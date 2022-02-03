@@ -1,0 +1,2070 @@
+/*Themes*/
+/*Fonts*/
+/*Roboto*/
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+/*Roboto Condensed*/
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700&display=swap');
+/*Press Start 2P*/
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+/*Exo*/
+@import url('https://fonts.googleapis.com/css2?family=Exo:wght@400;700&display=swap');
+/*Lato*/
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap');
+/*Source Sans Pro*/
+@import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;700&display=swap');
+/*Merriweather*/
+@import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap');
+/*Montserrat*/
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+/*Cinzel Decorative*/
+@import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&display=swap');
+
+/*DAY*/
+/*THEME 1*/
+/*DISPLAY FONT*/
+/*Arabic NotoSans, Arabic*/
+.theme_day_10001.prayertable_font_arabic_sans_kufi #prayertable_day_header_row,
+.theme_day_10001.prayertable_font_arabic_sans_kufi #prayertable_day_timetable_header, 
+.theme_day_10001.prayertable_font_arabic_sans_kufi #prayertable_day_footer_row{
+	font-family: 'Roboto', 'Noto Sans', 'Noto Sans Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoKufi*/
+.theme_day_10001.prayertable_font_arabic_kufi #prayertable_day_header_row,
+.theme_day_10001.prayertable_font_arabic_kufi #prayertable_day_timetable_header, 
+.theme_day_10001.prayertable_font_arabic_kufi #prayertable_day_footer_row{
+	font-family: 'Roboto', 'Noto Sans', 'Noto Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoNashk*/
+.theme_day_10001.prayertable_font_arabic_nashk #prayertable_day_header_row,
+.theme_day_10001.prayertable_font_arabic_nashk #prayertable_day_timetable_header, 
+.theme_day_10001.prayertable_font_arabic_nashk #prayertable_day_footer_row{
+	font-family: 'Roboto', 'Noto Sans', 'Noto Naskh Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoNastaliq*/
+.theme_day_10001.prayertable_font_arabic_nastaliq #prayertable_day_header_row,
+.theme_day_10001.prayertable_font_arabic_nastaliq #prayertable_day_timetable_header, 
+.theme_day_10001.prayertable_font_arabic_nastaliq #prayertable_day_footer_row{
+	font-family: 'Roboto', 'Noto Sans', 'Noto Nastaliq Urdu', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoSansUI*/
+.theme_day_10001.prayertable_font_arabic_ui #prayertable_day_header_row,
+.theme_day_10001.prayertable_font_arabic_ui #prayertable_day_timetable_header, 
+.theme_day_10001.prayertable_font_arabic_ui #prayertable_day_footer_row{
+	font-family: 'Roboto', 'Noto Sans', 'Noto Naskh Arabic UI', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*DEFAULT FONT*/
+/*Arabic NotoSans, Arabic*/
+.theme_day_10001.prayertable_font_arabic_sans_kufi #prayertable_day_timetable, 
+.theme_day_10001.prayertable_font_arabic_sans_kufi #prayertable_day_timetable_settings,
+.theme_day_10001.prayertable_font_arabic_sans_kufi #prayertable_day_time{
+	font-family: 'Roboto', 'Noto Sans', 'Noto Sans Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoKufi*/
+.theme_day_10001.prayertable_font_arabic_kufi #prayertable_day_timetable, 
+.theme_day_10001.prayertable_font_arabic_kufi #prayertable_day_timetable_settings,
+.theme_day_10001.prayertable_font_arabic_kufi #prayertable_day_time{
+	font-family: 'Roboto', 'Noto Sans', 'Noto Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoNashk*/
+.theme_day_10001.prayertable_font_arabic_nashk #prayertable_day_timetable, 
+.theme_day_10001.prayertable_font_arabic_nashk #prayertable_day_timetable_settings,
+.theme_day_10001.prayertable_font_arabic_nashk #prayertable_day_time{
+	font-family: 'Roboto', 'Noto Sans', 'Noto Naskh Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoNastaliq*/
+.theme_day_10001.prayertable_font_arabic_nastaliq #prayertable_day_timetable, 
+.theme_day_10001.prayertable_font_arabic_nastaliq #prayertable_day_timetable_settings,
+.theme_day_10001.prayertable_font_arabic_nastaliq #prayertable_day_time{
+	font-family: 'Roboto', 'Noto Sans', 'Noto Nastaliq Urdu', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoSansUI*/
+.theme_day_10001.prayertable_font_arabic_ui #prayertable_day_timetable, 
+.theme_day_10001.prayertable_font_arabic_ui #prayertable_day_timetable_settings,
+.theme_day_10001.prayertable_font_arabic_ui #prayertable_day_time{
+	font-family: 'Roboto', 'Noto Sans', 'Noto Naskh Arabic UI', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+.theme_day_10001{
+	background-color: white
+}
+.theme_day_10001 #prayertable_day_timetable_header {
+	color: #28708c;
+}
+.theme_day_10001#prayertable_day .prayertable_day_timetable_header-row{
+	background-color: #28708c;
+	color: white;
+}
+.theme_day_10001#prayertable_day .prayertable_day_timetable_header-row div{
+	border-left: 3px solid white;
+	border-right: 3px solid white;
+	text-transform: uppercase;
+} 
+.theme_day_10001#prayertable_day .prayertable_day_timetable_row_data div {
+	background-color: #28708c;
+	color: white;
+	border-left: 3px solid white;
+	border-right: 3px solid white;
+}
+/*Fasting column information*/
+.theme_day_10001#prayertable_day  .prayertable_day_timetable_row_data .prayertable_fast_start {
+	font-size: 1.2em !important;
+	font-weight: bold;
+}
+.theme_day_10001#prayertable_day .prayertable_day_timetable_row_data .prayertable_fast_end {
+	font-size: 1.2em !important;
+	font-weight: bold;
+}
+
+
+/*THEME 2*/
+/*DISPLAY FONT*/
+/*Arabic NotoSans, Arabic*/
+.theme_day_10002.prayertable_font_arabic_sans_kufi #prayertable_day_header, 
+.theme_day_10002.prayertable_font_arabic_sans_kufi #prayertable_day_timetable_header, 
+.theme_day_10002.prayertable_font_arabic_sans_kufi #prayertable_day_footer_row{
+	font-family: 'Exo', 'Noto Sans', 'Noto Sans Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoKufi*/
+.theme_day_10002.prayertable_font_arabic_kufi #prayertable_day_header, 
+.theme_day_10002.prayertable_font_arabic_kufi #prayertable_day_timetable_header, 
+.theme_day_10002.prayertable_font_arabic_kufi #prayertable_day_footer_row{
+	font-family: 'Exo', 'Noto Sans', 'Noto Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoNashk*/
+.theme_day_10002.prayertable_font_arabic_nashk #prayertable_day_header, 
+.theme_day_10002.prayertable_font_arabic_nashk #prayertable_day_timetable_header, 
+.theme_day_10002.prayertable_font_arabic_nashk #prayertable_day_footer_row{
+	font-family: 'Exo', 'Noto Sans', 'Noto Naskh Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoNastaliq*/
+.theme_day_10002.prayertable_font_arabic_nastaliq #prayertable_day_header, 
+.theme_day_10002.prayertable_font_arabic_nastaliq #prayertable_day_timetable_header, 
+.theme_day_10002.prayertable_font_arabic_nastaliq #prayertable_day_footer_row{
+	font-family: 'Exo', 'Noto Sans', 'Noto Nastaliq Urdu', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoSansUI*/
+.theme_day_10002.prayertable_font_arabic_ui #prayertable_day_header, 
+.theme_day_10002.prayertable_font_arabic_ui #prayertable_day_timetable_header, 
+.theme_day_10002.prayertable_font_arabic_ui #prayertable_day_footer_row{
+	font-family: 'Exo', 'Noto Sans', 'Noto Naskh Arabic UI', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*DEFAULT FONT*/
+/*Arabic NotoSans, Arabic*/
+.theme_day_10002.prayertable_font_arabic_sans_kufi #prayertable_day_timetable, 
+.theme_day_10002.prayertable_font_arabic_sans_kufi #prayertable_day_timetable_settings,
+.theme_day_10002.prayertable_font_arabic_sans_kufi #prayertable_day_time{
+	font-family: 'Exo', 'Noto Sans', 'Noto Sans Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoKufi*/
+.theme_day_10002.prayertable_font_arabic_kufi #prayertable_day_timetable, 
+.theme_day_10002.prayertable_font_arabic_kufi #prayertable_day_timetable_settings,
+.theme_day_10002.prayertable_font_arabic_kufi #prayertable_day_time{
+	font-family: 'Exo', 'Noto Sans', 'Noto Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoNashk*/
+.theme_day_10002.prayertable_font_arabic_nashk #prayertable_day_timetable, 
+.theme_day_10002.prayertable_font_arabic_nashk #prayertable_day_timetable_settings,
+.theme_day_10002.prayertable_font_arabic_nashk #prayertable_day_time{
+	font-family: 'Exo', 'Noto Sans', 'Noto Naskh Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoNastaliq*/
+.theme_day_10002.prayertable_font_arabic_nastaliq #prayertable_day_timetable, 
+.theme_day_10002.prayertable_font_arabic_nastaliq #prayertable_day_timetable_settings,
+.theme_day_10002.prayertable_font_arabic_nastaliq #prayertable_day_time{
+	font-family: 'Exo', 'Noto Sans', 'Noto Nastaliq Urdu', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoSansUI*/
+.theme_day_10002.prayertable_font_arabic_ui #prayertable_day_timetable, 
+.theme_day_10002.prayertable_font_arabic_ui #prayertable_day_timetable_settings,
+.theme_day_10002.prayertable_font_arabic_ui #prayertable_day_time{
+	font-family: 'Exo', 'Noto Sans', 'Noto Naskh Arabic UI', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+.theme_day_10002{
+	background-color: white
+}
+.theme_day_10002 #prayertable_day_timetable_header {
+	color: #0d8149;
+}
+.theme_day_10002#prayertable_day .prayertable_day_timetable_header-row div {
+	background-color: #0d8149;
+	color: white;
+	text-transform: uppercase;
+	border-left: 3px solid white;
+	border-right: 3px solid white;
+}
+.theme_day_10002#prayertable_day .prayertable_day_timetable_row_data div {
+	background-color: #0d8149;
+	color: white;
+	border-left: 3px solid white;
+	border-right: 3px solid white;
+}
+/*Fasting column information*/
+.theme_day_10002#prayertable_day  .prayertable_day_timetable_row_data .prayertable_fast_start {
+	font-size: 1.2em !important;
+	font-weight: bold;
+}
+.theme_day_10002#prayertable_day .prayertable_day_timetable_row_data .prayertable_fast_end {
+	font-size: 1.2em !important;
+	font-weight: bold;
+}
+
+/*THEME 3*/
+/*DISPLAY FONT*/
+/*Arabic NotoSans, Arabic*/
+.theme_day_10003.prayertable_font_arabic_sans_kufi #prayertable_day_header, 
+.theme_day_10003.prayertable_font_arabic_sans_kufi #prayertable_day_timetable_header, 
+.theme_day_10003.prayertable_font_arabic_sans_kufi #prayertable_day_footer_row{
+	font-family: 'Roboto', 'Noto Sans', 'Noto Sans Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoKufi*/
+.theme_day_10003.prayertable_font_arabic_kufi #prayertable_day_header, 
+.theme_day_10003.prayertable_font_arabic_kufi #prayertable_day_timetable_header, 
+.theme_day_10003.prayertable_font_arabic_kufi #prayertable_day_footer_row{
+	font-family: 'Roboto', 'Noto Sans', 'Noto Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoNashk*/
+.theme_day_10003.prayertable_font_arabic_nashk #prayertable_day_header, 
+.theme_day_10003.prayertable_font_arabic_nashk #prayertable_day_timetable_header, 
+.theme_day_10003.prayertable_font_arabic_nashk #prayertable_day_footer_row{
+	font-family: 'Roboto', 'Noto Sans', 'Noto Naskh Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoNastaliq*/
+.theme_day_10003.prayertable_font_arabic_nastaliq #prayertable_day_header, 
+.theme_day_10003.prayertable_font_arabic_nastaliq #prayertable_day_timetable_header, 
+.theme_day_10003.prayertable_font_arabic_nastaliq #prayertable_day_footer_row{
+	font-family: 'Roboto', 'Noto Sans', 'Noto Nastaliq Urdu', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoSansUI*/
+.theme_day_10003.prayertable_font_arabic_ui #prayertable_day_header, 
+.theme_day_10003.prayertable_font_arabic_ui #prayertable_day_timetable_header, 
+.theme_day_10003.prayertable_font_arabic_ui #prayertable_day_footer_row{
+	font-family: 'Roboto', 'Noto Sans', 'Noto Naskh Arabic UI', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*DEFAULT FONT*/
+/*Arabic NotoSans, Arabic*/
+.theme_day_10003.prayertable_font_arabic_sans_kufi #prayertable_day_timetable, 
+.theme_day_10003.prayertable_font_arabic_sans_kufi #prayertable_day_timetable_settings,
+.theme_day_10003.prayertable_font_arabic_sans_kufi #prayertable_day_time{
+	font-family: 'Roboto', 'Noto Sans', 'Noto Sans Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoKufi*/
+.theme_day_10003.prayertable_font_arabic_kufi #prayertable_day_timetable, 
+.theme_day_10003.prayertable_font_arabic_kufi #prayertable_day_timetable_settings,
+.theme_day_10003.prayertable_font_arabic_kufi #prayertable_day_time{
+	font-family: 'Roboto', 'Noto Sans', 'Noto Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoNashk*/
+.theme_day_10003.prayertable_font_arabic_nashk #prayertable_day_timetable, 
+.theme_day_10003.prayertable_font_arabic_nashk #prayertable_day_timetable_settings,
+.theme_day_10003.prayertable_font_arabic_nashk #prayertable_day_time{
+	font-family: 'Roboto', 'Noto Sans', 'Noto Naskh Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoNastaliq*/
+.theme_day_10003.prayertable_font_arabic_nastaliq #prayertable_day_timetable, 
+.theme_day_10003.prayertable_font_arabic_nastaliq #prayertable_day_timetable_settings,
+.theme_day_10003.prayertable_font_arabic_nastaliq #prayertable_day_time{
+	font-family: 'Roboto', 'Noto Sans', 'Noto Nastaliq Urdu', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoSansUI*/
+.theme_day_10003.prayertable_font_arabic_ui #prayertable_day_timetable, 
+.theme_day_10003.prayertable_font_arabic_ui #prayertable_day_timetable_settings,
+.theme_day_10003.prayertable_font_arabic_ui #prayertable_day_time{
+	font-family: 'Roboto', 'Noto Sans', 'Noto Naskh Arabic UI', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+.theme_day_10003{
+	background-color: white
+}
+.theme_day_10003 #prayertable_day_timetable_header {
+	color: #c3ba47;
+}
+.theme_day_10003#prayertable_day .prayertable_day_timetable_header-row div {
+	background-color: #00ab67;
+	color: white;
+	text-transform: uppercase;
+	border-left: 3px solid white;
+	border-right: 3px solid white;
+}
+.theme_day_10003#prayertable_day .prayertable_day_timetable_row_data div {
+	background-color: white;
+	color: #333;
+	border-left: 3px solid white;
+	border-right: 3px solid white;
+}
+/*Fasting column information*/
+.theme_day_10003#prayertable_day  .prayertable_day_timetable_row_data .prayertable_fast_start {
+	font-size: 1.2em !important;
+	font-weight: bold;
+	color:white;
+	background-color: #c3ba47;
+}
+.theme_day_10003#prayertable_day .prayertable_day_timetable_row_data .prayertable_fast_end {
+	font-size: 1.2em !important;
+	font-weight: bold;
+	color:white;
+	background-color: #c3ba47;
+}
+
+/*MONTH*/
+/*THEME 1*/
+/*DISPLAY FONT*/
+/*Arabic NotoSans, Arabic*/
+.theme_month_20001.prayertable_font_arabic_sans_kufi #prayertable_month_header, 
+.theme_month_20001.prayertable_font_arabic_sans_kufi #timetable_header, 
+.theme_month_20001.prayertable_font_arabic_sans_kufi #prayertable_month_footer{
+	font-family: 'Noto Sans', 'Noto Sans Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoKufi*/
+.theme_month_20001.prayertable_font_arabic_kufi #prayertable_month_header, 
+.theme_month_20001.prayertable_font_arabic_kufi #timetable_header, 
+.theme_month_20001.prayertable_font_arabic_kufi #prayertable_month_footer{
+	font-family: 'Noto Sans', 'Noto Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoNashk*/
+.theme_month_20001.prayertable_font_arabic_nashk #prayertable_month_header, 
+.theme_month_20001.prayertable_font_arabic_nashk #timetable_header, 
+.theme_month_20001.prayertable_font_arabic_nashk #prayertable_month_footer{
+	font-family: 'Noto Sans', 'Noto Naskh Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoNastaliq*/
+.theme_month_20001.prayertable_font_arabic_nastaliq #prayertable_month_header, 
+.theme_month_20001.prayertable_font_arabic_nastaliq #timetable_header, 
+.theme_month_20001.prayertable_font_arabic_nastaliq #prayertable_month_footer{
+	font-family: 'Noto Sans', 'Noto Nastaliq Urdu', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoSansUI*/
+.theme_month_20001.prayertable_font_arabic_ui #prayertable_month_header, 
+.theme_month_20001.prayertable_font_arabic_ui #timetable_header, 
+.theme_month_20001.prayertable_font_arabic_ui #prayertable_month_footer{
+	font-family: 'Noto Sans', 'Noto Naskh Arabic UI', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*DEFAULT FONT*/
+/*Arabic NotoSans, Arabic*/
+.theme_month_20001.prayertable_font_arabic_sans_kufi #timetable, 
+.theme_month_20001.prayertable_font_arabic_sans_kufi #timetable_footer{
+	font-family: 'Noto Sans', 'Noto Sans Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoKufi*/
+.theme_month_20001.prayertable_font_arabic_kufi #timetable, 
+.theme_month_20001.prayertable_font_arabic_kufi #timetable_footer{
+	font-family: 'Noto Sans', 'Noto Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoNashk*/
+.theme_month_20001.prayertable_font_arabic_nashk #timetable, 
+.theme_month_20001.prayertable_font_arabic_nashk #timetable_footer{
+	font-family: 'Noto Sans', 'Noto Naskh Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoNastaliq*/
+.theme_month_20001.prayertable_font_arabic_nastaliq #timetable, 
+.theme_month_20001.prayertable_font_arabic_nastaliq #timetable_footer{
+	font-family: 'Noto Sans', 'Noto Nastaliq Urdu', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoSansUI*/
+.theme_month_20001.prayertable_font_arabic_ui #timetable, 
+.theme_month_20001.prayertable_font_arabic_ui #timetable_footer{
+	font-family: 'Noto Sans', 'Noto Naskh Arabic UI', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+.theme_month_20001 {
+	background-color: white;
+	color: #404040;
+}
+/*Timetable*/
+.theme_month_20001 #timetable{
+	border : 0px !important;
+}
+.theme_month_20001 .timetable_row.prayertable_month_highlight_row .timetable_col {
+	background-color: #e6e6e6;
+}
+.theme_month_20001 .timetable_row.prayertable_month_day_01-10-row .timetable_col {
+	background-color: #e6e6e6 !important;
+}
+.theme_month_20001 .timetable_row.prayertable_month_day_11-20-row .timetable_col {
+	background-color: #FFF !important;
+}
+.theme_month_20001 .timetable_row.prayertable_month_day_21-30-row .timetable_col {
+	background-color: #e6e6e6 !important;
+}
+/*notes*/
+.theme_month_20001 #timetable .prayertable_month_notes {
+	background-color: white !important;
+}
+
+.theme_month_20001 #timetable .timetable_col.prayertable_fast_start {
+	background-color: #e6e6e6 !important;
+}
+.theme_month_20001 #timetable .timetable_col.prayertable_fast_end {
+	background-color: #e6e6e6 !important;
+}
+
+/*THEME 2*/
+/*DISPLAY FONT*/
+/*Arabic NotoSans, Arabic*/
+.theme_month_20002.prayertable_font_arabic_sans_kufi #prayertable_month_header, 
+.theme_month_20002.prayertable_font_arabic_sans_kufi #timetable_header, 
+.theme_month_20002.prayertable_font_arabic_sans_kufi #prayertable_month_footer{
+	font-family: 'Noto Sans', 'Noto Sans Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoKufi*/
+.theme_month_20002.prayertable_font_arabic_kufi #prayertable_month_header, 
+.theme_month_20002.prayertable_font_arabic_kufi #timetable_header, 
+.theme_month_20002.prayertable_font_arabic_kufi #prayertable_month_footer{
+	font-family: 'Noto Sans', 'Noto Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoNashk*/
+.theme_month_20002.prayertable_font_arabic_nashk #prayertable_month_header, 
+.theme_month_20002.prayertable_font_arabic_nashk #timetable_header, 
+.theme_month_20002.prayertable_font_arabic_nashk #prayertable_month_footer{
+	font-family: 'Noto Sans', 'Noto Naskh Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoNastaliq*/
+.theme_month_20002.prayertable_font_arabic_nastaliq #prayertable_month_header, 
+.theme_month_20002.prayertable_font_arabic_nastaliq #timetable_header, 
+.theme_month_20002.prayertable_font_arabic_nastaliq #prayertable_month_footer{
+	font-family: 'Noto Sans', 'Noto Nastaliq Urdu', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoSansUI*/
+.theme_month_20002.prayertable_font_arabic_ui #prayertable_month_header, 
+.theme_month_20002.prayertable_font_arabic_ui #timetable_header, 
+.theme_month_20002.prayertable_font_arabic_ui #prayertable_month_footer{
+	font-family: 'Noto Sans', 'Noto Naskh Arabic UI', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*DEFAULT FONT*/
+/*Arabic NotoSans, Arabic*/
+.theme_month_20002.prayertable_font_arabic_sans_kufi #timetable, 
+.theme_month_20002.prayertable_font_arabic_sans_kufi #timetable_footer{
+	font-family: 'Noto Sans', 'Noto Sans Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoKufi*/
+.theme_month_20002.prayertable_font_arabic_kufi #timetable, 
+.theme_month_20002.prayertable_font_arabic_kufi #timetable_footer{
+	font-family: 'Noto Sans', 'Noto Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoNashk*/
+.theme_month_20002.prayertable_font_arabic_nashk #timetable, 
+.theme_month_20002.prayertable_font_arabic_nashk #timetable_footer{
+	font-family: 'Noto Sans', 'Noto Naskh Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoNastaliq*/
+.theme_month_20002.prayertable_font_arabic_nastaliq #timetable, 
+.theme_month_20002.prayertable_font_arabic_nastaliq #timetable_footer{
+	font-family: 'Noto Sans', 'Noto Nastaliq Urdu', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoSansUI*/
+.theme_month_20002.prayertable_font_arabic_ui #timetable, 
+.theme_month_20002.prayertable_font_arabic_ui #timetable_footer{
+	font-family: 'Noto Sans', 'Noto Naskh Arabic UI', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+.theme_month_20002 {
+	background-color: white;
+	color: #404040;
+}
+/*Timetable*/
+.theme_month_20002 #timetable {
+	border : 0.5px solid #404040;
+}
+.theme_month_20002 #timetable .prayertable_month_header-row .timetable_col_header {
+	border-bottom: 0.5px solid #404040 !important;
+	border-top: 0.5px solid #404040 !important;
+}
+.theme_month_20002 #timetable .timetable_col_header {
+	border-bottom: 0.5px solid #404040;
+}
+.theme_month_20002 #timetable .timetable_col {
+	border-bottom: 0.5px solid #404040;
+}
+.theme_month_20002 .timetable_row.prayertable_month_highlight_row .timetable_col {
+	background-color: #e6e6e6;
+}
+.theme_month_20002 .timetable_row.prayertable_month_day_01-10-row .timetable_col {
+	background-color: #e6e6e6 !important;
+}
+.theme_month_20002 .timetable_row.prayertable_month_day_11-20-row .timetable_col {
+	background-color: #FFF !important;
+}
+.theme_month_20002 .timetable_row.prayertable_month_day_21-30-row .timetable_col {
+	background-color: #e6e6e6 !important;
+}
+.theme_month_20002 #timetable .prayertable_month_notes {
+	background-color: white !important;
+}
+.theme_month_20002 #timetable .timetable_col.prayertable_fast_start {
+	background-color: #e6e6e6 !important;
+	border-left: 1px solid #000000;
+	border-right: 1px solid #000000;
+}
+.theme_month_20002 #timetable .timetable_col.prayertable_fast_end {
+	background-color: #e6e6e6 !important;
+	border-left: 1px solid #000000;
+	border-right: 1px solid #000000;
+}
+/*THEME 3*/
+/*DISPLAY FONT*/
+/*Arabic NotoSans, Arabic*/
+.theme_month_20003.prayertable_font_arabic_sans_kufi #prayertable_month_header, 
+.theme_month_20003.prayertable_font_arabic_sans_kufi #timetable_header, 
+.theme_month_20003.prayertable_font_arabic_sans_kufi #prayertable_month_footer{
+	font-family: 'Roboto', 'Noto Sans', 'Noto Sans Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoKufi*/
+.theme_month_20003.prayertable_font_arabic_kufi #prayertable_month_header, 
+.theme_month_20003.prayertable_font_arabic_kufi #timetable_header, 
+.theme_month_20003.prayertable_font_arabic_kufi #prayertable_month_footer{
+	font-family: 'Roboto', 'Noto Sans', 'Noto Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoNashk*/
+.theme_month_20003.prayertable_font_arabic_nashk #prayertable_month_header, 
+.theme_month_20003.prayertable_font_arabic_nashk #timetable_header, 
+.theme_month_20003.prayertable_font_arabic_nashk #prayertable_month_footer{
+	font-family: 'Roboto', 'Noto Sans', 'Noto Naskh Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoNastaliq*/
+.theme_month_20003.prayertable_font_arabic_nastaliq #prayertable_month_header, 
+.theme_month_20003.prayertable_font_arabic_nastaliq #timetable_header, 
+.theme_month_20003.prayertable_font_arabic_nastaliq #prayertable_month_footer{
+	font-family: 'Roboto', 'Noto Sans', 'Noto Nastaliq Urdu', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoSansUI*/
+.theme_month_20003.prayertable_font_arabic_ui #prayertable_month_header, 
+.theme_month_20003.prayertable_font_arabic_ui #timetable_header, 
+.theme_month_20003.prayertable_font_arabic_ui #prayertable_month_footer{
+	font-family: 'Roboto', 'Noto Sans', 'Noto Naskh Arabic UI', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*DEFAULT FONT*/
+/*Arabic NotoSans, Arabic*/
+.theme_month_20003.prayertable_font_arabic_sans_kufi #timetable, 
+.theme_month_20003.prayertable_font_arabic_sans_kufi #timetable_footer{
+	font-family: 'Roboto', 'Noto Sans', 'Noto Sans Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoKufi*/
+.theme_month_20003.prayertable_font_arabic_kufi #timetable, 
+.theme_month_20003.prayertable_font_arabic_kufi #timetable_footer{
+	font-family: 'Roboto', 'Noto Sans', 'Noto Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoNashk*/
+.theme_month_20003.prayertable_font_arabic_nashk #timetable, 
+.theme_month_20003.prayertable_font_arabic_nashk #timetable_footer{
+	font-family: 'Roboto', 'Noto Sans', 'Noto Naskh Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoNastaliq*/
+.theme_month_20003.prayertable_font_arabic_nastaliq #timetable, 
+.theme_month_20003.prayertable_font_arabic_nastaliq #timetable_footer{
+	font-family: 'Roboto', 'Noto Sans', 'Noto Nastaliq Urdu', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoSansUI*/
+.theme_month_20003.prayertable_font_arabic_ui #timetable, 
+.theme_month_20003.prayertable_font_arabic_ui #timetable_footer{
+	font-family: 'Roboto', 'Noto Sans', 'Noto Naskh Arabic UI', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+.theme_month_20003 {
+	background-color: white
+}
+.theme_month_20003 #prayertable_month_header {
+	color: #333;
+}
+.theme_month_20003 #timetable_header {
+	color: #c3ba47;
+}
+.theme_month_20003 #timetable {
+	border : 0px !important;
+	color: #333;
+}
+.theme_month_20003 #timetable .prayertable_month_header-row .timetable_col_header {
+	background-color: #00ab67;
+	color : white !important;
+	text-transform: uppercase;
+}
+.theme_month_20003 .timetable_row.prayertable_month_highlight_row .timetable_col {
+	background-color: #ebeae2;
+}
+.theme_month_20003 .timetable_row.prayertable_month_day_01-10-row .timetable_col {
+	background-color: #ebeae2;
+}
+.theme_month_20003 .timetable_row.prayertable_month_day_11-20-row .timetable_col {
+	background-color: #FFF;
+}
+.theme_month_20003 .timetable_row.prayertable_month_day_21-30-row .timetable_col {
+	background-color: #ebeae2;
+}
+.theme_month_20003 #timetable .prayertable_month_notes {
+	background-color: white !important;
+}
+.theme_month_20003 #timetable .timetable_col.prayertable_fast_start {
+	background-color: #c3ba47 !important;
+	color: white;
+	border-left: 1px solid #c3ba47;
+	border-right: 1px solid #c3ba47;
+}
+.theme_month_20003 #timetable .timetable_col.prayertable_fast_end {
+	background-color: #c3ba47 !important;
+	color: white;
+	border-left: 1px solid #c3ba47;
+	border-right: 1px solid #c3ba47;
+}
+.theme_month_20003 #timetable_footer {
+	color : #ebedee;
+	background-color: #5c686c;
+}
+.theme_month_20003 #prayertable_month_footer {
+	color: #333;
+}
+/*THEME4*/
+/*DISPLAY FONT*/
+/*Arabic NotoSans, Arabic*/
+.theme_month_20004.prayertable_font_arabic_sans_kufi #prayertable_month_header, 
+.theme_month_20004.prayertable_font_arabic_sans_kufi #timetable_header, 
+.theme_month_20004.prayertable_font_arabic_sans_kufi #prayertable_month_footer{
+	font-family: 'Press Start 2P', 'Noto Sans', 'Noto Sans Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoKufi*/
+.theme_month_20004.prayertable_font_arabic_kufi #prayertable_month_header, 
+.theme_month_20004.prayertable_font_arabic_kufi #timetable_header, 
+.theme_month_20004.prayertable_font_arabic_kufi #prayertable_month_footer{
+	font-family: 'Press Start 2P', 'Noto Sans', 'Noto Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoNashk*/
+.theme_month_20004.prayertable_font_arabic_nashk #prayertable_month_header, 
+.theme_month_20004.prayertable_font_arabic_nashk #timetable_header, 
+.theme_month_20004.prayertable_font_arabic_nashk #prayertable_month_footer{
+	font-family: 'Press Start 2P', 'Noto Sans', 'Noto Naskh Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoNastaliq*/
+.theme_month_20004.prayertable_font_arabic_nastaliq #prayertable_month_header, 
+.theme_month_20004.prayertable_font_arabic_nastaliq #timetable_header, 
+.theme_month_20004.prayertable_font_arabic_nastaliq #prayertable_month_footer{
+	font-family: 'Press Start 2P', 'Noto Sans', 'Noto Nastaliq Urdu', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoSansUI*/
+.theme_month_20004.prayertable_font_arabic_ui #prayertable_month_header, 
+.theme_month_20004.prayertable_font_arabic_ui #timetable_header, 
+.theme_month_20004.prayertable_font_arabic_ui #prayertable_month_footer{
+	font-family: 'Press Start 2P', 'Noto Sans', 'Noto Naskh Arabic UI', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*DEFAULT FONT*/
+/*Arabic NotoSans, Arabic*/
+.theme_month_20004.prayertable_font_arabic_sans_kufi #timetable, 
+.theme_month_20004.prayertable_font_arabic_sans_kufi #timetable_footer{
+	font-family: 'Press Start 2P', 'Noto Sans', 'Noto Sans Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoKufi*/
+.theme_month_20004.prayertable_font_arabic_kufi #timetable, 
+.theme_month_20004.prayertable_font_arabic_kufi #timetable_footer{
+	font-family: 'Press Start 2P', 'Noto Sans', 'Noto Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoNashk*/
+.theme_month_20004.prayertable_font_arabic_nashk #timetable, 
+.theme_month_20004.prayertable_font_arabic_nashk #timetable_footer{
+	font-family: 'Press Start 2P', 'Noto Sans', 'Noto Naskh Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoNastaliq*/
+.theme_month_20004.prayertable_font_arabic_nastaliq #timetable, 
+.theme_month_20004.prayertable_font_arabic_nastaliq #timetable_footer{
+	font-family: 'Press Start 2P', 'Noto Sans', 'Noto Nastaliq Urdu', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoSansUI*/
+.theme_month_20004.prayertable_font_arabic_ui #timetable, 
+.theme_month_20004.prayertable_font_arabic_ui #timetable_footer{
+	font-family: 'Press Start 2P', 'Noto Sans', 'Noto Naskh Arabic UI', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*shrink font size compared to parent div for this font on this theme*/
+.theme_month_20004 .timetable_row, 
+.theme_month_20004 #timetable_footer_row, 
+.theme_month_20004 #prayertable_month_footer_row{
+	font-size:0.75em;
+}
+.theme_month_20004 {
+	background-color: white;
+}
+.theme_month_20004 #prayertable_month_header {
+	color: #ffffff;
+	background-color: #77c356;
+}
+.theme_month_20004 #timetable_header {
+	background-color: #77c356;
+	color: #404040;
+}
+.theme_month_20004 #timetable {
+	border : 0.5px solid #77c356;
+	color: #000000;
+}
+.theme_month_20004 #timetable .prayertable_month_header-row .timetable_col_header {background-color : #000000 !important;
+	color : white
+}
+.theme_month_20004 .timetable_row:nth-child(odd) {
+	background-color: #f6fbf5;
+}
+.theme_month_20004 .timetable_row:nth-child(even) {
+	background-color: #FFF;
+}
+.theme_month_20004 .timetable_row.prayertable_month_highlight_row .timetable_col {
+	background-color: #c5b28d;
+}
+.theme_month_20004 .timetable_row.prayertable_month_day_01-10-row .timetable_col {
+	background-color: #c5b28d !important;
+}
+.theme_month_20004 .timetable_row.prayertable_month_day_11-20-row .timetable_col {
+	background-color: #ffffff !important;
+}
+.theme_month_20004 .timetable_row.prayertable_month_day_21-30-row .timetable_col {
+	background-color: #a49775 !important;
+}
+.theme_month_20004 #timetable .prayertable_month_notes {
+	background-color: white !important;
+}
+.theme_month_20004 #timetable .timetable_col.prayertable_fast_start {
+	background-color: #f4e7b8 !important;
+	border-left: 2px solid #c9b47e;
+	border-right: 2px solid #c9b47e;
+}
+.theme_month_20004 #timetable .timetable_col.prayertable_fast_end {
+	background-color: #f4e7b8 !important;
+	border-left: 2px solid #c9b47e;
+	border-right: 2px solid #c9b47e;
+}
+.theme_month_20004 #timetable_footer {
+	color : white;
+	background-color : #000000 !important;
+}
+.theme_month_20004 #prayertable_month_footer {
+	color : white;
+	background-color: #77c356;
+}
+.theme_month_20004 #prayertable_month_footer #prayertable_month_footer_title1 {
+	padding: 5px;
+}
+.theme_month_20004 #prayertable_month_footer #prayertable_month_footer_title2 {
+	padding: 5px;
+}
+.theme_month_20004 #prayertable_month_footer #prayertable_month_footer_title3 {
+	padding: 5px;
+}
+
+/*START PRAYERTABLE THEME 5*/
+/*DISPLAY FONT*/
+/*Arabic NotoSans, Arabic*/
+.theme_month_20005.prayertable_font_arabic_sans_kufi #prayertable_month_header, 
+.theme_month_20005.prayertable_font_arabic_sans_kufi #timetable_header, 
+.theme_month_20005.prayertable_font_arabic_sans_kufi #prayertable_month_footer{
+	font-family: 'Roboto Condensed', 'Noto Sans', 'Noto Sans Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoKufi*/
+.theme_month_20005.prayertable_font_arabic_kufi #prayertable_month_header, 
+.theme_month_20005.prayertable_font_arabic_kufi #timetable_header, 
+.theme_month_20005.prayertable_font_arabic_kufi #prayertable_month_footer{
+	font-family: 'Roboto Condensed', 'Noto Sans', 'Noto Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoNashk*/
+.theme_month_20005.prayertable_font_arabic_nashk #prayertable_month_header, 
+.theme_month_20005.prayertable_font_arabic_nashk #timetable_header, 
+.theme_month_20005.prayertable_font_arabic_nashk #prayertable_month_footer{
+	font-family: 'Roboto Condensed', 'Noto Sans', 'Noto Naskh Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoNastaliq*/
+.theme_month_20005.prayertable_font_arabic_nastaliq #prayertable_month_header, 
+.theme_month_20005.prayertable_font_arabic_nastaliq #timetable_header, 
+.theme_month_20005.prayertable_font_arabic_nastaliq #prayertable_month_footer{
+	font-family: 'Roboto Condensed', 'Noto Sans', 'Noto Nastaliq Urdu', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoSansUI*/
+.theme_month_20005.prayertable_font_arabic_ui #prayertable_month_header, 
+.theme_month_20005.prayertable_font_arabic_ui #timetable_header, 
+.theme_month_20005.prayertable_font_arabic_ui #prayertable_month_footer{
+	font-family: 'Roboto Condensed', 'Noto Sans', 'Noto Naskh Arabic UI', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*DEFAULT FONT*/
+/*Arabic NotoSans, Arabic*/
+.theme_month_20005.prayertable_font_arabic_sans_kufi #timetable, 
+.theme_month_20005.prayertable_font_arabic_sans_kufi #timetable_footer{
+	font-family: 'Roboto Condensed', 'Noto Sans', 'Noto Sans Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoKufi*/
+.theme_month_20005.prayertable_font_arabic_kufi #timetable, 
+.theme_month_20005.prayertable_font_arabic_kufi #timetable_footer{
+	font-family: 'Roboto Condensed', 'Noto Sans', 'Noto Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoNashk*/
+.theme_month_20005.prayertable_font_arabic_nashk #timetable, 
+.theme_month_20005.prayertable_font_arabic_nashk #timetable_footer{
+	font-family: 'Roboto Condensed', 'Noto Sans', 'Noto Naskh Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoNastaliq*/
+.theme_month_20005.prayertable_font_arabic_nastaliq #timetable, 
+.theme_month_20005.prayertable_font_arabic_nastaliq #timetable_footer{
+	font-family: 'Roboto Condensed', 'Noto Sans', 'Noto Nastaliq Urdu', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoSansUI*/
+.theme_month_20005.prayertable_font_arabic_ui #timetable, 
+.theme_month_20005.prayertable_font_arabic_ui #timetable_footer{
+	font-family: 'Roboto Condensed', 'Noto Sans', 'Noto Naskh Arabic UI', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+.theme_month_20005 {
+	background-color: white;
+	color: #404040;
+}
+.theme_month_20005 #timetable {
+	border : 1px solid #009900;
+}
+.theme_month_20005 #timetable .prayertable_month_header-row .timetable_col_header {
+	background-color: #009900 !important;
+	color: white !important;
+	text-transform: uppercase;
+}
+.theme_month_20005 #timetable .timetable_col_header {
+	border-bottom: 0.5px solid #009900;
+}
+.theme_month_20005 #timetable .timetable_col {
+	border-bottom: 0.5px solid #009900;
+}
+.theme_month_20005 .timetable_row.prayertable_month_highlight_row .timetable_col {
+	background-color: #bbe3b8 !important;
+}
+.theme_month_20005 .timetable_row.prayertable_month_day_01-10-row .timetable_col {
+	background-color: #bbf796 !important;
+}
+.theme_month_20005 .timetable_row.prayertable_month_day_11-20-row .timetable_col {
+	background-color: #FFF !important;
+}
+.theme_month_20005 .timetable_row.prayertable_month_day_21-30-row .timetable_col {
+	background-color: #bbe3b8 !important;
+}
+.theme_month_20005 #timetable .prayertable_month_notes {
+	background-color: white !important;
+}
+.theme_month_20005 #timetable .timetable_col:nth-child(odd) {
+	background-color: #bbf796;
+}
+.theme_month_20005 #timetable .timetable_col:nth-child(even) {
+	background-color: #FFF;
+}
+.theme_month_20005 #timetable .timetable_col.prayertable_fast_start {
+	background-color: #57e944 !important;
+	border-left: 2px solid #009900;
+	border-right: 2px solid #009900;
+}
+.theme_month_20005 #timetable .timetable_col.prayertable_fast_end {
+	background-color: #57e944 !important;
+	border-left: 2px solid #009900;
+	border-right: 2px solid #009900;
+}
+
+/*START PRAYERTABLE THEME 6*/
+/*DISPLAY FONT*/
+/*Arabic NotoSans, Arabic*/
+.theme_month_20006.prayertable_font_arabic_sans_kufi #prayertable_month_header, 
+.theme_month_20006.prayertable_font_arabic_sans_kufi #timetable_header, 
+.theme_month_20006.prayertable_font_arabic_sans_kufi #prayertable_month_footer{
+	font-family: 'Roboto Condensed', 'Noto Sans', 'Noto Sans Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoKufi*/
+.theme_month_20006.prayertable_font_arabic_kufi #prayertable_month_header, 
+.theme_month_20006.prayertable_font_arabic_kufi #timetable_header, 
+.theme_month_20006.prayertable_font_arabic_kufi #prayertable_month_footer{
+	font-family: 'Roboto Condensed', 'Noto Sans', 'Noto Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoNashk*/
+.theme_month_20006.prayertable_font_arabic_nashk #prayertable_month_header, 
+.theme_month_20006.prayertable_font_arabic_nashk #timetable_header, 
+.theme_month_20006.prayertable_font_arabic_nashk #prayertable_month_footer{
+	font-family: 'Roboto Condensed', 'Noto Sans', 'Noto Naskh Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoNastaliq*/
+.theme_month_20006.prayertable_font_arabic_nastaliq #prayertable_month_header, 
+.theme_month_20006.prayertable_font_arabic_nastaliq #timetable_header, 
+.theme_month_20006.prayertable_font_arabic_nastaliq #prayertable_month_footer{
+	font-family: 'Roboto Condensed', 'Noto Sans', 'Noto Nastaliq Urdu', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoSansUI*/
+.theme_month_20006.prayertable_font_arabic_ui #prayertable_month_header, 
+.theme_month_20006.prayertable_font_arabic_ui #timetable_header, 
+.theme_month_20006.prayertable_font_arabic_ui #prayertable_month_footer{
+	font-family: 'Roboto Condensed', 'Noto Sans', 'Noto Naskh Arabic UI', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*DEFAULT FONT*/
+/*Arabic NotoSans, Arabic*/
+.theme_month_20006.prayertable_font_arabic_sans_kufi #timetable, 
+.theme_month_20006.prayertable_font_arabic_sans_kufi #timetable_footer{
+	font-family: 'Roboto Condensed', 'Noto Sans', 'Noto Sans Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoKufi*/
+.theme_month_20006.prayertable_font_arabic_kufi #timetable, 
+.theme_month_20006.prayertable_font_arabic_kufi #timetable_footer{
+	font-family: 'Roboto Condensed', 'Noto Sans', 'Noto Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoNashk*/
+.theme_month_20006.prayertable_font_arabic_nashk #timetable, 
+.theme_month_20006.prayertable_font_arabic_nashk #timetable_footer{
+	font-family: 'Roboto Condensed', 'Noto Sans', 'Noto Naskh Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoNastaliq*/
+.theme_month_20006.prayertable_font_arabic_nastaliq #timetable, 
+.theme_month_20006.prayertable_font_arabic_nastaliq #timetable_footer{
+	font-family: 'Roboto Condensed', 'Noto Sans', 'Noto Nastaliq Urdu', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoSansUI*/
+.theme_month_20006.prayertable_font_arabic_ui #timetable, 
+.theme_month_20006.prayertable_font_arabic_ui #timetable_footer{
+	font-family: 'Roboto Condensed', 'Noto Sans', 'Noto Naskh Arabic UI', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+.theme_month_20006 {
+	background-color: white;
+	color: #404040;
+}
+.theme_month_20006 #prayertable_month_header {
+	color: #2a5d99;
+}
+.theme_month_20006 #timetable_header {
+	color: #2a5d99;
+}
+.theme_month_20006 #timetable .prayertable_month_header-row .timetable_col_header {
+	background-color: #2a5d99 !important;
+	color: white !important;
+	text-transform: uppercase;
+}
+.theme_month_20006 .timetable_row:last-child {
+	border-bottom: none
+}
+.theme_month_20006 #timetable .timetable_col_header {
+	border-bottom: 0.5px solid #2a5d99;
+}
+.theme_month_20006 #timetable .timetable_col {
+	border-bottom: 0.5px solid #2a5d99;
+}
+.theme_month_20006 .timetable_row.prayertable_month_highlight_row .timetable_col {
+	background-color: #7bcae9 !important;
+}
+.theme_month_20006 .timetable_row.prayertable_month_day_01-10-row .timetable_col {
+	background-color: #c9edf7 !important;
+}
+.theme_month_20006 .timetable_row.prayertable_month_day_11-20-row .timetable_col {
+	background-color: #FFF !important;
+}
+.theme_month_20006 .timetable_row.prayertable_month_day_21-30-row .timetable_col {
+	background-color: #7bcae9 !important;
+}
+.theme_month_20006 #timetable .prayertable_month_notes {
+	background-color: white !important;
+}
+.theme_month_20006 #timetable .timetable_col:nth-child(odd) {
+	background-color: #c9edf7;
+	color: #404040;
+}
+.theme_month_20006 #timetable .timetable_col:nth-child(even) {
+	background-color: #FFF;
+}
+.theme_month_20006 #timetable .timetable_col.prayertable_fast_start {
+	background-color: #2a5d99 !important;
+	color: white;
+}
+.theme_month_20006 #timetable .timetable_col.prayertable_fast_end {
+	background-color: #2a5d99 !important;
+	color: white;
+}
+.theme_month_20006 #timetable_footer {
+	color: #2a5d99;
+}
+/*Footer*/
+.theme_month_20006 #prayertable_month_footer {
+	color : #2a5d99;
+}
+
+/*START PRAYERTABLE THEME 7*/
+/*DISPLAY FONT*/
+/*Arabic NotoSans, Arabic*/
+.theme_month_20007.prayertable_font_arabic_sans_kufi #prayertable_month_header, 
+.theme_month_20007.prayertable_font_arabic_sans_kufi #timetable_header, 
+.theme_month_20007.prayertable_font_arabic_sans_kufi #prayertable_month_footer{
+	font-family: 'Roboto Condensed', 'Noto Sans', 'Noto Sans Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoKufi*/
+.theme_month_20007.prayertable_font_arabic_kufi #prayertable_month_header, 
+.theme_month_20007.prayertable_font_arabic_kufi #timetable_header, 
+.theme_month_20007.prayertable_font_arabic_kufi #prayertable_month_footer{
+	font-family: 'Roboto Condensed', 'Noto Sans', 'Noto Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoNashk*/
+.theme_month_20007.prayertable_font_arabic_nashk #prayertable_month_header, 
+.theme_month_20007.prayertable_font_arabic_nashk #timetable_header, 
+.theme_month_20007.prayertable_font_arabic_nashk #prayertable_month_footer{
+	font-family: 'Roboto Condensed', 'Noto Sans', 'Noto Naskh Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoNastaliq*/
+.theme_month_20007.prayertable_font_arabic_nastaliq #prayertable_month_header, 
+.theme_month_20007.prayertable_font_arabic_nastaliq #timetable_header, 
+.theme_month_20007.prayertable_font_arabic_nastaliq #prayertable_month_footer{
+	font-family: 'Roboto Condensed', 'Noto Sans', 'Noto Nastaliq Urdu', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoSansUI*/
+.theme_month_20007.prayertable_font_arabic_ui #prayertable_month_header, 
+.theme_month_20007.prayertable_font_arabic_ui #timetable_header, 
+.theme_month_20007.prayertable_font_arabic_ui #prayertable_month_footer{
+	font-family: 'Roboto Condensed', 'Noto Sans', 'Noto Naskh Arabic UI', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*DEFAULT FONT*/
+/*Arabic NotoSans, Arabic*/
+.theme_month_20007.prayertable_font_arabic_sans_kufi #timetable, 
+.theme_month_20007.prayertable_font_arabic_sans_kufi #timetable_footer{
+	font-family: 'Roboto Condensed', 'Noto Sans', 'Noto Sans Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoKufi*/
+.theme_month_20007.prayertable_font_arabic_kufi #timetable, 
+.theme_month_20007.prayertable_font_arabic_kufi #timetable_footer{
+	font-family: 'Roboto Condensed', 'Noto Sans', 'Noto Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoNashk*/
+.theme_month_20007.prayertable_font_arabic_nashk #timetable, 
+.theme_month_20007.prayertable_font_arabic_nashk #timetable_footer{
+	font-family: 'Roboto Condensed', 'Noto Sans', 'Noto Naskh Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoNastaliq*/
+.theme_month_20007.prayertable_font_arabic_nastaliq #timetable, 
+.theme_month_20007.prayertable_font_arabic_nastaliq #timetable_footer{
+	font-family: 'Roboto Condensed', 'Noto Sans', 'Noto Nastaliq Urdu', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoSansUI*/
+.theme_month_20007.prayertable_font_arabic_ui #timetable, 
+.theme_month_20007.prayertable_font_arabic_ui #timetable_footer{
+	font-family: 'Roboto Condensed', 'Noto Sans', 'Noto Naskh Arabic UI', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+.theme_month_20007 {
+	background-color: white;
+	color: #404040;
+}
+.theme_month_20007 #prayertable_month_header {
+	color: #704c21;
+}
+.theme_month_20007 #timetable_header {
+	color: #704c21;
+}
+.theme_month_20007 #timetable .prayertable_month_header-row .timetable_col_header {
+	background-color: #c9b47e !important;
+	color: white !important;
+	text-transform: uppercase;
+}
+.theme_month_20007 #timetable .timetable_col_header {
+	border-bottom: 0.5px solid #c9b47e;
+}
+.theme_month_20007 #timetable .timetable_col {
+	border-bottom: 0.5px solid #c9b47e;
+}
+.theme_month_20007 .timetable_row.prayertable_month_highlight_row .timetable_col {
+	background-color: #c9b47e !important
+}
+.theme_month_20007 .timetable_row.prayertable_month_day_01-10-row .timetable_col {
+	background-color: #f4e7b8 !important
+}
+.theme_month_20007 .timetable_row.prayertable_month_day_11-20-row .timetable_col {
+	background-color: #FFF !important
+}
+.theme_month_20007 .timetable_row.prayertable_month_day_21-30-row .timetable_col {
+	background-color: #d2b88f !important
+}
+.theme_month_20007 #timetable .prayertable_month_notes {
+	background-color: white !important;
+}
+.theme_month_20007 #timetable .timetable_row .timetable_col:nth-child(odd) {
+	background-color: #fcf9de;
+	color: #404040;
+}
+.theme_month_20007 #timetable .timetable_row .timetable_col:first-child {
+	background-color: #d2b88f !important;
+	color: #404040;
+}
+.theme_month_20007 #timetable .timetable_row .timetable_col:nth-child(even) {
+	background-color: #FFF;
+	color: #404040;
+}
+.theme_month_20007 #timetable .timetable_row .timetable_col.prayertable_fast_start {
+	background-color: #f4e7b8 !important;
+	border-left: 2px solid #c9b47e;
+	border-right: 2px solid #c9b47e;
+}
+.theme_month_20007 .timetable_row:first-child .timetable_col.prayertable_fast_start {
+	border-top: 2px solid #c9b47e;
+}
+.theme_month_20007 .timetable_row:last-child .timetable_col.prayertable_fast_start {
+	border-bottom: 2px solid #c9b47e;
+}
+.theme_month_20007 #timetable .timetable_col.prayertable_fast_end {
+	background-color: #f4e7b8 !important;
+	border-left: 2px solid #c9b47e;
+	border-right: 2px solid #c9b47e;
+}
+.theme_month_20007 .timetable_row:first-child .timetable_col.prayertable_fast_end {
+	background-color: #c9b47e !important;
+}
+.theme_month_20007 .timetable_row:last-child .timetable_col.prayertable_fast_end {
+	border-bottom: 2px solid #c9b47e;
+}
+								              
+.theme_month_20007 #timetable_footer {
+	background-color: #d2b88f;
+	color: #704c21;
+}
+/*Footer*/
+.theme_month_20007 #prayertable_month_footer {
+	color : #704c21;
+}
+
+/*START PRAYERTABLE THEME 8*/
+/*DISPLAY FONT*/
+/*Arabic NotoSans, Arabic*/
+.theme_month_20008.prayertable_font_arabic_sans_kufi #prayertable_month_header, 
+.theme_month_20008.prayertable_font_arabic_sans_kufi #timetable_header, 
+.theme_month_20008.prayertable_font_arabic_sans_kufi #prayertable_month_footer{
+	font-family: 'Cinzel Decorative', 'Noto Sans', 'Noto Sans Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoKufi*/
+.theme_month_20008.prayertable_font_arabic_kufi #prayertable_month_header, 
+.theme_month_20008.prayertable_font_arabic_kufi #timetable_header, 
+.theme_month_20008.prayertable_font_arabic_kufi #prayertable_month_footer{
+	font-family: 'Cinzel Decorative', 'Noto Sans', 'Noto Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoNashk*/
+.theme_month_20008.prayertable_font_arabic_nashk #prayertable_month_header, 
+.theme_month_20008.prayertable_font_arabic_nashk #timetable_header, 
+.theme_month_20008.prayertable_font_arabic_nashk #prayertable_month_footer{
+	font-family: 'Cinzel Decorative', 'Noto Sans', 'Noto Naskh Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoNastaliq*/
+.theme_month_20008.prayertable_font_arabic_nastaliq #prayertable_month_header, 
+.theme_month_20008.prayertable_font_arabic_nastaliq #timetable_header, 
+.theme_month_20008.prayertable_font_arabic_nastaliq #prayertable_month_footer{
+	font-family: 'Cinzel Decorative', 'Noto Sans', 'Noto Nastaliq Urdu', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoSansUI*/
+.theme_month_20008.prayertable_font_arabic_ui #prayertable_month_header, 
+.theme_month_20008.prayertable_font_arabic_ui #timetable_header, 
+.theme_month_20008.prayertable_font_arabic_ui #prayertable_month_footer{
+	font-family: 'Cinzel Decorative', 'Noto Sans', 'Noto Naskh Arabic UI', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*DEFAULT FONT*/
+/*Arabic NotoSans, Arabic*/
+.theme_month_20008.prayertable_font_arabic_sans_kufi #timetable, 
+.theme_month_20008.prayertable_font_arabic_sans_kufi #timetable_footer{
+	font-family: 'Noto Sans', 'Noto Sans Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoKufi*/
+.theme_month_20008.prayertable_font_arabic_kufi #timetable, 
+.theme_month_20008.prayertable_font_arabic_kufi #timetable_footer{
+	font-family: 'Noto Sans', 'Noto Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoNashk*/
+.theme_month_20008.prayertable_font_arabic_nashk #timetable, 
+.theme_month_20008.prayertable_font_arabic_nashk #timetable_footer{
+	font-family: 'Noto Sans', 'Noto Naskh Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoNastaliq*/
+.theme_month_20008.prayertable_font_arabic_nastaliq #timetable, 
+.theme_month_20008.prayertable_font_arabic_nastaliq #timetable_footer{
+	font-family: 'Noto Sans', 'Noto Nastaliq Urdu', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoSansUI*/
+.theme_month_20008.prayertable_font_arabic_ui #timetable, 
+.theme_month_20008.prayertable_font_arabic_ui #timetable_footer{
+	font-family: 'Noto Sans', 'Noto Naskh Arabic UI', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+.theme_month_20008 {
+	background-color: #ffffff;
+	color: #000000;
+}
+.theme_month_20008 #prayertable_month_header{
+	background-color:#ffffff !important;
+	color:#ffd2e3 !important;
+}
+.theme_month_20008 #timetable_header{
+	background-color:#ffd2e3;
+}
+.theme_month_20008 #timetable .prayertable_month_header-row{
+	background-color:#ffd2e3;
+}
+
+.theme_month_20008 #timetable .prayertable_month_header-row .timetable_col_header {
+	text-transform: capitalize;
+}
+.theme_month_20008 #timetable{
+	background-color: #ffffff;
+}
+.theme_month_20008 #timetable .timetable_col {
+	background-color: #ffffff;
+}
+.theme_month_20008 .timetable_row.prayertable_month_highlight_row .timetable_col {
+	background-color: #000000 !important;
+	color: #ffffff !important;
+}
+.theme_month_20008 .timetable_row.prayertable_month_day_01-10-row .timetable_col {
+	background-color: #f2c2d3 !important;
+}
+.theme_month_20008 .timetable_row.prayertable_month_day_11-20-row .timetable_col {
+	background-color: #ffffff !important;
+}
+.theme_month_20008 .timetable_row.prayertable_month_day_21-30-row .timetable_col {
+	background-color: #f2c2d3 !important;
+}
+.theme_month_20008 #timetable .prayertable_month_notes {
+	background-color: white !important;
+}
+.theme_month_20008 #timetable .timetable_col.prayertable_fast_start {
+	background-color: #ffd2e3 !important;
+	color:#000000 !important;
+}
+.theme_month_20008 #timetable .timetable_col.prayertable_fast_end {
+	background-color: #ffd2e3 !important;
+	color:#000000 !important;
+}
+.theme_month_20008 #timetable_footer{
+	background-color:#ffd2e3;
+}
+
+.theme_month_20008 #prayertable_month_footer{
+	background-color:#ffffff !important;
+}
+
+
+/*THEME 9*/
+/*DISPLAY FONT*/
+/*Arabic NotoSans, Arabic*/
+.theme_month_20009.prayertable_font_arabic_sans_kufi #prayertable_month_header, 
+.theme_month_20009.prayertable_font_arabic_sans_kufi #timetable_header, 
+.theme_month_20009.prayertable_font_arabic_sans_kufi #prayertable_month_footer{
+	font-family: 'Noto Sans', 'Noto Sans Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoKufi*/
+.theme_month_20009.prayertable_font_arabic_kufi #prayertable_month_header, 
+.theme_month_20009.prayertable_font_arabic_kufi #timetable_header, 
+.theme_month_20009.prayertable_font_arabic_kufi #prayertable_month_footer{
+	font-family: 'Noto Sans', 'Noto Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoNashk*/
+.theme_month_20009.prayertable_font_arabic_nashk #prayertable_month_header, 
+.theme_month_20009.prayertable_font_arabic_nashk #timetable_header, 
+.theme_month_20009.prayertable_font_arabic_nashk #prayertable_month_footer{
+	font-family: 'Noto Sans', 'Noto Naskh Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoNastaliq*/
+.theme_month_20009.prayertable_font_arabic_nastaliq #prayertable_month_header, 
+.theme_month_20009.prayertable_font_arabic_nastaliq #timetable_header, 
+.theme_month_20009.prayertable_font_arabic_nastaliq #prayertable_month_footer{
+	font-family: 'Noto Sans', 'Noto Nastaliq Urdu', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoSansUI*/
+.theme_month_20009.prayertable_font_arabic_ui #prayertable_month_header, 
+.theme_month_20009.prayertable_font_arabic_ui #timetable_header, 
+.theme_month_20009.prayertable_font_arabic_ui #prayertable_month_footer{
+	font-family: 'Noto Sans', 'Noto Naskh Arabic UI', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*DEFAULT FONT*/
+/*Arabic NotoSans, Arabic*/
+.theme_month_20009.prayertable_font_arabic_sans_kufi #timetable, 
+.theme_month_20009.prayertable_font_arabic_sans_kufi #timetable_footer{
+	font-family: 'Noto Sans', 'Noto Sans Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoKufi*/
+.theme_month_20009.prayertable_font_arabic_kufi #timetable, 
+.theme_month_20009.prayertable_font_arabic_kufi #timetable_footer{
+	font-family: 'Noto Sans', 'Noto Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoNashk*/
+.theme_month_20009.prayertable_font_arabic_nashk #timetable, 
+.theme_month_20009.prayertable_font_arabic_nashk #timetable_footer{
+	font-family: 'Noto Sans', 'Noto Naskh Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoNastaliq*/
+.theme_month_20009.prayertable_font_arabic_nastaliq #timetable, 
+.theme_month_20009.prayertable_font_arabic_nastaliq #timetable_footer{
+	font-family: 'Noto Sans', 'Noto Nastaliq Urdu', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoSansUI*/
+.theme_month_20009.prayertable_font_arabic_ui #timetable, 
+.theme_month_20009.prayertable_font_arabic_ui #timetable_footer{
+	font-family: 'Noto Sans', 'Noto Naskh Arabic UI', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+.theme_month_20009 {
+	background-color: white;
+	color: #404040;
+}
+.theme_month_20009 #timetable {
+	border : 0px !important;
+}
+.theme_month_20009 #timetable .prayertable_month_header-row .timetable_col_header {
+	background-color: #1da1f2;
+	color : white !important;
+}
+.theme_month_20009 .timetable_row.prayertable_month_highlight_row .timetable_col {
+	background-color: #e6ecf0;
+}
+.theme_month_20009 .timetable_row.prayertable_month_day_01-10-row .timetable_col {
+	background-color: #e6ecf0;
+}
+.theme_month_20009 .timetable_row.prayertable_month_day_11-20-row .timetable_col {
+	background-color: #FFF;
+}
+.theme_month_20009 .timetable_row.prayertable_month_day_21-30-row .timetable_col {
+	background-color: #e6ecf0;
+}
+.theme_month_20009 #timetable .prayertable_month_notes {
+	background-color: white !important;
+}
+.theme_month_20009 #timetable .timetable_col.prayertable_fast_start {
+	background-color: #006dbf !important;
+	color: white;
+}
+.theme_month_20009 #timetable .timetable_col.prayertable_fast_end {
+	background-color: #006dbf !important;
+	color: white;
+}
+.theme_month_20009 #timetable_footer {
+	background-color: #1da1f2;
+	color : white;
+}
+
+/*THEME 10*/
+/*DISPLAY FONT*/
+/*Arabic NotoSans, Arabic*/
+.theme_month_20010.prayertable_font_arabic_sans_kufi #prayertable_month_header, 
+.theme_month_20010.prayertable_font_arabic_sans_kufi #timetable_header, 
+.theme_month_20010.prayertable_font_arabic_sans_kufi #prayertable_month_footer{
+	font-family: 'Exo', 'Noto Sans', 'Noto Sans Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoKufi*/
+.theme_month_20010.prayertable_font_arabic_kufi #prayertable_month_header, 
+.theme_month_20010.prayertable_font_arabic_kufi #timetable_header, 
+.theme_month_20010.prayertable_font_arabic_kufi #prayertable_month_footer{
+	font-family: 'Exo', 'Noto Sans', 'Noto Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoNashk*/
+.theme_month_20010.prayertable_font_arabic_nashk #prayertable_month_header, 
+.theme_month_20010.prayertable_font_arabic_nashk #timetable_header, 
+.theme_month_20010.prayertable_font_arabic_nashk #prayertable_month_footer{
+	font-family: 'Exo', 'Noto Sans', 'Noto Naskh Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoNastaliq*/
+.theme_month_20010.prayertable_font_arabic_nastaliq #prayertable_month_header, 
+.theme_month_20010.prayertable_font_arabic_nastaliq #timetable_header, 
+.theme_month_20010.prayertable_font_arabic_nastaliq #prayertable_month_footer{
+	font-family: 'Exo', 'Noto Sans', 'Noto Nastaliq Urdu', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoSansUI*/
+.theme_month_20010.prayertable_font_arabic_ui #prayertable_month_header, 
+.theme_month_20010.prayertable_font_arabic_ui #timetable_header, 
+.theme_month_20010.prayertable_font_arabic_ui #prayertable_month_footer{
+	font-family: 'Exo', 'Noto Sans', 'Noto Naskh Arabic UI', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*DEFAULT FONT*/
+/*Arabic NotoSans, Arabic*/
+.theme_month_20010.prayertable_font_arabic_sans_kufi #timetable, 
+.theme_month_20010.prayertable_font_arabic_sans_kufi #timetable_footer{
+	font-family: 'Exo', 'Noto Sans', 'Noto Sans Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoKufi*/
+.theme_month_20010.prayertable_font_arabic_kufi #timetable, 
+.theme_month_20010.prayertable_font_arabic_kufi #timetable_footer{
+	font-family: 'Exo', 'Noto Sans', 'Noto Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoNashk*/
+.theme_month_20010.prayertable_font_arabic_nashk #timetable, 
+.theme_month_20010.prayertable_font_arabic_nashk #timetable_footer{
+	font-family: 'Exo', 'Noto Sans', 'Noto Naskh Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoNastaliq*/
+.theme_month_20010.prayertable_font_arabic_nastaliq #timetable, 
+.theme_month_20010.prayertable_font_arabic_nastaliq #timetable_footer{
+	font-family: 'Exo', 'Noto Sans', 'Noto Nastaliq Urdu', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoSansUI*/
+.theme_month_20010.prayertable_font_arabic_ui #timetable, 
+.theme_month_20010.prayertable_font_arabic_ui #timetable_footer{
+	font-family: 'Exo', 'Noto Sans', 'Noto Naskh Arabic UI', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+.theme_month_20010 {
+	background-color: white
+}
+.theme_month_20010 #prayertable_month_header {
+	color: #012d74;
+}
+.theme_month_20010 #timetable_header {
+	color: #012d74;
+}
+.theme_month_20010 #timetable {
+	border : 0px !important;
+	color: #484848;
+	background-color: #ededed;
+}
+.theme_month_20010 #timetable .prayertable_month_header-row .timetable_col_header {
+	background-color: #10498F;
+	color : white !important;
+}
+.theme_month_20010 .timetable_row.prayertable_month_highlight_row .timetable_col {
+	background-color: #7194bd;
+	color : white;
+}
+.theme_month_20010 .timetable_row.prayertable_month_day_01-10-row .timetable_col {
+	background-color: #ededed;
+}
+.theme_month_20010 .timetable_row.prayertable_month_day_11-20-row .timetable_col {
+	background-color: #FFF;
+}
+.theme_month_20010 .timetable_row.prayertable_month_day_21-30-row .timetable_col {
+	background-color: #ededed;
+}
+.theme_month_20010 #timetable .prayertable_month_notes {
+	background-color: white !important;
+}
+.theme_month_20010 #timetable .timetable_col.prayertable_fast_start {
+	background-color: #ff7800 !important;
+	color: white;
+}
+.theme_month_20010 #timetable .timetable_col.prayertable_fast_end {
+	background-color: #ff7800 !important;
+	color: white;
+}
+.theme_month_20010 #timetable_footer {
+	background-color: #484848;
+	color : white;
+}
+.theme_month_20010 #prayertable_month_footer {
+	color: #012d74;
+}
+
+/*THEME 11*/
+/*DISPLAY FONT*/
+/*Arabic NotoSans, Arabic*/
+.theme_month_20011.prayertable_font_arabic_sans_kufi #prayertable_month_header, 
+.theme_month_20011.prayertable_font_arabic_sans_kufi #timetable_header, 
+.theme_month_20011.prayertable_font_arabic_sans_kufi #prayertable_month_footer{
+	font-family: 'Merriweather', 'Noto Sans', 'Noto Sans Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoKufi*/
+.theme_month_20011.prayertable_font_arabic_kufi #prayertable_month_header, 
+.theme_month_20011.prayertable_font_arabic_kufi #timetable_header, 
+.theme_month_20011.prayertable_font_arabic_kufi #prayertable_month_footer{
+	font-family: 'Merriweather', 'Noto Sans', 'Noto Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoNashk*/
+.theme_month_20011.prayertable_font_arabic_nashk #prayertable_month_header, 
+.theme_month_20011.prayertable_font_arabic_nashk #timetable_header, 
+.theme_month_20011.prayertable_font_arabic_nashk #prayertable_month_footer{
+	font-family: 'Merriweather', 'Noto Sans', 'Noto Naskh Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoNastaliq*/
+.theme_month_20011.prayertable_font_arabic_nastaliq #prayertable_month_header, 
+.theme_month_20011.prayertable_font_arabic_nastaliq #timetable_header, 
+.theme_month_20011.prayertable_font_arabic_nastaliq #prayertable_month_footer{
+	font-family: 'Merriweather', 'Noto Sans', 'Noto Nastaliq Urdu', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoSansUI*/
+.theme_month_20011.prayertable_font_arabic_ui #prayertable_month_header, 
+.theme_month_20011.prayertable_font_arabic_ui #timetable_header, 
+.theme_month_20011.prayertable_font_arabic_ui #prayertable_month_footer{
+	font-family: 'Merriweather', 'Noto Sans', 'Noto Naskh Arabic UI', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*DEFAULT FONT*/
+/*Arabic NotoSans, Arabic*/
+.theme_month_20011.prayertable_font_arabic_sans_kufi #timetable, 
+.theme_month_20011.prayertable_font_arabic_sans_kufi #timetable_footer{
+	font-family: 'Merriweather', 'Noto Sans', 'Noto Sans Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoKufi*/
+.theme_month_20011.prayertable_font_arabic_kufi #timetable, 
+.theme_month_20011.prayertable_font_arabic_kufi #timetable_footer{
+	font-family: 'Merriweather', 'Noto Sans', 'Noto Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoNashk*/
+.theme_month_20011.prayertable_font_arabic_nashk #timetable, 
+.theme_month_20011.prayertable_font_arabic_nashk #timetable_footer{
+	font-family: 'Merriweather', 'Noto Sans', 'Noto Naskh Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoNastaliq*/
+.theme_month_20011.prayertable_font_arabic_nastaliq #timetable, 
+.theme_month_20011.prayertable_font_arabic_nastaliq #timetable_footer{
+	font-family: 'Merriweather', 'Noto Sans', 'Noto Nastaliq Urdu', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoSansUI*/
+.theme_month_20011.prayertable_font_arabic_ui #timetable, 
+.theme_month_20011.prayertable_font_arabic_ui #timetable_footer{
+	font-family: 'Merriweather', 'Noto Sans', 'Noto Naskh Arabic UI', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+.theme_month_20011 {
+	background-color: #ffffff;
+}
+.theme_month_20011 #prayertable_month_header {
+	color: #6b6b6b;
+}
+.theme_month_20011 #timetable_header {
+	color: #6b6b6b;
+	background-color:#f0f0f0;
+	border-radius:25px 25px 0px 0px;
+}
+.theme_month_20011 #timetable {
+	color: #323232;
+}
+.theme_month_20011 #timetable .timetable_col_header {
+	background-color: #f77c10;
+	color : #ffffff !important;
+	vertical-align: middle;
+}
+.theme_month_20011 .timetable_row:last-child{
+	background-color:#ffffff;
+}
+.theme_month_20011 #timetable .timetable_col {
+	vertical-align: middle;
+	background-color: #f0f0f0;
+}
+.theme_month_20011 #timetable .timetable_col:first-child{
+	color:#1a71d9;
+}
+.theme_month_20011 #timetable .prayertable_month_calendartype{
+	color:#cf34ce;
+}
+
+.theme_month_20011 .timetable_row.prayertable_month_highlight_row{
+	background-color:#f0f0f0;
+}
+.theme_month_20011 .timetable_row.prayertable_month_highlight_row .timetable_col {
+	border-top: 0.5px solid #a6a6a6;
+	border-bottom: 0.5px solid #a6a6a6;
+	background-image: linear-gradient(to top,#d5d5d5 0%,#FAFAFA 100%);
+}
+.theme_month_20011 .timetable_row.prayertable_month_highlight_row .timetable_col:first-child {
+	border-top: 0.5px solid #a6a6a6;
+	border-bottom: 0.5px solid #a6a6a6;
+	background-image: linear-gradient(to top,#d5d5d5 0%,#FAFAFA 100%);
+}
+.theme_month_20011 .timetable_row.prayertable_month_highlight_row .timetable_col:last-child {
+	border-top: 0.5px solid #a6a6a6;
+	border-bottom: 0.5px solid #a6a6a6;
+	background-image: linear-gradient(to top,#d5d5d5 0%,#FAFAFA 100%);	
+}
+
+.theme_month_20011 .timetable_row.prayertable_month_day_01-10-row .timetable_col {
+	background-color: #d5d5d5;
+}
+.theme_month_20011 .timetable_row.prayertable_month_day_11-20-row .timetable_col {
+	background-color: #FAFAFA;
+}
+.theme_month_20011 .timetable_row.prayertable_month_day_21-30-row .timetable_col {
+	background-color: #d5d5d5;
+}
+.theme_month_20011 #timetable .prayertable_month_notes {
+	background-color: #ffffff !important;
+}
+.theme_month_20011 #timetable .timetable_col.prayertable_fast_start {
+	background-color: #d5d5d5 !important;
+}
+.theme_month_20011 #timetable .timetable_col.prayertable_fast_end {
+	background-color: #d5d5d5 !important;
+}
+.theme_month_20011 #timetable_footer {
+	color : #323232;
+}
+.theme_month_20011 #prayertable_month_footer {
+	color: #6b6b6b;
+}
+
+/*THEME 12*/
+/*DISPLAY FONT*/
+/*Arabic NotoSans, Arabic*/
+.theme_month_20012.prayertable_font_arabic_sans_kufi #prayertable_month_header, 
+.theme_month_20012.prayertable_font_arabic_sans_kufi #timetable_header, 
+.theme_month_20012.prayertable_font_arabic_sans_kufi #prayertable_month_footer{
+	font-family: 'Lato', 'Noto Sans', 'Noto Sans Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoKufi*/
+.theme_month_20012.prayertable_font_arabic_kufi #prayertable_month_header, 
+.theme_month_20012.prayertable_font_arabic_kufi #timetable_header, 
+.theme_month_20012.prayertable_font_arabic_kufi #prayertable_month_footer{
+	font-family: 'Lato', 'Noto Sans', 'Noto Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoNashk*/
+.theme_month_20012.prayertable_font_arabic_nashk #prayertable_month_header, 
+.theme_month_20012.prayertable_font_arabic_nashk #timetable_header, 
+.theme_month_20012.prayertable_font_arabic_nashk #prayertable_month_footer{
+	font-family: 'Lato', 'Noto Sans', 'Noto Naskh Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoNastaliq*/
+.theme_month_20012.prayertable_font_arabic_nastaliq #prayertable_month_header, 
+.theme_month_20012.prayertable_font_arabic_nastaliq #timetable_header, 
+.theme_month_20012.prayertable_font_arabic_nastaliq #prayertable_month_footer{
+	font-family: 'Lato', 'Noto Sans', 'Noto Nastaliq Urdu', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoSansUI*/
+.theme_month_20012.prayertable_font_arabic_ui #prayertable_month_header, 
+.theme_month_20012.prayertable_font_arabic_ui #timetable_header, 
+.theme_month_20012.prayertable_font_arabic_ui #prayertable_month_footer{
+	font-family: 'Lato', 'Noto Sans', 'Noto Naskh Arabic UI', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*DEFAULT FONT*/
+/*Arabic NotoSans, Arabic*/
+.theme_month_20012.prayertable_font_arabic_sans_kufi #timetable, 
+.theme_month_20012.prayertable_font_arabic_sans_kufi #timetable_footer{
+	font-family: 'Lato', 'Noto Sans', 'Noto Sans Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoKufi*/
+.theme_month_20012.prayertable_font_arabic_kufi #timetable, 
+.theme_month_20012.prayertable_font_arabic_kufi #timetable_footer{
+	font-family: 'Lato', 'Noto Sans', 'Noto Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoNashk*/
+.theme_month_20012.prayertable_font_arabic_nashk #timetable, 
+.theme_month_20012.prayertable_font_arabic_nashk #timetable_footer{
+	font-family: 'Lato', 'Noto Sans', 'Noto Naskh Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoNastaliq*/
+.theme_month_20012.prayertable_font_arabic_nastaliq #timetable, 
+.theme_month_20012.prayertable_font_arabic_nastaliq #timetable_footer{
+	font-family: 'Lato', 'Noto Sans', 'Noto Nastaliq Urdu', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoSansUI*/
+.theme_month_20012.prayertable_font_arabic_ui #timetable, 
+.theme_month_20012.prayertable_font_arabic_ui #timetable_footer{
+	font-family: 'Lato', 'Noto Sans', 'Noto Naskh Arabic UI', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+.theme_month_20012 {
+	background-color: white
+}
+.theme_month_20012 #prayertable_month_header {
+	color: #09589b;
+}
+.theme_month_20012 #timetable_header {
+	color: #09589b;
+}
+.theme_month_20012 #timetable {
+	border : 0px !important;
+	color: #666666;
+}
+.theme_month_20012 #timetable .prayertable_month_header-row .timetable_col_header {
+	background-color: white;
+	color : #09589b !important;
+	text-transform: uppercase;
+}
+.theme_month_20012 .timetable_row.prayertable_month_highlight_row .timetable_col {
+	background-color: #f37c2f;
+	color : white;
+}
+.theme_month_20012 .timetable_row.prayertable_month_day_01-10-row .timetable_col {
+	background-color: #ededed
+}
+.theme_month_20012 .timetable_row.prayertable_month_day_11-20-row .timetable_col {
+	background-color: #FFF
+}
+.theme_month_20012 .timetable_row.prayertable_month_day_21-30-row .timetable_col {
+	background-color: #ededed;
+}
+.theme_month_20012 #timetable .prayertable_month_notes {
+	background-color: white !important;
+}
+.theme_month_20012 #timetable .timetable_col.prayertable_fast_start {
+	background-color: #09589b !important;
+	color: white;
+}
+.theme_month_20012 #timetable .timetable_col.prayertable_fast_end {
+	background-color: #09589b !important;
+	color: white;
+}
+.theme_month_20012 #timetable_footer {
+	color : #09589b;
+}
+.theme_month_20012 #prayertable_month_footer {
+	color: #09589b;
+}
+
+/*THEME 13*/
+/*DISPLAY FONT*/
+/*Arabic NotoSans, Arabic*/
+.theme_month_20013.prayertable_font_arabic_sans_kufi #prayertable_month_header, 
+.theme_month_20013.prayertable_font_arabic_sans_kufi #timetable_header, 
+.theme_month_20013.prayertable_font_arabic_sans_kufi #prayertable_month_footer{
+	font-family: 'Merriweather', 'Noto Sans', 'Noto Sans Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoKufi*/
+.theme_month_20013.prayertable_font_arabic_kufi #prayertable_month_header, 
+.theme_month_20013.prayertable_font_arabic_kufi #timetable_header, 
+.theme_month_20013.prayertable_font_arabic_kufi #prayertable_month_footer{
+	font-family: 'Merriweather', 'Noto Sans', 'Noto Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoNashk*/
+.theme_month_20013.prayertable_font_arabic_nashk #prayertable_month_header, 
+.theme_month_20013.prayertable_font_arabic_nashk #timetable_header, 
+.theme_month_20013.prayertable_font_arabic_nashk #prayertable_month_footer{
+	font-family: 'Merriweather', 'Noto Sans', 'Noto Naskh Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoNastaliq*/
+.theme_month_20013.prayertable_font_arabic_nastaliq #prayertable_month_header, 
+.theme_month_20013.prayertable_font_arabic_nastaliq #timetable_header, 
+.theme_month_20013.prayertable_font_arabic_nastaliq #prayertable_month_footer{
+	font-family: 'Merriweather', 'Noto Sans', 'Noto Nastaliq Urdu', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoSansUI*/
+.theme_month_20013.prayertable_font_arabic_ui #prayertable_month_header, 
+.theme_month_20013.prayertable_font_arabic_ui #timetable_header, 
+.theme_month_20013.prayertable_font_arabic_ui #prayertable_month_footer{
+	font-family: 'Merriweather', 'Noto Sans', 'Noto Naskh Arabic UI', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*DEFAULT FONT*/
+/*Arabic NotoSans, Arabic*/
+.theme_month_20013.prayertable_font_arabic_sans_kufi #timetable, 
+.theme_month_20013.prayertable_font_arabic_sans_kufi #timetable_footer{
+	font-family: 'Source Sans Pro', 'Noto Sans', 'Noto Sans Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoKufi*/
+.theme_month_20013.prayertable_font_arabic_kufi #timetable, 
+.theme_month_20013.prayertable_font_arabic_kufi #timetable_footer{
+	font-family: 'Source Sans Pro', 'Noto Sans', 'Noto Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoNashk*/
+.theme_month_20013.prayertable_font_arabic_nashk #timetable, 
+.theme_month_20013.prayertable_font_arabic_nashk #timetable_footer{
+	font-family: 'Source Sans Pro', 'Noto Sans', 'Noto Naskh Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoNastaliq*/
+.theme_month_20013.prayertable_font_arabic_nastaliq #timetable, 
+.theme_month_20013.prayertable_font_arabic_nastaliq #timetable_footer{
+	font-family: 'Source Sans Pro', 'Noto Sans', 'Noto Nastaliq Urdu', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoSansUI*/
+.theme_month_20013.prayertable_font_arabic_ui #timetable, 
+.theme_month_20013.prayertable_font_arabic_ui #timetable_footer{
+	font-family: 'Source Sans Pro', 'Noto Sans', 'Noto Naskh Arabic UI', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+.theme_month_20013 {
+	background-image: linear-gradient(to bottom,#ebebed 0%,#fff 100%);
+}
+.theme_month_20013 #prayertable_month_header {
+	color: #293340;
+}
+.theme_month_20013 #timetable_header {
+	color: #293340;
+}
+.theme_month_20013 #timetable {
+	border : 0px !important;
+	color: #293340;
+}
+.theme_month_20013 #timetable .prayertable_month_header-row .timetable_col_header {
+	color : #293340 !important;
+	text-transform: uppercase;
+}
+.theme_month_20013 .timetable_row.prayertable_month_highlight_row .timetable_col {
+	background-color: #27313f;
+	color : white;
+}
+.theme_month_20013 .timetable_row.prayertable_month_day_01-10-row .timetable_col {
+	color : #293340;
+}
+.theme_month_20013 .timetable_row.prayertable_month_day_11-20-row .timetable_col {
+	background-color: #FFF;
+}
+.theme_month_20013 .timetable_row.prayertable_month_day_21-30-row .timetable_col {
+	color : #293340;
+}
+.theme_month_20013 #timetable .prayertable_month_notes {
+	background-color: white !important;
+}
+.theme_month_20013 #timetable .timetable_col.prayertable_fast_start {
+	background-color: #cea87a !important;
+	border-left: 1px solid #344051;
+	border-right: 1px solid #344051;
+	color: white;
+}
+.theme_month_20013 #timetable .timetable_col.prayertable_fast_end {
+	background-color: #cea87a !important;
+	border-left: 1px solid #344051;
+	border-right: 1px solid #344051;
+	color: white;
+}
+.theme_month_20013 #timetable_footer {
+	color : white;
+	background-color: #344051
+}
+.theme_month_20013 #prayertable_month_footer {
+	color: #293340;
+}
+
+/*THEME 14*/
+/*DISPLAY FONT*/
+/*Arabic NotoSans, Arabic*/
+.theme_month_20014.prayertable_font_arabic_sans_kufi #prayertable_month_header, 
+.theme_month_20014.prayertable_font_arabic_sans_kufi #timetable_header, 
+.theme_month_20014.prayertable_font_arabic_sans_kufi #prayertable_month_footer{
+	font-family: 'Montserrat', 'Noto Sans', 'Noto Sans Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoKufi*/
+.theme_month_20014.prayertable_font_arabic_kufi #prayertable_month_header, 
+.theme_month_20014.prayertable_font_arabic_kufi #timetable_header, 
+.theme_month_20014.prayertable_font_arabic_kufi #prayertable_month_footer{
+	font-family: 'Montserrat', 'Noto Sans', 'Noto Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoNashk*/
+.theme_month_20014.prayertable_font_arabic_nashk #prayertable_month_header, 
+.theme_month_20014.prayertable_font_arabic_nashk #timetable_header, 
+.theme_month_20014.prayertable_font_arabic_nashk #prayertable_month_footer{
+	font-family: 'Montserrat', 'Noto Sans', 'Noto Naskh Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoNastaliq*/
+.theme_month_20014.prayertable_font_arabic_nastaliq #prayertable_month_header, 
+.theme_month_20014.prayertable_font_arabic_nastaliq #timetable_header, 
+.theme_month_20014.prayertable_font_arabic_nastaliq #prayertable_month_footer{
+	font-family: 'Montserrat', 'Noto Sans', 'Noto Nastaliq Urdu', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoSansUI*/
+.theme_month_20014.prayertable_font_arabic_ui #prayertable_month_header, 
+.theme_month_20014.prayertable_font_arabic_ui #timetable_header, 
+.theme_month_20014.prayertable_font_arabic_ui #prayertable_month_footer{
+	font-family: 'Montserrat', 'Noto Sans', 'Noto Naskh Arabic UI', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*DEFAULT FONT*/
+/*Arabic NotoSans, Arabic*/
+.theme_month_20014.prayertable_font_arabic_sans_kufi #timetable, 
+.theme_month_20014.prayertable_font_arabic_sans_kufi #timetable_footer{
+	font-family: 'Merriweather', 'Noto Sans', 'Noto Sans Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoKufi*/
+.theme_month_20014.prayertable_font_arabic_kufi #timetable, 
+.theme_month_20014.prayertable_font_arabic_kufi #timetable_footer{
+	font-family: 'Merriweather', 'Noto Sans', 'Noto Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoNashk*/
+.theme_month_20014.prayertable_font_arabic_nashk #timetable, 
+.theme_month_20014.prayertable_font_arabic_nashk #timetable_footer{
+	font-family: 'Merriweather', 'Noto Sans', 'Noto Naskh Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoNastaliq*/
+.theme_month_20014.prayertable_font_arabic_nastaliq #timetable, 
+.theme_month_20014.prayertable_font_arabic_nastaliq #timetable_footer{
+	font-family: 'Merriweather', 'Noto Sans', 'Noto Nastaliq Urdu', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoSansUI*/
+.theme_month_20014.prayertable_font_arabic_ui #timetable, 
+.theme_month_20014.prayertable_font_arabic_ui #timetable_footer{
+	font-family: 'Merriweather', 'Noto Sans', 'Noto Naskh Arabic UI', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+.theme_month_20014 {
+	background-color: white
+}
+.theme_month_20014 #prayertable_month_header {
+	color: #363635;
+}
+.theme_month_20014 #timetable_header {
+	color: #363635;
+}
+.theme_month_20014 #timetable {border : 0px !important;
+	color: #363635;
+}
+.theme_month_20014 #timetable .prayertable_month_header-row .timetable_col_header {
+	background-color: #bf0909;
+	color : white !important;
+	text-transform: uppercase;
+}
+.theme_month_20014 .timetable_row.prayertable_month_highlight_row .timetable_col {
+	background-color: #363635;
+	color: white;
+}
+.theme_month_20014 .timetable_row.prayertable_month_day_01-10-row .timetable_col {
+	background-color: #ececec;
+}
+.theme_month_20014 .timetable_row.prayertable_month_day_11-20-row .timetable_col {
+	background-color: #FFF;
+}
+.theme_month_20014 .timetable_row.prayertable_month_day_21-30-row .timetable_col {
+	background-color: #ececec;
+}
+.theme_month_20014 #timetable .prayertable_month_notes {
+	background-color: white !important;
+}
+.theme_month_20014 #timetable .timetable_col.prayertable_fast_start {
+	background-color: #CFCFCF !important;
+	color: #363635;
+	border-left: 1px solid;
+	border-right: 1px solid;
+}
+.theme_month_20014 #timetable .timetable_col.prayertable_fast_end {
+	background-color: #CFCFCF !important;
+	color: #363635;
+	border-left: 1px solid;
+	border-right: 1px solid;
+}
+.theme_month_20014 #timetable_footer {
+	color : #444;
+	background-color: #CFCFCF;
+}
+.theme_month_20014 #prayertable_month_footer {
+	color: #363635;
+}
+
+/*THEME15*/
+/*DISPLAY FONT*/
+/*Arabic NotoSans, Arabic*/
+.theme_month_20015.prayertable_font_arabic_sans_kufi #prayertable_month_header, 
+.theme_month_20015.prayertable_font_arabic_sans_kufi #timetable_header, 
+.theme_month_20015.prayertable_font_arabic_sans_kufi #prayertable_month_footer{
+	font-family: 'Noto Sans', 'Noto Sans Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoKufi*/
+.theme_month_20015.prayertable_font_arabic_kufi #prayertable_month_header, 
+.theme_month_20015.prayertable_font_arabic_kufi #timetable_header, 
+.theme_month_20015.prayertable_font_arabic_kufi #prayertable_month_footer{
+	font-family: 'Noto Sans', 'Noto Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoNashk*/
+.theme_month_20015.prayertable_font_arabic_nashk #prayertable_month_header, 
+.theme_month_20015.prayertable_font_arabic_nashk #timetable_header, 
+.theme_month_20015.prayertable_font_arabic_nashk #prayertable_month_footer{
+	font-family: 'Noto Sans', 'Noto Naskh Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoNastaliq*/
+.theme_month_20015.prayertable_font_arabic_nastaliq #prayertable_month_header, 
+.theme_month_20015.prayertable_font_arabic_nastaliq #timetable_header, 
+.theme_month_20015.prayertable_font_arabic_nastaliq #prayertable_month_footer{
+	font-family: 'Noto Sans', 'Noto Nastaliq Urdu', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoSansUI*/
+.theme_month_20015.prayertable_font_arabic_ui #prayertable_month_header, 
+.theme_month_20015.prayertable_font_arabic_ui #timetable_header, 
+.theme_month_20015.prayertable_font_arabic_ui #prayertable_month_footer{
+	font-family: 'Noto Sans', 'Noto Naskh Arabic UI', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*DEFAULT FONT*/
+/*Arabic NotoSans, Arabic*/
+.theme_month_20015.prayertable_font_arabic_sans_kufi #timetable, 
+.theme_month_20015.prayertable_font_arabic_sans_kufi #timetable_footer{
+	font-family: 'Noto Sans', 'Noto Sans Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoKufi*/
+.theme_month_20015.prayertable_font_arabic_kufi #timetable, 
+.theme_month_20015.prayertable_font_arabic_kufi #timetable_footer{
+	font-family: 'Noto Sans', 'Noto Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoNashk*/
+.theme_month_20015.prayertable_font_arabic_nashk #timetable, 
+.theme_month_20015.prayertable_font_arabic_nashk #timetable_footer{
+	font-family: 'Noto Sans', 'Noto Naskh Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoNastaliq*/
+.theme_month_20015.prayertable_font_arabic_nastaliq #timetable, 
+.theme_month_20015.prayertable_font_arabic_nastaliq #timetable_footer{
+	font-family: 'Noto Sans', 'Noto Nastaliq Urdu', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoSansUI*/
+.theme_month_20015.prayertable_font_arabic_ui #timetable, 
+.theme_month_20015.prayertable_font_arabic_ui #timetable_footer{
+	font-family: 'Noto Sans', 'Noto Naskh Arabic UI', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+.theme_month_20015 {
+	background-color: white;
+	color: #404040;
+}
+.theme_month_20015 #timetable {
+	border : 0.5px solid #d2c196;
+}
+.theme_month_20015 #timetable .prayertable_month_header-row .timetable_col_header {
+	background-color: #d2c196 !important;
+	border-bottom: 1px solid #a49775;
+	border-top: 1px solid #a49775;
+}
+.theme_month_20015 .timetable_row:nth-child(odd) {
+	background-color: #fefef6;
+}
+.theme_month_20015 .timetable_row:nth-child(even) {
+	background-color: #FFF;
+}
+.theme_month_20015 #timetable .timetable_col_header {
+	border-bottom: 0.5px solid #d2c196;
+}
+.theme_month_20015 #timetable .timetable_col {
+	border-bottom: 0.5px solid #d2c196;
+}
+.theme_month_20015 .timetable_row.prayertable_month_highlight_row .timetable_col {
+	background-color: #d2b88f;
+}
+.theme_month_20015 .timetable_row.prayertable_month_day_01-10-row .timetable_col {
+	background-color: #d2b88f !important;
+}
+.theme_month_20015 .timetable_row.prayertable_month_day_11-20-row .timetable_col {
+	background-color: #FFF !important;
+}
+.theme_month_20015 .timetable_row.prayertable_month_day_21-30-row .timetable_col {
+	background-color: #d2b88f !important;
+}
+.theme_month_20015 #timetable .prayertable_month_notes {
+	background-color: white !important;
+}
+.theme_month_20015 #timetable .timetable_col.prayertable_fast_start {
+	background-color: #f4e7b8 !important;
+}
+.theme_month_20015 #timetable .timetable_col.prayertable_fast_end {
+	background-color: #f4e7b8 !important;
+}
+								 
+.theme_month_20015 #timetable_footer {
+	color : #404040;
+	background-color: #d2c196;
+	border: 1px solid #d2c196;
+}
+
+/*YEAR*/
+/*THEME 1*/
+/*DISPLAY FONT*/
+/*Arabic NotoSans, Arabic*/
+.theme_year_30001.prayertable_font_arabic_sans_kufi #prayertable_year_header_row, 
+.theme_year_30001.prayertable_font_arabic_sans_kufi #prayertable_year_timetable_header, 
+.theme_year_30001.prayertable_font_arabic_sans_kufi #prayertable_year_footer_row{
+	font-family: 'Noto Sans', 'Noto Sans Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoKufi*/
+.theme_year_30001.prayertable_font_arabic_kufi #prayertable_year_header_row, 
+.theme_year_30001.prayertable_font_arabic_kufi #prayertable_year_timetable_header, 
+.theme_year_30001.prayertable_font_arabic_kufi #prayertable_year_footer_row{
+	font-family: 'Noto Sans', 'Noto Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoNashk*/
+.theme_year_30001.prayertable_font_arabic_nashk #prayertable_year_header_row, 
+.theme_year_30001.prayertable_font_arabic_nashk #prayertable_year_timetable_header, 
+.theme_year_30001.prayertable_font_arabic_nashk #prayertable_year_footer_row{
+	font-family: 'Noto Sans', 'Noto Naskh Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoNastaliq*/
+.theme_year_30001.prayertable_font_arabic_nastaliq #prayertable_year_header_row, 
+.theme_year_30001.prayertable_font_arabic_nastaliq #prayertable_year_timetable_header, 
+.theme_year_30001.prayertable_font_arabic_nastaliq #prayertable_year_footer_row{
+	font-family: 'Noto Sans', 'Noto Nastaliq Urdu', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoSansUI*/
+.theme_year_30001.prayertable_font_arabic_ui #prayertable_year_header_row, 
+.theme_year_30001.prayertable_font_arabic_ui #prayertable_year_timetable_header, 
+.theme_year_30001.prayertable_font_arabic_ui #prayertable_year_footer_row{
+	font-family: 'Noto Sans', 'Noto Naskh Arabic UI', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*DEFAULT FONT*/
+/*Arabic NotoSans, Arabic*/
+.theme_year_30001.prayertable_font_arabic_sans_kufi #prayertable_year_timetable_footer{
+	font-family: 'Noto Sans', 'Noto Sans Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoKufi*/
+.theme_year_30001.prayertable_font_arabic_kufi #prayertable_year_timetable_footer{
+	font-family: 'Noto Sans', 'Noto Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoNashk*/
+.theme_year_30001.prayertable_font_arabic_nashk #prayertable_year_timetable_footer{
+	font-family: 'Noto Sans', 'Noto Naskh Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoNastaliq*/
+.theme_year_30001.prayertable_font_arabic_nastaliq #prayertable_year_timetable_footer{
+	font-family: 'Noto Sans', 'Noto Nastaliq Urdu', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+/*Arabic NotoSansUI*/
+.theme_year_30001.prayertable_font_arabic_ui #prayertable_year_timetable_footer{
+	font-family: 'Noto Sans', 'Noto Naskh Arabic UI', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+.theme_year_30001{
+	background-color: white
+}
+/*Header*/
+.theme_year_30001 #prayertable_year_header_row {
+	color: #404040;
+}
+/*Header timetable info*/
+.theme_year_30001 #prayertable_year_header_title4 {
+	color: #404040;
+}
+.theme_year_30001 #prayertable_year_header_title5 {
+	color: #404040;
+}
+/*Footer*/
+.theme_year_30001 #prayertable_year_footer_row {
+	color: #404040;
+}
