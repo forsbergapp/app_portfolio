@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='UTF-8'>
+	<title></title>
+	<script type='text/javascript' src='/js/main.js'></script>
+    <link rel='stylesheet' type='text/css' href='/css/main.css' />
+	<meta name="HandheldFriendly" content="true"/>
+    <link rel='shortcut icon' href='/images/favicon.ico' type='image/x-icon'>
+    <link rel='icon' type='image/png' href='/images/favicon-16x16.png' sizes='16x16'>
+    <link rel='icon' type='image/png' href='/images/favicon-32x32.png' sizes='32x32'>
+	<link rel='icon' type='image/png' href='/images/favicon-48x48.png' sizes='48x48'>
+    <link rel='icon' type='image/png' href='/images/favicon-96x96.png' sizes='96x96'>
+	
+</head>
+<body class='theme_sun' onload='init();'>
+	<div id="toggle_wrapper">
+		<input type="checkbox" id="toggle_checkbox" onclick='toggle_switch()'>
+		<label for="toggle_checkbox" class="toggle">
+		  <span class="toggle-button">
+			<span class="crater crater-1"></span>
+			<span class="crater crater-2"></span>
+			<span class="crater crater-3"></span>   
+			<span class="crater crater-4"></span>
+			<span class="crater crater-5"></span>
+			<span class="crater crater-6"></span>
+			<span class="crater crater-7"></span>
+		  </span>
+		  <span class="star star-1"></span>
+		  <span class="star star-2"></span>
+		  <span class="star star-3"></span>
+		  <span class="star star-4"></span>
+		  <span class="star star-5"></span>
+		  <span class="star star-6"></span>
+		  <span class="star star-7"></span>
+		  <span class="star star-8"></span>
+		</label>
+	</div>
+	<span class="moon">
+		<span class="crater crater-1"></span>
+		<span class="crater crater-2"></span>
+		<span class="crater crater-3"></span>   
+		<span class="crater crater-4"></span>
+		<span class="crater crater-5"></span>
+		<span class="crater crater-6"></span>
+		<span class="crater crater-7"></span>
+	</span>
+	<div class="sunholder">
+		<div class="sun"></div>
+		<div class="raybase ray1"><div class="ray"></div></div>
+		<div class="raybase ray2"><div class="ray"></div></div>
+		<div class="raybase ray3"><div class="ray"></div></div>
+		<div class="raybase ray4"><div class="ray"></div></div>
+		<div class="raybase ray5"><div class="ray"></div></div>
+		<div class="raybase ray6"><div class="ray"></div></div>
+		<div class="raybase ray7"><div class="ray"></div></div>
+		<div class="raybase ray8"><div class="ray"></div></div>
+	</div>
+	<div id="background-wrap">
+		<div class="x1">
+			<div class="cloud">
+				<img id="oci" src="/images/badge_OCI.jpg" alt="">
+			</div>
+		</div>
+	
+		<div class="x2">
+			<div class="cloud"></div>
+		</div>
+	
+		<div class="x3">
+			<div class="cloud">
+				<img id="ocp" src="/images/badge_OCP_Forms.png" alt="">
+			</div>
+		</div>
+	
+		<div class="x4">
+			<div class="cloud">
+				<img id="oca" src="/images/badge_OCA_PL_SQL_Developer.png" alt="">
+			</div>
+		</div>
+	
+		<div class="x5">
+			<div class="cloud"></div>
+		</div>
+	</div>
+	<div id='dialogues'>
+		<div id='dialogue_start' class='dialogue'>
+			<div id='dialogue_start_content' class='dialogue_content'>
+					<div id='about_logo'></div>
+					<div id='start_message'></div>
+					<div class='app_link' onclick='open_app(1);'>
+						
+						<div id='app_timetables_logo'></div>
+						<div id='app_timetables_title'>Time tables</div>
+					</div>
+					<div class='app_link' onclick='open_app(2);'>
+						<div id='app_property_management_logo'></div>
+						<div id='app_property_management_title'>Property Management</div>
+					</div>
+					<div id='contact'>
+						Contact <a id="app_email" href=""></a>
+					</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
