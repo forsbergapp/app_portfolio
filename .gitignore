@@ -1,0 +1,8 @@
+.env
+.vscode/
+dev/
+production_.env/
+node_modules/
+service/db/config/oracle_instantclient/
+ssl/
+

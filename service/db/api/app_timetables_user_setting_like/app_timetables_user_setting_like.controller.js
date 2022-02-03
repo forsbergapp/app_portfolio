@@ -1,0 +1,40 @@
+const { likeUserSetting,
+	    unlikeUserSetting} = require ("./app_timetables_user_setting_like.service");
+
+module.exports = {
+
+likeUserSetting: (req, res) => {
+	const id   = req.params.id;
+	const id_like   = req.body.user_setting_id;
+	likeUserSetting(id,id_like, (err,results) => {
+		if (err) {
+			console.log(err);
+			return res.status(500).send(
+				err
+			);
+		}
+		return res.status(200).json({
+			count: results.changedRows,
+			success: 1,
+			items: Array(results)
+		});
+	});
+},
+unlikeUserSetting: (req, res) => {
+	const id   = req.params.id;
+	const id_unlike   = req.body.user_setting_id;
+	unlikeUserSetting(id,id_unlike, (err,results) => {
+		if (err) {
+			console.log(err);
+			return res.status(500).send(
+				err
+			);
+		}
+		return res.status(200).json({
+			count: results.changedRows,
+			success: 1,
+			items: Array(results)
+		});
+	});
+}
+}
