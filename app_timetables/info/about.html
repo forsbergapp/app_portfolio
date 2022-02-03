@@ -1,0 +1,137 @@
+<div class='info_content'>
+    This web app provides advanced timetables for traditional muslim prayers.
+    It works on a mobile or in any supported browser and can be added to the mobile home screen.<br>
+    All timetable calculations are in real time.
+    <br>
+    <br>
+    Features:<br>
+    <br>
+    - Use Facebook or Google account to login or create a local user.<br>
+    - Local users use email verification to create account.<br>
+    <br>
+    - all regional settings supported by supported browsers<br>
+    - support for second language<br>
+    - arabic support of different arabic scripts<br>
+    - support of different Hijri calendar types<br>
+    - support of different number systems<br>
+    - right to left layout<br>
+    - timetables in Gregorian or Hijri calendar<br>
+    - show column titles with transliterad text or translated text in any order<br>
+    - add unique design with images, text and different themes to share with others<br>
+    - different ways to highlight rows, Friday, Saturday, Sunday or groups of 10 days<br>
+    - add temporary notes to month report before printing<br>
+    - print or share selected report in HTML or PDF using PDF server generation with
+    support for all regional settings<br>
+    <br>
+    - automatic GPS lookup where you are or selected on map<br>
+    - automatic timezone lookup where you are or selected on map<br>
+    - map with Qibbla<br>
+    <br>
+    - all known methods configurable to calculate times<br>
+    - different asr method
+    - high latitude adjustment
+    - support of Hijri adjustments<br>
+    - fasting information for Ramadan with flexible start and end<br>
+    - optional imsak, sunset and midnight prayer times<br>
+    - iqamat configurable times<br>
+    <br>
+    - multiple places support shown on the day report where each place can show different regional settings<br>
+    <br>
+    - QR code for profiles or user settings that can be shared<br>
+    - like and follow others<br>
+    - view count information on profies and on user settings<br>
+    - search other users<br>
+    - top users<br>
+    - information of follow and like statistics for current logged in user<br>
+    - view other users timetables and like them to keep track of liked timetables<br>
+    <br>
+    <br>
+    Technology used<br>
+    <br>
+    Pure Javascript developed in client and in server.<br>
+    Implemented with secure database access using credentials and token through REST API.<br>
+    Progressive webapp specification followed and optimized for maximum performance with realtime<br>
+    timetable calculations including browsing of periods.<br>
+    Javascript HTML DOM dynamic web interactive content creating reports<br>
+    with dynamic amount of columns and rows in any regional settings <br>
+    using CSS and Javascript according to extensive user settings.<br>
+    <br>
+    App hosted on Oracle Cloud with following servers:<br>
+    <br>
+    server 1 - Oracle Linux 7.9<br>
+    - Nodejs v 17.3.0 using Express framework, managed by pm2<br>
+    - maintaining multiple subdomains and applications<br>
+    - microservices installed:<br>
+    - REST API with json webtoken middleware security accesing<br>
+      Oracle and MySQL databases<br>
+    - report server HTML or PDF output<br>
+    - mail<br>
+    - geolocation<br>
+    - world cities database<br>
+    <br>
+    server 2 - Oracle linux 7.9<br>
+    - Mysql v 8.0.27 database<br>
+    - Oracle SQL Developer Data Modeler designed database<br>
+    <br>
+    Oracle Cloud - Oracle Autonomous JSON Database 21C <br>
+
+    <br>
+    Our providers<br>
+    <br>
+    <div id='about_table'>
+        <div class='about_row'>
+            <div>Oracle Cloud</div>
+            <div>www.oracle.com/cloud</div>
+        </div>
+        <div class='about_row'>
+            <div>Oracle Instant Client</div>
+            <div>www.oracle.com/database/technologies/instant-client.html</div>
+        </div>
+
+        <div class='about_row'>
+            <div>Node.js</div>
+            <div>www.nodejs.org</div>
+        </div>
+        <div class='about_row'>
+            <div>Express</div>
+            <div>www.expressjs.com</div>
+        </div>
+        <div class='about_row'>
+            <div>MySQL</div>
+            <div>www.mysql.com</div>
+        </div>
+        <div class='about_row'>
+            <div>Mapbox GL</div>
+            <div>www.mapbox.com</div>
+        </div>
+        <div class='about_row'>
+            <div>Geoplugin Geolocation</div>
+            <div>www.geoplugin.com</div>
+        </div>
+        <div class='about_row'>
+            <div>Simplemap, world city database</div>
+            <div>www.simplemaps.com</div>
+        </div>
+        <div class='about_row'>
+            <div>Pray Times</div>
+            <div>www.praytimes.org</div>
+        </div>
+        <div class='about_row'>
+            <div>EasyQRCodeJS</div>
+            <div>www.github.com/ushelp/EasyQRCodeJS</div>
+        </div>
+        <div class='about_row'>
+            <div>Google Fonts</div>
+            <div>fonts.google.com</div>
+        </div>
+        <div class='about_row'>
+            <div>Google Sign-In</div>
+            <div>developers.google.com/identity/sign-in/web/sign-in</div>
+        </div>
+        <div class='about_row'>
+            <div>Facebook Login</div>
+            <div>developers.facebook.com/docs/facebook-login/web</div>
+        </div>
+    </div>
+</div>
+<button  class='info_close toolbar_button' onclick="document.getElementById('window_info').style.display = 'none';window.location='#info_empty';document.getElementById('window_preview_toolbar_qr').style.display = 'block';"><i class="fas fa-check-circle"></i></button>
