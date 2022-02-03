@@ -1,0 +1,431 @@
+App portfolio
+
+A platform to build your app portfolio.
+With most necessary technology configured to get started.
+Includes 
+	Startpage to display your app portfolio.
+	Oracle SQL Developer Data model designed data model.
+	Scripts to create in mySQL or Oracle Database.
+	Global parameters controlled from Node server.
+
+	Timetables app
+	Progressive web app also called single page web app.
+	Worlds most advanced traditional prayer timetable calculation.
+	All known regional settings, all languagues and all countries supported.
+	Navigate in calendar per day, month or year in Gregorian or Hijri
+	calendar type in realtime.
+	REST API with authentication to mySQL or Oracle Database.
+	Facebook Login and Google sign in or create local user with user verification.
+	App can be used without registering but then settings can't be saved.
+	Map integration with automatic timezone and GPS lookup.
+	PDF server generation
+	QR code dynamic generation.
+	Social network functionality with profile, like, follow, view other user settings and statistics.
+	Microservice architecture with monitoring of each microservice activity.
+	Centralized data model error handling of database errors, constraints errors and 
+	application errors and showed in users language.
+	Calendars can be displayed with different themes using CSS3.
+	User interface and calendars can be displayed in any language with help of Google Noto Fonts
+	and translation of user interface is fetched from translation objects data model.
+	
+	PDF and HTML generated calendars are pixel perfect designed using pt font sizes
+	and calendar size are A4.
+	Some HTML server side rendering with database data population is performed at startup.
+	Different application themes available from about dialogue.
+	App is written in pure Javascript. Runs in Node.js using express framework.
+	App client is component structured and server-side rendered.
+
+	Property management app
+	Data model displayed at the moment and added to display how multiple apps can be managed.
+
+installation instructions
+
+1. install Node.js on server,
+version 17.3.0 supported
+
+	modules required
+	npm install express
+	npm install mysql
+	npm install oracledb
+	npm install dotenv
+	npm install --save-dev nodemon
+	npm install bcryptjs
+	npm install helmet@4.6.0
+	npm install jsonwebtoken
+	npm install nodemailer
+	npm install vhost
+	npm install node-fetch@2.6.1
+	npm install -g pm2
+
+	npm install puppeteer
+	//puppeteer options on Linux
+	npm install puppeteer --unsafe-perm=true
+	//install dependencies Oracle Linux for puppeteer
+	sudo yum install atk
+	sudo yum install at-spi2-atk
+	sudo yum install cups-libs
+	sudo yum install libdrm
+	sudo yum install libxkbcommon
+	sudo yum install libXcomposite
+	sudo yum install libXdamage
+	sudo yum install libXrandr
+	sudo yum install mesa-libgbm
+	sudo yum install pango
+	sudo yum install alsa-lib
+
+2. install mysql/oracle on same server or other server
+   mySQL 8.0.27 supported, other version should work
+   Oracle Autonomous JSON Database 21C supported, other version should work
+
+   For Oracle Database, install Oracle Instant Client
+   www.oracle.com/database/technologies/instant-client.html
+
+   See .env file for Oracle Instant Client variables.
+
+   use Unicode characterset to support emojis and all languages
+   import import.sql
+   import language *.sql files
+
+3. register google sign in
+   requires hostname
+   https://console.developers.google.com/
+
+   if not using Google, hide button
+	app_timetables/css/app.css
+	.abcRioButton{
+		display:none;
+	}
+
+4. register Facebook login
+
+   https://developers.facebook.com/docs/facebook-login/web
+
+   if not using Facebook, hide button
+	app_timetables/css/app.css
+	#login_facebook{
+		display:none;
+	}
+
+5. register mapbox 
+   get access token
+   https://www.mapbox.com/api-documentation/#access-tokens-and-token-scopes
+
+   without token map does not work.
+   
+6. register email provider
+   hostname, port, username, password
+   Check if email provider allows sending from apps if using free account.
+   For Gmail accounts check https://myaccount.google.com/lesssecureapps
+
+7. generate ssl files for https, use recommended letsencrypt for domain,
+   use self sign for localhost
+
+8. download app from Github
+
+   mkdir app_portfolio
+   cd app_portfolio
+   git clone https://github.com/appportfolio/app_portfolio.git
+
+9. create .env file with these values and suggestions:
+
+#server variables
+SERVER_HTTPS_KEY                        		={PATH}\server.key
+SERVER_HTTPS_CERT                       		={PATH}\server.crt
+SERVER_PORT                             		=80
+SERVER_HTTPS_PORT                       		=443
+#What database to use
+#1=DB1 mySQL, 2=DB2 Oracle
+SERVER_DB_USE                           		=1
+#mySQL
+SERVER_DB1_USER                         		={USERNAME}
+SERVER_DB1_PASS                         		={PASSWORD}
+SERVER_DB1_USER1                        		={USERNAME1}
+SERVER_DB1_PASS1                        		={PASSWORD1}
+SERVER_DB1_PORT                         		={PORT}
+SERVER_DB1_HOST                         		={HOSTNAME} (or localhost)
+SERVER_DB1_NAME                         		={DATABASENAME}
+SERVER_DB1_CHARACTERSET                 		='utf8mb4'
+SERVER_DB1_CONNECTION_LIMIT             		=10
+#Oracle
+SERVER_DB2_USER                         		={USERNAME}
+SERVER_DB2_PASS                         		={PASSWORD}
+SERVER_DB2_USER1                        		={USERNAME1}
+SERVER_DB2_PASS1                        		={PASSWORD1}
+SERVER_DB2_CONNECTSTRING                		={DATABASENAME}
+SERVER_DB2_POOL_MIN                     		=0
+SERVER_DB2_POOL_MAX                     		=4
+SERVER_DB2_POOL_INCREMENT               		=0
+#Oracle Instant Client path
+SERVER_DB2_LIBDIR                       		={ORACLE_INSTANT_CLIENT_PATH}
+SERVER_DB2_CONFIGDIR                    		={PATH_TNSNAMES_SQLNET_OR_WALLET_FILE_CONTENT}
+#Common app variables
+APP_URL							={HOSTNAME} (or localhost)
+APP_HOSTNAME						=https://localhost
+APP_COPYRIGHT						={COPYRIGHT TEXT}
+APP_USER_PROVIDER1_ID					={GOOGLE_ID}
+APP_USER_PROVIDER1_NAME					=Google
+APP_USER_PROVIDER1_API_SRC				=https://apis.google.com/js/platform.js?hl=
+APP_USER_PROVIDER2_ID					={FACEBOOK_ID}
+APP_USER_PROVIDER2_NAME					=Facebook
+APP_USER_PROVIDER2_API_VERSION				=v12.0
+#example:https://connect.facebook.net/en_US/sdk.js
+#set locale SDK in client
+APP_USER_PROVIDER2_API_SRC				=https://connect.facebook.net/
+APP_USER_PROVIDER2_API_SRC2				=/sdk.js
+APP_REST_CLIENT_ID					={APP_REST_CLIENT_ID}
+APP_REST_CLIENT_SECRET					={APP_REST_CLIENT_SECRET}
+APP_TOKEN_SECRET                        		={APP_TOKEN_SECRET}
+APP_TOKEN_EXPIRE_ACCESS                 		=1h
+APP_TOKEN_EXPIRE_DATA                   		=2d
+APP_JSON_LIMIT                          		=10MB
+APP_AUTH_TOKEN_URL					='/service/auth/token/'
+APP_REST_APP_LOG       				    	='app_log/'
+APP_REST_APP_OBJECT       			 	='app_object/'
+APP_REST_APP_TIMETABLES_PLACE      			='app_timetables_place/'
+APP_REST_APP_TIMETABLES_THEME      			='app_timetables_theme/'
+APP_REST_APP_TIMETABLES_USER_SETTING       		='app_timetables_user_setting/'
+APP_REST_APP_TIMETABLES_USER_SETTING_USER_ACCOUNT_ID    ='app_timetables_user_setting/user_account_id/'
+APP_REST_APP_TIMETABLES_USER_SETTING_PROFILE            ='app_timetables_user_setting/profile/'
+APP_REST_APP_TIMETABLES_USER_SETTING_LIKE      	        ='app_timetables_user_setting_like/'
+APP_REST_APP_TIMETABLES_USER_SETTING_VIEW      	        ='app_timetables_user_setting_view/'
+APP_REST_COUNTRY    			 	    	='country/'
+APP_REST_LANGUAGE_LOCALE    		    		='language/locale/'
+APP_REST_MESSAGE_TRANSLATION   				='message_translation/'
+APP_REST_USER_ACCOUNT       		    		='user_account/'
+APP_REST_USER_ACCOUNT_COMMON    	    		='user_account/common/'
+APP_REST_USER_ACCOUNT_PROFILE_USERNAME  		='user_account/profile/username/'
+APP_REST_USER_ACCOUNT_PROFILE_USERID    		='user_account/profile/id/'
+APP_REST_USER_ACCOUNT_PROFILE_SEARCH    		='user_account/profile/username/search/'
+APP_REST_USER_ACCOUNT_PROFILE_TOP       		='user_account/profile/top/'
+APP_REST_USER_ACCOUNT_PROFILE_DETAIL    		='user_account/profile/detail/'
+APP_REST_USER_ACCOUNT_ACTIVATE       			='user_account/activate/'
+APP_REST_USER_ACCOUNT_LOGIN     	    		='user_account/login'
+APP_REST_USER_ACCOUNT_SIGNUP       	    		='user_account/signup'
+APP_REST_USER_ACCOUNT_PROVIDER          		='user_account/provider/'
+APP_REST_USER_ACCOUNT_LIKE       	    		='user_account_like/'
+APP_REST_USER_ACCOUNT_FOLLOW    	    		='user_account_follow/'
+APP_SERVICE_GEOLOCATION                 		='/service/geolocation'
+APP_SERVICE_GPS_PLACE                   		='/getplace'
+APP_SERVICE_GPS_IP     			        	='/getip'
+APP_SERVICE_MAIL        		        	='/service/mail'
+APP_SERVICE_REPORT                	    		='/service/report'
+APP_SERVICE_WORLDCITIES                 		='/service/worldcities'
+APP_SERVICE_URL_GPS_PLACE               		=http://www.geoplugin.net/extras/location.gp
+APP_SERVICE_URL_GPS_IP                  		=http://www.geoplugin.net/json.gp
+#App1 Timetables variables
+APP1_ID						        =1
+APP1_NAME					        =Timetables
+#Progressive web app variables in manifest.json
+APP1_PWA_SHORT_NAME                     		=Timetables
+APP1_PWA_NAME                           		=Timetables
+APP1_PWA_DESCRIPTION                    		=Advanced traditional muslim salah timetables
+APP1_PWA_STARTURL                       		=/
+APP1_PWA_DISPLAY                        		=standalone
+APP1_PWA_BACKGROUND_COLOR               		=#FFFFFF
+APP1_PWA_THEME_COLOR                    		=#a49775
+APP1_PWA_ORIENTATION                    		=portrait-primary
+APP1_PWA_ICONS1_SRC                     		=/app_timetables/images/pwa/icon-192x192.png
+APP1_PWA_ICONS1_TYPE                    		=image/png
+APP1_PWA_ICONS1_SIZES                   		=192x192
+APP1_PWA_ICONS2_SRC                     		=/app_timetables/images/pwa/icon-512x512.png
+APP1_PWA_ICONS2_TYPE                    		=image/png
+APP1_PWA_ICONS2_SIZES                   		=512x512
+APP1_PWA_SCOPE                          		=/
+#Email variables CLIENT
+APP1_EMAIL_POLICY				        ={EMAIL_POLICY}
+APP1_EMAIL_DISCLAIMER				    	={EMAIL_DISCLAIMER}
+APP1_EMAIL_TERMS					={EMAIL_TERMS}
+#Email variables SERVER
+APP1_EMAIL_HOST                         		={EMAIL_HOST}
+APP1_EMAIL_PORT                         		={EMAIL_PORT}
+APP1_EMAIL_SECURE                       		=true
+APP1_EMAIL_USERNAME                     		={EMAIL_USERNAME}
+APP1_EMAIL_PASSWORD                     		={EMAIL_PASSWORD}
+APP1_EMAILTYPE_SIGNUP                   		=1
+APP1_EMAILTYPE_UNVERIFIED               		=2
+APP1_EMAILTYPE_RESET_PASSWORD           		=3
+APP1_EMAILTYPE_CHANGE_EMAIL             		=4
+#Other variables
+APP1_SOCIAL_LINK1_URL				    	={YOUR_SOCIAL_URL1} or empty
+APP1_SOCIAL_LINK2_URL				    	={YOUR_SOCIAL_URL2} or empty
+APP1_SOCIAL_LINK3_URL				    	={YOUR_SOCIAL_URL3} or empty
+APP1_SOCIAL_LINK4_URL				    	={YOUR_SOCIAL_URL4} or empty
+APP1_SOCIAL_LINK1_NAME				    	={YOUR_SOCIAL_NAME1} or empty
+APP1_SOCIAL_LINK2_NAME				    	={YOUR_SOCIAL_NAME2} or empty
+APP1_SOCIAL_LINK3_NAME				    	={YOUR_SOCIAL_NAME3} or empty
+APP1_SOCIAL_LINK4_NAME				    	={YOUR_SOCIAL_NAME4} or empty
+APP1_INFO_LINK1_URL				        ='/app_timetables/info/privacy_policy.html'
+APP1_INFO_LINK2_URL				        ='/app_timetables/info/disclaimer.html'
+APP1_INFO_LINK3_URL				        ='/app_timetables/info/terms.html'
+APP1_INFO_LINK4_URL				        ='/app_timetables/info/support.html'
+APP1_INFO_LINK5_URL				        ='/app_timetables/info/about.html'
+APP1_INFO_LINK1_NAME				    	='Privacy Policy'
+APP1_INFO_LINK2_NAME				    	='Disclaimer'
+APP1_INFO_LINK3_NAME				    	='Terms'
+APP1_INFO_LINK4_NAME				    	='Support'
+APP1_INFO_LINK5_NAME				    	='About'
+APP1_FILE_IMAGE_HEADER_FOOTER_WIDTH	    		=800
+APP1_FILE_IMAGE_HEADER_FOOTER_HEIGHT			=160
+APP1_FILE_IMAGE_AVATAR_WIDTH				=64
+APP1_FILE_IMAGE_AVATAR_HEIGHT		    		=64
+APP1_FILE_IMAGE_ALLOWED_TYPE1		    		='jpg'
+APP1_FILE_IMAGE_ALLOWED_TYPE2		    		='png'
+APP1_FILE_IMAGE_ALLOWED_TYPE3		    		='gif'
+APP1_FILE_IMAGE_MIME_TYPE			    	='image/jpeg'
+APP1_FILE_IMAGE_MAX_SIZE				=2000000
+#
+#REGIONAL SETTINGS
+#
+APP1_REGIONAL_DEFAULT_CALENDAR_LANG             	='en-us'
+APP1_REGIONAL_DEFAULT_LOCALE_EXT_PREFIX         	='-u'
+APP1_REGIONAL_DEFAULT_LOCALE_EXT_NUMBER_SYSTEM  	='-nu-'
+APP1_REGIONAL_DEFAULT_LOCALE_EXT_CALENDAR       	='-ca-'
+#ex '-u-ca-gregory'
+APP1_REGIONAL_DEFAULT_CALENDAR_TYPE_GREG        	='gregory'
+#ex '-nu-latn'
+APP1_REGIONAL_DEFAULT_CALENDAR_NUMBER_SYSTEM    	='latn'
+#Direction:Left to right
+APP1_REGIONAL_DEFAULT_DIRECTION			        =0
+#Second languague:None
+APP1_REGIONAL_DEFAULT_LOCALE_SECOND		        =0
+#Column title: transliterated, translation
+APP1_REGIONAL_DEFAULT_COLTITLE				=1
+#Arabic script:Sans Kufi
+APP1_REGIONAL_DEFAULT_ARABIC_SCRIPT		        =0
+#Calendar type: Gregorian
+APP1_REGIONAL_DEFAULT_CALENDARTYPE			=0
+#Calendar hijri type: islamic
+APP1_REGIONAL_DEFAULT_CALENDAR_HIJRI_TYPE	    	=0
+#
+#GPS SETTINGS
+#
+#Maptype:satellite-streets-v11
+APP1_GPS_DEFAULT_MAPTYPE				=5
+#Country:... (none)
+APP1_GPS_DEFAULT_COUNTRY				=''
+#City:... (none)
+APP1_GPS_DEFAULT_CITY					=''
+#Default place: Kabba, Makkah
+APP1_GPS_DEFAULT_PLACE_ID      		            	='40002'
+#Map variables
+APP1_GPS_DEFAULT_MAP_CONTAINER         		    	='mapid'
+APP1_GPS_DEFAULT_MAP_DEFAULT_ZOOM      		    	=14
+APP1_GPS_DEFAULT_MAP_DEFAULT_ZOOM_CITY 		    	=8
+APP1_GPS_DEFAULT_MAP_DEFAULT_ZOOM_PP   		    	=14
+APP1_GPS_DEFAULT_MAP_STYLE_BASEURL     		    	='mapbox://styles/mapbox/'
+APP1_GPS_DEFAULT_MAP_DEFAULT_STYLE     		    	='satellite-streets-v11'
+APP1_GPS_DEFAULT_MAP_MARKER_DIV_PP     		    	='map_marker_popular_place'
+APP1_GPS_DEFAULT_MAP_MARKER_DIV_CITY   		    	='map_marker_city'
+APP1_GPS_DEFAULT_MAP_MARKER_DIV_GPS    		    	='map_marker_gps'
+#Access token Mapbox
+APP1_GPS_MAP_ACCESS_TOKEN				={MAPBOX_ID}
+#Qibbla Kabba, Makkah
+APP1_GPS_MAP_QIBBLA_TITLE			        ='Kaaba, Makkah'
+APP1_GPS_MAP_QIBBLA_TEXT_SIZE		            	=14
+APP1_GPS_MAP_QIBBLA_LAT                         	='21.4226'
+APP1_GPS_MAP_QIBBLA_LONG                        	='39.8261'
+APP1_GPS_MAP_QIBBLA_COLOR                       	='#a49775'
+APP1_GPS_MAP_QIBBLA_WIDTH                       	=4
+APP1_GPS_MAP_QIBBLA_OPACITY                     	=1
+#Qibbla old Great temple, Petra, Jordan
+APP1_GPS_MAP_QIBBLA_OLD_TITLE		            	='Petra, jordan'
+APP1_GPS_MAP_QIBBLA_OLD_TEXT_SIZE	            	=14
+APP1_GPS_MAP_QIBBLA_OLD_LAT                     	='30.3289'
+APP1_GPS_MAP_QIBBLA_OLD_LONG                    	='35.4423'
+APP1_GPS_MAP_QIBBLA_OLD_COLOR                   	='#404040'
+APP1_GPS_MAP_QIBBLA_OLD_WIDTH                   	=4
+APP1_GPS_MAP_QIBBLA_OLD_OPACITY                 	=0.4
+APP1_GPS_MAP_FLYTO					=1
+APP1_GPS_MAP_JUMPTO					=0
+APP1_GPS_MAP_POPUP_OFFSET				=25
+#
+#DESIGN SETTINGS
+#
+APP1_DESIGN_DEFAULT_THEME_DAY                   	=10003
+APP1_DESIGN_DEFAULT_THEME_MONTH                 	=20003
+APP1_DESIGN_DEFAULT_THEME_YEAR                  	=30001
+#A4 paper
+APP1_DESIGN_DEFAULT_PAPERSIZE			        =0
+#highlight row: Friday
+APP1_DESIGN_DEFAULT_HIGHLIGHT_ROW		        =1
+#Show weekday: true
+APP1_DESIGN_DEFAULT_SHOW_WEEKDAY			=true
+#Column calendartype: true
+APP1_DESIGN_DEFAULT_SHOW_CALENDARTYPE	        	=true
+#Show notes: false
+APP1_DESIGN_DEFAULT_SHOW_NOTES			        =false
+#Show GPS: false
+APP1_DESIGN_DEFAULT_SHOW_GPS				=false
+#Show timezone: false
+APP1_DESIGN_DEFAULT_SHOW_TIMEZONE		        =false
+#
+#IMAGE SETTINGS
+#
+APP1_DESIGN_DEFAULT_REPORT_HEADER_SRC           	='/app_timetables/images/banner_kaaba.jpg'
+APP1_DESIGN_DEFAULT_REPORT_FOOTER_SRC           	=''
+#
+#TEXT SETTINGS
+#
+APP1_DESIGN_DEFAULT_REPORTTITLE1  		        =''
+APP1_DESIGN_DEFAULT_REPORTTITLE2  		        =''
+APP1_DESIGN_DEFAULT_REPORTTITLE3  		        =''
+APP1_DESIGN_DEFAULT_REPORTFOOTER1 		        ='بِسْمِ اللهِ الرَّحْمٰنِ الرَّحِيْمِ'
+APP1_DESIGN_DEFAULT_REPORTFOOTER2 		        ='In the name of God, the Almighty, the Merciful'
+APP1_DESIGN_DEFAULT_REPORTFOOTER3 		        ='Advanced traditional muslim prayer report'
+#
+#PRAYER SETTINGS
+#
+#Method: Muslim World League (MWL)
+APP1_PRAYER_DEFAULT_METHOD				=14
+#Asr method: Standard
+APP1_PRAYER_DEFAULT_ASR					=0
+#High latitude adj.: Angle/60th of night
+APP1_PRAYER_DEFAULT_HIGHLATITUDE			=1
+#Timeformat: 12h with no suffix
+APP1_PRAYER_DEFAULT_TIMEFORMAT			        =0
+#Hijri date adjustment: 0
+APP1_PRAYER_DEFAULT_HIJRI_ADJUSTMENT		    	=2
+#Fajr Iqamat: None
+APP1_PRAYER_DEFAULT_IQAMAT_TITLE_FAJR	        	=0
+#Dhuhr Iqamat: None
+APP1_PRAYER_DEFAULT_IQAMAT_TITLE_DHUHR	        	=0
+#Asr Iqamat: None
+APP1_PRAYER_DEFAULT_IQAMAT_TITLE_ASR		   	=0
+#Maghrib Iqamat: None
+APP1_PRAYER_DEFAULT_IQAMAT_TITLE_MAGHRIB	    	=0
+#Isha Iqamat: None
+APP1_PRAYER_DEFAULT_IQAMAT_TITLE_ISHA	        	=0
+#Column imsak: no
+APP1_PRAYER_DEFAULT_SHOW_IMSAK			        =false
+#Column sunset: no
+APP1_PRAYER_DEFAULT_SHOW_SUNSET			        =false
+#Column midnight: no
+APP1_PRAYER_DEFAULT_SHOW_MIDNIGHT		        =false
+#Fajr and Maghrib fasting info
+APP1_PRAYER_DEFAULT_SHOW_FAST_START_END	        	=1
+#
+#STARTUP SETTINGS
+#
+#1=print, 2=day, 3=month, 4=year, 5=settings, 6=profile
+APP1_STARTUP_DEFAULT_STARTUP_PAGE			=3
+#
+#QR SETTINGS
+#
+APP1_QR_LOGO_FILE_PATH                          	='/app_timetables/images/logo.png'
+APP1_QR_WIDTH						=128
+APP1_QR_HEIGHT					        =128
+APP1_QR_COLOR_DARK				        ='#2b2b32'
+APP1_QR_COLOR_LIGHT				        ='#ffffff'
+APP1_QR_LOGO_WIDTH				        =32
+APP1_QR_LOGO_HEIGHT				        =32
+APP1_QR_BACKGROUND_COLOR			        ='#ffffff'
+
+
+   observe also some global javascript values in 
+   js/app_globals.js
+
+10. run app on any supported Node.js platform
+
+   node server.js
+   or with pm2
+   pm2 start server-js --name "app_portfolio"

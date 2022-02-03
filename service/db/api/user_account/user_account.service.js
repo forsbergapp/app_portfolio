@@ -1,0 +1,1788 @@
+const { pool, oracledb, oracle_options } = require("../../config/database");
+
+module.exports = {
+    create: (data, callBack) => {
+        if (process.env.SERVER_DB_USE == 1) {
+            pool.query(
+                `INSERT INTO user_account(
+					bio,
+					private,
+					user_level,
+					date_created,
+					date_modified,
+					username,
+					password,
+					password_reminder,
+					email,
+					avatar,
+					validation_code,
+					active,
+					provider1_id,
+					provider1_first_name,
+					provider1_last_name,
+					provider1_image,
+					provider1_image_url,
+					provider1_email,
+					provider2_id,
+					provider2_first_name,
+					provider2_last_name,
+					provider2_image,
+					provider2_image_url,
+					provider2_email)
+				VALUES(?,?,?,SYSDATE(),SYSDATE(),?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) `, [
+                    data.bio,
+                    data.private,
+                    data.user_level,
+                    data.username,
+                    data.password,
+                    data.password_reminder,
+                    data.email,
+                    data.avatar,
+                    data.validation_code,
+                    data.active,
+                    data.provider1_id,
+                    data.provider1_first_name,
+                    data.provider1_last_name,
+                    data.provider1_image,
+                    data.provider1_image_url,
+                    data.provider1_email,
+                    data.provider2_id,
+                    data.provider2_first_name,
+                    data.provider2_last_name,
+                    data.provider2_image,
+                    data.provider2_image_url,
+                    data.provider2_email
+                ],
+                (error, results, fields) => {
+                    if (error) {
+						console.log('create err:' + error);
+                        return callBack(error);
+                    }
+                    return callBack(null, results);
+                }
+            );
+        } else if (process.env.SERVER_DB_USE == 2) {
+            async function execute_sql(err, result) {
+                try {
+                    if (data.avatar != null)
+                        data.avatar = Buffer.from(data.avatar, 'utf8');
+                    if (data.provider1_image != null)
+                        data.provider1_image = Buffer.from(data.provider1_image, 'utf8');
+                    if (data.provider2_image != null)
+                        data.provider2_image = Buffer.from(data.provider2_image, 'utf8');
+                    const pool2 = await oracledb.getConnection();
+                    const result = await pool2.execute(
+                        `INSERT INTO user_account(
+						bio,
+						private,
+						user_level,
+						date_created,
+						date_modified,
+						username,
+						password,
+						password_reminder,
+						email,
+						avatar,
+						validation_code,
+						active,
+						provider1_id,
+						provider1_first_name,
+						provider1_last_name,
+						provider1_image,
+						provider1_image_url,
+						provider1_email,
+						provider2_id,
+						provider2_first_name,
+						provider2_last_name,
+						provider2_image,
+						provider2_image_url,
+						provider2_email)
+					VALUES(:bio,
+						   :private,
+						   :user_level,
+						   SYSDATE,
+						   SYSDATE,
+						   :username,
+						   :password,
+						   :password_reminder,
+						   :email,
+						   :avatar,
+						   :validation_code,
+						   :active,
+						   :provider1_id,
+						   :provider1_first_name,
+						   :provider1_last_name,
+						   :provider1_image,
+						   :provider1_image_url,
+						   :provider1_email,
+						   :provider2_id,
+						   :provider2_first_name,
+						   :provider2_last_name,
+						   :provider2_image,
+						   :provider2_image_url,
+						   :provider2_email) `, {
+                            bio: data.bio,
+                            private: data.private,
+                            user_level: data.user_level,
+                            username: data.username,
+                            password: data.password,
+                            password_reminder: data.password_reminder,
+                            email: data.email,
+                            avatar: data.avatar,
+                            validation_code: data.validation_code,
+                            active: data.active,
+                            provider1_id: data.provider1_id,
+                            provider1_first_name: data.provider1_first_name,
+                            provider1_last_name: data.provider1_last_name,
+                            provider1_image: data.provider1_image,
+                            provider1_image_url: data.provider1_image_url,
+                            provider1_email: data.provider1_email,
+                            provider2_id: data.provider2_id,
+                            provider2_first_name: data.provider2_first_name,
+                            provider2_last_name: data.provider2_last_name,
+                            provider2_image: data.provider2_image,
+                            provider2_image_url: data.provider2_image_url,
+                            provider2_email: data.provider2_email
+                        },
+                        oracle_options, (err, result) => {
+                            if (err) {
+                                console.log('create SQL err:' + err);
+                                return callBack(err);
+                            } else {
+                                //Fetch id from rowid returned from Oracle
+                                //sample output:
+                                //{"lastRowid":"AAAWwdAAAAAAAdHAAC","rowsAffected":1}
+                                async function execute_sql2(err_id, result_id) {
+                                    //remove "" before and after
+                                    var lastRowid = JSON.stringify(result.lastRowid).replace(/"/g, '');
+                                    const pool3 = await oracledb.getConnection();
+                                    const result_rowid = await pool3.execute(
+                                        `SELECT id "insertId"
+									   FROM user_account
+									  WHERE rowid = :lastRowid`, {
+                                            lastRowid: lastRowid
+                                        },
+                                        oracle_options, (err_id2, result_id2) => {
+                                            if (err_id2) {
+                                                return callBack(err_id2);
+                                            } else {
+                                                return callBack(null, result_id2.rows[0]);
+                                            }
+                                        });
+                                    await pool3.close();
+                                }
+                                execute_sql2();
+                            }
+                        });
+                    await pool2.close();
+                } catch (err) {
+                    return callBack(err);
+                } finally {
+                    null;
+                }
+            }
+            execute_sql();
+        }
+    },
+    activateUser: (id, validation_code, callBack) => {
+        if (process.env.SERVER_DB_USE == 1) {
+            pool.query(
+                `UPDATE user_account
+					SET		active = 1,
+							validation_code = null,
+							date_modified = SYSDATE()
+					WHERE  id = ?
+					AND    validation_code = ?`, [id,
+                    validation_code
+                ],
+                (error, results, fields) => {
+                    if (error) {
+                        return callBack(error);
+                    }
+                    //can be one of these formats:
+                    //"{"count":0,"success":1,"items":[{"fieldCount":0,"affectedRows":0,"insertId":0,"serverStatus":2,"warningCount":0,"message":"(Rows matched: 0  Changed: 0  Warnings: 0","protocol41":true,"changedRows":0}]}"
+                    //"{"count":1,"success":1,"items":[{"fieldCount":0,"affectedRows":1,"insertId":0,"serverStatus":2,"warningCount":0,"message":"(Rows matched: 1  Changed: 1  Warnings: 0","protocol41":true,"changedRows":1}]}"
+                    //use affectedRows in app
+                    return callBack(null, results);
+                }
+            )
+        } else if (process.env.SERVER_DB_USE == 2) {
+            async function execute_sql(err, result) {
+                try {
+
+                    const pool2 = await oracledb.getConnection();
+                    const result_sql = await pool2.execute(
+                        `UPDATE user_account
+						SET		active = 1,
+								validation_code = null,
+								date_modified = SYSDATE
+						WHERE  id = :id
+						AND    validation_code = :validation_code `, {
+                            id: id,
+                            validation_code: validation_code
+                        },
+                        oracle_options, (err2, result2) => {
+                            if (err2) {
+                                return callBack(err2);
+                            } else {
+                                //result kan be {"rowsAffected":0} here
+                                //
+                                //but return callBack(null, result); 
+                                //can be one of these formats:
+                                //"{"success":1,"items":[{"rowsAffected":0}]}"
+                                //"{"success":1,"items":[{"lastRowid":"AAAWv1AAAAAAAVHAAA","rowsAffected":1}]}"
+                                //only checked if count=1 is used
+                                //
+                                //console.log('JSON.stringify(result):' + JSON.stringify(result2));
+                                //returns "{"success":1,"items":[{"count":0, "affectedRows": 0}]}"
+
+                                var oracle_json = {
+                                    "count": result2.rowsAffected,
+                                    "affectedRows": result2.rowsAffected
+                                };
+                                //use affectedRows as mysql in app
+                                return callBack(null, oracle_json);
+                            }
+                        });
+                    await pool2.close();
+                } catch (err) {
+                    return callBack(err.message);
+                } finally {
+                    null;
+                }
+            }
+            execute_sql();
+        }
+    },
+    getUserByUserId: (id, callBack) => {
+        if (process.env.SERVER_DB_USE == 1) {
+            pool.query(
+                `SELECT
+					u.id,
+					u.bio,
+					(SELECT MAX(ul.date_created)
+					   FROM user_account_logon ul
+					  WHERE ul.user_account_id = u.id
+						AND ul.result=1) last_logontime,
+					u.private,
+					u.user_level,
+					u.date_created,
+					u.date_modified,
+					u.username,
+					u.password,
+					u.password_reminder,
+					u.email,
+					CONVERT(u.avatar USING UTF8) avatar,
+					u.validation_code,
+					u.active,
+					u.provider1_id,
+					u.provider1_first_name,
+					u.provider1_last_name,
+					CONVERT(u.provider1_image USING UTF8) provider1_image,
+					u.provider1_image_url,
+					u.provider1_email,
+					u.provider2_id,
+					u.provider2_first_name,
+					u.provider2_last_name,
+					CONVERT(u.provider2_image USING UTF8) provider2_image,
+					u.provider2_image_url,
+					u.provider2_email
+				FROM user_account u
+				WHERE u.id = ? `, [id],
+                (error, results, fields) => {
+                    if (error) {
+                        return callBack(error);
+                    }
+                    return callBack(null, results[0]);
+                }
+            )
+        } else if (process.env.SERVER_DB_USE == 2) {
+            async function execute_sql(err, result) {
+                try {
+                    const pool2 = await oracledb.getConnection();
+                    const result = await pool2.execute(
+                        `SELECT
+						u.id "id",
+						u.bio "bio",
+						(SELECT MAX(ul.date_created)
+						   FROM user_account_logon ul
+						  WHERE ul.user_account_id = u.id
+							AND ul.result=1) "last_logontime",
+						u.private "private",
+						u.user_level "user_level",
+						u.date_created "date_created",
+						u.date_modified "date_modified",
+						u.username "username",
+						u.password "password",
+						u.password_reminder "password_reminder",
+						u.email "email",
+						u.avatar "avatar",
+						u.validation_code "validation_code",
+						u.active "active",
+						u.provider1_id "provider1_id",
+						u.provider1_first_name "provider1_first_name",
+						u.provider1_last_name "provider1_last_name",
+						u.provider1_image "provider1_image",
+						u.provider1_image_url "provider1_image_url",
+						u.provider1_email "provider1_email",
+						u.provider2_id "provider2_id",
+						u.provider2_first_name "provider2_first_name",
+						u.provider2_last_name "provider2_last_name",
+						u.provider2_image "provider2_image",
+						u.provider2_image_url "provider2_image_url",
+						u.provider2_email "provider2_email"
+					FROM user_account u
+					WHERE u.id = :id `, {
+                            id: id
+                        },
+                        oracle_options, (err, result) => {
+                            if (err) {
+                                return callBack(err);
+                            } else {
+                                return callBack(null, result.rows[0]);
+                            }
+                        });
+                    await pool2.close();
+                } catch (err) {
+                    return callBack(err.message);
+                } finally {
+                    null;
+                }
+            }
+            execute_sql();
+        }
+    },
+    getProfileUserId: (id, id_current_user, callBack) => {
+        if (process.env.SERVER_DB_USE == 1) {
+            pool.query(
+                `SELECT
+					u.id,
+					u.bio,
+					u.private,
+					u.user_level,
+					u.date_created,
+					u.username,
+					CONVERT(u.avatar USING UTF8) avatar,
+					u.provider1_id,
+					u.provider1_first_name,
+					u.provider1_last_name,
+					CONVERT(u.provider1_image USING UTF8) provider1_image,
+					u.provider1_image_url,
+					u.provider2_id,
+					u.provider2_first_name,
+					u.provider2_last_name,
+					CONVERT(u.provider2_image USING UTF8) provider2_image,
+					u.provider2_image_url,
+					(SELECT COUNT(u_following.user_account_id)   
+					   FROM user_account_follow  u_following
+					  WHERE u_following.user_account_id = u.id) 				count_following,
+					(SELECT COUNT(u_followed.user_account_id_follow) 
+					   FROM user_account_follow  u_followed
+					  WHERE u_followed.user_account_id_follow = u.id) 			count_followed,
+					(SELECT COUNT(u_likes.user_account_id)
+					   FROM user_account_like    u_likes
+					  WHERE u_likes.user_account_id = u.id ) 					count_likes,
+					(SELECT COUNT(u_likes.user_account_id_like)
+					   FROM user_account_like    u_likes
+					  WHERE u_likes.user_account_id_like = u.id )				count_liked,
+					(SELECT COUNT(DISTINCT us.user_account_id)
+					   FROM app_timetables_user_setting_like u_like,
+					   		app_timetables_user_setting us
+					  WHERE u_like.user_account_id = u.id
+					    AND u_like.user_setting_id = us.id)						count_user_setting_likes,
+					(SELECT COUNT(DISTINCT u_like.user_account_id)
+					   FROM app_timetables_user_setting_like u_like,
+					   		app_timetables_user_setting us
+					  WHERE us.user_account_id = u.id
+						AND u_like.user_setting_id = us.id)						count_user_setting_liked,
+					(SELECT COUNT(u_views.user_account_id_view)
+					   FROM user_account_view    u_views
+					  WHERE u_views.user_account_id_view = u.id ) 				count_views,
+					(SELECT COUNT(u_followed_current_user.user_account_id)
+					   FROM user_account_follow  u_followed_current_user 
+					  WHERE u_followed_current_user.user_account_id_follow = u.id
+						AND u_followed_current_user.user_account_id = ?) 		followed,
+					(SELECT COUNT(u_liked_current_user.user_account_id)  
+					   FROM user_account_like    u_liked_current_user
+					  WHERE u_liked_current_user.user_account_id_like = u.id
+						AND u_liked_current_user.user_account_id = ?)      		liked
+				FROM user_account u
+				WHERE u.id = ? `, [id_current_user,
+                    id_current_user,
+                    id
+                ],
+                (error, results, fields) => {
+                    if (error) {
+                        return callBack(error);
+                    }
+                    return callBack(null, results[0]);
+                }
+            )
+        } else if (process.env.SERVER_DB_USE == 2) {
+            async function execute_sql(err, result) {
+                try {
+                    const pool2 = await oracledb.getConnection();
+                    const result = await pool2.execute(
+                        `SELECT
+						u.id "id",
+						u.bio "bio",
+						u.private "private",
+						u.user_level "user_level",
+						u.date_created "date_created",
+						u.username "username",
+						u.avatar "avatar",
+						u.provider1_id "provider1_id",
+						u.provider1_first_name "provider1_first_name",
+						u.provider1_last_name "provider1_last_name",
+						u.provider1_image "provider1_image",
+						u.provider1_image_url "provider1_image_url",
+						u.provider2_id "provider2_id",
+						u.provider2_first_name "provider2_first_name",
+						u.provider2_last_name "provider2_last_name",
+						u.provider2_image "provider2_image",
+						u.provider2_image_url "provider2_image_url",
+						(SELECT COUNT(u_following.user_account_id)   
+						   FROM user_account_follow  u_following
+						  WHERE u_following.user_account_id = u.id) 				"count_following",
+						(SELECT COUNT(u_followed.user_account_id_follow) 
+						   FROM user_account_follow  u_followed
+						  WHERE u_followed.user_account_id_follow = u.id) 			"count_followed",
+						(SELECT COUNT(u_likes.user_account_id)
+						   FROM user_account_like    u_likes
+						  WHERE u_likes.user_account_id = u.id ) 					"count_likes",
+						(SELECT COUNT(u_likes.user_account_id_like)
+						   FROM user_account_like    u_likes
+						  WHERE u_likes.user_account_id_like = u.id )				"count_liked",
+						(SELECT COUNT(DISTINCT us.user_account_id)
+						   FROM app_timetables_user_setting_like u_like,
+						   		app_timetables_user_setting us
+						  WHERE u_like.user_account_id = u.id
+						    AND u_like.user_setting_id = us.id)						"count_user_setting_likes",
+						(SELECT COUNT(DISTINCT u_like.user_account_id)
+						   FROM app_timetables_user_setting_like u_like,
+						   		app_timetables_user_setting us
+						  WHERE us.user_account_id = u.id
+							AND u_like.user_setting_id = us.id)						"count_user_setting_liked",
+						(SELECT COUNT(u_views.user_account_id_view)
+						   FROM user_account_view    u_views
+						  WHERE u_views.user_account_id_view = u.id ) 				"count_views",
+						(SELECT COUNT(u_followed_current_user.user_account_id)
+						   FROM user_account_follow  u_followed_current_user 
+						  WHERE u_followed_current_user.user_account_id_follow = u.id
+							AND u_followed_current_user.user_account_id = :user_accound_id_current_user1) 	"followed",
+						(SELECT COUNT(u_liked_current_user.user_account_id)  
+						   FROM user_account_like    u_liked_current_user
+						  WHERE u_liked_current_user.user_account_id_like = u.id
+							AND u_liked_current_user.user_account_id = :user_accound_id_current_user2)      "liked"
+					FROM user_account u
+					WHERE u.id = :id `, {
+                            user_accound_id_current_user1: id_current_user,
+                            user_accound_id_current_user2: id_current_user,
+                            id: id
+                        },
+                        oracle_options, (err, result) => {
+                            if (err) {
+                                return callBack(err);
+                            } else {
+                                return callBack(null, result.rows[0]);
+                            }
+                        });
+                    await pool2.close();
+                } catch (err) {
+                    return callBack(err.message);
+                } finally {
+                    null;
+                }
+            }
+            execute_sql();
+        }
+    },
+    getProfileUsername: (username, id_current_user, callBack) => {
+        if (process.env.SERVER_DB_USE == 1) {
+            pool.query(
+                `SELECT
+					u.id,
+					u.bio,
+					u.private,
+					u.user_level,
+					u.date_created,
+					u.username,
+					CONVERT(u.avatar USING UTF8) avatar,
+					u.provider1_id,
+					u.provider1_first_name,
+					u.provider1_last_name,
+					CONVERT(u.provider1_image USING UTF8) provider1_image,
+					u.provider1_image_url,
+					u.provider2_id,
+					u.provider2_first_name,
+					u.provider2_last_name,
+					CONVERT(u.provider2_image USING UTF8) provider2_image,
+					u.provider2_image_url,
+					(SELECT COUNT(u_following.user_account_id)   
+					FROM user_account_follow  u_following
+					WHERE u_following.user_account_id = u.id) 				count_following,
+					(SELECT COUNT(u_followed.user_account_id_follow) 
+					FROM user_account_follow  u_followed
+					WHERE u_followed.user_account_id_follow = u.id) 			count_followed,
+					(SELECT COUNT(u_likes.user_account_id)
+					FROM user_account_like    u_likes
+					WHERE u_likes.user_account_id = u.id ) 					count_likes,
+					(SELECT COUNT(u_likes.user_account_id_like)
+					FROM user_account_like    u_likes
+					WHERE u_likes.user_account_id_like = u.id )				count_liked,
+					(SELECT COUNT(DISTINCT us.user_account_id)
+					FROM app_timetables_user_setting_like u_like,
+						app_timetables_user_setting us
+					WHERE u_like.user_account_id = u.id
+					AND u_like.user_setting_id = us.id)						count_user_setting_likes,
+					(SELECT COUNT(DISTINCT u_like.user_account_id)
+					FROM app_timetables_user_setting_like u_like,
+						app_timetables_user_setting us
+					WHERE us.user_account_id = u.id
+						AND u_like.user_setting_id = us.id)						count_user_setting_liked,
+					(SELECT COUNT(u_views.user_account_id_view)
+					FROM user_account_view    u_views
+					WHERE u_views.user_account_id_view = u.id ) 				count_views,
+					(SELECT COUNT(u_followed_current_user.user_account_id)
+					FROM user_account_follow  u_followed_current_user 
+					WHERE u_followed_current_user.user_account_id_follow = u.id
+						AND u_followed_current_user.user_account_id = ?) 		followed,
+					(SELECT COUNT(u_liked_current_user.user_account_id)  
+					FROM user_account_like    u_liked_current_user
+					WHERE u_liked_current_user.user_account_id_like = u.id
+						AND u_liked_current_user.user_account_id = ?)      		liked
+				FROM user_account u
+				WHERE u.username = ? 
+				AND u.active = 1 `, [id_current_user,
+                    id_current_user,
+                    username
+                ],
+                (error, results, fields) => {
+                    if (error) {
+                        return callBack(error);
+                    }
+                    return callBack(null, results[0]);
+                }
+            )
+        } else if (process.env.SERVER_DB_USE == 2) {
+            async function execute_sql(err, result) {
+                try {
+                    const pool2 = await oracledb.getConnection();
+                    const result = await pool2.execute(
+                        `SELECT
+						u.id "id",
+						u.bio "bio",
+						u.private "private",
+						u.user_level "user_level",
+						u.date_created "date_created",
+						u.username "username",
+						u.avatar "avatar",
+						u.provider1_id "provider1_id",
+						u.provider1_first_name "provider1_first_name",
+						u.provider1_last_name "provider1_last_name",
+						u.provider1_image "provider1_image",
+						u.provider1_image_url "provider1_image_url",
+						u.provider2_id "provider2_id",
+						u.provider2_first_name "provider2_first_name",
+						u.provider2_last_name "provider2_last_name",
+						u.provider2_image "provider2_image",
+						u.provider2_image_url "provider2_image_url",
+						(SELECT COUNT(u_following.user_account_id)   
+						   FROM user_account_follow  u_following
+						  WHERE u_following.user_account_id = u.id) 				"count_following",
+						(SELECT COUNT(u_followed.user_account_id_follow) 
+						   FROM user_account_follow  u_followed
+						  WHERE u_followed.user_account_id_follow = u.id) 			"count_followed",
+						(SELECT COUNT(u_likes.user_account_id)
+						   FROM user_account_like    u_likes
+						  WHERE u_likes.user_account_id = u.id ) 					"count_likes",
+						(SELECT COUNT(u_likes.user_account_id_like)
+						   FROM user_account_like    u_likes
+						  WHERE u_likes.user_account_id_like = u.id )				"count_liked",
+						(SELECT COUNT(DISTINCT us.user_account_id)
+						   FROM app_timetables_user_setting_like u_like,
+						   		app_timetables_user_setting us
+						  WHERE u_like.user_account_id = u.id
+							AND u_like.user_setting_id = us.id)						"count_user_setting_likes",
+						(SELECT COUNT(DISTINCT u_like.user_account_id)
+						   FROM app_timetables_user_setting_like u_like,
+						   		app_timetables_user_setting us
+						  WHERE us.user_account_id = u.id
+							AND u_like.user_setting_id = us.id)						"count_user_setting_liked",
+						(SELECT COUNT(u_views.user_account_id_view)
+						   FROM user_account_view    u_views
+						  WHERE u_views.user_account_id_view = u.id ) 				"count_views",
+						(SELECT COUNT(u_followed_current_user.user_account_id)
+						   FROM user_account_follow  u_followed_current_user 
+						  WHERE u_followed_current_user.user_account_id_follow = u.id
+							AND u_followed_current_user.user_account_id = :user_accound_id_current_user1) 	"followed",
+						(SELECT COUNT(u_liked_current_user.user_account_id)  
+						   FROM user_account_like    u_liked_current_user
+						  WHERE u_liked_current_user.user_account_id_like = u.id
+							AND u_liked_current_user.user_account_id = :user_accound_id_current_user2)      "liked"
+					FROM user_account u
+					WHERE u.username = :username 
+					AND u.active = 1 `, {
+                            user_accound_id_current_user1: id_current_user,
+                            user_accound_id_current_user2: id_current_user,
+                            username: username
+                        },
+                        oracle_options, (err, result) => {
+                            if (err) {
+                                return callBack(err);
+                            } else {
+                                return callBack(null, result.rows[0]);
+                            }
+                        });
+                    await pool2.close();
+                } catch (err) {
+                    return callBack(err.message);
+                } finally {
+                    null;
+                }
+            }
+            execute_sql();
+        }
+    },
+    searchProfileUser: (username, callBack) => {
+        if (process.env.SERVER_DB_USE == 1) {
+            pool.query(
+                `SELECT
+					u.id,
+					u.username,
+					CONVERT(u.avatar USING UTF8) avatar,
+					u.provider1_id,
+					u.provider1_first_name,
+					CONVERT(u.provider1_image USING UTF8) provider1_image,
+					u.provider1_image_url,
+					u.provider2_id,
+					u.provider2_first_name,
+					CONVERT(u.provider2_image USING UTF8) provider2_image,
+					u.provider2_image_url
+				FROM user_account u
+				WHERE (u.username LIKE ?
+					OR
+					u.provider1_first_name LIKE ?
+					OR
+					u.provider2_first_name LIKE ?)
+				AND   u.active = 1 `, ['%' + username + '%',
+                    '%' + username + '%',
+                    '%' + username + '%'
+                ],
+                (error, results, fields) => {
+                    if (error) {
+                        return callBack(error);
+                    }
+                    return callBack(null, results);
+                }
+            )
+        } else if (process.env.SERVER_DB_USE == 2) {
+            async function execute_sql(err, result) {
+                try {
+                    const pool2 = await oracledb.getConnection();
+                    const result = await pool2.execute(
+                        `SELECT
+						u.id "id",
+						u.username "username",
+						u.avatar "avatar",
+						u.provider1_id "provider1_id",
+						u.provider1_first_name "provider1_first_name",
+						u.provider1_image "provider1_image",
+						u.provider1_image_url "provider1_image_url",
+						u.provider2_id "provider2_id",
+						u.provider2_first_name "provider2_first_name",
+						u.provider2_image "provider2_image",
+						u.provider2_image_url "provider2_image_url"
+					FROM user_account u
+					WHERE (u.username LIKE :username
+						OR
+						u.provider1_first_name LIKE :provider1_first_name
+						OR
+						u.provider2_first_name LIKE :provider2_first_name)
+					AND   u.active = 1 `, {
+                            username: '%' + username + '%',
+                            provider1_first_name: '%' + username + '%',
+                            provider2_first_name: '%' + username + '%'
+                        },
+                        oracle_options, (err, result) => {
+                            if (err) {
+                                return callBack(err);
+                            } else {
+                                return callBack(null, result.rows);
+                            }
+                        });
+                    await pool2.close();
+                } catch (err) {
+                    return callBack(err.message);
+                } finally {
+                    null;
+                }
+            }
+            execute_sql();
+        }
+    },
+    getProfileDetail: (id, detailchoice, callBack) => {
+        if (process.env.SERVER_DB_USE == 1) {
+            pool.query(
+                `SELECT *
+			   FROM (SELECT 'FOLLOWING' detail,
+							u.id,
+							u.provider1_id,
+							u.provider2_id,
+							CONVERT(u.avatar USING UTF8) avatar,
+							CONVERT(u.provider1_image USING UTF8) provider1_image,
+							u.provider1_image_url,
+							CONVERT(u.provider2_image USING UTF8) provider2_image,
+							u.provider2_image_url,
+							u.username,
+							u.provider1_first_name,
+							u.provider2_first_name
+					FROM   user_account_follow u_follow,
+							user_account u
+					WHERE  u_follow.user_account_id = ?
+					AND    u.id = u_follow.user_account_id_follow
+					AND    u.active = 1
+					AND    1 = ?
+					UNION ALL
+					SELECT 'FOLLOWED' detail,
+							u.id,
+							u.provider1_id,
+							u.provider2_id,
+							CONVERT(u.avatar USING UTF8) avatar,
+							CONVERT(u.provider1_image USING UTF8) provider1_image,
+							u.provider1_image_url,
+							CONVERT(u.provider2_image USING UTF8) provider2_image,
+							u.provider2_image_url,
+							u.username,
+							u.provider1_first_name,
+							u.provider2_first_name
+					FROM   user_account_follow u_followed,
+							user_account u
+					WHERE  u_followed.user_account_id_follow = ?
+					AND    u.id = u_followed.user_account_id
+					AND    u.active = 1
+					AND    2 = ?
+					UNION ALL
+					SELECT 'LIKE_USER' detail,
+							u.id,
+							u.provider1_id,
+							u.provider2_id,
+							CONVERT(u.avatar USING UTF8) avatar,
+							CONVERT(u.provider1_image USING UTF8) provider1_image,
+							u.provider1_image_url,
+							CONVERT(u.provider2_image USING UTF8) provider2_image,
+							u.provider2_image_url,
+							u.username,
+							u.provider1_first_name,
+							u.provider2_first_name
+					FROM   user_account_like u_like,
+						user_account u
+					WHERE  u_like.user_account_id = ?
+					AND    u.id = u_like.user_account_id_like
+					AND    u.active = 1
+					AND    3 = ?
+					UNION ALL
+					SELECT 'LIKED_USER' detail,
+							u.id,
+							u.provider1_id,
+							u.provider2_id,
+							CONVERT(u.avatar USING UTF8) avatar,
+							CONVERT(u.provider1_image USING UTF8) provider1_image,
+							u.provider1_image_url,
+							CONVERT(u.provider2_image USING UTF8) provider2_image,
+							u.provider2_image_url,
+							u.username,
+							u.provider1_first_name,
+							u.provider2_first_name
+					FROM   user_account_like u_liked,
+						user_account u
+					WHERE  u_liked.user_account_id_like = ?
+					AND    u.id = u_liked.user_account_id
+					AND    u.active = 1
+					AND    4 = ?
+					UNION ALL
+					SELECT 'LIKE_SETTING' detail,
+							u.id,
+							u.provider1_id,
+							u.provider2_id,
+							CONVERT(u.avatar USING UTF8) avatar,
+							CONVERT(u.provider1_image USING UTF8) provider1_image,
+							u.provider1_image_url,
+							CONVERT(u.provider2_image USING UTF8) provider2_image,
+							u.provider2_image_url,
+							u.username,
+							u.provider1_first_name,
+							u.provider2_first_name
+					FROM   user_account u
+					WHERE  u.id IN (SELECT us.user_account_id
+									FROM   app_timetables_user_setting_like u_like,
+											app_timetables_user_setting us
+									WHERE  u_like.user_account_id = ?
+									AND    us.id = u_like.user_setting_id)
+					AND    u.active = 1
+					AND    5 = ?
+					UNION ALL
+					SELECT 'LIKED_SETTING' detail,
+							u.id,
+							u.provider1_id,
+							u.provider2_id,
+							CONVERT(u.avatar USING UTF8) avatar,
+							CONVERT(u.provider1_image USING UTF8) provider1_image,
+							u.provider1_image_url,
+							CONVERT(u.provider2_image USING UTF8) provider2_image,
+							u.provider2_image_url,
+							u.username,
+							u.provider1_first_name,
+							u.provider2_first_name
+					FROM   user_account u
+					WHERE  u.id IN (SELECT u_like.user_account_id
+									FROM   app_timetables_user_setting us,
+											app_timetables_user_setting_like u_like
+									WHERE  us.user_account_id = ?
+									AND    us.id = u_like.user_setting_id)
+					AND    u.active = 1
+					AND    6 = ?) t
+				ORDER BY 1, COALESCE(username, 
+									 provider1_first_name,
+									 provider2_first_name)`, [id,
+                    detailchoice,
+                    id,
+                    detailchoice,
+                    id,
+                    detailchoice,
+                    id,
+                    detailchoice,
+                    id,
+                    detailchoice,
+                    id,
+                    detailchoice
+                ],
+                (error, results, fields) => {
+                    if (error) {
+                        return callBack(error);
+                    }
+                    return callBack(null, results);
+                }
+            )
+        } else if (process.env.SERVER_DB_USE == 2) {
+            async function execute_sql(err, result) {
+                try {
+                    const pool2 = await oracledb.getConnection();
+                    const result = await pool2.execute(
+                        `SELECT *
+					   FROM (SELECT 'FOLLOWING' "detail",
+									u.id "id",
+									u.provider1_id "provider1_id",
+									u.provider2_id "provider2_id",
+									u.avatar "avatar",
+									u.provider1_image "provider1_image",
+									u.provider1_image_url "provider1_image_url",
+									u.provider2_image "provider2_image",
+									u.provider2_image_url "provider2_image_url",
+									u.username "username",
+									u.provider1_first_name "provider1_first_name",
+									u.provider2_first_name "provider2_first_name"
+							FROM   	user_account_follow u_follow,
+									user_account u
+							WHERE  u_follow.user_account_id = :user_account_id_following
+							AND    u.id = u_follow.user_account_id_follow
+							AND    u.active = 1
+							AND    1 = :detailchoice_following
+							UNION ALL
+							SELECT 'FOLLOWED' "detail",
+									u.id "id",
+									u.provider1_id "provider1_id",
+									u.provider2_id "provider2_id",
+									u.avatar "avatar",
+									u.provider1_image "provider1_image",
+									u.provider1_image_url "provider1_image_url",
+									u.provider2_image "provider2_image",
+									u.provider2_image_url "provider2_image_url",
+									u.username "username",
+									u.provider1_first_name "provider1_first_name",
+									u.provider2_first_name "provider2_first_name"
+							FROM   	user_account_follow u_followed,
+									user_account u
+							WHERE  u_followed.user_account_id_follow = :user_account_id_followed
+							AND    u.id = u_followed.user_account_id
+							AND    u.active = 1
+							AND    2 = :detailchoice_followed
+							UNION ALL
+							SELECT 'LIKE_USER' "detail",
+									u.id "id",
+									u.provider1_id "provider1_id",
+									u.provider2_id "provider2_id",
+									u.avatar "avatar",
+									u.provider1_image "provider1_image",
+									u.provider1_image_url "provider1_image_url",
+									u.provider2_image "provider2_image",
+									u.provider2_image_url "provider2_image_url",
+									u.username "username",
+									u.provider1_first_name "provider1_first_name",
+									u.provider2_first_name "provider2_first_name"
+							FROM   	user_account_like u_like,
+									user_account u
+							WHERE  u_like.user_account_id = :user_account_id_like_user
+							AND    u.id = u_like.user_account_id_like
+							AND    u.active = 1
+							AND    3 = :detailchoice_like_user
+							UNION ALL
+							SELECT 'LIKED_USER' "detail",
+									u.id "id",
+									u.provider1_id "provider1_id",
+									u.provider2_id "provider2_id",
+									u.avatar "avatar",
+									u.provider1_image "provider1_image",
+									u.provider1_image_url "provider1_image_url",
+									u.provider2_image "provider2_image",
+									u.provider2_image_url "provider2_image_url",
+									u.username "username",
+									u.provider1_first_name "provider1_first_name",
+									u.provider2_first_name "provider2_first_name"
+							FROM   	user_account_like u_liked,
+									user_account u
+							WHERE  u_liked.user_account_id_like = :user_account_id_liked_user
+							AND    u.id = u_liked.user_account_id
+							AND    u.active = 1
+							AND    4 = :detailchoice_liked_user
+							UNION ALL
+							SELECT 'LIKE_SETTING' "detail",
+									u.id "id",
+									u.provider1_id "provider1_id",
+									u.provider2_id "provider2_id",
+									u.avatar "avatar",
+									u.provider1_image "provider1_image",
+									u.provider1_image_url "provider1_image_url",
+									u.provider2_image "provider2_image",
+									u.provider2_image_url "provider2_image_url",
+									u.username "username",
+									u.provider1_first_name "provider1_first_name",
+									u.provider2_first_name "provider2_first_name"
+							FROM   user_account u
+							WHERE  u.id IN (SELECT us.user_account_id
+											FROM app_timetables_user_setting_like u_like,
+													app_timetables_user_setting us
+											WHERE  u_like.user_account_id = :user_account_id_like_setting
+											AND    us.id = u_like.user_setting_id)
+							AND    u.active = 1
+							AND    5 = :detailchoice_like_setting
+							UNION ALL
+							SELECT 'LIKED_SETTING' "detail",
+									u.id "id",
+									u.provider1_id "provider1_id",
+									u.provider2_id "provider2_id",
+									u.avatar "avatar",
+									u.provider1_image "provider1_image",
+									u.provider1_image_url "provider1_image_url",
+									u.provider2_image "provider2_image",
+									u.provider2_image_url "provider2_image_url",
+									u.username "username",
+									u.provider1_first_name "provider1_first_name",
+									u.provider2_first_name "provider2_first_name"
+							FROM   user_account u
+							WHERE  u.id IN (SELECT u_like.user_account_id
+											FROM app_timetables_user_setting us,
+													app_timetables_user_setting_like u_like
+											WHERE  us.user_account_id = :user_account_id_liked_setting
+											AND    us.id = u_like.user_setting_id)
+							AND    u.active = 1
+							AND    6 = :detailchoice_liked_setting) t
+						ORDER BY 1, COALESCE("username", 
+											 "provider1_first_name",
+											 "provider2_first_name") `, {
+                            user_account_id_following: id,
+                            detailchoice_following: detailchoice,
+                            user_account_id_followed: id,
+                            detailchoice_followed: detailchoice,
+                            user_account_id_like_user: id,
+                            detailchoice_like_user: detailchoice,
+                            user_account_id_liked_user: id,
+                            detailchoice_liked_user: detailchoice,
+                            user_account_id_like_setting: id,
+                            detailchoice_like_setting: detailchoice,
+                            user_account_id_liked_setting: id,
+                            detailchoice_liked_setting: detailchoice
+                        },
+                        oracle_options, (err, result) => {
+                            if (err) {
+                                return callBack(err);
+                            } else {
+                                return callBack(null, result.rows);
+                            }
+                        });
+                    await pool2.close();
+                } catch (err) {
+                    return callBack(err.message);
+                } finally {
+                    null;
+                }
+            }
+            execute_sql();
+        }
+    },
+    getProfileTop: (statchoice, callBack) => {
+        if (process.env.SERVER_DB_USE == 1) {
+            pool.query(
+                `SELECT *
+					FROM (SELECT 'FOLLOWING' top,
+									u.id,
+									u.provider1_id,
+									u.provider2_id,
+									CONVERT(u.avatar USING UTF8) avatar,
+									CONVERT(u.provider1_image USING UTF8) provider1_image,
+									u.provider1_image_url,
+									CONVERT(u.provider2_image USING UTF8) provider2_image,
+									u.provider2_image_url,
+									u.username,
+									u.provider1_first_name,
+									u.provider2_first_name,
+									(SELECT COUNT(u_follow.user_account_id_follow)
+									FROM user_account_follow u_follow
+									WHERE u_follow.user_account_id_follow = u.id) count
+							FROM   	user_account u
+							WHERE   u.active = 1
+							AND     1 = ?
+							UNION ALL
+							SELECT 'LIKE_USER' top,
+									u.id,
+									u.provider1_id,
+									u.provider2_id,
+									CONVERT(u.avatar USING UTF8) avatar,
+									CONVERT(u.provider1_image USING UTF8) provider1_image,
+									u.provider1_image_url,
+									CONVERT(u.provider2_image USING UTF8) provider2_image,
+									u.provider2_image_url,
+									u.username,
+									u.provider1_first_name,
+									u.provider2_first_name,
+									(SELECT COUNT(u_like.user_account_id_like)
+									FROM user_account_like u_like
+									WHERE u_like.user_account_id_like = u.id) count
+							FROM   user_account u
+							WHERE  u.active = 1
+							AND    2 = ?
+							UNION ALL
+							SELECT 'VISITED' top,
+									u.id,
+									u.provider1_id,
+									u.provider2_id,
+									CONVERT(u.avatar USING UTF8) avatar,
+									CONVERT(u.provider1_image USING UTF8) provider1_image,
+									u.provider1_image_url,
+									CONVERT(u.provider2_image USING UTF8) provider2_image,
+									u.provider2_image_url,
+									u.username,
+									u.provider1_first_name,
+									u.provider2_first_name,
+									(SELECT COUNT(u_visited.user_account_id_view)
+									FROM user_account_view u_visited
+									WHERE u_visited.user_account_id_view = u.id) count
+							FROM   user_account u
+							WHERE  u.active = 1
+							AND    3 = ?
+							UNION ALL
+							SELECT 'LIKE_SETTING' top,
+									u.id,
+									u.provider1_id,
+									u.provider2_id,
+									CONVERT(u.avatar USING UTF8) avatar,
+									CONVERT(u.provider1_image USING UTF8) provider1_image,
+									u.provider1_image_url,
+									CONVERT(u.provider2_image USING UTF8) provider2_image,
+									u.provider2_image_url,
+									u.username,
+									u.provider1_first_name,
+									u.provider2_first_name,
+									(SELECT COUNT(us.user_account_id)
+									FROM app_timetables_user_setting_like u_like,
+											app_timetables_user_setting us
+									WHERE us.user_account_id = u.id
+										AND u_like.user_setting_id = us.id) count
+							FROM   user_account u
+							WHERE  u.active = 1
+							AND    4 = ?
+							UNION ALL
+							SELECT 'VISITED_SETTING' top,
+									u.id,
+									u.provider1_id,
+									u.provider2_id,
+									CONVERT(u.avatar USING UTF8) avatar,
+									CONVERT(u.provider1_image USING UTF8) provider1_image,
+									u.provider1_image_url,
+									CONVERT(u.provider2_image USING UTF8) provider2_image,
+									u.provider2_image_url,
+									u.username,
+									u.provider1_first_name,
+									u.provider2_first_name,
+									(SELECT COUNT(us.user_account_id)
+									FROM app_timetables_user_setting_view u_view,
+											app_timetables_user_setting us
+									WHERE us.user_account_id = u.id
+										AND u_view.user_setting_id = us.id) count
+							FROM   user_account u
+							WHERE  u.active = 1
+							AND    5 = ?)  t
+					ORDER BY 1,13 DESC, COALESCE(username, 
+												provider1_first_name,
+												provider2_first_name)
+					LIMIT 10`, 
+				[statchoice,
+				 statchoice,
+				 statchoice,
+				 statchoice,
+				 statchoice
+                ],
+                (error, results, fields) => {
+                    if (error) {
+                        return callBack(error);
+                    }
+                    return callBack(null, results);
+                }
+            )
+        } else if (process.env.SERVER_DB_USE == 2) {
+            async function execute_sql(err, result) {
+                try {
+                    const pool2 = await oracledb.getConnection();
+                    const result = await pool2.execute(
+                        `SELECT *
+							FROM (SELECT 'FOLLOWING' "top",
+											u.id "id",
+											u.provider1_id "provider1_id",
+											u.provider2_id "provider2_id",
+											u.avatar "avatar",
+											u.provider1_image "provider1_image",
+											u.provider1_image_url "provider1_image_url",
+											u.provider2_image "provider2_image",
+											u.provider2_image_url "provider2_image_url",
+											u.username "username",
+											u.provider1_first_name "provider1_first_name",
+											u.provider2_first_name "provider2_first_name",
+											(SELECT COUNT(u_follow.user_account_id_follow)
+											FROM user_account_follow u_follow
+											WHERE u_follow.user_account_id_follow = u.id) "count"
+									FROM   	user_account u
+									WHERE   u.active = 1
+									AND     1 = :statchoice_following
+									UNION ALL
+									SELECT 'LIKE_USER' "top",
+											u.id "id",
+											u.provider1_id "provider1_id",
+											u.provider2_id "provider2_id",
+											u.avatar "avatar",
+											u.provider1_image "provider1_image",
+											u.provider1_image_url "provider1_image_url",
+											u.provider2_image "provider2_image",
+											u.provider2_image_url "provider2_image_url",
+											u.username "username",
+											u.provider1_first_name "provider1_first_name",
+											u.provider2_first_name "provider2_first_name",
+											(SELECT COUNT(u_like.user_account_id_like)
+											FROM user_account_like u_like
+											WHERE u_like.user_account_id_like = u.id) "count"
+									FROM   user_account u
+									WHERE  u.active = 1
+									AND    2 = :statchoice_like_user
+									UNION ALL
+									SELECT 'VISITED' "top",
+											u.id "id",
+											u.provider1_id "provider1_id",
+											u.provider2_id "provider2_id",
+											u.avatar "avatar",
+											u.provider1_image "provider1_image",
+											u.provider1_image_url "provider1_image_url",
+											u.provider2_image "provider2_image",
+											u.provider2_image_url "provider2_image_url",
+											u.username "username",
+											u.provider1_first_name "provider1_first_name",
+											u.provider2_first_name "provider2_first_name",
+											(SELECT COUNT(u_visited.user_account_id_view)
+											FROM user_account_view u_visited
+											WHERE u_visited.user_account_id_view = u.id) "count"
+									FROM   user_account u
+									WHERE  u.active = 1
+									AND    3 = :statchoice_visited
+									UNION ALL
+									SELECT 'LIKE_SETTING' "top",
+											u.id "id",
+											u.provider1_id "provider1_id",
+											u.provider2_id "provider2_id",
+											u.avatar "avatar",
+											u.provider1_image "provider1_image",
+											u.provider1_image_url "provider1_image_url",
+											u.provider2_image "provider2_image",
+											u.provider2_image_url "provider2_image_url",
+											u.username "username",
+											u.provider1_first_name "provider1_first_name",
+											u.provider2_first_name "provider2_first_name",
+											(SELECT COUNT(us.user_account_id)
+											FROM app_timetables_user_setting_like u_like,
+													app_timetables_user_setting us
+											WHERE us.user_account_id = u.id
+												AND u_like.user_setting_id = us.id) "count"
+									FROM   user_account u
+									WHERE  u.active = 1
+									AND    4 = :statchoice_like_setting
+									UNION ALL
+									SELECT 'VISITED_SETTING' "top",
+											u.id "id",
+											u.provider1_id "provider1_id",
+											u.provider2_id "provider2_id",
+											u.avatar "avatar",
+											u.provider1_image "provider1_image",
+											u.provider1_image_url "provider1_image_url",
+											u.provider2_image "provider2_image",
+											u.provider2_image_url "provider2_image_url",
+											u.username "username",
+											u.provider1_first_name "provider1_first_name",
+											u.provider2_first_name "provider2_first_name",
+											(SELECT COUNT(us.user_account_id)
+											FROM app_timetables_user_setting_view u_view,
+													app_timetables_user_setting us
+											WHERE us.user_account_id = u.id
+												AND u_view.user_setting_id = us.id) "count"
+									FROM   user_account u
+									WHERE  u.active = 1
+									AND    5 = :statchoice_visited_setting) t
+							WHERE    ROWNUM <=10
+							ORDER BY 1,13 DESC, COALESCE("username", 
+														"provider1_first_name",
+														"provider2_first_name") `, 
+						{
+                            statchoice_following: statchoice,
+                            statchoice_like_user: statchoice,
+                            statchoice_visited: statchoice,
+                            statchoice_like_setting: statchoice,
+                            statchoice_visited_setting: statchoice
+                        },
+                        oracle_options, (err, result) => {
+                            if (err) {
+                                return callBack(err);
+                            } else {
+                                return callBack(null, result.rows);
+                            }
+                        });
+                    await pool2.close();
+                } catch (err) {
+                    return callBack(err.message);
+                } finally {
+                    null;
+                }
+            }
+            execute_sql();
+        }
+
+    },
+    checkPassword: (id, callBack) => {
+        if (process.env.SERVER_DB_USE == 1) {
+            pool.query(
+                `SELECT password
+				   FROM user_account
+				  WHERE id = ? `, [id],
+                (error, results, fields) => {
+                    if (error) {
+                        return callBack(error);
+                    }
+                    return callBack(null, results[0]);
+                }
+            )
+        } else if (process.env.SERVER_DB_USE == 2) {
+            async function execute_sql(err, result) {
+                try {
+                    const pool2 = await oracledb.getConnection();
+                    const result = await pool2.execute(
+                        `SELECT password "password"
+				       FROM user_account
+				   	  WHERE id = :id `, {
+                            id: id
+                        },
+                        oracle_options, (err, result) => {
+                            if (err) {
+                                return callBack(err);
+                            } else {
+                                return callBack(null, result.rows[0]);
+                            }
+                        });
+                    await pool2.close();
+                } catch (err) {
+                    return callBack(err.message);
+                } finally {
+                    null;
+                }
+            }
+            execute_sql();
+        }
+    },
+    updateUserLocal: (data, search_id, callBack) => {
+        if (process.env.SERVER_DB_USE == 1) {
+            pool.query(
+                `UPDATE user_account
+					SET bio = ?,
+					private = ?,
+					user_level = ?,
+					username = ?,
+					password = ?,
+					password_reminder = ?,
+					email = ?,
+					avatar = ?,
+					date_modified = SYSDATE()
+				WHERE id = ? `, [
+                    data.bio,
+                    data.private,
+                    data.user_level,
+                    data.username,
+                    data.password,
+                    data.password_reminder,
+                    data.email,
+                    data.avatar,
+                    search_id
+                ],
+                (error, results, fields) => {
+                    if (error) {
+                        return callBack(error);
+                    }
+                    return callBack(null, results);
+                }
+            )
+        } else if (process.env.SERVER_DB_USE == 2) {
+            async function execute_sql(err, result) {
+                try {
+                    const pool2 = await oracledb.getConnection();
+                    const result = await pool2.execute(
+                        `UPDATE user_account
+						SET bio = :bio,
+						private = :private,
+						user_level = :user_level,
+						username = :username,
+						password = :password,
+						password_reminder = :password_reminder,
+						email = :email,
+						avatar = :avatar,
+						date_modified = SYSDATE
+					WHERE id = :id `, {
+                            bio: data.bio,
+                            private: data.private,
+                            user_level: data.user_level,
+                            username: data.username,
+                            password: data.password,
+                            password_reminder: data.password_reminder,
+                            email: data.email,
+                            avatar: Buffer.from(data.avatar, 'utf8'),
+                            id: search_id
+                        },
+                        oracle_options, (err, result) => {
+                            if (err) {
+                                return callBack(err);
+                            } else {
+                                return callBack(null, result);
+                            }
+                        });
+                    await pool2.close();
+                } catch (err) {
+                    return callBack(err.message);
+                } finally {
+                    null;
+                }
+            }
+            execute_sql();
+        }
+    },
+    updateUserCommon: (data, id, callBack) => {
+        if (process.env.SERVER_DB_USE == 1) {
+            pool.query(
+                `UPDATE user_account
+					SET bio = ?,
+					private = ?,
+					user_level = ?,
+					date_modified = SYSDATE()
+				WHERE id = ? `, [
+                    data.bio,
+                    data.private,
+                    data.user_level,
+                    id
+                ],
+                (error, results, fields) => {
+                    if (error) {
+                        return callBack(error);
+                    }
+                    return callBack(null, results);
+                }
+            )
+        } else if (process.env.SERVER_DB_USE == 2) {
+            async function execute_sql(err, result) {
+                try {
+                    const pool2 = await oracledb.getConnection();
+                    const result = await pool2.execute(
+                        `UPDATE user_account
+						SET bio = :bio,
+						private = :private,
+						user_level = :user_level,
+						date_modified = SYSDATE
+					WHERE id = :id `, {
+                            bio: data.bio,
+                            private: data.private,
+                            user_level: data.user_level,
+                            id: id
+                        },
+                        oracle_options, (err, result) => {
+                            if (err) {
+                                return callBack(err);
+                            } else {
+                                return callBack(null, result);
+                            }
+                        });
+                    await pool2.close();
+                } catch (err) {
+                    return callBack(err.message);
+                } finally {
+                    null;
+                }
+            }
+            execute_sql();
+        }
+    },
+    deleteUser: (id, callBack) => {
+        if (process.env.SERVER_DB_USE == 1) {
+            pool.query(
+                `DELETE FROM user_account
+				WHERE id = ? `, [id],
+                (error, results, fields) => {
+                    if (error) {
+                        return callBack(error);
+                    }
+                    return callBack(null, results);
+                }
+            )
+        } else if (process.env.SERVER_DB_USE == 2) {
+            async function execute_sql(err, result) {
+                try {
+                    const pool2 = await oracledb.getConnection();
+                    const result = await pool2.execute(
+                        `DELETE FROM user_account
+					WHERE id = :id `, {
+                            id: id
+                        },
+                        oracle_options, (err, result) => {
+                            if (err) {
+                                return callBack(err);
+                            } else {
+                                return callBack(null, result);
+                            }
+                        });
+                    await pool2.close();
+                } catch (err) {
+                    return callBack(err.message);
+                } finally {
+                    null;
+                }
+            }
+            execute_sql();
+        }
+    },
+    userLogin: (data, callBack) => {
+        if (process.env.SERVER_DB_USE == 1) {
+            pool.query(
+                `SELECT
+					id,
+					bio,
+					username,
+					password,
+					password_reminder,
+					email,
+					CONVERT(avatar USING UTF8) avatar
+				FROM user_account
+				WHERE username = ? 
+				AND  active = ? `, [data.username,
+                    data.active
+                ],
+                (error, results, fields) => {
+                    if (error) {
+                        return callBack(error);
+                    }
+                    return callBack(null, results[0]);
+                }
+            )
+        } else if (process.env.SERVER_DB_USE == 2) {
+            async function execute_sql(err, result) {
+                try {
+                    const pool2 = await oracledb.getConnection();
+                    const result = await pool2.execute(
+                        `SELECT
+						id "id",
+						bio "bio",
+						username "username",
+						password "password",
+						password_reminder "password_reminder",
+						email "email",
+						avatar "avatar"
+					FROM user_account
+					WHERE username = :username 
+					AND  active = :active `, {
+                            username: data.username,
+                            active: data.active
+                        },
+                        oracle_options, (err, result) => {
+                            if (err) {
+                                return callBack(err);
+                            } else {
+                                return callBack(null, result.rows[0]);
+                            }
+                        });
+                    await pool2.close();
+                } catch (err) {
+                    return callBack(err.message);
+                } finally {
+                    null;
+                }
+            }
+            execute_sql();
+        }
+    },
+    updateSigninProvider: (provider_no, id, data, callBack) => {
+        if (provider_no == 1) {
+            if (process.env.SERVER_DB_USE == 1) {
+                pool.query(
+                    `UPDATE user_account
+					SET    provider1_id = ?,
+							provider1_first_name = ?,
+							provider1_last_name = ?,
+							provider1_image = ?,
+							provider1_image_url = ?,
+							provider1_email = ?,
+							date_modified = SYSDATE()
+					WHERE  id = ?
+					AND    active =1 `, [data.provider1_id,
+                        data.provider1_first_name,
+                        data.provider1_last_name,
+                        data.provider1_image,
+                        data.provider1_image_url,
+                        data.provider1_email,
+                        id
+                    ],
+                    (error, results, fields) => {
+                        if (error) {
+                            return callBack(error);
+                        }
+                        return callBack(null, results[0]);
+                    }
+                )
+            } else if (process.env.SERVER_DB_USE == 2) {
+                async function execute_sql(err, result) {
+                    try {
+                        const pool2 = await oracledb.getConnection();
+                        const result = await pool2.execute(
+                            `UPDATE user_account
+						SET    provider1_id = :provider1_id,
+								provider1_first_name = :provider1_first_name,
+								provider1_last_name = :provider1_last_name,
+								provider1_image = :provider1_image,
+								provider1_image_url = :provider1_image_url,
+								provider1_email = :provider1_email,
+								date_modified = SYSDATE
+						WHERE  id = :id
+						AND    active =1 `, {
+                                provider1_id: data.provider1_id,
+                                provider1_first_name: data.provider1_first_name,
+                                provider1_last_name: data.provider1_last_name,
+                                provider1_image: Buffer.from(data.provider1_image, 'utf8'),
+                                provider1_image_url: data.provider1_image_url,
+                                provider1_email: data.provider1_email,
+                                id: id
+                            },
+                            oracle_options, (err, result) => {
+                                if (err) {
+                                    console.log('updateSigninProvider err:' + err);
+                                    return callBack(err);
+                                } else {
+                                    return callBack(null, result[0]);
+                                }
+                            });
+                        await pool2.close();
+                    } catch (err) {
+                        return callBack(err.message);
+                    } finally {
+                        null;
+                    }
+                }
+                execute_sql();
+            }
+        } else {
+            if (process.env.SERVER_DB_USE == 1) {
+                pool.query(
+                    `UPDATE user_account
+					SET    provider2_id = ?,
+							provider2_first_name = ?,
+							provider2_last_name = ?,
+							provider2_image = ?,
+							provider2_image_url = ?,
+							provider2_email = ?,
+							date_modified = SYSDATE()
+					WHERE  id = ?
+					AND    active =1 `, [data.provider2_id,
+                        data.provider2_first_name,
+                        data.provider2_last_name,
+                        data.provider2_image,
+                        data.provider2_image_url,
+                        data.provider2_email,
+                        id
+                    ],
+                    (error, results, fields) => {
+                        if (error) {
+                            return callBack(error);
+                        }
+                        return callBack(null, results[0]);
+                    }
+                )
+            } else if (process.env.SERVER_DB_USE == 2) {
+                async function execute_sql(err, result) {
+                    try {
+                        const pool2 = await oracledb.getConnection();
+                        const result = await pool2.execute(
+                            `UPDATE user_account
+						SET    provider2_id = :provider2_id,
+								provider2_first_name = :provider2_first_name,
+								provider2_last_name = :provider2_last_name,
+								provider2_image = :provider2_image,
+								provider2_image_url = :provider2_image_url,
+								provider2_email = :provider2_email,
+								date_modified = SYSDATE
+						WHERE  id = :id
+						AND    active =1 `, {
+                                provider2_id: data.provider2_id,
+                                provider2_first_name: data.provider2_first_name,
+                                provider2_last_name: data.provider2_last_name,
+                                provider2_image: Buffer.from(data.provider2_image, 'utf8'),
+                                provider2_image_url: data.provider2_image_url,
+                                provider2_email: data.provider2_email,
+                                id: id
+                            },
+                            oracle_options, (err, result) => {
+                                if (err) {
+                                    return callBack(err);
+                                } else {
+                                    return callBack(null, result[0]);
+                                }
+                            });
+                        await pool2.close();
+                    } catch (err) {
+                        return callBack(err.message);
+                    } finally {
+                        null;
+                    }
+                }
+                execute_sql();
+            }
+        }
+    },
+    getUserByProviderId: (provider_no, search_id, callBack) => {
+        if (process.env.SERVER_DB_USE == 1) {
+            pool.query(
+                `SELECT
+					u.id,
+					u.bio,
+					(SELECT MAX(ul.date_created)
+					FROM user_account_logon ul
+					WHERE ul.user_account_id = u.id
+						AND ul.result=1) last_logontime,
+					u.date_created,
+					u.date_modified,
+					u.username,
+					u.password,
+					u.password_reminder,
+					u.email,
+					CONVERT(u.avatar USING UTF8) avatar,
+					u.validation_code,
+					u.active,
+					u.provider1_id,
+					u.provider1_first_name,
+					u.provider1_last_name,
+					CONVERT(u.provider1_image USING UTF8) provider1_image,
+					u.provider1_image_url,
+					u.provider1_email,
+					u.provider2_id,
+					u.provider2_first_name,
+					u.provider2_last_name,
+					CONVERT(u.provider2_image USING UTF8) provider2_image,
+					u.provider2_image_url,
+					u.provider2_email
+				FROM user_account u
+				WHERE (u.provider1_id = ?
+					AND
+					1 = ?) 
+				OR    (u.provider2_id = ?
+					AND
+					2 = ?)`, [search_id,
+                    provider_no,
+                    search_id,
+                    provider_no
+                ],
+                (error, results, fields) => {
+                    if (error) {
+                        return callBack(error);
+                    }
+                    return callBack(null, results);
+                }
+            )
+        } else if (process.env.SERVER_DB_USE == 2) {
+            async function execute_sql(err, result) {
+                try {
+                    const pool2 = await oracledb.getConnection();
+                    const result = await pool2.execute(
+                        `SELECT
+						u.id "id",
+						u.bio "bio",
+						(SELECT MAX(ul.date_created)
+						   FROM user_account_logon ul
+						  WHERE ul.user_account_id = u.id
+							AND ul.result=1) "last_logontime",
+						u.date_created "date_created",
+						u.date_modified "date_modified",
+						u.username "username",
+						u.password "password",
+						u.password_reminder "password_reminder",
+						u.email "email",
+						u.avatar "avatar",
+						u.validation_code "validation_code",
+						u.active "active",
+						u.provider1_id "provider1_id",
+						u.provider1_first_name "provider1_first_name",
+						u.provider1_last_name "provider1_last_name",
+						u.provider1_image "provider1_image",
+						u.provider1_image_url "provider1_image_url",
+						u.provider1_email "provider1_email",
+						u.provider2_id "provider2_id",
+						u.provider2_first_name "provider2_first_name",
+						u.provider2_last_name "provider2_last_name",
+						u.provider2_image "provider2_image",
+						u.provider2_image_url "provider2_image_url",
+						u.provider2_email "provider2_email"
+					FROM user_account u
+					WHERE (u.provider1_id = :provider1_id
+						AND
+						1 = :provider1_no) 
+					OR    (u.provider2_id = :provider2_id
+						AND
+						2 = :provider2_no) `, {
+                            provider1_id: search_id,
+                            provider1_no: provider_no,
+                            provider2_id: search_id,
+                            provider2_no: provider_no
+                        },
+                        oracle_options, (err, result) => {
+                            if (err) {
+                                console.log('getUserByProviderId err:' + err);
+                                return callBack(err);
+                            } else {
+                                return callBack(null, result.rows);
+                            }
+                        });
+                    await pool2.close();
+                } catch (err) {
+                    return callBack(err.message);
+                } finally {
+                    null;
+                }
+            }
+            execute_sql();
+        }
+    }
+};
