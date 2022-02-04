@@ -57,36 +57,36 @@
     <meta name='apple-mobile-web-app-title' content=''>
     <meta name='google-signin-client_id' content=''>
 	<script>
-		get_app_globals();
-		set_app_globals_head();
-		/*Google*/
-		var tag = document.createElement('script');
-		tag.src = global_app_user_provider1_api_src + navigator.language;
-		tag.defer = true;
-		var firstScriptTag = document.getElementsByTagName('script')[0];
-		firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-		/*Facebook*/
-		window.fbAsyncInit = function() {
-			FB.init({
-			appId      : global_app_user_provider2_id,
-			cookie     : true,
-			xfbml      : true,
-			version    : global_app_user_provider2_api_version
-			});
-			
-			FB.AppEvents.logPageView();   
-			
-		};
-		(function(d, s, id){
-			var js, fjs = d.getElementsByTagName(s)[0];
-			if (d.getElementById(id)) {return;}
-			js = d.createElement(s); js.id = id;
-			js.src = global_app_user_provider2_api_src + 
-					 navigator.language.replace(/-/g, '_') + 
-					 global_app_user_provider2_api_src2;
-			fjs.parentNode.insertBefore(js, fjs);
-		}(document, 'script', 'facebook-jssdk'));
-
+		get_app_globals().then(function(){
+			set_app_globals_head();
+			/*Google*/
+			var tag = document.createElement('script');
+			tag.src = global_app_user_provider1_api_src + navigator.language;
+			tag.defer = true;
+			var firstScriptTag = document.getElementsByTagName('script')[0];
+			firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+			/*Facebook*/
+			window.fbAsyncInit = function() {
+				FB.init({
+				appId      : global_app_user_provider2_id,
+				cookie     : true,
+				xfbml      : true,
+				version    : global_app_user_provider2_api_version
+				});
+				
+				FB.AppEvents.logPageView();   
+				
+			};
+			(function(d, s, id){
+				var js, fjs = d.getElementsByTagName(s)[0];
+				if (d.getElementById(id)) {return;}
+				js = d.createElement(s); js.id = id;
+				js.src = global_app_user_provider2_api_src + 
+						navigator.language.replace(/-/g, '_') + 
+						global_app_user_provider2_api_src2;
+				fjs.parentNode.insertBefore(js, fjs);
+			}(document, 'script', 'facebook-jssdk'));
+		})
 	</script>
     <link rel='shortcut icon' href='/app_timetables/images/favicon.ico' type='image/x-icon'>
     <link rel='icon' type='image/png' href='/app_timetables/images/favicon-16x16.png' sizes='16x16'>
