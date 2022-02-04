@@ -1478,6 +1478,13 @@ A4	210 x 297mm
 	#app_logo {
 		display: block;
 	}
+	#profile_user_settings_title_row div:nth-child(1),
+	.profile_user_settings_row div:nth-child(1){
+		width:200px;
+	}
+	#profile_main_col1 {
+		width: 250px;
+	}
 	#window_preview_content{
 		-moz-transform: inherit;
 	  	-moz-transform-origin: inherit;

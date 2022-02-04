@@ -32,6 +32,7 @@ INSERT INTO app_message (message_code, app_id) VALUES ('20400',1);
 INSERT INTO app_message (message_code, app_id) VALUES ('20401',1);
 INSERT INTO app_message (message_code, app_id) VALUES ('20402',1);
 INSERT INTO app_message (message_code, app_id) VALUES ('20403',1);
+INSERT INTO app_message (message_code, app_id) VALUES ('20500',1);
 --
 -- Dumping data for table `app_object`
 --
@@ -1808,6 +1809,7 @@ INSERT INTO message (message_level_id, message_type_id, code) VALUES (1,4,'20400
 INSERT INTO message (message_level_id, message_type_id, code) VALUES (1,4,'20401');
 INSERT INTO message (message_level_id, message_type_id, code) VALUES (1,4,'20402');
 INSERT INTO message (message_level_id, message_type_id, code) VALUES (1,4,'20403');
+INSERT INTO message (message_level_id, message_type_id, code) VALUES (1,4,'20500');
 --
 -- Dumping data for table `message_level`
 --
