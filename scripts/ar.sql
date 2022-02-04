@@ -1133,3 +1133,4 @@ INSERT INTO message_translation (language_id, message_code, text) VALUES (25,'20
 INSERT INTO message_translation (language_id, message_code, text) VALUES (25,'20401','Failed to update user setting');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (25,'20402','Failed to update user');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (25,'20403','Invalid password');
+INSERT INTO message_translation (language_id, message_code, text) VALUES (25,'20500','Missing latitude or longitude');
