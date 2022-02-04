@@ -63,6 +63,8 @@ function app_log(app_module, app_module_type, app_module_request, app_module_res
 		});
 }
 function get_gps_from_ip(){
+    var status;
+    var json;
 	fetch(global_service_gps_ip + '?app_id=' + global_app_id,
         {method: 'GET',
         headers: {
@@ -71,108 +73,82 @@ function get_gps_from_ip(){
 			},
         })
         .then(function(response) {
-            if (response.status == 200)
-                return response.json();
-            else{
-                alert('Error: get_gps_from_ip: ' + response.status);
-                return response;
-            }
+            status = response.status;
+            return response.text();
         })
         .then(function(result) {
-            global_user_gps_latitude  = result.geoplugin_latitude;
-            global_user_gps_longitude = result.geoplugin_longitude;
-            global_user_gps_place     = result.geoplugin_city + ', ' + 
-                                        result.geoplugin_regionName + ', ' + 
-                                        result.geoplugin_countryName;
-            app_log('INIT', global_module_type, location.hostname, global_user_gps_place, '', 
-                    global_user_gps_latitude, global_user_gps_longitude); 
-        })
-        .catch((error) => {
-            alert('Error: get_gps_from_ip:' + error)
+            if (status==200){
+                json = JSON.parse(result);
+                global_user_gps_latitude  = json.geoplugin_latitude;
+                global_user_gps_longitude = json.geoplugin_longitude;
+                global_user_gps_place     = json.geoplugin_city + ', ' + 
+                                            json.geoplugin_regionName + ', ' + 
+                                            json.geoplugin_countryName;
+                app_log('INIT', global_module_type, location.hostname, global_user_gps_place, '', 
+                        global_user_gps_latitude, global_user_gps_longitude); 
+            }
+            else
+                alert('Error: get_gps_from_ip: ' + result);
         });
 
 	return null;
 }
 
 function get_token() {
-	//get token access
-    fetch(global_auth_token_url + 1,
+	var status;
+    var json;
+    fetch(global_auth_token_url + '?app_id=0&app_user_id=',
     {method: 'POST',
      headers: {
         'Authorization': 'Basic ' + btoa(global_rest_client_id + ':' + global_rest_client_secret)
         }
     })
       .then(function(response) {
-          if (response.status == 200)
-              return response.json();
-          else{
-              alert('Error: get_token: ' + response.status);
-              return response;
-          }
+            status = response.status;
+            return response.text();
       })
       .then(function(result) {
-          if (result.success === 1){
-            global_rest_at = result.token;
-            fetch(global_auth_token_url + 2,
-                {method: 'POST',
-                 headers: {
-                   'Authorization': 'Basic ' + btoa(global_rest_client_id + ':' + global_rest_client_secret)
-                   }
-                })
-                .then(function(response) {
-                    if (response.status == 200)
-                        return response.json();
-                    else{
-                        alert('Error: get_token2: ' + response.status);
-                        return response;
-                    }
-                })
-                .then(function(result) {
-                    if (result.success === 1){
-                        //set token data
-			            global_rest_dt = result.token;
-                        get_gps_from_ip();
-                    }
-                })
-                .catch((error) => {
-                    alert('Error: get_token2:' + error)
-                });
-          }
-        })
-      .catch((error) => {
-          alert('Error: get_token:' + error)
-      });
+          if (status == 200)
+            json = JSON.parse(result);
+            if (json.success === 1){
+                global_rest_at = json.token_at;
+                global_rest_dt = json.token_dt;
+                get_gps_from_ip();
+            }
+          else
+            alert('Error: get_token: ' + result);
+        });
 	return null;
 }
 
 function get_globals() {
+    var status;
+    var json;
     fetch(global_rest_app_globals,
       {method: 'GET'})
         .then(function(response) {
-            if (response.status == 200)
-                return response.json();
-            else{
-                alert('Error: get_globals: ' + response.status);
-                return response;
-            }
+            status = response.status;
+            return response.text();
         })
         .then(function(result) {
-            if (result.success === 1){
-                global_host	                = result.host;
-                global_auth_token_url       = 'https://' + global_host + result.auth_token_url;
-                global_rest_client_id	    = result.rest_client_id;
-                global_rest_client_secret   = result.rest_client_secret;
-                global_service_geolocation 	= 'https://' + global_host + result.service_geolocation;
-                global_service_gps_ip    	= global_service_geolocation + result.service_gps_ip;
-                global_rest_app_log         = global_rest_url_base + result.rest_app_log;
+            if (status==200){
+                json = JSON.parse(result);
+                if (json.success === 1){    
+                    global_host	                = json.host;
+                    global_auth_token_url       = 'https://' + global_host + json.auth_token_url;
+                    global_rest_client_id	    = json.rest_client_id;
+                    global_rest_client_secret   = json.rest_client_secret;
+                    global_service_geolocation 	= 'https://' + global_host + json.service_geolocation;
+                    global_service_gps_ip    	= global_service_geolocation + json.service_gps_ip;
+                    global_rest_app_log         = global_rest_url_base + json.rest_app_log;
 
-                document.getElementById('app_email').href='mailto:' + result.email;
-                document.getElementById('app_email').innerHTML=result.email;
-                get_token();
+                    document.getElementById('app_email').href='mailto:' + json.email;
+                    document.getElementById('app_email').innerHTML=json.email;
+                    get_token();
+                }
             }
-        })
-        .catch((error) => {
-            alert('Error: get_globals:' + error)
+            else
+                alert('Error: get_globals: ' + result);
         });
     return null;
 }

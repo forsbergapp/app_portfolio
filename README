@@ -162,6 +162,7 @@ SERVER_DB2_CONFIGDIR                    		={PATH_TNSNAMES_SQLNET_OR_WALLET_FILE_
 APP_URL							={HOSTNAME} (or localhost)
 APP_HOSTNAME						=https://localhost
 APP_COPYRIGHT						={COPYRIGHT TEXT}
+APP_EMAIL						={HOMEPAGE EMAIL}
 APP_USER_PROVIDER1_ID					={GOOGLE_ID}
 APP_USER_PROVIDER1_NAME					=Google
 APP_USER_PROVIDER1_API_SRC				=https://apis.google.com/js/platform.js?hl=
