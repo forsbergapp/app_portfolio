@@ -43,7 +43,7 @@ module.exports = {
                             });
         req.body.app_id 					= req.query.app_id;
         req.body.app_module				    = 'AUTH';
-        req.body.app_module_type			= 'TOKEN_GET';
+        req.body.app_module_type			= 'AUTH_TOKEN_GET';
         req.body.app_module_request		    = req.baseUrl;
         req.body.app_module_result			= 'AT:' + jsontoken_at + ',DT:' + jsontoken_dt;
         req.body.app_user_id				= req.query.app_user_id;

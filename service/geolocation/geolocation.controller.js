@@ -12,7 +12,7 @@ module.exports = {
 			 //Missing latitude or longitude
 			 getMessage(20500, 
 				data.query.app_id, 
-				'en', (err,results)  => {
+				data.query.lang_code, (err,results)  => {
 					return res.status(500).send(
 						results.text
 						);
