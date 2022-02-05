@@ -194,10 +194,10 @@ function getColumnTitles(transliteration = 0, calendartype, locale, second_local
 
 async function settings_translate_report() {
     var json;
-    var url = global_rest_url_base + global_rest_app_object + document.getElementById('setting_select_locale').value +
-			'?app_id=' + global_app_id;
     var status;
-    await fetch(url, {
+    await fetch(global_rest_url_base + global_rest_app_object + document.getElementById('setting_select_locale').value +
+                '?app_id=' + global_app_id + 
+                '&lang_code=' + document.getElementById('setting_select_locale').value, {
         method: 'GET',
         headers: {
             'Authorization': 'Bearer ' + global_rest_dt,
@@ -230,10 +230,10 @@ async function settings_translate_report() {
             //check if second language is used
             if (document.getElementById('setting_select_report_locale_second').value !=0){
                 var json2;
-                var url2 = global_rest_url_base + global_rest_app_object + document.getElementById('setting_select_report_locale_second').value +
-                        '?app_id=' + global_app_id;
                 var status2;
-                fetch(url2, {
+                fetch(global_rest_url_base + global_rest_app_object + document.getElementById('setting_select_report_locale_second').value +
+                        '?app_id=' + global_app_id + 
+                        '&lang_code=' + document.getElementById('setting_select_locale').value, {
                     method: 'GET',
                     headers: {
                         'Authorization': 'Bearer ' + global_rest_dt,
@@ -290,10 +290,10 @@ async function settings_translate_report() {
 
 async function settings_translate() {
 	var json;
-    var url = global_rest_url_base + global_rest_app_object + document.getElementById('setting_select_locale').value +
-			'?app_id=' + global_app_id;
     var status;
-    await fetch(url, {
+    await fetch(global_rest_url_base + global_rest_app_object + document.getElementById('setting_select_locale').value +
+                '?app_id=' + global_app_id + 
+                '&lang_code=' + document.getElementById('setting_select_locale').value, {
         method: 'GET',
         headers: {
             'Authorization': 'Bearer ' + global_rest_dt,
@@ -383,10 +383,10 @@ async function settings_translate() {
             //check if second language is used
             if (document.getElementById('setting_select_report_locale_second').value !=0){
                 var json2;
-                var url2 = global_rest_url_base + global_rest_app_object + document.getElementById('setting_select_report_locale_second').value +
-                            '?app_id=' + global_app_id;
                 var status2;
-                fetch(url2, {
+                fetch(global_rest_url_base + global_rest_app_object + document.getElementById('setting_select_report_locale_second').value +
+                        '?app_id=' + global_app_id + 
+                        '&lang_code=' + document.getElementById('setting_select_locale').value, {
                     method: 'GET',
                     headers: {
                         'Authorization': 'Bearer ' + global_rest_dt,
@@ -450,8 +450,9 @@ async function get_app_globals() {
     var status;
     var json;
     // first REST API call, no BASIC /BEARER ?
-    await fetch(global_rest_url_base + global_rest_app_globals, {
-            method: 'GET'
+    await fetch(global_rest_url_base + global_rest_app_globals + 
+                '?lang_code=' + document.getElementById('setting_select_locale').value, {
+                method: 'GET'
     })
     .then(function(response) {
         status = response.status;
@@ -654,10 +655,9 @@ async function get_app_globals() {
 }
 
 function show_error(code){
-    var url = global_rest_url_base + global_rest_message_translation + code + 
-            '?app_id=' + global_app_id +
-            '&lang_code=' + document.getElementById('setting_select_locale').value;
-    fetch(url, 
+    fetch(global_rest_url_base + global_rest_message_translation + code + 
+        '?app_id=' + global_app_id +
+        '&lang_code=' + document.getElementById('setting_select_locale').value, 
     {
         method: 'GET',
         headers: {
@@ -900,12 +900,13 @@ function isToday(checkdate){
 
 async function get_place_from_gps(latitude, longitude) {
     var error_message;
-    var url = global_service_gps_place + '?app_id= ' + global_app_id +
-        '&app_user_id=' + document.getElementById('setting_data_userid_logged_in').innerHTML +
-        '&latitude=' + latitude +
-        '&longitude=' + longitude;
     var status;
-    await fetch(url, {
+    await fetch(global_service_gps_place + 
+                '?app_id= ' + global_app_id +
+                '&app_user_id=' + document.getElementById('setting_data_userid_logged_in').innerHTML +
+                '&latitude=' + latitude +
+                '&longitude=' + longitude +
+                '&lang_code=' + document.getElementById('setting_select_locale').value, {
         method: 'GET',
         headers: {
             'Authorization': 'Bearer ' + global_rest_dt,
@@ -935,10 +936,11 @@ async function get_place_from_gps(latitude, longitude) {
 async function get_gps_from_ip() {
 
     var error_message;
-    var url = global_service_gps_ip + '?app_id=' + global_app_id + '&app_user_id=' +
-        document.getElementById('setting_data_userid_logged_in').innerHTML;
     var status;
-    await fetch(url, {
+    await fetch(global_service_gps_ip + 
+                '?app_id=' + global_app_id + 
+                '&app_user_id=' + document.getElementById('setting_data_userid_logged_in').innerHTML +
+                '&lang_code=' + document.getElementById('setting_select_locale').value, {
         method: 'GET',
         headers: {
             'Authorization': 'Bearer ' + global_rest_dt,
@@ -1345,7 +1347,10 @@ function create_qr(div, url) {
 async function get_token() {
     var status;
     //get token access
-    await fetch(global_auth_token_url + '?app_id=' + global_app_id + '&app_user_id=' + document.getElementById('setting_data_userid_logged_in').innerHTML, {
+    await fetch(global_auth_token_url + 
+                '?app_id=' + global_app_id + 
+                '&app_user_id=' + document.getElementById('setting_data_userid_logged_in').innerHTML +
+                '&lang_code=' + document.getElementById('setting_select_locale').value, {
         method: 'POST',
         headers: {
             'Authorization': 'Basic ' + btoa(global_app_rest_client_id + ':' + global_app_rest_client_secret)
@@ -2076,7 +2081,8 @@ function user_verify_check_input(item, nextField) {
 
             //activate user
             json_data = '{"validation_code":"' + validation_code + '"}';
-            fetch(global_rest_url_base + global_rest_user_account_activate + user_id, {
+            fetch(global_rest_url_base + global_rest_user_account_activate + user_id +
+                    '?lang_code=' + document.getElementById('setting_select_locale').value, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
@@ -2183,7 +2189,8 @@ function user_edit() {
         var status;
         //get user from REST API
         spinner('EDIT', 'visible');
-        fetch(global_rest_url_base + global_rest_user_account + user_id.innerHTML, {
+        fetch(global_rest_url_base + global_rest_user_account + user_id.innerHTML +
+                '?lang_code=' + document.getElementById('setting_select_locale').value, {
                 method: 'GET',
                 headers: {
                     'Authorization': 'Bearer ' + global_rest_at
@@ -2346,7 +2353,7 @@ function user_update() {
     }
     spinner('UPDATE', 'visible');
     //update user using REST API
-    fetch(url, {
+    fetch(url + '?lang_code=' + document.getElementById('setting_select_locale').value, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -2416,7 +2423,9 @@ function user_delete(choice) {
     user_edit();
     if (choice == 1) {
         spinner('DELETE_ACCOUNT', 'visible');
-        fetch(global_rest_url_base + global_rest_user_account + user_account_id + '?app_id=' + global_app_id, 
+        fetch(global_rest_url_base + global_rest_user_account + user_account_id + 
+                '?app_id=' + global_app_id +
+                '&lang_code=' + document.getElementById('setting_select_locale').value, 
             {
                 method: 'DELETE',
                 headers: {
@@ -2457,10 +2466,7 @@ function user_login() {
     username = document.getElementById('login_username');
     password = document.getElementById('login_password');
 
-    var url;
     var user_id = document.getElementById('setting_data_userid_logged_in');
-
-    url = global_rest_url_base + global_rest_user_account_login;
 
     json_data = '{' +
         '"app_id": ' + global_app_id + ',' +
@@ -2482,7 +2488,8 @@ function user_login() {
     spinner('LOGIN', 'visible');
     get_token().then(function(){
         //get user with username and password from REST API
-        fetch(url, {
+        fetch(global_rest_url_base + global_rest_user_account_login + 
+                '?lang_code=' + document.getElementById('setting_select_locale').value, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -2558,10 +2565,11 @@ async function user_setting_get(user_setting_id) {
     var select = document.getElementById("setting_select_user_setting");
     var option;
     var json;
-    var url = global_rest_url_base + global_rest_app_timetables_user_setting + user_setting_id + '?app_id=' + global_app_id;
     var status;
 
-    await fetch(url, {
+    await fetch(global_rest_url_base + global_rest_app_timetables_user_setting + user_setting_id +
+                '?app_id=' + global_app_id + 
+                '&lang_code=' + document.getElementById('setting_select_locale').value, {
             method: 'GET',
             headers: {
                 'Authorization': 'Bearer ' + global_rest_at
@@ -2669,9 +2677,10 @@ async function user_settings_get(userid, show_ui = 1, user_setting_id = '') {
     var json;
     var i;
     var status;
-
-    var url = global_rest_url_base + global_rest_app_timetables_user_setting_user_account_id + userid + '?app_id=' + global_app_id;
-    await fetch(url, {
+    
+    await fetch(global_rest_url_base + global_rest_app_timetables_user_setting_user_account_id + userid +
+                '?app_id=' + global_app_id + 
+                '&lang_code=' + document.getElementById('setting_select_locale').value, {
             method: 'GET',
             headers: {
                 'Authorization': 'Bearer ' + global_rest_at
@@ -2880,7 +2889,6 @@ function user_signup() {
     var password = document.getElementById('signup_password').value;
     var password_confirm = document.getElementById('signup_password_confirm').value;
     var password_reminder = document.getElementById('signup_password_reminder').value;
-    var url = global_rest_url_base + global_rest_user_account_signup;
     var select_setting_country = document.getElementById('setting_select_country');
     var select_setting_city = document.getElementById('setting_select_city');
     var select_setting_popular_place = document.getElementById('setting_select_popular_place');
@@ -2966,7 +2974,8 @@ function user_signup() {
     }
 
     spinner('SIGNUP', 'visible');
-    fetch(url, {
+    fetch(global_rest_url_base + global_rest_user_account_signup +
+            '?lang_code=' + document.getElementById('setting_select_locale').value, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -3338,7 +3347,8 @@ function user_settings_save() {
         '}';
     spinner('SAVE', 'visible');
 
-    fetch(global_rest_url_base + global_rest_app_timetables_user_setting + user_setting_id, {
+    fetch(global_rest_url_base + global_rest_app_timetables_user_setting + user_setting_id +
+            '?lang_code=' + document.getElementById('setting_select_locale').value, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -3442,7 +3452,8 @@ function user_settings_add(signup = false) {
     //adding user_id twice is bugfix, variable user_account_id seem to disappear if mentioned once
     //setting hardcoded number works but not applicable here
     spinner('ADD', 'visible');
-    fetch(global_rest_url_base + global_rest_app_timetables_user_setting, {
+    fetch(global_rest_url_base + global_rest_app_timetables_user_setting +
+            '?lang_code=' + document.getElementById('setting_select_locale').value, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -3493,7 +3504,9 @@ function user_settings_delete() {
     var status;
     if (select_user_setting.length > 1) {
         spinner('DELETE', 'visible');
-        fetch(global_rest_url_base + global_rest_app_timetables_user_setting + user_setting_id + '?app_id=' + global_app_id, 
+        fetch(global_rest_url_base + global_rest_app_timetables_user_setting + user_setting_id + 
+                '?app_id=' + global_app_id +
+                '&lang_code=' + document.getElementById('setting_select_locale').value, 
             {
                 method: 'DELETE',
                 headers: {
@@ -3736,7 +3749,6 @@ function update_settings_icon(url = '', logoff = false) {
 function updateProviderUser(provider_no, profile_id, profile_first_name, profile_last_name, profile_image_url, profile_email) {
     var json;
     var status;
-    var rest_url;
     var user_id = document.getElementById('setting_data_userid_logged_in');
     var profile_image;
     var profile_username_logged_in;
@@ -3750,7 +3762,6 @@ function updateProviderUser(provider_no, profile_id, profile_first_name, profile
         });
     }
 
-    rest_url = global_rest_url_base + global_rest_user_account_provider + profile_id;
     profile_username_logged_in = profile_first_name + ' ' + profile_last_name;
 
     img.src = profile_image_url;
@@ -3831,7 +3842,8 @@ function updateProviderUser(provider_no, profile_id, profile_first_name, profile
             '"prayer_column_fast_start_end_select_id": ' + document.getElementById('setting_select_report_show_fast_start_end').selectedIndex +
             '}';
 
-        fetch(rest_url, {
+        fetch(global_rest_url_base + global_rest_user_account_provider + profile_id +
+                '?lang_code=' + document.getElementById('setting_select_locale').value, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -3891,6 +3903,7 @@ function updateProviderUser(provider_no, profile_id, profile_first_name, profile
 }
 
 function onProviderSignIn(googleUser) {
+    console.log('onprovider 1');
     var profile;
     var profile_id;
     var profile_image_url;
@@ -4135,11 +4148,11 @@ function update_ui(option) {
 
                 SearchAndSetSelectedIndex('', settings.select_place,0);
                 if (settings.country[settings.country.selectedIndex].getAttribute('country_code')!=''){
-                    var url = global_service_worldcities + '/' + settings.country[settings.country.selectedIndex].getAttribute('country_code').toUpperCase() +
-                            '?app_id=' + global_app_id +
-                            '&app_user_id=' + document.getElementById('setting_data_userid_logged_in').innerHTML;
                     var status;
-                    fetch(url, {
+                    fetch(global_service_worldcities + '/' + settings.country[settings.country.selectedIndex].getAttribute('country_code').toUpperCase() +
+                            '?app_id=' + global_app_id +
+                            '&app_user_id=' + document.getElementById('setting_data_userid_logged_in').innerHTML +
+                            '&lang_code=' + document.getElementById('setting_select_locale').value, {
                         method: 'GET',
                         headers: {
                             'Authorization': 'Bearer ' + global_rest_dt,
@@ -4461,7 +4474,9 @@ function profile_show(user_account_id_other = null, username = null) {
             '"client_longitude": "' + global_user_gps_longitude + '",' +
             '"client_latitude": "' + global_user_gps_latitude + '"' +
             '}';
-        fetch(url + '?id=' + user_id.innerHTML, {
+        fetch(url + 
+                '?id=' + user_id.innerHTML +
+                '&lang_code=' + document.getElementById('setting_select_locale').value, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -4567,7 +4582,10 @@ function profile_show_user_setting() {
         document.getElementById('profile_user_settings_title_row').style.display = 'block';
         document.getElementById('profile_user_settings_rows').style.display = 'block';
 
-        fetch(global_rest_url_base + global_rest_app_timetables_user_setting_profile + document.getElementById('profile_id').innerHTML + '?id=' + user_id.innerHTML + '&app_id=' + global_app_id, 
+        fetch(global_rest_url_base + global_rest_app_timetables_user_setting_profile + document.getElementById('profile_id').innerHTML + 
+                '?id=' + user_id.innerHTML + 
+                '&app_id=' + global_app_id +
+                '&lang_code=' + document.getElementById('setting_select_locale').value,
             {
                 method: 'GET',
                 headers: {
@@ -4756,11 +4774,10 @@ function profile_detail(detailchoice) {
             default:
                 break;
         }
-        var url = global_rest_url_base +
-            global_rest_user_account_profile_detail +
-            document.getElementById('profile_id').innerHTML +
-            '?detailchoice=' + detailchoice + '&app_id=' + global_app_id;
-        fetch(url, {
+        fetch(global_rest_url_base + global_rest_user_account_profile_detail + document.getElementById('profile_id').innerHTML +
+                '?detailchoice=' + detailchoice + 
+                '&app_id=' + global_app_id +
+                '&lang_code=' + document.getElementById('setting_select_locale').value, {
                 method: 'GET',
                 headers: {
                     'Authorization': 'Bearer ' + global_rest_at
@@ -4858,7 +4875,9 @@ function profile_top(statschoice) {
     var status;
     //TOP
     //document.getElementById('profile_top').style.display = "block";
-    fetch(global_rest_url_base + global_rest_user_account_profile_top + statschoice + '?app_id=' + global_app_id, 
+    fetch(global_rest_url_base + global_rest_user_account_profile_top + statschoice + 
+            '?app_id=' + global_app_id +
+            '&lang_code=' + document.getElementById('setting_select_locale').value, 
         {
             method: 'GET',
             headers: {
@@ -5006,7 +5025,8 @@ function user_function(user_function, user_setting_id, row_div) {
             item0 = 'block';
             item1 = 'none';
         }
-        fetch(global_rest_url_base + rest_path + user_id, {
+        fetch(global_rest_url_base + rest_path + user_id +
+                '?lang_code=' + document.getElementById('setting_select_locale').value, {
                 method: method,
                 headers: {
                     'Content-Type': 'application/json',
@@ -5043,7 +5063,6 @@ function search_profile() {
     var status;
     var searched_username = document.getElementById('profile_search_input').value;
     var profile_search_list = document.getElementById('profile_search_list');
-    var url = global_rest_url_base + global_rest_user_account_profile_search + searched_username;
     profile_search_list.innerHTML = '';
     document.getElementById('profile_search_list').style.display = "none";
     var json_data = '{' +
@@ -5051,7 +5070,8 @@ function search_profile() {
         '"client_longitude": "' + global_user_gps_longitude + '",' +
         '"client_latitude": "' + global_user_gps_latitude + '"' +
         '}';
-    fetch(url, {
+    fetch(global_rest_url_base + global_rest_user_account_profile_search + searched_username +
+            '?lang_code=' + document.getElementById('setting_select_locale').value, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -5157,7 +5177,8 @@ function updateViewStat(user_setting_id, user_setting_user_account_id = null) {
             '"client_longitude": "' + global_user_gps_longitude + '",' +
             '"client_latitude": "' + global_user_gps_latitude + '"' +
             '}';
-        fetch(global_rest_url_base + global_rest_app_timetables_user_setting_view, {
+        fetch(global_rest_url_base + global_rest_app_timetables_user_setting_view +
+                '?lang_code=' + document.getElementById('setting_select_locale').value, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -5205,7 +5226,8 @@ function app_log(app_module, app_module_type, app_module_request, app_user_id) {
         '"user_gps_longitude": "' + global_user_gps_longitude + '"' +
         '}';
 
-    fetch(global_rest_url_base + global_rest_app_log, {
+    fetch(global_rest_url_base + global_rest_app_log +
+            '?lang_code=' + document.getElementById('setting_select_locale').value, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -5252,78 +5274,80 @@ function init_report_timetable() {
     var user_setting_id = urlParams.get('sid');
     var reporttype = urlParams.get('type');
     dialogue_loading(1);
-    init_common().then(function(){
-        //report start
-        if (inIframe() == false) {
-            //when report only is run outside webapp
-            //get gps and update view stat
-            //if run in iframe then these values are already known
-            //and update view stat handled in onclick
-            get_gps_from_ip().then(function(){
-                updateViewStat(user_setting_id);
-            })
-            
-        }
-        //check report type
-        switch (reporttype) {
-            //day
-            case '0':
-                {
-                    document.getElementById('prayertable_day').style.visibility = 'visible';
-                    //load settings from user_account_id, ignore ui stuff, override default 1 value
-                    user_settings_get(user_account_id, 0, user_setting_id).then(function(){
-                        //change to chosen user setting id
-                        let select = document.getElementById("setting_select_user_setting");
-                        for (i = select.options.length - 1; i >= 0; i--) {
-                            if (select[i].getAttribute('id') == user_setting_id) {
-                                select.selectedIndex = i;
+    get_app_globals().then(function(){
+        init_common().then(function(){
+            //report start
+            if (inIframe() == false) {
+                //when report only is run outside webapp
+                //get gps and update view stat
+                //if run in iframe then these values are already known
+                //and update view stat handled in onclick
+                get_gps_from_ip().then(function(){
+                    updateViewStat(user_setting_id);
+                })
+                
+            }
+            //check report type
+            switch (reporttype) {
+                //day
+                case '0':
+                    {
+                        document.getElementById('prayertable_day').style.visibility = 'visible';
+                        //load settings from user_account_id, ignore ui stuff, override default 1 value
+                        user_settings_get(user_account_id, 0, user_setting_id).then(function(){
+                            //change to chosen user setting id
+                            let select = document.getElementById("setting_select_user_setting");
+                            for (i = select.options.length - 1; i >= 0; i--) {
+                                if (select[i].getAttribute('id') == user_setting_id) {
+                                    select.selectedIndex = i;
+                                }
                             }
-                        }
-                        user_settings_load(0).then(function(){
-                            settings_translate_report().then(function(){
-                                update_timetable_report();
-                                dialogue_loading(0);
+                            user_settings_load(0).then(function(){
+                                settings_translate_report().then(function(){
+                                    update_timetable_report();
+                                    dialogue_loading(0);
+                                })
                             })
                         })
-                    })
-                    break;
-                }
-                //month
-            case '1':
-                {
-                    document.getElementById('prayertable_month').style.visibility = 'visible';
-                    //load setting from user_setting_id
-                    user_setting_get(user_setting_id).then(function(){
-                        user_settings_load(0).then(function(){
-                            settings_translate_report().then(function(){
-                                update_timetable_report();
-                                dialogue_loading(0);
-                            });
-                        })
-                    });
-                    break;
-                }
-                //year
-            case '2':
-                {
-                    document.getElementById('prayertable_year').style.visibility = 'visible';
-                    //load setting from user_setting_id
-                    user_setting_get(user_setting_id).then(function(){
-                        user_settings_load(0).then(function(){
-                            settings_translate_report().then(function(){
-                                update_timetable_report();
-                                dialogue_loading(0);
+                        break;
+                    }
+                    //month
+                case '1':
+                    {
+                        document.getElementById('prayertable_month').style.visibility = 'visible';
+                        //load setting from user_setting_id
+                        user_setting_get(user_setting_id).then(function(){
+                            user_settings_load(0).then(function(){
+                                settings_translate_report().then(function(){
+                                    update_timetable_report();
+                                    dialogue_loading(0);
+                                });
+                            })
+                        });
+                        break;
+                    }
+                    //year
+                case '2':
+                    {
+                        document.getElementById('prayertable_year').style.visibility = 'visible';
+                        //load setting from user_setting_id
+                        user_setting_get(user_setting_id).then(function(){
+                            user_settings_load(0).then(function(){
+                                settings_translate_report().then(function(){
+                                    update_timetable_report();
+                                    dialogue_loading(0);
+                                });
                             });
                         });
-                    });
-                    break;
-                }
-            default:
-                {
-                    document.getElementById('prayertable_day').style.visibility = 'visible';
-                    break;
-                }
-        }
+                        break;
+                    }
+                default:
+                    {
+                        document.getElementById('prayertable_day').style.visibility = 'visible';
+                        break;
+                    }
+            }
+        })
     })
 }
 async function app_load_basic(){
@@ -5402,26 +5426,59 @@ async function app_show(){
         profile_show(null, user);
     }
 }
+async function init_head(){
+    await get_app_globals().then(function(){
+        set_app_globals_head();
+        /*Google*/
+        var tag = document.createElement('script');
+        tag.src = global_app_user_provider1_api_src + navigator.language;
+        tag.defer = true;
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+        /*Facebook*/
+        window.fbAsyncInit = function() {
+            FB.init({
+            appId      : global_app_user_provider2_id,
+            cookie     : true,
+            xfbml      : true,
+            version    : global_app_user_provider2_api_version
+            });
+            
+            FB.AppEvents.logPageView();   
+            
+        };
+        (function(d, s, id){
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) {return;}
+            js = d.createElement(s); js.id = id;
+            js.src = global_app_user_provider2_api_src + 
+                    navigator.language.replace(/-/g, '_') + 
+                    global_app_user_provider2_api_src2;
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
+    })
+}
 function init() {
     dialogue_loading(1);
-
-    init_common().then(function(){
-        set_app_globals_body();
-        //if automatic sign not done then load basic
-        if (typeof global_user_gps_latitude == 'undefined') {
-            app_load_basic().then(function (){
+    init_head().then(function(){
+        init_common().then(function(){
+            set_app_globals_body();
+            //if automatic sign not done then load basic
+            if (typeof global_user_gps_latitude == 'undefined') {
+                app_load_basic().then(function (){
+                    app_load_the_rest().then(function(){
+                        app_start().then ( function () {
+                            dialogue_loading(0);
+                        })
+                    })
+                })
+            }
+            else
                 app_load_the_rest().then(function(){
                     app_start().then ( function () {
                         dialogue_loading(0);
                     })
                 })
-            })
-        }
-        else
-            app_load_the_rest().then(function(){
-                app_start().then ( function () {
-                    dialogue_loading(0);
-                })
-            })
+        })
     })
 }
