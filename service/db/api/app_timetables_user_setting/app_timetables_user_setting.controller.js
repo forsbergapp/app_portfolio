@@ -36,7 +36,7 @@ module.exports = {
 				//Record not found
 				getMessage(20400, 
 					req.query.app_id, 
-					'en', (err2,results2)  => {
+					req.query.lang_code, (err2,results2)  => {
 						return res.status(500).send(
 								results2.text
 						);
@@ -65,7 +65,7 @@ module.exports = {
 				//Record not found
 				getMessage(20400, 
 					req.query.app_id, 
-					'en', (err2,results2)  => {
+					req.query.lang_code, (err2,results2)  => {
 						return res.status(500).send(
 							results2.text
 						);
@@ -108,7 +108,7 @@ module.exports = {
 					//Failed to update user setting
 					getMessage(20401, 
 						req.body.app_id, 
-						'en', (err2,results2)  => {
+						req.query.lang_code, (err2,results2)  => {
 							return res.status(500).send(
 								results2.text
 							);
@@ -134,7 +134,7 @@ module.exports = {
 				//Record not found
 				getMessage(20400, 
 					req.query.app_id, 
-					'en', (err2,results2)  => {
+					req.query.lang_code, (err2,results2)  => {
 						return res.status(500).send(
 							results2.text
 						);
@@ -158,7 +158,7 @@ module.exports = {
 				//Record not found
 				getMessage(20400, 
 					req.query.app_id, 
-					'en', (err2,results2)  => {
+					req.query.lang_code, (err2,results2)  => {
 						return res.status(500).send(
 							results2.text
 						);
