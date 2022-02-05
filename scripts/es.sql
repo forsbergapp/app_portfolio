@@ -1129,7 +1129,7 @@ INSERT INTO message_translation (language_id, message_code, text) VALUES (506,'2
 INSERT INTO message_translation (language_id, message_code, text) VALUES (506,'20304','Por favor ingrese nombre de contraseña');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (506,'20305','Usuario no encontrado');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (506,'20306','Código no válido');
-INSERT INTO message_translation (language_id, message_code, text) VALUES (506,'20400','Record not found');
+INSERT INTO message_translation (language_id, message_code, text) VALUES (506,'20400','Registro no encontrado');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (506,'20401','No se pudo actualizar la configuración del usuario');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (506,'20402','No se pudo actualizar el usuario');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (506,'20403','Contraseña inválida');
