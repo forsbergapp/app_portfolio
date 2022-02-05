@@ -93,7 +93,7 @@ module.exports = {
                 if (app_code != null){
                     getMessage(app_code, 
                                 req.body.app_id, 
-                                'en', (err2,results2)  => {
+                                req.query.lang_code, (err2,results2)  => {
                                     console.log('err2:' + JSON.stringify(err2));
                                     console.log('results2:' + JSON.stringify(results2));
                                     return res.status(500).send(
@@ -177,7 +177,7 @@ module.exports = {
                     //Record not found
                     getMessage(20400, 
                         req.body.app_id, 
-                        'en', (err2,results2)  => {
+                        req.query.lang_code, (err2,results2)  => {
                             return res.status(500).send(
                                 results2.text
                                 );
@@ -221,7 +221,7 @@ module.exports = {
                     //Record not found
                     getMessage(20400, 
                         req.body.app_id, 
-                        'en', (err2,results2)  => {
+                        req.query.lang_code, (err2,results2)  => {
                             return res.status(500).send(
                                 results2.text
                             );
@@ -273,7 +273,7 @@ module.exports = {
                 //Record not found
 				getMessage(20400, 
 					req.body.app_id, 
-					'en', (err2,results2)  => {
+                    req.query.lang_code, (err2,results2)  => {
 						return res.status(500).send(
                             results2.text
 						);
@@ -326,7 +326,7 @@ module.exports = {
                     //Record not found
                     getMessage(20400, 
                         req.body.app_id, 
-                        'en', (err2,results2)  => {
+                        req.query.lang_code, (err2,results2)  => {
                             return res.status(500).send(
                                 results2.text
                             );
@@ -360,7 +360,7 @@ module.exports = {
                     //return ok even if records not found
                     getMessage(20400, 
                         req.query.app_id, 
-                        'en', (err2,results2)  => {
+                        req.query.lang_code, (err2,results2)  => {
                             return res.status(200).json({
                                     count: 0,
                                     message: results2.text
@@ -394,7 +394,7 @@ module.exports = {
                     //return ok even if records not found
                     getMessage(20400, 
                         req.query.app_id, 
-                        'en', (err2,results2)  => {
+                        req.query.lang_code, (err2,results2)  => {
                             return res.status(200).json({
                                     count: 0,
                                     message: results2.text
@@ -442,7 +442,7 @@ module.exports = {
                                 if (app_code != null)
                                     getMessage(app_code, 
                                                 req.body.app_id, 
-                                                'en', (err2,results2)  => {
+                                                req.query.lang_code, (err2,results2)  => {
                                                     return res.status(500).send(
                                                         results2.text
                                                     );
@@ -457,7 +457,7 @@ module.exports = {
                                     //"Failed to update user"
                                     getMessage(20402, 
                                         req.body.app_id, 
-                                        'en', (err2,results2)  => {
+                                        req.query.lang_code, (err2,results2)  => {
                                             return res.status(500).send(
                                                 results2.text
                                             );
@@ -474,7 +474,7 @@ module.exports = {
                         //invalid password
                         getMessage(20403, 
                                     req.body.app_id, 
-                                    'en', (err2,results2)  => {
+                                    req.query.lang_code, (err2,results2)  => {
                                         return res.status(500).send(
                                             results2.text
                                         );
@@ -484,7 +484,7 @@ module.exports = {
                     //user not found
                     getMessage(20305, 
                         req.body.app_id, 
-                        'en', (err2,results2)  => {
+                        req.query.lang_code, (err2,results2)  => {
                             return res.status(500).send(
                                 results2.text
                             );
@@ -507,7 +507,7 @@ module.exports = {
                     //record not found
                     getMessage(20400, 
                         req.body.app_id, 
-                        'en', (err2,results2)  => {
+                        req.query.lang_code, (err2,results2)  => {
                             return res.status(500).send(
                                 results2.text
                             );
@@ -535,7 +535,7 @@ module.exports = {
                         //record not found
                         getMessage(20400, 
                             req.query.app_id, 
-                            'en', (err2,results2)  => {
+                            req.query.lang_code, (err2,results2)  => {
                                 return res.status(500).send(
                                     results2.text
                                 );
@@ -595,7 +595,7 @@ module.exports = {
                         //Username or password not found
                         getMessage(20300, 
                             req.body.app_id, 
-                            'en', (err2,results2)  => {
+                            req.query.lang_code, (err2,results2)  => {
                                 return res.status(500).send(
                                     results2.text
                                 );
@@ -605,7 +605,7 @@ module.exports = {
                     //User not found
                     getMessage(20305, 
                         req.body.app_id, 
-                        'en', (err2,results2)  => {
+                        req.query.lang_code, (err2,results2)  => {
                             return res.status(500).send(
                                 results2.text
                             );

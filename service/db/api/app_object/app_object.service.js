@@ -173,7 +173,7 @@ module.exports = {
 					},
 					oracle_options, (err,result) => {
 						if (err) {
-							console.log('getMessage err:' + JSON.stringify(err));
+							console.log('getObjects err:' + JSON.stringify(err));
 							return callBack(err);
 						}
 						else{
