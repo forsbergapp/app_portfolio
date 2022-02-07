@@ -596,7 +596,7 @@ function create_day_title_row (col_titles, title_index, show_imsak, show_sunset,
 			</div>`;
 }
 
-function displayDay(settings, settings_main, item_id){
+function displayDay(settings, settings_ui, item_id){
 
 	var day_html='';
 	var times; 
@@ -614,7 +614,7 @@ function displayDay(settings, settings_main, item_id){
 	if (item_id ==0)
 		offset = 0;
 	else
-		offset = item_id == settings_main.navigation_left ? -1:+1;
+		offset = item_id == settings_ui.navigation_left ? -1:+1;
 	global_currentDate.setDate(global_currentDate.getDate()+ 1* offset);
 	
 	let date_current = new Date(global_currentDate.getFullYear(),global_currentDate.getMonth(),global_currentDate.getDate());
@@ -623,9 +623,9 @@ function displayDay(settings, settings_main, item_id){
 	let date_title5 = date_current.toLocaleDateString(settings.locale + global_def_locale_ext_prefix + global_def_locale_ext_calendar + settings.calendar_hijri_type + global_def_locale_ext_number_system + settings.number_system, options_hijri).toUpperCase();
 	
 	//Set theme and font classes on main div
-	settings_main.prayertable_day.classList = settings.theme_day + ' ' + 'prayertable_font_' + settings.arabic_script;		
+	settings_ui.prayertable_day.classList = settings.theme_day + ' ' + 'prayertable_font_' + settings.arabic_script;		
 	//set LTR or RTL on table layout
-	settings_main.prayertable_day.style.direction = settings.direction;
+	settings_ui.prayertable_day.style.direction = settings.direction;
 
 	var header_style = getstyle(settings.header_img_src, settings.header_text_al, settings.header_text_ac, settings.header_text_ar);
 	var footer_style = getstyle(settings.footer_img_src, settings.footer_text_al, settings.footer_text_ac, settings.footer_text_ar);
@@ -650,6 +650,7 @@ function displayDay(settings, settings_main, item_id){
 	var select_user_settings = document.getElementById('setting_select_user_setting');
 	var select_locale = document.getElementById("setting_select_locale");
 	var user_locale;
+	var select_user_timezone_report = document.getElementById('setting_select_report_timezone');
 	var user_timezone;
 	var user_label_timezone;
 	var select_number_system = document.getElementById('setting_select_report_numbersystem');
@@ -683,7 +684,7 @@ function displayDay(settings, settings_main, item_id){
 		//language
 		user_locale = select_user_settings[i].getAttribute('regional_language_locale');
 		//timezone report
-		user_timezone = settings_main.timezone_report[select_user_settings[i].getAttribute('regional_timezone_select_id')].value
+		user_timezone = select_user_timezone_report[select_user_settings[i].getAttribute('regional_timezone_select_id')].value
 		user_label_timezone = settings.timezone_label;
 		//number system
 		user_number_system = select_number_system[select_user_settings[i].getAttribute('regional_number_system_select_id')].value;
@@ -765,12 +766,12 @@ function displayDay(settings, settings_main, item_id){
 	</div>
 	<div id='prayertable_day_time'>
 	</div>`;
-	settings_main.prayertable_day.innerHTML = day_html;
+	settings_ui.prayertable_day.innerHTML = day_html;
 }
 /*----------------------- */
 /* Timetable year functions */
 /*----------------------- */
-function displayYear(settings, settings_main, item_id){
+function displayYear(settings, settings_ui, item_id){
 	
 	var startmonth            = global_currentDate.getMonth();
 	var starthijrimonth       = global_CurrentHijriDate[0];
@@ -779,9 +780,9 @@ function displayYear(settings, settings_main, item_id){
 	settings.reporttype        = 'YEAR';
 	
 	//Set theme and font class
-	settings_main.prayertable_year.classList = settings.theme_year + ' ' + 'prayertable_font_' + settings.arabic_script;
+	settings_ui.prayertable_year.classList = settings.theme_year + ' ' + 'prayertable_font_' + settings.arabic_script;
 	//set LTR or RTL on year layout
-	settings_main.prayertable_year.style.direction = settings.direction;
+	settings_ui.prayertable_year.style.direction = settings.direction;
 
 	//if both second language and both transliteration and translation columntitles will be shown
 	//add class to fix size
@@ -800,14 +801,14 @@ function displayYear(settings, settings_main, item_id){
 	}
 
 	//if item_id is set then navigate previous/next month/year
-	if (item_id == settings_main.navigation_left){
+	if (item_id == settings_ui.navigation_left){
 		if (settings.calendartype=='GREGORIAN')
 			global_currentDate.setYear(global_currentDate.getFullYear() - 1);
 		else
 			global_CurrentHijriDate[1] = global_CurrentHijriDate[1] - 1;
 	}
 	else 
-		if (item_id == settings_main.navigation_right){
+		if (item_id == settings_ui.navigation_right){
 			if (settings.calendartype=='GREGORIAN')
 				global_currentDate.setYear(global_currentDate.getFullYear() + 1);
 			else
@@ -893,273 +894,117 @@ function displayYear(settings, settings_main, item_id){
 		<div id='prayertable_year_footer_title3' class='prayertable_year_footer' >${settings.footer_txt3}</div>
 		<div></div>
 	</div>`;
-	settings_main.prayertable_year.innerHTML = year_html;
+	settings_ui.prayertable_year.innerHTML = year_html;
 
 	global_currentDate.setMonth(startmonth);
 	global_CurrentHijriDate[0] = starthijrimonth;
 }
 // update timetable
 function update_timetable_report(option = 0, item_id = 0) {
-	//settings reports
-	var settings ={prayertable_month       : 'prayertable_month', //class to add for month
+
+	var settings ={ prayertable_month       : 'prayertable_month', //class to add for month
 					prayertable_year_month  : 'prayertable_year_month', //class to add for year
-					reporttype          : 'MONTH', //MONTH default value, YEAR used to create less info on header and footer
-					locale              : document.getElementById('setting_select_locale').value,  
-					timezone            : document.getElementById('setting_select_report_timezone').value,
-					timezone_label	   : document.getElementById('setting_label_report_timezone').innerHTML,
-					number_system       : document.getElementById('setting_select_report_numbersystem').value,
-					direction           : document.getElementById('setting_select_report_direction').value,
-					second_locale       : document.getElementById('setting_select_report_locale_second').value,
-					arabic_script       : document.getElementById('setting_select_report_arabic_script').value,
-					calendartype        : document.getElementById('setting_select_calendartype').value,
-					calendar_hijri_type : document.getElementById('setting_select_calendar_hijri_type').value,
-	
-					place               : document.getElementById('setting_input_place').value,
-					gps_lat             : parseFloat(document.getElementById('setting_input_lat').value),
-					gps_long            : parseFloat(document.getElementById('setting_input_long').value),
-					gps_label_lat       : document.getElementById('setting_label_lat').innerHTML,
-					gps_label_long      : document.getElementById('setting_label_long').innerHTML,
+					reporttype          	: 'MONTH', //MONTH: normal month with more info, YEAR: month with less info
+					locale              	: document.getElementById('setting_select_locale').value,  
+					timezone            	: document.getElementById('setting_select_report_timezone').value,
+					timezone_label	   		: document.getElementById('setting_label_report_timezone').innerHTML,
+					number_system       	: document.getElementById('setting_select_report_numbersystem').value,
+					direction           	: document.getElementById('setting_select_report_direction').value,
+					second_locale       	: document.getElementById('setting_select_report_locale_second').value,
+					arabic_script       	: document.getElementById('setting_select_report_arabic_script').value,
+					calendartype        	: document.getElementById('setting_select_calendartype').value,
+					calendar_hijri_type 	: document.getElementById('setting_select_calendar_hijri_type').value,
 
-					theme_day           : 'theme_day_' + get_theme_id('day'),
-					theme_month         : 'theme_month_' + get_theme_id('month'),
-					theme_year          : 'theme_year_' + get_theme_id('year'),
-					coltitle            : document.getElementById('setting_select_report_coltitle').value,
-					highlight           : document.getElementById('setting_select_report_highlight_row').value,
-					show_weekday        : checkbox_value(document.getElementById('setting_checkbox_report_show_weekday')),
-					show_calendartype   : checkbox_value(document.getElementById('setting_checkbox_report_show_calendartype')),
-					show_notes          : checkbox_value(document.getElementById('setting_checkbox_report_show_notes')),
-					show_gps   	       	: checkbox_value(document.getElementById('setting_checkbox_report_show_gps')),
-					show_timezone       : checkbox_value(document.getElementById('setting_checkbox_report_show_timezone')),
+					place               	: document.getElementById('setting_input_place').value,
+					gps_lat             	: parseFloat(document.getElementById('setting_input_lat').value),
+					gps_long            	: parseFloat(document.getElementById('setting_input_long').value),
+					gps_label_lat       	: document.getElementById('setting_label_lat').innerHTML,
+					gps_label_long      	: document.getElementById('setting_label_long').innerHTML,
 
-										
-					header_img_src      : document.getElementById('setting_reportheader_img').src,
-					footer_img_src      : document.getElementById('setting_reportfooter_img').src,
+					theme_day           	: 'theme_day_' + get_theme_id('day'),
+					theme_month         	: 'theme_month_' + get_theme_id('month'),
+					theme_year          	: 'theme_year_' + get_theme_id('year'),
+					coltitle            	: document.getElementById('setting_select_report_coltitle').value,
+					highlight           	: document.getElementById('setting_select_report_highlight_row').value,
+					show_weekday        	: checkbox_value(document.getElementById('setting_checkbox_report_show_weekday')),
+					show_calendartype   	: checkbox_value(document.getElementById('setting_checkbox_report_show_calendartype')),
+					show_notes          	: checkbox_value(document.getElementById('setting_checkbox_report_show_notes')),
+					show_gps   	       		: checkbox_value(document.getElementById('setting_checkbox_report_show_gps')),
+					show_timezone       	: checkbox_value(document.getElementById('setting_checkbox_report_show_timezone')),
+								
+					header_img_src      	: document.getElementById('setting_reportheader_img').src,
+					footer_img_src      	: document.getElementById('setting_reportfooter_img').src,
 	
-					header_txt1         : document.getElementById('setting_input_reporttitle1').value,
-					header_txt2         : document.getElementById('setting_input_reporttitle2').value,
-					header_txt3         : document.getElementById('setting_input_reporttitle3').value,
+					header_txt1         	: document.getElementById('setting_input_reporttitle1').value,
+					header_txt2         	: document.getElementById('setting_input_reporttitle2').value,
+					header_txt3         	: document.getElementById('setting_input_reporttitle3').value,
 					//button is active set left, center or right true/false
-					header_text_al      : document.getElementById('setting_input_reporttitle_aleft').classList.contains('setting_button_active'),
-					header_text_ac      : document.getElementById('setting_input_reporttitle_acenter').classList.contains('setting_button_active'),
-					header_text_ar      : document.getElementById('setting_input_reporttitle_aright').classList.contains('setting_button_active'),
-					footer_txt1         : document.getElementById('setting_input_reportfooter1').value,
-					footer_txt2         : document.getElementById('setting_input_reportfooter2').value,
-					footer_txt3    	   	: document.getElementById('setting_input_reportfooter3').value,
+					header_text_al      	: document.getElementById('setting_input_reporttitle_aleft').classList.contains('setting_button_active'),
+					header_text_ac      	: document.getElementById('setting_input_reporttitle_acenter').classList.contains('setting_button_active'),
+					header_text_ar      	: document.getElementById('setting_input_reporttitle_aright').classList.contains('setting_button_active'),
+					footer_txt1         	: document.getElementById('setting_input_reportfooter1').value,
+					footer_txt2         	: document.getElementById('setting_input_reportfooter2').value,
+					footer_txt3    	   		: document.getElementById('setting_input_reportfooter3').value,
 					//button is active set left, center or right true/false
-					footer_text_al      : document.getElementById('setting_input_reportfooter_aleft').classList.contains('setting_button_active'),
-					footer_text_ac      : document.getElementById('setting_input_reportfooter_acenter').classList.contains('setting_button_active'),
-					footer_text_ar      : document.getElementById('setting_input_reportfooter_aright').classList.contains('setting_button_active'),
+					footer_text_al      	: document.getElementById('setting_input_reportfooter_aleft').classList.contains('setting_button_active'),
+					footer_text_ac      	: document.getElementById('setting_input_reportfooter_acenter').classList.contains('setting_button_active'),
+					footer_text_ar      	: document.getElementById('setting_input_reportfooter_aright').classList.contains('setting_button_active'),
 					
-					method              : document.getElementById('setting_select_method').value,
-					asr                 : document.getElementById('setting_select_asr').value,
-					highlat             : document.getElementById('setting_select_highlatitude').value,
-					format              : document.getElementById('setting_select_timeformat').value,
-					hijri_adj           : document.getElementById('setting_select_hijri_adjustment').value,
-					iqamat_fajr         : document.getElementById('setting_select_report_iqamat_title_fajr').value,
-					iqamat_dhuhr        : document.getElementById('setting_select_report_iqamat_title_dhuhr').value,
-					iqamat_asr          : document.getElementById('setting_select_report_iqamat_title_asr').value,
-					iqamat_maghrib      : document.getElementById('setting_select_report_iqamat_title_maghrib').value,
-					iqamat_isha         : document.getElementById('setting_select_report_iqamat_title_isha').value,
-					show_imsak          : checkbox_value(document.getElementById('setting_checkbox_report_show_imsak')),
-					show_sunset         : checkbox_value(document.getElementById('setting_checkbox_report_show_sunset')),
-					show_midnight       : checkbox_value(document.getElementById('setting_checkbox_report_show_midnight')),
-					show_fast_start_end : document.getElementById('setting_select_report_show_fast_start_end').value};
-	//settings ui
-	var settings_main = {	navigation_left         : 'toolbar_navigation_btn_left',
-							navigation_right        : 'toolbar_navigation_btn_right',
-							prayertable_day         : document.getElementById('prayertable_day'),
-							prayertable_month       : document.getElementById('prayertable_month'),
-							prayertable_year        : document.getElementById('prayertable_year'),
-							timezone_report         : document.getElementById('setting_select_report_timezone'),
-							reportheader_input      : document.getElementById('setting_input_reportheader_img'),
-							reportfooter_input      : document.getElementById('setting_input_reportfooter_img'),
-							header_preview_img_item : document.getElementById('setting_reportheader_img'),
-							footer_preview_img_item : document.getElementById('setting_reportfooter_img'),
-							button_active_class     : 'setting_button_active',
-							reportheader_aleft      : document.getElementById('setting_input_reporttitle_aleft'),
-							reportheader_acenter    : document.getElementById('setting_input_reporttitle_acenter'),
-							reportheader_aright     : document.getElementById('setting_input_reporttitle_aright'),
-							reportfooter_aleft      : document.getElementById('setting_input_reportfooter_aleft'),
-							reportfooter_acenter    : document.getElementById('setting_input_reportfooter_acenter'),
-							reportfooter_aright     : document.getElementById('setting_input_reportfooter_aright')};
+					method              	: document.getElementById('setting_select_method').value,
+					asr                 	: document.getElementById('setting_select_asr').value,
+					highlat             	: document.getElementById('setting_select_highlatitude').value,
+					format              	: document.getElementById('setting_select_timeformat').value,
+					hijri_adj           	: document.getElementById('setting_select_hijri_adjustment').value,
+					iqamat_fajr         	: document.getElementById('setting_select_report_iqamat_title_fajr').value,
+					iqamat_dhuhr        	: document.getElementById('setting_select_report_iqamat_title_dhuhr').value,
+					iqamat_asr          	: document.getElementById('setting_select_report_iqamat_title_asr').value,
+					iqamat_maghrib      	: document.getElementById('setting_select_report_iqamat_title_maghrib').value,
+					iqamat_isha         	: document.getElementById('setting_select_report_iqamat_title_isha').value,
+					show_imsak          	: checkbox_value(document.getElementById('setting_checkbox_report_show_imsak')),
+					show_sunset         	: checkbox_value(document.getElementById('setting_checkbox_report_show_sunset')),
+					show_midnight       	: checkbox_value(document.getElementById('setting_checkbox_report_show_midnight')),
+					show_fast_start_end 	: document.getElementById('setting_select_report_show_fast_start_end').value};
+					
+	var settings_ui = {	navigation_left     : 'toolbar_navigation_btn_left',
+						navigation_right    : 'toolbar_navigation_btn_right',
+						prayertable_day     : document.getElementById('prayertable_day'),
+						prayertable_month   : document.getElementById('prayertable_month'),
+						prayertable_year    : document.getElementById('prayertable_year')
+					  };
 	dialogue_loading(1);
 	switch (option){
 	//create timetable month or day or year if they are visible instead
 	case 0:{
-		if (settings_main.prayertable_month.style.visibility == 'visible'){
+		if (settings_ui.prayertable_month.style.visibility == 'visible'){
 			if (item_id==0){
 			//run same period again
-			displayMonth(0, settings_main.prayertable_month, settings);
+			displayMonth(0, settings_ui.prayertable_month, settings);
 			}
 			else{
 			//if item_id is set then navigate previous/next month
-			if (item_id == settings_main.navigation_left)
-				displayMonth(-1, settings_main.prayertable_month, settings);
+			if (item_id == settings_ui.navigation_left)
+				displayMonth(-1, settings_ui.prayertable_month, settings);
 			else 
-				if (item_id == settings_main.navigation_right)
-				displayMonth(+1, settings_main.prayertable_month, settings);
+				if (item_id == settings_ui.navigation_right)
+				displayMonth(+1, settings_ui.prayertable_month, settings);
 			}
 		}
 		else
-			if (settings_main.prayertable_day.style.visibility == 'visible')
+			if (settings_ui.prayertable_day.style.visibility == 'visible')
 				update_timetable_report(2, item_id);
 			else
-				if (settings_main.prayertable_year.style.visibility == 'visible')
+				if (settings_ui.prayertable_year.style.visibility == 'visible')
 					update_timetable_report(1, item_id);
 		break;
 	}
 	//1=create timetable year
 	case 1:{
-		displayYear(settings, settings_main, item_id);
+		displayYear(settings, settings_ui, item_id);
 		break;
 	}
 	//2=create timetable day
 	case 2:{
-		displayDay(settings, settings_main, item_id);
-		break;
-	}
-	//3=Update timetable, Images & texts, Report header
-	case 3:{
-		if (settings_main.prayertable_day.style.visibility == 'visible'){
-			document.getElementById('prayertable_day_header_title1').innerHTML = settings.header_txt1;
-			document.getElementById('prayertable_day_header_title2').innerHTML = settings.header_txt2;
-			document.getElementById('prayertable_day_header_title3').innerHTML = settings.header_txt3;
-		}
-		if (settings_main.prayertable_month.style.visibility == 'visible'){
-			document.getElementById('prayertable_month_header_title1').innerHTML = settings.header_txt1;
-			document.getElementById('prayertable_month_header_title2').innerHTML = settings.header_txt2;
-			document.getElementById('prayertable_month_header_title3').innerHTML = settings.header_txt3;
-		}
-		if (settings_main.prayertable_year.style.visibility == 'visible'){
-			document.getElementById('prayertable_year_header_title1').innerHTML = settings.header_txt1;
-			document.getElementById('prayertable_year_header_title2').innerHTML = settings.header_txt2;
-			document.getElementById('prayertable_year_header_title3').innerHTML = settings.header_txt3;
-		}
-		break;
-		}
-	//4=Update timetable, Images & texts, Report header align
-	case 4:{
-		//check if clicking on button that is already active then deactivate so no alignment
-		if (document.getElementById(item_id).classList.contains(settings_main.button_active_class)){
-			document.getElementById(item_id).classList.remove(settings_main.button_active_class)
-			if (settings_main.prayertable_day.style.visibility == 'visible')
-			document.getElementById('prayertable_day_header_row').style.textAlign = '';
-			if (settings_main.prayertable_month.style.visibility == 'visible' &&
-				document.getElementById('prayertable_month_header_col'))
-			document.getElementById('prayertable_month_header_col').style.textAlign = '';
-			if (settings_main.prayertable_year.style.visibility == 'visible')
-			document.getElementById('prayertable_year_header_row').style.textAlign = '';
-		}
-		else{	
-			settings_main.reportheader_aleft.classList.remove(settings_main.button_active_class);
-			settings_main.reportheader_acenter.classList.remove(settings_main.button_active_class);
-			settings_main.reportheader_aright.classList.remove(settings_main.button_active_class);
-			document.getElementById(item_id).classList.add(settings_main.button_active_class);
-			if (settings_main.prayertable_day.style.visibility == 'visible')
-			document.getElementById('prayertable_day_header_row').style.textAlign = item_id.substr(39);
-			if (settings_main.prayertable_month.style.visibility == 'visible' &&
-				document.getElementById('prayertable_month_header_col'))
-			document.getElementById('prayertable_month_header_col').style.textAlign = item_id.substr(39);
-			if (settings_main.prayertable_year.style.visibility == 'visible')
-			document.getElementById('prayertable_year_header_row').style.textAlign = item_id.substr(39);
-		}
-		break;
-		}
-	//5=Update timetable, Images & texts, Report footer
-	case 5:{
-		if (settings_main.prayertable_day.style.visibility == 'visible'){
-		document.getElementById('prayertable_day_footer_title1').innerHTML = settings.footer_txt1;
-		document.getElementById('prayertable_day_footer_title2').innerHTML = settings.footer_txt2;
-		document.getElementById('prayertable_day_footer_title3').innerHTML = settings.footer_txt3;
-		}
-		if (settings_main.prayertable_month.style.visibility == 'visible'){
-		document.getElementById('prayertable_month_footer_title1').innerHTML = settings.footer_txt1;
-		document.getElementById('prayertable_month_footer_title2').innerHTML = settings.footer_txt2;
-		document.getElementById('prayertable_month_footer_title3').innerHTML = settings.footer_txt3;
-		}
-		if (settings_main.prayertable_year.style.visibility == 'visible'){
-		document.getElementById('prayertable_year_footer_title1').innerHTML = settings.footer_txt1;
-		document.getElementById('prayertable_year_footer_title2').innerHTML = settings.footer_txt2;
-		document.getElementById('prayertable_year_footer_title3').innerHTML = settings.footer_txt3;
-		}
-		break;
-		}
-	//6=Update timetable, Images & texts, Report footer align
-	case 6:{
-		//check if clicking on button that is already active then deactivate so no alignment
-		if (document.getElementById(item_id).classList.contains(settings_main.button_active_class)){
-			document.getElementById(item_id).classList.remove(settings_main.button_active_class)
-			if (settings_main.prayertable_day.style.visibility == 'visible')
-			document.getElementById('prayertable_day_footer_row').style.textAlign = '';
-			if (settings_main.prayertable_month.style.visibility == 'visible' &&
-				document.getElementById('prayertable_month_footer_col'))
-			document.getElementById('prayertable_month_footer_col').style.textAlign = '';
-			if (settings_main.prayertable_year.style.visibility == 'visible')
-			document.getElementById('prayertable_year_footer_row').style.textAlign = '';
-		}
-		else{
-			settings_main.reportfooter_aleft.classList.remove(settings_main.button_active_class);
-			settings_main.reportfooter_acenter.classList.remove(settings_main.button_active_class);
-			settings_main.reportfooter_aright.classList.remove(settings_main.button_active_class);
-			document.getElementById(item_id).classList.add(settings_main.button_active_class);
-			if (settings_main.prayertable_day.style.visibility == 'visible')
-			document.getElementById('prayertable_day_footer_row').style.textAlign = item_id.substr(40);
-			if (settings_main.prayertable_month.style.visibility == 'visible' &&
-				document.getElementById('prayertable_month_footer_col'))
-			document.getElementById('prayertable_month_footer_col').style.textAlign = item_id.substr(40);
-			if (settings_main.prayertable_year.style.visibility == 'visible')
-			document.getElementById('prayertable_year_footer_row').style.textAlign = item_id.substr(40);
-		}
-		break;
-	}
-	//7=Update timetable, Images & texts, Report header image load
-	case 7:{
-		var resheader = previewFile(settings_main.prayertable_day.style.visibility,
-									settings_main.prayertable_month.style.visibility,
-									settings_main.prayertable_year.style.visibility,
-									document.getElementById('prayertable_day_header_row'),
-									document.getElementById('prayertable_month_header'), 
-									document.getElementById('prayertable_year_header_row'),
-									settings_main.header_preview_img_item, item_id);
-		break;
-	}
-	//8=Update timetable, Images & texts, Report header image clear
-	case 8:{
-		recreate_img(settings_main.header_preview_img_item);
-		//doesnt work:
-		//settings_main.header_preview_img_item.src = '';
-		settings_main.reportheader_input.value = '';
-		if (settings_main.prayertable_day.style.visibility == 'visible')
-		document.getElementById('prayertable_day_header_row').style.backgroundImage = '';
-		if (settings_main.prayertable_month.style.visibility == 'visible')
-		document.getElementById('prayertable_month_header').style.backgroundImage = '';
-		if (settings_main.prayertable_year.style.visibility == 'visible')
-		document.getElementById('prayertable_year_header_row').style.backgroundImage = '';
-		break;
-	}
-	//9=Update timetable, Images & texts, Report footer image load
-	case 9:{
-		var resfooter = previewFile(settings_main.prayertable_day.style.visibility,
-									settings_main.prayertable_month.style.visibility,
-									settings_main.prayertable_year.style.visibility,
-									document.getElementById('prayertable_day_footer_row'),
-									document.getElementById('prayertable_month_footer'), 
-									document.getElementById('prayertable_year_footer_row'),
-									settings_main.footer_preview_img_item, item_id);
-		break;
-	}
-	//10=Update timetable, Images & texts, Report footer image clear
-	case 10:{
-		recreate_img(settings_main.footer_preview_img_item);
-		//doesnt work:
-		//settings_main.footer_preview_img_item.src = '';
-		settings_main.reportfooter_input.value = '';
-		if (settings_main.prayertable_day.style.visibility == 'visible')
-		document.getElementById('prayertable_day_footer_row').style.backgroundImage = '';
-		if (settings_main.prayertable_month.style.visibility == 'visible')
-		document.getElementById('prayertable_month_footer').style.backgroundImage = '';
-		if (settings_main.prayertable_year.style.visibility == 'visible')
-		document.getElementById('prayertable_year_footer_row').style.backgroundImage = '';
+		displayDay(settings, settings_ui, item_id);
 		break;
 	}
 	default:{
