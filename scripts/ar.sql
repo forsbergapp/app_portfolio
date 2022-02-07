@@ -995,6 +995,8 @@ INSERT INTO message_translation (language_id, message_code, text) VALUES (25,'20
 INSERT INTO message_translation (language_id, message_code, text) VALUES (25,'20304','الرجاء إدخال كلمة المرور');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (25,'20305','المستخدم ليس موجود');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (25,'20306','الرمز غير صالح');
+INSERT INTO message_translation (language_id, message_code, text) VALUES (25,'20307','الملف المطبوع سري');
+INSERT INTO message_translation (language_id, message_code, text) VALUES (25,'20308','حجم الملف كبير جدًا');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (25,'20400','لم يتم العثور على السجل');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (25,'20401','فشل تحديث إعدادات المستخدم');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (25,'20402','فشل تحديث المستخدم');
