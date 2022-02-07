@@ -6,18 +6,18 @@ function printTable(){
 	var whatToPrint = document.getElementById('paper');
 	var html;
 	
-	html  = '<!DOCTYPE html>';
-	html += '<html>';
-	html += '<head>';
-	html += '<meta charset="UTF-8">';
-	html += '<title></title>';
-	html += '<link rel="stylesheet" type="text/css" href="/app_timetables/css/app.css" />';
-	html += '<link rel="stylesheet" type="text/css" href="/app_timetables/css/app_themes.css" />';
-	html += '</head>';
-	html += '<body id="printbody">';
-	html += whatToPrint.outerHTML;
-	html += '</body></html>';
-
+	html = `<!DOCTYPE html>
+			<html>
+			<head>
+				<meta charset='UTF-8'>
+				<title></title>
+				<link rel="stylesheet" type="text/css" href="/app_timetables/css/app.css" />
+				<link rel="stylesheet" type="text/css" href="/app_timetables/css/app_themes.css" />
+			</head>
+			<body id="printbody">
+				${whatToPrint.outerHTML}
+			</body>
+			</html>`;
 	win.document.write(html);
 	win.print();
 	win.onafterprint = function(){
