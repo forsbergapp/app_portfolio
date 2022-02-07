@@ -84,7 +84,7 @@ ALTER TABLE app_log MODIFY COLUMN user_platform VARCHAR(100) COMMENT
 
 CREATE TABLE app_message (
     message_code      VARCHAR(100) NOT NULL,
-    app_id            INTEGER NOT NULL
+    app_id            INTEGER NOT NULL,
 	CONSTRAINT app_message_pk PRIMARY KEY ( message_code,
                                             app_id )
 );
@@ -443,7 +443,7 @@ CREATE TABLE message (
     message_level_id INTEGER NOT NULL,
     message_type_id  INTEGER NOT NULL,
     code             VARCHAR(100) NOT NULL,
-    CONSTRAINT message_pk PRIMARY KEY ( code );
+    CONSTRAINT message_pk PRIMARY KEY ( code )
 );
 
 CREATE TABLE message_level (
@@ -460,7 +460,7 @@ CREATE TABLE message_translation (
     message_code VARCHAR(100) NOT NULL,
     text         VARCHAR(100),
     CONSTRAINT message_translation_pk PRIMARY KEY ( language_id,
-                                                    message_code );
+                                                    message_code )
 );
 
 CREATE TABLE message_type (
