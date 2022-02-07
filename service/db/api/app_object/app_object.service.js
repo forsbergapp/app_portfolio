@@ -74,8 +74,115 @@ module.exports = {
 												)
 								)
 							)
+				UNION ALL
+				SELECT DISTINCT  
+						'LOCALE' object,
+						null app_id,
+						null object_name,
+						'SETTING_SELECT_LOCALE' object_item_name, 
+											null subitem_name, 
+						CONCAT(l.lang_code, CASE 
+											WHEN c.country_code IS NOT NULL THEN 
+											CONCAT('-', c.country_code) 
+											ELSE 
+											'' 
+											END) lang_code,  
+						CONCAT(UPPER(SUBSTR(CONCAT(language_translation.text, CASE 
+														WHEN ct.text IS NOT NULL THEN 
+															CONCAT(' (', CONCAT(ct.text,')')) 
+														ELSE 
+															'' 
+														END),1,1)),SUBSTR(CONCAT(language_translation.text, 
+																			CASE 
+																			WHEN ct.text IS NOT NULL THEN 
+																				CONCAT(' (', CONCAT(ct.text,')')) 
+																			ELSE 
+																				'' 
+																			END),2)) text
+	
+				FROM language l,
+						language_translation,
+						locale loc
+						LEFT OUTER JOIN country c
+						ON c.id= loc.country_id
+						LEFT OUTER JOIN country_translation ct
+						ON ct.country_id = loc.country_id
+				WHERE l.id = loc.language_id
+					AND language_translation.language_id = l.id
+					AND language_translation.language_translation_id IN 
+					(SELECT id 
+					FROM language l2
+					WHERE (l2.lang_code IN (?, SUBSTRING_INDEX(?,'-',2), SUBSTRING_INDEX(?,'-',1))
+						OR (l2.lang_code = 'en'
+							AND NOT EXISTS(SELECT NULL
+											FROM language_translation lt1,
+												language l1
+											WHERE l1.id  = lt1.language_translation_id
+											AND lt1.language_id = l.id
+											AND l1.lang_code IN (?, SUBSTRING_INDEX(?,'-',2), SUBSTRING_INDEX(?,'-',1))
+										)
+									)
+								)
+						)
+					AND ct.language_id IN 
+					(SELECT id 
+					FROM language l2
+					WHERE (l2.lang_code IN (?, SUBSTRING_INDEX(?,'-',2), SUBSTRING_INDEX(?,'-',1))
+						OR (l2.lang_code = 'en'
+							AND NOT EXISTS(SELECT NULL
+											FROM country_translation ct1,
+												language l1
+											WHERE l1.id = ct1.language_id
+											AND  ct1.country_id = c.id
+											AND l1.lang_code IN (?, SUBSTRING_INDEX(?,'-',2), SUBSTRING_INDEX(?,'-',1))
+										)
+							)
+							)
+					)
+				UNION ALL
+				SELECT 'COUNTRY' object,   
+						null app_id,
+						null object_name,
+						'SETTING_SELECT_COUNTRY' object_item_name,
+						c.country_code subitem_name,
+										null lang_code,
+										concat(concat (c.flag_emoji, ' '), ct.text)
+				FROM    country  c,
+						country_translation ct,
+						language l
+				WHERE ct.country_id = c.id
+				AND   l.id = ct.language_id
+				AND (l.lang_code IN (?, SUBSTRING_INDEX(?,'-',2), SUBSTRING_INDEX(?,'-',1))
+					OR (l.lang_code = 'en'
+						AND NOT EXISTS(SELECT NULL
+										FROM country_translation ct1,
+												language l1
+										WHERE ct1.country_id = ct.country_id
+										AND l1.id = ct1.language_id
+										AND l1.lang_code IN (?, SUBSTRING_INDEX(?,'-',2), SUBSTRING_INDEX(?,'-',1))
+								)
+						)
+					)
 				ORDER BY 1,2,3,4, 5, 6`,
 				[app_id,
+				 lang_code,
+				 lang_code,
+				 lang_code,
+				 lang_code,
+				 lang_code,
+				 lang_code,
+				 lang_code,
+				 lang_code,
+				 lang_code,
+				 lang_code,
+				 lang_code,
+				 lang_code,
+				 lang_code,
+				 lang_code,
+				 lang_code,
+				 lang_code,
+				 lang_code,
+				 lang_code,
 				 lang_code,
 				 lang_code,
 				 lang_code,
@@ -166,6 +273,101 @@ module.exports = {
 												  )
 								  )
 							  )
+					UNION ALL
+					SELECT DISTINCT  
+							'LOCALE' object,
+							null app_id,
+							null object_name,
+							'SETTING_SELECT_LOCALE' object_item_name, 
+												null subitem_name, 
+							CONCAT(l.lang_code, CASE 
+												WHEN c.country_code IS NOT NULL THEN 
+												CONCAT('-', c.country_code) 
+												ELSE 
+												'' 
+												END) lang_code,  
+							CONCAT(UPPER(SUBSTR(CONCAT(language_translation.text, CASE 
+															WHEN ct.text IS NOT NULL THEN 
+																CONCAT(' (', CONCAT(ct.text,')')) 
+															ELSE 
+																'' 
+															END),1,1)),SUBSTR(CONCAT(language_translation.text, 
+																				CASE 
+																				WHEN ct.text IS NOT NULL THEN 
+																					CONCAT(' (', CONCAT(ct.text,')')) 
+																				ELSE 
+																					'' 
+																				END),2)) text
+		
+					FROM language l,
+							language_translation,
+							locale loc
+							LEFT OUTER JOIN country c
+							ON c.id= loc.country_id
+							LEFT OUTER JOIN country_translation ct
+							ON ct.country_id = loc.country_id
+					WHERE l.id = loc.language_id
+						AND language_translation.language_id = l.id
+						AND language_translation.language_translation_id IN 
+						(SELECT id 
+						FROM language l2
+						WHERE (l2.lang_code IN (:lang_code, 
+												SUBSTR(:lang_code, 0,INSTR(:lang_code,'-',1,2)-1), 
+												SUBSTR(:lang_code, 0,INSTR(:lang_code,'-',1,1)-1))
+							OR (l2.lang_code = 'en'
+								AND NOT EXISTS(SELECT NULL
+												FROM language_translation lt1,
+													language l1
+												WHERE l1.id  = lt1.language_translation_id
+												AND lt1.language_id = l.id
+												AND l1.lang_code IN (:lang_code, SUBSTR(:lang_code, 0,INSTR(:lang_code,'-',1,2)-1), SUBSTR(:lang_code, 0,INSTR(:lang_code,'-',1,1)-1))
+											)
+										)
+									)
+							)
+						AND ct.language_id IN 
+						(SELECT id 
+						FROM language l2
+						WHERE (l2.lang_code IN (:lang_code, 
+												SUBSTR(:lang_code, 0,INSTR(:lang_code,'-',1,2)-1), 
+												SUBSTR(:lang_code, 0,INSTR(:lang_code,'-',1,1)-1))
+							OR (l2.lang_code = 'en'
+								AND NOT EXISTS(SELECT NULL
+												FROM country_translation ct1,
+													language l1
+												WHERE l1.id = ct1.language_id
+												AND  ct1.country_id = c.id
+												AND l1.lang_code IN (:lang_code, SUBSTR(:lang_code, 0,INSTR(:lang_code,'-',1,2)-1), SUBSTR(:lang_code, 0,INSTR(:lang_code,'-',1,1)-1))
+											)
+								)
+								)
+						)
+					UNION ALL
+					SELECT 'COUNTRY' object,   
+							null app_id,
+							null object_name,
+							'SETTING_SELECT_COUNTRY' object_item_name,
+							c.country_code subitem_name,
+											null lang_code,
+											concat(concat (c.flag_emoji, ' '), ct.text)
+					FROM    country  c,
+							country_translation ct,
+							language l
+					WHERE ct.country_id = c.id
+					AND   l.id = ct.language_id
+					AND (l.lang_code IN (:lang_code, 
+										SUBSTR(:lang_code, 0,INSTR(:lang_code,'-',1,2)-1), 
+										SUBSTR(:lang_code, 0,INSTR(:lang_code,'-',1,1)-1))
+						OR (l.lang_code = 'en'
+							AND NOT EXISTS(SELECT NULL
+											FROM country_translation ct1,
+												language l1
+										WHERE ct1.country_id = ct.country_id
+										AND l1.id = ct1.language_id
+										AND l1.lang_code IN (:lang_code, SUBSTR(:lang_code, 0,INSTR(:lang_code,'-',1,2)-1), SUBSTR(:lang_code, 0,INSTR(:lang_code,'-',1,1)-1))
+								)
+						)
+					)
 				  ORDER BY 1,2,3,4, 5, 6`,
 					{
 						app_id: app_id,

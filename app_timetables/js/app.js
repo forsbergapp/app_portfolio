@@ -378,8 +378,29 @@ async function settings_translate() {
                         }
                     }
                 }
+                if (json.data[i].object=='LOCALE'){
+                    var select_locale = document.getElementById(json.data[i].object_item_name.toLowerCase());
+                    var select_second_locale = document.getElementById('setting_select_report_locale_second');
+        
+                    for (var optionindex = 0; optionindex < select_locale.options.length; optionindex++) {
+                            if (select_locale.options[optionindex].value == json.data[i].lang_code)
+                                select_locale.options[optionindex].text = json.data[i].text;
+                    }
+                    for (var optionindex = 0; optionindex < select_second_locale.options.length; optionindex++) {
+                            if (select_second_locale.options[optionindex].value == json.data[i].lang_code)
+                                select_second_locale.options[optionindex].text = json.data[i].text;
+                    }
+                }
+                if (json.data[i].object=='COUNTRY'){
+                    var select_country = document.getElementById(json.data[i].object_item_name.toLowerCase());
+                    for (var optionindex = 0; optionindex < select_country.options.length; optionindex++) {
+                            if (select_country.options[optionindex].getAttribute('country_code') == json.data[i].subitem_name)
+                                select_country.options[optionindex].text = json.data[i].text;
+                    }
+                }
             }
             
+    
             //check if second language is used
             if (document.getElementById('setting_select_report_locale_second').value !=0){
                 var json2;
@@ -2563,7 +2584,6 @@ function user_login() {
 
 async function user_setting_get(user_setting_id) {
     var select = document.getElementById("setting_select_user_setting");
-    var option;
     var json;
     var status;
 
@@ -2584,81 +2604,71 @@ async function user_setting_get(user_setting_id) {
                 json = JSON.parse(response);
                 select_empty(select);
                 //fill select with this one record
-                option = document.createElement('option');
-                option.text = json.description;
-                option.value = 0;
-                option.setAttribute('id', json.id);
-                option.setAttribute('description', json.description);
-                option.setAttribute('regional_language_locale', json.regional_language_locale);
-                option.setAttribute('regional_current_timezone_select_id', json.regional_current_timezone_select_id);
-                option.setAttribute('regional_timezone_select_id', json.regional_timezone_select_id);
-                option.setAttribute('regional_number_system_select_id', json.regional_number_system_select_id);
-                option.setAttribute('regional_layout_direction_select_id', json.regional_layout_direction_select_id);
-                option.setAttribute('regional_second_language_locale', json.regional_second_language_locale);
-                option.setAttribute('regional_column_title_select_id', json.regional_column_title_select_id);
-                option.setAttribute('regional_arabic_script_select_id', json.regional_arabic_script_select_id);
-                option.setAttribute('regional_calendar_type_select_id', json.regional_calendar_type_select_id);
-                option.setAttribute('regional_calendar_hijri_type_select_id', json.regional_calendar_hijri_type_select_id);
-
-                option.setAttribute('gps_map_type_select_id', json.gps_map_type_select_id);
-                option.setAttribute('gps_country_id', get_null_or_value(json.gps_country_id));
-                option.setAttribute('gps_city_id', get_null_or_value(json.gps_city_id));
-                option.setAttribute('gps_popular_place_id', get_null_or_value(json.gps_popular_place_id));
-                option.setAttribute('gps_lat_text', json.gps_lat_text);
-                option.setAttribute('gps_long_text', json.gps_long_text);
-
-                option.setAttribute('design_theme_day_id', json.design_theme_day_id);
-                option.setAttribute('design_theme_month_id', json.design_theme_month_id);
-                option.setAttribute('design_theme_year_id', json.design_theme_year_id);
-                option.setAttribute('design_paper_size_select_id', json.design_paper_size_select_id);
-                option.setAttribute('design_row_highlight_select_id', json.design_row_highlight_select_id);
-                option.setAttribute('design_column_weekday_checked', json.design_column_weekday_checked);
-                option.setAttribute('design_column_calendartype_checked', json.design_column_calendartype_checked);
-                option.setAttribute('design_column_notes_checked', json.design_column_notes_checked);
-                option.setAttribute('design_column_gps_checked', json.design_column_gps_checked);
-                option.setAttribute('design_column_timezone_checked', json.design_column_timezone_checked);
-
-                option.setAttribute('image_header_image_img', image_format(json.image_header_image_img));
-                option.setAttribute('image_footer_image_img', image_format(json.image_footer_image_img));
-
-                //fix null value that returns the word "null" without quotes
-                option.setAttribute('text_header_1_text', get_null_or_value(json.text_header_1_text));
-                option.setAttribute('text_header_2_text', get_null_or_value(json.text_header_2_text));
-                option.setAttribute('text_header_3_text', get_null_or_value(json.text_header_3_text));
-                option.setAttribute('text_header_align', get_null_or_value(json.text_header_align));
-                option.setAttribute('text_footer_1_text', get_null_or_value(json.text_footer_1_text));
-                option.setAttribute('text_footer_2_text', get_null_or_value(json.text_footer_2_text));
-                option.setAttribute('text_footer_3_text', get_null_or_value(json.text_footer_3_text));
-                option.setAttribute('text_footer_align', get_null_or_value(json.text_footer_align));
-
-                option.setAttribute('prayer_method_select_id', json.prayer_method_select_id);
-                option.setAttribute('prayer_asr_method_select_id', json.prayer_asr_method_select_id);
-                option.setAttribute('prayer_high_latitude_adjustment_select_id', json.prayer_high_latitude_adjustment_select_id);
-                option.setAttribute('prayer_time_format_select_id', json.prayer_time_format_select_id);
-                option.setAttribute('prayer_hijri_date_adjustment_select_id', json.prayer_hijri_date_adjustment_select_id);
-                option.setAttribute('prayer_fajr_iqamat_select_id', json.prayer_fajr_iqamat_select_id);
-                option.setAttribute('prayer_dhuhr_iqamat_select_id', json.prayer_dhuhr_iqamat_select_id);
-                option.setAttribute('prayer_asr_iqamat_select_id', json.prayer_asr_iqamat_select_id);
-                option.setAttribute('prayer_maghrib_iqamat_select_id', json.prayer_maghrib_iqamat_select_id);
-                option.setAttribute('prayer_isha_iqamat_select_id', json.prayer_isha_iqamat_select_id);
-                option.setAttribute('prayer_column_imsak_checked', json.prayer_column_imsak_checked);
-                option.setAttribute('prayer_column_sunset_checked', json.prayer_column_sunset_checked);
-                option.setAttribute('prayer_column_midnight_checked', json.prayer_column_midnight_checked);
-                option.setAttribute('prayer_column_fast_start_end_select_id', json.prayer_column_fast_start_end_select_id);
-                option.setAttribute('user_account_id', json.user_account_id);
-                select.appendChild(option);
-                //show user setting
-
-                //add only one option because of performance for report only 
+                let option_html='';
+                option_html += `<option value=${0} id=${json.id} 
+                                    description='${json.description}' 
+                                    regional_language_locale=${json.regional_language_locale}
+                                    regional_current_timezone_select_id=${json.regional_current_timezone_select_id}
+                                    regional_timezone_select_id=${json.regional_timezone_select_id}
+                                    regional_number_system_select_id=${json.regional_number_system_select_id}
+                                    regional_layout_direction_select_id=${json.regional_layout_direction_select_id}
+                                    regional_second_language_locale=${json.regional_second_language_locale}
+                                    regional_column_title_select_id=${json.regional_column_title_select_id}
+                                    regional_arabic_script_select_id=${json.regional_arabic_script_select_id}
+                                    regional_calendar_type_select_id=${json.regional_calendar_type_select_id}
+                                    regional_calendar_hijri_type_select_id=${json.regional_calendar_hijri_type_select_id}
+                                    gps_map_type_select_id=${json.gps_map_type_select_id}
+                                    ${json.gps_country_id==null?'gps_country_id=""':'gps_country_id=' + json.gps_country_id}
+                                    ${json.gps_city_id==null?'gps_city_id=""':'gps_city_id=' + json.gps_city_id}
+                                    ${json.gps_popular_place_id==null?'gps_popular_place_id=""':'gps_popular_place_id=' + json.gps_popular_place_id}
+                                    gps_lat_text=${json.gps_lat_text}
+                                    gps_long_text=${json.gps_long_text}
+                                    design_theme_day_id=${json.design_theme_day_id}
+                                    design_theme_month_id=${json.design_theme_month_id}
+                                    design_theme_year_id=${json.design_theme_year_id}
+                                    design_paper_size_select_id=${json.design_paper_size_select_id}
+                                    design_row_highlight_select_id=${json.design_row_highlight_select_id}
+                                    design_column_weekday_checked=${json.design_column_weekday_checked}
+                                    design_column_calendartype_checked=${json.design_column_calendartype_checked}
+                                    design_column_notes_checked=${json.design_column_notes_checked}
+                                    design_column_gps_checked=${json.design_column_gps_checked}
+                                    design_column_timezone_checked=${json.design_column_timezone_checked}
+                                    image_header_image_img='${image_format(json.image_header_image_img)}'
+                                    image_footer_image_img='${image_format(json.image_footer_image_img)}'
+                                    text_header_1_text='${json.text_header_1_text==null?'':json.text_header_1_text}'
+                                    text_header_2_text='${json.text_header_2_text==null?'':json.text_header_2_text}'
+                                    text_header_3_text='${json.text_header_3_text==null?'':json.text_header_3_text}'
+                                    text_header_align='${json.text_header_align==null?'':json.text_header_align}'
+                                    text_footer_1_text='${json.text_footer_1_text==null?'':json.text_footer_1_text}'
+                                    text_footer_2_text='${json.text_footer_2_text==null?'':json.text_footer_2_text}'
+                                    text_footer_3_text='${json.text_footer_3_text==null?'':json.text_footer_3_text}'
+                                    text_footer_align='${json.text_footer_align==null?'':json.text_footer_align}'
+                                    prayer_method_select_id=${json.prayer_method_select_id}
+                                    prayer_asr_method_select_id=${json.prayer_asr_method_select_id}
+                                    prayer_high_latitude_adjustment_select_id=${json.prayer_high_latitude_adjustment_select_id}
+                                    prayer_time_format_select_id=${json.prayer_time_format_select_id}
+                                    prayer_hijri_date_adjustment_select_id=${json.prayer_hijri_date_adjustment_select_id}
+                                    prayer_fajr_iqamat_select_id=${json.prayer_fajr_iqamat_select_id}
+                                    prayer_dhuhr_iqamat_select_id=${json.prayer_dhuhr_iqamat_select_id}
+                                    prayer_asr_iqamat_select_id=${json.prayer_asr_iqamat_select_id}
+                                    prayer_maghrib_iqamat_select_id=${json.prayer_maghrib_iqamat_select_id}
+                                    prayer_isha_iqamat_select_id=${json.prayer_isha_iqamat_select_id}
+                                    prayer_column_imsak_checked=${json.prayer_column_imsak_checked}
+                                    prayer_column_sunset_checked=${json.prayer_column_sunset_checked}
+                                    prayer_column_midnight_checked=${json.prayer_column_midnight_checked}
+                                    prayer_column_fast_start_end_select_id=${json.prayer_column_fast_start_end_select_id}
+                                    user_account_id=${json.user_account_id}
+                                    >${json.description}
+                                </option>`
+                select.innerHTML += option_html;
+                //add only option from user settings because of performance for report only 
                 //for locale and second locale, locales are not loaded, only load the used ones
-                var option = document.createElement('option');
-                option.text = json.regional_language_locale;
-                option.setAttribute('value', json.regional_language_locale);
-                document.getElementById('setting_select_locale').appendChild(option);
-                option = document.createElement('option');
-                option.text = json.regional_second_language_locale;
-                option.setAttribute('value', json.regional_second_language_locale);
-                document.getElementById('setting_select_report_locale_second').appendChild(option);
+                document.getElementById('setting_select_locale').innerHTML += 
+                `<option value=${json.regional_language_locale}>${json.regional_language_locale}</option`;
+                if (json.regional_second_language_locale !='0'){
+                    document.getElementById('setting_select_report_locale_second').innerHTML += 
+                    `<option value=${json.regional_second_language_locale}>${json.regional_second_language_locale}</option`;
+                }
             } else {
                 if (status == 401)
                     user_logoff();
@@ -2673,7 +2683,6 @@ async function user_setting_get(user_setting_id) {
 
 async function user_settings_get(userid, show_ui = 1, user_setting_id = '') {
     var select = document.getElementById("setting_select_user_setting");
-    var option;
     var json;
     var i;
     var status;
@@ -2695,85 +2704,74 @@ async function user_settings_get(userid, show_ui = 1, user_setting_id = '') {
                 json = JSON.parse(response);
                 select_empty(select);
                 //fill select
+                let option_html = '';
                 for (i = 0; i < json.count; i++) {
-                    option = document.createElement('option');
-                    option.text = json.items[i].description;
-                    option.value = i;
-                    option.setAttribute('id', json.items[i].id);
-                    option.setAttribute('description', json.items[i].description);
-                    option.setAttribute('regional_language_locale', json.items[i].regional_language_locale);
-                    option.setAttribute('regional_current_timezone_select_id', json.items[i].regional_current_timezone_select_id);
-                    option.setAttribute('regional_timezone_select_id', json.items[i].regional_timezone_select_id);
-                    option.setAttribute('regional_number_system_select_id', json.items[i].regional_number_system_select_id);
-                    option.setAttribute('regional_layout_direction_select_id', json.items[i].regional_layout_direction_select_id);
-                    option.setAttribute('regional_second_language_locale', json.items[i].regional_second_language_locale);
-                    option.setAttribute('regional_column_title_select_id', json.items[i].regional_column_title_select_id);
-                    option.setAttribute('regional_arabic_script_select_id', json.items[i].regional_arabic_script_select_id);
-                    option.setAttribute('regional_calendar_type_select_id', json.items[i].regional_calendar_type_select_id);
-                    option.setAttribute('regional_calendar_hijri_type_select_id', json.items[i].regional_calendar_hijri_type_select_id);
-
-                    option.setAttribute('gps_map_type_select_id', json.items[i].gps_map_type_select_id);
-                    option.setAttribute('gps_country_id', get_null_or_value(json.items[i].gps_country_id));
-                    option.setAttribute('gps_city_id', get_null_or_value(json.items[i].gps_city_id));
-                    option.setAttribute('gps_popular_place_id', get_null_or_value(json.items[i].gps_popular_place_id));
-                    option.setAttribute('gps_lat_text', json.items[i].gps_lat_text);
-                    option.setAttribute('gps_long_text', json.items[i].gps_long_text);
-
-                    option.setAttribute('design_theme_day_id', json.items[i].design_theme_day_id);
-                    option.setAttribute('design_theme_month_id', json.items[i].design_theme_month_id);
-                    option.setAttribute('design_theme_year_id', json.items[i].design_theme_year_id);
-                    option.setAttribute('design_paper_size_select_id', json.items[i].design_paper_size_select_id);
-                    option.setAttribute('design_row_highlight_select_id', json.items[i].design_row_highlight_select_id);
-                    option.setAttribute('design_column_weekday_checked', json.items[i].design_column_weekday_checked);
-                    option.setAttribute('design_column_calendartype_checked', json.items[i].design_column_calendartype_checked);
-                    option.setAttribute('design_column_notes_checked', json.items[i].design_column_notes_checked);
-                    option.setAttribute('design_column_gps_checked', json.items[i].design_column_gps_checked);
-                    option.setAttribute('design_column_timezone_checked', json.items[i].design_column_timezone_checked);
-
-                    option.setAttribute('image_header_image_img', image_format(json.items[i].image_header_image_img));
-                    option.setAttribute('image_footer_image_img', image_format(json.items[i].image_footer_image_img));
-
-                    //fix null value that returns the word "null" without quotes
-                    option.setAttribute('text_header_1_text', get_null_or_value(json.items[i].text_header_1_text));
-                    option.setAttribute('text_header_2_text', get_null_or_value(json.items[i].text_header_2_text));
-                    option.setAttribute('text_header_3_text', get_null_or_value(json.items[i].text_header_3_text));
-                    option.setAttribute('text_header_align', get_null_or_value(json.items[i].text_header_align));
-                    option.setAttribute('text_footer_1_text', get_null_or_value(json.items[i].text_footer_1_text));
-                    option.setAttribute('text_footer_2_text', get_null_or_value(json.items[i].text_footer_2_text));
-                    option.setAttribute('text_footer_3_text', get_null_or_value(json.items[i].text_footer_3_text));
-                    option.setAttribute('text_footer_align', get_null_or_value(json.items[i].text_footer_align));
-
-                    option.setAttribute('prayer_method_select_id', json.items[i].prayer_method_select_id);
-                    option.setAttribute('prayer_asr_method_select_id', json.items[i].prayer_asr_method_select_id);
-                    option.setAttribute('prayer_high_latitude_adjustment_select_id', json.items[i].prayer_high_latitude_adjustment_select_id);
-                    option.setAttribute('prayer_time_format_select_id', json.items[i].prayer_time_format_select_id);
-                    option.setAttribute('prayer_hijri_date_adjustment_select_id', json.items[i].prayer_hijri_date_adjustment_select_id);
-                    option.setAttribute('prayer_fajr_iqamat_select_id', json.items[i].prayer_fajr_iqamat_select_id);
-                    option.setAttribute('prayer_dhuhr_iqamat_select_id', json.items[i].prayer_dhuhr_iqamat_select_id);
-                    option.setAttribute('prayer_asr_iqamat_select_id', json.items[i].prayer_asr_iqamat_select_id);
-                    option.setAttribute('prayer_maghrib_iqamat_select_id', json.items[i].prayer_maghrib_iqamat_select_id);
-                    option.setAttribute('prayer_isha_iqamat_select_id', json.items[i].prayer_isha_iqamat_select_id);
-                    option.setAttribute('prayer_column_imsak_checked', json.items[i].prayer_column_imsak_checked);
-                    option.setAttribute('prayer_column_sunset_checked', json.items[i].prayer_column_sunset_checked);
-                    option.setAttribute('prayer_column_midnight_checked', json.items[i].prayer_column_midnight_checked);
-                    option.setAttribute('prayer_column_fast_start_end_select_id', json.items[i].prayer_column_fast_start_end_select_id);
-                    option.setAttribute('user_account_id', json.items[i].user_account_id);
-                    select.appendChild(option);
-
+                    option_html += `<option value=${i} id=${json.items[i].id} description='${json.items[i].description}'
+                                        regional_language_locale=${json.items[i].regional_language_locale}
+                                        regional_current_timezone_select_id=${json.items[i].regional_current_timezone_select_id}
+                                        regional_timezone_select_id=${json.items[i].regional_timezone_select_id}
+                                        regional_number_system_select_id=${json.items[i].regional_number_system_select_id}
+                                        regional_layout_direction_select_id=${json.items[i].regional_layout_direction_select_id}
+                                        regional_second_language_locale=${json.items[i].regional_second_language_locale}
+                                        regional_column_title_select_id=${json.items[i].regional_column_title_select_id}
+                                        regional_arabic_script_select_id=${json.items[i].regional_arabic_script_select_id}
+                                        regional_calendar_type_select_id=${json.items[i].regional_calendar_type_select_id}
+                                        regional_calendar_hijri_type_select_id=${json.items[i].regional_calendar_hijri_type_select_id}
+                                        gps_map_type_select_id=${json.items[i].gps_map_type_select_id}
+                                        ${json.items[i].gps_country_id==null?'gps_country_id=""':'gps_country_id=' + json.items[i].gps_country_id}
+                                        ${json.items[i].gps_city_id==null?'gps_city_id=""':'gps_city_id=' + json.items[i].gps_city_id}
+                                        ${json.items[i].gps_popular_place_id==null?'gps_popular_place_id=""':'gps_popular_place_id=' + json.items[i].gps_popular_place_id}
+                                        gps_lat_text=${json.items[i].gps_lat_text}
+                                        gps_long_text=${json.items[i].gps_long_text}
+                                        design_theme_day_id=${json.items[i].design_theme_day_id}
+                                        design_theme_month_id=${json.items[i].design_theme_month_id}
+                                        design_theme_year_id=${json.items[i].design_theme_year_id}
+                                        design_paper_size_select_id=${json.items[i].design_paper_size_select_id}
+                                        design_row_highlight_select_id=${json.items[i].design_row_highlight_select_id}
+                                        design_column_weekday_checked=${json.items[i].design_column_weekday_checked}
+                                        design_column_calendartype_checked=${json.items[i].design_column_calendartype_checked}
+                                        design_column_notes_checked=${json.items[i].design_column_notes_checked}
+                                        design_column_gps_checked=${json.items[i].design_column_gps_checked}
+                                        design_column_timezone_checked=${json.items[i].design_column_timezone_checked}
+                                        image_header_image_img='${image_format(json.items[i].image_header_image_img)}'
+                                        image_footer_image_img='${image_format(json.items[i].image_footer_image_img)}'
+                                        text_header_1_text='${json.items[i].text_header_1_text==null?'':json.items[i].text_header_1_text}'
+                                        text_header_2_text='${json.items[i].text_header_2_text==null?'':json.items[i].text_header_2_text}'
+                                        text_header_3_text='${json.items[i].text_header_3_text==null?'':json.items[i].text_header_3_text}'
+                                        text_header_align='${json.items[i].text_header_align==null?'':json.items[i].text_header_align}'
+                                        text_footer_1_text='${json.items[i].text_footer_1_text==null?'':json.items[i].text_footer_1_text}'
+                                        text_footer_2_text='${json.items[i].text_footer_2_text==null?'':json.items[i].text_footer_2_text}'
+                                        text_footer_3_text='${json.items[i].text_footer_3_text==null?'':json.items[i].text_footer_3_text}'
+                                        text_footer_align='${json.items[i].text_footer_align==null?'':json.items[i].text_footer_align}'    
+                                        prayer_method_select_id=${json.items[i].prayer_method_select_id}
+                                        prayer_asr_method_select_id=${json.items[i].prayer_asr_method_select_id}
+                                        prayer_high_latitude_adjustment_select_id=${json.items[i].prayer_high_latitude_adjustment_select_id}
+                                        prayer_time_format_select_id=${json.items[i].prayer_time_format_select_id}
+                                        prayer_hijri_date_adjustment_select_id=${json.items[i].prayer_hijri_date_adjustment_select_id}
+                                        prayer_fajr_iqamat_select_id=${json.items[i].prayer_fajr_iqamat_select_id}
+                                        prayer_dhuhr_iqamat_select_id=${json.items[i].prayer_dhuhr_iqamat_select_id}
+                                        prayer_asr_iqamat_select_id=${json.items[i].prayer_asr_iqamat_select_id}
+                                        prayer_maghrib_iqamat_select_id=${json.items[i].prayer_maghrib_iqamat_select_id}
+                                        prayer_isha_iqamat_select_id=${json.items[i].prayer_isha_iqamat_select_id}
+                                        prayer_column_imsak_checked=${json.items[i].prayer_column_imsak_checked}
+                                        prayer_column_sunset_checked=${json.items[i].prayer_column_sunset_checked}
+                                        prayer_column_midnight_checked=${json.items[i].prayer_column_midnight_checked}
+                                        prayer_column_fast_start_end_select_id=${json.items[i].prayer_column_fast_start_end_select_id}
+                                        user_account_id=${json.items[i].user_account_id}
+                                        >${json.items[i].description}
+                                    </option>`
                     if (show_ui == 0) {
                         //add only one option because of performance for report only 
                         //for locale and second locale, locales are not loaded, only load the used ones
-                        var option = document.createElement('option');
-                        option.text = json.items[i].regional_language_locale;
-                        option.setAttribute('value', json.items[i].regional_language_locale);
-                        document.getElementById('setting_select_locale').appendChild(option);
-
-                        option = document.createElement('option');
-                        option.text = json.items[i].regional_second_language_locale;
-                        option.setAttribute('value', json.items[i].regional_second_language_locale);
-                        document.getElementById('setting_select_report_locale_second').appendChild(option);
+                        document.getElementById('setting_select_locale').innerHTML += 
+                        `<option value=${json.items[i].regional_language_locale}>${json.items[i].regional_language_locale}</option`;
+                        if (json.items[i].regional_second_language_locale !='0'){
+                            document.getElementById('setting_select_report_locale_second').innerHTML += 
+                            `<option value=${json.items[i].regional_second_language_locale}>${json.items[i].regional_second_language_locale}</option`;                        
+                        }
                     }
                 }
+                select.innerHTML += option_html;
                 if (show_ui == 1) {
                     //show user setting select
                     document.getElementById('user_settings').style.display = "block";
@@ -3236,37 +3234,32 @@ async function user_settings_load(show_ui = 1) {
             button_pdf_year_url + '\' ';
         var i;
         var period;
-        for (i = 0; i <= 2; i++) {
-            if (i == 0)
-                period = 'day';
-            if (i == 1)
-                period = 'month';
-            if (i == 2)
-                period = 'year';
+        const period_arr = ['day','month','year'];
+        period_arr.forEach(period => {
             document.getElementById('setting_data_user_url_' + period).innerHTML =
-                '<button id="user_' + period + '_html"' +
-                'class="toolbar_button"' +
-                'onclick="' + eval('button_html_' + period + '_onclick') + '">' +
-                '<i class="fas fa-file-code"></i>' +
-                '<div id="user_' + period + '_label_html">HTML</div>' +
-                '</button>' +
-                '<button id="user_' + period + '_html_copy"' +
-                'class="toolbar_button" ' +
-                'onclick="var promise = navigator.clipboard .writeText(\'' + eval('button_html_' + period + '_url') + '\') .then(() => {null;});">' +
-                '<i class="fas fa-copy"></i>' +
-                '</button>' +
-                '<button id="user_' + period + '_pdf"' +
-                'class="toolbar_button"' +
-                'onclick="' + eval('button_pdf_' + period + '_onclick') + '">' +
-                '<i class="fas fa-file-pdf"></i>' +
-                '<div id="user_' + period + '_label_pdf">PDF</div>' +
-                '</button>' +
-                '<button id="user_' + period + '_pdf_copy"' +
-                'class="toolbar_button" ' +
-                'onclick="var promise = navigator.clipboard.writeText(\'' + eval('button_pdf_' + period + '_url') + '\') .then(() => {null;});">' +
-                '<i class="fas fa-copy"></i>' +
-                '</button>';
-        }
+                `<button id=${'user_' + period + '_html'}
+                    class='toolbar_button'
+                    onclick=${eval('button_html_' + period + '_onclick')}> 
+                    <i class='fas fa-file-code'></i>
+                    <div id=${'user_' + period + '_label_html'}>HTML</div>
+                </button>
+                <button id=${'user_' + period + '_html_copy'}
+                    class='toolbar_button'
+                    onclick='var promise = navigator.clipboard .writeText(${eval('button_html_' + period + '_url')}) .then(() => {null;});'>
+                    <i class='fas fa-copy'></i>
+                </button>' +
+                <button id=${'user_' + period + '_pdf'}
+                    class='toolbar_button'
+                    onclick=${eval('button_pdf_' + period + '_onclick')}> 
+                    <i class='fas fa-file-pdf'></i>
+                    <div id='user_' + period + '_label_pdf'>PDF</div>
+                </button>
+                <button id=${'user_' + period + '_pdf_copy'}
+                    class='toolbar_button'
+                    onclick='var promise = navigator.clipboard .writeText(${eval('button_pdf_' + period + '_url')}) .then(() => {null;});'>
+                    <i class='fas fa-copy'></i>
+                </button>`;
+        })
     }
     return null;
 }
@@ -3753,14 +3746,6 @@ function updateProviderUser(provider_no, profile_id, profile_first_name, profile
     var profile_image;
     var profile_username_logged_in;
     var img = new Image();
-    if (typeof global_user_gps_latitude == 'undefined') {
-        //automatic login, gps not set, set basic default values
-        get_token().then(function(){
-            app_load_basic().then(function(){
-                set_default_settings();
-            })
-        });
-    }
 
     profile_username_logged_in = profile_first_name + ' ' + profile_last_name;
 
@@ -3903,7 +3888,6 @@ function updateProviderUser(provider_no, profile_id, profile_first_name, profile
 }
 
 function onProviderSignIn(googleUser) {
-    console.log('onprovider 1');
     var profile;
     var profile_id;
     var profile_image_url;
@@ -3911,7 +3895,6 @@ function onProviderSignIn(googleUser) {
     var profile_last_name;
     var profile_email;
     var provider_no;
-
     if (googleUser) {
         provider_no = 1;
         profile = googleUser.getBasicProfile();
@@ -4142,10 +4125,10 @@ function update_ui(option) {
         case 5:
             {
                 //remove old list: 
-                var old_groups = settings.city.getElementsByTagName('optgroup');
-                for (var old_index = old_groups.length - 1; old_index >= 0; old_index--)
-                    settings.city.removeChild(old_groups[old_index])
-
+                //var old_groups = settings.city.getElementsByTagName('optgroup');
+                //for (var old_index = old_groups.length - 1; old_index >= 0; old_index--)
+                //    settings.city.removeChild(old_groups[old_index])
+                settings.city.innerHTML=`<option value='' id='' label='…' selected='selected'>…</option>`;
                 SearchAndSetSelectedIndex('', settings.select_place,0);
                 if (settings.country[settings.country.selectedIndex].getAttribute('country_code')!=''){
                     var status;
@@ -4179,30 +4162,31 @@ function update_ui(option) {
     
                             var current_admin_name;
                             //fill list with cities
+                            let cities='';
                             for (var i = 0; i < json.length; i++) {
                                 if (i == 0) {
-                                    optiongroup = document.createElement('OPTGROUP');
-                                    optiongroup.label = json[i].admin_name;
-                                    settings.city.appendChild(optiongroup);
+                                    cities += `<option value='' id='' label='…' selected='selected'>…</option>
+                                               <optgroup label='${json[i].admin_name}'>`;
                                     current_admin_name = json[i].admin_name;
                                 } else
                                 if (json[i].admin_name != current_admin_name) {
-                                    optiongroup = document.createElement('OPTGROUP');
-                                    optiongroup.label = json[i].admin_name;
-                                    settings.city.appendChild(optiongroup);
+                                    cities += `</optgroup>
+                                               <optgroup label='${json[i].admin_name}'>`;
                                     current_admin_name = json[i].admin_name;
                                 }
-                                var option = document.createElement('option');
-                                option.text = json[i].city;
-                                option.value = i + 1;
-                                option.setAttribute('id', json[i].id);
-                                option.setAttribute('countrycode', json[i].iso2);
-                                option.setAttribute('country', json[i].country);
-                                option.setAttribute('admin_name', json[i].admin_name);
-                                option.setAttribute('latitude', json[i].lat);
-                                option.setAttribute('longitud', json[i].lng);
-                                optiongroup.appendChild(option);
+                                cities +=
+                                `<option 
+                                    id=${json[i].id} 
+                                    value=${i + 1}
+                                    countrycode=${json[i].iso2}
+                                    country='${json[i].country}'
+                                    admin_name='${json[i].admin_name}'
+                                    latitude=${json[i].lat}
+                                    longitude=${json[i].lng}  
+                                    >${json[i].city}
+                                </option>`;
                             }
+                            settings.city.innerHTML = `${cities} </optgroup>`;
                             document.getElementById('setting_input_place').value = '';
                         }
                         else {
@@ -4219,7 +4203,7 @@ function update_ui(option) {
                 if (settings.city.id != '') {
                     
                     //set GPS and timezone
-                    var longitude_selected = settings.city[settings.city.selectedIndex].getAttribute('longitud');
+                    var longitude_selected = settings.city[settings.city.selectedIndex].getAttribute('longitude');
                     var latitude_selected = settings.city[settings.city.selectedIndex].getAttribute('latitude');
                     var timezone_selected = tzlookup(latitude_selected, longitude_selected);
                     settings.gps_long_input.value = longitude_selected;
@@ -4601,6 +4585,7 @@ function profile_show_user_setting() {
                     json = JSON.parse(response);
                     var user_settings = document.getElementById('profile_user_settings_rows');
                     user_settings.innerHTML = '';
+                    let html ='';
                     for (i = 0; i < json.count; i++) {
                         var common_url = global_service_report +
                             '?app_id=' + global_app_id +
@@ -4609,67 +4594,42 @@ function profile_show_user_setting() {
                             '&ps=A4' +
                             '&hf=0' +
                             '&format=html';
-                        row = document.createElement('div');
-                        row.classList.add('profile_user_settings_row');
-                        col = document.createElement('div');
-                        col.classList.add('profile_user_settings_place');
-                        col.innerHTML = json.items[i].description;
-                        row.appendChild(col);
-                        col = document.createElement('div');
-                        col.classList.add('profile_user_settings_day');
 
-                        col.innerHTML = '<a href="#" ' +
-                            'onclick="document.getElementById(\'window_preview_report\').style.visibility = \'visible\';' +
-                            'create_qr(\'window_preview_toolbar_qr\',\'' + common_url + '&type=0\');' +
-                            'updateViewStat(' + json.items[i].id + ',' + json.items[i].user_account_id + ');' +
-                            'document.getElementById(\'window_preview_content\').src=\'' +
-                            common_url + '&type=0\' ">' +
-                            '<i class="fas fa-calendar-day"></i>' + '</a>';
-                        row.appendChild(col);
-                        col = document.createElement('div');
-                        col.classList.add('profile_user_settings_month');
-                        col.innerHTML = '<a href="#" ' +
-                            'onclick="document.getElementById(\'window_preview_report\').style.visibility = \'visible\';' +
-                            'create_qr(\'window_preview_toolbar_qr\',\'' + common_url + '&type=1\');' +
-                            'updateViewStat(' + json.items[i].id + ',' + json.items[i].user_account_id + ');' +
-                            'document.getElementById(\'window_preview_content\').src=\'' +
-                            common_url + '&type=1\' ">' +
-                            '<i class="fas fa-calendar-week"></i>' + '</a>';
-                        row.appendChild(col);
-                        col = document.createElement('div');
-                        col.classList.add('profile_user_settings_year');
-                        col.innerHTML = '<a href="#" ' +
-                            'onclick="document.getElementById(\'window_preview_report\').style.visibility = \'visible\';' +
-                            'create_qr(\'window_preview_toolbar_qr\',\'' + common_url + '&type=2\');' +
-                            'updateViewStat(' + json.items[i].id + ',' + json.items[i].user_account_id + ');' +
-                            'document.getElementById(\'window_preview_content\').src=\'' +
-                            common_url + '&type=2\' ">' +
-                            '<i class="fas fa-calendar-alt"></i>' + '</a>';
-                        row.appendChild(col);
-                        col = document.createElement('div');
-                        col.classList.add('profile_user_settings_like');
+                        html += 
+                        `<div class='profile_user_settings_row'>
+                            <div class='profile_user_settings_place'>${json.items[i].description}
+                            </div>
+                            <div class='profile_user_settings_day'>
+                                <a href='#' onclick="document.getElementById('window_preview_report').style.visibility = 'visible';create_qr('window_preview_toolbar_qr', '${common_url}&type=0');updateViewStat(${json.items[i].id},${json.items[i].user_account_id});document.getElementById('window_preview_content').src='${common_url}&type=0' ">
+                                    <i class='fas fa-calendar-day'></i>
+                                </a>
+                            </div>
+                            <div class='profile_user_settings_month'>
+                                <a href='#' onclick="document.getElementById('window_preview_report').style.visibility = 'visible';create_qr('window_preview_toolbar_qr', '${common_url}&type=1');updateViewStat(${json.items[i].id},${json.items[i].user_account_id});document.getElementById('window_preview_content').src='${common_url}&type=1' ">
+                                    <i class='fas fa-calendar-week'></i>
+                                </a>
+                            </div>
+                            <div class='profile_user_settings_year'>
+                                <a href='#' onclick="document.getElementById('window_preview_report').style.visibility = 'visible';create_qr('window_preview_toolbar_qr', '${common_url}&type=2');updateViewStat(${json.items[i].id},${json.items[i].user_account_id});document.getElementById('window_preview_content').src='${common_url}&type=2' ">
+                                    <i class='fas fa-calendar-alt'></i>
+                                </a>
+                            </div>
+                            <div class='profile_user_settings_like' onclick='user_function("LIKE_USER_SETTING",${json.items[i].id},this)'>
+                                <i class='fas fa-heart-broken' style='display:${json.items[i].liked == 1?'none':'block'}'></i>
+                                <i class='fas fa-heart' style='display:${json.items[i].liked == 1?'block':'none'}'></i>
+                            </div>
+                            <div class='profile_user_settings_info_likes'>
+                                <i class='fas fa-heart'></i>
+                                <div class='profile_user_settings_info_like_count'>${json.items[i].count_likes}</div>
+                            </div>
+                            <div class='profile_user_settings_info_views'>
+                                <i class='fas fa-eye'></i>
+                                <div class='profile_user_settings_info_view_count'>${json.items[i].count_views}</div>
+                            </div>
+                        </div>`;
 
-                        col.setAttribute('onclick', 'user_function("LIKE_USER_SETTING",' + json.items[i].id + ',this)');
-
-                        if (json.items[i].liked == 1)
-                            col.innerHTML = '<i class="fas fa-heart-broken" style="display:none"></i><i class="fas fa-heart" style="display:block"></i>';
-                        else
-                            col.innerHTML = '<i class="fas fa-heart-broken" style="display:block"></i><i class="fas fa-heart" style="display:none"></i>';
-                        row.appendChild(col);
-                        col = document.createElement('div');
-                        col.classList.add('profile_user_settings_info_likes');
-                        col.innerHTML = '<i class="fas fa-heart"></i><div class="profile_user_settings_info_like_count">' +
-                            json.items[i].count_likes +
-                            '</div>';
-                        row.appendChild(col);
-                        col = document.createElement('div');
-                        col.classList.add('profile_user_settings_info_views');
-                        col.innerHTML = '<i class="fas fa-eye"></i><div class="profile_user_settings_info_view_count">' +
-                            json.items[i].count_views +
-                            '</div>';
-                        row.appendChild(col);
-                        user_settings.appendChild(row);
                     }
+                    user_settings.innerHTML = html;
                 }
             })
             .catch(function(error) {
@@ -4792,71 +4752,57 @@ function profile_detail(detailchoice) {
                     json = JSON.parse(response);
                     var profile_detail_list = document.getElementById('profile_detail_list');
                     profile_detail_list.innerHTML = '';
-                    row = '';
-                    col = '';
-                    item = '';
+
+                    let html = '';
+                    let image = '';
+                    let name='';
                     for (i = 0; i < json.count; i++) {
-                        row = document.createElement('div');
-                        row.classList.add('profile_detail_list_row');
-                        //first column: id
-                        col = document.createElement('div');
-                        col.classList.add('profile_detail_list_col');
-                        item = document.createElement('img');
-                        item.classList.add('profile_detail_list_user_account_id');
-                        item.innerHTML = json.items[i].id;
-                        //add item to column
-                        col.appendChild(item);
-                        //add columns to row					
-                        row.appendChild(col);
-                        //second column: avatar
-                        col = document.createElement('div');
-                        col.classList.add('profile_detail_list_col');
-                        item = document.createElement('img');
-                        item.classList.add('profile_detail_list_avatar');
+                        //select image
                         if (json.items[i].provider1_id == null && json.items[i].provider2_id == null) {
                             //show local user image
-                            item.src = image_format(json.items[i].avatar);
-                        } else
-                        if (json.items[i].provider1_id !== null) {
-                            //show provider 1 user image
-                            item.src = image_format(json.items[i].provider1_image);
-                        } else {
-                            //show provider 2 user image
-                            item.src = image_format(json.items[i].provider2_image);
-                        }
-                        //add item to column
-                        col.appendChild(item);
-                        //add columns to row					
-                        row.appendChild(col);
-                        //third column: username
-                        col = document.createElement('div');
-                        col.classList.add('profile_detail_list_col');
-                        item = document.createElement('div');
-                        item.classList.add('profile_detail_list_username');
-                        if (json.items[i].provider1_id == null && json.items[i].provider2_id == null)
-                        //show local username
-                            item.innerHTML = '<a href="#"  onclick="profile_show(' + json.items[i].id + ')">' +
-                            json.items[i].username +
-                            '</a>';
+                            image = image_format(json.items[i].avatar);
+                        } 
                         else
-                        if (json.items[i].provider1_id !== null) {
-                            //show provider 1 username
-                            item.innerHTML = '<a href="#"  onclick="profile_show(' + json.items[i].id + ')">' +
-                                json.items[i].provider1_first_name +
-                                '</a>';
-                        } else {
-                            //show provider 2 username
-                            item.innerHTML = '<a href="#"  onclick="profile_show(' + json.items[i].id + ')">' +
-                                json.items[i].provider2_first_name +
-                                '</a>';
-                        }
-                        //add item to column
-                        col.appendChild(item);
-                        //add columns to row
-                        row.appendChild(col);
-                        //add row to list
-                        profile_detail_list.appendChild(row);
+                            if (json.items[i].provider1_id !== null) {
+                                //show provider 1 user image
+                                image = image_format(json.items[i].provider1_image);
+                            } 
+                            else {
+                                //show provider 2 user image
+                                image = image_format(json.items[i].provider2_image);
+                            }
+                        //select name
+                        if (json.items[i].provider1_id == null && json.items[i].provider2_id == null){
+                            //show local username
+                            name = json.items[i].username;
+                        }   
+                        else
+                            if (json.items[i].provider1_id !== null) {
+                                //show provider 1 username
+                                name = json.items[i].provider1_first_name;
+                            } 
+                            else {
+                                //show provider 2 username
+                                name = json.items[i].provider2_first_name;
+                            }
+
+                        html += 
+                        `<div class='profile_detail_list_row'>
+                            <div class='profile_detail_list_col'>
+                                <div class='profile_detail_list_user_account_id'>${json.items[i].id}</div>
+                            </div>
+                            <div class='profile_detail_list_col'>
+                                <img class='profile_detail_list_avatar' src='${image}'>
+                            </div>
+                            <div class='profile_detail_list_col'>
+                                <div class='profile_detail_list_username'>
+                                    <a href='#' onclick='profile_show(${json.items[i].id})'>${name}</a>
+                                </div>
+                            </div>
+                        </div>`;
+
                     }
+                    profile_detail_list.innerHTML = html;
                 } else {
                     if (status == 401)
                         user_logoff();
@@ -4893,81 +4839,53 @@ function profile_top(statschoice) {
                 json = JSON.parse(response);
                 var profile_top_list = document.getElementById('profile_top_list');
                 profile_top_list.innerHTML = '';
-                row = '';
-                col = '';
-                item = '';
+                let html ='';
+                let image='';
+                let name='';
                 for (i = 0; i < json.count; i++) {
-                    row = document.createElement('div');
-                    row.classList.add('profile_top_list_row');
-                    //first column: id
-                    col = document.createElement('div');
-                    col.classList.add('profile_top_list_col');
-                    item = document.createElement('img');
-                    item.classList.add('profile_top_list_user_account_id');
-                    item.innerHTML = json.items[i].id;
-                    //add item to column
-                    col.appendChild(item);
-                    //add columns to row					
-                    row.appendChild(col);
-                    //second column: avatar
-                    col = document.createElement('div');
-                    col.classList.add('profile_top_list_col');
-                    item = document.createElement('img');
-                    item.classList.add('profile_top_list_avatar');
+                    //select image
                     if (json.items[i].provider1_id == null && json.items[i].provider2_id == null) {
                         //show local user image
-                        item.src = image_format(json.items[i].avatar);
+                        image = image_format(json.items[i].avatar);
                     } else
                     if (json.items[i].provider1_id !== null) {
                         //show provider 1 user image
-                        item.src = image_format(json.items[i].provider1_image);
+                        image = image_format(json.items[i].provider1_image);
                     } else {
                         //show provider 2 user image
-                        item.src = image_format(json.items[i].provider2_image);
+                        image = image_format(json.items[i].provider2_image);
                     }
-                    //add item to column
-                    col.appendChild(item);
-                    //add columns to row					
-                    row.appendChild(col);
-                    //third column: username
-                    col = document.createElement('div');
-                    col.classList.add('profile_top_list_col');
-                    item = document.createElement('div');
-                    item.classList.add('profile_top_list_username');
+                    //select username
                     if (json.items[i].provider1_id == null && json.items[i].provider2_id == null) {
                         //show local username
-                        item.innerHTML = '<a href="#"  onclick="profile_show(' + json.items[i].id + ')">' +
-                            json.items[i].username +
-                            '</a>';
+                        name = json.items[i].username;
                     } else
                     if (json.items[i].provider1_id !== null) {
                         //show provider 1 username
-                        item.innerHTML = '<a href="#"  onclick="profile_show(' + json.items[i].id + ')">' +
-                            json.items[i].provider1_first_name +
-                            '</a>';
+                        name = json.items[i].provider1_first_name;
                     } else {
                         //show provider 2 username
-                        item.innerHTML = '<a href="#"  onclick="profile_show(' + json.items[i].id + ')">' +
-                            json.items[i].provider2_first_name +
-                            '</a>';
+                        name = json.items[i].provider2_first_name;
                     }
-                    //add item to column
-                    col.appendChild(item);
-                    //add columns to row					
-                    row.appendChild(col);
-                    //fourth column: count
-                    col = document.createElement('div');
-                    col.classList.add('profile_top_list_col');
-                    item = document.createElement('div');
-                    item.classList.add('profile_top_list_count');
-                    item.innerHTML = json.items[i].count;
-                    //add item to column
-                    col.appendChild(item);
-                    //add columns to row					
-                    row.appendChild(col);
-                    //add row to list
-                    profile_top_list.appendChild(row);
+                    html +=
+                    `<div class='profile_top_list_row'>
+                        <div class='profile_top_list_col'>
+                            <div class='profile_top_list_user_account_id'>${json.items[i].id}</div>
+                        </div>
+                        <div class='profile_top_list_col'>
+                            <img class='profile_top_list_avatar' src='${image}'>
+                        </div>
+                        <div class='profile_top_list_col'>
+                            <div class='profile_top_list_username'>
+                                <a href='#' onclick='profile_show(${json.items[i].id})'>${name}</a>
+                            </div>
+                        </div>
+                        <div class='profile_top_list_col'>
+                            <div class='profile_top_list_count'>${json.items[i].count}</div>
+                        </div>
+                    </div>`;
                 }
+                profile_top_list.innerHTML = html;
             }
         })
         .catch(function(error) {
@@ -5088,72 +5006,52 @@ function search_profile() {
                 json = JSON.parse(response);
                 if (json.count > 0)
                     document.getElementById('profile_search_list').style.display = "block";
-                row = '';
-                col = '';
-                item = '';
+                let html = '';
+                let image= '';
+                let name = '';
                 profile_search_list.style.height = (json.count * 24).toString() + 'px';
                 for (i = 0; i < json.count; i++) {
-                    row = document.createElement('div');
-                    row.classList.add('profile_search_list_row');
-                    //first column: id
-                    col = document.createElement('div');
-                    col.classList.add('profile_search_list_col');
-                    item = document.createElement('img');
-                    item.classList.add('profile_search_list_user_account_id');
-                    item.innerHTML = json.items[i].id;
-                    //add item to column
-                    col.appendChild(item);
-                    //add columns to row					
-                    row.appendChild(col);
-                    //second column: avatar
-                    col = document.createElement('div');
-                    col.classList.add('profile_search_list_col');
-                    item = document.createElement('img');
-                    item.classList.add('profile_search_list_avatar');
                     if (json.items[i].provider1_id == null && json.items[i].provider2_id == null) {
                         //show local user image
-                        item.src = image_format(json.items[i].avatar);
-                    } else
-                    if (json.items[i].provider1_id !== null) {
-                        //show provider 1 user image
-                        item.src = image_format(json.items[i].provider1_image);
-                    } else {
-                        //show provider 2 user image
-                        item.src = image_format(json.items[i].provider2_image);
+                        image = image_format(json.items[i].avatar);
                     }
-                    //add item to column
-                    col.appendChild(item);
-                    //add columns to row					
-                    row.appendChild(col);
-                    //third column: username
-                    col = document.createElement('div');
-                    col.classList.add('profile_search_list_col');
-                    item = document.createElement('div');
-                    item.classList.add('profile_search_list_username');
-                    if (json.items[i].provider1_id == null && json.items[i].provider2_id == null)
-                    //show local username
-                        item.innerHTML = '<a href="#"  onclick="profile_show(' + json.items[i].id + ')">' +
-                        json.items[i].username +
-                        '</a>';
                     else
-                    if (json.items[i].provider1_id !== null) {
-                        //show provider 1 username
-                        item.innerHTML = '<a href="#"  onclick="profile_show(' + json.items[i].id + ')">' +
-                            json.items[i].provider1_first_name +
-                            '</a>';
-                    } else {
-                        //show provider 2 username
-                        item.innerHTML = '<a href="#"  onclick="profile_show(' + json.items[i].id + ')">' +
-                            json.items[i].provider2_first_name +
-                            '</a>';
+                        if (json.items[i].provider1_id !== null) {
+                            //show provider 1 user image
+                            image = image_format(json.items[i].provider1_image);
+                        } else {
+                            //show provider 2 user image
+                            image = image_format(json.items[i].provider2_image);
+                        }
+                    if (json.items[i].provider1_id == null && json.items[i].provider2_id == null){
+                        //show local username
+                        name  = json.items[i].username;
                     }
-                    //add item to column
-                    col.appendChild(item);
-                    //add columns to row					
-                    row.appendChild(col);
-                    //add row to list
-                    profile_search_list.appendChild(row);
+                    else
+                        if (json.items[i].provider1_id !== null) {
+                            //show provider 1 username
+                            name = json.items[i].provider1_first_name;
+                        } 
+                        else {
+                            //show provider 2 username
+                            name = json.items[i].provider2_first_name;
+                        }    
+                    html +=
+                    `<div class='profile_search_list_row'>
+                        <div class='profile_search_list_col'>
+                            <div class='profile_search_list_user_account_id'>${json.items[i].id}</div>
+                        </div>
+                        <div class='profile_search_list_col'>
+                            <img class='profile_search_list_avatar' src='${image}'>
+                        </div>
+                        <div class='profile_search_list_col'>
+                            <div class='profile_search_list_username'>
+                                <a href='#' onclick='profile_show(${json.items[i].id})'>${name}</a>
+                            </div>
+                        </div>
+                    </div>`;
                 }
+                profile_search_list.innerHTML = html;
             }
         })
         .catch(function(error) {
@@ -5350,61 +5248,37 @@ function init_report_timetable() {
         })
     })
 }
-async function app_load_basic(){
+async function app_load(){
     await get_gps_from_ip().then(function(){
         //init map thirdparty module
         init_map();
         //load themes in Design tab
         load_themes();
+        app_log('INIT', 'INIT', location.hostname, '');
+        //read into info divs at startup
+        update_info(1);
+        update_info(2);
+        update_info(3);
+        update_info(4);
+        update_info(5);
+        //set papersize
+        zoom_paper();
+        //user interface font depending selected arabic script
+        update_ui(3);
+        //use enter key at login
+        keyfunctions();
+        //set timers
+        //map doesnt update correct so set refresh
+        setInterval(fixmap, 1000);
+        //set current date and time for current locale and timezone
+        clearInterval(showcurrenttime);
+        setInterval(showcurrenttime, 1000);
+        //set report date and time for current locale, report timezone
+        clearInterval(showreporttime);
+        setInterval(showreporttime, 1000);
+        //show dialogue about using mobile and scan QR code after 5 seconds
+        setTimeout(show_dialogue('SCAN'), 5000);
     })
-}
-async function app_load_the_rest(){
-    app_log('INIT', 'INIT', location.hostname, '');
-    //read into info divs at startup
-    update_info(1);
-    update_info(2);
-    update_info(3);
-    update_info(4);
-    update_info(5);
-    //set papersize
-    zoom_paper();
-    //user interface font depending selected arabic script
-    update_ui(3);
-    //use enter key at login
-    keyfunctions();
-    //set timers
-    //map doesnt update correct so set refresh
-    setInterval(fixmap, 1000);
-    //set current date and time for current locale and timezone
-    clearInterval(showcurrenttime);
-    setInterval(showcurrenttime, 1000);
-    //set report date and time for current locale, report timezone
-    clearInterval(showreporttime);
-    setInterval(showreporttime, 1000);
-    //show dialogue about using mobile and scan QR code after 5 seconds
-    setTimeout(show_dialogue('SCAN'), 5000);
-}
-async function app_start(){
-    var user_id = document.getElementById('setting_data_userid_logged_in');
-    //set default settings or get user settings if already signed in
-    //if not signed in by provider
-    if (user_id.innerHTML == '') {
-        set_default_settings().then(function(){
-            settings_translate().then(function(){
-                app_show();
-            })
-        });
-    } else {
-        //Provider has already signed in
-        //get settings
-        user_settings_get(user_id.innerHTML).then(function(){
-            user_settings_load().then(function(){
-                settings_translate().then(function(){
-                    app_show();
-                })
-            })
-        });
-    }
 }
 async function app_show(){
     var urlParams = new URLSearchParams(window.location.search);
@@ -5427,7 +5301,7 @@ async function app_show(){
     }
 }
 async function init_head(){
-    await get_app_globals().then(function(){
+
         set_app_globals_head();
         /*Google*/
         var tag = document.createElement('script');
@@ -5456,29 +5330,23 @@ async function init_head(){
                     global_app_user_provider2_api_src2;
             fjs.parentNode.insertBefore(js, fjs);
         }(document, 'script', 'facebook-jssdk'));
-    })
 }
 function init() {
     dialogue_loading(1);
-    init_head().then(function(){
+    get_app_globals().then(function(){
         init_common().then(function(){
             set_app_globals_body();
-            //if automatic sign not done then load basic
-            if (typeof global_user_gps_latitude == 'undefined') {
-                app_load_basic().then(function (){
-                    app_load_the_rest().then(function(){
-                        app_start().then ( function () {
-                            dialogue_loading(0);
-                        })
+            app_load().then(function (){
+                set_default_settings().then(function(){
+                    settings_translate().then(function(){
+                        app_show().then(function(){
+                            init_head().then(function(){
+                                dialogue_loading(0);
+                            })
+                        });
                     })
-                })
-            }
-            else
-                app_load_the_rest().then(function(){
-                    app_start().then ( function () {
-                        dialogue_loading(0);
-                    })
-                })
+                });
+            })
         })
     })
 }
