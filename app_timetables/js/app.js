@@ -3747,16 +3747,11 @@ function updateProviderUser(provider_no, profile_id, profile_first_name, profile
                     document.getElementById('dialogue_signup').style.visibility = 'hidden';
                     //Show user tab
                     document.getElementById('tab7_nav').style.display = 'block';
-                    //Hide settings
-                    document.getElementById('settings').style.visibility = 'hidden';
-                    //Hide profile
-                    document.getElementById('profile').style.visibility = 'hidden';
                     user_settings_get(user_id.innerHTML).then(function(){
                         user_settings_load().then(function(){
                             settings_translate(true).then(function(){
                                 settings_translate(false).then(function(){
-                                    //show default startup
-                                    toolbar_bottom(global_default_startup_page);
+                                    app_show();
                                 })
                             })
                         })
@@ -5197,10 +5192,9 @@ async function app_load(){
     })
 }
 async function app_show(){
-    var urlParams = new URLSearchParams(window.location.search);
-    var user = urlParams.get('user');
+    var user = window.location.pathname.substring(1);
     //show default report or profile
-    if (user == null) {
+    if (user == '') {
         //show default startup
         toolbar_bottom(global_default_startup_page);
     } 
@@ -5212,7 +5206,6 @@ async function app_show(){
             document.getElementById('profile_info').classList.add("profile_info_logged_off");
         }
         document.getElementById('profile').style.visibility = "visible";
-        //hostname/[username] Node converts to hostname/?user=[username]
         profile_show(null, user);
     }
 }
