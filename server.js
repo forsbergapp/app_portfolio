@@ -170,10 +170,27 @@ app.get('/:user', function(req, res,next) {
       req.params.user!=='app_timetables' &&
       req.params.user!=='app_property_management' &&
       req.params.user!=='service') {
-      req.baseUrl = '/?user=' + req.params.user;
-      res.redirect(req.baseUrl);
+      if (req.protocol=='http')
+        return res.redirect('https://' + req.headers.host);
+      else{
+        const {getProfileUsername} = require("./service/db/api/user_account/user_account.service");
+        getProfileUsername(req.params.user,null, (err,result)=>{
+          if (result){
+            //timetables app generates startup html with some data from database
+            const { getApp } = require("./app_timetables/app");
+            res.setHeader('Content-Type', 'text/html');
+            const app = getApp()
+            .then(function(app_result){
+              return res.send(app_result);
+            });
+          }
+          else            
+            return res.redirect('/');
+        })
+      }
     }
-  next();
+  else
+    next();
 });
 
 //propertymanagement app directories
