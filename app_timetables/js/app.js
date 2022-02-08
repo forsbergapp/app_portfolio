@@ -1302,27 +1302,6 @@ function slide(wrapper, items, prev, next, type) {
         document.getElementsByClassName('slider_active_' + type)[0].classList.remove('slider_active_' + type);
         document.getElementById(items.children[index].children[0].id).classList.add('slider_active_' + type);
         set_theme_title(type);
-        switch (type) {
-            case 'day':
-                {
-                    index_day = index;
-                    update_timetable_report(2);
-                    break;
-                }
-            case 'month':
-                {
-                    index_month = index;
-                    update_timetable_report();
-                    break;
-                }
-            case 'year':
-                {
-                    index_year = index;
-                    update_timetable_report(1);
-                    break;
-                }
-        }
-
     }
 }
 
@@ -1502,6 +1481,11 @@ function fix_toolbar_button_sizes() {
     }
 }
 
+function iframe_resize(){
+    var paper_size_select = document.getElementById('setting_select_report_papersize');
+    document.getElementById('window_preview_content').className = paper_size_select.options[paper_size_select.selectedIndex].value;
+}
+
 function keyfunctions() {
     var input_username_login = document.getElementById("login_username");
     input_username_login.addEventListener("keyup", function(event) {
@@ -1639,6 +1623,10 @@ function keyfunctions() {
     document.getElementById('user_verify_verification_char5').addEventListener('keyup', function() { user_verify_check_input(this, "user_verify_verification_char6") }, false);
     document.getElementById('user_verify_verification_char6').addEventListener('keyup', function() { user_verify_check_input(this, "") }, false);
 
+    if(document.getElementById('window_preview_content').addEventListener)
+        document.getElementById('window_preview_content').addEventListener('load',function() { iframe_resize(); }, false);
+    else if(document.getElementById('window_preview_content').attachEvent)
+        document.getElementById('window_preview_content').attachEvent('onload',function() { iframe_resize(); });
 };
 
 function toolbar_bottom(choice) {
@@ -2917,7 +2905,55 @@ function user_signup() {
             alert(responseText_get_error('user_signup', error));
         });
 }
+function create_user_settings_links(user_account_id, sid){
+    //show generated url for current setting
+    var paper_size_select = document.getElementById('setting_select_report_papersize');
+    var common_url = global_service_report +
+        '?app_id=' + global_app_id +
+        '&id=' + user_account_id +
+        '&sid=' + sid +
+        '&ps=' + paper_size_select.options[paper_size_select.selectedIndex].value +
+        '&hf=0';
+    var period;
+    let url_type='';
+    const period_arr = ['day','month','year'];
+    period_arr.forEach(period => {
+        if (period =='day')
+            url_type = '&type=0';
+        if (period =='month')
+            url_type = '&type=1';
+        if (period =='year')
+            url_type = '&type=2';
 
+        document.getElementById('setting_data_user_url_' + period).innerHTML =
+            `<button id=${'user_' + period + '_html'}
+                class='toolbar_button'
+                onclick='document.getElementById("window_preview_report").style.visibility = "visible";
+                        create_qr("window_preview_toolbar_qr", "${common_url + '&format=html' + url_type}");
+                        document.getElementById("window_preview_content").src="${common_url + '&format=html' + url_type}"'> 
+                <i class='fas fa-file-code'></i>
+                <div id=${'user_' + period + '_label_html'}>HTML</div>
+            </button>
+            <button id=${'user_' + period + '_html_copy'}
+                class='toolbar_button'
+                onclick='var promise = navigator.clipboard.writeText("${common_url + '&format=html' + url_type}") .then(() => {null;});'>
+                <i class='fas fa-copy'></i>
+            </button>
+            <button id=${'user_' + period + '_pdf'}
+                class='toolbar_button'
+                onclick='document.getElementById("window_preview_report").style.visibility = "visible";
+                        create_qr("window_preview_toolbar_qr", "${common_url + '&format=pdf' + url_type}");
+                        document.getElementById("window_preview_content").src="${common_url + '&format=pdf' + url_type}"'> 
+                <i class='fas fa-file-pdf'></i>
+                <div id=${'user_' + period + '_label_pdf'}>PDF</div>
+            </button>
+            <button id=${'user_' + period + '_pdf_copy'}
+                class='toolbar_button'
+                onclick='var promise = navigator.clipboard.writeText("${common_url + '&format=pdf' + url_type}") .then(() => {null;});'>
+                <i class='fas fa-copy'></i>
+            </button>`;
+    })
+}
 async function user_settings_load(show_ui = 1) {
 
     var select_user_setting = document.getElementById('setting_select_user_setting');
@@ -2996,6 +3032,8 @@ async function user_settings_load(show_ui = 1) {
     }
     document.getElementById('setting_select_report_papersize').selectedIndex =
         select_user_setting[select_user_setting.selectedIndex].getAttribute('design_paper_size_select_id');
+    document.getElementById('paper').className=document.getElementById('setting_select_report_papersize').value;
+    
     document.getElementById('setting_select_report_highlight_row').selectedIndex =
         select_user_setting[select_user_setting.selectedIndex].getAttribute('design_row_highlight_select_id');
 
@@ -3103,54 +3141,8 @@ async function user_settings_load(show_ui = 1) {
         select_user_setting[select_user_setting.selectedIndex].getAttribute('prayer_column_fast_start_end_select_id');
 
     if (show_ui == 1) {
-        //show generated url for current setting
-        var papersize_index = select_user_setting[select_user_setting.selectedIndex].getAttribute('design_paper_size_select_id');
-        var paper_size_select = document.getElementById('setting_select_report_papersize');
-        var common_url = global_service_report +
-            '?app_id=' + global_app_id +
-            '&id=' + select_user_setting[select_user_setting.selectedIndex].getAttribute('user_account_id') +
-            '&sid=' + select_user_setting[select_user_setting.selectedIndex].getAttribute('id') +
-            '&ps=' + paper_size_select.options[papersize_index].value +
-            '&hf=0';
-        var period;
-        let url_type='';
-        const period_arr = ['day','month','year'];
-        period_arr.forEach(period => {
-            if (period =='day')
-                url_type = '&type=0';
-            if (period =='month')
-                url_type = '&type=1';
-            if (period =='year')
-                url_type = '&type=2';
-
-            document.getElementById('setting_data_user_url_' + period).innerHTML =
-                `<button id=${'user_' + period + '_html'}
-                    class='toolbar_button'
-                    onclick='document.getElementById("window_preview_report").style.visibility = "visible";
-                             create_qr("window_preview_toolbar_qr", "${common_url + '&format=html' + url_type}");
-                             document.getElementById("window_preview_content").src="${common_url + '&format=html' + url_type}"'> 
-                    <i class='fas fa-file-code'></i>
-                    <div id=${'user_' + period + '_label_html'}>HTML</div>
-                </button>
-                <button id=${'user_' + period + '_html_copy'}
-                    class='toolbar_button'
-                    onclick='var promise = navigator.clipboard.writeText("${common_url + '&format=html' + url_type}") .then(() => {null;});'>
-                    <i class='fas fa-copy'></i>
-                </button>
-                <button id=${'user_' + period + '_pdf'}
-                    class='toolbar_button'
-                    onclick='document.getElementById("window_preview_report").style.visibility = "visible";
-                             create_qr("window_preview_toolbar_qr", "${common_url + '&format=pdf' + url_type}");
-                             document.getElementById("window_preview_content").src="${common_url + '&format=pdf' + url_type}"'> 
-                    <i class='fas fa-file-pdf'></i>
-                    <div id=${'user_' + period + '_label_pdf'}>PDF</div>
-                </button>
-                <button id=${'user_' + period + '_pdf_copy'}
-                    class='toolbar_button'
-                    onclick='var promise = navigator.clipboard.writeText("${common_url + '&format=pdf' + url_type}") .then(() => {null;});'>
-                    <i class='fas fa-copy'></i>
-                </button>`;
-        })
+        create_user_settings_links(select_user_setting[select_user_setting.selectedIndex].getAttribute('user_account_id'),
+                                   select_user_setting[select_user_setting.selectedIndex].getAttribute('id'));
     }
     return null;
 }
@@ -3484,6 +3476,7 @@ async function set_default_settings() {
     set_theme_id('month', global_default_theme_month);
     set_theme_id('year', global_default_theme_year);
     document.getElementById('setting_select_report_papersize').selectedIndex = global_default_papersize;
+    document.getElementById('paper').className=document.getElementById('setting_select_report_papersize').value;
     document.getElementById('setting_select_report_highlight_row').selectedIndex = global_default_highlight_row;
     document.getElementById('setting_checkbox_report_show_weekday').checked = global_default_show_weekday;
     document.getElementById('setting_checkbox_report_show_calendartype').checked = global_default_show_calendartype;
@@ -3969,8 +3962,8 @@ function update_ui(option, item_id=null) {
         reportheader_aright     : document.getElementById('setting_input_reporttitle_aright'),
         reportfooter_aleft      : document.getElementById('setting_input_reportfooter_aleft'),
         reportfooter_acenter    : document.getElementById('setting_input_reportfooter_acenter'),
-        reportfooter_aright     : document.getElementById('setting_input_reportfooter_aright')
-
+        reportfooter_aright     : document.getElementById('setting_input_reportfooter_aright'),
+        select_user_setting     : document.getElementById('setting_select_user_setting')
     };
 
     switch (option) {
@@ -4209,67 +4202,19 @@ function update_ui(option, item_id=null) {
                 switch (settings.paper_size) {
                     case 'A4':
                         {
-                            settings.paper.style.width = '210mm';
-                            settings.paper.style.height = '297mm';
+                            settings.paper.className='A4';
                             break;
                         }
-                    case 'A4H':
+                    case 'Letter':
                         {
-                            settings.paper.style.width = '297mm';
-                            settings.paper.style.height = '210mm';
-                            break;
-                        }
-                    case 'A3':
-                        {
-                            settings.paper.style.width = '297mm';
-                            settings.paper.style.height = '420mm';
-                            break;
-                        }
-                    case 'A3H':
-                        {
-                            settings.paper.style.width = '420mm';
-                            settings.paper.style.height = '297mm';
-                            break;
-                        }
-                    case 'A5':
-                        {
-                            settings.paper.style.width = '148mm';
-                            settings.paper.style.height = '210mm';
-                            break;
-                        }
-                    case 'A5H':
-                        {
-                            settings.paper.style.width = '210mm';
-                            settings.paper.style.height = '148mm';
-                            break;
-                        }
-                    case 'USLetter':
-                        {
-                            settings.paper.style.width = '8.5in';
-                            settings.paper.style.height = '11in';
-                            break;
-                        }
-                    case 'USLetterH':
-                        {
-                            settings.paper.style.width = '11in';
-                            settings.paper.style.height = '8.5in';
-                            break;
-                        }
-                    case 'USLegal':
-                        {
-                            settings.paper.style.width = '8.5in';
-                            settings.paper.style.height = '14in';
-                            break;
-                        }
-                    case 'USLegalH':
-                        {
-                            settings.paper.style.width = '14in';
-                            settings.paper.style.height = '8.5in';
+                            settings.paper.className='Letter';
                             break;
                         }
                     default:
                         break;
                 }
+                create_user_settings_links(settings.select_user_setting[settings.select_user_setting.selectedIndex].getAttribute('user_account_id'),
+                                           settings.select_user_setting[settings.select_user_setting.selectedIndex].getAttribute('id'));
                 break;
             }
         //11=Image, Report header image load
@@ -5117,8 +5062,6 @@ function app_log(app_module, app_module_type, app_module_request, app_user_id) {
 
 async function init_common() {
     await get_token().then(function(){
-        //set copyright on paper div
-        document.getElementById('copyright').innerHTML = global_app_copyright;
         //set current date for report month
         global_currentDate = new Date();
         global_CurrentHijriDate = new Array();

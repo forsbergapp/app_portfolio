@@ -897,8 +897,6 @@ a:active {
 	height:96px;
 }
 #window_preview_content{
-	width: 210mm;
-	height: 297mm;
 	border: 0px;
 	display:block;
 	margin: 0 auto;
@@ -910,6 +908,14 @@ a:active {
   	-webkit-transform-origin: 0 0;
 	transform: scale(0.5);
   	transform-origin: 0 0;
+}
+#window_preview_content.A4{
+	width : 210mm;
+	height : 297mm;
+}
+#window_preview_content.Letter{
+	width : 8.5in;
+	height : 11in;
 }
 #window_preview_close{
 	vertical-align: top;
@@ -1364,8 +1370,6 @@ A4	210 x 297mm
 */
 #paper {
 	background-color:white;
-	width: 210mm;
-	height: 297mm;
 	display: flex;
 	justify-content: center;
 	background-size: 115% 109%;
@@ -1373,7 +1377,33 @@ A4	210 x 297mm
 	background-repeat: no-repeat;
 	z-index: 0;
 }
-
+#paper.A4{
+	width : 210mm;
+	height : 297mm;
+}
+#paper.Letter{
+	width : 8.5in;
+	height : 11in;
+}
+/* Letter fixes*/
+#paper.Letter #prayertable_month #timetable {
+	height:650px;
+}
+#paper.Letter #prayertable_year #prayertable_year_timetables.two_columntitles{
+	margin-top:-40px !important;
+	transform:scale(0.88) !important;
+}
+#paper.Letter #prayertable_year #prayertable_year_timetable_footer.two_columntitles{
+	margin-top:-40px !important;
+}
+/* Three columntitles fixes*/
+#paper.Letter #prayertable_year #prayertable_year_timetables.three_columntitles{
+	margin-top:-55px;
+	transform:scale(0.85);
+}
+#paper.Letter #prayertable_year #prayertable_year_timetable_footer.three_columntitles{
+	margin-top:-55px;
+}
 /*RESPONSIVE SETTINGS*/
 /*CSS for minimum 768px*/
 @media only screen and (min-width: 768px) {
@@ -1515,16 +1545,12 @@ A4	210 x 297mm
 #printbody #prayertable_day_time{
 	visibility: hidden;
 }
-/* set copyyright text on fixed place on paper div*/
+/* set copyright text on fixed place on paper div*/
 #paper #copyright{
  font-size:8pt;
- bottom:160px;
  margin:2px;
- left: 50%;
- position: fixed;
- transform: translate(-50%, -50%);
+ text-align: center;
  font-family:"Noto Sans";
- z-index:1;
 }	
 
 /* SPINNER */
@@ -1656,7 +1682,7 @@ A4	210 x 297mm
 	justify-content: center;
 	flex-direction: column;
 	background-position: center;
-	background-size: 800px 160px;
+	background-size: 100% 160px;
 	background-repeat: no-repeat;
 	position:relative;
 }
@@ -1738,7 +1764,7 @@ A4	210 x 297mm
 	justify-content: center;
 	flex-direction: column;
 	background-position: center;
-	background-size: 800px 160px;
+	background-size: 100% 160px;
 	background-repeat: no-repeat;
 	bottom:0px;
 	position:fixed;
@@ -1808,10 +1834,12 @@ A4	210 x 297mm
 }
 /*Header*/
 .prayertable_month #prayertable_month_header {
-	display: table;
+	display: flex;
 	width: 100%;
 	height: 160px;
-	background-size: 100% 100%;
+	justify-content: center;
+	flex-direction: column;
+	background-size: 100% 160px;
 	background-position: center;
 	background-repeat: no-repeat;
 	margin: 0px;
@@ -1828,13 +1856,6 @@ A4	210 x 297mm
 .prayertable_month #prayertable_month_header #prayertable_month_header_title3 {
 	padding-left: 10px;
 	padding-right: 10px;
-}
-.prayertable_month #prayertable_month_header_row {
-	display: table-row;
-}
-.prayertable_month #prayertable_month_header_col {
-	display: table-cell;
-	vertical-align: middle;
 }
 /*Timetable header*/
 .prayertable_month #timetable_header {
@@ -1941,23 +1962,18 @@ A4	210 x 297mm
 }
 /*Footer*/
 .prayertable_month #prayertable_month_footer {
-	display: table;
+	display: flex;
 	width: 100%;
 	height: 160px;
-	background-size: 100% 100%;
+	justify-content: center;
+	flex-direction: column;
+	background-size: 100% 160px;
 	background-position: center;
 	background-repeat: no-repeat;
 	margin: 0px;
 	text-align: center;
 	bottom:0px;
 	position:fixed;
-}
-.prayertable_month #prayertable_month_footer_row {
-	display: table-row
-}
-.prayertable_month #prayertable_month_footer_col {
-	display: table-cell;
-	vertical-align: middle;
 }
 
 /*YEAR common*/
@@ -1984,7 +2000,7 @@ A4	210 x 297mm
 	justify-content: center;
 	flex-direction: column;
 	background-position: center;
-	background-size: 800px 160px;
+	background-size: 100% 160px;
 	background-repeat: no-repeat;
 	position:relative;
 }
@@ -1997,7 +2013,6 @@ A4	210 x 297mm
 }
 #prayertable_year #prayertable_year_timetables {
 	position:relative;
-	height:740px;
 	margin:0px;
 }
 /* Two columntitles fixes*/
@@ -2005,17 +2020,22 @@ A4	210 x 297mm
 	margin-top:-10px;
 	transform:scale(0.98);
 }
+#prayertable_year #prayertable_year_timetable_footer.two_columntitles{
+	margin-top:-10px;
+}
 /* Three columntitles fixes*/
 #prayertable_year #prayertable_year_timetables.three_columntitles{
-	margin-top:-13px;
+	margin-top:-20px;
 	transform:scale(0.9);
 }
+#prayertable_year #prayertable_year_timetable_footer.three_columntitles{
+	margin-top:-20px;
+}
+
 /*Footer timetable info*/
 #prayertable_year #prayertable_year_timetable_footer {
 	width: 100%;
 	display: table;
-	bottom:185px;
-	position:fixed;
 }
 #prayertable_year #prayertable_year_timetable_footer_row {
 	display: table-row;
@@ -2050,7 +2070,7 @@ A4	210 x 297mm
 	justify-content: center;
 	flex-direction: column;
 	background-position: center;
-	background-size: 800px 160px;
+	background-size: 100% 160px;
 	background-repeat: no-repeat;
 	bottom:0px;
 	position:fixed;
@@ -2087,13 +2107,9 @@ A4	210 x 297mm
 #prayertable_year #timetable{
 	line-height: 3.75pt;
 }
-
 /*theme specific month fontsize and lineheight fixes*/
 #prayertable_year .theme_month_20002 #timetable {
 	line-height: 3pt !important;
-}
-#prayertable_year .theme_month_20002 #timetable .timetable_col{
-	padding:1.25px;
 }
 #prayertable_year .theme_month_20004 #timetable {
 	font-size: 3pt !important;
@@ -2101,32 +2117,17 @@ A4	210 x 297mm
 #prayertable_year .theme_month_20004 .timetable_col_header {
 	font-size: 2pt !important;
 }
-#prayertable_year .theme_month_20004 #timetable .timetable_col{
-	padding:1.04px;
-}
 #prayertable_year .theme_month_20005 #timetable {
 	line-height: 3pt !important;
-}
-#prayertable_year .theme_month_20005 #timetable .timetable_col{
-	padding:1.25px;
 }
 #prayertable_year .theme_month_20006 #timetable {
 	line-height: 3pt !important;
 }
-#prayertable_year .theme_month_20006 #timetable .timetable_col{
-	padding:1.27px;
-}
 #prayertable_year .theme_month_20007 #timetable {
 	line-height: 3pt !important;
 }
-#prayertable_year .theme_month_20007 #timetable .timetable_col{
-	padding:1.27px;
-}
 #prayertable_year .theme_month_20015 #timetable {
 	line-height: 3pt !important;
-}
-#prayertable_year .theme_month_20015 #timetable .timetable_col{
-	padding:1.21px;
 }
 
 /* APP THEME 1*/
