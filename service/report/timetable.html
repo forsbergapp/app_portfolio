@@ -15,81 +15,13 @@
 </head>
 <body id='printbody' onload='init_report_timetable();'>	
 	<div id='paper'>
-		<div id=copyright></div>
 		<div id="prayertable_day">
-			<div id='prayertable_day_header_row'>
-			<div id='prayertable_day_header_title1' class='prayertable_day_header' ></div>
-			<div id='prayertable_day_header_title2' class='prayertable_day_header' ></div>
-			<div id='prayertable_day_header_title3' class='prayertable_day_header' ></div>
-			</div>
-			<div id='prayertable_day_timetable_header'>
-			<div id='prayertable_day_header_title4' class='prayertable_day_header' ></div>
-			<div id='prayertable_day_header_title5' class='prayertable_day_header' ></div>
-			</div>
-			<div id="prayertable_day_timetable">
-			</div>
-			<div id='prayertable_day_footer_row'>
-			<div id='prayertable_day_footer_title1' class='prayertable_day_footer' ></div>
-			<div id='prayertable_day_footer_title2' class='prayertable_day_footer' ></div>
-			<div id='prayertable_day_footer_title3' class='prayertable_day_footer' ></div>
-			<div></div>
-			</div>
-			<div id='prayertable_day_time'>
-			</div>
 		</div>
 		<div id='prayertable_month'>
 		</div>
 		<div id='prayertable_year'>
-			<div class='prayertable_year_row' id='prayertable_year_header_row'>
-			<div id='prayertable_year_header_title1' class='prayertable_year_header' ></div>
-			<div id='prayertable_year_header_title2' class='prayertable_year_header' ></div>
-			<div id='prayertable_year_header_title3' class='prayertable_year_header' ></div>
-			</div>
-			<div class='prayertable_year_row' id='prayertable_year_timetable_header'>
-			<div id='prayertable_year_header_title4' class='prayertable_year_header' ></div>
-			<div id='prayertable_year_header_title5' class='prayertable_year_header' ></div>
-			</div>
-			<div id='prayertable_year_timetables'>
-				<div class='prayertable_year_row'>
-					<div id='prayertable_year_month1'></div>
-					<div id='prayertable_year_month2'></div>
-					<div id='prayertable_year_month3'></div>
-					<div id='prayertable_year_month4'></div>
-				</div>
-				<div class='prayertable_year_row'>
-					<div id='prayertable_year_month5'></div>
-					<div id='prayertable_year_month6'></div>
-					<div id='prayertable_year_month7'></div>
-					<div id='prayertable_year_month8'></div>
-				</div>
-				<div class='prayertable_year_row'>
-					<div id='prayertable_year_month9'></div>
-					<div id='prayertable_year_month10'></div>
-					<div id='prayertable_year_month11'></div>
-					<div id='prayertable_year_month12'></div>
-				</div>
-			</div>
-			<div id="prayertable_year_timetable_footer">
-			<div id="prayertable_year_timetable_footer_row">
-				<div id="prayertable_year_timetable_footer_col">
-				<div id="prayertable_year_timetable_footer_r1c1"></div>
-				<div id="prayertable_year_timetable_footer_r1c2"></div>
-				<div id="prayertable_year_timetable_footer_r1c3"></div>
-				<div id="prayertable_year_timetable_footer_r1c4"></div>
-				<div id="prayertable_year_timetable_footer_r1c5"></div>
-				<div id="prayertable_year_timetable_footer_r1c6"></div>
-				<div id="prayertable_year_timetable_footer_r1c7"></div>
-				</div>
-			</div>
-			</div>
-			<div class='prayertable_year_row' id='prayertable_year_footer_row'>
-			<div id='prayertable_year_footer_title1' class='prayertable_year_footer' ></div>
-			<div id='prayertable_year_footer_title2' class='prayertable_year_footer' ></div>
-			<div id='prayertable_year_footer_title3' class='prayertable_year_footer' ></div>
-			<div></div>
-			</div>
 		</div>
-		</div>
+	</div>
 	
 	<div id='settings'>
 						<select id='setting_select_locale'>
@@ -1103,6 +1035,7 @@
 
 				<select id='setting_select_report_papersize' >
 					<option value='A4' selected='selected'>A4 (210 x 297 mm) portrait</option>
+					<option value='Letter'>Letter (8.5in x 11 in) portrait</option>
 				</select>
 
 				<select id='setting_select_report_highlight_row' >
