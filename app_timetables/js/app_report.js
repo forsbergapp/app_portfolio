@@ -370,13 +370,9 @@ function displayMonth(offset, prayertable, settings) {
 
 		month_html +=
 			`<div id='prayertable_month_header' style='${header_style}'>
-				<div id='prayertable_month_header_row'>
-					<div id='prayertable_month_header_col'>
-						<div id='prayertable_month_header_title1'>${settings.header_txt1}</div>
-						<div id='prayertable_month_header_title2'>${settings.header_txt2}</div>
-						<div id='prayertable_month_header_title3'>${settings.header_txt3}</div>
-					</div>
-				</div>
+				<div id='prayertable_month_header_title1'>${settings.header_txt1}</div>
+				<div id='prayertable_month_header_title2'>${settings.header_txt2}</div>
+				<div id='prayertable_month_header_title3'>${settings.header_txt3}</div>
 			</div>`;
 	}
 
@@ -530,14 +526,11 @@ function displayMonth(offset, prayertable, settings) {
 				</div>
 			</div>
 		</div>
+		<div id='copyright'>${global_app_copyright}</div>
 		<div id='prayertable_month_footer' style='${footer_style}'>
-			<div id='prayertable_month_footer_row'>
-				<div id='prayertable_month_footer_col'>
-					<div id='prayertable_month_footer_title1'>${settings.footer_txt1}</div>
-					<div id='prayertable_month_footer_title2'>${settings.footer_txt2}</div>
-					<div id='prayertable_month_footer_title3'>${settings.footer_txt3}</div>
-				</div>
-			</div>
+			<div id='prayertable_month_footer_title1'>${settings.footer_txt1}</div>
+			<div id='prayertable_month_footer_title2'>${settings.footer_txt2}</div>
+			<div id='prayertable_month_footer_title3'>${settings.footer_txt3}</div>
 		</div>`;
 	}	
 	prayertable.innerHTML = month_html;
@@ -758,6 +751,7 @@ function displayDay(settings, settings_ui, item_id){
 	day_html += 
 	`	</div>
 	</div>
+	<div id='copyright'>${global_app_copyright}</div>
 	<div id='prayertable_day_footer_row' style='${footer_style}'>
 		<div id='prayertable_day_footer_title1' class='prayertable_day_footer' >${settings.footer_txt1}</div>
 		<div id='prayertable_day_footer_title2' class='prayertable_day_footer' >${settings.footer_txt2}</div>
@@ -787,17 +781,24 @@ function displayYear(settings, settings_ui, item_id){
 	//if both second language and both transliteration and translation columntitles will be shown
 	//add class to fix size
 	let timetable_class ='';
+	let timetable_footer_class ='';
 	if (settings.second_locale!='0') {
 		//transliteration OR translation
-		if (settings.coltitle=='0' || settings.coltitle=='3')
+		if (settings.coltitle=='0' || settings.coltitle=='3'){
 			timetable_class = 'class="two_columntitles"';
-		else
+			timetable_footer_class = 'class="two_columntitles"';
+		}
+		else{
 			timetable_class = 'class="three_columntitles"';
+			timetable_footer_class = 'class="three_columntitles"';
+		}
 	}
 	else{
 		//transliteration and translation are in the column titles
-		if (settings.coltitle=='1' || settings.coltitle=='2')
+		if (settings.coltitle=='1' || settings.coltitle=='2'){
 			timetable_class = 'class="two_columntitles"';
+			timetable_footer_class = 'class="two_columntitles"';
+		}
 	}
 
 	//if item_id is set then navigate previous/next month/year
@@ -875,7 +876,7 @@ function displayYear(settings, settings_ui, item_id){
 			${months[11]}
 		</div>
     </div>
-	<div id='prayertable_year_timetable_footer'>
+	<div id='prayertable_year_timetable_footer' ${timetable_footer_class}'>
 		<div id='prayertable_year_timetable_footer_row'>
 			<div id='prayertable_year_timetable_footer_col'>
 				<div id='prayertable_year_timetable_footer_r1c1' ${settings.show_gps == 'YES'?'class=""':'class="hidden"'}>${settings.place}</div>
@@ -888,6 +889,7 @@ function displayYear(settings, settings_ui, item_id){
 			</div>
 		</div>
 	</div>
+	<div id='copyright'>${global_app_copyright}</div>
 	<div class='prayertable_year_row' id='prayertable_year_footer_row' style='${footer_style}'>
 		<div id='prayertable_year_footer_title1' class='prayertable_year_footer' >${settings.footer_txt1}</div>
 		<div id='prayertable_year_footer_title2' class='prayertable_year_footer' >${settings.footer_txt2}</div>
