@@ -1537,7 +1537,7 @@ function keyfunctions() {
     document.getElementById('setting_btn_user_edit').addEventListener('click', function() { user_edit() }, false);
 
     document.getElementById('setting_btn_user_update').addEventListener('click', function() { user_update() }, false);
-    document.getElementById('setting_btn_user_delete_account').addEventListener('click', function() { show_dialogue('CONFIRM_DELETE'); }, false);
+    document.getElementById('setting_btn_user_delete_account').addEventListener('click', function() { user_delete(); }, false);
      
     document.getElementById('setting_btn_user_save').addEventListener('click', function() { user_settings_save() }, false);
     document.getElementById('setting_btn_user_add').addEventListener('click', function() { user_settings_add() }, false);
@@ -1847,24 +1847,31 @@ function format_json_date(db_date, short) {
 
 function spinner(button, visibility) {
     var button_spinner = '<div id="button_spinner" class="load-spinner">' +
-        '<div></div>' +
-        '<div></div>' +
-        '<div></div>' +
-        '<div></div>' +
-        '<div></div>' +
-        '<div></div>' +
-        '<div></div>' +
-        '<div></div>' +
-        '<div></div>' +
-        '<div></div>' +
-        '<div></div>' +
-        '<div></div>' +
-        '</div>';
+                            '<div></div>' +
+                            '<div></div>' +
+                            '<div></div>' +
+                            '<div></div>' +
+                            '<div></div>' +
+                            '<div></div>' +
+                            '<div></div>' +
+                            '<div></div>' +
+                            '<div></div>' +
+                            '<div></div>' +
+                            '<div></div>' +
+                            '<div></div>' +
+                         '</div>';
     var button_default_icon_login = '<i class="fas fa-arrow-alt-circle-right"></i>';
     var button_default_icon_signup = '<i class="fas fa-arrow-alt-circle-right"></i>';
     var button_default_icon_save = '<i class="fas fa-save"></i>';
     var button_default_icon_add = '<i class="fas fa-plus-square"></i>';
     var button_default_icon_delete = '<i class="fas fa-trash-alt"></i>';
+
+    var button_update_text = document.getElementById('setting_btn_label_user_update').outerHTML;
+    var button_delete_account_text = document.getElementById('setting_btn_label_user_delete_account').outerHTML;
+    var button_save_text = document.getElementById('setting_btn_label_user_save').outerHTML;
+    var button_add_text = document.getElementById('setting_btn_label_user_add').outerHTML;
+    var button_delete_text = document.getElementById('setting_btn_label_user_delete').outerHTML;
+
     switch (button) {
         case 'LOGIN':
             {
@@ -1885,41 +1892,41 @@ function spinner(button, visibility) {
         case 'SAVE':
             {
                 if (visibility == 'visible')
-                    document.getElementById('setting_btn_user_save').innerHTML = button_spinner;
+                    document.getElementById('setting_btn_user_save').innerHTML = button_spinner + button_save_text;
                 else
-                    document.getElementById('setting_btn_user_save').innerHTML = button_default_icon_save;
+                    document.getElementById('setting_btn_user_save').innerHTML = button_default_icon_save + button_save_text;
                 break;
             }
         case 'ADD':
             {
                 if (visibility == 'visible')
-                    document.getElementById('setting_btn_user_add').innerHTML = button_spinner;
+                    document.getElementById('setting_btn_user_add').innerHTML = button_spinner + button_add_text;
                 else
-                    document.getElementById('setting_btn_user_add').innerHTML = button_default_icon_add;
+                    document.getElementById('setting_btn_user_add').innerHTML = button_default_icon_add + button_add_text;
                 break;
             }
         case 'DELETE':
             {
                 if (visibility == 'visible')
-                    document.getElementById('setting_btn_user_delete').innerHTML = button_spinner;
+                    document.getElementById('setting_btn_user_delete').innerHTML = button_spinner + button_delete_text;
                 else
-                    document.getElementById('setting_btn_user_delete').innerHTML = button_default_icon_delete;
+                    document.getElementById('setting_btn_user_delete').innerHTML = button_default_icon_delete + button_delete_text;
                 break;
             }
         case 'UPDATE':
             {
                 if (visibility == 'visible')
-                    document.getElementById('setting_btn_user_update').innerHTML = button_spinner;
+                    document.getElementById('setting_btn_user_update').innerHTML = button_spinner + button_update_text;
                 else
-                    document.getElementById('setting_btn_user_update').innerHTML = button_default_icon_save;
+                    document.getElementById('setting_btn_user_update').innerHTML = button_default_icon_save + button_update_text;
                 break;
             }
         case 'DELETE_ACCOUNT':
             {
                 if (visibility == 'visible')
-                    document.getElementById('setting_btn_user_delete_account').innerHTML = button_spinner;
+                    document.getElementById('setting_btn_user_delete_account').innerHTML = button_spinner + button_delete_account_text;
                 else
-                    document.getElementById('setting_btn_user_delete_account').innerHTML = button_default_icon_delete;
+                    document.getElementById('setting_btn_user_delete_account').innerHTML = button_default_icon_delete + button_delete_account_text;
                 break;
             }
         default:
@@ -2189,6 +2196,7 @@ function user_edit() {
                 }
             })
             .catch(function(error) {
+                spinner('EDIT', 'hidden');
                 alert(responseText_get_error('user_login', error));
             });
     }
@@ -2333,44 +2341,74 @@ function user_update() {
     return null;
 }
 
-function user_delete(choice) {
+function user_delete(choice=null) {
     var user_account_id = document.getElementById('setting_data_userid_logged_in').innerHTML;
-    var select_user_setting = document.getElementById('setting_select_user_setting');
+    var password = document.getElementById('setting_input_password_edit').value;
+    
     var status;
-    //will close user edit and reset values as this is opened when user clicks on delete account button
-    user_edit();
-    if (choice == 1) {
-        spinner('DELETE_ACCOUNT', 'visible');
-        fetch(global_rest_url_base + global_rest_user_account + user_account_id + 
-                '?app_id=' + global_app_id +
-                '&lang_code=' + document.getElementById('setting_select_locale').value, 
-            {
-                method: 'DELETE',
-                headers: {
-                    'Authorization': 'Bearer ' + global_rest_at
-                }
-            })
-            .then(function(response) {
-                status = response.status;
-                return response.text();
-            })
-            .then(function(response) {
-                spinner('DELETE_ACCOUNT', 'hidden');
-                if (status == 200)
-                    user_logoff();
-                else {
-                    if (status == 401)
+    switch (choice){
+        case null:{
+            if (password == '') {
+                //"Please enter password"
+                document.getElementById('setting_input_password_edit').classList.add('input_error');
+                show_error(20304);
+                return null;
+            }
+            show_dialogue('CONFIRM_DELETE');
+            break;
+        }
+        case 0:{
+            document.getElementById("dialogue_confirm_delete").style.visibility = "hidden";
+            break;
+        }
+        case 1:{
+            document.getElementById("dialogue_confirm_delete").style.visibility = "hidden";
+            document.getElementById('setting_input_username_edit').classList.remove('input_error');
+            document.getElementById('setting_input_bio_edit').classList.remove('input_error');
+            document.getElementById('setting_input_email_edit').classList.remove('input_error');
+            document.getElementById('setting_input_password_edit').classList.remove('input_error');
+            document.getElementById('setting_input_password_confirm_edit').classList.remove('input_error');
+            document.getElementById('setting_input_new_password_edit').classList.remove('input_error');
+            document.getElementById('setting_input_new_password_confirm_edit').classList.remove('input_error');
+            document.getElementById('setting_input_password_reminder_edit').classList.remove('input_error');
+    
+            spinner('DELETE_ACCOUNT', 'visible');
+            let json_data = `{"password":"${password}"}`;
+            fetch(global_rest_url_base + global_rest_user_account + user_account_id + 
+                    '?app_id=' + global_app_id +
+                    '&lang_code=' + document.getElementById('setting_select_locale').value, 
+                {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + global_rest_at
+                    },
+                    body: json_data
+                })
+                .then(function(response) {
+                    status = response.status;
+                    return response.text();
+                })
+                .then(function(response) {
+                    spinner('DELETE_ACCOUNT', 'hidden');
+                    if (status == 200)
                         user_logoff();
-                    else
-                        alert(responseText_get_error('user_delete', response));
-                }
-            })
-            .catch(function(error) {
-                spinner('DELETE_ACCOUNT', 'hidden');
-                alert(responseText_get_error('user_delete', error));
-            });
+                    else {
+                        if (status == 401)
+                            user_logoff();
+                        else
+                            alert(responseText_get_error('user_delete', response));
+                    }
+                })
+                .catch(function(error) {
+                    spinner('DELETE_ACCOUNT', 'hidden');
+                    alert(responseText_get_error('user_delete', error));
+                });
+            break;
+        }
+        default:
+            break;
     }
-    document.getElementById("dialogue_confirm_delete").style.visibility = "hidden";
     return null;
 }
 
@@ -2475,6 +2513,7 @@ function user_login() {
             }
         })
         .catch(function(error) {
+            spinner('LOGIN', 'hidden');
             alert(responseText_get_error('user_login', error));
         });
     })
@@ -2902,6 +2941,7 @@ function user_signup() {
             }
         })
         .catch(function(error) {
+            spinner('SIGNUP', 'hidden');
             alert(responseText_get_error('user_signup', error));
         });
 }
@@ -3250,6 +3290,7 @@ function user_settings_save() {
             }
         })
         .catch(function(error) {
+            spinner('SAVE', 'hidden');
             alert(responseText_get_error('user_settings_save', error));
         });
 }
@@ -3369,6 +3410,7 @@ function user_settings_add(signup = false) {
             }
         })
         .catch(function(error) {
+            spinner('ADD', 'hidden');
             alert(responseText_get_error('user_settings_add', error));
         });
 }
@@ -3417,6 +3459,7 @@ function user_settings_delete() {
                 }
             })
             .catch(function(error) {
+                spinner('DELETE', 'hidden');
                 alert(responseText_get_error('user_settings_delete', error));
             });
     } else {
