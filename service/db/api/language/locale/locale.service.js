@@ -11,13 +11,19 @@ module.exports = {
                                       ELSE 
                                         '' 
                                       END) locale, 
-                  CONCAT(language_translation.text, CASE 
-                                                    WHEN ct.text IS NOT NULL THEN 
-                                                      CONCAT(' (', CONCAT(ct.text,')')) 
-                                                    ELSE 
-                                                      '' 
-                                                    END) text
-
+                                      CONCAT(UPPER(SUBSTR(CONCAT(language_translation.text, 
+                                        CASE 
+                                        WHEN ct.text IS NOT NULL THEN 
+                                          CONCAT(' (', CONCAT(ct.text,')')) 
+                                        ELSE 
+                                          '' 
+                                        END),1,1)),SUBSTR(CONCAT(language_translation.text, 
+                                                                  CASE 
+                                                                  WHEN ct.text IS NOT NULL THEN 
+                                                                    CONCAT(' (', CONCAT(ct.text,')')) 
+                                                                  ELSE 
+                                                                    '' 
+                                                                  END),2)) text
             FROM language l,
                   language_translation,
                   locale loc
@@ -82,19 +88,25 @@ module.exports = {
 				try{
 				const pool2 = await oracledb.getConnection();
 				const result = await pool2.execute(
-					`SELECT DISTINCT  
-                  CONCAT(l.lang_code, CASE 
+					`SELECT CONCAT(l.lang_code, CASE 
                                       WHEN c.country_code IS NOT NULL THEN 
                                         CONCAT('-', c.country_code) 
                                       ELSE 
                                         '' 
                                       END) "locale", 
-                  CONCAT(language_translation.text, CASE 
-                                                    WHEN ct.text IS NOT NULL THEN
-                                                      CONCAT(' (', CONCAT(ct.text,')')) 
-                                                    ELSE 
-                                                      '' 
-                                                    END) "text"
+                  CONCAT(UPPER(SUBSTR(CONCAT(language_translation.text, 
+                                              CASE 
+                                              WHEN ct.text IS NOT NULL THEN 
+                                                CONCAT(' (', CONCAT(ct.text,')')) 
+                                              ELSE 
+                                                '' 
+                                              END),1,1)),SUBSTR(CONCAT(language_translation.text, 
+                                                                        CASE 
+                                                                        WHEN ct.text IS NOT NULL THEN 
+                                                                          CONCAT(' (', CONCAT(ct.text,')')) 
+                                                                        ELSE 
+                                                                          '' 
+                                                                        END),2)) "text"
             FROM language l,
                   language_translation,
                   locale loc

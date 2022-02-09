@@ -61,6 +61,8 @@ var global_rest_app_timetables_user_setting_user_account_id;
 var global_rest_app_timetables_user_setting_profile;
 var global_rest_app_timetables_user_setting_like;
 var global_rest_app_timetables_user_setting_view;
+var global_rest_country;
+var global_rest_language_locale;
 var global_rest_message_translation;
 var global_rest_user_account;
 var global_rest_user_account_common;
