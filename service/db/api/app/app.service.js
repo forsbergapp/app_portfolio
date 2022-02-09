@@ -7,7 +7,8 @@ module.exports = {
 				`SELECT
 						id,
 						app_name
-				FROM app `,
+				FROM app
+				ORDER BY 1 `,
 				[],
 				(error, results, fields) => {
 					if (error){
@@ -25,7 +26,8 @@ module.exports = {
 					`SELECT
 							id, "id"
 							app_name "app_name"
-					FROM app`,
+					FROM app
+					ORDER BY 1`,
 					{},
 					oracle_options, (err,result) => {
 						if (err) {

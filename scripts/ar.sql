@@ -129,6 +129,7 @@ INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, 
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'DIALOGUE','USER_VERIFY_MESSAGE_1',25,'تم إرسال رسالة مع رمز التحقق إلى بريدك الإلكتروني');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'DIALOGUE','USER_VERIFY_MESSAGE_2',25,'أدخل الرمز للمتابعة');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'DIALOGUE','USER_VERIFY_MESSAGE_3',25,'لم تحصل على رمز التحقق؟');
+INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'DIALOGUE','CONFIRM_QUESTION',25,'هل أنت متأكد؟');
 --
 -- Dumping data for table `app_object_subitem_translation`
 --

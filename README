@@ -83,6 +83,10 @@ version 17.3.0 supported
    See .env file for Oracle Instant Client variables.
 
    use Unicode characterset to support emojis and all languages
+
+   run scripts/mysql.ddl in mysql database or
+   run script/oracle.ddl in oracle database
+
    import import.sql
    import language *.sql files
 

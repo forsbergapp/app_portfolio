@@ -674,6 +674,7 @@ a:active {
 	text-align: center;
 	width:30px;
 	height:40px;
+	border: 1px solid;
 }
 
 /* Dialogue scan_open_mobile*/
@@ -1031,26 +1032,27 @@ height: 25px;
 }
 
 #settings select {
-	background: #fefef6;
 	box-sizing: border-box;
 	-webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;
-	border: 1px solid #BEBEBE;
+	border: 0px;
 	padding: 0px;
-	margin: 0px;
+	margin: 1px;
 	font-size: 14px;
 	max-width: 52%;
 	min-width: 52%;
 	outline: none;
+	height: 21px;
 }
 #settings input {
 	box-sizing: border-box;
-	border: 1px solid #BEBEBE;
+	border: 0px;
 	padding: 3px;
-	margin: 0px;
+	margin: 1px;
 	width: 360px;
 	max-width:45%;
 	font-size: 14px;
+	height: 21px;
 }
 /* Settings for Label and input horizontal layout*/
 #settings .setting_horizontal {
@@ -1280,6 +1282,8 @@ height: 25px;
 	display:inline-block;
 	width:120px;
 	text-align: center;
+	font-size: 11px;
+	vertical-align: top;
 }
 #setting_avatar_logged_in{
 	width:64px;
@@ -1337,6 +1341,8 @@ height: 25px;
 	display: inline-block;
 	width: 60px;
 	text-align: center;
+	font-size: 11px;
+	vertical-align: top;
 }
 #setting_btn_user_save .load-spinner,
 #setting_btn_user_add .load-spinner,
