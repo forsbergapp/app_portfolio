@@ -376,26 +376,6 @@ async function settings_translate(first=true) {
                                 }
                             }
                         }
-                        if (json.data[i].object=='LOCALE'){
-                            var select_locale = document.getElementById(json.data[i].object_item_name.toLowerCase());
-                            var select_second_locale = document.getElementById('setting_select_report_locale_second');
-                
-                            for (var optionindex = 0; optionindex < select_locale.options.length; optionindex++) {
-                                    if (select_locale.options[optionindex].value == json.data[i].lang_code)
-                                        select_locale.options[optionindex].text = json.data[i].text;
-                            }
-                            for (var optionindex = 0; optionindex < select_second_locale.options.length; optionindex++) {
-                                    if (select_second_locale.options[optionindex].value == json.data[i].lang_code)
-                                        select_second_locale.options[optionindex].text = json.data[i].text;
-                            }
-                        }
-                        if (json.data[i].object=='COUNTRY'){
-                            var select_country = document.getElementById(json.data[i].object_item_name.toLowerCase());
-                            for (var optionindex = 0; optionindex < select_country.options.length; optionindex++) {
-                                    if (select_country.options[optionindex].getAttribute('country_code') == json.data[i].subitem_name)
-                                        select_country.options[optionindex].text = json.data[i].text;
-                            }
-                        }
                     }
                     else{
                         for (var i = 0; i < json.data.length; i++){
@@ -404,6 +384,80 @@ async function settings_translate(first=true) {
                         }
                     }
                     
+                }
+                if (first==true){
+                    //country
+                    fetch(global_rest_url_base + global_rest_country + document.getElementById('setting_select_locale').value, 
+                        {
+                            method: 'GET',
+                            headers: {
+                                'Authorization': 'Bearer ' + global_rest_at
+                            }
+                        })
+                    .then(function(response) {
+                        status = response.status;
+                        return response.text();
+                    })
+                    .then(function(result) {
+                        if (status === 200) {
+                            json = JSON.parse(result);
+                            let select_country = document.getElementById('setting_select_country');
+                            let html=`<option value='' id='' label='…' selected='selected'>…</option>`;
+                            for (var i = 0; i < json.countries.length; i++){
+                                if (i === 0){
+                                    html += `<optgroup label=${json.countries[i].group_name} />`;
+                                    current_group_name = json.countries[i].group_name;
+                                  }
+                                  else{
+                                    if (json.countries[i].group_name !== current_group_name){
+                                        html += `<optgroup label=${json.countries[i].group_name} />`;
+                                        current_group_name = json.countries[i].group_name;
+                                    }
+                                    html +=
+                                    `<option value=${i}
+                                            id=${json.countries[i].id} 
+                                            country_code=${json.countries[i].country_code} 
+                                            flag_emoji=${json.countries[i].flag_emoji} 
+                                            group_name=${json.countries[i].group_name}>${json.countries[i].flag_emoji} ${json.countries[i].text}
+                                    </option>`
+                                  }
+                            }
+                            select_country.innerHTML = html;
+                            //locale
+                            fetch(global_rest_url_base + global_rest_language_locale + document.getElementById('setting_select_locale').value, 
+                            {
+                                method: 'GET',
+                                headers: {
+                                    'Authorization': 'Bearer ' + global_rest_at
+                                }
+                            })
+                            .then(function(response) {
+                                status = response.status;
+                                return response.text();
+                            })
+                            .then(function(result) {
+                                if (status === 200) {
+                                    json = JSON.parse(result);
+                                    let html='';
+                                    let select_locale = document.getElementById('setting_select_locale');
+                                    let select_second_locale = document.getElementById('setting_select_report_locale_second');        
+                                    let current_locale = select_locale.value;
+                                    let current_second_locale = select_second_locale.value;
+                                    for (var i = 0; i < json.locales.length; i++){
+                                        html += `<option id="${i}" value="${json.locales[i].locale}">${json.locales[i].text}</option>`;
+                                    }
+                                    select_locale.innerHTML = html;
+                                    select_locale.value = current_locale;
+                                    select_second_locale.innerHTML = select_second_locale.options[0].outerHTML + html;
+                                    select_second_locale.value = current_second_locale;
+                                }
+                            }).catch(function(error) {
+                                alert(responseText_get_error('settings_translate locale', error));
+                            })
+                        }
+                    }).catch(function(error) {
+                        alert(responseText_get_error('settings_translate country', error));
+                    })
                 }
                 //if translating first language and second language is not used
                 if (first == true &&
@@ -488,6 +542,8 @@ async function get_app_globals() {
             global_rest_app_timetables_user_setting_profile = json.APP_REST_APP_TIMETABLES_USER_SETTING_PROFILE;
             global_rest_app_timetables_user_setting_like = json.APP_REST_APP_TIMETABLES_USER_SETTING_LIKE;
             global_rest_app_timetables_user_setting_view = json.APP_REST_APP_TIMETABLES_USER_SETTING_VIEW;
+            global_rest_country = json.APP_REST_COUNTRY,
+			global_rest_language_locale = json.APP_REST_LANGUAGE_LOCALE,
             global_rest_message_translation = json.APP_REST_MESSAGE_TRANSLATION;
             global_rest_user_account = json.APP_REST_USER_ACCOUNT;
             global_rest_user_account_common = json.APP_REST_USER_ACCOUNT_COMMON;
