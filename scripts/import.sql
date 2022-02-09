@@ -53,6 +53,7 @@ INSERT INTO app_object (app_id, object_name) VALUES (1,'TOOLBAR');
 --
 -- Dumping data for table `app_object_item`
 --
+INSERT INTO app_object_item (app_id, object_name, object_item_name) VALUES (1,'DIALOGUE','CONFIRM_QUESTION');
 INSERT INTO app_object_item (app_id, object_name, object_item_name) VALUES (1,'DIALOGUE','LOGIN_BTN_SIGNUP');
 INSERT INTO app_object_item (app_id, object_name, object_item_name) VALUES (1,'DIALOGUE','LOGIN_CONTINUE_WITH');
 INSERT INTO app_object_item (app_id, object_name, object_item_name) VALUES (1,'DIALOGUE','LOGIN_PASSWORD');
