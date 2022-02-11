@@ -2,7 +2,7 @@ const {pool, oracledb, oracle_options} = require ("../../config/database");
 
 module.exports = {
 	getThemes: callBack => {
-		if (process.env.SERVER_DB_USE == 1) {
+		if (process.env.SERVICE_DB_USE == 1) {
 			pool.query(
 				`SELECT
 						t.id,
@@ -34,7 +34,7 @@ module.exports = {
 					return callBack(null, results);
 				}
 			);
-		}else if (process.env.SERVER_DB_USE==2){
+		}else if (process.env.SERVICE_DB_USE==2){
 			async function execute_sql(err, result){
 				try{
 				const pool2 = await oracledb.getConnection();

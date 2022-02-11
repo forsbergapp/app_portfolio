@@ -10,7 +10,7 @@ module.exports = {
 	//use zh-hans, zh-hans, zh-hant, sr-cyrl, sr-latn
 	//else use zh, zh, zh, sr, sr
 	getObjects: (app_id, lang_code, callBack) => {
-		if (process.env.SERVER_DB_USE==1){
+		if (process.env.SERVICE_DB_USE==1){
 			pool.query(
 				` SELECT 	object, 
 							app_id, 
@@ -97,7 +97,7 @@ module.exports = {
 				}
 			);
 		}
-		else if (process.env.SERVER_DB_USE==2){
+		else if (process.env.SERVICE_DB_USE==2){
 			async function execute_sql(err, result){
 				try{
 				const pool2 = await oracledb.getConnection();

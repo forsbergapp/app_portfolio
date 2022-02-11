@@ -4,7 +4,7 @@ module.exports = {
 	createLog: (data, callBack) => {
 		//max 4000 characters can be saved
 		data.app_module_result = data.app_module_result.substr(0,3999);
-		if (process.env.SERVER_DB_USE==1){
+		if (process.env.SERVICE_DB_USE==1){
 			pool.query(
 				`INSERT INTO app_log(
 					app_id,
@@ -45,12 +45,13 @@ module.exports = {
 				],
 				(error, results, fields) => {
 					if (error){
+						console.log('createLog err:' + err);
 						return callBack(error);
 					}
 					return callBack(null, results);
 				}	
 			);
-		}else if (process.env.SERVER_DB_USE==2){
+		}else if (process.env.SERVICE_DB_USE==2){
 			async function execute_sql(err, result){
 				try{
 				const pool2 = await oracledb.getConnection();
@@ -110,6 +111,7 @@ module.exports = {
 					},
 					oracle_options, (err,result) => {
 						if (err) {
+							console.log('createLog err:' + err);
 							return callBack(err);
 						}
 						else{
@@ -127,7 +129,7 @@ module.exports = {
 		}
 	},
 	getLogs: callBack => {
-		if (process.env.SERVER_DB_USE==1){
+		if (process.env.SERVICE_DB_USE==1){
 			pool.query(
 				`SELECT
 						id,
@@ -158,7 +160,7 @@ module.exports = {
 				}
 			);
 		}
-		else if (process.env.SERVER_DB_USE==2){
+		else if (process.env.SERVICE_DB_USE==2){
 			async function execute_sql(err, result){
 				try{
 				const pool2 = await oracledb.getConnection();

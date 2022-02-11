@@ -20,7 +20,7 @@ module.exports = {
 			}
 		else{	
 			//service can return other formats, set json
-			const url = process.env.SERVICE_URL_GPS_PLACE + 
+			const url = process.env.SERVICE_GEOLOCATION_URL_GPS_PLACE + 
 						'?format=json' +
 						'&lat=' + data.query.latitude +
 						'&lon=' + data.query.longitude;
@@ -53,11 +53,11 @@ module.exports = {
 		var url;
 		if (typeof data.query.ip == 'undefined')
 			if (data.ip == '::1' || data.ip == '::ffff:127.0.0.1')
-				url = process.env.SERVICE_URL_GPS_IP + '?ip=';
+				url = process.env.SERVICE_GEOLOCATION_URL_GPS_IP + '?ip=';
 			else
-				url = process.env.SERVICE_URL_GPS_IP + '?ip=' + data.ip;
+				url = process.env.SERVICE_GEOLOCATION_URL_GPS_IP + '?ip=' + data.ip;
 		else
-			url = process.env.SERVICE_URL_GPS_IP + '?ip=' + data.query.ip;
+			url = process.env.SERVICE_GEOLOCATION_URL_GPS_IP + '?ip=' + data.query.ip;
 		geodata = await getService(url);
 		data.body.app_id 					  = data.query.app_id;
 		data.body.app_module				  = 'GEOLOCATION';

@@ -7,8 +7,6 @@ const https = require("https");
 const fs = require("fs");
 //module to configure Content Security Policy
 const helmet = require("helmet");
-//module to use subdomains
-const vhost = require("vhost");
 //module to save variables outside code
 require("dotenv").config();
 //SSL files for HTTPS
@@ -18,11 +16,6 @@ const options = {
 };
 //Create express application
 const app = express();
-//configure subdomain propertymanagement
-app.use(vhost('propertymanagement.' + process.env.APP_URL, function (req, res) {
-  res.sendFile(__dirname + "/app_property_management/datamodel.pdf");
-  }
-));
 //set routing configuration
 //service auth
 const authRouter = require("./service/auth/auth.router");
@@ -71,15 +64,10 @@ app.use(
   );
 // set middleware JSON maximum size
 app.use(express.json({ limit: process.env.SERVER_JSON_LIMIT }));
-//define what headers are allowed and origin
+//define what headers are allowed
 app.use(function(req, res, next) {
-  const allowedOrigins = [process.env.APP_URL, 'timetables.' + process.env.APP_URL];
-  const origin = 'https://' + req.headers.host;
-  if (allowedOrigins.includes(origin)) {
-      res.setHeader('Access-Control-Allow-Origin', origin);
-  }
   res.header("Access-Control-Allow-Headers", "Authorization, Origin, X-Requested-With, Content-Type, Accept");
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
   next();
 });
 //SERVER
@@ -127,8 +115,6 @@ app.use('/app_timetables/images',express.static(__dirname + '/app_timetables/ima
 
 //timetable app progressive webapp menifest
 app.get("/app_timetables/manifest.json",function (req, res,next) {
-  //this is only for timetables app
-  if (req.headers.host == 'timetables.' + process.env.APP_URL){
     res.type('text/plain')
     res.send(`{
                 "short_name": "${process.env.APP1_PWA_SHORT_NAME}",
@@ -154,14 +140,11 @@ app.get("/app_timetables/manifest.json",function (req, res,next) {
                 "scope": "${process.env.APP1_PWA_SCOPE}"
               }`
       );
-  }
-  else
-    next();
 });
 //timetable app show profile directly from url
 app.get('/:user', function(req, res,next) {
   //this is only for timetables app
-  if (req.headers.host == 'timetables.' + process.env.APP_URL &&
+  if (req.headers.host.substring(0,req.headers.host.indexOf('.')) == 'timetables' &&
       req.params.user !== '' && 
       req.params.user!=='robots.txt' &&
       req.params.user!=='manifest.json' &&
@@ -177,7 +160,7 @@ app.get('/:user', function(req, res,next) {
         const {getProfileUsername} = require("./service/db/api/user_account/user_account.service");
         getProfileUsername(req.params.user,null, (err,result)=>{
           if (result){
-            //timetables app generates startup html with some data from database
+            // return timetables app
             const { getApp } = require("./app_timetables/app");
             res.setHeader('Content-Type', 'text/html');
             const app = getApp()
@@ -208,13 +191,12 @@ app.get('/robots.txt', function (req, res) {
 });
 
 //config root url
-app.get("/",function (req, res) {
+app.get('/',function (req, res) {
   //redirect from http to https
   if (req.protocol=='http')
     return res.redirect('https://' + req.headers.host);
-
-  switch (req.headers.host){
-    case 'timetables.' + process.env.APP_URL:{
+  switch (req.headers.host.substring(0,req.headers.host.indexOf('.'))){
+    case 'timetables':{
       //timetables app generates startup html with some data from database
       const { getApp } = require("./app_timetables/app");
       res.setHeader('Content-Type', 'text/html');
@@ -222,6 +204,10 @@ app.get("/",function (req, res) {
       .then(function(app_result){
         return res.send(app_result);
       });
+      break;
+    }
+    case 'propertymanagement':{
+      res.sendFile(__dirname + "/app_property_management/datamodel.pdf");
       break;
     }
     default:{

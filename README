@@ -53,7 +53,6 @@ version 17.3.0 supported
 	npm install helmet@4.6.0
 	npm install jsonwebtoken
 	npm install nodemailer
-	npm install vhost
 	npm install node-fetch@2.6.1
 	npm install -g pm2
 
@@ -130,81 +129,82 @@ version 17.3.0 supported
    cd app_portfolio
    git clone https://github.com/appportfolio/app_portfolio.git
 
-9. create .env file with these values and suggestions:
-set values in {}
+9. create .env file in /app_portfolio
+set values in {} and modify default value if necessary
 
 #server variables
-SERVER_HTTPS_KEY                        		={PATH}\{FILENAME}
-SERVER_HTTPS_CERT                       		={PATH}\{FILENAME}
-SERVER_PORT                             		=80
-SERVER_HTTPS_PORT                       		=443
+SERVER_HTTPS_KEY                        			={PATH}\{FILENAME}
+SERVER_HTTPS_CERT                       			={PATH}\{FILENAME}
+SERVER_PORT                             			=80
+SERVER_HTTPS_PORT                       			=443
+SERVER_JSON_LIMIT                          			=10MB
+#service variables
 #What database to use
 #1=DB1 mySQL, 2=DB2 Oracle
-SERVER_DB_USE                           		=1
+SERVICE_DB_USE                           			=1
 #mySQL
-SERVER_DB1_USER                         		={USERNAME}
-SERVER_DB1_PASS                         		={PASSWORD}
-SERVER_DB1_USER1                        		={USERNAME1}
-SERVER_DB1_PASS1                        		={PASSWORD1}
-SERVER_DB1_PORT                         		={PORT}
-SERVER_DB1_HOST                         		={HOSTNAME} (or localhost)
-SERVER_DB1_NAME                         		={DATABASENAME}
-SERVER_DB1_CHARACTERSET                 		='utf8mb4'
-SERVER_DB1_CONNECTION_LIMIT             		=10
+SERVICE_DB_DB1_USER                         		={USERNAME}
+SERVICE_DB_DB1_PASS                         		={PASSWORD}
+SERVICE_DB_DB1_USER1                        		={USERNAME1}
+SERVICE_DB_DB1_PASS1                        		={PASSWORD1}
+SERVICE_DB_DB1_PORT                         		={PORT}
+SERVICE_DB_DB1_HOST                         		={HOSTNAME} (or localhost)
+SERVICE_DB_DB1_NAME                         		={DATABASENAME}
+SERVICE_DB_DB1_CHARACTERSET                 		='utf8mb4'
+SERVICE_DB_DB1_CONNECTION_LIMIT             		=10
 #Oracle
-SERVER_DB2_USER                         		={USERNAME}
-SERVER_DB2_PASS                         		={PASSWORD}
-SERVER_DB2_USER1                        		={USERNAME1}
-SERVER_DB2_PASS1                        		={PASSWORD1}
-SERVER_DB2_CONNECTSTRING                		={DATABASENAME}
-SERVER_DB2_POOL_MIN                     		=0
-SERVER_DB2_POOL_MAX                     		=4
-SERVER_DB2_POOL_INCREMENT               		=0
+SERVICE_DB_DB2_USER                         		={USERNAME}
+SERVICE_DB_DB2_PASS                         		={PASSWORD}
+SERVICE_DB_DB2_USER1                        		={USERNAME1}
+SERVICE_DB_DB2_PASS1                        		={PASSWORD1}
+SERVICE_DB_DB2_CONNECTSTRING                		={DATABASENAME}
+SERVICE_DB_DB2_POOL_MIN                     		=0
+SERVICE_DB_DB2_POOL_MAX                     		=4
+SERVICE_DB_DB2_POOL_INCREMENT               		=0
 #Oracle Instant Client path
-SERVER_DB2_LIBDIR								={ORACLE_INSTANT_CLIENT_PATH}
-SERVER_DB2_CONFIGDIR							={PATH_TNSNAMES_SQLNET_OR_WALLET_FILE_CONTENT}
-#other server variables
-SERVER_JSON_LIMIT                          		=10MB
-#service variables
-SERVICE_URL_GPS_PLACE                   		=http://www.geoplugin.net/extras/location.gp
-SERVICE_URL_GPS_IP                      		=http://www.geoplugin.net/json.gp
-SERVICE_AUTH_TOKEN_SECRET               		=23e78y2Basj22ai
-SERVICE_AUTH_TOKEN_EXPIRE_ACCESS        		=1h
-SERVICE_AUTH_TOKEN_EXPIRE_DATA          		=2d
+SERVICE_DB_DB2_LIBDIR								={ORACLE_INSTANT_CLIENT_PATH}
+SERVICE_DB_DB2_CONFIGDIR							={PATH_TNSNAMES_SQLNET_OR_WALLET_FILE_CONTENT}
+SERVICE_URL_GPS_PLACE                   			=http://www.geoplugin.net/extras/location.gp
+SERVICE_URL_GPS_IP                      			=http://www.geoplugin.net/json.gp
+SERVICE_AUTH_TOKEN_SECRET               			=23e78y2Basj22ai
+SERVICE_AUTH_TOKEN_EXPIRE_ACCESS        			=1h
+SERVICE_AUTH_TOKEN_EXPIRE_DATA          			=2d
 #Common app variables
-APP_URL											={HOSTNAME} (or localhost)
-APP_HOSTNAME									=https://localhost
-APP_REST_CLIENT_ID								={APP_REST_CLIENT_ID}
-APP_REST_CLIENT_SECRET							={APP_REST_CLIENT_SECRET}
+APP_REST_CLIENT_ID									={APP_REST_CLIENT_ID}
+APP_REST_CLIENT_SECRET								={APP_REST_CLIENT_SECRET}
 #App 1 variables
-APP1_ID						        			=1
-APP1_NAME					        			=Timetables
+APP1_ID						        				=1
+APP1_NAME					        				=Timetables
 #Progressive web app variables in manifest.json
-APP1_PWA_SHORT_NAME                     		=Timetables
-APP1_PWA_NAME                           		=Timetables
-APP1_PWA_DESCRIPTION                    		=Advanced traditional muslim salah timetables
-APP1_PWA_STARTURL                       		=/
-APP1_PWA_DISPLAY                        		=standalone
-APP1_PWA_BACKGROUND_COLOR               		=#FFFFFF
-APP1_PWA_THEME_COLOR                    		=#a49775
-APP1_PWA_ORIENTATION                    		=portrait-primary
-APP1_PWA_ICONS1_SRC                     		=/app_timetables/images/pwa/icon-192x192.png
-APP1_PWA_ICONS1_TYPE                    		=image/png
-APP1_PWA_ICONS1_SIZES                   		=192x192
-APP1_PWA_ICONS2_SRC                     		=/app_timetables/images/pwa/icon-512x512.png
-APP1_PWA_ICONS2_TYPE                    		=image/png
-APP1_PWA_ICONS2_SIZES                   		=512x512
-APP1_PWA_SCOPE                          		=/
+APP1_PWA_SHORT_NAME                     			=Timetables
+APP1_PWA_NAME                           			=Timetables
+APP1_PWA_DESCRIPTION                    			=Advanced traditional muslim salah timetables
+APP1_PWA_STARTURL                       			=/
+APP1_PWA_DISPLAY                        			=standalone
+APP1_PWA_BACKGROUND_COLOR               			=#FFFFFF
+APP1_PWA_THEME_COLOR                    			=#a49775
+APP1_PWA_ORIENTATION                    			=portrait-primary
+APP1_PWA_ICONS1_SRC                     			=/app_timetables/images/pwa/icon-192x192.png
+APP1_PWA_ICONS1_TYPE                    			=image/png
+APP1_PWA_ICONS1_SIZES                   			=192x192
+APP1_PWA_ICONS2_SRC                     			=/app_timetables/images/pwa/icon-512x512.png
+APP1_PWA_ICONS2_TYPE                    			=image/png
+APP1_PWA_ICONS2_SIZES                   			=512x512
+APP1_PWA_SCOPE                          			=/
 #Email variables SERVER
-APP1_EMAIL_HOST                         		={EMAIL_HOST}
-APP1_EMAIL_PORT                         		={EMAIL_PORT}
-APP1_EMAIL_SECURE                       		=true
-APP1_EMAIL_USERNAME                     		={EMAIL_USERNAME}
-APP1_EMAIL_PASSWORD                     		={EMAIL_PASSWORD}
-APP1_EMAILTYPE_SIGNUP                   		=1
-APP1_EMAILTYPE_UNVERIFIED               		=2
-APP1_EMAILTYPE_RESET_PASSWORD           		=3
-APP1_EMAILTYPE_CHANGE_EMAIL             		=4
+APP1_SERVICE_EMAIL_HOST                         	={EMAIL_HOST}
+APP1_SERVICE_EMAIL_PORT                         	={EMAIL_PORT}
+APP1_SERVICE_EMAIL_SECURE                       	=true
+APP1_SERVICE_EMAIL_USERNAME                     	={EMAIL_USERNAME}
+APP1_SERVICE_EMAIL_PASSWORD                     	={EMAIL_PASSWORD}
+APP1_SERVICE_EMAILTYPE_SIGNUP                   	=1
+APP1_SERVICE_EMAILTYPE_SIGNUP_FROM_NAME				={FROM NAME}
+APP1_SERVICE_EMAILTYPE_UNVERIFIED               	=2
+APP1_SERVICE_EMAILTYPE_UNVERIFIED_FROM_NAME			={FROM NAME}
+APP1_SERVICE_EMAILTYPE_RESET_PASSWORD           	=3
+APP1_SERVICE_EMAILTYPE_RESET_PASSWORD_FROM_NAME		={FROM NAME}
+APP1_SERVICE_EMAILTYPE_CHANGE_EMAIL             	=4
+APP1_SERVICE_EMAILTYPE_CHANGE_EMAIL_FROM_NAME		={FROM NAME}
 
 10. database parameters
 update scripts/import.sql or after import
@@ -212,7 +212,7 @@ update scripts/import.sql or after import
 table app
 set app url and logo
 
-table app_parameter
+update {} values in table app_parameter
 
 COPYRIGHT											={COPYRIGHT TEXT}
 EMAIL												={HOMEPAGE EMAIL}
@@ -238,32 +238,30 @@ REST_APP_TIMETABLES_USER_SETTING_USER_ACCOUNT_ID    =app_timetables_user_setting
 REST_APP_TIMETABLES_USER_SETTING_PROFILE            =app_timetables_user_setting/profile/
 REST_APP_TIMETABLES_USER_SETTING_LIKE      	        =app_timetables_user_setting_like/
 REST_APP_TIMETABLES_USER_SETTING_VIEW      	        =app_timetables_user_setting_view/
-REST_COUNTRY    			 	    		=country/
-REST_LANGUAGE_LOCALE    		    		=language/locale/
-REST_MESSAGE_TRANSLATION   					=message_translation/
-REST_USER_ACCOUNT       		    		=user_account/
-REST_USER_ACCOUNT_COMMON    	    		=user_account/common/
-REST_USER_ACCOUNT_PROFILE_USERNAME  		=user_account/profile/username/
-REST_USER_ACCOUNT_PROFILE_USERID    		=user_account/profile/id/
-REST_USER_ACCOUNT_PROFILE_SEARCH    		=user_account/profile/username/search/
-REST_USER_ACCOUNT_PROFILE_TOP       		=user_account/profile/top/
-REST_USER_ACCOUNT_PROFILE_DETAIL    		=user_account/profile/detail/
-REST_USER_ACCOUNT_ACTIVATE       			=user_account/activate/
-REST_USER_ACCOUNT_LOGIN     	    		=user_account/login
-REST_USER_ACCOUNT_SIGNUP       	    		=user_account/signup
-REST_USER_ACCOUNT_PROVIDER          		=user_account/provider/
-REST_USER_ACCOUNT_LIKE       	    		=user_account_like/
-REST_USER_ACCOUNT_FOLLOW    	    		=user_account_follow/
-SERVICE_URL_GPS_PLACE                   	=http://www.geoplugin.net/extras/location.gp
-SERVICE_URL_GPS_IP                      	=http://www.geoplugin.net/json.gp
-SERVICE_GEOLOCATION                 		=/service/geolocation
-SERVICE_GPS_PLACE                   		=/getplace
-SERVICE_GPS_IP     			        		=/getip
-SERVICE_MAIL        		        		=/service/mail
-SERVICE_REPORT                	    		=/service/report
-SERVICE_WORLDCITIES                 		=/service/worldcities
-SERVICE_URL_GPS_PLACE               		=http://www.geoplugin.net/extras/location.gp
-SERVICE_URL_GPS_IP                  		=http://www.geoplugin.net/json.gp
+REST_COUNTRY    			 	    				=country/
+REST_LANGUAGE_LOCALE    		    				=language/locale/
+REST_MESSAGE_TRANSLATION   							=message_translation/
+REST_USER_ACCOUNT       		    				=user_account/
+REST_USER_ACCOUNT_COMMON    	    				=user_account/common/
+REST_USER_ACCOUNT_PROFILE_USERNAME  				=user_account/profile/username/
+REST_USER_ACCOUNT_PROFILE_USERID    				=user_account/profile/id/
+REST_USER_ACCOUNT_PROFILE_SEARCH    				=user_account/profile/username/search/
+REST_USER_ACCOUNT_PROFILE_TOP       				=user_account/profile/top/
+REST_USER_ACCOUNT_PROFILE_DETAIL    				=user_account/profile/detail/
+REST_USER_ACCOUNT_ACTIVATE       					=user_account/activate/
+REST_USER_ACCOUNT_LOGIN     	    				=user_account/login
+REST_USER_ACCOUNT_SIGNUP       	    				=user_account/signup
+REST_USER_ACCOUNT_PROVIDER          				=user_account/provider/
+REST_USER_ACCOUNT_LIKE       	    				=user_account_like/
+REST_USER_ACCOUNT_FOLLOW    	    				=user_account_follow/
+SERVICE_URL_GPS_PLACE                   			=http://www.geoplugin.net/extras/location.gp
+SERVICE_URL_GPS_IP                      			=http://www.geoplugin.net/json.gp
+SERVICE_GEOLOCATION                 				=/service/geolocation
+SERVICE_GPS_PLACE                   				=/getplace
+SERVICE_GPS_IP     			        				=/getip
+SERVICE_REPORT                	    				=/service/report
+SERVICE_WORLDCITIES                 				=/service/worldcities
+
 #App1 Timetables variables
 #Email variables CLIENT
 EMAIL_POLICY				        		={EMAIL_POLICY}
@@ -447,7 +445,7 @@ QR_BACKGROUND_COLOR			        		=#ffffff
    observe also some global javascript values in 
    js/app_globals.js
 
-10. run app on any supported Node.js platform
+11. run app on any supported Node.js platform
 
    node server.js
    or with pm2

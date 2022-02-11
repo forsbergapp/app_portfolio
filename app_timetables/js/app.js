@@ -3021,6 +3021,10 @@ function user_signup() {
     var select_setting_popular_place = document.getElementById('setting_select_popular_place');
 
     var json_data = '{"app_id":' + global_app_id + ',' +
+        '"user_language": "' + navigator.language + '",' +
+        '"user_timezone": "' + Intl.DateTimeFormat().resolvedOptions().timeZone + '",' +
+        '"user_number_system": "' + Intl.NumberFormat().resolvedOptions().numberingSystem + '",' +
+        '"user_platform": "' + navigator.platform + '",' +
         '"username":"' + username + '",' +
         '"password":"' + password + '",' +
         '"password_reminder":"' + password_reminder + '",' +
@@ -3879,6 +3883,10 @@ function updateProviderUser(provider_no, profile_id, profile_first_name, profile
         var json_data =
             '{' +
             '"app_id": ' + global_app_id + ',' +
+            '"user_language": "' + navigator.language + '",' +
+            '"user_timezone": "' + Intl.DateTimeFormat().resolvedOptions().timeZone + '",' +
+            '"user_number_system": "' + Intl.NumberFormat().resolvedOptions().numberingSystem + '",' +
+            '"user_platform": "' + navigator.platform + '",' +
             '"active": 1,' +
             '"provider_no": ' + provider_no + ',' +
             '"provider' + provider_no + '_id":"' + profile_id + '",' +
@@ -5315,6 +5323,11 @@ async function init_common() {
                 global_app_name = json.data[0].app_name;
                 set_app_globals_head();
                 set_app_globals_body();
+                update_info(1);
+                update_info(2);
+                update_info(3);
+                update_info(4);
+                update_info(5);
             }
             else {
                 alert(responseText_get_error('get_app_globals app', result));
@@ -5430,12 +5443,6 @@ async function app_load(){
         //load themes in Design tab
         load_themes();
         app_log('INIT', 'INIT', location.hostname, '');
-        //read into info divs at startup
-        update_info(1);
-        update_info(2);
-        update_info(3);
-        update_info(4);
-        update_info(5);
         //set papersize
         zoom_paper();
         //user interface font depending selected arabic script

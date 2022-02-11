@@ -1,34 +1,34 @@
 var pool;
 var oracledb;
 var oracle_options;
-if (process.env.SERVER_DB_USE==1){
+if (process.env.SERVICE_DB_USE==1){
 	const { createPool } = require("mysql");
 	pool = createPool({
-		port: process.env.SERVER_DB1_PORT,
-		host: process.env.SERVER_DB1_HOST,
-		user: process.env.SERVER_DB1_USER,
-		password: process.env.SERVER_DB1_PASS,
-		database: process.env.SERVER_DB1_NAME,
-		charset: process.env.SERVER_DB1_CHARACTERSET,
-		connnectionLimit: process.env.SERVER_DB1_CONNECTION_LIMIT
+		port: process.env.SERVICE_DB_DB1_PORT,
+		host: process.env.SERVICE_DB_DB1_HOST,
+		user: process.env.SERVICE_DB_DB1_USER,
+		password: process.env.SERVICE_DB_DB1_PASS,
+		database: process.env.SERVICE_DB_DB1_NAME,
+		charset: process.env.SERVICE_DB_DB1_CHARACTERSET,
+		connnectionLimit: process.env.SERVICE_DB_DB1_CONNECTION_LIMIT
 	});
 }
-else if (process.env.SERVER_DB_USE==2){
+else if (process.env.SERVICE_DB_USE==2){
 	oracledb = require('oracledb');
 	oracledb.autoCommit = true;
 	oracledb.fetchAsBuffer = [ oracledb.BLOB ];
-	oracledb.initOracleClient({ libDir: process.env.SERVER_DB2_LIBDIR,
-						 		configDir:process.env.SERVER_DB2_CONFIGDIR});
+	oracledb.initOracleClient({ libDir: process.env.SERVICE_DB_DB2_LIBDIR,
+						 		configDir:process.env.SERVICE_DB_DB2_CONFIGDIR});
 	oracle_options = { outFormat: oracledb.OUT_FORMAT_OBJECT };
 	async function init(){
 		try{
 			await oracledb.createPool({
-				user: process.env.SERVER_DB2_USER,
-				password: process.env.SERVER_DB2_PASS,
-				connectString: process.env.SERVER_DB2_CONNECTSTRING,
-				poolMin: parseInt(process.env.SERVER_DB2_POOL_MIN),
-				poolMax: parseInt(process.env.SERVER_DB2_POOL_MAX),
-				poolIncrement: parseInt(process.env.SERVER_DB2_POOL_INCREMENT)
+				user: process.env.SERVICE_DB_DB2_USER,
+				password: process.env.SERVICE_DB_DB2_PASS,
+				connectString: process.env.SERVICE_DB_DB2_CONNECTSTRING,
+				poolMin: parseInt(process.env.SERVICE_DB_DB2_POOL_MIN),
+				poolMax: parseInt(process.env.SERVICE_DB_DB2_POOL_MAX),
+				poolIncrement: parseInt(process.env.SERVICE_DB_DB2_POOL_INCREMENT)
 				/* other params and default values
 				// edition: 'ORA$BASE', // used for Edition Based Redefintion
 				// events: false, // whether to handle Oracle Database FAN and RLB events or support CQN

@@ -321,7 +321,6 @@ INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_
 INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','SERVICE_GEOLOCATION','/service/geolocation',NULL);
 INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','SERVICE_GPS_IP','/getip',NULL);
 INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','SERVICE_GPS_PLACE','/getplace',NULL);
-INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','SERVICE_MAIL','/service/mail',NULL);
 INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','SERVICE_REPORT','/service/report',NULL);
 INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','SERVICE_URL_GPS_IP','http://www.geoplugin.net/json.gp',NULL);
 INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','SERVICE_URL_GPS_PLACE','http://www.geoplugin.net/extras/location.gp',NULL);

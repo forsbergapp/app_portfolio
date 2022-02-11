@@ -3,7 +3,7 @@ const {pool, oracledb, oracle_options} = require ("../../config/database");
 module.exports = {
 	//returns parameters for app_id=0 and given app_id
 	getParameters: (app_id, callBack) => {
-		if (process.env.SERVER_DB_USE==1){
+		if (process.env.SERVICE_DB_USE==1){
 			pool.query(
 				`SELECT
 						app_id,
@@ -24,7 +24,7 @@ module.exports = {
 				}
 			);
 		}
-		else if (process.env.SERVER_DB_USE==2){
+		else if (process.env.SERVICE_DB_USE==2){
 			async function execute_sql(err, result){
 				try{
 				const pool2 = await oracledb.getConnection();
