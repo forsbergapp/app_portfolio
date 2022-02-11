@@ -30,6 +30,7 @@ const authRouter = require("./service/auth/auth.router");
 const appRouter = require("./service/db/api/app/app.router");
 const app_logRouter = require("./service/db/api/app_log/app_log.router");
 const app_objectRouter = require("./service/db/api/app_object/app_object.router");
+const app_parameterRouter = require("./service/db/api/app_parameter/app_parameter.router");
 const countryRouter = require("./service/db/api/country/country.router");
 const languageLocaleRouter = require("./service/db/api/language/locale/locale.router");
 const message_translationRouter = require("./service/db/api/message_translation/message_translation.router");
@@ -69,7 +70,7 @@ app.use(
   })
   );
 // set middleware JSON maximum size
-app.use(express.json({ limit: process.env.APP_JSON_LIMIT }));
+app.use(express.json({ limit: process.env.SERVER_JSON_LIMIT }));
 //define what headers are allowed and origin
 app.use(function(req, res, next) {
   const allowedOrigins = [process.env.APP_URL, 'timetables.' + process.env.APP_URL];
@@ -77,7 +78,6 @@ app.use(function(req, res, next) {
   if (allowedOrigins.includes(origin)) {
       res.setHeader('Access-Control-Allow-Origin', origin);
   }
-  //res.header("Access-Control-Allow-Origin", process.env.APP_HOSTNAME);
   res.header("Access-Control-Allow-Headers", "Authorization, Origin, X-Requested-With, Content-Type, Accept");
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE');
   next();
@@ -90,6 +90,7 @@ app.use("/service/auth", authRouter);
 app.use("/service/db/api/app", appRouter);
 app.use("/service/db/api/app_log", app_logRouter);
 app.use("/service/db/api/app_object", app_objectRouter);
+app.use("/service/db/api/app_parameter", app_parameterRouter);
 app.use("/service/db/api/country", countryRouter);
 app.use("/service/db/api/language/locale", languageLocaleRouter);
 app.use("/service/db/api/message_translation", message_translationRouter);

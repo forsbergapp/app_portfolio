@@ -1,13 +1,13 @@
 var global_host_url 	     	 		= 'https://' + location.hostname;
 var global_host_server_url 				= 'https://' + location.hostname;
 var global_rest_url_base 				= global_host_server_url + '/service/db/api/';
-var global_rest_app_globals 			= 'app/app1globals';
+var global_rest_app_parameter 			= 'app_parameter/';
+var global_app_id 						= 1;
 
 //app variables
-var global_app_id;
-var global_app_copyright;
 var global_app_rest_client_id;
 var global_app_rest_client_secret;
+var global_app_copyright;
 var global_app_user_provider1_id;
 var global_app_user_provider1_name;
 var global_app_user_provider1_api_src;
@@ -49,11 +49,12 @@ var global_file_image_mime_type;
 var global_file_image_max_size;
 
 //authorization
-var global_auth_token_url;
+var global_service_auth_token_url;
 
 //rest
 var global_rest_at;
 var global_rest_dt;
+var global_rest_app;
 var global_rest_app_log;
 var global_rest_app_object;
 var global_rest_app_timetables_user_setting;

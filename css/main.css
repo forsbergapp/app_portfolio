@@ -272,7 +272,12 @@ a:active {
 	  box-shadow: 0 0 3px #ececec;
 	}
   }
-#app_timetables_logo:hover, #app_timetables_logo:active {
+.app_name{
+	width: 200px;
+	height: 30px;
+	margin: 0 auto;
+}
+.app_logo:hover, .app_logo:active {
 	-webkit-animation: glowing 1300ms infinite;
 	-moz-animation: glowing 1300ms infinite;
     -o-animation: glowing 1300ms infinite;
@@ -280,38 +285,11 @@ a:active {
 	border-radius:20px;
 	transform: scale(1.2);
 }
-#app_timetables_logo{
-	background-image: url('/app_timetables/images/logo.png');
-	background-size: contain;
+.app_logo{
 	width: 40px;
 	height: 40px;
-	margin: 0 auto;
-}
-#app_timetables_title{
-	width: 100px;
-	height: 40px;
-	margin: 0 auto;
-}
-#app_property_management_logo:hover, #app_property_management_logo:active {
-	-webkit-animation: glowing 1300ms infinite;
-	-moz-animation: glowing 1300ms infinite;
-    -o-animation: glowing 1300ms infinite;
-    animation: glowing 1300ms infinite;
-	border-radius:20px;
-	transform: scale(1.2);
-}
-#app_property_management_logo{
-	background-image: url('/app_property_management/images/logo.png');
-	background-size: contain;
-	width: 40px;
-	height: 33px;
 	margin: 0 auto;
 }	
-#app_property_management_title{
-	width: 100px;
-	height: 40px;
-	margin: 0 auto;
-}
 #contact{
 	font-size:16px;
 	margin-top:15px;
@@ -491,7 +469,13 @@ a:active {
 	margin-left:80px;
 	margin-top:-60px
  }
-
+ #copyright{
+	font-size: 24px;
+	text-align: center;
+	padding:30px;
+	font-family: 'Noto Sans';
+	
+ }
  /* SUN */
  div.sunholder {
     display: inline-block;

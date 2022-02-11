@@ -1,9 +1,8 @@
-const { getApp } = require ("./app.service");
+const { getParameters } = require ("./app_parameter.service");
 
 module.exports = {
-	getApp: (req, res) => {
-		const id = req.query.id;
-		getApp(id, (err, results) =>{
+	getParameters: (req, res) => {
+		getParameters(req.params.app_id,(err, results) =>{
 			if (err) {
 				console.log(err);
 				return res.status(500).send({

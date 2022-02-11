@@ -6,7 +6,7 @@ module.exports = {
 		let token = req.get("authorization");
 		if (token){
 			token = token.slice(7);
-			verify(token, process.env.APP_TOKEN_SECRET, (err, decoded) => {
+			verify(token, process.env.SERVICE_AUTH_TOKEN_SECRET, (err, decoded) => {
 				if (err){
 					res.status(401).send({
 						succes: 0,
@@ -34,12 +34,12 @@ module.exports = {
         var jsontoken_at;
         var jsontoken_dt;
         
-        jsontoken_at = sign ({tokentimstamp: Date.now()}, process.env.APP_TOKEN_SECRET, {
-                            expiresIn: process.env.APP_TOKEN_EXPIRE_ACCESS
+        jsontoken_at = sign ({tokentimstamp: Date.now()}, process.env.SERVICE_AUTH_TOKEN_SECRET, {
+                            expiresIn: process.env.SERVICE_AUTH_TOKEN_EXPIRE_ACCESS
                             });
 
-        jsontoken_dt = sign ({tokentimstamp: Date.now()}, process.env.APP_TOKEN_SECRET, {
-                            expiresIn: process.env.APP_TOKEN_EXPIRE_DATA
+        jsontoken_dt = sign ({tokentimstamp: Date.now()}, process.env.SERVICE_AUTH_TOKEN_SECRET, {
+                            expiresIn: process.env.SERVICE_AUTH_TOKEN_EXPIRE_DATA
                             });
         req.body.app_id 					= req.query.app_id;
         req.body.app_module				    = 'AUTH';

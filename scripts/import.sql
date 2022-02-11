@@ -1,9 +1,9 @@
 --
 -- Dumping data for table `app`
 --
-INSERT INTO app (id, app_name) VALUES (0,'HOME');
-INSERT INTO app (id, app_name) VALUES (1,'Timetables');
-INSERT INTO app (id, app_name) VALUES (2,'Property Managment');
+INSERT INTO app (id, app_name, url, logo) VALUES (0,'HOME', '','');
+INSERT INTO app (id, app_name, url, logo) VALUES (1,'Timetables','{APP_URL_APP1}','{APP_LOGO_URL_APP1}');
+INSERT INTO app (id, app_name, url, logo) VALUES (2,'Property Management','{APP_URL_APP2}','{APP_LOGO_URL_APP2}');
 --
 -- Dumping data for table `app_message`
 --
@@ -283,6 +283,190 @@ INSERT INTO app_object_item_subitem (app_id, object_name, object_item_name, subi
 INSERT INTO app_object_item_subitem (app_id, object_name, object_item_name, subitem_name) VALUES (1,'TOOLBAR','POPUP_MENU','POPUP_MENU_PROFILE_TOP');
 INSERT INTO app_object_item_subitem (app_id, object_name, object_item_name, subitem_name) VALUES (1,'TOOLBAR','POPUP_MENU','POPUP_MENU_SETTINGS');
 INSERT INTO app_object_item_subitem (app_id, object_name, object_item_name, subitem_name) VALUES (1,'TOOLBAR','POPUP_MENU','POPUP_MENU_SIGNUP');
+--
+-- Dumping data for table `app_parameter`
+--
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','APP_REST_CLIENT_ID','{APP_REST_CLIENT_ID}',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','APP_REST_CLIENT_SECRET','{APP_REST_CLIENT_SECRET}',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','COPYRIGHT','{COPYRIGHT TEXT}',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','EMAIL','{HOMEPAGE EMAIL}',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','REST_APP','app',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','REST_APP_LOG','app_log/',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','REST_APP_OBJECT','app_object/',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','REST_APP_PARAMETER','app_parameter/',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','REST_APP_TIMETABLES_PLACE','app_timetables_place/',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','REST_APP_TIMETABLES_THEME','app_timetables_theme/',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','REST_APP_TIMETABLES_USER_SETTING','app_timetables_user_setting/',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','REST_APP_TIMETABLES_USER_SETTING_LIKE','app_timetables_user_setting_like/',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','REST_APP_TIMETABLES_USER_SETTING_PROFILE','app_timetables_user_setting/profile/',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','REST_APP_TIMETABLES_USER_SETTING_USER_ACCOUNT_ID','app_timetables_user_setting/user_account_id/',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','REST_APP_TIMETABLES_USER_SETTING_VIEW','app_timetables_user_setting_view/',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','REST_COUNTRY','country/',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','REST_LANGUAGE_LOCALE','language/locale/',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','REST_MESSAGE_TRANSLATION','message_translation/',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','REST_USER_ACCOUNT','user_account/',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','REST_USER_ACCOUNT_ACTIVATE','user_account/activate/',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','REST_USER_ACCOUNT_COMMON','user_account/common/',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','REST_USER_ACCOUNT_FOLLOW','user_account_follow/',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','REST_USER_ACCOUNT_LIKE','user_account_like/',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','REST_USER_ACCOUNT_LOGIN','user_account/login',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','REST_USER_ACCOUNT_PROFILE_DETAIL','user_account/profile/detail/',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','REST_USER_ACCOUNT_PROFILE_SEARCH','user_account/profile/username/search/',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','REST_USER_ACCOUNT_PROFILE_TOP','user_account/profile/top/',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','REST_USER_ACCOUNT_PROFILE_USERID','user_account/profile/id/',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','REST_USER_ACCOUNT_PROFILE_USERNAME','user_account/profile/username/',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','REST_USER_ACCOUNT_PROVIDER','user_account/provider/',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','REST_USER_ACCOUNT_SIGNUP','user_account/signup',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','SERVICE_AUTH_TOKEN_URL','/service/auth/token',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','SERVICE_GEOLOCATION','/service/geolocation',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','SERVICE_GPS_IP','/getip',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','SERVICE_GPS_PLACE','/getplace',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','SERVICE_MAIL','/service/mail',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','SERVICE_REPORT','/service/report',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','SERVICE_URL_GPS_IP','http://www.geoplugin.net/json.gp',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','SERVICE_URL_GPS_PLACE','http://www.geoplugin.net/extras/location.gp',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','SERVICE_WORLDCITIES','/service/worldcities',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','USER_PROVIDER1_API_SRC','https://apis.google.com/js/platform.js?hl=',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'1','USER_PROVIDER1_ID','{GOOGLE_ID}',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','USER_PROVIDER1_NAME','Google',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','USER_PROVIDER2_API_SRC','https://connect.facebook.net/','example:https://connect.facebook.net/en_US/sdk.js, set locale SDK in client');
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','USER_PROVIDER2_API_SRC2','/sdk.js',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','USER_PROVIDER2_API_VERSION','v12.0',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'1','USER_PROVIDER2_ID','{FACEBOOK_ID}',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','USER_PROVIDER2_NAME','Facebook',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','DESIGN_DEFAULT_HIGHLIGHT_ROW','1','highlight row: Friday');
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','DESIGN_DEFAULT_PAPERSIZE','0','A4 paper');
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','DESIGN_DEFAULT_REPORT_FOOTER_SRC',NULL,NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','DESIGN_DEFAULT_REPORT_HEADER_SRC','/app_timetables/images/banner_kaaba.jpg',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','DESIGN_DEFAULT_REPORTFOOTER1','بِسْمِ اللهِ الرَّحْمٰنِ الرَّحِيْمِ',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','DESIGN_DEFAULT_REPORTFOOTER2','In the name of God, the Almighty, the Merciful',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','DESIGN_DEFAULT_REPORTFOOTER3','Advanced traditional muslim prayer report',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','DESIGN_DEFAULT_REPORTTITLE1',NULL,NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','DESIGN_DEFAULT_REPORTTITLE2',NULL,NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','DESIGN_DEFAULT_REPORTTITLE3',NULL,NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','DESIGN_DEFAULT_SHOW_CALENDARTYPE','true','Column calendartype: true');
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','DESIGN_DEFAULT_SHOW_GPS','false','Show GPS: false');
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','DESIGN_DEFAULT_SHOW_NOTES','false','Show notes: false');
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','DESIGN_DEFAULT_SHOW_TIMEZONE','false','Show timezone: false');
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','DESIGN_DEFAULT_SHOW_WEEKDAY','true','Show weekday: true');
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','DESIGN_DEFAULT_THEME_DAY','10003',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','DESIGN_DEFAULT_THEME_MONTH','20003',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','DESIGN_DEFAULT_THEME_YEAR','30001',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','EMAIL_DISCLAIMER','{EMAIL_DISCLAIMER}',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','EMAIL_POLICY','{EMAIL_POLICY}',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','EMAIL_TERMS','{EMAIL_TERMS}',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','EMAILTYPE_CHANGE_EMAIL','4',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','EMAILTYPE_RESET_PASSWORD','3',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','EMAILTYPE_SIGNUP','1',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','EMAILTYPE_UNVERIFIED','2',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','FILE_IMAGE_ALLOWED_TYPE1','jpg',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','FILE_IMAGE_ALLOWED_TYPE2','png',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','FILE_IMAGE_ALLOWED_TYPE3','gif',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','FILE_IMAGE_AVATAR_HEIGHT','64',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','FILE_IMAGE_AVATAR_WIDTH','64',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','FILE_IMAGE_HEADER_FOOTER_HEIGHT','160',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','FILE_IMAGE_HEADER_FOOTER_WIDTH','800',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','FILE_IMAGE_MAX_SIZE','2000000',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','FILE_IMAGE_MIME_TYPE','image/jpeg',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','GPS_DEFAULT_CITY',NULL,'City:... (none)');
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','GPS_DEFAULT_COUNTRY',NULL,'Country:... (none)');
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','GPS_DEFAULT_MAP_CONTAINER','mapid',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','GPS_DEFAULT_MAP_DEFAULT_STYLE','satellite-streets-v11',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','GPS_DEFAULT_MAP_DEFAULT_ZOOM','14',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','GPS_DEFAULT_MAP_DEFAULT_ZOOM_CITY','8',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','GPS_DEFAULT_MAP_DEFAULT_ZOOM_PP','14',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','GPS_DEFAULT_MAP_MARKER_DIV_CITY','map_marker_city',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','GPS_DEFAULT_MAP_MARKER_DIV_GPS','map_marker_gps',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','GPS_DEFAULT_MAP_MARKER_DIV_PP','map_marker_popular_place',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','GPS_DEFAULT_MAP_STYLE_BASEURL','mapbox://styles/mapbox/',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','GPS_DEFAULT_MAPTYPE','5','Maptype:satellite-streets-v11');
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','GPS_DEFAULT_PLACE_ID','40002','Default place: Kabba, Makkah');
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'1','GPS_MAP_ACCESS_TOKEN','{MAPBOX_ID}',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','GPS_MAP_FLYTO','1',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','GPS_MAP_JUMPTO','0',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','GPS_MAP_POPUP_OFFSET','25',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','GPS_MAP_QIBBLA_COLOR','#a49775',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','GPS_MAP_QIBBLA_LAT','21.4226',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','GPS_MAP_QIBBLA_LONG','39.8261',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','GPS_MAP_QIBBLA_OLD_COLOR','#404040',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','GPS_MAP_QIBBLA_OLD_LAT','30.3289',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','GPS_MAP_QIBBLA_OLD_LONG','35.4423',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','GPS_MAP_QIBBLA_OLD_OPACITY','0.4',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','GPS_MAP_QIBBLA_OLD_TEXT_SIZE','14','');
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','GPS_MAP_QIBBLA_OLD_TITLE','Petra, jordan','Qibbla old Great temple');
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','GPS_MAP_QIBBLA_OLD_WIDTH','4',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','GPS_MAP_QIBBLA_OPACITY','1',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','GPS_MAP_QIBBLA_TEXT_SIZE','14',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','GPS_MAP_QIBBLA_TITLE','Kaaba, Makkah','Qibbla Kabba, Makkah');
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','GPS_MAP_QIBBLA_WIDTH','4',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','INFO_LINK1_NAME','Privacy Policy',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','INFO_LINK1_URL','/app_timetables/info/privacy_policy.html',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','INFO_LINK2_NAME','Disclaimer',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','INFO_LINK2_URL','/app_timetables/info/disclaimer.html',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','INFO_LINK3_NAME','Terms',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','INFO_LINK3_URL','/app_timetables/info/terms.html',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','INFO_LINK4_NAME','Support',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','INFO_LINK4_URL','/app_timetables/info/support.html',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','INFO_LINK5_NAME','About',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','INFO_LINK5_URL','/app_timetables/info/about.html',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','PRAYER_DEFAULT_ASR','0','Asr method: Standard');
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','PRAYER_DEFAULT_HIGHLATITUDE','1','High latitude adj.: Angle/60th of night');
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','PRAYER_DEFAULT_HIJRI_ADJUSTMENT','2','Hijri date adjustment: 0');
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','PRAYER_DEFAULT_IQAMAT_TITLE_ASR','0','Asr Iqamat: None');
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','PRAYER_DEFAULT_IQAMAT_TITLE_DHUHR','0','Dhuhr Iqamat: None');
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','PRAYER_DEFAULT_IQAMAT_TITLE_FAJR','0','Fajr Iqamat: None');
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','PRAYER_DEFAULT_IQAMAT_TITLE_ISHA','0','Isha Iqamat: None');
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','PRAYER_DEFAULT_IQAMAT_TITLE_MAGHRIB','0','Maghrib Iqamat: None');
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','PRAYER_DEFAULT_METHOD','14','Method: Muslim World League (MWL)');
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','PRAYER_DEFAULT_SHOW_FAST_START_END','1','Fajr and Maghrib fasting info');
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','PRAYER_DEFAULT_SHOW_IMSAK','false','Column imsak: no');
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','PRAYER_DEFAULT_SHOW_MIDNIGHT','false','Column midnight: no');
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','PRAYER_DEFAULT_SHOW_SUNSET','false','Column sunset: no');
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','PRAYER_DEFAULT_TIMEFORMAT','0','Timeformat: 12h with no suffix');
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','PWA_BACKGROUND_COLOR','#FFFFFF',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','PWA_DESCRIPTION','Advanced traditional muslim salah timetables',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','PWA_DISPLAY','standalone',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','PWA_ICONS1_SIZES','192x192',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','PWA_ICONS1_SRC','/app_timetables/images/pwa/icon-192x192.png',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','PWA_ICONS1_TYPE','image/png',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','PWA_ICONS2_SIZES','512x512',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','PWA_ICONS2_SRC','/app_timetables/images/pwa/icon-512x512.png',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','PWA_ICONS2_TYPE','image/png',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','PWA_NAME','Timetables',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','PWA_ORIENTATION','portrait-primary',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','PWA_SCOPE','/',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','PWA_SHORT_NAME','Timetables',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','PWA_STARTURL','/',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','PWA_THEME_COLOR','#a49775',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','QR_BACKGROUND_COLOR','#ffffff',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','QR_COLOR_DARK','#2b2b32',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','QR_COLOR_LIGHT','#ffffff',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','QR_HEIGHT','128',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','QR_LOGO_FILE_PATH','/app_timetables/images/logo.png',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','QR_LOGO_HEIGHT','32',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','QR_LOGO_WIDTH','32',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','QR_WIDTH','128',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','REGIONAL_DEFAULT_ARABIC_SCRIPT','0','Arabic script:Sans Kufi');
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','REGIONAL_DEFAULT_CALENDAR_HIJRI_TYPE','0','Calendar hijri type: islamic');
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','REGIONAL_DEFAULT_CALENDAR_LANG','en-us',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','REGIONAL_DEFAULT_CALENDAR_NUMBER_SYSTEM','latn','ex \'-nu-latn\'');
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','REGIONAL_DEFAULT_CALENDAR_TYPE_GREG','gregory','ex \'-u-ca-gregory\'');
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','REGIONAL_DEFAULT_CALENDARTYPE','0','Calendar type: Gregorian');
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','REGIONAL_DEFAULT_COLTITLE','1','Column title: transliterated, translation');
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','REGIONAL_DEFAULT_DIRECTION','0','Direction:Left to right');
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','REGIONAL_DEFAULT_LOCALE_EXT_CALENDAR','-ca-',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','REGIONAL_DEFAULT_LOCALE_EXT_NUMBER_SYSTEM','-nu-',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','REGIONAL_DEFAULT_LOCALE_EXT_PREFIX','-u',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','REGIONAL_DEFAULT_LOCALE_SECOND','0','Second languague:None');
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','SOCIAL_LINK1_NAME',NULL,NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','SOCIAL_LINK1_URL',NULL,NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','SOCIAL_LINK2_NAME',NULL,NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','SOCIAL_LINK2_URL',NULL,NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','SOCIAL_LINK3_NAME',NULL,NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','SOCIAL_LINK3_URL',NULL,NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','SOCIAL_LINK4_NAME',NULL,NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','SOCIAL_LINK4_URL',NULL,NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','STARTUP_DEFAULT_STARTUP_PAGE','3','1=print, 2=day, 3=month, 4=year, 5=settings, 6=profile');
 --
 -- Dumping data for table `app_timetables_place`
 --
@@ -1827,6 +2011,11 @@ INSERT INTO message_level (id, message_level) VALUES (4,'30');
 --
 INSERT INTO message_type (id, message_type) VALUES (1,'ERROR');
 INSERT INTO message_type (id, message_type) VALUES (2,'INFO');
+--
+-- Dumping data for table `parameter_type`
+--
+INSERT INTO parameter_type (id, name) VALUES (0,'Public');
+INSERT INTO parameter_type (id, name) VALUES (1,'Private');
 --
 -- Dumping data for table `theme_category`
 --
