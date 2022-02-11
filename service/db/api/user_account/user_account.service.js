@@ -2,7 +2,7 @@ const { pool, oracledb, oracle_options } = require("../../config/database");
 
 module.exports = {
     create: (data, callBack) => {
-        if (process.env.SERVER_DB_USE == 1) {
+        if (process.env.SERVICE_DB_USE == 1) {
             pool.query(
                 `INSERT INTO user_account(
 					bio,
@@ -61,7 +61,7 @@ module.exports = {
                     return callBack(null, results);
                 }
             );
-        } else if (process.env.SERVER_DB_USE == 2) {
+        } else if (process.env.SERVICE_DB_USE == 2) {
             async function execute_sql(err, result) {
                 try {
                     if (data.avatar != null)
@@ -185,7 +185,7 @@ module.exports = {
         }
     },
     activateUser: (id, validation_code, callBack) => {
-        if (process.env.SERVER_DB_USE == 1) {
+        if (process.env.SERVICE_DB_USE == 1) {
             pool.query(
                 `UPDATE user_account
 					SET		active = 1,
@@ -206,7 +206,7 @@ module.exports = {
                     return callBack(null, results);
                 }
             )
-        } else if (process.env.SERVER_DB_USE == 2) {
+        } else if (process.env.SERVICE_DB_USE == 2) {
             async function execute_sql(err, result) {
                 try {
 
@@ -255,7 +255,7 @@ module.exports = {
         }
     },
     getUserByUserId: (id, callBack) => {
-        if (process.env.SERVER_DB_USE == 1) {
+        if (process.env.SERVICE_DB_USE == 1) {
             pool.query(
                 `SELECT
 					u.id,
@@ -296,7 +296,7 @@ module.exports = {
                     return callBack(null, results[0]);
                 }
             )
-        } else if (process.env.SERVER_DB_USE == 2) {
+        } else if (process.env.SERVICE_DB_USE == 2) {
             async function execute_sql(err, result) {
                 try {
                     const pool2 = await oracledb.getConnection();
@@ -353,7 +353,7 @@ module.exports = {
         }
     },
     getProfileUserId: (id, id_current_user, callBack) => {
-        if (process.env.SERVER_DB_USE == 1) {
+        if (process.env.SERVICE_DB_USE == 1) {
             pool.query(
                 `SELECT
 					u.id,
@@ -418,7 +418,7 @@ module.exports = {
                     return callBack(null, results[0]);
                 }
             )
-        } else if (process.env.SERVER_DB_USE == 2) {
+        } else if (process.env.SERVICE_DB_USE == 2) {
             async function execute_sql(err, result) {
                 try {
                     const pool2 = await oracledb.getConnection();
@@ -498,7 +498,7 @@ module.exports = {
         }
     },
     getProfileUsername: (username, id_current_user, callBack) => {
-        if (process.env.SERVER_DB_USE == 1) {
+        if (process.env.SERVICE_DB_USE == 1) {
             pool.query(
                 `SELECT
 					u.id,
@@ -564,7 +564,7 @@ module.exports = {
                     return callBack(null, results[0]);
                 }
             )
-        } else if (process.env.SERVER_DB_USE == 2) {
+        } else if (process.env.SERVICE_DB_USE == 2) {
             async function execute_sql(err, result) {
                 try {
                     const pool2 = await oracledb.getConnection();
@@ -645,7 +645,7 @@ module.exports = {
         }
     },
     searchProfileUser: (username, callBack) => {
-        if (process.env.SERVER_DB_USE == 1) {
+        if (process.env.SERVICE_DB_USE == 1) {
             pool.query(
                 `SELECT
 					u.id,
@@ -676,7 +676,7 @@ module.exports = {
                     return callBack(null, results);
                 }
             )
-        } else if (process.env.SERVER_DB_USE == 2) {
+        } else if (process.env.SERVICE_DB_USE == 2) {
             async function execute_sql(err, result) {
                 try {
                     const pool2 = await oracledb.getConnection();
@@ -722,7 +722,7 @@ module.exports = {
         }
     },
     getProfileDetail: (id, detailchoice, callBack) => {
-        if (process.env.SERVER_DB_USE == 1) {
+        if (process.env.SERVICE_DB_USE == 1) {
             pool.query(
                 `SELECT *
 			   FROM (SELECT 'FOLLOWING' detail,
@@ -864,7 +864,7 @@ module.exports = {
                     return callBack(null, results);
                 }
             )
-        } else if (process.env.SERVER_DB_USE == 2) {
+        } else if (process.env.SERVICE_DB_USE == 2) {
             async function execute_sql(err, result) {
                 try {
                     const pool2 = await oracledb.getConnection();
@@ -1021,7 +1021,7 @@ module.exports = {
         }
     },
     getProfileTop: (statchoice, callBack) => {
-        if (process.env.SERVER_DB_USE == 1) {
+        if (process.env.SERVICE_DB_USE == 1) {
             pool.query(
                 `SELECT *
 					FROM (SELECT 'FOLLOWING' top,
@@ -1139,7 +1139,7 @@ module.exports = {
                     return callBack(null, results);
                 }
             )
-        } else if (process.env.SERVER_DB_USE == 2) {
+        } else if (process.env.SERVICE_DB_USE == 2) {
             async function execute_sql(err, result) {
                 try {
                     const pool2 = await oracledb.getConnection();
@@ -1273,7 +1273,7 @@ module.exports = {
 
     },
     checkPassword: (id, callBack) => {
-        if (process.env.SERVER_DB_USE == 1) {
+        if (process.env.SERVICE_DB_USE == 1) {
             pool.query(
                 `SELECT password
 				   FROM user_account
@@ -1285,7 +1285,7 @@ module.exports = {
                     return callBack(null, results[0]);
                 }
             )
-        } else if (process.env.SERVER_DB_USE == 2) {
+        } else if (process.env.SERVICE_DB_USE == 2) {
             async function execute_sql(err, result) {
                 try {
                     const pool2 = await oracledb.getConnection();
@@ -1313,7 +1313,7 @@ module.exports = {
         }
     },
     updateUserLocal: (data, search_id, callBack) => {
-        if (process.env.SERVER_DB_USE == 1) {
+        if (process.env.SERVICE_DB_USE == 1) {
             pool.query(
                 `UPDATE user_account
 					SET bio = ?,
@@ -1343,7 +1343,7 @@ module.exports = {
                     return callBack(null, results);
                 }
             )
-        } else if (process.env.SERVER_DB_USE == 2) {
+        } else if (process.env.SERVICE_DB_USE == 2) {
             async function execute_sql(err, result) {
                 try {
                     const pool2 = await oracledb.getConnection();
@@ -1387,7 +1387,7 @@ module.exports = {
         }
     },
     updateUserCommon: (data, id, callBack) => {
-        if (process.env.SERVER_DB_USE == 1) {
+        if (process.env.SERVICE_DB_USE == 1) {
             pool.query(
                 `UPDATE user_account
 					SET bio = ?,
@@ -1407,7 +1407,7 @@ module.exports = {
                     return callBack(null, results);
                 }
             )
-        } else if (process.env.SERVER_DB_USE == 2) {
+        } else if (process.env.SERVICE_DB_USE == 2) {
             async function execute_sql(err, result) {
                 try {
                     const pool2 = await oracledb.getConnection();
@@ -1441,7 +1441,7 @@ module.exports = {
         }
     },
     deleteUser: (id, callBack) => {
-        if (process.env.SERVER_DB_USE == 1) {
+        if (process.env.SERVICE_DB_USE == 1) {
             pool.query(
                 `DELETE FROM user_account
 				WHERE id = ? `, [id],
@@ -1452,7 +1452,7 @@ module.exports = {
                     return callBack(null, results);
                 }
             )
-        } else if (process.env.SERVER_DB_USE == 2) {
+        } else if (process.env.SERVICE_DB_USE == 2) {
             async function execute_sql(err, result) {
                 try {
                     const pool2 = await oracledb.getConnection();
@@ -1479,7 +1479,7 @@ module.exports = {
         }
     },
     userLogin: (data, callBack) => {
-        if (process.env.SERVER_DB_USE == 1) {
+        if (process.env.SERVICE_DB_USE == 1) {
             pool.query(
                 `SELECT
 					id,
@@ -1501,7 +1501,7 @@ module.exports = {
                     return callBack(null, results[0]);
                 }
             )
-        } else if (process.env.SERVER_DB_USE == 2) {
+        } else if (process.env.SERVICE_DB_USE == 2) {
             async function execute_sql(err, result) {
                 try {
                     const pool2 = await oracledb.getConnection();
@@ -1539,7 +1539,7 @@ module.exports = {
     },
     updateSigninProvider: (provider_no, id, data, callBack) => {
         if (provider_no == 1) {
-            if (process.env.SERVER_DB_USE == 1) {
+            if (process.env.SERVICE_DB_USE == 1) {
                 pool.query(
                     `UPDATE user_account
 					SET    provider1_id = ?,
@@ -1565,7 +1565,7 @@ module.exports = {
                         return callBack(null, results[0]);
                     }
                 )
-            } else if (process.env.SERVER_DB_USE == 2) {
+            } else if (process.env.SERVICE_DB_USE == 2) {
                 async function execute_sql(err, result) {
                     try {
                         const pool2 = await oracledb.getConnection();
@@ -1606,7 +1606,7 @@ module.exports = {
                 execute_sql();
             }
         } else {
-            if (process.env.SERVER_DB_USE == 1) {
+            if (process.env.SERVICE_DB_USE == 1) {
                 pool.query(
                     `UPDATE user_account
 					SET    provider2_id = ?,
@@ -1632,7 +1632,7 @@ module.exports = {
                         return callBack(null, results[0]);
                     }
                 )
-            } else if (process.env.SERVER_DB_USE == 2) {
+            } else if (process.env.SERVICE_DB_USE == 2) {
                 async function execute_sql(err, result) {
                     try {
                         const pool2 = await oracledb.getConnection();
@@ -1674,7 +1674,7 @@ module.exports = {
         }
     },
     getUserByProviderId: (provider_no, search_id, callBack) => {
-        if (process.env.SERVER_DB_USE == 1) {
+        if (process.env.SERVICE_DB_USE == 1) {
             pool.query(
                 `SELECT
 					u.id,
@@ -1722,7 +1722,7 @@ module.exports = {
                     return callBack(null, results);
                 }
             )
-        } else if (process.env.SERVER_DB_USE == 2) {
+        } else if (process.env.SERVICE_DB_USE == 2) {
             async function execute_sql(err, result) {
                 try {
                     const pool2 = await oracledb.getConnection();
