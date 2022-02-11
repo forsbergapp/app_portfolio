@@ -131,10 +131,11 @@ version 17.3.0 supported
    git clone https://github.com/appportfolio/app_portfolio.git
 
 9. create .env file with these values and suggestions:
+set values in {}
 
 #server variables
-SERVER_HTTPS_KEY                        		={PATH}\server.key
-SERVER_HTTPS_CERT                       		={PATH}\server.crt
+SERVER_HTTPS_KEY                        		={PATH}\{FILENAME}
+SERVER_HTTPS_CERT                       		={PATH}\{FILENAME}
 SERVER_PORT                             		=80
 SERVER_HTTPS_PORT                       		=443
 #What database to use
@@ -160,66 +161,24 @@ SERVER_DB2_POOL_MIN                     		=0
 SERVER_DB2_POOL_MAX                     		=4
 SERVER_DB2_POOL_INCREMENT               		=0
 #Oracle Instant Client path
-SERVER_DB2_LIBDIR                       		={ORACLE_INSTANT_CLIENT_PATH}
-SERVER_DB2_CONFIGDIR                    		={PATH_TNSNAMES_SQLNET_OR_WALLET_FILE_CONTENT}
+SERVER_DB2_LIBDIR								={ORACLE_INSTANT_CLIENT_PATH}
+SERVER_DB2_CONFIGDIR							={PATH_TNSNAMES_SQLNET_OR_WALLET_FILE_CONTENT}
+#other server variables
+SERVER_JSON_LIMIT                          		=10MB
+#service variables
+SERVICE_URL_GPS_PLACE                   		=http://www.geoplugin.net/extras/location.gp
+SERVICE_URL_GPS_IP                      		=http://www.geoplugin.net/json.gp
+SERVICE_AUTH_TOKEN_SECRET               		=23e78y2Basj22ai
+SERVICE_AUTH_TOKEN_EXPIRE_ACCESS        		=1h
+SERVICE_AUTH_TOKEN_EXPIRE_DATA          		=2d
 #Common app variables
-APP_URL							={HOSTNAME} (or localhost)
-APP_HOSTNAME						=https://localhost
-APP_COPYRIGHT						={COPYRIGHT TEXT}
-APP_EMAIL						={HOMEPAGE EMAIL}
-APP_USER_PROVIDER1_ID					={GOOGLE_ID}
-APP_USER_PROVIDER1_NAME					=Google
-APP_USER_PROVIDER1_API_SRC				=https://apis.google.com/js/platform.js?hl=
-APP_USER_PROVIDER2_ID					={FACEBOOK_ID}
-APP_USER_PROVIDER2_NAME					=Facebook
-APP_USER_PROVIDER2_API_VERSION				=v12.0
-#example:https://connect.facebook.net/en_US/sdk.js
-#set locale SDK in client
-APP_USER_PROVIDER2_API_SRC				=https://connect.facebook.net/
-APP_USER_PROVIDER2_API_SRC2				=/sdk.js
-APP_REST_CLIENT_ID					={APP_REST_CLIENT_ID}
-APP_REST_CLIENT_SECRET					={APP_REST_CLIENT_SECRET}
-APP_TOKEN_SECRET                        		={APP_TOKEN_SECRET}
-APP_TOKEN_EXPIRE_ACCESS                 		=1h
-APP_TOKEN_EXPIRE_DATA                   		=2d
-APP_JSON_LIMIT                          		=10MB
-APP_AUTH_TOKEN_URL					='/service/auth/token'
-APP_REST_APP_LOG       				    	='app_log/'
-APP_REST_APP_OBJECT       			 	='app_object/'
-APP_REST_APP_TIMETABLES_PLACE      			='app_timetables_place/'
-APP_REST_APP_TIMETABLES_THEME      			='app_timetables_theme/'
-APP_REST_APP_TIMETABLES_USER_SETTING       		='app_timetables_user_setting/'
-APP_REST_APP_TIMETABLES_USER_SETTING_USER_ACCOUNT_ID    ='app_timetables_user_setting/user_account_id/'
-APP_REST_APP_TIMETABLES_USER_SETTING_PROFILE            ='app_timetables_user_setting/profile/'
-APP_REST_APP_TIMETABLES_USER_SETTING_LIKE      	        ='app_timetables_user_setting_like/'
-APP_REST_APP_TIMETABLES_USER_SETTING_VIEW      	        ='app_timetables_user_setting_view/'
-APP_REST_COUNTRY    			 	    	='country/'
-APP_REST_LANGUAGE_LOCALE    		    		='language/locale/'
-APP_REST_MESSAGE_TRANSLATION   				='message_translation/'
-APP_REST_USER_ACCOUNT       		    		='user_account/'
-APP_REST_USER_ACCOUNT_COMMON    	    		='user_account/common/'
-APP_REST_USER_ACCOUNT_PROFILE_USERNAME  		='user_account/profile/username/'
-APP_REST_USER_ACCOUNT_PROFILE_USERID    		='user_account/profile/id/'
-APP_REST_USER_ACCOUNT_PROFILE_SEARCH    		='user_account/profile/username/search/'
-APP_REST_USER_ACCOUNT_PROFILE_TOP       		='user_account/profile/top/'
-APP_REST_USER_ACCOUNT_PROFILE_DETAIL    		='user_account/profile/detail/'
-APP_REST_USER_ACCOUNT_ACTIVATE       			='user_account/activate/'
-APP_REST_USER_ACCOUNT_LOGIN     	    		='user_account/login'
-APP_REST_USER_ACCOUNT_SIGNUP       	    		='user_account/signup'
-APP_REST_USER_ACCOUNT_PROVIDER          		='user_account/provider/'
-APP_REST_USER_ACCOUNT_LIKE       	    		='user_account_like/'
-APP_REST_USER_ACCOUNT_FOLLOW    	    		='user_account_follow/'
-APP_SERVICE_GEOLOCATION                 		='/service/geolocation'
-APP_SERVICE_GPS_PLACE                   		='/getplace'
-APP_SERVICE_GPS_IP     			        	='/getip'
-APP_SERVICE_MAIL        		        	='/service/mail'
-APP_SERVICE_REPORT                	    		='/service/report'
-APP_SERVICE_WORLDCITIES                 		='/service/worldcities'
-APP_SERVICE_URL_GPS_PLACE               		=http://www.geoplugin.net/extras/location.gp
-APP_SERVICE_URL_GPS_IP                  		=http://www.geoplugin.net/json.gp
-#App1 Timetables variables
-APP1_ID						        =1
-APP1_NAME					        =Timetables
+APP_URL											={HOSTNAME} (or localhost)
+APP_HOSTNAME									=https://localhost
+APP_REST_CLIENT_ID								={APP_REST_CLIENT_ID}
+APP_REST_CLIENT_SECRET							={APP_REST_CLIENT_SECRET}
+#App 1 variables
+APP1_ID						        			=1
+APP1_NAME					        			=Timetables
 #Progressive web app variables in manifest.json
 APP1_PWA_SHORT_NAME                     		=Timetables
 APP1_PWA_NAME                           		=Timetables
@@ -236,10 +195,6 @@ APP1_PWA_ICONS2_SRC                     		=/app_timetables/images/pwa/icon-512x5
 APP1_PWA_ICONS2_TYPE                    		=image/png
 APP1_PWA_ICONS2_SIZES                   		=512x512
 APP1_PWA_SCOPE                          		=/
-#Email variables CLIENT
-APP1_EMAIL_POLICY				        ={EMAIL_POLICY}
-APP1_EMAIL_DISCLAIMER				    	={EMAIL_DISCLAIMER}
-APP1_EMAIL_TERMS					={EMAIL_TERMS}
 #Email variables SERVER
 APP1_EMAIL_HOST                         		={EMAIL_HOST}
 APP1_EMAIL_PORT                         		={EMAIL_PORT}
@@ -250,181 +205,244 @@ APP1_EMAILTYPE_SIGNUP                   		=1
 APP1_EMAILTYPE_UNVERIFIED               		=2
 APP1_EMAILTYPE_RESET_PASSWORD           		=3
 APP1_EMAILTYPE_CHANGE_EMAIL             		=4
+
+10. database parameters
+update scripts/import.sql or after import
+
+table app
+set app url and logo
+
+table app_parameter
+
+COPYRIGHT											={COPYRIGHT TEXT}
+EMAIL												={HOMEPAGE EMAIL}
+USER_PROVIDER1_ID									={GOOGLE_ID}
+USER_PROVIDER1_NAME									=Google
+USER_PROVIDER1_API_SRC								=https://apis.google.com/js/platform.js?hl=
+USER_PROVIDER2_ID									={FACEBOOK_ID}
+USER_PROVIDER2_NAME									=Facebook
+USER_PROVIDER2_API_VERSION							=v12.0
+#example:https://connect.facebook.net/en_US/sdk.js
+#set locale SDK in client
+USER_PROVIDER2_API_SRC								=https://connect.facebook.net/
+USER_PROVIDER2_API_SRC2								=/sdk.js
+SERVICE_AUTH_TOKEN_URL								=/service/auth/token
+APP_REST_CLIENT_ID									={APP_REST_CLIENT_ID}
+APP_REST_CLIENT_SECRET								={APP_REST_CLIENT_SECRET}
+REST_LOG       				    					=app_log/
+REST_APP_OBJECT       			 					=app_object/
+REST_APP_TIMETABLES_PLACE      						=app_timetables_place/
+REST_APP_TIMETABLES_THEME      						=app_timetables_theme/
+REST_APP_TIMETABLES_USER_SETTING       				=app_timetables_user_setting/
+REST_APP_TIMETABLES_USER_SETTING_USER_ACCOUNT_ID    =app_timetables_user_setting/user_account_id/
+REST_APP_TIMETABLES_USER_SETTING_PROFILE            =app_timetables_user_setting/profile/
+REST_APP_TIMETABLES_USER_SETTING_LIKE      	        =app_timetables_user_setting_like/
+REST_APP_TIMETABLES_USER_SETTING_VIEW      	        =app_timetables_user_setting_view/
+REST_COUNTRY    			 	    		=country/
+REST_LANGUAGE_LOCALE    		    		=language/locale/
+REST_MESSAGE_TRANSLATION   					=message_translation/
+REST_USER_ACCOUNT       		    		=user_account/
+REST_USER_ACCOUNT_COMMON    	    		=user_account/common/
+REST_USER_ACCOUNT_PROFILE_USERNAME  		=user_account/profile/username/
+REST_USER_ACCOUNT_PROFILE_USERID    		=user_account/profile/id/
+REST_USER_ACCOUNT_PROFILE_SEARCH    		=user_account/profile/username/search/
+REST_USER_ACCOUNT_PROFILE_TOP       		=user_account/profile/top/
+REST_USER_ACCOUNT_PROFILE_DETAIL    		=user_account/profile/detail/
+REST_USER_ACCOUNT_ACTIVATE       			=user_account/activate/
+REST_USER_ACCOUNT_LOGIN     	    		=user_account/login
+REST_USER_ACCOUNT_SIGNUP       	    		=user_account/signup
+REST_USER_ACCOUNT_PROVIDER          		=user_account/provider/
+REST_USER_ACCOUNT_LIKE       	    		=user_account_like/
+REST_USER_ACCOUNT_FOLLOW    	    		=user_account_follow/
+SERVICE_URL_GPS_PLACE                   	=http://www.geoplugin.net/extras/location.gp
+SERVICE_URL_GPS_IP                      	=http://www.geoplugin.net/json.gp
+SERVICE_GEOLOCATION                 		=/service/geolocation
+SERVICE_GPS_PLACE                   		=/getplace
+SERVICE_GPS_IP     			        		=/getip
+SERVICE_MAIL        		        		=/service/mail
+SERVICE_REPORT                	    		=/service/report
+SERVICE_WORLDCITIES                 		=/service/worldcities
+SERVICE_URL_GPS_PLACE               		=http://www.geoplugin.net/extras/location.gp
+SERVICE_URL_GPS_IP                  		=http://www.geoplugin.net/json.gp
+#App1 Timetables variables
+#Email variables CLIENT
+EMAIL_POLICY				        		={EMAIL_POLICY}
+EMAIL_DISCLAIMER				    		={EMAIL_DISCLAIMER}
+EMAIL_TERMS									={EMAIL_TERMS}
 #Other variables
-APP1_SOCIAL_LINK1_URL				    	={YOUR_SOCIAL_URL1} or empty
-APP1_SOCIAL_LINK2_URL				    	={YOUR_SOCIAL_URL2} or empty
-APP1_SOCIAL_LINK3_URL				    	={YOUR_SOCIAL_URL3} or empty
-APP1_SOCIAL_LINK4_URL				    	={YOUR_SOCIAL_URL4} or empty
-APP1_SOCIAL_LINK1_NAME				    	={YOUR_SOCIAL_NAME1} or empty
-APP1_SOCIAL_LINK2_NAME				    	={YOUR_SOCIAL_NAME2} or empty
-APP1_SOCIAL_LINK3_NAME				    	={YOUR_SOCIAL_NAME3} or empty
-APP1_SOCIAL_LINK4_NAME				    	={YOUR_SOCIAL_NAME4} or empty
-APP1_INFO_LINK1_URL				        ='/app_timetables/info/privacy_policy.html'
-APP1_INFO_LINK2_URL				        ='/app_timetables/info/disclaimer.html'
-APP1_INFO_LINK3_URL				        ='/app_timetables/info/terms.html'
-APP1_INFO_LINK4_URL				        ='/app_timetables/info/support.html'
-APP1_INFO_LINK5_URL				        ='/app_timetables/info/about.html'
-APP1_INFO_LINK1_NAME				    	='Privacy Policy'
-APP1_INFO_LINK2_NAME				    	='Disclaimer'
-APP1_INFO_LINK3_NAME				    	='Terms'
-APP1_INFO_LINK4_NAME				    	='Support'
-APP1_INFO_LINK5_NAME				    	='About'
-APP1_FILE_IMAGE_HEADER_FOOTER_WIDTH	    		=800
-APP1_FILE_IMAGE_HEADER_FOOTER_HEIGHT			=160
-APP1_FILE_IMAGE_AVATAR_WIDTH				=64
-APP1_FILE_IMAGE_AVATAR_HEIGHT		    		=64
-APP1_FILE_IMAGE_ALLOWED_TYPE1		    		='jpg'
-APP1_FILE_IMAGE_ALLOWED_TYPE2		    		='png'
-APP1_FILE_IMAGE_ALLOWED_TYPE3		    		='gif'
-APP1_FILE_IMAGE_MIME_TYPE			    	='image/jpeg'
-APP1_FILE_IMAGE_MAX_SIZE				=2000000
+SOCIAL_LINK1_URL				    		={YOUR_SOCIAL_URL1} or empty
+SOCIAL_LINK2_URL				    		={YOUR_SOCIAL_URL2} or empty
+SOCIAL_LINK3_URL				    		={YOUR_SOCIAL_URL3} or empty
+SOCIAL_LINK4_URL				    		={YOUR_SOCIAL_URL4} or empty
+SOCIAL_LINK1_NAME				    		={YOUR_SOCIAL_NAME1} or empty
+SOCIAL_LINK2_NAME				    		={YOUR_SOCIAL_NAME2} or empty
+SOCIAL_LINK3_NAME				    		={YOUR_SOCIAL_NAME3} or empty
+SOCIAL_LINK4_NAME				    		={YOUR_SOCIAL_NAME4} or empty
+INFO_LINK1_URL				        		=/app_timetables/info/privacy_policy.html
+INFO_LINK2_URL				        		=/app_timetables/info/disclaimer.html
+INFO_LINK3_URL				        		=/app_timetables/info/terms.html
+INFO_LINK4_URL				        		=/app_timetables/info/support.html
+INFO_LINK5_URL				        		=/app_timetables/info/about.html
+INFO_LINK1_NAME				    			=Privacy Policy
+INFO_LINK2_NAME				    			=Disclaimer
+INFO_LINK3_NAME				    			=Terms
+INFO_LINK4_NAME				    			=Support
+INFO_LINK5_NAME				    			=About
+FILE_IMAGE_HEADER_FOOTER_WIDTH	    		=800
+FILE_IMAGE_HEADER_FOOTER_HEIGHT				=160
+FILE_IMAGE_AVATAR_WIDTH						=64
+FILE_IMAGE_AVATAR_HEIGHT		    		=64
+FILE_IMAGE_ALLOWED_TYPE1		    		=jpg
+FILE_IMAGE_ALLOWED_TYPE2		    		=png
+FILE_IMAGE_ALLOWED_TYPE3		    		=gif
+FILE_IMAGE_MIME_TYPE			    		=image/jpeg
+FILE_IMAGE_MAX_SIZE							=2000000
 #
 #REGIONAL SETTINGS
 #
-APP1_REGIONAL_DEFAULT_CALENDAR_LANG             	='en-us'
-APP1_REGIONAL_DEFAULT_LOCALE_EXT_PREFIX         	='-u'
-APP1_REGIONAL_DEFAULT_LOCALE_EXT_NUMBER_SYSTEM  	='-nu-'
-APP1_REGIONAL_DEFAULT_LOCALE_EXT_CALENDAR       	='-ca-'
+REGIONAL_DEFAULT_CALENDAR_LANG             	=en-us
+REGIONAL_DEFAULT_LOCALE_EXT_PREFIX         	=-u
+REGIONAL_DEFAULT_LOCALE_EXT_NUMBER_SYSTEM  	=-nu-
+REGIONAL_DEFAULT_LOCALE_EXT_CALENDAR       	=-ca-
 #ex '-u-ca-gregory'
-APP1_REGIONAL_DEFAULT_CALENDAR_TYPE_GREG        	='gregory'
-#ex '-nu-latn'
-APP1_REGIONAL_DEFAULT_CALENDAR_NUMBER_SYSTEM    	='latn'
+REGIONAL_DEFAULT_CALENDAR_TYPE_GREG        	=gregory
+#ex -nu-latn
+REGIONAL_DEFAULT_CALENDAR_NUMBER_SYSTEM    	=latn
 #Direction:Left to right
-APP1_REGIONAL_DEFAULT_DIRECTION			        =0
+REGIONAL_DEFAULT_DIRECTION			        =0
 #Second languague:None
-APP1_REGIONAL_DEFAULT_LOCALE_SECOND		        =0
+REGIONAL_DEFAULT_LOCALE_SECOND		        =0
 #Column title: transliterated, translation
-APP1_REGIONAL_DEFAULT_COLTITLE				=1
+REGIONAL_DEFAULT_COLTITLE					=1
 #Arabic script:Sans Kufi
-APP1_REGIONAL_DEFAULT_ARABIC_SCRIPT		        =0
+REGIONAL_DEFAULT_ARABIC_SCRIPT		        =0
 #Calendar type: Gregorian
-APP1_REGIONAL_DEFAULT_CALENDARTYPE			=0
+REGIONAL_DEFAULT_CALENDARTYPE				=0
 #Calendar hijri type: islamic
-APP1_REGIONAL_DEFAULT_CALENDAR_HIJRI_TYPE	    	=0
+REGIONAL_DEFAULT_CALENDAR_HIJRI_TYPE	    =0
 #
 #GPS SETTINGS
 #
 #Maptype:satellite-streets-v11
-APP1_GPS_DEFAULT_MAPTYPE				=5
+GPS_DEFAULT_MAPTYPE							=5
 #Country:... (none)
-APP1_GPS_DEFAULT_COUNTRY				=''
+GPS_DEFAULT_COUNTRY							=
 #City:... (none)
-APP1_GPS_DEFAULT_CITY					=''
+GPS_DEFAULT_CITY							=
 #Default place: Kabba, Makkah
-APP1_GPS_DEFAULT_PLACE_ID      		            	='40002'
+GPS_DEFAULT_PLACE_ID      		            =40002
 #Map variables
-APP1_GPS_DEFAULT_MAP_CONTAINER         		    	='mapid'
-APP1_GPS_DEFAULT_MAP_DEFAULT_ZOOM      		    	=14
-APP1_GPS_DEFAULT_MAP_DEFAULT_ZOOM_CITY 		    	=8
-APP1_GPS_DEFAULT_MAP_DEFAULT_ZOOM_PP   		    	=14
-APP1_GPS_DEFAULT_MAP_STYLE_BASEURL     		    	='mapbox://styles/mapbox/'
-APP1_GPS_DEFAULT_MAP_DEFAULT_STYLE     		    	='satellite-streets-v11'
-APP1_GPS_DEFAULT_MAP_MARKER_DIV_PP     		    	='map_marker_popular_place'
-APP1_GPS_DEFAULT_MAP_MARKER_DIV_CITY   		    	='map_marker_city'
-APP1_GPS_DEFAULT_MAP_MARKER_DIV_GPS    		    	='map_marker_gps'
+GPS_DEFAULT_MAP_CONTAINER         		    =mapid
+GPS_DEFAULT_MAP_DEFAULT_ZOOM      		    =14
+GPS_DEFAULT_MAP_DEFAULT_ZOOM_CITY 		    =8
+GPS_DEFAULT_MAP_DEFAULT_ZOOM_PP   		    =14
+GPS_DEFAULT_MAP_STYLE_BASEURL     		    =mapbox://styles/mapbox/
+GPS_DEFAULT_MAP_DEFAULT_STYLE     		    =satellite-streets-v11
+GPS_DEFAULT_MAP_MARKER_DIV_PP     		    =map_marker_popular_place
+GPS_DEFAULT_MAP_MARKER_DIV_CITY   		    =map_marker_city
+GPS_DEFAULT_MAP_MARKER_DIV_GPS    		    =map_marker_gps
 #Access token Mapbox
-APP1_GPS_MAP_ACCESS_TOKEN				={MAPBOX_ID}
+GPS_MAP_ACCESS_TOKEN						={MAPBOX_ID}
 #Qibbla Kabba, Makkah
-APP1_GPS_MAP_QIBBLA_TITLE			        ='Kaaba, Makkah'
-APP1_GPS_MAP_QIBBLA_TEXT_SIZE		            	=14
-APP1_GPS_MAP_QIBBLA_LAT                         	='21.4226'
-APP1_GPS_MAP_QIBBLA_LONG                        	='39.8261'
-APP1_GPS_MAP_QIBBLA_COLOR                       	='#a49775'
-APP1_GPS_MAP_QIBBLA_WIDTH                       	=4
-APP1_GPS_MAP_QIBBLA_OPACITY                     	=1
+GPS_MAP_QIBBLA_TITLE			        	=Kaaba, Makkah
+GPS_MAP_QIBBLA_TEXT_SIZE		            =14
+GPS_MAP_QIBBLA_LAT                         	=21.4226
+GPS_MAP_QIBBLA_LONG                        	=39.8261
+GPS_MAP_QIBBLA_COLOR                       	=#a49775
+GPS_MAP_QIBBLA_WIDTH                       	=4
+GPS_MAP_QIBBLA_OPACITY                     	=1
 #Qibbla old Great temple, Petra, Jordan
-APP1_GPS_MAP_QIBBLA_OLD_TITLE		            	='Petra, jordan'
-APP1_GPS_MAP_QIBBLA_OLD_TEXT_SIZE	            	=14
-APP1_GPS_MAP_QIBBLA_OLD_LAT                     	='30.3289'
-APP1_GPS_MAP_QIBBLA_OLD_LONG                    	='35.4423'
-APP1_GPS_MAP_QIBBLA_OLD_COLOR                   	='#404040'
-APP1_GPS_MAP_QIBBLA_OLD_WIDTH                   	=4
-APP1_GPS_MAP_QIBBLA_OLD_OPACITY                 	=0.4
-APP1_GPS_MAP_FLYTO					=1
-APP1_GPS_MAP_JUMPTO					=0
-APP1_GPS_MAP_POPUP_OFFSET				=25
+GPS_MAP_QIBBLA_OLD_TITLE		            =Petra, jordan
+GPS_MAP_QIBBLA_OLD_TEXT_SIZE	            =14
+GPS_MAP_QIBBLA_OLD_LAT                     	=30.3289
+GPS_MAP_QIBBLA_OLD_LONG                    	=35.4423
+GPS_MAP_QIBBLA_OLD_COLOR                   	=#404040
+GPS_MAP_QIBBLA_OLD_WIDTH                   	=4
+GPS_MAP_QIBBLA_OLD_OPACITY                 	=0.4
+GPS_MAP_FLYTO								=1
+GPS_MAP_JUMPTO								=0
+GPS_MAP_POPUP_OFFSET						=25
 #
 #DESIGN SETTINGS
 #
-APP1_DESIGN_DEFAULT_THEME_DAY                   	=10003
-APP1_DESIGN_DEFAULT_THEME_MONTH                 	=20003
-APP1_DESIGN_DEFAULT_THEME_YEAR                  	=30001
+DESIGN_DEFAULT_THEME_DAY                   	=10003
+DESIGN_DEFAULT_THEME_MONTH                 	=20003
+DESIGN_DEFAULT_THEME_YEAR                  	=30001
 #A4 paper
-APP1_DESIGN_DEFAULT_PAPERSIZE			        =0
+DESIGN_DEFAULT_PAPERSIZE			        =0
 #highlight row: Friday
-APP1_DESIGN_DEFAULT_HIGHLIGHT_ROW		        =1
+DESIGN_DEFAULT_HIGHLIGHT_ROW		        =1
 #Show weekday: true
-APP1_DESIGN_DEFAULT_SHOW_WEEKDAY			=true
+DESIGN_DEFAULT_SHOW_WEEKDAY					=true
 #Column calendartype: true
-APP1_DESIGN_DEFAULT_SHOW_CALENDARTYPE	        	=true
+DESIGN_DEFAULT_SHOW_CALENDARTYPE	        =true
 #Show notes: false
-APP1_DESIGN_DEFAULT_SHOW_NOTES			        =false
+DESIGN_DEFAULT_SHOW_NOTES			        =false
 #Show GPS: false
-APP1_DESIGN_DEFAULT_SHOW_GPS				=false
+DESIGN_DEFAULT_SHOW_GPS						=false
 #Show timezone: false
-APP1_DESIGN_DEFAULT_SHOW_TIMEZONE		        =false
+DESIGN_DEFAULT_SHOW_TIMEZONE		        =false
 #
 #IMAGE SETTINGS
 #
-APP1_DESIGN_DEFAULT_REPORT_HEADER_SRC           	='/app_timetables/images/banner_kaaba.jpg'
-APP1_DESIGN_DEFAULT_REPORT_FOOTER_SRC           	=''
+DESIGN_DEFAULT_REPORT_HEADER_SRC           	=/app_timetables/images/banner_kaaba.jpg
+DESIGN_DEFAULT_REPORT_FOOTER_SRC           	=
 #
 #TEXT SETTINGS
 #
-APP1_DESIGN_DEFAULT_REPORTTITLE1  		        =''
-APP1_DESIGN_DEFAULT_REPORTTITLE2  		        =''
-APP1_DESIGN_DEFAULT_REPORTTITLE3  		        =''
-APP1_DESIGN_DEFAULT_REPORTFOOTER1 		        ='بِسْمِ اللهِ الرَّحْمٰنِ الرَّحِيْمِ'
-APP1_DESIGN_DEFAULT_REPORTFOOTER2 		        ='In the name of God, the Almighty, the Merciful'
-APP1_DESIGN_DEFAULT_REPORTFOOTER3 		        ='Advanced traditional muslim prayer report'
+DESIGN_DEFAULT_REPORTTITLE1  		        =
+DESIGN_DEFAULT_REPORTTITLE2  		        =
+DESIGN_DEFAULT_REPORTTITLE3  		        =
+DESIGN_DEFAULT_REPORTFOOTER1 		        =بِسْمِ اللهِ الرَّحْمٰنِ الرَّحِيْمِ
+DESIGN_DEFAULT_REPORTFOOTER2 		        =In the name of God, the Almighty, the Merciful
+DESIGN_DEFAULT_REPORTFOOTER3 		        =Advanced traditional muslim prayer report
 #
 #PRAYER SETTINGS
 #
 #Method: Muslim World League (MWL)
-APP1_PRAYER_DEFAULT_METHOD				=14
+PRAYER_DEFAULT_METHOD						=14
 #Asr method: Standard
-APP1_PRAYER_DEFAULT_ASR					=0
+PRAYER_DEFAULT_ASR							=0
 #High latitude adj.: Angle/60th of night
-APP1_PRAYER_DEFAULT_HIGHLATITUDE			=1
+PRAYER_DEFAULT_HIGHLATITUDE					=1
 #Timeformat: 12h with no suffix
-APP1_PRAYER_DEFAULT_TIMEFORMAT			        =0
+PRAYER_DEFAULT_TIMEFORMAT			        =0
 #Hijri date adjustment: 0
-APP1_PRAYER_DEFAULT_HIJRI_ADJUSTMENT		    	=2
+PRAYER_DEFAULT_HIJRI_ADJUSTMENT		    	=2
 #Fajr Iqamat: None
-APP1_PRAYER_DEFAULT_IQAMAT_TITLE_FAJR	        	=0
+PRAYER_DEFAULT_IQAMAT_TITLE_FAJR	        =0
 #Dhuhr Iqamat: None
-APP1_PRAYER_DEFAULT_IQAMAT_TITLE_DHUHR	        	=0
+PRAYER_DEFAULT_IQAMAT_TITLE_DHUHR	        =0
 #Asr Iqamat: None
-APP1_PRAYER_DEFAULT_IQAMAT_TITLE_ASR		   	=0
+PRAYER_DEFAULT_IQAMAT_TITLE_ASR		   		=0
 #Maghrib Iqamat: None
-APP1_PRAYER_DEFAULT_IQAMAT_TITLE_MAGHRIB	    	=0
+PRAYER_DEFAULT_IQAMAT_TITLE_MAGHRIB	    	=0
 #Isha Iqamat: None
-APP1_PRAYER_DEFAULT_IQAMAT_TITLE_ISHA	        	=0
+PRAYER_DEFAULT_IQAMAT_TITLE_ISHA	        =0
 #Column imsak: no
-APP1_PRAYER_DEFAULT_SHOW_IMSAK			        =false
+PRAYER_DEFAULT_SHOW_IMSAK			        =false
 #Column sunset: no
-APP1_PRAYER_DEFAULT_SHOW_SUNSET			        =false
+PRAYER_DEFAULT_SHOW_SUNSET			        =false
 #Column midnight: no
-APP1_PRAYER_DEFAULT_SHOW_MIDNIGHT		        =false
+PRAYER_DEFAULT_SHOW_MIDNIGHT		        =false
 #Fajr and Maghrib fasting info
-APP1_PRAYER_DEFAULT_SHOW_FAST_START_END	        	=1
+PRAYER_DEFAULT_SHOW_FAST_START_END	        =1
 #
 #STARTUP SETTINGS
 #
 #1=print, 2=day, 3=month, 4=year, 5=settings, 6=profile
-APP1_STARTUP_DEFAULT_STARTUP_PAGE			=3
+STARTUP_DEFAULT_STARTUP_PAGE				=3
 #
 #QR SETTINGS
 #
-APP1_QR_LOGO_FILE_PATH                          	='/app_timetables/images/logo.png'
-APP1_QR_WIDTH						=128
-APP1_QR_HEIGHT					        =128
-APP1_QR_COLOR_DARK				        ='#2b2b32'
-APP1_QR_COLOR_LIGHT				        ='#ffffff'
-APP1_QR_LOGO_WIDTH				        =32
-APP1_QR_LOGO_HEIGHT				        =32
-APP1_QR_BACKGROUND_COLOR			        ='#ffffff'
-
+QR_LOGO_FILE_PATH                          	=/app_timetables/images/logo.png
+QR_WIDTH									=128
+QR_HEIGHT					        		=128
+QR_COLOR_DARK				        		=#2b2b32
+QR_COLOR_LIGHT				        		=#ffffff
+QR_LOGO_WIDTH				        		=32
+QR_LOGO_HEIGHT				        		=32
+QR_BACKGROUND_COLOR			        		=#ffffff
 
    observe also some global javascript values in 
    js/app_globals.js
