@@ -1,6 +1,6 @@
-const { getApp } = require ("./app.controller");
+const { getParameters } = require ("./app_parameter.controller");
 const router = require("express").Router();
 const { checkToken } = require("../../../auth/auth.controller");
 
-router.get("/",  checkToken, getApp);
+router.get("/:app_id", getParameters);
 module.exports = router;

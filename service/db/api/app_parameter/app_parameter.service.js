@@ -1,21 +1,21 @@
 const {pool, oracledb, oracle_options} = require ("../../config/database");
 
 module.exports = {
-	getApp:(id, callBack) => {
-		if (typeof id=='undefined')
-			id=null;
+	//returns parameters for app_id=0 and given app_id
+	getParameters: (app_id, callBack) => {
 		if (process.env.SERVER_DB_USE==1){
 			pool.query(
 				`SELECT
-						id,
-						app_name,
-						url,
-						logo
-				FROM app
-				WHERE id = COALESCE(?, id)
+						app_id,
+						parameter_type_id,
+						parameter_name,
+						parameter_value,
+						parameter_comment
+				FROM app_parameter
+                WHERE app_id = ?
+					OR app_id = 0
 				ORDER BY 1 `,
-				[id,
-				 id],
+				[app_id],
 				(error, results, fields) => {
 					if (error){
 						return callBack(error);
@@ -30,18 +30,18 @@ module.exports = {
 				const pool2 = await oracledb.getConnection();
 				const result = await pool2.execute(
 					`SELECT
-							id "id",
-							app_name "app_name",
-							url "url",
-							logo "logo"
-					FROM app
-					WHERE id= NVL(:id, id)
+                            app_id "app_id",
+                            parameter_type_id "parameter_type_id",
+                            parameter_name "parameter_name",
+                            parameter_value "parameter_value",
+							parameter_comment "parameter_comment"
+                       FROM app_parameter
+                      WHERE app_id = :app_id
+					  OR app_id = 0
 					ORDER BY 1`,
-					{id: id},
+					{app_id: app_id},
 					oracle_options, (err,result) => {
 						if (err) {
-							console.log('err:' + err);
-							console.log('id:' + id);
 							return callBack(err);
 						}
 						else{
