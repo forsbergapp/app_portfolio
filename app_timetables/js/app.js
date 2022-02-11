@@ -505,8 +505,9 @@ async function settings_translate(first=true) {
 async function get_app_globals() {
     var status;
     var json;
-    // first REST API call, no BASIC /BEARER ?
-    await fetch(global_rest_url_base + global_rest_app_globals + 
+    //app parameter variables
+    //returns parameters for given app_id and app_id=0
+    await fetch(global_rest_url_base + global_rest_app_parameter + global_app_id +
                 '?lang_code=' + document.getElementById('setting_select_locale').value, {
                 method: 'GET'
     })
@@ -517,197 +518,329 @@ async function get_app_globals() {
     .then(function(result) {
         if (status === 200) {
             json = JSON.parse(result);
-            //set global values
-            //Common app variables
-            global_app_hostname = json.APP_HOSTNAME;
-            global_app_copyright = json.APP_COPYRIGHT;
-            global_app_user_provider1_id = json.APP_USER_PROVIDER1_ID;
-            global_app_user_provider1_name = json.APP_USER_PROVIDER1_NAME;
-            global_app_user_provider1_api_src = json.APP_USER_PROVIDER1_API_SRC;
-            global_app_user_provider2_id = json.APP_USER_PROVIDER2_ID;
-            global_app_user_provider2_name = json.APP_USER_PROVIDER2_NAME;
-            global_app_user_provider2_api_version = json.APP_USER_PROVIDER2_API_VERSION;
-            global_app_user_provider2_api_src = json.APP_USER_PROVIDER2_API_SRC;
-            global_app_user_provider2_api_src2 = json.APP_USER_PROVIDER2_API_SRC2;
-            //REST
-            global_app_rest_client_id = json.APP_REST_CLIENT_ID;
-            global_app_rest_client_secret = json.APP_REST_CLIENT_SECRET;
-            //authorization
-            global_auth_token_url = global_host_server_url + json.APP_AUTH_TOKEN_URL;
-            //REST API
-            global_rest_app_log = json.APP_REST_APP_LOG;
-            global_rest_app_object = json.APP_REST_APP_OBJECT;
-            global_rest_app_timetables_user_setting = json.APP_REST_APP_TIMETABLES_USER_SETTING;
-            global_rest_app_timetables_user_setting_user_account_id = json.APP_REST_APP_TIMETABLES_USER_SETTING_USER_ACCOUNT_ID;
-            global_rest_app_timetables_user_setting_profile = json.APP_REST_APP_TIMETABLES_USER_SETTING_PROFILE;
-            global_rest_app_timetables_user_setting_like = json.APP_REST_APP_TIMETABLES_USER_SETTING_LIKE;
-            global_rest_app_timetables_user_setting_view = json.APP_REST_APP_TIMETABLES_USER_SETTING_VIEW;
-            global_rest_country = json.APP_REST_COUNTRY,
-			global_rest_language_locale = json.APP_REST_LANGUAGE_LOCALE,
-            global_rest_message_translation = json.APP_REST_MESSAGE_TRANSLATION;
-            global_rest_user_account = json.APP_REST_USER_ACCOUNT;
-            global_rest_user_account_common = json.APP_REST_USER_ACCOUNT_COMMON;
-            global_rest_user_account_profile_username = json.APP_REST_USER_ACCOUNT_PROFILE_USERNAME;
-            global_rest_user_account_profile_userid = json.APP_REST_USER_ACCOUNT_PROFILE_USERID;
-            global_rest_user_account_profile_search = json.APP_REST_USER_ACCOUNT_PROFILE_SEARCH;
-            global_rest_user_account_profile_top = json.APP_REST_USER_ACCOUNT_PROFILE_TOP;
-            global_rest_user_account_profile_detail = json.APP_REST_USER_ACCOUNT_PROFILE_DETAIL;
-            global_rest_user_account_activate = json.APP_REST_USER_ACCOUNT_ACTIVATE;
-            global_rest_user_account_login = json.APP_REST_USER_ACCOUNT_LOGIN;
-            global_rest_user_account_signup = json.APP_REST_USER_ACCOUNT_SIGNUP;
-            global_rest_user_account_provider = json.APP_REST_USER_ACCOUNT_PROVIDER;
-            global_rest_user_account_like = json.APP_REST_USER_ACCOUNT_LIKE;
-            global_rest_user_account_follow = json.APP_REST_USER_ACCOUNT_FOLLOW;
-            //services
-            //geolocation
-            global_service_geolocation = global_host_server_url + json.APP_SERVICE_GEOLOCATION;
-            global_service_gps_place = global_service_geolocation + json.APP_SERVICE_GPS_PLACE;
-            global_service_gps_ip = global_service_geolocation + json.APP_SERVICE_GPS_IP;
-            //report
-            global_service_report = global_host_server_url + json.APP_SERVICE_REPORT;
-            //worldcities
-            global_service_worldcities = global_host_server_url + json.APP_SERVICE_WORLDCITIES;
-            //Application variables
-            global_app_id = json.APP1_ID;
-            global_app_name = json.APP1_NAME;
-            global_app_email_policy = json.APP1_EMAIL_POLICY;
-            global_app_email_disclaimer = json.APP1_EMAIL_DISCLAIMER;
-            global_app_email_terms = json.APP1_EMAIL_TERMS;
-            global_app_social_link1_url = json.APP1_SOCIAL_LINK1_URL;
-            global_app_social_link2_url = json.APP1_SOCIAL_LINK2_URL;
-            global_app_social_link3_url = json.APP1_SOCIAL_LINK3_URL;
-            global_app_social_link4_url = json.APP1_SOCIAL_LINK4_URL;
-            global_app_social_link1_name = json.APP1_SOCIAL_LINK1_NAME;
-            global_app_social_link2_name = json.APP1_SOCIAL_LINK2_NAME;
-            global_app_social_link3_name = json.APP1_SOCIAL_LINK3_NAME;
-            global_app_social_link4_name = json.APP1_SOCIAL_LINK4_NAME;
-            //info variables			
-            global_info_link1_url = json.APP1_INFO_LINK1_URL;
-            global_info_link2_url = json.APP1_INFO_LINK2_URL;
-            global_info_link3_url = json.APP1_INFO_LINK3_URL;
-            global_info_link4_url = json.APP1_INFO_LINK4_URL;
-            global_info_link5_url = json.APP1_INFO_LINK5_URL;
-            global_info_link1_name = json.APP1_INFO_LINK1_NAME;
-            global_info_link2_name = json.APP1_INFO_LINK2_NAME;
-            global_info_link3_name = json.APP1_INFO_LINK3_NAME;
-            global_info_link4_name = json.APP1_INFO_LINK4_NAME;
-            global_info_link5_name = json.APP1_INFO_LINK5_NAME;
-            //files
-            global_file_image_header_footer_width = json.APP1_FILE_IMAGE_HEADER_FOOTER_WIDTH;
-            global_file_image_header_footer_height = json.APP1_FILE_IMAGE_HEADER_FOOTER_HEIGHT;
-            global_file_image_avatar_width = json.APP1_FILE_IMAGE_AVATAR_WIDTH;
-            global_file_image_avatar_height = json.APP1_FILE_IMAGE_AVATAR_HEIGHT;
-            global_file_image_allowed_type1 = json.APP1_FILE_IMAGE_ALLOWED_TYPE1;
-            global_file_image_allowed_type2 = json.APP1_FILE_IMAGE_ALLOWED_TYPE2;
-            global_file_image_allowed_type3 = json.APP1_FILE_IMAGE_ALLOWED_TYPE3;
-            global_file_image_mime_type = json.APP1_FILE_IMAGE_MIME_TYPE;
-            global_file_image_max_size = json.APP1_FILE_IMAGE_MAX_SIZE;
-            //Regional settings
-            global_def_calendar_lang = json.APP1_REGIONAL_DEFAULT_CALENDAR_LANG;
-            global_def_locale_ext_prefix = json.APP1_REGIONAL_DEFAULT_LOCALE_EXT_PREFIX;
-            global_def_locale_ext_number_system = json.APP1_REGIONAL_DEFAULT_LOCALE_EXT_NUMBER_SYSTEM;
-            global_def_locale_ext_calendar = json.APP1_REGIONAL_DEFAULT_LOCALE_EXT_CALENDAR;
-            global_def_calendar_type_greg = json.APP1_REGIONAL_DEFAULT_CALENDAR_TYPE_GREG;
-            global_def_calendar_number_system = json.APP1_REGIONAL_DEFAULT_CALENDAR_NUMBER_SYSTEM;
-            global_default_direction = parseInt(json.APP1_REGIONAL_DEFAULT_DIRECTION);
-            global_default_locale_second = parseInt(json.APP1_REGIONAL_DEFAULT_LOCALE_SECOND);
-            global_default_coltitle = parseInt(json.APP1_REGIONAL_DEFAULT_COLTITLE);
-            global_default_arabic_script = parseInt(json.APP1_REGIONAL_DEFAULT_ARABIC_SCRIPT);
-            global_default_calendartype = parseInt(json.APP1_REGIONAL_DEFAULT_CALENDARTYPE);
-            global_default_calendar_hijri_type = parseInt(json.APP1_REGIONAL_DEFAULT_CALENDAR_HIJRI_TYPE);
-    
-            //GPS settings
-            global_default_maptype = parseInt(json.APP1_GPS_DEFAULT_MAPTYPE);
-            global_default_country = json.APP1_GPS_DEFAULT_COUNTRY;
-            global_default_city = json.APP1_GPS_DEFAULT_CITY;
-            global_default_place_id = json.APP1_GPS_DEFAULT_PLACE_ID;
-            //Map
-            global_map_container = json.APP1_GPS_DEFAULT_MAP_CONTAINER;
-            global_map_default_zoom = parseInt(json.APP1_GPS_DEFAULT_MAP_DEFAULT_ZOOM);
-            global_map_default_zoom_city = parseInt(json.APP1_GPS_DEFAULT_MAP_DEFAULT_ZOOM_CITY);
-            global_map_default_zoom_pp = parseInt(json.APP1_GPS_DEFAULT_MAP_DEFAULT_ZOOM_PP);
-            global_map_style_baseurl = json.APP1_GPS_DEFAULT_MAP_STYLE_BASEURL;
-            global_map_default_style = json.APP1_GPS_DEFAULT_MAP_DEFAULT_STYLE;
-            global_map_marker_div_pp = json.APP1_GPS_DEFAULT_MAP_MARKER_DIV_PP;
-            global_map_marker_div_city = json.APP1_GPS_DEFAULT_MAP_MARKER_DIV_CITY;
-            global_map_marker_div_gps = json.APP1_GPS_DEFAULT_MAP_MARKER_DIV_GPS;
-            global_app_map_access_token = json.APP1_GPS_MAP_ACCESS_TOKEN;
-    
-            //Qibbla
-            global_map_gps_qibbla_title = json.APP1_GPS_MAP_QIBBLA_TITLE;
-            global_map_gps_qibbla_text_size = parseFloat(json.APP1_GPS_MAP_QIBBLA_TEXT_SIZE);
-            global_map_gps_qibbla_lat = parseFloat(json.APP1_GPS_MAP_QIBBLA_LAT);
-            global_map_gps_qibbla_long = parseFloat(json.APP1_GPS_MAP_QIBBLA_LONG);
-            global_map_gps_qibbla_color = json.APP1_GPS_MAP_QIBBLA_COLOR;
-            global_map_gps_qibbla_width = parseFloat(json.APP1_GPS_MAP_QIBBLA_WIDTH);
-            global_map_gps_qibbla_opacity = parseFloat(json.APP1_GPS_MAP_QIBBLA_OPACITY);
-            //Qibbla old
-            global_map_gps_qibbla_old_title = json.APP1_GPS_MAP_QIBBLA_OLD_TITLE;
-            global_map_gps_qibbla_old_text_size = parseFloat(json.APP1_GPS_MAP_QIBBLA_OLD_TEXT_SIZE);
-            global_map_gps_qibbla_old_lat = parseFloat(json.APP1_GPS_MAP_QIBBLA_OLD_LAT);
-            global_map_gps_qibbla_old_long = parseFloat(json.APP1_GPS_MAP_QIBBLA_OLD_LONG);
-            global_map_gps_qibbla_old_color = json.APP1_GPS_MAP_QIBBLA_OLD_COLOR;
-            global_map_gps_qibbla_old_width = parseFloat(json.APP1_GPS_MAP_QIBBLA_OLD_WIDTH);
-            global_map_gps_qibbla_old_opacity = parseFloat(json.APP1_GPS_MAP_QIBBLA_OLD_OPACITY);
-            global_map_flyto = parseInt(json.APP1_GPS_MAP_FLYTO);
-            global_map_jumpto = parseInt(json.APP1_GPS_MAP_JUMPTO);
-            global_map_popup_offset = parseInt(json.APP1_GPS_MAP_POPUP_OFFSET);
-            //Design settings
-            global_default_theme_day = json.APP1_DESIGN_DEFAULT_THEME_DAY;
-            global_default_theme_month = json.APP1_DESIGN_DEFAULT_THEME_MONTH;
-            global_default_theme_year = json.APP1_DESIGN_DEFAULT_THEME_YEAR;
-            global_default_papersize = parseInt(json.APP1_DESIGN_DEFAULT_PAPERSIZE);
-            global_default_highlight_row = parseInt(json.APP1_DESIGN_DEFAULT_HIGHLIGHT_ROW);
-            global_default_show_weekday =  (json.APP1_DESIGN_DEFAULT_SHOW_WEEKDAY=== 'true');
-            global_default_show_calendartype = (json.APP1_DESIGN_DEFAULT_SHOW_CALENDARTYPE=== 'true');
-            global_default_show_notes = (json.APP1_DESIGN_DEFAULT_SHOW_NOTES=== 'true');
-            global_default_show_gps = (json.APP1_DESIGN_DEFAULT_SHOW_GPS=== 'true');
-            global_default_show_timezone = (json.APP1_DESIGN_DEFAULT_SHOW_TIMEZONE=== 'true');
-    
-            //Images settings
-            if (json.APP1_DESIGN_DEFAULT_REPORT_HEADER_SRC != '')
-                global_default_report_header_src = global_host_url + json.APP1_DESIGN_DEFAULT_REPORT_HEADER_SRC;
-            if (json.APP1_DESIGN_DEFAULT_REPORT_FOOTER_SRC != '')
-                global_default_report_footer_src = global_host_url + json.APP1_DESIGN_DEFAULT_REPORT_FOOTER_SRC;
-    
-            global_default_reporttitle1 = json.APP1_DESIGN_DEFAULT_REPORTTITLE1;
-            global_default_reporttitle2 = json.APP1_DESIGN_DEFAULT_REPORTTITLE2;
-            global_default_reporttitle3 = json.APP1_DESIGN_DEFAULT_REPORTTITLE3;
-            global_default_reportfooter1 = json.APP1_DESIGN_DEFAULT_REPORTFOOTER1;
-            global_default_reportfooter2 = json.APP1_DESIGN_DEFAULT_REPORTFOOTER2;
-            global_default_reportfooter3 = json.APP1_DESIGN_DEFAULT_REPORTFOOTER3;
-    
-            //Prayer settings
-            global_default_method = parseInt(json.APP1_PRAYER_DEFAULT_METHOD);
-            global_default_asr = parseInt(json.APP1_PRAYER_DEFAULT_ASR);
-            global_default_highlatitude = parseInt(json.APP1_PRAYER_DEFAULT_HIGHLATITUDE);
-            global_default_timeformat = parseInt(json.APP1_PRAYER_DEFAULT_TIMEFORMAT);
-            global_default_hijri_adjustment = parseInt(json.APP1_PRAYER_DEFAULT_HIJRI_ADJUSTMENT);
-            global_default_iqamat_title_fajr = parseInt(json.APP1_PRAYER_DEFAULT_IQAMAT_TITLE_FAJR);
-            global_default_iqamat_title_dhuhr = parseInt(json.APP1_PRAYER_DEFAULT_IQAMAT_TITLE_DHUHR);
-            global_default_iqamat_title_asr = parseInt(json.APP1_PRAYER_DEFAULT_IQAMAT_TITLE_ASR);
-            global_default_iqamat_title_maghrib = parseInt(json.APP1_PRAYER_DEFAULT_IQAMAT_TITLE_MAGHRIB);
-            global_default_iqamat_title_isha = parseInt(json.APP1_PRAYER_DEFAULT_IQAMAT_TITLE_ISHA);
-            global_default_show_imsak = (json.APP1_PRAYER_DEFAULT_SHOW_IMSAK=== 'true');
-            global_default_show_sunset = (json.APP1_PRAYER_DEFAULT_SHOW_SUNSET=== 'true');
-            global_default_show_midnight = (json.APP1_PRAYER_DEFAULT_SHOW_MIDNIGHT=== 'true');
-            global_default_show_fast_start_end = parseInt(json.APP1_PRAYER_DEFAULT_SHOW_FAST_START_END);
-    
-            //Startup settings
-            global_default_startup_page = parseInt(json.APP1_STARTUP_DEFAULT_STARTUP_PAGE);
-    
-            //QR variables
-            global_qr_logo_file_path = json.APP1_QR_LOGO_FILE_PATH;
-            global_qr_width = parseInt(json.APP1_QR_WIDTH);
-            global_qr_height = parseInt(json.APP1_QR_HEIGHT);
-            global_qr_color_dark = json.APP1_QR_COLOR_DARK;
-            global_qr_color_light = json.APP1_QR_COLOR_LIGHT;
-            global_qr_logo_width = parseInt(json.APP1_QR_LOGO_WIDTH);
-            global_qr_logo_height = parseInt(json.APP1_QR_LOGO_HEIGHT);
-            global_qr_background_color = json.APP1_QR_BACKGROUND_COLOR;
-    
+            for (var i = 0; i < json.data.length; i++) {
+                //variables for app_id=0
+                if (json.data[i].parameter_name=='APP_REST_CLIENT_ID')
+                    global_app_rest_client_id = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='APP_REST_CLIENT_SECRET')
+                    global_app_rest_client_secret = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='SERVICE_AUTH_TOKEN_URL')
+                    global_service_auth_token_url = global_host_server_url + json.data[i].parameter_value;                            
+                if (json.data[i].parameter_name=='COPYRIGHT')
+                    global_app_copyright = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='USER_PROVIDER1_ID')
+                    global_app_user_provider1_id = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='USER_PROVIDER1_NAME')
+                    global_app_user_provider1_name = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='USER_PROVIDER1_API_SRC')
+                    global_app_user_provider1_api_src = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='USER_PROVIDER2_ID')
+                    global_app_user_provider2_id = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='USER_PROVIDER2_NAME')
+                    global_app_user_provider2_name = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='USER_PROVIDER2_API_VERSION')
+                    global_app_user_provider2_api_version = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='USER_PROVIDER2_API_SRC')
+                    global_app_user_provider2_api_src = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='USER_PROVIDER2_API_SRC2')
+                    global_app_user_provider2_api_src2 = json.data[i].parameter_value;
+                //REST
+                if (json.data[i].parameter_name=='REST_APP')
+                    global_rest_app = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='REST_APP_LOG')
+                    global_rest_app_log = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='REST_APP_OBJECT')
+                    global_rest_app_object = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='REST_APP_TIMETABLES_USER_SETTING')
+                    global_rest_app_timetables_user_setting = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='REST_APP_TIMETABLES_USER_SETTING_USER_ACCOUNT_ID')
+                    global_rest_app_timetables_user_setting_user_account_id = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='REST_APP_TIMETABLES_USER_SETTING_PROFILE')
+                    global_rest_app_timetables_user_setting_profile = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='REST_APP_TIMETABLES_USER_SETTING_LIKE')
+                    global_rest_app_timetables_user_setting_like = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='REST_APP_TIMETABLES_USER_SETTING_VIEW')
+                    global_rest_app_timetables_user_setting_view = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='REST_COUNTRY')
+                    global_rest_country = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='REST_LANGUAGE_LOCALE')
+                    global_rest_language_locale = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='REST_MESSAGE_TRANSLATION')
+                    global_rest_message_translation = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='REST_USER_ACCOUNT')
+                    global_rest_user_account = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='REST_USER_ACCOUNT_COMMON')
+                    global_rest_user_account_common = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='REST_USER_ACCOUNT_PROFILE_USERNAME')
+                    global_rest_user_account_profile_username = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='REST_USER_ACCOUNT_PROFILE_USERID')
+                    global_rest_user_account_profile_userid = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='REST_USER_ACCOUNT_PROFILE_SEARCH')
+                    global_rest_user_account_profile_search = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='REST_USER_ACCOUNT_PROFILE_TOP')
+                    global_rest_user_account_profile_top = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='REST_USER_ACCOUNT_PROFILE_DETAIL')
+                    global_rest_user_account_profile_detail = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='REST_USER_ACCOUNT_ACTIVATE')
+                    global_rest_user_account_activate = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='REST_USER_ACCOUNT_LOGIN')
+                    global_rest_user_account_login = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='REST_USER_ACCOUNT_SIGNUP')
+                    global_rest_user_account_signup = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='REST_USER_ACCOUNT_PROVIDER')
+                    global_rest_user_account_provider = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='REST_USER_ACCOUNT_LIKE')
+                    global_rest_user_account_like = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='REST_USER_ACCOUNT_FOLLOW')
+                    global_rest_user_account_follow = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='SERVICE_GEOLOCATION')
+                    global_service_geolocation = global_host_server_url + json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='SERVICE_GPS_PLACE')
+                    global_service_gps_place = global_service_geolocation + json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='SERVICE_GPS_IP')
+                    global_service_gps_ip = global_service_geolocation + json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='SERVICE_REPORT')
+                    global_service_report = global_host_server_url + json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='SERVICE_WORLDCITIES')
+                    global_service_worldcities = global_host_server_url + json.data[i].parameter_value;
+                //App variables registered for this apps app_id
+                if (json.data[i].parameter_name=='EMAIL_POLICY')
+                    global_app_email_policy = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='EMAIL_DISCLAIMER')
+                    global_app_email_disclaimer = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='EMAIL_TERMS')
+                    global_app_email_terms = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='SOCIAL_LINK1_URL')
+                    global_app_social_link1_url = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='SOCIAL_LINK2_URL')
+                    global_app_social_link2_url = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='SOCIAL_LINK3_URL')
+                    global_app_social_link3_url = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='SOCIAL_LINK4_URL')
+                    global_app_social_link4_url = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='SOCIAL_LINK1_NAME')
+                    global_app_social_link1_name = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='SOCIAL_LINK2_NAME')
+                    global_app_social_link2_name = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='SOCIAL_LINK3_NAME')
+                    global_app_social_link3_name = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='SOCIAL_LINK4_NAME')
+                    global_app_social_link4_name = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='INFO_LINK1_URL')
+                    global_info_link1_url = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='INFO_LINK2_URL')
+                    global_info_link2_url = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='INFO_LINK3_URL')
+                    global_info_link3_url = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='INFO_LINK4_URL')
+                    global_info_link4_url = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='INFO_LINK5_URL')
+                    global_info_link5_url = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='INFO_LINK1_NAME')
+                    global_info_link1_name = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='INFO_LINK2_NAME')
+                    global_info_link2_name = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='INFO_LINK3_NAME')
+                    global_info_link3_name = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='INFO_LINK4_NAME')
+                    global_info_link4_name = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='INFO_LINK5_NAME')
+                    global_info_link5_name = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='FILE_IMAGE_HEADER_FOOTER_WIDTH')
+                    global_file_image_header_footer_width = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='FILE_IMAGE_HEADER_FOOTER_HEIGHT')
+                    global_file_image_header_footer_height = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='FILE_IMAGE_AVATAR_WIDTH')
+                    global_file_image_avatar_width = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='FILE_IMAGE_AVATAR_HEIGHT')
+                    global_file_image_avatar_height = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='FILE_IMAGE_ALLOWED_TYPE1')
+                    global_file_image_allowed_type1 = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='FILE_IMAGE_ALLOWED_TYPE2')
+                    global_file_image_allowed_type2 = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='FILE_IMAGE_ALLOWED_TYPE3')
+                    global_file_image_allowed_type3 = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='FILE_IMAGE_MIME_TYPE')
+                    global_file_image_mime_type = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='FILE_IMAGE_MAX_SIZE')
+                    global_file_image_max_size = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='REGIONAL_DEFAULT_CALENDAR_LANG')
+                    global_def_calendar_lang = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='REGIONAL_DEFAULT_LOCALE_EXT_PREFIX')
+                    global_def_locale_ext_prefix = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='REGIONAL_DEFAULT_LOCALE_EXT_NUMBER_SYSTEM')
+                    global_def_locale_ext_number_system = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='REGIONAL_DEFAULT_LOCALE_EXT_CALENDAR')
+                    global_def_locale_ext_calendar = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='REGIONAL_DEFAULT_CALENDAR_TYPE_GREG')
+                    global_def_calendar_type_greg = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='REGIONAL_DEFAULT_CALENDAR_NUMBER_SYSTEM')
+                    global_def_calendar_number_system = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='REGIONAL_DEFAULT_DIRECTION')
+                    global_default_direction = parseInt(json.data[i].parameter_value);
+                if (json.data[i].parameter_name=='REGIONAL_DEFAULT_LOCALE_SECOND')
+                    global_default_locale_second = parseInt(json.data[i].parameter_value);
+                if (json.data[i].parameter_name=='REGIONAL_DEFAULT_COLTITLE')
+                    global_default_coltitle = parseInt(json.data[i].parameter_value);
+                if (json.data[i].parameter_name=='REGIONAL_DEFAULT_ARABIC_SCRIPT')
+                    global_default_arabic_script = parseInt(json.data[i].parameter_value);
+                if (json.data[i].parameter_name=='REGIONAL_DEFAULT_CALENDARTYPE')
+                    global_default_calendartype = parseInt(json.data[i].parameter_value);
+                if (json.data[i].parameter_name=='REGIONAL_DEFAULT_CALENDAR_HIJRI_TYPE')
+                    global_default_calendar_hijri_type = parseInt(json.data[i].parameter_value);
+                if (json.data[i].parameter_name=='GPS_DEFAULT_MAPTYPE')
+                    global_default_maptype = parseInt(json.data[i].parameter_value);
+                if (json.data[i].parameter_name=='GPS_DEFAULT_COUNTRY')
+                    global_default_country = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='GPS_DEFAULT_CITY')
+                    global_default_city = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='GPS_DEFAULT_PLACE_ID')
+                    global_default_place_id = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='GPS_DEFAULT_MAP_CONTAINER')
+                    global_map_container = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='GPS_DEFAULT_MAP_DEFAULT_ZOOM')
+                    global_map_default_zoom = parseInt(json.data[i].parameter_value);
+                if (json.data[i].parameter_name=='GPS_DEFAULT_MAP_DEFAULT_ZOOM_CITY')
+                    global_map_default_zoom_city = parseInt(json.data[i].parameter_value);
+                if (json.data[i].parameter_name=='GPS_DEFAULT_MAP_DEFAULT_ZOOM_PP')
+                    global_map_default_zoom_pp = parseInt(json.data[i].parameter_value);
+                if (json.data[i].parameter_name=='GPS_DEFAULT_MAP_STYLE_BASEURL')
+                    global_map_style_baseurl = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='GPS_DEFAULT_MAP_DEFAULT_STYLE')
+                    global_map_default_style = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='GPS_DEFAULT_MAP_MARKER_DIV_PP')
+                    global_map_marker_div_pp = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='GPS_DEFAULT_MAP_MARKER_DIV_CITY')
+                    global_map_marker_div_city = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='GPS_DEFAULT_MAP_MARKER_DIV_GPS')
+                    global_map_marker_div_gps = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='GPS_MAP_ACCESS_TOKEN')
+                    global_app_map_access_token = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='GPS_MAP_QIBBLA_TITLE')
+                    global_map_gps_qibbla_title = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='GPS_MAP_QIBBLA_TEXT_SIZE')
+                    global_map_gps_qibbla_text_size = parseFloat(json.data[i].parameter_value);
+                if (json.data[i].parameter_name=='GPS_MAP_QIBBLA_LAT')
+                    global_map_gps_qibbla_lat = parseFloat(json.data[i].parameter_value);
+                if (json.data[i].parameter_name=='GPS_MAP_QIBBLA_LONG')
+                    global_map_gps_qibbla_long = parseFloat(json.data[i].parameter_value);
+                if (json.data[i].parameter_name=='GPS_MAP_QIBBLA_COLOR')
+                    global_map_gps_qibbla_color = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='GPS_MAP_QIBBLA_WIDTH')
+                    global_map_gps_qibbla_width = parseFloat(json.data[i].parameter_value);
+                if (json.data[i].parameter_name=='GPS_MAP_QIBBLA_OPACITY')
+                    global_map_gps_qibbla_opacity = parseFloat(json.data[i].parameter_value);
+                if (json.data[i].parameter_name=='GPS_MAP_QIBBLA_OLD_TITLE')
+                    global_map_gps_qibbla_old_title = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='GPS_MAP_QIBBLA_OLD_TEXT_SIZE')
+                    global_map_gps_qibbla_old_text_size = parseFloat(json.data[i].parameter_value);
+                if (json.data[i].parameter_name=='GPS_MAP_QIBBLA_OLD_LAT')
+                    global_map_gps_qibbla_old_lat = parseFloat(json.data[i].parameter_value);
+                if (json.data[i].parameter_name=='GPS_MAP_QIBBLA_OLD_LONG')
+                    global_map_gps_qibbla_old_long = parseFloat(json.data[i].parameter_value);
+                if (json.data[i].parameter_name=='GPS_MAP_QIBBLA_OLD_COLOR')
+                    global_map_gps_qibbla_old_color = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='GPS_MAP_QIBBLA_OLD_WIDTH')
+                    global_map_gps_qibbla_old_width = parseFloat(json.data[i].parameter_value);
+                if (json.data[i].parameter_name=='GPS_MAP_QIBBLA_OLD_OPACITY')
+                    global_map_gps_qibbla_old_opacity = parseFloat(json.data[i].parameter_value);
+                if (json.data[i].parameter_name=='GPS_MAP_FLYTO')
+                    global_map_flyto = parseInt(json.data[i].parameter_value);
+                if (json.data[i].parameter_name=='GPS_MAP_JUMPTO')
+                    global_map_jumpto = parseInt(json.data[i].parameter_value);
+                if (json.data[i].parameter_name=='GPS_MAP_POPUP_OFFSET')
+                    global_map_popup_offset = parseInt(json.data[i].parameter_value);
+                if (json.data[i].parameter_name=='DESIGN_DEFAULT_THEME_DAY')
+                    global_default_theme_day = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='DESIGN_DEFAULT_THEME_MONTH')
+                    global_default_theme_month = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='DESIGN_DEFAULT_THEME_YEAR')
+                    global_default_theme_year = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='DESIGN_DEFAULT_PAPERSIZE')
+                    global_default_papersize = parseInt(json.data[i].parameter_value);
+                if (json.data[i].parameter_name=='DESIGN_DEFAULT_HIGHLIGHT_ROW')
+                    global_default_highlight_row = parseInt(json.data[i].parameter_value);
+                if (json.data[i].parameter_name=='DESIGN_DEFAULT_SHOW_WEEKDAY')
+                    global_default_show_weekday = (json.data[i].parameter_value=== 'true');
+                if (json.data[i].parameter_name=='DESIGN_DEFAULT_SHOW_CALENDARTYPE')
+                    global_default_show_calendartype = (json.data[i].parameter_value=== 'true');
+                if (json.data[i].parameter_name=='DESIGN_DEFAULT_SHOW_NOTES')
+                    global_default_show_notes = (json.data[i].parameter_value=== 'true');
+                if (json.data[i].parameter_name=='DESIGN_DEFAULT_SHOW_GPS')
+                    global_default_show_gps = (json.data[i].parameter_value=== 'true');
+                if (json.data[i].parameter_name=='DESIGN_DEFAULT_SHOW_TIMEZONE')
+                    global_default_show_timezone = (json.data[i].parameter_value=== 'true');
+                if (json.data[i].parameter_name=='DESIGN_DEFAULT_REPORT_HEADER_SRC'){
+                    if (json.data[i].parameter_value!='')
+                        global_default_report_header_src = global_host_url + json.data[i].parameter_value;
+                }                    
+                if (json.data[i].parameter_name=='DESIGN_DEFAULT_REPORT_FOOTER_SRC'){
+                    if (json.data[i].parameter_value!='')
+                        global_default_report_footer_src = global_host_url + json.data[i].parameter_value;
+                }                                    
+                if (json.data[i].parameter_name=='DESIGN_DEFAULT_REPORTTITLE1')
+                    global_default_reporttitle1 = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='DESIGN_DEFAULT_REPORTTITLE2')
+                    global_default_reporttitle2 = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='DESIGN_DEFAULT_REPORTTITLE3')
+                    global_default_reporttitle3 = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='DESIGN_DEFAULT_REPORTFOOTER1')
+                    global_default_reportfooter1 = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='DESIGN_DEFAULT_REPORTFOOTER2')
+                    global_default_reportfooter2 = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='DESIGN_DEFAULT_REPORTFOOTER3')
+                    global_default_reportfooter3 = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='PRAYER_DEFAULT_METHOD')
+                    global_default_method = parseInt(json.data[i].parameter_value);
+                if (json.data[i].parameter_name=='PRAYER_DEFAULT_ASR')
+                    global_default_asr = parseInt(json.data[i].parameter_value);
+                if (json.data[i].parameter_name=='PRAYER_DEFAULT_HIGHLATITUDE')
+                    global_default_highlatitude = parseInt(json.data[i].parameter_value);
+                if (json.data[i].parameter_name=='PRAYER_DEFAULT_TIMEFORMAT')
+                    global_default_timeformat = parseInt(json.data[i].parameter_value);
+                if (json.data[i].parameter_name=='PRAYER_DEFAULT_HIJRI_ADJUSTMENT')
+                    global_default_hijri_adjustment = parseInt(json.data[i].parameter_value);
+                if (json.data[i].parameter_name=='PRAYER_DEFAULT_IQAMAT_TITLE_FAJR')
+                    global_default_iqamat_title_fajr = parseInt(json.data[i].parameter_value);
+                if (json.data[i].parameter_name=='PRAYER_DEFAULT_IQAMAT_TITLE_DHUHR')
+                    global_default_iqamat_title_dhuhr = parseInt(json.data[i].parameter_value);
+                if (json.data[i].parameter_name=='PRAYER_DEFAULT_IQAMAT_TITLE_ASR')
+                    global_default_iqamat_title_asr = parseInt(json.data[i].parameter_value);
+                if (json.data[i].parameter_name=='PRAYER_DEFAULT_IQAMAT_TITLE_MAGHRIB')
+                    global_default_iqamat_title_maghrib = parseInt(json.data[i].parameter_value);
+                if (json.data[i].parameter_name=='PRAYER_DEFAULT_IQAMAT_TITLE_ISHA')
+                    global_default_iqamat_title_isha = parseInt(json.data[i].parameter_value);
+                if (json.data[i].parameter_name=='PRAYER_DEFAULT_SHOW_IMSAK')
+                    global_default_show_imsak = (json.data[i].parameter_value=== 'true');
+                if (json.data[i].parameter_name=='PRAYER_DEFAULT_SHOW_SUNSET')
+                    global_default_show_sunset = (json.data[i].parameter_value=== 'true');
+                if (json.data[i].parameter_name=='PRAYER_DEFAULT_SHOW_MIDNIGHT')
+                    global_default_show_midnight = (json.data[i].parameter_value=== 'true');
+                if (json.data[i].parameter_name=='PRAYER_DEFAULT_SHOW_FAST_START_END')
+                    global_default_show_fast_start_end = parseInt(json.data[i].parameter_value);
+                //startup setting
+                if (json.data[i].parameter_name=='STARTUP_DEFAULT_STARTUP_PAGE')
+                    global_default_startup_page = parseInt(json.data[i].parameter_value);
+                //QR
+                if (json.data[i].parameter_name=='QR_LOGO_FILE_PATH')
+                    global_qr_logo_file_path = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='QR_WIDTH')
+                    global_qr_width = parseInt(json.data[i].parameter_value);
+                if (json.data[i].parameter_name=='QR_HEIGHT')
+                    global_qr_height = parseInt(json.data[i].parameter_value);
+                if (json.data[i].parameter_name=='QR_COLOR_DARK')
+                    global_qr_color_dark = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='QR_COLOR_LIGHT')
+                    global_qr_color_light = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='QR_LOGO_WIDTH')
+                    global_qr_logo_width = parseInt(json.data[i].parameter_value);
+                if (json.data[i].parameter_name=='QR_LOGO_HEIGHT')
+                    global_qr_logo_height = parseInt(json.data[i].parameter_value);
+                if (json.data[i].parameter_name=='QR_BACKGROUND_COLOR')
+                    global_qr_background_color = json.data[i].parameter_value;
+            }
         } else {
-            alert(responseText_get_error('get_app_globals', result));
+            alert(responseText_get_error('get_app_globals parameter', result));
         }
     })
 }
@@ -1386,7 +1519,7 @@ function create_qr(div, url) {
 async function get_token() {
     var status;
     //get token access
-    await fetch(global_auth_token_url + 
+    await fetch(global_service_auth_token_url + 
                 '?app_id=' + global_app_id + 
                 '&app_user_id=' + document.getElementById('setting_data_userid_logged_in').innerHTML +
                 '&lang_code=' + document.getElementById('setting_select_locale').value, {
@@ -3975,16 +4108,20 @@ function show_dialogue(dialogue, file = '') {
                 document.getElementById('dialogue_info').style.visibility = 'visible';
                 document.getElementById('app_copyright').innerHTML = global_app_copyright;
                 //show social links in window_preview_report div
-                document.getElementById('social_link1').innerHTML = '<a href="' + global_app_social_link1_url + '" target="_blank">' + global_app_social_link1_name + '</a>';
-                document.getElementById('social_link2').innerHTML = '<a href="' + global_app_social_link2_url + '" target="_blank">' + global_app_social_link2_name + '</a>';
-                document.getElementById('social_link3').innerHTML = '<a href="' + global_app_social_link3_url + '" target="_blank">' + global_app_social_link3_name + '</a>';
-                document.getElementById('social_link4').innerHTML = '<a href="' + global_app_social_link4_url + '" target="_blank">' + global_app_social_link4_name + '</a>';
+                if (global_app_social_link1_url!=null)
+                    document.getElementById('social_link1').innerHTML = `<a href=${global_app_social_link1_url} target='_blank'>${global_app_social_link1_name}</a>`;
+                if (global_app_social_link2_url!=null)
+                    document.getElementById('social_link2').innerHTML = `<a href=${global_app_social_link2_url} target='_blank'>${global_app_social_link2_name}</a>`;
+                if (global_app_social_link3_url!=null)
+                    document.getElementById('social_link3').innerHTML = `<a href=${global_app_social_link3_url} target='_blank'>${global_app_social_link3_name}</a>`;
+                if (global_app_social_link4_url!=null)
+                    document.getElementById('social_link4').innerHTML = `<a href=${global_app_social_link4_url} target='_blank'>${global_app_social_link4_name}</a>`;
                 // show info in window_info div
-                document.getElementById('info_link1').innerHTML = '<a href="#info1" onclick="document.getElementById(\'window_info\').style.display = \'block\';">' + global_info_link1_name + '</a>';
-                document.getElementById('info_link2').innerHTML = '<a href="#info2" onclick="document.getElementById(\'window_info\').style.display = \'block\';">' + global_info_link2_name + '</a>';
-                document.getElementById('info_link3').innerHTML = '<a href="#info3" onclick="document.getElementById(\'window_info\').style.display = \'block\';">' + global_info_link3_name + '</a>';
-                document.getElementById('info_link4').innerHTML = '<a href="#info4" onclick="document.getElementById(\'window_info\').style.display = \'block\';">' + global_info_link4_name + '</a>';
-                document.getElementById('info_link5').innerHTML = '<a href="#info5" onclick="document.getElementById(\'window_info\').style.display = \'block\';">' + global_info_link5_name + '</a>';
+                document.getElementById('info_link1').innerHTML = `<a href='#info1' onclick='document.getElementById("window_info").style.display = "block";'> ${global_info_link1_name} </a>`;
+                document.getElementById('info_link2').innerHTML = `<a href='#info2' onclick='document.getElementById("window_info").style.display = "block";'> ${global_info_link2_name} </a>`;
+                document.getElementById('info_link3').innerHTML = `<a href='#info3' onclick='document.getElementById("window_info").style.display = "block";'> ${global_info_link3_name} </a>`;
+                document.getElementById('info_link4').innerHTML = `<a href='#info4' onclick='document.getElementById("window_info").style.display = "block";'> ${global_info_link4_name} </a>`;
+                document.getElementById('info_link5').innerHTML = `<a href='#info5' onclick='document.getElementById("window_info").style.display = "block";'> ${global_info_link5_name} </a>`;
                 break;
             }
         case 'VERIFY':
@@ -5156,6 +5293,34 @@ function app_log(app_module, app_module_type, app_module_request, app_user_id) {
 
 async function init_common() {
     await get_token().then(function(){
+        var status;
+        //app variables
+        fetch(global_rest_url_base + global_rest_app +
+            '?id=' + global_app_id + 
+            '&lang_code=' + document.getElementById('setting_select_locale').value, 
+            {
+                method: 'GET',
+                headers: {
+                    'Authorization': 'Bearer ' + global_rest_at
+                }
+        })
+        .then(function(response) {
+            status = response.status;
+            return response.text();
+        })
+        .then(function(result) {
+            if (status === 200) {
+                json = JSON.parse(result);
+                global_app_hostname = json.data[0].url;
+                global_app_name = json.data[0].app_name;
+                set_app_globals_head();
+                set_app_globals_body();
+            }
+            else {
+                alert(responseText_get_error('get_app_globals app', result));
+            }
+        })
+        
         //set current date for report month
         global_currentDate = new Date();
         global_CurrentHijriDate = new Array();
@@ -5310,7 +5475,6 @@ async function app_show(){
 }
 async function init_head(){
 
-        set_app_globals_head();
         /*Google*/
         var tag = document.createElement('script');
         tag.src = global_app_user_provider1_api_src + navigator.language;
@@ -5343,7 +5507,6 @@ function init() {
     dialogue_loading(1);
     get_app_globals().then(function(){
         init_common().then(function(){
-            set_app_globals_body();
             app_load().then(function (){
                 set_default_settings().then(function(){
                     settings_translate(true).then(function(){
