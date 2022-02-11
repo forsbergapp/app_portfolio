@@ -2,6 +2,8 @@
 CREATE TABLE app (
     id        INTEGER NOT NULL,
     app_name  VARCHAR(100) NOT NULL,
+    url       VARCHAR(100),
+    logo      VARCHAR(100),
 	CONSTRAINT app_pk PRIMARY KEY ( id )
 );
 
@@ -172,10 +174,10 @@ CREATE TABLE app_parameter (
     app_id             INTEGER NOT NULL,
     parameter_type_id  VARCHAR(100) NOT NULL,
     parameter_name     VARCHAR(100) NOT NULL,
-    parameter_value    VARCHAR(100) NOT NULL,
+    parameter_value    VARCHAR(100),
+    parameter_comment  VARCHAR(100),
 	CONSTRAINT app_parameter_pk PRIMARY KEY ( app_id,
-	                                                  parameter_name,
-	                                                  parameter_type_id )
+	                                                  parameter_name )
 );
 
 CREATE TABLE app_timetables_place (
@@ -478,7 +480,8 @@ ALTER TABLE message_type ADD CONSTRAINT message_type_message_type_un UNIQUE ( me
 
 
 CREATE TABLE parameter_type (
-    id VARCHAR(100) NOT NULL
+    id VARCHAR(100) NOT NULL,
+    name VARCHAR2(100) NOT NULL
 );
 
 ALTER TABLE parameter_type ADD CONSTRAINT parameter_type_pk PRIMARY KEY ( id );
