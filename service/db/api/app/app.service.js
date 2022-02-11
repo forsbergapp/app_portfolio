@@ -4,7 +4,7 @@ module.exports = {
 	getApp:(id, callBack) => {
 		if (typeof id=='undefined')
 			id=null;
-		if (process.env.SERVER_DB_USE==1){
+		if (process.env.SERVICE_DB_USE==1){
 			pool.query(
 				`SELECT
 						id,
@@ -24,7 +24,7 @@ module.exports = {
 				}
 			);
 		}
-		else if (process.env.SERVER_DB_USE==2){
+		else if (process.env.SERVICE_DB_USE==2){
 			async function execute_sql(err, result){
 				try{
 				const pool2 = await oracledb.getConnection();
@@ -40,8 +40,6 @@ module.exports = {
 					{id: id},
 					oracle_options, (err,result) => {
 						if (err) {
-							console.log('err:' + err);
-							console.log('id:' + id);
 							return callBack(err);
 						}
 						else{

@@ -2,7 +2,7 @@ const {pool, oracledb, oracle_options} = require ("../../config/database");
 
 module.exports = {
 	likeUserSetting: (id, id_like, callBack) => {
-		if (process.env.SERVER_DB_USE == 1) {
+		if (process.env.SERVICE_DB_USE == 1) {
 			pool.query(
 			`INSERT INTO app_timetables_user_setting_like(
 							user_account_id, user_setting_id, date_created)
@@ -18,7 +18,7 @@ module.exports = {
 					return callBack(null, results);
 				}	
 			);
-		}else if (process.env.SERVER_DB_USE==2){
+		}else if (process.env.SERVICE_DB_USE==2){
 			async function execute_sql(err, result){
 				try{
 				const pool2 = await oracledb.getConnection();
@@ -49,7 +49,7 @@ module.exports = {
 		}
 	},
 	unlikeUserSetting: (id, id_unlike, callBack) => {
-		if (process.env.SERVER_DB_USE == 1) {
+		if (process.env.SERVICE_DB_USE == 1) {
 			pool.query(
 			`DELETE FROM app_timetables_user_setting_like
 				WHERE  user_account_id = ?
@@ -65,7 +65,7 @@ module.exports = {
 					return callBack(null, results);
 				}	
 			);
-		}else if (process.env.SERVER_DB_USE==2){
+		}else if (process.env.SERVICE_DB_USE==2){
 			async function execute_sql(err, result){
 				try{
 				const pool2 = await oracledb.getConnection();

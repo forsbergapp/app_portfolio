@@ -73,7 +73,7 @@ function get_app_code (app_id, errorNum, message, code, errno, sqlMessage){
 module.exports = {
     
     userSignup: (req, res) => {
-        const body = req.body;
+        let body = req.body;
         const salt = genSaltSync(10);
         if (typeof body.provider1_id == 'undefined' &&
             typeof body.provider2_id == 'undefined') {
@@ -84,7 +84,7 @@ module.exports = {
             body.password = hashSync(body.password, salt);
         create(body, (err, results) => {
             if (err) {
-                var app_code = get_app_code(req.body.app_id, 
+                var app_code = get_app_code(body.app_id, 
                             err.errorNum, 
                             err.message, 
                             err.code, 
@@ -92,7 +92,7 @@ module.exports = {
                             err.sqlMessage);
                 if (app_code != null){
                     getMessage(app_code, 
-                                req.body.app_id, 
+                                body.app_id, 
                                 req.query.lang_code, (err2,results2)  => {
                                     console.log('err2:' + JSON.stringify(err2));
                                     console.log('results2:' + JSON.stringify(results2));
@@ -107,26 +107,41 @@ module.exports = {
                     );
             }
             else{
-                req.body.user_account_id = results.insertId;
-                req.body.server_remote_addr = req.ip,
-                    req.body.server_user_agent = req.headers["user-agent"],
-                    req.body.server_http_host = req.headers["host"],
-                    req.body.server_http_accept_language = req.headers["accept-language"]
-                createUserSetting(req.body, (err2, results2) => {
+                body.user_account_id = results.insertId;
+                body.server_remote_addr = req.ip,
+                body.server_user_agent = req.headers["user-agent"],
+                body.server_http_host = req.headers["host"],
+                body.server_http_accept_language = req.headers["accept-language"]
+                createUserSetting(body, (err2, results2) => {
                     if (err2) {
                         console.log(err2);
                         return res.status(500).send(
                             err2
                         );
                     }
-                    if (typeof body.provider1_id == 'undefined' &&
-                        typeof body.provider2_id == 'undefined') {
+                    if (typeof req.body.provider1_id == 'undefined' &&
+                        typeof req.body.provider2_id == 'undefined') {
                         //send email for local users only
-                        req.body.toEmail = body.email;
-                        req.body.emailType = process.env.APP1_EMAILTYPE_SIGNUP;
-                        req.body.validationCode = body.validation_code;
-                        req.body.app_user_id = results.insertId;
-                        sendEmail(req, (err3, result3) => {
+                        const emailData = {
+                            app_id : req.body.app_id,
+                            app_user_id : req.body.user_account_id,
+                            emailType : process.env.APP1_SERVICE_EMAILTYPE_SIGNUP,
+                            toEmail : req.body.email,
+                            validationCode : body.validation_code,
+                            user_language:body.user_language,
+                            user_timezone:body.user_timezone,
+                            user_number_system:body.user_number_system,
+                            user_platform:body.user_platform,
+                            server_remote_addr : req.body.server_remote_addr,
+                            server_user_agent : req.body.server_user_agent,
+                            server_http_host : req.body.server_http_host,
+                            server_http_accept_language : req.body.server_http_accept_language,
+                            user_gps_latitude : req.body.gps_lat_text,
+                            user_gps_longitude : req.body.gps_long_text,
+                            protocol : req.protocol,
+                            host : req.get('host')
+                        }
+                        sendEmail(emailData, (err3, result3) => {
                             if (err3) {
                                 console.log(err3);
                                 //return res from userSignup
