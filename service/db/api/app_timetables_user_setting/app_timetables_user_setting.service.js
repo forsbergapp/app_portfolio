@@ -2,7 +2,7 @@ const {pool, oracledb, oracle_options} = require ("../../config/database");
 
 module.exports = {
 	createUserSetting: (data, callBack) => {
-		if (process.env.SERVER_DB_USE == 1) {
+		if (process.env.SERVICE_DB_USE == 1) {
 			pool.query(
 				`INSERT INTO app_timetables_user_setting(
 					description,
@@ -126,7 +126,7 @@ module.exports = {
 					return callBack(null, results);
 				}	
 			);
-		}else if (process.env.SERVER_DB_USE==2){
+		}else if (process.env.SERVICE_DB_USE==2){
 			async function execute_sql(err, result){
 				try{
 				const pool2 = await oracledb.getConnection();
@@ -337,7 +337,7 @@ module.exports = {
 		}
 	},
 	getUserSetting:  (id, callBack) => {
-		if (process.env.SERVER_DB_USE == 1) {
+		if (process.env.SERVICE_DB_USE == 1) {
 			pool.query(
 				`SELECT
 					id,
@@ -405,7 +405,7 @@ module.exports = {
 					return callBack(null, results);
 				}
 			);
-		}else if (process.env.SERVER_DB_USE==2){
+		}else if (process.env.SERVICE_DB_USE==2){
 			async function execute_sql(err, result){
 				try{
 				const pool2 = await oracledb.getConnection();
@@ -490,7 +490,7 @@ module.exports = {
 		}
 	},
 	getUserSettingsByUserId: (id, callBack) => {
-		if (process.env.SERVER_DB_USE == 1) {
+		if (process.env.SERVICE_DB_USE == 1) {
 			pool.query(
 				`SELECT
 					us.id,
@@ -559,7 +559,7 @@ module.exports = {
 				}
 			)
 		}
-		else if (process.env.SERVER_DB_USE==2){
+		else if (process.env.SERVICE_DB_USE==2){
 			async function execute_sql(err, result){
 				try{
 				const pool2 = await oracledb.getConnection();
@@ -645,7 +645,7 @@ module.exports = {
 		}
 	},
 	getProfileUserSettings: (id, id_current_user, callBack) => {
-		if (process.env.SERVER_DB_USE == 1) {
+		if (process.env.SERVICE_DB_USE == 1) {
 			pool.query(
 				`SELECT
 					us.id,
@@ -672,7 +672,7 @@ module.exports = {
 					return callBack(null, results); 
 				}
 			)
-		}else if (process.env.SERVER_DB_USE==2){
+		}else if (process.env.SERVICE_DB_USE==2){
 			async function execute_sql(err, result){
 				try{
 				const pool2 = await oracledb.getConnection();
@@ -716,7 +716,7 @@ module.exports = {
 		}
 	},
 	updateUserSetting: (data, id, callBack) => {
-		if (process.env.SERVER_DB_USE == 1) {
+		if (process.env.SERVICE_DB_USE == 1) {
 			pool.query(
 				`UPDATE app_timetables_user_setting
 					SET description = ?,
@@ -835,7 +835,7 @@ module.exports = {
 					return callBack(null, results); 
 				}
 			)
-		}else if (process.env.SERVER_DB_USE==2){
+		}else if (process.env.SERVICE_DB_USE==2){
 			async function execute_sql(err, result){
 				try{
 				const pool2 = await oracledb.getConnection();
@@ -969,7 +969,7 @@ module.exports = {
 		}
 	},
 	deleteUserSetting: (id, callBack) => {
-		if (process.env.SERVER_DB_USE == 1) {
+		if (process.env.SERVICE_DB_USE == 1) {
 			pool.query(
 				`DELETE FROM app_timetables_user_setting
 				WHERE id = ? `,
@@ -981,7 +981,7 @@ module.exports = {
 					return callBack(null, results); 
 				}
 			)
-		}else if (process.env.SERVER_DB_USE==2){
+		}else if (process.env.SERVICE_DB_USE==2){
 			async function execute_sql(err, result){
 				try{
 				const pool2 = await oracledb.getConnection();
@@ -1010,7 +1010,7 @@ module.exports = {
 		}
 	},
 	deleteUserSettingsByUserId: (id, callBack) => {
-		if (process.env.SERVER_DB_USE == 1) {
+		if (process.env.SERVICE_DB_USE == 1) {
 			pool.query(
 				`DELETE FROM app_timetables_user_setting
 				WHERE user_account_id = ? `,
@@ -1022,7 +1022,7 @@ module.exports = {
 					return callBack(null, results); 
 				}
 			)
-		}else if (process.env.SERVER_DB_USE==2){
+		}else if (process.env.SERVICE_DB_USE==2){
 			async function execute_sql(err, result){
 				try{
 				const pool2 = await oracledb.getConnection();
