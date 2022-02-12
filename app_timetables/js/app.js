@@ -205,75 +205,74 @@ async function settings_translate_report(first=true) {
         //show translation using first or second language
         await fetch(global_rest_url_base + global_rest_app_object + locale +
                 '?app_id=' + global_app_id + 
-                '&lang_code=' + document.getElementById('setting_select_locale').value, {
-        method: 'GET',
-        headers: {
-            'Authorization': 'Bearer ' + global_rest_dt,
-        }
+                '&lang_code=' + document.getElementById('setting_select_locale').value, 
+                {
+                method: 'GET',
+                headers: {
+                    'Authorization': 'Bearer ' + global_rest_dt,
+                }
         })
         .then(function(response) {
-        status = response.status;
-        return response.text();
+            status = response.status;
+            return response.text();
         })
         .then(function(result) {
-        if (status === 200) {
-            json = JSON.parse(result);	
-            for (var i = 0; i < json.data.length; i++){
-                if (first == true){
-                    if (json.data[i].object=='APP_OBJECT_ITEM' && json.data[i].object_name=='REPORT')
-                        first_language[json.data[i].object_item_name.toLowerCase()] = json.data[i].text;
-
-                    //Used by service report
-                    //Regional
-                    if (json.data[i].object=='APP_OBJECT_ITEM' && json.data[i].object_name=='SETTING_NAV_REGIONAL' && 
-                        json.data[i].object_item_name=='SETTING_LABEL_REPORT_TIMEZONE')
-                        document.getElementById('setting_label_report_timezone').innerHTML = json.data[i].text;
-                    //GPS
-                    if (json.data[i].object=='APP_OBJECT_ITEM' && json.data[i].object_name=='SETTING_NAV_GPS' && 
-                        json.data[i].object_item_name=='SETTING_LABEL_LAT')
-                        document.getElementById('setting_label_lat').innerHTML = json.data[i].text;
-                    if (json.data[i].object=='APP_OBJECT_ITEM' && json.data[i].object_name=='SETTING_NAV_GPS' && 
-                        json.data[i].object_item_name=='SETTING_LABEL_LONG')
-                        document.getElementById('setting_label_long').innerHTML = json.data[i].text;
-                }
-                else{
-                    for (var i = 0; i < json.data.length; i++){	
+            if (status === 200) {
+                json = JSON.parse(result);	
+                for (var i = 0; i < json.data.length; i++){
+                    if (first == true){
                         if (json.data[i].object=='APP_OBJECT_ITEM' && json.data[i].object_name=='REPORT')
-                            second_language[json.data[i].object_item_name.toLowerCase()] = json.data[i].text;						
-                    }
-                }
-            }          
-            //if translating first language and second language is not used
-            if (first == true &&
-                document.getElementById('setting_select_report_locale_second').value ==0){
-                second_language.timetable_title = '';
-                second_language.coltitle_day = '';
-                second_language.coltitle_weekday = '';
-                second_language.coltitle_weekday_tr = '';
-                second_language.coltitle_caltype_hijri = '';
-                second_language.coltitle_caltype_gregorian = '';
-                second_language.coltitle_imsak = '';
-                second_language.coltitle_fajr = '';
-                second_language.coltitle_fajr_iqamat = '';
-                second_language.coltitle_sunrise = '';
-                second_language.coltitle_dhuhr = '';
-                second_language.coltitle_dhuhr_iqamat = '';
-                second_language.coltitle_asr = '';
-                second_language.coltitle_asr_iqamat = '';
-                second_language.coltitle_sunset = '';
-                second_language.coltitle_maghrib = '';
-                second_language.coltitle_maghrib_iqamat = '';
-                second_language.coltitle_isha = '';
-                second_language.coltitle_isha_iqamat = '';
-                second_language.coltitle_midnight = '';
-                second_language.coltitle_notes = '';
-            }
-        } else {
-            if (status == 401)
-                user_logoff();
-        }
-        });
+                            first_language[json.data[i].object_item_name.toLowerCase()] = json.data[i].text;
 
+                        //Used by service report
+                        //Regional
+                        if (json.data[i].object=='APP_OBJECT_ITEM' && json.data[i].object_name=='SETTING_NAV_REGIONAL' && 
+                            json.data[i].object_item_name=='SETTING_LABEL_REPORT_TIMEZONE')
+                            document.getElementById('setting_label_report_timezone').innerHTML = json.data[i].text;
+                        //GPS
+                        if (json.data[i].object=='APP_OBJECT_ITEM' && json.data[i].object_name=='SETTING_NAV_GPS' && 
+                            json.data[i].object_item_name=='SETTING_LABEL_LAT')
+                            document.getElementById('setting_label_lat').innerHTML = json.data[i].text;
+                        if (json.data[i].object=='APP_OBJECT_ITEM' && json.data[i].object_name=='SETTING_NAV_GPS' && 
+                            json.data[i].object_item_name=='SETTING_LABEL_LONG')
+                            document.getElementById('setting_label_long').innerHTML = json.data[i].text;
+                    }
+                    else{
+                        for (var i = 0; i < json.data.length; i++){	
+                            if (json.data[i].object=='APP_OBJECT_ITEM' && json.data[i].object_name=='REPORT')
+                                second_language[json.data[i].object_item_name.toLowerCase()] = json.data[i].text;						
+                        }
+                    }
+                }          
+                //if translating first language and second language is not used
+                if (first == true &&
+                    document.getElementById('setting_select_report_locale_second').value ==0){
+                    second_language.timetable_title = '';
+                    second_language.coltitle_day = '';
+                    second_language.coltitle_weekday = '';
+                    second_language.coltitle_weekday_tr = '';
+                    second_language.coltitle_caltype_hijri = '';
+                    second_language.coltitle_caltype_gregorian = '';
+                    second_language.coltitle_imsak = '';
+                    second_language.coltitle_fajr = '';
+                    second_language.coltitle_fajr_iqamat = '';
+                    second_language.coltitle_sunrise = '';
+                    second_language.coltitle_dhuhr = '';
+                    second_language.coltitle_dhuhr_iqamat = '';
+                    second_language.coltitle_asr = '';
+                    second_language.coltitle_asr_iqamat = '';
+                    second_language.coltitle_sunset = '';
+                    second_language.coltitle_maghrib = '';
+                    second_language.coltitle_maghrib_iqamat = '';
+                    second_language.coltitle_isha = '';
+                    second_language.coltitle_isha_iqamat = '';
+                    second_language.coltitle_midnight = '';
+                    second_language.coltitle_notes = '';
+                }
+            } else {
+                exception('settings_translate_report', status, result);
+            }
+        });
     }
 	return null;
 }
@@ -452,10 +451,14 @@ async function settings_translate(first=true) {
                                     select_second_locale.innerHTML = select_second_locale.options[0].outerHTML + html;
                                     select_second_locale.value = current_second_locale;
                                 }
+                                else
+                                    exception('settings_translate', status, result);
                             }).catch(function(error) {
                                 alert(responseText_get_error('settings_translate locale', error));
                             })
                         }
+                        else
+                            exception('settings_translate', status, result);
                     }).catch(function(error) {
                         alert(responseText_get_error('settings_translate country', error));
                     })
@@ -493,8 +496,7 @@ async function settings_translate(first=true) {
                 update_ui(1);
             } 
             else {
-                if (status == 401)
-                    user_logoff();
+                exception('settings_translate', status, result);
             }   
         })
     }
@@ -1119,10 +1121,7 @@ async function get_place_from_gps(latitude, longitude) {
                 json.geoplugin_region + ', ' +
                 json.geoplugin_countryCode;
         } else {
-            if (status == 401)
-                user_logoff();
-            else
-                alert(responseText_get_error('get_place_from_gps', result));
+            exception('get_place_from_gps', status, result);
         }
     })
 }
@@ -1157,8 +1156,7 @@ async function get_gps_from_ip() {
             document.getElementById('setting_input_long').value = json.geoplugin_longitude;
 
         } else {
-            if (status == 401)
-                user_logoff();
+            exception('get_gps_from_ip', status, result);
         }
     })
 }
@@ -2164,6 +2162,12 @@ function zoom_paper(zoomvalue = '') {
     }
     return null;
 }
+function exception(function_name, status, message){
+    if (status == 401)
+        user_logoff();
+    else
+        alert(responseText_get_error(function_name, message));
+}
 
 function user_verify_check_input(item, nextField) {
 
@@ -2209,9 +2213,9 @@ function user_verify_check_input(item, nextField) {
                     status = response.status;
                     return response.text();
                 })
-                .then(function(response) {
+                .then(function(result) {
                     if (status == 200) {
-                        json = JSON.parse(response);
+                        json = JSON.parse(result);
                         spinner('SIGNUP', 'hidden');
                         if (json.items[0].affectedRows == 1) {
                             //if not logged in, means here user is signing up
@@ -2251,10 +2255,7 @@ function user_verify_check_input(item, nextField) {
                         }
                     } else {
                         spinner('SIGNUP', 'hidden');
-                        if (status == 401)
-                            user_logoff();
-                        else
-                            alert(responseText_get_error('user_verify_check_input', response));
+                        exception('user_verify_check_input', status, result);
                     }
                 })
                 .catch(function(error) {
@@ -2315,9 +2316,9 @@ function user_edit() {
                 status = response.status;
                 return response.text();
             })
-            .then(function(response) {
+            .then(function(result) {
                 if (status == 200) {
-                    json = JSON.parse(response);
+                    json = JSON.parse(result);
                     spinner('EDIT', 'hidden');
                     if (user_id.innerHTML == json.id) {
                         document.getElementById('user_edit_local').style.display = 'none';
@@ -2379,10 +2380,7 @@ function user_edit() {
                     }
                 } else {
                     spinner('EDIT', 'hidden');
-                    if (status == 401)
-                        user_logoff();
-                    else
-                        alert(responseText_get_error('user_edit', response));
+                    exception('user_edit', status, result);
                 }
             })
             .catch(function(error) {
@@ -2481,9 +2479,9 @@ function user_update() {
             status = response.status;
             return response.text();
         })
-        .then(function(response) {
+        .then(function(result) {
             if (status == 200) {
-                json = JSON.parse(response);
+                json = JSON.parse(result);
                 //user_id.innerHTML = json.id;
                 document.getElementById('user_edit').style.display = "none";
                 document.getElementById('user_settings').style.display = "block";
@@ -2518,10 +2516,7 @@ function user_update() {
                 spinner('UPDATE', 'hidden');
             } else {
                 spinner('UPDATE', 'hidden');
-                if (status == 401)
-                    user_logoff();
-                else
-                    alert(responseText_get_error('user_update', response));
+                exception('user_update', status, result);
             }
         })
         .catch(function(error) {
@@ -2579,16 +2574,12 @@ function user_delete(choice=null) {
                     status = response.status;
                     return response.text();
                 })
-                .then(function(response) {
+                .then(function(result) {
                     spinner('DELETE_ACCOUNT', 'hidden');
                     if (status == 200)
                         user_logoff();
-                    else {
-                        if (status == 401)
-                            user_logoff();
-                        else
-                            alert(responseText_get_error('user_delete', response));
-                    }
+                    else
+                        exception('user_delete', status, result);
                 })
                 .catch(function(error) {
                     spinner('DELETE_ACCOUNT', 'hidden');
@@ -2647,9 +2638,9 @@ function user_login() {
             status = response.status;
             return response.text();
         })
-        .then(function(json) {
+        .then(function(result) {
             if (status == 200) {
-                json = JSON.parse(json);
+                json = JSON.parse(result);
                 var result_id = json.items[0].id;
                 var result_username = json.items[0].username;
                 var result_password = password.value;
@@ -2696,10 +2687,7 @@ function user_login() {
                 });
             } else {
                 spinner('LOGIN', 'hidden');
-                if (status == 401)
-                    user_logoff();
-                else
-                    alert(responseText_get_error('user_login', json));
+                exception('user_login', status, result);
             }
         })
         .catch(function(error) {
@@ -2727,9 +2715,9 @@ async function user_setting_get(user_setting_id) {
             status = response.status;
             return response.text();
         })
-        .then(function(response) {
+        .then(function(result) {
             if (status == 200) {
-                json = JSON.parse(response);
+                json = JSON.parse(result);
                 select_empty(select);
                 //fill select with this one record
                 let option_html='';
@@ -2798,10 +2786,7 @@ async function user_setting_get(user_setting_id) {
                     `<option value=${json.regional_second_language_locale}>${json.regional_second_language_locale}</option`;
                 }
             } else {
-                if (status == 401)
-                    user_logoff();
-                else
-                    alert(responseText_get_error('user_setting_get', response));
+                exception('user_setting_get', status, result);
             }
         })
         .catch(function(error) {
@@ -2827,9 +2812,9 @@ async function user_settings_get(userid, show_ui = 1, user_setting_id = '') {
             status = response.status;
             return response.text();
         })
-        .then(function(response) {
+        .then(function(result) {
             if (status == 200) {
-                json = JSON.parse(response);
+                json = JSON.parse(result);
                 select_empty(select);
                 //fill select
                 let option_html = '';
@@ -2905,10 +2890,7 @@ async function user_settings_get(userid, show_ui = 1, user_setting_id = '') {
                     document.getElementById('user_settings').style.display = "block";
                 }
             } else {
-                if (status == 401)
-                    user_logoff();
-                else
-                    alert(responseText_get_error('user_settings_get', response));
+                exception('user_settings_get', status, result);
             }
         })
         .catch(function(error) {
@@ -3119,19 +3101,15 @@ function user_signup() {
             status = response.status;
             return response.text();
         })
-        .then(function(json) {
+        .then(function(result) {
             if (status == 200) {
-                json = JSON.parse(json);
+                json = JSON.parse(result);
                 document.getElementById('setting_data_userid_logged_in').innerHTML = json.id;
                 spinner('SIGNUP', 'hidden');
                 show_dialogue('VERIFY');
             } else {
                 spinner('SIGNUP', 'hidden');
-                if (status == 401)
-                    user_logoff();
-                else {
-                    alert(responseText_get_error('user_signup', json));
-                }
+                exception('user_signup', status, result);
             }
         })
         .catch(function(error) {
@@ -3465,17 +3443,14 @@ function user_settings_save() {
             status = response.status;
             return response.text();
         })
-        .then(function(response) {
+        .then(function(result) {
             if (status == 200) {
                 //update user settings select with saved data
                 set_settings_select();
                 spinner('SAVE', 'hidden');
             } else {
                 spinner('SAVE', 'hidden');
-                if (status == 401)
-                    user_logoff();
-                else
-                    alert(responseText_get_error('user_settings_save', response));
+                exception('user_settings_save', status, result);
             }
         })
         .catch(function(error) {
@@ -3571,9 +3546,9 @@ function user_settings_add(signup = false) {
             status = response.status;
             return response.text();
         })
-        .then(function(response) {
+        .then(function(result) {
             if (status === 200) {
-                var json = JSON.parse(response);
+                var json = JSON.parse(result);
                 //update user settings select with saved data
                 //save current settings to new option with 
                 //returned user_setting_id + user_account_id (then call set_settings_select)
@@ -3592,10 +3567,7 @@ function user_settings_add(signup = false) {
                 spinner('ADD', 'hidden');
             } else {
                 spinner('ADD', 'hidden');
-                if (status == 401)
-                    user_logoff();
-                else
-                    alert(responseText_get_error('user_settings_add', response));
+                exception('user_settings_add', status, result);
             }
         })
         .catch(function(error) {
@@ -3624,7 +3596,7 @@ function user_settings_delete() {
                 status = response.status;
                 return response.text();
             })
-            .then(function(response) {
+            .then(function(result) {
                 if (status == 200) {
                     var select = document.getElementById("setting_select_user_setting");
                     //delete current option
@@ -3641,10 +3613,7 @@ function user_settings_delete() {
                     
                 } else {
                     spinner('DELETE', 'hidden');
-                    if (status == 401)
-                        user_logoff();
-                    else
-                        alert(responseText_get_error('user_settings_delete', response));
+                    exception('user_settings_delete', status, result);
                 }
             })
             .catch(function(error) {
@@ -3962,9 +3931,9 @@ function updateProviderUser(provider_no, profile_id, profile_first_name, profile
                 status = response.status;
                 return response.text();
             })
-            .then(function(json) {
+            .then(function(result) {
                 if (status == 200) {
-                    json = JSON.parse(json);
+                    json = JSON.parse(result);
                     var result_id = json.items[0].id;
                     var result_bio = get_null_or_value(json.items[0].bio);
                     user_id.innerHTML = result_id;
@@ -3992,11 +3961,9 @@ function updateProviderUser(provider_no, profile_id, profile_first_name, profile
                             })
                         })
                     });
-                } else {
-                    if (status == 401)
-                        user_logoff();
-                    else
-                        alert(responseText_get_error('updateProviderUser', json));
+                } 
+                else {
+                    exception('updateProviderUser', status, result);
                 }
             })
             .catch(function(error) {
@@ -4325,8 +4292,7 @@ function update_ui(option, item_id=null) {
                             document.getElementById('setting_input_place').value = '';
                         }
                         else {
-                            if (status == 401)
-                                user_logoff();
+                            exception('update_ui', status, result);
                         }
                     })
                 } 
@@ -4900,9 +4866,9 @@ function profile_detail(detailchoice) {
                 status = response.status;
                 return response.text();
             })
-            .then(function(response) {
+            .then(function(result) {
                 if (status == 200) {
-                    json = JSON.parse(response);
+                    json = JSON.parse(result);
                     var profile_detail_list = document.getElementById('profile_detail_list');
                     profile_detail_list.innerHTML = '';
 
@@ -4957,10 +4923,7 @@ function profile_detail(detailchoice) {
                     }
                     profile_detail_list.innerHTML = html;
                 } else {
-                    if (status == 401)
-                        user_logoff();
-                    else
-                        alert(responseText_get_error('profile_detail', response));
+                    exception('profile_detail', status, result);
                 }
             })
             .catch(function(error) {
@@ -5109,19 +5072,16 @@ function user_function(user_function, user_setting_id, row_div) {
                 status = response.status;
                 return response.text();
             })
-            .then(function(response) {
+            .then(function(result) {
                 if (status == 200) {
-                    json = JSON.parse(response);
+                    json = JSON.parse(result);
                     if (user_function == 'LIKE_USER_SETTING') {
                         //update only user setting
                         profile_show_user_setting();
                     } else
                         profile_show(user_id_profile);
                 } else {
-                    if (status == 401)
-                        user_logoff();
-                    else
-                        alert(responseText_get_error('user_function', response));
+                    exception('user_function', status, result);
                 }
             })
             .catch(function(error) {
@@ -5241,14 +5201,11 @@ function updateViewStat(user_setting_id, user_setting_user_account_id = null) {
                 status = response.status;
                 return response.text();
             })
-            .then(function(response) {
+            .then(function(result) {
                 if (status == 200)
                     return null;
                 else {
-                    if (status == 401)
-                        user_logoff();
-                    else
-                        alert(responseText_get_error('updateViewStat', response));
+                    exception('updateViewStat', status, result);
                 }
             })
             .catch(function(error) {
