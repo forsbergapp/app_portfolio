@@ -24,7 +24,7 @@ module.exports = {
 				//PDF
 				pdf = await getReportService('', 
 											 url, 
-											 data.query.ps, 		//papersize		A4, USLetter
+											 data.query.ps, 		//papersize		A4, Letter
 											(data.query.hf==1));	//headerfooter	1/0
 				res.type('application/pdf');
 				res.send(pdf);

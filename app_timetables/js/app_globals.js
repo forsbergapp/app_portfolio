@@ -1,6 +1,4 @@
-var global_host_url 	     	 		= 'https://' + location.hostname;
-var global_host_server_url 				= 'https://' + location.hostname;
-var global_rest_url_base 				= global_host_server_url + '/service/db/api/';
+var global_rest_url_base 				= '/service/db/api/';
 var global_rest_app_parameter 			= 'app_parameter/';
 var global_app_id 						= 1;
 

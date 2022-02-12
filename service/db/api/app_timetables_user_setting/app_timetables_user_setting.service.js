@@ -660,7 +660,8 @@ module.exports = {
 					(SELECT COUNT(u_liked_current_user.id)
 					   FROM app_timetables_user_setting_like u_liked_current_user
 					  WHERE u_liked_current_user.user_account_id = ?
-						AND u_liked_current_user.user_setting_id = us.id) 	liked
+						AND u_liked_current_user.user_setting_id = us.id) 	liked,
+					us.design_paper_size_select_id
 				FROM app_timetables_user_setting us
 				WHERE us.user_account_id = ? `,
 				[id_current_user,
@@ -690,7 +691,8 @@ module.exports = {
 						(SELECT COUNT(u_liked_current_user.id)
 						   FROM app_timetables_user_setting_like u_liked_current_user
 						  WHERE u_liked_current_user.user_account_id = :user_account_id_current
-						    AND u_liked_current_user.user_setting_id = us.id) 	"liked"
+						    AND u_liked_current_user.user_setting_id = us.id) 	"liked",
+						us.design_paper_size_select_id "design_paper_size_select_id"
 					FROM app_timetables_user_setting us
 					WHERE us.user_account_id = :user_account_id `,
 					{

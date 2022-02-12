@@ -289,9 +289,10 @@ async function settings_translate(first=true) {
     if (locale != 0){
         //fetch any message with first language always
         //show translation using first or second language
-        await fetch(global_rest_url_base + global_rest_app_object + locale +
-                    '?app_id=' + global_app_id + 
-                    '&lang_code=' + document.getElementById('setting_select_locale').value, {
+        let url = `${global_rest_url_base}${global_rest_app_object}${locale}` +
+                  `?app_id=${global_app_id}` + 
+                  `&lang_code=${document.getElementById('setting_select_locale').value}`;
+        await fetch(url, {
             method: 'GET',
             headers: {
                 'Authorization': 'Bearer ' + global_rest_dt,
@@ -525,7 +526,7 @@ async function get_app_globals() {
                 if (json.data[i].parameter_name=='APP_REST_CLIENT_SECRET')
                     global_app_rest_client_secret = json.data[i].parameter_value;
                 if (json.data[i].parameter_name=='SERVICE_AUTH_TOKEN_URL')
-                    global_service_auth_token_url = global_host_server_url + json.data[i].parameter_value;                            
+                    global_service_auth_token_url = json.data[i].parameter_value;                            
                 if (json.data[i].parameter_name=='COPYRIGHT')
                     global_app_copyright = json.data[i].parameter_value;
                 if (json.data[i].parameter_name=='USER_PROVIDER1_ID')
@@ -594,15 +595,15 @@ async function get_app_globals() {
                 if (json.data[i].parameter_name=='REST_USER_ACCOUNT_FOLLOW')
                     global_rest_user_account_follow = json.data[i].parameter_value;
                 if (json.data[i].parameter_name=='SERVICE_GEOLOCATION')
-                    global_service_geolocation = global_host_server_url + json.data[i].parameter_value;
+                    global_service_geolocation = json.data[i].parameter_value;
                 if (json.data[i].parameter_name=='SERVICE_GPS_PLACE')
                     global_service_gps_place = global_service_geolocation + json.data[i].parameter_value;
                 if (json.data[i].parameter_name=='SERVICE_GPS_IP')
                     global_service_gps_ip = global_service_geolocation + json.data[i].parameter_value;
                 if (json.data[i].parameter_name=='SERVICE_REPORT')
-                    global_service_report = global_host_server_url + json.data[i].parameter_value;
+                    global_service_report = json.data[i].parameter_value;
                 if (json.data[i].parameter_name=='SERVICE_WORLDCITIES')
-                    global_service_worldcities = global_host_server_url + json.data[i].parameter_value;
+                    global_service_worldcities = json.data[i].parameter_value;
                 //App variables registered for this apps app_id
                 if (json.data[i].parameter_name=='EMAIL_POLICY')
                     global_app_email_policy = json.data[i].parameter_value;
@@ -772,11 +773,11 @@ async function get_app_globals() {
                     global_default_show_timezone = (json.data[i].parameter_value=== 'true');
                 if (json.data[i].parameter_name=='DESIGN_DEFAULT_REPORT_HEADER_SRC'){
                     if (json.data[i].parameter_value!='')
-                        global_default_report_header_src = global_host_url + json.data[i].parameter_value;
+                        global_default_report_header_src = json.data[i].parameter_value;
                 }                    
                 if (json.data[i].parameter_name=='DESIGN_DEFAULT_REPORT_FOOTER_SRC'){
                     if (json.data[i].parameter_value!='')
-                        global_default_report_footer_src = global_host_url + json.data[i].parameter_value;
+                        global_default_report_footer_src = json.data[i].parameter_value;
                 }                                    
                 if (json.data[i].parameter_name=='DESIGN_DEFAULT_REPORTTITLE1')
                     global_default_reporttitle1 = json.data[i].parameter_value;
@@ -3141,12 +3142,7 @@ function user_signup() {
 function create_user_settings_links(user_account_id, sid){
     //show generated url for current setting
     var paper_size_select = document.getElementById('setting_select_report_papersize');
-    var common_url = global_service_report +
-        '?app_id=' + global_app_id +
-        '&id=' + user_account_id +
-        '&sid=' + sid +
-        '&ps=' + paper_size_select.options[paper_size_select.selectedIndex].value +
-        '&hf=0';
+    var common_url = get_report_url(user_account_id, sid, paper_size_select.options[paper_size_select.selectedIndex].value);
     var period;
     let url_type='';
     const period_arr = ['day','month','year'];
@@ -4150,7 +4146,7 @@ function show_dialogue(dialogue, file = '') {
                 if (!localStorage.scan_open_mobile) {
                     localStorage.setItem('scan_open_mobile', true);
                     document.getElementById('dialogue_scan_open_mobile').style.visibility = 'visible';
-                    create_qr('scan_open_mobile_qrcode', global_host_url);
+                    create_qr('scan_open_mobile_qrcode', `${location.protocol}//${location.hostname}${location.port==''?'':':' + location.port}`);
                 };
                 break;
             }
@@ -4540,6 +4536,15 @@ function update_ui(option, item_id=null) {
 
 }
 
+function get_report_url(id, sid, papersize){
+    
+    return `${location.protocol}//${location.hostname}${location.port==''?'':':' + location.port}${global_service_report}` +
+         `?app_id=${global_app_id}` +
+         `&id=${id}` +
+         `&sid=${sid}` +
+         `&ps=${papersize}` +
+         `&hf=0`;
+}
 /*------------------------------------- */
 // Profile function
 /*------------------------------------- */
@@ -4655,7 +4660,7 @@ function profile_show(user_account_id_other = null, username = null) {
                     document.getElementById('profile_bio').innerHTML = get_null_or_value(json.bio);
                     document.getElementById('profile_joined_date').innerHTML = format_json_date(json.date_created, true);
                     document.getElementById("profile_qr").innerHTML = '';
-                    create_qr('profile_qr', global_host_url + '/' + json.username);
+                    create_qr('profile_qr', `${location.protocol}//${location.hostname}${location.port==''?'':':' + location.port}/` + json.username);
 
                     document.getElementById('profile_info_following_count').innerHTML = json.count_following;
                     document.getElementById('profile_info_followers_count').innerHTML = json.count_followed;
@@ -4738,14 +4743,11 @@ function profile_show_user_setting() {
                     user_settings.innerHTML = '';
                     let html ='';
                     for (i = 0; i < json.count; i++) {
-                        var common_url = global_service_report +
-                            '?app_id=' + global_app_id +
-                            '&id=' + json.items[i].user_account_id +
-                            '&sid=' + json.items[i].id +
-                            '&ps=A4' +
-                            '&hf=0' +
-                            '&format=html';
-
+                        var paper_size_select = document.getElementById('setting_select_report_papersize');
+                        var common_url = get_report_url(json.items[i].user_account_id, 
+                                                        json.items[i].id, 
+                                                        paper_size_select.options[json.items[i].design_paper_size_select_id].value) + 
+                                                        '&format=html';
                         html += 
                         `<div class='profile_user_settings_row'>
                             <div class='profile_user_settings_place'>${json.items[i].description}
@@ -5301,39 +5303,6 @@ function app_log(app_module, app_module_type, app_module_request, app_user_id) {
 
 async function init_common() {
     await get_token().then(function(){
-        var status;
-        //app variables
-        fetch(global_rest_url_base + global_rest_app +
-            '?id=' + global_app_id + 
-            '&lang_code=' + document.getElementById('setting_select_locale').value, 
-            {
-                method: 'GET',
-                headers: {
-                    'Authorization': 'Bearer ' + global_rest_at
-                }
-        })
-        .then(function(response) {
-            status = response.status;
-            return response.text();
-        })
-        .then(function(result) {
-            if (status === 200) {
-                json = JSON.parse(result);
-                global_app_hostname = json.data[0].url;
-                global_app_name = json.data[0].app_name;
-                set_app_globals_head();
-                set_app_globals_body();
-                update_info(1);
-                update_info(2);
-                update_info(3);
-                update_info(4);
-                update_info(5);
-            }
-            else {
-                alert(responseText_get_error('get_app_globals app', result));
-            }
-        })
-        
         //set current date for report month
         global_currentDate = new Date();
         global_CurrentHijriDate = new Array();
@@ -5437,6 +5406,38 @@ function init_report_timetable() {
     })
 }
 async function app_load(){
+    var status;
+    //app variables
+    fetch(global_rest_url_base + global_rest_app +
+        '?id=' + global_app_id + 
+        '&lang_code=' + document.getElementById('setting_select_locale').value, 
+        {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Bearer ' + global_rest_at
+            }
+    })
+    .then(function(response) {
+        status = response.status;
+        return response.text();
+    })
+    .then(function(result) {
+        if (status === 200) {
+            json = JSON.parse(result);
+            global_app_hostname = json.data[0].url;
+            global_app_name = json.data[0].app_name;
+            set_app_globals_head();
+            set_app_globals_body();
+            update_info(1);
+            update_info(2);
+            update_info(3);
+            update_info(4);
+            update_info(5);
+        }
+        else {
+            alert(responseText_get_error('get_app_globals app', result));
+        }
+    })
     await get_gps_from_ip().then(function(){
         //init map thirdparty module
         init_map();
