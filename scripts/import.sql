@@ -72,7 +72,6 @@ INSERT INTO app_object_item (app_id, object_name, object_item_name) VALUES (1,'D
 INSERT INTO app_object_item (app_id, object_name, object_item_name) VALUES (1,'DIALOGUE','USER_VERIFY_MESSAGE_1');
 INSERT INTO app_object_item (app_id, object_name, object_item_name) VALUES (1,'DIALOGUE','USER_VERIFY_MESSAGE_2');
 INSERT INTO app_object_item (app_id, object_name, object_item_name) VALUES (1,'DIALOGUE','USER_VERIFY_MESSAGE_3');
-INSERT INTO app_object_item (app_id, object_name, object_item_name) VALUES (1,'PROFILE','PROFILE_USER_SETTINGS_TITLE_PLACE');
 INSERT INTO app_object_item (app_id, object_name, object_item_name) VALUES (1,'REPORT','COLTITLE_ASR');
 INSERT INTO app_object_item (app_id, object_name, object_item_name) VALUES (1,'REPORT','COLTITLE_ASR_IQAMAT');
 INSERT INTO app_object_item (app_id, object_name, object_item_name) VALUES (1,'REPORT','COLTITLE_CALTYPE_GREGORIAN');
