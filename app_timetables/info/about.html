@@ -1,7 +1,7 @@
 <div class='info_content'>
-    This web app provides advanced timetables for traditional muslim prayers.
+    Worlds most advanced traditional prayer timetable calculation.<br>
     It works on a mobile or in any supported browser and can be added to the mobile home screen.<br>
-    All timetable calculations are in real time.
+    All timetable calculations are in real time.<br>
     <br>
     <br>
     Features:<br>
@@ -9,7 +9,7 @@
     - Use Facebook or Google account to login or create a local user.<br>
     - Local users use email verification to create account.<br>
     <br>
-    - all regional settings supported by supported browsers<br>
+    - all known regional settings, all languages, all countries supported<br>
     - support for second language<br>
     - arabic support of different arabic scripts<br>
     - support of different Hijri calendar types<br>
@@ -20,7 +20,7 @@
     - add unique design with images, text and different themes to share with others<br>
     - different ways to highlight rows, Friday, Saturday, Sunday or groups of 10 days<br>
     - add temporary notes to month report before printing<br>
-    - print or share selected report in HTML or PDF using PDF server generation with
+    - print or share selected report in HTML or PDF using PDF server generation with<br>
     support for all regional settings<br>
     <br>
     - automatic GPS lookup where you are or selected on map<br>
@@ -28,8 +28,8 @@
     - map with Qibbla<br>
     <br>
     - all known methods configurable to calculate times<br>
-    - different asr method
-    - high latitude adjustment
+    - different asr method<br>
+    - high latitude adjustment<br>
     - support of Hijri adjustments<br>
     - fasting information for Ramadan with flexible start and end<br>
     - optional imsak, sunset and midnight prayer times<br>
@@ -46,15 +46,27 @@
     - view other users timetables and like them to keep track of liked timetables<br>
     <br>
     <br>
-    Technology used<br>
+    About the app and technology used<br>
     <br>
-    Pure Javascript developed in client and in server.<br>
-    Implemented with secure database access using credentials and token through REST API.<br>
-    Progressive webapp specification followed and optimized for maximum performance with realtime<br>
-    timetable calculations including browsing of periods.<br>
-    Javascript HTML DOM dynamic web interactive content creating reports<br>
-    with dynamic amount of columns and rows in any regional settings <br>
-    using CSS and Javascript according to extensive user settings.<br>
+    Progressive web app also called single page web app.<br>
+	Uses REST API with authentication to mySQL or Oracle Database.<br>
+	QR code dynamic generation.<br>
+	Social network functionality with profile, like, follow, view other user settings and statistics.<br>
+	Microservice architecture with monitoring of each microservice activity.<br>
+	Centralized data model error handling of database errors, constraints errors and <br>
+	application errors and showed in users language.<br>
+	Timetables can be displayed with different themes using CSS3.<br>
+	User interface and timetables can be displayed in any language with help of Google Noto Fonts<br>
+	and translation of user interface is fetched from translation objects data model.<br>
+	<br>
+	Server generated PDF and HTML generated timetables are pixel perfect designed using pt font sizes<br>
+	and timetable paper size supported are A4 and Letter.<br>
+	Some HTML server side rendering with database data population is performed at startup.<br>
+	Different application themes available from about dialogue.<br>
+	App is written in pure Javascript and ES6 Javascript is often used in both client and server. <br>
+    Runs in Node.js using express framework.<br>
+	App client is component structured and server-side rendered.<br>
+    <br>
     <br>
     App hosted on Oracle Cloud with following servers:<br>
     <br>
@@ -134,4 +146,3 @@
         </div>
     </div>
 </div>
-<button  class='info_close toolbar_button' onclick="document.getElementById('window_info').style.display = 'none';window.location='#info_empty';document.getElementById('window_preview_toolbar_qr').style.display = 'block';"><i class="fas fa-check-circle"></i></button>
