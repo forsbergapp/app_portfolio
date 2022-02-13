@@ -11,7 +11,7 @@ CREATE TABLE app_log (
     id                           INT NOT NULL AUTO_INCREMENT,
     app_module                   VARCHAR(100),
     app_module_type              VARCHAR(100),
-    app_module_request           VARCHAR(100),
+    app_module_request           VARCHAR(500),
     app_module_result            VARCHAR(4000),
     app_user_id                  VARCHAR(100),
     user_language                VARCHAR(100),

@@ -4530,7 +4530,7 @@ function update_ui(option, item_id=null) {
 function get_report_url(id, sid, papersize){
     
     return `${location.protocol}//${location.hostname}${location.port==''?'':':' + location.port}${global_service_report}` +
-         `?app_id=${global_app_id}` +
+         `?app_id=${global_app_id}&lang_code=${document.getElementById('setting_select_locale').value}` +
          `&id=${id}` +
          `&sid=${sid}` +
          `&ps=${papersize}` +
@@ -5325,8 +5325,11 @@ function init_report_timetable() {
     var urlParams = new URLSearchParams(window.location.search);
     var user_account_id = urlParams.get('id');
     var user_setting_id = urlParams.get('sid');
+    var lang_code = urlParams.get('lang_code');
     var reporttype = urlParams.get('type');
     dialogue_loading(1);
+    document.getElementById('setting_select_locale').innerHTML = 
+                `<option value=${lang_code}>${lang_code}</option`;
     get_app_globals().then(function(){
         init_common().then(function(){
             //report start
@@ -5517,6 +5520,7 @@ async function init_head(){
 }
 function init() {
     dialogue_loading(1);
+    SearchAndSetSelectedIndex(navigator.language.toLowerCase(), document.getElementById('setting_select_locale'),1);
     get_app_globals().then(function(){
         init_common().then(function(){
             app_load().then(function (){
