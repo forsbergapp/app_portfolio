@@ -38,6 +38,11 @@
                 </div>
             </div>
             <div id='profile_main_stat_row2'>
+                <div id='profile_info_user_settings'>
+                    <button id='profile_main_btn_user_settings' class='toolbar_button' >
+                        <i class='fas fa-calendar-day'></i><i class='fas fa-calendar-week'></i><i class='fas fa-calendar-alt'></i>
+                    </button>
+                </div>
                 <div id='profile_info_user_setting_likes'>
                     <button id='profile_main_btn_user_setting_likes' class='toolbar_button' >
                         <i class='fas fa-heart'></i><i class='fas fa-calendar-day'></i><i class='fas fa-calendar-week'></i><i class='fas fa-calendar-alt'></i><i class='fas fa-user-friends'></i>
@@ -67,45 +72,10 @@
         </div>
     </div>
     <div id='profile_user_settings_public'>
-        <div id='profile_user_settings_title_row'>
-            <div id='profile_user_settings_title_place'>
-            </div>
-            <div id='profile_user_settings_title_day'>
-            </div>
-            <div id='profile_user_settings_title_month'>
-            </div>
-            <div id='profile_user_settings_title_year'>
-            </div>
-            <div id='profile_user_settings_title_like'>
-            </div>	
-            <div id='profile_user_settings_title_info_likes'>
-            </div>
-            <div id='profile_user_settings_title_info_view'>
-            </div>
-        </div>
-        <div id='profile_user_settings_rows'>
-            <div class='profile_user_settings_row'>
-                <div class='profile_user_settings_place'>
-                </div>
-                <div class='profile_user_settings_day'>
-                    <i class='fas fa-calendar-day'></i>
-                </div>
-                <div class='profile_user_settings_month'>
-                    <i class='fas fa-calendar-week'></i>
-                </div>
-                <div class='profile_user_settings_year'>
-                    <i class='fas fa-calendar-alt'></i>
-                </div>
-                <div class='profile_user_settings_like'>
-                    <i class='fas fa-heart-broken'></i>
-                    <i class='fas fa-heart'></i>
-                </div>	
-                <div class='profile_user_settings_info_likes'>
-                    <i class='fas fa-heart'></i><div id='profile_user_settings_info_like_count'></div>
-                </div>
-                <div class='profile_user_settings_info_view'>
-                    <i class='fas fa-eye'></i><div id='profile_user_settings_info_view_count'></div>
-                </div>	
+        <div id='profile_user_settings_row'>
+            <select id='profile_select_user_settings'>
+            </select>
+            <div id='profile_user_settings_detail'>
             </div>
         </div>
         <div id='profile_detail'>
@@ -130,17 +100,6 @@
                 </div>
             </div>
             <div id='profile_detail_list' class='profile_detail_list'>
-                <div class='profile_detail_list_row'>
-                    <div class='profile_detail_list_col'>
-                        <div class='profile_detail_list_user_account_id'></div>
-                    </div>
-                    <div class='profile_detail_list_col'>
-                        <img class='profile_detail_list_avatar' src='' alt=''/>
-                    </div>
-                    <div class='profile_detail_list_col'>
-                        <div class='profile_detail_list_username'></div>
-                    </div>
-                </div>
             </div>
         </div>
     </div>

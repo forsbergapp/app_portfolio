@@ -1735,6 +1735,7 @@ function keyfunctions() {
     document.getElementById('profile_main_btn_followed').addEventListener('click', function() { profile_detail(2) }, false);
     document.getElementById('profile_main_btn_likes').addEventListener('click', function() { profile_detail(3) }, false);
     document.getElementById('profile_main_btn_liked').addEventListener('click', function() { profile_detail(4) }, false);
+    document.getElementById('profile_main_btn_user_settings').addEventListener('click', function() { profile_detail(7) }, false);
     document.getElementById('profile_main_btn_user_setting_likes').addEventListener('click', function() { profile_detail(5) }, false);
     document.getElementById('profile_main_btn_user_setting_liked').addEventListener('click', function() { profile_detail(6) }, false);
 
@@ -1797,6 +1798,13 @@ function keyfunctions() {
     document.getElementById('setting_select_user_setting').addEventListener('change', function() {user_settings_load().then(function(){settings_translate(true).then(function(){settings_translate(false);})}) }, false);
     document.getElementById('app_select_theme').addEventListener('change', function() { app_select_theme() }, false);
           
+    document.getElementById('profile_select_user_settings').addEventListener('change', 
+        function() { profile_show_user_setting_detail(this.options[this.selectedIndex].getAttribute('common_url'), 
+                                                      this.options[this.selectedIndex].getAttribute('sid'), 
+                                                      this.options[this.selectedIndex].getAttribute('user_account_id'), 
+                                                      this.options[this.selectedIndex].getAttribute('liked'), 
+                                                      this.options[this.selectedIndex].getAttribute('count_likes'), 
+                                                      this.options[this.selectedIndex].getAttribute('count_views')) }, false);
     //on-keyup
     document.getElementById('setting_input_place').addEventListener('keyup', function() { typewatch("update_ui(8);", 1000); }, false);
     document.getElementById('setting_input_lat').addEventListener('keyup', function() { typewatch("update_ui(9);", 1000); }, false);
@@ -2669,7 +2677,7 @@ function user_login() {
                 document.getElementById('dialogue_login').style.visibility = 'hidden';
                 document.getElementById('dialogue_signup').style.visibility = 'hidden';
                 //Show user tab
-                document.getElementById('tab7_nav').style.display = 'block';
+                document.getElementById('tab7_nav').style.display = 'inline-block';
                 //Hide settings
                 document.getElementById('settings').style.visibility = 'hidden';
                 //Hide profile
@@ -2972,7 +2980,7 @@ function user_logoff() {
         document.getElementById('profile_detail').style.display = "none";
         document.getElementById('profile_detail_list').innerHTML = '';
         document.getElementById('profile_user_settings_public').style.display = "none";
-        document.getElementById('profile_user_settings_rows').innerHTML = '';
+        document.getElementById('profile_user_settings_detail').innerHTML = '';
         document.getElementById('profile_user_settings_private').style.display = "none";
 
         //empty user settings
@@ -3951,7 +3959,7 @@ function updateProviderUser(provider_no, profile_id, profile_first_name, profile
                     document.getElementById('dialogue_login').style.visibility = 'hidden';
                     document.getElementById('dialogue_signup').style.visibility = 'hidden';
                     //Show user tab
-                    document.getElementById('tab7_nav').style.display = 'block';
+                    document.getElementById('tab7_nav').style.display = 'inline-block';
                     user_settings_get(user_id.innerHTML).then(function(){
                         user_settings_load().then(function(){
                             settings_translate(true).then(function(){
@@ -4559,7 +4567,7 @@ function profile_show(user_account_id_other = null, username = null) {
         document.getElementById('profile_detail_list').innerHTML = '';
 
         document.getElementById('profile_user_settings_public').style.display = "none";
-        document.getElementById('profile_user_settings_rows').innerHTML = '';
+        document.getElementById('profile_user_settings_detail').innerHTML = '';
         document.getElementById('profile_user_settings_private').style.display = "none";
     } else {
         if (user_account_id_other !== null) {
@@ -4663,7 +4671,13 @@ function profile_show(user_account_id_other = null, username = null) {
                         document.getElementById('profile_user_settings_public').style.display = "block";
                         document.getElementById('profile_user_settings_private').style.display = "none";
                     }
-                    profile_show_user_setting();
+                    if (user_id.innerHTML =='')
+                        document.getElementById('profile_user_settings_row').style.display='none';
+                    else{
+                        document.getElementById('profile_user_settings_row').style.display='block';
+                        profile_show_user_setting();
+                    }
+
                 } else {
                     if (status == 500 && username !== null) {
                         document.getElementById('profile').style.visibility = 'hidden';
@@ -4680,13 +4694,42 @@ function profile_show(user_account_id_other = null, username = null) {
 
     return null;
 }
+function profile_show_user_setting_detail(common_url, id, user_account_id, liked, count_likes, count_views){
+    document.getElementById('profile_user_settings_detail').innerHTML = 
+       `<div class='profile_user_settings_day'>
+            <a href='#' onclick="document.getElementById('window_preview_report').style.visibility = 'visible';create_qr('window_preview_toolbar_qr', '${common_url}&type=0');updateViewStat(${id},${user_account_id});document.getElementById('window_preview_content').src='${common_url}&type=0' ">
+                <i class='fas fa-calendar-day'></i>
+            </a>
+        </div>
+        <div class='profile_user_settings_month'>
+            <a href='#' onclick="document.getElementById('window_preview_report').style.visibility = 'visible';create_qr('window_preview_toolbar_qr', '${common_url}&type=1');updateViewStat(${id},${user_account_id});document.getElementById('window_preview_content').src='${common_url}&type=1' ">
+                <i class='fas fa-calendar-week'></i>
+            </a>
+        </div>
+        <div class='profile_user_settings_year'>
+            <a href='#' onclick="document.getElementById('window_preview_report').style.visibility = 'visible';create_qr('window_preview_toolbar_qr', '${common_url}&type=2');updateViewStat(${id},${user_account_id});document.getElementById('window_preview_content').src='${common_url}&type=2' ">
+                <i class='fas fa-calendar-alt'></i>
+            </a>
+        </div>
+        <div class='profile_user_settings_like' onclick='user_function("LIKE_USER_SETTING",${id},this)'>
+            <i class='fas fa-heart-broken' style='display:${liked == 1?'none':'block'}'></i>
+            <i class='fas fa-heart' style='display:${liked == 1?'block':'none'}'></i>
+        </div>
+        <div class='profile_user_settings_info_likes'>
+            <i class='fas fa-heart'></i>
+            <div class='profile_user_settings_info_like_count'>${count_likes}</div>
+        </div>
+        <div class='profile_user_settings_info_views'>
+            <i class='fas fa-eye'></i>
+            <div class='profile_user_settings_info_view_count'>${count_views}</div>
+        </div>`;
+}
 
 function profile_show_user_setting() {
     var user_id = document.getElementById('setting_data_userid_logged_in');
     var status;
     if (document.getElementById('profile_user_settings_public').style.display == "block") {
-        document.getElementById('profile_user_settings_title_row').style.display = 'block';
-        document.getElementById('profile_user_settings_rows').style.display = 'block';
+        document.getElementById('profile_user_settings_row').style.display = 'block';
 
         fetch(global_rest_url_base + global_rest_app_timetables_user_setting_profile + document.getElementById('profile_id').innerHTML + 
                 '?id=' + user_id.innerHTML + 
@@ -4705,50 +4748,33 @@ function profile_show_user_setting() {
             .then(function(response) {
                 if (status == 200) {
                     json = JSON.parse(response);
-                    var user_settings = document.getElementById('profile_user_settings_rows');
-                    user_settings.innerHTML = '';
-                    let html ='';
+                    let profile_select_user_settings = document.getElementById('profile_select_user_settings');
+                    profile_select_user_settings.innerHTML='';
+                    let html = '';
+                    var paper_size_select = document.getElementById('setting_select_report_papersize');
                     for (i = 0; i < json.count; i++) {
-                        var paper_size_select = document.getElementById('setting_select_report_papersize');
                         var common_url = get_report_url(json.items[i].user_account_id, 
-                                                        json.items[i].id, 
-                                                        paper_size_select.options[json.items[i].design_paper_size_select_id].value) + 
-                                                        '&format=html';
-                        html += 
-                        `<div class='profile_user_settings_row'>
-                            <div class='profile_user_settings_place'>${json.items[i].description}
-                            </div>
-                            <div class='profile_user_settings_day'>
-                                <a href='#' onclick="document.getElementById('window_preview_report').style.visibility = 'visible';create_qr('window_preview_toolbar_qr', '${common_url}&type=0');updateViewStat(${json.items[i].id},${json.items[i].user_account_id});document.getElementById('window_preview_content').src='${common_url}&type=0' ">
-                                    <i class='fas fa-calendar-day'></i>
-                                </a>
-                            </div>
-                            <div class='profile_user_settings_month'>
-                                <a href='#' onclick="document.getElementById('window_preview_report').style.visibility = 'visible';create_qr('window_preview_toolbar_qr', '${common_url}&type=1');updateViewStat(${json.items[i].id},${json.items[i].user_account_id});document.getElementById('window_preview_content').src='${common_url}&type=1' ">
-                                    <i class='fas fa-calendar-week'></i>
-                                </a>
-                            </div>
-                            <div class='profile_user_settings_year'>
-                                <a href='#' onclick="document.getElementById('window_preview_report').style.visibility = 'visible';create_qr('window_preview_toolbar_qr', '${common_url}&type=2');updateViewStat(${json.items[i].id},${json.items[i].user_account_id});document.getElementById('window_preview_content').src='${common_url}&type=2' ">
-                                    <i class='fas fa-calendar-alt'></i>
-                                </a>
-                            </div>
-                            <div class='profile_user_settings_like' onclick='user_function("LIKE_USER_SETTING",${json.items[i].id},this)'>
-                                <i class='fas fa-heart-broken' style='display:${json.items[i].liked == 1?'none':'block'}'></i>
-                                <i class='fas fa-heart' style='display:${json.items[i].liked == 1?'block':'none'}'></i>
-                            </div>
-                            <div class='profile_user_settings_info_likes'>
-                                <i class='fas fa-heart'></i>
-                                <div class='profile_user_settings_info_like_count'>${json.items[i].count_likes}</div>
-                            </div>
-                            <div class='profile_user_settings_info_views'>
-                                <i class='fas fa-eye'></i>
-                                <div class='profile_user_settings_info_view_count'>${json.items[i].count_views}</div>
-                            </div>
-                        </div>`;
-
+                            json.items[i].id, 
+                            paper_size_select.options[json.items[i].design_paper_size_select_id].value) + 
+                            '&format=html';
+                        html += `<option id="${i}" 
+                                value=""
+                                sid=${json.items[i].id} 
+                                user_account_id=${json.items[i].user_account_id}
+                                liked=${json.items[i].liked}
+                                count_likes=${json.items[i].count_likes}
+                                count_views=${json.items[i].count_views}
+                                common_url=${common_url}
+                                >${json.items[i].description}
+                                </option>`;
                     }
-                    user_settings.innerHTML = html;
+                    profile_select_user_settings.innerHTML = html;
+                    profile_show_user_setting_detail(profile_select_user_settings.options[profile_select_user_settings.selectedIndex].getAttribute('common_url'), 
+                                                     profile_select_user_settings.options[profile_select_user_settings.selectedIndex].getAttribute('sid'), 
+                                                     profile_select_user_settings.options[profile_select_user_settings.selectedIndex].getAttribute('user_account_id'), 
+                                                     profile_select_user_settings.options[profile_select_user_settings.selectedIndex].getAttribute('liked'), 
+                                                     profile_select_user_settings.options[profile_select_user_settings.selectedIndex].getAttribute('count_likes'), 
+                                                     profile_select_user_settings.options[profile_select_user_settings.selectedIndex].getAttribute('count_views'));
                 }
             })
             .catch(function(error) {
@@ -4768,8 +4794,7 @@ function profile_detail(detailchoice) {
             case 1:
                 {
                     //Following
-                    document.getElementById('profile_user_settings_title_row').style.display = 'none';
-                    document.getElementById('profile_user_settings_rows').style.display = 'none';
+                    document.getElementById('profile_user_settings_row').style.display = 'none';
                     document.getElementById('profile_detail').style.display = 'block';
                     document.getElementById('profile_detail_header_following').style.display = 'block';
                     document.getElementById('profile_detail_header_followed').style.display = 'none';
@@ -4782,8 +4807,7 @@ function profile_detail(detailchoice) {
             case 2:
                 {
                     //Followed
-                    document.getElementById('profile_user_settings_title_row').style.display = 'none';
-                    document.getElementById('profile_user_settings_rows').style.display = 'none';
+                    document.getElementById('profile_user_settings_row').style.display = 'none';
                     document.getElementById('profile_detail').style.display = 'block';
                     document.getElementById('profile_detail_header_following').style.display = 'none';
                     document.getElementById('profile_detail_header_followed').style.display = 'block';
@@ -4796,8 +4820,7 @@ function profile_detail(detailchoice) {
             case 3:
                 {
                     //Like user
-                    document.getElementById('profile_user_settings_title_row').style.display = 'none';
-                    document.getElementById('profile_user_settings_rows').style.display = 'none';
+                    document.getElementById('profile_user_settings_row').style.display = 'none';
                     document.getElementById('profile_detail').style.display = 'block';
                     document.getElementById('profile_detail_header_following').style.display = 'none';
                     document.getElementById('profile_detail_header_followed').style.display = 'none';
@@ -4811,8 +4834,7 @@ function profile_detail(detailchoice) {
             case 4:
                 {
                     //Liked user
-                    document.getElementById('profile_user_settings_title_row').style.display = 'none';
-                    document.getElementById('profile_user_settings_rows').style.display = 'none';
+                    document.getElementById('profile_user_settings_row').style.display = 'none';
                     document.getElementById('profile_detail').style.display = 'block';
                     document.getElementById('profile_detail_header_following').style.display = 'none';
                     document.getElementById('profile_detail_header_followed').style.display = 'none';
@@ -4825,8 +4847,7 @@ function profile_detail(detailchoice) {
             case 5:
                 {
                     //Like user setting
-                    document.getElementById('profile_user_settings_title_row').style.display = 'none';
-                    document.getElementById('profile_user_settings_rows').style.display = 'none';
+                    document.getElementById('profile_user_settings_row').style.display = 'none';
                     document.getElementById('profile_detail').style.display = 'block';
                     document.getElementById('profile_detail_header_following').style.display = 'none';
                     document.getElementById('profile_detail_header_followed').style.display = 'none';
@@ -4839,8 +4860,7 @@ function profile_detail(detailchoice) {
             case 6:
                 {
                     //Liked user setting
-                    document.getElementById('profile_user_settings_title_row').style.display = 'none';
-                    document.getElementById('profile_user_settings_rows').style.display = 'none';
+                    document.getElementById('profile_user_settings_row').style.display = 'none';
                     document.getElementById('profile_detail').style.display = 'block';
                     document.getElementById('profile_detail_header_following').style.display = 'none';
                     document.getElementById('profile_detail_header_followed').style.display = 'none';
@@ -4849,6 +4869,18 @@ function profile_detail(detailchoice) {
                     document.getElementById('profile_detail_header_user_setting_like').style.display = 'none';
                     document.getElementById('profile_detail_header_user_setting_liked').style.display = 'block';
                     break;
+                }
+            case 7:
+                {
+                    //user settings
+                    document.getElementById('profile_user_settings_row').style.display = 'block';
+                    document.getElementById('profile_detail').style.display = 'none';
+                    document.getElementById('profile_detail_header_following').style.display = 'none';
+                    document.getElementById('profile_detail_header_followed').style.display = 'none';
+                    document.getElementById('profile_detail_header_like').style.display = 'none';
+                    document.getElementById('profile_detail_header_liked').style.display = 'none';
+                    document.getElementById('profile_detail_header_user_setting_like').style.display = 'none';
+                    document.getElementById('profile_detail_header_user_setting_liked').style.display = 'none';
                 }
             default:
                 break;

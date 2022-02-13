@@ -41,7 +41,6 @@ INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, 
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'DIALOGUE','LOGIN_PASSWORD',515,'Lösenord');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'DIALOGUE','LOGIN_TITLE',515,'Logga in');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'DIALOGUE','LOGIN_USERNAME',515,'Användarnamn');
-INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'PROFILE','PROFILE_USER_SETTINGS_TITLE_PLACE',515,'Plats');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'DIALOGUE','SCAN_OPEN_MOBILE_TITLE1',515,'Skanna för att använda på din mobil');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'DIALOGUE','SCAN_OPEN_MOBILE_TITLE2',515,'Avancerade traditionella muslimska salah tidtabeller');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'SETTING_NAV_USER','SETTING_BTN_LABEL_USER_ADD',515,'Lägg till');
