@@ -1427,6 +1427,7 @@ A4	210 x 297mm
 	}
 	#settings select {
 		max-width: 60%;
+		min-width: 60%;
 	}
 	#settings input {
 		max-width:90%;
@@ -1478,16 +1479,14 @@ A4	210 x 297mm
 	#settings ul {
 		padding-left: 0px;
 	}
-	#tab3 .setting_horizontal_row:first-child{
-		transform: inherit;
-	}
 	#tab3 .setting_horizontal_row:first-child .setting_horizontal_col{
 		min-width:inherit !important;
 	}
 	#tab3 .setting_horizontal_row:first-child {
 		height:200px;
 		transform: scale(1.1);
-		margin-left: 100px;
+		margin: 0 auto;
+		display: table-caption !important;
 	}
 	#paper {
 		margin: 0 auto;
