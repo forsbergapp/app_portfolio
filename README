@@ -18,21 +18,21 @@ Includes
 	Facebook Login and Google sign in or create local user with user verification.
 	App can be used without registering but then settings can't be saved.
 	Map integration with automatic timezone and GPS lookup.
-	PDF server generation
 	QR code dynamic generation.
 	Social network functionality with profile, like, follow, view other user settings and statistics.
 	Microservice architecture with monitoring of each microservice activity.
 	Centralized data model error handling of database errors, constraints errors and 
 	application errors and showed in users language.
-	Calendars can be displayed with different themes using CSS3.
-	User interface and calendars can be displayed in any language with help of Google Noto Fonts
+	Timetables can be displayed with different themes using CSS3.
+	User interface and timetables can be displayed in any language with help of Google Noto Fonts
 	and translation of user interface is fetched from translation objects data model.
 	
-	PDF and HTML generated calendars are pixel perfect designed using pt font sizes
-	and calendar size are A4.
+	Server generated PDF and HTML generated timetables are pixel perfect designed using pt font sizes
+	and timetable paper size supported are A4 and Letter.
 	Some HTML server side rendering with database data population is performed at startup.
 	Different application themes available from about dialogue.
-	App is written in pure Javascript. Runs in Node.js using express framework.
+	App is written in pure Javascript and ES6 Javascript is often used in both client and server.
+	Runs in Node.js using express framework.
 	App client is component structured and server-side rendered.
 
 	Property management app
@@ -213,61 +213,24 @@ table app
 set app url and logo
 
 update {} values in table app_parameter
+and
+update info files as needed, some variables are inside the info files
+see following variables:
+INFO_LINKX_URL
+SOCIAL_LINKX_NAME
 
-COPYRIGHT											={COPYRIGHT TEXT}
-EMAIL												={HOMEPAGE EMAIL}
-USER_PROVIDER1_ID									={GOOGLE_ID}
-USER_PROVIDER1_NAME									=Google
-USER_PROVIDER1_API_SRC								=https://apis.google.com/js/platform.js?hl=
-USER_PROVIDER2_ID									={FACEBOOK_ID}
-USER_PROVIDER2_NAME									=Facebook
-USER_PROVIDER2_API_VERSION							=v12.0
-#example:https://connect.facebook.net/en_US/sdk.js
-#set locale SDK in client
-USER_PROVIDER2_API_SRC								=https://connect.facebook.net/
-USER_PROVIDER2_API_SRC2								=/sdk.js
-SERVICE_AUTH_TOKEN_URL								=/service/auth/token
-APP_REST_CLIENT_ID									={APP_REST_CLIENT_ID}
-APP_REST_CLIENT_SECRET								={APP_REST_CLIENT_SECRET}
-REST_LOG       				    					=app_log/
-REST_APP_OBJECT       			 					=app_object/
-REST_APP_TIMETABLES_PLACE      						=app_timetables_place/
-REST_APP_TIMETABLES_THEME      						=app_timetables_theme/
-REST_APP_TIMETABLES_USER_SETTING       				=app_timetables_user_setting/
-REST_APP_TIMETABLES_USER_SETTING_USER_ACCOUNT_ID    =app_timetables_user_setting/user_account_id/
-REST_APP_TIMETABLES_USER_SETTING_PROFILE            =app_timetables_user_setting/profile/
-REST_APP_TIMETABLES_USER_SETTING_LIKE      	        =app_timetables_user_setting_like/
-REST_APP_TIMETABLES_USER_SETTING_VIEW      	        =app_timetables_user_setting_view/
-REST_COUNTRY    			 	    				=country/
-REST_LANGUAGE_LOCALE    		    				=language/locale/
-REST_MESSAGE_TRANSLATION   							=message_translation/
-REST_USER_ACCOUNT       		    				=user_account/
-REST_USER_ACCOUNT_COMMON    	    				=user_account/common/
-REST_USER_ACCOUNT_PROFILE_USERNAME  				=user_account/profile/username/
-REST_USER_ACCOUNT_PROFILE_USERID    				=user_account/profile/id/
-REST_USER_ACCOUNT_PROFILE_SEARCH    				=user_account/profile/username/search/
-REST_USER_ACCOUNT_PROFILE_TOP       				=user_account/profile/top/
-REST_USER_ACCOUNT_PROFILE_DETAIL    				=user_account/profile/detail/
-REST_USER_ACCOUNT_ACTIVATE       					=user_account/activate/
-REST_USER_ACCOUNT_LOGIN     	    				=user_account/login
-REST_USER_ACCOUNT_SIGNUP       	    				=user_account/signup
-REST_USER_ACCOUNT_PROVIDER          				=user_account/provider/
-REST_USER_ACCOUNT_LIKE       	    				=user_account_like/
-REST_USER_ACCOUNT_FOLLOW    	    				=user_account_follow/
-SERVICE_URL_GPS_PLACE                   			=http://www.geoplugin.net/extras/location.gp
-SERVICE_URL_GPS_IP                      			=http://www.geoplugin.net/json.gp
-SERVICE_GEOLOCATION                 				=/service/geolocation
-SERVICE_GPS_PLACE                   				=/getplace
-SERVICE_GPS_IP     			        				=/getip
-SERVICE_REPORT                	    				=/service/report
-SERVICE_WORLDCITIES                 				=/service/worldcities
+change other parameters in app_parameter if needed
 
+COPYRIGHT									={COPYRIGHT TEXT}
+EMAIL										={HOMEPAGE EMAIL}
+USER_PROVIDER1_ID							={GOOGLE_ID}
+USER_PROVIDER2_ID							={FACEBOOK_ID}
+APP_REST_CLIENT_ID							={APP_REST_CLIENT_ID}
+APP_REST_CLIENT_SECRET						={APP_REST_CLIENT_SECRET}
 #App1 Timetables variables
-#Email variables CLIENT
 EMAIL_POLICY				        		={EMAIL_POLICY}
 EMAIL_DISCLAIMER				    		={EMAIL_DISCLAIMER}
 EMAIL_TERMS									={EMAIL_TERMS}
-#Other variables
 SOCIAL_LINK1_URL				    		={YOUR_SOCIAL_URL1} or empty
 SOCIAL_LINK2_URL				    		={YOUR_SOCIAL_URL2} or empty
 SOCIAL_LINK3_URL				    		={YOUR_SOCIAL_URL3} or empty
@@ -286,161 +249,7 @@ INFO_LINK2_NAME				    			=Disclaimer
 INFO_LINK3_NAME				    			=Terms
 INFO_LINK4_NAME				    			=Support
 INFO_LINK5_NAME				    			=About
-FILE_IMAGE_HEADER_FOOTER_WIDTH	    		=800
-FILE_IMAGE_HEADER_FOOTER_HEIGHT				=160
-FILE_IMAGE_AVATAR_WIDTH						=64
-FILE_IMAGE_AVATAR_HEIGHT		    		=64
-FILE_IMAGE_ALLOWED_TYPE1		    		=jpg
-FILE_IMAGE_ALLOWED_TYPE2		    		=png
-FILE_IMAGE_ALLOWED_TYPE3		    		=gif
-FILE_IMAGE_MIME_TYPE			    		=image/jpeg
-FILE_IMAGE_MAX_SIZE							=2000000
-#
-#REGIONAL SETTINGS
-#
-REGIONAL_DEFAULT_CALENDAR_LANG             	=en-us
-REGIONAL_DEFAULT_LOCALE_EXT_PREFIX         	=-u
-REGIONAL_DEFAULT_LOCALE_EXT_NUMBER_SYSTEM  	=-nu-
-REGIONAL_DEFAULT_LOCALE_EXT_CALENDAR       	=-ca-
-#ex '-u-ca-gregory'
-REGIONAL_DEFAULT_CALENDAR_TYPE_GREG        	=gregory
-#ex -nu-latn
-REGIONAL_DEFAULT_CALENDAR_NUMBER_SYSTEM    	=latn
-#Direction:Left to right
-REGIONAL_DEFAULT_DIRECTION			        =0
-#Second languague:None
-REGIONAL_DEFAULT_LOCALE_SECOND		        =0
-#Column title: transliterated, translation
-REGIONAL_DEFAULT_COLTITLE					=1
-#Arabic script:Sans Kufi
-REGIONAL_DEFAULT_ARABIC_SCRIPT		        =0
-#Calendar type: Gregorian
-REGIONAL_DEFAULT_CALENDARTYPE				=0
-#Calendar hijri type: islamic
-REGIONAL_DEFAULT_CALENDAR_HIJRI_TYPE	    =0
-#
-#GPS SETTINGS
-#
-#Maptype:satellite-streets-v11
-GPS_DEFAULT_MAPTYPE							=5
-#Country:... (none)
-GPS_DEFAULT_COUNTRY							=
-#City:... (none)
-GPS_DEFAULT_CITY							=
-#Default place: Kabba, Makkah
-GPS_DEFAULT_PLACE_ID      		            =40002
-#Map variables
-GPS_DEFAULT_MAP_CONTAINER         		    =mapid
-GPS_DEFAULT_MAP_DEFAULT_ZOOM      		    =14
-GPS_DEFAULT_MAP_DEFAULT_ZOOM_CITY 		    =8
-GPS_DEFAULT_MAP_DEFAULT_ZOOM_PP   		    =14
-GPS_DEFAULT_MAP_STYLE_BASEURL     		    =mapbox://styles/mapbox/
-GPS_DEFAULT_MAP_DEFAULT_STYLE     		    =satellite-streets-v11
-GPS_DEFAULT_MAP_MARKER_DIV_PP     		    =map_marker_popular_place
-GPS_DEFAULT_MAP_MARKER_DIV_CITY   		    =map_marker_city
-GPS_DEFAULT_MAP_MARKER_DIV_GPS    		    =map_marker_gps
-#Access token Mapbox
 GPS_MAP_ACCESS_TOKEN						={MAPBOX_ID}
-#Qibbla Kabba, Makkah
-GPS_MAP_QIBBLA_TITLE			        	=Kaaba, Makkah
-GPS_MAP_QIBBLA_TEXT_SIZE		            =14
-GPS_MAP_QIBBLA_LAT                         	=21.4226
-GPS_MAP_QIBBLA_LONG                        	=39.8261
-GPS_MAP_QIBBLA_COLOR                       	=#a49775
-GPS_MAP_QIBBLA_WIDTH                       	=4
-GPS_MAP_QIBBLA_OPACITY                     	=1
-#Qibbla old Great temple, Petra, Jordan
-GPS_MAP_QIBBLA_OLD_TITLE		            =Petra, jordan
-GPS_MAP_QIBBLA_OLD_TEXT_SIZE	            =14
-GPS_MAP_QIBBLA_OLD_LAT                     	=30.3289
-GPS_MAP_QIBBLA_OLD_LONG                    	=35.4423
-GPS_MAP_QIBBLA_OLD_COLOR                   	=#404040
-GPS_MAP_QIBBLA_OLD_WIDTH                   	=4
-GPS_MAP_QIBBLA_OLD_OPACITY                 	=0.4
-GPS_MAP_FLYTO								=1
-GPS_MAP_JUMPTO								=0
-GPS_MAP_POPUP_OFFSET						=25
-#
-#DESIGN SETTINGS
-#
-DESIGN_DEFAULT_THEME_DAY                   	=10003
-DESIGN_DEFAULT_THEME_MONTH                 	=20003
-DESIGN_DEFAULT_THEME_YEAR                  	=30001
-#A4 paper
-DESIGN_DEFAULT_PAPERSIZE			        =0
-#highlight row: Friday
-DESIGN_DEFAULT_HIGHLIGHT_ROW		        =1
-#Show weekday: true
-DESIGN_DEFAULT_SHOW_WEEKDAY					=true
-#Column calendartype: true
-DESIGN_DEFAULT_SHOW_CALENDARTYPE	        =true
-#Show notes: false
-DESIGN_DEFAULT_SHOW_NOTES			        =false
-#Show GPS: false
-DESIGN_DEFAULT_SHOW_GPS						=false
-#Show timezone: false
-DESIGN_DEFAULT_SHOW_TIMEZONE		        =false
-#
-#IMAGE SETTINGS
-#
-DESIGN_DEFAULT_REPORT_HEADER_SRC           	=/app_timetables/images/banner_kaaba.jpg
-DESIGN_DEFAULT_REPORT_FOOTER_SRC           	=
-#
-#TEXT SETTINGS
-#
-DESIGN_DEFAULT_REPORTTITLE1  		        =
-DESIGN_DEFAULT_REPORTTITLE2  		        =
-DESIGN_DEFAULT_REPORTTITLE3  		        =
-DESIGN_DEFAULT_REPORTFOOTER1 		        =بِسْمِ اللهِ الرَّحْمٰنِ الرَّحِيْمِ
-DESIGN_DEFAULT_REPORTFOOTER2 		        =In the name of God, the Almighty, the Merciful
-DESIGN_DEFAULT_REPORTFOOTER3 		        =Advanced traditional muslim prayer report
-#
-#PRAYER SETTINGS
-#
-#Method: Muslim World League (MWL)
-PRAYER_DEFAULT_METHOD						=14
-#Asr method: Standard
-PRAYER_DEFAULT_ASR							=0
-#High latitude adj.: Angle/60th of night
-PRAYER_DEFAULT_HIGHLATITUDE					=1
-#Timeformat: 12h with no suffix
-PRAYER_DEFAULT_TIMEFORMAT			        =0
-#Hijri date adjustment: 0
-PRAYER_DEFAULT_HIJRI_ADJUSTMENT		    	=2
-#Fajr Iqamat: None
-PRAYER_DEFAULT_IQAMAT_TITLE_FAJR	        =0
-#Dhuhr Iqamat: None
-PRAYER_DEFAULT_IQAMAT_TITLE_DHUHR	        =0
-#Asr Iqamat: None
-PRAYER_DEFAULT_IQAMAT_TITLE_ASR		   		=0
-#Maghrib Iqamat: None
-PRAYER_DEFAULT_IQAMAT_TITLE_MAGHRIB	    	=0
-#Isha Iqamat: None
-PRAYER_DEFAULT_IQAMAT_TITLE_ISHA	        =0
-#Column imsak: no
-PRAYER_DEFAULT_SHOW_IMSAK			        =false
-#Column sunset: no
-PRAYER_DEFAULT_SHOW_SUNSET			        =false
-#Column midnight: no
-PRAYER_DEFAULT_SHOW_MIDNIGHT		        =false
-#Fajr and Maghrib fasting info
-PRAYER_DEFAULT_SHOW_FAST_START_END	        =1
-#
-#STARTUP SETTINGS
-#
-#1=print, 2=day, 3=month, 4=year, 5=settings, 6=profile
-STARTUP_DEFAULT_STARTUP_PAGE				=3
-#
-#QR SETTINGS
-#
-QR_LOGO_FILE_PATH                          	=/app_timetables/images/logo.png
-QR_WIDTH									=128
-QR_HEIGHT					        		=128
-QR_COLOR_DARK				        		=#2b2b32
-QR_COLOR_LIGHT				        		=#ffffff
-QR_LOGO_WIDTH				        		=32
-QR_LOGO_HEIGHT				        		=32
-QR_BACKGROUND_COLOR			        		=#ffffff
 
    observe also some global javascript values in 
    js/app_globals.js
