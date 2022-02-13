@@ -354,6 +354,7 @@ a:active {
 #profile_main_btn_followed,
 #profile_main_btn_likes,
 #profile_main_btn_liked,
+#profile_main_btn_user_settings,
 #profile_main_btn_user_setting_likes,
 #profile_main_btn_user_setting_liked{
 	font-size:16px;
@@ -400,57 +401,48 @@ a:active {
 /*profile public (user settings and profile detail)*/
 /*profile user setting*/
 #profile_user_settings_public{
-	width:100%;
+	width:340px;
 	height:100%;
 	margin-top:10px;
+	margin:0 auto;
 	text-align: center;
 }
 
-#profile_user_settings_title_row{
-    margin-left: -55px;
-}
-#profile_user_settings_title_row,
-#profile_user_settings_rows{
+#profile_user_settings_row{
 	width:100%;
-	display: inline-block !important;	
+	display: inline-block;	
 }
+#profile_select_user_settings{
+	width:100%;
+	margin-bottom:20px;
+}
+#profile_user_settings_detail{
+	width: 100% !important;
 
-#profile_user_settings_title_row,
-.profile_user_settings_row
+}
+#profile_user_settings_row i{
+	width: 26px;
+	height: 26px;
+	font-size:20px;
+}
+#profile_user_settings_row
 {
-	padding-bottom: 5px;
-}
-#profile_user_settings_title_row div,
-.profile_user_settings_row div{
-	display:inline-block;
-}
-#profile_user_settings_title_row div:nth-child(1),
-.profile_user_settings_row div:nth-child(1){
-	width:150px;
 	text-align: left;
-	padding-left: 10px;
 }
-#profile_user_settings_title_row div:nth-child(2),
-#profile_user_settings_title_row div:nth-child(3),
-#profile_user_settings_title_row div:nth-child(4),
-#profile_user_settings_title_row div:nth-child(5),
-.profile_user_settings_row div:nth-child(2),
-.profile_user_settings_row div:nth-child(3),
-.profile_user_settings_row div:nth-child(4),
-.profile_user_settings_row div:nth-child(5){
-	width:25px;
+#profile_user_settings_row div{
+	display:inline-block;
+	width:40px;
 }
-#profile_user_settings_title_row div:nth-child(6),
-.profile_user_settings_row div:nth-child(6){
-	padding-left:25px;
-}
-.profile_user_settings_info_likes{
-	padding-left:20px;
+#profile_user_settings_row div:nth-child(5),
+#profile_user_settings_row div:nth-child(6){
+	display:inline-block;
+	width:78px;
+	text-align:right;
 }
 
 .profile_user_settings_info_like_count,
 .profile_user_settings_info_view_count{
-	display:inline-block !important;
+	display:inline !important;
 }
 /*profile detail*/
 .profile_detail_logged_off{
@@ -941,22 +933,16 @@ a:active {
 
 /*SETTINGS TAB NAVIGATION */
 #tab_navigation{
-	width:550px;
 	height:50px;
 }
 #tab_navigation .tab_nav{
-	text-align: center;
-	position: relative;
-	float:left;
-	margin-left: -4px;
-	margin-right: -5px;
-	margin-top: -2px;
+	display:inline-block;
 }
 #tab_navigation button {
 	font-size: 11px;
 	padding:3px;
 	border:0px;
-	width:54px;
+	width:50px;
 }
 
 /*Show tab1 at startup*/
@@ -1050,7 +1036,7 @@ height: 25px;
 	padding: 3px;
 	margin: 1px;
 	width: 360px;
-	max-width:45%;
+	max-width:52%;
 	font-size: 14px;
 	height: 21px;
 }

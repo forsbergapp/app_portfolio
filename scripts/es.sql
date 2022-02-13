@@ -39,7 +39,6 @@ INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, 
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'DIALOGUE','LOGIN_PASSWORD',506,'Contraseña');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'DIALOGUE','LOGIN_TITLE',506,'Acceso');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'DIALOGUE','LOGIN_USERNAME',506,'Nombre de ususario');
-INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'PROFILE','PROFILE_USER_SETTINGS_TITLE_PLACE',506,'Lugar');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'DIALOGUE','SCAN_OPEN_MOBILE_TITLE1',506,'Escanear para usar en su teléfono');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'DIALOGUE','SCAN_OPEN_MOBILE_TITLE2',506,'Horarios avanzados de oración musulmana tradicional');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'SETTING_NAV_USER','SETTING_BTN_LABEL_USER_ADD',506,'Añadir');
