@@ -4021,19 +4021,27 @@ function onProviderSignIn(googleUser) {
 }
 
 function update_info(info) {
-    //use dynamic variable name
+    let button_close_about = `<button class='info_close toolbar_button' 
+                                onclick="document.getElementById('window_info').style.display = 'none';
+                                window.location='#info_empty';
+                                document.getElementById('window_preview_toolbar_qr').style.display = 'block';">
+                                <i class="fas fa-check-circle"></i>
+                            </button>`
+    let button_close_info = `<button class='info_close toolbar_button' 
+                                onclick="document.getElementById('window_info').style.display = 'none';
+                                window.location='#info_empty';">
+                                <i class="fas fa-check-circle"></i>
+                            </button>`;    
     fetch(eval('global_info_link' + info + '_url'))
         .then(function(response) {
             return response.text();
         })
         .then(function(result) {
-            // put file content as div content
-            //file should not have html,head or body tags
-            document.getElementById('info' + info).innerHTML = result;
             switch (info) {
-                ///info/privacy_policy.html
+                //info/privacy_policy.html
                 case 1:
                     {
+                        document.getElementById('info' + info).innerHTML = result + button_close_info;
                         document.getElementById('policy_app_name1').innerHTML = global_app_name;
                         document.getElementById('policy_app_name2').innerHTML = global_app_name;
                         document.getElementById('policy_app_hostname').href = global_app_hostname;
@@ -4042,9 +4050,10 @@ function update_info(info) {
                         document.getElementById('policy_app_email').innerText = global_app_email_policy;
                         break;
                     }
-                    //info/disclaimer.html
+                //info/disclaimer.html
                 case 2:
                     {
+                        document.getElementById('info' + info).innerHTML = result + button_close_info;
                         document.getElementById('disclaimer_app_name1').innerHTML = global_app_name;
                         document.getElementById('disclaimer_app_name2').innerHTML = global_app_name;
                         document.getElementById('disclaimer_app_name3').innerHTML = global_app_name;
@@ -4052,9 +4061,10 @@ function update_info(info) {
                         document.getElementById('disclaimer_app_email').innerText = global_app_email_disclaimer;
                         break;
                     }
-                    //info/terms.html
+                //info/terms.html
                 case 3:
                     {
+                        document.getElementById('info' + info).innerHTML = result + button_close_info;
                         document.getElementById('terms_app_name').innerHTML = global_app_name;
                         document.getElementById('terms_app_hostname').href = global_app_hostname;
                         document.getElementById('terms_app_hostname').innerText = global_app_hostname;
@@ -4062,9 +4072,16 @@ function update_info(info) {
                         document.getElementById('terms_app_email').innerText = global_app_email_terms;
                         break;
                     }
-                    //info/support.html
+                //info/support.html
                 case 4:
                     {
+                        document.getElementById('info' + info).innerHTML = result + button_close_info;
+                        break;
+                    }
+                //info/about.html
+                case 5:
+                    {
+                        document.getElementById('info' + info).innerHTML = result + button_close_about;
                         break;
                     }
                 default:
@@ -4539,7 +4556,8 @@ function profile_show(user_account_id_other = null, username = null) {
     document.getElementById('profile_top').style.display = "none";
     document.getElementById('profile_detail').style.display = "none";
     document.getElementById('profile').style.visibility = "visible";
-
+    document.getElementById('profile_select_user_settings').innerHTML='';
+    document.getElementById('profile_user_settings_detail').innerHTML = '';
     //empty search
     document.getElementById('profile_search_input').value = '';
     document.getElementById('profile_search_list').style.display = "none";
@@ -4567,7 +4585,6 @@ function profile_show(user_account_id_other = null, username = null) {
         document.getElementById('profile_detail_list').innerHTML = '';
 
         document.getElementById('profile_user_settings_public').style.display = "none";
-        document.getElementById('profile_user_settings_detail').innerHTML = '';
         document.getElementById('profile_user_settings_private').style.display = "none";
     } else {
         if (user_account_id_other !== null) {
@@ -4662,6 +4679,9 @@ function profile_show(user_account_id_other = null, username = null) {
                         document.getElementById('profile_like').children[0].style.display = 'block';
                         document.getElementById('profile_like').children[1].style.display = 'none';
                     }
+                    if (user_id.innerHTML ==''){
+                        setTimeout(function(){show_dialogue('LOGIN')}, 2000);
+                    }
                     if (json.private && parseInt(user_id.innerHTML) !== json.id) {
                         //private
                         document.getElementById('profile_user_settings_public').style.display = "none";
@@ -4670,14 +4690,9 @@ function profile_show(user_account_id_other = null, username = null) {
                         //public
                         document.getElementById('profile_user_settings_public').style.display = "block";
                         document.getElementById('profile_user_settings_private').style.display = "none";
-                    }
-                    if (user_id.innerHTML =='')
-                        document.getElementById('profile_user_settings_row').style.display='none';
-                    else{
-                        document.getElementById('profile_user_settings_row').style.display='block';
                         profile_show_user_setting();
                     }
-
+                    
                 } else {
                     if (status == 500 && username !== null) {
                         document.getElementById('profile').style.visibility = 'hidden';
@@ -5449,7 +5464,7 @@ async function app_load(){
         clearInterval(showreporttime);
         setInterval(showreporttime, 1000);
         //show dialogue about using mobile and scan QR code after 5 seconds
-        setTimeout(show_dialogue('SCAN'), 5000);
+        setTimeout(function(){show_dialogue('SCAN')}, 5000);
     })
 }
 async function app_show(){
