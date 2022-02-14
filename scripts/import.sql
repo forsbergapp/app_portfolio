@@ -35,6 +35,8 @@ INSERT INTO app_message (message_code, app_id) VALUES ('20401',1);
 INSERT INTO app_message (message_code, app_id) VALUES ('20402',1);
 INSERT INTO app_message (message_code, app_id) VALUES ('20403',1);
 INSERT INTO app_message (message_code, app_id) VALUES ('20500',1);
+INSERT INTO app_message (message_code, app_id) VALUES ('20501',1);
+INSERT INTO app_message (message_code, app_id) VALUES ('20502',1);
 --
 -- Dumping data for table `app_object`
 --
@@ -1997,13 +1999,15 @@ INSERT INTO message (message_level_id, message_type_id, code) VALUES (1,1,'20401
 INSERT INTO message (message_level_id, message_type_id, code) VALUES (1,1,'20402');
 INSERT INTO message (message_level_id, message_type_id, code) VALUES (1,1,'20403');
 INSERT INTO message (message_level_id, message_type_id, code) VALUES (1,1,'20500');
+INSERT INTO message (message_level_id, message_type_id, code) VALUES (1,2,'20501');
+INSERT INTO message (message_level_id, message_type_id, code) VALUES (1,2,'20502');
 --
 -- Dumping data for table `message_level`
 --
-INSERT INTO message_level (id, message_level) VALUES (1,'0');
-INSERT INTO message_level (id, message_level) VALUES (2,'10');
-INSERT INTO message_level (id, message_level) VALUES (3,'20');
-INSERT INTO message_level (id, message_level) VALUES (4,'30');
+INSERT INTO message_level (id, message_level) VALUES (1,'0_INFO');
+INSERT INTO message_level (id, message_level) VALUES (2,'10_USER');
+INSERT INTO message_level (id, message_level) VALUES (3,'20_APP');
+INSERT INTO message_level (id, message_level) VALUES (4,'30_SYSTEM');
 --
 -- Dumping data for table `message_type`
 --
