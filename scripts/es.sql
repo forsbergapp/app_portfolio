@@ -1099,3 +1099,5 @@ INSERT INTO message_translation (language_id, message_code, text) VALUES (506,'2
 INSERT INTO message_translation (language_id, message_code, text) VALUES (506,'20402','No se pudo actualizar el usuario');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (506,'20403','Contraseña inválida');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (506,'20500','Falta latitud or longitud');
+INSERT INTO message_translation (language_id, message_code, text) VALUES (506,'20501','Regístrate');
+INSERT INTO message_translation (language_id, message_code, text) VALUES (506,'20502','Código de verificación');
