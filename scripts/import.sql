@@ -326,9 +326,11 @@ INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_
 INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','SERVICE_URL_GPS_IP','http://www.geoplugin.net/json.gp',NULL);
 INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','SERVICE_URL_GPS_PLACE','http://www.geoplugin.net/extras/location.gp',NULL);
 INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','SERVICE_WORLDCITIES','/service/worldcities',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'1','USER_PROVIDER1_USE','1',NULL);
 INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','USER_PROVIDER1_API_SRC','https://apis.google.com/js/platform.js?hl=',NULL);
 INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'1','USER_PROVIDER1_ID','{GOOGLE_ID}',NULL);
 INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','USER_PROVIDER1_NAME','Google',NULL);
+INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'1','USER_PROVIDER2_USE','1',NULL);
 INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','USER_PROVIDER2_API_SRC','https://connect.facebook.net/','example:https://connect.facebook.net/en_US/sdk.js, set locale SDK in client');
 INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','USER_PROVIDER2_API_SRC2','/sdk.js',NULL);
 INSERT INTO app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','USER_PROVIDER2_API_VERSION','v12.0',NULL);
