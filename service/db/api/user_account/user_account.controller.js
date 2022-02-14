@@ -123,6 +123,7 @@ module.exports = {
                         typeof req.body.provider2_id == 'undefined') {
                         //send email for local users only
                         const emailData = {
+                            lang_code : req.query.lang_code,
                             app_id : req.body.app_id,
                             app_user_id : req.body.user_account_id,
                             emailType : process.env.APP1_SERVICE_EMAILTYPE_SIGNUP,
