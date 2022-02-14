@@ -531,12 +531,16 @@ async function get_app_globals() {
                     global_service_auth_token_url = json.data[i].parameter_value;                            
                 if (json.data[i].parameter_name=='COPYRIGHT')
                     global_app_copyright = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='USER_PROVIDER1_USE')
+                    global_app_user_provider1_use = json.data[i].parameter_value;
                 if (json.data[i].parameter_name=='USER_PROVIDER1_ID')
                     global_app_user_provider1_id = json.data[i].parameter_value;
                 if (json.data[i].parameter_name=='USER_PROVIDER1_NAME')
                     global_app_user_provider1_name = json.data[i].parameter_value;
                 if (json.data[i].parameter_name=='USER_PROVIDER1_API_SRC')
                     global_app_user_provider1_api_src = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='USER_PROVIDER2_USE')
+                    global_app_user_provider2_use = json.data[i].parameter_value;
                 if (json.data[i].parameter_name=='USER_PROVIDER2_ID')
                     global_app_user_provider2_id = json.data[i].parameter_value;
                 if (json.data[i].parameter_name=='USER_PROVIDER2_NAME')
@@ -871,7 +875,8 @@ function show_error(code){
 function set_app_globals_head() {
     //call this function from index.html i head before body is loaded
     //set meta tags in header
-    document.querySelector('meta[name="google-signin-client_id"]').setAttribute("content", global_app_user_provider1_id);
+    if (global_app_user_provider1_use ==1)
+        document.querySelector('meta[name="google-signin-client_id"]').setAttribute("content", global_app_user_provider1_id);
     document.title = global_app_name;
     document.querySelector('meta[name="apple-mobile-web-app-title"]').setAttribute("content", global_app_name)
 }
@@ -1753,7 +1758,8 @@ function keyfunctions() {
     document.getElementById('scan_open_mobile_close').addEventListener('click', function() { document.getElementById('dialogue_scan_open_mobile').style.visibility = 'hidden' }, false);
     document.getElementById('login_signup').addEventListener('click', function() { show_dialogue('SIGNUP') }, false);
     document.getElementById('login_button').addEventListener('click', function() { user_login() }, false);
-    document.getElementById('login_facebook').addEventListener('click', function() { onProviderSignIn() }, false);
+    if (global_app_user_provider2_use==1)
+        document.getElementById('login_facebook').addEventListener('click', function() { onProviderSignIn() }, false);
     document.getElementById('login_close').addEventListener('click', function() { document.getElementById('dialogue_login').style.visibility = 'hidden' }, false);
     document.getElementById('signup_login').addEventListener('click', function() { show_dialogue('LOGIN') }, false);
 
@@ -2911,22 +2917,26 @@ function user_logoff() {
     var option;
     //get new token to avoid endless loop och invalid token
     get_token().then(function(){
-        //sign out from Google if Google loaded
-        if (gapi.auth2.getAuthInstance()) {
-            gapi.auth2.getAuthInstance().signOut().then(function() {
-                null;
-            });
-        };
-        //Sign out from Facebook if signed in
-        FB.getLoginStatus(function(response) {
-            //statusChangeCallback(response);
-            if (response.authResponse) {
-                FB.logout(function(response) {
-                    // user is now logged out
+        if (global_app_user_provider1_use==1){
+            //sign out from Google if Google loaded
+            if (gapi.auth2.getAuthInstance()) {
+                gapi.auth2.getAuthInstance().signOut().then(function() {
                     null;
                 });
-            }
-        });
+            };
+        }
+        if (global_app_user_provider2_use==1){
+            //Sign out from Facebook if signed in
+            FB.getLoginStatus(function(response) {
+                //statusChangeCallback(response);
+                if (response.authResponse) {
+                    FB.logout(function(response) {
+                        // user is now logged out
+                        null;
+                    });
+                }
+            });
+        }
         //remove user setting icon
         update_settings_icon('', true);
         //remove user settings url links
@@ -5489,13 +5499,19 @@ async function app_show(){
     }
 }
 async function init_head(){
-
+    //enable provider 1 if used
+    if (global_app_user_provider1_use==1){
         /*Google*/
         var tag = document.createElement('script');
         tag.src = global_app_user_provider1_api_src + navigator.language;
         tag.defer = true;
         var firstScriptTag = document.getElementsByTagName('script')[0];
         firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+    }
+    else
+        document.getElementsByClassName('g-signin2')[0].className += 'login_button_hidden';
+    //enable provider 2 if used
+    if (global_app_user_provider2_use==1){
         /*Facebook*/
         window.fbAsyncInit = function() {
             FB.init({
@@ -5517,6 +5533,9 @@ async function init_head(){
                     global_app_user_provider2_api_src2;
             fjs.parentNode.insertBefore(js, fjs);
         }(document, 'script', 'facebook-jssdk'));
+    }
+    else
+        document.getElementById('login_facebook').className = 'login_button_hidden';
 }
 function init() {
     dialogue_loading(1);
