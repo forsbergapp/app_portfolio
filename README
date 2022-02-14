@@ -93,21 +93,21 @@ version 17.3.0 supported
    requires hostname
    https://console.developers.google.com/
 
-   if not using Google, hide button
-	app_timetables/css/app.css
-	.abcRioButton{
-		display:none;
-	}
+   if not using Google
+   set database parameter USER_PROVIDER1_USE=0
+   hides login button and app will not use SDK
+
+   default USER_PROVIDER1_USE=1
 
 4. register Facebook login
 
    https://developers.facebook.com/docs/facebook-login/web
 
-   if not using Facebook, hide button
-	app_timetables/css/app.css
-	#login_facebook{
-		display:none;
-	}
+   if not using Facebook 
+   set database parameter USER_PROVIDER1_USE=0
+   hides login button and app will not use SDK
+
+   default USER_PROVIDER2_USE=1
 
 5. register mapbox 
    get access token
