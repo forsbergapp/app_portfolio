@@ -701,6 +701,9 @@ a:active {
 	margin-bottom:20px;
 }
 /*Dialogue login/signup*/
+.login_button_hidden{
+	display:none !important;
+}
 #dialogue_login_content{
 	height:450px;
 }
