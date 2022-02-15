@@ -1,5 +1,37 @@
 --modified manually after SQL Developer Data modeler file generation to Mysql syntax
-CREATE TABLE app (
+
+CREATE ROLE role_app_admin;
+CREATE ROLE role_app_dba;
+CREATE ROLE role_app_home;
+CREATE ROLE role_app_property_management;
+CREATE ROLE role_app_timetables;
+
+CREATE USER app_admin IDENTIFIED BY 'APP_1_portfolio'
+    ACCOUNT UNLOCK;
+GRANT role_app_admin TO app_admin;
+SET DEFAULT ROLE ALL TO app_admin;
+
+CREATE USER app_home IDENTIFIED BY 'APP_1_portfolio'
+    ACCOUNT UNLOCK;
+GRANT role_app_home TO app_home;
+SET DEFAULT ROLE ALL TO app_home;
+
+CREATE USER app_portfolio IDENTIFIED BY 'APP_1_portfolio'
+    ACCOUNT UNLOCK;
+GRANT role_app_dba TO app_portfolio;
+SET DEFAULT ROLE ALL TO app_portfolio;
+
+CREATE USER app_property_management IDENTIFIED BY 'APP_1_portfolio'
+    ACCOUNT UNLOCK;
+GRANT role_app_property_management TO app_property_management;
+SET DEFAULT ROLE ALL TO app_property_management;
+
+CREATE USER app_timetables IDENTIFIED BY 'APP_1_portfolio'
+    ACCOUNT UNLOCK;
+GRANT role_app_timetables TO app_timetables;
+SET DEFAULT ROLE ALL TO app_timetables;
+
+CREATE TABLE app_portfolio.app (
     id        INTEGER NOT NULL,
     app_name  VARCHAR(100) NOT NULL,
     url       VARCHAR(100),
@@ -7,7 +39,17 @@ CREATE TABLE app (
 	CONSTRAINT app_pk PRIMARY KEY ( id )
 );
 
-CREATE TABLE app_log (
+GRANT SELECT ON app_portfolio.app TO role_app_home;
+
+GRANT SELECT ON app_portfolio.app TO role_app_property_management;
+
+GRANT ALL PRIVILEGES ON app_portfolio.app TO role_app_dba;
+
+GRANT SELECT ON app_portfolio.app TO role_app_timetables;
+
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app TO role_app_admin;
+
+CREATE TABLE app_portfolio.app_log (
     id                           INT NOT NULL AUTO_INCREMENT,
     app_module                   VARCHAR(100),
     app_module_type              VARCHAR(100),
@@ -29,7 +71,7 @@ CREATE TABLE app_log (
 	CONSTRAINT app_log_pk PRIMARY KEY ( id )
 );
 
-ALTER TABLE app_log MODIFY COLUMN app_log.app_module VARCHAR(100) COMMENT
+ALTER TABLE app_portfolio.app_log MODIFY COLUMN app_log.app_module VARCHAR(100) COMMENT
     'INIT
 AUTH
 MAIL
@@ -37,7 +79,7 @@ GEOLOCATION
 REPORT
 WORLDCITIES';
 
-ALTER TABLE app_log MODIFY COLUMN app_log.app_module_type VARCHAR(100) COMMENT
+ALTER TABLE app_portfolio.app_log MODIFY COLUMN app_log.app_module_type VARCHAR(100) COMMENT
     'INIT 			
 AUTH_TOKEN_GET
 send:
@@ -61,7 +103,7 @@ REPORT_TIMETABLE_MONTH
 REPORT_TIMETABLE_YEAR
 WORLDCITIES_CITIES';
 
-ALTER TABLE app_log MODIFY COLUMN app_log.app_module_request VARCHAR(100) COMMENT
+ALTER TABLE app_portfolio.app_log MODIFY COLUMN app_log.app_module_request VARCHAR(100) COMMENT
     'INIT: 
 AUTH_TOKEN_GET:	AT: token, DT: token
 MAIL%: 		emailaddress
@@ -69,38 +111,68 @@ GEOLOCATION%: 	url
 REPORT%: 		url
 WORLDCITIES%:	countrycode';
 
-ALTER TABLE app_log MODIFY COLUMN app_log.app_module_result VARCHAR(100) COMMENT
+ALTER TABLE app_portfolio.app_log MODIFY COLUMN app_log.app_module_result VARCHAR(100) COMMENT
     'successful info or any error message';
 
-ALTER TABLE app_log MODIFY COLUMN user_language VARCHAR(100) COMMENT
+ALTER TABLE app_portfolio.app_log MODIFY COLUMN user_language VARCHAR(100) COMMENT
     'navigator.language';
 
-ALTER TABLE app_log MODIFY COLUMN user_timezone VARCHAR(100) COMMENT
+ALTER TABLE app_portfolio.app_log MODIFY COLUMN user_timezone VARCHAR(100) COMMENT
     'Intl.DateTimeFormat().resolvedOptions().timeZone;';
 
-ALTER TABLE app_log MODIFY COLUMN user_number_system VARCHAR(100) COMMENT
+ALTER TABLE app_portfolio.app_log MODIFY COLUMN user_number_system VARCHAR(100) COMMENT
     'Intl.NumberFormat().resolvedOptions().numberingSystem';
 
-ALTER TABLE app_log MODIFY COLUMN user_platform VARCHAR(100) COMMENT
+ALTER TABLE app_portfolio.app_log MODIFY COLUMN user_platform VARCHAR(100) COMMENT
     'navigator.platform';
 
-CREATE TABLE app_message (
+GRANT SELECT, INSERT ON app_portfolio.app_log TO role_app_home;
+
+GRANT SELECT, INSERT ON app_portfolio.app_log TO role_app_property_management;
+
+GRANT ALL PRIVILEGES ON app_portfolio.app_log TO role_app_dba;
+
+GRANT SELECT, INSERT ON app_portfolio.app_log TO role_app_timetables;
+
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_log TO role_app_admin;
+
+CREATE TABLE app_portfolio.app_message (
     message_code      VARCHAR(100) NOT NULL,
     app_id            INTEGER NOT NULL
 	CONSTRAINT app_message_pk PRIMARY KEY ( message_code,
                                             app_id )
 );
 
-CREATE TABLE app_object (
+GRANT SELECT ON app_portfolio.app_message TO role_app_home;
+
+GRANT SELECT ON app_portfolio.app_message TO role_app_property_management;
+
+GRANT ALL PRIVILEGES ON app_portfolio.app_message TO role_app_dba;
+
+GRANT SELECT ON app_portfolio.app_message TO role_app_timetables;
+
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_message TO role_app_admin;
+
+CREATE TABLE app_portfolio.app_object (
     app_id       INTEGER NOT NULL,
     object_name  VARCHAR(100) NOT NULL,
 	CONSTRAINT app_object_pk PRIMARY KEY ( object_name,
                                            app_id )
 );
 
-ALTER TABLE app_object ADD CONSTRAINT app_object_object_name_un UNIQUE ( object_name );
+GRANT SELECT ON app_portfolio.app_object TO role_app_home;
 
-CREATE TABLE app_object_item (
+GRANT SELECT ON app_portfolio.app_object TO role_app_property_management;
+
+GRANT ALL PRIVILEGES ON app_portfolio.app_object TO role_app_dba;
+
+GRANT SELECT ON app_portfolio.app_object TO role_app_timetables;
+
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_object TO role_app_admin;
+
+ALTER TABLE app_portfolio.app_object ADD CONSTRAINT app_object_object_name_un UNIQUE ( object_name );
+
+CREATE TABLE app_portfolio.app_object_item (
     app_id            INTEGER NOT NULL,
     object_name       VARCHAR(100) NOT NULL,
     object_item_name  VARCHAR(100) NOT NULL,
@@ -109,7 +181,17 @@ CREATE TABLE app_object_item (
 	                                                    object_item_name )
 );
 
-CREATE TABLE app_object_item_subitem (
+GRANT SELECT ON app_portfolio.app_object_item TO role_app_home;
+
+GRANT SELECT ON app_portfolio.app_object_item TO role_app_property_management;
+
+GRANT ALL PRIVILEGES ON app_portfolio.app_object_item TO role_app_dba;
+
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_object_item TO role_app_admin;
+
+GRANT SELECT ON app_portfolio.app_object_item TO role_app_timetables;
+
+CREATE TABLE app_portfolio.app_object_item_subitem (
     app_id            INTEGER NOT NULL,
     object_name       VARCHAR(100) NOT NULL,
     object_item_name  VARCHAR(100) NOT NULL,
@@ -119,9 +201,18 @@ CREATE TABLE app_object_item_subitem (
 	                                                            object_name,
 	                                                            app_id )
 );
+GRANT SELECT ON app_portfolio.app_object_item_subitem TO role_app_home;
+
+GRANT SELECT ON app_portfolio.app_object_item_subitem TO role_app_property_management;
+
+GRANT ALL PRIVILEGES ON app_portfolio.app_object_item_subitem TO role_app_dba;
+
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_object_item_subitem TO role_app_admin;
+
+GRANT SELECT ON app_portfolio.app_object_item_subitem TO role_app_timetables;
 
 
-CREATE TABLE app_object_item_subitem_fixed (
+CREATE TABLE app_portfolio.app_object_item_subitem_fixed (
     app_id            INTEGER NOT NULL,
     object_name       VARCHAR(100) NOT NULL,
     object_item_name  VARCHAR(100) NOT NULL,
@@ -133,8 +224,18 @@ CREATE TABLE app_object_item_subitem_fixed (
 	                                                                  app_id )
 );
 
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_object_item_subitem_fixed TO role_app_admin;
 
-CREATE TABLE app_object_item_translation (
+GRANT SELECT ON app_portfolio.app_object_item_subitem_fixed TO role_app_home;
+
+GRANT SELECT ON app_portfolio.app_object_item_subitem_fixed TO role_app_property_management;
+
+GRANT ALL PRIVILEGES ON app_portfolio.app_object_item_subitem_fixed TO role_app_dba;
+
+GRANT SELECT ON app_portfolio.app_object_item_subitem_fixed TO role_app_timetables;
+
+
+CREATE TABLE app_portfolio.app_object_item_translation (
     app_id            INTEGER NOT NULL,
     object_name       VARCHAR(100) NOT NULL,
     object_item_name  VARCHAR(100) NOT NULL,
@@ -145,9 +246,18 @@ CREATE TABLE app_object_item_translation (
 	                                                                object_name,
 	                                                                app_id )
 );
+GRANT SELECT ON app_portfolio.app_object_item_translation TO role_app_timetables;
+
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_object_item_translation TO role_app_admin;
+
+GRANT SELECT ON app_portfolio.app_object_item_translation TO role_app_home;
+
+GRANT SELECT ON app_portfolio.app_object_item_translation TO role_app_property_management;
+
+GRANT ALL PRIVILEGES ON app_portfolio.app_object_item_translation TO role_app_dba;
 
 
-CREATE TABLE app_object_subitem_translation (
+CREATE TABLE app_portfolio.app_object_subitem_translation (
     app_id            INTEGER NOT NULL,
     object_name       VARCHAR(100) NOT NULL,
     object_item_name  VARCHAR(100) NOT NULL,
@@ -160,7 +270,17 @@ CREATE TABLE app_object_subitem_translation (
 	                                                                   object_name,
 	                                                                   app_id )
 );
-CREATE TABLE app_object_translation (
+GRANT SELECT ON app_portfolio.app_object_subitem_translation TO role_app_timetables;
+
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_object_subitem_translation TO role_app_admin;
+
+GRANT SELECT ON app_portfolio.app_object_subitem_translation TO role_app_home;
+
+GRANT SELECT ON app_portfolio.app_object_subitem_translation TO role_app_property_management;
+
+GRANT ALL PRIVILEGES ON app_portfolio.app_object_subitem_translation TO role_app_dba;
+
+CREATE TABLE app_portfolio.app_object_translation (
     app_id      INTEGER NOT NULL,
     object_name VARCHAR(100) NOT NULL,
     language_id INTEGER NOT NULL,
@@ -169,8 +289,17 @@ CREATE TABLE app_object_translation (
                                                            object_name,
                                                            language_id )
 );
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_object_translation TO role_app_admin;
 
-CREATE TABLE app_parameter (
+GRANT SELECT ON app_portfolio.app_object_translation TO role_app_timetables;
+
+GRANT SELECT ON app_portfolio.app_object_translation TO role_app_home;
+
+GRANT SELECT ON app_portfolio.app_object_translation TO role_app_property_management;
+
+GRANT ALL PRIVILEGES ON app_portfolio.app_object_translation TO role_app_dba;
+
+CREATE TABLE app_portfolio.app_parameter (
     app_id             INTEGER NOT NULL,
     parameter_type_id  VARCHAR(100) NOT NULL,
     parameter_name     VARCHAR(100) NOT NULL,
@@ -179,8 +308,17 @@ CREATE TABLE app_parameter (
 	CONSTRAINT app_parameter_pk PRIMARY KEY ( app_id,
 	                                                  parameter_name )
 );
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_parameter TO role_app_admin;
 
-CREATE TABLE app_timetables_place (
+GRANT SELECT ON app_portfolio.app_parameter TO role_app_timetables;
+
+GRANT SELECT ON app_portfolio.app_parameter TO role_app_home;
+
+GRANT SELECT ON app_portfolio.app_parameter TO role_app_property_management;
+
+GRANT ALL PRIVILEGES ON app_portfolio.app_parameter TO role_app_dba;
+
+CREATE TABLE app_portfolio.app_timetables_place (
     id               INTEGER NOT NULL,
     title            VARCHAR(100) NOT NULL,
     latitude         VARCHAR(100),
@@ -193,7 +331,13 @@ CREATE TABLE app_timetables_place (
 	CONSTRAINT app_timetables_place_pk PRIMARY KEY ( id )
 );
 
-CREATE TABLE app_timetables_theme (
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_timetables_place TO role_app_admin;
+
+GRANT SELECT ON app_portfolio.app_timetables_place TO role_app_timetables;
+
+GRANT ALL PRIVILEGES ON app_portfolio.app_timetables_place TO role_app_dba;
+
+CREATE TABLE app_portfolio.app_timetables_theme (
     id                    INTEGER NOT NULL,
     title                 VARCHAR(100) NOT NULL,
     author                VARCHAR(100) NOT NULL,
@@ -211,8 +355,13 @@ CREATE TABLE app_timetables_theme (
     theme_category_id     INTEGER NOT NULL,
 	CONSTRAINT app_timetables_theme_pk PRIMARY KEY ( id )
 );
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_timetables_theme TO role_app_admin;
 
-CREATE TABLE app_timetables_user_setting (
+GRANT SELECT ON app_portfolio.app_timetables_theme TO role_app_timetables;
+
+GRANT ALL PRIVILEGES ON app_portfolio.app_timetables_theme TO role_app_dba;
+
+CREATE TABLE app_portfolio.app_timetables_user_setting (
     id                                         INT NOT NULL AUTO_INCREMENT,
     description                                VARCHAR(100),
     regional_language_locale	               VARCHAR(100),
@@ -271,7 +420,13 @@ CREATE TABLE app_timetables_user_setting (
 	CONSTRAINT app_timetables_user_setting_pk PRIMARY KEY ( id )
 );
 
-ALTER TABLE app_timetables_user_setting
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_timetables_user_setting TO role_app_admin;
+
+GRANT SELECT, INSERT, DELETE, UPDATE ON app_portfolio.app_timetables_user_setting TO role_app_timetables;
+
+GRANT ALL PRIVILEGES ON app_portfolio.app_timetables_user_setting TO role_app_dba;
+
+ALTER TABLE app_portfolio.app_timetables_user_setting
     ADD CONSTRAINT arc_1 CHECK ( ( ( gps_country_id IS NOT NULL )
                                    AND ( gps_popular_place_id IS NULL ) )
                                  OR ( ( gps_popular_place_id IS NOT NULL )
@@ -279,7 +434,7 @@ ALTER TABLE app_timetables_user_setting
                                  OR ( ( gps_country_id IS NULL )
                                       AND ( gps_popular_place_id IS NULL ) ) );
 
-CREATE TABLE app_timetables_user_setting_hist (
+CREATE TABLE app_portfolio.app_timetables_user_setting_hist (
     id                                         INT NOT NULL AUTO_INCREMENT,
     dml                                        VARCHAR(1),
     dml_date                                   DATETIME,
@@ -340,17 +495,28 @@ CREATE TABLE app_timetables_user_setting_hist (
     user_account_id                            INT NOT NULL,
 	CONSTRAINT app_timetables_user_setting_hist_pk PRIMARY KEY ( id )
 );
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_timetables_user_setting_hist TO role_app_admin;
 
-CREATE TABLE app_timetables_user_setting_like (
+GRANT SELECT, INSERT ON app_portfolio.app_timetables_user_setting_hist TO role_app_timetables;
+
+GRANT ALL PRIVILEGES ON app_portfolio.app_timetables_user_setting_hist TO role_app_dba;
+
+CREATE TABLE app_portfolio.app_timetables_user_setting_like (
     id               INT NOT NULL AUTO_INCREMENT,
     user_account_id  INTEGER NOT NULL,
     user_setting_id  INTEGER NOT NULL,
 	date_created     DATETIME,	
 	CONSTRAINT app_timetables_user_setting_like_pk PRIMARY KEY ( user_account_id, user_setting_id )
 );
-ALTER TABLE app_timetables_user_setting_like ADD CONSTRAINT app_timetables_user_setting_like_un UNIQUE ( id );
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_timetables_user_setting_like TO role_app_admin;
 
-CREATE TABLE app_timetables_user_setting_like_hist (
+GRANT SELECT, INSERT, DELETE, UPDATE ON app_portfolio.app_timetables_user_setting_like TO role_app_timetables;
+
+GRANT ALL PRIVILEGES ON app_portfolio.app_timetables_user_setting_like TO role_app_dba;
+
+ALTER TABLE app_portfolio.app_timetables_user_setting_like ADD CONSTRAINT app_timetables_user_setting_like_un UNIQUE ( id );
+
+CREATE TABLE app_portfolio.app_timetables_user_setting_like_hist (
     id                    INT NOT NULL AUTO_INCREMENT,
     dml                   VARCHAR(1),
     dml_date              DATETIME,
@@ -360,8 +526,13 @@ CREATE TABLE app_timetables_user_setting_like_hist (
     date_created          DATETIME,
 	CONSTRAINT app_timetables_user_setting_like_hist_pk PRIMARY KEY ( id )
 );
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_timetables_user_setting_like_hist TO role_app_admin;
 
-CREATE TABLE app_timetables_user_setting_view (
+GRANT SELECT, INSERT ON app_portfolio.app_timetables_user_setting_like_hist TO role_app_timetables;
+
+GRANT ALL PRIVILEGES ON app_portfolio.app_timetables_user_setting_like_hist TO role_app_dba;
+
+CREATE TABLE app_portfolio.app_timetables_user_setting_view (
     user_account_id    INTEGER,
     user_setting_id    INTEGER NOT NULL,
     client_ip          VARCHAR(100),
@@ -370,8 +541,13 @@ CREATE TABLE app_timetables_user_setting_view (
     client_latitude    VARCHAR(100),
     date_created       DATETIME NOT NULL
 );
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_timetables_user_setting_view TO role_app_admin;
 
-CREATE TABLE app_timetables_user_setting_view_hist (
+GRANT SELECT, INSERT, DELETE, UPDATE ON app_portfolio.app_timetables_user_setting_view TO role_app_timetables;
+
+GRANT ALL PRIVILEGES ON app_portfolio.app_timetables_user_setting_view TO role_app_dba;
+
+CREATE TABLE app_portfolio.app_timetables_user_setting_view_hist (
     id                 INT NOT NULL AUTO_INCREMENT,
     dml                VARCHAR(1),
     dml_date           DATETIME,
@@ -384,8 +560,13 @@ CREATE TABLE app_timetables_user_setting_view_hist (
     date_created       DATETIME,
 	CONSTRAINT app_timetables_user_setting_view_hist_pk PRIMARY KEY ( id )
 );
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_timetables_user_setting_view_hist TO role_app_admin;
 
-CREATE TABLE country (
+GRANT SELECT, INSERT ON app_portfolio.app_timetables_user_setting_view_hist TO role_app_timetables;
+
+GRANT ALL PRIVILEGES ON app_portfolio.app_timetables_user_setting_view_hist TO role_app_dba;
+
+CREATE TABLE app_portfolio.country (
     id            INT NOT NULL AUTO_INCREMENT,
     country_code  VARCHAR(10) NOT NULL,
     flag_emoji    VARCHAR(10),
@@ -393,33 +574,56 @@ CREATE TABLE country (
     country_group_id  INTEGER NOT NULL,
 	CONSTRAINT country_pk PRIMARY KEY ( id )
 );
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.country TO role_app_admin;
 
-CREATE TABLE country_group (
+GRANT SELECT ON app_portfolio.country TO role_app_timetables;
+
+GRANT SELECT ON app_portfolio.country TO role_app_property_management;
+
+GRANT ALL PRIVILEGES ON app_portfolio.country TO role_app_dba;
+
+CREATE TABLE app_portfolio.country_group (
     id          INT NOT NULL AUTO_INCREMENT,
     group_name  VARCHAR(100) NOT NULL,
 	CONSTRAINT country_group_pk PRIMARY KEY ( id )
 );
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.country_group TO role_app_admin;
 
+GRANT SELECT ON app_portfolio.country_group TO role_app_timetables;
 
-CREATE TABLE country_translation (
+GRANT SELECT ON app_portfolio.country_group TO role_app_property_management;
+
+GRANT ALL PRIVILEGES ON app_portfolio.country_group TO role_app_dba;
+
+CREATE TABLE app_portfolio.country_translation (
     country_id   INTEGER NOT NULL,
     language_id  INTEGER NOT NULL,
     text         VARCHAR(100) NOT NULL,
 	CONSTRAINT country_translation_pk PRIMARY KEY ( country_id,
 	                                                language_id )
 );
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.country_translation TO role_app_admin;
 
-CREATE TABLE group_place (
+GRANT SELECT ON app_portfolio.country_translation TO role_app_timetables;
+
+GRANT SELECT ON app_portfolio.country_translation TO role_app_property_management;
+
+CREATE TABLE app_portfolio.group_place (
     id          INT NOT NULL AUTO_INCREMENT,
     group_name  VARCHAR(100) NOT NULL,
     icon_emoji  VARCHAR(10) NOT NULL,
     icon_url    VARCHAR(100),
 	CONSTRAINT group_pk PRIMARY KEY ( id )
 );
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.group_place TO role_app_admin;
 
-ALTER TABLE group_place ADD CONSTRAINT group_group_name_un UNIQUE ( group_name );
+GRANT SELECT ON app_portfolio.group_place TO role_app_timetables;
 
-CREATE TABLE language (
+GRANT ALL PRIVILEGES ON app_portfolio.group_place TO role_app_dba;
+
+ALTER TABLE app_portfolio.group_place ADD CONSTRAINT group_group_name_un UNIQUE ( group_name );
+
+CREATE TABLE app_portfolio.language (
     id         INT NOT NULL AUTO_INCREMENT,
     lang_code  VARCHAR(10) NOT NULL,
 	CONSTRAINT language_pk PRIMARY KEY ( id )
@@ -429,64 +633,129 @@ CREATE INDEX lang_code_index ON
     language (
         lang_code
     ASC );
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.language TO role_app_admin;
 
-CREATE TABLE language_translation (
+GRANT SELECT ON app_portfolio.language TO role_app_property_management;
+
+GRANT SELECT ON app_portfolio.language TO role_app_timetables;
+
+GRANT ALL PRIVILEGES ON app_portfolio.language TO role_app_dba;
+
+CREATE TABLE app_portfolio.language_translation (
     language_id              INTEGER NOT NULL,
     language_translation_id  INTEGER NOT NULL,
     text                     VARCHAR(100) NOT NULL,
 	CONSTRAINT language_translation_pk PRIMARY KEY ( language_translation_id,
 	                                                 language_id )
 );
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.language_translation TO role_app_admin;
 
-CREATE TABLE locale (
+GRANT SELECT ON app_portfolio.language_translation TO role_app_property_management;
+
+GRANT SELECT ON app_portfolio.language_translation TO role_app_timetables;
+
+GRANT ALL PRIVILEGES ON app_portfolio.language_translation TO role_app_dba;
+
+CREATE TABLE app_portfolio.locale (
     language_id  INTEGER NOT NULL,
-    country_id   INTEGER
+    country_id   INTEGER NOT NULL
 );
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.locale TO role_app_admin;
 
-ALTER TABLE locale ADD CONSTRAINT locale_un UNIQUE ( language_id,
+GRANT SELECT ON app_portfolio.locale TO role_app_property_management;
+
+GRANT SELECT ON app_portfolio.locale TO role_app_timetables;
+
+GRANT ALL PRIVILEGES ON app_portfolio.locale TO role_app_dba;
+
+ALTER TABLE app_portfolio.locale ADD CONSTRAINT locale_un UNIQUE ( language_id,
                                                      country_id );
 
-CREATE TABLE message (
+CREATE TABLE app_portfolio.message (
     message_level_id INTEGER NOT NULL,
     message_type_id  INTEGER NOT NULL,
     code             VARCHAR(100) NOT NULL,
-    CONSTRAINT message_pk PRIMARY KEY ( code );
+    CONSTRAINT message_pk PRIMARY KEY ( code )
 );
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.message TO role_app_admin;
 
-CREATE TABLE message_level (
+GRANT SELECT ON app_portfolio.message TO role_app_home;
+
+GRANT SELECT ON app_portfolio.message TO role_app_property_management;
+
+GRANT SELECT ON app_portfolio.message TO role_app_timetables;
+
+GRANT ALL PRIVILEGES ON app_portfolio.message TO role_app_dba;
+
+CREATE TABLE app_portfolio.message_level (
     id             INT NOT NULL AUTO_INCREMENT,
     message_level  VARCHAR(10) NOT NULL,
 	CONSTRAINT message_level_pk PRIMARY KEY ( id )
 );
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.message_level TO role_app_admin;
 
+GRANT SELECT ON app_portfolio.message_level TO role_app_home;
 
-ALTER TABLE message_level ADD CONSTRAINT message_level_message_level_un UNIQUE ( message_level );
+GRANT SELECT ON app_portfolio.message_level TO role_app_property_management;
 
-CREATE TABLE message_translation (
+GRANT SELECT ON app_portfolio.message_level TO role_app_timetables;
+
+GRANT ALL PRIVILEGES ON app_portfolio.message_level TO role_app_dba;
+
+ALTER TABLE app_portfolio.message_level ADD CONSTRAINT message_level_message_level_un UNIQUE ( message_level );
+
+CREATE TABLE app_portfolio.message_translation (
     language_id  INTEGER NOT NULL,
     message_code VARCHAR(100) NOT NULL,
     text         VARCHAR(100),
     CONSTRAINT message_translation_pk PRIMARY KEY ( language_id,
-                                                    message_code );
+                                                    message_code )
 );
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.message_translation TO role_app_admin;
 
-CREATE TABLE message_type (
+GRANT SELECT ON app_portfolio.message_translation TO role_app_home;
+
+GRANT SELECT ON app_portfolio.message_translation TO role_app_property_management;
+
+GRANT ALL PRIVILEGES ON app_portfolio.message_translation TO role_app_dba;
+
+GRANT SELECT ON app_portfolio.message_translation TO role_app_timetables;
+
+CREATE TABLE app_portfolio.message_type (
     id            INT NOT NULL AUTO_INCREMENT,
     message_type  VARCHAR(10) NOT NULL,
 	CONSTRAINT message_type_pk PRIMARY KEY ( id )
 );
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.message_type TO role_app_admin;
 
-ALTER TABLE message_type ADD CONSTRAINT message_type_message_type_un UNIQUE ( message_type );
+GRANT SELECT ON app_portfolio.message_type TO role_app_home;
+
+GRANT SELECT ON app_portfolio.message_type TO role_app_property_management;
+
+GRANT ALL PRIVILEGES ON app_portfolio.message_type TO role_app_dba;
+
+GRANT SELECT ON app_portfolio.message_type TO role_app_timetables;
+
+ALTER TABLE app_portfolio.message_type ADD CONSTRAINT message_type_message_type_un UNIQUE ( message_type );
 
 
-CREATE TABLE parameter_type (
+CREATE TABLE app_portfolio.parameter_type (
     id VARCHAR(100) NOT NULL,
     name VARCHAR2(100) NOT NULL
 );
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.parameter_type TO role_app_admin;
 
-ALTER TABLE parameter_type ADD CONSTRAINT parameter_type_pk PRIMARY KEY ( id );
+GRANT SELECT ON app_portfolio.parameter_type TO role_app_home;
 
-CREATE TABLE profile_search (
+GRANT SELECT ON app_portfolio.parameter_type TO role_app_property_management;
+
+GRANT ALL PRIVILEGES ON app_portfolio.parameter_type TO role_app_dba;
+
+GRANT SELECT ON app_portfolio.parameter_type TO role_app_timetables;
+
+ALTER TABLE app_portfolio.parameter_type ADD CONSTRAINT parameter_type_pk PRIMARY KEY ( id );
+
+CREATE TABLE app_portfolio.profile_search (
     user_account_id    INTEGER,
     search             VARCHAR(100) NOT NULL,
     client_ip          VARCHAR(100),
@@ -495,8 +764,17 @@ CREATE TABLE profile_search (
     client_latitude    VARCHAR(100),
     date_created       DATETIME NOT NULL
 );
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.profile_search TO role_app_admin;
 
-CREATE TABLE profile_search_hist (
+GRANT SELECT, INSERT ON app_portfolio.profile_search TO role_app_home;
+
+GRANT SELECT, INSERT, DELETE, UPDATE ON app_portfolio.profile_search TO role_app_property_management;
+
+GRANT ALL PRIVILEGES ON app_portfolio.profile_search TO role_app_dba;
+
+GRANT SELECT, INSERT, DELETE, UPDATE ON app_portfolio.profile_search TO role_app_timetables;
+
+CREATE TABLE app_portfolio.profile_search_hist (
     id                 INT NOT NULL AUTO_INCREMENT,
     dml_type           VARCHAR(1),
     dml_date           DATETIME,
@@ -509,20 +787,39 @@ CREATE TABLE profile_search_hist (
     date_created       DATETIME,
 	CONSTRAINT profile_search_hist_pk PRIMARY KEY ( id )
 );
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.profile_search_hist TO role_app_admin;
 
-CREATE TABLE theme_category (
+GRANT SELECT, INSERT ON app_portfolio.profile_search_hist TO role_app_home;
+
+GRANT SELECT, INSERT ON app_portfolio.profile_search_hist TO role_app_property_management;
+
+GRANT ALL PRIVILEGES ON app_portfolio.profile_search_hist TO role_app_dba;
+
+GRANT SELECT, INSERT ON app_portfolio.profile_search_hist TO role_app_timetables;
+
+CREATE TABLE app_portfolio.theme_category (
     id     INT NOT NULL AUTO_INCREMENT,
     title  VARCHAR(100) NOT NULL,
 	CONSTRAINT theme_category_pk PRIMARY KEY ( id )
 );
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.theme_category TO role_app_admin;
 
-CREATE TABLE theme_type (
+GRANT ALL PRIVILEGES ON app_portfolio.theme_category TO role_app_dba;
+
+GRANT SELECT ON app_portfolio.theme_category TO role_app_timetables;
+
+CREATE TABLE app_portfolio.theme_type (
     id     INT NOT NULL AUTO_INCREMENT,
     title  VARCHAR(10) NOT NULL,
 	CONSTRAINT theme_type_pk PRIMARY KEY ( id )
 );
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.theme_type TO role_app_admin;
+
+GRANT ALL PRIVILEGES ON app_portfolio.theme_type TO role_app_dba;
+
+GRANT SELECT ON app_portfolio.theme_type TO role_app_timetables;
 	
-CREATE TABLE user_account (
+CREATE TABLE app_portfolio.user_account (
     id                    INT NOT NULL AUTO_INCREMENT,
     bio                   VARCHAR(150),
     private               DECIMAL(1,0),
@@ -550,44 +847,76 @@ CREATE TABLE user_account (
     provider2_email       VARCHAR(1000),
 	CONSTRAINT user_account_pk PRIMARY KEY ( id )
 );
+GRANT SELECT ON app_portfolio.user_account TO role_app_home;
 
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.user_account TO role_app_admin;
 
-ALTER TABLE user_account ADD CONSTRAINT user_account_provider1_id_un UNIQUE ( provider1_id );
+GRANT SELECT, INSERT, DELETE, UPDATE ON app_portfolio.user_account TO role_app_property_management;
 
-ALTER TABLE user_account ADD CONSTRAINT user_account_provider2_id_un UNIQUE ( provider2_id );
+GRANT ALL PRIVILEGES ON app_portfolio.user_account TO role_app_dba;
 
-ALTER TABLE user_account ADD CONSTRAINT user_account_username_un UNIQUE ( username );
+GRANT SELECT, INSERT, DELETE, UPDATE ON app_portfolio.user_account TO role_app_timetables;
 
-ALTER TABLE user_account ADD CONSTRAINT user_account_email_un UNIQUE ( email );
+ALTER TABLE app_portfolio.user_account ADD CONSTRAINT user_account_provider1_id_un UNIQUE ( provider1_id );
 
-CREATE TABLE user_account_app (
+ALTER TABLE app_portfolio.user_account ADD CONSTRAINT user_account_provider2_id_un UNIQUE ( provider2_id );
+
+ALTER TABLE app_portfolio.user_account ADD CONSTRAINT user_account_username_un UNIQUE ( username );
+
+ALTER TABLE app_portfolio.user_account ADD CONSTRAINT user_account_email_un UNIQUE ( email );
+
+CREATE TABLE app_portfolio.user_account_app (
     user_account_id INTEGER NOT NULL,
     app_id          INTEGER NOT NULL,
     date_created    DATETIME NOT NULL,
     CONSTRAINT user_account_app_pk PRIMARY KEY ( app_id,
-                                                user_account_id );
+                                                user_account_id )
 );
+GRANT SELECT ON app_portfolio.user_account_app TO role_app_home;
 
-CREATE TABLE user_account_app_hist (
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.user_account_app TO role_app_admin;
+
+GRANT SELECT, INSERT, DELETE, UPDATE ON app_portfolio.user_account_app TO role_app_property_management;
+
+GRANT ALL PRIVILEGES ON app_portfolio.user_account_app TO role_app_dba;
+
+GRANT SELECT, INSERT, DELETE, UPDATE ON app_portfolio.user_account_app TO role_app_timetables;
+
+CREATE TABLE app_portfolio.user_account_app_hist (
     id              INTEGER NOT NULL,
     dml             VARCHAR(1),
     dml_date        DATE,
     user_account_id INTEGER,
     app_id          INTEGER,
     date_created    DATE,
-    CONSTRAINT user_account_app_hist_pk PRIMARY KEY ( id );
+    CONSTRAINT user_account_app_hist_pk PRIMARY KEY ( id )
 );
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.user_account_app_hist TO role_app_admin;
 
-CREATE TABLE user_account_follow (
+GRANT SELECT, INSERT ON app_portfolio.user_account_app_hist TO role_app_property_management;
+
+GRANT ALL PRIVILEGES ON app_portfolio.user_account_app_hist TO role_app_dba;
+
+GRANT SELECT, INSERT ON app_portfolio.user_account_app_hist TO role_app_timetables;
+
+CREATE TABLE app_portfolio.user_account_follow (
     id                      INT NOT NULL AUTO_INCREMENT,
     user_account_id         INTEGER NOT NULL,
     user_account_id_follow  INTEGER NOT NULL,
 	date_created            DATETIME,
 	CONSTRAINT user_account_follow_pk PRIMARY KEY ( user_account_id, user_account_id_follow )
 );
-ALTER TABLE user_account_follow ADD CONSTRAINT user_account_follow_un UNIQUE ( id );
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.user_account_follow TO role_app_admin;
 
-CREATE TABLE user_account_follow_hist (
+GRANT SELECT, INSERT, DELETE, UPDATE ON app_portfolio.user_account_follow TO role_app_property_management;
+
+GRANT ALL PRIVILEGES ON app_portfolio.user_account_follow TO role_app_dba;
+
+GRANT SELECT, INSERT, DELETE, UPDATE ON app_portfolio.user_account_follow TO role_app_timetables;
+
+ALTER TABLE app_portfolio.user_account_follow ADD CONSTRAINT user_account_follow_un UNIQUE ( id );
+
+CREATE TABLE app_portfolio.user_account_follow_hist (
     id                      INT NOT NULL AUTO_INCREMENT,
     dml                     VARCHAR(1),
     dml_date                DATETIME,
@@ -597,8 +926,15 @@ CREATE TABLE user_account_follow_hist (
     date_created            DATETIME,
 	CONSTRAINT user_account_follow_hist_pk PRIMARY KEY ( id )
 );
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.user_account_follow_hist TO role_app_admin;
 
-CREATE TABLE user_account_hist (
+GRANT SELECT, INSERT ON app_portfolio.user_account_follow_hist TO role_app_property_management;
+
+GRANT ALL PRIVILEGES ON app_portfolio.user_account_follow_hist TO role_app_dba;
+
+GRANT SELECT, INSERT ON app_portfolio.user_account_follow_hist TO role_app_timetables;
+
+CREATE TABLE app_portfolio.user_account_hist (
     id                    INT NOT NULL AUTO_INCREMENT,
     dml                   VARCHAR(1),
     dml_date              DATETIME,
@@ -627,17 +963,32 @@ CREATE TABLE user_account_hist (
     provider2_email       VARCHAR(1000),
 	CONSTRAINT user_account_hist_pk PRIMARY KEY ( id )
 );
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.user_account_hist TO role_app_admin;
 
-CREATE TABLE user_account_like (
+GRANT SELECT, INSERT ON app_portfolio.user_account_hist TO role_app_property_management;
+
+GRANT ALL PRIVILEGES ON app_portfolio.user_account_hist TO role_app_dba;
+
+GRANT SELECT, INSERT ON app_portfolio.user_account_hist TO role_app_timetables;
+
+CREATE TABLE app_portfolio.user_account_like (
     id                    INT NOT NULL AUTO_INCREMENT,
     user_account_id       INTEGER NOT NULL,
     user_account_id_like  INTEGER NOT NULL,
 	date_created          DATETIME,
 	CONSTRAINT user_account_like_pk PRIMARY KEY ( user_account_id, user_account_id_like )
 );
-ALTER TABLE user_account_like ADD CONSTRAINT user_account_like_un UNIQUE ( id );
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.user_account_like TO role_app_admin;
 
-CREATE TABLE user_account_like_hist (
+GRANT SELECT, INSERT, DELETE, UPDATE ON app_portfolio.user_account_like TO role_app_property_management;
+
+GRANT ALL PRIVILEGES ON app_portfolio.user_account_like TO role_app_dba;
+
+GRANT SELECT, INSERT, DELETE, UPDATE ON app_portfolio.user_account_like TO role_app_timetables;
+
+ALTER TABLE app_portfolio.user_account_like ADD CONSTRAINT user_account_like_un UNIQUE ( id );
+
+CREATE TABLE app_portfolio.user_account_like_hist (
     id                    INT NOT NULL AUTO_INCREMENT,
     dml                   VARCHAR(1),
     dml_date              DATETIME,
@@ -647,8 +998,15 @@ CREATE TABLE user_account_like_hist (
     date_created          DATETIME,
 	CONSTRAINT user_account_like_hist_pk PRIMARY KEY ( id )
 );
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.user_account_like_hist TO role_app_admin;
 
-CREATE TABLE user_account_logon (
+GRANT SELECT, INSERT ON app_portfolio.user_account_like_hist TO role_app_property_management;
+
+GRANT ALL PRIVILEGES ON app_portfolio.user_account_like_hist TO role_app_dba;
+
+GRANT SELECT, INSERT ON app_portfolio.user_account_like_hist TO role_app_timetables;
+
+CREATE TABLE app_portfolio.user_account_logon (
     user_account_id    INTEGER NOT NULL,
     app_id             INTEGER NOT NULL,
     result             INTEGER NOT NULL,
@@ -658,8 +1016,17 @@ CREATE TABLE user_account_logon (
     client_latitude    VARCHAR(100),
     date_created       DATETIME NOT NULL
 );
+GRANT SELECT, INSERT ON app_portfolio.user_account_logon TO role_app_home;
 
-CREATE TABLE user_account_logon_hist (
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.user_account_logon TO role_app_admin;
+
+GRANT SELECT, INSERT, DELETE, UPDATE ON app_portfolio.user_account_logon TO role_app_property_management;
+
+GRANT ALL PRIVILEGES ON app_portfolio.user_account_logon TO role_app_dba;
+
+GRANT SELECT, INSERT, DELETE, UPDATE ON app_portfolio.user_account_logon TO role_app_timetables;
+
+CREATE TABLE app_portfolio.user_account_logon_hist (
     id                 INT NOT NULL AUTO_INCREMENT,
     dml_type           VARCHAR(1),
     dml_date           DATETIME,
@@ -673,8 +1040,17 @@ CREATE TABLE user_account_logon_hist (
     date_created       DATETIME,
 	CONSTRAINT user_account_logon_hist_pk PRIMARY KEY ( id )
 );
+GRANT SELECT, INSERT ON app_portfolio.user_account_logon_hist TO role_app_home;
 
-CREATE TABLE user_account_view (
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.user_account_logon_hist TO role_app_admin;
+
+GRANT SELECT, INSERT ON app_portfolio.user_account_logon_hist TO role_app_property_management;
+
+GRANT ALL PRIVILEGES ON app_portfolio.user_account_logon_hist TO role_app_dba;
+
+GRANT SELECT, INSERT ON app_portfolio.user_account_logon_hist TO role_app_timetables;
+
+CREATE TABLE app_portfolio.user_account_view (
     user_account_id       INTEGER,
     user_account_id_view  INTEGER NOT NULL,
     client_ip             VARCHAR(100),
@@ -683,8 +1059,15 @@ CREATE TABLE user_account_view (
     client_latitude       VARCHAR(100),
     date_created          DATETIME NOT NULL
 );
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.user_account_view TO role_app_admin;
 
-CREATE TABLE user_account_view_hist (
+GRANT SELECT, INSERT, DELETE, UPDATE ON app_portfolio.user_account_view TO role_app_property_management;
+
+GRANT ALL PRIVILEGES ON app_portfolio.user_account_view TO role_app_dba;
+
+GRANT SELECT, INSERT, DELETE, UPDATE ON app_portfolio.user_account_view TO role_app_timetables;
+
+CREATE TABLE app_portfolio.user_account_view_hist (
     id                    INT NOT NULL AUTO_INCREMENT,
     dml_type              VARCHAR(1),
     dml_date              DATETIME,
@@ -697,31 +1080,37 @@ CREATE TABLE user_account_view_hist (
     date_created          DATETIME,
 	CONSTRAINT user_account_view_hist_pk PRIMARY KEY ( id )
 );
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.user_account_view_hist TO role_app_admin;
 
+GRANT SELECT, INSERT ON app_portfolio.user_account_view_hist TO role_app_property_management;
 
-ALTER TABLE app_log
+GRANT ALL PRIVILEGES ON app_portfolio.user_account_view_hist TO role_app_dba;
+
+GRANT SELECT, INSERT ON app_portfolio.user_account_view_hist TO role_app_timetables;
+
+ALTER TABLE app_portfolio.app_log
     ADD CONSTRAINT app_log_app_fk FOREIGN KEY ( app_id )
         REFERENCES app ( id );
 
-ALTER TABLE app_message
+ALTER TABLE app_portfolio.app_message
     ADD CONSTRAINT app_message_app_fk FOREIGN KEY ( app_id )
         REFERENCES app ( id );
 
-ALTER TABLE app_message
+ALTER TABLE app_portfolio.app_message
     ADD CONSTRAINT app_message_message_fk FOREIGN KEY ( message_code )
         REFERENCES message ( code );
 
-ALTER TABLE app_object
+ALTER TABLE app_portfolio.app_object
     ADD CONSTRAINT app_object_app_fk FOREIGN KEY ( app_id )
         REFERENCES app ( id );
 
-ALTER TABLE app_object_item
+ALTER TABLE app_portfolio.app_object_item
     ADD CONSTRAINT app_object_item_app_object_fk FOREIGN KEY ( object_name,
                                                                app_id )
         REFERENCES app_object ( object_name,
                                 app_id );
 
-ALTER TABLE app_object_item_subitem
+ALTER TABLE app_portfolio.app_object_item_subitem
     ADD CONSTRAINT app_object_item_subitem_app_object_item_fk FOREIGN KEY ( object_name,
                                                                             app_id,
                                                                             object_item_name )
@@ -729,7 +1118,7 @@ ALTER TABLE app_object_item_subitem
                                      app_id,
                                      object_item_name );
 
-ALTER TABLE app_object_item_subitem_fixed
+ALTER TABLE app_portfolio.app_object_item_subitem_fixed
     ADD CONSTRAINT app_object_item_subitem_fixed_app_object_item_fk FOREIGN KEY ( object_name,
                                                                                   app_id,
                                                                                   object_item_name )
@@ -737,7 +1126,7 @@ ALTER TABLE app_object_item_subitem_fixed
                                      app_id,
                                      object_item_name );
 
-ALTER TABLE app_object_item_translation
+ALTER TABLE app_portfolio.app_object_item_translation
     ADD CONSTRAINT app_object_item_translation_app_object_item_fk FOREIGN KEY ( object_name,
                                                                                 app_id,
                                                                                 object_item_name )
@@ -745,11 +1134,11 @@ ALTER TABLE app_object_item_translation
                                      app_id,
                                      object_item_name );
 
-ALTER TABLE app_object_item_translation
+ALTER TABLE app_portfolio.app_object_item_translation
     ADD CONSTRAINT app_object_item_translation_language_fk FOREIGN KEY ( language_id )
         REFERENCES language ( id );
 
-ALTER TABLE app_object_subitem_translation
+ALTER TABLE app_portfolio.app_object_subitem_translation
     ADD CONSTRAINT app_object_subitem_translation_app_object_item_subitem_fk FOREIGN KEY ( subitem_name,
                                                                                            object_item_name,
                                                                                            object_name,
@@ -759,194 +1148,194 @@ ALTER TABLE app_object_subitem_translation
                                              object_name,
                                              app_id );
 
-ALTER TABLE app_object_subitem_translation
+ALTER TABLE app_portfolio.app_object_subitem_translation
     ADD CONSTRAINT app_object_subitem_translation_language_fk FOREIGN KEY ( language_id )
         REFERENCES language ( id );
 
-ALTER TABLE app_object_translation
+ALTER TABLE app_portfolio.app_object_translation
     ADD CONSTRAINT app_object_translation_app_object_fk FOREIGN KEY ( object_name,
                                                                       app_id )
         REFERENCES app_object ( object_name,
                                 app_id );
 
-ALTER TABLE app_object_translation
+ALTER TABLE app_portfolio.app_object_translation
     ADD CONSTRAINT app_object_translation_language_fk FOREIGN KEY ( language_id )
         REFERENCES language ( id );
 
-ALTER TABLE app_parameter
+ALTER TABLE app_portfolio.app_parameter
     ADD CONSTRAINT app_parameter_app_fk FOREIGN KEY ( app_id )
         REFERENCES app ( id );
 
-ALTER TABLE app_parameter
+ALTER TABLE app_portfolio.app_parameter
     ADD CONSTRAINT app_parameter_parameter_type_fk FOREIGN KEY ( parameter_type_id )
         REFERENCES parameter_type ( id );
 
-ALTER TABLE app_timetables_place
-    ADD CONSTRAINT app_timetables_place_country_fk FOREIGN KEY ( country1_id )
+ALTER TABLE app_portfolio.app_timetables_place
+    ADD CONSTRAINT app_timetables_place_country1_fk FOREIGN KEY ( country1_id )
         REFERENCES country ( id );
 
-ALTER TABLE app_timetables_place
-    ADD CONSTRAINT app_timetables_place_country_fkv1 FOREIGN KEY ( country2_id )
+ALTER TABLE app_portfolio.app_timetables_place
+    ADD CONSTRAINT app_timetables_place_country2_fk FOREIGN KEY ( country2_id )
         REFERENCES country ( id );
 
-ALTER TABLE app_timetables_place
+ALTER TABLE app_portfolio.app_timetables_place
     ADD CONSTRAINT app_timetables_place_group_place_fk FOREIGN KEY ( group_place1_id )
         REFERENCES group_place ( id );
 
-ALTER TABLE app_timetables_place
-    ADD CONSTRAINT app_timetables_place_group_place_fkv1 FOREIGN KEY ( group_place2_id )
+ALTER TABLE app_portfolio.app_timetables_place
+    ADD CONSTRAINT app_timetables_place_group_place2_fk FOREIGN KEY ( group_place2_id )
         REFERENCES group_place ( id );
 
-ALTER TABLE app_timetables_theme
+ALTER TABLE app_portfolio.app_timetables_theme
     ADD CONSTRAINT app_timetables_theme_theme_category_fk FOREIGN KEY ( theme_category_id )
         REFERENCES theme_category ( id );
 
-ALTER TABLE app_timetables_theme
+ALTER TABLE app_portfolio.app_timetables_theme
     ADD CONSTRAINT app_timetables_theme_theme_type_fk FOREIGN KEY ( theme_type_id )
         REFERENCES theme_type ( id );
 
-ALTER TABLE app_timetables_user_setting
+ALTER TABLE app_portfolio.app_timetables_user_setting
     ADD CONSTRAINT app_timetables_user_setting_app_timetables_place_fk FOREIGN KEY ( gps_popular_place_id )
         REFERENCES app_timetables_place ( id );
 
-ALTER TABLE app_timetables_user_setting
-    ADD CONSTRAINT app_timetables_user_setting_app_timetables_theme_fk FOREIGN KEY ( design_theme_day_id )
+ALTER TABLE app_portfolio.app_timetables_user_setting
+    ADD CONSTRAINT app_timetables_user_setting_app_timetables_theme_day_fk FOREIGN KEY ( design_theme_day_id )
         REFERENCES app_timetables_theme ( id );
 
-ALTER TABLE app_timetables_user_setting
-    ADD CONSTRAINT app_timetables_user_setting_app_timetables_theme_fkv1 FOREIGN KEY ( design_theme_month_id )
+ALTER TABLE app_portfolio.app_timetables_user_setting
+    ADD CONSTRAINT app_timetables_user_setting_app_timetables_theme_month_fk FOREIGN KEY ( design_theme_month_id )
         REFERENCES app_timetables_theme ( id );
 
-ALTER TABLE app_timetables_user_setting
-    ADD CONSTRAINT app_timetables_user_setting_app_timetables_theme_fkv2 FOREIGN KEY ( design_theme_year_id )
+ALTER TABLE app_portfolio.app_timetables_user_setting
+    ADD CONSTRAINT app_timetables_user_setting_app_timetables_theme_year_fk FOREIGN KEY ( design_theme_year_id )
         REFERENCES app_timetables_theme ( id );
 
-ALTER TABLE app_timetables_user_setting
+ALTER TABLE app_portfolio.app_timetables_user_setting
     ADD CONSTRAINT app_timetables_user_setting_country_fk FOREIGN KEY ( gps_country_id )
         REFERENCES country ( id );
 
-ALTER TABLE app_timetables_user_setting_like
+ALTER TABLE app_portfolio.app_timetables_user_setting_like
     ADD CONSTRAINT app_timetables_user_setting_like_app_timetables_user_setting_fk FOREIGN KEY ( user_setting_id )
         REFERENCES app_timetables_user_setting ( id )
 		ON DELETE CASCADE;
 
-ALTER TABLE app_timetables_user_setting_like
+ALTER TABLE app_portfolio.app_timetables_user_setting_like
     ADD CONSTRAINT app_timetables_user_setting_like_user_account_fk FOREIGN KEY ( user_account_id )
         REFERENCES user_account ( id )
 		ON DELETE CASCADE;
 
-ALTER TABLE app_timetables_user_setting
+ALTER TABLE app_portfolio.app_timetables_user_setting
     ADD CONSTRAINT app_timetables_user_setting_user_account_fk FOREIGN KEY ( user_account_id )
         REFERENCES user_account ( id );
 
-ALTER TABLE app_timetables_user_setting_view
+ALTER TABLE app_portfolio.app_timetables_user_setting_view
     ADD CONSTRAINT app_timetables_user_setting_view_app_timetables_user_setting_fk FOREIGN KEY ( user_setting_id )
         REFERENCES app_timetables_user_setting ( id )
         ON DELETE CASCADE;
 
-ALTER TABLE app_timetables_user_setting_view
+ALTER TABLE app_portfolio.app_timetables_user_setting_view
     ADD CONSTRAINT app_timetables_user_setting_view_user_account_fk FOREIGN KEY ( user_account_id )
         REFERENCES user_account ( id )
         ON DELETE CASCADE;
 
-ALTER TABLE country
+ALTER TABLE app_portfolio.country
     ADD CONSTRAINT country_country_group_fk FOREIGN KEY ( country_group_id )
         REFERENCES country_group ( id );
 
-ALTER TABLE country_translation
+ALTER TABLE app_portfolio.country_translation
     ADD CONSTRAINT country_translation_country_fk FOREIGN KEY ( country_id )
         REFERENCES country ( id );
 
-ALTER TABLE country_translation
+ALTER TABLE app_portfolio.country_translation
     ADD CONSTRAINT country_translation_language_fk FOREIGN KEY ( language_id )
         REFERENCES language ( id );
 
-ALTER TABLE language_translation
+ALTER TABLE app_portfolio.language_translation
     ADD CONSTRAINT language_translation_language_fk FOREIGN KEY ( language_id )
         REFERENCES language ( id );
 
-ALTER TABLE language_translation
-    ADD CONSTRAINT language_translation_language_fkv1 FOREIGN KEY ( language_translation_id )
+ALTER TABLE app_portfolio.language_translation
+    ADD CONSTRAINT language_translation_language_translation_fk FOREIGN KEY ( language_translation_id )
         REFERENCES language ( id );
 
-ALTER TABLE locale
+ALTER TABLE app_portfolio.locale
     ADD CONSTRAINT locale_country_fk FOREIGN KEY ( country_id )
         REFERENCES country ( id );
 
-ALTER TABLE locale
+ALTER TABLE app_portfolio.locale
     ADD CONSTRAINT locale_language_fk FOREIGN KEY ( language_id )
         REFERENCES language ( id );
 
-ALTER TABLE message
+ALTER TABLE app_portfolio.message
     ADD CONSTRAINT message_message_level_fk FOREIGN KEY ( message_level_id )
         REFERENCES message_level ( id );
 
-ALTER TABLE message
+ALTER TABLE app_portfolio.message
     ADD CONSTRAINT message_message_type_fk FOREIGN KEY ( message_type_id )
         REFERENCES message_type ( id );
 
-ALTER TABLE message_translation
+ALTER TABLE app_portfolio.message_translation
     ADD CONSTRAINT message_translation_language_fk FOREIGN KEY ( language_id )
         REFERENCES language ( id );
 
-ALTER TABLE message_translation
+ALTER TABLE app_portfolio.message_translation
     ADD CONSTRAINT message_translation_message_fk FOREIGN KEY ( message_code )
         REFERENCES message ( code );
 
-ALTER TABLE profile_search
+ALTER TABLE app_portfolio.profile_search
     ADD CONSTRAINT profile_search_user_account_fk FOREIGN KEY ( user_account_id )
         REFERENCES user_account ( id )
         ON DELETE CASCADE;
 
-ALTER TABLE user_account_app
+ALTER TABLE app_portfolio.user_account_app
     ADD CONSTRAINT user_account_app_app_fk FOREIGN KEY ( app_id )
         REFERENCES app ( id );
 
-ALTER TABLE user_account_app
+ALTER TABLE app_portfolio.user_account_app
     ADD CONSTRAINT user_account_app_user_account_fk FOREIGN KEY ( user_account_id )
         REFERENCES user_account ( id );
 					
-ALTER TABLE user_account_follow
+ALTER TABLE app_portfolio.user_account_follow
     ADD CONSTRAINT user_account_follow_user_account_fk FOREIGN KEY ( user_account_id )
         REFERENCES user_account ( id )
 		ON DELETE CASCADE;
 
-ALTER TABLE user_account_follow
-    ADD CONSTRAINT user_account_follow_user_account_fkv2 FOREIGN KEY ( user_account_id_follow )
+ALTER TABLE app_portfolio.user_account_follow
+    ADD CONSTRAINT user_account_follow_user_account_follow_fk FOREIGN KEY ( user_account_id_follow )
         REFERENCES user_account ( id )
 		ON DELETE CASCADE;
 
-ALTER TABLE user_account_like
+ALTER TABLE app_portfolio.user_account_like
     ADD CONSTRAINT user_account_like_user_account_fk FOREIGN KEY ( user_account_id )
         REFERENCES user_account ( id )
 		ON DELETE CASCADE;
 
-ALTER TABLE user_account_like
-    ADD CONSTRAINT user_account_like_user_account_fkv2 FOREIGN KEY ( user_account_id_like )
+ALTER TABLE app_portfolio.user_account_like
+    ADD CONSTRAINT user_account_like_user_account_like_fk FOREIGN KEY ( user_account_id_like )
         REFERENCES user_account ( id )
 		ON DELETE CASCADE;
 
-ALTER TABLE user_account_logon
+ALTER TABLE app_portfolio.user_account_logon
     ADD CONSTRAINT user_account_logon_app_fk FOREIGN KEY ( app_id )
         REFERENCES app ( id );
 
-ALTER TABLE user_account_logon
+ALTER TABLE app_portfolio.user_account_logon
     ADD CONSTRAINT user_account_logon_user_account_fk FOREIGN KEY ( user_account_id )
         REFERENCES user_account ( id )
             ON DELETE CASCADE;
 
-ALTER TABLE user_account_view
+ALTER TABLE app_portfolio.user_account_view
     ADD CONSTRAINT user_account_view_user_account_fk FOREIGN KEY ( user_account_id )
         REFERENCES user_account ( id )
             ON DELETE CASCADE;
 
-ALTER TABLE user_account_view
-    ADD CONSTRAINT user_account_view_user_account_fkv2 FOREIGN KEY ( user_account_id_view )
+ALTER TABLE app_portfolio.user_account_view
+    ADD CONSTRAINT user_account_view_user_account_view_fk FOREIGN KEY ( user_account_id_view )
         REFERENCES user_account ( id )
         ON DELETE CASCADE;
 
-CREATE TRIGGER app_timetables_user_setting_before_delete 
-    BEFORE DELETE ON app_timetables_user_setting 
+CREATE TRIGGER app_portfolio.app_timetables_user_setting_before_delete 
+    BEFORE DELETE ON app_portfolio.app_timetables_user_setting 
     FOR EACH ROW 
 BEGIN
 INSERT INTO app_timetables_user_setting_hist
@@ -1068,8 +1457,8 @@ old.user_account_id);
 END; 
 /
 
-CREATE TRIGGER app_timetables_user_setting_before_insert 
-    BEFORE INSERT ON app_timetables_user_setting 
+CREATE TRIGGER app_portfolio.app_timetables_user_setting_before_insert 
+    BEFORE INSERT ON app_portfolio.app_timetables_user_setting 
     FOR EACH ROW 
 BEGIN
 INSERT INTO app_timetables_user_setting_hist
@@ -1191,8 +1580,8 @@ new.user_account_id);
 END; 
 /
 
-CREATE TRIGGER app_timetables_user_setting_before_update 
-    BEFORE UPDATE ON app_timetables_user_setting 
+CREATE TRIGGER app_portfolio.app_timetables_user_setting_before_update 
+    BEFORE UPDATE ON app_portfolio.app_timetables_user_setting 
     FOR EACH ROW 
 BEGIN
 INSERT INTO app_timetables_user_setting_hist
@@ -1314,8 +1703,8 @@ old.user_account_id);
 END; 
 /
 
-CREATE TRIGGER app_timetables_user_setting_like_before_delete 
-    BEFORE DELETE ON app_timetables_user_setting_like 
+CREATE TRIGGER app_portfolio.app_timetables_user_setting_like_before_delete 
+    BEFORE DELETE ON app_portfolio.app_timetables_user_setting_like 
     FOR EACH ROW 
 BEGIN
 INSERT INTO app_timetables_user_setting_like_hist
@@ -1335,8 +1724,8 @@ old.date_created);
 END; 
 /
 
-CREATE TRIGGER app_timetables_user_setting_like_before_insert 
-    BEFORE INSERT ON app_timetables_user_setting_like 
+CREATE TRIGGER app_portfolio.app_timetables_user_setting_like_before_insert 
+    BEFORE INSERT ON app_portfolio.app_timetables_user_setting_like 
     FOR EACH ROW 
 BEGIN
 INSERT INTO app_timetables_user_setting_like_hist
@@ -1356,8 +1745,8 @@ new.date_created);
 END; 
 /
 
-CREATE TRIGGER app_timetables_user_setting_like_before_update 
-    BEFORE UPDATE ON app_timetables_user_setting_like 
+CREATE TRIGGER app_portfolio.app_timetables_user_setting_like_before_update 
+    BEFORE UPDATE ON app_portfolio.app_timetables_user_setting_like 
     FOR EACH ROW 
 BEGIN
 INSERT INTO app_timetables_user_setting_like_hist
@@ -1376,8 +1765,8 @@ old.user_setting_id,
 old.date_created);
 END; 
 /
-CREATE TRIGGER app_timetables_user_setting_view_before_delete 
-    BEFORE DELETE ON app_timetables_user_setting_view 
+CREATE TRIGGER app_portfolio.app_timetables_user_setting_view_before_delete 
+    BEFORE DELETE ON app_portfolio.app_timetables_user_setting_view 
     FOR EACH ROW 
 BEGIN
 INSERT INTO app_timetables_user_setting_view_hist
@@ -1402,8 +1791,8 @@ old.client_latitude,
 old.date_created);
 END; 
 /
-CREATE TRIGGER app_timetables_user_setting_view_before_insert 
-    BEFORE INSERT ON app_timetables_user_setting_view 
+CREATE TRIGGER app_portfolio.app_timetables_user_setting_view_before_insert 
+    BEFORE INSERT ON app_portfolio.app_timetables_user_setting_view 
     FOR EACH ROW 
 BEGIN
 INSERT INTO app_timetables_user_setting_view_hist
@@ -1428,8 +1817,8 @@ new.client_latitude,
 new.date_created);
 END; 
 /
-CREATE TRIGGER app_timetables_user_setting_view_before_update 
-    BEFORE UPDATE ON app_timetables_user_setting_view 
+CREATE TRIGGER app_portfolio.app_timetables_user_setting_view_before_update 
+    BEFORE UPDATE ON app_portfolio.app_timetables_user_setting_view 
     FOR EACH ROW 
 BEGIN
 INSERT INTO app_timetables_user_setting_view_hist
@@ -1455,8 +1844,8 @@ old.date_created);
 END; 
 /
 
-CREATE TRIGGER profile_search_before_delete 
-    BEFORE DELETE ON profile_search 
+CREATE TRIGGER app_portfolio.profile_search_before_delete 
+    BEFORE DELETE ON app_portfolio.profile_search 
     FOR EACH ROW 
 BEGIN
 INSERT INTO profile_search_hist
@@ -1481,8 +1870,8 @@ old.client_latitude,
 old.date_created);
 END; 
 /
-CREATE TRIGGER profile_search_before_insert 
-    BEFORE INSERT ON profile_search 
+CREATE TRIGGER app_portfolio.profile_search_before_insert 
+    BEFORE INSERT ON app_portfolio.profile_search 
     FOR EACH ROW 
 BEGIN
 INSERT INTO profile_search_hist
@@ -1507,8 +1896,8 @@ new.client_latitude,
 new.date_created);
 END; 
 /
-CREATE TRIGGER profile_search_before_update 
-    BEFORE UPDATE ON profile_search 
+CREATE TRIGGER app_portfolio.profile_search_before_update 
+    BEFORE UPDATE ON app_portfolio.profile_search 
     FOR EACH ROW 
 BEGIN
 INSERT INTO profile_search_hist
@@ -1534,8 +1923,8 @@ old.date_created);
 END; 
 /
 
-CREATE TRIGGER user_account_app_before_delete 
-    BEFORE DELETE ON user_account_app 
+CREATE TRIGGER app_portfolio.user_account_app_before_delete 
+    BEFORE DELETE ON app_portfolio.user_account_app 
     FOR EACH ROW 
 BEGIN
 INSERT INTO user_account_app_hist
@@ -1552,8 +1941,8 @@ old.app_id,
 old.date_created);
 END; 
 /
-CREATE TRIGGER user_account_app_before_insert 
-    BEFORE INSERT ON user_account_app 
+CREATE TRIGGER app_portfolio.user_account_app_before_insert 
+    BEFORE INSERT ON app_portfolio.user_account_app 
     FOR EACH ROW 
 BEGIN
 INSERT INTO user_account_app_hist
@@ -1570,8 +1959,8 @@ new.app_id,
 new.date_created);
 END; 
 /
-CREATE TRIGGER user_account_app_before_update 
-    BEFORE UPDATE ON user_account_app 
+CREATE TRIGGER app_portfolio.user_account_app_before_update 
+    BEFORE UPDATE ON app_portfolio.user_account_app 
     FOR EACH ROW 
 BEGIN
 INSERT INTO user_account_app_hist
@@ -1589,8 +1978,8 @@ old.date_created);
 END; 
 /
 
-CREATE TRIGGER user_account_before_delete 
-    BEFORE DELETE ON user_account 
+CREATE TRIGGER app_portfolio.user_account_before_delete 
+    BEFORE DELETE ON app_portfolio.user_account 
     FOR EACH ROW 
 BEGIN
 INSERT INTO user_account_hist
@@ -1648,8 +2037,8 @@ INSERT INTO user_account_hist
 END; 
 /
 		
-CREATE TRIGGER user_account_before_insert 
-    BEFORE INSERT ON user_account 
+CREATE TRIGGER app_portfolio.user_account_before_insert 
+    BEFORE INSERT ON app_portfolio.user_account 
     FOR EACH ROW 
 	BEGIN
     IF new.username IS NOT NULL THEN
@@ -1775,8 +2164,8 @@ CREATE TRIGGER user_account_before_insert
 END; 
 /
 
-CREATE TRIGGER user_account_before_update 
-    BEFORE UPDATE ON user_account 
+CREATE TRIGGER app_portfolio.user_account_before_update 
+    BEFORE UPDATE ON app_portfolio.user_account 
     FOR EACH ROW 
     BEGIN
     IF new.username IS NOT NULL THEN
@@ -1902,8 +2291,8 @@ CREATE TRIGGER user_account_before_update
 END;
 /
 
-CREATE TRIGGER user_account_follow_before_delete 
-    BEFORE DELETE ON user_account_follow 
+CREATE TRIGGER app_portfolio.user_account_follow_before_delete 
+    BEFORE DELETE ON app_portfolio.user_account_follow 
     FOR EACH ROW 
 BEGIN
 INSERT INTO user_account_follow_hist
@@ -1923,8 +2312,8 @@ old.date_created);
 END; 
 /
 
-CREATE TRIGGER user_account_follow_before_insert 
-    BEFORE INSERT ON user_account_follow 
+CREATE TRIGGER app_portfolio.user_account_follow_before_insert 
+    BEFORE INSERT ON app_portfolio.user_account_follow 
     FOR EACH ROW 
 BEGIN
 INSERT INTO user_account_follow_hist
@@ -1944,8 +2333,8 @@ new.date_created);
 END; 
 /
 
-CREATE TRIGGER user_account_follow_before_update 
-    BEFORE UPDATE ON user_account_follow 
+CREATE TRIGGER app_portfolio.user_account_follow_before_update 
+    BEFORE UPDATE ON app_portfolio.user_account_follow 
     FOR EACH ROW 
 BEGIN
 INSERT INTO user_account_follow_hist
@@ -1965,8 +2354,8 @@ old.date_created);
 END; 
 /
 
-CREATE TRIGGER user_account_like_before_delete 
-    BEFORE DELETE ON user_account_like 
+CREATE TRIGGER app_portfolio.user_account_like_before_delete 
+    BEFORE DELETE ON app_portfolio.user_account_like 
     FOR EACH ROW 
 BEGIN
 INSERT INTO user_account_like_hist
@@ -1986,8 +2375,8 @@ old.date_created);
 END; 
 /
 
-CREATE TRIGGER user_account_like_before_insert 
-    BEFORE INSERT ON user_account_like 
+CREATE TRIGGER app_portfolio.user_account_like_before_insert 
+    BEFORE INSERT ON app_portfolio.user_account_like 
     FOR EACH ROW 
 BEGIN
 INSERT INTO user_account_like_hist
@@ -2007,8 +2396,8 @@ new.date_created);
 END; 
 /
 
-CREATE TRIGGER user_account_like_before_update 
-    BEFORE UPDATE ON user_account_like 
+CREATE TRIGGER app_portfolio.user_account_like_before_update 
+    BEFORE UPDATE ON app_portfolio.user_account_like 
     FOR EACH ROW 
 BEGIN
 INSERT INTO user_account_like_hist
@@ -2027,8 +2416,8 @@ old.user_account_id_like,
 old.date_created);
 END; 
 /
-CREATE TRIGGER user_account_logon_before_delete 
-    BEFORE DELETE ON user_account_logon 
+CREATE TRIGGER app_portfolio.user_account_logon_before_delete 
+    BEFORE DELETE ON app_portfolio.user_account_logon 
     FOR EACH ROW 
 BEGIN
 INSERT INTO user_account_logon_hist
@@ -2055,8 +2444,8 @@ old.client_latitude,
 old.date_created);
 END; 
 /
-CREATE TRIGGER user_account_logon_before_insert 
-    BEFORE INSERT ON user_account_logon 
+CREATE TRIGGER app_portfolio.user_account_logon_before_insert 
+    BEFORE INSERT ON app_portfolio.user_account_logon 
     FOR EACH ROW 
 BEGIN
 INSERT INTO user_account_logon_hist
@@ -2083,8 +2472,8 @@ new.client_latitude,
 new.date_created);
 END; 
 /
-CREATE TRIGGER user_account_logon_before_update 
-    BEFORE UPDATE ON user_account_logon 
+CREATE TRIGGER app_portfolio.user_account_logon_before_update 
+    BEFORE UPDATE ON app_portfolio.user_account_logon 
     FOR EACH ROW 
 BEGIN
 INSERT INTO user_account_logon_hist
@@ -2111,8 +2500,8 @@ old.client_latitude,
 old.date_created);
 END; 
 /
-CREATE TRIGGER user_account_view_before_delete 
-    BEFORE DELETE ON user_account_view 
+CREATE TRIGGER app_portfolio.user_account_view_before_delete 
+    BEFORE DELETE ON app_portfolio.user_account_view 
     FOR EACH ROW 
 BEGIN
 INSERT INTO user_account_view_hist
@@ -2137,8 +2526,8 @@ old.client_latitude,
 old.date_created);
 END; 
 /
-CREATE TRIGGER user_account_view_before_insert 
-    BEFORE INSERT ON user_account_view 
+CREATE TRIGGER app_portfolio.user_account_view_before_insert 
+    BEFORE INSERT ON app_portfolio.user_account_view 
     FOR EACH ROW 
 BEGIN
 INSERT INTO user_account_view_hist
@@ -2163,8 +2552,8 @@ new.client_latitude,
 new.date_created);
 END; 
 /
-CREATE TRIGGER user_account_view_before_update 
-    BEFORE UPDATE ON user_account_view 
+CREATE TRIGGER app_portfolio.user_account_view_before_update 
+    BEFORE UPDATE ON app_portfolio.user_account_view 
     FOR EACH ROW 
 BEGIN
 INSERT INTO user_account_view_hist
@@ -2189,5 +2578,3 @@ old.client_latitude,
 old.date_created);
 END; 
 /
-
-

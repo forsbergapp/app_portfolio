@@ -4,8 +4,7 @@ module.exports = {
 	getLocales: (lang_code, callBack) => {
     if (process.env.SERVICE_DB_USE == 1) {
       pool.query(
-        `SELECT DISTINCT  
-                  CONCAT(l.lang_code, CASE 
+        `SELECT   CONCAT(l.lang_code, CASE 
                                       WHEN c.country_code IS NOT NULL THEN 
                                         CONCAT('-', c.country_code) 
                                       ELSE 
@@ -63,8 +62,36 @@ module.exports = {
                         )
                       )
               )
+        UNION
+        SELECT l.lang_code locale,
+               CONCAT(UPPER(SUBSTR(lt.text,1,1)), SUBSTR(lt.text,2)) text
+          FROM language l,
+               language_translation lt
+          WHERE lt.language_id = l.id
+            AND INSTR(l.lang_code,'-') = 0
+            AND lt.language_translation_id IN 
+                      (SELECT id 
+                        FROM language l2
+                        WHERE (l2.lang_code IN (?, SUBSTRING_INDEX(?,'-',2), SUBSTRING_INDEX(?,'-',1))
+                          OR (l2.lang_code = 'en'
+                              AND NOT EXISTS(SELECT NULL
+                                              FROM language_translation lt1,
+                                                  language l1
+                                              WHERE l1.id  = lt1.language_translation_id
+                                              AND lt1.language_id = l.id
+                                              AND l1.lang_code IN (?, SUBSTRING_INDEX(?,'-',2), SUBSTRING_INDEX(?,'-',1))
+                                          )
+                                      )
+                                    )
+                            )
             ORDER BY 2 `,
         [lang_code,
+         lang_code,
+         lang_code,
+         lang_code,
+         lang_code,
+         lang_code,
+         lang_code,
          lang_code,
          lang_code,
          lang_code,
@@ -150,6 +177,30 @@ module.exports = {
                         )
                       )
               )
+          UNION
+          SELECT l.lang_code locale,
+                 CONCAT(UPPER(SUBSTR(lt.text,1,1)), SUBSTR(lt.text,2)) text
+            FROM language l,
+                 language_translation lt
+            WHERE lt.language_id = l.id
+              AND INSTR(l.lang_code,'-') = 0
+              AND lt.language_translation_id IN 
+                        (SELECT id 
+                          FROM language l2
+                          WHERE (l2.lang_code (:lang_code, 
+                                                SUBSTR(:lang_code, 0,INSTR(:lang_code,'-',1,2)-1), 
+                                                SUBSTR(:lang_code, 0,INSTR(:lang_code,'-',1,1)-1))
+                            OR (l2.lang_code = 'en'
+                                AND NOT EXISTS(SELECT NULL
+                                                FROM language_translation lt1,
+                                                    language l1
+                                                WHERE l1.id  = lt1.language_translation_id
+                                                AND lt1.language_id = l.id
+                                                AND l1.lang_code IN (:lang_code, SUBSTR(:lang_code, 0,INSTR(:lang_code,'-',1,2)-1), SUBSTR(:lang_code, 0,INSTR(:lang_code,'-',1,1)-1))
+                                            )
+                                        )
+                                      )
+                              )
           ORDER BY 2`,
 					{
 						lang_code: lang_code

@@ -83,9 +83,24 @@ version 17.3.0 supported
 
    use Unicode characterset to support emojis and all languages
 
-   run scripts/mysql.ddl in mysql database or
-   run script/oracle.ddl in oracle database
+   run scripts/mysql.ddl as root in mysql database or
+   run script/oracle.ddl as admin/dba in oracle database
 
+	USER CREATED			ROLE AND APP_ID INFO
+	app_portfolio			role ROLE_APP_DBA
+							database user, do not use in app
+	app_admin				role ROLE_APP_ADMIN
+							app admin in app
+	app_home				role ROLE_APP_HOME
+							app_id=0
+	app_timetables 			role ROLE_APP_TIMETABLES
+							app_id=1
+	app_property_management role ROLE_APP_PROPERTY_MANAGEMENT
+							app_id=2
+
+	default passsword APP_1_portfolio for all users
+
+	run in app_portfolio mysql database or oracle schema:
    import import.sql
    import language *.sql files
 
