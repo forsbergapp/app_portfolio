@@ -146,6 +146,7 @@ version 17.3.0 supported
 
 9. create .env file in /app_portfolio
 set values in {} and modify default value if necessary
+change default db password
 
 #server variables
 SERVER_HTTPS_KEY                        			={PATH}\{FILENAME}
@@ -158,20 +159,24 @@ SERVER_JSON_LIMIT                          			=10MB
 #1=DB1 mySQL, 2=DB2 Oracle
 SERVICE_DB_USE                           			=1
 #mySQL
-SERVICE_DB_DB1_USER                         		={USERNAME}
-SERVICE_DB_DB1_PASS                         		={PASSWORD}
-SERVICE_DB_DB1_USER1                        		={USERNAME1}
-SERVICE_DB_DB1_PASS1                        		={PASSWORD1}
+SERVICE_DB_DB1_USER0                         		=app_home
+SERVICE_DB_DB1_PASS0                         		=APP_1_portfolio
+SERVICE_DB_DB1_USER1                        		=app_timetables
+SERVICE_DB_DB1_PASS1                        		=APP_1_portfolio
+SERVICE_DB_DB1_USER2                        		=app_property_management
+SERVICE_DB_DB1_PASS2                        		=APP_1_portfolio
 SERVICE_DB_DB1_PORT                         		={PORT}
 SERVICE_DB_DB1_HOST                         		={HOSTNAME} (or localhost)
 SERVICE_DB_DB1_NAME                         		={DATABASENAME}
 SERVICE_DB_DB1_CHARACTERSET                 		='utf8mb4'
 SERVICE_DB_DB1_CONNECTION_LIMIT             		=10
 #Oracle
-SERVICE_DB_DB2_USER                         		={USERNAME}
-SERVICE_DB_DB2_PASS                         		={PASSWORD}
-SERVICE_DB_DB2_USER1                        		={USERNAME1}
-SERVICE_DB_DB2_PASS1                        		={PASSWORD1}
+SERVICE_DB_DB2_USER0                         		=app_home
+SERVICE_DB_DB2_PASS0                         		=APP_1_portfolio
+SERVICE_DB_DB2_USER1                        		=app_timetables
+SERVICE_DB_DB2_PASS1                        		=APP_1_portfolio
+SERVICE_DB_DB2_USER2                        		=app_property_management
+SERVICE_DB_DB2_PASS2                        		=APP_1_portfolio
 SERVICE_DB_DB2_CONNECTSTRING                		={DATABASENAME}
 SERVICE_DB_DB2_POOL_MIN                     		=0
 SERVICE_DB_DB2_POOL_MAX                     		=4

@@ -1,13 +1,50 @@
 var pool;
 var oracledb;
 var oracle_options;
+let db_user1;
+let db_password1;
+let db_user2;
+let db_password2;
+let app_id = 1;
+
+switch (app_id){
+	case 0:{
+		db_user1 = process.env.SERVICE_DB_DB1_USER0;
+		db_password1 = process.env.SERVICE_DB_DB1_PASS0;
+		db_user2 = process.env.SERVICE_DB_DB2_USER0;
+		db_password2 = process.env.SERVICE_DB_DB2_PASS0;
+		break;
+	}
+	case 1:{
+		db_user1 = process.env.SERVICE_DB_DB1_USER1;
+		db_password1 = process.env.SERVICE_DB_DB1_PASS1;
+		db_user2 = process.env.SERVICE_DB_DB2_USER1;
+		db_password2 = process.env.SERVICE_DB_DB2_PASS1;
+		break;
+	}
+	case 2:{
+		db_user1 = process.env.SERVICE_DB_DB1_USER2;
+		db_password1 = process.env.SERVICE_DB_DB1_PASS2;
+		db_user2 = process.env.SERVICE_DB_DB2_USER2;
+		db_password2 = process.env.SERVICE_DB_DB2_PASS2;
+		break;
+	}
+	default:{
+		db_user1 = process.env.SERVICE_DB_DB1_USER0;
+		db_password1 = process.env.SERVICE_DB_DB1_PASS0;
+		db_user2 = process.env.SERVICE_DB_DB2_USER0;
+		db_password2 = process.env.SERVICE_DB_DB2_PASS0;
+		break;
+	}
+}
+
 if (process.env.SERVICE_DB_USE==1){
 	const { createPool } = require("mysql");
 	pool = createPool({
 		port: process.env.SERVICE_DB_DB1_PORT,
 		host: process.env.SERVICE_DB_DB1_HOST,
-		user: process.env.SERVICE_DB_DB1_USER,
-		password: process.env.SERVICE_DB_DB1_PASS,
+		user: db_user1,
+		password: db_password1,
 		database: process.env.SERVICE_DB_DB1_NAME,
 		charset: process.env.SERVICE_DB_DB1_CHARACTERSET,
 		connnectionLimit: process.env.SERVICE_DB_DB1_CONNECTION_LIMIT
@@ -23,8 +60,8 @@ else if (process.env.SERVICE_DB_USE==2){
 	async function init(){
 		try{
 			await oracledb.createPool({
-				user: process.env.SERVICE_DB_DB2_USER,
-				password: process.env.SERVICE_DB_DB2_PASS,
+				user: db_user2,
+				password: db_password2,
 				connectString: process.env.SERVICE_DB_DB2_CONNECTSTRING,
 				poolMin: parseInt(process.env.SERVICE_DB_DB2_POOL_MIN),
 				poolMax: parseInt(process.env.SERVICE_DB_DB2_POOL_MAX),
