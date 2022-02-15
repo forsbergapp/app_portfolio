@@ -1,3 +1,7 @@
+CREATE DATABASE app_portfolio
+DEFAULT CHARACTER SET utf8mb4
+DEFAULT COLLATE utf8mb4_0900_ai_ci;
+
 CREATE ROLE role_app_admin;
 CREATE ROLE role_app_dba;
 CREATE ROLE role_app_home;
@@ -670,15 +674,15 @@ CREATE TABLE app_portfolio.locale (
     language_id  INTEGER NOT NULL,
     country_id   INTEGER NOT NULL
 );
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.message TO role_app_admin;
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.locale TO role_app_admin;
 
-GRANT SELECT ON app_portfolio.message TO role_app_home;
+GRANT SELECT ON app_portfolio.locale TO role_app_property_management;
 
-GRANT SELECT ON app_portfolio.message TO role_app_property_management;
+GRANT SELECT ON app_portfolio.locale TO role_app_timetables;
 
-GRANT SELECT ON app_portfolio.message TO role_app_timetables;
+GRANT ALL PRIVILEGES ON app_portfolio.locale TO role_app_dba;
 
-GRANT ALL PRIVILEGES ON app_portfolio.message TO role_app_dba;
+GRANT SELECT ON app_portfolio.locale TO role_app_home;
 
 ALTER TABLE app_portfolio.locale ADD CONSTRAINT locale_un UNIQUE ( language_id,
                                                      country_id );
