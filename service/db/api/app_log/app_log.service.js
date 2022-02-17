@@ -1,12 +1,12 @@
-const {pool, oracledb, oracle_options} = require ("../../config/database");
+const {oracle_options,get_pool} = require ("../../config/database");
 
 module.exports = {
 	createLog: (data, callBack) => {
 		//max 4000 characters can be saved
 		data.app_module_result = data.app_module_result.substr(0,3999);
 		if (process.env.SERVICE_DB_USE==1){
-			pool.query(
-				`INSERT INTO app_log(
+			get_pool(data.app_id).query(
+				`INSERT INTO ${process.env.SERVICE_DB_DB1_NAME}.app_log(
 					app_id,
 					app_module,
 					app_module_type,
@@ -53,10 +53,11 @@ module.exports = {
 			);
 		}else if (process.env.SERVICE_DB_USE==2){
 			async function execute_sql(err, result){
+				let pool2;
 				try{
-				const pool2 = await oracledb.getConnection();
+				pool2 = await get_pool(data.app_id).getConnection();
 				const result = await pool2.execute(
-					`INSERT INTO app_log(
+					`INSERT INTO ${process.env.SERVICE_DB_DB2_NAME}.app_log(
 						app_id,
 						app_module,
 						app_module_type,
@@ -118,11 +119,16 @@ module.exports = {
 							return callBack(null, result);
 						}
 					});
-					await pool2.close();
 				}catch (err) {
 					return callBack(err.message);
 				} finally {
-					null;
+					if (pool2) {
+						try {
+							await pool2.close(); 
+						} catch (err) {
+							console.error(err);
+						}
+					}
 				}
 			}
 			execute_sql();
@@ -130,7 +136,7 @@ module.exports = {
 	},
 	getLogs: callBack => {
 		if (process.env.SERVICE_DB_USE==1){
-			pool.query(
+			get_pool(app_id).query(
 				`SELECT
 						id,
 						app_id,
@@ -150,7 +156,7 @@ module.exports = {
 						server_http_host,
 						server_http_accept_language,
 						date_created
-				FROM app_log `,
+				FROM ${process.env.SERVICE_DB_DB1_NAME}.app_log `,
 				[],
 				(error, results, fields) => {
 					if (error){
@@ -162,8 +168,9 @@ module.exports = {
 		}
 		else if (process.env.SERVICE_DB_USE==2){
 			async function execute_sql(err, result){
+				let pool2;
 				try{
-				const pool2 = await oracledb.getConnection();
+				pool2 = await get_pool(app_id).getConnection();
 				const result = await pool2.execute(
 					`SELECT
 							id "id",
@@ -184,7 +191,7 @@ module.exports = {
 							server_http_host "server_http_host",
 							server_http_accept_language "server_http_accept_language",
 							date_created "date_created"
-					FROM app_log`,
+					FROM ${process.env.SERVICE_DB_DB2_NAME}.app_log`,
 					{},
 					oracle_options, (err,result) => {
 						if (err) {
@@ -194,11 +201,16 @@ module.exports = {
 							return callBack(null, result.rows);
 						}
 					});
-					await pool2.close();
 				}catch (err) {
 					return callBack(err.message);
 				} finally {
-					null;
+					if (pool2) {
+						try {
+							await pool2.close(); 
+						} catch (err) {
+							console.error(err);
+						}
+					}
 				}
 			}
 			execute_sql();
