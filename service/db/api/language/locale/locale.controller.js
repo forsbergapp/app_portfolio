@@ -7,7 +7,7 @@ module.exports = {
 			lang_code ='en';
 		else
 			lang_code = req.params.lang_code;
-		getLocales(lang_code,(err, results) =>{
+		getLocales(req.query.app_id, lang_code,(err, results) =>{
 			if (err) {
 				console.log(err);
 				return res.status(500).send({
