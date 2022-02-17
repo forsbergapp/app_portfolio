@@ -1,49 +1,50 @@
 const { getThemes } = require("../../service/db/api/app_timetables_theme/app_timetables_theme.service");
 
 module.exports = {
-  themes:() => {
+  themes:(app_id) => {
     return new Promise(function (resolve, reject){
-        getThemes((err, results)  => {
+        getThemes(app_id, (err, results)  => {
         var html_themes='';
-        if (err)
-          resolve (
-                    `<div class='setting_horizontal_col'>
-                        <label id='setting_label_report_theme_day'>Report theme day</label>
-                        <div id='setting_themes_day_slider' class='slider'>
-                        <div class='slider_wrapper'>
-                            <div id='slides_day' class='slides'>
-                            </div>
-                        </div>
-                        <a id='slider_prev_day' class='slider_control slider_prev'><i class='fas fa-chevron-left'></i></a>
-                        <a id='slider_next_day' class='slider_control slider_next'><i class='fas fa-chevron-right'></i></a>
-                        </div>
-                        <div id='slider_theme_day_id'></div>
-                    </div>
-                    <div class='setting_horizontal_col'>
-                        <label id='setting_label_report_theme_month'>Report theme month</label>
-                        <div id='setting_themes_month_slider' class='slider'>
-                        <div class='slider_wrapper'>
-                            <div id='slides_month' class='slides'>
-                            </div>
-                        </div>
-                        <a id='slider_prev_month' class='slider_control slider_prev'><i class='fas fa-chevron-left'></i></a>
-                        <a id='slider_next_month' class='slider_control slider_next'><i class='fas fa-chevron-right'></i></a>
-                        </div>
-                        <div id='slider_theme_month_id'></div>
-                    </div>
-                    <div class='setting_horizontal_col'>
-                        <label id='setting_label_report_theme_year'>Report theme year</label>
-                        <div id='setting_themes_year_slider' class='slider'>
-                        <div class='slider_wrapper'>
-                            <div id='slides_year' class='slides'>
-                            </div>
-                        </div>
-                        <a id='slider_prev_year' class='slider_control slider_prev'><i class='fas fa-chevron-left'></i></a>
-                        <a id='slider_next_year' class='slider_control slider_next'><i class='fas fa-chevron-right'></i></a>
-                        </div>
-                        <div id='slider_theme_year_id'></div>
-                    </div>`
-                )
+        if (err){
+            resolve (
+                      `<div class='setting_horizontal_col'>
+                          <label id='setting_label_report_theme_day'>Report theme day</label>
+                          <div id='setting_themes_day_slider' class='slider'>
+                          <div class='slider_wrapper'>
+                              <div id='slides_day' class='slides'>
+                              </div>
+                          </div>
+                          <a id='slider_prev_day' class='slider_control slider_prev'><i class='fas fa-chevron-left'></i></a>
+                          <a id='slider_next_day' class='slider_control slider_next'><i class='fas fa-chevron-right'></i></a>
+                          </div>
+                          <div id='slider_theme_day_id'></div>
+                      </div>
+                      <div class='setting_horizontal_col'>
+                          <label id='setting_label_report_theme_month'>Report theme month</label>
+                          <div id='setting_themes_month_slider' class='slider'>
+                          <div class='slider_wrapper'>
+                              <div id='slides_month' class='slides'>
+                              </div>
+                          </div>
+                          <a id='slider_prev_month' class='slider_control slider_prev'><i class='fas fa-chevron-left'></i></a>
+                          <a id='slider_next_month' class='slider_control slider_next'><i class='fas fa-chevron-right'></i></a>
+                          </div>
+                          <div id='slider_theme_month_id'></div>
+                      </div>
+                      <div class='setting_horizontal_col'>
+                          <label id='setting_label_report_theme_year'>Report theme year</label>
+                          <div id='setting_themes_year_slider' class='slider'>
+                          <div class='slider_wrapper'>
+                              <div id='slides_year' class='slides'>
+                              </div>
+                          </div>
+                          <a id='slider_prev_year' class='slider_control slider_prev'><i class='fas fa-chevron-left'></i></a>
+                          <a id='slider_next_year' class='slider_control slider_next'><i class='fas fa-chevron-right'></i></a>
+                          </div>
+                          <div id='slider_theme_year_id'></div>
+                      </div>`
+                  )
+        }
         else{
             var span_themes_day ='', span_themes_month='', span_themes_year='';
             //get themes and save result in three theme variables

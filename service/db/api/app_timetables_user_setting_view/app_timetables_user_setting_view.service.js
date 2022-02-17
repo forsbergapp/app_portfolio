@@ -1,10 +1,10 @@
-const {pool, oracledb, oracle_options} = require ("../../config/database");
+const {oracle_options, get_pool} = require ("../../config/database");
 
 module.exports = {
-	insertUserSettingView: (data, callBack) => {
+	insertUserSettingView: (app_id, data, callBack) => {
 		if (process.env.SERVICE_DB_USE == 1) {
-			pool.query(
-			`INSERT INTO app_timetables_user_setting_view(
+			get_pool(app_id).query(
+			`INSERT INTO ${process.env.SERVICE_DB_DB1_NAME}.app_timetables_user_setting_view(
 							user_account_id,
 							user_setting_id,
 							client_ip,
@@ -28,10 +28,11 @@ module.exports = {
 			);
 		}else if (process.env.SERVICE_DB_USE==2){
 			async function execute_sql(err, result){
+				let pool2;
 				try{
-				const pool2 = await oracledb.getConnection();
+				pool2 = await get_pool(app_id).getConnection();
 				const result_sql = await pool2.execute(
-					`INSERT INTO app_timetables_user_setting_view(
+					`INSERT INTO ${process.env.SERVICE_DB_DB2_NAME}.app_timetables_user_setting_view(
 									user_account_id,
 									user_setting_id,
 									client_ip,
@@ -62,11 +63,16 @@ module.exports = {
 							return callBack(null, result_ins);
 						}
 					});
-					await pool2.close();
 				}catch (err) {
 					return callBack(err.message);
 				} finally {
-					null;
+					if (pool2) {
+						try {
+							await pool2.close(); 
+						} catch (err) {
+							console.error(err);
+						}
+					}
 				}
 			}
 			execute_sql();

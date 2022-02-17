@@ -1,10 +1,10 @@
-const {pool, oracledb, oracle_options} = require ("../../config/database");
+const {oracle_options, get_pool} = require ("../../config/database");
 
 module.exports = {
-	likeUser: (id, id_like, callBack) => {
+	likeUser: (app_id, id, id_like, callBack) => {
 		if (process.env.SERVICE_DB_USE == 1) {
-			pool.query(
-			`INSERT INTO user_account_like(
+			get_pool(app_id).query(
+			`INSERT INTO ${process.env.SERVICE_DB_DB1_NAME}.user_account_like(
 							user_account_id, user_account_id_like, date_created)
 				VALUES(?,?, SYSDATE()) `,
 				[
@@ -20,10 +20,11 @@ module.exports = {
 			);
 		}else if (process.env.SERVICE_DB_USE==2){
 			async function execute_sql(err, result){
+				let pool2;
 				try{
-				const pool2 = await oracledb.getConnection();
+				pool2 = await get_pool(app_id).getConnection();
 				const result = await pool2.execute(
-					`INSERT INTO user_account_like(
+					`INSERT INTO ${process.env.SERVICE_DB_DB2_NAME}.user_account_like(
 									user_account_id, user_account_id_like, date_created)
 						VALUES(:user_account_id,:user_account_id_like, SYSDATE) `,
 					{
@@ -38,20 +39,25 @@ module.exports = {
 							return callBack(null, result);
 						}
 					});
-					await pool2.close();
 				}catch (err) {
 					return callBack(err.message);
 				} finally {
-					null;
+					if (pool2) {
+						try {
+							await pool2.close(); 
+						} catch (err) {
+							console.error(err);
+						}
+					}
 				}
 			}
 			execute_sql();
 		}
 	},
-	unlikeUser: (id, id_unlike, callBack) => {
+	unlikeUser: (app_id, id, id_unlike, callBack) => {
 		if (process.env.SERVICE_DB_USE == 1) {
-			pool.query(
-			`DELETE FROM user_account_like
+			get_pool(app_id).query(
+			`DELETE FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_like
 				WHERE  user_account_id = ?
 				AND    user_account_id_like = ? `,
 				[
@@ -67,10 +73,11 @@ module.exports = {
 			);
 		}else if (process.env.SERVICE_DB_USE==2){
 			async function execute_sql(err, result){
+				let pool2;
 				try{
-				const pool2 = await oracledb.getConnection();
+				pool2 = await get_pool(app_id).getConnection();
 				const result = await pool2.execute(
-					`DELETE FROM user_account_like
+					`DELETE FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_like
 						WHERE  user_account_id = :user_account_id
 						AND    user_account_id_like = :user_account_id_like `,
 					{
@@ -85,11 +92,16 @@ module.exports = {
 							return callBack(null, result);
 						}
 					});
-					await pool2.close();
 				}catch (err) {
 					return callBack(err.message);
 				} finally {
-					null;
+					if (pool2) {
+						try {
+							await pool2.close(); 
+						} catch (err) {
+							console.error(err);
+						}
+					}
 				}
 			}
 			execute_sql();

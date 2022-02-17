@@ -1,6 +1,6 @@
 const fs = require("fs");
 module.exports = {
-    getApp:() => {
+    getApp:(app_id) => {
         return new Promise(function (resolve, reject){
             fs.readFile(__dirname + '/index.html', 'utf-8', (err, app_result) => {
                 if (err) {
@@ -34,10 +34,10 @@ module.exports = {
                     const { themes } = require("./themes");
                     async function getAppComponents() {
                         //modules with fetch from database
-                        const AppCountries = await countries();
-                        const AppLocales = await locales();
-                        const AppPlaces = await places();
-                        const AppThemes = await themes();
+                        const AppCountries = await countries(app_id);
+                        const AppLocales = await locales(app_id);
+                        const AppPlaces = await places(app_id);
+                        const AppThemes = await themes(app_id);
                         
                         var app = app_result.replace(
                             '<AppHead/>',

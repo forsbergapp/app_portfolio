@@ -1,15 +1,16 @@
 const { getPlace } = require("../../service/db/api/app_timetables_place/app_timetables_place.service");
 
 module.exports = {
-  places:() => {
+  places:(app_id) => {
     return new Promise(function (resolve, reject){
-        getPlace((err, results)  => {
+        getPlace(app_id, (err, results)  => {
         var select_places;
-        if (err)
+        if (err){
           resolve (
-                    `<select id='setting_select_popular_place'>
-                    <option value="" id="" latitude="0" longitude="0" timezone="" selected="selected">...</option>`
-                )
+                      `<select id='setting_select_popular_place'>
+                      <option value="" id="" latitude="0" longitude="0" timezone="" selected="selected">...</option>`
+                  )
+        }
         else{
             select_places  =`<select id='setting_select_popular_place'>
                              <option value="" id="" latitude="0" longitude="0" timezone="" selected="selected">...</option>`

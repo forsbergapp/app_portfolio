@@ -387,7 +387,7 @@ async function settings_translate(first=true) {
                 }
                 if (first==true){
                     //country
-                    fetch(global_rest_url_base + global_rest_country + document.getElementById('setting_select_locale').value, 
+                    fetch(global_rest_url_base + global_rest_country + document.getElementById('setting_select_locale').value + `?app_id=${global_app_id}`, 
                         {
                             method: 'GET',
                             headers: {
@@ -424,7 +424,7 @@ async function settings_translate(first=true) {
                             }
                             select_country.innerHTML = html;
                             //locale
-                            fetch(global_rest_url_base + global_rest_language_locale + document.getElementById('setting_select_locale').value, 
+                            fetch(global_rest_url_base + global_rest_language_locale + document.getElementById('setting_select_locale').value + `?app_id=${global_app_id}`, 
                             {
                                 method: 'GET',
                                 headers: {
@@ -2215,7 +2215,8 @@ function user_verify_check_input(item, nextField) {
             //activate user
             json_data = '{"validation_code":"' + validation_code + '"}';
             fetch(global_rest_url_base + global_rest_user_account_activate + user_id +
-                    '?lang_code=' + document.getElementById('setting_select_locale').value, {
+                    '?app_id=' + global_app_id + 
+                    '&lang_code=' + document.getElementById('setting_select_locale').value, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
@@ -2320,7 +2321,8 @@ function user_edit() {
         //get user from REST API
         spinner('EDIT', 'visible');
         fetch(global_rest_url_base + global_rest_user_account + user_id.innerHTML +
-                '?lang_code=' + document.getElementById('setting_select_locale').value, {
+                '?app_id=' + global_app_id +
+                '&lang_code=' + document.getElementById('setting_select_locale').value, {
                 method: 'GET',
                 headers: {
                     'Authorization': 'Bearer ' + global_rest_at
@@ -2423,7 +2425,6 @@ function user_update() {
 
     if (document.getElementById('user_edit_local').style.display == 'block') {
         json_data = '{' + 
-            '"app_id":' + global_app_id + ',' +
             '"bio":"' + bio + '",' +
             '"private":' + boolean_to_number(document.getElementById('setting_checkbox_report_private').checked) + ',' +
             '"username":"' + username + '",' +
@@ -2481,7 +2482,8 @@ function user_update() {
     }
     spinner('UPDATE', 'visible');
     //update user using REST API
-    fetch(url + '?lang_code=' + document.getElementById('setting_select_locale').value, {
+    fetch(url + '?app_id=' + global_app_id +
+                '&lang_code=' + document.getElementById('setting_select_locale').value, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -3021,7 +3023,7 @@ function user_signup() {
     var select_setting_city = document.getElementById('setting_select_city');
     var select_setting_popular_place = document.getElementById('setting_select_popular_place');
 
-    var json_data = '{"app_id":' + global_app_id + ',' +
+    var json_data = '{' +
         '"user_language": "' + navigator.language + '",' +
         '"user_timezone": "' + Intl.DateTimeFormat().resolvedOptions().timeZone + '",' +
         '"user_number_system": "' + Intl.NumberFormat().resolvedOptions().numberingSystem + '",' +
@@ -3107,7 +3109,8 @@ function user_signup() {
 
     spinner('SIGNUP', 'visible');
     fetch(global_rest_url_base + global_rest_user_account_signup +
-            '?lang_code=' + document.getElementById('setting_select_locale').value, {
+            '?app_id=' + global_app_id +
+            '&lang_code=' + document.getElementById('setting_select_locale').value, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -3387,7 +3390,6 @@ function user_settings_save() {
 
     var json_data =
         '{' +
-        '"app_id":' + global_app_id + ',' +
         '"description": "' + document.getElementById('setting_input_place').value + '",' +
         '"regional_language_locale": "' + document.getElementById('setting_select_locale').value + '",' +
         '"regional_current_timezone_select_id": ' + document.getElementById('setting_select_timezone_current').selectedIndex + ',' +
@@ -3449,7 +3451,8 @@ function user_settings_save() {
     spinner('SAVE', 'visible');
 
     fetch(global_rest_url_base + global_rest_app_timetables_user_setting + user_setting_id +
-            '?lang_code=' + document.getElementById('setting_select_locale').value, {
+            '?app_id=' + global_app_id +
+            '&lang_code=' + document.getElementById('setting_select_locale').value, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -3489,7 +3492,6 @@ function user_settings_add(signup = false) {
     //use btoa() for images to encode with BASE64 to BLOB column.
     var json_data =
         '{' +
-        '"app_id":' + global_app_id + ',' +
         '"description": "' + description + '",' +
         '"regional_language_locale": "' + document.getElementById('setting_select_locale').value + '",' +
         '"regional_current_timezone_select_id": ' + document.getElementById('setting_select_timezone_current').selectedIndex + ',' +
@@ -3552,7 +3554,8 @@ function user_settings_add(signup = false) {
     //setting hardcoded number works but not applicable here
     spinner('ADD', 'visible');
     fetch(global_rest_url_base + global_rest_app_timetables_user_setting +
-            '?lang_code=' + document.getElementById('setting_select_locale').value, {
+            '?app_id=' + global_app_id +
+            '&lang_code=' + document.getElementById('setting_select_locale').value, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -4611,13 +4614,13 @@ function profile_show(user_account_id_other = null, username = null) {
         //PROFILE MAIN
         var json_data =
             '{' +
-            '"app_id":' + global_app_id + ',' +
             '"client_longitude": "' + global_user_gps_longitude + '",' +
             '"client_latitude": "' + global_user_gps_latitude + '"' +
             '}';
         fetch(url + 
-                '?id=' + user_id.innerHTML +
-                '&lang_code=' + document.getElementById('setting_select_locale').value, {
+                '?app_id=' + global_app_id + 
+                '&lang_code=' + document.getElementById('setting_select_locale').value +
+                '&id=' + user_id.innerHTML, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -4757,9 +4760,9 @@ function profile_show_user_setting() {
         document.getElementById('profile_user_settings_row').style.display = 'block';
 
         fetch(global_rest_url_base + global_rest_app_timetables_user_setting_profile + document.getElementById('profile_id').innerHTML + 
-                '?id=' + user_id.innerHTML + 
-                '&app_id=' + global_app_id +
-                '&lang_code=' + document.getElementById('setting_select_locale').value,
+                '?app_id=' + global_app_id +
+                '&lang_code=' + document.getElementById('setting_select_locale').value + 
+                '&id=' + user_id.innerHTML,
             {
                 method: 'GET',
                 headers: {
@@ -4911,9 +4914,9 @@ function profile_detail(detailchoice) {
                 break;
         }
         fetch(global_rest_url_base + global_rest_user_account_profile_detail + document.getElementById('profile_id').innerHTML +
-                '?detailchoice=' + detailchoice + 
-                '&app_id=' + global_app_id +
-                '&lang_code=' + document.getElementById('setting_select_locale').value, {
+                '?app_id=' + global_app_id +
+                '&lang_code=' + document.getElementById('setting_select_locale').value +
+                '&detailchoice=' + detailchoice, {
                 method: 'GET',
                 headers: {
                     'Authorization': 'Bearer ' + global_rest_at
@@ -5117,7 +5120,8 @@ function user_function(user_function, user_setting_id, row_div) {
             item1 = 'none';
         }
         fetch(global_rest_url_base + rest_path + user_id +
-                '?lang_code=' + document.getElementById('setting_select_locale').value, {
+                '?app_id=' + global_app_id + 
+                '&lang_code=' + document.getElementById('setting_select_locale').value, {
                 method: method,
                 headers: {
                     'Content-Type': 'application/json',
@@ -5154,18 +5158,19 @@ function search_profile() {
     profile_search_list.innerHTML = '';
     document.getElementById('profile_search_list').style.display = "none";
     var json_data = '{' +
-        '"app_id":' + global_app_id + ',' +
-        '"client_longitude": "' + global_user_gps_longitude + '",' +
-        '"client_latitude": "' + global_user_gps_latitude + '"' +
-        '}';
+                    '"client_longitude": "' + global_user_gps_longitude + '",' +
+                    '"client_latitude": "' + global_user_gps_latitude + '"' +
+                    '}';
     fetch(global_rest_url_base + global_rest_user_account_profile_search + searched_username +
-            '?lang_code=' + document.getElementById('setting_select_locale').value, {
+          '?app_id=' + global_app_id +
+          '&lang_code=' + document.getElementById('setting_select_locale').value, 
+          {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + global_rest_at
-            },
-            body: json_data
+          },
+          body: json_data
         })
         .then(function(response) {
             status = response.status;
@@ -5246,7 +5251,8 @@ function updateViewStat(user_setting_id, user_setting_user_account_id = null) {
             '"client_latitude": "' + global_user_gps_latitude + '"' +
             '}';
         fetch(global_rest_url_base + global_rest_app_timetables_user_setting_view +
-                '?lang_code=' + document.getElementById('setting_select_locale').value, {
+                '?app_id=' + global_app_id + 
+                '&lang_code=' + document.getElementById('setting_select_locale').value, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

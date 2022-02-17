@@ -1,10 +1,10 @@
-const {pool, oracledb, oracle_options} = require ("../../config/database");
+const {oracle_options,get_pool} = require ("../../config/database");
 
 module.exports = {
 	
-	getPlace: callBack => {
+	getPlace: (app_id, callBack) => {
 		if (process.env.SERVICE_DB_USE == 1) {
-			pool.query(
+			get_pool(app_id).query(
 				` SELECT	p.id,
 							p.title,
 							p.latitude,
@@ -19,11 +19,11 @@ module.exports = {
 							gp2.group_name     group2,
 							gp2.icon_emoji     group2_icon
 						FROM
-							country      c1,
-							group_place  gp1, 
-							group_place  gp2,
-							app_timetables_place        p
-							LEFT OUTER JOIN country c2 
+							${process.env.SERVICE_DB_DB1_NAME}.country      c1,
+							${process.env.SERVICE_DB_DB1_NAME}.group_place  gp1, 
+							${process.env.SERVICE_DB_DB1_NAME}.group_place  gp2,
+							${process.env.SERVICE_DB_DB1_NAME}.app_timetables_place        p
+							LEFT OUTER JOIN ${process.env.SERVICE_DB_DB1_NAME}.country c2 
 							ON c2.id = p.country2_id  
 						WHERE gp1.id = p.group_place1_id
 							AND   gp2.id = p.group_place2_id
@@ -31,6 +31,7 @@ module.exports = {
 				[],
 				(error, results, fields) => {
 					if (error){
+						console.log('getPlace err:' + error);
 						return callBack(error);
 					}
 					return callBack(null, results);
@@ -38,8 +39,9 @@ module.exports = {
 			);
 		}else if (process.env.SERVICE_DB_USE==2){
 			async function execute_sql(err, result){
+				let pool2;
 				try{
-				const pool2 = await oracledb.getConnection();
+				pool2 = await get_pool(app_id).getConnection();
 				const result = await pool2.execute(
 					`SELECT	p.id "id",
 							p.title "title",
@@ -55,11 +57,11 @@ module.exports = {
 							gp2.group_name     "group2",
 							gp2.icon_emoji     "group2_icon"
 						FROM
-							country      c1,
-							group_place  gp1, 
-							group_place  gp2,
-							app_timetables_place        p
-							LEFT OUTER JOIN country c2 
+							${process.env.SERVICE_DB_DB2_NAME}.country      c1,
+							${process.env.SERVICE_DB_DB2_NAME}.group_place  gp1, 
+							${process.env.SERVICE_DB_DB2_NAME}.group_place  gp2,
+							${process.env.SERVICE_DB_DB2_NAME}.app_timetables_place        p
+							LEFT OUTER JOIN ${process.env.SERVICE_DB_DB2_NAME}.country c2 
 							ON c2.id = p.country2_id  
 						WHERE gp1.id = p.group_place1_id
 							AND   gp2.id = p.group_place2_id
@@ -67,17 +69,23 @@ module.exports = {
 					{},
 					oracle_options, (err,result) => {
 						if (err) {
+							console.log('getPlace err:' + err);
 							return callBack(err);
 						}
 						else{
 							return callBack(null, result.rows);
 						}
 					});
-					await pool2.close();
 				}catch (err) {
 					return callBack(err.message);
 				} finally {
-					null;
+					if (pool2) {
+						try {
+							await pool2.close(); 
+						} catch (err) {
+							console.error(err);
+						}
+					}
 				}
 			}
 			execute_sql();

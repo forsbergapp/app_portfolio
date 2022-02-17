@@ -1,10 +1,10 @@
-const {pool, oracledb, oracle_options} = require ("../../config/database");
+const {oracle_options, get_pool} = require ("../../config/database");
 
 module.exports = {
 	insertUserAccountLogon: (data, callBack) => {
 		if (process.env.SERVICE_DB_USE == 1) {
-			pool.query(
-			`INSERT INTO user_account_logon(
+			get_pool(data.app_id).query(
+			`INSERT INTO ${process.env.SERVICE_DB_DB1_NAME}.user_account_logon(
 							user_account_id, app_id, result, client_ip, client_user_agent, client_longitude, client_latitude, date_created)
 				VALUES(?,?,?,?,?,?,?, SYSDATE()) `,
 				[
@@ -25,10 +25,11 @@ module.exports = {
 			);
 		}else if (process.env.SERVICE_DB_USE==2){
 			async function execute_sql(err, result){
+				let pool2;
 				try{
-				const pool2 = await oracledb.getConnection();
+				pool2 = await get_pool(data.app_id).getConnection();
 				const result_sql = await pool2.execute(
-					`INSERT INTO user_account_logon(
+					`INSERT INTO ${process.env.SERVICE_DB_DB2_NAME}.user_account_logon(
 						user_account_id, app_id, result, client_ip,  client_user_agent,  client_longitude, client_latitude, date_created)
 						VALUES(:user_account_id, :app_id, :result_insert,:client_ip,:client_user_agent, :client_longitude, :client_latitude, SYSDATE) `,
 					{
@@ -49,11 +50,16 @@ module.exports = {
 							return callBack(null, result2);
 						}
 					});
-					await pool2.close();
 				}catch (err) {
 					return callBack(err.message);
 				} finally {
-					null;
+					if (pool2) {
+						try {
+							await pool2.close(); 
+						} catch (err) {
+							console.error(err);
+						}
+					}
 				}
 			}
 			execute_sql();

@@ -1,10 +1,10 @@
-const { pool, oracledb, oracle_options } = require("../../config/database");
+const {oracle_options,get_pool} = require ("../../config/database");
 
 module.exports = {
-    create: (data, callBack) => {
+    create: (app_id, data, callBack) => {
         if (process.env.SERVICE_DB_USE == 1) {
-            pool.query(
-                `INSERT INTO user_account(
+            get_pool(app_id).query(
+                `INSERT INTO ${process.env.SERVICE_DB_DB1_NAME}.user_account(
 					bio,
 					private,
 					user_level,
@@ -63,6 +63,7 @@ module.exports = {
             );
         } else if (process.env.SERVICE_DB_USE == 2) {
             async function execute_sql(err, result) {
+				let pool2;
                 try {
                     if (data.avatar != null)
                         data.avatar = Buffer.from(data.avatar, 'utf8');
@@ -70,9 +71,9 @@ module.exports = {
                         data.provider1_image = Buffer.from(data.provider1_image, 'utf8');
                     if (data.provider2_image != null)
                         data.provider2_image = Buffer.from(data.provider2_image, 'utf8');
-                    const pool2 = await oracledb.getConnection();
+                    pool2 = await get_pool(app_id).getConnection();
                     const result = await pool2.execute(
-                        `INSERT INTO user_account(
+                        `INSERT INTO ${process.env.SERVICE_DB_DB2_NAME}.user_account(
 						bio,
 						private,
 						user_level,
@@ -155,45 +156,63 @@ module.exports = {
                                 async function execute_sql2(err_id, result_id) {
                                     //remove "" before and after
                                     var lastRowid = JSON.stringify(result.lastRowid).replace(/"/g, '');
-                                    const pool3 = await oracledb.getConnection();
-                                    const result_rowid = await pool3.execute(
-                                        `SELECT id "insertId"
-									   FROM user_account
-									  WHERE rowid = :lastRowid`, {
-                                            lastRowid: lastRowid
-                                        },
-                                        oracle_options, (err_id2, result_id2) => {
-                                            if (err_id2) {
-                                                return callBack(err_id2);
-                                            } else {
-                                                return callBack(null, result_id2.rows[0]);
-                                            }
-                                        });
-                                    await pool3.close();
+									let pool3;
+									try{
+										pool3 = await get_pool(app_id).getConnection();
+										const result_rowid = await pool3.execute(
+											`SELECT id "insertId"
+										   	   FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account
+											  WHERE rowid = :lastRowid`, {
+												lastRowid: lastRowid
+											},
+											oracle_options, (err_id2, result_id2) => {
+												if (err_id2) {
+													return callBack(err_id2);
+												} else {
+													return callBack(null, result_id2.rows[0]);
+												}
+											});
+									}catch (err) {
+										return callBack(err);
+									} finally {
+										if (pool3) {
+											try {
+												await pool3.close(); 
+											} catch (err) {
+												console.error(err);
+											}
+										}
+									}
                                 }
                                 execute_sql2();
                             }
                         });
-                    await pool2.close();
                 } catch (err) {
                     return callBack(err);
                 } finally {
-                    null;
+                    if (pool2) {
+						try {
+							await pool2.close(); 
+						} catch (err) {
+							console.error(err);
+						}
+					}
                 }
             }
             execute_sql();
         }
     },
-    activateUser: (id, validation_code, callBack) => {
+    activateUser: (app_id, id, validation_code, callBack) => {
         if (process.env.SERVICE_DB_USE == 1) {
-            pool.query(
-                `UPDATE user_account
-					SET		active = 1,
-							validation_code = null,
-							date_modified = SYSDATE()
-					WHERE  id = ?
-					AND    validation_code = ?`, [id,
-                    validation_code
+            get_pool(app_id).query(
+                `UPDATE ${process.env.SERVICE_DB_DB1_NAME}.user_account
+					SET	active = 1,
+				  	    validation_code = null,
+						date_modified = SYSDATE()
+				  WHERE id = ?
+					AND validation_code = ?`, 
+				[id,
+                 validation_code
                 ],
                 (error, results, fields) => {
                     if (error) {
@@ -208,16 +227,16 @@ module.exports = {
             )
         } else if (process.env.SERVICE_DB_USE == 2) {
             async function execute_sql(err, result) {
+				let pool2;
                 try {
-
-                    const pool2 = await oracledb.getConnection();
+					pool2 = await get_pool(app_id).getConnection();
                     const result_sql = await pool2.execute(
-                        `UPDATE user_account
-						SET		active = 1,
+                        `UPDATE ${process.env.SERVICE_DB_DB2_NAME}.user_account
+						    SET	active = 1,
 								validation_code = null,
 								date_modified = SYSDATE
-						WHERE  id = :id
-						AND    validation_code = :validation_code `, {
+						  WHERE id = :id
+						    AND validation_code = :validation_code `, {
                             id: id,
                             validation_code: validation_code
                         },
@@ -244,24 +263,29 @@ module.exports = {
                                 return callBack(null, oracle_json);
                             }
                         });
-                    await pool2.close();
                 } catch (err) {
                     return callBack(err.message);
                 } finally {
-                    null;
+                    if (pool2) {
+						try {
+							await pool2.close(); 
+						} catch (err) {
+							console.error(err);
+						}
+					}
                 }
             }
             execute_sql();
         }
     },
-    getUserByUserId: (id, callBack) => {
+    getUserByUserId: (app_id, id, callBack) => {
         if (process.env.SERVICE_DB_USE == 1) {
-            pool.query(
+            get_pool(app_id).query(
                 `SELECT
 					u.id,
 					u.bio,
 					(SELECT MAX(ul.date_created)
-					   FROM user_account_logon ul
+					   FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_logon ul
 					  WHERE ul.user_account_id = u.id
 						AND ul.result=1) last_logontime,
 					u.private,
@@ -287,7 +311,7 @@ module.exports = {
 					CONVERT(u.provider2_image USING UTF8) provider2_image,
 					u.provider2_image_url,
 					u.provider2_email
-				FROM user_account u
+				FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account u
 				WHERE u.id = ? `, [id],
                 (error, results, fields) => {
                     if (error) {
@@ -298,14 +322,15 @@ module.exports = {
             )
         } else if (process.env.SERVICE_DB_USE == 2) {
             async function execute_sql(err, result) {
+				let pool2;
                 try {
-                    const pool2 = await oracledb.getConnection();
+                    pool2 = await get_pool(app_id).getConnection();
                     const result = await pool2.execute(
                         `SELECT
 						u.id "id",
 						u.bio "bio",
 						(SELECT MAX(ul.date_created)
-						   FROM user_account_logon ul
+						   FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_logon ul
 						  WHERE ul.user_account_id = u.id
 							AND ul.result=1) "last_logontime",
 						u.private "private",
@@ -331,7 +356,7 @@ module.exports = {
 						u.provider2_image "provider2_image",
 						u.provider2_image_url "provider2_image_url",
 						u.provider2_email "provider2_email"
-					FROM user_account u
+					FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account u
 					WHERE u.id = :id `, {
                             id: id
                         },
@@ -342,19 +367,24 @@ module.exports = {
                                 return callBack(null, result.rows[0]);
                             }
                         });
-                    await pool2.close();
                 } catch (err) {
                     return callBack(err.message);
                 } finally {
-                    null;
+                    if (pool2) {
+						try {
+							await pool2.close(); 
+						} catch (err) {
+							console.error(err);
+						}
+					}
                 }
             }
             execute_sql();
         }
     },
-    getProfileUserId: (id, id_current_user, callBack) => {
+    getProfileUserId: (app_id, id, id_current_user, callBack) => {
         if (process.env.SERVICE_DB_USE == 1) {
-            pool.query(
+            get_pool(app_id).query(
                 `SELECT
 					u.id,
 					u.bio,
@@ -374,39 +404,39 @@ module.exports = {
 					CONVERT(u.provider2_image USING UTF8) provider2_image,
 					u.provider2_image_url,
 					(SELECT COUNT(u_following.user_account_id)   
-					   FROM user_account_follow  u_following
-					  WHERE u_following.user_account_id = u.id) 				count_following,
+					   FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_follow  u_following
+					  WHERE u_following.user_account_id = u.id) 					count_following,
 					(SELECT COUNT(u_followed.user_account_id_follow) 
-					   FROM user_account_follow  u_followed
-					  WHERE u_followed.user_account_id_follow = u.id) 			count_followed,
+					   FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_follow  u_followed
+					  WHERE u_followed.user_account_id_follow = u.id) 				count_followed,
 					(SELECT COUNT(u_likes.user_account_id)
-					   FROM user_account_like    u_likes
-					  WHERE u_likes.user_account_id = u.id ) 					count_likes,
+					   FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_like    u_likes
+					  WHERE u_likes.user_account_id = u.id ) 						count_likes,
 					(SELECT COUNT(u_likes.user_account_id_like)
-					   FROM user_account_like    u_likes
-					  WHERE u_likes.user_account_id_like = u.id )				count_liked,
+					   FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_like    u_likes
+					  WHERE u_likes.user_account_id_like = u.id )					count_liked,
 					(SELECT COUNT(DISTINCT us.user_account_id)
-					   FROM app_timetables_user_setting_like u_like,
-					   		app_timetables_user_setting us
+					   FROM ${process.env.SERVICE_DB_DB1_NAME}.app_timetables_user_setting_like u_like,
+					   		${process.env.SERVICE_DB_DB1_NAME}.app_timetables_user_setting us
 					  WHERE u_like.user_account_id = u.id
-					    AND u_like.user_setting_id = us.id)						count_user_setting_likes,
+					    AND u_like.user_setting_id = us.id)							count_user_setting_likes,
 					(SELECT COUNT(DISTINCT u_like.user_account_id)
-					   FROM app_timetables_user_setting_like u_like,
-					   		app_timetables_user_setting us
+					   FROM ${process.env.SERVICE_DB_DB1_NAME}.app_timetables_user_setting_like u_like,
+					   		${process.env.SERVICE_DB_DB1_NAME}.app_timetables_user_setting us
 					  WHERE us.user_account_id = u.id
-						AND u_like.user_setting_id = us.id)						count_user_setting_liked,
+						AND u_like.user_setting_id = us.id)							count_user_setting_liked,
 					(SELECT COUNT(u_views.user_account_id_view)
-					   FROM user_account_view    u_views
-					  WHERE u_views.user_account_id_view = u.id ) 				count_views,
+					   FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_view    u_views
+					  WHERE u_views.user_account_id_view = u.id ) 					count_views,
 					(SELECT COUNT(u_followed_current_user.user_account_id)
-					   FROM user_account_follow  u_followed_current_user 
+					   FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_follow  u_followed_current_user 
 					  WHERE u_followed_current_user.user_account_id_follow = u.id
-						AND u_followed_current_user.user_account_id = ?) 		followed,
+						AND u_followed_current_user.user_account_id = ?) 			followed,
 					(SELECT COUNT(u_liked_current_user.user_account_id)  
-					   FROM user_account_like    u_liked_current_user
+					   FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_like    u_liked_current_user
 					  WHERE u_liked_current_user.user_account_id_like = u.id
-						AND u_liked_current_user.user_account_id = ?)      		liked
-				FROM user_account u
+						AND u_liked_current_user.user_account_id = ?)      			liked
+				FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account u
 				WHERE u.id = ? `, [id_current_user,
                     id_current_user,
                     id
@@ -420,8 +450,9 @@ module.exports = {
             )
         } else if (process.env.SERVICE_DB_USE == 2) {
             async function execute_sql(err, result) {
+				let pool2;
                 try {
-                    const pool2 = await oracledb.getConnection();
+                    pool2 = await get_pool(app_id).getConnection();
                     const result = await pool2.execute(
                         `SELECT
 						u.id "id",
@@ -442,39 +473,39 @@ module.exports = {
 						u.provider2_image "provider2_image",
 						u.provider2_image_url "provider2_image_url",
 						(SELECT COUNT(u_following.user_account_id)   
-						   FROM user_account_follow  u_following
-						  WHERE u_following.user_account_id = u.id) 				"count_following",
+						   FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_follow  u_following
+						  WHERE u_following.user_account_id = u.id) 					"count_following",
 						(SELECT COUNT(u_followed.user_account_id_follow) 
-						   FROM user_account_follow  u_followed
-						  WHERE u_followed.user_account_id_follow = u.id) 			"count_followed",
+						   FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_follow  u_followed
+						  WHERE u_followed.user_account_id_follow = u.id) 				"count_followed",
 						(SELECT COUNT(u_likes.user_account_id)
-						   FROM user_account_like    u_likes
-						  WHERE u_likes.user_account_id = u.id ) 					"count_likes",
+						   FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_like    u_likes
+						  WHERE u_likes.user_account_id = u.id ) 						"count_likes",
 						(SELECT COUNT(u_likes.user_account_id_like)
-						   FROM user_account_like    u_likes
-						  WHERE u_likes.user_account_id_like = u.id )				"count_liked",
+						   FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_like    u_likes
+						  WHERE u_likes.user_account_id_like = u.id )					"count_liked",
 						(SELECT COUNT(DISTINCT us.user_account_id)
-						   FROM app_timetables_user_setting_like u_like,
-						   		app_timetables_user_setting us
+						   FROM ${process.env.SERVICE_DB_DB2_NAME}.app_timetables_user_setting_like u_like,
+						   		${process.env.SERVICE_DB_DB2_NAME}.app_timetables_user_setting us
 						  WHERE u_like.user_account_id = u.id
-						    AND u_like.user_setting_id = us.id)						"count_user_setting_likes",
+						    AND u_like.user_setting_id = us.id)							"count_user_setting_likes",
 						(SELECT COUNT(DISTINCT u_like.user_account_id)
-						   FROM app_timetables_user_setting_like u_like,
-						   		app_timetables_user_setting us
+						   FROM ${process.env.SERVICE_DB_DB2_NAME}.app_timetables_user_setting_like u_like,
+						   		${process.env.SERVICE_DB_DB2_NAME}.app_timetables_user_setting us
 						  WHERE us.user_account_id = u.id
-							AND u_like.user_setting_id = us.id)						"count_user_setting_liked",
+							AND u_like.user_setting_id = us.id)							"count_user_setting_liked",
 						(SELECT COUNT(u_views.user_account_id_view)
-						   FROM user_account_view    u_views
-						  WHERE u_views.user_account_id_view = u.id ) 				"count_views",
+						   FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_view    u_views
+						  WHERE u_views.user_account_id_view = u.id ) 					"count_views",
 						(SELECT COUNT(u_followed_current_user.user_account_id)
-						   FROM user_account_follow  u_followed_current_user 
+						   FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_follow  u_followed_current_user 
 						  WHERE u_followed_current_user.user_account_id_follow = u.id
 							AND u_followed_current_user.user_account_id = :user_accound_id_current_user1) 	"followed",
 						(SELECT COUNT(u_liked_current_user.user_account_id)  
-						   FROM user_account_like    u_liked_current_user
+						   FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_like    u_liked_current_user
 						  WHERE u_liked_current_user.user_account_id_like = u.id
 							AND u_liked_current_user.user_account_id = :user_accound_id_current_user2)      "liked"
-					FROM user_account u
+					FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account u
 					WHERE u.id = :id `, {
                             user_accound_id_current_user1: id_current_user,
                             user_accound_id_current_user2: id_current_user,
@@ -487,19 +518,24 @@ module.exports = {
                                 return callBack(null, result.rows[0]);
                             }
                         });
-                    await pool2.close();
                 } catch (err) {
                     return callBack(err.message);
                 } finally {
-                    null;
+                    if (pool2) {
+						try {
+							await pool2.close(); 
+						} catch (err) {
+							console.error(err);
+						}
+					}
                 }
             }
             execute_sql();
         }
     },
-    getProfileUsername: (username, id_current_user, callBack) => {
+    getProfileUsername: (app_id, username, id_current_user, callBack) => {
         if (process.env.SERVICE_DB_USE == 1) {
-            pool.query(
+            get_pool(app_id).query(
                 `SELECT
 					u.id,
 					u.bio,
@@ -519,39 +555,39 @@ module.exports = {
 					CONVERT(u.provider2_image USING UTF8) provider2_image,
 					u.provider2_image_url,
 					(SELECT COUNT(u_following.user_account_id)   
-					FROM user_account_follow  u_following
-					WHERE u_following.user_account_id = u.id) 				count_following,
+					   FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_follow  u_following
+					  WHERE u_following.user_account_id = u.id) 				count_following,
 					(SELECT COUNT(u_followed.user_account_id_follow) 
-					FROM user_account_follow  u_followed
-					WHERE u_followed.user_account_id_follow = u.id) 			count_followed,
+					   FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_follow  u_followed
+					  WHERE u_followed.user_account_id_follow = u.id) 			count_followed,
 					(SELECT COUNT(u_likes.user_account_id)
-					FROM user_account_like    u_likes
+					   FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_like    u_likes
 					WHERE u_likes.user_account_id = u.id ) 					count_likes,
 					(SELECT COUNT(u_likes.user_account_id_like)
-					FROM user_account_like    u_likes
-					WHERE u_likes.user_account_id_like = u.id )				count_liked,
+					   FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_like    u_likes
+					  WHERE u_likes.user_account_id_like = u.id )				count_liked,
 					(SELECT COUNT(DISTINCT us.user_account_id)
-					FROM app_timetables_user_setting_like u_like,
-						app_timetables_user_setting us
-					WHERE u_like.user_account_id = u.id
+					   FROM ${process.env.SERVICE_DB_DB1_NAME}.app_timetables_user_setting_like u_like,
+					        ${process.env.SERVICE_DB_DB1_NAME}.app_timetables_user_setting us
+					  WHERE u_like.user_account_id = u.id
 					AND u_like.user_setting_id = us.id)						count_user_setting_likes,
 					(SELECT COUNT(DISTINCT u_like.user_account_id)
-					FROM app_timetables_user_setting_like u_like,
-						app_timetables_user_setting us
+					   FROM ${process.env.SERVICE_DB_DB1_NAME}.app_timetables_user_setting_like u_like,
+					        ${process.env.SERVICE_DB_DB1_NAME}.app_timetables_user_setting us
 					WHERE us.user_account_id = u.id
 						AND u_like.user_setting_id = us.id)						count_user_setting_liked,
 					(SELECT COUNT(u_views.user_account_id_view)
-					FROM user_account_view    u_views
-					WHERE u_views.user_account_id_view = u.id ) 				count_views,
+					   FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_view    u_views
+					  WHERE u_views.user_account_id_view = u.id ) 				count_views,
 					(SELECT COUNT(u_followed_current_user.user_account_id)
-					FROM user_account_follow  u_followed_current_user 
-					WHERE u_followed_current_user.user_account_id_follow = u.id
+					   FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_follow  u_followed_current_user 
+					  WHERE u_followed_current_user.user_account_id_follow = u.id
 						AND u_followed_current_user.user_account_id = ?) 		followed,
 					(SELECT COUNT(u_liked_current_user.user_account_id)  
-					FROM user_account_like    u_liked_current_user
-					WHERE u_liked_current_user.user_account_id_like = u.id
+					   FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_like    u_liked_current_user
+					  WHERE u_liked_current_user.user_account_id_like = u.id
 						AND u_liked_current_user.user_account_id = ?)      		liked
-				FROM user_account u
+				FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account u
 				WHERE u.username = ? 
 				AND u.active = 1 `, [id_current_user,
                     id_current_user,
@@ -566,8 +602,9 @@ module.exports = {
             )
         } else if (process.env.SERVICE_DB_USE == 2) {
             async function execute_sql(err, result) {
+				let pool2;
                 try {
-                    const pool2 = await oracledb.getConnection();
+                    pool2 = await get_pool(app_id).getConnection();
                     const result = await pool2.execute(
                         `SELECT
 						u.id "id",
@@ -588,39 +625,39 @@ module.exports = {
 						u.provider2_image "provider2_image",
 						u.provider2_image_url "provider2_image_url",
 						(SELECT COUNT(u_following.user_account_id)   
-						   FROM user_account_follow  u_following
-						  WHERE u_following.user_account_id = u.id) 				"count_following",
+						   FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_follow  u_following
+						  WHERE u_following.user_account_id = u.id) 					"count_following",
 						(SELECT COUNT(u_followed.user_account_id_follow) 
-						   FROM user_account_follow  u_followed
-						  WHERE u_followed.user_account_id_follow = u.id) 			"count_followed",
+						   FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_follow  u_followed
+						  WHERE u_followed.user_account_id_follow = u.id) 				"count_followed",
 						(SELECT COUNT(u_likes.user_account_id)
-						   FROM user_account_like    u_likes
-						  WHERE u_likes.user_account_id = u.id ) 					"count_likes",
+						   FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_like    u_likes
+						  WHERE u_likes.user_account_id = u.id ) 						"count_likes",
 						(SELECT COUNT(u_likes.user_account_id_like)
-						   FROM user_account_like    u_likes
-						  WHERE u_likes.user_account_id_like = u.id )				"count_liked",
+						   FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_like    u_likes
+						  WHERE u_likes.user_account_id_like = u.id )					"count_liked",
 						(SELECT COUNT(DISTINCT us.user_account_id)
-						   FROM app_timetables_user_setting_like u_like,
-						   		app_timetables_user_setting us
+						   FROM ${process.env.SERVICE_DB_DB2_NAME}.app_timetables_user_setting_like u_like,
+						   		${process.env.SERVICE_DB_DB2_NAME}.app_timetables_user_setting us
 						  WHERE u_like.user_account_id = u.id
-							AND u_like.user_setting_id = us.id)						"count_user_setting_likes",
+							AND u_like.user_setting_id = us.id)							"count_user_setting_likes",
 						(SELECT COUNT(DISTINCT u_like.user_account_id)
-						   FROM app_timetables_user_setting_like u_like,
-						   		app_timetables_user_setting us
+						   FROM ${process.env.SERVICE_DB_DB2_NAME}.app_timetables_user_setting_like u_like,
+						   		${process.env.SERVICE_DB_DB2_NAME}.app_timetables_user_setting us
 						  WHERE us.user_account_id = u.id
-							AND u_like.user_setting_id = us.id)						"count_user_setting_liked",
+							AND u_like.user_setting_id = us.id)							"count_user_setting_liked",
 						(SELECT COUNT(u_views.user_account_id_view)
-						   FROM user_account_view    u_views
-						  WHERE u_views.user_account_id_view = u.id ) 				"count_views",
+						   FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_view    u_views
+						  WHERE u_views.user_account_id_view = u.id ) 					"count_views",
 						(SELECT COUNT(u_followed_current_user.user_account_id)
-						   FROM user_account_follow  u_followed_current_user 
+						   FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_follow  u_followed_current_user 
 						  WHERE u_followed_current_user.user_account_id_follow = u.id
 							AND u_followed_current_user.user_account_id = :user_accound_id_current_user1) 	"followed",
 						(SELECT COUNT(u_liked_current_user.user_account_id)  
-						   FROM user_account_like    u_liked_current_user
+						   FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_like    u_liked_current_user
 						  WHERE u_liked_current_user.user_account_id_like = u.id
 							AND u_liked_current_user.user_account_id = :user_accound_id_current_user2)      "liked"
-					FROM user_account u
+					FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account u
 					WHERE u.username = :username 
 					AND u.active = 1 `, {
                             user_accound_id_current_user1: id_current_user,
@@ -634,19 +671,24 @@ module.exports = {
                                 return callBack(null, result.rows[0]);
                             }
                         });
-                    await pool2.close();
                 } catch (err) {
                     return callBack(err.message);
                 } finally {
-                    null;
+                    if (pool2) {
+						try {
+							await pool2.close(); 
+						} catch (err) {
+							console.error(err);
+						}
+					}
                 }
             }
             execute_sql();
         }
     },
-    searchProfileUser: (username, callBack) => {
+    searchProfileUser: (app_id, username, callBack) => {
         if (process.env.SERVICE_DB_USE == 1) {
-            pool.query(
+            get_pool(app_id).query(
                 `SELECT
 					u.id,
 					u.username,
@@ -659,7 +701,7 @@ module.exports = {
 					u.provider2_first_name,
 					CONVERT(u.provider2_image USING UTF8) provider2_image,
 					u.provider2_image_url
-				FROM user_account u
+				FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account u
 				WHERE (u.username LIKE ?
 					OR
 					u.provider1_first_name LIKE ?
@@ -678,8 +720,9 @@ module.exports = {
             )
         } else if (process.env.SERVICE_DB_USE == 2) {
             async function execute_sql(err, result) {
+				let pool2;
                 try {
-                    const pool2 = await oracledb.getConnection();
+                    pool2 = await get_pool(app_id).getConnection();
                     const result = await pool2.execute(
                         `SELECT
 						u.id "id",
@@ -693,7 +736,7 @@ module.exports = {
 						u.provider2_first_name "provider2_first_name",
 						u.provider2_image "provider2_image",
 						u.provider2_image_url "provider2_image_url"
-					FROM user_account u
+					FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account u
 					WHERE (u.username LIKE :username
 						OR
 						u.provider1_first_name LIKE :provider1_first_name
@@ -711,19 +754,24 @@ module.exports = {
                                 return callBack(null, result.rows);
                             }
                         });
-                    await pool2.close();
                 } catch (err) {
                     return callBack(err.message);
                 } finally {
-                    null;
+                    if (pool2) {
+						try {
+							await pool2.close(); 
+						} catch (err) {
+							console.error(err);
+						}
+					}
                 }
             }
             execute_sql();
         }
     },
-    getProfileDetail: (id, detailchoice, callBack) => {
+    getProfileDetail: (app_id, id, detailchoice, callBack) => {
         if (process.env.SERVICE_DB_USE == 1) {
-            pool.query(
+            get_pool(app_id).query(
                 `SELECT *
 			   FROM (SELECT 'FOLLOWING' detail,
 							u.id,
@@ -737,8 +785,8 @@ module.exports = {
 							u.username,
 							u.provider1_first_name,
 							u.provider2_first_name
-					FROM   user_account_follow u_follow,
-							user_account u
+					FROM    ${process.env.SERVICE_DB_DB1_NAME}.user_account_follow u_follow,
+							${process.env.SERVICE_DB_DB1_NAME}.user_account u
 					WHERE  u_follow.user_account_id = ?
 					AND    u.id = u_follow.user_account_id_follow
 					AND    u.active = 1
@@ -756,8 +804,8 @@ module.exports = {
 							u.username,
 							u.provider1_first_name,
 							u.provider2_first_name
-					FROM   user_account_follow u_followed,
-							user_account u
+					FROM    ${process.env.SERVICE_DB_DB1_NAME}.user_account_follow u_followed,
+							${process.env.SERVICE_DB_DB1_NAME}.user_account u
 					WHERE  u_followed.user_account_id_follow = ?
 					AND    u.id = u_followed.user_account_id
 					AND    u.active = 1
@@ -775,8 +823,8 @@ module.exports = {
 							u.username,
 							u.provider1_first_name,
 							u.provider2_first_name
-					FROM   user_account_like u_like,
-						user_account u
+					FROM    ${process.env.SERVICE_DB_DB1_NAME}.user_account_like u_like,
+							${process.env.SERVICE_DB_DB1_NAME}.user_account u
 					WHERE  u_like.user_account_id = ?
 					AND    u.id = u_like.user_account_id_like
 					AND    u.active = 1
@@ -794,8 +842,8 @@ module.exports = {
 							u.username,
 							u.provider1_first_name,
 							u.provider2_first_name
-					FROM   user_account_like u_liked,
-						user_account u
+					FROM    ${process.env.SERVICE_DB_DB1_NAME}.user_account_like u_liked,
+							${process.env.SERVICE_DB_DB1_NAME}.user_account u
 					WHERE  u_liked.user_account_id_like = ?
 					AND    u.id = u_liked.user_account_id
 					AND    u.active = 1
@@ -813,10 +861,10 @@ module.exports = {
 							u.username,
 							u.provider1_first_name,
 							u.provider2_first_name
-					FROM   user_account u
+					FROM   ${process.env.SERVICE_DB_DB1_NAME}.user_account u
 					WHERE  u.id IN (SELECT us.user_account_id
-									FROM   app_timetables_user_setting_like u_like,
-											app_timetables_user_setting us
+									FROM   ${process.env.SERVICE_DB_DB1_NAME}.app_timetables_user_setting_like u_like,
+										   ${process.env.SERVICE_DB_DB1_NAME}.app_timetables_user_setting us
 									WHERE  u_like.user_account_id = ?
 									AND    us.id = u_like.user_setting_id)
 					AND    u.active = 1
@@ -834,10 +882,10 @@ module.exports = {
 							u.username,
 							u.provider1_first_name,
 							u.provider2_first_name
-					FROM   user_account u
+					FROM   ${process.env.SERVICE_DB_DB1_NAME}.user_account u
 					WHERE  u.id IN (SELECT u_like.user_account_id
-									FROM   app_timetables_user_setting us,
-											app_timetables_user_setting_like u_like
+									FROM   ${process.env.SERVICE_DB_DB1_NAME}.app_timetables_user_setting us,
+										   ${process.env.SERVICE_DB_DB1_NAME}.app_timetables_user_setting_like u_like
 									WHERE  us.user_account_id = ?
 									AND    us.id = u_like.user_setting_id)
 					AND    u.active = 1
@@ -866,8 +914,9 @@ module.exports = {
             )
         } else if (process.env.SERVICE_DB_USE == 2) {
             async function execute_sql(err, result) {
+				let pool2;
                 try {
-                    const pool2 = await oracledb.getConnection();
+                    pool2 = await get_pool(app_id).getConnection();
                     const result = await pool2.execute(
                         `SELECT *
 					   FROM (SELECT 'FOLLOWING' "detail",
@@ -882,8 +931,8 @@ module.exports = {
 									u.username "username",
 									u.provider1_first_name "provider1_first_name",
 									u.provider2_first_name "provider2_first_name"
-							FROM   	user_account_follow u_follow,
-									user_account u
+							FROM   	${process.env.SERVICE_DB_DB2_NAME}.user_account_follow u_follow,
+									${process.env.SERVICE_DB_DB2_NAME}.user_account u
 							WHERE  u_follow.user_account_id = :user_account_id_following
 							AND    u.id = u_follow.user_account_id_follow
 							AND    u.active = 1
@@ -901,8 +950,8 @@ module.exports = {
 									u.username "username",
 									u.provider1_first_name "provider1_first_name",
 									u.provider2_first_name "provider2_first_name"
-							FROM   	user_account_follow u_followed,
-									user_account u
+							FROM   	${process.env.SERVICE_DB_DB2_NAME}.user_account_follow u_followed,
+									${process.env.SERVICE_DB_DB2_NAME}.user_account u
 							WHERE  u_followed.user_account_id_follow = :user_account_id_followed
 							AND    u.id = u_followed.user_account_id
 							AND    u.active = 1
@@ -920,8 +969,8 @@ module.exports = {
 									u.username "username",
 									u.provider1_first_name "provider1_first_name",
 									u.provider2_first_name "provider2_first_name"
-							FROM   	user_account_like u_like,
-									user_account u
+							FROM   	${process.env.SERVICE_DB_DB2_NAME}.user_account_like u_like,
+									${process.env.SERVICE_DB_DB2_NAME}.user_account u
 							WHERE  u_like.user_account_id = :user_account_id_like_user
 							AND    u.id = u_like.user_account_id_like
 							AND    u.active = 1
@@ -939,8 +988,8 @@ module.exports = {
 									u.username "username",
 									u.provider1_first_name "provider1_first_name",
 									u.provider2_first_name "provider2_first_name"
-							FROM   	user_account_like u_liked,
-									user_account u
+							FROM   	${process.env.SERVICE_DB_DB2_NAME}.user_account_like u_liked,
+									${process.env.SERVICE_DB_DB2_NAME}.user_account u
 							WHERE  u_liked.user_account_id_like = :user_account_id_liked_user
 							AND    u.id = u_liked.user_account_id
 							AND    u.active = 1
@@ -958,10 +1007,10 @@ module.exports = {
 									u.username "username",
 									u.provider1_first_name "provider1_first_name",
 									u.provider2_first_name "provider2_first_name"
-							FROM   user_account u
+							FROM    ${process.env.SERVICE_DB_DB2_NAME}.user_account u
 							WHERE  u.id IN (SELECT us.user_account_id
-											FROM app_timetables_user_setting_like u_like,
-													app_timetables_user_setting us
+											FROM   ${process.env.SERVICE_DB_DB2_NAME}.app_timetables_user_setting_like u_like,
+												   ${process.env.SERVICE_DB_DB2_NAME}.app_timetables_user_setting us
 											WHERE  u_like.user_account_id = :user_account_id_like_setting
 											AND    us.id = u_like.user_setting_id)
 							AND    u.active = 1
@@ -979,10 +1028,10 @@ module.exports = {
 									u.username "username",
 									u.provider1_first_name "provider1_first_name",
 									u.provider2_first_name "provider2_first_name"
-							FROM   user_account u
+							FROM    ${process.env.SERVICE_DB_DB2_NAME}.user_account u
 							WHERE  u.id IN (SELECT u_like.user_account_id
-											FROM app_timetables_user_setting us,
-													app_timetables_user_setting_like u_like
+											  FROM ${process.env.SERVICE_DB_DB2_NAME}.app_timetables_user_setting us,
+											  	   ${process.env.SERVICE_DB_DB2_NAME}.app_timetables_user_setting_like u_like
 											WHERE  us.user_account_id = :user_account_id_liked_setting
 											AND    us.id = u_like.user_setting_id)
 							AND    u.active = 1
@@ -1010,19 +1059,24 @@ module.exports = {
                                 return callBack(null, result.rows);
                             }
                         });
-                    await pool2.close();
                 } catch (err) {
                     return callBack(err.message);
                 } finally {
-                    null;
+                    if (pool2) {
+						try {
+							await pool2.close(); 
+						} catch (err) {
+							console.error(err);
+						}
+					}
                 }
             }
             execute_sql();
         }
     },
-    getProfileTop: (statchoice, callBack) => {
+    getProfileTop: (app_id, statchoice, callBack) => {
         if (process.env.SERVICE_DB_USE == 1) {
-            pool.query(
+            get_pool(app_id).query(
                 `SELECT *
 					FROM (SELECT 'FOLLOWING' top,
 									u.id,
@@ -1037,9 +1091,9 @@ module.exports = {
 									u.provider1_first_name,
 									u.provider2_first_name,
 									(SELECT COUNT(u_follow.user_account_id_follow)
-									FROM user_account_follow u_follow
-									WHERE u_follow.user_account_id_follow = u.id) count
-							FROM   	user_account u
+									   FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_follow u_follow
+									  WHERE u_follow.user_account_id_follow = u.id) count
+							FROM   	${process.env.SERVICE_DB_DB1_NAME}.user_account u
 							WHERE   u.active = 1
 							AND     1 = ?
 							UNION ALL
@@ -1056,9 +1110,9 @@ module.exports = {
 									u.provider1_first_name,
 									u.provider2_first_name,
 									(SELECT COUNT(u_like.user_account_id_like)
-									FROM user_account_like u_like
-									WHERE u_like.user_account_id_like = u.id) count
-							FROM   user_account u
+									   FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_like u_like
+									  WHERE u_like.user_account_id_like = u.id) count
+							FROM   ${process.env.SERVICE_DB_DB1_NAME}.user_account u
 							WHERE  u.active = 1
 							AND    2 = ?
 							UNION ALL
@@ -1075,9 +1129,9 @@ module.exports = {
 									u.provider1_first_name,
 									u.provider2_first_name,
 									(SELECT COUNT(u_visited.user_account_id_view)
-									FROM user_account_view u_visited
-									WHERE u_visited.user_account_id_view = u.id) count
-							FROM   user_account u
+									   FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_view u_visited
+									  WHERE u_visited.user_account_id_view = u.id) count
+							FROM   ${process.env.SERVICE_DB_DB1_NAME}.user_account u
 							WHERE  u.active = 1
 							AND    3 = ?
 							UNION ALL
@@ -1094,11 +1148,11 @@ module.exports = {
 									u.provider1_first_name,
 									u.provider2_first_name,
 									(SELECT COUNT(us.user_account_id)
-									FROM app_timetables_user_setting_like u_like,
-											app_timetables_user_setting us
-									WHERE us.user_account_id = u.id
+									   FROM ${process.env.SERVICE_DB_DB1_NAME}.app_timetables_user_setting_like u_like,
+									   		${process.env.SERVICE_DB_DB1_NAME}.app_timetables_user_setting us
+									  WHERE us.user_account_id = u.id
 										AND u_like.user_setting_id = us.id) count
-							FROM   user_account u
+							FROM   ${process.env.SERVICE_DB_DB1_NAME}.user_account u
 							WHERE  u.active = 1
 							AND    4 = ?
 							UNION ALL
@@ -1115,11 +1169,11 @@ module.exports = {
 									u.provider1_first_name,
 									u.provider2_first_name,
 									(SELECT COUNT(us.user_account_id)
-									FROM app_timetables_user_setting_view u_view,
-											app_timetables_user_setting us
-									WHERE us.user_account_id = u.id
+									   FROM ${process.env.SERVICE_DB_DB1_NAME}.app_timetables_user_setting_view u_view,
+									        ${process.env.SERVICE_DB_DB1_NAME}.app_timetables_user_setting us
+									  WHERE us.user_account_id = u.id
 										AND u_view.user_setting_id = us.id) count
-							FROM   user_account u
+							FROM   ${process.env.SERVICE_DB_DB1_NAME}.user_account u
 							WHERE  u.active = 1
 							AND    5 = ?)  t
 					ORDER BY 1,13 DESC, COALESCE(username, 
@@ -1141,8 +1195,9 @@ module.exports = {
             )
         } else if (process.env.SERVICE_DB_USE == 2) {
             async function execute_sql(err, result) {
+				let pool2;
                 try {
-                    const pool2 = await oracledb.getConnection();
+                    pool2 = await get_pool(app_id).getConnection();
                     const result = await pool2.execute(
                         `SELECT *
 							FROM (SELECT 'FOLLOWING' "top",
@@ -1158,9 +1213,9 @@ module.exports = {
 											u.provider1_first_name "provider1_first_name",
 											u.provider2_first_name "provider2_first_name",
 											(SELECT COUNT(u_follow.user_account_id_follow)
-											FROM user_account_follow u_follow
-											WHERE u_follow.user_account_id_follow = u.id) "count"
-									FROM   	user_account u
+											   FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_follow u_follow
+											  WHERE u_follow.user_account_id_follow = u.id) "count"
+									FROM   	${process.env.SERVICE_DB_DB2_NAME}.user_account u
 									WHERE   u.active = 1
 									AND     1 = :statchoice_following
 									UNION ALL
@@ -1177,9 +1232,9 @@ module.exports = {
 											u.provider1_first_name "provider1_first_name",
 											u.provider2_first_name "provider2_first_name",
 											(SELECT COUNT(u_like.user_account_id_like)
-											FROM user_account_like u_like
-											WHERE u_like.user_account_id_like = u.id) "count"
-									FROM   user_account u
+											   FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_like u_like
+											  WHERE u_like.user_account_id_like = u.id) "count"
+									FROM   ${process.env.SERVICE_DB_DB2_NAME}.user_account u
 									WHERE  u.active = 1
 									AND    2 = :statchoice_like_user
 									UNION ALL
@@ -1196,9 +1251,9 @@ module.exports = {
 											u.provider1_first_name "provider1_first_name",
 											u.provider2_first_name "provider2_first_name",
 											(SELECT COUNT(u_visited.user_account_id_view)
-											FROM user_account_view u_visited
-											WHERE u_visited.user_account_id_view = u.id) "count"
-									FROM   user_account u
+											   FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_view u_visited
+											  WHERE u_visited.user_account_id_view = u.id) "count"
+									FROM   ${process.env.SERVICE_DB_DB2_NAME}.user_account u
 									WHERE  u.active = 1
 									AND    3 = :statchoice_visited
 									UNION ALL
@@ -1215,11 +1270,11 @@ module.exports = {
 											u.provider1_first_name "provider1_first_name",
 											u.provider2_first_name "provider2_first_name",
 											(SELECT COUNT(us.user_account_id)
-											FROM app_timetables_user_setting_like u_like,
-													app_timetables_user_setting us
-											WHERE us.user_account_id = u.id
+											   FROM ${process.env.SERVICE_DB_DB2_NAME}.app_timetables_user_setting_like u_like,
+											   		${process.env.SERVICE_DB_DB2_NAME}.app_timetables_user_setting us
+											  WHERE us.user_account_id = u.id
 												AND u_like.user_setting_id = us.id) "count"
-									FROM   user_account u
+									FROM   ${process.env.SERVICE_DB_DB2_NAME}.user_account u
 									WHERE  u.active = 1
 									AND    4 = :statchoice_like_setting
 									UNION ALL
@@ -1236,11 +1291,11 @@ module.exports = {
 											u.provider1_first_name "provider1_first_name",
 											u.provider2_first_name "provider2_first_name",
 											(SELECT COUNT(us.user_account_id)
-											FROM app_timetables_user_setting_view u_view,
-													app_timetables_user_setting us
-											WHERE us.user_account_id = u.id
+											   FROM ${process.env.SERVICE_DB_DB2_NAME}.app_timetables_user_setting_view u_view,
+											   		${process.env.SERVICE_DB_DB2_NAME}.app_timetables_user_setting us
+											   WHERE us.user_account_id = u.id
 												AND u_view.user_setting_id = us.id) "count"
-									FROM   user_account u
+									FROM   ${process.env.SERVICE_DB_DB2_NAME}.user_account u
 									WHERE  u.active = 1
 									AND    5 = :statchoice_visited_setting) t
 							WHERE    ROWNUM <=10
@@ -1261,22 +1316,27 @@ module.exports = {
                                 return callBack(null, result.rows);
                             }
                         });
-                    await pool2.close();
                 } catch (err) {
                     return callBack(err.message);
                 } finally {
-                    null;
+                    if (pool2) {
+						try {
+							await pool2.close(); 
+						} catch (err) {
+							console.error(err);
+						}
+					}
                 }
             }
             execute_sql();
         }
 
     },
-    checkPassword: (id, callBack) => {
+    checkPassword: (app_id, id, callBack) => {
         if (process.env.SERVICE_DB_USE == 1) {
-            pool.query(
+            get_pool(app_id).query(
                 `SELECT password
-				   FROM user_account
+				   FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account
 				  WHERE id = ? `, [id],
                 (error, results, fields) => {
                     if (error) {
@@ -1287,12 +1347,13 @@ module.exports = {
             )
         } else if (process.env.SERVICE_DB_USE == 2) {
             async function execute_sql(err, result) {
+				let pool2;
                 try {
-                    const pool2 = await oracledb.getConnection();
+                    pool2 = await get_pool(app_id).getConnection();
                     const result = await pool2.execute(
                         `SELECT password "password"
-				       FROM user_account
-				   	  WHERE id = :id `, {
+				           FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account
+				   	      WHERE id = :id `, {
                             id: id
                         },
                         oracle_options, (err, result) => {
@@ -1302,20 +1363,25 @@ module.exports = {
                                 return callBack(null, result.rows[0]);
                             }
                         });
-                    await pool2.close();
                 } catch (err) {
                     return callBack(err.message);
                 } finally {
-                    null;
+                    if (pool2) {
+						try {
+							await pool2.close(); 
+						} catch (err) {
+							console.error(err);
+						}
+					}
                 }
             }
             execute_sql();
         }
     },
-    updateUserLocal: (data, search_id, callBack) => {
+    updateUserLocal: (app_id, data, search_id, callBack) => {
         if (process.env.SERVICE_DB_USE == 1) {
-            pool.query(
-                `UPDATE user_account
+            get_pool(app_id).query(
+                `UPDATE ${process.env.SERVICE_DB_DB1_NAME}.user_account
 					SET bio = ?,
 					private = ?,
 					user_level = ?,
@@ -1345,20 +1411,21 @@ module.exports = {
             )
         } else if (process.env.SERVICE_DB_USE == 2) {
             async function execute_sql(err, result) {
+				let pool2;
                 try {
-                    const pool2 = await oracledb.getConnection();
+                    pool2 = await get_pool(app_id).getConnection();
                     const result = await pool2.execute(
-                        `UPDATE user_account
-						SET bio = :bio,
-						private = :private,
-						user_level = :user_level,
-						username = :username,
-						password = :password,
-						password_reminder = :password_reminder,
-						email = :email,
-						avatar = :avatar,
-						date_modified = SYSDATE
-					WHERE id = :id `, {
+                        `UPDATE ${process.env.SERVICE_DB_DB2_NAME}.user_account
+							SET bio = :bio,
+							private = :private,
+							user_level = :user_level,
+							username = :username,
+							password = :password,
+							password_reminder = :password_reminder,
+							email = :email,
+							avatar = :avatar,
+							date_modified = SYSDATE
+						WHERE id = :id `, {
                             bio: data.bio,
                             private: data.private,
                             user_level: data.user_level,
@@ -1376,20 +1443,25 @@ module.exports = {
                                 return callBack(null, result);
                             }
                         });
-                    await pool2.close();
                 } catch (err) {
                     return callBack(err.message);
                 } finally {
-                    null;
+                    if (pool2) {
+						try {
+							await pool2.close(); 
+						} catch (err) {
+							console.error(err);
+						}
+					}
                 }
             }
             execute_sql();
         }
     },
-    updateUserCommon: (data, id, callBack) => {
+    updateUserCommon: (app_id, data, id, callBack) => {
         if (process.env.SERVICE_DB_USE == 1) {
-            pool.query(
-                `UPDATE user_account
+            get_pool(app_id).query(
+                `UPDATE ${process.env.SERVICE_DB_DB1_NAME}.user_account
 					SET bio = ?,
 					private = ?,
 					user_level = ?,
@@ -1409,15 +1481,16 @@ module.exports = {
             )
         } else if (process.env.SERVICE_DB_USE == 2) {
             async function execute_sql(err, result) {
+				let pool2;
                 try {
-                    const pool2 = await oracledb.getConnection();
+                    pool2 = await get_pool(app_id).getConnection();
                     const result = await pool2.execute(
-                        `UPDATE user_account
-						SET bio = :bio,
-						private = :private,
-						user_level = :user_level,
-						date_modified = SYSDATE
-					WHERE id = :id `, {
+                        `UPDATE ${process.env.SERVICE_DB_DB2_NAME}.user_account
+							SET bio = :bio,
+							private = :private,
+							user_level = :user_level,
+							date_modified = SYSDATE
+						WHERE id = :id `, {
                             bio: data.bio,
                             private: data.private,
                             user_level: data.user_level,
@@ -1430,21 +1503,26 @@ module.exports = {
                                 return callBack(null, result);
                             }
                         });
-                    await pool2.close();
                 } catch (err) {
                     return callBack(err.message);
                 } finally {
-                    null;
+                    if (pool2) {
+						try {
+							await pool2.close(); 
+						} catch (err) {
+							console.error(err);
+						}
+					}
                 }
             }
             execute_sql();
         }
     },
-    deleteUser: (id, callBack) => {
+    deleteUser: (app_id, id, callBack) => {
         if (process.env.SERVICE_DB_USE == 1) {
-            pool.query(
-                `DELETE FROM user_account
-				WHERE id = ? `, [id],
+            get_pool(app_id).query(
+                `DELETE FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account
+				  WHERE id = ? `, [id],
                 (error, results, fields) => {
                     if (error) {
                         return callBack(error);
@@ -1454,11 +1532,12 @@ module.exports = {
             )
         } else if (process.env.SERVICE_DB_USE == 2) {
             async function execute_sql(err, result) {
+				let pool2;
                 try {
-                    const pool2 = await oracledb.getConnection();
+                    pool2 = await get_pool(app_id).getConnection();
                     const result = await pool2.execute(
-                        `DELETE FROM user_account
-					WHERE id = :id `, {
+                        `DELETE FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account
+						  WHERE id = :id `, {
                             id: id
                         },
                         oracle_options, (err, result) => {
@@ -1468,11 +1547,16 @@ module.exports = {
                                 return callBack(null, result);
                             }
                         });
-                    await pool2.close();
                 } catch (err) {
                     return callBack(err.message);
                 } finally {
-                    null;
+                    if (pool2) {
+						try {
+							await pool2.close(); 
+						} catch (err) {
+							console.error(err);
+						}
+					}
                 }
             }
             execute_sql();
@@ -1480,7 +1564,7 @@ module.exports = {
     },
     userLogin: (data, callBack) => {
         if (process.env.SERVICE_DB_USE == 1) {
-            pool.query(
+            get_pool(data.app_id).query(
                 `SELECT
 					id,
 					bio,
@@ -1489,10 +1573,11 @@ module.exports = {
 					password_reminder,
 					email,
 					CONVERT(avatar USING UTF8) avatar
-				FROM user_account
+				FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account
 				WHERE username = ? 
-				AND  active = ? `, [data.username,
-                    data.active
+				AND  active = ? `, 
+				[data.username,
+                 data.active
                 ],
                 (error, results, fields) => {
                     if (error) {
@@ -1503,20 +1588,21 @@ module.exports = {
             )
         } else if (process.env.SERVICE_DB_USE == 2) {
             async function execute_sql(err, result) {
+				let pool2;
                 try {
-                    const pool2 = await oracledb.getConnection();
+                    pool2 = await get_pool(data.app_id).getConnection();
                     const result = await pool2.execute(
                         `SELECT
-						id "id",
-						bio "bio",
-						username "username",
-						password "password",
-						password_reminder "password_reminder",
-						email "email",
-						avatar "avatar"
-					FROM user_account
-					WHERE username = :username 
-					AND  active = :active `, {
+							id "id",
+							bio "bio",
+							username "username",
+							password "password",
+							password_reminder "password_reminder",
+							email "email",
+							avatar "avatar"
+						FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account
+						WHERE username = :username 
+						AND  active = :active `, {
                             username: data.username,
                             active: data.active
                         },
@@ -1527,36 +1613,42 @@ module.exports = {
                                 return callBack(null, result.rows[0]);
                             }
                         });
-                    await pool2.close();
                 } catch (err) {
                     return callBack(err.message);
                 } finally {
-                    null;
+                    if (pool2) {
+						try {
+							await pool2.close(); 
+						} catch (err) {
+							console.error(err);
+						}
+					}
                 }
             }
             execute_sql();
         }
     },
-    updateSigninProvider: (provider_no, id, data, callBack) => {
+    updateSigninProvider: (app_id, provider_no, id, data, callBack) => {
         if (provider_no == 1) {
             if (process.env.SERVICE_DB_USE == 1) {
-                pool.query(
-                    `UPDATE user_account
-					SET    provider1_id = ?,
+                get_pool(app_id).query(
+                    `UPDATE ${process.env.SERVICE_DB_DB1_NAME}.user_account
+					    SET provider1_id = ?,
 							provider1_first_name = ?,
 							provider1_last_name = ?,
 							provider1_image = ?,
 							provider1_image_url = ?,
 							provider1_email = ?,
 							date_modified = SYSDATE()
-					WHERE  id = ?
-					AND    active =1 `, [data.provider1_id,
-                        data.provider1_first_name,
-                        data.provider1_last_name,
-                        data.provider1_image,
-                        data.provider1_image_url,
-                        data.provider1_email,
-                        id
+					  WHERE id = ?
+					    AND active =1 `, 
+					[data.provider1_id,
+					 data.provider1_first_name,
+					 data.provider1_last_name,
+					 data.provider1_image,
+					 data.provider1_image_url,
+					 data.provider1_email,
+					 id
                     ],
                     (error, results, fields) => {
                         if (error) {
@@ -1567,19 +1659,21 @@ module.exports = {
                 )
             } else if (process.env.SERVICE_DB_USE == 2) {
                 async function execute_sql(err, result) {
+					let pool2;
                     try {
-                        const pool2 = await oracledb.getConnection();
+                        pool2 = await get_pool(app_id).getConnection();
                         const result = await pool2.execute(
-                            `UPDATE user_account
-						SET    provider1_id = :provider1_id,
-								provider1_first_name = :provider1_first_name,
-								provider1_last_name = :provider1_last_name,
-								provider1_image = :provider1_image,
-								provider1_image_url = :provider1_image_url,
-								provider1_email = :provider1_email,
-								date_modified = SYSDATE
-						WHERE  id = :id
-						AND    active =1 `, {
+                            `UPDATE ${process.env.SERVICE_DB_DB2_NAME}.user_account
+								SET provider1_id = :provider1_id,
+									provider1_first_name = :provider1_first_name,
+									provider1_last_name = :provider1_last_name,
+									provider1_image = :provider1_image,
+									provider1_image_url = :provider1_image_url,
+									provider1_email = :provider1_email,
+									date_modified = SYSDATE
+							  WHERE id = :id
+								AND active =1 `, 
+							{
                                 provider1_id: data.provider1_id,
                                 provider1_first_name: data.provider1_first_name,
                                 provider1_last_name: data.provider1_last_name,
@@ -1596,28 +1690,35 @@ module.exports = {
                                     return callBack(null, result[0]);
                                 }
                             });
-                        await pool2.close();
                     } catch (err) {
                         return callBack(err.message);
                     } finally {
-                        null;
+                        if (pool2) {
+							try {
+								await pool2.close(); 
+							} catch (err) {
+								console.error(err);
+							}
+						}
                     }
                 }
                 execute_sql();
             }
         } else {
             if (process.env.SERVICE_DB_USE == 1) {
-                pool.query(
-                    `UPDATE user_account
-					SET    provider2_id = ?,
+                get_pool(app_id).query(
+                    `UPDATE ${process.env.SERVICE_DB_DB1_NAME}.user_account
+						SET provider2_id = ?,
 							provider2_first_name = ?,
 							provider2_last_name = ?,
 							provider2_image = ?,
 							provider2_image_url = ?,
 							provider2_email = ?,
 							date_modified = SYSDATE()
-					WHERE  id = ?
-					AND    active =1 `, [data.provider2_id,
+					  WHERE id = ?
+						AND active =1 `, 
+					[
+						data.provider2_id,
                         data.provider2_first_name,
                         data.provider2_last_name,
                         data.provider2_image,
@@ -1634,19 +1735,20 @@ module.exports = {
                 )
             } else if (process.env.SERVICE_DB_USE == 2) {
                 async function execute_sql(err, result) {
+					let pool2;
                     try {
-                        const pool2 = await oracledb.getConnection();
+                        pool2 = await get_pool(app_id).getConnection();
                         const result = await pool2.execute(
-                            `UPDATE user_account
-						SET    provider2_id = :provider2_id,
-								provider2_first_name = :provider2_first_name,
-								provider2_last_name = :provider2_last_name,
-								provider2_image = :provider2_image,
-								provider2_image_url = :provider2_image_url,
-								provider2_email = :provider2_email,
-								date_modified = SYSDATE
-						WHERE  id = :id
-						AND    active =1 `, {
+                            `UPDATE ${process.env.SERVICE_DB_DB2_NAME}.user_account
+								SET provider2_id = :provider2_id,
+									provider2_first_name = :provider2_first_name,
+									provider2_last_name = :provider2_last_name,
+									provider2_image = :provider2_image,
+									provider2_image_url = :provider2_image_url,
+									provider2_email = :provider2_email,
+									date_modified = SYSDATE
+							  WHERE id = :id
+								AND active =1 `, {
                                 provider2_id: data.provider2_id,
                                 provider2_first_name: data.provider2_first_name,
                                 provider2_last_name: data.provider2_last_name,
@@ -1662,26 +1764,31 @@ module.exports = {
                                     return callBack(null, result[0]);
                                 }
                             });
-                        await pool2.close();
                     } catch (err) {
                         return callBack(err.message);
                     } finally {
-                        null;
+                        if (pool2) {
+							try {
+								await pool2.close(); 
+							} catch (err) {
+								console.error(err);
+							}
+						}
                     }
                 }
                 execute_sql();
             }
         }
     },
-    getUserByProviderId: (provider_no, search_id, callBack) => {
+    getUserByProviderId: (app_id, provider_no, search_id, callBack) => {
         if (process.env.SERVICE_DB_USE == 1) {
-            pool.query(
+            get_pool(app_id).query(
                 `SELECT
 					u.id,
 					u.bio,
 					(SELECT MAX(ul.date_created)
-					FROM user_account_logon ul
-					WHERE ul.user_account_id = u.id
+					   FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_logon ul
+					  WHERE ul.user_account_id = u.id
 						AND ul.result=1) last_logontime,
 					u.date_created,
 					u.date_modified,
@@ -1704,7 +1811,7 @@ module.exports = {
 					CONVERT(u.provider2_image USING UTF8) provider2_image,
 					u.provider2_image_url,
 					u.provider2_email
-				FROM user_account u
+				FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account u
 				WHERE (u.provider1_id = ?
 					AND
 					1 = ?) 
@@ -1724,44 +1831,45 @@ module.exports = {
             )
         } else if (process.env.SERVICE_DB_USE == 2) {
             async function execute_sql(err, result) {
+				let pool2;
                 try {
-                    const pool2 = await oracledb.getConnection();
+                    pool2 = await get_pool(app_id).getConnection();
                     const result = await pool2.execute(
                         `SELECT
-						u.id "id",
-						u.bio "bio",
-						(SELECT MAX(ul.date_created)
-						   FROM user_account_logon ul
-						  WHERE ul.user_account_id = u.id
-							AND ul.result=1) "last_logontime",
-						u.date_created "date_created",
-						u.date_modified "date_modified",
-						u.username "username",
-						u.password "password",
-						u.password_reminder "password_reminder",
-						u.email "email",
-						u.avatar "avatar",
-						u.validation_code "validation_code",
-						u.active "active",
-						u.provider1_id "provider1_id",
-						u.provider1_first_name "provider1_first_name",
-						u.provider1_last_name "provider1_last_name",
-						u.provider1_image "provider1_image",
-						u.provider1_image_url "provider1_image_url",
-						u.provider1_email "provider1_email",
-						u.provider2_id "provider2_id",
-						u.provider2_first_name "provider2_first_name",
-						u.provider2_last_name "provider2_last_name",
-						u.provider2_image "provider2_image",
-						u.provider2_image_url "provider2_image_url",
-						u.provider2_email "provider2_email"
-					FROM user_account u
-					WHERE (u.provider1_id = :provider1_id
-						AND
-						1 = :provider1_no) 
-					OR    (u.provider2_id = :provider2_id
-						AND
-						2 = :provider2_no) `, {
+							u.id "id",
+							u.bio "bio",
+							(SELECT MAX(ul.date_created)
+							   FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_logon ul
+							  WHERE ul.user_account_id = u.id
+								AND ul.result=1) "last_logontime",
+							u.date_created "date_created",
+							u.date_modified "date_modified",
+							u.username "username",
+							u.password "password",
+							u.password_reminder "password_reminder",
+							u.email "email",
+							u.avatar "avatar",
+							u.validation_code "validation_code",
+							u.active "active",
+							u.provider1_id "provider1_id",
+							u.provider1_first_name "provider1_first_name",
+							u.provider1_last_name "provider1_last_name",
+							u.provider1_image "provider1_image",
+							u.provider1_image_url "provider1_image_url",
+							u.provider1_email "provider1_email",
+							u.provider2_id "provider2_id",
+							u.provider2_first_name "provider2_first_name",
+							u.provider2_last_name "provider2_last_name",
+							u.provider2_image "provider2_image",
+							u.provider2_image_url "provider2_image_url",
+							u.provider2_email "provider2_email"
+						FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account u
+						WHERE (u.provider1_id = :provider1_id
+							AND
+							1 = :provider1_no) 
+						OR    (u.provider2_id = :provider2_id
+							AND
+							2 = :provider2_no) `, {
                             provider1_id: search_id,
                             provider1_no: provider_no,
                             provider2_id: search_id,
@@ -1775,11 +1883,16 @@ module.exports = {
                                 return callBack(null, result.rows);
                             }
                         });
-                    await pool2.close();
                 } catch (err) {
                     return callBack(err.message);
                 } finally {
-                    null;
+                    if (pool2) {
+						try {
+							await pool2.close(); 
+						} catch (err) {
+							console.error(err);
+						}
+					}
                 }
             }
             execute_sql();

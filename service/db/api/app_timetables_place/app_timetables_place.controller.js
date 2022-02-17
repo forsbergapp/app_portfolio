@@ -2,7 +2,7 @@ const { getPlace } = require ("./app_timetables_place.service");
 
 module.exports = {
 	getPlace: (req, res) => {
-		getPlace((err, results) =>{
+		getPlace(req.query.app_id, (err, results) =>{
 			if (err) {
 				console.log(err);
 				return res.status(500).send({

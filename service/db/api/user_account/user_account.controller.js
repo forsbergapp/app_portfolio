@@ -82,9 +82,9 @@ module.exports = {
         }
         if (body.password)
             body.password = hashSync(body.password, salt);
-        create(body, (err, results) => {
+        create(req.query.app_id, body, (err, results) => {
             if (err) {
-                var app_code = get_app_code(body.app_id, 
+                var app_code = get_app_code(req.query.app_id, 
                             err.errorNum, 
                             err.message, 
                             err.code, 
@@ -92,7 +92,7 @@ module.exports = {
                             err.sqlMessage);
                 if (app_code != null){
                     getMessage(app_code, 
-                                body.app_id, 
+                                req.query.app_id, 
                                 req.query.lang_code, (err2,results2)  => {
                                     console.log('err2:' + JSON.stringify(err2));
                                     console.log('results2:' + JSON.stringify(results2));
@@ -112,7 +112,7 @@ module.exports = {
                 body.server_user_agent = req.headers["user-agent"],
                 body.server_http_host = req.headers["host"],
                 body.server_http_accept_language = req.headers["accept-language"]
-                createUserSetting(body, (err2, results2) => {
+                createUserSetting(req.query.app_id, body, (err2, results2) => {
                     if (err2) {
                         console.log(err2);
                         return res.status(500).send(
@@ -124,7 +124,7 @@ module.exports = {
                         //send email for local users only
                         const emailData = {
                             lang_code : req.query.lang_code,
-                            app_id : req.body.app_id,
+                            app_id : req.query.app_id,
                             app_user_id : req.body.user_account_id,
                             emailType : process.env.APP1_SERVICE_EMAILTYPE_SIGNUP,
                             toEmail : req.body.email,
@@ -164,7 +164,7 @@ module.exports = {
     activateUser: (req, res) => {
         const validation_code = req.body.validation_code;
         const id = req.params.id;
-        activateUser(id, validation_code, (err, results) => {
+        activateUser(req.query.app_id, id, validation_code, (err, results) => {
             if (err) {
                 console.log(err);
                 return res.status(500).send(
@@ -181,7 +181,7 @@ module.exports = {
     },
     getUserByUserId: (req, res) => {
         const id = req.params.id;
-        getUserByUserId(id, (err, results) => {
+        getUserByUserId(req.query.app_id, id, (err, results) => {
             if (err) {
                 console.log(err);
                 return res.status(500).send(
@@ -192,7 +192,7 @@ module.exports = {
                 if (!results) {
                     //Record not found
                     getMessage(20400, 
-                        req.body.app_id, 
+                        req.query.app_id, 
                         req.query.lang_code, (err2,results2)  => {
                             return res.status(500).send(
                                 results2.text
@@ -225,7 +225,7 @@ module.exports = {
         req.body.client_longitude = req.body.client_longitude;
         req.body.client_latitude = req.body.client_latitude;
 
-        getProfileUserId(id, id_current_user, (err, results) => {
+        getProfileUserId(req.query.app_id, id, id_current_user, (err, results) => {
             if (err) {
                 console.log(err);
                 return res.status(500).send(
@@ -236,7 +236,7 @@ module.exports = {
                 if (!results){
                     //Record not found
                     getMessage(20400, 
-                        req.body.app_id, 
+                        req.query.app_id, 
                         req.query.lang_code, (err2,results2)  => {
                             return res.status(500).send(
                                 results2.text
@@ -245,7 +245,7 @@ module.exports = {
                 }
                 else{
                     if ((results.id == id_current_user) == false) {
-                        insertUserAccountView(req.body, (err, results) => {
+                        insertUserAccountView(req.query.app_id, req.body, (err, results) => {
                             if (err) {
                                 console.log(err);
                                 return res.status(500).send(
@@ -278,7 +278,7 @@ module.exports = {
         req.body.client_user_agent = req.headers["user-agent"];
         req.body.client_longitude = req.body.client_longitude;
         req.body.client_latitude = req.body.client_latitude;
-        getProfileUsername(username, id_current_user, (err, results) => {
+        getProfileUsername(req.query.app_id, username, id_current_user, (err, results) => {
             if (err) {
                 console.log(err);
                 return res.status(500).send(
@@ -288,7 +288,7 @@ module.exports = {
             if (!results)
                 //Record not found
 				getMessage(20400, 
-					req.body.app_id, 
+					req.query.app_id, 
                     req.query.lang_code, (err2,results2)  => {
 						return res.status(500).send(
                             results2.text
@@ -297,7 +297,7 @@ module.exports = {
             else{
                 req.body.user_account_id_view = results.id;
                 if ((results.id == id_current_user) == false) {
-                    insertUserAccountView(req.body, (err, results) => {
+                    insertUserAccountView(req.query.app_id, req.body, (err, results) => {
                         if (err) {
                             console.log(err);
                             return res.status(500).send(
@@ -315,7 +315,7 @@ module.exports = {
     },
     searchProfileUser: (req, res) => {
         const username = req.params.username;
-        searchProfileUser(username, (err, results) => {
+        searchProfileUser(req.query.app_id, username, (err, results) => {
             if (err) {
                 console.log(err);
                 return res.status(500).send(
@@ -329,7 +329,7 @@ module.exports = {
                 req.body.client_user_agent = req.headers["user-agent"];
                 req.body.client_longitude = req.body.client_longitude;
                 req.body.client_latitude = req.body.client_latitude;
-                insertProfileSearch(req.body, (err, results2) => {
+                insertProfileSearch(req.query.app_id, req.body, (err, results2) => {
                     if (err) {
                         console.log(err);
                         return res.status(500).send(
@@ -363,7 +363,7 @@ module.exports = {
         if (typeof req.query.detailchoice !== 'undefined')
             detailchoice = req.query.detailchoice;
 
-        getProfileDetail(id, detailchoice, (err, results) => {
+        getProfileDetail(req.query.app_id, id, detailchoice, (err, results) => {
             if (err) {
                 console.log(err);
                 return res.status(500).send(
@@ -396,7 +396,7 @@ module.exports = {
         var statchoice;
         if (typeof req.params.statchoice !== 'undefined')
             statchoice = req.params.statchoice;
-        getProfileTop(statchoice, (err, results) => {
+        getProfileTop(req.query.app_id, statchoice, (err, results) => {
 
             if (err) {
                 console.log(err);
@@ -430,7 +430,7 @@ module.exports = {
         const body = req.body;
         const salt = genSaltSync(10);
         const id = req.params.id;
-        checkPassword(id, (err, results) => {
+        checkPassword(req.query.app_id, id, (err, results) => {
             if (err) {
                 console.log(err);
                 return res.status(500).send(
@@ -447,7 +447,7 @@ module.exports = {
                             if (body.password)
                                 body.password = hashSync(body.password, salt);
                         }
-                        updateUserLocal(body, id, (err_update, results_update) => {
+                        updateUserLocal(req.query.app_id, body, id, (err_update, results_update) => {
                             if (err_update) {
                                 var app_code = get_app_code(req.body.app_id, 
                                     err_update.errorNum, 
@@ -457,7 +457,7 @@ module.exports = {
                                     err_update.sqlMessage);
                                 if (app_code != null)
                                     getMessage(app_code, 
-                                                req.body.app_id, 
+                                                req.query.app_id, 
                                                 req.query.lang_code, (err2,results2)  => {
                                                     return res.status(500).send(
                                                         results2.text
@@ -472,7 +472,7 @@ module.exports = {
                                 if (!results_update) {
                                     //"Failed to update user"
                                     getMessage(20402, 
-                                        req.body.app_id, 
+                                        req.query.app_id, 
                                         req.query.lang_code, (err2,results2)  => {
                                             return res.status(500).send(
                                                 results2.text
@@ -489,7 +489,7 @@ module.exports = {
                         console.log('invalid password attempt for user id:' + id);
                         //invalid password
                         getMessage(20403, 
-                                    req.body.app_id, 
+                                    req.query.app_id, 
                                     req.query.lang_code, (err2,results2)  => {
                                         return res.status(500).send(
                                             results2.text
@@ -499,7 +499,7 @@ module.exports = {
                 } else {
                     //user not found
                     getMessage(20305, 
-                        req.body.app_id, 
+                        req.query.app_id, 
                         req.query.lang_code, (err2,results2)  => {
                             return res.status(500).send(
                                 results2.text
@@ -511,7 +511,7 @@ module.exports = {
     },
     updateUserCommon: (req, res) => {
         const id = req.params.id;
-        updateUserCommon(req.body, id, (err, results) => {
+        updateUserCommon(req.query.app_id, req.body, id, (err, results) => {
             if (err) {
                 console.log(err);
                 return res.status(500).send(
@@ -522,7 +522,7 @@ module.exports = {
                 if (!results) {
                     //record not found
                     getMessage(20400, 
-                        req.body.app_id, 
+                        req.query.app_id, 
                         req.query.lang_code, (err2,results2)  => {
                             return res.status(500).send(
                                 results2.text
@@ -539,7 +539,7 @@ module.exports = {
     deleteUser: (req, res) => {
         const id = req.params.id;
         const salt = genSaltSync(10);
-        checkPassword(id, (err, results) => {
+        checkPassword(req.query.app_id, id, (err, results) => {
             if (err) {
                 console.log(err);
                 return res.status(500).send(
@@ -549,8 +549,8 @@ module.exports = {
             else {
                 if (results) {
                     if (compareSync(req.body.password, results.password)){
-                        deleteUserSettingsByUserId(id, (err, results) => {
-                            deleteUser(id, (err, results) => {
+                        deleteUserSettingsByUserId(req.query.app_id, id, (err, results) => {
+                            deleteUser(req.query.app_id, id, (err, results) => {
                                 if (err) {
                                     console.log(err);
                                     return res.status(500).send(
@@ -674,7 +674,7 @@ module.exports = {
         req.body.client_user_agent = req.headers["user-agent"];
         req.body.client_longitude = req.body.client_longitude;
         req.body.client_latitude = req.body.client_latitude;
-        getUserByProviderId(req.body.provider_no, provider_id, (err, results) => {
+        getUserByProviderId(req.body.app_id, req.body.provider_no, provider_id, (err, results) => {
             if (err) {
                 console.log('getUserByProviderId controller:' + err);
                 return res.status(500).send(
@@ -684,7 +684,7 @@ module.exports = {
             else{
                 if (results.length > 0) {
                     //req.body.user_account_id = results[0].id;
-                    updateSigninProvider(req.body.provider_no, results[0].id, req.body, (err, results2) => {
+                    updateSigninProvider(req.body.app_id, req.body.provider_no, results[0].id, req.body, (err, results2) => {
                         if (err) {
                             console.log('updateSigninProvider controller:' + err);
                             return res.status(500).send(
@@ -719,7 +719,7 @@ module.exports = {
                     if (typeof req.body.provider2_image == 'undefined')
                         req.body.provider2_image = null;
 
-                    create(req.body, (err, results4) => {
+                    create(req.body.app_id, req.body, (err, results4) => {
                         if (err) {
                             console.log('create controller:' + err);
                             //console.log('create controller req.body:' + JSON.stringify(req.body));
@@ -728,7 +728,7 @@ module.exports = {
                             );
                         }
                         req.body.user_account_id = results4.insertId;
-                        createUserSetting(req.body, (err, results5) => {
+                        createUserSetting(req.body.app_id, req.body, (err, results5) => {
                             if (err) {
                                 console.log('createUserSetting controller:' + err);
                                 return res.status(500).send(
@@ -746,7 +746,7 @@ module.exports = {
                                 });
                             }
                         });
-                        getUserByProviderId(req.body.provider_no, provider_id, (err, results7) => {
+                        getUserByProviderId(req.body.app_id, req.body.provider_no, provider_id, (err, results7) => {
                             if (err) {
                                 console.log('getUserByProviderId controller:' + err);
                                 return res.status(500).send(

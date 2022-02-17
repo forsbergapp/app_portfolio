@@ -1,18 +1,19 @@
-const {pool, oracledb, oracle_options} = require ("../../config/database");
+const {oracle_options,get_pool} = require ("../../config/database");
 
 module.exports = {
 	getApp:(id, callBack) => {
 		if (typeof id=='undefined')
 			id=null;
 		if (process.env.SERVICE_DB_USE==1){
-			pool.query(
+			get_pool(id).query(
 				`SELECT
 						id,
 						app_name,
 						url,
 						logo
-				FROM app
+				FROM ${process.env.SERVICE_DB_DB1_NAME}.app
 				WHERE id = COALESCE(?, id)
+				OR ? = 0
 				ORDER BY 1 `,
 				[id,
 				 id],
@@ -26,16 +27,18 @@ module.exports = {
 		}
 		else if (process.env.SERVICE_DB_USE==2){
 			async function execute_sql(err, result){
+				let pool2;
 				try{
-				const pool2 = await oracledb.getConnection();
+				pool2 = await get_pool(id).getConnection();
 				const result = await pool2.execute(
 					`SELECT
 							id "id",
 							app_name "app_name",
 							url "url",
 							logo "logo"
-					FROM app
+					FROM ${process.env.SERVICE_DB_DB2_NAME}.app
 					WHERE id= NVL(:id, id)
+					OR :id = 0
 					ORDER BY 1`,
 					{id: id},
 					oracle_options, (err,result) => {
@@ -46,11 +49,16 @@ module.exports = {
 							return callBack(null, result.rows);
 						}
 					});
-					await pool2.close();
 				}catch (err) {
 					return callBack(err.message);
 				} finally {
-					null;
+					if (pool2) {
+						try {
+							await pool2.close(); 
+						} catch (err) {
+							console.error(err);
+						}
+					}
 				}
 			}
 			execute_sql();

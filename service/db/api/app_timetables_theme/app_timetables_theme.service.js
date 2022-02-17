@@ -1,9 +1,9 @@
-const {pool, oracledb, oracle_options} = require ("../../config/database");
+const {oracle_options, get_pool} = require ("../../config/database");
 
 module.exports = {
-	getThemes: callBack => {
+	getThemes: (app_id,callBack) => {
 		if (process.env.SERVICE_DB_USE == 1) {
-			pool.query(
+			get_pool(app_id).query(
 				`SELECT
 						t.id,
 						t.title,
@@ -20,15 +20,16 @@ module.exports = {
 						t.premium,
 						tc.title category,
 						tt.title type
-				FROM app_timetables_theme t,
-					theme_category tc,
-					theme_type tt
+				FROM ${process.env.SERVICE_DB_DB1_NAME}.app_timetables_theme t,
+					 ${process.env.SERVICE_DB_DB1_NAME}.theme_category tc,
+					 ${process.env.SERVICE_DB_DB1_NAME}.theme_type tt
 				WHERE tc.id = t.theme_category_id
 				AND   tt.id = t.theme_type_id 
 				ORDER BY tt.title, t.id`,
 				[],
 				(error, results, fields) => {
 					if (error){
+						console.log('getThemes err:' + error);
 						return callBack(error);
 					}
 					return callBack(null, results);
@@ -36,8 +37,9 @@ module.exports = {
 			);
 		}else if (process.env.SERVICE_DB_USE==2){
 			async function execute_sql(err, result){
+				let pool2;
 				try{
-				const pool2 = await oracledb.getConnection();
+				pool2 = await get_pool(app_id).getConnection();
 				const result = await pool2.execute(
 					`SELECT
 							t.id "id",
@@ -55,26 +57,32 @@ module.exports = {
 							t.premium "premium",
 							tc.title "category",
 							tt.title "type"
-					FROM app_timetables_theme t,
-						theme_category tc,
-						theme_type tt
+					FROM ${process.env.SERVICE_DB_DB2_NAME}.app_timetables_theme t,
+						 ${process.env.SERVICE_DB_DB2_NAME}.theme_category tc,
+						 ${process.env.SERVICE_DB_DB2_NAME}.theme_type tt
 					WHERE tc.id = t.theme_category_id
 					AND   tt.id = t.theme_type_id
 					ORDER BY tt.title, t.id`,
 					{},
 					oracle_options, (err,result) => {
 						if (err) {
+							console.log('getThemes err:' + err);
 							return callBack(err);
 						}
 						else{
 							return callBack(null, result.rows);
 						}
 					});
-					await pool2.close();
 				}catch (err) {
 					return callBack(err.message);
 				} finally {
-					null;
+					if (pool2) {
+						try {
+							await pool2.close(); 
+						} catch (err) {
+							console.error(err);
+						}
+					}
 				}
 			}
 			execute_sql();
