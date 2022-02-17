@@ -6,7 +6,7 @@ module.exports = {
 likeUserSetting: (req, res) => {
 	const id   = req.params.id;
 	const id_like   = req.body.user_setting_id;
-	likeUserSetting(id,id_like, (err,results) => {
+	likeUserSetting(req.query.app_id, id,id_like, (err,results) => {
 		if (err) {
 			console.log(err);
 			return res.status(500).send(
@@ -23,7 +23,7 @@ likeUserSetting: (req, res) => {
 unlikeUserSetting: (req, res) => {
 	const id   = req.params.id;
 	const id_unlike   = req.body.user_setting_id;
-	unlikeUserSetting(id,id_unlike, (err,results) => {
+	unlikeUserSetting(req.query.app_id, id,id_unlike, (err,results) => {
 		if (err) {
 			console.log(err);
 			return res.status(500).send(

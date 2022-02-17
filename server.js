@@ -200,7 +200,7 @@ app.get('/',function (req, res) {
       //timetables app generates startup html with some data from database
       const { getApp } = require("./app_timetables/app");
       res.setHeader('Content-Type', 'text/html');
-      const app = getApp()
+      const app = getApp(1)
       .then(function(app_result){
         return res.send(app_result);
       });

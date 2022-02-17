@@ -1,10 +1,10 @@
-const {pool, oracledb, oracle_options} = require ("../../config/database");
+const {oracle_options, get_pool} = require ("../../config/database");
 
 module.exports = {
-	createUserSetting: (data, callBack) => {
+	createUserSetting: (app_id, data, callBack) => {
 		if (process.env.SERVICE_DB_USE == 1) {
-			pool.query(
-				`INSERT INTO app_timetables_user_setting(
+			get_pool(app_id).query(
+				`INSERT INTO ${process.env.SERVICE_DB_DB1_NAME}.app_timetables_user_setting(
 					description,
 					regional_language_locale,
 					regional_current_timezone_select_id,
@@ -128,118 +128,119 @@ module.exports = {
 			);
 		}else if (process.env.SERVICE_DB_USE==2){
 			async function execute_sql(err, result){
+				let pool2;
 				try{
-				const pool2 = await oracledb.getConnection();
-				const result = await pool2.execute(
-					`INSERT INTO app_timetables_user_setting(
-						description,
-						regional_language_locale,
-						regional_current_timezone_select_id,
-						regional_timezone_select_id,
-						regional_number_system_select_id,
-						regional_layout_direction_select_id,
-						regional_second_language_locale,
-						regional_column_title_select_id,
-						regional_arabic_script_select_id,
-						regional_calendar_type_select_id,
-						regional_calendar_hijri_type_select_id,
-						gps_map_type_select_id,
-						gps_country_id,
-						gps_city_id,
-						gps_popular_place_id,
-						gps_lat_text,
-						gps_long_text,
-						design_theme_day_id,
-						design_theme_month_id,
-						design_theme_year_id,
-						design_paper_size_select_id,
-						design_row_highlight_select_id,
-						design_column_weekday_checked,
-						design_column_calendartype_checked,
-						design_column_notes_checked,
-						design_column_gps_checked,
-						design_column_timezone_checked,
-						image_header_image_img,
-						image_footer_image_img,
-						text_header_1_text,
-						text_header_2_text,
-						text_header_3_text,
-						text_header_align,
-						text_footer_1_text,
-						text_footer_2_text,
-						text_footer_3_text,
-						text_footer_align,
-						prayer_method_select_id,
-						prayer_asr_method_select_id,
-						prayer_high_latitude_adjustment_select_id,
-						prayer_time_format_select_id,
-						prayer_hijri_date_adjustment_select_id,
-						prayer_fajr_iqamat_select_id,
-						prayer_dhuhr_iqamat_select_id,
-						prayer_asr_iqamat_select_id,
-						prayer_maghrib_iqamat_select_id,
-						prayer_isha_iqamat_select_id,
-						prayer_column_imsak_checked,
-						prayer_column_sunset_checked,
-						prayer_column_midnight_checked,
-						prayer_column_fast_start_end_select_id,
-						date_created,
-						date_modified,
-						user_account_id)
-					VALUES(	:description,
-							:regional_language_locale,
-							:regional_current_timezone_select_id,
-							:regional_timezone_select_id,
-							:regional_number_system_select_id,
-							:regional_layout_direction_select_id,
-							:regional_second_language_locale,
-							:regional_column_title_select_id,
-							:regional_arabic_script_select_id,
-							:regional_calendar_type_select_id,
-							:regional_calendar_hijri_type_select_id,
-							:gps_map_type_select_id,
-							:gps_country_id,
-							:gps_city_id,
-							:gps_popular_place_id,
-							:gps_lat_text,
-							:gps_long_text,
-							:design_theme_day_id,
-							:design_theme_month_id,
-							:design_theme_year_id,
-							:design_paper_size_select_id,
-							:design_row_highlight_select_id,
-							:design_column_weekday_checked,
-							:design_column_calendartype_checked,
-							:design_column_notes_checked,
-							:design_column_gps_checked,
-							:design_column_timezone_checked,
-							:image_header_image_img,
-							:image_footer_image_img,
-							:text_header_1_text,
-							:text_header_2_text,
-							:text_header_3_text,
-							:text_header_align,
-							:text_footer_1_text,
-							:text_footer_2_text,
-							:text_footer_3_text,
-							:text_footer_align,
-							:prayer_method_select_id,
-							:prayer_asr_method_select_id,
-							:prayer_high_latitude_adjustment_select_id,
-							:prayer_time_format_select_id,
-							:prayer_hijri_date_adjustment_select_id,
-							:prayer_fajr_iqamat_select_id,
-							:prayer_dhuhr_iqamat_select_id,
-							:prayer_asr_iqamat_select_id,
-							:prayer_maghrib_iqamat_select_id,
-							:prayer_isha_iqamat_select_id,
-							:prayer_column_imsak_checked,
-							:prayer_column_sunset_checked,
-							:prayer_column_midnight_checked,
-							:prayer_column_fast_start_end_select_id,
-							SYSDATE,
-							SYSDATE,
-							:user_account_id)`,
+					pool2 = await get_pool(app_id).getConnection();
+					const result = await pool2.execute(
+						`INSERT INTO ${process.env.SERVICE_DB_DB2_NAME}.app_timetables_user_setting(
+							description,
+							regional_language_locale,
+							regional_current_timezone_select_id,
+							regional_timezone_select_id,
+							regional_number_system_select_id,
+							regional_layout_direction_select_id,
+							regional_second_language_locale,
+							regional_column_title_select_id,
+							regional_arabic_script_select_id,
+							regional_calendar_type_select_id,
+							regional_calendar_hijri_type_select_id,
+							gps_map_type_select_id,
+							gps_country_id,
+							gps_city_id,
+							gps_popular_place_id,
+							gps_lat_text,
+							gps_long_text,
+							design_theme_day_id,
+							design_theme_month_id,
+							design_theme_year_id,
+							design_paper_size_select_id,
+							design_row_highlight_select_id,
+							design_column_weekday_checked,
+							design_column_calendartype_checked,
+							design_column_notes_checked,
+							design_column_gps_checked,
+							design_column_timezone_checked,
+							image_header_image_img,
+							image_footer_image_img,
+							text_header_1_text,
+							text_header_2_text,
+							text_header_3_text,
+							text_header_align,
+							text_footer_1_text,
+							text_footer_2_text,
+							text_footer_3_text,
+							text_footer_align,
+							prayer_method_select_id,
+							prayer_asr_method_select_id,
+							prayer_high_latitude_adjustment_select_id,
+							prayer_time_format_select_id,
+							prayer_hijri_date_adjustment_select_id,
+							prayer_fajr_iqamat_select_id,
+							prayer_dhuhr_iqamat_select_id,
+							prayer_asr_iqamat_select_id,
+							prayer_maghrib_iqamat_select_id,
+							prayer_isha_iqamat_select_id,
+							prayer_column_imsak_checked,
+							prayer_column_sunset_checked,
+							prayer_column_midnight_checked,
+							prayer_column_fast_start_end_select_id,
+							date_created,
+							date_modified,
+							user_account_id)
+						VALUES(	:description,
+								:regional_language_locale,
+								:regional_current_timezone_select_id,
+								:regional_timezone_select_id,
+								:regional_number_system_select_id,
+								:regional_layout_direction_select_id,
+								:regional_second_language_locale,
+								:regional_column_title_select_id,
+								:regional_arabic_script_select_id,
+								:regional_calendar_type_select_id,
+								:regional_calendar_hijri_type_select_id,
+								:gps_map_type_select_id,
+								:gps_country_id,
+								:gps_city_id,
+								:gps_popular_place_id,
+								:gps_lat_text,
+								:gps_long_text,
+								:design_theme_day_id,
+								:design_theme_month_id,
+								:design_theme_year_id,
+								:design_paper_size_select_id,
+								:design_row_highlight_select_id,
+								:design_column_weekday_checked,
+								:design_column_calendartype_checked,
+								:design_column_notes_checked,
+								:design_column_gps_checked,
+								:design_column_timezone_checked,
+								:image_header_image_img,
+								:image_footer_image_img,
+								:text_header_1_text,
+								:text_header_2_text,
+								:text_header_3_text,
+								:text_header_align,
+								:text_footer_1_text,
+								:text_footer_2_text,
+								:text_footer_3_text,
+								:text_footer_align,
+								:prayer_method_select_id,
+								:prayer_asr_method_select_id,
+								:prayer_high_latitude_adjustment_select_id,
+								:prayer_time_format_select_id,
+								:prayer_hijri_date_adjustment_select_id,
+								:prayer_fajr_iqamat_select_id,
+								:prayer_dhuhr_iqamat_select_id,
+								:prayer_asr_iqamat_select_id,
+								:prayer_maghrib_iqamat_select_id,
+								:prayer_isha_iqamat_select_id,
+								:prayer_column_imsak_checked,
+								:prayer_column_sunset_checked,
+								:prayer_column_midnight_checked,
+								:prayer_column_fast_start_end_select_id,
+								SYSDATE,
+								SYSDATE,
+								:user_account_id)`,
 					{
 						description: data.description,
 						regional_language_locale: data.regional_language_locale,
@@ -305,11 +306,13 @@ module.exports = {
 							async function execute_sql2(err_id, result_id){
 								//remove "" before and after
 								var lastRowid = JSON.stringify(result.lastRowid).replace(/"/g,'');
-								const pool3 = await oracledb.getConnection();
+								let pool3;
+								try{
+								pool3 = await get_pool(app_id).getConnection();
 								const result_rowid = await pool3.execute(
 									`SELECT id "insertId"
-									   FROM app_timetables_user_setting
-									  WHERE rowid = :lastRowid`,
+										FROM ${process.env.SERVICE_DB_DB2_NAME}.app_timetables_user_setting
+										WHERE rowid = :lastRowid`,
 									{
 										lastRowid: lastRowid
 									},
@@ -321,24 +324,41 @@ module.exports = {
 											return callBack(null, result_id2.rows[0]);
 										}
 									});
-								await pool3.close();
+								}
+								catch(err){
+									return callBack(err.message);				
+								}
+								finally{
+									if (pool3) {
+										try {
+											await pool3.close(); 
+										} catch (err) {
+											console.error(err);
+										}
+									}
+								}
 							}
 							execute_sql2();
 						}
 					});
-					await pool2.close();
 				}catch (err) {
 					return callBack(err.message);
 				} finally {
-					null;
+					if (pool2) {
+						try {
+							await pool2.close(); 
+						} catch (err) {
+							console.error(err);
+						}
+					}
 				}
 			}
 			execute_sql();
 		}
 	},
-	getUserSetting:  (id, callBack) => {
+	getUserSetting:  (app_id, id, callBack) => {
 		if (process.env.SERVICE_DB_USE == 1) {
-			pool.query(
+			get_pool(app_id).query(
 				`SELECT
 					id,
 					description,
@@ -395,7 +415,7 @@ module.exports = {
 					date_created,
 					date_modified,
 					user_account_id
-				FROM app_timetables_user_setting 
+				FROM ${process.env.SERVICE_DB_DB1_NAME}.app_timetables_user_setting 
 				WHERE id = ? `,
 				[id],
 				(error, results, fields) => {
@@ -407,8 +427,9 @@ module.exports = {
 			);
 		}else if (process.env.SERVICE_DB_USE==2){
 			async function execute_sql(err, result){
+				let pool2;
 				try{
-				const pool2 = await oracledb.getConnection();
+				pool2 = await get_pool(app_id).getConnection();
 				const result = await pool2.execute(
 					`SELECT
 						id "id",
@@ -466,7 +487,7 @@ module.exports = {
 						date_created "date_created",
 						date_modified "date_modified",
 						user_account_id "user_account_id"
-					FROM app_timetables_user_setting 
+					FROM ${process.env.SERVICE_DB_DB2_NAME}.app_timetables_user_setting 
 					WHERE id = :id `,
 					{
 						id: id
@@ -479,19 +500,24 @@ module.exports = {
 							return callBack(null, result.rows);
 						}
 					});
-					await pool2.close();
 				}catch (err) {
 					return callBack(err.message);
 				} finally {
-					null;
+					if (pool2) {
+						try {
+							await pool2.close(); 
+						} catch (err) {
+							console.error(err);
+						}
+					}
 				}
 			}
 			execute_sql();
 		}
 	},
-	getUserSettingsByUserId: (id, callBack) => {
+	getUserSettingsByUserId: (app_id, id, callBack) => {
 		if (process.env.SERVICE_DB_USE == 1) {
-			pool.query(
+			get_pool(app_id).query(
 				`SELECT
 					us.id,
 					us.description,
@@ -548,7 +574,7 @@ module.exports = {
 					us.date_created,
 					us.date_modified,
 					us.user_account_id
-				FROM app_timetables_user_setting us
+				FROM ${process.env.SERVICE_DB_DB1_NAME}.app_timetables_user_setting us
 				WHERE us.user_account_id = ? `,
 				[id],
 				(error, results, fields) => {
@@ -561,8 +587,9 @@ module.exports = {
 		}
 		else if (process.env.SERVICE_DB_USE==2){
 			async function execute_sql(err, result){
+				let pool2;
 				try{
-				const pool2 = await oracledb.getConnection();
+				pool2 = await get_pool(app_id).getConnection();
 				const result = await pool2.execute(
 					`SELECT
 						id "id",
@@ -620,7 +647,7 @@ module.exports = {
 						date_created "date_created",
 						date_modified "date_modified",
 						user_account_id "user_account_id"
-					FROM app_timetables_user_setting
+					FROM ${process.env.SERVICE_DB_DB2_NAME}.app_timetables_user_setting
 					WHERE user_account_id = :user_account_id `,
 					{
 						user_account_id: id
@@ -634,35 +661,40 @@ module.exports = {
 							return callBack(null, result.rows);
 						}
 					});
-					await pool2.close();
 				}catch (err) {
 					return callBack(err.message);
 				} finally {
-					null;
+					if (pool2) {
+						try {
+							await pool2.close(); 
+						} catch (err) {
+							console.error(err);
+						}
+					}
 				}
 			}
 			execute_sql();
 		}
 	},
-	getProfileUserSettings: (id, id_current_user, callBack) => {
+	getProfileUserSettings: (app_id, id, id_current_user, callBack) => {
 		if (process.env.SERVICE_DB_USE == 1) {
-			pool.query(
+			get_pool(app_id).query(
 				`SELECT
 					us.id,
 					us.description,
 					us.user_account_id,
 					(SELECT COUNT(u_like.id)
-					   FROM app_timetables_user_setting_like u_like
+					   FROM ${process.env.SERVICE_DB_DB1_NAME}.app_timetables_user_setting_like u_like
 					  WHERE u_like.user_setting_id = us.id)				count_likes,
 					(SELECT COUNT(u_view.user_setting_id)
-					   FROM app_timetables_user_setting_view u_view
+					   FROM ${process.env.SERVICE_DB_DB1_NAME}.app_timetables_user_setting_view u_view
 					  WHERE u_view.user_setting_id = us.id)				count_views,
 					(SELECT COUNT(u_liked_current_user.id)
-					   FROM app_timetables_user_setting_like u_liked_current_user
+					   FROM ${process.env.SERVICE_DB_DB1_NAME}.app_timetables_user_setting_like u_liked_current_user
 					  WHERE u_liked_current_user.user_account_id = ?
 						AND u_liked_current_user.user_setting_id = us.id) 	liked,
 					us.design_paper_size_select_id
-				FROM app_timetables_user_setting us
+				FROM ${process.env.SERVICE_DB_DB1_NAME}.app_timetables_user_setting us
 				WHERE us.user_account_id = ? `,
 				[id_current_user,
 				id],
@@ -675,25 +707,26 @@ module.exports = {
 			)
 		}else if (process.env.SERVICE_DB_USE==2){
 			async function execute_sql(err, result){
+				let pool2;
 				try{
-				const pool2 = await oracledb.getConnection();
+				pool2 = await get_pool(app_id).getConnection();
 				const result = await pool2.execute(
 					`SELECT
 						us.id "id",
 						us.description "description",
 						us.user_account_id "user_account_id",
 						(SELECT COUNT(u_like.id)
-						   FROM app_timetables_user_setting_like u_like
+						   FROM ${process.env.SERVICE_DB_DB2_NAME}.app_timetables_user_setting_like u_like
 						  WHERE u_like.user_setting_id = us.id)				"count_likes",
 						(SELECT COUNT(u_view.user_setting_id)
-						   FROM app_timetables_user_setting_view u_view
+						   FROM ${process.env.SERVICE_DB_DB2_NAME}.app_timetables_user_setting_view u_view
 						  WHERE u_view.user_setting_id = us.id)				"count_views",
 						(SELECT COUNT(u_liked_current_user.id)
-						   FROM app_timetables_user_setting_like u_liked_current_user
+						   FROM ${process.env.SERVICE_DB_DB2_NAME}.app_timetables_user_setting_like u_liked_current_user
 						  WHERE u_liked_current_user.user_account_id = :user_account_id_current
 						    AND u_liked_current_user.user_setting_id = us.id) 	"liked",
 						us.design_paper_size_select_id "design_paper_size_select_id"
-					FROM app_timetables_user_setting us
+					FROM ${process.env.SERVICE_DB_DB2_NAME}.app_timetables_user_setting us
 					WHERE us.user_account_id = :user_account_id `,
 					{
 						user_account_id_current: id_current_user,
@@ -707,20 +740,25 @@ module.exports = {
 							return callBack(null, result.rows);
 						}
 					});
-					await pool2.close();
 				}catch (err) {
 					return callBack(err.message);
 				} finally {
-					null;
+					if (pool2) {
+						try {
+							await pool2.close(); 
+						} catch (err) {
+							console.error(err);
+						}
+					}
 				}
 			}
 			execute_sql();
 		}
 	},
-	updateUserSetting: (data, id, callBack) => {
+	updateUserSetting: (app_id, data, id, callBack) => {
 		if (process.env.SERVICE_DB_USE == 1) {
-			pool.query(
-				`UPDATE app_timetables_user_setting
+			get_pool(app_id).query(
+				`UPDATE ${process.env.SERVICE_DB_DB1_NAME}.app_timetables_user_setting
 					SET description = ?,
 					regional_language_locale = ?,
 					regional_current_timezone_select_id = ?,
@@ -839,10 +877,11 @@ module.exports = {
 			)
 		}else if (process.env.SERVICE_DB_USE==2){
 			async function execute_sql(err, result){
+				let pool2;
 				try{
-				const pool2 = await oracledb.getConnection();
+				pool2 = await get_pool(app_id).getConnection();
 				const result = await pool2.execute(
-					`UPDATE app_timetables_user_setting
+					`UPDATE ${process.env.SERVICE_DB_DB2_NAME}.app_timetables_user_setting
 						SET description = :description,
 						regional_language_locale = :regional_language_locale,
 						regional_current_timezone_select_id = :regional_current_timezone_select_id,
@@ -960,20 +999,25 @@ module.exports = {
 							return callBack(null, result);
 						}
 					});
-					await pool2.close();
 				}catch (err) {
 					return callBack(err.message);
 				} finally {
-					null;
+					if (pool2) {
+						try {
+							await pool2.close(); 
+						} catch (err) {
+							console.error(err);
+						}
+					}
 				}
 			}
 			execute_sql();
 		}
 	},
-	deleteUserSetting: (id, callBack) => {
+	deleteUserSetting: (app_id, id, callBack) => {
 		if (process.env.SERVICE_DB_USE == 1) {
-			pool.query(
-				`DELETE FROM app_timetables_user_setting
+			get_pool(app_id).query(
+				`DELETE FROM ${process.env.SERVICE_DB_DB1_NAME}.app_timetables_user_setting
 				WHERE id = ? `,
 				[id],
 				(error, results, fields) => {
@@ -985,10 +1029,11 @@ module.exports = {
 			)
 		}else if (process.env.SERVICE_DB_USE==2){
 			async function execute_sql(err, result){
+				let pool2;
 				try{
-				const pool2 = await oracledb.getConnection();
+				pool2 = await get_pool(app_id).getConnection();
 				const result = await pool2.execute(
-					`DELETE FROM app_timetables_user_setting
+					`DELETE FROM ${process.env.SERVICE_DB_DB2_NAME}.app_timetables_user_setting
 					WHERE id = :id `,
 					{
 						id: id
@@ -1001,21 +1046,26 @@ module.exports = {
 							return callBack(null, result);
 						}
 					});
-					await pool2.close();
 				}catch (err) {
 					return callBack(err.message);
 				} finally {
-					null;
+					if (pool2) {
+						try {
+							await pool2.close(); 
+						} catch (err) {
+							console.error(err);
+						}
+					}
 				}
 			}
 			execute_sql();
 		}
 	},
-	deleteUserSettingsByUserId: (id, callBack) => {
+	deleteUserSettingsByUserId: (app_id, id, callBack) => {
 		if (process.env.SERVICE_DB_USE == 1) {
-			pool.query(
-				`DELETE FROM app_timetables_user_setting
-				WHERE user_account_id = ? `,
+			get_pool(app_id).query(
+				`DELETE FROM ${process.env.SERVICE_DB_DB1_NAME}.app_timetables_user_setting
+				  WHERE user_account_id = ? `,
 				[id],
 				(error, results, fields) => {
 					if (error) {
@@ -1026,10 +1076,11 @@ module.exports = {
 			)
 		}else if (process.env.SERVICE_DB_USE==2){
 			async function execute_sql(err, result){
+				let pool2;
 				try{
-				const pool2 = await oracledb.getConnection();
+				pool2 = await get_pool(app_id).getConnection();
 				const result = await pool2.execute(
-					`DELETE FROM app_timetables_user_setting
+					`DELETE FROM ${process.env.SERVICE_DB_DB2_NAME}.app_timetables_user_setting
 					WHERE user_account_id = :user_account_id `,
 					{
 						user_account_id: id
@@ -1042,11 +1093,16 @@ module.exports = {
 							return callBack(null, result);
 						}
 					});
-					await pool2.close();
 				}catch (err) {
 					return callBack(err.message);
 				} finally {
-					null;
+					if (pool2) {
+						try {
+							await pool2.close(); 
+						} catch (err) {
+							console.error(err);
+						}
+					}
 				}
 			}
 			execute_sql();

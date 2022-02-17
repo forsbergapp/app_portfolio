@@ -6,7 +6,7 @@ module.exports = {
 	followUser: (req, res) => {
 		const id   = req.params.id;
 		const id_follow   = req.body.user_account_id;
-		followUser(id,id_follow, (err,results) => {
+		followUser(req.query.app_id, id,id_follow, (err,results) => {
 			if (err) {
 				console.log(err);
 				return res.status(500).send(
@@ -23,7 +23,7 @@ module.exports = {
 	unfollowUser: (req, res) => {
 		const id   = req.params.id;
 		const id_unfollow   = req.body.user_account_id;
-		unfollowUser(id,id_unfollow, (err,results) => {
+		unfollowUser(req.query.app_id, id,id_unfollow, (err,results) => {
 			if (err) {
 				console.log(err);
 				return res.status(500).send(
