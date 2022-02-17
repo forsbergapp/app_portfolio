@@ -9,7 +9,7 @@ const { createUserSetting,
 module.exports = {
 	createUserSetting: (req, res) =>{
 		const body = req.body;
-		createUserSetting(body, (err,results) => {
+		createUserSetting(req.query.app_id, body, (err,results) => {
 			if (err) {
 				console.log(err);
 				return res.status(500).send(
@@ -25,7 +25,7 @@ module.exports = {
 	},
 	getUserSettingsByUserId: (req, res) => {
 		const id = req.params.id;
-		getUserSettingsByUserId(id, (err, results) =>{
+		getUserSettingsByUserId(req.query.app_id, id, (err, results) =>{
 			if (err) {
 				console.log(err);
 				return res.status(500).send(
@@ -54,7 +54,7 @@ module.exports = {
 		var id_current_user;
 		if (typeof req.query.id !== 'undefined')
 			id_current_user = req.query.id;
-		getProfileUserSettings(id, id_current_user, (err, results) =>{
+		getProfileUserSettings(req.query.app_id, id, id_current_user, (err, results) =>{
 			if (err) {
 				console.log(err);
 				return res.status(500).send(
@@ -80,7 +80,7 @@ module.exports = {
 	},
 	getUserSetting: (req, res) => {
 		const id = req.params.id;
-		getUserSetting(id, (err, results) =>{
+		getUserSetting(req.query.app_id, id, (err, results) =>{
 			if (err) {
 				console.log(err);
 				return res.status(500).send(
@@ -96,7 +96,7 @@ module.exports = {
 	updateUserSetting: (req, res) => {
 		const body = req.body;
 		const id = req.params.id;
-		updateUserSetting(body, id, (err, results) =>{
+		updateUserSetting(req.query.app_id, body, id, (err, results) =>{
 			if (err) {
 				console.log(err);
 				return res.status(500).send(
@@ -107,7 +107,7 @@ module.exports = {
 				if (!results){
 					//Failed to update user setting
 					getMessage(20401, 
-						req.body.app_id, 
+						req.query.app_id, 
 						req.query.lang_code, (err2,results2)  => {
 							return res.status(500).send(
 								results2.text
@@ -123,7 +123,7 @@ module.exports = {
 	},
 	deleteUserSetting: (req, res) => {
 		const id = req.params.id;
-		deleteUserSetting(id, (err, results) =>{
+		deleteUserSetting(req.query.app_id, id, (err, results) =>{
 			if (err) {
 				console.log(err);
 				return res.status(500).send(
@@ -147,7 +147,7 @@ module.exports = {
 	},
 	deleteUserSettingsByUserId: (req, res) => {
 		const id = req.params.id;
-		deleteUserSettingsByUserId(id, (err, results) =>{
+		deleteUserSettingsByUserId(req.query.app_id, id, (err, results) =>{
 			if (err) {
 				console.log(err);
 				return res.status(500).send(

@@ -1,16 +1,17 @@
 const { getCountries } = require("../../service/db/api/country/country.service");
 
 module.exports = {
-  countries:() => {
+  countries:(app_id) => {
     return new Promise(function (resolve, reject){
-       getCountries('en', (err, results)  => {
+       getCountries(app_id, 'en', (err, results)  => {
         var select_countries;
-        if (err)
+        if (err){
           resolve (
-                  `<select name='country' id='setting_select_country'>
-                  <option value='' id='' label='…' selected='selected'>…</option>
-                  </select>`
-          )
+                    `<select name='country' id='setting_select_country'>
+                    <option value='' id='' label='…' selected='selected'>…</option>
+                    </select>`
+                  )
+        }     
         else{
           var current_group_name;
           select_countries  =`<select name='country' id='setting_select_country'>

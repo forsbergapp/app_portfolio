@@ -91,13 +91,11 @@ function get_gps_from_ip(){
             else
                 alert('Error: get_gps_from_ip: ' + result);
         });
-
-	return null;
 }
 function get_apps() {
 	var status;
     var json;
-    fetch(global_rest_url_base + global_rest_app,
+    fetch(global_rest_url_base + global_rest_app + '?id=' + global_app_id,
     {method: 'GET',
      headers: {
 			'Authorization': 'Bearer ' + global_rest_dt
@@ -125,7 +123,6 @@ function get_apps() {
           else
             alert('Error: get_apps: ' + result);
         });
-	return null;
 }
 
 function get_token() {
@@ -153,7 +150,6 @@ function get_token() {
           else
             alert('Error: get_token: ' + result);
         });
-	return null;
 }
 
 function get_parameters() {
@@ -195,7 +191,6 @@ function get_parameters() {
             else
                 alert('Error: get_parameters: ' + result);
         });
-    return null;
 }
 
 function countdown(remaining) {
