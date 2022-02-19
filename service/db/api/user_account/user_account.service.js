@@ -1,4 +1,4 @@
-const {oracle_options,get_pool} = require ("../../config/database");
+const {oracledb, get_pool} = require ("../../config/database");
 
 module.exports = {
     create: (app_id, data, callBack) => {
@@ -71,7 +71,7 @@ module.exports = {
                         data.provider1_image = Buffer.from(data.provider1_image, 'utf8');
                     if (data.provider2_image != null)
                         data.provider2_image = Buffer.from(data.provider2_image, 'utf8');
-                    pool2 = await get_pool(app_id).getConnection();
+					pool2 = await oracledb.getConnection(get_pool(app_id));
                     const result = await pool2.execute(
                         `INSERT INTO ${process.env.SERVICE_DB_DB2_NAME}.user_account(
 						bio,
@@ -145,7 +145,7 @@ module.exports = {
                             provider2_image_url: data.provider2_image_url,
                             provider2_email: data.provider2_email
                         },
-                        oracle_options, (err, result) => {
+                        (err, result) => {
                             if (err) {
                                 console.log('create SQL err:' + err);
                                 return callBack(err);
@@ -158,14 +158,14 @@ module.exports = {
                                     var lastRowid = JSON.stringify(result.lastRowid).replace(/"/g, '');
 									let pool3;
 									try{
-										pool3 = await get_pool(app_id).getConnection();
+										pool3 = await oracledb.getConnection(get_pool(app_id));
 										const result_rowid = await pool3.execute(
 											`SELECT id "insertId"
 										   	   FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account
 											  WHERE rowid = :lastRowid`, {
 												lastRowid: lastRowid
 											},
-											oracle_options, (err_id2, result_id2) => {
+											(err_id2, result_id2) => {
 												if (err_id2) {
 													return callBack(err_id2);
 												} else {
@@ -229,7 +229,7 @@ module.exports = {
             async function execute_sql(err, result) {
 				let pool2;
                 try {
-					pool2 = await get_pool(app_id).getConnection();
+					pool2 = await oracledb.getConnection(get_pool(app_id));
                     const result_sql = await pool2.execute(
                         `UPDATE ${process.env.SERVICE_DB_DB2_NAME}.user_account
 						    SET	active = 1,
@@ -240,7 +240,7 @@ module.exports = {
                             id: id,
                             validation_code: validation_code
                         },
-                        oracle_options, (err2, result2) => {
+                        (err2, result2) => {
                             if (err2) {
                                 return callBack(err2);
                             } else {
@@ -324,7 +324,7 @@ module.exports = {
             async function execute_sql(err, result) {
 				let pool2;
                 try {
-                    pool2 = await get_pool(app_id).getConnection();
+                    pool2 = await oracledb.getConnection(get_pool(app_id));
                     const result = await pool2.execute(
                         `SELECT
 						u.id "id",
@@ -360,7 +360,7 @@ module.exports = {
 					WHERE u.id = :id `, {
                             id: id
                         },
-                        oracle_options, (err, result) => {
+                        (err, result) => {
                             if (err) {
                                 return callBack(err);
                             } else {
@@ -452,7 +452,7 @@ module.exports = {
             async function execute_sql(err, result) {
 				let pool2;
                 try {
-                    pool2 = await get_pool(app_id).getConnection();
+                    pool2 = await oracledb.getConnection(get_pool(app_id));
                     const result = await pool2.execute(
                         `SELECT
 						u.id "id",
@@ -511,7 +511,7 @@ module.exports = {
                             user_accound_id_current_user2: id_current_user,
                             id: id
                         },
-                        oracle_options, (err, result) => {
+                        (err, result) => {
                             if (err) {
                                 return callBack(err);
                             } else {
@@ -604,7 +604,7 @@ module.exports = {
             async function execute_sql(err, result) {
 				let pool2;
                 try {
-                    pool2 = await get_pool(app_id).getConnection();
+                    pool2 = await oracledb.getConnection(get_pool(app_id));
                     const result = await pool2.execute(
                         `SELECT
 						u.id "id",
@@ -664,7 +664,7 @@ module.exports = {
                             user_accound_id_current_user2: id_current_user,
                             username: username
                         },
-                        oracle_options, (err, result) => {
+                        (err, result) => {
                             if (err) {
                                 return callBack(err);
                             } else {
@@ -722,7 +722,7 @@ module.exports = {
             async function execute_sql(err, result) {
 				let pool2;
                 try {
-                    pool2 = await get_pool(app_id).getConnection();
+                    pool2 = await oracledb.getConnection(get_pool(app_id));
                     const result = await pool2.execute(
                         `SELECT
 						u.id "id",
@@ -747,7 +747,7 @@ module.exports = {
                             provider1_first_name: '%' + username + '%',
                             provider2_first_name: '%' + username + '%'
                         },
-                        oracle_options, (err, result) => {
+                        (err, result) => {
                             if (err) {
                                 return callBack(err);
                             } else {
@@ -916,7 +916,7 @@ module.exports = {
             async function execute_sql(err, result) {
 				let pool2;
                 try {
-                    pool2 = await get_pool(app_id).getConnection();
+                    pool2 = await oracledb.getConnection(get_pool(app_id));
                     const result = await pool2.execute(
                         `SELECT *
 					   FROM (SELECT 'FOLLOWING' "detail",
@@ -1052,7 +1052,7 @@ module.exports = {
                             user_account_id_liked_setting: id,
                             detailchoice_liked_setting: detailchoice
                         },
-                        oracle_options, (err, result) => {
+                        (err, result) => {
                             if (err) {
                                 return callBack(err);
                             } else {
@@ -1197,7 +1197,7 @@ module.exports = {
             async function execute_sql(err, result) {
 				let pool2;
                 try {
-                    pool2 = await get_pool(app_id).getConnection();
+                    pool2 = await oracledb.getConnection(get_pool(app_id));
                     const result = await pool2.execute(
                         `SELECT *
 							FROM (SELECT 'FOLLOWING' "top",
@@ -1309,7 +1309,7 @@ module.exports = {
                             statchoice_like_setting: statchoice,
                             statchoice_visited_setting: statchoice
                         },
-                        oracle_options, (err, result) => {
+                        (err, result) => {
                             if (err) {
                                 return callBack(err);
                             } else {
@@ -1349,14 +1349,14 @@ module.exports = {
             async function execute_sql(err, result) {
 				let pool2;
                 try {
-                    pool2 = await get_pool(app_id).getConnection();
+                    pool2 = await oracledb.getConnection(get_pool(app_id));
                     const result = await pool2.execute(
                         `SELECT password "password"
 				           FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account
 				   	      WHERE id = :id `, {
                             id: id
                         },
-                        oracle_options, (err, result) => {
+                        (err, result) => {
                             if (err) {
                                 return callBack(err);
                             } else {
@@ -1413,7 +1413,7 @@ module.exports = {
             async function execute_sql(err, result) {
 				let pool2;
                 try {
-                    pool2 = await get_pool(app_id).getConnection();
+                    pool2 = await oracledb.getConnection(get_pool(app_id));
                     const result = await pool2.execute(
                         `UPDATE ${process.env.SERVICE_DB_DB2_NAME}.user_account
 							SET bio = :bio,
@@ -1436,7 +1436,7 @@ module.exports = {
                             avatar: Buffer.from(data.avatar, 'utf8'),
                             id: search_id
                         },
-                        oracle_options, (err, result) => {
+                        (err, result) => {
                             if (err) {
                                 return callBack(err);
                             } else {
@@ -1483,7 +1483,7 @@ module.exports = {
             async function execute_sql(err, result) {
 				let pool2;
                 try {
-                    pool2 = await get_pool(app_id).getConnection();
+                    pool2 = await oracledb.getConnection(get_pool(app_id));
                     const result = await pool2.execute(
                         `UPDATE ${process.env.SERVICE_DB_DB2_NAME}.user_account
 							SET bio = :bio,
@@ -1496,7 +1496,7 @@ module.exports = {
                             user_level: data.user_level,
                             id: id
                         },
-                        oracle_options, (err, result) => {
+                        (err, result) => {
                             if (err) {
                                 return callBack(err);
                             } else {
@@ -1534,13 +1534,13 @@ module.exports = {
             async function execute_sql(err, result) {
 				let pool2;
                 try {
-                    pool2 = await get_pool(app_id).getConnection();
+                    pool2 = await oracledb.getConnection(get_pool(app_id));
                     const result = await pool2.execute(
                         `DELETE FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account
 						  WHERE id = :id `, {
                             id: id
                         },
-                        oracle_options, (err, result) => {
+                        (err, result) => {
                             if (err) {
                                 return callBack(err);
                             } else {
@@ -1590,7 +1590,7 @@ module.exports = {
             async function execute_sql(err, result) {
 				let pool2;
                 try {
-                    pool2 = await get_pool(data.app_id).getConnection();
+                    pool2 = await oracledb.getConnection(get_pool(data.app_id));
                     const result = await pool2.execute(
                         `SELECT
 							id "id",
@@ -1606,7 +1606,7 @@ module.exports = {
                             username: data.username,
                             active: data.active
                         },
-                        oracle_options, (err, result) => {
+                        (err, result) => {
                             if (err) {
                                 return callBack(err);
                             } else {
@@ -1661,7 +1661,7 @@ module.exports = {
                 async function execute_sql(err, result) {
 					let pool2;
                     try {
-                        pool2 = await get_pool(app_id).getConnection();
+                        pool2 = await oracledb.getConnection(get_pool(app_id));
                         const result = await pool2.execute(
                             `UPDATE ${process.env.SERVICE_DB_DB2_NAME}.user_account
 								SET provider1_id = :provider1_id,
@@ -1682,7 +1682,7 @@ module.exports = {
                                 provider1_email: data.provider1_email,
                                 id: id
                             },
-                            oracle_options, (err, result) => {
+                            (err, result) => {
                                 if (err) {
                                     console.log('updateSigninProvider err:' + err);
                                     return callBack(err);
@@ -1737,7 +1737,7 @@ module.exports = {
                 async function execute_sql(err, result) {
 					let pool2;
                     try {
-                        pool2 = await get_pool(app_id).getConnection();
+                        pool2 = await oracledb.getConnection(get_pool(app_id));
                         const result = await pool2.execute(
                             `UPDATE ${process.env.SERVICE_DB_DB2_NAME}.user_account
 								SET provider2_id = :provider2_id,
@@ -1757,7 +1757,7 @@ module.exports = {
                                 provider2_email: data.provider2_email,
                                 id: id
                             },
-                            oracle_options, (err, result) => {
+                            (err, result) => {
                                 if (err) {
                                     return callBack(err);
                                 } else {
@@ -1833,7 +1833,7 @@ module.exports = {
             async function execute_sql(err, result) {
 				let pool2;
                 try {
-                    pool2 = await get_pool(app_id).getConnection();
+                    pool2 = await oracledb.getConnection(get_pool(app_id));
                     const result = await pool2.execute(
                         `SELECT
 							u.id "id",
@@ -1875,7 +1875,7 @@ module.exports = {
                             provider2_id: search_id,
                             provider2_no: provider_no
                         },
-                        oracle_options, (err, result) => {
+                        (err, result) => {
                             if (err) {
                                 console.log('getUserByProviderId err:' + err);
                                 return callBack(err);

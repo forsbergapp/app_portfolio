@@ -1,4 +1,4 @@
-const {oracle_options, get_pool} = require ("../../config/database");
+const {oracledb, get_pool} = require ("../../config/database");
 
 module.exports = {
 	getMessage: (code, app_id, lang_code, callBack) => {
@@ -52,7 +52,7 @@ module.exports = {
 			async function execute_sql(err, result){
 				let pool2;
 				try{
-				pool2 = await get_pool(app_id).getConnection();
+				pool2 = await oracledb.getConnection(get_pool(app_id));
 				const result = await pool2.execute(
 					`SELECT m.code "code",
 							m.message_level_id "message_level_id",
@@ -88,7 +88,7 @@ module.exports = {
 						code: code,
 						lang_code: lang_code
 					},
-					oracle_options, (err,result) => {
+					(err,result) => {
 						if (err) {
 							console.log('getMessage err:' + JSON.stringify(err));
 							return callBack(err);

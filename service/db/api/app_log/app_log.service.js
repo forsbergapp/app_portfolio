@@ -1,4 +1,4 @@
-const {oracle_options,get_pool} = require ("../../config/database");
+const {oracledb, get_pool} = require ("../../config/database");
 
 module.exports = {
 	createLog: (data, callBack) => {
@@ -55,7 +55,7 @@ module.exports = {
 			async function execute_sql(err, result){
 				let pool2;
 				try{
-				pool2 = await get_pool(data.app_id).getConnection();
+				pool2 = await oracledb.getConnection(get_pool(data.app_id));
 				const result = await pool2.execute(
 					`INSERT INTO ${process.env.SERVICE_DB_DB2_NAME}.app_log(
 						app_id,
@@ -110,7 +110,7 @@ module.exports = {
 						server_http_host:data.server_http_host,
 						server_http_accept_language:data.server_http_accept_language
 					},
-					oracle_options, (err,result) => {
+					(err,result) => {
 						if (err) {
 							console.log('createLog err:' + err);
 							return callBack(err);
@@ -170,7 +170,7 @@ module.exports = {
 			async function execute_sql(err, result){
 				let pool2;
 				try{
-				pool2 = await get_pool(app_id).getConnection();
+				pool2 = await oracledb.getConnection(get_pool(app_id));
 				const result = await pool2.execute(
 					`SELECT
 							id "id",
@@ -193,7 +193,7 @@ module.exports = {
 							date_created "date_created"
 					FROM ${process.env.SERVICE_DB_DB2_NAME}.app_log`,
 					{},
-					oracle_options, (err,result) => {
+					(err,result) => {
 						if (err) {
 							return callBack(err);
 						}
