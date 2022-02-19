@@ -1,4 +1,4 @@
-const {oracle_options, get_pool} = require ("../../config/database");
+const {oracledb, get_pool} = require ("../../config/database");
 
 module.exports = {
 	insertUserSettingView: (app_id, data, callBack) => {
@@ -30,7 +30,7 @@ module.exports = {
 			async function execute_sql(err, result){
 				let pool2;
 				try{
-				pool2 = await get_pool(app_id).getConnection();
+				pool2 = await oracledb.getConnection(get_pool(app_id));
 				const result_sql = await pool2.execute(
 					`INSERT INTO ${process.env.SERVICE_DB_DB2_NAME}.app_timetables_user_setting_view(
 									user_account_id,
@@ -55,7 +55,7 @@ module.exports = {
 						client_longitude: data.client_longitude,
 						client_latitude: data.client_latitude
 					},
-					oracle_options, (err_ins,result_ins) => {
+					(err_ins,result_ins) => {
 						if (err_ins) {
 							return callBack(err_ins);
 						}
