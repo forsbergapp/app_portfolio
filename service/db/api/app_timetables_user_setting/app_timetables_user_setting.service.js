@@ -1,4 +1,4 @@
-const {oracle_options, get_pool} = require ("../../config/database");
+const {oracledb, get_pool} = require ("../../config/database");
 
 module.exports = {
 	createUserSetting: (app_id, data, callBack) => {
@@ -130,7 +130,7 @@ module.exports = {
 			async function execute_sql(err, result){
 				let pool2;
 				try{
-					pool2 = await get_pool(app_id).getConnection();
+					pool2 = await oracledb.getConnection(get_pool(app_id));
 					const result = await pool2.execute(
 						`INSERT INTO ${process.env.SERVICE_DB_DB2_NAME}.app_timetables_user_setting(
 							description,
@@ -295,7 +295,7 @@ module.exports = {
 						prayer_column_fast_start_end_select_id: data.prayer_column_fast_start_end_select_id,
 						user_account_id: data.user_account_id
 					},
-					oracle_options, (err,result) => {
+					(err,result) => {
 						if (err) {
 							return callBack(err);
 						}
@@ -308,7 +308,7 @@ module.exports = {
 								var lastRowid = JSON.stringify(result.lastRowid).replace(/"/g,'');
 								let pool3;
 								try{
-								pool3 = await get_pool(app_id).getConnection();
+								pool3 = await oracledb.getConnection(get_pool(app_id));
 								const result_rowid = await pool3.execute(
 									`SELECT id "insertId"
 										FROM ${process.env.SERVICE_DB_DB2_NAME}.app_timetables_user_setting
@@ -316,7 +316,7 @@ module.exports = {
 									{
 										lastRowid: lastRowid
 									},
-									oracle_options, (err_id2,result_id2) => {
+									(err_id2,result_id2) => {
 										if (err_id2) {
 											return callBack(err_id2);
 										}
@@ -429,7 +429,7 @@ module.exports = {
 			async function execute_sql(err, result){
 				let pool2;
 				try{
-				pool2 = await get_pool(app_id).getConnection();
+				pool2 = await oracledb.getConnection(get_pool(app_id));
 				const result = await pool2.execute(
 					`SELECT
 						id "id",
@@ -492,7 +492,7 @@ module.exports = {
 					{
 						id: id
 					},
-					oracle_options, (err,result) => {
+					(err,result) => {
 						if (err) {
 							return callBack(err);
 						}
@@ -589,7 +589,7 @@ module.exports = {
 			async function execute_sql(err, result){
 				let pool2;
 				try{
-				pool2 = await get_pool(app_id).getConnection();
+				pool2 = await oracledb.getConnection(get_pool(app_id));
 				const result = await pool2.execute(
 					`SELECT
 						id "id",
@@ -652,7 +652,6 @@ module.exports = {
 					{
 						user_account_id: id
 					},
-					oracle_options,
 				 	(err,result) => {
 						if (err) {
 							return callBack(err);
@@ -709,7 +708,7 @@ module.exports = {
 			async function execute_sql(err, result){
 				let pool2;
 				try{
-				pool2 = await get_pool(app_id).getConnection();
+				pool2 = await oracledb.getConnection(get_pool(app_id));
 				const result = await pool2.execute(
 					`SELECT
 						us.id "id",
@@ -732,7 +731,7 @@ module.exports = {
 						user_account_id_current: id_current_user,
 						user_account_id: id
 					},
-					oracle_options, (err,result) => {
+					(err,result) => {
 						if (err) {
 							return callBack(err);
 						}
@@ -879,7 +878,7 @@ module.exports = {
 			async function execute_sql(err, result){
 				let pool2;
 				try{
-				pool2 = await get_pool(app_id).getConnection();
+				pool2 = await oracledb.getConnection(get_pool(app_id));
 				const result = await pool2.execute(
 					`UPDATE ${process.env.SERVICE_DB_DB2_NAME}.app_timetables_user_setting
 						SET description = :description,
@@ -991,7 +990,7 @@ module.exports = {
 						user_account_id: data.user_account_id,
 						id: id
 					},
-					oracle_options, (err,result) => {
+					(err,result) => {
 						if (err) {
 							return callBack(err);
 						}
@@ -1031,14 +1030,14 @@ module.exports = {
 			async function execute_sql(err, result){
 				let pool2;
 				try{
-				pool2 = await get_pool(app_id).getConnection();
+				pool2 = await oracledb.getConnection(get_pool(app_id));
 				const result = await pool2.execute(
 					`DELETE FROM ${process.env.SERVICE_DB_DB2_NAME}.app_timetables_user_setting
-					WHERE id = :id `,
+					  WHERE id = :id `,
 					{
 						id: id
 					},
-					oracle_options, (err,result) => {
+					(err,result) => {
 						if (err) {
 							return callBack(err);
 						}
@@ -1078,14 +1077,14 @@ module.exports = {
 			async function execute_sql(err, result){
 				let pool2;
 				try{
-				pool2 = await get_pool(app_id).getConnection();
+				pool2 = await oracledb.getConnection(get_pool(app_id));
 				const result = await pool2.execute(
 					`DELETE FROM ${process.env.SERVICE_DB_DB2_NAME}.app_timetables_user_setting
-					WHERE user_account_id = :user_account_id `,
+					  WHERE user_account_id = :user_account_id `,
 					{
 						user_account_id: id
 					},
-					oracle_options, (err,result) => {
+					(err,result) => {
 						if (err) {
 							return callBack(err);
 						}

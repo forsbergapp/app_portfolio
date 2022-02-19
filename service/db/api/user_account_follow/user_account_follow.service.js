@@ -1,4 +1,4 @@
-const {oracle_options, get_pool} = require ("../../config/database");
+const {oracledb, get_pool} = require ("../../config/database");
 
 module.exports = {
 	followUser: (app_id, id, id_follow, callBack) => {
@@ -22,7 +22,7 @@ module.exports = {
 			async function execute_sql(err, result){
 				let pool2;
 				try{
-				pool2 = await get_pool(app_id).getConnection();
+				pool2 = await oracledb.getConnection(get_pool(app_id));
 				const result = await pool2.execute(
 					`INSERT INTO ${process.env.SERVICE_DB_DB2_NAME}.user_account_follow(
 									user_account_id, user_account_id_follow, date_created)
@@ -31,7 +31,7 @@ module.exports = {
 						user_account_id: id,
 					 	user_account_id_follow: id_follow
 					},
-					oracle_options, (err,result) => {
+					(err,result) => {
 						if (err) {
 							return callBack(err);
 						}
@@ -75,7 +75,7 @@ module.exports = {
 			async function execute_sql(err, result){
 				let pool2;
 				try{
-				pool2 = await get_pool(app_id).getConnection();
+				pool2 = await oracledb.getConnection(get_pool(app_id));
 				const result = await pool2.execute(
 					`DELETE FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_follow
 						WHERE  user_account_id = :user_account_id
@@ -84,7 +84,7 @@ module.exports = {
 						user_account_id: id,
 					 	user_account_id_follow: id_unfollow
 					},
-					oracle_options, (err,result) => {
+					(err,result) => {
 						if (err) {
 							return callBack(err);
 						}

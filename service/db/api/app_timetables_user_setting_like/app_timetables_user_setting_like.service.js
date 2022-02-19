@@ -1,4 +1,4 @@
-const {oracle_options, get_pool} = require ("../../config/database");
+const {oracledb, get_pool} = require ("../../config/database");
 
 module.exports = {
 	likeUserSetting: (app_id, id, id_like, callBack) => {
@@ -22,7 +22,7 @@ module.exports = {
 			async function execute_sql(err, result){
 				let pool2;
 				try{
-				pool2 = await get_pool(app_id).getConnection();
+				pool2 = await oracledb.getConnection(get_pool(app_id));
 				const result = await pool2.execute(
 					`INSERT INTO ${process.env.SERVICE_DB_DB2_NAME}.app_timetables_user_setting_like(
 									user_account_id, user_setting_id, date_created)
@@ -31,7 +31,7 @@ module.exports = {
 						user_account_id: id,
 						user_setting_id: id_like
 					},
-					oracle_options, (err,result) => {
+					(err,result) => {
 						if (err) {
 							return callBack(err);
 						}
@@ -58,8 +58,8 @@ module.exports = {
 		if (process.env.SERVICE_DB_USE == 1) {
 			get_pool(app_id).query(
 			`DELETE FROM ${process.env.SERVICE_DB_DB1_NAME}.app_timetables_user_setting_like
-				WHERE  user_account_id = ?
-				AND    user_setting_id = ? `,
+			  WHERE user_account_id = ?
+				AND user_setting_id = ? `,
 				[
 				id,
 				id_unlike
@@ -75,16 +75,16 @@ module.exports = {
 			async function execute_sql(err, result){
 				let pool2;
 				try{
-				pool2 = await get_pool(app_id).getConnection();
+				pool2 = await oracledb.getConnection(get_pool(app_id));
 				const result = await pool2.execute(
 					`DELETE FROM ${process.env.SERVICE_DB_DB2_NAME}.app_timetables_user_setting_like
-						WHERE  user_account_id = :user_account_id
-						AND    user_setting_id = :user_setting_id `,
+					  WHERE user_account_id = :user_account_id
+						AND user_setting_id = :user_setting_id `,
 					{
 						user_account_id: id,
 						user_setting_id: id_unlike
 					},
-					oracle_options, (err,result) => {
+					(err,result) => {
 						if (err) {
 							return callBack(err);
 						}

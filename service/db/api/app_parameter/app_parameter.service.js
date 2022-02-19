@@ -1,4 +1,4 @@
-const {oracle_options,get_pool} = require ("../../config/database");
+const {oracledb, get_pool} = require ("../../config/database");
 
 module.exports = {
 	//returns parameters for app_id=0 and given app_id
@@ -28,7 +28,7 @@ module.exports = {
 			async function execute_sql(err, result){
 				let pool2;
 				try{
-				pool2 = await get_pool(app_id).getConnection();
+				pool2 = await oracledb.getConnection(get_pool(app_id));
 				const result = await pool2.execute(
 					`SELECT
                             app_id "app_id",
@@ -41,7 +41,7 @@ module.exports = {
 					  OR app_id = 0
 					ORDER BY 1`,
 					{app_id: app_id},
-					oracle_options, (err,result) => {
+					(err,result) => {
 						if (err) {
 							return callBack(err);
 						}

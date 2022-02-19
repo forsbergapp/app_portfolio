@@ -1,5 +1,4 @@
-const {oracle_options, get_pool} = require("../../../config/database");
-
+const {oracledb, get_pool} = require ("../../../config/database");
 module.exports = {
 	getLocales: (app_id, lang_code, callBack) => {
     if (process.env.SERVICE_DB_USE == 1) {
@@ -115,7 +114,7 @@ module.exports = {
 			async function execute_sql(err, result){
         let pool2;
 				try{
-				pool2 = await get_pool(app_id).getConnection();
+        pool2 = await oracledb.getConnection(get_pool(app_id));
 				const result = await pool2.execute(
 					`SELECT CONCAT(l.lang_code, CASE 
                                       WHEN c.country_code IS NOT NULL THEN 
@@ -207,7 +206,7 @@ module.exports = {
 					{
 						lang_code: lang_code
 					},
-					oracle_options, (err,result) => {
+					(err,result) => {
 						if (err) {
               console.log('getLocales err:' + err);
 							return callBack(err);
