@@ -914,14 +914,6 @@ function image_format(arr) {
     }
 }
 
-function select_empty(select) {
-    //empty select				
-    for (i = select.options.length - 1; i >= 0; i--) {
-        select.options[i] = null;
-    }
-    return null;
-}
-
 function select_get_selectindex(select, id) {
     if (id == 0)
         return 0;
@@ -1732,8 +1724,8 @@ function keyfunctions() {
     document.getElementById('setting_btn_user_update').addEventListener('click', function() { user_update() }, false);
     document.getElementById('setting_btn_user_delete_account').addEventListener('click', function() { user_delete(); }, false);
      
-    document.getElementById('setting_btn_user_save').addEventListener('click', function() { user_settings_save() }, false);
-    document.getElementById('setting_btn_user_add').addEventListener('click', function() { user_settings_add() }, false);
+    document.getElementById('setting_btn_user_save').addEventListener('click', function() { user_settings_function('SAVE') }, false);
+    document.getElementById('setting_btn_user_add').addEventListener('click', function() { user_settings_function('ADD') }, false);
     document.getElementById('setting_btn_user_delete').addEventListener('click', function() { user_settings_delete() }, false);
      
     document.getElementById('profile_main_btn_following').addEventListener('click', function() { profile_detail(1) }, false);
@@ -2734,7 +2726,7 @@ async function user_setting_get(user_setting_id) {
         .then(function(result) {
             if (status == 200) {
                 json = JSON.parse(result);
-                select_empty(select);
+                select.innerHTML = '';
                 //fill select with this one record
                 let option_html='';
                 option_html += `<option value=${0} id=${json.id} 
@@ -2831,7 +2823,7 @@ async function user_settings_get(userid, show_ui = 1, user_setting_id = '') {
         .then(function(result) {
             if (status == 200) {
                 json = JSON.parse(result);
-                select_empty(select);
+                select.innerHTML = '';
                 //fill select
                 let option_html = '';
                 for (i = 0; i < json.count; i++) {
@@ -2996,7 +2988,7 @@ function user_logoff() {
         document.getElementById('profile_user_settings_private').style.display = "none";
 
         //empty user settings
-        select_empty(select);
+        select.innerHTML = '';
         //add one empty option
         option = document.createElement('option');
         select.appendChild(option);
@@ -3375,112 +3367,7 @@ async function user_settings_load(show_ui = 1) {
     return null;
 }
 
-function user_settings_save() {
-    var select_user_setting = document.getElementById('setting_select_user_setting');
-    var user_setting_id = select_user_setting[select_user_setting.selectedIndex].getAttribute('id');
-    var user_id = document.getElementById('setting_data_userid_logged_in').innerHTML;
-    var status;
-    var select_setting_country = document.getElementById('setting_select_country');
-    var select_setting_city = document.getElementById('setting_select_city');
-    var select_setting_popular_place = document.getElementById('setting_select_popular_place');
-
-    //boolean use boolean_to_number()
-    //store 0/1 for checked value for checkboxes
-    //use btoa() for images to encode with BASE64 to BLOB column.
-
-    var json_data =
-        '{' +
-        '"description": "' + document.getElementById('setting_input_place').value + '",' +
-        '"regional_language_locale": "' + document.getElementById('setting_select_locale').value + '",' +
-        '"regional_current_timezone_select_id": ' + document.getElementById('setting_select_timezone_current').selectedIndex + ',' +
-        '"regional_timezone_select_id": ' + document.getElementById('setting_select_report_timezone').selectedIndex + ',' +
-        '"regional_number_system_select_id": ' + document.getElementById('setting_select_report_numbersystem').selectedIndex + ',' +
-        '"regional_layout_direction_select_id": ' + document.getElementById('setting_select_report_direction').selectedIndex + ',' +
-        '"regional_second_language_locale": "' + document.getElementById('setting_select_report_locale_second').value + '",' +
-        '"regional_column_title_select_id": ' + document.getElementById('setting_select_report_coltitle').selectedIndex + ',' +
-        '"regional_arabic_script_select_id": ' + document.getElementById('setting_select_report_arabic_script').selectedIndex + ',' +
-        '"regional_calendar_type_select_id": ' + document.getElementById('setting_select_calendartype').selectedIndex + ',' +
-        '"regional_calendar_hijri_type_select_id": ' + document.getElementById('setting_select_calendar_hijri_type').selectedIndex + ',' +
-
-        '"gps_map_type_select_id": ' + document.getElementById('setting_select_maptype').selectedIndex + ',' +
-        '"gps_country_id": ' + set_null_or_value(select_setting_country[select_setting_country.selectedIndex].getAttribute('id')) + ',' +
-        '"gps_city_id": ' + set_null_or_value(select_setting_city[select_setting_city.selectedIndex].getAttribute('id')) + ',' +
-        '"gps_popular_place_id": ' + set_null_or_value(select_setting_popular_place[select_setting_popular_place.selectedIndex].getAttribute('id')) + ',' +
-        '"gps_lat_text": "' + document.getElementById('setting_input_lat').value + '",' +
-        '"gps_long_text": "' + document.getElementById('setting_input_long').value + '",' +
-
-        '"design_theme_day_id": "' + get_theme_id('day') + '",' +
-        '"design_theme_month_id": "' + get_theme_id('month') + '",' +
-        '"design_theme_year_id": "' + get_theme_id('year') + '",' +
-        '"design_paper_size_select_id": ' + document.getElementById('setting_select_report_papersize').selectedIndex + ',' +
-        '"design_row_highlight_select_id": ' + document.getElementById('setting_select_report_highlight_row').selectedIndex + ',' +
-        '"design_column_weekday_checked": ' + boolean_to_number(document.getElementById('setting_checkbox_report_show_weekday').checked) + ',' +
-        '"design_column_calendartype_checked": ' + boolean_to_number(document.getElementById('setting_checkbox_report_show_calendartype').checked) + ',' +
-        '"design_column_notes_checked": ' + boolean_to_number(document.getElementById('setting_checkbox_report_show_notes').checked) + ',' +
-        '"design_column_gps_checked": ' + boolean_to_number(document.getElementById('setting_checkbox_report_show_gps').checked) + ',' +
-        '"design_column_timezone_checked": ' + boolean_to_number(document.getElementById('setting_checkbox_report_show_timezone').checked) + ',' +
-
-        '"image_header_image_img": "' + btoa(document.getElementById('setting_reportheader_img').src) + '",' +
-        '"image_footer_image_img": "' + btoa(document.getElementById('setting_reportfooter_img').src) + '",' +
-
-        '"text_header_1_text": "' + document.getElementById('setting_input_reporttitle1').value + '",' +
-        '"text_header_2_text": "' + document.getElementById('setting_input_reporttitle2').value + '",' +
-        '"text_header_3_text": "' + document.getElementById('setting_input_reporttitle3').value + '",' +
-        '"text_header_align": "' + align_button_value('reporttitle') + '",' +
-        '"text_footer_1_text": "' + document.getElementById('setting_input_reportfooter1').value + '",' +
-        '"text_footer_2_text": "' + document.getElementById('setting_input_reportfooter2').value + '",' +
-        '"text_footer_3_text": "' + document.getElementById('setting_input_reportfooter3').value + '",' +
-        '"text_footer_align": "' + align_button_value('reportfooter') + '",' +
-
-        '"prayer_method_select_id": ' + document.getElementById('setting_select_method').selectedIndex + ',' +
-        '"prayer_asr_method_select_id": ' + document.getElementById('setting_select_asr').selectedIndex + ',' +
-        '"prayer_high_latitude_adjustment_select_id": ' + document.getElementById('setting_select_highlatitude').selectedIndex + ',' +
-        '"prayer_time_format_select_id": ' + document.getElementById('setting_select_timeformat').selectedIndex + ',' +
-        '"prayer_hijri_date_adjustment_select_id": ' + document.getElementById('setting_select_hijri_adjustment').selectedIndex + ',' +
-        '"prayer_fajr_iqamat_select_id": ' + document.getElementById('setting_select_report_iqamat_title_fajr').selectedIndex + ',' +
-        '"prayer_dhuhr_iqamat_select_id": ' + document.getElementById('setting_select_report_iqamat_title_dhuhr').selectedIndex + ',' +
-        '"prayer_asr_iqamat_select_id": ' + document.getElementById('setting_select_report_iqamat_title_asr').selectedIndex + ',' +
-        '"prayer_maghrib_iqamat_select_id": ' + document.getElementById('setting_select_report_iqamat_title_maghrib').selectedIndex + ',' +
-        '"prayer_isha_iqamat_select_id": ' + document.getElementById('setting_select_report_iqamat_title_isha').selectedIndex + ',' +
-        '"prayer_column_imsak_checked": ' + boolean_to_number(document.getElementById('setting_checkbox_report_show_imsak').checked) + ',' +
-        '"prayer_column_sunset_checked": ' + boolean_to_number(document.getElementById('setting_checkbox_report_show_sunset').checked) + ',' +
-        '"prayer_column_midnight_checked": ' + boolean_to_number(document.getElementById('setting_checkbox_report_show_midnight').checked) + ',' +
-        '"prayer_column_fast_start_end_select_id": ' + document.getElementById('setting_select_report_show_fast_start_end').selectedIndex + ',' +
-        '"user_account_id": ' + user_id +
-        '}';
-    spinner('SAVE', 'visible');
-
-    fetch(global_rest_url_base + global_rest_app_timetables_user_setting + user_setting_id +
-            '?app_id=' + global_app_id +
-            '&lang_code=' + document.getElementById('setting_select_locale').value, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + global_rest_at
-            },
-            body: json_data
-        })
-        .then(function(response) {
-            status = response.status;
-            return response.text();
-        })
-        .then(function(result) {
-            if (status == 200) {
-                //update user settings select with saved data
-                set_settings_select();
-                spinner('SAVE', 'hidden');
-            } else {
-                spinner('SAVE', 'hidden');
-                exception('user_settings_save', status, result);
-            }
-        })
-        .catch(function(error) {
-            spinner('SAVE', 'hidden');
-            alert(responseText_get_error('user_settings_save', error));
-        });
-}
-
-function user_settings_add(signup = false) {
+function user_settings_function(function_name, signup = false) {
     var user_account_id = document.getElementById('setting_data_userid_logged_in').innerHTML;
     var description = document.getElementById('setting_input_place').value;
     var status;
@@ -3491,72 +3378,88 @@ function user_settings_add(signup = false) {
     //store 0/1 for checked value for checkboxes
     //use btoa() for images to encode with BASE64 to BLOB column.
     var json_data =
-        '{' +
-        '"description": "' + description + '",' +
-        '"regional_language_locale": "' + document.getElementById('setting_select_locale').value + '",' +
-        '"regional_current_timezone_select_id": ' + document.getElementById('setting_select_timezone_current').selectedIndex + ',' +
-        '"regional_timezone_select_id": ' + document.getElementById('setting_select_report_timezone').selectedIndex + ',' +
-        '"regional_number_system_select_id": ' + document.getElementById('setting_select_report_numbersystem').selectedIndex + ',' +
-        '"regional_layout_direction_select_id": ' + document.getElementById('setting_select_report_direction').selectedIndex + ',' +
-        '"regional_second_language_locale": "' + document.getElementById('setting_select_report_locale_second').value + '",' +
-        '"regional_column_title_select_id": ' + document.getElementById('setting_select_report_coltitle').selectedIndex + ',' +
-        '"regional_arabic_script_select_id": ' + document.getElementById('setting_select_report_arabic_script').selectedIndex + ',' +
-        '"regional_calendar_type_select_id": ' + document.getElementById('setting_select_calendartype').selectedIndex + ',' +
-        '"regional_calendar_hijri_type_select_id": ' + document.getElementById('setting_select_calendar_hijri_type').selectedIndex + ',' +
+        `{"description": "${description}",
+          "regional_language_locale": "${document.getElementById('setting_select_locale').value}",
+          "regional_current_timezone_select_id": ${document.getElementById('setting_select_timezone_current').selectedIndex},
+          "regional_timezone_select_id": ${document.getElementById('setting_select_report_timezone').selectedIndex},
+          "regional_number_system_select_id": ${document.getElementById('setting_select_report_numbersystem').selectedIndex},
+          "regional_layout_direction_select_id": ${document.getElementById('setting_select_report_direction').selectedIndex},
+          "regional_second_language_locale": "${document.getElementById('setting_select_report_locale_second').value}",
+          "regional_column_title_select_id": ${document.getElementById('setting_select_report_coltitle').selectedIndex},
+          "regional_arabic_script_select_id": ${document.getElementById('setting_select_report_arabic_script').selectedIndex},
+          "regional_calendar_type_select_id": ${document.getElementById('setting_select_calendartype').selectedIndex},
+          "regional_calendar_hijri_type_select_id": ${document.getElementById('setting_select_calendar_hijri_type').selectedIndex},
 
-        '"gps_map_type_select_id": ' + document.getElementById('setting_select_maptype').selectedIndex + ',' +
-        '"gps_country_id": ' + set_null_or_value(select_setting_country[select_setting_country.selectedIndex].getAttribute('id')) + ',' +
-        '"gps_city_id": ' + set_null_or_value(select_setting_city[select_setting_city.selectedIndex].getAttribute('id')) + ',' +
-        '"gps_popular_place_id": ' + set_null_or_value(select_setting_popular_place[select_setting_popular_place.selectedIndex].getAttribute('id')) + ',' +
-        '"gps_lat_text": "' + document.getElementById('setting_input_lat').value + '",' +
-        '"gps_long_text": "' + document.getElementById('setting_input_long').value + '",' +
+          "gps_map_type_select_id": ${document.getElementById('setting_select_maptype').selectedIndex},
+          "gps_country_id": "${select_setting_country[select_setting_country.selectedIndex].getAttribute('id')}",
+          "gps_city_id": "${select_setting_city[select_setting_city.selectedIndex].getAttribute('id')}",
+          "gps_popular_place_id": "${select_setting_popular_place[select_setting_popular_place.selectedIndex].getAttribute('id')}",
+          "gps_lat_text": "${document.getElementById('setting_input_lat').value}",
+          "gps_long_text": "${document.getElementById('setting_input_long').value}",
 
-        '"design_theme_day_id": "' + get_theme_id('day') + '",' +
-        '"design_theme_month_id": "' + get_theme_id('month') + '",' +
-        '"design_theme_year_id": "' + get_theme_id('year') + '",' +
-        '"design_paper_size_select_id": ' + document.getElementById('setting_select_report_papersize').selectedIndex + ',' +
-        '"design_row_highlight_select_id": ' + document.getElementById('setting_select_report_highlight_row').selectedIndex + ',' +
-        '"design_column_weekday_checked": ' + boolean_to_number(document.getElementById('setting_checkbox_report_show_weekday').checked) + ',' +
-        '"design_column_calendartype_checked": ' + boolean_to_number(document.getElementById('setting_checkbox_report_show_calendartype').checked) + ',' +
-        '"design_column_notes_checked": ' + boolean_to_number(document.getElementById('setting_checkbox_report_show_notes').checked) + ',' +
-        '"design_column_gps_checked": ' + boolean_to_number(document.getElementById('setting_checkbox_report_show_gps').checked) + ',' +
-        '"design_column_timezone_checked": ' + boolean_to_number(document.getElementById('setting_checkbox_report_show_timezone').checked) + ',' +
+          "design_theme_day_id": ${get_theme_id('day')},
+          "design_theme_month_id": ${get_theme_id('month')},
+          "design_theme_year_id": ${get_theme_id('year')},
+          "design_paper_size_select_id": ${document.getElementById('setting_select_report_papersize').selectedIndex},
+          "design_row_highlight_select_id": ${document.getElementById('setting_select_report_highlight_row').selectedIndex},
+          "design_column_weekday_checked": ${boolean_to_number(document.getElementById('setting_checkbox_report_show_weekday').checked)},
+          "design_column_calendartype_checked": ${boolean_to_number(document.getElementById('setting_checkbox_report_show_calendartype').checked)},
+          "design_column_notes_checked": ${boolean_to_number(document.getElementById('setting_checkbox_report_show_notes').checked)},
+          "design_column_gps_checked": ${boolean_to_number(document.getElementById('setting_checkbox_report_show_gps').checked)},
+          "design_column_timezone_checked": ${boolean_to_number(document.getElementById('setting_checkbox_report_show_timezone').checked)},
 
-        '"image_header_image_img": "' + btoa(document.getElementById('setting_reportheader_img').src) + '",' +
-        '"image_footer_image_img": "' + btoa(document.getElementById('setting_reportfooter_img').src) + '",' +
+          "image_header_image_img": "${btoa(document.getElementById('setting_reportheader_img').src)}",
+          "image_footer_image_img": "${btoa(document.getElementById('setting_reportfooter_img').src)}",
 
-        '"text_header_1_text": "' + document.getElementById('setting_input_reporttitle1').value + '",' +
-        '"text_header_2_text": "' + document.getElementById('setting_input_reporttitle2').value + '",' +
-        '"text_header_3_text": "' + document.getElementById('setting_input_reporttitle3').value + '",' +
-        '"text_header_align": "' + align_button_value('reporttitle') + '",' +
-        '"text_footer_1_text": "' + document.getElementById('setting_input_reportfooter1').value + '",' +
-        '"text_footer_2_text": "' + document.getElementById('setting_input_reportfooter2').value + '",' +
-        '"text_footer_3_text": "' + document.getElementById('setting_input_reportfooter3').value + '",' +
-        '"text_footer_align": "' + align_button_value('reportfooter') + '",' +
+          "text_header_1_text": "${document.getElementById('setting_input_reporttitle1').value}",
+          "text_header_2_text": "${document.getElementById('setting_input_reporttitle2').value}",
+          "text_header_3_text": "${document.getElementById('setting_input_reporttitle3').value}",
+          "text_header_align": "${align_button_value('reporttitle')}",
+          "text_footer_1_text": "${document.getElementById('setting_input_reportfooter1').value}",
+          "text_footer_2_text": "${document.getElementById('setting_input_reportfooter2').value}",
+          "text_footer_3_text": "${document.getElementById('setting_input_reportfooter3').value}",
+          "text_footer_align": "${align_button_value('reportfooter')}",
 
-        '"prayer_method_select_id": ' + document.getElementById('setting_select_method').selectedIndex + ',' +
-        '"prayer_asr_method_select_id": ' + document.getElementById('setting_select_asr').selectedIndex + ',' +
-        '"prayer_high_latitude_adjustment_select_id": ' + document.getElementById('setting_select_highlatitude').selectedIndex + ',' +
-        '"prayer_time_format_select_id": ' + document.getElementById('setting_select_timeformat').selectedIndex + ',' +
-        '"prayer_hijri_date_adjustment_select_id": ' + document.getElementById('setting_select_hijri_adjustment').selectedIndex + ',' +
-        '"prayer_fajr_iqamat_select_id": ' + document.getElementById('setting_select_report_iqamat_title_fajr').selectedIndex + ',' +
-        '"prayer_dhuhr_iqamat_select_id": ' + document.getElementById('setting_select_report_iqamat_title_dhuhr').selectedIndex + ',' +
-        '"prayer_asr_iqamat_select_id": ' + document.getElementById('setting_select_report_iqamat_title_asr').selectedIndex + ',' +
-        '"prayer_maghrib_iqamat_select_id": ' + document.getElementById('setting_select_report_iqamat_title_maghrib').selectedIndex + ',' +
-        '"prayer_isha_iqamat_select_id": ' + document.getElementById('setting_select_report_iqamat_title_isha').selectedIndex + ',' +
-        '"prayer_column_imsak_checked": ' + boolean_to_number(document.getElementById('setting_checkbox_report_show_imsak').checked) + ',' +
-        '"prayer_column_sunset_checked": ' + boolean_to_number(document.getElementById('setting_checkbox_report_show_sunset').checked) + ',' +
-        '"prayer_column_midnight_checked": ' + boolean_to_number(document.getElementById('setting_checkbox_report_show_midnight').checked) + ',' +
-        '"prayer_column_fast_start_end_select_id": ' + document.getElementById('setting_select_report_show_fast_start_end').selectedIndex + ',' +
-        '"user_account_id": ' + user_account_id +
-        '}';
-    //adding user_id twice is bugfix, variable user_account_id seem to disappear if mentioned once
-    //setting hardcoded number works but not applicable here
-    spinner('ADD', 'visible');
-    fetch(global_rest_url_base + global_rest_app_timetables_user_setting +
+          "prayer_method_select_id": ${document.getElementById('setting_select_method').selectedIndex},
+          "prayer_asr_method_select_id": ${document.getElementById('setting_select_asr').selectedIndex},
+          "prayer_high_latitude_adjustment_select_id": ${document.getElementById('setting_select_highlatitude').selectedIndex},
+          "prayer_time_format_select_id": ${document.getElementById('setting_select_timeformat').selectedIndex},
+          "prayer_hijri_date_adjustment_select_id": ${document.getElementById('setting_select_hijri_adjustment').selectedIndex},
+          "prayer_fajr_iqamat_select_id": ${document.getElementById('setting_select_report_iqamat_title_fajr').selectedIndex},
+          "prayer_dhuhr_iqamat_select_id": ${document.getElementById('setting_select_report_iqamat_title_dhuhr').selectedIndex},
+          "prayer_asr_iqamat_select_id": ${document.getElementById('setting_select_report_iqamat_title_asr').selectedIndex},
+          "prayer_maghrib_iqamat_select_id": ${document.getElementById('setting_select_report_iqamat_title_maghrib').selectedIndex},
+          "prayer_isha_iqamat_select_id": ${document.getElementById('setting_select_report_iqamat_title_isha').selectedIndex},
+          "prayer_column_imsak_checked": ${boolean_to_number(document.getElementById('setting_checkbox_report_show_imsak').checked)},
+          "prayer_column_sunset_checked": ${boolean_to_number(document.getElementById('setting_checkbox_report_show_sunset').checked)},
+          "prayer_column_midnight_checked": ${boolean_to_number(document.getElementById('setting_checkbox_report_show_midnight').checked)},
+          "prayer_column_fast_start_end_select_id": ${document.getElementById('setting_select_report_show_fast_start_end').selectedIndex},
+          "user_account_id": ${user_account_id}
+         }`;
+    spinner(function_name, 'visible');
+    let method;
+    let url;
+    switch (function_name){
+        case 'ADD':{
+            method = 'POST';
+            url = global_rest_url_base + global_rest_app_timetables_user_setting;
+            break;
+        }
+        case 'SAVE':{
+            method = 'PUT';
+            let select_user_setting = document.getElementById('setting_select_user_setting');
+            let user_setting_id = select_user_setting[select_user_setting.selectedIndex].getAttribute('id');
+            url = global_rest_url_base + global_rest_app_timetables_user_setting + user_setting_id;
+            break;
+        }
+        default:{
+            break;
+        }
+    }
+    fetch(url +
             '?app_id=' + global_app_id +
             '&lang_code=' + document.getElementById('setting_select_locale').value, {
-            method: 'POST',
+            method: method,
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + global_rest_at
@@ -3570,30 +3473,38 @@ function user_settings_add(signup = false) {
         .then(function(result) {
             if (status === 200) {
                 var json = JSON.parse(result);
-                //update user settings select with saved data
-                //save current settings to new option with 
-                //returned user_setting_id + user_account_id (then call set_settings_select)
-                if (signup == false) {
-                    var select = document.getElementById("setting_select_user_setting");
-                    var option;
-                    option = document.createElement('option');
-                    option.text = description;
-                    option.setAttribute('id', json.id);
-                    option.setAttribute('user_account_id', user_account_id);
-                    select.appendChild(option);
-                    select.selectedIndex = option.index;
-                    option.value = select.selectedIndex;
-                    set_settings_select();
+                switch (function_name){
+                    case 'ADD':{
+                        //update user settings select with saved data
+                        //save current settings to new option with 
+                        //returned user_setting_id + user_account_id (then call set_settings_select)
+                        if (signup == false) {
+                            var select = document.getElementById("setting_select_user_setting");
+                            select.innerHTML += `<option id=${json.id} user_account_id=${user_account_id} >${description}</option>`;
+                            select.selectedIndex = select.options[select.options.length - 1].index;
+                            select.options[select.options.length - 1].value = select.selectedIndex;
+                            set_settings_select();
+                        }
+                        break;
+                    }
+                    case 'SAVE':{
+                        //update user settings select with saved data
+                        set_settings_select(); 
+                        break;
+                    }
+                    default:{
+                        break;
+                    }
                 }
-                spinner('ADD', 'hidden');
+                spinner(function_name, 'hidden');
             } else {
-                spinner('ADD', 'hidden');
-                exception('user_settings_add', status, result);
+                spinner(function_name, 'hidden');
+                exception('user_settings_function', status, result);
             }
         })
         .catch(function(error) {
-            spinner('ADD', 'hidden');
-            alert(responseText_get_error('user_settings_add', error));
+            spinner(function_name, 'hidden');
+            alert(responseText_get_error('user_settings_function', error));
         });
 }
 
@@ -3767,8 +3678,7 @@ async function set_default_settings() {
 function set_settings_select() {
     var option = document.getElementById("setting_select_user_setting").options[document.getElementById("setting_select_user_setting").selectedIndex];
     option.text = document.getElementById('setting_input_place').value;
-    //option.value = 1;
-    //option.setAttribute('id', "");
+    
     option.setAttribute('description', document.getElementById('setting_input_place').value);
     option.setAttribute('regional_language_locale', document.getElementById('setting_select_locale').value);
     option.setAttribute('regional_current_timezone_select_id', document.getElementById('setting_select_timezone_current').selectedIndex);
@@ -3782,9 +3692,9 @@ function set_settings_select() {
     option.setAttribute('regional_calendar_hijri_type_select_id', document.getElementById('setting_select_calendar_hijri_type').selectedIndex);
 
     option.setAttribute('gps_map_type_select_id', document.getElementById('setting_select_maptype').selectedIndex);
-    option.setAttribute('gps_country_id', select_get_id('setting_select_country',document.getElementById('setting_select_country').selectedIndex));
-    option.setAttribute('gps_city_id', select_get_id('setting_select_city',document.getElementById('setting_select_city').selectedIndex));
-    option.setAttribute('gps_popular_place_id', select_get_id('setting_select_popular_place',document.getElementById('setting_select_popular_place').selectedIndex));
+    option.setAttribute('gps_country_id', document.getElementById('setting_select_country')[document.getElementById('setting_select_country').selectedIndex].getAttribute('id'));
+    option.setAttribute('gps_city_id', document.getElementById('setting_select_city')[document.getElementById('setting_select_city').selectedIndex].getAttribute('id'));
+    option.setAttribute('gps_popular_place_id', document.getElementById('setting_select_popular_place')[document.getElementById('setting_select_popular_place').selectedIndex].getAttribute('id'));
     option.setAttribute('gps_lat_text', document.getElementById('setting_input_lat').value);
     option.setAttribute('gps_long_text', document.getElementById('setting_input_long').value);
 
@@ -3826,7 +3736,6 @@ function set_settings_select() {
     option.setAttribute('prayer_column_sunset_checked', boolean_to_number(document.getElementById('setting_checkbox_report_show_sunset').checked));
     option.setAttribute('prayer_column_midnight_checked', boolean_to_number(document.getElementById('setting_checkbox_report_show_midnight').checked));
     option.setAttribute('prayer_column_fast_start_end_select_id', document.getElementById('setting_select_report_show_fast_start_end').selectedIndex);
-    //option.setAttribute('user_account_id', "");
 }
 
 function update_settings_icon(url = '', logoff = false) {
