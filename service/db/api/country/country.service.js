@@ -1,4 +1,4 @@
-const {oracle_options, get_pool} = require("../../config/database");
+const {oracledb, get_pool} = require ("../../config/database");
 
 module.exports = {
         getCountries: (app_id, lang_code, callBack) => {
@@ -46,7 +46,7 @@ module.exports = {
                         async function execute_sql(err, result) {
                                 let pool2;
                                 try {
-                                        pool2 = await get_pool(app_id).getConnection();
+                                        pool2 = await oracledb.getConnection(get_pool(app_id));
                                         const result = await pool2.execute(
                                                 `SELECT    c.id "id",
                                                         c.country_code "country_code",
@@ -77,7 +77,7 @@ module.exports = {
                                                 {
                                                         lang_code: lang_code
                                                 },
-                                                oracle_options, (err, result) => {
+                                                (err, result) => {
                                                         if (err) {
                                                                 return callBack(err);
                                                         }

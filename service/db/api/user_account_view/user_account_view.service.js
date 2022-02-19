@@ -1,4 +1,4 @@
-const {oracle_options, get_pool} = require ("../../config/database");
+const {oracledb, get_pool} = require ("../../config/database");
 
 module.exports = {
 	insertUserAccountView: (app_id, data, callBack) => {
@@ -26,7 +26,7 @@ module.exports = {
 			async function execute_sql(err, result){
 				let pool2;
 				try{
-				pool2 = await get_pool(app_id).getConnection();
+				pool2 = await oracledb.getConnection(get_pool(app_id));
 				const result = await pool2.execute(
 					`INSERT INTO ${process.env.SERVICE_DB_DB2_NAME}.user_account_view(
 									user_account_id, user_account_id_view, client_ip, client_user_agent, client_longitude, client_latitude, date_created)
@@ -39,7 +39,7 @@ module.exports = {
 						client_longitude: data.client_longitude,
 						client_latitude: data.client_latitude
 					},
-					oracle_options, (err,result) => {
+					(err,result) => {
 						if (err) {
 							return callBack(err);
 						}

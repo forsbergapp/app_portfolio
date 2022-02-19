@@ -1,4 +1,4 @@
-const {oracle_options,get_pool} = require ("../../config/database");
+const {oracledb, get_pool} = require ("../../config/database");
 
 module.exports = {
 	//get objects from language code or from using this logic:
@@ -101,7 +101,7 @@ module.exports = {
 			async function execute_sql(err, result){
 				let pool2;
 				try{
-				pool2 = await get_pool(app_id).getConnection();
+				pool2 = await oracledb.getConnection(get_pool(app_id));
 				const result = await pool2.execute(
 					` SELECT object "object", 
 							 app_id "app_id", 
@@ -172,7 +172,7 @@ module.exports = {
 						app_id: app_id,
 						lang_code: lang_code
 					},
-					oracle_options, (err,result) => {
+					(err,result) => {
 						if (err) {
 							console.log('getObjects err:' + JSON.stringify(err));
 							return callBack(err);
