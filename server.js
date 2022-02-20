@@ -30,11 +30,11 @@ const message_translationRouter = require("./service/db/api/message_translation/
 const user_accountRouter = require("./service/db/api/user_account/user_account.router");
 const user_account_likeRouter = require("./service/db/api/user_account_like/user_account_like.router");
 const user_account_followRouter = require("./service/db/api/user_account_follow/user_account_follow.router");
-const app_timetables_placeRouter = require("./service/db/api/app_timetables_place/app_timetables_place.router");
-const app_timetables_themeRouter = require("./service/db/api/app_timetables_theme/app_timetables_theme.router");
-const app_timetables_user_settingRouter = require("./service/db/api/app_timetables_user_setting/app_timetables_user_setting.router");
-const app_timetables_user_setting_likeRouter = require("./service/db/api/app_timetables_user_setting_like/app_timetables_user_setting_like.router");
-const app_timetables_user_setting_viewRouter = require("./service/db/api/app_timetables_user_setting_view/app_timetables_user_setting_view.router");
+const app1_app_timetables_placeRouter = require("./service/db/api/app_timetables_place/app_timetables_place.router");
+const app1_app_timetables_themeRouter = require("./service/db/api/app_timetables_theme/app_timetables_theme.router");
+const app1_app_timetables_user_settingRouter = require("./service/db/api/app_timetables_user_setting/app_timetables_user_setting.router");
+const app1_app_timetables_user_setting_likeRouter = require("./service/db/api/app_timetables_user_setting_like/app_timetables_user_setting_like.router");
+const app1_app_timetables_user_setting_viewRouter = require("./service/db/api/app_timetables_user_setting_view/app_timetables_user_setting_view.router");
 //service geolocation
 const geolocationRouter = require("./service/geolocation/geolocation.router");
 //service mail
@@ -85,11 +85,11 @@ app.use("/service/db/api/message_translation", message_translationRouter);
 app.use("/service/db/api/user_account", user_accountRouter);
 app.use("/service/db/api/user_account_like", user_account_likeRouter);
 app.use("/service/db/api/user_account_follow", user_account_followRouter);
-app.use("/service/db/api/app_timetables_place", app_timetables_placeRouter);
-app.use("/service/db/api/app_timetables_theme", app_timetables_themeRouter);
-app.use("/service/db/api/app_timetables_user_setting", app_timetables_user_settingRouter);
-app.use("/service/db/api/app_timetables_user_setting_like", app_timetables_user_setting_likeRouter);
-app.use("/service/db/api/app_timetables_user_setting_view", app_timetables_user_setting_viewRouter);
+app.use("/service/db/api/app_timetables_place", app1_app_timetables_placeRouter);
+app.use("/service/db/api/app_timetables_theme", app1_app_timetables_themeRouter);
+app.use("/service/db/api/app_timetables_user_setting", app1_app_timetables_user_settingRouter);
+app.use("/service/db/api/app_timetables_user_setting_like", app1_app_timetables_user_setting_likeRouter);
+app.use("/service/db/api/app_timetables_user_setting_view", app1_app_timetables_user_setting_viewRouter);
 //service geolocation
 app.use("/service/geolocation", geolocationRouter);
 //service mail
@@ -107,14 +107,14 @@ process.env.TZ = 'UTC';
 //app.use("/.well-known/acme-challenge/",express.static(__dirname + '/.well-known/acme-challenge/'));
 //app.use(express.static(__dirname, { dotfiles: 'allow' }));
 
-//timetable app directories
-app.use('/app_timetables/css',express.static(__dirname + '/app_timetables/css'));
-app.use('/app_timetables/js',express.static(__dirname + '/app_timetables/js'));
-app.use('/app_timetables/info',express.static(__dirname + '/app_timetables/info'));
-app.use('/app_timetables/images',express.static(__dirname + '/app_timetables/images'));
+//app 1 directories
+app.use('/app1/css',express.static(__dirname + '/app1/css'));
+app.use('/app1/js',express.static(__dirname + '/app1/js'));
+app.use('/app1/info',express.static(__dirname + '/app1/info'));
+app.use('/app1/images',express.static(__dirname + '/app1/images'));
 
-//timetable app progressive webapp menifest
-app.get("/app_timetables/manifest.json",function (req, res,next) {
+//app 1 progressive webapp menifest
+app.get("/app1/manifest.json",function (req, res,next) {
     res.type('text/plain')
     res.send(`{
                 "short_name": "${process.env.APP1_PWA_SHORT_NAME}",
@@ -141,18 +141,18 @@ app.get("/app_timetables/manifest.json",function (req, res,next) {
               }`
       );
 });
-//timetable app show profile directly from url
+//app 1 show profile directly from url
 app.get('/:user', function(req, res,next) {
-  //this is only for timetables app
-  if (req.headers.host.substring(0,req.headers.host.indexOf('.')) == 'timetables' &&
+  //this is only for app 1
+  if (req.headers.host.substring(0,req.headers.host.indexOf('.')) == 'app1' &&
       req.params.user !== '' && 
       req.params.user!=='robots.txt' &&
       req.params.user!=='manifest.json' &&
       req.params.user!=='css' &&
       req.params.user!=='images' &&
       req.params.user!=='js' &&
-      req.params.user!=='app_timetables' &&
-      req.params.user!=='app_property_management' &&
+      req.params.user!=='app1' &&
+      req.params.user!=='app2' &&
       req.params.user!=='service') {
       if (req.protocol=='http')
         return res.redirect('https://' + req.headers.host);
@@ -160,8 +160,8 @@ app.get('/:user', function(req, res,next) {
         const {getProfileUsername} = require("./service/db/api/user_account/user_account.service");
         getProfileUsername(req.params.user,null, (err,result)=>{
           if (result){
-            // return timetables app
-            const { getApp } = require("./app_timetables/app");
+            // return app 1
+            const { getApp } = require("./app1/app");
             res.setHeader('Content-Type', 'text/html');
             const app = getApp()
             .then(function(app_result){
@@ -178,11 +178,11 @@ app.get('/:user', function(req, res,next) {
 });
 
 //propertymanagement app directories
-app.use('/app_property_management',express.static(__dirname + '/app_property_management'));
+app.use('/app2',express.static(__dirname + '/app2'));
 //common directories
-app.use('/css',express.static(__dirname + '/css'));
-app.use('/images',express.static(__dirname + '/images'));
-app.use('/js',express.static(__dirname + '/js'));
+app.use('/app0/css',express.static(__dirname + '/app0/css'));
+app.use('/app0/images',express.static(__dirname + '/app0/images'));
+app.use('/app0/js',express.static(__dirname + '/app0/js'));
 
 //info for search bots
 app.get('/robots.txt', function (req, res) {
@@ -195,10 +195,24 @@ app.get('/',function (req, res) {
   //redirect from http to https
   if (req.protocol=='http')
     return res.redirect('https://' + req.headers.host);
+  //redirect naked domain to www
+  if (((req.headers.host.split('.').length - 1) == 1) &&
+      req.headers.host.indexOf('localhost')==0)
+    return res.redirect('https://www.' + req.headers.host);
   switch (req.headers.host.substring(0,req.headers.host.indexOf('.'))){
-    case 'timetables':{
-      //timetables app generates startup html with some data from database
-      const { getApp } = require("./app_timetables/app");
+    case '':
+    case 'www':{
+      res.setHeader('Content-Type', 'text/html');
+      return res.sendFile(__dirname + "/app0/index.html");
+      break;
+    }
+    case 'app0':{
+      return res.sendFile(__dirname + "/app0/info/datamodel.pdf");
+      break;
+    }
+    case 'app1':{
+      //app 1 generates startup html with some data from database
+      const { getApp } = require("./app1/app");
       res.setHeader('Content-Type', 'text/html');
       const app = getApp(1)
       .then(function(app_result){
@@ -206,13 +220,16 @@ app.get('/',function (req, res) {
       });
       break;
     }
-    case 'propertymanagement':{
-      res.sendFile(__dirname + "/app_property_management/datamodel.pdf");
+    case 'app2':{
+      return res.sendFile(__dirname + "/app2/datamodel.pdf");
       break;
     }
     default:{
-      res.setHeader('Content-Type', 'text/html');
-      return res.sendFile(__dirname + "/index.html");
+      //all other subdomains not registered redirect to root
+      if (req.headers.host.indexOf('localhost')>0)
+        return res.redirect('https://localhost');
+      else
+        return res.redirect('https://www.' + req.headers.host);
       break; 
     }
   }

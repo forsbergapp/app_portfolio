@@ -226,10 +226,10 @@ a:active {
 #dialogue_start_content{
 	visibility:visible;
 	font-family: 'Noto Sans';
-	height:300px;
+	height:360px;
 }
 #about_logo {
-	background-image: url('/images/logo.png');
+	background-image: url('/app0/images/logo.png');
 	background-size: cover;
 	background-repeat: no-repeat;
 	height: 50px;

@@ -110,13 +110,11 @@ function get_apps() {
             json = JSON.parse(result);
             let html='';
             for (var i = 0; i < json.data.length; i++) {
-                if (json.data[i].id !==0){
                     html +=
                     `<div class='app_link' onclick='window.open("${json.data[i].url}");'>
                             <div class='app_logo_div'><img class='app_logo' src='${json.data[i].logo}' /></div>
                             <div class='app_name'>${json.data[i].app_name}</div>
                     </div>`;
-                }
             }
             document.getElementById('apps').innerHTML = html;
           }
