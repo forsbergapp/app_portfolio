@@ -538,8 +538,7 @@ module.exports = {
     },
     deleteUser: (req, res) => {
         const id = req.params.id;
-        const salt = genSaltSync(10);
-        checkPassword(req.query.app_id, id, (err, results) => {
+        getUserByUserId(req.query.app_id, id, (err, results) => {
             if (err) {
                 console.log(err);
                 return res.status(500).send(
@@ -548,7 +547,7 @@ module.exports = {
             }
             else {
                 if (results) {
-                    if (compareSync(req.body.password, results.password)){
+                    if (results.provider1_id !=null || results.provider2_id !=null){
                         deleteUserSettingsByUserId(req.query.app_id, id, (err, results) => {
                             deleteUser(req.query.app_id, id, (err, results) => {
                                 if (err) {
@@ -578,16 +577,70 @@ module.exports = {
                         });
                     }
                     else{
-                        console.log('invalid password attempt for user id:' + id);
-                        //invalid password
-                        getMessage(20403, 
-                                    req.query.app_id, 
-                                    req.query.lang_code, (err2,results2)  => {
-                                        return res.status(500).send(
-                                            results2.text
-                                        );
-                                    });
-                    } 
+                        const salt = genSaltSync(10);
+                        checkPassword(req.query.app_id, id, (err, results) => {
+                            if (err) {
+                                console.log(err);
+                                return res.status(500).send(
+                                    err
+                                );
+                            }
+                            else {
+                                if (results) {
+                                    if (compareSync(req.body.password, results.password)){
+                                        deleteUserSettingsByUserId(req.query.app_id, id, (err, results) => {
+                                            deleteUser(req.query.app_id, id, (err, results) => {
+                                                if (err) {
+                                                    console.log(err);
+                                                    return res.status(500).send(
+                                                        err
+                                                    );
+                                                }
+                                                else{
+                                                    if (!results) {
+                                                        //record not found
+                                                        getMessage(20400, 
+                                                            req.query.app_id, 
+                                                            req.query.lang_code, (err2,results2)  => {
+                                                                return res.status(500).send(
+                                                                    results2.text
+                                                                );
+                                                            });
+                                                    }
+                                                    else{
+                                                        return res.status(200).json({
+                                                            success: 1
+                                                        });
+                                                    }
+                                                }
+                                            });
+                                        });
+                                    }
+                                    else{
+                                        console.log('invalid password attempt for user id:' + id);
+                                        //invalid password
+                                        getMessage(20403, 
+                                                    req.query.app_id, 
+                                                    req.query.lang_code, (err2,results2)  => {
+                                                        return res.status(500).send(
+                                                            results2.text
+                                                        );
+                                                    });
+                                    } 
+                                }
+                                else{
+                                    //user not found
+                                    getMessage(20305, 
+                                        req.query.app_id, 
+                                        req.query.lang_code, (err2,results2)  => {
+                                            return res.status(500).send(
+                                                results2.text
+                                            );
+                                        });
+                                }
+                            }
+                        });
+                    }
                 }
                 else{
                     //user not found
@@ -600,7 +653,8 @@ module.exports = {
                         });
                 }
             }
-        });
+        })
+
     },
     userLogin: (req, res) => {
         const body = req.body;

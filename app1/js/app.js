@@ -2541,7 +2541,7 @@ function user_delete(choice=null) {
     var status;
     switch (choice){
         case null:{
-            if (password == '') {
+            if (document.getElementById('user_edit_local').style.display == 'block' && password == '') {
                 //"Please enter password"
                 document.getElementById('setting_input_password_edit').classList.add('input_error');
                 show_error(20304);
