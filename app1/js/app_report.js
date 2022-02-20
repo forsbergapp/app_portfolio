@@ -11,8 +11,8 @@ function printTable(){
 			<head>
 				<meta charset='UTF-8'>
 				<title></title>
-				<link rel="stylesheet" type="text/css" href="/app_timetables/css/app.css" />
-				<link rel="stylesheet" type="text/css" href="/app_timetables/css/app_themes.css" />
+				<link rel="stylesheet" type="text/css" href="/app${global_app_id}/css/app.css" />
+				<link rel="stylesheet" type="text/css" href="/app${global_app_id}/css/app_themes.css" />
 			</head>
 			<body id="printbody">
 				${whatToPrint.outerHTML}
