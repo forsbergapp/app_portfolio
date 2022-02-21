@@ -1360,17 +1360,11 @@ height: 25px;
 }
 
 /* PAPER*/
-/* paper size supported
-A4	210 x 297mm
-*/
 #paper {
 	background-color:white;
-	display: flex;
-	justify-content: center;
-	background-size: 115% 109%;
-	background-position: center;
-	background-repeat: no-repeat;
 	z-index: 0;
+	transform: scale(0.5);
+	transform-origin: 0 11%;
 }
 #paper.A4{
 	width : 210mm;
@@ -1494,7 +1488,12 @@ A4	210 x 297mm
 	#paper {
 		margin: 0 auto;
 		transform: scale(0.7);
+		transform-origin:inherit;
 		position: inherit;
+	}
+	/*iphone fix*/
+	#prayertable_month {
+		padding-top:inherit;
 	}
 	#icons {
 		width: auto;
@@ -1773,12 +1772,6 @@ A4	210 x 297mm
 #prayertable_month {
 	width: 100%;
 	visibility:hidden;
-}
-/*iphone fix*/
-@media only screen and (min-width: 768px) {
-	#prayertable_month {
-		padding-top:inherit;
-	}
 }
 /*font sizes*/
 .prayertable_month #prayertable_month_header{
