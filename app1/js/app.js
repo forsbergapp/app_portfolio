@@ -890,6 +890,10 @@ function set_app_globals_body() {
 /*----------------------------- */
 /* General javascript functions */
 /*----------------------------- */
+function mobile(){
+    return (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent));
+   }
+   
 //function to convert buffert to one string
 function toBase64(arr) {
     //arr = new Uint8Array(arr) if it's an ArrayBuffer
@@ -1837,7 +1841,7 @@ function toolbar_bottom(choice) {
         //print
         case 1:
             {
-                if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))
+                if (mobile())
                     paper.style.display = "block";
                 settings.style.visibility = 'hidden';
                 printTable();
@@ -1846,7 +1850,7 @@ function toolbar_bottom(choice) {
             //day
         case 2:
             {
-                if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))
+                if (mobile())
                     paper.style.display = "block";
                 prayertable_day.style.visibility = 'visible';
                 prayertable_month.style.visibility = 'hidden';
@@ -1860,7 +1864,7 @@ function toolbar_bottom(choice) {
             //month
         case 3:
             {
-                if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))
+                if (mobile())
                     paper.style.display = "block";
                 prayertable_day.style.visibility = 'hidden';
                 prayertable_month.style.visibility = 'visible';
@@ -1874,7 +1878,7 @@ function toolbar_bottom(choice) {
             //year
         case 4:
             {
-                if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))
+                if (mobile())
                     paper.style.display = "block";
                 prayertable_day.style.visibility = 'hidden';
                 prayertable_month.style.visibility = 'hidden';
@@ -1889,7 +1893,7 @@ function toolbar_bottom(choice) {
         case 5:
             {
                 //Hide paper on mobile device when showing settings, scrollbug in background
-                if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))
+                if (mobile())
                     paper.style.display = "none";
                 settings.style.visibility = 'visible';
                 profile.style.visibility = 'hidden';
@@ -1900,7 +1904,7 @@ function toolbar_bottom(choice) {
         case 6:
             {
                 //Hide paper on mobile device when showing settings, scrollbug in background
-                if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))
+                if (mobile())
                     paper.style.display = "none";
                 settings.style.visibility = 'hidden';
                 document.getElementById('profile_detail').classList = '';
@@ -1919,7 +1923,7 @@ function toolbar_bottom(choice) {
         case 7:
             {
                 //Hide paper on mobile device when showing settings, scrollbug in background
-                if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))
+                if (mobile())
                     paper.style.display = "none";
                 settings.style.visibility = 'hidden';
                 document.getElementById('profile_detail').classList = '';
@@ -2140,17 +2144,14 @@ function dialogue_loading(visible){
         document.getElementById('dialogue_spinner').style.visibility='hidden';
     }
 }
-/*
-zoom paper, call att start without zoomvalue so papersize can be set
-and then with zoom value when zooming from toolbar top
-*/
+
 function zoom_paper(zoomvalue = '') {
     var old;
     var old_scale;
+    //called with null as argument at init() then used for zooming
     //even if css set, this property is not set at startup
-    //if (document.getElementById('paper').style.transform==''){
     if (zoomvalue == '') {
-        if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))
+        if (mobile())
             document.getElementById('paper').style.transform = 'scale(0.5)';
         else
             document.getElementById('paper').style.transform = 'scale(0.7)';
@@ -2159,7 +2160,6 @@ function zoom_paper(zoomvalue = '') {
         old_scale = parseFloat(old.substr(old.indexOf("(") + 1, old.indexOf(")") - 1));
         if (zoomvalue == 1) {
             //zoom in, increase value
-            //USE transform scale(), NOT zoom who messes up layout
             document.getElementById('paper').style.transform = 'scale(' + (old_scale + (1 / 10)) + ')';
         } else {
             //zoom out, decrease value
@@ -4054,7 +4054,7 @@ function show_dialogue(dialogue, file = '') {
             {
                 //show_scan_open_mobile
                 //do not show on mobile
-                if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))
+                if (mobile())
                     return null;
                 //show once and store variable in localstorage
                 if (!localStorage.scan_open_mobile) {
