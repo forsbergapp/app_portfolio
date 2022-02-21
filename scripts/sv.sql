@@ -618,7 +618,7 @@ INSERT INTO language_translation (language_id, language_translation_id, text) VA
 INSERT INTO language_translation (language_id, language_translation_id, text) VALUES (144,515,'elamitiska');
 INSERT INTO language_translation (language_id, language_translation_id, text) VALUES (145,515,'embu');
 INSERT INTO language_translation (language_id, language_translation_id, text) VALUES (146,515,'emiliska');
-INSERT INTO language_translation (language_id, language_translation_id, text) VALUES (515,515,'engelska');
+INSERT INTO language_translation (language_id, language_translation_id, text) VALUES (147,515,'engelska');
 INSERT INTO language_translation (language_id, language_translation_id, text) VALUES (148,515,'erjya');
 INSERT INTO language_translation (language_id, language_translation_id, text) VALUES (149,515,'esperanto');
 INSERT INTO language_translation (language_id, language_translation_id, text) VALUES (150,515,'estniska');
