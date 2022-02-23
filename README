@@ -195,23 +195,6 @@ APP_REST_CLIENT_ID									={APP_REST_CLIENT_ID}
 APP_REST_CLIENT_SECRET								={APP_REST_CLIENT_SECRET}
 #App 1 variables
 APP1_ID						        				=1
-APP1_NAME					        				=Timetables
-#Progressive web app variables in manifest.json
-APP1_PWA_SHORT_NAME                     			=Timetables
-APP1_PWA_NAME                           			=Timetables
-APP1_PWA_DESCRIPTION                    			=Advanced traditional muslim salah timetables
-APP1_PWA_STARTURL                       			=/
-APP1_PWA_DISPLAY                        			=standalone
-APP1_PWA_BACKGROUND_COLOR               			=#FFFFFF
-APP1_PWA_THEME_COLOR                    			=#a49775
-APP1_PWA_ORIENTATION                    			=portrait-primary
-APP1_PWA_ICONS1_SRC                     			=/app1/images/pwa/icon-192x192.png
-APP1_PWA_ICONS1_TYPE                    			=image/png
-APP1_PWA_ICONS1_SIZES                   			=192x192
-APP1_PWA_ICONS2_SRC                     			=/app1/images/pwa/icon-512x512.png
-APP1_PWA_ICONS2_TYPE                    			=image/png
-APP1_PWA_ICONS2_SIZES                   			=512x512
-APP1_PWA_SCOPE                          			=/
 #Email variables SERVER
 APP1_SERVICE_EMAIL_HOST                         	={EMAIL_HOST}
 APP1_SERVICE_EMAIL_PORT                         	={EMAIL_PORT}
