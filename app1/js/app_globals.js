@@ -2,7 +2,7 @@ var global_rest_url_base 				= '/service/db/api/';
 var global_rest_app_parameter 			= 'app_parameter/';
 var global_app_id 						= 1;
 
-//app variables
+//GLOBAL APP VARIABLES
 var global_app_rest_client_id;
 var global_app_rest_client_secret;
 var global_app_copyright;
@@ -16,42 +16,6 @@ var global_app_user_provider2_name;
 var global_app_user_provider2_api_version;
 var global_app_user_provider2_api_src;
 var global_app_user_provider2_api_src2;
-
-var global_app_social_link1_url;
-var global_app_social_link2_url;
-var global_app_social_link3_url;
-var global_app_social_link4_url;
-var global_app_social_link1_name;
-var global_app_social_link2_name;
-var global_app_social_link3_name;
-var global_app_social_link4_name;
-//info variables
-var global_info_link_1_url;
-var global_info_link_2_url;
-var global_info_link_3_url;
-var global_info_link_4_url;
-var global_info_link_5_url;
-var global_info_link_1_name;
-var global_info_link_2_name;
-var global_info_link_3_name;
-var global_info_link_4_name;
-var global_info_link_5_name;
-
-//files
-var global_file_image_header_footer_width;
-var global_file_image_header_footer_height;
-var global_file_image_avatar_width;
-var global_file_image_avatar_height;
-var global_file_image_allowed_type1;
-var global_file_image_allowed_type2;
-var global_file_image_allowed_type3;
-var global_file_image_mime_type;
-var global_file_image_max_size;
-
-//authorization
-var global_service_auth_token_url;
-
-//rest
 var global_rest_at;
 var global_rest_dt;
 var global_rest_app;
@@ -78,7 +42,6 @@ var global_rest_user_account_signup;
 var global_rest_user_account_provider;
 var global_rest_user_account_like;
 var global_rest_user_account_follow;
-
 //services
 //geolocation
 var global_service_geolocation;
@@ -89,6 +52,36 @@ var global_service_report;
 //worldcities
 var global_service_worldcities;
 
+//APP 1 VARIABLES
+var global_pwa_scope;
+var global_app_social_link1_url;
+var global_app_social_link2_url;
+var global_app_social_link3_url;
+var global_app_social_link4_url;
+var global_app_social_link1_name;
+var global_app_social_link2_name;
+var global_app_social_link3_name;
+var global_app_social_link4_name;
+var global_info_link_1_url;
+var global_info_link_2_url;
+var global_info_link_3_url;
+var global_info_link_4_url;
+var global_info_link_5_url;
+var global_info_link_1_name;
+var global_info_link_2_name;
+var global_info_link_3_name;
+var global_info_link_4_name;
+var global_info_link_5_name;
+var global_file_image_header_footer_width;
+var global_file_image_header_footer_height;
+var global_file_image_avatar_width;
+var global_file_image_avatar_height;
+var global_file_image_allowed_type1;
+var global_file_image_allowed_type2;
+var global_file_image_allowed_type3;
+var global_file_image_mime_type;
+var global_file_image_max_size;
+var global_service_auth_token_url;
 //REGIONAL SETTINGS
 var global_def_calendar_lang;
 var global_def_locale_ext_prefix;
@@ -239,7 +232,6 @@ var global_qr_color_light;
 var global_qr_logo_width;
 var global_qr_logo_height;
 var global_qr_background_color;
-
 //USER SETTINGS, client
 var global_currentDate;
 var global_CurrentHijriDate;
