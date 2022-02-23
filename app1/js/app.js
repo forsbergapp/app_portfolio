@@ -611,6 +611,8 @@ async function get_app_globals() {
                 if (json.data[i].parameter_name=='SERVICE_WORLDCITIES')
                     global_service_worldcities = json.data[i].parameter_value;
                 //App variables registered for this apps app_id
+                if (json.data[i].parameter_name=='PWA_SCOPE')
+                    global_pwa_scope = json.data[i].parameter_value; 
                 if (json.data[i].parameter_name=='EMAIL_POLICY')
                     global_app_email_policy = json.data[i].parameter_value;
                 if (json.data[i].parameter_name=='EMAIL_DISCLAIMER')
@@ -5452,6 +5454,14 @@ async function init_head(){
     else
         document.getElementById('login_facebook').className = 'login_button_hidden';
 }
+function serviceworker(){
+    if (!window.Promise) {
+        window.Promise = Promise;
+    }
+    if('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js', {scope: global_pwa_scope});
+    }
+}
 function init() {
     dialogue_loading(1);
     SearchAndSetSelectedIndex(navigator.language.toLowerCase(), document.getElementById('setting_select_locale'),1);
@@ -5464,6 +5474,7 @@ function init() {
                             app_show().then(function(){
                                 init_head().then(function(){
                                     dialogue_loading(0);
+                                    serviceworker();
                                 });
                             });
                         });
