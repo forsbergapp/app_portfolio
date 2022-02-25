@@ -74,7 +74,7 @@ CREATE TABLE app_portfolio.app_log (
 );
 
 ALTER TABLE app_portfolio.app_log MODIFY COLUMN app_log.app_module VARCHAR(100) COMMENT
-    'INIT
+    'APP
 AUTH
 MAIL
 GEOLOCATION
@@ -82,7 +82,9 @@ REPORT
 WORLDCITIES';
 
 ALTER TABLE app_portfolio.app_log MODIFY COLUMN app_log.app_module_type VARCHAR(100) COMMENT
-    'INIT 			
+    'HOME				start
+INIT 				app start
+MAINTENANCE
 AUTH_TOKEN_GET
 send:
 MAIL_SIGNUP			1 //Template, signup

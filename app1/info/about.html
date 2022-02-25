@@ -1,6 +1,7 @@
 <div class='info_content'>
-    Worlds most advanced traditional prayer timetable calculation.<br>
-    It works on a mobile or in any supported browser and can be added to the mobile home screen.<br>
+    World's most advanced traditional prayer timetable calculation.<br>
+    This is a progressive web app (PWA) and a single page application (SPA).<br>
+    It works on a mobile or in any supported browser and can be installed in the mobile.<br>
     All timetable calculations are in real time.<br>
     <br>
     <br>
@@ -45,49 +46,6 @@
     - information of follow and like statistics for current logged in user<br>
     - view other users timetables and like them to keep track of liked timetables<br>
     <br>
-    <br>
-    About the app and technology used<br>
-    <br>
-    Progressive web app also called single page web app.<br>
-	Uses REST API with authentication to mySQL or Oracle Database.<br>
-	QR code dynamic generation.<br>
-	Social network functionality with profile, like, follow, view other user settings and statistics.<br>
-	Microservice architecture with monitoring of each microservice activity.<br>
-	Centralized data model error handling of database errors, constraints errors and <br>
-	application errors and showed in users language.<br>
-	Timetables can be displayed with different themes using CSS3.<br>
-	User interface and timetables can be displayed in any language with help of Google Noto Fonts<br>
-	and translation of user interface is fetched from translation objects data model.<br>
-	<br>
-	Server generated PDF and HTML generated timetables are pixel perfect designed using pt font sizes<br>
-	and timetable paper size supported are A4 and Letter.<br>
-	Some HTML server side rendering with database data population is performed at startup.<br>
-	Different application themes available from about dialogue.<br>
-	App is written in pure Javascript and ES6 Javascript is often used in both client and server. <br>
-    Runs in Node.js using express framework.<br>
-	App client is component structured and server-side rendered.<br>
-    <br>
-    <br>
-    App hosted on Oracle Cloud with following servers:<br>
-    <br>
-    server 1 - Oracle Linux 7.9<br>
-    - Nodejs v 17.3.0 using Express framework, managed by pm2<br>
-    - maintaining multiple subdomains and applications<br>
-    - microservices installed:<br>
-    - REST API with json webtoken middleware security accessing<br>
-      Oracle and MySQL databases<br>
-    - report server HTML or PDF output<br>
-    - mail<br>
-    - geolocation<br>
-    - world cities database<br>
-    <br>
-    server 2 - Oracle linux 7.9<br>
-    - Mysql v 8.0.27 database<br>
-    - Oracle SQL Developer Data Modeler designed database<br>
-    <br>
-    Oracle Cloud - Oracle Autonomous JSON Database 21C <br>
-
-    <br>
     Our providers<br>
     <br>
     <div id='about_table'>
@@ -99,7 +57,10 @@
             <div>Oracle Instant Client</div>
             <div>www.oracle.com/database/technologies/instant-client.html</div>
         </div>
-
+        <div class='about_row'>
+            <div>MySQL</div>
+            <div>www.mysql.com</div>
+        </div>
         <div class='about_row'>
             <div>Node.js</div>
             <div>www.nodejs.org</div>
@@ -107,10 +68,6 @@
         <div class='about_row'>
             <div>Express</div>
             <div>www.expressjs.com</div>
-        </div>
-        <div class='about_row'>
-            <div>MySQL</div>
-            <div>www.mysql.com</div>
         </div>
         <div class='about_row'>
             <div>Mapbox GL</div>
