@@ -107,11 +107,18 @@ process.env.TZ = 'UTC';
 //app.use("/.well-known/acme-challenge/",express.static(__dirname + '/.well-known/acme-challenge/'));
 //app.use(express.static(__dirname, { dotfiles: 'allow' }));
 
+//app 0 directories
+app.use('/app0/info',express.static(__dirname + '/app0/info'));
+app.use('/app0/css',express.static(__dirname + '/app0/css'));
+app.use('/app0/images',express.static(__dirname + '/app0/images'));
+app.use('/app0/js',express.static(__dirname + '/app0/js'));
 //app 1 directories
 app.use('/app1/css',express.static(__dirname + '/app1/css'));
 app.use('/app1/js',express.static(__dirname + '/app1/js'));
 app.use('/app1/info',express.static(__dirname + '/app1/info'));
 app.use('/app1/images',express.static(__dirname + '/app1/images'));
+//app 2 directory
+app.use('/app2',express.static(__dirname + '/app2'));
 //app 1 pwa service worker, placed in root
 app.get("/sw.js",function (req, res,next) {
   if (req.headers.host.substring(0,req.headers.host.indexOf('.')) == 'app1') {
@@ -249,13 +256,6 @@ app.get('/:user', function(req, res,next) {
     next();
 });
 
-//propertymanagement app directories
-app.use('/app2',express.static(__dirname + '/app2'));
-//common directories
-app.use('/app0/css',express.static(__dirname + '/app0/css'));
-app.use('/app0/images',express.static(__dirname + '/app0/images'));
-app.use('/app0/js',express.static(__dirname + '/app0/js'));
-
 //info for search bots
 app.get('/robots.txt', function (req, res) {
   res.type('text/plain');
@@ -300,14 +300,17 @@ app.get('/',function (req, res) {
     case '':
     case 'www':{
       res.setHeader('Content-Type', 'text/html');
+      //return res.sendFile(__dirname + "/app0/index_maintenance.html");
       return res.sendFile(__dirname + "/app0/index.html");
       break;
     }
     case 'app0':{
-      return res.sendFile(__dirname + "/app0/info/datamodel.pdf");
+      //return res.sendFile(__dirname + "/app0/index_maintenance.html");
+      return res.sendFile(__dirname + "/app0/info/index.html");
       break;
     }
     case 'app1':{
+      //return res.sendFile(__dirname + "/app1/index_maintenance.html");
       //app 1 generates startup html with some data from database
       const { getApp } = require("./app1/app");
       res.setHeader('Content-Type', 'text/html');
@@ -318,6 +321,7 @@ app.get('/',function (req, res) {
       break;
     }
     case 'app2':{
+      //return res.sendFile(__dirname + "/app0/index_maintenance.html");
       return res.sendFile(__dirname + "/app2/datamodel.pdf");
       break;
     }
