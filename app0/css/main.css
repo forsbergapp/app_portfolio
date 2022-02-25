@@ -1,6 +1,7 @@
 /*Fonts used by settings and userinterface and some themes*/
 /*Noto Sans*/
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&display=swap');
+@import url('https://use.fontawesome.com/releases/v5.13.1/css/all.css');
 body {
 	font-size: 16px;
 	margin: 0;
@@ -65,6 +66,13 @@ body {
 }
 .theme_sun div.ray {
     border-left: 12px solid yellow;
+}
+
+.theme_sun .toolbar_button:hover{
+	color:#6ab344 !important;
+}
+.theme_sun #window_info{
+	background-color:#ffffff;
 }
 /*MOON THEME*/
 .theme_moon{
@@ -153,8 +161,6 @@ a:active {
 /* common dialogue settings*/
 .dialogue{
 	visibility:hidden;
-	position: fixed;
-	z-index: 10;
 	padding-top: 10px;
 	left: 0;
 	top: 0;
@@ -228,6 +234,21 @@ a:active {
 	font-family: 'Noto Sans';
 	height:360px;
 }
+#dialogue_info_content{
+	visibility:visible;
+	font-family: 'Noto Sans';
+	height: 380px;
+}
+#dialogue_info_content #copyright{
+	padding:10px;
+}
+
+#title1, #title2{
+	width: 200px;
+    height: 30px;
+    margin: 0 auto;
+}
+
 #about_logo {
 	background-image: url('/app0/images/logo.png');
 	background-size: cover;
@@ -877,3 +898,36 @@ div.ray8 {
 	  transform: translateX(-2px);
 	}
   }
+#window_info{
+	width:100%;
+	height:100%;
+	visibility:hidden;
+	position: fixed;
+	top:0px;
+	text-align:center;
+	overflow:auto;
+}
+.toolbar_button {
+	background: none;
+	border: none;
+	font-size: 30px;
+	width: 60px;
+	height: 60px;
+	padding:0px;
+	text-transform: uppercase;
+	cursor:pointer;
+}
+#toolbar_btn_close{
+	width:100%;
+}
+#info_diagram, #info_datamodel{
+	cursor:pointer;
+}
+#info img{
+	max-width:90%;
+}
+#info{
+	position:relative;
+	margin:20px;
+	z-index:-1;
+}
