@@ -113,7 +113,8 @@ function get_apps() {
           if (status == 200){
             json = JSON.parse(result);
             let html='';
-            for (var i = 0; i < json.data.length; i++) {
+            //start from app id 1, do not show app id 0
+            for (var i = 1; i < json.data.length; i++) {
                     html +=
                     `<div class='app_link' onclick='window.open("${json.data[i].url}");'>
                             <div class='app_logo_div'><img class='app_logo' src='${json.data[i].logo}' /></div>
@@ -253,6 +254,31 @@ function init(module_type){
     switch (module_type){
         case 'HOME':{
             document.getElementById("toggle_checkbox").checked = true;
+            document.getElementById('info_diagram_img').src=global_img_diagram_img;
+            document.getElementById('info_datamodel_img').src=global_img_datamodel_img;
+            document.getElementById('info_diagram').addEventListener('click', function() {info(1);}, false);
+            document.getElementById('info_datamodel').addEventListener('click', function() {info(2);}, false);
+            document.getElementById('toolbar_btn_close').addEventListener('click', function() {info(3);}, false);
+            document.getElementById('toolbar_btn_zoomout').addEventListener('click', function() {zoom_info(-1);}, false);
+            document.getElementById('toolbar_btn_zoomin').addEventListener('click', function() {zoom_info(1);}, false);
+            document.getElementById('toolbar_btn_left').addEventListener('click', function() {move_info(-1,0);}, false);
+            document.getElementById('toolbar_btn_right').addEventListener('click', function() {move_info(1,0);}, false);
+            document.getElementById('toolbar_btn_up').addEventListener('click', function() {move_info(0,-1);}, false);
+            document.getElementById('toolbar_btn_down').addEventListener('click', function() {move_info(0,1);}, false);
+            
+            document.getElementById( 'start_message' ).addEventListener( 'click', function( event ) {
+                event.preventDefault();
+                document.getElementById( 'dialogue_info_content' ).className = 'dialogue_content dialogue_flip dialogue_flip-side-1';
+                document.getElementById( 'dialogue_start_content' ).className = 'dialogue_content dialogue_flip dialogue_flip-side-2';
+            }, false );
+            document.getElementById( 'info_message' ).addEventListener( 'click', function( event ) {
+                event.preventDefault();
+                document.getElementById( 'dialogue_info_content' ).className = 'dialogue_content dialogue_flip';
+                document.getElementById( 'dialogue_start_content' ).className = 'dialogue_content dialogue_flip';
+            }, false );
+
+            zoom_info('');
+            move_info(null,null);
             get_parameters().then(function(){
                 document.getElementById('copyright').innerHTML = global_app_copyright;
                 document.getElementById('app_email').href='mailto:' + global_app_email;
@@ -261,30 +287,6 @@ function init(module_type){
                     get_gps_from_ip(module_type).then(function(){
                         get_apps();
                     })
-                })
-            })
-            break;
-        }
-        case 'INIT':{
-            document.getElementById('info_diagram_img').src=global_img_diagram_img;
-            document.getElementById('info_datamodel_img').src=global_img_datamodel_img;        
-            get_parameters().then(function(){
-                document.getElementById('copyright').innerHTML = global_app_copyright;
-                document.getElementById('app_email').href='mailto:' + global_app_email;
-                document.getElementById('app_email').innerHTML=global_app_email;
-                get_token().then(function(){
-                    get_gps_from_ip(module_type);
-                    zoom_info('');
-                    move_info(null,null);
-                    document.getElementById('info_diagram').addEventListener('click', function() {info(1);}, false);
-                    document.getElementById('info_datamodel').addEventListener('click', function() {info(2);}, false);
-                    document.getElementById('toolbar_btn_close').addEventListener('click', function() {info(3);}, false);
-                    document.getElementById('toolbar_btn_zoomout').addEventListener('click', function() {zoom_info(-1);}, false);
-                    document.getElementById('toolbar_btn_zoomin').addEventListener('click', function() {zoom_info(1);}, false);
-                    document.getElementById('toolbar_btn_left').addEventListener('click', function() {move_info(-1,0);}, false);
-                    document.getElementById('toolbar_btn_right').addEventListener('click', function() {move_info(1,0);}, false);
-                    document.getElementById('toolbar_btn_up').addEventListener('click', function() {move_info(0,-1);}, false);
-                    document.getElementById('toolbar_btn_down').addEventListener('click', function() {move_info(0,1);}, false);
                 })
             })
             break;

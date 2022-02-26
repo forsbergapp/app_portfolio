@@ -1,7 +1,7 @@
 --
 -- Dumping data for table `app`
 --
-INSERT INTO app_portfolio.app (id, app_name, url, logo) VALUES (0,'App Portfolio', 'https://app0.localhost','/app0/images/logo_app.png');
+INSERT INTO app_portfolio.app (id, app_name, url, logo) VALUES (0,'App Portfolio', 'https://localhost','/app0/images/logo_app.png');
 INSERT INTO app_portfolio.app (id, app_name, url, logo) VALUES (1,'Timetables','https://app1.localhost','/app1/images/logo.png');
 INSERT INTO app_portfolio.app (id, app_name, url, logo) VALUES (2,'Property Management','https://app2.localhost','/app2/images/logo.png');
 --
