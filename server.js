@@ -268,10 +268,6 @@ app.get('/favicon.ico', function (req, res) {
       res.sendFile(__dirname + "/app0/images/favicon.ico");
       break;
     }
-    case 'app0':{
-      res.sendFile(__dirname + "/app0/images/favicon.ico");
-      break;
-    }
     case 'app1':{
       res.sendFile(__dirname + "/app1/images/favicon.ico");
       break;
@@ -302,11 +298,6 @@ app.get('/',function (req, res) {
       res.setHeader('Content-Type', 'text/html');
       //return res.sendFile(__dirname + "/app0/index_maintenance.html");
       return res.sendFile(__dirname + "/app0/index.html");
-      break;
-    }
-    case 'app0':{
-      //return res.sendFile(__dirname + "/app0/index_maintenance.html");
-      return res.sendFile(__dirname + "/app0/info/index.html");
       break;
     }
     case 'app1':{
