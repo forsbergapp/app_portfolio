@@ -2,15 +2,15 @@ var global_module = 'APP';
 var global_app_id = 0;
 var global_app_copyright;
 var global_app_email;
-var global_service_auth_token_url;
+var global_app_rest_client_id;
+var global_app_rest_client_secret;
+var global_service_auth_token;
 var global_service_geolocation;
-var global_service_gps_ip;
+var global_service_geolocation_gps_ip;
 var global_rest_url_base    = 'https://' + location.hostname + '/service/db/api/';
 var global_rest_app;
 var global_rest_app_parameter = 'app_parameter/';
 var global_rest_app_log;
-var global_rest_client_id;
-var global_rest_client_secret;
 var global_rest_dt;
 var global_img_diagram_img = '/app0/info/app_portfolio.jpg';
 var global_img_datamodel_img = '/app0/info/datamodel.jpg';
@@ -68,7 +68,7 @@ function app_log(app_module, app_module_type, app_module_request, app_module_res
 async function get_gps_from_ip(module_type){
     var status;
     var json;
-	await fetch(global_service_geolocation + global_service_gps_ip + '?app_id=' + global_app_id,
+	await fetch(global_service_geolocation + global_service_geolocation_gps_ip + '?app_id=' + global_app_id,
         {method: 'GET',
         headers: {
 			'Content-Type': 'application/json',
@@ -131,10 +131,10 @@ function get_apps() {
 async function get_token() {
 	var status;
     var json;
-    await fetch(global_service_auth_token_url + '?app_id=' + global_app_id + '&app_user_id=',
+    await fetch(global_service_auth_token + '?app_id=' + global_app_id + '&app_user_id=',
     {method: 'POST',
      headers: {
-        'Authorization': 'Basic ' + btoa(global_rest_client_id + ':' + global_rest_client_secret)
+        'Authorization': 'Basic ' + btoa(global_app_rest_client_id + ':' + global_app_rest_client_secret)
         }
     })
       .then(function(response) {
@@ -167,23 +167,23 @@ async function get_parameters() {
                 json = JSON.parse(result);
                 for (var i = 0; i < json.data.length; i++) {
                     if (json.data[i].parameter_name=='APP_REST_CLIENT_ID')
-                        global_rest_client_id = json.data[i].parameter_value;
+                        global_app_rest_client_id = json.data[i].parameter_value;
                     if (json.data[i].parameter_name=='APP_REST_CLIENT_SECRET')
-                        global_rest_client_secret = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='SERVICE_AUTH_TOKEN_URL')
-                        global_service_auth_token_url = 'https://' + location.hostname + json.data[i].parameter_value;
+                        global_app_rest_client_secret = json.data[i].parameter_value;
+                    if (json.data[i].parameter_name=='APP_COPYRIGHT')
+                        global_app_copyright =json.data[i].parameter_value;
+                    if (json.data[i].parameter_name=='APP_EMAIL')
+                        global_app_email = json.data[i].parameter_value;
+                    if (json.data[i].parameter_name=='SERVICE_AUTH_TOKEN')
+                        global_service_auth_token = 'https://' + location.hostname + json.data[i].parameter_value;
                     if (json.data[i].parameter_name=='REST_APP')
                         global_rest_app = json.data[i].parameter_value;
                     if (json.data[i].parameter_name=='REST_APP_LOG')
                         global_rest_app_log = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='COPYRIGHT')
-                        global_app_copyright =json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='EMAIL')
-                        global_app_email = json.data[i].parameter_value;
                     if (json.data[i].parameter_name=='SERVICE_GEOLOCATION')
                         global_service_geolocation = 'https://' + location.hostname + json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='SERVICE_GPS_IP')
-                        global_service_gps_ip = json.data[i].parameter_value;
+                    if (json.data[i].parameter_name=='SERVICE_GEOLOCATION_GPS_IP')
+                        global_service_geolocation_gps_ip = json.data[i].parameter_value;
                 }
             }
             else
