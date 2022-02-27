@@ -23,8 +23,8 @@ const { insertProfileSearch } = require("../profile_search/profile_search.contro
 const { insertUserAccountLogon } = require("../user_account_logon/user_account_logon.controller");
 const { insertUserAccountView } = require("../user_account_view/user_account_view.controller");
 const { createUserSetting, deleteUserSettingsByUserId } = require("../app_timetables_user_setting/app_timetables_user_setting.service");
+const { getParameter } = require ("../app_parameter/app_parameter.service");
 const { sendEmail } = require("../../../../service/mail/mail.controller");
-const { ConsoleMessage } = require("puppeteer");
 
 function get_app_code (app_id, errorNum, message, code, errno, sqlMessage){
     var app_error_code = parseInt((JSON.stringify(errno) ?? JSON.stringify(errorNum)));
@@ -121,36 +121,38 @@ module.exports = {
                     }
                     if (typeof req.body.provider1_id == 'undefined' &&
                         typeof req.body.provider2_id == 'undefined') {
-                        //send email for local users only
-                        const emailData = {
-                            lang_code : req.query.lang_code,
-                            app_id : req.query.app_id,
-                            app_user_id : req.body.user_account_id,
-                            emailType : process.env.APP1_SERVICE_EMAILTYPE_SIGNUP,
-                            toEmail : req.body.email,
-                            validationCode : body.validation_code,
-                            user_language:body.user_language,
-                            user_timezone:body.user_timezone,
-                            user_number_system:body.user_number_system,
-                            user_platform:body.user_platform,
-                            server_remote_addr : req.body.server_remote_addr,
-                            server_user_agent : req.body.server_user_agent,
-                            server_http_host : req.body.server_http_host,
-                            server_http_accept_language : req.body.server_http_accept_language,
-                            user_gps_latitude : req.body.gps_lat_text,
-                            user_gps_longitude : req.body.gps_long_text,
-                            protocol : req.protocol,
-                            host : req.get('host')
-                        }
-                        sendEmail(emailData, (err3, result3) => {
-                            if (err3) {
-                                console.log(err3);
-                                //return res from userSignup
-                                return res.status(500).send(
-                                    err3
-                                );
-                            } 
-                        });
+                        getParameter(0,'SERVICE_MAIL_TYPE_SIGNUP', (err, parameter_value)=>{
+                            //send email for local users only
+                            const emailData = {
+                                lang_code : req.query.lang_code,
+                                app_id : req.query.app_id,
+                                app_user_id : req.body.user_account_id,
+                                emailType : parameter_value,
+                                toEmail : req.body.email,
+                                validationCode : body.validation_code,
+                                user_language:body.user_language,
+                                user_timezone:body.user_timezone,
+                                user_number_system:body.user_number_system,
+                                user_platform:body.user_platform,
+                                server_remote_addr : req.body.server_remote_addr,
+                                server_user_agent : req.body.server_user_agent,
+                                server_http_host : req.body.server_http_host,
+                                server_http_accept_language : req.body.server_http_accept_language,
+                                user_gps_latitude : req.body.gps_lat_text,
+                                user_gps_longitude : req.body.gps_long_text,
+                                protocol : req.protocol,
+                                host : req.get('host')
+                            }
+                            sendEmail(emailData, (err3, result3) => {
+                                if (err3) {
+                                    console.log(err3);
+                                    //return res from userSignup
+                                    return res.status(500).send(
+                                        err3
+                                    );
+                                } 
+                            });  
+                        })
                     } 
                 });
                 return res.status(200).json({
