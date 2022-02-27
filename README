@@ -185,30 +185,7 @@ SERVICE_DB_DB2_POOL_INCREMENT               		=0
 #Oracle Instant Client path
 SERVICE_DB_DB2_LIBDIR								={ORACLE_INSTANT_CLIENT_PATH}
 SERVICE_DB_DB2_CONFIGDIR							={PATH_TNSNAMES_SQLNET_OR_WALLET_FILE_CONTENT}
-SERVICE_URL_GPS_PLACE                   			=http://www.geoplugin.net/extras/location.gp
-SERVICE_URL_GPS_IP                      			=http://www.geoplugin.net/json.gp
-SERVICE_AUTH_TOKEN_SECRET               			=23e78y2Basj22ai
-SERVICE_AUTH_TOKEN_EXPIRE_ACCESS        			=1h
-SERVICE_AUTH_TOKEN_EXPIRE_DATA          			=2d
-#Common app variables
-APP_REST_CLIENT_ID									={APP_REST_CLIENT_ID}
-APP_REST_CLIENT_SECRET								={APP_REST_CLIENT_SECRET}
-#App 1 variables
-APP1_ID						        				=1
-#Email variables SERVER
-APP1_SERVICE_EMAIL_HOST                         	={EMAIL_HOST}
-APP1_SERVICE_EMAIL_PORT                         	={EMAIL_PORT}
-APP1_SERVICE_EMAIL_SECURE                       	=true
-APP1_SERVICE_EMAIL_USERNAME                     	={EMAIL_USERNAME}
-APP1_SERVICE_EMAIL_PASSWORD                     	={EMAIL_PASSWORD}
-APP1_SERVICE_EMAILTYPE_SIGNUP                   	=1
-APP1_SERVICE_EMAILTYPE_SIGNUP_FROM_NAME				={FROM NAME}
-APP1_SERVICE_EMAILTYPE_UNVERIFIED               	=2
-APP1_SERVICE_EMAILTYPE_UNVERIFIED_FROM_NAME			={FROM NAME}
-APP1_SERVICE_EMAILTYPE_RESET_PASSWORD           	=3
-APP1_SERVICE_EMAILTYPE_RESET_PASSWORD_FROM_NAME		={FROM NAME}
-APP1_SERVICE_EMAILTYPE_CHANGE_EMAIL             	=4
-APP1_SERVICE_EMAILTYPE_CHANGE_EMAIL_FROM_NAME		={FROM NAME}
+APP1_ID						                		=1
 
 10. database parameters
 update scripts/import.sql or after import
@@ -216,47 +193,11 @@ update scripts/import.sql or after import
 table app
 set app url and logo
 
-update {} values in table app_parameter
-and
-update info files as needed, some variables are inside the info files
-see following variables:
-INFO_LINKX_URL
-SOCIAL_LINKX_NAME
+update {...} values in table app_parameter
+they have parameter_type_id 1 or 2
+1 = Private shared values sent to app
+2 = Private values with passwords and sensitive data only available from NodeJS server
 
-change other parameters in app_parameter if needed
-
-COPYRIGHT									={COPYRIGHT TEXT}
-EMAIL										={HOMEPAGE EMAIL}
-USER_PROVIDER1_ID							={GOOGLE_ID}
-USER_PROVIDER2_ID							={FACEBOOK_ID}
-APP_REST_CLIENT_ID							={APP_REST_CLIENT_ID}
-APP_REST_CLIENT_SECRET						={APP_REST_CLIENT_SECRET}
-#App1 Timetables variables
-EMAIL_POLICY				        		={EMAIL_POLICY}
-EMAIL_DISCLAIMER				    		={EMAIL_DISCLAIMER}
-EMAIL_TERMS									={EMAIL_TERMS}
-SOCIAL_LINK1_URL				    		={YOUR_SOCIAL_URL1} or empty
-SOCIAL_LINK2_URL				    		={YOUR_SOCIAL_URL2} or empty
-SOCIAL_LINK3_URL				    		={YOUR_SOCIAL_URL3} or empty
-SOCIAL_LINK4_URL				    		={YOUR_SOCIAL_URL4} or empty
-SOCIAL_LINK1_NAME				    		={YOUR_SOCIAL_NAME1} or empty
-SOCIAL_LINK2_NAME				    		={YOUR_SOCIAL_NAME2} or empty
-SOCIAL_LINK3_NAME				    		={YOUR_SOCIAL_NAME3} or empty
-SOCIAL_LINK4_NAME				    		={YOUR_SOCIAL_NAME4} or empty
-INFO_LINK1_URL				        		=/app1/info/privacy_policy.html
-INFO_LINK2_URL				        		=/app1/info/disclaimer.html
-INFO_LINK3_URL				        		=/app1/info/terms.html
-INFO_LINK4_URL				        		=/app1/info/support.html
-INFO_LINK5_URL				        		=/app1/info/about.html
-INFO_LINK1_NAME				    			=Privacy Policy
-INFO_LINK2_NAME				    			=Disclaimer
-INFO_LINK3_NAME				    			=Terms
-INFO_LINK4_NAME				    			=Support
-INFO_LINK5_NAME				    			=About
-GPS_MAP_ACCESS_TOKEN						={MAPBOX_ID}
-
-   observe also some global javascript values in 
-   js/app_globals.js
 
 11. run app on any supported Node.js platform
 
