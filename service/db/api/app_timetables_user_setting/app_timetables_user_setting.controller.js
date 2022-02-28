@@ -11,7 +11,6 @@ module.exports = {
 		const body = req.body;
 		createUserSetting(req.query.app_id, body, (err,results) => {
 			if (err) {
-				console.log(err);
 				return res.status(500).send(
 					err
 				);
@@ -27,7 +26,6 @@ module.exports = {
 		const id = req.params.id;
 		getUserSettingsByUserId(req.query.app_id, id, (err, results) =>{
 			if (err) {
-				console.log(err);
 				return res.status(500).send(
 					err
 				);
@@ -56,7 +54,6 @@ module.exports = {
 			id_current_user = req.query.id;
 		getProfileUserSettings(req.query.app_id, id, id_current_user, (err, results) =>{
 			if (err) {
-				console.log(err);
 				return res.status(500).send(
 					err
 				);
@@ -82,7 +79,6 @@ module.exports = {
 		const id = req.params.id;
 		getUserSetting(req.query.app_id, id, (err, results) =>{
 			if (err) {
-				console.log(err);
 				return res.status(500).send(
 					err
 				);
@@ -98,7 +94,6 @@ module.exports = {
 		const id = req.params.id;
 		updateUserSetting(req.query.app_id, body, id, (err, results) =>{
 			if (err) {
-				console.log(err);
 				return res.status(500).send(
 					err
 				);
@@ -125,7 +120,6 @@ module.exports = {
 		const id = req.params.id;
 		deleteUserSetting(req.query.app_id, id, (err, results) =>{
 			if (err) {
-				console.log(err);
 				return res.status(500).send(
 					err
 				);
@@ -149,7 +143,6 @@ module.exports = {
 		const id = req.params.id;
 		deleteUserSettingsByUserId(req.query.app_id, id, (err, results) =>{
 			if (err) {
-				console.log(err);
 				return res.status(500).send(
 					err
 				);

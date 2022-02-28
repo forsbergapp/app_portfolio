@@ -2,13 +2,14 @@ const { sign } = require("jsonwebtoken");
 const { verify } = require("jsonwebtoken");
 const { createLog} = require ("../../service/db/api/app_log/app_log.service");
 const { getParameter, getParameters_server } = require ("../db/api/app_parameter/app_parameter.service");
+const { createLogAppSE } = require("../../service/log/log.service");
 module.exports = {
     checkToken: (req, res, next) => {
 		let token = req.get("authorization");
 		if (token){
             getParameter(0,'SERVICE_AUTH_TOKEN_SECRET', (err, db_SERVICE_AUTH_TOKEN_SECRET)=>{
 				if (err) {
-                    console.log(err);
+                    createLogAppSE(req.query.app_id, __appfilename, __appfunction, __appline, err);
                 }
                 else{
                     token = token.slice(7);
@@ -36,7 +37,7 @@ module.exports = {
         if(req.headers.authorization){
             getParameters_server(0, (err, result)=>{
                 if (err) {
-                    console.log(err);
+                    createLogAppSE(req.query.app_id, __appfilename, __appfunction, __appline, err);
                 }
                 else{
                     let json = JSON.parse(JSON.stringify(result));

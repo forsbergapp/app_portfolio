@@ -4,7 +4,6 @@ module.exports = {
 	getParameters: (req, res) => {
 		getParameters(req.params.app_id,(err, results) =>{
 			if (err) {
-				console.log(err);
 				return res.status(500).send({
 					success: 0,
 					data: err

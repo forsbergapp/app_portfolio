@@ -8,7 +8,6 @@ likeUser: (req, res) => {
 	const id_like   = req.body.user_account_id;
 	likeUser(req.query.app_id, id,id_like, (err,results) => {
 		if (err) {
-			console.log(err);
 			return res.status(500).send(
 				err
 			);
@@ -25,7 +24,6 @@ unlikeUser: (req, res) => {
 	const id_unlike   = req.body.user_account_id;
 	unlikeUser(req.query.app_id, id,id_unlike, (err,results) => {
 		if (err) {
-			console.log(err);
 			return res.status(500).send(
 				err
 			);

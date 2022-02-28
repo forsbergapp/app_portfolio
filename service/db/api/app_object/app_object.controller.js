@@ -6,7 +6,6 @@ module.exports = {
 		var app_id = req.query.app_id; 
 		getObjects(app_id, lang_code, (err, results) =>{
 			if (err) {
-				console.log(err);
 				return res.status(500).send({
 					success: 0,
 					data: err
