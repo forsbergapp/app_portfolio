@@ -5,7 +5,6 @@ module.exports = {
 		const id = req.query.id;
 		getApp(id, (err, results) =>{
 			if (err) {
-				console.log(err);
 				return res.status(500).send({
 					success: 0,
 					data: err

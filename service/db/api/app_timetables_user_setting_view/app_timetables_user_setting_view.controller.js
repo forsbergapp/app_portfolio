@@ -7,7 +7,6 @@ module.exports = {
 		req.body.client_user_agent = req.headers["user-agent"];
         insertUserSettingView(req.query.app_id, req.body, (err,results) => {
             if (err) {
-                console.log(err);
                 return res.status(500).send(
                     err
                 );

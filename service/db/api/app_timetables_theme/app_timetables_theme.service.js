@@ -1,5 +1,5 @@
 const {oracledb, get_pool} = require ("../../config/database");
-
+const { createLogAppSE } = require("../../../../service/log/log.service");
 module.exports = {
 	getThemes: (app_id,callBack) => {
 		if (process.env.SERVICE_DB_USE == 1) {
@@ -29,7 +29,7 @@ module.exports = {
 				[],
 				(error, results, fields) => {
 					if (error){
-						console.log('getThemes err:' + error);
+						createLogAppSE(app_id, __appfilename, __appfunction, __appline, error);
 						return callBack(error);
 					}
 					return callBack(null, results);
@@ -66,7 +66,7 @@ module.exports = {
 					{},
 					(err,result) => {
 						if (err) {
-							console.log('getThemes err:' + err);
+							createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
 							return callBack(err);
 						}
 						else{
@@ -74,13 +74,14 @@ module.exports = {
 						}
 					});
 				}catch (err) {
+					createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
 					return callBack(err.message);
 				} finally {
 					if (pool2) {
 						try {
 							await pool2.close(); 
 						} catch (err) {
-							console.error(err);
+							createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
 						}
 					}
 				}
