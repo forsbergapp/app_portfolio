@@ -7,7 +7,6 @@ module.exports = {
 		var lang_code = req.query.lang_code;
 		getMessage(code, app_id, lang_code, (err, results) =>{
 			if (err) {
-				console.log(err);
 				return res.status(500).send({
 					success: 0,
 					data: err

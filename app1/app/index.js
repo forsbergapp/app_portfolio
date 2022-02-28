@@ -1,10 +1,11 @@
 const fs = require("fs");
+const { createLogAppSE } = require("../../service/log/log.service");
 module.exports = {
     getApp:(app_id) => {
         return new Promise(function (resolve, reject){
             fs.readFile(__dirname + '/index.html', 'utf-8', (err, app_result) => {
                 if (err) {
-                    console.log('/ err:' + err);
+                    createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
                     resolve (err);  
                 }
                 else{

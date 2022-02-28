@@ -1,5 +1,5 @@
 const {oracledb, get_pool} = require ("../../config/database");
-
+const { createLogAppSE } = require("../../../../service/log/log.service");
 module.exports = {
     create: (app_id, data, callBack) => {
         if (process.env.SERVICE_DB_USE == 1) {
@@ -55,7 +55,7 @@ module.exports = {
                 ],
                 (error, results, fields) => {
                     if (error) {
-						console.log('create err:' + error);
+						createLogAppSE(app_id, __appfilename, __appfunction, __appline, error);
                         return callBack(error);
                     }
                     return callBack(null, results);
@@ -147,7 +147,7 @@ module.exports = {
                         },
                         (err, result) => {
                             if (err) {
-                                console.log('create SQL err:' + err);
+                                createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
                                 return callBack(err);
                             } else {
                                 //Fetch id from rowid returned from Oracle
@@ -167,19 +167,21 @@ module.exports = {
 											},
 											(err_id2, result_id2) => {
 												if (err_id2) {
+													createLogAppSE(app_id, __appfilename, __appfunction, __appline, err_id2);
 													return callBack(err_id2);
 												} else {
 													return callBack(null, result_id2.rows[0]);
 												}
 											});
 									}catch (err) {
+										createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
 										return callBack(err);
 									} finally {
 										if (pool3) {
 											try {
 												await pool3.close(); 
 											} catch (err) {
-												console.error(err);
+												createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
 											}
 										}
 									}
@@ -188,13 +190,14 @@ module.exports = {
                             }
                         });
                 } catch (err) {
+					createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
                     return callBack(err);
                 } finally {
                     if (pool2) {
 						try {
 							await pool2.close(); 
 						} catch (err) {
-							console.error(err);
+							createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
 						}
 					}
                 }
@@ -216,6 +219,7 @@ module.exports = {
                 ],
                 (error, results, fields) => {
                     if (error) {
+						createLogAppSE(app_id, __appfilename, __appfunction, __appline, error);
                         return callBack(error);
                     }
                     //can be one of these formats:
@@ -236,25 +240,16 @@ module.exports = {
 								validation_code = null,
 								date_modified = SYSDATE
 						  WHERE id = :id
-						    AND validation_code = :validation_code `, {
+						    AND validation_code = :validation_code `, 
+						{
                             id: id,
                             validation_code: validation_code
                         },
                         (err2, result2) => {
                             if (err2) {
+								createLogAppSE(app_id, __appfilename, __appfunction, __appline, err2);
                                 return callBack(err2);
                             } else {
-                                //result kan be {"rowsAffected":0} here
-                                //
-                                //but return callBack(null, result); 
-                                //can be one of these formats:
-                                //"{"success":1,"items":[{"rowsAffected":0}]}"
-                                //"{"success":1,"items":[{"lastRowid":"AAAWv1AAAAAAAVHAAA","rowsAffected":1}]}"
-                                //only checked if count=1 is used
-                                //
-                                //console.log('JSON.stringify(result):' + JSON.stringify(result2));
-                                //returns "{"success":1,"items":[{"count":0, "affectedRows": 0}]}"
-
                                 var oracle_json = {
                                     "count": result2.rowsAffected,
                                     "affectedRows": result2.rowsAffected
@@ -264,13 +259,14 @@ module.exports = {
                             }
                         });
                 } catch (err) {
+					createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
                     return callBack(err.message);
                 } finally {
                     if (pool2) {
 						try {
 							await pool2.close(); 
 						} catch (err) {
-							console.error(err);
+							createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
 						}
 					}
                 }
@@ -312,9 +308,11 @@ module.exports = {
 					u.provider2_image_url,
 					u.provider2_email
 				FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account u
-				WHERE u.id = ? `, [id],
+				WHERE u.id = ? `, 
+				[id],
                 (error, results, fields) => {
                     if (error) {
+						createLogAppSE(app_id, __appfilename, __appfunction, __appline, error);
                         return callBack(error);
                     }
                     return callBack(null, results[0]);
@@ -327,54 +325,57 @@ module.exports = {
                     pool2 = await oracledb.getConnection(get_pool(app_id));
                     const result = await pool2.execute(
                         `SELECT
-						u.id "id",
-						u.bio "bio",
-						(SELECT MAX(ul.date_created)
-						   FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_logon ul
-						  WHERE ul.user_account_id = u.id
-							AND ul.result=1) "last_logontime",
-						u.private "private",
-						u.user_level "user_level",
-						u.date_created "date_created",
-						u.date_modified "date_modified",
-						u.username "username",
-						u.password "password",
-						u.password_reminder "password_reminder",
-						u.email "email",
-						u.avatar "avatar",
-						u.validation_code "validation_code",
-						u.active "active",
-						u.provider1_id "provider1_id",
-						u.provider1_first_name "provider1_first_name",
-						u.provider1_last_name "provider1_last_name",
-						u.provider1_image "provider1_image",
-						u.provider1_image_url "provider1_image_url",
-						u.provider1_email "provider1_email",
-						u.provider2_id "provider2_id",
-						u.provider2_first_name "provider2_first_name",
-						u.provider2_last_name "provider2_last_name",
-						u.provider2_image "provider2_image",
-						u.provider2_image_url "provider2_image_url",
-						u.provider2_email "provider2_email"
-					FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account u
-					WHERE u.id = :id `, {
+							u.id "id",
+							u.bio "bio",
+							(SELECT MAX(ul.date_created)
+							FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_logon ul
+							WHERE ul.user_account_id = u.id
+								AND ul.result=1) "last_logontime",
+							u.private "private",
+							u.user_level "user_level",
+							u.date_created "date_created",
+							u.date_modified "date_modified",
+							u.username "username",
+							u.password "password",
+							u.password_reminder "password_reminder",
+							u.email "email",
+							u.avatar "avatar",
+							u.validation_code "validation_code",
+							u.active "active",
+							u.provider1_id "provider1_id",
+							u.provider1_first_name "provider1_first_name",
+							u.provider1_last_name "provider1_last_name",
+							u.provider1_image "provider1_image",
+							u.provider1_image_url "provider1_image_url",
+							u.provider1_email "provider1_email",
+							u.provider2_id "provider2_id",
+							u.provider2_first_name "provider2_first_name",
+							u.provider2_last_name "provider2_last_name",
+							u.provider2_image "provider2_image",
+							u.provider2_image_url "provider2_image_url",
+							u.provider2_email "provider2_email"
+						FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account u
+						WHERE u.id = :id `, 
+						{
                             id: id
                         },
                         (err, result) => {
                             if (err) {
+								createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
                                 return callBack(err);
                             } else {
                                 return callBack(null, result.rows[0]);
                             }
                         });
                 } catch (err) {
+					createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
                     return callBack(err.message);
                 } finally {
                     if (pool2) {
 						try {
 							await pool2.close(); 
 						} catch (err) {
-							console.error(err);
+							createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
 						}
 					}
                 }
@@ -437,12 +438,14 @@ module.exports = {
 					  WHERE u_liked_current_user.user_account_id_like = u.id
 						AND u_liked_current_user.user_account_id = ?)      			liked
 				FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account u
-				WHERE u.id = ? `, [id_current_user,
-                    id_current_user,
-                    id
+				WHERE u.id = ? `, 
+				[id_current_user,
+                 id_current_user,
+                 id
                 ],
                 (error, results, fields) => {
                     if (error) {
+						createLogAppSE(app_id, __appfilename, __appfunction, __appline, error);
                         return callBack(error);
                     }
                     return callBack(null, results[0]);
@@ -455,77 +458,80 @@ module.exports = {
                     pool2 = await oracledb.getConnection(get_pool(app_id));
                     const result = await pool2.execute(
                         `SELECT
-						u.id "id",
-						u.bio "bio",
-						u.private "private",
-						u.user_level "user_level",
-						u.date_created "date_created",
-						u.username "username",
-						u.avatar "avatar",
-						u.provider1_id "provider1_id",
-						u.provider1_first_name "provider1_first_name",
-						u.provider1_last_name "provider1_last_name",
-						u.provider1_image "provider1_image",
-						u.provider1_image_url "provider1_image_url",
-						u.provider2_id "provider2_id",
-						u.provider2_first_name "provider2_first_name",
-						u.provider2_last_name "provider2_last_name",
-						u.provider2_image "provider2_image",
-						u.provider2_image_url "provider2_image_url",
-						(SELECT COUNT(u_following.user_account_id)   
-						   FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_follow  u_following
-						  WHERE u_following.user_account_id = u.id) 					"count_following",
-						(SELECT COUNT(u_followed.user_account_id_follow) 
-						   FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_follow  u_followed
-						  WHERE u_followed.user_account_id_follow = u.id) 				"count_followed",
-						(SELECT COUNT(u_likes.user_account_id)
-						   FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_like    u_likes
-						  WHERE u_likes.user_account_id = u.id ) 						"count_likes",
-						(SELECT COUNT(u_likes.user_account_id_like)
-						   FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_like    u_likes
-						  WHERE u_likes.user_account_id_like = u.id )					"count_liked",
-						(SELECT COUNT(DISTINCT us.user_account_id)
-						   FROM ${process.env.SERVICE_DB_DB2_NAME}.app_timetables_user_setting_like u_like,
-						   		${process.env.SERVICE_DB_DB2_NAME}.app_timetables_user_setting us
-						  WHERE u_like.user_account_id = u.id
-						    AND u_like.user_setting_id = us.id)							"count_user_setting_likes",
-						(SELECT COUNT(DISTINCT u_like.user_account_id)
-						   FROM ${process.env.SERVICE_DB_DB2_NAME}.app_timetables_user_setting_like u_like,
-						   		${process.env.SERVICE_DB_DB2_NAME}.app_timetables_user_setting us
-						  WHERE us.user_account_id = u.id
-							AND u_like.user_setting_id = us.id)							"count_user_setting_liked",
-						(SELECT COUNT(u_views.user_account_id_view)
-						   FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_view    u_views
-						  WHERE u_views.user_account_id_view = u.id ) 					"count_views",
-						(SELECT COUNT(u_followed_current_user.user_account_id)
-						   FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_follow  u_followed_current_user 
-						  WHERE u_followed_current_user.user_account_id_follow = u.id
-							AND u_followed_current_user.user_account_id = :user_accound_id_current_user1) 	"followed",
-						(SELECT COUNT(u_liked_current_user.user_account_id)  
-						   FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_like    u_liked_current_user
-						  WHERE u_liked_current_user.user_account_id_like = u.id
-							AND u_liked_current_user.user_account_id = :user_accound_id_current_user2)      "liked"
-					FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account u
-					WHERE u.id = :id `, {
+							u.id "id",
+							u.bio "bio",
+							u.private "private",
+							u.user_level "user_level",
+							u.date_created "date_created",
+							u.username "username",
+							u.avatar "avatar",
+							u.provider1_id "provider1_id",
+							u.provider1_first_name "provider1_first_name",
+							u.provider1_last_name "provider1_last_name",
+							u.provider1_image "provider1_image",
+							u.provider1_image_url "provider1_image_url",
+							u.provider2_id "provider2_id",
+							u.provider2_first_name "provider2_first_name",
+							u.provider2_last_name "provider2_last_name",
+							u.provider2_image "provider2_image",
+							u.provider2_image_url "provider2_image_url",
+							(SELECT COUNT(u_following.user_account_id)   
+							FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_follow  u_following
+							WHERE u_following.user_account_id = u.id) 					"count_following",
+							(SELECT COUNT(u_followed.user_account_id_follow) 
+							FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_follow  u_followed
+							WHERE u_followed.user_account_id_follow = u.id) 				"count_followed",
+							(SELECT COUNT(u_likes.user_account_id)
+							FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_like    u_likes
+							WHERE u_likes.user_account_id = u.id ) 						"count_likes",
+							(SELECT COUNT(u_likes.user_account_id_like)
+							FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_like    u_likes
+							WHERE u_likes.user_account_id_like = u.id )					"count_liked",
+							(SELECT COUNT(DISTINCT us.user_account_id)
+							FROM ${process.env.SERVICE_DB_DB2_NAME}.app_timetables_user_setting_like u_like,
+									${process.env.SERVICE_DB_DB2_NAME}.app_timetables_user_setting us
+							WHERE u_like.user_account_id = u.id
+								AND u_like.user_setting_id = us.id)							"count_user_setting_likes",
+							(SELECT COUNT(DISTINCT u_like.user_account_id)
+							FROM ${process.env.SERVICE_DB_DB2_NAME}.app_timetables_user_setting_like u_like,
+									${process.env.SERVICE_DB_DB2_NAME}.app_timetables_user_setting us
+							WHERE us.user_account_id = u.id
+								AND u_like.user_setting_id = us.id)							"count_user_setting_liked",
+							(SELECT COUNT(u_views.user_account_id_view)
+							FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_view    u_views
+							WHERE u_views.user_account_id_view = u.id ) 					"count_views",
+							(SELECT COUNT(u_followed_current_user.user_account_id)
+							FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_follow  u_followed_current_user 
+							WHERE u_followed_current_user.user_account_id_follow = u.id
+								AND u_followed_current_user.user_account_id = :user_accound_id_current_user1) 	"followed",
+							(SELECT COUNT(u_liked_current_user.user_account_id)  
+							FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_like    u_liked_current_user
+							WHERE u_liked_current_user.user_account_id_like = u.id
+								AND u_liked_current_user.user_account_id = :user_accound_id_current_user2)      "liked"
+						FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account u
+						WHERE u.id = :id `, 
+						{
                             user_accound_id_current_user1: id_current_user,
                             user_accound_id_current_user2: id_current_user,
                             id: id
                         },
                         (err, result) => {
                             if (err) {
+								createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
                                 return callBack(err);
                             } else {
                                 return callBack(null, result.rows[0]);
                             }
                         });
                 } catch (err) {
+					createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
                     return callBack(err.message);
                 } finally {
                     if (pool2) {
 						try {
 							await pool2.close(); 
 						} catch (err) {
-							console.error(err);
+							createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
 						}
 					}
                 }
@@ -589,12 +595,14 @@ module.exports = {
 						AND u_liked_current_user.user_account_id = ?)      		liked
 				FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account u
 				WHERE u.username = ? 
-				AND u.active = 1 `, [id_current_user,
-                    id_current_user,
-                    username
+				AND u.active = 1 `, 
+				[id_current_user,
+                 id_current_user,
+                 username
                 ],
                 (error, results, fields) => {
                     if (error) {
+						createLogAppSE(app_id, __appfilename, __appfunction, __appline, error);
                         return callBack(error);
                     }
                     return callBack(null, results[0]);
@@ -607,78 +615,81 @@ module.exports = {
                     pool2 = await oracledb.getConnection(get_pool(app_id));
                     const result = await pool2.execute(
                         `SELECT
-						u.id "id",
-						u.bio "bio",
-						u.private "private",
-						u.user_level "user_level",
-						u.date_created "date_created",
-						u.username "username",
-						u.avatar "avatar",
-						u.provider1_id "provider1_id",
-						u.provider1_first_name "provider1_first_name",
-						u.provider1_last_name "provider1_last_name",
-						u.provider1_image "provider1_image",
-						u.provider1_image_url "provider1_image_url",
-						u.provider2_id "provider2_id",
-						u.provider2_first_name "provider2_first_name",
-						u.provider2_last_name "provider2_last_name",
-						u.provider2_image "provider2_image",
-						u.provider2_image_url "provider2_image_url",
-						(SELECT COUNT(u_following.user_account_id)   
-						   FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_follow  u_following
-						  WHERE u_following.user_account_id = u.id) 					"count_following",
-						(SELECT COUNT(u_followed.user_account_id_follow) 
-						   FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_follow  u_followed
-						  WHERE u_followed.user_account_id_follow = u.id) 				"count_followed",
-						(SELECT COUNT(u_likes.user_account_id)
-						   FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_like    u_likes
-						  WHERE u_likes.user_account_id = u.id ) 						"count_likes",
-						(SELECT COUNT(u_likes.user_account_id_like)
-						   FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_like    u_likes
-						  WHERE u_likes.user_account_id_like = u.id )					"count_liked",
-						(SELECT COUNT(DISTINCT us.user_account_id)
-						   FROM ${process.env.SERVICE_DB_DB2_NAME}.app_timetables_user_setting_like u_like,
-						   		${process.env.SERVICE_DB_DB2_NAME}.app_timetables_user_setting us
-						  WHERE u_like.user_account_id = u.id
-							AND u_like.user_setting_id = us.id)							"count_user_setting_likes",
-						(SELECT COUNT(DISTINCT u_like.user_account_id)
-						   FROM ${process.env.SERVICE_DB_DB2_NAME}.app_timetables_user_setting_like u_like,
-						   		${process.env.SERVICE_DB_DB2_NAME}.app_timetables_user_setting us
-						  WHERE us.user_account_id = u.id
-							AND u_like.user_setting_id = us.id)							"count_user_setting_liked",
-						(SELECT COUNT(u_views.user_account_id_view)
-						   FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_view    u_views
-						  WHERE u_views.user_account_id_view = u.id ) 					"count_views",
-						(SELECT COUNT(u_followed_current_user.user_account_id)
-						   FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_follow  u_followed_current_user 
-						  WHERE u_followed_current_user.user_account_id_follow = u.id
-							AND u_followed_current_user.user_account_id = :user_accound_id_current_user1) 	"followed",
-						(SELECT COUNT(u_liked_current_user.user_account_id)  
-						   FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_like    u_liked_current_user
-						  WHERE u_liked_current_user.user_account_id_like = u.id
-							AND u_liked_current_user.user_account_id = :user_accound_id_current_user2)      "liked"
-					FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account u
-					WHERE u.username = :username 
-					AND u.active = 1 `, {
+							u.id "id",
+							u.bio "bio",
+							u.private "private",
+							u.user_level "user_level",
+							u.date_created "date_created",
+							u.username "username",
+							u.avatar "avatar",
+							u.provider1_id "provider1_id",
+							u.provider1_first_name "provider1_first_name",
+							u.provider1_last_name "provider1_last_name",
+							u.provider1_image "provider1_image",
+							u.provider1_image_url "provider1_image_url",
+							u.provider2_id "provider2_id",
+							u.provider2_first_name "provider2_first_name",
+							u.provider2_last_name "provider2_last_name",
+							u.provider2_image "provider2_image",
+							u.provider2_image_url "provider2_image_url",
+							(SELECT COUNT(u_following.user_account_id)   
+							FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_follow  u_following
+							WHERE u_following.user_account_id = u.id) 					"count_following",
+							(SELECT COUNT(u_followed.user_account_id_follow) 
+							FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_follow  u_followed
+							WHERE u_followed.user_account_id_follow = u.id) 				"count_followed",
+							(SELECT COUNT(u_likes.user_account_id)
+							FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_like    u_likes
+							WHERE u_likes.user_account_id = u.id ) 						"count_likes",
+							(SELECT COUNT(u_likes.user_account_id_like)
+							FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_like    u_likes
+							WHERE u_likes.user_account_id_like = u.id )					"count_liked",
+							(SELECT COUNT(DISTINCT us.user_account_id)
+							FROM ${process.env.SERVICE_DB_DB2_NAME}.app_timetables_user_setting_like u_like,
+									${process.env.SERVICE_DB_DB2_NAME}.app_timetables_user_setting us
+							WHERE u_like.user_account_id = u.id
+								AND u_like.user_setting_id = us.id)							"count_user_setting_likes",
+							(SELECT COUNT(DISTINCT u_like.user_account_id)
+							FROM ${process.env.SERVICE_DB_DB2_NAME}.app_timetables_user_setting_like u_like,
+									${process.env.SERVICE_DB_DB2_NAME}.app_timetables_user_setting us
+							WHERE us.user_account_id = u.id
+								AND u_like.user_setting_id = us.id)							"count_user_setting_liked",
+							(SELECT COUNT(u_views.user_account_id_view)
+							FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_view    u_views
+							WHERE u_views.user_account_id_view = u.id ) 					"count_views",
+							(SELECT COUNT(u_followed_current_user.user_account_id)
+							FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_follow  u_followed_current_user 
+							WHERE u_followed_current_user.user_account_id_follow = u.id
+								AND u_followed_current_user.user_account_id = :user_accound_id_current_user1) 	"followed",
+							(SELECT COUNT(u_liked_current_user.user_account_id)  
+							FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_like    u_liked_current_user
+							WHERE u_liked_current_user.user_account_id_like = u.id
+								AND u_liked_current_user.user_account_id = :user_accound_id_current_user2)      "liked"
+						FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account u
+						WHERE u.username = :username 
+						AND u.active = 1 `, 
+						{
                             user_accound_id_current_user1: id_current_user,
                             user_accound_id_current_user2: id_current_user,
                             username: username
                         },
                         (err, result) => {
                             if (err) {
+								createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
                                 return callBack(err);
                             } else {
                                 return callBack(null, result.rows[0]);
                             }
                         });
                 } catch (err) {
+					createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
                     return callBack(err.message);
                 } finally {
                     if (pool2) {
 						try {
 							await pool2.close(); 
 						} catch (err) {
-							console.error(err);
+							createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
 						}
 					}
                 }
@@ -713,6 +724,7 @@ module.exports = {
                 ],
                 (error, results, fields) => {
                     if (error) {
+						createLogAppSE(app_id, __appfilename, __appfunction, __appline, error);
                         return callBack(error);
                     }
                     return callBack(null, results);
@@ -749,19 +761,21 @@ module.exports = {
                         },
                         (err, result) => {
                             if (err) {
+								createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
                                 return callBack(err);
                             } else {
                                 return callBack(null, result.rows);
                             }
                         });
                 } catch (err) {
+					createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
                     return callBack(err.message);
                 } finally {
                     if (pool2) {
 						try {
 							await pool2.close(); 
 						} catch (err) {
-							console.error(err);
+							createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
 						}
 					}
                 }
@@ -773,140 +787,142 @@ module.exports = {
         if (process.env.SERVICE_DB_USE == 1) {
             get_pool(app_id).query(
                 `SELECT *
-			   FROM (SELECT 'FOLLOWING' detail,
-							u.id,
-							u.provider1_id,
-							u.provider2_id,
-							CONVERT(u.avatar USING UTF8) avatar,
-							CONVERT(u.provider1_image USING UTF8) provider1_image,
-							u.provider1_image_url,
-							CONVERT(u.provider2_image USING UTF8) provider2_image,
-							u.provider2_image_url,
-							u.username,
-							u.provider1_first_name,
-							u.provider2_first_name
-					FROM    ${process.env.SERVICE_DB_DB1_NAME}.user_account_follow u_follow,
-							${process.env.SERVICE_DB_DB1_NAME}.user_account u
-					WHERE  u_follow.user_account_id = ?
-					AND    u.id = u_follow.user_account_id_follow
-					AND    u.active = 1
-					AND    1 = ?
-					UNION ALL
-					SELECT 'FOLLOWED' detail,
-							u.id,
-							u.provider1_id,
-							u.provider2_id,
-							CONVERT(u.avatar USING UTF8) avatar,
-							CONVERT(u.provider1_image USING UTF8) provider1_image,
-							u.provider1_image_url,
-							CONVERT(u.provider2_image USING UTF8) provider2_image,
-							u.provider2_image_url,
-							u.username,
-							u.provider1_first_name,
-							u.provider2_first_name
-					FROM    ${process.env.SERVICE_DB_DB1_NAME}.user_account_follow u_followed,
-							${process.env.SERVICE_DB_DB1_NAME}.user_account u
-					WHERE  u_followed.user_account_id_follow = ?
-					AND    u.id = u_followed.user_account_id
-					AND    u.active = 1
-					AND    2 = ?
-					UNION ALL
-					SELECT 'LIKE_USER' detail,
-							u.id,
-							u.provider1_id,
-							u.provider2_id,
-							CONVERT(u.avatar USING UTF8) avatar,
-							CONVERT(u.provider1_image USING UTF8) provider1_image,
-							u.provider1_image_url,
-							CONVERT(u.provider2_image USING UTF8) provider2_image,
-							u.provider2_image_url,
-							u.username,
-							u.provider1_first_name,
-							u.provider2_first_name
-					FROM    ${process.env.SERVICE_DB_DB1_NAME}.user_account_like u_like,
-							${process.env.SERVICE_DB_DB1_NAME}.user_account u
-					WHERE  u_like.user_account_id = ?
-					AND    u.id = u_like.user_account_id_like
-					AND    u.active = 1
-					AND    3 = ?
-					UNION ALL
-					SELECT 'LIKED_USER' detail,
-							u.id,
-							u.provider1_id,
-							u.provider2_id,
-							CONVERT(u.avatar USING UTF8) avatar,
-							CONVERT(u.provider1_image USING UTF8) provider1_image,
-							u.provider1_image_url,
-							CONVERT(u.provider2_image USING UTF8) provider2_image,
-							u.provider2_image_url,
-							u.username,
-							u.provider1_first_name,
-							u.provider2_first_name
-					FROM    ${process.env.SERVICE_DB_DB1_NAME}.user_account_like u_liked,
-							${process.env.SERVICE_DB_DB1_NAME}.user_account u
-					WHERE  u_liked.user_account_id_like = ?
-					AND    u.id = u_liked.user_account_id
-					AND    u.active = 1
-					AND    4 = ?
-					UNION ALL
-					SELECT 'LIKE_SETTING' detail,
-							u.id,
-							u.provider1_id,
-							u.provider2_id,
-							CONVERT(u.avatar USING UTF8) avatar,
-							CONVERT(u.provider1_image USING UTF8) provider1_image,
-							u.provider1_image_url,
-							CONVERT(u.provider2_image USING UTF8) provider2_image,
-							u.provider2_image_url,
-							u.username,
-							u.provider1_first_name,
-							u.provider2_first_name
-					FROM   ${process.env.SERVICE_DB_DB1_NAME}.user_account u
-					WHERE  u.id IN (SELECT us.user_account_id
-									FROM   ${process.env.SERVICE_DB_DB1_NAME}.app_timetables_user_setting_like u_like,
-										   ${process.env.SERVICE_DB_DB1_NAME}.app_timetables_user_setting us
-									WHERE  u_like.user_account_id = ?
-									AND    us.id = u_like.user_setting_id)
-					AND    u.active = 1
-					AND    5 = ?
-					UNION ALL
-					SELECT 'LIKED_SETTING' detail,
-							u.id,
-							u.provider1_id,
-							u.provider2_id,
-							CONVERT(u.avatar USING UTF8) avatar,
-							CONVERT(u.provider1_image USING UTF8) provider1_image,
-							u.provider1_image_url,
-							CONVERT(u.provider2_image USING UTF8) provider2_image,
-							u.provider2_image_url,
-							u.username,
-							u.provider1_first_name,
-							u.provider2_first_name
-					FROM   ${process.env.SERVICE_DB_DB1_NAME}.user_account u
-					WHERE  u.id IN (SELECT u_like.user_account_id
-									FROM   ${process.env.SERVICE_DB_DB1_NAME}.app_timetables_user_setting us,
-										   ${process.env.SERVICE_DB_DB1_NAME}.app_timetables_user_setting_like u_like
-									WHERE  us.user_account_id = ?
-									AND    us.id = u_like.user_setting_id)
-					AND    u.active = 1
-					AND    6 = ?) t
-				ORDER BY 1, COALESCE(username, 
-									 provider1_first_name,
-									 provider2_first_name)`, [id,
-                    detailchoice,
-                    id,
-                    detailchoice,
-                    id,
-                    detailchoice,
-                    id,
-                    detailchoice,
-                    id,
-                    detailchoice,
-                    id,
-                    detailchoice
+					FROM (SELECT 'FOLLOWING' detail,
+									u.id,
+									u.provider1_id,
+									u.provider2_id,
+									CONVERT(u.avatar USING UTF8) avatar,
+									CONVERT(u.provider1_image USING UTF8) provider1_image,
+									u.provider1_image_url,
+									CONVERT(u.provider2_image USING UTF8) provider2_image,
+									u.provider2_image_url,
+									u.username,
+									u.provider1_first_name,
+									u.provider2_first_name
+							FROM    ${process.env.SERVICE_DB_DB1_NAME}.user_account_follow u_follow,
+									${process.env.SERVICE_DB_DB1_NAME}.user_account u
+							WHERE  u_follow.user_account_id = ?
+							AND    u.id = u_follow.user_account_id_follow
+							AND    u.active = 1
+							AND    1 = ?
+							UNION ALL
+							SELECT 'FOLLOWED' detail,
+									u.id,
+									u.provider1_id,
+									u.provider2_id,
+									CONVERT(u.avatar USING UTF8) avatar,
+									CONVERT(u.provider1_image USING UTF8) provider1_image,
+									u.provider1_image_url,
+									CONVERT(u.provider2_image USING UTF8) provider2_image,
+									u.provider2_image_url,
+									u.username,
+									u.provider1_first_name,
+									u.provider2_first_name
+							FROM    ${process.env.SERVICE_DB_DB1_NAME}.user_account_follow u_followed,
+									${process.env.SERVICE_DB_DB1_NAME}.user_account u
+							WHERE  u_followed.user_account_id_follow = ?
+							AND    u.id = u_followed.user_account_id
+							AND    u.active = 1
+							AND    2 = ?
+							UNION ALL
+							SELECT 'LIKE_USER' detail,
+									u.id,
+									u.provider1_id,
+									u.provider2_id,
+									CONVERT(u.avatar USING UTF8) avatar,
+									CONVERT(u.provider1_image USING UTF8) provider1_image,
+									u.provider1_image_url,
+									CONVERT(u.provider2_image USING UTF8) provider2_image,
+									u.provider2_image_url,
+									u.username,
+									u.provider1_first_name,
+									u.provider2_first_name
+							FROM    ${process.env.SERVICE_DB_DB1_NAME}.user_account_like u_like,
+									${process.env.SERVICE_DB_DB1_NAME}.user_account u
+							WHERE  u_like.user_account_id = ?
+							AND    u.id = u_like.user_account_id_like
+							AND    u.active = 1
+							AND    3 = ?
+							UNION ALL
+							SELECT 'LIKED_USER' detail,
+									u.id,
+									u.provider1_id,
+									u.provider2_id,
+									CONVERT(u.avatar USING UTF8) avatar,
+									CONVERT(u.provider1_image USING UTF8) provider1_image,
+									u.provider1_image_url,
+									CONVERT(u.provider2_image USING UTF8) provider2_image,
+									u.provider2_image_url,
+									u.username,
+									u.provider1_first_name,
+									u.provider2_first_name
+							FROM    ${process.env.SERVICE_DB_DB1_NAME}.user_account_like u_liked,
+									${process.env.SERVICE_DB_DB1_NAME}.user_account u
+							WHERE  u_liked.user_account_id_like = ?
+							AND    u.id = u_liked.user_account_id
+							AND    u.active = 1
+							AND    4 = ?
+							UNION ALL
+							SELECT 'LIKE_SETTING' detail,
+									u.id,
+									u.provider1_id,
+									u.provider2_id,
+									CONVERT(u.avatar USING UTF8) avatar,
+									CONVERT(u.provider1_image USING UTF8) provider1_image,
+									u.provider1_image_url,
+									CONVERT(u.provider2_image USING UTF8) provider2_image,
+									u.provider2_image_url,
+									u.username,
+									u.provider1_first_name,
+									u.provider2_first_name
+							FROM   ${process.env.SERVICE_DB_DB1_NAME}.user_account u
+							WHERE  u.id IN (SELECT us.user_account_id
+											FROM   ${process.env.SERVICE_DB_DB1_NAME}.app_timetables_user_setting_like u_like,
+												${process.env.SERVICE_DB_DB1_NAME}.app_timetables_user_setting us
+											WHERE  u_like.user_account_id = ?
+											AND    us.id = u_like.user_setting_id)
+							AND    u.active = 1
+							AND    5 = ?
+							UNION ALL
+							SELECT 'LIKED_SETTING' detail,
+									u.id,
+									u.provider1_id,
+									u.provider2_id,
+									CONVERT(u.avatar USING UTF8) avatar,
+									CONVERT(u.provider1_image USING UTF8) provider1_image,
+									u.provider1_image_url,
+									CONVERT(u.provider2_image USING UTF8) provider2_image,
+									u.provider2_image_url,
+									u.username,
+									u.provider1_first_name,
+									u.provider2_first_name
+							FROM   ${process.env.SERVICE_DB_DB1_NAME}.user_account u
+							WHERE  u.id IN (SELECT u_like.user_account_id
+											FROM   ${process.env.SERVICE_DB_DB1_NAME}.app_timetables_user_setting us,
+												${process.env.SERVICE_DB_DB1_NAME}.app_timetables_user_setting_like u_like
+											WHERE  us.user_account_id = ?
+											AND    us.id = u_like.user_setting_id)
+							AND    u.active = 1
+							AND    6 = ?) t
+						ORDER BY 1, COALESCE(username, 
+											provider1_first_name,
+											provider2_first_name)`, 
+				[id,
+				 detailchoice,
+			 	 id,
+				 detailchoice,
+				 id,
+				 detailchoice,
+				 id,
+				 detailchoice,
+				 id,
+				 detailchoice,
+				 id,
+				 detailchoice
                 ],
                 (error, results, fields) => {
                     if (error) {
+						createLogAppSE(app_id, __appfilename, __appfunction, __appline, error);
                         return callBack(error);
                     }
                     return callBack(null, results);
@@ -919,126 +935,127 @@ module.exports = {
                     pool2 = await oracledb.getConnection(get_pool(app_id));
                     const result = await pool2.execute(
                         `SELECT *
-					   FROM (SELECT 'FOLLOWING' "detail",
-									u.id "id",
-									u.provider1_id "provider1_id",
-									u.provider2_id "provider2_id",
-									u.avatar "avatar",
-									u.provider1_image "provider1_image",
-									u.provider1_image_url "provider1_image_url",
-									u.provider2_image "provider2_image",
-									u.provider2_image_url "provider2_image_url",
-									u.username "username",
-									u.provider1_first_name "provider1_first_name",
-									u.provider2_first_name "provider2_first_name"
-							FROM   	${process.env.SERVICE_DB_DB2_NAME}.user_account_follow u_follow,
-									${process.env.SERVICE_DB_DB2_NAME}.user_account u
-							WHERE  u_follow.user_account_id = :user_account_id_following
-							AND    u.id = u_follow.user_account_id_follow
-							AND    u.active = 1
-							AND    1 = :detailchoice_following
-							UNION ALL
-							SELECT 'FOLLOWED' "detail",
-									u.id "id",
-									u.provider1_id "provider1_id",
-									u.provider2_id "provider2_id",
-									u.avatar "avatar",
-									u.provider1_image "provider1_image",
-									u.provider1_image_url "provider1_image_url",
-									u.provider2_image "provider2_image",
-									u.provider2_image_url "provider2_image_url",
-									u.username "username",
-									u.provider1_first_name "provider1_first_name",
-									u.provider2_first_name "provider2_first_name"
-							FROM   	${process.env.SERVICE_DB_DB2_NAME}.user_account_follow u_followed,
-									${process.env.SERVICE_DB_DB2_NAME}.user_account u
-							WHERE  u_followed.user_account_id_follow = :user_account_id_followed
-							AND    u.id = u_followed.user_account_id
-							AND    u.active = 1
-							AND    2 = :detailchoice_followed
-							UNION ALL
-							SELECT 'LIKE_USER' "detail",
-									u.id "id",
-									u.provider1_id "provider1_id",
-									u.provider2_id "provider2_id",
-									u.avatar "avatar",
-									u.provider1_image "provider1_image",
-									u.provider1_image_url "provider1_image_url",
-									u.provider2_image "provider2_image",
-									u.provider2_image_url "provider2_image_url",
-									u.username "username",
-									u.provider1_first_name "provider1_first_name",
-									u.provider2_first_name "provider2_first_name"
-							FROM   	${process.env.SERVICE_DB_DB2_NAME}.user_account_like u_like,
-									${process.env.SERVICE_DB_DB2_NAME}.user_account u
-							WHERE  u_like.user_account_id = :user_account_id_like_user
-							AND    u.id = u_like.user_account_id_like
-							AND    u.active = 1
-							AND    3 = :detailchoice_like_user
-							UNION ALL
-							SELECT 'LIKED_USER' "detail",
-									u.id "id",
-									u.provider1_id "provider1_id",
-									u.provider2_id "provider2_id",
-									u.avatar "avatar",
-									u.provider1_image "provider1_image",
-									u.provider1_image_url "provider1_image_url",
-									u.provider2_image "provider2_image",
-									u.provider2_image_url "provider2_image_url",
-									u.username "username",
-									u.provider1_first_name "provider1_first_name",
-									u.provider2_first_name "provider2_first_name"
-							FROM   	${process.env.SERVICE_DB_DB2_NAME}.user_account_like u_liked,
-									${process.env.SERVICE_DB_DB2_NAME}.user_account u
-							WHERE  u_liked.user_account_id_like = :user_account_id_liked_user
-							AND    u.id = u_liked.user_account_id
-							AND    u.active = 1
-							AND    4 = :detailchoice_liked_user
-							UNION ALL
-							SELECT 'LIKE_SETTING' "detail",
-									u.id "id",
-									u.provider1_id "provider1_id",
-									u.provider2_id "provider2_id",
-									u.avatar "avatar",
-									u.provider1_image "provider1_image",
-									u.provider1_image_url "provider1_image_url",
-									u.provider2_image "provider2_image",
-									u.provider2_image_url "provider2_image_url",
-									u.username "username",
-									u.provider1_first_name "provider1_first_name",
-									u.provider2_first_name "provider2_first_name"
-							FROM    ${process.env.SERVICE_DB_DB2_NAME}.user_account u
-							WHERE  u.id IN (SELECT us.user_account_id
-											FROM   ${process.env.SERVICE_DB_DB2_NAME}.app_timetables_user_setting_like u_like,
-												   ${process.env.SERVICE_DB_DB2_NAME}.app_timetables_user_setting us
-											WHERE  u_like.user_account_id = :user_account_id_like_setting
-											AND    us.id = u_like.user_setting_id)
-							AND    u.active = 1
-							AND    5 = :detailchoice_like_setting
-							UNION ALL
-							SELECT 'LIKED_SETTING' "detail",
-									u.id "id",
-									u.provider1_id "provider1_id",
-									u.provider2_id "provider2_id",
-									u.avatar "avatar",
-									u.provider1_image "provider1_image",
-									u.provider1_image_url "provider1_image_url",
-									u.provider2_image "provider2_image",
-									u.provider2_image_url "provider2_image_url",
-									u.username "username",
-									u.provider1_first_name "provider1_first_name",
-									u.provider2_first_name "provider2_first_name"
-							FROM    ${process.env.SERVICE_DB_DB2_NAME}.user_account u
-							WHERE  u.id IN (SELECT u_like.user_account_id
-											  FROM ${process.env.SERVICE_DB_DB2_NAME}.app_timetables_user_setting us,
-											  	   ${process.env.SERVICE_DB_DB2_NAME}.app_timetables_user_setting_like u_like
-											WHERE  us.user_account_id = :user_account_id_liked_setting
-											AND    us.id = u_like.user_setting_id)
-							AND    u.active = 1
-							AND    6 = :detailchoice_liked_setting) t
-						ORDER BY 1, COALESCE("username", 
-											 "provider1_first_name",
-											 "provider2_first_name") `, {
+						FROM (SELECT 'FOLLOWING' "detail",
+										u.id "id",
+										u.provider1_id "provider1_id",
+										u.provider2_id "provider2_id",
+										u.avatar "avatar",
+										u.provider1_image "provider1_image",
+										u.provider1_image_url "provider1_image_url",
+										u.provider2_image "provider2_image",
+										u.provider2_image_url "provider2_image_url",
+										u.username "username",
+										u.provider1_first_name "provider1_first_name",
+										u.provider2_first_name "provider2_first_name"
+								FROM   	${process.env.SERVICE_DB_DB2_NAME}.user_account_follow u_follow,
+										${process.env.SERVICE_DB_DB2_NAME}.user_account u
+								WHERE  u_follow.user_account_id = :user_account_id_following
+								AND    u.id = u_follow.user_account_id_follow
+								AND    u.active = 1
+								AND    1 = :detailchoice_following
+								UNION ALL
+								SELECT 'FOLLOWED' "detail",
+										u.id "id",
+										u.provider1_id "provider1_id",
+										u.provider2_id "provider2_id",
+										u.avatar "avatar",
+										u.provider1_image "provider1_image",
+										u.provider1_image_url "provider1_image_url",
+										u.provider2_image "provider2_image",
+										u.provider2_image_url "provider2_image_url",
+										u.username "username",
+										u.provider1_first_name "provider1_first_name",
+										u.provider2_first_name "provider2_first_name"
+								FROM   	${process.env.SERVICE_DB_DB2_NAME}.user_account_follow u_followed,
+										${process.env.SERVICE_DB_DB2_NAME}.user_account u
+								WHERE  u_followed.user_account_id_follow = :user_account_id_followed
+								AND    u.id = u_followed.user_account_id
+								AND    u.active = 1
+								AND    2 = :detailchoice_followed
+								UNION ALL
+								SELECT 'LIKE_USER' "detail",
+										u.id "id",
+										u.provider1_id "provider1_id",
+										u.provider2_id "provider2_id",
+										u.avatar "avatar",
+										u.provider1_image "provider1_image",
+										u.provider1_image_url "provider1_image_url",
+										u.provider2_image "provider2_image",
+										u.provider2_image_url "provider2_image_url",
+										u.username "username",
+										u.provider1_first_name "provider1_first_name",
+										u.provider2_first_name "provider2_first_name"
+								FROM   	${process.env.SERVICE_DB_DB2_NAME}.user_account_like u_like,
+										${process.env.SERVICE_DB_DB2_NAME}.user_account u
+								WHERE  u_like.user_account_id = :user_account_id_like_user
+								AND    u.id = u_like.user_account_id_like
+								AND    u.active = 1
+								AND    3 = :detailchoice_like_user
+								UNION ALL
+								SELECT 'LIKED_USER' "detail",
+										u.id "id",
+										u.provider1_id "provider1_id",
+										u.provider2_id "provider2_id",
+										u.avatar "avatar",
+										u.provider1_image "provider1_image",
+										u.provider1_image_url "provider1_image_url",
+										u.provider2_image "provider2_image",
+										u.provider2_image_url "provider2_image_url",
+										u.username "username",
+										u.provider1_first_name "provider1_first_name",
+										u.provider2_first_name "provider2_first_name"
+								FROM   	${process.env.SERVICE_DB_DB2_NAME}.user_account_like u_liked,
+										${process.env.SERVICE_DB_DB2_NAME}.user_account u
+								WHERE  u_liked.user_account_id_like = :user_account_id_liked_user
+								AND    u.id = u_liked.user_account_id
+								AND    u.active = 1
+								AND    4 = :detailchoice_liked_user
+								UNION ALL
+								SELECT 'LIKE_SETTING' "detail",
+										u.id "id",
+										u.provider1_id "provider1_id",
+										u.provider2_id "provider2_id",
+										u.avatar "avatar",
+										u.provider1_image "provider1_image",
+										u.provider1_image_url "provider1_image_url",
+										u.provider2_image "provider2_image",
+										u.provider2_image_url "provider2_image_url",
+										u.username "username",
+										u.provider1_first_name "provider1_first_name",
+										u.provider2_first_name "provider2_first_name"
+								FROM    ${process.env.SERVICE_DB_DB2_NAME}.user_account u
+								WHERE  u.id IN (SELECT us.user_account_id
+												FROM   ${process.env.SERVICE_DB_DB2_NAME}.app_timetables_user_setting_like u_like,
+													${process.env.SERVICE_DB_DB2_NAME}.app_timetables_user_setting us
+												WHERE  u_like.user_account_id = :user_account_id_like_setting
+												AND    us.id = u_like.user_setting_id)
+								AND    u.active = 1
+								AND    5 = :detailchoice_like_setting
+								UNION ALL
+								SELECT 'LIKED_SETTING' "detail",
+										u.id "id",
+										u.provider1_id "provider1_id",
+										u.provider2_id "provider2_id",
+										u.avatar "avatar",
+										u.provider1_image "provider1_image",
+										u.provider1_image_url "provider1_image_url",
+										u.provider2_image "provider2_image",
+										u.provider2_image_url "provider2_image_url",
+										u.username "username",
+										u.provider1_first_name "provider1_first_name",
+										u.provider2_first_name "provider2_first_name"
+								FROM    ${process.env.SERVICE_DB_DB2_NAME}.user_account u
+								WHERE  u.id IN (SELECT u_like.user_account_id
+												FROM ${process.env.SERVICE_DB_DB2_NAME}.app_timetables_user_setting us,
+													${process.env.SERVICE_DB_DB2_NAME}.app_timetables_user_setting_like u_like
+												WHERE  us.user_account_id = :user_account_id_liked_setting
+												AND    us.id = u_like.user_setting_id)
+								AND    u.active = 1
+								AND    6 = :detailchoice_liked_setting) t
+							ORDER BY 1, COALESCE("username", 
+												"provider1_first_name",
+												"provider2_first_name") `, 
+						{
                             user_account_id_following: id,
                             detailchoice_following: detailchoice,
                             user_account_id_followed: id,
@@ -1054,19 +1071,21 @@ module.exports = {
                         },
                         (err, result) => {
                             if (err) {
+								createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
                                 return callBack(err);
                             } else {
                                 return callBack(null, result.rows);
                             }
                         });
                 } catch (err) {
+					createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
                     return callBack(err.message);
                 } finally {
                     if (pool2) {
 						try {
 							await pool2.close(); 
 						} catch (err) {
-							console.error(err);
+							createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
 						}
 					}
                 }
@@ -1188,6 +1207,7 @@ module.exports = {
                 ],
                 (error, results, fields) => {
                     if (error) {
+						createLogAppSE(app_id, __appfilename, __appfunction, __appline, error);
                         return callBack(error);
                     }
                     return callBack(null, results);
@@ -1311,19 +1331,21 @@ module.exports = {
                         },
                         (err, result) => {
                             if (err) {
+								createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
                                 return callBack(err);
                             } else {
                                 return callBack(null, result.rows);
                             }
                         });
                 } catch (err) {
+					createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
                     return callBack(err.message);
                 } finally {
                     if (pool2) {
 						try {
 							await pool2.close(); 
 						} catch (err) {
-							console.error(err);
+							createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
 						}
 					}
                 }
@@ -1340,6 +1362,7 @@ module.exports = {
 				  WHERE id = ? `, [id],
                 (error, results, fields) => {
                     if (error) {
+						createLogAppSE(app_id, __appfilename, __appfunction, __appline, error);
                         return callBack(error);
                     }
                     return callBack(null, results[0]);
@@ -1358,19 +1381,21 @@ module.exports = {
                         },
                         (err, result) => {
                             if (err) {
+								createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
                                 return callBack(err);
                             } else {
                                 return callBack(null, result.rows[0]);
                             }
                         });
                 } catch (err) {
+					createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
                     return callBack(err.message);
                 } finally {
                     if (pool2) {
 						try {
 							await pool2.close(); 
 						} catch (err) {
-							console.error(err);
+							createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
 						}
 					}
                 }
@@ -1404,6 +1429,7 @@ module.exports = {
                 ],
                 (error, results, fields) => {
                     if (error) {
+						createLogAppSE(app_id, __appfilename, __appfunction, __appline, error);
                         return callBack(error);
                     }
                     return callBack(null, results);
@@ -1438,19 +1464,21 @@ module.exports = {
                         },
                         (err, result) => {
                             if (err) {
+								createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
                                 return callBack(err);
                             } else {
                                 return callBack(null, result);
                             }
                         });
                 } catch (err) {
+					createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
                     return callBack(err.message);
                 } finally {
                     if (pool2) {
 						try {
 							await pool2.close(); 
 						} catch (err) {
-							console.error(err);
+							createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
 						}
 					}
                 }
@@ -1474,6 +1502,7 @@ module.exports = {
                 ],
                 (error, results, fields) => {
                     if (error) {
+						createLogAppSE(app_id, __appfilename, __appfunction, __appline, error);
                         return callBack(error);
                     }
                     return callBack(null, results);
@@ -1498,19 +1527,21 @@ module.exports = {
                         },
                         (err, result) => {
                             if (err) {
+								createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
                                 return callBack(err);
                             } else {
                                 return callBack(null, result);
                             }
                         });
                 } catch (err) {
+					createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
                     return callBack(err.message);
                 } finally {
                     if (pool2) {
 						try {
 							await pool2.close(); 
 						} catch (err) {
-							console.error(err);
+							createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
 						}
 					}
                 }
@@ -1525,6 +1556,7 @@ module.exports = {
 				  WHERE id = ? `, [id],
                 (error, results, fields) => {
                     if (error) {
+						createLogAppSE(app_id, __appfilename, __appfunction, __appline, error);
                         return callBack(error);
                     }
                     return callBack(null, results);
@@ -1542,19 +1574,21 @@ module.exports = {
                         },
                         (err, result) => {
                             if (err) {
+								createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
                                 return callBack(err);
                             } else {
                                 return callBack(null, result);
                             }
                         });
                 } catch (err) {
+					createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
                     return callBack(err.message);
                 } finally {
                     if (pool2) {
 						try {
 							await pool2.close(); 
 						} catch (err) {
-							console.error(err);
+							createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
 						}
 					}
                 }
@@ -1581,6 +1615,7 @@ module.exports = {
                 ],
                 (error, results, fields) => {
                     if (error) {
+						createLogAppSE(app_id, __appfilename, __appfunction, __appline, error);
                         return callBack(error);
                     }
                     return callBack(null, results[0]);
@@ -1608,19 +1643,21 @@ module.exports = {
                         },
                         (err, result) => {
                             if (err) {
+								createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
                                 return callBack(err);
                             } else {
                                 return callBack(null, result.rows[0]);
                             }
                         });
                 } catch (err) {
+					createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
                     return callBack(err.message);
                 } finally {
                     if (pool2) {
 						try {
 							await pool2.close(); 
 						} catch (err) {
-							console.error(err);
+							createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
 						}
 					}
                 }
@@ -1652,6 +1689,7 @@ module.exports = {
                     ],
                     (error, results, fields) => {
                         if (error) {
+							createLogAppSE(app_id, __appfilename, __appfunction, __appline, error);
                             return callBack(error);
                         }
                         return callBack(null, results[0]);
@@ -1684,20 +1722,21 @@ module.exports = {
                             },
                             (err, result) => {
                                 if (err) {
-                                    console.log('updateSigninProvider err:' + err);
+                                    createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
                                     return callBack(err);
                                 } else {
                                     return callBack(null, result[0]);
                                 }
                             });
                     } catch (err) {
+						createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
                         return callBack(err.message);
                     } finally {
                         if (pool2) {
 							try {
 								await pool2.close(); 
 							} catch (err) {
-								console.error(err);
+								createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
 							}
 						}
                     }
@@ -1728,6 +1767,7 @@ module.exports = {
                     ],
                     (error, results, fields) => {
                         if (error) {
+							createLogAppSE(app_id, __appfilename, __appfunction, __appline, error);
                             return callBack(error);
                         }
                         return callBack(null, results[0]);
@@ -1748,7 +1788,8 @@ module.exports = {
 									provider2_email = :provider2_email,
 									date_modified = SYSDATE
 							  WHERE id = :id
-								AND active =1 `, {
+								AND active =1 `, 
+							{
                                 provider2_id: data.provider2_id,
                                 provider2_first_name: data.provider2_first_name,
                                 provider2_last_name: data.provider2_last_name,
@@ -1759,19 +1800,21 @@ module.exports = {
                             },
                             (err, result) => {
                                 if (err) {
+									createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
                                     return callBack(err);
                                 } else {
                                     return callBack(null, result[0]);
                                 }
                             });
                     } catch (err) {
+						createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
                         return callBack(err.message);
                     } finally {
                         if (pool2) {
 							try {
 								await pool2.close(); 
 							} catch (err) {
-								console.error(err);
+								createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
 							}
 						}
                     }
@@ -1817,13 +1860,15 @@ module.exports = {
 					1 = ?) 
 				OR    (u.provider2_id = ?
 					AND
-					2 = ?)`, [search_id,
-                    provider_no,
-                    search_id,
-                    provider_no
+					2 = ?)`, 
+				[search_id,
+                 provider_no,
+                 search_id,
+                 provider_no
                 ],
                 (error, results, fields) => {
                     if (error) {
+						createLogAppSE(app_id, __appfilename, __appfunction, __appline, error);
                         return callBack(error);
                     }
                     return callBack(null, results);
@@ -1877,20 +1922,21 @@ module.exports = {
                         },
                         (err, result) => {
                             if (err) {
-                                console.log('getUserByProviderId err:' + err);
+                                createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
                                 return callBack(err);
                             } else {
                                 return callBack(null, result.rows);
                             }
                         });
                 } catch (err) {
+					createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
                     return callBack(err.message);
                 } finally {
                     if (pool2) {
 						try {
 							await pool2.close(); 
 						} catch (err) {
-							console.error(err);
+							createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
 						}
 					}
                 }

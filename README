@@ -185,6 +185,22 @@ SERVICE_DB_DB2_POOL_INCREMENT               		=0
 #Oracle Instant Client path
 SERVICE_DB_DB2_LIBDIR								={ORACLE_INSTANT_CLIENT_PATH}
 SERVICE_DB_DB2_CONFIGDIR							={PATH_TNSNAMES_SQLNET_OR_WALLET_FILE_CONTENT}
+
+SERVICE_LOG_SCOPE_SERVER                    		='SERVER'
+SERVICE_LOG_SCOPE_SERVICE                   		='SERVICE'
+SERVICE_LOG_SCOPE_DB                        		='DB'
+SERVICE_LOG_SCOPE_ROUTER                    		='ROUTER'
+SERVICE_LOG_SCOPE_CONTROLLER                		='CONTROLLER'
+SERVICE_LOG_ENABLE_DB                       		=0
+SERVICE_LOG_ENABLE_ROUTER                   		=0
+SERVICE_LOG_LEVEL_ERROR                     		='ERROR'
+SERVICE_LOG_LEVEL_INFO                      		='INFO'
+SERVICE_LOG_DESTINATION                     		=0
+SERVICE_LOG_URL_DESTINATION                 		={URL TO REST API WITH POST}
+SERVICE_LOG_FILE_INTERVAL                   		={1D or 1M}
+SERVICE_LOG_FILE_PATH_SERVER                		={PATH with / at the end}
+SERVICE_LOG_DATE_FORMAT                     		={DEFAULT empty creates ISO8601 format}
+
 APP1_ID						                		=1
 
 10. database parameters
