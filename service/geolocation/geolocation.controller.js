@@ -2,6 +2,7 @@ const { getService} = require ("./geolocation.service");
 const { createLog} = require ("../../service/db/api/app_log/app_log.service");
 const { getMessage } = require("../db/api/message_translation/message_translation.service");
 const { getParameter } = require ("../db/api/app_parameter/app_parameter.service");
+const { createLogAppSE } = require("../../service/log/log.service");
 module.exports = {
 	getPlace: (data, res) => {
 		var geodata;
@@ -22,7 +23,7 @@ module.exports = {
 		else{	
 			getParameter(0,'SERVICE_GEOLOCATION_URL_GPS_PLACE', (err, db_SERVICE_GEOLOCATION_URL_GPS_PLACE)=>{
 				if (err) {
-                    console.log(err);
+					createLogAppSE(data.query.app_id, __appfilename, __appfunction, __appline, err);
                 }
                 else{
 					//service can return other formats, set json
@@ -59,7 +60,7 @@ module.exports = {
 		var url;
 		getParameter(0,'SERVICE_GEOLOCATION_URL_GPS_IP', (err, db_SERVICE_GEOLOCATION_URL_GPS_IP)=>{
 			if (err) {
-				console.log(err);
+				createLogAppSE(data.query.app_id, __appfilename, __appfunction, __appline, err);
 			}
 			else{
 				if (typeof data.query.ip == 'undefined')

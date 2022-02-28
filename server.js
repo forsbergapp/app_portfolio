@@ -1,6 +1,8 @@
 //variables
 //module to use Express framework
 const express = require ("express");
+//logging
+const { createLogServer, createLogAppSI } = require("./service/log/log.service");
 //module to use https
 const https = require("https");
 //module to read from file system
@@ -16,6 +18,60 @@ const options = {
 };
 //Create express application
 const app = express();
+//Logging variables
+Object.defineProperty(global, '__stack', {
+  get: function() {
+          var orig = Error.prepareStackTrace;
+          Error.prepareStackTrace = function(_, stack) {
+              return stack;
+          };
+          var err = new Error;
+          Error.captureStackTrace(err, arguments.callee);
+          var stack = err.stack;
+          Error.prepareStackTrace = orig;
+          return stack;
+      }
+});
+Object.defineProperty(global, '__appline', {
+  get: function() {
+          return __stack[1].getLineNumber();
+      }
+});
+Object.defineProperty(global, '__appfunction', {
+  get: function() {
+          return __stack[1].getFunctionName();
+      }
+});
+Object.defineProperty(global, '__appfilename', {
+    get: function() {
+      let filename = __stack[1].getFileName();
+      return filename.substring(__dirname.length).replace(/\\/g, "/");
+      } 
+});
+//Logging middleware
+app.use((err,req,res,next) => {
+  createLogServer(err, req, res);
+  next();
+})
+app.use((req,res,next) => {
+  /* enable if looking at the whole response
+  const getCircularReplacer = () => {
+    const seen = new WeakSet();
+    return (key, value) => {
+      if (typeof value === 'object' && value !== null) {
+        if (seen.has(value)) {
+          return;
+        }
+        seen.add(value);
+      }
+      return value;
+    };
+  };
+  createLogServer(null, null, null, 'res:' + JSON.stringify(res, getCircularReplacer()));
+  */
+  createLogServer(null, req, res);
+  next();
+})
 //set routing configuration
 //service auth
 const authRouter = require("./service/auth/auth.router");
@@ -135,7 +191,6 @@ app.get("/app1/manifest.json",function (req, res, next) {
     const { getParameters } = require ("./service/db/api/app_parameter/app_parameter.service");
     getParameters(process.env.APP1_ID,(err, results) =>{
       if (err) {
-        console.log(err);
         return res.status(500).send({
           success: 0,
           data: err
@@ -329,8 +384,8 @@ app.get('/',function (req, res) {
 
 //start HTTP and HTTPS
 app.listen(process.env.SERVER_PORT, () => {
-	console.log("HTTP Server up and running on PORT: ", process.env.SERVER_PORT);
+  createLogServer(null, null, null, "HTTP Server up and running on PORT: ", process.env.SERVER_PORT);
 });
 https.createServer(options, app).listen(process.env.SERVER_HTTPS_PORT, () => {
-	console.log("HTTPS Server up and running on PORT: ", process.env.SERVER_HTTPS_PORT);
+  createLogServer(null, null, null, "HTTPS Server up and running on PORT: ", process.env.SERVER_HTTPS_PORT);
 });

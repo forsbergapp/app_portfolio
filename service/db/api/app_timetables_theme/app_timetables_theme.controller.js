@@ -4,7 +4,6 @@ module.exports = {
 	getThemes: (req, res) => {
 		getThemes(req.query.app_id,(err, results) =>{
 			if (err) {
-				console.log(err);
 				return res.status(500).send({
 					success: 0,
 					data: err

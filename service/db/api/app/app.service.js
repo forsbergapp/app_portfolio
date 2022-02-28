@@ -1,5 +1,5 @@
 const {oracledb, get_pool} = require ("../../config/database");
-
+const { createLogAppSE } = require("../../../../service/log/log.service");
 module.exports = {
 	getApp:(id, callBack) => {
 		if (typeof id=='undefined')
@@ -19,6 +19,7 @@ module.exports = {
 				 id],
 				(error, results, fields) => {
 					if (error){
+						createLogAppSE(id, __appfilename, __appfunction, __appline, error);
 						return callBack(error);
 					}
 					return callBack(null, results);
@@ -43,6 +44,7 @@ module.exports = {
 					{id: id}, 
 					(err,result) => {
 						if (err) {
+							createLogAppSE(id, __appfilename, __appfunction, __appline, err);
 							return callBack(err);
 						}
 						else{
@@ -50,13 +52,14 @@ module.exports = {
 						}
 					});
 				}catch (err) {
+					createLogAppSE(id, __appfilename, __appfunction, __appline, err);
 					return callBack(err.message);
 				} finally {
 					if (pool2) {
 						try {
 							await pool2.close(); 
 						} catch (err) {
-							console.error(err);
+							createLogAppSE(id, __appfilename, __appfunction, __appline, err);
 						}
 					}
 				}

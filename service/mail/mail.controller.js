@@ -2,6 +2,7 @@ const { sendEmailService } = require("./mail.service");
 const { createLog} = require ("../../service/db/api/app_log/app_log.service");
 const { getMessage } = require("../db/api/message_translation/message_translation.service");
 const { getParameters, getParameters_server } = require ("../db/api/app_parameter/app_parameter.service");
+const { createLogAppSE } = require("../../service/log/log.service");
 module.exports = {
     getLogo: (req, res) => {
         if (typeof req.query.app_id == 'undefined')
@@ -17,7 +18,7 @@ module.exports = {
         if (req.query.app_id == process.env.APP1_ID){
             getParameters(req.query.app_id, (err, result)=>{
                 if (err) {
-                    console.log(err);
+                    createLogAppSE(req.query.app_id, __appfilename, __appfunction, __appline, err);
                 }
                 else{
                     let json = JSON.parse(JSON.stringify(result));
@@ -56,7 +57,7 @@ module.exports = {
                     req.body.server_http_accept_language = req.headers["accept-language"];
                     createLog(req.body, (err2, results2) => {
                         if (err2) {
-                            console.log(err2);
+                            createLogAppSE(req.query.app_id, __appfilename, __appfunction, __appline, err2);
                         }
                     });
                 }
@@ -183,10 +184,10 @@ module.exports = {
                 }
                 createLog(logData, (err2, results2) => {
                     if (err2)
-                        console.log('mail createLog err:' + err2);
+                        createLogAppSE(logData.app_id, __appfilename, __appfunction, __appline, err2);
                 });
                 if (err) {
-                    console.log(err);
+                    createLogAppSE(emailData.app_id, __appfilename, __appfunction, __appline, err);
                     return callBack(err, result);
                 } else
                     return callBack(null, result);
@@ -197,7 +198,7 @@ module.exports = {
                 data.app_id, 
                 data.lang_code, (err,results)  => {
                 if (err)
-                    console.log('err:' + JSON.stringify(err));
+                    createLogAppSE(data.app_id, __appfilename, __appfunction, __appline, err);
                 else{
                     email_subject = results.text;
                     //Verification code text
@@ -205,12 +206,12 @@ module.exports = {
                             data.app_id, 
                             data.lang_code, (err,results)  => {
                             if (err)
-                                console.log('err:' + JSON.stringify(err));
+                                createLogAppSE(data.app_id, __appfilename, __appfunction, __appline, err);
                             else{
                                 verification_title = results.text;
                                 getParameters_server(data.app_id, (err, result)=>{
                                     if (err) {
-                                        console.log(err);
+                                        createLogAppSE(data.app_id, __appfilename, __appfunction, __appline, err);
                                     }
                                     else{
                                         let json = JSON.parse(JSON.stringify(result));

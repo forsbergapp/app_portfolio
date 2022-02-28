@@ -1,5 +1,5 @@
 const {oracledb, get_pool} = require ("../../config/database");
-
+const { createLogAppSE } = require("../../../../service/log/log.service");
 module.exports = {
         getCountries: (app_id, lang_code, callBack) => {
                 if (process.env.SERVICE_DB_USE == 1) {
@@ -29,14 +29,14 @@ module.exports = {
                                         )
                                 ORDER BY 5, 4`,
                                 [lang_code,
-                                        lang_code,
-                                        lang_code,
-                                        lang_code,
-                                        lang_code,
-                                        lang_code],
+                                 lang_code,
+                                 lang_code,
+                                 lang_code,
+                                 lang_code,
+                                 lang_code],
                                 (error, results, fields) => {
                                         if (error) {
-                                                console.log('getCountries err:' + error);
+                                                createLogAppSE(app_id, __appfilename, __appfunction, __appline, error);
                                                 return callBack(error);
                                         }
                                         return callBack(null, results);
@@ -79,6 +79,7 @@ module.exports = {
                                                 },
                                                 (err, result) => {
                                                         if (err) {
+                                                                createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
                                                                 return callBack(err);
                                                         }
                                                         else {
@@ -86,13 +87,14 @@ module.exports = {
                                                         }
                                                 });
                                 } catch (err) {
+                                        createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
                                         return callBack(err.message);
                                 } finally {
                                         if (pool2) {
                                                 try {
                                                         await pool2.close(); 
                                                 } catch (err) {
-                                                        console.error(err);
+                                                        createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
                                                 }
                                         }
                                 }
