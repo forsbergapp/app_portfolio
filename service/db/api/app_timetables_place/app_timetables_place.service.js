@@ -1,5 +1,5 @@
 const {oracledb, get_pool} = require ("../../config/database");
-
+const { createLogAppSE } = require("../../../../service/log/log.service");
 module.exports = {
 	
 	getPlace: (app_id, callBack) => {
@@ -31,7 +31,7 @@ module.exports = {
 				[],
 				(error, results, fields) => {
 					if (error){
-						console.log('getPlace err:' + error);
+						createLogAppSE(app_id, __appfilename, __appfunction, __appline, error);
 						return callBack(error);
 					}
 					return callBack(null, results);
@@ -69,7 +69,7 @@ module.exports = {
 					{},
 					(err,result) => {
 						if (err) {
-							console.log('getPlace err:' + err);
+							createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
 							return callBack(err);
 						}
 						else{
@@ -77,13 +77,14 @@ module.exports = {
 						}
 					});
 				}catch (err) {
+					createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
 					return callBack(err.message);
 				} finally {
 					if (pool2) {
 						try {
 							await pool2.close(); 
 						} catch (err) {
-							console.error(err);
+							createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
 						}
 					}
 				}

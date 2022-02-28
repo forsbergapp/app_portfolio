@@ -5,7 +5,6 @@ module.exports = {
     insertUserAccountView: (app_id, data, res) => {
         insertUserAccountView(app_id, data, (err,results) => {
             if (err) {
-                console.log(err);
                 return (err,null);
             }
             return (null,results);

@@ -1,5 +1,5 @@
 const {oracledb, get_pool} = require ("../../config/database");
-
+const { createLogAppSE } = require("../../../../service/log/log.service");
 module.exports = {
 	createLog: (data, callBack) => {
 		//max 4000 characters can be saved
@@ -45,7 +45,7 @@ module.exports = {
 				],
 				(error, results, fields) => {
 					if (error){
-						console.log('createLog err:' + err);
+						createLogAppSE(data.app_id, __appfilename, __appfunction, __appline, error);
 						return callBack(error);
 					}
 					return callBack(null, results);
@@ -112,7 +112,7 @@ module.exports = {
 					},
 					(err,result) => {
 						if (err) {
-							console.log('createLog err:' + err);
+							createLogAppSE(data.app_id, __appfilename, __appfunction, __appline, err);
 							return callBack(err);
 						}
 						else{
@@ -120,13 +120,14 @@ module.exports = {
 						}
 					});
 				}catch (err) {
+					createLogAppSE(data.app_id, __appfilename, __appfunction, __appline, err);
 					return callBack(err.message);
 				} finally {
 					if (pool2) {
 						try {
 							await pool2.close(); 
 						} catch (err) {
-							console.error(err);
+							createLogAppSE(data.app_id, __appfilename, __appfunction, __appline, err);
 						}
 					}
 				}
@@ -160,6 +161,7 @@ module.exports = {
 				[],
 				(error, results, fields) => {
 					if (error){
+						createLogAppSE(app_id, __appfilename, __appfunction, __appline, error);
 						return callBack(error);
 					}
 					return callBack(null, results);
@@ -195,6 +197,7 @@ module.exports = {
 					{},
 					(err,result) => {
 						if (err) {
+							createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
 							return callBack(err);
 						}
 						else{
@@ -202,13 +205,14 @@ module.exports = {
 						}
 					});
 				}catch (err) {
+					createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
 					return callBack(err.message);
 				} finally {
 					if (pool2) {
 						try {
 							await pool2.close(); 
 						} catch (err) {
-							console.error(err);
+							createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
 						}
 					}
 				}

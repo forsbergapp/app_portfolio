@@ -2,7 +2,7 @@ var pool_db1_app_0;
 var pool_db1_app_1;
 var pool_db1_app_2;
 var oracledb;
-
+const { createLogDB, createLogAppSI, createLogAppSE } = require("../../log/log.service");
 function get_pool(app_id){
 	let pool;
 	if (process.env.SERVICE_DB_USE==1){
@@ -20,7 +20,7 @@ function get_pool(app_id){
 				break;
 			}
 			default:{
-				console.log('get_pool error app_id:' + app_id);
+				createLogAppSE(app_id, __appfilename, __appfunction, __appline, 'get_pool error app_id: ' + app_id);
 				break;
 			}
 		}
@@ -40,7 +40,7 @@ function get_pool(app_id){
 			break;
 		}
 		default:{
-			console.log('get_pool error app_id:' + app_id);
+			createLogAppSE(app_id, __appfilename, __appfunction, __appline, 'get_pool error app_id:' + app_id);
 			break;
 		}
 	}
@@ -58,7 +58,7 @@ if (process.env.SERVICE_DB_USE==1){
 		charset: process.env.SERVICE_DB_DB1_CHARACTERSET,
 		connnectionLimit: process.env.SERVICE_DB_DB1_CONNECTION_LIMIT
 	});
-	console.log('mysql createPool 0 user:' + process.env.SERVICE_DB_DB1_USER0);
+	createLogAppSI(0, __appfilename, __appfunction, __appline, 'mysql createPool 0 user:' + process.env.SERVICE_DB_DB1_USER0);
 	pool_db1_app_1 = mysql.createPool({
 			port: process.env.SERVICE_DB_DB1_PORT,
 			host: process.env.SERVICE_DB_DB1_HOST,
@@ -68,7 +68,7 @@ if (process.env.SERVICE_DB_USE==1){
 			charset: process.env.SERVICE_DB_DB1_CHARACTERSET,
 			connnectionLimit: process.env.SERVICE_DB_DB1_CONNECTION_LIMIT
 		});
-	console.log('mysql createPool 1 user:' + process.env.SERVICE_DB_DB1_USER1);
+	createLogAppSI(1, __appfilename, __appfunction, __appline, 'mysql createPool 1 user:' + process.env.SERVICE_DB_DB1_USER1);
 	pool_db1_app_2 = mysql.createPool({
 			port: process.env.SERVICE_DB_DB1_PORT,
 			host: process.env.SERVICE_DB_DB1_HOST,
@@ -78,7 +78,33 @@ if (process.env.SERVICE_DB_USE==1){
 			charset: process.env.SERVICE_DB_DB1_CHARACTERSET,
 			connnectionLimit: process.env.SERVICE_DB_DB1_CONNECTION_LIMIT
 		});
-	console.log('mysql createPool 2 user:' + process.env.SERVICE_DB_DB1_USER2);
+	createLogAppSI(2, __appfilename, __appfunction, __appline, 'mysql createPool 2 user:' + process.env.SERVICE_DB_DB1_USER2);
+	if (process.env.SERVICE_LOG_ENABLE_DB==1){
+		pool_db1_app_0.on('connection', function(connection) {
+			connection.on('enqueue', function(sequence) {
+				// if (sequence instanceof mysql.Sequence.Query) {
+				if ('Query' === sequence.constructor.name) {
+					createLogDB(0, sequence.sql);
+				}
+			});
+		});
+		pool_db1_app_1.on('connection', function(connection) {
+			connection.on('enqueue', function(sequence) {
+				// if (sequence instanceof mysql.Sequence.Query) {
+				if ('Query' === sequence.constructor.name) {
+					createLogDB(1, sequence.sql);
+				}
+			});
+		});
+		pool_db1_app_2.on('connection', function(connection) {
+			connection.on('enqueue', function(sequence) {
+				// if (sequence instanceof mysql.Sequence.Query) {
+				if ('Query' === sequence.constructor.name) {
+					createLogDB(2, sequence.sql);
+				}
+			});
+		});
+	}
 }
 else if (process.env.SERVICE_DB_USE==2){
 	oracledb = require('oracledb');
@@ -118,14 +144,14 @@ else if (process.env.SERVICE_DB_USE==2){
 				poolAlias: 'pool_db2_app_0'
 			}, (err,result) => {
 				if (err)
-					console.log(`oracledb.createPool 0 user: ${process.env.SERVICE_DB_DB2_USER0}, err:${err}`);
+					createLogAppSE(0, __appfilename, __appfunction, __appline, `oracledb.createPool 0 user: ${process.env.SERVICE_DB_DB2_USER0}, err:${err}`);
 				else
-					console.log(`oracledb.createPool 0 ok user:${process.env.SERVICE_DB_DB2_USER0})`);
+					createLogAppSI(0, __appfilename, __appfunction, __appline, `oracledb.createPool 0 ok user:${process.env.SERVICE_DB_DB2_USER0})`);
 			});
 		}catch (err) {
-			console.log(`oracledb.createPool 0 err:${err.message}`);
+			createLogAppSE(0, __appfilename, __appfunction, __appline, `oracledb.createPool 0 err:${err.message}`);
 		}finally {
-			console.log(`finally oracledb.createPool 0 ok`);
+			createLogAppSI(0, __appfilename, __appfunction, __appline, `finally oracledb.createPool 0 ok`);
 		}
 		try{
 			await oracledb.createPool({	
@@ -138,14 +164,14 @@ else if (process.env.SERVICE_DB_USE==2){
 				poolAlias: 'pool_db2_app_1'
 			}, (err,result) => {
 				if (err)
-					console.log(`oracledb.createPool 1 user: ${process.env.SERVICE_DB_DB2_USER1}, err:${err}`);
+					createLogAppSE(1, __appfilename, __appfunction, __appline, `oracledb.createPool 1 user: ${process.env.SERVICE_DB_DB2_USER1}, err:${err}`);
 				else
-					console.log(`oracledb.createPool 1 ok user:${process.env.SERVICE_DB_DB2_USER1}`);
+					createLogAppSI(1, __appfilename, __appfunction, __appline, `oracledb.createPool 1 ok user:${process.env.SERVICE_DB_DB2_USER1})`);
 			});
 		}catch (err) {
-			console.log(`oracledb.createPool 1 err:${err.message}`);
+			createLogAppSE(1, __appfilename, __appfunction, __appline, `oracledb.createPool 1 err:${err.message}`);
 		} finally {
-			console.log(`finally oracledb.createPool 1 ok`);
+			createLogAppSI(1, __appfilename, __appfunction, __appline, `finally oracledb.createPool 1 ok`);
 		}
 		try{	
 			await oracledb.createPool({
@@ -158,14 +184,14 @@ else if (process.env.SERVICE_DB_USE==2){
 				poolAlias: 'pool_db2_app_2'
 			}, (err,result) => {
 				if (err)
-					console.log(`oracledb.createPool 2 user: ${process.env.SERVICE_DB_DB2_USER2}, err:${err}`);
+					createLogAppSE(2, __appfilename, __appfunction, __appline, `oracledb.createPool 2 user: ${process.env.SERVICE_DB_DB2_USER2}, err:${err}`);
 				else
-					console.log(`oracledb.createPool 2 ok user:${process.env.SERVICE_DB_DB2_USER2})`);
+					createLogAppSI(2, __appfilename, __appfunction, __appline, `oracledb.createPool 2 ok user:${process.env.SERVICE_DB_DB2_USER2})`);
 			});
 		}catch (err) {
-			console.log(`oracledb.createPool 2 err:${err.message}`);
+			createLogAppSE(2, __appfilename, __appfunction, __appline, `oracledb.createPool 2 err:${err.message}`);
 		} finally {
-			console.log(`finally oracledb.createPool 2 ok`);
+			createLogAppSI(2, __appfilename, __appfunction, __appline, `finally oracledb.createPool 2 ok`);
 		}
 	}
 	init();

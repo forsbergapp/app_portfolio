@@ -5,7 +5,6 @@ module.exports = {
     insertUserAccountLogon: (data, res) => {
         insertUserAccountLogon(data, (err,results) => {
             if (err) {
-                console.log(err);
                 return (err,null);
             }
             return (null,results);

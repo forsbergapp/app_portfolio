@@ -25,7 +25,7 @@ const { insertUserAccountView } = require("../user_account_view/user_account_vie
 const { createUserSetting, deleteUserSettingsByUserId } = require("../app_timetables_user_setting/app_timetables_user_setting.service");
 const { getParameter } = require ("../app_parameter/app_parameter.service");
 const { sendEmail } = require("../../../../service/mail/mail.controller");
-
+const { createLogAppCI } = require("../../../../service/log/log.service");
 function get_app_code (app_id, errorNum, message, code, errno, sqlMessage){
     var app_error_code = parseInt((JSON.stringify(errno) ?? JSON.stringify(errorNum)));
     //check if user defined exception
@@ -94,8 +94,6 @@ module.exports = {
                     getMessage(app_code, 
                                 req.query.app_id, 
                                 req.query.lang_code, (err2,results2)  => {
-                                    console.log('err2:' + JSON.stringify(err2));
-                                    console.log('results2:' + JSON.stringify(results2));
                                     return res.status(500).send(
                                         results2.text
                                     );
@@ -114,7 +112,6 @@ module.exports = {
                 body.server_http_accept_language = req.headers["accept-language"]
                 createUserSetting(req.query.app_id, body, (err2, results2) => {
                     if (err2) {
-                        console.log(err2);
                         return res.status(500).send(
                             err2
                         );
@@ -145,7 +142,6 @@ module.exports = {
                             }
                             sendEmail(emailData, (err3, result3) => {
                                 if (err3) {
-                                    console.log(err3);
                                     //return res from userSignup
                                     return res.status(500).send(
                                         err3
@@ -168,7 +164,6 @@ module.exports = {
         const id = req.params.id;
         activateUser(req.query.app_id, id, validation_code, (err, results) => {
             if (err) {
-                console.log(err);
                 return res.status(500).send(
                     err
                 );
@@ -185,7 +180,6 @@ module.exports = {
         const id = req.params.id;
         getUserByUserId(req.query.app_id, id, (err, results) => {
             if (err) {
-                console.log(err);
                 return res.status(500).send(
                     err
                 );
@@ -229,7 +223,6 @@ module.exports = {
 
         getProfileUserId(req.query.app_id, id, id_current_user, (err, results) => {
             if (err) {
-                console.log(err);
                 return res.status(500).send(
                     err
                 );
@@ -249,7 +242,6 @@ module.exports = {
                     if ((results.id == id_current_user) == false) {
                         insertUserAccountView(req.query.app_id, req.body, (err, results) => {
                             if (err) {
-                                console.log(err);
                                 return res.status(500).send(
                                     err
                                 );
@@ -282,7 +274,6 @@ module.exports = {
         req.body.client_latitude = req.body.client_latitude;
         getProfileUsername(req.query.app_id, username, id_current_user, (err, results) => {
             if (err) {
-                console.log(err);
                 return res.status(500).send(
                     err
                 );
@@ -301,7 +292,6 @@ module.exports = {
                 if ((results.id == id_current_user) == false) {
                     insertUserAccountView(req.query.app_id, req.body, (err, results) => {
                         if (err) {
-                            console.log(err);
                             return res.status(500).send(
                                 err
                             );
@@ -319,7 +309,6 @@ module.exports = {
         const username = req.params.username;
         searchProfileUser(req.query.app_id, username, (err, results) => {
             if (err) {
-                console.log(err);
                 return res.status(500).send(
                     err
                 );
@@ -333,7 +322,6 @@ module.exports = {
                 req.body.client_latitude = req.body.client_latitude;
                 insertProfileSearch(req.query.app_id, req.body, (err, results2) => {
                     if (err) {
-                        console.log(err);
                         return res.status(500).send(
                             err
                         );
@@ -367,7 +355,6 @@ module.exports = {
 
         getProfileDetail(req.query.app_id, id, detailchoice, (err, results) => {
             if (err) {
-                console.log(err);
                 return res.status(500).send(
                     err
                 );
@@ -399,9 +386,7 @@ module.exports = {
         if (typeof req.params.statchoice !== 'undefined')
             statchoice = req.params.statchoice;
         getProfileTop(req.query.app_id, statchoice, (err, results) => {
-
             if (err) {
-                console.log(err);
                 return res.status(500).send(
                     err
                 );
@@ -434,7 +419,6 @@ module.exports = {
         const id = req.params.id;
         checkPassword(req.query.app_id, id, (err, results) => {
             if (err) {
-                console.log(err);
                 return res.status(500).send(
                     err
                 );
@@ -488,7 +472,7 @@ module.exports = {
                             }
                         });
                     } else {
-                        console.log('invalid password attempt for user id:' + id);
+                        createLogAppCI(req, req.query.app_id, __appfilename, __appfunction, __appline, 'invalid password attempt for user id:' + id);
                         //invalid password
                         getMessage(20403, 
                                     req.query.app_id, 
@@ -515,7 +499,6 @@ module.exports = {
         const id = req.params.id;
         updateUserCommon(req.query.app_id, req.body, id, (err, results) => {
             if (err) {
-                console.log(err);
                 return res.status(500).send(
                     err
                 );
@@ -542,7 +525,6 @@ module.exports = {
         const id = req.params.id;
         getUserByUserId(req.query.app_id, id, (err, results) => {
             if (err) {
-                console.log(err);
                 return res.status(500).send(
                     err
                 );
@@ -553,7 +535,6 @@ module.exports = {
                         deleteUserSettingsByUserId(req.query.app_id, id, (err, results) => {
                             deleteUser(req.query.app_id, id, (err, results) => {
                                 if (err) {
-                                    console.log(err);
                                     return res.status(500).send(
                                         err
                                     );
@@ -582,7 +563,6 @@ module.exports = {
                         const salt = genSaltSync(10);
                         checkPassword(req.query.app_id, id, (err, results) => {
                             if (err) {
-                                console.log(err);
                                 return res.status(500).send(
                                     err
                                 );
@@ -593,7 +573,6 @@ module.exports = {
                                         deleteUserSettingsByUserId(req.query.app_id, id, (err, results) => {
                                             deleteUser(req.query.app_id, id, (err, results) => {
                                                 if (err) {
-                                                    console.log(err);
                                                     return res.status(500).send(
                                                         err
                                                     );
@@ -619,7 +598,7 @@ module.exports = {
                                         });
                                     }
                                     else{
-                                        console.log('invalid password attempt for user id:' + id);
+                                        createLogAppCI(req, req.query.app_id, __appfilename, __appfunction, __appline, 'invalid password attempt for user id:' + id);
                                         //invalid password
                                         getMessage(20403, 
                                                     req.query.app_id, 
@@ -663,7 +642,6 @@ module.exports = {
         var result_pw;
         userLogin(body, (err, results) => {
             if (err) {
-                console.log('userlogin 1:' + err);
                 return res.status(500).send(
                     err
                 );
@@ -688,7 +666,6 @@ module.exports = {
                     }
                     insertUserAccountLogon(req.body, (err2, results2) => {
                         if (err2) {
-                            console.log('userlogin 2:' + err2);
                             return res.status(500).send(
                                 err2
                             );
@@ -732,7 +709,6 @@ module.exports = {
         req.body.client_latitude = req.body.client_latitude;
         getUserByProviderId(req.body.app_id, req.body.provider_no, provider_id, (err, results) => {
             if (err) {
-                console.log('getUserByProviderId controller:' + err);
                 return res.status(500).send(
                     err
                 );
@@ -742,7 +718,6 @@ module.exports = {
                     //req.body.user_account_id = results[0].id;
                     updateSigninProvider(req.body.app_id, req.body.provider_no, results[0].id, req.body, (err, results2) => {
                         if (err) {
-                            console.log('updateSigninProvider controller:' + err);
                             return res.status(500).send(
                                 err
                             );
@@ -751,7 +726,6 @@ module.exports = {
                             req.body.user_account_id = results[0].id;
                             insertUserAccountLogon(req.body, (err, results3) => {
                                 if (err) {
-                                    console.log('insertUserAccountLogon controller:' + err);
                                     return res.status(500).send(
                                         err
                                     );
@@ -777,8 +751,6 @@ module.exports = {
 
                     create(req.body.app_id, req.body, (err, results4) => {
                         if (err) {
-                            console.log('create controller:' + err);
-                            //console.log('create controller req.body:' + JSON.stringify(req.body));
                             return res.status(500).send(
                                 err
                             );
@@ -786,7 +758,6 @@ module.exports = {
                         req.body.user_account_id = results4.insertId;
                         createUserSetting(req.body.app_id, req.body, (err, results5) => {
                             if (err) {
-                                console.log('createUserSetting controller:' + err);
                                 return res.status(500).send(
                                     err
                                 );
@@ -794,7 +765,6 @@ module.exports = {
                             else{
                                 insertUserAccountLogon(req.body, (err, results6) => {
                                     if (err) {
-                                        console.log('insertUserAccountLogon controller:' + err);
                                         return res.status(500).send(
                                             err
                                         );
@@ -804,7 +774,6 @@ module.exports = {
                         });
                         getUserByProviderId(req.body.app_id, req.body.provider_no, provider_id, (err, results7) => {
                             if (err) {
-                                console.log('getUserByProviderId controller:' + err);
                                 return res.status(500).send(
                                     err
                                 );

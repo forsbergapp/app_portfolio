@@ -9,7 +9,6 @@ module.exports = {
 		body.server_http_accept_language = req.headers["accept-language"];	
 		createLog(body, (err,results) => {
 			if (err) {
-				console.log(err);
 				return res.status(500).send({
 					success:0,
 					message: err
@@ -24,7 +23,6 @@ module.exports = {
 	getLogs: (req, res) => {
 		getLogs((err, results) =>{
 			if (err) {
-				console.log(err);
 				return res.status(500).send({
 					success: 0,
 					data: err

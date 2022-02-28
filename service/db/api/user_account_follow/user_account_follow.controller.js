@@ -8,7 +8,6 @@ module.exports = {
 		const id_follow   = req.body.user_account_id;
 		followUser(req.query.app_id, id,id_follow, (err,results) => {
 			if (err) {
-				console.log(err);
 				return res.status(500).send(
 					err
 				);
@@ -25,7 +24,6 @@ module.exports = {
 		const id_unfollow   = req.body.user_account_id;
 		unfollowUser(req.query.app_id, id,id_unfollow, (err,results) => {
 			if (err) {
-				console.log(err);
 				return res.status(500).send(
 					err
 				);

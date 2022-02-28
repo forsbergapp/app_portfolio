@@ -1,5 +1,5 @@
 const {oracledb, get_pool} = require ("../../config/database");
-
+const { createLogAppSE } = require("../../../../service/log/log.service");
 module.exports = {
 	//returns parameters for app_id=0 and given app_id
 	//and only public and private shared
@@ -21,6 +21,7 @@ module.exports = {
 				[app_id],
 				(error, results, fields) => {
 					if (error){
+						createLogAppSE(app_id, __appfilename, __appfunction, __appline, error);
 						return callBack(error);
 					}
 					return callBack(null, results);
@@ -48,6 +49,7 @@ module.exports = {
 					{app_id: app_id},
 					(err,result) => {
 						if (err) {
+							createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
 							return callBack(err);
 						}
 						else{
@@ -55,13 +57,14 @@ module.exports = {
 						}
 					});
 				}catch (err) {
+					createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
 					return callBack(err.message);
 				} finally {
 					if (pool2) {
 						try {
 							await pool2.close(); 
 						} catch (err) {
-							console.error(err);
+							createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
 						}
 					}
 				}
@@ -90,6 +93,7 @@ module.exports = {
 				[app_id],
 				(error, results, fields) => {
 					if (error){
+						createLogAppSE(app_id, __appfilename, __appfunction, __appline, error);
 						return callBack(error);
 					}
 					return callBack(null, results);
@@ -117,6 +121,7 @@ module.exports = {
 					{app_id: app_id},
 					(err,result) => {
 						if (err) {
+							createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
 							return callBack(err);
 						}
 						else{
@@ -124,13 +129,14 @@ module.exports = {
 						}
 					});
 				}catch (err) {
+					createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
 					return callBack(err.message);
 				} finally {
 					if (pool2) {
 						try {
 							await pool2.close(); 
 						} catch (err) {
-							console.error(err);
+							createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
 						}
 					}
 				}
@@ -151,7 +157,7 @@ module.exports = {
 				 parameter_name],
 				(error, results, fields) => {
 					if (error){
-						console.log(error);
+						createLogAppSE(app_id, __appfilename, __appfunction, __appline, error);
 						return callBack(error);
 					}
 					return callBack(null, results[0].parameter_value);
@@ -174,6 +180,7 @@ module.exports = {
 					 parameter_name:parameter_name},
 					(err,result) => {
 						if (err) {
+							createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
 							return callBack(err);
 						}
 						else{
@@ -181,13 +188,14 @@ module.exports = {
 						}
 					});
 				}catch (err) {
+					createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
 					return callBack(err.message);
 				} finally {
 					if (pool2) {
 						try {
 							await pool2.close(); 
 						} catch (err) {
-							console.error(err);
+							createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
 						}
 					}
 				}

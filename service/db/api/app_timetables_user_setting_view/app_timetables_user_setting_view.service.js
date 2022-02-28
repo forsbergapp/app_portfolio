@@ -1,5 +1,5 @@
 const {oracledb, get_pool} = require ("../../config/database");
-
+const { createLogAppSE } = require("../../../../service/log/log.service");
 module.exports = {
 	insertUserSettingView: (app_id, data, callBack) => {
 		if (process.env.SERVICE_DB_USE == 1) {
@@ -21,6 +21,7 @@ module.exports = {
 				data.client_latitude],
 				(error, results, fields) => {
 					if (error){
+						createLogAppSE(app_id, __appfilename, __appfunction, __appline, error);
 						return callBack(error);
 					}
 					return callBack(null, results);
@@ -57,6 +58,7 @@ module.exports = {
 					},
 					(err_ins,result_ins) => {
 						if (err_ins) {
+							createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
 							return callBack(err_ins);
 						}
 						else{
@@ -64,13 +66,14 @@ module.exports = {
 						}
 					});
 				}catch (err) {
+					createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
 					return callBack(err.message);
 				} finally {
 					if (pool2) {
 						try {
 							await pool2.close(); 
 						} catch (err) {
-							console.error(err);
+							createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
 						}
 					}
 				}
