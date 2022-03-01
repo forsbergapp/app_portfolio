@@ -191,6 +191,7 @@ SERVICE_LOG_SCOPE_SERVICE                   		='SERVICE'
 SERVICE_LOG_SCOPE_DB                        		='DB'
 SERVICE_LOG_SCOPE_ROUTER                    		='ROUTER'
 SERVICE_LOG_SCOPE_CONTROLLER                		='CONTROLLER'
+SERVICE_LOG_ENABLE_SERVER_INFO						=1
 SERVICE_LOG_ENABLE_DB                       		=0
 SERVICE_LOG_ENABLE_ROUTER                   		=0
 SERVICE_LOG_LEVEL_ERROR                     		='ERROR'
