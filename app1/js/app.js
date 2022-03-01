@@ -3235,19 +3235,20 @@ async function user_settings_load(show_ui = 1) {
     document.getElementById('setting_input_long').value =
         select_user_setting[select_user_setting.selectedIndex].getAttribute('gps_long_text');
     //if user interface shall be shown and if country, city and popular place are not set
-    if (show_ui == 1 &&
+    if (show_ui == 1)
+        if (
         select_user_setting[select_user_setting.selectedIndex].getAttribute('gps_country_id')||null == null &&
         select_user_setting[select_user_setting.selectedIndex].getAttribute('gps_city_id')||null == null &&
         select_user_setting[select_user_setting.selectedIndex].getAttribute('gps_popular_place_id')||null == null) {
-        update_map(document.getElementById('setting_input_long').value,
-            document.getElementById('setting_input_lat').value,
-            global_gps_map_zoom, //default zoom
-            document.getElementById('setting_input_place').value, //text1
-            document.getElementById('setting_label_report_timezone').innerHTML, //text2
-            document.getElementById('setting_select_report_timezone').value, //text3
-            global_gps_map_marker_div_gps, //marker for GPS
-            global_gps_map_jumpto);
-    }
+            update_map(document.getElementById('setting_input_long').value,
+                document.getElementById('setting_input_lat').value,
+                global_gps_map_zoom, //default zoom
+                document.getElementById('setting_input_place').value, //text1
+                document.getElementById('setting_label_report_timezone').innerHTML, //text2
+                document.getElementById('setting_select_report_timezone').value, //text3
+                global_gps_map_marker_div_gps, //marker for GPS
+                global_gps_map_jumpto);
+        }
     //Design
     if (show_ui == 1){
         set_theme_id('day', select_user_setting[select_user_setting.selectedIndex].getAttribute('design_theme_day_id'));
