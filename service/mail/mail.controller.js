@@ -56,9 +56,7 @@ module.exports = {
                     req.body.server_http_host = req.headers["host"];
                     req.body.server_http_accept_language = req.headers["accept-language"];
                     createLog(req.body, (err2, results2) => {
-                        if (err2) {
-                            createLogAppSE(req.query.app_id, __appfilename, __appfunction, __appline, err2);
-                        }
+                        null;
                     });
                 }
             }) 
@@ -183,11 +181,9 @@ module.exports = {
                     user_gps_longitude : data.user_gps_longitude
                 }
                 createLog(logData, (err2, results2) => {
-                    if (err2)
-                        createLogAppSE(logData.app_id, __appfilename, __appfunction, __appline, err2);
+                    null;
                 });
-                if (err) {
-                    createLogAppSE(emailData.app_id, __appfilename, __appfunction, __appline, err);
+                if (err) {    
                     return callBack(err, result);
                 } else
                     return callBack(null, result);
