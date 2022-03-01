@@ -69,7 +69,8 @@ app.use((req,res,next) => {
   };
   createLogServer(null, null, null, 'res:' + JSON.stringify(res, getCircularReplacer()));
   */
-  createLogServer(null, req, res);
+  if (process.env.SERVICE_LOG_ENABLE_SERVER_INFO==1)
+    createLogServer(null, req, res);
   next();
 })
 //set routing configuration
