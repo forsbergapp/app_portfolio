@@ -1,0 +1,210 @@
+/*Fonts used by settings and userinterface and some themes*/
+/*Noto Sans*/
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&display=swap');
+@import url('https://use.fontawesome.com/releases/v5.13.1/css/all.css');
+body {
+	margin: 0;
+	height: 100%;
+	width: -webkit-fit-content;
+	-webkit-text-size-adjust:none;
+	-moz-text-size-adjust: none;
+	-ms-text-size-adjust: none;
+	padding: 0px;
+}
+
+/* common*/
+select,input, button {
+	font-family: inherit;
+}
+a:link{
+	text-decoration: none;
+}
+a:visited {
+	text-decoration: none;
+}
+a:hover {
+	text-decoration: underline;
+}
+a:active {
+	text-decoration: underline;
+}
+
+/*DIALOUGE SETTINGS*/	
+/* common dialogue settings*/
+.dialogues{
+	width:100%;
+	height:100%;
+	position:fixed;
+}
+
+.dialogue{
+	width: 100%;
+	height: 100%;
+	text-align: center;
+	top:15%;
+	position:fixed;
+	-webkit-animation-name: animatetop;
+	-webkit-animation-duration: 0.4s;
+	animation-name: animatetop;
+	animation-duration: 0.4s;
+	z-index: 10;
+}
+.dialogue_content{
+	padding: 10px;
+	width: 300px;
+	display:inline-block;
+    top: 20%;
+	height: 540px;
+	border-radius: 4px;
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+}
+/* add animation effects */
+@-webkit-keyframes animatetop {
+	from {
+		top: -60%;
+		opacity: 0
+	}
+	to {
+		top: 15%;
+		opacity: 1
+	}
+}
+
+@keyframes animatetop {
+	from {
+		top: -60%;
+		opacity: 0
+	}
+	to {
+		top: 15%;
+		opacity: 1
+	}
+}
+
+#dialogue_login{
+	visibility:visible;
+}
+#dialogue_login_content{
+	height:270px;
+}
+
+#login_logo {
+	background-image: url('/app0/images/logo.png');
+	background-size: cover;
+	background-repeat: no-repeat;
+	height: 50px;
+	margin: 0 auto;
+}
+#login_title{
+    margin-top:20px;
+}
+.login_input{
+	border-radius: 16px;
+	height:40px;
+	width:90%;
+	margin-top:10px;
+	padding: 8px 16px;
+	box-sizing: border-box;
+}
+.button {
+	background: none;
+	border: none;
+	width: 60px;
+	height: 60px;
+	padding:0px;
+	text-transform: uppercase;
+	cursor:pointer;
+}
+#dashboard{
+	width:100%;
+	height:100%;
+	visibility: hidden;
+}
+#menu{
+	width:150px;
+	height:100%;
+	position:fixed;
+	padding-top: 20px;
+}
+.menuitem{
+	cursor: pointer;
+	text-align: left;
+    margin: 20px;
+	text-transform:uppercase;
+}
+
+#main{
+	width:100%;
+	height:100%;
+	margin-left: 150px;
+    position: fixed;
+}
+
+#menu_1_content, #menu_2_content, #menu_3_content, #menu_4_content{
+	width: 75%;
+    height: 100%;
+	position:fixed;
+	margin:20px;
+	display: none;
+}
+.widget{
+    height: 50%;
+	margin:20px;
+    padding: 5px;
+	text-align: center;
+	border-radius: 4px;
+}
+
+/*RESPONSIVE SETTINGS*/
+/*CSS for minimum 768px*/
+@media only screen and (min-width: 768px) {
+	body {
+		margin: 10;
+		width: auto;
+	}	
+}
+
+body.theme_light{
+	color: #404040;
+	background: rgb(81, 171, 255);
+	font-size: 16px;
+	font-family: 'Noto Sans';
+}
+.theme_light .dialogue_content:hover, .theme_light .dialogue_content:active{
+	box-shadow: 0 0 35px 4px rgb(255,255,255,0.25);
+}  
+.theme_light .dialogue_content{
+	background-color: #fefefe;
+	box-shadow: 0 4px 8px 0 rgb(0 0 0 / 20%), 0 6px 20px 0 rgb(0 0 0 / 19%);
+}
+.theme_light #login_title{
+	font-size: 16px;
+}
+.theme_light .login_input{
+	border: 1px solid #ddd;
+	font-size:16px;
+}
+.theme_light .button:hover, .theme_light .button:active{
+	color:#6ab344 !important;
+}
+.theme_light .button {
+	font-size: 30px;
+}
+.theme_light #menu{
+	background-color:#fefefe;
+	font-weight: bold;
+}
+.theme_light #main{
+	background-color:rgb(81, 171, 255);
+}
+.theme_light .menuitem:hover, .theme_light .menuitem:active{
+	color:#6ab344 !important;
+}
+.theme_light .widget:hover, .theme_light .widget:active{
+	box-shadow: 0 0 35px 4px rgb(255,255,255,0.25);
+}  
+.theme_light .widget{
+	background-color: #fefefe;
+	box-shadow: 0 4px 8px 0 rgb(0 0 0 / 20%), 0 6px 20px 0 rgb(0 0 0 / 19%);
+}

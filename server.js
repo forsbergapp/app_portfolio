@@ -76,6 +76,7 @@ app.use((req,res,next) => {
 //set routing configuration
 //service auth
 const authRouter = require("./service/auth/auth.router");
+const authAdminRouter = require("./service/auth/admin/admin.router");
 //service db
 const appRouter = require("./service/db/api/app/app.router");
 const app_logRouter = require("./service/db/api/app_log/app_log.router");
@@ -131,6 +132,7 @@ app.use(function(req, res, next) {
 //set REST API endpoints and connect to routers
 //authorization
 app.use("/service/auth", authRouter);
+app.use("/service/auth/admin", authAdminRouter);
 //service database
 app.use("/service/db/api/app", appRouter);
 app.use("/service/db/api/app_log", app_logRouter);
@@ -164,6 +166,10 @@ process.env.TZ = 'UTC';
 //app.use("/.well-known/acme-challenge/",express.static(__dirname + '/.well-known/acme-challenge/'));
 //app.use(express.static(__dirname, { dotfiles: 'allow' }));
 
+//admin directories
+app.use('/admin/js',express.static(__dirname + '/admin/js'));
+app.use('/admin/css',express.static(__dirname + '/admin/css'));
+
 //app 0 directories
 app.use('/app0/info',express.static(__dirname + '/app0/info'));
 app.use('/app0/css',express.static(__dirname + '/app0/css'));
@@ -176,6 +182,17 @@ app.use('/app1/info',express.static(__dirname + '/app1/info'));
 app.use('/app1/images',express.static(__dirname + '/app1/images'));
 //app 2 directory
 app.use('/app2',express.static(__dirname + '/app2'));
+
+app.get("/admin",function (req, res, next) {
+  //redirect from http to https
+  if (req.protocol=='http')
+    return res.redirect('https://' + req.headers.host + "/admin");
+  else
+    return res.sendFile(__dirname + "/admin/index.html");
+});
+app.get("/admin/:sub",function (req, res, next) {
+    return res.redirect('https://' + req.headers.host + "/admin");
+});
 //app 1 pwa service worker, placed in root
 app.get("/sw.js",function (req, res,next) {
   if (req.headers.host.substring(0,req.headers.host.indexOf('.')) == 'app1') {
