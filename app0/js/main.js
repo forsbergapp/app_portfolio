@@ -4,7 +4,7 @@ var global_app_copyright;
 var global_app_email;
 var global_app_rest_client_id;
 var global_app_rest_client_secret;
-var global_service_auth_token;
+var global_service_auth;
 var global_service_geolocation;
 var global_service_geolocation_gps_ip;
 var global_rest_url_base    = 'https://' + location.hostname + '/service/db/api/';
@@ -131,7 +131,7 @@ function get_apps() {
 async function get_token() {
 	var status;
     var json;
-    await fetch(global_service_auth_token + '?app_id=' + global_app_id + '&app_user_id=',
+    await fetch(global_service_auth + '?app_id=' + global_app_id + '&app_user_id=',
     {method: 'POST',
      headers: {
         'Authorization': 'Basic ' + btoa(global_app_rest_client_id + ':' + global_app_rest_client_secret)
@@ -174,8 +174,8 @@ async function get_parameters() {
                         global_app_copyright =json.data[i].parameter_value;
                     if (json.data[i].parameter_name=='APP_EMAIL')
                         global_app_email = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='SERVICE_AUTH_TOKEN')
-                        global_service_auth_token = 'https://' + location.hostname + json.data[i].parameter_value;
+                    if (json.data[i].parameter_name=='SERVICE_AUTH')
+                        global_service_auth = 'https://' + location.hostname + json.data[i].parameter_value;
                     if (json.data[i].parameter_name=='REST_APP')
                         global_rest_app = json.data[i].parameter_value;
                     if (json.data[i].parameter_name=='REST_APP_LOG')
