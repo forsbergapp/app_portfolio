@@ -48,7 +48,7 @@ var global_rest_user_account_provider;
 var global_rest_user_account_like;
 var global_rest_user_account_follow;
 //services
-var global_service_auth_token;
+var global_service_auth;
 var global_service_geolocation;
 var global_service_geolocation_gps_place;
 var global_service_geolocation_gps_ip;
