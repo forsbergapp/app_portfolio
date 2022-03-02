@@ -534,8 +534,8 @@ async function get_app_globals() {
                     global_app_copyright = json.data[i].parameter_value;
                 if (json.data[i].parameter_name=='APP_DEFAULT_STARTUP_PAGE')
                     global_app_default_startup_page = parseInt(json.data[i].parameter_value);
-                if (json.data[i].parameter_name=='SERVICE_AUTH_TOKEN')
-                    global_service_auth_token = json.data[i].parameter_value;                            
+                if (json.data[i].parameter_name=='SERVICE_AUTH')
+                    global_service_auth = json.data[i].parameter_value;                            
                 if (json.data[i].parameter_name=='USER_PROVIDER1_USE')
                     global_app_user_provider1_use = json.data[i].parameter_value;
                 if (json.data[i].parameter_name=='USER_PROVIDER1_ID')
@@ -1523,7 +1523,7 @@ function create_qr(div, url) {
 async function get_token() {
     var status;
     //get token access
-    await fetch(global_service_auth_token + 
+    await fetch(global_service_auth + 
                 '?app_id=' + global_app_id + 
                 '&app_user_id=' + document.getElementById('setting_data_userid_logged_in').innerHTML +
                 '&lang_code=' + document.getElementById('setting_select_locale').value, {
