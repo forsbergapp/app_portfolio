@@ -1,8 +1,8 @@
 const { followUser, 
 		unfollowUser} = require ("./user_account_follow.controller");
 const router = require("express").Router();
-const { checkToken } = require("../../../auth/auth.controller");
+const { checkAccessToken } = require("../../../auth/auth.controller");
 
-router.post("/:id", checkToken, followUser);
-router.delete("/:id", checkToken, unfollowUser);
+router.post("/:id", checkAccessToken, followUser);
+router.delete("/:id", checkAccessToken, unfollowUser);
 module.exports = router;

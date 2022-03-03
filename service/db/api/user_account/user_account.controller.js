@@ -26,6 +26,7 @@ const { createUserSetting, deleteUserSettingsByUserId } = require("../app_timeta
 const { getParameter } = require ("../app_parameter/app_parameter.service");
 const { sendEmail } = require("../../../../service/mail/mail.controller");
 const { createLogAppCI } = require("../../../../service/log/log.service");
+const { accessToken } = require("../../../../service/auth/auth.controller");
 function get_app_code (app_id, errorNum, message, code, errno, sqlMessage){
     var app_error_code = parseInt((JSON.stringify(errno) ?? JSON.stringify(errorNum)));
     //check if user defined exception
@@ -322,7 +323,6 @@ module.exports = {
                 );
             }
             else{
-                req.body.user_account_id = results.id;
                 req.body.search = username;
                 req.body.client_ip = req.ip;
                 req.body.client_user_agent = req.headers["user-agent"];
@@ -680,10 +680,13 @@ module.exports = {
                         }
                     });
                     if (result_pw == 1) {
-                        return res.status(200).json({
-                            count: Array(results.items).length,
-                            success: 1,
-                            items: Array(results)
+                        accessToken(req, (err, Token)=>{
+                            return res.status(200).json({
+                                count: Array(results.items).length,
+                                success: 1,
+                                accessToken: Token,
+                                items: Array(results)
+                            });
                         });
                     } else {
                         //Username or password not found
@@ -741,11 +744,15 @@ module.exports = {
                             });
                         }
                     });
-                    return res.status(200).json({
-                        count: results.length,
-                        success: 1,
-                        items: results
+                    accessToken(req, (err, Token)=>{
+                        return res.status(200).json({
+                            count: results.length,
+                            success: 1,
+                            accessToken: Token,
+                            items: results
+                        });
                     });
+                    
                 } else {
                     //if provider user not found then create user and one user setting
                     //avatar not used by providers, set default null
@@ -786,12 +793,16 @@ module.exports = {
                                     err
                                 );
                             }
-                            else
-                                return res.status(200).json({
-                                    count: results7.length,
-                                    success: 1,
-                                    items: results7
+                            else{
+                                accessToken(req, (err, Token)=>{
+                                    return res.status(200).json({
+                                        count: results7.length,
+                                        success: 1,
+                                        accessToken: Token,
+                                        items: results7
+                                    });
                                 });
+                            }
                         });
                     });
                 }

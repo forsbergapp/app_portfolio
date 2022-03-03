@@ -1,4 +1,4 @@
-const { accessToken} = require ("./auth.controller");
+const { dataToken} = require ("./auth.controller");
 const router = require("express").Router();
-router.post("/", accessToken);
+router.post("/", dataToken);
 module.exports = router;

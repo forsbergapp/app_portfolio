@@ -1,6 +1,6 @@
 const { getThemes } = require ("./app_timetables_theme.controller");
 const router = require("express").Router();
-const { checkToken } = require("../../../auth/auth.controller");
+const { checkDataToken } = require("../../../auth/auth.controller");
 
-router.get("/",  checkToken, getThemes);
+router.get("/",  checkDataToken, getThemes);
 module.exports = router;
