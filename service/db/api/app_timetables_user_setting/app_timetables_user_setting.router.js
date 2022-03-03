@@ -6,13 +6,15 @@ const { createUserSetting,
 		deleteUserSetting,
 		deleteUserSettingsByUserId} = require ("./app_timetables_user_setting.controller");
 const router = require("express").Router();
-const { checkToken } = require("../../../auth/auth.controller");
+const { checkAccessToken, checkDataToken } = require("../../../auth/auth.controller");
 
-router.post("/", checkToken, createUserSetting);
-router.get("/:id", checkToken, getUserSetting);
-router.get("/user_account_id/:id", checkToken, getUserSettingsByUserId);
-router.get("/profile/:id", checkToken, getProfileUserSettings);
-router.put("/:id", checkToken, updateUserSetting);
-router.delete("/:id", checkToken, deleteUserSetting);
-router.delete("/user_account_id/:id", checkToken, deleteUserSettingsByUserId);
+router.get("/:id", checkDataToken, getUserSetting);
+router.get("/user_account_id/:id", checkDataToken, getUserSettingsByUserId);
+router.get("/profile/:id", checkDataToken, getProfileUserSettings);
+
+router.post("/", checkAccessToken, createUserSetting);
+router.put("/:id", checkAccessToken, updateUserSetting);
+router.delete("/:id", checkAccessToken, deleteUserSetting);
+router.delete("/user_account_id/:id", checkAccessToken, deleteUserSettingsByUserId);
+
 module.exports = router;

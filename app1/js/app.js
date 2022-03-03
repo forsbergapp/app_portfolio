@@ -391,7 +391,7 @@ async function settings_translate(first=true) {
                         {
                             method: 'GET',
                             headers: {
-                                'Authorization': 'Bearer ' + global_rest_at
+                                'Authorization': 'Bearer ' + global_rest_dt
                             }
                         })
                     .then(function(response) {
@@ -431,7 +431,7 @@ async function settings_translate(first=true) {
                             {
                                 method: 'GET',
                                 headers: {
-                                    'Authorization': 'Bearer ' + global_rest_at
+                                    'Authorization': 'Bearer ' + global_rest_dt
                                 }
                             })
                             .then(function(response) {
@@ -587,8 +587,10 @@ async function get_app_globals() {
                     global_rest_user_account_profile_username = json.data[i].parameter_value;
                 if (json.data[i].parameter_name=='REST_USER_ACCOUNT_PROFILE_USERID')
                     global_rest_user_account_profile_userid = json.data[i].parameter_value;
-                if (json.data[i].parameter_name=='REST_USER_ACCOUNT_PROFILE_SEARCH')
-                    global_rest_user_account_profile_search = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='REST_USER_ACCOUNT_PROFILE_SEARCHA')
+                    global_rest_user_account_profile_searchA = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='REST_USER_ACCOUNT_PROFILE_SEARCHD')
+                    global_rest_user_account_profile_searchD = json.data[i].parameter_value;
                 if (json.data[i].parameter_name=='REST_USER_ACCOUNT_PROFILE_TOP')
                     global_rest_user_account_profile_top = json.data[i].parameter_value;
                 if (json.data[i].parameter_name=='REST_USER_ACCOUNT_PROFILE_DETAIL')
@@ -863,7 +865,7 @@ function show_error(code){
     {
         method: 'GET',
         headers: {
-            'Authorization': 'Bearer ' + global_rest_at
+            'Authorization': 'Bearer ' + global_rest_dt
         }
     })
     .then(function(response) {
@@ -1539,9 +1541,6 @@ async function get_token() {
     .then(function(result) {
         if (status === 200) {
             let json = JSON.parse(result);
-            //access token
-            global_rest_at = json.token_at;
-            //data token
             global_rest_dt = json.token_dt;
         } else {
             alert(responseText_get_error('get_token', result));
@@ -2216,7 +2215,7 @@ function user_verify_check_input(item, nextField) {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': 'Bearer ' + global_rest_at
+                        'Authorization': 'Bearer ' + global_rest_dt
                     },
                     body: json_data
                 })
@@ -2635,78 +2634,77 @@ function user_login() {
         return null;
     }
     spinner('LOGIN', 'visible');
-    get_token().then(function(){
-        //get user with username and password from REST API
-        fetch(global_rest_url_base + global_rest_user_account_login + 
-                '?lang_code=' + document.getElementById('setting_select_locale').value, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + global_rest_at
-            },
-            body: json_data
-        })
-        .then(function(response) {
-            status = response.status;
-            return response.text();
-        })
-        .then(function(result) {
-            if (status == 200) {
-                json = JSON.parse(result);
-                var result_id = json.items[0].id;
-                var result_username = json.items[0].username;
-                var result_password = password.value;
-                var result_avatar = json.items[0].avatar;
-                var result_bio = get_null_or_value(json.items[0].bio);
-                user_id.innerHTML = result_id;
+    //get user with username and password from REST API
+    fetch(global_rest_url_base + global_rest_user_account_login + 
+            '?lang_code=' + document.getElementById('setting_select_locale').value, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + global_rest_dt
+        },
+        body: json_data
+    })
+    .then(function(response) {
+        status = response.status;
+        return response.text();
+    })
+    .then(function(result) {
+        if (status == 200) {
+            json = JSON.parse(result);
+            global_rest_at	= json.accessToken;
+            var result_id = json.items[0].id;
+            var result_username = json.items[0].username;
+            var result_password = password.value;
+            var result_avatar = json.items[0].avatar;
+            var result_bio = get_null_or_value(json.items[0].bio);
+            user_id.innerHTML = result_id;
 
-                document.getElementById('user_logged_in').style.display = "block";
+            document.getElementById('user_logged_in').style.display = "block";
 
-                //set avatar or empty
-                if (result_avatar == null || result_avatar == '') {
-                    recreate_img(document.getElementById('setting_avatar_logged_in'));
-                    result_avatar = '';
-                } else
-                    document.getElementById('setting_avatar_logged_in').src = image_format(result_avatar);
-                update_settings_icon(image_format(result_avatar));
+            //set avatar or empty
+            if (result_avatar == null || result_avatar == '') {
+                recreate_img(document.getElementById('setting_avatar_logged_in'));
+                result_avatar = '';
+            } else
+                document.getElementById('setting_avatar_logged_in').src = image_format(result_avatar);
+            update_settings_icon(image_format(result_avatar));
 
-                document.getElementById('setting_bio_logged_in').innerHTML = result_bio;
-                document.getElementById('setting_data_username_logged_in').innerHTML = result_username;
+            document.getElementById('setting_bio_logged_in').innerHTML = result_bio;
+            document.getElementById('setting_data_username_logged_in').innerHTML = result_username;
 
-                document.getElementById(username.id).value = '';
-                document.getElementById(password.id).value = '';
-                document.getElementById('popup_menu_login').style.display = 'none';
-                document.getElementById('popup_menu_signup').style.display = 'none';
-                document.getElementById('popup_menu_logoff').style.display = 'block';
-                document.getElementById('dialogue_login').style.visibility = 'hidden';
-                document.getElementById('dialogue_signup').style.visibility = 'hidden';
-                //Show user tab
-                document.getElementById('tab7_nav').style.display = 'inline-block';
-                //Hide settings
-                document.getElementById('settings').style.visibility = 'hidden';
-                //Hide profile
-                document.getElementById('profile').style.visibility = 'hidden';
-                spinner('LOGIN', 'hidden');
-                user_settings_get(user_id.innerHTML).then(function(){
-                    user_settings_load().then(function(){
-                        settings_translate(true).then(function(){
-                            settings_translate(false).then(function(){
-                                //show default startup
-                                toolbar_bottom(global_app_default_startup_page);
-                            })
+            document.getElementById(username.id).value = '';
+            document.getElementById(password.id).value = '';
+            document.getElementById('popup_menu_login').style.display = 'none';
+            document.getElementById('popup_menu_signup').style.display = 'none';
+            document.getElementById('popup_menu_logoff').style.display = 'block';
+            document.getElementById('dialogue_login').style.visibility = 'hidden';
+            document.getElementById('dialogue_signup').style.visibility = 'hidden';
+            //Show user tab
+            document.getElementById('tab7_nav').style.display = 'inline-block';
+            //Hide settings
+            document.getElementById('settings').style.visibility = 'hidden';
+            //Hide profile
+            document.getElementById('profile').style.visibility = 'hidden';
+            spinner('LOGIN', 'hidden');
+            user_settings_get(user_id.innerHTML).then(function(){
+                user_settings_load().then(function(){
+                    settings_translate(true).then(function(){
+                        settings_translate(false).then(function(){
+                            //show default startup
+                            toolbar_bottom(global_app_default_startup_page);
                         })
                     })
-                });
-            } else {
-                spinner('LOGIN', 'hidden');
-                exception('user_login', status, result);
-            }
-        })
-        .catch(function(error) {
+                })
+            });
+        } else {
             spinner('LOGIN', 'hidden');
-            alert(responseText_get_error('user_login', error));
-        });
+            exception('user_login', status, result);
+        }
     })
+    .catch(function(error) {
+        spinner('LOGIN', 'hidden');
+        alert(responseText_get_error('user_login', error));
+    });
     
 }
 
@@ -2720,7 +2718,7 @@ async function user_setting_get(user_setting_id) {
                 '&lang_code=' + document.getElementById('setting_select_locale').value, {
             method: 'GET',
             headers: {
-                'Authorization': 'Bearer ' + global_rest_at
+                'Authorization': 'Bearer ' + global_rest_dt
             }
         })
         .then(function(response) {
@@ -2817,7 +2815,7 @@ async function user_settings_get(userid, show_ui = 1, user_setting_id = '') {
                 '&lang_code=' + document.getElementById('setting_select_locale').value, {
             method: 'GET',
             headers: {
-                'Authorization': 'Bearer ' + global_rest_at
+                'Authorization': 'Bearer ' + global_rest_dt
             }
         })
         .then(function(response) {
@@ -3110,7 +3108,7 @@ function user_signup() {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + global_rest_at
+                'Authorization': 'Bearer ' + global_rest_dt
             },
             body: json_data
         })
@@ -3858,7 +3856,7 @@ function updateProviderUser(provider_no, profile_id, profile_first_name, profile
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + global_rest_at
+                    'Authorization': 'Bearer ' + global_rest_dt
                 },
                 body: json_data
             })
@@ -3869,6 +3867,7 @@ function updateProviderUser(provider_no, profile_id, profile_first_name, profile
             .then(function(result) {
                 if (status == 200) {
                     json = JSON.parse(result);
+                    global_rest_at = json.accessToken;
                     var result_id = json.items[0].id;
                     var result_bio = get_null_or_value(json.items[0].bio);
                     user_id.innerHTML = result_id;
@@ -5062,18 +5061,34 @@ function search_profile() {
     var profile_search_list = document.getElementById('profile_search_list');
     profile_search_list.innerHTML = '';
     document.getElementById('profile_search_list').style.display = "none";
-    var json_data = '{' +
+    let url;
+    let token;
+    let json_data;
+    if (document.getElementById('setting_data_userid_logged_in').innerHTML!=''){
+        url = global_rest_url_base + global_rest_user_account_profile_searchA;
+        token = global_rest_at;
+        json_data = '{' +
+                    '"user_account_id":' + document.getElementById('setting_data_userid_logged_in').innerHTML + ',' +
                     '"client_longitude": "' + global_session_user_gps_longitude + '",' +
                     '"client_latitude": "' + global_session_user_gps_latitude + '"' +
                     '}';
-    fetch(global_rest_url_base + global_rest_user_account_profile_search + searched_username +
+    }
+    else{
+        url = global_rest_url_base + global_rest_user_account_profile_searchD;
+        token = global_rest_dt;
+        json_data = '{' +
+                    '"client_longitude": "' + global_session_user_gps_longitude + '",' +
+                    '"client_latitude": "' + global_session_user_gps_latitude + '"' +
+                    '}';
+    }
+    fetch(url + searched_username +
           '?app_id=' + global_app_id +
           '&lang_code=' + document.getElementById('setting_select_locale').value, 
           {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + global_rest_at
+                'Authorization': 'Bearer ' + token
           },
           body: json_data
         })
@@ -5177,7 +5192,7 @@ function updateViewStat(user_setting_id, user_setting_user_account_id = null) {
                 }
             })
             .catch(function(error) {
-                alert(responseText_get_error('search_profile', error));
+                alert(responseText_get_error('updateViewStat', error));
             });
     }
 }
@@ -5342,7 +5357,7 @@ async function app_load(){
         {
             method: 'GET',
             headers: {
-                'Authorization': 'Bearer ' + global_rest_at
+                'Authorization': 'Bearer ' + global_rest_dt
             }
     })
     .then(function(response) {

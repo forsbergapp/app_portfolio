@@ -14,24 +14,26 @@ const {
     getUserByProviderId
 } = require("./user_account.controller");
 const router = require("express").Router();
-const { checkToken } = require("../../../auth/auth.controller");
+const { checkAccessToken, checkDataToken } = require("../../../auth/auth.controller");
 
-router.post("/login", checkToken, userLogin);
-router.post("/signup", checkToken, userSignup);
+router.post("/login", checkDataToken, userLogin);
+router.post("/signup", checkDataToken, userSignup);
 //local user
-router.put("/activate/:id", checkToken, activateUser);
-router.put("/:id", checkToken, updateUserLocal);
+router.put("/activate/:id", checkDataToken, activateUser);
+router.put("/:id", checkAccessToken, updateUserLocal);
 //provider user
-router.post("/provider/:id", checkToken, getUserByProviderId);
+router.post("/provider/:id", checkDataToken, getUserByProviderId);
 //common user
-router.put("/common/:id", checkToken, updateUserCommon);
-router.get("/:id", checkToken, getUserByUserId);
-router.delete("/:id", checkToken, deleteUser);
+router.get("/:id", checkDataToken, getUserByUserId);
+router.put("/common/:id", checkAccessToken, updateUserCommon);
+router.delete("/:id", checkAccessToken, deleteUser);
 //profile
-router.get("/profile/detail/:id", checkToken, getProfileDetail);
-router.get("/profile/top/:statchoice", checkToken, getProfileTop);
-router.post("/profile/username/:username", checkToken, getProfileUsername);
-router.post("/profile/username/search/:username", checkToken, searchProfileUser);
-router.post("/profile/id/:id", checkToken, getProfileUserId);
+router.get("/profile/detail/:id", checkDataToken, getProfileDetail);
+router.get("/profile/top/:statchoice", checkDataToken, getProfileTop);
+router.post("/profile/id/:id", checkDataToken, getProfileUserId);
+router.post("/profile/username/:username", checkDataToken, getProfileUsername);
+router.post("/profile/username/searchD/:username", checkDataToken, searchProfileUser);
+router.post("/profile/username/searchA/:username", checkAccessToken, searchProfileUser);
+
 
 module.exports = router;
