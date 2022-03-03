@@ -1,6 +1,6 @@
 const { getCountries } = require ("./country.controller");
 const router = require("express").Router();
-const { checkToken } = require("../../../auth/auth.controller");
+const { checkDataToken } = require("../../../auth/auth.controller");
 
-router.get("/:lang_code",  checkToken, getCountries);
+router.get("/:lang_code",  checkDataToken, getCountries);
 module.exports = router;
