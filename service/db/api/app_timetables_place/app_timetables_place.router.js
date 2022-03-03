@@ -1,6 +1,6 @@
 const { getPlace } = require ("./app_timetables_place.controller");
 const router = require("express").Router();
-const { checkToken } = require("../../../auth/auth.controller");
+const { checkDataToken } = require("../../../auth/auth.controller");
 
-router.get("/",  checkToken, getPlace);
+router.get("/",  checkDataToken, getPlace);
 module.exports = router;
