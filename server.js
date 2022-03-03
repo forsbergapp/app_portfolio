@@ -310,7 +310,7 @@ app.get('/:user', function(req, res,next) {
         return res.redirect('https://' + req.headers.host);
       else{
         const {getProfileUsername} = require("./service/db/api/user_account/user_account.service");
-        getProfileUsername(req.params.user,null, (err,result)=>{
+        getProfileUsername(process.env.APP1_ID,req.params.user,null, (err,result)=>{
           if (result){
             // return app 1
             const { getApp } = require("./app1/app");
