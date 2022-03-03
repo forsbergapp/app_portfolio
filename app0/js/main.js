@@ -145,7 +145,6 @@ async function get_token() {
           if (status == 200)
             json = JSON.parse(result);
             if (json.success === 1){
-                global_rest_at = json.token_at;
                 global_rest_dt = json.token_dt;
             }
           else
