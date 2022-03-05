@@ -147,6 +147,14 @@ version 17.3.0 supported
 9. create .env file in /app_portfolio
 set values in {} and modify default value if necessary
 change default db password
+format BLOCKIP.txt content, without comment and in an array:
+[
+	["0.0.0.0", "0.0.0.255"],
+    ["1.1.1.1", "1.1.1.1"] 
+]
+leave SERVICE_AUTH_BLOCK_IP_RANGE empty if no blocking
+if you want the whole request in each access in server log
+set SERVICE_LOG_ENABLE_SERVER_VERBOSE=1
 
 #server variables
 SERVER_HTTPS_KEY                        			={PATH}\{FILENAME}
@@ -157,6 +165,9 @@ SERVER_JSON_LIMIT                          			=10MB
 SERVER_ADMIN_NAME									={ADMIN_USERNAME}
 SERVER_ADMIN_PASSWORD								={ADMIN_PASSWORD}
 #service variables
+SERVICE_AUTH_BLOCK_IP_RANGE                 		={PATH/BLOCKIP.txt}
+SERVICE_AUTH_ADMIN_TOKEN_EXPIRE_ACCESS				=1d
+SERVICE_AUTH_ADMIN_TOKEN_SECRET						={ADMIN_TOKEN_SECRET}
 #What database to use
 #1=DB1 mySQL, 2=DB2 Oracle
 SERVICE_DB_USE                           			=1
@@ -198,8 +209,10 @@ SERVICE_LOG_SCOPE_DB                        		='DB'
 SERVICE_LOG_SCOPE_ROUTER                    		='ROUTER'
 SERVICE_LOG_SCOPE_CONTROLLER                		='CONTROLLER'
 SERVICE_LOG_ENABLE_SERVER_INFO						=1
+SERVICE_LOG_ENABLE_SERVER_VERBOSE					=0
 SERVICE_LOG_ENABLE_DB                       		=0
 SERVICE_LOG_ENABLE_ROUTER                   		=0
+SERVICE_LOG_LEVEL_VERBOSE		    				='VERBOSE'
 SERVICE_LOG_LEVEL_ERROR                     		='ERROR'
 SERVICE_LOG_LEVEL_INFO                      		='INFO'
 SERVICE_LOG_DESTINATION                     		=0
@@ -207,10 +220,6 @@ SERVICE_LOG_URL_DESTINATION                 		={URL TO REST API WITH POST}
 SERVICE_LOG_FILE_INTERVAL                   		={1D or 1M}
 SERVICE_LOG_FILE_PATH_SERVER                		={PATH with / at the end}
 SERVICE_LOG_DATE_FORMAT                     		={DEFAULT empty creates ISO8601 format}
-
-SERVICE_AUTH_ADMIN_TOKEN_EXPIRE_ACCESS				=1d
-SERVICE_AUTH_ADMIN_TOKEN_SECRET						={ADMIN_TOKEN_SECRET}
-
 APP1_ID						                		=1
 
 10. database parameters
