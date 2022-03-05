@@ -86,7 +86,6 @@ app.use((req,res,next) => {
       let ip_v4 = req.ip.replace('::ffff:','');
       if ((ip_v4.match(/\./g)||[]).length==3){
         try{
-          console.log(JSON.stringify(JSON.parse(ranges)));
           JSON.parse(ranges).forEach(element => {
             if (IPtoNum(element[0]) <= IPtoNum(ip_v4) &&
                 IPtoNum(element[1]) >= IPtoNum(ip_v4)) {
