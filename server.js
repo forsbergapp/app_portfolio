@@ -2,7 +2,7 @@
 //module to use Express framework
 const express = require ("express");
 //logging
-const { createLogServer, createLogAppSI } = require("./service/log/log.service");
+const { createLogServer, createLogAppSI, createLogAppSE } = require("./service/log/log.service");
 //module to use https
 const https = require("https");
 //module to read from file system
@@ -54,24 +54,56 @@ app.use((err,req,res,next) => {
   next();
 })
 app.use((req,res,next) => {
-  /* enable if looking at the whole response
-  const getCircularReplacer = () => {
-    const seen = new WeakSet();
-    return (key, value) => {
-      if (typeof value === 'object' && value !== null) {
-        if (seen.has(value)) {
-          return;
+  if (process.env.SERVICE_LOG_ENABLE_SERVER_VERBOSE==1){
+    const getCircularReplacer = () => {
+      const seen = new WeakSet();
+      return (key, value) => {
+        if (typeof value === 'object' && value !== null) {
+          if (seen.has(value)) {
+            return;
+          }
+          seen.add(value);
         }
-        seen.add(value);
-      }
-      return value;
+        return value;
+      };
     };
-  };
-  createLogServer(null, null, null, 'res:' + JSON.stringify(res, getCircularReplacer()));
-  */
-  if (process.env.SERVICE_LOG_ENABLE_SERVER_INFO==1)
-    createLogServer(null, req, res);
-  next();
+    createLogServer(null, null, null, 'res:' + JSON.stringify(res, getCircularReplacer()));
+  }
+  else
+    if (process.env.SERVICE_LOG_ENABLE_SERVER_INFO==1)
+      createLogServer(null, req, res);
+
+  if (process.env.SERVICE_AUTH_BLOCK_IP_RANGE){
+    const ranges = fs.readFileSync(process.env.SERVICE_AUTH_BLOCK_IP_RANGE, 'utf8');
+    function IPtoNum(ip){
+      return Number(
+        ip.split(".")
+          .map(d => ("000"+d).substr(-3) )
+          .join("")
+      );
+    }
+    if (req.headers.host.indexOf('localhost')==-1){
+      let ip_v4 = req.ip.replace('::ffff:','');
+      if ((ip_v4.match(/\./g)||[]).length==3){
+        try{
+          console.log(JSON.stringify(JSON.parse(ranges)));
+          JSON.parse(ranges).forEach(element => {
+            if (IPtoNum(element[0]) <= IPtoNum(ip_v4) &&
+                IPtoNum(element[1]) >= IPtoNum(ip_v4)) {
+                  createLogServer(null, null, null, `ip ${ip_v4} blocked, range: ${IPtoNum(element[0])}-${IPtoNum(element[1])}, tried URL: ${req.originalUrl}`);
+                  return res.status(500).send('stop');
+            }
+          })
+        }
+        catch(err){
+          createLogAppSE(null, __appfilename, __appfunction, __appline, err);
+        }
+      }
+    } 
+    next();
+  }
+  else
+    next();
 })
 //set routing configuration
 //service auth
@@ -385,8 +417,8 @@ app.get('/',function (req, res) {
       break;
     }
     case 'app2':{
-      //return res.sendFile(__dirname + "/app0/index_maintenance.html");
-      return res.sendFile(__dirname + "/app2/datamodel.pdf");
+      return res.sendFile(__dirname + "/app0/index_maintenance.html");
+      //return res.sendFile(__dirname + "/app2/datamodel.pdf");
       break;
     }
     default:{
@@ -402,8 +434,8 @@ app.get('/',function (req, res) {
 
 //start HTTP and HTTPS
 app.listen(process.env.SERVER_PORT, () => {
-  createLogServer(null, null, null, "HTTP Server up and running on PORT: ", process.env.SERVER_PORT);
+  createLogServer(null, null, null, "HTTP Server up and running on PORT: " + process.env.SERVER_PORT);
 });
 https.createServer(options, app).listen(process.env.SERVER_HTTPS_PORT, () => {
-  createLogServer(null, null, null, "HTTPS Server up and running on PORT: ", process.env.SERVER_HTTPS_PORT);
+  createLogServer(null, null, null, "HTTPS Server up and running on PORT: " + process.env.SERVER_HTTPS_PORT);
 });

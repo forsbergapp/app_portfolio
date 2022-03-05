@@ -87,8 +87,12 @@ module.exports = {
         }
         else
             logdate = logdate.toISOString();
-        if (err==null)
-            log_level = process.env.SERVICE_LOG_LEVEL_INFO;
+        if (err==null){
+            if(process.env.SERVICE_LOG_ENABLE_SERVER_VERBOSE==1)
+                log_level = process.env.SERVICE_LOG_LEVEL_VERBOSE;
+            else
+                log_level = process.env.SERVICE_LOG_LEVEL_INFO;
+        }
         else{
             log_error_status = err.status;
             log_error_message = err.message;
