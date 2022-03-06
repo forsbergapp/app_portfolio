@@ -103,8 +103,18 @@ module.exports = {
             `{"logscope": "${process.env.SERVICE_LOG_SCOPE_SERVER}",` +
              `"loglevel": "${log_level}",` +
              `"logdate": ${logdate},` +
+             `"ip":"",` +
              `"host": "${require('os').hostname()}",` +
-             `"info": "${info}",` +
+             `"protocol": "",` +
+             `"url": "",` +
+             `"method":"",` +
+             `"statusCode": "",` +
+             `"user-agent": "",` +
+             `"accept-language": "",` +
+             `"http_referer": "",` +
+             `"error_status": "",` + 
+             `"error_message": "",` +
+             `"info": "${info}"` +
             `}`;
         }
         else{
@@ -123,6 +133,7 @@ module.exports = {
              `"http_referer": "${req.headers["referer"]}",` +
              `"error_status": "${log_error_status}",` + 
              `"error_message": "${log_error_message}",` +
+             `"info": ""` +
             `}`;
         }
         sendLog(process.env.SERVICE_LOG_SCOPE_SERVER, log_level, log_json_server);
@@ -195,26 +206,26 @@ module.exports = {
         }
         else
             logdate = logdate.toISOString();	
-            let log_json =`{"logscope": "${process.env.SERVICE_LOG_SCOPE_CONTROLLER}",
-                            "loglevel": "${process.env.SERVICE_LOG_LEVEL_INFO}",
-                            "logdate": ${logdate.toISOString()},
-                            "ip":"${req.ip}",
-                            "host": "${req.get('host')}",
-                            "protocol": "${req.protocol}",
-                            "protocol_version": "${req.versionMajor + '.' + req.versionMinor}",
-                            "url": "${req.originalUrl}",
-                            "method":"${req.method}",
-                            "status_code": ${res.status}
-                            "user-agent": "${req.headers["user-agent"]}",
-                            "accept-language": "${req.headers["accept-language"]}",
-                            "http_referer": "${req.headers.referer}",
-                            "app_id": ${app_id},
-                            "app_filename": "${app_filename}",
-                            "app_function_name": "${app_function_name}",
-                            "app_app_line": ${app_line},
-                            "logtext": "${logtext}"
-                            }`;
-            sendLog(process.env.SERVICE_LOG_SCOPE_CONTROLLER, process.env.SERVICE_LOG_LEVEL_INFO, log_json);
+        let log_json =`{"logscope": "${process.env.SERVICE_LOG_SCOPE_CONTROLLER}",
+                        "loglevel": "${process.env.SERVICE_LOG_LEVEL_INFO}",
+                        "logdate": ${logdate.toISOString()},
+                        "ip":"${req.ip}",
+                        "host": "${req.get('host')}",
+                        "protocol": "${req.protocol}",
+                        "protocol_version": "${req.versionMajor + '.' + req.versionMinor}",
+                        "url": "${req.originalUrl}",
+                        "method":"${req.method}",
+                        "status_code": ${res.status}
+                        "user-agent": "${req.headers["user-agent"]}",
+                        "accept-language": "${req.headers["accept-language"]}",
+                        "http_referer": "${req.headers.referer}",
+                        "app_id": ${app_id},
+                        "app_filename": "${app_filename}",
+                        "app_function_name": "${app_function_name}",
+                        "app_app_line": ${app_line},
+                        "logtext": "${logtext}"
+                        }`;
+        sendLog(process.env.SERVICE_LOG_SCOPE_CONTROLLER, process.env.SERVICE_LOG_LEVEL_INFO, log_json);
 	},
     createLogAppCE: (req, app_id, app_filename, app_function_name, app_line, logtext) => {
         let logdate = new Date();
