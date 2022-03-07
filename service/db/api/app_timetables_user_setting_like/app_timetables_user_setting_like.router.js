@@ -1,8 +1,12 @@
-const { likeUserSetting, 
-	    unlikeUserSetting} = require ("./app_timetables_user_setting_like.controller");
 const router = require("express").Router();
+const { likeUserSetting, 
+	unlikeUserSetting} = require ("./app_timetables_user_setting_like.controller");
 const { checkAccessToken } = require("../../../auth/auth.controller");
-
+const { createLogAppRI } = require("../../../log/log.service");
+router.use((req,res,next)=>{
+    createLogAppRI(req, res, req.query.id, __appfilename, __appfunction, __appline, req.body);
+    next();
+})
 router.post("/:id", checkAccessToken, likeUserSetting);
 router.delete("/:id", checkAccessToken, unlikeUserSetting);
 module.exports = router;

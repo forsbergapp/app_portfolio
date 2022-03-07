@@ -4,7 +4,7 @@ const { createLog} = require ("../../service/db/api/app_log/app_log.service");
 const { getParameter, getParameters_server } = require ("../db/api/app_parameter/app_parameter.service");
 const { createLogAppSE, createLogAppCI } = require("../../service/log/log.service");
 module.exports = {
-    access_control: (req, callBack) => {
+    access_control: (req, res, callBack) => {
         if (process.env.SERVICE_AUTH_BLOCK_IP_RANGE){
             const fs = require("fs");
             const ranges = fs.readFileSync(process.env.SERVICE_AUTH_BLOCK_IP_RANGE, 'utf8');
@@ -16,38 +16,36 @@ module.exports = {
               );
             }
             //check if IP is blocked
-            if (req.headers.host.indexOf('localhost')==-1){
-              let ip_v4 = req.ip.replace('::ffff:','');
-              if ((ip_v4.match(/\./g)||[]).length==3){
-                try{
-                  JSON.parse(ranges).forEach(element => {
-                    if (IPtoNum(element[0]) <= IPtoNum(ip_v4) &&
-                        IPtoNum(element[1]) >= IPtoNum(ip_v4)) {
-                            createLogAppCI(req, null, __appfilename, __appfunction, __appline, `ip ${ip_v4} blocked, range: ${IPtoNum(element[0])}-${IPtoNum(element[1])}, tried URL: ${req.originalUrl}`);
-                            return callBack(1,null);
-                    }
-                  })
+            let ip_v4 = req.ip.replace('::ffff:','');
+            if ((ip_v4.match(/\./g)||[]).length==3){
+            try{
+                JSON.parse(ranges).forEach(element => {
+                if (IPtoNum(element[0]) <= IPtoNum(ip_v4) &&
+                    IPtoNum(element[1]) >= IPtoNum(ip_v4)) {
+                        createLogAppCI(req, res, null, __appfilename, __appfunction, __appline, `ip ${ip_v4} blocked, range: ${IPtoNum(element[0])}-${IPtoNum(element[1])}, tried URL: ${req.originalUrl}`);
+                        return callBack(1,null);
                 }
-                catch(err){
-                  createLogAppSE(null, __appfilename, __appfunction, __appline, err);
-                  return callBack(null,1);
-                }
-              }
+                })
+            }
+            catch(err){
+                createLogAppSE(null, __appfilename, __appfunction, __appline, err);
+                return callBack(null,1);
+            }
             }
             //check if accessed from domain and not os hostname
             var os = require("os");
             if (req.headers.host==os.hostname()){
-                createLogAppCI(req, null, __appfilename, __appfunction, __appline, `ip ${ip_v4} blocked, accessed from hostname ${os.hostname()} not domain, tried URL: ${req.originalUrl}`);
+                createLogAppCI(req, res, null, __appfilename, __appfunction, __appline, `ip ${ip_v4} blocked, accessed from hostname ${os.hostname()} not domain, tried URL: ${req.originalUrl}`);
                 return callBack(1,null);
             }
             //check if user-agent exists
             if (req.headers["user-agent"]=='undefined'){
-                createLogAppCI(req, null, __appfilename, __appfunction, __appline, `ip ${ip_v4} blocked, no user-agent, tried URL: ${req.originalUrl}`);
+                createLogAppCI(req, res, null, __appfilename, __appfunction, __appline, `ip ${ip_v4} blocked, no user-agent, tried URL: ${req.originalUrl}`);
                 return callBack(1,null);
             }
             //check if accept-language exists
             if (req.headers["accept-language"]=='undefined'){
-                createLogAppCI(req, null, __appfilename, __appfunction, __appline, `ip ${ip_v4} blocked, no accept-language, tried URL: ${req.originalUrl}`);
+                createLogAppCI(req, res, null, __appfilename, __appfunction, __appline, `ip ${ip_v4} blocked, no accept-language, tried URL: ${req.originalUrl}`);
                 return callBack(1,null);
             }
             return callBack(null,1);

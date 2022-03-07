@@ -56,7 +56,7 @@ app.use((err,req,res,next) => {
 app.use((req,res,next) => {
   //access control
   const { access_control} = require("./service/auth/auth.controller");
-  access_control(req, (err, result)=>{
+  access_control(req, res, (err, result)=>{
 		if(err)
       return res.status(500).send('stop');
 		else
@@ -392,8 +392,8 @@ app.get('/',function (req, res) {
       break;
     }
     case 'app2':{
-      return res.sendFile(__dirname + "/app0/index_maintenance.html");
-      //return res.sendFile(__dirname + "/app2/datamodel.pdf");
+      //return res.sendFile(__dirname + "/app0/index_maintenance.html");
+      return res.sendFile(__dirname + "/app2/datamodel.pdf");
       break;
     }
     default:{

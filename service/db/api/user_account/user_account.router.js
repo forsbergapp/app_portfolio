@@ -1,3 +1,4 @@
+const router = require("express").Router();
 const {
     userSignup,
     activateUser,
@@ -13,9 +14,12 @@ const {
     userLogin,
     getUserByProviderId
 } = require("./user_account.controller");
-const router = require("express").Router();
 const { checkAccessToken, checkDataToken } = require("../../../auth/auth.controller");
-
+const { createLogAppRI } = require("../../../log/log.service");
+router.use((req,res,next)=>{
+    createLogAppRI(req, res, req.query.id, __appfilename, __appfunction, __appline, req.body);
+    next();
+})
 router.post("/login", checkDataToken, userLogin);
 router.post("/signup", checkDataToken, userSignup);
 //local user

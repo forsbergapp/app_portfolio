@@ -480,7 +480,7 @@ module.exports = {
                             }
                         });
                     } else {
-                        createLogAppCI(req, req.query.app_id, __appfilename, __appfunction, __appline, 'invalid password attempt for user id:' + id);
+                        createLogAppCI(req, res, req.query.app_id, __appfilename, __appfunction, __appline, 'invalid password attempt for user id:' + id);
                         //invalid password
                         getMessage(20403, 
                                     req.query.app_id, 
@@ -606,7 +606,7 @@ module.exports = {
                                         });
                                     }
                                     else{
-                                        createLogAppCI(req, req.query.app_id, __appfilename, __appfunction, __appline, 'invalid password attempt for user id:' + id);
+                                        createLogAppCI(req, res, req.query.app_id, __appfilename, __appfunction, __appline, 'invalid password attempt for user id:' + id);
                                         //invalid password
                                         getMessage(20403, 
                                                     req.query.app_id, 
@@ -690,6 +690,7 @@ module.exports = {
                         });
                     } else {
                         //Username or password not found
+                        createLogAppCI(req, res, req.body.app_id, __appfilename, __appfunction, __appline, 'invalid password attempt for user id:' + req.body.user_account_id + ', username:' + req.body.username);
                         getMessage(20300, 
                             req.body.app_id, 
                             req.query.lang_code, (err2,results2)  => {
@@ -700,6 +701,7 @@ module.exports = {
                     }
                 } else{
                     //User not found
+                    createLogAppCI(req, res, req.body.app_id, __appfilename, __appfunction, __appline, 'user not found:' + req.body.username);
                     getMessage(20305, 
                         req.body.app_id, 
                         req.query.lang_code, (err2,results2)  => {
