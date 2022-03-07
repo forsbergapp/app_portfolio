@@ -79,7 +79,7 @@ module.exports = {
              "http_referer": "",
              "error_status": "", 
              "error_message": "",
-             "info": "${info}"
+             "info": "${JSON.stringify(info).replaceAll('"', '\'')}"
              }`;
         }
         else{
@@ -97,7 +97,7 @@ module.exports = {
              "accept-language": "${req.headers["accept-language"]}",
              "http_referer": "${req.headers["referer"]}",
              "error_status": "${log_error_status}",
-             "error_message": "${log_error_message.replaceAll('"', '\'')}", 
+             "error_message": "${JSON.stringify(log_error_message).replaceAll('"', '\'')}", 
              "info": ""
             }`;
         }
@@ -117,7 +117,7 @@ module.exports = {
                                 "loglevel": "${process.env.SERVICE_LOG_LEVEL_INFO}",
                                 "logdate": "${logdate}",
                                 "app_id": ${app_id},
-                                "logtext": "${logtext.replaceAll('"', '\'')}"
+                                "logtext": "${JSON.stringify(logtext).replaceAll('"', '\'')}"
                                 }`;
             sendLog(logscope, loglevel, log_json_db);
         }
@@ -138,7 +138,7 @@ module.exports = {
                         "app_filename": "${app_filename}",
                         "app_function_name": "${app_function_name}",
                         "app_app_line": ${app_line},
-                        "logtext": "${logtext.replaceAll('"', '\'')}"
+                        "logtext": "${JSON.stringify(logtext).replaceAll('"', '\'')}"
                         }`;
         sendLog(process.env.SERVICE_LOG_SCOPE_SERVICE, process.env.SERVICE_LOG_LEVEL_INFO, log_json);
 	},
@@ -158,7 +158,7 @@ module.exports = {
                         "app_filename": "${app_filename}",
                         "app_function_name": "${app_function_name}",
                         "app_app_line": ${app_line},
-                        "logtext": "${logtext.replaceAll('"', '\'')}"
+                        "logtext": "${JSON.stringify(logtext).replaceAll('"', '\'')}"
                         }`;
         sendLog(process.env.SERVICE_LOG_SCOPE_SERVICE, process.env.SERVICE_LOG_LEVEL_ERROR, log_json);
 	},
@@ -187,7 +187,7 @@ module.exports = {
                         "app_filename": "${app_filename}",
                         "app_function_name": "${app_function_name}",
                         "app_app_line": ${app_line},
-                        "logtext": "${logtext.replaceAll('"', '\'')}"
+                        "logtext": "${JSON.stringify(logtext).replaceAll('"', '\'')}"
                         }`;
         sendLog(process.env.SERVICE_LOG_SCOPE_CONTROLLER, process.env.SERVICE_LOG_LEVEL_INFO, log_json);
 	},
@@ -216,7 +216,7 @@ module.exports = {
                         "app_filename": "${app_filename}",
                         "app_function_name": "${app_function_name}",
                         "app_app_line": ${app_line},
-                        "logtext": "${logtext.replaceAll('"', '\'')}"
+                        "logtext": "${JSON.stringify(logtext).replaceAll('"', '\'')}"
                         }`;
         sendLog(process.env.SERVICE_LOG_SCOPE_CONTROLLER, process.env.SERVICE_LOG_LEVEL_ERROR, log_json);
 	},

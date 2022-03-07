@@ -390,10 +390,10 @@ a:active {
 }
 #profile_follow:hover i,
 #profile_like:hover i,
-.profile_user_settings_day:hover i,
-.profile_user_settings_month:hover i,
-.profile_user_settings_year:hover i,
-.profile_user_settings_like:hover i{
+#profile_user_settings_day:hover i,
+#profile_user_settings_month:hover i,
+#profile_user_settings_year:hover i,
+#profile_user_settings_like:hover i{
 	cursor:pointer;
 	transform: scale(1.3);
 	transition: transform 0.5s ease, background 0.5s ease, box-shadow 0.5s ease;
@@ -2197,13 +2197,13 @@ body.app_theme1,
 }
 .app_theme1 #profile_follow:hover i,
 .app_theme1 #profile_like:hover i,
-.app_theme1 .profile_user_settings_day:hover i,
-.app_theme1 .profile_user_settings_month:hover i,
-.app_theme1 .profile_user_settings_year:hover i,
-.app_theme1 .profile_user_settings_like:hover i{
+.app_theme1 #profile_user_settings_day:hover i,
+.app_theme1 #profile_user_settings_month:hover i,
+.app_theme1 #profile_user_settings_year:hover i,
+.app_theme1 #profile_user_settings_like:hover i{
 	color:#6ab344;
 }
-.app_theme1 .profile_user_settings_row .profile_user_settings_like:hover{
+.app_theme1 .profile_user_settings_row #profile_user_settings_like:hover{
 	color:#6ab344;
 }
 .app_theme1 .dialogue{
@@ -2362,13 +2362,13 @@ body.app_theme2,
 }
 .app_theme2 #profile_follow:hover i,
 .app_theme2 #profile_like:hover i,
-.app_theme2 .profile_user_settings_day:hover i,
-.app_theme2 .profile_user_settings_month:hover i,
-.app_theme2 .profile_user_settings_year:hover i,
-.app_theme2 .profile_user_settings_like:hover i{
+.app_theme2 #profile_user_settings_day:hover i,
+.app_theme2 #profile_user_settings_month:hover i,
+.app_theme2 #profile_user_settings_year:hover i,
+.app_theme2 #profile_user_settings_like:hover i{
 	color:#6ab344;
 }
-.app_theme2 .profile_user_settings_row .profile_user_settings_like:hover{
+.app_theme2 .profile_user_settings_row #profile_user_settings_like:hover{
 	color:#6ab344;
 }
 .app_theme2 .dialogue{
@@ -2527,13 +2527,13 @@ body.app_theme3,
 }
 .app_theme3 #profile_follow:hover i,
 .app_theme3 #profile_like:hover i,
-.app_theme3 .profile_user_settings_day:hover i,
-.app_theme3 .profile_user_settings_month:hover i,
-.app_theme3 .profile_user_settings_year:hover i,
-.app_theme3 .profile_user_settings_like:hover i{
+.app_theme3 #profile_user_settings_day:hover i,
+.app_theme3 #profile_user_settings_month:hover i,
+.app_theme3 #profile_user_settings_year:hover i,
+.app_theme3 #profile_user_settings_like:hover i{
 	color:#6ab344;
 }
-.app_theme3 .profile_user_settings_row .profile_user_settings_like:hover{
+.app_theme3 .profile_user_settings_row #profile_user_settings_like:hover{
 	color:#6ab344;
 }
 .app_theme3 .dialogue{

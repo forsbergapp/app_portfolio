@@ -56,9 +56,9 @@ app.use((err,req,res,next) => {
 app.use((req,res,next) => {
   //access control
   const { access_control} = require("./service/auth/auth.controller");
-  access_control(req, res, (err, result)=>{
-		if(err)
-      return res.status(500).send('stop');
+  access_control(req, res, (http_err_code, result)=>{
+		if(http_err_code)
+      return res.status(http_err_code).send('stop');
 		else
       if (process.env.SERVICE_LOG_ENABLE_SERVER_VERBOSE==1){
         const getCircularReplacer = () => {
