@@ -106,6 +106,8 @@ const app1_app_timetables_user_setting_viewRouter = require("./service/db/api/ap
 const geolocationRouter = require("./service/geolocation/geolocation.router");
 //service mail
 const mailRouter = require("./service/mail/mail.router");
+//service forms
+const formsRouter = require("./service/forms/forms.router");
 //service report
 const reportRouter = require("./service/report/report.router");
 //service worldcities
@@ -162,6 +164,8 @@ app.use("/service/db/api/app_timetables_user_setting_view", app1_app_timetables_
 app.use("/service/geolocation", geolocationRouter);
 //service mail
 app.use("/service/mail", mailRouter);
+//service forms
+app.use("/service/forms", formsRouter);
 //service report
 app.use("/service/report", reportRouter);
 //service worldcities
@@ -178,7 +182,6 @@ process.env.TZ = 'UTC';
 //admin directories
 app.use('/admin/js',express.static(__dirname + '/admin/js'));
 app.use('/admin/css',express.static(__dirname + '/admin/css'));
-
 //app 0 directories
 app.use('/app0/info',express.static(__dirname + '/app0/info'));
 app.use('/app0/css',express.static(__dirname + '/app0/css'));
@@ -196,8 +199,12 @@ app.get("/admin",function (req, res, next) {
   //redirect from http to https
   if (req.protocol=='http')
     return res.redirect('https://' + req.headers.host + "/admin");
-  else
-    return res.sendFile(__dirname + "/admin/index.html");
+  else{
+    const { getAdmin } = require ("./service/forms/forms.controller");
+        getAdmin( (err, app_result)=>{
+          return res.send(app_result);
+        })
+  }
 });
 app.get("/admin/:sub",function (req, res, next) {
     return res.redirect('https://' + req.headers.host + "/admin");
@@ -318,19 +325,13 @@ app.get('/:user', function(req, res,next) {
       if (req.protocol=='http')
         return res.redirect('https://' + req.headers.host);
       else{
-        const {getProfileUsername} = require("./service/db/api/user_account/user_account.service");
-        getProfileUsername(process.env.APP1_ID,req.params.user,null, (err,result)=>{
-          if (result){
-            // return app 1
-            const { getApp } = require("./app1/app");
-            res.setHeader('Content-Type', 'text/html');
-            const app = getApp(process.env.APP1_ID)
-            .then(function(app_result){
-              return res.send(app_result);
-            });
-          }
-          else            
+        const { getForm} = require("./service/forms/forms.controller");
+        getForm(process.env.APP1_ID, req.params.user, (err, app_result)=>{
+          //if err=0 means here redirect to /
+          if (err==0)
             return res.redirect('/');
+          else
+            return res.send(app_result);
         })
       }
     }
@@ -384,13 +385,10 @@ app.get('/',function (req, res) {
     }
     case 'app1':{
       //return res.sendFile(__dirname + "/app1/index_maintenance.html");
-      //app 1 generates startup html with some data from database
-      const { getApp } = require("./app1/app");
-      res.setHeader('Content-Type', 'text/html');
-      const app = getApp(process.env.APP1_ID)
-      .then(function(app_result){
-        return res.send(app_result);
-      });
+      const { getForm} = require("./service/forms/forms.controller");
+      getForm(process.env.APP1_ID, null,(err, app_result)=>{
+          return res.send(app_result);
+      })
       break;
     }
     case 'app2':{

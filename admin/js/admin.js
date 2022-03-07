@@ -1,12 +1,5 @@
 var global_rest_admin_at;
 
-function show_menu(menu){
-    document.getElementById('menu_1_content').style.display='none';
-    document.getElementById('menu_2_content').style.display='none';
-    document.getElementById('menu_3_content').style.display='none';
-    document.getElementById('menu_4_content').style.display='none';
-    document.getElementById(`menu_${menu}_content`).style.display='block';
-}
 function admin_login(){
     var status;
     var json;
@@ -25,39 +18,44 @@ function admin_login(){
                 json = JSON.parse(result);
                 if (json.success == 1){
                     global_rest_admin_at = json.token_at;
-                    document.getElementById('dashboard').style.visibility = 'visible';
-                    document.getElementById('menu_1_content').style.display = 'block';
-                    document.getElementById('dialogue_login').style.visibility = 'hidden';
-                    document.getElementById('menu_1').addEventListener('click', function() { show_menu(1) }, false);
-                    document.getElementById('menu_2').addEventListener('click', function() { show_menu(2) }, false);
-                    document.getElementById('menu_3').addEventListener('click', function() { show_menu(3) }, false);
-                    document.getElementById('menu_4').addEventListener('click', function() { show_menu(4) }, false);
-                    document.getElementById('menu_5').addEventListener('click', function() { admin_logout() }, false);
-                    document.getElementById('menu_1_content_widget').innerHTML = 'One';
-                    document.getElementById('menu_2_content_widget').innerHTML = 'Two';
-                    document.getElementById('menu_3_content_widget').innerHTML = 'Three';
-                    document.getElementById('menu_4_content_widget').innerHTML = 'Four';
-                    document.getElementById("login_username").value='';
-                    document.getElementById("login_password").value='';
+                    fetch('/service/forms/admin/secure',
+                    {method: 'GET',
+                        headers: {
+                            'Authorization': 'Bearer ' + global_rest_admin_at,
+                        }
+                    })
+                        .then(function(response) {
+                            status = response.status;
+                            return response.text();
+                        })
+                        .then(function(result) {
+                            if (status == 200){
+                                document.getElementById("login_username").value='';
+                                document.getElementById("login_password").value='';                        
+                                document.getElementById('dialogue_login').style.visibility = 'hidden';
+                                document.getElementById('secure').style.visibility = 'visible';
+                                document.getElementById('secure').innerHTML = result;
+                                //make script in innerHTML work:
+                                var scripts = Array.prototype.slice.call(document.getElementById('secure').getElementsByTagName("script"));
+                                for (var i = 0; i < scripts.length; i++) {
+                                    if (scripts[i].src != "") {
+                                        var tag = document.createElement("script");
+                                        tag.src = scripts[i].src;
+                                        document.getElementsByTagName("head")[0].appendChild(tag);
+                                    }
+                                    else {
+                                        eval(scripts[i].innerHTML);
+                                    }
+                                }
+                            }
+                            else
+                                alert('Error: ' + result);
+                        });
                 }
             }
             else
                 alert('Error: ' + result);
         });
-}
-function admin_logout(){
-    document.getElementById('menu_1').removeEventListener('click', function() { show_menu(1) }, false);
-    document.getElementById('menu_2').removeEventListener('click', function() { show_menu(2) }, false);
-    document.getElementById('menu_3').removeEventListener('click', function() { show_menu(3) }, false);
-    document.getElementById('menu_4').removeEventListener('click', function() { show_menu(4) }, false);
-    document.getElementById('menu_5').removeEventListener('click', function() { admin_login() }, false);
-    document.getElementById('dashboard').style.visibility = 'hidden';
-    document.getElementById('menu_1_content_widget').innerHTML = '';
-    document.getElementById('menu_2_content_widget').innerHTML = '';
-    document.getElementById('menu_3_content_widget').innerHTML = '';
-    document.getElementById('menu_4_content_widget').innerHTML = '';
-    document.getElementById('dialogue_login').style.visibility = 'visible';
-    document.getElementById('body').classList = 'theme_light';
 }
 function keyfunctions(){
     document.getElementById("login_username").addEventListener("keyup", function(event) {

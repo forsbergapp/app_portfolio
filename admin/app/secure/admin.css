@@ -1,0 +1,72 @@
+<style>
+    select,input, button {
+        font-family: inherit;
+    }
+    a:link{
+        text-decoration: none;
+    }
+    a:visited {
+        text-decoration: none;
+    }
+    a:hover {
+        text-decoration: underline;
+    }
+    a:active {
+        text-decoration: underline;
+    }
+    #dashboard{
+        width:100%;
+        height:100%;
+    }
+    #menu{
+        width:150px;
+        height:100%;
+        position:fixed;
+        padding-top: 20px;
+    }
+    .menuitem{
+        cursor: pointer;
+        text-align: left;
+        margin: 20px;
+        text-transform:uppercase;
+    }
+
+    #main{
+        width:100%;
+        height:100%;
+        margin-left: 150px;
+        position: fixed;
+    }
+
+    #menu_1_content, #menu_2_content, #menu_3_content, #menu_4_content{
+        width: 75%;
+        height: 100%;
+        position:fixed;
+        margin:20px;
+        display: none;
+    }
+    .widget{
+        height: 50%;
+        margin:20px;
+        padding: 5px;
+        text-align: center;
+        border-radius: 4px;
+    }
+    .theme_light #menu{
+        background-color:#fefefe;
+        font-weight: bold;
+    }
+    .theme_light #main{
+        background-color:rgb(81, 171, 255);
+    }
+    .theme_light .menuitem:hover, .theme_light .menuitem:active{
+        color:#6ab344 !important;
+    }
+    .theme_light .widget:hover, .theme_light .widget:active{
+        box-shadow: 0 0 35px 4px rgb(255,255,255,0.25);
+    }  
+    .theme_light .widget{
+        background-color: #fefefe;
+        box-shadow: 0 4px 8px 0 rgb(0 0 0 / 20%), 0 6px 20px 0 rgb(0 0 0 / 19%);
+    }
+</style>
