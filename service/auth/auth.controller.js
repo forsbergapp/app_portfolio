@@ -23,7 +23,8 @@ module.exports = {
                 if (IPtoNum(element[0]) <= IPtoNum(ip_v4) &&
                     IPtoNum(element[1]) >= IPtoNum(ip_v4)) {
                         createLogAppCI(req, res, null, __appfilename, __appfunction, __appline, `ip ${ip_v4} blocked, range: ${IPtoNum(element[0])}-${IPtoNum(element[1])}, tried URL: ${req.originalUrl}`);
-                        return callBack(1,null);
+                        //403 Forbidden
+                        return callBack(403,null);
                 }
                 })
             }
@@ -36,17 +37,20 @@ module.exports = {
             var os = require("os");
             if (req.headers.host==os.hostname()){
                 createLogAppCI(req, res, null, __appfilename, __appfunction, __appline, `ip ${ip_v4} blocked, accessed from hostname ${os.hostname()} not domain, tried URL: ${req.originalUrl}`);
-                return callBack(1,null);
+                //406 Not Acceptable
+                return callBack(406,null);
             }
             //check if user-agent exists
             if (req.headers["user-agent"]=='undefined'){
                 createLogAppCI(req, res, null, __appfilename, __appfunction, __appline, `ip ${ip_v4} blocked, no user-agent, tried URL: ${req.originalUrl}`);
-                return callBack(1,null);
+                //406 Not Acceptable
+                return callBack(406,null);
             }
             //check if accept-language exists
             if (req.headers["accept-language"]=='undefined'){
                 createLogAppCI(req, res, null, __appfilename, __appfunction, __appline, `ip ${ip_v4} blocked, no accept-language, tried URL: ${req.originalUrl}`);
-                return callBack(1,null);
+                //406 Not Acceptable
+                return callBack(406,null);
             }
             return callBack(null,1);
           }
