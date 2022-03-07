@@ -1997,18 +1997,6 @@ function format_json_date(db_date, short) {
         //in ISO 8601 format
         //JSON returns format 2020-08-08T05:15:28Z
         //"yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'"
-
-        /*
-        var dateTimeRegExp = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{3})?Z$/;
-        var reviver = function(key, value) {
-          if (typeof value === 'string' && dateTimeRegExp.test(value)) {
-            return new Date(value);
-          } else {
-            return value;
-          }
-        };
-        var todo = JSON.parse('{"name":"Get milk","due":"2016-01-01T05:00:00.123Z"}', reviver);
-        */
         var settings = {
             timezone_current: document.getElementById('setting_select_timezone_current').value,
             locale: document.getElementById('setting_select_locale').value
@@ -2047,20 +2035,20 @@ function format_json_date(db_date, short) {
 }
 
 function spinner(button, visibility) {
-    var button_spinner = '<div id="button_spinner" class="load-spinner">' +
-                            '<div></div>' +
-                            '<div></div>' +
-                            '<div></div>' +
-                            '<div></div>' +
-                            '<div></div>' +
-                            '<div></div>' +
-                            '<div></div>' +
-                            '<div></div>' +
-                            '<div></div>' +
-                            '<div></div>' +
-                            '<div></div>' +
-                            '<div></div>' +
-                         '</div>';
+    var button_spinner = `<div id="button_spinner" class="load-spinner">
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                         </div>`;
     var button_default_icon_login = '<i class="fas fa-arrow-alt-circle-right"></i>';
     var button_default_icon_signup = '<i class="fas fa-arrow-alt-circle-right"></i>';
     var button_default_icon_save = '<i class="fas fa-save"></i>';
@@ -2149,25 +2137,20 @@ function dialogue_loading(visible){
 }
 
 function zoom_paper(zoomvalue = '') {
-    var old;
-    var old_scale;
+    let old;
+    let old_scale;
+    let div = document.getElementById('paper');
     //called with null as argument at init() then used for zooming
     //even if css set, this property is not set at startup
     if (zoomvalue == '') {
         if (mobile())
-            document.getElementById('paper').style.transform = 'scale(0.5)';
+            div.style.transform = 'scale(0.5)';
         else
-            document.getElementById('paper').style.transform = 'scale(0.7)';
+            div.style.transform = 'scale(0.7)';
     } else {
         old = document.getElementById('paper').style.transform;
         old_scale = parseFloat(old.substr(old.indexOf("(") + 1, old.indexOf(")") - 1));
-        if (zoomvalue == 1) {
-            //zoom in, increase value
-            document.getElementById('paper').style.transform = 'scale(' + (old_scale + (1 / 10)) + ')';
-        } else {
-            //zoom out, decrease value
-            document.getElementById('paper').style.transform = 'scale(' + (old_scale - (1 / 10)) + ')';
-        }
+        div.style.transform = 'scale(' + (old_scale + (zoomvalue / 10)) + ')';
     }
     return null;
 }
@@ -2419,16 +2402,16 @@ function user_update() {
     var status;
 
     if (document.getElementById('user_edit_local').style.display == 'block') {
-        json_data = '{' + 
-            '"bio":"' + bio + '",' +
-            '"private":' + boolean_to_number(document.getElementById('setting_checkbox_report_private').checked) + ',' +
-            '"username":"' + username + '",' +
-            '"password":"' + password + '",' +
-            '"new_password":"' + new_password + '",' +
-            '"password_reminder":"' + password_reminder + '",' +
-            '"email":"' + email + '",' +
-            '"avatar":"' + avatar + '"' +
-            '}';
+        json_data = `{ 
+                        "bio":"${bio}",
+                        "private": ${boolean_to_number(document.getElementById('setting_checkbox_report_private').checked)},
+                        "username":"${username}",
+                        "password":"${password}",
+                        "new_password":"${new_password}",
+                        "password_reminder":"${password_reminder}",
+                        "email":"${email}",
+                        "avatar":"${avatar}"
+                    }`;
         url = global_rest_url_base + global_rest_user_account + user_id.innerHTML;
         document.getElementById('setting_input_username_edit').classList.remove('input_error');
 
@@ -2470,9 +2453,9 @@ function user_update() {
             return null;
         }
     } else {
-        json_data = '{"bio":"' + bio + '",' +
-            '"private":' + boolean_to_number(document.getElementById('setting_checkbox_report_private').checked) +
-            '}';
+        json_data = `{"bio":"${bio}",
+                      "private":${boolean_to_number(document.getElementById('setting_checkbox_report_private').checked)}
+                     }`;
         url = global_rest_url_base + global_rest_user_account_common + user_id.innerHTML
     }
     spinner('UPDATE', 'visible');
@@ -2616,13 +2599,14 @@ function user_login() {
 
     var user_id = document.getElementById('setting_data_userid_logged_in');
 
-    json_data = '{' +
-        '"app_id": ' + global_app_id + ',' +
-        '"username":"' + username.value + '",' +
-        '"password":"' + password.value + '",' +
-        '"active":1,' +
-        '"client_longitude":"' + global_session_user_gps_longitude + '",' +
-        '"client_latitude":"' + global_session_user_gps_latitude + '"}';
+    json_data = `{
+                    "app_id": ${global_app_id},
+                    "username":"${username.value}",
+                    "password":"${password.value}",
+                    "active":1,
+                    "client_longitude":"${global_session_user_gps_longitude}",
+                    "client_latitude":"${global_session_user_gps_latitude}"
+                 }`;
     if (username.value == '') {
         //"Please enter username"
         show_error(20303);
@@ -3017,73 +3001,73 @@ function user_signup() {
     var select_setting_city = document.getElementById('setting_select_city');
     var select_setting_popular_place = document.getElementById('setting_select_popular_place');
 
-    var json_data = '{' +
-        '"user_language": "' + navigator.language + '",' +
-        '"user_timezone": "' + Intl.DateTimeFormat().resolvedOptions().timeZone + '",' +
-        '"user_number_system": "' + Intl.NumberFormat().resolvedOptions().numberingSystem + '",' +
-        '"user_platform": "' + navigator.platform + '",' +
-        '"username":"' + username + '",' +
-        '"password":"' + password + '",' +
-        '"password_reminder":"' + password_reminder + '",' +
-        '"email":"' + email + '",' +
-        '"active":' + 0 + ',' +
-        '"description": "' + document.getElementById('setting_input_place').value + '",' +
-        '"regional_language_locale": "' + document.getElementById('setting_select_locale').value + '",' +
-        '"regional_current_timezone_select_id": ' + document.getElementById('setting_select_timezone_current').selectedIndex + ',' +
-        '"regional_timezone_select_id": ' + document.getElementById('setting_select_report_timezone').selectedIndex + ',' +
-        '"regional_number_system_select_id": ' + document.getElementById('setting_select_report_numbersystem').selectedIndex + ',' +
-        '"regional_layout_direction_select_id": ' + document.getElementById('setting_select_report_direction').selectedIndex + ',' +
-        '"regional_second_language_locale": "' + document.getElementById('setting_select_report_locale_second').value + '",' +
-        '"regional_column_title_select_id": ' + document.getElementById('setting_select_report_coltitle').selectedIndex + ',' +
-        '"regional_arabic_script_select_id": ' + document.getElementById('setting_select_report_arabic_script').selectedIndex + ',' +
-        '"regional_calendar_type_select_id": ' + document.getElementById('setting_select_calendartype').selectedIndex + ',' +
-        '"regional_calendar_hijri_type_select_id": ' + document.getElementById('setting_select_calendar_hijri_type').selectedIndex + ',' +
+    var json_data = `{
+                    "user_language": "${navigator.language}",
+                    "user_timezone": "${Intl.DateTimeFormat().resolvedOptions().timeZone}",
+                    "user_number_system": "${Intl.NumberFormat().resolvedOptions().numberingSystem}",
+                    "user_platform": "${navigator.platform}",
+                    "username":"${username}",
+                    "password":"${password}",
+                    "password_reminder":"${password_reminder}",
+                    "email":"${email}",
+                    "active":0 ,
+                    "description": "${document.getElementById('setting_input_place').value}",
+                    "regional_language_locale": "${document.getElementById('setting_select_locale').value}",
+                    "regional_current_timezone_select_id": ${document.getElementById('setting_select_timezone_current').selectedIndex},
+                    "regional_timezone_select_id": ${document.getElementById('setting_select_report_timezone').selectedIndex},
+                    "regional_number_system_select_id": ${document.getElementById('setting_select_report_numbersystem').selectedIndex},
+                    "regional_layout_direction_select_id": ${document.getElementById('setting_select_report_direction').selectedIndex},
+                    "regional_second_language_locale": "${document.getElementById('setting_select_report_locale_second').value}",
+                    "regional_column_title_select_id": ${document.getElementById('setting_select_report_coltitle').selectedIndex},
+                    "regional_arabic_script_select_id": ${document.getElementById('setting_select_report_arabic_script').selectedIndex},
+                    "regional_calendar_type_select_id": ${document.getElementById('setting_select_calendartype').selectedIndex},
+                    "regional_calendar_hijri_type_select_id": ${document.getElementById('setting_select_calendar_hijri_type').selectedIndex},
 
-        '"gps_map_type_select_id": ' + document.getElementById('setting_select_maptype').selectedIndex + ',' +
-        '"gps_country_id": ' + set_null_or_value(select_setting_country[select_setting_country.selectedIndex].getAttribute('id')) + ',' +
-        '"gps_city_id": ' + set_null_or_value(select_setting_city[select_setting_city.selectedIndex].getAttribute('id')) + ',' +
-        '"gps_popular_place_id": ' + set_null_or_value(select_setting_popular_place[select_setting_popular_place.selectedIndex].getAttribute('id')) + ',' +
-        '"gps_lat_text": "' + document.getElementById('setting_input_lat').value + '",' +
-        '"gps_long_text": "' + document.getElementById('setting_input_long').value + '",' +
+                    "gps_map_type_select_id": ${document.getElementById('setting_select_maptype').selectedIndex},
+                    "gps_country_id": ${set_null_or_value(select_setting_country[select_setting_country.selectedIndex].getAttribute('id'))},
+                    "gps_city_id": ${set_null_or_value(select_setting_city[select_setting_city.selectedIndex].getAttribute('id'))},
+                    "gps_popular_place_id": ${set_null_or_value(select_setting_popular_place[select_setting_popular_place.selectedIndex].getAttribute('id'))},
+                    "gps_lat_text": "${document.getElementById('setting_input_lat').value}",
+                    "gps_long_text": "${document.getElementById('setting_input_long').value}",
 
-        '"design_theme_day_id": "' + get_theme_id('day') + '",' +
-        '"design_theme_month_id": "' + get_theme_id('month') + '",' +
-        '"design_theme_year_id": "' + get_theme_id('year') + '",' +
-        '"design_paper_size_select_id": ' + document.getElementById('setting_select_report_papersize').selectedIndex + ',' +
-        '"design_row_highlight_select_id": ' + document.getElementById('setting_select_report_highlight_row').selectedIndex + ',' +
-        '"design_column_weekday_checked": ' + boolean_to_number(document.getElementById('setting_checkbox_report_show_weekday').checked) + ',' +
-        '"design_column_calendartype_checked": ' + boolean_to_number(document.getElementById('setting_checkbox_report_show_calendartype').checked) + ',' +
-        '"design_column_notes_checked": ' + boolean_to_number(document.getElementById('setting_checkbox_report_show_notes').checked) + ',' +
-        '"design_column_gps_checked": ' + boolean_to_number(document.getElementById('setting_checkbox_report_show_gps').checked) + ',' +
-        '"design_column_timezone_checked": ' + boolean_to_number(document.getElementById('setting_checkbox_report_show_timezone').checked) + ',' +
+                    "design_theme_day_id": "${get_theme_id('day')}",
+                    "design_theme_month_id": "${get_theme_id('month')}",
+                    "design_theme_year_id": "${get_theme_id('year')}",
+                    "design_paper_size_select_id": ${document.getElementById('setting_select_report_papersize').selectedIndex},
+                    "design_row_highlight_select_id": ${document.getElementById('setting_select_report_highlight_row').selectedIndex},
+                    "design_column_weekday_checked": ${boolean_to_number(document.getElementById('setting_checkbox_report_show_weekday').checked)},
+                    "design_column_calendartype_checked": ${boolean_to_number(document.getElementById('setting_checkbox_report_show_calendartype').checked)},
+                    "design_column_notes_checked": ${boolean_to_number(document.getElementById('setting_checkbox_report_show_notes').checked)},
+                    "design_column_gps_checked": ${boolean_to_number(document.getElementById('setting_checkbox_report_show_gps').checked)},
+                    "design_column_timezone_checked": ${boolean_to_number(document.getElementById('setting_checkbox_report_show_timezone').checked)},
 
-        '"image_header_image_img": "' + btoa(document.getElementById('setting_reportheader_img').src) + '",' +
-        '"image_footer_image_img": "' + btoa(document.getElementById('setting_reportfooter_img').src) + '",' +
+                    "image_header_image_img": "${btoa(document.getElementById('setting_reportheader_img').src)}",
+                    "image_footer_image_img": "${btoa(document.getElementById('setting_reportfooter_img').src)}",
 
-        '"text_header_1_text": "' + document.getElementById('setting_input_reporttitle1').value + '",' +
-        '"text_header_2_text": "' + document.getElementById('setting_input_reporttitle2').value + '",' +
-        '"text_header_3_text": "' + document.getElementById('setting_input_reporttitle3').value + '",' +
-        '"text_header_align": "' + align_button_value('reporttitle') + '",' +
-        '"text_footer_1_text": "' + document.getElementById('setting_input_reportfooter1').value + '",' +
-        '"text_footer_2_text": "' + document.getElementById('setting_input_reportfooter2').value + '",' +
-        '"text_footer_3_text": "' + document.getElementById('setting_input_reportfooter3').value + '",' +
-        '"text_footer_align": "' + align_button_value('reportfooter') + '",' +
+                    "text_header_1_text": "${document.getElementById('setting_input_reporttitle1').value}",
+                    "text_header_2_text": "${document.getElementById('setting_input_reporttitle2').value}",
+                    "text_header_3_text": "${document.getElementById('setting_input_reporttitle3').value}",
+                    "text_header_align": "${align_button_value('reporttitle')}",
+                    "text_footer_1_text": "${document.getElementById('setting_input_reportfooter1').value}",
+                    "text_footer_2_text": "${document.getElementById('setting_input_reportfooter2').value}",
+                    "text_footer_3_text": "${document.getElementById('setting_input_reportfooter3').value}",
+                    "text_footer_align": "${align_button_value('reportfooter')}",
 
-        '"prayer_method_select_id": ' + document.getElementById('setting_select_method').selectedIndex + ',' +
-        '"prayer_asr_method_select_id": ' + document.getElementById('setting_select_asr').selectedIndex + ',' +
-        '"prayer_high_latitude_adjustment_select_id": ' + document.getElementById('setting_select_highlatitude').selectedIndex + ',' +
-        '"prayer_time_format_select_id": ' + document.getElementById('setting_select_timeformat').selectedIndex + ',' +
-        '"prayer_hijri_date_adjustment_select_id": ' + document.getElementById('setting_select_hijri_adjustment').selectedIndex + ',' +
-        '"prayer_fajr_iqamat_select_id": ' + document.getElementById('setting_select_report_iqamat_title_fajr').selectedIndex + ',' +
-        '"prayer_dhuhr_iqamat_select_id": ' + document.getElementById('setting_select_report_iqamat_title_dhuhr').selectedIndex + ',' +
-        '"prayer_asr_iqamat_select_id": ' + document.getElementById('setting_select_report_iqamat_title_asr').selectedIndex + ',' +
-        '"prayer_maghrib_iqamat_select_id": ' + document.getElementById('setting_select_report_iqamat_title_maghrib').selectedIndex + ',' +
-        '"prayer_isha_iqamat_select_id": ' + document.getElementById('setting_select_report_iqamat_title_isha').selectedIndex + ',' +
-        '"prayer_column_imsak_checked": ' + boolean_to_number(document.getElementById('setting_checkbox_report_show_imsak').checked) + ',' +
-        '"prayer_column_sunset_checked": ' + boolean_to_number(document.getElementById('setting_checkbox_report_show_sunset').checked) + ',' +
-        '"prayer_column_midnight_checked": ' + boolean_to_number(document.getElementById('setting_checkbox_report_show_midnight').checked) + ',' +
-        '"prayer_column_fast_start_end_select_id": ' + document.getElementById('setting_select_report_show_fast_start_end').selectedIndex +
-        '}';
+                    "prayer_method_select_id": ${document.getElementById('setting_select_method').selectedIndex},
+                    "prayer_asr_method_select_id": ${document.getElementById('setting_select_asr').selectedIndex},
+                    "prayer_high_latitude_adjustment_select_id": ${document.getElementById('setting_select_highlatitude').selectedIndex},
+                    "prayer_time_format_select_id": ${document.getElementById('setting_select_timeformat').selectedIndex},
+                    "prayer_hijri_date_adjustment_select_id": ${document.getElementById('setting_select_hijri_adjustment').selectedIndex},
+                    "prayer_fajr_iqamat_select_id": ${document.getElementById('setting_select_report_iqamat_title_fajr').selectedIndex},
+                    "prayer_dhuhr_iqamat_select_id": ${document.getElementById('setting_select_report_iqamat_title_dhuhr').selectedIndex},
+                    "prayer_asr_iqamat_select_id": ${document.getElementById('setting_select_report_iqamat_title_asr').selectedIndex},
+                    "prayer_maghrib_iqamat_select_id": ${document.getElementById('setting_select_report_iqamat_title_maghrib').selectedIndex},
+                    "prayer_isha_iqamat_select_id": ${document.getElementById('setting_select_report_iqamat_title_isha').selectedIndex},
+                    "prayer_column_imsak_checked": ${boolean_to_number(document.getElementById('setting_checkbox_report_show_imsak').checked)},
+                    "prayer_column_sunset_checked": ${boolean_to_number(document.getElementById('setting_checkbox_report_show_sunset').checked)},
+                    "prayer_column_midnight_checked": ${boolean_to_number(document.getElementById('setting_checkbox_report_show_midnight').checked)},
+                    "prayer_column_fast_start_end_select_id": ${document.getElementById('setting_select_report_show_fast_start_end').selectedIndex}
+                    }`;
     var status;
     if (username == '') {
         //"Please enter username"
@@ -3575,7 +3559,7 @@ async function set_default_settings() {
     SearchAndSetSelectedIndex(navigator.language.toLowerCase(), document.getElementById('setting_select_locale'),1);
     //default timezone current timezone
     SearchAndSetSelectedIndex(current_timezone, document.getElementById('setting_select_timezone_current'),1);
-    //def report timezone current timezone, 
+    //default report timezone current timezone, 
     //will be changed user timezone to place timezone if no GPS can be set and default place will be used
     SearchAndSetSelectedIndex(current_timezone, document.getElementById('setting_select_report_timezone'),1);
     //set default numberformat numbersystem
@@ -3756,7 +3740,6 @@ function update_settings_icon(url = '', logoff = false) {
         img_account_image_url.src = url;
     }
     return null;
-
 }
 
 function updateProviderUser(provider_no, profile_id, profile_first_name, profile_last_name, profile_image_url, profile_email) {
@@ -3779,77 +3762,77 @@ function updateProviderUser(provider_no, profile_id, profile_first_name, profile
         ctx.drawImage(el.target, 0, 0, elem.width, elem.height);
         profile_image = ctx.canvas.toDataURL(global_image_file_mime_type);
         var json_data =
-            '{' +
-            '"app_id": ' + global_app_id + ',' +
-            '"user_language": "' + navigator.language + '",' +
-            '"user_timezone": "' + Intl.DateTimeFormat().resolvedOptions().timeZone + '",' +
-            '"user_number_system": "' + Intl.NumberFormat().resolvedOptions().numberingSystem + '",' +
-            '"user_platform": "' + navigator.platform + '",' +
-            '"active": 1,' +
-            '"provider_no": ' + provider_no + ',' +
-            '"provider' + provider_no + '_id":"' + profile_id + '",' +
-            '"provider' + provider_no + '_first_name":"' + profile_first_name + '",' +
-            '"provider' + provider_no + '_last_name":"' + profile_last_name + '",' +
-            '"provider' + provider_no + '_image":"' + btoa(profile_image) + '",' +
-            '"provider' + provider_no + '_image_url":"' + profile_image_url + '",' +
-            '"provider' + provider_no + '_email":"' + profile_email + '",' +
-            '"description": "' + document.getElementById('setting_input_place').value + '",' +
-            '"regional_language_locale": "' + document.getElementById('setting_select_locale').value + '",' +
-            '"regional_current_timezone_select_id": ' + document.getElementById('setting_select_timezone_current').selectedIndex + ',' +
-            '"regional_timezone_select_id": ' + document.getElementById('setting_select_report_timezone').selectedIndex + ',' +
-            '"regional_number_system_select_id": ' + document.getElementById('setting_select_report_numbersystem').selectedIndex + ',' +
-            '"regional_layout_direction_select_id": ' + document.getElementById('setting_select_report_direction').selectedIndex + ',' +
-            '"regional_second_language_locale": "' + document.getElementById('setting_select_report_locale_second').value + '",' +
-            '"regional_column_title_select_id": ' + document.getElementById('setting_select_report_coltitle').selectedIndex + ',' +
-            '"regional_arabic_script_select_id": ' + document.getElementById('setting_select_report_arabic_script').selectedIndex + ',' +
-            '"regional_calendar_type_select_id": ' + document.getElementById('setting_select_calendartype').selectedIndex + ',' +
-            '"regional_calendar_hijri_type_select_id": ' + document.getElementById('setting_select_calendar_hijri_type').selectedIndex + ',' +
+            `{
+            "app_id": ${global_app_id},
+            "user_language": "${navigator.language}",
+            "user_timezone": "${Intl.DateTimeFormat().resolvedOptions().timeZone}",
+            "user_number_system": "${Intl.NumberFormat().resolvedOptions().numberingSystem}",
+            "user_platform": "${navigator.platform}",
+            "active": 1,
+            "provider_no": ${provider_no},
+            "${'provider' + provider_no + '_id'}":"${profile_id}",
+            "${'provider' + provider_no + '_first_name'}":"${profile_first_name}",
+            "${'provider' + provider_no + '_last_name'}":"${profile_last_name}",
+            "${'provider' + provider_no + '_image'}":"${btoa(profile_image)}",
+            "${'provider' + provider_no + '_image_url'}":"${profile_image_url}",
+            "${'provider' + provider_no + '_email'}":"${profile_email}",
+            "description": "${document.getElementById('setting_input_place').value}",
+            "regional_language_locale": "${document.getElementById('setting_select_locale').value}",
+            "regional_current_timezone_select_id": ${document.getElementById('setting_select_timezone_current').selectedIndex},
+            "regional_timezone_select_id": ${document.getElementById('setting_select_report_timezone').selectedIndex},
+            "regional_number_system_select_id": ${document.getElementById('setting_select_report_numbersystem').selectedIndex},
+            "regional_layout_direction_select_id": ${document.getElementById('setting_select_report_direction').selectedIndex},
+            "regional_second_language_locale": "${document.getElementById('setting_select_report_locale_second').value}",
+            "regional_column_title_select_id": ${document.getElementById('setting_select_report_coltitle').selectedIndex},
+            "regional_arabic_script_select_id": ${document.getElementById('setting_select_report_arabic_script').selectedIndex},
+            "regional_calendar_type_select_id": ${document.getElementById('setting_select_calendartype').selectedIndex},
+            "regional_calendar_hijri_type_select_id": ${document.getElementById('setting_select_calendar_hijri_type').selectedIndex},
 
-            '"gps_map_type_select_id": ' + document.getElementById('setting_select_maptype').selectedIndex + ',' +
-            '"gps_country_id": ' + select_get_id('setting_select_country',document.getElementById('setting_select_country').selectedIndex) + ',' +
-            '"gps_city_id": ' + select_get_id('setting_select_city',document.getElementById('setting_select_city').selectedIndex) + ',' +
-            '"gps_popular_place_id": ' + select_get_id('setting_select_popular_place',document.getElementById('setting_select_popular_place').selectedIndex) + ',' +
-            '"gps_lat_text": "' + document.getElementById('setting_input_lat').value + '",' +
-            '"gps_long_text": "' + document.getElementById('setting_input_long').value + '",' +
+            "gps_map_type_select_id": ${document.getElementById('setting_select_maptype').selectedIndex},
+            "gps_country_id": ${select_get_id('setting_select_country',document.getElementById('setting_select_country').selectedIndex)},
+            "gps_city_id": ${select_get_id('setting_select_city',document.getElementById('setting_select_city').selectedIndex)},
+            "gps_popular_place_id": ${select_get_id('setting_select_popular_place',document.getElementById('setting_select_popular_place').selectedIndex)},
+            "gps_lat_text": "${document.getElementById('setting_input_lat').value}",
+            "gps_long_text": "${document.getElementById('setting_input_long').value}",
 
-            '"design_theme_day_id": "' + get_theme_id('day') + '",' +
-            '"design_theme_month_id": "' + get_theme_id('month') + '",' +
-            '"design_theme_year_id": "' + get_theme_id('year') + '",' +
-            '"design_paper_size_select_id": ' + document.getElementById('setting_select_report_papersize').selectedIndex + ',' +
-            '"design_row_highlight_select_id": ' + document.getElementById('setting_select_report_highlight_row').selectedIndex + ',' +
-            '"design_column_weekday_checked": ' + boolean_to_number(document.getElementById('setting_checkbox_report_show_weekday').checked) + ',' +
-            '"design_column_calendartype_checked": ' + boolean_to_number(document.getElementById('setting_checkbox_report_show_calendartype').checked) + ',' +
-            '"design_column_notes_checked": ' + boolean_to_number(document.getElementById('setting_checkbox_report_show_notes').checked) + ',' +
-            '"design_column_gps_checked": ' + boolean_to_number(document.getElementById('setting_checkbox_report_show_gps').checked) + ',' +
-            '"design_column_timezone_checked": ' + boolean_to_number(document.getElementById('setting_checkbox_report_show_timezone').checked) + ',' +
+            "design_theme_day_id": ${get_theme_id('day')},
+            "design_theme_month_id": ${get_theme_id('month')},
+            "design_theme_year_id": ${get_theme_id('year')},
+            "design_paper_size_select_id": ${document.getElementById('setting_select_report_papersize').selectedIndex},
+            "design_row_highlight_select_id": ${document.getElementById('setting_select_report_highlight_row').selectedIndex},
+            "design_column_weekday_checked": ${boolean_to_number(document.getElementById('setting_checkbox_report_show_weekday').checked)},
+            "design_column_calendartype_checked": ${boolean_to_number(document.getElementById('setting_checkbox_report_show_calendartype').checked)},
+            "design_column_notes_checked": ${boolean_to_number(document.getElementById('setting_checkbox_report_show_notes').checked)},
+            "design_column_gps_checked": ${boolean_to_number(document.getElementById('setting_checkbox_report_show_gps').checked)},
+            "design_column_timezone_checked": ${boolean_to_number(document.getElementById('setting_checkbox_report_show_timezone').checked)},
 
-            '"image_header_image_img": "' + btoa(document.getElementById('setting_reportheader_img').src) + '",' +
-            '"image_footer_image_img": "' + btoa(document.getElementById('setting_reportfooter_img').src) + '",' +
+            "image_header_image_img": "${btoa(document.getElementById('setting_reportheader_img').src)}",
+            "image_footer_image_img": "${btoa(document.getElementById('setting_reportfooter_img').src)}",
 
-            '"text_header_1_text": "' + document.getElementById('setting_input_reporttitle1').value + '",' +
-            '"text_header_2_text": "' + document.getElementById('setting_input_reporttitle2').value + '",' +
-            '"text_header_3_text": "' + document.getElementById('setting_input_reporttitle3').value + '",' +
-            '"text_header_align": "' + align_button_value('reporttitle') + '",' +
-            '"text_footer_1_text": "' + document.getElementById('setting_input_reportfooter1').value + '",' +
-            '"text_footer_2_text": "' + document.getElementById('setting_input_reportfooter2').value + '",' +
-            '"text_footer_3_text": "' + document.getElementById('setting_input_reportfooter3').value + '",' +
-            '"text_footer_align": "' + align_button_value('reportfooter') + '",' +
+            "text_header_1_text": "${document.getElementById('setting_input_reporttitle1').value}",
+            "text_header_2_text": "${document.getElementById('setting_input_reporttitle2').value}",
+            "text_header_3_text": "${document.getElementById('setting_input_reporttitle3').value}",
+            "text_header_align": "${align_button_value('reporttitle')}",
+            "text_footer_1_text": "${document.getElementById('setting_input_reportfooter1').value}",
+            "text_footer_2_text": "${document.getElementById('setting_input_reportfooter2').value}",
+            "text_footer_3_text": "${document.getElementById('setting_input_reportfooter3').value}",
+            "text_footer_align": "${align_button_value('reportfooter')}",
 
-            '"prayer_method_select_id": ' + document.getElementById('setting_select_method').selectedIndex + ',' +
-            '"prayer_asr_method_select_id": ' + document.getElementById('setting_select_asr').selectedIndex + ',' +
-            '"prayer_high_latitude_adjustment_select_id": ' + document.getElementById('setting_select_highlatitude').selectedIndex + ',' +
-            '"prayer_time_format_select_id": ' + document.getElementById('setting_select_timeformat').selectedIndex + ',' +
-            '"prayer_hijri_date_adjustment_select_id": ' + document.getElementById('setting_select_hijri_adjustment').selectedIndex + ',' +
-            '"prayer_fajr_iqamat_select_id": ' + document.getElementById('setting_select_report_iqamat_title_fajr').selectedIndex + ',' +
-            '"prayer_dhuhr_iqamat_select_id": ' + document.getElementById('setting_select_report_iqamat_title_dhuhr').selectedIndex + ',' +
-            '"prayer_asr_iqamat_select_id": ' + document.getElementById('setting_select_report_iqamat_title_asr').selectedIndex + ',' +
-            '"prayer_maghrib_iqamat_select_id": ' + document.getElementById('setting_select_report_iqamat_title_maghrib').selectedIndex + ',' +
-            '"prayer_isha_iqamat_select_id": ' + document.getElementById('setting_select_report_iqamat_title_isha').selectedIndex + ',' +
-            '"prayer_column_imsak_checked": ' + boolean_to_number(document.getElementById('setting_checkbox_report_show_imsak').checked) + ',' +
-            '"prayer_column_sunset_checked": ' + boolean_to_number(document.getElementById('setting_checkbox_report_show_sunset').checked) + ',' +
-            '"prayer_column_midnight_checked": ' + boolean_to_number(document.getElementById('setting_checkbox_report_show_midnight').checked) + ',' +
-            '"prayer_column_fast_start_end_select_id": ' + document.getElementById('setting_select_report_show_fast_start_end').selectedIndex +
-            '}';
+            "prayer_method_select_id": ${document.getElementById('setting_select_method').selectedIndex},
+            "prayer_asr_method_select_id": ${document.getElementById('setting_select_asr').selectedIndex},
+            "prayer_high_latitude_adjustment_select_id": ${document.getElementById('setting_select_highlatitude').selectedIndex},
+            "prayer_time_format_select_id": ${document.getElementById('setting_select_timeformat').selectedIndex},
+            "prayer_hijri_date_adjustment_select_id": ${document.getElementById('setting_select_hijri_adjustment').selectedIndex},
+            "prayer_fajr_iqamat_select_id": ${document.getElementById('setting_select_report_iqamat_title_fajr').selectedIndex},
+            "prayer_dhuhr_iqamat_select_id": ${document.getElementById('setting_select_report_iqamat_title_dhuhr').selectedIndex},
+            "prayer_asr_iqamat_select_id": ${document.getElementById('setting_select_report_iqamat_title_asr').selectedIndex},
+            "prayer_maghrib_iqamat_select_id": ${document.getElementById('setting_select_report_iqamat_title_maghrib').selectedIndex},
+            "prayer_isha_iqamat_select_id": ${document.getElementById('setting_select_report_iqamat_title_isha').selectedIndex},
+            "prayer_column_imsak_checked": ${boolean_to_number(document.getElementById('setting_checkbox_report_show_imsak').checked)},
+            "prayer_column_sunset_checked": ${boolean_to_number(document.getElementById('setting_checkbox_report_show_sunset').checked)},
+            "prayer_column_midnight_checked": ${boolean_to_number(document.getElementById('setting_checkbox_report_show_midnight').checked)},
+            "prayer_column_fast_start_end_select_id": ${document.getElementById('setting_select_report_show_fast_start_end').selectedIndex}
+            }`;
 
         fetch(global_rest_url_base + global_rest_user_account_provider + profile_id +
                 '?lang_code=' + document.getElementById('setting_select_locale').value, {
@@ -4517,10 +4500,10 @@ function profile_show(user_account_id_other = null, username = null) {
         }
         //PROFILE MAIN
         var json_data =
-            '{' +
-            '"client_longitude": "' + global_session_user_gps_longitude + '",' +
-            '"client_latitude": "' + global_session_user_gps_latitude + '"' +
-            '}';
+            `{
+            "client_longitude": "${global_session_user_gps_longitude}",
+            "client_latitude": "${global_session_user_gps_latitude}"
+            }`;
         fetch(url + 
                 '?app_id=' + global_app_id + 
                 '&lang_code=' + document.getElementById('setting_select_locale').value +
@@ -4628,30 +4611,30 @@ function profile_show(user_account_id_other = null, username = null) {
 }
 function profile_show_user_setting_detail(common_url, id, user_account_id, liked, count_likes, count_views){
     document.getElementById('profile_user_settings_detail').innerHTML = 
-       `<div class='profile_user_settings_day'>
+       `<div id='profile_user_settings_day'>
             <a href='#' onclick="document.getElementById('window_preview_report').style.visibility = 'visible';create_qr('window_preview_toolbar_qr', '${common_url}&type=0');updateViewStat(${id},${user_account_id});document.getElementById('window_preview_content').src='${common_url}&type=0' ">
                 <i class='fas fa-calendar-day'></i>
             </a>
         </div>
-        <div class='profile_user_settings_month'>
+        <div id='profile_user_settings_month'>
             <a href='#' onclick="document.getElementById('window_preview_report').style.visibility = 'visible';create_qr('window_preview_toolbar_qr', '${common_url}&type=1');updateViewStat(${id},${user_account_id});document.getElementById('window_preview_content').src='${common_url}&type=1' ">
                 <i class='fas fa-calendar-week'></i>
             </a>
         </div>
-        <div class='profile_user_settings_year'>
+        <div id='profile_user_settings_year'>
             <a href='#' onclick="document.getElementById('window_preview_report').style.visibility = 'visible';create_qr('window_preview_toolbar_qr', '${common_url}&type=2');updateViewStat(${id},${user_account_id});document.getElementById('window_preview_content').src='${common_url}&type=2' ">
                 <i class='fas fa-calendar-alt'></i>
             </a>
         </div>
-        <div class='profile_user_settings_like' onclick='user_function("LIKE_USER_SETTING",${id},this)'>
+        <div id='profile_user_settings_like' onclick='user_function("LIKE_USER_SETTING",${id})'>
             <i class='fas fa-heart-broken' style='display:${liked == 1?'none':'block'}'></i>
             <i class='fas fa-heart' style='display:${liked == 1?'block':'none'}'></i>
         </div>
-        <div class='profile_user_settings_info_likes'>
+        <div id='profile_user_settings_info_likes'>
             <i class='fas fa-heart'></i>
             <div class='profile_user_settings_info_like_count'>${count_likes}</div>
         </div>
-        <div class='profile_user_settings_info_views'>
+        <div id='profile_user_settings_info_views'>
             <i class='fas fa-eye'></i>
             <div class='profile_user_settings_info_view_count'>${count_views}</div>
         </div>`;
@@ -4973,40 +4956,121 @@ function profile_top(statschoice) {
         });
 }
 
-function user_function(user_function, user_setting_id, row_div) {
+function profile_update_stat(){
+    let profile_id = document.getElementById('profile_id');
+    let json_data =
+    `{
+    "client_longitude": "${global_session_user_gps_longitude}",
+    "client_latitude": "${global_session_user_gps_latitude}"
+    }`;
+    //get updated stat for given user
+    //to avoid update in stat set searched by same user
+    let url = global_rest_url_base + global_rest_user_account_profile_userid + profile_id.innerHTML;
+    fetch(url + 
+        '?app_id=' + global_app_id + 
+        '&lang_code=' + document.getElementById('setting_select_locale').value +
+        '&id=' + profile_id.innerHTML, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + global_rest_dt
+        },
+        body: json_data
+    })
+    .then(function(response) {
+        status = response.status;
+        return response.text();
+    })
+    .then(function(response) {
+        if (status == 200) {
+            json = JSON.parse(response);
+            document.getElementById('profile_info_following_count').innerHTML = json.count_following;
+            document.getElementById('profile_info_followers_count').innerHTML = json.count_followed;
+            document.getElementById('profile_info_likes_count').innerHTML = json.count_likes;
+            document.getElementById('profile_info_liked_count').innerHTML = json.count_liked;
+            document.getElementById('profile_info_user_setting_likes_count').innerHTML = json.count_user_setting_likes;
+            document.getElementById('profile_info_user_setting_liked_count').innerHTML = json.count_user_setting_liked;
+            document.getElementById('profile_info_view_count').innerHTML = json.count_views;
+        }
+    })
+}
+
+function profile_user_setting_update_stat(){
+    let profile_id = document.getElementById('profile_id').innerHTML;
+    var user_id = document.getElementById('setting_data_userid_logged_in').innerHTML;
+    fetch(global_rest_url_base + global_rest_app_timetables_user_setting_profile + profile_id + 
+            '?app_id=' + global_app_id +
+            '&lang_code=' + document.getElementById('setting_select_locale').value + 
+            '&id=' + user_id,
+        {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Bearer ' + global_rest_dt
+            }
+        })
+    .then(function(response) {
+        status = response.status;
+        return response.text();
+    })
+    .then(function(response) {
+        if (status == 200) {
+            json = JSON.parse(response);
+            let profile_select_user_settings = document.getElementById('profile_select_user_settings');
+            var paper_size_select = document.getElementById('setting_select_report_papersize');
+            for (i = 0; i < json.count; i++) {
+                if (profile_select_user_settings.options[profile_select_user_settings.selectedIndex].getAttribute('sid')==json.items[i].id){
+                    var common_url = get_report_url(json.items[i].user_account_id, 
+                                                    json.items[i].id, 
+                                                    paper_size_select.options[json.items[i].design_paper_size_select_id].value) + 
+                                                    '&format=html';
+                    profile_select_user_settings.options[profile_select_user_settings.selectedIndex].setAttribute('user_account_id', json.items[i].user_account_id);
+                    profile_select_user_settings.options[profile_select_user_settings.selectedIndex].setAttribute('liked', json.items[i].liked);
+                    profile_select_user_settings.options[profile_select_user_settings.selectedIndex].setAttribute('count_likes', json.items[i].count_likes);
+                    profile_select_user_settings.options[profile_select_user_settings.selectedIndex].setAttribute('count_views', json.items[i].count_views);
+                    profile_select_user_settings.options[profile_select_user_settings.selectedIndex].setAttribute('common_url', common_url);
+                    profile_select_user_settings.options[profile_select_user_settings.selectedIndex].text = json.items[i].description;
+                    profile_show_user_setting_detail(common_url, 
+                                                     json.items[i].id, 
+                                                     json.items[i].user_account_id, 
+                                                     json.items[i].liked, 
+                                                     json.items[i].count_likes, 
+                                                     json.items[i].count_views);
+                }
+            }
+        }
+    })
+    .catch(function(error) {
+        alert(responseText_get_error('profile_user_setting_update_stat', error));
+    });
+}
+function user_function(user_function, user_setting_id) {
     var status;
     var user_id = document.getElementById('setting_data_userid_logged_in').innerHTML;
     var user_id_profile = document.getElementById('profile_id').innerHTML;
     var json_data;
     var method;
-    var item0;
-    var item1;
-    var div_id;
     var rest_path;
     var check_div;
     switch (user_function) {
         case 'FOLLOW':
             {
-                div_id = 'profile_follow';
                 rest_path = global_rest_user_account_follow;
                 json_data = '{"user_account_id":' + user_id_profile + '}';
-                check_div = document.getElementById(div_id);
+                check_div = document.getElementById('profile_follow');
                 break;
             }
         case 'LIKE':
             {
-                div_id = 'profile_like';
                 rest_path = global_rest_user_account_like;
                 json_data = '{"user_account_id":' + user_id_profile + '}';
-                check_div = document.getElementById(div_id);
+                check_div = document.getElementById('profile_like');
                 break;
             }
         case 'LIKE_USER_SETTING':
             {
-                div_id = 'profile_user_settings_like';
                 rest_path = global_rest_app_timetables_user_setting_like;
                 json_data = '{"user_setting_id":' + user_setting_id + '}';
-                check_div = row_div;
+                check_div = document.getElementById('profile_user_settings_like');
                 break;
             }
     }
@@ -5016,12 +5080,8 @@ function user_function(user_function, user_setting_id, row_div) {
     else {
         if (check_div.children[0].style.display == 'block') {
             method = 'POST';
-            item0 = 'none';
-            item1 = 'block';
         } else {
             method = 'DELETE';
-            item0 = 'block';
-            item1 = 'none';
         }
         fetch(global_rest_url_base + rest_path + user_id +
                 '?app_id=' + global_app_id + 
@@ -5040,11 +5100,56 @@ function user_function(user_function, user_setting_id, row_div) {
             .then(function(result) {
                 if (status == 200) {
                     json = JSON.parse(result);
-                    if (user_function == 'LIKE_USER_SETTING') {
-                        //update only user setting
-                        profile_show_user_setting();
-                    } else
-                        profile_show(user_id_profile);
+                    switch (user_function) {
+                        case 'FOLLOW':
+                            {
+                                if (document.getElementById('profile_follow').children[0].style.display == 'block'){
+                                    //follow
+                                    document.getElementById('profile_follow').children[0].style.display = 'none';
+                                    document.getElementById('profile_follow').children[1].style.display = 'block';
+                                }
+                                else{
+                                    //unfollow
+                                    document.getElementById('profile_follow').children[0].style.display = 'block';
+                                    document.getElementById('profile_follow').children[1].style.display = 'none';
+                                }
+                                profile_update_stat();
+                                break;
+                            }
+                        case 'LIKE':
+                            {
+                                if (document.getElementById('profile_like').children[0].style.display == 'block'){
+                                    //like
+                                    document.getElementById('profile_like').children[0].style.display = 'none';
+                                    document.getElementById('profile_like').children[1].style.display = 'block';
+                                }
+                                else{
+                                    //unlike
+                                    document.getElementById('profile_like').children[0].style.display = 'block';
+                                    document.getElementById('profile_like').children[1].style.display = 'none';
+                                }
+                                profile_update_stat();
+                                break;
+                            }
+                        case 'LIKE_USER_SETTING':
+                            {
+                                //update only current user setting
+                                /*
+                                if (document.getElementById('profile_user_settings_like').children[0].style.display == 'block'){
+                                    //like
+                                    document.getElementById('profile_user_settings_like').children[0].style.display = 'none';
+                                    document.getElementById('profile_user_settings_like').children[1].style.display = 'block';
+                                }
+                                else{
+                                    //unlike
+                                    document.getElementById('profile_user_settings_like').children[0].style.display = 'block';
+                                    document.getElementById('profile_user_settings_like').children[1].style.display = 'none';
+                                }
+                                */
+                                profile_user_setting_update_stat();
+                                break;
+                            }
+                    }
                 } else {
                     exception('user_function', status, result);
                 }
@@ -5067,19 +5172,19 @@ function search_profile() {
     if (document.getElementById('setting_data_userid_logged_in').innerHTML!=''){
         url = global_rest_url_base + global_rest_user_account_profile_searchA;
         token = global_rest_at;
-        json_data = '{' +
-                    '"user_account_id":' + document.getElementById('setting_data_userid_logged_in').innerHTML + ',' +
-                    '"client_longitude": "' + global_session_user_gps_longitude + '",' +
-                    '"client_latitude": "' + global_session_user_gps_latitude + '"' +
-                    '}';
+        json_data = `{
+                    "user_account_id":${document.getElementById('setting_data_userid_logged_in').innerHTML},
+                    "client_longitude": "${global_session_user_gps_longitude}",
+                    "client_latitude": "${global_session_user_gps_latitude}"
+                    }`;
     }
     else{
         url = global_rest_url_base + global_rest_user_account_profile_searchD;
         token = global_rest_dt;
-        json_data = '{' +
-                    '"client_longitude": "' + global_session_user_gps_longitude + '",' +
-                    '"client_latitude": "' + global_session_user_gps_latitude + '"' +
-                    '}';
+        json_data = `{
+                    "client_longitude": "${global_session_user_gps_longitude}",
+                    "client_latitude": "${global_session_user_gps_latitude}"
+                    }`;
     }
     fetch(url + searched_username +
           '?app_id=' + global_app_id +
@@ -5163,13 +5268,12 @@ function updateViewStat(user_setting_id, user_setting_user_account_id = null) {
             json_user_account_id = 'null';
         else
             json_user_account_id = document.getElementById('setting_data_userid_logged_in').innerHTML;
-        var json_data =
-            '{' +
-            '"user_account_id":' + json_user_account_id + ',' +
-            '"user_setting_id":' + user_setting_id + ',' +
-            '"client_longitude": "' + global_session_user_gps_longitude + '",' +
-            '"client_latitude": "' + global_session_user_gps_latitude + '"' +
-            '}';
+        var json_data =`{
+                        "user_account_id":${json_user_account_id},
+                        "user_setting_id":${user_setting_id},
+                        "client_longitude": "${global_session_user_gps_longitude}",
+                        "client_latitude": "${global_session_user_gps_latitude}"
+                        }`;
         fetch(global_rest_url_base + global_rest_app_timetables_user_setting_view +
                 '?app_id=' + global_app_id + 
                 '&lang_code=' + document.getElementById('setting_select_locale').value, {
@@ -5201,21 +5305,20 @@ function updateViewStat(user_setting_id, user_setting_user_account_id = null) {
 /*------------------------------------- */
 function app_log(app_module, app_module_type, app_module_request, app_user_id) {
     var status;
-    var json_data =
-        '{' +
-        '"app_id":"' + global_app_id + '",' +
-        '"app_module":"' + app_module + '",' +
-        '"app_module_type":"' + '' + app_module_type + '",' +
-        '"app_module_request":"' + app_module_request + '",' +
-        '"app_module_result":"' + '",' +
-        '"app_user_id":"' + '' + app_user_id + '",' +
-        '"user_language": "' + navigator.language + '",' +
-        '"user_timezone": "' + Intl.DateTimeFormat().resolvedOptions().timeZone + '",' +
-        '"user_number_system": "' + Intl.NumberFormat().resolvedOptions().numberingSystem + '",' +
-        '"user_platform": "' + navigator.platform + '",' +
-        '"user_gps_latitude": "' + global_session_user_gps_latitude + '",' +
-        '"user_gps_longitude": "' + global_session_user_gps_longitude + '"' +
-        '}';
+    var json_data =`{
+                    "app_id":"${global_app_id}",
+                    "app_module":"${app_module}",
+                    "app_module_type":"${app_module_type}",
+                    "app_module_request":"${app_module_request}",
+                    "app_module_result":"",
+                    "app_user_id":"${app_user_id}",
+                    "user_language": "${navigator.language}",
+                    "user_timezone": "${Intl.DateTimeFormat().resolvedOptions().timeZone}",
+                    "user_number_system": "${Intl.NumberFormat().resolvedOptions().numberingSystem}",
+                    "user_platform": "${navigator.platform}",
+                    "user_gps_latitude": "${global_session_user_gps_latitude}",
+                    "user_gps_longitude": "${global_session_user_gps_longitude}"
+                    }`;
 
     fetch(global_rest_url_base + global_rest_app_log +
             '?lang_code=' + document.getElementById('setting_select_locale').value, {
