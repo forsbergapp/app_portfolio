@@ -57,7 +57,7 @@ app.use((req,res,next) => {
   //access control
   const { access_control} = require("./service/auth/auth.controller");
   access_control(req, res, (http_err_code, result)=>{
-		if(http_err_code)
+		if(http_err_code)      
       return res.status(http_err_code).send('stop');
 		else
       if (process.env.SERVICE_LOG_ENABLE_SERVER_VERBOSE==1){
@@ -378,7 +378,6 @@ app.get('/',function (req, res) {
   switch (req.headers.host.substring(0,req.headers.host.indexOf('.'))){
     case '':
     case 'www':{
-      res.setHeader('Content-Type', 'text/html');
       //return res.sendFile(__dirname + "/app0/index_maintenance.html");
       return res.sendFile(__dirname + "/app0/index.html");
       break;

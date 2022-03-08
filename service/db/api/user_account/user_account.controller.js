@@ -728,7 +728,6 @@ module.exports = {
             }
             else{
                 if (results.length > 0) {
-                    //req.body.user_account_id = results[0].id;
                     updateSigninProvider(req.body.app_id, req.body.provider_no, results[0].id, req.body, (err, results2) => {
                         if (err) {
                             return res.status(500).send(

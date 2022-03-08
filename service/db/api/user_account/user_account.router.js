@@ -28,7 +28,7 @@ router.put("/:id", checkAccessToken, updateUserLocal);
 //provider user
 router.post("/provider/:id", checkDataToken, getUserByProviderId);
 //common user
-router.get("/:id", checkDataToken, getUserByUserId);
+router.get("/:id", checkAccessToken, getUserByUserId);
 router.put("/common/:id", checkAccessToken, updateUserCommon);
 router.delete("/:id", checkAccessToken, deleteUser);
 //profile

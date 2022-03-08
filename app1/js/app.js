@@ -270,7 +270,7 @@ async function settings_translate_report(first=true) {
                     second_language.coltitle_notes = '';
                 }
             } else {
-                exception('settings_translate_report', status, result);
+                exception(status, result);
             }
         });
     }
@@ -455,15 +455,15 @@ async function settings_translate(first=true) {
                                     select_second_locale.value = current_second_locale;
                                 }
                                 else
-                                    exception('settings_translate', status, result);
+                                    exception(status, result);
                             }).catch(function(error) {
-                                alert(responseText_get_error('settings_translate locale', error));
+                                show_message('EXCEPTION', null,null, error);
                             })
                         }
                         else
-                            exception('settings_translate', status, result);
+                            exception(status, result);
                     }).catch(function(error) {
-                        alert(responseText_get_error('settings_translate country', error));
+                        show_message('EXCEPTION', null,null, error);
                     })
                 }
                 //if translating first language and second language is not used
@@ -499,7 +499,7 @@ async function settings_translate(first=true) {
                 update_ui(1);
             } 
             else {
-                exception('settings_translate', status, result);
+                exception(status, result);
             }   
         })
     }
@@ -853,29 +853,100 @@ async function get_app_globals() {
                     global_qr_background_color = json.data[i].parameter_value;
             }
         } else {
-            alert(responseText_get_error('get_app_globals parameter', result));
+            show_message('EXCEPTION', null,null, result);
         }
     })
 }
 
-function show_error(code){
-    fetch(global_rest_url_base + global_rest_message_translation + code + 
-        '?app_id=' + global_app_id +
-        '&lang_code=' + document.getElementById('setting_select_locale').value, 
-    {
-        method: 'GET',
-        headers: {
-            'Authorization': 'Bearer ' + global_rest_dt
+function show_message(message_type, code, function_id, exception_message=''){
+    let confirm_question = document.getElementById('confirm_question');
+    let message_title = document.getElementById('message_title');
+    let dialogue = document.getElementById('dialogue_message');
+    let old_close = document.getElementById('message_close');
+    let button_cancel = document.getElementById('message_cancel');
+    let function_delete_user_account = function() { document.getElementById('dialogue_message').style.visibility = 'hidden';user_delete(1) };
+    let function_delete_user_setting = function() { document.getElementById('dialogue_message').style.visibility = 'hidden';user_settings_delete(1) };
+    let function_close = function() { document.getElementById('dialogue_message').style.visibility = 'hidden'};
+    let show = 'inline-block';
+    let hide = 'none';
+    //this removes old eventlistener
+    let button_close = old_close.cloneNode(true);
+    old_close.parentNode.replaceChild(button_close, old_close);
+    //INFO, ERROR, CONFIRM, EXCEPTION
+    switch (message_type){
+        case 'ERROR':{
+            fetch(global_rest_url_base + global_rest_message_translation + code + 
+                '?app_id=' + global_app_id +
+                '&lang_code=' + document.getElementById('setting_select_locale').value, 
+            {
+                method: 'GET',
+                headers: {
+                    'Authorization': 'Bearer ' + global_rest_dt
+                }
+            })
+            .then(function(response) {
+                return response.text();
+            })
+            .then(function(response) {
+                confirm_question.style.display = hide;
+                button_cancel.style.display = hide;
+                message_title.style.display = show;
+                message_title.innerHTML = JSON.parse(response).data.text;
+                button_close.addEventListener('click', function_close, false);
+                dialogue.style.visibility = 'visible';
+                button_close.focus();
+            }).catch(function(error) {
+                show_message('EXCEPTION', null,null, error);
+            })
+            break;
         }
-    })
-    .then(function(response) {
-        return response.text();
-    })
-    .then(function(response) {
-        alert(JSON.parse(response).data.text);
-    }).catch(function(error) {
-        alert(responseText_get_error('show_error', error));
-    })
+        case 'INFO':{
+            break;
+        }
+        case 'EXCEPTION':{
+            confirm_question.style.display = hide;
+            button_cancel.style.display = hide;
+            message_title.style.display = show;
+            try {
+                // dont show code or errno returned from json
+                if (typeof JSON.parse(exception_message).message !== "undefined"){
+                    // message from Node controller.js and service.js files
+                    message_title.innerHTML= JSON.parse(exception_message).message;
+                }
+                else{
+                    //message from Mysql, code + sqlMessage
+                    if (typeof JSON.parse(exception_message).sqlMessage !== "undefined")
+                        message_title.innerHTML= JSON.parse(exception_message).sqlMessage;
+                    else{
+                    //message from Oracle, errorNum, offset
+                    if (typeof JSON.parse(exception_message).errorNum !== "undefined")
+                        message_title.innerHTML= JSON.parse(exception_message).errorNum;
+                    else
+                        message_title.innerHTML= exception_message;
+                    }    
+                }
+            } catch (e) {
+                //other error and json not returned, return the whole text
+                message_title.innerHTML = exception_message;
+            }
+            button_close.addEventListener('click', function_close, false);
+            dialogue.style.visibility = 'visible';
+            button_close.focus();
+            break;
+        }
+        case 'CONFIRM':{
+            confirm_question.style.display = show;
+            button_cancel.style.display = show;
+            message_title.style.display = show;
+            if (function_id==1)
+                button_close.addEventListener('click', function_delete_user_account, false);
+            if (function_id==2)
+                button_close.addEventListener('click', function_delete_user_setting, false);
+            dialogue.style.visibility = 'visible';
+            button_close.focus();
+            break;
+        }
+    }
 }
 
 function set_app_globals_head() {
@@ -993,12 +1064,12 @@ function show_image(item_show, item_load) {
     const fileExtension = fileName.split(".").pop();
     if (!allowedExtensions.includes(fileExtension)){
         //File type not allowed
-        show_error(20307);
+        show_message('ERROR', 20307);
     }
     else
         if (fileSize > global_image_file_max_size){
             //File size too large
-            show_error(20308);
+            show_message('ERROR', 20308);
         }
         else {
             reader.onloadend = function(event) {
@@ -1128,7 +1199,7 @@ async function get_place_from_gps(latitude, longitude) {
                 json.geoplugin_region + ', ' +
                 json.geoplugin_countryCode;
         } else {
-            exception('get_place_from_gps', status, result);
+            exception(status, result);
         }
     })
 }
@@ -1163,7 +1234,7 @@ async function get_gps_from_ip() {
             document.getElementById('setting_input_long').value = json.geoplugin_longitude;
 
         } else {
-            exception('get_gps_from_ip', status, result);
+            exception(status, result);
         }
     })
 }
@@ -1543,7 +1614,7 @@ async function get_token() {
             let json = JSON.parse(result);
             global_rest_dt = json.token_dt;
         } else {
-            alert(responseText_get_error('get_token', result));
+            show_message('EXCEPTION', null,null, result);
         }    
     })
 }
@@ -1753,7 +1824,7 @@ function keyfunctions() {
     document.getElementById('profile_top_row2_2').addEventListener('click', function() { profile_top(5) }, false);
 
     document.getElementById('info_close').addEventListener('click', function() { document.getElementById('dialogue_info').style.visibility = 'hidden' }, false);
-    
+
     document.getElementById('scan_open_mobile_close').addEventListener('click', function() { document.getElementById('dialogue_scan_open_mobile').style.visibility = 'hidden' }, false);
     document.getElementById('login_signup').addEventListener('click', function() { show_dialogue('SIGNUP') }, false);
     document.getElementById('login_button').addEventListener('click', function() { user_login() }, false);
@@ -1765,8 +1836,8 @@ function keyfunctions() {
     document.getElementById('signup_button').addEventListener('click', function() { user_signup() }, false);
     document.getElementById('signup_close').addEventListener('click', function() { document.getElementById('dialogue_signup').style.visibility = 'hidden' }, false);
     
-    document.getElementById('confirm_close').addEventListener('click', function() { user_delete(1) }, false);
-    document.getElementById('confirm_cancel').addEventListener('click', function() { user_delete(0) }, false);
+    document.getElementById('message_cancel').addEventListener('click', function() { document.getElementById("dialogue_message").style.visibility = "hidden" }, false);
+
     document.getElementById('window_preview_close').addEventListener('click', function() { document.getElementById('window_preview_content').onload='';document.getElementById('window_preview_content').src='';document.getElementById('window_preview_toolbar_qr').innerHTML='';document.getElementById('window_preview_report').style.visibility = 'hidden' }, false);
        
     document.getElementById('toolbar_btn_print').addEventListener('click', function() { toolbar_bottom(1) }, false);
@@ -1968,26 +2039,6 @@ function align_button_value(report_align_where) {
     return '';
 }
 
-function responseText_get_error(calling_function, responseText) {
-    //calling_function for future use to log internally
-    try {
-        // dont show code or errno returned from json
-        if (typeof JSON.parse(responseText).message !== "undefined")
-        // message from Node controller.js and service.js files
-            return JSON.parse(responseText).message;
-        else
-        //message from Mysql, code + sqlMessage
-        if (typeof JSON.parse(responseText).sqlMessage !== "undefined")
-            return JSON.parse(responseText).sqlMessage;
-        //message from Oracle, errorNum, offset
-        if (typeof JSON.parse(responseText).errorNum !== "undefined")
-            return JSON.parse(responseText).errorNum;
-        return responseText;
-    } catch (e) {
-        //other error and json not returned, return the whole text
-        return responseText;
-    }
-}
 
 function format_json_date(db_date, short) {
     if (db_date == null)
@@ -2154,11 +2205,11 @@ function zoom_paper(zoomvalue = '') {
     }
     return null;
 }
-function exception(function_name, status, message){
+function exception(status, message){
     if (status == 401)
         user_logoff();
     else
-        alert(responseText_get_error(function_name, message));
+        show_message('EXCEPTION',  null, null, message);
 }
 
 function user_verify_check_input(item, nextField) {
@@ -2244,16 +2295,16 @@ function user_verify_check_input(item, nextField) {
                             document.getElementById('user_verify_verification_char5').classList.add('input_error');
                             document.getElementById('user_verify_verification_char6').classList.add('input_error');
                             //code not valid
-                            show_error(20306);
+                            show_message('ERROR', 20306);
                         }
                     } else {
                         spinner('SIGNUP', 'hidden');
-                        exception('user_verify_check_input', status, result);
+                        exception(status, result);
                     }
                 })
                 .catch(function(error) {
                     spinner('SIGNUP', 'hidden');
-                    alert(responseText_get_error('user_verify_check_input', error));
+                    show_message('EXCEPTION', null,null, error);
                 });
         } else
         //not last, next!
@@ -2370,16 +2421,16 @@ function user_edit() {
                         document.getElementById('setting_label_data_account_modified_edit').innerHTML = format_json_date(json.date_modified);
                     } else {
                         //User not found
-                        show_error(20305);
+                        show_message('ERROR', 20305);
                     }
                 } else {
                     spinner('EDIT', 'hidden');
-                    exception('user_edit', status, result);
+                    exception(status, result);
                 }
             })
             .catch(function(error) {
                 spinner('EDIT', 'hidden');
-                alert(responseText_get_error('user_login', error));
+                show_message('EXCEPTION', null,null, error);
             });
     }
     return null;
@@ -2429,19 +2480,19 @@ function user_update() {
         if (username == '') {
             //"Please enter username"
             document.getElementById('setting_input_username_edit').classList.add('input_error');
-            show_error(20303);
+            show_message('ERROR', 20303);
             return null;
         }
         if (password == '') {
             //"Please enter password"
             document.getElementById('setting_input_password_edit').classList.add('input_error');
-            show_error(20304);
+            show_message('ERROR', 20304);
             return null;
         }
         if (password != password_confirm) {
             //Password not the same
             document.getElementById('setting_input_password_confirm_edit').classList.add('input_error');
-            show_error(20301);
+            show_message('ERROR', 20301);
             return null;
         }
         //check new passwords
@@ -2449,7 +2500,7 @@ function user_update() {
             //New Password are entered but they are not the same
             document.getElementById('setting_input_new_password_edit').classList.add('input_error');
             document.getElementById('setting_input_new_password_confirm_edit').classList.add('input_error');
-            show_error(20301);
+            show_message('ERROR', 20301);
             return null;
         }
     } else {
@@ -2510,12 +2561,12 @@ function user_update() {
                 spinner('UPDATE', 'hidden');
             } else {
                 spinner('UPDATE', 'hidden');
-                exception('user_update', status, result);
+                exception(status, result);
             }
         })
         .catch(function(error) {
             spinner('UPDATE', 'hidden');
-            alert(responseText_get_error('user_update', error));
+            show_message('EXCEPTION', null,null, error);
         });
     return null;
 }
@@ -2530,18 +2581,14 @@ function user_delete(choice=null) {
             if (document.getElementById('user_edit_local').style.display == 'block' && password == '') {
                 //"Please enter password"
                 document.getElementById('setting_input_password_edit').classList.add('input_error');
-                show_error(20304);
+                show_message('ERROR', 20304);
                 return null;
             }
-            show_dialogue('CONFIRM_DELETE');
-            break;
-        }
-        case 0:{
-            document.getElementById("dialogue_confirm_delete").style.visibility = "hidden";
+            show_message('CONFIRM',null,1);
             break;
         }
         case 1:{
-            document.getElementById("dialogue_confirm_delete").style.visibility = "hidden";
+            document.getElementById("dialogue_message").style.visibility = "hidden";
             document.getElementById('setting_input_username_edit').classList.remove('input_error');
             document.getElementById('setting_input_bio_edit').classList.remove('input_error');
             document.getElementById('setting_input_email_edit').classList.remove('input_error');
@@ -2573,11 +2620,11 @@ function user_delete(choice=null) {
                     if (status == 200)
                         user_logoff();
                     else
-                        exception('user_delete', status, result);
+                        exception(status, result);
                 })
                 .catch(function(error) {
                     spinner('DELETE_ACCOUNT', 'hidden');
-                    alert(responseText_get_error('user_delete', error));
+                    show_message('EXCEPTION', null,null, error);
                 });
             break;
         }
@@ -2609,12 +2656,12 @@ function user_login() {
                  }`;
     if (username.value == '') {
         //"Please enter username"
-        show_error(20303);
+        show_message('ERROR', 20303);
         return null;
     }
     if (password.value == '') {
         //"Please enter password"
-        show_error(20304);
+        show_message('ERROR', 20304);
         return null;
     }
     spinner('LOGIN', 'visible');
@@ -2682,12 +2729,12 @@ function user_login() {
             });
         } else {
             spinner('LOGIN', 'hidden');
-            exception('user_login', status, result);
+            exception(status, result);
         }
     })
     .catch(function(error) {
         spinner('LOGIN', 'hidden');
-        alert(responseText_get_error('user_login', error));
+        show_message('EXCEPTION', null,null, error);
     });
     
 }
@@ -2780,11 +2827,11 @@ async function user_setting_get(user_setting_id) {
                     `<option value=${json.regional_second_language_locale}>${json.regional_second_language_locale}</option`;
                 }
             } else {
-                exception('user_setting_get', status, result);
+                exception(status, result);
             }
         })
         .catch(function(error) {
-            alert(responseText_get_error('user_setting_get', error));
+            show_message('EXCEPTION', null,null, error);
         });
 }
 
@@ -2884,11 +2931,11 @@ async function user_settings_get(userid, show_ui = 1, user_setting_id = '') {
                     document.getElementById('user_settings').style.display = "block";
                 }
             } else {
-                exception('user_settings_get', status, result);
+                exception(status, result);
             }
         })
         .catch(function(error) {
-            alert(responseText_get_error('user_settings_get', error));
+            show_message('EXCEPTION', null,null, error);
         });
 }
 
@@ -3071,17 +3118,17 @@ function user_signup() {
     var status;
     if (username == '') {
         //"Please enter username"
-        show_error(20303);
+        show_message('ERROR', 20303);
         return null;
     }
     if (password == '') {
         //"Please enter password"
-        show_error(20304);
+        show_message('ERROR', 20304);
         return null;
     }
     if (password != password_confirm) {
         //Password not the same
-        show_error(20301);
+        show_message('ERROR', 20301);
         return null;
     }
 
@@ -3108,12 +3155,12 @@ function user_signup() {
                 show_dialogue('VERIFY');
             } else {
                 spinner('SIGNUP', 'hidden');
-                exception('user_signup', status, result);
+                exception(status, result);
             }
         })
         .catch(function(error) {
             spinner('SIGNUP', 'hidden');
-            alert(responseText_get_error('user_signup', error));
+            show_message('EXCEPTION', null,null, error);
         });
 }
 function create_user_settings_links(user_account_id, sid){
@@ -3486,62 +3533,69 @@ function user_settings_function(function_name, signup = false) {
                 spinner(function_name, 'hidden');
             } else {
                 spinner(function_name, 'hidden');
-                exception('user_settings_function', status, result);
+                exception(status, result);
             }
         })
         .catch(function(error) {
             spinner(function_name, 'hidden');
-            alert(responseText_get_error('user_settings_function', error));
+            show_message('EXCEPTION', null,null, error);
         });
 }
 
-function user_settings_delete() {
-    var user_account_id = document.getElementById('setting_data_userid_logged_in').innerHTML;
+function user_settings_delete(choice=null) {
     var select_user_setting = document.getElementById('setting_select_user_setting');
     var user_setting_id = select_user_setting[select_user_setting.selectedIndex].getAttribute('id');
     var status;
-    if (select_user_setting.length > 1) {
-        spinner('DELETE', 'visible');
-        fetch(global_rest_url_base + global_rest_app_timetables_user_setting + user_setting_id + 
-                '?app_id=' + global_app_id +
-                '&lang_code=' + document.getElementById('setting_select_locale').value, 
-            {
-                method: 'DELETE',
-                headers: {
-                    'Authorization': 'Bearer ' + global_rest_at
-                }
-            })
-            .then(function(response) {
-                status = response.status;
-                return response.text();
-            })
-            .then(function(result) {
-                if (status == 200) {
-                    var select = document.getElementById("setting_select_user_setting");
-                    //delete current option
-                    select.remove(select.selectedIndex);
-                    //load next available
-                    user_settings_load().then(function(){
-                        settings_translate(true).then(function(){
-                            settings_translate(false).then(function(){
-                                update_timetable_report();
-                                spinner('DELETE', 'hidden');
-                            })
-                        })
+    switch (choice){
+        case null:{
+            show_message('CONFIRM',null,2);
+            break;
+        }
+        case 1:{
+            if (select_user_setting.length > 1) {
+                spinner('DELETE', 'visible');
+                fetch(global_rest_url_base + global_rest_app_timetables_user_setting + user_setting_id + 
+                        '?app_id=' + global_app_id +
+                        '&lang_code=' + document.getElementById('setting_select_locale').value, 
+                    {
+                        method: 'DELETE',
+                        headers: {
+                            'Authorization': 'Bearer ' + global_rest_at
+                        }
                     })
-                    
-                } else {
-                    spinner('DELETE', 'hidden');
-                    exception('user_settings_delete', status, result);
-                }
-            })
-            .catch(function(error) {
-                spinner('DELETE', 'hidden');
-                alert(responseText_get_error('user_settings_delete', error));
-            });
-    } else {
-        //You can't delete last user setting
-        show_error(20302);
+                    .then(function(response) {
+                        status = response.status;
+                        return response.text();
+                    })
+                    .then(function(result) {
+                        if (status == 200) {
+                            var select = document.getElementById("setting_select_user_setting");
+                            //delete current option
+                            select.remove(select.selectedIndex);
+                            //load next available
+                            user_settings_load().then(function(){
+                                settings_translate(true).then(function(){
+                                    settings_translate(false).then(function(){
+                                        update_timetable_report();
+                                        spinner('DELETE', 'hidden');
+                                    })
+                                })
+                            })
+                            
+                        } else {
+                            spinner('DELETE', 'hidden');
+                            exception(status, result);
+                        }
+                    })
+                    .catch(function(error) {
+                        spinner('DELETE', 'hidden');
+                        show_message('EXCEPTION', null,null, error);
+                    });
+            } else {
+                //You can't delete last user setting
+                show_message('ERROR', 20302);
+            }
+        }
     }
     return null;
 }
@@ -3880,11 +3934,11 @@ function updateProviderUser(provider_no, profile_id, profile_first_name, profile
                     });
                 } 
                 else {
-                    exception('updateProviderUser', status, result);
+                    exception(status, result);
                 }
             })
             .catch(function(error) {
-                alert(responseText_get_error('updateProviderUser', error));
+                show_message('EXCEPTION', null,null, error);
             });
     }
     return null;
@@ -4067,12 +4121,6 @@ function show_dialogue(dialogue, file = '') {
                 document.getElementById('signup_username').focus();
                 break;
             }
-        case 'CONFIRM_DELETE':
-            {
-                //show_user_verify
-                document.getElementById('dialogue_confirm_delete').style.visibility = 'visible';
-                break;
-            }
     }
     return null;
 };
@@ -4222,7 +4270,7 @@ async function update_ui(option, item_id=null) {
                             document.getElementById('setting_input_place').value = '';
                         }
                         else {
-                            exception('update_ui', status, result);
+                            exception(status, result);
                         }
                     })
                 } 
@@ -4603,7 +4651,7 @@ function profile_show(user_account_id_other = null, username = null) {
                 }
             })
             .catch(function(error) {
-                alert(responseText_get_error('profile_show', error));
+                show_message('EXCEPTION', null,null, error);
             });
     }
 
@@ -4693,7 +4741,7 @@ function profile_show_user_setting() {
                 }
             })
             .catch(function(error) {
-                alert(responseText_get_error('profile_show', error));
+                show_message('EXCEPTION', null,null, error);
             });
     }
 }
@@ -4870,11 +4918,11 @@ function profile_detail(detailchoice) {
                     }
                     profile_detail_list.innerHTML = html;
                 } else {
-                    exception('profile_detail', status, result);
+                    exception(status, result);
                 }
             })
             .catch(function(error) {
-                alert(responseText_get_error('profile_detail', error));
+                show_message('EXCEPTION', null,null, error);
             });
     } else
         show_dialogue('LOGIN');
@@ -4952,7 +5000,7 @@ function profile_top(statschoice) {
             }
         })
         .catch(function(error) {
-            alert(responseText_get_error('profile_top', error));
+            show_message('EXCEPTION', null,null, error);
         });
 }
 
@@ -5040,7 +5088,7 @@ function profile_user_setting_update_stat(){
         }
     })
     .catch(function(error) {
-        alert(responseText_get_error('profile_user_setting_update_stat', error));
+        show_message('EXCEPTION', null,null, error);
     });
 }
 function user_function(user_function, user_setting_id) {
@@ -5151,11 +5199,11 @@ function user_function(user_function, user_setting_id) {
                             }
                     }
                 } else {
-                    exception('user_function', status, result);
+                    exception(status, result);
                 }
             })
             .catch(function(error) {
-                alert(responseText_get_error('profile_top', error));
+                show_message('EXCEPTION', null,null, error);
             });
     }
 }
@@ -5255,7 +5303,7 @@ function search_profile() {
             }
         })
         .catch(function(error) {
-            alert(responseText_get_error('search_profile', error));
+            show_message('EXCEPTION', null,null, error);
         });
 }
 
@@ -5292,11 +5340,11 @@ function updateViewStat(user_setting_id, user_setting_user_account_id = null) {
                 if (status == 200)
                     return null;
                 else {
-                    exception('updateViewStat', status, result);
+                    exception(status, result);
                 }
             })
             .catch(function(error) {
-                alert(responseText_get_error('updateViewStat', error));
+                show_message('EXCEPTION', null,null, error);
             });
     }
 }
@@ -5340,7 +5388,7 @@ function app_log(app_module, app_module_type, app_module_request, app_user_id) {
                 return null;
         })
         .catch(function(error) {
-            alert(responseText_get_error('app_log', error));
+            show_message('EXCEPTION', null,null, error);
         });
 }
 
@@ -5481,7 +5529,7 @@ async function app_load(){
             update_info(5);
         }
         else {
-            alert(responseText_get_error('get_app_globals app', result));
+            show_message('EXCEPTION', null,null, result);
         }
     })
     await get_gps_from_ip().then(function(){
