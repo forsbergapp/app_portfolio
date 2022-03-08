@@ -221,7 +221,7 @@ CREATE TABLE app_portfolio.app_object_item_subitem_fixed (
     object_name       VARCHAR(100) NOT NULL,
     object_item_name  VARCHAR(100) NOT NULL,
     subitem_name      VARCHAR(100) NOT NULL,
-    subitem_text      VARCHAR(100) NOT NULL,
+    subitem_text      VARCHAR(2000) NOT NULL,
 	CONSTRAINT app_object_item_subitem_fixed_pk PRIMARY KEY ( subitem_name,
 	                                                                  object_item_name,
 	                                                                  object_name,
@@ -244,7 +244,7 @@ CREATE TABLE app_portfolio.app_object_item_translation (
     object_name       VARCHAR(100) NOT NULL,
     object_item_name  VARCHAR(100) NOT NULL,
     language_id       INTEGER NOT NULL,
-    text              VARCHAR(100) NOT NULL,
+    text              VARCHAR(2000) NOT NULL,
 	CONSTRAINT app_object_item_translation_pk PRIMARY KEY ( language_id,
 	                                                                object_item_name,
 	                                                                object_name,
@@ -267,7 +267,7 @@ CREATE TABLE app_portfolio.app_object_subitem_translation (
     object_item_name  VARCHAR(100) NOT NULL,
     subitem_name      VARCHAR(100) NOT NULL,
     language_id       INTEGER NOT NULL,
-    text              VARCHAR(100) NOT NULL,
+    text              VARCHAR(2000) NOT NULL,
 	CONSTRAINT app_object_subitem_translation_pk PRIMARY KEY ( language_id,
 	                                                                   subitem_name,
 	                                                                   object_item_name,
@@ -288,7 +288,7 @@ CREATE TABLE app_portfolio.app_object_translation (
     app_id      INTEGER NOT NULL,
     object_name VARCHAR(100) NOT NULL,
     language_id INTEGER NOT NULL,
-    text        VARCHAR(100) NOT NULL,
+    text        VARCHAR(2000) NOT NULL,
     CONSTRAINT app_object_translation_pk PRIMARY KEY ( app_id,
                                                            object_name,
                                                            language_id )
@@ -606,7 +606,7 @@ GRANT ALL PRIVILEGES ON app_portfolio.country_group TO role_app_dba;
 CREATE TABLE app_portfolio.country_translation (
     country_id   INTEGER NOT NULL,
     language_id  INTEGER NOT NULL,
-    text         VARCHAR(100) NOT NULL,
+    text         VARCHAR(2000) NOT NULL,
 	CONSTRAINT country_translation_pk PRIMARY KEY ( country_id,
 	                                                language_id )
 );
@@ -658,7 +658,7 @@ GRANT ALL PRIVILEGES ON app_portfolio.language TO role_app_dba;
 CREATE TABLE app_portfolio.language_translation (
     language_id              INTEGER NOT NULL,
     language_translation_id  INTEGER NOT NULL,
-    text                     VARCHAR(100) NOT NULL,
+    text                     VARCHAR(2000) NOT NULL,
 	CONSTRAINT language_translation_pk PRIMARY KEY ( language_translation_id,
 	                                                 language_id )
 );
@@ -725,7 +725,7 @@ ALTER TABLE app_portfolio.message_level ADD CONSTRAINT message_level_message_lev
 CREATE TABLE app_portfolio.message_translation (
     language_id  INTEGER NOT NULL,
     message_code VARCHAR(100) NOT NULL,
-    text         VARCHAR(100),
+    text         VARCHAR(2000),
     CONSTRAINT message_translation_pk PRIMARY KEY ( language_id,
                                                     message_code )
 );
