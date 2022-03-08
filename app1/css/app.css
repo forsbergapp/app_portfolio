@@ -801,13 +801,29 @@ a:active {
 	padding:10px !important;
 }
 
-/*Dialogue confirm delete*/
-#dialogue_confirm_content{
+/*Dialogue message*/
+#dialogue_message_content{
 	width: 300px;
-	height: 100px;
+	height: auto;
 }
 #confirm_question{
-	font-size:30px;
+	font-size:16px;
+	cursor:default;
+	display:inline-block;
+	margin-bottom:10px;
+}
+#message_title{
+	cursor:default;
+	font-size:16px;
+	display:inline-block;
+}
+#message_cancel{
+	cursor:pointer;
+}
+#message_close{
+	outline:none;
+	cursor:pointer;
+	display:inline-block;
 }
 
 /* WINDOW INFO*/
@@ -2179,12 +2195,6 @@ body.app_theme1,
 .app_theme1 .toolbar_button:hover {
 	color:#6ab344 !important;
 }
-.app_theme1 .toolbar_button_ok {
-	color:#6ab344 !important;
-}
-.app_theme1 .toolbar_button_cancel {
-	color:#e32636 !important;
-}
 .app_theme1 #profile_search_input{
 	border: 1px solid #ddd;
 }
@@ -2344,12 +2354,6 @@ body.app_theme2,
 .app_theme2 .toolbar_button:hover {
 	color:#6ab344 !important;
 }
-.app_theme2 .toolbar_button_ok {
-	color:#6ab344 !important;
-}
-.app_theme2 .toolbar_button_cancel {
-	color:#e32636 !important;
-}
 .app_theme2 #profile_search_input{
 	border: 1px solid #ddd;
 }
@@ -2508,12 +2512,6 @@ body.app_theme3,
 }
 .app_theme3 .toolbar_button:hover {
 	color:#6ab344 !important;
-}
-.app_theme3 .toolbar_button_ok {
-	color:#6ab344 !important;
-}
-.app_theme3 .toolbar_button_cancel {
-	color:#e32636 !important;
 }
 .app_theme3 #profile_search_input{
 	border: 1px solid #ddd;
