@@ -32,7 +32,7 @@ router.get("/:id", checkAccessToken, getUserByUserId);
 router.put("/common/:id", checkAccessToken, updateUserCommon);
 router.delete("/:id", checkAccessToken, deleteUser);
 //profile
-router.get("/profile/detail/:id", checkDataToken, getProfileDetail);
+router.get("/profile/detail/:id", checkAccessToken, getProfileDetail);
 router.get("/profile/top/:statchoice", checkDataToken, getProfileTop);
 router.post("/profile/id/:id", checkDataToken, getProfileUserId);
 router.post("/profile/username/:username", checkDataToken, getProfileUsername);

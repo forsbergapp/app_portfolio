@@ -1,26 +1,33 @@
 App portfolio
 
 A platform to build your app portfolio.
-With most necessary technology configured to get started.
+With most necessary technology configured to get started and with less
+library and module dependencies for performance and better maintainability
+with code you have control over.
+Microservice architecture with monitoring of each microservice activity.
+Services included are authentication, database, forms, report, geolocation, log, mail
+and worldcities.
+Runs in Node.js using Express framework.
+Apps are component structured and server-side rendered with database data popluation.
+REST API with authentication middleware supporting both mySQL and Oracle Database.
+Admin single page web app (SPA) with sourcecode secured using authentication credentials.
 Includes 
 	Startpage to display your app portfolio.
 	Oracle SQL Developer Data model designed data model.
 	Scripts to create in mySQL or Oracle Database.
-	Global parameters controlled from Node server.
+	Server parameters controlled from Node.js server and app parameters from database.
 
-	Timetables app
-	Progressive web app also called single page web app.
+	App1 - Timetables app
+	Progressive web app (PWA) and a single page web app (SPA).
 	Worlds most advanced traditional prayer timetable calculation.
 	All known regional settings, all languagues and all countries supported.
 	Navigate in calendar per day, month or year in Gregorian or Hijri
 	calendar type in realtime.
-	REST API with authentication to mySQL or Oracle Database.
 	Facebook Login and Google sign in or create local user with user verification.
 	App can be used without registering but then settings can't be saved.
 	Map integration with automatic timezone and GPS lookup.
 	QR code dynamic generation.
 	Social network functionality with profile, like, follow, view other user settings and statistics.
-	Microservice architecture with monitoring of each microservice activity.
 	Centralized data model error handling of database errors, constraints errors and 
 	application errors and showed in users language.
 	Timetables can be displayed with different themes using CSS3.
@@ -29,32 +36,46 @@ Includes
 	
 	Server generated PDF and HTML generated timetables are pixel perfect designed using pt font sizes
 	and timetable paper size supported are A4 and Letter.
-	Some HTML server side rendering with database data population is performed at startup.
 	Different application themes available from about dialogue.
 	App is written in pure Javascript and ES6 Javascript is often used in both client and server.
-	Runs in Node.js using express framework.
-	App client is component structured and server-side rendered.
 
-	Property management app
-	Data model displayed at the moment and added to display how multiple apps can be managed.
+	App 2 - Property management app
+	Data model displayed at the moment.
+	Data model supports:
+	- management of a property with multiple owners, multiple subtypes of properties, 
+	  owner of multiple properties, facility management and vechicle access management
+	- economic adminstration
+		- bills
+		- payments
+		- receipts for owners, contact groups representing one or more properties
+		- accounting ledger and journal, multicurrency support
+		- staff management
+		- salary
+		- quota calculations for condominum properties
+		- bank management
+	- investment of assets, real estate, currency, exchange tradable(stock, future, energy), 
+	  exchange cryptocurrency and basic stock exchange trading model
+	- contact management, in groups or shared ownerships, representation for owners, tenants, 
+	  guests
+	- booking reservation facility, network access management
+	- service management water, electricity, internet, phone lines etc
+	- board of directors management with reunion schedule
 
 installation instructions
 
 1. install Node.js on server,
 version 17.3.0 supported
 
-	modules required
+	modules required:
 	npm install express
 	npm install mysql
 	npm install oracledb
 	npm install dotenv
-	npm install --save-dev nodemon
 	npm install bcryptjs
 	npm install helmet@4.6.0
 	npm install jsonwebtoken
 	npm install nodemailer
 	npm install node-fetch@2.6.1
-	npm install -g pm2
 
 	npm install puppeteer
 	//puppeteer options on Linux
@@ -72,6 +93,10 @@ version 17.3.0 supported
 	sudo yum install pango
 	sudo yum install alsa-lib
 
+	modules optional:
+	npm install --save-dev nodemon
+	npm install -g pm2
+
 2. install mysql/oracle on same server or other server
    mySQL 8.0.27 supported, other version should work
    Oracle Autonomous JSON Database 21C supported, other version should work
@@ -86,23 +111,30 @@ version 17.3.0 supported
    run scripts/mysql.ddl as root in mysql database or
    run script/oracle.ddl as admin/dba in oracle database
 
-	USER CREATED			ROLE AND APP_ID INFO
-	app_portfolio			role ROLE_APP_DBA
-							database user, do not use in app
-	app_admin				role ROLE_APP_ADMIN
-							app admin in app
-	app0					role ROLE_APP0
-							app_id=0
-	app1 					role ROLE_APP1
-							app_id=1
-	app2 					role ROLE_APP2
-							app_id=2
+   USER CREATED			ROLE AND APP_ID INFO
+   ------------			--------------------
+   app_portfolio		role ROLE_APP_DBA
+						database user, do not use in app,
+						use app users with less privileges
+						for a more secure app
 
-	default passsword APP_1_portfolio for all users
+   app_admin			role ROLE_APP_ADMIN
+						app admin in app
+						DELETE/INSERT/SELECT/UPATE all tables, but no DDL
+   app0					role ROLE_APP0
+						app_id=0
+   
+   app1 				role ROLE_APP1
+						app_id=1
+   
+   app2 				role ROLE_APP2
+						app_id=2
 
-	run in app_portfolio mysql database or oracle schema:
-   import import.sql
-   import language *.sql files
+   default passsword APP_1_portfolio for all users
+
+   run in app_portfolio mysql database or oracle schema:
+   import scripts/import.sql
+   import language scripts/*.sql files
 
 3. register google sign in
    requires hostname
@@ -126,26 +158,25 @@ version 17.3.0 supported
 
 5. register mapbox 
    get access token
-   https://www.mapbox.com/api-documentation/#access-tokens-and-token-scopes
+   https://docs.mapbox.com/api/overview/
 
-   without token map does not work.
+   map does not work without this access token.
    
-6. register email provider
+6. register email provider to send from server
    hostname, port, username, password
    Check if email provider allows sending from apps if using free account.
-   For Gmail accounts check https://myaccount.google.com/lesssecureapps
 
-7. generate ssl files for https, use recommended letsencrypt for domain,
-   use self sign for localhost
+7. generate ssl files for https, start using letsencrypt for a domain and
+   use self sign for localhost or use ssl provider of your choice
 
-8. download app from Github
+8. download from Github
 
    mkdir app_portfolio
    cd app_portfolio
    git clone https://github.com/appportfolio/app_portfolio.git
 
 9. create .env file in /app_portfolio
-set values in {} and modify default value if necessary
+set values in {} and modify default values if necessary
 change default db password
 format BLOCKIP.txt content, without comment and in an array:
 [
@@ -235,7 +266,6 @@ update {...} values in table app_parameter
 they have parameter_type_id 1 or 2
 1 = Private shared values sent to app
 2 = Private values with passwords and sensitive data only available from NodeJS server
-
 
 11. run app on any supported Node.js platform
 
