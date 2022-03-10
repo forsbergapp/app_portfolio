@@ -116,16 +116,18 @@ const worldcitiesRouter = require("./service/worldcities/worldcities.router");
 //set middleware to configure Content Security Policy
 app.use(
   helmet({
+    crossOriginEmbedderPolicy: false,
     contentSecurityPolicy: {
       directives: {
-        defaultSrc: ["'self'"], 
-        scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'", 'api.mapbox.com', 'apis.google.com', 'connect.facebook.net'],
-        styleSrc: ["'self'", "'unsafe-inline'", 'fonts.googleapis.com', 'use.fontawesome.com', 'api.mapbox.com'],
-        fontSrc: ["self", 'fonts.gstatic.com', 'use.fontawesome.com'],
-        imgSrc: ["*", 'data:', 'blob:'],
+        "default-src": ["'self'"], 
+        "script-src": ["'self'", "'unsafe-inline'", "'unsafe-eval'", 'api.mapbox.com', 'apis.google.com', 'connect.facebook.net', 'www.facebook.com'],
+        "script-src-attr": ["'self'", "'unsafe-inline'"],
+        "style-src": ["'self'", "'unsafe-inline'", 'fonts.googleapis.com', 'use.fontawesome.com', 'api.mapbox.com'],
+        "font-src": ["self", 'fonts.gstatic.com', 'use.fontawesome.com'],
+        "img-src": ["*", 'data:', 'blob:'],
         connectSrc: ["*"],
         childSrc: ["'self'", 'blob:'],
-        objectSrc: ["'self'", 'data:'],
+        "object-src": ["'self'", 'data:'],
         frameSrc: ["'self'", 'data:', 'accounts.google.com', 'www.facebook.com'],
       },
     }
