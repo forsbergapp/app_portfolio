@@ -63,8 +63,7 @@ Includes
 
 installation instructions
 
-1. install Node.js on server,
-version 17.3.0 supported
+1. install Node.js on server
 
 	modules required:
 	npm install express
@@ -75,7 +74,7 @@ version 17.3.0 supported
 	npm install helmet@4.6.0
 	npm install jsonwebtoken
 	npm install nodemailer
-	npm install node-fetch@2.6.1
+	npm install axios
 
 	npm install puppeteer
 	//puppeteer options on Linux
@@ -98,8 +97,6 @@ version 17.3.0 supported
 	npm install -g pm2
 
 2. install mysql/oracle on same server or other server
-   mySQL 8.0.27 supported, other version should work
-   Oracle Autonomous JSON Database 21C supported, other version should work
 
    For Oracle Database, install Oracle Instant Client
    www.oracle.com/database/technologies/instant-client.html
@@ -250,6 +247,8 @@ SERVICE_LOG_DESTINATION                     		={0=FILE ONLY
                                                       1=URL ONLY REST API METHOD POST
                                                       2=FILE AND URL}
 SERVICE_LOG_URL_DESTINATION                 		={URL TO REST API METHOD POST}
+SERVICE_LOG_URL_DESTINATION_USERNAME        		={USERNAME}
+SERVICE_LOG_URL_DESTINATION_PASSWORD        		={PASSWORD}
 SERVICE_LOG_FILE_INTERVAL                   		={1D or 1M}
 SERVICE_LOG_FILE_PATH_SERVER                		={PATH with / at the end}
 SERVICE_LOG_DATE_FORMAT                     		={DEFAULT empty creates ISO8601 format

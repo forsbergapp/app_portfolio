@@ -1,8 +1,10 @@
-const fetch = require('node-fetch');
+const axios = require('axios');
 module.exports = {
     getService: async (url) => {
-        var res = await fetch(url,{method: 'GET'});
-        const geodata = await res.json();
-        return geodata;
+        let res = await axios({
+            url: url,
+            method: 'GET'
+        })
+        return res.data;
     }
 }

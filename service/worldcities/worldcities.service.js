@@ -1,4 +1,3 @@
-const fetch = require('node-fetch');
 module.exports = {
     getService: () => {
         const fs = require('fs');
