@@ -30,11 +30,12 @@ function sendLog(logscope, loglevel, log){
     if (process.env.SERVICE_LOG_DESTINATION==1 ||
         process.env.SERVICE_LOG_DESTINATION==2){
         //url destination
-        const fetch = require('node-fetch');
-        fetch(process.env.SERVICE_LOG_URL_DESTINATION,{method: 'POST', body:log})
-        .then(function(){
-            null;
-        })
+        const axios = require('axios');
+        const headers = { 
+            'Authorization': 'Basic ' + btoa(process.env.SERVICE_LOG_URL_DESTINATION_USERNAME + ':' + process.env.SERVICE_LOG_URL_DESTINATION_PASSWORD)
+        };
+        axios.post(process.env.SERVICE_LOG_URL_DESTINATION, log);
+        
     }   
 }
 module.exports = {
