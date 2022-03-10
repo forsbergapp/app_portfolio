@@ -1851,7 +1851,25 @@ function keyfunctions() {
     document.getElementById('popup_menu_profile').addEventListener('click', function() { toolbar_bottom(6) }, false);
     document.getElementById('popup_menu_profile_top').addEventListener('click', function() { toolbar_bottom(7) }, false);
     document.getElementById('popup_menu_settings').addEventListener('click', function() { toolbar_bottom(5) }, false);
-    
+
+    document.getElementById('user_day_html').addEventListener('click', function() { user_setting_link(this) }, false);
+    document.getElementById('user_day_html_copy').addEventListener('click', function() { user_setting_link(this) }, false);
+    document.getElementById('user_day_pdf').addEventListener('click', function() { user_setting_link(this) }, false);
+    document.getElementById('user_day_pdf_copy').addEventListener('click', function() { user_setting_link(this) }, false);
+    document.getElementById('user_month_html').addEventListener('click', function() { user_setting_link(this) }, false);
+    document.getElementById('user_month_html_copy').addEventListener('click', function() { user_setting_link(this) }, false);
+    document.getElementById('user_month_pdf').addEventListener('click', function() { user_setting_link(this) }, false);
+    document.getElementById('user_month_pdf_copy').addEventListener('click', function() { user_setting_link(this) }, false);
+    document.getElementById('user_year_html').addEventListener('click', function() { user_setting_link(this) }, false);
+    document.getElementById('user_year_html_copy').addEventListener('click', function() { user_setting_link(this) }, false);
+    document.getElementById('user_year_pdf').addEventListener('click', function() { user_setting_link(this) }, false);
+    document.getElementById('user_year_pdf_copy').addEventListener('click', function() { user_setting_link(this) }, false);
+
+    document.getElementById('info_link1').addEventListener('click', function() {document.getElementById("window_info").style.display = "block"}, false);
+    document.getElementById('info_link2').addEventListener('click', function() {document.getElementById("window_info").style.display = "block"}, false);
+    document.getElementById('info_link3').addEventListener('click', function() {document.getElementById("window_info").style.display = "block"}, false);
+    document.getElementById('info_link4').addEventListener('click', function() {document.getElementById("window_info").style.display = "block"}, false);
+    document.getElementById('info_link5').addEventListener('click', function() {document.getElementById("window_info").style.display = "block"}, false);
     //onchange
     document.getElementById('setting_select_locale').addEventListener('change', function() { settings_translate(true) }, false);
     document.getElementById('setting_select_timezone_current').addEventListener('change', function() { update_ui(1) }, false);
@@ -1872,6 +1890,7 @@ function keyfunctions() {
                        
     document.getElementById('setting_input_avatar_img').addEventListener('change', function() { show_image(document.getElementById('setting_avatar_logged_in'), this.id); }, false);
     document.getElementById('setting_select_user_setting').addEventListener('change', function() {user_settings_load().then(function(){settings_translate(true).then(function(){settings_translate(false);})}) }, false);
+
     document.getElementById('app_select_theme').addEventListener('change', function() { app_select_theme() }, false);
           
     document.getElementById('profile_select_user_settings').addEventListener('change', 
@@ -3165,49 +3184,72 @@ function user_signup() {
             show_message('EXCEPTION', null,null, error);
         });
 }
-function create_user_settings_links(user_account_id, sid){
-    //show generated url for current setting
-    var paper_size_select = document.getElementById('setting_select_report_papersize');
-    var common_url = get_report_url(user_account_id, sid, paper_size_select.options[paper_size_select.selectedIndex].value);
-    var period;
+function user_setting_link(item){
+    let paper_size_select = document.getElementById('setting_select_report_papersize');
+    let common_url;
     let url_type='';
-    const period_arr = ['day','month','year'];
-    period_arr.forEach(period => {
-        if (period =='day')
-            url_type = '&type=0';
-        if (period =='month')
-            url_type = '&type=1';
-        if (period =='year')
-            url_type = '&type=2';
+    let select_user_setting = document.getElementById('setting_select_user_setting');
+    let user_account_id = select_user_setting[select_user_setting.selectedIndex].getAttribute('user_account_id');
+    let sid = select_user_setting[select_user_setting.selectedIndex].getAttribute('id');
+    common_url = get_report_url(user_account_id, sid, paper_size_select.options[paper_size_select.selectedIndex].value);
+    if (item.id.substr(0,8)=='user_day')
+        url_type = '&type=0';
+    if (item.id.substr(0,10)=='user_month')
+        url_type = '&type=1';
+    if (item.id.substr(0,9)=='user_year')
+        url_type = '&type=2';
 
-        document.getElementById('setting_data_user_url_' + period).innerHTML =
-            `<button id=${'user_' + period + '_html'}
-                class='toolbar_button'
-                onclick='document.getElementById("window_preview_report").style.visibility = "visible";
-                        create_qr("window_preview_toolbar_qr", "${common_url + '&format=html' + url_type}");
-                        document.getElementById("window_preview_content").src="${common_url + '&format=html' + url_type}"'> 
-                <i class='fas fa-file-code'></i>
-                <div id=${'user_' + period + '_label_html'}>HTML</div>
-            </button>
-            <button id=${'user_' + period + '_html_copy'}
-                class='toolbar_button'
-                onclick='var promise = navigator.clipboard.writeText("${common_url + '&format=html' + url_type}") .then(() => {null;});'>
-                <i class='fas fa-copy'></i>
-            </button>
-            <button id=${'user_' + period + '_pdf'}
-                class='toolbar_button'
-                onclick='document.getElementById("window_preview_report").style.visibility = "visible";
-                        create_qr("window_preview_toolbar_qr", "${common_url + '&format=pdf' + url_type}");
-                        document.getElementById("window_preview_content").src="${common_url + '&format=pdf' + url_type}"'> 
-                <i class='fas fa-file-pdf'></i>
-                <div id=${'user_' + period + '_label_pdf'}>PDF</div>
-            </button>
-            <button id=${'user_' + period + '_pdf_copy'}
-                class='toolbar_button'
-                onclick='var promise = navigator.clipboard.writeText("${common_url + '&format=pdf' + url_type}") .then(() => {null;});'>
-                <i class='fas fa-copy'></i>
-            </button>`;
-    })
+    switch (item.id){
+        case 'user_day_html':
+        case 'user_month_html':
+        case 'user_year_html':{
+            dialogue_loading(1);
+            document.getElementById("window_preview_report").style.visibility = "visible";
+            create_qr("window_preview_toolbar_qr", `${common_url}&format=html${url_type}`);
+            document.getElementById("window_preview_content").src=`${common_url}'&format=html${url_type}`;
+            dialogue_loading(0);
+            break;
+        }
+        case 'user_day_html_copy':
+        case 'user_month_html_copy':
+        case 'user_year_html_copy':{
+            var promise = navigator.clipboard.writeText(`${common_url}'&format=html'${url_type}`) .then(() => {null;});
+            break;
+        }
+        case 'user_day_pdf':
+        case 'user_month_pdf':
+        case 'user_year_pdf':{
+            document.getElementById("window_preview_report").style.visibility = "visible";
+            create_qr("window_preview_toolbar_qr", `${common_url}&format=pdf${url_type}`);
+            dialogue_loading(1);
+            fetch (`${common_url}'&format=pdf${url_type}`,
+                    {
+                        headers: {
+                            'Content-Type': 'application/pdf;charset=UTF-8'
+                        }
+                    }
+            )
+            .then(function(response) {
+                return response.blob();
+            })
+            .then(function(pdf) {      
+                var reader = new FileReader();
+                reader.readAsDataURL(pdf); 
+                reader.onloadend = function() {
+                    var base64PDF = reader.result;   
+                    document.getElementById("window_preview_content").src= base64PDF;
+                    dialogue_loading(0);
+                }
+            })
+            break;
+        }
+        case 'user_day_pdf_copy':
+        case 'user_month_pdf_copy':
+        case 'user_year_pdf_copy':{
+            var promise = navigator.clipboard.writeText(`${common_url}'&format=pdf'${url_type}`) .then(() => {null;});
+            break;
+        }
+    }
 }
 async function user_settings_load(show_ui = 1) {
 
@@ -3396,10 +3438,6 @@ async function user_settings_load(show_ui = 1) {
     document.getElementById('setting_select_report_show_fast_start_end').selectedIndex =
         select_user_setting[select_user_setting.selectedIndex].getAttribute('prayer_column_fast_start_end_select_id');
 
-    if (show_ui == 1) {
-        create_user_settings_links(select_user_setting[select_user_setting.selectedIndex].getAttribute('user_account_id'),
-                                   select_user_setting[select_user_setting.selectedIndex].getAttribute('id'));
-    }
     return null;
 }
 
@@ -4078,11 +4116,11 @@ function show_dialogue(dialogue, file = '') {
                 if (global_info_social_link4_url!=null)
                     document.getElementById('social_link4').innerHTML = `<a href=${global_info_social_link4_url} target='_blank'>${global_info_social_link4_name}</a>`;
                 // show info in window_info div
-                document.getElementById('info_link1').innerHTML = `<a href='#info1' onclick='document.getElementById("window_info").style.display = "block";'> ${global_info_link1_name} </a>`;
-                document.getElementById('info_link2').innerHTML = `<a href='#info2' onclick='document.getElementById("window_info").style.display = "block";'> ${global_info_link2_name} </a>`;
-                document.getElementById('info_link3').innerHTML = `<a href='#info3' onclick='document.getElementById("window_info").style.display = "block";'> ${global_info_link3_name} </a>`;
-                document.getElementById('info_link4').innerHTML = `<a href='#info4' onclick='document.getElementById("window_info").style.display = "block";'> ${global_info_link4_name} </a>`;
-                document.getElementById('info_link5').innerHTML = `<a href='#info5' onclick='document.getElementById("window_info").style.display = "block";'> ${global_info_link5_name} </a>`;
+                document.getElementById('info_link1').innerHTML = global_info_link1_name;
+                document.getElementById('info_link2').innerHTML = global_info_link2_name;
+                document.getElementById('info_link3').innerHTML = global_info_link3_name;
+                document.getElementById('info_link4').innerHTML = global_info_link4_name;
+                document.getElementById('info_link5').innerHTML = global_info_link5_name;
                 break;
             }
         case 'VERIFY':
@@ -4389,8 +4427,6 @@ async function update_ui(option, item_id=null) {
                     default:
                         break;
                 }
-                create_user_settings_links(settings.select_user_setting[settings.select_user_setting.selectedIndex].getAttribute('user_account_id'),
-                                           settings.select_user_setting[settings.select_user_setting.selectedIndex].getAttribute('id'));
                 break;
             }
         //11=Image, Report header image load
