@@ -1593,9 +1593,9 @@ function create_qr(div, url) {
 /*----------------------- */
 /* User setting functions */
 /*----------------------- */
-async function get_token() {
+async function get_data_token() {
     var status;
-    //get token access
+    //get data token
     await fetch(global_service_auth + 
                 '?app_id=' + global_app_id + 
                 '&app_user_id=' + document.getElementById('setting_data_userid_logged_in').innerHTML +
@@ -2942,8 +2942,10 @@ async function user_settings_get(userid, show_ui = 1, user_setting_id = '') {
 function user_logoff() {
     var select = document.getElementById("setting_select_user_setting");
     var option;
-    //get new token to avoid endless loop och invalid token
-    get_token().then(function(){
+    //remove access token
+    global_rest_at ='';
+    //get new data token to avoid endless loop och invalid token
+    get_data_token().then(function(){
         if (global_app_user_provider1_use==1){
             //sign out from Google if Google loaded
             if (gapi.auth2.getAuthInstance()) {
@@ -5393,7 +5395,7 @@ function app_log(app_module, app_module_type, app_module_request, app_user_id) {
 }
 
 async function init_common() {
-    await get_token().then(function(){
+    await get_data_token().then(function(){
         //set current date for report month
         global_session_currentDate = new Date();
         global_session_CurrentHijriDate = new Array();
@@ -5598,7 +5600,7 @@ async function init_head(){
             version    : global_app_user_provider2_api_version
             });
             
-            FB.AppEvents.logPageView();   
+            /*FB.AppEvents.logPageView();   */
             
         };
         (function(d, s, id){

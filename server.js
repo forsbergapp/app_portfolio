@@ -48,6 +48,35 @@ Object.defineProperty(global, '__appfilename', {
       return filename.substring(__dirname.length).replace(/\\/g, "/");
       } 
 });
+//set middleware to configure Content Security Policy
+app.use(
+  helmet({
+    crossOriginEmbedderPolicy: false,
+    contentSecurityPolicy: {
+      directives: {
+        "default-src": ["'self'"], 
+        "script-src": ["'self'", "'unsafe-inline'", "'unsafe-eval'", 'api.mapbox.com', 'apis.google.com', 'connect.facebook.net', '*.facebook.com'],
+        "script-src-attr": ["'self'", "'unsafe-inline'"],
+        "style-src": ["'self'", "'unsafe-inline'", 'fonts.googleapis.com', 'use.fontawesome.com', 'api.mapbox.com'],
+        "font-src": ["self", 'fonts.gstatic.com', 'use.fontawesome.com'],
+        "img-src": ["*", 'data:', 'blob:'],
+        connectSrc: ["*"],
+        childSrc: ["'self'", 'blob:'],
+        "object-src": ["'self'", 'data:'],
+        frameSrc: ["'self'", 'data:', 'accounts.google.com', 'www.facebook.com'],
+      },
+    }
+  })
+);
+// set middleware JSON maximum size
+app.use(express.json({ limit: process.env.SERVER_JSON_LIMIT }));
+//define what headers are allowed
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Headers", "Authorization, Origin, X-Requested-With, Content-Type, Accept, Service-Worker-Allowed");
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+  next();
+});
+
 //Logging middleware
 app.use((err,req,res,next) => {
   createLogServer(err, req, res);
@@ -113,34 +142,6 @@ const reportRouter = require("./service/report/report.router");
 //service worldcities
 const worldcitiesRouter = require("./service/worldcities/worldcities.router");
 
-//set middleware to configure Content Security Policy
-app.use(
-  helmet({
-    crossOriginEmbedderPolicy: false,
-    contentSecurityPolicy: {
-      directives: {
-        "default-src": ["'self'"], 
-        "script-src": ["'self'", "'unsafe-inline'", "'unsafe-eval'", 'api.mapbox.com', 'apis.google.com', 'connect.facebook.net', 'www.facebook.com'],
-        "script-src-attr": ["'self'", "'unsafe-inline'"],
-        "style-src": ["'self'", "'unsafe-inline'", 'fonts.googleapis.com', 'use.fontawesome.com', 'api.mapbox.com'],
-        "font-src": ["self", 'fonts.gstatic.com', 'use.fontawesome.com'],
-        "img-src": ["*", 'data:', 'blob:'],
-        connectSrc: ["*"],
-        childSrc: ["'self'", 'blob:'],
-        "object-src": ["'self'", 'data:'],
-        frameSrc: ["'self'", 'data:', 'accounts.google.com', 'www.facebook.com'],
-      },
-    }
-  })
-  );
-// set middleware JSON maximum size
-app.use(express.json({ limit: process.env.SERVER_JSON_LIMIT }));
-//define what headers are allowed
-app.use(function(req, res, next) {
-  res.header("Access-Control-Allow-Headers", "Authorization, Origin, X-Requested-With, Content-Type, Accept");
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-  next();
-});
 //SERVER
 //set REST API endpoints and connect to routers
 //authorization
