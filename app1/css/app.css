@@ -616,10 +616,13 @@ a:active {
 	z-index:1;
 }
 /*Loading dialogue*/
+#dialogue_loading{
+	text-align:center;
+}
 #dialogue_spinner{
-	transform: translate(-50%, -50%);
-	top: 10%;
-	left: 50%;
+	top: 50%;
+    margin-left: -40px;
+	display:inline-block;
 }
 
 /*Info dialogue*/
@@ -884,7 +887,7 @@ a:active {
 	top: 0px;
 	position:fixed;
 	overflow:auto;
-	z-index: 11;
+	z-index: 10;
 	visibility:hidden;
 	float:left;
     text-align:center;
