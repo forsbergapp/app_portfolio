@@ -184,20 +184,23 @@ process.env.TZ = 'UTC';
 //app.use(express.static(__dirname, { dotfiles: 'allow' }));
 
 //admin directories
-app.use('/admin/js',express.static(__dirname + '/admin/js'));
-app.use('/admin/css',express.static(__dirname + '/admin/css'));
+app.use('/admin/js',express.static(__dirname + '/apps/admin/js'));
+app.use('/admin/css',express.static(__dirname + '/apps/admin/css'));
+//common directories
+app.use('/common/js',express.static(__dirname + '/apps/common/js'));
+app.use('/common/css',express.static(__dirname + '/apps/common/css'));
 //app 0 directories
-app.use('/app0/info',express.static(__dirname + '/app0/info'));
-app.use('/app0/css',express.static(__dirname + '/app0/css'));
-app.use('/app0/images',express.static(__dirname + '/app0/images'));
-app.use('/app0/js',express.static(__dirname + '/app0/js'));
+app.use('/app0/info',express.static(__dirname + '/apps/app0/info'));
+app.use('/app0/css',express.static(__dirname + '/apps/app0/css'));
+app.use('/app0/images',express.static(__dirname + '/apps/app0/images'));
+app.use('/app0/js',express.static(__dirname + '/apps/app0/js'));
 //app 1 directories
-app.use('/app1/css',express.static(__dirname + '/app1/css'));
-app.use('/app1/js',express.static(__dirname + '/app1/js'));
-app.use('/app1/info',express.static(__dirname + '/app1/info'));
-app.use('/app1/images',express.static(__dirname + '/app1/images'));
+app.use('/app1/css',express.static(__dirname + '/apps/app1/css'));
+app.use('/app1/js',express.static(__dirname + '/apps/app1/js'));
+app.use('/app1/info',express.static(__dirname + '/apps/app1/info'));
+app.use('/app1/images',express.static(__dirname + '/apps/app1/images'));
 //app 2 directory
-app.use('/app2',express.static(__dirname + '/app2'));
+app.use('/app2',express.static(__dirname + '/apps/app2'));
 
 app.get("/admin",function (req, res, next) {
   //redirect from http to https
@@ -205,12 +208,12 @@ app.get("/admin",function (req, res, next) {
     return res.redirect('https://' + req.headers.host + "/admin");
   else{
     const { getParameter} = require ("./service/db/api/app_parameter/app_parameter.service");
-    getParameter(0,'SERVER_MAINTENANCE', (err, db_SERVER_MAINTENANCE)=>{
+    getParameter(process.env.APP0_ID,'SERVER_MAINTENANCE', (err, db_SERVER_MAINTENANCE)=>{
       if (err)
-        createLogAppSE(0, __appfilename, __appfunction, __appline, err);      
+        createLogAppSE(process.env.APP0_ID, __appfilename, __appfunction, __appline, err);      
       else{
           if (db_SERVER_MAINTENANCE==1)
-            return res.sendFile(__dirname + "/admin/index_maintenance.html");
+            return res.sendFile(__dirname + "/apps/admin/index_maintenance.html");
           else{
             const { getAdmin } = require ("./service/forms/forms.controller");
             getAdmin( (err, app_result)=>{
@@ -262,12 +265,12 @@ app.get('/:user', function(req, res,next) {
         return res.redirect('https://' + req.headers.host);
       else{
         const { getParameter} = require ("./service/db/api/app_parameter/app_parameter.service");
-        getParameter(0,'SERVER_MAINTENANCE', (err, db_SERVER_MAINTENANCE)=>{
+        getParameter(process.env.APP0_ID,'SERVER_MAINTENANCE', (err, db_SERVER_MAINTENANCE)=>{
           if (err)
-            createLogAppSE(0, __appfilename, __appfunction, __appline, err);      
+            createLogAppSE(process.env.APP1_ID, __appfilename, __appfunction, __appline, err);      
           else{
               if (db_SERVER_MAINTENANCE==1)
-                return res.sendFile(__dirname + "/app1/index_maintenance.html");
+                return res.sendFile(__dirname + "/apps/app1/index_maintenance.html");
               else{
                   const { getForm} = require("./service/forms/forms.controller");
                   getForm(process.env.APP1_ID, req.params.user, (err, app_result)=>{
@@ -295,19 +298,19 @@ app.get('/favicon.ico', function (req, res) {
   switch (req.headers.host.substring(0,req.headers.host.indexOf('.'))){
     case '':
     case 'www':{
-      res.sendFile(__dirname + "/app0/images/favicon.ico");
+      res.sendFile(__dirname + "/apps/app0/images/favicon.ico");
       break;
     }
     case 'app1':{
-      res.sendFile(__dirname + "/app1/images/favicon.ico");
+      res.sendFile(__dirname + "/apps/app1/images/favicon.ico");
       break;
     }
     case 'app2':{
-      res.sendFile(__dirname + "/app2/images/favicon.ico");
+      res.sendFile(__dirname + "/apps/app2/images/favicon.ico");
       break;
     }
     default:{
-      res.sendFile(__dirname + "/app0/images/favicon.ico");
+      res.sendFile(__dirname + "/apps/app0/images/favicon.ico");
       break; 
     }
   }
@@ -326,26 +329,30 @@ app.get('/',function (req, res) {
     case '':
     case 'www':{
       const { getParameter} = require ("./service/db/api/app_parameter/app_parameter.service");
-      getParameter(0,'SERVER_MAINTENANCE', (err, db_SERVER_MAINTENANCE)=>{
+      getParameter(process.env.APP0_ID,'SERVER_MAINTENANCE', (err, db_SERVER_MAINTENANCE)=>{
         if (err)
-          createLogAppSE(0, __appfilename, __appfunction, __appline, err);      
+          createLogAppSE(process.env.APP0_ID, __appfilename, __appfunction, __appline, err);      
         else{
             if (db_SERVER_MAINTENANCE==1)
-              return res.sendFile(__dirname + "/app0/index_maintenance.html");
-            else
-                return res.sendFile(__dirname + "/app0/index.html");
+              return res.sendFile(__dirname + "/apps/app0/index_maintenance.html");
+            else{
+              const { getForm} = require("./service/forms/forms.controller");
+              getForm(process.env.APP0_ID, null,(err, app_result)=>{
+                  return res.send(app_result);
+              })
+            }
         }
       })
       break;
     }
     case 'app1':{
       const { getParameter} = require ("./service/db/api/app_parameter/app_parameter.service");
-      getParameter(0,'SERVER_MAINTENANCE', (err, db_SERVER_MAINTENANCE)=>{
+      getParameter(process.env.APP0_ID,'SERVER_MAINTENANCE', (err, db_SERVER_MAINTENANCE)=>{
         if (err)
-          createLogAppSE(1, __appfilename, __appfunction, __appline, err);      
+          createLogAppSE(process.env.APP1_ID, __appfilename, __appfunction, __appline, err);      
         else{
             if (db_SERVER_MAINTENANCE==1)
-              return res.sendFile(__dirname + "/app1/index_maintenance.html");
+              return res.sendFile(__dirname + "/apps/app1/index_maintenance.html");
             else{
               const { getForm} = require("./service/forms/forms.controller");
               getForm(process.env.APP1_ID, null,(err, app_result)=>{
@@ -358,14 +365,18 @@ app.get('/',function (req, res) {
     }
     case 'app2':{
       const { getParameter} = require ("./service/db/api/app_parameter/app_parameter.service");
-      getParameter(0,'SERVER_MAINTENANCE', (err, db_SERVER_MAINTENANCE)=>{
+      getParameter(process.env.APP0_ID,'SERVER_MAINTENANCE', (err, db_SERVER_MAINTENANCE)=>{
         if (err)
-          createLogAppSE(2, __appfilename, __appfunction, __appline, err);      
+          createLogAppSE(process.env.APP2_ID, __appfilename, __appfunction, __appline, err);      
         else{
             if (db_SERVER_MAINTENANCE==1)
-              return res.sendFile(__dirname + "/app2/index_maintenance.html");
-            else
-              return res.sendFile(__dirname + "/app2/datamodel.pdf");
+              return res.sendFile(__dirname + "/apps/app2/index_maintenance.html");
+            else{
+              const { getForm} = require("./service/forms/forms.controller");
+              getForm(process.env.APP2_ID, null,(err, app_result)=>{
+                  return res.send(app_result);
+              })
+            }
         }
       })
       break;

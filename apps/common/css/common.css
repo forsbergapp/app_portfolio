@@ -1,0 +1,27 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&display=swap');
+@import url('https://use.fontawesome.com/releases/v5.13.1/css/all.css');
+#dialogue_maintenance{
+	visibility: hidden;
+}
+#dialogue_maintenance_content{
+	font-family: 'Noto Sans';
+	height:250px;
+}
+#maintenance_logo {
+	background-image: url('/app0/images/logo.png');
+	background-size: cover;
+	background-repeat: no-repeat;
+	height: 50px;
+	margin: 0 auto;
+}
+#maintenance_message{
+	padding-top:20px;
+	padding-bottom:20px;
+}
+#maintenance_countdown{
+	font-size: 30px;
+	padding-bottom:20px;
+}
+#maintenance_footer{
+	padding-bottom:5px;
+}
