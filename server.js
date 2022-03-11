@@ -224,91 +224,11 @@ app.get("/sw.js",function (req, res,next) {
     next();
 });
 //app 1 progressive webapp menifest
-app.get("/app1/manifest.json",function (req, res, next) {
-    const { getParameters } = require ("./service/db/api/app_parameter/app_parameter.service");
-    getParameters(process.env.APP1_ID,(err, results) =>{
-      if (err) {
-        return res.status(500).send({
-          success: 0,
-          data: err
-        });
-      }
-      else {
-        let json = JSON.parse(JSON.stringify(results));
-        let pwa_short_name;
-        let pwa_name;
-        let pwa_description;
-        let pwa_start_url;
-        let pwa_display;
-        let pwa_background_color;
-        let pwa_theme_color;
-        let pwa_orientation;
-        let pwa_icons1_src;
-        let pwa_icons1_type;
-        let pwa_icons1_sizes;
-        let pwa_icons2_src;
-        let pwa_icons2_type;
-        let pwa_icons2_sizes;
-        let pwa_scope;
-        for (var i = 0; i < json.length; i++) {
-          if (json[i].parameter_name=='PWA_SHORT_NAME')
-            pwa_short_name = json[i].parameter_value;
-          if (json[i].parameter_name=='PWA_NAME')
-            pwa_name = json[i].parameter_value;
-          if (json[i].parameter_name=='PWA_DESCRIPTION')
-            pwa_description = json[i].parameter_value;
-          if (json[i].parameter_name=='PWA_START_URL')
-            pwa_start_url = json[i].parameter_value;
-          if (json[i].parameter_name=='PWA_DISPLAY')
-            pwa_display = json[i].parameter_value;
-          if (json[i].parameter_name=='PWA_BACKGROUND_COLOR')
-            pwa_background_color = json[i].parameter_value;
-          if (json[i].parameter_name=='PWA_THEME_COLOR')
-            pwa_theme_color = json[i].parameter_value;
-          if (json[i].parameter_name=='PWA_ORIENTATION')
-            pwa_orientation = json[i].parameter_value;
-          if (json[i].parameter_name=='PWA_ICONS1_SRC')
-            pwa_icons1_src = json[i].parameter_value;
-          if (json[i].parameter_name=='PWA_ICONS1_TYPE')
-            pwa_icons1_type = json[i].parameter_value;
-          if (json[i].parameter_name=='PWA_ICONS1_SIZES')
-            pwa_icons1_sizes = json[i].parameter_value;
-          if (json[i].parameter_name=='PWA_ICONS2_SRC')
-            pwa_icons2_src = json[i].parameter_value;
-          if (json[i].parameter_name=='PWA_ICONS2_TYPE')
-            pwa_icons2_type = json[i].parameter_value;
-          if (json[i].parameter_name=='PWA_ICONS2_SIZES')
-            pwa_icons2_sizes = json[i].parameter_value;
-          if (json[i].parameter_name=='PWA_SCOPE')
-            pwa_scope = json[i].parameter_value;
-        }
-        res.type('text/plain');
-        res.send(`{
-                    "short_name": "${pwa_short_name}",
-                    "name": "${pwa_name}",
-                    "description": "${pwa_description}",
-                    "start_url": "${pwa_start_url}",
-                    "display": "${pwa_display}",
-                    "background_color": "${pwa_background_color}",
-                    "theme_color": "${pwa_theme_color}",
-                    "orientation": "${pwa_orientation}",
-                    "icons": [
-                      {
-                        "src": "${pwa_icons1_src}",
-                        "type": "${pwa_icons1_type}",
-                        "sizes": "${pwa_icons1_sizes}"
-                      },
-                      {
-                        "src": "${pwa_icons2_src}",
-                        "type": "${pwa_icons2_type}",
-                        "sizes": "${pwa_icons2_sizes}"
-                      }
-                    ],
-                    "scope": "${pwa_scope}"
-                  }`
-                );
-      }
-    });
+app.get("/app1/manifest.json",function (req, res) {
+  const { getManifest} = require("./service/forms/forms.controller");
+  getManifest(process.env.APP1_ID, (err, manifest)=>{
+      return res.send(manifest);
+  })
 });
 //app 1 show profile directly from url
 app.get('/:user', function(req, res,next) {
