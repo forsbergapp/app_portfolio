@@ -4,7 +4,7 @@
 
 //delay API calls when typing to avoid too many calls 
 var typewatch = function() {
-    var timer = 0;
+    let timer = 0;
     return function(callback, ms) {
         clearTimeout(timer);
         timer = setTimeout(callback, ms);
@@ -94,7 +94,7 @@ function getweekday(locale) {
 		return second_language.coltitle_weekday;
 }
 function getColumnTitles(transliteration = 0, calendartype, locale, second_locale, check_second = 'Y') {
-	var coltitle = {day: '',
+	let coltitle = {day: '',
 					weekday: '',
 					weekday_tr: '',
 					caltype: '',
@@ -193,8 +193,8 @@ function getColumnTitles(transliteration = 0, calendartype, locale, second_local
 
 
 async function settings_translate_report(first=true) {
-    var json;
-    var status;
+    let json;
+    let status;
     let locale='';
     if (first==true)
         locale = document.getElementById('setting_select_locale').value;
@@ -219,7 +219,7 @@ async function settings_translate_report(first=true) {
         .then(function(result) {
             if (status === 200) {
                 json = JSON.parse(result);	
-                for (var i = 0; i < json.data.length; i++){
+                for (let i = 0; i < json.data.length; i++){
                     if (first == true){
                         if (json.data[i].object=='APP_OBJECT_ITEM' && json.data[i].object_name=='REPORT')
                             first_language[json.data[i].object_item_name.toLowerCase()] = json.data[i].text;
@@ -238,7 +238,7 @@ async function settings_translate_report(first=true) {
                             document.getElementById('setting_label_long').innerHTML = json.data[i].text;
                     }
                     else{
-                        for (var i = 0; i < json.data.length; i++){	
+                        for (let i = 0; i < json.data.length; i++){	
                             if (json.data[i].object=='APP_OBJECT_ITEM' && json.data[i].object_name=='REPORT')
                                 second_language[json.data[i].object_item_name.toLowerCase()] = json.data[i].text;						
                         }
@@ -278,8 +278,8 @@ async function settings_translate_report(first=true) {
 }
 
 async function settings_translate(first=true) {
-	var json;
-    var status;
+	let json;
+    let status;
     let locale;
     if (first ==true)
         locale = document.getElementById('setting_select_locale').value
@@ -304,7 +304,7 @@ async function settings_translate(first=true) {
         .then(function(result) {
             if (status === 200) {
                 json = JSON.parse(result);
-                for (var i = 0; i < json.data.length; i++){
+                for (let i = 0; i < json.data.length; i++){
                     if (first==true){
                         if (json.data[i].object=='APP_OBJECT'){
                             if (json.data[i].object_name=='APP_DESCRIPTION')
@@ -365,9 +365,9 @@ async function settings_translate(first=true) {
                                 document.getElementById(json.data[i].subitem_name.toLowerCase()).innerHTML = json.data[i].text;
                             else{
                                 //update select objects
-                                var select_element = json.data[i].object_item_name;
+                                let select_element = json.data[i].object_item_name;
                                 //option number not saved in column but end with the option number
-                                var select_option = json.data[i].subitem_name.substr(json.data[i].subitem_name.lastIndexOf('_')+1);
+                                let select_option = json.data[i].subitem_name.substr(json.data[i].subitem_name.lastIndexOf('_')+1);
                                 try{
                                     document.getElementById(select_element.toLowerCase()).options[select_option].text = json.data[i].text;
                                 }
@@ -378,7 +378,7 @@ async function settings_translate(first=true) {
                         }
                     }
                     else{
-                        for (var i = 0; i < json.data.length; i++){
+                        for (let i = 0; i < json.data.length; i++){
                             if (json.data[i].object=='APP_OBJECT_ITEM' && json.data[i].object_name=='REPORT')
                                 second_language[json.data[i].object_item_name.toLowerCase()] = json.data[i].text;						
                         }
@@ -404,7 +404,7 @@ async function settings_translate(first=true) {
                             let select_country = document.getElementById('setting_select_country');
                             let html=`<option value='' id='' label='…' selected='selected'>…</option>`;
                             let current_country = document.getElementById('setting_select_country')[document.getElementById('setting_select_country').selectedIndex].id;
-                            for (var i = 0; i < json.countries.length; i++){
+                            for (let i = 0; i < json.countries.length; i++){
                                 if (i === 0){
                                     html += `<optgroup label=${json.countries[i].group_name} />`;
                                     current_group_name = json.countries[i].group_name;
@@ -446,7 +446,7 @@ async function settings_translate(first=true) {
                                     let select_second_locale = document.getElementById('setting_select_report_locale_second');        
                                     let current_locale = select_locale.value;
                                     let current_second_locale = select_second_locale.value;
-                                    for (var i = 0; i < json.locales.length; i++){
+                                    for (let i = 0; i < json.locales.length; i++){
                                         html += `<option id="${i}" value="${json.locales[i].locale}">${json.locales[i].text}</option>`;
                                     }
                                     select_locale.innerHTML = html;
@@ -509,8 +509,8 @@ async function settings_translate(first=true) {
 /* Global app functions */
 /*----------------------- */
 async function get_app_globals() {
-    var status;
-    var json;
+    let status;
+    let json;
     //app parameter variables
     //returns parameters for given app_id and app_id=0
     await fetch(global_rest_url_base + global_rest_app_parameter + global_app_id +
@@ -524,7 +524,7 @@ async function get_app_globals() {
     .then(function(result) {
         if (status === 200) {
             json = JSON.parse(result);
-            for (var i = 0; i < json.data.length; i++) {
+            for (let i = 0; i < json.data.length; i++) {
                 //variables for app_id=0
                 if (json.data[i].parameter_name=='APP_REST_CLIENT_ID')
                     global_app_rest_client_id = json.data[i].parameter_value;
@@ -999,7 +999,7 @@ function select_get_selectindex(select, id) {
     if (id == 0)
         return 0;
     else {
-        var select = document.getElementById(select);
+        let select = document.getElementById(select);
         for (i = 0; i < select.options.length; i++) {
             if (select.options[i].getAttribute('id') == id)
                 return i;
@@ -1012,7 +1012,7 @@ function select_get_id(select, selectindex) {
     if (selectindex == 0)
         return 'null';
     else {
-        var select = document.getElementById(select);
+        let select = document.getElementById(select);
         return select[selectindex].getAttribute('id');
     }
     return null;
@@ -1021,7 +1021,7 @@ function select_get_id(select, selectindex) {
 function SearchAndSetSelectedIndex(search, select_item, colcheck) {
     //colcheck=0 search id
     //colcheck=1 search value
-    for (var i = 0; i < select_item.options.length; i++) {
+    for (let i = 0; i < select_item.options.length; i++) {
         if ((colcheck==0 && select_item.options[i].id == search) ||
             (colcheck==1 && select_item.options[i].value == search)) {
             select_item.selectedIndex = i;
@@ -1041,10 +1041,10 @@ function checkbox_value(checkbox) {
 function recreate_img(img_item) {
     //cant set img src to null, it will containt url or show corrupt image
     //recreating the img is the workaround
-    var parentnode = img_item.parentNode;
-    var id = img_item.id;
-    var alt = img_item.alt;
-    var img = document.createElement('img');
+    let parentnode = img_item.parentNode;
+    let id = img_item.id;
+    let alt = img_item.alt;
+    let img = document.createElement('img');
 
     parentnode.removeChild(img_item);
     img.id = id;
@@ -1053,8 +1053,8 @@ function recreate_img(img_item) {
     return null;
 }
 function show_image(item_show, item_load) {
-    var file = document.getElementById(item_load).files[0];
-    var reader = new FileReader();
+    let file = document.getElementById(item_load).files[0];
+    let reader = new FileReader();
 
     const allowedExtensions = [global_image_file_allowed_type1,
                                global_image_file_allowed_type2,
@@ -1073,10 +1073,10 @@ function show_image(item_show, item_load) {
         }
         else {
             reader.onloadend = function(event) {
-                var img = new Image();
+                let img = new Image();
                 img.src = event.target.result;
                 img.onload = function(el) {
-                    var elem = document.createElement('canvas');
+                    let elem = document.createElement('canvas');
                     if (item_show.id=='setting_avatar_logged_in'){
                         elem.width = global_user_image_avatar_width;
                         elem.height = global_user_image_avatar_height;
@@ -1085,9 +1085,9 @@ function show_image(item_show, item_load) {
                         elem.width = global_image_file_header_footer_width;
                         elem.height = global_image_file_header_footer_height;
                     }
-                    var ctx = elem.getContext('2d');
+                    let ctx = elem.getContext('2d');
                     ctx.drawImage(el.target, 0, 0, elem.width, elem.height);
-                    var srcEncoded = ctx.canvas.toDataURL(global_image_file_mime_type);
+                    let srcEncoded = ctx.canvas.toDataURL(global_image_file_mime_type);
                     item_show.src = srcEncoded;
                 }
             }
@@ -1135,9 +1135,9 @@ function fileisloaded(image_item_src) {
 }
 
 function convertnumberlocale(numberstring, splitcharacter, locale) {
-    var left = Number((numberstring).substr(0, (numberstring).indexOf(splitcharacter))).toLocaleString(locale);
-    var right;
-    var suffix;
+    let left = Number((numberstring).substr(0, (numberstring).indexOf(splitcharacter))).toLocaleString(locale);
+    let right;
+    let suffix;
     //check if suffix is added
     if (numberstring.substr(numberstring.length - 2) == 'am' ||
         numberstring.substr(numberstring.length - 2) == 'pm') {
@@ -1173,8 +1173,8 @@ function isToday(checkdate){
 /*--------------------- */
 
 async function get_place_from_gps(latitude, longitude) {
-    var error_message;
-    var status;
+    let error_message;
+    let status;
     await fetch(global_service_geolocation_gps_place + 
                 '?app_id= ' + global_app_id +
                 '&app_user_id=' + document.getElementById('setting_data_userid_logged_in').innerHTML +
@@ -1206,8 +1206,8 @@ async function get_place_from_gps(latitude, longitude) {
 
 async function get_gps_from_ip() {
 
-    var error_message;
-    var status;
+    let error_message;
+    let status;
     await fetch(global_service_geolocation_gps_ip + 
                 '?app_id=' + global_app_id + 
                 '&app_user_id=' + document.getElementById('setting_data_userid_logged_in').innerHTML +
@@ -1252,12 +1252,11 @@ function create_map_popup_text(place, subtitle, timezone) {
 }
 
 function update_map_popup() {
-    var popup_title_div = document.getElementById('settings_gps_map_popup_title');
-    var popup_sub_title_div = document.getElementById('settings_gps_map_popup_sub_title');
-    var city_current = document.getElementById('setting_select_city');
-    var popular_place_current = document.getElementById('setting_select_popular_place');
-    var place = document.getElementById('setting_input_place');
-    var timezone = document.getElementById('setting_label_report_timezone');
+    let popup_title_div = document.getElementById('settings_gps_map_popup_title');
+    let popup_sub_title_div = document.getElementById('settings_gps_map_popup_sub_title');
+    let city_current = document.getElementById('setting_select_city');
+    let place = document.getElementById('setting_input_place');
+    let timezone = document.getElementById('setting_label_report_timezone');
 
     //check if popup exists
     if (popup_title_div) {
@@ -1267,8 +1266,6 @@ function update_map_popup() {
             popup_title_div.innerHTML = city_current.options[city_current.selectedIndex].text;
         } else {
             //Popular place name or custom title
-            //popup_title_div.innerHTML = popular_place_current.options[popular_place_current.selectedIndex].text;
-            //Always show from place
             popup_title_div.innerHTML = place.value;
         }
         //Timezone text:
@@ -1308,9 +1305,7 @@ function fixmap() {
 }
 
 function map_show_qibbla() {
-    //	
     if (global_session_gps_map_mymap.getSource('qibbla')) {
-        var mySource = global_session_gps_map_mymap.getSource('qibbla');
         global_session_gps_map_mymap.getSource('qibbla').setData({
             'type': 'FeatureCollection',
             'features': [{
@@ -1327,7 +1322,6 @@ function map_show_qibbla() {
             }]
         });
         //qibbla old
-        var mySource = global_session_gps_map_mymap.getSource('qibbla_old');
         global_session_gps_map_mymap.getSource('qibbla_old').setData({
             'type': 'FeatureCollection',
             'features': [{
@@ -1346,7 +1340,6 @@ function map_show_qibbla() {
 
     } else {
         global_session_gps_map_mymap.on('load', function() {
-
             global_session_gps_map_mymap.addSource('qibbla', {
                 'type': 'geojson',
                 'data': {
@@ -1377,7 +1370,6 @@ function map_show_qibbla() {
                     'line-opacity': global_gps_map_qibbla_opacity
                 }
             });
-
             global_session_gps_map_mymap.addLayer({
                 "id": "qibbla_symbol",
                 "type": "symbol",
@@ -1388,7 +1380,6 @@ function map_show_qibbla() {
                     "text-size": global_gps_map_qibbla_text_size
                 }
             });
-
             //qibbla old
             global_session_gps_map_mymap.addSource('qibbla_old', {
                 'type': 'geojson',
@@ -1449,14 +1440,14 @@ function update_map(longitude, latitude, zoom, text1, text2, text3, marker_id, f
         else
             global_session_gps_map_mymap.jumpTo({ 'center': [longitude, latitude], 'zoom': zoom });
     }
-    var popuptext = create_map_popup_text(text1,
+    let popuptext = create_map_popup_text(text1,
         text2,
         text3);
-    var popup = new mapboxgl.Popup({ offset: global_gps_map_popup_offset, closeOnClick: false })
+    let popup = new mapboxgl.Popup({ offset: global_gps_map_popup_offset, closeOnClick: false })
         .setLngLat([longitude, latitude])
         .setHTML(popuptext)
         .addTo(global_session_gps_map_mymap);
-    var el = document.createElement('div');
+    let el = document.createElement('div');
     el.id = marker_id;
     new mapboxgl.Marker(el)
         .setLngLat([longitude, latitude])
@@ -1474,7 +1465,7 @@ function app_select_theme() {
 }
 
 function get_theme_id(type) {
-    var select_user_setting = document.getElementById('setting_select_user_setting');
+    let select_user_setting = document.getElementById('setting_select_user_setting');
     if (document.getElementsByClassName('slider_active_' + type)[0])
         return document.getElementsByClassName('slider_active_' + type)[0].getAttribute('data-theme_id');
     else
@@ -1483,8 +1474,8 @@ function get_theme_id(type) {
 }
 
 function set_theme_id(type, theme_id) {
-    var slides = document.getElementById('setting_themes_' + type + '_slider').children[0].children[0]
-    for (var i = 0; i < slides.childElementCount; i++) {
+    let slides = document.getElementById('setting_themes_' + type + '_slider').children[0].children[0]
+    for (let i = 0; i < slides.childElementCount; i++) {
         if (slides.children[i].children[0].getAttribute('data-theme_id') == theme_id) {
             //remove active class from current theme
             document.getElementsByClassName('slider_active_' + type)[0].classList.remove('slider_active_' + type);
@@ -1525,7 +1516,7 @@ function load_themes() {
 }
 
 function slide(wrapper, items, prev, next, type) {
-    var posInitial,
+    let posInitial,
         slides = items.getElementsByClassName('slide_' + type),
         slidesLength = slides.length,
         index_day = 0,
@@ -1541,8 +1532,8 @@ function slide(wrapper, items, prev, next, type) {
     next.addEventListener('click', function() { shiftSlide(1) });
 
     function shiftSlide(dir, action) {
-        var slideSize = items.getElementsByClassName('slide_' + type)[0].offsetWidth;
-        var index;
+        let slideSize = items.getElementsByClassName('slide_' + type)[0].offsetWidth;
+        let index;
         //read position and divide with image size and remove "px" characters
         //better solution would be search items and get index where active class is found
         index = Math.abs(items.style.left.substr(0, items.style.left.length - 2) / slideSize);
@@ -1576,7 +1567,7 @@ function slide(wrapper, items, prev, next, type) {
 /*----------------------- */
 
 function create_qr(div, url) {
-    var qrcode = new QRCode(document.getElementById(div), {
+    let qrcode = new QRCode(document.getElementById(div), {
         text: url,
         width: global_qr_width,
         height: global_qr_height,
@@ -1594,7 +1585,7 @@ function create_qr(div, url) {
 /* User setting functions */
 /*----------------------- */
 async function get_data_token() {
-    var status;
+    let status;
     //get data token
     await fetch(global_service_auth + 
                 '?app_id=' + global_app_id + 
@@ -1620,12 +1611,12 @@ async function get_data_token() {
 }
 
 function showcurrenttime() {
-    var settings = {
+    let settings = {
         timezone_current: document.getElementById('setting_select_timezone_current').value,
         locale: document.getElementById('setting_select_locale').value,
         timedisplay_item: document.getElementById('setting_label_current_date_time_display')
     }
-    var options = {
+    let options = {
         timeZone: settings.timezone_current,
         weekday: 'long',
         year: 'numeric',
@@ -1642,12 +1633,12 @@ function showcurrenttime() {
 
 function showreporttime() {
 
-    var settings = {
+    let settings = {
         timezone_report: document.getElementById('setting_select_report_timezone')[document.getElementById('setting_select_report_timezone').selectedIndex].value,
         locale: document.getElementById('setting_select_locale').value,
         timedisplay_item: document.getElementById('setting_label_report_date_time_display')
     }
-    var options = {
+    let options = {
         timeZone: settings.timezone_report,
         weekday: 'long',
         year: 'numeric',
@@ -1665,12 +1656,11 @@ function showreporttime() {
     }
     //if day report created with div class prayertable_day_current_time
     if (document.getElementsByClassName('prayertable_day_current_time').length > 0) {
-        var user_current_time = document.getElementsByClassName('prayertable_day_current_time');
-        var select_user_settings = document.getElementById('setting_select_user_setting');
-        var select_timezone_report = document.getElementById('setting_select_report_timezone');
-        var select_locale = document.getElementById('setting_select_locale');
-        var user_locale;
-        var user_options;
+        let user_current_time = document.getElementsByClassName('prayertable_day_current_time');
+        let select_user_settings = document.getElementById('setting_select_user_setting');
+        let select_timezone_report = document.getElementById('setting_select_report_timezone');
+        let user_locale;
+        let user_options;
         //loop user settings
         for (i = 0; i <= select_user_settings.options.length - 1; i++) {
             user_options = {
@@ -1745,12 +1735,12 @@ function fix_toolbar_button_sizes() {
 }
 
 function iframe_resize(){
-    var paper_size_select = document.getElementById('setting_select_report_papersize');
+    let paper_size_select = document.getElementById('setting_select_report_papersize');
     document.getElementById('window_preview_content').className = paper_size_select.options[paper_size_select.selectedIndex].value;
 }
 
 function keyfunctions() {
-    var input_username_login = document.getElementById("login_username");
+    let input_username_login = document.getElementById("login_username");
     input_username_login.addEventListener("keyup", function(event) {
         if (event.keyCode === 13) {
             event.preventDefault();
@@ -1759,7 +1749,7 @@ function keyfunctions() {
             document.getElementById("login_username").blur();
         }
     });
-    var input_password_login = document.getElementById("login_password");
+    let input_password_login = document.getElementById("login_password");
     input_password_login.addEventListener("keyup", function(event) {
         if (event.keyCode === 13) {
             event.preventDefault();
@@ -1822,6 +1812,11 @@ function keyfunctions() {
     document.getElementById('profile_top_row1_3').addEventListener('click', function() { profile_top(3) }, false);
     document.getElementById('profile_top_row2_1').addEventListener('click', function() { profile_top(4) }, false);
     document.getElementById('profile_top_row2_2').addEventListener('click', function() { profile_top(5) }, false);
+
+    document.getElementById('profile_user_settings_day').addEventListener('click', function() { profile_user_setting_link(this) }, false);
+    document.getElementById('profile_user_settings_month').addEventListener('click', function() { profile_user_setting_link(this) }, false);
+    document.getElementById('profile_user_settings_year').addEventListener('click', function() { profile_user_setting_link(this) }, false);
+    document.getElementById('profile_user_settings_like').addEventListener('click', function() { profile_user_setting_link(this) }, false);
 
     document.getElementById('info_close').addEventListener('click', function() { document.getElementById('dialogue_info').style.visibility = 'hidden' }, false);
 
@@ -1894,10 +1889,7 @@ function keyfunctions() {
     document.getElementById('app_select_theme').addEventListener('change', function() { app_select_theme() }, false);
           
     document.getElementById('profile_select_user_settings').addEventListener('change', 
-        function() { profile_show_user_setting_detail(this.options[this.selectedIndex].getAttribute('common_url'), 
-                                                      this.options[this.selectedIndex].getAttribute('sid'), 
-                                                      this.options[this.selectedIndex].getAttribute('user_account_id'), 
-                                                      this.options[this.selectedIndex].getAttribute('liked'), 
+        function() { profile_show_user_setting_detail(this.options[this.selectedIndex].getAttribute('liked'), 
                                                       this.options[this.selectedIndex].getAttribute('count_likes'), 
                                                       this.options[this.selectedIndex].getAttribute('count_views')) }, false);
     //on-keyup
@@ -1921,14 +1913,14 @@ function keyfunctions() {
 };
 
 function toolbar_bottom(choice) {
-    var paper = document.getElementById('paper');
-    var prayertable_day = document.getElementById('prayertable_day');
-    var prayertable_month = document.getElementById('prayertable_month');
-    var prayertable_year = document.getElementById('prayertable_year');
-    var settings = document.getElementById('settings');
-    var profile = document.getElementById('profile');
-    var profile_info_div = document.getElementById('profile_info');
-    var profile_top_div = document.getElementById('profile_top');
+    let paper = document.getElementById('paper');
+    let prayertable_day = document.getElementById('prayertable_day');
+    let prayertable_month = document.getElementById('prayertable_month');
+    let prayertable_year = document.getElementById('prayertable_year');
+    let settings = document.getElementById('settings');
+    let profile = document.getElementById('profile');
+    let profile_info_div = document.getElementById('profile_info');
+    let profile_top_div = document.getElementById('profile_top');
 
     switch (choice) {
         //print
@@ -2033,7 +2025,7 @@ function toolbar_bottom(choice) {
 
 
 function openTab(tab_selected) {
-    var i;
+    let i;
     for (i = 1; i < 8; i++) {
         //hide all tab content
         document.getElementById("tab" + i).style.display = "none";
@@ -2067,18 +2059,19 @@ function format_json_date(db_date, short) {
         //in ISO 8601 format
         //JSON returns format 2020-08-08T05:15:28Z
         //"yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'"
-        var settings = {
+        let settings = {
             timezone_current: document.getElementById('setting_select_timezone_current').value,
             locale: document.getElementById('setting_select_locale').value
         }
+        let options;
         if (short)
-            var options = {
+            options = {
                 timeZone: settings.timezone_current,
                 year: 'numeric',
                 month: 'long'
             };
         else
-            var options = {
+            options = {
                 timeZone: settings.timezone_current,
                 weekday: 'long',
                 year: 'numeric',
@@ -2089,7 +2082,7 @@ function format_json_date(db_date, short) {
                 second: '2-digit',
                 timeZoneName: 'long'
             };
-        var utc_date = new Date(Date.UTC(
+        let utc_date = new Date(Date.UTC(
             db_date.substr(0, 4), //year
             db_date.substr(5, 2) - 1, //month
             db_date.substr(8, 2), //day
@@ -2097,15 +2090,13 @@ function format_json_date(db_date, short) {
             db_date.substr(14, 2), //min
             db_date.substr(17, 2) //sec
         ));
-
-        var format_date = utc_date.toLocaleDateString(settings.locale, options);
-
+        let format_date = utc_date.toLocaleDateString(settings.locale, options);
         return format_date;
     }
 }
 
 function spinner(button, visibility) {
-    var button_spinner = `<div id="button_spinner" class="load-spinner">
+    let button_spinner = `<div id="button_spinner" class="load-spinner">
                             <div></div>
                             <div></div>
                             <div></div>
@@ -2119,17 +2110,17 @@ function spinner(button, visibility) {
                             <div></div>
                             <div></div>
                          </div>`;
-    var button_default_icon_login = '<i class="fas fa-arrow-alt-circle-right"></i>';
-    var button_default_icon_signup = '<i class="fas fa-arrow-alt-circle-right"></i>';
-    var button_default_icon_save = '<i class="fas fa-save"></i>';
-    var button_default_icon_add = '<i class="fas fa-plus-square"></i>';
-    var button_default_icon_delete = '<i class="fas fa-trash-alt"></i>';
+    let button_default_icon_login = '<i class="fas fa-arrow-alt-circle-right"></i>';
+    let button_default_icon_signup = '<i class="fas fa-arrow-alt-circle-right"></i>';
+    let button_default_icon_save = '<i class="fas fa-save"></i>';
+    let button_default_icon_add = '<i class="fas fa-plus-square"></i>';
+    let button_default_icon_delete = '<i class="fas fa-trash-alt"></i>';
 
-    var button_update_text = document.getElementById('setting_btn_label_user_update').outerHTML;
-    var button_delete_account_text = document.getElementById('setting_btn_label_user_delete_account').outerHTML;
-    var button_save_text = document.getElementById('setting_btn_label_user_save').outerHTML;
-    var button_add_text = document.getElementById('setting_btn_label_user_add').outerHTML;
-    var button_delete_text = document.getElementById('setting_btn_label_user_delete').outerHTML;
+    let button_update_text = document.getElementById('setting_btn_label_user_update').outerHTML;
+    let button_delete_account_text = document.getElementById('setting_btn_label_user_delete_account').outerHTML;
+    let button_save_text = document.getElementById('setting_btn_label_user_save').outerHTML;
+    let button_add_text = document.getElementById('setting_btn_label_user_add').outerHTML;
+    let button_delete_text = document.getElementById('setting_btn_label_user_delete').outerHTML;
 
     switch (button) {
         case 'LOGIN':
@@ -2233,10 +2224,10 @@ function exception(status, message){
 
 function user_verify_check_input(item, nextField) {
 
-    var status;
-    var user_id = document.getElementById('setting_data_userid_logged_in').innerHTML;
-    var json;
-    var json_data;
+    let status;
+    let user_id = document.getElementById('setting_data_userid_logged_in').innerHTML;
+    let json;
+    let json_data;
     //only accept 0-9
     if (['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'].indexOf(document.getElementById(item.id).value) > -1)
         if (nextField == '' || (document.getElementById('user_verify_verification_char1').value != '' &
@@ -2246,7 +2237,7 @@ function user_verify_check_input(item, nextField) {
                 document.getElementById('user_verify_verification_char5').value != '' &
                 document.getElementById('user_verify_verification_char6').value != '')) {
             //last field, validate entered code
-            var validation_code = parseInt(document.getElementById('user_verify_verification_char1').value +
+            let validation_code = parseInt(document.getElementById('user_verify_verification_char1').value +
                 document.getElementById('user_verify_verification_char2').value +
                 document.getElementById('user_verify_verification_char3').value +
                 document.getElementById('user_verify_verification_char4').value +
@@ -2335,7 +2326,7 @@ function user_verify_check_input(item, nextField) {
 }
 
 function user_edit() {
-    var json;
+    let json;
     if (document.getElementById('user_edit').style.display == 'block') {
         document.getElementById('user_edit').style.display = "none";
         document.getElementById('setting_checkbox_report_private').checked = false;
@@ -2364,8 +2355,8 @@ function user_edit() {
 
         document.getElementById('user_settings').style.display = "block";
     } else {
-        var user_id = document.getElementById('setting_data_userid_logged_in');
-        var status;
+        let user_id = document.getElementById('setting_data_userid_logged_in');
+        let status;
         //get user from REST API
         spinner('EDIT', 'visible');
         fetch(global_rest_url_base + global_rest_user_account + user_id.innerHTML +
@@ -2456,20 +2447,20 @@ function user_edit() {
 }
 
 function user_update() {
-    var avatar = btoa(document.getElementById('setting_avatar_logged_in').src);
-    var username = document.getElementById('setting_input_username_edit').value;
-    var bio = document.getElementById('setting_input_bio_edit').value;
-    var email = document.getElementById('setting_input_email_edit').value;
-    var password = document.getElementById('setting_input_password_edit').value;
-    var password_confirm = document.getElementById('setting_input_password_confirm_edit').value;
-    var new_password = document.getElementById('setting_input_new_password_edit').value;
-    var new_password_confirm = document.getElementById('setting_input_new_password_confirm_edit').value;
-    var password_reminder = document.getElementById('setting_input_password_reminder_edit').value;
-    var user_id = document.getElementById('setting_data_userid_logged_in');
-    var url;
-    var json;
-    var json_data;
-    var status;
+    let avatar = btoa(document.getElementById('setting_avatar_logged_in').src);
+    let username = document.getElementById('setting_input_username_edit').value;
+    let bio = document.getElementById('setting_input_bio_edit').value;
+    let email = document.getElementById('setting_input_email_edit').value;
+    let password = document.getElementById('setting_input_password_edit').value;
+    let password_confirm = document.getElementById('setting_input_password_confirm_edit').value;
+    let new_password = document.getElementById('setting_input_new_password_edit').value;
+    let new_password_confirm = document.getElementById('setting_input_new_password_confirm_edit').value;
+    let password_reminder = document.getElementById('setting_input_password_reminder_edit').value;
+    let user_id = document.getElementById('setting_data_userid_logged_in');
+    let url;
+    let json;
+    let json_data;
+    let status;
 
     if (document.getElementById('user_edit_local').style.display == 'block') {
         json_data = `{ 
@@ -2591,10 +2582,10 @@ function user_update() {
 }
 
 function user_delete(choice=null) {
-    var user_account_id = document.getElementById('setting_data_userid_logged_in').innerHTML;
-    var password = document.getElementById('setting_input_password_edit').value;
+    let user_account_id = document.getElementById('setting_data_userid_logged_in').innerHTML;
+    let password = document.getElementById('setting_input_password_edit').value;
     
-    var status;
+    let status;
     switch (choice){
         case null:{
             if (document.getElementById('user_edit_local').style.display == 'block' && password == '') {
@@ -2654,16 +2645,16 @@ function user_delete(choice=null) {
 }
 
 function user_login() {
-    var username;
-    var password;
-    var json;
-    var json_data;
-    var status;
+    let username;
+    let password;
+    let json;
+    let json_data;
+    let status;
 
     username = document.getElementById('login_username');
     password = document.getElementById('login_password');
 
-    var user_id = document.getElementById('setting_data_userid_logged_in');
+    let user_id = document.getElementById('setting_data_userid_logged_in');
 
     json_data = `{
                     "app_id": ${global_app_id},
@@ -2702,11 +2693,10 @@ function user_login() {
         if (status == 200) {
             json = JSON.parse(result);
             global_rest_at	= json.accessToken;
-            var result_id = json.items[0].id;
-            var result_username = json.items[0].username;
-            var result_password = password.value;
-            var result_avatar = json.items[0].avatar;
-            var result_bio = get_null_or_value(json.items[0].bio);
+            let result_id = json.items[0].id;
+            let result_username = json.items[0].username;
+            let result_avatar = json.items[0].avatar;
+            let result_bio = get_null_or_value(json.items[0].bio);
             user_id.innerHTML = result_id;
 
             document.getElementById('user_logged_in').style.display = "block";
@@ -2759,9 +2749,9 @@ function user_login() {
 }
 
 async function user_setting_get(user_setting_id) {
-    var select = document.getElementById("setting_select_user_setting");
-    var json;
-    var status;
+    let select = document.getElementById("setting_select_user_setting");
+    let json;
+    let status;
 
     await fetch(global_rest_url_base + global_rest_app_timetables_user_setting + user_setting_id +
                 '?app_id=' + global_app_id + 
@@ -2855,10 +2845,10 @@ async function user_setting_get(user_setting_id) {
 }
 
 async function user_settings_get(userid, show_ui = 1, user_setting_id = '') {
-    var select = document.getElementById("setting_select_user_setting");
-    var json;
-    var i;
-    var status;
+    let select = document.getElementById("setting_select_user_setting");
+    let json;
+    let i;
+    let status;
     
     await fetch(global_rest_url_base + global_rest_app_timetables_user_setting_user_account_id + userid +
                 '?app_id=' + global_app_id + 
@@ -2959,8 +2949,8 @@ async function user_settings_get(userid, show_ui = 1, user_setting_id = '') {
 }
 
 function user_logoff() {
-    var select = document.getElementById("setting_select_user_setting");
-    var option;
+    let select = document.getElementById("setting_select_user_setting");
+    let option;
     //remove access token
     global_rest_at ='';
     //get new data token to avoid endless loop och invalid token
@@ -3038,8 +3028,9 @@ function user_logoff() {
         document.getElementById('profile_detail').style.display = "none";
         document.getElementById('profile_detail_list').innerHTML = '';
         document.getElementById('profile_user_settings_public').style.display = "none";
-        document.getElementById('profile_user_settings_detail').innerHTML = '';
         document.getElementById('profile_user_settings_private').style.display = "none";
+        document.getElementById('profile_user_settings_info_like_count').innerHTML='';
+        document.getElementById('profile_user_settings_info_view_count').innerHTML='';
 
         //empty user settings
         select.innerHTML = '';
@@ -3060,16 +3051,16 @@ function user_logoff() {
 }
 
 function user_signup() {
-    var username = document.getElementById('signup_username').value;
-    var email = document.getElementById('signup_email').value;
-    var password = document.getElementById('signup_password').value;
-    var password_confirm = document.getElementById('signup_password_confirm').value;
-    var password_reminder = document.getElementById('signup_password_reminder').value;
-    var select_setting_country = document.getElementById('setting_select_country');
-    var select_setting_city = document.getElementById('setting_select_city');
-    var select_setting_popular_place = document.getElementById('setting_select_popular_place');
+    let username = document.getElementById('signup_username').value;
+    let email = document.getElementById('signup_email').value;
+    let password = document.getElementById('signup_password').value;
+    let password_confirm = document.getElementById('signup_password_confirm').value;
+    let password_reminder = document.getElementById('signup_password_reminder').value;
+    let select_setting_country = document.getElementById('setting_select_country');
+    let select_setting_city = document.getElementById('setting_select_city');
+    let select_setting_popular_place = document.getElementById('setting_select_popular_place');
 
-    var json_data = `{
+    let json_data = `{
                     "user_language": "${navigator.language}",
                     "user_timezone": "${Intl.DateTimeFormat().resolvedOptions().timeZone}",
                     "user_number_system": "${Intl.NumberFormat().resolvedOptions().numberingSystem}",
@@ -3136,7 +3127,7 @@ function user_signup() {
                     "prayer_column_midnight_checked": ${boolean_to_number(document.getElementById('setting_checkbox_report_show_midnight').checked)},
                     "prayer_column_fast_start_end_select_id": ${document.getElementById('setting_select_report_show_fast_start_end').selectedIndex}
                     }`;
-    var status;
+    let status;
     if (username == '') {
         //"Please enter username"
         show_message('ERROR', 20303);
@@ -3203,57 +3194,32 @@ function user_setting_link(item){
         case 'user_day_html':
         case 'user_month_html':
         case 'user_year_html':{
-            dialogue_loading(1);
-            document.getElementById("window_preview_report").style.visibility = "visible";
-            create_qr("window_preview_toolbar_qr", `${common_url}&format=html${url_type}`);
-            document.getElementById("window_preview_content").src=`${common_url}'&format=html${url_type}`;
-            dialogue_loading(0);
+            preview_report(`${common_url}&format=html${url_type}`, 'html');
             break;
         }
         case 'user_day_html_copy':
         case 'user_month_html_copy':
         case 'user_year_html_copy':{
-            var promise = navigator.clipboard.writeText(`${common_url}'&format=html'${url_type}`) .then(() => {null;});
+            let promise = navigator.clipboard.writeText(`${common_url}'&format=html'${url_type}`) .then(() => {null;});
             break;
         }
         case 'user_day_pdf':
         case 'user_month_pdf':
         case 'user_year_pdf':{
-            document.getElementById("window_preview_report").style.visibility = "visible";
-            create_qr("window_preview_toolbar_qr", `${common_url}&format=pdf${url_type}`);
-            dialogue_loading(1);
-            fetch (`${common_url}'&format=pdf${url_type}`,
-                    {
-                        headers: {
-                            'Content-Type': 'application/pdf;charset=UTF-8'
-                        }
-                    }
-            )
-            .then(function(response) {
-                return response.blob();
-            })
-            .then(function(pdf) {      
-                var reader = new FileReader();
-                reader.readAsDataURL(pdf); 
-                reader.onloadend = function() {
-                    var base64PDF = reader.result;   
-                    document.getElementById("window_preview_content").src= base64PDF;
-                    dialogue_loading(0);
-                }
-            })
+            preview_report(`${common_url}&format=pdf${url_type}`, 'pdf');
             break;
         }
         case 'user_day_pdf_copy':
         case 'user_month_pdf_copy':
         case 'user_year_pdf_copy':{
-            var promise = navigator.clipboard.writeText(`${common_url}'&format=pdf'${url_type}`) .then(() => {null;});
+            let promise = navigator.clipboard.writeText(`${common_url}'&format=pdf'${url_type}`) .then(() => {null;});
             break;
         }
     }
 }
 async function user_settings_load(show_ui = 1) {
 
-    var select_user_setting = document.getElementById('setting_select_user_setting');
+    let select_user_setting = document.getElementById('setting_select_user_setting');
     //Regional
     SearchAndSetSelectedIndex(select_user_setting[select_user_setting.selectedIndex].getAttribute('regional_language_locale'),
         document.getElementById('setting_select_locale'), 1);
@@ -3442,16 +3408,16 @@ async function user_settings_load(show_ui = 1) {
 }
 
 function user_settings_function(function_name, signup = false) {
-    var user_account_id = document.getElementById('setting_data_userid_logged_in').innerHTML;
-    var description = document.getElementById('setting_input_place').value;
-    var status;
-    var select_setting_country = document.getElementById('setting_select_country');
-    var select_setting_city = document.getElementById('setting_select_city');
-    var select_setting_popular_place = document.getElementById('setting_select_popular_place');
+    let user_account_id = document.getElementById('setting_data_userid_logged_in').innerHTML;
+    let description = document.getElementById('setting_input_place').value;
+    let status;
+    let select_setting_country = document.getElementById('setting_select_country');
+    let select_setting_city = document.getElementById('setting_select_city');
+    let select_setting_popular_place = document.getElementById('setting_select_popular_place');
     //boolean use boolean_to_number()
     //store 0/1 for checked value for checkboxes
     //use btoa() for images to encode with BASE64 to BLOB column.
-    var json_data =
+    let json_data =
         `{"description": "${description}",
           "regional_language_locale": "${document.getElementById('setting_select_locale').value}",
           "regional_current_timezone_select_id": ${document.getElementById('setting_select_timezone_current').selectedIndex},
@@ -3546,14 +3512,14 @@ function user_settings_function(function_name, signup = false) {
         })
         .then(function(result) {
             if (status === 200) {
-                var json = JSON.parse(result);
+                let json = JSON.parse(result);
                 switch (function_name){
                     case 'ADD':{
                         //update user settings select with saved data
                         //save current settings to new option with 
                         //returned user_setting_id + user_account_id (then call set_settings_select)
                         if (signup == false) {
-                            var select = document.getElementById("setting_select_user_setting");
+                            let select = document.getElementById("setting_select_user_setting");
                             select.innerHTML += `<option id=${json.id} user_account_id=${user_account_id} >${description}</option>`;
                             select.selectedIndex = select.options[select.options.length - 1].index;
                             select.options[select.options.length - 1].value = select.selectedIndex;
@@ -3583,9 +3549,9 @@ function user_settings_function(function_name, signup = false) {
 }
 
 function user_settings_delete(choice=null) {
-    var select_user_setting = document.getElementById('setting_select_user_setting');
-    var user_setting_id = select_user_setting[select_user_setting.selectedIndex].getAttribute('id');
-    var status;
+    let select_user_setting = document.getElementById('setting_select_user_setting');
+    let user_setting_id = select_user_setting[select_user_setting.selectedIndex].getAttribute('id');
+    let status;
     switch (choice){
         case null:{
             show_message('CONFIRM',null,2);
@@ -3609,7 +3575,7 @@ function user_settings_delete(choice=null) {
                     })
                     .then(function(result) {
                         if (status == 200) {
-                            var select = document.getElementById("setting_select_user_setting");
+                            let select = document.getElementById("setting_select_user_setting");
                             //delete current option
                             select.remove(select.selectedIndex);
                             //load next available
@@ -3641,8 +3607,8 @@ function user_settings_delete(choice=null) {
 }
 
 async function set_default_settings() {
-    var current_timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    var current_number_system = Intl.NumberFormat().resolvedOptions().numberingSystem;
+    let current_timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    let current_number_system = Intl.NumberFormat().resolvedOptions().numberingSystem;
 
     //Regional
     //set according to users browser settings
@@ -3680,7 +3646,7 @@ async function set_default_settings() {
         document.getElementById('setting_input_place').value = global_session_user_gps_place;
     } else {
         //Set Makkah as default
-        var select_place = document.getElementById('setting_select_popular_place');
+        let select_place = document.getElementById('setting_select_popular_place');
         select_place.selectedIndex = select_get_selectindex(select_place.id, global_gps_default_place_id);
         //Update popular places
         update_ui(7);
@@ -3757,7 +3723,7 @@ async function set_default_settings() {
 }
 
 function set_settings_select() {
-    var option = document.getElementById("setting_select_user_setting").options[document.getElementById("setting_select_user_setting").selectedIndex];
+    let option = document.getElementById("setting_select_user_setting").options[document.getElementById("setting_select_user_setting").selectedIndex];
     option.text = document.getElementById('setting_input_place').value;
     
     option.setAttribute('description', document.getElementById('setting_input_place').value);
@@ -3820,8 +3786,8 @@ function set_settings_select() {
 }
 
 function update_settings_icon(url = '', logoff = false) {
-    var img_account_image_url = document.getElementById('user_account_image_url');
-    var i_tag = document.getElementById('toolbar_btn_settings').children[1];
+    let img_account_image_url = document.getElementById('user_account_image_url');
+    let i_tag = document.getElementById('toolbar_btn_settings').children[1];
     if (logoff == true) {
         //hide image url and show the icon
         img_account_image_url.style.display = 'none';
@@ -3837,25 +3803,25 @@ function update_settings_icon(url = '', logoff = false) {
 }
 
 function updateProviderUser(provider_no, profile_id, profile_first_name, profile_last_name, profile_image_url, profile_email) {
-    var json;
-    var status;
-    var user_id = document.getElementById('setting_data_userid_logged_in');
-    var profile_image;
-    var profile_username_logged_in;
-    var img = new Image();
+    let json;
+    let status;
+    let user_id = document.getElementById('setting_data_userid_logged_in');
+    let profile_image;
+    let profile_username_logged_in;
+    let img = new Image();
 
     profile_username_logged_in = profile_first_name + ' ' + profile_last_name;
 
     img.src = profile_image_url;
     img.crossOrigin = 'Anonymous';
     img.onload = function(el) {
-        var elem = document.createElement('canvas');
+        let elem = document.createElement('canvas');
         elem.width = global_user_image_avatar_width;
         elem.height = global_user_image_avatar_height;
-        var ctx = elem.getContext('2d');
+        let ctx = elem.getContext('2d');
         ctx.drawImage(el.target, 0, 0, elem.width, elem.height);
         profile_image = ctx.canvas.toDataURL(global_image_file_mime_type);
-        var json_data =
+        let json_data =
             `{
             "app_id": ${global_app_id},
             "user_language": "${navigator.language}",
@@ -3945,15 +3911,13 @@ function updateProviderUser(provider_no, profile_id, profile_first_name, profile
                 if (status == 200) {
                     json = JSON.parse(result);
                     global_rest_at = json.accessToken;
-                    var result_id = json.items[0].id;
-                    var result_bio = get_null_or_value(json.items[0].bio);
-                    user_id.innerHTML = result_id;
+                    user_id.innerHTML = json.items[0].id;
                     document.getElementById('user_logged_in').style.display = "block";
                     document.getElementById('setting_avatar_logged_in').src = profile_image;
 
                     update_settings_icon(profile_image);
 
-                    document.getElementById('setting_bio_logged_in').innerHTML = result_bio;
+                    document.getElementById('setting_bio_logged_in').innerHTML = get_null_or_value(json.items[0].bio);
                     document.getElementById('setting_data_username_logged_in').innerHTML = profile_username_logged_in;
 
                     document.getElementById('popup_menu_login').style.display = 'none';
@@ -3985,13 +3949,13 @@ function updateProviderUser(provider_no, profile_id, profile_first_name, profile
 }
 
 function onProviderSignIn(googleUser) {
-    var profile;
-    var profile_id;
-    var profile_image_url;
-    var profile_first_name;
-    var profile_last_name;
-    var profile_email;
-    var provider_no;
+    let profile;
+    let profile_id;
+    let profile_image_url;
+    let profile_first_name;
+    let profile_last_name;
+    let profile_email;
+    let provider_no;
     if (googleUser) {
         provider_no = 1;
         profile = googleUser.getBasicProfile();
@@ -4097,16 +4061,12 @@ function update_info(info) {
 };
 
 function show_dialogue(dialogue, file = '') {
-    //dialogue values: INFO, VERIFY, SCAN, LOGIN
     switch (dialogue) {
         case 'INFO':
             {
-                //show info (not about that will be created later task) code...
-                //close settings
                 document.getElementById('settings').style.visibility = 'hidden';
                 document.getElementById('dialogue_info').style.visibility = 'visible';
                 document.getElementById('app_copyright').innerHTML = global_app_copyright;
-                //show social links in window_preview_report div
                 if (global_info_social_link1_url!=null)
                     document.getElementById('social_link1').innerHTML = `<a href=${global_info_social_link1_url} target='_blank'>${global_info_social_link1_name}</a>`;
                 if (global_info_social_link2_url!=null)
@@ -4115,7 +4075,6 @@ function show_dialogue(dialogue, file = '') {
                     document.getElementById('social_link3').innerHTML = `<a href=${global_info_social_link3_url} target='_blank'>${global_info_social_link3_name}</a>`;
                 if (global_info_social_link4_url!=null)
                     document.getElementById('social_link4').innerHTML = `<a href=${global_info_social_link4_url} target='_blank'>${global_info_social_link4_name}</a>`;
-                // show info in window_info div
                 document.getElementById('info_link1').innerHTML = global_info_link1_name;
                 document.getElementById('info_link2').innerHTML = global_info_link2_name;
                 document.getElementById('info_link3').innerHTML = global_info_link3_name;
@@ -4125,16 +4084,12 @@ function show_dialogue(dialogue, file = '') {
             }
         case 'VERIFY':
             {
-                //hide dialogue_signup
                 document.getElementById('dialogue_signup').style.visibility = 'hidden';
-                //show_user_verify
                 document.getElementById('dialogue_user_verify').style.visibility = 'visible';
                 break;
             }
         case 'SCAN':
             {
-                //show_scan_open_mobile
-                //do not show on mobile
                 if (mobile())
                     return null;
                 //show once and store variable in localstorage
@@ -4147,7 +4102,6 @@ function show_dialogue(dialogue, file = '') {
             }
         case 'LOGIN':
             {
-                //show_login
                 document.getElementById('dialogue_login').style.visibility = 'visible';
                 document.getElementById('dialogue_signup').style.visibility = 'hidden';
                 document.getElementById('login_username').focus();
@@ -4155,7 +4109,6 @@ function show_dialogue(dialogue, file = '') {
             }
         case 'SIGNUP':
             {
-                //show_signup
                 document.getElementById('dialogue_signup').style.visibility = 'visible';
                 document.getElementById('dialogue_login').style.visibility = 'hidden';
                 document.getElementById('signup_username').focus();
@@ -4166,7 +4119,7 @@ function show_dialogue(dialogue, file = '') {
 };
 
 async function update_ui(option, item_id=null) {
-    var settings = {
+    let settings = {
         paper                   : document.getElementById('paper'),
         timezone_report         : document.getElementById('setting_select_report_timezone'),
         maptype                 : document.getElementById('setting_select_maptype'),
@@ -4194,11 +4147,6 @@ async function update_ui(option, item_id=null) {
         //Regional, timezone current
         case 1:
             {
-                //showcurrenttime already in interval no need to recreate intervall
-                //Update current date and time for chosen locale and timezone format;
-                //clearInterval(showcurrenttime);
-                //setInterval(showcurrenttime, 1000);
-
                 //Update user edit info in case user is changing timezone while editing user
                 if (document.getElementById('user_edit').style.display == 'block') {
                     //call twice, 
@@ -4220,8 +4168,8 @@ async function update_ui(option, item_id=null) {
         //Regional, update font, arabic script
         case 3:
             {
-                var select = document.getElementById('setting_select_report_arabic_script');
-                var prefix = 'font_';
+                let select = document.getElementById('setting_select_report_arabic_script');
+                let prefix = 'font_';
                 document.getElementById('toolbar_top').classList = prefix + select[select.selectedIndex].value;
                 document.getElementById('settings').classList = prefix + select[select.selectedIndex].value;
                 document.getElementById('profile').classList = prefix + select[select.selectedIndex].value;
@@ -4251,7 +4199,7 @@ async function update_ui(option, item_id=null) {
                 settings.city.innerHTML=`<option value='' id='' label='…' selected='selected'>…</option>`;
                 SearchAndSetSelectedIndex('', settings.select_place,0);
                 if (settings.country[settings.country.selectedIndex].getAttribute('country_code')!=null){
-                    var status;
+                    let status;
                     await fetch(global_service_worldcities + '/' + settings.country[settings.country.selectedIndex].getAttribute('country_code').toUpperCase() +
                             '?app_id=' + global_app_id +
                             '&app_user_id=' + document.getElementById('setting_data_userid_logged_in').innerHTML +
@@ -4269,8 +4217,8 @@ async function update_ui(option, item_id=null) {
                         if (status === 200) {
                             let json = JSON.parse(result);
                             json.sort(function(a, b) {
-                                var x = a.admin_name.toLowerCase() + a.city.toLowerCase();
-                                var y = b.admin_name.toLowerCase() + b.city.toLowerCase();
+                                let x = a.admin_name.toLowerCase() + a.city.toLowerCase();
+                                let y = b.admin_name.toLowerCase() + b.city.toLowerCase();
                                 if (x < y) {
                                     return -1;
                                 }
@@ -4280,10 +4228,10 @@ async function update_ui(option, item_id=null) {
                                 return 0;
                             });
     
-                            var current_admin_name;
+                            let current_admin_name;
                             //fill list with cities
                             let cities='';
-                            for (var i = 0; i < json.length; i++) {
+                            for (let i = 0; i < json.length; i++) {
                                 if (i == 0) {
                                     cities += `<option value='' id='' label='…' selected='selected'>…</option>
                                                <optgroup label='${json[i].admin_name}'>`;
@@ -4320,9 +4268,9 @@ async function update_ui(option, item_id=null) {
         case 6:
             {                    
                 //set GPS and timezone
-                var longitude_selected = settings.city[settings.city.selectedIndex].getAttribute('longitude');
-                var latitude_selected = settings.city[settings.city.selectedIndex].getAttribute('latitude');
-                var timezone_selected = tzlookup(latitude_selected, longitude_selected);
+                let longitude_selected = settings.city[settings.city.selectedIndex].getAttribute('longitude');
+                let latitude_selected = settings.city[settings.city.selectedIndex].getAttribute('latitude');
+                let timezone_selected = tzlookup(latitude_selected, longitude_selected);
                 settings.gps_long_input.value = longitude_selected;
                 settings.gps_lat_input.value = latitude_selected;
 
@@ -4348,9 +4296,9 @@ async function update_ui(option, item_id=null) {
         case 7:
             {
                 //set GPS and timezone
-                var longitude_selected = settings.select_place[settings.select_place.selectedIndex].getAttribute('longitude');
-                var latitude_selected = settings.select_place[settings.select_place.selectedIndex].getAttribute('latitude');
-                var timezone_selected = settings.select_place[settings.select_place.selectedIndex].getAttribute('timezone');
+                let longitude_selected = settings.select_place[settings.select_place.selectedIndex].getAttribute('longitude');
+                let latitude_selected = settings.select_place[settings.select_place.selectedIndex].getAttribute('latitude');
+                let timezone_selected = settings.select_place[settings.select_place.selectedIndex].getAttribute('timezone');
                 settings.gps_long_input.value = longitude_selected;
                 settings.gps_lat_input.value = latitude_selected;
                 //Update map
@@ -4367,12 +4315,12 @@ async function update_ui(option, item_id=null) {
                 //display empty country
                 SearchAndSetSelectedIndex('', settings.country,0);
                 //remove old city list:            
-                var old_groups = settings.city.getElementsByTagName('optgroup');
-                for (var old_index = old_groups.length - 1; old_index >= 0; old_index--)
+                let old_groups = settings.city.getElementsByTagName('optgroup');
+                for (let old_index = old_groups.length - 1; old_index >= 0; old_index--)
                     settings.city.removeChild(old_groups[old_index])
                 //display first empty city
                 SearchAndSetSelectedIndex('', settings.city,0);
-                var title = settings.select_place.options[settings.select_place.selectedIndex].text;
+                let title = settings.select_place.options[settings.select_place.selectedIndex].text;
                 document.getElementById('setting_input_place').value = title;
                 break;
             }
@@ -4402,8 +4350,8 @@ async function update_ui(option, item_id=null) {
                     //display empty country
                     SearchAndSetSelectedIndex('', settings.country,0);
                     //remove old city list:            
-                    var old_groups = settings.city.getElementsByTagName('optgroup');
-                    for (var old_index = old_groups.length - 1; old_index >= 0; old_index--)
+                    let old_groups = settings.city.getElementsByTagName('optgroup');
+                    for (let old_index = old_groups.length - 1; old_index >= 0; old_index--)
                         settings.city.removeChild(old_groups[old_index])
                         //display first empty city
                     SearchAndSetSelectedIndex('', settings.city,0);
@@ -4432,7 +4380,7 @@ async function update_ui(option, item_id=null) {
         //11=Image, Report header image load
 	    case 11:
             {
-                var resheader = show_image(settings.header_preview_img_item, item_id);
+                let resheader = show_image(settings.header_preview_img_item, item_id);
                 break;
             }
         //12=Image, Report header image clear
@@ -4447,7 +4395,7 @@ async function update_ui(option, item_id=null) {
         //13=Image, Report footer image load
 	    case 13:
             {
-                var resfooter = show_image(settings.footer_preview_img_item, item_id);
+                let resfooter = show_image(settings.footer_preview_img_item, item_id);
                 break;
             }
         //14=Image, Report footer image clear
@@ -4492,8 +4440,8 @@ async function update_ui(option, item_id=null) {
         //Prayer, method
         case 17:
             {
-                var method = document.getElementById('setting_select_method').value;
-                var suffix;
+                let method = document.getElementById('setting_select_method').value;
+                let suffix;
 
                 document.getElementById('setting_method_param_fajr').innerHTML = '';
                 document.getElementById('setting_method_param_isha').innerHTML = '';
@@ -4530,26 +4478,22 @@ function get_report_url(id, sid, papersize){
 	profile_show(userid) 			from choosing profile in profile_detail
 	profile_show(null, username) 	from init startup when user enters url*/
 function profile_show(user_account_id_other = null, username = null) {
-    var status;
-    var json;
-    var row;
-    var col;
-    var item;
-    var user_account_id_search;
-    var url;
+    let status;
+    let json;
+    let user_account_id_search;
+    let url;
 
     document.getElementById('profile_info').style.display = "none";
     document.getElementById('profile_top').style.display = "none";
     document.getElementById('profile_detail').style.display = "none";
     document.getElementById('profile').style.visibility = "visible";
     document.getElementById('profile_select_user_settings').innerHTML='';
-    document.getElementById('profile_user_settings_detail').innerHTML = '';
     //empty search
     document.getElementById('profile_search_input').value = '';
     document.getElementById('profile_search_list').style.display = "none";
     document.getElementById('profile_search_list').innerHTML = '';
 
-    var user_id = document.getElementById('setting_data_userid_logged_in');
+    let user_id = document.getElementById('setting_data_userid_logged_in');
     if (user_account_id_other == null && user_id.innerHTML == '' && username == null) {
         //empty except profile top, always visible even not logged in
         document.getElementById('profile_main').style.display = "none";
@@ -4572,6 +4516,8 @@ function profile_show(user_account_id_other = null, username = null) {
 
         document.getElementById('profile_user_settings_public').style.display = "none";
         document.getElementById('profile_user_settings_private').style.display = "none";
+        document.getElementById('profile_user_settings_info_like_count').innerHTML='';
+        document.getElementById('profile_user_settings_info_view_count').innerHTML='';
     } else {
         if (user_account_id_other !== null) {
             user_account_id_search = user_account_id_other;
@@ -4585,7 +4531,7 @@ function profile_show(user_account_id_other = null, username = null) {
             url = global_rest_url_base + global_rest_user_account_profile_userid + user_account_id_search;
         }
         //PROFILE MAIN
-        var json_data =
+        let json_data =
             `{
             "client_longitude": "${global_session_user_gps_longitude}",
             "client_latitude": "${global_session_user_gps_latitude}"
@@ -4695,40 +4641,82 @@ function profile_show(user_account_id_other = null, username = null) {
 
     return null;
 }
-function profile_show_user_setting_detail(common_url, id, user_account_id, liked, count_likes, count_views){
-    document.getElementById('profile_user_settings_detail').innerHTML = 
-       `<div id='profile_user_settings_day'>
-            <a href='#' onclick="document.getElementById('window_preview_report').style.visibility = 'visible';create_qr('window_preview_toolbar_qr', '${common_url}&type=0');updateViewStat(${id},${user_account_id});document.getElementById('window_preview_content').src='${common_url}&type=0' ">
-                <i class='fas fa-calendar-day'></i>
-            </a>
-        </div>
-        <div id='profile_user_settings_month'>
-            <a href='#' onclick="document.getElementById('window_preview_report').style.visibility = 'visible';create_qr('window_preview_toolbar_qr', '${common_url}&type=1');updateViewStat(${id},${user_account_id});document.getElementById('window_preview_content').src='${common_url}&type=1' ">
-                <i class='fas fa-calendar-week'></i>
-            </a>
-        </div>
-        <div id='profile_user_settings_year'>
-            <a href='#' onclick="document.getElementById('window_preview_report').style.visibility = 'visible';create_qr('window_preview_toolbar_qr', '${common_url}&type=2');updateViewStat(${id},${user_account_id});document.getElementById('window_preview_content').src='${common_url}&type=2' ">
-                <i class='fas fa-calendar-alt'></i>
-            </a>
-        </div>
-        <div id='profile_user_settings_like' onclick='user_function("LIKE_USER_SETTING",${id})'>
-            <i class='fas fa-heart-broken' style='display:${liked == 1?'none':'block'}'></i>
-            <i class='fas fa-heart' style='display:${liked == 1?'block':'none'}'></i>
-        </div>
-        <div id='profile_user_settings_info_likes'>
-            <i class='fas fa-heart'></i>
-            <div class='profile_user_settings_info_like_count'>${count_likes}</div>
-        </div>
-        <div id='profile_user_settings_info_views'>
-            <i class='fas fa-eye'></i>
-            <div class='profile_user_settings_info_view_count'>${count_views}</div>
-        </div>`;
+function preview_report(url, type){
+    if (type=='html'){
+        document.getElementById("window_preview_report").style.visibility = "visible";
+        create_qr("window_preview_toolbar_qr", url);
+        dialogue_loading(1);
+        document.getElementById("window_preview_content").src=url;
+        dialogue_loading(0);
+    }
+    else
+        if (type=='pdf'){
+            document.getElementById("window_preview_report").style.visibility = "visible";
+            create_qr("window_preview_toolbar_qr", url);
+            dialogue_loading(1);
+            fetch (url,
+                    {
+                        headers: {
+                            'Content-Type': 'application/pdf;charset=UTF-8'
+                        }
+                    }
+            )
+            .then(function(response) {
+                return response.blob();
+            })
+            .then(function(pdf) {      
+                let reader = new FileReader();
+                reader.readAsDataURL(pdf); 
+                reader.onloadend = function() {
+                    let base64PDF = reader.result;   
+                    document.getElementById("window_preview_content").src= base64PDF;
+                    dialogue_loading(0);
+                }
+            })
+        }
+}
+function profile_user_setting_link(item){
+    let paper_size_select = document.getElementById('setting_select_report_papersize');
+    let common_url;
+    let url_type='';
+    let select_user_setting = document.getElementById('profile_select_user_settings');
+    let user_account_id = select_user_setting[select_user_setting.selectedIndex].getAttribute('user_account_id');
+    let sid = select_user_setting[select_user_setting.selectedIndex].getAttribute('sid');
+    common_url = get_report_url(user_account_id, sid, paper_size_select.options[paper_size_select.selectedIndex].value);
+    if (item.id =='profile_user_settings_day')
+        url_type = '&type=0';
+    if (item.id =='profile_user_settings_month')
+        url_type = '&type=1';
+    if (item.id == 'profile_user_settings_year')
+        url_type = '&type=2';
+
+    switch (item.id){
+        case 'profile_user_settings_day':
+        case 'profile_user_settings_month':
+        case 'profile_user_settings_year':{
+            updateViewStat(sid,user_account_id);
+            preview_report(`${common_url}&format=html${url_type}`, 'html');
+            break;
+        }
+        case 'profile_user_settings_like':{
+            user_function("LIKE_USER_SETTING",sid);
+            break;
+        }
+    }
+}
+
+function profile_show_user_setting_detail(liked, count_likes, count_views){
+    
+    document.getElementById('profile_user_settings_like').children[0].style.display = `${liked == 1?'none':'block'}`;
+    document.getElementById('profile_user_settings_like').children[1].style.display = `${liked == 1?'block':'none'}`;
+
+    document.getElementById('profile_user_settings_info_like_count').innerHTML = count_likes;
+    document.getElementById('profile_user_settings_info_view_count').innerHTML = count_views;
 }
 
 function profile_show_user_setting() {
-    var user_id = document.getElementById('setting_data_userid_logged_in');
-    var status;
+    let user_id = document.getElementById('setting_data_userid_logged_in');
+    let status;
     if (document.getElementById('profile_user_settings_public').style.display == "block") {
         document.getElementById('profile_user_settings_row').style.display = 'block';
 
@@ -4752,12 +4740,7 @@ function profile_show_user_setting() {
                     let profile_select_user_settings = document.getElementById('profile_select_user_settings');
                     profile_select_user_settings.innerHTML='';
                     let html = '';
-                    var paper_size_select = document.getElementById('setting_select_report_papersize');
                     for (i = 0; i < json.count; i++) {
-                        var common_url = get_report_url(json.items[i].user_account_id, 
-                            json.items[i].id, 
-                            paper_size_select.options[json.items[i].design_paper_size_select_id].value) + 
-                            '&format=html';
                         html += `<option id="${i}" 
                                 value=""
                                 sid=${json.items[i].id} 
@@ -4765,15 +4748,11 @@ function profile_show_user_setting() {
                                 liked=${json.items[i].liked}
                                 count_likes=${json.items[i].count_likes}
                                 count_views=${json.items[i].count_views}
-                                common_url=${common_url}
                                 >${json.items[i].description}
                                 </option>`;
                     }
                     profile_select_user_settings.innerHTML = html;
-                    profile_show_user_setting_detail(profile_select_user_settings.options[profile_select_user_settings.selectedIndex].getAttribute('common_url'), 
-                                                     profile_select_user_settings.options[profile_select_user_settings.selectedIndex].getAttribute('sid'), 
-                                                     profile_select_user_settings.options[profile_select_user_settings.selectedIndex].getAttribute('user_account_id'), 
-                                                     profile_select_user_settings.options[profile_select_user_settings.selectedIndex].getAttribute('liked'), 
+                    profile_show_user_setting_detail(profile_select_user_settings.options[profile_select_user_settings.selectedIndex].getAttribute('liked'), 
                                                      profile_select_user_settings.options[profile_select_user_settings.selectedIndex].getAttribute('count_likes'), 
                                                      profile_select_user_settings.options[profile_select_user_settings.selectedIndex].getAttribute('count_views'));
                 }
@@ -4785,8 +4764,8 @@ function profile_show_user_setting() {
 }
 
 function profile_detail(detailchoice) {
-    var status;
-    var user_id = document.getElementById('setting_data_userid_logged_in');
+    let status;
+    let user_id = document.getElementById('setting_data_userid_logged_in');
     //DETAIL
     //show only if user logged in
     if (parseInt(user_id.innerHTML) || 0 !== 0) {
@@ -4902,7 +4881,7 @@ function profile_detail(detailchoice) {
             .then(function(result) {
                 if (status == 200) {
                     json = JSON.parse(result);
-                    var profile_detail_list = document.getElementById('profile_detail_list');
+                    let profile_detail_list = document.getElementById('profile_detail_list');
                     profile_detail_list.innerHTML = '';
 
                     let html = '';
@@ -4967,9 +4946,8 @@ function profile_detail(detailchoice) {
 }
 
 function profile_top(statschoice) {
-    var status;
+    let status;
     //TOP
-    //document.getElementById('profile_top').style.display = "block";
     fetch(global_rest_url_base + global_rest_user_account_profile_top + statschoice + 
             '?app_id=' + global_app_id +
             '&lang_code=' + document.getElementById('setting_select_locale').value, 
@@ -4986,7 +4964,7 @@ function profile_top(statschoice) {
         .then(function(response) {
             if (status == 200) {
                 json = JSON.parse(response);
-                var profile_top_list = document.getElementById('profile_top_list');
+                let profile_top_list = document.getElementById('profile_top_list');
                 profile_top_list.innerHTML = '';
                 let html ='';
                 let image='';
@@ -5052,6 +5030,7 @@ function profile_update_stat(){
     //get updated stat for given user
     //to avoid update in stat set searched by same user
     let url = global_rest_url_base + global_rest_user_account_profile_userid + profile_id.innerHTML;
+    let status;
     fetch(url + 
         '?app_id=' + global_app_id + 
         '&lang_code=' + document.getElementById('setting_select_locale').value +
@@ -5083,7 +5062,8 @@ function profile_update_stat(){
 
 function profile_user_setting_update_stat(){
     let profile_id = document.getElementById('profile_id').innerHTML;
-    var user_id = document.getElementById('setting_data_userid_logged_in').innerHTML;
+    let user_id = document.getElementById('setting_data_userid_logged_in').innerHTML;
+    let status;
     fetch(global_rest_url_base + global_rest_app_timetables_user_setting_profile + profile_id + 
             '?app_id=' + global_app_id +
             '&lang_code=' + document.getElementById('setting_select_locale').value + 
@@ -5102,23 +5082,14 @@ function profile_user_setting_update_stat(){
         if (status == 200) {
             json = JSON.parse(response);
             let profile_select_user_settings = document.getElementById('profile_select_user_settings');
-            var paper_size_select = document.getElementById('setting_select_report_papersize');
             for (i = 0; i < json.count; i++) {
                 if (profile_select_user_settings.options[profile_select_user_settings.selectedIndex].getAttribute('sid')==json.items[i].id){
-                    var common_url = get_report_url(json.items[i].user_account_id, 
-                                                    json.items[i].id, 
-                                                    paper_size_select.options[json.items[i].design_paper_size_select_id].value) + 
-                                                    '&format=html';
                     profile_select_user_settings.options[profile_select_user_settings.selectedIndex].setAttribute('user_account_id', json.items[i].user_account_id);
                     profile_select_user_settings.options[profile_select_user_settings.selectedIndex].setAttribute('liked', json.items[i].liked);
                     profile_select_user_settings.options[profile_select_user_settings.selectedIndex].setAttribute('count_likes', json.items[i].count_likes);
                     profile_select_user_settings.options[profile_select_user_settings.selectedIndex].setAttribute('count_views', json.items[i].count_views);
-                    profile_select_user_settings.options[profile_select_user_settings.selectedIndex].setAttribute('common_url', common_url);
                     profile_select_user_settings.options[profile_select_user_settings.selectedIndex].text = json.items[i].description;
-                    profile_show_user_setting_detail(common_url, 
-                                                     json.items[i].id, 
-                                                     json.items[i].user_account_id, 
-                                                     json.items[i].liked, 
+                    profile_show_user_setting_detail(json.items[i].liked, 
                                                      json.items[i].count_likes, 
                                                      json.items[i].count_views);
                 }
@@ -5130,13 +5101,13 @@ function profile_user_setting_update_stat(){
     });
 }
 function user_function(user_function, user_setting_id) {
-    var status;
-    var user_id = document.getElementById('setting_data_userid_logged_in').innerHTML;
-    var user_id_profile = document.getElementById('profile_id').innerHTML;
-    var json_data;
-    var method;
-    var rest_path;
-    var check_div;
+    let status;
+    let user_id = document.getElementById('setting_data_userid_logged_in').innerHTML;
+    let user_id_profile = document.getElementById('profile_id').innerHTML;
+    let json_data;
+    let method;
+    let rest_path;
+    let check_div;
     switch (user_function) {
         case 'FOLLOW':
             {
@@ -5247,9 +5218,9 @@ function user_function(user_function, user_setting_id) {
 }
 
 function search_profile() {
-    var status;
-    var searched_username = document.getElementById('profile_search_input').value;
-    var profile_search_list = document.getElementById('profile_search_list');
+    let status;
+    let searched_username = document.getElementById('profile_search_input').value;
+    let profile_search_list = document.getElementById('profile_search_list');
     profile_search_list.innerHTML = '';
     document.getElementById('profile_search_list').style.display = "none";
     let url;
@@ -5346,15 +5317,15 @@ function search_profile() {
 }
 
 function updateViewStat(user_setting_id, user_setting_user_account_id = null) {
-    var status;
-    var json_user_account_id;
+    let status;
+    let json_user_account_id;
     if (user_setting_user_account_id !== parseInt(document.getElementById('setting_data_userid_logged_in').innerHTML) ||
         document.getElementById('setting_data_userid_logged_in').innerHTML == '') {
         if (document.getElementById('setting_data_userid_logged_in').innerHTML == '')
             json_user_account_id = 'null';
         else
             json_user_account_id = document.getElementById('setting_data_userid_logged_in').innerHTML;
-        var json_data =`{
+        let json_data =`{
                         "user_account_id":${json_user_account_id},
                         "user_setting_id":${user_setting_id},
                         "client_longitude": "${global_session_user_gps_longitude}",
@@ -5390,8 +5361,8 @@ function updateViewStat(user_setting_id, user_setting_user_account_id = null) {
 // init app function in index.html
 /*------------------------------------- */
 function app_log(app_module, app_module_type, app_module_request, app_user_id) {
-    var status;
-    var json_data =`{
+    let status;
+    let json_data =`{
                     "app_id":"${global_app_id}",
                     "app_module":"${app_module}",
                     "app_module_type":"${app_module_type}",
@@ -5447,11 +5418,11 @@ async function init_common() {
 }
 
 function init_report_timetable() {
-    var urlParams = new URLSearchParams(window.location.search);
-    var user_account_id = urlParams.get('id');
-    var user_setting_id = urlParams.get('sid');
-    var lang_code = urlParams.get('lang_code');
-    var reporttype = urlParams.get('type');
+    let urlParams = new URLSearchParams(window.location.search);
+    let user_account_id = urlParams.get('id');
+    let user_setting_id = urlParams.get('sid');
+    let lang_code = urlParams.get('lang_code');
+    let reporttype = urlParams.get('type');
     dialogue_loading(1);
     document.getElementById('setting_select_locale').innerHTML = 
                 `<option value=${lang_code}>${lang_code}</option`;
@@ -5461,8 +5432,6 @@ function init_report_timetable() {
             if (inIframe() == false) {
                 //when report only is run outside webapp
                 //get gps and update view stat
-                //if run in iframe then these values are already known
-                //and update view stat handled in onclick
                 get_gps_from_ip().then(function(){
                     updateViewStat(user_setting_id);
                 });
@@ -5538,7 +5507,7 @@ function init_report_timetable() {
     })
 }
 async function app_load(){
-    var status;
+    let status;
     //app variables
     fetch(global_rest_url_base + global_rest_app +
         '?id=' + global_app_id + 
@@ -5596,7 +5565,7 @@ async function app_load(){
     })
 }
 async function app_show(){
-    var user = window.location.pathname.substring(1);
+    let user = window.location.pathname.substring(1);
     //show default report or profile
     if (user == '') {
         //show default startup
@@ -5616,18 +5585,18 @@ async function app_show(){
 async function init_head(){
     //enable provider 1 if used
     if (global_app_user_provider1_use==1){
-        /*Google*/
-        var tag = document.createElement('script');
+        /*Provider 1 SDK*/
+        let tag = document.createElement('script');
         tag.src = global_app_user_provider1_api_src + navigator.language;
         tag.defer = true;
-        var firstScriptTag = document.getElementsByTagName('script')[0];
+        let firstScriptTag = document.getElementsByTagName('script')[0];
         firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
     }
     else
         document.getElementsByClassName('g-signin2')[0].className += 'login_button_hidden';
     //enable provider 2 if used
     if (global_app_user_provider2_use==1){
-        /*Facebook*/
+        /*Provider 2 SDK*/
         window.fbAsyncInit = function() {
             FB.init({
             appId      : global_app_user_provider2_id,
@@ -5640,7 +5609,7 @@ async function init_head(){
             
         };
         (function(d, s, id){
-            var js, fjs = d.getElementsByTagName(s)[0];
+            let js, fjs = d.getElementsByTagName(s)[0];
             if (d.getElementById(id)) {return;}
             js = d.createElement(s); js.id = id;
             js.src = global_app_user_provider2_api_src + 
