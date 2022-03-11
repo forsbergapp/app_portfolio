@@ -2726,12 +2726,17 @@ function user_login() {
             //Hide profile
             document.getElementById('profile').style.visibility = 'hidden';
             spinner('LOGIN', 'hidden');
+            document.getElementById('prayertable_day').innerHTML='';
+            document.getElementById('prayertable_month').innerHTML='';
+            document.getElementById('prayertable_year').innerHTML='';
+            dialogue_loading(1);
             user_settings_get(user_id.innerHTML).then(function(){
                 user_settings_load().then(function(){
                     settings_translate(true).then(function(){
                         settings_translate(false).then(function(){
                             //show default startup
                             toolbar_bottom(global_app_default_startup_page);
+                            dialogue_loading(0);
                         })
                     })
                 })
@@ -3927,11 +3932,16 @@ function updateProviderUser(provider_no, profile_id, profile_first_name, profile
                     document.getElementById('dialogue_signup').style.visibility = 'hidden';
                     //Show user tab
                     document.getElementById('tab7_nav').style.display = 'inline-block';
+                    document.getElementById('prayertable_day').innerHTML='';
+                    document.getElementById('prayertable_month').innerHTML='';
+                    document.getElementById('prayertable_year').innerHTML='';
+                    dialogue_loading(1);
                     user_settings_get(user_id.innerHTML).then(function(){
                         user_settings_load().then(function(){
                             settings_translate(true).then(function(){
                                 settings_translate(false).then(function(){
                                     app_show();
+                                    dialogue_loading(0);
                                 })
                             })
                         })
