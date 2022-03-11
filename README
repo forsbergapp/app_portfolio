@@ -243,7 +243,9 @@ SERVICE_LOG_FILE_INTERVAL                   		={1D or 1M}
 SERVICE_LOG_FILE_PATH_SERVER                		={PATH with / at the end}
 SERVICE_LOG_DATE_FORMAT                     		={DEFAULT empty creates ISO8601 format
 													  ex: "yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'"}
+APP0_ID						                		=0
 APP1_ID						                		=1
+APP2_ID						                		=2
 
 10. database parameters
 update scripts/import.sql or after import

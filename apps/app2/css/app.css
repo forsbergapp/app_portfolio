@@ -1,0 +1,87 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&display=swap');
+@import url('https://use.fontawesome.com/releases/v5.13.1/css/all.css');
+body {
+	font-size: 16px;
+	margin: 0;
+	height: 100%;
+	width: -webkit-fit-content;
+	-webkit-text-size-adjust:none;
+	-moz-text-size-adjust: none;
+	-ms-text-size-adjust: none;
+	padding: 0px;
+}
+
+.dialogue{
+	visibility:hidden;
+	width: 100%;
+	height: 100%;
+	text-align: center;
+	top:15%;
+	position:fixed;
+	-webkit-animation-name: animatetop;
+	-webkit-animation-duration: 0.4s;
+	animation-name: animatetop;
+	animation-duration: 0.4s;
+
+}
+.dialogue_content{
+	font-size:16px;
+	padding: 10px;
+	width: 300px;
+	display:inline-block;
+    top: 20%;
+	height: 540px;
+	border-radius: 4px;
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+	box-shadow: 0 4px 8px 0 rgb(0 0 0 / 20%), 0 6px 20px 0 rgb(0 0 0 / 19%);
+}
+@-webkit-keyframes animatetop {
+	from {
+		top: -60%;
+		opacity: 0
+	}
+	to {
+		top: 15%;
+		opacity: 1
+	}
+}
+@keyframes animatetop {
+	from {
+		top: -60%;
+		opacity: 0
+	}
+	to {
+		top: 15%;
+		opacity: 1
+	}
+}
+#window_info{
+	width:100%;
+	height:100%;
+	visibility:visible;
+	position: fixed;
+	top:0px;
+	text-align:center;
+	overflow:auto;
+	z-index:11;
+}
+.toolbar_button {
+	background: none;
+	border: none;
+	font-size: 30px;
+	width: 60px;
+	height: 60px;
+	padding:0px;
+	text-transform: uppercase;
+	cursor:pointer;
+}
+#info img{
+	max-width:90%;
+}
+#info{
+	position:relative;
+	margin:20px;
+	z-index:-1;
+	margin-top:-70px;
+}
