@@ -1662,6 +1662,7 @@ INSERT INTO app_portfolio.parameter_type (id, name) VALUES (2,'Private');
 --
 -- Dumping data for table `app_parameter`
 --
+INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','SERVER_MAINTENANCE','0','0=no, 1=yes');
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'1','APP_REST_CLIENT_ID','{APP_REST_CLIENT_ID}',NULL);
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'1','APP_REST_CLIENT_SECRET','{APP_REST_CLIENT_SECRET}',NULL);
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'1','APP_COPYRIGHT','{COPYRIGHT TEXT}',NULL);
