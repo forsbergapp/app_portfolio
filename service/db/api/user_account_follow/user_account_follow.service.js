@@ -60,7 +60,7 @@ module.exports = {
 	unfollowUser: (app_id, id, id_unfollow, callBack) => {
 		if (process.env.SERVICE_DB_USE == 1) {
 			get_pool(app_id).query(
-			`DELETE ${process.env.SERVICE_DB_DB1_NAME}.FROM user_account_follow
+			`DELETE FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_follow
 				WHERE  user_account_id = ?
 				AND    user_account_id_follow = ? `,
 				[

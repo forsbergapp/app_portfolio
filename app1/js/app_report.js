@@ -2,9 +2,9 @@
 /* Global timetable functions */
 /*----------------------- */
 function printTable(){
-	var win = window.open('','printwindow','');
-	var whatToPrint = document.getElementById('paper');
-	var html;
+	let win = window.open('','printwindow','');
+	let whatToPrint = document.getElementById('paper');
+	let html;
 	
 	html = `<!DOCTYPE html>
 			<html>
@@ -189,10 +189,10 @@ function timetable_headers_month(items, settings){
 }
 //calculate Iqamat
 function calculateIqamat(option, calculated_time){
-	var add_minutes;
-	var return_value;
-	var timeString;
-	var suffix;
+	let add_minutes;
+	let return_value;
+	let timeString;
+	let suffix;
 	//ex calculated_time argument = '5:59'
 	if (calculated_time.substr(calculated_time.length-2)=='am' || 
 		calculated_time.substr(calculated_time.length-2)=='pm'){
@@ -246,13 +246,13 @@ function calculateIqamat(option, calculated_time){
 // make a timetable month row
 function makeTableRow(data, items, timerow, year, month, settings) {
 
-	var options_weekday = {weekday:'long'};
-	var options_calendartype = {timeZone: settings.timezone, 
+	let options_weekday = {weekday:'long'};
+	let options_calendartype = {timeZone: settings.timezone, 
 								dateStyle: 'short'};
-	var date;
-	var iqamat;
-	var html='';
-	for (var i in items) {
+	let date;
+	let iqamat;
+	let html='';
+	for (let i in items) {
 		date = '';
 		iqamat = '';
 		//Check if column should be displayed
@@ -279,7 +279,7 @@ function makeTableRow(data, items, timerow, year, month, settings) {
 				switch(i){
 				case 'caltype':{
 					if (settings.calendartype=='GREGORIAN'){
-						var date_temp = new Date(year,month,data['day']);
+						let date_temp = new Date(year,month,data['day']);
 						date_temp.setDate(date_temp.getDate() + parseInt(settings.hijri_adj));
 						html += `<div class='timetable_col prayertable_month_calendartype'>${date_temp.toLocaleDateString(settings.locale + global_regional_def_locale_ext_prefix + global_regional_def_locale_ext_calendar + settings.calendar_hijri_type + global_regional_def_locale_ext_number_system + settings.number_system, options_calendartype)}</div>`;
 					}
@@ -295,7 +295,7 @@ function makeTableRow(data, items, timerow, year, month, settings) {
 				case 'weekday':
 				case 'weekday_tr':{
 					if (settings.calendartype=='GREGORIAN'){
-						var date_temp = new Date(year,month,data['day']);
+						let date_temp = new Date(year,month,data['day']);
 						date_temp.setDate(date_temp.getDate() + parseInt(settings.hijri_adj));
 						html += `<div class='timetable_col prayertable_month_date'>${date_temp.toLocaleDateString(i=='weekday'?settings.locale:settings.second_locale + global_regional_def_locale_ext_prefix + global_regional_def_locale_ext_calendar + settings.calendar_hijri_type, options_weekday)}</div>`;
 						}
@@ -347,26 +347,24 @@ function makeTableRow(data, items, timerow, year, month, settings) {
 // display timetable month
 function displayMonth(offset, prayertable, settings) {
 
-	var month;
-	var year;
-	var month_html='';
-
+	let month;
+	let year;
+	let month_html='';
+	let header_style ='';
+	let footer_style ='';
 	prayertable.innerHTML ='';
 	//add default class, theme class and font class		
 	prayertable.classList = settings.prayertable_month + ' ' + 
 							settings.theme_month + ' ' +
 							'prayertable_font_' + settings.arabic_script;
-
-	//Set direction
-	//set LTR or RTL on table layout if MONTH, on YEAR direction in set on the whole year layout
-	if (settings.reporttype =='MONTH')
-		prayertable.style.direction = settings.direction;
-
-	setMethod_praytimes(settings.method, settings.asr, settings.highlat);
 	
 	if (settings.reporttype =='MONTH'){
-		var header_style = getstyle(settings.header_img_src, settings.header_text_al, settings.header_text_ac, settings.header_text_ar);
-		var footer_style = getstyle(settings.footer_img_src, settings.footer_text_al, settings.footer_text_ac, settings.footer_text_ar);
+		//Set direction
+		//set LTR or RTL on table layout if MONTH, on YEAR direction is set on the whole year layout
+		prayertable.style.direction = settings.direction;
+
+		header_style = getstyle(settings.header_img_src, settings.header_text_al, settings.header_text_ac, settings.header_text_ar);
+		footer_style = getstyle(settings.footer_img_src, settings.footer_text_al, settings.footer_text_ac, settings.footer_text_ar);
 
 		month_html +=
 			`<div id='prayertable_month_header' style='${header_style}'>
@@ -376,8 +374,8 @@ function displayMonth(offset, prayertable, settings) {
 			</div>`;
 	}
 
-	var title_date;	
-	var options;
+	let title_date;	
+	let options;
 	switch (settings.reporttype){
 		case 'MONTH':{
 			options = {month:'long', year: 'numeric'};
@@ -423,8 +421,7 @@ function displayMonth(offset, prayertable, settings) {
 			title4 = new Date(title_date[0],title_date[1]-1,title_date[2]).toLocaleDateString(settings.locale + global_regional_def_locale_ext_prefix + global_regional_def_locale_ext_calendar + settings.calendar_hijri_type + global_regional_def_locale_ext_number_system + settings.number_system, options).toUpperCase();
 		}
 
-
-	var items = getColumnTitles(0, settings.calendartype, settings.locale, settings.second_locale);
+	let items = getColumnTitles(0, settings.calendartype, settings.locale, settings.second_locale);
 	month_html+=
 	`<div id='timetable_header'>
 		<div id='prayertable_month_header_title4'>${title4}</div>
@@ -433,11 +430,11 @@ function displayMonth(offset, prayertable, settings) {
 	<div id='timetable'>
 		${timetable_headers_month(items, settings)}`;
 
-	var date;
-	var endDate;
-	var date_hijri;
-	var endDate_hijri;
-	var timezone_offset = getTimezoneOffset(settings.timezone);
+	let date;
+	let endDate;
+	let date_hijri;
+	let endDate_hijri;
+	let timezone_offset = getTimezoneOffset(settings.timezone);
 	
 	if (settings.calendartype=='GREGORIAN'){
 		date = new Date(year, month, 1);
@@ -455,7 +452,7 @@ function displayMonth(offset, prayertable, settings) {
 			endDate = HijriToGreg(settings.hijri_adj,endDate_hijri);
 			endDate = new Date(endDate[0], endDate[1]-1, endDate[2]);
 		}
-	
+	setMethod_praytimes(settings.method, settings.asr, settings.highlat);
 	while (date < endDate) {
 		let times = prayTimes.getTimes(date, [settings.gps_lat, settings.gps_long], timezone_offset, 0, settings.format);
 		if (settings.calendartype=='GREGORIAN')
@@ -591,15 +588,15 @@ function create_day_title_row (col_titles, title_index, show_imsak, show_sunset,
 
 function displayDay(settings, settings_ui, item_id){
 
-	var day_html='';
-	var times; 
-	var offset;
-	var options = { timeZone: settings.timezone, 
+	let day_html='';
+	let times; 
+	let offset;
+	let options = { timeZone: settings.timezone, 
 					weekday: 'long', 
 					year: 'numeric', 
 					month: 'long', 
 					day: 'numeric'};
-	var options_hijri = { timeZone: settings.timezone, 
+	let options_hijri = { timeZone: settings.timezone, 
 					year: 'numeric', 
 					month: 'long', 
 					day: 'numeric'};
@@ -620,8 +617,8 @@ function displayDay(settings, settings_ui, item_id){
 	//set LTR or RTL on table layout
 	settings_ui.prayertable_day.style.direction = settings.direction;
 
-	var header_style = getstyle(settings.header_img_src, settings.header_text_al, settings.header_text_ac, settings.header_text_ar);
-	var footer_style = getstyle(settings.footer_img_src, settings.footer_text_al, settings.footer_text_ac, settings.footer_text_ar);
+	let header_style = getstyle(settings.header_img_src, settings.header_text_al, settings.header_text_ac, settings.header_text_ar);
+	let footer_style = getstyle(settings.footer_img_src, settings.footer_text_al, settings.footer_text_ac, settings.footer_text_ar);
 
 	day_html += 
 	`
@@ -640,37 +637,36 @@ function displayDay(settings, settings_ui, item_id){
 		${timetable_headers_day(settings)}
 		<div class='prayertable_day_timetable_settings'>`;
 	
-	var select_user_settings = document.getElementById('setting_select_user_setting');
-	var select_locale = document.getElementById("setting_select_locale");
-	var user_locale;
-	var select_user_timezone_report = document.getElementById('setting_select_report_timezone');
-	var user_timezone;
-	var user_label_timezone;
-	var select_number_system = document.getElementById('setting_select_report_numbersystem');
-	var user_number_system;
-	var select_calendar_hijri_type = document.getElementById('setting_select_calendar_hijri_type');
-	var user_calendar_hijri_type;
-	var user_gps_label_latitude;
-	var user_gps_latitude;
-	var user_gps_label_longitude;
-	var user_gps_longitude;
-	var user_show_gps;
-	var user_show_timezone;
-	var select_method = document.getElementById('setting_select_method');
-	var user_method;
-	var select_asr = document.getElementById('setting_select_asr');
-	var user_asr;
-	var select_highlat = document.getElementById('setting_select_highlatitude');
-	var user_highlat;
-	var select_format = document.getElementById('setting_select_timeformat');
-	var user_format;
-	var select_hijri_adjustment = document.getElementById('setting_select_hijri_adjustment');
-	var user_hijri_adjustment;
-	var user_show_imsak;
-	var user_show_sunset;
-	var user_show_midnight;
-	var user_show_fast_start_end;
-	var user_place;
+	let select_user_settings = document.getElementById('setting_select_user_setting');
+	let user_locale;
+	let select_user_timezone_report = document.getElementById('setting_select_report_timezone');
+	let user_timezone;
+	let user_label_timezone;
+	let select_number_system = document.getElementById('setting_select_report_numbersystem');
+	let user_number_system;
+	let select_calendar_hijri_type = document.getElementById('setting_select_calendar_hijri_type');
+	let user_calendar_hijri_type;
+	let user_gps_label_latitude;
+	let user_gps_latitude;
+	let user_gps_label_longitude;
+	let user_gps_longitude;
+	let user_show_gps;
+	let user_show_timezone;
+	let select_method = document.getElementById('setting_select_method');
+	let user_method;
+	let select_asr = document.getElementById('setting_select_asr');
+	let user_asr;
+	let select_highlat = document.getElementById('setting_select_highlatitude');
+	let user_highlat;
+	let select_format = document.getElementById('setting_select_timeformat');
+	let user_format;
+	let select_hijri_adjustment = document.getElementById('setting_select_hijri_adjustment');
+	let user_hijri_adjustment;
+	let user_show_imsak;
+	let user_show_sunset;
+	let user_show_midnight;
+	let user_show_fast_start_end;
+	let user_place;
 	//update user settings to current select option 
 	set_settings_select();
 	for (i=0;i<=select_user_settings.options.length-1;i++){
@@ -767,9 +763,9 @@ function displayDay(settings, settings_ui, item_id){
 /*----------------------- */
 function displayYear(settings, settings_ui, item_id){
 	
-	var startmonth            = global_session_currentDate.getMonth();
-	var starthijrimonth       = global_session_CurrentHijriDate[0];
-	var year_html='';
+	let startmonth            = global_session_currentDate.getMonth();
+	let starthijrimonth       = global_session_CurrentHijriDate[0];
+	let year_html='';
 	
 	settings.reporttype        = 'YEAR';
 	
@@ -816,15 +812,15 @@ function displayYear(settings, settings_ui, item_id){
 				global_session_CurrentHijriDate[1] = global_session_CurrentHijriDate[1] + 1;
 			}
 
-	var header_style = getstyle(settings.header_img_src, settings.header_text_al, settings.header_text_ac, settings.header_text_ar);
-	var footer_style = getstyle(settings.footer_img_src, settings.footer_text_al, settings.footer_text_ac, settings.footer_text_ar);
+	let header_style = getstyle(settings.header_img_src, settings.header_text_al, settings.header_text_ac, settings.header_text_ar);
+	let footer_style = getstyle(settings.footer_img_src, settings.footer_text_al, settings.footer_text_ac, settings.footer_text_ar);
 
 	//timetable header
 	//show year with selected locale and number system for both Hijri and Gregorian
-	var options_year = { timeZone: settings.timezone, 
+	let options_year = { timeZone: settings.timezone, 
 						 year: 'numeric',
 						 useGrouping:false};
-	var year_title4;
+	let year_title4;
 	if (settings.calendartype=='GREGORIAN'){
 		year_title4 = global_session_currentDate.getFullYear();
 		year_title4 = year_title4.toLocaleString(settings.locale + global_regional_def_locale_ext_prefix + global_regional_def_locale_ext_number_system + settings.number_system, options_year);
@@ -837,7 +833,7 @@ function displayYear(settings, settings_ui, item_id){
 	//timetables
 	let months = new Array(12);
 	let timetable_month = document.createElement('div');
-	for (var monthindex = 1; monthindex <= 12; monthindex++) { 
+	for (let monthindex = 1; monthindex <= 12; monthindex++) { 
 		if (settings.calendartype=='GREGORIAN')
 			global_session_currentDate.setMonth(monthindex -1);
 		else
@@ -904,7 +900,7 @@ function displayYear(settings, settings_ui, item_id){
 // update timetable
 function update_timetable_report(option = 0, item_id = 0) {
 
-	var settings ={ prayertable_month       : 'prayertable_month', //class to add for month
+	let settings ={ prayertable_month       : 'prayertable_month', //class to add for month
 					prayertable_year_month  : 'prayertable_year_month', //class to add for year
 					reporttype          	: 'MONTH', //MONTH: normal month with more info, YEAR: month with less info
 					locale              	: document.getElementById('setting_select_locale').value,  
@@ -967,7 +963,7 @@ function update_timetable_report(option = 0, item_id = 0) {
 					show_midnight       	: checkbox_value(document.getElementById('setting_checkbox_report_show_midnight')),
 					show_fast_start_end 	: document.getElementById('setting_select_report_show_fast_start_end').value};
 					
-	var settings_ui = {	navigation_left     : 'toolbar_navigation_btn_left',
+	let settings_ui = {	navigation_left     : 'toolbar_navigation_btn_left',
 						navigation_right    : 'toolbar_navigation_btn_right',
 						prayertable_day     : document.getElementById('prayertable_day'),
 						prayertable_month   : document.getElementById('prayertable_month'),
