@@ -1,8 +1,8 @@
 module.exports = {
     getForm: (app_id, username, callBack) => {
         const {getProfileUsername} = require("../db/api/user_account/user_account.service");
-        function main (){
-            const { getApp } = require("../../app1/app");
+        function main (app_id){
+            const { getApp } = require("../../apps");
             const app = getApp(app_id)
             .then(function(app_result){
                 return callBack(null, app_result)
@@ -12,7 +12,7 @@ module.exports = {
             if (username!=null){
                 getProfileUsername(app_id, username, null, (err,result)=>{
                     if (result)
-                        main();
+                        main(app_id);
                     else{
                         //return 0 meaning redirect to /
                         return callBack(0);
@@ -20,8 +20,10 @@ module.exports = {
                   })
             }
             else
-                main();
+                main(app_id);
         }
+        else
+                main(app_id);
 	},
     getManifest: (app_id, callBack) => {
         const { getParameters } = require ("../db/api/app_parameter/app_parameter.service");
@@ -107,7 +109,7 @@ module.exports = {
         });
     },
     getAdminSecure: (req, res) => {
-        const { getAdmin } = require("../../admin/app/secure");
+        const { getAdmin } = require("../../apps/admin/src/secure");
             getAdmin((err, app_result)=>{
                 return res.status(200).send(
                     app_result
@@ -115,7 +117,7 @@ module.exports = {
             })        
 	},
     getAdmin: (callBack) => {
-        const { getAdmin } = require("../../admin/app");
+        const { getAdmin } = require("../../apps");
             const app = getAdmin()
             .then(function(app_result){
                 return callBack(null, app_result);
