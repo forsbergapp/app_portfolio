@@ -440,8 +440,8 @@ a:active {
 	text-align:right;
 }
 
-.profile_user_settings_info_like_count,
-.profile_user_settings_info_view_count{
+#profile_user_settings_info_like_count,
+#profile_user_settings_info_view_count{
 	display:inline !important;
 }
 /*profile detail*/
