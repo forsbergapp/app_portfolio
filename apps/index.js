@@ -3,6 +3,8 @@ const { createLogAppSE } = require("../service/log/log.service");
 module.exports = {
     getApp:(app_id) => {
         return new Promise(function (resolve, reject){
+            const AppHeadCommon = fs.readFileSync(__dirname + '/common/src/head.html', 'utf8');
+            const AppBodyCommon = fs.readFileSync(__dirname + '/common/src/body.html', 'utf8');
             switch(app_id){
                 case '0':{
                     fs.readFile(__dirname + '/app0/src/index.html', 'utf-8', (err, app_result) => {
@@ -19,11 +21,13 @@ module.exports = {
                             const AppBackground = fs.readFileSync(__dirname + '/app0/src/background.html', 'utf8');
                             const AppDialogues = fs.readFileSync(__dirname + '/app0/src/dialogues.html', 'utf8');
                             const AppWindowInfo = fs.readFileSync(__dirname + '/app0/src/window_info.html', 'utf8');
-                            const AppCommon = fs.readFileSync(__dirname + '/common/src/common.html', 'utf8');
                             async function getAppComponents() {                        
                                 var app = app_result.replace(
                                     '<AppHead/>',
                                     `${AppHead}`);
+                                app = app.replace(
+                                    '<AppHeadCommon/>',
+                                    `${AppHeadCommon}`);    
                                 app = app.replace(
                                     '<AppToggle/>',
                                     `${AppToggle}`);
@@ -43,8 +47,8 @@ module.exports = {
                                     '<AppWindowInfo/>',
                                     `${AppWindowInfo}`);
                                 app = app.replace(
-                                    '<AppCommon/>',
-                                    `${AppCommon}`);
+                                    '<AppBodyCommon/>',
+                                    `${AppBodyCommon}`);
                                 resolve (app);
                             }
                             getAppComponents();
@@ -59,7 +63,6 @@ module.exports = {
                             resolve (err);  
                         }
                         else{
-                            //module html files
                             const AppHead = fs.readFileSync(__dirname + '/app1/src/head.html', 'utf8');
                             const AppToolbarTop = fs.readFileSync(__dirname + '/app1/src/toolbar_top.html', 'utf8');
                             const AppPaper = fs.readFileSync(__dirname + '/app1/src/paper.html', 'utf8');
@@ -77,9 +80,7 @@ module.exports = {
                             const AppWindowInfo = fs.readFileSync(__dirname + '/app1/src/window_info.html', 'utf8');
                             const AppWindowPreviewReport = fs.readFileSync(__dirname + '/app1/src/window_preview_report.html', 'utf8');
                             const AppDialogues = fs.readFileSync(__dirname + '/app1/src/dialogues.html', 'utf8');
-                            const AppToolbarBottom = fs.readFileSync(__dirname + '/app1/src/toolbar_bottom.html', 'utf8');
-                            const AppCommon = fs.readFileSync(__dirname + '/common/src/common.html', 'utf8');
-        
+                            const AppToolbarBottom = fs.readFileSync(__dirname + '/app1/src/toolbar_bottom.html', 'utf8');        
                             const { countries } = require("./app1/src/countries");
                             const { locales } = require("./app1/src/locales");
                             const { places } = require("./app1/src/places");
@@ -94,6 +95,9 @@ module.exports = {
                                 var app = app_result.replace(
                                     '<AppHead/>',
                                     `${AppHead}`);
+                                app = app.replace(
+                                    '<AppHeadCommon/>',
+                                    `${AppHeadCommon}`);
                                 app = app.replace(
                                     '<AppToolbarTop/>',
                                     `${AppToolbarTop}`);
@@ -159,8 +163,8 @@ module.exports = {
                                     '<AppToolbarBottom/>',
                                     `${AppToolbarBottom}`);
                                 app = app.replace(
-                                    '<AppCommon/>',
-                                    `${AppCommon}`);
+                                    '<AppBodyCommon/>',
+                                    `${AppBodyCommon}`);
                                 resolve (app);
                             }
                             getAppComponents();
@@ -169,26 +173,27 @@ module.exports = {
                     break;
                 }
                 case '2':{
-                    fs.readFile(__dirname + '/app0/src/index.html', 'utf-8', (err, app_result) => {
+                    fs.readFile(__dirname + '/app2/src/index.html', 'utf-8', (err, app_result) => {
                         if (err) {
                             createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
                             resolve (err);  
                         }
                         else{
-                            //module html files
                             const AppHead = fs.readFileSync(__dirname + '/app2/src/head.html', 'utf8');
                             const AppWindowInfo = fs.readFileSync(__dirname + '/app2/src/window_info.html', 'utf8');
-                            const AppCommon = fs.readFileSync(__dirname + '/common/src/common.html', 'utf8');
                             async function getAppComponents() {                        
                                 var app = app_result.replace(
                                     '<AppHead/>',
                                     `${AppHead}`);
                                 app = app.replace(
+                                    '<AppHeadCommon/>',
+                                    `${AppHeadCommon}`);
+                                app = app.replace(
                                     '<AppWindowInfo/>',
                                     `${AppWindowInfo}`);
                                 app = app.replace(
-                                    '<AppCommon/>',
-                                    `${AppCommon}`);
+                                    '<AppBodyCommon/>',
+                                    `${AppBodyCommon}`);
                                 resolve (app);
                             }
                             getAppComponents();
@@ -207,20 +212,54 @@ module.exports = {
                     resolve (err);  
                 }
                 else{
-                    //module html files
                     const AppHead = fs.readFileSync(__dirname + '/admin/src/head.html', 'utf8');
                     const AppDialogues = fs.readFileSync(__dirname + '/admin/src/dialogues.html', 'utf8');
-                    const AppCommon = fs.readFileSync(__dirname + '/common/src/common.html', 'utf8');
+                    const AppHeadCommon = fs.readFileSync(__dirname + '/common/src/head.html', 'utf8');
+                    const AppBodyCommon = fs.readFileSync(__dirname + '/common/src/body.html', 'utf8');
                     async function getAppComponents() {                        
                         var app = app_result.replace(
                             '<AppHead/>',
                             `${AppHead}`);
                         app = app.replace(
+                            '<AppHeadCommon/>',
+                            `${AppHeadCommon}`);
+                        app = app.replace(
                             '<AppDialogues/>',
                             `${AppDialogues}`);
                         app = app.replace(
-                            '<AppCommon/>',
-                            `${AppCommon}`);
+                            '<AppBodyCommon/>',
+                            `${AppBodyCommon}`);
+                        resolve (app);
+                    }
+                    getAppComponents();
+                }
+            });
+        })
+    },
+    getMaintenance:(app_id) => {
+        return new Promise(function (resolve, reject){
+            fs.readFile(__dirname + '/common/src/index_maintenance.html', 'utf-8', (err, app_result) => {
+                if (err) {
+                    createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
+                    resolve (err);  
+                }
+                else{
+                    const AppHead = fs.readFileSync(__dirname + '/common/src/head_maintenance.html', 'utf8');
+                    const AppHeadCommon = fs.readFileSync(__dirname + '/common/src/head.html', 'utf8');
+                    const AppBodyCommon = fs.readFileSync(__dirname + '/common/src/body.html', 'utf8');
+                    async function getAppComponents() {                        
+                        var app = app_result.replace(
+                            '<AppHead/>',
+                            `${AppHead}`);
+                        app = app.replace(
+                            '<APP_ID/>',
+                            `${app_id==''?null:app_id}`);
+                        app = app.replace(
+                            '<AppHeadCommon/>',
+                            `${AppHeadCommon}`);
+                        app = app.replace(
+                            '<AppBodyCommon/>',
+                            `${AppBodyCommon}`);
                         resolve (app);
                     }
                     getAppComponents();
