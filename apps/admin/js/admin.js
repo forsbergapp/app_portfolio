@@ -1,5 +1,5 @@
 var global_rest_admin_at;
-
+var global_app_id='';
 function admin_login(){
     var status;
     var json;

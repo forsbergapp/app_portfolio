@@ -116,6 +116,8 @@ app.use((req,res,next) => {
 //service auth
 const authRouter = require("./service/auth/auth.router");
 const authAdminRouter = require("./service/auth/admin/admin.router");
+//service broadcast
+const broadcastRouter = require("./service/broadcast/broadcast.router");
 //service db
 const appRouter = require("./service/db/api/app/app.router");
 const app_logRouter = require("./service/db/api/app_log/app_log.router");
@@ -148,6 +150,8 @@ const worldcitiesRouter = require("./service/worldcities/worldcities.router");
 //authorization
 app.use("/service/auth", authRouter);
 app.use("/service/auth/admin", authAdminRouter);
+//service broadcast
+app.use("/service/broadcast", broadcastRouter);
 //service database
 app.use("/service/db/api/app", appRouter);
 app.use("/service/db/api/app_log", app_logRouter);
@@ -212,8 +216,12 @@ app.get("/admin",function (req, res, next) {
       if (err)
         createLogAppSE(process.env.APP0_ID, __appfilename, __appfunction, __appline, err);      
       else{
-          if (db_SERVER_MAINTENANCE==1)
-            return res.sendFile(__dirname + "/apps/admin/index_maintenance.html");
+          if (db_SERVER_MAINTENANCE==1){
+            const { getMaintenance} = require("./service/forms/forms.controller");
+            getMaintenance('',(err, app_result)=>{
+                return res.send(app_result);
+            })
+          }
           else{
             const { getAdmin } = require ("./service/forms/forms.controller");
             getAdmin( (err, app_result)=>{
@@ -234,7 +242,7 @@ app.get("/sw.js",function (req, res,next) {
       res.type('application/javascript');
       res.setHeader('Service-Worker-Allowed', '/')
       res.status(200);
-      return res.sendFile(__dirname + "/app1/sw.js");
+      return res.sendFile(__dirname + "/apps/app1/sw.js");
   }
   else
     next();
@@ -333,8 +341,12 @@ app.get('/',function (req, res) {
         if (err)
           createLogAppSE(process.env.APP0_ID, __appfilename, __appfunction, __appline, err);      
         else{
-            if (db_SERVER_MAINTENANCE==1)
-              return res.sendFile(__dirname + "/apps/app0/index_maintenance.html");
+            if (db_SERVER_MAINTENANCE==1){
+              const { getMaintenance} = require("./service/forms/forms.controller");
+              getMaintenance(process.env.APP0_ID,(err, app_result)=>{
+                  return res.send(app_result);
+              })
+            }
             else{
               const { getForm} = require("./service/forms/forms.controller");
               getForm(process.env.APP0_ID, null,(err, app_result)=>{
@@ -351,8 +363,12 @@ app.get('/',function (req, res) {
         if (err)
           createLogAppSE(process.env.APP1_ID, __appfilename, __appfunction, __appline, err);      
         else{
-            if (db_SERVER_MAINTENANCE==1)
-              return res.sendFile(__dirname + "/apps/app1/index_maintenance.html");
+            if (db_SERVER_MAINTENANCE==1){
+              const { getMaintenance} = require("./service/forms/forms.controller");
+              getMaintenance(process.env.APP1_ID,(err, app_result)=>{
+                  return res.send(app_result);
+              })
+            }
             else{
               const { getForm} = require("./service/forms/forms.controller");
               getForm(process.env.APP1_ID, null,(err, app_result)=>{
@@ -369,8 +385,12 @@ app.get('/',function (req, res) {
         if (err)
           createLogAppSE(process.env.APP2_ID, __appfilename, __appfunction, __appline, err);      
         else{
-            if (db_SERVER_MAINTENANCE==1)
-              return res.sendFile(__dirname + "/apps/app2/index_maintenance.html");
+            if (db_SERVER_MAINTENANCE==1){
+              const { getMaintenance} = require("./service/forms/forms.controller");
+              getMaintenance(process.env.APP2_ID,(err, app_result)=>{
+                  return res.send(app_result);
+              })
+            }
             else{
               const { getForm} = require("./service/forms/forms.controller");
               getForm(process.env.APP2_ID, null,(err, app_result)=>{
@@ -391,7 +411,6 @@ app.get('/',function (req, res) {
     }
   }
 });
-
 //start HTTP and HTTPS
 app.listen(process.env.SERVER_PORT, () => {
   createLogServer(null, null, null, "HTTP Server up and running on PORT: " + process.env.SERVER_PORT);
@@ -399,3 +418,5 @@ app.listen(process.env.SERVER_PORT, () => {
 https.createServer(options, app).listen(process.env.SERVER_HTTPS_PORT, () => {
   createLogServer(null, null, null, "HTTPS Server up and running on PORT: " + process.env.SERVER_HTTPS_PORT);
 });
+
+global.clients = [];
