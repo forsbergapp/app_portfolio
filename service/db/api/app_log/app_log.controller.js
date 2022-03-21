@@ -21,7 +21,8 @@ module.exports = {
 		});
 	},
 	getLogs: (req, res) => {
-		getLogs(req.query.limit, (err, results) =>{
+		let limit = parseInt(req.query.limit);
+		getLogs(limit, (err, results) =>{
 			if (err) {
 				return res.status(500).send({
 					success: 0,
