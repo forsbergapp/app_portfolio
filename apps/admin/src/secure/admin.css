@@ -78,6 +78,20 @@
         background-color: #FFF;
     }
 
+    .theme_light .switch-label {
+        color: transparent;
+    }
+    .theme_light .switch-label::before {
+        background-color: #dedede;
+    }
+    .theme_light .switch-label::after {
+        background-color: #fff;
+        box-shadow: 0 0 2px rgba(0, 0, 0, 0.45);
+    }  
+    .theme_light .switch-input:checked + .switch-label::before {
+        background-color: rgb(81, 171, 255);
+    }
+    
     #box1{
         width: 49%;
         height: 200px;
@@ -178,6 +192,58 @@
         }
     
     }
+    #menu_1_content_widget2{
+        height:50px;
+        display: block;
+        text-align: center;
+    }
+    #users_connected, #count_connected{
+        display:inline-block;
+    }
+    #count_local, #count_google, #count_facebook{
+        display:inline-block;
+        margin-right:10px;
+    }
+    #users_count i.fa-user{
+        color: #a49775;
+    }
+    .googletext{
+        font-family: 'Noto Sans';
+        font-weight: bold;
+        margin-left:-2px;
+        margin-right:-2px;
+        
+    }
+    #users_count #google1{
+        color: #4285F4;
+        display:inline-block;
+    }
+    #users_count #google2{
+        color: #DB4437;
+        display:inline-block;
+    }
+    #users_count #google3{
+        color: #F4B400;
+        display:inline-block;
+    }
+    #users_count #google4{
+        color: #4285F4;
+        display:inline-block;
+    }
+    #users_count #google5{
+        color: #0F9D58;
+        display:inline-block;
+    }
+    #users_count #google6{
+        color: #DB4437;
+        display:inline-block;
+    }
+    #users_count i.fa-facebook{
+        color: #4267b2;
+    }
+    #menu_1_content_widget3{
+        height:50px;
+    }
     #list_connections{
         height:100px;
         overflow-y: auto;
@@ -224,5 +290,44 @@
         width:120px;
         display:inline-block;
     }
-
+    .switch-input {
+        display: none;
+      }
+    .switch-label {
+        display: inline-block !important;
+        position:relative;
+        width: 48px;
+        height: 24px;
+        text-indent: -150%;
+        clip: rect(0 0 0 0);
+        user-select: none;
+        vertical-align: middle;
+    }
+    .switch-label::before,
+    .switch-label::after {
+        content: "";
+        display: block;
+        position: absolute;
+        cursor: pointer;
+    }
+    .switch-label::before {
+        width: 48px;
+        height: 24px;
+        border-radius: 9999em;
+        -webkit-transition: background-color 0.25s ease;
+        transition: background-color 0.25s ease;
+    }
+    .switch-label::after {
+        top: 0px;
+        left: 0px;
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        -webkit-transition: left 0.25s ease;
+        transition: left 0.25s ease;
+    }
+    .switch-input:checked + .switch-label::after {
+        left: 24px;
+    }
+      
 </style>
