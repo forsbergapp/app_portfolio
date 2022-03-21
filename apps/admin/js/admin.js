@@ -41,7 +41,7 @@ function admin_login(){
                                     if (scripts[i].src != "") {
                                         var tag = document.createElement("script");
                                         tag.src = scripts[i].src;
-                                        document.getElementsByTagName("head")[0].appendChild(tag);
+                                        document.getElementById('secure').insertBefore(tag, document.getElementById('secure').firstChild);
                                     }
                                     else {
                                         eval(scripts[i].innerHTML);

@@ -1,4 +1,4 @@
-const { createLog, getLogs } = require ("./app_log.service");
+const { createLog, getLogs, getStatUniqueVisitor } = require ("./app_log.service");
 
 module.exports = {
 	createLog: (req, res) =>{
@@ -21,7 +21,7 @@ module.exports = {
 		});
 	},
 	getLogs: (req, res) => {
-		getLogs((err, results) =>{
+		getLogs(req.query.limit, (err, results) =>{
 			if (err) {
 				return res.status(500).send({
 					success: 0,
@@ -33,5 +33,19 @@ module.exports = {
 				data: results
 			});
 		});
+	},
+	getStatUniqueVisitor: (req, res) =>{
+		getStatUniqueVisitor(req.query.app_id, req.query.statchoice, req.query.year, req.query.month, (err, results)=>{
+			if (err) {
+				return res.status(500).send({
+					success: 0,
+					data: err
+				});
+			}
+			return res.status(200).json({
+				success: 1,
+				data: results
+			});
+		})
 	}
 }

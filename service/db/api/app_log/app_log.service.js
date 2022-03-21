@@ -1,4 +1,4 @@
-const {oracledb, get_pool} = require ("../../config/database");
+const {oracledb, get_pool, get_pool_admin} = require ("../../config/database");
 const { createLogAppSE } = require("../../../../service/log/log.service");
 module.exports = {
 	createLog: (data, callBack) => {
@@ -135,9 +135,9 @@ module.exports = {
 			execute_sql();
 		}
 	},
-	getLogs: callBack => {
+	getLogs: (limit, callBack) => {
 		if (process.env.SERVICE_DB_USE==1){
-			get_pool(app_id).query(
+			get_pool_admin().query(
 				`SELECT
 						id,
 						app_id,
@@ -157,8 +157,10 @@ module.exports = {
 						server_http_host,
 						server_http_accept_language,
 						date_created
-				FROM ${process.env.SERVICE_DB_DB1_NAME}.app_log `,
-				[],
+				FROM ${process.env.SERVICE_DB_DB1_NAME}.app_log 
+				ORDER BY 18 DESC
+				LIMIT  ?`,
+				[limit],
 				(error, results, fields) => {
 					if (error){
 						createLogAppSE(app_id, __appfilename, __appfunction, __appline, error);
@@ -172,7 +174,7 @@ module.exports = {
 			async function execute_sql(err, result){
 				let pool2;
 				try{
-				pool2 = await oracledb.getConnection(get_pool(app_id));
+				pool2 = await oracledb.getConnection(get_pool_admin());
 				const result = await pool2.execute(
 					`SELECT
 							id "id",
@@ -193,8 +195,130 @@ module.exports = {
 							server_http_host "server_http_host",
 							server_http_accept_language "server_http_accept_language",
 							date_created "date_created"
-					FROM ${process.env.SERVICE_DB_DB2_NAME}.app_log`,
-					{},
+					FROM ${process.env.SERVICE_DB_DB2_NAME}.app_log
+					WHERE ROWNUM <= :limit
+					ORDER BY 18 DESC`,
+					{limit:limit},
+					(err,result) => {
+						if (err) {
+							createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
+							return callBack(err);
+						}
+						else{
+							return callBack(null, result.rows);
+						}
+					});
+				}catch (err) {
+					createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
+					return callBack(err.message);
+				} finally {
+					if (pool2) {
+						try {
+							await pool2.close(); 
+						} catch (err) {
+							createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
+						}
+					}
+				}
+			}
+			execute_sql();
+		}
+	},
+	getStatUniqueVisitor: (app_id, statchoice, year, month, callBack) => {
+		if (app_id=='')
+			app_id = null;
+		if (process.env.SERVICE_DB_USE==1){
+			get_pool_admin().query(
+				`SELECT
+						app_id,
+						DATE_FORMAT(date_created, '%Y') year,
+						DATE_FORMAT(date_created, '%c') month,
+						null 							day,
+						COUNT(DISTINCT server_remote_addr) amount
+				FROM ${process.env.SERVICE_DB_DB1_NAME}.app_log
+				WHERE 1 = ?
+				AND   app_id = COALESCE(?, app_id)
+				AND   DATE_FORMAT(date_created, '%Y') = ?
+				AND   DATE_FORMAT(date_created, '%c') = ?
+				GROUP BY app_id,
+						 DATE_FORMAT(date_created, '%Y'),
+				         DATE_FORMAT(date_created, '%c')
+				UNION ALL
+				SELECT
+						app_id,
+						DATE_FORMAT(date_created, '%Y') year,
+						DATE_FORMAT(date_created, '%c') month,
+						DATE_FORMAT(date_created, '%e') day,
+						COUNT(DISTINCT server_remote_addr) amount
+				FROM ${process.env.SERVICE_DB_DB1_NAME}.app_log
+				WHERE 2 = ?
+				AND   app_id = COALESCE(?, app_id)
+				AND   DATE_FORMAT(date_created, '%Y') = ?
+				AND   DATE_FORMAT(date_created, '%c') = ?
+				GROUP BY app_id,
+						 DATE_FORMAT(date_created, '%Y'),
+				         DATE_FORMAT(date_created, '%c'),
+				         DATE_FORMAT(date_created, '%e')
+				ORDER BY 4
+				`,
+				[statchoice,
+			     app_id,
+				 year,
+				 month,
+				 statchoice,
+				 app_id,
+				 year,
+				 month],
+				(error, results, fields) => {
+					if (error){
+						createLogAppSE(app_id, __appfilename, __appfunction, __appline, error);
+						return callBack(error);
+					}
+					return callBack(null, results);
+				}
+			);
+		}
+		else if (process.env.SERVICE_DB_USE==2){
+			async function execute_sql(err, result){
+				let pool2;
+				try{
+				pool2 = await oracledb.getConnection(get_pool_admin());
+				const result = await pool2.execute(
+					`SELECT
+							app_id "app_id",
+							TO_CHAR(date_created, 'YYYY') 	"year",
+							TO_CHAR(date_created, 'fmMM') 	"month",
+							null 							"day",
+							COUNT(DISTINCT server_remote_addr) "amount"
+					FROM ${process.env.SERVICE_DB_DB2_NAME}.app_log
+					WHERE 1 = :statchoice
+					AND  app_id = NVL(:app_id, app_id)
+					AND TO_CHAR(date_created, 'YYYY') = :year
+					AND TO_CHAR(date_created, 'fmMM') = :month
+					GROUP BY app_id,
+							TO_CHAR(date_created, 'YYYY'),
+							TO_CHAR(date_created, 'fmMM')
+					UNION ALL
+					SELECT
+							app_id "app_id",
+							TO_CHAR(date_created, 'YYYY') 	"year",
+							TO_CHAR(date_created, 'fmMM') 	"month",
+							TO_CHAR(date_created, 'DD') 	"day",
+							COUNT(DISTINCT server_remote_addr) "amount"
+					FROM ${process.env.SERVICE_DB_DB2_NAME}.app_log
+					WHERE 2 = :statchoice
+					AND  app_id = NVL(:app_id, app_id)
+					AND TO_CHAR(date_created, 'YYYY') = :year
+					AND TO_CHAR(date_created, 'fmMM') = :month
+					GROUP BY app_id,
+							TO_CHAR(date_created, 'YYYY'),
+							TO_CHAR(date_created, 'fmMM'),
+							TO_CHAR(date_created, 'DD')
+					ORDER BY 4`,
+					{statchoice: statchoice,
+					 app_id: app_id,
+					 year: year,
+					 month:month},
 					(err,result) => {
 						if (err) {
 							createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
