@@ -1,7 +1,10 @@
 const eventSource = new EventSource(`/service/broadcast?app_id=${global_app_id}`);
 
 eventSource.onmessage = function (event) {
-    show_broadcast(event.data);
+    if (global_app_id === '')
+        null;
+    else
+        show_broadcast(event.data);
 }
 eventSource.onerror = function (err) {
     eventSource.close();
