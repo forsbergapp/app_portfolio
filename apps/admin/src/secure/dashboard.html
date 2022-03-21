@@ -1,14 +1,40 @@
 <div id='dashboard'>
     <div id='menu'>
-        <div id='menu_1' class='menuitem'>One</div>
+        <div id='menu_1' class='menuitem'>Dashboard</div>
         <div id='menu_2' class='menuitem'>Two</div>
         <div id='menu_3' class='menuitem'>Three</div>
         <div id='menu_4' class='menuitem'>Four</div>
         <div id='menu_5' class='menuitem'>Logout</div>
     </div>
     <div id='main'>
+        <div id="button_spinner" class="load-spinner">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
         <div id='menu_1_content' class='main_content'>
-            <div id='menu_1_content_widget' class='widget'>One</div>
+            <div id='menu_1_content_widget' class='widget'>
+                <div class="graphBox">
+                    <select id="select_app">
+                    </select>
+                    <div id="box1">
+                        <canvas id="pieChart"></canvas>
+                    </div>
+                    <div id="box2">
+                        <canvas id="barChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div id="list_connections" class="widget"></div>
         </div>
         <div id='menu_2_content' class='main_content'>
             <div id='menu_2_content_widget' class='widget'>Two</div>
