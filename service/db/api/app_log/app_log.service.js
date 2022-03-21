@@ -163,7 +163,7 @@ module.exports = {
 				[limit],
 				(error, results, fields) => {
 					if (error){
-						createLogAppSE(app_id, __appfilename, __appfunction, __appline, error);
+						createLogAppSE(process.env.APP0_ID, __appfilename, __appfunction, __appline, error);
 						return callBack(error);
 					}
 					return callBack(null, results);
@@ -196,12 +196,12 @@ module.exports = {
 							server_http_accept_language "server_http_accept_language",
 							date_created "date_created"
 					FROM ${process.env.SERVICE_DB_DB2_NAME}.app_log
-					WHERE ROWNUM <= :limit
-					ORDER BY 18 DESC`,
+					ORDER BY 18 DESC
+					FETCH NEXT :limit ROWS ONLY`,
 					{limit:limit},
 					(err,result) => {
 						if (err) {
-							createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
+							createLogAppSE(process.env.APP0_ID, __appfilename, __appfunction, __appline, err);
 							return callBack(err);
 						}
 						else{
@@ -209,14 +209,14 @@ module.exports = {
 						}
 					});
 				}catch (err) {
-					createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
+					createLogAppSE(process.env.APP0_ID, __appfilename, __appfunction, __appline, err);
 					return callBack(err.message);
 				} finally {
 					if (pool2) {
 						try {
 							await pool2.close(); 
 						} catch (err) {
-							createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
+							createLogAppSE(process.env.APP0_ID, __appfilename, __appfunction, __appline, err);
 						}
 					}
 				}
