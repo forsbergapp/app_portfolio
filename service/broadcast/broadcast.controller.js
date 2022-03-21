@@ -1,3 +1,4 @@
+global.broadcast_clients = [];
 module.exports = {
 	getBroadcast: (req, res) => {
         res.setHeader('Content-type', 'text/event-stream');
@@ -11,7 +12,7 @@ module.exports = {
                 else{
                     if (db_SERVER_MAINTENANCE==1){
                         const broadcast ={"broadcast_type" :"MAINTENANCE", 
-                                          "broadcast_message":"Maintenance, connected:" + clients.length};
+                                          "broadcast_message":"Maintenance, connected:" + broadcast_clients.length};
                         res.write (`data: ${btoa(JSON.stringify(broadcast))}\n\n`);
                     }
                 }
@@ -20,14 +21,23 @@ module.exports = {
         const clientId = Date.now();
         const newClient = {
             id: clientId,
-            res
+            app_id: req.query.app_id,
+            user_agent: req.headers["user-agent"],
+            connection_date: new Date().toISOString(),
+            ip: req.ip
         };
-        clients.push(newClient);
+        broadcast_clients.push(newClient);
         res.on('close', ()=>{
-            clients = clients.filter(client => client.id !== clientId);
+            broadcast_clients = broadcast_clients.filter(client => client.id !== clientId);
             clearInterval(intervalId);
             res.end();
         })
           
+    },
+    getConnected: (req, res) => {
+        return res.status(200).json({
+            success: 1,
+            data: broadcast_clients
+        });
     }
 }

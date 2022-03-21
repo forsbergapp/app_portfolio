@@ -1,4 +1,4 @@
-const {oracledb, get_pool} = require ("../../config/database");
+const {oracledb, get_pool, get_pool_admin} = require ("../../config/database");
 const { createLogAppSE } = require("../../../../service/log/log.service");
 module.exports = {
 	//returns parameters for app_id=0 and given app_id
@@ -146,7 +146,7 @@ module.exports = {
 	},
 	getParameter: (app_id, parameter_name, callBack) =>{
 		if (process.env.SERVICE_DB_USE==1){
-			get_pool(app_id).query(
+			get_pool_admin().query(
 				`SELECT parameter_value
 				   FROM ${process.env.SERVICE_DB_DB1_NAME}.app_parameter
                   WHERE app_id = ?
@@ -168,7 +168,7 @@ module.exports = {
 			async function execute_sql(err, result){
 				let pool2;
 				try{
-				pool2 = await oracledb.getConnection(get_pool(app_id));
+				pool2 = await oracledb.getConnection(get_pool_admin());
 				const result = await pool2.execute(
 					`SELECT parameter_value "parameter_value"
                        FROM ${process.env.SERVICE_DB_DB2_NAME}.app_parameter
@@ -185,6 +185,63 @@ module.exports = {
 						}
 						else{
 							return callBack(null, result.rows[0].parameter_value);
+						}
+					});
+				}catch (err) {
+					createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
+					return callBack(err.message);
+				} finally {
+					if (pool2) {
+						try {
+							await pool2.close(); 
+						} catch (err) {
+							createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
+						}
+					}
+				}
+			}
+			execute_sql();
+		}
+	},
+	setParameter: (app_id, body, callBack) =>{
+		if (process.env.SERVICE_DB_USE==1){
+			get_pool_admin().query(
+				`UPDATE ${process.env.SERVICE_DB_DB1_NAME}.app_parameter
+					SET parameter_value = ?
+                  WHERE app_id = ?
+				    AND parameter_name = ?`,
+				[body.parameter_value, 
+				 app_id,
+				 body.parameter_name],
+				(error, results, fields) => {
+					if (error){
+						createLogAppSE(app_id, __appfilename, __appfunction, __appline, error);
+						return callBack(error);
+					}
+					return callBack(null, results);
+				}
+			);
+		}
+		else if (process.env.SERVICE_DB_USE==2){
+			async function execute_sql(err, result){
+				let pool2;
+				try{
+				pool2 = await oracledb.getConnection(get_pool_admin());
+				const result = await pool2.execute(
+					`UPDATE ${process.env.SERVICE_DB_DB2_NAME}.app_parameter
+						SET parameter_value = :parameter_value
+                      WHERE app_id = :app_id
+					    AND parameter_name = :parameter_name`,
+					{parameter_value: body.parameter_value,
+					 app_id: app_id,
+					 parameter_name: body.parameter_name},
+					(err,result) => {
+						if (err) {
+							createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
+							return callBack(err);
+						}
+						else{
+							return callBack(null, result);
 						}
 					});
 				}catch (err) {

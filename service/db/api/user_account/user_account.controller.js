@@ -13,7 +13,8 @@ const {
     deleteUser,
     userLogin,
     updateSigninProvider,
-    getUserByProviderId
+    getUserByProviderId,
+    getStatCount
 } = require("./user_account.service");
 
 const { genSaltSync, hashSync, compareSync } = require("bcryptjs");
@@ -809,5 +810,20 @@ module.exports = {
                 }
             }
         });
-    }
+    },
+    getStatCount: (req, res) => {
+        getStatCount((err, results) => {
+            if (err) {
+                return res.status(500).send(
+                    err
+                );
+            }
+            else{
+                return res.status(200).json({
+                    success: 1,
+                    data: results
+                });
+            }
+        });
+    },
 }

@@ -1,9 +1,9 @@
 <div id='dashboard'>
     <div id='menu'>
-        <div id='menu_1' class='menuitem'>Dashboard</div>
-        <div id='menu_2' class='menuitem'>Two</div>
-        <div id='menu_3' class='menuitem'>Three</div>
-        <div id='menu_4' class='menuitem'>Four</div>
+        <div id='menu_1' class='menuitem'>DASHBOARD</div>
+        <div id='menu_2' class='menuitem'>APP ADMIN</div>
+        <div id='menu_3' class='menuitem'>APP STAT</div>
+        <div id='menu_4' class='menuitem'>LOGS</div>
         <div id='menu_5' class='menuitem'>Logout</div>
     </div>
     <div id='main'>
@@ -22,7 +22,7 @@
             <div></div>
         </div>
         <div id='menu_1_content' class='main_content'>
-            <div id='menu_1_content_widget' class='widget'>
+            <div id='menu_1_content_widget1' class='widget'>
                 <div class="graphBox">
                     <select id="select_app">
                     </select>
@@ -34,13 +34,40 @@
                     </div>
                 </div>
             </div>
-            <div id="list_connections" class="widget"></div>
+            <div id='menu_1_content_widget2' class='widget'>
+                <div id="users_connected">
+                    Connected users:<div id="count_connected"></div>
+                </div>
+                <div id="users_count">
+                    Count users:
+                    <i class="fas fa-user"></i>
+                    <div id='count_local'></div>
+                    <div id='google1' class="googletext">G</div>
+                    <div id='google2' class="googletext">o</div>
+                    <div id='google3' class="googletext">o</div>
+                    <div id='google4' class="googletext">g</div>
+                    <div id='google5' class="googletext">l</div>
+                    <div id='google6' class="googletext">e</div>
+                    <div id='count_google'></div>
+                    <i class="fab fa-facebook"></i>
+                    <div id='count_facebook'></div>
+                </div>
+            </div>
+            <div id='menu_1_content_widget3' class='widget'>
+                <div id="maintenance">
+                    Maintenance
+                    <input id='checkbox_maintenance' type='checkbox' class='switch-input' />
+                    <label for='checkbox_maintenance' class='switch-label'>Switch</label>
+                </div>
+            </div>
         </div>
         <div id='menu_2_content' class='main_content'>
             <div id='menu_2_content_widget' class='widget'>Two</div>
         </div>
         <div id='menu_3_content' class='main_content'>
-            <div id='menu_3_content_widget' class='widget'>Three</div>
+            <div id='menu_3_content_widget' class='widget'>
+                <div id="list_connections" class="widget"></div>
+            </div>
         </div>
         <div id='menu_4_content' class='main_content'>
             <div id='menu_4_content_widget' class='widget'>Four</div>

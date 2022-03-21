@@ -211,25 +211,9 @@ app.get("/admin",function (req, res, next) {
   if (req.protocol=='http')
     return res.redirect('https://' + req.headers.host + "/admin");
   else{
-    const { getParameter} = require ("./service/db/api/app_parameter/app_parameter.service");
-    getParameter(process.env.APP0_ID,'SERVER_MAINTENANCE', (err, db_SERVER_MAINTENANCE)=>{
-      if (err)
-        createLogAppSE(process.env.APP0_ID, __appfilename, __appfunction, __appline, err);      
-      else{
-          if (db_SERVER_MAINTENANCE==1){
-            const { getMaintenance} = require("./service/forms/forms.controller");
-            getMaintenance('',(err, app_result)=>{
-                return res.send(app_result);
-            })
-          }
-          else{
-            const { getAdmin } = require ("./service/forms/forms.controller");
-            getAdmin( (err, app_result)=>{
-              return res.send(app_result);
-            })
-          }
-          
-      }
+    const { getAdmin } = require ("./service/forms/forms.controller");
+    getAdmin( (err, app_result)=>{
+      return res.send(app_result);
     })
   }
 });
@@ -419,4 +403,4 @@ https.createServer(options, app).listen(process.env.SERVER_HTTPS_PORT, () => {
   createLogServer(null, null, null, "HTTPS Server up and running on PORT: " + process.env.SERVER_HTTPS_PORT);
 });
 
-global.clients = [];
+

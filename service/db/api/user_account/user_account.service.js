@@ -1,4 +1,4 @@
-const {oracledb, get_pool} = require ("../../config/database");
+const {oracledb, get_pool, get_pool_admin} = require ("../../config/database");
 const { createLogAppSE } = require("../../../../service/log/log.service");
 module.exports = {
     create: (app_id, data, callBack) => {
@@ -1926,6 +1926,73 @@ module.exports = {
                                 return callBack(err);
                             } else {
                                 return callBack(null, result.rows);
+                            }
+                        });
+                } catch (err) {
+					createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
+                    return callBack(err.message);
+                } finally {
+                    if (pool2) {
+						try {
+							await pool2.close(); 
+						} catch (err) {
+							createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
+						}
+					}
+                }
+            }
+            execute_sql();
+        }
+    },
+    getStatCount: (callBack) => {
+        if (process.env.SERVICE_DB_USE == 1) {
+            get_pool_admin().query(
+                `SELECT 
+						(SELECT COUNT(*)
+						   FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account
+						  WHERE provider1_id IS NULL
+							AND provider2_id IS NULL) count_local,
+						(SELECT COUNT(*)
+						   FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account
+						  WHERE provider1_id IS NOT NULL) count_google,
+						(SELECT COUNT(*)
+						   FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account
+						  WHERE provider2_id IS NOT NULL) count_facebook
+				 FROM DUAL`, 
+				[],
+                (error, results, fields) => {
+                    if (error) {
+						createLogAppSE(app_id, __appfilename, __appfunction, __appline, error);
+                        return callBack(error);
+                    }
+                    return callBack(null, results[0]);
+                }
+            )
+        } else if (process.env.SERVICE_DB_USE == 2) {
+            async function execute_sql(err, result) {
+				let pool2;
+                try {
+                    pool2 = await oracledb.getConnection(get_pool_admin());
+                    const result = await pool2.execute(
+                        `SELECT 
+								(SELECT COUNT(*)
+								   FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account
+								  WHERE provider1_id IS NULL
+									AND provider2_id IS NULL) "count_local",
+								(SELECT COUNT(*)
+								   FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account
+								  WHERE provider1_id IS NOT NULL) "count_google",
+								(SELECT COUNT(*)
+								   FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account
+								  WHERE provider2_id IS NOT NULL) "count_facebook"
+						FROM DUAL`,  
+				 		{},
+                        (err, result) => {
+                            if (err) {
+								createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
+                                return callBack(err);
+                            } else {
+                                return callBack(null, result.rows[0]);
                             }
                         });
                 } catch (err) {
