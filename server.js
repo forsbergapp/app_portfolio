@@ -56,7 +56,7 @@ app.use(
     contentSecurityPolicy: {
       directives: {
         "default-src": ["'self'"], 
-        "script-src": ["'self'", "'unsafe-inline'", "'unsafe-eval'", 'api.mapbox.com', 'apis.google.com', 'connect.facebook.net', '*.facebook.com'],
+        "script-src": ["'self'", "'unsafe-inline'", "'unsafe-eval'", 'api.mapbox.com', 'apis.google.com', 'connect.facebook.net', '*.facebook.com', 'cdn.jsdelivr.net'],
         "script-src-attr": ["'self'", "'unsafe-inline'"],
         "style-src": ["'self'", "'unsafe-inline'", 'fonts.googleapis.com', 'use.fontawesome.com', 'api.mapbox.com'],
         "font-src": ["self", 'fonts.gstatic.com', 'use.fontawesome.com'],
