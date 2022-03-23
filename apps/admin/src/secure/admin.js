@@ -8,6 +8,21 @@
     var global_rest_user_account;
     var global_service_geolocation;
     var global_service_geolocation_gps_ip;
+    var global_service_geolocation_gps_place;
+    //map variables
+    var global_gps_map_container      ='mapid';
+    var global_gps_map_style_baseurl  ='mapbox://styles/mapbox/';
+    var global_gps_map_style          ='satellite-streets-v11';
+    var global_gps_map_zoom           = 14;
+    var global_gps_map_flyto          = 1;
+    var global_gps_map_jumpto         = 0;
+    var global_gps_map_marker_div_gps = 'map_marker_gps';
+    var global_gps_map_popup_offset   = 25;
+    //session variables
+    var global_session_map;
+    var global_session_gps_latitude;
+    var global_session_gps_longitude;
+
 
     document.getElementById('menu_1_content').style.display = 'block';
     document.getElementById('menu_1').addEventListener('click', function() { show_menu(1) }, false);
@@ -15,7 +30,10 @@
     document.getElementById('menu_3').addEventListener('click', function() { show_menu(3) }, false);
     document.getElementById('menu_4').addEventListener('click', function() { show_menu(4) }, false);
     document.getElementById('menu_5').addEventListener('click', function() { admin_logout() }, false);
-    document.getElementById('select_app').addEventListener('click', function() { show_chart(2); }, false);
+    document.getElementById('select_app_menu1').addEventListener('click', function() { show_chart(2); }, false);
+    document.getElementById('select_app_menu3').addEventListener('click', function() { show_app_log(); show_connected();}, false);
+    document.getElementById('select_maptype').addEventListener('change', function() { map_set_style(); }, false);
+    
     document.getElementById('checkbox_maintenance').addEventListener('click', function() { set_maintenance() }, false);
 
 
@@ -23,8 +41,10 @@
     get_parameters().then(function(){
         get_token().then(function(){
             get_apps().then(function(){
-                show_menu(1);
-                document.getElementById('button_spinner').style.visibility = 'hidden';
+                get_gps_from_ip().then(function(){
+                    show_menu(1);
+                    document.getElementById('button_spinner').style.visibility = 'hidden';
+                })                
             })
         })
     })
@@ -57,6 +77,10 @@
                             global_service_geolocation = 'https://' + location.hostname + json.data[i].parameter_value;
                         if (json.data[i].parameter_name=='SERVICE_GEOLOCATION_GPS_IP')
                             global_service_geolocation_gps_ip = json.data[i].parameter_value;
+                        if (json.data[i].parameter_name=='SERVICE_GEOLOCATION_GPS_PLACE')
+                            global_service_geolocation_gps_place = json.data[i].parameter_value;
+                        if (json.data[i].parameter_name=='GPS_MAP_ACCESS_TOKEN')
+                            global_gps_map_access_token = json.data[i].parameter_value;        
                     }
                 }
                 else
@@ -102,16 +126,51 @@
         .then(function(result) {
             if (status == 200){
                 json = JSON.parse(result);
-                let html='';
+                let html='<option value="">ALL</option>';
                 for (var i = 0; i < json.data.length; i++) {
                         html +=
                         `<option value='${json.data[i].id}'>APP${json.data[i].id}</option>`;
                 }
-                document.getElementById('select_app').innerHTML = html;
+                document.getElementById('select_app_menu1').innerHTML = html;
+                document.getElementById('select_app_menu3').innerHTML = html;
             }
             else
                 alert('Error: get_apps: ' + result);
             });
+    }
+    async function get_gps_from_ip() {
+        let status;
+        await fetch(global_service_geolocation + global_service_geolocation_gps_ip + 
+                    '?app_id=' + 0 + 
+                    '&app_user_id=' +
+                    '&lang_code=en',
+            {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Bearer ' + global_rest_dt,
+            }
+        })
+        .then(function(response) {
+            status = response.status;
+            return response.text();
+        })
+        .then(function(result) {
+            if (status === 200) {
+                let json = JSON.parse(result);
+                global_session_gps_latitude = json.geoplugin_latitude;
+                global_session_gps_longitude = json.geoplugin_longitude;
+                if (!global_session_map)
+                    init_map();
+                update_map(global_session_gps_longitude,
+                    global_session_gps_latitude,
+                    global_gps_map_zoom,
+                    json.geoplugin_city + ', ' + 
+                    json.geoplugin_region + ', ' + 
+                    json.geoplugin_countryCode,
+                    global_gps_map_marker_div_gps,
+                    global_gps_map_jumpto);
+            }
+        })
     }
     function admin_logout(){
         document.getElementById('menu_1').removeEventListener('click', function() { show_menu(1) }, false);
@@ -141,7 +200,10 @@
                 break;    
             }
             case 3:{
-                show_connections();
+                show_app_log();
+                show_connected();
+                get_gps_from_ip();
+                global_session_map.resize();
                 break;    
             }
             case 4:{
@@ -149,6 +211,7 @@
             }
         }            
     }
+    /* MENU 1*/
     function show_chart(chart=''){
         let current_year = new Date().getFullYear();
         let current_month = new Date().getMonth()+1;
@@ -210,7 +273,7 @@
         if (chart==2 || chart==''){
             let json2;
             let status2;
-            let app_id2 = document.getElementById('select_app').options[document.getElementById('select_app').selectedIndex].value;
+            let app_id2 = document.getElementById('select_app_menu1').options[document.getElementById('select_app_menu1').selectedIndex].value;
             fetch(`/service/db/api/app_log/admin/stat/uniquevisitor?app_id=${app_id2}&statchoice=2&year=${current_year}&month=${current_month}`,
             {method: 'GET',
                 headers: {
@@ -390,10 +453,16 @@
                 alert('Error: show_maintenance: ' + result);
             });
     }
-    async function show_connections(){
+    /*MENU 3*/
+    function show_user_agent(user_agent){
+        return null;
+    }
+    
+    async function show_connected(){
         let status;
         let json;
-        await fetch(`/service/db/api/app_log?limit=100`,
+        let app_id = document.getElementById('select_app_menu3').options[document.getElementById('select_app_menu3').selectedIndex].value;
+        await fetch(`/service/broadcast/connected?app_id=${app_id}`,
             {method: 'GET',
                 headers: {
                     'Authorization': 'Bearer ' + global_rest_admin_at,
@@ -407,69 +476,255 @@
             if (status == 200)
                 json = JSON.parse(result);
                 if (json.success === 1){
-                    let list_connections = document.getElementById('list_connections');
-                    list_connections.innerHTML = '';
+                    let elements = document.querySelectorAll(".list_connected_gps_click");
+                    let click_function = function() { show_gps_on_map(this)};
+                    let elementsArray = Array.prototype.slice.call(elements);
+                    elementsArray.forEach(function(elem){
+                        elem.removeEventListener("click", click_function);
+                    });
+
+                    let list_connected = document.getElementById('list_connected');
+                    list_connected.innerHTML = '';
                     let html = '';
                     html += 
-                        `<div id='list_connections_row_title' class='list_connections_row'>
-                            <div class='list_connections_col'>
+                        `<div id='list_connected_row_title' class='list_connected_row'>
+                            <div class='list_connected_col'>
                                 <div>ID</div>
                             </div>
-                            <div class='list_connections_col'>
-                                <div>APP_ID</div>
+                            <div class='list_connected_col'>
+                                <div>APP ID</div>
                             </div>
-                            <div class='list_connections_col'>
-                                <div>MODULE</div>
+                            <div class='list_connected_col'>
+                                <div>USER AGENT</div>
                             </div>
-                            <div class='list_connections_col'>
-                                <div>TYPE</div>
+                            <div class='list_connected_col'>
+                                <div>CONNECTION DATE</div>
                             </div>
-                            <div class='list_connections_col'>
+                            <div class='list_connected_col'>
                                 <div>IP</div>
                             </div>
-                            <div class='list_connections_col'>
+                            <div class='list_connected_col'>
                                 <div>GPS LAT</div>
                             </div>
-                            <div class='list_connections_col'>
-                                <div>GPS_LONG</div>
+                            <div class='list_connected_col'>
+                                <div>GPS LONG</div>
                             </div>
-                            <div class='list_connections_col'>
+                        </div>`;
+                    for (i = 0; i < json.data.length; i++) {
+                        html += 
+                        `<div class='list_connected_row'>
+                            <div class='list_connected_col'>
+                                <div>${json.data[i].id}</div>
+                            </div>
+                            <div class='list_connected_col'>
+                                <div>${json.data[i].app_id}</div>
+                            </div>
+                            <div class='list_connected_col'>
+                                <div>${show_user_agent(json.data[i].user_agent)}</div>
+                            </div>
+                            <div class='list_connected_col'>
+                                <div>${json.data[i].connection_date}</div>
+                            </div>
+                            <div class='list_connected_col'>
+                                <div>${json.data[i].ip.replace('::ffff:','')}</div>
+                            </div>
+                            <div class='list_connected_col list_connected_gps_click'>
+                                <div>${json.data[i].gps_latitude}</div>
+                            </div>
+                            <div class='list_connected_col list_connected_gps_click'>
+                                <div>${json.data[i].gps_longitude}</div>
+                            </div>
+                        </div>`;
+                    }
+                    list_connected.innerHTML = html;
+                    elements = document.querySelectorAll(".list_connected_gps_click");
+                    elementsArray = Array.prototype.slice.call(elements);
+                    elementsArray.forEach(function(elem){
+                        elem.addEventListener("click", click_function);
+                    });
+                }
+            else
+                alert('Error: show_connected: ' + result);
+            });
+    }    
+    async function show_app_log(){
+        let status;
+        let json;
+        let app_id = document.getElementById('select_app_menu3').options[document.getElementById('select_app_menu3').selectedIndex].value;
+        await fetch(`/service/db/api/app_log?app_id=${app_id}&limit=100`,
+            {method: 'GET',
+                headers: {
+                    'Authorization': 'Bearer ' + global_rest_admin_at,
+                }
+            })
+            .then(function(response) {
+                status = response.status;
+                return response.text();
+            })
+            .then(function(result) {
+            if (status == 200)
+                json = JSON.parse(result);
+                if (json.success === 1){
+                    let elements = document.querySelectorAll(".list_app_log_gps_click");
+                    let click_function = function() { show_gps_on_map(this)};
+                    let elementsArray = Array.prototype.slice.call(elements);
+                    elementsArray.forEach(function(elem){
+                        elem.removeEventListener("click", click_function);
+                    });
+                    let list_app_log = document.getElementById('list_app_log');
+                    list_app_log.innerHTML = '';
+                    let html = '';
+                    html += 
+                        `<div id='list_app_log_row_title' class='list_app_log_row'>
+                            <div class='list_app_log_col'>
+                                <div>ID</div>
+                            </div>
+                            <div class='list_app_log_col'>
+                                <div>APP ID</div>
+                            </div>
+                            <div class='list_app_log_col'>
+                                <div>MODULE</div>
+                            </div>
+                            <div class='list_app_log_col'>
+                                <div>TYPE</div>
+                            </div>
+                            <div class='list_app_log_col'>
+                                <div>IP</div>
+                            </div>
+                            <div class='list_app_log_col'>
+                                <div>GPS LAT</div>
+                            </div>
+                            <div class='list_app_log_col'>
+                                <div>GPS LONG</div>
+                            </div>
+                            <div class='list_app_log_col'>
                                 <div>DATE</div>
                             </div>
                         </div>`;
                     for (i = 0; i < json.data.length; i++) {
                         html += 
-                        `<div class='list_connections_row'>
-                            <div class='list_connections_col'>
+                        `<div class='list_app_log_row'>
+                            <div class='list_app_log_col'>
                                 <div>${json.data[i].id}</div>
                             </div>
-                            <div class='list_connections_col'>
+                            <div class='list_app_log_col'>
                                 <div>${json.data[i].app_id}</div>
                             </div>
-                            <div class='list_connections_col'>
+                            <div class='list_app_log_col'>
                                 <div>${json.data[i].app_module}</div>
                             </div>
-                            <div class='list_connections_col'>
+                            <div class='list_app_log_col'>
                                 <div>${json.data[i].app_module_type}</div>
                             </div>
-                            <div class='list_connections_col'>
+                            <div class='list_app_log_col'>
                                 <div>${json.data[i].server_remote_addr.replace('::ffff:','')}</div>
                             </div>
-                            <div class='list_connections_col'>
+                            <div class='list_app_log_col list_app_log_gps_click'>
                                 <div>${json.data[i].user_gps_latitude}</div>
                             </div>
-                            <div class='list_connections_col'>
+                            <div class='list_app_log_col list_app_log_gps_click'>
                                 <div>${json.data[i].user_gps_longitude}</div>
                             </div>
-                            <div class='list_connections_col'>
+                            <div class='list_app_log_col'>
                                 <div>${json.data[i].date_created}</div>
                             </div>
                         </div>`;
                     }
-                    list_connections.innerHTML = html;
+                    list_app_log.innerHTML = html;
+                    elements = document.querySelectorAll(".list_app_log_gps_click");
+                    elementsArray = Array.prototype.slice.call(elements);
+                    elementsArray.forEach(function(elem){
+                        elem.addEventListener("click", click_function);
+                    });
                 }
             else
-                alert('Error: show_connections: ' + result);
+                alert('Error: show_app_log: ' + result);
             });
     }    
+    function init_map() {
+        mapboxgl.accessToken = global_gps_map_access_token;
+        global_session_map = new mapboxgl.Map({
+            container: global_gps_map_container,
+            style: global_gps_map_style_baseurl + global_gps_map_style,
+            center: [global_session_gps_latitude,
+                     global_session_gps_longitude
+            ],
+            zoom: global_gps_map_zoom
+        });
+
+        global_session_map.addControl(new mapboxgl.NavigationControl());
+    }
+    function update_map(longitude, latitude, zoom, text_place, marker_id, flyto) {
+        if (flyto == 1) {
+            global_session_gps_map_mymap.flyTo({
+                'center': [longitude, latitude],
+                essential: true // this animation is considered essential with respect to prefers-reduced-motion
+            });
+        } else {
+            if (zoom == '')
+                global_session_map.jumpTo({ 'center': [longitude, latitude] });
+            else
+                global_session_map.jumpTo({ 'center': [longitude, latitude], 'zoom': zoom });
+        }
+        fetch(`/service/geolocation/getTimezone?latitude=${latitude}&longitude=${longitude}`,
+            {method: 'GET',
+                headers: {
+                    'Authorization': 'Bearer ' + global_rest_dt,
+                }
+            })
+        .then(function(response) {
+            status = response.status;
+            return response.text();
+        })
+        .then(function(text_timezone) {
+            let popuptext = `<div id="map_popup_title">${text_place}</div>
+                             <div id="map_popup_sub_title">Timezone</div>
+                             <div id="map_popup_sub_title_timezone">${text_timezone}</div>`;
+            let popup = new mapboxgl.Popup({ offset: global_gps_map_popup_offset, closeOnClick: false })
+            .setLngLat([longitude, latitude])
+            .setHTML(popuptext)
+            .addTo(global_session_map);
+            let el = document.createElement('div');
+            el.id = marker_id;
+            new mapboxgl.Marker(el)
+            .setLngLat([longitude, latitude])
+            .addTo(global_session_map);
+            return null;    
+        })
+    }
+    function map_set_style(){
+        global_session_map.setStyle(global_gps_map_style_baseurl + document.getElementById('select_maptype').value);
+    }
+    function show_gps_on_map(item){
+        let status;
+        fetch(global_service_geolocation + global_service_geolocation_gps_place + 
+                    '?app_id=' + 0 +
+                    '&app_user_id=' + 
+                    '&latitude=' + item.parentNode.children[5].children[0].innerHTML +
+                    '&longitude=' + item.parentNode.children[6].children[0].innerHTML +
+                    '&lang_code=en', {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Bearer ' + global_rest_dt,
+            }
+        })
+        .then(function(response) {
+            status = response.status;
+            return response.text();
+        })
+        .then(function(result) {
+            if (status === 200) {
+                let json = JSON.parse(result);
+                update_map(item.parentNode.children[6].children[0].innerHTML,
+                    item.parentNode.children[5].children[0].innerHTML,
+                    global_gps_map_zoom,
+                    json.geoplugin_place + ', ' + 
+                    json.geoplugin_region + ', ' + 
+                    json.geoplugin_countryCode,
+                    global_gps_map_marker_div_gps,
+                    global_gps_map_jumpto);
+            }
+        })
+    }
+    
 </script>
