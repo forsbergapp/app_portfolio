@@ -54,43 +54,7 @@
         text-align: center;
         border-radius: 4px;
     }
-    .theme_light #menu{
-        background-color:#fefefe;
-        font-weight: bold;
-    }
-    .theme_light #main{
-        background-color:rgb(81, 171, 255);
-    }
-    .theme_light .menuitem:hover, .theme_light .menuitem:active{
-        color:#6ab344 !important;
-    }
-    .theme_light .widget:hover, .theme_light .widget:active{
-        box-shadow: 0 0 35px 4px rgb(255,255,255,0.25);
-    }  
-    .theme_light .widget{
-        background-color: #fefefe;
-        box-shadow: 0 4px 8px 0 rgb(0 0 0 / 20%), 0 6px 20px 0 rgb(0 0 0 / 19%);
-    }
-    .theme_light .list_connections_row:nth-child(odd) {
-        background-color: rgb(197 227 255);
-    }
-    .theme_light .list_connections_row:nth-child(even) {
-        background-color: #FFF;
-    }
-
-    .theme_light .switch-label {
-        color: transparent;
-    }
-    .theme_light .switch-label::before {
-        background-color: #dedede;
-    }
-    .theme_light .switch-label::after {
-        background-color: #fff;
-        box-shadow: 0 0 2px rgba(0, 0, 0, 0.45);
-    }  
-    .theme_light .switch-input:checked + .switch-label::before {
-        background-color: rgb(81, 171, 255);
-    }
+    
     
     #box1{
         width: 49%;
@@ -108,7 +72,7 @@
     #box1 canvas, #box2 canvas{
         max-height: 100%;
     }
-    #select_app{
+    #select_app_menu1{
         margin-left: 49%;
     }
     .load-spinner {
@@ -244,52 +208,6 @@
     #menu_1_content_widget3{
         height:50px;
     }
-    #list_connections{
-        height:100px;
-        overflow-y: auto;
-        overflow-x: auto;
-        font-size: 9px;
-    }
-    #list_connections_row_title{
-        font-weight: bold;
-    }
-    .list_connections_row{
-        height:24px;
-        margin-top: 4px;
-    }    
-
-    .list_connections_col:nth-child(1){
-        width:25px;
-        display:inline-block;
-    }
-    .list_connections_col:nth-child(2){
-        width:25px;
-        display:inline-block;
-    }
-    .list_connections_col:nth-child(3){
-        width:70px;
-        display:inline-block;
-    }
-    .list_connections_col:nth-child(4){
-        width:110px;
-        display:inline-block;
-    }
-    .list_connections_col:nth-child(5){
-        width:90px;
-        display:inline-block;
-    }
-    .list_connections_col:nth-child(6){
-        width:50px;
-        display:inline-block;
-    }
-    .list_connections_col:nth-child(7){
-        width:50px;
-        display:inline-block;
-    }
-    .list_connections_col:nth-child(8){
-        width:120px;
-        display:inline-block;
-    }
     .switch-input {
         display: none;
       }
@@ -328,6 +246,141 @@
     }
     .switch-input:checked + .switch-label::after {
         left: 24px;
+    }      
+    
+    #menu_3_content_widget1{
+        height:250px;
     }
-      
+    #menu_3_content_widget2{
+        height:170px;
+    }
+    
+    #list_app_log, #list_connected{
+        height:100px;
+        overflow-y: auto;
+        overflow-x: auto;
+        margin-bottom: 10px;
+        border-radius: 4px;
+    }
+    .list_app_log_row, .list_connected_row{
+        height:24px;
+        margin-top: 4px;
+    }   
+    .list_app_log_gps_click, .list_connected_gps_click{
+        cursor:pointer;
+    }
+
+    .list_app_log_col:nth-child(1){
+        width:25px;
+        display:inline-block;
+    }
+    .list_app_log_col:nth-child(2){
+        width:25px;
+        display:inline-block;
+    }
+    .list_app_log_col:nth-child(3){
+        width:70px;
+        display:inline-block;
+    }
+    .list_app_log_col:nth-child(4){
+        width:110px;
+        display:inline-block;
+    }
+    .list_app_log_col:nth-child(5){
+        width:90px;
+        display:inline-block;
+    }
+    .list_app_log_col:nth-child(6){
+        width:50px;
+        display:inline-block;
+    }
+    .list_app_log_col:nth-child(7){
+        width:50px;
+        display:inline-block;
+    }
+    .list_app_log_col:nth-child(8){
+        width:120px;
+        display:inline-block;
+    }
+    .list_connected_col:nth-child(1){
+        width:70px;
+        display:inline-block;
+    }
+    .list_connected_col:nth-child(2){
+        width:25px;
+        display:inline-block;
+    }
+    .list_connected_col:nth-child(3){
+        width:80px;
+        display:inline-block;
+    }
+    .list_connected_col:nth-child(4){
+        width:120px;
+        display:inline-block;
+    }
+    .list_connected_col:nth-child(5){
+        width:90px;
+        display:inline-block;
+    }
+    .list_connected_col:nth-child(6), .list_connected_col:nth-child(7){
+        width:50px;
+        display:inline-block;
+    }
+    #mapid{
+        width: 100%;
+        height: 87%;
+    }
+    .theme_light #menu{
+        background-color:#fefefe;
+        font-weight: bold;
+    }
+    .theme_light #main{
+        background-color:rgb(81, 171, 255);
+    }
+    .theme_light .menuitem:hover, .theme_light .menuitem:active{
+        color:#6ab344 !important;
+    }
+    .theme_light .widget:hover, .theme_light .widget:active{
+        box-shadow: 0 0 35px 4px rgb(255,255,255,0.25);
+    }  
+    .theme_light .widget{
+        background-color: #fefefe;
+        box-shadow: 0 4px 8px 0 rgb(0 0 0 / 20%), 0 6px 20px 0 rgb(0 0 0 / 19%);
+    }
+    .theme_light .list_app_log_row:nth-child(odd),
+    .theme_light .list_connected_row:nth-child(odd) {
+        background-color: rgb(197 227 255);
+    }
+    .theme_light .list_app_log_row:nth-child(even),
+    .theme_light .list_connected_row:nth-child(even) {
+        background-color: #FFF;
+    }
+    .theme_light #list_app_log_row_title, 
+    .theme_light #list_connected_row_title{
+        font-weight: bold;
+    }
+    .theme_light .list_app_log_row,
+    .theme_light .list_connected_row{
+        font-size: 9px;
+    }
+    .theme_light #list_app_log,
+    .theme_light #list_connected{
+        border: rgb(197 227 255) solid 0.5px;
+    }
+    .theme_light .switch-label {
+        color: transparent;
+    }
+    .theme_light .switch-label::before {
+        background-color: #dedede;
+    }
+    .theme_light .switch-label::after {
+        background-color: #fff;
+        box-shadow: 0 0 2px rgba(0, 0, 0, 0.45);
+    }  
+    .theme_light .switch-input:checked + .switch-label::before {
+        background-color: rgb(81, 171, 255);
+    }
+    .theme_light #map_popup_title{
+        font-weight: bold;
+    }
 </style>
