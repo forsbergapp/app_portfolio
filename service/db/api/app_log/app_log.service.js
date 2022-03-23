@@ -135,7 +135,7 @@ module.exports = {
 			execute_sql();
 		}
 	},
-	getLogs: (limit, callBack) => {
+	getLogs: (app_id, limit, callBack) => {
 		if (process.env.SERVICE_DB_USE==1){
 			get_pool_admin().query(
 				`SELECT
@@ -158,9 +158,11 @@ module.exports = {
 						server_http_accept_language,
 						date_created
 				FROM ${process.env.SERVICE_DB_DB1_NAME}.app_log 
+				WHERE app_id = COALESCE(?, app_id)
 				ORDER BY 18 DESC
 				LIMIT  ?`,
-				[limit],
+				[app_id,
+				 limit],
 				(error, results, fields) => {
 					if (error){
 						createLogAppSE(process.env.APP0_ID, __appfilename, __appfunction, __appline, error);
@@ -196,9 +198,11 @@ module.exports = {
 							server_http_accept_language "server_http_accept_language",
 							date_created "date_created"
 					FROM ${process.env.SERVICE_DB_DB2_NAME}.app_log
+					WHERE app_id = NVL(:app_id, app_id)
 					ORDER BY 18 DESC
 					FETCH NEXT :limit ROWS ONLY`,
-					{limit:limit},
+					{app_id:app_id,
+					 limit:limit},
 					(err,result) => {
 						if (err) {
 							createLogAppSE(process.env.APP0_ID, __appfilename, __appfunction, __appline, err);
