@@ -22,7 +22,7 @@ module.exports = {
 	},
 	getLogs: (req, res) => {
 		let limit = parseInt(req.query.limit);
-		getLogs(limit, (err, results) =>{
+		getLogs(req.query.app_id, limit, (err, results) =>{
 			if (err) {
 				return res.status(500).send({
 					success: 0,
