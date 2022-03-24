@@ -59,6 +59,7 @@
                     <input id='checkbox_maintenance' type='checkbox' class='switch-input' />
                     <label for='checkbox_maintenance' class='switch-label'>Switch</label>
                 </div>
+                <div id="maintenance_broadcast_info" class="chat_click"><i class="fas fa-comment"></i></div>
             </div>
         </div>
         <div id='menu_2_content' class='main_content'>
@@ -85,9 +86,26 @@
                     <option value='navigation-guidance-night-v4'>navigation-guidance-night-v4</option>
                 </select>
             </div>
+            
         </div>
         <div id='menu_4_content' class='main_content'>
             <div id='menu_4_content_widget' class='widget'>Four</div>
+        </div>
+    </div>
+    <div id='dialogue_send_broadcast' class='dialogue'>
+        <div id='dialogue_send_broadcast_content' class='dialogue_content'>
+            <div id='send_broadcast_form'>
+                <div id='send_broadcast_title'>Broadcast</div>
+                <select id="select_broadcast_type">
+                    <option value='INFO' selected='selected'>INFO</option>
+                    <option value='MAINTENANCE' selected='selected'>MAINTENANCE</option>
+                </select>
+                <div id="client_id_label">CLIENT ID</div><div id="client_id"></div>
+                <select id="select_app_broadcast"></select>
+                <textarea id="send_broadcast_message" ></textarea>
+                <button id='send_broadcast_send' class='button' ><i class='fas fa-arrow-alt-circle-right'></i></button>
+                <button id='send_broadcast_close' class='button' ><i class='fas fa-check-circle'></i></button>
+            </div>
         </div>
     </div>
 </div>

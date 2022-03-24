@@ -208,6 +208,15 @@
     #menu_1_content_widget3{
         height:50px;
     }
+    #maintenance, #maintenance_broadcast_info{
+        display:inline-block;
+        margin:10px;
+        vertical-align: middle;
+    }
+    #maintenance_broadcast_info{
+        font-size: 24px;
+        margin-left: 10px;
+    }
     .switch-input {
         display: none;
       }
@@ -266,7 +275,7 @@
         height:24px;
         margin-top: 4px;
     }   
-    .list_app_log_gps_click, .list_connected_gps_click{
+    .list_app_log_gps_click, .list_connected_gps_click, .list_connected_chat_click, #maintenance_broadcast_info{
         cursor:pointer;
     }
 
@@ -326,9 +335,83 @@
         width:50px;
         display:inline-block;
     }
+    .list_connected_col:nth-child(8){
+        width:25px;
+        display:inline-block;
+    }
     #mapid{
         width: 100%;
         height: 87%;
+    }
+    .dialogue{
+        visibility:hidden;
+        position: fixed;
+        z-index: 10;
+        padding-top: 10px;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+    }
+    .dialogue_content{
+        font-size:16px;
+        text-align:center;
+        top: 50%;
+        left: 50%;
+        position: fixed;
+        transform: translate(-50%, -50%);
+        padding: 10px;
+        width: 300px;
+        height: 540px;
+        border-radius: 4px;
+        -moz-border-radius: 4px;
+        -webkit-border-radius: 4px;
+        -webkit-animation-name: animatetop;
+        -webkit-animation-duration: 0.4s;
+        animation-name: animatetop;
+        animation-duration: 0.4s;
+    }
+    #dialogue_send_broadcast_content{
+        height:320px;
+    }
+    #select_app_broadcast{
+        width:50%;
+        display: block;
+        margin: 0 auto;
+    }
+    #send_broadcast_message{
+        width:80%;
+        height:100px;
+        margin-top:10px;
+        resize: none;
+    }
+    #client_id_label{
+        width:100%;
+    }
+    #send_broadcast, #send_broadcast_close{
+        width:100%;
+    }
+    
+    @-webkit-keyframes animatetop {
+        from {
+            top: -300px;
+            opacity: 0
+        }
+        to {
+            top: 0;
+            opacity: 1
+        }
+    }
+    @keyframes animatetop {
+        from {
+            top: -300px;
+            opacity: 0
+        }
+        to {
+            top: 0;
+            opacity: 1
+        }
     }
     .theme_light #menu{
         background-color:#fefefe;
@@ -337,7 +420,9 @@
     .theme_light #main{
         background-color:rgb(81, 171, 255);
     }
-    .theme_light .menuitem:hover, .theme_light .menuitem:active{
+    .theme_light .menuitem:hover, .theme_light .menuitem:active, 
+    .theme_light .chat_click:hover, .theme_light .chat_click:active,
+    .theme_light .gps_click:hover, .theme_light .gps_click:active{
         color:#6ab344 !important;
     }
     .theme_light .widget:hover, .theme_light .widget:active{
@@ -383,4 +468,12 @@
     .theme_light #map_popup_title{
         font-weight: bold;
     }
+    .theme_light .dialogue{
+        background-color: rgba(0,0,0,0.4);
+    }
+    .theme_light .dialogue_content{
+        background-color: #fefefe;
+        box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+    }
+    
 </style>

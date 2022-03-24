@@ -30,10 +30,15 @@
     document.getElementById('menu_3').addEventListener('click', function() { show_menu(3) }, false);
     document.getElementById('menu_4').addEventListener('click', function() { show_menu(4) }, false);
     document.getElementById('menu_5').addEventListener('click', function() { admin_logout() }, false);
-    document.getElementById('select_app_menu1').addEventListener('click', function() { show_chart(2); }, false);
-    document.getElementById('select_app_menu3').addEventListener('click', function() { show_app_log(); show_connected();}, false);
+    document.getElementById('select_app_menu1').addEventListener('change', function() { show_chart(2); }, false);
+    document.getElementById('select_app_menu3').addEventListener('change', function() { show_app_log(); show_connected();}, false);
     document.getElementById('select_maptype').addEventListener('change', function() { map_set_style(); }, false);
+    document.getElementById('select_broadcast_type').addEventListener('change', function() { set_broadcast_type(); }, false);
+    document.getElementById('maintenance_broadcast_info').addEventListener('click', function() { show_broadcast_dialogue('ALL'); }, false);
+    document.getElementById('send_broadcast_send').addEventListener('click', function() { sendBroadcast(); }, false);
+    document.getElementById('send_broadcast_close').addEventListener('click', function() { closeBroadcast()}, false);
     
+
     document.getElementById('checkbox_maintenance').addEventListener('click', function() { set_maintenance() }, false);
 
 
@@ -133,6 +138,7 @@
                 }
                 document.getElementById('select_app_menu1').innerHTML = html;
                 document.getElementById('select_app_menu3').innerHTML = html;
+                document.getElementById('select_app_broadcast').innerHTML = html;
             }
             else
                 alert('Error: get_apps: ' + result);
@@ -355,7 +361,8 @@
     function count_connected(){
         let status;
         let json;
-        fetch('/service/broadcast/connected',
+        let app_id = document.getElementById('select_app_menu1').options[document.getElementById('select_app_menu1').selectedIndex].value;
+        fetch(`/service/broadcast/connected?app_id=${app_id}`,
         {method: 'GET',
         headers: {
                 'Authorization': 'Bearer ' + global_rest_admin_at,
@@ -458,6 +465,19 @@
         return null;
     }
     
+    function set_list_eventlisteners(list_type, list_function, event_action){
+        let elements = document.querySelectorAll(`.list_${list_type}_${list_function}_click`);   
+        let click_function = function() { list_item_action(this)};
+        let elementsArray = Array.prototype.slice.call(elements);
+        if (event_action==1)
+            elementsArray.forEach(function(elem){
+                elem.addEventListener("click", click_function);
+            });
+        else
+            elementsArray.forEach(function(elem){
+                elem.removeEventListener("click", click_function);
+            });
+    }
     async function show_connected(){
         let status;
         let json;
@@ -476,13 +496,9 @@
             if (status == 200)
                 json = JSON.parse(result);
                 if (json.success === 1){
-                    let elements = document.querySelectorAll(".list_connected_gps_click");
-                    let click_function = function() { show_gps_on_map(this)};
-                    let elementsArray = Array.prototype.slice.call(elements);
-                    elementsArray.forEach(function(elem){
-                        elem.removeEventListener("click", click_function);
-                    });
-
+                    
+                    set_list_eventlisteners('connected', 'gps',0);
+                    set_list_eventlisteners('connected', 'chat',0);
                     let list_connected = document.getElementById('list_connected');
                     list_connected.innerHTML = '';
                     let html = '';
@@ -509,6 +525,9 @@
                             <div class='list_connected_col'>
                                 <div>GPS LONG</div>
                             </div>
+                            <div class='list_connected_col'>
+                                <div>BROADCAST</div>
+                            </div>
                         </div>`;
                     for (i = 0; i < json.data.length; i++) {
                         html += 
@@ -528,20 +547,21 @@
                             <div class='list_connected_col'>
                                 <div>${json.data[i].ip.replace('::ffff:','')}</div>
                             </div>
-                            <div class='list_connected_col list_connected_gps_click'>
+                            <div class='list_connected_col list_connected_gps_click gps_click'>
                                 <div>${json.data[i].gps_latitude}</div>
                             </div>
-                            <div class='list_connected_col list_connected_gps_click'>
+                            <div class='list_connected_col list_connected_gps_click gps_click'>
                                 <div>${json.data[i].gps_longitude}</div>
                             </div>
+                            <div class='list_connected_col list_connected_chat_click chat_click'>
+                                <div><i class="fas fa-comment"></i></div>
+                            </div>
+                            
                         </div>`;
                     }
                     list_connected.innerHTML = html;
-                    elements = document.querySelectorAll(".list_connected_gps_click");
-                    elementsArray = Array.prototype.slice.call(elements);
-                    elementsArray.forEach(function(elem){
-                        elem.addEventListener("click", click_function);
-                    });
+                    set_list_eventlisteners('connected', 'gps',1);
+                    set_list_eventlisteners('connected', 'chat',1);
                 }
             else
                 alert('Error: show_connected: ' + result);
@@ -565,12 +585,7 @@
             if (status == 200)
                 json = JSON.parse(result);
                 if (json.success === 1){
-                    let elements = document.querySelectorAll(".list_app_log_gps_click");
-                    let click_function = function() { show_gps_on_map(this)};
-                    let elementsArray = Array.prototype.slice.call(elements);
-                    elementsArray.forEach(function(elem){
-                        elem.removeEventListener("click", click_function);
-                    });
+                    set_list_eventlisteners('app_log', 'gps',0);
                     let list_app_log = document.getElementById('list_app_log');
                     list_app_log.innerHTML = '';
                     let html = '';
@@ -619,10 +634,10 @@
                             <div class='list_app_log_col'>
                                 <div>${json.data[i].server_remote_addr.replace('::ffff:','')}</div>
                             </div>
-                            <div class='list_app_log_col list_app_log_gps_click'>
+                            <div class='list_app_log_col list_app_log_gps_click gps_click'>
                                 <div>${json.data[i].user_gps_latitude}</div>
                             </div>
-                            <div class='list_app_log_col list_app_log_gps_click'>
+                            <div class='list_app_log_col list_app_log_gps_click gps_click'>
                                 <div>${json.data[i].user_gps_longitude}</div>
                             </div>
                             <div class='list_app_log_col'>
@@ -631,11 +646,7 @@
                         </div>`;
                     }
                     list_app_log.innerHTML = html;
-                    elements = document.querySelectorAll(".list_app_log_gps_click");
-                    elementsArray = Array.prototype.slice.call(elements);
-                    elementsArray.forEach(function(elem){
-                        elem.addEventListener("click", click_function);
-                    });
+                    set_list_eventlisteners('app_log', 'gps',1);
                 }
             else
                 alert('Error: show_app_log: ' + result);
@@ -695,36 +706,163 @@
     function map_set_style(){
         global_session_map.setStyle(global_gps_map_style_baseurl + document.getElementById('select_maptype').value);
     }
-    function show_gps_on_map(item){
-        let status;
-        fetch(global_service_geolocation + global_service_geolocation_gps_place + 
-                    '?app_id=' + 0 +
-                    '&app_user_id=' + 
-                    '&latitude=' + item.parentNode.children[5].children[0].innerHTML +
-                    '&longitude=' + item.parentNode.children[6].children[0].innerHTML +
-                    '&lang_code=en', {
-            method: 'GET',
-            headers: {
-                'Authorization': 'Bearer ' + global_rest_dt,
+    function list_item_action(item){
+        if (item.className.indexOf('gps_click')>0){
+            let status;
+            fetch(global_service_geolocation + global_service_geolocation_gps_place + 
+                        '?app_id=' + 0 +
+                        '&app_user_id=' + 
+                        '&latitude=' + item.parentNode.children[5].children[0].innerHTML +
+                        '&longitude=' + item.parentNode.children[6].children[0].innerHTML +
+                        '&lang_code=en', {
+                method: 'GET',
+                headers: {
+                    'Authorization': 'Bearer ' + global_rest_dt,
+                }
+            })
+            .then(function(response) {
+                status = response.status;
+                return response.text();
+            })
+            .then(function(result) {
+                if (status === 200) {
+                    let json = JSON.parse(result);
+                    update_map(item.parentNode.children[6].children[0].innerHTML,
+                        item.parentNode.children[5].children[0].innerHTML,
+                        global_gps_map_zoom,
+                        json.geoplugin_place + ', ' + 
+                        json.geoplugin_region + ', ' + 
+                        json.geoplugin_countryCode,
+                        global_gps_map_marker_div_gps,
+                        global_gps_map_jumpto);
+                }
+            })
+        }
+        else
+            if (item.className.indexOf('chat_click')>0){
+                show_broadcast_dialogue('CLIENT', item.parentNode.children[0].children[0].innerHTML);
             }
+        
+    }
+    function sendBroadcast(){
+        let broadcast_type = document.getElementById('select_broadcast_type').options[document.getElementById('select_broadcast_type').selectedIndex].value;
+        let client_id;
+        let app_id;
+        let broadcast_message = document.getElementById('send_broadcast_message').value;
+        let destination_app;
+
+        if (broadcast_message==''){
+            alert('Please enter message');
+            return null;
+        }
+        
+        if (document.getElementById('client_id').innerHTML==''){
+            destination_app=1;
+            app_id = document.getElementById('select_app_broadcast').options[document.getElementById('select_app_broadcast').selectedIndex].value;
+            if (app_id == '')
+                app_id = 'null';
+            client_id = 'null';
+        }
+        else{
+            destination_app=0;
+            client_id = document.getElementById('client_id').innerHTML;
+            app_id = 'null';
+        }
+            
+        let json_data =`{"destination_app": ${destination_app},
+                         "app_id": ${app_id},
+                         "client_id": ${client_id},
+                         "broadcast_type" :"${broadcast_type}", 
+                         "broadcast_message":"${broadcast_message}"}`;
+        fetch('/service/broadcast',
+        {method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + global_rest_admin_at,
+        },
+        body: json_data
         })
         .then(function(response) {
-            status = response.status;
-            return response.text();
+                status = response.status;
+                return response.text();
         })
         .then(function(result) {
-            if (status === 200) {
-                let json = JSON.parse(result);
-                update_map(item.parentNode.children[6].children[0].innerHTML,
-                    item.parentNode.children[5].children[0].innerHTML,
-                    global_gps_map_zoom,
-                    json.geoplugin_place + ', ' + 
-                    json.geoplugin_region + ', ' + 
-                    json.geoplugin_countryCode,
-                    global_gps_map_marker_div_gps,
-                    global_gps_map_jumpto);
+            if (status == 200){
+                alert('Sent!');
             }
-        })
+            else
+                alert('Error: sendBroadcast: ' + result);
+            });
+    }    
+    function closeBroadcast(){
+        document.getElementById('dialogue_send_broadcast').style.visibility='hidden'; 
+        document.getElementById('client_id_label').style.display='inline-block';
+        document.getElementById('client_id').style.display='inline-block';
+        document.getElementById('select_app_broadcast').style.display='inline-block';
+        document.getElementById('client_id').innerHTML='';
+        document.getElementById('send_broadcast_message').value='';
     }
-    
+    function show_broadcast_dialogue(dialogue_type, client_id=null){
+        switch (dialogue_type){
+            case 'CLIENT':{
+                //hide and set INFO, should not be able to send MAINTENANCE message here
+                document.getElementById('select_broadcast_type').style.display='none';
+                document.getElementById('select_broadcast_type').selectedIndex = 0;
+                //hide app selection
+                document.getElementById('select_app_broadcast').style.display='none';
+                //show client id
+                document.getElementById('client_id_label').style.display = 'inline-block';
+                document.getElementById('client_id').style.display = 'inline-block';
+                document.getElementById('client_id').innerHTML = client_id;
+                break;
+            }
+            case 'APP':{
+                //hide and set INFO, should not be able to send MAINTENANCE message here
+                document.getElementById('select_broadcast_type').style.display='none';
+                document.getElementById('select_broadcast_type').selectedIndex = 0;
+                //show app selection
+                document.getElementById('select_app_broadcast').style.display='block';
+                //hide client id
+                document.getElementById('client_id_label').style.display = 'none';
+                document.getElementById('client_id').style.display = 'none';
+                document.getElementById('client_id').innerHTML = '';
+                break;
+            }
+            case 'ALL':{
+                //show broadcast type and INFO
+                document.getElementById('select_broadcast_type').style.display='inline-block';
+                document.getElementById('select_broadcast_type').selectedIndex = 0;
+                //show app selection
+                document.getElementById('select_app_broadcast').style.display='block';
+                //hide client id
+                document.getElementById('client_id_label').style.display = 'none';
+                document.getElementById('client_id').style.display = 'none';
+                document.getElementById('client_id').innerHTML = '';
+                break;
+            }
+        }
+        document.getElementById('dialogue_send_broadcast').style.visibility='visible';
+    }
+    function set_broadcast_type(){
+        switch (document.getElementById('select_broadcast_type').value){
+            case 'INFO':{
+                //show app selection
+                document.getElementById('select_app_broadcast').style.display='block';
+                //hide client id
+                document.getElementById('client_id_label').style.display = 'none';
+                document.getElementById('client_id').style.display = 'none';
+                document.getElementById('client_id').innerHTML = '';
+                break;
+            }
+            case 'MAINTENANCE':{
+                //hide app selection
+                document.getElementById('select_app_broadcast').style.display='none';
+                //hide client id
+                document.getElementById('client_id_label').style.display = 'none';
+                document.getElementById('client_id').style.display = 'none';
+                document.getElementById('client_id').innerHTML = '';
+                break;
+            }
+        }
+    }
 </script>
