@@ -1,4 +1,5 @@
-const eventSource = new EventSource(`/service/broadcast?app_id=${global_app_id}`);
+const clientId = Date.now();
+const eventSource = new EventSource(`/service/broadcast/connect/${clientId}?app_id=${global_app_id}`);
 
 eventSource.onmessage = function (event) {
     if (global_app_id === '')
@@ -58,5 +59,6 @@ function show_maintenance(message, init){
             document.getElementById('maintenance_footer').innerHTML = message;
         }
         else
-            document.getElementById('maintenance_footer').innerHTML = message;
+            if (message!='')
+                document.getElementById('maintenance_footer').innerHTML = message;
 }
