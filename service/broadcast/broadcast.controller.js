@@ -1,7 +1,11 @@
 global.broadcast_clients = [];
 module.exports = {
 	getBroadcast: (req, res) => {
-        res.setHeader('Content-type', 'text/event-stream');
+        const headers = {
+            "Content-Type": "text/event-stream",
+            "Connection": "keep-alive",
+          };
+        res.writeHead(200, headers);
         const intervalId = setInterval(() => {
             const { getParameter } = require ("../db/api/app_parameter/app_parameter.service");
             getParameter(process.env.APP0_ID,'SERVER_MAINTENANCE', (err, db_SERVER_MAINTENANCE)=>{
@@ -11,9 +15,9 @@ module.exports = {
                 }
                 else{
                     if (db_SERVER_MAINTENANCE==1){
-                        const broadcast ={"broadcast_type" :"MAINTENANCE", 
-                                          "broadcast_message":"Maintenance, connected:" + broadcast_clients.length};
-                        res.write (`data: ${btoa(JSON.stringify(broadcast))}\n\n`);
+                        const broadcast =`{"broadcast_type" :"MAINTENANCE", 
+                                          "broadcast_message":""}`;
+                        res.write (`data: ${btoa(broadcast)}\n\n`);
                     }
                 }
             })
@@ -27,9 +31,8 @@ module.exports = {
         }
         let res2;
         getIp(req, res2, (err, geodata) =>{
-            const clientId = Date.now();
             const newClient = {
-                id: clientId,
+                id: req.params.clientId,
                 app_id: app_id,
                 user_agent: req.headers["user-agent"],
                 connection_date: new Date().toISOString(),
@@ -40,7 +43,7 @@ module.exports = {
             };
             broadcast_clients.push(newClient);
             res.on('close', ()=>{
-                broadcast_clients = broadcast_clients.filter(client => client.id !== clientId);
+                broadcast_clients = broadcast_clients.filter(client => client.id !== req.params.clientId);
                 clearInterval(intervalId);
                 res.end();
             })
@@ -68,32 +71,31 @@ module.exports = {
         });
     },
     sendBroadcast: (req, res) => {
-        if (req.body.app_id !==''){
+        let broadcast;
+        if (req.body.destination_app ==1){
             //broadcast to all connected to given app_id
             broadcast_clients.forEach(client=>{
-                if (client.app_id == req.body.app_id){
-                    const broadcast ={"broadcast_type" :"INFO", 
-                                      "broadcast_message":`App ${req.body.app_id} only message, connected:` + broadcast_clients.length};
-                    client.response.write (`data: ${btoa(JSON.stringify(broadcast))}\n\n`);
+                if (client.app_id == req.body.app_id || req.body.app_id == null){
+                    broadcast =`{"broadcast_type"   : "${req.body.broadcast_type}", 
+                                 "broadcast_message": "${req.body.broadcast_message}"}`;
+                    client.response.write (`data: ${btoa(broadcast)}\n\n`);
                 }
             })
         }
             
-        if (req.body.clientId !==''){
+        if (req.body.client_id !==null){
             //broadcast to specific client
             broadcast_clients.forEach(client=>{
-                if (client.clientId == req.body.clientId){
-                    const broadcast ={"broadcast_type" :"INFO", 
-                                      "broadcast_message":"Client message, connected:" + broadcast_clients.length};
-                    client.response.write (`data: ${btoa(JSON.stringify(broadcast))}\n\n`);
-                    return res.status(200).json({
-                        success: 1
-                    });
+                if (client.id == req.body.client_id){
+                    broadcast =`{"broadcast_type"   : "${req.body.broadcast_type}", 
+                                 "broadcast_message": "${req.body.broadcast_message}"}`;
+                    client.response.write (`data: ${btoa(broadcast)}\n\n`);
+                    
                 }
             })
         }
         return res.status(200).json({
             success: 1
-        });           
+        });
     }
 }
