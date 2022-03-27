@@ -21,8 +21,14 @@ module.exports = {
 		});
 	},
 	getLogs: (req, res) => {
+		let year = parseInt(req.query.year);
+		let month = parseInt(req.query.month);
+		let sort = parseInt(req.query.sort);
+		let order_by = req.query.order_by;
+		let offset = parseInt(req.query.offset);
 		let limit = parseInt(req.query.limit);
-		getLogs(req.query.app_id, limit, (err, results) =>{
+		
+		getLogs(req.query.app_id, year, month, sort, order_by, offset, limit, (err, results) =>{
 			if (err) {
 				return res.status(500).send({
 					success: 0,

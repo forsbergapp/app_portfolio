@@ -51,18 +51,75 @@ module.exports = {
     },
     getConnected: (req, res) => {
         let broadcast_clients_no_res = [];
+        let i=0;
         broadcast_clients.forEach(client=>{
             if (client.app_id == req.query.app_id || req.query.app_id == ''){
-                const copyClient = {
-                    id: client.id,
-                    app_id: client.app_id,
-                    user_agent: client.user_agent,
-                    connection_date: client.connection_date,
-                    ip: client.ip,
-                    gps_latitude: client.gps_latitude,
-                    gps_longitude: client.gps_longitude
-                };
+                i++;
+                let copyClient;
+                if (typeof req.query.limit=='undefined' || (typeof req.query.limit!='undefined' && i<=req.query.limit)){
+                    copyClient = {
+                        id: client.id,
+                        app_id: client.app_id,
+                        user_agent: client.user_agent,
+                        connection_date: client.connection_date,
+                        ip: client.ip,
+                        gps_latitude: client.gps_latitude,
+                        gps_longitude: client.gps_longitude
+                    };
+                }
                 broadcast_clients_no_res.push(copyClient);
+                if (typeof req.query.limit!='undefined'){
+                    function sortByProperty(property, order_by){
+                        return function(a,b){  
+                           if(a[property] > b[property])  
+                              return 1 * order_by;
+                           else if(a[property] < b[property])  
+                              return -1 * order_by;
+                       
+                           return 0;  
+                        }  
+                     }
+                     let column_sort;
+                     let order_by;
+                     if (req.query.order_by =='asc')
+                        order_by = 1;
+                     else   
+                        order_by = -1;
+                     switch (parseInt(req.query.sort)){
+                         case 1:{
+                            column_sort = 'id';
+                            break;
+                         }
+                         case 2:{
+                            column_sort = 'app_id';
+                            break;
+                         }
+                         case 3:{
+                            column_sort = 'user_agent';
+                            break;
+                         }
+                         case 4:{
+                            column_sort = 'connection_date';
+                            break;
+                         }
+                         case 5:{
+                            column_sort = 'ip';
+                            break;
+                         }
+                         case 6:{
+                            column_sort = 'gps_latitude';
+                            break;
+                         }
+                         case 7:{
+                            column_sort = 'gps_longitude';
+                            break;
+                         }
+                         default:{
+                            column_sort = 'connection_date';
+                         }
+                     }
+                     broadcast_clients_no_res.sort(sortByProperty(column_sort, order_by))
+                }
             }
         })
         return res.status(200).json({
