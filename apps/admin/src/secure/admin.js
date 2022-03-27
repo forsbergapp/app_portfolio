@@ -22,7 +22,7 @@
     var global_session_map;
     var global_session_gps_latitude;
     var global_session_gps_longitude;
-
+    var global_page = 0;
 
     document.getElementById('menu_1_content').style.display = 'block';
     document.getElementById('menu_1').addEventListener('click', function() { show_menu(1) }, false);
@@ -38,7 +38,32 @@
     document.getElementById('send_broadcast_send').addEventListener('click', function() { sendBroadcast(); }, false);
     document.getElementById('send_broadcast_close').addEventListener('click', function() { closeBroadcast()}, false);
     
-
+    document.getElementById('list_app_log_col_title1').addEventListener('click', function() { list_sort_click(this)}, false); 
+    document.getElementById('list_app_log_col_title2').addEventListener('click', function() { list_sort_click(this)}, false);
+    document.getElementById('list_app_log_col_title3').addEventListener('click', function() { list_sort_click(this)}, false);
+    document.getElementById('list_app_log_col_title4').addEventListener('click', function() { list_sort_click(this)}, false);
+    document.getElementById('list_app_log_col_title5').addEventListener('click', function() { list_sort_click(this)}, false);
+    document.getElementById('list_app_log_col_title6').addEventListener('click', function() { list_sort_click(this)}, false);
+    document.getElementById('list_app_log_col_title7').addEventListener('click', function() { list_sort_click(this)}, false);
+    document.getElementById('list_app_log_col_title8').addEventListener('click', function() { list_sort_click(this)}, false);
+    document.getElementById('list_connected_col_title1').addEventListener('click', function() { list_sort_click(this)}, false); 
+    document.getElementById('list_connected_col_title2').addEventListener('click', function() { list_sort_click(this)}, false);
+    document.getElementById('list_connected_col_title3').addEventListener('click', function() { list_sort_click(this)}, false);
+    document.getElementById('list_connected_col_title4').addEventListener('click', function() { list_sort_click(this)}, false);
+    document.getElementById('list_connected_col_title5').addEventListener('click', function() { list_sort_click(this)}, false);
+    document.getElementById('list_connected_col_title6').addEventListener('click', function() { list_sort_click(this)}, false);
+    document.getElementById('list_connected_col_title7').addEventListener('click', function() { list_sort_click(this)}, false);
+    
+    document.getElementById('select_year_menu3').addEventListener('change', function() { show_app_log()}, false);
+    document.getElementById('select_month_menu3').addEventListener('change', function() { show_app_log()}, false);
+    document.getElementById('list_connected_title1').addEventListener('click', function() { list_click(this)}, false);
+    document.getElementById('list_app_log_title2').addEventListener('click', function() { list_click(this)}, false);
+    
+    document.getElementById('list_app_log_first').addEventListener('click', function() { page_navigation(this)}, false);
+    document.getElementById('list_app_log_previous').addEventListener('click', function() { page_navigation(this)}, false);
+    document.getElementById('list_app_log_next').addEventListener('click', function() { page_navigation(this)}, false);
+    document.getElementById('list_app_log_last').addEventListener('click', function() { page_navigation(this)}, false);
+    
     document.getElementById('checkbox_maintenance').addEventListener('click', function() { set_maintenance() }, false);
 
 
@@ -206,6 +231,18 @@
                 break;    
             }
             case 3:{
+                global_page = 0;
+                let current_year = new Date().getFullYear();
+                document.getElementById('select_year_menu3').innerHTML = 
+                    `<option value="${current_year}">${current_year}</option>
+                     <option value="${current_year -1}">${current_year-1}</option>
+                     <option value="${current_year -2}">${current_year-2}</option>
+                     <option value="${current_year -3}">${current_year-3}</option>
+                     <option value="${current_year -4}">${current_year-4}</option>
+                     <option value="${current_year -5}">${current_year-5}</option>
+                     `;
+                document.getElementById('select_year_menu3').selectedIndex = 0;
+                document.getElementById('select_month_menu3').selectedIndex = new Date().getMonth();
                 show_app_log();
                 show_connected();
                 get_gps_from_ip();
@@ -478,11 +515,91 @@
                 elem.removeEventListener("click", click_function);
             });
     }
-    async function show_connected(){
+    function list_click(item){
+        if (item.id == 'list_connected_title1'){
+            document.getElementById('list_connected_form').style.display='block';
+            document.getElementById('list_app_log_form').style.display='none';
+            show_connected();
+        }
+        else
+            if (item.id == 'list_app_log_title2'){
+                document.getElementById('list_app_log_form').style.display='block';
+                document.getElementById('list_connected_form').style.display='none';
+                global_page = 0;
+                show_app_log();
+            }
+    }
+    function get_sort(){
+        let sort = '';
+        for (let i=1;i <=8;i++){
+            if (document.getElementById('list_app_log_col_title' + i).classList.contains('asc'))
+                sort = i;
+            if (document.getElementById('list_app_log_col_title' + i).classList.contains('desc'))
+                sort = i;
+        }
+        return sort;
+    }
+    function get_order(item){
+        let order_by = '';
+        if (document.getElementById(item.id).classList.contains('asc'))
+            order_by = 'desc';
+        if (document.getElementById(item.id).classList.contains('desc'))
+            order_by = 'asc';
+        if (order_by=='')
+            order_by = 'desc';
+        return order_by;
+    }
+    function list_sort_click(item){
+        if (item.id.indexOf('list_app_log_col_title')==0){
+            show_app_log(item.id.substr(item.id.length - 1), get_order(item));
+        }
+        else{
+            if (item.id.indexOf('list_connected_col_title')==0){
+                show_connected(item.id.substr(item.id.length - 1), get_order(item));
+            }
+        }
+    }
+    function page_navigation(item){
+        
+        let sort = get_sort();
+        if (sort =='')
+            sort = 8;
+        switch (item.id){
+            case 'list_app_log_first':{
+                global_page = 0;
+                show_app_log(sort, get_order(item), 0, 1000);
+                break;
+            }
+            case 'list_app_log_previous':{
+                global_page = global_page - 1000;
+                if (global_page < 0)
+                    global_page = 0;
+                show_app_log(sort, get_order(item), global_page, 1000);
+                break;
+            }
+            case 'list_app_log_next':{
+                global_page = global_page + 1000;
+                show_app_log(sort, get_order(item), global_page, 1000);
+                break;
+            }
+            case 'list_app_log_last':{
+                global_page = global_page + 1000;
+                show_app_log(sort, get_order(item), global_page, 1000);
+                break;
+            }
+        }
+    }
+    async function show_connected(sort=4, order_by='desc'){
         let status;
         let json;
         let app_id = document.getElementById('select_app_menu3').options[document.getElementById('select_app_menu3').selectedIndex].value;
-        await fetch(`/service/broadcast/connected?app_id=${app_id}`,
+        for (let i=1;i<=7;i++){
+            document.getElementById('list_connected_col_title' + i).classList.remove('asc');
+            document.getElementById('list_connected_col_title' + i).classList.remove('desc');
+        }
+        document.getElementById('list_connected_col_title' + sort).classList.add(order_by);
+
+        await fetch(`/service/broadcast/connected?app_id=${app_id}&sort=${sort}&order_by=${order_by}&limit=1000`,
             {method: 'GET',
                 headers: {
                     'Authorization': 'Bearer ' + global_rest_admin_at,
@@ -502,33 +619,6 @@
                     let list_connected = document.getElementById('list_connected');
                     list_connected.innerHTML = '';
                     let html = '';
-                    html += 
-                        `<div id='list_connected_row_title' class='list_connected_row'>
-                            <div class='list_connected_col'>
-                                <div>ID</div>
-                            </div>
-                            <div class='list_connected_col'>
-                                <div>APP ID</div>
-                            </div>
-                            <div class='list_connected_col'>
-                                <div>USER AGENT</div>
-                            </div>
-                            <div class='list_connected_col'>
-                                <div>CONNECTION DATE</div>
-                            </div>
-                            <div class='list_connected_col'>
-                                <div>IP</div>
-                            </div>
-                            <div class='list_connected_col'>
-                                <div>GPS LAT</div>
-                            </div>
-                            <div class='list_connected_col'>
-                                <div>GPS LONG</div>
-                            </div>
-                            <div class='list_connected_col'>
-                                <div>BROADCAST</div>
-                            </div>
-                        </div>`;
                     for (i = 0; i < json.data.length; i++) {
                         html += 
                         `<div class='list_connected_row'>
@@ -567,11 +657,18 @@
                 alert('Error: show_connected: ' + result);
             });
     }    
-    async function show_app_log(){
+    async function show_app_log(sort=8, order_by='desc', offset=0, limit=1000){
         let status;
         let json;
         let app_id = document.getElementById('select_app_menu3').options[document.getElementById('select_app_menu3').selectedIndex].value;
-        await fetch(`/service/db/api/app_log?app_id=${app_id}&limit=100`,
+        let year = document.getElementById('select_year_menu3').value;
+        let month = document.getElementById('select_month_menu3').value;
+        for (let i=1;i <=8;i++){
+            document.getElementById('list_app_log_col_title' + i).classList.remove('asc');
+            document.getElementById('list_app_log_col_title' + i).classList.remove('desc');
+        }
+        document.getElementById('list_app_log_col_title' + sort).classList.add(order_by);
+        await fetch(`/service/db/api/app_log?app_id=${app_id}&year=${year}&month=${month}&sort=${sort}&order_by=${order_by}&offset=${offset}&limit=${limit}`,
             {method: 'GET',
                 headers: {
                     'Authorization': 'Bearer ' + global_rest_admin_at,
@@ -589,33 +686,6 @@
                     let list_app_log = document.getElementById('list_app_log');
                     list_app_log.innerHTML = '';
                     let html = '';
-                    html += 
-                        `<div id='list_app_log_row_title' class='list_app_log_row'>
-                            <div class='list_app_log_col'>
-                                <div>ID</div>
-                            </div>
-                            <div class='list_app_log_col'>
-                                <div>APP ID</div>
-                            </div>
-                            <div class='list_app_log_col'>
-                                <div>MODULE</div>
-                            </div>
-                            <div class='list_app_log_col'>
-                                <div>TYPE</div>
-                            </div>
-                            <div class='list_app_log_col'>
-                                <div>IP</div>
-                            </div>
-                            <div class='list_app_log_col'>
-                                <div>GPS LAT</div>
-                            </div>
-                            <div class='list_app_log_col'>
-                                <div>GPS LONG</div>
-                            </div>
-                            <div class='list_app_log_col'>
-                                <div>DATE</div>
-                            </div>
-                        </div>`;
                     for (i = 0; i < json.data.length; i++) {
                         html += 
                         `<div class='list_app_log_row'>

@@ -1,5 +1,6 @@
 const {oracledb, get_pool, get_pool_admin} = require ("../../config/database");
 const { createLogAppSE } = require("../../../../service/log/log.service");
+const { ORDER } = require("mysql/lib/PoolSelector");
 module.exports = {
 	createLog: (data, callBack) => {
 		//max 4000 characters can be saved
@@ -135,8 +136,36 @@ module.exports = {
 			execute_sql();
 		}
 	},
-	getLogs: (app_id, limit, callBack) => {
+	getLogs: (app_id, year, month, sort, order_by, offset, limit, callBack) => {
 		if (process.env.SERVICE_DB_USE==1){
+			/* 	sort in UI:
+				1=ID
+				2=APP ID
+				3=MODULE
+				4=MODULE TYPE
+				5=IP
+				6=GPS LAT
+				7=GPS LONG
+				8=DATE
+			*/
+			switch (sort){
+				case 5:{
+					sort=14;
+					break
+				}
+				case 6:{
+					sort=12;
+					break
+				}
+				case 7:{
+					sort=13;
+					break
+				}
+				case 8:{
+					sort=18;
+					break
+				}
+			}
 			get_pool_admin().query(
 				`SELECT
 						id,
@@ -159,9 +188,15 @@ module.exports = {
 						date_created
 				FROM ${process.env.SERVICE_DB_DB1_NAME}.app_log 
 				WHERE app_id = COALESCE(?, app_id)
-				ORDER BY 18 DESC
-				LIMIT  ?`,
+				AND   DATE_FORMAT(date_created, '%Y') = ?
+				AND   DATE_FORMAT(date_created, '%c') = ?
+				ORDER BY ? ${order_by}
+				LIMIT ?,?`,
 				[app_id,
+				 year,
+				 month, 
+				 sort,
+				 offset,
 				 limit],
 				(error, results, fields) => {
 					if (error){
@@ -199,9 +234,15 @@ module.exports = {
 							date_created "date_created"
 					FROM ${process.env.SERVICE_DB_DB2_NAME}.app_log
 					WHERE app_id = NVL(:app_id, app_id)
-					ORDER BY 18 DESC
-					FETCH NEXT :limit ROWS ONLY`,
+					AND   TO_CHAR(date_created, 'YYYY') = :year
+					AND   TO_CHAR(date_created, 'fmMM') = :month
+					ORDER BY :sort ${order_by}
+					OFFSET :offset ROWS FETCH NEXT :limit ROWS ONLY`,
 					{app_id:app_id,
+					 year:year,
+					 month:month,
+					 sort:sort,
+					 offset:offset,
 					 limit:limit},
 					(err,result) => {
 						if (err) {

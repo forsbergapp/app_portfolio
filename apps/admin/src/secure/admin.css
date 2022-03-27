@@ -258,86 +258,108 @@
     }      
     
     #menu_3_content_widget1{
-        height:250px;
+        height:260px;
     }
     #menu_3_content_widget2{
         height:170px;
     }
-    
+    #list_app_log_title1, #list_connected_title2{
+        text-transform: uppercase;
+        display:inline-block;
+        width:30%;
+    }
+    .list_button{
+        border: none;
+        text-transform: uppercase;
+        cursor: pointer;
+        background:none;
+        display:inline-block;
+        width:30%;
+        font-size: 16px;
+    }    
+    #list_connected_form{
+        display: none;
+    }
     #list_app_log, #list_connected{
-        height:100px;
+        height:150px;
         overflow-y: auto;
         overflow-x: auto;
         margin-bottom: 10px;
         border-radius: 4px;
     }
+    #list_app_log_col_title1,#list_app_log_col_title2,#list_app_log_col_title3,
+    #list_app_log_col_title4, #list_app_log_col_title5, #list_app_log_col_title6,
+    #list_app_log_col_title7, #list_app_log_col_title8,
+    #list_connected_col_title1,#list_connected_col_title2,#list_connected_col_title3,
+    #list_connected_col_title4, #list_connected_col_title5, #list_connected_col_title6,
+    #list_connected_col_title7{
+        cursor:pointer;
+    }
+
     .list_app_log_row, .list_connected_row{
-        height:24px;
-        margin-top: 4px;
+        height: 18px;
+        padding-top:4px;
     }   
     .list_app_log_gps_click, .list_connected_gps_click, .list_connected_chat_click, #maintenance_broadcast_info{
         cursor:pointer;
     }
-
-    .list_app_log_col:nth-child(1){
-        width:25px;
+    .list_app_log_col, .list_connected_col{
         display:inline-block;
     }
-    .list_app_log_col:nth-child(2){
+    .list_app_log_col:nth-child(1){
         width:25px;
-        display:inline-block;
+    }
+    .list_app_log_col:nth-child(2){
+        width:40px;
     }
     .list_app_log_col:nth-child(3){
         width:70px;
-        display:inline-block;
     }
     .list_app_log_col:nth-child(4){
         width:110px;
-        display:inline-block;
     }
     .list_app_log_col:nth-child(5){
         width:90px;
-        display:inline-block;
     }
     .list_app_log_col:nth-child(6){
         width:50px;
-        display:inline-block;
     }
     .list_app_log_col:nth-child(7){
         width:50px;
-        display:inline-block;
     }
     .list_app_log_col:nth-child(8){
         width:120px;
-        display:inline-block;
+    }
+    #list_app_pagination{
+        display: block;
+    }
+    #list_app_pagination div{
+        display: inline-block;
+        margin-left: 10px;
+        margin-right: 10px;
+        font-size: 24px;
+        cursor:pointer;
     }
     .list_connected_col:nth-child(1){
         width:70px;
-        display:inline-block;
     }
     .list_connected_col:nth-child(2){
-        width:25px;
-        display:inline-block;
+        width:40px;
     }
     .list_connected_col:nth-child(3){
         width:80px;
-        display:inline-block;
     }
     .list_connected_col:nth-child(4){
         width:120px;
-        display:inline-block;
     }
     .list_connected_col:nth-child(5){
         width:90px;
-        display:inline-block;
     }
     .list_connected_col:nth-child(6), .list_connected_col:nth-child(7){
         width:50px;
-        display:inline-block;
     }
     .list_connected_col:nth-child(8){
         width:25px;
-        display:inline-block;
     }
     #mapid{
         width: 100%;
@@ -432,6 +454,9 @@
         background-color: #fefefe;
         box-shadow: 0 4px 8px 0 rgb(0 0 0 / 20%), 0 6px 20px 0 rgb(0 0 0 / 19%);
     }
+    .theme_light .list_button:hover, .theme_light .list_button:active{
+        color:#6ab344;
+    }
     .theme_light .list_app_log_row:nth-child(odd),
     .theme_light .list_connected_row:nth-child(odd) {
         background-color: rgb(197 227 255);
@@ -452,6 +477,14 @@
     .theme_light #list_connected{
         border: rgb(197 227 255) solid 0.5px;
     }
+    .theme_light #list_app_pagination div{
+        color:rgb(81, 171, 255);
+    }
+    .theme_light #list_app_pagination div:hover, 
+    .theme_light #list_app_pagination div:active{
+        color:#6ab344 !important;
+    }
+    
     .theme_light .switch-label {
         color: transparent;
     }
