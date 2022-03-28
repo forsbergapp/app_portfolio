@@ -23,7 +23,8 @@
     var global_session_gps_latitude;
     var global_session_gps_longitude;
     var global_page = 0;
-
+    var global_page_last =0;
+    var global_limit =1000;
     document.getElementById('menu_1_content').style.display = 'block';
     document.getElementById('menu_1').addEventListener('click', function() { show_menu(1) }, false);
     document.getElementById('menu_2').addEventListener('click', function() { show_menu(2) }, false);
@@ -529,13 +530,19 @@
                 show_app_log();
             }
     }
-    function get_sort(){
+    function get_sort(order_by=0){
         let sort = '';
         for (let i=1;i <=8;i++){
             if (document.getElementById('list_app_log_col_title' + i).classList.contains('asc'))
-                sort = i;
+                if (order_by==0)
+                    sort = i;
+                else
+                    sort = 'asc';
             if (document.getElementById('list_app_log_col_title' + i).classList.contains('desc'))
-                sort = i;
+                if (order_by==0)
+                    sort = i;
+                else
+                    sort = 'desc';
         }
         return sort;
     }
@@ -562,29 +569,35 @@
     function page_navigation(item){
         
         let sort = get_sort();
+        let order_by = get_sort(1);
         if (sort =='')
             sort = 8;
         switch (item.id){
             case 'list_app_log_first':{
                 global_page = 0;
-                show_app_log(sort, get_order(item), 0, 1000);
+                show_app_log(sort, order_by, 0, global_limit);
                 break;
             }
             case 'list_app_log_previous':{
-                global_page = global_page - 1000;
-                if (global_page < 0)
+                global_page = global_page - global_limit;
+                if (global_page - global_limit < 0)
                     global_page = 0;
-                show_app_log(sort, get_order(item), global_page, 1000);
+                else
+                    global_page = global_page - global_limit;
+                show_app_log(sort, order_by, global_page, global_limit);
                 break;
             }
             case 'list_app_log_next':{
-                global_page = global_page + 1000;
-                show_app_log(sort, get_order(item), global_page, 1000);
+                if (global_page + global_limit > global_page_last)
+                    global_page = global_page_last;
+                else
+                    global_page = global_page + global_limit;
+                show_app_log(sort, order_by, global_page, global_limit);
                 break;
             }
             case 'list_app_log_last':{
-                global_page = global_page + 1000;
-                show_app_log(sort, get_order(item), global_page, 1000);
+                global_page = global_page_last;
+                show_app_log(sort, order_by, global_page, global_limit);
                 break;
             }
         }
@@ -599,7 +612,7 @@
         }
         document.getElementById('list_connected_col_title' + sort).classList.add(order_by);
 
-        await fetch(`/service/broadcast/connected?app_id=${app_id}&sort=${sort}&order_by=${order_by}&limit=1000`,
+        await fetch(`/service/broadcast/connected?app_id=${app_id}&sort=${sort}&order_by=${order_by}&limit=${global_limit}`,
             {method: 'GET',
                 headers: {
                     'Authorization': 'Bearer ' + global_rest_admin_at,
@@ -657,7 +670,7 @@
                 alert('Error: show_connected: ' + result);
             });
     }    
-    async function show_app_log(sort=8, order_by='desc', offset=0, limit=1000){
+    async function show_app_log(sort=8, order_by='desc', offset=0, limit=global_limit){
         let status;
         let json;
         let app_id = document.getElementById('select_app_menu3').options[document.getElementById('select_app_menu3').selectedIndex].value;
@@ -682,6 +695,7 @@
             if (status == 200)
                 json = JSON.parse(result);
                 if (json.success === 1){
+                    global_page_last = Math.floor(json.data[0].total_rows/global_limit) * global_limit;
                     set_list_eventlisteners('app_log', 'gps',0);
                     let list_app_log = document.getElementById('list_app_log');
                     list_app_log.innerHTML = '';

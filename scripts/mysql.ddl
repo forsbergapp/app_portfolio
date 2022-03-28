@@ -130,6 +130,11 @@ ALTER TABLE app_portfolio.app_log MODIFY COLUMN user_number_system VARCHAR(100) 
 ALTER TABLE app_portfolio.app_log MODIFY COLUMN user_platform VARCHAR(100) COMMENT
     'navigator.platform';
 
+CREATE INDEX app_log_date_created_index ON
+    app_portfolio.app_log (
+        date_created
+    ASC );
+
 GRANT SELECT, INSERT ON app_portfolio.app_log TO role_app0;
 
 GRANT SELECT, INSERT ON app_portfolio.app_log TO role_app2;
