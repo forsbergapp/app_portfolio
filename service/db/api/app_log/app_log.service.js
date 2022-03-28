@@ -137,35 +137,35 @@ module.exports = {
 		}
 	},
 	getLogs: (app_id, year, month, sort, order_by, offset, limit, callBack) => {
-		if (process.env.SERVICE_DB_USE==1){
-			/* 	sort in UI:
-				1=ID
-				2=APP ID
-				3=MODULE
-				4=MODULE TYPE
-				5=IP
-				6=GPS LAT
-				7=GPS LONG
-				8=DATE
-			*/
-			switch (sort){
-				case 5:{
-					sort=14;
-					break
-				}
-				case 6:{
-					sort=12;
-					break
-				}
-				case 7:{
-					sort=13;
-					break
-				}
-				case 8:{
-					sort=18;
-					break
-				}
+		/* 	sort in UI:
+			1=ID
+			2=APP ID
+			3=MODULE
+			4=MODULE TYPE
+			5=IP
+			6=GPS LAT
+			7=GPS LONG
+			8=DATE
+		*/
+		switch (sort){
+			case 5:{
+				sort=14;
+				break
 			}
+			case 6:{
+				sort=12;
+				break
+			}
+			case 7:{
+				sort=13;
+				break
+			}
+			case 8:{
+				sort=18;
+				break
+			}
+		}
+		if (process.env.SERVICE_DB_USE==1){
 			get_pool_admin().query(
 				`SELECT
 						id,
@@ -185,17 +185,17 @@ module.exports = {
 						server_user_agent,
 						server_http_host,
 						server_http_accept_language,
-						date_created
+						date_created,
+						count(*) over() total_rows
 				FROM ${process.env.SERVICE_DB_DB1_NAME}.app_log 
 				WHERE app_id = COALESCE(?, app_id)
 				AND   DATE_FORMAT(date_created, '%Y') = ?
 				AND   DATE_FORMAT(date_created, '%c') = ?
-				ORDER BY ? ${order_by}
+				ORDER BY ${sort} ${order_by}
 				LIMIT ?,?`,
 				[app_id,
 				 year,
-				 month, 
-				 sort,
+				 month,
 				 offset,
 				 limit],
 				(error, results, fields) => {
@@ -231,17 +231,17 @@ module.exports = {
 							server_user_agent "server_user_agent",
 							server_http_host "server_http_host",
 							server_http_accept_language "server_http_accept_language",
-							date_created "date_created"
+							date_created "date_created",
+							count(*) over() "total_rows"
 					FROM ${process.env.SERVICE_DB_DB2_NAME}.app_log
 					WHERE app_id = NVL(:app_id, app_id)
 					AND   TO_CHAR(date_created, 'YYYY') = :year
 					AND   TO_CHAR(date_created, 'fmMM') = :month
-					ORDER BY :sort ${order_by}
+					ORDER BY ${sort} ${order_by}
 					OFFSET :offset ROWS FETCH NEXT :limit ROWS ONLY`,
 					{app_id:app_id,
 					 year:year,
 					 month:month,
-					 sort:sort,
 					 offset:offset,
 					 limit:limit},
 					(err,result) => {
