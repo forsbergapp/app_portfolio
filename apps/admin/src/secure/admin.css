@@ -23,6 +23,8 @@
         height:100%;
         position:fixed;
         padding-top: 20px;
+        z-index: 10;
+        display:none;
     }
     .menuitem{
         cursor: pointer;
@@ -30,21 +32,27 @@
         margin: 20px;
         text-transform:uppercase;
     }
+    #menu_open{
+        display: block;
+        height: 30px;
+    }
+    #menu_close{
+        display: block;
+        float: right;
+        width: 40px;
+        font-size: 24px;
+    }
 
     #main{
         width:100%;
         height:100%;
-        margin-left: 150px;
         position: fixed;
         display: block;
         text-align:center;
     }
 
-    #menu_1_content, #menu_2_content, #menu_3_content, #menu_4_content{
-        width: 75%;
-        height: 100%;
+    .main_content{
         position:fixed;
-        margin:20px;
         display: none;
     }
     .widget{
@@ -261,7 +269,7 @@
         height:260px;
     }
     #menu_3_content_widget2{
-        height:170px;
+        height:340px;
     }
     #list_app_log_title1, #list_connected_title2{
         text-transform: uppercase;
@@ -297,8 +305,10 @@
     }
 
     .list_app_log_row, .list_connected_row{
-        height: 18px;
+        height: 30px;
         padding-top:4px;
+        padding-left:5px;
+        text-align: start;
     }   
     .list_app_log_gps_click, .list_connected_gps_click, .list_connected_chat_click, #maintenance_broadcast_info{
         cursor:pointer;
@@ -332,6 +342,7 @@
     }
     #list_app_pagination{
         display: block;
+        margin-top: -10px;
     }
     #list_app_pagination div{
         display: inline-block;
@@ -435,6 +446,34 @@
             opacity: 1
         }
     }
+    @media only screen and (min-width: 768px) {
+        #menu_open, #menu_close{
+            display: none;
+        }
+        #menu{
+            display:block !important;
+        }
+        #main{
+            margin-left:150px
+            }
+
+        .main_content{
+            width: 75%;
+            height: 100%;
+            margin:20px;
+        }
+        #menu_3_content_widget2{
+            height: 170px
+        }
+        .list_app_log_row, .list_connected_row{
+            height: 18px;
+        }
+        #list_app_pagination{
+            margin-top: unset;
+        }
+    }
+    
+
     .theme_light #menu{
         background-color:#fefefe;
         font-weight: bold;
@@ -451,7 +490,7 @@
         box-shadow: 0 0 35px 4px rgb(255,255,255,0.25);
     }  
     .theme_light .widget{
-        background-color: #fefefe;
+        background-color: #fefefe !important;
         box-shadow: 0 4px 8px 0 rgb(0 0 0 / 20%), 0 6px 20px 0 rgb(0 0 0 / 19%);
     }
     .theme_light .list_button:hover, .theme_light .list_button:active{
