@@ -29,7 +29,7 @@ module.exports = {
             if (userpass !== process.env.SERVER_ADMIN_NAME + ':' + process.env.SERVER_ADMIN_PASSWORD) {
                 return res.status(401).send({ 
                     success: 0,
-                    message: "HTTP Error 401 Unauthorized: Access is denied."
+                    message: "Unauthorized: Access is denied."
                 });
             } 
             var jsontoken_at;
@@ -45,7 +45,7 @@ module.exports = {
         else{
             return res.status(401).send({ 
                 success: 0,
-                message: "HTTP Error 401 Unauthorized: Access is denied"
+                message: "Unauthorized: Access is denied"
             });
         }
     }

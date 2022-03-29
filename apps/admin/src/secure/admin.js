@@ -42,7 +42,7 @@
     document.getElementById('maintenance_broadcast_info').addEventListener('click', function() { show_broadcast_dialogue('ALL'); }, false);
     document.getElementById('send_broadcast_send').addEventListener('click', function() { sendBroadcast(); }, false);
     document.getElementById('send_broadcast_close').addEventListener('click', function() { closeBroadcast()}, false);
-    
+
     document.getElementById('list_app_log_col_title1').addEventListener('click', function() { list_sort_click(this)}, false); 
     document.getElementById('list_app_log_col_title2').addEventListener('click', function() { list_sort_click(this)}, false);
     document.getElementById('list_app_log_col_title3').addEventListener('click', function() { list_sort_click(this)}, false);
@@ -119,7 +119,7 @@
                     }
                 }
                 else
-                    alert('Error: get_parameters: ' + result);
+                    show_message(result);
             });
     }
     async function get_token() {
@@ -142,7 +142,7 @@
                     global_rest_dt = json.token_dt;
                 }
             else
-                alert('Error: get_token: ' + result);
+                show_message(result);
             });
     }
     async function get_apps() {
@@ -171,7 +171,7 @@
                 document.getElementById('select_app_broadcast').innerHTML = html;
             }
             else
-                alert('Error: get_apps: ' + result);
+                show_message(result);
             });
     }
     async function get_gps_from_ip() {
@@ -420,7 +420,7 @@
                 document.getElementById('count_connected').innerHTML = json.data.length;
             }
             else
-                alert('Error: count_connected: ' + result);
+                show_message(result);
             });
     }
     function count_users(){
@@ -444,7 +444,7 @@
                 document.getElementById('count_facebook').innerHTML = json.data.count_facebook;
             }
             else
-                alert('Error: show_maintenance: ' + result);
+                show_message(result);
             });
     }
     function show_maintenance(){
@@ -469,7 +469,7 @@
                     document.getElementById('checkbox_maintenance').checked =false;
             }
             else
-                alert('Error: show_maintenance: ' + result);
+                show_message(result);
             });
     }
     function set_maintenance(){
@@ -499,7 +499,7 @@
                 null;
             }
             else
-                alert('Error: show_maintenance: ' + result);
+                show_message(result);
             });
     }
     /*MENU 3*/
@@ -671,7 +671,7 @@
                     set_list_eventlisteners('connected', 'chat',1);
                 }
             else
-                alert('Error: show_connected: ' + result);
+                show_message(result);
             });
     }    
     async function show_app_log(sort=8, order_by='desc', offset=0, limit=global_limit){
@@ -737,7 +737,7 @@
                     set_list_eventlisteners('app_log', 'gps',1);
                 }
             else
-                alert('Error: show_app_log: ' + result);
+                show_message(result);
             });
     }    
     function init_map() {
@@ -840,7 +840,7 @@
         let destination_app;
 
         if (broadcast_message==''){
-            alert('Please enter message');
+            show_message('Please enter message');
             return null;
         }
         
@@ -876,10 +876,10 @@
         })
         .then(function(result) {
             if (status == 200){
-                alert('Sent!');
+                show_message('Sent!');
             }
             else
-                alert('Error: sendBroadcast: ' + result);
+                show_message(result);
             });
     }    
     function closeBroadcast(){
