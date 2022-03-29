@@ -29,13 +29,16 @@ a:active {
 	text-decoration: underline;
 }
 
-/*DIALOUGE SETTINGS*/	
-/* common dialogue settings*/
-.dialogues{
-	width:100%;
-	height:100%;
-	position:fixed;
+#dialogue_login{
+	visibility: visible;
 }
+#dialogue_message{
+	visibility: hidden;
+}
+#dialogue_message_content{
+	width: auto;
+}
+
 
 .dialogue{
 	width: 100%;
@@ -54,7 +57,7 @@ a:active {
 	width: 300px;
 	display:inline-block;
     top: 20%;
-	height: 540px;
+	height: auto;
 	border-radius: 4px;
 	-moz-border-radius: 4px;
 	-webkit-border-radius: 4px;

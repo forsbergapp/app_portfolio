@@ -182,7 +182,7 @@ a:active {
 	width: 300px;
 	display:inline-block;
     top: 20%;
-	height: 540px;
+	height: auto;
 	border-radius: 4px;
 	-moz-border-radius: 4px;
 	-webkit-border-radius: 4px;
@@ -233,6 +233,10 @@ a:active {
         -ms-transform:     rotateY( 180deg );
         -o-transform:      rotateY( 180deg );
         -webkit-transform: rotateY( 180deg );
+}
+#dialogue_message_content{
+	font-family: 'Noto Sans' !important;
+	font-size: 11px;
 }
 #app_portfolio{
 	margin-top:30px;

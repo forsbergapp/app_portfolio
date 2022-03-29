@@ -63,7 +63,7 @@ function app_log(app_module, app_module_type, app_module_request, app_module_res
 				return null;
 		})
 		.catch(function(error) {
-			alert(responseText_get_error('app_log', error));
+            show_message('Error: app_log: ' + error);
 		});
 }
 async function get_gps_from_ip(){
@@ -94,7 +94,7 @@ async function get_gps_from_ip(){
                         json.geoplugin_longitude); 
             }
             else
-                alert('Error: get_gps_from_ip: ' + result);
+                show_message('Error: get_gps_from_ip: ' + result);
         });
 }
 function get_apps() {
@@ -125,7 +125,7 @@ function get_apps() {
             document.getElementById('apps').innerHTML = html;
           }
           else
-            alert('Error: get_apps: ' + result);
+            show_message('Error: get_apps: ' + result);
         });
 }
 
@@ -149,14 +149,14 @@ async function get_token() {
                 global_rest_dt = json.token_dt;
             }
           else
-            alert('Error: get_token: ' + result);
+            show_message('Error: get_token: ' + result);
         });
 }
 
 async function get_parameters() {
     let status;
     let json;
-    await fetch(global_rest_url_base + global_rest_app_parameter + global_app_id,
+    await fetch( global_rest_url_base + global_rest_app_parameter + global_app_id,
       {method: 'GET'})
         .then(function(response) {
             status = response.status;
@@ -187,7 +187,7 @@ async function get_parameters() {
                 }
             }
             else
-                alert('Error: get_parameters: ' + result);
+                show_message('Error: get_parameters: ' + result);
         });
 }
 function zoom_info(zoomvalue = '') {
@@ -243,6 +243,12 @@ function info(id){
     }
 
 }
+function show_message(message){
+    message = message.replace('<pre>','');
+    message = message.replace('</pre>','');
+    document.getElementById('message_title').innerHTML = message;
+    document.getElementById('dialogue_message').style.visibility='visible'; 
+}
 function init(){
     document.getElementById("toggle_checkbox").checked = true;
     document.getElementById('info_diagram_img').src=global_img_diagram_img;
@@ -257,6 +263,9 @@ function init(){
     document.getElementById('toolbar_btn_up').addEventListener('click', function() {move_info(0,-1);}, false);
     document.getElementById('toolbar_btn_down').addEventListener('click', function() {move_info(0,1);}, false);
     
+    document.getElementById('message_close').addEventListener('click', function() {document.getElementById('dialogue_message').style.visibility= 'hidden'}, false);
+    
+
     document.getElementById( 'start_message' ).addEventListener( 'click', function( event ) {
         event.preventDefault();
         document.getElementById( 'dialogue_info_content' ).className = 'dialogue_content dialogue_flip dialogue_flip-side-1';
