@@ -11,6 +11,13 @@ body {
 	padding: 0px;
 }
 
+#dialogue_message_content{
+	font-family: 'Noto Sans';
+	font-size: 11px;
+	width: auto;
+	z-index: 12;
+    background-color: #fefefe;
+}
 .dialogue{
 	visibility:hidden;
 	width: 100%;
@@ -30,7 +37,7 @@ body {
 	width: 300px;
 	display:inline-block;
     top: 20%;
-	height: 540px;
+	height: auto;
 	border-radius: 4px;
 	-moz-border-radius: 4px;
 	-webkit-border-radius: 4px;
@@ -60,7 +67,6 @@ body {
 	width:100%;
 	height:100%;
 	visibility:visible;
-	position: fixed;
 	top:0px;
 	text-align:center;
 	overflow:auto;
