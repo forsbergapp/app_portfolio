@@ -26,6 +26,10 @@
     var global_page_last =0;
     var global_limit =1000;
     document.getElementById('menu_1_content').style.display = 'block';
+
+    document.getElementById('menu_open').addEventListener('click', function() { document.getElementById('menu').style.display = 'block' }, false);
+    document.getElementById('menu_close').addEventListener('click', function() { document.getElementById('menu').style.display = 'none' }, false);
+
     document.getElementById('menu_1').addEventListener('click', function() { show_menu(1) }, false);
     document.getElementById('menu_2').addEventListener('click', function() { show_menu(2) }, false);
     document.getElementById('menu_3').addEventListener('click', function() { show_menu(3) }, false);
