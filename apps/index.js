@@ -180,6 +180,7 @@ module.exports = {
                         }
                         else{
                             const AppHead = fs.readFileSync(__dirname + '/app2/src/head.html', 'utf8');
+                            const AppDialogues = fs.readFileSync(__dirname + '/app2/src/dialogues.html', 'utf8');
                             const AppWindowInfo = fs.readFileSync(__dirname + '/app2/src/window_info.html', 'utf8');
                             async function getAppComponents() {                        
                                 var app = app_result.replace(
@@ -188,6 +189,9 @@ module.exports = {
                                 app = app.replace(
                                     '<AppHeadCommon/>',
                                     `${AppHeadCommon}`);
+                                app = app.replace(
+                                    '<AppDialogues/>',
+                                    `${AppDialogues}`);
                                 app = app.replace(
                                     '<AppWindowInfo/>',
                                     `${AppWindowInfo}`);
