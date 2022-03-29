@@ -49,12 +49,12 @@ function admin_login(){
                                 }
                             }
                             else
-                                alert('Error: ' + result);
+                                show_message(result);
                         });
                 }
             }
             else
-                alert('Error: ' + result);
+                show_message(result);
         });
 }
 function keyfunctions(){
@@ -75,7 +75,21 @@ function keyfunctions(){
         }
     });
     document.getElementById('login_button').addEventListener('click', function() { admin_login() }, false);
+    document.getElementById('message_close').addEventListener('click', function() { document.getElementById('dialogue_message').style.visibility='hidden'; }, false);
 }
+function show_message(message){
+    message = message.replace('<pre>','');
+    message = message.replace('</pre>','');
+    try{
+        message = JSON.parse(message).message
+    }
+    catch (err){
+        null;
+    }
+    document.getElementById('message_title').innerHTML = message;
+    document.getElementById('dialogue_message').style.visibility='visible'; 
+}
+
 function init(){
     keyfunctions();
 }
