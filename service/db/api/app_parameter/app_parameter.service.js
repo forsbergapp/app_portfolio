@@ -89,7 +89,7 @@ module.exports = {
 					   OR 
 					   app_id = 0)
 				  AND parameter_type_id IN (0,1,2)
-				ORDER BY 1 `,
+				ORDER BY 1, 3`,
 				[app_id],
 				(error, results, fields) => {
 					if (error){
@@ -117,7 +117,76 @@ module.exports = {
 					         OR 
 							 app_id = 0)
 					    AND parameter_type_id IN (0,1,2)
-					ORDER BY 1`,
+					ORDER BY 1, 3`,
+					{app_id: app_id},
+					(err,result) => {
+						if (err) {
+							createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
+							return callBack(err);
+						}
+						else{
+							return callBack(null, result.rows);
+						}
+					});
+				}catch (err) {
+					createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
+					return callBack(err.message);
+				} finally {
+					if (pool2) {
+						try {
+							await pool2.close(); 
+						} catch (err) {
+							createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
+						}
+					}
+				}
+			}
+			execute_sql();
+		}
+	},
+	getParameters_admin: (app_id, callBack) => {
+		if (process.env.SERVICE_DB_USE==1){
+			get_pool_admin().query(
+				`SELECT
+						ap.app_id,
+						ap.parameter_type_id,
+						pt.name parameter_type_name,
+						ap.parameter_name,
+						ap.parameter_value,
+						ap.parameter_comment
+				FROM ${process.env.SERVICE_DB_DB1_NAME}.app_parameter ap,
+					 ${process.env.SERVICE_DB_DB1_NAME}.parameter_type pt
+                WHERE ap.app_id = ?
+				  AND pt.id = ap.parameter_type_id
+				ORDER BY 1, 4`,
+				[app_id],
+				(error, results, fields) => {
+					if (error){
+						createLogAppSE(app_id, __appfilename, __appfunction, __appline, error);
+						return callBack(error);
+					}
+					return callBack(null, results);
+				}
+			);
+		}
+		else if (process.env.SERVICE_DB_USE==2){
+			async function execute_sql(err, result){
+				let pool2;
+				try{
+				pool2 = await oracledb.getConnection(get_pool_admin());
+				const result = await pool2.execute(
+					`SELECT
+                            ap.app_id "app_id",
+                            ap.parameter_type_id "parameter_type_id",
+							pt.name "parameter_type_name",
+                            ap.parameter_name "parameter_name",
+                            ap.parameter_value "parameter_value",
+							ap.parameter_comment "parameter_comment"
+                       FROM ${process.env.SERVICE_DB_DB2_NAME}.app_parameter ap,
+					   	    ${process.env.SERVICE_DB_DB2_NAME}.parameter_type pt
+                      WHERE ap.app_id = :app_id
+					  	AND pt.id = ap.parameter_type_id
+					ORDER BY 1, 4`,
 					{app_id: app_id},
 					(err,result) => {
 						if (err) {
@@ -203,19 +272,23 @@ module.exports = {
 			execute_sql();
 		}
 	},
-	setParameter: (app_id, body, callBack) =>{
+	setParameter: (body, callBack) =>{
 		if (process.env.SERVICE_DB_USE==1){
 			get_pool_admin().query(
 				`UPDATE ${process.env.SERVICE_DB_DB1_NAME}.app_parameter
-					SET parameter_value = ?
+					SET parameter_type_id = ?,
+						parameter_value = ?,
+						parameter_comment = ?
                   WHERE app_id = ?
 				    AND parameter_name = ?`,
-				[body.parameter_value, 
-				 app_id,
+				[body.parameter_type_id,
+				 body.parameter_value, 
+				 body.parameter_comment,
+				 body.app_id,
 				 body.parameter_name],
 				(error, results, fields) => {
 					if (error){
-						createLogAppSE(app_id, __appfilename, __appfunction, __appline, error);
+						createLogAppSE(body.app_id, __appfilename, __appfunction, __appline, error);
 						return callBack(error);
 					}
 					return callBack(null, results);
@@ -229,15 +302,19 @@ module.exports = {
 				pool2 = await oracledb.getConnection(get_pool_admin());
 				const result = await pool2.execute(
 					`UPDATE ${process.env.SERVICE_DB_DB2_NAME}.app_parameter
-						SET parameter_value = :parameter_value
+						SET parameter_type_id = :parameter_type_id,
+							parameter_value = :parameter_value,
+							parameter_comment = :parameter_comment
                       WHERE app_id = :app_id
 					    AND parameter_name = :parameter_name`,
-					{parameter_value: body.parameter_value,
-					 app_id: app_id,
+					{parameter_type_id: body.parameter_type_id,
+					 parameter_value: body.parameter_value, 
+					 parameter_comment: body.parameter_comment,
+					 app_id: body.app_id,
 					 parameter_name: body.parameter_name},
 					(err,result) => {
 						if (err) {
-							createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
+							createLogAppSE(body.app_id, __appfilename, __appfunction, __appline, err);
 							return callBack(err);
 						}
 						else{
@@ -245,14 +322,14 @@ module.exports = {
 						}
 					});
 				}catch (err) {
-					createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
+					createLogAppSE(body.app_id, __appfilename, __appfunction, __appline, err);
 					return callBack(err.message);
 				} finally {
 					if (pool2) {
 						try {
 							await pool2.close(); 
 						} catch (err) {
-							createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
+							createLogAppSE(body.app_id, __appfilename, __appfunction, __appline, err);
 						}
 					}
 				}

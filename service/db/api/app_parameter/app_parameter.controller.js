@@ -1,8 +1,36 @@
-const { getParameters, getParameter, setParameter } = require ("./app_parameter.service");
+const { getParameters, getParameters_server, getParameters_admin, getParameter, setParameter } = require ("./app_parameter.service");
 
 module.exports = {
 	getParameters: (req, res) => {
 		getParameters(req.params.app_id,(err, results) =>{
+			if (err) {
+				return res.status(500).send({
+					success: 0,
+					data: err
+				});
+			}
+			return res.status(200).json({
+				success: 1,
+				data: results
+			});
+		});
+	},
+	getParameters_server: (req, res) => {
+		getParameters_server(req.params.app_id, (err, results) =>{
+			if (err) {
+				return res.status(500).send({
+					success: 0,
+					data: err
+				});
+			}
+			return res.status(200).json({
+				success: 1,
+				data: results
+			});
+		});
+	},
+	getParameters_admin: (req, res) => {
+		getParameters_admin(req.params.app_id, (err, results) =>{
 			if (err) {
 				return res.status(500).send({
 					success: 0,
@@ -30,7 +58,7 @@ module.exports = {
 		});
 	},
 	setParameter: (req, res) => {
-		setParameter(req.params.app_id, req.body, (err, results) =>{
+		setParameter(req.body, (err, results) =>{
 			if (err) {
 				return res.status(500).send({
 					success: 0,
