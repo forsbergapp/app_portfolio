@@ -126,6 +126,7 @@ const app_parameterRouter = require("./service/db/api/app_parameter/app_paramete
 const countryRouter = require("./service/db/api/country/country.router");
 const languageLocaleRouter = require("./service/db/api/language/locale/locale.router");
 const message_translationRouter = require("./service/db/api/message_translation/message_translation.router");
+const parameter_typeRouter = require("./service/db/api/parameter_type/parameter_type.router");
 const user_accountRouter = require("./service/db/api/user_account/user_account.router");
 const user_account_likeRouter = require("./service/db/api/user_account_like/user_account_like.router");
 const user_account_followRouter = require("./service/db/api/user_account_follow/user_account_follow.router");
@@ -160,6 +161,7 @@ app.use("/service/db/api/app_parameter", app_parameterRouter);
 app.use("/service/db/api/country", countryRouter);
 app.use("/service/db/api/language/locale", languageLocaleRouter);
 app.use("/service/db/api/message_translation", message_translationRouter);
+app.use("/service/db/api/parameter_type", parameter_typeRouter);
 app.use("/service/db/api/user_account", user_accountRouter);
 app.use("/service/db/api/user_account_like", user_account_likeRouter);
 app.use("/service/db/api/user_account_follow", user_account_followRouter);

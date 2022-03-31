@@ -4,7 +4,10 @@
     var global_app_rest_client_id;
     var global_app_rest_client_secret;
     var global_service_auth;
+    var global_rest_base = '/service/db/api/';
     var global_rest_app;
+    var global_rest_app_parameter = 'app_parameter';
+    var global_rest_parameter_type;
     var global_rest_user_account;
     var global_service_geolocation;
     var global_service_geolocation_gps_ip;
@@ -25,6 +28,8 @@
     var global_page = 0;
     var global_page_last =0;
     var global_limit =1000;
+    var global_previous_row;
+
     document.getElementById('menu_1_content').style.display = 'block';
 
     document.getElementById('menu_open').addEventListener('click', function() { document.getElementById('menu').style.display = 'block' }, false);
@@ -42,6 +47,9 @@
     document.getElementById('maintenance_broadcast_info').addEventListener('click', function() { show_broadcast_dialogue('ALL'); }, false);
     document.getElementById('send_broadcast_send').addEventListener('click', function() { sendBroadcast(); }, false);
     document.getElementById('send_broadcast_close').addEventListener('click', function() { closeBroadcast()}, false);
+
+    document.getElementById('apps_save').addEventListener('click', function() { apps_save()}, false); 
+    document.getElementById('lov_close').addEventListener('click', function() { close_lov()}, false); 
 
     document.getElementById('list_app_log_col_title1').addEventListener('click', function() { list_sort_click(this)}, false); 
     document.getElementById('list_app_log_col_title2').addEventListener('click', function() { list_sort_click(this)}, false);
@@ -88,7 +96,7 @@
     async function get_parameters() {
         let status;
         let json;
-        await fetch('/service/db/api/app_parameter/0',
+        await fetch(`${global_rest_base + global_rest_app_parameter}/0`,
         {method: 'GET'})
             .then(function(response) {
                 status = response.status;
@@ -106,6 +114,8 @@
                             global_service_auth = 'https://' + location.hostname + json.data[i].parameter_value;
                         if (json.data[i].parameter_name=='REST_APP')
                             global_rest_app = json.data[i].parameter_value;
+                        if (json.data[i].parameter_name=='REST_PARAMETER_TYPE')
+                            global_rest_parameter_type = json.data[i].parameter_value;
                         if (json.data[i].parameter_name=='REST_USER_ACCOUNT')
                             global_rest_user_account = json.data[i].parameter_value;
                         if (json.data[i].parameter_name=='SERVICE_GEOLOCATION')
@@ -148,7 +158,7 @@
     async function get_apps() {
         let status;
         let json;
-        await fetch('/service/db/api/' + global_rest_app + '?id=0',
+        await fetch(global_rest_base + global_rest_app + '?id=0',
         {method: 'GET',
         headers: {
                 'Authorization': 'Bearer ' + global_rest_dt
@@ -233,6 +243,7 @@
                 break;    
             }
             case 2:{
+                show_apps();
                 break;    
             }
             case 3:{
@@ -267,7 +278,7 @@
             let json;
             let status;
             let app_id ='';
-            fetch(`/service/db/api/app_log/admin/stat/uniquevisitor?app_id=${app_id}&statchoice=1&year=${current_year}&month=${current_month}`,
+            fetch(global_rest_base + `app_log/admin/stat/uniquevisitor?app_id=${app_id}&statchoice=1&year=${current_year}&month=${current_month}`,
             {method: 'GET',
                 headers: {
                     'Authorization': 'Bearer ' + global_rest_admin_at,
@@ -322,7 +333,7 @@
             let json2;
             let status2;
             let app_id2 = document.getElementById('select_app_menu1').options[document.getElementById('select_app_menu1').selectedIndex].value;
-            fetch(`/service/db/api/app_log/admin/stat/uniquevisitor?app_id=${app_id2}&statchoice=2&year=${current_year}&month=${current_month}`,
+            fetch(global_rest_base + `app_log/admin/stat/uniquevisitor?app_id=${app_id2}&statchoice=2&year=${current_year}&month=${current_month}`,
             {method: 'GET',
                 headers: {
                     'Authorization': 'Bearer ' + global_rest_admin_at,
@@ -426,7 +437,7 @@
     function count_users(){
         let status;
         let json;
-        fetch('/service/db/api/' + global_rest_user_account + '/admin/count',
+        fetch(global_rest_base + global_rest_user_account + '/admin/count',
         {method: 'GET',
         headers: {
                 'Authorization': 'Bearer ' + global_rest_admin_at,
@@ -450,7 +461,7 @@
     function show_maintenance(){
         let status;
         let json;
-        fetch('/service/db/api/app_parameter/admin/0?parameter_name=SERVER_MAINTENANCE',
+        fetch(global_rest_base + global_rest_app_parameter + '/admin/0?parameter_name=SERVER_MAINTENANCE',
         {method: 'GET',
         headers: {
                 'Authorization': 'Bearer ' + global_rest_admin_at,
@@ -482,7 +493,7 @@
             check_value = 0;
         let json_data = `{"parameter_name":"SERVER_MAINTENANCE",
                           "parameter_value":${check_value}}`;
-        fetch('/service/db/api/app_parameter/admin/0',
+        fetch(global_rest_base + global_rest_app_parameter + '/admin/0',
         {method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
@@ -501,6 +512,305 @@
             else
                 show_message(result);
             });
+    }
+    /*MENU 2*/
+    function close_lov(){
+        document.getElementById('dialogue_lov').style.visibility = 'hidden';
+        document.getElementById('lov_title').innerHTML='';
+        document.getElementById('lov_list').innerHTML='';
+    }
+    function show_lov(lov, row_item, item_index){
+        switch(lov){
+            case 1:{
+                let status;
+                let json;
+                fetch(global_rest_base + global_rest_parameter_type + `admin`,
+                    {method: 'GET',
+                        headers: {
+                            'Authorization': 'Bearer ' + global_rest_admin_at,
+                        }
+                    })
+                    .then(function(response) {
+                        status = response.status;
+                        return response.text();
+                    })
+                    .then(function(result) {
+                        if (status == 200){
+                            json = JSON.parse(result);
+                            if (json.success === 1){
+                                let lov_list = document.getElementById('lov_list');
+                                lov_list.innerHTML = '';
+                                let html = '';
+                                for (i = 0; i < json.data.length; i++) {
+                                    html += 
+                                    `<div id='list_lov_row_${i}' class='list_lov_row'>
+                                        <div class='list_lov_col'>
+                                            <div>${json.data[i].id}</div>
+                                        </div>
+                                        <div class='list_lov_col'>
+                                            <div>${json.data[i].name}</div>
+                                        </div>
+                                    </div>`;
+                                }
+                                lov_list.innerHTML = html;
+                                document.getElementById('lov_title').innerHTML = 'PARAMETER TYPE';
+                                document.getElementById('dialogue_lov').style.visibility = 'visible';
+                                document.querySelectorAll('.list_lov_row').forEach(e => e.addEventListener('click', function(event) {
+                                    row_item.parentNode.parentNode.children[item_index].children[0].value = this.children[0].children[0].innerHTML;
+                                    row_item.parentNode.parentNode.children[item_index].children[0].focus();
+                                    row_item.parentNode.parentNode.children[item_index].children[0].dispatchEvent(new Event('change'));
+                                    close_lov();
+                                }));
+                            }
+                        }
+                    })
+                break;
+            }
+        }
+    }
+    function get_parameter_type_name(row_item, item, old_value){
+        fetch(`${global_rest_base}${global_rest_parameter_type}admin?id=${item.value}`,
+            {method: 'GET',
+                headers: {
+                    'Authorization': 'Bearer ' + global_rest_admin_at,
+                }
+            })
+            .then(function(response) {
+                status = response.status;
+                return response.text();
+            })
+            .then(function(result) {
+            if (status == 200){
+                json = JSON.parse(result);
+                if (json.data.length == 1)
+                    document.getElementById(row_item).children[2].children[0].innerHTML = json.data[0].name;
+                else{
+                    item.value = old_value;
+                    item.focus();
+                }
+            }
+            else
+                show_message(result);
+            });
+    }
+    function list_events(item_row, item_edit, column_start_index){
+        //on change on all editable fields
+        //mark record as changed if any editable field is changed
+        //get parameter_type_name for app_parameter rows
+        document.querySelectorAll(item_edit).forEach(e => e.addEventListener('change', function(event) {
+            event.target.parentNode.parentNode.setAttribute('data-changed-record','1')
+            if (item_row == 'list_app_parameter_row' && event.target.parentNode.parentNode.children[1].children[0] == event.target)
+                if (this.value=='')
+                    this.value = event.target.defaultValue;
+                else
+                    get_parameter_type_name(event.target.parentNode.parentNode.id, this, event.target.defaultValue);
+        }));
+        //key navigation key-up and key-down
+        document.querySelectorAll(item_edit).forEach(e => e.addEventListener('keydown', function(event) {
+            //up arrow
+            if (event.keyCode === 38) {
+                if (item_row=='list_apps_row')
+                    global_previous_row = event.target.parentNode.parentNode;
+                event.preventDefault();
+                let index = parseInt(event.target.parentNode.parentNode.id.substr(item_row.length+1));
+                if (index>0)
+                    document.getElementById(`${item_row}_${index - 1}`).children[column_start_index].children[0].focus();
+            }
+            //down arrow
+            if (event.keyCode === 40) {
+                if (item_row=='list_apps_row')
+                    global_previous_row = event.target.parentNode.parentNode;
+                event.preventDefault();
+                let index = parseInt(event.target.parentNode.parentNode.id.substr(item_row.length+1)) +1;
+                if (document.getElementById(`${item_row}_${index}`)!= null)
+                    document.getElementById(`${item_row}_${index}`).children[column_start_index].children[0].focus();
+            }
+        }));
+        //focus event on master to automatically show detail records
+        if (item_row=='list_apps_row'){
+            document.querySelectorAll(item_edit).forEach(e => 
+                e.addEventListener('focus', function(event) {
+                    if (global_previous_row != event.target.parentNode.parentNode){
+                        global_previous_row = event.target.parentNode.parentNode;
+                        show_app_parameter(e.parentNode.parentNode.children[0].children[0].innerHTML);
+                    }
+                }
+            ));
+        }
+    }
+    async function show_apps(){
+        let status;
+        let json;
+        await fetch(global_rest_base + global_rest_app + '?id=0',
+            {method: 'GET',
+                headers: {
+                    'Authorization': 'Bearer ' + global_rest_dt,
+                }
+            })
+            .then(function(response) {
+                status = response.status;
+                return response.text();
+            })
+            .then(function(result) {
+                if (status == 200){
+                    json = JSON.parse(result);
+                    if (json.success === 1){
+                        let list_apps = document.getElementById('list_apps');
+                        list_apps.innerHTML = '';
+                        let html = '';
+                        for (i = 0; i < json.data.length; i++) {
+                            html += 
+                            `<div id='list_apps_row_${i}' data-changed-record='0' class='list_apps_row' >
+                                <div class='list_apps_col'>
+                                    <div class='list_readonly_app'>${json.data[i].id}</div>
+                                </div>
+                                <div class='list_apps_col'>
+                                    <input type=text class='list_edit_app' value='${json.data[i].app_name}'>
+                                </div>
+                                <div class='list_apps_col'>
+                                    <input type=text class='list_edit_app' value='${json.data[i].url}'>
+                                </div>
+                                <div class='list_apps_col'>
+                                    <input type=text class='list_edit_app' value='${json.data[i].logo}'>
+                                </div>
+                            </div>`;
+                        }
+                        list_apps.innerHTML = html;
+                        list_events('list_apps_row', '.list_edit_app', 1);
+
+                        //set focus first column in first row
+                        //this will trigger to show detail records
+                        document.querySelectorAll('.list_edit_app')[0].focus();
+                    }
+                }
+            })  
+    }
+    function show_app_parameter(app_id){
+        let status;
+        let json;
+        fetch(global_rest_base + global_rest_app_parameter + `/admin/all/${parseInt(app_id)}`,
+            {method: 'GET',
+                headers: {
+                    'Authorization': 'Bearer ' + global_rest_admin_at,
+                }
+            })
+            .then(function(response) {
+                status = response.status;
+                return response.text();
+            })
+            .then(function(result) {
+                if (status == 200){
+                    json = JSON.parse(result);
+                    if (json.success === 1){
+                        let list_app_parameter = document.getElementById('list_app_parameter');
+                        list_app_parameter.innerHTML = '';
+                        let html = '';
+                        for (i = 0; i < json.data.length; i++) {
+                            html += 
+                            `<div id='list_app_parameter_row_${i}' data-changed-record='0' class='list_app_parameter_row'>
+                                <div class='list_app_parameter_col'>
+                                    <input type=number class='list_edit_app_parameter' value=${json.data[i].app_id}>
+                                </div>
+                                <div class='list_app_parameter_col'>
+                                    <input type=number class='list_edit_app_parameter' value=${json.data[i].parameter_type_id}>
+                                </div>
+                                <div class='list_app_parameter_col'>
+                                    <div class='list_readonly_app_parameter list_lov_click'>${json.data[i].parameter_type_name}</div>
+                                </div>
+                                <div class='list_app_parameter_col'>
+                                    <div class='list_readonly_app_parameter'>${json.data[i].parameter_name}</div>
+                                </div>
+                                <div class='list_app_parameter_col'>
+                                    <input type=text class='list_edit_app_parameter' value='${json.data[i].parameter_value==null?'':json.data[i].parameter_value}'>
+                                </div>
+                                <div class='list_app_parameter_col'>
+                                    <input type=text class='list_edit_app_parameter' value='${json.data[i].parameter_comment==null?'':json.data[i].parameter_comment}'>
+                                </div>
+                            </div>`;
+                        }
+                        list_app_parameter.innerHTML = html;
+                        list_events('list_app_parameter_row', '.list_edit_app_parameter', 1);
+                        document.querySelectorAll('.list_lov_click').forEach(e => e.addEventListener('click', function(event) {
+                            show_lov(1, this, 1);
+                        }));
+                    }
+                }
+            })
+    }
+    function apps_save(){
+        //save changes in list_apps
+        document.querySelectorAll('.list_apps_row').forEach(e => {
+            if (e.getAttribute('data-changed-record')=='1'){
+                update_record('app',
+                                e,
+                                e.children[0].children[0].innerHTML,//id
+                                e.children[1].children[0].value,    //app_name
+                                e.children[2].children[0].value,    //url
+                                e.children[3].children[0].value);   //logo
+            }
+        });
+        //save changes in list_app_parameter
+        document.querySelectorAll('.list_app_parameter_row').forEach(e => {
+            if (e.getAttribute('data-changed-record')=='1'){
+                update_record('app_parameter',
+                                e,
+                                null, null, null, null,
+                                e.children[0].children[0].value,    //app_id
+                                e.children[1].children[0].value,    //parameter_type_id
+                                e.children[3].children[0].innerHTML,//parameter_name
+                                e.children[4].children[0].value,    //parameter_value
+                                e.children[5].children[0].value);   //parameter_comment
+            }
+        });
+    }
+    function update_record(table, 
+                           element,
+                           id=null, app_name=null, url=null, logo=null,
+                           app_id=null, parameter_type_id=null, parameter_name=null, parameter_value=null, parameter_comment=null){
+        let status;
+        let rest_url;
+        let json_data;
+        document.getElementById('save_spinner').style.display='inline-block';
+        document.getElementById('apps_save').style.display='none';
+        switch (table){
+            case 'app':{
+                json_data = `{"app_name": "${app_name}",
+                              "url": "${url}",
+                              "logo": "${logo}"}`;
+                rest_url = `${global_rest_base}${global_rest_app}/admin/${id}`;
+                break;
+            }
+            case 'app_parameter':{
+                json_data = `{"app_id": ${app_id},
+                              "parameter_name":"${parameter_name}",
+                              "parameter_type_id":"${parameter_type_id}",
+                              "parameter_value":"${parameter_value}",
+                              "parameter_comment":"${parameter_comment}"}`;
+                rest_url = `${global_rest_base}${global_rest_app_parameter}/admin`;
+                break;
+            }
+        }
+        fetch(rest_url, 
+            {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + global_rest_admin_at
+            },
+            body: json_data
+        })
+        .then(function(response) {
+            status = response.status;
+            return response.text();
+        })
+        .then(function(result) {
+            document.getElementById('save_spinner').style.display='none';
+            document.getElementById('apps_save').style.display='inline-block';
+            if (status === 200)
+                element.setAttribute('data-changed-record', '0');
+            else
+                show_message(result);
+        })
     }
     /*MENU 3*/
     function show_user_agent(user_agent){
@@ -685,7 +995,7 @@
             document.getElementById('list_app_log_col_title' + i).classList.remove('desc');
         }
         document.getElementById('list_app_log_col_title' + sort).classList.add(order_by);
-        await fetch(`/service/db/api/app_log?app_id=${app_id}&year=${year}&month=${month}&sort=${sort}&order_by=${order_by}&offset=${offset}&limit=${limit}`,
+        await fetch(global_rest_base + `app_log?app_id=${app_id}&year=${year}&month=${month}&sort=${sort}&order_by=${order_by}&offset=${offset}&limit=${limit}`,
             {method: 'GET',
                 headers: {
                     'Authorization': 'Bearer ' + global_rest_admin_at,
