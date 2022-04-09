@@ -1062,6 +1062,7 @@
         });
 
         global_session_map.addControl(new mapboxgl.NavigationControl());
+        global_session_map.addControl(new mapboxgl.FullscreenControl());
     }
     function update_map(longitude, latitude, zoom, text_place, marker_id, flyto) {
         if (flyto == 1) {
