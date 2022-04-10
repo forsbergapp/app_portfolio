@@ -38,21 +38,64 @@ function sendLog(logscope, loglevel, log){
         
     }   
 }
+function logdate(){
+    let logdate = new Date();
+    if (process.env.SERVICE_LOG_DATE_FORMAT!='' &&
+        typeof process.env.SERVICE_LOG_DATE_FORMAT!='undefined'){
+        //ex ISO8601 format: "yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'"
+        logdate.format(process.env.SERVICE_LOG_DATE_FORMAT);
+    }
+    else
+        logdate = logdate.toISOString();
+    return logdate;
+}
+function createLogAppS(level_info, app_id, app_filename, app_function_name, app_line, logtext){
+    
+    let log_json =`{"logdate": "${logdate()}",
+                    "ip":"",
+                    "host": "${require('os').hostname()}",
+                    "protocol": "",
+                    "url": "",
+                    "method":"",
+                    "statusCode": "",
+                    "user-agent": "",
+                    "accept-language": "",
+                    "http_referer": "",
+                    "app_id": ${app_id},
+                    "app_filename": "${app_filename}",
+                    "app_function_name": "${app_function_name}",
+                    "app_app_line": ${app_line},
+                    "logtext": "${JSON.stringify(logtext).replaceAll('"', '\'')}"
+                    }`;
+    sendLog(process.env.SERVICE_LOG_SCOPE_SERVICE, level_info, log_json);
+}
+function createLogAppC(level_info, req, res, app_id, app_filename, app_function_name, app_line, logtext){
+    let log_json =`{"logdate": "${logdate()}",
+                    "ip":"${req.ip}",
+                    "host": "${req.get('host')}",
+                    "protocol": "${req.protocol}",
+                    "url": "${req.originalUrl}",
+                    "method":"${req.method}",
+                    "status_code": ${res.statusCode},
+                    "user-agent": "${req.headers["user-agent"]}",
+                    "accept-language": "${req.headers["accept-language"]}",
+                    "http_referer": "${req.headers.referer}",
+                    "app_id": ${app_id},
+                    "app_filename": "${app_filename}",
+                    "app_function_name": "${app_function_name}",
+                    "app_app_line": ${app_line},
+                    "logtext": "${JSON.stringify(logtext).replaceAll('"', '\'')}"
+                    }`;
+    sendLog(process.env.SERVICE_LOG_SCOPE_CONTROLLER, level_info, log_json);
+}
 module.exports = {
 
 	createLogServer: (err=null, req, res, info=null) =>{
-        let logdate = new Date();
         let log_error_status = '';
         let log_error_message = '';
         let log_level;
         let log_json_server;
-        if (process.env.SERVICE_LOG_DATE_FORMAT!='' &&
-            typeof process.env.SERVICE_LOG_DATE_FORMAT!='undefined'){
-            //ex ISO8601 format: "yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'"
-            logdate.format(process.env.SERVICE_LOG_DATE_FORMAT);
-        }
-        else
-            logdate = logdate.toISOString();
+
         if (err==null){
             if(process.env.SERVICE_LOG_ENABLE_SERVER_VERBOSE==1)
                 log_level = process.env.SERVICE_LOG_LEVEL_VERBOSE;
@@ -66,9 +109,7 @@ module.exports = {
         }
         if (info!=null){
             log_json_server = 
-            `{"logscope": "${process.env.SERVICE_LOG_SCOPE_SERVER}",
-             "loglevel": "${log_level}",
-             "logdate": "${logdate}",
+            `{"logdate": "${logdate()}",
              "ip":"",
              "host": "${require('os').hostname()}",
              "protocol": "",
@@ -78,16 +119,16 @@ module.exports = {
              "user-agent": "",
              "accept-language": "",
              "http_referer": "",
-             "error_status": "", 
-             "error_message": "",
-             "info": "${JSON.stringify(info).replaceAll('"', '\'')}"
+             "app_id": "",
+             "app_filename": "",
+             "app_function_name": "",
+             "app_app_line": "",
+             "logtext": "${JSON.stringify(info).replaceAll('"', '\'')}"
              }`;
         }
         else{
             log_json_server  =
-            `{"logscope": "${process.env.SERVICE_LOG_SCOPE_SERVER}",
-             "loglevel": "${log_level}",
-             "logdate": "${logdate}",
+            `{"logdate": "${logdate()}",
              "ip":"${req.ip}",
              "host": "${req.get('host')}",
              "protocol": "${req.protocol}",
@@ -97,143 +138,51 @@ module.exports = {
              "user-agent": "${req.headers["user-agent"]}",
              "accept-language": "${req.headers["accept-language"]}",
              "http_referer": "${req.headers["referer"]}",
-             "error_status": "${log_error_status}",
-             "error_message": "${JSON.stringify(log_error_message).replaceAll('"', '\'')}", 
-             "info": ""
+             "app_id": "",
+             "app_filename": "",
+             "app_function_name": "",
+             "app_app_line": "",
+             "logtext": "${log_error_status}-${JSON.stringify(log_error_message).replaceAll('"', '\'')}"
             }`;
         }
         sendLog(process.env.SERVICE_LOG_SCOPE_SERVER, log_level, log_json_server);
     },
     createLogDB: (app_id, logtext) =>{
         if (process.env.SERVICE_LOG_ENABLE_DB==1){
-            let logdate = new Date();
-            if (process.env.SERVICE_LOG_DATE_FORMAT!='' &&
-                typeof process.env.SERVICE_LOG_DATE_FORMAT!='undefined'){
-                //ex ISO8601 format: "yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'"
-                logdate.format(process.env.SERVICE_LOG_DATE_FORMAT);
-            }
-            else
-                logdate = logdate.toISOString();
-            let log_json_db = `{"logscope": "${process.env.SERVICE_LOG_SCOPE_DB}",
-                                "loglevel": "${process.env.SERVICE_LOG_LEVEL_INFO}",
-                                "logdate": "${logdate}",
+            let log_json_db = `{"logdate": "${logdate()}",
+                                "ip":"",
+                                "host": "${require('os').hostname()}",
+                                "protocol": "",
+                                "url": "",
+                                "method":"",
+                                "statusCode": "",
+                                "user-agent": "",
+                                "accept-language": "",
+                                "http_referer": "",
                                 "app_id": ${app_id},
+                                "app_filename": "",
+                                "app_function_name": "",
+                                "app_app_line": "",
                                 "logtext": "${JSON.stringify(logtext).replaceAll('"', '\'')}"
                                 }`;
-            sendLog(logscope, loglevel, log_json_db);
+            sendLog(process.env.SERVICE_LOG_SCOPE_DB, process.env.SERVICE_LOG_LEVEL_INFO, log_json_db);
         }
     },
     createLogAppSI: (app_id, app_filename, app_function_name, app_line, logtext) => {
-        let logdate = new Date();
-        if (process.env.SERVICE_LOG_DATE_FORMAT!='' &&
-            typeof process.env.SERVICE_LOG_DATE_FORMAT!='undefined'){
-            //ex ISO8601 format: "yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'"
-            logdate.format(process.env.SERVICE_LOG_DATE_FORMAT);
-        }
-        else
-            logdate = logdate.toISOString();	
-        let log_json =`{"logscope": "${process.env.SERVICE_LOG_SCOPE_SERVICE}",
-                        "loglevel": "${process.env.SERVICE_LOG_LEVEL_INFO}",
-                        "logdate": "${logdate}",
-                        "app_id": ${app_id},
-                        "app_filename": "${app_filename}",
-                        "app_function_name": "${app_function_name}",
-                        "app_app_line": ${app_line},
-                        "logtext": "${JSON.stringify(logtext).replaceAll('"', '\'')}"
-                        }`;
-        sendLog(process.env.SERVICE_LOG_SCOPE_SERVICE, process.env.SERVICE_LOG_LEVEL_INFO, log_json);
+        createLogAppS(process.env.SERVICE_LOG_LEVEL_INFO, app_id, app_filename, app_function_name, app_line, logtext);
 	},
     createLogAppSE: (app_id, app_filename, app_function_name, app_line, logtext) => {
-        let logdate = new Date();
-        if (process.env.SERVICE_LOG_DATE_FORMAT!='' &&
-            typeof process.env.SERVICE_LOG_DATE_FORMAT!='undefined'){
-            //ex ISO8601 format: "yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'"
-            logdate.format(process.env.SERVICE_LOG_DATE_FORMAT);
-        }
-        else
-            logdate = logdate.toISOString();	
-        let log_json =`{"logscope": "${process.env.SERVICE_LOG_SCOPE_SERVICE}",
-                        "loglevel": "${process.env.SERVICE_LOG_LEVEL_ERROR}",
-                        "logdate": "${logdate}",
-                        "app_id": ${app_id},
-                        "app_filename": "${app_filename}",
-                        "app_function_name": "${app_function_name}",
-                        "app_app_line": ${app_line},
-                        "logtext": "${JSON.stringify(logtext).replaceAll('"', '\'')}"
-                        }`;
-        sendLog(process.env.SERVICE_LOG_SCOPE_SERVICE, process.env.SERVICE_LOG_LEVEL_ERROR, log_json);
+        createLogAppS(process.env.SERVICE_LOG_LEVEL_ERROR, app_id, app_filename, app_function_name, app_line, logtext);
 	},
     createLogAppCI: (req, res, app_id, app_filename, app_function_name, app_line, logtext) => {
-        let logdate = new Date();
-        if (process.env.SERVICE_LOG_DATE_FORMAT!='' &&
-            typeof process.env.SERVICE_LOG_DATE_FORMAT!='undefined'){
-            //ex ISO8601 format: "yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'"
-            logdate.format(process.env.SERVICE_LOG_DATE_FORMAT);
-        }
-        else
-            logdate = logdate.toISOString();	
-        let log_json =`{"logscope": "${process.env.SERVICE_LOG_SCOPE_CONTROLLER}",
-                        "loglevel": "${process.env.SERVICE_LOG_LEVEL_INFO}",
-                        "logdate": "${logdate}",
-                        "ip":"${req.ip}",
-                        "host": "${req.get('host')}",
-                        "protocol": "${req.protocol}",
-                        "url": "${req.originalUrl}",
-                        "method":"${req.method}",
-                        "status_code": ${res.statusCode},
-                        "user-agent": "${req.headers["user-agent"]}",
-                        "accept-language": "${req.headers["accept-language"]}",
-                        "http_referer": "${req.headers.referer}",
-                        "app_id": ${app_id},
-                        "app_filename": "${app_filename}",
-                        "app_function_name": "${app_function_name}",
-                        "app_app_line": ${app_line},
-                        "logtext": "${JSON.stringify(logtext).replaceAll('"', '\'')}"
-                        }`;
-        sendLog(process.env.SERVICE_LOG_SCOPE_CONTROLLER, process.env.SERVICE_LOG_LEVEL_INFO, log_json);
+        createLogAppC(process.env.SERVICE_LOG_LEVEL_INFO, req, res, app_id, app_filename, app_function_name, app_line, logtext);
 	},
     createLogAppCE: (req, res, app_id, app_filename, app_function_name, app_line, logtext) => {
-        let logdate = new Date();
-        if (process.env.SERVICE_LOG_DATE_FORMAT!='' &&
-            typeof process.env.SERVICE_LOG_DATE_FORMAT!='undefined'){
-            //ex ISO8601 format: "yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'"
-            logdate.format(process.env.SERVICE_LOG_DATE_FORMAT);
-        }
-        else
-            logdate = logdate.toISOString();	
-        let log_json =`{"logscope": "${process.env.SERVICE_LOG_SCOPE_CONTROLLER}",
-                        "loglevel": "${process.env.SERVICE_LOG_LEVEL_ERROR}",
-                        "logdate": "${logdate}",
-                        "ip":"${req.ip}",
-                        "host": "${req.get('host')}",
-                        "protocol": "${req.protocol}",
-                        "url": "${req.originalUrl}",
-                        "method":"${req.method}",
-                        "status_code": ${res.statusCode},
-                        "user-agent": "${req.headers["user-agent"]}",
-                        "accept-language": "${req.headers["accept-language"]}",
-                        "http_referer": "${req.headers.referer}",
-                        "app_id": ${app_id},
-                        "app_filename": "${app_filename}",
-                        "app_function_name": "${app_function_name}",
-                        "app_app_line": ${app_line},
-                        "logtext": "${JSON.stringify(logtext).replaceAll('"', '\'')}"
-                        }`;
-        sendLog(process.env.SERVICE_LOG_SCOPE_CONTROLLER, process.env.SERVICE_LOG_LEVEL_ERROR, log_json);
+        createLogAppC(process.env.SERVICE_LOG_LEVEL_ERROR, req, res, app_id, app_filename, app_function_name, app_line, logtext);
 	},
     createLogAppRI: (req, res, app_id, app_filename, app_function_name, app_line, logtext) => {
         if (process.env.SERVICE_LOG_ENABLE_ROUTER==1){
-            let logdate = new Date();
-            if (process.env.SERVICE_LOG_DATE_FORMAT!='' &&
-                typeof process.env.SERVICE_LOG_DATE_FORMAT!='undefined'){
-                //ex ISO8601 format: "yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'"
-                logdate.format(process.env.SERVICE_LOG_DATE_FORMAT);
-            }
-            else
-                logdate = logdate.toISOString();	
-            let log_json =`{"logscope": "${process.env.SERVICE_LOG_SCOPE_ROUTER}",
-                            "loglevel": "${process.env.SERVICE_LOG_LEVEL_INFO}",
-                            "logdate": "${logdate}",
+            let log_json =`{"logdate": "${logdate()}",
                             "ip":"${req.ip}",
                             "host": "${req.get('host')}",
                             "protocol": "${req.protocol}",
