@@ -11,7 +11,7 @@ function sendLog(logscope, loglevel, log){
     }
     
     if (process.env.SERVICE_LOG_FILE_INTERVAL=='1D')
-        filename = `${logscope}_${loglevel}_${logdate.getFullYear()}${logdate.getMonth()+1}${logdate.getDate()}.log`;
+        filename = `${logscope}_${loglevel}_${logdate.getFullYear()}${logdate.getMonth()+1}${logdate.toLocaleString("en-US", { day: "2-digit"})}.log`;
     else
         if (process.env.SERVICE_LOG_FILE_INTERVAL=='1M')
             filename = `${logscope}_${loglevel}_${logdate.getFullYear()}${logdate.getMonth()+1}.log`;
@@ -34,7 +34,29 @@ function sendLog(logscope, loglevel, log){
         const headers = { 
             'Authorization': 'Basic ' + btoa(process.env.SERVICE_LOG_URL_DESTINATION_USERNAME + ':' + process.env.SERVICE_LOG_URL_DESTINATION_PASSWORD)
         };
-        axios.post(process.env.SERVICE_LOG_URL_DESTINATION, log);
+        //add logscope and loglevel first and as all logfiles will be sent to same url
+        let url_old  = JSON.parse(log);
+        let url_log  = {};
+        url_log.logscope = logscope;
+        url_log.loglevel = loglevel;
+        url_log.logdate = url_old.logdate;
+        url_log.ip = url_old.ip;
+        url_log.host = url_old.host;
+        url_log.protocol = url_old.protocol;
+        url_log.url = url_old.url;
+        url_log.method = url_old.method;
+        url_log.statusCode = url_old.statusCode;
+        url_log['user-agent'] = url_old['user-agent'];
+        url_log['accept-language'] = url_old['accept-language'];
+        url_log.http_referer = url_old.http_referer;
+        url_log.app_id = url_old.app_id;
+        url_log.app_filename = url_old.app_filename;
+        url_log.app_function_name = url_old.app_function_name;
+        url_log.app_line = url_old.app_line;
+        url_log.logtext = url_old.logtext;
+
+        url_log = JSON.stringify(url_log);
+        axios.post(process.env.SERVICE_LOG_URL_DESTINATION, url_log);
         
     }   
 }
@@ -65,7 +87,7 @@ function createLogAppS(level_info, app_id, app_filename, app_function_name, app_
                     "app_filename": "${app_filename}",
                     "app_function_name": "${app_function_name}",
                     "app_app_line": ${app_line},
-                    "logtext": "${JSON.stringify(logtext).replaceAll('"', '\'')}"
+                    "logtext": ${JSON.stringify(logtext)}
                     }`;
     sendLog(process.env.SERVICE_LOG_SCOPE_SERVICE, level_info, log_json);
 }
@@ -84,7 +106,7 @@ function createLogAppC(level_info, req, res, app_id, app_filename, app_function_
                     "app_filename": "${app_filename}",
                     "app_function_name": "${app_function_name}",
                     "app_app_line": ${app_line},
-                    "logtext": "${JSON.stringify(logtext).replaceAll('"', '\'')}"
+                    "logtext": ${JSON.stringify(logtext)}
                     }`;
     sendLog(process.env.SERVICE_LOG_SCOPE_CONTROLLER, level_info, log_json);
 }
@@ -123,7 +145,7 @@ module.exports = {
              "app_filename": "",
              "app_function_name": "",
              "app_app_line": "",
-             "logtext": "${JSON.stringify(info).replaceAll('"', '\'')}"
+             "logtext": ${JSON.stringify(info)}
              }`;
         }
         else{
@@ -142,7 +164,7 @@ module.exports = {
              "app_filename": "",
              "app_function_name": "",
              "app_app_line": "",
-             "logtext": "${log_error_status}-${JSON.stringify(log_error_message).replaceAll('"', '\'')}"
+             "logtext": ${JSON.stringify(log_error_status + '-' + log_error_message)}
             }`;
         }
         sendLog(process.env.SERVICE_LOG_SCOPE_SERVER, log_level, log_json_server);
@@ -163,7 +185,7 @@ module.exports = {
                                 "app_filename": "",
                                 "app_function_name": "",
                                 "app_app_line": "",
-                                "logtext": "${JSON.stringify(logtext).replaceAll('"', '\'')}"
+                                "logtext": ${JSON.stringify(logtext)}
                                 }`;
             sendLog(process.env.SERVICE_LOG_SCOPE_DB, process.env.SERVICE_LOG_LEVEL_INFO, log_json_db);
         }
@@ -196,7 +218,7 @@ module.exports = {
                             "app_filename": "${app_filename}",
                             "app_function_name": "${app_function_name}",
                             "app_app_line": ${app_line},
-                            "logtext": "${JSON.stringify(logtext).replaceAll('"', '\'')}"
+                            "logtext": ${JSON.stringify(logtext)}
                             }`;
             sendLog(process.env.SERVICE_LOG_SCOPE_ROUTER, process.env.SERVICE_LOG_LEVEL_INFO, log_json);
         }
