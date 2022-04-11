@@ -222,5 +222,48 @@ module.exports = {
                             }`;
             sendLog(process.env.SERVICE_LOG_SCOPE_ROUTER, process.env.SERVICE_LOG_LEVEL_INFO, log_json);
         }
-	}
+	},
+    getParameters: (callBack) => {
+        let results = {};
+        results.SERVICE_LOG_SCOPE_SERVER = process.env.SERVICE_LOG_SCOPE_SERVER;
+        results.SERVICE_LOG_SCOPE_SERVICE = process.env.SERVICE_LOG_SCOPE_SERVICE;
+        results.SERVICE_LOG_SCOPE_DB = process.env.SERVICE_LOG_SCOPE_DB;
+        results.SERVICE_LOG_SCOPE_ROUTER = process.env.SERVICE_LOG_SCOPE_ROUTER;
+        results.SERVICE_LOG_SCOPE_CONTROLLER = process.env.SERVICE_LOG_SCOPE_CONTROLLER;
+        results.SERVICE_LOG_ENABLE_SERVER_INFO = process.env.SERVICE_LOG_ENABLE_SERVER_INFO;
+        results.SERVICE_LOG_ENABLE_SERVER_VERBOSE = process.env.SERVICE_LOG_ENABLE_SERVER_VERBOSE;
+        
+        results.SERVICE_LOG_ENABLE_DB = process.env.SERVICE_LOG_ENABLE_DB;
+        results.SERVICE_LOG_ENABLE_ROUTER = process.env.SERVICE_LOG_ENABLE_ROUTER;
+        results.SERVICE_LOG_LEVEL_VERBOSE = process.env.SERVICE_LOG_LEVEL_VERBOSE;
+        results.SERVICE_LOG_LEVEL_ERROR = process.env.SERVICE_LOG_LEVEL_ERROR;
+        results.SERVICE_LOG_LEVEL_INFO = process.env.SERVICE_LOG_LEVEL_INFO;
+        
+        results.SERVICE_LOG_FILE_INTERVAL = process.env.SERVICE_LOG_FILE_INTERVAL;
+        
+        return callBack(null, results);
+    },
+    getLogs: (data, callBack) => {
+        var fs = require('fs');
+        let filename;
+        if (process.env.SERVICE_LOG_FILE_INTERVAL=='1D')
+            filename = `${data.logscope}_${data.loglevel}_${data.year}${data.month}${data.day}.log`;
+        else
+            if (process.env.SERVICE_LOG_FILE_INTERVAL=='1M')
+                filename = `${data.logscope}_${data.loglevel}_${data.year}${data.month}.log`;
+            else
+                filename = `${data.logscope}_${data.loglevel}_${data.year}${data.month}.log`;
+        let log; 
+        try {
+            log = fs.readFileSync(process.env.SERVICE_LOG_FILE_PATH_SERVER + filename , 'utf8');    
+            //logs save with in JSON format {}\r\n for each row, replace \r\n with ,
+            log = log.replace(/\r\n/g,',');
+            //remove last ,
+            log = log.substring(0, log.length - 1);
+        } catch (error) {
+            log = '';
+        }
+        
+        return callBack(null, log);
+    }
 };
