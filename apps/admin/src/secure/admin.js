@@ -12,6 +12,28 @@
     var global_service_geolocation;
     var global_service_geolocation_gps_ip;
     var global_service_geolocation_gps_place;
+    var global_service_log = '/service/log'
+    var global_service_log_scope_server;
+    var global_service_log_scope_service;
+    var global_service_log_scope_db;
+    var global_service_log_scope_router;
+    var global_service_log_scope_controller;
+    var global_service_log_enable_server_info;
+    var global_service_log_enable_server_verbose;
+                    
+    var global_service_log_enable_db;
+    var global_service_log_enable_router;
+    var global_service_log_level_verbose;
+    var global_service_log_level_error;
+    var global_service_log_level_info;
+                    
+    var global_service_log_destination;
+    var global_service_log_url_destination;
+    var global_service_log_url_destination_username;
+    var global_service_log_url_destination_password;
+    var global_service_log_file_interval;
+    var global_service_log_file_path_server;
+    var global_service_log_date_format;
     //map variables
     var global_gps_map_container      ='mapid';
     var global_gps_map_style_baseurl  ='mapbox://styles/mapbox/';
@@ -40,17 +62,21 @@
     document.getElementById('menu_3').addEventListener('click', function() { show_menu(3) }, false);
     document.getElementById('menu_4').addEventListener('click', function() { show_menu(4) }, false);
     document.getElementById('menu_5').addEventListener('click', function() { admin_logout() }, false);
+
     document.getElementById('select_app_menu1').addEventListener('change', function() { show_chart(2); }, false);
-    document.getElementById('select_app_menu3').addEventListener('change', function() { show_app_log(); show_connected();}, false);
-    document.getElementById('select_maptype').addEventListener('change', function() { map_set_style(); }, false);
     document.getElementById('select_broadcast_type').addEventListener('change', function() { set_broadcast_type(); }, false);
     document.getElementById('maintenance_broadcast_info').addEventListener('click', function() { show_broadcast_dialogue('ALL'); }, false);
     document.getElementById('send_broadcast_send').addEventListener('click', function() { sendBroadcast(); }, false);
     document.getElementById('send_broadcast_close').addEventListener('click', function() { closeBroadcast()}, false);
+    document.getElementById('checkbox_maintenance').addEventListener('click', function() { set_maintenance() }, false);
 
-    document.getElementById('apps_save').addEventListener('click', function() { apps_save()}, false); 
     document.getElementById('lov_close').addEventListener('click', function() { close_lov()}, false); 
+    document.getElementById('apps_save').addEventListener('click', function() { apps_save()}, false); 
 
+    document.getElementById('select_app_menu3').addEventListener('change', function() { show_app_log(); show_connected();}, false);
+    document.getElementById('select_maptype').addEventListener('change', function() { map_set_style(); }, false);
+    document.getElementById('select_year_menu3').addEventListener('change', function() { show_app_log()}, false);
+    document.getElementById('select_month_menu3').addEventListener('change', function() { show_app_log()}, false);
     document.getElementById('list_app_log_col_title1').addEventListener('click', function() { list_sort_click(this)}, false); 
     document.getElementById('list_app_log_col_title2').addEventListener('click', function() { list_sort_click(this)}, false);
     document.getElementById('list_app_log_col_title3').addEventListener('click', function() { list_sort_click(this)}, false);
@@ -66,19 +92,19 @@
     document.getElementById('list_connected_col_title5').addEventListener('click', function() { list_sort_click(this)}, false);
     document.getElementById('list_connected_col_title6').addEventListener('click', function() { list_sort_click(this)}, false);
     document.getElementById('list_connected_col_title7').addEventListener('click', function() { list_sort_click(this)}, false);
-    
-    document.getElementById('select_year_menu3').addEventListener('change', function() { show_app_log()}, false);
-    document.getElementById('select_month_menu3').addEventListener('change', function() { show_app_log()}, false);
     document.getElementById('list_connected_title1').addEventListener('click', function() { list_click(this)}, false);
     document.getElementById('list_app_log_title2').addEventListener('click', function() { list_click(this)}, false);
-    
     document.getElementById('list_app_log_first').addEventListener('click', function() { page_navigation(this)}, false);
     document.getElementById('list_app_log_previous').addEventListener('click', function() { page_navigation(this)}, false);
     document.getElementById('list_app_log_next').addEventListener('click', function() { page_navigation(this)}, false);
     document.getElementById('list_app_log_last').addEventListener('click', function() { page_navigation(this)}, false);
     
-    document.getElementById('checkbox_maintenance').addEventListener('click', function() { set_maintenance() }, false);
-
+    document.getElementById('select_logscope4').addEventListener('change', function() { show_server_logs();}, false);
+    document.getElementById('select_loglevel4').addEventListener('change', function() { show_server_logs();}, false);
+    document.getElementById('select_app_menu4').addEventListener('change', function() { show_server_logs();}, false);
+    document.getElementById('select_year_menu4').addEventListener('change', function() { show_server_logs();}, false);
+    document.getElementById('select_month_menu4').addEventListener('change', function() { show_server_logs();}, false);
+    document.getElementById('select_day_menu4').addEventListener('change', function() { show_server_logs();}, false);
 
     document.getElementById('button_spinner').style.visibility = 'visible';
     get_parameters().then(function(){
@@ -178,6 +204,7 @@
                 }
                 document.getElementById('select_app_menu1').innerHTML = html;
                 document.getElementById('select_app_menu3').innerHTML = html;
+                document.getElementById('select_app_menu4').innerHTML = html;
                 document.getElementById('select_app_broadcast').innerHTML = html;
             }
             else
@@ -266,7 +293,22 @@
                 break;    
             }
             case 4:{
-                break;    
+                let current_year = new Date().getFullYear();
+                document.getElementById('select_year_menu4').innerHTML = 
+                    `<option value="${current_year}">${current_year}</option>
+                     <option value="${current_year -1}">${current_year-1}</option>
+                     <option value="${current_year -2}">${current_year-2}</option>
+                     <option value="${current_year -3}">${current_year-3}</option>
+                     <option value="${current_year -4}">${current_year-4}</option>
+                     <option value="${current_year -5}">${current_year-5}</option>
+                     `;
+                document.getElementById('select_year_menu4').selectedIndex = 0;
+                document.getElementById('select_month_menu4').selectedIndex = new Date().getMonth();
+                document.getElementById('select_day_menu4').selectedIndex = new Date().getDate() -1;
+                get_server_log_parameters().then(function() {
+                    show_server_logs();
+                });
+                break;
             }
         }            
     }
@@ -1263,5 +1305,145 @@
                 break;
             }
         }
+    }
+    /* MENU 4 */
+    async function get_server_log_parameters(){
+        let status;
+        let json;
+        await fetch(global_service_log + '/parameters',
+        {method: 'GET',
+        headers: {
+                'Authorization': 'Bearer ' + global_rest_admin_at
+            }
+        })
+        .then(function(response) {
+            status = response.status;
+            return response.text();
+        })
+        .then(function(result) {
+            if (status==200){
+                json = JSON.parse(result);
+                global_service_log_scope_server = json.data.SERVICE_LOG_SCOPE_SERVER;
+                global_service_log_scope_service = json.data.SERVICE_LOG_SCOPE_SERVICE;
+                global_service_log_scope_db = json.data.SERVICE_LOG_SCOPE_DB;
+                global_service_log_scope_router = json.data.SERVICE_LOG_SCOPE_ROUTER;
+                global_service_log_scope_controller = json.data.SERVICE_LOG_SCOPE_CONTROLLER;
+
+                global_service_log_enable_server_info = json.data.SERVICE_LOG_ENABLE_SERVER_INFO;
+                global_service_log_enable_server_verbose = json.data.SERVICE_LOG_ENABLE_SERVER_VERBOSE;
+                global_service_log_enable_db = json.data.SERVICE_LOG_ENABLE_DB;
+                global_service_log_enable_router = json.data.SERVICE_LOG_ENABLE_ROUTER;
+
+                global_service_log_level_verbose = json.data.SERVICE_LOG_LEVEL_VERBOSE;
+                global_service_log_level_error = json.data.SERVICE_LOG_LEVEL_ERROR;
+                global_service_log_level_info = json.data.SERVICE_LOG_LEVEL_INFO;
+
+                global_service_log_file_interval = json.data.SERVICE_LOG_FILE_INTERVAL;
+
+                let html = '';
+                html +=`<option value='${global_service_log_scope_server}'>${global_service_log_scope_server}</option>`;
+                html +=`<option value='${global_service_log_scope_service}'>${global_service_log_scope_service}</option>`;
+                html +=`<option value='${global_service_log_scope_db}'>${global_service_log_scope_db}</option>`;
+                html +=`<option value='${global_service_log_scope_router}'>${global_service_log_scope_router}</option>`;
+                html +=`<option value='${global_service_log_scope_controller}'>${global_service_log_scope_controller}</option>`;
+                document.getElementById('select_logscope4').innerHTML = html;
+                html =`<option value='${global_service_log_level_info}'>${global_service_log_level_info}</option>`;
+                html +=`<option value='${global_service_log_level_verbose}'>${global_service_log_level_verbose}</option>`;
+                html +=`<option value='${global_service_log_level_error}'>${global_service_log_level_error}</option>`;
+
+                document.getElementById('select_loglevel4').innerHTML = html;
+                if (global_service_log_file_interval=='1M')
+                    document.getElementById('select_day_menu4').style.display = 'none';
+                else
+                    document.getElementById('select_day_menu4').style.display = 'inline-block';
+            }
+            else
+                show_message(result);
+        })
+    }
+    function show_server_logs(){
+        let status;
+        let json;
+        let logscope = document.getElementById('select_logscope4').value;
+        let loglevel = document.getElementById('select_loglevel4').value;
+        let year = document.getElementById('select_year_menu4').value;
+        let month= document.getElementById('select_month_menu4').value;
+        let day  = document.getElementById('select_day_menu4').value;
+        let url_parameters;
+        if (global_service_log_file_interval=='1M')
+            url_parameters = `logscope=${logscope}&loglevel=${loglevel}&year=${year}&month=${month}`;
+        else
+            url_parameters = `logscope=${logscope}&loglevel=${loglevel}&year=${year}&month=${month}&day=${day}`;
+        fetch(global_service_log + `/logs?${url_parameters}`,
+        {method: 'GET',
+        headers: {
+                'Authorization': 'Bearer ' + global_rest_admin_at
+            }
+        })
+        .then(function(response) {
+            status = response.status;
+            return response.text();
+        })
+        .then(function(result) {
+            if (status==200){
+                json = JSON.parse(result);
+                let list_server_log = document.getElementById('list_server_log');
+                list_server_log.innerHTML = '';
+                let html = '';
+                for (i = 0; i < json.length; i++) {
+                    html += 
+                    `<div class='list_server_log_row'>
+                        <div class='list_server_log_col'>
+                            <div>${json[i].logdate}</div>
+                        </div>
+                        <div class='list_server_log_col'>
+                            <div>${json[i].ip==""?"":json[i].ip.replace('::ffff:','')}</div>
+                        </div>
+                        <div class='list_server_log_col'>
+                            <div>${json[i].host}</div>
+                        </div>
+                        <div class='list_server_log_col'>
+                            <div>${json[i].protocol}</div>
+                        </div>
+                        <div class='list_server_log_col'>
+                            <div>${json[i].url}</div>
+                        </div>
+                        <div class='list_server_log_col'>
+                            <div>${json[i].method}</div>
+                        </div>
+                        <div class='list_server_log_col'>
+                            <div>${json[i].statusCode}</div>
+                        </div>
+                        <div class='list_server_log_col'>
+                            <div>${json[i]['user-agent']}</div>
+                        </div>
+                        <div class='list_server_log_col'>
+                            <div>${json[i]['accept-language']}</div>
+                        </div>
+                        <div class='list_server_log_col'>
+                            <div>${json[i].http_referer}</div>
+                        </div>
+                        <div class='list_server_log_col'>
+                            <div>${json[i].app_id}</div>
+                        </div>
+                        <div class='list_server_log_col'>
+                            <div>${json[i].app_filename}</div>
+                        </div>
+                        <div class='list_server_log_col'>
+                            <div>${json[i].app_function_name}</div>
+                        </div>
+                        <div class='list_server_log_col'>
+                            <div>${json[i].app_app_line}</div>
+                        </div>
+                        <div class='list_server_log_col'>
+                            <div>${json[i].logtext}</div>
+                        </div>
+                    </div><br>`;
+                }
+                list_server_log.innerHTML = html;
+            }
+            else
+                show_message(result);
+        })
     }
 </script>
