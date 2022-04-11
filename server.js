@@ -137,6 +137,8 @@ const app1_app_timetables_user_setting_likeRouter = require("./service/db/api/ap
 const app1_app_timetables_user_setting_viewRouter = require("./service/db/api/app_timetables_user_setting_view/app_timetables_user_setting_view.router");
 //service geolocation
 const geolocationRouter = require("./service/geolocation/geolocation.router");
+//service log
+const logRouter = require("./service/log/log.router");
 //service mail
 const mailRouter = require("./service/mail/mail.router");
 //service forms
@@ -172,6 +174,8 @@ app.use("/service/db/api/app_timetables_user_setting_like", app1_app_timetables_
 app.use("/service/db/api/app_timetables_user_setting_view", app1_app_timetables_user_setting_viewRouter);
 //service geolocation
 app.use("/service/geolocation", geolocationRouter);
+//service log
+app.use("/service/log", logRouter);
 //service mail
 app.use("/service/mail", mailRouter);
 //service forms
