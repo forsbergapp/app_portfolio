@@ -4,7 +4,7 @@
         <div id='menu_1' class='menuitem'>DASHBOARD</div>
         <div id='menu_2' class='menuitem'>APP ADMIN</div>
         <div id='menu_3' class='menuitem'>APP STAT</div>
-        <div id='menu_4' class='menuitem'>LOGS</div>
+        <div id='menu_4' class='menuitem'>SERVER LOGS</div>
         <div id='menu_5' class='menuitem'>Logout</div>
     </div>
     <div id='main'>
@@ -228,7 +228,108 @@
             
         </div>
         <div id='menu_4_content' class='main_content'>
-            <div id='menu_4_content_widget' class='widget'>Four</div>
+            <div id='menu_4_content_widget' class='widget'>
+                <select id="select_logscope4"></select>
+                <select id="select_loglevel4"></select>
+                <select id="select_app_menu4"></select>
+                <select id="select_year_menu4"></select>
+                <select id="select_month_menu4">
+                    <option value='1'>1</option>
+                    <option value='2'>2</option>
+                    <option value='3'>3</option>
+                    <option value='4'>4</option>
+                    <option value='5'>5</option>
+                    <option value='6'>6</option>
+                    <option value='7'>7</option>
+                    <option value='8'>8</option>
+                    <option value='9'>9</option>
+                    <option value='10'>10</option>
+                    <option value='11'>11</option>
+                    <option value='12'>12</option>
+                </select>
+                <select id="select_day_menu4">
+                    <option value='1'>1</option>
+                    <option value='2'>2</option>
+                    <option value='3'>3</option>
+                    <option value='4'>4</option>
+                    <option value='5'>5</option>
+                    <option value='6'>6</option>
+                    <option value='7'>7</option>
+                    <option value='8'>8</option>
+                    <option value='9'>9</option>
+                    <option value='10'>10</option>
+                    <option value='11'>11</option>
+                    <option value='12'>12</option>
+                    <option value='13'>13</option>
+                    <option value='14'>14</option>
+                    <option value='15'>15</option>
+                    <option value='16'>16</option>
+                    <option value='17'>17</option>
+                    <option value='18'>18</option>
+                    <option value='19'>19</option>
+                    <option value='20'>20</option>
+                    <option value='21'>21</option>
+                    <option value='22'>22</option>
+                    <option value='23'>23</option>
+                    <option value='24'>24</option>
+                    <option value='25'>25</option>
+                    <option value='26'>26</option>
+                    <option value='27'>27</option>
+                    <option value='28'>28</option>
+                    <option value='29'>29</option>
+                    <option value='30'>30</option>
+                    <option value='31'>31</option>
+                </select>
+                <div id='list_server_log_title'>Server Log</div>
+                <div id='list_server_log_row_title' class='list_server_log_row'>
+                    <div id='list_server_log_col_title1' class='list_server_log_col'>
+                        <div>LOGDATE</div>
+                    </div>
+                    <div id='list_server_log_col_title2' class='list_server_log_col'>
+                        <div>IP</div>
+                    </div>
+                    <div id='list_server_log_col_title3' class='list_server_log_col'>
+                        <div>HOST</div>
+                    </div>
+                    <div id='list_server_log_col_title4' class='list_server_log_col'>
+                        <div>PROTOCOL</div>
+                    </div>
+                    <div id='list_server_log_col_title5' class='list_server_log_col'>
+                        <div>URL</div>
+                    </div>
+                    <div id='list_server_log_col_title6' class='list_server_log_col'>
+                        <div>METHOD</div>
+                    </div>
+                    <div id='list_server_log_col_title7' class='list_server_log_col'>
+                        <div>STATUSCODE</div>
+                    </div>
+                    <div id='list_server_log_col_title8' class='list_server_log_col'>
+                        <div>USER AGENT</div>
+                    </div>
+                    <div id='list_server_log_col_title9' class='list_server_log_col'>
+                        <div>ACCEPT LANGUAGE</div>
+                    </div>
+                    <div id='list_server_log_col_title10' class='list_server_log_col'>
+                        <div>HTTP REFERER</div>
+                    </div>
+                    <div id='list_server_log_col_title11' class='list_server_log_col'>
+                        <div>APP ID</div>
+                    </div>
+                    <div id='list_server_log_col_title12' class='list_server_log_col'>
+                        <div>APP FILENAME</div>
+                    </div>
+                    <div id='list_server_log_col_title13' class='list_server_log_col'>
+                        <div>APP FUNCTION NAME</div>
+                    </div>
+                    <div id='list_server_log_col_title14' class='list_server_log_col'>
+                        <div>APP APP LINE</div>
+                    </div>
+                    <div id='list_server_log_col_title15' class='list_server_log_col'>
+                        <div>LOG TEXT</div>
+                    </div>
+                </div>
+                <div id="list_server_log" ></div>
+            </div>
         </div>
     </div>
     <div id='dialogue_send_broadcast' class='dialogue'>
