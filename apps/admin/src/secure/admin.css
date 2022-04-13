@@ -577,6 +577,14 @@
         width: 100%;
         height: 87%;
     }
+    #map_my_location{
+        position: absolute;
+        top: 320px;
+        left: 30px;
+        border-radius: 4px;
+        height: 29px;
+        width: 29px;
+    }
     /*MENU 4 APP STAT*/
     #menu_4_content_widget{
         height:500px;
@@ -766,6 +774,10 @@
     .theme_light #map_popup_title{
         font-weight: bold;
     }
+    .theme_light #map_my_location{
+        font-size: 20px;
+        background-color: #fefefe;
+    }    
     .theme_light .dialogue{
         background-color: rgba(0,0,0,0.4);
     }
