@@ -1,56 +1,56 @@
 <script>
 
-    var global_rest_dt;
-    var global_app_rest_client_id;
-    var global_app_rest_client_secret;
-    var global_service_auth;
-    var global_rest_base = '/service/db/api/';
-    var global_rest_app;
-    var global_rest_app_parameter = 'app_parameter';
-    var global_rest_parameter_type;
-    var global_rest_user_account;
-    var global_service_geolocation;
-    var global_service_geolocation_gps_ip;
-    var global_service_geolocation_gps_place;
-    var global_service_log = '/service/log'
-    var global_service_log_scope_server;
-    var global_service_log_scope_service;
-    var global_service_log_scope_db;
-    var global_service_log_scope_router;
-    var global_service_log_scope_controller;
-    var global_service_log_enable_server_info;
-    var global_service_log_enable_server_verbose;
+    window.global_rest_dt= '';
+    window.global_app_rest_client_id= '';
+    window.global_app_rest_client_secret= '';
+    window.global_service_auth= '';
+    window.global_rest_base = '/service/db/api/';
+    window.global_rest_app= '';
+    window.global_rest_app_parameter = 'app_parameter';
+    window.global_rest_parameter_type= '';
+    window.global_rest_user_account= '';
+    window.global_service_geolocation= '';
+    window.global_service_geolocation_gps_ip= '';
+    window.global_service_geolocation_gps_place= '';
+    window.global_service_log = '/service/log';
+    window.global_service_log_scope_server= '';
+    window.global_service_log_scope_service= '';
+    window.global_service_log_scope_db= '';
+    window.global_service_log_scope_router= '';
+    window.global_service_log_scope_controller= '';
+    window.global_service_log_enable_server_info= '';
+    window.global_service_log_enable_server_verbose= '';
                     
-    var global_service_log_enable_db;
-    var global_service_log_enable_router;
-    var global_service_log_level_verbose;
-    var global_service_log_level_error;
-    var global_service_log_level_info;
+    window.global_service_log_enable_db= '';
+    window.global_service_log_enable_router= '';
+    window.global_service_log_level_verbose= '';
+    window.global_service_log_level_error= '';
+    window.global_service_log_level_info= '';
                     
-    var global_service_log_destination;
-    var global_service_log_url_destination;
-    var global_service_log_url_destination_username;
-    var global_service_log_url_destination_password;
-    var global_service_log_file_interval;
-    var global_service_log_file_path_server;
-    var global_service_log_date_format;
+    window.global_service_log_destination= '';
+    window.global_service_log_url_destination= '';
+    window.global_service_log_url_destination_username= '';
+    window.global_service_log_url_destination_password= '';
+    window.global_service_log_file_interval= '';
+    window.global_service_log_file_path_server= '';
+    window.global_service_log_date_format= '';
     //map variables
-    var global_gps_map_container      ='mapid';
-    var global_gps_map_style_baseurl  ='mapbox://styles/mapbox/';
-    var global_gps_map_style          ='satellite-streets-v11';
-    var global_gps_map_zoom           = 14;
-    var global_gps_map_flyto          = 1;
-    var global_gps_map_jumpto         = 0;
-    var global_gps_map_marker_div_gps = 'map_marker_gps';
-    var global_gps_map_popup_offset   = 25;
+    window.global_gps_map_container      ='mapid';
+    window.global_gps_map_style_baseurl  ='mapbox://styles/mapbox/';
+    window.global_gps_map_style          ='satellite-streets-v11';
+    window.global_gps_map_zoom           = 14;
+    window.global_gps_map_flyto          = 1;
+    window.global_gps_map_jumpto         = 0;
+    window.global_gps_map_marker_div_gps = 'map_marker_gps';
+    window.global_gps_map_popup_offset   = 25;
     //session variables
-    var global_session_map;
-    var global_session_gps_latitude;
-    var global_session_gps_longitude;
-    var global_page = 0;
-    var global_page_last =0;
-    var global_limit =1000;
-    var global_previous_row;
+    window.global_session_map= '';
+    window.global_session_gps_latitude= '';
+    window.global_session_gps_longitude= '';
+    window.global_page = 0;
+    window.global_page_last =0;
+    window.global_limit =1000;
+    window.global_previous_row= '';
 
     document.getElementById('menu_1_content').style.display = 'block';
 
@@ -73,7 +73,7 @@
     document.getElementById('lov_close').addEventListener('click', function() { close_lov()}, false); 
     document.getElementById('apps_save').addEventListener('click', function() { apps_save()}, false); 
 
-    document.getElementById('select_app_menu3').addEventListener('change', function() { show_app_log(); show_connected();}, false);
+    document.getElementById('select_app_menu3').addEventListener('change', function() { show_app_log().then(function(){show_connected();})}, false);
     document.getElementById('select_maptype').addEventListener('change', function() { map_set_style(); }, false);
     document.getElementById('select_year_menu3').addEventListener('change', function() { show_app_log()}, false);
     document.getElementById('select_month_menu3').addEventListener('change', function() { show_app_log()}, false);
@@ -98,6 +98,7 @@
     document.getElementById('list_app_log_previous').addEventListener('click', function() { page_navigation(this)}, false);
     document.getElementById('list_app_log_next').addEventListener('click', function() { page_navigation(this)}, false);
     document.getElementById('list_app_log_last').addEventListener('click', function() { page_navigation(this)}, false);
+    document.getElementById('map_my_location').addEventListener('click', function() { get_gps_from_ip()}, false);
     
     document.getElementById('select_logscope4').addEventListener('change', function() { show_server_logs();}, false);
     document.getElementById('select_loglevel4').addEventListener('change', function() { show_server_logs();}, false);
@@ -118,11 +119,23 @@
         })
     })
     
+    function exception(status, message){
+        if (status == 401)
+            admin_logout();
+        else
+            show_message(message);
+    }
+    function admin_token_has_value(){
+        if (window.global_rest_admin_at =='')
+            return false;
+        else
+            return true;
+    }
 
     async function get_parameters() {
         let status;
         let json;
-        await fetch(`${global_rest_base + global_rest_app_parameter}/0`,
+        await fetch(`${window.global_rest_base + window.global_rest_app_parameter}/0`,
         {method: 'GET'})
             .then(function(response) {
                 status = response.status;
@@ -133,38 +146,38 @@
                     json = JSON.parse(result);
                     for (var i = 0; i < json.data.length; i++) {
                         if (json.data[i].parameter_name=='APP_REST_CLIENT_ID')
-                            global_app_rest_client_id = json.data[i].parameter_value;
+                            window.global_app_rest_client_id = json.data[i].parameter_value;
                         if (json.data[i].parameter_name=='APP_REST_CLIENT_SECRET')
-                            global_app_rest_client_secret = json.data[i].parameter_value;
+                            window.global_app_rest_client_secret = json.data[i].parameter_value;
                         if (json.data[i].parameter_name=='SERVICE_AUTH')
-                            global_service_auth = 'https://' + location.hostname + json.data[i].parameter_value;
+                            window.global_service_auth = 'https://' + location.hostname + json.data[i].parameter_value;
                         if (json.data[i].parameter_name=='REST_APP')
-                            global_rest_app = json.data[i].parameter_value;
+                            window.global_rest_app = json.data[i].parameter_value;
                         if (json.data[i].parameter_name=='REST_PARAMETER_TYPE')
-                            global_rest_parameter_type = json.data[i].parameter_value;
+                            window.global_rest_parameter_type = json.data[i].parameter_value;
                         if (json.data[i].parameter_name=='REST_USER_ACCOUNT')
-                            global_rest_user_account = json.data[i].parameter_value;
+                            window.global_rest_user_account = json.data[i].parameter_value;
                         if (json.data[i].parameter_name=='SERVICE_GEOLOCATION')
-                            global_service_geolocation = 'https://' + location.hostname + json.data[i].parameter_value;
+                            window.global_service_geolocation = 'https://' + location.hostname + json.data[i].parameter_value;
                         if (json.data[i].parameter_name=='SERVICE_GEOLOCATION_GPS_IP')
-                            global_service_geolocation_gps_ip = json.data[i].parameter_value;
+                            window.global_service_geolocation_gps_ip = json.data[i].parameter_value;
                         if (json.data[i].parameter_name=='SERVICE_GEOLOCATION_GPS_PLACE')
-                            global_service_geolocation_gps_place = json.data[i].parameter_value;
+                            window.global_service_geolocation_gps_place = json.data[i].parameter_value;
                         if (json.data[i].parameter_name=='GPS_MAP_ACCESS_TOKEN')
-                            global_gps_map_access_token = json.data[i].parameter_value;        
+                            window.global_gps_map_access_token = json.data[i].parameter_value;        
                     }
                 }
                 else
-                    show_message(result);
+                    exception(status, result);
             });
     }
     async function get_token() {
         let status;
         let json;
-        await fetch(global_service_auth + '?app_id=0' + '&app_user_id=',
+        await fetch(window.global_service_auth + '?app_id=0' + '&app_user_id=',
             {method: 'POST',
             headers: {
-                'Authorization': 'Basic ' + btoa(global_app_rest_client_id + ':' + global_app_rest_client_secret)
+                'Authorization': 'Basic ' + btoa(window.global_app_rest_client_id + ':' + window.global_app_rest_client_secret)
                 }
             })
             .then(function(response) {
@@ -172,22 +185,23 @@
                 return response.text();
             })
             .then(function(result) {
-            if (status == 200)
+            if (status == 200){
                 json = JSON.parse(result);
                 if (json.success === 1){
-                    global_rest_dt = json.token_dt;
+                    window.global_rest_dt = json.token_dt;
                 }
+            }
             else
-                show_message(result);
+                exception(status, result);
             });
     }
     async function get_apps() {
         let status;
         let json;
-        await fetch(global_rest_base + global_rest_app + '?id=0',
+        await fetch(window.global_rest_base + window.global_rest_app + '?id=0',
         {method: 'GET',
         headers: {
-                'Authorization': 'Bearer ' + global_rest_dt
+                'Authorization': 'Bearer ' + window.global_rest_dt
             }
         })
         .then(function(response) {
@@ -208,19 +222,19 @@
                 document.getElementById('select_app_broadcast').innerHTML = html;
             }
             else
-                show_message(result);
+                exception(status, result);
             });
     }
     async function get_gps_from_ip() {
         let status;
-        await fetch(global_service_geolocation + global_service_geolocation_gps_ip + 
+        await fetch(window.global_service_geolocation + window.global_service_geolocation_gps_ip + 
                     '?app_id=' + 0 + 
                     '&app_user_id=' +
                     '&lang_code=en',
             {
             method: 'GET',
             headers: {
-                'Authorization': 'Bearer ' + global_rest_dt,
+                'Authorization': 'Bearer ' + window.global_rest_dt,
             }
         })
         .then(function(response) {
@@ -230,22 +244,125 @@
         .then(function(result) {
             if (status === 200) {
                 let json = JSON.parse(result);
-                global_session_gps_latitude = json.geoplugin_latitude;
-                global_session_gps_longitude = json.geoplugin_longitude;
-                if (!global_session_map)
+                window.global_session_gps_latitude = json.geoplugin_latitude;
+                window.global_session_gps_longitude = json.geoplugin_longitude;
+                if (!window.global_session_map)
                     init_map();
-                update_map(global_session_gps_longitude,
-                    global_session_gps_latitude,
-                    global_gps_map_zoom,
+                update_map(window.global_session_gps_longitude,
+                    window.global_session_gps_latitude,
+                    window.global_gps_map_zoom,
                     json.geoplugin_city + ', ' + 
                     json.geoplugin_region + ', ' + 
                     json.geoplugin_countryCode,
-                    global_gps_map_marker_div_gps,
-                    global_gps_map_jumpto);
+                    window.global_gps_map_marker_div_gps,
+                    window.global_gps_map_jumpto);
             }
+            else
+                exception(status, result);
         })
     }
+    function delete_globals(){
+        //delete all globals in this file, not globals declared elsewhere
+        delete window.global_rest_dt;
+        delete window.global_app_rest_client_id;
+        delete window.global_app_rest_client_secret;
+        delete window.global_service_auth;
+        delete window.global_rest_base;
+        delete window.global_rest_app;
+        delete window.global_rest_app_parameter;
+        delete window.global_rest_parameter_type;
+        delete window.global_rest_user_account;
+        delete window.global_service_geolocation;
+        delete window.global_service_geolocation_gps_ip;
+        delete window.global_service_geolocation_gps_place;
+        delete window.global_service_log;
+        delete window.global_service_log_scope_server;
+        delete window.global_service_log_scope_service;
+        delete window.global_service_log_scope_db;
+        delete window.global_service_log_scope_router;
+        delete window.global_service_log_scope_controller;
+        delete window.global_service_log_enable_server_info;
+        delete window.global_service_log_enable_server_verbose;                        
+        delete window.global_service_log_enable_db;
+        delete window.global_service_log_enable_router;
+        delete window.global_service_log_level_verbose;
+        delete window.global_service_log_level_error;
+        delete window.global_service_log_level_info;                        
+        delete window.global_service_log_destination;
+        delete window.global_service_log_url_destination;
+        delete window.global_service_log_url_destination_username;
+        delete window.global_service_log_url_destination_password;
+        delete window.global_service_log_file_interval;
+        delete window.global_service_log_file_path_server;
+        delete window.global_service_log_date_format;
+        delete window.global_gps_map_container;
+        delete window.global_gps_map_style_baseurl;
+        delete window.global_gps_map_style;
+        delete window.global_gps_map_zoom;
+        delete window.global_gps_map_flyto;
+        delete window.global_gps_map_jumpto;
+        delete window.global_gps_map_marker_div_gps;
+        delete window.global_gps_map_popup_offset;
+        delete window.global_session_map;
+        delete window.global_session_gps_latitude;
+        delete window.global_session_gps_longitude;
+        delete window.global_page;
+        delete window.global_page_last;
+        delete window.global_limit;
+        delete window.global_previous_row;
+        /*
+        delete window[global_rest_dt];
+        delete window[global_app_rest_client_id];
+        delete window[global_app_rest_client_secret];
+        delete window[global_service_auth];
+        delete window[global_rest_base];
+        delete window[global_rest_app];
+        delete window[global_rest_app_parameter];
+        delete window[global_rest_parameter_type];
+        delete window[global_rest_user_account];
+        delete window[global_service_geolocation];
+        delete window[global_service_geolocation_gps_ip];
+        delete window[global_service_geolocation_gps_place];
+        delete window[global_service_log];
+        delete window[global_service_log_scope_server];
+        delete window[global_service_log_scope_service];
+        delete window[global_service_log_scope_db];
+        delete window[global_service_log_scope_router];
+        delete window[global_service_log_scope_controller];
+        delete window[global_service_log_enable_server_info];
+        delete window[global_service_log_enable_server_verbose];
+        delete window[global_service_log_enable_db];
+        delete window[global_service_log_enable_router];
+        delete window[global_service_log_level_verbose];
+        delete window[global_service_log_level_error];
+        delete window[global_service_log_level_info];
+        delete window[global_service_log_destination];
+        delete window[global_service_log_url_destination];
+        delete window[global_service_log_url_destination_username];
+        delete window[global_service_log_url_destination_password];
+        delete window[global_service_log_file_interval];
+        delete window[global_service_log_file_path_server];
+        delete window[global_service_log_date_format];
+        delete window[global_gps_map_container];
+        delete window[global_gps_map_style_baseurl];
+        delete window[global_gps_map_style];
+        delete window[global_gps_map_zoom];
+        delete window[global_gps_map_flyto];
+        delete window[global_gps_map_jumpto];
+        delete window[global_gps_map_marker_div_gps];
+        delete window[global_gps_map_popup_offset];
+        delete window[global_session_map];
+        delete window[global_session_gps_latitude];
+        delete window[global_session_gps_longitude];
+        delete window[global_page];
+        delete window[global_page_last];
+        delete window[global_limit];
+        delete window[global_previous_row];
+        */
+    }
     function admin_logout(){
+        window.global_rest_admin_at = '';
+        delete_globals();
         document.getElementById('menu_1').removeEventListener('click', function() { show_menu(1) }, false);
         document.getElementById('menu_2').removeEventListener('click', function() { show_menu(2) }, false);
         document.getElementById('menu_3').removeEventListener('click', function() { show_menu(3) }, false);
@@ -263,10 +380,15 @@
         document.getElementById(`menu_${menu}_content`).style.display='block';
         switch(menu){
             case 1:{
-                show_chart();
-                count_connected();
-                count_users();
-                show_maintenance();
+                show_chart(1).then(function(){
+                    show_chart(2).then(function(){
+                        count_connected().then(function(){
+                            count_users().then(function(){
+                                show_maintenance();
+                            });
+                        });
+                    });
+                });                
                 break;    
             }
             case 2:{
@@ -274,7 +396,7 @@
                 break;    
             }
             case 3:{
-                global_page = 0;
+                window.global_page = 0;
                 let current_year = new Date().getFullYear();
                 document.getElementById('select_year_menu3').innerHTML = 
                     `<option value="${current_year}">${current_year}</option>
@@ -286,10 +408,13 @@
                      `;
                 document.getElementById('select_year_menu3').selectedIndex = 0;
                 document.getElementById('select_month_menu3').selectedIndex = new Date().getMonth();
-                show_app_log();
-                show_connected();
-                get_gps_from_ip();
-                global_session_map.resize();
+                show_app_log().then(function(){
+                    show_connected().then(function(){
+                        if (admin_token_has_value()){
+                            window.global_session_map.resize();
+                        }
+                    });
+                });
                 break;    
             }
             case 4:{
@@ -313,17 +438,18 @@
         }            
     }
     /* MENU 1*/
-    function show_chart(chart=''){
-        let current_year = new Date().getFullYear();
-        let current_month = new Date().getMonth()+1;
-        if (chart==1 || chart==''){
+    //chart 1=Left Piechart, 2= Right Barchart
+    async function show_chart(chart){
+        if (admin_token_has_value()){
+            let current_year = new Date().getFullYear();
+            let current_month = new Date().getMonth()+1;
             let json;
             let status;
             let app_id ='';
-            fetch(global_rest_base + `app_log/admin/stat/uniquevisitor?app_id=${app_id}&statchoice=1&year=${current_year}&month=${current_month}`,
+            await fetch(window.global_rest_base + `app_log/admin/stat/uniquevisitor?app_id=${app_id}&statchoice=${chart}&year=${current_year}&month=${current_month}`,
             {method: 'GET',
                 headers: {
-                    'Authorization': 'Bearer ' + global_rest_admin_at,
+                    'Authorization': 'Bearer ' + window.global_rest_admin_at,
                 }
             })
             .then(function(response) {
@@ -334,196 +460,185 @@
                 if (status == 200){
                     json = JSON.parse(result);
                     if (json.success == 1){
-                        let app_id_array = [];
-                        let amount_array = [];
-                        for (let i = 0; i < json.data.length; i++) {
-                            app_id_array.push('APP' + json.data[i].app_id);
-                            amount_array.push(json.data[i].amount);
-                        }
-                        document.getElementById('box1').innerHTML = '<canvas id="pieChart"></canvas>';
-                        const ctx1 = document.getElementById('pieChart').getContext('2d');
-                        const pieChart = new Chart(ctx1, {
-                            type: 'pie',
-                            data: {
-                                labels: app_id_array,
-                                datasets: [{
-                                    label: '',
-                                    data: amount_array,
-                                    backgroundColor: [
-                                        'rgba(255, 99, 132, 1)',
-                                        'rgba(54, 162, 235, 1)',
-                                        'rgba(255, 206, 86, 1)'
-                                    ]
-                                }]
-                            },
-                            options: {
-                                responsive:true,
-                                plugins: {
-                                    title: {
-                                        display: true,
-                                        text: `Unique Visitors ${current_year}-${current_month} per app`
+                        document.getElementById(`box${chart}`).innerHTML = `<canvas id="Chart${chart}"></canvas>`;
+                        const ctx = document.getElementById(`Chart${chart}`).getContext('2d');
+                        if (chart==1){
+                            let app_id_array = [];
+                            let amount_array = [];
+                            for (let i = 0; i < json.data.length; i++) {
+                                app_id_array.push('APP' + json.data[i].app_id);
+                                amount_array.push(json.data[i].amount);
+                            }
+                            const pieChart = new Chart(ctx, {
+                                type: 'pie',
+                                data: {
+                                    labels: app_id_array,
+                                    datasets: [{
+                                        label: '',
+                                        data: amount_array,
+                                        backgroundColor: [
+                                            'rgba(255, 99, 132, 1)',
+                                            'rgba(54, 162, 235, 1)',
+                                            'rgba(255, 206, 86, 1)'
+                                        ]
+                                    }]
+                                },
+                                options: {
+                                    responsive:true,
+                                    plugins: {
+                                        title: {
+                                            display: true,
+                                            text: `Unique Visitors ${current_year}-${current_month} per app`
+                                        }
                                     }
                                 }
-                            }
-                            
-                        });
+                                
+                            });
+                        }
+                        else
+                            if (chart==2){
+                                let day_array = [];
+                                let amount_array = [];
+                                for (let i = 0; i < json.data.length; i++) {
+                                    day_array.push(json.data[i].day);
+                                    amount_array.push(json.data[i].amount);
+                                }
+                                const barChart = new Chart(ctx, {
+                                    type: 'bar',
+                                    data: {
+                                        labels: day_array,
+                                        datasets: [{
+                                            label: `Unique Visitors ${current_year}-${current_month} per day`,
+                                            data: amount_array,
+                                            backgroundColor: [
+                                                'rgba(54, 162, 235, 1)',
+                                                'rgba(54, 162, 235, 1)',
+                                                'rgba(54, 162, 235, 1)',
+                                                'rgba(54, 162, 235, 1)',
+                                                'rgba(54, 162, 235, 1)',
+                                                'rgba(54, 162, 235, 1)',
+                                                'rgba(54, 162, 235, 1)',
+                                                'rgba(54, 162, 235, 1)',
+                                                'rgba(54, 162, 235, 1)',
+                                                'rgba(54, 162, 235, 1)',
+                                                'rgba(54, 162, 235, 1)',
+                                                'rgba(54, 162, 235, 1)',
+                                                'rgba(54, 162, 235, 1)',
+                                                'rgba(54, 162, 235, 1)',
+                                                'rgba(54, 162, 235, 1)',
+                                                'rgba(54, 162, 235, 1)',
+                                                'rgba(54, 162, 235, 1)',
+                                                'rgba(54, 162, 235, 1)',
+                                                'rgba(54, 162, 235, 1)',
+                                                'rgba(54, 162, 235, 1)',
+                                                'rgba(54, 162, 235, 1)',
+                                                'rgba(54, 162, 235, 1)',
+                                                'rgba(54, 162, 235, 1)',
+                                                'rgba(54, 162, 235, 1)',
+                                                'rgba(54, 162, 235, 1)',
+                                                'rgba(54, 162, 235, 1)',
+                                                'rgba(54, 162, 235, 1)',
+                                                'rgba(54, 162, 235, 1)',
+                                                'rgba(54, 162, 235, 1)',
+                                                'rgba(54, 162, 235, 1)',
+                                                'rgba(54, 162, 235, 1)'
+                                            ]
+                                        }]
+                                    },
+                                    options: {
+                                        responsive:true,
+                                        scale: {
+                                            ticks: {
+                                                precision: 0
+                                            }
+                                        }
+                                    }
+                                });
+                            }       
                     }
                 }
+                else
+                    exception(status, result);
             })
         }
-        if (chart==2 || chart==''){
-            let json2;
-            let status2;
-            let app_id2 = document.getElementById('select_app_menu1').options[document.getElementById('select_app_menu1').selectedIndex].value;
-            fetch(global_rest_base + `app_log/admin/stat/uniquevisitor?app_id=${app_id2}&statchoice=2&year=${current_year}&month=${current_month}`,
+    }
+    async function count_connected(){
+        if (admin_token_has_value()){
+            let status;
+            let json;
+            let app_id = document.getElementById('select_app_menu1').options[document.getElementById('select_app_menu1').selectedIndex].value;
+            await fetch(`/service/broadcast/connected?app_id=${app_id}`,
             {method: 'GET',
-                headers: {
-                    'Authorization': 'Bearer ' + global_rest_admin_at,
+            headers: {
+                    'Authorization': 'Bearer ' + window.global_rest_admin_at,
                 }
             })
             .then(function(response) {
-                status2 = response.status;
-                return response.text();
+                    status = response.status;
+                    return response.text();
             })
             .then(function(result) {
-                if (status2 == 200){
-                    json2 = JSON.parse(result);
-                    if (json2.success == 1){
-                        let day_array = [];
-                        let amount_array = [];
-                        for (let i = 0; i < json2.data.length; i++) {
-                            day_array.push(json2.data[i].day);
-                            amount_array.push(json2.data[i].amount);
-                        }
-                        document.getElementById('box2').innerHTML = '<canvas id="barChart"></canvas>';
-                        const ctx2 = document.getElementById('barChart').getContext('2d');
-                        const barChart = new Chart(ctx2, {
-                            type: 'bar',
-                            data: {
-                                labels: day_array,
-                                datasets: [{
-                                    label: `Unique Visitors ${current_year}-${current_month} per day`,
-                                    data: amount_array,
-                                    backgroundColor: [
-                                        'rgba(54, 162, 235, 1)',
-                                        'rgba(54, 162, 235, 1)',
-                                        'rgba(54, 162, 235, 1)',
-                                        'rgba(54, 162, 235, 1)',
-                                        'rgba(54, 162, 235, 1)',
-                                        'rgba(54, 162, 235, 1)',
-                                        'rgba(54, 162, 235, 1)',
-                                        'rgba(54, 162, 235, 1)',
-                                        'rgba(54, 162, 235, 1)',
-                                        'rgba(54, 162, 235, 1)',
-                                        'rgba(54, 162, 235, 1)',
-                                        'rgba(54, 162, 235, 1)',
-                                        'rgba(54, 162, 235, 1)',
-                                        'rgba(54, 162, 235, 1)',
-                                        'rgba(54, 162, 235, 1)',
-                                        'rgba(54, 162, 235, 1)',
-                                        'rgba(54, 162, 235, 1)',
-                                        'rgba(54, 162, 235, 1)',
-                                        'rgba(54, 162, 235, 1)',
-                                        'rgba(54, 162, 235, 1)',
-                                        'rgba(54, 162, 235, 1)',
-                                        'rgba(54, 162, 235, 1)',
-                                        'rgba(54, 162, 235, 1)',
-                                        'rgba(54, 162, 235, 1)',
-                                        'rgba(54, 162, 235, 1)',
-                                        'rgba(54, 162, 235, 1)',
-                                        'rgba(54, 162, 235, 1)',
-                                        'rgba(54, 162, 235, 1)',
-                                        'rgba(54, 162, 235, 1)',
-                                        'rgba(54, 162, 235, 1)',
-                                        'rgba(54, 162, 235, 1)'
-                                    ]
-                                }]
-                            },
-                            options: {
-                                responsive:true,
-                                scale: {
-                                  ticks: {
-                                    precision: 0
-                                  }
-                                }
-                            }
-                        });
-                    }
+                if (status == 200){
+                    json = JSON.parse(result);
+                    document.getElementById('count_connected').innerHTML = json.data.length;
                 }
-            })
+                else
+                    exception(status, result);
+                });
         }
     }
-    function count_connected(){
-        let status;
-        let json;
-        let app_id = document.getElementById('select_app_menu1').options[document.getElementById('select_app_menu1').selectedIndex].value;
-        fetch(`/service/broadcast/connected?app_id=${app_id}`,
-        {method: 'GET',
-        headers: {
-                'Authorization': 'Bearer ' + global_rest_admin_at,
-            }
-        })
-        .then(function(response) {
-                status = response.status;
-                return response.text();
-        })
-        .then(function(result) {
-            if (status == 200){
-                json = JSON.parse(result);
-                document.getElementById('count_connected').innerHTML = json.data.length;
-            }
-            else
-                show_message(result);
-            });
-    }
-    function count_users(){
-        let status;
-        let json;
-        fetch(global_rest_base + global_rest_user_account + '/admin/count',
-        {method: 'GET',
-        headers: {
-                'Authorization': 'Bearer ' + global_rest_admin_at,
-            }
-        })
-        .then(function(response) {
-                status = response.status;
-                return response.text();
-        })
-        .then(function(result) {
-            if (status == 200){
-                json = JSON.parse(result);
-                document.getElementById('count_local').innerHTML = json.data.count_local;
-                document.getElementById('count_google').innerHTML = json.data.count_google;
-                document.getElementById('count_facebook').innerHTML = json.data.count_facebook;
-            }
-            else
-                show_message(result);
-            });
-    }
-    function show_maintenance(){
-        let status;
-        let json;
-        fetch(global_rest_base + global_rest_app_parameter + '/admin/0?parameter_name=SERVER_MAINTENANCE',
-        {method: 'GET',
-        headers: {
-                'Authorization': 'Bearer ' + global_rest_admin_at,
-            }
-        })
-        .then(function(response) {
-                status = response.status;
-                return response.text();
-        })
-        .then(function(result) {
-            if (status == 200){
-                json = JSON.parse(result);
-                if (json.data==1)
-                    document.getElementById('checkbox_maintenance').checked =true;
+    async function count_users(){
+        if (admin_token_has_value()){
+            let status;
+            let json;
+            await fetch(window.global_rest_base + window.global_rest_user_account + '/admin/count',
+            {method: 'GET',
+            headers: {
+                    'Authorization': 'Bearer ' + window.global_rest_admin_at,
+                }
+            })
+            .then(function(response) {
+                    status = response.status;
+                    return response.text();
+            })
+            .then(function(result) {
+                if (status == 200){
+                    json = JSON.parse(result);
+                    document.getElementById('count_local').innerHTML = json.data.count_local;
+                    document.getElementById('count_google').innerHTML = json.data.count_google;
+                    document.getElementById('count_facebook').innerHTML = json.data.count_facebook;
+                }
                 else
-                    document.getElementById('checkbox_maintenance').checked =false;
-            }
-            else
-                show_message(result);
+                    exception(status, result);
             });
+        }
+    }
+    async function show_maintenance(){
+        if (admin_token_has_value()){
+            let status;
+            let json;
+            await fetch(window.global_rest_base + window.global_rest_app_parameter + '/admin/0?parameter_name=SERVER_MAINTENANCE',
+            {method: 'GET',
+            headers: {
+                    'Authorization': 'Bearer ' + window.global_rest_admin_at,
+                }
+            })
+            .then(function(response) {
+                    status = response.status;
+                    return response.text();
+            })
+            .then(function(result) {
+                if (status == 200){
+                    json = JSON.parse(result);
+                    if (json.data==1)
+                        document.getElementById('checkbox_maintenance').checked =true;
+                    else
+                        document.getElementById('checkbox_maintenance').checked =false;
+                }
+                else
+                    exception(status, result);
+                });
+        }
     }
     function set_maintenance(){
         let status;
@@ -535,11 +650,11 @@
             check_value = 0;
         let json_data = `{"parameter_name":"SERVER_MAINTENANCE",
                           "parameter_value":${check_value}}`;
-        fetch(global_rest_base + global_rest_app_parameter + '/admin/0',
+        fetch(window.global_rest_base + window.global_rest_app_parameter + '/admin/0',
         {method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + global_rest_admin_at,
+            'Authorization': 'Bearer ' + window.global_rest_admin_at,
         },
         body: json_data
         })
@@ -552,7 +667,7 @@
                 null;
             }
             else
-                show_message(result);
+                exception(status, result);
             });
     }
     /*MENU 2*/
@@ -566,10 +681,10 @@
             case 1:{
                 let status;
                 let json;
-                fetch(global_rest_base + global_rest_parameter_type + `admin`,
+                fetch(window.global_rest_base + window.global_rest_parameter_type + `admin`,
                     {method: 'GET',
                         headers: {
-                            'Authorization': 'Bearer ' + global_rest_admin_at,
+                            'Authorization': 'Bearer ' + window.global_rest_admin_at,
                         }
                     })
                     .then(function(response) {
@@ -605,16 +720,18 @@
                                 }));
                             }
                         }
+                        else
+                            exception(status, result);
                     })
                 break;
             }
         }
     }
     function get_parameter_type_name(row_item, item, old_value){
-        fetch(`${global_rest_base}${global_rest_parameter_type}admin?id=${item.value}`,
+        fetch(`${window.global_rest_base}${window.global_rest_parameter_type}admin?id=${item.value}`,
             {method: 'GET',
                 headers: {
-                    'Authorization': 'Bearer ' + global_rest_admin_at,
+                    'Authorization': 'Bearer ' + window.global_rest_admin_at,
                 }
             })
             .then(function(response) {
@@ -632,7 +749,7 @@
                 }
             }
             else
-                show_message(result);
+                exception(status, result);
             });
     }
     function list_events(item_row, item_edit, column_start_index){
@@ -652,7 +769,7 @@
             //up arrow
             if (event.keyCode === 38) {
                 if (item_row=='list_apps_row')
-                    global_previous_row = event.target.parentNode.parentNode;
+                    window.global_previous_row = event.target.parentNode.parentNode;
                 event.preventDefault();
                 let index = parseInt(event.target.parentNode.parentNode.id.substr(item_row.length+1));
                 if (index>0)
@@ -661,7 +778,7 @@
             //down arrow
             if (event.keyCode === 40) {
                 if (item_row=='list_apps_row')
-                    global_previous_row = event.target.parentNode.parentNode;
+                    window.global_previous_row = event.target.parentNode.parentNode;
                 event.preventDefault();
                 let index = parseInt(event.target.parentNode.parentNode.id.substr(item_row.length+1)) +1;
                 if (document.getElementById(`${item_row}_${index}`)!= null)
@@ -672,8 +789,8 @@
         if (item_row=='list_apps_row'){
             document.querySelectorAll(item_edit).forEach(e => 
                 e.addEventListener('focus', function(event) {
-                    if (global_previous_row != event.target.parentNode.parentNode){
-                        global_previous_row = event.target.parentNode.parentNode;
+                    if (window.global_previous_row != event.target.parentNode.parentNode){
+                        window.global_previous_row = event.target.parentNode.parentNode;
                         show_app_parameter(e.parentNode.parentNode.children[0].children[0].innerHTML);
                     }
                 }
@@ -683,10 +800,10 @@
     async function show_apps(){
         let status;
         let json;
-        await fetch(global_rest_base + global_rest_app + '?id=0',
+        await fetch(window.global_rest_base + window.global_rest_app + '?id=0',
             {method: 'GET',
                 headers: {
-                    'Authorization': 'Bearer ' + global_rest_dt,
+                    'Authorization': 'Bearer ' + window.global_rest_dt,
                 }
             })
             .then(function(response) {
@@ -725,15 +842,17 @@
                         document.querySelectorAll('.list_edit_app')[0].focus();
                     }
                 }
+                else
+                    exception(status, result);
             })  
     }
     function show_app_parameter(app_id){
         let status;
         let json;
-        fetch(global_rest_base + global_rest_app_parameter + `/admin/all/${parseInt(app_id)}`,
+        fetch(window.global_rest_base + window.global_rest_app_parameter + `/admin/all/${parseInt(app_id)}`,
             {method: 'GET',
                 headers: {
-                    'Authorization': 'Bearer ' + global_rest_admin_at,
+                    'Authorization': 'Bearer ' + window.global_rest_admin_at,
                 }
             })
             .then(function(response) {
@@ -777,6 +896,8 @@
                         }));
                     }
                 }
+                else
+                    exception(status, result);
             })
     }
     function apps_save(){
@@ -809,50 +930,52 @@
                            element,
                            id=null, app_name=null, url=null, logo=null,
                            app_id=null, parameter_type_id=null, parameter_name=null, parameter_value=null, parameter_comment=null){
-        let status;
-        let rest_url;
-        let json_data;
-        document.getElementById('save_spinner').style.display='inline-block';
-        document.getElementById('apps_save').style.display='none';
-        switch (table){
-            case 'app':{
-                json_data = `{"app_name": "${app_name}",
-                              "url": "${url}",
-                              "logo": "${logo}"}`;
-                rest_url = `${global_rest_base}${global_rest_app}/admin/${id}`;
-                break;
+        if (admin_token_has_value()){
+            let status;
+            let rest_url;
+            let json_data;
+            document.getElementById('save_spinner').style.display='inline-block';
+            document.getElementById('apps_save').style.display='none';
+            switch (table){
+                case 'app':{
+                    json_data = `{"app_name": "${app_name}",
+                                "url": "${url}",
+                                "logo": "${logo}"}`;
+                    rest_url = `${window.global_rest_base}${window.global_rest_app}/admin/${id}`;
+                    break;
+                }
+                case 'app_parameter':{
+                    json_data = `{"app_id": ${app_id},
+                                "parameter_name":"${parameter_name}",
+                                "parameter_type_id":"${parameter_type_id}",
+                                "parameter_value":"${parameter_value}",
+                                "parameter_comment":"${parameter_comment}"}`;
+                    rest_url = `${window.global_rest_base}${window.global_rest_app_parameter}/admin`;
+                    break;
+                }
             }
-            case 'app_parameter':{
-                json_data = `{"app_id": ${app_id},
-                              "parameter_name":"${parameter_name}",
-                              "parameter_type_id":"${parameter_type_id}",
-                              "parameter_value":"${parameter_value}",
-                              "parameter_comment":"${parameter_comment}"}`;
-                rest_url = `${global_rest_base}${global_rest_app_parameter}/admin`;
-                break;
-            }
+            fetch(rest_url, 
+                {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' +window.global_rest_admin_at
+                },
+                body: json_data
+            })
+            .then(function(response) {
+                status = response.status;
+                return response.text();
+            })
+            .then(function(result) {
+                document.getElementById('save_spinner').style.display='none';
+                document.getElementById('apps_save').style.display='inline-block';
+                if (status === 200)
+                    element.setAttribute('data-changed-record', '0');
+                else
+                    exception(status, result);
+            })
         }
-        fetch(rest_url, 
-            {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + global_rest_admin_at
-            },
-            body: json_data
-        })
-        .then(function(response) {
-            status = response.status;
-            return response.text();
-        })
-        .then(function(result) {
-            document.getElementById('save_spinner').style.display='none';
-            document.getElementById('apps_save').style.display='inline-block';
-            if (status === 200)
-                element.setAttribute('data-changed-record', '0');
-            else
-                show_message(result);
-        })
     }
     /*MENU 3*/
     function show_user_agent(user_agent){
@@ -882,7 +1005,7 @@
             if (item.id == 'list_app_log_title2'){
                 document.getElementById('list_app_log_form').style.display='block';
                 document.getElementById('list_connected_form').style.display='none';
-                global_page = 0;
+               window.global_page = 0;
                 show_app_log();
             }
     }
@@ -930,101 +1053,104 @@
             sort = 8;
         switch (item.id){
             case 'list_app_log_first':{
-                global_page = 0;
-                show_app_log(sort, order_by, 0, global_limit);
+               window.global_page = 0;
+                show_app_log(sort, order_by, 0,window.global_limit);
                 break;
             }
             case 'list_app_log_previous':{
-                global_page = global_page - global_limit;
-                if (global_page - global_limit < 0)
-                    global_page = 0;
+                window.global_page = window.global_page - window.global_limit;
+                if (window.global_page - window.global_limit < 0)
+                    window.global_page = 0;
                 else
-                    global_page = global_page - global_limit;
-                show_app_log(sort, order_by, global_page, global_limit);
+                    window.global_page = window.global_page - window.global_limit;
+                show_app_log(sort, order_by, window.global_page, window.global_limit);
                 break;
             }
             case 'list_app_log_next':{
-                if (global_page + global_limit > global_page_last)
-                    global_page = global_page_last;
+                if (window.global_page + window.global_limit > window.global_page_last)
+                    window.global_page = window.global_page_last;
                 else
-                    global_page = global_page + global_limit;
-                show_app_log(sort, order_by, global_page, global_limit);
+                    window.global_page = window.global_page + window.global_limit;
+                show_app_log(sort, order_by, window.global_page, window.global_limit);
                 break;
             }
             case 'list_app_log_last':{
-                global_page = global_page_last;
-                show_app_log(sort, order_by, global_page, global_limit);
+                window.global_page = window.global_page_last;
+                show_app_log(sort, order_by, window.global_page, window.global_limit);
                 break;
             }
         }
     }
     async function show_connected(sort=4, order_by='desc'){
-        let status;
-        let json;
-        let app_id = document.getElementById('select_app_menu3').options[document.getElementById('select_app_menu3').selectedIndex].value;
-        for (let i=1;i<=7;i++){
-            document.getElementById('list_connected_col_title' + i).classList.remove('asc');
-            document.getElementById('list_connected_col_title' + i).classList.remove('desc');
-        }
-        document.getElementById('list_connected_col_title' + sort).classList.add(order_by);
+        if (admin_token_has_value()){
+            let status;
+            let json;
+            let app_id = document.getElementById('select_app_menu3').options[document.getElementById('select_app_menu3').selectedIndex].value;
+            for (let i=1;i<=7;i++){
+                document.getElementById('list_connected_col_title' + i).classList.remove('asc');
+                document.getElementById('list_connected_col_title' + i).classList.remove('desc');
+            }
+            document.getElementById('list_connected_col_title' + sort).classList.add(order_by);
 
-        await fetch(`/service/broadcast/connected?app_id=${app_id}&sort=${sort}&order_by=${order_by}&limit=${global_limit}`,
-            {method: 'GET',
-                headers: {
-                    'Authorization': 'Bearer ' + global_rest_admin_at,
-                }
-            })
-            .then(function(response) {
-                status = response.status;
-                return response.text();
-            })
-            .then(function(result) {
-            if (status == 200)
-                json = JSON.parse(result);
-                if (json.success === 1){
-                    
-                    set_list_eventlisteners('connected', 'gps',0);
-                    set_list_eventlisteners('connected', 'chat',0);
-                    let list_connected = document.getElementById('list_connected');
-                    list_connected.innerHTML = '';
-                    let html = '';
-                    for (i = 0; i < json.data.length; i++) {
-                        html += 
-                        `<div class='list_connected_row'>
-                            <div class='list_connected_col'>
-                                <div>${json.data[i].id}</div>
-                            </div>
-                            <div class='list_connected_col'>
-                                <div>${json.data[i].app_id}</div>
-                            </div>
-                            <div class='list_connected_col'>
-                                <div>${show_user_agent(json.data[i].user_agent)}</div>
-                            </div>
-                            <div class='list_connected_col'>
-                                <div>${json.data[i].connection_date}</div>
-                            </div>
-                            <div class='list_connected_col'>
-                                <div>${json.data[i].ip.replace('::ffff:','')}</div>
-                            </div>
-                            <div class='list_connected_col list_connected_gps_click gps_click'>
-                                <div>${json.data[i].gps_latitude}</div>
-                            </div>
-                            <div class='list_connected_col list_connected_gps_click gps_click'>
-                                <div>${json.data[i].gps_longitude}</div>
-                            </div>
-                            <div class='list_connected_col list_connected_chat_click chat_click'>
-                                <div><i class="fas fa-comment"></i></div>
-                            </div>
-                            
-                        </div>`;
+            await fetch(`/service/broadcast/connected?app_id=${app_id}&sort=${sort}&order_by=${order_by}&limit=${window.global_limit}`,
+                {method: 'GET',
+                    headers: {
+                        'Authorization': 'Bearer ' + window.global_rest_admin_at,
                     }
-                    list_connected.innerHTML = html;
-                    set_list_eventlisteners('connected', 'gps',1);
-                    set_list_eventlisteners('connected', 'chat',1);
+                })
+                .then(function(response) {
+                    status = response.status;
+                    return response.text();
+                })
+                .then(function(result) {
+                if (status == 200){
+                    json = JSON.parse(result);
+                    if (json.success === 1){
+                        
+                        set_list_eventlisteners('connected', 'gps',0);
+                        set_list_eventlisteners('connected', 'chat',0);
+                        let list_connected = document.getElementById('list_connected');
+                        list_connected.innerHTML = '';
+                        let html = '';
+                        for (i = 0; i < json.data.length; i++) {
+                            html += 
+                            `<div class='list_connected_row'>
+                                <div class='list_connected_col'>
+                                    <div>${json.data[i].id}</div>
+                                </div>
+                                <div class='list_connected_col'>
+                                    <div>${json.data[i].app_id}</div>
+                                </div>
+                                <div class='list_connected_col'>
+                                    <div>${show_user_agent(json.data[i].user_agent)}</div>
+                                </div>
+                                <div class='list_connected_col'>
+                                    <div>${json.data[i].connection_date}</div>
+                                </div>
+                                <div class='list_connected_col'>
+                                    <div>${json.data[i].ip.replace('::ffff:','')}</div>
+                                </div>
+                                <div class='list_connected_col list_connected_gps_click gps_click'>
+                                    <div>${json.data[i].gps_latitude}</div>
+                                </div>
+                                <div class='list_connected_col list_connected_gps_click gps_click'>
+                                    <div>${json.data[i].gps_longitude}</div>
+                                </div>
+                                <div class='list_connected_col list_connected_chat_click chat_click'>
+                                    <div><i class="fas fa-comment"></i></div>
+                                </div>
+                                
+                            </div>`;
+                        }
+                        list_connected.innerHTML = html;
+                        set_list_eventlisteners('connected', 'gps',1);
+                        set_list_eventlisteners('connected', 'chat',1);
+                    }
                 }
-            else
-                show_message(result);
-            });
+                else
+                    exception(status, result);
+                });
+        }
     }    
     async function show_app_log(sort=8, order_by='desc', offset=0, limit=global_limit){
         let status;
@@ -1037,10 +1163,10 @@
             document.getElementById('list_app_log_col_title' + i).classList.remove('desc');
         }
         document.getElementById('list_app_log_col_title' + sort).classList.add(order_by);
-        await fetch(global_rest_base + `app_log?app_id=${app_id}&year=${year}&month=${month}&sort=${sort}&order_by=${order_by}&offset=${offset}&limit=${limit}`,
+        await fetch(window.global_rest_base + `app_log?app_id=${app_id}&year=${year}&month=${month}&sort=${sort}&order_by=${order_by}&offset=${offset}&limit=${limit}`,
             {method: 'GET',
                 headers: {
-                    'Authorization': 'Bearer ' + global_rest_admin_at,
+                    'Authorization': 'Bearer ' + window.global_rest_admin_at,
                 }
             })
             .then(function(response) {
@@ -1048,10 +1174,10 @@
                 return response.text();
             })
             .then(function(result) {
-            if (status == 200)
+            if (status == 200){
                 json = JSON.parse(result);
                 if (json.success === 1){
-                    global_page_last = Math.floor(json.data[0].total_rows/global_limit) * global_limit;
+                    window.global_page_last = Math.floor(json.data[0].total_rows/global_limit) * window.global_limit;
                     set_list_eventlisteners('app_log', 'gps',0);
                     let list_app_log = document.getElementById('list_app_log');
                     list_app_log.innerHTML = '';
@@ -1088,40 +1214,41 @@
                     list_app_log.innerHTML = html;
                     set_list_eventlisteners('app_log', 'gps',1);
                 }
+            }
             else
-                show_message(result);
+                exception(status, result);
             });
     }    
     function init_map() {
-        mapboxgl.accessToken = global_gps_map_access_token;
-        global_session_map = new mapboxgl.Map({
-            container: global_gps_map_container,
-            style: global_gps_map_style_baseurl + global_gps_map_style,
+        mapboxgl.accessToken = window.global_gps_map_access_token;
+        window.global_session_map = new mapboxgl.Map({
+            container: window.global_gps_map_container,
+            style: window.global_gps_map_style_baseurl + window.global_gps_map_style,
             center: [global_session_gps_latitude,
-                     global_session_gps_longitude
+                     window.global_session_gps_longitude
             ],
-            zoom: global_gps_map_zoom
+            zoom: window.global_gps_map_zoom
         });
 
-        global_session_map.addControl(new mapboxgl.NavigationControl());
-        global_session_map.addControl(new mapboxgl.FullscreenControl());
+        window.global_session_map.addControl(new mapboxgl.NavigationControl());
+        window.global_session_map.addControl(new mapboxgl.FullscreenControl());
     }
     function update_map(longitude, latitude, zoom, text_place, marker_id, flyto) {
         if (flyto == 1) {
-            global_session_gps_map_mymap.flyTo({
+            window.global_session_gps_map_mymap.flyTo({
                 'center': [longitude, latitude],
                 essential: true // this animation is considered essential with respect to prefers-reduced-motion
             });
         } else {
             if (zoom == '')
-                global_session_map.jumpTo({ 'center': [longitude, latitude] });
+                window.global_session_map.jumpTo({ 'center': [longitude, latitude] });
             else
-                global_session_map.jumpTo({ 'center': [longitude, latitude], 'zoom': zoom });
+                window.global_session_map.jumpTo({ 'center': [longitude, latitude], 'zoom': zoom });
         }
         fetch(`/service/geolocation/getTimezone?latitude=${latitude}&longitude=${longitude}`,
             {method: 'GET',
                 headers: {
-                    'Authorization': 'Bearer ' + global_rest_dt,
+                    'Authorization': 'Bearer ' + window.global_rest_dt,
                 }
             })
         .then(function(response) {
@@ -1132,25 +1259,25 @@
             let popuptext = `<div id="map_popup_title">${text_place}</div>
                              <div id="map_popup_sub_title">Timezone</div>
                              <div id="map_popup_sub_title_timezone">${text_timezone}</div>`;
-            let popup = new mapboxgl.Popup({ offset: global_gps_map_popup_offset, closeOnClick: false })
+            let popup = new mapboxgl.Popup({ offset: window.global_gps_map_popup_offset, closeOnClick: false })
             .setLngLat([longitude, latitude])
             .setHTML(popuptext)
-            .addTo(global_session_map);
+            .addTo(window.global_session_map);
             let el = document.createElement('div');
             el.id = marker_id;
             new mapboxgl.Marker(el)
             .setLngLat([longitude, latitude])
-            .addTo(global_session_map);
+            .addTo(window.global_session_map);
             return null;    
         })
     }
     function map_set_style(){
-        global_session_map.setStyle(global_gps_map_style_baseurl + document.getElementById('select_maptype').value);
+        window.global_session_map.setStyle(window.global_gps_map_style_baseurl + document.getElementById('select_maptype').value);
     }
     function list_item_action(item){
         if (item.className.indexOf('gps_click')>0){
             let status;
-            fetch(global_service_geolocation + global_service_geolocation_gps_place + 
+            fetch(window.global_service_geolocation + window.global_service_geolocation_gps_place + 
                         '?app_id=' + 0 +
                         '&app_user_id=' + 
                         '&latitude=' + item.parentNode.children[5].children[0].innerHTML +
@@ -1158,7 +1285,7 @@
                         '&lang_code=en', {
                 method: 'GET',
                 headers: {
-                    'Authorization': 'Bearer ' + global_rest_dt,
+                    'Authorization': 'Bearer ' + window.global_rest_dt,
                 }
             })
             .then(function(response) {
@@ -1170,13 +1297,15 @@
                     let json = JSON.parse(result);
                     update_map(item.parentNode.children[6].children[0].innerHTML,
                         item.parentNode.children[5].children[0].innerHTML,
-                        global_gps_map_zoom,
+                        window.global_gps_map_zoom,
                         json.geoplugin_place + ', ' + 
                         json.geoplugin_region + ', ' + 
                         json.geoplugin_countryCode,
-                        global_gps_map_marker_div_gps,
-                        global_gps_map_jumpto);
+                        window.global_gps_map_marker_div_gps,
+                        window.global_gps_map_jumpto);
                 }
+                else
+                    exception(status, result);
             })
         }
         else
@@ -1219,7 +1348,7 @@
         {method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + global_rest_admin_at,
+            'Authorization': 'Bearer ' + window.global_rest_admin_at,
         },
         body: json_data
         })
@@ -1232,7 +1361,7 @@
                 show_message('Sent!');
             }
             else
-                show_message(result);
+                exception(status, result);
             });
     }    
     function closeBroadcast(){
@@ -1310,10 +1439,10 @@
     async function get_server_log_parameters(){
         let status;
         let json;
-        await fetch(global_service_log + '/parameters',
+        await fetch(window.global_service_log + '/parameters',
         {method: 'GET',
         headers: {
-                'Authorization': 'Bearer ' + global_rest_admin_at
+                'Authorization': 'Bearer ' + window.global_rest_admin_at
             }
         })
         .then(function(response) {
@@ -1323,127 +1452,129 @@
         .then(function(result) {
             if (status==200){
                 json = JSON.parse(result);
-                global_service_log_scope_server = json.data.SERVICE_LOG_SCOPE_SERVER;
-                global_service_log_scope_service = json.data.SERVICE_LOG_SCOPE_SERVICE;
-                global_service_log_scope_db = json.data.SERVICE_LOG_SCOPE_DB;
-                global_service_log_scope_router = json.data.SERVICE_LOG_SCOPE_ROUTER;
-                global_service_log_scope_controller = json.data.SERVICE_LOG_SCOPE_CONTROLLER;
+                window.global_service_log_scope_server = json.data.SERVICE_LOG_SCOPE_SERVER;
+                window.global_service_log_scope_service = json.data.SERVICE_LOG_SCOPE_SERVICE;
+                window.global_service_log_scope_db = json.data.SERVICE_LOG_SCOPE_DB;
+                window.global_service_log_scope_router = json.data.SERVICE_LOG_SCOPE_ROUTER;
+                window.global_service_log_scope_controller = json.data.SERVICE_LOG_SCOPE_CONTROLLER;
 
-                global_service_log_enable_server_info = json.data.SERVICE_LOG_ENABLE_SERVER_INFO;
-                global_service_log_enable_server_verbose = json.data.SERVICE_LOG_ENABLE_SERVER_VERBOSE;
-                global_service_log_enable_db = json.data.SERVICE_LOG_ENABLE_DB;
-                global_service_log_enable_router = json.data.SERVICE_LOG_ENABLE_ROUTER;
+                window.global_service_log_enable_server_info = json.data.SERVICE_LOG_ENABLE_SERVER_INFO;
+                window.global_service_log_enable_server_verbose = json.data.SERVICE_LOG_ENABLE_SERVER_VERBOSE;
+                window.global_service_log_enable_db = json.data.SERVICE_LOG_ENABLE_DB;
+                window.global_service_log_enable_router = json.data.SERVICE_LOG_ENABLE_ROUTER;
 
-                global_service_log_level_verbose = json.data.SERVICE_LOG_LEVEL_VERBOSE;
-                global_service_log_level_error = json.data.SERVICE_LOG_LEVEL_ERROR;
-                global_service_log_level_info = json.data.SERVICE_LOG_LEVEL_INFO;
+                window.global_service_log_level_verbose = json.data.SERVICE_LOG_LEVEL_VERBOSE;
+                window.global_service_log_level_error = json.data.SERVICE_LOG_LEVEL_ERROR;
+                window.global_service_log_level_info = json.data.SERVICE_LOG_LEVEL_INFO;
 
-                global_service_log_file_interval = json.data.SERVICE_LOG_FILE_INTERVAL;
+                window.global_service_log_file_interval = json.data.SERVICE_LOG_FILE_INTERVAL;
 
                 let html = '';
-                html +=`<option value='${global_service_log_scope_server}'>${global_service_log_scope_server}</option>`;
-                html +=`<option value='${global_service_log_scope_service}'>${global_service_log_scope_service}</option>`;
-                html +=`<option value='${global_service_log_scope_db}'>${global_service_log_scope_db}</option>`;
-                html +=`<option value='${global_service_log_scope_router}'>${global_service_log_scope_router}</option>`;
-                html +=`<option value='${global_service_log_scope_controller}'>${global_service_log_scope_controller}</option>`;
+                html +=`<option value='${window.global_service_log_scope_server}'>${window.global_service_log_scope_server}</option>`;
+                html +=`<option value='${window.global_service_log_scope_service}'>${window.global_service_log_scope_service}</option>`;
+                html +=`<option value='${window.global_service_log_scope_db}'>${window.global_service_log_scope_db}</option>`;
+                html +=`<option value='${window.global_service_log_scope_router}'>${window.global_service_log_scope_router}</option>`;
+                html +=`<option value='${window.global_service_log_scope_controller}'>${window.global_service_log_scope_controller}</option>`;
                 document.getElementById('select_logscope4').innerHTML = html;
-                html =`<option value='${global_service_log_level_info}'>${global_service_log_level_info}</option>`;
-                html +=`<option value='${global_service_log_level_verbose}'>${global_service_log_level_verbose}</option>`;
-                html +=`<option value='${global_service_log_level_error}'>${global_service_log_level_error}</option>`;
+                html =`<option value='${window.global_service_log_level_info}'>${window.global_service_log_level_info}</option>`;
+                html +=`<option value='${window.global_service_log_level_verbose}'>${window.global_service_log_level_verbose}</option>`;
+                html +=`<option value='${window.global_service_log_level_error}'>${window.global_service_log_level_error}</option>`;
 
                 document.getElementById('select_loglevel4').innerHTML = html;
-                if (global_service_log_file_interval=='1M')
+                if (window.global_service_log_file_interval=='1M')
                     document.getElementById('select_day_menu4').style.display = 'none';
                 else
                     document.getElementById('select_day_menu4').style.display = 'inline-block';
             }
             else
-                show_message(result);
+                exception(status, result);
         })
     }
     function show_server_logs(){
-        let status;
-        let json;
-        let logscope = document.getElementById('select_logscope4').value;
-        let loglevel = document.getElementById('select_loglevel4').value;
-        let year = document.getElementById('select_year_menu4').value;
-        let month= document.getElementById('select_month_menu4').value;
-        let day  = document.getElementById('select_day_menu4').value;
-        let url_parameters;
-        if (global_service_log_file_interval=='1M')
-            url_parameters = `logscope=${logscope}&loglevel=${loglevel}&year=${year}&month=${month}`;
-        else
-            url_parameters = `logscope=${logscope}&loglevel=${loglevel}&year=${year}&month=${month}&day=${day}`;
-        fetch(global_service_log + `/logs?${url_parameters}`,
-        {method: 'GET',
-        headers: {
-                'Authorization': 'Bearer ' + global_rest_admin_at
-            }
-        })
-        .then(function(response) {
-            status = response.status;
-            return response.text();
-        })
-        .then(function(result) {
-            if (status==200){
-                json = JSON.parse(result);
-                let list_server_log = document.getElementById('list_server_log');
-                list_server_log.innerHTML = '';
-                let html = '';
-                for (i = 0; i < json.length; i++) {
-                    html += 
-                    `<div class='list_server_log_row'>
-                        <div class='list_server_log_col'>
-                            <div>${json[i].logdate}</div>
-                        </div>
-                        <div class='list_server_log_col'>
-                            <div>${json[i].ip==""?"":json[i].ip.replace('::ffff:','')}</div>
-                        </div>
-                        <div class='list_server_log_col'>
-                            <div>${json[i].host}</div>
-                        </div>
-                        <div class='list_server_log_col'>
-                            <div>${json[i].protocol}</div>
-                        </div>
-                        <div class='list_server_log_col'>
-                            <div>${json[i].url}</div>
-                        </div>
-                        <div class='list_server_log_col'>
-                            <div>${json[i].method}</div>
-                        </div>
-                        <div class='list_server_log_col'>
-                            <div>${json[i].statusCode}</div>
-                        </div>
-                        <div class='list_server_log_col'>
-                            <div>${json[i]['user-agent']}</div>
-                        </div>
-                        <div class='list_server_log_col'>
-                            <div>${json[i]['accept-language']}</div>
-                        </div>
-                        <div class='list_server_log_col'>
-                            <div>${json[i].http_referer}</div>
-                        </div>
-                        <div class='list_server_log_col'>
-                            <div>${json[i].app_id}</div>
-                        </div>
-                        <div class='list_server_log_col'>
-                            <div>${json[i].app_filename}</div>
-                        </div>
-                        <div class='list_server_log_col'>
-                            <div>${json[i].app_function_name}</div>
-                        </div>
-                        <div class='list_server_log_col'>
-                            <div>${json[i].app_app_line}</div>
-                        </div>
-                        <div class='list_server_log_col'>
-                            <div>${json[i].logtext}</div>
-                        </div>
-                    </div><br>`;
-                }
-                list_server_log.innerHTML = html;
-            }
+        if (admin_token_has_value()){
+            let status;
+            let json;
+            let logscope = document.getElementById('select_logscope4').value;
+            let loglevel = document.getElementById('select_loglevel4').value;
+            let year = document.getElementById('select_year_menu4').value;
+            let month= document.getElementById('select_month_menu4').value;
+            let day  = document.getElementById('select_day_menu4').value;
+            let url_parameters;
+            if (window.global_service_log_file_interval=='1M')
+                url_parameters = `logscope=${logscope}&loglevel=${loglevel}&year=${year}&month=${month}`;
             else
-                show_message(result);
-        })
+                url_parameters = `logscope=${logscope}&loglevel=${loglevel}&year=${year}&month=${month}&day=${day}`;
+            fetch(window.global_service_log + `/logs?${url_parameters}`,
+            {method: 'GET',
+            headers: {
+                    'Authorization': 'Bearer ' + window.global_rest_admin_at
+                }
+            })
+            .then(function(response) {
+                status = response.status;
+                return response.text();
+            })
+            .then(function(result) {
+                if (status==200){
+                    json = JSON.parse(result);
+                    let list_server_log = document.getElementById('list_server_log');
+                    list_server_log.innerHTML = '';
+                    let html = '';
+                    for (i = 0; i < json.length; i++) {
+                        html += 
+                        `<div class='list_server_log_row'>
+                            <div class='list_server_log_col'>
+                                <div>${json[i].logdate}</div>
+                            </div>
+                            <div class='list_server_log_col'>
+                                <div>${json[i].ip==""?"":json[i].ip.replace('::ffff:','')}</div>
+                            </div>
+                            <div class='list_server_log_col'>
+                                <div>${json[i].host}</div>
+                            </div>
+                            <div class='list_server_log_col'>
+                                <div>${json[i].protocol}</div>
+                            </div>
+                            <div class='list_server_log_col'>
+                                <div>${json[i].url}</div>
+                            </div>
+                            <div class='list_server_log_col'>
+                                <div>${json[i].method}</div>
+                            </div>
+                            <div class='list_server_log_col'>
+                                <div>${json[i].statusCode}</div>
+                            </div>
+                            <div class='list_server_log_col'>
+                                <div>${json[i]['user-agent']}</div>
+                            </div>
+                            <div class='list_server_log_col'>
+                                <div>${json[i]['accept-language']}</div>
+                            </div>
+                            <div class='list_server_log_col'>
+                                <div>${json[i].http_referer}</div>
+                            </div>
+                            <div class='list_server_log_col'>
+                                <div>${json[i].app_id}</div>
+                            </div>
+                            <div class='list_server_log_col'>
+                                <div>${json[i].app_filename}</div>
+                            </div>
+                            <div class='list_server_log_col'>
+                                <div>${json[i].app_function_name}</div>
+                            </div>
+                            <div class='list_server_log_col'>
+                                <div>${json[i].app_app_line}</div>
+                            </div>
+                            <div class='list_server_log_col'>
+                                <div>${json[i].logtext}</div>
+                            </div>
+                        </div><br>`;
+                    }
+                    list_server_log.innerHTML = html;
+                }
+                else
+                    exception(status, result);
+            })
+        }
     }
 </script>
