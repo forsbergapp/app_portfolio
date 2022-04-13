@@ -1,4 +1,4 @@
-var global_rest_admin_at;
+window.global_rest_admin_at = '';
 var global_app_id='';
 function admin_login(){
     var status;
@@ -17,11 +17,11 @@ function admin_login(){
             if (status == 200){
                 json = JSON.parse(result);
                 if (json.success == 1){
-                    global_rest_admin_at = json.token_at;
+                    window.global_rest_admin_at = json.token_at;
                     fetch('/service/forms/admin/secure',
                     {method: 'GET',
                         headers: {
-                            'Authorization': 'Bearer ' + global_rest_admin_at,
+                            'Authorization': 'Bearer ' + window.global_rest_admin_at,
                         }
                     })
                         .then(function(response) {
