@@ -18,11 +18,6 @@
     window.global_service_log_scope_db= '';
     window.global_service_log_scope_router= '';
     window.global_service_log_scope_controller= '';
-    window.global_service_log_enable_server_info= '';
-    window.global_service_log_enable_server_verbose= '';
-                    
-    window.global_service_log_enable_db= '';
-    window.global_service_log_enable_router= '';
     window.global_service_log_level_verbose= '';
     window.global_service_log_level_error= '';
     window.global_service_log_level_info= '';
@@ -106,7 +101,8 @@
     document.getElementById('select_year_menu4').addEventListener('change', function() { show_server_logs();}, false);
     document.getElementById('select_month_menu4').addEventListener('change', function() { show_server_logs();}, false);
     document.getElementById('select_day_menu4').addEventListener('change', function() { show_server_logs();}, false);
-
+    document.getElementById('filesearch_menu4').addEventListener('click', function() { show_existing_logfiles();}, false);
+    
     document.getElementById('button_spinner').style.visibility = 'visible';
     get_parameters().then(function(){
         get_token().then(function(){
@@ -281,10 +277,6 @@
         delete window.global_service_log_scope_db;
         delete window.global_service_log_scope_router;
         delete window.global_service_log_scope_controller;
-        delete window.global_service_log_enable_server_info;
-        delete window.global_service_log_enable_server_verbose;                        
-        delete window.global_service_log_enable_db;
-        delete window.global_service_log_enable_router;
         delete window.global_service_log_level_verbose;
         delete window.global_service_log_level_error;
         delete window.global_service_log_level_info;                        
@@ -310,55 +302,6 @@
         delete window.global_page_last;
         delete window.global_limit;
         delete window.global_previous_row;
-        /*
-        delete window[global_rest_dt];
-        delete window[global_app_rest_client_id];
-        delete window[global_app_rest_client_secret];
-        delete window[global_service_auth];
-        delete window[global_rest_base];
-        delete window[global_rest_app];
-        delete window[global_rest_app_parameter];
-        delete window[global_rest_parameter_type];
-        delete window[global_rest_user_account];
-        delete window[global_service_geolocation];
-        delete window[global_service_geolocation_gps_ip];
-        delete window[global_service_geolocation_gps_place];
-        delete window[global_service_log];
-        delete window[global_service_log_scope_server];
-        delete window[global_service_log_scope_service];
-        delete window[global_service_log_scope_db];
-        delete window[global_service_log_scope_router];
-        delete window[global_service_log_scope_controller];
-        delete window[global_service_log_enable_server_info];
-        delete window[global_service_log_enable_server_verbose];
-        delete window[global_service_log_enable_db];
-        delete window[global_service_log_enable_router];
-        delete window[global_service_log_level_verbose];
-        delete window[global_service_log_level_error];
-        delete window[global_service_log_level_info];
-        delete window[global_service_log_destination];
-        delete window[global_service_log_url_destination];
-        delete window[global_service_log_url_destination_username];
-        delete window[global_service_log_url_destination_password];
-        delete window[global_service_log_file_interval];
-        delete window[global_service_log_file_path_server];
-        delete window[global_service_log_date_format];
-        delete window[global_gps_map_container];
-        delete window[global_gps_map_style_baseurl];
-        delete window[global_gps_map_style];
-        delete window[global_gps_map_zoom];
-        delete window[global_gps_map_flyto];
-        delete window[global_gps_map_jumpto];
-        delete window[global_gps_map_marker_div_gps];
-        delete window[global_gps_map_popup_offset];
-        delete window[global_session_map];
-        delete window[global_session_gps_latitude];
-        delete window[global_session_gps_longitude];
-        delete window[global_page];
-        delete window[global_page_last];
-        delete window[global_limit];
-        delete window[global_previous_row];
-        */
     }
     function admin_logout(){
         window.global_rest_admin_at = '';
@@ -1458,10 +1401,32 @@
                 window.global_service_log_scope_router = json.data.SERVICE_LOG_SCOPE_ROUTER;
                 window.global_service_log_scope_controller = json.data.SERVICE_LOG_SCOPE_CONTROLLER;
 
-                window.global_service_log_enable_server_info = json.data.SERVICE_LOG_ENABLE_SERVER_INFO;
-                window.global_service_log_enable_server_verbose = json.data.SERVICE_LOG_ENABLE_SERVER_VERBOSE;
-                window.global_service_log_enable_db = json.data.SERVICE_LOG_ENABLE_DB;
-                window.global_service_log_enable_router = json.data.SERVICE_LOG_ENABLE_ROUTER;
+
+                document.getElementById('menu4_row_parameters_col1_1').style.display = 'none';
+                document.getElementById('menu4_row_parameters_col1_0').style.display = 'none';
+                document.getElementById('menu4_row_parameters_col2_1').style.display = 'none';
+                document.getElementById('menu4_row_parameters_col2_0').style.display = 'none';
+                document.getElementById('menu4_row_parameters_col3_1').style.display = 'none';
+                document.getElementById('menu4_row_parameters_col3_0').style.display = 'none';
+                document.getElementById('menu4_row_parameters_col4_1').style.display = 'none';
+                document.getElementById('menu4_row_parameters_col4_0').style.display = 'none';
+
+                if (json.data.SERVICE_LOG_ENABLE_SERVER_INFO==1)
+                    document.getElementById('menu4_row_parameters_col1_1').style.display = 'inline-block';
+                else
+                    document.getElementById('menu4_row_parameters_col1_0').style.display = 'inline-block';
+                if (json.data.SERVICE_LOG_ENABLE_SERVER_VERBOSE==1)
+                    document.getElementById('menu4_row_parameters_col2_1').style.display = 'inline-block';
+                else
+                    document.getElementById('menu4_row_parameters_col2_0').style.display = 'inline-block';
+                if (json.data.SERVICE_LOG_ENABLE_DB==1)
+                    document.getElementById('menu4_row_parameters_col3_1').style.display = 'inline-block';
+                else
+                    document.getElementById('menu4_row_parameters_col3_0').style.display = 'inline-block';
+                if (json.data.SERVICE_LOG_ENABLE_ROUTER==1)
+                    document.getElementById('menu4_row_parameters_col4_1').style.display = 'inline-block';
+                else
+                    document.getElementById('menu4_row_parameters_col4_0').style.display = 'inline-block';
 
                 window.global_service_log_level_verbose = json.data.SERVICE_LOG_LEVEL_VERBOSE;
                 window.global_service_log_level_error = json.data.SERVICE_LOG_LEVEL_ERROR;
@@ -1571,6 +1536,69 @@
                         </div><br>`;
                     }
                     list_server_log.innerHTML = html;
+                }
+                else
+                    exception(status, result);
+            })
+        }
+    }
+    function show_existing_logfiles(){
+        if (admin_token_has_value()){
+            let status;
+            let json;
+            let url_parameters;
+            fetch(window.global_service_log + `/files`,
+            {method: 'GET',
+            headers: {
+                    'Authorization': 'Bearer ' + window.global_rest_admin_at
+                }
+            })
+            .then(function(response) {
+                status = response.status;
+                return response.text();
+            })
+            .then(function(result) {
+                if (status==200){
+                    json = JSON.parse(result);
+                    let logfiles_list = document.getElementById('lov_list');
+                    logfiles_list.innerHTML = '';
+                    let html = '';
+                    for (i = 0; i < json.length; i++) {
+                        html += 
+                        `<div id='list_logfiles_row_${i}' class='list_lov_row'>
+                            <div class='list_logfiles_col'>
+                                <div>${json[i]}</div>
+                            </div>
+                        </div>`;
+                    }
+                    logfiles_list.innerHTML = html;
+                    document.getElementById('lov_title').innerHTML = 'SERVER LOG FILES';
+                    document.getElementById('dialogue_lov').style.visibility = 'visible';
+                    document.querySelectorAll('.list_lov_row').forEach(e => e.addEventListener('click', function(event) {
+                        let i = 0;
+                        this.children[0].children[0].innerHTML.split('_').forEach(function (record) {
+                            i++;
+                            switch (i){
+                                case 1:{
+                                    document.getElementById('select_logscope4').value = record;
+                                    break;
+                                }
+                                case 2:{
+                                    document.getElementById('select_loglevel4').value = record;
+                                    break;
+                                }
+                                case 3:{
+                                    document.getElementById('select_year_menu4').value = parseInt(record.substring(0,4));
+                                    document.getElementById('select_month_menu4').value = parseInt(record.substring(4,6));
+                                    if (global_service_log_file_interval=='1D')
+                                        document.getElementById('select_day_menu4').value = parseInt(record.substring(6,8));
+                                    break;
+                                }
+                            } 
+                        })   
+                        document.getElementById('select_logscope4').dispatchEvent(new Event('change'));
+                        close_lov();
+                    }));
                 }
                 else
                     exception(status, result);
