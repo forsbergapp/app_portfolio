@@ -9,14 +9,15 @@ function sendLog(logscope, loglevel, log){
         console.log(err)
         console.log(log);
     }
-    
+    let month = logdate.toLocaleString("en-US", { month: "2-digit"});
+    let day   = logdate.toLocaleString("en-US", { day: "2-digit"});
     if (process.env.SERVICE_LOG_FILE_INTERVAL=='1D')
-        filename = `${logscope}_${loglevel}_${logdate.getFullYear()}${logdate.getMonth()+1}${logdate.toLocaleString("en-US", { day: "2-digit"})}.log`;
+        filename = `${logscope}_${loglevel}_${logdate.getFullYear()}${month}${day}.log`;
     else
         if (process.env.SERVICE_LOG_FILE_INTERVAL=='1M')
-            filename = `${logscope}_${loglevel}_${logdate.getFullYear()}${logdate.getMonth()+1}.log`;
+            filename = `${logscope}_${loglevel}_${logdate.getFullYear()}${month}.log`;
         else
-            filename = `${logscope}_${loglevel}_${logdate.getFullYear()}${logdate.getMonth()+1}.log`;
+            filename = `${logscope}_${loglevel}_${logdate.getFullYear()}${month}.log`;
     if (process.env.SERVICE_LOG_DESTINATION==0 ||
         process.env.SERVICE_LOG_DESTINATION==2){
         //file destination
@@ -244,26 +245,58 @@ module.exports = {
         return callBack(null, results);
     },
     getLogs: (data, callBack) => {
-        var fs = require('fs');
+        let fs = require('fs');
         let filename;
-        if (process.env.SERVICE_LOG_FILE_INTERVAL=='1D')
+
+        if (parseInt(data.month) <10)
+            data.month = '0' + data.month;
+        if (process.env.SERVICE_LOG_FILE_INTERVAL=='1D'){
+            if (parseInt(data.day) <10)
+                data.day = '0' + data.day;
             filename = `${data.logscope}_${data.loglevel}_${data.year}${data.month}${data.day}.log`;
+        }
         else
             if (process.env.SERVICE_LOG_FILE_INTERVAL=='1M')
                 filename = `${data.logscope}_${data.loglevel}_${data.year}${data.month}.log`;
             else
                 filename = `${data.logscope}_${data.loglevel}_${data.year}${data.month}.log`;
-        let log; 
+        let log;
+        let fixed_log = [];
+        let loggerror = 0;
         try {
-            log = fs.readFileSync(process.env.SERVICE_LOG_FILE_PATH_SERVER + filename , 'utf8');    
-            //logs save with in JSON format {}\r\n for each row, replace \r\n with ,
-            log = log.replace(/\r\n/g,',');
-            //remove last ,
-            log = log.substring(0, log.length - 1);
+            loggerror = 1;
+            log = fs.readFileSync(process.env.SERVICE_LOG_FILE_PATH_SERVER + filename , 'utf8'); 
+            loggerror = 2;
+            log.split('\r\n').forEach(function (record) {
+                if (record.length>0)
+                    fixed_log.push(JSON.parse(record));
+            })   
         } catch (error) {
             log = '';
+            if (loggerror == 2)
+                return callBack(error.message);
         }
-        
-        return callBack(null, log);
+        return callBack(null, fixed_log);
+    },
+    getFiles: (callBack) => {
+        let fs = require('fs');
+        let logfiles =[];
+        fs.readdir(process.env.SERVICE_LOG_FILE_PATH_SERVER, (err, files) => {
+            if (err) {
+                return callBack(err, null)
+            }
+            files.forEach(file => {
+                if (file.indexOf('CONTROLLER_INFO_')==0||
+                    file.indexOf('DB_INFO_')==0||
+                    file.indexOf('ROUTER_INFO_')==0||
+                    file.indexOf('SERVER_ERROR_')==0||
+                    file.indexOf('SERVER_INFO_')==0||
+                    file.indexOf('SERVER_VERBOSE_')==0||
+                    file.indexOf('SERVICE_ERROR_')==0||
+                    file.indexOf('SERVICE_INFO_')==0)
+                logfiles.push(file);
+            });
+            return callBack(null, logfiles);
+        });
     }
 };
