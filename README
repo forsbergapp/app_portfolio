@@ -82,8 +82,6 @@ installation instructions
 		sudo yum install pango
 		sudo yum install alsa-lib
 
-	modules optional:
-	npm install --save-dev nodemon
 	npm install -g pm2
 
 2. install mysql/oracle on same server or other server
@@ -243,6 +241,7 @@ SERVICE_LOG_FILE_INTERVAL                   		={1D or 1M}
 SERVICE_LOG_FILE_PATH_SERVER                		={PATH with / at the end}
 SERVICE_LOG_DATE_FORMAT                     		={DEFAULT empty creates ISO8601 format
 													  ex: "yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'"}
+SERVICE_LOG_PM2_FILE                        		={filename.json}
 APP0_ID						                		=0
 APP1_ID						                		=1
 APP2_ID						                		=2
@@ -259,7 +258,11 @@ they have parameter_type_id 1 or 2
 2 = Private values with passwords and sensitive data only available from NodeJS server
 
 11. run app on any supported Node.js platform
+   	starts without logging and restarts automatically when files are changed:
+   	pm2 start server.js --name app_portfolio -o "/dev/null" -e "/dev/null" --watch --ignore-watch=".well-known logs node_modules"
+	start JSON log:
+	windows:
+	start /b pm2 logs --json>{SERVICE_LOG_FILE_PATH_SERVER}{SERVICE_LOG_PM2_FILE}
+	linux:   
+	nohup pm2 logs --json>{SERVICE_LOG_FILE_PATH_SERVER}{SERVICE_LOG_PM2_FILE} &
 
-   node server.js
-   or with pm2
-   pm2 start server-js --name "app_portfolio"

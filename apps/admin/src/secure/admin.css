@@ -590,17 +590,23 @@
         width: 29px;
     }
     /*MENU 4 APP STAT*/
+    #menu_4_content{
+        width:90%;
+    }
     #menu_4_content_widget{
         height:500px;
         width:100%;
     }
+    #filesearch_menu4{
+        height: 32px;
+    }
     #menu4_row_parameters div{
         display: inline-block;
     }
-    #list_server_log_title{
+    #list_server_log_title1, #list_pm2_log_title2{
         text-transform: uppercase;
         display:inline-block;
-        width:100%;
+        width:30%;
     }
     #list_server_log{
         height:380px;
@@ -622,18 +628,84 @@
     .list_server_log_col:nth-child(4){
         width:50px;
     }
+    .list_server_log_col:nth-child(5){
+        width:250px;
+    }
+    .list_server_log_col:nth-child(6){
+        width:50px;
+    }
+    .list_server_log_col:nth-child(7){
+        width:60px;
+    }
+    .list_server_log_col:nth-child(8){
+        width: 600px;
+    }
+    .list_server_log_col:nth-child(9){
+        width:200px;
+    }
+    .list_server_log_col:nth-child(10){
+        width:60px;
+    }
+    .list_server_log_col:nth-child(11){
+        width:50px;
+    }
+    .list_server_log_col:nth-child(12){
+        width:390px;
+    }
+    .list_server_log_col:nth-child(13){
+        width:100px;
+    }
+    .list_server_log_col:nth-child(14){
+        width:50px;
+    }
     .list_server_log_row{
-        height: 30px;
         padding-top:4px;
         padding-left:5px;
         text-align: start;
-        display: inline-block;
     }   
     .list_server_log_col{
         display:inline-block;
-    }
-    .list_server_log_col{
         width:auto;
+        margin-right: 10px;
+        overflow: auto;
+    }
+    #list_pm2_log{
+        text-align: left;
+    }
+    #list_pm2_log_form{
+        display:none;
+    }
+    #list_pm2_log_out, #list_pm2_log_err, #list_pm2_log_process_event{
+        height:100px;
+        overflow-y: auto;
+        overflow-x: auto;
+        margin-bottom: 10px;
+        border-radius: 4px;
+        white-space: nowrap;
+    }
+    .list_pm2_log_row, .list_pm2_log_process_event_row{
+        padding-top:4px;
+        padding-left:5px;
+        text-align: left;
+        display: inline-block;
+    }
+    .list_pm2_log_col, .list_pm2_log_process_event_col{
+        display:inline-block;
+    }
+    .list_pm2_log_col:nth-child(1), .list_pm2_log_process_event_col:nth-child(1){
+        width:120px;
+    }
+    .list_pm2_log_col:nth-child(2), .list_pm2_log_process_event_col:nth-child(2){
+        width:100px;
+    }
+    .list_pm2_log_col:nth-child(3), .list_pm2_log_col:nth-child(3){
+        width:auto;
+    }
+    .list_pm2_log_col:nth-child(4), .list_pm2_log_col:nth-child(4){
+        width:50px;
+    }
+    .list_pm2_log_process_event_col:nth-child(3){
+        width:50px;
     }
     /*RESPONSIVE*/
     @media only screen and (min-width: 768px) {
@@ -648,7 +720,7 @@
             }
 
         .main_content{
-            width: 75%;
+            width: 75% !important;
             height: 100%;
             margin:20px;
         }
@@ -707,33 +779,44 @@
     }
     .theme_light .list_apps_row,
     .theme_light .list_app_parameter_row,
-    .theme_light .list_server_log_row{
+    .theme_light .list_server_log_row,
+    .theme_light .list_pm2_log_row,
+    .theme_light .list_pm2_log_process_event_row{
         background-color: rgb(197 227 255);
     }
     .theme_light .list_lov_row:nth-child(odd),
     .theme_light .list_app_log_row:nth-child(odd),
     .theme_light .list_connected_row:nth-child(odd),
-    .theme_light .list_server_log_row:nth-child(odd){
+    .theme_light .list_server_log_row:nth-of-type(odd),
+    .theme_light .list_pm2_log_row:nth-child(odd),
+    .theme_light .list_pm2_log_process_event_row:nth-child(odd){
         background-color: rgb(197 227 255);
     }
     .theme_light .list_lov_row:nth-child(even),
     .theme_light .list_app_log_row:nth-child(even),
     .theme_light .list_connected_row:nth-child(even),
-    .theme_light .list_server_log_row:nth-child(even){
+    .theme_light .list_server_log_row:nth-of-type(even),
+    .theme_light .list_pm2_log_row:nth-child(even),
+    .theme_light .list_pm2_log_process_event_row:nth-child(even){
         background-color: #FFF;
     }
     .theme_light #list_apps_row_title, 
     .theme_light #list_app_parameter_row_title, 
     .theme_light #list_app_log_row_title, 
     .theme_light #list_connected_row_title,
-    .theme_light #list_server_log_row_title{
+    .theme_light #list_server_log_row_title,
+    .theme_light #list_pm2_log_out_row_title,
+    .theme_light #list_pm2_log_err_row_title,
+    .theme_light #list_pm2_log_process_event_row_title{
         font-weight: bold;
     }
     .theme_light .list_apps_row,
     .theme_light .list_app_parameter_row,
     .theme_light .list_app_log_row,
     .theme_light .list_connected_row,
-    .theme_light .list_server_log_row{
+    .theme_light .list_server_log_row,
+    .theme_light .list_pm2_log_row,
+    .theme_light .list_pm2_log_process_event_row{
         font-size: 9px;
     }
     .theme_light .list_apps_row input,
@@ -750,7 +833,10 @@
     .theme_light #list_lov,
     .theme_light #list_app_log,
     .theme_light #list_connected,
-    .theme_light #list_server_log{
+    .theme_light #list_server_log,
+    .theme_light #list_pm2_log_out,
+    .theme_light #list_pm2_log_err,
+    .theme_light #list_pm2_log_process_event{
         border: rgb(197 227 255) solid 0.5px;
     }
     .theme_light #list_app_pagination div{
@@ -793,14 +879,19 @@
     #menu4_row_parameters_col1_1,
     #menu4_row_parameters_col2_1,
     #menu4_row_parameters_col3_1,
-    #menu4_row_parameters_col4_1{
+    #menu4_row_parameters_col4_1,
+    #menu4_row_parameters_col5_1{
         color:#6ab344;
     }
     #menu4_row_parameters_col1_0,
     #menu4_row_parameters_col2_0,
     #menu4_row_parameters_col3_0,
-    #menu4_row_parameters_col4_0{
+    #menu4_row_parameters_col4_0,
+    #menu4_row_parameters_col5_0{
         color:#d82139;
+    }
+    .theme_light #list_pm2_log_title_out, #list_pm2_log_title_err, #list_pm2_log_title_process_event{
+        font-size:11px;
     }
     .theme_light .dialogue{
         background-color: rgba(0,0,0,0.4);
