@@ -1,3 +1,7 @@
+function pm2log(log){
+    console.log(log);
+}
+    
 function sendLog(logscope, loglevel, log){
     let filename;
     let logdate = new Date();
@@ -6,8 +10,8 @@ function sendLog(logscope, loglevel, log){
         log = JSON.stringify(JSON.parse(log));
     }
     catch(err){
-        console.log(err)
-        console.log(log);
+        pm2log(err)
+        pm2log(log);
     }
     let month = logdate.toLocaleString("en-US", { month: "2-digit"});
     let day   = logdate.toLocaleString("en-US", { day: "2-digit"});
@@ -24,7 +28,7 @@ function sendLog(logscope, loglevel, log){
         var fs = require('fs');
         fs.appendFile(process.env.SERVICE_LOG_FILE_PATH_SERVER + filename, log + '\r\n', 'utf8', (err) => {
             if (err) {
-              console.log(err);
+                pm2log(err);
             }
         });
     }
@@ -241,7 +245,7 @@ module.exports = {
         results.SERVICE_LOG_LEVEL_INFO = process.env.SERVICE_LOG_LEVEL_INFO;
         
         results.SERVICE_LOG_FILE_INTERVAL = process.env.SERVICE_LOG_FILE_INTERVAL;
-        
+        results.SERVICE_LOG_PM2_FILE = process.env.SERVICE_LOG_PM2_FILE;
         return callBack(null, results);
     },
     getLogs: (data, callBack) => {
@@ -268,8 +272,11 @@ module.exports = {
             log = fs.readFileSync(process.env.SERVICE_LOG_FILE_PATH_SERVER + filename , 'utf8'); 
             loggerror = 2;
             log.split('\r\n').forEach(function (record) {
-                if (record.length>0)
-                    fixed_log.push(JSON.parse(record));
+                if (record.length>0){
+                    let log_app_id = JSON.parse(record).app_id;
+                    if (log_app_id == parseInt(data.app_id) || data.app_id=='')
+                        fixed_log.push(JSON.parse(record));
+                }
             })   
         } catch (error) {
             log = '';
@@ -283,7 +290,7 @@ module.exports = {
         let logfiles =[];
         fs.readdir(process.env.SERVICE_LOG_FILE_PATH_SERVER, (err, files) => {
             if (err) {
-                return callBack(err, null)
+                return callBack(err, null);
             }
             files.forEach(file => {
                 if (file.indexOf('CONTROLLER_INFO_')==0||
@@ -298,5 +305,16 @@ module.exports = {
             });
             return callBack(null, logfiles);
         });
+    },
+    getPM2Logs: (callBack) => {
+        let fs = require('fs');
+        let log ;
+        try {
+            log = fs.readFileSync(process.env.SERVICE_LOG_FILE_PATH_SERVER + process.env.SERVICE_LOG_PM2_FILE , 'utf8'); 
+        } catch (error) {
+            log = '';
+            return callBack(error.message);
+        }
+        return callBack(null, log);
     }
 };

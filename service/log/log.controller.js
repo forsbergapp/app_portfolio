@@ -1,4 +1,4 @@
-const { getParameters, getLogs, getFiles} = require ("./log.service");
+const { getParameters, getLogs, getFiles, getPM2Logs} = require ("./log.service");
 module.exports = {
 	getParameters: (req, res) => {
 		getParameters((err, results) =>{
@@ -28,6 +28,18 @@ module.exports = {
 	},
 	getFiles: (req, res) => {
 		getFiles((err, results) =>{
+			if (err) {
+				return res.status(500).send(
+                    err
+                );
+			}
+			return res.status(200).send(
+				results
+			);
+		});
+	},
+	getPM2Logs: (req, res) => {
+		getPM2Logs((err, results) =>{
 			if (err) {
 				return res.status(500).send(
                     err
