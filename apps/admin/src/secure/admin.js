@@ -102,6 +102,8 @@
     document.getElementById('select_month_menu4').addEventListener('change', function() { show_server_logs();}, false);
     document.getElementById('select_day_menu4').addEventListener('change', function() { show_server_logs();}, false);
     document.getElementById('filesearch_menu4').addEventListener('click', function() { show_existing_logfiles();}, false);
+    document.getElementById('list_pm2_log_title1').addEventListener('click', function() { list_click(this)}, false);
+    document.getElementById('list_server_log_title2').addEventListener('click', function() { list_click(this)}, false);
     
     document.getElementById('button_spinner').style.visibility = 'visible';
     get_parameters().then(function(){
@@ -939,18 +941,33 @@
             });
     }
     function list_click(item){
-        if (item.id == 'list_connected_title1'){
-            document.getElementById('list_connected_form').style.display='block';
-            document.getElementById('list_app_log_form').style.display='none';
-            show_connected();
-        }
-        else
-            if (item.id == 'list_app_log_title2'){
+        switch (item.id){
+            case 'list_connected_title1':{
+                document.getElementById('list_connected_form').style.display='block';
+                document.getElementById('list_app_log_form').style.display='none';
+                show_connected();
+                break;
+            }
+            case 'list_app_log_title2':{
                 document.getElementById('list_app_log_form').style.display='block';
                 document.getElementById('list_connected_form').style.display='none';
-               window.global_page = 0;
+                window.global_page = 0;
                 show_app_log();
+                break;
             }
+            case 'list_pm2_log_title1':{
+                document.getElementById('list_pm2_log_form').style.display='block';
+                document.getElementById('list_server_log_form').style.display='none';
+                show_pm2_logs();
+                break;
+            }
+            case 'list_server_log_title2':{
+                document.getElementById('list_server_log_form').style.display='block';
+                document.getElementById('list_pm2_log_form').style.display='none';
+                show_server_logs();
+                break;
+            }
+        }
     }
     function get_sort(order_by=0){
         let sort = '';
@@ -1410,6 +1427,8 @@
                 document.getElementById('menu4_row_parameters_col3_0').style.display = 'none';
                 document.getElementById('menu4_row_parameters_col4_1').style.display = 'none';
                 document.getElementById('menu4_row_parameters_col4_0').style.display = 'none';
+                document.getElementById('menu4_row_parameters_col5_1').style.display = 'none';
+                document.getElementById('menu4_row_parameters_col5_0').style.display = 'none';
 
                 if (json.data.SERVICE_LOG_ENABLE_SERVER_INFO==1)
                     document.getElementById('menu4_row_parameters_col1_1').style.display = 'inline-block';
@@ -1427,6 +1446,10 @@
                     document.getElementById('menu4_row_parameters_col4_1').style.display = 'inline-block';
                 else
                     document.getElementById('menu4_row_parameters_col4_0').style.display = 'inline-block';
+                if (json.data.SERVICE_LOG_PM2_FILE && json.data.SERVICE_LOG_PM2_FILE!=null)
+                    document.getElementById('menu4_row_parameters_col5_1').style.display = 'inline-block';
+                else
+                    document.getElementById('menu4_row_parameters_col5_0').style.display = 'inline-block';
 
                 window.global_service_log_level_verbose = json.data.SERVICE_LOG_LEVEL_VERBOSE;
                 window.global_service_log_level_error = json.data.SERVICE_LOG_LEVEL_ERROR;
@@ -1464,11 +1487,12 @@
             let year = document.getElementById('select_year_menu4').value;
             let month= document.getElementById('select_month_menu4').value;
             let day  = document.getElementById('select_day_menu4').value;
+            let app_id = document.getElementById('select_app_menu4').options[document.getElementById('select_app_menu4').selectedIndex].value;
             let url_parameters;
             if (window.global_service_log_file_interval=='1M')
-                url_parameters = `logscope=${logscope}&loglevel=${loglevel}&year=${year}&month=${month}`;
+                url_parameters = `app_id=${app_id}&logscope=${logscope}&loglevel=${loglevel}&year=${year}&month=${month}`;
             else
-                url_parameters = `logscope=${logscope}&loglevel=${loglevel}&year=${year}&month=${month}&day=${day}`;
+                url_parameters = `app_id=${app_id}&logscope=${logscope}&loglevel=${loglevel}&year=${year}&month=${month}&day=${day}`;
             fetch(window.global_service_log + `/logs?${url_parameters}`,
             {method: 'GET',
             headers: {
@@ -1484,8 +1508,57 @@
                     json = JSON.parse(result);
                     let list_server_log = document.getElementById('list_server_log');
                     list_server_log.innerHTML = '';
-                    let html = '';
+                    let html = `<div id='list_server_log_row_title' class='list_server_log_row'>
+                                <div id='list_server_log_col_title1' class='list_server_log_col'>
+                                    <div>LOGDATE</div>
+                                </div>
+                                <div id='list_server_log_col_title2' class='list_server_log_col'>
+                                    <div>IP</div>
+                                </div>
+                                <div id='list_server_log_col_title3' class='list_server_log_col'>
+                                    <div>HOST</div>
+                                </div>
+                                <div id='list_server_log_col_title4' class='list_server_log_col'>
+                                    <div>PROTOCOL</div>
+                                </div>
+                                <div id='list_server_log_col_title5' class='list_server_log_col'>
+                                    <div>URL</div>
+                                </div>
+                                <div id='list_server_log_col_title6' class='list_server_log_col'>
+                                    <div>METHOD</div>
+                                </div>
+                                <div id='list_server_log_col_title7' class='list_server_log_col'>
+                                    <div>STATUSCODE</div>
+                                </div>
+                                <div id='list_server_log_col_title8' class='list_server_log_col'>
+                                    <div>USER AGENT</div>
+                                </div>
+                                <div id='list_server_log_col_title9' class='list_server_log_col'>
+                                    <div>ACCEPT LANGUAGE</div>
+                                </div>
+                                <div id='list_server_log_col_title10' class='list_server_log_col'>
+                                    <div>HTTP REFERER</div>
+                                </div>
+                                <div id='list_server_log_col_title11' class='list_server_log_col'>
+                                    <div>APP ID</div>
+                                </div>
+                                <div id='list_server_log_col_title12' class='list_server_log_col'>
+                                    <div>APP FILENAME</div>
+                                </div>
+                                <div id='list_server_log_col_title13' class='list_server_log_col'>
+                                    <div>APP FUNCTION NAME</div>
+                                </div>
+                                <div id='list_server_log_col_title14' class='list_server_log_col'>
+                                    <div>APP APP LINE</div>
+                                </div>
+                                <div id='list_server_log_col_title15' class='list_server_log_col'>
+                                    <div>LOG TEXT</div>
+                                </div>
+                            </div>`;
                     for (i = 0; i < json.length; i++) {
+                        //test if JSON in logtext
+                        if (typeof json[i].logtext === 'object')
+                            json[i].logtext = JSON.stringify(json[i].logtext);
                         html += 
                         `<div class='list_server_log_row'>
                             <div class='list_server_log_col'>
@@ -1533,7 +1606,7 @@
                             <div class='list_server_log_col'>
                                 <div>${json[i].logtext}</div>
                             </div>
-                        </div><br>`;
+                        </div>`;
                     }
                     list_server_log.innerHTML = html;
                 }
@@ -1599,6 +1672,109 @@
                         document.getElementById('select_logscope4').dispatchEvent(new Event('change'));
                         close_lov();
                     }));
+                }
+                else
+                    exception(status, result);
+            })
+        }
+    }
+    function show_pm2_logs(){
+        if (admin_token_has_value()){
+            let status;
+            let json;
+
+            fetch(window.global_service_log + `/pm2logs`,
+            {method: 'GET',
+            headers: {
+                    'Authorization': 'Bearer ' + window.global_rest_admin_at
+                }
+            })
+            .then(function(response) {
+                status = response.status;
+                return response.text();
+            })
+            .then(function(result) {
+                if (status==200){
+                    let fixed_log = [];
+                    result.split('\n').forEach(function (record) {
+                        if (record.length>0)
+                            fixed_log.push(JSON.parse(record));
+                    })
+                    json = fixed_log;
+                    //json = JSON.parse(result);
+                    let list_pm2_log_out = document.getElementById('list_pm2_log_out');
+                    let list_pm2_log_err = document.getElementById('list_pm2_log_err');
+                    let list_pm2_log_process_event = document.getElementById('list_pm2_log_process_event');
+                    list_pm2_log_out.innerHTML = '';
+                    list_pm2_log_err.innerHTML = '';
+                    list_pm2_log_process_event.innerHTML = '';
+                    let html_out = '';
+                    let html_err = '';
+                    let html_process_event = '';
+                    for (i = 0; i < json.length; i++) {
+                        //out               message, timestamp, type, process_id, app_name
+                        //err               message, timestamp, type, process_id, app_name
+                        //process event,    timestamp, type, status, app_name
+                        list_pm2_log_out
+                        list_pm2_log_err
+                        list_pm2_log_process_event
+                        switch (json[i].type){
+                            case 'out':{
+                                html_out += 
+                                `<div class='list_pm2_log_row'>
+                                    <div class='list_pm2_log_col'>
+                                        <div>${json[i].timestamp}</div>
+                                    </div>
+                                    <div class='list_pm2_log_col'>
+                                        <div>${json[i].app_name}</div>
+                                    </div>
+                                    <div class='list_pm2_log_col'>
+                                        <div>${json[i].message}</div>
+                                    </div>
+                                    <div class='list_pm2_log_col'>
+                                        <div>${json[i].process_id}</div>
+                                    </div>
+                                </div><br>`;        
+                                break;
+                            }
+                            case 'err':{
+                                html_err += 
+                                `<div class='list_pm2_log_row'>
+                                    <div class='list_pm2_log_col'>
+                                        <div>${json[i].timestamp}</div>
+                                    </div>
+                                    <div class='list_pm2_log_col'>
+                                        <div>${json[i].app_name}</div>
+                                    </div>
+                                    <div class='list_pm2_log_col'>
+                                        <div>${json[i].message}</div>
+                                    </div>
+                                    <div class='list_pm2_log_col'>
+                                        <div>${json[i].process_id}</div>
+                                    </div>
+                                </div><br>`;
+                                break;
+                            }
+                            case 'process_event':{
+                                html_process_event += 
+                                `<div class='list_pm2_log_row'>
+                                    <div class='list_pm2_log_col'>
+                                        <div>${json[i].timestamp}</div>
+                                    </div>
+                                    <div class='list_pm2_log_col'>
+                                        <div>${json[i].app_name}</div>
+                                    </div>
+                                    <div class='list_pm2_log_col'>
+                                        <div>${json[i].status}</div>
+                                    </div>
+                                </div><br>`;
+                                break;
+                            }
+                        }
+                    }
+                    list_pm2_log_out.innerHTML = html_out;
+                    list_pm2_log_err.innerHTML = html_err;
+                    list_pm2_log_process_event.innerHTML = html_process_event;
                 }
                 else
                     exception(status, result);

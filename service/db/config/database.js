@@ -30,7 +30,7 @@ function get_pool(app_id){
 				break;
 			}
 			default:{
-				createLogAppSE(app_id, __appfilename, __appfunction, __appline, 'get_pool error app_id: ' + app_id);
+				createLogAppSE(null, __appfilename, __appfunction, __appline, 'get_pool error app_id: ' + app_id);
 				break;
 			}
 		}
@@ -50,7 +50,7 @@ function get_pool(app_id){
 				break;
 			}
 			default:{
-				createLogAppSE(app_id, __appfilename, __appfunction, __appline, 'get_pool error app_id:' + app_id);
+				createLogAppSE(null, __appfilename, __appfunction, __appline, 'get_pool error app_id:' + app_id);
 				break;
 			}
 		}
