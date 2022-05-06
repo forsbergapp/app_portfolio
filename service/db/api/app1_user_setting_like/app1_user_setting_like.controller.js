@@ -1,11 +1,11 @@
 const { likeUserSetting,
-	    unlikeUserSetting} = require ("./app_timetables_user_setting_like.service");
+	    unlikeUserSetting} = require ("./app1_user_setting_like.service");
 
 module.exports = {
 
 likeUserSetting: (req, res) => {
 	const id   = req.params.id;
-	const id_like   = req.body.user_setting_id;
+	const id_like   = req.body.app1_user_setting_id;
 	likeUserSetting(req.query.app_id, id,id_like, (err,results) => {
 		if (err) {
 			return res.status(500).send(
@@ -21,7 +21,7 @@ likeUserSetting: (req, res) => {
 },
 unlikeUserSetting: (req, res) => {
 	const id   = req.params.id;
-	const id_unlike   = req.body.user_setting_id;
+	const id_unlike   = req.body.app1_user_setting_id;
 	unlikeUserSetting(req.query.app_id, id,id_unlike, (err,results) => {
 		if (err) {
 			return res.status(500).send(

@@ -4,9 +4,9 @@ module.exports = {
 	insertUserSettingView: (app_id, data, callBack) => {
 		if (process.env.SERVICE_DB_USE == 1) {
 			get_pool(app_id).query(
-			`INSERT INTO ${process.env.SERVICE_DB_DB1_NAME}.app_timetables_user_setting_view(
+			`INSERT INTO ${process.env.SERVICE_DB_DB1_NAME}.app1_user_setting_view(
 							user_account_id,
-							user_setting_id,
+							app1_user_setting_id,
 							client_ip,
 							client_user_agent,
 							client_longitude,
@@ -14,7 +14,7 @@ module.exports = {
 							date_created)
 				VALUES(?,?,?,?,?,?, SYSDATE()) `,
 				[data.user_account_id,
-				data.user_setting_id,
+				data.app1_user_setting_id,
 				data.client_ip,
 				data.client_user_agent,
 				data.client_longitude,
@@ -33,16 +33,16 @@ module.exports = {
 				try{
 				pool2 = await oracledb.getConnection(get_pool(app_id));
 				const result_sql = await pool2.execute(
-					`INSERT INTO ${process.env.SERVICE_DB_DB2_NAME}.app_timetables_user_setting_view(
+					`INSERT INTO ${process.env.SERVICE_DB_DB2_NAME}.app1_user_setting_view(
 									user_account_id,
-									user_setting_id,
+									app1_user_setting_id,
 									client_ip,
 									client_user_agent,
 									client_longitude, 
 									client_latitude, 
 									date_created)
 						VALUES( :user_account_id,
-								:user_setting_id,
+								:app1_user_setting_id,
 								:client_ip,
 								:client_user_agent,
 								:client_longitude,
@@ -50,7 +50,7 @@ module.exports = {
 								SYSDATE) `,
 					{
 						user_account_id: data.user_account_id,
-						user_setting_id: data.user_setting_id,
+						app1_user_setting_id: data.app1_user_setting_id,
 						client_ip: data.client_ip,
 						client_user_agent: data.client_user_agent,
 						client_longitude: data.client_longitude,

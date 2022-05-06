@@ -417,15 +417,15 @@ module.exports = {
 					   FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_like    u_likes
 					  WHERE u_likes.user_account_id_like = u.id )					count_liked,
 					(SELECT COUNT(DISTINCT us.user_account_id)
-					   FROM ${process.env.SERVICE_DB_DB1_NAME}.app_timetables_user_setting_like u_like,
-					   		${process.env.SERVICE_DB_DB1_NAME}.app_timetables_user_setting us
+					   FROM ${process.env.SERVICE_DB_DB1_NAME}.app1_user_setting_like u_like,
+					   		${process.env.SERVICE_DB_DB1_NAME}.app1_user_setting us
 					  WHERE u_like.user_account_id = u.id
-					    AND u_like.user_setting_id = us.id)							count_user_setting_likes,
+					    AND u_like.app1_user_setting_id = us.id)							count_user_setting_likes,
 					(SELECT COUNT(DISTINCT u_like.user_account_id)
-					   FROM ${process.env.SERVICE_DB_DB1_NAME}.app_timetables_user_setting_like u_like,
-					   		${process.env.SERVICE_DB_DB1_NAME}.app_timetables_user_setting us
+					   FROM ${process.env.SERVICE_DB_DB1_NAME}.app1_user_setting_like u_like,
+					   		${process.env.SERVICE_DB_DB1_NAME}.app1_user_setting us
 					  WHERE us.user_account_id = u.id
-						AND u_like.user_setting_id = us.id)							count_user_setting_liked,
+						AND u_like.app1_user_setting_id = us.id)							count_user_setting_liked,
 					(SELECT COUNT(u_views.user_account_id_view)
 					   FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_view    u_views
 					  WHERE u_views.user_account_id_view = u.id ) 					count_views,
@@ -488,15 +488,15 @@ module.exports = {
 							FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_like    u_likes
 							WHERE u_likes.user_account_id_like = u.id )					"count_liked",
 							(SELECT COUNT(DISTINCT us.user_account_id)
-							FROM ${process.env.SERVICE_DB_DB2_NAME}.app_timetables_user_setting_like u_like,
-									${process.env.SERVICE_DB_DB2_NAME}.app_timetables_user_setting us
+							FROM ${process.env.SERVICE_DB_DB2_NAME}.app1_user_setting_like u_like,
+									${process.env.SERVICE_DB_DB2_NAME}.app1_user_setting us
 							WHERE u_like.user_account_id = u.id
-								AND u_like.user_setting_id = us.id)							"count_user_setting_likes",
+								AND u_like.app1_user_setting_id = us.id)							"count_user_setting_likes",
 							(SELECT COUNT(DISTINCT u_like.user_account_id)
-							FROM ${process.env.SERVICE_DB_DB2_NAME}.app_timetables_user_setting_like u_like,
-									${process.env.SERVICE_DB_DB2_NAME}.app_timetables_user_setting us
+							FROM ${process.env.SERVICE_DB_DB2_NAME}.app1_user_setting_like u_like,
+									${process.env.SERVICE_DB_DB2_NAME}.app1_user_setting us
 							WHERE us.user_account_id = u.id
-								AND u_like.user_setting_id = us.id)							"count_user_setting_liked",
+								AND u_like.app1_user_setting_id = us.id)							"count_user_setting_liked",
 							(SELECT COUNT(u_views.user_account_id_view)
 							FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_view    u_views
 							WHERE u_views.user_account_id_view = u.id ) 					"count_views",
@@ -573,15 +573,15 @@ module.exports = {
 					   FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_like    u_likes
 					  WHERE u_likes.user_account_id_like = u.id )				count_liked,
 					(SELECT COUNT(DISTINCT us.user_account_id)
-					   FROM ${process.env.SERVICE_DB_DB1_NAME}.app_timetables_user_setting_like u_like,
-					        ${process.env.SERVICE_DB_DB1_NAME}.app_timetables_user_setting us
+					   FROM ${process.env.SERVICE_DB_DB1_NAME}.app1_user_setting_like u_like,
+					        ${process.env.SERVICE_DB_DB1_NAME}.app1_user_setting us
 					  WHERE u_like.user_account_id = u.id
-					AND u_like.user_setting_id = us.id)						count_user_setting_likes,
+					AND u_like.app1_user_setting_id = us.id)						count_user_setting_likes,
 					(SELECT COUNT(DISTINCT u_like.user_account_id)
-					   FROM ${process.env.SERVICE_DB_DB1_NAME}.app_timetables_user_setting_like u_like,
-					        ${process.env.SERVICE_DB_DB1_NAME}.app_timetables_user_setting us
+					   FROM ${process.env.SERVICE_DB_DB1_NAME}.app1_user_setting_like u_like,
+					        ${process.env.SERVICE_DB_DB1_NAME}.app1_user_setting us
 					WHERE us.user_account_id = u.id
-						AND u_like.user_setting_id = us.id)						count_user_setting_liked,
+						AND u_like.app1_user_setting_id = us.id)						count_user_setting_liked,
 					(SELECT COUNT(u_views.user_account_id_view)
 					   FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_view    u_views
 					  WHERE u_views.user_account_id_view = u.id ) 				count_views,
@@ -645,15 +645,15 @@ module.exports = {
 							FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_like    u_likes
 							WHERE u_likes.user_account_id_like = u.id )					"count_liked",
 							(SELECT COUNT(DISTINCT us.user_account_id)
-							FROM ${process.env.SERVICE_DB_DB2_NAME}.app_timetables_user_setting_like u_like,
-									${process.env.SERVICE_DB_DB2_NAME}.app_timetables_user_setting us
+							FROM ${process.env.SERVICE_DB_DB2_NAME}.app1_user_setting_like u_like,
+									${process.env.SERVICE_DB_DB2_NAME}.app1_user_setting us
 							WHERE u_like.user_account_id = u.id
-								AND u_like.user_setting_id = us.id)							"count_user_setting_likes",
+								AND u_like.app1_user_setting_id = us.id)							"count_user_setting_likes",
 							(SELECT COUNT(DISTINCT u_like.user_account_id)
-							FROM ${process.env.SERVICE_DB_DB2_NAME}.app_timetables_user_setting_like u_like,
-									${process.env.SERVICE_DB_DB2_NAME}.app_timetables_user_setting us
+							FROM ${process.env.SERVICE_DB_DB2_NAME}.app1_user_setting_like u_like,
+									${process.env.SERVICE_DB_DB2_NAME}.app1_user_setting us
 							WHERE us.user_account_id = u.id
-								AND u_like.user_setting_id = us.id)							"count_user_setting_liked",
+								AND u_like.app1_user_setting_id = us.id)							"count_user_setting_liked",
 							(SELECT COUNT(u_views.user_account_id_view)
 							FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_view    u_views
 							WHERE u_views.user_account_id_view = u.id ) 					"count_views",
@@ -877,10 +877,10 @@ module.exports = {
 									u.provider2_first_name
 							FROM   ${process.env.SERVICE_DB_DB1_NAME}.user_account u
 							WHERE  u.id IN (SELECT us.user_account_id
-											FROM   ${process.env.SERVICE_DB_DB1_NAME}.app_timetables_user_setting_like u_like,
-												${process.env.SERVICE_DB_DB1_NAME}.app_timetables_user_setting us
+											FROM   ${process.env.SERVICE_DB_DB1_NAME}.app1_user_setting_like u_like,
+												${process.env.SERVICE_DB_DB1_NAME}.app1_user_setting us
 											WHERE  u_like.user_account_id = ?
-											AND    us.id = u_like.user_setting_id)
+											AND    us.id = u_like.app1_user_setting_id)
 							AND    u.active = 1
 							AND    5 = ?
 							UNION ALL
@@ -898,10 +898,10 @@ module.exports = {
 									u.provider2_first_name
 							FROM   ${process.env.SERVICE_DB_DB1_NAME}.user_account u
 							WHERE  u.id IN (SELECT u_like.user_account_id
-											FROM   ${process.env.SERVICE_DB_DB1_NAME}.app_timetables_user_setting us,
-												${process.env.SERVICE_DB_DB1_NAME}.app_timetables_user_setting_like u_like
+											FROM   ${process.env.SERVICE_DB_DB1_NAME}.app1_user_setting us,
+												${process.env.SERVICE_DB_DB1_NAME}.app1_user_setting_like u_like
 											WHERE  us.user_account_id = ?
-											AND    us.id = u_like.user_setting_id)
+											AND    us.id = u_like.app1_user_setting_id)
 							AND    u.active = 1
 							AND    6 = ?) t
 						ORDER BY 1, COALESCE(username, 
@@ -1025,10 +1025,10 @@ module.exports = {
 										u.provider2_first_name "provider2_first_name"
 								FROM    ${process.env.SERVICE_DB_DB2_NAME}.user_account u
 								WHERE  u.id IN (SELECT us.user_account_id
-												FROM   ${process.env.SERVICE_DB_DB2_NAME}.app_timetables_user_setting_like u_like,
-													${process.env.SERVICE_DB_DB2_NAME}.app_timetables_user_setting us
+												FROM   ${process.env.SERVICE_DB_DB2_NAME}.app1_user_setting_like u_like,
+													${process.env.SERVICE_DB_DB2_NAME}.app1_user_setting us
 												WHERE  u_like.user_account_id = :user_account_id_like_setting
-												AND    us.id = u_like.user_setting_id)
+												AND    us.id = u_like.app1_user_setting_id)
 								AND    u.active = 1
 								AND    5 = :detailchoice_like_setting
 								UNION ALL
@@ -1046,10 +1046,10 @@ module.exports = {
 										u.provider2_first_name "provider2_first_name"
 								FROM    ${process.env.SERVICE_DB_DB2_NAME}.user_account u
 								WHERE  u.id IN (SELECT u_like.user_account_id
-												FROM ${process.env.SERVICE_DB_DB2_NAME}.app_timetables_user_setting us,
-													${process.env.SERVICE_DB_DB2_NAME}.app_timetables_user_setting_like u_like
+												FROM ${process.env.SERVICE_DB_DB2_NAME}.app1_user_setting us,
+													${process.env.SERVICE_DB_DB2_NAME}.app1_user_setting_like u_like
 												WHERE  us.user_account_id = :user_account_id_liked_setting
-												AND    us.id = u_like.user_setting_id)
+												AND    us.id = u_like.app1_user_setting_id)
 								AND    u.active = 1
 								AND    6 = :detailchoice_liked_setting) t
 							ORDER BY 1, COALESCE("username", 
@@ -1167,10 +1167,10 @@ module.exports = {
 									u.provider1_first_name,
 									u.provider2_first_name,
 									(SELECT COUNT(us.user_account_id)
-									   FROM ${process.env.SERVICE_DB_DB1_NAME}.app_timetables_user_setting_like u_like,
-									   		${process.env.SERVICE_DB_DB1_NAME}.app_timetables_user_setting us
+									   FROM ${process.env.SERVICE_DB_DB1_NAME}.app1_user_setting_like u_like,
+									   		${process.env.SERVICE_DB_DB1_NAME}.app1_user_setting us
 									  WHERE us.user_account_id = u.id
-										AND u_like.user_setting_id = us.id) count
+										AND u_like.app1_user_setting_id = us.id) count
 							FROM   ${process.env.SERVICE_DB_DB1_NAME}.user_account u
 							WHERE  u.active = 1
 							AND    4 = ?
@@ -1188,10 +1188,10 @@ module.exports = {
 									u.provider1_first_name,
 									u.provider2_first_name,
 									(SELECT COUNT(us.user_account_id)
-									   FROM ${process.env.SERVICE_DB_DB1_NAME}.app_timetables_user_setting_view u_view,
-									        ${process.env.SERVICE_DB_DB1_NAME}.app_timetables_user_setting us
+									   FROM ${process.env.SERVICE_DB_DB1_NAME}.app1_user_setting_view u_view,
+									        ${process.env.SERVICE_DB_DB1_NAME}.app1_user_setting us
 									  WHERE us.user_account_id = u.id
-										AND u_view.user_setting_id = us.id) count
+										AND u_view.app1_user_setting_id = us.id) count
 							FROM   ${process.env.SERVICE_DB_DB1_NAME}.user_account u
 							WHERE  u.active = 1
 							AND    5 = ?)  t
@@ -1290,10 +1290,10 @@ module.exports = {
 											u.provider1_first_name "provider1_first_name",
 											u.provider2_first_name "provider2_first_name",
 											(SELECT COUNT(us.user_account_id)
-											   FROM ${process.env.SERVICE_DB_DB2_NAME}.app_timetables_user_setting_like u_like,
-											   		${process.env.SERVICE_DB_DB2_NAME}.app_timetables_user_setting us
+											   FROM ${process.env.SERVICE_DB_DB2_NAME}.app1_user_setting_like u_like,
+											   		${process.env.SERVICE_DB_DB2_NAME}.app1_user_setting us
 											  WHERE us.user_account_id = u.id
-												AND u_like.user_setting_id = us.id) "count"
+												AND u_like.app1_user_setting_id = us.id) "count"
 									FROM   ${process.env.SERVICE_DB_DB2_NAME}.user_account u
 									WHERE  u.active = 1
 									AND    4 = :statchoice_like_setting
@@ -1311,10 +1311,10 @@ module.exports = {
 											u.provider1_first_name "provider1_first_name",
 											u.provider2_first_name "provider2_first_name",
 											(SELECT COUNT(us.user_account_id)
-											   FROM ${process.env.SERVICE_DB_DB2_NAME}.app_timetables_user_setting_view u_view,
-											   		${process.env.SERVICE_DB_DB2_NAME}.app_timetables_user_setting us
+											   FROM ${process.env.SERVICE_DB_DB2_NAME}.app1_user_setting_view u_view,
+											   		${process.env.SERVICE_DB_DB2_NAME}.app1_user_setting us
 											   WHERE us.user_account_id = u.id
-												AND u_view.user_setting_id = us.id) "count"
+												AND u_view.app1_user_setting_id = us.id) "count"
 									FROM   ${process.env.SERVICE_DB_DB2_NAME}.user_account u
 									WHERE  u.active = 1
 									AND    5 = :statchoice_visited_setting) t

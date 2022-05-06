@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const { getPlace } = require ("./app_timetables_place.controller");
+const { getPlace } = require ("./app1_place.controller");
 const { checkDataToken } = require("../../../auth/auth.controller");
 const { createLogAppRI } = require("../../../log/log.service");
 router.use((req,res,next)=>{

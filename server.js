@@ -130,11 +130,11 @@ const parameter_typeRouter = require("./service/db/api/parameter_type/parameter_
 const user_accountRouter = require("./service/db/api/user_account/user_account.router");
 const user_account_likeRouter = require("./service/db/api/user_account_like/user_account_like.router");
 const user_account_followRouter = require("./service/db/api/user_account_follow/user_account_follow.router");
-const app1_app_timetables_placeRouter = require("./service/db/api/app_timetables_place/app_timetables_place.router");
-const app1_app_timetables_themeRouter = require("./service/db/api/app_timetables_theme/app_timetables_theme.router");
-const app1_app_timetables_user_settingRouter = require("./service/db/api/app_timetables_user_setting/app_timetables_user_setting.router");
-const app1_app_timetables_user_setting_likeRouter = require("./service/db/api/app_timetables_user_setting_like/app_timetables_user_setting_like.router");
-const app1_app_timetables_user_setting_viewRouter = require("./service/db/api/app_timetables_user_setting_view/app_timetables_user_setting_view.router");
+const app1_placeRouter = require("./service/db/api/app1_place/app1_place.router");
+const app1_themeRouter = require("./service/db/api/app1_theme/app1_theme.router");
+const app1_user_settingRouter = require("./service/db/api/app1_user_setting/app1_user_setting.router");
+const app1_user_setting_likeRouter = require("./service/db/api/app1_user_setting_like/app1_user_setting_like.router");
+const app1_user_setting_viewRouter = require("./service/db/api/app1_user_setting_view/app1_user_setting_view.router");
 //service geolocation
 const geolocationRouter = require("./service/geolocation/geolocation.router");
 //service log
@@ -167,11 +167,11 @@ app.use("/service/db/api/parameter_type", parameter_typeRouter);
 app.use("/service/db/api/user_account", user_accountRouter);
 app.use("/service/db/api/user_account_like", user_account_likeRouter);
 app.use("/service/db/api/user_account_follow", user_account_followRouter);
-app.use("/service/db/api/app_timetables_place", app1_app_timetables_placeRouter);
-app.use("/service/db/api/app_timetables_theme", app1_app_timetables_themeRouter);
-app.use("/service/db/api/app_timetables_user_setting", app1_app_timetables_user_settingRouter);
-app.use("/service/db/api/app_timetables_user_setting_like", app1_app_timetables_user_setting_likeRouter);
-app.use("/service/db/api/app_timetables_user_setting_view", app1_app_timetables_user_setting_viewRouter);
+app.use("/service/db/api/app1_place", app1_placeRouter);
+app.use("/service/db/api/app1_theme", app1_themeRouter);
+app.use("/service/db/api/app1_user_setting", app1_user_settingRouter);
+app.use("/service/db/api/app1_user_setting_like", app1_user_setting_likeRouter);
+app.use("/service/db/api/app1_user_setting_view", app1_user_setting_viewRouter);
 //service geolocation
 app.use("/service/geolocation", geolocationRouter);
 //service log
