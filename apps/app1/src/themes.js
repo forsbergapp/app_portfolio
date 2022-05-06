@@ -1,4 +1,4 @@
-const { getThemes } = require("../../../service/db/api/app_timetables_theme/app_timetables_theme.service");
+const { getThemes } = require("../../../service/db/api/app1_theme/app1_theme.service");
 
 module.exports = {
   themes:(app_id) => {

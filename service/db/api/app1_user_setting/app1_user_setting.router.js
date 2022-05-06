@@ -5,7 +5,7 @@ const { createUserSetting,
 	getUserSetting,
 	updateUserSetting, 
 	deleteUserSetting,
-	deleteUserSettingsByUserId} = require ("./app_timetables_user_setting.controller");
+	deleteUserSettingsByUserId} = require ("./app1_user_setting.controller");
 const { checkAccessToken, checkDataToken } = require("../../../auth/auth.controller");
 const { createLogAppRI } = require("../../../log/log.service");
 router.use((req,res,next)=>{
