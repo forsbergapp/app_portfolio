@@ -563,16 +563,16 @@ async function get_app_globals() {
                     global_rest_app_log = json.data[i].parameter_value;
                 if (json.data[i].parameter_name=='REST_APP_OBJECT')
                     global_rest_app_object = json.data[i].parameter_value;
-                if (json.data[i].parameter_name=='REST_APP_TIMETABLES_USER_SETTING')
-                    global_rest_app_timetables_user_setting = json.data[i].parameter_value;
-                if (json.data[i].parameter_name=='REST_APP_TIMETABLES_USER_SETTING_USER_ACCOUNT_ID')
-                    global_rest_app_timetables_user_setting_user_account_id = json.data[i].parameter_value;
-                if (json.data[i].parameter_name=='REST_APP_TIMETABLES_USER_SETTING_PROFILE')
-                    global_rest_app_timetables_user_setting_profile = json.data[i].parameter_value;
-                if (json.data[i].parameter_name=='REST_APP_TIMETABLES_USER_SETTING_LIKE')
-                    global_rest_app_timetables_user_setting_like = json.data[i].parameter_value;
-                if (json.data[i].parameter_name=='REST_APP_TIMETABLES_USER_SETTING_VIEW')
-                    global_rest_app_timetables_user_setting_view = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='REST_APP1_USER_SETTING')
+                    global_rest_app1_user_setting = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='REST_APP1_USER_SETTING_USER_ACCOUNT_ID')
+                    global_rest_app1_user_setting_user_account_id = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='REST_APP1_USER_SETTING_PROFILE')
+                    global_rest_app1_user_setting_profile = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='REST_APP1_USER_SETTING_LIKE')
+                    global_rest_app1_user_setting_like = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='REST_APP1_USER_SETTING_VIEW')
+                    global_rest_app1_user_setting_view = json.data[i].parameter_value;
                 if (json.data[i].parameter_name=='REST_COUNTRY')
                     global_rest_country = json.data[i].parameter_value;
                 if (json.data[i].parameter_name=='REST_LANGUAGE_LOCALE')
@@ -2758,7 +2758,7 @@ async function user_setting_get(user_setting_id) {
     let json;
     let status;
 
-    await fetch(global_rest_url_base + global_rest_app_timetables_user_setting + user_setting_id +
+    await fetch(global_rest_url_base + global_rest_app1_user_setting + user_setting_id +
                 '?app_id=' + global_app_id + 
                 '&lang_code=' + document.getElementById('setting_select_locale').value, {
             method: 'GET',
@@ -2855,7 +2855,7 @@ async function user_settings_get(userid, show_ui = 1, user_setting_id = '') {
     let i;
     let status;
     
-    await fetch(global_rest_url_base + global_rest_app_timetables_user_setting_user_account_id + userid +
+    await fetch(global_rest_url_base + global_rest_app1_user_setting_user_account_id + userid +
                 '?app_id=' + global_app_id + 
                 '&lang_code=' + document.getElementById('setting_select_locale').value, {
             method: 'GET',
@@ -3487,14 +3487,14 @@ function user_settings_function(function_name, signup = false) {
     switch (function_name){
         case 'ADD':{
             method = 'POST';
-            url = global_rest_url_base + global_rest_app_timetables_user_setting;
+            url = global_rest_url_base + global_rest_app1_user_setting;
             break;
         }
         case 'SAVE':{
             method = 'PUT';
             let select_user_setting = document.getElementById('setting_select_user_setting');
             let user_setting_id = select_user_setting[select_user_setting.selectedIndex].getAttribute('id');
-            url = global_rest_url_base + global_rest_app_timetables_user_setting + user_setting_id;
+            url = global_rest_url_base + global_rest_app1_user_setting + user_setting_id;
             break;
         }
         default:{
@@ -3565,7 +3565,7 @@ function user_settings_delete(choice=null) {
         case 1:{
             if (select_user_setting.length > 1) {
                 spinner('DELETE', 'visible');
-                fetch(global_rest_url_base + global_rest_app_timetables_user_setting + user_setting_id + 
+                fetch(global_rest_url_base + global_rest_app1_user_setting + user_setting_id + 
                         '?app_id=' + global_app_id +
                         '&lang_code=' + document.getElementById('setting_select_locale').value, 
                     {
@@ -4730,7 +4730,7 @@ function profile_show_user_setting() {
     if (document.getElementById('profile_user_settings_public').style.display == "block") {
         document.getElementById('profile_user_settings_row').style.display = 'block';
 
-        fetch(global_rest_url_base + global_rest_app_timetables_user_setting_profile + document.getElementById('profile_id').innerHTML + 
+        fetch(global_rest_url_base + global_rest_app1_user_setting_profile + document.getElementById('profile_id').innerHTML + 
                 '?app_id=' + global_app_id +
                 '&lang_code=' + document.getElementById('setting_select_locale').value + 
                 '&id=' + user_id.innerHTML,
@@ -5074,7 +5074,7 @@ function profile_user_setting_update_stat(){
     let profile_id = document.getElementById('profile_id').innerHTML;
     let user_id = document.getElementById('setting_data_userid_logged_in').innerHTML;
     let status;
-    fetch(global_rest_url_base + global_rest_app_timetables_user_setting_profile + profile_id + 
+    fetch(global_rest_url_base + global_rest_app1_user_setting_profile + profile_id + 
             '?app_id=' + global_app_id +
             '&lang_code=' + document.getElementById('setting_select_locale').value + 
             '&id=' + user_id,
@@ -5135,8 +5135,8 @@ function user_function(user_function, user_setting_id) {
             }
         case 'LIKE_USER_SETTING':
             {
-                rest_path = global_rest_app_timetables_user_setting_like;
-                json_data = '{"user_setting_id":' + user_setting_id + '}';
+                rest_path = global_rest_app1_user_setting_like;
+                json_data = '{"app1_user_setting_id":' + user_setting_id + '}';
                 check_div = document.getElementById('profile_user_settings_like');
                 break;
             }
@@ -5337,11 +5337,11 @@ function updateViewStat(user_setting_id, user_setting_user_account_id = null) {
             json_user_account_id = document.getElementById('setting_data_userid_logged_in').innerHTML;
         let json_data =`{
                         "user_account_id":${json_user_account_id},
-                        "user_setting_id":${user_setting_id},
+                        "app1_user_setting_id":${user_setting_id},
                         "client_longitude": "${global_session_user_gps_longitude}",
                         "client_latitude": "${global_session_user_gps_latitude}"
                         }`;
-        fetch(global_rest_url_base + global_rest_app_timetables_user_setting_view +
+        fetch(global_rest_url_base + global_rest_app1_user_setting_view +
                 '?app_id=' + global_app_id + 
                 '&lang_code=' + document.getElementById('setting_select_locale').value, {
                 method: 'POST',

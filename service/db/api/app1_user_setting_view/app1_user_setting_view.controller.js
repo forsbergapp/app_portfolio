@@ -1,4 +1,4 @@
-const { insertUserSettingView} = require ("./app_timetables_user_setting_view.service");
+const { insertUserSettingView} = require ("./app1_user_setting_view.service");
 
 module.exports = {
 

@@ -4,7 +4,7 @@ const { createUserSetting,
 		getUserSetting,
 		updateUserSetting, 
 		deleteUserSetting,
-		deleteUserSettingsByUserId} = require ("./app_timetables_user_setting.service");
+		deleteUserSettingsByUserId} = require ("./app1_user_setting.service");
 		const { getMessage } = require("../message_translation/message_translation.service");
 module.exports = {
 	createUserSetting: (req, res) =>{

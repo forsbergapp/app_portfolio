@@ -4,7 +4,7 @@ module.exports = {
 	createUserSetting: (app_id, data, callBack) => {
 		if (process.env.SERVICE_DB_USE == 1) {
 			get_pool(app_id).query(
-				`INSERT INTO ${process.env.SERVICE_DB_DB1_NAME}.app_timetables_user_setting(
+				`INSERT INTO ${process.env.SERVICE_DB_DB1_NAME}.app1_user_setting(
 					description,
 					regional_language_locale,
 					regional_current_timezone_select_id,
@@ -133,7 +133,7 @@ module.exports = {
 				try{
 					pool2 = await oracledb.getConnection(get_pool(app_id));
 					const result = await pool2.execute(
-						`INSERT INTO ${process.env.SERVICE_DB_DB2_NAME}.app_timetables_user_setting(
+						`INSERT INTO ${process.env.SERVICE_DB_DB2_NAME}.app1_user_setting(
 							description,
 							regional_language_locale,
 							regional_current_timezone_select_id,
@@ -313,7 +313,7 @@ module.exports = {
 								pool3 = await oracledb.getConnection(get_pool(app_id));
 								const result_rowid = await pool3.execute(
 									`SELECT id "insertId"
-										FROM ${process.env.SERVICE_DB_DB2_NAME}.app_timetables_user_setting
+										FROM ${process.env.SERVICE_DB_DB2_NAME}.app1_user_setting
 										WHERE rowid = :lastRowid`,
 									{
 										lastRowid: lastRowid
@@ -420,7 +420,7 @@ module.exports = {
 					date_created,
 					date_modified,
 					user_account_id
-				FROM ${process.env.SERVICE_DB_DB1_NAME}.app_timetables_user_setting 
+				FROM ${process.env.SERVICE_DB_DB1_NAME}.app1_user_setting 
 				WHERE id = ? `,
 				[id],
 				(error, results, fields) => {
@@ -493,7 +493,7 @@ module.exports = {
 						date_created "date_created",
 						date_modified "date_modified",
 						user_account_id "user_account_id"
-					FROM ${process.env.SERVICE_DB_DB2_NAME}.app_timetables_user_setting 
+					FROM ${process.env.SERVICE_DB_DB2_NAME}.app1_user_setting 
 					WHERE id = :id `,
 					{
 						id: id
@@ -582,7 +582,7 @@ module.exports = {
 					us.date_created,
 					us.date_modified,
 					us.user_account_id
-				FROM ${process.env.SERVICE_DB_DB1_NAME}.app_timetables_user_setting us
+				FROM ${process.env.SERVICE_DB_DB1_NAME}.app1_user_setting us
 				WHERE us.user_account_id = ? `,
 				[id],
 				(error, results, fields) => {
@@ -656,7 +656,7 @@ module.exports = {
 						date_created "date_created",
 						date_modified "date_modified",
 						user_account_id "user_account_id"
-					FROM ${process.env.SERVICE_DB_DB2_NAME}.app_timetables_user_setting
+					FROM ${process.env.SERVICE_DB_DB2_NAME}.app1_user_setting
 					WHERE user_account_id = :user_account_id `,
 					{
 						user_account_id: id
@@ -694,17 +694,17 @@ module.exports = {
 					us.description,
 					us.user_account_id,
 					(SELECT COUNT(u_like.id)
-					   FROM ${process.env.SERVICE_DB_DB1_NAME}.app_timetables_user_setting_like u_like
-					  WHERE u_like.user_setting_id = us.id)				count_likes,
-					(SELECT COUNT(u_view.user_setting_id)
-					   FROM ${process.env.SERVICE_DB_DB1_NAME}.app_timetables_user_setting_view u_view
-					  WHERE u_view.user_setting_id = us.id)				count_views,
+					   FROM ${process.env.SERVICE_DB_DB1_NAME}.app1_user_setting_like u_like
+					  WHERE u_like.app1_user_setting_id = us.id)				count_likes,
+					(SELECT COUNT(u_view.app1_user_setting_id)
+					   FROM ${process.env.SERVICE_DB_DB1_NAME}.app1_user_setting_view u_view
+					  WHERE u_view.app1_user_setting_id = us.id)				count_views,
 					(SELECT COUNT(u_liked_current_user.id)
-					   FROM ${process.env.SERVICE_DB_DB1_NAME}.app_timetables_user_setting_like u_liked_current_user
+					   FROM ${process.env.SERVICE_DB_DB1_NAME}.app1_user_setting_like u_liked_current_user
 					  WHERE u_liked_current_user.user_account_id = ?
-						AND u_liked_current_user.user_setting_id = us.id) 	liked,
+						AND u_liked_current_user.app1_user_setting_id = us.id) 	liked,
 					us.design_paper_size_select_id
-				FROM ${process.env.SERVICE_DB_DB1_NAME}.app_timetables_user_setting us
+				FROM ${process.env.SERVICE_DB_DB1_NAME}.app1_user_setting us
 				WHERE us.user_account_id = ? `,
 				[id_current_user,
 				id],
@@ -727,17 +727,17 @@ module.exports = {
 						us.description "description",
 						us.user_account_id "user_account_id",
 						(SELECT COUNT(u_like.id)
-						   FROM ${process.env.SERVICE_DB_DB2_NAME}.app_timetables_user_setting_like u_like
-						  WHERE u_like.user_setting_id = us.id)				"count_likes",
-						(SELECT COUNT(u_view.user_setting_id)
-						   FROM ${process.env.SERVICE_DB_DB2_NAME}.app_timetables_user_setting_view u_view
-						  WHERE u_view.user_setting_id = us.id)				"count_views",
+						   FROM ${process.env.SERVICE_DB_DB2_NAME}.app1_user_setting_like u_like
+						  WHERE u_like.app1_user_setting_id = us.id)				"count_likes",
+						(SELECT COUNT(u_view.app1_user_setting_id)
+						   FROM ${process.env.SERVICE_DB_DB2_NAME}.app1_user_setting_view u_view
+						  WHERE u_view.app1_user_setting_id = us.id)				"count_views",
 						(SELECT COUNT(u_liked_current_user.id)
-						   FROM ${process.env.SERVICE_DB_DB2_NAME}.app_timetables_user_setting_like u_liked_current_user
+						   FROM ${process.env.SERVICE_DB_DB2_NAME}.app1_user_setting_like u_liked_current_user
 						  WHERE u_liked_current_user.user_account_id = :user_account_id_current
-						    AND u_liked_current_user.user_setting_id = us.id) 	"liked",
+						    AND u_liked_current_user.app1_user_setting_id = us.id) 	"liked",
 						us.design_paper_size_select_id "design_paper_size_select_id"
-					FROM ${process.env.SERVICE_DB_DB2_NAME}.app_timetables_user_setting us
+					FROM ${process.env.SERVICE_DB_DB2_NAME}.app1_user_setting us
 					WHERE us.user_account_id = :user_account_id `,
 					{
 						user_account_id_current: id_current_user,
@@ -771,7 +771,7 @@ module.exports = {
 	updateUserSetting: (app_id, data, id, callBack) => {
 		if (process.env.SERVICE_DB_USE == 1) {
 			get_pool(app_id).query(
-				`UPDATE ${process.env.SERVICE_DB_DB1_NAME}.app_timetables_user_setting
+				`UPDATE ${process.env.SERVICE_DB_DB1_NAME}.app1_user_setting
 					SET description = ?,
 					regional_language_locale = ?,
 					regional_current_timezone_select_id = ?,
@@ -895,7 +895,7 @@ module.exports = {
 				try{
 				pool2 = await oracledb.getConnection(get_pool(app_id));
 				const result = await pool2.execute(
-					`UPDATE ${process.env.SERVICE_DB_DB2_NAME}.app_timetables_user_setting
+					`UPDATE ${process.env.SERVICE_DB_DB2_NAME}.app1_user_setting
 						SET description = :description,
 						regional_language_locale = :regional_language_locale,
 						regional_current_timezone_select_id = :regional_current_timezone_select_id,
@@ -1033,7 +1033,7 @@ module.exports = {
 	deleteUserSetting: (app_id, id, callBack) => {
 		if (process.env.SERVICE_DB_USE == 1) {
 			get_pool(app_id).query(
-				`DELETE FROM ${process.env.SERVICE_DB_DB1_NAME}.app_timetables_user_setting
+				`DELETE FROM ${process.env.SERVICE_DB_DB1_NAME}.app1_user_setting
 				WHERE id = ? `,
 				[id],
 				(error, results, fields) => {
@@ -1050,7 +1050,7 @@ module.exports = {
 				try{
 				pool2 = await oracledb.getConnection(get_pool(app_id));
 				const result = await pool2.execute(
-					`DELETE FROM ${process.env.SERVICE_DB_DB2_NAME}.app_timetables_user_setting
+					`DELETE FROM ${process.env.SERVICE_DB_DB2_NAME}.app1_user_setting
 					  WHERE id = :id `,
 					{
 						id: id
@@ -1083,7 +1083,7 @@ module.exports = {
 	deleteUserSettingsByUserId: (app_id, id, callBack) => {
 		if (process.env.SERVICE_DB_USE == 1) {
 			get_pool(app_id).query(
-				`DELETE FROM ${process.env.SERVICE_DB_DB1_NAME}.app_timetables_user_setting
+				`DELETE FROM ${process.env.SERVICE_DB_DB1_NAME}.app1_user_setting
 				  WHERE user_account_id = ? `,
 				[id],
 				(error, results, fields) => {
@@ -1100,7 +1100,7 @@ module.exports = {
 				try{
 				pool2 = await oracledb.getConnection(get_pool(app_id));
 				const result = await pool2.execute(
-					`DELETE FROM ${process.env.SERVICE_DB_DB2_NAME}.app_timetables_user_setting
+					`DELETE FROM ${process.env.SERVICE_DB_DB2_NAME}.app1_user_setting
 					  WHERE user_account_id = :user_account_id `,
 					{
 						user_account_id: id
