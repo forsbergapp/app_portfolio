@@ -1,6 +1,6 @@
 const router = require("express").Router();
 const { likeUserSetting, 
-	unlikeUserSetting} = require ("./app_timetables_user_setting_like.controller");
+	unlikeUserSetting} = require ("./app1_user_setting_like.controller");
 const { checkAccessToken } = require("../../../auth/auth.controller");
 const { createLogAppRI } = require("../../../log/log.service");
 router.use((req,res,next)=>{

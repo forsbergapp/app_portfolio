@@ -4,8 +4,8 @@ module.exports = {
 	likeUserSetting: (app_id, id, id_like, callBack) => {
 		if (process.env.SERVICE_DB_USE == 1) {
 			get_pool(app_id).query(
-			`INSERT INTO ${process.env.SERVICE_DB_DB1_NAME}.app_timetables_user_setting_like(
-							user_account_id, user_setting_id, date_created)
+			`INSERT INTO ${process.env.SERVICE_DB_DB1_NAME}.app1_user_setting_like(
+							user_account_id, app1_user_setting_id, date_created)
 				VALUES(?,?, SYSDATE()) `,
 				[
 				id,
@@ -25,12 +25,12 @@ module.exports = {
 				try{
 				pool2 = await oracledb.getConnection(get_pool(app_id));
 				const result = await pool2.execute(
-					`INSERT INTO ${process.env.SERVICE_DB_DB2_NAME}.app_timetables_user_setting_like(
-									user_account_id, user_setting_id, date_created)
-						VALUES(:user_account_id,:user_setting_id, SYSDATE) `,
+					`INSERT INTO ${process.env.SERVICE_DB_DB2_NAME}.app1_user_setting_like(
+									user_account_id, app1_user_setting_id, date_created)
+						VALUES(:user_account_id,:app1_user_setting_id, SYSDATE) `,
 					{
 						user_account_id: id,
-						user_setting_id: id_like
+						app1_user_setting_id: id_like
 					},
 					(err,result) => {
 						if (err) {
@@ -60,9 +60,9 @@ module.exports = {
 	unlikeUserSetting: (app_id, id, id_unlike, callBack) => {
 		if (process.env.SERVICE_DB_USE == 1) {
 			get_pool(app_id).query(
-			`DELETE FROM ${process.env.SERVICE_DB_DB1_NAME}.app_timetables_user_setting_like
+			`DELETE FROM ${process.env.SERVICE_DB_DB1_NAME}.app1_user_setting_like
 			  WHERE user_account_id = ?
-				AND user_setting_id = ? `,
+				AND app1_user_setting_id = ? `,
 				[
 				id,
 				id_unlike
@@ -81,12 +81,12 @@ module.exports = {
 				try{
 				pool2 = await oracledb.getConnection(get_pool(app_id));
 				const result = await pool2.execute(
-					`DELETE FROM ${process.env.SERVICE_DB_DB2_NAME}.app_timetables_user_setting_like
+					`DELETE FROM ${process.env.SERVICE_DB_DB2_NAME}.app1_user_setting_like
 					  WHERE user_account_id = :user_account_id
-						AND user_setting_id = :user_setting_id `,
+						AND app1_user_setting_id = :app1_user_setting_id `,
 					{
 						user_account_id: id,
-						user_setting_id: id_unlike
+						app1_user_setting_id: id_unlike
 					},
 					(err,result) => {
 						if (err) {

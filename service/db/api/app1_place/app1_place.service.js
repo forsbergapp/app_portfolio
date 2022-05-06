@@ -20,9 +20,9 @@ module.exports = {
 							gp2.icon_emoji     group2_icon
 						FROM
 							${process.env.SERVICE_DB_DB1_NAME}.country      c1,
-							${process.env.SERVICE_DB_DB1_NAME}.group_place  gp1, 
-							${process.env.SERVICE_DB_DB1_NAME}.group_place  gp2,
-							${process.env.SERVICE_DB_DB1_NAME}.app_timetables_place        p
+							${process.env.SERVICE_DB_DB1_NAME}.app1_group_place  gp1, 
+							${process.env.SERVICE_DB_DB1_NAME}.app1_group_place  gp2,
+							${process.env.SERVICE_DB_DB1_NAME}.app1_place        p
 							LEFT OUTER JOIN ${process.env.SERVICE_DB_DB1_NAME}.country c2 
 							ON c2.id = p.country2_id  
 						WHERE gp1.id = p.group_place1_id
@@ -58,9 +58,9 @@ module.exports = {
 							gp2.icon_emoji     "group2_icon"
 						FROM
 							${process.env.SERVICE_DB_DB2_NAME}.country      c1,
-							${process.env.SERVICE_DB_DB2_NAME}.group_place  gp1, 
-							${process.env.SERVICE_DB_DB2_NAME}.group_place  gp2,
-							${process.env.SERVICE_DB_DB2_NAME}.app_timetables_place        p
+							${process.env.SERVICE_DB_DB2_NAME}.app1_group_place  gp1, 
+							${process.env.SERVICE_DB_DB2_NAME}.app1_group_place  gp2,
+							${process.env.SERVICE_DB_DB2_NAME}.app1_place        p
 							LEFT OUTER JOIN ${process.env.SERVICE_DB_DB2_NAME}.country c2 
 							ON c2.id = p.country2_id  
 						WHERE gp1.id = p.group_place1_id

@@ -20,11 +20,11 @@ module.exports = {
 						t.premium,
 						tc.title category,
 						tt.title type
-				FROM ${process.env.SERVICE_DB_DB1_NAME}.app_timetables_theme t,
-					 ${process.env.SERVICE_DB_DB1_NAME}.theme_category tc,
-					 ${process.env.SERVICE_DB_DB1_NAME}.theme_type tt
-				WHERE tc.id = t.theme_category_id
-				AND   tt.id = t.theme_type_id 
+				FROM ${process.env.SERVICE_DB_DB1_NAME}.app1_theme t,
+					 ${process.env.SERVICE_DB_DB1_NAME}.app1_theme_category tc,
+					 ${process.env.SERVICE_DB_DB1_NAME}.app1_theme_type tt
+				WHERE tc.id = t.app1_theme_category_id
+				AND   tt.id = t.app1_theme_type_id 
 				ORDER BY tt.title, t.id`,
 				[],
 				(error, results, fields) => {
@@ -57,11 +57,11 @@ module.exports = {
 							t.premium "premium",
 							tc.title "category",
 							tt.title "type"
-					FROM ${process.env.SERVICE_DB_DB2_NAME}.app_timetables_theme t,
-						 ${process.env.SERVICE_DB_DB2_NAME}.theme_category tc,
-						 ${process.env.SERVICE_DB_DB2_NAME}.theme_type tt
-					WHERE tc.id = t.theme_category_id
-					AND   tt.id = t.theme_type_id
+					FROM ${process.env.SERVICE_DB_DB2_NAME}.app1_theme t,
+						 ${process.env.SERVICE_DB_DB2_NAME}.app1_theme_category tc,
+						 ${process.env.SERVICE_DB_DB2_NAME}.app1_theme_type tt
+					WHERE tc.id = t.app1_theme_category_id
+					AND   tt.id = t.app1_theme_type_id
 					ORDER BY tt.title, t.id`,
 					{},
 					(err,result) => {
