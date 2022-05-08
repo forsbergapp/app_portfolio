@@ -6,7 +6,7 @@ module.exports = {
 			get_pool_admin().query(
 				`SELECT
 						id,
-						name
+						parameter_type_name
                    FROM ${process.env.SERVICE_DB_DB1_NAME}.parameter_type
                   WHERE id = COALESCE(?, id)
 				  ORDER BY 1`,
@@ -28,7 +28,7 @@ module.exports = {
 				const result = await pool2.execute(
 					`SELECT
                             id "id",
-                            name "name"
+                            parameter_type_name "parameter_type_name"
                     FROM ${process.env.SERVICE_DB_DB2_NAME}.parameter_type
                     WHERE id = NVL(:id, id)
 					ORDER BY 1`,
