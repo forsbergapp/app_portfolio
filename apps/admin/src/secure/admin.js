@@ -68,10 +68,10 @@
     document.getElementById('lov_close').addEventListener('click', function() { close_lov()}, false); 
     document.getElementById('apps_save').addEventListener('click', function() { apps_save()}, false); 
 
-    document.getElementById('select_app_menu3').addEventListener('change', function() { show_app_log().then(function(){show_connected();})}, false);
+    document.getElementById('select_app_menu3').addEventListener('change', function() { show_app_stat()}, false);
     document.getElementById('select_maptype').addEventListener('change', function() { map_set_style(); }, false);
-    document.getElementById('select_year_menu3').addEventListener('change', function() { show_app_log()}, false);
-    document.getElementById('select_month_menu3').addEventListener('change', function() { show_app_log()}, false);
+    document.getElementById('select_year_menu3').addEventListener('change', function() { show_app_stat()}, false);
+    document.getElementById('select_month_menu3').addEventListener('change', function() { show_app_stat()}, false);
     document.getElementById('list_app_log_col_title1').addEventListener('click', function() { list_sort_click(this)}, false); 
     document.getElementById('list_app_log_col_title2').addEventListener('click', function() { list_sort_click(this)}, false);
     document.getElementById('list_app_log_col_title3').addEventListener('click', function() { list_sort_click(this)}, false);
@@ -353,12 +353,10 @@
                      `;
                 document.getElementById('select_year_menu3').selectedIndex = 0;
                 document.getElementById('select_month_menu3').selectedIndex = new Date().getMonth();
-                show_app_log().then(function(){
-                    show_connected().then(function(){
-                        if (admin_token_has_value()){
-                            window.global_session_map.resize();
-                        }
-                    });
+                show_app_stat().then(function(){
+                    if (admin_token_has_value()){
+                        window.global_session_map.resize();
+                    }
                 });
                 break;    
             }
@@ -650,7 +648,7 @@
                                             <div>${json.data[i].id}</div>
                                         </div>
                                         <div class='list_lov_col'>
-                                            <div>${json.data[i].name}</div>
+                                            <div>${json.data[i].parameter_type_name}</div>
                                         </div>
                                     </div>`;
                                 }
@@ -687,7 +685,7 @@
             if (status == 200){
                 json = JSON.parse(result);
                 if (json.data.length == 1)
-                    document.getElementById(row_item).children[2].children[0].innerHTML = json.data[0].name;
+                    document.getElementById(row_item).children[2].children[0].innerHTML = json.data[0].parameter_type_name;
                 else{
                     item.value = old_value;
                     item.focus();
@@ -1046,13 +1044,15 @@
             let status;
             let json;
             let app_id = document.getElementById('select_app_menu3').options[document.getElementById('select_app_menu3').selectedIndex].value;
+            let year = document.getElementById('select_year_menu3').value;
+            let month = document.getElementById('select_month_menu3').value;
             for (let i=1;i<=7;i++){
                 document.getElementById('list_connected_col_title' + i).classList.remove('asc');
                 document.getElementById('list_connected_col_title' + i).classList.remove('desc');
             }
             document.getElementById('list_connected_col_title' + sort).classList.add(order_by);
 
-            await fetch(`/service/broadcast/connected?app_id=${app_id}&sort=${sort}&order_by=${order_by}&limit=${window.global_limit}`,
+            await fetch(`/service/broadcast/connected?app_id=${app_id}&&year=${year}&month=${month}&sort=${sort}&order_by=${order_by}&limit=${window.global_limit}`,
                 {method: 'GET',
                     headers: {
                         'Authorization': 'Bearer ' + window.global_rest_admin_at,
@@ -1112,6 +1112,12 @@
                 });
         }
     }    
+    async function show_app_stat(){
+        if (document.getElementById('list_connected_form').style.display=='block')
+            list_click(document.getElementById('list_connected_title1'));
+        else
+            list_click(document.getElementById('list_app_log_title2'));
+    }
     async function show_app_log(sort=8, order_by='desc', offset=0, limit=global_limit){
         let status;
         let json;
