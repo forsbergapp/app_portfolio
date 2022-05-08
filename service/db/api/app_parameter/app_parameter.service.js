@@ -150,7 +150,7 @@ module.exports = {
 				`SELECT
 						ap.app_id,
 						ap.parameter_type_id,
-						pt.name parameter_type_name,
+						pt.parameter_type_name,
 						ap.parameter_name,
 						ap.parameter_value,
 						ap.parameter_comment
@@ -178,7 +178,7 @@ module.exports = {
 					`SELECT
                             ap.app_id "app_id",
                             ap.parameter_type_id "parameter_type_id",
-							pt.name "parameter_type_name",
+							pt.parameter_type_name "parameter_type_name",
                             ap.parameter_name "parameter_name",
                             ap.parameter_value "parameter_value",
 							ap.parameter_comment "parameter_comment"
