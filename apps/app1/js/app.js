@@ -569,6 +569,12 @@ async function get_app_globals() {
                     global_rest_app1_user_setting_user_account_id = json.data[i].parameter_value;
                 if (json.data[i].parameter_name=='REST_APP1_USER_SETTING_PROFILE')
                     global_rest_app1_user_setting_profile = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='REST_APP1_USER_SETTING_PROFILE_ALL')
+                    global_rest_app1_user_setting_profile_all = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='REST_APP1_USER_SETTING_PROFILE_DETAIL')
+                    global_rest_app1_user_setting_profile_detail = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='REST_APP1_USER_SETTING_PROFILE_TOP')
+                    global_rest_app1_user_setting_profile_top = json.data[i].parameter_value;
                 if (json.data[i].parameter_name=='REST_APP1_USER_SETTING_LIKE')
                     global_rest_app1_user_setting_like = json.data[i].parameter_value;
                 if (json.data[i].parameter_name=='REST_APP1_USER_SETTING_VIEW')
@@ -618,6 +624,10 @@ async function get_app_globals() {
                 if (json.data[i].parameter_name=='SERVICE_WORLDCITIES')
                     global_service_worldcities = json.data[i].parameter_value;
                 //App variables registered for this apps app_id
+                if (json.data[i].parameter_name=='APP_REPORT_PATH')
+                    global_app_report_path = json.data[i].parameter_value; 
+                if (json.data[i].parameter_name=='APP_REPORT_TIMETABLE')
+                    global_app_report_timetable = json.data[i].parameter_value; 
                 if (json.data[i].parameter_name=='PWA_SCOPE')
                     global_pwa_scope = json.data[i].parameter_value; 
                 if (json.data[i].parameter_name=='INFO_EMAIL_POLICY')
@@ -937,7 +947,8 @@ function show_message(message_type, code, function_id, exception_message=''){
         case 'CONFIRM':{
             confirm_question.style.display = show;
             button_cancel.style.display = show;
-            message_title.style.display = show;
+            message_title.style.display = hide;
+            message_title.innerHTML = '';
             if (function_id==1)
                 button_close.addEventListener('click', function_delete_user_account, false);
             if (function_id==2)
@@ -3188,35 +3199,32 @@ function user_setting_link(item){
     let user_account_id = select_user_setting[select_user_setting.selectedIndex].getAttribute('user_account_id');
     let sid = select_user_setting[select_user_setting.selectedIndex].getAttribute('id');
     common_url = get_report_url(user_account_id, sid, paper_size_select.options[paper_size_select.selectedIndex].value);
-    if (item.id.substr(0,8)=='user_day')
-        url_type = '&type=0';
-    if (item.id.substr(0,10)=='user_month')
-        url_type = '&type=1';
-    if (item.id.substr(0,9)=='user_year')
-        url_type = '&type=2';
-
     switch (item.id){
         case 'user_day_html':
         case 'user_month_html':
         case 'user_year_html':{
+            url_type = get_report_url_type(item.id, 'HTML');
             preview_report(`${common_url}&format=html${url_type}`, 'html');
             break;
         }
         case 'user_day_html_copy':
         case 'user_month_html_copy':
         case 'user_year_html_copy':{
+            url_type = get_report_url_type(item.id, 'HTML');
             let promise = navigator.clipboard.writeText(`${common_url}'&format=html'${url_type}`) .then(() => {null;});
             break;
         }
         case 'user_day_pdf':
         case 'user_month_pdf':
         case 'user_year_pdf':{
+            url_type = get_report_url_type(item.id, 'PDF');
             preview_report(`${common_url}&format=pdf${url_type}`, 'pdf');
             break;
         }
         case 'user_day_pdf_copy':
         case 'user_month_pdf_copy':
         case 'user_year_pdf_copy':{
+            url_type = get_report_url_type(item.id, 'PDF');
             let promise = navigator.clipboard.writeText(`${common_url}'&format=pdf'${url_type}`) .then(() => {null;});
             break;
         }
@@ -4478,11 +4486,39 @@ function get_report_url(id, sid, papersize){
          `&id=${id}` +
          `&sid=${sid}` +
          `&ps=${papersize}` +
-         `&hf=0`;
+         `&hf=0` + 
+         `&module=${global_app_report_timetable}`;
 }
 /*------------------------------------- */
 // Profile function
 /*------------------------------------- */
+function profile_user_setting_stat(id){
+    let status;
+    fetch(global_rest_url_base + global_rest_app1_user_setting_profile + id + 
+        '?app_id=' + global_app_id + 
+        '&lang_code=' + document.getElementById('setting_select_locale').value, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + global_rest_dt
+        }
+    })
+    .then(function(response) {
+        status = response.status;
+        return response.text();
+    })
+    .then(function(response) {
+        if (status == 200) {
+            json = JSON.parse(response);
+            document.getElementById('profile_info_user_setting_likes_count').innerHTML = json.items.count_user_setting_likes;
+            document.getElementById('profile_info_user_setting_liked_count').innerHTML = json.items.count_user_setting_liked;
+        }
+    })
+    .catch(function(error) {
+        show_message('EXCEPTION', null,null, error);
+    });
+}
+
 /* call 
 	profile_show() 					from popupmenu
 	profile_show(userid) 			from choosing profile in profile_detail
@@ -4595,13 +4631,15 @@ function profile_show(user_account_id_other = null, username = null) {
                     document.getElementById("profile_qr").innerHTML = '';
                     create_qr('profile_qr', `${location.protocol}//${location.hostname}${location.port==''?'':':' + location.port}/` + json.username);
 
+                    document.getElementById('profile_info_view_count').innerHTML = json.count_views;
+
                     document.getElementById('profile_info_following_count').innerHTML = json.count_following;
                     document.getElementById('profile_info_followers_count').innerHTML = json.count_followed;
                     document.getElementById('profile_info_likes_count').innerHTML = json.count_likes;
                     document.getElementById('profile_info_liked_count').innerHTML = json.count_liked;
-                    document.getElementById('profile_info_user_setting_likes_count').innerHTML = json.count_user_setting_likes;
-                    document.getElementById('profile_info_user_setting_liked_count').innerHTML = json.count_user_setting_liked;
-                    document.getElementById('profile_info_view_count').innerHTML = json.count_views;
+                    
+                    //user settings
+                    profile_user_setting_stat(json.id);
 
                     if (json.followed == 1) {
                         //followed
@@ -4685,6 +4723,14 @@ function preview_report(url, type){
             })
         }
 }
+function get_report_url_type(item, format){
+    if (item =='profile_user_settings_day' || item.substr(0,8)=='user_day')
+        return url_type = '&type=0&type_desc=REPORT_TIMETABLE_DAY_' + format;
+    if (item =='profile_user_settings_month' || item.substr(0,10)=='user_month')
+        return url_type = '&type=1&type_desc=REPORT_TIMETABLE_DAY_' + format;
+    if (item == 'profile_user_settings_year' || item.substr(0,9)=='user_year')
+        return url_type = '&type=2&type_desc=REPORT_TIMETABLE_DAY_' + format;
+}
 function profile_user_setting_link(item){
     let paper_size_select = document.getElementById('setting_select_report_papersize');
     let common_url;
@@ -4693,13 +4739,7 @@ function profile_user_setting_link(item){
     let user_account_id = select_user_setting[select_user_setting.selectedIndex].getAttribute('user_account_id');
     let sid = select_user_setting[select_user_setting.selectedIndex].getAttribute('sid');
     common_url = get_report_url(user_account_id, sid, paper_size_select.options[paper_size_select.selectedIndex].value);
-    if (item.id =='profile_user_settings_day')
-        url_type = '&type=0';
-    if (item.id =='profile_user_settings_month')
-        url_type = '&type=1';
-    if (item.id == 'profile_user_settings_year')
-        url_type = '&type=2';
-
+    url_type = get_report_url_type(item.id, 'HTML');
     switch (item.id){
         case 'profile_user_settings_day':
         case 'profile_user_settings_month':
@@ -4730,7 +4770,7 @@ function profile_show_user_setting() {
     if (document.getElementById('profile_user_settings_public').style.display == "block") {
         document.getElementById('profile_user_settings_row').style.display = 'block';
 
-        fetch(global_rest_url_base + global_rest_app1_user_setting_profile + document.getElementById('profile_id').innerHTML + 
+        fetch(global_rest_url_base + global_rest_app1_user_setting_profile_all + document.getElementById('profile_id').innerHTML + 
                 '?app_id=' + global_app_id +
                 '&lang_code=' + document.getElementById('setting_select_locale').value + 
                 '&id=' + user_id.innerHTML,
@@ -4776,6 +4816,16 @@ function profile_show_user_setting() {
 function profile_detail(detailchoice) {
     let status;
     let user_id = document.getElementById('setting_data_userid_logged_in');
+    let url;
+    if (detailchoice == 1 || detailchoice == 2 || detailchoice == 3 || detailchoice == 4){
+        /*detailchoice 1,2,3, 4: user_account*/
+        url = global_rest_url_base + global_rest_user_account_profile_detail;
+    }
+    else{
+        //detailchoice 5,6: app1_user_setting
+        url = global_rest_url_base + global_rest_app1_user_setting_profile_detail;
+    }
+
     //DETAIL
     //show only if user logged in
     if (parseInt(user_id.innerHTML) || 0 !== 0) {
@@ -4871,18 +4921,21 @@ function profile_detail(detailchoice) {
                     document.getElementById('profile_detail_header_liked').style.display = 'none';
                     document.getElementById('profile_detail_header_user_setting_like').style.display = 'none';
                     document.getElementById('profile_detail_header_user_setting_liked').style.display = 'none';
+                    break;
                 }
             default:
                 break;
         }
-        fetch(global_rest_url_base + global_rest_user_account_profile_detail + document.getElementById('profile_id').innerHTML +
-                '?app_id=' + global_app_id +
-                '&lang_code=' + document.getElementById('setting_select_locale').value +
-                '&detailchoice=' + detailchoice, {
-                method: 'GET',
-                headers: {
-                    'Authorization': 'Bearer ' + global_rest_at
-                }
+        if (detailchoice !=7)
+        {
+            fetch(url + document.getElementById('profile_id').innerHTML +
+            '?app_id=' + global_app_id +
+            '&lang_code=' + document.getElementById('setting_select_locale').value +
+            '&detailchoice=' + detailchoice, {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Bearer ' + global_rest_at
+            }
             })
             .then(function(response) {
                 status = response.status;
@@ -4951,14 +5004,24 @@ function profile_detail(detailchoice) {
             .catch(function(error) {
                 show_message('EXCEPTION', null,null, error);
             });
+        }
     } else
         show_dialogue('LOGIN');
 }
 
 function profile_top(statschoice) {
     let status;
+    let url;
+    if (statschoice ==1 || statschoice ==2 || statschoice ==3){
+        /*statschoice 1,2,3: user_account*/
+        url = global_rest_url_base + global_rest_user_account_profile_top;
+    }
+    else{
+        /*statschoice 4 or 5: app1_user_settings*/
+        url = global_rest_url_base + global_rest_app1_user_setting_profile_top;
+    }
     //TOP
-    fetch(global_rest_url_base + global_rest_user_account_profile_top + statschoice + 
+    fetch(url + statschoice + 
             '?app_id=' + global_app_id +
             '&lang_code=' + document.getElementById('setting_select_locale').value, 
         {
@@ -5059,13 +5122,12 @@ function profile_update_stat(){
     .then(function(response) {
         if (status == 200) {
             json = JSON.parse(response);
+            document.getElementById('profile_info_view_count').innerHTML = json.count_views;
             document.getElementById('profile_info_following_count').innerHTML = json.count_following;
             document.getElementById('profile_info_followers_count').innerHTML = json.count_followed;
             document.getElementById('profile_info_likes_count').innerHTML = json.count_likes;
             document.getElementById('profile_info_liked_count').innerHTML = json.count_liked;
-            document.getElementById('profile_info_user_setting_likes_count').innerHTML = json.count_user_setting_likes;
-            document.getElementById('profile_info_user_setting_liked_count').innerHTML = json.count_user_setting_liked;
-            document.getElementById('profile_info_view_count').innerHTML = json.count_views;
+            profile_user_setting_stat(json.id);
         }
     })
 }
@@ -5074,7 +5136,7 @@ function profile_user_setting_update_stat(){
     let profile_id = document.getElementById('profile_id').innerHTML;
     let user_id = document.getElementById('setting_data_userid_logged_in').innerHTML;
     let status;
-    fetch(global_rest_url_base + global_rest_app1_user_setting_profile + profile_id + 
+    fetch(global_rest_url_base + global_rest_app1_user_setting_profile_all + profile_id + 
             '?app_id=' + global_app_id +
             '&lang_code=' + document.getElementById('setting_select_locale').value + 
             '&id=' + user_id,
@@ -5104,6 +5166,7 @@ function profile_user_setting_update_stat(){
                                                      json.items[i].count_views);
                 }
             }
+            profile_user_setting_stat(profile_id);
         }
     })
     .catch(function(error) {

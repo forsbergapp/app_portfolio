@@ -2,8 +2,7 @@ const {
     create,
     activateUser,
     getUserByUserId,
-    getProfileUserId,
-    getProfileUsername,
+    getProfileUser,
     searchProfileUser,
     getProfileDetail,
     getProfileTop,
@@ -23,7 +22,7 @@ const { getMessage } = require("../message_translation/message_translation.servi
 const { insertProfileSearch } = require("../profile_search/profile_search.controller");
 const { insertUserAccountLogon } = require("../user_account_logon/user_account_logon.controller");
 const { insertUserAccountView } = require("../user_account_view/user_account_view.controller");
-const { createUserSetting, deleteUserSettingsByUserId } = require("../app1_user_setting/app1_user_setting.service");
+const { createUserSetting } = require("../app1_user_setting/app1_user_setting.service");
 const { getParameter } = require ("../app_parameter/app_parameter.service");
 const { sendEmail } = require("../../../../service/mail/mail.controller");
 const { createLogAppCI } = require("../../../../service/log/log.service");
@@ -125,7 +124,7 @@ module.exports = {
                                 //send email for local users only
                                 const emailData = {
                                     lang_code : req.query.lang_code,
-                                    app_id : req.query.app_id,
+                                    app_id : process.env.APP0_ID,
                                     app_user_id : req.body.user_account_id,
                                     emailType : parameter_value,
                                     toEmail : req.body.email,
@@ -213,8 +212,13 @@ module.exports = {
                 }
         });
     },
-    getProfileUserId: (req, res) => {
+    getProfileUser: (req, res) => {
+        if (typeof req.params.id == 'undefined')
+            req.params.id = null;
+        if (typeof req.params.username == 'undefined')
+            req.params.username = null;
         const id = req.params.id;
+        const username = req.params.username;
         var id_current_user;
 
         if (typeof req.query.id !== 'undefined')
@@ -231,7 +235,7 @@ module.exports = {
         req.body.client_longitude = req.body.client_longitude;
         req.body.client_latitude = req.body.client_latitude;
 
-        getProfileUserId(req.query.app_id, id, id_current_user, (err, results) => {
+        getProfileUser(req.query.app_id, id, username, id_current_user, (err, results) => {
             if (err) {
                 return res.status(500).send(
                     err
@@ -266,53 +270,6 @@ module.exports = {
                 
             }         
             
-        });
-    },
-    getProfileUsername: (req, res) => {
-        const username = req.params.username;
-        var id_current_user;
-        if (typeof req.query.id !== 'undefined')
-            id_current_user = req.query.id;
-        if (id_current_user == '')
-            id_current_user = null;
-        else
-            id_current_user = parseInt(id_current_user);
-        req.body.user_account_id = id_current_user;
-        req.body.client_ip = req.ip;
-        req.body.client_user_agent = req.headers["user-agent"];
-        req.body.client_longitude = req.body.client_longitude;
-        req.body.client_latitude = req.body.client_latitude;
-        getProfileUsername(req.query.app_id, username, id_current_user, (err, results) => {
-            if (err) {
-                return res.status(500).send(
-                    err
-                );
-            }
-            if (!results)
-                //Record not found
-				getMessage(20400, 
-					req.query.app_id, 
-                    req.query.lang_code, (err2,results2)  => {
-						return res.status(500).send(
-                            results2.text
-						);
-					});
-            else{
-                req.body.user_account_id_view = results.id;
-                if ((results.id == id_current_user) == false) {
-                    insertUserAccountView(req.query.app_id, req.body, (err, results) => {
-                        if (err) {
-                            return res.status(500).send(
-                                err
-                            );
-                        }
-                    });
-                }
-                //send without {} so the variablename is not sent
-                return res.status(200).json(
-                    results
-                );
-            }
         });
     },
     searchProfileUser: (req, res) => {
@@ -541,31 +498,29 @@ module.exports = {
             else {
                 if (results) {
                     if (results.provider1_id !=null || results.provider2_id !=null){
-                        deleteUserSettingsByUserId(req.query.app_id, id, (err, results) => {
-                            deleteUser(req.query.app_id, id, (err, results) => {
-                                if (err) {
-                                    return res.status(500).send(
-                                        err
-                                    );
+                        deleteUser(req.query.app_id, id, (err, results) => {
+                            if (err) {
+                                return res.status(500).send(
+                                    err
+                                );
+                            }
+                            else{
+                                if (!results) {
+                                    //record not found
+                                    getMessage(20400, 
+                                        req.query.app_id, 
+                                        req.query.lang_code, (err2,results2)  => {
+                                            return res.status(500).send(
+                                                results2.text
+                                            );
+                                        });
                                 }
                                 else{
-                                    if (!results) {
-                                        //record not found
-                                        getMessage(20400, 
-                                            req.query.app_id, 
-                                            req.query.lang_code, (err2,results2)  => {
-                                                return res.status(500).send(
-                                                    results2.text
-                                                );
-                                            });
-                                    }
-                                    else{
-                                        return res.status(200).json({
-                                            success: 1
-                                        });
-                                    }
+                                    return res.status(200).json({
+                                        success: 1
+                                    });
                                 }
-                            });
+                            }
                         });
                     }
                     else{
@@ -579,31 +534,29 @@ module.exports = {
                             else {
                                 if (results) {
                                     if (compareSync(req.body.password, results.password)){
-                                        deleteUserSettingsByUserId(req.query.app_id, id, (err, results) => {
-                                            deleteUser(req.query.app_id, id, (err, results) => {
-                                                if (err) {
-                                                    return res.status(500).send(
-                                                        err
-                                                    );
+                                        deleteUser(req.query.app_id, id, (err, results) => {
+                                            if (err) {
+                                                return res.status(500).send(
+                                                    err
+                                                );
+                                            }
+                                            else{
+                                                if (!results) {
+                                                    //record not found
+                                                    getMessage(20400, 
+                                                        req.query.app_id, 
+                                                        req.query.lang_code, (err2,results2)  => {
+                                                            return res.status(500).send(
+                                                                results2.text
+                                                            );
+                                                        });
                                                 }
                                                 else{
-                                                    if (!results) {
-                                                        //record not found
-                                                        getMessage(20400, 
-                                                            req.query.app_id, 
-                                                            req.query.lang_code, (err2,results2)  => {
-                                                                return res.status(500).send(
-                                                                    results2.text
-                                                                );
-                                                            });
-                                                    }
-                                                    else{
-                                                        return res.status(200).json({
-                                                            success: 1
-                                                        });
-                                                    }
+                                                    return res.status(200).json({
+                                                        success: 1
+                                                    });
                                                 }
-                                            });
+                                            }
                                         });
                                     }
                                     else{

@@ -3,8 +3,7 @@ const {
     userSignup,
     activateUser,
     getUserByUserId,
-    getProfileUserId,
-    getProfileUsername,
+    getProfileUser,
     searchProfileUser,
     getProfileDetail,
     getProfileTop,
@@ -36,8 +35,8 @@ router.delete("/:id", checkAccessToken, deleteUser);
 //profile
 router.get("/profile/detail/:id", checkAccessToken, getProfileDetail);
 router.get("/profile/top/:statchoice", checkDataToken, getProfileTop);
-router.post("/profile/id/:id", checkDataToken, getProfileUserId);
-router.post("/profile/username/:username", checkDataToken, getProfileUsername);
+router.post("/profile/id/:id", checkDataToken, getProfileUser);
+router.post("/profile/username/:username", checkDataToken, getProfileUser);
 router.post("/profile/username/searchD/:username", checkDataToken, searchProfileUser);
 router.post("/profile/username/searchA/:username", checkAccessToken, searchProfileUser);
 router.get("/admin/count", checkAdmin, getStatCount);

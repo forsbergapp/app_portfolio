@@ -1,10 +1,12 @@
 const { createUserSetting, 
 		getUserSettingsByUserId,
+		getProfileUserSetting,
 		getProfileUserSettings,
+		getProfileUserSettingDetail,
+		getProfileTop,
 		getUserSetting,
 		updateUserSetting, 
-		deleteUserSetting,
-		deleteUserSettingsByUserId} = require ("./app1_user_setting.service");
+		deleteUserSetting} = require ("./app1_user_setting.service");
 		const { getMessage } = require("../message_translation/message_translation.service");
 module.exports = {
 	createUserSetting: (req, res) =>{
@@ -47,6 +49,31 @@ module.exports = {
 			});
 		});
 	},
+	getProfileUserSetting: (req, res) => {
+		const id = req.params.id;
+		getProfileUserSetting(req.query.app_id, id, (err, results) =>{
+			if (err) {
+				return res.status(500).send(
+					err
+				);
+			}
+			if (!results){
+				//Record not found
+				getMessage(20400, 
+					req.query.app_id, 
+					req.query.lang_code, (err2,results2)  => {
+						return res.status(500).send(
+							results2.text
+						);
+					});
+			}
+			return res.status(200).json({
+				count: results.length,
+				success: 1,
+				items: results
+			});
+		});
+	},
 	getProfileUserSettings: (req, res) => {
 		const id = req.params.id;
 		var id_current_user;
@@ -75,6 +102,72 @@ module.exports = {
 			});
 		});
 	},
+	getProfileUserSettingDetail: (req, res) => {
+        const id = req.params.id;
+        var detailchoice;
+        if (typeof req.query.detailchoice !== 'undefined')
+            detailchoice = req.query.detailchoice;
+
+		getProfileUserSettingDetail(req.query.app_id, id, detailchoice, (err, results) => {
+            if (err) {
+                return res.status(500).send(
+                    err
+                );
+            }
+            else{
+                if (!results) {
+                    //Record not found
+                    //return ok even if records not found
+                    getMessage(20400, 
+                        req.query.app_id, 
+                        req.query.lang_code, (err2,results2)  => {
+                            return res.status(200).json({
+                                    count: 0,
+                                    message: results2.text
+                                });
+                        });
+                }
+                else
+                    return res.status(200).json({
+                        count: results.length,
+                        success: 1,
+                        items: results
+                    });
+            }
+        });
+    },
+	getProfileTop: (req, res) => {
+        var statchoice;
+        if (typeof req.params.statchoice !== 'undefined')
+            statchoice = req.params.statchoice;
+        getProfileTop(req.query.app_id, statchoice, (err, results) => {
+            if (err) {
+                return res.status(500).send(
+                    err
+                );
+            }
+            else{
+                if (!results) {
+                    //Record not found
+                    //return ok even if records not found
+                    getMessage(20400, 
+                        req.query.app_id, 
+                        req.query.lang_code, (err2,results2)  => {
+                            return res.status(200).json({
+                                    count: 0,
+                                    message: results2.text
+                                });
+                        });
+                }
+                else
+                    return res.status(200).json({
+                        count: results.length,
+                        success: 1,
+                        items: results
+                    });
+            }
+        });
+    },
 	getUserSetting: (req, res) => {
 		const id = req.params.id;
 		getUserSetting(req.query.app_id, id, (err, results) =>{
@@ -119,29 +212,6 @@ module.exports = {
 	deleteUserSetting: (req, res) => {
 		const id = req.params.id;
 		deleteUserSetting(req.query.app_id, id, (err, results) =>{
-			if (err) {
-				return res.status(500).send(
-					err
-				);
-			}
-			if (!results){
-				//Record not found
-				getMessage(20400, 
-					req.query.app_id, 
-					req.query.lang_code, (err2,results2)  => {
-						return res.status(500).send(
-							results2.text
-						);
-					});
-			}
-			return res.status(200).json({
-				success: 1
-			});
-		});
-	},
-	deleteUserSettingsByUserId: (req, res) => {
-		const id = req.params.id;
-		deleteUserSettingsByUserId(req.query.app_id, id, (err, results) =>{
 			if (err) {
 				return res.status(500).send(
 					err
