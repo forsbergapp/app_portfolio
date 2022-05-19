@@ -383,7 +383,7 @@ module.exports = {
             execute_sql();
         }
     },
-    getProfileUserId: (app_id, id, id_current_user, callBack) => {
+    getProfileUser: (app_id, id, username, id_current_user, callBack) => {
         if (process.env.SERVICE_DB_USE == 1) {
             get_pool(app_id).query(
                 `SELECT
@@ -416,16 +416,6 @@ module.exports = {
 					(SELECT COUNT(u_likes.user_account_id_like)
 					   FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_like    u_likes
 					  WHERE u_likes.user_account_id_like = u.id )					count_liked,
-					(SELECT COUNT(DISTINCT us.user_account_id)
-					   FROM ${process.env.SERVICE_DB_DB1_NAME}.app1_user_setting_like u_like,
-					   		${process.env.SERVICE_DB_DB1_NAME}.app1_user_setting us
-					  WHERE u_like.user_account_id = u.id
-					    AND u_like.app1_user_setting_id = us.id)							count_user_setting_likes,
-					(SELECT COUNT(DISTINCT u_like.user_account_id)
-					   FROM ${process.env.SERVICE_DB_DB1_NAME}.app1_user_setting_like u_like,
-					   		${process.env.SERVICE_DB_DB1_NAME}.app1_user_setting us
-					  WHERE us.user_account_id = u.id
-						AND u_like.app1_user_setting_id = us.id)							count_user_setting_liked,
 					(SELECT COUNT(u_views.user_account_id_view)
 					   FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_view    u_views
 					  WHERE u_views.user_account_id_view = u.id ) 					count_views,
@@ -438,10 +428,14 @@ module.exports = {
 					  WHERE u_liked_current_user.user_account_id_like = u.id
 						AND u_liked_current_user.user_account_id = ?)      			liked
 				FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account u
-				WHERE u.id = ? `, 
+				WHERE u.id = ? 
+				      OR 
+					  (u.username = ?
+					  AND u.active = 1)`, 
 				[id_current_user,
                  id_current_user,
-                 id
+                 id,
+				 username
                 ],
                 (error, results, fields) => {
                     if (error) {
@@ -487,16 +481,6 @@ module.exports = {
 							(SELECT COUNT(u_likes.user_account_id_like)
 							FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_like    u_likes
 							WHERE u_likes.user_account_id_like = u.id )					"count_liked",
-							(SELECT COUNT(DISTINCT us.user_account_id)
-							FROM ${process.env.SERVICE_DB_DB2_NAME}.app1_user_setting_like u_like,
-									${process.env.SERVICE_DB_DB2_NAME}.app1_user_setting us
-							WHERE u_like.user_account_id = u.id
-								AND u_like.app1_user_setting_id = us.id)							"count_user_setting_likes",
-							(SELECT COUNT(DISTINCT u_like.user_account_id)
-							FROM ${process.env.SERVICE_DB_DB2_NAME}.app1_user_setting_like u_like,
-									${process.env.SERVICE_DB_DB2_NAME}.app1_user_setting us
-							WHERE us.user_account_id = u.id
-								AND u_like.app1_user_setting_id = us.id)							"count_user_setting_liked",
 							(SELECT COUNT(u_views.user_account_id_view)
 							FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_view    u_views
 							WHERE u_views.user_account_id_view = u.id ) 					"count_views",
@@ -509,169 +493,15 @@ module.exports = {
 							WHERE u_liked_current_user.user_account_id_like = u.id
 								AND u_liked_current_user.user_account_id = :user_accound_id_current_user2)      "liked"
 						FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account u
-						WHERE u.id = :id `, 
+						WHERE u.id = :id 
+							  OR 
+							  (u.username = :username
+							  AND u.active = 1)`, 
 						{
                             user_accound_id_current_user1: id_current_user,
                             user_accound_id_current_user2: id_current_user,
-                            id: id
-                        },
-                        (err, result) => {
-                            if (err) {
-								createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
-                                return callBack(err);
-                            } else {
-                                return callBack(null, result.rows[0]);
-                            }
-                        });
-                } catch (err) {
-					createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
-                    return callBack(err.message);
-                } finally {
-                    if (pool2) {
-						try {
-							await pool2.close(); 
-						} catch (err) {
-							createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
-						}
-					}
-                }
-            }
-            execute_sql();
-        }
-    },
-    getProfileUsername: (app_id, username, id_current_user, callBack) => {
-        if (process.env.SERVICE_DB_USE == 1) {
-            get_pool(app_id).query(
-                `SELECT
-					u.id,
-					u.bio,
-					u.private,
-					u.user_level,
-					u.date_created,
-					u.username,
-					CONVERT(u.avatar USING UTF8) avatar,
-					u.provider1_id,
-					u.provider1_first_name,
-					u.provider1_last_name,
-					CONVERT(u.provider1_image USING UTF8) provider1_image,
-					u.provider1_image_url,
-					u.provider2_id,
-					u.provider2_first_name,
-					u.provider2_last_name,
-					CONVERT(u.provider2_image USING UTF8) provider2_image,
-					u.provider2_image_url,
-					(SELECT COUNT(u_following.user_account_id)   
-					   FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_follow  u_following
-					  WHERE u_following.user_account_id = u.id) 				count_following,
-					(SELECT COUNT(u_followed.user_account_id_follow) 
-					   FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_follow  u_followed
-					  WHERE u_followed.user_account_id_follow = u.id) 			count_followed,
-					(SELECT COUNT(u_likes.user_account_id)
-					   FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_like    u_likes
-					WHERE u_likes.user_account_id = u.id ) 					count_likes,
-					(SELECT COUNT(u_likes.user_account_id_like)
-					   FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_like    u_likes
-					  WHERE u_likes.user_account_id_like = u.id )				count_liked,
-					(SELECT COUNT(DISTINCT us.user_account_id)
-					   FROM ${process.env.SERVICE_DB_DB1_NAME}.app1_user_setting_like u_like,
-					        ${process.env.SERVICE_DB_DB1_NAME}.app1_user_setting us
-					  WHERE u_like.user_account_id = u.id
-					AND u_like.app1_user_setting_id = us.id)						count_user_setting_likes,
-					(SELECT COUNT(DISTINCT u_like.user_account_id)
-					   FROM ${process.env.SERVICE_DB_DB1_NAME}.app1_user_setting_like u_like,
-					        ${process.env.SERVICE_DB_DB1_NAME}.app1_user_setting us
-					WHERE us.user_account_id = u.id
-						AND u_like.app1_user_setting_id = us.id)						count_user_setting_liked,
-					(SELECT COUNT(u_views.user_account_id_view)
-					   FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_view    u_views
-					  WHERE u_views.user_account_id_view = u.id ) 				count_views,
-					(SELECT COUNT(u_followed_current_user.user_account_id)
-					   FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_follow  u_followed_current_user 
-					  WHERE u_followed_current_user.user_account_id_follow = u.id
-						AND u_followed_current_user.user_account_id = ?) 		followed,
-					(SELECT COUNT(u_liked_current_user.user_account_id)  
-					   FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_like    u_liked_current_user
-					  WHERE u_liked_current_user.user_account_id_like = u.id
-						AND u_liked_current_user.user_account_id = ?)      		liked
-				FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account u
-				WHERE u.username = ? 
-				AND u.active = 1 `, 
-				[id_current_user,
-                 id_current_user,
-                 username
-                ],
-                (error, results, fields) => {
-                    if (error) {
-						createLogAppSE(app_id, __appfilename, __appfunction, __appline, error);
-                        return callBack(error);
-                    }
-                    return callBack(null, results[0]);
-                }
-            )
-        } else if (process.env.SERVICE_DB_USE == 2) {
-            async function execute_sql(err, result) {
-				let pool2;
-                try {
-                    pool2 = await oracledb.getConnection(get_pool(app_id));
-                    const result = await pool2.execute(
-                        `SELECT
-							u.id "id",
-							u.bio "bio",
-							u.private "private",
-							u.user_level "user_level",
-							u.date_created "date_created",
-							u.username "username",
-							u.avatar "avatar",
-							u.provider1_id "provider1_id",
-							u.provider1_first_name "provider1_first_name",
-							u.provider1_last_name "provider1_last_name",
-							u.provider1_image "provider1_image",
-							u.provider1_image_url "provider1_image_url",
-							u.provider2_id "provider2_id",
-							u.provider2_first_name "provider2_first_name",
-							u.provider2_last_name "provider2_last_name",
-							u.provider2_image "provider2_image",
-							u.provider2_image_url "provider2_image_url",
-							(SELECT COUNT(u_following.user_account_id)   
-							FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_follow  u_following
-							WHERE u_following.user_account_id = u.id) 					"count_following",
-							(SELECT COUNT(u_followed.user_account_id_follow) 
-							FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_follow  u_followed
-							WHERE u_followed.user_account_id_follow = u.id) 				"count_followed",
-							(SELECT COUNT(u_likes.user_account_id)
-							FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_like    u_likes
-							WHERE u_likes.user_account_id = u.id ) 						"count_likes",
-							(SELECT COUNT(u_likes.user_account_id_like)
-							FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_like    u_likes
-							WHERE u_likes.user_account_id_like = u.id )					"count_liked",
-							(SELECT COUNT(DISTINCT us.user_account_id)
-							FROM ${process.env.SERVICE_DB_DB2_NAME}.app1_user_setting_like u_like,
-									${process.env.SERVICE_DB_DB2_NAME}.app1_user_setting us
-							WHERE u_like.user_account_id = u.id
-								AND u_like.app1_user_setting_id = us.id)							"count_user_setting_likes",
-							(SELECT COUNT(DISTINCT u_like.user_account_id)
-							FROM ${process.env.SERVICE_DB_DB2_NAME}.app1_user_setting_like u_like,
-									${process.env.SERVICE_DB_DB2_NAME}.app1_user_setting us
-							WHERE us.user_account_id = u.id
-								AND u_like.app1_user_setting_id = us.id)							"count_user_setting_liked",
-							(SELECT COUNT(u_views.user_account_id_view)
-							FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_view    u_views
-							WHERE u_views.user_account_id_view = u.id ) 					"count_views",
-							(SELECT COUNT(u_followed_current_user.user_account_id)
-							FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_follow  u_followed_current_user 
-							WHERE u_followed_current_user.user_account_id_follow = u.id
-								AND u_followed_current_user.user_account_id = :user_accound_id_current_user1) 	"followed",
-							(SELECT COUNT(u_liked_current_user.user_account_id)  
-							FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_like    u_liked_current_user
-							WHERE u_liked_current_user.user_account_id_like = u.id
-								AND u_liked_current_user.user_account_id = :user_accound_id_current_user2)      "liked"
-						FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account u
-						WHERE u.username = :username 
-						AND u.active = 1 `, 
-						{
-                            user_accound_id_current_user1: id_current_user,
-                            user_accound_id_current_user2: id_current_user,
-                            username: username
+                            id: id,
+							username: username
                         },
                         (err, result) => {
                             if (err) {
@@ -861,59 +691,13 @@ module.exports = {
 							WHERE  u_liked.user_account_id_like = ?
 							AND    u.id = u_liked.user_account_id
 							AND    u.active = 1
-							AND    4 = ?
-							UNION ALL
-							SELECT 'LIKE_SETTING' detail,
-									u.id,
-									u.provider1_id,
-									u.provider2_id,
-									CONVERT(u.avatar USING UTF8) avatar,
-									CONVERT(u.provider1_image USING UTF8) provider1_image,
-									u.provider1_image_url,
-									CONVERT(u.provider2_image USING UTF8) provider2_image,
-									u.provider2_image_url,
-									u.username,
-									u.provider1_first_name,
-									u.provider2_first_name
-							FROM   ${process.env.SERVICE_DB_DB1_NAME}.user_account u
-							WHERE  u.id IN (SELECT us.user_account_id
-											FROM   ${process.env.SERVICE_DB_DB1_NAME}.app1_user_setting_like u_like,
-												${process.env.SERVICE_DB_DB1_NAME}.app1_user_setting us
-											WHERE  u_like.user_account_id = ?
-											AND    us.id = u_like.app1_user_setting_id)
-							AND    u.active = 1
-							AND    5 = ?
-							UNION ALL
-							SELECT 'LIKED_SETTING' detail,
-									u.id,
-									u.provider1_id,
-									u.provider2_id,
-									CONVERT(u.avatar USING UTF8) avatar,
-									CONVERT(u.provider1_image USING UTF8) provider1_image,
-									u.provider1_image_url,
-									CONVERT(u.provider2_image USING UTF8) provider2_image,
-									u.provider2_image_url,
-									u.username,
-									u.provider1_first_name,
-									u.provider2_first_name
-							FROM   ${process.env.SERVICE_DB_DB1_NAME}.user_account u
-							WHERE  u.id IN (SELECT u_like.user_account_id
-											FROM   ${process.env.SERVICE_DB_DB1_NAME}.app1_user_setting us,
-												${process.env.SERVICE_DB_DB1_NAME}.app1_user_setting_like u_like
-											WHERE  us.user_account_id = ?
-											AND    us.id = u_like.app1_user_setting_id)
-							AND    u.active = 1
-							AND    6 = ?) t
+							AND    4 = ?) t
 						ORDER BY 1, COALESCE(username, 
 											provider1_first_name,
 											provider2_first_name)`, 
 				[id,
 				 detailchoice,
 			 	 id,
-				 detailchoice,
-				 id,
-				 detailchoice,
-				 id,
 				 detailchoice,
 				 id,
 				 detailchoice,
@@ -1009,49 +793,7 @@ module.exports = {
 								WHERE  u_liked.user_account_id_like = :user_account_id_liked_user
 								AND    u.id = u_liked.user_account_id
 								AND    u.active = 1
-								AND    4 = :detailchoice_liked_user
-								UNION ALL
-								SELECT 'LIKE_SETTING' "detail",
-										u.id "id",
-										u.provider1_id "provider1_id",
-										u.provider2_id "provider2_id",
-										u.avatar "avatar",
-										u.provider1_image "provider1_image",
-										u.provider1_image_url "provider1_image_url",
-										u.provider2_image "provider2_image",
-										u.provider2_image_url "provider2_image_url",
-										u.username "username",
-										u.provider1_first_name "provider1_first_name",
-										u.provider2_first_name "provider2_first_name"
-								FROM    ${process.env.SERVICE_DB_DB2_NAME}.user_account u
-								WHERE  u.id IN (SELECT us.user_account_id
-												FROM   ${process.env.SERVICE_DB_DB2_NAME}.app1_user_setting_like u_like,
-													${process.env.SERVICE_DB_DB2_NAME}.app1_user_setting us
-												WHERE  u_like.user_account_id = :user_account_id_like_setting
-												AND    us.id = u_like.app1_user_setting_id)
-								AND    u.active = 1
-								AND    5 = :detailchoice_like_setting
-								UNION ALL
-								SELECT 'LIKED_SETTING' "detail",
-										u.id "id",
-										u.provider1_id "provider1_id",
-										u.provider2_id "provider2_id",
-										u.avatar "avatar",
-										u.provider1_image "provider1_image",
-										u.provider1_image_url "provider1_image_url",
-										u.provider2_image "provider2_image",
-										u.provider2_image_url "provider2_image_url",
-										u.username "username",
-										u.provider1_first_name "provider1_first_name",
-										u.provider2_first_name "provider2_first_name"
-								FROM    ${process.env.SERVICE_DB_DB2_NAME}.user_account u
-								WHERE  u.id IN (SELECT u_like.user_account_id
-												FROM ${process.env.SERVICE_DB_DB2_NAME}.app1_user_setting us,
-													${process.env.SERVICE_DB_DB2_NAME}.app1_user_setting_like u_like
-												WHERE  us.user_account_id = :user_account_id_liked_setting
-												AND    us.id = u_like.app1_user_setting_id)
-								AND    u.active = 1
-								AND    6 = :detailchoice_liked_setting) t
+								AND    4 = :detailchoice_liked_user) t
 							ORDER BY 1, COALESCE("username", 
 												"provider1_first_name",
 												"provider2_first_name") `, 
@@ -1063,11 +805,7 @@ module.exports = {
                             user_account_id_like_user: id,
                             detailchoice_like_user: detailchoice,
                             user_account_id_liked_user: id,
-                            detailchoice_liked_user: detailchoice,
-                            user_account_id_like_setting: id,
-                            detailchoice_like_setting: detailchoice,
-                            user_account_id_liked_setting: id,
-                            detailchoice_liked_setting: detailchoice
+                            detailchoice_liked_user: detailchoice
                         },
                         (err, result) => {
                             if (err) {
@@ -1152,56 +890,12 @@ module.exports = {
 									  WHERE u_visited.user_account_id_view = u.id) count
 							FROM   ${process.env.SERVICE_DB_DB1_NAME}.user_account u
 							WHERE  u.active = 1
-							AND    3 = ?
-							UNION ALL
-							SELECT 'LIKE_SETTING' top,
-									u.id,
-									u.provider1_id,
-									u.provider2_id,
-									CONVERT(u.avatar USING UTF8) avatar,
-									CONVERT(u.provider1_image USING UTF8) provider1_image,
-									u.provider1_image_url,
-									CONVERT(u.provider2_image USING UTF8) provider2_image,
-									u.provider2_image_url,
-									u.username,
-									u.provider1_first_name,
-									u.provider2_first_name,
-									(SELECT COUNT(us.user_account_id)
-									   FROM ${process.env.SERVICE_DB_DB1_NAME}.app1_user_setting_like u_like,
-									   		${process.env.SERVICE_DB_DB1_NAME}.app1_user_setting us
-									  WHERE us.user_account_id = u.id
-										AND u_like.app1_user_setting_id = us.id) count
-							FROM   ${process.env.SERVICE_DB_DB1_NAME}.user_account u
-							WHERE  u.active = 1
-							AND    4 = ?
-							UNION ALL
-							SELECT 'VISITED_SETTING' top,
-									u.id,
-									u.provider1_id,
-									u.provider2_id,
-									CONVERT(u.avatar USING UTF8) avatar,
-									CONVERT(u.provider1_image USING UTF8) provider1_image,
-									u.provider1_image_url,
-									CONVERT(u.provider2_image USING UTF8) provider2_image,
-									u.provider2_image_url,
-									u.username,
-									u.provider1_first_name,
-									u.provider2_first_name,
-									(SELECT COUNT(us.user_account_id)
-									   FROM ${process.env.SERVICE_DB_DB1_NAME}.app1_user_setting_view u_view,
-									        ${process.env.SERVICE_DB_DB1_NAME}.app1_user_setting us
-									  WHERE us.user_account_id = u.id
-										AND u_view.app1_user_setting_id = us.id) count
-							FROM   ${process.env.SERVICE_DB_DB1_NAME}.user_account u
-							WHERE  u.active = 1
-							AND    5 = ?)  t
+							AND    3 = ?)  t
 					ORDER BY 1,13 DESC, COALESCE(username, 
 												provider1_first_name,
 												provider2_first_name)
 					LIMIT 10`, 
 				[statchoice,
-				 statchoice,
-				 statchoice,
 				 statchoice,
 				 statchoice
                 ],
@@ -1275,49 +969,7 @@ module.exports = {
 											  WHERE u_visited.user_account_id_view = u.id) "count"
 									FROM   ${process.env.SERVICE_DB_DB2_NAME}.user_account u
 									WHERE  u.active = 1
-									AND    3 = :statchoice_visited
-									UNION ALL
-									SELECT 'LIKE_SETTING' "top",
-											u.id "id",
-											u.provider1_id "provider1_id",
-											u.provider2_id "provider2_id",
-											u.avatar "avatar",
-											u.provider1_image "provider1_image",
-											u.provider1_image_url "provider1_image_url",
-											u.provider2_image "provider2_image",
-											u.provider2_image_url "provider2_image_url",
-											u.username "username",
-											u.provider1_first_name "provider1_first_name",
-											u.provider2_first_name "provider2_first_name",
-											(SELECT COUNT(us.user_account_id)
-											   FROM ${process.env.SERVICE_DB_DB2_NAME}.app1_user_setting_like u_like,
-											   		${process.env.SERVICE_DB_DB2_NAME}.app1_user_setting us
-											  WHERE us.user_account_id = u.id
-												AND u_like.app1_user_setting_id = us.id) "count"
-									FROM   ${process.env.SERVICE_DB_DB2_NAME}.user_account u
-									WHERE  u.active = 1
-									AND    4 = :statchoice_like_setting
-									UNION ALL
-									SELECT 'VISITED_SETTING' "top",
-											u.id "id",
-											u.provider1_id "provider1_id",
-											u.provider2_id "provider2_id",
-											u.avatar "avatar",
-											u.provider1_image "provider1_image",
-											u.provider1_image_url "provider1_image_url",
-											u.provider2_image "provider2_image",
-											u.provider2_image_url "provider2_image_url",
-											u.username "username",
-											u.provider1_first_name "provider1_first_name",
-											u.provider2_first_name "provider2_first_name",
-											(SELECT COUNT(us.user_account_id)
-											   FROM ${process.env.SERVICE_DB_DB2_NAME}.app1_user_setting_view u_view,
-											   		${process.env.SERVICE_DB_DB2_NAME}.app1_user_setting us
-											   WHERE us.user_account_id = u.id
-												AND u_view.app1_user_setting_id = us.id) "count"
-									FROM   ${process.env.SERVICE_DB_DB2_NAME}.user_account u
-									WHERE  u.active = 1
-									AND    5 = :statchoice_visited_setting) t
+									AND    3 = :statchoice_visited) t
 							WHERE    ROWNUM <=10
 							ORDER BY 1,13 DESC, COALESCE("username", 
 														"provider1_first_name",
@@ -1325,9 +977,7 @@ module.exports = {
 						{
                             statchoice_following: statchoice,
                             statchoice_like_user: statchoice,
-                            statchoice_visited: statchoice,
-                            statchoice_like_setting: statchoice,
-                            statchoice_visited_setting: statchoice
+                            statchoice_visited: statchoice
                         },
                         (err, result) => {
                             if (err) {
