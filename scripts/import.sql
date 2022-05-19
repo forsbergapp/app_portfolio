@@ -1589,6 +1589,16 @@ INSERT INTO app_portfolio.message_type (id, message_type) VALUES (1,'ERROR');
 INSERT INTO app_portfolio.message_type (id, message_type) VALUES (2,'INFO');
 --
 -- Dumping data for table `message`
+--  db info/errors
+--	20100-20199
+--	db constraints info/error
+--	20200-20299
+--	app info/error
+--	20300-20399
+--	node rest api info/error
+--	20400-20499
+--	service info/error
+--	20500-20599
 --
 INSERT INTO app_portfolio.message (message_level_id, message_type_id, code) VALUES (1,1,'20100');
 INSERT INTO app_portfolio.message (message_level_id, message_type_id, code) VALUES (1,1,'20101');
@@ -1651,8 +1661,8 @@ INSERT INTO app_portfolio.app_message (message_code, app_id) VALUES ('20401',1);
 INSERT INTO app_portfolio.app_message (message_code, app_id) VALUES ('20402',1);
 INSERT INTO app_portfolio.app_message (message_code, app_id) VALUES ('20403',1);
 INSERT INTO app_portfolio.app_message (message_code, app_id) VALUES ('20500',1);
-INSERT INTO app_portfolio.app_message (message_code, app_id) VALUES ('20501',1);
-INSERT INTO app_portfolio.app_message (message_code, app_id) VALUES ('20502',1);
+INSERT INTO app_portfolio.app_message (message_code, app_id) VALUES ('20501',0);
+INSERT INTO app_portfolio.app_message (message_code, app_id) VALUES ('20502',0);
 --
 -- Dumping data for table `parameter_type`
 --
@@ -1663,6 +1673,8 @@ INSERT INTO app_portfolio.parameter_type (id, parameter_type_name) VALUES (2,'Pr
 -- Dumping data for table `app_parameter`
 --
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','SERVER_MAINTENANCE','0','0=no, 1=yes');
+INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','APP_REPORT_PATH','/apps/app1/report/',NULL);
+INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','APP_REPORT_TIMETABLE','timetable.html',NULL);
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'1','APP_REST_CLIENT_ID','{APP_REST_CLIENT_ID}',NULL);
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'1','APP_REST_CLIENT_SECRET','{APP_REST_CLIENT_SECRET}',NULL);
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'1','APP_COPYRIGHT','{COPYRIGHT TEXT}',NULL);
@@ -1672,13 +1684,16 @@ INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_na
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','REST_APP_LOG','app_log/',NULL);
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','REST_APP_OBJECT','app_object/',NULL);
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','REST_APP_PARAMETER','app_parameter/',NULL);
-INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','REST_APP1_PLACE','app1_place/',NULL);
-INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','REST_APP1_THEME','app1_theme/',NULL);
-INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','REST_APP1_USER_SETTING','app1_user_setting/',NULL);
-INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','REST_APP1_USER_SETTING_LIKE','app1_user_setting_like/',NULL);
-INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','REST_APP1_USER_SETTING_PROFILE','app1_user_setting/profile/',NULL);
-INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','REST_APP1_USER_SETTING_USER_ACCOUNT_ID','app1_user_setting/user_account_id/',NULL);
-INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','REST_APP1_USER_SETTING_VIEW','app1_user_setting_view/',NULL);
+INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','REST_APP1_PLACE','app1_place/',NULL);
+INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','REST_APP1_THEME','app1_theme/',NULL);
+INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','REST_APP1_USER_SETTING','app1_user_setting/',NULL);
+INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','REST_APP1_USER_SETTING_LIKE','app1_user_setting_like/',NULL);
+INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','REST_APP1_USER_SETTING_PROFILE','app1_user_setting/profile/',NULL);
+INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','REST_APP1_USER_SETTING_PROFILE_ALL','app1_user_setting/profile/all/',NULL);
+INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','REST_APP1_USER_SETTING_PROFILE_DETAIL','app1_user_setting/profile/detail/',NULL);
+INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','REST_APP1_USER_SETTING_PROFILE_TOP','app1_user_setting/profile/top/',NULL);
+INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','REST_APP1_USER_SETTING_USER_ACCOUNT_ID','app1_user_setting/user_account_id/',NULL);
+INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','REST_APP1_USER_SETTING_VIEW','app1_user_setting_view/',NULL);
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','REST_COUNTRY','country/',NULL);
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','REST_LANGUAGE_LOCALE','language/locale/',NULL);
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','REST_MESSAGE_TRANSLATION','message_translation/',NULL);
@@ -1708,18 +1723,18 @@ INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_na
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','SERVICE_GEOLOCATION_URL_GPS_IP','http://www.geoplugin.net/json.gp',NULL);
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','SERVICE_GEOLOCATION_URL_GPS_PLACE','http://www.geoplugin.net/extras/location.gp',NULL);
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','SERVICE_MAIL_TYPE_SIGNUP','1',NULL);
-INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'1','SERVICE_MAIL_TYPE_SIGNUP_FROM_NAME','{EMAIL_FROM_NAME}',NULL);
+INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'1','SERVICE_MAIL_TYPE_SIGNUP_FROM_NAME','{EMAIL_FROM_NAME}',NULL);
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','SERVICE_MAIL_TYPE_UNVERIFIED','2',NULL);
-INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'1','SERVICE_MAIL_TYPE_UNVERIFIED_FROM_NAME','{EMAIL_FROM_NAME}',NULL);
+INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'1','SERVICE_MAIL_TYPE_UNVERIFIED_FROM_NAME','{EMAIL_FROM_NAME}',NULL);
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','SERVICE_MAIL_TYPE_RESET_PASSWORD','3',NULL);
-INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'1','SERVICE_MAIL_TYPE_RESET_PASSWORD_FROM_NAME','{EMAIL_FROM_NAME}',NULL);
+INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'1','SERVICE_MAIL_TYPE_RESET_PASSWORD_FROM_NAME','{EMAIL_FROM_NAME}',NULL);
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','SERVICE_MAIL_TYPE_CHANGE_EMAIL','4',NULL);
-INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'1','SERVICE_MAIL_TYPE_CHANGE_EMAIL_FROM_NAME','{EMAIL_FROM_NAME}',NULL);
-INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'2','SERVICE_MAIL_HOST','{EMAIL_HOST}',NULL);
-INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'2','SERVICE_MAIL_PORT','{EMAIL_PORT}',NULL);
-INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'2','SERVICE_MAIL_SECURE','{EMAIL_SECURE}',NULL);
-INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'2','SERVICE_MAIL_USERNAME','{EMAIL_USERNAME}',NULL);
-INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'2','SERVICE_MAIL_PASSWORD','{EMAIL_PASSWORD}',NULL);
+INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'1','SERVICE_MAIL_TYPE_CHANGE_EMAIL_FROM_NAME','{EMAIL_FROM_NAME}',NULL);
+INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'2','SERVICE_MAIL_HOST','{EMAIL_HOST}',NULL);
+INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'2','SERVICE_MAIL_PORT','{EMAIL_PORT}',NULL);
+INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'2','SERVICE_MAIL_SECURE','{EMAIL_SECURE}',NULL);
+INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'2','SERVICE_MAIL_USERNAME','{EMAIL_USERNAME}',NULL);
+INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'2','SERVICE_MAIL_PASSWORD','{EMAIL_PASSWORD}',NULL);
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','SERVICE_REPORT','/service/report',NULL);
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','SERVICE_WORLDCITIES','/service/worldcities',NULL);
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','USER_PROVIDER1_USE','1',NULL);
