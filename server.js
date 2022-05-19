@@ -130,11 +130,6 @@ const parameter_typeRouter = require("./service/db/api/parameter_type/parameter_
 const user_accountRouter = require("./service/db/api/user_account/user_account.router");
 const user_account_likeRouter = require("./service/db/api/user_account_like/user_account_like.router");
 const user_account_followRouter = require("./service/db/api/user_account_follow/user_account_follow.router");
-const app1_placeRouter = require("./service/db/api/app1_place/app1_place.router");
-const app1_themeRouter = require("./service/db/api/app1_theme/app1_theme.router");
-const app1_user_settingRouter = require("./service/db/api/app1_user_setting/app1_user_setting.router");
-const app1_user_setting_likeRouter = require("./service/db/api/app1_user_setting_like/app1_user_setting_like.router");
-const app1_user_setting_viewRouter = require("./service/db/api/app1_user_setting_view/app1_user_setting_view.router");
 //service geolocation
 const geolocationRouter = require("./service/geolocation/geolocation.router");
 //service log
@@ -167,11 +162,6 @@ app.use("/service/db/api/parameter_type", parameter_typeRouter);
 app.use("/service/db/api/user_account", user_accountRouter);
 app.use("/service/db/api/user_account_like", user_account_likeRouter);
 app.use("/service/db/api/user_account_follow", user_account_followRouter);
-app.use("/service/db/api/app1_place", app1_placeRouter);
-app.use("/service/db/api/app1_theme", app1_themeRouter);
-app.use("/service/db/api/app1_user_setting", app1_user_settingRouter);
-app.use("/service/db/api/app1_user_setting_like", app1_user_setting_likeRouter);
-app.use("/service/db/api/app1_user_setting_view", app1_user_setting_viewRouter);
 //service geolocation
 app.use("/service/geolocation", geolocationRouter);
 //service log
@@ -204,13 +194,6 @@ app.use('/app0/info',express.static(__dirname + '/apps/app0/info'));
 app.use('/app0/css',express.static(__dirname + '/apps/app0/css'));
 app.use('/app0/images',express.static(__dirname + '/apps/app0/images'));
 app.use('/app0/js',express.static(__dirname + '/apps/app0/js'));
-//app 1 directories
-app.use('/app1/css',express.static(__dirname + '/apps/app1/css'));
-app.use('/app1/js',express.static(__dirname + '/apps/app1/js'));
-app.use('/app1/info',express.static(__dirname + '/apps/app1/info'));
-app.use('/app1/images',express.static(__dirname + '/apps/app1/images'));
-//app 2 directory
-app.use('/app2',express.static(__dirname + '/apps/app2'));
 
 app.get("/admin",function (req, res, next) {
   //redirect from http to https
@@ -226,96 +209,46 @@ app.get("/admin",function (req, res, next) {
 app.get("/admin/:sub",function (req, res, next) {
     return res.redirect('https://' + req.headers.host + "/admin");
 });
-//app 1 pwa service worker, placed in root
-app.get("/sw.js",function (req, res,next) {
-  if (req.headers.host.substring(0,req.headers.host.indexOf('.')) == 'app1') {
-      res.type('application/javascript');
-      res.setHeader('Service-Worker-Allowed', '/')
-      res.status(200);
-      return res.sendFile(__dirname + "/apps/app1/sw.js");
-  }
-  else
-    next();
-});
-//app 1 progressive webapp menifest
-app.get("/app1/manifest.json",function (req, res) {
-  const { getManifest} = require("./service/forms/forms.controller");
-  getManifest(process.env.APP1_ID, (err, manifest)=>{
-      return res.send(manifest);
-  })
-});
-//app 1 show profile directly from url
-app.get('/:user', function(req, res,next) {
-  //this is only for app 1
-  if (req.headers.host.substring(0,req.headers.host.indexOf('.')) == 'app1' &&
-      req.params.user !== '' && 
-      req.params.user!=='robots.txt' &&
-      req.params.user!=='manifest.json' &&
-      req.params.user!=='favicon.ico' &&
-      req.params.user!=='sw.js' &&
-      req.params.user!=='css' &&
-      req.params.user!=='images' &&
-      req.params.user!=='js' &&
-      req.params.user!=='app1' &&
-      req.params.user!=='app2' &&
-      req.params.user!=='service') {
-      if (req.protocol=='http')
-        return res.redirect('https://' + req.headers.host);
-      else{
-        const { getParameter} = require ("./service/db/api/app_parameter/app_parameter.service");
-        getParameter(process.env.APP0_ID,'SERVER_MAINTENANCE', (err, db_SERVER_MAINTENANCE)=>{
-          if (err)
-            createLogAppSE(process.env.APP1_ID, __appfilename, __appfunction, __appline, err);      
-          else{
-              if (db_SERVER_MAINTENANCE==1)
-                return res.sendFile(__dirname + "/apps/app1/index_maintenance.html");
-              else{
-                  const { getForm} = require("./service/forms/forms.controller");
-                  getForm(process.env.APP1_ID, req.params.user, (err, app_result)=>{
-                    //if err=0 means here redirect to /
-                    if (err==0)
-                      return res.redirect('/');
-                    else
-                      return res.send(app_result);
-                  })
-              }
-          }
-        })
+function load_apps_code(){
+  //load dynamic code for installed apps
+  // ex app1 file: apps/app1/server.js
+  const { getApp } = require ("./service/db/api/app/app.service");
+  getApp(process.env.APP0_ID,(err, results) =>{
+    if (err) {
+      console.log(err);
+    }
+    else {
+      let json = JSON.parse(JSON.stringify(results));
+      for (var i = 0; i < json.length; i++) {
+          if (json[i].id != 0)
+            eval(fs.readFileSync(`./apps/app${json[i].id}/server.js`, 'utf8'));
       }
     }
-  else
-    next();
-});
+  });
+}
+//load apps code after database is up
+setTimeout(function(){load_apps_code()}, 10000);
 
 //info for search bots
 app.get('/robots.txt', function (req, res) {
   res.type('text/plain');
   res.send("User-agent: *\nDisallow: /");
 });
-app.get('/favicon.ico', function (req, res) {
+app.get('/favicon.ico', function (req, res, next) {
   switch (req.headers.host.substring(0,req.headers.host.indexOf('.'))){
     case '':
     case 'www':{
       res.sendFile(__dirname + "/apps/app0/images/favicon.ico");
       break;
     }
-    case 'app1':{
-      res.sendFile(__dirname + "/apps/app1/images/favicon.ico");
-      break;
-    }
-    case 'app2':{
-      res.sendFile(__dirname + "/apps/app2/images/favicon.ico");
-      break;
-    }
     default:{
-      res.sendFile(__dirname + "/apps/app0/images/favicon.ico");
-      break; 
+      next();
     }
   }
 });
 
 //config root url
-app.get('/',function (req, res) {
+app.get('/',function (req, res, next) {
   //redirect from http to https
   if (req.protocol=='http')
     return res.redirect('https://' + req.headers.host);
@@ -347,57 +280,8 @@ app.get('/',function (req, res) {
       })
       break;
     }
-    case 'app1':{
-      const { getParameter} = require ("./service/db/api/app_parameter/app_parameter.service");
-      getParameter(process.env.APP0_ID,'SERVER_MAINTENANCE', (err, db_SERVER_MAINTENANCE)=>{
-        if (err)
-          createLogAppSE(process.env.APP1_ID, __appfilename, __appfunction, __appline, err);      
-        else{
-            if (db_SERVER_MAINTENANCE==1){
-              const { getMaintenance} = require("./service/forms/forms.controller");
-              getMaintenance(process.env.APP1_ID,(err, app_result)=>{
-                  return res.send(app_result);
-              })
-            }
-            else{
-              const { getForm} = require("./service/forms/forms.controller");
-              getForm(process.env.APP1_ID, null,(err, app_result)=>{
-                  return res.send(app_result);
-              })
-            }
-        }
-      })
-      break;
-    }
-    case 'app2':{
-      const { getParameter} = require ("./service/db/api/app_parameter/app_parameter.service");
-      getParameter(process.env.APP0_ID,'SERVER_MAINTENANCE', (err, db_SERVER_MAINTENANCE)=>{
-        if (err)
-          createLogAppSE(process.env.APP2_ID, __appfilename, __appfunction, __appline, err);      
-        else{
-            if (db_SERVER_MAINTENANCE==1){
-              const { getMaintenance} = require("./service/forms/forms.controller");
-              getMaintenance(process.env.APP2_ID,(err, app_result)=>{
-                  return res.send(app_result);
-              })
-            }
-            else{
-              const { getForm} = require("./service/forms/forms.controller");
-              getForm(process.env.APP2_ID, null,(err, app_result)=>{
-                  return res.send(app_result);
-              })
-            }
-        }
-      })
-      break;
-    }
     default:{
-      //all other subdomains not registered redirect to root
-      if (req.headers.host.indexOf('localhost')>0)
-        return res.redirect('https://localhost');
-      else
-        return res.redirect('https://www.' + req.headers.host);
-      break; 
+      next();
     }
   }
 });

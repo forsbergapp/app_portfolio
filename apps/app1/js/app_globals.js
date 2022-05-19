@@ -27,8 +27,11 @@ var global_rest_app;
 var global_rest_app_log;
 var global_rest_app_object;
 var global_rest_app1_user_setting;
-var global_rest_app1_user_setting_user_account_id;
+var global_rest_app1_user_setting_user_account_id;    
 var global_rest_app1_user_setting_profile;
+var global_rest_app1_user_setting_profile_all;
+var global_rest_app1_user_setting_profile_top;
+var global_rest_app1_user_setting_profile_detail;
 var global_rest_app1_user_setting_like;
 var global_rest_app1_user_setting_view;
 var global_rest_country;
@@ -56,6 +59,9 @@ var global_service_geolocation_gps_ip;
 var global_service_report;
 var global_service_worldcities;
 //APP 1 VARIABLES
+var global_app_report_path; 
+var global_app_report_timetable;
+
 var global_pwa_scope;
 var global_info_social_link1_url;
 var global_info_social_link2_url;

@@ -686,6 +686,77 @@ module.exports = {
 			execute_sql();
 		}
 	},
+	getProfileUserSetting: (app_id, id, callBack) => {
+        if (process.env.SERVICE_DB_USE == 1) {
+            get_pool(app_id).query(
+                `SELECT
+					(SELECT COUNT(DISTINCT us.user_account_id)
+					   FROM ${process.env.SERVICE_DB_DB1_NAME}.app1_user_setting_like u_like,
+					   		${process.env.SERVICE_DB_DB1_NAME}.app1_user_setting us
+					  WHERE u_like.user_account_id = u.id
+					    AND u_like.app1_user_setting_id = us.id)							count_user_setting_likes,
+					(SELECT COUNT(DISTINCT u_like.user_account_id)
+					   FROM ${process.env.SERVICE_DB_DB1_NAME}.app1_user_setting_like u_like,
+					   		${process.env.SERVICE_DB_DB1_NAME}.app1_user_setting us
+					  WHERE us.user_account_id = u.id
+						AND u_like.app1_user_setting_id = us.id)							count_user_setting_liked
+				FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account u
+				WHERE u.id = ? `, 
+				[id],
+                (error, results, fields) => {
+                    if (error) {
+						createLogAppSE(app_id, __appfilename, __appfunction, __appline, error);
+                        return callBack(error);
+                    }
+                    return callBack(null, results[0]);
+                }
+            )
+        } else if (process.env.SERVICE_DB_USE == 2) {
+            async function execute_sql(err, result) {
+				let pool2;
+                try {
+                    pool2 = await oracledb.getConnection(get_pool(app_id));
+                    const result = await pool2.execute(
+                        `SELECT
+							(SELECT COUNT(DISTINCT us.user_account_id)
+							FROM ${process.env.SERVICE_DB_DB2_NAME}.app1_user_setting_like u_like,
+									${process.env.SERVICE_DB_DB2_NAME}.app1_user_setting us
+							WHERE u_like.user_account_id = u.id
+								AND u_like.app1_user_setting_id = us.id)							"count_user_setting_likes",
+							(SELECT COUNT(DISTINCT u_like.user_account_id)
+							FROM ${process.env.SERVICE_DB_DB2_NAME}.app1_user_setting_like u_like,
+									${process.env.SERVICE_DB_DB2_NAME}.app1_user_setting us
+							WHERE us.user_account_id = u.id
+								AND u_like.app1_user_setting_id = us.id)							"count_user_setting_liked"
+						FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account u
+						WHERE u.id = :id`, 
+						{
+                            id: id
+                        },
+                        (err, result) => {
+                            if (err) {
+								createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
+                                return callBack(err);
+                            } else {
+                                return callBack(null, result.rows[0]);
+                            }
+                        });
+                } catch (err) {
+					createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
+                    return callBack(err.message);
+                } finally {
+                    if (pool2) {
+						try {
+							await pool2.close(); 
+						} catch (err) {
+							createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
+						}
+					}
+                }
+            }
+            execute_sql();
+        }
+    },
 	getProfileUserSettings: (app_id, id, id_current_user, callBack) => {
 		if (process.env.SERVICE_DB_USE == 1) {
 			get_pool(app_id).query(
@@ -768,6 +839,289 @@ module.exports = {
 			execute_sql();
 		}
 	},
+	getProfileUserSettingDetail: (app_id, id, detailchoice, callBack) => {
+        if (process.env.SERVICE_DB_USE == 1) {
+            get_pool(app_id).query(
+                `SELECT *
+					FROM (SELECT 'LIKE_SETTING' detail,
+									u.id,
+									u.provider1_id,
+									u.provider2_id,
+									CONVERT(u.avatar USING UTF8) avatar,
+									CONVERT(u.provider1_image USING UTF8) provider1_image,
+									u.provider1_image_url,
+									CONVERT(u.provider2_image USING UTF8) provider2_image,
+									u.provider2_image_url,
+									u.username,
+									u.provider1_first_name,
+									u.provider2_first_name
+							FROM   ${process.env.SERVICE_DB_DB1_NAME}.user_account u
+							WHERE  u.id IN (SELECT us.user_account_id
+											FROM   ${process.env.SERVICE_DB_DB1_NAME}.app1_user_setting_like u_like,
+												${process.env.SERVICE_DB_DB1_NAME}.app1_user_setting us
+											WHERE  u_like.user_account_id = ?
+											AND    us.id = u_like.app1_user_setting_id)
+							AND    u.active = 1
+							AND    5 = ?
+							UNION ALL
+							SELECT 'LIKED_SETTING' detail,
+									u.id,
+									u.provider1_id,
+									u.provider2_id,
+									CONVERT(u.avatar USING UTF8) avatar,
+									CONVERT(u.provider1_image USING UTF8) provider1_image,
+									u.provider1_image_url,
+									CONVERT(u.provider2_image USING UTF8) provider2_image,
+									u.provider2_image_url,
+									u.username,
+									u.provider1_first_name,
+									u.provider2_first_name
+							FROM   ${process.env.SERVICE_DB_DB1_NAME}.user_account u
+							WHERE  u.id IN (SELECT u_like.user_account_id
+											FROM   ${process.env.SERVICE_DB_DB1_NAME}.app1_user_setting us,
+												${process.env.SERVICE_DB_DB1_NAME}.app1_user_setting_like u_like
+											WHERE  us.user_account_id = ?
+											AND    us.id = u_like.app1_user_setting_id)
+							AND    u.active = 1
+							AND    6 = ?) t
+						ORDER BY 1, COALESCE(username, 
+											provider1_first_name,
+											provider2_first_name)`, 
+				[id,
+				 detailchoice,
+			 	 id,
+				 detailchoice
+                ],
+                (error, results, fields) => {
+                    if (error) {
+						createLogAppSE(app_id, __appfilename, __appfunction, __appline, error);
+                        return callBack(error);
+                    }
+                    return callBack(null, results);
+                }
+            )
+        } else if (process.env.SERVICE_DB_USE == 2) {
+            async function execute_sql(err, result) {
+				let pool2;
+                try {
+                    pool2 = await oracledb.getConnection(get_pool(app_id));
+                    const result = await pool2.execute(
+                        `SELECT *
+						FROM (SELECT 'LIKE_SETTING' "detail",
+										u.id "id",
+										u.provider1_id "provider1_id",
+										u.provider2_id "provider2_id",
+										u.avatar "avatar",
+										u.provider1_image "provider1_image",
+										u.provider1_image_url "provider1_image_url",
+										u.provider2_image "provider2_image",
+										u.provider2_image_url "provider2_image_url",
+										u.username "username",
+										u.provider1_first_name "provider1_first_name",
+										u.provider2_first_name "provider2_first_name"
+								FROM    ${process.env.SERVICE_DB_DB2_NAME}.user_account u
+								WHERE  u.id IN (SELECT us.user_account_id
+												FROM   ${process.env.SERVICE_DB_DB2_NAME}.app1_user_setting_like u_like,
+													${process.env.SERVICE_DB_DB2_NAME}.app1_user_setting us
+												WHERE  u_like.user_account_id = :user_account_id_like_setting
+												AND    us.id = u_like.app1_user_setting_id)
+								AND    u.active = 1
+								AND    5 = :detailchoice_like_setting
+								UNION ALL
+								SELECT 'LIKED_SETTING' "detail",
+										u.id "id",
+										u.provider1_id "provider1_id",
+										u.provider2_id "provider2_id",
+										u.avatar "avatar",
+										u.provider1_image "provider1_image",
+										u.provider1_image_url "provider1_image_url",
+										u.provider2_image "provider2_image",
+										u.provider2_image_url "provider2_image_url",
+										u.username "username",
+										u.provider1_first_name "provider1_first_name",
+										u.provider2_first_name "provider2_first_name"
+								FROM    ${process.env.SERVICE_DB_DB2_NAME}.user_account u
+								WHERE  u.id IN (SELECT u_like.user_account_id
+												FROM ${process.env.SERVICE_DB_DB2_NAME}.app1_user_setting us,
+													${process.env.SERVICE_DB_DB2_NAME}.app1_user_setting_like u_like
+												WHERE  us.user_account_id = :user_account_id_liked_setting
+												AND    us.id = u_like.app1_user_setting_id)
+								AND    u.active = 1
+								AND    6 = :detailchoice_liked_setting) t
+							ORDER BY 1, COALESCE("username", 
+												"provider1_first_name",
+												"provider2_first_name") `, 
+						{
+                            user_account_id_like_setting: id,
+                            detailchoice_like_setting: detailchoice,
+                            user_account_id_liked_setting: id,
+                            detailchoice_liked_setting: detailchoice
+                        },
+                        (err, result) => {
+                            if (err) {
+								createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
+                                return callBack(err);
+                            } else {
+                                return callBack(null, result.rows);
+                            }
+                        });
+                } catch (err) {
+					createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
+                    return callBack(err.message);
+                } finally {
+                    if (pool2) {
+						try {
+							await pool2.close(); 
+						} catch (err) {
+							createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
+						}
+					}
+                }
+            }
+            execute_sql();
+        }
+    },
+	getProfileTop: (app_id, statchoice, callBack) => {
+        if (process.env.SERVICE_DB_USE == 1) {
+            get_pool(app_id).query(
+                `SELECT *
+					FROM (SELECT 'LIKE_SETTING' top,
+									u.id,
+									u.provider1_id,
+									u.provider2_id,
+									CONVERT(u.avatar USING UTF8) avatar,
+									CONVERT(u.provider1_image USING UTF8) provider1_image,
+									u.provider1_image_url,
+									CONVERT(u.provider2_image USING UTF8) provider2_image,
+									u.provider2_image_url,
+									u.username,
+									u.provider1_first_name,
+									u.provider2_first_name,
+									(SELECT COUNT(us.user_account_id)
+									   FROM ${process.env.SERVICE_DB_DB1_NAME}.app1_user_setting_like u_like,
+									   		${process.env.SERVICE_DB_DB1_NAME}.app1_user_setting us
+									  WHERE us.user_account_id = u.id
+										AND u_like.app1_user_setting_id = us.id) count
+							FROM   ${process.env.SERVICE_DB_DB1_NAME}.user_account u
+							WHERE  u.active = 1
+							AND    4 = ?
+							UNION ALL
+							SELECT 'VISITED_SETTING' top,
+									u.id,
+									u.provider1_id,
+									u.provider2_id,
+									CONVERT(u.avatar USING UTF8) avatar,
+									CONVERT(u.provider1_image USING UTF8) provider1_image,
+									u.provider1_image_url,
+									CONVERT(u.provider2_image USING UTF8) provider2_image,
+									u.provider2_image_url,
+									u.username,
+									u.provider1_first_name,
+									u.provider2_first_name,
+									(SELECT COUNT(us.user_account_id)
+									   FROM ${process.env.SERVICE_DB_DB1_NAME}.app1_user_setting_view u_view,
+									        ${process.env.SERVICE_DB_DB1_NAME}.app1_user_setting us
+									  WHERE us.user_account_id = u.id
+										AND u_view.app1_user_setting_id = us.id) count
+							FROM   ${process.env.SERVICE_DB_DB1_NAME}.user_account u
+							WHERE  u.active = 1
+							AND    5 = ?)  t
+					ORDER BY 1,13 DESC, COALESCE(username, 
+												provider1_first_name,
+												provider2_first_name)
+					LIMIT 10`, 
+				[statchoice,
+				 statchoice
+                ],
+                (error, results, fields) => {
+                    if (error) {
+						createLogAppSE(app_id, __appfilename, __appfunction, __appline, error);
+                        return callBack(error);
+                    }
+                    return callBack(null, results);
+                }
+            )
+        } else if (process.env.SERVICE_DB_USE == 2) {
+            async function execute_sql(err, result) {
+				let pool2;
+                try {
+                    pool2 = await oracledb.getConnection(get_pool(app_id));
+                    const result = await pool2.execute(
+                        `SELECT *
+							FROM (	SELECT 'LIKE_SETTING' "top",
+											u.id "id",
+											u.provider1_id "provider1_id",
+											u.provider2_id "provider2_id",
+											u.avatar "avatar",
+											u.provider1_image "provider1_image",
+											u.provider1_image_url "provider1_image_url",
+											u.provider2_image "provider2_image",
+											u.provider2_image_url "provider2_image_url",
+											u.username "username",
+											u.provider1_first_name "provider1_first_name",
+											u.provider2_first_name "provider2_first_name",
+											(SELECT COUNT(us.user_account_id)
+											   FROM ${process.env.SERVICE_DB_DB2_NAME}.app1_user_setting_like u_like,
+											   		${process.env.SERVICE_DB_DB2_NAME}.app1_user_setting us
+											  WHERE us.user_account_id = u.id
+												AND u_like.app1_user_setting_id = us.id) "count"
+									FROM   ${process.env.SERVICE_DB_DB2_NAME}.user_account u
+									WHERE  u.active = 1
+									AND    4 = :statchoice_like_setting
+									UNION ALL
+									SELECT 'VISITED_SETTING' "top",
+											u.id "id",
+											u.provider1_id "provider1_id",
+											u.provider2_id "provider2_id",
+											u.avatar "avatar",
+											u.provider1_image "provider1_image",
+											u.provider1_image_url "provider1_image_url",
+											u.provider2_image "provider2_image",
+											u.provider2_image_url "provider2_image_url",
+											u.username "username",
+											u.provider1_first_name "provider1_first_name",
+											u.provider2_first_name "provider2_first_name",
+											(SELECT COUNT(us.user_account_id)
+											   FROM ${process.env.SERVICE_DB_DB2_NAME}.app1_user_setting_view u_view,
+											   		${process.env.SERVICE_DB_DB2_NAME}.app1_user_setting us
+											   WHERE us.user_account_id = u.id
+												AND u_view.app1_user_setting_id = us.id) "count"
+									FROM   ${process.env.SERVICE_DB_DB2_NAME}.user_account u
+									WHERE  u.active = 1
+									AND    5 = :statchoice_visited_setting) t
+							WHERE    ROWNUM <=10
+							ORDER BY 1,13 DESC, COALESCE("username", 
+														"provider1_first_name",
+														"provider2_first_name") `, 
+						{
+                            statchoice_like_setting: statchoice,
+                            statchoice_visited_setting: statchoice
+                        },
+                        (err, result) => {
+                            if (err) {
+								createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
+                                return callBack(err);
+                            } else {
+                                return callBack(null, result.rows);
+                            }
+                        });
+                } catch (err) {
+					createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
+                    return callBack(err.message);
+                } finally {
+                    if (pool2) {
+						try {
+							await pool2.close(); 
+						} catch (err) {
+							createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
+						}
+					}
+                }
+            }
+            execute_sql();
+        }
+
+    },
 	updateUserSetting: (app_id, data, id, callBack) => {
 		if (process.env.SERVICE_DB_USE == 1) {
 			get_pool(app_id).query(
@@ -1054,56 +1408,6 @@ module.exports = {
 					  WHERE id = :id `,
 					{
 						id: id
-					},
-					(err,result) => {
-						if (err) {
-							createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
-							return callBack(err);
-						}
-						else{
-							return callBack(null, result);
-						}
-					});
-				}catch (err) {
-					createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
-					return callBack(err.message);
-				} finally {
-					if (pool2) {
-						try {
-							await pool2.close(); 
-						} catch (err) {
-							createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
-						}
-					}
-				}
-			}
-			execute_sql();
-		}
-	},
-	deleteUserSettingsByUserId: (app_id, id, callBack) => {
-		if (process.env.SERVICE_DB_USE == 1) {
-			get_pool(app_id).query(
-				`DELETE FROM ${process.env.SERVICE_DB_DB1_NAME}.app1_user_setting
-				  WHERE user_account_id = ? `,
-				[id],
-				(error, results, fields) => {
-					if (error) {
-						createLogAppSE(app_id, __appfilename, __appfunction, __appline, error);
-						return callBack(error);
-					}
-					return callBack(null, results); 
-				}
-			)
-		}else if (process.env.SERVICE_DB_USE==2){
-			async function execute_sql(err, result){
-				let pool2;
-				try{
-				pool2 = await oracledb.getConnection(get_pool(app_id));
-				const result = await pool2.execute(
-					`DELETE FROM ${process.env.SERVICE_DB_DB2_NAME}.app1_user_setting
-					  WHERE user_account_id = :user_account_id `,
-					{
-						user_account_id: id
 					},
 					(err,result) => {
 						if (err) {
