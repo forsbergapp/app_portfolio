@@ -15,52 +15,59 @@ module.exports = {
             req.body.app_module_type = 'MAIL_LOGO_READ';
         }
         res.sendFile(__dirname + '/logo.png');
-        if (req.query.app_id == process.env.APP1_ID){
-            getParameters(req.query.app_id, (err, result)=>{
-                if (err) {
-                    createLogAppSE(req.query.app_id, __appfilename, __appfunction, __appline, err);
+        getParameters(req.query.app_id, (err, result)=>{
+            if (err) {
+                createLogAppSE(req.query.app_id, __appfilename, __appfunction, __appline, err);
+            }
+            else{
+                let json = JSON.parse(JSON.stringify(result));
+                let db_SERVICE_MAIL_TYPE_CHANGE_EMAIL;
+                let db_SERVICE_MAIL_TYPE_RESET_PASSWORD;
+                let db_SERVICE_MAIL_TYPE_SIGNUP;
+                let db_SERVICE_MAIL_TYPE_UNVERIFIED;
+                for (var i = 0; i < json.length; i++){
+                    if (json[i].parameter_name=='SERVICE_MAIL_TYPE_CHANGE_EMAIL')
+                        db_SERVICE_MAIL_TYPE_CHANGE_EMAIL = json[i].parameter_value;
+                    if (json[i].parameter_name=='SERVICE_MAIL_TYPE_RESET_PASSWORD')
+                        db_SERVICE_MAIL_TYPE_RESET_PASSWORD = json[i].parameter_value;
+                    if (json[i].parameter_name=='SERVICE_MAIL_TYPE_SIGNUP')
+                        db_SERVICE_MAIL_TYPE_SIGNUP = json[i].parameter_value;
+                    if (json[i].parameter_name=='SERVICE_MAIL_TYPE_UNVERIFIED')
+                        db_SERVICE_MAIL_TYPE_UNVERIFIED = json[i].parameter_value;
                 }
-                else{
-                    let json = JSON.parse(JSON.stringify(result));
-                    let db_SERVICE_MAIL_TYPE_CHANGE_EMAIL;
-                    let db_SERVICE_MAIL_TYPE_RESET_PASSWORD;
-                    let db_SERVICE_MAIL_TYPE_SIGNUP;
-                    let db_SERVICE_MAIL_TYPE_UNVERIFIED;
-                    for (var i = 0; i < json.length; i++){
-                        //app 0 variables
-                        if (json[i].parameter_name=='SERVICE_MAIL_TYPE_CHANGE_EMAIL')
-                            db_SERVICE_MAIL_TYPE_CHANGE_EMAIL = json[i].parameter_value;
-                        if (json[i].parameter_name=='SERVICE_MAIL_TYPE_RESET_PASSWORD')
-                            db_SERVICE_MAIL_TYPE_RESET_PASSWORD = json[i].parameter_value;
-                        if (json[i].parameter_name=='SERVICE_MAIL_TYPE_SIGNUP')
-                            db_SERVICE_MAIL_TYPE_SIGNUP = json[i].parameter_value;
-                        if (json[i].parameter_name=='SERVICE_MAIL_TYPE_UNVERIFIED')
-                            db_SERVICE_MAIL_TYPE_UNVERIFIED = json[i].parameter_value;
-                    }
-                    req.body.app_id = req.query.app_id;
-                    req.body.app_module = 'MAIL';
-                    if (req.query.emailType == db_SERVICE_MAIL_TYPE_SIGNUP)
+                req.body.app_id = req.query.app_id;
+                req.body.app_module = 'MAIL';
+                switch (req.query.emailType){
+                    case db_SERVICE_MAIL_TYPE_SIGNUP:{
                         req.body.app_module_type = 'MAIL_SIGNUP_READ';
-                    if (req.query.emailType == db_SERVICE_MAIL_TYPE_UNVERIFIED)
+                        break;
+                    }
+                    case db_SERVICE_MAIL_TYPE_UNVERIFIED:{
                         req.body.app_module_type = 'MAIL_UNVERIFIED_READ';
-                    if (req.query.emailType == db_SERVICE_MAIL_TYPE_RESET_PASSWORD)
+                        break;
+                    }
+                    case db_SERVICE_MAIL_TYPE_RESET_PASSWORD:{
                         req.body.app_module_type = 'MAIL_RESET_PASSWORD_READ';
-                    if (req.query.emailType == db_SERVICE_MAIL_TYPE_CHANGE_EMAIL)
+                        break;
+                    }
+                    case db_SERVICE_MAIL_TYPE_CHANGE_EMAIL:{
                         req.body.app_module_type = 'MAIL_CHANGE_EMAIL_READ';
-                    req.body.app_module_request = req.protocol + '://' + req.get('host') + req.originalUrl;
-                    req.body.app_module_result = '';
-                    req.body.app_user_id = req.query.app_user_id;
-    
-                    req.body.server_remote_addr = req.ip;
-                    req.body.server_user_agent = req.headers["user-agent"];
-                    req.body.server_http_host = req.headers["host"];
-                    req.body.server_http_accept_language = req.headers["accept-language"];
-                    createLog(req.body, (err2, results2) => {
-                        null;
-                    });
+                        break;
+                    }
                 }
-            }) 
-        }
+                req.body.app_module_request = req.protocol + '://' + req.get('host') + req.originalUrl;
+                req.body.app_module_result = '';
+                req.body.app_user_id = req.query.app_user_id;
+
+                req.body.server_remote_addr = req.ip;
+                req.body.server_user_agent = req.headers["user-agent"];
+                req.body.server_http_host = req.headers["host"];
+                req.body.server_http_accept_language = req.headers["accept-language"];
+                createLog(req.body, (err2, results2) => {
+                    null;
+                });
+            }
+        }) 
         
     },
     sendEmail: (data, callBack) => {
@@ -85,9 +92,8 @@ module.exports = {
         data.protocol
         data.host
         */ 
-        // return /service/mail not the full OS path and with forward slash
-        let email_subject;
-        let verification_title;
+        const fs = require('fs');
+        let emailData;
 
         let db_SERVICE_MAIL_TYPE_CHANGE_EMAIL;
         let db_SERVICE_MAIL_TYPE_RESET_PASSWORD;
@@ -104,68 +110,11 @@ module.exports = {
         let db_SERVICE_MAIL_PASSWORD;
     
         function main_function(){
-            var baseUrl = __dirname.substring(process.cwd().length).replace(/\\/g, "/");
-            let email_from;
-            let html_template;
-            let email_host;
-            let email_port;
-            let email_secure;
-            let email_auth_user;
-            let email_auth_pass;
-            let app_module_type;
-            
-            if (data.app_id == process.env.APP1_ID) {
-                // Read css
-                const fs = require('fs');
-                const css = fs.readFileSync(__dirname + '/mail_app_' + data.app_id + '.css', 'utf8');                
-                if (data.emailType == db_SERVICE_MAIL_TYPE_SIGNUP){
-                    app_module_type = 'MAIL_SIGNUP';
-                    email_from = db_SERVICE_MAIL_TYPE_SIGNUP_FROM_NAME;
-                    html_template = fs.readFileSync(__dirname + `/mail_app_${data.app_id}_signup.html`, 'utf8');
-                    html_template = html_template.replace('<Css/>', `<style>${css}</style>`);
-                    html_template = html_template.replace('<Logo/>', 
-                                                          `<img id='app_logo' src='${data.protocol}://${data.host}${baseUrl}/logo?id=${data.app_id}&uid=${data.app_user_id}&emailType=${data.emailType}'>`);
-                    html_template = html_template.replace('<Validation_code_title/>', `${verification_title}`);
-                    html_template = html_template.replace('<Validation_code/>', `${data.validationCode}`);
-                    html_template = html_template.replace('<Footer/>', 
-                                                          `<a target='_blank' href='${data.protocol}://${data.host}'>${data.protocol}://${data.host}</a>`);
-                }
-                if (data.emailType == db_SERVICE_MAIL_TYPE_UNVERIFIED){
-                    app_module_type = 'MAIL_UNVERIFIED';
-                    email_from = db_SERVICE_MAIL_TYPE_UNVERIFIED_FROM_NAME;
-                }
-                if (data.emailType == db_SERVICE_MAIL_TYPE_RESET_PASSWORD){
-                    app_module_type = 'MAIL_RESET_PASSWORD';
-                    email_from = db_SERVICE_MAIL_TYPE_RESET_PASSWORD_FROM_NAME;
-                }
-                if (data.emailType == db_SERVICE_MAIL_TYPE_CHANGE_EMAIL){
-                    app_module_type = 'MAIL_CHANGE_EMAIL';
-                    email_from = db_SERVICE_MAIL_TYPE_CHANGE_EMAIL_FROM_NAME;
-                }
-                email_host = db_SERVICE_MAIL_HOST;
-                email_port = db_SERVICE_MAIL_PORT;
-                email_secure = db_SERVICE_MAIL_SECURE;
-                email_auth_user = db_SERVICE_MAIL_USERNAME;
-                email_auth_pass = db_SERVICE_MAIL_PASSWORD;
-            }
-            const emailData = {
-                email_host: email_host,
-                email_port: email_port,
-                email_secure: email_secure,
-                email_auth_user: email_auth_user,
-                email_auth_pass: email_auth_pass,
-                app_id: data.app_id,
-                app_user_id: data.app_user_id,
-                from: email_from,
-                to: data.toEmail,
-                subject: email_subject,
-                html: html_template
-            };
             sendEmailService(emailData, (err, result) => {
                 const logData ={
                     app_id : emailData.app_id,
                     app_module : 'MAIL',
-                    app_module_type : app_module_type,
+                    app_module_type : emailData.app_module_type,
                     app_module_request : emailData.to,
                     app_module_result : `${(err)?JSON.stringify(err):JSON.stringify(result)}`,
                     app_user_id : emailData.app_user_id,
@@ -189,64 +138,160 @@ module.exports = {
                     return callBack(null, result);
             });
         }
-        //Signup text
-        getMessage(20501, 
-                data.app_id, 
-                data.lang_code, (err,results)  => {
-                if (err)
-                    createLogAppSE(data.app_id, __appfilename, __appfunction, __appline, err);
-                else{
-                    email_subject = results.text;
-                    //Verification code text
-                    getMessage(20502, 
-                            data.app_id, 
-                            data.lang_code, (err,results)  => {
-                            if (err)
-                                createLogAppSE(data.app_id, __appfilename, __appfunction, __appline, err);
-                            else{
-                                verification_title = results.text;
-                                getParameters_server(data.app_id, (err, result)=>{
-                                    if (err) {
-                                        createLogAppSE(data.app_id, __appfilename, __appfunction, __appline, err);
-                                    }
-                                    else{
-                                        let json = JSON.parse(JSON.stringify(result));
-                                        for (var i = 0; i < json.length; i++){
-                                            //app 0 variables
-                                            if (json[i].parameter_name=='SERVICE_MAIL_TYPE_CHANGE_EMAIL')
-                                                db_SERVICE_MAIL_TYPE_CHANGE_EMAIL = json[i].parameter_value;
-                                            if (json[i].parameter_name=='SERVICE_MAIL_TYPE_RESET_PASSWORD')
-                                                db_SERVICE_MAIL_TYPE_RESET_PASSWORD = json[i].parameter_value;
-                                            if (json[i].parameter_name=='SERVICE_MAIL_TYPE_SIGNUP')
-                                                db_SERVICE_MAIL_TYPE_SIGNUP = json[i].parameter_value;
-                                            if (json[i].parameter_name=='SERVICE_MAIL_TYPE_UNVERIFIED')
-                                                db_SERVICE_MAIL_TYPE_UNVERIFIED = json[i].parameter_value;
-                                            //app 1 variables
-                                            if (json[i].parameter_name=='SERVICE_MAIL_TYPE_CHANGE_EMAIL_FROM_NAME')
-                                                db_SERVICE_MAIL_TYPE_CHANGE_EMAIL_FROM_NAME = json[i].parameter_value;
-                                            if (json[i].parameter_name=='SERVICE_MAIL_TYPE_RESET_PASSWORD_FROM_NAME')
-                                                db_SERVICE_MAIL_TYPE_RESET_PASSWORD_FROM_NAME = json[i].parameter_value;
-                                            if (json[i].parameter_name=='SERVICE_MAIL_TYPE_SIGNUP_FROM_NAME')
-                                                db_SERVICE_MAIL_TYPE_SIGNUP_FROM_NAME = json[i].parameter_value;
-                                            if (json[i].parameter_name=='SERVICE_MAIL_TYPE_UNVERIFIED_FROM_NAME')
-                                                db_SERVICE_MAIL_TYPE_UNVERIFIED_FROM_NAME = json[i].parameter_value;
-                                            if (json[i].parameter_name=='SERVICE_MAIL_HOST')
-                                                db_SERVICE_MAIL_HOST = json[i].parameter_value;
-                                            if (json[i].parameter_name=='SERVICE_MAIL_PORT')
-                                                db_SERVICE_MAIL_PORT = json[i].parameter_value;
-                                            if (json[i].parameter_name=='SERVICE_MAIL_SECURE')
-                                                db_SERVICE_MAIL_SECURE = json[i].parameter_value;
-                                            if (json[i].parameter_name=='SERVICE_MAIL_USERNAME')
-                                                db_SERVICE_MAIL_USERNAME = json[i].parameter_value;
-                                            if (json[i].parameter_name=='SERVICE_MAIL_PASSWORD')
-                                                db_SERVICE_MAIL_PASSWORD = json[i].parameter_value;                                        
+        async function get_mail_data(emailType, app_id, app_user_id, toEmail) {
+            // return /service/mail not the full OS path and with forward slash
+            const baseUrl = __dirname.substring(process.cwd().length).replace(/\\/g, "/");
+            let html_template;
+            let email_subject;
+            let verification_title;
+            const css = fs.readFileSync(__dirname + '/mail.css', 'utf8');
+        
+            switch (emailType){
+                case db_SERVICE_MAIL_TYPE_SIGNUP:{
+                    //Signup text
+                    getMessage(20501, 
+                        data.app_id, 
+                        data.lang_code, (err,results)  => {
+                        if (err)
+                            createLogAppSE(data.app_id, __appfilename, __appfunction, __appline, err);
+                        else{
+                            email_subject = results.text;
+                            //Verification code text
+                            getMessage(20502, 
+                                       data.app_id, 
+                                       data.lang_code, (err,results)  => {
+                                            if (err)
+                                                createLogAppSE(data.app_id, __appfilename, __appfunction, __appline, err);
+                                            else{
+                                                verification_title = results.text;
+                                                html_template = fs.readFileSync(__dirname + `/mail_signup.html`, 'utf8');
+                                                html_template = html_template.replace('<Css/>', `<style>${css}</style>`);
+                                                html_template = html_template.replace('<Logo/>', 
+                                                                                    `<img id='app_logo' src='${data.protocol}://${data.host}${baseUrl}/logo?id=${data.app_id}&uid=${data.app_user_id}&emailType=${data.emailType}'>`);
+                                                html_template = html_template.replace('<Validation_code_title/>', `${verification_title}`);
+                                                html_template = html_template.replace('<Validation_code/>', `${data.validationCode}`);
+                                                html_template = html_template.replace('<Footer/>', 
+                                                                                    `<a target='_blank' href='${data.protocol}://${data.host}'>${data.protocol}://${data.host}</a>`);
+                                                emailData =  {
+                                                    email_host: db_SERVICE_MAIL_HOST,
+                                                    email_port: db_SERVICE_MAIL_PORT,
+                                                    email_secure: db_SERVICE_MAIL_SECURE,
+                                                    email_auth_user: db_SERVICE_MAIL_USERNAME,
+                                                    email_auth_pass: db_SERVICE_MAIL_PASSWORD,
+                                                    app_id: app_id,
+                                                    app_user_id: app_user_id,
+                                                    app_module_type: 'MAIL_SIGNUP',
+                                                    from: db_SERVICE_MAIL_TYPE_SIGNUP_FROM_NAME,
+                                                    to: toEmail,
+                                                    subject: email_subject,
+                                                    html: html_template
+                                                };
+                                                main_function();
                                             }
-                                        main_function();
-                                    }
-                                })
+                                        })
                             }
-                    });
+                        })
+                    break;
                 }
-            });        
+                case db_SERVICE_MAIL_TYPE_UNVERIFIED:{
+                    //to be implemented
+                    html_template = null;
+                    emailData =  {
+                        email_host: db_SERVICE_MAIL_HOST,
+                        email_port: db_SERVICE_MAIL_PORT,
+                        email_secure: db_SERVICE_MAIL_SECURE,
+                        email_auth_user: db_SERVICE_MAIL_USERNAME,
+                        email_auth_pass: db_SERVICE_MAIL_PASSWORD,
+                        app_id: app_id,
+                        app_user_id: app_user_id,
+                        app_module_type: 'MAIL_UNVERIFIED',
+                        from: db_SERVICE_MAIL_TYPE_UNVERIFIED_FROM_NAME,
+                        to: toEmail,
+                        subject: email_subject,
+                        html: html_template
+                    };
+                    main_function();
+                    break;
+                }
+                case db_SERVICE_MAIL_TYPE_RESET_PASSWORD:{
+                    //to be implemented
+                    html_template = null;
+                    emailData =  {
+                        email_host: db_SERVICE_MAIL_HOST,
+                        email_port: db_SERVICE_MAIL_PORT,
+                        email_secure: db_SERVICE_MAIL_SECURE,
+                        email_auth_user: db_SERVICE_MAIL_USERNAME,
+                        email_auth_pass: db_SERVICE_MAIL_PASSWORD,
+                        app_id: app_id,
+                        app_user_id: app_user_id,
+                        app_module_type: 'MAIL_RESET_PASSWORD',
+                        from: db_SERVICE_MAIL_TYPE_RESET_PASSWORD_FROM_NAME,
+                        to: toEmail,
+                        subject: email_subject,
+                        html: html_template
+                    };
+                    main_function();
+                    break;
+                }
+                case db_SERVICE_MAIL_TYPE_CHANGE_EMAIL:{
+                    //to be implemented
+                    html_template = null;
+                    emailData =  {
+                        email_host: db_SERVICE_MAIL_HOST,
+                        email_port: db_SERVICE_MAIL_PORT,
+                        email_secure: db_SERVICE_MAIL_SECURE,
+                        email_auth_user: db_SERVICE_MAIL_USERNAME,
+                        email_auth_pass: db_SERVICE_MAIL_PASSWORD,
+                        app_id: app_id,
+                        app_user_id: app_user_id,
+                        app_module_type: 'MAIL_CHANGE_EMAIL',
+                        from: db_SERVICE_MAIL_TYPE_CHANGE_EMAIL_FROM_NAME,
+                        to: toEmail,
+                        subject: email_subject,
+                        html: html_template
+                    };
+                    main_function();
+                    break;
+                }
+            }       
+        }
+        getParameters_server(data.app_id, (err, result)=>{
+            if (err) {
+                createLogAppSE(data.app_id, __appfilename, __appfunction, __appline, err);
+            }
+            else{
+                let json = JSON.parse(JSON.stringify(result));
+                for (var i = 0; i < json.length; i++){
+                    //app 0 variables
+                    if (json[i].parameter_name=='SERVICE_MAIL_TYPE_CHANGE_EMAIL')
+                        db_SERVICE_MAIL_TYPE_CHANGE_EMAIL = json[i].parameter_value;
+                    if (json[i].parameter_name=='SERVICE_MAIL_TYPE_RESET_PASSWORD')
+                        db_SERVICE_MAIL_TYPE_RESET_PASSWORD = json[i].parameter_value;
+                    if (json[i].parameter_name=='SERVICE_MAIL_TYPE_SIGNUP')
+                        db_SERVICE_MAIL_TYPE_SIGNUP = json[i].parameter_value;
+                    if (json[i].parameter_name=='SERVICE_MAIL_TYPE_UNVERIFIED')
+                        db_SERVICE_MAIL_TYPE_UNVERIFIED = json[i].parameter_value;
+                    if (json[i].parameter_name=='SERVICE_MAIL_TYPE_CHANGE_EMAIL_FROM_NAME')
+                        db_SERVICE_MAIL_TYPE_CHANGE_EMAIL_FROM_NAME = json[i].parameter_value;
+                    if (json[i].parameter_name=='SERVICE_MAIL_TYPE_RESET_PASSWORD_FROM_NAME')
+                        db_SERVICE_MAIL_TYPE_RESET_PASSWORD_FROM_NAME = json[i].parameter_value;
+                    if (json[i].parameter_name=='SERVICE_MAIL_TYPE_SIGNUP_FROM_NAME')
+                        db_SERVICE_MAIL_TYPE_SIGNUP_FROM_NAME = json[i].parameter_value;
+                    if (json[i].parameter_name=='SERVICE_MAIL_TYPE_UNVERIFIED_FROM_NAME')
+                        db_SERVICE_MAIL_TYPE_UNVERIFIED_FROM_NAME = json[i].parameter_value;
+                    if (json[i].parameter_name=='SERVICE_MAIL_HOST')
+                        db_SERVICE_MAIL_HOST = json[i].parameter_value;
+                    if (json[i].parameter_name=='SERVICE_MAIL_PORT')
+                        db_SERVICE_MAIL_PORT = json[i].parameter_value;
+                    if (json[i].parameter_name=='SERVICE_MAIL_SECURE')
+                        db_SERVICE_MAIL_SECURE = json[i].parameter_value;
+                    if (json[i].parameter_name=='SERVICE_MAIL_USERNAME')
+                        db_SERVICE_MAIL_USERNAME = json[i].parameter_value;
+                    if (json[i].parameter_name=='SERVICE_MAIL_PASSWORD')
+                        db_SERVICE_MAIL_PASSWORD = json[i].parameter_value;                                        
+                }
+                get_mail_data(data.emailType, data.app_id, data.app_user_id, data.toEmail);
+            }
+        })
     }
 };
