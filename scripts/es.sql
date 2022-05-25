@@ -1089,7 +1089,7 @@ INSERT INTO message_translation (language_id, message_code, text) VALUES (506,'2
 INSERT INTO message_translation (language_id, message_code, text) VALUES (506,'20301','Contraseña no es la misma');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (506,'20302','No puede eliminar la última configuración de usuario');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (506,'20303','Por favor ingrese nombre de usuario');
-INSERT INTO message_translation (language_id, message_code, text) VALUES (506,'20304','Por favor ingrese nombre de contraseña');
+INSERT INTO message_translation (language_id, message_code, text) VALUES (506,'20304','Por favor ingrese contraseña');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (506,'20305','Usuario no encontrado');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (506,'20306','Código no válido');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (506,'20307','Tipo de archivo no permitido');

@@ -885,8 +885,13 @@ function show_message(message_type, code, function_id, exception_message=''){
     //INFO, ERROR, CONFIRM, EXCEPTION
     switch (message_type){
         case 'ERROR':{
+            let app_id;
+            if (code =='20305' || code =='20306')
+                app_id = global_app_main_id;
+            else
+                app_id = global_app_id;
             fetch(global_rest_url_base + global_rest_message_translation + code + 
-                '?app_id=' + global_app_id +
+                '?app_id=' + app_id +
                 '&lang_code=' + document.getElementById('setting_select_locale').value, 
             {
                 method: 'GET',
