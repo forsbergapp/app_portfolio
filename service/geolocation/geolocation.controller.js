@@ -13,7 +13,7 @@ module.exports = {
 			data.query.longitude=='undefined'){
 			 //Missing latitude or longitude
 			 getMessage(20500, 
-				data.query.app_id, 
+				process.env.APP0_ID, 
 				data.query.lang_code, (err,results)  => {
 					return res.status(500).send(
 						results.text

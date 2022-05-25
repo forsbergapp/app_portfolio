@@ -1,6 +1,7 @@
 var global_rest_url_base 				= '/service/db/api/';
 var global_rest_app_parameter 			= 'app_parameter/';
 var global_app_id 						= 1;
+var global_app_main_id 					= 0;
 
 var global_app_hostname;
 var global_app_name
