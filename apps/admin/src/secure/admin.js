@@ -196,10 +196,10 @@
     async function get_apps() {
         let status;
         let json;
-        await fetch(window.global_rest_base + window.global_rest_app + '?id=0',
+        await fetch(window.global_rest_base + window.global_rest_app + '/admin?id=0',
         {method: 'GET',
         headers: {
-                'Authorization': 'Bearer ' + window.global_rest_dt
+                'Authorization': 'Bearer ' + window.global_rest_admin_at
             }
         })
         .then(function(response) {
@@ -743,10 +743,10 @@
     async function show_apps(){
         let status;
         let json;
-        await fetch(window.global_rest_base + window.global_rest_app + '?id=0',
+        await fetch(window.global_rest_base + window.global_rest_app + '/admin?id=0',
             {method: 'GET',
                 headers: {
-                    'Authorization': 'Bearer ' + window.global_rest_dt,
+                    'Authorization': 'Bearer ' + window.global_rest_admin_at,
                 }
             })
             .then(function(response) {
@@ -774,6 +774,9 @@
                                 </div>
                                 <div class='list_apps_col'>
                                     <input type=text class='list_edit_app' value='${json.data[i].logo}'>
+                                </div>
+                                <div class='list_apps_col'>
+                                    <input type='checkbox' class='list_edit_app' ${json.data[i].enabled==1?'checked':''} />
                                 </div>
                             </div>`;
                         }
@@ -852,7 +855,8 @@
                                 e.children[0].children[0].innerHTML,//id
                                 e.children[1].children[0].value,    //app_name
                                 e.children[2].children[0].value,    //url
-                                e.children[3].children[0].value);   //logo
+                                e.children[3].children[0].value,    //logo
+                                e.children[4].children[0].checked); //enabled
             }
         });
         //save changes in list_app_parameter
@@ -860,7 +864,7 @@
             if (e.getAttribute('data-changed-record')=='1'){
                 update_record('app_parameter',
                                 e,
-                                null, null, null, null,
+                                null, null, null, null, null,
                                 e.children[0].children[0].value,    //app_id
                                 e.children[1].children[0].value,    //parameter_type_id
                                 e.children[3].children[0].innerHTML,//parameter_name
@@ -871,7 +875,7 @@
     }
     function update_record(table, 
                            element,
-                           id=null, app_name=null, url=null, logo=null,
+                           id=null, app_name=null, url=null, logo=null, enabled=null,
                            app_id=null, parameter_type_id=null, parameter_name=null, parameter_value=null, parameter_comment=null){
         if (admin_token_has_value()){
             let status;
@@ -881,18 +885,25 @@
             document.getElementById('apps_save').style.display='none';
             switch (table){
                 case 'app':{
+                    if (id==0){
+                        //app 0 should always be enabled
+                        element.children[4].children[0].checked = true;
+                        enabled=true;
+                        show_message('App 0 should always be enabled');
+                    }
                     json_data = `{"app_name": "${app_name}",
-                                "url": "${url}",
-                                "logo": "${logo}"}`;
+                                  "url": "${url}",
+                                  "logo": "${logo}",
+                                  "enabled": "${enabled==true?1:0}"}`;
                     rest_url = `${window.global_rest_base}${window.global_rest_app}/admin/${id}`;
                     break;
                 }
                 case 'app_parameter':{
                     json_data = `{"app_id": ${app_id},
-                                "parameter_name":"${parameter_name}",
-                                "parameter_type_id":"${parameter_type_id}",
-                                "parameter_value":"${parameter_value}",
-                                "parameter_comment":"${parameter_comment}"}`;
+                                  "parameter_name":"${parameter_name}",
+                                  "parameter_type_id":"${parameter_type_id}",
+                                  "parameter_value":"${parameter_value}",
+                                  "parameter_comment":"${parameter_comment}"}`;
                     rest_url = `${window.global_rest_base}${window.global_rest_app_parameter}/admin`;
                     break;
                 }

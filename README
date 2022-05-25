@@ -237,7 +237,8 @@ SERVICE_LOG_PM2_FILE                        		={filename.json}
 APP0_ID						                		=0
 
 10. database parameters
-update scripts/import.sql or after import
+update scripts/import.sql or after import, observe db username and password for apps 
+are in APP_PARAMETER table, admin and app0 in .env file.
 
 table app
 set app url and logo
@@ -256,3 +257,20 @@ they have parameter_type_id 1 or 2
 	linux:   
 	nohup pm2 logs --json>{SERVICE_LOG_FILE_PATH_SERVER}{SERVICE_LOG_PM2_FILE} &
 
+12. how to add new app
+	update db script:
+	scripts/mysql.ddl
+	script/oracle.ddl
+	scripts/import.sql
+	scripts/*.sql language files
+
+	add files and folders
+	/apps/{APP_ID}*					contains client app files and server code
+	/apps/{APP_ID}/server.js		read by function load_apps_code() in /server.js
+									contains function getApp, const APP{APP_ID}_ID = {APP_ID} (ex APP1_ID = 1)
+									(loaded dynamically in server.js and should be unique variable name),
+									express app.use() and app.get() declarations
+	/apps/{APP_ID}/client.js		read by service/forms/forms.controller.js
+									contains function getApp(app_id, params) to start client app				
+	/apps/{APP_ID}/report			reports
+	/service/db/api/app{APP_ID}*	rest api for app{APP_ID}
