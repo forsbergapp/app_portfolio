@@ -150,7 +150,7 @@ module.exports = {
                 case db_SERVICE_MAIL_TYPE_SIGNUP:{
                     //Signup text
                     getMessage(20501, 
-                        data.app_id, 
+                        process.env.APP0_ID, 
                         data.lang_code, (err,results)  => {
                         if (err)
                             createLogAppSE(data.app_id, __appfilename, __appfunction, __appline, err);
@@ -158,7 +158,7 @@ module.exports = {
                             email_subject = results.text;
                             //Verification code text
                             getMessage(20502, 
-                                       data.app_id, 
+                                       process.env.APP0_ID, 
                                        data.lang_code, (err,results)  => {
                                             if (err)
                                                 createLogAppSE(data.app_id, __appfilename, __appfunction, __appline, err);
