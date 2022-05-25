@@ -38,6 +38,7 @@ CREATE TABLE app_portfolio.app (
     app_name  VARCHAR(100) NOT NULL,
     url       VARCHAR(100),
     logo      VARCHAR(100),
+    enabled   INTEGER NOT NULL,
 	CONSTRAINT app_pk PRIMARY KEY ( id )
 );
 
@@ -147,7 +148,7 @@ GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_log TO role_app_admin;
 
 CREATE TABLE app_portfolio.app_message (
     message_code      VARCHAR(100) NOT NULL,
-    app_id            INTEGER NOT NULL
+    app_id            INTEGER NOT NULL,
 	CONSTRAINT app_message_pk PRIMARY KEY ( message_code,
                                             app_id )
 );
