@@ -909,7 +909,7 @@ GRANT ALL PRIVILEGES ON app_portfolio.user_account_app TO role_app_dba;
 GRANT SELECT, INSERT, DELETE, UPDATE ON app_portfolio.user_account_app TO role_app1;
 
 CREATE TABLE app_portfolio.user_account_app_hist (
-    id              INTEGER NOT NULL,
+    id              INTEGER NOT NULL AUTO_INCREMENT,
     dml             VARCHAR(1),
     dml_date        DATE,
     user_account_id INTEGER,
@@ -1374,7 +1374,8 @@ ALTER TABLE app_portfolio.profile_search
 
 ALTER TABLE app_portfolio.user_account_app
     ADD CONSTRAINT user_account_app_app_fk FOREIGN KEY ( app_id )
-        REFERENCES app ( id );
+        REFERENCES app ( id )
+        ON DELETE CASCADE;
 
 ALTER TABLE app_portfolio.user_account_app
     ADD CONSTRAINT user_account_app_user_account_fk FOREIGN KEY ( user_account_id )
