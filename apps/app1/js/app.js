@@ -563,6 +563,53 @@ async function get_app_globals() {
                     global_rest_app_log = json.data[i].parameter_value;
                 if (json.data[i].parameter_name=='REST_APP_OBJECT')
                     global_rest_app_object = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='REST_COUNTRY')
+                    global_rest_country = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='REST_LANGUAGE_LOCALE')
+                    global_rest_language_locale = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='REST_MESSAGE_TRANSLATION')
+                    global_rest_message_translation = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='REST_USER_ACCOUNT')
+                    global_rest_user_account = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='REST_USER_ACCOUNT_ACTIVATE')
+                    global_rest_user_account_activate = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='REST_USER_ACCOUNT_APP')
+                    global_rest_user_account_app = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='REST_USER_ACCOUNT_COMMON')
+                    global_rest_user_account_common = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='REST_USER_ACCOUNT_LOGIN')
+                    global_rest_user_account_login = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='REST_USER_ACCOUNT_PROFILE_USERID')
+                    global_rest_user_account_profile_userid = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='REST_USER_ACCOUNT_PROFILE_USERNAME')
+                    global_rest_user_account_profile_username = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='REST_USER_ACCOUNT_PROFILE_SEARCHA')
+                    global_rest_user_account_profile_searchA = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='REST_USER_ACCOUNT_PROFILE_SEARCHD')
+                    global_rest_user_account_profile_searchD = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='REST_USER_ACCOUNT_PROFILE_TOP')
+                    global_rest_user_account_profile_top = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='REST_USER_ACCOUNT_PROFILE_DETAIL')
+                    global_rest_user_account_profile_detail = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='REST_USER_ACCOUNT_PROVIDER')
+                    global_rest_user_account_provider = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='REST_USER_ACCOUNT_SIGNUP')
+                    global_rest_user_account_signup = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='REST_USER_ACCOUNT_LIKE')
+                    global_rest_user_account_like = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='REST_USER_ACCOUNT_FOLLOW')
+                    global_rest_user_account_follow = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='SERVICE_GEOLOCATION')
+                    global_service_geolocation = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='SERVICE_GEOLOCATION_GPS_PLACE')
+                    global_service_geolocation_gps_place = global_service_geolocation + json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='SERVICE_GEOLOCATION_GPS_IP')
+                    global_service_geolocation_gps_ip = global_service_geolocation + json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='SERVICE_REPORT')
+                    global_service_report = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='SERVICE_WORLDCITIES')
+                    global_service_worldcities = json.data[i].parameter_value;
+                //App variables registered for this apps app_id
                 if (json.data[i].parameter_name=='REST_APP1_USER_SETTING')
                     global_rest_app1_user_setting = json.data[i].parameter_value;
                 if (json.data[i].parameter_name=='REST_APP1_USER_SETTING_USER_ACCOUNT_ID')
@@ -579,51 +626,6 @@ async function get_app_globals() {
                     global_rest_app1_user_setting_like = json.data[i].parameter_value;
                 if (json.data[i].parameter_name=='REST_APP1_USER_SETTING_VIEW')
                     global_rest_app1_user_setting_view = json.data[i].parameter_value;
-                if (json.data[i].parameter_name=='REST_COUNTRY')
-                    global_rest_country = json.data[i].parameter_value;
-                if (json.data[i].parameter_name=='REST_LANGUAGE_LOCALE')
-                    global_rest_language_locale = json.data[i].parameter_value;
-                if (json.data[i].parameter_name=='REST_MESSAGE_TRANSLATION')
-                    global_rest_message_translation = json.data[i].parameter_value;
-                if (json.data[i].parameter_name=='REST_USER_ACCOUNT')
-                    global_rest_user_account = json.data[i].parameter_value;
-                if (json.data[i].parameter_name=='REST_USER_ACCOUNT_COMMON')
-                    global_rest_user_account_common = json.data[i].parameter_value;
-                if (json.data[i].parameter_name=='REST_USER_ACCOUNT_PROFILE_USERNAME')
-                    global_rest_user_account_profile_username = json.data[i].parameter_value;
-                if (json.data[i].parameter_name=='REST_USER_ACCOUNT_PROFILE_USERID')
-                    global_rest_user_account_profile_userid = json.data[i].parameter_value;
-                if (json.data[i].parameter_name=='REST_USER_ACCOUNT_PROFILE_SEARCHA')
-                    global_rest_user_account_profile_searchA = json.data[i].parameter_value;
-                if (json.data[i].parameter_name=='REST_USER_ACCOUNT_PROFILE_SEARCHD')
-                    global_rest_user_account_profile_searchD = json.data[i].parameter_value;
-                if (json.data[i].parameter_name=='REST_USER_ACCOUNT_PROFILE_TOP')
-                    global_rest_user_account_profile_top = json.data[i].parameter_value;
-                if (json.data[i].parameter_name=='REST_USER_ACCOUNT_PROFILE_DETAIL')
-                    global_rest_user_account_profile_detail = json.data[i].parameter_value;
-                if (json.data[i].parameter_name=='REST_USER_ACCOUNT_ACTIVATE')
-                    global_rest_user_account_activate = json.data[i].parameter_value;
-                if (json.data[i].parameter_name=='REST_USER_ACCOUNT_LOGIN')
-                    global_rest_user_account_login = json.data[i].parameter_value;
-                if (json.data[i].parameter_name=='REST_USER_ACCOUNT_SIGNUP')
-                    global_rest_user_account_signup = json.data[i].parameter_value;
-                if (json.data[i].parameter_name=='REST_USER_ACCOUNT_PROVIDER')
-                    global_rest_user_account_provider = json.data[i].parameter_value;
-                if (json.data[i].parameter_name=='REST_USER_ACCOUNT_LIKE')
-                    global_rest_user_account_like = json.data[i].parameter_value;
-                if (json.data[i].parameter_name=='REST_USER_ACCOUNT_FOLLOW')
-                    global_rest_user_account_follow = json.data[i].parameter_value;
-                if (json.data[i].parameter_name=='SERVICE_GEOLOCATION')
-                    global_service_geolocation = json.data[i].parameter_value;
-                if (json.data[i].parameter_name=='SERVICE_GEOLOCATION_GPS_PLACE')
-                    global_service_geolocation_gps_place = global_service_geolocation + json.data[i].parameter_value;
-                if (json.data[i].parameter_name=='SERVICE_GEOLOCATION_GPS_IP')
-                    global_service_geolocation_gps_ip = global_service_geolocation + json.data[i].parameter_value;
-                if (json.data[i].parameter_name=='SERVICE_REPORT')
-                    global_service_report = json.data[i].parameter_value;
-                if (json.data[i].parameter_name=='SERVICE_WORLDCITIES')
-                    global_service_worldcities = json.data[i].parameter_value;
-                //App variables registered for this apps app_id
                 if (json.data[i].parameter_name=='APP_REPORT_PATH')
                     global_app_report_path = json.data[i].parameter_value; 
                 if (json.data[i].parameter_name=='APP_REPORT_TIMETABLE')
@@ -2288,6 +2290,8 @@ function user_verify_check_input(item, nextField) {
                         json = JSON.parse(result);
                         spinner('SIGNUP', 'hidden');
                         if (json.items[0].affectedRows == 1) {
+                            //create app for user_account
+                            user_account_app(global_app_id, document.getElementById('setting_data_userid_logged_in').innerHTML);
                             //create intitial user setting
                             user_settings_function('ADD');
                             //login with username and password from signup fields
@@ -3070,6 +3074,37 @@ function user_logoff() {
     
 }
 
+function user_account_app(app_id, user_account_id) {
+    let status;
+    let json_data =
+        `{"app_id": ${app_id},
+          "user_account_id": ${user_account_id}
+         }`;
+    fetch(global_rest_url_base + global_rest_user_account_app +
+            '?lang_code=' + document.getElementById('setting_select_locale').value, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + global_rest_at
+            },
+            body: json_data
+        })
+        .then(function(response) {
+            status = response.status;
+            return response.text();
+        })
+        .then(function(result) {
+            if (status === 200) {
+                let json = JSON.parse(result);
+            } else {
+                exception(status, result);
+            }
+        })
+        .catch(function(error) {
+            show_message('EXCEPTION', null,null, error);
+        });
+}
+
 function user_signup() {
     let username = document.getElementById('signup_username').value;
     let email = document.getElementById('signup_email').value;
@@ -3811,6 +3846,8 @@ function updateProviderUser(provider_no, profile_id, profile_first_name, profile
                     global_rest_at = json.accessToken;
                     user_id.innerHTML = json.items[0].id;
                     if (json.userCreated == 1) {
+                        //create app for user_account
+                        user_account_app(global_app_id, user_id.innerHTML);
                         //create intitial user setting
                         user_settings_function('ADD');
                     }
