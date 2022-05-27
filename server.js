@@ -128,6 +128,7 @@ const languageLocaleRouter = require("./service/db/api/language/locale/locale.ro
 const message_translationRouter = require("./service/db/api/message_translation/message_translation.router");
 const parameter_typeRouter = require("./service/db/api/parameter_type/parameter_type.router");
 const user_accountRouter = require("./service/db/api/user_account/user_account.router");
+const user_account_appRouter = require("./service/db/api/user_account_app/user_account_app.router");
 const user_account_likeRouter = require("./service/db/api/user_account_like/user_account_like.router");
 const user_account_followRouter = require("./service/db/api/user_account_follow/user_account_follow.router");
 //service geolocation
@@ -160,6 +161,7 @@ app.use("/service/db/api/language/locale", languageLocaleRouter);
 app.use("/service/db/api/message_translation", message_translationRouter);
 app.use("/service/db/api/parameter_type", parameter_typeRouter);
 app.use("/service/db/api/user_account", user_accountRouter);
+app.use("/service/db/api/user_account_app", user_account_appRouter);
 app.use("/service/db/api/user_account_like", user_account_likeRouter);
 app.use("/service/db/api/user_account_follow", user_account_followRouter);
 //service geolocation
