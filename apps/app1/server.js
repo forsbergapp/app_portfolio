@@ -173,7 +173,7 @@ app.get("/app1/manifest.json",function (req, res) {
       return res.redirect('https://' + req.headers.host);
     //redirect naked domain to www
     if (((req.headers.host.split('.').length - 1) == 1) &&
-        req.headers.host.indexOf('localhost')==0)
+        req.headers.host.indexOf('localhost')==-1)
       return res.redirect('https://www.' + req.headers.host);
     switch (req.headers.host.substring(0,req.headers.host.indexOf('.'))){
     case 'app1':{
