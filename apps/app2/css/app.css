@@ -91,3 +91,12 @@ body {
 	z-index:-1;
 	margin-top:-70px;
 }
+
+.common_dialogue_content:hover, 
+.common_dialogue_content:active{
+	box-shadow: 0 0 35px 4px rgb(255,255,255,0.25);
+}  
+.common_dialogue_content{
+	background-color: #fefefe;
+	box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);	
+}
