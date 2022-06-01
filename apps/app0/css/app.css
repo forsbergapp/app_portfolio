@@ -27,10 +27,14 @@ body {
 .theme_sun a:hover, .theme_sun a:active {
 	color:#6ab344;
 }
-.theme_sun .dialogue_content:hover, .theme_sun .dialogue_content:active{
+.theme_sun .dialogue_content:hover, 
+.theme_sun .dialogue_content:active,
+.theme_sun .common_dialogue_content:hover, 
+.theme_sun .common_dialogue_content:active{
 	box-shadow: 0 0 35px 4px rgb(255,255,255,0.25);
 }  
-.theme_sun .dialogue_content{
+.theme_sun .dialogue_content,
+.theme_sun .common_dialogue_content{
 	background-color: #fefefe;
 	box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);	
 }
@@ -88,10 +92,14 @@ body {
 .theme_moon a:hover, .theme_moon a:active {
 	color:#6ab344;
 }
-.theme_moon .dialogue_content:hover, .theme_moon .dialogue_content:active{
+.theme_moon .dialogue_content:hover, 
+.theme_moon .dialogue_content:active,
+.theme_moon .common_dialogue_content:hover, 
+.theme_moon .common_dialogue_content:active{
 	box-shadow: 0 0 35px 4px rgb(255,255,255,0.25);
 }  
-.theme_moon .dialogue_content{
+.theme_moon .dialogue_content,
+.theme_moon .common_dialogue_content{
 	color: #e2e2e2;
 	background: rgb(68, 68, 68);
 	box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);	

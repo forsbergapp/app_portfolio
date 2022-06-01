@@ -4119,6 +4119,7 @@ async function update_ui(option, item_id=null) {
                 document.getElementById('profile').classList = prefix + select[select.selectedIndex].value;
                 document.getElementById('profile_top').classList = prefix + select[select.selectedIndex].value;
                 document.getElementById('dialogues').classList = prefix + select[select.selectedIndex].value;
+                document.getElementById('common_dialogues').classList = prefix + select[select.selectedIndex].value;
                 document.getElementById('window_info').classList = prefix + select[select.selectedIndex].value;
                 document.getElementById('toolbar_bottom').classList = prefix + select[select.selectedIndex].value;
                 break;

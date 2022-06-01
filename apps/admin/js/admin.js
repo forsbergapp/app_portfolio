@@ -6,7 +6,7 @@ function admin_login(){
     fetch('/service/auth/admin',
     {method: 'POST',
         headers: {
-        'Authorization': 'Basic ' + btoa(document.getElementById("login_username").value + ':' + document.getElementById("login_password").value)
+        'Authorization': 'Basic ' + btoa(document.getElementById("admin_login_username").value + ':' + document.getElementById("admin_login_password").value)
         }
     })
         .then(function(response) {
@@ -30,9 +30,9 @@ function admin_login(){
                         })
                         .then(function(result) {
                             if (status == 200){
-                                document.getElementById("login_username").value='';
-                                document.getElementById("login_password").value='';                        
-                                document.getElementById('dialogue_login').style.visibility = 'hidden';
+                                document.getElementById("admin_login_username").value='';
+                                document.getElementById("admin_login_password").value='';                        
+                                document.getElementById('dialogue_admin_login').style.visibility = 'hidden';
                                 document.getElementById('secure').style.visibility = 'visible';
                                 document.getElementById('secure').innerHTML = result;
                                 //make script in innerHTML work:
@@ -58,34 +58,30 @@ function admin_login(){
         });
 }
 function keyfunctions(){
-    document.getElementById("login_username").addEventListener("keyup", function(event) {
+    document.getElementById("admin_login_username").addEventListener("keyup", function(event) {
         if (event.keyCode === 13) {
             event.preventDefault();
             admin_login();
             //unfocus
-            document.getElementById("login_username").blur();
+            document.getElementById("admin_login_username").blur();
         }
     });
-    document.getElementById("login_password").addEventListener("keyup", function(event) {
+    document.getElementById("admin_login_password").addEventListener("keyup", function(event) {
         if (event.keyCode === 13) {
             event.preventDefault();
             admin_login();
             //unfocus
-            document.getElementById("login_password").blur();
+            document.getElementById("admin_login_password").blur();
         }
     });
-    document.getElementById('login_button').addEventListener('click', function() { admin_login() }, false);
+    document.getElementById('admin_login_button').addEventListener('click', function() { admin_login() }, false);
     document.getElementById('message_close').addEventListener('click', function() { document.getElementById('dialogue_message').style.visibility='hidden'; }, false);
 }
 function show_message(message){
     message = message.replace('<pre>','');
     message = message.replace('</pre>','');
-    try{
+    if (typeof JSON.parse(message).message !== "undefined")
         message = JSON.parse(message).message
-    }
-    catch (err){
-        null;
-    }
     document.getElementById('message_title').innerHTML = message;
     document.getElementById('dialogue_message').style.visibility='visible'; 
 }

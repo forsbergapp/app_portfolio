@@ -33,6 +33,7 @@
 #profile.font_arabic_sans_kufi,
 #profile_top.font_arabic_sans_kufi,
 #dialogues.font_arabic_sans_kufi,
+#common_dialogues.font_arabic_sans_kufi,
 #window_info.font_arabic_sans_kufi,
 #toolbar_bottom.font_arabic_sans_kufi{
 	font-family: 'Noto Sans', "Noto Kufi Sans Arabic", "Noto Sans JP", "Noto Sans KR", "Noto Sans SC", "Noto Sans TC", "Noto Sans HK";
@@ -43,6 +44,7 @@
 #profile.font_arabic_kufi,
 #profile_top.font_arabic_kufi,
 #dialogues.font_arabic_kufi,
+#common_dialogues.font_arabic_kufi,
 #window_info.font_arabic_kufi,
 #toolbar_bottom.font_arabic_kufi{
 	font-family: 'Noto Sans', "Noto Kufi Arabic", "Noto Sans JP", "Noto Sans KR", "Noto Sans SC", "Noto Sans TC", "Noto Sans HK";
@@ -54,6 +56,7 @@
 #profile.font_arabic_nashk,
 #profile_top.font_arabic_nashk,
 #dialogues.font_arabic_nashk,
+#common_dialogues.font_arabic_nashk,
 #window_info.font_arabic_nashk,
 #toolbar_bottom.font_arabic_nashk{
 	font-family: 'Noto Sans', "Noto Naskh Arabic", "Noto Sans JP", "Noto Sans KR", "Noto Sans SC", "Noto Sans TC", "Noto Sans HK";
@@ -64,6 +67,7 @@
 #profile.font_arabic_nastaliq,
 #profile_top.font_arabic_nastaliq,
 #dialogues.font_arabic_nastaliq,
+#common_dialogues.font_arabic_nastaliq,
 #window_info.font_arabic_nastaliq,
 #toolbar_bottom.font_arabic_nastaliq{
 	font-family: 'Noto Sans', "Noto Nastaliq Urdu", "Noto Sans JP", "Noto Sans KR", "Noto Sans SC", "Noto Sans TC", "Noto Sans HK";
@@ -93,6 +97,7 @@
 #profile.font_arabic_ui,
 #profile_top.font_arabic_ui,
 #dialogues.font_arabic_ui,
+#common_dialogues.font_arabic_ui,
 #window_info.font_arabic_ui,
 #toolbar_bottom.font_arabic_ui{
 	font-family: 'Noto Sans', "Noto Naskh Arabic UI", "Noto Sans JP", "Noto Sans KR", "Noto Sans SC", "Noto Sans TC", "Noto Sans HK";
@@ -615,7 +620,11 @@ a:active {
 	position: relative;
 	z-index:1;
 }
-/*Loading dialogue*/
+/*Common Dialogue settings */
+#login_logo, #signup_logo{
+	background-image: url('../images/logo.png');
+}
+/*Dialogue loading */
 #dialogue_loading{
 	text-align:center;
 }
@@ -625,7 +634,7 @@ a:active {
 	display:inline-block;
 }
 
-/*Info dialogue*/
+/*Dialogue Info */
 #dialogue_info_content{
 	height:380px;
 }
@@ -644,33 +653,6 @@ a:active {
 	width: 100%;
 }
 
-/* Dialogue Verifcation code*/
-#dialogue_user_verify_content{
-	height:280px;
-}
-
-#user_verify_email i{
-	font-size:30px;
-}
-#user_verify_verification_container{
-	margin-top:40px;
-	margin-bottom:40px;	
-}
-.user_verify_verification_wrap{
-	width: 30px;
-	height: 40px;
-	padding: 0;
-	display:inline-block;
-	margin:5px;
-}
-.user_verify_input_verification_char{
-	border-radius: 4px;
-	font-size: 30px;
-	text-align: center;
-	width:30px;
-	height:40px;
-	border: 1px solid;
-}
 
 /* Dialogue scan_open_mobile*/
 #dialogue_scan_open_mobile{
@@ -703,108 +685,12 @@ a:active {
 	margin-top:10px;
 	margin-bottom:20px;
 }
-/*Dialogue login/signup*/
-.login_button_hidden{
-	display:none !important;
-}
-#dialogue_login_content{
-	height:450px;
-}
-#dialogue_signup_content{
-	height:450px;
-}
-#login_form, #signup_form{
-	margin: 0px auto;
-	width:268px;
-}
-#login_logo, #signup_logo{
-	background-image: url('../images/logo.png');
-	background-size: contain;
-	width: 40px;
-	height: 40px;
-	margin: 0 auto;
-}
-.login_input, .signup_input{
-	border-radius: 16px;
-	border: 1px solid #ddd;
-	height:40px;
-	width:100%;
-	font-size:16px;
-	margin-top:10px;
-	padding: 8px 16px;
-	box-sizing: border-box;
-}
-
-.tab_button{
-	border: 0px;
-	margin-top:10px;
-	cursor:pointer;
-	background:none;
-}
-#login_title, #login_signup, #signup_login, #signup_title{
-	display:inline-block;
-	width: 30%;
-}
-.login_button, .signup_button{
-	border-top-left-radius: 20px;
-	border-top-right-radius: 20px;
-	border-bottom-right-radius: 20px;
-	border-bottom-left-radius: 20px;	
-	width:100%;
-	height:40px;
-	font-size:16px;
-	padding:1px;
-	border: 0px solid;
-	margin-top:10px;
-	cursor:pointer;
-}
-/*Facebook*/
-#login_facebook{
-	display:block;
-	font-weight:bold;
-}
-#logo_facebook{
-	margin-left:-30px;
-	margin-top:-5px;
-	width:24px;
-	position:absolute;
-	text-align: center;
-	display:inline-block;
-	font-size:24px;
-}
-#login_btn_facebook{
-	display:inline-block;
-}
-/*Google original button*/
-.abcRioButton{
-	display:block;
-	box-shadow:none !important;
-	border-top-left-radius: 20px !important;
-	border-top-right-radius: 20px !important;
-	border-bottom-right-radius: 20px !important;
-	border-bottom-left-radius: 20px !important;
-	width: 100% !important;
-	height: 40px !important;
-	padding: 1px;
-	border: 0px solid;
-	margin-top: 10px;	
-}
-.abcRioButton:hover{
-	-webkit-box-shadow:none !important;
-	box-shadow:none !important;
-}
-.abcRioButtonContents{
-	font-size: 16px !important;
-	font-weight:bold !important;
-	margin-left:5% !important;
-	margin-right:10% !important;
-	line-height:40px !important;
-}
-.abcRioButtonIcon{
-	padding:10px !important;
-}
 
 /*Dialogue message*/
+#dialogue_message{
+	z-index: 20;
+}
+
 #dialogue_message_content{
 	width: 300px;
 	height: auto;
@@ -880,7 +766,7 @@ a:active {
 	padding: 0 !important;
 	display: inline-block;
 }
-/* WINDOW PREVIE  */
+/* WINDOW PREVIEW  */
 #window_preview_report {
     width:100%;
     height:100%;
@@ -2141,9 +2027,11 @@ height: 25px;
 /* Darker colors*/
 body.app_theme1,
 .app_theme1 .dialogue_content,
+.app_theme1 .common_dialogue_content,
 .app_theme1 #settings select,
 .app_theme1 #settings input,
 .app_theme1 #dialogues input,
+.app_theme1 #common_dialogues input,
 .app_theme1 #tab_navigation .tab_nav_selected button,
 .app_theme1 #window_info,
 .app_theme1 #window_preview_report,
@@ -2170,6 +2058,7 @@ body.app_theme1,
 .app_theme1 #settings select,
 .app_theme1 #settings input,
 .app_theme1 #dialogues input,
+.app_theme1 #common_dialogues input,
 .app_theme1 #tab_navigation button,
 .app_theme1 #window_info,
 .app_theme1 #window_preview_toolbar,
@@ -2178,7 +2067,8 @@ body.app_theme1,
 .app_theme1 #profile_top,
 .app_theme1 .popup-content a,
 .app_theme1 .toolbar_button,
-.app_theme1 .dialogue_content
+.app_theme1 .dialogue_content,
+.app_theme1 .common_dialogue_content
 {
 	color : #a49775;
 }
@@ -2219,10 +2109,12 @@ body.app_theme1,
 .app_theme1 .profile_user_settings_row #profile_user_settings_like:hover{
 	color:#6ab344;
 }
-.app_theme1 .dialogue{
+.app_theme1 .dialogue,
+.app_theme1 .common_dialogue{
 	background-color: rgba(0,0,0,0.4);
 }
-.app_theme1 .dialogue_content{
+.app_theme1 .dialogue_content,
+.app_theme1 .common_dialogue_content{
 	background-color: #fefefe;
 	box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
 }
@@ -2236,10 +2128,12 @@ body.app_theme1,
 .app_theme1 #scan_open_mobile_title3{
 	color: #a3a3a3;
 }
-.app_theme1 .tab_button{
+.app_theme1 .login_tab_button,
+.app_theme1 .signup_tab_button{
 	color: #a49775;
 }
-.app_theme1 .tab_button:hover{
+.app_theme1 .login_tab_button:hover,
+.app_theme1 .signup_tab_button:hover{
 	color:#6ab344;
 }
 .app_theme1 #login_button, .app_theme1 #signup_button{
@@ -2299,9 +2193,11 @@ body.app_theme1,
 /* darker colors*/
 body.app_theme2,
 .app_theme2 .dialogue_content,
+.app_theme2 .common_dialogue_content,
 .app_theme2 #settings select,
 .app_theme2 #settings input,
 .app_theme2 #dialogues input,
+.app_theme2 #common_dialogues input,
 .app_theme2 #tab_navigation .tab_nav_selected button,
 .app_theme2 #window_info,
 .app_theme2 #window_preview_report,
@@ -2329,6 +2225,7 @@ body.app_theme2,
 .app_theme2 #settings select,
 .app_theme2 #settings input,
 .app_theme2 #dialogues input,
+.app_theme2 #common_dialogues input,
 .app_theme2 #tab_navigation button,
 .app_theme2 #window_info,
 .app_theme2 #window_preview_toolbar,
@@ -2337,7 +2234,8 @@ body.app_theme2,
 .app_theme2 #profile_top,
 .app_theme2 .popup-content a,
 .app_theme2 .toolbar_button,
-.app_theme2 .dialogue_content
+.app_theme2 .dialogue_content,
+.app_theme2 .common_dialogue_content
 {
 	color: #404040 !important;
 }
@@ -2378,10 +2276,12 @@ body.app_theme2,
 .app_theme2 .profile_user_settings_row #profile_user_settings_like:hover{
 	color:#6ab344;
 }
-.app_theme2 .dialogue{
+.app_theme2 .dialogue,
+.app_theme2 .common_dialogue{
 	background-color: rgba(0,0,0,0.4);
 }
-.app_theme2 .dialogue_content{
+.app_theme2 .dialogue_content,
+.app_theme2 .common_dialogue_content{
 	background-color: #fefefe;
 	box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
 }
@@ -2395,10 +2295,12 @@ body.app_theme2,
 .app_theme2 #scan_open_mobile_title3{
 	color: #a3a3a3;
 }
-.app_theme2 .tab_button{
+.app_theme2 .login_tab_button, 
+.app_theme2 .signup_tab_button{
 	color: #a49775;
 }
-.app_theme2 .tab_button:hover{
+.app_theme2 .login_tab_button:hover,
+.app_theme2 .signup_tab_button:hover{
 	color:#6ab344;
 }
 .app_theme2 #login_button, .app_theme1 #signup_button{
@@ -2459,9 +2361,11 @@ body.app_theme2,
 /* Darker colors*/
 body.app_theme3,
 .app_theme3 .dialogue_content,
+.app_theme3 .common_dialogue_content,
 .app_theme3 #settings select,
 .app_theme3 #settings input,
 .app_theme3 #dialogues input,
+.app_theme3 #common_dialogues input,
 .app_theme3 #tab_navigation .tab_nav_selected button,
 .app_theme3 #window_info,
 .app_theme3 #window_preview_report,
@@ -2488,6 +2392,7 @@ body.app_theme3,
 .app_theme3 #settings select,
 .app_theme3 #settings input,
 .app_theme3 #dialogues input,
+.app_theme3 #common_dialogues input,
 .app_theme3 #tab_navigation button,
 .app_theme3 #window_info,
 .app_theme3 #window_preview_toolbar,
@@ -2496,7 +2401,8 @@ body.app_theme3,
 .app_theme3 #profile_top,
 .app_theme3 .popup-content a,
 .app_theme3 .toolbar_button,
-.app_theme3 .dialogue_content
+.app_theme3 .dialogue_content,
+.app_theme3 .common_dialogue_content
 {
 	color : #FBF9F8 !important;
 }
@@ -2537,10 +2443,12 @@ body.app_theme3,
 .app_theme3 .profile_user_settings_row #profile_user_settings_like:hover{
 	color:#6ab344;
 }
-.app_theme3 .dialogue{
+.app_theme3 .dialogue,
+.app_theme3 .common_dialogue{
 	background-color: rgba(0,0,0,0.4);
 }
-.app_theme3 .dialogue_content{
+.app_theme3 .dialogue_content,
+.app_theme3 .common_dialogue_content{
 	background-color: #fefefe;
 	box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
 }
@@ -2554,10 +2462,12 @@ body.app_theme3,
 .app_theme3 #scan_open_mobile_title3{
 	color: #a3a3a3;
 }
-.app_theme3 .tab_button{
+.app_theme3 .login_tab_button,
+.app_theme3 .signup_tab_button{
 	color: #a49775;
 }
-.app_theme3 .tab_button:hover{
+.app_theme3 .login_tab_button:hover,
+.app_theme3 .signup_tab_button:hover{
 	color:#6ab344;
 }
 .app_theme3 #login_button, .app_theme1 #signup_button{
