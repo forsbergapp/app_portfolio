@@ -313,7 +313,7 @@
         document.getElementById('menu_3').removeEventListener('click', function() { show_menu(3) }, false);
         document.getElementById('menu_4').removeEventListener('click', function() { show_menu(4) }, false);
         document.getElementById('menu_5').removeEventListener('click', function() { admin_login() }, false);
-        document.getElementById('dialogue_login').style.visibility = 'visible';
+        document.getElementById('dialogue_admin_login').style.visibility = 'visible';
         document.getElementById('secure').style.visibility = 'hidden';
         document.getElementById('secure').innerHTML = '';
     }
@@ -591,9 +591,10 @@
             check_value = 1;
         else
             check_value = 0;
-        let json_data = `{"parameter_name":"SERVER_MAINTENANCE",
+        let json_data = `{"app_id" : 0, 
+                          "parameter_name":"SERVER_MAINTENANCE",
                           "parameter_value":${check_value}}`;
-        fetch(window.global_rest_base + window.global_rest_app_parameter + '/admin/0',
+        fetch(window.global_rest_base + window.global_rest_app_parameter + '/admin/value',
         {method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
@@ -1076,46 +1077,47 @@
                 .then(function(result) {
                 if (status == 200){
                     json = JSON.parse(result);
+                    let list_connected = document.getElementById('list_connected');
+                    list_connected.innerHTML = '';
                     if (json.success === 1){
-                        
-                        set_list_eventlisteners('connected', 'gps',0);
-                        set_list_eventlisteners('connected', 'chat',0);
-                        let list_connected = document.getElementById('list_connected');
-                        list_connected.innerHTML = '';
-                        let html = '';
-                        for (i = 0; i < json.data.length; i++) {
-                            html += 
-                            `<div class='list_connected_row'>
-                                <div class='list_connected_col'>
-                                    <div>${json.data[i].id}</div>
-                                </div>
-                                <div class='list_connected_col'>
-                                    <div>${json.data[i].app_id}</div>
-                                </div>
-                                <div class='list_connected_col'>
-                                    <div>${show_user_agent(json.data[i].user_agent)}</div>
-                                </div>
-                                <div class='list_connected_col'>
-                                    <div>${json.data[i].connection_date}</div>
-                                </div>
-                                <div class='list_connected_col'>
-                                    <div>${json.data[i].ip.replace('::ffff:','')}</div>
-                                </div>
-                                <div class='list_connected_col list_connected_gps_click gps_click'>
-                                    <div>${json.data[i].gps_latitude}</div>
-                                </div>
-                                <div class='list_connected_col list_connected_gps_click gps_click'>
-                                    <div>${json.data[i].gps_longitude}</div>
-                                </div>
-                                <div class='list_connected_col list_connected_chat_click chat_click'>
-                                    <div><i class="fas fa-comment"></i></div>
-                                </div>
-                                
-                            </div>`;
-                        }
-                        list_connected.innerHTML = html;
-                        set_list_eventlisteners('connected', 'gps',1);
-                        set_list_eventlisteners('connected', 'chat',1);
+                        if (json.data.length >0){
+                            set_list_eventlisteners('connected', 'gps',0);
+                            set_list_eventlisteners('connected', 'chat',0);
+                            let html = '';
+                            for (i = 0; i < json.data.length; i++) {
+                                html += 
+                                `<div class='list_connected_row'>
+                                    <div class='list_connected_col'>
+                                        <div>${json.data[i].id}</div>
+                                    </div>
+                                    <div class='list_connected_col'>
+                                        <div>${json.data[i].app_id}</div>
+                                    </div>
+                                    <div class='list_connected_col'>
+                                        <div>${show_user_agent(json.data[i].user_agent)}</div>
+                                    </div>
+                                    <div class='list_connected_col'>
+                                        <div>${json.data[i].connection_date}</div>
+                                    </div>
+                                    <div class='list_connected_col'>
+                                        <div>${json.data[i].ip.replace('::ffff:','')}</div>
+                                    </div>
+                                    <div class='list_connected_col list_connected_gps_click gps_click'>
+                                        <div>${json.data[i].gps_latitude}</div>
+                                    </div>
+                                    <div class='list_connected_col list_connected_gps_click gps_click'>
+                                        <div>${json.data[i].gps_longitude}</div>
+                                    </div>
+                                    <div class='list_connected_col list_connected_chat_click chat_click'>
+                                        <div><i class="fas fa-comment"></i></div>
+                                    </div>
+                                    
+                                </div>`;
+                            }
+                            list_connected.innerHTML = html;
+                            set_list_eventlisteners('connected', 'gps',1);
+                            set_list_eventlisteners('connected', 'chat',1);
+                        }   
                     }
                 }
                 else
@@ -1153,43 +1155,45 @@
             .then(function(result) {
             if (status == 200){
                 json = JSON.parse(result);
+                let list_app_log = document.getElementById('list_app_log');
+                list_app_log.innerHTML = '';
                 if (json.success === 1){
-                    window.global_page_last = Math.floor(json.data[0].total_rows/global_limit) * window.global_limit;
-                    set_list_eventlisteners('app_log', 'gps',0);
-                    let list_app_log = document.getElementById('list_app_log');
-                    list_app_log.innerHTML = '';
-                    let html = '';
-                    for (i = 0; i < json.data.length; i++) {
-                        html += 
-                        `<div class='list_app_log_row'>
-                            <div class='list_app_log_col'>
-                                <div>${json.data[i].id}</div>
-                            </div>
-                            <div class='list_app_log_col'>
-                                <div>${json.data[i].app_id}</div>
-                            </div>
-                            <div class='list_app_log_col'>
-                                <div>${json.data[i].app_module}</div>
-                            </div>
-                            <div class='list_app_log_col'>
-                                <div>${json.data[i].app_module_type}</div>
-                            </div>
-                            <div class='list_app_log_col'>
-                                <div>${json.data[i].server_remote_addr.replace('::ffff:','')}</div>
-                            </div>
-                            <div class='list_app_log_col list_app_log_gps_click gps_click'>
-                                <div>${json.data[i].user_gps_latitude}</div>
-                            </div>
-                            <div class='list_app_log_col list_app_log_gps_click gps_click'>
-                                <div>${json.data[i].user_gps_longitude}</div>
-                            </div>
-                            <div class='list_app_log_col'>
-                                <div>${json.data[i].date_created}</div>
-                            </div>
-                        </div>`;
+                    if (json.data.length >0){
+                        window.global_page_last = Math.floor(json.data[0].total_rows/global_limit) * window.global_limit;
+                        set_list_eventlisteners('app_log', 'gps',0);
+                        let html = '';
+                        for (i = 0; i < json.data.length; i++) {
+                            html += 
+                            `<div class='list_app_log_row'>
+                                <div class='list_app_log_col'>
+                                    <div>${json.data[i].id}</div>
+                                </div>
+                                <div class='list_app_log_col'>
+                                    <div>${json.data[i].app_id}</div>
+                                </div>
+                                <div class='list_app_log_col'>
+                                    <div>${json.data[i].app_module}</div>
+                                </div>
+                                <div class='list_app_log_col'>
+                                    <div>${json.data[i].app_module_type}</div>
+                                </div>
+                                <div class='list_app_log_col'>
+                                    <div>${json.data[i].server_remote_addr.replace('::ffff:','')}</div>
+                                </div>
+                                <div class='list_app_log_col list_app_log_gps_click gps_click'>
+                                    <div>${json.data[i].user_gps_latitude}</div>
+                                </div>
+                                <div class='list_app_log_col list_app_log_gps_click gps_click'>
+                                    <div>${json.data[i].user_gps_longitude}</div>
+                                </div>
+                                <div class='list_app_log_col'>
+                                    <div>${json.data[i].date_created}</div>
+                                </div>
+                            </div>`;
+                        }
+                        list_app_log.innerHTML = html;
+                        set_list_eventlisteners('app_log', 'gps',1);
                     }
-                    list_app_log.innerHTML = html;
-                    set_list_eventlisteners('app_log', 'gps',1);
                 }
             }
             else
