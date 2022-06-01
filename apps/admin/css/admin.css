@@ -29,17 +29,6 @@ a:active {
 	text-decoration: underline;
 }
 
-#dialogue_login{
-	visibility: visible;
-}
-#dialogue_message{
-	visibility: hidden;
-}
-#dialogue_message_content{
-	width: auto;
-}
-
-
 .dialogue{
 	width: 100%;
 	height: 100%;
@@ -85,24 +74,24 @@ a:active {
 	}
 }
 
-#dialogue_login{
+#dialogue_admin_login{
 	visibility:visible;
 }
-#dialogue_login_content{
+#dialogue_admin_login_content{
 	height:270px;
 }
 
-#login_logo {
+#admin_login_logo {
 	background-image: url('/app0/images/logo.png');
 	background-size: cover;
 	background-repeat: no-repeat;
 	height: 50px;
 	margin: 0 auto;
 }
-#login_title{
+#admin_login_title{
     margin-top:20px;
 }
-.login_input{
+.admin_login_input{
 	border-radius: 16px;
 	height:40px;
 	width:90%;
@@ -110,6 +99,13 @@ a:active {
 	padding: 8px 16px;
 	box-sizing: border-box;
 }
+#dialogue_message{
+	visibility: hidden;
+}
+#dialogue_message_content{
+	width: auto;
+}
+
 .button {
 	background: none;
 	border: none;
@@ -135,17 +131,21 @@ body.theme_light{
 	font-size: 16px;
 	font-family: 'Noto Sans';
 }
-.theme_light .dialogue_content:hover, .theme_light .dialogue_content:active{
+.theme_light .dialogue_content:hover, 
+.theme_light .dialogue_content:active,
+.theme_light .common_dialogue_content:hover, 
+.theme_light .common_dialogue_content:active{
 	box-shadow: 0 0 35px 4px rgb(255,255,255,0.25);
 }  
-.theme_light .dialogue_content{
+.theme_light .dialogue_content,
+.theme_light .common_dialogue_content{
 	background-color: #fefefe;
 	box-shadow: 0 4px 8px 0 rgb(0 0 0 / 20%), 0 6px 20px 0 rgb(0 0 0 / 19%);
 }
-.theme_light #login_title{
+.theme_light #admin_login_title{
 	font-size: 16px;
 }
-.theme_light .login_input{
+.theme_light .admin_login_input{
 	border: 1px solid #ddd;
 	font-size:16px;
 }
