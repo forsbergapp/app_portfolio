@@ -1844,6 +1844,7 @@ function keyfunctions() {
     if (global_app_user_provider2_use==1)
         document.getElementById('login_facebook').addEventListener('click', function() { onProviderSignIn() }, false);
     document.getElementById('login_close').addEventListener('click', function() { document.getElementById('dialogue_login').style.visibility = 'hidden' }, false);
+    document.getElementById('user_edit_close').addEventListener('click', function() { user_edit() }, false);
     document.getElementById('signup_login').addEventListener('click', function() { show_dialogue('LOGIN') }, false);
 
     document.getElementById('signup_button').addEventListener('click', function() { user_signup() }, false);
@@ -1938,7 +1939,11 @@ function toolbar_bottom(choice) {
     let settings = document.getElementById('settings');
     let profile = document.getElementById('profile');
     let profile_info_div = document.getElementById('profile_info');
+    let profile_info_app1_div = document.getElementById('profile_info_app1');
     let profile_top_div = document.getElementById('profile_top');
+    let profile_top_app1_div = document.getElementById('profile_top_app1');
+    let profile_top_list_div = document.getElementById('profile_top_list');
+    
 
     switch (choice) {
         //print
@@ -2018,7 +2023,10 @@ function toolbar_bottom(choice) {
                 }
                 profile.style.visibility = 'visible';
                 profile_info_div.style.display = 'block';
+                profile_info_app1_div.style.display = 'block';
                 profile_top_div.style.display = 'none';
+                profile_top_app1_div.style.display = 'none';
+                profile_top_list_div.style.display = 'none';
                 profile_show();
                 break;
             }
@@ -2034,7 +2042,10 @@ function toolbar_bottom(choice) {
                 profile.style.visibility = 'visible';
                 //profile_top_div.style.visibility = 'visible';
                 profile_info_div.style.display = 'none';
+                profile_info_app1_div.style.display = 'none';
                 profile_top_div.style.display = 'block';
+                profile_top_app1_div.style.display = 'block';
+                profile_top_list_div.style.display = 'block';
                 profile_top(1);
                 break;
             }
@@ -2346,8 +2357,8 @@ function user_verify_check_input(item, nextField) {
 
 function user_edit() {
     let json;
-    if (document.getElementById('user_edit').style.display == 'block') {
-        document.getElementById('user_edit').style.display = "none";
+    if (document.getElementById('dialogue_user_edit').style.visibility == 'visible') {
+        document.getElementById('dialogue_user_edit').style.visibility = "hidden";
         document.getElementById('setting_checkbox_report_private').checked = false;
         //common
         document.getElementById('setting_input_bio_edit').value = '';
@@ -2372,7 +2383,6 @@ function user_edit() {
         document.getElementById('setting_label_data_account_created_edit').value = '';
         document.getElementById('setting_label_data_account_modified_edit').value = '';
 
-        document.getElementById('user_settings').style.display = "block";
     } else {
         let user_id = document.getElementById('setting_data_userid_logged_in');
         let status;
@@ -2397,9 +2407,7 @@ function user_edit() {
                     if (user_id.innerHTML == json.id) {
                         document.getElementById('user_edit_local').style.display = 'none';
                         document.getElementById('user_edit_provider').style.display = 'none';
-                        document.getElementById('user_edit').style.display = "block";
-
-                        document.getElementById('user_settings').style.display = "none";
+                        document.getElementById('dialogue_user_edit').style.visibility = "visible";
 
                         document.getElementById('setting_checkbox_report_private').checked = number_to_boolean(json.private);
                         document.getElementById('setting_input_bio_edit').value = get_null_or_value(json.bio);
@@ -2557,7 +2565,7 @@ function user_update() {
             if (status == 200) {
                 json = JSON.parse(result);
                 //user_id.innerHTML = json.id;
-                document.getElementById('user_edit').style.display = "none";
+                document.getElementById('dialogue_user_edit').style.visibility = "hidden";
                 document.getElementById('user_settings').style.display = "block";
 
                 document.getElementById('setting_avatar_edit').style.display = 'none';
@@ -3008,7 +3016,7 @@ function user_logoff() {
 
         //hide logged in, user_edit and user settings
         document.getElementById('user_logged_in').style.display = "none";
-        document.getElementById('user_edit').style.display = "none";
+        document.getElementById('dialogue_user_edit').style.visibility = "hidden";
         document.getElementById('user_settings').style.display = "none";
         //clear logged in info
         document.getElementById('setting_data_username_logged_in').innerHTML = '';
@@ -4092,7 +4100,7 @@ async function update_ui(option, item_id=null) {
         case 1:
             {
                 //Update user edit info in case user is changing timezone while editing user
-                if (document.getElementById('user_edit').style.display == 'block') {
+                if (document.getElementById('dialogue_user_edit').style.visibility == 'visible') {
                     //call twice, 
                     //first will hide and reset values
                     user_edit();
@@ -4457,7 +4465,12 @@ function profile_show(user_account_id_other = null, username = null) {
     let url;
 
     document.getElementById('profile_info').style.display = "none";
+    document.getElementById('profile_info_app1').style.display = "none";
+
     document.getElementById('profile_top').style.display = "none";
+    document.getElementById('profile_top_app1').style.display = "none";
+    document.getElementById('profile_top_list').style.display = "none";
+
     document.getElementById('profile_detail').style.display = "none";
     document.getElementById('profile').style.visibility = "visible";
     document.getElementById('profile_select_user_settings').innerHTML='';
@@ -4528,6 +4541,7 @@ function profile_show(user_account_id_other = null, username = null) {
                 if (status == 200) {
                     json = JSON.parse(response);
                     document.getElementById('profile_info').style.display = "block";
+                    document.getElementById('profile_info_app1').style.display = "block";
                     document.getElementById('profile_main').style.display = "block";
                     document.getElementById('profile_id').innerHTML = json.id;
 
