@@ -4,8 +4,12 @@ module.exports = {
     getApp:(app_id, username) => {
         return new Promise(function (resolve, reject){
             function main(app_id){
-                const AppHeadCommon = fs.readFileSync(__dirname + '/../common/src/head.html', 'utf8');
-                const AppBodyCommon = fs.readFileSync(__dirname + '/../common/src/body.html', 'utf8');
+                const AppCommonHead = fs.readFileSync(__dirname + '/../common/src/head.html', 'utf8');
+                const AppCommonBody = fs.readFileSync(__dirname + '/../common/src/body.html', 'utf8');
+                const AppCommonProfileInfoSearch = fs.readFileSync(__dirname + '/../common/src/profile_info_search.html', 'utf8');
+                const AppCommonProfileInfo = fs.readFileSync(__dirname + '/../common/src/profile_info.html', 'utf8');
+                const AppCommonProfileTop = fs.readFileSync(__dirname + '/../common/src/profile_top.html', 'utf8');
+                const AppCommonProfileTopList = fs.readFileSync(__dirname + '/../common/src/profile_top_list.html', 'utf8');
                 fs.readFile(__dirname + '/src/index.html', 'utf-8', (err, app_result) => {
                     if (err) {
                         createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
@@ -22,8 +26,9 @@ module.exports = {
                         const AppSettingsTabNavigationTab4 = fs.readFileSync(__dirname + '/src/settings_tab_navigation_tab4.html', 'utf8');
                         const AppSettingsTabNavigationTab5 = fs.readFileSync(__dirname + '/src/settings_tab_navigation_tab5.html', 'utf8');
                         const AppSettingsTabNavigationTab6 = fs.readFileSync(__dirname + '/src/settings_tab_navigation_tab6.html', 'utf8');
-                        const AppSettingsTabNavigationTab7 = fs.readFileSync(__dirname + '/src/settings_tab_navigation_tab7.html', 'utf8');
-                        const AppProfileInfoSearch = fs.readFileSync(__dirname + '/src/profile_info_search.html', 'utf8');
+                        const AppSettingsTabNavigationTab7UserLoggedIn = fs.readFileSync(__dirname + '/src/settings_tab_navigation_tab7_user_logged_in.html', 'utf8');
+                        const AppSettingsTabNavigationTab7UserSettings = fs.readFileSync(__dirname + '/src/settings_tab_navigation_tab7_user_settings.html', 'utf8');
+                        
                         const AppProfileInfo = fs.readFileSync(__dirname + '/src/profile_info.html', 'utf8');
                         const AppProfileTop = fs.readFileSync(__dirname + '/src/profile_top.html', 'utf8');
                         const AppWindowInfo = fs.readFileSync(__dirname + '/src/window_info.html', 'utf8');
@@ -45,8 +50,8 @@ module.exports = {
                                 '<AppHead/>',
                                 `${AppHead}`);
                             app = app.replace(
-                                '<AppHeadCommon/>',
-                                `${AppHeadCommon}`);
+                                '<AppCommonHead/>',
+                                `${AppCommonHead}`);
                             app = app.replace(
                                 '<AppToolbarTop/>',
                                 `${AppToolbarTop}`);
@@ -88,17 +93,29 @@ module.exports = {
                                 '<AppSettingsTabNavigationTab6/>',
                                 `${AppSettingsTabNavigationTab6}`);
                             app = app.replace(
-                                '<AppSettingsTabNavigationTab7/>',
-                                `${AppSettingsTabNavigationTab7}`);    
+                                '<AppSettingsTabNavigationTab7UserLoggedIn/>',
+                                `${AppSettingsTabNavigationTab7UserLoggedIn}`);
                             app = app.replace(
-                                '<AppProfileInfoSearch/>',
-                                `${AppProfileInfoSearch}`);    
+                                '<AppSettingsTabNavigationTab7UserSettings/>',
+                                `${AppSettingsTabNavigationTab7UserSettings}`);
+                            app = app.replace(
+                                '<AppCommonProfileInfoSearch/>',
+                                `${AppCommonProfileInfoSearch}`);    
+                            app = app.replace(
+                                '<AppCommonProfileInfo/>',
+                                `${AppCommonProfileInfo}`);    
                             app = app.replace(
                                 '<AppProfileInfo/>',
                                 `${AppProfileInfo}`);    
                             app = app.replace(
+                                '<AppCommonProfileTop/>',
+                                `${AppCommonProfileTop}`);    
+                            app = app.replace(
                                 '<AppProfileTop/>',
                                 `${AppProfileTop}`);    
+                            app = app.replace(
+                                '<AppCommonProfileTopList/>',
+                                `${AppCommonProfileTopList}`);    
                             app = app.replace(
                                 '<AppWindowInfo/>',
                                 `${AppWindowInfo}`);    
@@ -112,8 +129,8 @@ module.exports = {
                                 '<AppToolbarBottom/>',
                                 `${AppToolbarBottom}`);
                             app = app.replace(
-                                '<AppBodyCommon/>',
-                                `${AppBodyCommon}`);
+                                '<AppCommonBody/>',
+                                `${AppCommonBody}`);
                             resolve (app);
                         }
                         getAppComponents();
