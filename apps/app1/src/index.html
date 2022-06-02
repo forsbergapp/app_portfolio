@@ -2,7 +2,7 @@
 <html>
 <head>
 	<AppHead/>
-	<AppHeadCommon/>
+	<AppCommonHead/>
 </head>	
 <body class='app_theme1' onload='init();'>
     <AppToolbarTop/>
@@ -16,18 +16,27 @@
 			<AppSettingsTabNavigationTab4/>
 			<AppSettingsTabNavigationTab5/>
 			<AppSettingsTabNavigationTab6/>
-			<AppSettingsTabNavigationTab7/>
+			<li id='tab7'>
+				<div class='setting_horizontal'>
+					<AppSettingsTabNavigationTab7UserLoggedIn/>
+					<AppCommonUserEdit/>
+					<AppSettingsTabNavigationTab7UserSettings/>
+				</div>
+			</li>
 		</ul>
 	</div>
 	<div id='profile'>
-		<AppProfileInfoSearch/>
+		<AppCommonProfileInfoSearch/>
+		<AppCommonProfileInfo/>
 		<AppProfileInfo/>
+		<AppCommonProfileTop/>
 		<AppProfileTop/>
+		<AppCommonProfileTopList/>
 	</div>
 	<AppWindowInfo/>
 	<AppWindowPreviewReport/>
 	<AppDialogues/>
 	<AppToolbarBottom/>
-	<AppBodyCommon/>
+	<AppCommonBody/>
 </body>
 </html>

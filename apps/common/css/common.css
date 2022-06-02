@@ -83,6 +83,9 @@
 	padding-bottom:5px;
 }
 /* Dialogue Verifcation code*/
+#dialogue_user_verify{
+	visibility: hidden;
+}
 #dialogue_user_verify_content{
 	height:280px;
 }
@@ -109,6 +112,10 @@
 	border: 1px solid;
 }
 /*Dialogue login/signup*/
+#dialogue_login,
+#dialogue_signup{
+	visibility: hidden;
+}
 .login_button_hidden{
 	display:none !important;
 }
@@ -206,7 +213,299 @@
 .abcRioButtonIcon{
 	padding:10px !important;
 }
+/*Dialogue user edit*/
+#dialogue_user_edit{
+	visibility: hidden;
+}
+#dialogue_user_edit_content{
+	width: auto;
+	height: auto;
+}
+#dialogue_user_edit_content .setting_horizontal_row{
+	display: inline-block;
+}
+#dialogue_user_edit_content #user_edit_common .setting_horizontal_row:first-child .setting_horizontal_col:nth-child(1){
+	text-align: center !important;
+}
+#dialogue_user_edit_content #user_edit_common .setting_horizontal_row:first-child .setting_horizontal_col:nth-child(2){
+	text-align: center !important;
+}
 
+#dialogue_user_edit_content .setting_horizontal_col:nth-child(1){
+	text-align: left;
+	width:230px !important;
+	min-width:unset !important;
+	float: left;
+	margin-right:10px;
+}
+#dialogue_user_edit_content  .setting_horizontal_col:nth-child(2){
+	width:560px !important;
+	text-align:left;
+}
+#dialogue_user_edit_content #user_edit_buttons .setting_horizontal_col:nth-child(1) {
+	text-align: center !important;
+}
+#dialogue_user_edit_content #user_edit_buttons .setting_horizontal_col:nth-child(2) {
+	text-align: center !important;
+}
+
+/*profile*/
+/*profile search*/
+#profile_info_search {
+	height:50px;
+	text-align:center;
+	position: relative;
+	z-index:1;
+}
+#profile_search_input{
+	border-radius: 16px;
+	width:240px;
+	margin-top:10px;
+	margin-right:10px;
+	padding: 8px 16px;
+	box-sizing: border-box;
+}
+#profile_search_list{
+	height:120px;
+	width:250px;
+	padding: 10px;
+	margin:0 auto;
+	border-radius: 16px;
+	display:none;
+}
+.profile_search_list_row{
+	height:24px;
+}
+.profile_search_list_col:nth-child(1){
+	display: none;
+}
+.profile_search_list_col:nth-child(2){
+	width:24px;
+	display:table-cell;
+}
+.profile_search_list_col:nth-child(3),
+.profile_search_list_col:nth-child(4){
+	display:table-cell;
+	vertical-align: middle;
+	padding-left:10px;
+}
+.profile_search_list_col:nth-child(4){
+	width:100%;
+	text-align:right;
+}
+.profile_search_list_avatar{
+	height:24px;
+	width:24px;
+	border-radius: 50%;
+}
+
+/*profile main*/
+#profile_main {
+	width:100%;
+	margin:10px;
+	text-align:center;
+}
+#profile_main_col1{
+	display:inline-block;
+	width:200px;
+	text-align:left;
+}
+#profile_main_col2{
+	display:inline-block;
+	width:128px;
+	vertical-align:top;
+}
+#profile_main_col3{
+	display:inline-block;
+	vertical-align:top;
+}
+#profile_main_col3 div{
+	padding-bottom:10px;
+}
+#profile_id{
+	display:none;
+}
+#profile_avatar{
+	width: 64px;
+	height: 64px;
+	border-radius: 50%;
+}
+#profile_main_stat_row1{
+	margin-top: 10px;
+	text-align: center;
+}
+#profile_main_stat_row1 div{
+	display:inline-block;
+	margin-right: 10px;
+}
+#profile_joined_date{
+	margin-top: 10px;
+}
+#profile_joined_date,
+#profile_info_following_count,
+#profile_info_followers_count,
+#profile_info_likes_count,
+#profile_info_view_count
+{
+	display:inline-block;
+	margin-left:10px;
+}
+#profile_main_btn_following,
+#profile_main_btn_followed,
+#profile_main_btn_likes,
+#profile_main_btn_liked{
+	font-size:16px;
+	height:20px;
+	text-align:left;
+}
+#profile_main_btn_following,
+#profile_main_btn_followed,
+#profile_main_btn_likes{
+	width:20px;
+}
+#profile_main_btn_liked{
+	width:40px;
+}
+#profile_qr {
+	padding:3px;
+	padding-bottom:0px;
+	width:96px;
+}
+
+#profile_qr canvas{
+	height:96px;
+	width:96px;
+}
+#profile_follow i:nth-child(2),
+#profile_like i:nth-child(2){
+	display:none;
+}
+#profile_follow:hover i,
+#profile_like:hover i{
+	cursor:pointer;
+	transform: scale(1.3);
+	transition: transform 0.5s ease, background 0.5s ease, box-shadow 0.5s ease;
+}
+/*profile detail*/
+.profile_detail_logged_off{
+	display:none;
+}
+#profile_detail {
+	width: 100%;
+	height: 100%;
+	padding-top:10px;
+	display:inline-block;
+}
+
+.profile_detail_list{
+	height:100px;
+	width:350px;
+	border:0.5px solid;
+	display: inline-block;
+	overflow-y: auto;
+}
+.profile_detail_list_row{
+	height:24px;
+	margin-top: 4px;
+    margin-left: -90px;
+}
+.profile_detail_list_col:nth-child(1){
+	display: none;
+}
+.profile_detail_list_col:nth-child(2){
+	width:24px;
+	vertical-align: middle;
+	display:inline-block;
+}
+.profile_detail_list_col:nth-child(3){
+	display:inline-block;
+	width:200px;
+	vertical-align: middle;
+	padding-left:10px;
+	text-align:left;
+}
+.profile_detail_list_avatar{
+	height:24px;
+	width:24px;
+	border-radius: 50%;
+}
+/*profie_top*/
+#profile_top {
+	width: 100%;
+	height: 100%;
+	padding-top:10px;
+	position:fixed;
+}
+
+#profile_top_header,
+#profile_top_row1{
+	text-align: center;
+}
+#profile_top_row1 a{
+	margin-right:10px;
+}
+#profile_top_list{
+	width:100%;
+	padding-top: 90px;
+	position:fixed;
+}
+.profile_top_list_row{
+	height:24px;
+	width: 300px;
+    margin: 0 auto;
+}
+.profile_top_list_col:nth-child(1){
+	display: none;
+}
+.profile_top_list_col:nth-child(2){
+	width:24px;
+	display:table-cell;
+}
+.profile_top_list_col:nth-child(3),
+.profile_top_list_col:nth-child(4){
+	display:table-cell;
+	vertical-align: middle;
+	padding-left:10px;
+}
+.profile_top_list_col:nth-child(4){
+	width:100%;
+	text-align:right;
+}
+.profile_top_list_avatar{
+	height:24px;
+	width:24px;
+	border-radius: 50%;
+}
+/*User */
+#setting_btn_label_user_update,
+#setting_btn_label_user_delete_account{
+	display:inline-block;
+	width:120px;
+	text-align: center;
+	font-size: 11px;
+	vertical-align: top;
+}
+#setting_label_provider_id_edit,
+#setting_label_provider_id_edit_data,
+#setting_label_provider_image_url_edit,
+#setting_label_provider_image_url_edit_data{
+	display:none !important;
+}
+/*signup*/
+.input_error{
+	border:1px solid red !important;
+}
+#setting_btn_user_update,
+#setting_btn_user_delete_account
+{
+	width:100px;
+}
+#setting_btn_user_update i,
+#setting_btn_user_delete_account i{
+	font-size:30px;
+}
+	
+/* broadcast */
 #broadcast_info {
 	visibility:hidden;
 	width:100%;
@@ -317,4 +616,17 @@
     right: 10px;
     position: absolute;
 	cursor:pointer;
+}
+/*RESPONSIVE SETTINGS*/
+/*CSS for minimum 768px*/
+@media only screen and (min-width: 768px) {
+	#profile_main_col1 {
+		width: 250px;
+	}
+	#setting_label_data_last_logontime_edit,
+	#setting_label_data_account_created_edit,
+	#setting_label_data_account_modified_edit {
+		font-size: 11px;
+	}
+
 }
