@@ -321,11 +321,13 @@ a:active {
 	display:inline !important;
 }
 /*Profile top*/
+#profile_top_app1{
+	margin-top:60px;
+}
 #profile_top_row2{
 	text-align: center;
 	position:fixed;
 	width:100%;
-	margin-top:60px;
 }
 
 #profile_top_row2 a{
