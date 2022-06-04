@@ -446,11 +446,11 @@
 }
 #profile_top_list{
 	width:100%;
-	padding-top: 90px;
+	margin-top: 30px;
 	position:fixed;
 }
 .profile_top_list_row{
-	height:24px;
+	height:30px;
 	width: 300px;
     margin: 0 auto;
 }
