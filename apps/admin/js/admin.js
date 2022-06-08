@@ -1,5 +1,6 @@
 window.global_rest_admin_at = '';
 var global_app_id='';
+
 function admin_login(){
     var status;
     var json;
@@ -49,12 +50,12 @@ function admin_login(){
                                 }
                             }
                             else
-                                show_message(result);
+                                show_message('EXCEPTION', null,null, result, global_app_id, global_lang_code);
                         });
                 }
             }
             else
-                show_message(result);
+                show_message('EXCEPTION', null,null, result, global_app_id, global_lang_code);
         });
 }
 function keyfunctions(){
@@ -75,16 +76,7 @@ function keyfunctions(){
         }
     });
     document.getElementById('admin_login_button').addEventListener('click', function() { admin_login() }, false);
-    document.getElementById('message_close').addEventListener('click', function() { document.getElementById('dialogue_message').style.visibility='hidden'; }, false);
-}
-function show_message(message){
-    message = message.replace('<pre>','');
-    message = message.replace('</pre>','');
-    if (typeof JSON.parse(message).message !== "undefined")
-        message = JSON.parse(message).message
-    document.getElementById('message_title').innerHTML = message;
-    document.getElementById('dialogue_message').style.visibility='visible'; 
-}
+    document.getElementById('message_close').addEventListener('click', function() { document.getElementById('dialogue_message').style.visibility='hidden'; }, false);}
 
 function init(){
     keyfunctions();
