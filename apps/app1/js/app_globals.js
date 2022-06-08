@@ -1,32 +1,21 @@
-var global_rest_url_base 				= '/service/db/api/';
-var global_rest_app_parameter 			= 'app_parameter/';
 var global_app_id 						= 1;
-var global_app_main_id 					= 0;
 
 var global_app_hostname;
-var global_app_name
+var global_app_name;
 
-//GLOBAL APP VARIABLES
-var global_app_rest_client_id;
-var global_app_rest_client_secret;
-var global_app_copyright;
-var global_app_default_startup_page;
 
-var global_app_user_provider1_use;
-var global_app_user_provider1_id;
-var global_app_user_provider1_name;
-var global_app_user_provider1_api_src;
-var global_app_user_provider2_use;
-var global_app_user_provider2_id;
-var global_app_user_provider2_name;
-var global_app_user_provider2_api_version;
-var global_app_user_provider2_api_src;
-var global_app_user_provider2_api_src2;
-var global_rest_at;
-var global_rest_dt;
-var global_rest_app;
-var global_rest_app_log;
-var global_rest_app_object;
+var global_profile_detail_header_like_user_setting = `<i class='fas fa-heart'></i>
+													  <i class='fas fa-calendar-day'></i>
+													  <i class='fas fa-calendar-week'></i>
+													  <i class='fas fa-calendar-alt'></i>
+													  <i class='fas fa-user-friends'></i>`;
+var global_profile_detail_header_liked_user_setting = `<i class='fas fa-heart'></i>
+													   <i class='fas fa-calendar-day'></i>
+													   <i class='fas fa-calendar-week'></i>
+													   <i class='fas fa-calendar-alt'></i>
+													   <i class='fas fa-users'></i>`;                                                
+
+
 var global_rest_app1_user_setting;
 var global_rest_app1_user_setting_user_account_id;    
 var global_rest_app1_user_setting_profile;
@@ -35,32 +24,8 @@ var global_rest_app1_user_setting_profile_top;
 var global_rest_app1_user_setting_profile_detail;
 var global_rest_app1_user_setting_like;
 var global_rest_app1_user_setting_view;
-var global_rest_country;
-var global_rest_language_locale;
-var global_rest_message_translation;
-var global_rest_user_account;
-var global_rest_user_account_activate;
-var global_rest_user_account_app;
-var global_rest_user_account_common;
-var global_rest_user_account_login;
-var global_rest_user_account_profile_username;
-var global_rest_user_account_profile_userid;
-var global_rest_user_account_profile_searchA;
-var global_rest_user_account_profile_searchD;
-var global_rest_user_account_profile_top;
-var global_rest_user_account_profile_detail;
-var global_rest_user_account_provider;
-var global_rest_user_account_signup;
-var global_rest_user_account_like;
-var global_rest_user_account_follow;
-//services
-var global_service_auth;
-var global_service_geolocation;
-var global_service_geolocation_gps_place;
-var global_service_geolocation_gps_ip;
-var global_service_report;
-var global_service_worldcities;
-//APP 1 VARIABLES
+
+var global_app_default_startup_page;
 var global_app_report_path; 
 var global_app_report_timetable;
 
@@ -248,7 +213,4 @@ var global_qr_background_color;
 //session variables
 var global_session_currentDate;
 var global_session_CurrentHijriDate;
-var global_session_user_gps_latitude;
-var global_session_user_gps_longitude;
-var global_session_user_gps_place;
 var global_session_gps_map_mymap;
