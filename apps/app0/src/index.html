@@ -2,15 +2,31 @@
 <html>
 <head>
 	<AppHead/>
-	<AppHeadCommon/>
+	<AppCommonHead/>
 </head>	
 <body class='theme_sun' onload='init();'>
     <AppToggle/>
 	<AppMoon/>
 	<AppSun/>
 	<AppBackground/>
+	<div id='dialogue_profile' class='dialogue'>
+		<div id='dialogue_profile_content' class='dialogue_content'>
+			<AppCommonProfileInfoSearch/>
+			<AppCommonProfileInfo/>
+			<AppCommonProfileDetail/>
+			<AppCommonProfileTop/>
+			<AppCommonProfileTopList/>
+			<AppCommonProfileInfoApps/>
+			<button id='profile_home' class='toolbar_button' >
+				<i class="fas fa-home"></i>
+			</button>
+			<button id='profile_close' class='toolbar_button' >
+				<i class='fas fa-check-circle'></i>
+			</button>
+		</div>
+	</div>
     <AppDialogues/>
 	<AppWindowInfo/>
-	<AppBodyCommon/>
+	<AppCommonBody/>
 </body>
 </html>
