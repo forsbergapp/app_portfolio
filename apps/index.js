@@ -3,8 +3,14 @@ const { createLogAppSE } = require("../service/log/log.service");
 module.exports = {
     getApp:(app_id) => {
         return new Promise(function (resolve, reject){
-            const AppHeadCommon = fs.readFileSync(__dirname + '/common/src/head.html', 'utf8');
-            const AppBodyCommon = fs.readFileSync(__dirname + '/common/src/body.html', 'utf8');
+            const AppCommonHead = fs.readFileSync(__dirname + '/common/src/head.html', 'utf8');
+            const AppCommonBody = fs.readFileSync(__dirname + '/common/src/body.html', 'utf8');
+            const AppCommonProfileInfoSearch = fs.readFileSync(__dirname + '/common/src/profile_info_search.html', 'utf8');
+            const AppCommonProfileInfo = fs.readFileSync(__dirname + '/common/src/profile_info.html', 'utf8');
+            const AppCommonProfileDetail = fs.readFileSync(__dirname + '/common/src/profile_detail.html', 'utf8');
+            const AppCommonProfileTop = fs.readFileSync(__dirname + '/common/src/profile_top.html', 'utf8');
+            const AppCommonProfileTopList = fs.readFileSync(__dirname + '/common/src/profile_top_list.html', 'utf8');
+            const AppCommonProfileInfoApps = fs.readFileSync(__dirname + '/common/src/profile_info_apps.html', 'utf8');
             fs.readFile(__dirname + '/app0/src/index.html', 'utf-8', (err, app_result) => {
                 if (err) {
                     createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
@@ -24,8 +30,8 @@ module.exports = {
                             '<AppHead/>',
                             `${AppHead}`);
                         app = app.replace(
-                            '<AppHeadCommon/>',
-                            `${AppHeadCommon}`);    
+                            '<AppCommonHead/>',
+                            `${AppCommonHead}`);    
                         app = app.replace(
                             '<AppToggle/>',
                             `${AppToggle}`);
@@ -39,14 +45,32 @@ module.exports = {
                             '<AppBackground/>',
                             `${AppBackground}`);
                         app = app.replace(
+                            '<AppCommonProfileInfoSearch/>',
+                            `${AppCommonProfileInfoSearch}`);
+                        app = app.replace(
+                            '<AppCommonProfileInfo/>',
+                            `${AppCommonProfileInfo}`);
+                        app = app.replace(
+                            '<AppCommonProfileDetail/>',
+                            `${AppCommonProfileDetail}`);
+                        app = app.replace(
+                            '<AppCommonProfileTop/>',
+                            `${AppCommonProfileTop}`);
+                        app = app.replace(
+                            '<AppCommonProfileTopList/>',
+                            `${AppCommonProfileTopList}`);
+                        app = app.replace(
+                            '<AppCommonProfileInfoApps/>',
+                            `${AppCommonProfileInfoApps}`);
+                        app = app.replace(
                             '<AppDialogues/>',
                             `${AppDialogues}`);
                         app = app.replace(
                             '<AppWindowInfo/>',
                             `${AppWindowInfo}`);
                         app = app.replace(
-                            '<AppBodyCommon/>',
-                            `${AppBodyCommon}`);
+                            '<AppCommonBody/>',
+                            `${AppCommonBody}`);
                         resolve (app);
                     }
                     getAppComponents();
@@ -64,21 +88,21 @@ module.exports = {
                 else{
                     const AppHead = fs.readFileSync(__dirname + '/admin/src/head.html', 'utf8');
                     const AppDialogues = fs.readFileSync(__dirname + '/admin/src/dialogues.html', 'utf8');
-                    const AppHeadCommon = fs.readFileSync(__dirname + '/common/src/head.html', 'utf8');
-                    const AppBodyCommon = fs.readFileSync(__dirname + '/common/src/body.html', 'utf8');
+                    const AppCommonHead = fs.readFileSync(__dirname + '/common/src/head.html', 'utf8');
+                    const AppCommonBody = fs.readFileSync(__dirname + '/common/src/body.html', 'utf8');
                     async function getAppComponents() {                        
                         var app = app_result.replace(
                             '<AppHead/>',
                             `${AppHead}`);
                         app = app.replace(
-                            '<AppHeadCommon/>',
-                            `${AppHeadCommon}`);
+                            '<AppCommonHead/>',
+                            `${AppCommonHead}`);
                         app = app.replace(
                             '<AppDialogues/>',
                             `${AppDialogues}`);
                         app = app.replace(
-                            '<AppBodyCommon/>',
-                            `${AppBodyCommon}`);
+                            '<AppCommonBody/>',
+                            `${AppCommonBody}`);
                         resolve (app);
                     }
                     getAppComponents();
@@ -95,8 +119,8 @@ module.exports = {
                 }
                 else{
                     const AppHead = fs.readFileSync(__dirname + '/common/src/head_maintenance.html', 'utf8');
-                    const AppHeadCommon = fs.readFileSync(__dirname + '/common/src/head.html', 'utf8');
-                    const AppBodyCommon = fs.readFileSync(__dirname + '/common/src/body.html', 'utf8');
+                    const AppCommonHead = fs.readFileSync(__dirname + '/common/src/head.html', 'utf8');
+                    const AppCommonBody = fs.readFileSync(__dirname + '/common/src/body.html', 'utf8');
                     async function getAppComponents() {                        
                         var app = app_result.replace(
                             '<AppHead/>',
@@ -105,11 +129,11 @@ module.exports = {
                             '<APP_ID/>',
                             `${app_id==''?null:app_id}`);
                         app = app.replace(
-                            '<AppHeadCommon/>',
-                            `${AppHeadCommon}`);
+                            '<AppCommonHead/>',
+                            `${AppCommonHead}`);
                         app = app.replace(
-                            '<AppBodyCommon/>',
-                            `${AppBodyCommon}`);
+                            '<AppCommonBody/>',
+                            `${AppCommonBody}`);
                         resolve (app);
                     }
                     getAppComponents();

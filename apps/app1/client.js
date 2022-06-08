@@ -8,6 +8,7 @@ module.exports = {
                 const AppCommonBody = fs.readFileSync(__dirname + '/../common/src/body.html', 'utf8');
                 const AppCommonProfileInfoSearch = fs.readFileSync(__dirname + '/../common/src/profile_info_search.html', 'utf8');
                 const AppCommonProfileInfo = fs.readFileSync(__dirname + '/../common/src/profile_info.html', 'utf8');
+                const AppCommonProfileDetail = fs.readFileSync(__dirname + '/../common/src/profile_detail.html', 'utf8');
                 const AppCommonProfileTop = fs.readFileSync(__dirname + '/../common/src/profile_top.html', 'utf8');
                 const AppCommonProfileTopList = fs.readFileSync(__dirname + '/../common/src/profile_top_list.html', 'utf8');
                 fs.readFile(__dirname + '/src/index.html', 'utf-8', (err, app_result) => {
@@ -106,7 +107,11 @@ module.exports = {
                                 `${AppCommonProfileInfo}`);    
                             app = app.replace(
                                 '<AppProfileInfo/>',
-                                `${AppProfileInfo}`);    
+                                `${AppProfileInfo}`);
+                            //tag AppCommonProfileDetail inside AppProfileInfo
+                            app = app.replace(
+                                '<AppCommonProfileDetail/>',
+                                `${AppCommonProfileDetail}`);
                             app = app.replace(
                                 '<AppCommonProfileTop/>',
                                 `${AppCommonProfileTop}`);    
