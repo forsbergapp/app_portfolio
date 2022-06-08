@@ -1648,10 +1648,10 @@ INSERT INTO app_portfolio.app_message (message_code, app_id) VALUES ('20202',0);
 INSERT INTO app_portfolio.app_message (message_code, app_id) VALUES ('20203',0);
 INSERT INTO app_portfolio.app_message (message_code, app_id) VALUES ('20204',0);
 INSERT INTO app_portfolio.app_message (message_code, app_id) VALUES ('20300',0);
-INSERT INTO app_portfolio.app_message (message_code, app_id) VALUES ('20301',1);
+INSERT INTO app_portfolio.app_message (message_code, app_id) VALUES ('20301',0);
 INSERT INTO app_portfolio.app_message (message_code, app_id) VALUES ('20302',1);
-INSERT INTO app_portfolio.app_message (message_code, app_id) VALUES ('20303',1);
-INSERT INTO app_portfolio.app_message (message_code, app_id) VALUES ('20304',1);
+INSERT INTO app_portfolio.app_message (message_code, app_id) VALUES ('20303',0);
+INSERT INTO app_portfolio.app_message (message_code, app_id) VALUES ('20304',0);
 INSERT INTO app_portfolio.app_message (message_code, app_id) VALUES ('20305',0);
 INSERT INTO app_portfolio.app_message (message_code, app_id) VALUES ('20306',0);
 INSERT INTO app_portfolio.app_message (message_code, app_id) VALUES ('20307',1);
@@ -1674,27 +1674,16 @@ INSERT INTO app_portfolio.parameter_type (id, parameter_type_name) VALUES (2,'Pr
 -- Dumping data for table `app_parameter`
 --
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','SERVER_MAINTENANCE','0','0=no, 1=yes');
-INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','APP_REPORT_PATH','/apps/app1/report/',NULL);
-INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','APP_REPORT_TIMETABLE','timetable.html',NULL);
+
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'1','APP_REST_CLIENT_ID','{APP_REST_CLIENT_ID}',NULL);
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'1','APP_REST_CLIENT_SECRET','{APP_REST_CLIENT_SECRET}',NULL);
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'1','APP_COPYRIGHT','{COPYRIGHT TEXT}',NULL);
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'1','APP_EMAIL','{HOMEPAGE EMAIL}',NULL);
-INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','APP_DEFAULT_STARTUP_PAGE','3','1=print, 2=day, 3=month, 4=year, 5=settings, 6=profile');
+
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','REST_APP','app',NULL);
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','REST_APP_LOG','app_log/',NULL);
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','REST_APP_OBJECT','app_object/',NULL);
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','REST_APP_PARAMETER','app_parameter/',NULL);
-INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','REST_APP1_PLACE','app1_place/',NULL);
-INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','REST_APP1_THEME','app1_theme/',NULL);
-INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','REST_APP1_USER_SETTING','app1_user_setting/',NULL);
-INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','REST_APP1_USER_SETTING_LIKE','app1_user_setting_like/',NULL);
-INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','REST_APP1_USER_SETTING_PROFILE','app1_user_setting/profile/',NULL);
-INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','REST_APP1_USER_SETTING_PROFILE_ALL','app1_user_setting/profile/all/',NULL);
-INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','REST_APP1_USER_SETTING_PROFILE_DETAIL','app1_user_setting/profile/detail/',NULL);
-INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','REST_APP1_USER_SETTING_PROFILE_TOP','app1_user_setting/profile/top/',NULL);
-INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','REST_APP1_USER_SETTING_USER_ACCOUNT_ID','app1_user_setting/user_account_id/',NULL);
-INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','REST_APP1_USER_SETTING_VIEW','app1_user_setting_view/',NULL);
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','REST_COUNTRY','country/',NULL);
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','REST_LANGUAGE_LOCALE','language/locale/',NULL);
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','REST_MESSAGE_TRANSLATION','message_translation/',NULL);
@@ -1719,14 +1708,6 @@ INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_na
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'2','SERVICE_AUTH_TOKEN_ACCESS_EXPIRE','1h',NULL);
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'2','SERVICE_AUTH_TOKEN_DATA_SECRET','{TOKEN_SECRET}',NULL);
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'2','SERVICE_AUTH_TOKEN_DATA_EXPIRE','2d',NULL);
-INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'2','SERVICE_DB_DB1_APP1_USER','{DB_USER}',NULL);
-INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'2','SERVICE_DB_DB1_APP1_PASSWORD','{DB_PASSWORD}',NULL);
-INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'2','SERVICE_DB_DB2_APP1_USER','{DB_USER}',NULL);
-INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'2','SERVICE_DB_DB2_APP1_PASSWORD','{DB_PASSWORD}',NULL);
-INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (2,'2','SERVICE_DB_DB1_APP2_USER','{DB_USER}',NULL);
-INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (2,'2','SERVICE_DB_DB1_APP2_PASSWORD','{DB_PASSWORD}',NULL);
-INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (2,'2','SERVICE_DB_DB2_APP2_USER','{DB_USER}',NULL);
-INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (2,'2','SERVICE_DB_DB2_APP2_PASSWORD','{DB_PASSWORD}',NULL);
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','SERVICE_GEOLOCATION','/service/geolocation',NULL);
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','SERVICE_GEOLOCATION_GPS_IP','/getip',NULL);
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','SERVICE_GEOLOCATION_GPS_PLACE','/getplace',NULL);
@@ -1757,6 +1738,36 @@ INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_na
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','USER_PROVIDER2_API_VERSION','v13.0',NULL);
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'1','USER_PROVIDER2_ID','{FACEBOOK_ID}',NULL);
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','USER_PROVIDER2_NAME','Facebook',NULL);
+
+INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','QR_BACKGROUND_COLOR','#ffffff',NULL);
+INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','QR_COLOR_DARK','#2b2b32',NULL);
+INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','QR_COLOR_LIGHT','#ffffff',NULL);
+INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','QR_HEIGHT','128',NULL);
+INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','QR_LOGO_FILE_PATH','/app0/images/logo_app.png',NULL);
+INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','QR_LOGO_HEIGHT','32',NULL);
+INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','QR_LOGO_WIDTH','32',NULL);
+INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','QR_WIDTH','128',NULL);
+
+INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'1','GPS_MAP_ACCESS_TOKEN','{MAPBOX_ID}',NULL);
+
+INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','APP_DEFAULT_STARTUP_PAGE','3','1=print, 2=day, 3=month, 4=year, 5=settings, 6=profile');
+INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','APP_REPORT_PATH','/apps/app1/report/',NULL);
+INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','APP_REPORT_TIMETABLE','timetable.html',NULL);
+INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','REST_APP1_PLACE','app1_place/',NULL);
+INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','REST_APP1_THEME','app1_theme/',NULL);
+INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','REST_APP1_USER_SETTING','app1_user_setting/',NULL);
+INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','REST_APP1_USER_SETTING_LIKE','app1_user_setting_like/',NULL);
+INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','REST_APP1_USER_SETTING_PROFILE','app1_user_setting/profile/',NULL);
+INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','REST_APP1_USER_SETTING_PROFILE_ALL','app1_user_setting/profile/all/',NULL);
+INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','REST_APP1_USER_SETTING_PROFILE_DETAIL','app1_user_setting/profile/detail/',NULL);
+INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','REST_APP1_USER_SETTING_PROFILE_TOP','app1_user_setting/profile/top/',NULL);
+INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','REST_APP1_USER_SETTING_USER_ACCOUNT_ID','app1_user_setting/user_account_id/',NULL);
+INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','REST_APP1_USER_SETTING_VIEW','app1_user_setting_view/',NULL);
+INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'2','SERVICE_DB_DB1_APP1_USER','{DB_USER}',NULL);
+INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'2','SERVICE_DB_DB1_APP1_PASSWORD','{DB_PASSWORD}',NULL);
+INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'2','SERVICE_DB_DB2_APP1_USER','{DB_USER}',NULL);
+INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'2','SERVICE_DB_DB2_APP1_PASSWORD','{DB_PASSWORD}',NULL);
+
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'1','INFO_EMAIL_DISCLAIMER','{EMAIL_DISCLAIMER}',NULL);
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'1','INFO_EMAIL_POLICY','{EMAIL_POLICY}',NULL);
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'1','INFO_EMAIL_TERMS','{EMAIL_TERMS}',NULL);
@@ -1793,7 +1804,6 @@ INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_na
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','GPS_DEFAULT_CITY',NULL,'City:... (none)');
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','GPS_DEFAULT_COUNTRY',NULL,'Country:... (none)');
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','GPS_DEFAULT_PLACE_ID','40002','Default place: Kabba, Makkah');
-INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'1','GPS_MAP_ACCESS_TOKEN','{MAPBOX_ID}',NULL);
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','GPS_MAP_CONTAINER','mapid',NULL);
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','GPS_MAP_STYLE','satellite-streets-v11',NULL);
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','GPS_MAP_ZOOM','14',NULL);
@@ -1885,6 +1895,11 @@ INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_na
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','QR_LOGO_HEIGHT','32',NULL);
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','QR_LOGO_WIDTH','32',NULL);
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','QR_WIDTH','128',NULL);
+
+INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (2,'2','SERVICE_DB_DB1_APP2_USER','{DB_USER}',NULL);
+INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (2,'2','SERVICE_DB_DB1_APP2_PASSWORD','{DB_PASSWORD}',NULL);
+INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (2,'2','SERVICE_DB_DB2_APP2_USER','{DB_USER}',NULL);
+INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (2,'2','SERVICE_DB_DB2_APP2_PASSWORD','{DB_PASSWORD}',NULL);
 
 --
 -- Dumping data for table `app1_place`
