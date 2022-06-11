@@ -70,13 +70,13 @@ var second_language =
 				};
 
 function gettimetabletitle(locale) {
-	if (locale == document.getElementById('setting_select_locale').value)
+	if (locale == get_lang_code())
 		return first_language.timetable_title;
 	else
 		return second_language.timetable_title;
 }
 function getweekday(locale) {
-	if (locale == document.getElementById('setting_select_locale').value)
+	if (locale == get_lang_code())
 		return first_language.coltitle_weekday;
 	else
 		return second_language.coltitle_weekday;
@@ -119,7 +119,7 @@ function getColumnTitles(transliteration = 0, calendartype, locale, second_local
 		coltitle['midnight'] = first_language.coltitle_transliteration_midnight;
 		}
 	else {
-		if (locale==document.getElementById('setting_select_locale').value){
+		if (locale==get_lang_code()){
 			coltitle['day'] =first_language.coltitle_day;
 			coltitle['weekday'] =first_language.coltitle_weekday;
 			if (second_locale != '0' & check_second == 'Y') {
@@ -185,7 +185,7 @@ async function settings_translate_report(first=true) {
     let status;
     let locale='';
     if (first==true)
-        locale = document.getElementById('setting_select_locale').value;
+        locale = get_lang_code();
     else
         locale = document.getElementById('setting_select_report_locale_second').value;
     if (locale != 0){
@@ -193,7 +193,7 @@ async function settings_translate_report(first=true) {
         //show translation using first or second language
         await fetch(global_rest_url_base + global_rest_app_object + locale +
                 '?app_id=' + global_app_id + 
-                '&lang_code=' + document.getElementById('setting_select_locale').value, 
+                '&lang_code=' + get_lang_code(), 
                 {
                 method: 'GET',
                 headers: {
@@ -258,7 +258,7 @@ async function settings_translate_report(first=true) {
                     second_language.coltitle_notes = '';
                 }
             } else {
-                exception(status, result);
+                exception(status, result, get_lang_code());
             }
         });
     }
@@ -270,7 +270,7 @@ async function settings_translate(first=true) {
     let status;
     let locale;
     if (first ==true)
-        locale = document.getElementById('setting_select_locale').value
+        locale = get_lang_code()
     else
         locale = document.getElementById('setting_select_report_locale_second').value
     if (locale != 0){
@@ -278,7 +278,7 @@ async function settings_translate(first=true) {
         //show translation using first or second language
         let url = `${global_rest_url_base}${global_rest_app_object}${locale}` +
                   `?app_id=${global_app_id}` + 
-                  `&lang_code=${document.getElementById('setting_select_locale').value}`;
+                  `&lang_code=${get_lang_code()}`;
         await fetch(url, {
             method: 'GET',
             headers: {
@@ -375,7 +375,7 @@ async function settings_translate(first=true) {
                 }
                 if (first==true){
                     //country
-                    fetch(global_rest_url_base + global_rest_country + document.getElementById('setting_select_locale').value + `?app_id=${global_app_id}`, 
+                    fetch(global_rest_url_base + global_rest_country + get_lang_code() + `?app_id=${global_app_id}`, 
                         {
                             method: 'GET',
                             headers: {
@@ -415,7 +415,7 @@ async function settings_translate(first=true) {
                             SearchAndSetSelectedIndex(current_country,
                                                       document.getElementById('setting_select_country'),0);
                             //locale
-                            fetch(global_rest_url_base + global_rest_language_locale + document.getElementById('setting_select_locale').value + `?app_id=${global_app_id}`, 
+                            fetch(global_rest_url_base + global_rest_language_locale + get_lang_code() + `?app_id=${global_app_id}`, 
                             {
                                 method: 'GET',
                                 headers: {
@@ -443,15 +443,15 @@ async function settings_translate(first=true) {
                                     select_second_locale.value = current_second_locale;
                                 }
                                 else
-                                    exception(status, result);
+                                    exception(status, result, get_lang_code());
                             }).catch(function(error) {
-                                show_message('EXCEPTION', null,null, error, global_app_id, document.getElementById('setting_select_locale').value);
+                                show_message('EXCEPTION', null,null, error, global_app_id, get_lang_code());
                             })
                         }
                         else
-                            exception(status, result);
+                            exception(status, result, get_lang_code());
                     }).catch(function(error) {
-                        show_message('EXCEPTION', null,null, error, global_app_id, document.getElementById('setting_select_locale').value);
+                        show_message('EXCEPTION', null,null, error, global_app_id, get_lang_code());
                     })
                 }
                 //if translating first language and second language is not used
@@ -487,7 +487,7 @@ async function settings_translate(first=true) {
                 update_ui(1);
             } 
             else {
-                exception(status, result);
+                exception(status, result, get_lang_code());
             }   
         })
     }
@@ -502,7 +502,7 @@ async function get_app_globals() {
     //app parameter variables
     //returns parameters for given app_id and app_id=0
     await fetch(global_rest_url_base + global_rest_app_parameter + global_app_id +
-                '?lang_code=' + document.getElementById('setting_select_locale').value, {
+                '?lang_code=' + get_lang_code(), {
                 method: 'GET'
     })
     .then(function(response) {
@@ -521,8 +521,22 @@ async function get_app_globals() {
                         global_app_rest_client_secret = json.data[i].parameter_value;
                     if (json.data[i].parameter_name=='APP_COPYRIGHT')
                         global_app_copyright = json.data[i].parameter_value;
+                    if (json.data[i].parameter_name=='IMAGE_FILE_ALLOWED_TYPE1')
+                        global_image_file_allowed_type1 = json.data[i].parameter_value;
+                    if (json.data[i].parameter_name=='IMAGE_FILE_ALLOWED_TYPE2')
+                        global_image_file_allowed_type2 = json.data[i].parameter_value;
+                    if (json.data[i].parameter_name=='IMAGE_FILE_ALLOWED_TYPE3')
+                        global_image_file_allowed_type3 = json.data[i].parameter_value;
+                    if (json.data[i].parameter_name=='IMAGE_FILE_MIME_TYPE')
+                        global_image_file_mime_type = json.data[i].parameter_value;
+                    if (json.data[i].parameter_name=='IMAGE_FILE_MAX_SIZE')
+                        global_image_file_max_size = json.data[i].parameter_value;
                     if (json.data[i].parameter_name=='SERVICE_AUTH')
-                        global_service_auth = json.data[i].parameter_value;                            
+                        global_service_auth = json.data[i].parameter_value;
+                    if (json.data[i].parameter_name=='USER_IMAGE_AVATAR_WIDTH')
+                        global_user_image_avatar_width = json.data[i].parameter_value;
+                    if (json.data[i].parameter_name=='USER_IMAGE_AVATAR_HEIGHT')
+                        global_user_image_avatar_height = json.data[i].parameter_value;                          
                     if (json.data[i].parameter_name=='USER_PROVIDER1_USE')
                         global_app_user_provider1_use = json.data[i].parameter_value;
                     if (json.data[i].parameter_name=='USER_PROVIDER1_ID')
@@ -564,8 +578,12 @@ async function get_app_globals() {
                         global_rest_user_account_app = json.data[i].parameter_value;
                     if (json.data[i].parameter_name=='REST_USER_ACCOUNT_COMMON')
                         global_rest_user_account_common = json.data[i].parameter_value;
+                    if (json.data[i].parameter_name=='REST_USER_ACCOUNT_LIKE')
+                        global_rest_user_account_like = json.data[i].parameter_value;
                     if (json.data[i].parameter_name=='REST_USER_ACCOUNT_LOGIN')
                         global_rest_user_account_login = json.data[i].parameter_value;
+                    if (json.data[i].parameter_name=='REST_USER_ACCOUNT_FOLLOW')
+                        global_rest_user_account_follow = json.data[i].parameter_value;
                     if (json.data[i].parameter_name=='REST_USER_ACCOUNT_PROFILE_DETAIL')
                         global_rest_user_account_profile_detail = json.data[i].parameter_value;
                     if (json.data[i].parameter_name=='REST_USER_ACCOUNT_PROFILE_SEARCHA')
@@ -582,10 +600,6 @@ async function get_app_globals() {
                         global_rest_user_account_provider = json.data[i].parameter_value;
                     if (json.data[i].parameter_name=='REST_USER_ACCOUNT_SIGNUP')
                         global_rest_user_account_signup = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='REST_USER_ACCOUNT_LIKE')
-                        global_rest_user_account_like = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='REST_USER_ACCOUNT_FOLLOW')
-                        global_rest_user_account_follow = json.data[i].parameter_value;
                     if (json.data[i].parameter_name=='SERVICE_GEOLOCATION')
                         global_service_geolocation = json.data[i].parameter_value;
                     if (json.data[i].parameter_name=='SERVICE_GEOLOCATION_GPS_PLACE')
@@ -788,16 +802,6 @@ async function get_app_globals() {
                         global_image_header_footer_width = json.data[i].parameter_value;
                     if (json.data[i].parameter_name=='IMAGE_HEADER_FOOTER_HEIGHT')
                         global_image_header_footer_height = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='IMAGE_FILE_ALLOWED_TYPE1')
-                        global_image_file_allowed_type1 = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='IMAGE_FILE_ALLOWED_TYPE2')
-                        global_image_file_allowed_type2 = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='IMAGE_FILE_ALLOWED_TYPE3')
-                        global_image_file_allowed_type3 = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='IMAGE_FILE_MIME_TYPE')
-                        global_image_file_mime_type = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='IMAGE_FILE_MAX_SIZE')
-                        global_image_file_max_size = json.data[i].parameter_value;
                     if (json.data[i].parameter_name=='IMAGE_DEFAULT_REPORT_HEADER_SRC'){
                         if (json.data[i].parameter_value!='')
                             global_image_default_report_header_src = json.data[i].parameter_value;
@@ -834,10 +838,6 @@ async function get_app_globals() {
                         global_prayer_default_show_midnight = (json.data[i].parameter_value=== 'true');
                     if (json.data[i].parameter_name=='PRAYER_DEFAULT_SHOW_FAST_START_END')
                         global_prayer_default_show_fast_start_end = parseInt(json.data[i].parameter_value);
-                    if (json.data[i].parameter_name=='USER_IMAGE_AVATAR_WIDTH')
-                        global_user_image_avatar_width = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='USER_IMAGE_AVATAR_HEIGHT')
-                        global_user_image_avatar_height = json.data[i].parameter_value;
                     //QR
                     if (json.data[i].parameter_name=='QR_LOGO_FILE_PATH')
                         global_qr_logo_file_path = json.data[i].parameter_value;
@@ -859,7 +859,7 @@ async function get_app_globals() {
                 
             }
         } else {
-            show_message('EXCEPTION', null,null, result, global_app_id, document.getElementById('setting_select_locale').value);
+            show_message('EXCEPTION', null,null, result, global_app_id, get_lang_code());
         }
     })
 }
@@ -926,81 +926,6 @@ function checkbox_value(checkbox) {
         return 'NO';
 }
 
-function recreate_img(img_item) {
-    //cant set img src to null, it will containt url or show corrupt image
-    //recreating the img is the workaround
-    let parentnode = img_item.parentNode;
-    let id = img_item.id;
-    let alt = img_item.alt;
-    let img = document.createElement('img');
-
-    parentnode.removeChild(img_item);
-    img.id = id;
-    img.alt = alt;
-    parentnode.appendChild(img);
-    return null;
-}
-function show_image(item_show, item_load) {
-    let file = document.getElementById(item_load).files[0];
-    let reader = new FileReader();
-
-    const allowedExtensions = [global_image_file_allowed_type1,
-                               global_image_file_allowed_type2,
-                               global_image_file_allowed_type3
-                              ];
-    const { name: fileName, size: fileSize } = file;
-    const fileExtension = fileName.split(".").pop();
-    if (!allowedExtensions.includes(fileExtension)){
-        //File type not allowed
-        show_message('ERROR', 20307, null,null, global_app_id, document.getElementById('setting_select_locale').value);
-    }
-    else
-        if (fileSize > global_image_file_max_size){
-            //File size too large
-            show_message('ERROR', 20308, null, null, global_app_id, document.getElementById('setting_select_locale').value);
-        }
-        else {
-            reader.onloadend = function(event) {
-                let img = new Image();
-                img.src = event.target.result;
-                img.onload = function(el) {
-                    let elem = document.createElement('canvas');
-                    if (item_show.id=='setting_avatar_logged_in'){
-                        elem.width = global_user_image_avatar_width;
-                        elem.height = global_user_image_avatar_height;
-                    }
-                    else{
-                        elem.width = global_image_file_header_footer_width;
-                        elem.height = global_image_file_header_footer_height;
-                    }
-                    let ctx = elem.getContext('2d');
-                    ctx.drawImage(el.target, 0, 0, elem.width, elem.height);
-                    let srcEncoded = ctx.canvas.toDataURL(global_image_file_mime_type);
-                    item_show.src = srcEncoded;
-                }
-            }
-        }
-    if (file)
-        reader.readAsDataURL(file); //reads the data as a URL
-    else
-        item_show.src = '';
-    return null;
-}
-
-function boolean_to_number(boolean_value) {
-    if (boolean_value == true)
-        return 1;
-    else
-        return 0;
-}
-
-function number_to_boolean(number_value) {
-    if (number_value == 1)
-        return true;
-    else
-        return false;
-}
-
 function set_null_or_value(value) {
     if (value == null || value == '')
         return 'null';
@@ -1062,7 +987,7 @@ async function get_place_from_gps(latitude, longitude) {
                 '&app_user_id=' + document.getElementById('setting_data_userid_logged_in').innerHTML +
                 '&latitude=' + latitude +
                 '&longitude=' + longitude +
-                '&lang_code=' + document.getElementById('setting_select_locale').value, {
+                '&lang_code=' + get_lang_code(), {
         method: 'GET',
         headers: {
             'Authorization': 'Bearer ' + global_rest_dt,
@@ -1081,7 +1006,7 @@ async function get_place_from_gps(latitude, longitude) {
                 json.geoplugin_region + ', ' +
                 json.geoplugin_countryCode;
         } else {
-            exception(status, result);
+            exception(status, result, get_lang_code());
         }
     })
 }
@@ -1413,10 +1338,14 @@ function slide(wrapper, items, prev, next, type) {
 /*----------------------- */
 /* User setting functions */
 /*----------------------- */
+function get_lang_code(){
+    return document.getElementById('setting_select_locale').value;
+}
+
 function showcurrenttime() {
     let settings = {
         timezone_current: document.getElementById('setting_select_timezone_current').value,
-        locale: document.getElementById('setting_select_locale').value,
+        locale: get_lang_code(),
         timedisplay_item: document.getElementById('setting_label_current_date_time_display')
     }
     let options = {
@@ -1438,7 +1367,7 @@ function showreporttime() {
 
     let settings = {
         timezone_report: document.getElementById('setting_select_report_timezone')[document.getElementById('setting_select_report_timezone').selectedIndex].value,
-        locale: document.getElementById('setting_select_locale').value,
+        locale: get_lang_code(),
         timedisplay_item: document.getElementById('setting_label_report_date_time_display')
     }
     let options = {
@@ -1591,32 +1520,34 @@ function keyfunctions() {
     document.getElementById('setting_input_reportfooter_acenter').addEventListener('click', function() { update_ui(16, this.id) }, false);
     document.getElementById('setting_input_reportfooter_aright').addEventListener('click', function() { update_ui(16, this.id) }, false);
 
-    document.getElementById('setting_btn_avatar_img').addEventListener('click', function() { document.getElementById('setting_input_avatar_img').click() }, false);
-    document.getElementById('setting_btn_user_edit').addEventListener('click', function() { user_edit() }, false);
+    document.getElementById('user_edit_btn_avatar_img').addEventListener('click', function() { document.getElementById('user_edit_input_avatar_img').click() }, false);
+    document.getElementById('user_edit_input_avatar_img').addEventListener('change', function() { show_image(document.getElementById('user_edit_avatar_img'), this.id, global_user_image_avatar_width, global_user_image_avatar_height, get_lang_code()) }, false);
+    
+    document.getElementById('setting_btn_user_edit').addEventListener('click', function() { user_edit_app() }, false);
 
-    document.getElementById('setting_btn_user_update').addEventListener('click', function() { user_update() }, false);
-    document.getElementById('setting_btn_user_delete_account').addEventListener('click', function() { user_delete(); }, false);
+    document.getElementById('setting_btn_user_update').addEventListener('click', function() { user_update_app(); }, false);
+    document.getElementById('setting_btn_user_delete_account').addEventListener('click', function() { user_delete_app(); }, false);
      
     document.getElementById('setting_btn_user_save').addEventListener('click', function() { user_settings_function('SAVE') }, false);
     document.getElementById('setting_btn_user_add').addEventListener('click', function() { user_settings_function('ADD') }, false);
     document.getElementById('setting_btn_user_delete').addEventListener('click', function() { user_settings_delete() }, false);
      
-    document.getElementById('profile_main_btn_following').addEventListener('click', function() { profile_detail_app(1,document.getElementById('setting_data_userid_logged_in').innerHTML, document.getElementById('setting_select_locale').value, null, true, 'profile_show_app') }, false);
-    document.getElementById('profile_main_btn_followed').addEventListener('click', function() { profile_detail_app(2, document.getElementById('setting_data_userid_logged_in').innerHTML, document.getElementById('setting_select_locale').value, null, true, 'profile_show_app') }, false);
-    document.getElementById('profile_main_btn_likes').addEventListener('click', function() { profile_detail_app(3, document.getElementById('setting_data_userid_logged_in').innerHTML, document.getElementById('setting_select_locale').value, null, true, 'profile_show_app') }, false);
-    document.getElementById('profile_main_btn_liked').addEventListener('click', function() { profile_detail_app(4, document.getElementById('setting_data_userid_logged_in').innerHTML, document.getElementById('setting_select_locale').value, null, true, 'profile_show_app') }, false);
-    document.getElementById('profile_main_btn_user_settings').addEventListener('click', function() { profile_detail_app(7, document.getElementById('setting_data_userid_logged_in').innerHTML, document.getElementById('setting_select_locale').value, global_rest_app1_user_setting_profile_detail, false) }, false);
-    document.getElementById('profile_main_btn_user_setting_likes').addEventListener('click', function() { profile_detail_app(5, document.getElementById('setting_data_userid_logged_in').innerHTML, document.getElementById('setting_select_locale').value, global_rest_app1_user_setting_profile_detail, true, global_profile_detail_header_like_user_setting) }, false);
-    document.getElementById('profile_main_btn_user_setting_liked').addEventListener('click', function() { profile_detail_app(6, document.getElementById('setting_data_userid_logged_in').innerHTML, document.getElementById('setting_select_locale').value, global_rest_app1_user_setting_profile_detail, true, global_profile_detail_header_liked_user_setting) }, false);
+    document.getElementById('profile_main_btn_following').addEventListener('click', function() { profile_detail_app(1,document.getElementById('setting_data_userid_logged_in').innerHTML, get_lang_code(), null, true, 'profile_show_app') }, false);
+    document.getElementById('profile_main_btn_followed').addEventListener('click', function() { profile_detail_app(2, document.getElementById('setting_data_userid_logged_in').innerHTML, get_lang_code(), null, true, 'profile_show_app') }, false);
+    document.getElementById('profile_main_btn_likes').addEventListener('click', function() { profile_detail_app(3, document.getElementById('setting_data_userid_logged_in').innerHTML, get_lang_code(), null, true, 'profile_show_app') }, false);
+    document.getElementById('profile_main_btn_liked').addEventListener('click', function() { profile_detail_app(4, document.getElementById('setting_data_userid_logged_in').innerHTML, get_lang_code(), null, true, 'profile_show_app') }, false);
+    document.getElementById('profile_main_btn_user_settings').addEventListener('click', function() { profile_detail_app(7, document.getElementById('setting_data_userid_logged_in').innerHTML, get_lang_code(), global_rest_app1_user_setting_profile_detail, false) }, false);
+    document.getElementById('profile_main_btn_user_setting_likes').addEventListener('click', function() { profile_detail_app(5, document.getElementById('setting_data_userid_logged_in').innerHTML, get_lang_code(), global_rest_app1_user_setting_profile_detail, true, global_profile_detail_header_like_user_setting) }, false);
+    document.getElementById('profile_main_btn_user_setting_liked').addEventListener('click', function() { profile_detail_app(6, document.getElementById('setting_data_userid_logged_in').innerHTML, get_lang_code(), global_rest_app1_user_setting_profile_detail, true, global_profile_detail_header_liked_user_setting) }, false);
 
-    document.getElementById('profile_follow').addEventListener('click', function() { user_function('FOLLOW') }, false);
-    document.getElementById('profile_like').addEventListener('click', function() { user_function('LIKE') }, false);
+    document.getElementById('profile_follow').addEventListener('click', function() { user_function_app('FOLLOW') }, false);
+    document.getElementById('profile_like').addEventListener('click', function() { user_function_app('LIKE') }, false);
 
-    document.getElementById('profile_top_row1_1').addEventListener('click', function() { profile_top(1, document.getElementById('setting_data_userid_logged_in').innerHTML, document.getElementById('setting_select_timezone_current').value, document.getElementById('setting_select_locale').value, null, 'profile_show_app') }, false);
-    document.getElementById('profile_top_row1_2').addEventListener('click', function() { profile_top(2, document.getElementById('setting_data_userid_logged_in').innerHTML, document.getElementById('setting_select_timezone_current').value, document.getElementById('setting_select_locale').value, null, 'profile_show_app') }, false);
-    document.getElementById('profile_top_row1_3').addEventListener('click', function() { profile_top(3, document.getElementById('setting_data_userid_logged_in').innerHTML, document.getElementById('setting_select_timezone_current').value, document.getElementById('setting_select_locale').value, null, 'profile_show_app') }, false);
-    document.getElementById('profile_top_row2_1').addEventListener('click', function() { profile_top(4, document.getElementById('setting_data_userid_logged_in').innerHTML, document.getElementById('setting_select_timezone_current').value, document.getElementById('setting_select_locale').value, global_rest_app1_user_setting_profile_top, 'profile_show_app') }, false);
-    document.getElementById('profile_top_row2_2').addEventListener('click', function() { profile_top(5, document.getElementById('setting_data_userid_logged_in').innerHTML, document.getElementById('setting_select_timezone_current').value, document.getElementById('setting_select_locale').value, global_rest_app1_user_setting_profile_top, 'profile_show_app') }, false);
+    document.getElementById('profile_top_row1_1').addEventListener('click', function() { profile_top(1, document.getElementById('setting_data_userid_logged_in').innerHTML, document.getElementById('setting_select_timezone_current').value, get_lang_code(), null, 'profile_show_app') }, false);
+    document.getElementById('profile_top_row1_2').addEventListener('click', function() { profile_top(2, document.getElementById('setting_data_userid_logged_in').innerHTML, document.getElementById('setting_select_timezone_current').value, get_lang_code(), null, 'profile_show_app') }, false);
+    document.getElementById('profile_top_row1_3').addEventListener('click', function() { profile_top(3, document.getElementById('setting_data_userid_logged_in').innerHTML, document.getElementById('setting_select_timezone_current').value, get_lang_code(), null, 'profile_show_app') }, false);
+    document.getElementById('profile_top_row2_1').addEventListener('click', function() { profile_top(4, document.getElementById('setting_data_userid_logged_in').innerHTML, document.getElementById('setting_select_timezone_current').value, get_lang_code(), global_rest_app1_user_setting_profile_top, 'profile_show_app') }, false);
+    document.getElementById('profile_top_row2_2').addEventListener('click', function() { profile_top(5, document.getElementById('setting_data_userid_logged_in').innerHTML, document.getElementById('setting_select_timezone_current').value, get_lang_code(), global_rest_app1_user_setting_profile_top, 'profile_show_app') }, false);
 
     document.getElementById('profile_user_settings_day').addEventListener('click', function() { profile_user_setting_link(this) }, false);
     document.getElementById('profile_user_settings_month').addEventListener('click', function() { profile_user_setting_link(this) }, false);
@@ -1631,10 +1562,10 @@ function keyfunctions() {
     if (global_app_user_provider2_use==1)
         document.getElementById('login_facebook').addEventListener('click', function() { onProviderSignIn() }, false);
     document.getElementById('login_close').addEventListener('click', function() { document.getElementById('dialogue_login').style.visibility = 'hidden' }, false);
-    document.getElementById('user_edit_close').addEventListener('click', function() { user_edit() }, false);
+    document.getElementById('user_edit_close').addEventListener('click', function() { user_edit_app() }, false);
     document.getElementById('signup_login').addEventListener('click', function() { show_common_dialogue('LOGIN') }, false);
 
-    document.getElementById('signup_button').addEventListener('click', function() { user_signup() }, false);
+    document.getElementById('signup_button').addEventListener('click', function() { user_signup(document.getElementById('setting_data_userid_logged_in'), get_lang_code()) }, false);
     document.getElementById('signup_close').addEventListener('click', function() { document.getElementById('dialogue_signup').style.visibility = 'hidden' }, false);
     
     document.getElementById('message_cancel').addEventListener('click', function() { document.getElementById("dialogue_message").style.visibility = "hidden" }, false);
@@ -1689,7 +1620,7 @@ function keyfunctions() {
                      
     document.getElementById('setting_select_method').addEventListener('change', function() { update_ui(17);}, false);
                        
-    document.getElementById('setting_input_avatar_img').addEventListener('change', function() { show_image(document.getElementById('setting_avatar_logged_in'), this.id); }, false);
+    
     document.getElementById('setting_select_user_setting').addEventListener('change', function() {user_settings_load().then(function(){settings_translate(true).then(function(){settings_translate(false);})}) }, false);
 
     document.getElementById('app_select_theme').addEventListener('change', function() { app_select_theme() }, false);
@@ -1703,14 +1634,14 @@ function keyfunctions() {
     document.getElementById('setting_input_lat').addEventListener('keyup', function() { typewatch("update_ui(9);", 1000); }, false);
     document.getElementById('setting_input_long').addEventListener('keyup', function() { typewatch("update_ui(9);", 1000); }, false);
                                    
-    document.getElementById('profile_search_input').addEventListener('keyup', function() { typewatch("search_profile(document.getElementById('setting_data_userid_logged_in').innerHTML, document.getElementById('setting_select_timezone_current').value, document.getElementById('setting_select_locale').value, 'profile_show_app');", 500); }, false);
+    document.getElementById('profile_search_input').addEventListener('keyup', function() { typewatch("search_profile(document.getElementById('setting_data_userid_logged_in').innerHTML, document.getElementById('setting_select_timezone_current').value, get_lang_code(), 'profile_show_app');", 500); }, false);
     
-    document.getElementById('user_verify_verification_char1').addEventListener('keyup', function() { user_verify_check_input(this, "user_verify_verification_char2") }, false);
-    document.getElementById('user_verify_verification_char2').addEventListener('keyup', function() { user_verify_check_input(this, "user_verify_verification_char3") }, false);
-    document.getElementById('user_verify_verification_char3').addEventListener('keyup', function() { user_verify_check_input(this, "user_verify_verification_char4") }, false);
-    document.getElementById('user_verify_verification_char4').addEventListener('keyup', function() { user_verify_check_input(this, "user_verify_verification_char5") }, false);
-    document.getElementById('user_verify_verification_char5').addEventListener('keyup', function() { user_verify_check_input(this, "user_verify_verification_char6") }, false);
-    document.getElementById('user_verify_verification_char6').addEventListener('keyup', function() { user_verify_check_input(this, "") }, false);
+    document.getElementById('user_verify_verification_char1').addEventListener('keyup', function() { user_verify_check_input_app(this, "user_verify_verification_char2") }, false);
+    document.getElementById('user_verify_verification_char2').addEventListener('keyup', function() { user_verify_check_input_app(this, "user_verify_verification_char3") }, false);
+    document.getElementById('user_verify_verification_char3').addEventListener('keyup', function() { user_verify_check_input_app(this, "user_verify_verification_char4") }, false);
+    document.getElementById('user_verify_verification_char4').addEventListener('keyup', function() { user_verify_check_input_app(this, "user_verify_verification_char5") }, false);
+    document.getElementById('user_verify_verification_char5').addEventListener('keyup', function() { user_verify_check_input_app(this, "user_verify_verification_char6") }, false);
+    document.getElementById('user_verify_verification_char6').addEventListener('keyup', function() { user_verify_check_input_app(this, "") }, false);
 
     if(document.getElementById('window_preview_content').addEventListener)
         document.getElementById('window_preview_content').addEventListener('load',function() { iframe_resize(); }, false);
@@ -1752,7 +1683,6 @@ function toolbar_bottom(choice) {
                 prayertable_year.style.visibility = 'hidden';
                 settings.style.visibility = 'hidden';
                 profile.style.visibility = 'hidden';
-                //profile_top_div.style.visibility = 'hidden';
                 update_timetable_report(2);
                 break;
             }
@@ -1766,7 +1696,6 @@ function toolbar_bottom(choice) {
                 prayertable_year.style.visibility = 'hidden';
                 settings.style.visibility = 'hidden';
                 profile.style.visibility = 'hidden';
-                //profile_top_div.style.visibility = 'hidden';
                 update_timetable_report(0);
                 break;
             }
@@ -1780,7 +1709,6 @@ function toolbar_bottom(choice) {
                 prayertable_year.style.visibility = 'visible';
                 settings.style.visibility = 'hidden';
                 profile.style.visibility = 'hidden';
-                //profile_top_div.style.visibility = 'hidden';
                 update_timetable_report(1);
                 break;
             }
@@ -1792,7 +1720,6 @@ function toolbar_bottom(choice) {
                     paper.style.display = "none";
                 settings.style.visibility = 'visible';
                 profile.style.visibility = 'hidden';
-                //profile_top_div.style.visibility = 'hidden';
                 break;
             }
             //profile
@@ -1814,7 +1741,7 @@ function toolbar_bottom(choice) {
                 profile_top_div.style.display = 'none';
                 profile_top_app1_div.style.display = 'none';
                 profile_top_list_div.style.display = 'none';
-                profile_show_app(null,null, document.getElementById('setting_data_userid_logged_in').innerHTML , document.getElementById('setting_select_timezone_current').value,document.getElementById('setting_select_locale').value);
+                profile_show_app(null,null, document.getElementById('setting_data_userid_logged_in').innerHTML , document.getElementById('setting_select_timezone_current').value,get_lang_code());
                 break;
             }
             //profile top
@@ -1827,13 +1754,12 @@ function toolbar_bottom(choice) {
                 document.getElementById('profile_detail').classList = '';
                 document.getElementById('profile_info').classList = '';
                 profile.style.visibility = 'visible';
-                //profile_top_div.style.visibility = 'visible';
                 profile_info_div.style.display = 'none';
                 profile_info_app1_div.style.display = 'none';
                 profile_top_div.style.display = 'block';
                 profile_top_app1_div.style.display = 'block';
                 profile_top_list_div.style.display = 'block';
-                profile_top(1, document.getElementById('setting_data_userid_logged_in').innerHTML, document.getElementById('setting_select_timezone_current').value, document.getElementById('setting_select_locale').value, null, 'profile_show_app');
+                profile_top(1, document.getElementById('setting_data_userid_logged_in').innerHTML, document.getElementById('setting_select_timezone_current').value, get_lang_code(), null, 'profile_show_app');
                 break;
             }
     }
@@ -1866,7 +1792,8 @@ function align_button_value(report_align_where) {
     return '';
 }
 
-function spinner(button, visibility) {
+/*Spinner for SAVE, ADD, DELETE, EDIT*/
+function spinner_app(button, visibility) {
     let button_spinner = `<div id="button_spinner" class="load-spinner">
                             <div></div>
                             <div></div>
@@ -1881,35 +1808,16 @@ function spinner(button, visibility) {
                             <div></div>
                             <div></div>
                          </div>`;
-    let button_default_icon_login = '<i class="fas fa-arrow-alt-circle-right"></i>';
-    let button_default_icon_signup = '<i class="fas fa-arrow-alt-circle-right"></i>';
     let button_default_icon_save = '<i class="fas fa-save"></i>';
     let button_default_icon_add = '<i class="fas fa-plus-square"></i>';
     let button_default_icon_delete = '<i class="fas fa-trash-alt"></i>';
+    let button_default_icon_edit = '<i class="fas fa-edit"></i>';
 
-    let button_update_text = document.getElementById('setting_btn_label_user_update').outerHTML;
-    let button_delete_account_text = document.getElementById('setting_btn_label_user_delete_account').outerHTML;
     let button_save_text = document.getElementById('setting_btn_label_user_save').outerHTML;
     let button_add_text = document.getElementById('setting_btn_label_user_add').outerHTML;
     let button_delete_text = document.getElementById('setting_btn_label_user_delete').outerHTML;
 
     switch (button) {
-        case 'LOGIN':
-            {
-                if (visibility == 'visible')
-                    document.getElementById('login_button').innerHTML = button_spinner;
-                else
-                    document.getElementById('login_button').innerHTML = button_default_icon_login;
-                break;
-            }
-        case 'SIGNUP':
-            {
-                if (visibility == 'visible')
-                    document.getElementById('signup_button').innerHTML = button_spinner;
-                else
-                    document.getElementById('signup_button').innerHTML = button_default_icon_signup;
-                break;
-            }
         case 'SAVE':
             {
                 if (visibility == 'visible')
@@ -1934,22 +1842,14 @@ function spinner(button, visibility) {
                     document.getElementById('setting_btn_user_delete').innerHTML = button_default_icon_delete + button_delete_text;
                 break;
             }
-        case 'UPDATE':
+        case 'EDIT':
             {
                 if (visibility == 'visible')
-                    document.getElementById('setting_btn_user_update').innerHTML = button_spinner + button_update_text;
+                    document.getElementById('setting_btn_user_edit').innerHTML = button_spinner;
                 else
-                    document.getElementById('setting_btn_user_update').innerHTML = button_default_icon_save + button_update_text;
+                    document.getElementById('setting_btn_user_edit').innerHTML = button_default_icon_edit;
                 break;
-            }
-        case 'DELETE_ACCOUNT':
-            {
-                if (visibility == 'visible')
-                    document.getElementById('setting_btn_user_delete_account').innerHTML = button_spinner + button_delete_account_text;
-                else
-                    document.getElementById('setting_btn_user_delete_account').innerHTML = button_default_icon_delete + button_delete_account_text;
-                break;
-            }
+            }    
         default:
             {
                 null;
@@ -1986,436 +1886,52 @@ function zoom_paper(zoomvalue = '') {
     }
     return null;
 }
-function exception(status, message){
-    if (status == 401)
-        user_logoff_app();
-    else
-        show_message('EXCEPTION',  null, null, message, global_app_id, document.getElementById('setting_select_locale').value);
-}
 
-function user_verify_check_input(item, nextField) {
-
-    let status;
-    let user_id = document.getElementById('setting_data_userid_logged_in').innerHTML;
-    let json;
-    let json_data;
-    //only accept 0-9
-    if (['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'].indexOf(document.getElementById(item.id).value) > -1)
-        if (nextField == '' || (document.getElementById('user_verify_verification_char1').value != '' &
-                document.getElementById('user_verify_verification_char2').value != '' &
-                document.getElementById('user_verify_verification_char3').value != '' &
-                document.getElementById('user_verify_verification_char4').value != '' &
-                document.getElementById('user_verify_verification_char5').value != '' &
-                document.getElementById('user_verify_verification_char6').value != '')) {
-            //last field, validate entered code
-            let validation_code = parseInt(document.getElementById('user_verify_verification_char1').value +
-                document.getElementById('user_verify_verification_char2').value +
-                document.getElementById('user_verify_verification_char3').value +
-                document.getElementById('user_verify_verification_char4').value +
-                document.getElementById('user_verify_verification_char5').value +
-                document.getElementById('user_verify_verification_char6').value);
-            spinner('SIGNUP', 'visible');
-            document.getElementById('user_verify_verification_char1').classList.remove('input_error');
-            document.getElementById('user_verify_verification_char2').classList.remove('input_error');
-            document.getElementById('user_verify_verification_char3').classList.remove('input_error');
-            document.getElementById('user_verify_verification_char4').classList.remove('input_error');
-            document.getElementById('user_verify_verification_char5').classList.remove('input_error');
-            document.getElementById('user_verify_verification_char6').classList.remove('input_error');
-
-            //activate user
-            json_data = '{"validation_code":"' + validation_code + '"}';
-            fetch(global_rest_url_base + global_rest_user_account_activate + user_id +
-                    '?app_id=' + global_app_id + 
-                    '&lang_code=' + document.getElementById('setting_select_locale').value, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': 'Bearer ' + global_rest_dt
-                    },
-                    body: json_data
-                })
-                .then(function(response) {
-                    status = response.status;
-                    return response.text();
-                })
-                .then(function(result) {
-                    if (status == 200) {
-                        json = JSON.parse(result);
-                        spinner('SIGNUP', 'hidden');
-                        if (json.items[0].affectedRows == 1) {
-                            //create app for user_account
-                            user_account_app(global_app_id, document.getElementById('setting_data_userid_logged_in').innerHTML);
-                            //create intitial user setting
-                            user_settings_function('ADD');
-                            //login with username and password from signup fields
-                            document.getElementById('dialogue_login').style.visibility = "hidden";
-                            document.getElementById('login_username').value =
-                                document.getElementById('signup_username').value;
-                            document.getElementById('login_password').value =
-                                document.getElementById('signup_password').value;
-
-                            document.getElementById('dialogue_signup').style.visibility = 'hidden';
-                            document.getElementById('signup_username').value = '';
-                            document.getElementById('signup_email').value = '';
-                            document.getElementById('signup_password').value = '';
-                            document.getElementById('signup_password_confirm').value = '';
-                            document.getElementById('signup_password_reminder').value = '';
-                            user_login_app().then(function(){
-                                document.getElementById('dialogue_user_verify').style.visibility = 'hidden';
-                                document.getElementById('user_verify_verification_char1').value = '';
-                                document.getElementById('user_verify_verification_char2').value = '';
-                                document.getElementById('user_verify_verification_char3').value = '';
-                                document.getElementById('user_verify_verification_char4').value = '';
-                                document.getElementById('user_verify_verification_char5').value = '';
-                                document.getElementById('user_verify_verification_char6').value = '';
-                            });
-                        } else {
-                            document.getElementById('user_verify_verification_char1').classList.add('input_error');
-                            document.getElementById('user_verify_verification_char2').classList.add('input_error');
-                            document.getElementById('user_verify_verification_char3').classList.add('input_error');
-                            document.getElementById('user_verify_verification_char4').classList.add('input_error');
-                            document.getElementById('user_verify_verification_char5').classList.add('input_error');
-                            document.getElementById('user_verify_verification_char6').classList.add('input_error');
-                            //code not valid
-                            show_message('ERROR', 20306, null, null, global_main_app_id, document.getElementById('setting_select_locale').value);
-                        }
-                    } else {
-                        spinner('SIGNUP', 'hidden');
-                        exception(status, result);
-                    }
-                })
-                .catch(function(error) {
-                    spinner('SIGNUP', 'hidden');
-                    show_message('EXCEPTION', null,null, error, global_app_id, document.getElementById('setting_select_locale').value);
-                });
-        } else
-        //not last, next!
-            document.getElementById(nextField).focus();
-    else
-    //remove anything else than 0-9
-        document.getElementById(item.id).value = '';
-    return null;
-}
-
-function user_edit() {
-    let json;
-    if (document.getElementById('dialogue_user_edit').style.visibility == 'visible') {
-        document.getElementById('dialogue_user_edit').style.visibility = "hidden";
-        document.getElementById('setting_checkbox_report_private').checked = false;
-        //common
-        document.getElementById('setting_input_bio_edit').value = '';
-        //local
-        document.getElementById('setting_input_username_edit').value = '';
-        document.getElementById('setting_input_email_edit').value = '';
-        document.getElementById('setting_input_password_edit').value = '';
-        document.getElementById('setting_input_password_confirm_edit').value = '';
-        document.getElementById('setting_input_new_password_edit').value = '';
-        document.getElementById('setting_input_new_password_confirm_edit').value = '';
-        document.getElementById('setting_input_password_reminder_edit').value = '';
-        document.getElementById('setting_avatar_edit').style.display = "none";
-        //provider
-        document.getElementById('setting_user_edit_provider_logo').innerHTML = '';
-        document.getElementById('setting_label_provider_id_edit_data').innerHTML = '';
-        document.getElementById('setting_label_provider_name_edit_data').innerHTML = '';
-        document.getElementById('setting_label_provider_email_edit_data').innerHTML = '';
-        document.getElementById('setting_label_provider_image_url_edit_data').innerHTML = '';
-
-        //account info
-        document.getElementById('setting_label_data_last_logontime_edit').value = '';
-        document.getElementById('setting_label_data_account_created_edit').value = '';
-        document.getElementById('setting_label_data_account_modified_edit').value = '';
-
-    } else {
-        let user_id = document.getElementById('setting_data_userid_logged_in');
-        let status;
-        //get user from REST API
-        spinner('EDIT', 'visible');
-        fetch(global_rest_url_base + global_rest_user_account + user_id.innerHTML +
-                '?app_id=' + global_app_id +
-                '&lang_code=' + document.getElementById('setting_select_locale').value, {
-                method: 'GET',
-                headers: {
-                    'Authorization': 'Bearer ' + global_rest_at
-                }
-            })
-            .then(function(response) {
-                status = response.status;
-                return response.text();
-            })
-            .then(function(result) {
-                if (status == 200) {
-                    json = JSON.parse(result);
-                    spinner('EDIT', 'hidden');
-                    if (user_id.innerHTML == json.id) {
-                        document.getElementById('user_edit_local').style.display = 'none';
-                        document.getElementById('user_edit_provider').style.display = 'none';
-                        document.getElementById('dialogue_user_edit').style.visibility = "visible";
-
-                        document.getElementById('setting_checkbox_report_private').checked = number_to_boolean(json.private);
-                        document.getElementById('setting_input_bio_edit').value = get_null_or_value(json.bio);
-
-                        if (json.provider1_id == null && json.provider2_id == null) {
-                            document.getElementById('user_edit_local').style.display = 'block';
-                            document.getElementById('user_edit_provider').style.display = 'none';
-                            document.getElementById('setting_avatar_edit').style.display = "block";
-
-                            if (json.avatar == null || json.avatar == '')
-                                recreate_img(document.getElementById('setting_avatar_logged_in'));
-                            else
-                                document.getElementById('setting_avatar_logged_in').src = image_format(json.avatar);
-                            update_settings_icon(image_format(json.avatar));
-
-
-                            document.getElementById('setting_input_username_edit').value = json.username;
-
-                            document.getElementById('setting_input_email_edit').value = json.email;
-
-                            document.getElementById('setting_input_password_edit').value = '',
-                                document.getElementById('setting_input_password_confirm_edit').value = '',
-                                document.getElementById('setting_input_new_password_edit').value = '';
-                            document.getElementById('setting_input_new_password_confirm_edit').value = '';
-
-                            document.getElementById('setting_input_password_reminder_edit').value = json.password_reminder;
-                        } else
-                        if (json.provider1_id !== null) {
-                            document.getElementById('user_edit_provider').style.display = 'block';
-                            document.getElementById('setting_user_edit_provider_logo').innerHTML = '<i class="fab fa-google"></i>';
-                            document.getElementById('user_edit_local').style.display = 'none';
-                            document.getElementById('setting_label_provider_id_edit_data').innerHTML = json.provider1_id;
-                            document.getElementById('setting_label_provider_name_edit_data').innerHTML = json.provider1_first_name + ' ' + json.provider1_last_name;
-                            document.getElementById('setting_label_provider_email_edit_data').innerHTML = json.provider1_email;
-                            document.getElementById('setting_label_provider_image_url_edit_data').innerHTML = json.provider1_image_url;
-                        } else
-                        if (json.provider2_id !== null) {
-                            document.getElementById('user_edit_provider').style.display = 'block';
-                            document.getElementById('setting_user_edit_provider_logo').innerHTML = '<i class="fab fa-facebook"></i>';
-                            document.getElementById('user_edit_local').style.display = 'none';
-                            document.getElementById('setting_label_provider_id_edit_data').innerHTML = json.provider2_id;
-                            document.getElementById('setting_label_provider_name_edit_data').innerHTML = json.provider2_first_name + ' ' + json.provider2_last_name;
-                            document.getElementById('setting_label_provider_email_edit_data').innerHTML = json.provider2_email;
-                            document.getElementById('setting_label_provider_image_url_edit_data').innerHTML = json.provider2_image_url;
-                        }
-                        document.getElementById('setting_label_data_last_logontime_edit').innerHTML = format_json_date(json.last_logontime, null, document.getElementById('setting_select_timezone_current').value, document.getElementById('setting_select_locale').value);
-                        document.getElementById('setting_label_data_account_created_edit').innerHTML = format_json_date(json.date_created, null, document.getElementById('setting_select_timezone_current').value, document.getElementById('setting_select_locale').value);
-                        document.getElementById('setting_label_data_account_modified_edit').innerHTML = format_json_date(json.date_modified, null, document.getElementById('setting_select_timezone_current').value, document.getElementById('setting_select_locale').value);
-                    } else {
-                        //User not found
-                        show_message('ERROR', 20305, null, null, global_main_app_id, document.getElementById('setting_select_locale').value);
-                    }
-                } else {
-                    spinner('EDIT', 'hidden');
-                    exception(status, result);
-                }
-            })
-            .catch(function(error) {
-                spinner('EDIT', 'hidden');
-                show_message('EXCEPTION', null,null, error, global_app_id, document.getElementById('setting_select_locale').value);
-            });
-    }
-    return null;
-}
-
-function user_update() {
-    let avatar = btoa(document.getElementById('setting_avatar_logged_in').src);
-    let username = document.getElementById('setting_input_username_edit').value;
-    let bio = document.getElementById('setting_input_bio_edit').value;
-    let email = document.getElementById('setting_input_email_edit').value;
-    let password = document.getElementById('setting_input_password_edit').value;
-    let password_confirm = document.getElementById('setting_input_password_confirm_edit').value;
-    let new_password = document.getElementById('setting_input_new_password_edit').value;
-    let new_password_confirm = document.getElementById('setting_input_new_password_confirm_edit').value;
-    let password_reminder = document.getElementById('setting_input_password_reminder_edit').value;
-    let user_id = document.getElementById('setting_data_userid_logged_in');
-    let url;
-    let json;
-    let json_data;
-    let status;
-
-    if (document.getElementById('user_edit_local').style.display == 'block') {
-        json_data = `{ 
-                        "bio":"${bio}",
-                        "private": ${boolean_to_number(document.getElementById('setting_checkbox_report_private').checked)},
-                        "username":"${username}",
-                        "password":"${password}",
-                        "new_password":"${new_password}",
-                        "password_reminder":"${password_reminder}",
-                        "email":"${email}",
-                        "avatar":"${avatar}"
-                    }`;
-        url = global_rest_url_base + global_rest_user_account + user_id.innerHTML;
-        document.getElementById('setting_input_username_edit').classList.remove('input_error');
-
-        document.getElementById('setting_input_bio_edit').classList.remove('input_error');
-        document.getElementById('setting_input_email_edit').classList.remove('input_error');
-
-        document.getElementById('setting_input_password_edit').classList.remove('input_error');
-        document.getElementById('setting_input_password_confirm_edit').classList.remove('input_error');
-        document.getElementById('setting_input_new_password_edit').classList.remove('input_error');
-        document.getElementById('setting_input_new_password_confirm_edit').classList.remove('input_error');
-
-        document.getElementById('setting_input_password_reminder_edit').classList.remove('input_error');
-
-        //validate input
-        if (username == '') {
-            //"Please enter username"
-            document.getElementById('setting_input_username_edit').classList.add('input_error');
-            show_message('ERROR', 20303, null, null, global_main_app_id, document.getElementById('setting_select_locale').value);
-            return null;
-        }
-        if (password == '') {
-            //"Please enter password"
-            document.getElementById('setting_input_password_edit').classList.add('input_error');
-            show_message('ERROR', 20304, null, null, global_main_app_id, document.getElementById('setting_select_locale').value);
-            return null;
-        }
-        if (password != password_confirm) {
-            //Password not the same
-            document.getElementById('setting_input_password_confirm_edit').classList.add('input_error');
-            show_message('ERROR', 20301, null, null, global_main_app_id, document.getElementById('setting_select_locale').value);
-            return null;
-        }
-        //check new passwords
-        if (new_password != new_password_confirm) {
-            //New Password are entered but they are not the same
-            document.getElementById('setting_input_new_password_edit').classList.add('input_error');
-            document.getElementById('setting_input_new_password_confirm_edit').classList.add('input_error');
-            show_message('ERROR', 20301, null, null, document.getElementById('setting_select_locale').value);
-            return null;
-        }
-    } else {
-        json_data = `{"bio":"${bio}",
-                      "private":${boolean_to_number(document.getElementById('setting_checkbox_report_private').checked)}
-                     }`;
-        url = global_rest_url_base + global_rest_user_account_common + user_id.innerHTML
-    }
-    spinner('UPDATE', 'visible');
-    //update user using REST API
-    fetch(url + '?app_id=' + global_app_id +
-                '&lang_code=' + document.getElementById('setting_select_locale').value, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + global_rest_at
-            },
-            body: json_data
-        })
-        .then(function(response) {
-            status = response.status;
-            return response.text();
-        })
-        .then(function(result) {
-            if (status == 200) {
-                json = JSON.parse(result);
-                //user_id.innerHTML = json.id;
-                document.getElementById('dialogue_user_edit').style.visibility = "hidden";
-                document.getElementById('user_settings').style.display = "block";
-
-                document.getElementById('setting_avatar_edit').style.display = 'none';
-
-                update_settings_icon(atob(avatar));
-                //update_settings_icon(imaage_format(json.avatar));
-
-                document.getElementById('setting_data_username_logged_in').innerHTML = username;
-                document.getElementById('setting_bio_logged_in').innerHTML = bio;
-
-                document.getElementById('setting_checkbox_report_private').checked = false;
-                document.getElementById('setting_input_username_edit').value = '';
-                document.getElementById('setting_input_bio_edit').value = '';
-                document.getElementById('setting_input_email_edit').value = '';
-                document.getElementById('setting_input_password_edit').value = '';
-                document.getElementById('setting_input_password_confirm_edit').value = '';
-                document.getElementById('setting_input_new_password_edit').value = '';
-                document.getElementById('setting_input_new_password_confirm_edit').value = '';
-                document.getElementById('setting_input_password_reminder_edit').value = '';
-                //provider
-                document.getElementById('setting_user_edit_provider_logo').innerHTML = '';
-                document.getElementById('setting_label_provider_id_edit_data').innerHTML = '';
-                document.getElementById('setting_label_provider_name_edit_data').innerHTML = '';
-                document.getElementById('setting_label_provider_email_edit_data').innerHTML = '';
-                document.getElementById('setting_label_provider_image_url_edit_data').innerHTML = '';
-
-                document.getElementById('setting_label_data_last_logontime_edit').innerHTML = '';
-                document.getElementById('setting_label_data_account_created_edit').innerHTML = '';
-                document.getElementById('setting_label_data_account_modified_edit').innerHTML = '';
-                spinner('UPDATE', 'hidden');
-            } else {
-                spinner('UPDATE', 'hidden');
-                exception(status, result);
+async function user_edit_app() {
+    spinner_app('EDIT', 'visible');
+    await user_edit(document.getElementById('setting_data_userid_logged_in').innerHTML, document.getElementById('setting_select_timezone_current').value, get_lang_code(),(err, result) => {
+        if ((err==null && result==null) == false){
+            spinner_app('EDIT', 'hidden');
+            if (err==null){
+                update_settings_icon(image_format(result.avatar));
             }
-        })
-        .catch(function(error) {
-            spinner('UPDATE', 'hidden');
-            show_message('EXCEPTION', null,null, error, global_app_id, document.getElementById('setting_select_locale').value);
-        });
-    return null;
+        }
+    });
 }
-
-function user_delete(choice=null) {
-    let user_account_id = document.getElementById('setting_data_userid_logged_in').innerHTML;
-    let password = document.getElementById('setting_input_password_edit').value;
-    let function_delete_user_account = function() { document.getElementById('dialogue_message').style.visibility = 'hidden';user_delete(1) };
-    let status;
-    switch (choice){
-        case null:{
-            if (document.getElementById('user_edit_local').style.display == 'block' && password == '') {
-                //"Please enter password"
-                document.getElementById('setting_input_password_edit').classList.add('input_error');
-                show_message('ERROR', 20304, null, null, global_main_app_id, document.getElementById('setting_select_locale').value);
-                return null;
-            }
-            show_message('CONFIRM',null,function_delete_user_account, null, null, global_app_id, document.getElementById('setting_select_locale').value);
-            break;
+async function user_update_app(){
+    await user_update(document.getElementById('setting_data_userid_logged_in').innerHTML, get_lang_code(),(err, result) => {
+        if (err==null){
+            //update_settings_icon(image_format(result.avatar));
+            update_settings_icon(atob(result.avatar));
+            document.getElementById('setting_data_username_logged_in').innerHTML = result.username;
+            document.getElementById('setting_bio_logged_in').innerHTML = result.bio;
         }
-        case 1:{
-            document.getElementById("dialogue_message").style.visibility = "hidden";
-            document.getElementById('setting_input_username_edit').classList.remove('input_error');
-            document.getElementById('setting_input_bio_edit').classList.remove('input_error');
-            document.getElementById('setting_input_email_edit').classList.remove('input_error');
-            document.getElementById('setting_input_password_edit').classList.remove('input_error');
-            document.getElementById('setting_input_password_confirm_edit').classList.remove('input_error');
-            document.getElementById('setting_input_new_password_edit').classList.remove('input_error');
-            document.getElementById('setting_input_new_password_confirm_edit').classList.remove('input_error');
-            document.getElementById('setting_input_password_reminder_edit').classList.remove('input_error');
-    
-            spinner('DELETE_ACCOUNT', 'visible');
-            let json_data = `{"password":"${password}"}`;
-            fetch(global_rest_url_base + global_rest_user_account + user_account_id + 
-                    '?app_id=' + global_app_id +
-                    '&lang_code=' + document.getElementById('setting_select_locale').value, 
-                {
-                    method: 'DELETE',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': 'Bearer ' + global_rest_at
-                    },
-                    body: json_data
-                })
-                .then(function(response) {
-                    status = response.status;
-                    return response.text();
-                })
-                .then(function(result) {
-                    spinner('DELETE_ACCOUNT', 'hidden');
-                    if (status == 200)
-                        user_logoff_app();
-                    else
-                        exception(status, result);
-                })
-                .catch(function(error) {
-                    spinner('DELETE_ACCOUNT', 'hidden');
-                    show_message('EXCEPTION', null,null, error, global_app_id, document.getElementById('setting_select_locale').value);
-                });
-            break;
+    });
+}
+async function  user_delete_app(){
+    let user_local;
+    if (document.getElementById('user_edit_local').style.display == 'block')
+        user_local = true;
+    else
+        user_local = false;
+    let function_delete_user_account = function() { 
+                                            document.getElementById('dialogue_message').style.visibility = 'hidden';
+                                            user_delete(1, document.getElementById('setting_data_userid_logged_in').innerHTML, user_local, null, get_lang_code(), (err, result)=>{
+                                                if (err==null){
+                                                    user_logoff_app();
+                                                }
+                                            }) 
+                                        };
+    await user_delete(null, document.getElementById('setting_data_userid_logged_in').innerHTML, user_local, function_delete_user_account, get_lang_code(), (err, result) =>{
+        if (err==null){
+            user_logoff_app();
         }
-        default:
-            break;
-    }
-    return null;
+    })
 }
 async function user_login_app(){
     let username = document.getElementById('login_username');
     let password = document.getElementById('login_password');
-    let lang_code = document.getElementById('setting_select_locale').value;
+    let lang_code = get_lang_code();
     let user_id = document.getElementById('setting_data_userid_logged_in');
     spinner('LOGIN', 'visible');
     await user_login(username.value, password.value, lang_code, (err, result)=>{
@@ -2466,6 +1982,26 @@ async function user_login_app(){
         
     })
 }
+async function user_verify_check_input_app(item, nextField){
+    await user_verify_check_input(item, document.getElementById('setting_data_userid_logged_in').innerHTML, nextField, get_lang_code(), (err, result) => {
+        if ((err==null && result==null)==false)
+            if(err==null){
+                //create app for user_account
+                user_account_app(global_app_id, document.getElementById('setting_data_userid_logged_in').innerHTML, get_lang_code());
+                //create intitial user setting
+                user_settings_function('ADD');
+                user_login_app();
+            }
+    })
+}
+
+async function user_function_app(function_name){
+    await user_function(function_name, document.getElementById('setting_data_userid_logged_in').innerHTML, get_lang_code(), (err, result) => {
+        if (err==null){
+            profile_update_stat_app();
+        }
+    })
+}
 async function user_setting_get(user_setting_id) {
     let select = document.getElementById("setting_select_user_setting");
     let json;
@@ -2473,7 +2009,7 @@ async function user_setting_get(user_setting_id) {
 
     await fetch(global_rest_url_base + global_rest_app1_user_setting + user_setting_id +
                 '?app_id=' + global_app_id + 
-                '&lang_code=' + document.getElementById('setting_select_locale').value, {
+                '&lang_code=' + get_lang_code(), {
             method: 'GET',
             headers: {
                 'Authorization': 'Bearer ' + global_rest_dt
@@ -2554,11 +2090,11 @@ async function user_setting_get(user_setting_id) {
                     `<option value=${json.regional_second_language_locale}>${json.regional_second_language_locale}</option`;
                 }
             } else {
-                exception(status, result);
+                exception(status, result, get_lang_code());
             }
         })
         .catch(function(error) {
-            show_message('EXCEPTION', null,null, error, global_app_id, document.getElementById('setting_select_locale').value);
+            show_message('EXCEPTION', null,null, error, global_app_id, get_lang_code());
         });
 }
 
@@ -2570,7 +2106,7 @@ async function user_settings_get(userid, show_ui = 1, user_setting_id = '') {
     
     await fetch(global_rest_url_base + global_rest_app1_user_setting_user_account_id + userid +
                 '?app_id=' + global_app_id + 
-                '&lang_code=' + document.getElementById('setting_select_locale').value, {
+                '&lang_code=' + get_lang_code(), {
             method: 'GET',
             headers: {
                 'Authorization': 'Bearer ' + global_rest_dt
@@ -2658,11 +2194,11 @@ async function user_settings_get(userid, show_ui = 1, user_setting_id = '') {
                     document.getElementById('user_settings').style.display = "block";
                 }
             } else {
-                exception(status, result);
+                exception(status, result, get_lang_code());
             }
         })
         .catch(function(error) {
-            show_message('EXCEPTION', null,null, error, global_app_id, document.getElementById('setting_select_locale').value);
+            show_message('EXCEPTION', null,null, error, global_app_id, get_lang_code());
         });
 }
 
@@ -2670,7 +2206,7 @@ function user_logoff_app() {
     let select = document.getElementById("setting_select_user_setting");
     let option;
     //get new data token to avoid endless loop och invalid token
-    user_logoff(document.getElementById('setting_data_userid_logged_in').innerHTML, document.getElementById('setting_select_locale').value).then(function(){
+    user_logoff(document.getElementById('setting_data_userid_logged_in').innerHTML, get_lang_code()).then(function(){
         //remove user setting icon
         update_settings_icon('', true);
 
@@ -2681,6 +2217,7 @@ function user_logoff_app() {
         //clear logged in info
         document.getElementById('setting_data_username_logged_in').innerHTML = '';
         recreate_img(document.getElementById('setting_avatar_logged_in'));
+        document.getElementById('setting_avatar_edit').style.display = "none";
         document.getElementById('setting_bio_logged_in').innerHTML = '';
         document.getElementById('setting_data_userid_logged_in').innerHTML = '';
 
@@ -2707,103 +2244,6 @@ function user_logoff_app() {
     
 }
 
-function user_account_app(app_id, user_account_id) {
-    let status;
-    let json_data =
-        `{"app_id": ${app_id},
-          "user_account_id": ${user_account_id}
-         }`;
-    fetch(global_rest_url_base + global_rest_user_account_app +
-            '?lang_code=' + document.getElementById('setting_select_locale').value, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + global_rest_at
-            },
-            body: json_data
-        })
-        .then(function(response) {
-            status = response.status;
-            return response.text();
-        })
-        .then(function(result) {
-            if (status === 200) {
-                let json = JSON.parse(result);
-            } else {
-                exception(status, result);
-            }
-        })
-        .catch(function(error) {
-            show_message('EXCEPTION', null,null, error, global_app_id, document.getElementById('setting_select_locale').value);
-        });
-}
-
-function user_signup() {
-    let username = document.getElementById('signup_username').value;
-    let email = document.getElementById('signup_email').value;
-    let password = document.getElementById('signup_password').value;
-    let password_confirm = document.getElementById('signup_password_confirm').value;
-    let password_reminder = document.getElementById('signup_password_reminder').value;
-
-    let json_data = `{
-                    "user_language": "${navigator.language}",
-                    "user_timezone": "${Intl.DateTimeFormat().resolvedOptions().timeZone}",
-                    "user_number_system": "${Intl.NumberFormat().resolvedOptions().numberingSystem}",
-                    "user_platform": "${navigator.platform}",
-                    "username":"${username}",
-                    "password":"${password}",
-                    "password_reminder":"${password_reminder}",
-                    "email":"${email}",
-                    "active":0 }`;
-    let status;
-    if (username == '') {
-        //"Please enter username"
-        show_message('ERROR', 20303, null, null, global_main_app_id, document.getElementById('setting_select_locale').value);
-        return null;
-    }
-    if (password == '') {
-        //"Please enter password"
-        show_message('ERROR', 20304, null, null, global_main_app_id, document.getElementById('setting_select_locale').value);
-        return null;
-    }
-    if (password != password_confirm) {
-        //Password not the same
-        show_message('ERROR', 20301, null, null, global_main_app_id, document.getElementById('setting_select_locale').value);
-        return null;
-    }
-
-    spinner('SIGNUP', 'visible');
-    fetch(global_rest_url_base + global_rest_user_account_signup +
-            '?app_id=' + global_app_id +
-            '&lang_code=' + document.getElementById('setting_select_locale').value, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + global_rest_dt
-            },
-            body: json_data
-        })
-        .then(function(response) {
-            status = response.status;
-            return response.text();
-        })
-        .then(function(result) {
-            if (status == 200) {
-                json = JSON.parse(result);
-                global_rest_at = json.accessToken;
-                document.getElementById('setting_data_userid_logged_in').innerHTML = json.id;
-                spinner('SIGNUP', 'hidden');
-                show_common_dialogue('VERIFY');
-            } else {
-                spinner('SIGNUP', 'hidden');
-                exception(status, result);
-            }
-        })
-        .catch(function(error) {
-            spinner('SIGNUP', 'hidden');
-            show_message('EXCEPTION', null,null, error, global_app_id, document.getElementById('setting_select_locale').value);
-        });
-}
 function user_setting_link(item){
     let paper_size_select = document.getElementById('setting_select_report_papersize');
     let common_url;
@@ -3045,7 +2485,7 @@ function user_settings_function(function_name) {
     //use btoa() for images to encode with BASE64 to BLOB column.
     let json_data =
         `{"description": "${description}",
-          "regional_language_locale": "${document.getElementById('setting_select_locale').value}",
+          "regional_language_locale": "${get_lang_code()}",
           "regional_current_timezone_select_id": ${document.getElementById('setting_select_timezone_current').selectedIndex},
           "regional_timezone_select_id": ${document.getElementById('setting_select_report_timezone').selectedIndex},
           "regional_number_system_select_id": ${document.getElementById('setting_select_report_numbersystem').selectedIndex},
@@ -3102,7 +2542,7 @@ function user_settings_function(function_name) {
           "prayer_column_fast_start_end_select_id": ${document.getElementById('setting_select_report_show_fast_start_end').selectedIndex},
           "user_account_id": ${user_account_id}
          }`;
-    spinner(function_name, 'visible');
+    spinner_app(function_name, 'visible');
     let method;
     let url;
     switch (function_name){
@@ -3124,7 +2564,7 @@ function user_settings_function(function_name) {
     }
     fetch(url +
             '?app_id=' + global_app_id +
-            '&lang_code=' + document.getElementById('setting_select_locale').value, {
+            '&lang_code=' + get_lang_code(), {
             method: method,
             headers: {
                 'Content-Type': 'application/json',
@@ -3160,15 +2600,15 @@ function user_settings_function(function_name) {
                         break;
                     }
                 }
-                spinner(function_name, 'hidden');
+                spinner_app(function_name, 'hidden');
             } else {
-                spinner(function_name, 'hidden');
-                exception(status, result);
+                spinner_app(function_name, 'hidden');
+                exception(status, result, get_lang_code());
             }
         })
         .catch(function(error) {
-            spinner(function_name, 'hidden');
-            show_message('EXCEPTION', null,null, error, global_app_id, document.getElementById('setting_select_locale').value);
+            spinner_app(function_name, 'hidden');
+            show_message('EXCEPTION', null,null, error, global_app_id, get_lang_code());
         });
 }
 
@@ -3180,15 +2620,15 @@ function user_settings_delete(choice=null) {
     
     switch (choice){
         case null:{
-            show_message('CONFIRM',null,function_delete_user_setting, null, global_app_id, document.getElementById('setting_select_locale').value);
+            show_message('CONFIRM',null,function_delete_user_setting, null, global_app_id, get_lang_code());
             break;
         }
         case 1:{
             if (select_user_setting.length > 1) {
-                spinner('DELETE', 'visible');
+                spinner_app('DELETE', 'visible');
                 fetch(global_rest_url_base + global_rest_app1_user_setting + user_setting_id + 
                         '?app_id=' + global_app_id +
-                        '&lang_code=' + document.getElementById('setting_select_locale').value, 
+                        '&lang_code=' + get_lang_code(), 
                     {
                         method: 'DELETE',
                         headers: {
@@ -3209,23 +2649,23 @@ function user_settings_delete(choice=null) {
                                 settings_translate(true).then(function(){
                                     settings_translate(false).then(function(){
                                         update_timetable_report();
-                                        spinner('DELETE', 'hidden');
+                                        spinner_app('DELETE', 'hidden');
                                     })
                                 })
                             })
                             
                         } else {
-                            spinner('DELETE', 'hidden');
-                            exception(status, result);
+                            spinner_app('DELETE', 'hidden');
+                            exception(status, result, get_lang_code());
                         }
                     })
                     .catch(function(error) {
-                        spinner('DELETE', 'hidden');
-                        show_message('EXCEPTION', null,null, error, global_app_id, document.getElementById('setting_select_locale').value);
+                        spinner_app('DELETE', 'hidden');
+                        show_message('EXCEPTION', null,null, error, global_app_id, get_lang_code());
                     });
             } else {
                 //You can't delete last user setting
-                show_message('ERROR', 20302, null, null, global_app_id, document.getElementById('setting_select_locale').value);
+                show_message('ERROR', 20302, null, null, global_app_id, get_lang_code());
             }
         }
     }
@@ -3353,7 +2793,7 @@ function set_settings_select() {
     option.text = document.getElementById('setting_input_place').value;
     
     option.setAttribute('description', document.getElementById('setting_input_place').value);
-    option.setAttribute('regional_language_locale', document.getElementById('setting_select_locale').value);
+    option.setAttribute('regional_language_locale', get_lang_code());
     option.setAttribute('regional_current_timezone_select_id', document.getElementById('setting_select_timezone_current').selectedIndex);
     option.setAttribute('regional_timezone_select_id', document.getElementById('setting_select_report_timezone').selectedIndex);
     option.setAttribute('regional_number_system_select_id', document.getElementById('setting_select_report_numbersystem').selectedIndex);
@@ -3413,17 +2853,22 @@ function set_settings_select() {
 
 function update_settings_icon(url = '', logoff = false) {
     let img_account_image_url = document.getElementById('user_account_image_url');
+    let img_account_image_url2  = document.getElementById('setting_avatar_logged_in');
     let i_tag = document.getElementById('toolbar_btn_settings').children[1];
     if (logoff == true) {
         //hide image url and show the icon
         img_account_image_url.style.display = 'none';
         img_account_image_url.src = '';
+        img_account_image_url2.style.display = 'none';
+        img_account_image_url2.src = '';
         i_tag.style.display = 'inline-block';
     } else {
         //show image url in user setting and hide the icon
         i_tag.style.display = 'none';
         img_account_image_url.style.display = 'inline-block';
         img_account_image_url.src = url;
+        img_account_image_url2.style.display = 'inline-block';
+        img_account_image_url2.src = url;
     }
     return null;
 }
@@ -3463,7 +2908,7 @@ function updateProviderUser(provider_no, profile_id, profile_first_name, profile
             "${'provider' + provider_no + '_image_url'}":"${profile_image_url}",
             "${'provider' + provider_no + '_email'}":"${profile_email}"}`;
         fetch(global_rest_url_base + global_rest_user_account_provider + profile_id +
-                '?lang_code=' + document.getElementById('setting_select_locale').value, {
+                '?lang_code=' + get_lang_code(), {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -3517,11 +2962,11 @@ function updateProviderUser(provider_no, profile_id, profile_first_name, profile
                     });
                 } 
                 else {
-                    exception(status, result);
+                    exception(status, result, get_lang_code());
                 }
             })
             .catch(function(error) {
-                show_message('EXCEPTION', null,null, error, global_app_id, document.getElementById('setting_select_locale').value);
+                show_message('EXCEPTION', null,null, error, global_app_id, get_lang_code());
             });
     }
     return null;
@@ -3710,9 +3155,9 @@ async function update_ui(option, item_id=null) {
                 if (document.getElementById('dialogue_user_edit').style.visibility == 'visible') {
                     //call twice, 
                     //first will hide and reset values
-                    user_edit();
+                    user_edit_app();
                     //second will fetch info again
-                    user_edit();
+                    user_edit_app();
                 }
                 break;
             }
@@ -3763,7 +3208,7 @@ async function update_ui(option, item_id=null) {
                     await fetch(global_service_worldcities + '/' + settings.country[settings.country.selectedIndex].getAttribute('country_code').toUpperCase() +
                             '?app_id=' + global_app_id +
                             '&app_user_id=' + document.getElementById('setting_data_userid_logged_in').innerHTML +
-                            '&lang_code=' + document.getElementById('setting_select_locale').value, {
+                            '&lang_code=' + get_lang_code(), {
                         method: 'GET',
                         headers: {
                             'Authorization': 'Bearer ' + global_rest_dt,
@@ -3818,7 +3263,7 @@ async function update_ui(option, item_id=null) {
                             document.getElementById('setting_input_place').value = '';
                         }
                         else {
-                            exception(status, result);
+                            exception(status, result, get_lang_code());
                         }
                     })
                 } 
@@ -3940,7 +3385,7 @@ async function update_ui(option, item_id=null) {
         //11=Image, Report header image load
 	    case 11:
             {
-                let resheader = show_image(settings.header_preview_img_item, item_id);
+                let resheader = show_image(settings.header_preview_img_item, item_id, global_image_header_footer_width, global_image_header_footer_height, get_lang_code());
                 break;
             }
         //12=Image, Report header image clear
@@ -3955,7 +3400,7 @@ async function update_ui(option, item_id=null) {
         //13=Image, Report footer image load
 	    case 13:
             {
-                let resfooter = show_image(settings.footer_preview_img_item, item_id);
+                let resfooter = show_image(settings.footer_preview_img_item, item_id, global_image_header_footer_width, global_image_header_footer_height, get_lang_code());
                 break;
             }
         //14=Image, Report footer image clear
@@ -4024,7 +3469,7 @@ async function update_ui(option, item_id=null) {
 function get_report_url(id, sid, papersize){
     
     return `${location.protocol}//${location.hostname}${location.port==''?'':':' + location.port}${global_service_report}` +
-         `?app_id=${global_app_id}&lang_code=${document.getElementById('setting_select_locale').value}` +
+         `?app_id=${global_app_id}&lang_code=${get_lang_code()}` +
          `&id=${id}` +
          `&sid=${sid}` +
          `&ps=${papersize}` +
@@ -4038,7 +3483,7 @@ function profile_user_setting_stat(id){
     let status;
     fetch(global_rest_url_base + global_rest_app1_user_setting_profile + id + 
         '?app_id=' + global_app_id + 
-        '&lang_code=' + document.getElementById('setting_select_locale').value, {
+        '&lang_code=' + get_lang_code(), {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -4057,8 +3502,15 @@ function profile_user_setting_stat(id){
         }
     })
     .catch(function(error) {
-        show_message('EXCEPTION', null,null, error, global_app_id, document.getElementById('setting_select_locale').value);
+        show_message('EXCEPTION', null,null, error, global_app_id, get_lang_code());
     });
+}
+async function profile_update_stat_app(){
+    await profile_update_stat(get_lang_code(), (err, result) =>{
+        if (err==null){
+            profile_user_setting_stat(result.id);
+        }
+    })
 }
 async function profile_show_app(user_account_id_other = null, username = null, user_id, timezone, lang_code) {
     document.getElementById('profile').style.visibility = "visible";
@@ -4164,7 +3616,7 @@ function profile_user_setting_link(item){
             break;
         }
         case 'profile_user_settings_like':{
-            user_function("LIKE_USER_SETTING",sid);
+            user_settings_like(sid);
             break;
         }
     }
@@ -4187,7 +3639,7 @@ function profile_show_user_setting() {
 
         fetch(global_rest_url_base + global_rest_app1_user_setting_profile_all + document.getElementById('profile_id').innerHTML + 
                 '?app_id=' + global_app_id +
-                '&lang_code=' + document.getElementById('setting_select_locale').value + 
+                '&lang_code=' + get_lang_code() + 
                 '&id=' + user_id.innerHTML,
             {
                 method: 'GET',
@@ -4223,7 +3675,7 @@ function profile_show_user_setting() {
                 }
             })
             .catch(function(error) {
-                show_message('EXCEPTION', null,null, error, global_app_id, document.getElementById('setting_select_locale').value);
+                show_message('EXCEPTION', null,null, error, global_app_id, get_lang_code());
             });
     }
 }
@@ -4249,52 +3701,13 @@ function profile_detail_app(detailchoice, user_id, lang_code, rest_url_app, fetc
                 
 }
 
-function profile_update_stat(){
-    let profile_id = document.getElementById('profile_id');
-    let json_data =
-    `{
-    "client_longitude": "${global_session_user_gps_longitude}",
-    "client_latitude": "${global_session_user_gps_latitude}"
-    }`;
-    //get updated stat for given user
-    //to avoid update in stat set searched by same user
-    let url = global_rest_url_base + global_rest_user_account_profile_userid + profile_id.innerHTML;
-    let status;
-    fetch(url + 
-        '?app_id=' + global_app_id + 
-        '&lang_code=' + document.getElementById('setting_select_locale').value +
-        '&id=' + profile_id.innerHTML, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + global_rest_dt
-        },
-        body: json_data
-    })
-    .then(function(response) {
-        status = response.status;
-        return response.text();
-    })
-    .then(function(response) {
-        if (status == 200) {
-            json = JSON.parse(response);
-            document.getElementById('profile_info_view_count').innerHTML = json.count_views;
-            document.getElementById('profile_info_following_count').innerHTML = json.count_following;
-            document.getElementById('profile_info_followers_count').innerHTML = json.count_followed;
-            document.getElementById('profile_info_likes_count').innerHTML = json.count_likes;
-            document.getElementById('profile_info_liked_count').innerHTML = json.count_liked;
-            profile_user_setting_stat(json.id);
-        }
-    })
-}
-
 function profile_user_setting_update_stat(){
     let profile_id = document.getElementById('profile_id').innerHTML;
     let user_id = document.getElementById('setting_data_userid_logged_in').innerHTML;
     let status;
     fetch(global_rest_url_base + global_rest_app1_user_setting_profile_all + profile_id + 
             '?app_id=' + global_app_id +
-            '&lang_code=' + document.getElementById('setting_select_locale').value + 
+            '&lang_code=' + get_lang_code() + 
             '&id=' + user_id,
         {
             method: 'GET',
@@ -4326,52 +3739,28 @@ function profile_user_setting_update_stat(){
         }
     })
     .catch(function(error) {
-        show_message('EXCEPTION', null,null, error, global_app_id, document.getElementById('setting_select_locale').value);
+        show_message('EXCEPTION', null,null, error, global_app_id, get_lang_code());
     });
 }
-function user_function(user_function, user_setting_id) {
+function user_settings_like(user_setting_id) {
     let status;
     let user_id = document.getElementById('setting_data_userid_logged_in').innerHTML;
-    let user_id_profile = document.getElementById('profile_id').innerHTML;
     let json_data;
     let method;
-    let rest_path;
-    let check_div;
-    switch (user_function) {
-        case 'FOLLOW':
-            {
-                rest_path = global_rest_user_account_follow;
-                json_data = '{"user_account_id":' + user_id_profile + '}';
-                check_div = document.getElementById('profile_follow');
-                break;
-            }
-        case 'LIKE':
-            {
-                rest_path = global_rest_user_account_like;
-                json_data = '{"user_account_id":' + user_id_profile + '}';
-                check_div = document.getElementById('profile_like');
-                break;
-            }
-        case 'LIKE_USER_SETTING':
-            {
-                rest_path = global_rest_app1_user_setting_like;
-                json_data = '{"app1_user_setting_id":' + user_setting_id + '}';
-                check_div = document.getElementById('profile_user_settings_like');
-                break;
-            }
-    }
+
+    json_data = '{"app1_user_setting_id":' + user_setting_id + '}';
 
     if (user_id == '')
         show_common_dialogue('LOGIN');
     else {
-        if (check_div.children[0].style.display == 'block') {
+        if (document.getElementById('profile_user_settings_like').children[0].style.display == 'block') {
             method = 'POST';
         } else {
             method = 'DELETE';
         }
-        fetch(global_rest_url_base + rest_path + user_id +
+        fetch(global_rest_url_base + global_rest_app1_user_setting_like + user_id +
                 '?app_id=' + global_app_id + 
-                '&lang_code=' + document.getElementById('setting_select_locale').value, {
+                '&lang_code=' + get_lang_code(), {
                 method: method,
                 headers: {
                     'Content-Type': 'application/json',
@@ -4386,66 +3775,16 @@ function user_function(user_function, user_setting_id) {
             .then(function(result) {
                 if (status == 200) {
                     json = JSON.parse(result);
-                    switch (user_function) {
-                        case 'FOLLOW':
-                            {
-                                if (document.getElementById('profile_follow').children[0].style.display == 'block'){
-                                    //follow
-                                    document.getElementById('profile_follow').children[0].style.display = 'none';
-                                    document.getElementById('profile_follow').children[1].style.display = 'block';
-                                }
-                                else{
-                                    //unfollow
-                                    document.getElementById('profile_follow').children[0].style.display = 'block';
-                                    document.getElementById('profile_follow').children[1].style.display = 'none';
-                                }
-                                profile_update_stat();
-                                break;
-                            }
-                        case 'LIKE':
-                            {
-                                if (document.getElementById('profile_like').children[0].style.display == 'block'){
-                                    //like
-                                    document.getElementById('profile_like').children[0].style.display = 'none';
-                                    document.getElementById('profile_like').children[1].style.display = 'block';
-                                }
-                                else{
-                                    //unlike
-                                    document.getElementById('profile_like').children[0].style.display = 'block';
-                                    document.getElementById('profile_like').children[1].style.display = 'none';
-                                }
-                                profile_update_stat();
-                                break;
-                            }
-                        case 'LIKE_USER_SETTING':
-                            {
-                                //update only current user setting
-                                /*
-                                if (document.getElementById('profile_user_settings_like').children[0].style.display == 'block'){
-                                    //like
-                                    document.getElementById('profile_user_settings_like').children[0].style.display = 'none';
-                                    document.getElementById('profile_user_settings_like').children[1].style.display = 'block';
-                                }
-                                else{
-                                    //unlike
-                                    document.getElementById('profile_user_settings_like').children[0].style.display = 'block';
-                                    document.getElementById('profile_user_settings_like').children[1].style.display = 'none';
-                                }
-                                */
-                                profile_user_setting_update_stat();
-                                break;
-                            }
-                    }
+                    profile_user_setting_update_stat();
                 } else {
-                    exception(status, result);
+                    exception(status, result, get_lang_code());
                 }
             })
             .catch(function(error) {
-                show_message('EXCEPTION', null,null, error, global_app_id, document.getElementById('setting_select_locale').value);
+                show_message('EXCEPTION', null,null, error, global_app_id, get_lang_code());
             });
     }
 }
-
 
 function updateViewStat(user_setting_id, user_setting_user_account_id = null) {
     let status;
@@ -4464,7 +3803,7 @@ function updateViewStat(user_setting_id, user_setting_user_account_id = null) {
                         }`;
         fetch(global_rest_url_base + global_rest_app1_user_setting_view +
                 '?app_id=' + global_app_id + 
-                '&lang_code=' + document.getElementById('setting_select_locale').value, {
+                '&lang_code=' + get_lang_code(), {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -4480,11 +3819,11 @@ function updateViewStat(user_setting_id, user_setting_user_account_id = null) {
                 if (status == 200)
                     return null;
                 else {
-                    exception(status, result);
+                    exception(status, result, get_lang_code());
                 }
             })
             .catch(function(error) {
-                show_message('EXCEPTION', null,null, error, global_app_id, document.getElementById('setting_select_locale').value);
+                show_message('EXCEPTION', null,null, error, global_app_id, get_lang_code());
             });
     }
 }
@@ -4492,7 +3831,7 @@ function updateViewStat(user_setting_id, user_setting_user_account_id = null) {
 // init app function in index.html
 /*------------------------------------- */
 async function init_common() {
-    await get_data_token(document.getElementById('setting_data_userid_logged_in').innerHTML, document.getElementById('setting_select_locale').value).then(function(){
+    await get_data_token(document.getElementById('setting_data_userid_logged_in').innerHTML, get_lang_code()).then(function(){
         //set current date for report month
         global_session_currentDate = new Date();
         global_session_CurrentHijriDate = new Array();
@@ -4522,7 +3861,7 @@ function init_report_timetable() {
             if (inIframe() == false) {
                 //when report only is run outside webapp
                 //get gps and update view stat
-                get_gps_from_ip(document.getElementById('setting_data_userid_logged_in').innerHTML, document.getElementById('setting_select_locale').value).then(function(){
+                get_gps_from_ip(document.getElementById('setting_data_userid_logged_in').innerHTML, get_lang_code()).then(function(){
                     document.getElementById('setting_select_popular_place').selectedIndex = 0;
                     document.getElementById('setting_input_lat').value = global_session_user_gps_latitude;
                     document.getElementById('setting_input_long').value = global_session_user_gps_longitude;        
@@ -4604,7 +3943,7 @@ async function app_load(){
     //app variables
     fetch(global_rest_url_base + global_rest_app +
         '?id=' + global_app_id + 
-        '&lang_code=' + document.getElementById('setting_select_locale').value, 
+        '&lang_code=' + get_lang_code(), 
         {
             method: 'GET',
             headers: {
@@ -4629,10 +3968,10 @@ async function app_load(){
             update_info(5);
         }
         else {
-            show_message('EXCEPTION', null,null, result, global_app_id, document.getElementById('setting_select_locale').value);
+            show_message('EXCEPTION', null,null, result, global_app_id, get_lang_code());
         }
     })
-    await get_gps_from_ip(document.getElementById('setting_data_userid_logged_in').innerHTML, document.getElementById('setting_select_locale').value).then(function(){
+    await get_gps_from_ip(document.getElementById('setting_data_userid_logged_in').innerHTML, get_lang_code()).then(function(){
         document.getElementById('setting_select_popular_place').selectedIndex = 0;
         document.getElementById('setting_input_lat').value = global_session_user_gps_latitude;
         document.getElementById('setting_input_long').value = global_session_user_gps_longitude;
@@ -4648,7 +3987,7 @@ async function app_load(){
                 document.getElementById('setting_data_userid_logged_in').innerHTML, 
                 global_session_user_gps_latitude,
                 global_session_user_gps_longitude,
-                document.getElementById('setting_select_locale').value);
+                get_lang_code());
         //set papersize
         zoom_paper();
         //user interface font depending selected arabic script
@@ -4683,7 +4022,7 @@ async function app_show(){
             document.getElementById('profile_info').classList.add("profile_info_logged_off");
         }
         document.getElementById('profile').style.visibility = "visible";
-        profile_show_app(null, user, document.getElementById('setting_data_userid_logged_in'), document.getElementById('setting_select_timezone_current').value, document.getElementById('setting_select_locale').value);
+        profile_show_app(null, user, document.getElementById('setting_data_userid_logged_in'), document.getElementById('setting_select_timezone_current').value, get_lang_code());
     }
 }
 async function init_head(){
