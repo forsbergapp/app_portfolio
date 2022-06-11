@@ -2,9 +2,13 @@ var global_module = 'APP';
 var global_module_type = 'HOME';
 var global_app_id = 0;
 var global_app_name;
+var global_exception_app_function = 'user_logoff_app';
 var global_app_email;
 var global_img_diagram_img = '/app0/info/app_portfolio.jpg';
 var global_img_datamodel_img = '/app0/info/datamodel.jpg';
+
+var global_user_image_avatar_width;
+var global_user_image_avatar_height;
 
 var global_qr_width;
 var global_qr_height;
@@ -16,6 +20,8 @@ var global_qr_logo_height;
 var global_qr_background_color;
 
 function keyfunctions(){
+
+    document.getElementById('toggle_checkbox').addEventListener('click', function() { toggle_switch() }, false);
     document.getElementById('login_close').addEventListener('click', function() { document.getElementById('dialogue_login').style.visibility = 'hidden' }, false);
     document.getElementById('info_diagram').addEventListener('click', function() {info(1);}, false);
     document.getElementById('info_datamodel').addEventListener('click', function() {info(2);}, false);
@@ -27,7 +33,7 @@ function keyfunctions(){
     document.getElementById('toolbar_btn_up').addEventListener('click', function() {move_info(0,-1);}, false);
     document.getElementById('toolbar_btn_down').addEventListener('click', function() {move_info(0,1);}, false);
     
-    document.getElementById('message_close').addEventListener('click', function() {document.getElementById('dialogue_message').style.visibility= 'hidden'}, false);
+    document.getElementById('message_cancel').addEventListener('click', function() { document.getElementById("dialogue_message").style.visibility = "hidden" }, false);
 
     document.getElementById( 'start_message' ).addEventListener( 'click', function( event ) {
         event.preventDefault();
@@ -37,34 +43,82 @@ function keyfunctions(){
     document.getElementById('start_profile').addEventListener('click', function() {profile_home()}, false);
     document.getElementById('profile_home').addEventListener('click', function() {profile_home()}, false);
     document.getElementById('profile_close').addEventListener('click', function() {profile_close()}, false);
-    document.getElementById('profile_top_row1_1').addEventListener('click', function() { profile_top(1, '', Intl.DateTimeFormat().resolvedOptions().timeZone, global_lang_code)}, false);
-    document.getElementById('profile_top_row1_2').addEventListener('click', function() { profile_top(2, '', Intl.DateTimeFormat().resolvedOptions().timeZone, global_lang_code)}, false);
-    document.getElementById('profile_top_row1_3').addEventListener('click', function() { profile_top(3, '', Intl.DateTimeFormat().resolvedOptions().timeZone, global_lang_code)}, false);
-    document.getElementById('profile_search_input').addEventListener('keyup', function() { typewatch("search_profile('', Intl.DateTimeFormat().resolvedOptions().timeZone, global_lang_code, null);", 500); }, false);
-
-    document.getElementById('profile_main_btn_following').addEventListener('click', function() { profile_detail(1,'', Intl.DateTimeFormat().resolvedOptions().timeZone, global_lang_code, null, true, null) }, false);
-    document.getElementById('profile_main_btn_followed').addEventListener('click', function() { profile_detail(2, '', Intl.DateTimeFormat().resolvedOptions().timeZone, global_lang_code, null, true, null) }, false);
-    document.getElementById('profile_main_btn_likes').addEventListener('click', function() { profile_detail(3, '', Intl.DateTimeFormat().resolvedOptions().timeZone, global_lang_code, null, true, null) }, false);
-    document.getElementById('profile_main_btn_liked').addEventListener('click', function() { profile_detail(4, '', Intl.DateTimeFormat().resolvedOptions().timeZone, global_lang_code, null, true, null) }, false);
+    document.getElementById('profile_search_input').addEventListener('keyup', function() { typewatch("search_profile(document.getElementById('user_menu_user_id').innerHTML, Intl.DateTimeFormat().resolvedOptions().timeZone, global_lang_code, null);", 500); }, false);
     
+    document.getElementById('profile_top_row1_1').addEventListener('click', function() { profile_top(1, document.getElementById('user_menu_user_id').innerHTML, Intl.DateTimeFormat().resolvedOptions().timeZone, global_lang_code)}, false);
+    document.getElementById('profile_top_row1_2').addEventListener('click', function() { profile_top(2, document.getElementById('user_menu_user_id').innerHTML, Intl.DateTimeFormat().resolvedOptions().timeZone, global_lang_code)}, false);
+    document.getElementById('profile_top_row1_3').addEventListener('click', function() { profile_top(3, document.getElementById('user_menu_user_id').innerHTML, Intl.DateTimeFormat().resolvedOptions().timeZone, global_lang_code)}, false);
+
+    document.getElementById('profile_follow').addEventListener('click', function() { user_function_app('FOLLOW') }, false);
+	document.getElementById('profile_like').addEventListener('click', function() { user_function_app('LIKE') }, false);
+
+    document.getElementById('profile_main_btn_following').addEventListener('click', function() { profile_detail(1, document.getElementById('user_menu_user_id').innerHTML, Intl.DateTimeFormat().resolvedOptions().timeZone, global_lang_code, null, true, null) }, false);
+    document.getElementById('profile_main_btn_followed').addEventListener('click', function() { profile_detail(2, document.getElementById('user_menu_user_id').innerHTML, Intl.DateTimeFormat().resolvedOptions().timeZone, global_lang_code, null, true, null) }, false);
+    document.getElementById('profile_main_btn_likes').addEventListener('click', function() { profile_detail(3, document.getElementById('user_menu_user_id').innerHTML, Intl.DateTimeFormat().resolvedOptions().timeZone, global_lang_code, null, true, null) }, false);
+    document.getElementById('profile_main_btn_liked').addEventListener('click', function() { profile_detail(4, document.getElementById('user_menu_user_id').innerHTML, Intl.DateTimeFormat().resolvedOptions().timeZone, global_lang_code, null, true, null) }, false);
+    
+
     document.getElementById( 'info_message' ).addEventListener( 'click', function( event ) {
         event.preventDefault();
         document.getElementById( 'dialogue_info_content' ).className = 'dialogue_content dialogue_flip';
         document.getElementById( 'dialogue_start_content' ).className = 'dialogue_content dialogue_flip';
     }, false );
 
+    document.getElementById('user_menu').addEventListener('click', function() { user_menu_click() }, false);
+    
+    document.getElementById('user_menu_dropdown_profile').addEventListener('click', function() { user_menu_item_click(this) }, false);
+    document.getElementById('user_menu_dropdown_edit').addEventListener('click', function() { user_menu_item_click(this) }, false);
+    document.getElementById('user_menu_dropdown_log_out').addEventListener('click', function() { user_menu_item_click(this) }, false);
+
+    document.getElementById('user_menu_dropdown_signup').addEventListener('click', function() { user_menu_item_click(this) }, false);
+    document.getElementById('user_menu_dropdown_log_in').addEventListener('click', function() { user_menu_item_click(this) }, false);
+    
+
+    let input_username_login = document.getElementById("login_username");
+    input_username_login.addEventListener("keyup", function(event) {
+        if (event.keyCode === 13) {
+            event.preventDefault();
+            user_login_app().then(function(){
+                //unfocus
+                document.getElementById("login_username").blur();
+            });
+        }
+    });
+    let input_password_login = document.getElementById("login_password");
+    input_password_login.addEventListener("keyup", function(event) {
+        if (event.keyCode === 13) {
+            event.preventDefault();
+            user_login_app().then(function(){
+                //unfocus
+                document.getElementById("login_password").blur();
+            });
+        }
+    });
     document.getElementById('login_signup').addEventListener('click', function() { show_common_dialogue('SIGNUP') }, false);
+    
+    document.getElementById('login_button').addEventListener('click', function() { user_login_app() }, false);
     /*
-    document.getElementById('login_button').addEventListener('click', function() { user_login() }, false);
     if (global_app_user_provider2_use==1)
         document.getElementById('login_facebook').addEventListener('click', function() { onProviderSignIn() }, false);
     */
     document.getElementById('login_close').addEventListener('click', function() { document.getElementById('dialogue_login').style.visibility = 'hidden' }, false);
-    //document.getElementById('user_edit_close').addEventListener('click', function() { user_edit() }, false);
+    document.getElementById('user_edit_close').addEventListener('click', function() { user_edit_app() }, false);
+    document.getElementById('user_edit_btn_avatar_img').addEventListener('click', function() { document.getElementById('user_edit_input_avatar_img').click() }, false);
+    document.getElementById('user_edit_input_avatar_img').addEventListener('change', function() { show_image(document.getElementById('user_edit_avatar_img'), this.id, global_user_image_avatar_width, global_user_image_avatar_height, global_lang_code); }, false);
+    document.getElementById('user_edit_close').addEventListener('click', function() { document.getElementById('dialogue_user_edit').style.visibility = 'hidden' }, false);
     document.getElementById('signup_login').addEventListener('click', function() { show_common_dialogue('LOGIN') }, false);
-
-    //document.getElementById('signup_button').addEventListener('click', function() { user_signup() }, false);
+    document.getElementById('setting_btn_user_update').addEventListener('click', function() { user_update_app(); }, false);
+    document.getElementById('setting_btn_user_delete_account').addEventListener('click', function() { user_delete_app(); }, false);
+    document.getElementById('signup_button').addEventListener('click', function() { user_signup(document.getElementById('user_menu_user_id'), global_lang_code) }, false);
     document.getElementById('signup_close').addEventListener('click', function() { document.getElementById('dialogue_signup').style.visibility = 'hidden' }, false);
+
+    document.getElementById('user_verify_verification_char1').addEventListener('keyup', function() { user_verify_check_input_app(this, "user_verify_verification_char2") }, false);
+    document.getElementById('user_verify_verification_char2').addEventListener('keyup', function() { user_verify_check_input_app(this, "user_verify_verification_char3") }, false);
+    document.getElementById('user_verify_verification_char3').addEventListener('keyup', function() { user_verify_check_input_app(this, "user_verify_verification_char4") }, false);
+    document.getElementById('user_verify_verification_char4').addEventListener('keyup', function() { user_verify_check_input_app(this, "user_verify_verification_char5") }, false);
+    document.getElementById('user_verify_verification_char5').addEventListener('keyup', function() { user_verify_check_input_app(this, "user_verify_verification_char6") }, false);
+    document.getElementById('user_verify_verification_char6').addEventListener('keyup', function() { user_verify_check_input_app(this, "") }, false);
+
 }
 function toggle_switch(){
     if(document.getElementById('toggle_checkbox').checked)
@@ -100,14 +154,18 @@ function get_apps() {
                     document.getElementById('login_app_name').innerHTML = global_app_name;
                     document.getElementById('signup_app_name').innerHTML = global_app_name;
                 }
-                else{
-                    html +=`<div class='app_link' onclick='window.open("${json.data[i].url}");'>
-                                    <div class='app_logo_div'><img class='app_logo' src='${json.data[i].logo}' /></div>
-                                    <div class='app_name'>${json.data[i].app_name}</div>
+                else{   
+                    html +=`<div class='app_link'>
+                                <div class='app_url'>${json.data[i].url}</div>
+                                <div class='app_logo_div'><img class='app_logo' src='${json.data[i].logo}' /></div>
+                                <div class='app_name'>${json.data[i].app_name}</div>
                             </div>`;
                 }
             }
             document.getElementById('apps').innerHTML = html;
+            document.querySelectorAll('.app_link').forEach(e => e.addEventListener('click', function(event) {
+                window.open(event.target.parentNode.parentNode.children[0].innerHTML);
+            }))
           }
           else
             show_message('EXCEPTION', null,null, result, global_app_id, global_lang_code);
@@ -135,8 +193,22 @@ async function get_parameters() {
                         global_app_copyright =json.data[i].parameter_value;
                     if (json.data[i].parameter_name=='APP_EMAIL')
                         global_app_email = json.data[i].parameter_value;
+                    if (json.data[i].parameter_name=='IMAGE_FILE_ALLOWED_TYPE1')
+                        global_image_file_allowed_type1 = json.data[i].parameter_value;
+                    if (json.data[i].parameter_name=='IMAGE_FILE_ALLOWED_TYPE2')
+                        global_image_file_allowed_type2 = json.data[i].parameter_value;
+                    if (json.data[i].parameter_name=='IMAGE_FILE_ALLOWED_TYPE3')
+                        global_image_file_allowed_type3 = json.data[i].parameter_value;
+                    if (json.data[i].parameter_name=='IMAGE_FILE_MIME_TYPE')
+                        global_image_file_mime_type = json.data[i].parameter_value;
+                    if (json.data[i].parameter_name=='IMAGE_FILE_MAX_SIZE')
+                        global_image_file_max_size = json.data[i].parameter_value;
                     if (json.data[i].parameter_name=='SERVICE_AUTH')
                         global_service_auth = json.data[i].parameter_value;
+                    if (json.data[i].parameter_name=='USER_IMAGE_AVATAR_WIDTH')
+                        global_user_image_avatar_width = json.data[i].parameter_value;
+                    if (json.data[i].parameter_name=='USER_IMAGE_AVATAR_HEIGHT')
+                        global_user_image_avatar_height = json.data[i].parameter_value;
                     if (json.data[i].parameter_name=='USER_PROVIDER1_USE')
                         global_app_user_provider1_use = json.data[i].parameter_value;
                     if (json.data[i].parameter_name=='USER_PROVIDER1_ID')
@@ -161,6 +233,20 @@ async function get_parameters() {
                         global_rest_app = json.data[i].parameter_value;
                     if (json.data[i].parameter_name=='REST_APP_LOG')
                         global_rest_app_log = json.data[i].parameter_value;
+                    if (json.data[i].parameter_name=='REST_MESSAGE_TRANSLATION')
+                        global_rest_message_translation = json.data[i].parameter_value;
+                    if (json.data[i].parameter_name=='REST_USER_ACCOUNT')
+                        global_rest_user_account = json.data[i].parameter_value;
+                    if (json.data[i].parameter_name=='REST_USER_ACCOUNT_ACTIVATE')
+                        global_rest_user_account_activate = json.data[i].parameter_value;
+                    if (json.data[i].parameter_name=='REST_USER_ACCOUNT_APP')
+                        global_rest_user_account_app = json.data[i].parameter_value;
+                    if (json.data[i].parameter_name=='REST_USER_ACCOUNT_LIKE')
+                        global_rest_user_account_like = json.data[i].parameter_value;
+                    if (json.data[i].parameter_name=='REST_USER_ACCOUNT_FOLLOW')
+                        global_rest_user_account_follow = json.data[i].parameter_value;
+                    if (json.data[i].parameter_name=='REST_USER_ACCOUNT_LOGIN')
+                        global_rest_user_account_login = json.data[i].parameter_value;
                     if (json.data[i].parameter_name=='REST_USER_ACCOUNT_PROFILE_DETAIL')
                         global_rest_user_account_profile_detail = json.data[i].parameter_value;
                     if (json.data[i].parameter_name=='REST_USER_ACCOUNT_PROFILE_SEARCHA')
@@ -173,6 +259,8 @@ async function get_parameters() {
                         global_rest_user_account_profile_userid = json.data[i].parameter_value;
                     if (json.data[i].parameter_name=='REST_USER_ACCOUNT_PROFILE_USERNAME')
                         global_rest_user_account_profile_username = json.data[i].parameter_value;
+                    if (json.data[i].parameter_name=='REST_USER_ACCOUNT_SIGNUP')
+                        global_rest_user_account_signup = json.data[i].parameter_value;
                     if (json.data[i].parameter_name=='SERVICE_GEOLOCATION')
                         global_service_geolocation = json.data[i].parameter_value;
                     if (json.data[i].parameter_name=='SERVICE_GEOLOCATION_GPS_IP')
@@ -266,7 +354,7 @@ function profile_home(){
     profile_top_div.style.display = 'block';
     profile_top_list_div.style.display = 'block';
     document.getElementById('profile_detail_list').innerHTML = '';
-    profile_top(1, '', Intl.DateTimeFormat().resolvedOptions().timeZone, global_lang_code);
+    profile_top(1, document.getElementById('user_menu_user_id').innerHTML, Intl.DateTimeFormat().resolvedOptions().timeZone, global_lang_code);
 }
 function profile_close(){
     let profile = document.getElementById('dialogue_profile');
@@ -297,6 +385,153 @@ function profile_close(){
 
     document.getElementById('profile_detail_list').innerHTML = '';
 }
+function user_menu_click(){
+    if (document.getElementById('user_menu_dropdown').style.visibility=='visible')
+        document.getElementById('user_menu_dropdown').style.visibility = 'hidden';
+    else
+        document.getElementById('user_menu_dropdown').style.visibility = 'visible';
+}
+function user_menu_item_click(item){
+    switch (item.id){
+        case 'user_menu_dropdown_profile':{
+            //profile_home();
+            document.getElementById('dialogue_profile').style.visibility = 'visible';
+            profile_show(document.getElementById('user_menu_user_id').innerHTML,
+                null,
+                document.getElementById('user_menu_user_id').innerHTML,
+                Intl.DateTimeFormat().resolvedOptions().timeZone,
+                global_lang_code,
+                (err, result)=>{
+                    null;
+                });
+            break;
+        }
+        case 'user_menu_dropdown_edit':{
+            user_edit_app();
+            break;
+        }
+        case 'user_menu_dropdown_log_out':{
+            user_logoff_app();            
+            break;
+        }
+        case 'user_menu_dropdown_signup':{
+            document.getElementById('dialogue_signup').style.visibility = 'visible';
+            break;
+        }
+        case 'user_menu_dropdown_log_in':{
+            document.getElementById('dialogue_login').style.visibility = 'visible';
+            break;
+        }
+        default:
+            break;
+    }
+    document.getElementById('user_menu_dropdown').style.visibility = 'hidden';
+}
+async function user_login_app(){
+    let username = document.getElementById('login_username');
+    let password = document.getElementById('login_password');
+    let user_id = document.getElementById('user_menu_user_id');
+    spinner('LOGIN', 'visible');
+    await user_login(username.value, password.value, global_lang_code, (err, result)=>{
+        spinner('LOGIN', 'hidden');
+        if (err==null){
+            username.value = '';
+            password.value = '';
+            
+            user_id.innerHTML = result.user_id;
+            //set avatar or empty
+            if (result.avatar == null || result.avatar == '') {
+                recreate_img(document.getElementById('user_menu_avatar_img'));
+                result.avatar = '';
+            } else
+                document.getElementById('user_menu_avatar_img').src = image_format(result.avatar);
+            document.getElementById('user_menu_username').innerHTML = result.username;
+            
+            document.getElementById('user_menu_logged_in').style.display = 'inline-block';
+            document.getElementById('user_menu').classList.add('user_menu_logged_in');
+            document.getElementById('user_menu_logged_out').style.display = 'none';
+
+            document.getElementById('user_menu_dropdown_logged_in').style.display = 'inline-block';
+            document.getElementById('user_menu_dropdown_logged_out').style.display = 'none';
+
+            document.getElementById('dialogue_login').style.visibility = 'hidden';
+            document.getElementById('dialogue_signup').style.visibility = 'hidden';
+        }
+        
+    })
+}
+function user_logoff_app() {
+    user_logoff(document.getElementById('user_menu_user_id').innerHTML, global_lang_code).then(function(){
+        document.getElementById('user_menu_user_id').innerHTML = '';
+        recreate_img(document.getElementById('user_menu_avatar_img'));
+        document.getElementById('user_menu_username').innerHTML = '';
+        document.getElementById('user_menu_logged_in').style.display = 'none';
+        document.getElementById('user_menu').classList.remove('user_menu_logged_in');
+        document.getElementById('user_menu_logged_out').style.display = 'inline-block';
+        document.getElementById('user_menu_dropdown_logged_in').style.display = 'none';
+        document.getElementById('user_menu_dropdown_logged_out').style.display = 'inline-block';
+    })
+}
+async function user_edit_app() {
+    await user_edit(document.getElementById('user_menu_user_id').innerHTML, Intl.DateTimeFormat().resolvedOptions().timeZone, global_lang_code.value,(err, result) => {
+        if ((err==null && result==null) == false)
+            if (err==null){
+                document.getElementById('user_menu_avatar_img').src = image_format(result.avatar);
+            }
+    });
+}
+async function user_update_app(){
+    await user_update(document.getElementById('user_menu_user_id').innerHTML, global_lang_code,(err, result) => {
+        if (err==null){
+            document.getElementById('user_menu_avatar_img').src = atob(result.avatar);
+            document.getElementById('user_menu_username').innerHTML = result.username;
+        }
+    });
+
+}
+async function user_verify_check_input_app(item, nextField){
+    await user_verify_check_input(item, document.getElementById('user_menu_user_id').innerHTML, nextField, global_lang_code, (err, result) => {
+        if ((err==null && result==null)==false)
+            if(err==null){
+                //create app for user_account
+                user_account_app(global_app_id, document.getElementById('user_menu_user_id').innerHTML, global_lang_code);
+                user_login_app();
+            }
+    })
+}
+async function user_function_app(function_name){
+    await user_function(function_name, document.getElementById('user_menu_user_id').innerHTML, global_lang_code, (err, result) => {
+        if (err==null){
+            profile_update_stat_app();
+        }
+    })
+}
+async function profile_update_stat_app(){
+    await profile_update_stat(global_lang_code, (err, result) =>{
+        null;
+    })
+}
+
+async function  user_delete_app(){
+    let user_local;
+    if (document.getElementById('user_edit_local').style.display == 'block')
+        user_local = true;
+    else
+        user_local = false;
+    let function_delete_user_account = function() { 
+                                            document.getElementById('dialogue_message').style.visibility = 'hidden';
+                                            user_delete(1, document.getElementById('user_menu_user_id').innerHTML, user_local, null, global_lang_code, (err, result)=>{
+                                                if (err==null){
+                                                    user_logoff_app();
+                                                }
+                                            }) 
+                                        };
+    await user_delete(null, document.getElementById('user_menu_user_id').innerHTML, user_local, function_delete_user_account, global_lang_code, (err, result) =>{
+        if (err==null){
+            user_logoff_app();
+        }
+    })
+}
 function init(){
     document.getElementById("toggle_checkbox").checked = true;
     document.getElementById('info_diagram_img').src=global_img_diagram_img;
@@ -312,7 +547,15 @@ function init(){
 
     document.getElementById('login_btn_signup').innerHTML = 'Signup';
     document.getElementById('signup_btn_login').innerHTML = 'Login';
-    
+
+    document.getElementById('user_menu_dropdown_profile').innerHTML = 'Profile';
+    document.getElementById('user_menu_dropdown_edit').innerHTML = 'Edit';
+    document.getElementById('user_menu_dropdown_log_out').innerHTML = 'Log out';
+
+    document.getElementById('user_menu_dropdown_signup').innerHTML = 'Signup';
+    document.getElementById('user_menu_dropdown_log_in').innerHTML = 'Log in';    
+
+    document.getElementById('confirm_question').innerHTML = 'Are you sure?';
 
     keyfunctions();
     zoom_info('');

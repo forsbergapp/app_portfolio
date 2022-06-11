@@ -1,4 +1,4 @@
-var global_app_main_id 					= 0;
+var global_main_app_id 					= 0;
 // if app not using translation then use default lang_code from navigator
 var global_lang_code                    = navigator.language;
 var global_rest_url_base 				= '/service/db/api/';
@@ -41,6 +41,13 @@ var global_rest_user_account_provider;
 var global_rest_user_account_signup;
 var global_rest_user_account_like;
 var global_rest_user_account_follow;
+//Images uploaded
+var global_image_file_allowed_type1;
+var global_image_file_allowed_type2;
+var global_image_file_allowed_type3;
+var global_image_file_mime_type;
+var global_image_file_max_size;
+
 //services
 var global_service_auth;
 var global_service_geolocation;
@@ -399,7 +406,7 @@ function profile_detail(detailchoice, user_id, timezone, lang_code, rest_url_app
                     profile_detail_list.innerHTML = html;
                     show_profile_click_events('.profile_detail_list_username', profile_id, user_id, timezone, lang_code, click_function);
                 } else {
-                    exception(status, result);
+                    exception(status, result, lang_code);
                 }
             })
             .catch(function(error) {
@@ -713,7 +720,7 @@ async function user_login(username, password, lang_code, callBack) {
                                    avatar: json.items[0].avatar})
 
         } else {
-            exception(status, result);
+            exception(status, result, lang_code);
             return callBack(result, null);
         }
     })
@@ -760,7 +767,6 @@ async function user_logoff(user_id, lang_code){
         document.getElementById('setting_input_new_password_edit').value = '';
         document.getElementById('setting_input_new_password_confirm_edit').value = '';
         document.getElementById('setting_input_password_reminder_edit').value = '';
-        document.getElementById('setting_avatar_edit').style.display = "none";
 
         //clear signup
         document.getElementById('signup_username').value = '';
@@ -786,6 +792,646 @@ async function user_logoff(user_id, lang_code){
         document.getElementById('profile_detail').style.display = "none";
         document.getElementById('profile_detail_list').innerHTML = '';
         
+    })
+}
+async function user_edit(user_id, timezone, lang_code,callBack) {
+    let json;
+    if (document.getElementById('dialogue_user_edit').style.visibility == 'visible') {
+        document.getElementById('dialogue_user_edit').style.visibility = "hidden";
+        document.getElementById('setting_checkbox_report_private').checked = false;
+        //common
+        document.getElementById('setting_input_bio_edit').value = '';
+        //local
+        document.getElementById('setting_input_username_edit').value = '';
+        document.getElementById('setting_input_email_edit').value = '';
+        document.getElementById('setting_input_password_edit').value = '';
+        document.getElementById('setting_input_password_confirm_edit').value = '';
+        document.getElementById('setting_input_new_password_edit').value = '';
+        document.getElementById('setting_input_new_password_confirm_edit').value = '';
+        document.getElementById('setting_input_password_reminder_edit').value = '';
+        //provider
+        document.getElementById('setting_user_edit_provider_logo').innerHTML = '';
+        document.getElementById('setting_label_provider_id_edit_data').innerHTML = '';
+        document.getElementById('setting_label_provider_name_edit_data').innerHTML = '';
+        document.getElementById('setting_label_provider_email_edit_data').innerHTML = '';
+        document.getElementById('setting_label_provider_image_url_edit_data').innerHTML = '';
+
+        //account info
+        document.getElementById('setting_label_data_last_logontime_edit').value = '';
+        document.getElementById('setting_label_data_account_created_edit').value = '';
+        document.getElementById('setting_label_data_account_modified_edit').value = '';
+        return callBack(null, null);
+    } else {
+        let status;
+        //get user from REST API
+        fetch(global_rest_url_base + global_rest_user_account + user_id +
+                '?app_id=' + global_app_id +
+                '&lang_code=' + lang_code, {
+                method: 'GET',
+                headers: {
+                    'Authorization': 'Bearer ' + global_rest_at
+                }
+            })
+            .then(function(response) {
+                status = response.status;
+                return response.text();
+            })
+            .then(function(result) {
+                if (status == 200) {
+                    json = JSON.parse(result);
+                    if (user_id == json.id) {
+                        document.getElementById('user_edit_local').style.display = 'none';
+                        document.getElementById('user_edit_provider').style.display = 'none';
+                        document.getElementById('dialogue_user_edit').style.visibility = "visible";
+
+                        document.getElementById('setting_checkbox_report_private').checked = number_to_boolean(json.private);
+                        document.getElementById('setting_input_bio_edit').value = get_null_or_value(json.bio);
+
+                        if (json.provider1_id == null && json.provider2_id == null) {
+                            document.getElementById('user_edit_local').style.display = 'block';
+                            document.getElementById('user_edit_provider').style.display = 'none';
+
+                            //display fetched avatar in user edit dialogue
+                            document.getElementById('user_edit_avatar').style.display = 'block';
+                            if (json.avatar == null || json.avatar == '')
+                                recreate_img(document.getElementById('user_edit_avatar_img'));
+                            else
+                                document.getElementById('user_edit_avatar_img').src = image_format(json.avatar);
+
+                            document.getElementById('setting_input_username_edit').value = json.username;
+
+                            document.getElementById('setting_input_email_edit').value = json.email;
+
+                            document.getElementById('setting_input_password_edit').value = '',
+                                document.getElementById('setting_input_password_confirm_edit').value = '',
+                                document.getElementById('setting_input_new_password_edit').value = '';
+                            document.getElementById('setting_input_new_password_confirm_edit').value = '';
+
+                            document.getElementById('setting_input_password_reminder_edit').value = json.password_reminder;
+                        } else
+                        if (json.provider1_id !== null) {
+                            document.getElementById('user_edit_provider').style.display = 'block';
+                            document.getElementById('setting_user_edit_provider_logo').innerHTML = '<i class="fab fa-google"></i>';
+                            document.getElementById('user_edit_local').style.display = 'none';
+                            document.getElementById('setting_label_provider_id_edit_data').innerHTML = json.provider1_id;
+                            document.getElementById('setting_label_provider_name_edit_data').innerHTML = json.provider1_first_name + ' ' + json.provider1_last_name;
+                            document.getElementById('setting_label_provider_email_edit_data').innerHTML = json.provider1_email;
+                            document.getElementById('setting_label_provider_image_url_edit_data').innerHTML = json.provider1_image_url;
+                        } else
+                        if (json.provider2_id !== null) {
+                            document.getElementById('user_edit_provider').style.display = 'block';
+                            document.getElementById('setting_user_edit_provider_logo').innerHTML = '<i class="fab fa-facebook"></i>';
+                            document.getElementById('user_edit_local').style.display = 'none';
+                            document.getElementById('setting_label_provider_id_edit_data').innerHTML = json.provider2_id;
+                            document.getElementById('setting_label_provider_name_edit_data').innerHTML = json.provider2_first_name + ' ' + json.provider2_last_name;
+                            document.getElementById('setting_label_provider_email_edit_data').innerHTML = json.provider2_email;
+                            document.getElementById('setting_label_provider_image_url_edit_data').innerHTML = json.provider2_image_url;
+                        }
+                        document.getElementById('setting_label_data_last_logontime_edit').innerHTML = format_json_date(json.last_logontime, null, timezone, lang_code);
+                        document.getElementById('setting_label_data_account_created_edit').innerHTML = format_json_date(json.date_created, null, timezone, lang_code);
+                        document.getElementById('setting_label_data_account_modified_edit').innerHTML = format_json_date(json.date_modified, null, timezone, lang_code);
+                        return callBack(null, {id: json.id,
+                                               provider_1: json.provider1_id,
+                                               provider_2: json.provider2_id,
+                                               avatar:     json.avatar
+                                              });
+                    } else {
+                        //User not found
+                        show_message('ERROR', 20305, null, null, global_main_app_id, lang_code);
+                        return callBack('ERROR', null);
+                    }
+                } else {
+                    exception(status, result, lang_code);
+                    return callBack(result, null);
+                }
+            })
+            .catch(function(error) {
+                show_message('EXCEPTION', null,null, error, global_app_id, lang_code);
+                return callBack(error, null);
+            });
+    }
+}
+async function user_update(user_id, lang_code, callBack) {
+    let avatar = btoa(document.getElementById('user_edit_avatar_img').src);
+    let username = document.getElementById('setting_input_username_edit').value;
+    let bio = document.getElementById('setting_input_bio_edit').value;
+    let email = document.getElementById('setting_input_email_edit').value;
+    let password = document.getElementById('setting_input_password_edit').value;
+    let password_confirm = document.getElementById('setting_input_password_confirm_edit').value;
+    let new_password = document.getElementById('setting_input_new_password_edit').value;
+    let new_password_confirm = document.getElementById('setting_input_new_password_confirm_edit').value;
+    let password_reminder = document.getElementById('setting_input_password_reminder_edit').value;
+    
+    let url;
+    let json;
+    let json_data;
+    let status;
+
+    if (document.getElementById('user_edit_local').style.display == 'block') {
+        json_data = `{ 
+                        "bio":"${bio}",
+                        "private": ${boolean_to_number(document.getElementById('setting_checkbox_report_private').checked)},
+                        "username":"${username}",
+                        "password":"${password}",
+                        "new_password":"${new_password}",
+                        "password_reminder":"${password_reminder}",
+                        "email":"${email}",
+                        "avatar":"${avatar}"
+                    }`;
+        url = global_rest_url_base + global_rest_user_account + user_id;
+        document.getElementById('setting_input_username_edit').classList.remove('input_error');
+
+        document.getElementById('setting_input_bio_edit').classList.remove('input_error');
+        document.getElementById('setting_input_email_edit').classList.remove('input_error');
+
+        document.getElementById('setting_input_password_edit').classList.remove('input_error');
+        document.getElementById('setting_input_password_confirm_edit').classList.remove('input_error');
+        document.getElementById('setting_input_new_password_edit').classList.remove('input_error');
+        document.getElementById('setting_input_new_password_confirm_edit').classList.remove('input_error');
+
+        document.getElementById('setting_input_password_reminder_edit').classList.remove('input_error');
+
+        //validate input
+        if (username == '') {
+            //"Please enter username"
+            document.getElementById('setting_input_username_edit').classList.add('input_error');
+            show_message('ERROR', 20303, null, null, lang_code);
+            return callBack('ERROR', null);
+        }
+        if (password == '') {
+            //"Please enter password"
+            document.getElementById('setting_input_password_edit').classList.add('input_error');
+            show_message('ERROR', 20304, null, null, global_main_app_id, lang_code);
+            return callBack('ERROR', null);
+        }
+        if (password != password_confirm) {
+            //Password not the same
+            document.getElementById('setting_input_password_confirm_edit').classList.add('input_error');
+            show_message('ERROR', 20301, null, null, global_main_app_id, lang_code);
+            return callBack('ERROR', null);
+        }
+        //check new passwords
+        if (new_password != new_password_confirm) {
+            //New Password are entered but they are not the same
+            document.getElementById('setting_input_new_password_edit').classList.add('input_error');
+            document.getElementById('setting_input_new_password_confirm_edit').classList.add('input_error');
+            show_message('ERROR', 20301, null, null, lang_code);
+            return callBack('ERROR', null);
+        }
+    } else {
+        json_data = `{"bio":"${bio}",
+                      "private":${boolean_to_number(document.getElementById('setting_checkbox_report_private').checked)}
+                     }`;
+        url = global_rest_url_base + global_rest_user_account_common + user_id
+    }
+    spinner('UPDATE', 'visible');
+    //update user using REST API
+    fetch(url + '?app_id=' + global_app_id +
+                '&lang_code=' + lang_code, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + global_rest_at
+            },
+            body: json_data
+        })
+        .then(function(response) {
+            status = response.status;
+            return response.text();
+        })
+        .then(function(result) {
+            if (status == 200) {
+                json = JSON.parse(result);
+                document.getElementById('dialogue_user_edit').style.visibility = "hidden";
+                document.getElementById('user_edit_avatar').style.display = 'none';
+
+                document.getElementById('setting_checkbox_report_private').checked = false;
+                document.getElementById('setting_input_username_edit').value = '';
+                document.getElementById('setting_input_bio_edit').value = '';
+                document.getElementById('setting_input_email_edit').value = '';
+                document.getElementById('setting_input_password_edit').value = '';
+                document.getElementById('setting_input_password_confirm_edit').value = '';
+                document.getElementById('setting_input_new_password_edit').value = '';
+                document.getElementById('setting_input_new_password_confirm_edit').value = '';
+                document.getElementById('setting_input_password_reminder_edit').value = '';
+                //provider
+                document.getElementById('setting_user_edit_provider_logo').innerHTML = '';
+                document.getElementById('setting_label_provider_id_edit_data').innerHTML = '';
+                document.getElementById('setting_label_provider_name_edit_data').innerHTML = '';
+                document.getElementById('setting_label_provider_email_edit_data').innerHTML = '';
+                document.getElementById('setting_label_provider_image_url_edit_data').innerHTML = '';
+
+                document.getElementById('setting_label_data_last_logontime_edit').innerHTML = '';
+                document.getElementById('setting_label_data_account_created_edit').innerHTML = '';
+                document.getElementById('setting_label_data_account_modified_edit').innerHTML = '';
+                spinner('UPDATE', 'hidden');
+                return callBack(null, {username: username, 
+                                       avatar: avatar,
+                                       bio: bio});
+            } else {
+                spinner('UPDATE', 'hidden');
+                exception(status, result, lang_code);
+                return callBack(result, null);
+            }
+        })
+        .catch(function(error) {
+            spinner('UPDATE', 'hidden');
+            show_message('EXCEPTION', null,null, error, global_app_id, lang_code);
+            return callBack(error, null);
+        });
+}
+function user_signup(item_destination_user_id, lang_code) {
+    let username = document.getElementById('signup_username').value;
+    let email = document.getElementById('signup_email').value;
+    let password = document.getElementById('signup_password').value;
+    let password_confirm = document.getElementById('signup_password_confirm').value;
+    let password_reminder = document.getElementById('signup_password_reminder').value;
+
+    let json_data = `{
+                    "user_language": "${navigator.language}",
+                    "user_timezone": "${Intl.DateTimeFormat().resolvedOptions().timeZone}",
+                    "user_number_system": "${Intl.NumberFormat().resolvedOptions().numberingSystem}",
+                    "user_platform": "${navigator.platform}",
+                    "username":"${username}",
+                    "password":"${password}",
+                    "password_reminder":"${password_reminder}",
+                    "email":"${email}",
+                    "active":0 }`;
+    let status;
+    if (username == '') {
+        //"Please enter username"
+        show_message('ERROR', 20303, null, null, global_main_app_id, lang_code);
+        return null;
+    }
+    if (password == '') {
+        //"Please enter password"
+        show_message('ERROR', 20304, null, null, global_main_app_id, lang_code);
+        return null;
+    }
+    if (password != password_confirm) {
+        //Password not the same
+        show_message('ERROR', 20301, null, null, global_main_app_id, lang_code);
+        return null;
+    }
+
+    spinner('SIGNUP', 'visible');
+    fetch(global_rest_url_base + global_rest_user_account_signup +
+            '?app_id=' + global_app_id +
+            '&lang_code=' + lang_code, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + global_rest_dt
+            },
+            body: json_data
+        })
+        .then(function(response) {
+            status = response.status;
+            return response.text();
+        })
+        .then(function(result) {
+            spinner('SIGNUP', 'hidden');
+            if (status == 200) {
+                json = JSON.parse(result);
+                global_rest_at = json.accessToken;
+                //update item with new user_account.id
+                item_destination_user_id.innerHTML = json.id;
+                show_common_dialogue('VERIFY');
+            } else {
+                exception(status, result, lang_code);
+            }
+        })
+        .catch(function(error) {
+            spinner('SIGNUP', 'hidden');
+            show_message('EXCEPTION', null,null, error, global_app_id, lang_code);
+        });
+}
+async function user_verify_check_input(item, user_id, nextField, lang_code, callBack) {
+
+    let status;
+    let json;
+    let json_data;
+    //only accept 0-9
+    if (['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'].indexOf(document.getElementById(item.id).value) > -1)
+        if (nextField == '' || (document.getElementById('user_verify_verification_char1').value != '' &
+                document.getElementById('user_verify_verification_char2').value != '' &
+                document.getElementById('user_verify_verification_char3').value != '' &
+                document.getElementById('user_verify_verification_char4').value != '' &
+                document.getElementById('user_verify_verification_char5').value != '' &
+                document.getElementById('user_verify_verification_char6').value != '')) {
+            //last field, validate entered code
+            let validation_code = parseInt(document.getElementById('user_verify_verification_char1').value +
+                document.getElementById('user_verify_verification_char2').value +
+                document.getElementById('user_verify_verification_char3').value +
+                document.getElementById('user_verify_verification_char4').value +
+                document.getElementById('user_verify_verification_char5').value +
+                document.getElementById('user_verify_verification_char6').value);
+            spinner('SIGNUP', 'visible');
+            document.getElementById('user_verify_verification_char1').classList.remove('input_error');
+            document.getElementById('user_verify_verification_char2').classList.remove('input_error');
+            document.getElementById('user_verify_verification_char3').classList.remove('input_error');
+            document.getElementById('user_verify_verification_char4').classList.remove('input_error');
+            document.getElementById('user_verify_verification_char5').classList.remove('input_error');
+            document.getElementById('user_verify_verification_char6').classList.remove('input_error');
+
+            //activate user
+            json_data = '{"validation_code":"' + validation_code + '"}';
+            fetch(global_rest_url_base + global_rest_user_account_activate + user_id +
+                    '?app_id=' + global_app_id + 
+                    '&lang_code=' + lang_code, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + global_rest_dt
+                    },
+                    body: json_data
+                })
+                .then(function(response) {
+                    status = response.status;
+                    return response.text();
+                })
+                .then(function(result) {
+                    spinner('SIGNUP', 'hidden');
+                    if (status == 200) {
+                        json = JSON.parse(result);
+                        if (json.items[0].affectedRows == 1) {
+                            //login with username and password from signup fields
+                            document.getElementById('dialogue_login').style.visibility = "hidden";
+                            document.getElementById('login_username').value =
+                                document.getElementById('signup_username').value;
+                            document.getElementById('login_password').value =
+                                document.getElementById('signup_password').value;
+
+                            document.getElementById('dialogue_signup').style.visibility = 'hidden';
+                            document.getElementById('signup_username').value = '';
+                            document.getElementById('signup_email').value = '';
+                            document.getElementById('signup_password').value = '';
+                            document.getElementById('signup_password_confirm').value = '';
+                            document.getElementById('signup_password_reminder').value = '';
+                            
+                            document.getElementById('dialogue_user_verify').style.visibility = 'hidden';
+                            document.getElementById('user_verify_verification_char1').value = '';
+                            document.getElementById('user_verify_verification_char2').value = '';
+                            document.getElementById('user_verify_verification_char3').value = '';
+                            document.getElementById('user_verify_verification_char4').value = '';
+                            document.getElementById('user_verify_verification_char5').value = '';
+                            document.getElementById('user_verify_verification_char6').value = '';
+                            return callBack(null, {actived: 1});
+
+                        } else {
+                            document.getElementById('user_verify_verification_char1').classList.add('input_error');
+                            document.getElementById('user_verify_verification_char2').classList.add('input_error');
+                            document.getElementById('user_verify_verification_char3').classList.add('input_error');
+                            document.getElementById('user_verify_verification_char4').classList.add('input_error');
+                            document.getElementById('user_verify_verification_char5').classList.add('input_error');
+                            document.getElementById('user_verify_verification_char6').classList.add('input_error');
+                            //code not valid
+                            show_message('ERROR', 20306, null, null, global_main_app_id, lang_code);
+                            return callBack('ERROR', null);
+                        }
+                    } else {
+                        exception(status, result, lang_code);
+                        return callBack(result, null);
+                    }
+                })
+                .catch(function(error) {
+                    spinner('SIGNUP', 'hidden');
+                    show_message('EXCEPTION', null,null, error, global_app_id, lang_code);
+                    return callBack(error, null);
+                });
+        } else{
+            //not last, next!
+            document.getElementById(nextField).focus();
+            return callBack(null, null);
+        }
+    else{
+        //remove anything else than 0-9
+        document.getElementById(item.id).value = '';
+        return callBack(null, null);
+    }
+}
+async function user_delete(choice=null, user_account_id, user_local, function_delete_event, lang_code, callBack ) {
+    let password = document.getElementById('setting_input_password_edit').value;
+    let status;
+    switch (choice){
+        case null:{
+            if (user_local==true && password == '') {
+                //"Please enter password"
+                document.getElementById('setting_input_password_edit').classList.add('input_error');
+                show_message('ERROR', 20304, null, null, global_main_app_id, lang_code);
+                return null;
+            }
+            show_message('CONFIRM',null,function_delete_event, null, null, global_app_id, lang_code);
+            return callBack('CONFIRM',null);
+            break;
+        }
+        case 1:{
+            document.getElementById("dialogue_message").style.visibility = "hidden";
+            document.getElementById('setting_input_username_edit').classList.remove('input_error');
+            document.getElementById('setting_input_bio_edit').classList.remove('input_error');
+            document.getElementById('setting_input_email_edit').classList.remove('input_error');
+            document.getElementById('setting_input_password_edit').classList.remove('input_error');
+            document.getElementById('setting_input_password_confirm_edit').classList.remove('input_error');
+            document.getElementById('setting_input_new_password_edit').classList.remove('input_error');
+            document.getElementById('setting_input_new_password_confirm_edit').classList.remove('input_error');
+            document.getElementById('setting_input_password_reminder_edit').classList.remove('input_error');
+    
+            spinner('DELETE_ACCOUNT', 'visible');
+            let json_data = `{"password":"${password}"}`;
+            fetch(global_rest_url_base + global_rest_user_account + user_account_id + 
+                    '?app_id=' + global_app_id +
+                    '&lang_code=' + lang_code, 
+                {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + global_rest_at
+                    },
+                    body: json_data
+                })
+                .then(function(response) {
+                    status = response.status;
+                    return response.text();
+                })
+                .then(function(result) {
+                    spinner('DELETE_ACCOUNT', 'hidden');
+                    if (status == 200)
+                        return callBack(null,{deleted: 1});
+                    else{
+                        exception(status, result, lang_code);
+                        return callBack(result,null);
+                    }
+                })
+                .catch(function(error) {
+                    spinner('DELETE_ACCOUNT', 'hidden');
+                    show_message('EXCEPTION', null,null, error, global_app_id, lang_code);
+                    return callBack(error,null);
+                });
+            break;
+        }
+        default:
+            break;
+    }
+}
+function user_function(user_function, user_id, lang_code, callBack) {
+    let user_id_profile = document.getElementById('profile_id').innerHTML;
+    let status;
+    let json_data;
+    let method;
+    let rest_path;
+    let check_div;
+    switch (user_function) {
+        case 'FOLLOW':
+            {
+                rest_path = global_rest_user_account_follow;
+                json_data = '{"user_account_id":' + user_id_profile + '}';
+                check_div = document.getElementById('profile_follow');
+                break;
+            }
+        case 'LIKE':
+            {
+                rest_path = global_rest_user_account_like;
+                json_data = '{"user_account_id":' + user_id_profile + '}';
+                check_div = document.getElementById('profile_like');
+                break;
+            }
+    }
+
+    if (user_id == '')
+        show_common_dialogue('LOGIN');
+    else {
+        if (check_div.children[0].style.display == 'block') {
+            method = 'POST';
+        } else {
+            method = 'DELETE';
+        }
+        fetch(global_rest_url_base + rest_path + user_id +
+                '?app_id=' + global_app_id + 
+                '&lang_code=' + lang_code, {
+                method: method,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + global_rest_at
+                },
+                body: json_data
+            })
+            .then(function(response) {
+                status = response.status;
+                return response.text();
+            })
+            .then(function(result) {
+                if (status == 200) {
+                    json = JSON.parse(result);
+                    switch (user_function) {
+                        case 'FOLLOW':
+                            {
+                                if (document.getElementById('profile_follow').children[0].style.display == 'block'){
+                                    //follow
+                                    document.getElementById('profile_follow').children[0].style.display = 'none';
+                                    document.getElementById('profile_follow').children[1].style.display = 'block';
+                                }
+                                else{
+                                    //unfollow
+                                    document.getElementById('profile_follow').children[0].style.display = 'block';
+                                    document.getElementById('profile_follow').children[1].style.display = 'none';
+                                }
+                                break;
+                            }
+                        case 'LIKE':
+                            {
+                                if (document.getElementById('profile_like').children[0].style.display == 'block'){
+                                    //like
+                                    document.getElementById('profile_like').children[0].style.display = 'none';
+                                    document.getElementById('profile_like').children[1].style.display = 'block';
+                                }
+                                else{
+                                    //unlike
+                                    document.getElementById('profile_like').children[0].style.display = 'block';
+                                    document.getElementById('profile_like').children[1].style.display = 'none';
+                                }
+                                break;
+                            }
+                    }
+                    return callBack(null, {});
+                } else {
+                    exception(status, result, lang_code);
+                    return callBack(result, null);
+                }
+            })
+            .catch(function(error) {
+                show_message('EXCEPTION', null,null, error, global_app_id, lang_code);
+                return callBack(error, null);
+            });
+    }
+}
+function user_account_app(app_id, user_account_id, lang_code) {
+    let status;
+    let json_data =
+        `{"app_id": ${app_id},
+          "user_account_id": ${user_account_id}
+         }`;
+    fetch(global_rest_url_base + global_rest_user_account_app +
+            '?lang_code=' + lang_code, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + global_rest_at
+            },
+            body: json_data
+        })
+        .then(function(response) {
+            status = response.status;
+            return response.text();
+        })
+        .then(function(result) {
+            if (status === 200) {
+                let json = JSON.parse(result);
+            } else {
+                exception(status, result, lang_code);
+            }
+        })
+        .catch(function(error) {
+            show_message('EXCEPTION', null,null, error, global_app_id, lang_code);
+        });
+}
+async function profile_update_stat(lang_code, callBack){
+    let profile_id = document.getElementById('profile_id');
+    let json_data =
+    `{
+    "client_longitude": "${global_session_user_gps_longitude}",
+    "client_latitude": "${global_session_user_gps_latitude}"
+    }`;
+    //get updated stat for given user
+    //to avoid update in stat set searched by same user
+    let url = global_rest_url_base + global_rest_user_account_profile_userid + profile_id.innerHTML;
+    let status;
+    fetch(url + 
+        '?app_id=' + global_app_id + 
+        '&lang_code=' + lang_code +
+        '&id=' + profile_id.innerHTML, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + global_rest_dt
+        },
+        body: json_data
+    })
+    .then(function(response) {
+        status = response.status;
+        return response.text();
+    })
+    .then(function(result) {
+        if (status == 200) {
+            json = JSON.parse(result);
+            document.getElementById('profile_info_view_count').innerHTML = json.count_views;
+            document.getElementById('profile_info_following_count').innerHTML = json.count_following;
+            document.getElementById('profile_info_followers_count').innerHTML = json.count_followed;
+            document.getElementById('profile_info_likes_count').innerHTML = json.count_likes;
+            document.getElementById('profile_info_liked_count').innerHTML = json.count_liked;
+            return callBack(null, {id : json.id})
+        }
+        else
+            return callBack(result, null);
     })
 }
 async function get_data_token(user_id, lang_code) {
@@ -837,7 +1483,7 @@ async function get_gps_from_ip(user_id, lang_code) {
                                                 json.geoplugin_regionName + ', ' +
                                                 json.geoplugin_countryName;
         } else {
-            exception(status, result);
+            exception(status, result, lang_code);
         }
     })
 }
@@ -1096,4 +1742,145 @@ function image_format(arr) {
             return atob(arr);
         }
     }
+}
+function spinner(button, visibility) {
+    let button_spinner = `<div id="button_spinner" class="load-spinner">
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                         </div>`;
+    let button_default_icon_login = '<i class="fas fa-arrow-alt-circle-right"></i>';
+    let button_default_icon_signup = '<i class="fas fa-arrow-alt-circle-right"></i>';
+    let button_default_icon_update = '<i class="fas fa-save"></i>';
+    let button_default_icon_delete_account = '<i class="fas fa-trash-alt"></i>';
+    
+    let button_update_text = document.getElementById('setting_btn_label_user_update').outerHTML;
+    let button_delete_account_text = document.getElementById('setting_btn_label_user_delete_account').outerHTML;
+    
+    switch (button) {
+        case 'LOGIN':
+            {
+                if (visibility == 'visible')
+                    document.getElementById('login_button').innerHTML = button_spinner;
+                else
+                    document.getElementById('login_button').innerHTML = button_default_icon_login;
+                break;
+            }
+        case 'SIGNUP':
+            {
+                if (visibility == 'visible')
+                    document.getElementById('signup_button').innerHTML = button_spinner;
+                else
+                    document.getElementById('signup_button').innerHTML = button_default_icon_signup;
+                break;
+            }
+        case 'UPDATE':
+            {
+                if (visibility == 'visible')
+                    document.getElementById('setting_btn_user_update').innerHTML = button_spinner + button_update_text;
+                else
+                    document.getElementById('setting_btn_user_update').innerHTML = button_default_icon_update + button_update_text;
+                break;
+            }
+        case 'DELETE_ACCOUNT':
+            {
+                if (visibility == 'visible')
+                    document.getElementById('setting_btn_user_delete_account').innerHTML = button_spinner + button_delete_account_text;
+                else
+                    document.getElementById('setting_btn_user_delete_account').innerHTML = button_default_icon_delete_account + button_delete_account_text;
+                break;
+            }
+        default:
+            {
+                null;
+            }
+    }
+    return null;
+}
+function exception(status, message, lang_code){
+    if (status == 401)
+        eval(`(function (){${global_exception_app_function}()}());`);
+    else
+        show_message('EXCEPTION',  null, null, message, global_app_id, lang_code);
+}
+function recreate_img(img_item) {
+    //cant set img src to null, it will containt url or show corrupt image
+    //recreating the img is the workaround
+    let parentnode = img_item.parentNode;
+    let id = img_item.id;
+    let alt = img_item.alt;
+    let img = document.createElement('img');
+
+    parentnode.removeChild(img_item);
+    img.id = id;
+    img.alt = alt;
+    parentnode.appendChild(img);
+    return null;
+}
+function boolean_to_number(boolean_value) {
+    if (boolean_value == true)
+        return 1;
+    else
+        return 0;
+}
+function number_to_boolean(number_value) {
+    if (number_value == 1)
+        return true;
+    else
+        return false;
+}
+function show_image(item_img, item_input, image_width, image_height, lang_code) {
+    let file = document.getElementById(item_input).files[0];
+    let reader = new FileReader();
+
+    const allowedExtensions = [global_image_file_allowed_type1,
+                               global_image_file_allowed_type2,
+                               global_image_file_allowed_type3
+                              ];
+    const { name: fileName, size: fileSize } = file;
+    const fileExtension = fileName.split(".").pop();
+    if (!allowedExtensions.includes(fileExtension)){
+        //File type not allowed
+        show_message('ERROR', 20307, null,null, global_main_app_id, lang_code);
+    }
+    else
+        if (fileSize > global_image_file_max_size){
+            //File size too large
+            show_message('ERROR', 20308, null, null, global_main_app_id, lang_code);
+        }
+        else {
+            /*Save all file in mime type format specified in parameter
+             using direct "...item_img.src = event.target.result;..." instead
+             of "...ctx.canvas.toDataURL()..." usage would not convert uploaded file 
+             to desired format, for example uploading png file will convert to jpg image
+             and to specified size, this will save space in database */
+            reader.onloadend = function(event) {
+                let img = new Image();
+                img.src = event.target.result;
+                
+                img.onload = function(el) {
+                    let elem = document.createElement('canvas');
+                    elem.width = image_width;
+                    elem.height = image_height;
+                    let ctx = elem.getContext('2d');
+                    ctx.drawImage(el.target, 0, 0, elem.width, elem.height);
+                    let srcEncoded = ctx.canvas.toDataURL(global_image_file_mime_type);
+                    item_img.src = srcEncoded;
+                }
+            }
+        }
+    if (file)
+        reader.readAsDataURL(file); //reads the data as a URL
+    else
+        item_show.src = '';
+    return null;
 }
