@@ -19,6 +19,7 @@ module.exports = {
                 else{
                     //module html files
                     const AppHead = fs.readFileSync(__dirname + '/app0/src/head.html', 'utf8');
+                    const AppUserAccount = fs.readFileSync(__dirname + '/app0/src/user_account.html', 'utf8');
                     const AppToggle = fs.readFileSync(__dirname + '/app0/src/toogle.html', 'utf8');
                     const AppMoon = fs.readFileSync(__dirname + '/app0/src/moon.html', 'utf8');
                     const AppSun = fs.readFileSync(__dirname + '/app0/src/sun.html', 'utf8');
@@ -32,6 +33,9 @@ module.exports = {
                         app = app.replace(
                             '<AppCommonHead/>',
                             `${AppCommonHead}`);    
+                        app = app.replace(
+                            '<AppUserAccount/>',
+                            `${AppUserAccount}`);
                         app = app.replace(
                             '<AppToggle/>',
                             `${AppToggle}`);
