@@ -1654,8 +1654,8 @@ INSERT INTO app_portfolio.app_message (message_code, app_id) VALUES ('20303',0);
 INSERT INTO app_portfolio.app_message (message_code, app_id) VALUES ('20304',0);
 INSERT INTO app_portfolio.app_message (message_code, app_id) VALUES ('20305',0);
 INSERT INTO app_portfolio.app_message (message_code, app_id) VALUES ('20306',0);
-INSERT INTO app_portfolio.app_message (message_code, app_id) VALUES ('20307',1);
-INSERT INTO app_portfolio.app_message (message_code, app_id) VALUES ('20308',1);
+INSERT INTO app_portfolio.app_message (message_code, app_id) VALUES ('20307',0);
+INSERT INTO app_portfolio.app_message (message_code, app_id) VALUES ('20308',0);
 INSERT INTO app_portfolio.app_message (message_code, app_id) VALUES ('20400',0);
 INSERT INTO app_portfolio.app_message (message_code, app_id) VALUES ('20400',1);
 INSERT INTO app_portfolio.app_message (message_code, app_id) VALUES ('20401',1);
@@ -1749,6 +1749,15 @@ INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_na
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','QR_WIDTH','128',NULL);
 
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'1','GPS_MAP_ACCESS_TOKEN','{MAPBOX_ID}',NULL);
+
+INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','IMAGE_FILE_ALLOWED_TYPE1','jpg',NULL);
+INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','IMAGE_FILE_ALLOWED_TYPE2','png',NULL);
+INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','IMAGE_FILE_ALLOWED_TYPE3','gif',NULL);
+INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','IMAGE_FILE_MAX_SIZE','2000000',NULL);
+INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','IMAGE_FILE_MIME_TYPE','image/jpeg',NULL);
+
+INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','USER_IMAGE_AVATAR_HEIGHT','64',NULL);
+INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','USER_IMAGE_AVATAR_WIDTH','64',NULL);
 
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','APP_DEFAULT_STARTUP_PAGE','3','1=print, 2=day, 3=month, 4=year, 5=settings, 6=profile');
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','APP_REPORT_PATH','/apps/app1/report/',NULL);
@@ -1847,13 +1856,8 @@ INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_na
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','TEXT_DEFAULT_REPORTTITLE1',NULL,NULL);
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','TEXT_DEFAULT_REPORTTITLE2',NULL,NULL);
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','TEXT_DEFAULT_REPORTTITLE3',NULL,NULL);
-INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','IMAGE_FILE_ALLOWED_TYPE1','jpg',NULL);
-INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','IMAGE_FILE_ALLOWED_TYPE2','png',NULL);
-INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','IMAGE_FILE_ALLOWED_TYPE3','gif',NULL);
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','IMAGE_HEADER_FOOTER_HEIGHT','160',NULL);
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','IMAGE_HEADER_FOOTER_WIDTH','800',NULL);
-INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','IMAGE_FILE_MAX_SIZE','2000000',NULL);
-INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','IMAGE_FILE_MIME_TYPE','image/jpeg',NULL);
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','IMAGE_DEFAULT_REPORT_FOOTER_SRC',NULL,NULL);
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','IMAGE_DEFAULT_REPORT_HEADER_SRC','/app1/images/banner_kaaba.jpg',NULL);
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','PRAYER_DEFAULT_ASR','0','Asr method: Standard');
@@ -1870,8 +1874,6 @@ INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_na
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','PRAYER_DEFAULT_SHOW_MIDNIGHT','false','Column midnight: no');
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','PRAYER_DEFAULT_SHOW_SUNSET','false','Column sunset: no');
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','PRAYER_DEFAULT_TIMEFORMAT','0','Timeformat: 12h with no suffix');
-INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','USER_IMAGE_AVATAR_HEIGHT','64',NULL);
-INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','USER_IMAGE_AVATAR_WIDTH','64',NULL);
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','PWA_BACKGROUND_COLOR','#FFFFFF',NULL);
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','PWA_DESCRIPTION','Advanced traditional muslim salah timetables',NULL);
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','PWA_DISPLAY','standalone',NULL);

@@ -11,7 +11,6 @@ body {
 	-ms-text-size-adjust: none;
 	padding: 0px;
 }
-
 /* common*/
 select,input, button {
 	font-family: inherit;
@@ -27,6 +26,72 @@ a:hover {
 }
 a:active {
 	text-decoration: underline;
+}
+/*User account*/
+#user_menu{
+	visibility: visible;
+	top:10px;
+	right:10px;
+	position:fixed;
+	width: 40px;
+	height:40px;
+	z-index:1;
+	border-radius: 20px !important;
+	cursor:pointer;
+}
+.user_menu_logged_in{
+	width: auto !important;
+    height: auto !important;
+    padding: 10px;
+}
+#user_menu_dropdown{
+	visibility: hidden;
+	top:60px;
+	right:10px;
+	position:fixed;
+	width:200px;
+	height:auto;
+	border-radius: 4px;
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+	box-shadow: 0 4px 8px 0 rgb(0 0 0 / 20%), 0 6px 20px 0 rgb(0 0 0 / 19%);
+	z-index:1;
+}
+#user_menu_logged_in, #user_menu_dropdown_logged_in{
+	display: none;
+}
+#user_menu_logged_out{
+	right: 15px;
+    position: fixed;
+}
+#user_menu_logged_out{
+	display: inline-block;
+}
+#user_menu_dropdown_logged_in{
+	display:none;
+	width:100%;
+}
+#user_menu_dropdown_logged_out{
+	display: inline-block;
+	width:100%;
+}
+#user_menu_dropdown_logged_in div,
+#user_menu_dropdown_logged_out div{
+	padding-left: 20px;
+    padding-bottom: 10px;
+	padding-top: 10px;
+	cursor:pointer;
+}
+#user_menu_user_id{
+	display: none;
+}
+#user_menu_default_avatar{
+	font-size: 30px;
+}
+#user_menu_avatar_img{
+	width:40px;
+	height:40px;
+	border-radius:20px;
 }
 /*Profile*/
 #dialogue_profile{
@@ -206,7 +271,9 @@ a:active {
 .app_link{
 	cursor:pointer;
 }
-
+.app_url{
+	display:none;
+}
 @-webkit-keyframes glowing {
 	0% {
 	  background-color: #ececec;
@@ -294,12 +361,9 @@ a:active {
 		100% {
 			margin-left: 100%;
 		}
-	}
-	
-	
+	}	
 }
-
-/* Clouds*/
+/* Background with clouds*/
 #background-wrap {
     bottom: 0;
 	left: 0;
@@ -309,7 +373,6 @@ a:active {
 	top: 0;
 	z-index: 0;
 }
-
 /* KEYFRAMES */
 @-webkit-keyframes animateCloud {
     0% {
@@ -445,7 +508,7 @@ a:active {
 	transform: translate(0px,0px);
     animation: spin 80s linear 0s infinite;
 	margin:25px;
-	z-index:-10;
+	z-index:-1;
 }
 div.sun {
     height: 53px;
@@ -501,34 +564,8 @@ div.ray8 {
     from { transform: translate(0px,0px) }
     to { transform: translate(5px,0px) }
 }
-/* TOOGLE*/
-#toggle_wrapper {
-	position: absolute;
-	top: 0px;
-	right: 0px;
-	transform: scale(0.4);
-	transform-origin: 200px 0px;
-	z-index: 10;
-	margin:20px;
-  }
-  
-  #toggle_checkbox {
-	opacity: 0;
-	height: 0;
-	width: 0;
-  }
-  
-  .toggle {
-	position: relative;
-	cursor: pointer;
-	display: inline-block;
-	width: 200px;
-	height: 100px;
-	background: #211042;
-	border-radius: 50px;
-	transition: 500ms;
-	overflow: hidden;
-  }
+
+  /*Moon*/
   .moon {
 	position: absolute;
 	margin-left: 25px;
@@ -540,6 +577,7 @@ div.ray8 {
 	overflow: hidden;
 	box-shadow: 0 0 35px 4px rgba(255, 255, 255);
 	transition: all 500ms ease-out;
+	z-index:-1;
   }
   .moon .crater-1, .moon .crater-2, .moon .crater-3,
   .moon .crater-4, .moon .crater-5, .moon .crater-6,
@@ -567,6 +605,30 @@ div.ray8 {
   .moon .crater-7{
 	transform-origin: -25px 14px;
   }
+
+/* TOOGLE*/
+#toggle_wrapper {
+	transform: scale(0.3);
+	transform-origin: 50% 0;
+	margin-top: 20px;
+	height: 60px;
+}
+#toggle_checkbox {
+	opacity: 0;
+	height: 0;
+	width: 0;
+} 
+.toggle {
+	position: relative;
+	cursor: pointer;
+	display: inline-block;
+	width: 200px;
+	height: 100px;
+	background: #211042;
+	border-radius: 50px;
+	transition: 500ms;
+	overflow: hidden;
+}
 .toggle-button {
 	position: absolute;
 	display: inline-block;
@@ -580,7 +642,6 @@ div.ray8 {
 	box-shadow: 0 0 35px 4px rgba(255, 255, 255);
 	transition: all 500ms ease-out;
   }
-  
   .crater {
 	position: absolute;
 	display: inline-block;
@@ -588,7 +649,6 @@ div.ray8 {
 	border-radius: 50%;
 	transition: 500ms;
   }
-  
   .crater-1 {
 	background: #FFFFF9;
 	width: 86px;
@@ -596,49 +656,42 @@ div.ray8 {
 	left: 10px;
 	bottom: 10px;
   }
-  
   .crater-2 {
 	width: 20px;
 	height: 20px;
 	top: -7px;
 	left: 44px;
   }
-  
   .crater-3 {
 	width: 16px;
 	height: 16px;
 	top: 20px;
 	right: -4px;
   }
-  
   .crater-4 {
 	width: 10px;
 	height: 10px;
 	top: 24px;
 	left: 30px;
   }
-  
   .crater-5 {
 	width: 15px;
 	height: 15px;
 	top: 40px;
 	left: 48px;
   }
-  
   .crater-6 {
 	width: 10px;
 	height: 10px;
 	top: 48px;
 	left: 20px;
   }
-  
   .crater-7 {
 	width: 12px;
 	height: 12px;
 	bottom: 5px;
 	left: 35px;
   }
-  
   .star {
 	position: absolute;
 	display: inline-block;
@@ -646,42 +699,36 @@ div.ray8 {
 	background: #FFF;
 	box-shadow: 1px 0 2px 2px rgba(255, 255, 255);
   }
-  
   .star-1 {
 	width: 6px;
 	height: 6px;
 	right: 90px;
 	bottom: 40px;
   }
-  
   .star-2 {
 	width: 8px;
 	height: 8px;
 	right: 70px;
 	top: 10px;
   }
-  
   .star-3 {
 	width: 5px;
 	height: 5px;
 	right: 60px;
 	bottom: 15px;
   }
-  
   .star-4 {
 	width: 3px;
 	height: 3px;
 	right: 40px;
 	bottom: 50px;
   }
-  
   .star-5 {
 	width: 4px;
 	height: 4px;
 	right: 10px;
 	bottom: 35px;
   }
-  
   .star-6, .star-7, .star-8 {
 	width: 10px;
 	height: 2px;
@@ -693,34 +740,28 @@ div.ray8 {
 	animation-timing-function: ease-out;
 	animation-iteration-count: infinite;
   }
-  
   .star-6 {
 	right: 30px;
 	bottom: 30px;
 	animation-delay: -2s;
   }
-  
   .star-7 {
 	right: 50px;
 	bottom: 60px;
   }
-  
   .star-8 {
 	right: 90px;
 	top: 10px;
 	animation-delay: -4s;
   }
-  
   @keyframes travel {
 	0% {
 	  transform: rotate(-45deg) translateX(70px);
 	}
-  
 	50% {
 	  transform: rotate(-45deg) translateX(-20px);
 	  box-shadow: 5px 0px 6px 1px #FFF;
 	}
-  
 	100% {
 	  transform: rotate(-45deg) translateX(-30px);
 	  width: 2px;
@@ -729,27 +770,22 @@ div.ray8 {
 	  box-shadow: none;
 	}
   }
-  
   #toggle_checkbox:checked + .toggle {
 	background: #24D7F7;
   }
-  
   #toggle_checkbox:checked + .toggle .toggle-button {
 	background: #F7FFFF;
 	transform: translateX(102px);
 	box-shadow: 0 0 35px 5px rgba(255, 255, 255);
   }
-  
   #toggle_checkbox:checked + .toggle .toggle-button .crater {
 	transform: rotate(-45deg) translateX(70px);
   }
-  
   #toggle_checkbox:checked + .toggle .star {
 	animation: move 2s infinite;
 	transform: none;
 	box-shadow: none;
   }
-  
   #toggle_checkbox:checked + .toggle .star-1 {
 	width: 40px;
 	height: 10px;
@@ -759,7 +795,6 @@ div.ray8 {
 	top: 25px;
 	box-shadow: none;
   }
-  
   #toggle_checkbox:checked + .toggle .star-2 {
 	width: 12px;
 	height: 12px;
@@ -768,7 +803,6 @@ div.ray8 {
 	top: 23px;
 	box-shadow: -1px 0 2px 0 rgba(0, 0 , 0, 0.1);
   }
-  
   #toggle_checkbox:checked + .toggle .star-3 {
 	width: 16px;
 	height: 16px;
@@ -777,7 +811,6 @@ div.ray8 {
 	top: 19px;
 	box-shadow: -1px 0 2px 0 rgba(0, 0 , 0, 0.1);
   }
-  
   #toggle_checkbox:checked + .toggle .star-4 {
 	width: 14px;
 	height: 14px;
@@ -786,7 +819,6 @@ div.ray8 {
 	top: 21px;
 	box-shadow: -1px 0 2px 0 rgba(0, 0 , 0, 0.1);
   }
-  
   #toggle_checkbox:checked + .toggle .star-5 {
 	width: 60px;
 	height: 15px;
@@ -796,7 +828,6 @@ div.ray8 {
 	bottom: 20px;
 	box-shadow: none;
   }
-  
   #toggle_checkbox:checked + .toggle .star-6 {
 	width: 18px;
 	height: 18px;
@@ -806,7 +837,6 @@ div.ray8 {
 	bottom: 20px;
 	box-shadow: -1px 0 2px 0 rgba(0, 0 , 0, 0.1);
   }
-  
   #toggle_checkbox:checked + .toggle .star-7 {
 	width: 24px;
 	height: 24px;
@@ -816,7 +846,6 @@ div.ray8 {
 	bottom: 20px;
 	box-shadow: -1px 0 2px 0 rgba(0, 0 , 0, 0.1);
   }
-  
   #toggle_checkbox:checked + .toggle .star-8 {
 	width: 21px;
 	height: 21px;
@@ -826,20 +855,18 @@ div.ray8 {
 	top: 59px;
 	box-shadow: -1px 0 2px 0 rgba(0, 0 , 0, 0.1);
   }
-  
   @keyframes move {
 	0% {
 	  transform: none;
 	}
-	
 	25% {
 	  transform: translateX(2px);
 	}
-	
 	100% {
 	  transform: translateX(-2px);
 	}
   }
+/*Window */
 #window_info{
 	width:100%;
 	height:100%;
@@ -850,6 +877,7 @@ div.ray8 {
 	overflow:auto;
 	z-index:11;
 }
+/*Other*/
 .toolbar_button {
 	background: none;
 	border: none;
@@ -874,87 +902,6 @@ div.ray8 {
 	margin:20px;
 	z-index:-1;
 }
-/*spinner*/
-.load-spinner {
-	visibility: visible;
-	display:inline-block;
-	width: 64px;
-	height: 64px;
-	margin-top: 40px;
-	z-index:1;
-}
-.load-spinner div {
-	transform-origin: 32px 32px;
-	animation: lds-spinner 1.2s linear infinite;
-}
-.load-spinner div:after {
-	content: ' ';
-	display: block;
-	position: absolute;
-	top: 3px;
-	left: 29px;
-	width: 5px;
-	height: 14px;
-	border-radius: 20%;
-	background: rgb(81, 171, 255);
-}
-.load-spinner div:nth-child(1) {
-	transform: rotate(0deg);
-	animation-delay: -1.1s;
-}
-.load-spinner div:nth-child(2) {
-	transform: rotate(30deg);
-	animation-delay: -1s;
-}
-.load-spinner div:nth-child(3) {
-	transform: rotate(60deg);
-	animation-delay: -0.9s;
-}
-.load-spinner div:nth-child(4) {
-	transform: rotate(90deg);
-	animation-delay: -0.8s;
-}
-.load-spinner div:nth-child(5) {
-	transform: rotate(120deg);
-	animation-delay: -0.7s;
-}
-.load-spinner div:nth-child(6) {
-	transform: rotate(150deg);
-	animation-delay: -0.6s;
-}
-.load-spinner div:nth-child(7) {
-	transform: rotate(180deg);
-	animation-delay: -0.5s;
-}
-.load-spinner div:nth-child(8) {
-	transform: rotate(210deg);
-	animation-delay: -0.4s;
-}
-.load-spinner div:nth-child(9) {
-	transform: rotate(240deg);
-	animation-delay: -0.3s;
-}
-.load-spinner div:nth-child(10) {
-	transform: rotate(270deg);
-	animation-delay: -0.2s;
-}
-.load-spinner div:nth-child(11) {
-	transform: rotate(300deg);
-	animation-delay: -0.1s;
-}
-.load-spinner div:nth-child(12) {
-	transform: rotate(330deg);
-	animation-delay: 0s;
-}
-@keyframes lds-spinner {
-	0% {
-		opacity: 1;
-	}
-	100% {
-		opacity: 0;
-	}
-
-}
 
 /* SUN THEME*/
 .theme_sun{
@@ -974,11 +921,17 @@ div.ray8 {
 .theme_sun .dialogue_content:hover, 
 .theme_sun .dialogue_content:active,
 .theme_sun .common_dialogue_content:hover, 
-.theme_sun .common_dialogue_content:active{
+.theme_sun .common_dialogue_content:active,
+.theme_sun #user_menu:hover,
+.theme_sun #user_menu:active,
+.theme_sun #user_menu_dropdown:hover,
+.theme_sun #user_menu_dropdown:active{
 	box-shadow: 0 0 35px 4px rgb(255,255,255,0.25);
 }  
 .theme_sun .dialogue_content,
-.theme_sun .common_dialogue_content{
+.theme_sun .common_dialogue_content,
+.theme_sun #user_menu,
+.theme_sun #user_menu_dropdown{
 	background-color: #fefefe;
 	box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);	
 	font-family: 'Noto Sans';
@@ -1038,6 +991,13 @@ div.ray8 {
 	border: 1px solid #ddd;
 	background-color: white;	
 }
+.theme_sun #user_menu_dropdown_logged_in div:hover,
+.theme_sun #user_menu_dropdown_logged_in div:active,
+.theme_sun #user_menu_dropdown_logged_out div:hover,
+.theme_sun #user_menu_dropdown_logged_out div:active{
+	background-color:#ddd;
+}
+
 /*MOON THEME*/
 .theme_moon{
 	color: #e2e2e2;
@@ -1056,11 +1016,17 @@ div.ray8 {
 .theme_moon .dialogue_content:hover, 
 .theme_moon .dialogue_content:active,
 .theme_moon .common_dialogue_content:hover, 
-.theme_moon .common_dialogue_content:active{
+.theme_moon .common_dialogue_content:active,
+.theme_moon #user_menu:hover,
+.theme_moon #user_menu:active,
+.theme_moon #user_menu_dropdown:hover,
+.theme_moon #user_menu_dropdown:active{
 	box-shadow: 0 0 35px 4px rgb(255,255,255,0.25);
 }  
 .theme_moon .dialogue_content,
-.theme_moon .common_dialogue_content{
+.theme_moon .common_dialogue_content,
+.theme_moon #user_menu,
+.theme_moon #user_menu_dropdown{
 	color: #e2e2e2;
 	background: rgb(68, 68, 68);
 	box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
@@ -1127,4 +1093,11 @@ div.ray8 {
 .theme_moon #profile_search_list{
 	border: 1px solid #ddd;
 	background-color: white;	
+}
+.theme_moon #user_menu_dropdown_logged_in div:hover,
+.theme_moon #user_menu_dropdown_logged_in div:active,
+.theme_moon #user_menu_dropdown_logged_out div:hover,
+.theme_moon #user_menu_dropdown_logged_out div:active{
+	background-color:#ddd;
+	color:rgb(68, 68, 68);
 }

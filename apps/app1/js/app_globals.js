@@ -3,6 +3,7 @@ var global_app_id 						= 1;
 var global_app_hostname;
 var global_app_name;
 
+var global_exception_app_function = 'user_logoff_app';
 
 var global_profile_detail_header_like_user_setting = `<i class='fas fa-heart'></i>
 													  <i class='fas fa-calendar-day'></i>
@@ -113,11 +114,6 @@ var global_image_default_report_header_src;
 var global_image_default_report_footer_src;
 var global_image_header_footer_width;
 var global_image_header_footer_height;
-var global_image_allowed_type1;
-var global_image_allowed_type2;
-var global_image_allowed_type3;
-var global_image_mime_type;
-var global_image_max_size;
 
 var global_text_default_reporttitle1;
 var global_text_default_reporttitle2;
