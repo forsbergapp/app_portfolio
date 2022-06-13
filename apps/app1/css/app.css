@@ -125,17 +125,7 @@ a:hover {
 a:active {
 	text-decoration: underline;
 }
-/*TOOLBAR COMMON*/
-.toolbar_button {
-	background: none;
-	border: none;
-	font-size: 30px;
-	width: 60px;
-	height: 60px;
-	padding:0px;
-	text-transform: uppercase;
-	cursor:pointer;
-}
+/*TOOLBAR*/
 .toolbar_defaultsize{
 	font-size:11px !important;
 }
@@ -470,35 +460,6 @@ a:active {
 	margin-bottom:20px;
 }
 
-/*Dialogue message*/
-#dialogue_message{
-	z-index: 20;
-}
-
-#dialogue_message_content{
-	width: 300px;
-	height: auto;
-}
-#confirm_question{
-	font-size:16px;
-	cursor:default;
-	display:inline-block;
-	margin-bottom:10px;
-}
-#message_title{
-	cursor:default;
-	font-size:16px;
-	display:inline-block;
-}
-#message_cancel{
-	cursor:pointer;
-}
-#message_close{
-	outline:none;
-	cursor:pointer;
-	display:inline-block;
-}
-
 /* WINDOW INFO*/
 #window_info {
     width:100%;
@@ -647,45 +608,7 @@ a:active {
 
 /*SETTINGS, common*/
 /*checkbox use switch ui*/
-.switch-input {
-  display: none;
-}
-.switch-label {
-  display: inline-block !important;
-  position:relative;
-  width: 48px;
-  height: 24px;
-  text-indent: -150%;
-  clip: rect(0 0 0 0);
-  user-select: none;
-  vertical-align: middle;
-}
-.switch-label::before,
-.switch-label::after {
-  content: "";
-  display: block;
-  position: absolute;
-  cursor: pointer;
-}
-.switch-label::before {
-  width: 48px;
-  height: 24px;
-  border-radius: 9999em;
-  -webkit-transition: background-color 0.25s ease;
-  transition: background-color 0.25s ease;
-}
-.switch-label::after {
-  top: 0px;
-  left: 0px;
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  -webkit-transition: left 0.25s ease;
-  transition: left 0.25s ease;
-}
-.switch-input:checked + .switch-label::after {
-  left: 24px;
-}
+
 /*other common settings*/
 #settings input[type=checkbox]{
 width: 25px;

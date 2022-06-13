@@ -113,8 +113,10 @@ function show_broadcast_info(message){
 function show_maintenance(message, init){
     let countdown_timer = 60;
 
-    if (init==1)
+    if (init==1){
+        document.getElementById('dialogue_maintenance').style.visibility='visible';
         maintenance_countdown(countdown_timer);
+    }
     else
         if (document.getElementById('maintenance_countdown').innerHTML=='') {
             let divs = document.body.getElementsByTagName('div');
@@ -758,7 +760,7 @@ async function user_logoff(user_id, lang_code){
         document.getElementById('dialogue_user_edit').style.visibility = "hidden";
 
         //clear user edit
-        document.getElementById('setting_checkbox_report_private').checked = false;
+        document.getElementById('setting_checkbox_profile_private').checked = false;
         document.getElementById('setting_input_username_edit').value = '';
         document.getElementById('setting_input_bio_edit').value = '';
         document.getElementById('setting_input_email_edit').value = '';
@@ -798,7 +800,7 @@ async function user_edit(user_id, timezone, lang_code,callBack) {
     let json;
     if (document.getElementById('dialogue_user_edit').style.visibility == 'visible') {
         document.getElementById('dialogue_user_edit').style.visibility = "hidden";
-        document.getElementById('setting_checkbox_report_private').checked = false;
+        document.getElementById('setting_checkbox_profile_private').checked = false;
         //common
         document.getElementById('setting_input_bio_edit').value = '';
         //local
@@ -844,7 +846,7 @@ async function user_edit(user_id, timezone, lang_code,callBack) {
                         document.getElementById('user_edit_provider').style.display = 'none';
                         document.getElementById('dialogue_user_edit').style.visibility = "visible";
 
-                        document.getElementById('setting_checkbox_report_private').checked = number_to_boolean(json.private);
+                        document.getElementById('setting_checkbox_profile_private').checked = number_to_boolean(json.private);
                         document.getElementById('setting_input_bio_edit').value = get_null_or_value(json.bio);
 
                         if (json.provider1_id == null && json.provider2_id == null) {
@@ -930,7 +932,7 @@ async function user_update(user_id, lang_code, callBack) {
     if (document.getElementById('user_edit_local').style.display == 'block') {
         json_data = `{ 
                         "bio":"${bio}",
-                        "private": ${boolean_to_number(document.getElementById('setting_checkbox_report_private').checked)},
+                        "private": ${boolean_to_number(document.getElementById('setting_checkbox_profile_private').checked)},
                         "username":"${username}",
                         "password":"${password}",
                         "new_password":"${new_password}",
@@ -980,7 +982,7 @@ async function user_update(user_id, lang_code, callBack) {
         }
     } else {
         json_data = `{"bio":"${bio}",
-                      "private":${boolean_to_number(document.getElementById('setting_checkbox_report_private').checked)}
+                      "private":${boolean_to_number(document.getElementById('setting_checkbox_profile_private').checked)}
                      }`;
         url = global_rest_url_base + global_rest_user_account_common + user_id
     }
@@ -1005,7 +1007,7 @@ async function user_update(user_id, lang_code, callBack) {
                 document.getElementById('dialogue_user_edit').style.visibility = "hidden";
                 document.getElementById('user_edit_avatar').style.display = 'none';
 
-                document.getElementById('setting_checkbox_report_private').checked = false;
+                document.getElementById('setting_checkbox_profile_private').checked = false;
                 document.getElementById('setting_input_username_edit').value = '';
                 document.getElementById('setting_input_bio_edit').value = '';
                 document.getElementById('setting_input_email_edit').value = '';
@@ -1556,7 +1558,7 @@ function show_common_dialogue(dialogue, file = '') {
     return null;   
 }
 
-function show_message(message_type, code, function_event, exception_message='', app_id, lang_code='en-us'){
+function show_message(message_type, code, function_event, message_text='', app_id, lang_code='en-us'){
     let confirm_question = document.getElementById('confirm_question');
     let message_title = document.getElementById('message_title');
     let dialogue = document.getElementById('dialogue_message');
@@ -1597,6 +1599,13 @@ function show_message(message_type, code, function_event, exception_message='', 
             break;
         }
         case 'INFO':{
+            confirm_question.style.display = hide;
+            button_cancel.style.display = hide;
+            message_title.style.display = show;
+            message_title.innerHTML = message_text;
+            button_close.addEventListener('click', function_close, false);
+            dialogue.style.visibility = 'visible';
+            button_close.focus();
             break;
         }
         case 'EXCEPTION':{
@@ -1605,28 +1614,28 @@ function show_message(message_type, code, function_event, exception_message='', 
             message_title.style.display = show;
             try {
                 // dont show code or errno returned from json
-                if (typeof JSON.parse(exception_message).message !== "undefined"){
+                if (typeof JSON.parse(message_text).message !== "undefined"){
                     // message from Node controller.js and service.js files
-                    message_title.innerHTML= JSON.parse(exception_message).message;
+                    message_title.innerHTML= JSON.parse(message_text).message;
                 }
                 else{
                     //message from Mysql, code + sqlMessage
-                    if (typeof JSON.parse(exception_message).sqlMessage !== "undefined")
-                        message_title.innerHTML= JSON.parse(exception_message).sqlMessage;
+                    if (typeof JSON.parse(message_text).sqlMessage !== "undefined")
+                        message_title.innerHTML= JSON.parse(message_text).sqlMessage;
                     else{
                         //message from Oracle, errorNum, offset
-                        if (typeof JSON.parse(exception_message).errorNum !== "undefined")
-                            message_title.innerHTML= JSON.parse(exception_message).errorNum;
+                        if (typeof JSON.parse(message_text).errorNum !== "undefined")
+                            message_title.innerHTML= JSON.parse(message_text).errorNum;
                         else{
-                            exception_message = exception_message.replace('<pre>','');
-                            exception_message = exception_message.replace('</pre>','');
-                            message_title.innerHTML= exception_message;
+                            message_text = message_text.replace('<pre>','');
+                            message_text = message_text.replace('</pre>','');
+                            message_title.innerHTML= message_text;
                         }
                     }    
                 }
             } catch (e) {
                 //other error and json not returned, return the whole text
-                message_title.innerHTML = exception_message;
+                message_title.innerHTML = message_text;
             }
             button_close.addEventListener('click', function_close, false);
             dialogue.style.visibility = 'visible';
