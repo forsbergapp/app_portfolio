@@ -865,15 +865,6 @@ async function get_app_globals() {
 }
 
 
-function set_app_globals_head() {
-    //call this function from index.html i head before body is loaded
-    //set meta tags in header
-    if (global_app_user_provider1_use ==1)
-        document.querySelector('meta[name="google-signin-client_id"]').setAttribute("content", global_app_user_provider1_id);
-    document.title = global_app_name;
-    document.querySelector('meta[name="apple-mobile-web-app-title"]').setAttribute("content", global_app_name)
-}
-
 function set_app_globals_body() {
     //call this function from init() when body is loaded
     document.getElementById('app_name').innerHTML = global_app_name;
@@ -1559,8 +1550,7 @@ function keyfunctions() {
     document.getElementById('scan_open_mobile_close').addEventListener('click', function() { document.getElementById('dialogue_scan_open_mobile').style.visibility = 'hidden' }, false);
     document.getElementById('login_signup').addEventListener('click', function() { show_common_dialogue('SIGNUP') }, false);
     document.getElementById('login_button').addEventListener('click', function() { user_login_app() }, false);
-    if (global_app_user_provider2_use==1)
-        document.getElementById('login_facebook').addEventListener('click', function() { onProviderSignIn() }, false);
+    
     document.getElementById('login_close').addEventListener('click', function() { document.getElementById('dialogue_login').style.visibility = 'hidden' }, false);
     document.getElementById('user_edit_close').addEventListener('click', function() { user_edit_app() }, false);
     document.getElementById('signup_login').addEventListener('click', function() { show_common_dialogue('LOGIN') }, false);
@@ -2872,143 +2862,61 @@ function update_settings_icon(url = '', logoff = false) {
     return null;
 }
 
-function updateProviderUser(provider_no, profile_id, profile_first_name, profile_last_name, profile_image_url, profile_email) {
-    let json;
-    let status;
+async function updateProviderUser_app(provider_no, profile_id, profile_first_name, profile_last_name, profile_image_url, profile_email){
     let user_id = document.getElementById('setting_data_userid_logged_in');
-    let profile_image;
-    let profile_username_logged_in;
-    let img = new Image();
+    await updateProviderUser(provider_no, profile_id, profile_first_name, profile_last_name, profile_image_url, profile_email, get_lang_code(), (err, result)=>{
+        if(err==null){
+            user_id.innerHTML = result.user_account_id;
+            if (result.userCreated == 1) {
+                //create app for user_account
+                user_account_app(global_app_id, user_id.innerHTML);
+                //create intitial user setting
+                user_settings_function('ADD');
+            }
+            document.getElementById('user_logged_in').style.display = "block";
+            document.getElementById('setting_avatar_logged_in').src = result.profile_image;
 
-    profile_username_logged_in = profile_first_name + ' ' + profile_last_name;
+            update_settings_icon(result.profile_image);
 
-    img.src = profile_image_url;
-    img.crossOrigin = 'Anonymous';
-    img.onload = function(el) {
-        let elem = document.createElement('canvas');
-        elem.width = global_user_image_avatar_width;
-        elem.height = global_user_image_avatar_height;
-        let ctx = elem.getContext('2d');
-        ctx.drawImage(el.target, 0, 0, elem.width, elem.height);
-        profile_image = ctx.canvas.toDataURL(global_image_file_mime_type);
-        let json_data =
-            `{
-            "app_id": ${global_app_id},
-            "user_language": "${navigator.language}",
-            "user_timezone": "${Intl.DateTimeFormat().resolvedOptions().timeZone}",
-            "user_number_system": "${Intl.NumberFormat().resolvedOptions().numberingSystem}",
-            "user_platform": "${navigator.platform}",
-            "active": 1,
-            "provider_no": ${provider_no},
-            "${'provider' + provider_no + '_id'}":"${profile_id}",
-            "${'provider' + provider_no + '_first_name'}":"${profile_first_name}",
-            "${'provider' + provider_no + '_last_name'}":"${profile_last_name}",
-            "${'provider' + provider_no + '_image'}":"${btoa(profile_image)}",
-            "${'provider' + provider_no + '_image_url'}":"${profile_image_url}",
-            "${'provider' + provider_no + '_email'}":"${profile_email}"}`;
-        fetch(global_rest_url_base + global_rest_user_account_provider + profile_id +
-                '?lang_code=' + get_lang_code(), {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + global_rest_dt
-                },
-                body: json_data
-            })
-            .then(function(response) {
-                status = response.status;
-                return response.text();
-            })
-            .then(function(result) {
-                if (status == 200) {
-                    json = JSON.parse(result);
-                    global_rest_at = json.accessToken;
-                    user_id.innerHTML = json.items[0].id;
-                    if (json.userCreated == 1) {
-                        //create app for user_account
-                        user_account_app(global_app_id, user_id.innerHTML);
-                        //create intitial user setting
-                        user_settings_function('ADD');
-                    }
-                    document.getElementById('user_logged_in').style.display = "block";
-                    document.getElementById('setting_avatar_logged_in').src = profile_image;
+            document.getElementById('setting_bio_logged_in').innerHTML = get_null_or_value(result.bio);
+            document.getElementById('setting_data_username_logged_in').innerHTML = result.first_name + ' ' + result.last_name;
 
-                    update_settings_icon(profile_image);
-
-                    document.getElementById('setting_bio_logged_in').innerHTML = get_null_or_value(json.items[0].bio);
-                    document.getElementById('setting_data_username_logged_in').innerHTML = profile_username_logged_in;
-
-                    document.getElementById('popup_menu_login').style.display = 'none';
-                    document.getElementById('popup_menu_signup').style.display = 'none';
-                    document.getElementById('popup_menu_logoff').style.display = 'block';
-                    document.getElementById('dialogue_login').style.visibility = 'hidden';
-                    document.getElementById('dialogue_signup').style.visibility = 'hidden';
-                    //Show user tab
-                    document.getElementById('tab7_nav').style.display = 'inline-block';
-                    document.getElementById('prayertable_day').innerHTML='';
-                    document.getElementById('prayertable_month').innerHTML='';
-                    document.getElementById('prayertable_year').innerHTML='';
-                    dialogue_loading(1);
-                    user_settings_get(user_id.innerHTML).then(function(){
-                        user_settings_load().then(function(){
-                            settings_translate(true).then(function(){
-                                settings_translate(false).then(function(){
-                                    app_show();
-                                    dialogue_loading(0);
-                                })
-                            })
+            document.getElementById('popup_menu_login').style.display = 'none';
+            document.getElementById('popup_menu_signup').style.display = 'none';
+            document.getElementById('popup_menu_logoff').style.display = 'block';
+            //Show user tab
+            document.getElementById('tab7_nav').style.display = 'inline-block';
+            document.getElementById('prayertable_day').innerHTML='';
+            document.getElementById('prayertable_month').innerHTML='';
+            document.getElementById('prayertable_year').innerHTML='';
+            dialogue_loading(1);
+            user_settings_get(user_id.innerHTML).then(function(){
+                user_settings_load().then(function(){
+                    settings_translate(true).then(function(){
+                        settings_translate(false).then(function(){
+                            app_show();
+                            dialogue_loading(0);
                         })
-                    });
-                } 
-                else {
-                    exception(status, result, get_lang_code());
-                }
-            })
-            .catch(function(error) {
-                show_message('EXCEPTION', null,null, error, global_app_id, get_lang_code());
+                    })
+                })
             });
-    }
-    return null;
+        }
+    })
 }
 
-function onProviderSignIn(googleUser) {
-    let profile;
-    let profile_id;
-    let profile_image_url;
-    let profile_first_name;
-    let profile_last_name;
-    let profile_email;
-    let provider_no;
-    if (googleUser) {
-        provider_no = 1;
-        profile = googleUser.getBasicProfile();
-        profile_id = profile.getId();
-        profile_image_url = profile.getImageUrl();
-        profile_first_name = profile.getGivenName();
-        profile_last_name = profile.getFamilyName();
-        profile_email = profile.getEmail();
-        updateProviderUser(provider_no, profile_id, profile_first_name, profile_last_name, profile_image_url, profile_email);
-    } else {
-        provider_no = 2;
-        FB.getLoginStatus(function(response) {
-            //statusChangeCallback(response);
-            FB.login(function(response) {
-                if (response.authResponse) {
-                    FB.api('/me?fields=id,first_name,last_name,picture, email', function(response) {
-                        profile_id = response.id;
-                        profile_image_url = response.picture.data.url;
-                        profile_first_name = response.first_name;
-                        profile_last_name = response.last_name;
-                        profile_email = response.email;
-                        updateProviderUser(provider_no, profile_id, profile_first_name, profile_last_name, profile_image_url, profile_email);
-                    });
-                } else
-                    console.log('User cancelled login or did not fully authorize.');
-            });
-        });
-    }
-    return null;
+async function onProviderSignIn_app(googleUser){
+    await onProviderSignIn(googleUser, (err, result)=>{
+        if (err==null){
+            updateProviderUser_app(result.provider_no, 
+                               result.profile_id, 
+                               result.profile_first_name, 
+                               result.profile_last_name, 
+                               result.profile_image_url, 
+                               result.profile_email);
+        }
+    })
 }
+
 
 function update_info(info) {
     let button_close_about = `<button class='info_close toolbar_button' 
@@ -4024,45 +3932,7 @@ async function app_show(){
         profile_show_app(null, user, document.getElementById('setting_data_userid_logged_in'), document.getElementById('setting_select_timezone_current').value, get_lang_code());
     }
 }
-async function init_head(){
-    //enable provider 1 if used
-    if (global_app_user_provider1_use==1){
-        /*Provider 1 SDK*/
-        let tag = document.createElement('script');
-        tag.src = global_app_user_provider1_api_src + navigator.language;
-        tag.defer = true;
-        let firstScriptTag = document.getElementsByTagName('script')[0];
-        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-    }
-    else
-        document.getElementsByClassName('g-signin2')[0].className += 'login_button_hidden';
-    //enable provider 2 if used
-    if (global_app_user_provider2_use==1){
-        /*Provider 2 SDK*/
-        window.fbAsyncInit = function() {
-            FB.init({
-            appId      : global_app_user_provider2_id,
-            cookie     : true,
-            xfbml      : true,
-            version    : global_app_user_provider2_api_version
-            });
-            
-            /*FB.AppEvents.logPageView();   */
-            
-        };
-        (function(d, s, id){
-            let js, fjs = d.getElementsByTagName(s)[0];
-            if (d.getElementById(id)) {return;}
-            js = d.createElement(s); js.id = id;
-            js.src = global_app_user_provider2_api_src + 
-                    navigator.language.replace(/-/g, '_') + 
-                    global_app_user_provider2_api_src2;
-            fjs.parentNode.insertBefore(js, fjs);
-        }(document, 'script', 'facebook-jssdk'));
-    }
-    else
-        document.getElementById('login_facebook').className = 'login_button_hidden';
-}
+
 function serviceworker(){
     if (!window.Promise) {
         window.Promise = Promise;
@@ -4081,7 +3951,7 @@ function init() {
                     settings_translate(true).then(function(){
                         settings_translate(false).then(function(){
                             app_show().then(function(){
-                                init_head().then(function(){
+                                init_providers('onProviderSignIn_app', function() { onProviderSignIn_app() }).then(function(){
                                     dialogue_loading(0);
                                     serviceworker();
                                 });
