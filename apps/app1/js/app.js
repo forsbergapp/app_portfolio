@@ -1890,8 +1890,8 @@ function zoom_paper(zoomvalue = '') {
 async function user_edit_app() {
     spinner_app('EDIT', 'visible');
     await user_edit(document.getElementById('setting_data_userid_logged_in').innerHTML, document.getElementById('setting_select_timezone_current').value, get_lang_code(),(err, result) => {
+        spinner_app('EDIT', 'hidden');
         if ((err==null && result==null) == false){
-            spinner_app('EDIT', 'hidden');
             if (err==null){
                 update_settings_icon(image_format(result.avatar));
             }
@@ -2217,7 +2217,6 @@ function user_logoff_app() {
         //clear logged in info
         document.getElementById('setting_data_username_logged_in').innerHTML = '';
         recreate_img(document.getElementById('setting_avatar_logged_in'));
-        document.getElementById('setting_avatar_edit').style.display = "none";
         document.getElementById('setting_bio_logged_in').innerHTML = '';
         document.getElementById('setting_data_userid_logged_in').innerHTML = '';
 
