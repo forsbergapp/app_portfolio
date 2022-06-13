@@ -91,9 +91,6 @@
             opacity: 1
         }
     }
-    #dialogue_message{
-        z-index:20;
-    }
     /*DASHBOARD COMMON*/
     #dashboard{
         width:100%;

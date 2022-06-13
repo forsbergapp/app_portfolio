@@ -886,7 +886,7 @@
                         //app 0 should always be enabled
                         element.children[4].children[0].checked = true;
                         enabled=true;
-                        show_message('App 0 should always be enabled');
+                        show_message('INFO', null, null, 'App 0 should always be enabled', global_main_app_id, global_lang_code);
                     }
                     json_data = `{"app_name": "${app_name}",
                                   "url": "${url}",
@@ -1299,7 +1299,7 @@
         let destination_app;
 
         if (broadcast_message==''){
-            show_message('Please enter message');
+            show_message('INFO', null, null, 'Please enter message', global_main_app_id, global_lang_code);
             return null;
         }
         
@@ -1335,7 +1335,7 @@
         })
         .then(function(result) {
             if (status == 200){
-                show_message('Sent!');
+                show_message('INFO', null, null, 'Sent!', global_main_app_id, global_lang_code);
             }
             else
                 exception(status, result, global_lang_code);

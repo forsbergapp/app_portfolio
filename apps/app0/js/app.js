@@ -415,11 +415,11 @@ function user_menu_item_click(item){
             break;
         }
         case 'user_menu_dropdown_signup':{
-            document.getElementById('dialogue_signup').style.visibility = 'visible';
+            show_common_dialogue('SIGNUP');
             break;
         }
         case 'user_menu_dropdown_log_in':{
-            document.getElementById('dialogue_login').style.visibility = 'visible';
+            show_common_dialogue('LOGIN');
             break;
         }
         default:
