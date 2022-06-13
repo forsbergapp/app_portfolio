@@ -996,6 +996,31 @@ div.ray8 {
 .theme_sun .switch-input:checked + .switch-label::before {
 	background-color: #6ddc5f;
 }
+.theme_sun .login_tab_button, 
+.theme_sun .signup_tab_button{
+	color: #a49775;
+}
+.theme_sun .login_tab_button:hover,
+.theme_sun .signup_tab_button:hover{
+	color:#6ab344;
+}
+.theme_sun #login_button, .app_theme1 #signup_button{
+	background-color: #a49775;
+	color: #ffffff;
+}
+.theme_sun .login_button:hover,
+.theme_sun .signup_button:hover,
+.theme_sun .abcRioButton:hover{
+	background-color:#6ab344 !important;
+}
+.theme_sun #login_facebook{
+	background-color: #4267b2;
+	color:#ffffff;
+}
+.theme_sun .abcRioButton{
+	background-color: rgb(239, 239, 239) !important;
+}
+
 
 
 /*MOON THEME*/
@@ -1120,4 +1145,28 @@ div.ray8 {
 }
 .theme_moon .switch-input:checked + .switch-label::before {
 	background-color: #2b2b32;
+}
+.theme_moon .login_tab_button,
+.theme_moon .signup_tab_button{
+	color: #a49775;
+}
+.theme_moon .login_tab_button:hover,
+.theme_moon .signup_tab_button:hover{
+	color:#6ab344;
+}
+.theme_moon #login_button, .theme_moon #signup_button{
+	background-color: #a49775;
+	color: #ffffff;
+}
+.theme_moon .login_button:hover,
+.theme_moon .signup_button:hover,
+.theme_moon .abcRioButton:hover{
+	background-color:#6ab344 !important;
+}
+.theme_moon #login_facebook{
+	background-color: #4267b2;
+	color:#ffffff;
+}
+.theme_moon .abcRioButton{
+	background-color: rgb(239, 239, 239) !important;
 }

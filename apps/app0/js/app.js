@@ -97,10 +97,6 @@ function keyfunctions(){
     document.getElementById('login_signup').addEventListener('click', function() { show_common_dialogue('SIGNUP') }, false);
     
     document.getElementById('login_button').addEventListener('click', function() { user_login_app() }, false);
-    /*
-    if (global_app_user_provider2_use==1)
-        document.getElementById('login_facebook').addEventListener('click', function() { onProviderSignIn() }, false);
-    */
     document.getElementById('login_close').addEventListener('click', function() { document.getElementById('dialogue_login').style.visibility = 'hidden' }, false);
     document.getElementById('user_edit_close').addEventListener('click', function() { user_edit_app() }, false);
     document.getElementById('user_edit_btn_avatar_img').addEventListener('click', function() { document.getElementById('user_edit_input_avatar_img').click() }, false);
@@ -153,6 +149,7 @@ function get_apps() {
                     document.getElementById('signup_logo').style.backgroundImage=`url(${json.data[i].logo})`;
                     document.getElementById('login_app_name').innerHTML = global_app_name;
                     document.getElementById('signup_app_name').innerHTML = global_app_name;
+                    set_app_globals_head();
                 }
                 else{   
                     html +=`<div class='app_link'>
@@ -259,6 +256,8 @@ async function get_parameters() {
                         global_rest_user_account_profile_userid = json.data[i].parameter_value;
                     if (json.data[i].parameter_name=='REST_USER_ACCOUNT_PROFILE_USERNAME')
                         global_rest_user_account_profile_username = json.data[i].parameter_value;
+                    if (json.data[i].parameter_name=='REST_USER_ACCOUNT_PROVIDER')
+                        global_rest_user_account_provider = json.data[i].parameter_value;
                     if (json.data[i].parameter_name=='REST_USER_ACCOUNT_SIGNUP')
                         global_rest_user_account_signup = json.data[i].parameter_value;
                     if (json.data[i].parameter_name=='SERVICE_GEOLOCATION')
@@ -532,6 +531,44 @@ async function  user_delete_app(){
         }
     })
 }
+async function updateProviderUser_app(provider_no, profile_id, profile_first_name, profile_last_name, profile_image_url, profile_email){
+    let user_id = document.getElementById('user_menu_user_id');
+    await updateProviderUser(provider_no, profile_id, profile_first_name, profile_last_name, profile_image_url, profile_email, global_lang_code, (err, result)=>{
+        if(err==null){
+            user_id.innerHTML = result.user_account_id;
+            if (result.userCreated == 1) {
+                //create app for user_account
+                user_account_app(global_app_id, user_id.innerHTML);
+            }
+            //set avatar or empty
+            if (result.profile_image == null || result.profile_image == '') {
+                recreate_img(document.getElementById('user_menu_avatar_img'));
+                result.profile_image = '';
+            } else
+                document.getElementById('user_menu_avatar_img').src = image_format(result.profile_image);
+            document.getElementById('user_menu_username').innerHTML = result.first_name + ' ' + result.last_name;
+
+            document.getElementById('user_menu_logged_in').style.display = 'inline-block';
+            document.getElementById('user_menu').classList.add('user_menu_logged_in');
+            document.getElementById('user_menu_logged_out').style.display = 'none';
+
+            document.getElementById('user_menu_dropdown_logged_in').style.display = 'inline-block';
+            document.getElementById('user_menu_dropdown_logged_out').style.display = 'none';
+        }
+    })
+}
+async function onProviderSignIn_app(googleUser){
+    await onProviderSignIn(googleUser, (err, result)=>{
+        if (err==null){
+            updateProviderUser_app(result.provider_no, 
+                                   result.profile_id, 
+                                   result.profile_first_name, 
+                                   result.profile_last_name, 
+                                   result.profile_image_url, 
+                                   result.profile_email);
+        }
+    })
+}
 function init(){
     document.getElementById("toggle_checkbox").checked = true;
     document.getElementById('info_diagram_img').src=global_img_diagram_img;
@@ -576,6 +613,9 @@ function init(){
                         global_session_user_gps_longitude,
                         global_lang_code);
                 get_apps();
+                init_providers('onProviderSignIn_app', function() { onProviderSignIn_app() }).then(function(){
+                    null;
+                });
             })
         })
     })

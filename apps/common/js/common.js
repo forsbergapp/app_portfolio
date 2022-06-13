@@ -1436,6 +1436,153 @@ async function profile_update_stat(lang_code, callBack){
             return callBack(result, null);
     })
 }
+function set_app_globals_head() {
+    //call this function from index.html i head before body is loaded
+    //set meta tags in header        
+    document.title = global_app_name;
+    document.querySelector('meta[name="apple-mobile-web-app-title"]').setAttribute("content", global_app_name)
+}
+
+async function init_providers(provider1_function, provider2_function){
+    //enable provider 1 if used
+    if (global_app_user_provider1_use==1){
+        document.querySelector('meta[name="google-signin-client_id"]').setAttribute("content", global_app_user_provider1_id);
+        document.getElementsByClassName('g-signin2')[0].setAttribute('data-onsuccess', provider1_function);
+        /*Provider 1 SDK*/
+        let tag = document.createElement('script');
+        tag.src = global_app_user_provider1_api_src + navigator.language;
+        tag.defer = true;
+        let firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+    }
+    else
+        document.getElementsByClassName('g-signin2')[0].className += 'login_button_hidden';
+    //enable provider 2 if used
+    if (global_app_user_provider2_use==1){
+        document.getElementById('login_facebook').addEventListener('click', provider2_function, false);
+        /*Provider 2 SDK*/
+        window.fbAsyncInit = function() {
+            FB.init({
+            appId      : global_app_user_provider2_id,
+            cookie     : true,
+            xfbml      : true,
+            version    : global_app_user_provider2_api_version
+            });
+            
+            /*FB.AppEvents.logPageView();   */
+            
+        };
+        (function(d, s, id){
+            let js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) {return;}
+            js = d.createElement(s); js.id = id;
+            js.src = global_app_user_provider2_api_src + 
+                    navigator.language.replace(/-/g, '_') + 
+                    global_app_user_provider2_api_src2;
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
+    }
+    else
+        document.getElementById('login_facebook').className = 'login_button_hidden';
+}
+async function updateProviderUser(provider_no, profile_id, profile_first_name, profile_last_name, profile_image_url, profile_email, lang_code, callBack) {
+    let json;
+    let status;
+    let profile_image;
+    let img = new Image();
+
+    img.src = profile_image_url;
+    img.crossOrigin = 'Anonymous';
+    img.onload = function(el) {
+        let elem = document.createElement('canvas');
+        elem.width = global_user_image_avatar_width;
+        elem.height = global_user_image_avatar_height;
+        let ctx = elem.getContext('2d');
+        ctx.drawImage(el.target, 0, 0, elem.width, elem.height);
+        profile_image = ctx.canvas.toDataURL(global_image_file_mime_type);
+        let json_data =
+            `{
+            "app_id": ${global_app_id},
+            "user_language": "${navigator.language}",
+            "user_timezone": "${Intl.DateTimeFormat().resolvedOptions().timeZone}",
+            "user_number_system": "${Intl.NumberFormat().resolvedOptions().numberingSystem}",
+            "user_platform": "${navigator.platform}",
+            "active": 1,
+            "provider_no": ${provider_no},
+            "${'provider' + provider_no + '_id'}":"${profile_id}",
+            "${'provider' + provider_no + '_first_name'}":"${profile_first_name}",
+            "${'provider' + provider_no + '_last_name'}":"${profile_last_name}",
+            "${'provider' + provider_no + '_image'}":"${btoa(profile_image)}",
+            "${'provider' + provider_no + '_image_url'}":"${profile_image_url}",
+            "${'provider' + provider_no + '_email'}":"${profile_email}"}`;
+        fetch(global_rest_url_base + global_rest_user_account_provider + profile_id +
+                '?lang_code=' + lang_code, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + global_rest_dt
+                },
+                body: json_data
+            })
+            .then(function(response) {
+                status = response.status;
+                return response.text();
+            })
+            .then(function(result) {
+                if (status == 200) {
+                    json = JSON.parse(result);
+                    global_rest_at = json.accessToken;
+                    document.getElementById('dialogue_login').style.visibility = 'hidden';
+                    document.getElementById('dialogue_signup').style.visibility = 'hidden';
+                    return callBack(null, {user_account_id: json.items[0].id,
+                                           first_name: profile_first_name,
+                                           last_name: profile_last_name,
+                                           bio: json.items[0].bio,
+                                           avatar: profile_image,
+                                           userCreated: json.userCreated});
+                } 
+                else {
+                    exception(status, result, lang_code);
+                    return callBack(result, null);
+                }
+            })
+            .catch(function(error) {
+                show_message('EXCEPTION', null,null, error, global_app_id, lang_code);
+                return callBack(error, null);
+            });
+    }
+}
+async function onProviderSignIn(googleUser, callBack) {
+    let profile;
+    if (googleUser) {
+        profile = googleUser.getBasicProfile();
+        return callBack(null, {provider_no: 1,
+                               profile_id: profile.getId(),
+                               profile_first_name: profile.getGivenName(),
+                               profile_last_name: profile.getFamilyName(),
+                               profile_image_url: profile.getImageUrl(),
+                               profile_email: profile.getEmail()});
+    } else {
+        provider_no = 2;
+        FB.getLoginStatus(function(response) {
+            //statusChangeCallback(response);
+            FB.login(function(response) {
+                if (response.authResponse) {
+                    FB.api('/me?fields=id,first_name,last_name,picture, email', function(response) {
+                        return callBack(null, {provider_no: 2,
+                                               profile_id: response.id,
+                                               profile_first_name: response.first_name,
+                                               profile_last_name: response.last_name,
+                                               profile_image_url: response.picture.data.url,
+                                               profile_email: response.email});
+                    });
+                } else
+                    console.log('User cancelled login or did not fully authorize.');
+                    return callBack('ERROR', null);
+            });
+        });
+    }
+}
 async function get_data_token(user_id, lang_code) {
     let status;
     await fetch(global_service_auth + 
