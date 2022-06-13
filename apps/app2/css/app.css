@@ -11,58 +11,6 @@ body {
 	padding: 0px;
 }
 
-#dialogue_message_content{
-	font-family: 'Noto Sans';
-	font-size: 11px;
-	width: auto;
-	z-index: 12;
-    background-color: #fefefe;
-}
-.common_dialogue{
-	visibility:hidden;
-	width: 100%;
-	height: 100%;
-	text-align: center;
-	top:15%;
-	position:fixed;
-	-webkit-animation-name: animatetop;
-	-webkit-animation-duration: 0.4s;
-	animation-name: animatetop;
-	animation-duration: 0.4s;
-
-}
-.common_dialogue_content{
-	font-size:16px;
-	padding: 10px;
-	width: 300px;
-	display:inline-block;
-    top: 20%;
-	height: auto;
-	border-radius: 4px;
-	-moz-border-radius: 4px;
-	-webkit-border-radius: 4px;
-	box-shadow: 0 4px 8px 0 rgb(0 0 0 / 20%), 0 6px 20px 0 rgb(0 0 0 / 19%);
-}
-@-webkit-keyframes animatetop {
-	from {
-		top: -60%;
-		opacity: 0
-	}
-	to {
-		top: 15%;
-		opacity: 1
-	}
-}
-@keyframes animatetop {
-	from {
-		top: -60%;
-		opacity: 0
-	}
-	to {
-		top: 15%;
-		opacity: 1
-	}
-}
 #window_info{
 	width:100%;
 	height:100%;
@@ -71,16 +19,6 @@ body {
 	text-align:center;
 	overflow:auto;
 	z-index:11;
-}
-.toolbar_button {
-	background: none;
-	border: none;
-	font-size: 30px;
-	width: 60px;
-	height: 60px;
-	padding:0px;
-	text-transform: uppercase;
-	cursor:pointer;
 }
 #info img{
 	max-width:90%;
@@ -97,6 +35,9 @@ body {
 	box-shadow: 0 0 35px 4px rgb(255,255,255,0.25);
 }  
 .common_dialogue_content{
+	font-family: 'Noto Sans';
+	font-size: 11px;
+	z-index: 12;
 	background-color: #fefefe;
 	box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);	
 }

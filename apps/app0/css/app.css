@@ -125,14 +125,7 @@ a:active {
 	position:fixed;
 }
 /*DIALOUGE SETTINGS*/	
-/* common dialogue settings*/
-.common_dialogue{
-	z-index: 50 !important;
-}
-.common_dialogue_content{
-	height:auto !important;
-}
-	
+/* common dialogue settings*/	
 .dialogue{
 	visibility:hidden;
 	width: 100%;
@@ -878,16 +871,6 @@ div.ray8 {
 	z-index:11;
 }
 /*Other*/
-.toolbar_button {
-	background: none;
-	border: none;
-	font-size: 30px;
-	width: 60px;
-	height: 60px;
-	padding:0px;
-	text-transform: uppercase;
-	cursor:pointer;
-}
 #toolbar_btn_close{
 	width:100%;
 }
@@ -971,6 +954,9 @@ div.ray8 {
     border-left: 12px solid yellow;
 }
 
+.theme_sun .toolbar_button{
+	color: #404040 !important;
+}
 .theme_sun .toolbar_button:hover, .theme_sun .toolbar_button:active{
 	color:#6ab344 !important;
 }
@@ -997,6 +983,20 @@ div.ray8 {
 .theme_sun #user_menu_dropdown_logged_out div:active{
 	background-color:#ddd;
 }
+.theme_sun .switch-label {
+	color: transparent;
+}
+.theme_sun .switch-label::before {
+	background-color: #dedede;
+}
+.theme_sun .switch-label::after {
+	background-color: #fff;
+	box-shadow: 0 0 2px rgba(0, 0, 0, 0.45);
+}  
+.theme_sun .switch-input:checked + .switch-label::before {
+	background-color: #6ddc5f;
+}
+
 
 /*MOON THEME*/
 .theme_moon{
@@ -1071,6 +1071,13 @@ div.ray8 {
 .theme_moon div.sunholder {
     animation: unset;
 }
+.theme_moon .toolbar_button{
+	color : #a49775;
+}
+.theme_moon .toolbar_button:hover, .theme_sun .toolbar_button:active{
+	color:#6ab344 !important;
+}
+
 
 .theme_moon #about_logo, .theme_moon #info_logo{
 	background: linear-gradient(0deg, rgba(68 68 68 / 50%), rgba(68, 68, 68, 50%)), url(/app0/images/logo.png);
@@ -1100,4 +1107,17 @@ div.ray8 {
 .theme_moon #user_menu_dropdown_logged_out div:active{
 	background-color:#ddd;
 	color:rgb(68, 68, 68);
+}
+.theme_moon .switch-label {
+	color: transparent;
+} 
+.theme_moon .switch-label::before {
+	background-color: #dedede;
+}
+.theme_moon .switch-label::after {
+	background-color: #a49775;
+	box-shadow: 0 0 2px rgba(0, 0, 0, 0.45);
+}
+.theme_moon .switch-input:checked + .switch-label::before {
+	background-color: #2b2b32;
 }
