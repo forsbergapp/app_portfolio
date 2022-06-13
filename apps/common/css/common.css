@@ -1,9 +1,62 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&display=swap');
 @import url('https://use.fontawesome.com/releases/v5.13.1/css/all.css');
+
+/*checkbox with switch ui*/
+.switch-input {
+	display: none;
+  }
+  .switch-label {
+	display: inline-block !important;
+	position:relative;
+	width: 48px;
+	height: 24px;
+	text-indent: -150%;
+	clip: rect(0 0 0 0);
+	user-select: none;
+	vertical-align: middle;
+  }
+  .switch-label::before,
+  .switch-label::after {
+	content: "";
+	display: block;
+	position: absolute;
+	cursor: pointer;
+  }
+  .switch-label::before {
+	width: 48px;
+	height: 24px;
+	border-radius: 9999em;
+	-webkit-transition: background-color 0.25s ease;
+	transition: background-color 0.25s ease;
+  }
+  .switch-label::after {
+	top: 0px;
+	left: 0px;
+	width: 24px;
+	height: 24px;
+	border-radius: 50%;
+	-webkit-transition: left 0.25s ease;
+	transition: left 0.25s ease;
+  }
+  .switch-input:checked + .switch-label::after {
+	left: 24px;
+  }
+
+.toolbar_button {
+	background: none;
+	border: none;
+	font-size: 30px;
+	width: 60px;
+	height: 60px;
+	padding:0px;
+	text-transform: uppercase;
+	cursor:pointer;
+}
+
 .common_dialogue{
 	visibility:hidden;
 	position: fixed;
-	z-index: 10;
+	z-index: 50;
 	padding-top: 10px;
 	left: 0;
 	top: 0;
@@ -20,7 +73,8 @@
 	transform: translate(-50%, -50%);
 	padding: 10px;
 	width: 300px;
-	height: 540px;
+	height: auto;
+	word-break: break-word;
 	border-radius: 4px;
 	-moz-border-radius: 4px;
 	-webkit-border-radius: 4px;
@@ -53,6 +107,27 @@
 		opacity: 1
 	}
 
+}
+
+/* Dialogue message*/
+#confirm_question{
+	font-size:16px;
+	cursor:default;
+	display:inline-block;
+	margin-bottom:10px;
+}
+#message_title{
+	cursor:default;
+	font-size:16px;
+	display:inline-block;
+}
+#message_cancel{
+	cursor:pointer;
+}
+#message_close{
+	outline:none;
+	cursor:pointer;
+	display:inline-block;
 }
 
 /* Dialogue maintenance*/
