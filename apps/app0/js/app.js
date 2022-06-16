@@ -475,7 +475,7 @@ async function user_edit_app() {
     await user_edit(document.getElementById('user_menu_user_id').innerHTML, Intl.DateTimeFormat().resolvedOptions().timeZone, global_lang_code.value,(err, result) => {
         if ((err==null && result==null) == false)
             if (err==null){
-                document.getElementById('user_menu_avatar_img').src = image_format(result.avatar);
+                document.getElementById('user_menu_avatar_img').src = image_format(result.avatar ?? result.provider1_image ?? result.provider2_image);
             }
     });
 }
