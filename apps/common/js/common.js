@@ -194,30 +194,8 @@ function profile_top(statschoice, user_id, timezone, lang_code, app_rest_url = n
                 let image='';
                 let name='';
                 for (i = 0; i < json.count; i++) {
-                    //select image
-                    if (json.items[i].provider1_id == null && json.items[i].provider2_id == null) {
-                        //show local user image
-                        image = image_format(json.items[i].avatar);
-                    } else
-                    if (json.items[i].provider1_id !== null) {
-                        //show provider 1 user image
-                        image = image_format(json.items[i].provider1_image);
-                    } else {
-                        //show provider 2 user image
-                        image = image_format(json.items[i].provider2_image);
-                    }
-                    //select username
-                    if (json.items[i].provider1_id == null && json.items[i].provider2_id == null) {
-                        //show local username
-                        name = json.items[i].username;
-                    } else
-                    if (json.items[i].provider1_id !== null) {
-                        //show provider 1 username
-                        name = json.items[i].provider1_first_name;
-                    } else {
-                        //show provider 2 username
-                        name = json.items[i].provider2_first_name;
-                    }
+                    image = image_format(json.items[i].avatar ?? json.items[i].provider1_image ?? json.items[i].provider2_image);
+                    name = json.items[i].username;
                     html +=
                     `<div class='profile_top_list_row'>
                         <div class='profile_top_list_col'>
@@ -360,35 +338,8 @@ function profile_detail(detailchoice, user_id, timezone, lang_code, rest_url_app
                     let image = '';
                     let name='';
                     for (i = 0; i < json.count; i++) {
-                        //select image
-                        if (json.items[i].provider1_id == null && json.items[i].provider2_id == null) {
-                            //show local user image
-                            image = image_format(json.items[i].avatar);
-                        } 
-                        else
-                            if (json.items[i].provider1_id !== null) {
-                                //show provider 1 user image
-                                image = image_format(json.items[i].provider1_image);
-                            } 
-                            else {
-                                //show provider 2 user image
-                                image = image_format(json.items[i].provider2_image);
-                            }
-                        //select name
-                        if (json.items[i].provider1_id == null && json.items[i].provider2_id == null){
-                            //show local username
-                            name = json.items[i].username;
-                        }   
-                        else
-                            if (json.items[i].provider1_id !== null) {
-                                //show provider 1 username
-                                name = json.items[i].provider1_first_name;
-                            } 
-                            else {
-                                //show provider 2 username
-                                name = json.items[i].provider2_first_name;
-                            }
-
+                        image = image_format(json.items[i].avatar ?? json.items[i].provider1_image ?? json.items[i].provider2_image);
+                        name = json.items[i].username;
                         html += 
                         `<div class='profile_detail_list_row'>
                             <div class='profile_detail_list_col'>
@@ -471,31 +422,8 @@ function search_profile(user_id, timezone, lang_code, click_function) {
                 let name = '';
                 profile_search_list.style.height = (json.count * 24).toString() + 'px';
                 for (i = 0; i < json.count; i++) {
-                    if (json.items[i].provider1_id == null && json.items[i].provider2_id == null) {
-                        //show local user image
-                        image = image_format(json.items[i].avatar);
-                    }
-                    else
-                        if (json.items[i].provider1_id !== null) {
-                            //show provider 1 user image
-                            image = image_format(json.items[i].provider1_image);
-                        } else {
-                            //show provider 2 user image
-                            image = image_format(json.items[i].provider2_image);
-                        }
-                    if (json.items[i].provider1_id == null && json.items[i].provider2_id == null){
-                        //show local username
-                        name  = json.items[i].username;
-                    }
-                    else
-                        if (json.items[i].provider1_id !== null) {
-                            //show provider 1 username
-                            name = json.items[i].provider1_first_name;
-                        } 
-                        else {
-                            //show provider 2 username
-                            name = json.items[i].provider2_first_name;
-                        }    
+                    image = image_format(json.items[i].avatar ?? json.items[i].provider1_image ?? json.items[i].provider2_image);
+                    name = json.items[i].username;
                     html +=
                     `<div class='profile_search_list_row'>
                         <div class='profile_search_list_col'>
@@ -604,28 +532,10 @@ async function profile_show(user_account_id_other = null, username = null, user_
                     document.getElementById('profile_main').style.display = "block";
                     document.getElementById('profile_id').innerHTML = json.id;
 
-                    if (json.provider1_id == null && json.provider2_id == null) {
-                        //show local user image
-                        document.getElementById('profile_avatar').src = image_format(json.avatar);
-                    } else
-                    if (json.provider1_id !== null) {
-                        //show provider 1 user image
-                        document.getElementById('profile_avatar').src = image_format(json.provider1_image);
-                    } else {
-                        //show provider 2 user image
-                        document.getElementById('profile_avatar').src = image_format(json.provider2_image);
-                    }
-                    if (json.provider1_id == null && json.provider2_id == null)
+                    document.getElementById('profile_avatar').src = image_format(json.avatar ?? json.provider1_image ?? json.provider2_image);
                     //show local username
-                        document.getElementById('profile_username').innerHTML = json.username;
-                    else
-                    if (json.provider1_id !== null) {
-                        //show provider 1 username
-                        document.getElementById('profile_username').innerHTML = json.provider1_first_name;
-                    } else {
-                        //show provider 2 username
-                        document.getElementById('profile_username').innerHTML = json.provider2_first_name;
-                    }
+                    document.getElementById('profile_username').innerHTML = json.username;
+
                     document.getElementById('profile_bio').innerHTML = get_null_or_value(json.bio);
                     document.getElementById('profile_joined_date').innerHTML = format_json_date(json.date_created, true, timezone, lang_code);
                     document.getElementById("profile_qr").innerHTML = '';
@@ -803,9 +713,9 @@ async function user_edit(user_id, timezone, lang_code,callBack) {
         document.getElementById('dialogue_user_edit').style.visibility = "hidden";
         document.getElementById('setting_checkbox_profile_private').checked = false;
         //common
+        document.getElementById('setting_input_username_edit').value = '';
         document.getElementById('setting_input_bio_edit').value = '';
         //local
-        document.getElementById('setting_input_username_edit').value = '';
         document.getElementById('setting_input_email_edit').value = '';
         document.getElementById('setting_input_password_edit').value = '';
         document.getElementById('setting_input_password_confirm_edit').value = '';
@@ -848,6 +758,7 @@ async function user_edit(user_id, timezone, lang_code,callBack) {
                         document.getElementById('dialogue_user_edit').style.visibility = "visible";
 
                         document.getElementById('setting_checkbox_profile_private').checked = number_to_boolean(json.private);
+                        document.getElementById('setting_input_username_edit').value = json.username;
                         document.getElementById('setting_input_bio_edit').value = get_null_or_value(json.bio);
 
                         if (json.provider1_id == null && json.provider2_id == null) {
@@ -860,8 +771,6 @@ async function user_edit(user_id, timezone, lang_code,callBack) {
                                 recreate_img(document.getElementById('user_edit_avatar_img'));
                             else
                                 document.getElementById('user_edit_avatar_img').src = image_format(json.avatar);
-
-                            document.getElementById('setting_input_username_edit').value = json.username;
 
                             document.getElementById('setting_input_email_edit').value = json.email;
 
@@ -942,11 +851,19 @@ async function user_update(user_id, lang_code, callBack) {
     let json_data;
     let status;
 
+    //validate input
+    if (username == '') {
+        //"Please enter username"
+        document.getElementById('setting_input_username_edit').classList.add('input_error');
+        show_message('ERROR', 20303, null, null, lang_code);
+        return callBack('ERROR', null);
+    }
+    
     if (document.getElementById('user_edit_local').style.display == 'block') {
         json_data = `{ 
+                        "username":"${username}",
                         "bio":"${bio}",
                         "private": ${boolean_to_number(document.getElementById('setting_checkbox_profile_private').checked)},
-                        "username":"${username}",
                         "password":"${password}",
                         "new_password":"${new_password}",
                         "password_reminder":"${password_reminder}",
@@ -966,13 +883,6 @@ async function user_update(user_id, lang_code, callBack) {
 
         document.getElementById('setting_input_password_reminder_edit').classList.remove('input_error');
 
-        //validate input
-        if (username == '') {
-            //"Please enter username"
-            document.getElementById('setting_input_username_edit').classList.add('input_error');
-            show_message('ERROR', 20303, null, null, lang_code);
-            return callBack('ERROR', null);
-        }
         if (password == '') {
             //"Please enter password"
             document.getElementById('setting_input_password_edit').classList.add('input_error');
@@ -994,7 +904,8 @@ async function user_update(user_id, lang_code, callBack) {
             return callBack('ERROR', null);
         }
     } else {
-        json_data = `{"bio":"${bio}",
+        json_data = `{"username":"${username}",
+                      "bio":"${bio}",
                       "private":${boolean_to_number(document.getElementById('setting_checkbox_profile_private').checked)}
                      }`;
         url = global_rest_url_base + global_rest_user_account_common + user_id
@@ -1553,10 +1464,11 @@ async function updateProviderUser(provider_no, profile_id, profile_first_name, p
                     document.getElementById('dialogue_login').style.visibility = 'hidden';
                     document.getElementById('dialogue_signup').style.visibility = 'hidden';
                     return callBack(null, {user_account_id: json.items[0].id,
-                                           first_name: profile_first_name,
-                                           last_name: profile_last_name,
+                                           username: json.items[0].username,
                                            bio: json.items[0].bio,
                                            avatar: profile_image,
+                                           first_name: profile_first_name,
+                                           last_name: profile_last_name,
                                            userCreated: json.userCreated});
                 } 
                 else {
