@@ -431,11 +431,16 @@ module.exports = {
 				WHERE u.id = ? 
 				      OR 
 					  (u.username = ?
-					  AND u.active = 1)`, 
+					  AND u.active = 1)
+				AND EXISTS(SELECT NULL
+							 FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_app uap
+						    WHERE uap.user_account_id = u.id
+							  AND uap.app_id = ?)`,
 				[id_current_user,
                  id_current_user,
                  id,
-				 username
+				 username,
+				 app_id
                 ],
                 (error, results, fields) => {
                     if (error) {
@@ -496,12 +501,17 @@ module.exports = {
 						WHERE u.id = :id 
 							  OR 
 							  (u.username = :username
-							  AND u.active = 1)`, 
+							  AND u.active = 1)
+						AND EXISTS(SELECT NULL
+									 FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_app uap
+								    WHERE uap.user_account_id = u.id
+  									  AND uap.app_id = ?)`,
 						{
                             user_accound_id_current_user1: id_current_user,
                             user_accound_id_current_user2: id_current_user,
                             id: id,
-							username: username
+							username: username,
+							app_id: app_id
                         },
                         (err, result) => {
                             if (err) {
@@ -548,9 +558,15 @@ module.exports = {
 					u.provider1_first_name LIKE ?
 					OR
 					u.provider2_first_name LIKE ?)
-				AND   u.active = 1 `, ['%' + username + '%',
-                    '%' + username + '%',
-                    '%' + username + '%'
+				AND   u.active = 1 
+				AND EXISTS(SELECT NULL
+							 FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_app uap
+						    WHERE uap.user_account_id = u.id
+  							  AND uap.app_id = ?)`, 
+				['%' + username + '%',
+                 '%' + username + '%',
+                 '%' + username + '%',
+				 app_id
                 ],
                 (error, results, fields) => {
                     if (error) {
@@ -584,19 +600,25 @@ module.exports = {
 						u.provider1_first_name LIKE :provider1_first_name
 						OR
 						u.provider2_first_name LIKE :provider2_first_name)
-					AND   u.active = 1 `, {
-                            username: '%' + username + '%',
-                            provider1_first_name: '%' + username + '%',
-                            provider2_first_name: '%' + username + '%'
-                        },
-                        (err, result) => {
-                            if (err) {
-								createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
-                                return callBack(err);
-                            } else {
-                                return callBack(null, result.rows);
-                            }
-                        });
+					AND   u.active = 1 
+					AND EXISTS(SELECT NULL
+								 FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_app uap
+							    WHERE uap.user_account_id = u.id
+   								  AND uap.app_id = :app_id)`,
+					{
+                    	username: '%' + username + '%',
+                        provider1_first_name: '%' + username + '%',
+                        provider2_first_name: '%' + username + '%',
+						app_id: app_id
+                    },
+					(err, result) => {
+						if (err) {
+							createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
+							return callBack(err);
+						} else {
+							return callBack(null, result.rows);
+						}
+					});
                 } catch (err) {
 					createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
                     return callBack(err.message);
@@ -891,13 +913,18 @@ module.exports = {
 							FROM   ${process.env.SERVICE_DB_DB1_NAME}.user_account u
 							WHERE  u.active = 1
 							AND    3 = ?)  t
+					WHERE EXISTS(SELECT NULL
+								   FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_app uap
+								  WHERE uap.user_account_id = t.id
+								    AND uap.app_id = ?)
 					ORDER BY 1,13 DESC, COALESCE(username, 
-												provider1_first_name,
-												provider2_first_name)
+												 provider1_first_name,
+												 provider2_first_name)
 					LIMIT 10`, 
 				[statchoice,
 				 statchoice,
-				 statchoice
+				 statchoice,
+				 app_id
                 ],
                 (error, results, fields) => {
                     if (error) {
@@ -970,14 +997,19 @@ module.exports = {
 									FROM   ${process.env.SERVICE_DB_DB2_NAME}.user_account u
 									WHERE  u.active = 1
 									AND    3 = :statchoice_visited) t
-							WHERE    ROWNUM <=10
+							WHERE EXISTS(SELECT NULL
+										   FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_app uap
+										  WHERE uap.user_account_id = t.id
+											AND uap.app_id = :app_id)
+							AND    ROWNUM <=10
 							ORDER BY 1,13 DESC, COALESCE("username", 
-														"provider1_first_name",
-														"provider2_first_name") `, 
+														 "provider1_first_name",
+														 "provider2_first_name") `, 
 						{
                             statchoice_following: statchoice,
                             statchoice_like_user: statchoice,
-                            statchoice_visited: statchoice
+                            statchoice_visited: statchoice,
+							app_id: app_id
                         },
                         (err, result) => {
                             if (err) {

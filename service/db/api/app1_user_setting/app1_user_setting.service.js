@@ -1,7 +1,7 @@
 const {oracledb, get_pool} = require ("../../config/database");
 const { createLogAppSE } = require("../../../../service/log/log.service");
 module.exports = {
-	createUserSetting: (app_id, data, callBack) => {
+	createUserSetting: (app_id, initial, data, callBack) => {
 		if (process.env.SERVICE_DB_USE == 1) {
 			get_pool(app_id).query(
 				`INSERT INTO ${process.env.SERVICE_DB_DB1_NAME}.app1_user_setting(
@@ -59,12 +59,17 @@ module.exports = {
 					date_created,
 					date_modified,
 					user_account_id)
-				VALUES(?,?,?,?,?,?,?,?,?,?,
+				SELECT ?,?,?,?,?,?,?,?,?,?,
 					?,?,?,?,?,?,?,?,?,?,
 					?,?,?,?,?,?,?,?,?,?,
 					?,?,?,?,?,?,?,?,?,?,
 					?,?,?,?,?,?,?,?,?,?,
-					?,SYSDATE(),SYSDATE(),?)`,
+					?,SYSDATE(),SYSDATE(),?
+				FROM DUAL
+				WHERE NOT EXISTS (SELECT null
+						            FROM ${process.env.SERVICE_DB_DB1_NAME}.app1_user_setting aus
+								   WHERE ? = 1
+								     AND aus.user_account_id = ?)`,
 				[
 				data.description,
 				data.regional_language_locale,
@@ -117,6 +122,8 @@ module.exports = {
 				data.prayer_column_sunset_checked,
 				data.prayer_column_midnight_checked,
 				data.prayer_column_fast_start_end_select_id,
+				data.user_account_id,
+				initial,
 				data.user_account_id
 				],
 				(error, results, fields) => {
@@ -188,7 +195,7 @@ module.exports = {
 							date_created,
 							date_modified,
 							user_account_id)
-						VALUES(	:description,
+						SELECT	:description,
 								:regional_language_locale,
 								:regional_current_timezone_select_id,
 								:regional_timezone_select_id,
@@ -241,7 +248,12 @@ module.exports = {
 								:prayer_column_fast_start_end_select_id,
 								SYSDATE,
 								SYSDATE,
-								:user_account_id)`,
+								:user_account_id
+						FROM DUAL
+						WHERE NOT EXISTS (SELECT null
+										    FROM ${process.env.SERVICE_DB_DB2_NAME}.app1_user_setting aus
+										   WHERE :initial = 1
+										 	 AND aus.user_account_id = :user_account_id)`,
 					{
 						description: data.description,
 						regional_language_locale: data.regional_language_locale,
@@ -294,7 +306,8 @@ module.exports = {
 						prayer_column_sunset_checked: data.prayer_column_sunset_checked,
 						prayer_column_midnight_checked: data.prayer_column_midnight_checked,
 						prayer_column_fast_start_end_select_id: data.prayer_column_fast_start_end_select_id,
-						user_account_id: data.user_account_id
+						user_account_id: data.user_account_id,
+						initial: initial
 					},
 					(err,result) => {
 						if (err) {

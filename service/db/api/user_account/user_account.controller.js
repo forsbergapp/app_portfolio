@@ -19,6 +19,7 @@ const {
 const { genSaltSync, hashSync, compareSync } = require("bcryptjs");
 const { getMessage } = require("../message_translation/message_translation.service");
 const { insertProfileSearch } = require("../profile_search/profile_search.controller");
+const { createUserAccountApp } = require("../user_account_app/user_account_app.service");
 const { insertUserAccountLogon } = require("../user_account_logon/user_account_logon.controller");
 const { insertUserAccountView } = require("../user_account_view/user_account_view.controller");
 const { getParameter } = require ("../app_parameter/app_parameter.service");
@@ -630,6 +631,13 @@ module.exports = {
                             );
                         }
                     });
+                    createUserAccountApp(req.body.app_id, results.id, (err3, results3) => {
+                        if (err3) {
+                            return res.status(500).send(
+                                err3
+                            );
+                        }
+                    });
                     if (result_pw == 1) {
                         accessToken(req, (err, Token)=>{
                             return res.status(200).json({
@@ -694,7 +702,14 @@ module.exports = {
                                     );
                                 }
                             });
-                            accessToken(req, (err4, Token)=>{
+                            createUserAccountApp(req.body.app_id, results[0].id, (err4, results4) => {
+                                if (err4) {
+                                    return res.status(500).send(
+                                        err4
+                                    );
+                                }
+                            });        
+                            accessToken(req, (err5, Token)=>{
                                 return res.status(200).json({
                                     count: results.length,
                                     success: 1,
@@ -732,14 +747,21 @@ module.exports = {
                                     );
                                 }
                             });
-                            getUserByProviderId(req.body.app_id, req.body.provider_no, provider_id, (err6, results6) => {
+                            createUserAccountApp(req.body.app_id, results4.insertId, (err6, results6) => {
                                 if (err6) {
                                     return res.status(500).send(
                                         err6
                                     );
                                 }
+                            });        
+                            getUserByProviderId(req.body.app_id, req.body.provider_no, provider_id, (err7, results7) => {
+                                if (err7) {
+                                    return res.status(500).send(
+                                        err7
+                                    );
+                                }
                                 else{
-                                    accessToken(req, (err7, Token)=>{
+                                    accessToken(req, (err8, Token)=>{
                                         return res.status(200).json({
                                             count: results6.length,
                                             success: 1,

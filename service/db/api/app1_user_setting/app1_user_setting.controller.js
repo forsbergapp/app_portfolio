@@ -11,7 +11,7 @@ const { createUserSetting,
 module.exports = {
 	createUserSetting: (req, res) =>{
 		const body = req.body;
-		createUserSetting(req.query.app_id, body, (err,results) => {
+		createUserSetting(req.query.app_id, req.query.initial, body, (err,results) => {
 			if (err) {
 				return res.status(500).send(
 					err
