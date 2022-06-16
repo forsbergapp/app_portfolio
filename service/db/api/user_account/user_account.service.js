@@ -2,6 +2,18 @@ const {oracledb, get_pool, get_pool_admin} = require ("../../config/database");
 const { createLogAppSE } = require("../../../../service/log/log.service");
 module.exports = {
     create: (app_id, data, callBack) => {
+		if (typeof data.provider1_id != 'undefined' && 
+		    data.provider1_id != '' && 
+			data.provider1_id){
+            //generate local username for provider 1
+            data.username = `${data.provider1_first_name}${Date.now()}`;
+        }
+		if (typeof data.provider2_id != 'undefined' && 
+		    data.provider2_id != '' && 
+			data.provider2_id){
+            //generate local username for provider 2
+            data.username = `${data.provider2_first_name}${Date.now()}`;
+        }
         if (process.env.SERVICE_DB_USE == 1) {
             get_pool(app_id).query(
                 `INSERT INTO ${process.env.SERVICE_DB_DB1_NAME}.user_account(
@@ -1172,11 +1184,14 @@ module.exports = {
         if (process.env.SERVICE_DB_USE == 1) {
             get_pool(app_id).query(
                 `UPDATE ${process.env.SERVICE_DB_DB1_NAME}.user_account
-					SET bio = ?,
+					SET username = ?,
+					bio = ?,
 					private = ?,
 					user_level = ?,
 					date_modified = SYSDATE()
-				WHERE id = ? `, [
+				WHERE id = ? `, 
+				[   
+					data.username,
                     data.bio,
                     data.private,
                     data.user_level,
@@ -1197,11 +1212,13 @@ module.exports = {
                     pool2 = await oracledb.getConnection(get_pool(app_id));
                     const result = await pool2.execute(
                         `UPDATE ${process.env.SERVICE_DB_DB2_NAME}.user_account
-							SET bio = :bio,
+							SET username = :username,
+							bio = :bio,
 							private = :private,
 							user_level = :user_level,
 							date_modified = SYSDATE
-						WHERE id = :id `, {
+						WHERE id = :id `, 
+						{	username: username,
                             bio: data.bio,
                             private: data.private,
                             user_level: data.user_level,
@@ -1290,8 +1307,10 @@ module.exports = {
 					email,
 					CONVERT(avatar USING UTF8) avatar
 				FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account
-				WHERE username = ? 
-				AND  active = ? `, 
+			   WHERE username = ? 
+				 AND provider1_id IS NULL
+				 AND provider2_id IS NULL
+				 AND active = ? `, 
 				[data.username,
                  data.active
                 ],
@@ -1318,8 +1337,11 @@ module.exports = {
 							email "email",
 							avatar "avatar"
 						FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account
-						WHERE username = :username 
-						AND  active = :active `, {
+					   WHERE username = :username 
+						 AND provider1_id IS NULL
+						 AND provider2_id IS NULL	   
+						 AND active = :active `, 
+						{
                             username: data.username,
                             active: data.active
                         },
