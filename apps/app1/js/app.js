@@ -1883,7 +1883,7 @@ async function user_edit_app() {
         spinner_app('EDIT', 'hidden');
         if ((err==null && result==null) == false){
             if (err==null){
-                update_settings_icon(image_format(result.avatar));
+                update_settings_icon(image_format(result.avatar ?? result.provider1_image ?? result.provider2_image));
             }
         }
     });
@@ -2874,9 +2874,9 @@ async function updateProviderUser_app(provider_no, profile_id, profile_first_nam
                 user_settings_function('ADD');
             }
             document.getElementById('user_logged_in').style.display = "block";
-            document.getElementById('setting_avatar_logged_in').src = result.profile_image;
+            document.getElementById('setting_avatar_logged_in').src = result.avatar;
 
-            update_settings_icon(result.profile_image);
+            update_settings_icon(result.avatar);
 
             document.getElementById('setting_bio_logged_in').innerHTML = get_null_or_value(result.bio);
             document.getElementById('setting_data_username_logged_in').innerHTML = result.first_name + ' ' + result.last_name;

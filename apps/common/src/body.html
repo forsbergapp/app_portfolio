@@ -33,7 +33,11 @@
                 <input id='login_username' type='text' class='login_input'/>
                 <input id='login_password' type='password' class='login_input'/>
                 <button id='login_button' class='login_button' ><i class='fas fa-arrow-alt-circle-right'></i></button>
-                <div class='g-signin2' data-onsuccess=''></div>
+                <div id="g_id_onload"
+						data-client_id=''
+						data-callback=''>
+					</div>
+				<div class='g_id_signin login_button' data-type='standard'></div>
                 <button id='login_facebook' class='login_button' >
                         <div id='logo_facebook'>
                             <i class='fab fa-facebook'></i>

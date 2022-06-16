@@ -260,34 +260,6 @@
 #login_btn_facebook{
 	display:inline-block;
 }
-/*Dialogue login Google*/
-.abcRioButton{
-	display:block;
-	box-shadow:none !important;
-	border-top-left-radius: 20px !important;
-	border-top-right-radius: 20px !important;
-	border-bottom-right-radius: 20px !important;
-	border-bottom-left-radius: 20px !important;
-	width: 100% !important;
-	height: 40px !important;
-	padding: 1px;
-	border: 0px solid;
-	margin-top: 10px;	
-}
-.abcRioButton:hover{
-	-webkit-box-shadow:none !important;
-	box-shadow:none !important;
-}
-.abcRioButtonContents{
-	font-size: 16px !important;
-	font-weight:bold !important;
-	margin-left:5% !important;
-	margin-right:10% !important;
-	line-height:40px !important;
-}
-.abcRioButtonIcon{
-	padding:10px !important;
-}
 /*Dialogue user edit*/
 #dialogue_user_edit{
 	visibility: hidden;

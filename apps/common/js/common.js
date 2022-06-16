@@ -739,14 +739,14 @@ async function user_logoff(user_id, lang_code){
     get_data_token(user_id, lang_code).then(function(){
         if (global_app_user_provider1_use==1){
             //sign out from Google if Google loaded
-            if (gapi.auth2.getAuthInstance()) {
-                gapi.auth2.getAuthInstance().signOut().then(function() {
-                    null;
-                });
-            };
+            //nothing to do with Google Identity
+            null;
         }
         if (global_app_user_provider2_use==1){
             //Sign out from Facebook if signed in
+            //do nothing since FB.getLoginStatus logs out user in browser
+            null;
+            /*
             FB.getLoginStatus(function(response) {
                 //statusChangeCallback(response);
                 if (response.authResponse) {
@@ -756,6 +756,7 @@ async function user_logoff(user_id, lang_code){
                     });
                 }
             });
+            */
         }
         document.getElementById('dialogue_user_edit').style.visibility = "hidden";
 
@@ -853,7 +854,7 @@ async function user_edit(user_id, timezone, lang_code,callBack) {
                             document.getElementById('user_edit_local').style.display = 'block';
                             document.getElementById('user_edit_provider').style.display = 'none';
 
-                            //display fetched avatar in user edit dialogue
+                            //display fetched avatar editable
                             document.getElementById('user_edit_avatar').style.display = 'block';
                             if (json.avatar == null || json.avatar == '')
                                 recreate_img(document.getElementById('user_edit_avatar_img'));
@@ -871,31 +872,43 @@ async function user_edit(user_id, timezone, lang_code,callBack) {
 
                             document.getElementById('setting_input_password_reminder_edit').value = json.password_reminder;
                         } else
-                        if (json.provider1_id !== null) {
-                            document.getElementById('user_edit_provider').style.display = 'block';
-                            document.getElementById('setting_user_edit_provider_logo').innerHTML = '<i class="fab fa-google"></i>';
-                            document.getElementById('user_edit_local').style.display = 'none';
-                            document.getElementById('setting_label_provider_id_edit_data').innerHTML = json.provider1_id;
-                            document.getElementById('setting_label_provider_name_edit_data').innerHTML = json.provider1_first_name + ' ' + json.provider1_last_name;
-                            document.getElementById('setting_label_provider_email_edit_data').innerHTML = json.provider1_email;
-                            document.getElementById('setting_label_provider_image_url_edit_data').innerHTML = json.provider1_image_url;
-                        } else
-                        if (json.provider2_id !== null) {
-                            document.getElementById('user_edit_provider').style.display = 'block';
-                            document.getElementById('setting_user_edit_provider_logo').innerHTML = '<i class="fab fa-facebook"></i>';
-                            document.getElementById('user_edit_local').style.display = 'none';
-                            document.getElementById('setting_label_provider_id_edit_data').innerHTML = json.provider2_id;
-                            document.getElementById('setting_label_provider_name_edit_data').innerHTML = json.provider2_first_name + ' ' + json.provider2_last_name;
-                            document.getElementById('setting_label_provider_email_edit_data').innerHTML = json.provider2_email;
-                            document.getElementById('setting_label_provider_image_url_edit_data').innerHTML = json.provider2_image_url;
-                        }
+                            if (json.provider1_id !== null) {
+                                document.getElementById('user_edit_provider').style.display = 'block';
+                                document.getElementById('setting_user_edit_provider_logo').innerHTML = '<i class="fab fa-google"></i>';
+                                document.getElementById('user_edit_local').style.display = 'none';
+                                document.getElementById('setting_label_provider_id_edit_data').innerHTML = json.provider1_id;
+                                document.getElementById('setting_label_provider_name_edit_data').innerHTML = json.provider1_first_name + ' ' + json.provider1_last_name;
+                                document.getElementById('setting_label_provider_email_edit_data').innerHTML = json.provider1_email;
+                                document.getElementById('setting_label_provider_image_url_edit_data').innerHTML = json.provider1_image_url;
+                                document.getElementById('user_edit_avatar').style.display = 'none';
+                                if (json.provider1_image == null || json.provider1_image == '')
+                                    recreate_img(document.getElementById('user_edit_avatar_img'));
+                                else
+                                    document.getElementById('user_edit_avatar_img').src = image_format(json.provider1_image);
+                            } else
+                                if (json.provider2_id !== null) {
+                                    document.getElementById('user_edit_provider').style.display = 'block';
+                                    document.getElementById('setting_user_edit_provider_logo').innerHTML = '<i class="fab fa-facebook"></i>';
+                                    document.getElementById('user_edit_local').style.display = 'none';
+                                    document.getElementById('setting_label_provider_id_edit_data').innerHTML = json.provider2_id;
+                                    document.getElementById('setting_label_provider_name_edit_data').innerHTML = json.provider2_first_name + ' ' + json.provider2_last_name;
+                                    document.getElementById('setting_label_provider_email_edit_data').innerHTML = json.provider2_email;
+                                    document.getElementById('setting_label_provider_image_url_edit_data').innerHTML = json.provider2_image_url;
+                                    document.getElementById('user_edit_avatar').style.display = 'none';
+                                    if (json.provider2_image == null || json.provider2_image == '')
+                                        recreate_img(document.getElementById('user_edit_avatar_img'));
+                                    else
+                                        document.getElementById('user_edit_avatar_img').src = image_format(json.provider2_image);
+                                }
                         document.getElementById('setting_label_data_last_logontime_edit').innerHTML = format_json_date(json.last_logontime, null, timezone, lang_code);
                         document.getElementById('setting_label_data_account_created_edit').innerHTML = format_json_date(json.date_created, null, timezone, lang_code);
                         document.getElementById('setting_label_data_account_modified_edit').innerHTML = format_json_date(json.date_modified, null, timezone, lang_code);
                         return callBack(null, {id: json.id,
-                                               provider_1: json.provider1_id,
-                                               provider_2: json.provider2_id,
-                                               avatar:     json.avatar
+                                               provider_1:      json.provider1_id,
+                                               provider_2:      json.provider2_id,
+                                               avatar:          json.avatar,
+                                               provider1_image: json.provider1_image,
+                                               provider2_image: json.provider2_image
                                               });
                     } else {
                         //User not found
@@ -1446,8 +1459,13 @@ function set_app_globals_head() {
 async function init_providers(provider1_function, provider2_function){
     //enable provider 1 if used
     if (global_app_user_provider1_use==1){
-        document.querySelector('meta[name="google-signin-client_id"]').setAttribute("content", global_app_user_provider1_id);
-        document.getElementsByClassName('g-signin2')[0].setAttribute('data-onsuccess', provider1_function);
+        document.getElementById('g_id_onload').setAttribute('data-client_id', global_app_user_provider1_id);
+        document.getElementById('g_id_onload').setAttribute('data-callback', provider1_function);
+        document.getElementById('g_id_onload').setAttribute('data-auto_select', 'true');
+        document.getElementsByClassName('g_id_signin')[0].setAttribute('data-shape', 'circle');
+        document.getElementsByClassName('g_id_signin')[0].setAttribute('data-width', '268');
+        document.getElementsByClassName('g_id_signin')[0].setAttribute('data-text', 'continue_with');
+
         /*Provider 1 SDK*/
         let tag = document.createElement('script');
         tag.src = global_app_user_provider1_api_src + navigator.language;
@@ -1456,7 +1474,7 @@ async function init_providers(provider1_function, provider2_function){
         firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
     }
     else
-        document.getElementsByClassName('g-signin2')[0].className += 'login_button_hidden';
+        document.getElementsByClassName('g_id_signin')[0].className += 'login_button_hidden';
     //enable provider 2 if used
     if (global_app_user_provider2_use==1){
         document.getElementById('login_facebook').addEventListener('click', provider2_function, false);
@@ -1554,32 +1572,36 @@ async function updateProviderUser(provider_no, profile_id, profile_first_name, p
 }
 async function onProviderSignIn(googleUser, callBack) {
     let profile;
+    function fb_api(){
+        FB.api('/me?fields=id,first_name,last_name,picture, email', function(response) {
+            return callBack(null, {provider_no: 2,
+                                   profile_id: response.id,
+                                   profile_first_name: response.first_name,
+                                   profile_last_name: response.last_name,
+                                   profile_image_url: response.picture.data.url,
+                                   profile_email: response.email});
+        });
+    }
     if (googleUser) {
-        profile = googleUser.getBasicProfile();
+        profile = parseJwt(googleUser.credential);
         return callBack(null, {provider_no: 1,
-                               profile_id: profile.getId(),
-                               profile_first_name: profile.getGivenName(),
-                               profile_last_name: profile.getFamilyName(),
-                               profile_image_url: profile.getImageUrl(),
-                               profile_email: profile.getEmail()});
+                               profile_id: profile.sub,
+                               profile_first_name: profile.given_name,
+                               profile_last_name: profile.family_name,
+                               profile_image_url: profile.picture,
+                               profile_email: profile.email});
     } else {
-        provider_no = 2;
         FB.getLoginStatus(function(response) {
-            //statusChangeCallback(response);
-            FB.login(function(response) {
-                if (response.authResponse) {
-                    FB.api('/me?fields=id,first_name,last_name,picture, email', function(response) {
-                        return callBack(null, {provider_no: 2,
-                                               profile_id: response.id,
-                                               profile_first_name: response.first_name,
-                                               profile_last_name: response.last_name,
-                                               profile_image_url: response.picture.data.url,
-                                               profile_email: response.email});
-                    });
-                } else
-                    console.log('User cancelled login or did not fully authorize.');
-                    return callBack('ERROR', null);
-            });
+            if (response.status === 'connected') 
+                return fb_api();
+            else
+                FB.login(function(response) {
+                    if (response.authResponse) {
+                        return fb_api();
+                    } else
+                        console.log('User cancelled login or did not fully authorize.');
+                        return callBack('ERROR', null);
+                });
         });
     }
 }
@@ -1883,6 +1905,14 @@ function toBase64(arr) {
         arr.reduce((data, byte) => data + String.fromCharCode(byte), '')
     );
 }
+function parseJwt(token) {
+    try {
+      return JSON.parse(atob(token.split('.')[1]));
+    } catch (e) {
+      return null;
+    }
+  };
+
 //function to check image if to read buffer or not
 function image_format(arr) {
     //arr = new Uint8Array(arr) if it's an ArrayBuffer

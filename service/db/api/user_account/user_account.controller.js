@@ -679,30 +679,29 @@ module.exports = {
             }
             else{
                 if (results.length > 0) {
-                    updateSigninProvider(req.body.app_id, req.body.provider_no, results[0].id, req.body, (err, results2) => {
-                        if (err) {
+                    updateSigninProvider(req.body.app_id, req.body.provider_no, results[0].id, req.body, (err2, results2) => {
+                        if (err2) {
                             return res.status(500).send(
-                                err
+                                err2
                             );
                         }
                         else{
                             req.body.user_account_id = results[0].id;
-                            insertUserAccountLogon(req.body, (err, results3) => {
-                                if (err) {
+                            insertUserAccountLogon(req.body, (err3, results3) => {
+                                if (err3) {
                                     return res.status(500).send(
-                                        err
+                                        err3
                                     );
                                 }
-                                else
-                                    accessToken(req, (err, Token)=>{
-                                        return res.status(200).json({
-                                            count: results.length,
-                                            success: 1,
-                                            accessToken: Token,
-                                            items: results,
-                                            userCreated: 0
-                                        });
-                                    });
+                            });
+                            accessToken(req, (err4, Token)=>{
+                                return res.status(200).json({
+                                    count: results.length,
+                                    success: 1,
+                                    accessToken: Token,
+                                    items: results,
+                                    userCreated: 0
+                                });
                             });
                         }
                     });
@@ -718,38 +717,36 @@ module.exports = {
                     if (typeof req.body.provider2_image == 'undefined')
                         req.body.provider2_image = null;
 
-                    create(req.body.app_id, req.body, (err, results4) => {
-                        if (err) {
+                    create(req.body.app_id, req.body, (err4, results4) => {
+                        if (err4) {
                             return res.status(500).send(
-                                err
+                                err4
                             );
                         }
                         else{
                             req.body.user_account_id = results4.insertId;
-                            insertUserAccountLogon(req.body, (err, results5) => {
-                                if (err) {
+                            insertUserAccountLogon(req.body, (err5, results5) => {
+                                if (err5) {
                                     return res.status(500).send(
-                                        err
+                                        err5
+                                    );
+                                }
+                            });
+                            getUserByProviderId(req.body.app_id, req.body.provider_no, provider_id, (err6, results6) => {
+                                if (err6) {
+                                    return res.status(500).send(
+                                        err6
                                     );
                                 }
                                 else{
-                                    getUserByProviderId(req.body.app_id, req.body.provider_no, provider_id, (err, results6) => {
-                                        if (err) {
-                                            return res.status(500).send(
-                                                err
-                                            );
-                                        }
-                                        else{
-                                            accessToken(req, (err, Token)=>{
-                                                return res.status(200).json({
-                                                    count: results6.length,
-                                                    success: 1,
-                                                    accessToken: Token,
-                                                    items: results6,
-                                                    userCreated: 1
-                                                });
-                                            });
-                                        }
+                                    accessToken(req, (err7, Token)=>{
+                                        return res.status(200).json({
+                                            count: results6.length,
+                                            success: 1,
+                                            accessToken: Token,
+                                            items: results6,
+                                            userCreated: 1
+                                        });
                                     });
                                 }
                             });
