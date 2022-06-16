@@ -2553,7 +2553,7 @@ async function user_settings_function(function_name, initial_user_setting) {
             break;
         }
     }
-    fetch(url, {
+    await fetch(url, {
             method: method,
             headers: {
                 'Content-Type': 'application/json',
@@ -3927,7 +3927,7 @@ async function app_show(){
             document.getElementById('profile_info').classList.add("profile_info_logged_off");
         }
         document.getElementById('profile').style.visibility = "visible";
-        profile_show_app(null, user, document.getElementById('setting_data_userid_logged_in'), document.getElementById('setting_select_timezone_current').value, get_lang_code());
+        profile_show_app(null, user, document.getElementById('setting_data_userid_logged_in').innerHTML, document.getElementById('setting_select_timezone_current').value, get_lang_code());
     }
 }
 

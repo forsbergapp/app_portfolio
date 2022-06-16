@@ -149,7 +149,7 @@ module.exports = {
                         main(app_id);
                     else{
                         //return 0 meaning redirect to /
-                        return callBack(0);
+                        resolve (0);
                     }
                 })
             }

@@ -2128,20 +2128,7 @@ CREATE TRIGGER app_portfolio.user_account_before_insert
     BEFORE INSERT ON app_portfolio.user_account 
     FOR EACH ROW 
 	BEGIN
-    IF new.username IS NOT NULL THEN
-    	SET new.provider1_first_name = null;
-		SET new.provider1_last_name = null;
-		SET new.provider1_image = null;
-		SET new.provider1_image_url = null;
-		SET new.provider1_email = null;
-		SET new.provider2_first_name = null;
-		SET new.provider2_last_name = null;
-		SET new.provider2_image = null;
-		SET new.provider2_image_url = null;
-		SET new.provider2_email = null;
-    END IF;
 	IF new.provider1_id IS NOT NULL OR new.provider2_id IS NOT NULL THEN
-		SET new.username = null;
         SET new.password = null;
 		SET new.password_reminder = null;
 		SET new.email = null;
@@ -2191,8 +2178,7 @@ CREATE TRIGGER app_portfolio.user_account_before_insert
 		   (new.username IS NULL OR new.password IS NULL OR new.email IS NULL) THEN 
            signal SQLSTATE '45000'
 		SET message_text = 'Username, password and email are required', MYSQL_ERRNO = 20107;
-	ELSEIF (new.provider1_id IS NOT NULL AND new.provider2_id IS NOT NULL) OR
-		   (new.username IS NOT NULL AND (new.provider1_id IS NOT NULL OR new.provider2_id IS NOT NULL)) THEN 
+	ELSEIF new.provider1_id IS NOT NULL AND new.provider2_id IS NOT NULL THEN 
            signal SQLSTATE '45000'
 		SET message_text = 'One provider one user', MYSQL_ERRNO = 20108;
     END IF;
@@ -2255,20 +2241,7 @@ CREATE TRIGGER app_portfolio.user_account_before_update
     BEFORE UPDATE ON app_portfolio.user_account 
     FOR EACH ROW 
     BEGIN
-    IF new.username IS NOT NULL THEN
-    	SET new.provider1_first_name = null;
-		SET new.provider1_last_name = null;
-		SET new.provider1_image = null;
-		SET new.provider1_image_url = null;
-		SET new.provider1_email = null;
-		SET new.provider2_first_name = null;
-		SET new.provider2_last_name = null;
-		SET new.provider2_image = null;
-		SET new.provider2_image_url = null;
-		SET new.provider2_email = null;
-    END IF;
 	IF new.provider1_id IS NOT NULL OR new.provider2_id IS NOT NULL THEN
-		SET new.username = null;
         SET new.password = null;
 		SET new.password_reminder = null;
 		SET new.email = null;
@@ -2318,8 +2291,7 @@ CREATE TRIGGER app_portfolio.user_account_before_update
 		   (new.username IS NULL OR new.password IS NULL OR new.email IS NULL) THEN 
            signal SQLSTATE '45000'
 		SET message_text = 'Username, password and email are required', MYSQL_ERRNO = 20107;
-	ELSEIF (new.provider1_id IS NOT NULL AND new.provider2_id IS NOT NULL) OR
-		   (new.username IS NOT NULL AND (new.provider1_id IS NOT NULL OR new.provider2_id IS NOT NULL)) THEN 
+	ELSEIF new.provider1_id IS NOT NULL AND new.provider2_id IS NOT NULL THEN 
            signal SQLSTATE '45000'
 		SET message_text = 'One provider one user', MYSQL_ERRNO = 20108;
     END IF;
