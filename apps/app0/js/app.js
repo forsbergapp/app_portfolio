@@ -535,12 +535,12 @@ async function updateProviderUser_app(provider_no, profile_id, profile_first_nam
         if(err==null){
             user_id.innerHTML = result.user_account_id;
             //set avatar or empty
-            if (result.profile_image == null || result.profile_image == '') {
+            if (result.avatar == null || result.avatar == '') {
                 recreate_img(document.getElementById('user_menu_avatar_img'));
-                result.profile_image = '';
+                result.avatar = '';
             } else
-                document.getElementById('user_menu_avatar_img').src = image_format(result.profile_image);
-            document.getElementById('user_menu_username').innerHTML = result.first_name + ' ' + result.last_name;
+                document.getElementById('user_menu_avatar_img').src = result.avatar;
+            document.getElementById('user_menu_username').innerHTML = result.username;
 
             document.getElementById('user_menu_logged_in').style.display = 'inline-block';
             document.getElementById('user_menu').classList.add('user_menu_logged_in');

@@ -142,8 +142,8 @@ app.get("/app1/manifest.json",function (req, res) {
                 else{
                     const { getForm} = require("./service/forms/forms.controller");
                     getForm(APP1_ID, req.params.user, (err, app_result)=>{
-                      //if err=0 means here redirect to /
-                      if (err==0)
+                      //if app_result=0 means here redirect to /
+                      if (app_result==0)
                         return res.redirect('/');
                       else
                         return res.send(app_result);
