@@ -1927,47 +1927,50 @@ async function user_login_app(){
     await user_login(username.value, password.value, lang_code, (err, result)=>{
         spinner('LOGIN', 'hidden');
         if (err==null){
-            username.value = '';
-            password.value = '';
-            document.getElementById('user_logged_in').style.display = "block";
             user_id.innerHTML = result.user_id;
-            //set avatar or empty
-            if (result.avatar == null || result.avatar == '') {
-                recreate_img(document.getElementById('setting_avatar_logged_in'));
-                result.avatar = '';
-            } else
-                document.getElementById('setting_avatar_logged_in').src = image_format(result.avatar);
-            update_settings_icon(image_format(result.avatar));
-            document.getElementById('setting_bio_logged_in').innerHTML = get_null_or_value(result.bio);
-            document.getElementById('setting_data_username_logged_in').innerHTML = result.username;
-            
-            document.getElementById('popup_menu_login').style.display = 'none';
-            document.getElementById('popup_menu_signup').style.display = 'none';
-            document.getElementById('popup_menu_logoff').style.display = 'block';
-            document.getElementById('dialogue_login').style.visibility = 'hidden';
-            document.getElementById('dialogue_signup').style.visibility = 'hidden';
-            //Show user tab
-            document.getElementById('tab7_nav').style.display = 'inline-block';
-            //Hide settings
-            document.getElementById('settings').style.visibility = 'hidden';
-            //Hide profile
-            document.getElementById('profile').style.visibility = 'hidden';
-            
-            document.getElementById('prayertable_day').innerHTML='';
-            document.getElementById('prayertable_month').innerHTML='';
-            document.getElementById('prayertable_year').innerHTML='';
-            dialogue_loading(1);
-            user_settings_get(user_id.innerHTML).then(function(){
-                user_settings_load().then(function(){
-                    settings_translate(true).then(function(){
-                        settings_translate(false).then(function(){
-                            //show default startup
-                            toolbar_bottom(global_app_default_startup_page);
-                            dialogue_loading(0);
+            //create intitial user setting if not exist, send initial=true
+            user_settings_function('ADD', true).then(function(){
+                username.value = '';
+                password.value = '';
+                document.getElementById('user_logged_in').style.display = "block";
+                //set avatar or empty
+                if (result.avatar == null || result.avatar == '') {
+                    recreate_img(document.getElementById('setting_avatar_logged_in'));
+                    result.avatar = '';
+                } else
+                    document.getElementById('setting_avatar_logged_in').src = image_format(result.avatar);
+                update_settings_icon(image_format(result.avatar));
+                document.getElementById('setting_bio_logged_in').innerHTML = get_null_or_value(result.bio);
+                document.getElementById('setting_data_username_logged_in').innerHTML = result.username;
+                
+                document.getElementById('popup_menu_login').style.display = 'none';
+                document.getElementById('popup_menu_signup').style.display = 'none';
+                document.getElementById('popup_menu_logoff').style.display = 'block';
+                document.getElementById('dialogue_login').style.visibility = 'hidden';
+                document.getElementById('dialogue_signup').style.visibility = 'hidden';
+                //Show user tab
+                document.getElementById('tab7_nav').style.display = 'inline-block';
+                //Hide settings
+                document.getElementById('settings').style.visibility = 'hidden';
+                //Hide profile
+                document.getElementById('profile').style.visibility = 'hidden';
+                
+                document.getElementById('prayertable_day').innerHTML='';
+                document.getElementById('prayertable_month').innerHTML='';
+                document.getElementById('prayertable_year').innerHTML='';
+                dialogue_loading(1);
+                user_settings_get(user_id.innerHTML).then(function(){
+                    user_settings_load().then(function(){
+                        settings_translate(true).then(function(){
+                            settings_translate(false).then(function(){
+                                //show default startup
+                                toolbar_bottom(global_app_default_startup_page);
+                                dialogue_loading(0);
+                            })
                         })
                     })
-                })
-            });          
+                });          
+            })
         }
         
     })
@@ -1976,10 +1979,6 @@ async function user_verify_check_input_app(item, nextField){
     await user_verify_check_input(item, document.getElementById('setting_data_userid_logged_in').innerHTML, nextField, get_lang_code(), (err, result) => {
         if ((err==null && result==null)==false)
             if(err==null){
-                //create app for user_account
-                user_account_app(global_app_id, document.getElementById('setting_data_userid_logged_in').innerHTML, get_lang_code());
-                //create intitial user setting
-                user_settings_function('ADD');
                 user_login_app();
             }
     })
@@ -2462,7 +2461,7 @@ async function user_settings_load(show_ui = 1) {
     return null;
 }
 
-function user_settings_function(function_name) {
+async function user_settings_function(function_name, initial_user_setting) {
     let user_account_id = document.getElementById('setting_data_userid_logged_in').innerHTML;
     let description = document.getElementById('setting_input_place').value;
     let status;
@@ -2537,23 +2536,24 @@ function user_settings_function(function_name) {
     switch (function_name){
         case 'ADD':{
             method = 'POST';
-            url = global_rest_url_base + global_rest_app1_user_setting;
+            url = global_rest_url_base + global_rest_app1_user_setting + 
+                  `?app_id=${global_app_id}&lang_code=${get_lang_code()}` + 
+                  `&initial=${initial_user_setting==true?1:0}`;
             break;
         }
         case 'SAVE':{
             method = 'PUT';
             let select_user_setting = document.getElementById('setting_select_user_setting');
             let user_setting_id = select_user_setting[select_user_setting.selectedIndex].getAttribute('id');
-            url = global_rest_url_base + global_rest_app1_user_setting + user_setting_id;
+            url = global_rest_url_base + global_rest_app1_user_setting + user_setting_id + 
+                  `?app_id=${global_app_id}&lang_code=${get_lang_code()}`;
             break;
         }
         default:{
             break;
         }
     }
-    fetch(url +
-            '?app_id=' + global_app_id +
-            '&lang_code=' + get_lang_code(), {
+    fetch(url, {
             method: method,
             headers: {
                 'Content-Type': 'application/json',
@@ -2867,39 +2867,37 @@ async function updateProviderUser_app(provider_no, profile_id, profile_first_nam
     await updateProviderUser(provider_no, profile_id, profile_first_name, profile_last_name, profile_image_url, profile_email, get_lang_code(), (err, result)=>{
         if(err==null){
             user_id.innerHTML = result.user_account_id;
-            if (result.userCreated == 1) {
-                //create app for user_account
-                user_account_app(global_app_id, user_id.innerHTML);
-                //create intitial user setting
-                user_settings_function('ADD');
-            }
-            document.getElementById('user_logged_in').style.display = "block";
-            document.getElementById('setting_avatar_logged_in').src = result.avatar;
-
-            update_settings_icon(result.avatar);
-
-            document.getElementById('setting_bio_logged_in').innerHTML = get_null_or_value(result.bio);
-            document.getElementById('setting_data_username_logged_in').innerHTML = result.first_name + ' ' + result.last_name;
-
-            document.getElementById('popup_menu_login').style.display = 'none';
-            document.getElementById('popup_menu_signup').style.display = 'none';
-            document.getElementById('popup_menu_logoff').style.display = 'block';
-            //Show user tab
-            document.getElementById('tab7_nav').style.display = 'inline-block';
-            document.getElementById('prayertable_day').innerHTML='';
-            document.getElementById('prayertable_month').innerHTML='';
-            document.getElementById('prayertable_year').innerHTML='';
-            dialogue_loading(1);
-            user_settings_get(user_id.innerHTML).then(function(){
-                user_settings_load().then(function(){
-                    settings_translate(true).then(function(){
-                        settings_translate(false).then(function(){
-                            app_show();
-                            dialogue_loading(0);
+            //create intitial user setting if not exist, send initial=true
+            user_settings_function('ADD', true).then(function(){
+                document.getElementById('user_logged_in').style.display = "block";
+                document.getElementById('setting_avatar_logged_in').src = result.avatar;
+    
+                update_settings_icon(result.avatar);
+    
+                document.getElementById('setting_bio_logged_in').innerHTML = get_null_or_value(result.bio);
+                document.getElementById('setting_data_username_logged_in').innerHTML = result.first_name + ' ' + result.last_name;
+    
+                document.getElementById('popup_menu_login').style.display = 'none';
+                document.getElementById('popup_menu_signup').style.display = 'none';
+                document.getElementById('popup_menu_logoff').style.display = 'block';
+                //Show user tab
+                document.getElementById('tab7_nav').style.display = 'inline-block';
+                document.getElementById('prayertable_day').innerHTML='';
+                document.getElementById('prayertable_month').innerHTML='';
+                document.getElementById('prayertable_year').innerHTML='';
+                dialogue_loading(1);
+                user_settings_get(user_id.innerHTML).then(function(){
+                    user_settings_load().then(function(){
+                        settings_translate(true).then(function(){
+                            settings_translate(false).then(function(){
+                                app_show();
+                                dialogue_loading(0);
+                            })
                         })
                     })
-                })
+                });
             });
+            
         }
     })
 }
