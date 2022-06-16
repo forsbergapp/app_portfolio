@@ -492,8 +492,6 @@ async function user_verify_check_input_app(item, nextField){
     await user_verify_check_input(item, document.getElementById('user_menu_user_id').innerHTML, nextField, global_lang_code, (err, result) => {
         if ((err==null && result==null)==false)
             if(err==null){
-                //create app for user_account
-                user_account_app(global_app_id, document.getElementById('user_menu_user_id').innerHTML, global_lang_code);
                 user_login_app();
             }
     })
@@ -536,10 +534,6 @@ async function updateProviderUser_app(provider_no, profile_id, profile_first_nam
     await updateProviderUser(provider_no, profile_id, profile_first_name, profile_last_name, profile_image_url, profile_email, global_lang_code, (err, result)=>{
         if(err==null){
             user_id.innerHTML = result.user_account_id;
-            if (result.userCreated == 1) {
-                //create app for user_account
-                user_account_app(global_app_id, user_id.innerHTML);
-            }
             //set avatar or empty
             if (result.profile_image == null || result.profile_image == '') {
                 recreate_img(document.getElementById('user_menu_avatar_img'));

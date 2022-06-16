@@ -6,8 +6,15 @@ module.exports = {
 			get_pool(app_id).query(
 			`INSERT INTO ${process.env.SERVICE_DB_DB1_NAME}.user_account_app(
 							app_id, user_account_id, date_created)
-				VALUES(?,?, SYSDATE()) `,
+				SELECT ?,?, SYSDATE()
+				  FROM DUAL
+				  WHERE NOT EXISTS (SELECT NULL
+									  FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_app uap
+									 WHERE uap.app_id = ?
+									   AND uap.user_account_id = ?)`,
 				[
+				app_id,
+				user_account_id,
 				app_id,
 				user_account_id
 				],
@@ -27,7 +34,12 @@ module.exports = {
 				const result = await pool2.execute(
 					`INSERT INTO ${process.env.SERVICE_DB_DB2_NAME}.user_account_app(
 									app_id, user_account_id, date_created)
-						VALUES(:app_id, :user_account_id, SYSDATE)`,
+						SELECT :app_id, :user_account_id, SYSDATE
+						  FROM DUAL
+						 WHERE NOT EXISTS (SELECT NULL
+										     FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_app uap
+										    WHERE uap.app_id = :app_id
+										 	  AND uap.user_account_id = :user_account_id)`,
 					{
 						app_id: app_id,
 						user_account_id: user_account_id
