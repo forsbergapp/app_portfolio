@@ -23,7 +23,7 @@ Includes
 	All known regional settings, all languagues and all countries supported.
 	Navigate in calendar per day, month or year in Gregorian or Hijri
 	calendar type in realtime.
-	Facebook Login and Google sign in or create local user with user verification.
+	Facebook Login and Google Identity or create local user with user verification.
 	App can be used without registering but then settings can't be saved.
 	Map integration with automatic timezone and GPS lookup.
 	QR code dynamic generation.
@@ -121,7 +121,7 @@ installation instructions
    import scripts/import.sql
    import language scripts/*.sql files
 
-3. register google sign in
+3. register Google Identity
    requires hostname
    https://console.developers.google.com/
 
