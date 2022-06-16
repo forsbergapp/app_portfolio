@@ -49,16 +49,16 @@ Object.defineProperty(global, '__appfilename', {
       return filename.substring(__dirname.length).replace(/\\/g, "/");
       } 
 });
-//set middleware to configure Content Security Policy
+//set Helmet to configure Content Security Policy
 app.use(
   helmet({
     crossOriginEmbedderPolicy: false,
     contentSecurityPolicy: {
       directives: {
         "default-src": ["'self'"], 
-        "script-src": ["'self'", "'unsafe-inline'", "'unsafe-eval'", 'api.mapbox.com', 'apis.google.com', 'connect.facebook.net', '*.facebook.com', 'cdn.jsdelivr.net'],
+        "script-src": ["'self'", "'unsafe-inline'", "'unsafe-eval'", 'api.mapbox.com', 'accounts.google.com', 'www.google.com', 'play.google.com', 'connect.facebook.net', '*.facebook.com', 'cdn.jsdelivr.net'],
         "script-src-attr": ["'self'", "'unsafe-inline'"],
-        "style-src": ["'self'", "'unsafe-inline'", 'fonts.googleapis.com', 'use.fontawesome.com', 'api.mapbox.com'],
+        "style-src": ["'self'", "'unsafe-inline'", 'fonts.googleapis.com', 'accounts.google.com', 'ssl.gstatic.com', 'use.fontawesome.com', 'api.mapbox.com'],
         "font-src": ["self", 'fonts.gstatic.com', 'use.fontawesome.com'],
         "img-src": ["*", 'data:', 'blob:'],
         connectSrc: ["*"],
@@ -69,6 +69,8 @@ app.use(
     }
   })
 );
+// Helmet referrer policy
+app.use(helmet.referrerPolicy({ policy: 'strict-origin-when-cross-origin' }));
 // set middleware JSON maximum size
 app.use(express.json({ limit: process.env.SERVER_JSON_LIMIT }));
 //define what headers are allowed
