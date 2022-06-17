@@ -1379,7 +1379,7 @@ async function init_providers(provider1_function, provider2_function){
 
         /*Provider 1 SDK*/
         let tag = document.createElement('script');
-        tag.src = global_app_user_provider1_api_src + navigator.language;
+        tag.src = global_app_user_provider1_api_src;
         tag.defer = true;
         let firstScriptTag = document.getElementsByTagName('script')[0];
         firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
