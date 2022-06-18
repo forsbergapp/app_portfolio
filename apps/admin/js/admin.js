@@ -1,5 +1,5 @@
 window.global_rest_admin_at = '';
-var global_app_id='';
+global_app_id='';
 
 function admin_login(){
     var status;

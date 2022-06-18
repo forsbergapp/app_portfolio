@@ -1,3 +1,4 @@
+var global_app_id;
 var global_main_app_id 					= 0;
 // if app not using translation then use default lang_code from navigator
 var global_lang_code                    = navigator.language;
