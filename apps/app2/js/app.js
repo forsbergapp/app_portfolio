@@ -1,6 +1,6 @@
+global_app_id = 2;
 var global_module = 'APP';
 var global_module_type = 'INIT';
-var global_app_id = 2;
 var global_exception_app_function = 'user_logoff_app';
 var global_img_datamodel_img = '/app2/info/datamodel.jpg';
 
