@@ -1,6 +1,6 @@
+global_app_id = 0;
 var global_module = 'APP';
 var global_module_type = 'HOME';
-var global_app_id = 0;
 var global_app_name;
 var global_exception_app_function = 'user_logoff_app';
 var global_app_email;
