@@ -1,4 +1,4 @@
-var global_app_id 						= 1;
+global_app_id 						= 1;
 
 var global_app_hostname;
 var global_app_name;

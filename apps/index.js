@@ -93,6 +93,8 @@ module.exports = {
                     const AppHead = fs.readFileSync(__dirname + '/admin/src/head.html', 'utf8');
                     const AppDialogues = fs.readFileSync(__dirname + '/admin/src/dialogues.html', 'utf8');
                     const AppCommonHead = fs.readFileSync(__dirname + '/common/src/head.html', 'utf8');
+                    const AppCommonHeadMap = fs.readFileSync(__dirname + '/common/src/head_map.html', 'utf8');
+                    const AppCommonHeadChart = fs.readFileSync(__dirname + '/common/src/head_chart.html', 'utf8');
                     const AppCommonBody = fs.readFileSync(__dirname + '/common/src/body.html', 'utf8');
                     async function getAppComponents() {                        
                         var app = app_result.replace(
@@ -101,6 +103,12 @@ module.exports = {
                         app = app.replace(
                             '<AppCommonHead/>',
                             `${AppCommonHead}`);
+                        app = app.replace(
+                            '<AppCommonHeadMap/>',
+                            `${AppCommonHeadMap}`);
+                        app = app.replace(
+                            '<AppCommonHeadChart/>',
+                            `${AppCommonHeadChart}`);
                         app = app.replace(
                             '<AppDialogues/>',
                             `${AppDialogues}`);
