@@ -47,7 +47,7 @@
     window.global_limit =1000;
     window.global_previous_row= '';
 
-    var global_exception_app_function = 'admin_logoff';
+    init_common('', 'APP', 'INIT', 'admin_exception_after');
 
     document.getElementById('menu_1_content').style.display = 'block';
 
@@ -58,7 +58,7 @@
     document.getElementById('menu_2').addEventListener('click', function() { show_menu(2) }, false);
     document.getElementById('menu_3').addEventListener('click', function() { show_menu(3) }, false);
     document.getElementById('menu_4').addEventListener('click', function() { show_menu(4) }, false);
-    document.getElementById('menu_5').addEventListener('click', function() { admin_logout() }, false);
+    document.getElementById('menu_5').addEventListener('click', function() { admin_logoff_app() }, false);
 
     document.getElementById('select_app_menu1').addEventListener('change', function() { show_chart(2); }, false);
     document.getElementById('select_broadcast_type').addEventListener('change', function() { set_broadcast_type(); }, false);
@@ -162,7 +162,7 @@
                     }
                 }
                 else
-                    exception(status, result, global_lang_code);
+                    exception(status, result, window.global_lang_code);
             });
     }
     async function get_token() {
@@ -186,7 +186,7 @@
                 }
             }
             else
-                exception(status, result, global_lang_code);
+                exception(status, result, window.global_lang_code);
             });
     }
     async function get_apps() {
@@ -216,7 +216,7 @@
                 document.getElementById('select_app_broadcast').innerHTML = html;
             }
             else
-                exception(status, result, global_lang_code);
+                exception(status, result, window.global_lang_code);
             });
     }
     async function get_gps_from_ip() {
@@ -252,7 +252,7 @@
                     window.global_gps_map_jumpto);
             }
             else
-                exception(status, result, global_lang_code);
+                exception(status, result, window.global_lang_code);
         })
     }
     function delete_globals(){
@@ -301,7 +301,7 @@
         delete window.global_limit;
         delete window.global_previous_row;
     }
-    function admin_logout(){
+    function admin_exception_after(){
         window.global_rest_admin_at = '';
         delete_globals();
         document.getElementById('menu_1').removeEventListener('click', function() { show_menu(1) }, false);
@@ -497,7 +497,7 @@
                     }
                 }
                 else
-                    exception(status, result, global_lang_code);
+                    exception(status, result, window.global_lang_code);
             })
         }
     }
@@ -522,7 +522,7 @@
                     document.getElementById('count_connected').innerHTML = json.data.length;
                 }
                 else
-                    exception(status, result, global_lang_code);
+                    exception(status, result, window.global_lang_code);
                 });
         }
     }
@@ -548,7 +548,7 @@
                     document.getElementById('count_facebook').innerHTML = json.data.count_facebook;
                 }
                 else
-                    exception(status, result, global_lang_code);
+                    exception(status, result, window.global_lang_code);
             });
         }
     }
@@ -575,7 +575,7 @@
                         document.getElementById('checkbox_maintenance').checked =false;
                 }
                 else
-                    exception(status, result, global_lang_code);
+                    exception(status, result, window.global_lang_code);
                 });
         }
     }
@@ -607,7 +607,7 @@
                 null;
             }
             else
-                exception(status, result, global_lang_code);
+                exception(status, result, window.global_lang_code);
             });
     }
     /*MENU 2*/
@@ -661,7 +661,7 @@
                             }
                         }
                         else
-                            exception(status, result, global_lang_code);
+                            exception(status, result, window.global_lang_code);
                     })
                 break;
             }
@@ -689,7 +689,7 @@
                 }
             }
             else
-                exception(status, result, global_lang_code);
+                exception(status, result, window.global_lang_code);
             });
     }
     function list_events(item_row, item_edit, column_start_index){
@@ -786,7 +786,7 @@
                     }
                 }
                 else
-                    exception(status, result, global_lang_code);
+                    exception(status, result, window.global_lang_code);
             })  
     }
     function show_app_parameter(app_id){
@@ -840,7 +840,7 @@
                     }
                 }
                 else
-                    exception(status, result,global_lang_code);
+                    exception(status, result,window.global_lang_code);
             })
     }
     function apps_save(){
@@ -886,7 +886,7 @@
                         //app 0 should always be enabled
                         element.children[4].children[0].checked = true;
                         enabled=true;
-                        show_message('INFO', null, null, 'App 0 should always be enabled', global_main_app_id, global_lang_code);
+                        show_message('INFO', null, null, 'App 0 should always be enabled', window.global_main_app_id, window.global_lang_code);
                     }
                     json_data = `{"app_name": "${app_name}",
                                   "url": "${url}",
@@ -924,7 +924,7 @@
                 if (status === 200)
                     element.setAttribute('data-changed-record', '0');
                 else
-                    exception(status, result, global_lang_code);
+                    exception(status, result, window.global_lang_code);
             })
         }
     }
@@ -1117,7 +1117,7 @@
                     }
                 }
                 else
-                    exception(status, result, global_lang_code);
+                    exception(status, result, window.global_lang_code);
                 });
         }
     }    
@@ -1127,7 +1127,7 @@
         else
             list_click(document.getElementById('list_app_log_title2'));
     }
-    async function show_app_log(sort=8, order_by='desc', offset=0, limit=global_limit){
+    async function show_app_log(sort=8, order_by='desc', offset=0, limit=window.global_limit){
         let status;
         let json;
         let app_id = document.getElementById('select_app_menu3').options[document.getElementById('select_app_menu3').selectedIndex].value;
@@ -1155,7 +1155,7 @@
                 list_app_log.innerHTML = '';
                 if (json.success === 1){
                     if (json.data.length >0){
-                        window.global_page_last = Math.floor(json.data[0].total_rows/global_limit) * window.global_limit;
+                        window.global_page_last = Math.floor(json.data[0].total_rows/window.global_limit) * window.global_limit;
                         set_list_eventlisteners('app_log', 'gps',0);
                         let html = '';
                         for (i = 0; i < json.data.length; i++) {
@@ -1193,7 +1193,7 @@
                 }
             }
             else
-                exception(status, result, global_lang_code);
+                exception(status, result, window.global_lang_code);
             });
     }    
     function init_map() {
@@ -1201,7 +1201,7 @@
         window.global_session_map = new mapboxgl.Map({
             container: window.global_gps_map_container,
             style: window.global_gps_map_style_baseurl + window.global_gps_map_style,
-            center: [global_session_gps_latitude,
+            center: [window.global_session_gps_latitude,
                      window.global_session_gps_longitude
             ],
             zoom: window.global_gps_map_zoom
@@ -1282,7 +1282,7 @@
                         window.global_gps_map_jumpto);
                 }
                 else
-                    exception(status, result, global_lang_code);
+                    exception(status, result, window.global_lang_code);
             })
         }
         else
@@ -1299,7 +1299,7 @@
         let destination_app;
 
         if (broadcast_message==''){
-            show_message('INFO', null, null, 'Please enter message', global_main_app_id, global_lang_code);
+            show_message('INFO', null, null, 'Please enter message', window.global_main_app_id, window.global_lang_code);
             return null;
         }
         
@@ -1335,10 +1335,10 @@
         })
         .then(function(result) {
             if (status == 200){
-                show_message('INFO', null, null, 'Sent!', global_main_app_id, global_lang_code);
+                show_message('INFO', null, null, 'Sent!', window.global_main_app_id, window.global_lang_code);
             }
             else
-                exception(status, result, global_lang_code);
+                exception(status, result, window.global_lang_code);
             });
     }    
     function closeBroadcast(){
@@ -1492,7 +1492,7 @@
                     document.getElementById('select_day_menu4').style.display = 'inline-block';
             }
             else
-                exception(status, result, global_lang_code);
+                exception(status, result, window.global_lang_code);
         })
     }
     function show_server_logs(){
@@ -1628,7 +1628,7 @@
                     list_server_log.innerHTML = html;
                 }
                 else
-                    exception(status, result, global_lang_code);
+                    exception(status, result, window.global_lang_code);
             })
         }
     }
@@ -1680,7 +1680,7 @@
                                 case 3:{
                                     document.getElementById('select_year_menu4').value = parseInt(record.substring(0,4));
                                     document.getElementById('select_month_menu4').value = parseInt(record.substring(4,6));
-                                    if (global_service_log_file_interval=='1D')
+                                    if (window.global_service_log_file_interval=='1D')
                                         document.getElementById('select_day_menu4').value = parseInt(record.substring(6,8));
                                     break;
                                 }
@@ -1691,7 +1691,7 @@
                     }));
                 }
                 else
-                    exception(status, result, global_lang_code);
+                    exception(status, result, window.global_lang_code);
             })
         }
     }
@@ -1794,7 +1794,7 @@
                     list_pm2_log_process_event.innerHTML = html_process_event;
                 }
                 else
-                    exception(status, result, global_lang_code);
+                    exception(status, result, window.global_lang_code);
             })
         }
     }

@@ -1,3 +1,6 @@
+function app_exception(){
+    null;
+}
 function init_maintenance(){
     let spinner = `<div id="maintenance_spinner" class="load-spinner">
         <div></div>

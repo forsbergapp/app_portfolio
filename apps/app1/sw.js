@@ -7,6 +7,10 @@
 const cacheName = 'site-cache-v1'
 const assetsToCache = [
     '/common/css/common.css',
+    '/common/css/maintenance.css',
+    '/common/js/common.js',
+    '/common/js/easy.qrcode.js',
+    '/common/js/maintenance.js',
     '/app1/css/app_themes.css',
     '/app1/css/app.css',
     '/app1/css/images/theme_day_10001.jpg',
@@ -30,12 +34,9 @@ const assetsToCache = [
     '/app1/css/images/theme_year_30001.jpg',
     '/app1/images/banner_kaaba.jpg',
     '/app1/images/logo.png',
-    '/common/js/common.js',
-    '/app1/js/app_globals.js',
     '/app1/js/app_report.js',
     '/app1/js/app_thirdparty.js',
     '/app1/js/app.js',
-    '/app1/js/easy.qrcode.js',
     '/app1/js/PrayTimes.js'
 ]
 self.addEventListener('install', ( event ) => {
