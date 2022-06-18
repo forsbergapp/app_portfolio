@@ -1,13 +1,9 @@
-global_app_id = 2;
-var global_module = 'APP';
-var global_module_type = 'INIT';
-var global_exception_app_function = 'user_logoff_app';
-var global_img_datamodel_img = '/app2/info/datamodel.jpg';
+window.global_img_datamodel_img = '/app2/info/datamodel.jpg';
 
 async function get_parameters() {
     var status;
     var json;
-    await fetch(global_rest_url_base + global_rest_app_parameter + global_app_id,
+    await fetch(window.global_rest_url_base + window.global_rest_app_parameter + window.global_app_id,
       {method: 'GET'})
         .then(function(response) {
             status = response.status;
@@ -18,23 +14,23 @@ async function get_parameters() {
                 json = JSON.parse(result);
                 for (var i = 0; i < json.data.length; i++) {
                     if (json.data[i].parameter_name=='APP_REST_CLIENT_ID')
-                        global_app_rest_client_id = json.data[i].parameter_value;
+                        window.global_app_rest_client_id = json.data[i].parameter_value;
                     if (json.data[i].parameter_name=='APP_REST_CLIENT_SECRET')
-                        global_app_rest_client_secret = json.data[i].parameter_value;
+                        window.global_app_rest_client_secret = json.data[i].parameter_value;
                     if (json.data[i].parameter_name=='SERVICE_AUTH')
-                        global_service_auth = json.data[i].parameter_value;
+                        window.global_service_auth = json.data[i].parameter_value;
                     if (json.data[i].parameter_name=='REST_APP')
-                        global_rest_app = json.data[i].parameter_value;
+                        window.global_rest_app = json.data[i].parameter_value;
                     if (json.data[i].parameter_name=='REST_APP_LOG')
-                        global_rest_app_log = json.data[i].parameter_value;
+                        window.global_rest_app_log = json.data[i].parameter_value;
                     if (json.data[i].parameter_name=='SERVICE_GEOLOCATION')
-                        global_service_geolocation = json.data[i].parameter_value;
+                        window.global_service_geolocation = json.data[i].parameter_value;
                     if (json.data[i].parameter_name=='SERVICE_GEOLOCATION_GPS_IP')
-                        global_service_geolocation_gps_ip = json.data[i].parameter_value;
+                        window.global_service_geolocation_gps_ip = json.data[i].parameter_value;
                 }
             }
             else
-                show_message('EXCEPTION', null,null, result, global_app_id, global_lang_code);
+                show_message('EXCEPTION', null,null, result, window.global_app_id, window.global_lang_code);
         });
 }
 function zoom_info(zoomvalue = '') {
@@ -71,12 +67,12 @@ function info(id){
     switch (id){
         case 1:{
             document.getElementById('window_info').style.visibility = 'visible';
-            document.getElementById('info').innerHTML = `<img src="${global_img_diagram_img}"/>`;
+            document.getElementById('info').innerHTML = `<img src="${window.global_img_diagram_img}"/>`;
             break;
         }
         case 2:{
             document.getElementById('window_info').style.visibility = 'visible';
-            document.getElementById('info').innerHTML = `<img src="${global_img_datamodel_img}"/>`;
+            document.getElementById('info').innerHTML = `<img src="${window.global_img_datamodel_img}"/>`;
             break;
         }
         case 3:{
@@ -91,8 +87,11 @@ function info(id){
     }
 
 }
-
+function app_exception() {
+    null;
+}
 function init(){
+    init_common(2, 'APP', 'INIT', 'app_exception');
     document.getElementById('toolbar_btn_zoomout').addEventListener('click', function() {zoom_info(-1);}, false);
     document.getElementById('toolbar_btn_zoomin').addEventListener('click', function() {zoom_info(1);}, false);
     document.getElementById('toolbar_btn_left').addEventListener('click', function() {move_info(-1,0);}, false);
@@ -103,18 +102,18 @@ function init(){
     zoom_info('');
     move_info(null,null);
     document.getElementById('window_info').style.visibility = 'visible';
-    document.getElementById('info').innerHTML = `<img src="${global_img_datamodel_img}"/>`;
+    document.getElementById('info').innerHTML = `<img src="${window.global_img_datamodel_img}"/>`;
     get_parameters().then(function(){
-        get_data_token(null, global_lang_code).then(function(){
-            get_gps_from_ip(null, global_lang_code).then(function(){
-                app_log(global_module, 
-                        global_module_type, 
+        get_data_token(null, window.global_lang_code).then(function(){
+            get_gps_from_ip(null, window.global_lang_code).then(function(){
+                app_log(window.global_module, 
+                        window.global_module_type, 
                         location.hostname, 
-                        global_session_user_gps_place, 
+                        window.global_session_user_gps_place, 
                         '', 
-                        global_session_user_gps_latitude, 
-                        global_session_user_gps_longitude,
-                        global_lang_code);
+                        window.global_session_user_gps_latitude, 
+                        window.global_session_user_gps_longitude,
+                        window.global_lang_code);
             });
         })
     })

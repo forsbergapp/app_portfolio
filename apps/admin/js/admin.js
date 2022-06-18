@@ -1,5 +1,4 @@
 window.global_rest_admin_at = '';
-global_app_id='';
 
 function admin_login(){
     var status;
@@ -50,12 +49,12 @@ function admin_login(){
                                 }
                             }
                             else
-                                show_message('EXCEPTION', null,null, result, global_main_app_id, global_lang_code);
+                                show_message('EXCEPTION', null,null, result, window.global_main_app_id, window.global_lang_code);
                         });
                 }
             }
             else
-                show_message('EXCEPTION', null,null, result, global_main_app_id, global_lang_code);
+                show_message('EXCEPTION', null,null, result, window.global_main_app_id, window.global_lang_code);
         });
 }
 function keyfunctions(){
@@ -78,6 +77,10 @@ function keyfunctions(){
     document.getElementById('admin_login_button').addEventListener('click', function() { admin_login() }, false);
     document.getElementById('message_close').addEventListener('click', function() { document.getElementById('dialogue_message').style.visibility='hidden'; }, false);}
 
+function admin_exception_before(){
+    null;
+}
 function init(){
+    init_common('', 'APP', 'INIT', 'admin_exception_before');
     keyfunctions();
 }
