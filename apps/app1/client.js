@@ -5,6 +5,7 @@ module.exports = {
         return new Promise(function (resolve, reject){
             function main(app_id){
                 const AppCommonHead = fs.readFileSync(__dirname + '/../common/src/head.html', 'utf8');
+                const AppCommonHeadMap = fs.readFileSync(__dirname + '/../common/src/head_map.html', 'utf8');
                 const AppCommonBody = fs.readFileSync(__dirname + '/../common/src/body.html', 'utf8');
                 const AppCommonProfileInfoSearch = fs.readFileSync(__dirname + '/../common/src/profile_info_search.html', 'utf8');
                 const AppCommonProfileInfo = fs.readFileSync(__dirname + '/../common/src/profile_info.html', 'utf8');
@@ -53,6 +54,9 @@ module.exports = {
                             app = app.replace(
                                 '<AppCommonHead/>',
                                 `${AppCommonHead}`);
+                            app = app.replace(
+                                '<AppCommonHeadMap/>',
+                                `${AppCommonHeadMap}`);
                             app = app.replace(
                                 '<AppToolbarTop/>',
                                 `${AppToolbarTop}`);
