@@ -11,8 +11,9 @@ function printTable(){
 			<head>
 				<meta charset='UTF-8'>
 				<title></title>
+				<link rel="stylesheet" type="text/css" href="/app${window.global_app_id}/css/app_fonts.css" />
 				<link rel="stylesheet" type="text/css" href="/app${window.global_app_id}/css/app.css" />
-				<link rel="stylesheet" type="text/css" href="/app${window.global_app_id}/css/app_themes.css" />
+				<link rel="stylesheet" type="text/css" href="/app${window.global_app_id}/css/app_report.css" />
 			</head>
 			<body id="printbody">
 				${whatToPrint.outerHTML}
@@ -969,7 +970,6 @@ function update_timetable_report(option = 0, item_id = 0) {
 						prayertable_month   : document.getElementById('prayertable_month'),
 						prayertable_year    : document.getElementById('prayertable_year')
 					  };
-	dialogue_loading(1);
 	switch (option){
 	//create timetable month or day or year if they are visible instead
 	case 0:{
@@ -1009,6 +1009,5 @@ function update_timetable_report(option = 0, item_id = 0) {
 		break;
 		}
 	}
-	dialogue_loading(0);
 	return null;
 }

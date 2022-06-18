@@ -3955,7 +3955,6 @@ function init_report_timetable() {
     let user_setting_id = urlParams.get('sid');
     let lang_code = urlParams.get('lang_code');
     let reporttype = urlParams.get('type');
-    dialogue_loading(1);
     document.getElementById('setting_select_locale').innerHTML = 
                 `<option value=${lang_code}>${lang_code}</option`;
     get_app_globals().then(function(){
@@ -3991,7 +3990,6 @@ function init_report_timetable() {
                                 settings_translate_report(true).then(function(){
                                     settings_translate_report(false).then(function(){
                                         update_timetable_report();
-                                        dialogue_loading(0);
                                     });
                                 });
                             });
@@ -4008,7 +4006,6 @@ function init_report_timetable() {
                                 settings_translate_report(true).then(function(){
                                     settings_translate_report(false).then(function(){
                                         update_timetable_report();
-                                        dialogue_loading(0);
                                     });
                                 });
                             })
@@ -4025,7 +4022,6 @@ function init_report_timetable() {
                                 settings_translate_report(true).then(function(){
                                     settings_translate_report(false).then(function(){
                                         update_timetable_report();
-                                        dialogue_loading(0);
                                     });
                                 });
                             });
