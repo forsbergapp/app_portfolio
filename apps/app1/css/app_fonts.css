@@ -1,0 +1,27 @@
+/*Fonts used by app client and some report themes*/
+/*Noto Sans regional fonts*/
+/*Arabic NotoSans*/
+@import url('https://fonts.googleapis.com/earlyaccess/notosanskufiarabic.css');
+/*Arabic NotoKufi*/
+@import url('https://fonts.googleapis.com/earlyaccess/notokufiarabic.css');
+/*Arabic NotoNashk*/
+@import url('https://fonts.googleapis.com/earlyaccess/notonaskharabic.css');
+/*Arabic NotoNastaliq*/
+@import url('https://fonts.googleapis.com/earlyaccess/notonastaliqurdu.css');
+/*Arabic NotoSansUI*/
+@import url('https://fonts.googleapis.com/earlyaccess/notonaskharabicui.css');
+/*Japanese*/
+/*Noto Sans JP*/
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap');
+/*Korean*/
+/*Noto Sans KR*/
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
+/*HK*/
+/*Noto Sans HK*/
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+HK:wght@400;700&display=swap');
+/*Chinese simplified*/
+/*Noto Sans SC*/
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700&display=swap');
+/*Chinese traditional*/
+/*Noto Sans TC*/
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap');
