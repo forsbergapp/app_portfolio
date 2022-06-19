@@ -470,10 +470,13 @@
 	padding-left:10px;
 	text-align:left;
 }
-.profile_detail_list_avatar{
+.profile_detail_list_avatar, .profile_detail_list_app_logo{
 	height:24px;
 	width:24px;
 	border-radius: 50%;
+}
+.profile_detail_list_app_url, .profile_detail_list_date_created{
+	display: none;
 }
 /*profie_top*/
 #profile_top {
