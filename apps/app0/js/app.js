@@ -49,6 +49,7 @@ function keyfunctions(){
     document.getElementById('profile_main_btn_followed').addEventListener('click', function() { profile_detail(2, document.getElementById('user_menu_user_id').innerHTML, Intl.DateTimeFormat().resolvedOptions().timeZone, window.global_lang_code, null, true, null) }, false);
     document.getElementById('profile_main_btn_likes').addEventListener('click', function() { profile_detail(3, document.getElementById('user_menu_user_id').innerHTML, Intl.DateTimeFormat().resolvedOptions().timeZone, window.global_lang_code, null, true, null) }, false);
     document.getElementById('profile_main_btn_liked').addEventListener('click', function() { profile_detail(4, document.getElementById('user_menu_user_id').innerHTML, Intl.DateTimeFormat().resolvedOptions().timeZone, window.global_lang_code, null, true, null) }, false);
+    document.getElementById('profile_main_btn_cloud').addEventListener('click', function() { profile_detail(5, document.getElementById('user_menu_user_id').innerHTML, Intl.DateTimeFormat().resolvedOptions().timeZone, window.global_lang_code, window.global_rest_user_account_app, true, global_profile_detail_header_cloud, null) }, false);
     
 
     document.getElementById( 'info_message' ).addEventListener( 'click', function( event ) {

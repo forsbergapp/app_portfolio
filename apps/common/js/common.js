@@ -54,6 +54,9 @@ window.global_image_file_max_size;
 window.global_user_image_avatar_width;
 window.global_user_image_avatar_height;
 
+//Profile
+window.global_profile_detail_header_cloud = '<i class="fas fa-cloud"></i>';
+
 //services
 window.global_service_auth;
 window.global_service_geolocation;
@@ -138,26 +141,31 @@ function show_maintenance(message, init){
                 document.getElementById('maintenance_footer').innerHTML = message;
 }
 /*Profile*/
-function show_profile_click_events(item, profile_id, user_id, timezone, lang_code, click_function){
+function show_profile_click_events(item, user_id, timezone, lang_code, click_function, app_show = false){
     document.querySelectorAll(item).forEach(e => e.addEventListener('click', function(event) {
-        //execute function from inparameter or use default when not specified
-        let profile_id = event.target.parentNode.parentNode.parentNode.children[0].children[0].innerHTML;
-        if (click_function ==null){
-            profile_show(profile_id,
-                         null,
-                         user_id,
-                         timezone,
-                         lang_code,
-                         (err, result)=>{
-                             null;
-                         });
+        if (app_show==true){
+            event.preventDefault();
+            window.open(event.target.parentNode.parentNode.parentNode.children[3].children[0].innerHTML, '_blank');
         }
         else{
-            eval(`(function (){${click_function}(${profile_id},
-                    ${null},
-                    ${user_id==''?"''":user_id},
-                    '${timezone}',
-                    '${lang_code}')}());`);
+            //execute function from inparameter or use default when not specified
+            let profile_id = event.target.parentNode.parentNode.parentNode.children[0].children[0].innerHTML;
+            if (click_function ==null){
+                profile_show(profile_id,
+                            null,
+                            user_id,
+                            timezone,
+                            lang_code,
+                            (err, result)=>{
+                                null;
+                            });
+            }
+            else
+                eval(`(function (){${click_function}(${profile_id},
+                        ${null},
+                        ${user_id==''?"''":user_id},
+                        '${timezone}',
+                        '${lang_code}')}());`);
         }
     }));
 }
@@ -216,7 +224,7 @@ function profile_top(statschoice, user_id, timezone, lang_code, app_rest_url = n
                     </div>`;
                 }
                 profile_top_list.innerHTML = html;
-                show_profile_click_events('.profile_top_list_username', profile_id, user_id, timezone, lang_code, click_function);
+                show_profile_click_events('.profile_top_list_username', user_id, timezone, lang_code, click_function);
             }
         })
         .catch(function(error) {
@@ -238,6 +246,18 @@ function profile_detail(detailchoice, user_id, timezone, lang_code, rest_url_app
     //show only if user logged in
     if (parseInt(user_id) || 0 !== 0) {
         switch (detailchoice) {
+            case 0:
+                {
+                    //show only other app specfic hide common
+                    document.getElementById('profile_detail').style.display = 'none';
+                    document.getElementById('profile_detail_header_following').style.display = 'none';
+                    document.getElementById('profile_detail_header_followed').style.display = 'none';
+                    document.getElementById('profile_detail_header_like').style.display = 'none';
+                    document.getElementById('profile_detail_header_liked').style.display = 'none';
+                    document.getElementById('profile_detail_header_app').style.display = 'none';
+                    document.getElementById('profile_detail_header_app').innerHTML = '';
+                    break;
+                }
             case 1:
                 {
                     //Following
@@ -286,8 +306,7 @@ function profile_detail(detailchoice, user_id, timezone, lang_code, rest_url_app
                     document.getElementById('profile_detail_header_app').innerHTML = '';
                     break;
                 }
-            case 5:
-            case 6:
+            default:
                 {
                     //show app specific
                     document.getElementById('profile_detail').style.display = 'block';
@@ -299,20 +318,6 @@ function profile_detail(detailchoice, user_id, timezone, lang_code, rest_url_app
                     document.getElementById('profile_detail_header_app').innerHTML = header_app;
                     break;
                 }
-            case 7:
-                {
-                    //show only other app specfic hide common
-                    document.getElementById('profile_detail').style.display = 'none';
-                    document.getElementById('profile_detail_header_following').style.display = 'none';
-                    document.getElementById('profile_detail_header_followed').style.display = 'none';
-                    document.getElementById('profile_detail_header_like').style.display = 'none';
-                    document.getElementById('profile_detail_header_liked').style.display = 'none';
-                    document.getElementById('profile_detail_header_app').style.display = 'none';
-                    document.getElementById('profile_detail_header_app').innerHTML = '';
-                    break;
-                }
-            default:
-                break;
         }
         if (fetch_detail)
         {
@@ -336,29 +341,55 @@ function profile_detail(detailchoice, user_id, timezone, lang_code, rest_url_app
                     profile_detail_list.innerHTML = '';
 
                     let html = '';
-                    let image = '';
-                    let name='';
                     for (i = 0; i < json.count; i++) {
-                        image = image_format(json.items[i].avatar ?? json.items[i].provider1_image ?? json.items[i].provider2_image);
-                        name = json.items[i].username;
-                        html += 
-                        `<div class='profile_detail_list_row'>
-                            <div class='profile_detail_list_col'>
-                                <div class='profile_detail_list_user_account_id'>${json.items[i].id}</div>
-                            </div>
-                            <div class='profile_detail_list_col'>
-                                <img class='profile_detail_list_avatar' src='${image}'>
-                            </div>
-                            <div class='profile_detail_list_col'>
-                                <div class='profile_detail_list_username'>
-                                    <a href='#'>${name}</a>
+                        if (window.global_app_id == window.global_main_app_id && detailchoice==5){
+                            if (json.items[i].app_id !=0){
+                                //App list in app 0
+                                html += 
+                                `<div class='profile_detail_list_row'>
+                                    <div class='profile_detail_list_col'>
+                                        <div class='profile_detail_list_app_id'>${json.items[i].app_id}</div>
+                                    </div>
+                                    <div class='profile_detail_list_col'>
+                                        <img class='profile_detail_list_app_logo' src='${json.items[i].logo}'>
+                                    </div>
+                                    <div class='profile_detail_list_col'>
+                                        <div class='profile_detail_list_app_name'>
+                                            <a href='${json.items[i].url}'>${json.items[i].app_name}</a>
+                                        </div>
+                                    </div>
+                                    <div class='profile_detail_list_col'>
+                                        <div class='profile_detail_list_app_url'>${json.items[i].url}</div>
+                                    </div>
+                                    <div class='profile_detail_list_col'>
+                                        <div class='profile_detail_list_date_created'>${json.items[i].date_created}</div>
+                                    </div>
+                                </div>`;
+                            }
+                        }
+                        else{
+                            //Username list
+                            html += 
+                            `<div class='profile_detail_list_row'>
+                                <div class='profile_detail_list_col'>
+                                    <div class='profile_detail_list_user_account_id'>${json.items[i].id}</div>
                                 </div>
-                            </div>
-                        </div>`;
-
+                                <div class='profile_detail_list_col'>
+                                    <img class='profile_detail_list_avatar' src='${image_format(json.items[i].avatar ?? json.items[i].provider1_image ?? json.items[i].provider2_image)}'>
+                                </div>
+                                <div class='profile_detail_list_col'>
+                                    <div class='profile_detail_list_username'>
+                                        <a href='#'>${json.items[i].username}</a>
+                                    </div>
+                                </div>
+                            </div>`;
+                        }
                     }
                     profile_detail_list.innerHTML = html;
-                    show_profile_click_events('.profile_detail_list_username', profile_id, user_id, timezone, lang_code, click_function);
+                    if (window.global_app_id == window.global_main_app_id && detailchoice==5)
+                        show_profile_click_events('.profile_detail_list_app_name', user_id, timezone, lang_code, click_function, true);
+                    else
+                        show_profile_click_events('.profile_detail_list_username', user_id, timezone, lang_code, click_function);
                 } else {
                     exception(status, result, lang_code);
                 }
@@ -441,7 +472,7 @@ function search_profile(user_id, timezone, lang_code, click_function) {
                     </div>`;
                 }
                 profile_search_list.innerHTML = html;
-                show_profile_click_events('.profile_search_list_username', profile_id, user_id, timezone, lang_code, click_function);
+                show_profile_click_events('.profile_search_list_username', user_id, timezone, lang_code, click_function);
             }
         })
         .catch(function(error) {
@@ -571,7 +602,8 @@ async function profile_show(user_account_id_other = null, username = null, user_
                     if (user_id ==''){
                         setTimeout(function(){show_common_dialogue('LOGIN')}, 2000);
                     }
-                    return callBack(null,json.id);
+                    return callBack(null,{profile_id: json.id,
+                                          private: json.private});
                     
                 } else
                     return callBack(status,null);
