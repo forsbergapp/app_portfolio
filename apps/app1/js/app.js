@@ -1720,14 +1720,14 @@ function keyfunctions() {
     document.getElementById('setting_btn_user_save').addEventListener('click', function() { user_settings_function('SAVE') }, false);
     document.getElementById('setting_btn_user_add').addEventListener('click', function() { user_settings_function('ADD') }, false);
     document.getElementById('setting_btn_user_delete').addEventListener('click', function() { user_settings_delete() }, false);
-     
-    document.getElementById('profile_main_btn_following').addEventListener('click', function() { profile_detail_app(1,document.getElementById('setting_data_userid_logged_in').innerHTML, get_lang_code(), null, true, 'profile_show_app') }, false);
-    document.getElementById('profile_main_btn_followed').addEventListener('click', function() { profile_detail_app(2, document.getElementById('setting_data_userid_logged_in').innerHTML, get_lang_code(), null, true, 'profile_show_app') }, false);
-    document.getElementById('profile_main_btn_likes').addEventListener('click', function() { profile_detail_app(3, document.getElementById('setting_data_userid_logged_in').innerHTML, get_lang_code(), null, true, 'profile_show_app') }, false);
-    document.getElementById('profile_main_btn_liked').addEventListener('click', function() { profile_detail_app(4, document.getElementById('setting_data_userid_logged_in').innerHTML, get_lang_code(), null, true, 'profile_show_app') }, false);
-    document.getElementById('profile_main_btn_user_settings').addEventListener('click', function() { profile_detail_app(7, document.getElementById('setting_data_userid_logged_in').innerHTML, get_lang_code(), window.global_rest_app1_user_setting_profile_detail, false) }, false);
-    document.getElementById('profile_main_btn_user_setting_likes').addEventListener('click', function() { profile_detail_app(5, document.getElementById('setting_data_userid_logged_in').innerHTML, get_lang_code(), window.global_rest_app1_user_setting_profile_detail, true, window.global_profile_detail_header_like_user_setting) }, false);
-    document.getElementById('profile_main_btn_user_setting_liked').addEventListener('click', function() { profile_detail_app(6, document.getElementById('setting_data_userid_logged_in').innerHTML, get_lang_code(), window.global_rest_app1_user_setting_profile_detail, true, window.global_profile_detail_header_liked_user_setting) }, false);
+
+    document.getElementById('profile_main_btn_user_settings').addEventListener('click', function() { profile_detail_app(0, document.getElementById('setting_data_userid_logged_in').innerHTML, get_lang_code(), window.global_rest_app1_user_setting_profile_detail, false) }, false);
+    document.getElementById('profile_main_btn_following').addEventListener('click', function() { profile_detail_app(1,document.getElementById('setting_data_userid_logged_in').innerHTML, get_lang_code(), null, true, null, 'profile_show_app') }, false);
+    document.getElementById('profile_main_btn_followed').addEventListener('click', function() { profile_detail_app(2, document.getElementById('setting_data_userid_logged_in').innerHTML, get_lang_code(), null, true, null, 'profile_show_app') }, false);
+    document.getElementById('profile_main_btn_likes').addEventListener('click', function() { profile_detail_app(3, document.getElementById('setting_data_userid_logged_in').innerHTML, get_lang_code(), null, true, null, 'profile_show_app') }, false);
+    document.getElementById('profile_main_btn_liked').addEventListener('click', function() { profile_detail_app(4, document.getElementById('setting_data_userid_logged_in').innerHTML, get_lang_code(), null, true, null, 'profile_show_app') }, false);
+    document.getElementById('profile_main_btn_user_setting_likes').addEventListener('click', function() { profile_detail_app(5, document.getElementById('setting_data_userid_logged_in').innerHTML, get_lang_code(), window.global_rest_app1_user_setting_profile_detail, true, window.global_profile_detail_header_like_user_setting, 'profile_show_app') }, false);
+    document.getElementById('profile_main_btn_user_setting_liked').addEventListener('click', function() { profile_detail_app(6, document.getElementById('setting_data_userid_logged_in').innerHTML, get_lang_code(), window.global_rest_app1_user_setting_profile_detail, true, window.global_profile_detail_header_liked_user_setting, 'profile_show_app') }, false);
 
     document.getElementById('profile_follow').addEventListener('click', function() { user_function_app('FOLLOW') }, false);
     document.getElementById('profile_like').addEventListener('click', function() { user_function_app('LIKE') }, false);
@@ -2392,7 +2392,7 @@ async function user_settings_get(userid, show_ui = 1, user_setting_id = '') {
 function user_logoff_app() {
     let select = document.getElementById("setting_select_user_setting");
     let option;
-    //get new data token to avoid endless loop och invalid token
+    //get new data token to avoid endless loop and invalid token
     user_logoff(document.getElementById('setting_data_userid_logged_in').innerHTML, get_lang_code()).then(function(){
         //remove user setting icon
         update_settings_icon('', true);
@@ -3627,15 +3627,15 @@ async function profile_show_app(user_account_id_other = null, username = null, u
         document.getElementById('profile_user_settings_info_view_count').innerHTML='';
     }
     else
-        await profile_show(user_account_id_other, username, user_id, timezone, lang_code, (err, result_profile_id)=>{
+        await profile_show(user_account_id_other, username, user_id, timezone, lang_code, (err, result)=>{
             if (err==null){
-                if (result_profile_id != null){
+                if (result.profile_id != null){
                     document.getElementById('profile_info_app1').style.display = "block";
 
                     //user settings
-                    profile_user_setting_stat(result_profile_id);
+                    profile_user_setting_stat(result.profile_id);
     
-                    if (json.private && parseInt(user_id) !== result_profile_id) {
+                    if (result.private && parseInt(user_id) !== result.profile_id) {
                         //private
                         document.getElementById('profile_user_settings_public').style.display = "none";
                         document.getElementById('profile_user_settings_private').style.display = "block";
@@ -3781,9 +3781,9 @@ function profile_show_user_setting() {
             });
     }
 }
-function profile_detail_app(detailchoice, user_id, lang_code, rest_url_app, fetch_detail, header_app) {
+function profile_detail_app(detailchoice, user_id, lang_code, rest_url_app, fetch_detail, header_app, click_function) {
     if (parseInt(user_id) || 0 !== 0) {
-        if (detailchoice == 7){
+        if (detailchoice == 0){
             //user settings
             document.getElementById('profile_user_settings_row').style.display = 'block';
         }
@@ -3796,7 +3796,7 @@ function profile_detail_app(detailchoice, user_id, lang_code, rest_url_app, fetc
             //Liked user setting
             document.getElementById('profile_user_settings_row').style.display = 'none';
         }
-        profile_detail(detailchoice, user_id, document.getElementById('setting_select_timezone_current').value, lang_code, rest_url_app, fetch_detail, header_app);
+        profile_detail(detailchoice, user_id, document.getElementById('setting_select_timezone_current').value, lang_code, rest_url_app, fetch_detail, header_app, click_function);
     } 
     else
         show_common_dialogue('LOGIN');
