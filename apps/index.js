@@ -25,6 +25,7 @@ module.exports = {
                     const AppSun = fs.readFileSync(__dirname + '/app0/src/sun.html', 'utf8');
                     const AppBackground = fs.readFileSync(__dirname + '/app0/src/background.html', 'utf8');
                     const AppDialogues = fs.readFileSync(__dirname + '/app0/src/dialogues.html', 'utf8');
+                    const AppProfileInfo = fs.readFileSync(__dirname + '/app0/src/profile_info.html', 'utf8');
                     const AppWindowInfo = fs.readFileSync(__dirname + '/app0/src/window_info.html', 'utf8');
                     async function getAppComponents() {                        
                         var app = app_result.replace(
@@ -54,6 +55,10 @@ module.exports = {
                         app = app.replace(
                             '<AppCommonProfileInfo/>',
                             `${AppCommonProfileInfo}`);
+                        app = app.replace(
+                            '<AppProfileInfo/>',
+                            `${AppProfileInfo}`);
+                        //tag AppCommonProfileDetail inside AppProfileInfo
                         app = app.replace(
                             '<AppCommonProfileDetail/>',
                             `${AppCommonProfileDetail}`);
