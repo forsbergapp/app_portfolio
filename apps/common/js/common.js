@@ -1047,7 +1047,8 @@ async function user_update(user_id, lang_code, callBack) {
                      }`;
         url = window.global_rest_url_base + window.global_rest_user_account_common + user_id
     }
-    spinner('UPDATE', 'visible');
+    let old_button = document.getElementById('setting_btn_user_update').innerHTML;
+    document.getElementById('setting_btn_user_update').innerHTML = window.global_button_spinner;
     //update user using REST API
     fetch(url + '?app_id=' + window.global_app_id +
                 '&lang_code=' + lang_code, {
@@ -1063,6 +1064,7 @@ async function user_update(user_id, lang_code, callBack) {
             return response.text();
         })
         .then(function(result) {
+            document.getElementById('setting_btn_user_update').innerHTML = old_button;
             if (status == 200) {
                 json = JSON.parse(result);
                 document.getElementById('dialogue_user_edit').style.visibility = "hidden";
@@ -1087,18 +1089,16 @@ async function user_update(user_id, lang_code, callBack) {
                 document.getElementById('setting_label_data_last_logontime_edit').innerHTML = '';
                 document.getElementById('setting_label_data_account_created_edit').innerHTML = '';
                 document.getElementById('setting_label_data_account_modified_edit').innerHTML = '';
-                spinner('UPDATE', 'hidden');
                 return callBack(null, {username: username, 
                                        avatar: avatar,
                                        bio: bio});
             } else {
-                spinner('UPDATE', 'hidden');
                 exception(status, result, lang_code);
                 return callBack(result, null);
             }
         })
         .catch(function(error) {
-            spinner('UPDATE', 'hidden');
+            document.getElementById('setting_btn_user_update').innerHTML = old_button;
             show_message('EXCEPTION', null,null, error, window.global_app_id, lang_code);
             return callBack(error, null);
         });
@@ -1137,7 +1137,8 @@ function user_signup(item_destination_user_id, lang_code) {
         return null;
     }
 
-    spinner('SIGNUP', 'visible');
+    let old_button = document.getElementById('signup_button').innerHTML;
+    document.getElementById('signup_button').innerHTML = window.global_button_spinner;
     fetch(window.global_rest_url_base + window.global_rest_user_account_signup +
             '?app_id=' + window.global_app_id +
             '&lang_code=' + lang_code, {
@@ -1153,7 +1154,7 @@ function user_signup(item_destination_user_id, lang_code) {
             return response.text();
         })
         .then(function(result) {
-            spinner('SIGNUP', 'hidden');
+            document.getElementById('signup_button').innerHTML = old_button;
             if (status == 200) {
                 json = JSON.parse(result);
                 window.global_rest_at = json.accessToken;
@@ -1165,7 +1166,7 @@ function user_signup(item_destination_user_id, lang_code) {
             }
         })
         .catch(function(error) {
-            spinner('SIGNUP', 'hidden');
+            document.getElementById('signup_button').innerHTML = old_button;
             show_message('EXCEPTION', null,null, error, window.global_app_id, lang_code);
         });
 }
@@ -1189,7 +1190,8 @@ async function user_verify_check_input(item, user_id, nextField, lang_code, call
                 document.getElementById('user_verify_verification_char4').value +
                 document.getElementById('user_verify_verification_char5').value +
                 document.getElementById('user_verify_verification_char6').value);
-            spinner('SIGNUP', 'visible');
+            let old_button = document.getElementById('user_verify_email').innerHTML;
+            document.getElementById('user_verify_email').innerHTML = window.global_button_spinner;
             document.getElementById('user_verify_verification_char1').classList.remove('input_error');
             document.getElementById('user_verify_verification_char2').classList.remove('input_error');
             document.getElementById('user_verify_verification_char3').classList.remove('input_error');
@@ -1214,7 +1216,7 @@ async function user_verify_check_input(item, user_id, nextField, lang_code, call
                     return response.text();
                 })
                 .then(function(result) {
-                    spinner('SIGNUP', 'hidden');
+                    document.getElementById('user_verify_email').innerHTML = old_button;
                     if (status == 200) {
                         json = JSON.parse(result);
                         if (json.items[0].affectedRows == 1) {
@@ -1258,7 +1260,7 @@ async function user_verify_check_input(item, user_id, nextField, lang_code, call
                     }
                 })
                 .catch(function(error) {
-                    spinner('SIGNUP', 'hidden');
+                    document.getElementById('user_verify_email').innerHTML = old_button;
                     show_message('EXCEPTION', null,null, error, window.global_app_id, lang_code);
                     return callBack(error, null);
                 });
@@ -1299,7 +1301,8 @@ async function user_delete(choice=null, user_account_id, user_local, function_de
             document.getElementById('setting_input_new_password_confirm_edit').classList.remove('input_error');
             document.getElementById('setting_input_password_reminder_edit').classList.remove('input_error');
     
-            spinner('DELETE_ACCOUNT', 'visible');
+            let old_button = document.getElementById('setting_btn_user_delete_account').innerHTML;
+            document.getElementById('setting_btn_user_delete_account').innerHTML = window.global_button_spinner;
             let json_data = `{"password":"${password}"}`;
             fetch(window.global_rest_url_base + window.global_rest_user_account + user_account_id + 
                     '?app_id=' + window.global_app_id +
@@ -1317,7 +1320,7 @@ async function user_delete(choice=null, user_account_id, user_local, function_de
                     return response.text();
                 })
                 .then(function(result) {
-                    spinner('DELETE_ACCOUNT', 'hidden');
+                    document.getElementById('setting_btn_user_delete_account').innerHTML = old_button;
                     if (status == 200)
                         return callBack(null,{deleted: 1});
                     else{
@@ -1326,7 +1329,7 @@ async function user_delete(choice=null, user_account_id, user_local, function_de
                     }
                 })
                 .catch(function(error) {
-                    spinner('DELETE_ACCOUNT', 'hidden');
+                    document.getElementById('setting_btn_user_delete_account').innerHTML = old_button;
                     show_message('EXCEPTION', null,null, error, window.global_app_id, lang_code);
                     return callBack(error,null);
                 });
@@ -2020,50 +2023,7 @@ function image_format(arr) {
         }
     }
 }
-function spinner(button, visibility) {
-    
-    
-    let button_update_text = document.getElementById('setting_btn_label_user_update').outerHTML;
-    let button_delete_account_text = document.getElementById('setting_btn_label_user_delete_account').outerHTML;
-    
-    switch (button) {
-        case 'LOGIN':
-            {
-                if (visibility == 'visible')
-                    document.getElementById('login_button').innerHTML = window.global_button_spinner;
-                else
-                    document.getElementById('login_button').innerHTML = window.global_button_default_icon_login;
-                break;
-            }
-        case 'SIGNUP':
-            {
-                if (visibility == 'visible')
-                    document.getElementById('signup_button').innerHTML = window.global_button_spinner;
-                else
-                    document.getElementById('signup_button').innerHTML = window.global_button_default_icon_signup;
-                break;
-            }
-        case 'UPDATE':
-            {
-                if (visibility == 'visible')
-                    document.getElementById('setting_btn_user_update').innerHTML = window.global_button_spinner + button_update_text;
-                else
-                    document.getElementById('setting_btn_user_update').innerHTML = window.global_button_default_icon_update + button_update_text;
-                break;
-            }
-        case 'DELETE_ACCOUNT':
-            {
-                if (visibility == 'visible')
-                    document.getElementById('setting_btn_user_delete_account').innerHTML = window.global_button_spinner + button_delete_account_text;
-                else
-                    document.getElementById('setting_btn_user_delete_account').innerHTML = window.global_button_default_icon_delete_account + button_delete_account_text;
-                break;
-            }
-        default:
-            null;
-    }
-    return null;
-}
+
 function exception(status, message, lang_code){
     if (status == 401)
         eval(`(function (){${window.global_exception_app_function}()}());`);
