@@ -1,4 +1,4 @@
-const { createUserAccountApp, getUserAccountApps} = require ("./user_account_app.service");
+const { createUserAccountApp, getUserAccountApps, deleteUserAccountApps} = require ("./user_account_app.service");
 
 module.exports = {
 	
@@ -30,4 +30,16 @@ module.exports = {
 			});
 		});
 	},
+	deleteUserAccountApps: (req, res) => {
+		deleteUserAccountApps(req.query.app_id, req.params.user_account_id, req.params.app_id, (err,results) => {
+			if (err) {
+				return res.status(500).send(
+					err
+				);
+			}
+			return res.status(200).json({
+				success: 1
+			});
+		});
+	}
 }
