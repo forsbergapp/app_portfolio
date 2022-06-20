@@ -47,6 +47,35 @@
     window.global_limit =1000;
     window.global_previous_row= '';
 
+    document.getElementById('menu_open').innerHTML = window.global_button_default_icon_menu_open;
+    document.getElementById('menu_close').innerHTML = window.global_button_default_icon_menu_close;
+    document.getElementById('maintenance_broadcast_info').innerHTML = window.global_button_default_icon_chat;
+    document.getElementById('apps_save').innerHTML = window.global_button_default_icon_save;
+    document.getElementById('list_app_log_first').innerHTML = global_button_default_icon_first;
+    document.getElementById('list_app_log_previous').innerHTML = window.global_button_default_icon_previous;
+    document.getElementById('list_app_log_next').innerHTML = window.global_button_default_icon_next;
+    document.getElementById('list_app_log_last').innerHTML = window.global_button_default_icon_last;
+    document.getElementById('map_my_location').innerHTML = window.global_button_default_icon_map_my_location;
+
+    document.getElementById('filesearch_menu4').innerHTML =  window.global_button_default_icon_search;
+    document.getElementById('menu4_row_parameters_col1_1').innerHTML = window.global_button_default_icon_checkbox_checked;
+    document.getElementById('menu4_row_parameters_col1_0').innerHTML = window.global_button_default_icon_checkbox_empty;
+    document.getElementById('menu4_row_parameters_col2_1').innerHTML = window.global_button_default_icon_checkbox_checked;
+    document.getElementById('menu4_row_parameters_col2_0').innerHTML = window.global_button_default_icon_checkbox_empty
+    document.getElementById('menu4_row_parameters_col3_1').innerHTML = window.global_button_default_icon_checkbox_checked;
+    document.getElementById('menu4_row_parameters_col3_0').innerHTML = window.global_button_default_icon_checkbox_empty
+    document.getElementById('menu4_row_parameters_col4_1').innerHTML = window.global_button_default_icon_checkbox_checked;
+    document.getElementById('menu4_row_parameters_col4_0').innerHTML = window.global_button_default_icon_checkbox_empty
+    document.getElementById('menu4_row_parameters_col5_1').innerHTML = window.global_button_default_icon_checkbox_checked;
+    document.getElementById('menu4_row_parameters_col5_0').innerHTML = window.global_button_default_icon_checkbox_empty
+
+    document.getElementById('send_broadcast_send').innerHTML = window.global_button_default_icon_send;
+    document.getElementById('send_broadcast_close').innerHTML = window.global_button_default_icon_close;
+    document.getElementById('lov_close').innerHTML = window.global_button_default_icon_close;
+
+    document.getElementById('count_local_label').innerHTML = window.global_button_default_icon_user;
+    document.getElementById('count_provider2_label').innerHTML = window.global_button_default_icon_provider2;
+
     init_common('', 'APP', 'INIT', 'admin_exception_after', true);
 
     document.getElementById('menu_1_content').style.display = 'block';
@@ -543,8 +572,8 @@
                 if (status == 200){
                     json = JSON.parse(result);
                     document.getElementById('count_local').innerHTML = json.data.count_local;
-                    document.getElementById('count_google').innerHTML = json.data.count_google;
-                    document.getElementById('count_facebook').innerHTML = json.data.count_facebook;
+                    document.getElementById('count_provider1').innerHTML = json.data.count_provider1;
+                    document.getElementById('count_provider2').innerHTML = json.data.count_provider2;
                 }
                 else
                     exception(status, result, window.global_lang_code);
@@ -1107,7 +1136,7 @@
                                         <div>${json.data[i].gps_longitude}</div>
                                     </div>
                                     <div class='list_connected_col list_connected_chat_click chat_click'>
-                                        <div><i class="fas fa-comment"></i></div>
+                                        <div>${window.global_button_default_icon_chat}</div>
                                     </div>
                                     
                                 </div>`;
