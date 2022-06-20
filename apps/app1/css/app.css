@@ -373,11 +373,6 @@ a:active {
 #dialogue_loading{
 	text-align:center;
 }
-#dialogue_spinner{
-	top: 50%;
-    margin-left: -40px;
-	display:inline-block;
-}
 
 /*Dialogue Info */
 #dialogue_info_content{
@@ -429,6 +424,10 @@ a:active {
 #scan_open_mobile_title3{
 	margin-top:10px;
 	margin-bottom:20px;
+}
+
+#dialogue_loading #button_spinner{
+	top: 50%;
 }
 
 /* WINDOW INFO*/
@@ -877,8 +876,14 @@ height: 25px;
 #setting_btn_user_delete i{
 	font-size:30px;
 }
-#setting_btn_user_delete_account{
-	display: none;
+#setting_btn_label_user_save, 
+#setting_btn_label_user_add,
+#setting_btn_label_user_delete{
+	text-transform: uppercase;
+}
+
+#setting_btn_user_delete_account, #setting_btn_label_user_delete_account{
+	display: none !important;
 }
 
 #setting_btn_label_user_save,
@@ -889,12 +894,6 @@ height: 25px;
 	text-align: center;
 	font-size: 11px;
 	vertical-align: top;
-}
-#setting_btn_user_save .load-spinner,
-#setting_btn_user_add .load-spinner,
-#setting_btn_user_delete .load-spinner{
-	width:50px;
-	height:50px;
 }
 
 #settings #setting_data_user_url_day,
