@@ -2143,13 +2143,15 @@ function show_image(item_img, item_input, image_width, image_height, lang_code) 
     return null;
 }
 
-function init_common(app_id, module, module_type, exception_app_function){
+function init_common(app_id, module, module_type, exception_app_function, close_eventsource){
     window.global_app_id = app_id;
     window.global_module = module;
     window.global_module_type = module_type;
     window.global_exception_app_function = exception_app_function;
 
     window.global_clientId = Date.now();
+    if (close_eventsource==true)
+        window.global_eventSource.close();
     window.global_eventSource = new EventSource(`/service/broadcast/connect/${window.global_clientId}?app_id=${window.global_app_id}`);
     window.global_eventSource.onmessage = function (event) {
         if (window.global_app_id === '')
