@@ -121,6 +121,7 @@ function toggle_switch(){
 function get_apps() {
 	let status;
     let json;
+    document.getElementById('apps').innerHTML = window.global_button_spinner;
     fetch(window.global_rest_url_base + window.global_rest_app + '?id=' + window.global_app_id,
     {method: 'GET',
      headers: {
@@ -424,9 +425,11 @@ async function user_login_app(){
     let username = document.getElementById('login_username');
     let password = document.getElementById('login_password');
     let user_id = document.getElementById('user_menu_user_id');
-    spinner('LOGIN', 'visible');
+    let old_button = document.getElementById('login_button').innerHTML;
+    document.getElementById('login_button').innerHTML = window.global_button_spinner;
+            
     await user_login(username.value, password.value, window.global_lang_code, (err, result)=>{
-        spinner('LOGIN', 'hidden');
+        document.getElementById('login_button').innerHTML = old_button;
         if (err==null){
             username.value = '';
             password.value = '';
