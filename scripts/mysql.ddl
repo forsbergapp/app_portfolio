@@ -464,6 +464,7 @@ CREATE TABLE app_portfolio.app1_user_setting (
     date_created                               DATETIME,
     date_modified                              DATETIME,
     user_account_id                            INT NOT NULL,
+    app_id                                     INT NOT NULL,
 	CONSTRAINT app1_user_setting_pk PRIMARY KEY ( id )
 );
 
@@ -1309,9 +1310,11 @@ ALTER TABLE app_portfolio.app1_user_setting_like
 		ON DELETE CASCADE;
 
 ALTER TABLE app_portfolio.app1_user_setting
-    ADD CONSTRAINT app1_user_setting_user_account_fk FOREIGN KEY ( user_account_id )
-        REFERENCES user_account ( id )
-        ON DELETE CASCADE;
+    ADD CONSTRAINT app1_user_setting_user_account_app_fk FOREIGN KEY ( app_id,
+                                                                       user_account_id )
+        REFERENCES user_account_app ( app_id,
+                                      user_account_id )
+            ON DELETE CASCADE;
 
 ALTER TABLE app_portfolio.app1_user_setting_view
     ADD CONSTRAINT app1_user_setting_view_app1_user_setting_fk FOREIGN KEY ( app1_user_setting_id )
