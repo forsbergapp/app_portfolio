@@ -47,7 +47,7 @@
     window.global_limit =1000;
     window.global_previous_row= '';
 
-    init_common('', 'APP', 'INIT', 'admin_exception_after');
+    init_common('', 'APP', 'INIT', 'admin_exception_after', true);
 
     document.getElementById('menu_1_content').style.display = 'block';
 
