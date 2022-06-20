@@ -166,6 +166,9 @@
 #user_verify_email i{
 	font-size:30px;
 }
+#user_verify_email{
+	height:30px;
+}
 #user_verify_verification_container{
 	margin-top:40px;
 	margin-bottom:40px;	
@@ -546,6 +549,7 @@
 	text-align: center;
 	font-size: 11px;
 	vertical-align: top;
+	text-transform: uppercase;
 }
 #setting_label_provider_id_edit,
 #setting_label_provider_id_edit_data,

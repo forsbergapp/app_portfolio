@@ -107,13 +107,11 @@
     document.getElementById('list_pm2_log_title1').addEventListener('click', function() { list_click(this)}, false);
     document.getElementById('list_server_log_title2').addEventListener('click', function() { list_click(this)}, false);
     
-    document.getElementById('button_spinner').style.visibility = 'visible';
     get_parameters().then(function(){
         get_token().then(function(){
             get_apps().then(function(){
                 get_gps_from_ip().then(function(){
                     show_menu(1);
-                    document.getElementById('button_spinner').style.visibility = 'hidden';
                 })                
             })
         })
@@ -385,6 +383,7 @@
             let json;
             let status;
             let app_id ='';
+            document.getElementById(`box${chart}`).innerHTML = window.global_button_spinner;
             await fetch(window.global_rest_base + `app_log/admin/stat/uniquevisitor?app_id=${app_id}&statchoice=${chart}&year=${current_year}&month=${current_month}`,
             {method: 'GET',
                 headers: {
@@ -621,6 +620,7 @@
             case 1:{
                 let status;
                 let json;
+                document.getElementById('lov_list').innerHTML = window.global_button_spinner;
                 fetch(window.global_rest_base + window.global_rest_parameter_type + `admin`,
                     {method: 'GET',
                         headers: {
@@ -740,6 +740,7 @@
     async function show_apps(){
         let status;
         let json;
+        document.getElementById('list_apps').innerHTML = window.global_button_spinner;
         await fetch(window.global_rest_base + window.global_rest_app + '/admin?id=0',
             {method: 'GET',
                 headers: {
@@ -792,6 +793,7 @@
     function show_app_parameter(app_id){
         let status;
         let json;
+        document.getElementById('list_app_parameter').innerHTML = window.global_button_spinner;
         fetch(window.global_rest_base + window.global_rest_app_parameter + `/admin/all/${parseInt(app_id)}`,
             {method: 'GET',
                 headers: {
@@ -878,8 +880,8 @@
             let status;
             let rest_url;
             let json_data;
-            document.getElementById('save_spinner').style.display='inline-block';
-            document.getElementById('apps_save').style.display='none';
+            let old_button = document.getElementById('apps_save').innerHTML;
+            document.getElementById('apps_save').innerHTML = window.global_button_spinner;
             switch (table){
                 case 'app':{
                     if (id==0){
@@ -919,8 +921,7 @@
                 return response.text();
             })
             .then(function(result) {
-                document.getElementById('save_spinner').style.display='none';
-                document.getElementById('apps_save').style.display='inline-block';
+                document.getElementById('apps_save').innerHTML = old_button;
                 if (status === 200)
                     element.setAttribute('data-changed-record', '0');
                 else
@@ -1054,6 +1055,7 @@
             let app_id = document.getElementById('select_app_menu3').options[document.getElementById('select_app_menu3').selectedIndex].value;
             let year = document.getElementById('select_year_menu3').value;
             let month = document.getElementById('select_month_menu3').value;
+            document.getElementById('list_connected').innerHTML = window.global_button_spinner;
             for (let i=1;i<=7;i++){
                 document.getElementById('list_connected_col_title' + i).classList.remove('asc');
                 document.getElementById('list_connected_col_title' + i).classList.remove('desc');
@@ -1133,6 +1135,7 @@
         let app_id = document.getElementById('select_app_menu3').options[document.getElementById('select_app_menu3').selectedIndex].value;
         let year = document.getElementById('select_year_menu3').value;
         let month = document.getElementById('select_month_menu3').value;
+        document.getElementById('list_app_log').innerHTML = window.global_button_spinner;
         for (let i=1;i <=8;i++){
             document.getElementById('list_app_log_col_title' + i).classList.remove('asc');
             document.getElementById('list_app_log_col_title' + i).classList.remove('desc');
@@ -1506,6 +1509,7 @@
             let day  = document.getElementById('select_day_menu4').value;
             let app_id = document.getElementById('select_app_menu4').options[document.getElementById('select_app_menu4').selectedIndex].value;
             let url_parameters;
+            document.getElementById('list_server_log').innerHTML = window.global_button_spinner;
             if (window.global_service_log_file_interval=='1M')
                 url_parameters = `app_id=${app_id}&logscope=${logscope}&loglevel=${loglevel}&year=${year}&month=${month}`;
             else
@@ -1637,6 +1641,7 @@
             let status;
             let json;
             let url_parameters;
+            document.getElementById('lov_list').innerHTML = window.global_button_spinner;
             fetch(window.global_service_log + `/files`,
             {method: 'GET',
             headers: {
@@ -1699,7 +1704,9 @@
         if (admin_token_has_value()){
             let status;
             let json;
-
+            document.getElementById('list_pm2_log_out').innerHTML = window.global_button_spinner;
+            document.getElementById('list_pm2_log_err').innerHTML = window.global_button_spinner;
+            document.getElementById('list_pm2_log_process_event').innerHTML = window.global_button_spinner;
             fetch(window.global_service_log + `/pm2logs`,
             {method: 'GET',
             headers: {
