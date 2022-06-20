@@ -1231,7 +1231,7 @@ module.exports = {
 					prayer_column_midnight_checked = ?,
 					prayer_column_fast_start_end_select_id = ?,
 					user_account_id = ?,
-					app_id,
+					app_id = ?,
 					date_modified = SYSDATE()
 				WHERE id = ? `,
 				[
