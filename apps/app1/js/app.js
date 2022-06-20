@@ -1979,61 +1979,16 @@ function align_button_value(report_align_where) {
     return '';
 }
 
-/*Spinner for SAVE, ADD, DELETE, EDIT*/
-function spinner_app(button, visibility) {
-    
-    let button_save_text = document.getElementById('setting_btn_label_user_save').outerHTML;
-    let button_add_text = document.getElementById('setting_btn_label_user_add').outerHTML;
-    let button_delete_text = document.getElementById('setting_btn_label_user_delete').outerHTML;
-
-    switch (button) {
-        case 'SAVE':
-            {
-                if (visibility == 'visible')
-                    document.getElementById('setting_btn_user_save').innerHTML = window.global_button_spinner + button_save_text;
-                else
-                    document.getElementById('setting_btn_user_save').innerHTML = window.global_button_default_icon_save + button_save_text;
-                break;
-            }
-        case 'ADD':
-            {
-                if (visibility == 'visible')
-                    document.getElementById('setting_btn_user_add').innerHTML = window.global_button_spinner + button_add_text;
-                else
-                    document.getElementById('setting_btn_user_add').innerHTML = window.global_button_default_icon_add + button_add_text;
-                break;
-            }
-        case 'DELETE':
-            {
-                if (visibility == 'visible')
-                    document.getElementById('setting_btn_user_delete').innerHTML = window.global_button_spinner + button_delete_text;
-                else
-                    document.getElementById('setting_btn_user_delete').innerHTML = window.global_button_default_icon_delete + button_delete_text;
-                break;
-            }
-        case 'EDIT':
-            {
-                if (visibility == 'visible')
-                    document.getElementById('setting_btn_user_edit').innerHTML = window.global_button_spinner;
-                else
-                    document.getElementById('setting_btn_user_edit').innerHTML = window.global_button_default_icon_edit;
-                break;
-            }    
-        default:
-            {
-                null;
-            }
-    }
-    return null;
-}
 function dialogue_loading(visible){
     if (visible==1){
+        document.getElementById('dialogue_loading').innerHTML = window.global_button_spinner;
         document.getElementById('dialogue_loading').style.visibility='visible';
-        document.getElementById('dialogue_spinner').style.visibility='visible';
+        //document.getElementById('dialogue_spinner').style.visibility='visible';
     }
     else{
+        document.getElementById('dialogue_loading').innerHTML = '';
         document.getElementById('dialogue_loading').style.visibility='hidden';
-        document.getElementById('dialogue_spinner').style.visibility='hidden';
+        //document.getElementById('dialogue_spinner').style.visibility='hidden';
     }
 }
 
@@ -2057,9 +2012,10 @@ function zoom_paper(zoomvalue = '') {
 }
 
 async function user_edit_app() {
-    spinner_app('EDIT', 'visible');
+    let old_button = document.getElementById('setting_btn_user_edit').innerHTML;
+    document.getElementById('setting_btn_user_edit').innerHTML = window.global_button_spinner;
     await user_edit(document.getElementById('setting_data_userid_logged_in').innerHTML, document.getElementById('setting_select_timezone_current').value, get_lang_code(),(err, result) => {
-        spinner_app('EDIT', 'hidden');
+        document.getElementById('setting_btn_user_edit').innerHTML = old_button;
         if ((err==null && result==null) == false){
             if (err==null){
                 update_settings_icon(image_format(result.avatar ?? result.provider1_image ?? result.provider2_image));
@@ -2082,9 +2038,10 @@ async function user_login_app(){
     let password = document.getElementById('login_password');
     let lang_code = get_lang_code();
     let user_id = document.getElementById('setting_data_userid_logged_in');
-    spinner('LOGIN', 'visible');
+    let old_button = document.getElementById('login_button').innerHTML;
+    document.getElementById('login_button').innerHTML = window.global_button_spinner;
     await user_login(username.value, password.value, lang_code, (err, result)=>{
-        spinner('LOGIN', 'hidden');
+        document.getElementById('login_button').innerHTML = old_button;
         if (err==null){
             user_id.innerHTML = result.user_id;
             //create intitial user setting if not exist, send initial=true
@@ -2688,11 +2645,16 @@ async function user_settings_function(function_name, initial_user_setting) {
           "prayer_column_fast_start_end_select_id": ${document.getElementById('setting_select_report_show_fast_start_end').selectedIndex},
           "user_account_id": ${user_account_id}
          }`;
-    spinner_app(function_name, 'visible');
     let method;
     let url;
+    let old_button;
+    let spinner_item;
+    
     switch (function_name){
         case 'ADD':{
+            spinner_item = document.getElementById('setting_btn_user_add')
+            old_button = spinner_item.innerHTML;
+            spinner_item.innerHTML = window.global_button_spinner;
             method = 'POST';
             url = window.global_rest_url_base + window.global_rest_app1_user_setting + 
                   `?app_id=${window.global_app_id}&lang_code=${get_lang_code()}` + 
@@ -2700,6 +2662,9 @@ async function user_settings_function(function_name, initial_user_setting) {
             break;
         }
         case 'SAVE':{
+            spinner_item = document.getElementById('setting_btn_user_save')
+            old_button = spinner_item.innerHTML;
+            spinner_item.innerHTML = window.global_button_spinner;
             method = 'PUT';
             let select_user_setting = document.getElementById('setting_select_user_setting');
             let user_setting_id = select_user_setting[select_user_setting.selectedIndex].getAttribute('id');
@@ -2725,6 +2690,7 @@ async function user_settings_function(function_name, initial_user_setting) {
         })
         .then(function(result) {
             if (status === 200) {
+                spinner_item.innerHTML = old_button;
                 let json = JSON.parse(result);
                 switch (function_name){
                     case 'ADD':{
@@ -2747,14 +2713,13 @@ async function user_settings_function(function_name, initial_user_setting) {
                         break;
                     }
                 }
-                spinner_app(function_name, 'hidden');
             } else {
-                spinner_app(function_name, 'hidden');
+                spinner_item.innerHTML = old_button;
                 exception(status, result, get_lang_code());
             }
         })
         .catch(function(error) {
-            spinner_app(function_name, 'hidden');
+            spinner_item.innerHTML = old_button;
             show_message('EXCEPTION', null,null, error, window.global_app_id, get_lang_code());
         });
 }
@@ -2772,7 +2737,8 @@ function user_settings_delete(choice=null) {
         }
         case 1:{
             if (select_user_setting.length > 1) {
-                spinner_app('DELETE', 'visible');
+                let old_button = document.getElementById('setting_btn_user_delete').innerHTML;
+                document.getElementById('setting_btn_user_delete').innerHTML = window.global_button_spinner;
                 fetch(window.global_rest_url_base + window.global_rest_app1_user_setting + user_setting_id + 
                         '?app_id=' + window.global_app_id +
                         '&lang_code=' + get_lang_code(), 
@@ -2796,18 +2762,18 @@ function user_settings_delete(choice=null) {
                                 settings_translate(true).then(function(){
                                     settings_translate(false).then(function(){
                                         update_timetable_report();
-                                        spinner_app('DELETE', 'hidden');
+                                        document.getElementById('setting_btn_user_delete').innerHTML = old_button;
                                     })
                                 })
                             })
                             
                         } else {
-                            spinner_app('DELETE', 'hidden');
+                            document.getElementById('setting_btn_user_delete').innerHTML = old_button;
                             exception(status, result, get_lang_code());
                         }
                     })
                     .catch(function(error) {
-                        spinner_app('DELETE', 'hidden');
+                        document.getElementById('setting_btn_user_delete').innerHTML = old_button;
                         show_message('EXCEPTION', null,null, error, window.global_app_id, get_lang_code());
                     });
             } else {
