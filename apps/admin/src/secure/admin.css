@@ -167,41 +167,44 @@
     #users_connected, #count_connected{
         display:inline-block;
     }
-    #count_local, #count_google, #count_facebook{
+    #count_local_label, #count_provider2_label{
+        display: inline-block;
+    }
+    #count_local, #count_provider1, #count_provider2{
         display:inline-block;
         margin-right:10px;
     }
-    .googletext{
+    .provider1text{
         font-family: 'Noto Sans';
         font-weight: bold;
         margin-left:-2px;
         margin-right:-2px;
     }
-    #users_count #google1{
+    #users_count #provider1_1{
         color: #4285F4;
         display:inline-block;
     }
-    #users_count #google2{
+    #users_count #provider1_2{
         color: #DB4437;
         display:inline-block;
     }
-    #users_count #google3{
+    #users_count #provider1_3{
         color: #F4B400;
         display:inline-block;
     }
-    #users_count #google4{
+    #users_count #provider1_4{
         color: #4285F4;
         display:inline-block;
     }
-    #users_count #google5{
+    #users_count #provider1_5{
         color: #0F9D58;
         display:inline-block;
     }
-    #users_count #google6{
+    #users_count #provider1_6{
         color: #DB4437;
         display:inline-block;
     }
-    #users_count i.fa-facebook{
+    #users_count #count_provider2_label{
         color: #4267b2;
     }
     #menu_1_content_widget3{
@@ -695,7 +698,7 @@
     .theme_light .list_button:hover, .theme_light .list_button:active{
         color:#6ab344;
     }
-    .theme_light #users_count i.fa-user{
+    .theme_light #users_count #count_local_label{
         color: #a49775;
     }
     .theme_light .list_apps_row,

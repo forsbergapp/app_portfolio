@@ -74,7 +74,8 @@ window.global_button_default_icon_save = '<i class="fas fa-save"></i>';
 window.global_button_default_icon_add = '<i class="fas fa-plus-square"></i>';
 window.global_button_default_icon_delete = '<i class="fas fa-trash-alt"></i>';
 window.global_button_default_icon_edit = '<i class="fas fa-edit"></i>';
-                            
+
+window.global_button_default_icon_send = '<i class="fas fa-arrow-alt-circle-right"></i>';
 window.global_button_default_icon_login = '<i class="fas fa-arrow-alt-circle-right"></i>';
 window.global_button_default_icon_signup = '<i class="fas fa-arrow-alt-circle-right"></i>';
 window.global_button_default_icon_update = '<i class="fas fa-save"></i>';
@@ -95,9 +96,11 @@ window.global_button_default_icon_up = '<i class="fas fa-arrow-alt-circle-up"></
 window.global_button_default_icon_down = '<i class="fas fa-arrow-alt-circle-down"></i>';
 window.global_button_default_icon_provider1 = '<i class="fab fa-google"></i>';
 window.global_button_default_icon_provider2 = '<i class="fab fa-facebook"></i>';
+window.global_button_default_icon_map_my_location = '<i class="fas fa-crosshairs"></i>';
 
 window.global_button_default_icon_search = '<i class="fas fa-search"></i>';
-window.global_button_default_icon_menu = '<i class="fas fa-bars"></i>';
+window.global_button_default_icon_menu_open = '<i class="fas fa-bars"></i>';
+window.global_button_default_icon_menu_close = '<i class="fas fa-times-circle"></i>';
 window.global_button_default_icon_first = '<i class="fas fa-fast-backward"></i>';
 window.global_button_default_icon_previous = '<i class="fas fa-backward"></i>';
 window.global_button_default_icon_next = '<i class="fas fa-forward"></i>';

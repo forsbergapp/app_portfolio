@@ -1658,10 +1658,10 @@ module.exports = {
 							AND provider2_id IS NULL) count_local,
 						(SELECT COUNT(*)
 						   FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account
-						  WHERE provider1_id IS NOT NULL) count_google,
+						  WHERE provider1_id IS NOT NULL) count_provider1,
 						(SELECT COUNT(*)
 						   FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account
-						  WHERE provider2_id IS NOT NULL) count_facebook
+						  WHERE provider2_id IS NOT NULL) count_provider2
 				 FROM DUAL`, 
 				[],
                 (error, results, fields) => {
@@ -1685,10 +1685,10 @@ module.exports = {
 									AND provider2_id IS NULL) "count_local",
 								(SELECT COUNT(*)
 								   FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account
-								  WHERE provider1_id IS NOT NULL) "count_google",
+								  WHERE provider1_id IS NOT NULL) "count_provider1",
 								(SELECT COUNT(*)
 								   FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account
-								  WHERE provider2_id IS NOT NULL) "count_facebook"
+								  WHERE provider2_id IS NOT NULL) "count_provider2"
 						FROM DUAL`,  
 				 		{},
                         (err, result) => {
