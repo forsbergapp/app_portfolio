@@ -58,18 +58,20 @@ module.exports = {
 					prayer_column_fast_start_end_select_id,
 					date_created,
 					date_modified,
-					user_account_id)
+					user_account_id,
+					app_id)
 				SELECT ?,?,?,?,?,?,?,?,?,?,
 					?,?,?,?,?,?,?,?,?,?,
 					?,?,?,?,?,?,?,?,?,?,
 					?,?,?,?,?,?,?,?,?,?,
 					?,?,?,?,?,?,?,?,?,?,
-					?,SYSDATE(),SYSDATE(),?
+					?,SYSDATE(),SYSDATE(),?,?
 				FROM DUAL
 				WHERE NOT EXISTS (SELECT null
 						            FROM ${process.env.SERVICE_DB_DB1_NAME}.app1_user_setting aus
 								   WHERE ? = 1
-								     AND aus.user_account_id = ?)`,
+								     AND aus.user_account_id = ?
+									 AND aus.app_id = ?)`,
 				[
 				data.description,
 				data.regional_language_locale,
@@ -123,8 +125,10 @@ module.exports = {
 				data.prayer_column_midnight_checked,
 				data.prayer_column_fast_start_end_select_id,
 				data.user_account_id,
+				app_id,
 				initial,
-				data.user_account_id
+				data.user_account_id,
+				app_id
 				],
 				(error, results, fields) => {
 					if (error){
@@ -194,7 +198,8 @@ module.exports = {
 							prayer_column_fast_start_end_select_id,
 							date_created,
 							date_modified,
-							user_account_id)
+							user_account_id,
+							app_id)
 						SELECT	:description,
 								:regional_language_locale,
 								:regional_current_timezone_select_id,
@@ -248,12 +253,14 @@ module.exports = {
 								:prayer_column_fast_start_end_select_id,
 								SYSDATE,
 								SYSDATE,
-								:user_account_id
+								:user_account_id,
+								:app_id
 						FROM DUAL
 						WHERE NOT EXISTS (SELECT null
 										    FROM ${process.env.SERVICE_DB_DB2_NAME}.app1_user_setting aus
 										   WHERE :initial = 1
-										 	 AND aus.user_account_id = :user_account_id)`,
+										 	 AND aus.user_account_id = :user_account_id
+											 AND aus.app_id = :app_id)`,
 					{
 						description: data.description,
 						regional_language_locale: data.regional_language_locale,
@@ -307,6 +314,7 @@ module.exports = {
 						prayer_column_midnight_checked: data.prayer_column_midnight_checked,
 						prayer_column_fast_start_end_select_id: data.prayer_column_fast_start_end_select_id,
 						user_account_id: data.user_account_id,
+						app_id: app_id,
 						initial: initial
 					},
 					(err,result) => {
@@ -432,7 +440,8 @@ module.exports = {
 					prayer_column_fast_start_end_select_id,
 					date_created,
 					date_modified,
-					user_account_id
+					user_account_id,
+					app_id
 				FROM ${process.env.SERVICE_DB_DB1_NAME}.app1_user_setting 
 				WHERE id = ? `,
 				[id],
@@ -505,7 +514,8 @@ module.exports = {
 						prayer_column_fast_start_end_select_id "prayer_column_fast_start_end_select_id",
 						date_created "date_created",
 						date_modified "date_modified",
-						user_account_id "user_account_id"
+						user_account_id "user_account_id",
+						app_id "app_id"
 					FROM ${process.env.SERVICE_DB_DB2_NAME}.app1_user_setting 
 					WHERE id = :id `,
 					{
@@ -594,10 +604,13 @@ module.exports = {
 					us.prayer_column_fast_start_end_select_id,
 					us.date_created,
 					us.date_modified,
-					us.user_account_id
+					us.user_account_id,
+					us.app_id
 				FROM ${process.env.SERVICE_DB_DB1_NAME}.app1_user_setting us
-				WHERE us.user_account_id = ? `,
-				[id],
+				WHERE us.user_account_id = ?
+				  AND us.app_id = ?`,
+				[id,
+				 app_id],
 				(error, results, fields) => {
 					if (error) {
 						createLogAppSE(app_id, __appfilename, __appfunction, __appline, error);
@@ -668,9 +681,11 @@ module.exports = {
 						prayer_column_fast_start_end_select_id "prayer_column_fast_start_end_select_id",
 						date_created "date_created",
 						date_modified "date_modified",
-						user_account_id "user_account_id"
+						user_account_id "user_account_id",
+						app_id "app_id"
 					FROM ${process.env.SERVICE_DB_DB2_NAME}.app1_user_setting
-					WHERE user_account_id = :user_account_id `,
+					WHERE user_account_id = :user_account_id 
+					  AND app_id = :app_id`,
 					{
 						user_account_id: id
 					},
@@ -707,15 +722,19 @@ module.exports = {
 					   FROM ${process.env.SERVICE_DB_DB1_NAME}.app1_user_setting_like u_like,
 					   		${process.env.SERVICE_DB_DB1_NAME}.app1_user_setting us
 					  WHERE u_like.user_account_id = u.id
-					    AND u_like.app1_user_setting_id = us.id)							count_user_setting_likes,
+					    AND us.id = u_like.app1_user_setting_id
+						AND us.app_id = ?)													count_user_setting_likes,
 					(SELECT COUNT(DISTINCT u_like.user_account_id)
 					   FROM ${process.env.SERVICE_DB_DB1_NAME}.app1_user_setting_like u_like,
 					   		${process.env.SERVICE_DB_DB1_NAME}.app1_user_setting us
 					  WHERE us.user_account_id = u.id
+					    AND us.app_id = ?
 						AND u_like.app1_user_setting_id = us.id)							count_user_setting_liked
 				FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account u
 				WHERE u.id = ? `, 
-				[id],
+				[app_id,
+			     app_id,
+				 id],
                 (error, results, fields) => {
                     if (error) {
 						createLogAppSE(app_id, __appfilename, __appfunction, __appline, error);
@@ -732,19 +751,22 @@ module.exports = {
                     const result = await pool2.execute(
                         `SELECT
 							(SELECT COUNT(DISTINCT us.user_account_id)
-							FROM ${process.env.SERVICE_DB_DB2_NAME}.app1_user_setting_like u_like,
+							   FROM ${process.env.SERVICE_DB_DB2_NAME}.app1_user_setting_like u_like,
 									${process.env.SERVICE_DB_DB2_NAME}.app1_user_setting us
-							WHERE u_like.user_account_id = u.id
-								AND u_like.app1_user_setting_id = us.id)							"count_user_setting_likes",
+							  WHERE u_like.user_account_id = u.id
+								AND us.id = u_like.app1_user_setting_id
+								AND us.app_id = :app_id)													"count_user_setting_likes",
 							(SELECT COUNT(DISTINCT u_like.user_account_id)
-							FROM ${process.env.SERVICE_DB_DB2_NAME}.app1_user_setting_like u_like,
+							   FROM ${process.env.SERVICE_DB_DB2_NAME}.app1_user_setting_like u_like,
 									${process.env.SERVICE_DB_DB2_NAME}.app1_user_setting us
-							WHERE us.user_account_id = u.id
+							  WHERE us.user_account_id = u.id
+							    AND us.app_id = :app_id
 								AND u_like.app1_user_setting_id = us.id)							"count_user_setting_liked"
 						FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account u
 						WHERE u.id = :id`, 
 						{
-                            id: id
+                            id: id,
+							app_id: app_id
                         },
                         (err, result) => {
                             if (err) {
@@ -789,9 +811,11 @@ module.exports = {
 						AND u_liked_current_user.app1_user_setting_id = us.id) 	liked,
 					us.design_paper_size_select_id
 				FROM ${process.env.SERVICE_DB_DB1_NAME}.app1_user_setting us
-				WHERE us.user_account_id = ? `,
+				WHERE us.user_account_id = ? 
+				  AND us.app_id = ?`,
 				[id_current_user,
-				id],
+				 id,
+			     app_id],
 				(error, results, fields) => {
 					if (error) {
 						createLogAppSE(app_id, __appfilename, __appfunction, __appline, error);
@@ -822,10 +846,12 @@ module.exports = {
 						    AND u_liked_current_user.app1_user_setting_id = us.id) 	"liked",
 						us.design_paper_size_select_id "design_paper_size_select_id"
 					FROM ${process.env.SERVICE_DB_DB2_NAME}.app1_user_setting us
-					WHERE us.user_account_id = :user_account_id `,
+					WHERE us.user_account_id = :user_account_id
+					  AND us.app_id = :app_id `,
 					{
 						user_account_id_current: id_current_user,
-						user_account_id: id
+						user_account_id: id,
+						app_id: app_id
 					},
 					(err,result) => {
 						if (err) {
@@ -870,10 +896,11 @@ module.exports = {
 									u.provider2_first_name
 							FROM   ${process.env.SERVICE_DB_DB1_NAME}.user_account u
 							WHERE  u.id IN (SELECT us.user_account_id
-											FROM   ${process.env.SERVICE_DB_DB1_NAME}.app1_user_setting_like u_like,
-												${process.env.SERVICE_DB_DB1_NAME}.app1_user_setting us
-											WHERE  u_like.user_account_id = ?
-											AND    us.id = u_like.app1_user_setting_id)
+											  FROM ${process.env.SERVICE_DB_DB1_NAME}.app1_user_setting_like u_like,
+											 	   ${process.env.SERVICE_DB_DB1_NAME}.app1_user_setting us
+											 WHERE u_like.user_account_id = ?
+											   AND us.app_id = ?
+											   AND us.id = u_like.app1_user_setting_id)
 							AND    u.active = 1
 							AND    5 = ?
 							UNION ALL
@@ -891,18 +918,21 @@ module.exports = {
 									u.provider2_first_name
 							FROM   ${process.env.SERVICE_DB_DB1_NAME}.user_account u
 							WHERE  u.id IN (SELECT u_like.user_account_id
-											FROM   ${process.env.SERVICE_DB_DB1_NAME}.app1_user_setting us,
-												${process.env.SERVICE_DB_DB1_NAME}.app1_user_setting_like u_like
-											WHERE  us.user_account_id = ?
-											AND    us.id = u_like.app1_user_setting_id)
+											  FROM ${process.env.SERVICE_DB_DB1_NAME}.app1_user_setting us,
+												   ${process.env.SERVICE_DB_DB1_NAME}.app1_user_setting_like u_like
+											 WHERE us.user_account_id = ?
+											   AND us.app_id = ?
+											   AND us.id = u_like.app1_user_setting_id)
 							AND    u.active = 1
 							AND    6 = ?) t
 						ORDER BY 1, COALESCE(username, 
 											provider1_first_name,
 											provider2_first_name)`, 
 				[id,
+				 app_id,
 				 detailchoice,
 			 	 id,
+				 app_id,
 				 detailchoice
                 ],
                 (error, results, fields) => {
@@ -934,10 +964,11 @@ module.exports = {
 										u.provider2_first_name "provider2_first_name"
 								FROM    ${process.env.SERVICE_DB_DB2_NAME}.user_account u
 								WHERE  u.id IN (SELECT us.user_account_id
-												FROM   ${process.env.SERVICE_DB_DB2_NAME}.app1_user_setting_like u_like,
-													${process.env.SERVICE_DB_DB2_NAME}.app1_user_setting us
-												WHERE  u_like.user_account_id = :user_account_id_like_setting
-												AND    us.id = u_like.app1_user_setting_id)
+												  FROM ${process.env.SERVICE_DB_DB2_NAME}.app1_user_setting_like u_like,
+													   ${process.env.SERVICE_DB_DB2_NAME}.app1_user_setting us
+												 WHERE u_like.user_account_id = :user_account_id_like_setting
+												   AND us.app_id = :app_id
+												   AND us.id = u_like.app1_user_setting_id)
 								AND    u.active = 1
 								AND    5 = :detailchoice_like_setting
 								UNION ALL
@@ -955,10 +986,11 @@ module.exports = {
 										u.provider2_first_name "provider2_first_name"
 								FROM    ${process.env.SERVICE_DB_DB2_NAME}.user_account u
 								WHERE  u.id IN (SELECT u_like.user_account_id
-												FROM ${process.env.SERVICE_DB_DB2_NAME}.app1_user_setting us,
-													${process.env.SERVICE_DB_DB2_NAME}.app1_user_setting_like u_like
-												WHERE  us.user_account_id = :user_account_id_liked_setting
-												AND    us.id = u_like.app1_user_setting_id)
+												  FROM ${process.env.SERVICE_DB_DB2_NAME}.app1_user_setting us,
+													   ${process.env.SERVICE_DB_DB2_NAME}.app1_user_setting_like u_like
+												 WHERE us.user_account_id = :user_account_id_liked_setting
+												   AND us.app_id = :app_id
+												   AND us.id = u_like.app1_user_setting_id)
 								AND    u.active = 1
 								AND    6 = :detailchoice_liked_setting) t
 							ORDER BY 1, COALESCE("username", 
@@ -966,6 +998,7 @@ module.exports = {
 												"provider2_first_name") `, 
 						{
                             user_account_id_like_setting: id,
+							app_id: app_id,
                             detailchoice_like_setting: detailchoice,
                             user_account_id_liked_setting: id,
                             detailchoice_liked_setting: detailchoice
@@ -1014,6 +1047,7 @@ module.exports = {
 									   FROM ${process.env.SERVICE_DB_DB1_NAME}.app1_user_setting_like u_like,
 									   		${process.env.SERVICE_DB_DB1_NAME}.app1_user_setting us
 									  WHERE us.user_account_id = u.id
+									    AND us.app_id = ?
 										AND u_like.app1_user_setting_id = us.id) count
 							FROM   ${process.env.SERVICE_DB_DB1_NAME}.user_account u
 							WHERE  u.active = 1
@@ -1035,6 +1069,7 @@ module.exports = {
 									   FROM ${process.env.SERVICE_DB_DB1_NAME}.app1_user_setting_view u_view,
 									        ${process.env.SERVICE_DB_DB1_NAME}.app1_user_setting us
 									  WHERE us.user_account_id = u.id
+									    AND us.app_id = ?
 										AND u_view.app1_user_setting_id = us.id) count
 							FROM   ${process.env.SERVICE_DB_DB1_NAME}.user_account u
 							WHERE  u.active = 1
@@ -1043,7 +1078,9 @@ module.exports = {
 												provider1_first_name,
 												provider2_first_name)
 					LIMIT 10`, 
-				[statchoice,
+				[app_id,
+				 statchoice,
+				 app_id,
 				 statchoice
                 ],
                 (error, results, fields) => {
@@ -1077,6 +1114,7 @@ module.exports = {
 											   FROM ${process.env.SERVICE_DB_DB2_NAME}.app1_user_setting_like u_like,
 											   		${process.env.SERVICE_DB_DB2_NAME}.app1_user_setting us
 											  WHERE us.user_account_id = u.id
+											    AND us.app_id = :app_id
 												AND u_like.app1_user_setting_id = us.id) "count"
 									FROM   ${process.env.SERVICE_DB_DB2_NAME}.user_account u
 									WHERE  u.active = 1
@@ -1097,7 +1135,8 @@ module.exports = {
 											(SELECT COUNT(us.user_account_id)
 											   FROM ${process.env.SERVICE_DB_DB2_NAME}.app1_user_setting_view u_view,
 											   		${process.env.SERVICE_DB_DB2_NAME}.app1_user_setting us
-											   WHERE us.user_account_id = u.id
+											  WHERE us.user_account_id = u.id
+											    AND us.app_id = :app_id
 												AND u_view.app1_user_setting_id = us.id) "count"
 									FROM   ${process.env.SERVICE_DB_DB2_NAME}.user_account u
 									WHERE  u.active = 1
@@ -1107,7 +1146,8 @@ module.exports = {
 														"provider1_first_name",
 														"provider2_first_name") `, 
 						{
-                            statchoice_like_setting: statchoice,
+                            app_id: app_id,
+							statchoice_like_setting: statchoice,
                             statchoice_visited_setting: statchoice
                         },
                         (err, result) => {
@@ -1191,6 +1231,7 @@ module.exports = {
 					prayer_column_midnight_checked = ?,
 					prayer_column_fast_start_end_select_id = ?,
 					user_account_id = ?,
+					app_id,
 					date_modified = SYSDATE()
 				WHERE id = ? `,
 				[
@@ -1246,6 +1287,7 @@ module.exports = {
 				data.prayer_column_midnight_checked,
 				data.prayer_column_fast_start_end_select_id,
 				data.user_account_id,
+				app_id,
 				id
 				],
 				(error, results, fields) => {
@@ -1315,6 +1357,7 @@ module.exports = {
 						prayer_column_midnight_checked = :prayer_column_midnight_checked,
 						prayer_column_fast_start_end_select_id = :prayer_column_fast_start_end_select_id,
 						user_account_id = :user_account_id,
+						app_id = :app_id
 						date_modified = SYSDATE
 					WHERE id = :id `,
 					{
@@ -1370,6 +1413,7 @@ module.exports = {
 						prayer_column_midnight_checked: data.prayer_column_midnight_checked,
 						prayer_column_fast_start_end_select_id: data.prayer_column_fast_start_end_select_id,
 						user_account_id: data.user_account_id,
+						app_id: app_id,
 						id: id
 					},
 					(err,result) => {

@@ -877,6 +877,9 @@ height: 25px;
 #setting_btn_user_delete i{
 	font-size:30px;
 }
+#setting_btn_user_delete_account{
+	display: none;
+}
 
 #setting_btn_label_user_save,
 #setting_btn_label_user_add,

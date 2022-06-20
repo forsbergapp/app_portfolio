@@ -1715,7 +1715,6 @@ function keyfunctions() {
     document.getElementById('setting_btn_user_edit').addEventListener('click', function() { user_edit_app() }, false);
 
     document.getElementById('setting_btn_user_update').addEventListener('click', function() { user_update_app(); }, false);
-    document.getElementById('setting_btn_user_delete_account').addEventListener('click', function() { user_delete_app(); }, false);
      
     document.getElementById('setting_btn_user_save').addEventListener('click', function() { user_settings_function('SAVE') }, false);
     document.getElementById('setting_btn_user_add').addEventListener('click', function() { user_settings_function('ADD') }, false);
@@ -1982,25 +1981,7 @@ function align_button_value(report_align_where) {
 
 /*Spinner for SAVE, ADD, DELETE, EDIT*/
 function spinner_app(button, visibility) {
-    let button_spinner = `<div id="button_spinner" class="load-spinner">
-                            <div></div>
-                            <div></div>
-                            <div></div>
-                            <div></div>
-                            <div></div>
-                            <div></div>
-                            <div></div>
-                            <div></div>
-                            <div></div>
-                            <div></div>
-                            <div></div>
-                            <div></div>
-                         </div>`;
-    let button_default_icon_save = '<i class="fas fa-save"></i>';
-    let button_default_icon_add = '<i class="fas fa-plus-square"></i>';
-    let button_default_icon_delete = '<i class="fas fa-trash-alt"></i>';
-    let button_default_icon_edit = '<i class="fas fa-edit"></i>';
-
+    
     let button_save_text = document.getElementById('setting_btn_label_user_save').outerHTML;
     let button_add_text = document.getElementById('setting_btn_label_user_add').outerHTML;
     let button_delete_text = document.getElementById('setting_btn_label_user_delete').outerHTML;
@@ -2009,33 +1990,33 @@ function spinner_app(button, visibility) {
         case 'SAVE':
             {
                 if (visibility == 'visible')
-                    document.getElementById('setting_btn_user_save').innerHTML = button_spinner + button_save_text;
+                    document.getElementById('setting_btn_user_save').innerHTML = window.global_button_spinner + button_save_text;
                 else
-                    document.getElementById('setting_btn_user_save').innerHTML = button_default_icon_save + button_save_text;
+                    document.getElementById('setting_btn_user_save').innerHTML = window.global_button_default_icon_save + button_save_text;
                 break;
             }
         case 'ADD':
             {
                 if (visibility == 'visible')
-                    document.getElementById('setting_btn_user_add').innerHTML = button_spinner + button_add_text;
+                    document.getElementById('setting_btn_user_add').innerHTML = window.global_button_spinner + button_add_text;
                 else
-                    document.getElementById('setting_btn_user_add').innerHTML = button_default_icon_add + button_add_text;
+                    document.getElementById('setting_btn_user_add').innerHTML = window.global_button_default_icon_add + button_add_text;
                 break;
             }
         case 'DELETE':
             {
                 if (visibility == 'visible')
-                    document.getElementById('setting_btn_user_delete').innerHTML = button_spinner + button_delete_text;
+                    document.getElementById('setting_btn_user_delete').innerHTML = window.global_button_spinner + button_delete_text;
                 else
-                    document.getElementById('setting_btn_user_delete').innerHTML = button_default_icon_delete + button_delete_text;
+                    document.getElementById('setting_btn_user_delete').innerHTML = window.global_button_default_icon_delete + button_delete_text;
                 break;
             }
         case 'EDIT':
             {
                 if (visibility == 'visible')
-                    document.getElementById('setting_btn_user_edit').innerHTML = button_spinner;
+                    document.getElementById('setting_btn_user_edit').innerHTML = window.global_button_spinner;
                 else
-                    document.getElementById('setting_btn_user_edit').innerHTML = button_default_icon_edit;
+                    document.getElementById('setting_btn_user_edit').innerHTML = window.global_button_default_icon_edit;
                 break;
             }    
         default:
@@ -2095,26 +2076,6 @@ async function user_update_app(){
             document.getElementById('setting_bio_logged_in').innerHTML = result.bio;
         }
     });
-}
-async function  user_delete_app(){
-    let user_local;
-    if (document.getElementById('user_edit_local').style.display == 'block')
-        user_local = true;
-    else
-        user_local = false;
-    let function_delete_user_account = function() { 
-                                            document.getElementById('dialogue_message').style.visibility = 'hidden';
-                                            user_delete(1, document.getElementById('setting_data_userid_logged_in').innerHTML, user_local, null, get_lang_code(), (err, result)=>{
-                                                if (err==null){
-                                                    user_logoff_app();
-                                                }
-                                            }) 
-                                        };
-    await user_delete(null, document.getElementById('setting_data_userid_logged_in').innerHTML, user_local, function_delete_user_account, get_lang_code(), (err, result) =>{
-        if (err==null){
-            user_logoff_app();
-        }
-    })
 }
 async function user_login_app(){
     let username = document.getElementById('login_username');
@@ -3118,12 +3079,12 @@ function update_info(info) {
                                 onclick="document.getElementById('window_info').style.display = 'none';
                                 window.location='#info_empty';
                                 document.getElementById('window_preview_toolbar_qr').style.display = 'block';">
-                                <i class="fas fa-check-circle"></i>
+                                ${window.global_button_default_icon_close}
                             </button>`
     let button_close_info = `<button class='info_close toolbar_button' 
                                 onclick="document.getElementById('window_info').style.display = 'none';
                                 window.location='#info_empty';">
-                                <i class="fas fa-check-circle"></i>
+                                ${window.global_button_default_icon_close}
                             </button>`;    
     fetch(eval('window.global_info_link' + info + '_url'))
         .then(function(response) {
