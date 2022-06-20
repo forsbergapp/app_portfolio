@@ -81,6 +81,7 @@ function admin_exception_before(){
     null;
 }
 function init(){
+    document.getElementById('admin_login_button').innerHTML = window.global_button_default_icon_login;
     init_common('', 'APP', 'INIT', 'admin_exception_before');
     keyfunctions();
 }
