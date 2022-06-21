@@ -412,6 +412,7 @@
             let json;
             let status;
             let app_id ='';
+            let old_html = document.getElementById(`box${chart}`).innerHTML;
             document.getElementById(`box${chart}`).innerHTML = window.global_button_spinner;
             await fetch(window.global_rest_base + `app_log/admin/stat/uniquevisitor?app_id=${app_id}&statchoice=${chart}&year=${current_year}&month=${current_month}`,
             {method: 'GET',
@@ -524,8 +525,10 @@
                             }       
                     }
                 }
-                else
+                else{
+                    document.getElementById(`box${chart}`).innerHTML = old_html;
                     exception(status, result, window.global_lang_code);
+                }   
             })
         }
     }
@@ -649,6 +652,9 @@
             case 1:{
                 let status;
                 let json;
+                let old_html = document.getElementById('lov_list').innerHTML;
+                document.getElementById('lov_title').innerHTML = 'PARAMETER TYPE';
+                document.getElementById('dialogue_lov').style.visibility = 'visible';
                 document.getElementById('lov_list').innerHTML = window.global_button_spinner;
                 fetch(window.global_rest_base + window.global_rest_parameter_type + `admin`,
                     {method: 'GET',
@@ -679,8 +685,6 @@
                                     </div>`;
                                 }
                                 lov_list.innerHTML = html;
-                                document.getElementById('lov_title').innerHTML = 'PARAMETER TYPE';
-                                document.getElementById('dialogue_lov').style.visibility = 'visible';
                                 document.querySelectorAll('.list_lov_row').forEach(e => e.addEventListener('click', function(event) {
                                     row_item.parentNode.parentNode.children[item_index].children[0].value = this.children[0].children[0].innerHTML;
                                     row_item.parentNode.parentNode.children[item_index].children[0].focus();
@@ -689,8 +693,10 @@
                                 }));
                             }
                         }
-                        else
+                        else{
+                            document.getElementById('lov_list').innerHTML = old_html;
                             exception(status, result, window.global_lang_code);
+                        }
                     })
                 break;
             }
@@ -769,6 +775,7 @@
     async function show_apps(){
         let status;
         let json;
+        let old_html = document.getElementById('list_apps').innerHTML;
         document.getElementById('list_apps').innerHTML = window.global_button_spinner;
         await fetch(window.global_rest_base + window.global_rest_app + '/admin?id=0',
             {method: 'GET',
@@ -815,13 +822,16 @@
                         document.querySelectorAll('.list_edit_app')[0].focus();
                     }
                 }
-                else
+                else{
+                    document.getElementById('list_apps').innerHTML = old_html;
                     exception(status, result, window.global_lang_code);
+                }
             })  
     }
     function show_app_parameter(app_id){
         let status;
         let json;
+        let old_html = document.getElementById('list_app_parameter').innerHTML;
         document.getElementById('list_app_parameter').innerHTML = window.global_button_spinner;
         fetch(window.global_rest_base + window.global_rest_app_parameter + `/admin/all/${parseInt(app_id)}`,
             {method: 'GET',
@@ -870,8 +880,10 @@
                         }));
                     }
                 }
-                else
+                else{
+                    document.getElementById('list_app_parameter').innerHTML = old_html;
                     exception(status, result,window.global_lang_code);
+                }
             })
     }
     function apps_save(){
@@ -1084,6 +1096,7 @@
             let app_id = document.getElementById('select_app_menu3').options[document.getElementById('select_app_menu3').selectedIndex].value;
             let year = document.getElementById('select_year_menu3').value;
             let month = document.getElementById('select_month_menu3').value;
+            let old_html = document.getElementById('list_connected').innerHTML;
             document.getElementById('list_connected').innerHTML = window.global_button_spinner;
             for (let i=1;i<=7;i++){
                 document.getElementById('list_connected_col_title' + i).classList.remove('asc');
@@ -1102,53 +1115,55 @@
                     return response.text();
                 })
                 .then(function(result) {
-                if (status == 200){
-                    json = JSON.parse(result);
-                    let list_connected = document.getElementById('list_connected');
-                    list_connected.innerHTML = '';
-                    if (json.success === 1){
-                        if (json.data.length >0){
-                            set_list_eventlisteners('connected', 'gps',0);
-                            set_list_eventlisteners('connected', 'chat',0);
-                            let html = '';
-                            for (i = 0; i < json.data.length; i++) {
-                                html += 
-                                `<div class='list_connected_row'>
-                                    <div class='list_connected_col'>
-                                        <div>${json.data[i].id}</div>
-                                    </div>
-                                    <div class='list_connected_col'>
-                                        <div>${json.data[i].app_id}</div>
-                                    </div>
-                                    <div class='list_connected_col'>
-                                        <div>${show_user_agent(json.data[i].user_agent)}</div>
-                                    </div>
-                                    <div class='list_connected_col'>
-                                        <div>${json.data[i].connection_date}</div>
-                                    </div>
-                                    <div class='list_connected_col'>
-                                        <div>${json.data[i].ip.replace('::ffff:','')}</div>
-                                    </div>
-                                    <div class='list_connected_col list_connected_gps_click gps_click'>
-                                        <div>${json.data[i].gps_latitude}</div>
-                                    </div>
-                                    <div class='list_connected_col list_connected_gps_click gps_click'>
-                                        <div>${json.data[i].gps_longitude}</div>
-                                    </div>
-                                    <div class='list_connected_col list_connected_chat_click chat_click'>
-                                        <div>${window.global_button_default_icon_chat}</div>
-                                    </div>
-                                    
-                                </div>`;
-                            }
-                            list_connected.innerHTML = html;
-                            set_list_eventlisteners('connected', 'gps',1);
-                            set_list_eventlisteners('connected', 'chat',1);
-                        }   
+                    if (status == 200){
+                        json = JSON.parse(result);
+                        let list_connected = document.getElementById('list_connected');
+                        list_connected.innerHTML = '';
+                        if (json.success === 1){
+                            if (json.data.length >0){
+                                set_list_eventlisteners('connected', 'gps',0);
+                                set_list_eventlisteners('connected', 'chat',0);
+                                let html = '';
+                                for (i = 0; i < json.data.length; i++) {
+                                    html += 
+                                    `<div class='list_connected_row'>
+                                        <div class='list_connected_col'>
+                                            <div>${json.data[i].id}</div>
+                                        </div>
+                                        <div class='list_connected_col'>
+                                            <div>${json.data[i].app_id}</div>
+                                        </div>
+                                        <div class='list_connected_col'>
+                                            <div>${show_user_agent(json.data[i].user_agent)}</div>
+                                        </div>
+                                        <div class='list_connected_col'>
+                                            <div>${json.data[i].connection_date}</div>
+                                        </div>
+                                        <div class='list_connected_col'>
+                                            <div>${json.data[i].ip.replace('::ffff:','')}</div>
+                                        </div>
+                                        <div class='list_connected_col list_connected_gps_click gps_click'>
+                                            <div>${json.data[i].gps_latitude}</div>
+                                        </div>
+                                        <div class='list_connected_col list_connected_gps_click gps_click'>
+                                            <div>${json.data[i].gps_longitude}</div>
+                                        </div>
+                                        <div class='list_connected_col list_connected_chat_click chat_click'>
+                                            <div>${window.global_button_default_icon_chat}</div>
+                                        </div>
+                                        
+                                    </div>`;
+                                }
+                                list_connected.innerHTML = html;
+                                set_list_eventlisteners('connected', 'gps',1);
+                                set_list_eventlisteners('connected', 'chat',1);
+                            }   
+                        }
                     }
-                }
-                else
+                else{
+                    document.getElementById('list_connected').innerHTML = old_html;
                     exception(status, result, window.global_lang_code);
+                }
                 });
         }
     }    
@@ -1164,6 +1179,7 @@
         let app_id = document.getElementById('select_app_menu3').options[document.getElementById('select_app_menu3').selectedIndex].value;
         let year = document.getElementById('select_year_menu3').value;
         let month = document.getElementById('select_month_menu3').value;
+        let old_html = document.getElementById('list_app_log').innerHTML;
         document.getElementById('list_app_log').innerHTML = window.global_button_spinner;
         for (let i=1;i <=8;i++){
             document.getElementById('list_app_log_col_title' + i).classList.remove('asc');
@@ -1181,52 +1197,54 @@
                 return response.text();
             })
             .then(function(result) {
-            if (status == 200){
-                json = JSON.parse(result);
-                let list_app_log = document.getElementById('list_app_log');
-                list_app_log.innerHTML = '';
-                if (json.success === 1){
-                    if (json.data.length >0){
-                        window.global_page_last = Math.floor(json.data[0].total_rows/window.global_limit) * window.global_limit;
-                        set_list_eventlisteners('app_log', 'gps',0);
-                        let html = '';
-                        for (i = 0; i < json.data.length; i++) {
-                            html += 
-                            `<div class='list_app_log_row'>
-                                <div class='list_app_log_col'>
-                                    <div>${json.data[i].id}</div>
-                                </div>
-                                <div class='list_app_log_col'>
-                                    <div>${json.data[i].app_id}</div>
-                                </div>
-                                <div class='list_app_log_col'>
-                                    <div>${json.data[i].app_module}</div>
-                                </div>
-                                <div class='list_app_log_col'>
-                                    <div>${json.data[i].app_module_type}</div>
-                                </div>
-                                <div class='list_app_log_col'>
-                                    <div>${json.data[i].server_remote_addr.replace('::ffff:','')}</div>
-                                </div>
-                                <div class='list_app_log_col list_app_log_gps_click gps_click'>
-                                    <div>${json.data[i].user_gps_latitude}</div>
-                                </div>
-                                <div class='list_app_log_col list_app_log_gps_click gps_click'>
-                                    <div>${json.data[i].user_gps_longitude}</div>
-                                </div>
-                                <div class='list_app_log_col'>
-                                    <div>${json.data[i].date_created}</div>
-                                </div>
-                            </div>`;
+                if (status == 200){
+                    json = JSON.parse(result);
+                    let list_app_log = document.getElementById('list_app_log');
+                    list_app_log.innerHTML = '';
+                    if (json.success === 1){
+                        if (json.data.length >0){
+                            window.global_page_last = Math.floor(json.data[0].total_rows/window.global_limit) * window.global_limit;
+                            set_list_eventlisteners('app_log', 'gps',0);
+                            let html = '';
+                            for (i = 0; i < json.data.length; i++) {
+                                html += 
+                                `<div class='list_app_log_row'>
+                                    <div class='list_app_log_col'>
+                                        <div>${json.data[i].id}</div>
+                                    </div>
+                                    <div class='list_app_log_col'>
+                                        <div>${json.data[i].app_id}</div>
+                                    </div>
+                                    <div class='list_app_log_col'>
+                                        <div>${json.data[i].app_module}</div>
+                                    </div>
+                                    <div class='list_app_log_col'>
+                                        <div>${json.data[i].app_module_type}</div>
+                                    </div>
+                                    <div class='list_app_log_col'>
+                                        <div>${json.data[i].server_remote_addr.replace('::ffff:','')}</div>
+                                    </div>
+                                    <div class='list_app_log_col list_app_log_gps_click gps_click'>
+                                        <div>${json.data[i].user_gps_latitude}</div>
+                                    </div>
+                                    <div class='list_app_log_col list_app_log_gps_click gps_click'>
+                                        <div>${json.data[i].user_gps_longitude}</div>
+                                    </div>
+                                    <div class='list_app_log_col'>
+                                        <div>${json.data[i].date_created}</div>
+                                    </div>
+                                </div>`;
+                            }
+                            list_app_log.innerHTML = html;
+                            set_list_eventlisteners('app_log', 'gps',1);
                         }
-                        list_app_log.innerHTML = html;
-                        set_list_eventlisteners('app_log', 'gps',1);
                     }
                 }
-            }
-            else
+            else{
+                document.getElementById('list_app_log').innerHTML = old_html;
                 exception(status, result, window.global_lang_code);
-            });
+            }
+        });
     }    
     function init_map() {
         mapboxgl.accessToken = window.global_gps_map_access_token;
@@ -1538,6 +1556,7 @@
             let day  = document.getElementById('select_day_menu4').value;
             let app_id = document.getElementById('select_app_menu4').options[document.getElementById('select_app_menu4').selectedIndex].value;
             let url_parameters;
+            let old_html = document.getElementById('list_server_log').innerHTML;
             document.getElementById('list_server_log').innerHTML = window.global_button_spinner;
             if (window.global_service_log_file_interval=='1M')
                 url_parameters = `app_id=${app_id}&logscope=${logscope}&loglevel=${loglevel}&year=${year}&month=${month}`;
@@ -1660,8 +1679,10 @@
                     }
                     list_server_log.innerHTML = html;
                 }
-                else
+                else{
+                    document.getElementById('list_server_log').innerHTML = old_html;
                     exception(status, result, window.global_lang_code);
+                }
             })
         }
     }
@@ -1670,6 +1691,9 @@
             let status;
             let json;
             let url_parameters;
+            let old_html = document.getElementById('lov_list').innerHTML;
+            document.getElementById('lov_title').innerHTML = 'SERVER LOG FILES';
+            document.getElementById('dialogue_lov').style.visibility = 'visible';
             document.getElementById('lov_list').innerHTML = window.global_button_spinner;
             fetch(window.global_service_log + `/files`,
             {method: 'GET',
@@ -1696,8 +1720,6 @@
                         </div>`;
                     }
                     logfiles_list.innerHTML = html;
-                    document.getElementById('lov_title').innerHTML = 'SERVER LOG FILES';
-                    document.getElementById('dialogue_lov').style.visibility = 'visible';
                     document.querySelectorAll('.list_lov_row').forEach(e => e.addEventListener('click', function(event) {
                         let i = 0;
                         this.children[0].children[0].innerHTML.split('_').forEach(function (record) {
@@ -1724,8 +1746,10 @@
                         close_lov();
                     }));
                 }
-                else
+                else{
+                    document.getElementById('lov_list').innerHTML = old_html;
                     exception(status, result, window.global_lang_code);
+                }
             })
         }
     }
@@ -1733,6 +1757,9 @@
         if (admin_token_has_value()){
             let status;
             let json;
+            let old_html1 = document.getElementById('list_pm2_log_out').innerHTML;
+            let old_html2 = document.getElementById('list_pm2_log_err').innerHTML;
+            let old_html3 = document.getElementById('list_pm2_log_process_event').innerHTML;
             document.getElementById('list_pm2_log_out').innerHTML = window.global_button_spinner;
             document.getElementById('list_pm2_log_err').innerHTML = window.global_button_spinner;
             document.getElementById('list_pm2_log_process_event').innerHTML = window.global_button_spinner;
@@ -1829,8 +1856,12 @@
                     list_pm2_log_err.innerHTML = html_err;
                     list_pm2_log_process_event.innerHTML = html_process_event;
                 }
-                else
+                else{
+                    document.getElementById('list_pm2_log_out').innerHTML = old_html1;
+                    document.getElementById('list_pm2_log_err').innerHTML = old_html2;
+                    document.getElementById('list_pm2_log_process_event').innerHTML = old_html3;
                     exception(status, result, window.global_lang_code);
+                }        
             })
         }
     }

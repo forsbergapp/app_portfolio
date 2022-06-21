@@ -53,6 +53,9 @@
         overflow-y: auto;
         height: 230px;
     }
+    #lov_list #button_spinner{
+        visibility: unset;
+    }
     #select_app_broadcast{
         width:50%;
         display: block;
