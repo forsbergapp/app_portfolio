@@ -1,7 +1,6 @@
 /*Arabic NotoSans, Arabic*/
 #toolbar_top.font_arabic_sans_kufi, 
 #settings.font_arabic_sans_kufi, 
-#profile.font_arabic_sans_kufi,
 #dialogues.font_arabic_sans_kufi,
 #common_dialogues.font_arabic_sans_kufi,
 #window_info.font_arabic_sans_kufi,
@@ -11,7 +10,6 @@
 /*Arabic NotoKufi*/
 #toolbar_top.font_arabic_kufi, 
 #settings.font_arabic_kufi, 
-#profile.font_arabic_kufi,
 #dialogues.font_arabic_kufi,
 #common_dialogues.font_arabic_kufi,
 #window_info.font_arabic_kufi,
@@ -22,7 +20,6 @@
 /*Arabic NotoNashk*/
 #toolbar_top.font_arabic_nashk, 
 #settings.font_arabic_nashk, 
-#profile.font_arabic_nashk,
 #dialogues.font_arabic_nashk,
 #common_dialogues.font_arabic_nashk,
 #window_info.font_arabic_nashk,
@@ -32,7 +29,6 @@
 /*Arabic NotoNastaliq*/
 #toolbar_top.font_arabic_nastaliq,
 #settings.font_arabic_nastaliq, 
-#profile.font_arabic_nastaliq,
 #dialogues.font_arabic_nastaliq,
 #common_dialogues.font_arabic_nastaliq,
 #window_info.font_arabic_nastaliq,
@@ -61,7 +57,6 @@
 /*Arabic NotoSansUI*/
 #toolbar_top.font_arabic_ui, 
 #settings.font_arabic_ui, 
-#profile.font_arabic_ui,
 #dialogues.font_arabic_ui,
 #common_dialogues.font_arabic_ui,
 #window_info.font_arabic_ui,
@@ -189,21 +184,6 @@ a:active {
 }
 
 /* PROFILE*/
-#profile {
-	visibility: hidden;
-	width: 100%;
-	height: 100%;
-	font-size: 16px;
-	margin: 0;
-	z-index: 1;
-	bottom: 0px;
-	right: 0px;
-	position: fixed;
-}
-.fas.fa-heart,
-.fas.fa-heart-broken{
-	color:red;
-}
 .profile_info_logged_off{
 	left:unset !important;
 }
@@ -224,7 +204,6 @@ a:active {
 	height:20px;
 	text-align:left;
 }
-
 #profile_main_btn_user_setting_likes,
 #profile_main_btn_user_setting_liked{
 	width:80px;
@@ -1043,9 +1022,6 @@ body.app_theme1,
 .app_theme1 #window_info,
 .app_theme1 #window_preview_report,
 .app_theme1 #window_preview_toolbar,
-.app_theme1 #profile,
-.app_theme1 #profile_detail,
-.app_theme1 #profile_top,
 .app_theme1 .popup-content
 {
 	background-color : #2b2b32 !important;
@@ -1069,9 +1045,6 @@ body.app_theme1,
 .app_theme1 #tab_navigation button,
 .app_theme1 #window_info,
 .app_theme1 #window_preview_toolbar,
-.app_theme1 #profile,
-.app_theme1 #profile_detail,
-.app_theme1 #profile_top,
 .app_theme1 .popup-content a,
 .app_theme1 .toolbar_button,
 .app_theme1 .dialogue_content,
@@ -1209,9 +1182,6 @@ body.app_theme2,
 .app_theme2 #window_info,
 .app_theme2 #window_preview_report,
 .app_theme2 #window_preview_toolbar,
-.app_theme2 #profile,
-.app_theme2 #profile_detail,
-.app_theme2 #profile_top,
 .app_theme2 .popup-content
 {
 	background-color:#f5f5f5 !important;
@@ -1236,9 +1206,6 @@ body.app_theme2,
 .app_theme2 #tab_navigation button,
 .app_theme2 #window_info,
 .app_theme2 #window_preview_toolbar,
-.app_theme2 #profile,
-.app_theme2 #profile_detail,
-.app_theme2 #profile_top,
 .app_theme2 .popup-content a,
 .app_theme2 .toolbar_button,
 .app_theme2 .dialogue_content,
@@ -1377,9 +1344,6 @@ body.app_theme3,
 .app_theme3 #window_info,
 .app_theme3 #window_preview_report,
 .app_theme3 #window_preview_toolbar,
-.app_theme3 #profile,
-.app_theme3 #profile_detail,
-.app_theme3 #profile_top,
 .app_theme3 .popup-content
 {
 	background-color : #584f46 !important;
@@ -1403,9 +1367,6 @@ body.app_theme3,
 .app_theme3 #tab_navigation button,
 .app_theme3 #window_info,
 .app_theme3 #window_preview_toolbar,
-.app_theme3 #profile,
-.app_theme3 #profile_detail,
-.app_theme3 #profile_top,
 .app_theme3 .popup-content a,
 .app_theme3 .toolbar_button,
 .app_theme3 .dialogue_content,

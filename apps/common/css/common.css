@@ -298,7 +298,39 @@
 	text-align: center !important;
 }
 
-/*profile*/
+/*Dialogue profile*/
+#dialogue_profile{
+	visibility:hidden;
+	top: 0px;
+    padding-top: 20px;
+	z-index:1;
+	width: 100%;
+    height: 100%;
+	position:fixed;
+}
+.fas.fa-heart,
+.fas.fa-heart-broken{
+	color:red;
+}
+
+#dialogue_profile_content{
+	word-break: unset;
+}
+#profile_info{
+	display:none;
+}
+#dialogue_profile_content{
+	width:500px;
+	height:500px;
+}
+#profile_home{
+	bottom:80px;
+	position:fixed;
+}
+#profile_close{
+	bottom:30px;
+	position:fixed;
+}
 /*profile search*/
 #profile_info_search {
 	height:50px;

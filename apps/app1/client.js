@@ -7,11 +7,7 @@ module.exports = {
                 const AppCommonHead = fs.readFileSync(__dirname + '/../common/src/head.html', 'utf8');
                 const AppCommonHeadMap = fs.readFileSync(__dirname + '/../common/src/head_map.html', 'utf8');
                 const AppCommonBody = fs.readFileSync(__dirname + '/../common/src/body.html', 'utf8');
-                const AppCommonProfileInfoSearch = fs.readFileSync(__dirname + '/../common/src/profile_info_search.html', 'utf8');
-                const AppCommonProfileInfo = fs.readFileSync(__dirname + '/../common/src/profile_info.html', 'utf8');
                 const AppCommonProfileDetail = fs.readFileSync(__dirname + '/../common/src/profile_detail.html', 'utf8');
-                const AppCommonProfileTop = fs.readFileSync(__dirname + '/../common/src/profile_top.html', 'utf8');
-                const AppCommonProfileTopList = fs.readFileSync(__dirname + '/../common/src/profile_top_list.html', 'utf8');
                 fs.readFile(__dirname + '/src/index.html', 'utf-8', (err, app_result) => {
                     if (err) {
                         createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
@@ -104,28 +100,6 @@ module.exports = {
                                 '<AppSettingsTabNavigationTab7UserSettings/>',
                                 `${AppSettingsTabNavigationTab7UserSettings}`);
                             app = app.replace(
-                                '<AppCommonProfileInfoSearch/>',
-                                `${AppCommonProfileInfoSearch}`);    
-                            app = app.replace(
-                                '<AppCommonProfileInfo/>',
-                                `${AppCommonProfileInfo}`);    
-                            app = app.replace(
-                                '<AppProfileInfo/>',
-                                `${AppProfileInfo}`);
-                            //tag AppCommonProfileDetail inside AppProfileInfo
-                            app = app.replace(
-                                '<AppCommonProfileDetail/>',
-                                `${AppCommonProfileDetail}`);
-                            app = app.replace(
-                                '<AppCommonProfileTop/>',
-                                `${AppCommonProfileTop}`);    
-                            app = app.replace(
-                                '<AppProfileTop/>',
-                                `${AppProfileTop}`);    
-                            app = app.replace(
-                                '<AppCommonProfileTopList/>',
-                                `${AppCommonProfileTopList}`);    
-                            app = app.replace(
                                 '<AppWindowInfo/>',
                                 `${AppWindowInfo}`);    
                             app = app.replace(
@@ -140,6 +114,17 @@ module.exports = {
                             app = app.replace(
                                 '<AppCommonBody/>',
                                 `${AppCommonBody}`);
+                            //profile inside common body
+                            app = app.replace(
+                                '<AppProfileInfo/>',
+                                `${AppProfileInfo}`);
+                            //tag AppCommonProfileDetail inside AppProfileInfo
+                            app = app.replace(
+                                '<AppCommonProfileDetail/>',
+                                `${AppCommonProfileDetail}`);
+                            app = app.replace(
+                                '<AppProfileTop/>',
+                                `${AppProfileTop}`);    
                             resolve (app);
                         }
                         getAppComponents();

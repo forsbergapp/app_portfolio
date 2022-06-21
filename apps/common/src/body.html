@@ -246,7 +246,89 @@
                 <button id='message_close' class='toolbar_button toolbar_button_ok' ></button>
             </div>
         </div>
-    </div>    
+    </div>
+    <div id='dialogue_profile' class='common_dialogue'>
+		<div id='dialogue_profile_content' class='common_dialogue_content'>
+			<div id='profile_info_search'>
+                <div id='profile_input_row'>
+                    <input id='profile_search_input' type='text' />
+                    <div id='profile_search_icon'></div>
+                </div>
+                <div id='profile_search_list'>
+                    <div class='profile_search_list_row'>
+                        <div class='profile_search_list_col'>
+                            <div class='profile_search_list_user_account_id'></div>
+                        </div>
+                        <div class='profile_search_list_col'>
+                            <img class='profile_top_list_avatar' src='' alt=''/>
+                        </div>
+                        <div class='profile_search_list_col'>
+                            <div class='profile_search_list_username'></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+			<div id='profile_info'>
+                <div id='profile_main'>
+                    <div id='profile_main_col1'>
+                        <div id='profile_id'></div>
+                        <img id='profile_avatar' src='' alt=''/>
+                        <div id='profile_username'></div>
+                        <div id='profile_bio'></div>
+                        <div id='profile_joined'>
+                            <div id='profile_joined_date_icon'></div>
+                            <div id='profile_joined_date'></div>
+                        </div>
+                    </div>
+                    <div id='profile_main_col2'>
+                        <div id='profile_qr'></div>
+                    </div>
+                    <div id='profile_main_col3'>
+                        <div id='profile_follow' >
+                        </div>
+                        <div id='profile_like' >
+                        </div>
+                    </div>
+                </div>
+                <div id='profile_main_stat_row1'>
+                    <div id='profile_info_view'>
+                        <div id='profile_info_view_count_icon'></div>
+                        <div id='profile_info_view_count'></div>
+                    </div>
+                    <div id='profile_info_following'>
+                        <button id='profile_main_btn_following' class='toolbar_button' ></button>
+                        <div id='profile_info_following_count'></div>
+                    </div>
+                    <div id='profile_info_followers'>
+                        <button id='profile_main_btn_followed' class='toolbar_button' ></button>
+                        <div id='profile_info_followers_count'></div>
+                    </div>
+                    <div id='profile_info_likes'>
+                        <button id='profile_main_btn_likes' class='toolbar_button' ></button>
+                        <div id='profile_info_likes_count'></div>
+                    </div>
+                    <div id='profile_info_liked'>
+                        <button id='profile_main_btn_liked' class='toolbar_button' ></button>
+                        <div id='profile_info_liked_count'></div>
+                    </div>
+                </div>
+                <AppProfileInfo/>
+            </div>
+			<div id='profile_top'>
+                <div id='profile_top_header'>
+                </div>
+                <div id='profile_top_row1'>
+                    <a id='profile_top_row1_1' href='#' ></a>
+                    <a id='profile_top_row1_2' href='#' ></a>
+                    <a id='profile_top_row1_3' href='#' ></a>
+                </div>
+            </div>
+            <AppProfileTop/>
+			<div id='profile_top_list'></div>
+			<button id='profile_home' class='toolbar_button' ></button>
+			<button id='profile_close' class='toolbar_button' ></button>
+		</div>
+	</div>
 </div>
 <div id='broadcast'>
     <div id='broadcast_info'>

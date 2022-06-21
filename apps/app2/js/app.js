@@ -110,24 +110,23 @@ async function init_app(){
     move_info(null,null);
     document.getElementById('window_info').style.visibility = 'visible';
     document.getElementById('info').innerHTML = `<img src="${window.global_img_datamodel_img}"/>`;
-    await get_data_token(null, window.global_lang_code).then(function(){
-        null;
-    })
 }
 function init(){
     init_common(2, 'APP', 'INIT', 'app_exception');
     init_app().then(function(){
         get_parameters().then(function(){
-            get_gps_from_ip(null, window.global_lang_code).then(function(){
-                app_log(window.global_module, 
-                        window.global_module_type, 
-                        location.hostname, 
-                        window.global_session_user_gps_place, 
-                        '', 
-                        window.global_session_user_gps_latitude, 
-                        window.global_session_user_gps_longitude,
-                        window.global_lang_code);
-            });
+            get_data_token(null, window.global_lang_code).then(function(){
+                get_gps_from_ip(null, window.global_lang_code).then(function(){
+                    app_log(window.global_module, 
+                            window.global_module_type, 
+                            location.hostname, 
+                            window.global_session_user_gps_place, 
+                            '', 
+                            window.global_session_user_gps_latitude, 
+                            window.global_session_user_gps_longitude,
+                            window.global_lang_code);
+                });
+            })
         })    
     })
 }
