@@ -1,5 +1,5 @@
 <script>
-
+    init_common('', 'APP', 'INIT', 'admin_exception_after', true);
     window.global_rest_dt= '';
     window.global_app_rest_client_id= '';
     window.global_app_rest_client_secret= '';
@@ -75,8 +75,6 @@
 
     document.getElementById('count_local_label').innerHTML = window.global_button_default_icon_user;
     document.getElementById('count_provider2_label').innerHTML = window.global_button_default_icon_provider2;
-
-    init_common('', 'APP', 'INIT', 'admin_exception_after', true);
 
     document.getElementById('menu_1_content').style.display = 'block';
 

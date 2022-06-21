@@ -159,6 +159,9 @@ a:active {
 	margin-bottom:-4px;
 	border-radius:20px;
 }
+#user_account_default_avatar{
+	display: inline-block;
+}
 /*POPUP MENU*/
 .popup-content {
 	display: none;
