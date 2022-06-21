@@ -90,8 +90,15 @@ function info(id){
 function app_exception() {
     null;
 }
-function init(){
-    init_common(2, 'APP', 'INIT', 'app_exception');
+async function init_app(){
+    //window info
+    document.getElementById('toolbar_btn_zoomout').innerHTML = window.global_button_default_icon_zoomout;
+    document.getElementById('toolbar_btn_zoomin').innerHTML = window.global_button_default_icon_zoomin;
+    document.getElementById('toolbar_btn_left').innerHTML = window.global_button_default_icon_left;
+    document.getElementById('toolbar_btn_right').innerHTML = window.global_button_default_icon_right;
+    document.getElementById('toolbar_btn_up').innerHTML = window.global_button_default_icon_up;
+    document.getElementById('toolbar_btn_down').innerHTML = window.global_button_default_icon_down;
+
     document.getElementById('toolbar_btn_zoomout').addEventListener('click', function() {zoom_info(-1);}, false);
     document.getElementById('toolbar_btn_zoomin').addEventListener('click', function() {zoom_info(1);}, false);
     document.getElementById('toolbar_btn_left').addEventListener('click', function() {move_info(-1,0);}, false);
@@ -103,8 +110,14 @@ function init(){
     move_info(null,null);
     document.getElementById('window_info').style.visibility = 'visible';
     document.getElementById('info').innerHTML = `<img src="${window.global_img_datamodel_img}"/>`;
-    get_parameters().then(function(){
-        get_data_token(null, window.global_lang_code).then(function(){
+    await get_data_token(null, window.global_lang_code).then(function(){
+        null;
+    })
+}
+function init(){
+    init_common(2, 'APP', 'INIT', 'app_exception');
+    init_app().then(function(){
+        get_parameters().then(function(){
             get_gps_from_ip(null, window.global_lang_code).then(function(){
                 app_log(window.global_module, 
                         window.global_module_type, 
@@ -115,6 +128,6 @@ function init(){
                         window.global_session_user_gps_longitude,
                         window.global_lang_code);
             });
-        })
+        })    
     })
 }

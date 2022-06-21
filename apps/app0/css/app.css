@@ -208,7 +208,9 @@ a:active {
     position: fixed;
     left: 20%;
 }
-
+#contact_text, #app_email{
+	display: inline-block;
+}
 .dialogue_flip {
     backface-visibility:             hidden;
         -moz-backface-visibility:    hidden;
@@ -1021,6 +1023,10 @@ div.ray8 {
 	background-color: rgb(239, 239, 239) !important;
 }
 
+#info_diagram_img, #info_datamodel_img{
+	width: 128px;
+	height: 64px;
+}
 
 
 /*MOON THEME*/
