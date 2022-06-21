@@ -314,6 +314,9 @@
 	padding: 8px 16px;
 	box-sizing: border-box;
 }
+#profile_search_icon{
+	display: inline-block;
+}
 #profile_search_list{
 	height:120px;
 	width:250px;
@@ -378,6 +381,9 @@
 	width: 64px;
 	height: 64px;
 	border-radius: 50%;
+}
+#profile_joined_date_icon{
+	display: inline-block;
 }
 #profile_main_stat_row1{
 	margin-top: 10px;

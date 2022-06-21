@@ -1,15 +1,3 @@
-window.global_profile_detail_header_like_user_setting = `<i class='fas fa-heart'></i>
-													  <i class='fas fa-calendar-day'></i>
-													  <i class='fas fa-calendar-week'></i>
-													  <i class='fas fa-calendar-alt'></i>
-													  <i class='fas fa-user-friends'></i>`;
-window.global_profile_detail_header_liked_user_setting = `<i class='fas fa-heart'></i>
-													   <i class='fas fa-calendar-day'></i>
-													   <i class='fas fa-calendar-week'></i>
-													   <i class='fas fa-calendar-alt'></i>
-													   <i class='fas fa-users'></i>`;                                                
-
-
 window.global_rest_app1_user_setting;
 window.global_rest_app1_user_setting_user_account_id;    
 window.global_rest_app1_user_setting_profile;
@@ -1725,9 +1713,17 @@ function keyfunctions() {
     document.getElementById('profile_main_btn_followed').addEventListener('click', function() { profile_detail_app(2, document.getElementById('setting_data_userid_logged_in').innerHTML, get_lang_code(), null, true, null, 'profile_show_app') }, false);
     document.getElementById('profile_main_btn_likes').addEventListener('click', function() { profile_detail_app(3, document.getElementById('setting_data_userid_logged_in').innerHTML, get_lang_code(), null, true, null, 'profile_show_app') }, false);
     document.getElementById('profile_main_btn_liked').addEventListener('click', function() { profile_detail_app(4, document.getElementById('setting_data_userid_logged_in').innerHTML, get_lang_code(), null, true, null, 'profile_show_app') }, false);
-    document.getElementById('profile_main_btn_user_setting_likes').addEventListener('click', function() { profile_detail_app(5, document.getElementById('setting_data_userid_logged_in').innerHTML, get_lang_code(), window.global_rest_app1_user_setting_profile_detail, true, window.global_profile_detail_header_like_user_setting, 'profile_show_app') }, false);
-    document.getElementById('profile_main_btn_user_setting_liked').addEventListener('click', function() { profile_detail_app(6, document.getElementById('setting_data_userid_logged_in').innerHTML, get_lang_code(), window.global_rest_app1_user_setting_profile_detail, true, window.global_profile_detail_header_liked_user_setting, 'profile_show_app') }, false);
-
+    document.getElementById('profile_main_btn_user_setting_likes').addEventListener('click', function() { profile_detail_app(5, document.getElementById('setting_data_userid_logged_in').innerHTML, get_lang_code(), window.global_rest_app1_user_setting_profile_detail, true, 
+        window.global_button_default_icon_like +
+        window.global_button_default_icon_day +
+        window.global_button_default_icon_month +
+        window.global_button_default_icon_year +
+        window.global_button_default_icon_follows, 'profile_show_app') }, false);
+    document.getElementById('profile_main_btn_user_setting_liked').addEventListener('click', function() { profile_detail_app(6, document.getElementById('setting_data_userid_logged_in').innerHTML, get_lang_code(), window.global_rest_app1_user_setting_profile_detail, true, window.global_button_default_icon_like +
+        window.global_button_default_icon_day +
+        window.global_button_default_icon_month +
+        window.global_button_default_icon_year +
+        window.global_button_default_icon_followed, 'profile_show_app') }, false);
     document.getElementById('profile_follow').addEventListener('click', function() { user_function_app('FOLLOW') }, false);
     document.getElementById('profile_like').addEventListener('click', function() { user_function_app('LIKE') }, false);
 
@@ -2967,21 +2963,21 @@ function set_settings_select() {
 function update_settings_icon(url = '', logoff = false) {
     let img_account_image_url = document.getElementById('user_account_image_url');
     let img_account_image_url2  = document.getElementById('setting_avatar_logged_in');
-    let i_tag = document.getElementById('toolbar_btn_settings').children[1];
+    let default_avatar = document.getElementById('user_account_default_avatar');
     if (logoff == true) {
         //hide image url and show the icon
         img_account_image_url.style.display = 'none';
         img_account_image_url.src = '';
         img_account_image_url2.style.display = 'none';
         img_account_image_url2.src = '';
-        i_tag.style.display = 'inline-block';
+        default_avatar.style.display = 'inline-block';
     } else {
         //show image url in user setting and hide the icon
-        i_tag.style.display = 'none';
         img_account_image_url.style.display = 'inline-block';
         img_account_image_url.src = url;
         img_account_image_url2.style.display = 'inline-block';
         img_account_image_url2.src = url;
+        default_avatar.style.display = 'none';
     }
     return null;
 }
@@ -3859,7 +3855,85 @@ function updateViewStat(user_setting_id, user_setting_user_account_id = null) {
 /*------------------------------------- */
 // init app function in index.html
 /*------------------------------------- */
-async function init_app() {
+async function init_app(ui=false) {
+    if (ui==true){
+        //dialogues
+        document.getElementById('info_close').innerHTML = window.global_button_default_icon_close;
+        document.getElementById('scan_open_mobile_close').innerHTML = window.global_button_default_icon_close;
+        //profile info
+        document.getElementById('profile_main_btn_user_settings').innerHTML = window.global_button_default_icon_day  + window.global_button_default_icon_month + window.global_button_default_icon_year;
+        document.getElementById('profile_main_btn_user_setting_likes').innerHTML = window.global_button_default_icon_like + window.global_button_default_icon_day + window.global_button_default_icon_month + window.global_button_default_icon_year + window.global_button_default_icon_follows;
+        document.getElementById('profile_main_btn_user_setting_liked').innerHTML = window.global_button_default_icon_like + window.global_button_default_icon_day + window.global_button_default_icon_month + window.global_button_default_icon_year + window.global_button_default_icon_followed;
+        document.getElementById('profile_user_settings_day').innerHTML = window.global_button_default_icon_day;
+        document.getElementById('profile_user_settings_month').innerHTML = window.global_button_default_icon_month;
+        document.getElementById('profile_user_settings_year').innerHTML = window.global_button_default_icon_year;
+        document.getElementById('profile_user_settings_like').innerHTML = window.global_button_default_icon_unlike + window.global_button_default_icon_like;
+        document.getElementById('profile_user_settings_private_title').innerHTML = window.global_button_default_icon_private;
+
+        document.getElementById('profile_user_settings_info_likes').innerHTML = window.global_button_default_icon_like + '<div id="profile_user_settings_info_like_count"></div>';
+        document.getElementById('profile_user_settings_info_views').innerHTML = window.global_button_default_icon_views + '<div id="profile_user_settings_info_view_count"></div>';
+        //profile top
+        document.getElementById('profile_top_row2_1').innerHTML = window.global_button_default_icon_like + window.global_button_default_icon_day  + window.global_button_default_icon_month + window.global_button_default_icon_year;
+        document.getElementById('profile_top_row2_2').innerHTML = window.global_button_default_icon_views + window.global_button_default_icon_day  + window.global_button_default_icon_month + window.global_button_default_icon_year;
+        //settings tab 4
+        document.getElementById('setting_input_reportheader_clear').innerHTML = window.global_button_default_icon_remove;
+        document.getElementById('setting_input_reportfooter_clear').innerHTML = window.global_button_default_icon_remove;
+        //settings tab 5
+        document.getElementById('setting_input_reporttitle_aleft').innerHTML =  window.global_button_default_icon_align_left;
+        document.getElementById('setting_input_reporttitle_acenter').innerHTML = window.global_button_default_icon_align_center
+        document.getElementById('setting_input_reporttitle_aright').innerHTML = window.global_button_default_icon_align_right;
+        document.getElementById('setting_input_reportfooter_aleft').innerHTML = window.global_button_default_icon_align_left;
+        document.getElementById('setting_input_reportfooter_acenter').innerHTML = window.global_button_default_icon_align_center;
+        document.getElementById('setting_input_reportfooter_aright').innerHTML = window.global_button_default_icon_align_right;
+        //settings tab 7 user logged in
+        document.getElementById('setting_btn_user_edit').innerHTML = window.global_button_default_icon_edit;
+        //settings tab 7 user settings
+        document.getElementById('user_day_html').innerHTML = window.global_button_default_icon_html + '<div id="user_day_label_html">HTML</div>';
+        document.getElementById('user_day_html_copy').innerHTML = window.global_button_default_icon_copy;
+        document.getElementById('user_day_pdf').innerHTML = window.global_button_default_icon_pdf + '<div id="user_day_label_pdf">PDF</div>';
+        document.getElementById('user_day_pdf_copy').innerHTML = window.global_button_default_icon_copy;
+        document.getElementById('user_month_html').innerHTML = window.global_button_default_icon_html + '<div id="user_month_label_html">HTML</div>';
+        document.getElementById('user_month_html_copy').innerHTML = window.global_button_default_icon_copy;
+        document.getElementById('user_month_pdf').innerHTML = window.global_button_default_icon_pdf + '<div id="user_month_label_pdf">PDF</div>';
+        document.getElementById('user_month_pdf_copy').innerHTML = window.global_button_default_icon_copy;
+        document.getElementById('user_year_html').innerHTML = window.global_button_default_icon_html + '<div id="user_year_label_html">HTML</div>';
+        document.getElementById('user_year_html_copy').innerHTML = window.global_button_default_icon_copy;
+        document.getElementById('user_year_pdf').innerHTML = window.global_button_default_icon_pdf + '<div id="user_year_label_pdf">PDF</div>';
+        document.getElementById('user_year_pdf_copy').innerHTML = window.global_button_default_icon_copy;
+
+        document.getElementById('setting_btn_user_save').innerHTML = window.global_button_default_icon_save;
+        document.getElementById('setting_btn_user_add').innerHTML = window.global_button_default_icon_add;
+        document.getElementById('setting_btn_user_delete').innerHTML = window.global_button_default_icon_delete;
+        //tab navigation
+        document.getElementById('tab_1_nav_btn_regional').innerHTML = window.global_button_default_icon_tab_regional + '<div id="tab_1_nav_label_regional">Regional</div>';
+        document.getElementById('tab_2_nav_btn_gps').innerHTML = window.global_button_default_icon_tab_gps + '<div id="tab_2_nav_label_gps">GPS</div>';
+        document.getElementById('tab_3_nav_btn_btn_design').innerHTML = window.global_button_default_icon_tab_design + '<div id="tab_3_nav_label_design">Design</div>';
+        document.getElementById('tab_4_nav_btn_btn_image').innerHTML = window.global_button_default_icon_tab_image + '<div id="tab_4_nav_label_image">Image</div>';
+        document.getElementById('tab_5_nav_btn_btn_text').innerHTML = window.global_button_default_icon_tab_text + '<div id="tab_5_nav_label_text">Text</div>';
+        document.getElementById('tab_6_nav_btn_btn_prayer').innerHTML = window.global_button_default_icon_tab_prayer + '<div id="tab_6_nav_label_prayer">Prayer</div>';
+        document.getElementById('tab_7_nav_btn_btn_user').innerHTML = window.global_button_default_icon_tab_user + '<div id="tab_7_nav_label_user">User</div>';
+        //toolbar bottom
+        document.getElementById('toolbar_btn_print').innerHTML = window.global_button_default_icon_print + '<div id="toolbar_btn_print_label">Print</div>';
+        document.getElementById('toolbar_btn_day').innerHTML = window.global_button_default_icon_day + '<div id="toolbar_btn_day_label">Day</div>';
+        document.getElementById('toolbar_btn_month').innerHTML = window.global_button_default_icon_month + '<div id="toolbar_btn_month_label">Month</div>';
+        document.getElementById('toolbar_btn_year').innerHTML = window.global_button_default_icon_year + '<div id="toolbar_btn_year_label">Year</div>';    
+        document.getElementById('user_account_default_avatar').innerHTML = window.global_button_default_icon_user;
+        //toolbar top
+        document.getElementById('toolbar_btn_zoomout').innerHTML = window.global_button_default_icon_zoomout;
+        document.getElementById('toolbar_btn_zoomin').innerHTML = window.global_button_default_icon_zoomin;
+        document.getElementById('toolbar_btn_left').innerHTML = window.global_button_default_icon_left;
+        document.getElementById('toolbar_btn_right').innerHTML = window.global_button_default_icon_right;
+        document.getElementById('toolbar_btn_about').innerHTML = window.global_button_default_icon_info;
+        //window preview report
+        document.getElementById('window_preview_close').innerHTML = window.global_button_default_icon_close;
+        //themes from client server generation
+        document.getElementById('slider_prev_day').innerHTML = window.global_button_default_icon_slider_left;
+        document.getElementById('slider_next_day').innerHTML =  window.global_button_default_icon_slider_right;
+        document.getElementById('slider_prev_month').innerHTML = window.global_button_default_icon_slider_left;
+        document.getElementById('slider_next_month').innerHTML = window.global_button_default_icon_slider_right;
+        document.getElementById('slider_prev_year').innerHTML = window.global_button_default_icon_slider_left;
+        document.getElementById('slider_next_year').innerHTML = window.global_button_default_icon_slider_right;
+    }
     await get_data_token(document.getElementById('setting_data_userid_logged_in').innerHTML, get_lang_code()).then(function(){
         //set current date for report month
         window.global_session_currentDate = new Date();
@@ -3883,7 +3957,7 @@ function init_report_timetable() {
     let lang_code = urlParams.get('lang_code');
     let reporttype = urlParams.get('type');
     document.getElementById('setting_select_locale').innerHTML = 
-                `<option value=${lang_code}>${lang_code}</option`;
+                `<option value=${lang_code}>${lang_code}</option`;    
     get_app_globals().then(function(){
         init_app().then(function(){
             //report start
@@ -3961,7 +4035,7 @@ function init_report_timetable() {
                         break;
                     }
             }
-        })
+        })   
     })
 }
 async function app_load(){
@@ -4068,7 +4142,7 @@ function init() {
     dialogue_loading(1);
     SearchAndSetSelectedIndex(navigator.language.toLowerCase(), document.getElementById('setting_select_locale'),1);
     get_app_globals().then(function(){
-        init_app().then(function(){
+        init_app(true).then(function(){
             app_load().then(function (){
                 set_default_settings().then(function(){
                     settings_translate(true).then(function(){
@@ -4083,6 +4157,6 @@ function init() {
                     });
                 });
             });
-        });
+        })
     });
 }
