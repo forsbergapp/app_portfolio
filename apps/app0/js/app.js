@@ -33,8 +33,8 @@ function keyfunctions(){
         document.getElementById( 'dialogue_info_content' ).className = 'dialogue_content dialogue_flip dialogue_flip-side-1';
         document.getElementById( 'dialogue_start_content' ).className = 'dialogue_content dialogue_flip dialogue_flip-side-2';
     }, false );
-    document.getElementById('start_profile').addEventListener('click', function() {profile_home()}, false);
-    document.getElementById('profile_home').addEventListener('click', function() {profile_home()}, false);
+    document.getElementById('start_profile').addEventListener('click', function() {profile_home(document.getElementById('user_menu_user_id').innerHTML, Intl.DateTimeFormat().resolvedOptions().timeZone, window.global_lang_code)}, false);
+    document.getElementById('profile_home').addEventListener('click', function() {profile_home(document.getElementById('user_menu_user_id').innerHTML, Intl.DateTimeFormat().resolvedOptions().timeZone, window.global_lang_code);}, false);
     document.getElementById('profile_close').addEventListener('click', function() {profile_close()}, false);
     document.getElementById('profile_search_input').addEventListener('keyup', function() { window.global_typewatch("search_profile(document.getElementById('user_menu_user_id').innerHTML, Intl.DateTimeFormat().resolvedOptions().timeZone, window.global_lang_code, null);", 500); }, false);
     
@@ -335,50 +335,6 @@ function info(id){
     }
 
 }
-function profile_home(){
-    let profile = document.getElementById('dialogue_profile');
-    let profile_info_div = document.getElementById('profile_info');
-    let profile_detail_div = document.getElementById('profile_detail');
-    let profile_top_div = document.getElementById('profile_top');
-    let profile_top_list_div = document.getElementById('profile_top_list');
-
-    profile.style.visibility = 'visible';
-    profile_detail_div.style.display = 'none';
-    profile_info_div.style.display = 'none';
-    profile_top_div.style.display = 'block';
-    profile_top_list_div.style.display = 'block';
-    document.getElementById('profile_detail_list').innerHTML = '';
-    profile_top(1, document.getElementById('user_menu_user_id').innerHTML, Intl.DateTimeFormat().resolvedOptions().timeZone, window.global_lang_code);
-}
-function profile_close(){
-    let profile = document.getElementById('dialogue_profile');
-    let profile_info_div = document.getElementById('profile_info');
-    let profile_detail_div = document.getElementById('profile_detail');
-    let profile_top_div = document.getElementById('profile_top');
-    let profile_top_list_div = document.getElementById('profile_top_list');
-
-    profile.style.visibility = 'hidden';
-    profile_info_div.style.display = 'none';
-    profile_detail_div.style.display = 'none';
-    profile_top_div.style.display = 'none';
-    profile_top_list_div.style.display = 'none';
-    profile_top_list_div.innerHTML = '';
-    document.getElementById('profile_avatar').src = '';
-    document.getElementById('profile_username').innerHTML = '';
-    document.getElementById('profile_bio').innerHTML = '';
-    document.getElementById('profile_joined_date').innerHTML = '';
-    document.getElementById('profile_follow').children[0].style.display = 'block';
-    document.getElementById('profile_follow').children[1].style.display = 'none';
-    document.getElementById('profile_like').children[0].style.display = 'block';
-    document.getElementById('profile_like').children[1].style.display = 'none';
-
-    document.getElementById('profile_info_following_count').innerHTML = '';
-    document.getElementById('profile_info_followers_count').innerHTML = '';
-    document.getElementById('profile_info_likes_count').innerHTML = '';
-    document.getElementById('profile_qr').innerHTML = '';
-
-    document.getElementById('profile_detail_list').innerHTML = '';
-}
 function user_menu_click(){
     if (document.getElementById('user_menu_dropdown').style.visibility=='visible')
         document.getElementById('user_menu_dropdown').style.visibility = 'hidden';
@@ -596,9 +552,6 @@ function init_app(){
     document.getElementById('start_message').innerHTML = window.global_button_default_icon_info;
     document.getElementById('start_profile').innerHTML = window.global_button_default_icon_user;
     document.getElementById('info_message').innerHTML = window.global_button_default_icon_close;
-    //profile
-    document.getElementById('profile_home').innerHTML = window.global_button_default_icon_home;
-    document.getElementById('profile_close').innerHTML = window.global_button_default_icon_close;
     //profile info
     document.getElementById('profile_main_btn_cloud').innerHTML = window.global_button_default_icon_cloud;
     document.getElementById('user_menu_default_avatar').innerHTML = window.global_button_default_icon_user_avatar;

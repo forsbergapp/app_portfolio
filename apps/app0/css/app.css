@@ -90,35 +90,8 @@ a:active {
 	border-radius:20px;
 }
 /*Profile*/
-#dialogue_profile{
-	visibility:hidden;
-	top: 0px;
-    padding-top: 20px;
-	z-index:50;
-}
-#profile_info{
-	display:none;
-}
-#profile_top{
-	position:relative !important;
-	height:60px !important;
-}
 #profile_top_list{
-	display:inline-block;
-	position:relative !important;
-	margin-top: 0px !important;
-}
-#dialogue_profile_content{
-	width:500px;
-	height:500px;
-}
-#profile_home{
-	bottom:80px;
-	position:fixed;
-}
-#profile_close{
-	bottom:30px;
-	position:fixed;
+	margin-top: 60px !important;
 }
 #profile_main_btn_cloud{
 	font-size: 16px;

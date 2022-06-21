@@ -730,6 +730,45 @@ async function profile_show(user_account_id_other = null, username = null, user_
             });
     }
 }
+function profile_home(user_id, timezone, lang_code, header_app, click_event_function){
+    document.getElementById('dialogue_profile').style.visibility = 'visible';;
+    document.getElementById('profile_info').style.display = 'none';
+    document.getElementById('profile_detail').style.display = 'none';
+    document.getElementById('profile_top').style.display = 'block';
+    document.getElementById('profile_top_list').style.display = 'block';
+    document.getElementById('profile_detail_list').innerHTML = '';
+    profile_top(1, user_id, timezone, lang_code, header_app, click_event_function);
+}
+
+function profile_close(){
+    let profile = document.getElementById('dialogue_profile');
+    let profile_info_div = document.getElementById('profile_info');
+    let profile_detail_div = document.getElementById('profile_detail');
+    let profile_top_div = document.getElementById('profile_top');
+    let profile_top_list_div = document.getElementById('profile_top_list');
+
+    profile.style.visibility = 'hidden';
+    profile_info_div.style.display = 'none';
+    profile_detail_div.style.display = 'none';
+    profile_top_div.style.display = 'none';
+    profile_top_list_div.style.display = 'none';
+    profile_top_list_div.innerHTML = '';
+    document.getElementById('profile_avatar').src = '';
+    document.getElementById('profile_username').innerHTML = '';
+    document.getElementById('profile_bio').innerHTML = '';
+    document.getElementById('profile_joined_date').innerHTML = '';
+    document.getElementById('profile_follow').children[0].style.display = 'block';
+    document.getElementById('profile_follow').children[1].style.display = 'none';
+    document.getElementById('profile_like').children[0].style.display = 'block';
+    document.getElementById('profile_like').children[1].style.display = 'none';
+
+    document.getElementById('profile_info_following_count').innerHTML = '';
+    document.getElementById('profile_info_followers_count').innerHTML = '';
+    document.getElementById('profile_info_likes_count').innerHTML = '';
+    document.getElementById('profile_qr').innerHTML = '';
+
+    document.getElementById('profile_detail_list').innerHTML = '';
+}
 /* User */
 async function user_login(username, password, lang_code, callBack) {
     
@@ -2115,7 +2154,7 @@ function show_image(item_img, item_input, image_width, image_height, lang_code) 
     return null;
 }
 
-function init_common(app_id, module, module_type, exception_app_function, close_eventsource){
+function init_common(app_id, module, module_type, exception_app_function, close_eventsource=false, ui=true){
     window.global_app_id = app_id;
     window.global_module = module;
     window.global_module_type = module_type;
@@ -2134,41 +2173,46 @@ function init_common(app_id, module, module_type, exception_app_function, close_
     window.global_eventSource.onerror = function (err) {
         window.global_eventSource.close();
     }
-    //icons
-    //body
-    document.getElementById('user_verify_email').innerHTML = window.global_button_default_icon_mail;
-    document.getElementById('login_button').innerHTML = window.global_button_default_icon_login;
-    document.getElementById('logo_facebook').innerHTML = window.global_button_default_icon_provider2;
-    document.getElementById('login_close').innerHTML = window.global_button_default_icon_close;
-    document.getElementById('signup_button').innerHTML = window.global_button_default_icon_signup;
-    document.getElementById('signup_close').innerHTML = window.global_button_default_icon_close;
-    document.getElementById('user_edit_btn_avatar_img').innerHTML = window.global_button_default_icon_avatar_edit;
-    document.getElementById('user_edit_private').innerHTML = window.global_button_default_icon_private;
-    document.getElementById('setting_btn_user_update').innerHTML = window.global_button_default_icon_update;
-    document.getElementById('setting_btn_user_delete_account').innerHTML = window.global_button_default_icon_delete_account;
-    document.getElementById('user_edit_close').innerHTML = window.global_button_default_icon_close;
-    document.getElementById('message_cancel').innerHTML = window.global_button_default_icon_cancel;
-    document.getElementById('message_close').innerHTML = window.global_button_default_icon_close;
-    document.getElementById('broadcast_close').innerHTML = window.global_button_default_icon_broadcast_close;
-    //profile detail
-    document.getElementById('profile_detail_header_following').innerHTML = window.global_button_default_icon_follows;
-    document.getElementById('profile_detail_header_followed').innerHTML = window.global_button_default_icon_followed;
-    document.getElementById('profile_detail_header_like').innerHTML = window.global_button_default_icon_like + window.global_button_default_icon_follows;
-    document.getElementById('profile_detail_header_liked').innerHTML = window.global_button_default_icon_like + window.global_button_default_icon_followed;
-    //profile info search
-    document.getElementById('profile_search_icon').innerHTML = window.global_button_default_icon_search;
-    //profile info
-    document.getElementById('profile_joined_date_icon').innerHTML = window.global_button_default_icon_user_joined_date;
-    document.getElementById('profile_follow').innerHTML = window.global_button_default_icon_user_follow_user + window.global_button_default_icon_user_followed_user;
-    document.getElementById('profile_like').innerHTML = window.global_button_default_icon_unlike + window.global_button_default_icon_like;
-    document.getElementById('profile_info_view_count_icon').innerHTML = window.global_button_default_icon_views;
-    document.getElementById('profile_main_btn_following').innerHTML = window.global_button_default_icon_follows;
-    document.getElementById('profile_main_btn_followed').innerHTML = window.global_button_default_icon_followed;
-    document.getElementById('profile_main_btn_likes').innerHTML = window.global_button_default_icon_like;
-    document.getElementById('profile_main_btn_liked').innerHTML = window.global_button_default_icon_like + window.global_button_default_icon_followed;
-    //profile top
-    document.getElementById('profile_top_header').innerHTML = window.global_button_default_icon_top_header;
-    document.getElementById('profile_top_row1_1').innerHTML = window.global_button_default_icon_follows;
-    document.getElementById('profile_top_row1_2').innerHTML = window.global_button_default_icon_like + window.global_button_default_icon_follows;
-    document.getElementById('profile_top_row1_3').innerHTML = window.global_button_default_icon_views;
+    if (ui==true){
+        //icons
+        //body
+        document.getElementById('user_verify_email').innerHTML = window.global_button_default_icon_mail;
+        document.getElementById('login_button').innerHTML = window.global_button_default_icon_login;
+        document.getElementById('logo_facebook').innerHTML = window.global_button_default_icon_provider2;
+        document.getElementById('login_close').innerHTML = window.global_button_default_icon_close;
+        document.getElementById('signup_button').innerHTML = window.global_button_default_icon_signup;
+        document.getElementById('signup_close').innerHTML = window.global_button_default_icon_close;
+        document.getElementById('user_edit_btn_avatar_img').innerHTML = window.global_button_default_icon_avatar_edit;
+        document.getElementById('user_edit_private').innerHTML = window.global_button_default_icon_private;
+        document.getElementById('setting_btn_user_update').innerHTML = window.global_button_default_icon_update;
+        document.getElementById('setting_btn_user_delete_account').innerHTML = window.global_button_default_icon_delete_account;
+        document.getElementById('user_edit_close').innerHTML = window.global_button_default_icon_close;
+        document.getElementById('message_cancel').innerHTML = window.global_button_default_icon_cancel;
+        document.getElementById('message_close').innerHTML = window.global_button_default_icon_close;
+        document.getElementById('broadcast_close').innerHTML = window.global_button_default_icon_broadcast_close;
+        //profile detail
+        document.getElementById('profile_detail_header_following').innerHTML = window.global_button_default_icon_follows;
+        document.getElementById('profile_detail_header_followed').innerHTML = window.global_button_default_icon_followed;
+        document.getElementById('profile_detail_header_like').innerHTML = window.global_button_default_icon_like + window.global_button_default_icon_follows;
+        document.getElementById('profile_detail_header_liked').innerHTML = window.global_button_default_icon_like + window.global_button_default_icon_followed;
+        //profile info search
+        document.getElementById('profile_search_icon').innerHTML = window.global_button_default_icon_search;
+        //profile info
+        document.getElementById('profile_joined_date_icon').innerHTML = window.global_button_default_icon_user_joined_date;
+        document.getElementById('profile_follow').innerHTML = window.global_button_default_icon_user_follow_user + window.global_button_default_icon_user_followed_user;
+        document.getElementById('profile_like').innerHTML = window.global_button_default_icon_unlike + window.global_button_default_icon_like;
+        document.getElementById('profile_info_view_count_icon').innerHTML = window.global_button_default_icon_views;
+        document.getElementById('profile_main_btn_following').innerHTML = window.global_button_default_icon_follows;
+        document.getElementById('profile_main_btn_followed').innerHTML = window.global_button_default_icon_followed;
+        document.getElementById('profile_main_btn_likes').innerHTML = window.global_button_default_icon_like;
+        document.getElementById('profile_main_btn_liked').innerHTML = window.global_button_default_icon_like + window.global_button_default_icon_followed;
+        //profile top
+        document.getElementById('profile_top_header').innerHTML = window.global_button_default_icon_top_header;
+        document.getElementById('profile_top_row1_1').innerHTML = window.global_button_default_icon_follows;
+        document.getElementById('profile_top_row1_2').innerHTML = window.global_button_default_icon_like + window.global_button_default_icon_follows;
+        document.getElementById('profile_top_row1_3').innerHTML = window.global_button_default_icon_views;
+        //buttons
+        document.getElementById('profile_home').innerHTML = window.global_button_default_icon_home;
+        document.getElementById('profile_close').innerHTML = window.global_button_default_icon_close;    
+    }
 };
