@@ -563,8 +563,7 @@ async function onProviderSignIn_app(googleUser){
         }
     })
 }
-function init(){
-    init_common(0, 'APP', 'HOME', 'app_exception');
+function init_app(){
     document.getElementById("toggle_checkbox").checked = true;
     document.getElementById('info_diagram_img').src=window.global_img_diagram_img;
     document.getElementById('info_datamodel_img').src=window.global_img_datamodel_img;
@@ -589,9 +588,37 @@ function init(){
 
     document.getElementById('confirm_question').innerHTML = 'Are you sure?';
 
+    document.getElementById('title1').innerHTML = 'App Portfolio Diagram';
+    document.getElementById('title2').innerHTML = 'App Portfolio Data model';
+    document.getElementById('contact_text').innerHTML = 'Contact'
+    
+    //start
+    document.getElementById('start_message').innerHTML = window.global_button_default_icon_info;
+    document.getElementById('start_profile').innerHTML = window.global_button_default_icon_user;
+    document.getElementById('info_message').innerHTML = window.global_button_default_icon_close;
+    //profile
+    document.getElementById('profile_home').innerHTML = window.global_button_default_icon_home;
+    document.getElementById('profile_close').innerHTML = window.global_button_default_icon_close;
+    //profile info
+    document.getElementById('profile_main_btn_cloud').innerHTML = window.global_button_default_icon_cloud;
+    document.getElementById('user_menu_default_avatar').innerHTML = window.global_button_default_icon_user_avatar;
+    //window
+    document.getElementById('toolbar_btn_close').innerHTML = window.global_button_default_icon_close;
+    document.getElementById('toolbar_btn_zoomout').innerHTML = window.global_button_default_icon_zoomout;
+    document.getElementById('toolbar_btn_zoomin').innerHTML = window.global_button_default_icon_zoomin;
+    document.getElementById('toolbar_btn_left').innerHTML =  window.global_button_default_icon_left;
+    document.getElementById('toolbar_btn_right').innerHTML = window.global_button_default_icon_right;
+    document.getElementById('toolbar_btn_up').innerHTML =  window.global_button_default_icon_up;
+    document.getElementById('toolbar_btn_down').innerHTML = window.global_button_default_icon_down;
+    
     keyfunctions();
     zoom_info('');
     move_info(null,null);
+}
+function init(){
+    init_common(0, 'APP', 'HOME', 'app_exception');
+    init_app();
+    
     get_parameters().then(function(){
         document.getElementById('copyright').innerHTML = window.global_app_copyright;
         document.getElementById('app_email').href='mailto:' + window.global_app_email;
