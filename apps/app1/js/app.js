@@ -1737,6 +1737,9 @@ function keyfunctions() {
     document.getElementById('profile_user_settings_month').addEventListener('click', function() { profile_user_setting_link(this) }, false);
     document.getElementById('profile_user_settings_year').addEventListener('click', function() { profile_user_setting_link(this) }, false);
     document.getElementById('profile_user_settings_like').addEventListener('click', function() { profile_user_setting_link(this) }, false);
+    document.getElementById('profile_home').addEventListener('click', function() {toolbar_bottom(7)}, false);
+    document.getElementById('profile_close').addEventListener('click', function() {profile_close()}, false);
+
 
     document.getElementById('info_close').addEventListener('click', function() { document.getElementById('dialogue_info').style.visibility = 'hidden' }, false);
 
@@ -1838,7 +1841,7 @@ function toolbar_bottom(choice) {
     let prayertable_month = document.getElementById('prayertable_month');
     let prayertable_year = document.getElementById('prayertable_year');
     let settings = document.getElementById('settings');
-    let profile = document.getElementById('profile');
+    let profile = document.getElementById('dialogue_profile');
     let profile_info_div = document.getElementById('profile_info');
     let profile_info_app1_div = document.getElementById('profile_info_app1');
     let profile_top_div = document.getElementById('profile_top');
@@ -2065,7 +2068,7 @@ async function user_login_app(){
                 //Hide settings
                 document.getElementById('settings').style.visibility = 'hidden';
                 //Hide profile
-                document.getElementById('profile').style.visibility = 'hidden';
+                document.getElementById('dialogue_profile').style.visibility = 'hidden';
                 
                 document.getElementById('prayertable_day').innerHTML='';
                 document.getElementById('prayertable_month').innerHTML='';
@@ -3201,8 +3204,6 @@ async function update_ui(option, item_id=null) {
                 let prefix = 'font_';
                 document.getElementById('toolbar_top').classList = prefix + select[select.selectedIndex].value;
                 document.getElementById('settings').classList = prefix + select[select.selectedIndex].value;
-                document.getElementById('profile').classList = prefix + select[select.selectedIndex].value;
-                document.getElementById('profile_top').classList = prefix + select[select.selectedIndex].value;
                 document.getElementById('dialogues').classList = prefix + select[select.selectedIndex].value;
                 document.getElementById('common_dialogues').classList = prefix + select[select.selectedIndex].value;
                 document.getElementById('window_info').classList = prefix + select[select.selectedIndex].value;
@@ -3538,7 +3539,7 @@ async function profile_update_stat_app(){
     })
 }
 async function profile_show_app(user_account_id_other = null, username = null, user_id, timezone, lang_code) {
-    document.getElementById('profile').style.visibility = "visible";
+    document.getElementById('dialogue_profile').style.visibility = "visible";
     document.getElementById('profile_info_app1').style.display = "none";
     document.getElementById('profile_top_app1').style.display = "none";
     document.getElementById('profile_select_user_settings').innerHTML='';
@@ -3572,7 +3573,7 @@ async function profile_show_app(user_account_id_other = null, username = null, u
             }
             else{
                 if (err == 500 && username !== null) {
-                    document.getElementById('profile').style.visibility = 'hidden';
+                    document.getElementById('dialogue_profile').style.visibility = 'hidden';
                     //refresh webpage without not found username
                     //this does not occur in webapp
                     document.location.href = "/";
@@ -3950,7 +3951,7 @@ async function init_app(ui=false) {
 }
 
 function init_report_timetable() {
-    init_common(1, 'APP', 'INIT', 'app_exception');
+    init_common(1, 'APP', 'INIT', 'app_exception', null, false);
     let urlParams = new URLSearchParams(window.location.search);
     let user_account_id = urlParams.get('id');
     let user_setting_id = urlParams.get('sid');
@@ -4121,7 +4122,7 @@ async function app_show(){
             document.getElementById('profile_detail').classList.add("profile_detail_logged_off");
             document.getElementById('profile_info').classList.add("profile_info_logged_off");
         }
-        document.getElementById('profile').style.visibility = "visible";
+        document.getElementById('dialogue_profile').style.visibility = "visible";
         profile_show_app(null, user, document.getElementById('setting_data_userid_logged_in').innerHTML, document.getElementById('setting_select_timezone_current').value, get_lang_code());
     }
 }
