@@ -1738,7 +1738,7 @@ function keyfunctions() {
     document.getElementById('profile_user_settings_year').addEventListener('click', function() { profile_user_setting_link(this) }, false);
     document.getElementById('profile_user_settings_like').addEventListener('click', function() { profile_user_setting_link(this) }, false);
     document.getElementById('profile_home').addEventListener('click', function() {toolbar_bottom(7)}, false);
-    document.getElementById('profile_close').addEventListener('click', function() {profile_close()}, false);
+    document.getElementById('profile_close').addEventListener('click', function() {profile_close_app()}, false);
 
 
     document.getElementById('info_close').addEventListener('click', function() { document.getElementById('dialogue_info').style.visibility = 'hidden' }, false);
@@ -1841,13 +1841,6 @@ function toolbar_bottom(choice) {
     let prayertable_month = document.getElementById('prayertable_month');
     let prayertable_year = document.getElementById('prayertable_year');
     let settings = document.getElementById('settings');
-    let profile = document.getElementById('dialogue_profile');
-    let profile_info_div = document.getElementById('profile_info');
-    let profile_info_app1_div = document.getElementById('profile_info_app1');
-    let profile_top_div = document.getElementById('profile_top');
-    let profile_top_app1_div = document.getElementById('profile_top_app1');
-    let profile_top_list_div = document.getElementById('profile_top_list');
-    
 
     switch (choice) {
         //print
@@ -1868,7 +1861,6 @@ function toolbar_bottom(choice) {
                 prayertable_month.style.visibility = 'hidden';
                 prayertable_year.style.visibility = 'hidden';
                 settings.style.visibility = 'hidden';
-                profile.style.visibility = 'hidden';
                 update_timetable_report(2);
                 break;
             }
@@ -1881,7 +1873,6 @@ function toolbar_bottom(choice) {
                 prayertable_month.style.visibility = 'visible';
                 prayertable_year.style.visibility = 'hidden';
                 settings.style.visibility = 'hidden';
-                profile.style.visibility = 'hidden';
                 update_timetable_report(0);
                 break;
             }
@@ -1894,7 +1885,6 @@ function toolbar_bottom(choice) {
                 prayertable_month.style.visibility = 'hidden';
                 prayertable_year.style.visibility = 'visible';
                 settings.style.visibility = 'hidden';
-                profile.style.visibility = 'hidden';
                 update_timetable_report(1);
                 break;
             }
@@ -1905,7 +1895,6 @@ function toolbar_bottom(choice) {
                 if (mobile())
                     paper.style.display = "none";
                 settings.style.visibility = 'visible';
-                profile.style.visibility = 'hidden';
                 break;
             }
             //profile
@@ -1915,18 +1904,6 @@ function toolbar_bottom(choice) {
                 if (mobile())
                     paper.style.display = "none";
                 settings.style.visibility = 'hidden';
-                document.getElementById('profile_detail').classList = '';
-                document.getElementById('profile_info').classList = '';
-                if (document.getElementById('setting_data_username_logged_in').innerHTML == '') {
-                    document.getElementById('profile_detail').classList.add("profile_detail_logged_off");
-                    document.getElementById('profile_info').classList.add("profile_info_logged_off");
-                }
-                profile.style.visibility = 'visible';
-                profile_info_div.style.display = 'block';
-                profile_info_app1_div.style.display = 'block';
-                profile_top_div.style.display = 'none';
-                profile_top_app1_div.style.display = 'none';
-                profile_top_list_div.style.display = 'none';
                 profile_show_app(null,null, document.getElementById('setting_data_userid_logged_in').innerHTML , document.getElementById('setting_select_timezone_current').value,get_lang_code());
                 break;
             }
@@ -1937,14 +1914,6 @@ function toolbar_bottom(choice) {
                 if (mobile())
                     paper.style.display = "none";
                 settings.style.visibility = 'hidden';
-                document.getElementById('profile_detail').classList = '';
-                document.getElementById('profile_info').classList = '';
-                profile.style.visibility = 'visible';
-                profile_info_div.style.display = 'none';
-                profile_info_app1_div.style.display = 'none';
-                profile_top_div.style.display = 'block';
-                profile_top_app1_div.style.display = 'block';
-                profile_top_list_div.style.display = 'block';
                 profile_top(1, document.getElementById('setting_data_userid_logged_in').innerHTML, document.getElementById('setting_select_timezone_current').value, get_lang_code(), null, 'profile_show_app');
                 break;
             }
@@ -2306,6 +2275,22 @@ async function user_settings_get(userid, show_ui = 1, user_setting_id = '') {
         });
 }
 
+function profile_close_app(){
+    profile_close();
+    profile_clear_app;
+}
+function profile_clear_app(){
+
+    document.getElementById('profile_public').style.display = "none";
+    document.getElementById('profile_private').style.display = "none";
+    
+    document.getElementById('profile_info_user_setting_likes_count').innerHTML='';
+    document.getElementById('profile_info_user_setting_liked_count').innerHTML='';
+    document.getElementById('profile_select_user_settings').innerHTML='';
+
+    document.getElementById('profile_user_settings_info_like_count').innerHTML='';
+    document.getElementById('profile_user_settings_info_view_count').innerHTML='';
+}
 function user_logoff_app() {
     let select = document.getElementById("setting_select_user_setting");
     let option;
@@ -2323,12 +2308,7 @@ function user_logoff_app() {
         recreate_img(document.getElementById('setting_avatar_logged_in'));
         document.getElementById('setting_bio_logged_in').innerHTML = '';
         document.getElementById('setting_data_userid_logged_in').innerHTML = '';
-
-        document.getElementById('profile_user_settings_public').style.display = "none";
-        document.getElementById('profile_user_settings_private').style.display = "none";
-        document.getElementById('profile_user_settings_info_like_count').innerHTML='';
-        document.getElementById('profile_user_settings_info_view_count').innerHTML='';
-
+        profile_clear_app();
         //empty user settings
         select.innerHTML = '';
         //add one empty option
@@ -3540,34 +3520,30 @@ async function profile_update_stat_app(){
 }
 async function profile_show_app(user_account_id_other = null, username = null, user_id, timezone, lang_code) {
     document.getElementById('dialogue_profile').style.visibility = "visible";
-    document.getElementById('profile_info_app1').style.display = "none";
-    document.getElementById('profile_top_app1').style.display = "none";
-    document.getElementById('profile_select_user_settings').innerHTML='';
+    document.getElementById('profile_top').style.display = "none";
+    document.getElementById('profile_main_stat_row2').style.display = "none";
+    document.getElementById('profile_user_settings_row').style.display = "none";
+    
+    profile_clear_app();
     if (user_account_id_other == null && user_id == '' && username == null) {
         document.getElementById('profile_info').style.display = "none";
-        document.getElementById('profile_user_settings_public').style.display = "none";
-        document.getElementById('profile_user_settings_private').style.display = "none";
-        document.getElementById('profile_user_settings_info_like_count').innerHTML='';
-        document.getElementById('profile_user_settings_info_view_count').innerHTML='';
     }
     else
         await profile_show(user_account_id_other, username, user_id, timezone, lang_code, (err, result)=>{
             if (err==null){
                 if (result.profile_id != null){
-                    document.getElementById('profile_info_app1').style.display = "block";
-
-                    //user settings
-                    profile_user_setting_stat(result.profile_id);
-    
-                    if (result.private && parseInt(user_id) !== result.profile_id) {
+                    if (result.private==1 && parseInt(user_id) !== result.profile_id) {
                         //private
-                        document.getElementById('profile_user_settings_public').style.display = "none";
-                        document.getElementById('profile_user_settings_private').style.display = "block";
+                        null;
                     } else {
                         //public
-                        document.getElementById('profile_user_settings_public').style.display = "block";
-                        document.getElementById('profile_user_settings_private').style.display = "none";
-                        profile_show_user_setting();
+                        if (user_id != ''){
+                            document.getElementById('profile_main_stat_row2').style.display = "block";
+                            document.getElementById('profile_user_settings_row').style.display = "block";
+                            //user settings
+                            profile_user_setting_stat(result.profile_id);
+                            profile_show_user_setting();
+                        }
                     }    
                 }
             }
@@ -3660,50 +3636,48 @@ function profile_show_user_setting_detail(liked, count_likes, count_views){
 function profile_show_user_setting() {
     let user_id = document.getElementById('setting_data_userid_logged_in');
     let status;
-    if (document.getElementById('profile_user_settings_public').style.display == "block") {
-        document.getElementById('profile_user_settings_row').style.display = 'block';
+    document.getElementById('profile_user_settings_row').style.display = 'block';
 
-        fetch(window.global_rest_url_base + window.global_rest_app1_user_setting_profile_all + document.getElementById('profile_id').innerHTML + 
-                '?app_id=' + window.global_app_id +
-                '&lang_code=' + get_lang_code() + 
-                '&id=' + user_id.innerHTML,
-            {
-                method: 'GET',
-                headers: {
-                    'Authorization': 'Bearer ' + window.global_rest_dt
+    fetch(window.global_rest_url_base + window.global_rest_app1_user_setting_profile_all + document.getElementById('profile_id').innerHTML + 
+            '?app_id=' + window.global_app_id +
+            '&lang_code=' + get_lang_code() + 
+            '&id=' + user_id.innerHTML,
+        {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Bearer ' + window.global_rest_dt
+            }
+        })
+        .then(function(response) {
+            status = response.status;
+            return response.text();
+        })
+        .then(function(response) {
+            if (status == 200) {
+                json = JSON.parse(response);
+                let profile_select_user_settings = document.getElementById('profile_select_user_settings');
+                profile_select_user_settings.innerHTML='';
+                let html = '';
+                for (i = 0; i < json.count; i++) {
+                    html += `<option id="${i}" 
+                            value=""
+                            sid=${json.items[i].id} 
+                            user_account_id=${json.items[i].user_account_id}
+                            liked=${json.items[i].liked}
+                            count_likes=${json.items[i].count_likes}
+                            count_views=${json.items[i].count_views}
+                            >${json.items[i].description}
+                            </option>`;
                 }
-            })
-            .then(function(response) {
-                status = response.status;
-                return response.text();
-            })
-            .then(function(response) {
-                if (status == 200) {
-                    json = JSON.parse(response);
-                    let profile_select_user_settings = document.getElementById('profile_select_user_settings');
-                    profile_select_user_settings.innerHTML='';
-                    let html = '';
-                    for (i = 0; i < json.count; i++) {
-                        html += `<option id="${i}" 
-                                value=""
-                                sid=${json.items[i].id} 
-                                user_account_id=${json.items[i].user_account_id}
-                                liked=${json.items[i].liked}
-                                count_likes=${json.items[i].count_likes}
-                                count_views=${json.items[i].count_views}
-                                >${json.items[i].description}
-                                </option>`;
-                    }
-                    profile_select_user_settings.innerHTML = html;
-                    profile_show_user_setting_detail(profile_select_user_settings.options[profile_select_user_settings.selectedIndex].getAttribute('liked'), 
-                                                     profile_select_user_settings.options[profile_select_user_settings.selectedIndex].getAttribute('count_likes'), 
-                                                     profile_select_user_settings.options[profile_select_user_settings.selectedIndex].getAttribute('count_views'));
-                }
-            })
-            .catch(function(error) {
-                show_message('EXCEPTION', null,null, error, window.global_app_id, get_lang_code());
-            });
-    }
+                profile_select_user_settings.innerHTML = html;
+                profile_show_user_setting_detail(profile_select_user_settings.options[profile_select_user_settings.selectedIndex].getAttribute('liked'), 
+                                                    profile_select_user_settings.options[profile_select_user_settings.selectedIndex].getAttribute('count_likes'), 
+                                                    profile_select_user_settings.options[profile_select_user_settings.selectedIndex].getAttribute('count_views'));
+            }
+        })
+        .catch(function(error) {
+            show_message('EXCEPTION', null,null, error, window.global_app_id, get_lang_code());
+        });
 }
 function profile_detail_app(detailchoice, user_id, lang_code, rest_url_app, fetch_detail, header_app, click_function) {
     if (parseInt(user_id) || 0 !== 0) {
@@ -3869,7 +3843,6 @@ async function init_app(ui=false) {
         document.getElementById('profile_user_settings_month').innerHTML = window.global_button_default_icon_month;
         document.getElementById('profile_user_settings_year').innerHTML = window.global_button_default_icon_year;
         document.getElementById('profile_user_settings_like').innerHTML = window.global_button_default_icon_unlike + window.global_button_default_icon_like;
-        document.getElementById('profile_user_settings_private_title').innerHTML = window.global_button_default_icon_private;
 
         document.getElementById('profile_user_settings_info_likes').innerHTML = window.global_button_default_icon_like + '<div id="profile_user_settings_info_like_count"></div>';
         document.getElementById('profile_user_settings_info_views').innerHTML = window.global_button_default_icon_views + '<div id="profile_user_settings_info_view_count"></div>';
@@ -4117,11 +4090,6 @@ async function app_show(){
     } 
     else {
         //show profile for user entered in url
-        //check if logged in
-        if (document.getElementById('setting_data_username_logged_in').innerHTML == '') {
-            document.getElementById('profile_detail').classList.add("profile_detail_logged_off");
-            document.getElementById('profile_info').classList.add("profile_info_logged_off");
-        }
         document.getElementById('dialogue_profile').style.visibility = "visible";
         profile_show_app(null, user, document.getElementById('setting_data_userid_logged_in').innerHTML, document.getElementById('setting_select_timezone_current').value, get_lang_code());
     }

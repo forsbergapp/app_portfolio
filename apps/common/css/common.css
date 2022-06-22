@@ -386,12 +386,12 @@
 /*profile main*/
 #profile_main {
 	width:100%;
-	margin:10px;
+	margin-top:10px;
 	text-align:center;
 }
 #profile_main_col1{
 	display:inline-block;
-	width:200px;
+	width:250px;
 	text-align:left;
 }
 #profile_main_col2{
@@ -419,7 +419,7 @@
 }
 #profile_main_stat_row1{
 	margin-top: 10px;
-	text-align: center;
+	text-align: left;
 }
 #profile_main_stat_row1 div{
 	display:inline-block;
@@ -473,10 +473,27 @@
 	transform: scale(1.3);
 	transition: transform 0.5s ease, background 0.5s ease, box-shadow 0.5s ease;
 }
-/*profile detail*/
-.profile_detail_logged_off{
-	display:none;
+/*profile private*/
+#profile_public{
+	width:400px;
+	height:100%;
+	margin-top:10px;
+	margin:0 auto;
+	text-align: center;
 }
+#profile_private{
+	width:100%;
+	height:100%;
+	text-align: center;
+}
+#profile_private_title{
+	font-size:48px;
+	text-align: left;
+	margin: 10px;
+	display:inline-block;
+}
+
+/*profile detail*/
 #profile_detail {
 	width: 100%;
 	height: 100%;

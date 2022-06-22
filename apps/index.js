@@ -53,15 +53,15 @@ module.exports = {
                         app = app.replace(
                             '<AppCommonBody/>',
                             `${AppCommonBody}`);
-                        //profile inside common body
+                        //Profile tag in common body
                         app = app.replace(
                             '<AppProfileInfo/>',
                             `${AppProfileInfo}`);
-                        //tag AppCommonProfileDetail inside AppProfileInfo
+                        //Profile tag in common body
                         app = app.replace(
                             '<AppCommonProfileDetail/>',
                             `${AppCommonProfileDetail}`);
-                        // tag not used in this app set empty
+                        //Profile tag not used in common body
                         app = app.replace(
                             '<AppProfileTop/>',
                             '');        
@@ -87,7 +87,6 @@ module.exports = {
                     const AppCommonHeadChart = fs.readFileSync(__dirname + '/common/src/head_chart.html', 'utf8');
                     const AppCommonBody = fs.readFileSync(__dirname + '/common/src/body.html', 'utf8');
                     const AppCommonProfileDetail = fs.readFileSync(__dirname + '/common/src/profile_detail.html', 'utf8');
-                    const AppProfileInfo = fs.readFileSync(__dirname + '/admin/src/profile_info.html', 'utf8');
                     async function getAppComponents() {                        
                         var app = app_result.replace(
                             '<AppHead/>',
@@ -107,15 +106,15 @@ module.exports = {
                         app = app.replace(
                             '<AppCommonBody/>',
                             `${AppCommonBody}`);
-                        //profile inside common body
+                        //Profile tag not used in common body
                         app = app.replace(
                             '<AppProfileInfo/>',
-                            `${AppProfileInfo}`);
-                        //tag AppCommonProfileDetail inside AppProfileInfo
+                            '');
+                        //Profile tag AppCommonProfileDetail in common body
                         app = app.replace(
                             '<AppCommonProfileDetail/>',
                             `${AppCommonProfileDetail}`);
-                        // tag not used in this app set empty
+                        //Profile tag not used in common body
                         app = app.replace(
                             '<AppProfileTop/>',
                             '');
@@ -137,6 +136,7 @@ module.exports = {
                     const AppHead = fs.readFileSync(__dirname + '/common/src/head_maintenance.html', 'utf8');
                     const AppCommonHead = fs.readFileSync(__dirname + '/common/src/head.html', 'utf8');
                     const AppCommonBody = fs.readFileSync(__dirname + '/common/src/body.html', 'utf8');
+                    const AppCommonProfileDetail = fs.readFileSync(__dirname + '/common/src/profile_detail.html', 'utf8');
                     async function getAppComponents() {                        
                         var app = app_result.replace(
                             '<AppHead/>',
@@ -150,10 +150,15 @@ module.exports = {
                         app = app.replace(
                             '<AppCommonBody/>',
                             `${AppCommonBody}`);
-                        // tag not used in this app set empty
+                        //Profile tag not used in common body
                         app = app.replace(
                             '<AppProfileInfo/>',
                             '');
+                        //Profile tag not used in common body
+                        app = app.replace(
+                            '<AppCommonProfileDetail/>',
+                            `${AppCommonProfileDetail}`);
+                        //Profile tag not used in common body
                         app = app.replace(
                             '<AppProfileTop/>',
                             '');                        
