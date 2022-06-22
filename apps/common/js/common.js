@@ -152,7 +152,6 @@ window.global_button_default_icon_print = '<i class="fas fa-print"></i>';
 window.global_button_default_icon_mail = '<i class="fas fa-envelope-square"></i>';
 window.global_button_default_icon_private = '<i class="fas fa-lock"></i>';
 
-
 //services
 window.global_service_auth;
 window.global_service_geolocation;
@@ -262,6 +261,10 @@ function show_profile_click_events(item, user_id, timezone, lang_code, click_fun
 function profile_top(statschoice, user_id, timezone, lang_code, app_rest_url = null, click_function=null) {
     let status;
     let url;
+    document.getElementById('dialogue_profile').style.visibility = 'visible';
+    document.getElementById('profile_info').style.display = 'none';
+    document.getElementById('profile_top').style.display = 'block';
+                
     if (statschoice ==1 || statschoice ==2 || statschoice ==3){
         /*statschoice 1,2,3: user_account*/
         url = window.global_rest_url_base + window.global_rest_user_account_profile_top;
@@ -609,35 +612,12 @@ async function profile_show(user_account_id_other = null, username = null, user_
 
     document.getElementById('profile_info').style.display = "none";
     document.getElementById('profile_top').style.display = "none";
-    document.getElementById('profile_top_list').style.display = "none";
-
     document.getElementById('profile_detail').style.display = "none";
-
-    //empty search
-    document.getElementById('profile_search_input').value = '';
     document.getElementById('profile_search_list').style.display = "none";
-    document.getElementById('profile_search_list').innerHTML = '';
-    
+
+    profile_clear()
     if (user_account_id_other == null && user_id == '' && username == null) {
-        //empty except profile top, always visible even not logged in
-        document.getElementById('profile_main').style.display = "none";
-        document.getElementById('profile_avatar').src = '';
-        document.getElementById('profile_username').innerHTML = '';
-        document.getElementById('profile_bio').innerHTML = '';
-        document.getElementById('profile_joined_date').innerHTML = '';
-        document.getElementById('profile_follow').children[0].style.display = 'block';
-        document.getElementById('profile_follow').children[1].style.display = 'none';
-        document.getElementById('profile_like').children[0].style.display = 'block';
-        document.getElementById('profile_like').children[1].style.display = 'none';
-
-        document.getElementById('profile_info_following_count').innerHTML = '';
-        document.getElementById('profile_info_followers_count').innerHTML = '';
-        document.getElementById('profile_info_likes_count').innerHTML = '';
-        document.getElementById('profile_qr').innerHTML = '';
-
-        document.getElementById('profile_detail').style.display = "none";
-        document.getElementById('profile_detail_list').innerHTML = '';
-
+        
         return callBack(null,null);
 
     } else {
@@ -688,15 +668,7 @@ async function profile_show(user_account_id_other = null, username = null, user_
                     document.getElementById('profile_joined_date').innerHTML = format_json_date(json.date_created, true, timezone, lang_code);
                     document.getElementById("profile_qr").innerHTML = '';
                     create_qr('profile_qr', `${location.protocol}//${location.hostname}${location.port==''?'':':' + location.port}/` + json.username);
-
-                    document.getElementById('profile_info_view_count').innerHTML = json.count_views;
-
-                    document.getElementById('profile_info_following_count').innerHTML = json.count_following;
-                    document.getElementById('profile_info_followers_count').innerHTML = json.count_followed;
-                    document.getElementById('profile_info_likes_count').innerHTML = json.count_likes;
-                    document.getElementById('profile_info_liked_count').innerHTML = json.count_liked;
-                    
-
+                    //User account followed and liked
                     if (json.followed == 1) {
                         //followed
                         document.getElementById('profile_follow').children[0].style.display = 'none';
@@ -714,13 +686,27 @@ async function profile_show(user_account_id_other = null, username = null, user_
                         //not liked
                         document.getElementById('profile_like').children[0].style.display = 'block';
                         document.getElementById('profile_like').children[1].style.display = 'none';
-                    }
+                    } 
+                    //if private then hide info
+                    if (json.private==1 && parseInt(user_id) !== json.id) {
+                        //private
+                        document.getElementById('profile_public').style.display = "none";
+                        document.getElementById('profile_private').style.display = "block";
+                    } else {
+                        //public
+                        document.getElementById('profile_public').style.display = "block";
+                        document.getElementById('profile_private').style.display = "none";
+                        document.getElementById('profile_info_view_count').innerHTML = json.count_views;
+                        document.getElementById('profile_info_following_count').innerHTML = json.count_following;
+                        document.getElementById('profile_info_followers_count').innerHTML = json.count_followed;
+                        document.getElementById('profile_info_likes_count').innerHTML = json.count_likes;
+                        document.getElementById('profile_info_liked_count').innerHTML = json.count_liked;
+                    }    
                     if (user_id ==''){
                         setTimeout(function(){show_common_dialogue('LOGIN')}, 2000);
                     }
                     return callBack(null,{profile_id: json.id,
-                                          private: json.private});
-                    
+                                          private: json.private});                    
                 } else
                     return callBack(status,null);
             })
@@ -739,35 +725,36 @@ function profile_home(user_id, timezone, lang_code, header_app, click_event_func
     document.getElementById('profile_detail_list').innerHTML = '';
     profile_top(1, user_id, timezone, lang_code, header_app, click_event_function);
 }
+function profile_clear(){
 
-function profile_close(){
-    let profile = document.getElementById('dialogue_profile');
-    let profile_info_div = document.getElementById('profile_info');
-    let profile_detail_div = document.getElementById('profile_detail');
-    let profile_top_div = document.getElementById('profile_top');
-    let profile_top_list_div = document.getElementById('profile_top_list');
-
-    profile.style.visibility = 'hidden';
-    profile_info_div.style.display = 'none';
-    profile_detail_div.style.display = 'none';
-    profile_top_div.style.display = 'none';
-    profile_top_list_div.style.display = 'none';
-    profile_top_list_div.innerHTML = '';
-    document.getElementById('profile_avatar').src = '';
-    document.getElementById('profile_username').innerHTML = '';
-    document.getElementById('profile_bio').innerHTML = '';
-    document.getElementById('profile_joined_date').innerHTML = '';
     document.getElementById('profile_follow').children[0].style.display = 'block';
     document.getElementById('profile_follow').children[1].style.display = 'none';
     document.getElementById('profile_like').children[0].style.display = 'block';
     document.getElementById('profile_like').children[1].style.display = 'none';
 
+    document.getElementById('profile_avatar').src = '';
+    document.getElementById('profile_username').innerHTML = '';
+    document.getElementById('profile_bio').innerHTML = '';
+    document.getElementById('profile_joined_date').innerHTML = '';
+
+    document.getElementById('profile_info_view_count').innerHTML = '';
     document.getElementById('profile_info_following_count').innerHTML = '';
     document.getElementById('profile_info_followers_count').innerHTML = '';
     document.getElementById('profile_info_likes_count').innerHTML = '';
+    document.getElementById('profile_info_liked_count').innerHTML = '';
+    
     document.getElementById('profile_qr').innerHTML = '';
 
+    document.getElementById('profile_search_input').value = '';
     document.getElementById('profile_detail_list').innerHTML = '';
+    document.getElementById('profile_top_list').innerHTML = '';
+}
+function profile_close(){
+    document.getElementById('dialogue_profile').style.visibility = 'hidden';
+    document.getElementById('profile_info').style.display = 'none';
+    document.getElementById('profile_detail').style.display = 'none';
+    document.getElementById('profile_top').style.display = 'none';
+    profile_clear();
 }
 /* User */
 async function user_login(username, password, lang_code, callBack) {
@@ -876,22 +863,8 @@ async function user_logoff(user_id, lang_code){
         document.getElementById('signup_password_confirm').value = '';
         document.getElementById('signup_password_reminder').value = '';
 
-        //clear profile
-        document.getElementById('profile_main').style.display = "none";
-        document.getElementById('profile_avatar').src = '';
-        document.getElementById('profile_username').innerHTML = '';
-        document.getElementById('profile_bio').innerHTML = '';
-        document.getElementById('profile_joined_date').innerHTML = '';
-        document.getElementById('profile_follow').children[0].style.display = 'block';
-        document.getElementById('profile_follow').children[1].style.display = 'none';
-        document.getElementById('profile_like').children[0].style.display = 'block';
-        document.getElementById('profile_like').children[1].style.display = 'none';
-        document.getElementById('profile_info_following_count').innerHTML = '';
-        document.getElementById('profile_info_followers_count').innerHTML = '';
-        document.getElementById('profile_info_likes_count').innerHTML = '';
-        document.getElementById('profile_qr').innerHTML = '';
-        document.getElementById('profile_detail').style.display = "none";
-        document.getElementById('profile_detail_list').innerHTML = '';
+        document.getElementById('dialogue_profile').style.visibility = 'hidden';
+        profile_clear();
         
     })
 }
@@ -2206,6 +2179,8 @@ function init_common(app_id, module, module_type, exception_app_function, close_
         document.getElementById('profile_main_btn_followed').innerHTML = window.global_button_default_icon_followed;
         document.getElementById('profile_main_btn_likes').innerHTML = window.global_button_default_icon_like;
         document.getElementById('profile_main_btn_liked').innerHTML = window.global_button_default_icon_like + window.global_button_default_icon_followed;
+        document.getElementById('profile_private_title').innerHTML = window.global_button_default_icon_private;
+
         //profile top
         document.getElementById('profile_top_header').innerHTML = window.global_button_default_icon_top_header;
         document.getElementById('profile_top_row1_1').innerHTML = window.global_button_default_icon_follows;
