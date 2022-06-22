@@ -114,14 +114,15 @@ module.exports = {
                             app = app.replace(
                                 '<AppCommonBody/>',
                                 `${AppCommonBody}`);
-                            //profile inside common body
+                            //Profile tag in common body
                             app = app.replace(
                                 '<AppProfileInfo/>',
                                 `${AppProfileInfo}`);
-                            //tag AppCommonProfileDetail inside AppProfileInfo
+                            //Profile tag in common body
                             app = app.replace(
                                 '<AppCommonProfileDetail/>',
                                 `${AppCommonProfileDetail}`);
+                            //Profile tag in common body
                             app = app.replace(
                                 '<AppProfileTop/>',
                                 `${AppProfileTop}`);    

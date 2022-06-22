@@ -13,7 +13,6 @@ module.exports = {
                 }
                 else{
                     const AppHead = fs.readFileSync(__dirname + '/src/head.html', 'utf8');
-                    const AppProfileInfo = fs.readFileSync(__dirname + '/src/profile_info.html', 'utf8');
                     const AppWindowInfo = fs.readFileSync(__dirname + '/src/window_info.html', 'utf8');
                     async function getAppComponents() {                        
                         var app = app_result.replace(
@@ -28,15 +27,15 @@ module.exports = {
                         app = app.replace(
                             '<AppCommonBody/>',
                             `${AppCommonBody}`);
-                        //profile inside common body
+                        //Profile tag not used in common body
                         app = app.replace(
                             '<AppProfileInfo/>',
-                            `${AppProfileInfo}`);
-                        //tag AppCommonProfileDetail inside AppProfileInfo
+                            '');
+                        //Profile tag AppCommonProfileDetail in common body
                         app = app.replace(
                             '<AppCommonProfileDetail/>',
-                            `${AppCommonProfileDetail}`);  
-                        // tag not used in this app set empty
+                            `${AppCommonProfileDetail}`);
+                        //Profile tag not used in common body
                         app = app.replace(
                             '<AppProfileTop/>',
                             '');
