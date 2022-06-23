@@ -1,5 +1,6 @@
 const fs = require("fs");
 const { createLogAppSE } = require("../service/log/log.service");
+const { getAppStartParameters } = require("../service/db/api/app_parameter/app_parameter.service");
 module.exports = {
     getApp:(app_id) => {
         return new Promise(function (resolve, reject){
@@ -38,7 +39,28 @@ module.exports = {
                 app = app.replace(
                         '<AppProfileTop/>',
                         '');        
-                resolve(app);
+                getAppStartParameters(process.env.APP0_ID, (err,result) =>{
+                    if (err)
+                        reject(err);
+                    else{
+                        let parameters = {   
+                            app_id: app_id,
+                            module: 'APP',
+                            module_type: 'INIT',
+                            exception_app_function: 'app_exception',
+                            close_eventsource: null,
+                            ui: true,
+                            service_auth: result[0].service_auth,
+                            app_rest_client_id: result[0].app_rest_client_id,
+                            app_rest_client_secret: result[0].app_rest_client_secret,
+                            rest_app_parameter: result[0].rest_app_parameter
+                        }    
+                        app = app.replace(
+                            '<ITEM_COMMON_PARAMETERS/>',
+                            JSON.stringify(parameters));
+                        resolve(app);
+                    }
+                })
             }).catch(err => {
                 createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
                 reject (err);
@@ -80,7 +102,28 @@ module.exports = {
                 app = app.replace(
                         '<AppProfileTop/>',
                         '');        
-                resolve(app);
+                getAppStartParameters(process.env.APP0_ID, (err,result) =>{
+                    if (err)
+                        reject(err);
+                    else{
+                        let parameters = {   
+                            app_id: '',
+                            module: 'APP',
+                            module_type: 'INIT',
+                            exception_app_function: 'admin_exception_before',
+                            close_eventsource: null,
+                            ui: true,
+                            service_auth: result[0].service_auth,
+                            app_rest_client_id: result[0].app_rest_client_id,
+                            app_rest_client_secret: result[0].app_rest_client_secret,
+                            rest_app_parameter: result[0].rest_app_parameter
+                        }    
+                        app = app.replace(
+                            '<ITEM_COMMON_PARAMETERS/>',
+                            JSON.stringify(parameters));
+                        resolve(app);
+                    }
+                })
             }).catch(err => {
                 createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
                 reject (err);
@@ -123,7 +166,28 @@ module.exports = {
                 app = app.replace(
                         '<AppProfileTop/>',
                         '');        
-                resolve(app);
+                getAppStartParameters(process.env.APP0_ID, (err,result) =>{
+                    if (err)
+                        reject(err);
+                    else{
+                        let parameters = {   
+                            app_id: '',
+                            module: 'APP',
+                            module_type: 'MAINTENANCE',
+                            exception_app_function: 'app_exception',
+                            close_eventsource: null,
+                            ui: true,
+                            service_auth: result[0].service_auth,
+                            app_rest_client_id: result[0].app_rest_client_id,
+                            app_rest_client_secret: result[0].app_rest_client_secret,
+                            rest_app_parameter: result[0].rest_app_parameter
+                        };
+                        app = app.replace(
+                            '<ITEM_COMMON_PARAMETERS/>',
+                            JSON.stringify(parameters));
+                        resolve(app);
+                    }
+                })
             }).catch(err => {
                 createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
                 reject (err);
