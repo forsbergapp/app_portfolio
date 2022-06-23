@@ -144,116 +144,122 @@ module.exports = {
             let html_template;
             let email_subject;
             let verification_title;
-            const css = fs.readFileSync(__dirname + '/mail.css', 'utf8');
-        
-            switch (emailType){
-                case db_SERVICE_MAIL_TYPE_SIGNUP:{
-                    //Signup text
-                    getMessage(20501, 
-                        process.env.APP0_ID, 
-                        data.lang_code, (err,results)  => {
-                        if (err)
-                            createLogAppSE(data.app_id, __appfilename, __appfunction, __appline, err);
-                        else{
-                            email_subject = results.text;
-                            //Verification code text
-                            getMessage(20502, 
-                                       process.env.APP0_ID, 
-                                       data.lang_code, (err,results)  => {
-                                            if (err)
-                                                createLogAppSE(data.app_id, __appfilename, __appfunction, __appline, err);
-                                            else{
-                                                verification_title = results.text;
-                                                html_template = fs.readFileSync(__dirname + `/mail_signup.html`, 'utf8');
-                                                html_template = html_template.replace('<Css/>', `<style>${css}</style>`);
-                                                html_template = html_template.replace('<Logo/>', 
-                                                                                    `<img id='app_logo' src='${data.protocol}://${data.host}${baseUrl}/logo?id=${data.app_id}&uid=${data.app_user_id}&emailType=${data.emailType}'>`);
-                                                html_template = html_template.replace('<Validation_code_title/>', `${verification_title}`);
-                                                html_template = html_template.replace('<Validation_code/>', `${data.validationCode}`);
-                                                html_template = html_template.replace('<Footer/>', 
-                                                                                    `<a target='_blank' href='${data.protocol}://${data.host}'>${data.protocol}://${data.host}</a>`);
-                                                emailData =  {
-                                                    email_host: db_SERVICE_MAIL_HOST,
-                                                    email_port: db_SERVICE_MAIL_PORT,
-                                                    email_secure: db_SERVICE_MAIL_SECURE,
-                                                    email_auth_user: db_SERVICE_MAIL_USERNAME,
-                                                    email_auth_pass: db_SERVICE_MAIL_PASSWORD,
-                                                    app_id: app_id,
-                                                    app_user_id: app_user_id,
-                                                    app_module_type: 'MAIL_SIGNUP',
-                                                    from: db_SERVICE_MAIL_TYPE_SIGNUP_FROM_NAME,
-                                                    to: toEmail,
-                                                    subject: email_subject,
-                                                    html: html_template
-                                                };
-                                                main_function();
-                                            }
-                                        })
-                            }
-                        })
-                    break;
-                }
-                case db_SERVICE_MAIL_TYPE_UNVERIFIED:{
-                    //to be implemented
-                    html_template = null;
-                    emailData =  {
-                        email_host: db_SERVICE_MAIL_HOST,
-                        email_port: db_SERVICE_MAIL_PORT,
-                        email_secure: db_SERVICE_MAIL_SECURE,
-                        email_auth_user: db_SERVICE_MAIL_USERNAME,
-                        email_auth_pass: db_SERVICE_MAIL_PASSWORD,
-                        app_id: app_id,
-                        app_user_id: app_user_id,
-                        app_module_type: 'MAIL_UNVERIFIED',
-                        from: db_SERVICE_MAIL_TYPE_UNVERIFIED_FROM_NAME,
-                        to: toEmail,
-                        subject: email_subject,
-                        html: html_template
-                    };
-                    main_function();
-                    break;
-                }
-                case db_SERVICE_MAIL_TYPE_RESET_PASSWORD:{
-                    //to be implemented
-                    html_template = null;
-                    emailData =  {
-                        email_host: db_SERVICE_MAIL_HOST,
-                        email_port: db_SERVICE_MAIL_PORT,
-                        email_secure: db_SERVICE_MAIL_SECURE,
-                        email_auth_user: db_SERVICE_MAIL_USERNAME,
-                        email_auth_pass: db_SERVICE_MAIL_PASSWORD,
-                        app_id: app_id,
-                        app_user_id: app_user_id,
-                        app_module_type: 'MAIL_RESET_PASSWORD',
-                        from: db_SERVICE_MAIL_TYPE_RESET_PASSWORD_FROM_NAME,
-                        to: toEmail,
-                        subject: email_subject,
-                        html: html_template
-                    };
-                    main_function();
-                    break;
-                }
-                case db_SERVICE_MAIL_TYPE_CHANGE_EMAIL:{
-                    //to be implemented
-                    html_template = null;
-                    emailData =  {
-                        email_host: db_SERVICE_MAIL_HOST,
-                        email_port: db_SERVICE_MAIL_PORT,
-                        email_secure: db_SERVICE_MAIL_SECURE,
-                        email_auth_user: db_SERVICE_MAIL_USERNAME,
-                        email_auth_pass: db_SERVICE_MAIL_PASSWORD,
-                        app_id: app_id,
-                        app_user_id: app_user_id,
-                        app_module_type: 'MAIL_CHANGE_EMAIL',
-                        from: db_SERVICE_MAIL_TYPE_CHANGE_EMAIL_FROM_NAME,
-                        to: toEmail,
-                        subject: email_subject,
-                        html: html_template
-                    };
-                    main_function();
-                    break;
-                }
-            }       
+            let css;
+            fs.readFile(__dirname + '/mail.css', 'utf8', (error, fileBuffer) => {
+                css = fileBuffer.toString();
+                switch (emailType){
+                    case db_SERVICE_MAIL_TYPE_SIGNUP:{
+                        //Signup text
+                        getMessage(20501, 
+                            process.env.APP0_ID, 
+                            data.lang_code, (err,results)  => {
+                            if (err)
+                                createLogAppSE(data.app_id, __appfilename, __appfunction, __appline, err);
+                            else{
+                                email_subject = results.text;
+                                //Verification code text
+                                getMessage(20502, 
+                                        process.env.APP0_ID, 
+                                        data.lang_code, (err,results)  => {
+                                                if (err)
+                                                    createLogAppSE(data.app_id, __appfilename, __appfunction, __appline, err);
+                                                else{
+                                                    verification_title = results.text;
+
+                                                    fs.readFile(__dirname + `/mail_signup.html`, 'utf8', (error, fileBuffer) => {
+                                                        html_template = fileBuffer.toString();
+                                                        html_template = html_template.replace('<Css/>', `<style>${css}</style>`);
+                                                        html_template = html_template.replace('<Logo/>', 
+                                                                                              `<img id='app_logo' src='${data.protocol}://${data.host}${baseUrl}/logo?id=${data.app_id}&uid=${data.app_user_id}&emailType=${data.emailType}'>`);
+                                                        html_template = html_template.replace('<Validation_code_title/>', `${verification_title}`);
+                                                        html_template = html_template.replace('<Validation_code/>', `${data.validationCode}`);
+                                                        html_template = html_template.replace('<Footer/>', 
+                                                                                              `<a target='_blank' href='${data.protocol}://${data.host}'>${data.protocol}://${data.host}</a>`);
+                                                        emailData =  {
+                                                            email_host: db_SERVICE_MAIL_HOST,
+                                                            email_port: db_SERVICE_MAIL_PORT,
+                                                            email_secure: db_SERVICE_MAIL_SECURE,
+                                                            email_auth_user: db_SERVICE_MAIL_USERNAME,
+                                                            email_auth_pass: db_SERVICE_MAIL_PASSWORD,
+                                                            app_id: app_id,
+                                                            app_user_id: app_user_id,
+                                                            app_module_type: 'MAIL_SIGNUP',
+                                                            from: db_SERVICE_MAIL_TYPE_SIGNUP_FROM_NAME,
+                                                            to: toEmail,
+                                                            subject: email_subject,
+                                                            html: html_template
+                                                        };
+                                                        main_function();
+                                                    });
+                                                }
+                                            })
+                                }
+                            })
+                        break;
+                    }
+                    case db_SERVICE_MAIL_TYPE_UNVERIFIED:{
+                        //to be implemented
+                        html_template = null;
+                        emailData =  {
+                            email_host: db_SERVICE_MAIL_HOST,
+                            email_port: db_SERVICE_MAIL_PORT,
+                            email_secure: db_SERVICE_MAIL_SECURE,
+                            email_auth_user: db_SERVICE_MAIL_USERNAME,
+                            email_auth_pass: db_SERVICE_MAIL_PASSWORD,
+                            app_id: app_id,
+                            app_user_id: app_user_id,
+                            app_module_type: 'MAIL_UNVERIFIED',
+                            from: db_SERVICE_MAIL_TYPE_UNVERIFIED_FROM_NAME,
+                            to: toEmail,
+                            subject: email_subject,
+                            html: html_template
+                        };
+                        main_function();
+                        break;
+                    }
+                    case db_SERVICE_MAIL_TYPE_RESET_PASSWORD:{
+                        //to be implemented
+                        html_template = null;
+                        emailData =  {
+                            email_host: db_SERVICE_MAIL_HOST,
+                            email_port: db_SERVICE_MAIL_PORT,
+                            email_secure: db_SERVICE_MAIL_SECURE,
+                            email_auth_user: db_SERVICE_MAIL_USERNAME,
+                            email_auth_pass: db_SERVICE_MAIL_PASSWORD,
+                            app_id: app_id,
+                            app_user_id: app_user_id,
+                            app_module_type: 'MAIL_RESET_PASSWORD',
+                            from: db_SERVICE_MAIL_TYPE_RESET_PASSWORD_FROM_NAME,
+                            to: toEmail,
+                            subject: email_subject,
+                            html: html_template
+                        };
+                        main_function();
+                        break;
+                    }
+                    case db_SERVICE_MAIL_TYPE_CHANGE_EMAIL:{
+                        //to be implemented
+                        html_template = null;
+                        emailData =  {
+                            email_host: db_SERVICE_MAIL_HOST,
+                            email_port: db_SERVICE_MAIL_PORT,
+                            email_secure: db_SERVICE_MAIL_SECURE,
+                            email_auth_user: db_SERVICE_MAIL_USERNAME,
+                            email_auth_pass: db_SERVICE_MAIL_PASSWORD,
+                            app_id: app_id,
+                            app_user_id: app_user_id,
+                            app_module_type: 'MAIL_CHANGE_EMAIL',
+                            from: db_SERVICE_MAIL_TYPE_CHANGE_EMAIL_FROM_NAME,
+                            to: toEmail,
+                            subject: email_subject,
+                            html: html_template
+                        };
+                        main_function();
+                        break;
+                    }
+                }  
+            });
+                 
         }
         getParameters_server(data.app_id, (err, result)=>{
             if (err) {
