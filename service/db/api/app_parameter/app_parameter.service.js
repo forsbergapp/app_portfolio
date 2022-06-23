@@ -144,77 +144,6 @@ module.exports = {
 			execute_sql();
 		}
 	},
-	/*function for starting apps pools in db/config/database.js
-	use pool 0 but fetch parameters for given app_id
-	and only SERVICE_DB_% parameter names, X is appid:
-	SERVICE_DB_DB1_APPX_USER
-	SERVICE_DB_DB1_APPX_PASSWORD
-	SERVICE_DB_DB2_APPX_USER
-	SERVICE_DB_DB2_APPX_PASSWORD
-	*/
-	getParameters_server_db: (app_id, callBack) => {
-		if (process.env.SERVICE_DB_USE==1){
-			get_pool(process.env.APP0_ID).query(
-				`SELECT
-						app_id,
-						parameter_name,
-						parameter_value
-				FROM ${process.env.SERVICE_DB_DB1_NAME}.app_parameter
-                WHERE app_id = ?
-				  AND parameter_type_id IN (0,1,2)
-				  AND parameter_name like 'SERVICE_DB_%'
-				ORDER BY 1, 3`,
-				[app_id],
-				(error, results, fields) => {
-					if (error){
-						createLogAppSE(app_id, __appfilename, __appfunction, __appline, error);
-						return callBack(error);
-					}
-					return callBack(null, results);
-				}
-			);
-		}
-		else if (process.env.SERVICE_DB_USE==2){
-			async function execute_sql(err, result){
-				let pool2;
-				try{
-				pool2 = await oracledb.getConnection(get_pool(process.env.APP0_ID));
-				const result = await pool2.execute(
-					`SELECT
-                            app_id "app_id",
-                            parameter_name "parameter_name",
-                            parameter_value "parameter_value"
-                       FROM ${process.env.SERVICE_DB_DB2_NAME}.app_parameter
-                      WHERE app_id = :app_id
-					    AND parameter_type_id IN (0,1,2)
-						AND parameter_name like 'SERVICE_DB_%'
-					ORDER BY 1, 3`,
-					{app_id: app_id},
-					(err,result) => {
-						if (err) {
-							createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
-							return callBack(err);
-						}
-						else{
-							return callBack(null, result.rows);
-						}
-					});
-				}catch (err) {
-					createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
-					return callBack(err.message);
-				} finally {
-					if (pool2) {
-						try {
-							await pool2.close(); 
-						} catch (err) {
-							createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
-						}
-					}
-				}
-			}
-			execute_sql();
-		}
-	},
 	getParameters_admin: (app_id, callBack) => {
 		if (process.env.SERVICE_DB_USE==1){
 			get_pool_admin().query(
@@ -458,6 +387,79 @@ module.exports = {
 							await pool2.close(); 
 						} catch (err) {
 							createLogAppSE(body.app_id, __appfilename, __appfunction, __appline, err);
+						}
+					}
+				}
+			}
+			execute_sql();
+		}
+	},
+	getAppDBParameters: (app_id, callBack) => {
+		let db_user = `SERVICE_DB_DB${process.env.SERVICE_DB_USE}_APP_USER`;
+		let db_password = `SERVICE_DB_DB${process.env.SERVICE_DB_USE}_APP_PASSWORD`;
+		if (process.env.SERVICE_DB_USE==1){
+			get_pool(process.env.APP0_ID).query(
+				`SELECT
+						a.id,
+						(SELECT ap.parameter_value
+						   FROM ${process.env.SERVICE_DB_DB1_NAME}.app_parameter ap
+                		  WHERE ap.parameter_name = ?
+						    AND ap.app_id = a.id) db_user,
+						(SELECT ap.parameter_value
+						   FROM ${process.env.SERVICE_DB_DB1_NAME}.app_parameter ap
+						  WHERE ap.parameter_name = ?
+				  		    AND ap.app_id = a.id) db_password
+				  FROM app a
+				ORDER BY 1`,
+				[db_user,
+				 db_password],
+				(error, results, fields) => {
+					if (error){
+						createLogAppSE(app_id, __appfilename, __appfunction, __appline, error);
+						return callBack(error);
+					}
+					return callBack(null, results);
+				}
+			);
+		}
+		else if (process.env.SERVICE_DB_USE==2){
+			async function execute_sql(err, result){
+				let pool2;
+				try{
+				pool2 = await oracledb.getConnection(get_pool(process.env.APP0_ID));
+				const result = await pool2.execute(
+					`SELECT
+							a.id "id",
+							(SELECT ap.parameter_value
+							   FROM ${process.env.SERVICE_DB_DB2_NAME}.app_parameter ap
+							  WHERE ap.parameter_name = ?
+								AND ap.app_id = a.id) "db_user",
+							(SELECT ap.parameter_value
+						  	   FROM ${process.env.SERVICE_DB_DB2_NAME}.app_parameter ap
+							  WHERE ap.parameter_name = ?
+							    AND ap.app_id = a.id) "db_password"
+					   FROM app a
+					ORDER BY 1, 3`,
+					{db_user: db_user,
+					 db_password: db_password},
+					(err,result) => {
+						if (err) {
+							createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
+							return callBack(err);
+						}
+						else{
+							return callBack(null, result.rows);
+						}
+					});
+				}catch (err) {
+					createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
+					return callBack(err.message);
+				} finally {
+					if (pool2) {
+						try {
+							await pool2.close(); 
+						} catch (err) {
+							createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
 						}
 					}
 				}

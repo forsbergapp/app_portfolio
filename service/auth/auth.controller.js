@@ -7,32 +7,39 @@ module.exports = {
     access_control: (req, res, callBack) => {
         if (process.env.SERVICE_AUTH_BLOCK_IP_RANGE){
             const fs = require("fs");
-            const ranges = fs.readFileSync(process.env.SERVICE_AUTH_BLOCK_IP_RANGE, 'utf8');
-            function IPtoNum(ip){
-              return Number(
-                ip.split(".")
-                  .map(d => ("000"+d).substr(-3) )
-                  .join("")
-              );
-            }
-            //check if IP is blocked
-            let ip_v4 = req.ip.replace('::ffff:','');
-            if ((ip_v4.match(/\./g)||[]).length==3){
-            try{
-                JSON.parse(ranges).forEach(element => {
-                if (IPtoNum(element[0]) <= IPtoNum(ip_v4) &&
-                    IPtoNum(element[1]) >= IPtoNum(ip_v4)) {
-                        createLogAppCI(req, res, null, __appfilename, __appfunction, __appline, `ip ${ip_v4} blocked, range: ${IPtoNum(element[0])}-${IPtoNum(element[1])}, tried URL: ${req.originalUrl}`);
-                        //403 Forbidden
-                        return callBack(403,null);
+            let ranges;
+            fs.readFile(process.env.SERVICE_AUTH_BLOCK_IP_RANGE, 'utf8', (error, fileBuffer) => {
+                if (error)
+                    ranges = null;
+                else{
+                    ranges = fileBuffer.toString();
+                    function IPtoNum(ip){
+                        return Number(
+                            ip.split(".")
+                            .map(d => ("000"+d).substr(-3) )
+                            .join("")
+                        );
+                    }
+                    //check if IP is blocked
+                    let ip_v4 = req.ip.replace('::ffff:','');
+                    if ((ip_v4.match(/\./g)||[]).length==3){
+                        try{
+                            JSON.parse(ranges).forEach(element => {
+                            if (IPtoNum(element[0]) <= IPtoNum(ip_v4) &&
+                                IPtoNum(element[1]) >= IPtoNum(ip_v4)) {
+                                    createLogAppCI(req, res, null, __appfilename, __appfunction, __appline, `ip ${ip_v4} blocked, range: ${IPtoNum(element[0])}-${IPtoNum(element[1])}, tried URL: ${req.originalUrl}`);
+                                    //403 Forbidden
+                                    return callBack(403,null);
+                            }
+                            })
+                        }
+                        catch(err){
+                            createLogAppSE(null, __appfilename, __appfunction, __appline, err);
+                            return callBack(null,1);
+                        }
+                    }
                 }
-                })
-            }
-            catch(err){
-                createLogAppSE(null, __appfilename, __appfunction, __appline, err);
-                return callBack(null,1);
-            }
-            }
+            });
             //check if accessed from domain and not os hostname
             var os = require("os");
             if (req.headers.host==os.hostname()){

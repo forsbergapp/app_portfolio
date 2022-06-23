@@ -1,185 +1,187 @@
-window.global_app_id;
-window.global_app_name;
-window.global_app_hostname;
-window.global_main_app_id 					= 0;
-// if app not using translation then use default lang_code from navigator
-window.global_lang_code                    = navigator.language;
-window.global_rest_url_base 				= '/service/db/api/';
-window.global_rest_app_parameter 			= 'app_parameter/';
-
-window.global_app_rest_client_id;
-window.global_app_rest_client_secret;
-window.global_app_copyright;
-
-window.global_app_user_provider1_use;
-window.global_app_user_provider1_id;
-window.global_app_user_provider1_name;
-window.global_app_user_provider1_api_src;
-window.global_app_user_provider2_use;
-window.global_app_user_provider2_id;
-window.global_app_user_provider2_name;
-window.global_app_user_provider2_api_version;
-window.global_app_user_provider2_api_src;
-window.global_app_user_provider2_api_src2;
-window.global_rest_at;
-window.global_rest_dt;
-window.global_rest_app;
-window.global_rest_app_log;
-window.global_rest_app_object;
-window.global_rest_country;
-window.global_rest_language_locale;
-window.global_rest_message_translation;
-window.global_rest_user_account;
-window.global_rest_user_account_activate;
-window.global_rest_user_account_app;
-window.global_rest_user_account_common;
-window.global_rest_user_account_login;
-window.global_rest_user_account_profile_username;
-window.global_rest_user_account_profile_userid;
-window.global_rest_user_account_profile_searchA;
-window.global_rest_user_account_profile_searchD;
-window.global_rest_user_account_profile_top;
-window.global_rest_user_account_profile_detail;
-window.global_rest_user_account_provider;
-window.global_rest_user_account_signup;
-window.global_rest_user_account_like;
-window.global_rest_user_account_follow;
-//Images uploaded
-window.global_image_file_allowed_type1;
-window.global_image_file_allowed_type2;
-window.global_image_file_allowed_type3;
-window.global_image_file_mime_type;
-window.global_image_file_max_size;
-
-window.global_user_image_avatar_width;
-window.global_user_image_avatar_height;
-
-//spinner
-window.global_button_spinner = `<div id="button_spinner" class="load-spinner">
-                                    <div></div>
-                                    <div></div>
-                                    <div></div>
-                                    <div></div>
-                                    <div></div>
-                                    <div></div>
-                                    <div></div>
-                                    <div></div>
-                                    <div></div>
-                                    <div></div>
-                                    <div></div>
-                                    <div></div>
-                                </div>`;
-//Icons
-window.global_button_default_icon_save = '<i class="fas fa-save"></i>';
-window.global_button_default_icon_add = '<i class="fas fa-plus-square"></i>';
-window.global_button_default_icon_delete = '<i class="fas fa-trash-alt"></i>';
-window.global_button_default_icon_edit = '<i class="fas fa-edit"></i>';
-
-window.global_button_default_icon_send = '<i class="fas fa-arrow-alt-circle-right"></i>';
-window.global_button_default_icon_login = '<i class="fas fa-arrow-alt-circle-right"></i>';
-window.global_button_default_icon_signup = '<i class="fas fa-arrow-alt-circle-right"></i>';
-window.global_button_default_icon_update = '<i class="fas fa-save"></i>';
-window.global_button_default_icon_delete_account = '<i class="fas fa-trash-alt"></i>';                                
-
-window.global_button_default_icon_chat = '<i class="fas fa-comment"></i>';
-window.global_button_default_icon_checkbox_checked = '<i class="fas fa-check-square"></i>';
-window.global_button_default_icon_checkbox_empty = '<i class="fas fa-square"></i>';
-window.global_button_default_icon_info = '<i class="fas fa-info-circle"></i>';
-window.global_button_default_icon_close = '<i class="fas fa-check-circle"></i>';
-window.global_button_default_icon_user = '<i class="fas fa-user"></i>';
-window.global_button_default_icon_avatar_edit = '<i class="fas fa-camera"></i>';
-window.global_button_default_icon_user_avatar = '<i class="fas fa-user-circle"></i>';
-
-window.global_button_default_icon_user_joined_date = '<i class="fas fa-hands-helping"></i>';
-window.global_button_default_icon_user_follow_user = '<i class="fas fa-user-plus"></i>';
-window.global_button_default_icon_user_followed_user = '<i class="fas fa-user-check"></i';
-
-window.global_button_default_icon_home = '<i class="fas fa-home"></i>';
-window.global_button_default_icon_cloud = '<i class="fas fa-cloud"></i>';
-window.global_button_default_icon_provider1 = '<i class="fab fa-google"></i>';
-window.global_button_default_icon_provider2 = '<i class="fab fa-facebook"></i>';
-window.global_button_default_icon_map_my_location = '<i class="fas fa-crosshairs"></i>';
-
-window.global_button_default_icon_search = '<i class="fas fa-search"></i>';
-window.global_button_default_icon_menu_open = '<i class="fas fa-bars"></i>';
-window.global_button_default_icon_menu_close = '<i class="fas fa-times-circle"></i>';
-window.global_button_default_icon_broadcast_close = '<i class="fas fa-times-circle"></i>';
-window.global_button_default_icon_first = '<i class="fas fa-fast-backward"></i>';
-window.global_button_default_icon_previous = '<i class="fas fa-backward"></i>';
-window.global_button_default_icon_next = '<i class="fas fa-forward"></i>';
-window.global_button_default_icon_last = '<i class="fas fa-fast-forward"></i>';
-
-window.global_button_default_icon_cancel =  '<i class="fas fa-times-circle"></i>';
-
-window.global_button_default_icon_zoomout = '<i class="fas fa-search-minus"></i>';
-window.global_button_default_icon_zoomin = '<i class="fas fa-search-plus"></i>';
-window.global_button_default_icon_left = '<i class="fas fa-arrow-alt-circle-left"></i>';
-window.global_button_default_icon_right = '<i class="fas fa-arrow-alt-circle-right"></i>';
-window.global_button_default_icon_up = '<i class="fas fa-arrow-alt-circle-up"></i>';
-window.global_button_default_icon_down = '<i class="fas fa-arrow-alt-circle-down"></i>';
-
-window.global_button_default_icon_day = '<i class="fas fa-calendar-day"></i>';
-window.global_button_default_icon_month = '<i class="fas fa-calendar-week"></i>';
-window.global_button_default_icon_year = '<i class="fas fa-calendar-alt"></i>';
-
-window.global_button_default_icon_like = '<i class="fas fa-heart"></i>';
-window.global_button_default_icon_unlike = '<i class="fas fa-heart-broken"></i>';
-window.global_button_default_icon_views = '<i class="fas fa-eye"></i>';
-window.global_button_default_icon_follows = '<i class="fas fa-user-friends"></i>';
-window.global_button_default_icon_followed = '<i class="fas fa-users"></i>';
-window.global_button_default_icon_top_header = '<i class="fas fa-medal"></i>';
-
-window.global_button_default_icon_align_left = '<i class="fa fa-align-left" tabindex="1"></i>';
-window.global_button_default_icon_align_center = '<i class="fa fa-align-center" tabindex="1"></i>';
-window.global_button_default_icon_align_right = '<i class="fa fa-align-left" tabindex="1"></i>';
-window.global_button_default_icon_remove = '<i class="fa fa-times" ></i>';
-window.global_button_default_icon_html = '<i class="fas file-code"></i>';
-window.global_button_default_icon_copy = '<i class="fas fa-copy"></i>';
-window.global_button_default_icon_pdf  = '<i class="fas fa-file-pdf"></i>';
-
-window.global_button_default_icon_tab_regional  = '<i class="fas fa-globe"></i>';
-window.global_button_default_icon_tab_gps  = '<i class="fas fa-map-marked-alt"></i>';
-window.global_button_default_icon_tab_design  = '<i class="fas fa-palette"></i>';
-window.global_button_default_icon_tab_image = '<i class="fas fa-images"></i>';
-window.global_button_default_icon_tab_text = '<i class="fas fa-text-height"></i>';
-window.global_button_default_icon_tab_prayer = '<i class="fas fa-pray"></i>';
-window.global_button_default_icon_tab_user = '<i class="fas fa-user"></i>';
-
-window.global_button_default_icon_slider_left = '<i class="fas fa-chevron-left"></i>';
-window.global_button_default_icon_slider_right = '<i class="fas fa-chevron-right"></i>';
-
-window.global_button_default_icon_print = '<i class="fas fa-print"></i>';
-window.global_button_default_icon_mail = '<i class="fas fa-envelope-square"></i>';
-window.global_button_default_icon_private = '<i class="fas fa-lock"></i>';
-
-//services
-window.global_service_auth;
-window.global_service_geolocation;
-window.global_service_geolocation_gps_place;
-window.global_service_geolocation_gps_ip;
-window.global_service_report;
-window.global_service_worldcities;
-
-//session variables
-window.global_session_user_gps_latitude;
-window.global_session_user_gps_longitude;
-window.global_session_user_gps_place;
-
-//init common variables, set in init_common()
-window.global_clientId;
-window.global_eventSource;
-window.global_module;
-window.global_module_type;
-window.global_exception_app_function;
-
-//delay API calls when typing to avoid too many calls 
-window.global_typewatch = function() {
-    let timer = 0;
-    return function(callback, ms) {
-        clearTimeout(timer);
-        timer = setTimeout(callback, ms);
-    };
-}();
+function set_globals(){
+    window.global_app_id;
+    window.global_app_name;
+    window.global_app_hostname;
+    window.global_main_app_id 					= 0;
+    // if app not using translation then use default lang_code from navigator
+    window.global_lang_code                    = navigator.language;
+    window.global_rest_url_base 				= '/service/db/api/';
+    window.global_rest_app_parameter 			= 'app_parameter/';
+    
+    window.global_app_rest_client_id;
+    window.global_app_rest_client_secret;
+    window.global_app_copyright;
+    
+    window.global_app_user_provider1_use;
+    window.global_app_user_provider1_id;
+    window.global_app_user_provider1_name;
+    window.global_app_user_provider1_api_src;
+    window.global_app_user_provider2_use;
+    window.global_app_user_provider2_id;
+    window.global_app_user_provider2_name;
+    window.global_app_user_provider2_api_version;
+    window.global_app_user_provider2_api_src;
+    window.global_app_user_provider2_api_src2;
+    window.global_rest_at;
+    window.global_rest_dt;
+    window.global_rest_app;
+    window.global_rest_app_log;
+    window.global_rest_app_object;
+    window.global_rest_country;
+    window.global_rest_language_locale;
+    window.global_rest_message_translation;
+    window.global_rest_user_account;
+    window.global_rest_user_account_activate;
+    window.global_rest_user_account_app;
+    window.global_rest_user_account_common;
+    window.global_rest_user_account_login;
+    window.global_rest_user_account_profile_username;
+    window.global_rest_user_account_profile_userid;
+    window.global_rest_user_account_profile_searchA;
+    window.global_rest_user_account_profile_searchD;
+    window.global_rest_user_account_profile_top;
+    window.global_rest_user_account_profile_detail;
+    window.global_rest_user_account_provider;
+    window.global_rest_user_account_signup;
+    window.global_rest_user_account_like;
+    window.global_rest_user_account_follow;
+    //Images uploaded
+    window.global_image_file_allowed_type1;
+    window.global_image_file_allowed_type2;
+    window.global_image_file_allowed_type3;
+    window.global_image_file_mime_type;
+    window.global_image_file_max_size;
+    
+    window.global_user_image_avatar_width;
+    window.global_user_image_avatar_height;
+    
+    //spinner
+    window.global_button_spinner = `<div id="button_spinner" class="load-spinner">
+                                        <div></div>
+                                        <div></div>
+                                        <div></div>
+                                        <div></div>
+                                        <div></div>
+                                        <div></div>
+                                        <div></div>
+                                        <div></div>
+                                        <div></div>
+                                        <div></div>
+                                        <div></div>
+                                        <div></div>
+                                    </div>`;
+    //Icons
+    window.global_button_default_icon_save = '<i class="fas fa-save"></i>';
+    window.global_button_default_icon_add = '<i class="fas fa-plus-square"></i>';
+    window.global_button_default_icon_delete = '<i class="fas fa-trash-alt"></i>';
+    window.global_button_default_icon_edit = '<i class="fas fa-edit"></i>';
+    
+    window.global_button_default_icon_send = '<i class="fas fa-arrow-alt-circle-right"></i>';
+    window.global_button_default_icon_login = '<i class="fas fa-arrow-alt-circle-right"></i>';
+    window.global_button_default_icon_signup = '<i class="fas fa-arrow-alt-circle-right"></i>';
+    window.global_button_default_icon_update = '<i class="fas fa-save"></i>';
+    window.global_button_default_icon_delete_account = '<i class="fas fa-trash-alt"></i>';                                
+    
+    window.global_button_default_icon_chat = '<i class="fas fa-comment"></i>';
+    window.global_button_default_icon_checkbox_checked = '<i class="fas fa-check-square"></i>';
+    window.global_button_default_icon_checkbox_empty = '<i class="fas fa-square"></i>';
+    window.global_button_default_icon_info = '<i class="fas fa-info-circle"></i>';
+    window.global_button_default_icon_close = '<i class="fas fa-check-circle"></i>';
+    window.global_button_default_icon_user = '<i class="fas fa-user"></i>';
+    window.global_button_default_icon_avatar_edit = '<i class="fas fa-camera"></i>';
+    window.global_button_default_icon_user_avatar = '<i class="fas fa-user-circle"></i>';
+    
+    window.global_button_default_icon_user_joined_date = '<i class="fas fa-hands-helping"></i>';
+    window.global_button_default_icon_user_follow_user = '<i class="fas fa-user-plus"></i>';
+    window.global_button_default_icon_user_followed_user = '<i class="fas fa-user-check"></i';
+    
+    window.global_button_default_icon_home = '<i class="fas fa-home"></i>';
+    window.global_button_default_icon_cloud = '<i class="fas fa-cloud"></i>';
+    window.global_button_default_icon_provider1 = '<i class="fab fa-google"></i>';
+    window.global_button_default_icon_provider2 = '<i class="fab fa-facebook"></i>';
+    window.global_button_default_icon_map_my_location = '<i class="fas fa-crosshairs"></i>';
+    
+    window.global_button_default_icon_search = '<i class="fas fa-search"></i>';
+    window.global_button_default_icon_menu_open = '<i class="fas fa-bars"></i>';
+    window.global_button_default_icon_menu_close = '<i class="fas fa-times-circle"></i>';
+    window.global_button_default_icon_broadcast_close = '<i class="fas fa-times-circle"></i>';
+    window.global_button_default_icon_first = '<i class="fas fa-fast-backward"></i>';
+    window.global_button_default_icon_previous = '<i class="fas fa-backward"></i>';
+    window.global_button_default_icon_next = '<i class="fas fa-forward"></i>';
+    window.global_button_default_icon_last = '<i class="fas fa-fast-forward"></i>';
+    
+    window.global_button_default_icon_cancel =  '<i class="fas fa-times-circle"></i>';
+    
+    window.global_button_default_icon_zoomout = '<i class="fas fa-search-minus"></i>';
+    window.global_button_default_icon_zoomin = '<i class="fas fa-search-plus"></i>';
+    window.global_button_default_icon_left = '<i class="fas fa-arrow-alt-circle-left"></i>';
+    window.global_button_default_icon_right = '<i class="fas fa-arrow-alt-circle-right"></i>';
+    window.global_button_default_icon_up = '<i class="fas fa-arrow-alt-circle-up"></i>';
+    window.global_button_default_icon_down = '<i class="fas fa-arrow-alt-circle-down"></i>';
+    
+    window.global_button_default_icon_day = '<i class="fas fa-calendar-day"></i>';
+    window.global_button_default_icon_month = '<i class="fas fa-calendar-week"></i>';
+    window.global_button_default_icon_year = '<i class="fas fa-calendar-alt"></i>';
+    
+    window.global_button_default_icon_like = '<i class="fas fa-heart"></i>';
+    window.global_button_default_icon_unlike = '<i class="fas fa-heart-broken"></i>';
+    window.global_button_default_icon_views = '<i class="fas fa-eye"></i>';
+    window.global_button_default_icon_follows = '<i class="fas fa-user-friends"></i>';
+    window.global_button_default_icon_followed = '<i class="fas fa-users"></i>';
+    window.global_button_default_icon_top_header = '<i class="fas fa-medal"></i>';
+    
+    window.global_button_default_icon_align_left = '<i class="fa fa-align-left" tabindex="1"></i>';
+    window.global_button_default_icon_align_center = '<i class="fa fa-align-center" tabindex="1"></i>';
+    window.global_button_default_icon_align_right = '<i class="fa fa-align-left" tabindex="1"></i>';
+    window.global_button_default_icon_remove = '<i class="fa fa-times" ></i>';
+    window.global_button_default_icon_html = '<i class="fa-solid fa-file-code"></i>';
+    window.global_button_default_icon_copy = '<i class="fas fa-copy"></i>';
+    window.global_button_default_icon_pdf  = '<i class="fas fa-file-pdf"></i>';
+    
+    window.global_button_default_icon_tab_regional  = '<i class="fas fa-globe"></i>';
+    window.global_button_default_icon_tab_gps  = '<i class="fas fa-map-marked-alt"></i>';
+    window.global_button_default_icon_tab_design  = '<i class="fas fa-palette"></i>';
+    window.global_button_default_icon_tab_image = '<i class="fas fa-images"></i>';
+    window.global_button_default_icon_tab_text = '<i class="fas fa-text-height"></i>';
+    window.global_button_default_icon_tab_prayer = '<i class="fas fa-pray"></i>';
+    window.global_button_default_icon_tab_user = '<i class="fas fa-user"></i>';
+    
+    window.global_button_default_icon_slider_left = '<i class="fas fa-chevron-left"></i>';
+    window.global_button_default_icon_slider_right = '<i class="fas fa-chevron-right"></i>';
+    
+    window.global_button_default_icon_print = '<i class="fas fa-print"></i>';
+    window.global_button_default_icon_mail = '<i class="fas fa-envelope-square"></i>';
+    window.global_button_default_icon_private = '<i class="fas fa-lock"></i>';
+    
+    //services
+    window.global_service_auth;
+    window.global_service_geolocation;
+    window.global_service_geolocation_gps_place;
+    window.global_service_geolocation_gps_ip;
+    window.global_service_report;
+    window.global_service_worldcities;
+    
+    //session variables
+    window.global_session_user_gps_latitude;
+    window.global_session_user_gps_longitude;
+    window.global_session_user_gps_place;
+    
+    //init common variables, set in init_common()
+    window.global_clientId;
+    window.global_eventSource;
+    window.global_module;
+    window.global_module_type;
+    window.global_exception_app_function;
+    
+    //delay API calls when typing to avoid too many calls 
+    window.global_typewatch = function() {
+        let timer = 0;
+        return function(callback, ms) {
+            clearTimeout(timer);
+            timer = setTimeout(callback, ms);
+        };
+    }();
+}
 
 function maintenance_countdown(remaining) {
     if(remaining <= 0)
@@ -2128,6 +2130,7 @@ function show_image(item_img, item_input, image_width, image_height, lang_code) 
 }
 
 function init_common(app_id, module, module_type, exception_app_function, close_eventsource=false, ui=true){
+    set_globals();
     window.global_app_id = app_id;
     window.global_module = module;
     window.global_module_type = module_type;

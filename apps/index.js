@@ -3,169 +3,130 @@ const { createLogAppSE } = require("../service/log/log.service");
 module.exports = {
     getApp:(app_id) => {
         return new Promise(function (resolve, reject){
-            const AppCommonHead = fs.readFileSync(__dirname + '/common/src/head.html', 'utf8');
-            const AppCommonBody = fs.readFileSync(__dirname + '/common/src/body.html', 'utf8');
-            const AppCommonProfileDetail = fs.readFileSync(__dirname + '/common/src/profile_detail.html', 'utf8');
-            fs.readFile(__dirname + '/app0/src/index.html', 'utf-8', (err, app_result) => {
-                if (err) {
-                    createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
-                    resolve (err);  
-                }
-                else{
-                    //module html files
-                    const AppHead = fs.readFileSync(__dirname + '/app0/src/head.html', 'utf8');
-                    const AppUserAccount = fs.readFileSync(__dirname + '/app0/src/user_account.html', 'utf8');
-                    const AppToggle = fs.readFileSync(__dirname + '/app0/src/toogle.html', 'utf8');
-                    const AppMoon = fs.readFileSync(__dirname + '/app0/src/moon.html', 'utf8');
-                    const AppSun = fs.readFileSync(__dirname + '/app0/src/sun.html', 'utf8');
-                    const AppBackground = fs.readFileSync(__dirname + '/app0/src/background.html', 'utf8');
-                    const AppDialogues = fs.readFileSync(__dirname + '/app0/src/dialogues.html', 'utf8');
-                    const AppProfileInfo = fs.readFileSync(__dirname + '/app0/src/profile_info.html', 'utf8');
-                    const AppWindowInfo = fs.readFileSync(__dirname + '/app0/src/window_info.html', 'utf8');
-                    async function getAppComponents() {                        
-                        var app = app_result.replace(
-                            '<AppHead/>',
-                            `${AppHead}`);
+            const {promises: {readFile}} = require("fs");
+            const files = [
+                ['APP', __dirname + '/app0/src/index.html'],
+                ['<AppCommonHead/>', __dirname + '/common/src/head.html'],
+                ['<AppCommonBody/>', __dirname + '/common/src/body.html'],
+                ['<AppCommonProfileDetail/>', __dirname + '/common/src/profile_detail.html'], //Profile tag in common body
+
+                ['<AppHead/>', __dirname + '/app0/src/head.html'],
+                ['<AppUserAccount/>', __dirname + '/app0/src/user_account.html'],
+                ['<AppToggle/>', __dirname + '/app0/src/toogle.html'],
+                ['<AppMoon/>', __dirname + '/app0/src/moon.html'],
+                ['<AppSun/>', __dirname + '/app0/src/sun.html'],
+                ['<AppBackground/>', __dirname + '/app0/src/background.html'],
+                ['<AppDialogues/>', __dirname + '/app0/src/dialogues.html'],
+                ['<AppProfileInfo/>', __dirname + '/app0/src/profile_info.html'],   /*Profile tag in common body*/
+                ['<AppWindowInfo/>', __dirname + '/app0/src/window_info.html']
+              ];
+            let i = 0;
+            Promise.all(files.map(file => {
+                return readFile(file[1], 'utf8');
+            })).then(fileBuffers => {
+                let app ='';
+                fileBuffers.forEach(fileBuffer => {
+                    if (app=='')
+                        app = fileBuffer.toString();
+                    else
                         app = app.replace(
-                            '<AppCommonHead/>',
-                            `${AppCommonHead}`);    
-                        app = app.replace(
-                            '<AppUserAccount/>',
-                            `${AppUserAccount}`);
-                        app = app.replace(
-                            '<AppToggle/>',
-                            `${AppToggle}`);
-                        app = app.replace(
-                            '<AppMoon/>',
-                            `${AppMoon}`);
-                        app = app.replace(
-                            '<AppSun/>',
-                            `${AppSun}`);
-                        app = app.replace(
-                            '<AppBackground/>',
-                            `${AppBackground}`);
-                        app = app.replace(
-                            '<AppDialogues/>',
-                            `${AppDialogues}`);
-                        app = app.replace(
-                            '<AppWindowInfo/>',
-                            `${AppWindowInfo}`);
-                        app = app.replace(
-                            '<AppCommonBody/>',
-                            `${AppCommonBody}`);
-                        //Profile tag in common body
-                        app = app.replace(
-                            '<AppProfileInfo/>',
-                            `${AppProfileInfo}`);
-                        //Profile tag in common body
-                        app = app.replace(
-                            '<AppCommonProfileDetail/>',
-                            `${AppCommonProfileDetail}`);
-                        //Profile tag not used in common body
-                        app = app.replace(
-                            '<AppProfileTop/>',
-                            '');        
-                        resolve (app);
-                    }
-                    getAppComponents();
-                }
+                                files[i][0],
+                                `${fileBuffer.toString()}`);
+                    i++;
+                });
+                //Profile tag not used in common body
+                app = app.replace(
+                        '<AppProfileTop/>',
+                        '');        
+                resolve(app);
+            }).catch(err => {
+                createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
+                reject (err);
             });
         })
     },
     getAdmin:() => {
         return new Promise(function (resolve, reject){
-            fs.readFile(__dirname + '/admin/src/index.html', 'utf-8', (err, app_result) => {
-                if (err) {
-                    createLogAppSE(null, __appfilename, __appfunction, __appline, err);
-                    resolve (err);  
-                }
-                else{
-                    const AppHead = fs.readFileSync(__dirname + '/admin/src/head.html', 'utf8');
-                    const AppDialogues = fs.readFileSync(__dirname + '/admin/src/dialogues.html', 'utf8');
-                    const AppCommonHead = fs.readFileSync(__dirname + '/common/src/head.html', 'utf8');
-                    const AppCommonHeadMap = fs.readFileSync(__dirname + '/common/src/head_map.html', 'utf8');
-                    const AppCommonHeadChart = fs.readFileSync(__dirname + '/common/src/head_chart.html', 'utf8');
-                    const AppCommonBody = fs.readFileSync(__dirname + '/common/src/body.html', 'utf8');
-                    const AppCommonProfileDetail = fs.readFileSync(__dirname + '/common/src/profile_detail.html', 'utf8');
-                    async function getAppComponents() {                        
-                        var app = app_result.replace(
-                            '<AppHead/>',
-                            `${AppHead}`);
+            const {promises: {readFile}} = require("fs");
+            const files = [
+                ['APP', __dirname + '/admin/src/index.html'],
+                ['<AppHead/>', __dirname + '/admin/src/head.html'],
+                ['<AppCommonHead/>', __dirname + '/common/src/head.html'],
+                ['<AppCommonHeadMap/>', __dirname + '/common/src/head_map.html'],
+                ['<AppCommonHeadChart/>', __dirname + '/common/src/head_chart.html'],
+                ['<AppCommonBody/>', __dirname + '/common/src/body.html'],
+                ['<AppCommonProfileDetail/>', __dirname + '/common/src/profile_detail.html'], //Profile tag in common body
+                ['<AppDialogues/>', __dirname + '/admin/src/dialogues.html']
+              ];
+            let i = 0;
+            Promise.all(files.map(file => {
+                return readFile(file[1], 'utf8');
+            })).then(fileBuffers => {
+                let app ='';
+                fileBuffers.forEach(fileBuffer => {
+                    if (app=='')
+                        app = fileBuffer.toString();
+                    else
                         app = app.replace(
-                            '<AppCommonHead/>',
-                            `${AppCommonHead}`);
-                        app = app.replace(
-                            '<AppCommonHeadMap/>',
-                            `${AppCommonHeadMap}`);
-                        app = app.replace(
-                            '<AppCommonHeadChart/>',
-                            `${AppCommonHeadChart}`);
-                        app = app.replace(
-                            '<AppDialogues/>',
-                            `${AppDialogues}`);
-                        app = app.replace(
-                            '<AppCommonBody/>',
-                            `${AppCommonBody}`);
-                        //Profile tag not used in common body
-                        app = app.replace(
-                            '<AppProfileInfo/>',
-                            '');
-                        //Profile tag AppCommonProfileDetail in common body
-                        app = app.replace(
-                            '<AppCommonProfileDetail/>',
-                            `${AppCommonProfileDetail}`);
-                        //Profile tag not used in common body
-                        app = app.replace(
-                            '<AppProfileTop/>',
-                            '');
-                        resolve (app);
-                    }
-                    getAppComponents();
-                }
+                                files[i][0],
+                                `${fileBuffer.toString()}`);
+                    i++;
+                });
+                //Profile tag not used in common body
+                app = app.replace(
+                        '<AppProfileInfo/>',
+                        '');
+                //Profile tag not used in common body
+                app = app.replace(
+                        '<AppProfileTop/>',
+                        '');        
+                resolve(app);
+            }).catch(err => {
+                createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
+                reject (err);
             });
         })
     },
     getMaintenance:(app_id) => {
         return new Promise(function (resolve, reject){
-            fs.readFile(__dirname + '/common/src/index_maintenance.html', 'utf-8', (err, app_result) => {
-                if (err) {
-                    createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
-                    resolve (err);  
-                }
-                else{
-                    const AppHead = fs.readFileSync(__dirname + '/common/src/head_maintenance.html', 'utf8');
-                    const AppCommonHead = fs.readFileSync(__dirname + '/common/src/head.html', 'utf8');
-                    const AppCommonBody = fs.readFileSync(__dirname + '/common/src/body.html', 'utf8');
-                    const AppCommonProfileDetail = fs.readFileSync(__dirname + '/common/src/profile_detail.html', 'utf8');
-                    async function getAppComponents() {                        
-                        var app = app_result.replace(
-                            '<AppHead/>',
-                            `${AppHead}`);
+            const {promises: {readFile}} = require("fs");
+            const files = [
+                ['APP', __dirname + '/common/src/index_maintenance.html'],
+                ['<AppHead/>', __dirname + '/common/src/head_maintenance.html'],
+                ['<AppCommonHead/>', __dirname + '/common/src/head.html'],
+                ['<AppCommonBody/>', __dirname + '/common/src/body.html'],
+                ['<AppCommonProfileDetail/>', __dirname + '/common/src/profile_detail.html'] //Profile tag in common body
+              ];
+            let i = 0;
+            Promise.all(files.map(file => {
+                return readFile(file[1], 'utf8');
+            })).then(fileBuffers => {
+                let app ='';
+                fileBuffers.forEach(fileBuffer => {
+                    if (app=='')
+                        app = fileBuffer.toString();
+                    else
                         app = app.replace(
-                            '<APP_ID/>',
-                            `${app_id==''?null:app_id}`);
-                        app = app.replace(
-                            '<AppCommonHead/>',
-                            `${AppCommonHead}`);
-                        app = app.replace(
-                            '<AppCommonBody/>',
-                            `${AppCommonBody}`);
-                        //Profile tag not used in common body
-                        app = app.replace(
-                            '<AppProfileInfo/>',
-                            '');
-                        //Profile tag not used in common body
-                        app = app.replace(
-                            '<AppCommonProfileDetail/>',
-                            `${AppCommonProfileDetail}`);
-                        //Profile tag not used in common body
-                        app = app.replace(
-                            '<AppProfileTop/>',
-                            '');                        
-                        resolve (app);
-                    }
-                    getAppComponents();
-                }
+                                files[i][0],
+                                `${fileBuffer.toString()}`);
+                    i++;
+                });
+                //replace appid in index file
+                app = app.replace(
+                        '<APP_ID/>',
+                        `${app_id==''?null:app_id}`);
+                //Profile tag not used in common body
+                app = app.replace(
+                        '<AppProfileInfo/>',
+                        '');
+                //Profile tag not used in common body
+                app = app.replace(
+                        '<AppProfileTop/>',
+                        '');        
+                resolve(app);
+            }).catch(err => {
+                createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
+                reject (err);
             });
         })
     }
