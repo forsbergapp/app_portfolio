@@ -264,26 +264,28 @@ module.exports = {
                 filename = `${data.logscope}_${data.loglevel}_${data.year}${data.month}.log`;
             else
                 filename = `${data.logscope}_${data.loglevel}_${data.year}${data.month}.log`;
-        let log;
         let fixed_log = [];
         let loggerror = 0;
         try {
             loggerror = 1;
-            log = fs.readFileSync(process.env.SERVICE_LOG_FILE_PATH_SERVER + filename , 'utf8'); 
-            loggerror = 2;
-            log.split('\r\n').forEach(function (record) {
-                if (record.length>0){
-                    let log_app_id = JSON.parse(record).app_id;
-                    if (log_app_id == parseInt(data.app_id) || data.app_id=='')
-                        fixed_log.push(JSON.parse(record));
-                }
-            })   
+            fs.readFile(process.env.SERVICE_LOG_FILE_PATH_SERVER + filename, 'utf8', (error, fileBuffer) => {
+                loggerror = 2;
+                if (error)
+                    return callBack(null, fixed_log);
+                else
+                    fileBuffer.toString().split('\r\n').forEach(function (record) {
+                        if (record.length>0){
+                            let log_app_id = JSON.parse(record).app_id;
+                            if (log_app_id == parseInt(data.app_id) || data.app_id=='')
+                                fixed_log.push(JSON.parse(record));
+                        }
+                    })
+                return callBack(null, fixed_log);
+            });
         } catch (error) {
-            log = '';
             if (loggerror == 2)
                 return callBack(error.message);
         }
-        return callBack(null, fixed_log);
     },
     getFiles: (callBack) => {
         let fs = require('fs');
@@ -308,13 +310,12 @@ module.exports = {
     },
     getPM2Logs: (callBack) => {
         let fs = require('fs');
-        let log ;
         try {
-            log = fs.readFileSync(process.env.SERVICE_LOG_FILE_PATH_SERVER + process.env.SERVICE_LOG_PM2_FILE , 'utf8'); 
+            fs.readFile(process.env.SERVICE_LOG_FILE_PATH_SERVER + process.env.SERVICE_LOG_PM2_FILE, 'utf8', (error, fileBuffer) => {
+                return callBack(null, fileBuffer.toString());
+            });    
         } catch (error) {
-            log = '';
             return callBack(error.message);
         }
-        return callBack(null, log);
     }
 };

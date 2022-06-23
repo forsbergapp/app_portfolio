@@ -4,132 +4,82 @@ module.exports = {
     getApp:(app_id, username) => {
         return new Promise(function (resolve, reject){
             function main(app_id){
-                const AppCommonHead = fs.readFileSync(__dirname + '/../common/src/head.html', 'utf8');
-                const AppCommonHeadMap = fs.readFileSync(__dirname + '/../common/src/head_map.html', 'utf8');
-                const AppCommonBody = fs.readFileSync(__dirname + '/../common/src/body.html', 'utf8');
-                const AppCommonProfileDetail = fs.readFileSync(__dirname + '/../common/src/profile_detail.html', 'utf8');
-                fs.readFile(__dirname + '/src/index.html', 'utf-8', (err, app_result) => {
-                    if (err) {
-                        createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
-                        resolve (err);  
-                    }
-                    else{
-                        const AppHead = fs.readFileSync(__dirname + '/src/head.html', 'utf8');
-                        const AppToolbarTop = fs.readFileSync(__dirname + '/src/toolbar_top.html', 'utf8');
-                        const AppPaper = fs.readFileSync(__dirname + '/src/paper.html', 'utf8');
-                        const AppSettingsTabNavigation = fs.readFileSync(__dirname + '/src/settings_tab_navigation.html', 'utf8');
-                        const AppSettingsTabNavigationTab1 = fs.readFileSync(__dirname + '/src/settings_tab_navigation_tab1.html', 'utf8');
-                        const AppSettingsTabNavigationTab2 = fs.readFileSync(__dirname + '/src/settings_tab_navigation_tab2.html', 'utf8');
-                        const AppSettingsTabNavigationTab3 = fs.readFileSync(__dirname + '/src/settings_tab_navigation_tab3.html', 'utf8');
-                        const AppSettingsTabNavigationTab4 = fs.readFileSync(__dirname + '/src/settings_tab_navigation_tab4.html', 'utf8');
-                        const AppSettingsTabNavigationTab5 = fs.readFileSync(__dirname + '/src/settings_tab_navigation_tab5.html', 'utf8');
-                        const AppSettingsTabNavigationTab6 = fs.readFileSync(__dirname + '/src/settings_tab_navigation_tab6.html', 'utf8');
-                        const AppSettingsTabNavigationTab7UserLoggedIn = fs.readFileSync(__dirname + '/src/settings_tab_navigation_tab7_user_logged_in.html', 'utf8');
-                        const AppSettingsTabNavigationTab7UserSettings = fs.readFileSync(__dirname + '/src/settings_tab_navigation_tab7_user_settings.html', 'utf8');
-                        
-                        const AppProfileInfo = fs.readFileSync(__dirname + '/src/profile_info.html', 'utf8');
-                        const AppProfileTop = fs.readFileSync(__dirname + '/src/profile_top.html', 'utf8');
-                        const AppWindowInfo = fs.readFileSync(__dirname + '/src/window_info.html', 'utf8');
-                        const AppWindowPreviewReport = fs.readFileSync(__dirname + '/src/window_preview_report.html', 'utf8');
-                        const AppDialogues = fs.readFileSync(__dirname + '/src/dialogues.html', 'utf8');
-                        const AppToolbarBottom = fs.readFileSync(__dirname + '/src/toolbar_bottom.html', 'utf8');        
-                        const { countries } = require("./src/countries");
-                        const { locales } = require("./src/locales");
-                        const { places } = require("./src/places");
-                        const { themes } = require("./src/themes");
-                        async function getAppComponents() {
-                            //modules with fetch from database
-                            const AppCountries = await countries(app_id);
-                            const AppLocales = await locales(app_id);
-                            const AppPlaces = await places(app_id);
-                            const AppThemes = await themes(app_id);
-                            
-                            var app = app_result.replace(
-                                '<AppHead/>',
-                                `${AppHead}`);
-                            app = app.replace(
-                                '<AppCommonHead/>',
-                                `${AppCommonHead}`);
-                            app = app.replace(
-                                '<AppCommonHeadMap/>',
-                                `${AppCommonHeadMap}`);
-                            app = app.replace(
-                                '<AppToolbarTop/>',
-                                `${AppToolbarTop}`);
-                            app = app.replace(
-                                '<AppPaper/>',
-                                `${AppPaper}`);
-                            app = app.replace(
-                                '<AppSettingsTabNavigation/>',
-                                `${AppSettingsTabNavigation}`);
-                            app = app.replace(
-                                '<AppSettingsTabNavigationTab1/>',
-                                `${AppSettingsTabNavigationTab1}`);
-                            //Locales tag used more than once, use RegExp for that
-                            app = app.replace(
+                const {promises: {readFile}} = require("fs");
+                const { countries } = require("./src/countries");
+                const { locales } = require("./src/locales");
+                const { places } = require("./src/places");
+                const { themes } = require("./src/themes");
+                const files = [
+                  ['APP', __dirname + '/src/index.html'],
+                  ['<AppCommonHead/>', __dirname + '/../common/src/head.html'],
+                  ['<AppCommonHeadMap/>', __dirname + '/../common/src/head_map.html'],
+                  ['<AppCommonBody/>', __dirname + '/../common/src/body.html'],
+                  ['<AppCommonProfileDetail/>', __dirname + '/../common/src/profile_detail.html'], //Profile tag in common body
+
+                  ['<AppHead/>', __dirname + '/src/head.html'],
+                  ['<AppToolbarTop/>', __dirname + '/src/toolbar_top.html'],
+                  ['<AppPaper/>', __dirname + '/src/paper.html'],
+                  ['<AppSettingsTabNavigation/>', __dirname + '/src/settings_tab_navigation.html'],
+                  ['<AppSettingsTabNavigationTab1/>', __dirname + '/src/settings_tab_navigation_tab1.html'],
+                  ['<AppSettingsTabNavigationTab2/>', __dirname + '/src/settings_tab_navigation_tab2.html'],
+                  ['<AppSettingsTabNavigationTab3/>', __dirname + '/src/settings_tab_navigation_tab3.html'],
+                  ['<AppSettingsTabNavigationTab4/>', __dirname + '/src/settings_tab_navigation_tab4.html'],
+                  ['<AppSettingsTabNavigationTab5/>', __dirname + '/src/settings_tab_navigation_tab5.html'],
+                  ['<AppSettingsTabNavigationTab6/>', __dirname + '/src/settings_tab_navigation_tab6.html'],
+                  ['<AppSettingsTabNavigationTab7UserLoggedIn/>', __dirname + '/src/settings_tab_navigation_tab7_user_logged_in.html'],
+                  ['<AppSettingsTabNavigationTab7UserSettings/>', __dirname + '/src/settings_tab_navigation_tab7_user_settings.html'],
+                  
+                  ['<AppProfileInfo/>', __dirname + '/src/profile_info.html'], /*Profile tag in common body*/
+                  ['<AppProfileTop/>', __dirname + '/src/profile_top.html'],   //Profile tag in common body
+                  ['<AppWindowInfo/>', __dirname + '/src/window_info.html'],
+                  ['<AppWindowPreviewReport/>', __dirname + '/src/window_preview_report.html'],
+                  ['<AppDialogues/>', __dirname + '/src/dialogues.html'],
+                  ['<AppToolbarBottom/>', __dirname + '/src/toolbar_bottom.html']
+                ];
+                let AppCountries;
+                let AppLocales;
+                let AppPlaces;
+                let AppThemes;
+                async function getAppComponents() {
+                    //modules with fetch from database
+                    AppCountries = await countries(app_id);
+                    AppLocales = await locales(app_id);
+                    AppPlaces = await places(app_id);
+                    AppThemes = await themes(app_id);
+                }
+                getAppComponents().then(function(){
+                    let i = 0;
+                    Promise.all(files.map(file => {
+                        return readFile(file[1], 'utf8');
+                    })).then(fileBuffers => {
+                        let app ='';
+                        fileBuffers.forEach(fileBuffer => {
+                            if (app=='')
+                                app = fileBuffer.toString();
+                            else
+                                app = app.replace(
+                                        files[i][0],
+                                        `${fileBuffer.toString()}`);
+                            i++;
+                        });
+                        //Locales tag used more than once, use RegExp for that
+                        app = app.replace(
                                 new RegExp('<AppLocales/>', 'g'),
                                 `${AppLocales}`);
-                            app = app.replace(
-                                '<AppSettingsTabNavigationTab2/>',
-                                `${AppSettingsTabNavigationTab2}`);
-                            app = app.replace(
+                        app = app.replace(
                                 '<AppCountries/>',
                                 `${AppCountries}`);
-                            app = app.replace(
+                        app = app.replace(
                                 '<AppPlaces/>',
                                 `${AppPlaces}`);
-                            app = app.replace(
-                                '<AppSettingsTabNavigationTab3/>',
-                                `${AppSettingsTabNavigationTab3}`);
-                            app = app.replace(
+                        app = app.replace(
                                 '<AppThemes/>',
                                 `${AppThemes}`);
-                            app = app.replace(
-                                '<AppSettingsTabNavigationTab4/>',
-                                `${AppSettingsTabNavigationTab4}`);
-                            app = app.replace(
-                                '<AppSettingsTabNavigationTab5/>',
-                                `${AppSettingsTabNavigationTab5}`);
-                            app = app.replace(
-                                '<AppSettingsTabNavigationTab6/>',
-                                `${AppSettingsTabNavigationTab6}`);
-                            app = app.replace(
-                                '<AppSettingsTabNavigationTab7UserLoggedIn/>',
-                                `${AppSettingsTabNavigationTab7UserLoggedIn}`);
-                            app = app.replace(
-                                '<AppSettingsTabNavigationTab7UserSettings/>',
-                                `${AppSettingsTabNavigationTab7UserSettings}`);
-                            app = app.replace(
-                                '<AppWindowInfo/>',
-                                `${AppWindowInfo}`);    
-                            app = app.replace(
-                                '<AppWindowPreviewReport/>',
-                                `${AppWindowPreviewReport}`);    
-                            app = app.replace(
-                                '<AppDialogues/>',
-                                `${AppDialogues}`);
-                            app = app.replace(
-                                '<AppToolbarBottom/>',
-                                `${AppToolbarBottom}`);
-                            app = app.replace(
-                                '<AppCommonBody/>',
-                                `${AppCommonBody}`);
-                            //Profile tag in common body
-                            app = app.replace(
-                                '<AppProfileInfo/>',
-                                `${AppProfileInfo}`);
-                            //Profile tag in common body
-                            app = app.replace(
-                                '<AppCommonProfileDetail/>',
-                                `${AppCommonProfileDetail}`);
-                            //Profile tag in common body
-                            app = app.replace(
-                                '<AppProfileTop/>',
-                                `${AppProfileTop}`);    
-                            resolve (app);
-                        }
-                        getAppComponents();
-                    }
+                        resolve(app);
+                    }).catch(err => {
+                        createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
+                        reject (err);
+                    });
                 });
             }
             if (username!=null){

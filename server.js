@@ -12,11 +12,7 @@ const fs = require("fs");
 const helmet = require("helmet");
 //module to save variables outside code
 require("dotenv").config();
-//SSL files for HTTPS
-const options = {
-	key: fs.readFileSync(process.env.SERVER_HTTPS_KEY),
-	cert: fs.readFileSync(process.env.SERVER_HTTPS_CERT)
-};
+
 //Create express application
 const app = express();
 //Logging variables
@@ -213,25 +209,36 @@ app.get("/admin",function (req, res, next) {
 app.get("/admin/:sub",function (req, res, next) {
     return res.redirect('https://' + req.headers.host + "/admin");
 });
-function load_apps_code(){
-  //load dynamic code for installed apps
-  // ex app1 file: apps/app1/server.js
-  const { getApp } = require ("./service/db/api/app/app.service");
-  getApp(process.env.APP0_ID,(err, results) =>{
-    if (err) {
-      console.log(err);
-    }
-    else {
-      let json = JSON.parse(JSON.stringify(results));
-      for (var i = 0; i < json.length; i++) {
-          if (json[i].id != 0)
-            eval(fs.readFileSync(`./apps/app${json[i].id}/server.js`, 'utf8'));
-      }
-    }
-  });
-}
-//load apps code after database is up
-setTimeout(function(){load_apps_code()}, 10000);
+
+const {init_db, mysql_pool, oracle_pool} = require ("./service/db/config/database");
+init_db().then(function(){
+  
+	let json;
+  const { getAppDBParameters } = require ("./service/db/api/app_parameter/app_parameter.service");
+  //app_id inparameter for log, all apps will be returned
+	getAppDBParameters(process.env.APP0_ID,(err, results) =>{
+		if (err) {
+			createLogAppSE(process.env.APP0_ID, __appfilename, __appfunction, __appline, `DB getApp, err:${err}`);
+		}
+		else {
+			json = JSON.parse(JSON.stringify(results));
+			for (var i = 1; i < json.length; i++) {
+				if (process.env.SERVICE_DB_USE==1){
+          mysql_pool(json[i].id, json[i].db_user, json[i].db_password);
+				}
+				else if (process.env.SERVICE_DB_USE==2){
+				  oracle_pool(json[i].id, json[i].db_user, json[i].db_password);				
+				}
+				//load dynamic server app code
+				const fs = require("fs");
+				fs.readFile(`./apps/app${json[i].id}/server.js`, 'utf8', (error, fileBuffer) => {
+				  eval(fileBuffer);
+				})
+			}
+		}
+	});
+})
+
 
 //info for search bots
 app.get('/robots.txt', function (req, res) {
@@ -293,8 +300,18 @@ app.get('/',function (req, res, next) {
 app.listen(process.env.SERVER_PORT, () => {
   createLogServer(null, null, null, "HTTP Server up and running on PORT: " + process.env.SERVER_PORT);
 });
-https.createServer(options, app).listen(process.env.SERVER_HTTPS_PORT, () => {
-  createLogServer(null, null, null, "HTTPS Server up and running on PORT: " + process.env.SERVER_HTTPS_PORT);
+//SSL files for HTTPS
+let options;
+fs.readFile(process.env.SERVER_HTTPS_KEY, 'utf8', (error, fileBuffer) => {
+  let env_key = fileBuffer.toString();
+  fs.readFile(process.env.SERVER_HTTPS_CERT, 'utf8', (error, fileBuffer) => {
+    let env_cert = fileBuffer.toString();
+    options = {
+      key: env_key,
+      cert: env_cert
+    };
+    https.createServer(options, app).listen(process.env.SERVER_HTTPS_PORT, () => {
+      createLogServer(null, null, null, "HTTPS Server up and running on PORT: " + process.env.SERVER_HTTPS_PORT);
+    });    
+  });  
 });
-
-

@@ -1,5 +1,5 @@
 <script>
-    init_common('', 'APP', 'INIT', 'admin_exception_after', true);
+    init_common('', 'APP', 'INIT', 'admin_logoff_app', true);
     window.global_rest_dt= '';
     window.global_app_rest_client_id= '';
     window.global_app_rest_client_secret= '';
@@ -326,7 +326,7 @@
         delete window.global_limit;
         delete window.global_previous_row;
     }
-    function admin_exception_after(){
+    function admin_logoff_app(){
         window.global_rest_admin_at = '';
         delete_globals();
         document.getElementById('menu_1').removeEventListener('click', function() { show_menu(1) }, false);

@@ -21,8 +21,9 @@ module.exports = {
 				//HTML
 				//called if format=html or not PDF or puppeteer creating PDF
 				const fs = require('fs');
-				const html = fs.readFileSync(__dirname + '/../..' + db_APP_REPORT_PATH + data.query.module, 'utf8');
-				res.send(html);
+				fs.readFile(__dirname + '/../..' + db_APP_REPORT_PATH + data.query.module, 'utf8', (error, fileBuffer) => {
+					res.send(fileBuffer.toString());
+				});
 			}
 			data.body.app_id 					  = data.query.app_id;
 			data.body.app_module 				  = 'REPORT';
