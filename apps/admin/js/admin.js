@@ -84,7 +84,7 @@ function init_app(){
     document.getElementById('admin_login_button').innerHTML = window.global_button_default_icon_login;
     keyfunctions();
 }
-function init(){
-    init_common('', 'APP', 'INIT', 'admin_exception_before');
+function init(parameters){
+    init_common(parameters);
     init_app();
 }

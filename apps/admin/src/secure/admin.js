@@ -1,12 +1,19 @@
 <script>
-    init_common('', 'APP', 'INIT', 'admin_logoff_app', true);
-    window.global_rest_dt= '';
-    window.global_app_rest_client_id= '';
-    window.global_app_rest_client_secret= '';
-    window.global_service_auth= '';
-    window.global_rest_base = '/service/db/api/';
+    init_common({   
+                app_id: 0,
+                module: 'APP',
+                module_type: 'INIT',
+                exception_app_function: 'admin_logoff_app',
+                close_eventsource: true,
+                ui: true,
+                service_auth: window.global_service_auth,
+                app_rest_client_id: window.global_app_rest_client_id,
+                app_rest_client_secret: window.global_app_rest_client_secret,
+                rest_app_parameter: window.global_rest_app_parameter
+                });
+
+
     window.global_rest_app= '';
-    window.global_rest_app_parameter = 'app_parameter';
     window.global_rest_parameter_type= '';
     window.global_rest_user_account= '';
     window.global_service_geolocation= '';
@@ -133,9 +140,8 @@
     document.getElementById('filesearch_menu4').addEventListener('click', function() { show_existing_logfiles();}, false);
     document.getElementById('list_pm2_log_title1').addEventListener('click', function() { list_click(this)}, false);
     document.getElementById('list_server_log_title2').addEventListener('click', function() { list_click(this)}, false);
-    
-    get_parameters().then(function(){
-        get_token().then(function(){
+    get_data_token(null, window.global_lang_code).then(function(){
+        get_parameters().then(function(){        
             get_apps().then(function(){
                 get_gps_from_ip().then(function(){
                     show_menu(1);
@@ -154,70 +160,43 @@
     async function get_parameters() {
         let status;
         let json;
-        await fetch(`${window.global_rest_base + window.global_rest_app_parameter}/0`,
-        {method: 'GET'})
-            .then(function(response) {
-                status = response.status;
-                return response.text();
-            })
-            .then(function(result) {
-                if (status==200){
-                    json = JSON.parse(result);
-                    for (var i = 0; i < json.data.length; i++) {
-                        if (json.data[i].parameter_name=='APP_REST_CLIENT_ID')
-                            window.global_app_rest_client_id = json.data[i].parameter_value;
-                        if (json.data[i].parameter_name=='APP_REST_CLIENT_SECRET')
-                            window.global_app_rest_client_secret = json.data[i].parameter_value;
-                        if (json.data[i].parameter_name=='SERVICE_AUTH')
-                            window.global_service_auth = 'https://' + location.hostname + json.data[i].parameter_value;
-                        if (json.data[i].parameter_name=='REST_APP')
-                            window.global_rest_app = json.data[i].parameter_value;
-                        if (json.data[i].parameter_name=='REST_PARAMETER_TYPE')
-                            window.global_rest_parameter_type = json.data[i].parameter_value;
-                        if (json.data[i].parameter_name=='REST_USER_ACCOUNT')
-                            window.global_rest_user_account = json.data[i].parameter_value;
-                        if (json.data[i].parameter_name=='SERVICE_GEOLOCATION')
-                            window.global_service_geolocation = 'https://' + location.hostname + json.data[i].parameter_value;
-                        if (json.data[i].parameter_name=='SERVICE_GEOLOCATION_GPS_IP')
-                            window.global_service_geolocation_gps_ip = json.data[i].parameter_value;
-                        if (json.data[i].parameter_name=='SERVICE_GEOLOCATION_GPS_PLACE')
-                            window.global_service_geolocation_gps_place = json.data[i].parameter_value;
-                        if (json.data[i].parameter_name=='GPS_MAP_ACCESS_TOKEN')
-                            window.global_gps_map_access_token = json.data[i].parameter_value;        
-                    }
-                }
-                else
-                    exception(status, result, window.global_lang_code);
-            });
-    }
-    async function get_token() {
-        let status;
-        let json;
-        await fetch(window.global_service_auth + '?app_id=0' + '&app_user_id=',
-            {method: 'POST',
-            headers: {
-                'Authorization': 'Basic ' + btoa(window.global_app_rest_client_id + ':' + window.global_app_rest_client_secret)
-                }
-            })
-            .then(function(response) {
-                status = response.status;
-                return response.text();
-            })
-            .then(function(result) {
-            if (status == 200){
+        await fetch(`${window.global_rest_url_base + window.global_rest_app_parameter}0`,
+                    {method: 'GET',
+                        headers: {
+                        'Authorization': 'Bearer ' + window.global_rest_dt
+                    }})
+        .then(function(response) {
+            status = response.status;
+            return response.text();
+        })
+        .then(function(result) {
+            if (status==200){
                 json = JSON.parse(result);
-                if (json.success === 1){
-                    window.global_rest_dt = json.token_dt;
+                for (var i = 0; i < json.data.length; i++) {
+                    if (json.data[i].parameter_name=='REST_APP')
+                        window.global_rest_app = json.data[i].parameter_value;
+                    if (json.data[i].parameter_name=='REST_PARAMETER_TYPE')
+                        window.global_rest_parameter_type = json.data[i].parameter_value;
+                    if (json.data[i].parameter_name=='REST_USER_ACCOUNT')
+                        window.global_rest_user_account = json.data[i].parameter_value;
+                    if (json.data[i].parameter_name=='SERVICE_GEOLOCATION')
+                        window.global_service_geolocation = json.data[i].parameter_value;
+                    if (json.data[i].parameter_name=='SERVICE_GEOLOCATION_GPS_IP')
+                        window.global_service_geolocation_gps_ip = json.data[i].parameter_value;
+                    if (json.data[i].parameter_name=='SERVICE_GEOLOCATION_GPS_PLACE')
+                        window.global_service_geolocation_gps_place = json.data[i].parameter_value;
+                    if (json.data[i].parameter_name=='GPS_MAP_ACCESS_TOKEN')
+                        window.global_gps_map_access_token = json.data[i].parameter_value;        
                 }
             }
             else
                 exception(status, result, window.global_lang_code);
-            });
+        });
     }
     async function get_apps() {
         let status;
         let json;
-        await fetch(window.global_rest_base + window.global_rest_app + '/admin?id=0',
+        await fetch(window.global_rest_url_base + window.global_rest_app + '/admin?id=0',
         {method: 'GET',
         headers: {
                 'Authorization': 'Bearer ' + window.global_rest_admin_at
@@ -282,11 +261,7 @@
     }
     function delete_globals(){
         //delete all globals in this file, not globals declared elsewhere
-        delete window.global_rest_dt;
-        delete window.global_app_rest_client_id;
-        delete window.global_app_rest_client_secret;
-        delete window.global_service_auth;
-        delete window.global_rest_base;
+        //and not some start variables
         delete window.global_rest_app;
         delete window.global_rest_app_parameter;
         delete window.global_rest_parameter_type;
@@ -412,7 +387,7 @@
             let app_id ='';
             let old_html = document.getElementById(`box${chart}`).innerHTML;
             document.getElementById(`box${chart}`).innerHTML = window.global_button_spinner;
-            await fetch(window.global_rest_base + `app_log/admin/stat/uniquevisitor?app_id=${app_id}&statchoice=${chart}&year=${current_year}&month=${current_month}`,
+            await fetch(window.global_rest_url_base + `app_log/admin/stat/uniquevisitor?app_id=${app_id}&statchoice=${chart}&year=${current_year}&month=${current_month}`,
             {method: 'GET',
                 headers: {
                     'Authorization': 'Bearer ' + window.global_rest_admin_at,
@@ -559,7 +534,7 @@
         if (admin_token_has_value()){
             let status;
             let json;
-            await fetch(window.global_rest_base + window.global_rest_user_account + '/admin/count',
+            await fetch(window.global_rest_url_base + window.global_rest_user_account + '/admin/count',
             {method: 'GET',
             headers: {
                     'Authorization': 'Bearer ' + window.global_rest_admin_at,
@@ -585,7 +560,7 @@
         if (admin_token_has_value()){
             let status;
             let json;
-            await fetch(window.global_rest_base + window.global_rest_app_parameter + '/admin/0?parameter_name=SERVER_MAINTENANCE',
+            await fetch(window.global_rest_url_base + window.global_rest_app_parameter + 'admin/0?parameter_name=SERVER_MAINTENANCE',
             {method: 'GET',
             headers: {
                     'Authorization': 'Bearer ' + window.global_rest_admin_at,
@@ -619,7 +594,7 @@
         let json_data = `{"app_id" : 0, 
                           "parameter_name":"SERVER_MAINTENANCE",
                           "parameter_value":${check_value}}`;
-        fetch(window.global_rest_base + window.global_rest_app_parameter + '/admin/value',
+        fetch(window.global_rest_url_base + window.global_rest_app_parameter + 'admin/value',
         {method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
@@ -654,7 +629,7 @@
                 document.getElementById('lov_title').innerHTML = 'PARAMETER TYPE';
                 document.getElementById('dialogue_lov').style.visibility = 'visible';
                 document.getElementById('lov_list').innerHTML = window.global_button_spinner;
-                fetch(window.global_rest_base + window.global_rest_parameter_type + `admin`,
+                fetch(window.global_rest_url_base + window.global_rest_parameter_type + `admin`,
                     {method: 'GET',
                         headers: {
                             'Authorization': 'Bearer ' + window.global_rest_admin_at,
@@ -701,7 +676,7 @@
         }
     }
     function get_parameter_type_name(row_item, item, old_value){
-        fetch(`${window.global_rest_base}${window.global_rest_parameter_type}admin?id=${item.value}`,
+        fetch(`${window.global_rest_url_base}${window.global_rest_parameter_type}admin?id=${item.value}`,
             {method: 'GET',
                 headers: {
                     'Authorization': 'Bearer ' + window.global_rest_admin_at,
@@ -775,7 +750,7 @@
         let json;
         let old_html = document.getElementById('list_apps').innerHTML;
         document.getElementById('list_apps').innerHTML = window.global_button_spinner;
-        await fetch(window.global_rest_base + window.global_rest_app + '/admin?id=0',
+        await fetch(window.global_rest_url_base + window.global_rest_app + '/admin?id=0',
             {method: 'GET',
                 headers: {
                     'Authorization': 'Bearer ' + window.global_rest_admin_at,
@@ -831,7 +806,7 @@
         let json;
         let old_html = document.getElementById('list_app_parameter').innerHTML;
         document.getElementById('list_app_parameter').innerHTML = window.global_button_spinner;
-        fetch(window.global_rest_base + window.global_rest_app_parameter + `/admin/all/${parseInt(app_id)}`,
+        fetch(window.global_rest_url_base + window.global_rest_app_parameter + `admin/all/${parseInt(app_id)}`,
             {method: 'GET',
                 headers: {
                     'Authorization': 'Bearer ' + window.global_rest_admin_at,
@@ -933,7 +908,7 @@
                                   "url": "${url}",
                                   "logo": "${logo}",
                                   "enabled": "${enabled==true?1:0}"}`;
-                    rest_url = `${window.global_rest_base}${window.global_rest_app}/admin/${id}`;
+                    rest_url = `${window.global_rest_url_base}${window.global_rest_app}/admin/${id}`;
                     break;
                 }
                 case 'app_parameter':{
@@ -942,7 +917,7 @@
                                   "parameter_type_id":"${parameter_type_id}",
                                   "parameter_value":"${parameter_value}",
                                   "parameter_comment":"${parameter_comment}"}`;
-                    rest_url = `${window.global_rest_base}${window.global_rest_app_parameter}/admin`;
+                    rest_url = `${window.global_rest_url_base}${window.global_rest_app_parameter}admin`;
                     break;
                 }
             }
@@ -1184,7 +1159,7 @@
             document.getElementById('list_app_log_col_title' + i).classList.remove('desc');
         }
         document.getElementById('list_app_log_col_title' + sort).classList.add(order_by);
-        await fetch(window.global_rest_base + `app_log?app_id=${app_id}&year=${year}&month=${month}&sort=${sort}&order_by=${order_by}&offset=${offset}&limit=${limit}`,
+        await fetch(window.global_rest_url_base + `app_log?app_id=${app_id}&year=${year}&month=${month}&sort=${sort}&order_by=${order_by}&offset=${offset}&limit=${limit}`,
             {method: 'GET',
                 headers: {
                     'Authorization': 'Bearer ' + window.global_rest_admin_at,
