@@ -168,119 +168,117 @@ async function get_parameters() {
     let status;
     let json;
     await fetch( window.global_rest_url_base + window.global_rest_app_parameter + window.global_app_id,
-      {method: 'GET'})
-        .then(function(response) {
-            status = response.status;
-            return response.text();
-        })
-        .then(function(result) {
-            if (status==200){
-                json = JSON.parse(result);
-                for (var i = 0; i < json.data.length; i++) {
-                    if (json.data[i].parameter_name=='APP_REST_CLIENT_ID')
-                        window.global_app_rest_client_id = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='APP_REST_CLIENT_SECRET')
-                        window.global_app_rest_client_secret = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='APP_COPYRIGHT')
-                        window.global_app_copyright =json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='APP_EMAIL')
-                        window.global_app_email = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='IMAGE_FILE_ALLOWED_TYPE1')
-                        window.global_image_file_allowed_type1 = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='IMAGE_FILE_ALLOWED_TYPE2')
-                        window.global_image_file_allowed_type2 = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='IMAGE_FILE_ALLOWED_TYPE3')
-                        window.global_image_file_allowed_type3 = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='IMAGE_FILE_MIME_TYPE')
-                        window.global_image_file_mime_type = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='IMAGE_FILE_MAX_SIZE')
-                        window.global_image_file_max_size = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='SERVICE_AUTH')
-                        window.global_service_auth = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='USER_IMAGE_AVATAR_WIDTH')
-                        window.global_user_image_avatar_width = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='USER_IMAGE_AVATAR_HEIGHT')
-                        window.global_user_image_avatar_height = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='USER_PROVIDER1_USE')
-                        window.global_app_user_provider1_use = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='USER_PROVIDER1_ID')
-                        window.global_app_user_provider1_id = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='USER_PROVIDER1_NAME')
-                        window.global_app_user_provider1_name = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='USER_PROVIDER1_API_SRC')
-                        window.global_app_user_provider1_api_src = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='USER_PROVIDER2_USE')
-                        window.global_app_user_provider2_use = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='USER_PROVIDER2_ID')
-                        window.global_app_user_provider2_id = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='USER_PROVIDER2_NAME')
-                        window.global_app_user_provider2_name = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='USER_PROVIDER2_API_VERSION')
-                        window.global_app_user_provider2_api_version = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='USER_PROVIDER2_API_SRC')
-                        window.global_app_user_provider2_api_src = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='USER_PROVIDER2_API_SRC2')
-                        window.global_app_user_provider2_api_src2 = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='REST_APP')
-                        window.global_rest_app = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='REST_APP_LOG')
-                        window.global_rest_app_log = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='REST_MESSAGE_TRANSLATION')
-                        window.global_rest_message_translation = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='REST_USER_ACCOUNT')
-                        window.global_rest_user_account = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='REST_USER_ACCOUNT_ACTIVATE')
-                        window.global_rest_user_account_activate = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='REST_USER_ACCOUNT_APP')
-                        window.global_rest_user_account_app = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='REST_USER_ACCOUNT_LIKE')
-                        window.global_rest_user_account_like = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='REST_USER_ACCOUNT_FOLLOW')
-                        window.global_rest_user_account_follow = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='REST_USER_ACCOUNT_LOGIN')
-                        window.global_rest_user_account_login = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='REST_USER_ACCOUNT_PROFILE_DETAIL')
-                        window.global_rest_user_account_profile_detail = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='REST_USER_ACCOUNT_PROFILE_SEARCHA')
-                        window.global_rest_user_account_profile_searchA = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='REST_USER_ACCOUNT_PROFILE_SEARCHD')
-                        window.global_rest_user_account_profile_searchD = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='REST_USER_ACCOUNT_PROFILE_TOP')
-                        window.global_rest_user_account_profile_top = json.data[i].parameter_value;                        
-                    if (json.data[i].parameter_name=='REST_USER_ACCOUNT_PROFILE_USERID')
-                        window.global_rest_user_account_profile_userid = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='REST_USER_ACCOUNT_PROFILE_USERNAME')
-                        window.global_rest_user_account_profile_username = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='REST_USER_ACCOUNT_PROVIDER')
-                        window.global_rest_user_account_provider = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='REST_USER_ACCOUNT_SIGNUP')
-                        window.global_rest_user_account_signup = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='SERVICE_GEOLOCATION')
-                        window.global_service_geolocation = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='SERVICE_GEOLOCATION_GPS_IP')
-                        window.global_service_geolocation_gps_ip = json.data[i].parameter_value;
-                    //QR
-                    if (json.data[i].parameter_name=='QR_LOGO_FILE_PATH')
-                        window.global_qr_logo_file_path = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='QR_WIDTH')
-                        window.global_qr_width = parseInt(json.data[i].parameter_value);
-                    if (json.data[i].parameter_name=='QR_HEIGHT')
-                        window.global_qr_height = parseInt(json.data[i].parameter_value);
-                    if (json.data[i].parameter_name=='QR_COLOR_DARK')
-                        window.global_qr_color_dark = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='QR_COLOR_LIGHT')
-                        window.global_qr_color_light = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='QR_LOGO_WIDTH')
-                        window.global_qr_logo_width = parseInt(json.data[i].parameter_value);
-                    if (json.data[i].parameter_name=='QR_LOGO_HEIGHT')
-                        window.global_qr_logo_height = parseInt(json.data[i].parameter_value);
-                    if (json.data[i].parameter_name=='QR_BACKGROUND_COLOR')
-                        window.global_qr_background_color = json.data[i].parameter_value;
+                {method: 'GET',
+                headers: {
+                    'Authorization': 'Bearer ' + window.global_rest_dt
                 }
+                })
+    .then(function(response) {
+        status = response.status;
+        return response.text();
+    })
+    .then(function(result) {
+        if (status==200){
+            json = JSON.parse(result);
+            for (var i = 0; i < json.data.length; i++) {
+                if (json.data[i].parameter_name=='APP_COPYRIGHT')
+                    window.global_app_copyright =json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='APP_EMAIL')
+                    window.global_app_email = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='IMAGE_FILE_ALLOWED_TYPE1')
+                    window.global_image_file_allowed_type1 = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='IMAGE_FILE_ALLOWED_TYPE2')
+                    window.global_image_file_allowed_type2 = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='IMAGE_FILE_ALLOWED_TYPE3')
+                    window.global_image_file_allowed_type3 = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='IMAGE_FILE_MIME_TYPE')
+                    window.global_image_file_mime_type = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='IMAGE_FILE_MAX_SIZE')
+                    window.global_image_file_max_size = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='USER_IMAGE_AVATAR_WIDTH')
+                    window.global_user_image_avatar_width = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='USER_IMAGE_AVATAR_HEIGHT')
+                    window.global_user_image_avatar_height = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='USER_PROVIDER1_USE')
+                    window.global_app_user_provider1_use = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='USER_PROVIDER1_ID')
+                    window.global_app_user_provider1_id = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='USER_PROVIDER1_NAME')
+                    window.global_app_user_provider1_name = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='USER_PROVIDER1_API_SRC')
+                    window.global_app_user_provider1_api_src = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='USER_PROVIDER2_USE')
+                    window.global_app_user_provider2_use = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='USER_PROVIDER2_ID')
+                    window.global_app_user_provider2_id = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='USER_PROVIDER2_NAME')
+                    window.global_app_user_provider2_name = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='USER_PROVIDER2_API_VERSION')
+                    window.global_app_user_provider2_api_version = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='USER_PROVIDER2_API_SRC')
+                    window.global_app_user_provider2_api_src = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='USER_PROVIDER2_API_SRC2')
+                    window.global_app_user_provider2_api_src2 = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='REST_APP')
+                    window.global_rest_app = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='REST_APP_LOG')
+                    window.global_rest_app_log = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='REST_MESSAGE_TRANSLATION')
+                    window.global_rest_message_translation = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='REST_USER_ACCOUNT')
+                    window.global_rest_user_account = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='REST_USER_ACCOUNT_ACTIVATE')
+                    window.global_rest_user_account_activate = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='REST_USER_ACCOUNT_APP')
+                    window.global_rest_user_account_app = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='REST_USER_ACCOUNT_LIKE')
+                    window.global_rest_user_account_like = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='REST_USER_ACCOUNT_FOLLOW')
+                    window.global_rest_user_account_follow = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='REST_USER_ACCOUNT_LOGIN')
+                    window.global_rest_user_account_login = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='REST_USER_ACCOUNT_PROFILE_DETAIL')
+                    window.global_rest_user_account_profile_detail = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='REST_USER_ACCOUNT_PROFILE_SEARCHA')
+                    window.global_rest_user_account_profile_searchA = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='REST_USER_ACCOUNT_PROFILE_SEARCHD')
+                    window.global_rest_user_account_profile_searchD = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='REST_USER_ACCOUNT_PROFILE_TOP')
+                    window.global_rest_user_account_profile_top = json.data[i].parameter_value;                        
+                if (json.data[i].parameter_name=='REST_USER_ACCOUNT_PROFILE_USERID')
+                    window.global_rest_user_account_profile_userid = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='REST_USER_ACCOUNT_PROFILE_USERNAME')
+                    window.global_rest_user_account_profile_username = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='REST_USER_ACCOUNT_PROVIDER')
+                    window.global_rest_user_account_provider = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='REST_USER_ACCOUNT_SIGNUP')
+                    window.global_rest_user_account_signup = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='SERVICE_GEOLOCATION')
+                    window.global_service_geolocation = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='SERVICE_GEOLOCATION_GPS_IP')
+                    window.global_service_geolocation_gps_ip = json.data[i].parameter_value;
+                //QR
+                if (json.data[i].parameter_name=='QR_LOGO_FILE_PATH')
+                    window.global_qr_logo_file_path = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='QR_WIDTH')
+                    window.global_qr_width = parseInt(json.data[i].parameter_value);
+                if (json.data[i].parameter_name=='QR_HEIGHT')
+                    window.global_qr_height = parseInt(json.data[i].parameter_value);
+                if (json.data[i].parameter_name=='QR_COLOR_DARK')
+                    window.global_qr_color_dark = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='QR_COLOR_LIGHT')
+                    window.global_qr_color_light = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='QR_LOGO_WIDTH')
+                    window.global_qr_logo_width = parseInt(json.data[i].parameter_value);
+                if (json.data[i].parameter_name=='QR_LOGO_HEIGHT')
+                    window.global_qr_logo_height = parseInt(json.data[i].parameter_value);
+                if (json.data[i].parameter_name=='QR_BACKGROUND_COLOR')
+                    window.global_qr_background_color = json.data[i].parameter_value;
             }
-            else
-                show_message('EXCEPTION', null,null, result, window.global_app_id, window.global_lang_code);
-        });
+        }
+        else
+            show_message('EXCEPTION', null,null, result, window.global_app_id, window.global_lang_code);
+    });
 }
 function zoom_info(zoomvalue = '') {
     let old;
@@ -519,7 +517,7 @@ async function onProviderSignIn_app(googleUser){
         }
     })
 }
-function init_app(){
+async function init_app(){
     document.getElementById("toggle_checkbox").checked = true;
     document.getElementById('info_diagram_img').src=window.global_img_diagram_img;
     document.getElementById('info_datamodel_img').src=window.global_img_datamodel_img;
@@ -567,21 +565,19 @@ function init_app(){
     keyfunctions();
     zoom_info('');
     move_info(null,null);
+    await get_data_token(null, window.global_lang_code);
 }
-function init(){
-    init_common(0, 'APP', 'HOME', 'app_exception');
-    init_app();
-    
-    get_parameters().then(function(){
-        document.getElementById('copyright').innerHTML = window.global_app_copyright;
-        document.getElementById('app_email').href='mailto:' + window.global_app_email;
-        document.getElementById('app_email').innerHTML=window.global_app_email;
-    
-        get_data_token(null, window.global_lang_code).then(function(){
+function init(parameters){
+    init_common(parameters);
+    init_app().then(function(){
+        get_parameters().then(function(){
+            document.getElementById('copyright').innerHTML = window.global_app_copyright;
+            document.getElementById('app_email').href='mailto:' + window.global_app_email;
+            document.getElementById('app_email').innerHTML=window.global_app_email;
             get_gps_from_ip(null, window.global_lang_code).then(function(){
                 app_log(window.global_module, 
                         window.global_module_type, 
-                        location.hostname, 
+                        location, 
                         window.global_session_user_gps_place, 
                         '', 
                         window.global_session_user_gps_latitude, 

@@ -466,5 +466,101 @@ module.exports = {
 			}
 			execute_sql();
 		}
+	},
+	getAppStartParameters: (app_id, callBack) => {
+		let service_auth = 'SERVICE_AUTH';
+		let app_rest_client_id = 'APP_REST_CLIENT_ID';
+		let app_rest_client_secret ='APP_REST_CLIENT_SECRET';
+		let rest_app_parameter ='REST_APP_PARAMETER';
+		if (process.env.SERVICE_DB_USE==1){
+			get_pool(app_id).query(
+				`SELECT
+						(SELECT ap.parameter_value
+						   FROM ${process.env.SERVICE_DB_DB1_NAME}.app_parameter ap
+                		  WHERE ap.parameter_name = ?
+						    AND ap.app_id = ?) service_auth,
+						(SELECT ap.parameter_value
+						   FROM ${process.env.SERVICE_DB_DB1_NAME}.app_parameter ap
+						  WHERE ap.parameter_name = ?
+				  		    AND ap.app_id = ?) app_rest_client_id,
+						(SELECT ap.parameter_value
+						   FROM ${process.env.SERVICE_DB_DB1_NAME}.app_parameter ap
+						  WHERE ap.parameter_name = ?
+							AND ap.app_id = ?) app_rest_client_secret,
+						(SELECT ap.parameter_value
+							FROM ${process.env.SERVICE_DB_DB1_NAME}.app_parameter ap
+							WHERE ap.parameter_name = ?
+								AND ap.app_id = ?) rest_app_parameter
+				  FROM DUAL`,
+				[service_auth,
+				 app_id,
+				 app_rest_client_id,
+				 app_id,
+				 app_rest_client_secret,
+				 app_id,
+				 rest_app_parameter,
+				 app_id],
+				(error, results, fields) => {
+					if (error){
+						createLogAppSE(app_id, __appfilename, __appfunction, __appline, error);
+						return callBack(error);
+					}
+					return callBack(null, results);
+				}
+			);
+		}
+		else if (process.env.SERVICE_DB_USE==2){
+			async function execute_sql(err, result){
+				let pool2;
+				try{
+				pool2 = await oracledb.getConnection(get_pool(process.env.APP0_ID));
+				const result = await pool2.execute(
+					`SELECT
+							(SELECT ap.parameter_value
+							   FROM ${process.env.SERVICE_DB_DB2_NAME}.app_parameter ap
+							  WHERE ap.parameter_name = :service_auth
+								AND ap.app_id = :app_id) "service_auth",
+							(SELECT ap.parameter_value
+							   FROM ${process.env.SERVICE_DB_DB2_NAME}.app_parameter ap
+							  WHERE ap.parameter_name = :app_rest_client_id
+								AND ap.app_id = :app_id) "app_rest_client_id",
+							(SELECT ap.parameter_value
+							   FROM ${process.env.SERVICE_DB_DB2_NAME}.app_parameter ap
+							  WHERE ap.parameter_name = :app_rest_client_secret
+								AND ap.app_id = :app_id) "app_rest_client_secret",
+							(SELECT ap.parameter_value
+								FROM ${process.env.SERVICE_DB_DB1_NAME}.app_parameter ap
+								WHERE ap.parameter_name = :rest_app_parameter
+									AND ap.app_id = :app_id) "rest_app_parameter"
+					  FROM DUAL`,
+					{app_id: app_id,
+					 service_auth: service_auth,
+					 app_rest_client_id: app_rest_client_id,
+					 app_rest_client_secret: app_rest_client_secret,
+					 rest_app_parameter: rest_app_parameter},
+					(err,result) => {
+						if (err) {
+							createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
+							return callBack(err);
+						}
+						else{
+							return callBack(null, result.rows);
+						}
+					});
+				}catch (err) {
+					createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
+					return callBack(err.message);
+				} finally {
+					if (pool2) {
+						try {
+							await pool2.close(); 
+						} catch (err) {
+							createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
+						}
+					}
+				}
+			}
+			execute_sql();
+		}
 	}
 };
