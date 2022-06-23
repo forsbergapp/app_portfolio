@@ -4,34 +4,31 @@ async function get_parameters() {
     var status;
     var json;
     await fetch(window.global_rest_url_base + window.global_rest_app_parameter + window.global_app_id,
-      {method: 'GET'})
-        .then(function(response) {
-            status = response.status;
-            return response.text();
-        })
-        .then(function(result) {
-            if (status==200){
-                json = JSON.parse(result);
-                for (var i = 0; i < json.data.length; i++) {
-                    if (json.data[i].parameter_name=='APP_REST_CLIENT_ID')
-                        window.global_app_rest_client_id = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='APP_REST_CLIENT_SECRET')
-                        window.global_app_rest_client_secret = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='SERVICE_AUTH')
-                        window.global_service_auth = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='REST_APP')
-                        window.global_rest_app = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='REST_APP_LOG')
-                        window.global_rest_app_log = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='SERVICE_GEOLOCATION')
-                        window.global_service_geolocation = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='SERVICE_GEOLOCATION_GPS_IP')
-                        window.global_service_geolocation_gps_ip = json.data[i].parameter_value;
-                }
+                {method: 'GET',
+                headers: {
+                'Authorization': 'Bearer ' + window.global_rest_dt
+                }})
+    .then(function(response) {
+        status = response.status;
+        return response.text();
+    })
+    .then(function(result) {
+        if (status==200){
+            json = JSON.parse(result);
+            for (var i = 0; i < json.data.length; i++) {
+                if (json.data[i].parameter_name=='REST_APP')
+                    window.global_rest_app = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='REST_APP_LOG')
+                    window.global_rest_app_log = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='SERVICE_GEOLOCATION')
+                    window.global_service_geolocation = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='SERVICE_GEOLOCATION_GPS_IP')
+                    window.global_service_geolocation_gps_ip = json.data[i].parameter_value;
             }
-            else
-                show_message('EXCEPTION', null,null, result, window.global_app_id, window.global_lang_code);
-        });
+        }
+        else
+            show_message('EXCEPTION', null,null, result, window.global_app_id, window.global_lang_code);
+    });
 }
 function zoom_info(zoomvalue = '') {
     var old;
@@ -110,23 +107,23 @@ async function init_app(){
     move_info(null,null);
     document.getElementById('window_info').style.visibility = 'visible';
     document.getElementById('info').innerHTML = `<img src="${window.global_img_datamodel_img}"/>`;
+    await get_data_token(null, window.global_lang_code);    
+
 }
-function init(){
-    init_common(2, 'APP', 'INIT', 'app_exception');
+function init(parameters){
+    init_common(parameters);
     init_app().then(function(){
         get_parameters().then(function(){
-            get_data_token(null, window.global_lang_code).then(function(){
-                get_gps_from_ip(null, window.global_lang_code).then(function(){
-                    app_log(window.global_module, 
-                            window.global_module_type, 
-                            location.hostname, 
-                            window.global_session_user_gps_place, 
-                            '', 
-                            window.global_session_user_gps_latitude, 
-                            window.global_session_user_gps_longitude,
-                            window.global_lang_code);
-                });
-            })
+            get_gps_from_ip(null, window.global_lang_code).then(function(){
+                app_log(window.global_module, 
+                        window.global_module_type, 
+                        location, 
+                        window.global_session_user_gps_place, 
+                        '', 
+                        window.global_session_user_gps_latitude, 
+                        window.global_session_user_gps_longitude,
+                        window.global_lang_code);
+            });
         })    
     })
 }
