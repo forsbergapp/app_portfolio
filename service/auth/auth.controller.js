@@ -67,7 +67,7 @@ module.exports = {
     checkAccessToken: (req, res, next) => {
 		let token = req.get("authorization");
 		if (token){
-            getParameter(0,'SERVICE_AUTH_TOKEN_ACCESS_SECRET', (err, db_SERVICE_AUTH_TOKEN_ACCESS_SECRET)=>{
+            getParameter(process.env.APP0_ID,'SERVICE_AUTH_TOKEN_ACCESS_SECRET', (err, db_SERVICE_AUTH_TOKEN_ACCESS_SECRET)=>{
 				if (err) {
                     createLogAppSE(req.query.app_id, __appfilename, __appfunction, __appline, err);
                 }
@@ -96,7 +96,7 @@ module.exports = {
     checkDataToken: (req, res, next) => {
 		let token = req.get("authorization");
 		if (token){
-            getParameter(0,'SERVICE_AUTH_TOKEN_DATA_SECRET', (err, db_SERVICE_AUTH_TOKEN_DATA_SECRET)=>{
+            getParameter(process.env.APP0_ID,'SERVICE_AUTH_TOKEN_DATA_SECRET', (err, db_SERVICE_AUTH_TOKEN_DATA_SECRET)=>{
 				if (err) {
                     createLogAppSE(req.query.app_id, __appfilename, __appfunction, __appline, err);
                 }
@@ -124,7 +124,7 @@ module.exports = {
 	},
     dataToken: (req, res) => {
         if(req.headers.authorization){
-            getParameters_server(0, (err, result)=>{
+            getParameters_server(process.env.APP0_ID, (err, result)=>{
                 if (err) {
                     createLogAppSE(req.query.app_id, __appfilename, __appfunction, __appline, err);
                 }
@@ -187,7 +187,7 @@ module.exports = {
         }
     },
     accessToken: (req, callBack) => {
-        getParameters_server(0, (err, result)=>{
+        getParameters_server(process.env.APP0_ID, (err, result)=>{
             if (err) {
                 createLogAppSE(req.body.app_id, __appfilename, __appfunction, __appline, err);
                 return  callBack(err);
