@@ -1,18 +1,18 @@
 const puppeteer = require('puppeteer');
 module.exports = {
-    getReportService: async (html, url, ps, hf) => {
+    getReportService: async (url, ps, hf) => {
         const browser = await puppeteer.launch({
+            pipe:true,
             headless: true,
-            args: [ '--ignore-certificate-errors' ]
+            ignoreHTTPSErrors: true,
+            args: [ '--ignore-certificate-errors',
+                    '--disable-gpu']
         });
         const webPage = await browser.newPage();
-        if (html!='')
-            await  webPage.setContent(html, {waitUntil: 'networkidle0'}); 
-        else
-            await webPage.goto(url, {
-                    timeout: 12000,
-                    waitUntil: "networkidle0"
-                });
+        await webPage.goto(url, {
+                timeout: 12000,
+                waitUntil: "networkidle2"
+            });
         
         if (ps=='A4'){
             //https://pixelsconverter.com/a-paper-sizes-to-pixels
