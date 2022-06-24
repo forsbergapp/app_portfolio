@@ -10,10 +10,9 @@ module.exports = {
 			if (data.query.format == 'pdf' && typeof data.query.service == "undefined" ){
 				const url = data.protocol + ':/' + data.get('host') + data.originalUrl + '&service=1';
 				//PDF
-				pdf = await getReportService('', 
-											url, 
-											data.query.ps, 			//papersize		A4, Letter
-											(data.query.hf==1));	//headerfooter	1/0
+				pdf = await getReportService(url, 
+											 data.query.ps, 			//papersize		A4, Letter
+											 (data.query.hf==1));	//headerfooter	1/0
 				res.type('application/pdf');
 				res.send(pdf);
 			}
