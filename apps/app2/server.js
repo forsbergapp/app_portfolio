@@ -25,7 +25,7 @@ app.get('/favicon.ico', function (req, res, next) {
     switch (req.headers.host.substring(0,req.headers.host.indexOf('.'))){
       case 'app2':{
         const { getParameter} = require ("./service/db/api/app_parameter/app_parameter.service");
-        getParameter(process.env.APP0_ID,'SERVER_MAINTENANCE', (err, db_SERVER_MAINTENANCE)=>{
+        getParameter(process.env.MAIN_APP_ID,'SERVER_MAINTENANCE', (err, db_SERVER_MAINTENANCE)=>{
           if (err)
             createLogAppSE(APP2_ID, __appfilename, __appfunction, __appline, err);      
           else{

@@ -216,9 +216,9 @@ init_db().then(function(){
 	let json;
   const { getAppDBParameters } = require ("./service/db/api/app_parameter/app_parameter.service");
   //app_id inparameter for log, all apps will be returned
-	getAppDBParameters(process.env.APP0_ID,(err, results) =>{
+	getAppDBParameters(process.env.MAIN_APP_ID,(err, results) =>{
 		if (err) {
-			createLogAppSE(process.env.APP0_ID, __appfilename, __appfunction, __appline, `DB getApp, err:${err}`);
+			createLogAppSE(process.env.MAIN_APP_ID, __appfilename, __appfunction, __appline, `DB getApp, err:${err}`);
 		}
 		else {
 			json = JSON.parse(JSON.stringify(results));
@@ -271,19 +271,19 @@ app.get('/',function (req, res, next) {
     case '':
     case 'www':{
       const { getParameter} = require ("./service/db/api/app_parameter/app_parameter.service");
-      getParameter(process.env.APP0_ID,'SERVER_MAINTENANCE', (err, db_SERVER_MAINTENANCE)=>{
+      getParameter(process.env.MAIN_APP_ID,'SERVER_MAINTENANCE', (err, db_SERVER_MAINTENANCE)=>{
         if (err)
-          createLogAppSE(process.env.APP0_ID, __appfilename, __appfunction, __appline, err);      
+          createLogAppSE(process.env.MAIN_APP_ID, __appfilename, __appfunction, __appline, err);      
         else{
             if (db_SERVER_MAINTENANCE==1){
               const { getMaintenance} = require("./service/forms/forms.controller");
-              getMaintenance(process.env.APP0_ID,(err, app_result)=>{
+              getMaintenance(process.env.MAIN_APP_ID,(err, app_result)=>{
                   return res.send(app_result);
               })
             }
             else{
               const { getForm} = require("./service/forms/forms.controller");
-              getForm(process.env.APP0_ID, null,(err, app_result)=>{
+              getForm(process.env.MAIN_APP_ID, null,(err, app_result)=>{
                   return res.send(app_result);
               })
             }

@@ -36,7 +36,7 @@ module.exports = {
                 app = app.replace(
                     '<AppProfileTop/>',
                     '');
-                getAppStartParameters(process.env.APP0_ID, (err,result) =>{
+                getAppStartParameters(process.env.MAIN_APP_ID, (err,result) =>{
                     if (err)
                         reject(err);
                     else{
@@ -47,6 +47,7 @@ module.exports = {
                             exception_app_function: 'app_exception',
                             close_eventsource: null,
                             ui: true,
+                            admin: null,
                             service_auth: result[0].service_auth,
                             app_rest_client_id: result[0].app_rest_client_id,
                             app_rest_client_secret: result[0].app_rest_client_secret,

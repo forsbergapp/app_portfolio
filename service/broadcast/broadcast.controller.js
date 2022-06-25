@@ -8,10 +8,10 @@ module.exports = {
         res.writeHead(200, headers);
         const intervalId = setInterval(() => {
             const { getParameter } = require ("../db/api/app_parameter/app_parameter.service");
-            getParameter(process.env.APP0_ID,'SERVER_MAINTENANCE', (err, db_SERVER_MAINTENANCE)=>{
+            getParameter(process.env.MAIN_APP_ID,'SERVER_MAINTENANCE', (err, db_SERVER_MAINTENANCE)=>{
                 if (err){
                     const {createLogAppSE} = require("../log/log.service");
-                    createLogAppSE(process.env.APP0_ID, __appfilename, __appfunction, __appline, err);
+                    createLogAppSE(process.env.MAIN_APP_ID, __appfilename, __appfunction, __appline, err);
                 }
                 else{
                     if (db_SERVER_MAINTENANCE==1){
@@ -26,8 +26,8 @@ module.exports = {
         req.query.app_user_id ='';
         let app_id = req.query.app_id;
         if (req.query.app_id ==''){
-            //use APP0_ID to use in log if this is called from admin without app_id
-            req.query.app_id = process.env.APP0_ID;
+            //use MAIN_APP_ID to use in log if this is called from admin without app_id
+            req.query.app_id = process.env.MAIN_APP_ID;
         }
         let res2;
         getIp(req, res2, (err, geodata) =>{
@@ -132,7 +132,7 @@ module.exports = {
     },
     sendBroadcast: (req, res) => {
         let broadcast;
-        if (req.body.destination_app ==1){
+        if (req.body.destination_app ==true){
             //broadcast to all connected to given app_id
             broadcast_clients.forEach(client=>{
                 if (client.app_id == req.body.app_id || req.body.app_id == null){
