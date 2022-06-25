@@ -200,7 +200,7 @@ module.exports = {
 				 limit],
 				(error, results, fields) => {
 					if (error){
-						createLogAppSE(process.env.APP0_ID, __appfilename, __appfunction, __appline, error);
+						createLogAppSE(process.env.MAIN_APP_ID, __appfilename, __appfunction, __appline, error);
 						return callBack(error);
 					}
 					return callBack(null, results);
@@ -246,7 +246,7 @@ module.exports = {
 					 limit:limit},
 					(err,result) => {
 						if (err) {
-							createLogAppSE(process.env.APP0_ID, __appfilename, __appfunction, __appline, err);
+							createLogAppSE(process.env.MAIN_APP_ID, __appfilename, __appfunction, __appline, err);
 							return callBack(err);
 						}
 						else{
@@ -254,14 +254,14 @@ module.exports = {
 						}
 					});
 				}catch (err) {
-					createLogAppSE(process.env.APP0_ID, __appfilename, __appfunction, __appline, err);
+					createLogAppSE(process.env.MAIN_APP_ID, __appfilename, __appfunction, __appline, err);
 					return callBack(err.message);
 				} finally {
 					if (pool2) {
 						try {
 							await pool2.close(); 
 						} catch (err) {
-							createLogAppSE(process.env.APP0_ID, __appfilename, __appfunction, __appline, err);
+							createLogAppSE(process.env.MAIN_APP_ID, __appfilename, __appfunction, __appline, err);
 						}
 					}
 				}

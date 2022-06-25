@@ -129,7 +129,7 @@ app.get("/app1/manifest.json",function (req, res) {
           return res.redirect('https://' + req.headers.host);
         else{
           const { getParameter} = require ("./service/db/api/app_parameter/app_parameter.service");
-          getParameter(process.env.APP0_ID,'SERVER_MAINTENANCE', (err, db_SERVER_MAINTENANCE)=>{
+          getParameter(process.env.MAIN_APP_ID,'SERVER_MAINTENANCE', (err, db_SERVER_MAINTENANCE)=>{
             if (err)
               createLogAppSE(APP1_ID, __appfilename, __appfunction, __appline, err);      
             else{
@@ -178,7 +178,7 @@ app.get("/app1/manifest.json",function (req, res) {
     switch (req.headers.host.substring(0,req.headers.host.indexOf('.'))){
     case 'app1':{
         const { getParameter} = require ("./service/db/api/app_parameter/app_parameter.service");
-        getParameter(process.env.APP0_ID,'SERVER_MAINTENANCE', (err, db_SERVER_MAINTENANCE)=>{
+        getParameter(process.env.MAIN_APP_ID,'SERVER_MAINTENANCE', (err, db_SERVER_MAINTENANCE)=>{
           if (err)
             createLogAppSE(APP1_ID, __appfilename, __appfunction, __appline, err);      
           else{
