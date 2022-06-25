@@ -1,11 +1,12 @@
 <script>
     init_common({   
-                app_id: 0,
+                app_id: '',
                 module: 'APP',
                 module_type: 'INIT',
                 exception_app_function: 'admin_logoff_app',
                 close_eventsource: true,
                 ui: true,
+                admin: true,
                 service_auth: window.global_service_auth,
                 app_rest_client_id: window.global_app_rest_client_id,
                 app_rest_client_secret: window.global_app_rest_client_secret,
@@ -226,7 +227,7 @@
     async function get_gps_from_ip() {
         let status;
         await fetch(window.global_service_geolocation + window.global_service_geolocation_gps_ip + 
-                    '?app_id=' + 0 + 
+                    '?app_id=' + window.global_main_app_id + 
                     '&app_user_id=' +
                     '&lang_code=en',
             {
@@ -591,7 +592,7 @@
             check_value = 1;
         else
             check_value = 0;
-        let json_data = `{"app_id" : 0, 
+        let json_data = `{"app_id" : ${window.global_main_app_id}, 
                           "parameter_name":"SERVER_MAINTENANCE",
                           "parameter_value":${check_value}}`;
         fetch(window.global_rest_url_base + window.global_rest_app_parameter + 'admin/value',
@@ -898,11 +899,11 @@
             document.getElementById('apps_save').innerHTML = window.global_button_spinner;
             switch (table){
                 case 'app':{
-                    if (id==0){
-                        //app 0 should always be enabled
+                    if (id==window.global_main_app_id){
+                        //app window.global_main_app_id should always be enabled
                         element.children[4].children[0].checked = true;
                         enabled=true;
-                        show_message('INFO', null, null, 'App 0 should always be enabled', window.global_main_app_id, window.global_lang_code);
+                        show_message('INFO', null, null, `App ${window.global_main_app_id} should always be enabled`, window.global_main_app_id, window.global_lang_code);
                     }
                     json_data = `{"app_name": "${app_name}",
                                   "url": "${url}",
@@ -1278,7 +1279,7 @@
         if (item.className.indexOf('gps_click')>0){
             let status;
             fetch(window.global_service_geolocation + window.global_service_geolocation_gps_place + 
-                        '?app_id=' + 0 +
+                        '?app_id=' + window.global_main_app_id +
                         '&app_user_id=' + 
                         '&latitude=' + item.parentNode.children[5].children[0].innerHTML +
                         '&longitude=' + item.parentNode.children[6].children[0].innerHTML +
@@ -1327,14 +1328,14 @@
         }
         
         if (document.getElementById('client_id').innerHTML==''){
-            destination_app=1;
+            destination_app=true;
             app_id = document.getElementById('select_app_broadcast').options[document.getElementById('select_app_broadcast').selectedIndex].value;
             if (app_id == '')
                 app_id = 'null';
             client_id = 'null';
         }
         else{
-            destination_app=0;
+            destination_app=false;
             client_id = document.getElementById('client_id').innerHTML;
             app_id = 'null';
         }

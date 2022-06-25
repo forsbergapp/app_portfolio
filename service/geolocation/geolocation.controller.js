@@ -13,7 +13,7 @@ module.exports = {
 			data.query.longitude=='undefined'){
 			 //Missing latitude or longitude
 			 getMessage(20500, 
-				process.env.APP0_ID, 
+				process.env.MAIN_APP_ID, 
 				data.query.lang_code, (err,results)  => {
 					return res.status(500).send(
 						results.text
@@ -21,7 +21,7 @@ module.exports = {
 				});
 			}
 		else{	
-			getParameter(process.env.APP0_ID,'SERVICE_GEOLOCATION_URL_GPS_PLACE', (err, db_SERVICE_GEOLOCATION_URL_GPS_PLACE)=>{
+			getParameter(process.env.MAIN_APP_ID,'SERVICE_GEOLOCATION_URL_GPS_PLACE', (err, db_SERVICE_GEOLOCATION_URL_GPS_PLACE)=>{
 				if (err) {
 					createLogAppSE(data.query.app_id, __appfilename, __appfunction, __appline, err);
                 }
@@ -58,7 +58,7 @@ module.exports = {
 		var geodata;
 		var result;
 		var url;
-		getParameter(process.env.APP0_ID,'SERVICE_GEOLOCATION_URL_GPS_IP', (err, db_SERVICE_GEOLOCATION_URL_GPS_IP)=>{
+		getParameter(process.env.MAIN_APP_ID,'SERVICE_GEOLOCATION_URL_GPS_IP', (err, db_SERVICE_GEOLOCATION_URL_GPS_IP)=>{
 			if (err) {
 				createLogAppSE(data.query.app_id, __appfilename, __appfunction, __appline, err);
 			}
