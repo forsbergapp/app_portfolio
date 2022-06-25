@@ -398,7 +398,7 @@ module.exports = {
 		let db_user = `SERVICE_DB_DB${process.env.SERVICE_DB_USE}_APP_USER`;
 		let db_password = `SERVICE_DB_DB${process.env.SERVICE_DB_USE}_APP_PASSWORD`;
 		if (process.env.SERVICE_DB_USE==1){
-			get_pool(process.env.APP0_ID).query(
+			get_pool(process.env.MAIN_APP_ID).query(
 				`SELECT
 						a.id,
 						(SELECT ap.parameter_value
@@ -426,7 +426,7 @@ module.exports = {
 			async function execute_sql(err, result){
 				let pool2;
 				try{
-				pool2 = await oracledb.getConnection(get_pool(process.env.APP0_ID));
+				pool2 = await oracledb.getConnection(get_pool(process.env.MAIN_APP_ID));
 				const result = await pool2.execute(
 					`SELECT
 							a.id "id",
@@ -513,7 +513,7 @@ module.exports = {
 			async function execute_sql(err, result){
 				let pool2;
 				try{
-				pool2 = await oracledb.getConnection(get_pool(process.env.APP0_ID));
+				pool2 = await oracledb.getConnection(get_pool(process.env.MAIN_APP_ID));
 				const result = await pool2.execute(
 					`SELECT
 							(SELECT ap.parameter_value

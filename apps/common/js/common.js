@@ -1,17 +1,23 @@
-function set_globals(ui, service_auth, app_rest_client_id, app_rest_client_secret, rest_app_parameter){
-    window.global_app_rest_client_id = app_rest_client_id;
-    window.global_app_rest_client_secret = app_rest_client_secret;
-    window.global_service_auth = service_auth;
-    window.global_rest_app_parameter = rest_app_parameter;
-    window.global_app_id;
+function set_globals(parameters){
+    window.global_app_id = parameters.app_id;
+    window.global_module = parameters.module;
+    window.global_module_type = parameters.module_type;
+    window.global_exception_app_function = parameters.exception_app_function;
+
+    window.global_admin = parameters.admin;
+    window.global_service_auth = parameters.service_auth;
+    window.global_app_rest_client_id = parameters.app_rest_client_id;
+    window.global_app_rest_client_secret = parameters.app_rest_client_secret;
+    window.global_rest_app_parameter = parameters.rest_app_parameter;
+    
     window.global_app_name;
     window.global_app_hostname;
     window.global_main_app_id 					= 0;
+
     // if app not using translation then use default lang_code from navigator
     window.global_lang_code                     = navigator.language;
     window.global_rest_url_base 				= '/service/db/api/';
-    
-    
+
     window.global_app_copyright;
     
     window.global_app_user_provider1_use;
@@ -75,7 +81,7 @@ function set_globals(ui, service_auth, app_rest_client_id, app_rest_client_secre
     window.global_module;
     window.global_module_type;
     window.global_exception_app_function;
-    if (ui==true){
+    if (parameters.ui==true){
         //spinner
         window.global_button_spinner = `<div id="button_spinner" class="load-spinner">
                                             <div></div>
@@ -1718,8 +1724,13 @@ async function getAppstartParameters(token, callBack){
 }
 async function get_data_token(user_id, lang_code) {
     let status;
+    let app_id;
+    if (window.global_admin==true)
+        app_id = window.global_main_app_id;
+    else
+        app_id = window.global_app_id;
     await fetch(window.global_service_auth + 
-                '?app_id=' + window.global_app_id + 
+                '?app_id=' + app_id + 
                 '&app_user_id=' + user_id +
                 '&lang_code=' + lang_code, {
         method: 'POST',
@@ -2173,23 +2184,20 @@ function init_common(parameters){
      exception_app_function:
      close_eventsource:
      ui:
+     admin:
      service_auth: 
      global_rest_client_id: 
      global_rest_client_secret:
      rest_app_parameter:}
     */
-    set_globals(parameters.ui, parameters.service_auth, parameters.app_rest_client_id, parameters.app_rest_client_secret, parameters.rest_app_parameter);
-    window.global_app_id = parameters.app_id;
-    window.global_module = parameters.module;
-    window.global_module_type = parameters.module_type;
-    window.global_exception_app_function = parameters.exception_app_function;
+    set_globals(parameters);
 
     window.global_clientId = Date.now();
     if (parameters.close_eventsource==true)
         window.global_eventSource.close();
     window.global_eventSource = new EventSource(`/service/broadcast/connect/${window.global_clientId}?app_id=${window.global_app_id}`);
     window.global_eventSource.onmessage = function (event) {
-        if (window.global_app_id === '')
+        if (window.global_admin == true)
             null;
         else
             show_broadcast(event.data);
