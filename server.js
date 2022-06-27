@@ -211,35 +211,45 @@ app.get("/admin/:sub",function (req, res, next) {
 });
 
 const {init_db, mysql_pool, oracle_pool} = require ("./service/db/config/database");
-init_db().then(function(){
-  
-	let json;
-  const { getAppDBParameters } = require ("./service/db/api/app_parameter/app_parameter.service");
-  //app_id inparameter for log, all apps will be returned
-	getAppDBParameters(process.env.MAIN_APP_ID,(err, results) =>{
-		if (err) {
-			createLogAppSE(process.env.MAIN_APP_ID, __appfilename, __appfunction, __appline, `DB getApp, err:${err}`);
-		}
-		else {
-			json = JSON.parse(JSON.stringify(results));
-			for (var i = 1; i < json.length; i++) {
-				if (process.env.SERVICE_DB_USE==1){
-          mysql_pool(json[i].id, json[i].db_user, json[i].db_password);
-				}
-				else if (process.env.SERVICE_DB_USE==2){
-				  oracle_pool(json[i].id, json[i].db_user, json[i].db_password);				
-				}
-				//load dynamic server app code
-				const fs = require("fs");
-				fs.readFile(`./apps/app${json[i].id}/server.js`, 'utf8', (error, fileBuffer) => {
-				  eval(fileBuffer);
-				})
-			}
-		}
-	});
+init_db((err, result) =>{
+  if (err)
+    createLogAppSE(process.env.MAIN_APP_ID, __appfilename, __appfunction, __appline, `DB init_db, err:${err}`);  
+  else{
+    let json;
+    const { getAppDBParameters } = require ("./service/db/api/app_parameter/app_parameter.service");
+    //app_id inparameter for log, all apps will be returned
+    getAppDBParameters(process.env.MAIN_APP_ID,(err, results) =>{
+      if (err) {
+        createLogAppSE(process.env.MAIN_APP_ID, __appfilename, __appfunction, __appline, `DB getApp, err:${err}`);
+      }
+      else {
+        json = JSON.parse(JSON.stringify(results));
+        function start_pool(app_id, db_user, db_password){
+          const fs = require("fs");
+          function load_dynamic_code(app_id){
+            //load dynamic server app code
+            fs.readFile(`./apps/app${app_id}/server.js`, 'utf8', (error, fileBuffer) => {
+              eval(fileBuffer);
+            });
+          }
+          if (process.env.SERVICE_DB_USE==1){
+            mysql_pool(app_id, db_user, db_password, (err, result) =>{
+              load_dynamic_code(app_id);
+            });
+          }
+          else if (process.env.SERVICE_DB_USE==2){
+            oracle_pool(app_id, db_user, db_password, (err, result)=>{
+              load_dynamic_code(app_id);
+            });
+          }
+        }
+        for (var i = 1; i < json.length; i++) {
+          start_pool(json[i].id, json[i].db_user, json[i].db_password);
+        }
+      }
+    }); 
+  }
 })
-
-
 //info for search bots
 app.get('/robots.txt', function (req, res) {
   res.type('text/plain');
