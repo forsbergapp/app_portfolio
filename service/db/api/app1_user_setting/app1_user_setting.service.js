@@ -255,10 +255,10 @@ module.exports = {
 								SYSDATE,
 								:user_account_id,
 								:app_id
-						FROM DUAL
+						FROM DUAL 
 						WHERE NOT EXISTS (SELECT null
 										    FROM ${process.env.SERVICE_DB_DB2_NAME}.app1_user_setting aus
-										   WHERE :initial = 1
+										   WHERE :initial_setting = 1
 										 	 AND aus.user_account_id = :user_account_id
 											 AND aus.app_id = :app_id)`,
 					{
@@ -315,7 +315,7 @@ module.exports = {
 						prayer_column_fast_start_end_select_id: data.prayer_column_fast_start_end_select_id,
 						user_account_id: data.user_account_id,
 						app_id: app_id,
-						initial: initial
+						initial_setting: initial
 					},
 					(err,result) => {
 						if (err) {
@@ -363,7 +363,12 @@ module.exports = {
 									}
 								}
 							}
-							execute_sql2();
+							if (initial==1)
+								//user logged in and if user setting is created or not
+								//not used here
+								return callBack(null, result);
+							else
+								execute_sql2();
 						}
 					});
 				}catch (err) {
@@ -687,7 +692,8 @@ module.exports = {
 					WHERE user_account_id = :user_account_id 
 					  AND app_id = :app_id`,
 					{
-						user_account_id: id
+						user_account_id: id,
+						app_id: app_id
 					},
 				 	(err,result) => {
 						if (err) {
@@ -1357,7 +1363,7 @@ module.exports = {
 						prayer_column_midnight_checked = :prayer_column_midnight_checked,
 						prayer_column_fast_start_end_select_id = :prayer_column_fast_start_end_select_id,
 						user_account_id = :user_account_id,
-						app_id = :app_id
+						app_id = :app_id,
 						date_modified = SYSDATE
 					WHERE id = :id `,
 					{
