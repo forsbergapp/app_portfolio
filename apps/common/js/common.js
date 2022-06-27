@@ -1954,11 +1954,11 @@ function show_message(message_type, code, function_event, message_text='', app_i
                 else{
                     //message from Mysql, code + sqlMessage
                     if (typeof JSON.parse(message_text).sqlMessage !== "undefined")
-                        message_title.innerHTML= JSON.parse(message_text).sqlMessage;
+                        message_title.innerHTML= 'DB Error: ' + JSON.parse(message_text).sqlMessage;
                     else{
                         //message from Oracle, errorNum, offset
                         if (typeof JSON.parse(message_text).errorNum !== "undefined")
-                            message_title.innerHTML= JSON.parse(message_text).errorNum;
+                            message_title.innerHTML= 'DB Error: ' + message_text;
                         else{
                             message_text = message_text.replace('<pre>','');
                             message_text = message_text.replace('</pre>','');
