@@ -409,7 +409,7 @@ module.exports = {
 						   FROM ${process.env.SERVICE_DB_DB1_NAME}.app_parameter ap
 						  WHERE ap.parameter_name = ?
 				  		    AND ap.app_id = a.id) db_password
-				  FROM app a
+				  FROM ${process.env.SERVICE_DB_DB1_NAME}.app a
 				ORDER BY 1`,
 				[db_user,
 				 db_password],
@@ -432,13 +432,13 @@ module.exports = {
 							a.id "id",
 							(SELECT ap.parameter_value
 							   FROM ${process.env.SERVICE_DB_DB2_NAME}.app_parameter ap
-							  WHERE ap.parameter_name = ?
+							  WHERE ap.parameter_name = :db_user
 								AND ap.app_id = a.id) "db_user",
 							(SELECT ap.parameter_value
 						  	   FROM ${process.env.SERVICE_DB_DB2_NAME}.app_parameter ap
-							  WHERE ap.parameter_name = ?
+							  WHERE ap.parameter_name = :db_password
 							    AND ap.app_id = a.id) "db_password"
-					   FROM app a
+					   FROM ${process.env.SERVICE_DB_DB2_NAME}.app a
 					ORDER BY 1, 3`,
 					{db_user: db_user,
 					 db_password: db_password},
