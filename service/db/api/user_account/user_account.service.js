@@ -517,7 +517,7 @@ module.exports = {
 						AND EXISTS(SELECT NULL
 									 FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_app uap
 								    WHERE uap.user_account_id = u.id
-  									  AND uap.app_id = ?)`,
+  									  AND uap.app_id = :app_id)`,
 						{
                             user_accound_id_current_user1: id_current_user,
                             user_accound_id_current_user2: id_current_user,
@@ -1011,7 +1011,7 @@ module.exports = {
 									AND    3 = :statchoice_visited) t
 							WHERE EXISTS(SELECT NULL
 										   FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_app uap
-										  WHERE uap.user_account_id = t.id
+										  WHERE uap.user_account_id = t."id"
 											AND uap.app_id = :app_id)
 							AND    ROWNUM <=10
 							ORDER BY 1,13 DESC, COALESCE("username", 
