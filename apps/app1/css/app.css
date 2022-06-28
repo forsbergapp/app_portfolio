@@ -345,7 +345,7 @@ a:active {
 }
 /*dialogue_info_content and windows_info buttons*/
 .info_close{
-	width: 100%;
+	width: 100% !important;
 }
 
 
