@@ -30,6 +30,7 @@ module.exports = {
             req.query.app_id = process.env.MAIN_APP_ID;
         }
         let res2;
+        req.query.callback=1;
         getIp(req, res2, (err, geodata) =>{
             const newClient = {
                 id: req.params.clientId,

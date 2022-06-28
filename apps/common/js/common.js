@@ -1,7 +1,5 @@
 function set_globals(parameters){
     window.global_app_id = parameters.app_id;
-    window.global_module = parameters.module;
-    window.global_module_type = parameters.module_type;
     window.global_exception_app_function = parameters.exception_app_function;
 
     window.global_admin = parameters.admin;
@@ -9,6 +7,10 @@ function set_globals(parameters){
     window.global_app_rest_client_id = parameters.app_rest_client_id;
     window.global_app_rest_client_secret = parameters.app_rest_client_secret;
     window.global_rest_app_parameter = parameters.rest_app_parameter;
+
+    window.global_session_user_gps_latitude = parameters.gps_lat;
+    window.global_session_user_gps_longitude = parameters.gps_long;
+    window.global_session_user_gps_place = parameters.gps_place;
     
     window.global_app_name;
     window.global_app_hostname;
@@ -69,17 +71,10 @@ function set_globals(parameters){
     window.global_service_geolocation_gps_ip;
     window.global_service_report;
     window.global_service_worldcities;
-    
-    //session variables
-    window.global_session_user_gps_latitude;
-    window.global_session_user_gps_longitude;
-    window.global_session_user_gps_place;
-    
+        
     //init common variables, set in init_common()
     window.global_clientId;
     window.global_eventSource;
-    window.global_module;
-    window.global_module_type;
     window.global_exception_app_function;
     if (parameters.ui==true){
         //spinner
@@ -2188,7 +2183,11 @@ function init_common(parameters){
      service_auth: 
      global_rest_client_id: 
      global_rest_client_secret:
-     rest_app_parameter:}
+     rest_app_parameter:
+     gps_lat: 
+     gps_long: 
+     gps_place:
+    }
     */
     set_globals(parameters);
 
