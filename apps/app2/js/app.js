@@ -115,14 +115,7 @@ function init(parameters){
     init_app().then(function(){
         get_parameters().then(function(){
             get_gps_from_ip(null, window.global_lang_code).then(function(){
-                app_log(window.global_module, 
-                        window.global_module_type, 
-                        location, 
-                        window.global_session_user_gps_place, 
-                        '', 
-                        window.global_session_user_gps_latitude, 
-                        window.global_session_user_gps_longitude,
-                        window.global_lang_code);
+                null;
             });
         })    
     })

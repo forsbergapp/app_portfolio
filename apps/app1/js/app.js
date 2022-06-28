@@ -740,8 +740,6 @@ async function get_app_globals() {
                     //REST
                     if (json.data[i].parameter_name=='REST_APP')
                         window.global_rest_app = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='REST_APP_LOG')
-                        window.global_rest_app_log = json.data[i].parameter_value;
                     if (json.data[i].parameter_name=='REST_APP_OBJECT')
                         window.global_rest_app_object = json.data[i].parameter_value;
                     if (json.data[i].parameter_name=='REST_COUNTRY')
@@ -784,8 +782,6 @@ async function get_app_globals() {
                         window.global_service_geolocation = json.data[i].parameter_value;
                     if (json.data[i].parameter_name=='SERVICE_GEOLOCATION_GPS_PLACE')
                         window.global_service_geolocation_gps_place = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='SERVICE_GEOLOCATION_GPS_IP')
-                        window.global_service_geolocation_gps_ip = json.data[i].parameter_value;
                     if (json.data[i].parameter_name=='SERVICE_REPORT')
                         window.global_service_report = json.data[i].parameter_value;
                     if (json.data[i].parameter_name=='SERVICE_WORLDCITIES')
@@ -3930,15 +3926,16 @@ function init_report_timetable() {
         else{
             let parameters = JSON.parse(`{
                 "app_id": 1,
-                "module": "REPORT",
-                "module_type": "INIT",
                 "exception_app_function": "app_exception",
                 "close_eventsource": null,
                 "ui": false,
                 "service_auth": "${result.service_auth}",
                 "app_rest_client_id": "${result.app_rest_client_id}",
                 "app_rest_client_secret": "${result.app_rest_client_secret}",
-                "rest_app_parameter": "${result.rest_app_parameter}"
+                "rest_app_parameter": "${result.rest_app_parameter}",
+                "gps_lat": null,
+                "gps_long":null,
+                "gps_place": null
                 }`);
             init_common(parameters);
             init_app(parameters.ui).then(function(){
@@ -3947,19 +3944,16 @@ function init_report_timetable() {
                 let lang_code = urlParams.get('lang_code');
                 let reporttype = urlParams.get('type');
                 document.getElementById('setting_select_locale').innerHTML = 
-                            `<option value=${lang_code}>${lang_code}</option`;    
+                                        `<option value=${lang_code}>${lang_code}</option`;    
                 get_app_globals().then(function(){
                     //report start
                     if (inIframe() == false) {
                         //when report only is run outside webapp
                         //get gps and update view stat
-                        get_gps_from_ip(document.getElementById('setting_data_userid_logged_in').innerHTML, get_lang_code()).then(function(){
-                            document.getElementById('setting_select_popular_place').selectedIndex = 0;
-                            document.getElementById('setting_input_lat').value = window.global_session_user_gps_latitude;
-                            document.getElementById('setting_input_long').value = window.global_session_user_gps_longitude;        
-                            updateViewStat(user_setting_id);
-                        });
-                        
+                        document.getElementById('setting_select_popular_place').selectedIndex = 0;
+                        document.getElementById('setting_input_lat').value = window.global_session_user_gps_latitude;
+                        document.getElementById('setting_input_long').value = window.global_session_user_gps_longitude;        
+                        updateViewStat(user_setting_id);
                     }
                     //check report type
                     switch (reporttype) {
@@ -4062,41 +4056,31 @@ async function app_load(){
             show_message('EXCEPTION', null,null, result, window.global_app_id, get_lang_code());
         }
     })
-    await get_gps_from_ip(document.getElementById('setting_data_userid_logged_in').innerHTML, get_lang_code()).then(function(){
-        document.getElementById('setting_select_popular_place').selectedIndex = 0;
-        document.getElementById('setting_input_lat').value = window.global_session_user_gps_latitude;
-        document.getElementById('setting_input_long').value = window.global_session_user_gps_longitude;
+    document.getElementById('setting_select_popular_place').selectedIndex = 0;
+    document.getElementById('setting_input_lat').value = window.global_session_user_gps_latitude;
+    document.getElementById('setting_input_long').value = window.global_session_user_gps_longitude;
 
-        //init map thirdparty module
-        init_map();
-        //load themes in Design tab
-        load_themes();
-        app_log('APP', 
-                'INIT', 
-                location, 
-                window.global_session_user_gps_place, 
-                document.getElementById('setting_data_userid_logged_in').innerHTML, 
-                window.global_session_user_gps_latitude,
-                window.global_session_user_gps_longitude,
-                get_lang_code());
-        //set papersize
-        zoom_paper();
-        //user interface font depending selected arabic script
-        update_ui(3);
-        //use enter key at login
-        keyfunctions();
-        //set timers
-        //map doesnt update correct so set refresh
-        setInterval(fixmap, 1000);
-        //set current date and time for current locale and timezone
-        clearInterval(showcurrenttime);
-        setInterval(showcurrenttime, 1000);
-        //set report date and time for current locale, report timezone
-        clearInterval(showreporttime);
-        setInterval(showreporttime, 1000);
-        //show dialogue about using mobile and scan QR code after 5 seconds
-        setTimeout(function(){show_dialogue('SCAN')}, 5000);
-    })
+    //init map thirdparty module
+    init_map();
+    //load themes in Design tab
+    load_themes();
+    //set papersize
+    zoom_paper();
+    //user interface font depending selected arabic script
+    update_ui(3);
+    //use enter key at login
+    keyfunctions();
+    //set timers
+    //map doesnt update correct so set refresh
+    setInterval(fixmap, 1000);
+    //set current date and time for current locale and timezone
+    clearInterval(showcurrenttime);
+    setInterval(showcurrenttime, 1000);
+    //set report date and time for current locale, report timezone
+    clearInterval(showreporttime);
+    setInterval(showreporttime, 1000);
+    //show dialogue about using mobile and scan QR code after 5 seconds
+    setTimeout(function(){show_dialogue('SCAN')}, 5000);
 }
 async function app_show(){
     let user = window.location.pathname.substring(1);

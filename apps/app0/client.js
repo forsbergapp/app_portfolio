@@ -7,23 +7,24 @@ module.exports = {
                 ['APP', __dirname + '/src/index.html'],
                 ['<AppCommonHead/>', __dirname + '/../common/src/head.html'],
                 ['<AppCommonBody/>', __dirname + '/../common/src/body.html'],
-                /*Profile tag AppCommonProfileDetail in common body */
-                ['<AppCommonProfileDetail/>', __dirname + '/../common/src/profile_detail.html'], 
+                ['<AppCommonProfileDetail/>', __dirname + '/../common/src/profile_detail.html'], //Profile tag in common body
+
                 ['<AppHead/>', __dirname + '/src/head.html'],
+                ['<AppUserAccount/>', __dirname + '/src/user_account.html'],
+                ['<AppToggle/>', __dirname + '/src/toogle.html'],
+                ['<AppBackground/>', __dirname + '/src/background.html'],
+                ['<AppDialogues/>', __dirname + '/src/dialogues.html'],
+                ['<AppProfileInfo/>', __dirname + '/src/profile_info.html'],   /*Profile tag in common body*/
                 ['<AppWindowInfo/>', __dirname + '/src/window_info.html']
               ];
-            read_app_files(files, (err, app)=>{
+              read_app_files(files, (err, app)=>{
                 if (err)
                     reject(err);
                 else{
                     //Profile tag not used in common body
                     app = app.replace(
-                        '<AppProfileInfo/>',
-                        '');
-                    //Profile tag not used in common body
-                    app = app.replace(
                         '<AppProfileTop/>',
-                        '');
+                        '');        
                     getAppStartParameters(process.env.MAIN_APP_ID, (err,result) =>{
                         if (err)
                             reject(err);

@@ -1,11 +1,9 @@
-const fs = require("fs");
-const { createLogAppSE } = require("../../service/log/log.service");
 const { getAppStartParameters } = require("../../service/db/api/app_parameter/app_parameter.service");
+const { read_app_files } = require("../");
 module.exports = {
-    getApp:(app_id, username) => {
+    getApp:(app_id, username, gps_lat, gps_long, gps_place) => {
         return new Promise(function (resolve, reject){
             function main(app_id){
-                const {promises: {readFile}} = require("fs");
                 const { countries } = require("./src/countries");
                 const { locales } = require("./src/locales");
                 const { places } = require("./src/places");
@@ -49,60 +47,49 @@ module.exports = {
                     AppThemes = await themes(app_id);
                 }
                 getAppComponents().then(function(){
-                    let i = 0;
-                    Promise.all(files.map(file => {
-                        return readFile(file[1], 'utf8');
-                    })).then(fileBuffers => {
-                        let app ='';
-                        fileBuffers.forEach(fileBuffer => {
-                            if (app=='')
-                                app = fileBuffer.toString();
-                            else
-                                app = app.replace(
-                                        files[i][0],
-                                        `${fileBuffer.toString()}`);
-                            i++;
-                        });
-                        //Locales tag used more than once, use RegExp for that
-                        app = app.replace(
+                    read_app_files(files, (err, app)=>{
+                        if (err)
+                            reject(err);
+                        else{
+                            //Locales tag used more than once, use RegExp for that
+                            app = app.replace(
                                 new RegExp('<AppLocales/>', 'g'),
                                 `${AppLocales}`);
-                        app = app.replace(
-                                '<AppCountries/>',
-                                `${AppCountries}`);
-                        app = app.replace(
-                                '<AppPlaces/>',
-                                `${AppPlaces}`);
-                        app = app.replace(
-                                '<AppThemes/>',
-                                `${AppThemes}`);
-                        getAppStartParameters(process.env.MAIN_APP_ID, (err,result) =>{
-                            if (err)
-                                reject(err);
-                            else{
-                                let parameters = {   
-                                    app_id: app_id,
-                                    module: 'APP',
-                                    module_type: 'INIT',
-                                    exception_app_function: 'app_exception',
-                                    close_eventsource: null,
-                                    ui: true,
-                                    admin: null,
-                                    service_auth: result[0].service_auth,
-                                    app_rest_client_id: result[0].app_rest_client_id,
-                                    app_rest_client_secret: result[0].app_rest_client_secret,
-                                    rest_app_parameter: result[0].rest_app_parameter
-                                }    
-                                app = app.replace(
-                                    '<ITEM_COMMON_PARAMETERS/>',
-                                    JSON.stringify(parameters));
-                                resolve(app);
-                            }
-                        })
-                    }).catch(err => {
-                        createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
-                        reject (err);
-                    });
+                            app = app.replace(
+                                    '<AppCountries/>',
+                                    `${AppCountries}`);
+                            app = app.replace(
+                                    '<AppPlaces/>',
+                                    `${AppPlaces}`);
+                            app = app.replace(
+                                    '<AppThemes/>',
+                                    `${AppThemes}`);
+                            getAppStartParameters(process.env.MAIN_APP_ID, (err,result) =>{
+                                if (err)
+                                    reject(err);
+                                else{
+                                    let parameters = {   
+                                        app_id: app_id,
+                                        exception_app_function: 'app_exception',
+                                        close_eventsource: null,
+                                        ui: true,
+                                        admin: null,
+                                        service_auth: result[0].service_auth,
+                                        app_rest_client_id: result[0].app_rest_client_id,
+                                        app_rest_client_secret: result[0].app_rest_client_secret,
+                                        rest_app_parameter: result[0].rest_app_parameter,
+                                        gps_lat: gps_lat, 
+                                        gps_long: gps_long, 
+                                        gps_place: gps_place
+                                    }    
+                                    app = app.replace(
+                                        '<ITEM_COMMON_PARAMETERS/>',
+                                        JSON.stringify(parameters));
+                                    resolve(app);
+                                }
+                            })
+                        } 
+                    })                       
                 });
             }
             if (username!=null){
