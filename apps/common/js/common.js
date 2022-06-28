@@ -2231,8 +2231,10 @@ function init_common(parameters){
         document.getElementById('profile_search_icon').innerHTML = window.global_button_default_icon_search;
         //profile info
         document.getElementById('profile_joined_date_icon').innerHTML = window.global_button_default_icon_user_joined_date;
-        document.getElementById('profile_follow').innerHTML = window.global_button_default_icon_user_follow_user + window.global_button_default_icon_user_followed_user;
-        document.getElementById('profile_like').innerHTML = window.global_button_default_icon_unlike + window.global_button_default_icon_like;
+        document.getElementById('profile_follow_follow').innerHTML = window.global_button_default_icon_user_follow_user;
+        document.getElementById('profile_follow_followed').innerHTML = window.global_button_default_icon_user_followed_user;
+        document.getElementById('profile_like_like').innerHTML = window.global_button_default_icon_like;
+        document.getElementById('profile_like_unlike').innerHTML = window.global_button_default_icon_unlike;
         document.getElementById('profile_info_view_count_icon').innerHTML = window.global_button_default_icon_views;
         document.getElementById('profile_main_btn_following').innerHTML = window.global_button_default_icon_follows;
         document.getElementById('profile_main_btn_followed').innerHTML = window.global_button_default_icon_followed;
@@ -2246,7 +2248,7 @@ function init_common(parameters){
         document.getElementById('profile_top_row1_2').innerHTML = window.global_button_default_icon_like + window.global_button_default_icon_follows;
         document.getElementById('profile_top_row1_3').innerHTML = window.global_button_default_icon_views;
         //buttons
-        document.getElementById('profile_home').innerHTML = window.global_button_default_icon_home;
+        document.getElementById('profile_home').innerHTML = window.global_button_default_icon_top_header;
         document.getElementById('profile_close').innerHTML = window.global_button_default_icon_close;    
     }
 };
