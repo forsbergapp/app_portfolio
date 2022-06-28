@@ -251,10 +251,6 @@ async function get_parameters() {
                     window.global_rest_user_account_provider = json.data[i].parameter_value;
                 if (json.data[i].parameter_name=='REST_USER_ACCOUNT_SIGNUP')
                     window.global_rest_user_account_signup = json.data[i].parameter_value;
-                if (json.data[i].parameter_name=='SERVICE_GEOLOCATION')
-                    window.global_service_geolocation = json.data[i].parameter_value;
-                if (json.data[i].parameter_name=='SERVICE_GEOLOCATION_GPS_IP')
-                    window.global_service_geolocation_gps_ip = json.data[i].parameter_value;
                 //QR
                 if (json.data[i].parameter_name=='QR_LOGO_FILE_PATH')
                     window.global_qr_logo_file_path = json.data[i].parameter_value;
@@ -565,20 +561,10 @@ function init(parameters){
             document.getElementById('copyright').innerHTML = window.global_app_copyright;
             document.getElementById('app_email').href='mailto:' + window.global_app_email;
             document.getElementById('app_email').innerHTML=window.global_app_email;
-            get_gps_from_ip(null, window.global_lang_code).then(function(){
-                app_log(window.global_module, 
-                        window.global_module_type, 
-                        location, 
-                        window.global_session_user_gps_place, 
-                        '', 
-                        window.global_session_user_gps_latitude, 
-                        window.global_session_user_gps_longitude,
-                        window.global_lang_code);
-                get_apps();
-                init_providers('onProviderSignIn_app', function() { onProviderSignIn_app() }).then(function(){
-                    null;
-                });
-            })
+            get_apps();
+            init_providers('onProviderSignIn_app', function() { onProviderSignIn_app() }).then(function(){
+                null;
+            });
         })
     })
 }
