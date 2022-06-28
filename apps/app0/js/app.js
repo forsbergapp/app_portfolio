@@ -57,8 +57,6 @@ function keyfunctions(){
         document.getElementById( 'dialogue_info_content' ).className = 'dialogue_content dialogue_flip';
         document.getElementById( 'dialogue_start_content' ).className = 'dialogue_content dialogue_flip';
     }, false );
-
-    document.getElementById('user_menu').addEventListener('click', function() { user_menu_click() }, false);
     
     document.getElementById('user_menu_dropdown_profile').addEventListener('click', function() { user_menu_item_click(this) }, false);
     document.getElementById('user_menu_dropdown_edit').addEventListener('click', function() { user_menu_item_click(this) }, false);
@@ -333,12 +331,6 @@ function info(id){
     }
 
 }
-function user_menu_click(){
-    if (document.getElementById('user_menu_dropdown').style.visibility=='visible')
-        document.getElementById('user_menu_dropdown').style.visibility = 'hidden';
-    else
-        document.getElementById('user_menu_dropdown').style.visibility = 'visible';
-}
 function user_menu_item_click(item){
     switch (item.id){
         case 'user_menu_dropdown_profile':{
@@ -373,7 +365,6 @@ function user_menu_item_click(item){
         default:
             break;
     }
-    document.getElementById('user_menu_dropdown').style.visibility = 'hidden';
 }
 async function user_login_app(){
     let username = document.getElementById('login_username');

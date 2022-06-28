@@ -14,8 +14,6 @@ module.exports = {
                 ['<AppHead/>', __dirname + '/app0/src/head.html'],
                 ['<AppUserAccount/>', __dirname + '/app0/src/user_account.html'],
                 ['<AppToggle/>', __dirname + '/app0/src/toogle.html'],
-                ['<AppMoon/>', __dirname + '/app0/src/moon.html'],
-                ['<AppSun/>', __dirname + '/app0/src/sun.html'],
                 ['<AppBackground/>', __dirname + '/app0/src/background.html'],
                 ['<AppDialogues/>', __dirname + '/app0/src/dialogues.html'],
                 ['<AppProfileInfo/>', __dirname + '/app0/src/profile_info.html'],   /*Profile tag in common body*/
