@@ -31,13 +31,13 @@ app.get('/favicon.ico', function (req, res, next) {
           else{
               if (db_SERVER_MAINTENANCE==1){
                 const { getMaintenance} = require("./service/forms/forms.controller");
-                getMaintenance(APP2_ID,(err, app_result)=>{
+                getMaintenance(req, res, APP2_ID,(err, app_result)=>{
                     return res.send(app_result);
                 })
               }
               else{
                 const { getForm} = require("./service/forms/forms.controller");
-                getForm(APP2_ID, null,(err, app_result)=>{
+                getForm(req, res, APP2_ID, null,(err, app_result)=>{
                     return res.send(app_result);
                 })
               }

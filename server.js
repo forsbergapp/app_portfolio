@@ -200,8 +200,8 @@ app.get("/admin",function (req, res, next) {
   if (req.protocol=='http')
     return res.redirect('https://' + req.headers.host + "/admin");
   else{
-    const { getAdmin } = require ("./service/forms/forms.controller");
-    getAdmin( (err, app_result)=>{
+    const { getForm } = require ("./service/forms/forms.controller");
+    getForm(req, res, null, null, (err, app_result)=>{
       return res.send(app_result);
     })
   }
@@ -287,13 +287,13 @@ app.get('/',function (req, res, next) {
         else{
             if (db_SERVER_MAINTENANCE==1){
               const { getMaintenance} = require("./service/forms/forms.controller");
-              getMaintenance(process.env.MAIN_APP_ID,(err, app_result)=>{
+              getMaintenance(req, res, process.env.MAIN_APP_ID,(err, app_result)=>{
                   return res.send(app_result);
               })
             }
             else{
               const { getForm} = require("./service/forms/forms.controller");
-              getForm(process.env.MAIN_APP_ID, null,(err, app_result)=>{
+              getForm(req, res, process.env.MAIN_APP_ID, null,(err, app_result)=>{
                   return res.send(app_result);
               })
             }
