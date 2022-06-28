@@ -88,7 +88,7 @@ module.exports = {
 					createLog(data.body, (err2,results2)  => {
 						null;
 					}); 
-					if (data.baseUrl == '/service/broadcast')
+					if (data.query.callback==1)
 						return callBack(null, geodata);
 					else
 						return res.status(200).json(

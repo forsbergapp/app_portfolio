@@ -135,13 +135,13 @@ app.get("/app1/manifest.json",function (req, res) {
             else{
                 if (db_SERVER_MAINTENANCE==1){
                   const { getMaintenance} = require("./service/forms/forms.controller");
-                  getMaintenance(APP1_ID,(err, app_result)=>{
+                  getMaintenance(req, APP1_ID,(err, app_result)=>{
                       return res.send(app_result);
                   })
                 }
                 else{
                     const { getForm} = require("./service/forms/forms.controller");
-                    getForm(APP1_ID, req.params.user, (err, app_result)=>{
+                    getForm(req, APP1_ID, req.params.user, (err, app_result)=>{
                       //if app_result=0 means here redirect to /
                       if (app_result==0)
                         return res.redirect('/');
@@ -184,13 +184,13 @@ app.get("/app1/manifest.json",function (req, res) {
           else{
               if (db_SERVER_MAINTENANCE==1){
                 const { getMaintenance} = require("./service/forms/forms.controller");
-                getMaintenance(APP1_ID,(err, app_result)=>{
+                getMaintenance(req, res, APP1_ID,(err, app_result)=>{
                     return res.send(app_result);
                 })
               }
               else{
                 const { getForm} = require("./service/forms/forms.controller");
-                getForm(APP1_ID, null,(err, app_result)=>{
+                getForm(req, res, APP1_ID, null,(err, app_result)=>{
                     return res.send(app_result);
                 })
               }
