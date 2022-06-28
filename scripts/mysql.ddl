@@ -540,7 +540,8 @@ CREATE TABLE app_portfolio.app1_user_setting_hist (
     prayer_column_fast_start_end_select_id     DECIMAL(10,0),
     date_created                               DATETIME,
     date_modified                              DATETIME,
-    user_account_id                            INT NOT NULL,
+    user_account_id                            INTEGER,
+    app_id                                     INTEGER,
 	CONSTRAINT app1_user_setting_hist_pk PRIMARY KEY ( id )
 );
 GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app1_user_setting_hist TO role_app_admin;
@@ -1485,7 +1486,8 @@ prayer_column_midnight_checked,
 prayer_column_fast_start_end_select_id,
 date_created,
 date_modified,
-user_account_id)
+user_account_id,
+app_id)
 VALUES(
 'D',
 SYSDATE(),
@@ -1543,7 +1545,8 @@ old.prayer_column_midnight_checked,
 old.prayer_column_fast_start_end_select_id,
 old.date_created,
 old.date_modified,
-old.user_account_id);
+old.user_account_id,
+old.app_id);
 END; 
 /
 
@@ -1608,7 +1611,8 @@ prayer_column_midnight_checked,
 prayer_column_fast_start_end_select_id,
 date_created,
 date_modified,
-user_account_id)
+user_account_id,
+app_id)
 VALUES(
 'I',
 SYSDATE(),
@@ -1666,7 +1670,8 @@ new.prayer_column_midnight_checked,
 new.prayer_column_fast_start_end_select_id,
 new.date_created,
 new.date_modified,
-new.user_account_id);
+new.user_account_id,
+new.app_id);
 END; 
 /
 
@@ -1731,7 +1736,8 @@ prayer_column_midnight_checked,
 prayer_column_fast_start_end_select_id,
 date_created,
 date_modified,
-user_account_id)
+user_account_id,
+app_id)
 VALUES(
 'U',
 SYSDATE(),
@@ -1789,7 +1795,8 @@ old.prayer_column_midnight_checked,
 old.prayer_column_fast_start_end_select_id,
 old.date_created,
 old.date_modified,
-old.user_account_id);
+old.user_account_id,
+old.app_id);
 END; 
 /
 
