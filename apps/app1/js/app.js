@@ -24,12 +24,10 @@ window.global_info_link_1_url;
 window.global_info_link_2_url;
 window.global_info_link_3_url;
 window.global_info_link_4_url;
-window.global_info_link_5_url;
 window.global_info_link_1_name;
 window.global_info_link_2_name;
 window.global_info_link_3_name;
 window.global_info_link_4_name;
-window.global_info_link_5_name;
 
 window.global_info_email_policy;
 window.global_info_email_disclaimer;
@@ -851,8 +849,6 @@ async function get_app_globals() {
                         window.global_info_link3_url = json.data[i].parameter_value;
                     if (json.data[i].parameter_name=='INFO_LINK4_URL')
                         window.global_info_link4_url = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='INFO_LINK5_URL')
-                        window.global_info_link5_url = json.data[i].parameter_value;
                     if (json.data[i].parameter_name=='INFO_LINK1_NAME')
                         window.global_info_link1_name = json.data[i].parameter_value;
                     if (json.data[i].parameter_name=='INFO_LINK2_NAME')
@@ -861,8 +857,6 @@ async function get_app_globals() {
                         window.global_info_link3_name = json.data[i].parameter_value;
                     if (json.data[i].parameter_name=='INFO_LINK4_NAME')
                         window.global_info_link4_name = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='INFO_LINK5_NAME')
-                        window.global_info_link5_name = json.data[i].parameter_value;
                     if (json.data[i].parameter_name=='REGIONAL_DEFAULT_CALENDAR_LANG')
                         window.global_regional_def_calendar_lang = json.data[i].parameter_value;
                     if (json.data[i].parameter_name=='REGIONAL_DEFAULT_LOCALE_EXT_PREFIX')
@@ -3082,14 +3076,8 @@ function update_info(info) {
                         document.getElementById('terms_app_email').innerText = window.global_info_email_terms;
                         break;
                     }
-                //info/support.html
-                case 4:
-                    {
-                        document.getElementById('info' + info).innerHTML = result + button_close_info;
-                        break;
-                    }
                 //info/about.html
-                case 5:
+                case 4:
                     {
                         document.getElementById('info' + info).innerHTML = result + button_close_about;
                         break;
@@ -3122,7 +3110,6 @@ function show_dialogue(dialogue, file = '') {
                 document.getElementById('info_link2').innerHTML = window.global_info_link2_name;
                 document.getElementById('info_link3').innerHTML = window.global_info_link3_name;
                 document.getElementById('info_link4').innerHTML = window.global_info_link4_name;
-                document.getElementById('info_link5').innerHTML = window.global_info_link5_name;
                 break;
             }
         case 'SCAN':
@@ -4070,7 +4057,6 @@ async function app_load(){
             update_info(2);
             update_info(3);
             update_info(4);
-            update_info(5);
         }
         else {
             show_message('EXCEPTION', null,null, result, window.global_app_id, get_lang_code());
