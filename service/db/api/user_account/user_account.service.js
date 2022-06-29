@@ -401,7 +401,29 @@ module.exports = {
                 `SELECT
 					u.id,
 					u.bio,
-					u.private,
+					(SELECT 1
+					   FROM DUAL
+					  WHERE u.private = 1
+					    AND (NOT EXISTS (SELECT NULL
+									      FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_follow  uaf 
+									     WHERE uaf.user_account_id = u.id
+									       AND uaf.user_account_id_follow = ?)
+						    OR 
+						    NOT EXISTS (SELECT NULL
+									      FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_follow  uaf 
+									     WHERE uaf.user_account_id_follow = u.id
+								  	       AND uaf.user_account_id = ?))
+					UNION
+					SELECT NULL
+					  FROM DUAL
+				     WHERE EXISTS (SELECT NULL
+									FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_follow  uaf 
+									WHERE uaf.user_account_id = u.id
+									  AND uaf.user_account_id_follow = ?)
+					   AND EXISTS (SELECT NULL
+									 FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_follow  uaf 
+									WHERE uaf.user_account_id_follow = u.id
+									  AND uaf.user_account_id = ?)) private,
 					u.user_level,
 					u.date_created,
 					u.username,
@@ -449,6 +471,10 @@ module.exports = {
 						    WHERE uap.user_account_id = u.id
 							  AND uap.app_id = ?)`,
 				[id_current_user,
+				 id_current_user,
+				 id_current_user,
+				 id_current_user,
+				 id_current_user,
                  id_current_user,
                  id,
 				 username,
@@ -471,7 +497,29 @@ module.exports = {
                         `SELECT
 							u.id "id",
 							u.bio "bio",
-							u.private "private",
+							(SELECT 1
+								FROM DUAL
+							   WHERE u.private = 1
+								 AND (NOT EXISTS (SELECT NULL
+												   FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_follow  uaf 
+												  WHERE uaf.user_account_id = u.id
+													AND uaf.user_account_id_follow = :user_accound_id_current_user)
+									 OR 
+									 NOT EXISTS (SELECT NULL
+												   FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_follow  uaf 
+												  WHERE uaf.user_account_id_follow = u.id
+													  AND uaf.user_account_id = :user_accound_id_current_user))
+							 UNION
+							 SELECT NULL
+							   FROM DUAL
+							  WHERE EXISTS (SELECT NULL
+											 FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_follow  uaf 
+											 WHERE uaf.user_account_id = u.id
+											   AND uaf.user_account_id_follow = :user_accound_id_current_user)
+								AND EXISTS (SELECT NULL
+											  FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_follow  uaf 
+											 WHERE uaf.user_account_id_follow = u.id
+											   AND uaf.user_account_id = :user_accound_id_current_user)) "private",
 							u.user_level "user_level",
 							u.date_created "date_created",
 							u.username "username",
@@ -504,11 +552,11 @@ module.exports = {
 							(SELECT COUNT(u_followed_current_user.user_account_id)
 							FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_follow  u_followed_current_user 
 							WHERE u_followed_current_user.user_account_id_follow = u.id
-								AND u_followed_current_user.user_account_id = :user_accound_id_current_user1) 	"followed",
+								AND u_followed_current_user.user_account_id = :user_accound_id_current_user) 	"followed",
 							(SELECT COUNT(u_liked_current_user.user_account_id)  
 							FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_like    u_liked_current_user
 							WHERE u_liked_current_user.user_account_id_like = u.id
-								AND u_liked_current_user.user_account_id = :user_accound_id_current_user2)      "liked"
+								AND u_liked_current_user.user_account_id = :user_accound_id_current_user)      "liked"
 						FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account u
 						WHERE u.id = :id 
 							  OR 
@@ -519,8 +567,7 @@ module.exports = {
 								    WHERE uap.user_account_id = u.id
   									  AND uap.app_id = :app_id)`,
 						{
-                            user_accound_id_current_user1: id_current_user,
-                            user_accound_id_current_user2: id_current_user,
+                            user_accound_id_current_user: id_current_user,
                             id: id,
 							username: username,
 							app_id: app_id
@@ -553,28 +600,28 @@ module.exports = {
         if (process.env.SERVICE_DB_USE == 1) {
             get_pool(app_id).query(
                 `SELECT
-					u.id,
-					u.username,
-					CONVERT(u.avatar USING UTF8) avatar,
-					u.provider1_id,
-					u.provider1_first_name,
-					CONVERT(u.provider1_image USING UTF8) provider1_image,
-					u.provider1_image_url,
-					u.provider2_id,
-					u.provider2_first_name,
-					CONVERT(u.provider2_image USING UTF8) provider2_image,
-					u.provider2_image_url
-				FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account u
+						u.id,
+						u.username,
+						CONVERT(u.avatar USING UTF8) avatar,
+						u.provider1_id,
+						u.provider1_first_name,
+						CONVERT(u.provider1_image USING UTF8) provider1_image,
+						u.provider1_image_url,
+						u.provider2_id,
+						u.provider2_first_name,
+						CONVERT(u.provider2_image USING UTF8) provider2_image,
+						u.provider2_image_url
+				 FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account u
 				WHERE (u.username LIKE ?
-					OR
-					u.provider1_first_name LIKE ?
-					OR
-					u.provider2_first_name LIKE ?)
-				AND   u.active = 1 
-				AND EXISTS(SELECT NULL
-							 FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_app uap
-						    WHERE uap.user_account_id = u.id
-  							  AND uap.app_id = ?)`, 
+						OR
+						u.provider1_first_name LIKE ?
+						OR
+						u.provider2_first_name LIKE ?)
+				  AND u.active = 1
+				  AND EXISTS(SELECT NULL
+							   FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_app uap
+							  WHERE uap.user_account_id = u.id
+								AND uap.app_id = ?)`, 
 				['%' + username + '%',
                  '%' + username + '%',
                  '%' + username + '%',
@@ -595,28 +642,28 @@ module.exports = {
                     pool2 = await oracledb.getConnection(get_pool(app_id));
                     const result = await pool2.execute(
                         `SELECT
-						u.id "id",
-						u.username "username",
-						u.avatar "avatar",
-						u.provider1_id "provider1_id",
-						u.provider1_first_name "provider1_first_name",
-						u.provider1_image "provider1_image",
-						u.provider1_image_url "provider1_image_url",
-						u.provider2_id "provider2_id",
-						u.provider2_first_name "provider2_first_name",
-						u.provider2_image "provider2_image",
-						u.provider2_image_url "provider2_image_url"
-					FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account u
-					WHERE (u.username LIKE :username
-						OR
-						u.provider1_first_name LIKE :provider1_first_name
-						OR
-						u.provider2_first_name LIKE :provider2_first_name)
-					AND   u.active = 1 
-					AND EXISTS(SELECT NULL
-								 FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_app uap
-							    WHERE uap.user_account_id = u.id
-   								  AND uap.app_id = :app_id)`,
+								u.id "id",
+								u.username "username",
+								u.avatar "avatar",
+								u.provider1_id "provider1_id",
+								u.provider1_first_name "provider1_first_name",
+								u.provider1_image "provider1_image",
+								u.provider1_image_url "provider1_image_url",
+								u.provider2_id "provider2_id",
+								u.provider2_first_name "provider2_first_name",
+								u.provider2_image "provider2_image",
+								u.provider2_image_url "provider2_image_url"
+						  FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account u
+						 WHERE (u.username LIKE :username
+								OR
+								u.provider1_first_name LIKE :provider1_first_name
+								OR
+								u.provider2_first_name LIKE :provider2_first_name)
+						   AND u.active = 1 
+						   AND EXISTS(SELECT NULL
+										FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_app uap
+									   WHERE uap.user_account_id = u.id
+										 AND uap.app_id = :app_id)`,
 					{
                     	username: '%' + username + '%',
                         provider1_first_name: '%' + username + '%',
@@ -884,9 +931,10 @@ module.exports = {
 									(SELECT COUNT(u_follow.user_account_id_follow)
 									   FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_follow u_follow
 									  WHERE u_follow.user_account_id_follow = u.id) count
-							FROM   	${process.env.SERVICE_DB_DB1_NAME}.user_account u
+							 FROM 	${process.env.SERVICE_DB_DB1_NAME}.user_account u
 							WHERE   u.active = 1
-							AND     1 = ?
+							  AND   u.private <> 1
+							  AND   1 = ?
 							UNION ALL
 							SELECT 'LIKE_USER' top,
 									u.id,
@@ -903,9 +951,10 @@ module.exports = {
 									(SELECT COUNT(u_like.user_account_id_like)
 									   FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_like u_like
 									  WHERE u_like.user_account_id_like = u.id) count
-							FROM   ${process.env.SERVICE_DB_DB1_NAME}.user_account u
+							 FROM  ${process.env.SERVICE_DB_DB1_NAME}.user_account u
 							WHERE  u.active = 1
-							AND    2 = ?
+							  AND  u.private <> 1
+							  AND  2 = ?
 							UNION ALL
 							SELECT 'VISITED' top,
 									u.id,
@@ -922,9 +971,10 @@ module.exports = {
 									(SELECT COUNT(u_visited.user_account_id_view)
 									   FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_view u_visited
 									  WHERE u_visited.user_account_id_view = u.id) count
-							FROM   ${process.env.SERVICE_DB_DB1_NAME}.user_account u
+							 FROM  ${process.env.SERVICE_DB_DB1_NAME}.user_account u
 							WHERE  u.active = 1
-							AND    3 = ?)  t
+							  AND  u.private <> 1
+							  AND  3 = ?)  t
 					WHERE EXISTS(SELECT NULL
 								   FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_app uap
 								  WHERE uap.user_account_id = t.id
@@ -968,9 +1018,10 @@ module.exports = {
 											(SELECT COUNT(u_follow.user_account_id_follow)
 											   FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_follow u_follow
 											  WHERE u_follow.user_account_id_follow = u.id) "count"
-									FROM   	${process.env.SERVICE_DB_DB2_NAME}.user_account u
+									 FROM  	${process.env.SERVICE_DB_DB2_NAME}.user_account u
 									WHERE   u.active = 1
-									AND     1 = :statchoice_following
+									  AND   u.private <> 1
+									  AND   1 = :statchoice_following
 									UNION ALL
 									SELECT 'LIKE_USER' "top",
 											u.id "id",
@@ -987,9 +1038,10 @@ module.exports = {
 											(SELECT COUNT(u_like.user_account_id_like)
 											   FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_like u_like
 											  WHERE u_like.user_account_id_like = u.id) "count"
-									FROM   ${process.env.SERVICE_DB_DB2_NAME}.user_account u
+									 FROM  ${process.env.SERVICE_DB_DB2_NAME}.user_account u
 									WHERE  u.active = 1
-									AND    2 = :statchoice_like_user
+									  AND  u.private <> 1
+									  AND  2 = :statchoice_like_user
 									UNION ALL
 									SELECT 'VISITED' "top",
 											u.id "id",
@@ -1006,9 +1058,10 @@ module.exports = {
 											(SELECT COUNT(u_visited.user_account_id_view)
 											   FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_view u_visited
 											  WHERE u_visited.user_account_id_view = u.id) "count"
-									FROM   ${process.env.SERVICE_DB_DB2_NAME}.user_account u
+									 FROM  ${process.env.SERVICE_DB_DB2_NAME}.user_account u
 									WHERE  u.active = 1
-									AND    3 = :statchoice_visited) t
+									  AND  u.private <> 1
+									  AND  3 = :statchoice_visited) t
 							WHERE EXISTS(SELECT NULL
 										   FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_app uap
 										  WHERE uap.user_account_id = t."id"
