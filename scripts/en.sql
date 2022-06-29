@@ -1133,6 +1133,8 @@ INSERT INTO message_translation (language_id, message_code, text) VALUES (147,'2
 INSERT INTO message_translation (language_id, message_code, text) VALUES (147,'20306','Code not valid');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (147,'20307','File type not allowed');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (147,'20308','File size too large');
+INSERT INTO message_translation (language_id, message_code, text) VALUES (147,'20309','Text not valid');
+INSERT INTO message_translation (language_id, message_code, text) VALUES (147,'20310','Text too long');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (147,'20400','Record not found');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (147,'20401','Failed to update user setting');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (147,'20402','Failed to update user');

@@ -535,6 +535,8 @@ function search_profile(user_id, timezone, lang_code, click_function) {
     let url;
     let token;
     let json_data;
+    if (check_input(searched_username, lang_code) == false)
+        return;
     if (user_id!=''){
         //search using access token with logged in user_account_id
         url = window.global_rest_url_base + window.global_rest_user_account_profile_searchA;
@@ -768,6 +770,9 @@ async function user_login(username, password, lang_code, callBack) {
     let json;
     let json_data;
     let status;
+
+    if (check_input(username, lang_code) == false || check_input(password, lang_code)== false)
+        return callBack('ERROR', null);
 
     if (username == '') {
         //"Please enter username"
@@ -1018,6 +1023,15 @@ async function user_update(user_id, lang_code, callBack) {
     let json_data;
     let status;
 
+    if (check_input(username, lang_code) == false ||
+        check_input(bio, lang_code, 150) == false ||
+        check_input(email, lang_code) == false ||
+        check_input(password, lang_code) == false ||
+        check_input(password_confirm, lang_code) == false ||
+        check_input(new_password, lang_code) == false ||
+        check_input(new_password_confirm, lang_code) == false ||
+        check_input(password_reminder, lang_code) == false)
+        return callBack('ERROR', null);
     //validate input
     if (username == '') {
         //"Please enter username"
@@ -1139,6 +1153,13 @@ function user_signup(item_destination_user_id, lang_code) {
     let password = document.getElementById('signup_password').value;
     let password_confirm = document.getElementById('signup_password_confirm').value;
     let password_reminder = document.getElementById('signup_password_reminder').value;
+
+    if (check_input(username, lang_code) == false || 
+        check_input(email, lang_code)== false ||
+        check_input(password, lang_code)== false ||
+        check_input(password_confirm, lang_code)== false ||
+        check_input(password_reminder, lang_code)== false)
+        return null;
 
     let json_data = `{
                     "user_language": "${navigator.language}",
@@ -2169,6 +2190,36 @@ function show_image(item_img, item_input, image_width, image_height, lang_code) 
 }
 function getHostname(){
     return `${location.protocol}//${location.hostname}${location.port==''?'':':' + location.port}`;
+}
+function check_input(text, lang_code, text_length=100){
+    if (text==null || text=='')
+        return true;
+    else{
+        try {
+            let check_text = JSON.parse(JSON.stringify(text));
+            if (text.includes('"') ||
+                text.includes('\\')){
+                //not valid text
+                show_message('ERROR', 20309, null, null, window.global_main_app_id,lang_code);
+                return false;
+            }
+        } catch (error) {
+            //not valid text
+            show_message('ERROR', 20309, null, null, window.global_main_app_id,lang_code);
+            return false;
+        }
+        try {
+            //check default max length 100 characters or parameter value
+            if (text.length>text_length){
+                //text too long
+                show_message('ERROR', 20310, null, null, window.global_main_app_id,lang_code);
+                return false;
+            }
+        } catch (error) {
+            return false;
+        }
+        return true;
+    }
 }
 function init_common(parameters){
     /*
