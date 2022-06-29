@@ -1096,6 +1096,8 @@ INSERT INTO message_translation (language_id, message_code, text) VALUES (453,'2
 INSERT INTO message_translation (language_id, message_code, text) VALUES (453,'20306','Недопустимый код');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (453,'20307','Тип файла не разрешен');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (453,'20308','Слишком большой размер файла');
+INSERT INTO message_translation (language_id, message_code, text) VALUES (453,'20309','Недопустимый текст');
+INSERT INTO message_translation (language_id, message_code, text) VALUES (453,'20310','Слишком длинный текст');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (453,'20400','Запись не найдена');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (453,'20401','Не удалось обновить параметр пользователя');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (453,'20402','Не удалось обновить пользователя');
