@@ -695,8 +695,8 @@ async function profile_show(user_account_id_other = null, username = null, user_
                         document.getElementById('profile_like').children[0].style.display = 'block';
                         document.getElementById('profile_like').children[1].style.display = 'none';
                     } 
-                    //if private then hide info
-                    if (json.private==1 && parseInt(user_id) !== json.id) {
+                    //if private then hide info, sql decides if private, no need to check here if same user
+                    if (json.private==1) {
                         //private
                         document.getElementById('profile_public').style.display = "none";
                         document.getElementById('profile_private').style.display = "block";
