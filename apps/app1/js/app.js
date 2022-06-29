@@ -1885,9 +1885,6 @@ function toolbar_bottom(choice) {
             //profile
         case 6:
             {
-                //Hide paper on mobile device when showing settings, scrollbug in background
-                if (mobile())
-                    paper.style.display = "none";
                 settings.style.visibility = 'hidden';
                 profile_show_app(null,null, document.getElementById('setting_data_userid_logged_in').innerHTML , document.getElementById('setting_select_timezone_current').value,get_lang_code());
                 break;
@@ -1895,9 +1892,6 @@ function toolbar_bottom(choice) {
             //profile top
         case 7:
             {
-                //Hide paper on mobile device when showing settings, scrollbug in background
-                if (mobile())
-                    paper.style.display = "none";
                 settings.style.visibility = 'hidden';
                 profile_top(1, document.getElementById('setting_data_userid_logged_in').innerHTML, document.getElementById('setting_select_timezone_current').value, get_lang_code(), null, 'profile_show_app');
                 break;
