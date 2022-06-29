@@ -1095,6 +1095,8 @@ INSERT INTO message_translation (language_id, message_code, text) VALUES (546,'2
 INSERT INTO message_translation (language_id, message_code, text) VALUES (546,'20306','代碼無效');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (546,'20307','不允許的文件類型');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (546,'20308','文件過大');
+INSERT INTO message_translation (language_id, message_code, text) VALUES (546,'20309','文本無效');
+INSERT INTO message_translation (language_id, message_code, text) VALUES (546,'20310','文本太長');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (546,'20400','記錄不存在');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (546,'20401','更新用戶設置失敗');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (546,'20402','更新用戶失敗');
