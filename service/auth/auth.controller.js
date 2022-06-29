@@ -5,6 +5,7 @@ const { getParameter, getParameters_server } = require ("../db/api/app_parameter
 const { createLogAppSE, createLogAppCI } = require("../../service/log/log.service");
 module.exports = {
     access_control: (req, res, callBack) => {
+        let ip_v4 = req.ip.replace('::ffff:','');
         async function block_ip_control(callBack){
             if (process.env.SERVICE_AUTH_BLOCK_IP_RANGE){
                 const fs = require("fs");
@@ -22,7 +23,6 @@ module.exports = {
                             );
                         }
                         //check if IP is blocked
-                        let ip_v4 = req.ip.replace('::ffff:','');
                         if ((ip_v4.match(/\./g)||[]).length==3){
                             for (const element of JSON.parse(ranges)) {
                                 if (IPtoNum(element[0]) <= IPtoNum(ip_v4) &&
@@ -44,6 +44,12 @@ module.exports = {
             if (err)
                 return callBack(err,null);
             else{
+                //check if host exists
+                if (typeof req.headers.host=='undefined'){
+                    createLogAppCI(req, res, null, __appfilename, __appfunction, __appline, `ip ${ip_v4} blocked, no host, tried URL: ${req.originalUrl}`);
+                    //406 Not Acceptable
+                    return callBack(406,null);
+                }
                 //check if accessed from domain and not os hostname
                 var os = require("os");
                 if (req.headers.host==os.hostname()){
@@ -52,13 +58,13 @@ module.exports = {
                     return callBack(406,null);
                 }
                 //check if user-agent exists
-                if (req.headers["user-agent"]=='undefined'){
+                if (typeof req.headers["user-agent"]=='undefined'){
                     createLogAppCI(req, res, null, __appfilename, __appfunction, __appline, `ip ${ip_v4} blocked, no user-agent, tried URL: ${req.originalUrl}`);
                     //406 Not Acceptable
                     return callBack(406,null);
                 }
                 //check if accept-language exists
-                if (req.headers["accept-language"]=='undefined'){
+                if (typeof req.headers["accept-language"]=='undefined'){
                     createLogAppCI(req, res, null, __appfilename, __appfunction, __appline, `ip ${ip_v4} blocked, no accept-language, tried URL: ${req.originalUrl}`);
                     //406 Not Acceptable
                     return callBack(406,null);
