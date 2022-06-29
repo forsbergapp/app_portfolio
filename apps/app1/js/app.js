@@ -2545,6 +2545,17 @@ async function user_settings_function(function_name, initial_user_setting, callB
     let select_setting_country = document.getElementById('setting_select_country');
     let select_setting_city = document.getElementById('setting_select_city');
     let select_setting_popular_place = document.getElementById('setting_select_popular_place');
+    if (check_input(description, get_lang_code()) == false ||
+        check_input(document.getElementById('setting_input_lat').value, get_lang_code()) == false ||
+        check_input(document.getElementById('setting_input_long').value, get_lang_code()) == false ||
+        check_input(document.getElementById('setting_input_reporttitle1').value, get_lang_code()) == false ||
+        check_input(document.getElementById('setting_input_reporttitle2').value, get_lang_code()) == false ||
+        check_input(document.getElementById('setting_input_reporttitle3').value, get_lang_code()) == false ||
+        check_input(document.getElementById('setting_input_reportfooter1').value, get_lang_code()) == false ||
+        check_input(document.getElementById('setting_input_reportfooter2').value, get_lang_code()) == false ||
+        check_input(document.getElementById('setting_input_reportfooter3').value, get_lang_code()) == false ||
+        check_input(document.getElementById('setting_input_long').value, get_lang_code()) == false)
+        return;
     //boolean use boolean_to_number()
     //store 0/1 for checked value for checkboxes
     //use btoa() for images to encode with BASE64 to BLOB column.

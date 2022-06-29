@@ -195,6 +195,23 @@ app.use('/app0/css',express.static(__dirname + '/apps/app0/css'));
 app.use('/app0/images',express.static(__dirname + '/apps/app0/images'));
 app.use('/app0/js',express.static(__dirname + '/apps/app0/js'));
 
+
+app.use(function(req, res, next) {
+  var err = null;
+  try {
+      decodeURIComponent(req.path)
+  }
+  catch(e) {
+      err = e;
+  }
+  if (err){
+      console.log(err, req.url);
+      createLogAppSE(process.env.MAIN_APP_ID, __appfilename, __appfunction, __appline, `Not valid url input, req.url ${req.url} err:${err}`);
+      return res.redirect('https://' + req.headers.host);
+  }
+  next();
+});
+
 app.get("/admin",function (req, res, next) {
   //redirect from http to https
   if (req.protocol=='http')
