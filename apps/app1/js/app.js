@@ -186,265 +186,29 @@ window.global_session_currentDate;
 window.global_session_CurrentHijriDate;
 window.global_session_gps_map_mymap;
 
-window.global_first_language = 
-				{
-					"coltitle_transliteration_imsak": "Imsak",
-					"coltitle_transliteration_fajr": "Fajr",
-					"coltitle_transliteration_fajr_iqamat": "Iqamat",
-					"coltitle_transliteration_sunrise": "Shoorok",
-					"coltitle_transliteration_dhuhr": "Dhuhr",
-					"coltitle_transliteration_dhuhr_iqamat": "Iqamat",
-					"coltitle_transliteration_asr": "Asr",
-					"coltitle_transliteration_asr_iqamat": "Iqamat",
-					"coltitle_transliteration_sunset": "Sunset",
-					"coltitle_transliteration_maghrib": "Maghrib",
-					"coltitle_transliteration_maghrib_iqamat": "Iqamat",
-					"coltitle_transliteration_isha": "Isha",
-					"coltitle_transliteration_isha_iqamat": "Iqamat",
-					"coltitle_transliteration_midnight": "Midnight",
-					"timetable_title": "Timetable",
-					"coltitle_day": "Day",
-					"coltitle_weekday": "Weekday",
-					"coltitle_weekday_tr": "",
-					"coltitle_caltype_hijri": "Hijri",
-					"coltitle_caltype_gregorian": "Gregorian",
-					"coltitle_imsak": "Imsak",
-					"coltitle_fajr": "Dawn",
-					"coltitle_fajr_iqamat": "Iqamat",
-					"coltitle_sunrise": "Sunrise",
-					"coltitle_dhuhr": "Noon",
-					"coltitle_dhuhr_iqamat": "Iqamat",
-					"coltitle_asr": "Afternoon",
-					"coltitle_asr_iqamat": "Iqamat",
-					"coltitle_sunset": "Sunset",
-					"coltitle_maghrib": "Sunset",
-					"coltitle_maghrib_iqamat": "Iqamat",
-					"coltitle_isha": "Night",
-					"coltitle_isha_iqamat": "Iqamat",
-					"coltitle_midnight": "Midnight",
-					"coltitle_notes": "Notes"
-				};
-//second language objects that are displayed are column titles
-//transliterated column titles are used by first language
-
-window.global_second_language =
-				{
-					"timetable_title": "Timetable",
-					"coltitle_day": "Day",
-					"coltitle_weekday": "Weekday",
-					"coltitle_weekday_tr": "",
-					"coltitle_caltype_hijri": "Hijri",
-					"coltitle_caltype_gregorian": "Gregorian",
-					"coltitle_imsak": "Imsak",
-					"coltitle_fajr": "Dawn",
-					"coltitle_fajr_iqamat": "Iqamat",
-					"coltitle_sunrise": "Sunrise",
-					"coltitle_dhuhr": "Noon",
-					"coltitle_dhuhr_iqamat": "Iqamat",
-					"coltitle_asr": "Afternoon",
-					"coltitle_asr_iqamat": "Iqamat",
-					"coltitle_sunset": "Sunset",
-					"coltitle_maghrib": "Sunset",
-					"coltitle_maghrib_iqamat": "Iqamat",
-					"coltitle_isha": "Night",
-					"coltitle_isha_iqamat": "Iqamat",
-					"coltitle_midnight": "Midnight",
-					"coltitle_notes": "Notes"
-				};
-
-function gettimetabletitle(locale) {
-	if (locale == get_lang_code())
-		return window.global_first_language.timetable_title;
-	else
-		return window.global_second_language.timetable_title;
-}
-function getweekday(locale) {
-	if (locale == get_lang_code())
-		return window.global_first_language.coltitle_weekday;
-	else
-		return window.global_second_language.coltitle_weekday;
-}
-function getColumnTitles(transliteration = 0, calendartype, locale, second_locale, check_second = 'Y') {
-	let coltitle = {day: '',
-					weekday: '',
-					weekday_tr: '',
-					caltype: '',
-					imsak: '',
-					fajr: '',
-					fajr_iqamat: '',
-					sunrise: '',
-					dhuhr: '',
-					dhuhr_iqamat: '',
-					asr: '',
-					asr_iqamat: '',
-					sunset: '',
-					maghrib: '',
-					maghrib_iqamat: '',
-					isha: '',
-					isha_iqamat: '',
-					midnight: '',
-					notes: ''};
-	if (transliteration == 1){
-		//set only these values for transliterad column titles
-		coltitle['imsak'] = window.global_first_language.coltitle_transliteration_imsak;
-		coltitle['fajr'] = window.global_first_language.coltitle_transliteration_fajr;
-		coltitle['fajr_iqamat'] = window.global_first_language.coltitle_transliteration_fajr_iqamat;
-		coltitle['sunrise'] = window.global_first_language.coltitle_transliteration_sunrise;
-		coltitle['dhuhr'] = window.global_first_language.coltitle_transliteration_dhuhr;
-		coltitle['dhuhr_iqamat'] = window.global_first_language.coltitle_transliteration_dhuhr_iqamat;
-		coltitle['asr'] = window.global_first_language.coltitle_transliteration_asr;
-		coltitle['asr_iqamat'] = window.global_first_language.coltitle_transliteration_asr_iqamat;
-		coltitle['sunset'] = window.global_first_language.coltitle_transliteration_sunset;
-		coltitle['maghrib'] = window.global_first_language.coltitle_transliteration_maghrib;
-		coltitle['maghrib_iqamat'] = window.global_first_language.coltitle_transliteration_maghrib_iqamat;
-		coltitle['isha'] = window.global_first_language.coltitle_transliteration_isha;
-		coltitle['isha_iqamat'] = window.global_first_language.coltitle_transliteration_isha_iqamat;
-		coltitle['midnight'] = window.global_first_language.coltitle_transliteration_midnight;
-		}
-	else {
-		if (locale==get_lang_code()){
-			coltitle['day'] = window.global_first_language.coltitle_day;
-			coltitle['weekday'] = window.global_first_language.coltitle_weekday;
-			if (second_locale != '0' & check_second == 'Y') {
-				coltitle['weekday_tr'] = getweekday(second_locale);
-			} else
-				coltitle['weekday_tr'] = '';
-			if (calendartype == 'GREGORIAN') {
-				coltitle['caltype'] = window.global_first_language.coltitle_caltype_hijri;
-			} else {
-				coltitle['caltype'] = window.global_first_language.coltitle_caltype_gregorian;
-			}
-			coltitle['imsak'] = window.global_first_language.coltitle_imsak;
-			coltitle['fajr'] = window.global_first_language.coltitle_fajr;
-			coltitle['fajr_iqamat'] = window.global_first_language.coltitle_fajr_iqamat;
-			coltitle['sunrise'] = window.global_first_language.coltitle_sunrise;
-			coltitle['dhuhr'] = window.global_first_language.coltitle_dhuhr;
-			coltitle['dhuhr_iqamat'] = window.global_first_language.coltitle_dhuhr_iqamat;
-			coltitle['asr'] = window.global_first_language.coltitle_asr;
-			coltitle['asr_iqamat'] = window.global_first_language.coltitle_asr_iqamat;
-			coltitle['sunset'] = window.global_first_language.coltitle_sunset;
-			coltitle['maghrib'] = window.global_first_language.coltitle_maghrib;
-			coltitle['maghrib_iqamat'] = window.global_first_language.coltitle_maghrib_iqamat;
-			coltitle['isha'] = window.global_first_language.coltitle_isha;
-			coltitle['isha_iqamat'] = window.global_first_language.coltitle_isha_iqamat;
-			coltitle['midnight'] = window.global_first_language.coltitle_midnight;
-			coltitle['notes'] = window.global_first_language.coltitle_notes;
-		}
-		else{
-			coltitle['day'] = window.global_second_language.coltitle_day;
-			coltitle['weekday'] = window.global_second_language.coltitle_weekday;
-			if (second_locale != '0' & check_second == 'Y') {
-				coltitle['weekday_tr'] = getweekday(second_locale);
-			} else
-				coltitle['weekday_tr'] = '';
-			if (calendartype == 'GREGORIAN') {
-				coltitle['caltype'] = window.global_second_language.coltitle_caltype_hijri;
-			} else {
-				coltitle['caltype'] = window.global_second_language.coltitle_caltype_gregorian;
-			}
-			coltitle['imsak'] = window.global_second_language.coltitle_imsak;
-			coltitle['fajr'] = window.global_second_language.coltitle_fajr;
-			coltitle['fajr_iqamat'] = window.global_second_language.coltitle_fajr_iqamat;
-			coltitle['sunrise'] = window.global_second_language.coltitle_sunrise;
-			coltitle['dhuhr'] = window.global_second_language.coltitle_dhuhr;
-			coltitle['dhuhr_iqamat'] = window.global_second_language.coltitle_dhuhr_iqamat;
-			coltitle['asr'] = window.global_second_language.coltitle_asr;
-			coltitle['asr_iqamat'] = window.global_second_language.coltitle_asr_iqamat;
-			coltitle['sunset'] = window.global_second_language.coltitle_sunset;
-			coltitle['maghrib'] = window.global_second_language.coltitle_maghrib;
-			coltitle['maghrib_iqamat'] = window.global_second_language.coltitle_maghrib_iqamat;
-			coltitle['isha'] = window.global_second_language.coltitle_isha;
-			coltitle['isha_iqamat'] = window.global_second_language.coltitle_isha_iqamat;
-			coltitle['midnight'] = window.global_second_language.coltitle_midnight;
-			coltitle['notes'] = window.global_second_language.coltitle_notes;
-		}
-		};
-	return coltitle;
-}
-
-
-async function settings_translate_report(first=true) {
-    let json;
-    let status;
-    let locale='';
-    if (first==true)
-        locale = get_lang_code();
-    else
-        locale = document.getElementById('setting_select_report_locale_second').value;
-    if (locale != 0){
-        //fetch any message with first language always
-        //show translation using first or second language
-        await fetch(window.global_rest_url_base + window.global_rest_app_object + locale +
-                '?app_id=' + window.global_app_id + 
-                '&lang_code=' + get_lang_code(), 
-                {
-                method: 'GET',
-                headers: {
-                    'Authorization': 'Bearer ' + window.global_rest_dt,
-                }
-        })
-        .then(function(response) {
-            status = response.status;
-            return response.text();
-        })
-        .then(function(result) {
-            if (status === 200) {
-                json = JSON.parse(result);	
-                for (let i = 0; i < json.data.length; i++){
-                    if (first == true){
-                        if (json.data[i].object=='APP_OBJECT_ITEM' && json.data[i].object_name=='REPORT')
-                            window.global_first_language[json.data[i].object_item_name.toLowerCase()] = json.data[i].text;
-
-                        //Used by service report
-                        //Regional
-                        if (json.data[i].object=='APP_OBJECT_ITEM' && json.data[i].object_name=='SETTING_NAV_REGIONAL' && 
-                            json.data[i].object_item_name=='SETTING_LABEL_REPORT_TIMEZONE')
-                            document.getElementById('setting_label_report_timezone').innerHTML = json.data[i].text;
-                        //GPS
-                        if (json.data[i].object=='APP_OBJECT_ITEM' && json.data[i].object_name=='SETTING_NAV_GPS' && 
-                            json.data[i].object_item_name=='SETTING_LABEL_LAT')
-                            document.getElementById('setting_label_lat').innerHTML = json.data[i].text;
-                        if (json.data[i].object=='APP_OBJECT_ITEM' && json.data[i].object_name=='SETTING_NAV_GPS' && 
-                            json.data[i].object_item_name=='SETTING_LABEL_LONG')
-                            document.getElementById('setting_label_long').innerHTML = json.data[i].text;
-                    }
-                    else{
-                        for (let i = 0; i < json.data.length; i++){	
-                            if (json.data[i].object=='APP_OBJECT_ITEM' && json.data[i].object_name=='REPORT')
-                                window.global_second_language[json.data[i].object_item_name.toLowerCase()] = json.data[i].text;						
-                        }
-                    }
-                }          
-                //if translating first language and second language is not used
-                if (first == true &&
-                    document.getElementById('setting_select_report_locale_second').value ==0){
-                    window.global_second_language.timetable_title = '';
-                    window.global_second_language.coltitle_day = '';
-                    window.global_second_language.coltitle_weekday = '';
-                    window.global_second_language.coltitle_weekday_tr = '';
-                    window.global_second_language.coltitle_caltype_hijri = '';
-                    window.global_second_language.coltitle_caltype_gregorian = '';
-                    window.global_second_language.coltitle_imsak = '';
-                    window.global_second_language.coltitle_fajr = '';
-                    window.global_second_language.coltitle_fajr_iqamat = '';
-                    window.global_second_language.coltitle_sunrise = '';
-                    window.global_second_language.coltitle_dhuhr = '';
-                    window.global_second_language.coltitle_dhuhr_iqamat = '';
-                    window.global_second_language.coltitle_asr = '';
-                    window.global_second_language.coltitle_asr_iqamat = '';
-                    window.global_second_language.coltitle_sunset = '';
-                    window.global_second_language.coltitle_maghrib = '';
-                    window.global_second_language.coltitle_maghrib_iqamat = '';
-                    window.global_second_language.coltitle_isha = '';
-                    window.global_second_language.coltitle_isha_iqamat = '';
-                    window.global_second_language.coltitle_midnight = '';
-                    window.global_second_language.coltitle_notes = '';
-                }
-            } else {
-                exception(status, result, get_lang_code());
-            }
-        });
-    }
+function printTable(){
+	let win = window.open('','printwindow','');
+	let whatToPrint = document.getElementById('paper');
+	let html;
+	
+	html = `<!DOCTYPE html>
+			<html>
+			<head>
+				<meta charset='UTF-8'>
+				<title></title>
+				<link rel="stylesheet" type="text/css" href="/app${window.global_app_id}/css/app_fonts.css" />
+				<link rel="stylesheet" type="text/css" href="/app${window.global_app_id}/css/app.css" />
+				<link rel="stylesheet" type="text/css" href="/app${window.global_app_id}/css/app_report.css" />
+			</head>
+			<body id="printbody">
+				${whatToPrint.outerHTML}
+			</body>
+			</html>`;
+	win.document.write(html);
+	win.print();
+	win.onafterprint = function(){
+		win.close();
+	}
 	return null;
 }
 
@@ -1092,34 +856,6 @@ function set_null_or_value(value) {
         return value;
 }
 
-function fileisloaded(image_item_src) {
-    //if (image_item_src.substr(0,4)=='data')
-    if (image_item_src == '')
-        return false;
-    else
-        return true;
-}
-
-function convertnumberlocale(numberstring, splitcharacter, locale) {
-    let left = Number((numberstring).substr(0, (numberstring).indexOf(splitcharacter))).toLocaleString(locale);
-    let right;
-    let suffix;
-    //check if suffix is added
-    if (numberstring.substr(numberstring.length - 2) == 'am' ||
-        numberstring.substr(numberstring.length - 2) == 'pm') {
-        suffix = numberstring.substr(numberstring.length - 3);
-        //convert except the last suffix part
-        right = Number(numberstring.substr(numberstring.indexOf(splitcharacter) + 1, 2)).toLocaleString(locale);
-    } else {
-        right = Number(numberstring.substr(numberstring.indexOf(splitcharacter) + 1)).toLocaleString(locale);
-        suffix = '';
-    }
-    //cant compare arab number with latin numbers, check length instead
-    if (right.length == 1)
-        return left + splitcharacter + (0).toLocaleString(locale) + right + suffix;
-    else
-        return left + splitcharacter + right + suffix;
-}
 /* check if run inside an iframe*/
 function inIframe() {
     try {
@@ -1127,12 +863,6 @@ function inIframe() {
     } catch (e) {
         return true;
     }
-}
-function isToday(checkdate){
-    let today = new Date();
-    return (checkdate.getMonth() == today.getMonth()) && 
-            (checkdate.getDate() == today.getDate()) && 
-            (checkdate.getFullYear() == today.getFullYear());
 }
 /*--------------------- */
 /*Map and GPS functions */
@@ -1497,6 +1227,86 @@ function slide(wrapper, items, prev, next, type) {
 /*----------------------- */
 /* User setting functions */
 /*----------------------- */
+
+function getTimetable_div(){
+    if (document.getElementById('prayertable_day').style.visibility == 'visible')
+        return 'prayertable_day';
+    if (document.getElementById('prayertable_month').style.visibility == 'visible')
+        return 'prayertable_month';
+    if (document.getElementById('prayertable_year').style.visibility == 'visible')
+        return 'prayertable_year';
+}
+function getReportSettings(){
+    return {    prayertable_month       : 'prayertable_month', //class to add for month
+                prayertable_year_month  : 'prayertable_year_month', //class to add for year
+                reporttype          	: 'MONTH', //MONTH: normal month with more info, YEAR: month with less info
+                locale              	: document.getElementById('setting_select_locale').value,  
+                timezone            	: document.getElementById('setting_select_report_timezone').value,
+                timezone_label	   		: document.getElementById('setting_label_report_timezone').innerHTML,
+                number_system       	: document.getElementById('setting_select_report_numbersystem').value,
+                direction           	: document.getElementById('setting_select_report_direction').value,
+                second_locale       	: document.getElementById('setting_select_report_locale_second').value,
+                arabic_script       	: document.getElementById('setting_select_report_arabic_script').value,
+                calendartype        	: document.getElementById('setting_select_calendartype').value,
+                calendar_hijri_type 	: document.getElementById('setting_select_calendar_hijri_type').value,
+
+                place               	: document.getElementById('setting_input_place').value,
+                gps_lat             	: parseFloat(document.getElementById('setting_input_lat').value),
+                gps_long            	: parseFloat(document.getElementById('setting_input_long').value),
+                gps_label_lat       	: document.getElementById('setting_label_lat').innerHTML,
+                gps_label_long      	: document.getElementById('setting_label_long').innerHTML,
+
+                theme_day           	: 'theme_day_' + get_theme_id('day'),
+                theme_month         	: 'theme_month_' + get_theme_id('month'),
+                theme_year          	: 'theme_year_' + get_theme_id('year'),
+                coltitle            	: document.getElementById('setting_select_report_coltitle').value,
+                highlight           	: document.getElementById('setting_select_report_highlight_row').value,
+                show_weekday        	: checkbox_value(document.getElementById('setting_checkbox_report_show_weekday')),
+                show_calendartype   	: checkbox_value(document.getElementById('setting_checkbox_report_show_calendartype')),
+                show_notes          	: checkbox_value(document.getElementById('setting_checkbox_report_show_notes')),
+                show_gps   	       		: checkbox_value(document.getElementById('setting_checkbox_report_show_gps')),
+                show_timezone       	: checkbox_value(document.getElementById('setting_checkbox_report_show_timezone')),
+                            
+                header_img_src      	: document.getElementById('setting_reportheader_img').src,
+                footer_img_src      	: document.getElementById('setting_reportfooter_img').src,
+
+                header_txt1         	: document.getElementById('setting_input_reporttitle1').value,
+                header_txt2         	: document.getElementById('setting_input_reporttitle2').value,
+                header_txt3         	: document.getElementById('setting_input_reporttitle3').value,
+                //button is active set left, center or right true/false
+                header_text_al      	: document.getElementById('setting_input_reporttitle_aleft').classList.contains('setting_button_active'),
+                header_text_ac      	: document.getElementById('setting_input_reporttitle_acenter').classList.contains('setting_button_active'),
+                header_text_ar      	: document.getElementById('setting_input_reporttitle_aright').classList.contains('setting_button_active'),
+                footer_txt1         	: document.getElementById('setting_input_reportfooter1').value,
+                footer_txt2         	: document.getElementById('setting_input_reportfooter2').value,
+                footer_txt3    	   		: document.getElementById('setting_input_reportfooter3').value,
+                //button is active set left, center or right true/false
+                footer_text_al      	: document.getElementById('setting_input_reportfooter_aleft').classList.contains('setting_button_active'),
+                footer_text_ac      	: document.getElementById('setting_input_reportfooter_acenter').classList.contains('setting_button_active'),
+                footer_text_ar      	: document.getElementById('setting_input_reportfooter_aright').classList.contains('setting_button_active'),
+                
+                method              	: document.getElementById('setting_select_method').value,
+                asr                 	: document.getElementById('setting_select_asr').value,
+                highlat             	: document.getElementById('setting_select_highlatitude').value,
+                format              	: document.getElementById('setting_select_timeformat').value,
+                hijri_adj           	: document.getElementById('setting_select_hijri_adjustment').value,
+                iqamat_fajr         	: document.getElementById('setting_select_report_iqamat_title_fajr').value,
+                iqamat_dhuhr        	: document.getElementById('setting_select_report_iqamat_title_dhuhr').value,
+                iqamat_asr          	: document.getElementById('setting_select_report_iqamat_title_asr').value,
+                iqamat_maghrib      	: document.getElementById('setting_select_report_iqamat_title_maghrib').value,
+                iqamat_isha         	: document.getElementById('setting_select_report_iqamat_title_isha').value,
+                show_imsak          	: checkbox_value(document.getElementById('setting_checkbox_report_show_imsak')),
+                show_sunset         	: checkbox_value(document.getElementById('setting_checkbox_report_show_sunset')),
+                show_midnight       	: checkbox_value(document.getElementById('setting_checkbox_report_show_midnight')),
+                show_fast_start_end 	: document.getElementById('setting_select_report_show_fast_start_end').value,
+                ui_navigation_left      : 'toolbar_navigation_btn_left',
+                ui_navigation_right     : 'toolbar_navigation_btn_right',
+                ui_timetable_div        : getTimetable_div(),
+                ui_prayertable_day      : document.getElementById('prayertable_day'),
+                ui_prayertable_month    : document.getElementById('prayertable_month'),
+                ui_prayertable_year     : document.getElementById('prayertable_year')};
+}
+
 function get_lang_code(){
     return document.getElementById('setting_select_locale').value;
 }
@@ -1654,8 +1464,8 @@ function keyfunctions() {
     //onClick
     document.getElementById('toolbar_btn_zoomout').addEventListener('click', function() { zoom_paper(-1) }, false);
 	document.getElementById('toolbar_btn_zoomin').addEventListener('click', function() { zoom_paper(1) }, false);
-	document.getElementById('toolbar_btn_left').addEventListener('click', function() { update_timetable_report(0, 'toolbar_navigation_btn_left') }, false);
-	document.getElementById('toolbar_btn_right').addEventListener('click', function() { update_timetable_report(0, 'toolbar_navigation_btn_right') }, false);
+	document.getElementById('toolbar_btn_left').addEventListener('click', function() { update_timetable_report(0, 'toolbar_navigation_btn_left', getReportSettings(), get_lang_code()) }, false);
+	document.getElementById('toolbar_btn_right').addEventListener('click', function() { update_timetable_report(0, 'toolbar_navigation_btn_right', getReportSettings(), get_lang_code()) }, false);
 	document.getElementById('toolbar_btn_about').addEventListener('click', function() { show_dialogue('INFO') }, false);
 
     document.getElementById('tab_1_nav_btn_regional').addEventListener('click', function() { openTab('tab1') }, false);
@@ -1843,7 +1653,7 @@ function toolbar_bottom(choice) {
                 prayertable_month.style.visibility = 'hidden';
                 prayertable_year.style.visibility = 'hidden';
                 settings.style.visibility = 'hidden';
-                update_timetable_report(2);
+                update_timetable_report(2, null, getReportSettings(), get_lang_code());
                 break;
             }
             //month
@@ -1855,7 +1665,7 @@ function toolbar_bottom(choice) {
                 prayertable_month.style.visibility = 'visible';
                 prayertable_year.style.visibility = 'hidden';
                 settings.style.visibility = 'hidden';
-                update_timetable_report(0);
+                update_timetable_report(0, null, getReportSettings(), get_lang_code());
                 break;
             }
             //year
@@ -1867,7 +1677,7 @@ function toolbar_bottom(choice) {
                 prayertable_month.style.visibility = 'hidden';
                 prayertable_year.style.visibility = 'visible';
                 settings.style.visibility = 'hidden';
-                update_timetable_report(1);
+                update_timetable_report(1, null, getReportSettings(), get_lang_code());
                 break;
             }
             //settings
@@ -2481,7 +2291,7 @@ async function user_settings_load(show_ui = 1) {
         //remove active class if it is active
         document.getElementById('setting_input_reporttitle_a' +
             select_user_setting[select_user_setting.selectedIndex].getAttribute('text_header_align')).classList.remove('setting_button_active');
-        update_timetable_report(4, 'setting_input_reporttitle_a' +
+        update_ui(15, 'setting_input_reporttitle_a' +
             select_user_setting[select_user_setting.selectedIndex].getAttribute('text_header_align'));
     }
     document.getElementById('setting_input_reportfooter1').value =
@@ -2498,7 +2308,7 @@ async function user_settings_load(show_ui = 1) {
         //remove active class if it is active
         document.getElementById('setting_input_reportfooter_a' +
             select_user_setting[select_user_setting.selectedIndex].getAttribute('text_footer_align')).classList.remove('setting_button_active');
-        update_timetable_report(6, 'setting_input_reportfooter_a' +
+        update_ui(16, 'setting_input_reportfooter_a' +
             select_user_setting[select_user_setting.selectedIndex].getAttribute('text_footer_align'));
     }
     //Prayer
@@ -2746,7 +2556,7 @@ function user_settings_delete(choice=null) {
                             user_settings_load().then(function(){
                                 settings_translate(true).then(function(){
                                     settings_translate(false).then(function(){
-                                        update_timetable_report();
+                                        update_timetable_report(null, null, getReportSettings(), get_lang_code());
                                         document.getElementById('setting_btn_user_delete').innerHTML = old_button;
                                     })
                                 })
@@ -3961,9 +3771,9 @@ function init_report_timetable(parameters) {
                                 }
                             }
                             user_settings_load(0).then(function(){
-                                settings_translate_report(true).then(function(){
-                                    settings_translate_report(false).then(function(){
-                                        update_timetable_report();
+                                settings_translate_report(true, document.getElementById('setting_select_report_locale_second').value, get_lang_code()).then(function(){
+                                    settings_translate_report(false, document.getElementById('setting_select_report_locale_second').value, get_lang_code()).then(function(){
+                                        update_timetable_report(null, null, getReportSettings(), get_lang_code());
                                     });
                                 });
                             });
@@ -3977,9 +3787,9 @@ function init_report_timetable(parameters) {
                         //load setting from user_setting_id
                         user_setting_get(user_setting_id).then(function(){
                             user_settings_load(0).then(function(){
-                                settings_translate_report(true).then(function(){
-                                    settings_translate_report(false).then(function(){
-                                        update_timetable_report();
+                                settings_translate_report(true, document.getElementById('setting_select_report_locale_second').value, get_lang_code()).then(function(){
+                                    settings_translate_report(false, document.getElementById('setting_select_report_locale_second').value, get_lang_code()).then(function(){
+                                        update_timetable_report(null, null, getReportSettings(), get_lang_code());
                                     });
                                 });
                             })
@@ -3993,9 +3803,9 @@ function init_report_timetable(parameters) {
                         //load setting from user_setting_id
                         user_setting_get(user_setting_id).then(function(){
                             user_settings_load(0).then(function(){
-                                settings_translate_report(true).then(function(){
-                                    settings_translate_report(false).then(function(){
-                                        update_timetable_report();
+                                settings_translate_report(true, document.getElementById('setting_select_report_locale_second').value, get_lang_code()).then(function(){
+                                    settings_translate_report(false, document.getElementById('setting_select_report_locale_second').value, get_lang_code()).then(function(){
+                                        update_timetable_report(null, null, getReportSettings(), get_lang_code());
                                     });
                                 });
                             });
