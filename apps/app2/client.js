@@ -1,5 +1,4 @@
-const { getAppStartParameters } = require("../../service/db/api/app_parameter/app_parameter.service");
-const { read_app_files } = require("../");
+const { read_app_files, get_module_with_init } = require("../");
 module.exports = {
     getApp:(app_id, params, gps_lat, gps_long, gps_place) => {
         return new Promise(function (resolve, reject){
@@ -12,7 +11,7 @@ module.exports = {
                 ['<AppHead/>', __dirname + '/src/head.html'],
                 ['<AppWindowInfo/>', __dirname + '/src/window_info.html']
               ];
-            read_app_files(files, (err, app)=>{
+            read_app_files(app_id, files, (err, app)=>{
                 if (err)
                     reject(err);
                 else{
@@ -24,28 +23,19 @@ module.exports = {
                     app = app.replace(
                         '<AppProfileTop/>',
                         '');
-                    getAppStartParameters(process.env.MAIN_APP_ID, (err,result) =>{
+                    get_module_with_init(app_id, 
+                                         'app_exception',
+                                         null,
+                                         true,
+                                         null,
+                                         gps_lat,
+                                         gps_long,
+                                         gps_place,
+                                         app, (err, app_init) =>{
                         if (err)
                             reject(err);
                         else{
-                            let parameters = {   
-                                app_id: app_id,
-                                exception_app_function: 'app_exception',
-                                close_eventsource: null,
-                                ui: true,
-                                admin: null,
-                                service_auth: result[0].service_auth,
-                                app_rest_client_id: result[0].app_rest_client_id,
-                                app_rest_client_secret: result[0].app_rest_client_secret,
-                                rest_app_parameter: result[0].rest_app_parameter,
-                                gps_lat: gps_lat, 
-                                gps_long: gps_long, 
-                                gps_place: gps_place
-                            }    
-                            app = app.replace(
-                                '<ITEM_COMMON_PARAMETERS/>',
-                                JSON.stringify(parameters));
-                            resolve(app);
+                            resolve(app_init);
                         }
                     })
                 }
