@@ -1359,13 +1359,12 @@ function showreporttime() {
     if (document.getElementsByClassName('prayertable_day_current_time').length > 0) {
         let user_current_time = document.getElementsByClassName('prayertable_day_current_time');
         let select_user_settings = document.getElementById('setting_select_user_setting');
-        let select_timezone_report = document.getElementById('setting_select_report_timezone');
         let user_locale;
         let user_options;
         //loop user settings
         for (i = 0; i <= select_user_settings.options.length - 1; i++) {
             user_options = {
-                timeZone: select_timezone_report[select_user_settings[i].getAttribute('regional_timezone_select_id')].value,
+                timeZone: select_user_settings[i].getAttribute('regional_timezone'),
                 weekday: 'long',
                 year: 'numeric',
                 month: 'long',
@@ -1891,16 +1890,16 @@ async function user_setting_get(user_setting_id) {
                 option_html += `<option value=${0} id=${json.id} 
                                     description='${json.description}' 
                                     regional_language_locale=${json.regional_language_locale}
-                                    regional_current_timezone_select_id=${json.regional_current_timezone_select_id}
-                                    regional_timezone_select_id=${json.regional_timezone_select_id}
-                                    regional_number_system_select_id=${json.regional_number_system_select_id}
-                                    regional_layout_direction_select_id=${json.regional_layout_direction_select_id}
+                                    regional_current_timezone=${json.regional_current_timezone}
+                                    regional_timezone=${json.regional_timezone}
+                                    regional_number_system=${json.regional_number_system}
+                                    regional_layout_direction=${json.regional_layout_direction}
                                     regional_second_language_locale=${json.regional_second_language_locale}
-                                    regional_column_title_select_id=${json.regional_column_title_select_id}
-                                    regional_arabic_script_select_id=${json.regional_arabic_script_select_id}
-                                    regional_calendar_type_select_id=${json.regional_calendar_type_select_id}
-                                    regional_calendar_hijri_type_select_id=${json.regional_calendar_hijri_type_select_id}
-                                    gps_map_type_select_id=${json.gps_map_type_select_id}
+                                    regional_column_title=${json.regional_column_title}
+                                    regional_arabic_script=${json.regional_arabic_script}
+                                    regional_calendar_type=${json.regional_calendar_type}
+                                    regional_calendar_hijri_type=${json.regional_calendar_hijri_type}
+                                    gps_map_type=${json.gps_map_type}
                                     ${json.gps_country_id==null?`gps_country_id `:'gps_country_id=' + json.gps_country_id}
                                     ${json.gps_city_id==null?`gps_city_id `:'gps_city_id=' + json.gps_city_id}
                                     ${json.gps_popular_place_id==null?`gps_popular_place_id `:'gps_popular_place_id=' + json.gps_popular_place_id}
@@ -1909,8 +1908,8 @@ async function user_setting_get(user_setting_id) {
                                     design_theme_day_id=${json.design_theme_day_id}
                                     design_theme_month_id=${json.design_theme_month_id}
                                     design_theme_year_id=${json.design_theme_year_id}
-                                    design_paper_size_select_id=${json.design_paper_size_select_id}
-                                    design_row_highlight_select_id=${json.design_row_highlight_select_id}
+                                    design_paper_size=${json.design_paper_size}
+                                    design_row_highlight=${json.design_row_highlight}
                                     design_column_weekday_checked=${json.design_column_weekday_checked}
                                     design_column_calendartype_checked=${json.design_column_calendartype_checked}
                                     design_column_notes_checked=${json.design_column_notes_checked}
@@ -1926,20 +1925,20 @@ async function user_setting_get(user_setting_id) {
                                     text_footer_2_text='${json.text_footer_2_text==null?'':json.text_footer_2_text}'
                                     text_footer_3_text='${json.text_footer_3_text==null?'':json.text_footer_3_text}'
                                     text_footer_align='${json.text_footer_align==null?'':json.text_footer_align}'
-                                    prayer_method_select_id=${json.prayer_method_select_id}
-                                    prayer_asr_method_select_id=${json.prayer_asr_method_select_id}
-                                    prayer_high_latitude_adjustment_select_id=${json.prayer_high_latitude_adjustment_select_id}
-                                    prayer_time_format_select_id=${json.prayer_time_format_select_id}
-                                    prayer_hijri_date_adjustment_select_id=${json.prayer_hijri_date_adjustment_select_id}
-                                    prayer_fajr_iqamat_select_id=${json.prayer_fajr_iqamat_select_id}
-                                    prayer_dhuhr_iqamat_select_id=${json.prayer_dhuhr_iqamat_select_id}
-                                    prayer_asr_iqamat_select_id=${json.prayer_asr_iqamat_select_id}
-                                    prayer_maghrib_iqamat_select_id=${json.prayer_maghrib_iqamat_select_id}
-                                    prayer_isha_iqamat_select_id=${json.prayer_isha_iqamat_select_id}
+                                    prayer_method=${json.prayer_method}
+                                    prayer_asr_method=${json.prayer_asr_method}
+                                    prayer_high_latitude_adjustment=${json.prayer_high_latitude_adjustment}
+                                    prayer_time_format=${json.prayer_time_format}
+                                    prayer_hijri_date_adjustment=${json.prayer_hijri_date_adjustment}
+                                    prayer_fajr_iqamat=${json.prayer_fajr_iqamat}
+                                    prayer_dhuhr_iqamat=${json.prayer_dhuhr_iqamat}
+                                    prayer_asr_iqamat=${json.prayer_asr_iqamat}
+                                    prayer_maghrib_iqamat=${json.prayer_maghrib_iqamat}
+                                    prayer_isha_iqamat=${json.prayer_isha_iqamat}
                                     prayer_column_imsak_checked=${json.prayer_column_imsak_checked}
                                     prayer_column_sunset_checked=${json.prayer_column_sunset_checked}
                                     prayer_column_midnight_checked=${json.prayer_column_midnight_checked}
-                                    prayer_column_fast_start_end_select_id=${json.prayer_column_fast_start_end_select_id}
+                                    prayer_column_fast_start_end=${json.prayer_column_fast_start_end}
                                     user_account_id=${json.user_account_id}
                                     >${json.description}
                                 </option>`
@@ -1988,16 +1987,16 @@ async function user_settings_get(userid, show_ui = 1, user_setting_id = '') {
                 for (i = 0; i < json.count; i++) {
                     option_html += `<option value=${i} id=${json.items[i].id} description='${json.items[i].description}'
                                         regional_language_locale=${json.items[i].regional_language_locale}
-                                        regional_current_timezone_select_id=${json.items[i].regional_current_timezone_select_id}
-                                        regional_timezone_select_id=${json.items[i].regional_timezone_select_id}
-                                        regional_number_system_select_id=${json.items[i].regional_number_system_select_id}
-                                        regional_layout_direction_select_id=${json.items[i].regional_layout_direction_select_id}
+                                        regional_current_timezone=${json.items[i].regional_current_timezone}
+                                        regional_timezone=${json.items[i].regional_timezone}
+                                        regional_number_system=${json.items[i].regional_number_system}
+                                        regional_layout_direction=${json.items[i].regional_layout_direction}
                                         regional_second_language_locale=${json.items[i].regional_second_language_locale}
-                                        regional_column_title_select_id=${json.items[i].regional_column_title_select_id}
-                                        regional_arabic_script_select_id=${json.items[i].regional_arabic_script_select_id}
-                                        regional_calendar_type_select_id=${json.items[i].regional_calendar_type_select_id}
-                                        regional_calendar_hijri_type_select_id=${json.items[i].regional_calendar_hijri_type_select_id}
-                                        gps_map_type_select_id=${json.items[i].gps_map_type_select_id}
+                                        regional_column_title=${json.items[i].regional_column_title}
+                                        regional_arabic_script=${json.items[i].regional_arabic_script}
+                                        regional_calendar_type=${json.items[i].regional_calendar_type}
+                                        regional_calendar_hijri_type=${json.items[i].regional_calendar_hijri_type}
+                                        gps_map_type=${json.items[i].gps_map_type}
                                         ${json.items[i].gps_country_id==null?`gps_country_id `:'gps_country_id=' + json.items[i].gps_country_id}
                                         ${json.items[i].gps_city_id==null?`gps_city_id `:'gps_city_id=' + json.items[i].gps_city_id}
                                         ${json.items[i].gps_popular_place_id==null?`gps_popular_place_id `:'gps_popular_place_id=' + json.items[i].gps_popular_place_id}
@@ -2006,8 +2005,8 @@ async function user_settings_get(userid, show_ui = 1, user_setting_id = '') {
                                         design_theme_day_id=${json.items[i].design_theme_day_id}
                                         design_theme_month_id=${json.items[i].design_theme_month_id}
                                         design_theme_year_id=${json.items[i].design_theme_year_id}
-                                        design_paper_size_select_id=${json.items[i].design_paper_size_select_id}
-                                        design_row_highlight_select_id=${json.items[i].design_row_highlight_select_id}
+                                        design_paper_size=${json.items[i].design_paper_size}
+                                        design_row_highlight=${json.items[i].design_row_highlight}
                                         design_column_weekday_checked=${json.items[i].design_column_weekday_checked}
                                         design_column_calendartype_checked=${json.items[i].design_column_calendartype_checked}
                                         design_column_notes_checked=${json.items[i].design_column_notes_checked}
@@ -2023,20 +2022,20 @@ async function user_settings_get(userid, show_ui = 1, user_setting_id = '') {
                                         text_footer_2_text='${json.items[i].text_footer_2_text==null?'':json.items[i].text_footer_2_text}'
                                         text_footer_3_text='${json.items[i].text_footer_3_text==null?'':json.items[i].text_footer_3_text}'
                                         text_footer_align='${json.items[i].text_footer_align==null?'':json.items[i].text_footer_align}'    
-                                        prayer_method_select_id=${json.items[i].prayer_method_select_id}
-                                        prayer_asr_method_select_id=${json.items[i].prayer_asr_method_select_id}
-                                        prayer_high_latitude_adjustment_select_id=${json.items[i].prayer_high_latitude_adjustment_select_id}
-                                        prayer_time_format_select_id=${json.items[i].prayer_time_format_select_id}
-                                        prayer_hijri_date_adjustment_select_id=${json.items[i].prayer_hijri_date_adjustment_select_id}
-                                        prayer_fajr_iqamat_select_id=${json.items[i].prayer_fajr_iqamat_select_id}
-                                        prayer_dhuhr_iqamat_select_id=${json.items[i].prayer_dhuhr_iqamat_select_id}
-                                        prayer_asr_iqamat_select_id=${json.items[i].prayer_asr_iqamat_select_id}
-                                        prayer_maghrib_iqamat_select_id=${json.items[i].prayer_maghrib_iqamat_select_id}
-                                        prayer_isha_iqamat_select_id=${json.items[i].prayer_isha_iqamat_select_id}
+                                        prayer_method=${json.items[i].prayer_method}
+                                        prayer_asr_method=${json.items[i].prayer_asr_method}
+                                        prayer_high_latitude_adjustment=${json.items[i].prayer_high_latitude_adjustment}
+                                        prayer_time_format=${json.items[i].prayer_time_format}
+                                        prayer_hijri_date_adjustment=${json.items[i].prayer_hijri_date_adjustment}
+                                        prayer_fajr_iqamat=${json.items[i].prayer_fajr_iqamat}
+                                        prayer_dhuhr_iqamat=${json.items[i].prayer_dhuhr_iqamat}
+                                        prayer_asr_iqamat=${json.items[i].prayer_asr_iqamat}
+                                        prayer_maghrib_iqamat=${json.items[i].prayer_maghrib_iqamat}
+                                        prayer_isha_iqamat=${json.items[i].prayer_isha_iqamat}
                                         prayer_column_imsak_checked=${json.items[i].prayer_column_imsak_checked}
                                         prayer_column_sunset_checked=${json.items[i].prayer_column_sunset_checked}
                                         prayer_column_midnight_checked=${json.items[i].prayer_column_midnight_checked}
-                                        prayer_column_fast_start_end_select_id=${json.items[i].prayer_column_fast_start_end_select_id}
+                                        prayer_column_fast_start_end=${json.items[i].prayer_column_fast_start_end}
                                         user_account_id=${json.items[i].user_account_id}
                                         >${json.items[i].description}
                                     </option>`
@@ -2167,37 +2166,43 @@ async function user_settings_load(show_ui = 1) {
     //Regional
     SearchAndSetSelectedIndex(select_user_setting[select_user_setting.selectedIndex].getAttribute('regional_language_locale'),
         document.getElementById('setting_select_locale'), 1);
-    document.getElementById('setting_select_timezone_current').selectedIndex =
-        select_user_setting[select_user_setting.selectedIndex].getAttribute('regional_current_timezone_select_id');
-    document.getElementById('setting_select_report_timezone').selectedIndex =
-        select_user_setting[select_user_setting.selectedIndex].getAttribute('regional_timezone_select_id');
-    document.getElementById('setting_select_report_numbersystem').selectedIndex =
-        select_user_setting[select_user_setting.selectedIndex].getAttribute('regional_number_system_select_id');
-    document.getElementById('setting_select_report_direction').selectedIndex =
-        select_user_setting[select_user_setting.selectedIndex].getAttribute('regional_layout_direction_select_id');
+
+    SearchAndSetSelectedIndex(select_user_setting[select_user_setting.selectedIndex].getAttribute('regional_current_timezone'),
+        document.getElementById('setting_select_timezone_current'), 1);
+    SearchAndSetSelectedIndex(select_user_setting[select_user_setting.selectedIndex].getAttribute('regional_timezone'),
+        document.getElementById('setting_select_report_timezone'), 1)
+
+    SearchAndSetSelectedIndex(select_user_setting[select_user_setting.selectedIndex].getAttribute('regional_number_system'),
+        document.getElementById('setting_select_report_numbersystem'), 1)
+    SearchAndSetSelectedIndex(select_user_setting[select_user_setting.selectedIndex].getAttribute('regional_layout_direction'),
+        document.getElementById('setting_select_report_direction'), 1)
+    
     SearchAndSetSelectedIndex(select_user_setting[select_user_setting.selectedIndex].getAttribute('regional_second_language_locale'),
         document.getElementById('setting_select_report_locale_second'),1);
-    document.getElementById('setting_select_report_coltitle').selectedIndex =
-        select_user_setting[select_user_setting.selectedIndex].getAttribute('regional_column_title_select_id');
-    document.getElementById('setting_select_report_arabic_script').selectedIndex =
-        select_user_setting[select_user_setting.selectedIndex].getAttribute('regional_arabic_script_select_id');
-    document.getElementById('setting_select_calendartype').selectedIndex =
-        select_user_setting[select_user_setting.selectedIndex].getAttribute('regional_calendar_type_select_id');
-    document.getElementById('setting_select_calendar_hijri_type').selectedIndex =
-        select_user_setting[select_user_setting.selectedIndex].getAttribute('regional_calendar_hijri_type_select_id');
+    
+    SearchAndSetSelectedIndex(select_user_setting[select_user_setting.selectedIndex].getAttribute('regional_column_title'),
+        document.getElementById('setting_select_report_coltitle'),1);
+    SearchAndSetSelectedIndex(select_user_setting[select_user_setting.selectedIndex].getAttribute('regional_arabic_script'),
+        document.getElementById('setting_select_report_arabic_script'),1);
+    SearchAndSetSelectedIndex(select_user_setting[select_user_setting.selectedIndex].getAttribute('regional_calendar_type'),
+        document.getElementById('setting_select_calendartype'),1);
+    
+    SearchAndSetSelectedIndex(select_user_setting[select_user_setting.selectedIndex].getAttribute('regional_calendar_hijri_type'),
+        document.getElementById('setting_select_calendar_hijri_type'),1);
 
     if (show_ui == 1) {
         //GPS
-        document.getElementById('setting_select_maptype').selectedIndex =
-            select_user_setting[select_user_setting.selectedIndex].getAttribute('gps_map_type_select_id');
+
+        SearchAndSetSelectedIndex(select_user_setting[select_user_setting.selectedIndex].getAttribute('gps_map_type'),
+            document.getElementById('setting_select_maptype'),1);
 
         SearchAndSetSelectedIndex(select_user_setting[select_user_setting.selectedIndex].getAttribute('gps_country_id'),
-                                    document.getElementById('setting_select_country'),0);
+            document.getElementById('setting_select_country'),0);
         if (select_user_setting[select_user_setting.selectedIndex].getAttribute('gps_country_id')||null !=null) {
             //fill cities for chosen country
             await update_ui(5).then(function(){
                 SearchAndSetSelectedIndex(select_user_setting[select_user_setting.selectedIndex].getAttribute('gps_city_id'),
-                document.getElementById('setting_select_city'),0);
+                    document.getElementById('setting_select_city'),0);
                 if (select_user_setting[select_user_setting.selectedIndex].getAttribute('gps_city_id')||null !=null) {
                     //set GPS for chosen city
                     update_ui(6);
@@ -2205,7 +2210,7 @@ async function user_settings_load(show_ui = 1) {
             })
         }        
         SearchAndSetSelectedIndex(select_user_setting[select_user_setting.selectedIndex].getAttribute('gps_popular_place_id'),
-                                    document.getElementById('setting_select_popular_place'),0);
+            document.getElementById('setting_select_popular_place'),0);
         if (select_user_setting[select_user_setting.selectedIndex].getAttribute('gps_popular_place_id')||null !=null) {
             //set GPS for chosen popular place
             update_ui(7);
@@ -2238,12 +2243,14 @@ async function user_settings_load(show_ui = 1) {
         set_theme_id('month', select_user_setting[select_user_setting.selectedIndex].getAttribute('design_theme_month_id'));
         set_theme_id('year', select_user_setting[select_user_setting.selectedIndex].getAttribute('design_theme_year_id'));
     }
-    document.getElementById('setting_select_report_papersize').selectedIndex =
-        select_user_setting[select_user_setting.selectedIndex].getAttribute('design_paper_size_select_id');
+
+    SearchAndSetSelectedIndex(select_user_setting[select_user_setting.selectedIndex].getAttribute('design_paper_size'),
+        document.getElementById('setting_select_report_papersize'),1);
+    
     document.getElementById('paper').className=document.getElementById('setting_select_report_papersize').value;
     
-    document.getElementById('setting_select_report_highlight_row').selectedIndex =
-        select_user_setting[select_user_setting.selectedIndex].getAttribute('design_row_highlight_select_id');
+    SearchAndSetSelectedIndex(select_user_setting[select_user_setting.selectedIndex].getAttribute('design_row_highlight'),
+        document.getElementById('setting_select_report_highlight_row'),1);
 
     document.getElementById('setting_checkbox_report_show_weekday').checked =
         number_to_boolean(select_user_setting[select_user_setting.selectedIndex].getAttribute('design_column_weekday_checked'));
@@ -2312,31 +2319,32 @@ async function user_settings_load(show_ui = 1) {
             select_user_setting[select_user_setting.selectedIndex].getAttribute('text_footer_align'));
     }
     //Prayer
-    document.getElementById('setting_select_method').selectedIndex =
-        select_user_setting[select_user_setting.selectedIndex].getAttribute('prayer_method_select_id');
-    if (show_ui == 1)
-    //show method parameters used
+    SearchAndSetSelectedIndex(select_user_setting[select_user_setting.selectedIndex].getAttribute('prayer_method'),
+        document.getElementById('setting_select_method'),1);
+
+    if (show_ui == 1){
+        //show method parameters used
         update_ui(17);
-
-    document.getElementById('setting_select_asr').selectedIndex =
-        select_user_setting[select_user_setting.selectedIndex].getAttribute('prayer_asr_method_select_id');
-    document.getElementById('setting_select_highlatitude').selectedIndex =
-        select_user_setting[select_user_setting.selectedIndex].getAttribute('prayer_high_latitude_adjustment_select_id');
-    document.getElementById('setting_select_timeformat').selectedIndex =
-        select_user_setting[select_user_setting.selectedIndex].getAttribute('prayer_time_format_select_id');
-    document.getElementById('setting_select_hijri_adjustment').selectedIndex =
-        select_user_setting[select_user_setting.selectedIndex].getAttribute('prayer_hijri_date_adjustment_select_id');
-    document.getElementById('setting_select_report_iqamat_title_fajr').selectedIndex =
-        select_user_setting[select_user_setting.selectedIndex].getAttribute('prayer_fajr_iqamat_select_id');
-    document.getElementById('setting_select_report_iqamat_title_dhuhr').selectedIndex =
-        select_user_setting[select_user_setting.selectedIndex].getAttribute('prayer_dhuhr_iqamat_select_id');
-    document.getElementById('setting_select_report_iqamat_title_asr').selectedIndex =
-        select_user_setting[select_user_setting.selectedIndex].getAttribute('prayer_asr_iqamat_select_id');
-    document.getElementById('setting_select_report_iqamat_title_maghrib').selectedIndex =
-        select_user_setting[select_user_setting.selectedIndex].getAttribute('prayer_maghrib_iqamat_select_id');
-    document.getElementById('setting_select_report_iqamat_title_isha').selectedIndex =
-        select_user_setting[select_user_setting.selectedIndex].getAttribute('prayer_isha_iqamat_select_id');
-
+    }
+    SearchAndSetSelectedIndex(select_user_setting[select_user_setting.selectedIndex].getAttribute('prayer_asr_method'),
+        document.getElementById('setting_select_asr'),1);
+    SearchAndSetSelectedIndex(select_user_setting[select_user_setting.selectedIndex].getAttribute('prayer_high_latitude_adjustment'),
+        document.getElementById('setting_select_highlatitude'),1);
+    SearchAndSetSelectedIndex(select_user_setting[select_user_setting.selectedIndex].getAttribute('prayer_time_format'),
+        document.getElementById('setting_select_timeformat'),1);
+    SearchAndSetSelectedIndex(select_user_setting[select_user_setting.selectedIndex].getAttribute('prayer_hijri_date_adjustment'),
+        document.getElementById('setting_select_hijri_adjustment'),1);
+    SearchAndSetSelectedIndex(select_user_setting[select_user_setting.selectedIndex].getAttribute('prayer_fajr_iqamat'),
+        document.getElementById('setting_select_report_iqamat_title_fajr'),1);
+    SearchAndSetSelectedIndex(select_user_setting[select_user_setting.selectedIndex].getAttribute('prayer_fajr_iqamat'),
+        document.getElementById('setting_select_report_iqamat_title_dhuhr'),1);
+    SearchAndSetSelectedIndex(select_user_setting[select_user_setting.selectedIndex].getAttribute('prayer_asr_iqamat'),
+        document.getElementById('setting_select_report_iqamat_title_asr'),1);
+    
+    SearchAndSetSelectedIndex(select_user_setting[select_user_setting.selectedIndex].getAttribute('prayer_maghrib_iqamat'),
+        document.getElementById('setting_select_report_iqamat_title_maghrib'),1);
+    SearchAndSetSelectedIndex(select_user_setting[select_user_setting.selectedIndex].getAttribute('prayer_isha_iqamat'),
+        document.getElementById('setting_select_report_iqamat_title_isha'),1);
 
     document.getElementById('setting_checkbox_report_show_imsak').checked =
         number_to_boolean(select_user_setting[select_user_setting.selectedIndex].getAttribute('prayer_column_imsak_checked'));
@@ -2345,8 +2353,8 @@ async function user_settings_load(show_ui = 1) {
     document.getElementById('setting_checkbox_report_show_midnight').checked =
         number_to_boolean(select_user_setting[select_user_setting.selectedIndex].getAttribute('prayer_column_midnight_checked'));
 
-    document.getElementById('setting_select_report_show_fast_start_end').selectedIndex =
-        select_user_setting[select_user_setting.selectedIndex].getAttribute('prayer_column_fast_start_end_select_id');
+    SearchAndSetSelectedIndex(select_user_setting[select_user_setting.selectedIndex].getAttribute('prayer_column_fast_start_end'),
+        document.getElementById('setting_select_report_show_fast_start_end'),1);
 
     return null;
 }
@@ -2375,17 +2383,17 @@ async function user_settings_function(function_name, initial_user_setting, callB
     let json_data =
         `{"description": "${description}",
           "regional_language_locale": "${get_lang_code()}",
-          "regional_current_timezone_select_id": ${document.getElementById('setting_select_timezone_current').selectedIndex},
-          "regional_timezone_select_id": ${document.getElementById('setting_select_report_timezone').selectedIndex},
-          "regional_number_system_select_id": ${document.getElementById('setting_select_report_numbersystem').selectedIndex},
-          "regional_layout_direction_select_id": ${document.getElementById('setting_select_report_direction').selectedIndex},
+          "regional_current_timezone": "${document.getElementById('setting_select_timezone_current').value}",
+          "regional_timezone": "${document.getElementById('setting_select_report_timezone').value}",
+          "regional_number_system": "${document.getElementById('setting_select_report_numbersystem').value}",
+          "regional_layout_direction": "${document.getElementById('setting_select_report_direction').value}",
           "regional_second_language_locale": "${document.getElementById('setting_select_report_locale_second').value}",
-          "regional_column_title_select_id": ${document.getElementById('setting_select_report_coltitle').selectedIndex},
-          "regional_arabic_script_select_id": ${document.getElementById('setting_select_report_arabic_script').selectedIndex},
-          "regional_calendar_type_select_id": ${document.getElementById('setting_select_calendartype').selectedIndex},
-          "regional_calendar_hijri_type_select_id": ${document.getElementById('setting_select_calendar_hijri_type').selectedIndex},
+          "regional_column_title": "${document.getElementById('setting_select_report_coltitle').value}",
+          "regional_arabic_script": "${document.getElementById('setting_select_report_arabic_script').value}",
+          "regional_calendar_type": "${document.getElementById('setting_select_calendartype').value}",
+          "regional_calendar_hijri_type": "${document.getElementById('setting_select_calendar_hijri_type').value}",
 
-          "gps_map_type_select_id": ${document.getElementById('setting_select_maptype').selectedIndex},
+          "gps_map_type": "${document.getElementById('setting_select_maptype').value}",
           "gps_country_id": ${select_setting_country[select_setting_country.selectedIndex].getAttribute('id')||null},
           "gps_city_id": ${select_setting_city[select_setting_city.selectedIndex].getAttribute('id')||null},
           "gps_popular_place_id": ${select_setting_popular_place[select_setting_popular_place.selectedIndex].getAttribute('id')||null},
@@ -2395,8 +2403,8 @@ async function user_settings_function(function_name, initial_user_setting, callB
           "design_theme_day_id": ${get_theme_id('day')},
           "design_theme_month_id": ${get_theme_id('month')},
           "design_theme_year_id": ${get_theme_id('year')},
-          "design_paper_size_select_id": ${document.getElementById('setting_select_report_papersize').selectedIndex},
-          "design_row_highlight_select_id": ${document.getElementById('setting_select_report_highlight_row').selectedIndex},
+          "design_paper_size": "${document.getElementById('setting_select_report_papersize').value}",
+          "design_row_highlight": "${document.getElementById('setting_select_report_highlight_row').value}",
           "design_column_weekday_checked": ${boolean_to_number(document.getElementById('setting_checkbox_report_show_weekday').checked)},
           "design_column_calendartype_checked": ${boolean_to_number(document.getElementById('setting_checkbox_report_show_calendartype').checked)},
           "design_column_notes_checked": ${boolean_to_number(document.getElementById('setting_checkbox_report_show_notes').checked)},
@@ -2415,20 +2423,20 @@ async function user_settings_function(function_name, initial_user_setting, callB
           "text_footer_3_text": "${document.getElementById('setting_input_reportfooter3').value}",
           "text_footer_align": "${align_button_value('reportfooter')}",
 
-          "prayer_method_select_id": ${document.getElementById('setting_select_method').selectedIndex},
-          "prayer_asr_method_select_id": ${document.getElementById('setting_select_asr').selectedIndex},
-          "prayer_high_latitude_adjustment_select_id": ${document.getElementById('setting_select_highlatitude').selectedIndex},
-          "prayer_time_format_select_id": ${document.getElementById('setting_select_timeformat').selectedIndex},
-          "prayer_hijri_date_adjustment_select_id": ${document.getElementById('setting_select_hijri_adjustment').selectedIndex},
-          "prayer_fajr_iqamat_select_id": ${document.getElementById('setting_select_report_iqamat_title_fajr').selectedIndex},
-          "prayer_dhuhr_iqamat_select_id": ${document.getElementById('setting_select_report_iqamat_title_dhuhr').selectedIndex},
-          "prayer_asr_iqamat_select_id": ${document.getElementById('setting_select_report_iqamat_title_asr').selectedIndex},
-          "prayer_maghrib_iqamat_select_id": ${document.getElementById('setting_select_report_iqamat_title_maghrib').selectedIndex},
-          "prayer_isha_iqamat_select_id": ${document.getElementById('setting_select_report_iqamat_title_isha').selectedIndex},
+          "prayer_method": "${document.getElementById('setting_select_method').value}",
+          "prayer_asr_method": "${document.getElementById('setting_select_asr').value}",
+          "prayer_high_latitude_adjustment": "${document.getElementById('setting_select_highlatitude').value}",
+          "prayer_time_format": "${document.getElementById('setting_select_timeformat').value}",
+          "prayer_hijri_date_adjustment": "${document.getElementById('setting_select_hijri_adjustment').value}",
+          "prayer_fajr_iqamat": "${document.getElementById('setting_select_report_iqamat_title_fajr').value}",
+          "prayer_dhuhr_iqamat": "${document.getElementById('setting_select_report_iqamat_title_dhuhr').value}",
+          "prayer_asr_iqamat": "${document.getElementById('setting_select_report_iqamat_title_asr').value}",
+          "prayer_maghrib_iqamat": "${document.getElementById('setting_select_report_iqamat_title_maghrib').value}",
+          "prayer_isha_iqamat": "${document.getElementById('setting_select_report_iqamat_title_isha').value}",
           "prayer_column_imsak_checked": ${boolean_to_number(document.getElementById('setting_checkbox_report_show_imsak').checked)},
           "prayer_column_sunset_checked": ${boolean_to_number(document.getElementById('setting_checkbox_report_show_sunset').checked)},
           "prayer_column_midnight_checked": ${boolean_to_number(document.getElementById('setting_checkbox_report_show_midnight').checked)},
-          "prayer_column_fast_start_end_select_id": ${document.getElementById('setting_select_report_show_fast_start_end').selectedIndex},
+          "prayer_column_fast_start_end": "${document.getElementById('setting_select_report_show_fast_start_end').value}",
           "user_account_id": ${user_account_id}
          }`;
     let method;
@@ -2599,15 +2607,16 @@ async function set_default_settings() {
     //set default numberformat numbersystem
     SearchAndSetSelectedIndex(current_number_system, document.getElementById('setting_select_report_numbersystem'),1);
     //set default for others in Regional
-    document.getElementById('setting_select_report_direction').selectedIndex = window.global_regional_default_direction;
-    document.getElementById('setting_select_report_locale_second').selectedIndex = window.global_regional_default_locale_second;
-    document.getElementById('setting_select_report_coltitle').selectedIndex = window.global_regional_default_coltitle;
-    document.getElementById('setting_select_report_arabic_script').selectedIndex = window.global_regional_default_arabic_script;
-    document.getElementById('setting_select_calendartype').selectedIndex = window.global_regional_default_calendartype;
-    document.getElementById('setting_select_calendar_hijri_type').selectedIndex = window.global_regional_default_calendar_hijri_type;
+
+    SearchAndSetSelectedIndex(window.global_regional_default_direction, document.getElementById('setting_select_report_direction'),1);
+    SearchAndSetSelectedIndex(window.global_regional_default_locale_second, document.getElementById('setting_select_report_locale_second'),1);
+    SearchAndSetSelectedIndex(window.window.global_regional_default_coltitle, document.getElementById('setting_select_report_coltitle'),1);
+    SearchAndSetSelectedIndex(window.global_regional_default_arabic_script, document.getElementById('setting_select_report_arabic_script'),1);
+    SearchAndSetSelectedIndex(window.global_regional_default_calendartype, document.getElementById('setting_select_calendartype'),1);
+    SearchAndSetSelectedIndex(window.global_regional_default_calendar_hijri_type, document.getElementById('setting_select_calendar_hijri_type'),1);
 
     //GPS
-    document.getElementById('setting_select_maptype').selectedIndex = window.global_gps_map_maptype;
+    SearchAndSetSelectedIndex(window.global_gps_map_maptype, document.getElementById('setting_select_maptype'),1);
     SearchAndSetSelectedIndex(window.global_gps_default_country, document.getElementById('setting_select_country'),0);
     SearchAndSetSelectedIndex(window.global_gps_default_city, document.getElementById('setting_select_city'),0);
     
@@ -2629,9 +2638,11 @@ async function set_default_settings() {
     set_theme_id('day', window.global_design_default_theme_day);
     set_theme_id('month', window.global_design_default_theme_month);
     set_theme_id('year', window.global_design_default_theme_year);
-    document.getElementById('setting_select_report_papersize').selectedIndex = window.global_design_default_papersize;
+
+    SearchAndSetSelectedIndex(window.global_design_default_papersize, document.getElementById('setting_select_report_papersize'),1);
     document.getElementById('paper').className=document.getElementById('setting_select_report_papersize').value;
-    document.getElementById('setting_select_report_highlight_row').selectedIndex = window.global_design_default_highlight_row;
+    SearchAndSetSelectedIndex(window.global_design_default_highlight_row, document.getElementById('setting_select_report_highlight_row'),1);
+    
     document.getElementById('setting_checkbox_report_show_weekday').checked = window.global_design_default_show_weekday;
     document.getElementById('setting_checkbox_report_show_calendartype').checked = window.global_design_default_show_calendartype;
     document.getElementById('setting_checkbox_report_show_notes').checked = window.global_design_default_show_notes;
@@ -2666,24 +2677,25 @@ async function set_default_settings() {
     document.getElementById('setting_input_reportfooter_aright').classList = 'setting_button'; //Align right not active
 
     //Prayer
-    document.getElementById('setting_select_method').selectedIndex = window.global_prayer_default_method;
+    SearchAndSetSelectedIndex(window.global_prayer_default_method, document.getElementById('setting_select_method'),1);
     //show method parameters used
     update_ui(17);
-    document.getElementById('setting_select_asr').selectedIndex = window.global_prayer_default_asr;
-    document.getElementById('setting_select_highlatitude').selectedIndex = window.global_prayer_default_highlatitude;
-    document.getElementById('setting_select_timeformat').selectedIndex = window.global_prayer_default_timeformat;
-    document.getElementById('setting_select_hijri_adjustment').selectedIndex = window.global_prayer_default_hijri_adjustment;
 
-    document.getElementById('setting_select_report_iqamat_title_fajr').selectedIndex = window.global_prayer_default_iqamat_title_fajr;
-    document.getElementById('setting_select_report_iqamat_title_dhuhr').selectedIndex = window.global_prayer_default_iqamat_title_dhuhr;
-    document.getElementById('setting_select_report_iqamat_title_asr').selectedIndex = window.global_prayer_default_iqamat_title_asr;
-    document.getElementById('setting_select_report_iqamat_title_maghrib').selectedIndex = window.global_prayer_default_iqamat_title_maghrib;
-    document.getElementById('setting_select_report_iqamat_title_isha').selectedIndex = window.global_prayer_default_iqamat_title_isha;
+    SearchAndSetSelectedIndex(window.global_prayer_default_asr, document.getElementById('setting_select_asr'),1);
+    SearchAndSetSelectedIndex(window.global_prayer_default_highlatitude, document.getElementById('setting_select_highlatitude'),1);
+    SearchAndSetSelectedIndex(window.global_prayer_default_timeformat, document.getElementById('setting_select_timeformat'),1);
+    SearchAndSetSelectedIndex(window.global_prayer_default_hijri_adjustment, document.getElementById('setting_select_method'),1);
+    
+    SearchAndSetSelectedIndex(window.global_prayer_default_iqamat_title_fajr, document.getElementById('setting_select_report_iqamat_title_fajr'),1);
+    SearchAndSetSelectedIndex(window.global_prayer_default_iqamat_title_dhuhr, document.getElementById('setting_select_report_iqamat_title_dhuhr'),1);
+    SearchAndSetSelectedIndex(window.global_prayer_default_iqamat_title_asr, document.getElementById('setting_select_report_iqamat_title_asr'),1);
+    SearchAndSetSelectedIndex(window.global_prayer_default_iqamat_title_maghrib, document.getElementById('setting_select_report_iqamat_title_maghrib'),1);
+    SearchAndSetSelectedIndex(window.global_prayer_default_iqamat_title_isha, document.getElementById('setting_select_report_iqamat_title_isha'),1);
 
     document.getElementById('setting_checkbox_report_show_imsak').checked = window.global_prayer_default_show_imsak;
     document.getElementById('setting_checkbox_report_show_sunset').checked = window.global_prayer_default_show_sunset;
     document.getElementById('setting_checkbox_report_show_midnight').checked = window.global_prayer_default_show_midnight;
-    document.getElementById('setting_select_report_show_fast_start_end').selectedIndex = window.global_prayer_default_show_fast_start_end;
+    SearchAndSetSelectedIndex(window.global_prayer_default_show_fast_start_end, document.getElementById('setting_select_report_show_fast_start_end'),1);
     //update select
     set_settings_select();
     //set default popup menu
@@ -2702,17 +2714,17 @@ function set_settings_select() {
     
     option.setAttribute('description', document.getElementById('setting_input_place').value);
     option.setAttribute('regional_language_locale', get_lang_code());
-    option.setAttribute('regional_current_timezone_select_id', document.getElementById('setting_select_timezone_current').selectedIndex);
-    option.setAttribute('regional_timezone_select_id', document.getElementById('setting_select_report_timezone').selectedIndex);
-    option.setAttribute('regional_number_system_select_id', document.getElementById('setting_select_report_numbersystem').selectedIndex);
-    option.setAttribute('regional_layout_direction_select_id', document.getElementById('setting_select_report_direction').selectedIndex);
+    option.setAttribute('regional_current_timezone', document.getElementById('setting_select_timezone_current').value);
+    option.setAttribute('regional_timezone', document.getElementById('setting_select_report_timezone').value);
+    option.setAttribute('regional_number_system', document.getElementById('setting_select_report_numbersystem').value);
+    option.setAttribute('regional_layout_direction', document.getElementById('setting_select_report_direction').value);
     option.setAttribute('regional_second_language_locale', document.getElementById('setting_select_report_locale_second').value);
-    option.setAttribute('regional_column_title_select_id', document.getElementById('setting_select_report_coltitle').selectedIndex);
-    option.setAttribute('regional_arabic_script_select_id', document.getElementById('setting_select_report_arabic_script').selectedIndex);
-    option.setAttribute('regional_calendar_type_select_id', document.getElementById('setting_select_calendartype').selectedIndex);
-    option.setAttribute('regional_calendar_hijri_type_select_id', document.getElementById('setting_select_calendar_hijri_type').selectedIndex);
+    option.setAttribute('regional_column_title', document.getElementById('setting_select_report_coltitle').value);
+    option.setAttribute('regional_arabic_script', document.getElementById('setting_select_report_arabic_script').value);
+    option.setAttribute('regional_calendar_type', document.getElementById('setting_select_calendartype').value);
+    option.setAttribute('regional_calendar_hijri_type', document.getElementById('setting_select_calendar_hijri_type').value);
 
-    option.setAttribute('gps_map_type_select_id', document.getElementById('setting_select_maptype').selectedIndex);
+    option.setAttribute('gps_map_type', document.getElementById('setting_select_maptype').value);
     option.setAttribute('gps_country_id', document.getElementById('setting_select_country')[document.getElementById('setting_select_country').selectedIndex].getAttribute('id'));
     option.setAttribute('gps_city_id', document.getElementById('setting_select_city')[document.getElementById('setting_select_city').selectedIndex].getAttribute('id'));
     option.setAttribute('gps_popular_place_id', document.getElementById('setting_select_popular_place')[document.getElementById('setting_select_popular_place').selectedIndex].getAttribute('id'));
@@ -2722,8 +2734,8 @@ function set_settings_select() {
     option.setAttribute('design_theme_day_id', get_theme_id('day'));
     option.setAttribute('design_theme_month_id', get_theme_id('month'));
     option.setAttribute('design_theme_year_id', get_theme_id('year'));
-    option.setAttribute('design_paper_size_select_id', document.getElementById('setting_select_report_papersize').selectedIndex);
-    option.setAttribute('design_row_highlight_select_id', document.getElementById('setting_select_report_highlight_row').selectedIndex);
+    option.setAttribute('design_paper_size', document.getElementById('setting_select_report_papersize').value);
+    option.setAttribute('design_row_highlight', document.getElementById('setting_select_report_highlight_row').value);
     option.setAttribute('design_column_weekday_checked', boolean_to_number(document.getElementById('setting_checkbox_report_show_weekday').checked));
     option.setAttribute('design_column_calendartype_checked', boolean_to_number(document.getElementById('setting_checkbox_report_show_calendartype').checked));
     option.setAttribute('design_column_notes_checked', boolean_to_number(document.getElementById('setting_checkbox_report_show_notes').checked));
@@ -2743,20 +2755,20 @@ function set_settings_select() {
     option.setAttribute('text_footer_3_text', document.getElementById('setting_input_reportfooter3').value);
     option.setAttribute('text_footer_align', align_button_value('reportfooter'));
 
-    option.setAttribute('prayer_method_select_id', document.getElementById('setting_select_method').selectedIndex);
-    option.setAttribute('prayer_asr_method_select_id', document.getElementById('setting_select_asr').selectedIndex);
-    option.setAttribute('prayer_high_latitude_adjustment_select_id', document.getElementById('setting_select_highlatitude').selectedIndex);
-    option.setAttribute('prayer_time_format_select_id', document.getElementById('setting_select_timeformat').selectedIndex);
-    option.setAttribute('prayer_hijri_date_adjustment_select_id', document.getElementById('setting_select_hijri_adjustment').selectedIndex);
-    option.setAttribute('prayer_fajr_iqamat_select_id', document.getElementById('setting_select_report_iqamat_title_fajr').selectedIndex);
-    option.setAttribute('prayer_dhuhr_iqamat_select_id', document.getElementById('setting_select_report_iqamat_title_dhuhr').selectedIndex);
-    option.setAttribute('prayer_asr_iqamat_select_id', document.getElementById('setting_select_report_iqamat_title_asr').selectedIndex);
-    option.setAttribute('prayer_maghrib_iqamat_select_id', document.getElementById('setting_select_report_iqamat_title_maghrib').selectedIndex);
-    option.setAttribute('prayer_isha_iqamat_select_id', document.getElementById('setting_select_report_iqamat_title_isha').selectedIndex);
+    option.setAttribute('prayer_method', document.getElementById('setting_select_method').value);
+    option.setAttribute('prayer_asr_method', document.getElementById('setting_select_asr').value);
+    option.setAttribute('prayer_high_latitude_adjustment', document.getElementById('setting_select_highlatitude').value);
+    option.setAttribute('prayer_time_format', document.getElementById('setting_select_timeformat').value);
+    option.setAttribute('prayer_hijri_date_adjustment', document.getElementById('setting_select_hijri_adjustment').value);
+    option.setAttribute('prayer_fajr_iqamat', document.getElementById('setting_select_report_iqamat_title_fajr').value);
+    option.setAttribute('prayer_dhuhr_iqamat', document.getElementById('setting_select_report_iqamat_title_dhuhr').value);
+    option.setAttribute('prayer_asr_iqamat', document.getElementById('setting_select_report_iqamat_title_asr').value);
+    option.setAttribute('prayer_maghrib_iqamat', document.getElementById('setting_select_report_iqamat_title_maghrib').value);
+    option.setAttribute('prayer_isha_iqamat', document.getElementById('setting_select_report_iqamat_title_isha').value);
     option.setAttribute('prayer_column_imsak_checked', boolean_to_number(document.getElementById('setting_checkbox_report_show_imsak').checked));
     option.setAttribute('prayer_column_sunset_checked', boolean_to_number(document.getElementById('setting_checkbox_report_show_sunset').checked));
     option.setAttribute('prayer_column_midnight_checked', boolean_to_number(document.getElementById('setting_checkbox_report_show_midnight').checked));
-    option.setAttribute('prayer_column_fast_start_end_select_id', document.getElementById('setting_select_report_show_fast_start_end').selectedIndex);
+    option.setAttribute('prayer_column_fast_start_end', document.getElementById('setting_select_report_show_fast_start_end').value);
 }
 
 function update_settings_icon(url = '', logoff = false) {
