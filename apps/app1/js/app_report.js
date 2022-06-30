@@ -905,12 +905,9 @@ function displayDay(settings, item_id, lang_code){
 	
 	let select_user_settings = document.getElementById('setting_select_user_setting');
 	let user_locale;
-	let select_user_timezone_report = document.getElementById('setting_select_report_timezone');
 	let user_timezone;
 	let user_label_timezone;
-	let select_number_system = document.getElementById('setting_select_report_numbersystem');
 	let user_number_system;
-	let select_calendar_hijri_type = document.getElementById('setting_select_calendar_hijri_type');
 	let user_calendar_hijri_type;
 	let user_gps_label_latitude;
 	let user_gps_latitude;
@@ -918,15 +915,10 @@ function displayDay(settings, item_id, lang_code){
 	let user_gps_longitude;
 	let user_show_gps;
 	let user_show_timezone;
-	let select_method = document.getElementById('setting_select_method');
 	let user_method;
-	let select_asr = document.getElementById('setting_select_asr');
 	let user_asr;
-	let select_highlat = document.getElementById('setting_select_highlatitude');
 	let user_highlat;
-	let select_format = document.getElementById('setting_select_timeformat');
 	let user_format;
-	let select_hijri_adjustment = document.getElementById('setting_select_hijri_adjustment');
 	let user_hijri_adjustment;
 	let user_show_imsak;
 	let user_show_sunset;
@@ -939,12 +931,12 @@ function displayDay(settings, item_id, lang_code){
 		//language
 		user_locale = select_user_settings[i].getAttribute('regional_language_locale');
 		//timezone report
-		user_timezone = select_user_timezone_report[select_user_settings[i].getAttribute('regional_timezone_select_id')].value
+		user_timezone = select_user_settings[i].getAttribute('regional_timezone');
 		user_label_timezone = settings.timezone_label;
 		//number system
-		user_number_system = select_number_system[select_user_settings[i].getAttribute('regional_number_system_select_id')].value;
+		user_number_system = select_user_settings[i].getAttribute('regional_number_system');
 		//calendar hijri type
-		user_calendar_hijri_type = select_calendar_hijri_type[select_user_settings[i].getAttribute('regional_calendar_hijri_type_select_id')].value;
+		user_calendar_hijri_type = select_user_settings[i].getAttribute('regional_calendar_hijri_type');
 		//gps text - current translation
 		user_gps_label_latitude = settings.gps_label_lat;
 		//gps latitude
@@ -960,15 +952,15 @@ function displayDay(settings, item_id, lang_code){
 		user_show_timezone = settings.show_timezone;
 		//user_show_timezone = select_user_settings[i].getAttribute('design_column_timezone_checked');
 		//method
-		user_method = select_method[select_user_settings[i].getAttribute('prayer_method_select_id')].value;
+		user_method = select_user_settings[i].getAttribute('prayer_method');
 		//asr method
-		user_asr = select_asr[select_user_settings[i].getAttribute('prayer_asr_method_select_id')].value;
+		user_asr = select_user_settings[i].getAttribute('prayer_asr_method');
 		//highlat adjustment
-		user_highlat = select_highlat[select_user_settings[i].getAttribute('prayer_high_latitude_adjustment_select_id')].value;
+		user_highlat = select_user_settings[i].getAttribute('prayer_high_latitude_adjustment');
 		//format
-		user_format = select_format[select_user_settings[i].getAttribute('prayer_time_format_select_id')].value;
+		user_format = select_user_settings[i].getAttribute('prayer_time_format');
 		//hijri adjustment
-		user_hijri_adjustment = select_hijri_adjustment[select_user_settings[i].getAttribute('prayer_hijri_date_adjustment_select_id')].value;
+		user_hijri_adjustment = select_user_settings[i].getAttribute('prayer_hijri_date_adjustment');
 		//show imsak - current setting
 		user_show_imsak = settings.show_imsak;
 		//show sunset - current setting
