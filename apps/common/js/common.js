@@ -159,7 +159,7 @@ function set_globals(parameters){
         window.global_button_default_icon_html = '<i class="fa-solid fa-file-code"></i>';
         window.global_button_default_icon_copy = '<i class="fas fa-copy"></i>';
         window.global_button_default_icon_pdf  = '<i class="fas fa-file-pdf"></i>';
-
+        window.global_button_default_icon_link = '<i class="fa-solid fa-link"></i>';
         window.global_button_default_icon_tab_regional  = '<i class="fas fa-globe"></i>';
         window.global_button_default_icon_tab_gps  = '<i class="fas fa-map-marked-alt"></i>';
         window.global_button_default_icon_tab_design  = '<i class="fas fa-palette"></i>';
@@ -1708,36 +1708,6 @@ async function onProviderSignIn(googleUser, callBack) {
         });
     }
 }    
-async function getAppstartParameters(token, callBack){
-    let status;
-    let lang_code = navigator.language;
-    let app_id = 0;
-    await fetch('/service/db/api/app_parameter/start/' + app_id +
-                '?app_id=' + app_id + 
-                '&app_user_id=' + null +
-                '&lang_code=' + lang_code, 
-                {
-                method: 'GET',
-                headers: {
-                    'Authorization': 'Bearer ' + token
-                }})
-    .then(function(response) {
-        status = response.status;
-        return response.text();
-    })
-    .then(function(result) {
-        if (status === 200) {
-            let json = JSON.parse(result);
-            callBack(null, {service_auth: json.data[0].service_auth,
-                            app_rest_client_id: json.data[0].app_rest_client_id,
-                            app_rest_client_secret: json.data[0].app_rest_client_secret,
-                            rest_app_parameter: json.data[0].rest_app_parameter});
-        } 
-        else {
-            callBack(result, null);
-        }    
-    })
-}
 async function get_data_token(user_id, lang_code) {
     let status;
     let app_id;

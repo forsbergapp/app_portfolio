@@ -8,7 +8,6 @@ window.global_rest_app1_user_setting_like;
 window.global_rest_app1_user_setting_view;
 
 window.global_app_default_startup_page;
-window.global_app_report_path; 
 window.global_app_report_timetable;
 
 window.global_pwa_scope;
@@ -809,8 +808,6 @@ async function get_app_globals() {
                         window.global_rest_app1_user_setting_like = json.data[i].parameter_value;
                     if (json.data[i].parameter_name=='REST_APP1_USER_SETTING_VIEW')
                         window.global_rest_app1_user_setting_view = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='APP_REPORT_PATH')
-                        window.global_app_report_path = json.data[i].parameter_value; 
                     if (json.data[i].parameter_name=='APP_REPORT_TIMETABLE')
                         window.global_app_report_timetable = json.data[i].parameter_value; 
                     if (json.data[i].parameter_name=='PWA_SCOPE')
@@ -2329,7 +2326,10 @@ function user_setting_link(item){
         case 'user_month_html_copy':
         case 'user_year_html_copy':{
             url_type = get_report_url_type(item.id, 'HTML');
-            let promise = navigator.clipboard.writeText(`${common_url}'&format=html'${url_type}`) .then(() => {null;});
+            let text_copy = `${common_url}&format=html${url_type}`;
+            navigator.clipboard.writeText(text_copy) .then(() => {
+                show_message('INFO', null, null, window.global_button_default_icon_link, window.global_main_app_id, window.global_lang_code);
+            });
             break;
         }
         case 'user_day_pdf':
@@ -2343,7 +2343,10 @@ function user_setting_link(item){
         case 'user_month_pdf_copy':
         case 'user_year_pdf_copy':{
             url_type = get_report_url_type(item.id, 'PDF');
-            let promise = navigator.clipboard.writeText(`${common_url}'&format=pdf'${url_type}`) .then(() => {null;});
+            let text_copy = `${common_url}&format=pdf${url_type}`;
+            navigator.clipboard.writeText(text_copy) .then(() => {
+                show_message('INFO', null, null, window.global_button_default_icon_link, window.global_main_app_id, window.global_lang_code);
+            });
             break;
         }
     }
@@ -3479,8 +3482,7 @@ function get_report_url(id, sid, papersize){
          `&sid=${sid}` +
          `&ps=${papersize}` +
          `&hf=0` + 
-         `&module=${window.global_app_report_timetable}` +
-         `&token=${window.global_rest_dt}`;
+         `&module=${window.global_app_report_timetable}`;
 }
 /*------------------------------------- */
 // Profile function
@@ -3596,9 +3598,9 @@ function get_report_url_type(item, format){
     if (item =='profile_user_settings_day' || item.substr(0,8)=='user_day')
         return url_type = '&type=0&type_desc=REPORT_TIMETABLE_DAY_' + format;
     if (item =='profile_user_settings_month' || item.substr(0,10)=='user_month')
-        return url_type = '&type=1&type_desc=REPORT_TIMETABLE_DAY_' + format;
+        return url_type = '&type=1&type_desc=REPORT_TIMETABLE_MONTH_' + format;
     if (item == 'profile_user_settings_year' || item.substr(0,9)=='user_year')
-        return url_type = '&type=2&type_desc=REPORT_TIMETABLE_DAY_' + format;
+        return url_type = '&type=2&type_desc=REPORT_TIMETABLE_YEAR_' + format;
 }
 function profile_user_setting_link(item){
     let paper_size_select = document.getElementById('setting_select_report_papersize');
@@ -3923,111 +3925,91 @@ async function init_app(ui=false) {
     
 }
 
-function init_report_timetable() {
+function init_report_timetable(parameters) {
     let urlParams = new URLSearchParams(window.location.search);
-    getAppstartParameters(urlParams.get('token'), (err, result) => {
-        if (err)
-            null;
-        else{
-            let parameters = JSON.parse(`{
-                "app_id": 1,
-                "exception_app_function": "app_exception",
-                "close_eventsource": null,
-                "ui": false,
-                "service_auth": "${result.service_auth}",
-                "app_rest_client_id": "${result.app_rest_client_id}",
-                "app_rest_client_secret": "${result.app_rest_client_secret}",
-                "rest_app_parameter": "${result.rest_app_parameter}",
-                "gps_lat": null,
-                "gps_long":null,
-                "gps_place": null
-                }`);
-            init_common(parameters);
-            init_app(parameters.ui).then(function(){
-                let user_account_id = urlParams.get('id');
-                let user_setting_id = urlParams.get('sid');
-                let lang_code = urlParams.get('lang_code');
-                let reporttype = urlParams.get('type');
-                document.getElementById('setting_select_locale').innerHTML = 
-                                        `<option value=${lang_code}>${lang_code}</option`;    
-                get_app_globals().then(function(){
-                    //report start
-                    if (inIframe() == false) {
-                        //when report only is run outside webapp
-                        //get gps and update view stat
-                        document.getElementById('setting_select_popular_place').selectedIndex = 0;
-                        document.getElementById('setting_input_lat').value = window.global_session_user_gps_latitude;
-                        document.getElementById('setting_input_long').value = window.global_session_user_gps_longitude;        
-                        updateViewStat(user_setting_id);
-                    }
-                    //check report type
-                    switch (reporttype) {
-                        //day
-                        case '0':
-                            {
-                                document.getElementById('prayertable_day').style.visibility = 'visible';
-                                //load settings from user_account_id, ignore ui stuff, override default 1 value
-                                user_settings_get(user_account_id, 0, user_setting_id).then(function(){
-                                    //change to chosen user setting id
-                                    let select = document.getElementById("setting_select_user_setting");
-                                    for (i = select.options.length - 1; i >= 0; i--) {
-                                        if (select[i].getAttribute('id') == user_setting_id) {
-                                            select.selectedIndex = i;
-                                        }
-                                    }
-                                    user_settings_load(0).then(function(){
-                                        settings_translate_report(true).then(function(){
-                                            settings_translate_report(false).then(function(){
-                                                update_timetable_report();
-                                            });
-                                        });
+    init_common(parameters);
+    init_app(parameters.ui).then(function(){
+        let user_account_id = urlParams.get('id');
+        let user_setting_id = urlParams.get('sid');
+        let lang_code = urlParams.get('lang_code');
+        let reporttype = urlParams.get('type');
+        document.getElementById('setting_select_locale').innerHTML = 
+                                `<option value=${lang_code}>${lang_code}</option`;    
+        get_app_globals().then(function(){
+            //report start
+            if (inIframe() == false) {
+                //when report only is run outside webapp
+                //get gps and update view stat
+                document.getElementById('setting_select_popular_place').selectedIndex = 0;
+                document.getElementById('setting_input_lat').value = window.global_session_user_gps_latitude;
+                document.getElementById('setting_input_long').value = window.global_session_user_gps_longitude;        
+                updateViewStat(user_setting_id);
+            }
+            //check report type
+            switch (reporttype) {
+                //day
+                case '0':
+                    {
+                        document.getElementById('prayertable_day').style.visibility = 'visible';
+                        //load settings from user_account_id, ignore ui stuff, override default 1 value
+                        user_settings_get(user_account_id, 0, user_setting_id).then(function(){
+                            //change to chosen user setting id
+                            let select = document.getElementById("setting_select_user_setting");
+                            for (i = select.options.length - 1; i >= 0; i--) {
+                                if (select[i].getAttribute('id') == user_setting_id) {
+                                    select.selectedIndex = i;
+                                }
+                            }
+                            user_settings_load(0).then(function(){
+                                settings_translate_report(true).then(function(){
+                                    settings_translate_report(false).then(function(){
+                                        update_timetable_report();
                                     });
                                 });
-                                break;
-                            }
-                            //month
-                        case '1':
-                            {
-                                document.getElementById('prayertable_month').style.visibility = 'visible';
-                                //load setting from user_setting_id
-                                user_setting_get(user_setting_id).then(function(){
-                                    user_settings_load(0).then(function(){
-                                        settings_translate_report(true).then(function(){
-                                            settings_translate_report(false).then(function(){
-                                                update_timetable_report();
-                                            });
-                                        });
-                                    })
-                                });
-                                break;
-                            }
-                            //year
-                        case '2':
-                            {
-                                document.getElementById('prayertable_year').style.visibility = 'visible';
-                                //load setting from user_setting_id
-                                user_setting_get(user_setting_id).then(function(){
-                                    user_settings_load(0).then(function(){
-                                        settings_translate_report(true).then(function(){
-                                            settings_translate_report(false).then(function(){
-                                                update_timetable_report();
-                                            });
-                                        });
+                            });
+                        });
+                        break;
+                    }
+                    //month
+                case '1':
+                    {
+                        document.getElementById('prayertable_month').style.visibility = 'visible';
+                        //load setting from user_setting_id
+                        user_setting_get(user_setting_id).then(function(){
+                            user_settings_load(0).then(function(){
+                                settings_translate_report(true).then(function(){
+                                    settings_translate_report(false).then(function(){
+                                        update_timetable_report();
                                     });
                                 });
-                                break;
-                            }
-                        default:
-                            {
-                                document.getElementById('prayertable_day').style.visibility = 'visible';
-                                break;
-                            }
+                            })
+                        });
+                        break;
                     }
-                })
-            }) 
-        }        
-    });
-    
+                    //year
+                case '2':
+                    {
+                        document.getElementById('prayertable_year').style.visibility = 'visible';
+                        //load setting from user_setting_id
+                        user_setting_get(user_setting_id).then(function(){
+                            user_settings_load(0).then(function(){
+                                settings_translate_report(true).then(function(){
+                                    settings_translate_report(false).then(function(){
+                                        update_timetable_report();
+                                    });
+                                });
+                            });
+                        });
+                        break;
+                    }
+                default:
+                    {
+                        document.getElementById('prayertable_day').style.visibility = 'visible';
+                        break;
+                    }
+            }
+        })
+    }) 
 }
 async function app_load(){
     let status;
