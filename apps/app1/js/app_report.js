@@ -867,7 +867,7 @@ function displayDay(settings, item_id, lang_code){
 					month: 'long', 
 					day: 'numeric'};
 					
-	if (item_id ==0)
+	if (item_id ==null)
 		offset = 0;
 	else
 		offset = item_id == settings.ui_navigation_left ? -1:+1;
