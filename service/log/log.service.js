@@ -7,6 +7,8 @@ function sendLog(logscope, loglevel, log){
     let logdate = new Date();
     //make log nice and compact
     try{
+        //replace backslash \ with [BACKSLASH]
+        log = log.replaceAll('\\', '[BACKSLASH]');
         log = JSON.stringify(JSON.parse(log));
     }
     catch(err){
@@ -272,7 +274,9 @@ module.exports = {
                 loggerror = 2;
                 if (error)
                     return callBack(null, fixed_log);
-                else
+                else{
+                    //replace backslash \ with [BACKSLASH]
+                    fileBuffer = fileBuffer.replaceAll('\\', '[BACKSLASH]');
                     fileBuffer.toString().split('\r\n').forEach(function (record) {
                         if (record.length>0){
                             let log_app_id = JSON.parse(record).app_id;
@@ -280,6 +284,7 @@ module.exports = {
                                 fixed_log.push(JSON.parse(record));
                         }
                     })
+                }
                 return callBack(null, fixed_log);
             });
         } catch (error) {
