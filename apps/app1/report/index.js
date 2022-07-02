@@ -6,8 +6,7 @@ module.exports = {
                 ['REPORT', __dirname + '/' + module],
                 ['<ReportHead/>', __dirname + '/head.html'],
                 ['<ReportCommonHead/>', __dirname + '/../../common/report/head.html'],
-                ['<ReportPaper/>', __dirname + '/paper.html'],
-                ['<ReportSettings/>', __dirname + '/settings.html']
+                ['<ReportPaper/>', __dirname + '/paper.html']
             ];
             read_app_files(app_id, files, (err, report)=>{
                 if (err)
