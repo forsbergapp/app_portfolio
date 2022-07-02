@@ -1732,9 +1732,7 @@ async function get_data_token(user_id, lang_code) {
         if (status === 200) {
             let json = JSON.parse(result);
             window.global_rest_dt = json.token_dt;
-        } else {
-            show_message('EXCEPTION', null,null, result, window.global_app_id, lang_code);
-        }    
+        }   
     })
 }
 function user_account_app_delete(choice=null, user_account_id, app_id, lang_code, function_delete_event){
@@ -2063,6 +2061,19 @@ function parseJwt(token) {
     }
   };
 
+function checkbox_value(checkbox) {
+    if (checkbox.checked)
+        return 'YES';
+    else
+        return 'NO';
+}
+function checkbox_checked(checkbox) {
+    if (checkbox == 1)
+        return 'YES';
+    else
+        return 'NO';
+}
+
 //function to check image if to read buffer or not
 function image_format(arr) {
     //arr = new Uint8Array(arr) if it's an ArrayBuffer
@@ -2111,6 +2122,14 @@ function number_to_boolean(number_value) {
         return true;
     else
         return false;
+}
+/* check if run inside an iframe*/
+function inIframe() {
+    try {
+        return window.self !== window.top;
+    } catch (e) {
+        return true;
+    }
 }
 function show_image(item_img, item_input, image_width, image_height, lang_code) {
     let file = document.getElementById(item_input).files[0];
