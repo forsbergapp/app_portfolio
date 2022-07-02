@@ -210,7 +210,7 @@ a:active {
 #profile_user_settings_year:active,
 #profile_user_settings_like:hover,
 #profile_user_settings_like:active{
-	cursor:pointer;
+	cursor: pointer;
 	transform: scale(1.3);
 	transition: transform 0.5s ease, background 0.5s ease, box-shadow 0.5s ease;
 }
@@ -523,7 +523,10 @@ a:active {
 	border:0px;
 	width:50px;
 }
-
+#tab_navigation button:hover,
+#tab_navigation button:active{
+	cursor: pointer;
+}
 /*Show tab1 at startup*/
 .tab_navigation_content li#tab1 {
 	display: block;
@@ -1042,7 +1045,9 @@ body.app_theme1,
 	color:#6ab344;
 }
 .app_theme1 .toolbar_button:hover,
-.app_theme1 .toolbar_button:active {
+.app_theme1 .toolbar_button:active,
+.app_theme1 #tab_navigation button:hover,
+.app_theme1 #tab_navigation button:active {
 	color:#6ab344 !important;
 }
 .app_theme1 #profile_search_input{
@@ -1213,7 +1218,9 @@ body.app_theme2,
 	color:#6ab344;
 }
 .app_theme2 .toolbar_button:hover,
-.app_theme2 .toolbar_button:active {
+.app_theme2 .toolbar_button:active,
+.app_theme2 #tab_navigation button:hover,
+.app_theme2 #tab_navigation button:active {
 	color:#6ab344 !important;
 }
 .app_theme2 #profile_search_input{
@@ -1384,7 +1391,9 @@ body.app_theme3,
 	color:#6ab344;
 }
 .app_theme3 .toolbar_button:hover,
-.app_theme3 .toolbar_button:active {
+.app_theme3 .toolbar_button:active,
+.app_theme3 #tab_navigation button:hover,
+.app_theme3 #tab_navigation button:active {
 	color:#6ab344 !important;
 }
 .app_theme3 #profile_search_input{
