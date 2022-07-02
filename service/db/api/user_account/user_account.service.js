@@ -462,14 +462,14 @@ module.exports = {
 					  WHERE u_liked_current_user.user_account_id_like = u.id
 						AND u_liked_current_user.user_account_id = ?)      			liked
 				FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account u
-				WHERE u.id = ? 
+			   WHERE (u.id = ? 
 				      OR 
-					  (u.username = ?
-					  AND u.active = 1)
-				AND EXISTS(SELECT NULL
-							 FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_app uap
-						    WHERE uap.user_account_id = u.id
-							  AND uap.app_id = ?)`,
+					  u.username = ?)
+				 AND u.active = 1
+				 AND EXISTS(SELECT NULL
+							  FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_app uap
+						     WHERE uap.user_account_id = u.id
+							   AND uap.app_id = ?)`,
 				[id_current_user,
 				 id_current_user,
 				 id_current_user,
@@ -558,14 +558,14 @@ module.exports = {
 							WHERE u_liked_current_user.user_account_id_like = u.id
 								AND u_liked_current_user.user_account_id = :user_accound_id_current_user)      "liked"
 						FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account u
-						WHERE u.id = :id 
+					   WHERE (u.id = :id 
 							  OR 
-							  (u.username = :username
-							  AND u.active = 1)
-						AND EXISTS(SELECT NULL
-									 FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_app uap
-								    WHERE uap.user_account_id = u.id
-  									  AND uap.app_id = :app_id)`,
+							  u.username = :username)
+						 AND u.active = 1
+						 AND EXISTS(SELECT NULL
+									  FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_app uap
+								     WHERE uap.user_account_id = u.id
+  									   AND uap.app_id = :app_id)`,
 						{
                             user_accound_id_current_user: id_current_user,
                             id: id,

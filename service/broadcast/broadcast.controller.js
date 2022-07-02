@@ -1,6 +1,6 @@
 global.broadcast_clients = [];
 module.exports = {
-	getBroadcast: (req, res) => {
+	connectBroadcast: (req, res) => {
         const headers = {
             "Content-Type": "text/event-stream",
             "Connection": "keep-alive",
@@ -35,6 +35,7 @@ module.exports = {
             const newClient = {
                 id: req.params.clientId,
                 app_id: app_id,
+                user_account_id: req.query.user_account_id,
                 user_agent: req.headers["user-agent"],
                 connection_date: new Date().toISOString(),
                 ip: req.ip,
@@ -50,7 +51,7 @@ module.exports = {
             })
         })
     },
-    getConnected: (req, res) => {
+    getListConnected: (req, res) => {
         let broadcast_clients_no_res = [];
         let i=0;
         broadcast_clients.forEach(client=>{
@@ -65,6 +66,7 @@ module.exports = {
                             copyClient = {
                                 id: client.id,
                                 app_id: client.app_id,
+                                user_account_id: client.user_account_id,
                                 user_agent: client.user_agent,
                                 connection_date: client.connection_date,
                                 ip: client.ip,
@@ -102,22 +104,26 @@ module.exports = {
                 break;
             }
             case 3:{
-                column_sort = 'user_agent';
+                column_sort = 'user_account_id';
                 break;
             }
             case 4:{
-                column_sort = 'connection_date';
+                column_sort = 'user_agent';
                 break;
             }
             case 5:{
-                column_sort = 'ip';
+                column_sort = 'connection_date';
                 break;
             }
             case 6:{
-                column_sort = 'gps_latitude';
+                column_sort = 'ip';
                 break;
             }
             case 7:{
+                column_sort = 'gps_latitude';
+                break;
+            }
+            case 8:{
                 column_sort = 'gps_longitude';
                 break;
             }
@@ -157,6 +163,36 @@ module.exports = {
         }
         return res.status(200).json({
             success: 1
+        });
+    },
+    updateConnected: (req, res) => {
+        
+        let i=0;
+        for (let i = 0; i < broadcast_clients.length; i++){
+            if (broadcast_clients[i].id==req.query.client_id){
+                broadcast_clients[i].user_account_id = req.query.user_account_id;
+                broadcast_clients[i].connection_date = new Date().toISOString();
+                return res.status(200).json({
+                    success: 1
+                });
+            }
+        }
+        return res.status(200).json({
+            success: 1
+        });
+    },
+    checkConnected: (req, res) => {
+        
+        let i=0;
+        for (let i = 0; i < broadcast_clients.length; i++){
+            if (broadcast_clients[i].user_account_id == req.query.user_account_id){
+                return res.status(200).json({
+                    success: 1
+                });
+            }
+        }
+        return res.status(200).json({
+            success: 0
         });
     }
 }

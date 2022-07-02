@@ -72,7 +72,7 @@ function set_globals(parameters){
     window.global_service_report;
     window.global_service_worldcities;
         
-    //init common variables, set in init_common()
+    window.global_user_account_id = '';
     window.global_clientId;
     window.global_eventSource;
     window.global_exception_app_function;
@@ -116,6 +116,7 @@ function set_globals(parameters){
         window.global_button_default_icon_user_joined_date = '<i class="fas fa-hands-helping"></i>';
         window.global_button_default_icon_user_follow_user = '<i class="fas fa-user-plus"></i>';
         window.global_button_default_icon_user_followed_user = '<i class="fas fa-user-check"></i';
+        window.global_button_default_icon_online = '<i class="fa-solid fa-circle-small"></i>';
 
         window.global_button_default_icon_home = '<i class="fas fa-home"></i>';
         window.global_button_default_icon_cloud = '<i class="fas fa-cloud"></i>';
@@ -2210,6 +2211,44 @@ function check_input(text, lang_code, text_length=100){
         return true;
     }
 }
+function reconnect(){
+    setTimeout(connectOnline, 5000);
+}
+function updateOnlineStatus(){
+
+    fetch(`/service/broadcast/update_connected?app_id=${window.global_app_id}&client_id=${window.global_clientId}&user_account_id=${window.global_user_account_id}`,
+    {method: 'PUT',
+        headers: {
+            'Authorization': 'Bearer ' + window.global_rest_dt,
+        }
+    })
+    .then(function(response) {
+        status = response.status;
+        return response.text();
+    })
+    .then(function(result) {
+        if (status == 200){
+            null;
+        }
+        else{
+            exception(status, result, window.global_lang_code);
+        }
+    });
+}
+function connectOnline(updateOnline=false){
+    window.global_clientId = Date.now();
+    window.global_eventSource = new EventSource(`/service/broadcast/connect/${window.global_clientId}?app_id=${window.global_app_id}&user_account_id=${window.global_user_account_id}`);
+    window.global_eventSource.onmessage = function (event) {
+        if (window.global_admin == true)
+            null;
+        else
+            show_broadcast(event.data);
+    }
+    window.global_eventSource.onerror = function (err) {
+        window.global_eventSource.close();
+        reconnect();
+    }
+}
 function init_common(parameters){
     /*
     parameters:
@@ -2231,19 +2270,14 @@ function init_common(parameters){
     */
     set_globals(parameters);
 
-    window.global_clientId = Date.now();
-    if (parameters.close_eventsource==true)
+    if (parameters.close_eventsource==true){
         window.global_eventSource.close();
-    window.global_eventSource = new EventSource(`/service/broadcast/connect/${window.global_clientId}?app_id=${window.global_app_id}`);
-    window.global_eventSource.onmessage = function (event) {
-        if (window.global_admin == true)
-            null;
-        else
-            show_broadcast(event.data);
+        connectOnline();
     }
-    window.global_eventSource.onerror = function (err) {
-        window.global_eventSource.close();
+    else{
+        connectOnline();
     }
+   
     if (parameters.ui==true){
         //icons
         //body
