@@ -35,6 +35,7 @@ const assetsToCache = [
     '/app1/css/images/theme_year_30001.jpg',
     '/app1/images/banner_kaaba.jpg',
     '/app1/images/logo.png',
+    '/app1/js/app_globals.js',
     '/app1/js/app_report.js',
     '/app1/js/app_thirdparty.js',
     '/app1/js/app.js',
