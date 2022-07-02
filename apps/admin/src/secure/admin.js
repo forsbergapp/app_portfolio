@@ -264,7 +264,6 @@
         //delete all globals in this file, not globals declared elsewhere
         //and not some start variables
         delete window.global_rest_app;
-        delete window.global_rest_app_parameter;
         delete window.global_rest_parameter_type;
         delete window.global_rest_user_account;
         delete window.global_service_geolocation;
@@ -1072,7 +1071,8 @@
             let month = document.getElementById('select_month_menu3').value;
             let old_html = document.getElementById('list_connected').innerHTML;
             document.getElementById('list_connected').innerHTML = window.global_button_spinner;
-            for (let i=1;i<=7;i++){
+            //sort on all columns except last column with chat icon
+            for (let i=1;i<=8;i++){
                 document.getElementById('list_connected_col_title' + i).classList.remove('asc');
                 document.getElementById('list_connected_col_title' + i).classList.remove('desc');
             }
@@ -1106,6 +1106,9 @@
                                         </div>
                                         <div class='list_connected_col'>
                                             <div>${json.data[i].app_id}</div>
+                                        </div>
+                                        <div class='list_connected_col'>
+                                            <div>${json.data[i].user_account_id}</div>
                                         </div>
                                         <div class='list_connected_col'>
                                             <div>${show_user_agent(json.data[i].user_agent)}</div>
