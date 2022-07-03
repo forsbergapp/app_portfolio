@@ -185,14 +185,14 @@ module.exports = {
         
         let i=0;
         for (let i = 0; i < broadcast_clients.length; i++){
-            if (broadcast_clients[i].user_account_id == req.query.user_account_id){
+            if (broadcast_clients[i].user_account_id == req.params.user_account_id){
                 return res.status(200).json({
-                    success: 1
+                    online: 1
                 });
             }
         }
         return res.status(200).json({
-            success: 0
+            online: 0
         });
     }
 }
