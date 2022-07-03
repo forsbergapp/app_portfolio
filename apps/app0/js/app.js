@@ -12,7 +12,7 @@ window.global_qr_logo_width;
 window.global_qr_logo_height;
 window.global_qr_background_color;
 
-function keyfunctions(){
+function setEvents(){
 
     document.getElementById('toggle_checkbox').addEventListener('click', function() { toggle_switch() }, false);
     document.getElementById('login_close').addEventListener('click', function() { document.getElementById('dialogue_login').style.visibility = 'hidden' }, false);
@@ -552,7 +552,7 @@ async function init_app(){
     document.getElementById('toolbar_btn_up').innerHTML =  window.global_button_default_icon_up;
     document.getElementById('toolbar_btn_down').innerHTML = window.global_button_default_icon_down;
     
-    keyfunctions();
+    setEvents();
     zoom_info('');
     move_info(null,null);
     await get_data_token(null, window.global_lang_code);

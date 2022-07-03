@@ -1,193 +1,357 @@
-function set_globals(parameters){
-    window.global_app_id = parameters.app_id;
-    window.global_exception_app_function = parameters.exception_app_function;
-
-    window.global_admin = parameters.admin;
-    window.global_service_auth = parameters.service_auth;
-    window.global_app_rest_client_id = parameters.app_rest_client_id;
-    window.global_app_rest_client_secret = parameters.app_rest_client_secret;
-    window.global_rest_app_parameter = parameters.rest_app_parameter;
-
-    window.global_session_user_gps_latitude = parameters.gps_lat;
-    window.global_session_user_gps_longitude = parameters.gps_long;
-    window.global_session_user_gps_place = parameters.gps_place;
-    
-    window.global_app_name;
-    window.global_app_hostname;
-    window.global_main_app_id 					= 0;
-
-    // if app not using translation then use default lang_code from navigator
-    window.global_lang_code                     = navigator.language;
-    window.global_rest_url_base 				= '/service/db/api/';
-
-    window.global_app_copyright;
-    
-    window.global_app_user_provider1_use;
-    window.global_app_user_provider1_id;
-    window.global_app_user_provider1_name;
-    window.global_app_user_provider1_api_src;
-    window.global_app_user_provider2_use;
-    window.global_app_user_provider2_id;
-    window.global_app_user_provider2_name;
-    window.global_app_user_provider2_api_version;
-    window.global_app_user_provider2_api_src;
-    window.global_app_user_provider2_api_src2;
-    window.global_rest_at;
-    window.global_rest_dt;
-    window.global_rest_app;
-    window.global_rest_app_log;
-    window.global_rest_app_object;
-    window.global_rest_country;
-    window.global_rest_language_locale;
-    window.global_rest_message_translation;
-    window.global_rest_user_account;
-    window.global_rest_user_account_activate;
-    window.global_rest_user_account_app;
-    window.global_rest_user_account_common;
-    window.global_rest_user_account_login;
-    window.global_rest_user_account_profile_username;
-    window.global_rest_user_account_profile_userid;
-    window.global_rest_user_account_profile_searchA;
-    window.global_rest_user_account_profile_searchD;
-    window.global_rest_user_account_profile_top;
-    window.global_rest_user_account_profile_detail;
-    window.global_rest_user_account_provider;
-    window.global_rest_user_account_signup;
-    window.global_rest_user_account_like;
-    window.global_rest_user_account_follow;
-    //Images uploaded
-    window.global_image_file_allowed_type1;
-    window.global_image_file_allowed_type2;
-    window.global_image_file_allowed_type3;
-    window.global_image_file_mime_type;
-    window.global_image_file_max_size;
-    
-    window.global_user_image_avatar_width;
-    window.global_user_image_avatar_height;
-
-    //services
-    window.global_service_geolocation;
-    window.global_service_geolocation_gps_place;
-    window.global_service_geolocation_gps_ip;
-    window.global_service_report;
-    window.global_service_worldcities;
-        
-    window.global_user_account_id = '';
-    window.global_clientId;
-    window.global_eventSource;
-    window.global_exception_app_function;
-    if (parameters.ui==true){
-        //spinner
-        window.global_button_spinner = `<div id="button_spinner" class="load-spinner">
-                                            <div></div>
-                                            <div></div>
-                                            <div></div>
-                                            <div></div>
-                                            <div></div>
-                                            <div></div>
-                                            <div></div>
-                                            <div></div>
-                                            <div></div>
-                                            <div></div>
-                                            <div></div>
-                                            <div></div>
-                                        </div>`;
-        //Icons
-        window.global_button_default_icon_save = '<i class="fas fa-save"></i>';
-        window.global_button_default_icon_add = '<i class="fas fa-plus-square"></i>';
-        window.global_button_default_icon_delete = '<i class="fas fa-trash-alt"></i>';
-        window.global_button_default_icon_edit = '<i class="fas fa-edit"></i>';
-
-        window.global_button_default_icon_send = '<i class="fas fa-arrow-alt-circle-right"></i>';
-        window.global_button_default_icon_login = '<i class="fas fa-arrow-alt-circle-right"></i>';
-        window.global_button_default_icon_signup = '<i class="fas fa-arrow-alt-circle-right"></i>';
-        window.global_button_default_icon_update = '<i class="fas fa-save"></i>';
-        window.global_button_default_icon_delete_account = '<i class="fas fa-trash-alt"></i>';                                
-
-        window.global_button_default_icon_chat = '<i class="fas fa-comment"></i>';
-        window.global_button_default_icon_checkbox_checked = '<i class="fas fa-check-square"></i>';
-        window.global_button_default_icon_checkbox_empty = '<i class="fas fa-square"></i>';
-        window.global_button_default_icon_info = '<i class="fas fa-info-circle"></i>';
-        window.global_button_default_icon_close = '<i class="fas fa-check-circle"></i>';
-        window.global_button_default_icon_user = '<i class="fas fa-user"></i>';
-        window.global_button_default_icon_avatar_edit = '<i class="fas fa-camera"></i>';
-        window.global_button_default_icon_user_avatar = '<i class="fas fa-user-circle"></i>';
-
-        window.global_button_default_icon_user_joined_date = '<i class="fas fa-hands-helping"></i>';
-        window.global_button_default_icon_user_follow_user = '<i class="fas fa-user-plus"></i>';
-        window.global_button_default_icon_user_followed_user = '<i class="fas fa-user-check"></i';
-        window.global_button_default_icon_online = '<i class="fa-solid fa-circle-small"></i>';
-
-        window.global_button_default_icon_home = '<i class="fas fa-home"></i>';
-        window.global_button_default_icon_cloud = '<i class="fas fa-cloud"></i>';
-        window.global_button_default_icon_provider1 = '<i class="fab fa-google"></i>';
-        window.global_button_default_icon_provider2 = '<i class="fab fa-facebook"></i>';
-        window.global_button_default_icon_map_my_location = '<i class="fas fa-crosshairs"></i>';
-
-        window.global_button_default_icon_search = '<i class="fas fa-search"></i>';
-        window.global_button_default_icon_menu_open = '<i class="fas fa-bars"></i>';
-        window.global_button_default_icon_menu_close = '<i class="fas fa-times-circle"></i>';
-        window.global_button_default_icon_broadcast_close = '<i class="fas fa-times-circle"></i>';
-        window.global_button_default_icon_first = '<i class="fas fa-fast-backward"></i>';
-        window.global_button_default_icon_previous = '<i class="fas fa-backward"></i>';
-        window.global_button_default_icon_next = '<i class="fas fa-forward"></i>';
-        window.global_button_default_icon_last = '<i class="fas fa-fast-forward"></i>';
-
-        window.global_button_default_icon_cancel =  '<i class="fas fa-times-circle"></i>';
-
-        window.global_button_default_icon_zoomout = '<i class="fas fa-search-minus"></i>';
-        window.global_button_default_icon_zoomin = '<i class="fas fa-search-plus"></i>';
-        window.global_button_default_icon_left = '<i class="fas fa-arrow-alt-circle-left"></i>';
-        window.global_button_default_icon_right = '<i class="fas fa-arrow-alt-circle-right"></i>';
-        window.global_button_default_icon_up = '<i class="fas fa-arrow-alt-circle-up"></i>';
-        window.global_button_default_icon_down = '<i class="fas fa-arrow-alt-circle-down"></i>';
-
-        window.global_button_default_icon_day = '<i class="fas fa-calendar-day"></i>';
-        window.global_button_default_icon_month = '<i class="fas fa-calendar-week"></i>';
-        window.global_button_default_icon_year = '<i class="fas fa-calendar-alt"></i>';
-
-        window.global_button_default_icon_like = '<i class="fas fa-heart"></i>';
-        window.global_button_default_icon_unlike = '<i class="fas fa-heart-broken"></i>';
-        window.global_button_default_icon_views = '<i class="fas fa-eye"></i>';
-        window.global_button_default_icon_follows = '<i class="fas fa-user-friends"></i>';
-        window.global_button_default_icon_followed = '<i class="fas fa-users"></i>';
-        window.global_button_default_icon_top_header = '<i class="fas fa-medal"></i>';
-
-        window.global_button_default_icon_align_left = '<i class="fa fa-align-left" tabindex="1"></i>';
-        window.global_button_default_icon_align_center = '<i class="fa fa-align-center" tabindex="1"></i>';
-        window.global_button_default_icon_align_right = '<i class="fa fa-align-left" tabindex="1"></i>';
-        window.global_button_default_icon_remove = '<i class="fa fa-times" ></i>';
-        window.global_button_default_icon_html = '<i class="fa-solid fa-file-code"></i>';
-        window.global_button_default_icon_copy = '<i class="fas fa-copy"></i>';
-        window.global_button_default_icon_pdf  = '<i class="fas fa-file-pdf"></i>';
-        window.global_button_default_icon_link = '<i class="fa-solid fa-link"></i>';
-        window.global_button_default_icon_tab_regional  = '<i class="fas fa-globe"></i>';
-        window.global_button_default_icon_tab_gps  = '<i class="fas fa-map-marked-alt"></i>';
-        window.global_button_default_icon_tab_design  = '<i class="fas fa-palette"></i>';
-        window.global_button_default_icon_tab_image = '<i class="fas fa-images"></i>';
-        window.global_button_default_icon_tab_text = '<i class="fas fa-text-height"></i>';
-        window.global_button_default_icon_tab_prayer = '<i class="fas fa-pray"></i>';
-        window.global_button_default_icon_tab_user = '<i class="fas fa-user"></i>';
-
-        window.global_button_default_icon_slider_left = '<i class="fas fa-chevron-left"></i>';
-        window.global_button_default_icon_slider_right = '<i class="fas fa-chevron-right"></i>';
-
-        window.global_button_default_icon_print = '<i class="fas fa-print"></i>';
-        window.global_button_default_icon_mail = '<i class="fas fa-envelope-square"></i>';
-        window.global_button_default_icon_private = '<i class="fas fa-lock"></i>';
-        //delay API calls when typing to avoid too many calls 
-        window.global_typewatch = function() {
-            let timer = 0;
-            return function(callback, ms) {
-                clearTimeout(timer);
-                timer = setTimeout(callback, ms);
+/*  Functions and globals in this order:
+    MISC
+    MESSAGE & DIALOGUE
+    BROADCAST
+    GPS
+    QR
+    PROFILE
+    USER
+    USER PROVIDER    
+    EXCEPTION
+    INIT
+ */
+/*----------------------- */
+/* MISC                   */
+/*----------------------- */
+function get_null_or_value(value) {
+    if (value == null)
+        return '';
+    else
+        return value;
+}
+function format_json_date(db_date, short, timezone, lang_code) {
+    if (db_date == null)
+        return null;
+    else {
+        //Json returns UTC time
+        //in ISO 8601 format
+        //JSON returns format 2020-08-08T05:15:28Z
+        //"yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'"
+        let settings = {
+            timezone_current: timezone,
+            locale: lang_code
+        }
+        let options;
+        if (short)
+            options = {
+                timeZone: settings.timezone_current,
+                year: 'numeric',
+                month: 'long'
             };
-        }();
+        else
+            options = {
+                timeZone: settings.timezone_current,
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                timeZoneName: 'long'
+            };
+        let utc_date = new Date(Date.UTC(
+            db_date.substr(0, 4), //year
+            db_date.substr(5, 2) - 1, //month
+            db_date.substr(8, 2), //day
+            db_date.substr(11, 2), //hour
+            db_date.substr(14, 2), //min
+            db_date.substr(17, 2) //sec
+        ));
+        let format_date = utc_date.toLocaleDateString(settings.locale, options);
+        return format_date;
     }
-    
-    
 }
 
+function mobile(){
+    return (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent));
+   }
+   
+//function to convert buffert to one string
+function toBase64(arr) {
+    //arr = new Uint8Array(arr) if it's an ArrayBuffer
+    return atob(
+        arr.reduce((data, byte) => data + String.fromCharCode(byte), '')
+    );
+}
+function parseJwt(token) {
+    try {
+      return JSON.parse(atob(token.split('.')[1]));
+    } catch (e) {
+      return null;
+    }
+  };
+
+function checkbox_value(checkbox) {
+    if (checkbox.checked)
+        return 'YES';
+    else
+        return 'NO';
+}
+function checkbox_checked(checkbox) {
+    if (checkbox == 1)
+        return 'YES';
+    else
+        return 'NO';
+}
+
+//function to check image if to read buffer or not
+function image_format(arr) {
+    //arr = new Uint8Array(arr) if it's an ArrayBuffer
+    if (arr == null || arr == '')
+        return '';
+    else {
+        //Oracle returns buffer for BLOB
+        if (arr.data) {
+            //buffer
+            return toBase64(arr.data);
+        } else {
+            //not buffer
+            return atob(arr);
+        }
+    }
+}
+function recreate_img(img_item) {
+    //cant set img src to null, it will containt url or show corrupt image
+    //recreating the img is the workaround
+    let parentnode = img_item.parentNode;
+    let id = img_item.id;
+    let alt = img_item.alt;
+    let img = document.createElement('img');
+
+    parentnode.removeChild(img_item);
+    img.id = id;
+    img.alt = alt;
+    parentnode.appendChild(img);
+    return null;
+}
+function boolean_to_number(boolean_value) {
+    if (boolean_value == true)
+        return 1;
+    else
+        return 0;
+}
+function number_to_boolean(number_value) {
+    if (number_value == 1)
+        return true;
+    else
+        return false;
+}
+/* check if run inside an iframe*/
+function inIframe() {
+    try {
+        return window.self !== window.top;
+    } catch (e) {
+        return true;
+    }
+}
+function show_image(item_img, item_input, image_width, image_height, lang_code) {
+    let file = document.getElementById(item_input).files[0];
+    let reader = new FileReader();
+
+    const allowedExtensions = [window.global_image_file_allowed_type1,
+                               window.global_image_file_allowed_type2,
+                               window.global_image_file_allowed_type3
+                              ];
+    const { name: fileName, size: fileSize } = file;
+    const fileExtension = fileName.split(".").pop();
+    if (!allowedExtensions.includes(fileExtension)){
+        //File type not allowed
+        show_message('ERROR', 20307, null,null, window.global_main_app_id, lang_code);
+    }
+    else
+        if (fileSize > window.global_image_file_max_size){
+            //File size too large
+            show_message('ERROR', 20308, null, null, window.global_main_app_id, lang_code);
+        }
+        else {
+            /*Save all file in mime type format specified in parameter
+             using direct "...item_img.src = event.target.result;..." instead
+             of "...ctx.canvas.toDataURL()..." usage would not convert uploaded file 
+             to desired format, for example uploading png file will convert to jpg image
+             and to specified size, this will save space in database */
+            reader.onloadend = function(event) {
+                let img = new Image();
+                img.src = event.target.result;
+                
+                img.onload = function(el) {
+                    let elem = document.createElement('canvas');
+                    elem.width = image_width;
+                    elem.height = image_height;
+                    let ctx = elem.getContext('2d');
+                    ctx.drawImage(el.target, 0, 0, elem.width, elem.height);
+                    let srcEncoded = ctx.canvas.toDataURL(window.global_image_file_mime_type);
+                    item_img.src = srcEncoded;
+                }
+            }
+        }
+    if (file)
+        reader.readAsDataURL(file); //reads the data as a URL
+    else
+        item_show.src = '';
+    return null;
+}
+function getHostname(){
+    return `${location.protocol}//${location.hostname}${location.port==''?'':':' + location.port}`;
+}
+function check_input(text, lang_code, text_length=100){
+    if (text==null || text=='')
+        return true;
+    else{
+        try {
+            let check_text = JSON.parse(JSON.stringify(text));
+            if (text.includes('"') ||
+                text.includes('\\')){
+                //not valid text
+                show_message('ERROR', 20309, null, null, window.global_main_app_id,lang_code);
+                return false;
+            }
+        } catch (error) {
+            //not valid text
+            show_message('ERROR', 20309, null, null, window.global_main_app_id,lang_code);
+            return false;
+        }
+        try {
+            //check default max length 100 characters or parameter value
+            if (text.length>text_length){
+                //text too long
+                show_message('ERROR', 20310, null, null, window.global_main_app_id,lang_code);
+                return false;
+            }
+        } catch (error) {
+            return false;
+        }
+        return true;
+    }
+}
+/*----------------------- */
+/* MESSAGE & DIALOGUE     */
+/*----------------------- */
+function show_common_dialogue(dialogue, file = '') {
+    switch (dialogue) {
+        case 'VERIFY':
+            {
+                document.getElementById('dialogue_signup').style.visibility = 'hidden';
+                document.getElementById('dialogue_user_verify').style.visibility = 'visible';
+                break;
+            }
+        case 'LOGIN':
+            {
+                document.getElementById('dialogue_login').style.visibility = 'visible';
+                document.getElementById('dialogue_signup').style.visibility = 'hidden';
+                document.getElementById('login_username').focus();
+                break;
+            }
+        case 'SIGNUP':
+            {
+                document.getElementById('dialogue_signup').style.visibility = 'visible';
+                document.getElementById('dialogue_login').style.visibility = 'hidden';
+                document.getElementById('signup_username').focus();
+                break;
+            }
+    }
+    return null;   
+}
+
+function show_message(message_type, code, function_event, message_text='', app_id, lang_code='en-us'){
+    let confirm_question = document.getElementById('confirm_question');
+    let message_title = document.getElementById('message_title');
+    let dialogue = document.getElementById('dialogue_message');
+    let old_close = document.getElementById('message_close');
+    let button_cancel = document.getElementById('message_cancel');
+    let function_close = function() { document.getElementById('dialogue_message').style.visibility = 'hidden'};
+    let show = 'inline-block';
+    let hide = 'none';
+    //this removes old eventlistener
+    let button_close = old_close.cloneNode(true);
+    old_close.parentNode.replaceChild(button_close, old_close);
+    //INFO, ERROR, CONFIRM, EXCEPTION
+    switch (message_type){
+        case 'ERROR':{
+            fetch(window.global_rest_url_base + window.global_rest_message_translation + code + 
+                '?app_id=' + app_id +
+                '&lang_code=' + lang_code, 
+            {
+                method: 'GET',
+                headers: {
+                    'Authorization': 'Bearer ' + window.global_rest_dt
+                }
+            })
+            .then(function(response) {
+                return response.text();
+            })
+            .then(function(response) {
+                confirm_question.style.display = hide;
+                button_cancel.style.display = hide;
+                message_title.style.display = show;
+                message_title.innerHTML = JSON.parse(response).data.text;
+                button_close.addEventListener('click', function_close, false);
+                dialogue.style.visibility = 'visible';
+                button_close.focus();
+            }).catch(function(error) {
+                show_message('EXCEPTION', null,null, error, app_id, lang_code);
+            })
+            break;
+        }
+        case 'INFO':{
+            confirm_question.style.display = hide;
+            button_cancel.style.display = hide;
+            message_title.style.display = show;
+            message_title.innerHTML = message_text;
+            button_close.addEventListener('click', function_close, false);
+            dialogue.style.visibility = 'visible';
+            button_close.focus();
+            break;
+        }
+        case 'EXCEPTION':{
+            confirm_question.style.display = hide;
+            button_cancel.style.display = hide;
+            message_title.style.display = show;
+            try {
+                // dont show code or errno returned from json
+                if (typeof JSON.parse(message_text).message !== "undefined"){
+                    // message from Node controller.js and service.js files
+                    message_title.innerHTML= JSON.parse(message_text).message;
+                }
+                else{
+                    //message from Mysql, code + sqlMessage
+                    if (typeof JSON.parse(message_text).sqlMessage !== "undefined")
+                        message_title.innerHTML= 'DB Error: ' + JSON.parse(message_text).sqlMessage;
+                    else{
+                        //message from Oracle, errorNum, offset
+                        if (typeof JSON.parse(message_text).errorNum !== "undefined")
+                            message_title.innerHTML= 'DB Error: ' + message_text;
+                        else{
+                            message_text = message_text.replace('<pre>','');
+                            message_text = message_text.replace('</pre>','');
+                            message_title.innerHTML= message_text;
+                        }
+                    }    
+                }
+            } catch (e) {
+                //other error and json not returned, return the whole text
+                message_title.innerHTML = message_text;
+            }
+            button_close.addEventListener('click', function_close, false);
+            dialogue.style.visibility = 'visible';
+            button_close.focus();
+            break;
+        }
+        case 'CONFIRM':{
+            confirm_question.style.display = show;
+            button_cancel.style.display = show;
+            message_title.style.display = hide;
+            message_title.innerHTML = '';
+            button_close.addEventListener('click', function_event, false);
+            dialogue.style.visibility = 'visible';
+            button_close.focus();
+            break;
+        }
+    }
+}
+/*----------------------- */
+/* BROADCAST              */
+/*----------------------- */
 function maintenance_countdown(remaining) {
     if(remaining <= 0)
         location.reload(true);
@@ -242,7 +406,101 @@ function show_maintenance(message, init){
             if (message!='')
                 document.getElementById('maintenance_footer').innerHTML = message;
 }
-/*Profile*/
+function reconnect(){
+    setTimeout(connectOnline, 5000);
+}
+function updateOnlineStatus(){
+
+    fetch(`/service/broadcast/update_connected?app_id=${window.global_app_id}&client_id=${window.global_clientId}&user_account_id=${window.global_user_account_id}`,
+    {method: 'PUT',
+        headers: {
+            'Authorization': 'Bearer ' + window.global_rest_dt,
+        }
+    })
+    .then(function(response) {
+        status = response.status;
+        return response.text();
+    })
+    .then(function(result) {
+        if (status == 200){
+            null;
+        }
+        else{
+            exception(status, result, window.global_lang_code);
+        }
+    });
+}
+function connectOnline(updateOnline=false){
+    window.global_clientId = Date.now();
+    window.global_eventSource = new EventSource(`/service/broadcast/connect/${window.global_clientId}?app_id=${window.global_app_id}&user_account_id=${window.global_user_account_id}`);
+    window.global_eventSource.onmessage = function (event) {
+        if (window.global_admin == true)
+            null;
+        else
+            show_broadcast(event.data);
+    }
+    window.global_eventSource.onerror = function (err) {
+        window.global_eventSource.close();
+        reconnect();
+    }
+}
+/*----------------------- */
+/* GPS                    */
+/*----------------------- */
+async function get_gps_from_ip(user_id, lang_code) {
+
+    let status;
+    let app_id;
+    if (window.global_app_id != '')
+        app_id = window.global_app_id
+    else
+        app_id = window.global_main_app_id
+    await fetch(window.global_service_geolocation + window.global_service_geolocation_gps_ip + 
+                '?app_id=' + app_id + 
+                '&app_user_id=' +  user_id +
+                '&lang_code=' + lang_code, {
+        method: 'GET',
+        headers: {
+            'Authorization': 'Bearer ' + window.global_rest_dt,
+        }
+    })
+    .then(function(response) {
+        status = response.status;
+        return response.text();
+    })
+    .then(function(result) {
+        if (status === 200) {
+            let json = JSON.parse(result);
+            window.global_session_user_gps_latitude  = json.geoplugin_latitude;
+            window.global_session_user_gps_longitude = json.geoplugin_longitude;
+            window.global_session_user_gps_place     = json.geoplugin_city + ', ' +
+                                                json.geoplugin_regionName + ', ' +
+                                                json.geoplugin_countryName;
+        } else {
+            exception(status, result, lang_code);
+        }
+    })
+}
+/*----------------------- */
+/* QR                     */
+/*----------------------- */
+function create_qr(div, url) {
+    let qrcode = new QRCode(document.getElementById(div), {
+        text: url,
+        width: window.global_qr_width,
+        height: window.global_qr_height,
+        colorDark: window.global_qr_color_dark,
+        colorLight: window.global_qr_color_light,
+        logo: window.global_qr_logo_file_path,
+        logoWidth: window.global_qr_logo_width,
+        logoHeight: window.global_qr_logo_height,
+        logoBackgroundColor: window.global_qr_background_color,
+        logoBackgroundTransparent: false
+    });
+}
+/*----------------------- */
+/* PROFILE                */
+/*----------------------- */
 function show_profile_click_events(item, user_id, timezone, lang_code, click_function){
     document.querySelectorAll(item).forEach(e => e.addEventListener('click', function(event) {
         //execute function from inparameter or use default when not specified
@@ -765,7 +1023,49 @@ function profile_close(){
     document.getElementById('profile_top').style.display = 'none';
     profile_clear();
 }
-/* User */
+async function profile_update_stat(lang_code, callBack){
+    let profile_id = document.getElementById('profile_id');
+    let json_data =
+    `{
+    "client_longitude": "${window.global_session_user_gps_longitude}",
+    "client_latitude": "${window.global_session_user_gps_latitude}"
+    }`;
+    //get updated stat for given user
+    //to avoid update in stat set searched by same user
+    let url = window.global_rest_url_base + window.global_rest_user_account_profile_userid + profile_id.innerHTML;
+    let status;
+    fetch(url + 
+        '?app_id=' + window.global_app_id + 
+        '&lang_code=' + lang_code +
+        '&id=' + profile_id.innerHTML, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + window.global_rest_dt
+        },
+        body: json_data
+    })
+    .then(function(response) {
+        status = response.status;
+        return response.text();
+    })
+    .then(function(result) {
+        if (status == 200) {
+            json = JSON.parse(result);
+            document.getElementById('profile_info_view_count').innerHTML = json.count_views;
+            document.getElementById('profile_info_following_count').innerHTML = json.count_following;
+            document.getElementById('profile_info_followers_count').innerHTML = json.count_followed;
+            document.getElementById('profile_info_likes_count').innerHTML = json.count_likes;
+            document.getElementById('profile_info_liked_count').innerHTML = json.count_liked;
+            return callBack(null, {id : json.id})
+        }
+        else
+            return callBack(result, null);
+    })
+}
+/*----------------------- */
+/* USER                   */
+/*----------------------- */
 async function user_login(username, password, lang_code, callBack) {
     
     let json;
@@ -1512,53 +1812,51 @@ function user_account_app(app_id, user_account_id, lang_code) {
             show_message('EXCEPTION', null,null, error, window.global_app_id, lang_code);
         });
 }
-async function profile_update_stat(lang_code, callBack){
-    let profile_id = document.getElementById('profile_id');
-    let json_data =
-    `{
-    "client_longitude": "${window.global_session_user_gps_longitude}",
-    "client_latitude": "${window.global_session_user_gps_latitude}"
-    }`;
-    //get updated stat for given user
-    //to avoid update in stat set searched by same user
-    let url = window.global_rest_url_base + window.global_rest_user_account_profile_userid + profile_id.innerHTML;
+function user_account_app_delete(choice=null, user_account_id, app_id, lang_code, function_delete_event){
     let status;
-    fetch(url + 
-        '?app_id=' + window.global_app_id + 
-        '&lang_code=' + lang_code +
-        '&id=' + profile_id.innerHTML, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + window.global_rest_dt
-        },
-        body: json_data
-    })
-    .then(function(response) {
-        status = response.status;
-        return response.text();
-    })
-    .then(function(result) {
-        if (status == 200) {
-            json = JSON.parse(result);
-            document.getElementById('profile_info_view_count').innerHTML = json.count_views;
-            document.getElementById('profile_info_following_count').innerHTML = json.count_following;
-            document.getElementById('profile_info_followers_count').innerHTML = json.count_followed;
-            document.getElementById('profile_info_likes_count').innerHTML = json.count_likes;
-            document.getElementById('profile_info_liked_count').innerHTML = json.count_liked;
-            return callBack(null, {id : json.id})
+    
+    switch (choice){
+        case null:{
+            show_message('CONFIRM',null,function_delete_event, null, null, window.global_app_id, lang_code);
+            break;
         }
-        else
-            return callBack(result, null);
-    })
+        case 1:{
+            document.getElementById("dialogue_message").style.visibility = "hidden";
+    
+            fetch(window.global_rest_url_base + window.global_rest_user_account_app + user_account_id + '/' + app_id +
+                    '?app_id=' + window.global_app_id +
+                    '&lang_code=' + lang_code, 
+                {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + window.global_rest_at
+                    }
+                })
+                .then(function(response) {
+                    status = response.status;
+                    return response.text();
+                })
+                .then(function(result) {
+                    if (status == 200){
+                        //execute event and refresh app list
+                        document.getElementById('profile_main_btn_cloud').click()
+                    }
+                    else{
+                        exception(status, result, lang_code);
+                    }
+                })
+                .catch(function(error) {
+                    show_message('EXCEPTION', null,null, error, window.global_app_id, lang_code);
+                });
+        }
+        default:
+            break;
+    }
 }
-function set_app_globals_head() {
-    //call this function from index.html i head before body is loaded
-    //set meta tags in header        
-    document.title = window.global_app_name;
-    document.querySelector('meta[name="apple-mobile-web-app-title"]').setAttribute("content", window.global_app_name)
-}
-
+/*----------------------- */
+/* USER PROVIDER          */
+/*----------------------- */
 async function init_providers(provider1_function, provider2_function){
     //enable provider 1 if used
     if (window.global_app_user_provider1_use==1){
@@ -1708,7 +2006,25 @@ async function onProviderSignIn(googleUser, callBack) {
                 });
         });
     }
-}    
+}
+/*----------------------- */
+/* EXCEPTION              */
+/*----------------------- */
+function exception(status, message, lang_code){
+    if (status == 401)
+        eval(`(function (){${window.global_exception_app_function}()}());`);
+    else
+        show_message('EXCEPTION',  null, null, message, window.global_app_id, lang_code);
+}
+/*----------------------- */
+/* INIT                   */
+/*----------------------- */
+function set_app_globals_head() {
+    //call this function from index.html i head before body is loaded
+    //set meta tags in header        
+    document.title = window.global_app_name;
+    document.querySelector('meta[name="apple-mobile-web-app-title"]').setAttribute("content", window.global_app_name)
+}
 async function get_data_token(user_id, lang_code) {
     let status;
     let app_id;
@@ -1734,77 +2050,6 @@ async function get_data_token(user_id, lang_code) {
             let json = JSON.parse(result);
             window.global_rest_dt = json.token_dt;
         }   
-    })
-}
-function user_account_app_delete(choice=null, user_account_id, app_id, lang_code, function_delete_event){
-    let status;
-    
-    switch (choice){
-        case null:{
-            show_message('CONFIRM',null,function_delete_event, null, null, window.global_app_id, lang_code);
-            break;
-        }
-        case 1:{
-            document.getElementById("dialogue_message").style.visibility = "hidden";
-    
-            fetch(window.global_rest_url_base + window.global_rest_user_account_app + user_account_id + '/' + app_id +
-                    '?app_id=' + window.global_app_id +
-                    '&lang_code=' + lang_code, 
-                {
-                    method: 'DELETE',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': 'Bearer ' + window.global_rest_at
-                    }
-                })
-                .then(function(response) {
-                    status = response.status;
-                    return response.text();
-                })
-                .then(function(result) {
-                    if (status == 200){
-                        //execute event and refresh app list
-                        document.getElementById('profile_main_btn_cloud').click()
-                    }
-                    else{
-                        exception(status, result, lang_code);
-                    }
-                })
-                .catch(function(error) {
-                    show_message('EXCEPTION', null,null, error, window.global_app_id, lang_code);
-                });
-        }
-        default:
-            break;
-    }
-}
-async function get_gps_from_ip(user_id, lang_code) {
-
-    let status;
-    await fetch(window.global_service_geolocation + window.global_service_geolocation_gps_ip + 
-                '?app_id=' + window.global_app_id + 
-                '&app_user_id=' +  user_id +
-                '&lang_code=' + lang_code, {
-        method: 'GET',
-        headers: {
-            'Authorization': 'Bearer ' + window.global_rest_dt,
-        }
-    })
-    .then(function(response) {
-        status = response.status;
-        return response.text();
-    })
-    .then(function(result) {
-        if (status === 200) {
-            let json = JSON.parse(result);
-            window.global_session_user_gps_latitude  = json.geoplugin_latitude;
-            window.global_session_user_gps_longitude = json.geoplugin_longitude;
-            window.global_session_user_gps_place     = json.geoplugin_city + ', ' +
-                                                json.geoplugin_regionName + ', ' +
-                                                json.geoplugin_countryName;
-        } else {
-            exception(status, result, lang_code);
-        }
     })
 }
 function app_log(app_module, app_module_type, app_module_request, app_module_result, app_user_id,
@@ -1849,405 +2094,192 @@ function app_log(app_module, app_module_type, app_module_request, app_module_res
         show_message('EXCEPTION', null,null, error, window.global_app_id, lang_code);
     });
 }
+function set_globals(parameters){
+    window.global_app_id = parameters.app_id;
+    window.global_exception_app_function = parameters.exception_app_function;
 
-function show_common_dialogue(dialogue, file = '') {
-    switch (dialogue) {
-        case 'VERIFY':
-            {
-                document.getElementById('dialogue_signup').style.visibility = 'hidden';
-                document.getElementById('dialogue_user_verify').style.visibility = 'visible';
-                break;
-            }
-        case 'LOGIN':
-            {
-                document.getElementById('dialogue_login').style.visibility = 'visible';
-                document.getElementById('dialogue_signup').style.visibility = 'hidden';
-                document.getElementById('login_username').focus();
-                break;
-            }
-        case 'SIGNUP':
-            {
-                document.getElementById('dialogue_signup').style.visibility = 'visible';
-                document.getElementById('dialogue_login').style.visibility = 'hidden';
-                document.getElementById('signup_username').focus();
-                break;
-            }
-    }
-    return null;   
-}
+    window.global_admin = parameters.admin;
+    window.global_service_auth = parameters.service_auth;
+    window.global_app_rest_client_id = parameters.app_rest_client_id;
+    window.global_app_rest_client_secret = parameters.app_rest_client_secret;
+    window.global_rest_app_parameter = parameters.rest_app_parameter;
 
-function show_message(message_type, code, function_event, message_text='', app_id, lang_code='en-us'){
-    let confirm_question = document.getElementById('confirm_question');
-    let message_title = document.getElementById('message_title');
-    let dialogue = document.getElementById('dialogue_message');
-    let old_close = document.getElementById('message_close');
-    let button_cancel = document.getElementById('message_cancel');
-    let function_close = function() { document.getElementById('dialogue_message').style.visibility = 'hidden'};
-    let show = 'inline-block';
-    let hide = 'none';
-    //this removes old eventlistener
-    let button_close = old_close.cloneNode(true);
-    old_close.parentNode.replaceChild(button_close, old_close);
-    //INFO, ERROR, CONFIRM, EXCEPTION
-    switch (message_type){
-        case 'ERROR':{
-            fetch(window.global_rest_url_base + window.global_rest_message_translation + code + 
-                '?app_id=' + app_id +
-                '&lang_code=' + lang_code, 
-            {
-                method: 'GET',
-                headers: {
-                    'Authorization': 'Bearer ' + window.global_rest_dt
-                }
-            })
-            .then(function(response) {
-                return response.text();
-            })
-            .then(function(response) {
-                confirm_question.style.display = hide;
-                button_cancel.style.display = hide;
-                message_title.style.display = show;
-                message_title.innerHTML = JSON.parse(response).data.text;
-                button_close.addEventListener('click', function_close, false);
-                dialogue.style.visibility = 'visible';
-                button_close.focus();
-            }).catch(function(error) {
-                show_message('EXCEPTION', null,null, error, app_id, lang_code);
-            })
-            break;
-        }
-        case 'INFO':{
-            confirm_question.style.display = hide;
-            button_cancel.style.display = hide;
-            message_title.style.display = show;
-            message_title.innerHTML = message_text;
-            button_close.addEventListener('click', function_close, false);
-            dialogue.style.visibility = 'visible';
-            button_close.focus();
-            break;
-        }
-        case 'EXCEPTION':{
-            confirm_question.style.display = hide;
-            button_cancel.style.display = hide;
-            message_title.style.display = show;
-            try {
-                // dont show code or errno returned from json
-                if (typeof JSON.parse(message_text).message !== "undefined"){
-                    // message from Node controller.js and service.js files
-                    message_title.innerHTML= JSON.parse(message_text).message;
-                }
-                else{
-                    //message from Mysql, code + sqlMessage
-                    if (typeof JSON.parse(message_text).sqlMessage !== "undefined")
-                        message_title.innerHTML= 'DB Error: ' + JSON.parse(message_text).sqlMessage;
-                    else{
-                        //message from Oracle, errorNum, offset
-                        if (typeof JSON.parse(message_text).errorNum !== "undefined")
-                            message_title.innerHTML= 'DB Error: ' + message_text;
-                        else{
-                            message_text = message_text.replace('<pre>','');
-                            message_text = message_text.replace('</pre>','');
-                            message_title.innerHTML= message_text;
-                        }
-                    }    
-                }
-            } catch (e) {
-                //other error and json not returned, return the whole text
-                message_title.innerHTML = message_text;
-            }
-            button_close.addEventListener('click', function_close, false);
-            dialogue.style.visibility = 'visible';
-            button_close.focus();
-            break;
-        }
-        case 'CONFIRM':{
-            confirm_question.style.display = show;
-            button_cancel.style.display = show;
-            message_title.style.display = hide;
-            message_title.innerHTML = '';
-            button_close.addEventListener('click', function_event, false);
-            dialogue.style.visibility = 'visible';
-            button_close.focus();
-            break;
-        }
-    }
-}
-/*----------------------- */
-/* QR functions */
-/*----------------------- */
+    window.global_session_user_gps_latitude = parameters.gps_lat;
+    window.global_session_user_gps_longitude = parameters.gps_long;
+    window.global_session_user_gps_place = parameters.gps_place;
+    
+    window.global_app_name;
+    window.global_app_hostname;
+    window.global_main_app_id 					= 0;
 
-function create_qr(div, url) {
-    let qrcode = new QRCode(document.getElementById(div), {
-        text: url,
-        width: window.global_qr_width,
-        height: window.global_qr_height,
-        colorDark: window.global_qr_color_dark,
-        colorLight: window.global_qr_color_light,
-        logo: window.global_qr_logo_file_path,
-        logoWidth: window.global_qr_logo_width,
-        logoHeight: window.global_qr_logo_height,
-        logoBackgroundColor: window.global_qr_background_color,
-        logoBackgroundTransparent: false
-    });
-}
-/*----------------------------- */
-/* General javascript functions */
-/*----------------------------- */
-function get_null_or_value(value) {
-    if (value == null)
-        return '';
-    else
-        return value;
-}
-function format_json_date(db_date, short, timezone, lang_code) {
-    if (db_date == null)
-        return null;
-    else {
-        //Json returns UTC time
-        //in ISO 8601 format
-        //JSON returns format 2020-08-08T05:15:28Z
-        //"yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'"
-        let settings = {
-            timezone_current: timezone,
-            locale: lang_code
-        }
-        let options;
-        if (short)
-            options = {
-                timeZone: settings.timezone_current,
-                year: 'numeric',
-                month: 'long'
+    // if app not using translation then use default lang_code from navigator
+    window.global_lang_code                     = navigator.language;
+    window.global_rest_url_base 				= '/service/db/api/';
+
+    window.global_app_copyright;
+    
+    window.global_app_user_provider1_use;
+    window.global_app_user_provider1_id;
+    window.global_app_user_provider1_name;
+    window.global_app_user_provider1_api_src;
+    window.global_app_user_provider2_use;
+    window.global_app_user_provider2_id;
+    window.global_app_user_provider2_name;
+    window.global_app_user_provider2_api_version;
+    window.global_app_user_provider2_api_src;
+    window.global_app_user_provider2_api_src2;
+    window.global_rest_at;
+    window.global_rest_dt;
+    window.global_rest_app;
+    window.global_rest_app_log;
+    window.global_rest_app_object;
+    window.global_rest_country;
+    window.global_rest_language_locale;
+    window.global_rest_message_translation;
+    window.global_rest_user_account;
+    window.global_rest_user_account_activate;
+    window.global_rest_user_account_app;
+    window.global_rest_user_account_common;
+    window.global_rest_user_account_login;
+    window.global_rest_user_account_profile_username;
+    window.global_rest_user_account_profile_userid;
+    window.global_rest_user_account_profile_searchA;
+    window.global_rest_user_account_profile_searchD;
+    window.global_rest_user_account_profile_top;
+    window.global_rest_user_account_profile_detail;
+    window.global_rest_user_account_provider;
+    window.global_rest_user_account_signup;
+    window.global_rest_user_account_like;
+    window.global_rest_user_account_follow;
+    //Images uploaded
+    window.global_image_file_allowed_type1;
+    window.global_image_file_allowed_type2;
+    window.global_image_file_allowed_type3;
+    window.global_image_file_mime_type;
+    window.global_image_file_max_size;
+    
+    window.global_user_image_avatar_width;
+    window.global_user_image_avatar_height;
+
+    //services
+    window.global_service_geolocation;
+    window.global_service_geolocation_gps_place;
+    window.global_service_geolocation_gps_ip;
+    window.global_service_report;
+    window.global_service_worldcities;
+        
+    window.global_user_account_id = '';
+    window.global_clientId;
+    window.global_eventSource;
+    window.global_exception_app_function;
+    if (parameters.ui==true){
+        //spinner
+        window.global_button_spinner = `<div id="button_spinner" class="load-spinner">
+                                            <div></div>
+                                            <div></div>
+                                            <div></div>
+                                            <div></div>
+                                            <div></div>
+                                            <div></div>
+                                            <div></div>
+                                            <div></div>
+                                            <div></div>
+                                            <div></div>
+                                            <div></div>
+                                            <div></div>
+                                        </div>`;
+        //Icons
+        window.global_button_default_icon_save = '<i class="fas fa-save"></i>';
+        window.global_button_default_icon_add = '<i class="fas fa-plus-square"></i>';
+        window.global_button_default_icon_delete = '<i class="fas fa-trash-alt"></i>';
+        window.global_button_default_icon_edit = '<i class="fas fa-edit"></i>';
+
+        window.global_button_default_icon_send = '<i class="fas fa-arrow-alt-circle-right"></i>';
+        window.global_button_default_icon_login = '<i class="fas fa-arrow-alt-circle-right"></i>';
+        window.global_button_default_icon_signup = '<i class="fas fa-arrow-alt-circle-right"></i>';
+        window.global_button_default_icon_update = '<i class="fas fa-save"></i>';
+        window.global_button_default_icon_delete_account = '<i class="fas fa-trash-alt"></i>';                                
+
+        window.global_button_default_icon_chat = '<i class="fas fa-comment"></i>';
+        window.global_button_default_icon_checkbox_checked = '<i class="fas fa-check-square"></i>';
+        window.global_button_default_icon_checkbox_empty = '<i class="fas fa-square"></i>';
+        window.global_button_default_icon_info = '<i class="fas fa-info-circle"></i>';
+        window.global_button_default_icon_close = '<i class="fas fa-check-circle"></i>';
+        window.global_button_default_icon_user = '<i class="fas fa-user"></i>';
+        window.global_button_default_icon_avatar_edit = '<i class="fas fa-camera"></i>';
+        window.global_button_default_icon_user_avatar = '<i class="fas fa-user-circle"></i>';
+
+        window.global_button_default_icon_user_joined_date = '<i class="fas fa-hands-helping"></i>';
+        window.global_button_default_icon_user_follow_user = '<i class="fas fa-user-plus"></i>';
+        window.global_button_default_icon_user_followed_user = '<i class="fas fa-user-check"></i';
+        window.global_button_default_icon_online = '<i class="fa-solid fa-circle-small"></i>';
+
+        window.global_button_default_icon_home = '<i class="fas fa-home"></i>';
+        window.global_button_default_icon_cloud = '<i class="fas fa-cloud"></i>';
+        window.global_button_default_icon_provider1 = '<i class="fab fa-google"></i>';
+        window.global_button_default_icon_provider2 = '<i class="fab fa-facebook"></i>';
+        window.global_button_default_icon_map_my_location = '<i class="fas fa-crosshairs"></i>';
+
+        window.global_button_default_icon_search = '<i class="fas fa-search"></i>';
+        window.global_button_default_icon_menu_open = '<i class="fas fa-bars"></i>';
+        window.global_button_default_icon_menu_close = '<i class="fas fa-times-circle"></i>';
+        window.global_button_default_icon_broadcast_close = '<i class="fas fa-times-circle"></i>';
+        window.global_button_default_icon_first = '<i class="fas fa-fast-backward"></i>';
+        window.global_button_default_icon_previous = '<i class="fas fa-backward"></i>';
+        window.global_button_default_icon_next = '<i class="fas fa-forward"></i>';
+        window.global_button_default_icon_last = '<i class="fas fa-fast-forward"></i>';
+
+        window.global_button_default_icon_cancel =  '<i class="fas fa-times-circle"></i>';
+
+        window.global_button_default_icon_zoomout = '<i class="fas fa-search-minus"></i>';
+        window.global_button_default_icon_zoomin = '<i class="fas fa-search-plus"></i>';
+        window.global_button_default_icon_left = '<i class="fas fa-arrow-alt-circle-left"></i>';
+        window.global_button_default_icon_right = '<i class="fas fa-arrow-alt-circle-right"></i>';
+        window.global_button_default_icon_up = '<i class="fas fa-arrow-alt-circle-up"></i>';
+        window.global_button_default_icon_down = '<i class="fas fa-arrow-alt-circle-down"></i>';
+
+        window.global_button_default_icon_day = '<i class="fas fa-calendar-day"></i>';
+        window.global_button_default_icon_month = '<i class="fas fa-calendar-week"></i>';
+        window.global_button_default_icon_year = '<i class="fas fa-calendar-alt"></i>';
+
+        window.global_button_default_icon_like = '<i class="fas fa-heart"></i>';
+        window.global_button_default_icon_unlike = '<i class="fas fa-heart-broken"></i>';
+        window.global_button_default_icon_views = '<i class="fas fa-eye"></i>';
+        window.global_button_default_icon_follows = '<i class="fas fa-user-friends"></i>';
+        window.global_button_default_icon_followed = '<i class="fas fa-users"></i>';
+        window.global_button_default_icon_top_header = '<i class="fas fa-medal"></i>';
+
+        window.global_button_default_icon_align_left = '<i class="fa fa-align-left" tabindex="1"></i>';
+        window.global_button_default_icon_align_center = '<i class="fa fa-align-center" tabindex="1"></i>';
+        window.global_button_default_icon_align_right = '<i class="fa fa-align-left" tabindex="1"></i>';
+        window.global_button_default_icon_remove = '<i class="fa fa-times" ></i>';
+        window.global_button_default_icon_html = '<i class="fa-solid fa-file-code"></i>';
+        window.global_button_default_icon_copy = '<i class="fas fa-copy"></i>';
+        window.global_button_default_icon_pdf  = '<i class="fas fa-file-pdf"></i>';
+        window.global_button_default_icon_link = '<i class="fa-solid fa-link"></i>';
+        window.global_button_default_icon_tab_regional  = '<i class="fas fa-globe"></i>';
+        window.global_button_default_icon_tab_gps  = '<i class="fas fa-map-marked-alt"></i>';
+        window.global_button_default_icon_tab_design  = '<i class="fas fa-palette"></i>';
+        window.global_button_default_icon_tab_image = '<i class="fas fa-images"></i>';
+        window.global_button_default_icon_tab_text = '<i class="fas fa-text-height"></i>';
+        window.global_button_default_icon_tab_prayer = '<i class="fas fa-pray"></i>';
+        window.global_button_default_icon_tab_user = '<i class="fas fa-user"></i>';
+
+        window.global_button_default_icon_slider_left = '<i class="fas fa-chevron-left"></i>';
+        window.global_button_default_icon_slider_right = '<i class="fas fa-chevron-right"></i>';
+
+        window.global_button_default_icon_print = '<i class="fas fa-print"></i>';
+        window.global_button_default_icon_mail = '<i class="fas fa-envelope-square"></i>';
+        window.global_button_default_icon_private = '<i class="fas fa-lock"></i>';
+        //delay API calls when typing to avoid too many calls 
+        window.global_typewatch = function() {
+            let timer = 0;
+            return function(callback, ms) {
+                clearTimeout(timer);
+                timer = setTimeout(callback, ms);
             };
-        else
-            options = {
-                timeZone: settings.timezone_current,
-                weekday: 'long',
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit',
-                timeZoneName: 'long'
-            };
-        let utc_date = new Date(Date.UTC(
-            db_date.substr(0, 4), //year
-            db_date.substr(5, 2) - 1, //month
-            db_date.substr(8, 2), //day
-            db_date.substr(11, 2), //hour
-            db_date.substr(14, 2), //min
-            db_date.substr(17, 2) //sec
-        ));
-        let format_date = utc_date.toLocaleDateString(settings.locale, options);
-        return format_date;
-    }
-}
-
-function mobile(){
-    return (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent));
-   }
-   
-//function to convert buffert to one string
-function toBase64(arr) {
-    //arr = new Uint8Array(arr) if it's an ArrayBuffer
-    return atob(
-        arr.reduce((data, byte) => data + String.fromCharCode(byte), '')
-    );
-}
-function parseJwt(token) {
-    try {
-      return JSON.parse(atob(token.split('.')[1]));
-    } catch (e) {
-      return null;
-    }
-  };
-
-function checkbox_value(checkbox) {
-    if (checkbox.checked)
-        return 'YES';
-    else
-        return 'NO';
-}
-function checkbox_checked(checkbox) {
-    if (checkbox == 1)
-        return 'YES';
-    else
-        return 'NO';
-}
-
-//function to check image if to read buffer or not
-function image_format(arr) {
-    //arr = new Uint8Array(arr) if it's an ArrayBuffer
-    if (arr == null || arr == '')
-        return '';
-    else {
-        //Oracle returns buffer for BLOB
-        if (arr.data) {
-            //buffer
-            return toBase64(arr.data);
-        } else {
-            //not buffer
-            return atob(arr);
-        }
-    }
-}
-
-function exception(status, message, lang_code){
-    if (status == 401)
-        eval(`(function (){${window.global_exception_app_function}()}());`);
-    else
-        show_message('EXCEPTION',  null, null, message, window.global_app_id, lang_code);
-}
-function recreate_img(img_item) {
-    //cant set img src to null, it will containt url or show corrupt image
-    //recreating the img is the workaround
-    let parentnode = img_item.parentNode;
-    let id = img_item.id;
-    let alt = img_item.alt;
-    let img = document.createElement('img');
-
-    parentnode.removeChild(img_item);
-    img.id = id;
-    img.alt = alt;
-    parentnode.appendChild(img);
-    return null;
-}
-function boolean_to_number(boolean_value) {
-    if (boolean_value == true)
-        return 1;
-    else
-        return 0;
-}
-function number_to_boolean(number_value) {
-    if (number_value == 1)
-        return true;
-    else
-        return false;
-}
-/* check if run inside an iframe*/
-function inIframe() {
-    try {
-        return window.self !== window.top;
-    } catch (e) {
-        return true;
-    }
-}
-function show_image(item_img, item_input, image_width, image_height, lang_code) {
-    let file = document.getElementById(item_input).files[0];
-    let reader = new FileReader();
-
-    const allowedExtensions = [window.global_image_file_allowed_type1,
-                               window.global_image_file_allowed_type2,
-                               window.global_image_file_allowed_type3
-                              ];
-    const { name: fileName, size: fileSize } = file;
-    const fileExtension = fileName.split(".").pop();
-    if (!allowedExtensions.includes(fileExtension)){
-        //File type not allowed
-        show_message('ERROR', 20307, null,null, window.global_main_app_id, lang_code);
-    }
-    else
-        if (fileSize > window.global_image_file_max_size){
-            //File size too large
-            show_message('ERROR', 20308, null, null, window.global_main_app_id, lang_code);
-        }
-        else {
-            /*Save all file in mime type format specified in parameter
-             using direct "...item_img.src = event.target.result;..." instead
-             of "...ctx.canvas.toDataURL()..." usage would not convert uploaded file 
-             to desired format, for example uploading png file will convert to jpg image
-             and to specified size, this will save space in database */
-            reader.onloadend = function(event) {
-                let img = new Image();
-                img.src = event.target.result;
-                
-                img.onload = function(el) {
-                    let elem = document.createElement('canvas');
-                    elem.width = image_width;
-                    elem.height = image_height;
-                    let ctx = elem.getContext('2d');
-                    ctx.drawImage(el.target, 0, 0, elem.width, elem.height);
-                    let srcEncoded = ctx.canvas.toDataURL(window.global_image_file_mime_type);
-                    item_img.src = srcEncoded;
-                }
-            }
-        }
-    if (file)
-        reader.readAsDataURL(file); //reads the data as a URL
-    else
-        item_show.src = '';
-    return null;
-}
-function getHostname(){
-    return `${location.protocol}//${location.hostname}${location.port==''?'':':' + location.port}`;
-}
-function check_input(text, lang_code, text_length=100){
-    if (text==null || text=='')
-        return true;
-    else{
-        try {
-            let check_text = JSON.parse(JSON.stringify(text));
-            if (text.includes('"') ||
-                text.includes('\\')){
-                //not valid text
-                show_message('ERROR', 20309, null, null, window.global_main_app_id,lang_code);
-                return false;
-            }
-        } catch (error) {
-            //not valid text
-            show_message('ERROR', 20309, null, null, window.global_main_app_id,lang_code);
-            return false;
-        }
-        try {
-            //check default max length 100 characters or parameter value
-            if (text.length>text_length){
-                //text too long
-                show_message('ERROR', 20310, null, null, window.global_main_app_id,lang_code);
-                return false;
-            }
-        } catch (error) {
-            return false;
-        }
-        return true;
-    }
-}
-function reconnect(){
-    setTimeout(connectOnline, 5000);
-}
-function updateOnlineStatus(){
-
-    fetch(`/service/broadcast/update_connected?app_id=${window.global_app_id}&client_id=${window.global_clientId}&user_account_id=${window.global_user_account_id}`,
-    {method: 'PUT',
-        headers: {
-            'Authorization': 'Bearer ' + window.global_rest_dt,
-        }
-    })
-    .then(function(response) {
-        status = response.status;
-        return response.text();
-    })
-    .then(function(result) {
-        if (status == 200){
-            null;
-        }
-        else{
-            exception(status, result, window.global_lang_code);
-        }
-    });
-}
-function connectOnline(updateOnline=false){
-    window.global_clientId = Date.now();
-    window.global_eventSource = new EventSource(`/service/broadcast/connect/${window.global_clientId}?app_id=${window.global_app_id}&user_account_id=${window.global_user_account_id}`);
-    window.global_eventSource.onmessage = function (event) {
-        if (window.global_admin == true)
-            null;
-        else
-            show_broadcast(event.data);
-    }
-    window.global_eventSource.onerror = function (err) {
-        window.global_eventSource.close();
-        reconnect();
-    }
+        }();
+    }   
 }
 function init_common(parameters){
     /*
