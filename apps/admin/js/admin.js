@@ -57,7 +57,7 @@ function admin_login(){
                 show_message('EXCEPTION', null,null, result, window.global_main_app_id, window.global_lang_code);
         });
 }
-function keyfunctions(){
+function setEvents(){
     document.getElementById("admin_login_username").addEventListener("keyup", function(event) {
         if (event.keyCode === 13) {
             event.preventDefault();
@@ -82,7 +82,7 @@ function admin_exception_before(){
 }
 function init_app(){
     document.getElementById('admin_login_button').innerHTML = window.global_button_default_icon_login;
-    keyfunctions();
+    setEvents();
 }
 function init(parameters){
     init_common(parameters);
