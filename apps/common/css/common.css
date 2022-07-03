@@ -417,6 +417,21 @@
 	height: 64px;
 	border-radius: 50%;
 }
+#profile_avatar_online_status{
+	display:none;
+    position: fixed;
+    margin-left: -18px;
+    margin-top: 43px;
+}
+#profile_avatar_online_status.online{
+	display: inline-block;
+	color:#6ab344;
+}
+#profile_avatar_online_status.offline{
+	display: inline-block;
+	color:rgb(224, 38, 38);
+}
+
 #profile_joined_date_icon{
 	display: inline-block;
 }

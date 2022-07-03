@@ -1738,8 +1738,6 @@ async function user_login_app(){
         document.getElementById('login_button').innerHTML = old_button;
         if (err==null){
             user_id.innerHTML = result.user_id;
-            window.global_user_account_id = result.user_id;
-            updateOnlineStatus();
             //create intitial user setting if not exist, send initial=true
             user_settings_function('ADD_LOGIN', true, (err, result_settings) =>{
                 if (err)
@@ -1836,8 +1834,6 @@ function user_logoff_app() {
         document.getElementById('user_settings').style.display = "none";
         //clear logged in info
         document.getElementById('setting_data_username_logged_in').innerHTML = '';
-        window.global_user_account_id = '';
-        updateOnlineStatus();
         recreate_img(document.getElementById('setting_avatar_logged_in'));
         document.getElementById('setting_bio_logged_in').innerHTML = '';
         document.getElementById('setting_data_userid_logged_in').innerHTML = '';
