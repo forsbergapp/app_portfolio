@@ -444,6 +444,25 @@ function connectOnline(updateOnline=false){
         reconnect();
     }
 }
+function checkOnline(div_icon_online, user_account_id){
+    fetch(`/service/broadcast/checkconnected/${user_account_id}`,
+    {method: 'GET',
+        headers: {
+            'Authorization': 'Bearer ' + window.global_rest_dt,
+        }
+    })
+    .then(function(response) {
+        status = response.status;
+        return response.text();
+    })
+    .then(function(result) {
+        if (JSON.parse(result).online == 1)
+            document.getElementById(div_icon_online).className = 'online';
+        else
+            document.getElementById(div_icon_online).className= 'offline';
+    });
+    
+}
 /*----------------------- */
 /* GPS                    */
 /*----------------------- */
@@ -969,9 +988,10 @@ async function profile_show(user_account_id_other = null, username = null, user_
                         document.getElementById('profile_info_likes_count').innerHTML = json.count_likes;
                         document.getElementById('profile_info_liked_count').innerHTML = json.count_liked;
                     }    
-                    if (user_id ==''){
+                    if (user_id =='')
                         setTimeout(function(){show_common_dialogue('LOGIN')}, 2000);
-                    }
+                    else
+                        checkOnline('profile_avatar_online_status', json.id);
                     return callBack(null,{profile_id: json.id,
                                           private: json.private});                    
                 } else
@@ -1112,6 +1132,8 @@ async function user_login(username, password, lang_code, callBack) {
     .then(function(result) {
         if (status == 200) {
             json = JSON.parse(result);
+            window.global_user_account_id = json.items[0].id;
+            updateOnlineStatus();
             window.global_rest_at	= json.accessToken;
             return callBack(null, {user_id: json.items[0].id,
                                    username: json.items[0].username,
@@ -1132,6 +1154,9 @@ async function user_login(username, password, lang_code, callBack) {
 async function user_logoff(user_id, lang_code){
     //remove access token
     window.global_rest_at ='';
+    window.global_user_account_id = '';
+    updateOnlineStatus();
+    document.getElementById('profile_avatar_online_status').className='';
     //get new data token to avoid endless loop och invalid token
     get_data_token(user_id, lang_code).then(function(){
         if (window.global_app_user_provider1_use==1){
@@ -1951,6 +1976,7 @@ async function updateProviderUser(provider_no, profile_id, profile_first_name, p
                 if (status == 200) {
                     json = JSON.parse(result);
                     window.global_rest_at = json.accessToken;
+                    window.global_user_account_id = json.items[0].id;
                     document.getElementById('dialogue_login').style.visibility = 'hidden';
                     document.getElementById('dialogue_signup').style.visibility = 'hidden';
                     return callBack(null, {user_account_id: json.items[0].id,
@@ -2212,7 +2238,7 @@ function set_globals(parameters){
         window.global_button_default_icon_user_joined_date = '<i class="fas fa-hands-helping"></i>';
         window.global_button_default_icon_user_follow_user = '<i class="fas fa-user-plus"></i>';
         window.global_button_default_icon_user_followed_user = '<i class="fas fa-user-check"></i';
-        window.global_button_default_icon_online = '<i class="fa-solid fa-circle-small"></i>';
+        window.global_button_default_icon_online = '<i class="fa-solid fa-circle"></i>';
 
         window.global_button_default_icon_home = '<i class="fas fa-home"></i>';
         window.global_button_default_icon_cloud = '<i class="fas fa-cloud"></i>';
@@ -2346,7 +2372,7 @@ function init_common(parameters){
         document.getElementById('profile_main_btn_likes').innerHTML = window.global_button_default_icon_like;
         document.getElementById('profile_main_btn_liked').innerHTML = window.global_button_default_icon_like + window.global_button_default_icon_followed;
         document.getElementById('profile_private_title').innerHTML = window.global_button_default_icon_private;
-
+        document.getElementById('profile_avatar_online_status').innerHTML = window.global_button_default_icon_online;
         //profile top
         document.getElementById('profile_top_header').innerHTML = window.global_button_default_icon_top_header;
         document.getElementById('profile_top_row1_1').innerHTML = window.global_button_default_icon_follows;

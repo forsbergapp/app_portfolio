@@ -375,8 +375,6 @@ async function user_login_app(){
             password.value = '';
             
             user_id.innerHTML = result.user_id;
-            window.global_user_account_id = result.user_id;
-            updateOnlineStatus();
             //set avatar or empty
             if (result.avatar == null || result.avatar == '') {
                 recreate_img(document.getElementById('user_menu_avatar_img'));
@@ -404,8 +402,6 @@ function app_exception(){
 function user_logoff_app() {
     user_logoff(document.getElementById('user_menu_user_id').innerHTML, window.global_lang_code).then(function(){
         document.getElementById('user_menu_user_id').innerHTML = '';
-        window.global_user_account_id = '';
-        updateOnlineStatus();
         recreate_img(document.getElementById('user_menu_avatar_img'));
         document.getElementById('user_menu_username').innerHTML = '';
         document.getElementById('user_menu_logged_in').style.display = 'none';
