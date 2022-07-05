@@ -431,7 +431,7 @@
         margin-bottom: 10px;
         border-radius: 4px;
     }
-    #list_app_log_row_title div, #list_connected_row_title div{
+    #list_app_log_row_title div, #list_connected_row_title div, #list_server_log_row_title div{
         cursor:pointer;
     }
     #list_app_log_row_title, #list_connected_row_title{
@@ -574,7 +574,7 @@
         width:200px;
     }
     .list_server_log_col:nth-child(10){
-        width:60px;
+        width:70px;
     }
     .list_server_log_col:nth-child(11){
         width:50px;
@@ -586,7 +586,7 @@
         width:100px;
     }
     .list_server_log_col:nth-child(14){
-        width:50px;
+        width:70px;
     }
     .list_server_log_row{
         padding-top:4px;
@@ -604,6 +604,13 @@
     }
     #list_pm2_log_form{
         display:none;
+    }
+    #list_pm2_log_path_info div{
+        font-size: 11px;
+        display: inline-block;
+    }
+    #list_pm2_log_path_info div:nth-child(2){
+        margin-left: 10px;
     }
     #list_pm2_log_out, #list_pm2_log_err, #list_pm2_log_process_event{
         height:100px;

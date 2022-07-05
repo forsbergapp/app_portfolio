@@ -21,9 +21,10 @@ module.exports = {
                     err
                 );
 			}
-			return res.status(200).send(
-				results
-			);
+			return res.status(200).json({
+				success: 1,
+				data: results
+			});
 		});
 	},
 	getFiles: (req, res) => {
@@ -45,9 +46,12 @@ module.exports = {
                     err
                 );
 			}
-			return res.status(200).send(
-				results
-			);
+			return res.status(200).json({
+				success: 1,
+				path: process.env.SERVICE_LOG_FILE_PATH_SERVER,
+				file: process.env.SERVICE_LOG_PM2_FILE,
+				data: results
+			});
 		});
 	}
 }
