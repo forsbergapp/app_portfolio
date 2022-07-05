@@ -285,6 +285,88 @@ module.exports = {
                         }
                     })
                 }
+                function sortByProperty(property, order_by){
+                    return function(a,b){  
+                       if(a[property] > b[property])  
+                          return 1 * order_by;
+                       else if(a[property] < b[property])  
+                          return -1 * order_by;
+                   
+                       return 0;  
+                    }  
+                }
+                let column_sort;
+                let order_by;
+                if (data.order_by =='asc')
+                    order_by = 1;
+                else   
+                    order_by = -1;
+                switch (parseInt(data.sort)){
+                    case 1:{
+                        column_sort = 'logdate';
+                        break;
+                    }
+                    case 2:{
+                        column_sort = 'ip';
+                        break;
+                    }
+                    case 3:{
+                        column_sort = 'host';
+                        break;
+                    }
+                    case 4:{
+                        column_sort = 'protocol';
+                        break;
+                    }
+                    case 5:{
+                        column_sort = 'url';
+                        break;
+                    }
+                    case 6:{
+                        column_sort = 'method';
+                        break;
+                    }
+                    case 7:{
+                        column_sort = 'statusCode';
+                        break;
+                    }
+                    case 8:{
+                        column_sort = '["user-agent"]';
+                        break;
+                    }
+                    case 9:{
+                        column_sort = '["accept-language"]';
+                        break;
+                    }
+                    case 10:{
+                        column_sort = 'http_referer';
+                        break;
+                    }
+                    case 11:{
+                        column_sort = 'app_id';
+                        break;
+                    }
+                    case 12:{
+                        column_sort = 'app_filename';
+                        break;
+                    }
+                    case 13:{
+                        column_sort = 'app_function_name';
+                        break;
+                    }
+                    case 14:{
+                        column_sort = 'app_app_line';
+                        break;
+                    }
+                    case 15:{
+                        column_sort = 'logdate';
+                        break;
+                    }
+                    default:{
+                        column_sort = 'logdate';
+                    }
+                }
+                fixed_log.sort(sortByProperty(column_sort, order_by))
                 return callBack(null, fixed_log);
             });
         } catch (error) {
@@ -316,8 +398,13 @@ module.exports = {
     getPM2Logs: (callBack) => {
         let fs = require('fs');
         try {
+            let fixed_log = [];
             fs.readFile(process.env.SERVICE_LOG_FILE_PATH_SERVER + process.env.SERVICE_LOG_PM2_FILE, 'utf8', (error, fileBuffer) => {
-                return callBack(null, fileBuffer.toString());
+                fileBuffer.split('\n').forEach(function (record) {
+                    if (record.length>0)
+                        fixed_log.push(JSON.parse(record));
+                })
+                return callBack(null, fixed_log);
             });    
         } catch (error) {
             return callBack(error.message);
