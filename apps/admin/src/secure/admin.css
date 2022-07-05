@@ -545,6 +545,8 @@
         margin-bottom: 10px;
         border-radius: 4px;
         white-space: nowrap;
+        display: grid;
+        grid-auto-rows: max-content;
     }
     .list_server_log_col:nth-child(1){
         width:120px;
