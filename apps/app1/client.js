@@ -24,9 +24,10 @@ module.exports = {
                   ['<AppSettingsTabNavigationTab4/>', __dirname + '/src/settings_tab_navigation_tab4.html'],
                   ['<AppSettingsTabNavigationTab5/>', __dirname + '/src/settings_tab_navigation_tab5.html'],
                   ['<AppSettingsTabNavigationTab6/>', __dirname + '/src/settings_tab_navigation_tab6.html'],
-                  ['<AppSettingsTabNavigationTab7UserLoggedIn/>', __dirname + '/src/settings_tab_navigation_tab7_user_logged_in.html'],
-                  ['<AppSettingsTabNavigationTab7UserSettings/>', __dirname + '/src/settings_tab_navigation_tab7_user_settings.html'],
-                  
+                  ['<AppSettingsTabNavigationTab7/>', __dirname + '/src/settings_tab_navigation_tab7.html'],
+                  ['<AppTimezones/>', __dirname + '/src/settings_tab_navigation_tab1_timezones.html'],
+                  ['<AppTimezones/>', __dirname + '/src/settings_tab_navigation_tab1_timezones.html'],
+
                   ['<AppProfileInfo/>', __dirname + '/src/profile_info.html'], /*Profile tag in common body*/
                   ['<AppProfileTop/>', __dirname + '/src/profile_top.html'],   //Profile tag in common body
                   ['<AppWindowInfo/>', __dirname + '/src/window_info.html'],
