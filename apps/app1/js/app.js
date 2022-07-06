@@ -738,68 +738,47 @@ async function settings_translate(first=true) {
                         if (json.data[i].object=='APP_OBJECT'){
                             if (json.data[i].object_name=='APP_DESCRIPTION')
                                 document.getElementById(json.data[i].object_name.toLowerCase()).innerHTML = json.data[i].text;
-                            if (json.data[i].object_name=='SETTING_NAV_REGIONAL')
-                                document.getElementById('tab_1_nav_label_regional').innerHTML = json.data[i].text;
-                            if (json.data[i].object_name=='SETTING_NAV_GPS')
-                                document.getElementById('tab_2_nav_label_gps').innerHTML = json.data[i].text;
-                            if (json.data[i].object_name=='SETTING_NAV_DESIGN')
-                                document.getElementById('tab_3_nav_label_design').innerHTML = json.data[i].text;
-                            if (json.data[i].object_name=='SETTING_NAV_IMAGE')
-                                document.getElementById('tab_4_nav_label_image').innerHTML = json.data[i].text;
-                            if (json.data[i].object_name=='SETTING_NAV_TEXT')
-                                document.getElementById('tab_5_nav_label_text').innerHTML = json.data[i].text;
-                            if (json.data[i].object_name=='SETTING_NAV_PRAYER')
-                                document.getElementById('tab_6_nav_label_prayer').innerHTML = json.data[i].text;
-                            if (json.data[i].object_name=='SETTING_NAV_USER')
-                                document.getElementById('tab_7_nav_label_user').innerHTML = json.data[i].text;
                         }
                         if (json.data[i].object=='APP_OBJECT_ITEM'){
-            
-                            //alt text
-                            if (json.data[i].object_name=='SETTING_NAV_IMAGE' &&
-                                (json.data[i].object_item_name=='SETTING_REPORTHEADER_IMG' ||
-                                json.data[i].object_item_name=='SETTING_REPORTFOOTER_IMG'))
-                                document.getElementById(json.data[i].object_item_name.toLowerCase()).alt = json.data[i].text;
-                            else 
-                                //placeholder text
-                                if (json.data[i].object_name=='DIALOGUE' &&
-                                    (json.data[i].object_item_name=='LOGIN_USERNAME' ||
-                                    json.data[i].object_item_name=='LOGIN_PASSWORD' ||
-                                    json.data[i].object_item_name=='SIGNUP_USERNAME' ||
-                                    json.data[i].object_item_name=='SIGNUP_EMAIL'||
-                                    json.data[i].object_item_name=='SIGNUP_PASSWORD'||
-                                    json.data[i].object_item_name=='SIGNUP_PASSWORD_CONFIRM'||
-                                    json.data[i].object_item_name=='SIGNUP_PASSWORD_REMINDER'))
-                                    document.getElementById(json.data[i].object_item_name.toLowerCase()).placeholder = json.data[i].text;
-                                else
-                                    if (json.data[i].object_item_name=='LOGIN_CONTINUE_WITH')
-                                        document.getElementById('login_btn_facebook').innerHTML = json.data[i].text + ' ' + window.global_app_user_provider2_name;
+                            //placeholder text
+                            if (json.data[i].object_name=='DIALOGUE' &&
+                                (json.data[i].object_item_name=='LOGIN_USERNAME' ||
+                                json.data[i].object_item_name=='LOGIN_PASSWORD' ||
+                                json.data[i].object_item_name=='SIGNUP_USERNAME' ||
+                                json.data[i].object_item_name=='SIGNUP_EMAIL'||
+                                json.data[i].object_item_name=='SIGNUP_PASSWORD'||
+                                json.data[i].object_item_name=='SIGNUP_PASSWORD_CONFIRM'||
+                                json.data[i].object_item_name=='SIGNUP_PASSWORD_REMINDER'))
+                                document.getElementById(json.data[i].object_item_name.toLowerCase()).placeholder = json.data[i].text;
+                            else
+                                if (json.data[i].object_item_name=='LOGIN_CONTINUE_WITH')
+                                    document.getElementById('login_btn_facebook').innerHTML = json.data[i].text + ' ' + window.global_app_user_provider2_name;
+                                else{
+                                    if (json.data[i].object=='APP_OBJECT_ITEM' && json.data[i].object_name=='REPORT')
+                                        window.global_first_language[json.data[i].object_item_name.toLowerCase()] = json.data[i].text;
                                     else{
-                                        if (json.data[i].object=='APP_OBJECT_ITEM' && json.data[i].object_name=='REPORT')
-                                            window.global_first_language[json.data[i].object_item_name.toLowerCase()] = json.data[i].text;
+                                        //Regional
+                                        if (json.data[i].object=='APP_OBJECT_ITEM' && json.data[i].object_name=='SETTING_NAV_REGIONAL' && 
+                                            json.data[i].object_item_name=='SETTING_LABEL_REPORT_TIMEZONE')
+                                            window.global_first_language.timezone_text = json.data[i].text;
+                                        //GPS
+                                        if (json.data[i].object=='APP_OBJECT_ITEM' && json.data[i].object_name=='SETTING_NAV_GPS' && 
+                                            json.data[i].object_item_name=='SETTING_LABEL_LAT')
+                                            window.global_first_language.gps_lat_text = json.data[i].text;
+                                        if (json.data[i].object=='APP_OBJECT_ITEM' && json.data[i].object_name=='SETTING_NAV_GPS' && 
+                                            json.data[i].object_item_name=='SETTING_LABEL_LONG')
+                                            window.global_first_language.gps_long_text = json.data[i].text;
                                         else{
-                                            //Regional
-                                            if (json.data[i].object=='APP_OBJECT_ITEM' && json.data[i].object_name=='SETTING_NAV_REGIONAL' && 
-                                                json.data[i].object_item_name=='SETTING_LABEL_REPORT_TIMEZONE')
-                                                window.global_first_language.timezone_text = json.data[i].text;
-                                            //GPS
-                                            if (json.data[i].object=='APP_OBJECT_ITEM' && json.data[i].object_name=='SETTING_NAV_GPS' && 
-                                                json.data[i].object_item_name=='SETTING_LABEL_LAT')
-                                                window.global_first_language.gps_lat_text = json.data[i].text;
-                                            if (json.data[i].object=='APP_OBJECT_ITEM' && json.data[i].object_name=='SETTING_NAV_GPS' && 
-                                                json.data[i].object_item_name=='SETTING_LABEL_LONG')
-                                                window.global_first_language.gps_long_text = json.data[i].text;
-                                            else{
-                                                //set text on the rest objects in innerHTML
-                                                try{
-                                                    document.getElementById(json.data[i].object_item_name.toLowerCase()).innerHTML = json.data[i].text;
-                                                }
-                                                catch (err){
-                                                    console.log(json.data[i].object_item_name.toLowerCase());
-                                                }
-                                            }								
-                                        }
+                                            //set text on the rest objects in innerHTML
+                                            try{
+                                                document.getElementById(json.data[i].object_item_name.toLowerCase()).innerHTML = json.data[i].text;
+                                            }
+                                            catch (err){
+                                                console.log(json.data[i].object_item_name.toLowerCase());
+                                            }
+                                        }								
                                     }
+                                }
                         }
                         if (json.data[i].object=='APP_OBJECT_ITEM_SUBITEM'){
                             if (json.data[i].object_name=='TOOLBAR')
@@ -1167,14 +1146,14 @@ function openTab(tab_selected) {
     let i;
     for (i = 1; i < 8; i++) {
         //hide all tab content
-        document.getElementById("tab" + i).style.display = "none";
+        document.getElementById("tab" + i).style.display = 'none';
         //remove mark for all tabs
-        document.getElementById("tab" + i + "_nav").className = document.getElementById("tab" + i + "_nav").className.replace("tab_nav_selected", "");
+        document.getElementById("tab_nav_" + i).className = '';
     }
     //show active tab content
-    document.getElementById(tab_selected).style.display = "block";
+    document.getElementById('tab' + tab_selected).style.display = 'block';
     //mark active tab
-    document.getElementById(tab_selected + "_nav").classList.add("tab_nav_selected");
+    document.getElementById("tab_nav_" + tab_selected).classList.add("tab_nav_selected");
 }
 
 
@@ -1662,6 +1641,12 @@ async function update_ui(option, item_id=null) {
                     settings.reportheader_aright.classList.remove(settings.button_active_class);
                     document.getElementById(item_id).classList.add(settings.button_active_class);
                 }
+                let header_align = get_align(document.getElementById('setting_input_reporttitle_aleft').classList.contains('setting_button_active'),
+                                                 document.getElementById('setting_input_reporttitle_acenter').classList.contains('setting_button_active'),
+                                                 document.getElementById('setting_input_reporttitle_aright').classList.contains('setting_button_active'));
+                document.getElementById('setting_input_reporttitle1').style.textAlign= header_align;
+                document.getElementById('setting_input_reporttitle2').style.textAlign= header_align;
+                document.getElementById('setting_input_reporttitle3').style.textAlign= header_align;
                 break;
             }
         //16=Texts, Report footer align
@@ -1677,6 +1662,12 @@ async function update_ui(option, item_id=null) {
                     settings.reportfooter_aright.classList.remove(settings.button_active_class);
                     document.getElementById(item_id).classList.add(settings.button_active_class);
                 }
+                let footer_align = get_align(document.getElementById('setting_input_reportfooter_aleft').classList.contains('setting_button_active'),
+                                                 document.getElementById('setting_input_reportfooter_acenter').classList.contains('setting_button_active'),
+                                                 document.getElementById('setting_input_reportfooter_aright').classList.contains('setting_button_active'));
+                document.getElementById('setting_input_reportfooter1').style.textAlign= footer_align;
+                document.getElementById('setting_input_reportfooter2').style.textAlign= footer_align;
+                document.getElementById('setting_input_reportfooter3').style.textAlign= footer_align;
                 break;
             }
         //Prayer, method
@@ -1723,7 +1714,6 @@ async function user_update_app(){
             //update_settings_icon(image_format(result.avatar));
             update_settings_icon(atob(result.avatar));
             document.getElementById('setting_data_username_logged_in').innerHTML = result.username;
-            document.getElementById('setting_bio_logged_in').innerHTML = result.bio;
         }
     });
 }
@@ -1746,14 +1736,7 @@ async function user_login_app(){
                     username.value = '';
                     password.value = '';
                     document.getElementById('user_logged_in').style.display = "block";
-                    //set avatar or empty
-                    if (result.avatar == null || result.avatar == '') {
-                        recreate_img(document.getElementById('setting_avatar_logged_in'));
-                        result.avatar = '';
-                    } else
-                        document.getElementById('setting_avatar_logged_in').src = image_format(result.avatar);
                     update_settings_icon(image_format(result.avatar));
-                    document.getElementById('setting_bio_logged_in').innerHTML = get_null_or_value(result.bio);
                     document.getElementById('setting_data_username_logged_in').innerHTML = result.username;
                     
                     document.getElementById('popup_menu_login').style.display = 'none';
@@ -1762,7 +1745,7 @@ async function user_login_app(){
                     document.getElementById('dialogue_login').style.visibility = 'hidden';
                     document.getElementById('dialogue_signup').style.visibility = 'hidden';
                     //Show user tab
-                    document.getElementById('tab7_nav').style.display = 'inline-block';
+                    document.getElementById('tab_nav_7').style.display = 'inline-block';
                     //Hide settings
                     document.getElementById('settings').style.visibility = 'hidden';
                     //Hide profile
@@ -1834,8 +1817,6 @@ function user_logoff_app() {
         document.getElementById('user_settings').style.display = "none";
         //clear logged in info
         document.getElementById('setting_data_username_logged_in').innerHTML = '';
-        recreate_img(document.getElementById('setting_avatar_logged_in'));
-        document.getElementById('setting_bio_logged_in').innerHTML = '';
         document.getElementById('setting_data_userid_logged_in').innerHTML = '';
         profile_clear_app();
         //empty user settings
@@ -1865,18 +1846,16 @@ async function updateProviderUser_app(provider_no, profile_id, profile_first_nam
                     null;
                 else{
                     document.getElementById('user_logged_in').style.display = "block";
-                    document.getElementById('setting_avatar_logged_in').src = result.avatar;
         
                     update_settings_icon(result.avatar);
-        
-                    document.getElementById('setting_bio_logged_in').innerHTML = get_null_or_value(result.bio);
+
                     document.getElementById('setting_data_username_logged_in').innerHTML = result.first_name + ' ' + result.last_name;
         
                     document.getElementById('popup_menu_login').style.display = 'none';
                     document.getElementById('popup_menu_signup').style.display = 'none';
                     document.getElementById('popup_menu_logoff').style.display = 'block';
                     //Show user tab
-                    document.getElementById('tab7_nav').style.display = 'inline-block';
+                    document.getElementById('tab_nav_7').style.display = 'inline-block';
                     document.getElementById('prayertable_day').innerHTML='';
                     document.getElementById('prayertable_month').innerHTML='';
                     document.getElementById('prayertable_year').innerHTML='';
@@ -2673,9 +2652,9 @@ async function set_default_settings() {
     document.getElementById('popup_menu_signup').style.display = 'block';
     document.getElementById('popup_menu_logoff').style.display = 'none';
     //Hide user tab
-    document.getElementById('tab7_nav').style.display = 'none';
+    document.getElementById('tab_nav_7').style.display = 'none';
     //open regional tab in settings
-    openTab('tab1');
+    openTab('1');
 }
 
 function set_settings_select() {
@@ -2743,21 +2722,16 @@ function set_settings_select() {
 
 function update_settings_icon(url = '', logoff = false) {
     let img_account_image_url = document.getElementById('user_account_image_url');
-    let img_account_image_url2  = document.getElementById('setting_avatar_logged_in');
     let default_avatar = document.getElementById('user_account_default_avatar');
     if (logoff == true) {
         //hide image url and show the icon
         img_account_image_url.style.display = 'none';
         img_account_image_url.src = '';
-        img_account_image_url2.style.display = 'none';
-        img_account_image_url2.src = '';
         default_avatar.style.display = 'inline-block';
     } else {
         //show image url in user setting and hide the icon
         img_account_image_url.style.display = 'inline-block';
         img_account_image_url.src = url;
-        img_account_image_url2.style.display = 'inline-block';
-        img_account_image_url2.src = url;
         default_avatar.style.display = 'none';
     }
     return null;
@@ -2981,13 +2955,13 @@ function setEvents() {
 	document.getElementById('toolbar_btn_right').addEventListener('click', function() { update_timetable_report(getTimetable_type(), 'toolbar_navigation_btn_right', getReportSettings(), get_lang_code()) }, false);
 	document.getElementById('toolbar_btn_about').addEventListener('click', function() { show_dialogue('INFO') }, false);
 
-    document.getElementById('tab_1_nav_btn_regional').addEventListener('click', function() { openTab('tab1') }, false);
-    document.getElementById('tab_2_nav_btn_gps').addEventListener('click', function() { openTab('tab2') }, false);
-    document.getElementById('tab_3_nav_btn_btn_design').addEventListener('click', function() { openTab('tab3') }, false);
-    document.getElementById('tab_4_nav_btn_btn_image').addEventListener('click', function() { openTab('tab4') }, false);
-    document.getElementById('tab_5_nav_btn_btn_text').addEventListener('click', function() { openTab('tab5') }, false);
-    document.getElementById('tab_6_nav_btn_btn_prayer').addEventListener('click', function() { openTab('tab6') }, false);
-    document.getElementById('tab_7_nav_btn_btn_user').addEventListener('click', function() { openTab('tab7') }, false);
+    document.getElementById('tab_nav_btn_1').addEventListener('click', function() { openTab('1') }, false);
+    document.getElementById('tab_nav_btn_2').addEventListener('click', function() { openTab('2') }, false);
+    document.getElementById('tab_nav_btn_3').addEventListener('click', function() { openTab('3') }, false);
+    document.getElementById('tab_nav_btn_4').addEventListener('click', function() { openTab('4') }, false);
+    document.getElementById('tab_nav_btn_5').addEventListener('click', function() { openTab('5') }, false);
+    document.getElementById('tab_nav_btn_6').addEventListener('click', function() { openTab('6') }, false);
+    document.getElementById('tab_nav_btn_7').addEventListener('click', function() { openTab('7') }, false);
     
     document.getElementById('setting_btn_reportheader_img').addEventListener('click', function() { document.getElementById('setting_input_reportheader_img').click() }, false);
     document.getElementById('setting_input_reportheader_clear').addEventListener('click', function() { update_ui(12) }, false);
@@ -3535,6 +3509,10 @@ async function init_app() {
     //settings tab 4
     document.getElementById('setting_input_reportheader_clear').innerHTML = window.global_button_default_icon_remove;
     document.getElementById('setting_input_reportfooter_clear').innerHTML = window.global_button_default_icon_remove;
+
+    document.getElementById('setting_btn_reportheader_img').innerHTML = window.global_button_default_icon_search;
+    document.getElementById('setting_btn_reportfooter_img').innerHTML = window.global_button_default_icon_search;
+    
     //settings tab 5
     document.getElementById('setting_input_reporttitle_aleft').innerHTML =  window.global_button_default_icon_align_left;
     document.getElementById('setting_input_reporttitle_acenter').innerHTML = window.global_button_default_icon_align_center
@@ -3562,13 +3540,13 @@ async function init_app() {
     document.getElementById('setting_btn_user_add').innerHTML = window.global_button_default_icon_add;
     document.getElementById('setting_btn_user_delete').innerHTML = window.global_button_default_icon_delete;
     //tab navigation
-    document.getElementById('tab_1_nav_btn_regional').innerHTML = window.global_button_default_icon_tab_regional + '<div id="tab_1_nav_label_regional">Regional</div>';
-    document.getElementById('tab_2_nav_btn_gps').innerHTML = window.global_button_default_icon_tab_gps + '<div id="tab_2_nav_label_gps">GPS</div>';
-    document.getElementById('tab_3_nav_btn_btn_design').innerHTML = window.global_button_default_icon_tab_design + '<div id="tab_3_nav_label_design">Design</div>';
-    document.getElementById('tab_4_nav_btn_btn_image').innerHTML = window.global_button_default_icon_tab_image + '<div id="tab_4_nav_label_image">Image</div>';
-    document.getElementById('tab_5_nav_btn_btn_text').innerHTML = window.global_button_default_icon_tab_text + '<div id="tab_5_nav_label_text">Text</div>';
-    document.getElementById('tab_6_nav_btn_btn_prayer').innerHTML = window.global_button_default_icon_tab_prayer + '<div id="tab_6_nav_label_prayer">Prayer</div>';
-    document.getElementById('tab_7_nav_btn_btn_user').innerHTML = window.global_button_default_icon_tab_user + '<div id="tab_7_nav_label_user">User</div>';
+    document.getElementById('tab_nav_btn_1').innerHTML = window.global_button_default_icon_tab_regional;
+    document.getElementById('tab_nav_btn_2').innerHTML = window.global_button_default_icon_tab_gps;
+    document.getElementById('tab_nav_btn_3').innerHTML = window.global_button_default_icon_tab_design;
+    document.getElementById('tab_nav_btn_4').innerHTML = window.global_button_default_icon_tab_image;
+    document.getElementById('tab_nav_btn_5').innerHTML = window.global_button_default_icon_tab_text;
+    document.getElementById('tab_nav_btn_6').innerHTML = window.global_button_default_icon_tab_prayer;
+    document.getElementById('tab_nav_btn_7').innerHTML = window.global_button_default_icon_tab_user;
     //toolbar bottom
     document.getElementById('toolbar_btn_print').innerHTML = window.global_button_default_icon_print + '<div id="toolbar_btn_print_label">Print</div>';
     document.getElementById('toolbar_btn_day').innerHTML = window.global_button_default_icon_day + '<div id="toolbar_btn_day_label">Day</div>';
