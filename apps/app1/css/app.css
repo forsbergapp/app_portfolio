@@ -40,16 +40,6 @@
 #toolbar_bottom.font_arabic_nastaliq button{
 	line-height:1.5 !important;
 }
-#settings.font_arabic_nastaliq #tab_1_nav_label_regional,
-#settings.font_arabic_nastaliq #tab_2_nav_label_gps,
-#settings.font_arabic_nastaliq #tab_3_nav_label_design,
-#settings.font_arabic_nastaliq #tab_4_nav_label_image,
-#settings.font_arabic_nastaliq #tab_5_nav_label_text,
-#settings.font_arabic_nastaliq #tab_6_nav_label_prayer,
-#settings.font_arabic_nastaliq #tab_7_nav_label_user
-{
-	font-size:0.7em;
-}
 #settings.font_arabic_nastaliq input{
 	height:35px;
 }
@@ -513,12 +503,15 @@ a:active {
 /*SETTINGS TAB NAVIGATION */
 #tab_navigation{
 	height:50px;
+	margin: 0px;
+    padding: 0px;
+	text-align: center;
 }
 #tab_navigation .tab_nav{
 	display:inline-block;
 }
 #tab_navigation button {
-	font-size: 11px;
+	font-size: 30px;
 	padding:3px;
 	border:0px;
 	width:50px;
@@ -527,14 +520,20 @@ a:active {
 #tab_navigation button:active{
 	cursor: pointer;
 }
-/*Show tab1 at startup*/
-.tab_navigation_content li#tab1 {
+#tab_navigation ul{
 	display: block;
 }
-.tab_navigation_content li {
-	display: none;
+#tab_navigation li{
+	display: inline-block;
+	list-style: none;
 }
-
+/*Show tab1 at startup*/
+#tab_navigation #tab1 {
+	display: block;
+}
+.tab_content {
+	display:inline-block;
+}
 /*SETTINGS, common*/
 /*checkbox use switch ui*/
 
@@ -542,10 +541,6 @@ a:active {
 #settings input[type=checkbox]{
 width: 25px;
 height: 25px;
-}
-#settings ul {
-	list-style: none;
-	padding-left:10px;
 }
 #settings label {
 	margin: 0 0 3px 0;
@@ -584,137 +579,40 @@ height: 25px;
 	font-size: 14px;
 	height: 21px;
 }
-/* Settings for Label and input horizontal layout*/
-#settings .setting_horizontal {
-	display: table;
-	width: 100%;
+#settings .setting_horizontal_row{
+	width:100%;
+	font-size:0;
 }
-#settings .setting_horizontal .setting_horizontal_row {
-	display: table-row;
+#settings .setting_horizontal_col:nth-child(1),
+#settings .setting_horizontal_col:nth-child(4){
+	width:5%;
+	display: inline-block;
 }
-#settings .setting_horizontal .setting_horizontal_col {
-	display: table-cell;
-	vertical-align: middle;
-	padding-top:2px;
-}
-/*Set column sizes*/
-/*Label*/
-#settings .setting_horizontal .setting_horizontal_col:first-child {
-	width:20%;
-	min-width:120px !important;
+#settings .setting_horizontal_col:nth-child(2),
+#settings .setting_horizontal_col:nth-child(3){
+	width:45%;
+	display: inline-block;
 	text-align:left;
+	font-size:16px;
 }
-/*Value*/
-#settings .setting_horizontal .setting_horizontal_col:last-child {
-	width:60%;
-	text-align:left;
+#settings .setting_horizontal_col:nth-child(3) select,
+#settings .setting_horizontal_col:nth-child(3) input{
+	min-width: 100%;
 }
-
-/* SETTINGS DESIGN*/
-#tab3 .setting_horizontal_row:first-child{
-	height:185px;
-	display:flex;
-	margin-right: -250px;
-	transform: scale(0.8);
-}
-#tab3 .setting_horizontal_row:first-child .setting_horizontal_col{
-	display:inline-block;
-	text-align: center;
-	width:140px;
-}
-#setting_label_report_theme_day,
-#setting_label_report_theme_month,
-#setting_label_report_theme_year{
-	margin-left:-15px !important;
-	text-align:left;
-}
-
-/* THEME SLIDER*/
-.slider {
-  position: absolute;
-  width: 96px;
-  height: 136px;
-  box-shadow: 3px 3px 10px rgba(0,0,0,.2);
-}
-.slider .slider_wrapper {
-  overflow: hidden;
-  position: relative;
-  width: 96px;
-  height: 136px;
-  z-index: 1;
-}
-.slider .slides {
-  display: flex;
-  position: relative;
-  top: 0;
-  left: -96px;
-}
-.slider .slide {
-  width: 96px;
-  height: 136px;
-  cursor: pointer;
-}
-.slider_control {
-  position: absolute;
-  top: 50%;
-  width: 50px;
-  height: 50px;
-  background: #fff;
-  border-radius: 50px;
-  margin-top: -20px;
-  box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.3);
-  z-index: 2;
-}
-.slider_prev,
-.slider_next {
-  background-size: 22px;
-  background-position: center;
-  background-repeat: no-repeat;
-  cursor: pointer;
-}
-.slider_prev {
-  left: -10px;
-}
-.slider_prev i{
-  font-size:30px;
-  margin-top:25%;
-}
-.slider_next {
-  right: -10px;
-}
-.slider_next i{
-  font-size:30px;
-  margin-top:25%;
-}
-#slider_theme_day_id,
-#slider_theme_month_id,
-#slider_theme_year_id{
-	bottom: -140px;
-	position:relative;
-	margin-left:-80px;
-}
-#setting_themes_day_slider,
-#setting_themes_month_slider,
-#setting_themes_year_slider{
-	margin-left:-20px;
-}
-#setting_themes_day_slider img {
-	width:96px;
-	height:136px;
-}
-#setting_themes_month_slider img {
-	width:96px;
-	height:136px;
-}
-#setting_themes_year_slider img {
-	width:96px;
-	height:136px;
-}
-
 /* SETTINGS GPS*/
 #mapid {
 	height: 250px;
-	width: 98%;
+	margin-left: 5%;
+	margin-right: 5%;
+	margin-bottom: 10px;
+}
+#settings #tab2 .setting_horizontal_col:nth-child(1),
+#settings #tab2 .setting_horizontal_col:nth-child(4){
+	width:5%;
+}
+#settings #tab2 .setting_horizontal_col:nth-child(2),
+#settings #tab2 .setting_horizontal_col:nth-child(3){
+	width:45%;
 }
 .mapboxgl-popup{
 	max-width:unset !important;
@@ -744,42 +642,173 @@ height: 25px;
 	height: 41px;
 	cursor: pointer;
 }
+/* SETTINGS DESIGN*/
+#settings #tab3 .setting_horizontal_row:first-child .setting_horizontal_col:nth-child(1),
+#settings #tab3 .setting_horizontal_row:first-child .setting_horizontal_col:nth-child(2),
+#settings #tab3 .setting_horizontal_row:first-child .setting_horizontal_col:nth-child(3){
+	width: 130px;
+	font-size: 16px;
+}
+#settings #tab3 .setting_horizontal_row:first-child .setting_horizontal_col:nth-child(4){
+	width:0%;
+}
+#settings #tab3 .setting_horizontal_row:first-child{
+	margin-bottom: 10px;
+}
+#settings #tab3 .setting_horizontal_row:first-child .setting_horizontal_col{
+	text-align: center !important;
+}
 
+
+
+/* THEME SLIDER*/
+.slider {
+	display: inline-block;
+  	width: 96px;
+  	height: 136px;
+  	box-shadow: 3px 3px 10px rgba(0,0,0,.2);
+}
+.slider .slider_wrapper {
+  	overflow: hidden;
+  	position: relative;
+  	width: 96px;
+  	height: 136px;
+  	z-index: 1;
+}
+.slider .slides {
+  	display: flex;
+  	position: relative;
+  	top: 0;
+  	left: -96px;
+}
+.slider .slide {
+  	width: 96px;
+  	height: 136px;
+  	cursor: pointer;
+}
+.slider_control {
+  	top: 50%;
+  	width: 50px;
+  	height: 50px;
+  	background: #fff;
+  	border-radius: 50px;
+  	margin-top: -20px;
+  	box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.3);
+  	z-index: 2;
+}
+.slider_prev,
+.slider_next {
+  	background-size: 22px;
+  	background-position: center;
+  	background-repeat: no-repeat;
+  	cursor: pointer;
+}
+#slider_prev_day{
+	margin-left: -60px;
+}
+#slider_next_day{
+	margin-left: 10px;
+}
+#slider_prev_month{
+	margin-left: -60px;
+}
+#slider_next_month{
+	margin-left: 10px;
+}
+#slider_prev_year{
+	margin-left: -60px;
+}
+#slider_next_year{
+	margin-left: 10px;
+}
+.slider_prev,
+.slider_next {
+    margin-top: -250px;
+    position: fixed;
+	text-align: center;
+    display: inline-block;
+}
+.slider_prev i{
+  	font-size:30px;
+  	margin-top:25%;
+}
+.slider_next i{
+  	font-size:30px;
+  	margin-top:25%;
+}
+#setting_themes_day_slider img {
+	width:96px;
+	height:136px;
+}
+#setting_themes_month_slider img {
+	width:96px;
+	height:136px;
+}
+#setting_themes_year_slider img {
+	width:96px;
+	height:136px;
+}
 /*SETTINGS IMAGE*/
+#settings #tab4 .setting_horizontal_row .setting_horizontal_col:nth-child(1),
+#settings #tab4 .setting_horizontal_row .setting_horizontal_col:nth-child(3){
+	width:5%;
+}
+#settings #tab4 .setting_horizontal_row .setting_horizontal_col:nth-child(2){
+	width:90%;
+}
+.setting_paper_preview{
+	width: 84mm;
+    height: 118.8mm;
+	margin: 0 auto;
+	background-color: white;
+}
+#setting_paper_preview_header_image{
+    margin-bottom: 69mm;
+}
+#setting_paper_preview_header_image div{
+	min-height: 69px;
+}
+.setting_paper_preview_header,
+.setting_paper_preview_footer{
+	text-align: center;
+}
 #setting_btn_reportheader_img,
 #setting_btn_reportfooter_img{
-	width:150px !important;
+	width: 100px !important;
 }
-#setting_input_reportheader_clear,
-#setting_input_reportfooter_clear{
-	float:right;
+#setting_reportfooter_img{
+	margin-top: 4px;
 }
 #setting_input_reportheader_img,
 #setting_input_reportfooter_img{
 	display:none;
 }
-#setting_reportheader_img{
-	width: 300px;
-	height: 80px;
-	float: left !important;
-	border: 0.5px solid #a49775;
-}
-#setting_reportfooter_img{
-	width: 300px;
-	height: 80px;
-	float: left !important;
-	border: 0.5px solid #a49775;
+#setting_reportheader_img, #setting_reportfooter_img{
+	width: 100%;
+	min-width: 100%;
 }
 /*SETTINGS Text*/
-#setting_input_reporttitle1,
-#setting_input_reporttitle2,
-#setting_input_reporttitle3,
-#setting_input_reportfooter1,
-#setting_input_reportfooter2,
-#setting_input_reportfooter3{
-	width:200px !important;
-	min-width:200px;
-	margin-right: 2px !important;
+#settings #tab5 .setting_horizontal_row .setting_horizontal_col:nth-child(1),
+#settings #tab5 .setting_horizontal_row .setting_horizontal_col:nth-child(3){
+	width:5%;
+}
+#settings #tab5 .setting_horizontal_row .setting_horizontal_col:nth-child(2){
+	width:90%;
+}
+#settings #tab5 .setting_report_title{
+	min-width: 99%;
+    background-color: white !important;
+    border: 0.5px solid #a49775;
+	color: #333;
+	font-size: 9px;
+	margin: -2px;
+	text-align: center;
+}
+#settings #tab5 #setting_paper_preview_header_text{
+	margin-bottom: 66mm;
+}
+#settings #tab5 #setting_input_reporttitle3{
+	margin-bottom: 4px;
 }
 /* Settings for alignment buttons*/
 #settings .setting_button {
@@ -793,14 +822,15 @@ height: 25px;
 	display:inline-block;
 }
 /* SETTINGS USER*/
-#user_logged_in .setting_horizontal_col:nth-child(1){
-	width:75px !important;
-	min-width:unset !important;
+#settings #tab7 .setting_horizontal_row .setting_horizontal_col:nth-child(1),
+#settings #tab7 .setting_horizontal_row .setting_horizontal_col:nth-child(4){
+	width:10%;
 }
-#user_logged_in .setting_horizontal_col:nth-child(2){
-	width:325px !important;
-	text-align:left;
+#settings #tab7 .setting_horizontal_row .setting_horizontal_col:nth-child(2),
+#settings #tab7 .setting_horizontal_row .setting_horizontal_col:nth-child(3){
+	width:40%;
 }
+
 #user_logged_in{
 	display:none;
 }
@@ -891,8 +921,6 @@ height: 25px;
 		margin: 0 auto;
 	}
 	#tab_navigation button {
-		font-size: 16px;
-		padding:3px;
 		border:0px;
 		width:75px;
 	}
@@ -911,59 +939,18 @@ height: 25px;
 		max-width:90%;
 		width:inherit;
 	}
-	#settings .setting_horizontal .setting_horizontal_col:first-child {
-		padding-left:10px;
-		min-width:225px !important;
-	}
-	#slider_theme_day_id,
-	#slider_theme_month_id,
-	#slider_theme_year_id{
-		margin-left:-15px;
-	}
-	#setting_label_report_theme_day,
-	#setting_label_report_theme_month,
-	#setting_label_report_theme_year{
-		margin-left:-15px !important;
-		text-align:unset;
-	}	
-	#setting_themes_day_slider,
-	#setting_themes_month_slider,
-	#setting_themes_year_slider{
-		margin-left:15px;
-	}
-	#setting_reportheader_img{
-		width: 460px;
-		height: 115px;
-	}
-	#setting_reportfooter_img{
-		width: 460px;
-		height: 115px;
-	}
-	#setting_input_reporttitle1,
-	#setting_input_reporttitle2,
-	#setting_input_reporttitle3,
-	#setting_input_reportfooter1,
-	#setting_input_reportfooter2,
-	#setting_input_reportfooter3{
-		width:320px !important;
-	}
 	#settings ul {
 		padding-left: 0px;
-	}
-	#tab3 .setting_horizontal_row:first-child .setting_horizontal_col{
-		min-width:inherit !important;
-	}
-	#tab3 .setting_horizontal_row:first-child {
-		height:200px;
-		transform: scale(1.1);
-		margin: 0 auto;
-		display: table-caption !important;
 	}
 	#icons {
 		width: auto;
 	}
 	#app_logo {
 		display: block;
+	}
+	.slider_prev,
+	.slider_next {
+		margin-top: -165px;
 	}
 	#profile_user_settings_title_row div:nth-child(1),
 	.profile_user_settings_row div:nth-child(1){
@@ -1007,7 +994,7 @@ body.app_theme1,
 .app_theme1 #toolbar_top,
 .app_theme1 #settings,
 .app_theme1 #tab_navigation,
-.app_theme1 #tab_navigation .tab_nav button,
+.app_theme1 #tab_navigation li button,
 .app_theme1 .tab_navigation_content,
 .app_theme1 #toolbar_bottom
 {
@@ -1179,7 +1166,7 @@ body.app_theme2,
 .app_theme2 #toolbar_top,
 .app_theme2 #settings,
 .app_theme2 #tab_navigation,
-.app_theme2 #tab_navigation .tab_nav button,
+.app_theme2 #tab_navigation li button,
 .app_theme2 .tab_navigation_content,
 .app_theme2 #toolbar_bottom
 {
@@ -1353,7 +1340,7 @@ body.app_theme3,
 .app_theme3 #toolbar_top,
 .app_theme3 #settings,
 .app_theme3 #tab_navigation,
-.app_theme3 #tab_navigation .tab_nav button,
+.app_theme3 #tab_navigation li button,
 .app_theme3 .tab_navigation_content,
 .app_theme3 #toolbar_bottom
 {

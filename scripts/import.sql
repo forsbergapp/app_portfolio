@@ -95,12 +95,6 @@ INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name
 INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (1,'SETTING_NAV_GPS','SETTING_LABEL_PLACE');
 INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (1,'SETTING_NAV_GPS','SETTING_LABEL_POPULAR_PLACE');
 INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (1,'SETTING_NAV_GPS','SETTING_SELECT_POPULAR_PLACE');
-INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (1,'SETTING_NAV_IMAGE','SETTING_BTN_REPORTFOOTER_IMG');
-INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (1,'SETTING_NAV_IMAGE','SETTING_BTN_REPORTHEADER_IMG');
-INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (1,'SETTING_NAV_IMAGE','SETTING_LABEL_REPORTFOOTER_IMG');
-INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (1,'SETTING_NAV_IMAGE','SETTING_LABEL_REPORTHEADER_IMG');
-INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (1,'SETTING_NAV_IMAGE','SETTING_REPORTFOOTER_IMG');
-INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (1,'SETTING_NAV_IMAGE','SETTING_REPORTHEADER_IMG');
 INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (1,'SETTING_NAV_PRAYER','SETTING_LABEL_ASR');
 INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (1,'SETTING_NAV_PRAYER','SETTING_LABEL_HIGHLATITUDE');
 INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (1,'SETTING_NAV_PRAYER','SETTING_LABEL_HIJRI_ADJUSTMENT');
@@ -140,8 +134,6 @@ INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name
 INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (1,'SETTING_NAV_REGIONAL','SETTING_SELECT_REPORT_COLTITLE');
 INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (1,'SETTING_NAV_REGIONAL','SETTING_SELECT_REPORT_DIRECTION');
 INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (1,'SETTING_NAV_REGIONAL','SETTING_SELECT_REPORT_LOCALE_SECOND');
-INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (1,'SETTING_NAV_TEXT','SETTING_LABEL_REPORTFOOTER_TEXT');
-INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (1,'SETTING_NAV_TEXT','SETTING_LABEL_REPORTHEADER_TEXT');
 INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (1,'SETTING_NAV_USER','SETTING_BTN_LABEL_USER_ADD');
 INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (1,'SETTING_NAV_USER','SETTING_BTN_LABEL_USER_DELETE');
 INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (1,'SETTING_NAV_USER','SETTING_BTN_LABEL_USER_DELETE_ACCOUNT');
