@@ -1,74 +1,100 @@
-<li id='tab2'>
+<div id='tab2' class="tab_content">
     <div id='mapid'></div>
-    <div class='setting_horizontal'>
     <div class='setting_horizontal_row'>
         <div class='setting_horizontal_col'>
-        <label id='setting_label_maptype'>Map type</label>
+        </div>
+        <div class='setting_horizontal_col'>
+            <label id='setting_label_maptype'>Map type</label>
         </div>
         <div class='setting_horizontal_col'>    
-        <select id='setting_select_maptype' >
-        <option value='streets-v11' selected='selected'>streets-v11</option>
-        <option value='outdoors-v11'>outdoors-v11</option>
-        <option value='light-v10'>light-v10</option>
-        <option value='dark-v10'>dark-v10</option>
-        <option value='satellite-v9'>satellite-v9</option>
-        <option value='satellite-streets-v11'>satellite-streets-v11</option>
-        <option value='navigation-preview-day-v4'>navigation-preview-day-v4</option>
-        <option value='navigation-preview-night-v4'>navigation-preview-night-v4</option>
-        <option value='navigation-guidance-day-v4'>navigation-guidance-day-v4</option>
-        <option value='navigation-guidance-night-v4'>navigation-guidance-night-v4</option>
-    </select>
+            <select id='setting_select_maptype' >
+                <option value='streets-v11' selected='selected'>streets-v11</option>
+                <option value='outdoors-v11'>outdoors-v11</option>
+                <option value='light-v10'>light-v10</option>
+                <option value='dark-v10'>dark-v10</option>
+                <option value='satellite-v9'>satellite-v9</option>
+                <option value='satellite-streets-v11'>satellite-streets-v11</option>
+                <option value='navigation-preview-day-v4'>navigation-preview-day-v4</option>
+                <option value='navigation-preview-night-v4'>navigation-preview-night-v4</option>
+                <option value='navigation-guidance-day-v4'>navigation-guidance-day-v4</option>
+                <option value='navigation-guidance-night-v4'>navigation-guidance-night-v4</option>
+            </select>
+        </div>
+        <div class='setting_horizontal_col'>
         </div>
     </div>
     <div class='setting_horizontal_row'>
         <div class='setting_horizontal_col'>
-        <label id='setting_label_country'>Country</label>
+        </div>
+        <div class='setting_horizontal_col'>
+            <label id='setting_label_country'>Country</label>
         </div>
         <div class='setting_horizontal_col'>
             <AppCountries/>
         </div>
+        <div class='setting_horizontal_col'>
+        </div>
     </div>      
     <div class='setting_horizontal_row'>
         <div class='setting_horizontal_col'>
-        <label id='setting_label_city'>City</label>
         </div>
         <div class='setting_horizontal_col'>
-        <select name='city' id='setting_select_city'  >
-            <option value='' id='' label='…' selected='selected'>…</option>
-        </select>
+            <label id='setting_label_city'>City</label>
+        </div>
+        <div class='setting_horizontal_col'>
+            <select name='city' id='setting_select_city'  >
+                <option value='' id='' label='…' selected='selected'>…</option>
+            </select>
+        </div>
+        <div class='setting_horizontal_col'>
         </div>
     </div>  
     <div class='setting_horizontal_row'>
         <div class='setting_horizontal_col'>
-        <label id='setting_label_popular_place'>Popular places</label>
+        </div>
+        <div class='setting_horizontal_col'>
+            <label id='setting_label_popular_place'>Popular places</label>
         </div>
         <div class='setting_horizontal_col'>
             <AppPlaces/>
         </div>
-    </div>
-    <div class='setting_horizontal_row'>
         <div class='setting_horizontal_col'>
-        <label id='setting_label_place'>Place</label>
-        </div>
-        <div class='setting_horizontal_col'>
-        <input type='text' id='setting_input_place' />
         </div>
     </div>
     <div class='setting_horizontal_row'>
         <div class='setting_horizontal_col'>
-        <label id='setting_label_lat'>GPS Latitude</label>
         </div>
         <div class='setting_horizontal_col'>
-        <input type='text' id='setting_input_lat' />
+            <label id='setting_label_place'>Place</label>
+        </div>
+        <div class='setting_horizontal_col'>
+            <input type='text' id='setting_input_place' />
+        </div>
+        <div class='setting_horizontal_col'>
         </div>
     </div>
     <div class='setting_horizontal_row'>
         <div class='setting_horizontal_col'>
-        <label id='setting_label_long'>GPS Longitude</label>
         </div>
         <div class='setting_horizontal_col'>
-        <input type='text' id='setting_input_long' />
+            <label id='setting_label_lat'>GPS Latitude</label>
+        </div>
+        <div class='setting_horizontal_col'>
+            <input type='text' id='setting_input_lat' />
+        </div>
+        <div class='setting_horizontal_col'>
         </div>
     </div>
+    <div class='setting_horizontal_row'>
+        <div class='setting_horizontal_col'>
+        </div>
+        <div class='setting_horizontal_col'>
+            <label id='setting_label_long'>GPS Longitude</label>
+        </div>
+        <div class='setting_horizontal_col'>
+            <input type='text' id='setting_input_long' />
+        </div>
+        <div class='setting_horizontal_col'>
+        </div>
     </div>
-</li>
+</div>
