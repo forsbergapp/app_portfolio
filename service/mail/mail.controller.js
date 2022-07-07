@@ -7,7 +7,7 @@ const { createLogAppSE } = require("../../service/log/log.service");
 function app_log(app_id, app_module_type, request, result, app_user_id,
                  user_language, user_timezone,user_number_system,user_platform,
                  server_remote_addr, server_user_agent, server_http_host,server_http_accept_language,
-                 user_gps_latitude,user_gps_longitude){
+                 client_latitude,client_longitude){
     const logData ={
         app_id : app_id,
         app_module : 'MAIL',
@@ -23,8 +23,8 @@ function app_log(app_id, app_module_type, request, result, app_user_id,
         server_user_agent : server_user_agent,
         server_http_host : server_http_host,
         server_http_accept_language : server_http_accept_language,
-        user_gps_latitude : user_gps_latitude,
-        user_gps_longitude : user_gps_longitude
+        client_latitude : client_latitude,
+        client_longitude : client_longitude
     }
     createLog(logData, (err,results)  => {
         null;
@@ -66,19 +66,19 @@ module.exports = {
                 req.body.app_module = 'MAIL';
                 switch (req.query.emailType){
                     case db_SERVICE_MAIL_TYPE_SIGNUP:{
-                        req.body.app_module_type = 'MAIL_SIGNUP_READ';
+                        req.body.app_module_type = 'SIGNUP_READ';
                         break;
                     }
                     case db_SERVICE_MAIL_TYPE_UNVERIFIED:{
-                        req.body.app_module_type = 'MAIL_UNVERIFIED_READ';
+                        req.body.app_module_type = 'UNVERIFIED_READ';
                         break;
                     }
                     case db_SERVICE_MAIL_TYPE_RESET_PASSWORD:{
-                        req.body.app_module_type = 'MAIL_RESET_PASSWORD_READ';
+                        req.body.app_module_type = 'RESET_PASSWORD_READ';
                         break;
                     }
                     case db_SERVICE_MAIL_TYPE_CHANGE_EMAIL:{
-                        req.body.app_module_type = 'MAIL_CHANGE_EMAIL_READ';
+                        req.body.app_module_type = 'CHANGE_EMAIL_READ';
                         break;
                     }
                 }
@@ -121,8 +121,8 @@ module.exports = {
         data.server_user_agent
         data.server_http_host
         data.server_http_accept_language
-        data.user_gps_latitude
-		data.user_gps_longitude
+        data.client_latitude
+		data.client_longitude
         data.protocol
         data.host
         */ 
@@ -158,8 +158,8 @@ module.exports = {
                         data.server_user_agent,
                         data.server_http_host,
                         data.server_http_accept_language,
-                        data.user_gps_latitude,
-                        data.user_gps_longitude);
+                        data.client_latitude,
+                        data.client_longitude);
                 if (err) {    
                     return callBack(err, result);
                 } else
@@ -211,7 +211,7 @@ module.exports = {
                                                             email_auth_pass: db_SERVICE_MAIL_PASSWORD,
                                                             app_id: app_id,
                                                             app_user_id: app_user_id,
-                                                            app_module_type: 'MAIL_SIGNUP',
+                                                            app_module_type: 'SIGNUP',
                                                             from: db_SERVICE_MAIL_TYPE_SIGNUP_FROM_NAME,
                                                             to: toEmail,
                                                             subject: email_subject,
@@ -236,7 +236,7 @@ module.exports = {
                             email_auth_pass: db_SERVICE_MAIL_PASSWORD,
                             app_id: app_id,
                             app_user_id: app_user_id,
-                            app_module_type: 'MAIL_UNVERIFIED',
+                            app_module_type: 'UNVERIFIED',
                             from: db_SERVICE_MAIL_TYPE_UNVERIFIED_FROM_NAME,
                             to: toEmail,
                             subject: email_subject,
@@ -256,7 +256,7 @@ module.exports = {
                             email_auth_pass: db_SERVICE_MAIL_PASSWORD,
                             app_id: app_id,
                             app_user_id: app_user_id,
-                            app_module_type: 'MAIL_RESET_PASSWORD',
+                            app_module_type: 'RESET_PASSWORD',
                             from: db_SERVICE_MAIL_TYPE_RESET_PASSWORD_FROM_NAME,
                             to: toEmail,
                             subject: email_subject,
@@ -276,7 +276,7 @@ module.exports = {
                             email_auth_pass: db_SERVICE_MAIL_PASSWORD,
                             app_id: app_id,
                             app_user_id: app_user_id,
-                            app_module_type: 'MAIL_CHANGE_EMAIL',
+                            app_module_type: 'CHANGE_EMAIL',
                             from: db_SERVICE_MAIL_TYPE_CHANGE_EMAIL_FROM_NAME,
                             to: toEmail,
                             subject: email_subject,

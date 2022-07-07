@@ -345,11 +345,11 @@ function preview_report(url, type){
 }
 function get_report_url_type(item, format){
     if (item =='profile_user_settings_day' || item.substr(0,8)=='user_day')
-        return url_type = '&type=0&type_desc=REPORT_TIMETABLE_DAY_' + format;
+        return url_type = '&type=0';
     if (item =='profile_user_settings_month' || item.substr(0,10)=='user_month')
-        return url_type = '&type=1&type_desc=REPORT_TIMETABLE_MONTH_' + format;
+        return url_type = '&type=1';
     if (item == 'profile_user_settings_year' || item.substr(0,9)=='user_year')
-        return url_type = '&type=2&type_desc=REPORT_TIMETABLE_YEAR_' + format;
+        return url_type = '&type=2';
 }
 /*----------------------- */
 /* MAP                    */
@@ -2570,12 +2570,12 @@ async function set_default_settings() {
     SearchAndSetSelectedIndex(window.global_gps_default_city, document.getElementById('setting_select_city'),0);
     
     //set according to users GPS/IP settings
-    if (window.global_session_user_gps_latitude != '' && window.global_session_user_gps_longitude != '') {
-        document.getElementById('setting_input_lat').value = window.global_session_user_gps_latitude;
-        document.getElementById('setting_input_long').value = window.global_session_user_gps_longitude;
+    if (window.global_client_latitude != '' && window.global_client_longitude != '') {
+        document.getElementById('setting_input_lat').value = window.global_client_latitude;
+        document.getElementById('setting_input_long').value = window.global_client_longitude;
         //Update GPS position
         update_ui(9);
-        document.getElementById('setting_input_place').value = window.global_session_user_gps_place;
+        document.getElementById('setting_input_place').value = window.global_client_place;
     } else {
         //Set Makkah as default
         let select_place = document.getElementById('setting_select_popular_place');
@@ -3614,8 +3614,8 @@ async function init_app() {
                     update_info(4);
                     //set default geolocation
                     document.getElementById('setting_select_popular_place').selectedIndex = 0;
-                    document.getElementById('setting_input_lat').value = window.global_session_user_gps_latitude;
-                    document.getElementById('setting_input_long').value = window.global_session_user_gps_longitude;
+                    document.getElementById('setting_input_lat').value = window.global_client_latitude;
+                    document.getElementById('setting_input_long').value = window.global_client_longitude;
                     //init map thirdparty module
                     init_map();
                     //load themes in Design tab

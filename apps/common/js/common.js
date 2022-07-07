@@ -490,9 +490,9 @@ async function get_gps_from_ip(user_id, lang_code) {
     .then(function(result) {
         if (status === 200) {
             let json = JSON.parse(result);
-            window.global_session_user_gps_latitude  = json.geoplugin_latitude;
-            window.global_session_user_gps_longitude = json.geoplugin_longitude;
-            window.global_session_user_gps_place     = json.geoplugin_city + ', ' +
+            window.global_client_latitude  = json.geoplugin_latitude;
+            window.global_client_longitude = json.geoplugin_longitude;
+            window.global_client_place     = json.geoplugin_city + ', ' +
                                                 json.geoplugin_regionName + ', ' +
                                                 json.geoplugin_countryName;
         } else {
@@ -821,8 +821,8 @@ function search_profile(user_id, timezone, lang_code, click_function) {
         token = window.global_rest_at;
         json_data = `{
                     "user_account_id":${user_id},
-                    "client_longitude": "${window.global_session_user_gps_longitude}",
-                    "client_latitude": "${window.global_session_user_gps_latitude}"
+                    "client_longitude": "${window.global_client_longitude}",
+                    "client_latitude": "${window.global_client_latitude}"
                     }`;
     }
     else{
@@ -830,8 +830,8 @@ function search_profile(user_id, timezone, lang_code, click_function) {
         url = window.global_rest_url_base + window.global_rest_user_account_profile_searchD;
         token = window.global_rest_dt;
         json_data = `{
-                    "client_longitude": "${window.global_session_user_gps_longitude}",
-                    "client_latitude": "${window.global_session_user_gps_latitude}"
+                    "client_longitude": "${window.global_client_longitude}",
+                    "client_latitude": "${window.global_client_latitude}"
                     }`;
     }
     fetch(url + searched_username +
@@ -921,8 +921,8 @@ async function profile_show(user_account_id_other = null, username = null, user_
         //PROFILE MAIN
         let json_data =
             `{
-            "client_longitude": "${window.global_session_user_gps_longitude}",
-            "client_latitude": "${window.global_session_user_gps_latitude}"
+            "client_longitude": "${window.global_client_longitude}",
+            "client_latitude": "${window.global_client_latitude}"
             }`;
         fetch(url + 
                 '?app_id=' + window.global_app_id + 
@@ -1047,8 +1047,8 @@ async function profile_update_stat(lang_code, callBack){
     let profile_id = document.getElementById('profile_id');
     let json_data =
     `{
-    "client_longitude": "${window.global_session_user_gps_longitude}",
-    "client_latitude": "${window.global_session_user_gps_latitude}"
+    "client_longitude": "${window.global_client_longitude}",
+    "client_latitude": "${window.global_client_latitude}"
     }`;
     //get updated stat for given user
     //to avoid update in stat set searched by same user
@@ -1115,8 +1115,8 @@ async function user_login(username, password, lang_code, callBack) {
                     "user_timezone": "${Intl.DateTimeFormat().resolvedOptions().timeZone}",
                     "user_number_system": "${Intl.NumberFormat().resolvedOptions().numberingSystem}",
                     "user_platform": "${navigator.platform}",
-                    "client_longitude":"${window.global_session_user_gps_longitude}",
-                    "client_latitude":"${window.global_session_user_gps_latitude}"
+                    "client_longitude":"${window.global_client_longitude}",
+                    "client_latitude":"${window.global_client_latitude}"
                  }`;
 
     //get user with username and password from REST API
@@ -1492,15 +1492,18 @@ function user_signup(item_destination_user_id, lang_code) {
         return null;
 
     let json_data = `{
-                    "user_language": "${navigator.language}",
-                    "user_timezone": "${Intl.DateTimeFormat().resolvedOptions().timeZone}",
-                    "user_number_system": "${Intl.NumberFormat().resolvedOptions().numberingSystem}",
-                    "user_platform": "${navigator.platform}",
                     "username":"${username}",
                     "password":"${password}",
                     "password_reminder":"${password_reminder}",
                     "email":"${email}",
-                    "active":0 }`;
+                    "active":0 ,
+                    "user_language": "${navigator.language}",
+                    "user_timezone": "${Intl.DateTimeFormat().resolvedOptions().timeZone}",
+                    "user_number_system": "${Intl.NumberFormat().resolvedOptions().numberingSystem}",
+                    "user_platform": "${navigator.platform}",
+                    "client_latitude": "${window.global_client_latitude}",
+                    "client_longitude": "${window.global_client_longitude}"
+                    }`;
     let status;
     if (username == '') {
         //"Please enter username"
@@ -1963,8 +1966,8 @@ async function updateProviderUser(provider_no, profile_id, profile_first_name, p
             "user_timezone": "${Intl.DateTimeFormat().resolvedOptions().timeZone}",
             "user_number_system": "${Intl.NumberFormat().resolvedOptions().numberingSystem}",
             "user_platform": "${navigator.platform}",
-            "client_latitude": "${window.global_session_user_gps_latitude}",
-            "client_longitude": "${window.global_session_user_gps_longitude}"
+            "client_latitude": "${window.global_client_latitude}",
+            "client_longitude": "${window.global_client_longitude}"
             }`;
         fetch(window.global_rest_url_base + window.global_rest_user_account_provider + profile_id +
                 '?lang_code=' + lang_code, {
@@ -2095,9 +2098,9 @@ function set_globals(parameters){
     window.global_app_rest_client_secret = parameters.app_rest_client_secret;
     window.global_rest_app_parameter = parameters.rest_app_parameter;
 
-    window.global_session_user_gps_latitude = parameters.gps_lat;
-    window.global_session_user_gps_longitude = parameters.gps_long;
-    window.global_session_user_gps_place = parameters.gps_place;
+    window.global_client_latitude = parameters.gps_lat;
+    window.global_client_longitude = parameters.gps_long;
+    window.global_client_place = parameters.gps_place;
     
     window.global_app_name;
     window.global_app_hostname;
@@ -2276,8 +2279,6 @@ function init_common(parameters){
     /*
     parameters:
     {app_id: 
-     module:
-     module_type:
      exception_app_function:
      close_eventsource:
      ui:

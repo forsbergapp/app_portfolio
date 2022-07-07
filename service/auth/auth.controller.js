@@ -6,7 +6,7 @@ const { createLogAppSE, createLogAppCI } = require("../../service/log/log.servic
 function app_log(app_id, app_module_type, request, result, app_user_id,
                  user_language, user_timezone,user_number_system,user_platform,
                  server_remote_addr, server_user_agent, server_http_host,server_http_accept_language,
-                 user_gps_latitude,user_gps_longitude){
+                 client_latitude,client_longitude){
     const logData ={
         app_id : app_id,
         app_module : 'AUTH',
@@ -22,8 +22,8 @@ function app_log(app_id, app_module_type, request, result, app_user_id,
         server_user_agent : server_user_agent,
         server_http_host : server_http_host,
         server_http_accept_language : server_http_accept_language,
-        user_gps_latitude : user_gps_latitude,
-        user_gps_longitude : user_gps_longitude
+        client_latitude : client_latitude,
+        client_longitude : client_longitude
     }
     createLog(logData, (err,results)  => {
         null;
@@ -182,7 +182,7 @@ module.exports = {
                     var userpass = new Buffer.from((req.headers.authorization || '').split(' ')[1] || '', 'base64').toString();
                     if (userpass !== db_APP_REST_CLIENT_ID + ':' + db_APP_REST_CLIENT_SECRET) {
                         app_log(req.query.app_id,
-                                'AUTH_TOKEN_GET',
+                                'DATATOKEN_FAIL',
                                 req.baseUrl,
                                 'HTTP Error 401 Unauthorized: Access is denied.',
                                 req.query.app_user_id,
@@ -209,7 +209,7 @@ module.exports = {
                                         expiresIn: db_SERVICE_AUTH_TOKEN_DATA_EXPIRE
                                         });
                     app_log(req.query.app_id,
-                            'AUTH_TOKEN_GET',
+                            'DATATOKEN_OK',
                             req.baseUrl,
                             'DT:' + jsontoken_dt,
                             req.query.app_user_id,
@@ -262,13 +262,13 @@ module.exports = {
                                     });
 
                 app_log(req.body.app_id,
-                        'AUTH_TOKEN_GET',
+                        'ACCESSTOKEN_OK',
                         req.baseUrl,
                         'AT:' + jsontoken_at,
                         req.body.user_account_id,
                         req.body.user_language,
                         req.body.user_timezone,
-                        req.body.number_system,
+                        req.body.user_number_system,
                         req.body.user_platform,
                         req.ip,
                         req.headers["user-agent"],

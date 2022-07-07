@@ -3,7 +3,7 @@ const { createLog} = require ("../../service/db/api/app_log/app_log.service");
 function app_log(app_id, app_module_type, request, result, app_user_id,
 				 user_language, user_timezone,user_number_system,user_platform,
 				 server_remote_addr, server_user_agent, server_http_host,server_http_accept_language,
-				 user_gps_latitude,user_gps_longitude){
+				 client_latitude,client_longitude){
 	const logData ={
 		app_id : app_id,
 		app_module : 'WORLDCITIES',
@@ -19,8 +19,8 @@ function app_log(app_id, app_module_type, request, result, app_user_id,
 		server_user_agent : server_user_agent,
 		server_http_host : server_http_host,
 		server_http_accept_language : server_http_accept_language,
-		user_gps_latitude : user_gps_latitude,
-		user_gps_longitude : user_gps_longitude
+		client_latitude : client_latitude,
+		client_longitude : client_longitude
 	}
     createLog(logData, (err,results)  => {
         null;
@@ -38,7 +38,7 @@ module.exports = {
 					return (item.iso2 == data.params.country);
 				});	
 				app_log(data.query.app_id, 
-						'WORLDCITIES_CITIES', 
+						'CITIES', 
 						data.params.country,
 						null,
 						data.query.app_user_id,
