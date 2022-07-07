@@ -28,7 +28,8 @@ app.get("/sw.js",function (req, res,next) {
 });
 
 //app 1 progressive webapp menifest
-app.get("/app1/manifest.json",function (req, res) {
+app.get("/app1/manifest.json",function (req, res, next) {
+  if (req.headers.host.substring(0,req.headers.host.indexOf('.')) == 'app1'){
     const { getParameters } = require ("./service/db/api/app_parameter/app_parameter.service");
     getParameters(APP1_ID,(err, results) =>{
       if (err) {
@@ -110,96 +111,54 @@ app.get("/app1/manifest.json",function (req, res) {
                         );
       } 
     })
-  });
-  //app 1 show profile directly from url
-  app.get('/:user', function(req, res,next) {
-    if (req.headers.host.substring(0,req.headers.host.indexOf('.')) == 'app1' &&
-        req.params.user !== '' && 
-        req.params.user!=='robots.txt' &&
-        req.params.user!=='manifest.json' &&
-        req.params.user!=='favicon.ico' &&
-        req.params.user!=='sw.js' &&
-        req.params.user!=='css' &&
-        req.params.user!=='images' &&
-        req.params.user!=='js' &&
-        req.params.user!=='app1' &&
-        req.params.user!=='app2' &&
-        req.params.user!=='service') {
-        if (req.protocol=='http')
-          return res.redirect('https://' + req.headers.host);
-        else{
-          const { getParameter} = require ("./service/db/api/app_parameter/app_parameter.service");
-          getParameter(process.env.MAIN_APP_ID,'SERVER_MAINTENANCE', (err, db_SERVER_MAINTENANCE)=>{
-            if (err)
-              createLogAppSE(APP1_ID, __appfilename, __appfunction, __appline, err);      
-            else{
-                if (db_SERVER_MAINTENANCE==1){
-                  const { getMaintenance} = require("./service/forms/forms.controller");
-                  getMaintenance(req, APP1_ID,(err, app_result)=>{
-                      return res.send(app_result);
-                  })
-                }
-                else{
-                    const { getForm} = require("./service/forms/forms.controller");
-                    getForm(req, res, APP1_ID, req.params.user, (err, app_result)=>{
-                      //if app_result=0 means here redirect to /
-                      if (app_result==0)
-                        return res.redirect('/');
-                      else
-                        return res.send(app_result);
-                    })
-                }
-            }
-          })
-        }
-      }
-    else
-      next();
-  });
-  app.get('/favicon.ico', function (req, res, next) {
-    switch (req.headers.host.substring(0,req.headers.host.indexOf('.'))){
-      case 'app1':{
-        res.sendFile(__dirname + "/apps/app1/images/favicon.ico");
-        break;
-      }
-      default:{
-        next();
+  }
+  else
+    next();
+});
+app.get('/favicon.ico', function (req, res, next) {
+  if (req.headers.host.substring(0,req.headers.host.indexOf('.')) == 'app1')
+    res.sendFile(__dirname + "/apps/app1/images/favicon.ico");
+  else
+    next();
+});
+//app 1 show profile directly from url
+app.get('/:user', function(req, res,next) {
+  if (req.headers.host.substring(0,req.headers.host.indexOf('.')) == 'app1' &&
+      req.params.user !== '' && 
+      req.params.user!=='robots.txt' &&
+      req.params.user!=='manifest.json' &&
+      req.params.user!=='favicon.ico' &&
+      req.params.user!=='sw.js' &&
+      req.params.user!=='css' &&
+      req.params.user!=='images' &&
+      req.params.user!=='js' &&
+      req.params.user!=='service') {
+      if (req.protocol=='http')
+        return res.redirect('https://' + req.headers.host);
+      else{
+        const { getForm} = require("./service/forms/forms.controller");
+        getForm(req, res, APP1_ID, req.params.user, (err, app_result)=>{
+          //if app_result=0 means here redirect to /
+          if (app_result==0)
+            return res.redirect('/');
+          else
+            return res.send(app_result);
+        })
       }
     }
-  });
-  app.get('/',function (req, res, next) {
+  else
+    next();
+});
+app.get('/',function (req, res, next) {
+  if (req.headers.host.substring(0,req.headers.host.indexOf('.')) == 'app1'){
     //redirect from http to https
     if (req.protocol=='http')
       return res.redirect('https://' + req.headers.host);
-    //redirect naked domain to www
-    if (((req.headers.host.split('.').length - 1) == 1) &&
-        req.headers.host.indexOf('localhost')==-1)
-      return res.redirect('https://www.' + req.headers.host);
-    switch (req.headers.host.substring(0,req.headers.host.indexOf('.'))){
-    case 'app1':{
-        const { getParameter} = require ("./service/db/api/app_parameter/app_parameter.service");
-        getParameter(process.env.MAIN_APP_ID,'SERVER_MAINTENANCE', (err, db_SERVER_MAINTENANCE)=>{
-          if (err)
-            createLogAppSE(APP1_ID, __appfilename, __appfunction, __appline, err);      
-          else{
-              if (db_SERVER_MAINTENANCE==1){
-                const { getMaintenance} = require("./service/forms/forms.controller");
-                getMaintenance(req, res, APP1_ID,(err, app_result)=>{
-                    return res.send(app_result);
-                })
-              }
-              else{
-                const { getForm} = require("./service/forms/forms.controller");
-                getForm(req, res, APP1_ID, null,(err, app_result)=>{
-                    return res.send(app_result);
-                })
-              }
-          }
-        })
-        break;
-      }
-    default:{
-      next();
-    }
-    }
+    const { getForm} = require("./service/forms/forms.controller");
+    getForm(req, res, APP1_ID, null,(err, app_result)=>{
+        return res.send(app_result);
+    })
+  }
+  else
+    next();
 });
