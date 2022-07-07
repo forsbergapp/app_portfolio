@@ -3,6 +3,32 @@ const { verify } = require("jsonwebtoken");
 const { createLog} = require ("../../service/db/api/app_log/app_log.service");
 const { getParameter, getParameters_server } = require ("../db/api/app_parameter/app_parameter.service");
 const { createLogAppSE, createLogAppCI } = require("../../service/log/log.service");
+function app_log(app_id, app_module_type, request, result, app_user_id,
+                 user_language, user_timezone,user_number_system,user_platform,
+                 server_remote_addr, server_user_agent, server_http_host,server_http_accept_language,
+                 user_gps_latitude,user_gps_longitude){
+    const logData ={
+        app_id : app_id,
+        app_module : 'AUTH',
+        app_module_type : app_module_type,
+        app_module_request : request,
+        app_module_result : result,
+        app_user_id : app_user_id,
+        user_language : user_language,
+        user_timezone : user_timezone,
+        user_number_system : user_number_system,
+        user_platform : user_platform,
+        server_remote_addr : server_remote_addr,
+        server_user_agent : server_user_agent,
+        server_http_host : server_http_host,
+        server_http_accept_language : server_http_accept_language,
+        user_gps_latitude : user_gps_latitude,
+        user_gps_longitude : user_gps_longitude
+    }
+    createLog(logData, (err,results)  => {
+        null;
+    }); 
+}
 module.exports = {
     access_control: (req, res, callBack) => {
         let ip_v4 = req.ip.replace('::ffff:','');
@@ -155,6 +181,21 @@ module.exports = {
                     }                    
                     var userpass = new Buffer.from((req.headers.authorization || '').split(' ')[1] || '', 'base64').toString();
                     if (userpass !== db_APP_REST_CLIENT_ID + ':' + db_APP_REST_CLIENT_SECRET) {
+                        app_log(req.query.app_id,
+                                'AUTH_TOKEN_GET',
+                                req.baseUrl,
+                                'HTTP Error 401 Unauthorized: Access is denied.',
+                                req.query.app_user_id,
+                                null,
+                                null,
+                                null,
+                                null,
+                                req.ip,
+                                req.headers["user-agent"],
+                                req.headers["host"],
+                                req.headers["accept-language"],
+                                null,
+                                null);
                         return res.status(401).send({ 
                             success: 0,
                             message: "HTTP Error 401 Unauthorized: Access is denied."
@@ -167,19 +208,21 @@ module.exports = {
                                         {
                                         expiresIn: db_SERVICE_AUTH_TOKEN_DATA_EXPIRE
                                         });
-                    req.body.app_id 					= req.query.app_id;
-                    req.body.app_module				    = 'AUTH';
-                    req.body.app_module_type			= 'AUTH_TOKEN_GET';
-                    req.body.app_module_request		    = req.baseUrl;
-                    req.body.app_module_result			= 'DT:' + jsontoken_dt;
-                    req.body.app_user_id				= req.query.app_user_id;
-                    req.body.server_remote_addr 		= req.ip;
-                    req.body.server_user_agent 		    = req.headers["user-agent"];
-                    req.body.server_http_host 			= req.headers["host"];
-                    req.body.server_http_accept_language= req.headers["accept-language"];
-                    createLog(req.body, (err2,results2) => {
-                        null;
-                    }); 
+                    app_log(req.query.app_id,
+                            'AUTH_TOKEN_GET',
+                            req.baseUrl,
+                            'DT:' + jsontoken_dt,
+                            req.query.app_user_id,
+                            null,
+                            null,
+                            null,
+                            null,
+                            req.ip,
+                            req.headers["user-agent"],
+                            req.headers["host"],
+                            req.headers["accept-language"],
+                            null,
+                            null);
                     return res.status(200).json({ 
                             success: 1,
                             message: "OK",
@@ -218,19 +261,21 @@ module.exports = {
                                     expiresIn: db_SERVICE_AUTH_TOKEN_ACCESS_EXPIRE
                                     });
 
-                req.body.app_id 					= req.body.app_id;
-                req.body.app_module				    = 'AUTH';
-                req.body.app_module_type			= 'AUTH_TOKEN_GET';
-                req.body.app_module_request		    = req.baseUrl;
-                req.body.app_module_result			= 'AT:' + jsontoken_at;
-                req.body.app_user_id				= req.body.user_account_id;
-                req.body.server_remote_addr 		= req.ip;
-                req.body.server_user_agent 		    = req.headers["user-agent"];
-                req.body.server_http_host 			= req.headers["host"];
-                req.body.server_http_accept_language= req.headers["accept-language"];
-                createLog(req.body, (err2,results2) => {
-                    null;
-                }); 
+                app_log(req.body.app_id,
+                        'AUTH_TOKEN_GET',
+                        req.baseUrl,
+                        'AT:' + jsontoken_at,
+                        req.body.user_account_id,
+                        req.body.user_language,
+                        req.body.user_timezone,
+                        req.body.number_system,
+                        req.body.user_platform,
+                        req.ip,
+                        req.headers["user-agent"],
+                        req.headers["host"],
+                        req.headers["accept-language"],
+                        req.body.client_latitude,
+                        req.body.client_longitude);                                    
                 return  callBack(null,jsontoken_at);
             }
         })

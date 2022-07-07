@@ -4,7 +4,8 @@ const { ORDER } = require("mysql/lib/PoolSelector");
 module.exports = {
 	createLog: (data, callBack) => {
 		//max 4000 characters can be saved
-		data.app_module_result = data.app_module_result.substr(0,3999);
+		if (data.app_module_result!=null)
+			data.app_module_result = data.app_module_result.substr(0,3999);
 		if (process.env.SERVICE_DB_USE==1){
 			get_pool(data.app_id).query(
 				`INSERT INTO ${process.env.SERVICE_DB_DB1_NAME}.app_log(
