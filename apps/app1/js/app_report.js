@@ -182,8 +182,8 @@ function updateReportViewStat(user_account_id, user_setting_id, lang_code) {
     let json_data =`{
                     "user_account_id":${user_account_id},
                     "app1_user_setting_id":${user_setting_id},
-                    "client_longitude": "${window.global_session_user_gps_longitude}",
-                    "client_latitude": "${window.global_session_user_gps_latitude}"
+                    "client_longitude": "${window.global_client_longitude}",
+                    "client_latitude": "${window.global_client_latitude}"
                     }`;
     fetch(window.global_rest_url_base + window.global_rest_app1_user_setting_view +
             '?app_id=' + window.global_app_id + 
