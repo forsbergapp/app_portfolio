@@ -7,8 +7,8 @@ function admin_login(){
                       "user_timezone": "${Intl.DateTimeFormat().resolvedOptions().timeZone}",
                       "user_number_system": "${Intl.NumberFormat().resolvedOptions().numberingSystem}",
                       "user_platform": "${navigator.platform}",
-                      "user_gps_latitude": "${window.global_session_user_gps_latitude}",
-                      "user_gps_longitude": "${window.global_session_user_gps_longitude}"}`;
+                      "client_latitude": "${window.global_client_latitude}",
+                      "client_longitude": "${window.global_client_longitude}"}`;
     fetch('/service/auth/admin',
     {method: 'POST',
         headers: {

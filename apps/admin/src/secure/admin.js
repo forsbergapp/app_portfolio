@@ -332,10 +332,10 @@ async function show_list(list_div, list_div_col_title, url, sort, order_by, cols
                                                         <div>${json.data[i].server_remote_addr.replace('::ffff:','')}</div>
                                                     </div>
                                                     <div class='list_app_log_col list_app_log_gps_click gps_click'>
-                                                        <div>${json.data[i].user_gps_latitude}</div>
+                                                        <div>${json.data[i].client_latitude}</div>
                                                     </div>
                                                     <div class='list_app_log_col list_app_log_gps_click gps_click'>
-                                                        <div>${json.data[i].user_gps_longitude}</div>
+                                                        <div>${json.data[i].client_longitude}</div>
                                                     </div>
                                                     <div class='list_app_log_col'>
                                                         <div>${json.data[i].date_created}</div>
@@ -639,8 +639,8 @@ function init_map() {
     window.global_session_map = new mapboxgl.Map({
         container: window.global_gps_map_container,
         style: window.global_gps_map_style_baseurl + window.global_gps_map_style,
-        center: [window.global_session_user_gps_latitude,
-                 window.global_session_user_gps_longitude
+        center: [window.global_client_latitude,
+                 window.global_client_longitude
         ],
         zoom: window.global_gps_map_zoom
     });
@@ -1647,9 +1647,9 @@ function delete_globals(){
     delete window.global_gps_map_marker_div_gps;
     delete window.global_gps_map_popup_offset;
     delete window.global_session_map;
-    delete window.global_session_user_gps_latitude;
-    delete window.global_session_user_gps_longitude;
-    delete window.global_session_user_gps_place;
+    delete window.global_client_latitude;
+    delete window.global_client_longitude;
+    delete window.global_client_place;
     delete window.global_page;
     delete window.global_page_last;
     delete window.global_limit;
@@ -1747,9 +1747,9 @@ function init_admin_secure(){
     window.global_gps_map_marker_div_gps = 'map_marker_gps';
     window.global_gps_map_popup_offset   = 25;
     //session variables
-    window.global_session_user_gps_latitude = '';
-    window.global_session_user_gps_longitude = '';
-    window.global_session_user_gps_place = '';
+    window.global_client_latitude = '';
+    window.global_client_longitude = '';
+    window.global_client_place = '';
 
 
 
@@ -1834,10 +1834,10 @@ function init_admin_secure(){
     document.getElementById('list_app_log_next').addEventListener('click', function() { page_navigation(this)}, false);
     document.getElementById('list_app_log_last').addEventListener('click', function() { page_navigation(this)}, false);
     document.getElementById('map_my_location').addEventListener('click', function() { get_gps_from_ip().then(function(){
-        update_map(window.global_session_user_gps_longitude,
-                   window.global_session_user_gps_latitude,
+        update_map(window.global_client_longitude,
+                   window.global_client_latitude,
                    window.global_gps_map_zoom,
-                   window.global_session_user_gps_place,
+                   window.global_client_place,
                    window.global_gps_map_marker_div_gps,
                    window.global_gps_map_jumpto);})}, false);
     document.getElementById('select_logscope4').addEventListener('change', function() { show_server_logs();}, false);
@@ -1855,10 +1855,10 @@ function init_admin_secure(){
                 get_gps_from_ip().then(function(){
                     if (!window.global_session_map)
                         init_map();
-                    update_map(window.global_session_user_gps_longitude,
-                               window.global_session_user_gps_latitude,
+                    update_map(window.global_client_longitude,
+                               window.global_client_latitude,
                                window.global_gps_map_zoom,
-                               window.global_session_user_gps_place,
+                               window.global_client_place,
                                window.global_gps_map_marker_div_gps,
                                window.global_gps_map_jumpto);
                     show_menu(1);
@@ -1869,8 +1869,6 @@ function init_admin_secure(){
 }
 init_common({
     app_id: '',
-    module: 'APP',
-    module_type: 'INIT',
     exception_app_function: 'admin_logoff_app',
     close_eventsource: true,
     ui: true,
