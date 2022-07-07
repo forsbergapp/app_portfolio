@@ -131,8 +131,8 @@ module.exports = {
                             server_user_agent : req.body.server_user_agent,
                             server_http_host : req.body.server_http_host,
                             server_http_accept_language : req.body.server_http_accept_language,
-                            user_gps_latitude : req.body.gps_lat_text,
-                            user_gps_longitude : req.body.gps_long_text,
+                            client_latitude : req.body.client_latitude,
+                            client_longitude : req.body.client_longitude,
                             protocol : req.protocol,
                             host : req.get('host')
                         }
