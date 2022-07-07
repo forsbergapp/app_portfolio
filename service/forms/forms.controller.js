@@ -1,4 +1,5 @@
 const { createLog} = require ("../../service/db/api/app_log/app_log.service");
+const { createLogAppSE} = require("../../service/log/log.service");
 const { getIp} = require ("../../service/geolocation/geolocation.controller");
 function app_log(app_id, app_module_type, request, result, app_user_id,
                  user_language, user_timezone,user_number_system,user_platform,
@@ -65,31 +66,66 @@ module.exports = {
         }
         else{
             //other apps
-            const { getApp } = require(`../../apps/app${app_id}/client`);
-            app_module_type = 'APP';
-            const app = getApp(app_id, 
-                            params,
-                            result.geoplugin_latitude,
-                            result.geoplugin_longitude, 
-                            gps_place)
-            .then(function(app_result){
-                app_log(app_id, 
-                        app_module_type, 
-                        params,
-                        gps_place,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        req.ip,
-                        req.headers["user-agent"],
-                        req.headers["host"],
-                        req.headers["accept-language"],
-                        result.geoplugin_latitude, 
-                        result.geoplugin_longitude);
-                return callBack(null, app_result)
-            });            
+            //check if maintenance
+            const { getParameter} = require ("../../service/db/api/app_parameter/app_parameter.service");
+            getParameter(process.env.MAIN_APP_ID,'SERVER_MAINTENANCE', (err, db_SERVER_MAINTENANCE)=>{
+                if (err)
+                    createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);      
+                else{
+                    if (db_SERVER_MAINTENANCE==1){
+                        const { getMaintenance } = require("../../apps");
+                        const app = getMaintenance(app_id,
+                                                    result.geoplugin_latitude,
+                                                    result.geoplugin_longitude,
+                                                    gps_place)
+                        .then(function(app_result){
+                            app_log(app_id, 
+                                    'MAINTENANCE',
+                                    null,
+                                    gps_place,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    req.ip,
+                                    req.headers["user-agent"],
+                                    req.headers["host"],
+                                    req.headers["accept-language"],
+                                    result.geoplugin_latitude, 
+                                    result.geoplugin_longitude);
+                            return callBack(null, app_result);
+                        });
+                    }
+                    else{
+                        const { getApp } = require(`../../apps/app${app_id}/client`);
+                        app_module_type = 'APP';
+                        const app = getApp(app_id, 
+                                           params,
+                                           result.geoplugin_latitude,
+                                           result.geoplugin_longitude, 
+                                           gps_place)
+                        .then(function(app_result){
+                            app_log(app_id, 
+                                    app_module_type, 
+                                    params,
+                                    gps_place,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    req.ip,
+                                    req.headers["user-agent"],
+                                    req.headers["host"],
+                                    req.headers["accept-language"],
+                                    result.geoplugin_latitude, 
+                                    result.geoplugin_longitude);
+                            return callBack(null, app_result)
+                        });            
+                    }
+                }
+            })
         }
     })
   },
@@ -125,38 +161,5 @@ module.exports = {
                 );
             })
         })
-  },
-  getMaintenance: (req, res, app_id, callBack) => {
-        const { getMaintenance } = require("../../apps");
-        req.query.app_id = app_id;
-        req.query.app_user_id = null;
-        req.query.callback=1;
-        getIp(req, res, (err, result)=>{
-            let gps_place = result.geoplugin_city + ', ' +
-                            result.geoplugin_regionName + ', ' +
-                            result.geoplugin_countryName;
-            const app = getMaintenance(app_id,
-                                       result.geoplugin_latitude,
-                                       result.geoplugin_longitude,
-                                       gps_place)
-            .then(function(app_result){
-                app_log(app_id, 
-                        'MAINTENANCE',
-                        null,
-                        gps_place,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        req.ip,
-                        req.headers["user-agent"],
-                        req.headers["host"],
-                        req.headers["accept-language"],
-                        result.geoplugin_latitude, 
-                        result.geoplugin_longitude);
-                return callBack(null, app_result);
-            });
-        })
-	}
+  }
 }
