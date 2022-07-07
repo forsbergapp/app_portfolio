@@ -6,7 +6,7 @@ const { createLogAppSE } = require("../../service/log/log.service");
 function app_log(app_id, app_module_type, request, result, app_user_id,
 				 user_language, user_timezone,user_number_system,user_platform,
 				 server_remote_addr, server_user_agent, server_http_host,server_http_accept_language,
-				 user_gps_latitude,user_gps_longitude){
+				 client_latitude,client_longitude){
     const logData ={
         app_id : app_id,
         app_module : 'GEOLOCATION',
@@ -22,8 +22,8 @@ function app_log(app_id, app_module_type, request, result, app_user_id,
         server_user_agent : server_user_agent,
         server_http_host : server_http_host,
         server_http_accept_language : server_http_accept_language,
-        user_gps_latitude : user_gps_latitude,
-        user_gps_longitude : user_gps_longitude
+        client_latitude : client_latitude,
+        client_longitude : client_longitude
     }
     createLog(logData, (err,results)  => {
         null;
@@ -57,7 +57,7 @@ module.exports = {
 					async function getasync(){
 						geodata = await getService(url);
 						app_log(data.query.app_id, 
-								'GEOLOCATION_PLACE',
+								'PLACE',
 								url,
 								JSON.stringify(geodata),
 								data.query.app_user_id,
@@ -99,7 +99,7 @@ module.exports = {
 				async function getasync(){
 					geodata = await getService(url);
 					app_log(data.query.app_id, 
-							'GEOLOCATION_IP',
+							'IP',
 							url,
 							JSON.stringify(geodata),
 							data.query.app_user_id,
