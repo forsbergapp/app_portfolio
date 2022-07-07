@@ -1,23 +1,26 @@
 const { createLog} = require ("../../service/db/api/app_log/app_log.service");
 const { getIp} = require ("../../service/geolocation/geolocation.controller");
-function app_log(req, app_id, app_module_type, params, gps_latitude, gps_longitude, gps_place){
+function app_log(app_id, app_module_type, request, result, app_user_id,
+                 user_language, user_timezone,user_number_system,user_platform,
+                 server_remote_addr, server_user_agent, server_http_host,server_http_accept_language,
+                 user_gps_latitude,user_gps_longitude){
     const logData ={
         app_id : app_id,
         app_module : 'FORMS',
         app_module_type : app_module_type,
-        app_module_request : params,
-        app_module_result : gps_place,
-        app_user_id : null,
-        user_language : null,
-        user_timezone : null,
-        user_number_system : null,
-        user_platform : null,
-        server_remote_addr : req.ip,
-        server_user_agent : req.headers["user-agent"],
-        server_http_host : req.headers["host"],
-        server_http_accept_language : req.headers["accept-language"],
-        user_gps_latitude : gps_latitude,
-        user_gps_longitude : gps_longitude
+        app_module_request : request,
+        app_module_result : result,
+        app_user_id : app_user_id,
+        user_language : user_language,
+        user_timezone : user_timezone,
+        user_number_system : user_number_system,
+        user_platform : user_platform,
+        server_remote_addr : server_remote_addr,
+        server_user_agent : server_user_agent,
+        server_http_host : server_http_host,
+        server_http_accept_language : server_http_accept_language,
+        user_gps_latitude : user_gps_latitude,
+        user_gps_longitude : user_gps_longitude
     }
     createLog(logData, (err,results)  => {
         null;
@@ -39,16 +42,24 @@ module.exports = {
             const { getAdmin } = require("../../apps/admin/client");
             app_module_type = 'ADMIN';
             const app = getAdmin(result.geoplugin_latitude,
-                                    result.geoplugin_longitude, 
-                                    gps_place)
+                                 result.geoplugin_longitude, 
+                                 gps_place)
             .then(function(app_result){
-                app_log(req, 
-                        process.env.MAIN_APP_ID, 
+                app_log(process.env.MAIN_APP_ID, 
                         app_module_type, 
+                        params,
+                        gps_place,
                         null,
-                        result.gps_latitude, 
-                        result.gps_longitude, 
-                        gps_place);
+                        null,
+                        null,
+                        null,
+                        null,
+                        req.ip,
+                        req.headers["user-agent"],
+                        req.headers["host"],
+                        req.headers["accept-language"],
+                        result.geoplugin_latitude, 
+                        result.geoplugin_longitude);
                 return callBack(null, app_result);
             })
         }
@@ -62,13 +73,21 @@ module.exports = {
                             result.geoplugin_longitude, 
                             gps_place)
             .then(function(app_result){
-                app_log(req, 
-                        app_id, 
+                app_log(app_id, 
                         app_module_type, 
                         params,
-                        result.geoplugin_latitude,
-                        result.geoplugin_longitude, 
-                        gps_place);
+                        gps_place,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        req.ip,
+                        req.headers["user-agent"],
+                        req.headers["host"],
+                        req.headers["accept-language"],
+                        result.geoplugin_latitude, 
+                        result.geoplugin_longitude);
                 return callBack(null, app_result)
             });            
         }
@@ -86,13 +105,21 @@ module.exports = {
                             result.geoplugin_regionName + ', ' +
                             result.geoplugin_countryName;
             getAdmin((err, app_result)=>{
-                app_log(req, 
-                        process.env.MAIN_APP_ID, 
+                app_log(process.env.MAIN_APP_ID, 
                         'ADMIN_SECURE', 
                         null,
-                        result.gps_latitude, 
-                        result.gps_longitude, 
-                        gps_place);
+                        gps_place,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        req.ip,
+                        req.headers["user-agent"],
+                        req.headers["host"],
+                        req.headers["accept-language"],
+                        result.geoplugin_latitude, 
+                        result.geoplugin_longitude);
                 return res.status(200).send(
                     app_result
                 );
@@ -110,16 +137,24 @@ module.exports = {
                             result.geoplugin_countryName;
             const app = getMaintenance(app_id,
                                        result.geoplugin_latitude,
-                                       result.geoplugin_longitude, 
+                                       result.geoplugin_longitude,
                                        gps_place)
             .then(function(app_result){
-                app_log(req, 
-                        app_id, 
-                        'MAINTENANCE', 
+                app_log(app_id, 
+                        'MAINTENANCE',
                         null,
-                        result.gps_latitude, 
-                        result.gps_longitude, 
-                        gps_place);
+                        gps_place,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        req.ip,
+                        req.headers["user-agent"],
+                        req.headers["host"],
+                        req.headers["accept-language"],
+                        result.geoplugin_latitude, 
+                        result.geoplugin_longitude);
                 return callBack(null, app_result);
             });
         })
