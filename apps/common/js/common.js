@@ -1111,6 +1111,10 @@ async function user_login(username, password, lang_code, callBack) {
                     "username":"${username}",
                     "password":"${password}",
                     "active":1,
+                    "user_language": "${navigator.language}",
+                    "user_timezone": "${Intl.DateTimeFormat().resolvedOptions().timeZone}",
+                    "user_number_system": "${Intl.NumberFormat().resolvedOptions().numberingSystem}",
+                    "user_platform": "${navigator.platform}",
                     "client_longitude":"${window.global_session_user_gps_longitude}",
                     "client_latitude":"${window.global_session_user_gps_latitude}"
                  }`;
@@ -1947,10 +1951,6 @@ async function updateProviderUser(provider_no, profile_id, profile_first_name, p
         let json_data =
             `{
             "app_id": ${window.global_app_id},
-            "user_language": "${navigator.language}",
-            "user_timezone": "${Intl.DateTimeFormat().resolvedOptions().timeZone}",
-            "user_number_system": "${Intl.NumberFormat().resolvedOptions().numberingSystem}",
-            "user_platform": "${navigator.platform}",
             "active": 1,
             "provider_no": ${provider_no},
             "${'provider' + provider_no + '_id'}":"${profile_id}",
@@ -1958,7 +1958,14 @@ async function updateProviderUser(provider_no, profile_id, profile_first_name, p
             "${'provider' + provider_no + '_last_name'}":"${profile_last_name}",
             "${'provider' + provider_no + '_image'}":"${btoa(profile_image)}",
             "${'provider' + provider_no + '_image_url'}":"${profile_image_url}",
-            "${'provider' + provider_no + '_email'}":"${profile_email}"}`;
+            "${'provider' + provider_no + '_email'}":"${profile_email}",
+            "user_language": "${navigator.language}",
+            "user_timezone": "${Intl.DateTimeFormat().resolvedOptions().timeZone}",
+            "user_number_system": "${Intl.NumberFormat().resolvedOptions().numberingSystem}",
+            "user_platform": "${navigator.platform}",
+            "client_latitude": "${window.global_session_user_gps_latitude}",
+            "client_longitude": "${window.global_session_user_gps_longitude}"
+            }`;
         fetch(window.global_rest_url_base + window.global_rest_user_account_provider + profile_id +
                 '?lang_code=' + lang_code, {
                 method: 'POST',
@@ -2077,48 +2084,6 @@ async function get_data_token(user_id, lang_code) {
             window.global_rest_dt = json.token_dt;
         }   
     })
-}
-function app_log(app_module, app_module_type, app_module_request, app_module_result, app_user_id,
-    user_gps_latitude, user_gps_longitude, lang_code){
-    var status;
-    let json_data =`{
-                    "app_id":"${window.global_app_id}",
-                    "app_module":"${app_module}",
-                    "app_module_type":"${app_module_type}",
-                    "app_module_request":"${app_module_request}",
-                    "app_module_result":"${app_module_result}",
-                    "app_user_id":"${app_user_id}",
-                    "user_language": "${navigator.language}",
-                    "user_timezone": "${Intl.DateTimeFormat().resolvedOptions().timeZone}",
-                    "user_number_system": "${Intl.NumberFormat().resolvedOptions().numberingSystem}",
-                    "user_platform": "${navigator.platform}",
-                    "user_gps_latitude": "${user_gps_latitude}",
-                    "user_gps_longitude": "${user_gps_longitude}"
-                    }`;
-
-    fetch(window.global_rest_url_base + window.global_rest_app_log +
-        '?lang_code=' + lang_code,
-        {
-        method: 'POST',
-        headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + window.global_rest_dt
-        },
-        body: json_data
-    })
-    .then(function(response){
-        status = response.status;
-        return response.text();
-    })
-    .then(function(response) {
-        if (status === 200)
-            return null;
-        else
-            return null;
-    })
-    .catch(function(error) {
-        show_message('EXCEPTION', null,null, error, window.global_app_id, lang_code);
-    });
 }
 function set_globals(parameters){
     window.global_app_id = parameters.app_id;

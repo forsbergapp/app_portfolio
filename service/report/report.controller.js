@@ -1,5 +1,30 @@
 const { createLog} = require ("../../service/db/api/app_log/app_log.service");
-
+function app_log(app_id, app_module_type, request, result, app_user_id,
+				 user_language, user_timezone,user_number_system,user_platform,
+				 server_remote_addr, server_user_agent, server_http_host,server_http_accept_language,
+				 user_gps_latitude,user_gps_longitude){
+	const logData ={
+		app_id : app_id,
+		app_module : 'REPORT',
+		app_module_type : app_module_type,
+		app_module_request : request,
+		app_module_result : result,
+		app_user_id : app_user_id,
+		user_language : user_language,
+		user_timezone : user_timezone,
+		user_number_system : user_number_system,
+		user_platform : user_platform,
+		server_remote_addr : server_remote_addr,
+		server_user_agent : server_user_agent,
+		server_http_host : server_http_host,
+		server_http_accept_language : server_http_accept_language,
+		user_gps_latitude : user_gps_latitude,
+		user_gps_longitude : user_gps_longitude
+    }
+    createLog(logData, (err,results)  => {
+        null;
+    }); 
+}
 module.exports = {
 	getReport: async (data, res) => {
 		var pdf;
@@ -30,22 +55,24 @@ module.exports = {
 										 result.gps_longitude, 
 										 gps_place)
 				.then(function(report_result){
+					app_log(data.query.app_id,
+							data.query.type_desc, 
+							data.protocol + '://' + data.get('host') + data.originalUrl,
+							gps_place,
+							null,
+							null,
+							null,
+							null,
+							null,
+							data.ip,
+							data.headers["user-agent"],
+							data.headers["host"],
+							data.headers["accept-language"],
+							result.geoplugin_latitude, 
+							result.geoplugin_longitude);
 					res.send(report_result);
 				})
 			})
 		}
-		data.body.app_id 					  = data.query.app_id;
-		data.body.app_module 				  = 'REPORT';
-		data.body.app_module_type 			  = data.query.type_desc;
-		data.body.app_module_request		  = data.protocol + '://' + data.get('host') + data.originalUrl;
-		data.body.app_module_result			  = '';
-		data.body.app_user_id				  = data.query.id;
-		data.body.server_remote_addr 		  = data.ip;
-		data.body.server_user_agent 		  = data.headers["user-agent"];
-		data.body.server_http_host 			  = data.headers["host"];
-		data.body.server_http_accept_language = data.headers["accept-language"];
-		createLog(data.body, (err2,results2)  => {
-			null;
-		}); 
 	}		
 };

@@ -3,11 +3,18 @@ window.global_rest_admin_at = '';
 function admin_login(){
     var status;
     var json;
+    var json_data = `{"user_language": "${navigator.language}",
+                      "user_timezone": "${Intl.DateTimeFormat().resolvedOptions().timeZone}",
+                      "user_number_system": "${Intl.NumberFormat().resolvedOptions().numberingSystem}",
+                      "user_platform": "${navigator.platform}",
+                      "user_gps_latitude": "${window.global_session_user_gps_latitude}",
+                      "user_gps_longitude": "${window.global_session_user_gps_longitude}"}`;
     fetch('/service/auth/admin',
     {method: 'POST',
         headers: {
         'Authorization': 'Basic ' + btoa(document.getElementById("admin_login_username").value + ':' + document.getElementById("admin_login_password").value)
-        }
+        },
+        body: json_data
     })
         .then(function(response) {
             status = response.status;
