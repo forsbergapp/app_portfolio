@@ -267,24 +267,50 @@ init_db((err, result) =>{
     }); 
   }
 })
-//info for search bots
+//info for search bots, same for all apps
 app.get('/robots.txt', function (req, res) {
   res.type('text/plain');
   res.send("User-agent: *\nDisallow: /");
 });
 app.get('/favicon.ico', function (req, res, next) {
-  switch (req.headers.host.substring(0,req.headers.host.indexOf('.'))){
-    case '':
-    case 'www':{
-      res.sendFile(__dirname + "/apps/app0/images/favicon.ico");
-      break;
-    }
-    default:{
-      next();
-    }
+  if (req.headers.host.substring(0,req.headers.host.indexOf('.'))=='' ||
+      req.headers.host.substring(0,req.headers.host.indexOf('.'))=='www'){
+        res.sendFile(__dirname + "/apps/app0/images/favicon.ico");
   }
+  else
+    next();
 });
-
+app.get('/:user',function (req, res, next) {
+  //redirect from http to https
+  if (req.protocol=='http')
+    return res.redirect('https://' + req.headers.host);
+  //redirect naked domain to www
+  if (((req.headers.host.split('.').length - 1) == 1) &&
+      req.headers.host.indexOf('localhost')==-1)
+    return res.redirect('https://www.' + req.headers.host);
+  if ((req.headers.host.substring(0,req.headers.host.indexOf('.'))=='' ||
+      req.headers.host.substring(0,req.headers.host.indexOf('.'))=='www') &&
+      req.params.user !== '' && 
+      req.params.user!=='robots.txt' &&
+      req.params.user!=='manifest.json' &&
+      req.params.user!=='favicon.ico' &&
+      req.params.user!=='sw.js' &&
+      req.params.user!=='css' &&
+      req.params.user!=='images' &&
+      req.params.user!=='js' &&
+      req.params.user!=='service'){
+      const { getForm} = require("./service/forms/forms.controller");
+      getForm(req, res, process.env.MAIN_APP_ID, req.params.user,(err, app_result)=>{
+          //if app_result=0 means here redirect to /
+          if (app_result==0)
+            return res.redirect('/');
+          else
+            return res.send(app_result);
+      })
+  }
+  else
+      next();
+});
 //config root url
 app.get('/',function (req, res, next) {
   //redirect from http to https
@@ -294,34 +320,15 @@ app.get('/',function (req, res, next) {
   if (((req.headers.host.split('.').length - 1) == 1) &&
       req.headers.host.indexOf('localhost')==-1)
     return res.redirect('https://www.' + req.headers.host);
-  switch (req.headers.host.substring(0,req.headers.host.indexOf('.'))){
-    case '':
-    case 'www':{
-      const { getParameter} = require ("./service/db/api/app_parameter/app_parameter.service");
-      getParameter(process.env.MAIN_APP_ID,'SERVER_MAINTENANCE', (err, db_SERVER_MAINTENANCE)=>{
-        if (err)
-          createLogAppSE(process.env.MAIN_APP_ID, __appfilename, __appfunction, __appline, err);      
-        else{
-            if (db_SERVER_MAINTENANCE==1){
-              const { getMaintenance} = require("./service/forms/forms.controller");
-              getMaintenance(req, res, process.env.MAIN_APP_ID,(err, app_result)=>{
-                  return res.send(app_result);
-              })
-            }
-            else{
-              const { getForm} = require("./service/forms/forms.controller");
-              getForm(req, res, process.env.MAIN_APP_ID, null,(err, app_result)=>{
-                  return res.send(app_result);
-              })
-            }
-        }
+  if (req.headers.host.substring(0,req.headers.host.indexOf('.'))=='' ||
+      req.headers.host.substring(0,req.headers.host.indexOf('.'))=='www'){
+      const { getForm} = require("./service/forms/forms.controller");
+      getForm(req, res, process.env.MAIN_APP_ID, null,(err, app_result)=>{
+          return res.send(app_result);
       })
-      break;
-    }
-    default:{
-      next();
-    }
   }
+  else
+      next();
 });
 //start HTTP and HTTPS
 app.listen(process.env.SERVER_PORT, () => {

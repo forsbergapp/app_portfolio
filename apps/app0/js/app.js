@@ -561,9 +561,26 @@ function init(parameters){
             document.getElementById('app_email').href='mailto:' + window.global_app_email;
             document.getElementById('app_email').innerHTML=window.global_app_email;
             get_apps();
-            init_providers('onProviderSignIn_app', function() { onProviderSignIn_app() }).then(function(){
-                null;
-            });
+            async function show_start(){
+                let user = window.location.pathname.substring(1);
+                if (user !='') {
+                    //show profile for user entered in url
+                    document.getElementById('dialogue_profile').style.visibility = "visible";
+                    profile_show(null, 
+                                 user, 
+                                 document.getElementById('user_menu_user_id').innerHTML,
+                                 Intl.DateTimeFormat().resolvedOptions().timeZone,
+                                 window.global_lang_code,
+                                 (err, result)=>{
+                                    null;
+                                 });
+                }
+            }
+            show_start().then(function(){
+                init_providers('onProviderSignIn_app', function() { onProviderSignIn_app() }).then(function(){
+                    null;
+                });
+            })
         })
     })
 }
