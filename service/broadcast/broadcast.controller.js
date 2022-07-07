@@ -1,4 +1,31 @@
 global.broadcast_clients = [];
+const { createLog} = require ("../../service/db/api/app_log/app_log.service");
+function app_log(app_id, app_module_type, request, result, app_user_id,
+				 user_language, user_timezone,user_number_system,user_platform,
+				 server_remote_addr, server_user_agent, server_http_host,server_http_accept_language,
+				 user_gps_latitude,user_gps_longitude){
+    const logData ={
+        app_id : app_id,
+        app_module : 'BROADCAST',
+        app_module_type : app_module_type,
+        app_module_request : request,
+        app_module_result : result,
+        app_user_id : app_user_id,
+        user_language : user_language,
+        user_timezone : user_timezone,
+        user_number_system : user_number_system,
+        user_platform : user_platform,
+        server_remote_addr : server_remote_addr,
+        server_user_agent : server_user_agent,
+        server_http_host : server_http_host,
+        server_http_accept_language : server_http_accept_language,
+        user_gps_latitude : user_gps_latitude,
+        user_gps_longitude : user_gps_longitude
+    }
+    createLog(logData, (err,results)  => {
+        null;
+    }); 
+}
 module.exports = {
 	connectBroadcast: (req, res) => {
         const headers = {
@@ -44,6 +71,21 @@ module.exports = {
                 response: res
             };
             broadcast_clients.push(newClient);
+            app_log(req.query.app_id,
+                    'BROADCAST_CONNECT',
+                    req.originalUrl,
+                    JSON.stringify(geodata),
+                    req.query.user_account_id,
+                    null,
+                    null,
+                    null,
+                    null,
+                    req.ip,
+                    req.headers["user-agent"],
+                    req.headers["host"],
+                    req.headers["accept-language"],
+                    geodata.geoplugin_latitude,
+                    geodata.geoplugin_longitude);
             res.on('close', ()=>{
                 broadcast_clients = broadcast_clients.filter(client => client.id !== req.params.clientId);
                 clearInterval(intervalId);

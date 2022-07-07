@@ -3,6 +3,32 @@ const { createLog} = require ("../../service/db/api/app_log/app_log.service");
 const { getMessage } = require("../db/api/message_translation/message_translation.service");
 const { getParameter } = require ("../db/api/app_parameter/app_parameter.service");
 const { createLogAppSE } = require("../../service/log/log.service");
+function app_log(app_id, app_module_type, request, result, app_user_id,
+				 user_language, user_timezone,user_number_system,user_platform,
+				 server_remote_addr, server_user_agent, server_http_host,server_http_accept_language,
+				 user_gps_latitude,user_gps_longitude){
+    const logData ={
+        app_id : app_id,
+        app_module : 'GEOLOCATION',
+        app_module_type : app_module_type,
+        app_module_request : request,
+        app_module_result : result,
+        app_user_id : app_user_id,
+        user_language : user_language,
+        user_timezone : user_timezone,
+        user_number_system : user_number_system,
+        user_platform : user_platform,
+        server_remote_addr : server_remote_addr,
+        server_user_agent : server_user_agent,
+        server_http_host : server_http_host,
+        server_http_accept_language : server_http_accept_language,
+        user_gps_latitude : user_gps_latitude,
+        user_gps_longitude : user_gps_longitude
+    }
+    createLog(logData, (err,results)  => {
+        null;
+    }); 
+}
 module.exports = {
 	getPlace: (data, res) => {
 		var geodata;
@@ -30,21 +56,21 @@ module.exports = {
 					const url = `${db_SERVICE_GEOLOCATION_URL_GPS_PLACE}?format=json&lat=${data.query.latitude}&lon=${data.query.longitude}`;
 					async function getasync(){
 						geodata = await getService(url);
-						data.body.app_id 					  = data.query.app_id;
-						data.body.app_module				  = 'GEOLOCATION';
-						data.body.app_module_type			  = 'GEOLOCATION_PLACE';
-						data.body.app_module_request		  = url;
-						data.body.app_module_result			  = JSON.stringify(geodata);
-						data.body.app_user_id				  = data.query.app_user_id;
-						data.body.server_remote_addr 		  = data.ip;
-						data.body.server_user_agent 		  = data.headers["user-agent"];
-						data.body.server_http_host 			  = data.headers["host"];
-						data.body.server_http_accept_language = data.headers["accept-language"];
-						data.body.user_gps_latitude			  = geodata.geoplugin_latitude;
-						data.body.user_gps_longitude		  = geodata.geoplugin_longitude;
-						createLog(data.body, (err2,results2)  => {
-							null;
-						}); 
+						app_log(data.query.app_id, 
+								'GEOLOCATION_PLACE',
+								url,
+								JSON.stringify(geodata),
+								data.query.app_user_id,
+								null,
+								null,
+								null,
+								null,
+								data.ip,
+								data.headers["user-agent"],
+								data.headers["host"],
+								data.headers["accept-language"],
+								geodata.geoplugin_latitude,
+								geodata.geoplugin_longitude);
 						return res.status(200).json(
 							geodata
 						)
@@ -72,22 +98,21 @@ module.exports = {
 					url = db_SERVICE_GEOLOCATION_URL_GPS_IP + '?ip=' + data.query.ip;
 				async function getasync(){
 					geodata = await getService(url);
-					data.body.app_id 					  = data.query.app_id;
-					data.body.app_module				  = 'GEOLOCATION';
-					data.body.app_module_type			  = 'GEOLOCATION_IP';
-					data.body.app_module_request		  = url;
-					data.body.app_module_result			  = JSON.stringify(geodata);
-					data.body.app_user_id				  = data.query.app_user_id;
-					data.body.server_remote_addr 		  = data.ip;
-					data.body.server_user_agent 		  = data.headers["user-agent"];
-					data.body.server_http_host 			  = data.headers["host"];
-					data.body.server_http_accept_language = data.headers["accept-language"];
-					data.body.user_gps_latitude			  = geodata.geoplugin_latitude;
-					data.body.user_gps_longitude		  = geodata.geoplugin_longitude;
-
-					createLog(data.body, (err2,results2)  => {
-						null;
-					}); 
+					app_log(data.query.app_id, 
+							'GEOLOCATION_IP',
+							url,
+							JSON.stringify(geodata),
+							data.query.app_user_id,
+							null,
+							null,
+							null,
+							null,
+							data.ip,
+							data.headers["user-agent"],
+							data.headers["host"],
+							data.headers["accept-language"],
+							geodata.geoplugin_latitude,
+							geodata.geoplugin_longitude);
 					if (data.query.callback==1)
 						return callBack(null, geodata);
 					else

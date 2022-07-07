@@ -1,8 +1,35 @@
 const { sendEmailService } = require("./mail.service");
+const { getIp} = require ("../../service/geolocation/geolocation.controller");
 const { createLog} = require ("../../service/db/api/app_log/app_log.service");
 const { getMessage } = require("../db/api/message_translation/message_translation.service");
 const { getParameters, getParameters_server } = require ("../db/api/app_parameter/app_parameter.service");
 const { createLogAppSE } = require("../../service/log/log.service");
+function app_log(app_id, app_module_type, request, result, app_user_id,
+                 user_language, user_timezone,user_number_system,user_platform,
+                 server_remote_addr, server_user_agent, server_http_host,server_http_accept_language,
+                 user_gps_latitude,user_gps_longitude){
+    const logData ={
+        app_id : app_id,
+        app_module : 'MAIL',
+        app_module_type : app_module_type,
+        app_module_request : request,
+        app_module_result : result,
+        app_user_id : app_user_id,
+        user_language : user_language,
+        user_timezone : user_timezone,
+        user_number_system : user_number_system,
+        user_platform : user_platform,
+        server_remote_addr : server_remote_addr,
+        server_user_agent : server_user_agent,
+        server_http_host : server_http_host,
+        server_http_accept_language : server_http_accept_language,
+        user_gps_latitude : user_gps_latitude,
+        user_gps_longitude : user_gps_longitude
+    }
+    createLog(logData, (err,results)  => {
+        null;
+    }); 
+}
 module.exports = {
     getLogo: (req, res) => {
         if (typeof req.query.app_id == 'undefined')
@@ -55,20 +82,27 @@ module.exports = {
                         break;
                     }
                 }
-                req.body.app_module_request = req.protocol + '://' + req.get('host') + req.originalUrl;
-                req.body.app_module_result = '';
-                req.body.app_user_id = req.query.app_user_id;
-
-                req.body.server_remote_addr = req.ip;
-                req.body.server_user_agent = req.headers["user-agent"];
-                req.body.server_http_host = req.headers["host"];
-                req.body.server_http_accept_language = req.headers["accept-language"];
-                createLog(req.body, (err2, results2) => {
-                    null;
-                });
+                getIp(req, res, (err, result)=>{
+                    app_log(req.query.app_id,
+                            req.body.app_module_type,
+                            req.protocol + '://' + req.get('host') + req.originalUrl,
+                            result.geoplugin_city + ', ' +
+                            result.geoplugin_regionName + ', ' +
+                            result.geoplugin_countryName,
+                            req.query.app_user_id,
+                            null,
+                            null,
+                            null,
+                            null,
+                            req.ip,
+                            req.headers["user-agent"],
+                            req.headers["host"],
+                            req.headers["accept-language"],
+                            result.geoplugin_latitude,
+                            result.geoplugin_longitude);
+                })
             }
         }) 
-        
     },
     sendEmail: (data, callBack) => {
         /*
@@ -111,27 +145,21 @@ module.exports = {
     
         function main_function(){
             sendEmailService(emailData, (err, result) => {
-                const logData ={
-                    app_id : emailData.app_id,
-                    app_module : 'MAIL',
-                    app_module_type : emailData.app_module_type,
-                    app_module_request : emailData.to,
-                    app_module_result : `${(err)?JSON.stringify(err):JSON.stringify(result)}`,
-                    app_user_id : emailData.app_user_id,
-                    user_language : data.user_language,
-                    user_timezone : data.user_timezone,
-                    user_number_system : data.user_number_system,
-                    user_platform : data.user_platform,
-                    server_remote_addr : data.server_remote_addr,
-                    server_user_agent : data.server_user_agent,
-                    server_http_host : data.server_http_host,
-                    server_http_accept_language : data.server_http_accept_language,
-                    user_gps_latitude : data.user_gps_latitude,
-                    user_gps_longitude : data.user_gps_longitude
-                }
-                createLog(logData, (err2, results2) => {
-                    null;
-                });
+                app_log(emailData.app_id,
+                        emailData.app_module_type,
+                        emailData.to,
+                        `${(err)?JSON.stringify(err):JSON.stringify(result)}`,
+                        emailData.app_user_id,
+                        data.user_language,
+                        data.user_timezone,
+                        data.user_number_system,
+                        data.user_platform,
+                        data.server_remote_addr,
+                        data.server_user_agent,
+                        data.server_http_host,
+                        data.server_http_accept_language,
+                        data.user_gps_latitude,
+                        data.user_gps_longitude);
                 if (err) {    
                     return callBack(err, result);
                 } else
