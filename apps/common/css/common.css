@@ -266,12 +266,41 @@
 #dialogue_user_edit{
 	visibility: hidden;
 }
+
 #dialogue_user_edit_content{
-	width: auto;
+	width: 360px;
 	height: auto;
+	font-size: 11px;
 }
+#dialogue_user_edit_content input{
+	width: 100%;
+	font-size: 11px;
+}
+#user_edit_avatar{
+	width:64px;
+	height:64px;
+}
+#user_edit_avatar_img{
+	width:48px;
+	height:48px;
+	border-radius: 50%;
+	position:fixed;
+	left: 26px;
+    top: 17px;
+	z-index: -1;
+}
+#user_edit_input_avatar_img{
+	display:none;
+}
+#user_edit_btn_avatar_img{
+	border: none;
+    width: 26px;	
+    margin-top: 20px;
+    -webkit-appearance: none;
+}
+
 #dialogue_user_edit_content .setting_horizontal_row{
-	display: inline-block;
+	display: block;
 }
 #dialogue_user_edit_content #user_edit_common .setting_horizontal_row:first-child .setting_horizontal_col:nth-child(1){
 	text-align: center !important;
@@ -280,21 +309,19 @@
 	text-align: center !important;
 }
 
-#dialogue_user_edit_content .setting_horizontal_col:nth-child(1){
+#dialogue_user_edit_content .setting_horizontal_col:nth-child(1),
+#dialogue_user_edit_content .setting_horizontal_col:nth-child(2){
+	width :170px;
 	text-align: left;
-	width:230px !important;
-	min-width:unset !important;
-	float: left;
-	margin-right:10px;
+	display: inline-block;
 }
-#dialogue_user_edit_content  .setting_horizontal_col:nth-child(2){
-	width:560px !important;
-	text-align:left;
-}
+
 #dialogue_user_edit_content #user_edit_buttons .setting_horizontal_col:nth-child(1) {
-	text-align: center !important;
+	width: 0%;
+	display: none;
 }
 #dialogue_user_edit_content #user_edit_buttons .setting_horizontal_col:nth-child(2) {
+	width: 100%;
 	text-align: center !important;
 }
 #setting_label_data_last_logontime_edit,
@@ -635,31 +662,6 @@
 #setting_label_provider_image_url_edit_data{
 	display:none !important;
 }
-#user_edit_avatar{
-	width:64px;
-	height:64px;
-	position:fixed;
-}
-#user_edit_avatar_img{
-	width:64px;
-	height:64px;
-	border-radius: 50%;
-	position:fixed;
-	left:10px;
-	z-index: -1;
-}
-#user_edit_input_avatar_img{
-	display:none;
-}
-#user_edit_btn_avatar_img{
-	border: none;
-    width: 26px;	
-    margin-top: 20px;
-    -webkit-appearance: none;
-}
-#user_edit_common{
-	margin-top:20px;
-}
 /*signup*/
 .input_error{
 	border:1px solid red !important;
@@ -668,6 +670,7 @@
 #setting_btn_user_delete_account
 {
 	width:100px;
+	height: 30px;
 }
 #setting_btn_user_update,
 #setting_btn_user_delete_account{
@@ -883,6 +886,20 @@
 		width:500px;
 		height:500px;
 	}
+	#dialogue_user_edit_content{
+		width:500px;
+		font-size: 16px;
+	}
+	#dialogue_user_edit_content .setting_horizontal_col:nth-child(1), #dialogue_user_edit_content .setting_horizontal_col:nth-child(2) {
+		width: 240px;
+	}
+	#dialogue_user_edit_content input{
+		font-size: 16px;
+	}
+	#user_edit_avatar_img{
+		top:20px;
+	}
+
 	#profile_public {
 		width:400px;
 	}

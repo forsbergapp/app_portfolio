@@ -65,26 +65,27 @@
     </div>
     <div id='dialogue_user_edit' class='common_dialogue'>
         <div id='dialogue_user_edit_content' class='common_dialogue_content'>
-            <div id='user_avatar'>
-                <div id='user_edit_avatar'>
-                    <button id='user_edit_btn_avatar_img'></button>
-                    <input id='user_edit_input_avatar_img' type='file'>
-                </div>
-                <img id='user_edit_avatar_img' alt='' src=''>
-            </div>
             <div id='user_edit_common'>
                 <div class='setting_horizontal_row'>
                     <div class='setting_horizontal_col'>
+                        <div id='user_avatar'>
+                            <div id='user_edit_avatar'>
+                                <button id='user_edit_btn_avatar_img'></button>
+                                <input id='user_edit_input_avatar_img' type='file'>
+                            </div>
+                            <img id='user_edit_avatar_img' alt='' src=''>
+                        </div>
                     </div>
                     <div class='setting_horizontal_col'>
-                        <div id='user_edit_private'></div>
+                        <div id='user_edit_private'>
+                        </div>
                         <input id='setting_checkbox_profile_private' type='checkbox' class='switch-input' />
                         <label for='setting_checkbox_profile_private' class='switch-label'></label>
                     </div>
                 </div>
                 <div class='setting_horizontal_row'>
                     <div class='setting_horizontal_col'>
-                    <label id='setting_label_username_edit'>Username</label>
+                        <label id='setting_label_username_edit'>Username</label>
                     </div>
                     <div class='setting_horizontal_col'>
                         <input id='setting_input_username_edit'/>
@@ -92,7 +93,7 @@
                 </div>
                 <div class='setting_horizontal_row'>
                     <div class='setting_horizontal_col'>
-                    <label id='setting_label_bio_edit'>Bio</label>
+                        <label id='setting_label_bio_edit'>Bio</label>
                     </div>
                     <div class='setting_horizontal_col'>
                         <input id='setting_input_bio_edit'/>
@@ -102,7 +103,7 @@
             <div id='user_edit_local'>
                 <div class='setting_horizontal_row'>
                     <div class='setting_horizontal_col'>
-                    <label id='setting_label_email_edit'>Email</label>
+                        <label id='setting_label_email_edit'>Email</label>
                     </div>
                     <div class='setting_horizontal_col'>
                         <input id='setting_input_email_edit'/>
@@ -110,7 +111,7 @@
                 </div>
                 <div class='setting_horizontal_row'>
                     <div class='setting_horizontal_col'>
-                    <label id='setting_label_password_edit'>Password</label>
+                        <label id='setting_label_password_edit'>Password</label>
                     </div>
                     <div class='setting_horizontal_col'>
                         <input id='setting_input_password_edit' type='password' value='' />
@@ -118,7 +119,7 @@
                 </div>
                 <div class='setting_horizontal_row'>
                     <div class='setting_horizontal_col'>
-                    <label id='setting_label_password_confirm_edit'>Confirm password</label>
+                        <label id='setting_label_password_confirm_edit'>Confirm password</label>
                     </div>
                     <div class='setting_horizontal_col'>
                         <input id='setting_input_password_confirm_edit' type='password' value='' />
@@ -126,7 +127,7 @@
                 </div>
                 <div class='setting_horizontal_row'>
                     <div class='setting_horizontal_col'>
-                    <label id='setting_label_new_password_edit'>New password</label>
+                        <label id='setting_label_new_password_edit'>New password</label>
                     </div>
                     <div class='setting_horizontal_col'>
                         <input id='setting_input_new_password_edit' type='password' value='' />
@@ -134,7 +135,7 @@
                 </div>
                 <div class='setting_horizontal_row'>
                     <div class='setting_horizontal_col'>
-                    <label id='setting_label_new_password_confirm_edit'>New confirm password</label>
+                        <label id='setting_label_new_password_confirm_edit'>New confirm password</label>
                     </div>
                     <div class='setting_horizontal_col'>
                         <input id='setting_input_new_password_confirm_edit' type='password' value='' />
@@ -142,7 +143,7 @@
                 </div>
                 <div class='setting_horizontal_row'>
                     <div class='setting_horizontal_col'>
-                    <label id='setting_label_password_reminder_edit'>Password reminder</label>
+                        <label id='setting_label_password_reminder_edit'>Password reminder</label>
                     </div>
                     <div class='setting_horizontal_col'>
                         <input id='setting_input_password_reminder_edit' />
@@ -152,14 +153,14 @@
             <div id='user_edit_provider'>
                 <div class='setting_horizontal_row'>
                     <div class='setting_horizontal_col'>
-                    <label id='setting_label_provider_edit'></label>
+                        <label id='setting_label_provider_edit'></label>
                     </div>
                     <div id='setting_user_edit_provider_logo' class='setting_horizontal_col'>
                     </div>
                 </div>
                 <div class='setting_horizontal_row'>
                     <div class='setting_horizontal_col'>
-                    <label id='setting_label_provider_id_edit'></label>
+                        <label id='setting_label_provider_id_edit'></label>
                     </div>
                     <div class='setting_horizontal_col'>
                         <label id='setting_label_provider_id_edit_data'></label>
@@ -167,7 +168,7 @@
                 </div>
                 <div class='setting_horizontal_row'>
                     <div class='setting_horizontal_col'>
-                    <label id='setting_label_provider_name_edit'>Name</label>
+                        <label id='setting_label_provider_name_edit'>Name</label>
                     </div>
                     <div class='setting_horizontal_col'>
                         <label id='setting_label_provider_name_edit_data'></label>
@@ -175,7 +176,7 @@
                 </div>
                 <div class='setting_horizontal_row'>
                     <div class='setting_horizontal_col'>
-                    <label id='setting_label_provider_email_edit'>Email</label>
+                        <label id='setting_label_provider_email_edit'>Email</label>
                     </div>
                     <div class='setting_horizontal_col'>
                         <label id='setting_label_provider_email_edit_data'></label>
@@ -183,7 +184,7 @@
                 </div>
                 <div class='setting_horizontal_row'>
                     <div class='setting_horizontal_col'>
-                    <label id='setting_label_provider_image_url_edit'></label>
+                        <label id='setting_label_provider_image_url_edit'></label>
                     </div>
                     <div class='setting_horizontal_col'>
                         <label id='setting_label_provider_image_url_edit_data'></label>
@@ -193,7 +194,7 @@
             <div id='user_edit_account_info'>
                 <div class='setting_horizontal_row'>
                     <div class='setting_horizontal_col'>
-                    <label id='setting_label_last_logontime_edit'>Last logon time</label>
+                        <label id='setting_label_last_logontime_edit'>Last logon time</label>
                     </div>
                     <div class='setting_horizontal_col'>
                         <label id='setting_label_data_last_logontime_edit'></label>
@@ -201,7 +202,7 @@
                 </div>
                 <div class='setting_horizontal_row'>
                     <div class='setting_horizontal_col'>
-                    <label id='setting_label_account_created_edit'>Account created</label>
+                        <label id='setting_label_account_created_edit'>Account created</label>
                     </div>
                     <div class='setting_horizontal_col'>
                         <label id='setting_label_data_account_created_edit'></label>
@@ -209,7 +210,7 @@
                 </div>
                 <div class='setting_horizontal_row'>
                     <div class='setting_horizontal_col'>
-                    <label id='setting_label_account_modified_edit'>Account modified</label>
+                        <label id='setting_label_account_modified_edit'>Account modified</label>
                     </div>
                     <div class='setting_horizontal_col'>
                         <label id='setting_label_data_account_modified_edit'></label>
