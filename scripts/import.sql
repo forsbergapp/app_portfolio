@@ -23,20 +23,13 @@ INSERT INTO app_portfolio.app_object (app_id, object_name) VALUES (1,'TOOLBAR');
 -- Dumping data for table `app_object_item`
 --
 INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (1,'DIALOGUE','CONFIRM_QUESTION');
-INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (1,'DIALOGUE','LOGIN_BTN_SIGNUP');
 INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (1,'DIALOGUE','LOGIN_CONTINUE_WITH');
 INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (1,'DIALOGUE','LOGIN_PASSWORD');
-INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (1,'DIALOGUE','LOGIN_TITLE');
 INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (1,'DIALOGUE','LOGIN_USERNAME');
-INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (1,'DIALOGUE','SCAN_OPEN_MOBILE_TITLE1');
-INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (1,'DIALOGUE','SCAN_OPEN_MOBILE_TITLE2');
-INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (1,'DIALOGUE','SCAN_OPEN_MOBILE_TITLE3');
-INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (1,'DIALOGUE','SIGNUP_BTN_LOGIN');
 INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (1,'DIALOGUE','SIGNUP_EMAIL');
 INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (1,'DIALOGUE','SIGNUP_PASSWORD');
 INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (1,'DIALOGUE','SIGNUP_PASSWORD_CONFIRM');
 INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (1,'DIALOGUE','SIGNUP_PASSWORD_REMINDER');
-INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (1,'DIALOGUE','SIGNUP_TITLE');
 INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (1,'DIALOGUE','SIGNUP_USERNAME');
 INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (1,'DIALOGUE','USER_VERIFY_MESSAGE_1');
 INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (1,'DIALOGUE','USER_VERIFY_MESSAGE_2');
@@ -154,11 +147,9 @@ INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name
 INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (1,'SETTING_NAV_USER','SETTING_LABEL_USER_URL_MONTH');
 INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (1,'SETTING_NAV_USER','SETTING_LABEL_USER_URL_YEAR');
 INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (1,'SETTING_NAV_USER','SETTING_LABEL_USERNAME_EDIT');
-INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (1,'TOOLBAR','POPUP_MENU');
 INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (1,'TOOLBAR','TOOLBAR_BTN_DAY_LABEL');
 INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (1,'TOOLBAR','TOOLBAR_BTN_MONTH_LABEL');
 INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (1,'TOOLBAR','TOOLBAR_BTN_PRINT_LABEL');
-INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (1,'TOOLBAR','TOOLBAR_BTN_SETTINGS_LABEL');
 INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (1,'TOOLBAR','TOOLBAR_BTN_YEAR_LABEL');
 --
 -- Dumping data for table `app_object_item_subitem`
@@ -237,12 +228,6 @@ INSERT INTO app_portfolio.app_object_item_subitem (app_id, object_name, object_i
 INSERT INTO app_portfolio.app_object_item_subitem (app_id, object_name, object_item_name, subitem_name) VALUES (1,'SETTING_NAV_REGIONAL','SETTING_SELECT_REPORT_DIRECTION','SETTING_SELECT_REPORT_DIRECTION_0');
 INSERT INTO app_portfolio.app_object_item_subitem (app_id, object_name, object_item_name, subitem_name) VALUES (1,'SETTING_NAV_REGIONAL','SETTING_SELECT_REPORT_DIRECTION','SETTING_SELECT_REPORT_DIRECTION_1');
 INSERT INTO app_portfolio.app_object_item_subitem (app_id, object_name, object_item_name, subitem_name) VALUES (1,'SETTING_NAV_REGIONAL','SETTING_SELECT_REPORT_LOCALE_SECOND','SETTING_SELECT_REPORT_LOCALE_SECOND_0');
-INSERT INTO app_portfolio.app_object_item_subitem (app_id, object_name, object_item_name, subitem_name) VALUES (1,'TOOLBAR','POPUP_MENU','POPUP_MENU_LOGIN');
-INSERT INTO app_portfolio.app_object_item_subitem (app_id, object_name, object_item_name, subitem_name) VALUES (1,'TOOLBAR','POPUP_MENU','POPUP_MENU_LOGOFF');
-INSERT INTO app_portfolio.app_object_item_subitem (app_id, object_name, object_item_name, subitem_name) VALUES (1,'TOOLBAR','POPUP_MENU','POPUP_MENU_PROFILE');
-INSERT INTO app_portfolio.app_object_item_subitem (app_id, object_name, object_item_name, subitem_name) VALUES (1,'TOOLBAR','POPUP_MENU','POPUP_MENU_PROFILE_TOP');
-INSERT INTO app_portfolio.app_object_item_subitem (app_id, object_name, object_item_name, subitem_name) VALUES (1,'TOOLBAR','POPUP_MENU','POPUP_MENU_SETTINGS');
-INSERT INTO app_portfolio.app_object_item_subitem (app_id, object_name, object_item_name, subitem_name) VALUES (1,'TOOLBAR','POPUP_MENU','POPUP_MENU_SIGNUP');
 --
 -- Dumping data for table `country_group`
 --

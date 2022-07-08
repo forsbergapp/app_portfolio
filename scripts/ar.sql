@@ -34,13 +34,9 @@ INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, 
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'REPORT','COLTITLE_TRANSLITERATION_SUNRISE',25,'Shorook');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'REPORT','COLTITLE_TRANSLITERATION_SUNSET',25,'Sunset');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'REPORT','COLTITLE_WEEKDAY',25,'يوم من أيام الأسبوع');
-INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'DIALOGUE','LOGIN_BTN_SIGNUP',25,'سجل');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'DIALOGUE','LOGIN_CONTINUE_WITH',25,'Continue with');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'DIALOGUE','LOGIN_PASSWORD',25,'كلمه السر');
-INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'DIALOGUE','LOGIN_TITLE',25,'تسجيل الدخول');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'DIALOGUE','LOGIN_USERNAME',25,'اسم المستخدم');
-INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'DIALOGUE','SCAN_OPEN_MOBILE_TITLE1',25,'مسح لاستخدامه على هاتفك');
-INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'DIALOGUE','SCAN_OPEN_MOBILE_TITLE2',25,'مواقيت الصلاة التقليدية المتقدمة');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'SETTING_NAV_USER','SETTING_BTN_LABEL_USER_ADD',25,'أضف');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'SETTING_NAV_USER','SETTING_BTN_LABEL_USER_DELETE',25,'حذف');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'SETTING_NAV_USER','SETTING_BTN_LABEL_USER_DELETE_ACCOUNT',25,'حذف الحساب');
@@ -104,18 +100,15 @@ INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, 
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'SETTING_NAV_USER','SETTING_LABEL_USER_URL_MONTH',25,'شهر');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'SETTING_NAV_USER','SETTING_LABEL_USER_URL_YEAR',25,'عام');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'SETTING_NAV_USER','SETTING_LABEL_USERNAME_EDIT',25,'اسم المستخدم');
-INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'DIALOGUE','SIGNUP_BTN_LOGIN',25,'تسجيل الدخول');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'DIALOGUE','SIGNUP_EMAIL',25,'البريد الإلكتروني');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'DIALOGUE','SIGNUP_PASSWORD',25,'كلمه السر');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'DIALOGUE','SIGNUP_PASSWORD_CONFIRM',25,'تأكيد كلمة المرور');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'DIALOGUE','SIGNUP_PASSWORD_REMINDER',25,'تذكير كلمة السر');
-INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'DIALOGUE','SIGNUP_TITLE',25,'سجل');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'DIALOGUE','SIGNUP_USERNAME',25,'اسم المستخدم');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'REPORT','TIMETABLE_TITLE',25,'الجدول الزمني');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'TOOLBAR','TOOLBAR_BTN_DAY_LABEL',25,'يوم');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'TOOLBAR','TOOLBAR_BTN_MONTH_LABEL',25,'شهر');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'TOOLBAR','TOOLBAR_BTN_PRINT_LABEL',25,'طباعة');
-INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'TOOLBAR','TOOLBAR_BTN_SETTINGS_LABEL',25,'الإعدادات');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'TOOLBAR','TOOLBAR_BTN_YEAR_LABEL',25,'عام');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'DIALOGUE','USER_VERIFY_MESSAGE_1',25,'تم إرسال رسالة مع رمز التحقق إلى بريدك الإلكتروني');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'DIALOGUE','USER_VERIFY_MESSAGE_2',25,'أدخل الرمز للمتابعة');
@@ -124,12 +117,6 @@ INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, 
 --
 -- Dumping data for table `app_object_subitem_translation`
 --
-INSERT INTO app_object_subitem_translation (app_id, object_name, object_item_name, subitem_name, language_id, text) VALUES (1,'TOOLBAR','POPUP_MENU','POPUP_MENU_LOGIN',25,'تسجيل الدخول');
-INSERT INTO app_object_subitem_translation (app_id, object_name, object_item_name, subitem_name, language_id, text) VALUES (1,'TOOLBAR','POPUP_MENU','POPUP_MENU_LOGOFF',25,'إطفاء');
-INSERT INTO app_object_subitem_translation (app_id, object_name, object_item_name, subitem_name, language_id, text) VALUES (1,'TOOLBAR','POPUP_MENU','POPUP_MENU_PROFILE',25,'الملف الشخصي');
-INSERT INTO app_object_subitem_translation (app_id, object_name, object_item_name, subitem_name, language_id, text) VALUES (1,'TOOLBAR','POPUP_MENU','POPUP_MENU_PROFILE_TOP',25,'Top');
-INSERT INTO app_object_subitem_translation (app_id, object_name, object_item_name, subitem_name, language_id, text) VALUES (1,'TOOLBAR','POPUP_MENU','POPUP_MENU_SETTINGS',25,'الإعدادات');
-INSERT INTO app_object_subitem_translation (app_id, object_name, object_item_name, subitem_name, language_id, text) VALUES (1,'TOOLBAR','POPUP_MENU','POPUP_MENU_SIGNUP',25,'سجل');
 INSERT INTO app_object_subitem_translation (app_id, object_name, object_item_name, subitem_name, language_id, text) VALUES (1,'SETTING_NAV_PRAYER','SETTING_SELECT_ASR','SETTING_SELECT_ASR_0',25,'اساسي');
 INSERT INTO app_object_subitem_translation (app_id, object_name, object_item_name, subitem_name, language_id, text) VALUES (1,'SETTING_NAV_PRAYER','SETTING_SELECT_ASR','SETTING_SELECT_ASR_1',25,'حنفي');
 INSERT INTO app_object_subitem_translation (app_id, object_name, object_item_name, subitem_name, language_id, text) VALUES (1,'SETTING_NAV_REGIONAL','SETTING_SELECT_CALENDARTYPE','SETTING_SELECT_CALENDARTYPE_0',25,'التقويم الغريغوري');
