@@ -36,13 +36,9 @@ INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, 
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'REPORT','COLTITLE_TRANSLITERATION_SUNRISE',546,'Shorook');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'REPORT','COLTITLE_TRANSLITERATION_SUNSET',546,'Sunset');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'REPORT','COLTITLE_WEEKDAY',546,'平日');
-INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'DIALOGUE','LOGIN_BTN_SIGNUP',546,'註冊');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'DIALOGUE','LOGIN_CONTINUE_WITH',546,'繼續');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'DIALOGUE','LOGIN_PASSWORD',546,'密碼');
-INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'DIALOGUE','LOGIN_TITLE',546,'登錄');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'DIALOGUE','LOGIN_USERNAME',546,'用戶名');
-INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'DIALOGUE','SCAN_OPEN_MOBILE_TITLE1',546,'掃描即可在手機上使用');
-INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'DIALOGUE','SCAN_OPEN_MOBILE_TITLE2',546,'先進的傳統穆斯林薩拉赫時間表');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'SETTING_NAV_USER','SETTING_BTN_LABEL_USER_ADD',546,'加');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'SETTING_NAV_USER','SETTING_BTN_LABEL_USER_DELETE',546,'刪除');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'SETTING_NAV_USER','SETTING_BTN_LABEL_USER_DELETE_ACCOUNT',546,'刪除帳戶');
@@ -106,18 +102,15 @@ INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, 
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'SETTING_NAV_USER','SETTING_LABEL_USER_URL_MONTH',546,'月');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'SETTING_NAV_USER','SETTING_LABEL_USER_URL_YEAR',546,'年');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'SETTING_NAV_USER','SETTING_LABEL_USERNAME_EDIT',546,'用戶名');
-INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'DIALOGUE','SIGNUP_BTN_LOGIN',546,'登錄');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'DIALOGUE','SIGNUP_EMAIL',546,'電子郵件');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'DIALOGUE','SIGNUP_PASSWORD',546,'密碼');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'DIALOGUE','SIGNUP_PASSWORD_CONFIRM',546,'確認密碼');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'DIALOGUE','SIGNUP_PASSWORD_REMINDER',546,'密碼提醒');
-INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'DIALOGUE','SIGNUP_TITLE',546,'註冊');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'DIALOGUE','SIGNUP_USERNAME',546,'用戶名');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'REPORT','TIMETABLE_TITLE',546,'時間表');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'TOOLBAR','TOOLBAR_BTN_DAY_LABEL',546,'天');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'TOOLBAR','TOOLBAR_BTN_MONTH_LABEL',546,'月');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'TOOLBAR','TOOLBAR_BTN_PRINT_LABEL',546,'打印');
-INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'TOOLBAR','TOOLBAR_BTN_SETTINGS_LABEL',546,'設定值');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'TOOLBAR','TOOLBAR_BTN_YEAR_LABEL',546,'年');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'DIALOGUE','USER_VERIFY_MESSAGE_1',546,'帶有驗證碼的消息已發送到您的電子郵件。');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'DIALOGUE','USER_VERIFY_MESSAGE_2',546,'輸入代碼以繼續。');
@@ -126,12 +119,6 @@ INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, 
 --
 -- Dumping data for table `app_object_subitem_translation`
 --
-INSERT INTO app_object_subitem_translation (app_id, object_name, object_item_name, subitem_name, language_id, text) VALUES (1,'TOOLBAR','POPUP_MENU','POPUP_MENU_LOGIN',546,'登錄');
-INSERT INTO app_object_subitem_translation (app_id, object_name, object_item_name, subitem_name, language_id, text) VALUES (1,'TOOLBAR','POPUP_MENU','POPUP_MENU_LOGOFF',546,'註銷');
-INSERT INTO app_object_subitem_translation (app_id, object_name, object_item_name, subitem_name, language_id, text) VALUES (1,'TOOLBAR','POPUP_MENU','POPUP_MENU_PROFILE',546,'輪廓');
-INSERT INTO app_object_subitem_translation (app_id, object_name, object_item_name, subitem_name, language_id, text) VALUES (1,'TOOLBAR','POPUP_MENU','POPUP_MENU_PROFILE_TOP',546,'最佳');
-INSERT INTO app_object_subitem_translation (app_id, object_name, object_item_name, subitem_name, language_id, text) VALUES (1,'TOOLBAR','POPUP_MENU','POPUP_MENU_SETTINGS',546,'設定值');
-INSERT INTO app_object_subitem_translation (app_id, object_name, object_item_name, subitem_name, language_id, text) VALUES (1,'TOOLBAR','POPUP_MENU','POPUP_MENU_SIGNUP',546,'註冊');
 INSERT INTO app_object_subitem_translation (app_id, object_name, object_item_name, subitem_name, language_id, text) VALUES (1,'SETTING_NAV_PRAYER','SETTING_SELECT_ASR','SETTING_SELECT_ASR_0',546,'標準');
 INSERT INTO app_object_subitem_translation (app_id, object_name, object_item_name, subitem_name, language_id, text) VALUES (1,'SETTING_NAV_PRAYER','SETTING_SELECT_ASR','SETTING_SELECT_ASR_1',546,'Hanafi');
 INSERT INTO app_object_subitem_translation (app_id, object_name, object_item_name, subitem_name, language_id, text) VALUES (1,'SETTING_NAV_REGIONAL','SETTING_SELECT_CALENDARTYPE','SETTING_SELECT_CALENDARTYPE_0',546,'格里高利安');

@@ -516,15 +516,12 @@ async function init_app(){
     document.getElementById('signup_password_confirm').placeholder = 'Password confirm';
     document.getElementById('signup_password_reminder').placeholder = 'Password reminder';
 
-    document.getElementById('login_btn_signup').innerHTML = 'Signup';
-    document.getElementById('signup_btn_login').innerHTML = 'Login';
+    document.getElementById('user_menu_dropdown_profile').innerHTML = window.global_button_default_icon_profile;
+    document.getElementById('user_menu_dropdown_edit').innerHTML = window.global_button_default_icon_edit;
+    document.getElementById('user_menu_dropdown_log_out').innerHTML = window.global_button_default_icon_logoff;
 
-    document.getElementById('user_menu_dropdown_profile').innerHTML = 'Profile';
-    document.getElementById('user_menu_dropdown_edit').innerHTML = 'Edit';
-    document.getElementById('user_menu_dropdown_log_out').innerHTML = 'Log out';
-
-    document.getElementById('user_menu_dropdown_signup').innerHTML = 'Signup';
-    document.getElementById('user_menu_dropdown_log_in').innerHTML = 'Log in';    
+    document.getElementById('user_menu_dropdown_signup').innerHTML = window.global_button_default_icon_signup;
+    document.getElementById('user_menu_dropdown_log_in').innerHTML = window.global_button_default_icon_login;
 
     document.getElementById('confirm_question').innerHTML = 'Are you sure?';
 

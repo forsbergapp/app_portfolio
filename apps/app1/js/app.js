@@ -300,12 +300,12 @@ function get_report_url(id, sid, papersize){
 }
 function updateViewStat_app(user_setting_id, user_setting_user_account_id = null) {
     let user_account_id;
-    if (user_setting_user_account_id !== parseInt(document.getElementById('setting_data_userid_logged_in').innerHTML) ||
-        document.getElementById('setting_data_userid_logged_in').innerHTML == '') {
-        if (document.getElementById('setting_data_userid_logged_in').innerHTML == '')
+    if (user_setting_user_account_id !== parseInt(document.getElementById('user_account_userid_logged_in').innerHTML) ||
+        document.getElementById('user_account_userid_logged_in').innerHTML == '') {
+        if (document.getElementById('user_account_userid_logged_in').innerHTML == '')
             user_account_id = 'null';
         else
-            user_account_id = document.getElementById('setting_data_userid_logged_in').innerHTML;
+            user_account_id = document.getElementById('user_account_userid_logged_in').innerHTML;
         updateReportViewStat(user_account_id, user_setting_id, get_lang_code());
     }
 }
@@ -359,7 +359,7 @@ async function get_place_from_gps(latitude, longitude) {
     let status;
     await fetch(window.global_service_geolocation + window.global_service_geolocation_gps_place + 
                 '?app_id= ' + window.global_app_id +
-                '&app_user_id=' + document.getElementById('setting_data_userid_logged_in').innerHTML +
+                '&app_user_id=' + document.getElementById('user_account_userid_logged_in').innerHTML +
                 '&latitude=' + latitude +
                 '&longitude=' + longitude +
                 '&lang_code=' + get_lang_code(), {
@@ -735,10 +735,6 @@ async function settings_translate(first=true) {
                 json = JSON.parse(result);
                 for (let i = 0; i < json.data.length; i++){
                     if (first==true){
-                        if (json.data[i].object=='APP_OBJECT'){
-                            if (json.data[i].object_name=='APP_DESCRIPTION')
-                                document.getElementById(json.data[i].object_name.toLowerCase()).innerHTML = json.data[i].text;
-                        }
                         if (json.data[i].object=='APP_OBJECT_ITEM'){
                             //placeholder text
                             if (json.data[i].object_name=='DIALOGUE' &&
@@ -1013,48 +1009,40 @@ function fix_toolbar_button_sizes() {
     document.getElementById('toolbar_btn_day_label').classList = 'toolbar_button';
     document.getElementById('toolbar_btn_month_label').classList = 'toolbar_button';
     document.getElementById('toolbar_btn_year_label').classList = 'toolbar_button';
-    document.getElementById('toolbar_btn_settings_label').classList = 'toolbar_button';
 
     if (document.getElementById('toolbar_btn_print_label').innerHTML.length > 9 ||
         document.getElementById('toolbar_btn_day_label').innerHTML.length > 9 ||
         document.getElementById('toolbar_btn_month_label').innerHTML.length > 9 ||
-        document.getElementById('toolbar_btn_year_label').innerHTML.length > 9 ||
-        document.getElementById('toolbar_btn_settings_label').innerHTML.length > 9) {
+        document.getElementById('toolbar_btn_year_label').innerHTML.length > 9 ) {
         document.getElementById('toolbar_btn_print_label').classList.add('toolbar_smallsize');
         document.getElementById('toolbar_btn_day_label').classList.add('toolbar_smallsize');
         document.getElementById('toolbar_btn_month_label').classList.add('toolbar_smallsize');
-        document.getElementById('toolbar_btn_year_label').classList.add('toolbar_smallsize');
-        document.getElementById('toolbar_btn_settings_label').classList.add('toolbar_smallsize');
+        document.getElementById('toolbar_btn_year_label').classList.add('toolbar_smallsize');        
     }
     //if all labels are shorter than 5 characters
     if (document.getElementById('toolbar_btn_print_label').innerHTML.length < 5 &&
         document.getElementById('toolbar_btn_day_label').innerHTML.length < 5 &&
         document.getElementById('toolbar_btn_month_label').innerHTML.length < 5 &&
-        document.getElementById('toolbar_btn_year_label').innerHTML.length < 5 &&
-        document.getElementById('toolbar_btn_settings_label').innerHTML.length < 5) {
+        document.getElementById('toolbar_btn_year_label').innerHTML.length < 5 ) {
         document.getElementById('toolbar_btn_print_label').classList.add('toolbar_bigsize');
         document.getElementById('toolbar_btn_day_label').classList.add('toolbar_bigsize');
         document.getElementById('toolbar_btn_month_label').classList.add('toolbar_bigsize');
         document.getElementById('toolbar_btn_year_label').classList.add('toolbar_bigsize');
-        document.getElementById('toolbar_btn_settings_label').classList.add('toolbar_bigsize');
     }
     //if non of above then show default font size
     if (!(document.getElementById('toolbar_btn_print_label').innerHTML.length > 9 ||
             document.getElementById('toolbar_btn_day_label').innerHTML.length > 9 ||
             document.getElementById('toolbar_btn_month_label').innerHTML.length > 9 ||
-            document.getElementById('toolbar_btn_year_label').innerHTML.length > 9 ||
-            document.getElementById('toolbar_btn_settings_label').innerHTML.length > 9) &&
+            document.getElementById('toolbar_btn_year_label').innerHTML.length > 9 ) &&
         !(document.getElementById('toolbar_btn_print_label').innerHTML.length < 5 &&
             document.getElementById('toolbar_btn_day_label').innerHTML.length < 5 &&
             document.getElementById('toolbar_btn_month_label').innerHTML.length < 5 &&
-            document.getElementById('toolbar_btn_year_label').innerHTML.length < 5 &&
-            document.getElementById('toolbar_btn_settings_label').innerHTML.length < 5)) {
+            document.getElementById('toolbar_btn_year_label').innerHTML.length < 5 )) {
 
         document.getElementById('toolbar_btn_print_label').classList.add('toolbar_defaultsize');
         document.getElementById('toolbar_btn_day_label').classList.add('toolbar_defaultsize');
         document.getElementById('toolbar_btn_month_label').classList.add('toolbar_defaultsize');
-        document.getElementById('toolbar_btn_year_label').classList.add('toolbar_defaultsize');
-        document.getElementById('toolbar_btn_settings_label').classList.add('toolbar_defaultsize');
+        document.getElementById('toolbar_btn_year_label').classList.add('toolbar_defaultsize');;
     }
 }
 
@@ -1128,14 +1116,14 @@ async function toolbar_bottom(choice) {
         case 6:
             {
                 settings.style.visibility = 'hidden';
-                profile_show_app(null,null, document.getElementById('setting_data_userid_logged_in').innerHTML , document.getElementById('setting_select_timezone_current').value,get_lang_code());
+                profile_show_app(null,null, document.getElementById('user_account_userid_logged_in').innerHTML , document.getElementById('setting_select_timezone_current').value,get_lang_code());
                 break;
             }
             //profile top
         case 7:
             {
                 settings.style.visibility = 'hidden';
-                profile_top(1, document.getElementById('setting_data_userid_logged_in').innerHTML, document.getElementById('setting_select_timezone_current').value, get_lang_code(), null, 'profile_show_app');
+                profile_top(1, document.getElementById('user_account_userid_logged_in').innerHTML, document.getElementById('setting_select_timezone_current').value, get_lang_code(), null, 'profile_show_app');
                 break;
             }
     }
@@ -1423,7 +1411,7 @@ async function update_ui(option, item_id=null) {
                     let status;
                     await fetch(window.global_service_worldcities + '/' + settings.country[settings.country.selectedIndex].getAttribute('country_code').toUpperCase() +
                             '?app_id=' + window.global_app_id +
-                            '&app_user_id=' + document.getElementById('setting_data_userid_logged_in').innerHTML +
+                            '&app_user_id=' + document.getElementById('user_account_userid_logged_in').innerHTML +
                             '&lang_code=' + get_lang_code(), {
                         method: 'GET',
                         headers: {
@@ -1697,10 +1685,7 @@ async function update_ui(option, item_id=null) {
 /* USER                   */
 /*----------------------- */
 async function user_edit_app() {
-    let old_button = document.getElementById('setting_btn_user_edit').innerHTML;
-    document.getElementById('setting_btn_user_edit').innerHTML = window.global_button_spinner;
-    await user_edit(document.getElementById('setting_data_userid_logged_in').innerHTML, document.getElementById('setting_select_timezone_current').value, get_lang_code(),(err, result) => {
-        document.getElementById('setting_btn_user_edit').innerHTML = old_button;
+    await user_edit(document.getElementById('user_account_userid_logged_in').innerHTML, document.getElementById('setting_select_timezone_current').value, get_lang_code(),(err, result) => {
         if ((err==null && result==null) == false){
             if (err==null){
                 update_settings_icon(image_format(result.avatar ?? result.provider1_image ?? result.provider2_image));
@@ -1709,11 +1694,11 @@ async function user_edit_app() {
     });
 }
 async function user_update_app(){
-    await user_update(document.getElementById('setting_data_userid_logged_in').innerHTML, get_lang_code(),(err, result) => {
+    await user_update(document.getElementById('user_account_userid_logged_in').innerHTML, get_lang_code(),(err, result) => {
         if (err==null){
             //update_settings_icon(image_format(result.avatar));
             update_settings_icon(atob(result.avatar));
-            document.getElementById('setting_data_username_logged_in').innerHTML = result.username;
+            document.getElementById('user_account_username_logged_in').innerHTML = result.username;
         }
     });
 }
@@ -1721,7 +1706,7 @@ async function user_login_app(){
     let username = document.getElementById('login_username');
     let password = document.getElementById('login_password');
     let lang_code = get_lang_code();
-    let user_id = document.getElementById('setting_data_userid_logged_in');
+    let user_id = document.getElementById('user_account_userid_logged_in');
     let old_button = document.getElementById('login_button').innerHTML;
     document.getElementById('login_button').innerHTML = window.global_button_spinner;
     await user_login(username.value, password.value, lang_code, (err, result)=>{
@@ -1735,13 +1720,13 @@ async function user_login_app(){
                 else{
                     username.value = '';
                     password.value = '';
-                    document.getElementById('user_logged_in').style.display = "block";
-                    update_settings_icon(image_format(result.avatar));
-                    document.getElementById('setting_data_username_logged_in').innerHTML = result.username;
                     
-                    document.getElementById('popup_menu_login').style.display = 'none';
-                    document.getElementById('popup_menu_signup').style.display = 'none';
-                    document.getElementById('popup_menu_logoff').style.display = 'block';
+                    update_settings_icon(image_format(result.avatar));
+                    document.getElementById('user_account_username_logged_in').innerHTML = result.username;
+                    
+                    document.getElementById('user_menu_dropdown_logged_in').style.display = 'block';
+                    document.getElementById('user_menu_dropdown_logged_out').style.display = 'none';
+
                     document.getElementById('dialogue_login').style.visibility = 'hidden';
                     document.getElementById('dialogue_signup').style.visibility = 'hidden';
                     //Show user tab
@@ -1773,7 +1758,7 @@ async function user_login_app(){
     })
 }
 async function user_verify_check_input_app(item, nextField){
-    await user_verify_check_input(item, document.getElementById('setting_data_userid_logged_in').innerHTML, nextField, get_lang_code(), (err, result) => {
+    await user_verify_check_input(item, document.getElementById('user_account_userid_logged_in').innerHTML, nextField, get_lang_code(), (err, result) => {
         if ((err==null && result==null)==false)
             if(err==null){
                 user_login_app();
@@ -1781,7 +1766,7 @@ async function user_verify_check_input_app(item, nextField){
     })
 }
 async function user_function_app(function_name){
-    await user_function(function_name, document.getElementById('setting_data_userid_logged_in').innerHTML, get_lang_code(), (err, result) => {
+    await user_function(function_name, document.getElementById('user_account_userid_logged_in').innerHTML, get_lang_code(), (err, result) => {
         if (err==null){
             profile_update_stat_app();
         }
@@ -1807,17 +1792,19 @@ function user_logoff_app() {
     let select = document.getElementById("setting_select_user_setting");
     let option;
     //get new data token to avoid endless loop and invalid token
-    user_logoff(document.getElementById('setting_data_userid_logged_in').innerHTML, get_lang_code()).then(function(){
+    user_logoff(document.getElementById('user_account_userid_logged_in').innerHTML, get_lang_code()).then(function(){
         //remove user setting icon
         update_settings_icon('', true);
 
         //hide logged in, user_edit and user settings
-        document.getElementById('user_logged_in').style.display = "none";
+        document.getElementById('user_menu_dropdown_logged_in').style.display = 'none';
+        document.getElementById('user_menu_dropdown_logged_out').style.display = 'block';
+        
         
         document.getElementById('user_settings').style.display = "none";
         //clear logged in info
-        document.getElementById('setting_data_username_logged_in').innerHTML = '';
-        document.getElementById('setting_data_userid_logged_in').innerHTML = '';
+        document.getElementById('user_account_username_logged_in').innerHTML = '';
+        document.getElementById('user_account_userid_logged_in').innerHTML = '';
         profile_clear_app();
         //empty user settings
         select.innerHTML = '';
@@ -1836,7 +1823,7 @@ function user_logoff_app() {
     })    
 }
 async function updateProviderUser_app(provider_no, profile_id, profile_first_name, profile_last_name, profile_image_url, profile_email){
-    let user_id = document.getElementById('setting_data_userid_logged_in');
+    let user_id = document.getElementById('user_account_userid_logged_in');
     await updateProviderUser(provider_no, profile_id, profile_first_name, profile_last_name, profile_image_url, profile_email, get_lang_code(), (err, result)=>{
         if(err==null){
             user_id.innerHTML = result.user_account_id;
@@ -1844,16 +1831,14 @@ async function updateProviderUser_app(provider_no, profile_id, profile_first_nam
             user_settings_function('ADD_LOGIN', true, (err, result_settings) =>{
                 if (err)
                     null;
-                else{
-                    document.getElementById('user_logged_in').style.display = "block";
-        
+                else{        
                     update_settings_icon(result.avatar);
 
-                    document.getElementById('setting_data_username_logged_in').innerHTML = result.first_name + ' ' + result.last_name;
+                    document.getElementById('user_account_username_logged_in').innerHTML = result.first_name + ' ' + result.last_name;
         
-                    document.getElementById('popup_menu_login').style.display = 'none';
-                    document.getElementById('popup_menu_signup').style.display = 'none';
-                    document.getElementById('popup_menu_logoff').style.display = 'block';
+                    document.getElementById('user_menu_dropdown_logged_in').style.display = 'block';
+                    document.getElementById('user_menu_dropdown_logged_out').style.display = 'none';
+
                     //Show user tab
                     document.getElementById('tab_nav_7').style.display = 'inline-block';
                     document.getElementById('prayertable_day').innerHTML='';
@@ -2310,7 +2295,7 @@ async function user_settings_load(show_ui = 1) {
 }
 
 async function user_settings_function(function_name, initial_user_setting, callBack) {
-    let user_account_id = document.getElementById('setting_data_userid_logged_in').innerHTML;
+    let user_account_id = document.getElementById('user_account_userid_logged_in').innerHTML;
     let description = document.getElementById('setting_input_place').value;
     let status;
     let select_setting_country = document.getElementById('setting_select_country');
@@ -2647,10 +2632,6 @@ async function set_default_settings() {
     SearchAndSetSelectedIndex(window.global_prayer_default_show_fast_start_end, document.getElementById('setting_select_report_show_fast_start_end'),1);
     //update select
     set_settings_select();
-    //set default popup menu
-    document.getElementById('popup_menu_login').style.display = 'block';
-    document.getElementById('popup_menu_signup').style.display = 'block';
-    document.getElementById('popup_menu_logoff').style.display = 'none';
     //Hide user tab
     document.getElementById('tab_nav_7').style.display = 'none';
     //open regional tab in settings
@@ -2795,7 +2776,7 @@ function profile_show_user_setting_detail(liked, count_likes, count_views){
     document.getElementById('profile_user_settings_info_view_count').innerHTML = count_views;
 }
 function profile_show_user_setting() {
-    let user_id = document.getElementById('setting_data_userid_logged_in');
+    let user_id = document.getElementById('user_account_userid_logged_in');
     let status;
     document.getElementById('profile_user_settings_row').style.display = 'block';
 
@@ -2842,7 +2823,7 @@ function profile_show_user_setting() {
 }
 function profile_user_setting_update_stat(){
     let profile_id = document.getElementById('profile_id').innerHTML;
-    let user_id = document.getElementById('setting_data_userid_logged_in').innerHTML;
+    let user_id = document.getElementById('user_account_userid_logged_in').innerHTML;
     let status;
     fetch(window.global_rest_url_base + window.global_rest_app1_user_setting_profile_all + profile_id + 
             '?app_id=' + window.global_app_id +
@@ -2883,7 +2864,7 @@ function profile_user_setting_update_stat(){
 }
 function user_settings_like(user_setting_id) {
     let status;
-    let user_id = document.getElementById('setting_data_userid_logged_in').innerHTML;
+    let user_id = document.getElementById('user_account_userid_logged_in').innerHTML;
     let json_data;
     let method;
 
@@ -2978,8 +2959,6 @@ function setEvents() {
 
     document.getElementById('user_edit_btn_avatar_img').addEventListener('click', function() { document.getElementById('user_edit_input_avatar_img').click() }, false);
     document.getElementById('user_edit_input_avatar_img').addEventListener('change', function() { show_image(document.getElementById('user_edit_avatar_img'), this.id, window.global_user_image_avatar_width, window.global_user_image_avatar_height, get_lang_code()) }, false);
-    
-    document.getElementById('setting_btn_user_edit').addEventListener('click', function() { user_edit_app() }, false);
 
     document.getElementById('setting_btn_user_update').addEventListener('click', function() { user_update_app(); }, false);
      
@@ -2987,18 +2966,18 @@ function setEvents() {
     document.getElementById('setting_btn_user_add').addEventListener('click', function() { user_settings_function('ADD', false, (err, result)=>{null;}) }, false);
     document.getElementById('setting_btn_user_delete').addEventListener('click', function() { user_settings_delete() }, false);
 
-    document.getElementById('profile_main_btn_user_settings').addEventListener('click', function() { profile_detail_app(0, document.getElementById('setting_data_userid_logged_in').innerHTML, get_lang_code(), window.global_rest_app1_user_setting_profile_detail, false) }, false);
-    document.getElementById('profile_main_btn_following').addEventListener('click', function() { profile_detail_app(1,document.getElementById('setting_data_userid_logged_in').innerHTML, get_lang_code(), null, true, null, 'profile_show_app') }, false);
-    document.getElementById('profile_main_btn_followed').addEventListener('click', function() { profile_detail_app(2, document.getElementById('setting_data_userid_logged_in').innerHTML, get_lang_code(), null, true, null, 'profile_show_app') }, false);
-    document.getElementById('profile_main_btn_likes').addEventListener('click', function() { profile_detail_app(3, document.getElementById('setting_data_userid_logged_in').innerHTML, get_lang_code(), null, true, null, 'profile_show_app') }, false);
-    document.getElementById('profile_main_btn_liked').addEventListener('click', function() { profile_detail_app(4, document.getElementById('setting_data_userid_logged_in').innerHTML, get_lang_code(), null, true, null, 'profile_show_app') }, false);
-    document.getElementById('profile_main_btn_user_setting_likes').addEventListener('click', function() { profile_detail_app(5, document.getElementById('setting_data_userid_logged_in').innerHTML, get_lang_code(), window.global_rest_app1_user_setting_profile_detail, true, 
+    document.getElementById('profile_main_btn_user_settings').addEventListener('click', function() { profile_detail_app(0, document.getElementById('user_account_userid_logged_in').innerHTML, get_lang_code(), window.global_rest_app1_user_setting_profile_detail, false) }, false);
+    document.getElementById('profile_main_btn_following').addEventListener('click', function() { profile_detail_app(1,document.getElementById('user_account_userid_logged_in').innerHTML, get_lang_code(), null, true, null, 'profile_show_app') }, false);
+    document.getElementById('profile_main_btn_followed').addEventListener('click', function() { profile_detail_app(2, document.getElementById('user_account_userid_logged_in').innerHTML, get_lang_code(), null, true, null, 'profile_show_app') }, false);
+    document.getElementById('profile_main_btn_likes').addEventListener('click', function() { profile_detail_app(3, document.getElementById('user_account_userid_logged_in').innerHTML, get_lang_code(), null, true, null, 'profile_show_app') }, false);
+    document.getElementById('profile_main_btn_liked').addEventListener('click', function() { profile_detail_app(4, document.getElementById('user_account_userid_logged_in').innerHTML, get_lang_code(), null, true, null, 'profile_show_app') }, false);
+    document.getElementById('profile_main_btn_user_setting_likes').addEventListener('click', function() { profile_detail_app(5, document.getElementById('user_account_userid_logged_in').innerHTML, get_lang_code(), window.global_rest_app1_user_setting_profile_detail, true, 
         window.global_button_default_icon_like +
         window.global_button_default_icon_day +
         window.global_button_default_icon_month +
         window.global_button_default_icon_year +
         window.global_button_default_icon_follows, 'profile_show_app') }, false);
-    document.getElementById('profile_main_btn_user_setting_liked').addEventListener('click', function() { profile_detail_app(6, document.getElementById('setting_data_userid_logged_in').innerHTML, get_lang_code(), window.global_rest_app1_user_setting_profile_detail, true, window.global_button_default_icon_like +
+    document.getElementById('profile_main_btn_user_setting_liked').addEventListener('click', function() { profile_detail_app(6, document.getElementById('user_account_userid_logged_in').innerHTML, get_lang_code(), window.global_rest_app1_user_setting_profile_detail, true, window.global_button_default_icon_like +
         window.global_button_default_icon_day +
         window.global_button_default_icon_month +
         window.global_button_default_icon_year +
@@ -3006,11 +2985,11 @@ function setEvents() {
     document.getElementById('profile_follow').addEventListener('click', function() { user_function_app('FOLLOW') }, false);
     document.getElementById('profile_like').addEventListener('click', function() { user_function_app('LIKE') }, false);
 
-    document.getElementById('profile_top_row1_1').addEventListener('click', function() { profile_top(1, document.getElementById('setting_data_userid_logged_in').innerHTML, document.getElementById('setting_select_timezone_current').value, get_lang_code(), null, 'profile_show_app') }, false);
-    document.getElementById('profile_top_row1_2').addEventListener('click', function() { profile_top(2, document.getElementById('setting_data_userid_logged_in').innerHTML, document.getElementById('setting_select_timezone_current').value, get_lang_code(), null, 'profile_show_app') }, false);
-    document.getElementById('profile_top_row1_3').addEventListener('click', function() { profile_top(3, document.getElementById('setting_data_userid_logged_in').innerHTML, document.getElementById('setting_select_timezone_current').value, get_lang_code(), null, 'profile_show_app') }, false);
-    document.getElementById('profile_top_row2_1').addEventListener('click', function() { profile_top(4, document.getElementById('setting_data_userid_logged_in').innerHTML, document.getElementById('setting_select_timezone_current').value, get_lang_code(), window.global_rest_app1_user_setting_profile_top, 'profile_show_app') }, false);
-    document.getElementById('profile_top_row2_2').addEventListener('click', function() { profile_top(5, document.getElementById('setting_data_userid_logged_in').innerHTML, document.getElementById('setting_select_timezone_current').value, get_lang_code(), window.global_rest_app1_user_setting_profile_top, 'profile_show_app') }, false);
+    document.getElementById('profile_top_row1_1').addEventListener('click', function() { profile_top(1, document.getElementById('user_account_userid_logged_in').innerHTML, document.getElementById('setting_select_timezone_current').value, get_lang_code(), null, 'profile_show_app') }, false);
+    document.getElementById('profile_top_row1_2').addEventListener('click', function() { profile_top(2, document.getElementById('user_account_userid_logged_in').innerHTML, document.getElementById('setting_select_timezone_current').value, get_lang_code(), null, 'profile_show_app') }, false);
+    document.getElementById('profile_top_row1_3').addEventListener('click', function() { profile_top(3, document.getElementById('user_account_userid_logged_in').innerHTML, document.getElementById('setting_select_timezone_current').value, get_lang_code(), null, 'profile_show_app') }, false);
+    document.getElementById('profile_top_row2_1').addEventListener('click', function() { profile_top(4, document.getElementById('user_account_userid_logged_in').innerHTML, document.getElementById('setting_select_timezone_current').value, get_lang_code(), window.global_rest_app1_user_setting_profile_top, 'profile_show_app') }, false);
+    document.getElementById('profile_top_row2_2').addEventListener('click', function() { profile_top(5, document.getElementById('user_account_userid_logged_in').innerHTML, document.getElementById('setting_select_timezone_current').value, get_lang_code(), window.global_rest_app1_user_setting_profile_top, 'profile_show_app') }, false);
 
     document.getElementById('profile_user_settings_day').addEventListener('click', function() { profile_user_setting_link(this) }, false);
     document.getElementById('profile_user_settings_month').addEventListener('click', function() { profile_user_setting_link(this) }, false);
@@ -3030,7 +3009,7 @@ function setEvents() {
     document.getElementById('user_edit_close').addEventListener('click', function() { user_edit_app() }, false);
     document.getElementById('signup_login').addEventListener('click', function() { show_common_dialogue('LOGIN') }, false);
 
-    document.getElementById('signup_button').addEventListener('click', function() { user_signup(document.getElementById('setting_data_userid_logged_in'), get_lang_code()) }, false);
+    document.getElementById('signup_button').addEventListener('click', function() { user_signup(document.getElementById('user_account_userid_logged_in'), get_lang_code()) }, false);
     document.getElementById('signup_close').addEventListener('click', function() { document.getElementById('dialogue_signup').style.visibility = 'hidden' }, false);
     
     document.getElementById('message_cancel').addEventListener('click', function() { document.getElementById("dialogue_message").style.visibility = "hidden" }, false);
@@ -3045,6 +3024,7 @@ function setEvents() {
     document.getElementById('popup_menu_login').addEventListener('click', function() { show_common_dialogue('LOGIN') }, false);
     document.getElementById('popup_menu_signup').addEventListener('click', function() { show_common_dialogue('SIGNUP') }, false);
     document.getElementById('popup_menu_logoff').addEventListener('click', function() { user_logoff_app() }, false);
+    document.getElementById('popup_menu_edit').addEventListener('click', function() { user_edit_app() }, false);
     document.getElementById('popup_menu_profile').addEventListener('click', function() { toolbar_bottom(6) }, false);
     document.getElementById('popup_menu_profile_top').addEventListener('click', function() { toolbar_bottom(7) }, false);
     document.getElementById('popup_menu_settings').addEventListener('click', function() { toolbar_bottom(5) }, false);
@@ -3099,7 +3079,7 @@ function setEvents() {
     document.getElementById('setting_input_lat').addEventListener('keyup', function() { window.global_typewatch("update_ui(9);", 1000); }, false);
     document.getElementById('setting_input_long').addEventListener('keyup', function() { window.global_typewatch("update_ui(9);", 1000); }, false);
                                    
-    document.getElementById('profile_search_input').addEventListener('keyup', function() { window.global_typewatch("search_profile(document.getElementById('setting_data_userid_logged_in').innerHTML, document.getElementById('setting_select_timezone_current').value, get_lang_code(), 'profile_show_app');", 500); }, false);
+    document.getElementById('profile_search_input').addEventListener('keyup', function() { window.global_typewatch("search_profile(document.getElementById('user_account_userid_logged_in').innerHTML, document.getElementById('setting_select_timezone_current').value, get_lang_code(), 'profile_show_app');", 500); }, false);
     
     document.getElementById('user_verify_verification_char1').addEventListener('keyup', function() { user_verify_check_input_app(this, "user_verify_verification_char2") }, false);
     document.getElementById('user_verify_verification_char2').addEventListener('keyup', function() { user_verify_check_input_app(this, "user_verify_verification_char3") }, false);
@@ -3492,6 +3472,7 @@ async function init_app() {
     //dialogues
     document.getElementById('info_close').innerHTML = window.global_button_default_icon_close;
     document.getElementById('scan_open_mobile_close').innerHTML = window.global_button_default_icon_close;
+    document.getElementById('scan_open_mobile_title1').innerHTML = window.global_button_default_icon_mobile;
     //profile info
     document.getElementById('profile_main_btn_user_settings').innerHTML = window.global_button_default_icon_day  + window.global_button_default_icon_month + window.global_button_default_icon_year;
     document.getElementById('profile_main_btn_user_setting_likes').innerHTML = window.global_button_default_icon_like + window.global_button_default_icon_day + window.global_button_default_icon_month + window.global_button_default_icon_year + window.global_button_default_icon_follows;
@@ -3520,8 +3501,6 @@ async function init_app() {
     document.getElementById('setting_input_reportfooter_aleft').innerHTML = window.global_button_default_icon_align_left;
     document.getElementById('setting_input_reportfooter_acenter').innerHTML = window.global_button_default_icon_align_center;
     document.getElementById('setting_input_reportfooter_aright').innerHTML = window.global_button_default_icon_align_right;
-    //settings tab 7 user logged in
-    document.getElementById('setting_btn_user_edit').innerHTML = window.global_button_default_icon_edit;
     //settings tab 7 user settings
     document.getElementById('user_day_html').innerHTML = window.global_button_default_icon_html + '<div id="user_day_label_html">HTML</div>';
     document.getElementById('user_day_html_copy').innerHTML = window.global_button_default_icon_copy;
@@ -3552,13 +3531,22 @@ async function init_app() {
     document.getElementById('toolbar_btn_day').innerHTML = window.global_button_default_icon_day + '<div id="toolbar_btn_day_label">Day</div>';
     document.getElementById('toolbar_btn_month').innerHTML = window.global_button_default_icon_month + '<div id="toolbar_btn_month_label">Month</div>';
     document.getElementById('toolbar_btn_year').innerHTML = window.global_button_default_icon_year + '<div id="toolbar_btn_year_label">Year</div>';    
-    document.getElementById('user_account_default_avatar').innerHTML = window.global_button_default_icon_user;
     //toolbar top
     document.getElementById('toolbar_btn_zoomout').innerHTML = window.global_button_default_icon_zoomout;
     document.getElementById('toolbar_btn_zoomin').innerHTML = window.global_button_default_icon_zoomin;
     document.getElementById('toolbar_btn_left').innerHTML = window.global_button_default_icon_left;
     document.getElementById('toolbar_btn_right').innerHTML = window.global_button_default_icon_right;
     document.getElementById('toolbar_btn_about').innerHTML = window.global_button_default_icon_info;
+    document.getElementById('user_account_default_avatar').innerHTML = window.global_button_default_icon_user;
+    //popup user menu
+    document.getElementById('popup_menu_login').innerHTML = window.global_button_default_icon_login;
+    document.getElementById('popup_menu_logoff').innerHTML = window.global_button_default_icon_logoff;
+    document.getElementById('popup_menu_signup').innerHTML = window.global_button_default_icon_signup;
+    document.getElementById('popup_menu_edit').innerHTML = window.global_button_default_icon_edit;
+    document.getElementById('popup_menu_profile').innerHTML = window.global_button_default_icon_profile;
+    document.getElementById('popup_menu_profile_top').innerHTML = window.global_button_default_icon_profile_top;
+    document.getElementById('popup_menu_settings').innerHTML = window.global_button_default_icon_settings;
+
     //window preview report
     document.getElementById('window_preview_close').innerHTML = window.global_button_default_icon_close;
     //themes from client server generation
@@ -3569,7 +3557,7 @@ async function init_app() {
     document.getElementById('slider_prev_year').innerHTML = window.global_button_default_icon_slider_left;
     document.getElementById('slider_next_year').innerHTML = window.global_button_default_icon_slider_right;
     
-    await get_data_token(document.getElementById('setting_data_userid_logged_in').innerHTML, get_lang_code()).then(function(){
+    await get_data_token(document.getElementById('user_account_userid_logged_in').innerHTML, get_lang_code()).then(function(){
         //set current date for report month
         window.global_session_currentDate = new Date();
         window.global_session_CurrentHijriDate = new Array();
@@ -3654,7 +3642,7 @@ async function init_app() {
                                     if (user !='') {
                                         //show profile for user entered in url
                                         document.getElementById('dialogue_profile').style.visibility = "visible";
-                                        profile_show_app(null, user, document.getElementById('setting_data_userid_logged_in').innerHTML, document.getElementById('setting_select_timezone_current').value, get_lang_code());
+                                        profile_show_app(null, user, document.getElementById('user_account_userid_logged_in').innerHTML, document.getElementById('setting_select_timezone_current').value, get_lang_code());
                                     }
                                 }
                                 show_start().then(function(){
