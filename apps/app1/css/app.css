@@ -134,16 +134,15 @@ a:active {
 #icons #toolbar_btn_print_label,
 #toolbar_btn_day_label,
 #toolbar_btn_month_label,
-#toolbar_btn_year_label,
-#toolbar_btn_settings_label {
+#toolbar_btn_year_label {
 	font-size: 11px;
 }
 #user_account_image_url{
 	display:none;
-	width:28px;
-	height:28px;
+	width:30px;
+	height:30px;
 	margin-bottom:-4px;
-	border-radius:20px;
+	border-radius:25px;
 }
 #user_account_default_avatar{
 	display: inline-block;
@@ -152,24 +151,34 @@ a:active {
 .popup-content {
 	display: none;
 	position: absolute;
-	min-width: 160px;
-	bottom:60px;
+	right:0px;
+	width:100px;
 	box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
 	z-index: 1;
-	left: 51%;
 }
 .popup-content a {
 	padding: 10px 10px;
 	text-decoration: none;
 	display: block;
-	font-size:16px;
+	font-size:30px;
 }
-#toolbar_btn_settings:hover .popup-content,
-#toolbar_btn_settings:active .popup-content 
+#toolbar_btn_user_menu:hover .popup-content,
+#toolbar_btn_user_menu:active .popup-content 
 	{display: block;}
-#popup_menu_logoff{
+#toolbar_btn_user_menu{
+	float:right;
+}
+/* USER ACCOUNT*/
+#user_account_userid_logged_in, #user_menu_dropdown_logged_in{
 	display:none;
 }
+#user_account_userid_logged_in{
+	display:none !important;
+}
+#user_account_username_logged_in{
+	font-size: 11px;
+}
+
 
 /* PROFILE*/
 #profile_main_stat_row2{
@@ -322,7 +331,7 @@ a:active {
 
 /*Dialogue Info */
 #dialogue_info_content{
-	height:380px;
+	height:290px;
 }
 #about_logo {
 	background-image: url('../images/logo.png');
@@ -362,14 +371,7 @@ a:active {
 #scan_open_mobile_title1{
 	margin-top:10px;
 	margin-bottom:20px;
-}
-#scan_open_mobile_title2{
-	margin-top:10px;
-	margin-bottom:20px;
-}
-#scan_open_mobile_title3{
-	margin-top:10px;
-	margin-bottom:20px;
+	font-size: 48px;
 }
 
 #dialogue_loading #button_spinner{
@@ -549,10 +551,7 @@ height: 25px;
 	font-weight: bold;
 }
 #settings #setting_label_current_date_time_display,
-#settings #setting_label_report_date_time_display,
-#setting_label_data_last_logontime_edit,
-#setting_label_data_account_created_edit,
-#setting_label_data_account_modified_edit {
+#settings #setting_label_report_date_time_display{
 	font-size: 8px;
 }
 
@@ -821,7 +820,7 @@ height: 25px;
 #setting_method_params div{
 	display:inline-block;
 }
-/* SETTINGS USER*/
+/* SETTINGS USER SETTINGS*/
 #settings #tab7 .setting_horizontal_row .setting_horizontal_col:nth-child(1),
 #settings #tab7 .setting_horizontal_row .setting_horizontal_col:nth-child(4){
 	width:10%;
@@ -831,27 +830,6 @@ height: 25px;
 	width:40%;
 }
 
-#user_logged_in{
-	display:none;
-}
-#setting_avatar_logged_in{
-	width:64px;
-	height:64px;
-	float:left;
-	border-radius:50%;
-}
-#setting_avatar_edit{
-	margin-top:22px;
-	margin-left:22px;
-	position:absolute;
-	display:none;
-}
-#setting_input_avatar_img{
-	display:none;
-}
-#setting_data_userid_logged_in{
-	display:none !important;
-}
 /*user settings*/
 #user_settings{
 	display:none;
@@ -859,7 +837,6 @@ height: 25px;
 #user_settings .setting_horizontal_col{
 	padding-top:0px !important;
 }
-#setting_btn_user_edit,
 #setting_btn_user_save, 
 #setting_btn_user_add,
 #setting_btn_user_delete{

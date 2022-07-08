@@ -297,6 +297,11 @@
 #dialogue_user_edit_content #user_edit_buttons .setting_horizontal_col:nth-child(2) {
 	text-align: center !important;
 }
+#setting_label_data_last_logontime_edit,
+#setting_label_data_account_created_edit,
+#setting_label_data_account_modified_edit {
+	font-size: 8px;
+}
 
 /*Dialogue profile*/
 #dialogue_profile{
@@ -653,7 +658,7 @@
     -webkit-appearance: none;
 }
 #user_edit_common{
-	margin-top:50px;
+	margin-top:20px;
 }
 /*signup*/
 .input_error{
