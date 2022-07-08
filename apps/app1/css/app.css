@@ -535,6 +535,7 @@ a:active {
 }
 .tab_content {
 	display:inline-block;
+	margin-top: 10px;
 }
 /*SETTINGS, common*/
 /*checkbox use switch ui*/
@@ -829,8 +830,16 @@ height: 25px;
 #settings #tab7 .setting_horizontal_row .setting_horizontal_col:nth-child(3){
 	width:40%;
 }
+#settings #tab7 .setting_horizontal_row:nth-child(5) .setting_horizontal_col:nth-child(2),
+#settings #tab7 .setting_horizontal_row:nth-child(6) .setting_horizontal_col:nth-child(2){
+	width: 0%;
+}
+#settings #tab7 .setting_horizontal_row:nth-child(5) .setting_horizontal_col:nth-child(3),
+#settings #tab7 .setting_horizontal_row:nth-child(6) .setting_horizontal_col:nth-child(3){
+	width: 80%;
+	text-align: center;
+}
 
-/*user settings*/
 #user_settings{
 	display:none;
 }
