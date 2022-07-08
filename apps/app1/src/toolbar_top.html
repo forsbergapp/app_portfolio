@@ -3,5 +3,27 @@
     <button id='toolbar_btn_zoomin' class='toolbar_button' ></button>
     <button id='toolbar_btn_left' class='toolbar_button' ></i></button>
     <button id='toolbar_btn_right' class='toolbar_button' ></i></button>
-    <button id='toolbar_btn_about' class='toolbar_button' ></button>
+    <button id='toolbar_btn_user_menu' class='toolbar_button'>	
+        <div id='user_menu_logged_in'>
+            <div id='user_account_userid_logged_in'></div>            
+            <img id='user_account_image_url' src=''/>
+            <div id='user_account_username_logged_in'></div>
+        </div>
+        <div id='user_menu_logged_out'>
+            <div id='user_account_default_avatar'></div>
+        </div>
+        <div class='popup-content'>
+            <div id="user_menu_dropdown_logged_in">
+                <a href='#' id='popup_menu_logoff' ></a>
+                <a href='#' id='popup_menu_edit' ></a>
+                <a href='#' id='popup_menu_profile'></a>
+            </div>
+            <div id="user_menu_dropdown_logged_out">
+                <a href='#' id='popup_menu_login' ></a>
+                <a href='#' id='popup_menu_signup' ></a>
+            </div>            
+            <a href='#' id='popup_menu_profile_top' ></a>
+            <a href='#' id='popup_menu_settings' ></a>
+        </div>
+    </button>
 </div>
