@@ -1295,7 +1295,6 @@ function show_dialogue(dialogue, file = '') {
     switch (dialogue) {
         case 'INFO':
             {
-                document.getElementById('settings').style.visibility = 'hidden';
                 document.getElementById('dialogue_info').style.visibility = 'visible';
                 document.getElementById('app_copyright').innerHTML = window.global_app_copyright;
                 if (window.global_info_social_link1_url!=null)
