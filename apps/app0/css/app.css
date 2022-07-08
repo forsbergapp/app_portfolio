@@ -46,13 +46,16 @@ a:active {
 	top:50px;
 	right:10px;
 	position:fixed;
-	width:200px;
+	width:100px;
+	text-align: center;
+	font-size: 30px !important;
 	height:auto;
 	border-radius: 4px;
 	-moz-border-radius: 4px;
 	-webkit-border-radius: 4px;
 	box-shadow: 0 4px 8px 0 rgb(0 0 0 / 20%), 0 6px 20px 0 rgb(0 0 0 / 19%);
 	z-index:1;
+	padding-bottom: 10px;
 }
 #user_account:hover #user_menu_dropdown,
 #user_account:active #user_menu_dropdown{
@@ -78,9 +81,6 @@ a:active {
 }
 #user_menu_dropdown_logged_in div,
 #user_menu_dropdown_logged_out div{
-	padding-left: 20px;
-    padding-bottom: 10px;
-	padding-top: 10px;
 	cursor:pointer;
 }
 #user_menu_user_id{
@@ -581,8 +581,7 @@ div.ray8 {
 /* TOOGLE*/
 #toggle_wrapper {
 	transform: scale(0.3);
-	transform-origin: 50% 0;
-	margin-top: 20px;
+	transform-origin: 30% 0;
 	height: 60px;
 }
 #toggle_checkbox {

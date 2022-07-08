@@ -2189,11 +2189,15 @@ function set_globals(parameters){
         window.global_button_default_icon_edit = '<i class="fas fa-edit"></i>';
 
         window.global_button_default_icon_send = '<i class="fas fa-arrow-alt-circle-right"></i>';
-        window.global_button_default_icon_login = '<i class="fas fa-arrow-alt-circle-right"></i>';
-        window.global_button_default_icon_signup = '<i class="fas fa-arrow-alt-circle-right"></i>';
+        window.global_button_default_icon_login = '<i class="fa-solid fa-right-to-bracket"></i>';
+        window.global_button_default_icon_logoff = '<i class="fa-solid fa-right-from-bracket"></i>';
+        window.global_button_default_icon_signup = '<i class="fa-solid fa-user-pen"></i>';
         window.global_button_default_icon_update = '<i class="fas fa-save"></i>';
         window.global_button_default_icon_delete_account = '<i class="fas fa-trash-alt"></i>';                                
-
+        window.global_button_default_icon_profile = '<i class="fa-solid fa-id-card"></i>';
+        window.global_button_default_icon_profile_top = '<i class="fa-solid fa-medal"></i>';
+        window.global_button_default_icon_settings = '<i class="fa-solid fa-gear"></i>';
+        
         window.global_button_default_icon_chat = '<i class="fas fa-comment"></i>';
         window.global_button_default_icon_checkbox_checked = '<i class="fas fa-check-square"></i>';
         window.global_button_default_icon_checkbox_empty = '<i class="fas fa-square"></i>';
@@ -2214,6 +2218,7 @@ function set_globals(parameters){
         window.global_button_default_icon_provider2 = '<i class="fab fa-facebook"></i>';
         window.global_button_default_icon_map_my_location = '<i class="fas fa-crosshairs"></i>';
 
+        window.global_button_default_icon_mobile = '<i class="fa-solid fa-mobile-screen-button"></i>';
         window.global_button_default_icon_search = '<i class="fas fa-search"></i>';
         window.global_button_default_icon_menu_open = '<i class="fas fa-bars"></i>';
         window.global_button_default_icon_menu_close = '<i class="fas fa-times-circle"></i>';
@@ -2241,7 +2246,6 @@ function set_globals(parameters){
         window.global_button_default_icon_views = '<i class="fas fa-eye"></i>';
         window.global_button_default_icon_follows = '<i class="fas fa-user-friends"></i>';
         window.global_button_default_icon_followed = '<i class="fas fa-users"></i>';
-        window.global_button_default_icon_top_header = '<i class="fas fa-medal"></i>';
 
         window.global_button_default_icon_align_left = '<i class="fa fa-align-left" tabindex="1"></i>';
         window.global_button_default_icon_align_center = '<i class="fa fa-align-center" tabindex="1"></i>';
@@ -2304,20 +2308,29 @@ function init_common(parameters){
    
     if (parameters.ui==true){
         //icons
-        //body
+        //
         document.getElementById('user_verify_email').innerHTML = window.global_button_default_icon_mail;
+        
         document.getElementById('login_button').innerHTML = window.global_button_default_icon_login;
         document.getElementById('logo_facebook').innerHTML = window.global_button_default_icon_provider2;
         document.getElementById('login_close').innerHTML = window.global_button_default_icon_close;
         document.getElementById('signup_button').innerHTML = window.global_button_default_icon_signup;
         document.getElementById('signup_close').innerHTML = window.global_button_default_icon_close;
+
+        document.getElementById('login_title').innerHTML = window.global_button_default_icon_login;
+        document.getElementById('login_btn_signup').innerHTML = window.global_button_default_icon_signup;
+        document.getElementById('signup_btn_login').innerHTML = window.global_button_default_icon_login;
+        document.getElementById('signup_title').innerHTML = window.global_button_default_icon_signup;
+        	
         document.getElementById('user_edit_btn_avatar_img').innerHTML = window.global_button_default_icon_avatar_edit;
         document.getElementById('user_edit_private').innerHTML = window.global_button_default_icon_private;
         document.getElementById('setting_btn_user_update').innerHTML = window.global_button_default_icon_update;
         document.getElementById('setting_btn_user_delete_account').innerHTML = window.global_button_default_icon_delete_account;
         document.getElementById('user_edit_close').innerHTML = window.global_button_default_icon_close;
+        
         document.getElementById('message_cancel').innerHTML = window.global_button_default_icon_cancel;
         document.getElementById('message_close').innerHTML = window.global_button_default_icon_close;
+        
         document.getElementById('broadcast_close').innerHTML = window.global_button_default_icon_broadcast_close;
         //profile detail
         document.getElementById('profile_detail_header_following').innerHTML = window.global_button_default_icon_follows;
@@ -2340,12 +2353,12 @@ function init_common(parameters){
         document.getElementById('profile_private_title').innerHTML = window.global_button_default_icon_private;
         document.getElementById('profile_avatar_online_status').innerHTML = window.global_button_default_icon_online;
         //profile top
-        document.getElementById('profile_top_header').innerHTML = window.global_button_default_icon_top_header;
+        document.getElementById('profile_top_header').innerHTML = window.global_button_default_icon_profile_top;
         document.getElementById('profile_top_row1_1').innerHTML = window.global_button_default_icon_follows;
         document.getElementById('profile_top_row1_2').innerHTML = window.global_button_default_icon_like + window.global_button_default_icon_follows;
         document.getElementById('profile_top_row1_3').innerHTML = window.global_button_default_icon_views;
         //buttons
-        document.getElementById('profile_home').innerHTML = window.global_button_default_icon_top_header;
+        document.getElementById('profile_home').innerHTML = window.global_button_default_icon_profile_top;
         document.getElementById('profile_close').innerHTML = window.global_button_default_icon_close;    
     }
 };
