@@ -57,6 +57,66 @@ async function get_module_with_init(app_id,
         }
     })
 }
+async function get_email_verification(data, email, baseUrl, lang_code, callBack){
+    let email_subject_code;
+    switch (parseInt(data.emailType)){
+        case 1:{
+            //Signup text
+            email_subject_code = 20501;
+            break;
+        }
+        case 2:{
+            //Unverified text
+            email_subject_code = 20501;
+            break;
+        }
+        case 3:{
+            //Reset password text
+            email_subject_code = 20501;
+            break;
+        }
+        case 4:{
+            //Change email text
+            email_subject_code = 20501;
+            break;
+        }
+    }
+    const { getMessage } = require("../service/db/api/message_translation/message_translation.service");
+    const { createLogAppSE } = require("../service/log/log.service");
+    getMessage(email_subject_code,
+        process.env.MAIN_APP_ID, 
+        lang_code, (err,results)  => {
+        if (err){
+            createLogAppSE(data.app_id, __appfilename, __appfunction, __appline, err);
+            callBack(err, null);
+        }
+        else{
+            let email_subject = results.text;
+            //Verification code text
+            getMessage(20502, 
+                    process.env.MAIN_APP_ID, 
+                    lang_code, (err,results)  => {
+                    if (err){
+                        createLogAppSE(data.app_id, __appfilename, __appfunction, __appline, err);
+                        callBack(err, null);
+                    }
+                    else{
+                        let verification_title = results.text;
+                        email = email.replace('<Logo/>', 
+                                            `<img id='app_logo' src='${data.protocol}://${data.host}${baseUrl}/logo?id=${data.app_id}&uid=${data.app_user_id}&emailType=${data.emailType}'>`);
+                        email = email.replace('<Validation_code_title/>', 
+                                            `${verification_title}`);
+                        email = email.replace('<Validation_code/>', 
+                                            `${data.validationCode}`);
+                        email = email.replace('<Footer/>', 
+                                            `<a target='_blank' href='${data.protocol}://${data.host}'>${data.protocol}://${data.host}</a>`);
+                        callBack(null, {"subject": email_subject,
+                                        "email": email});
+                    }
+            })
+        }
+    })
+}
 module.exports = {
     getMaintenance:(app_id, gps_lat, gps_long, gps_place) => {
         return new Promise(function (resolve, reject){
@@ -98,7 +158,39 @@ module.exports = {
                 }
             })
         })
+    },
+    getMail:(app_id, data, baseUrl) => {
+        return new Promise(function (resolve, reject){
+            let mailfile = '';
+            let files= [];
+            //email type 1-4 implented are emails with verification code
+            if (parseInt(data.emailType)==1 || 
+                parseInt(data.emailType)==2 || 
+                parseInt(data.emailType)==3 ||
+                parseInt(data.emailType)==4){
+                files = [
+                    ['MAIL', __dirname + '/common/mail/mail.html'],
+                    ['<MailHeader/>', __dirname + `/app${app_id}/mail/mail_header_verification.html`],
+                    ['<MailBody/>', __dirname + `/app${app_id}/mail/mail_body_verification.html`]
+                ];
+            }
+            read_app_files(app_id, files, (err, email)=>{
+                if (err)
+                    reject(err);
+                else{
+                    //email type 1-4 are emails with verification code
+                    get_email_verification(data, email, baseUrl, data.lang_code, (err,email_verification)=>{
+                        if (err)
+                            reject(err);
+                        else
+                            resolve({"subject":         email_verification.subject, 
+                                     "html":            email_verification.email});    
+                    })
+                }
+            })
+        })
     }
 }
 module.exports.read_app_files = read_app_files;
 module.exports.get_module_with_init = get_module_with_init;
+module.exports.get_email_verification = get_email_verification;
