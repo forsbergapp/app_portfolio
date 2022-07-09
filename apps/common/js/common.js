@@ -227,10 +227,21 @@ function check_input(text, lang_code, text_length=100){
 /*----------------------- */
 /* MESSAGE & DIALOGUE     */
 /*----------------------- */
-function show_common_dialogue(dialogue, file = '') {
+function show_common_dialogue(dialogue, title=null, icon=null, click_cancel_event) {
     switch (dialogue) {
         case 'VERIFY':
             {
+                //this removes old eventlistener
+                let old_cancel = document.getElementById('user_verify_cancel');
+                let button_cancel = old_cancel.cloneNode(true);
+                old_cancel.parentNode.replaceChild(button_cancel, old_cancel);
+                
+                button_cancel.addEventListener('click', click_cancel_event);
+
+                document.getElementById('user_verify_email').innerHTML = title;
+                document.getElementById('user_verify_cancel').innerHTML = icon;
+                
+                document.getElementById('dialogue_login').style.visibility = 'hidden';
                 document.getElementById('dialogue_signup').style.visibility = 'hidden';
                 document.getElementById('dialogue_user_verify').style.visibility = 'visible';
                 break;
@@ -1110,7 +1121,6 @@ async function user_login(username, password, lang_code, callBack) {
                     "app_id": ${window.global_app_id},
                     "username":"${username}",
                     "password":"${password}",
-                    "active":1,
                     "user_language": "${navigator.language}",
                     "user_timezone": "${Intl.DateTimeFormat().resolvedOptions().timeZone}",
                     "user_number_system": "${Intl.NumberFormat().resolvedOptions().numberingSystem}",
@@ -1139,10 +1149,19 @@ async function user_login(username, password, lang_code, callBack) {
             window.global_user_account_id = json.items[0].id;
             updateOnlineStatus();
             window.global_rest_at	= json.accessToken;
-            return callBack(null, {user_id: json.items[0].id,
-                                   username: json.items[0].username,
-                                   bio: json.items[0].bio,
-                                   avatar: json.items[0].avatar})
+            if (json.items[0].active==0){
+                let function_cancel_event = function() { `${window.global_exception_app_function}();`};
+                //use same fields as signup
+                document.getElementById('signup_username').value = document.getElementById('login_username').value;
+                document.getElementById('signup_password').value = document.getElementById('login_password').value;
+                show_common_dialogue('VERIFY', json.items[0].email, window.global_button_default_icon_logoff, function_cancel_event);
+                return callBack('ERROR', null);
+            }
+            else    
+                return callBack(null, {user_id: json.items[0].id,
+                                       username: json.items[0].username,
+                                       bio: json.items[0].bio,
+                                       avatar: json.items[0].avatar})
 
         } else {
             exception(status, result, lang_code);
@@ -1197,6 +1216,9 @@ async function user_logoff(user_id, lang_code){
         document.getElementById('setting_input_new_password_confirm_edit').value = '';
         document.getElementById('setting_input_password_reminder_edit').value = '';
 
+        //clear login
+        document.getElementById('login_username').value = '';
+        document.getElementById('login_password').value = '';
         //clear signup
         document.getElementById('signup_username').value = '';
         document.getElementById('signup_email').value = '';
@@ -1542,9 +1564,11 @@ function user_signup(item_destination_user_id, lang_code) {
             if (status == 200) {
                 json = JSON.parse(result);
                 window.global_rest_at = json.accessToken;
+                window.global_user_account_id = json.id;
                 //update item with new user_account.id
                 item_destination_user_id.innerHTML = json.id;
-                show_common_dialogue('VERIFY');
+                let function_cancel_event = function() { `${window.global_exception_app_function}();`};
+                show_common_dialogue('VERIFY', email, window.global_button_default_icon_logoff, function_cancel_event);
             } else {
                 exception(status, result, lang_code);
             }
@@ -1554,7 +1578,7 @@ function user_signup(item_destination_user_id, lang_code) {
             show_message('EXCEPTION', null,null, error, window.global_app_id, lang_code);
         });
 }
-async function user_verify_check_input(item, user_id, nextField, lang_code, callBack) {
+async function user_verify_check_input(item, nextField, lang_code, callBack) {
 
     let status;
     let json;
@@ -1585,7 +1609,7 @@ async function user_verify_check_input(item, user_id, nextField, lang_code, call
 
             //activate user
             json_data = '{"validation_code":"' + validation_code + '"}';
-            fetch(window.global_rest_url_base + window.global_rest_user_account_activate + user_id +
+            fetch(window.global_rest_url_base + window.global_rest_user_account_activate + window.global_user_account_id +
                     '?app_id=' + window.global_app_id + 
                     '&lang_code=' + lang_code, {
                     method: 'PUT',
@@ -2309,7 +2333,7 @@ function init_common(parameters){
     if (parameters.ui==true){
         //icons
         //
-        document.getElementById('user_verify_email').innerHTML = window.global_button_default_icon_mail;
+        document.getElementById('user_verify_email_icon').innerHTML = window.global_button_default_icon_mail;
         
         document.getElementById('login_button').innerHTML = window.global_button_default_icon_login;
         document.getElementById('logo_facebook').innerHTML = window.global_button_default_icon_provider2;
