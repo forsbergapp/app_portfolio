@@ -364,7 +364,7 @@ function user_menu_item_click(item){
 async function user_login_app(){
     let username = document.getElementById('login_username');
     let password = document.getElementById('login_password');
-    let user_id = document.getElementById('user_menu_user_id');
+    let user_id_div = document.getElementById('user_menu_user_id');
     let old_button = document.getElementById('login_button').innerHTML;
     document.getElementById('login_button').innerHTML = window.global_button_spinner;
             
@@ -374,7 +374,7 @@ async function user_login_app(){
             username.value = '';
             password.value = '';
             
-            user_id.innerHTML = result.user_id;
+            user_id_div.innerHTML = result.user_id;
             //set avatar or empty
             if (result.avatar == null || result.avatar == '') {
                 recreate_img(document.getElementById('user_menu_avatar_img'));
@@ -429,7 +429,7 @@ async function user_update_app(){
 
 }
 async function user_verify_check_input_app(item, nextField){
-    await user_verify_check_input(item, document.getElementById('user_menu_user_id').innerHTML, nextField, window.global_lang_code, (err, result) => {
+    await user_verify_check_input(item, nextField, window.global_lang_code, (err, result) => {
         if ((err==null && result==null)==false)
             if(err==null){
                 user_login_app();
@@ -504,10 +504,18 @@ async function onProviderSignIn_app(googleUser){
     })
 }
 async function init_app(){
+    //start
+    document.getElementById('start_message').innerHTML = window.global_button_default_icon_info;
+    document.getElementById('start_profile').innerHTML = window.global_button_default_icon_user;
+    document.getElementById('info_message').innerHTML = window.global_button_default_icon_close;
     document.getElementById("toggle_checkbox").checked = true;
     document.getElementById('info_diagram_img').src=window.global_img_diagram_img;
     document.getElementById('info_datamodel_img').src=window.global_img_datamodel_img;
+    document.getElementById('title1').innerHTML = 'App Portfolio Diagram';
+    document.getElementById('title2').innerHTML = 'App Portfolio Data model';
+    document.getElementById('contact_text').innerHTML = 'Contact'
 
+    //diaologie login signup
     document.getElementById('login_username').placeholder = 'Username';
     document.getElementById('login_password').placeholder = 'Password';
     document.getElementById('signup_username').placeholder = 'Username';
@@ -516,6 +524,7 @@ async function init_app(){
     document.getElementById('signup_password_confirm').placeholder = 'Password confirm';
     document.getElementById('signup_password_reminder').placeholder = 'Password reminder';
 
+    //user menu
     document.getElementById('user_menu_dropdown_profile').innerHTML = window.global_button_default_icon_profile;
     document.getElementById('user_menu_dropdown_edit').innerHTML = window.global_button_default_icon_edit;
     document.getElementById('user_menu_dropdown_log_out').innerHTML = window.global_button_default_icon_logoff;
@@ -523,16 +532,9 @@ async function init_app(){
     document.getElementById('user_menu_dropdown_signup').innerHTML = window.global_button_default_icon_signup;
     document.getElementById('user_menu_dropdown_log_in').innerHTML = window.global_button_default_icon_login;
 
+    //dialogue confirm
     document.getElementById('confirm_question').innerHTML = 'Are you sure?';
 
-    document.getElementById('title1').innerHTML = 'App Portfolio Diagram';
-    document.getElementById('title2').innerHTML = 'App Portfolio Data model';
-    document.getElementById('contact_text').innerHTML = 'Contact'
-    
-    //start
-    document.getElementById('start_message').innerHTML = window.global_button_default_icon_info;
-    document.getElementById('start_profile').innerHTML = window.global_button_default_icon_user;
-    document.getElementById('info_message').innerHTML = window.global_button_default_icon_close;
     //profile info
     document.getElementById('profile_main_btn_cloud').innerHTML = window.global_button_default_icon_cloud;
     document.getElementById('user_menu_default_avatar').innerHTML = window.global_button_default_icon_user_avatar;

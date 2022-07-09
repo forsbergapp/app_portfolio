@@ -112,9 +112,6 @@ INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, 
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'TOOLBAR','TOOLBAR_BTN_MONTH_LABEL',515,'Månad');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'TOOLBAR','TOOLBAR_BTN_PRINT_LABEL',515,'Skriv ut');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'TOOLBAR','TOOLBAR_BTN_YEAR_LABEL',515,'År');
-INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'DIALOGUE','USER_VERIFY_MESSAGE_1',515,'Ett meddelande med verifieringskod har skickats till din e-post.');
-INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'DIALOGUE','USER_VERIFY_MESSAGE_2',515,'Ange koden för att fortsätta.');
-INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'DIALOGUE','USER_VERIFY_MESSAGE_3',515,'Fick du inte en verifieringskod?');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'DIALOGUE','CONFIRM_QUESTION',515,'Är du säker?');
 --
 -- Dumping data for table `app_object_subitem_translation`

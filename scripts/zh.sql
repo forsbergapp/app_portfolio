@@ -112,9 +112,6 @@ INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, 
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'TOOLBAR','TOOLBAR_BTN_MONTH_LABEL',107,'月');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'TOOLBAR','TOOLBAR_BTN_PRINT_LABEL',107,'打印');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'TOOLBAR','TOOLBAR_BTN_YEAR_LABEL',107,'年');
-INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'DIALOGUE','USER_VERIFY_MESSAGE_1',107,'带有验证码的消息已发送到您的电子邮件。');
-INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'DIALOGUE','USER_VERIFY_MESSAGE_2',107,'输入代码以继续。');
-INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'DIALOGUE','USER_VERIFY_MESSAGE_3',107,'没有收到验证码？');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'DIALOGUE','CONFIRM_QUESTION',107,'你确定吗？');
 --
 -- Dumping data for table `app_object_subitem_translation`
