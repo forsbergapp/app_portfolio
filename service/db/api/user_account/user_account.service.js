@@ -1356,16 +1356,14 @@ module.exports = {
 					bio,
 					username,
 					password,
-					password_reminder,
 					email,
+					active,
 					CONVERT(avatar USING UTF8) avatar
 				FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account
 			   WHERE username = ? 
 				 AND provider1_id IS NULL
-				 AND provider2_id IS NULL
-				 AND active = ? `, 
-				[data.username,
-                 data.active
+				 AND provider2_id IS NULL`, 
+				[data.username
                 ],
                 (error, results, fields) => {
                     if (error) {
@@ -1386,17 +1384,15 @@ module.exports = {
 							bio "bio",
 							username "username",
 							password "password",
-							password_reminder "password_reminder",
 							email "email",
+							active "active",
 							avatar "avatar"
 						FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account
 					   WHERE username = :username 
 						 AND provider1_id IS NULL
-						 AND provider2_id IS NULL	   
-						 AND active = :active `, 
+						 AND provider2_id IS NULL`, 
 						{
-                            username: data.username,
-                            active: data.active
+                            username: data.username
                         },
                         (err, result) => {
                             if (err) {

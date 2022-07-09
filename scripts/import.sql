@@ -31,9 +31,6 @@ INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name
 INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (1,'DIALOGUE','SIGNUP_PASSWORD_CONFIRM');
 INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (1,'DIALOGUE','SIGNUP_PASSWORD_REMINDER');
 INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (1,'DIALOGUE','SIGNUP_USERNAME');
-INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (1,'DIALOGUE','USER_VERIFY_MESSAGE_1');
-INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (1,'DIALOGUE','USER_VERIFY_MESSAGE_2');
-INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (1,'DIALOGUE','USER_VERIFY_MESSAGE_3');
 INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (1,'REPORT','COLTITLE_ASR');
 INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (1,'REPORT','COLTITLE_ASR_IQAMAT');
 INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (1,'REPORT','COLTITLE_CALTYPE_GREGORIAN');
