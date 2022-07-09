@@ -1705,13 +1705,13 @@ async function user_login_app(){
     let username = document.getElementById('login_username');
     let password = document.getElementById('login_password');
     let lang_code = get_lang_code();
-    let user_id = document.getElementById('user_account_userid_logged_in');
+    let user_id_div = document.getElementById('user_account_userid_logged_in');
     let old_button = document.getElementById('login_button').innerHTML;
     document.getElementById('login_button').innerHTML = window.global_button_spinner;
     await user_login(username.value, password.value, lang_code, (err, result)=>{
         document.getElementById('login_button').innerHTML = old_button;
         if (err==null){
-            user_id.innerHTML = result.user_id;
+            user_id_div.innerHTML = result.user_id;
             //create intitial user setting if not exist, send initial=true
             user_settings_function('ADD_LOGIN', true, (err, result_settings) =>{
                 if (err)
@@ -1739,7 +1739,7 @@ async function user_login_app(){
                     document.getElementById('prayertable_month').innerHTML='';
                     document.getElementById('prayertable_year').innerHTML='';
                     dialogue_loading(1);
-                    user_settings_get(user_id.innerHTML).then(function(){
+                    user_settings_get(user_id_div.innerHTML).then(function(){
                         user_settings_load().then(function(){
                             settings_translate(true).then(function(){
                                 settings_translate(false).then(function(){
@@ -1757,7 +1757,7 @@ async function user_login_app(){
     })
 }
 async function user_verify_check_input_app(item, nextField){
-    await user_verify_check_input(item, document.getElementById('user_account_userid_logged_in').innerHTML, nextField, get_lang_code(), (err, result) => {
+    await user_verify_check_input(item, nextField, get_lang_code(), (err, result) => {
         if ((err==null && result==null)==false)
             if(err==null){
                 user_login_app();

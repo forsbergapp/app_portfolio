@@ -163,11 +163,13 @@
 #dialogue_user_verify_content{
 	height:280px;
 }
-#user_verify_email i{
+#user_verify_email_icon{
 	font-size:30px;
+	height:30px;
 }
 #user_verify_email{
-	height:30px;
+	font-size: 16px;
+    margin-top: 20px;
 }
 #user_verify_verification_container{
 	margin-top:40px;
