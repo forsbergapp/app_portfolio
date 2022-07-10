@@ -13,6 +13,55 @@
 /*----------------------- */
 /* MISC                   */
 /*----------------------- */
+function common_translate_ui(lang_code){
+    let url = `${window.global_rest_url_base}${window.global_rest_app_object}${lang_code}` +
+                  `?app_id=${window.global_main_app_id}` + 
+                  `&lang_code=${lang_code}`;
+    fetch(url, {
+        method: 'GET',
+        headers: {
+            'Authorization': 'Bearer ' + window.global_rest_dt,
+        }
+    })
+    .then(function(response) {
+        status = response.status;
+        return response.text();
+    })
+    .then(function(result) {
+        if (status == 200) {
+            json = JSON.parse(result);
+            for (let i = 0; i < json.data.length; i++){
+                //app 0 placeholder text
+                if (json.data[i].object_name=='DIALOGUE'){
+                    if (json.data[i].object_item_name=='USERNAME'){
+                        document.getElementById('login_username').placeholder = json.data[i].text;
+                        document.getElementById('signup_username').placeholder = json.data[i].text;    
+                    }
+                    else
+                        if (json.data[i].object_item_name=='PASSWORD'){
+                            document.getElementById('login_password').placeholder = json.data[i].text;
+                            document.getElementById('signup_password').placeholder = json.data[i].text;    
+                        }
+                        else
+                            if (json.data[i].object_item_name=='EMAIL'){
+                                document.getElementById('signup_email').placeholder = json.data[i].text;
+                                document.getElementById('forgot_email').placeholder = json.data[i].text;    
+                            }
+                            else
+                                if (json.data[i].object_item_name=='SIGNUP_PASSWORD_CONFIRM'||
+                                    json.data[i].object_item_name=='SIGNUP_PASSWORD_REMINDER'){
+                                    document.getElementById(json.data[i].object_item_name.toLowerCase()).placeholder = json.data[i].text;
+                                }
+                                else
+                                    if (json.data[i].object_item_name=='LOGIN_CONTINUE_WITH')
+                                        document.getElementById('login_btn_provider2').innerHTML = json.data[i].text + ' ' + window.global_app_user_provider2_name;
+                                    else
+                                        document.getElementById(json.data[i].object_item_name.toLowerCase()).innerHTML = json.data[i].text;
+                }   
+            }
+        }
+    })                            
+}
 function get_null_or_value(value) {
     if (value == null)
         return '';
@@ -246,14 +295,24 @@ function show_common_dialogue(dialogue, title=null, icon=null, click_cancel_even
             {
                 document.getElementById('dialogue_login').style.visibility = 'visible';
                 document.getElementById('dialogue_signup').style.visibility = 'hidden';
+                document.getElementById('dialogue_forgot').style.visibility = 'hidden';
                 document.getElementById('login_username').focus();
                 break;
             }
         case 'SIGNUP':
             {
-                document.getElementById('dialogue_signup').style.visibility = 'visible';
                 document.getElementById('dialogue_login').style.visibility = 'hidden';
+                document.getElementById('dialogue_signup').style.visibility = 'visible';
+                document.getElementById('dialogue_forgot').style.visibility = 'hidden';
                 document.getElementById('signup_username').focus();
+                break;
+            }
+        case 'FORGOT':
+            {
+                document.getElementById('dialogue_login').style.visibility = 'hidden';
+                document.getElementById('dialogue_signup').style.visibility = 'hidden';
+                document.getElementById('dialogue_forgot').style.visibility = 'visible';
+                document.getElementById('forgot_email').focus();
                 break;
             }
     }
@@ -1194,25 +1253,12 @@ async function user_logoff(user_id, lang_code){
     //get new data token to avoid endless loop och invalid token
     get_data_token(user_id, lang_code).then(function(){
         if (window.global_app_user_provider1_use==1){
-            //sign out from Google if Google loaded
-            //nothing to do with Google Identity
+            //nothing to do with provider1
             null;
         }
         if (window.global_app_user_provider2_use==1){
-            //Sign out from Facebook if signed in
-            //do nothing since FB.getLoginStatus logs out user in browser
+            //nothing to do with provider2
             null;
-            /*
-            FB.getLoginStatus(function(response) {
-                //statusChangeCallback(response);
-                if (response.authResponse) {
-                    FB.logout(function(response) {
-                        // user is now logged out
-                        null;
-                    });
-                }
-            });
-            */
         }
         document.getElementById('dialogue_user_edit').style.visibility = "hidden";
 
@@ -1938,7 +1984,7 @@ async function init_providers(provider1_function, provider2_function){
         document.getElementsByClassName('g_id_signin')[0].className += 'login_button_hidden';
     //enable provider 2 if used
     if (window.global_app_user_provider2_use==1){
-        document.getElementById('login_facebook').addEventListener('click', provider2_function, false);
+        document.getElementById('login_provider2').addEventListener('click', provider2_function, false);
         /*Provider 2 SDK*/
         window.fbAsyncInit = function() {
             FB.init({
@@ -1947,8 +1993,6 @@ async function init_providers(provider1_function, provider2_function){
             xfbml      : true,
             version    : window.global_app_user_provider2_api_version
             });
-            
-            /*FB.AppEvents.logPageView();   */
             
         };
         (function(d, s, id){
@@ -1962,7 +2006,7 @@ async function init_providers(provider1_function, provider2_function){
         }(document, 'script', 'facebook-jssdk'));
     }
     else
-        document.getElementById('login_facebook').className = 'login_button_hidden';
+        document.getElementById('login_provider2').className = 'login_button_hidden';
 }
 async function updateProviderUser(provider_no, profile_id, profile_first_name, profile_last_name, profile_image_url, profile_email, lang_code, callBack) {
     let json;
@@ -2220,6 +2264,8 @@ function set_globals(parameters){
         window.global_button_default_icon_login = '<i class="fa-solid fa-right-to-bracket"></i>';
         window.global_button_default_icon_logoff = '<i class="fa-solid fa-right-from-bracket"></i>';
         window.global_button_default_icon_signup = '<i class="fa-solid fa-user-pen"></i>';
+        window.global_button_default_icon_forgot = '<i class="fa-solid fa-circle-question"></i>';
+        window.global_button_default_icon_sendmail = '<i class="fa-solid fa-envelope"></i>';
         window.global_button_default_icon_update = '<i class="fas fa-save"></i>';
         window.global_button_default_icon_delete_account = '<i class="fas fa-trash-alt"></i>';                                
         window.global_button_default_icon_profile = '<i class="fa-solid fa-id-card"></i>';
@@ -2338,17 +2384,25 @@ function init_common(parameters){
         //icons
         //
         document.getElementById('user_verify_email_icon').innerHTML = window.global_button_default_icon_mail;
-        
+        //dialogue login
+        document.getElementById('login_tab1').innerHTML = window.global_button_default_icon_login;
+        document.getElementById('login_tab2').innerHTML = window.global_button_default_icon_signup;
+        document.getElementById('login_tab3').innerHTML = window.global_button_default_icon_forgot;
         document.getElementById('login_button').innerHTML = window.global_button_default_icon_login;
-        document.getElementById('logo_facebook').innerHTML = window.global_button_default_icon_provider2;
+        document.getElementById('logo_provider2').innerHTML = window.global_button_default_icon_provider2;
         document.getElementById('login_close').innerHTML = window.global_button_default_icon_close;
+        //dialogue signup
+        document.getElementById('signup_tab1').innerHTML = window.global_button_default_icon_login;
+        document.getElementById('signup_tab2').innerHTML = window.global_button_default_icon_signup;
+        document.getElementById('signup_tab3').innerHTML = window.global_button_default_icon_forgot;
         document.getElementById('signup_button').innerHTML = window.global_button_default_icon_signup;
         document.getElementById('signup_close').innerHTML = window.global_button_default_icon_close;
-
-        document.getElementById('login_title').innerHTML = window.global_button_default_icon_login;
-        document.getElementById('login_btn_signup').innerHTML = window.global_button_default_icon_signup;
-        document.getElementById('signup_btn_login').innerHTML = window.global_button_default_icon_login;
-        document.getElementById('signup_title').innerHTML = window.global_button_default_icon_signup;
+        //dialogue forgot
+        document.getElementById('forgot_tab1').innerHTML = window.global_button_default_icon_login;
+        document.getElementById('forgot_tab2').innerHTML = window.global_button_default_icon_signup;
+        document.getElementById('forgot_tab3').innerHTML = window.global_button_default_icon_forgot;
+        document.getElementById('forgot_button').innerHTML = window.global_button_default_icon_sendmail;
+        document.getElementById('forgot_close').innerHTML = window.global_button_default_icon_close;
         	
         document.getElementById('user_edit_btn_avatar_img').innerHTML = window.global_button_default_icon_avatar_edit;
         document.getElementById('user_edit_private').innerHTML = window.global_button_default_icon_private;
@@ -2387,6 +2441,21 @@ function init_common(parameters){
         document.getElementById('profile_top_row1_3').innerHTML = window.global_button_default_icon_views;
         //buttons
         document.getElementById('profile_home').innerHTML = window.global_button_default_icon_profile_top;
-        document.getElementById('profile_close').innerHTML = window.global_button_default_icon_close;    
+        document.getElementById('profile_close').innerHTML = window.global_button_default_icon_close;
+        //events
+        document.getElementById('login_tab2').addEventListener('click', function() { show_common_dialogue('SIGNUP') }, false);
+        document.getElementById('login_tab3').addEventListener('click', function() { show_common_dialogue('FORGOT') }, false);
+        document.getElementById('login_close').addEventListener('click', function() { document.getElementById('dialogue_login').style.visibility = 'hidden' }, false);
+
+        document.getElementById('signup_tab1').addEventListener('click', function() { show_common_dialogue('LOGIN') }, false);
+        document.getElementById('signup_tab3').addEventListener('click', function() { show_common_dialogue('FORGOT') }, false);
+        document.getElementById('signup_close').addEventListener('click', function() { document.getElementById('dialogue_signup').style.visibility = 'hidden' }, false);
+
+        document.getElementById('forgot_tab1').addEventListener('click', function() { show_common_dialogue('LOGIN') }, false);
+        document.getElementById('forgot_tab2').addEventListener('click', function() { show_common_dialogue('SIGNUP') }, false);
+        document.getElementById('forgot_close').addEventListener('click', function() { document.getElementById('dialogue_forgot').style.visibility = 'hidden' }, false);
+
+        document.getElementById('message_cancel').addEventListener('click', function() { document.getElementById("dialogue_message").style.visibility = "hidden" }, false);
+
     }
 };
