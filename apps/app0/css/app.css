@@ -94,13 +94,7 @@ a:active {
 	height:40px;
 	border-radius:20px;
 }
-/*Profile*/
-#profile_main_btn_cloud{
-	font-size: 16px;
-	height: 20px;
-}
-/*DIALOUGE SETTINGS*/	
-/* common dialogue settings*/	
+/* Common dialogue settings*/	
 .dialogue{
 	visibility:hidden;
 	width: 100%;
@@ -290,10 +284,12 @@ a:active {
 	height: 40px;
 	margin: 0 auto;
 }	
-
-#dialogue_login_content, #dialogue_signup_content {
-    height: 450px !important;
+/*Dialogue profile*/
+#profile_main_btn_cloud{
+	font-size: 16px;
+	height: 20px;
 }
+/*Dialogue login/signup/forgot*/
 #dialogue_login_content:hover, 
 #dialogue_login_content:active,
 #dialogue_signup_content:hover, 
@@ -975,16 +971,21 @@ div.ray8 {
 	background-color: #6ddc5f;
 }
 .theme_sun .login_tab_button, 
-.theme_sun .signup_tab_button{
+.theme_sun .signup_tab_button,
+.theme_sun .forgot_tab_button{
 	color: #a49775;
 }
 .theme_sun .login_tab_button:hover,
 .theme_sun .login_tab_button:active,
 .theme_sun .signup_tab_button:hover,
-.theme_sun .signup_tab_button:active{
+.theme_sun .signup_tab_button:active,
+.theme_sun .forgot_tab_button:hover,
+.theme_sun .forgot_tab_button:active{
 	color:#6ab344;
 }
-.theme_sun #login_button, .app_theme1 #signup_button{
+.theme_sun #login_button, 
+.theme_sun #signup_button,
+.theme_sun #forgot_button{
 	background-color: #a49775;
 	color: #ffffff;
 }
@@ -992,7 +993,9 @@ div.ray8 {
 .theme_sun .login_button:active,
 .theme_sun .signup_button:hover,
 .theme_sun .signup_button:active,
-.theme_sun #login_facebook{
+.theme_sun .forgot_button:hover,
+.theme_sun .forgot_button:active,
+.theme_sun #login_provider2{
 	background-color: #4267b2;
 	color:#ffffff;
 }
@@ -1121,16 +1124,21 @@ div.ray8 {
 	background-color: #2b2b32;
 }
 .theme_moon .login_tab_button,
-.theme_moon .signup_tab_button{
+.theme_moon .signup_tab_button,
+.theme_moon .forgot_tab_button{
 	color: #a49775;
 }
 .theme_moon .login_tab_button:hover,
 .theme_moon .login_tab_button:active,
 .theme_moon .signup_tab_button:hover,
-.theme_moon .signup_tab_button:active{
+.theme_moon .signup_tab_button:active,
+.theme_moon .forgot_tab_button:hover,
+.theme_moon .forgot_tab_button:active{
 	color:#6ab344;
 }
-.theme_moon #login_button, .theme_moon #signup_button{
+.theme_moon #login_button, 
+.theme_moon #signup_button,
+.theme_moon #forgot_button{
 	background-color: #a49775;
 	color: #ffffff;
 }
@@ -1138,7 +1146,9 @@ div.ray8 {
 .theme_moon .login_button:active,
 .theme_moon .signup_button:hover,
 .theme_moon .signup_button:active,
-.theme_moon #login_facebook{
+.theme_moon .forgot_button:hover,
+.theme_moon .forgot_button:active,
+.theme_moon #login_provider2{
 	background-color: #4267b2;
 	color:#ffffff;
 }

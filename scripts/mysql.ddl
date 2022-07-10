@@ -180,7 +180,6 @@ GRANT SELECT ON app_portfolio.app_object TO role_app1;
 
 GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_object TO role_app_admin;
 
-ALTER TABLE app_portfolio.app_object ADD CONSTRAINT app_object_object_name_un UNIQUE ( object_name );
 
 CREATE TABLE app_portfolio.app_object_item (
     app_id            INTEGER NOT NULL,
