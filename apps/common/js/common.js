@@ -843,8 +843,8 @@ function search_profile(user_id, timezone, lang_code, click_function) {
         token = window.global_rest_at;
         json_data = `{
                     "user_account_id":${user_id},
-                    "client_longitude": "${window.global_client_longitude}",
-                    "client_latitude": "${window.global_client_latitude}"
+                    "client_latitude": "${window.global_client_latitude}",
+                    "client_longitude": "${window.global_client_longitude}"
                     }`;
     }
     else{
@@ -852,8 +852,8 @@ function search_profile(user_id, timezone, lang_code, click_function) {
         url = window.global_rest_url_base + window.global_rest_user_account_profile_searchD;
         token = window.global_rest_dt;
         json_data = `{
-                    "client_longitude": "${window.global_client_longitude}",
-                    "client_latitude": "${window.global_client_latitude}"
+                    "client_latitude": "${window.global_client_latitude}",
+                    "client_longitude": "${window.global_client_longitude}"
                     }`;
     }
     fetch(url + searched_username +
@@ -943,8 +943,8 @@ async function profile_show(user_account_id_other = null, username = null, user_
         //PROFILE MAIN
         let json_data =
             `{
-            "client_longitude": "${window.global_client_longitude}",
-            "client_latitude": "${window.global_client_latitude}"
+            "client_latitude": "${window.global_client_latitude}",
+            "client_longitude": "${window.global_client_longitude}"
             }`;
         fetch(url + 
                 '?app_id=' + window.global_app_id + 
@@ -1069,8 +1069,8 @@ async function profile_update_stat(lang_code, callBack){
     let profile_id = document.getElementById('profile_id');
     let json_data =
     `{
-    "client_longitude": "${window.global_client_longitude}",
-    "client_latitude": "${window.global_client_latitude}"
+        "client_latitude": "${window.global_client_latitude}",
+        "client_longitude": "${window.global_client_longitude}"
     }`;
     //get updated stat for given user
     //to avoid update in stat set searched by same user
@@ -1136,8 +1136,8 @@ async function user_login(username, password, lang_code, callBack) {
                     "user_timezone": "${Intl.DateTimeFormat().resolvedOptions().timeZone}",
                     "user_number_system": "${Intl.NumberFormat().resolvedOptions().numberingSystem}",
                     "user_platform": "${navigator.platform}",
-                    "client_longitude":"${window.global_client_longitude}",
-                    "client_latitude":"${window.global_client_latitude}"
+                    "client_latitude":"${window.global_client_latitude}",
+                    "client_longitude":"${window.global_client_longitude}"
                  }`;
 
     //get user with username and password from REST API
@@ -1603,7 +1603,7 @@ async function user_verify_check_input(item, nextField, lang_code, callBack) {
                 document.getElementById('user_verify_verification_char5').value != '' &
                 document.getElementById('user_verify_verification_char6').value != '')) {
             //last field, validate entered code
-            let validation_code = parseInt(document.getElementById('user_verify_verification_char1').value +
+            let verification_code = parseInt(document.getElementById('user_verify_verification_char1').value +
                 document.getElementById('user_verify_verification_char2').value +
                 document.getElementById('user_verify_verification_char3').value +
                 document.getElementById('user_verify_verification_char4').value +
@@ -1619,7 +1619,7 @@ async function user_verify_check_input(item, nextField, lang_code, callBack) {
             document.getElementById('user_verify_verification_char6').classList.remove('input_error');
 
             //activate user
-            json_data = '{"validation_code":"' + validation_code + '"}';
+            json_data = '{"verification_code":"' + verification_code + '"}';
             fetch(window.global_rest_url_base + window.global_rest_user_account_activate + window.global_user_account_id +
                     '?app_id=' + window.global_app_id + 
                     '&lang_code=' + lang_code, {
