@@ -27,7 +27,7 @@ module.exports = {
 					password_reminder,
 					email,
 					avatar,
-					validation_code,
+					verification_code,
 					active,
 					provider1_id,
 					provider1_first_name,
@@ -50,7 +50,7 @@ module.exports = {
                     data.password_reminder,
                     data.email,
                     data.avatar,
-                    data.validation_code,
+                    data.verification_code,
                     data.active,
                     data.provider1_id,
                     data.provider1_first_name,
@@ -96,7 +96,7 @@ module.exports = {
 						password_reminder,
 						email,
 						avatar,
-						validation_code,
+						verification_code,
 						active,
 						provider1_id,
 						provider1_first_name,
@@ -120,7 +120,7 @@ module.exports = {
 						   :password_reminder,
 						   :email,
 						   :avatar,
-						   :validation_code,
+						   :verification_code,
 						   :active,
 						   :provider1_id,
 						   :provider1_first_name,
@@ -142,7 +142,7 @@ module.exports = {
                             password_reminder: data.password_reminder,
                             email: data.email,
                             avatar: data.avatar,
-                            validation_code: data.validation_code,
+                            verification_code: data.verification_code,
                             active: data.active,
                             provider1_id: data.provider1_id,
                             provider1_first_name: data.provider1_first_name,
@@ -217,17 +217,17 @@ module.exports = {
             execute_sql();
         }
     },
-    activateUser: (app_id, id, validation_code, callBack) => {
+    activateUser: (app_id, id, verification_code, callBack) => {
         if (process.env.SERVICE_DB_USE == 1) {
             get_pool(app_id).query(
                 `UPDATE ${process.env.SERVICE_DB_DB1_NAME}.user_account
 					SET	active = 1,
-				  	    validation_code = null,
+				  	    verification_code = null,
 						date_modified = SYSDATE()
 				  WHERE id = ?
-					AND validation_code = ?`, 
+					AND verification_code = ?`, 
 				[id,
-                 validation_code
+                 verification_code
                 ],
                 (error, results, fields) => {
                     if (error) {
@@ -249,13 +249,77 @@ module.exports = {
                     const result_sql = await pool2.execute(
                         `UPDATE ${process.env.SERVICE_DB_DB2_NAME}.user_account
 						    SET	active = 1,
-								validation_code = null,
+								verification_code = null,
 								date_modified = SYSDATE
 						  WHERE id = :id
-						    AND validation_code = :validation_code `, 
+						    AND verification_code = :verification_code `, 
 						{
                             id: id,
-                            validation_code: validation_code
+                            verification_code: verification_code
+                        },
+                        (err2, result2) => {
+                            if (err2) {
+								createLogAppSE(app_id, __appfilename, __appfunction, __appline, err2);
+                                return callBack(err2);
+                            } else {
+                                var oracle_json = {
+                                    "count": result2.rowsAffected,
+                                    "affectedRows": result2.rowsAffected
+                                };
+                                //use affectedRows as mysql in app
+                                return callBack(null, oracle_json);
+                            }
+                        });
+                } catch (err) {
+					createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
+                    return callBack(err.message);
+                } finally {
+                    if (pool2) {
+						try {
+							await pool2.close(); 
+						} catch (err) {
+							createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
+						}
+					}
+                }
+            }
+            execute_sql();
+        }
+    },
+	updateUserVerificationCode: (app_id, id, verification_code, callBack) => {
+        if (process.env.SERVICE_DB_USE == 1) {
+            get_pool(app_id).query(
+                `UPDATE ${process.env.SERVICE_DB_DB1_NAME}.user_account
+					SET	verification_code = ?,
+						date_modified = SYSDATE()
+				  WHERE id = ?`, 
+				[verification_code,
+				 id
+                ],
+                (error, results, fields) => {
+                    if (error) {
+						createLogAppSE(app_id, __appfilename, __appfunction, __appline, error);
+                        return callBack(error);
+                    }
+                    //can be one of these formats:
+                    //"{"count":0,"success":1,"items":[{"fieldCount":0,"affectedRows":0,"insertId":0,"serverStatus":2,"warningCount":0,"message":"(Rows matched: 0  Changed: 0  Warnings: 0","protocol41":true,"changedRows":0}]}"
+                    //"{"count":1,"success":1,"items":[{"fieldCount":0,"affectedRows":1,"insertId":0,"serverStatus":2,"warningCount":0,"message":"(Rows matched: 1  Changed: 1  Warnings: 0","protocol41":true,"changedRows":1}]}"
+                    //use affectedRows in app
+                    return callBack(null, results);
+                }
+            )
+        } else if (process.env.SERVICE_DB_USE == 2) {
+            async function execute_sql(err, result) {
+				let pool2;
+                try {
+					pool2 = await oracledb.getConnection(get_pool(app_id));
+                    const result_sql = await pool2.execute(
+                        `UPDATE ${process.env.SERVICE_DB_DB2_NAME}.user_account
+						    SET	verification_code = :verification_code,
+								date_modified = SYSDATE
+						  WHERE id = :id `, 
+						{verification_code: verification_code,
+                         id: id   
                         },
                         (err2, result2) => {
                             if (err2) {
@@ -305,7 +369,7 @@ module.exports = {
 					u.password_reminder,
 					u.email,
 					CONVERT(u.avatar USING UTF8) avatar,
-					u.validation_code,
+					u.verification_code,
 					u.active,
 					u.provider1_id,
 					u.provider1_first_name,
@@ -352,7 +416,7 @@ module.exports = {
 							u.password_reminder "password_reminder",
 							u.email "email",
 							u.avatar "avatar",
-							u.validation_code "validation_code",
+							u.verification_code "verification_code",
 							u.active "active",
 							u.provider1_id "provider1_id",
 							u.provider1_first_name "provider1_first_name",
@@ -1593,7 +1657,7 @@ module.exports = {
 					u.password_reminder,
 					u.email,
 					CONVERT(u.avatar USING UTF8) avatar,
-					u.validation_code,
+					u.verification_code,
 					u.active,
 					u.provider1_id,
 					u.provider1_first_name,
@@ -1647,7 +1711,7 @@ module.exports = {
 							u.password_reminder "password_reminder",
 							u.email "email",
 							u.avatar "avatar",
-							u.validation_code "validation_code",
+							u.verification_code "verification_code",
 							u.active "active",
 							u.provider1_id "provider1_id",
 							u.provider1_first_name "provider1_first_name",

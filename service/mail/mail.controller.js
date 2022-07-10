@@ -31,36 +31,49 @@ function app_log(app_id, app_module_type, request, result, app_user_id,
 }
 module.exports = {
     getLogo: (req, res) => {
-        if (typeof req.query.app_id == 'undefined')
+        if (typeof req.query.id == 'undefined'){
+            req.body.app_id = 0;
             req.query.app_id = 0;
+        }
+        else{
+            req.body.app_id = req.query.id;
+            req.query.app_id = req.query.id;
+        }
         if (typeof req.query.app_user_id == 'undefined')
             req.query.app_user_id = null;
-        if (typeof req.query.emailType == 'undefined') {
+        if (typeof req.query.et == 'undefined') {
             //image called direct without parameters
-            req.query.emailType = null;
-            req.body.app_module_type = 'MAIL_LOGO_READ';
+            req.query.et = null;
         }
-        res.sendFile(__dirname + `../../apps/app${app_id}/mail/logo.png`);
-        req.body.app_id = req.query.app_id;
-        getIp(req, res, (err, result)=>{
-            app_log(req.query.app_id,
-                    'READ',
-                    req.protocol + '://' + req.get('host') + req.originalUrl,
-                    result.geoplugin_city + ', ' +
-                    result.geoplugin_regionName + ', ' +
-                    result.geoplugin_countryName,
-                    req.query.app_user_id,
-                    null,
-                    null,
-                    null,
-                    null,
-                    req.ip,
-                    req.headers["user-agent"],
-                    req.headers["host"],
-                    req.headers["accept-language"],
-                    result.geoplugin_latitude,
-                    result.geoplugin_longitude);
-        })
+        var path = require('path');
+        res.sendFile(path.resolve(__dirname + `/../../apps/app${req.body.app_id}/mail/logo.png`), (err) =>{
+            if (err){
+                createLogAppSE(req.body.app_id, __appfilename, __appfunction, __appline, err);
+                return res.send(null);
+            }
+            else {
+                req.query.callback = 1;
+                getIp(req, res, (err, result)=>{
+                    app_log(req.body.app_id,
+                            'READ',
+                            req.protocol + '://' + req.get('host') + req.originalUrl,
+                            result.geoplugin_city + ', ' +
+                            result.geoplugin_regionName + ', ' +
+                            result.geoplugin_countryName,
+                            req.query.app_user_id,
+                            null,
+                            null,
+                            null,
+                            null,
+                            req.ip,
+                            req.headers["user-agent"],
+                            req.headers["host"],
+                            req.headers["accept-language"],
+                            result.geoplugin_latitude,
+                            result.geoplugin_longitude);
+                })
+            }
+        });
     },
     sendEmail: (data, callBack) => {
         let emailData;

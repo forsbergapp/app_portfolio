@@ -859,7 +859,7 @@ CREATE TABLE app_portfolio.user_account (
     password_reminder     VARCHAR(100),
     email                 VARCHAR(100),
     avatar                LONGBLOB,
-    validation_code       VARCHAR(6),
+    verification_code     VARCHAR(6),
     active                DECIMAL(1,0),
     provider1_id          VARCHAR(21),
     provider1_first_name  VARCHAR(1000),
@@ -982,7 +982,7 @@ CREATE TABLE app_portfolio.user_account_hist (
     password_reminder     VARCHAR(100),
     email                 VARCHAR(100),
     avatar                LONGBLOB,
-    validation_code       VARCHAR(6),
+    verification_code     VARCHAR(6),
     active                DECIMAL(1,0),
     provider1_id          VARCHAR(21),
     provider1_first_name  VARCHAR(1000),
@@ -2093,7 +2093,7 @@ INSERT INTO user_account_hist
 	password_reminder,
 	email,
 	avatar,
-	validation_code,
+	verification_code,
 	active,
 	provider1_id,
 	provider1_first_name,
@@ -2119,7 +2119,7 @@ INSERT INTO user_account_hist
 	old.password_reminder,
 	old.email,
 	null,
-	old.validation_code,
+	old.verification_code,
 	old.active,
 	old.provider1_id,
 	old.provider1_first_name,
@@ -2143,7 +2143,7 @@ CREATE TRIGGER app_portfolio.user_account_before_insert
 		SET new.password_reminder = null;
 		SET new.email = null;
 		SET new.avatar = null;
-		SET new.validation_code = null;
+		SET new.verification_code = null;
 		IF new.provider1_id IS NOT NULL THEN
 			SET new.provider2_first_name = null;
 			SET	new.provider2_last_name = null;
@@ -2206,7 +2206,7 @@ CREATE TRIGGER app_portfolio.user_account_before_insert
 	password_reminder,
 	email,
 	avatar,
-	validation_code,
+	verification_code,
 	active,
 	provider1_id,
 	provider1_first_name,
@@ -2232,7 +2232,7 @@ CREATE TRIGGER app_portfolio.user_account_before_insert
 	new.password_reminder,
 	new.email,
 	null,
-	new.validation_code,
+	new.verification_code,
 	new.active,
 	new.provider1_id,
 	new.provider1_first_name,
@@ -2256,7 +2256,7 @@ CREATE TRIGGER app_portfolio.user_account_before_update
 		SET new.password_reminder = null;
 		SET new.email = null;
 		SET new.avatar = null;
-		SET new.validation_code = null;
+		SET new.verification_code = null;
 		IF new.provider1_id IS NOT NULL THEN
 			SET new.provider2_first_name = null;
 			SET	new.provider2_last_name = null;
@@ -2319,7 +2319,7 @@ CREATE TRIGGER app_portfolio.user_account_before_update
 		password_reminder,
 		email,
 		avatar,
-		validation_code,
+		verification_code,
 		active,
 		provider1_id,
 		provider1_first_name,
@@ -2345,7 +2345,7 @@ CREATE TRIGGER app_portfolio.user_account_before_update
 		old.password_reminder,
 		old.email,
 		null,
-		old.validation_code,
+		old.verification_code,
 		old.active,
 		old.provider1_id,
 		old.provider1_first_name,
