@@ -14,8 +14,22 @@ window.global_qr_background_color;
 
 function setEvents(){
 
+    //app
+    //user menu
     document.getElementById('toggle_checkbox').addEventListener('click', function() { toggle_switch() }, false);
-    document.getElementById('login_close').addEventListener('click', function() { document.getElementById('dialogue_login').style.visibility = 'hidden' }, false);
+    document.getElementById('user_menu_dropdown_profile').addEventListener('click', function() { user_menu_item_click(this) }, false);
+    document.getElementById('user_menu_dropdown_edit').addEventListener('click', function() { user_menu_item_click(this) }, false);
+    document.getElementById('user_menu_dropdown_log_out').addEventListener('click', function() { user_menu_item_click(this) }, false);
+    document.getElementById('user_menu_dropdown_signup').addEventListener('click', function() { user_menu_item_click(this) }, false);
+    document.getElementById('user_menu_dropdown_log_in').addEventListener('click', function() { user_menu_item_click(this) }, false);
+    //start page
+    document.getElementById( 'start_message' ).addEventListener( 'click', function( event ) {
+        event.preventDefault();
+        document.getElementById( 'dialogue_info_content' ).className = 'dialogue_content dialogue_flip dialogue_flip-side-1';
+        document.getElementById( 'dialogue_start_content' ).className = 'dialogue_content dialogue_flip dialogue_flip-side-2';
+    }, false );
+    document.getElementById('start_profile').addEventListener('click', function() {profile_home(document.getElementById('user_menu_user_id').innerHTML, Intl.DateTimeFormat().resolvedOptions().timeZone, window.global_lang_code)}, false);
+    //second page
     document.getElementById('info_diagram').addEventListener('click', function() {info(1);}, false);
     document.getElementById('info_datamodel').addEventListener('click', function() {info(2);}, false);
     document.getElementById('toolbar_btn_close').addEventListener('click', function() {info(3);}, false);
@@ -25,46 +39,27 @@ function setEvents(){
     document.getElementById('toolbar_btn_right').addEventListener('click', function() {move_info(1,0);}, false);
     document.getElementById('toolbar_btn_up').addEventListener('click', function() {move_info(0,-1);}, false);
     document.getElementById('toolbar_btn_down').addEventListener('click', function() {move_info(0,1);}, false);
-    
-    document.getElementById('message_cancel').addEventListener('click', function() { document.getElementById("dialogue_message").style.visibility = "hidden" }, false);
-
-    document.getElementById( 'start_message' ).addEventListener( 'click', function( event ) {
-        event.preventDefault();
-        document.getElementById( 'dialogue_info_content' ).className = 'dialogue_content dialogue_flip dialogue_flip-side-1';
-        document.getElementById( 'dialogue_start_content' ).className = 'dialogue_content dialogue_flip dialogue_flip-side-2';
-    }, false );
-    document.getElementById('start_profile').addEventListener('click', function() {profile_home(document.getElementById('user_menu_user_id').innerHTML, Intl.DateTimeFormat().resolvedOptions().timeZone, window.global_lang_code)}, false);
-    document.getElementById('profile_home').addEventListener('click', function() {profile_home(document.getElementById('user_menu_user_id').innerHTML, Intl.DateTimeFormat().resolvedOptions().timeZone, window.global_lang_code);}, false);
-    document.getElementById('profile_close').addEventListener('click', function() {profile_close()}, false);
-    document.getElementById('profile_search_input').addEventListener('keyup', function() { window.global_typewatch("search_profile(document.getElementById('user_menu_user_id').innerHTML, Intl.DateTimeFormat().resolvedOptions().timeZone, window.global_lang_code, null);", 500); }, false);
-    
-    document.getElementById('profile_top_row1_1').addEventListener('click', function() { profile_top(1, document.getElementById('user_menu_user_id').innerHTML, Intl.DateTimeFormat().resolvedOptions().timeZone, window.global_lang_code)}, false);
-    document.getElementById('profile_top_row1_2').addEventListener('click', function() { profile_top(2, document.getElementById('user_menu_user_id').innerHTML, Intl.DateTimeFormat().resolvedOptions().timeZone, window.global_lang_code)}, false);
-    document.getElementById('profile_top_row1_3').addEventListener('click', function() { profile_top(3, document.getElementById('user_menu_user_id').innerHTML, Intl.DateTimeFormat().resolvedOptions().timeZone, window.global_lang_code)}, false);
-
-    document.getElementById('profile_follow').addEventListener('click', function() { user_function_app('FOLLOW') }, false);
-	document.getElementById('profile_like').addEventListener('click', function() { user_function_app('LIKE') }, false);
-
-    document.getElementById('profile_main_btn_following').addEventListener('click', function() { profile_detail(1, document.getElementById('user_menu_user_id').innerHTML, Intl.DateTimeFormat().resolvedOptions().timeZone, window.global_lang_code, null, true, null) }, false);
-    document.getElementById('profile_main_btn_followed').addEventListener('click', function() { profile_detail(2, document.getElementById('user_menu_user_id').innerHTML, Intl.DateTimeFormat().resolvedOptions().timeZone, window.global_lang_code, null, true, null) }, false);
-    document.getElementById('profile_main_btn_likes').addEventListener('click', function() { profile_detail(3, document.getElementById('user_menu_user_id').innerHTML, Intl.DateTimeFormat().resolvedOptions().timeZone, window.global_lang_code, null, true, null) }, false);
-    document.getElementById('profile_main_btn_liked').addEventListener('click', function() { profile_detail(4, document.getElementById('user_menu_user_id').innerHTML, Intl.DateTimeFormat().resolvedOptions().timeZone, window.global_lang_code, null, true, null) }, false);
-    document.getElementById('profile_main_btn_cloud').addEventListener('click', function() { profile_detail(5, document.getElementById('user_menu_user_id').innerHTML, Intl.DateTimeFormat().resolvedOptions().timeZone, window.global_lang_code, window.global_rest_user_account_app, true, global_button_default_icon_cloud, null) }, false);
-    
-
     document.getElementById( 'info_message' ).addEventListener( 'click', function( event ) {
         event.preventDefault();
         document.getElementById( 'dialogue_info_content' ).className = 'dialogue_content dialogue_flip';
         document.getElementById( 'dialogue_start_content' ).className = 'dialogue_content dialogue_flip';
     }, false );
-    
-    document.getElementById('user_menu_dropdown_profile').addEventListener('click', function() { user_menu_item_click(this) }, false);
-    document.getElementById('user_menu_dropdown_edit').addEventListener('click', function() { user_menu_item_click(this) }, false);
-    document.getElementById('user_menu_dropdown_log_out').addEventListener('click', function() { user_menu_item_click(this) }, false);
-
-    document.getElementById('user_menu_dropdown_signup').addEventListener('click', function() { user_menu_item_click(this) }, false);
-    document.getElementById('user_menu_dropdown_log_in').addEventListener('click', function() { user_menu_item_click(this) }, false);
-
+    //common with app specific settings
+    //dialogue profile
+    document.getElementById('profile_home').addEventListener('click', function() {profile_home(document.getElementById('user_menu_user_id').innerHTML, Intl.DateTimeFormat().resolvedOptions().timeZone, window.global_lang_code);}, false);
+    document.getElementById('profile_close').addEventListener('click', function() {profile_close()}, false);
+    document.getElementById('profile_search_input').addEventListener('keyup', function() { window.global_typewatch("search_profile(document.getElementById('user_menu_user_id').innerHTML, Intl.DateTimeFormat().resolvedOptions().timeZone, window.global_lang_code, null);", 500); }, false);
+    document.getElementById('profile_top_row1_1').addEventListener('click', function() { profile_top(1, document.getElementById('user_menu_user_id').innerHTML, Intl.DateTimeFormat().resolvedOptions().timeZone, window.global_lang_code)}, false);
+    document.getElementById('profile_top_row1_2').addEventListener('click', function() { profile_top(2, document.getElementById('user_menu_user_id').innerHTML, Intl.DateTimeFormat().resolvedOptions().timeZone, window.global_lang_code)}, false);
+    document.getElementById('profile_top_row1_3').addEventListener('click', function() { profile_top(3, document.getElementById('user_menu_user_id').innerHTML, Intl.DateTimeFormat().resolvedOptions().timeZone, window.global_lang_code)}, false);
+    document.getElementById('profile_follow').addEventListener('click', function() { user_function_app('FOLLOW') }, false);
+	document.getElementById('profile_like').addEventListener('click', function() { user_function_app('LIKE') }, false);
+    document.getElementById('profile_main_btn_following').addEventListener('click', function() { profile_detail(1, document.getElementById('user_menu_user_id').innerHTML, Intl.DateTimeFormat().resolvedOptions().timeZone, window.global_lang_code, null, true, null) }, false);
+    document.getElementById('profile_main_btn_followed').addEventListener('click', function() { profile_detail(2, document.getElementById('user_menu_user_id').innerHTML, Intl.DateTimeFormat().resolvedOptions().timeZone, window.global_lang_code, null, true, null) }, false);
+    document.getElementById('profile_main_btn_likes').addEventListener('click', function() { profile_detail(3, document.getElementById('user_menu_user_id').innerHTML, Intl.DateTimeFormat().resolvedOptions().timeZone, window.global_lang_code, null, true, null) }, false);
+    document.getElementById('profile_main_btn_liked').addEventListener('click', function() { profile_detail(4, document.getElementById('user_menu_user_id').innerHTML, Intl.DateTimeFormat().resolvedOptions().timeZone, window.global_lang_code, null, true, null) }, false);
+    document.getElementById('profile_main_btn_cloud').addEventListener('click', function() { profile_detail(5, document.getElementById('user_menu_user_id').innerHTML, Intl.DateTimeFormat().resolvedOptions().timeZone, window.global_lang_code, window.global_rest_user_account_app, true, global_button_default_icon_cloud, null) }, false);
+    //dialogue login/signup/forgot
     let input_username_login = document.getElementById("login_username");
     input_username_login.addEventListener("keyup", function(event) {
         if (event.keyCode === 13) {
@@ -85,27 +80,23 @@ function setEvents(){
             });
         }
     });
-    document.getElementById('login_signup').addEventListener('click', function() { show_common_dialogue('SIGNUP') }, false);
-    
-    document.getElementById('login_button').addEventListener('click', function() { user_login_app() }, false);
-    document.getElementById('login_close').addEventListener('click', function() { document.getElementById('dialogue_login').style.visibility = 'hidden' }, false);
+    document.getElementById('login_button').addEventListener('click', function() { user_login_app() }, false);    
+    document.getElementById('signup_button').addEventListener('click', function() { user_signup(document.getElementById('user_menu_user_id'), window.global_lang_code) }, false);
+    document.getElementById('forgot_button').addEventListener('click', function() { alert('send email...') }, false);
+    //dialogue user edit
     document.getElementById('user_edit_close').addEventListener('click', function() { user_edit_app() }, false);
     document.getElementById('user_edit_btn_avatar_img').addEventListener('click', function() { document.getElementById('user_edit_input_avatar_img').click() }, false);
     document.getElementById('user_edit_input_avatar_img').addEventListener('change', function() { show_image(document.getElementById('user_edit_avatar_img'), this.id, window.global_user_image_avatar_width, window.global_user_image_avatar_height, window.global_lang_code); }, false);
-    document.getElementById('user_edit_close').addEventListener('click', function() { document.getElementById('dialogue_user_edit').style.visibility = 'hidden' }, false);
-    document.getElementById('signup_login').addEventListener('click', function() { show_common_dialogue('LOGIN') }, false);
+    document.getElementById('user_edit_close').addEventListener('click', function() { document.getElementById('dialogue_user_edit').style.visibility = 'hidden' }, false);    
     document.getElementById('setting_btn_user_update').addEventListener('click', function() { user_update_app(); }, false);
     document.getElementById('setting_btn_user_delete_account').addEventListener('click', function() { user_delete_app(); }, false);
-    document.getElementById('signup_button').addEventListener('click', function() { user_signup(document.getElementById('user_menu_user_id'), window.global_lang_code) }, false);
-    document.getElementById('signup_close').addEventListener('click', function() { document.getElementById('dialogue_signup').style.visibility = 'hidden' }, false);
-
+    //dialogue verify
     document.getElementById('user_verify_verification_char1').addEventListener('keyup', function() { user_verify_check_input_app(this, "user_verify_verification_char2") }, false);
     document.getElementById('user_verify_verification_char2').addEventListener('keyup', function() { user_verify_check_input_app(this, "user_verify_verification_char3") }, false);
     document.getElementById('user_verify_verification_char3').addEventListener('keyup', function() { user_verify_check_input_app(this, "user_verify_verification_char4") }, false);
     document.getElementById('user_verify_verification_char4').addEventListener('keyup', function() { user_verify_check_input_app(this, "user_verify_verification_char5") }, false);
     document.getElementById('user_verify_verification_char5').addEventListener('keyup', function() { user_verify_check_input_app(this, "user_verify_verification_char6") }, false);
     document.getElementById('user_verify_verification_char6').addEventListener('keyup', function() { user_verify_check_input_app(this, "") }, false);
-
 }
 function toggle_switch(){
     if(document.getElementById('toggle_checkbox').checked)
@@ -139,8 +130,10 @@ function get_apps() {
                     window.global_app_name = json.data[i].app_name;
                     document.getElementById('login_logo').style.backgroundImage=`url(${json.data[i].logo})`;
                     document.getElementById('signup_logo').style.backgroundImage=`url(${json.data[i].logo})`;
+                    document.getElementById('forgot_logo').style.backgroundImage=`url(${json.data[i].logo})`;
                     document.getElementById('login_app_name').innerHTML = window.global_app_name;
                     document.getElementById('signup_app_name').innerHTML = window.global_app_name;
+                    document.getElementById('forgot_app_name').innerHTML = window.global_app_name;
                     set_app_globals_head();
                 }
                 else{   
@@ -220,6 +213,8 @@ async function get_parameters() {
                     window.global_rest_app = json.data[i].parameter_value;
                 if (json.data[i].parameter_name=='REST_APP_LOG')
                     window.global_rest_app_log = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='REST_APP_OBJECT')
+                    window.global_rest_app_object = json.data[i].parameter_value;
                 if (json.data[i].parameter_name=='REST_MESSAGE_TRANSLATION')
                     window.global_rest_message_translation = json.data[i].parameter_value;
                 if (json.data[i].parameter_name=='REST_USER_ACCOUNT')
@@ -426,7 +421,6 @@ async function user_update_app(){
             document.getElementById('user_menu_username').innerHTML = result.username;
         }
     });
-
 }
 async function user_verify_check_input_app(item, nextField){
     await user_verify_check_input(item, nextField, window.global_lang_code, (err, result) => {
@@ -448,7 +442,6 @@ async function profile_update_stat_app(){
         null;
     })
 }
-
 async function  user_delete_app(){
     let user_local;
     if (document.getElementById('user_edit_local').style.display == 'block')
@@ -513,28 +506,13 @@ async function init_app(){
     document.getElementById('info_datamodel_img').src=window.global_img_datamodel_img;
     document.getElementById('title1').innerHTML = 'App Portfolio Diagram';
     document.getElementById('title2').innerHTML = 'App Portfolio Data model';
-    document.getElementById('contact_text').innerHTML = 'Contact'
-
-    //diaologie login signup
-    document.getElementById('login_username').placeholder = 'Username';
-    document.getElementById('login_password').placeholder = 'Password';
-    document.getElementById('signup_username').placeholder = 'Username';
-    document.getElementById('signup_email').placeholder = 'Email';
-    document.getElementById('signup_password').placeholder = 'Password';
-    document.getElementById('signup_password_confirm').placeholder = 'Password confirm';
-    document.getElementById('signup_password_reminder').placeholder = 'Password reminder';
-
+    document.getElementById('contact_text').innerHTML = 'Contact'    
     //user menu
     document.getElementById('user_menu_dropdown_profile').innerHTML = window.global_button_default_icon_profile;
     document.getElementById('user_menu_dropdown_edit').innerHTML = window.global_button_default_icon_edit;
     document.getElementById('user_menu_dropdown_log_out').innerHTML = window.global_button_default_icon_logoff;
-
     document.getElementById('user_menu_dropdown_signup').innerHTML = window.global_button_default_icon_signup;
     document.getElementById('user_menu_dropdown_log_in').innerHTML = window.global_button_default_icon_login;
-
-    //dialogue confirm
-    document.getElementById('confirm_question').innerHTML = 'Are you sure?';
-
     //profile info
     document.getElementById('profile_main_btn_cloud').innerHTML = window.global_button_default_icon_cloud;
     document.getElementById('user_menu_default_avatar').innerHTML = window.global_button_default_icon_user_avatar;
@@ -556,6 +534,7 @@ function init(parameters){
     init_common(parameters);
     init_app().then(function(){
         get_parameters().then(function(){
+            common_translate_ui(window.global_lang_code);
             document.getElementById('copyright').innerHTML = window.global_app_copyright;
             document.getElementById('app_email').href='mailto:' + window.global_app_email;
             document.getElementById('app_email').innerHTML=window.global_app_email;

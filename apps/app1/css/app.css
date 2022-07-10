@@ -321,7 +321,7 @@ a:active {
 
 }
 /*Common Dialogue settings */
-#login_logo, #signup_logo{
+#login_logo, #signup_logo, #forgot_logo{
 	background-image: url('../images/logo.png');
 }
 /*Dialogue loading */
@@ -1071,26 +1071,33 @@ body.app_theme1,
 	color: #a3a3a3;
 }
 .app_theme1 .login_tab_button,
-.app_theme1 .signup_tab_button{
+.app_theme1 .signup_tab_button,
+.app_theme1 .forgot_tab_button{
 	color: #a49775;
 }
 .app_theme1 .login_tab_button:hover,
 .app_theme1 .login_tab_button:active,
 .app_theme1 .signup_tab_button:hover,
-.app_theme1 .signup_tab_button:active{
+.app_theme1 .signup_tab_button:active,
+.app_theme1 .forgot_tab_button:hover,
+.app_theme1 .forgot_tab_button:active{
 	color:#6ab344;
 }
-.app_theme1 #login_button, .app_theme1 #signup_button{
+.app_theme1 #login_button, 
+.app_theme1 #signup_button,
+.app_theme1 #forgot_button{
 	background-color: #a49775;
 	color: #ffffff;
 }
 .app_theme1 .login_button:hover,
 .app_theme1 .login_button:active,
 .app_theme1 .signup_button:hover,
-.app_theme1 .signup_button:active{
+.app_theme1 .signup_button:active,
+.app_theme1 .forgot_button:hover,
+.app_theme1 .forgot_button:active{
 	background-color:#6ab344 !important;
 }
-.app_theme1 #login_facebook{
+.app_theme1 #login_provider2{
 	background-color: #4267b2;
 	color:#ffffff;
 }
@@ -1244,26 +1251,33 @@ body.app_theme2,
 	color: #a3a3a3;
 }
 .app_theme2 .login_tab_button, 
-.app_theme2 .signup_tab_button{
+.app_theme2 .signup_tab_button,
+.app_theme2 .forgot_tab_button{
 	color: #a49775;
 }
 .app_theme2 .login_tab_button:hover,
 .app_theme2 .login_tab_button:active,
 .app_theme2 .signup_tab_button:hover,
-.app_theme2 .signup_tab_button:active{
+.app_theme2 .signup_tab_button:active,
+.app_theme2 .forgot_tab_button:hover,
+.app_theme2 .forgot_tab_button:active{
 	color:#6ab344;
 }
-.app_theme2 #login_button, .app_theme1 #signup_button{
+.app_theme2 #login_button, 
+.app_theme2 #signup_button,
+.app_theme2 #forgot_button{
 	background-color: #a49775;
 	color: #ffffff;
 }
 .app_theme2 .login_button:hover,
 .app_theme2 .login_button:active,
 .app_theme2 .signup_button:hover,
-.app_theme2 .signup_button:active{
+.app_theme2 .signup_button:active,
+.app_theme2 .forgot_button:hover,
+.app_theme2 .forgot_button:active{
 	background-color:#6ab344 !important;
 }
-.app_theme2 #login_facebook{
+.app_theme2 #login_provider2{
 	background-color: #4267b2;
 	color:#ffffff;
 }
@@ -1417,26 +1431,33 @@ body.app_theme3,
 	color: #a3a3a3;
 }
 .app_theme3 .login_tab_button,
-.app_theme3 .signup_tab_button{
+.app_theme3 .signup_tab_button,
+.app_theme3 .forgot_tab_button{
 	color: #a49775;
 }
 .app_theme3 .login_tab_button:hover,
 .app_theme3 .login_tab_button:active,
 .app_theme3 .signup_tab_button:hover,
-.app_theme3 .signup_tab_button:active{
+.app_theme3 .signup_tab_button:active,
+.app_theme3 .forgot_tab_button:hover,
+.app_theme3 .forgot_tab_button:active{
 	color:#6ab344;
 }
-.app_theme3 #login_button, .app_theme1 #signup_button{
+.app_theme3 #login_button, 
+.app_theme3 #signup_button,
+.app_theme3 #forgot_button{
 	background-color: #a49775;
 	color: #ffffff;
 }
 .app_theme3 .login_button:hover,
 .app_theme3 .login_button:active,
 .app_theme3 .signup_button:hover,
-.app_theme3 .signup_button:active{
+.app_theme3 .signup_button:active,
+.app_theme3 .forgot_button:hover,
+.app_theme3 .forgot_button:active{
 	background-color:#6ab344 !important;
 }
-.app_theme3 #login_facebook{
+.app_theme3 #login_provider2{
 	background-color: #4267b2;
 	color:#ffffff;
 }

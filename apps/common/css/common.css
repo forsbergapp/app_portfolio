@@ -190,31 +190,31 @@
 	height:40px;
 	border: 1px solid;
 }
-/*Dialogue login/signup*/
+/*Dialogue login/signup/forgot*/
 #dialogue_login,
-#dialogue_signup{
+#dialogue_signup,
+#dialogue_forgot{
 	visibility: hidden;
 }
 .login_button_hidden{
 	display:none !important;
 }
-#dialogue_login_content{
+#dialogue_login_content,
+#dialogue_signup_content,
+#dialogue_forgot_content{
 	height:450px;
 }
-#dialogue_signup_content{
-	height:450px;
-}
-#login_form, #signup_form{
+#login_form, #signup_form, #forgot_form{
 	margin: 0px auto;
 	width:268px;
 }
-#login_logo, #signup_logo{
+#login_logo, #signup_logo, #forgot_logo{
 	background-size: contain;
 	width: 40px;
 	height: 40px;
 	margin: 0 auto;
 }
-.login_input, .signup_input{
+.login_input, .signup_input, .forgot_input{
 	border-radius: 16px;
 	border: 1px solid #ddd;
 	height:40px;
@@ -224,15 +224,16 @@
 	padding: 8px 16px;
 	box-sizing: border-box;
 }
-#login_title, #login_signup, #signup_login, #signup_title{
+#login_tab1, #login_tab2, #login_tab3, 
+#signup_tab1, #signup_tab2, #signup_tab3,
+#forgot_tab1, #forgot_tab2, #forgot_tab3
+{
 	display:inline-block;
 	width: 30%;
+	font-size: 16px;
 }
-.login_button, .signup_button{
-	border-top-left-radius: 20px;
-	border-top-right-radius: 20px;
-	border-bottom-right-radius: 20px;
-	border-bottom-left-radius: 20px;	
+.login_button, .signup_button, .forgot_button{
+	border-radius: 20px;
 	width:100%;
 	height:40px;
 	font-size:16px;
@@ -241,27 +242,23 @@
 	margin-top:10px;
 	cursor:pointer;
 }
-.login_tab_button, .signup_tab_button{
+.login_tab_button, .signup_tab_button, .forgot_tab_button{
 	border: 0px;
 	margin-top:10px;
 	cursor:pointer;
 	background:none;
 }
-/*Dialogue login Facebook*/
-#login_facebook{
+/*Dialogue login provider2*/
+#login_provider2{
 	display:block;
 	font-weight:bold;
 }
-#logo_facebook{
-	margin-left:-30px;
-	margin-top:-5px;
+#logo_provider2{
 	width:24px;
-	position:absolute;
-	text-align: center;
 	display:inline-block;
 	font-size:24px;
 }
-#login_btn_facebook{
+#login_btn_provider2{
 	display:inline-block;
 }
 /*Dialogue user edit*/

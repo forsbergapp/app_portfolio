@@ -8,7 +8,7 @@ INSERT INTO app_portfolio.app (id, app_name, url, logo) VALUES (2,'Property Mana
 -- Dumping data for table `app_object`
 --
 INSERT INTO app_portfolio.app_object (app_id, object_name) VALUES (1,'APP_DESCRIPTION');
-INSERT INTO app_portfolio.app_object (app_id, object_name) VALUES (1,'DIALOGUE');
+INSERT INTO app_portfolio.app_object (app_id, object_name) VALUES (0,'DIALOGUE');
 INSERT INTO app_portfolio.app_object (app_id, object_name) VALUES (1,'PROFILE');
 INSERT INTO app_portfolio.app_object (app_id, object_name) VALUES (1,'REPORT');
 INSERT INTO app_portfolio.app_object (app_id, object_name) VALUES (1,'SETTING_NAV_DESIGN');
@@ -22,15 +22,13 @@ INSERT INTO app_portfolio.app_object (app_id, object_name) VALUES (1,'TOOLBAR');
 --
 -- Dumping data for table `app_object_item`
 --
-INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (1,'DIALOGUE','CONFIRM_QUESTION');
-INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (1,'DIALOGUE','LOGIN_CONTINUE_WITH');
-INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (1,'DIALOGUE','LOGIN_PASSWORD');
-INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (1,'DIALOGUE','LOGIN_USERNAME');
-INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (1,'DIALOGUE','SIGNUP_EMAIL');
-INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (1,'DIALOGUE','SIGNUP_PASSWORD');
-INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (1,'DIALOGUE','SIGNUP_PASSWORD_CONFIRM');
-INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (1,'DIALOGUE','SIGNUP_PASSWORD_REMINDER');
-INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (1,'DIALOGUE','SIGNUP_USERNAME');
+INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (0,'DIALOGUE','CONFIRM_QUESTION');
+INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (0,'DIALOGUE','LOGIN_CONTINUE_WITH');
+INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (0,'DIALOGUE','PASSWORD');
+INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (0,'DIALOGUE','USERNAME');
+INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (0,'DIALOGUE','EMAIL');
+INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (0,'DIALOGUE','SIGNUP_PASSWORD_CONFIRM');
+INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (0,'DIALOGUE','SIGNUP_PASSWORD_REMINDER');
 INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (1,'REPORT','COLTITLE_ASR');
 INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (1,'REPORT','COLTITLE_ASR_IQAMAT');
 INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (1,'REPORT','COLTITLE_CALTYPE_GREGORIAN');
@@ -1708,14 +1706,14 @@ INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_na
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','SERVICE_WORLDCITIES','/service/worldcities',NULL);
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','USER_PROVIDER1_USE','1',NULL);
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','USER_PROVIDER1_API_SRC','https://accounts.google.com/gsi/client',NULL);
-INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'1','USER_PROVIDER1_ID','{GOOGLE_ID}',NULL);
-INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','USER_PROVIDER1_NAME','Google',NULL);
+INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'1','USER_PROVIDER1_ID','{PROVIDER1_ID}',NULL);
+INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','USER_PROVIDER1_NAME','{PROVIDER1_NAME}',NULL);
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','USER_PROVIDER2_USE','1',NULL);
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','USER_PROVIDER2_API_SRC','https://connect.facebook.net/','example:https://connect.facebook.net/en_US/sdk.js, set locale SDK in client');
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','USER_PROVIDER2_API_SRC2','/sdk.js',NULL);
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','USER_PROVIDER2_API_VERSION','v13.0',NULL);
-INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'1','USER_PROVIDER2_ID','{FACEBOOK_ID}',NULL);
-INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','USER_PROVIDER2_NAME','Facebook',NULL);
+INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'1','USER_PROVIDER2_ID','{PROVIDER2_ID}',NULL);
+INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','USER_PROVIDER2_NAME','{PROVIDER2_NAME}',NULL);
 
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','QR_BACKGROUND_COLOR','#ffffff',NULL);
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','QR_COLOR_DARK','#2b2b32',NULL);
