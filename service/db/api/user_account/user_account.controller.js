@@ -1,6 +1,7 @@
 const {
     create,
     activateUser,
+    updateUserVerificationCode,
     getUserByUserId,
     getProfileUser,
     searchProfileUser,
@@ -70,6 +71,9 @@ function get_app_code (errorNum, message, code, errno, sqlMessage){
                 return null;
     }
 };
+function verification_code(){
+    return Math.floor(100000 + Math.random() * 900000);
+}
 module.exports = {
     
     userSignup: (req, res) => {
@@ -77,8 +81,8 @@ module.exports = {
         const salt = genSaltSync(10);
         if (typeof body.provider1_id == 'undefined' &&
             typeof body.provider2_id == 'undefined') {
-            //generate validation code for local users only
-            body.validation_code = Math.floor(100000 + Math.random() * 900000);
+            //generate verification code for local users only
+            body.verification_code = verification_code();
         }
         if (body.password)
             body.password = hashSync(body.password, salt);
@@ -122,7 +126,7 @@ module.exports = {
                             app_user_id : req.body.user_account_id,
                             emailType : parameter_value,
                             toEmail : req.body.email,
-                            validationCode : body.validation_code,
+                            verificationCode : body.verification_code,
                             user_language:body.user_language,
                             user_timezone:body.user_timezone,
                             user_number_system:body.user_number_system,
@@ -168,9 +172,9 @@ module.exports = {
         });
     },
     activateUser: (req, res) => {
-        const validation_code = req.body.validation_code;
+        const verification_code = req.body.verification_code;
         const id = req.params.id;
-        activateUser(req.query.app_id, id, validation_code, (err, results) => {
+        activateUser(req.query.app_id, id, verification_code, (err, results) => {
             if (err) {
                 return res.status(500).send(
                     err
@@ -639,14 +643,67 @@ module.exports = {
                         }
                     });
                     if (result_pw == 1) {
-                        accessToken(req, (err, Token)=>{
-                            return res.status(200).json({
-                                count: Array(results.items).length,
-                                success: 1,
-                                accessToken: Token,
-                                items: Array(results)
+                        //if user not activated then send email with new verification code
+                        let new_code = verification_code();
+                        if (results.active == 0){
+                            updateUserVerificationCode(req.body.app_id, results.id, new_code, (err_verification,result_verification) => {
+                                if (err_verification)
+                                    return res.status(500),send(
+                                        err_verification
+                                    );
+                                else{
+                                    getParameter(0,'SERVICE_MAIL_TYPE_UNVERIFIED', (err3, parameter_value)=>{
+                                        const emailData = {
+                                            lang_code : req.query.lang_code,
+                                            app_id : process.env.MAIN_APP_ID,
+                                            app_user_id : req.body.user_account_id,
+                                            emailType : parameter_value,
+                                            toEmail : results.email,
+                                            verificationCode : new_code,
+                                            user_language: req.body.user_language,
+                                            user_timezone: req.body.user_timezone,
+                                            user_number_system: req.body.user_number_system,
+                                            user_platform: req.body.user_platform,
+                                            server_remote_addr : req.ip,
+                                            server_user_agent : req.headers["user-agent"],
+                                            server_http_host : req.headers["host"],
+                                            server_http_accept_language : req.headers["accept-language"],
+                                            client_latitude : req.body.client_latitude,
+                                            client_longitude : req.body.client_longitude,
+                                            protocol : req.protocol,
+                                            host : req.get('host')
+                                        }
+                                        sendEmail(emailData, (err_email, result_email) => {
+                                            if (err_email) {
+                                                return res.status(500).send(
+                                                    err_email
+                                                );
+                                            }
+                                            else{
+                                                accessToken(req, (err, Token)=>{
+                                                    return res.status(200).json({
+                                                        count: Array(results.items).length,
+                                                        success: 1,
+                                                        accessToken: Token,
+                                                        items: Array(results)
+                                                    });
+                                                });
+                                            }
+                                        })
+                                    })
+                                }
+                            })
+                        }
+                        else{
+                            accessToken(req, (err, Token)=>{
+                                return res.status(200).json({
+                                    count: Array(results.items).length,
+                                    success: 1,
+                                    accessToken: Token,
+                                    items: Array(results)
+                                });
                             });
-                        });
+                        }           
                     } else {
                         //Username or password not found
                         createLogAppCI(req, res, req.body.app_id, __appfilename, __appfunction, __appline, 'invalid password attempt for user id:' + req.body.user_account_id + ', username:' + req.body.username);
