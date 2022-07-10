@@ -230,13 +230,9 @@ function check_input(text, lang_code, text_length=100){
 function show_common_dialogue(dialogue, title=null, icon=null, click_cancel_event) {
     switch (dialogue) {
         case 'VERIFY':
-            {
-                //this removes old eventlistener
-                let old_cancel = document.getElementById('user_verify_cancel');
-                let button_cancel = old_cancel.cloneNode(true);
-                old_cancel.parentNode.replaceChild(button_cancel, old_cancel);
-                
-                button_cancel.addEventListener('click', click_cancel_event);
+            {    
+                dialogue_verify_clear();
+                document.getElementById('user_verify_cancel').addEventListener('click', click_cancel_event);
 
                 document.getElementById('user_verify_email').innerHTML = title;
                 document.getElementById('user_verify_cancel').innerHTML = icon;
@@ -359,6 +355,21 @@ function show_message(message_type, code, function_event, message_text='', app_i
             break;
         }
     }
+}
+function dialogue_verify_clear(){
+    document.getElementById('dialogue_user_verify').style.visibility = 'hidden';
+    //this removes old eventlistener
+    let old_cancel = document.getElementById('user_verify_cancel');
+    let button_cancel = old_cancel.cloneNode(true);
+    old_cancel.parentNode.replaceChild(button_cancel, old_cancel);
+    document.getElementById('user_verify_email').innerHTML='';
+    document.getElementById('user_verify_cancel').innerHTML='';
+    document.getElementById('user_verify_verification_char1').value = '';
+    document.getElementById('user_verify_verification_char2').value = '';
+    document.getElementById('user_verify_verification_char3').value = '';
+    document.getElementById('user_verify_verification_char4').value = '';
+    document.getElementById('user_verify_verification_char5').value = '';
+    document.getElementById('user_verify_verification_char6').value = '';
 }
 /*----------------------- */
 /* BROADCAST              */
@@ -1150,7 +1161,7 @@ async function user_login(username, password, lang_code, callBack) {
             updateOnlineStatus();
             window.global_rest_at	= json.accessToken;
             if (json.items[0].active==0){
-                let function_cancel_event = function() { `${window.global_exception_app_function}();`};
+                let function_cancel_event = function() { dialogue_verify_clear();eval(`(function (){${window.global_exception_app_function}()}());`);};
                 //use same fields as signup
                 document.getElementById('signup_username').value = document.getElementById('login_username').value;
                 document.getElementById('signup_password').value = document.getElementById('login_password').value;
@@ -1567,7 +1578,7 @@ function user_signup(item_destination_user_id, lang_code) {
                 window.global_user_account_id = json.id;
                 //update item with new user_account.id
                 item_destination_user_id.innerHTML = json.id;
-                let function_cancel_event = function() { `${window.global_exception_app_function}();`};
+                let function_cancel_event = function() { dialogue_verify_clear();eval(`(function (){${window.global_exception_app_function}()}());`);};
                 show_common_dialogue('VERIFY', email, window.global_button_default_icon_logoff, function_cancel_event);
             } else {
                 exception(status, result, lang_code);
@@ -1641,14 +1652,7 @@ async function user_verify_check_input(item, nextField, lang_code, callBack) {
                             document.getElementById('signup_password').value = '';
                             document.getElementById('signup_password_confirm').value = '';
                             document.getElementById('signup_password_reminder').value = '';
-                            
-                            document.getElementById('dialogue_user_verify').style.visibility = 'hidden';
-                            document.getElementById('user_verify_verification_char1').value = '';
-                            document.getElementById('user_verify_verification_char2').value = '';
-                            document.getElementById('user_verify_verification_char3').value = '';
-                            document.getElementById('user_verify_verification_char4').value = '';
-                            document.getElementById('user_verify_verification_char5').value = '';
-                            document.getElementById('user_verify_verification_char6').value = '';
+                            dialogue_verify_clear();
                             return callBack(null, {actived: 1});
 
                         } else {
