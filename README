@@ -10,20 +10,22 @@ and worldcities.
 Runs in Node.js using Express framework.
 Apps are component structured and server-side rendered with database data popluation.
 REST API with authentication middleware supporting both mySQL and Oracle Database.
-Admin single page web app (SPA) with sourcecode secured using authentication credentials.
+
 Includes 
-	Startpage to display your app portfolio.
+	1.Main single page app to display your app portfolio.
 	Oracle SQL Developer Data model designed data model.
 	Scripts to create in mySQL or Oracle Database.
 	Server parameters controlled from Node.js server and app parameters from database.
 
-	App1 - Timetables app
+	2.Admin single page web app (SPA) with sourcecode secured using authentication credentials.
+
+	3.App1 - Timetables app
 	Progressive web app (PWA) and a single page web app (SPA).
 	Worlds most advanced traditional prayer timetable calculation.
 	All known regional settings, all languagues and all countries supported.
 	Navigate in calendar per day, month or year in Gregorian or Hijri
 	calendar type in realtime.
-	Facebook Login and Google Identity or create local user with user verification.
+	Use sign in provider or create local user with user verification.
 	App can be used without registering but then settings can't be saved.
 	Map integration with automatic timezone and GPS lookup.
 	QR code dynamic generation.
@@ -39,8 +41,8 @@ Includes
 	Different application themes available from about dialogue.
 	App is written in pure Javascript and ES6 Javascript is often used in both client and server.
 
-	App 2 - Property management app
-	Data model displayed at the moment.
+	4.App 2 - Property management app
+	Data model displayed to show how a simple app can be installed.
 	Data model supports:
 	- management of a property with multiple owners, multiple subtypes of properties, 
 	  owner of multiple properties, facility management and vechicle access management
@@ -121,7 +123,7 @@ installation instructions
    import scripts/import.sql
    import language scripts/*.sql files
 
-3. register Google Identity
+3. register sign in provider 1 - Google Identity
    requires hostname
    https://console.developers.google.com/
 
@@ -131,7 +133,7 @@ installation instructions
 
    default USER_PROVIDER1_USE=1
 
-4. register Facebook login
+4. register sign in provider 2 - Facebook login
 
    https://developers.facebook.com/docs/facebook-login/web
 

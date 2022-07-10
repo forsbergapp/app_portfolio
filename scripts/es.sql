@@ -1,6 +1,14 @@
 --
 -- Dumping data for table `app_object_item_translation`
 --
+INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (0,'DIALOGUE','EMAIL',506,'Correo electrónico');
+INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (0,'DIALOGUE','PASSWORD',506,'Contraseña');
+INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (0,'DIALOGUE','LOGIN_CONTINUE_WITH',506,'Continua con');
+INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (0,'DIALOGUE','SIGNUP_PASSWORD_CONFIRM',506,'Confirmar contraseña');
+INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (0,'DIALOGUE','SIGNUP_PASSWORD_REMINDER',506,'Contraseña recordar');
+INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (0,'DIALOGUE','SIGNUP_USERNAME',506,'Nombre de ususario');
+INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (0,'DIALOGUE','CONFIRM_QUESTION',506,'Estás seguro?');
+
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'REPORT','COLTITLE_ASR',506,'Media tarde');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'REPORT','COLTITLE_ASR_IQAMAT',506,'Iqamat');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'REPORT','COLTITLE_CALTYPE_GREGORIAN',506,'Gregoriano');
@@ -34,9 +42,6 @@ INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, 
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'REPORT','COLTITLE_TRANSLITERATION_SUNRISE',506,'Shorook');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'REPORT','COLTITLE_TRANSLITERATION_SUNSET',506,'Sunset');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'REPORT','COLTITLE_WEEKDAY',506,'Día de semana');
-INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'DIALOGUE','LOGIN_CONTINUE_WITH',506,'Continua con');
-INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'DIALOGUE','LOGIN_PASSWORD',506,'Contraseña');
-INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'DIALOGUE','LOGIN_USERNAME',506,'Nombre de ususario');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'SETTING_NAV_USER','SETTING_BTN_LABEL_USER_ADD',506,'Añadir');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'SETTING_NAV_USER','SETTING_BTN_LABEL_USER_DELETE',506,'Borrar');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'SETTING_NAV_USER','SETTING_BTN_LABEL_USER_DELETE_ACCOUNT',506,'Borrar cuenta');
@@ -100,17 +105,11 @@ INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, 
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'SETTING_NAV_USER','SETTING_LABEL_USER_URL_MONTH',506,'Mes');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'SETTING_NAV_USER','SETTING_LABEL_USER_URL_YEAR',506,'Año');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'SETTING_NAV_USER','SETTING_LABEL_USERNAME_EDIT',506,'Nombre de usuario');
-INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'DIALOGUE','SIGNUP_EMAIL',506,'Correo electrónico');
-INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'DIALOGUE','SIGNUP_PASSWORD',506,'Contraseña');
-INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'DIALOGUE','SIGNUP_PASSWORD_CONFIRM',506,'Confirmar contraseña');
-INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'DIALOGUE','SIGNUP_PASSWORD_REMINDER',506,'Contraseña recordar');
-INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'DIALOGUE','SIGNUP_USERNAME',506,'Nombre de ususario');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'REPORT','TIMETABLE_TITLE',506,'Horario');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'TOOLBAR','TOOLBAR_BTN_DAY_LABEL',506,'Día');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'TOOLBAR','TOOLBAR_BTN_MONTH_LABEL',506,'Mes');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'TOOLBAR','TOOLBAR_BTN_PRINT_LABEL',506,'Imprimir');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'TOOLBAR','TOOLBAR_BTN_YEAR_LABEL',506,'Año');
-INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'DIALOGUE','CONFIRM_QUESTION',506,'Estás seguro?');
 --
 -- Dumping data for table `app_object_subitem_translation`
 --
