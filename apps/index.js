@@ -103,11 +103,11 @@ async function get_email_verification(data, email, baseUrl, lang_code, callBack)
                     else{
                         let verification_title = results.text;
                         email = email.replace('<Logo/>', 
-                                            `<img id='app_logo' src='${data.protocol}://${data.host}${baseUrl}/logo?id=${data.app_id}&uid=${data.app_user_id}&emailType=${data.emailType}'>`);
-                        email = email.replace('<Validation_code_title/>', 
+                                            `<img id='app_logo' src='${data.protocol}://${data.host}${baseUrl}/logo?id=${data.app_id}&uid=${data.app_user_id}&et=${data.emailType}'>`);
+                        email = email.replace('<Verification_code_title/>', 
                                             `${verification_title}`);
-                        email = email.replace('<Validation_code/>', 
-                                            `${data.validationCode}`);
+                        email = email.replace('<Verification_code/>', 
+                                            `${data.verificationCode}`);
                         email = email.replace('<Footer/>', 
                                             `<a target='_blank' href='${data.protocol}://${data.host}'>${data.protocol}://${data.host}</a>`);
                         callBack(null, {"subject": email_subject,
