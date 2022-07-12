@@ -74,50 +74,68 @@ CREATE TABLE app_portfolio.app_log (
 	CONSTRAINT app_log_pk PRIMARY KEY ( id )
 );
 
-ALTER TABLE app_portfolio.app_log MODIFY COLUMN app_log.app_module VARCHAR(100) COMMENT
-    'APP
-AUTH
-MAIL
+ALTER TABLE app_portfolio.app_log MODIFY COLUMN app_module VARCHAR(100) COMMENT
+    'AUTH
+BROADCAST
+FORMS
 GEOLOCATION
+MAIL
 REPORT
 WORLDCITIES';
 
-ALTER TABLE app_portfolio.app_log MODIFY COLUMN app_log.app_module_type VARCHAR(100) COMMENT
-    'HOME				start
-INIT 				app start
-MAINTENANCE
-AUTH_TOKEN_GET
-send:
-MAIL_SIGNUP			1 //Template, signup
-MAIL_UNVERIFIED		2 //Template, unverified user
-			 	     when logging in
-MAIL_RESET_PASSWORD	3 //Template, reset password
-MAIL_CHANGE_EMAIL		4 //Template, change email
-read:
-MAIL_SIGNUP_READ		1 //Read email, signup
-MAIL_UNVERIFIED_READ	2 //Read email, unverified user
-				     when logging in
-MAIL_RESET_PASSWORD_READ	3 //Read email, reset password
-MAIL_CHANGE_EMAIL_READ	4 //Read email, change email
-MAIL_LOGO_READ		Read only logo used in email
+ALTER TABLE app_portfolio.app_log MODIFY COLUMN app_module_type VARCHAR(100) COMMENT
+    'AUTH
+	DATATOKEN_OK
+	DATATOKEN_FAIL
+	ACCESSTOKEN
+	ADMINTOKEN_OK
+	ADMINTOKEN_FAIL
+BROADCAST
+	CONNECT
+FORMS
+	APP
+	ADMIN
+	ADMIN_SECURE
+	MAINTENANCE
+GEOLOCATION
+	IP
+	PLACE
+MAI
+	READ
+	SEND
+REPORT
+	HTML
+	PDF
+WORLDCITIES
+	CITIES';
 
-GEOLOCATION_PLACE
-GEOLOCATION_IP
-REPORT_TIMETABLE_DAY
-REPORT_TIMETABLE_MONTH
-REPORT_TIMETABLE_YEAR
-WORLDCITIES_CITIES';
-
-ALTER TABLE app_portfolio.app_log MODIFY COLUMN app_log.app_module_request VARCHAR(100) COMMENT
-    'INIT: 
-AUTH_TOKEN_GET:	AT: token, DT: token
-MAIL%: 		emailaddress
+ALTER TABLE app_portfolio.app_log MODIFY COLUMN app_module_request VARCHAR(100) COMMENT
+    'MAIL%: 		emailaddress
 GEOLOCATION%: 	url
 REPORT%: 		url
 WORLDCITIES%:	countrycode';
 
-ALTER TABLE app_portfolio.app_log MODIFY COLUMN app_log.app_module_result VARCHAR(100) COMMENT
-    'successful info or any error message';
+ALTER TABLE app_portfolio.app_log MODIFY COLUMN app_module_result VARCHAR(100) COMMENT
+    'AUTH
+ADMINTOKEN_OK	AT: token
+ADMINTOKEN_FAIL	error message
+DATATOKEN_OK	DT: token
+DATATOKEN_FAIL	error message
+ACCESSTOKEN_OK	AT: token
+
+FORMS
+APP			geolocation place
+ADMIN			geolocation place
+ADMIN_SECURE		geolocation place
+MAINTENANCE		geolocation place
+
+GEOLOCATION
+IP			geodata
+PLACE			geodata
+
+MAIL
+			result or error message
+';
 
 ALTER TABLE app_portfolio.app_log MODIFY COLUMN user_language VARCHAR(100) COMMENT
     'navigator.language';
@@ -664,6 +682,54 @@ GRANT SELECT ON app_portfolio.country_translation TO role_app2;
 
 GRANT ALL PRIVILEGES ON app_portfolio.country_translation TO role_app_dba;
 
+CREATE TABLE app_portfolio.event (
+    id            INT NOT NULL AUTO_INCREMENT,
+    event_name    VARCHAR(100) NOT NULL,
+    event_type_id INTEGER NOT NULL,
+    CONSTRAINT event_pk PRIMARY KEY ( id )
+);
+
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.event TO role_app_admin;
+
+GRANT ALL PRIVILEGES ON app_portfolio.event TO role_app_dba;
+
+GRANT SELECT ON app_portfolio.event TO role_app0;
+
+GRANT SELECT ON app_portfolio.event TO role_app1;
+
+GRANT SELECT ON app_portfolio.event TO role_app2;
+
+CREATE TABLE app_portfolio.event_status (
+    id          INT NOT NULL AUTO_INCREMENT,
+    status_name VARCHAR(100) NOT NULL,
+    CONSTRAINT event_status_pk PRIMARY KEY ( id )
+);
+
+GRANT SELECT ON app_portfolio.event_status TO role_app0;
+
+GRANT SELECT ON app_portfolio.event_status TO role_app1;
+
+GRANT SELECT ON app_portfolio.event_status TO role_app2;
+
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.event_status TO role_app_admin;
+
+GRANT ALL PRIVILEGES ON app_portfolio.event_status TO role_app_dba;
+
+CREATE TABLE app_portfolio.event_type (
+    id              INT NOT NULL AUTO_INCREMENT,
+    event_type_name VARCHAR(100) NOT NULL,
+    CONSTRAINT event_type_pk PRIMARY KEY ( id )
+);
+
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.event_type TO role_app_admin;
+
+GRANT ALL PRIVILEGES ON app_portfolio.event_type TO role_app_dba;
+
+GRANT SELECT ON app_portfolio.event_type TO role_app0;
+
+GRANT SELECT ON app_portfolio.event_type TO role_app1;
+
+GRANT SELECT ON app_portfolio.event_type TO role_app2;
 
 CREATE TABLE app_portfolio.language (
     id         INT NOT NULL AUTO_INCREMENT,
@@ -786,10 +852,9 @@ GRANT SELECT ON app_portfolio.message_type TO role_app1;
 
 ALTER TABLE app_portfolio.message_type ADD CONSTRAINT message_type_message_type_un UNIQUE ( message_type );
 
-
 CREATE TABLE app_portfolio.parameter_type (
     id VARCHAR(100) NOT NULL,
-    name VARCHAR2(100) NOT NULL
+    parameter_type_name VARCHAR(100) NOT NULL
 );
 GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.parameter_type TO role_app_admin;
 
@@ -927,6 +992,24 @@ GRANT SELECT, INSERT ON app_portfolio.user_account_app_hist TO role_app2;
 GRANT ALL PRIVILEGES ON app_portfolio.user_account_app_hist TO role_app_dba;
 
 GRANT SELECT, INSERT ON app_portfolio.user_account_app_hist TO role_app1;
+
+CREATE TABLE app_portfolio.user_account_event (
+    user_account_id INTEGER NOT NULL,
+    event_id        INTEGER NOT NULL,
+    event_status_id INTEGER NOT NULL,
+    date_created    DATETIME NOT NULL,
+    date_modified   DATETIME
+);
+
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.user_account_event TO role_app0;
+
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.user_account_event TO role_app1;
+
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.user_account_event TO role_app2;
+
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.user_account_event TO role_app_admin;
+
+GRANT ALL PRIVILEGES ON app_portfolio.user_account_event TO role_app_dba;
 
 CREATE TABLE app_portfolio.user_account_follow (
     id                      INT NOT NULL AUTO_INCREMENT,
@@ -1338,6 +1421,10 @@ ALTER TABLE app_portfolio.country_translation
     ADD CONSTRAINT country_translation_language_fk FOREIGN KEY ( language_id )
         REFERENCES language ( id );
 
+ALTER TABLE app_portfolio.event
+    ADD CONSTRAINT event_event_type_fk FOREIGN KEY ( event_type_id )
+        REFERENCES app_portfolio.event_type ( id );
+
 ALTER TABLE app_portfolio.language_translation
     ADD CONSTRAINT language_translation_language_fk FOREIGN KEY ( language_id )
         REFERENCES language ( id );
@@ -1384,7 +1471,20 @@ ALTER TABLE app_portfolio.user_account_app
     ADD CONSTRAINT user_account_app_user_account_fk FOREIGN KEY ( user_account_id )
         REFERENCES user_account ( id )
         ON DELETE CASCADE;
-					
+
+ALTER TABLE app_portfolio.user_account_event
+    ADD CONSTRAINT user_account_event_event_fk FOREIGN KEY ( event_id )
+        REFERENCES app_portfolio.event ( id );
+
+ALTER TABLE app_portfolio.user_account_event
+    ADD CONSTRAINT user_account_event_event_status_fk FOREIGN KEY ( event_status_id )
+        REFERENCES app_portfolio.event_status ( id );
+
+ALTER TABLE app_portfolio.user_account_event
+    ADD CONSTRAINT user_account_event_user_account_fk FOREIGN KEY ( user_account_id )
+        REFERENCES app_portfolio.user_account ( id )
+            ON DELETE CASCADE;
+	
 ALTER TABLE app_portfolio.user_account_follow
     ADD CONSTRAINT user_account_follow_user_account_fk FOREIGN KEY ( user_account_id )
         REFERENCES user_account ( id )
