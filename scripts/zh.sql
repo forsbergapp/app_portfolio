@@ -3,12 +3,14 @@
 --
 -- Dumping data for table `app_object_item_translation`
 --
-INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (0,'DIALOGUE','EMAIL',107,'电子邮件');
-INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (0,'DIALOGUE','PASSWORD',107,'密码');
-INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (0,'DIALOGUE','LOGIN_CONTINUE_WITH',107,'继续');
-INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (0,'DIALOGUE','SIGNUP_PASSWORD_CONFIRM',107,'确认密码');
-INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (0,'DIALOGUE','SIGNUP_PASSWORD_REMINDER',107,'密码提醒');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (0,'DIALOGUE','USERNAME',107,'用户名');
+INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (0,'DIALOGUE','PASSWORD',107,'密码');
+INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (0,'DIALOGUE','BIO',107,'传');
+INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (0,'DIALOGUE','EMAIL',107,'电子邮件');
+INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (0,'DIALOGUE','PASSWORD_CONFIRM',107,'确认密码');
+INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (0,'DIALOGUE','PASSWORD_REMINDER',107,'密码提醒');
+INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (0,'DIALOGUE','NEW_PASSWORD_CONFIRM',107,'新的确认密码');
+INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (0,'DIALOGUE','NEW_PASSWORD',107,'新密码');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (0,'DIALOGUE','CONFIRM_QUESTION',107,'你确定吗？');
 
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'REPORT','COLTITLE_ASR',107,'下午');
@@ -44,34 +46,19 @@ INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, 
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'REPORT','COLTITLE_TRANSLITERATION_SUNRISE',107,'Shorook');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'REPORT','COLTITLE_TRANSLITERATION_SUNSET',107,'Sunset');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'REPORT','COLTITLE_WEEKDAY',107,'平日');
-INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'SETTING_NAV_USER','SETTING_BTN_LABEL_USER_ADD',107,'加');
-INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'SETTING_NAV_USER','SETTING_BTN_LABEL_USER_DELETE',107,'删除');
-INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'SETTING_NAV_USER','SETTING_BTN_LABEL_USER_DELETE_ACCOUNT',107,'删除帐户');
-INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'SETTING_NAV_USER','SETTING_BTN_LABEL_USER_SAVE',107,'保存');
-INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'SETTING_NAV_USER','SETTING_BTN_LABEL_USER_UPDATE',107,'更新');
-INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'SETTING_NAV_USER','SETTING_LABEL_ACCOUNT_CREATED_EDIT',107,'帐户已创建');
-INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'SETTING_NAV_USER','SETTING_LABEL_ACCOUNT_MODIFIED_EDIT',107,'帐户已修改');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'SETTING_NAV_PRAYER','SETTING_LABEL_ASR',107,'Asr 方法');
-INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'SETTING_NAV_USER','SETTING_LABEL_BIO_EDIT',107,'传');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'SETTING_NAV_REGIONAL','SETTING_LABEL_CALENDAR_HIJRI_TYPE',107,'日历类型 Hijri');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'SETTING_NAV_REGIONAL','SETTING_LABEL_CALENDARTYPE',107,'日历类型');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'SETTING_NAV_GPS','SETTING_LABEL_CITY',107,'市');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'SETTING_NAV_GPS','SETTING_LABEL_COUNTRY',107,'国家');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'SETTING_NAV_REGIONAL','SETTING_LABEL_CURRENT_DATE_TIME_TITLE',107,'语言和时区的当前日期和时间');
-INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'SETTING_NAV_USER','SETTING_LABEL_EMAIL_EDIT',107,'电子邮件');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'SETTING_NAV_PRAYER','SETTING_LABEL_HIGHLATITUDE',107,'高纬度调整');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'SETTING_NAV_PRAYER','SETTING_LABEL_HIJRI_ADJUSTMENT',107,'Hijri 日期调整');
-INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'SETTING_NAV_USER','SETTING_LABEL_LAST_LOGONTIME_EDIT',107,'上次登录时间');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'SETTING_NAV_GPS','SETTING_LABEL_LAT',107,'GPS纬度');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'SETTING_NAV_REGIONAL','SETTING_LABEL_LOCALE',107,'语言');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'SETTING_NAV_GPS','SETTING_LABEL_LONG',107,'GPS经度');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'SETTING_NAV_GPS','SETTING_LABEL_MAPTYPE',107,'地图类型');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'SETTING_NAV_PRAYER','SETTING_LABEL_METHOD',107,'方法');
-INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'SETTING_NAV_USER','SETTING_LABEL_NEW_PASSWORD_CONFIRM_EDIT',107,'新的确认密码');
-INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'SETTING_NAV_USER','SETTING_LABEL_NEW_PASSWORD_EDIT',107,'新密码');
-INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'SETTING_NAV_USER','SETTING_LABEL_PASSWORD_CONFIRM_EDIT',107,'确认密码');
-INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'SETTING_NAV_USER','SETTING_LABEL_PASSWORD_EDIT',107,'密码');
-INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'SETTING_NAV_USER','SETTING_LABEL_PASSWORD_REMINDER_EDIT',107,'密码提醒');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'SETTING_NAV_GPS','SETTING_LABEL_PLACE',107,'地点');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'SETTING_NAV_GPS','SETTING_LABEL_POPULAR_PLACE',107,'热门地方');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'SETTING_NAV_REGIONAL','SETTING_LABEL_REPORT_ARABIC_SCRIPT',107,'阿拉伯文字');
@@ -106,7 +93,6 @@ INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, 
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'SETTING_NAV_USER','SETTING_LABEL_USER_URL_DAY',107,'天');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'SETTING_NAV_USER','SETTING_LABEL_USER_URL_MONTH',107,'月');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'SETTING_NAV_USER','SETTING_LABEL_USER_URL_YEAR',107,'年');
-INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'SETTING_NAV_USER','SETTING_LABEL_USERNAME_EDIT',107,'用户名');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'REPORT','TIMETABLE_TITLE',107,'时间表');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'TOOLBAR','TOOLBAR_BTN_DAY_LABEL',107,'天');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'TOOLBAR','TOOLBAR_BTN_MONTH_LABEL',107,'月');

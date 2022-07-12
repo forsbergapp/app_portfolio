@@ -1,12 +1,14 @@
 --
 -- Dumping data for table `app_object_item_translation`
 --
-INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (0,'DIALOGUE','EMAIL',506,'Correo electrónico');
+INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (0,'DIALOGUE','USERNAME',506,'Nombre de ususario');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (0,'DIALOGUE','PASSWORD',506,'Contraseña');
-INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (0,'DIALOGUE','LOGIN_CONTINUE_WITH',506,'Continua con');
-INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (0,'DIALOGUE','SIGNUP_PASSWORD_CONFIRM',506,'Confirmar contraseña');
-INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (0,'DIALOGUE','SIGNUP_PASSWORD_REMINDER',506,'Contraseña recordar');
-INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (0,'DIALOGUE','SIGNUP_USERNAME',506,'Nombre de ususario');
+INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (0,'DIALOGUE','EMAIL',506,'Correo electrónico');
+INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (0,'DIALOGUE','BIO',506,'Bio');
+INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (0,'DIALOGUE','PASSWORD_CONFIRM',506,'Confirmar contraseña');
+INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (0,'DIALOGUE','PASSWORD_REMINDER',506,'Contraseña recordar');
+INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (0,'DIALOGUE','NEW_PASSWORD_CONFIRM',506,'Nueva contraseña confirmar');
+INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (0,'DIALOGUE','NEW_PASSWORD',506,'Nueva contraseña');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (0,'DIALOGUE','CONFIRM_QUESTION',506,'Estás seguro?');
 
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'REPORT','COLTITLE_ASR',506,'Media tarde');
@@ -42,34 +44,19 @@ INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, 
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'REPORT','COLTITLE_TRANSLITERATION_SUNRISE',506,'Shorook');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'REPORT','COLTITLE_TRANSLITERATION_SUNSET',506,'Sunset');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'REPORT','COLTITLE_WEEKDAY',506,'Día de semana');
-INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'SETTING_NAV_USER','SETTING_BTN_LABEL_USER_ADD',506,'Añadir');
-INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'SETTING_NAV_USER','SETTING_BTN_LABEL_USER_DELETE',506,'Borrar');
-INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'SETTING_NAV_USER','SETTING_BTN_LABEL_USER_DELETE_ACCOUNT',506,'Borrar cuenta');
-INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'SETTING_NAV_USER','SETTING_BTN_LABEL_USER_SAVE',506,'Guardar');
-INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'SETTING_NAV_USER','SETTING_BTN_LABEL_USER_UPDATE',506,'Actualizar');
-INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'SETTING_NAV_USER','SETTING_LABEL_ACCOUNT_CREATED_EDIT',506,'Cuenta creada');
-INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'SETTING_NAV_USER','SETTING_LABEL_ACCOUNT_MODIFIED_EDIT',506,'Cuenta modificada');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'SETTING_NAV_PRAYER','SETTING_LABEL_ASR',506,'Método Asr');
-INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'SETTING_NAV_USER','SETTING_LABEL_BIO_EDIT',506,'Bio');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'SETTING_NAV_REGIONAL','SETTING_LABEL_CALENDAR_HIJRI_TYPE',506,'Calendario Hijri típo');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'SETTING_NAV_REGIONAL','SETTING_LABEL_CALENDARTYPE',506,'Típo calendario');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'SETTING_NAV_GPS','SETTING_LABEL_CITY',506,'Ciudad');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'SETTING_NAV_GPS','SETTING_LABEL_COUNTRY',506,'País');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'SETTING_NAV_REGIONAL','SETTING_LABEL_CURRENT_DATE_TIME_TITLE',506,'Fecha y hora actual por idioma y zona horaria');
-INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'SETTING_NAV_USER','SETTING_LABEL_EMAIL_EDIT',506,'Correo electrónico');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'SETTING_NAV_PRAYER','SETTING_LABEL_HIGHLATITUDE',506,'Ajuste de alta latitud');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'SETTING_NAV_PRAYER','SETTING_LABEL_HIJRI_ADJUSTMENT',506,'Ajuste fecha Hijri');
-INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'SETTING_NAV_USER','SETTING_LABEL_LAST_LOGONTIME_EDIT',506,'Hora del último inicio de sesión');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'SETTING_NAV_GPS','SETTING_LABEL_LAT',506,'GPS Latitud');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'SETTING_NAV_REGIONAL','SETTING_LABEL_LOCALE',506,'Idioma');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'SETTING_NAV_GPS','SETTING_LABEL_LONG',506,'GPS Longitud');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'SETTING_NAV_GPS','SETTING_LABEL_MAPTYPE',506,'Típo mapa');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'SETTING_NAV_PRAYER','SETTING_LABEL_METHOD',506,'Método');
-INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'SETTING_NAV_USER','SETTING_LABEL_NEW_PASSWORD_CONFIRM_EDIT',506,'Nueva contraseña confirmar');
-INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'SETTING_NAV_USER','SETTING_LABEL_NEW_PASSWORD_EDIT',506,'Nueva contraseña');
-INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'SETTING_NAV_USER','SETTING_LABEL_PASSWORD_CONFIRM_EDIT',506,'Confirmar contraseña');
-INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'SETTING_NAV_USER','SETTING_LABEL_PASSWORD_EDIT',506,'Contraseña');
-INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'SETTING_NAV_USER','SETTING_LABEL_PASSWORD_REMINDER_EDIT',506,'Contraseña recordar');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'SETTING_NAV_GPS','SETTING_LABEL_PLACE',506,'Lugar');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'SETTING_NAV_GPS','SETTING_LABEL_POPULAR_PLACE',506,'Lugares populares');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'SETTING_NAV_REGIONAL','SETTING_LABEL_REPORT_ARABIC_SCRIPT',506,'Escritura árabe');
@@ -104,7 +91,6 @@ INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, 
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'SETTING_NAV_USER','SETTING_LABEL_USER_URL_DAY',506,'Día');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'SETTING_NAV_USER','SETTING_LABEL_USER_URL_MONTH',506,'Mes');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'SETTING_NAV_USER','SETTING_LABEL_USER_URL_YEAR',506,'Año');
-INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'SETTING_NAV_USER','SETTING_LABEL_USERNAME_EDIT',506,'Nombre de usuario');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'REPORT','TIMETABLE_TITLE',506,'Horario');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'TOOLBAR','TOOLBAR_BTN_DAY_LABEL',506,'Día');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'TOOLBAR','TOOLBAR_BTN_MONTH_LABEL',506,'Mes');

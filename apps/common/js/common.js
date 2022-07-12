@@ -12,8 +12,13 @@
  */
 /*----------------------- */
 /* MISC                   */
+
+
+
 /*----------------------- */
 function common_translate_ui(lang_code){
+    let json;
+    let status;
     let url = `${window.global_rest_url_base}${window.global_rest_app_object}${lang_code}` +
                   `?app_id=${window.global_main_app_id}` + 
                   `&lang_code=${lang_code}`;
@@ -33,30 +38,56 @@ function common_translate_ui(lang_code){
             for (let i = 0; i < json.data.length; i++){
                 //app 0 placeholder text
                 if (json.data[i].object_name=='DIALOGUE'){
-                    if (json.data[i].object_item_name=='USERNAME'){
-                        document.getElementById('login_username').placeholder = json.data[i].text;
-                        document.getElementById('signup_username').placeholder = json.data[i].text;    
-                    }
-                    else
-                        if (json.data[i].object_item_name=='PASSWORD'){
-                            document.getElementById('login_password').placeholder = json.data[i].text;
-                            document.getElementById('signup_password').placeholder = json.data[i].text;    
+                    switch  (json.data[i].object_item_name){
+                        case 'USERNAME':{
+                            document.getElementById('login_username').placeholder = json.data[i].text;
+                            document.getElementById('signup_username').placeholder = json.data[i].text;
+                            document.getElementById('user_edit_input_username').placeholder = json.data[i].text;
+                            break;
                         }
-                        else
-                            if (json.data[i].object_item_name=='EMAIL'){
-                                document.getElementById('signup_email').placeholder = json.data[i].text;
-                                document.getElementById('forgot_email').placeholder = json.data[i].text;    
-                            }
-                            else
-                                if (json.data[i].object_item_name=='SIGNUP_PASSWORD_CONFIRM'||
-                                    json.data[i].object_item_name=='SIGNUP_PASSWORD_REMINDER'){
-                                    document.getElementById(json.data[i].object_item_name.toLowerCase()).placeholder = json.data[i].text;
-                                }
-                                else
-                                    if (json.data[i].object_item_name=='LOGIN_CONTINUE_WITH')
-                                        document.getElementById('login_btn_provider2').innerHTML = json.data[i].text + ' ' + window.global_app_user_provider2_name;
-                                    else
-                                        document.getElementById(json.data[i].object_item_name.toLowerCase()).innerHTML = json.data[i].text;
+                        case 'EMAIL':{
+                            document.getElementById('signup_email').placeholder = json.data[i].text;
+                            document.getElementById('forgot_email').placeholder = json.data[i].text;
+                            document.getElementById('user_edit_input_email').placeholder = json.data[i].text;
+                            break;
+                        }
+                        case 'BIO':{
+                            document.getElementById('signup_email').placeholder = json.data[i].text;
+                            document.getElementById('forgot_email').placeholder = json.data[i].text;
+                            document.getElementById('user_edit_input_bio').placeholder = json.data[i].text;
+                            break;
+                        }
+                        case 'PASSWORD':{
+                            document.getElementById('login_password').placeholder = json.data[i].text;
+                            document.getElementById('signup_password').placeholder = json.data[i].text;
+                            document.getElementById('user_edit_input_password').placeholder = json.data[i].text;
+                            break;
+                        }
+                        case 'PASSWORD_CONFIRM':{
+                            document.getElementById('signup_password_confirm').placeholder = json.data[i].text;
+                            document.getElementById('user_edit_input_password_confirm').placeholder = json.data[i].text;
+                            break;
+                        }
+                        case 'PASSWORD_REMINDER':{
+                            document.getElementById('signup_password_reminder').placeholder = json.data[i].text;
+                            document.getElementById('user_edit_input_password_reminder').placeholder = json.data[i].text;
+                            break;
+                        }
+                        case 'NEW_PASSWORD_CONFIRM':{
+                            document.getElementById('user_edit_input_new_password_confirm').placeholder = json.data[i].text;
+                            document.getElementById('user_new_password_confirm').placeholder = json.data[i].text;    
+                            break;
+                        }
+                        case 'NEW_PASSWORD':{
+                            document.getElementById('user_edit_input_new_password').placeholder = json.data[i].text;
+                            document.getElementById('user_new_password').placeholder = json.data[i].text;    
+                            break;
+                        }
+                        default:{
+                            document.getElementById(json.data[i].object_item_name.toLowerCase()).innerHTML = json.data[i].text;
+                            break;
+                        }
+                    }                                        
                 }   
             }
         }
@@ -276,11 +307,25 @@ function check_input(text, lang_code, text_length=100){
 /*----------------------- */
 /* MESSAGE & DIALOGUE     */
 /*----------------------- */
-function show_common_dialogue(dialogue, title=null, icon=null, click_cancel_event) {
+function show_common_dialogue(dialogue, user_verification_type, title=null, icon=null, click_cancel_event) {
     switch (dialogue) {
         case 'VERIFY':
             {    
                 dialogue_verify_clear();
+                switch (user_verification_type){
+                    case 'LOGIN':{
+                        document.getElementById('user_verification_type').innerHTML = 1;
+                        break;
+                    }
+                    case 'SIGNUP':{
+                        document.getElementById('user_verification_type').innerHTML = 2;
+                        break;
+                    }
+                    case 'FORGOT':{
+                        document.getElementById('user_verification_type').innerHTML = 3;
+                        break;
+                    }
+                }
                 document.getElementById('user_verify_cancel').addEventListener('click', click_cancel_event);
 
                 document.getElementById('user_verify_email').innerHTML = title;
@@ -1221,10 +1266,7 @@ async function user_login(username, password, lang_code, callBack) {
             window.global_rest_at	= json.accessToken;
             if (json.items[0].active==0){
                 let function_cancel_event = function() { dialogue_verify_clear();eval(`(function (){${window.global_exception_app_function}()}());`);};
-                //use same fields as signup
-                document.getElementById('signup_username').value = document.getElementById('login_username').value;
-                document.getElementById('signup_password').value = document.getElementById('login_password').value;
-                show_common_dialogue('VERIFY', json.items[0].email, window.global_button_default_icon_logoff, function_cancel_event);
+                show_common_dialogue('VERIFY', 'LOGIN', json.items[0].email, window.global_button_default_icon_logoff, function_cancel_event);
                 return callBack('ERROR', null);
             }
             else    
@@ -1263,15 +1305,15 @@ async function user_logoff(user_id, lang_code){
         document.getElementById('dialogue_user_edit').style.visibility = "hidden";
 
         //clear user edit
-        document.getElementById('setting_checkbox_profile_private').checked = false;
-        document.getElementById('setting_input_username_edit').value = '';
-        document.getElementById('setting_input_bio_edit').value = '';
-        document.getElementById('setting_input_email_edit').value = '';
-        document.getElementById('setting_input_password_edit').value = '';
-        document.getElementById('setting_input_password_confirm_edit').value = '';
-        document.getElementById('setting_input_new_password_edit').value = '';
-        document.getElementById('setting_input_new_password_confirm_edit').value = '';
-        document.getElementById('setting_input_password_reminder_edit').value = '';
+        document.getElementById('user_edit_checkbox_profile_private').checked = false;
+        document.getElementById('user_edit_input_username').value = '';
+        document.getElementById('user_edit_input_bio').value = '';
+        document.getElementById('user_edit_input_email').value = '';
+        document.getElementById('user_edit_input_password').value = '';
+        document.getElementById('user_edit_input_password_confirm').value = '';
+        document.getElementById('user_edit_input_new_password').value = '';
+        document.getElementById('user_edit_input_new_password_confirm').value = '';
+        document.getElementById('user_edit_input_password_reminder').value = '';
 
         //clear login
         document.getElementById('login_username').value = '';
@@ -1292,28 +1334,28 @@ async function user_edit(user_id, timezone, lang_code,callBack) {
     let json;
     if (document.getElementById('dialogue_user_edit').style.visibility == 'visible') {
         document.getElementById('dialogue_user_edit').style.visibility = "hidden";
-        document.getElementById('setting_checkbox_profile_private').checked = false;
+        document.getElementById('user_edit_checkbox_profile_private').checked = false;
         //common
-        document.getElementById('setting_input_username_edit').value = '';
-        document.getElementById('setting_input_bio_edit').value = '';
+        document.getElementById('user_edit_input_username').value = '';
+        document.getElementById('user_edit_input_bio').value = '';
         //local
-        document.getElementById('setting_input_email_edit').value = '';
-        document.getElementById('setting_input_password_edit').value = '';
-        document.getElementById('setting_input_password_confirm_edit').value = '';
-        document.getElementById('setting_input_new_password_edit').value = '';
-        document.getElementById('setting_input_new_password_confirm_edit').value = '';
-        document.getElementById('setting_input_password_reminder_edit').value = '';
+        document.getElementById('user_edit_input_email').value = '';
+        document.getElementById('user_edit_input_password').value = '';
+        document.getElementById('user_edit_input_password_confirm').value = '';
+        document.getElementById('user_edit_input_new_password').value = '';
+        document.getElementById('user_edit_input_new_password_confirm').value = '';
+        document.getElementById('user_edit_input_password_reminder').value = '';
         //provider
-        document.getElementById('setting_user_edit_provider_logo').innerHTML = '';
-        document.getElementById('setting_label_provider_id_edit_data').innerHTML = '';
-        document.getElementById('setting_label_provider_name_edit_data').innerHTML = '';
-        document.getElementById('setting_label_provider_email_edit_data').innerHTML = '';
-        document.getElementById('setting_label_provider_image_url_edit_data').innerHTML = '';
+        document.getElementById('user_edit_provider_logo').innerHTML = '';
+        document.getElementById('user_edit_label_provider_id_edit_data').innerHTML = '';
+        document.getElementById('user_edit_label_provider_name_edit_data').innerHTML = '';
+        document.getElementById('user_edit_label_provider_email_edit_data').innerHTML = '';
+        document.getElementById('user_edit_label_provider_image_url_edit_data').innerHTML = '';
 
         //account info
-        document.getElementById('setting_label_data_last_logontime_edit').value = '';
-        document.getElementById('setting_label_data_account_created_edit').value = '';
-        document.getElementById('setting_label_data_account_modified_edit').value = '';
+        document.getElementById('user_edit_label_data_last_logontime').value = '';
+        document.getElementById('user_edit_label_data_account_created').value = '';
+        document.getElementById('user_edit_label_data_account_modified').value = '';
         return callBack(null, null);
     } else {
         let status;
@@ -1338,9 +1380,9 @@ async function user_edit(user_id, timezone, lang_code,callBack) {
                         document.getElementById('user_edit_provider').style.display = 'none';
                         document.getElementById('dialogue_user_edit').style.visibility = "visible";
 
-                        document.getElementById('setting_checkbox_profile_private').checked = number_to_boolean(json.private);
-                        document.getElementById('setting_input_username_edit').value = json.username;
-                        document.getElementById('setting_input_bio_edit').value = get_null_or_value(json.bio);
+                        document.getElementById('user_edit_checkbox_profile_private').checked = number_to_boolean(json.private);
+                        document.getElementById('user_edit_input_username').value = json.username;
+                        document.getElementById('user_edit_input_bio').value = get_null_or_value(json.bio);
 
                         if (json.provider1_id == null && json.provider2_id == null) {
                             document.getElementById('user_edit_local').style.display = 'block';
@@ -1352,24 +1394,22 @@ async function user_edit(user_id, timezone, lang_code,callBack) {
                                 recreate_img(document.getElementById('user_edit_avatar_img'));
                             else
                                 document.getElementById('user_edit_avatar_img').src = image_format(json.avatar);
+                            document.getElementById('user_edit_input_email').value = json.email;
+                            document.getElementById('user_edit_input_password').value = '',
+                                document.getElementById('user_edit_input_password_confirm').value = '',
+                                document.getElementById('user_edit_input_new_password').value = '';
+                            document.getElementById('user_edit_input_new_password_confirm').value = '';
 
-                            document.getElementById('setting_input_email_edit').value = json.email;
-
-                            document.getElementById('setting_input_password_edit').value = '',
-                                document.getElementById('setting_input_password_confirm_edit').value = '',
-                                document.getElementById('setting_input_new_password_edit').value = '';
-                            document.getElementById('setting_input_new_password_confirm_edit').value = '';
-
-                            document.getElementById('setting_input_password_reminder_edit').value = json.password_reminder;
+                            document.getElementById('user_edit_input_password_reminder').value = json.password_reminder;
                         } else
                             if (json.provider1_id !== null) {
                                 document.getElementById('user_edit_provider').style.display = 'block';
-                                document.getElementById('setting_user_edit_provider_logo').innerHTML = window.global_button_default_icon_provider1;
+                                document.getElementById('user_edit_provider_logo').innerHTML = window.global_button_default_icon_provider1;
                                 document.getElementById('user_edit_local').style.display = 'none';
-                                document.getElementById('setting_label_provider_id_edit_data').innerHTML = json.provider1_id;
-                                document.getElementById('setting_label_provider_name_edit_data').innerHTML = json.provider1_first_name + ' ' + json.provider1_last_name;
-                                document.getElementById('setting_label_provider_email_edit_data').innerHTML = json.provider1_email;
-                                document.getElementById('setting_label_provider_image_url_edit_data').innerHTML = json.provider1_image_url;
+                                document.getElementById('user_edit_label_provider_id_edit_data').innerHTML = json.provider1_id;
+                                document.getElementById('user_edit_label_provider_name_edit_data').innerHTML = json.provider1_first_name + ' ' + json.provider1_last_name;
+                                document.getElementById('user_edit_label_provider_email_edit_data').innerHTML = json.provider1_email;
+                                document.getElementById('user_edit_label_provider_image_url_edit_data').innerHTML = json.provider1_image_url;
                                 document.getElementById('user_edit_avatar').style.display = 'none';
                                 if (json.provider1_image == null || json.provider1_image == '')
                                     recreate_img(document.getElementById('user_edit_avatar_img'));
@@ -1378,21 +1418,21 @@ async function user_edit(user_id, timezone, lang_code,callBack) {
                             } else
                                 if (json.provider2_id !== null) {
                                     document.getElementById('user_edit_provider').style.display = 'block';
-                                    document.getElementById('setting_user_edit_provider_logo').innerHTML = window.global_button_default_icon_provider2;
+                                    document.getElementById('user_edit_provider_logo').innerHTML = window.global_button_default_icon_provider2;
                                     document.getElementById('user_edit_local').style.display = 'none';
-                                    document.getElementById('setting_label_provider_id_edit_data').innerHTML = json.provider2_id;
-                                    document.getElementById('setting_label_provider_name_edit_data').innerHTML = json.provider2_first_name + ' ' + json.provider2_last_name;
-                                    document.getElementById('setting_label_provider_email_edit_data').innerHTML = json.provider2_email;
-                                    document.getElementById('setting_label_provider_image_url_edit_data').innerHTML = json.provider2_image_url;
+                                    document.getElementById('user_edit_label_provider_id_edit_data').innerHTML = json.provider2_id;
+                                    document.getElementById('user_edit_label_provider_name_edit_data').innerHTML = json.provider2_first_name + ' ' + json.provider2_last_name;
+                                    document.getElementById('user_edit_label_provider_email_edit_data').innerHTML = json.provider2_email;
+                                    document.getElementById('user_edit_label_provider_image_url_edit_data').innerHTML = json.provider2_image_url;
                                     document.getElementById('user_edit_avatar').style.display = 'none';
                                     if (json.provider2_image == null || json.provider2_image == '')
                                         recreate_img(document.getElementById('user_edit_avatar_img'));
                                     else
                                         document.getElementById('user_edit_avatar_img').src = image_format(json.provider2_image);
                                 }
-                        document.getElementById('setting_label_data_last_logontime_edit').innerHTML = format_json_date(json.last_logontime, null, timezone, lang_code);
-                        document.getElementById('setting_label_data_account_created_edit').innerHTML = format_json_date(json.date_created, null, timezone, lang_code);
-                        document.getElementById('setting_label_data_account_modified_edit').innerHTML = format_json_date(json.date_modified, null, timezone, lang_code);
+                        document.getElementById('user_edit_label_data_last_logontime').innerHTML = format_json_date(json.last_logontime, null, timezone, lang_code);
+                        document.getElementById('user_edit_label_data_account_created').innerHTML = format_json_date(json.date_created, null, timezone, lang_code);
+                        document.getElementById('user_edit_label_data_account_modified').innerHTML = format_json_date(json.date_modified, null, timezone, lang_code);
                         return callBack(null, {id: json.id,
                                                provider_1:      json.provider1_id,
                                                provider_2:      json.provider2_id,
@@ -1418,14 +1458,14 @@ async function user_edit(user_id, timezone, lang_code,callBack) {
 }
 async function user_update(user_id, lang_code, callBack) {
     let avatar = btoa(document.getElementById('user_edit_avatar_img').src);
-    let username = document.getElementById('setting_input_username_edit').value;
-    let bio = document.getElementById('setting_input_bio_edit').value;
-    let email = document.getElementById('setting_input_email_edit').value;
-    let password = document.getElementById('setting_input_password_edit').value;
-    let password_confirm = document.getElementById('setting_input_password_confirm_edit').value;
-    let new_password = document.getElementById('setting_input_new_password_edit').value;
-    let new_password_confirm = document.getElementById('setting_input_new_password_confirm_edit').value;
-    let password_reminder = document.getElementById('setting_input_password_reminder_edit').value;
+    let username = document.getElementById('user_edit_input_username').value;
+    let bio = document.getElementById('user_edit_input_bio').value;
+    let email = document.getElementById('user_edit_input_email').value;
+    let password = document.getElementById('user_edit_input_password').value;
+    let password_confirm = document.getElementById('user_edit_input_password_confirm').value;
+    let new_password = document.getElementById('user_edit_input_new_password').value;
+    let new_password_confirm = document.getElementById('user_edit_input_new_password_confirm').value;
+    let password_reminder = document.getElementById('user_edit_input_password_reminder').value;
     
     let url;
     let json;
@@ -1444,7 +1484,7 @@ async function user_update(user_id, lang_code, callBack) {
     //validate input
     if (username == '') {
         //"Please enter username"
-        document.getElementById('setting_input_username_edit').classList.add('input_error');
+        document.getElementById('user_edit_input_username').classList.add('input_error');
         show_message('ERROR', 20303, null, null, lang_code);
         return callBack('ERROR', null);
     }
@@ -1453,7 +1493,7 @@ async function user_update(user_id, lang_code, callBack) {
         json_data = `{ 
                         "username":"${username}",
                         "bio":"${bio}",
-                        "private": ${boolean_to_number(document.getElementById('setting_checkbox_profile_private').checked)},
+                        "private": ${boolean_to_number(document.getElementById('user_edit_checkbox_profile_private').checked)},
                         "password":"${password}",
                         "new_password":"${new_password}",
                         "password_reminder":"${password_reminder}",
@@ -1461,47 +1501,47 @@ async function user_update(user_id, lang_code, callBack) {
                         "avatar":"${avatar}"
                     }`;
         url = window.global_rest_url_base + window.global_rest_user_account + user_id;
-        document.getElementById('setting_input_username_edit').classList.remove('input_error');
+        document.getElementById('user_edit_input_username').classList.remove('input_error');
 
-        document.getElementById('setting_input_bio_edit').classList.remove('input_error');
-        document.getElementById('setting_input_email_edit').classList.remove('input_error');
+        document.getElementById('user_edit_input_bio').classList.remove('input_error');
+        document.getElementById('user_edit_input_email').classList.remove('input_error');
 
-        document.getElementById('setting_input_password_edit').classList.remove('input_error');
-        document.getElementById('setting_input_password_confirm_edit').classList.remove('input_error');
-        document.getElementById('setting_input_new_password_edit').classList.remove('input_error');
-        document.getElementById('setting_input_new_password_confirm_edit').classList.remove('input_error');
+        document.getElementById('user_edit_input_password').classList.remove('input_error');
+        document.getElementById('user_edit_input_password_confirm').classList.remove('input_error');
+        document.getElementById('user_edit_input_new_password').classList.remove('input_error');
+        document.getElementById('user_edit_input_new_password_confirm').classList.remove('input_error');
 
-        document.getElementById('setting_input_password_reminder_edit').classList.remove('input_error');
+        document.getElementById('user_edit_input_password_reminder').classList.remove('input_error');
 
         if (password == '') {
             //"Please enter password"
-            document.getElementById('setting_input_password_edit').classList.add('input_error');
+            document.getElementById('user_edit_input_password').classList.add('input_error');
             show_message('ERROR', 20304, null, null, window.global_main_app_id, lang_code);
             return callBack('ERROR', null);
         }
         if (password != password_confirm) {
             //Password not the same
-            document.getElementById('setting_input_password_confirm_edit').classList.add('input_error');
+            document.getElementById('user_edit_input_password_confirm').classList.add('input_error');
             show_message('ERROR', 20301, null, null, window.global_main_app_id, lang_code);
             return callBack('ERROR', null);
         }
         //check new passwords
         if (new_password != new_password_confirm) {
             //New Password are entered but they are not the same
-            document.getElementById('setting_input_new_password_edit').classList.add('input_error');
-            document.getElementById('setting_input_new_password_confirm_edit').classList.add('input_error');
+            document.getElementById('user_edit_input_new_password').classList.add('input_error');
+            document.getElementById('user_edit_input_new_password_confirm').classList.add('input_error');
             show_message('ERROR', 20301, null, null, lang_code);
             return callBack('ERROR', null);
         }
     } else {
         json_data = `{"username":"${username}",
                       "bio":"${bio}",
-                      "private":${boolean_to_number(document.getElementById('setting_checkbox_profile_private').checked)}
+                      "private":${boolean_to_number(document.getElementById('user_edit_checkbox_profile_private').checked)}
                      }`;
         url = window.global_rest_url_base + window.global_rest_user_account_common + user_id
     }
-    let old_button = document.getElementById('setting_btn_user_update').innerHTML;
-    document.getElementById('setting_btn_user_update').innerHTML = window.global_button_spinner;
+    let old_button = document.getElementById('user_edit_btn_user_update').innerHTML;
+    document.getElementById('user_edit_btn_user_update').innerHTML = window.global_button_spinner;
     //update user using REST API
     fetch(url + '?app_id=' + window.global_app_id +
                 '&lang_code=' + lang_code, {
@@ -1517,31 +1557,31 @@ async function user_update(user_id, lang_code, callBack) {
             return response.text();
         })
         .then(function(result) {
-            document.getElementById('setting_btn_user_update').innerHTML = old_button;
+            document.getElementById('user_edit_btn_user_update').innerHTML = old_button;
             if (status == 200) {
                 json = JSON.parse(result);
                 document.getElementById('dialogue_user_edit').style.visibility = "hidden";
                 document.getElementById('user_edit_avatar').style.display = 'none';
 
-                document.getElementById('setting_checkbox_profile_private').checked = false;
-                document.getElementById('setting_input_username_edit').value = '';
-                document.getElementById('setting_input_bio_edit').value = '';
-                document.getElementById('setting_input_email_edit').value = '';
-                document.getElementById('setting_input_password_edit').value = '';
-                document.getElementById('setting_input_password_confirm_edit').value = '';
-                document.getElementById('setting_input_new_password_edit').value = '';
-                document.getElementById('setting_input_new_password_confirm_edit').value = '';
-                document.getElementById('setting_input_password_reminder_edit').value = '';
+                document.getElementById('user_edit_checkbox_profile_private').checked = false;
+                document.getElementById('user_edit_input_username').value = '';
+                document.getElementById('user_edit_input_bio').value = '';
+                document.getElementById('user_edit_input_email').value = '';
+                document.getElementById('user_edit_input_password').value = '';
+                document.getElementById('user_edit_input_password_confirm').value = '';
+                document.getElementById('user_edit_input_new_password').value = '';
+                document.getElementById('user_edit_input_new_password_confirm').value = '';
+                document.getElementById('user_edit_input_password_reminder').value = '';
                 //provider
-                document.getElementById('setting_user_edit_provider_logo').innerHTML = '';
-                document.getElementById('setting_label_provider_id_edit_data').innerHTML = '';
-                document.getElementById('setting_label_provider_name_edit_data').innerHTML = '';
-                document.getElementById('setting_label_provider_email_edit_data').innerHTML = '';
-                document.getElementById('setting_label_provider_image_url_edit_data').innerHTML = '';
+                document.getElementById('user_edit_provider_logo').innerHTML = '';
+                document.getElementById('user_edit_label_provider_id_edit_data').innerHTML = '';
+                document.getElementById('user_edit_label_provider_name_edit_data').innerHTML = '';
+                document.getElementById('user_edit_label_provider_email_edit_data').innerHTML = '';
+                document.getElementById('user_edit_label_provider_image_url_edit_data').innerHTML = '';
 
-                document.getElementById('setting_label_data_last_logontime_edit').innerHTML = '';
-                document.getElementById('setting_label_data_account_created_edit').innerHTML = '';
-                document.getElementById('setting_label_data_account_modified_edit').innerHTML = '';
+                document.getElementById('user_edit_label_data_last_logontime').innerHTML = '';
+                document.getElementById('user_edit_label_data_account_created').innerHTML = '';
+                document.getElementById('user_edit_label_data_account_modified').innerHTML = '';
                 return callBack(null, {username: username, 
                                        avatar: avatar,
                                        bio: bio});
@@ -1551,7 +1591,7 @@ async function user_update(user_id, lang_code, callBack) {
             }
         })
         .catch(function(error) {
-            document.getElementById('setting_btn_user_update').innerHTML = old_button;
+            document.getElementById('user_edit_btn_user_update').innerHTML = old_button;
             show_message('EXCEPTION', null,null, error, window.global_app_id, lang_code);
             return callBack(error, null);
         });
@@ -1625,7 +1665,7 @@ function user_signup(item_destination_user_id, lang_code) {
                 //update item with new user_account.id
                 item_destination_user_id.innerHTML = json.id;
                 let function_cancel_event = function() { dialogue_verify_clear();eval(`(function (){${window.global_exception_app_function}()}());`);};
-                show_common_dialogue('VERIFY', email, window.global_button_default_icon_logoff, function_cancel_event);
+                show_common_dialogue('VERIFY', 'SIGNUP', email, window.global_button_default_icon_logoff, function_cancel_event);
             } else {
                 exception(status, result, lang_code);
             }
@@ -1685,13 +1725,29 @@ async function user_verify_check_input(item, nextField, lang_code, callBack) {
                     if (status == 200) {
                         json = JSON.parse(result);
                         if (json.items[0].affectedRows == 1) {
-                            //login with username and password from signup fields
+                            switch (document.getElementById('verification_type').innerHTML){
+                                case 1:{
+                                    //LOGIN
+                                    break;
+                                }
+                                case 2:{
+                                    //SIGNUP
+                                    //login with username and password from signup fields
+                                    document.getElementById('login_username').value =
+                                        document.getElementById('signup_username').value;
+                                    document.getElementById('login_password').value =
+                                        document.getElementById('signup_password').value;
+                                    break;
+                                }
+                                case 3:{
+                                    //FORGOT
+                                    //show dialogue new password
+                                    break;
+                                }
+                            }
+                            
                             document.getElementById('dialogue_login').style.visibility = "hidden";
-                            document.getElementById('login_username').value =
-                                document.getElementById('signup_username').value;
-                            document.getElementById('login_password').value =
-                                document.getElementById('signup_password').value;
-
+                            
                             document.getElementById('dialogue_signup').style.visibility = 'hidden';
                             document.getElementById('signup_username').value = '';
                             document.getElementById('signup_email').value = '';
@@ -1734,13 +1790,13 @@ async function user_verify_check_input(item, nextField, lang_code, callBack) {
     }
 }
 async function user_delete(choice=null, user_account_id, user_local, function_delete_event, lang_code, callBack ) {
-    let password = document.getElementById('setting_input_password_edit').value;
+    let password = document.getElementById('user_edit_input_password').value;
     let status;
     switch (choice){
         case null:{
             if (user_local==true && password == '') {
                 //"Please enter password"
-                document.getElementById('setting_input_password_edit').classList.add('input_error');
+                document.getElementById('user_edit_input_password').classList.add('input_error');
                 show_message('ERROR', 20304, null, null, window.global_main_app_id, lang_code);
                 return null;
             }
@@ -1750,17 +1806,17 @@ async function user_delete(choice=null, user_account_id, user_local, function_de
         }
         case 1:{
             document.getElementById("dialogue_message").style.visibility = "hidden";
-            document.getElementById('setting_input_username_edit').classList.remove('input_error');
-            document.getElementById('setting_input_bio_edit').classList.remove('input_error');
-            document.getElementById('setting_input_email_edit').classList.remove('input_error');
-            document.getElementById('setting_input_password_edit').classList.remove('input_error');
-            document.getElementById('setting_input_password_confirm_edit').classList.remove('input_error');
-            document.getElementById('setting_input_new_password_edit').classList.remove('input_error');
-            document.getElementById('setting_input_new_password_confirm_edit').classList.remove('input_error');
-            document.getElementById('setting_input_password_reminder_edit').classList.remove('input_error');
+            document.getElementById('user_edit_input_username').classList.remove('input_error');
+            document.getElementById('user_edit_input_bio').classList.remove('input_error');
+            document.getElementById('user_edit_input_email').classList.remove('input_error');
+            document.getElementById('user_edit_input_password').classList.remove('input_error');
+            document.getElementById('user_edit_input_password_confirm').classList.remove('input_error');
+            document.getElementById('user_edit_input_new_password').classList.remove('input_error');
+            document.getElementById('user_edit_input_new_password_confirm').classList.remove('input_error');
+            document.getElementById('user_edit_input_password_reminder').classList.remove('input_error');
     
-            let old_button = document.getElementById('setting_btn_user_delete_account').innerHTML;
-            document.getElementById('setting_btn_user_delete_account').innerHTML = window.global_button_spinner;
+            let old_button = document.getElementById('user_edit_btn_user_delete_account').innerHTML;
+            document.getElementById('user_edit_btn_user_delete_account').innerHTML = window.global_button_spinner;
             let json_data = `{"password":"${password}"}`;
             fetch(window.global_rest_url_base + window.global_rest_user_account + user_account_id + 
                     '?app_id=' + window.global_app_id +
@@ -1778,7 +1834,7 @@ async function user_delete(choice=null, user_account_id, user_local, function_de
                     return response.text();
                 })
                 .then(function(result) {
-                    document.getElementById('setting_btn_user_delete_account').innerHTML = old_button;
+                    document.getElementById('user_edit_btn_user_delete_account').innerHTML = old_button;
                     if (status == 200)
                         return callBack(null,{deleted: 1});
                     else{
@@ -1787,7 +1843,7 @@ async function user_delete(choice=null, user_account_id, user_local, function_de
                     }
                 })
                 .catch(function(error) {
-                    document.getElementById('setting_btn_user_delete_account').innerHTML = old_button;
+                    document.getElementById('user_edit_btn_user_delete_account').innerHTML = old_button;
                     show_message('EXCEPTION', null,null, error, window.global_app_id, lang_code);
                     return callBack(error,null);
                 });
@@ -1960,6 +2016,44 @@ function user_account_app_delete(choice=null, user_account_id, app_id, lang_code
             break;
     }
 }
+async function user_forgot(){
+    let email = document.getElementById('forgot_email').value;
+    let json_data;
+    if (check_input(email, window.global_lang_code) == false || email =='')
+        return;
+    else{
+        let old_button = document.getElementById('forgot_button').innerHTML;
+        document.getElementById('forgot_button').innerHTML = window.global_button_spinner;
+        fetch(window.global_rest_url_base + window.global_rest_user_account_forgot + email +
+            '?app_id=' + window.global_app_id +
+            '&lang_code=' + window.global_lang_code, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + window.global_rest_dt
+            },
+            body: json_data
+        })
+        .then(function(response) {
+            status = response.status;
+            return response.text();
+        })
+        .then(function(result) {
+            document.getElementById('forgot_button').innerHTML = old_button;
+            if (status == 200) {
+                json = JSON.parse(result);
+                if (json.sent == 1){
+                    window.global_user_account_id = json.id;
+                    let function_cancel_event = function() { document.getElementById('dialogue_user_verify').style.visibility='hidden';};
+                    show_common_dialogue('VERIFY', 'FORGOT', email, window.global_button_default_icon_cancel, function_cancel_event);
+                }            
+            } else {
+                exception(status, result, window.global_lang_code);
+            }
+        })
+    }
+}
+
 /*----------------------- */
 /* USER PROVIDER          */
 /*----------------------- */
@@ -2206,17 +2300,18 @@ function set_globals(parameters){
     window.global_rest_user_account_activate;
     window.global_rest_user_account_app;
     window.global_rest_user_account_common;
+    window.global_rest_user_account_follow;
+    window.global_rest_user_account_forgot;
+    window.global_rest_user_account_like;
     window.global_rest_user_account_login;
-    window.global_rest_user_account_profile_username;
-    window.global_rest_user_account_profile_userid;
+    window.global_rest_user_account_profile_detail;
     window.global_rest_user_account_profile_searchA;
     window.global_rest_user_account_profile_searchD;
     window.global_rest_user_account_profile_top;
-    window.global_rest_user_account_profile_detail;
+    window.global_rest_user_account_profile_username;
+    window.global_rest_user_account_profile_userid;
     window.global_rest_user_account_provider;
     window.global_rest_user_account_signup;
-    window.global_rest_user_account_like;
-    window.global_rest_user_account_follow;
     //Images uploaded
     window.global_image_file_allowed_type1;
     window.global_image_file_allowed_type2;
@@ -2260,17 +2355,24 @@ function set_globals(parameters){
         window.global_button_default_icon_delete = '<i class="fas fa-trash-alt"></i>';
         window.global_button_default_icon_edit = '<i class="fas fa-edit"></i>';
 
+        window.global_button_default_icon_delete_account = '<i class="fa-solid fa-user-minus"></i>';
+        window.global_button_default_icon_last_logontime = '<i class="fa-solid fa-right-to-bracket"></i>';
+        window.global_button_default_icon_account_created = '<i class="fas fa-hands-helping"></i>';
+        window.global_button_default_icon_account_modified = '<i class="fas fa-edit"></i>';
+
         window.global_button_default_icon_send = '<i class="fas fa-arrow-alt-circle-right"></i>';
         window.global_button_default_icon_login = '<i class="fa-solid fa-right-to-bracket"></i>';
         window.global_button_default_icon_logoff = '<i class="fa-solid fa-right-from-bracket"></i>';
         window.global_button_default_icon_signup = '<i class="fa-solid fa-user-pen"></i>';
         window.global_button_default_icon_forgot = '<i class="fa-solid fa-circle-question"></i>';
+        window.global_button_default_icon_password = '<i class="fa-solid fa-unlock-keyhole"></i>';
         window.global_button_default_icon_sendmail = '<i class="fa-solid fa-envelope"></i>';
         window.global_button_default_icon_update = '<i class="fas fa-save"></i>';
         window.global_button_default_icon_delete_account = '<i class="fas fa-trash-alt"></i>';                                
         window.global_button_default_icon_profile = '<i class="fa-solid fa-id-card"></i>';
         window.global_button_default_icon_profile_top = '<i class="fa-solid fa-medal"></i>';
         window.global_button_default_icon_settings = '<i class="fa-solid fa-gear"></i>';
+        window.global_button_default_icon_account_reminder = '<i class="fa-solid fa-circle-question"></i>';
         
         window.global_button_default_icon_chat = '<i class="fas fa-comment"></i>';
         window.global_button_default_icon_checkbox_checked = '<i class="fas fa-check-square"></i>';
@@ -2403,16 +2505,35 @@ function init_common(parameters){
         document.getElementById('forgot_tab3').innerHTML = window.global_button_default_icon_forgot;
         document.getElementById('forgot_button').innerHTML = window.global_button_default_icon_sendmail;
         document.getElementById('forgot_close').innerHTML = window.global_button_default_icon_close;
-        	
+        //dialogue new password
+        document.getElementById('user_new_password_icon').innerHTML = window.global_button_default_icon_password;
+        document.getElementById('user_new_password_cancel').innerHTML = window.global_button_default_icon_cancel;
+        document.getElementById('user_new_password_close').innerHTML = window.global_button_default_icon_close;
+        
+        //dialogue user edit
         document.getElementById('user_edit_btn_avatar_img').innerHTML = window.global_button_default_icon_avatar_edit;
         document.getElementById('user_edit_private').innerHTML = window.global_button_default_icon_private;
-        document.getElementById('setting_btn_user_update').innerHTML = window.global_button_default_icon_update;
-        document.getElementById('setting_btn_user_delete_account').innerHTML = window.global_button_default_icon_delete_account;
+        document.getElementById('user_edit_btn_user_update').innerHTML = window.global_button_default_icon_update;
+        document.getElementById('user_edit_btn_user_delete_account').innerHTML = window.global_button_default_icon_delete_account;
         document.getElementById('user_edit_close').innerHTML = window.global_button_default_icon_close;
-        
+
+        document.getElementById('user_edit_input_username_icon').innerHTML = window.global_button_default_icon_user;
+        document.getElementById('user_edit_input_bio_icon').innerHTML = window.global_button_default_icon_profile;
+        document.getElementById('user_edit_input_email_icon').innerHTML = window.global_button_default_icon_mail;
+        document.getElementById('user_edit_input_password_icon').innerHTML = window.global_button_default_icon_password;
+        document.getElementById('user_edit_input_password_confirm_icon').innerHTML = window.global_button_default_icon_password;
+        document.getElementById('user_edit_input_new_password_icon').innerHTML = window.global_button_default_icon_password;
+        document.getElementById('user_edit_input_new_password_confirm_icon').innerHTML = window.global_button_default_icon_password;
+        document.getElementById('user_edit_input_password_reminder_icon').innerHTML = window.global_button_default_icon_account_reminder;
+
+        document.getElementById('user_edit_label_last_logontime').innerHTML = window.global_button_default_icon_last_logontime;
+        document.getElementById('user_edit_label_account_created').innerHTML = window.global_button_default_icon_account_created;
+        document.getElementById('user_edit_label_account_modified').innerHTML = window.global_button_default_icon_account_modified;
+
+        //dialogue message
         document.getElementById('message_cancel').innerHTML = window.global_button_default_icon_cancel;
         document.getElementById('message_close').innerHTML = window.global_button_default_icon_close;
-        
+        //broadcast
         document.getElementById('broadcast_close').innerHTML = window.global_button_default_icon_broadcast_close;
         //profile detail
         document.getElementById('profile_detail_header_following').innerHTML = window.global_button_default_icon_follows;
@@ -2453,6 +2574,17 @@ function init_common(parameters){
 
         document.getElementById('forgot_tab1').addEventListener('click', function() { show_common_dialogue('LOGIN') }, false);
         document.getElementById('forgot_tab2').addEventListener('click', function() { show_common_dialogue('SIGNUP') }, false);
+
+        document.getElementById("forgot_email").addEventListener("keyup", function(event) {
+            if (event.keyCode === 13) {
+                event.preventDefault();
+                user_forgot().then(function(){
+                    //unfocus
+                    document.getElementById("forgot_email").blur();
+                });
+            }
+        });
+        document.getElementById('forgot_button').addEventListener('click', function() { user_forgot()}, false);
         document.getElementById('forgot_close').addEventListener('click', function() { document.getElementById('dialogue_forgot').style.visibility = 'hidden' }, false);
 
         document.getElementById('message_cancel').addEventListener('click', function() { document.getElementById("dialogue_message").style.visibility = "hidden" }, false);
