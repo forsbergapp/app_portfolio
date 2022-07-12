@@ -82,14 +82,13 @@ function setEvents(){
     });
     document.getElementById('login_button').addEventListener('click', function() { user_login_app() }, false);    
     document.getElementById('signup_button').addEventListener('click', function() { user_signup(document.getElementById('user_menu_user_id'), window.global_lang_code) }, false);
-    document.getElementById('forgot_button').addEventListener('click', function() { alert('send email...') }, false);
     //dialogue user edit
     document.getElementById('user_edit_close').addEventListener('click', function() { user_edit_app() }, false);
     document.getElementById('user_edit_btn_avatar_img').addEventListener('click', function() { document.getElementById('user_edit_input_avatar_img').click() }, false);
     document.getElementById('user_edit_input_avatar_img').addEventListener('change', function() { show_image(document.getElementById('user_edit_avatar_img'), this.id, window.global_user_image_avatar_width, window.global_user_image_avatar_height, window.global_lang_code); }, false);
     document.getElementById('user_edit_close').addEventListener('click', function() { document.getElementById('dialogue_user_edit').style.visibility = 'hidden' }, false);    
-    document.getElementById('setting_btn_user_update').addEventListener('click', function() { user_update_app(); }, false);
-    document.getElementById('setting_btn_user_delete_account').addEventListener('click', function() { user_delete_app(); }, false);
+    document.getElementById('user_edit_btn_user_update').addEventListener('click', function() { user_update_app(); }, false);
+    document.getElementById('user_edit_btn_user_delete_account').addEventListener('click', function() { user_delete_app(); }, false);
     //dialogue verify
     document.getElementById('user_verify_verification_char1').addEventListener('keyup', function() { user_verify_check_input_app(this, "user_verify_verification_char2") }, false);
     document.getElementById('user_verify_verification_char2').addEventListener('keyup', function() { user_verify_check_input_app(this, "user_verify_verification_char3") }, false);
@@ -227,6 +226,8 @@ async function get_parameters() {
                     window.global_rest_user_account_like = json.data[i].parameter_value;
                 if (json.data[i].parameter_name=='REST_USER_ACCOUNT_FOLLOW')
                     window.global_rest_user_account_follow = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='REST_USER_ACCOUNT_FORGOT')
+                    window.global_rest_user_account_forgot = json.data[i].parameter_value;
                 if (json.data[i].parameter_name=='REST_USER_ACCOUNT_LOGIN')
                     window.global_rest_user_account_login = json.data[i].parameter_value;
                 if (json.data[i].parameter_name=='REST_USER_ACCOUNT_PROFILE_DETAIL')

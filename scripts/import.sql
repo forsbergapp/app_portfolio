@@ -1,11 +1,11 @@
 --
--- Dumping data for table `app`
+-- Dumping data for table app
 --
 INSERT INTO app_portfolio.app (id, app_name, url, logo) VALUES (0,'App Portfolio', 'https://localhost','/app0/images/logo_app.png');
 INSERT INTO app_portfolio.app (id, app_name, url, logo) VALUES (1,'Timetables','https://app1.localhost','/app1/images/logo.png');
 INSERT INTO app_portfolio.app (id, app_name, url, logo) VALUES (2,'Property Management','https://app2.localhost','/app2/images/logo.png');
 --
--- Dumping data for table `app_object`
+-- Dumping data for table app_object
 --
 INSERT INTO app_portfolio.app_object (app_id, object_name) VALUES (1,'APP_DESCRIPTION');
 INSERT INTO app_portfolio.app_object (app_id, object_name) VALUES (0,'DIALOGUE');
@@ -20,15 +20,19 @@ INSERT INTO app_portfolio.app_object (app_id, object_name) VALUES (1,'SETTING_NA
 INSERT INTO app_portfolio.app_object (app_id, object_name) VALUES (1,'SETTING_NAV_USER');
 INSERT INTO app_portfolio.app_object (app_id, object_name) VALUES (1,'TOOLBAR');
 --
--- Dumping data for table `app_object_item`
+-- Dumping data for table app_object_item
 --
 INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (0,'DIALOGUE','CONFIRM_QUESTION');
-INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (0,'DIALOGUE','LOGIN_CONTINUE_WITH');
 INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (0,'DIALOGUE','PASSWORD');
 INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (0,'DIALOGUE','USERNAME');
+INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (0,'DIALOGUE','BIO');
 INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (0,'DIALOGUE','EMAIL');
-INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (0,'DIALOGUE','SIGNUP_PASSWORD_CONFIRM');
-INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (0,'DIALOGUE','SIGNUP_PASSWORD_REMINDER');
+INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (0,'DIALOGUE','PASSWORD_CONFIRM');
+INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (0,'DIALOGUE','PASSWORD_REMINDER');
+INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (0,'DIALOGUE','NEW_PASSWORD_CONFIRM');
+INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (0,'DIALOGUE','NEW_PASSWORD');
+
+
 INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (1,'REPORT','COLTITLE_ASR');
 INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (1,'REPORT','COLTITLE_ASR_IQAMAT');
 INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (1,'REPORT','COLTITLE_CALTYPE_GREGORIAN');
@@ -122,32 +126,16 @@ INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name
 INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (1,'SETTING_NAV_REGIONAL','SETTING_SELECT_REPORT_COLTITLE');
 INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (1,'SETTING_NAV_REGIONAL','SETTING_SELECT_REPORT_DIRECTION');
 INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (1,'SETTING_NAV_REGIONAL','SETTING_SELECT_REPORT_LOCALE_SECOND');
-INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (1,'SETTING_NAV_USER','SETTING_BTN_LABEL_USER_ADD');
-INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (1,'SETTING_NAV_USER','SETTING_BTN_LABEL_USER_DELETE');
-INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (1,'SETTING_NAV_USER','SETTING_BTN_LABEL_USER_DELETE_ACCOUNT');
-INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (1,'SETTING_NAV_USER','SETTING_BTN_LABEL_USER_SAVE');
-INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (1,'SETTING_NAV_USER','SETTING_BTN_LABEL_USER_UPDATE');
-INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (1,'SETTING_NAV_USER','SETTING_LABEL_ACCOUNT_CREATED_EDIT');
-INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (1,'SETTING_NAV_USER','SETTING_LABEL_ACCOUNT_MODIFIED_EDIT');
-INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (1,'SETTING_NAV_USER','SETTING_LABEL_BIO_EDIT');
-INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (1,'SETTING_NAV_USER','SETTING_LABEL_EMAIL_EDIT');
-INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (1,'SETTING_NAV_USER','SETTING_LABEL_LAST_LOGONTIME_EDIT');
-INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (1,'SETTING_NAV_USER','SETTING_LABEL_NEW_PASSWORD_CONFIRM_EDIT');
-INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (1,'SETTING_NAV_USER','SETTING_LABEL_NEW_PASSWORD_EDIT');
-INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (1,'SETTING_NAV_USER','SETTING_LABEL_PASSWORD_CONFIRM_EDIT');
-INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (1,'SETTING_NAV_USER','SETTING_LABEL_PASSWORD_EDIT');
-INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (1,'SETTING_NAV_USER','SETTING_LABEL_PASSWORD_REMINDER_EDIT');
 INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (1,'SETTING_NAV_USER','SETTING_LABEL_USER_SETTINGS');
 INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (1,'SETTING_NAV_USER','SETTING_LABEL_USER_URL_DAY');
 INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (1,'SETTING_NAV_USER','SETTING_LABEL_USER_URL_MONTH');
 INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (1,'SETTING_NAV_USER','SETTING_LABEL_USER_URL_YEAR');
-INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (1,'SETTING_NAV_USER','SETTING_LABEL_USERNAME_EDIT');
 INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (1,'TOOLBAR','TOOLBAR_BTN_DAY_LABEL');
 INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (1,'TOOLBAR','TOOLBAR_BTN_MONTH_LABEL');
 INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (1,'TOOLBAR','TOOLBAR_BTN_PRINT_LABEL');
 INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (1,'TOOLBAR','TOOLBAR_BTN_YEAR_LABEL');
 --
--- Dumping data for table `app_object_item_subitem`
+-- Dumping data for table app_object_item_subitem
 --
 INSERT INTO app_portfolio.app_object_item_subitem (app_id, object_name, object_item_name, subitem_name) VALUES (1,'SETTING_NAV_DESIGN','SETTING_SELECT_REPORT_HIGHLIGHT_ROW','SETTING_SELECT_REPORT_HIGHLIGHT_ROW_0');
 INSERT INTO app_portfolio.app_object_item_subitem (app_id, object_name, object_item_name, subitem_name) VALUES (1,'SETTING_NAV_DESIGN','SETTING_SELECT_REPORT_HIGHLIGHT_ROW','SETTING_SELECT_REPORT_HIGHLIGHT_ROW_1');
@@ -224,7 +212,7 @@ INSERT INTO app_portfolio.app_object_item_subitem (app_id, object_name, object_i
 INSERT INTO app_portfolio.app_object_item_subitem (app_id, object_name, object_item_name, subitem_name) VALUES (1,'SETTING_NAV_REGIONAL','SETTING_SELECT_REPORT_DIRECTION','SETTING_SELECT_REPORT_DIRECTION_1');
 INSERT INTO app_portfolio.app_object_item_subitem (app_id, object_name, object_item_name, subitem_name) VALUES (1,'SETTING_NAV_REGIONAL','SETTING_SELECT_REPORT_LOCALE_SECOND','SETTING_SELECT_REPORT_LOCALE_SECOND_0');
 --
--- Dumping data for table `country_group`
+-- Dumping data for table country_group
 --
 INSERT INTO app_portfolio.country_group (id, group_name) VALUES (1,'Africa');
 INSERT INTO app_portfolio.country_group (id, group_name) VALUES (2,'Americas');
@@ -232,7 +220,7 @@ INSERT INTO app_portfolio.country_group (id, group_name) VALUES (3,'Asia');
 INSERT INTO app_portfolio.country_group (id, group_name) VALUES (4,'Europe');
 INSERT INTO app_portfolio.country_group (id, group_name) VALUES (5,'Oceania');
 --
--- Dumping data for table `country`
+-- Dumping data for table country
 --
 INSERT INTO app_portfolio.country (id, country_code, flag_emoji, flag_url, country_group_id) VALUES (251,'af','🇦🇫',NULL,3);
 INSERT INTO app_portfolio.country (id, country_code, flag_emoji, flag_url, country_group_id) VALUES (252,'ax','🇦🇽',NULL,4);
@@ -485,7 +473,50 @@ INSERT INTO app_portfolio.country (id, country_code, flag_emoji, flag_url, count
 INSERT INTO app_portfolio.country (id, country_code, flag_emoji, flag_url, country_group_id) VALUES (499,'zw','🇿🇼',NULL,1);
 INSERT INTO app_portfolio.country (id, country_code, flag_emoji, flag_url, country_group_id) VALUES (500,'xk','🇽🇰',NULL,4);
 --
--- Dumping data for table `group_place`
+-- Dumping data for table event_type
+--
+INSERT INTO app_portfolio.event_type (id, event_type_name) VALUES (1,'USER');
+--
+-- Dumping data for table event
+--
+INSERT INTO app_portfolio.event (id,event_name,event_type_id) VALUES (1,'SIGNUP',1);
+INSERT INTO app_portfolio.event (id,event_name,event_type_id) VALUES (2,'LOGIN',1);
+INSERT INTO app_portfolio.event (id,event_name,event_type_id) VALUES (3,'EMAIL_UPDATED',1);
+INSERT INTO app_portfolio.event (id,event_name,event_type_id) VALUES (4,'PASSWORD_UPDATED',1);
+INSERT INTO app_portfolio.event (id,event_name,event_type_id) VALUES (5,'PASSWORD_RESET',1);
+INSERT INTO app_portfolio.event (id,event_name,event_type_id) VALUES (6,'OTP_SENT_SIGNUP',1);
+INSERT INTO app_portfolio.event (id,event_name,event_type_id) VALUES (7,'OTP_SENT_LOGIN',1);
+INSERT INTO app_portfolio.event (id,event_name,event_type_id) VALUES (8,'OTP_SENT_UNVERIFIED',1);
+INSERT INTO app_portfolio.event (id,event_name,event_type_id) VALUES (9,'OTP_SENT_PASSWORD_RESET',1);
+INSERT INTO app_portfolio.event (id,event_name,event_type_id) VALUES (10,'OTP_SENT_CHANGE_EMAIL',1);
+INSERT INTO app_portfolio.event (id,event_name,event_type_id) VALUES (11,'EMAIL_VERIFIED_SIGNUP',1);
+INSERT INTO app_portfolio.event (id,event_name,event_type_id) VALUES (12,'EMAIL_VERIFIED_UNVERIFIED',1);
+INSERT INTO app_portfolio.event (id,event_name,event_type_id) VALUES (13,'EMAIL_VERIFIED_PASSWORD_RESET',1);
+INSERT INTO app_portfolio.event (id,event_name,event_type_id) VALUES (14,'EMAIL_VERIFIED_CHANGE_EMAIL',1);
+INSERT INTO app_portfolio.event (id,event_name,event_type_id) VALUES (15,'LOGIN_NOT_MATCHING_PASSWORD',1);
+INSERT INTO app_portfolio.event (id,event_name,event_type_id) VALUES (16,'USER_UPDATED',1);
+INSERT INTO app_portfolio.event (id,event_name,event_type_id) VALUES (17,'LOGIN_2FA',1);
+INSERT INTO app_portfolio.event (id,event_name,event_type_id) VALUES (18,'USER_SUSPENDED',1);
+INSERT INTO app_portfolio.event (id,event_name,event_type_id) VALUES (19,'USER_UNSUSPENDED',1);
+INSERT INTO app_portfolio.event (id,event_name,event_type_id) VALUES (20,'LOGIN_SUCCESSFUL_SUSPENDED_ACCOUNT',1);
+INSERT INTO app_portfolio.event (id,event_name,event_type_id) VALUES (21,'PHONE_UPDATED',1);
+INSERT INTO app_portfolio.event (id,event_name,event_type_id) VALUES (22,'PHONE_VERIFIED_SIGNUP',1);
+INSERT INTO app_portfolio.event (id,event_name,event_type_id) VALUES (23,'PHONE_VERIFIED_UNVERIFIED',1);
+INSERT INTO app_portfolio.event (id,event_name,event_type_id) VALUES (24,'PHONE_VERIFIED_PASSWORD_RESET',1);
+INSERT INTO app_portfolio.event (id,event_name,event_type_id) VALUES (25,'PHONE_VERIFIED_CHANGE_PHONE',1);
+INSERT INTO app_portfolio.event (id,event_name,event_type_id) VALUES (26,'PHONE_OTP_SENT_SIGNUP',1);
+INSERT INTO app_portfolio.event (id,event_name,event_type_id) VALUES (27,'PHONE_OTP_SENT_LOGIN',1);
+INSERT INTO app_portfolio.event (id,event_name,event_type_id) VALUES (28,'PHONE_OTP_UNVERIFIED',1);
+INSERT INTO app_portfolio.event (id,event_name,event_type_id) VALUES (29,'PHONE_OTP_PASSWORD_RESET',1);
+INSERT INTO app_portfolio.event (id,event_name,event_type_id) VALUES (30,'PHONE_OTP_CHANGE_PHONE',1);
+--
+-- Dumping data for table event_status
+--
+INSERT INTO app_portfolio.event_status (id,status_name) VALUES (1,'INPROGRESS');
+INSERT INTO app_portfolio.event_status (id,status_name) VALUES (2,'SUCCESSFUL');
+INSERT INTO app_portfolio.event_status (id,status_name) VALUES (3,'FAILED');
+--
+-- Dumping data for table group_place
 --
 INSERT INTO app_portfolio.group_place (id, group_name, icon_emoji, icon_url) VALUES (1,'Africa','🌍',NULL);
 INSERT INTO app_portfolio.group_place (id, group_name, icon_emoji, icon_url) VALUES (2,'America','🌎',NULL);
@@ -500,7 +531,7 @@ INSERT INTO app_portfolio.group_place (id, group_name, icon_emoji, icon_url) VAL
 INSERT INTO app_portfolio.group_place (id, group_name, icon_emoji, icon_url) VALUES (11,'Popular places','🤩',NULL);
 INSERT INTO app_portfolio.group_place (id, group_name, icon_emoji, icon_url) VALUES (12,'Synagogue','🕍',NULL);
 --
--- Dumping data for table `language`
+-- Dumping data for table language
 --
 INSERT INTO app_portfolio.language (id, lang_code) VALUES (1,'ab');
 INSERT INTO app_portfolio.language (id, lang_code) VALUES (2,'ace');
@@ -1131,7 +1162,7 @@ INSERT INTO app_portfolio.language (id, lang_code) VALUES (1040,'uz-arab');
 INSERT INTO app_portfolio.language (id, lang_code) VALUES (1041,'uz-cyrl');
 INSERT INTO app_portfolio.language (id, lang_code) VALUES (1042,'uz-latn');
 --
--- Dumping data for table `locale`
+-- Dumping data for table locale
 --
 INSERT INTO app_portfolio.locale (language_id, country_id) VALUES (8,402);
 INSERT INTO app_portfolio.locale (language_id, country_id) VALUES (8,449);
@@ -1548,19 +1579,19 @@ INSERT INTO app_portfolio.locale (language_id, country_id) VALUES (1040,251);
 INSERT INTO app_portfolio.locale (language_id, country_id) VALUES (1041,490);
 INSERT INTO app_portfolio.locale (language_id, country_id) VALUES (1042,490);
 --
--- Dumping data for table `message_level`
+-- Dumping data for table message_level
 --
 INSERT INTO app_portfolio.message_level (id, message_level) VALUES (1,'0_INFO');
 INSERT INTO app_portfolio.message_level (id, message_level) VALUES (2,'10_USER');
 INSERT INTO app_portfolio.message_level (id, message_level) VALUES (3,'20_APP');
 INSERT INTO app_portfolio.message_level (id, message_level) VALUES (4,'30_SYSTEM');
 --
--- Dumping data for table `message_type`
+-- Dumping data for table message_type
 --
 INSERT INTO app_portfolio.message_type (id, message_type) VALUES (1,'ERROR');
 INSERT INTO app_portfolio.message_type (id, message_type) VALUES (2,'INFO');
 --
--- Dumping data for table `message`
+-- Dumping data for table message
 --  db info/errors
 --	20100-20199
 --	db constraints info/error
@@ -1605,7 +1636,7 @@ INSERT INTO app_portfolio.message (message_level_id, message_type_id, code) VALU
 INSERT INTO app_portfolio.message (message_level_id, message_type_id, code) VALUES (1,2,'20501');
 INSERT INTO app_portfolio.message (message_level_id, message_type_id, code) VALUES (1,2,'20502');
 --
--- Dumping data for table `app_message`
+-- Dumping data for table app_message
 --
 INSERT INTO app_portfolio.app_message (message_code, app_id) VALUES ('20100',0);
 INSERT INTO app_portfolio.app_message (message_code, app_id) VALUES ('20101',0);
@@ -1641,13 +1672,13 @@ INSERT INTO app_portfolio.app_message (message_code, app_id) VALUES ('20500',0);
 INSERT INTO app_portfolio.app_message (message_code, app_id) VALUES ('20501',0);
 INSERT INTO app_portfolio.app_message (message_code, app_id) VALUES ('20502',0);
 --
--- Dumping data for table `parameter_type`
+-- Dumping data for table parameter_type
 --
 INSERT INTO app_portfolio.parameter_type (id, parameter_type_name) VALUES (0,'Public');
 INSERT INTO app_portfolio.parameter_type (id, parameter_type_name) VALUES (1,'Private shared');
 INSERT INTO app_portfolio.parameter_type (id, parameter_type_name) VALUES (2,'Private');
 --
--- Dumping data for table `app_parameter`
+-- Dumping data for table app_parameter
 --
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','SERVER_MAINTENANCE','0','0=no, 1=yes');
 
@@ -1669,6 +1700,7 @@ INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_na
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','REST_USER_ACCOUNT_APP','user_account_app/',NULL);
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','REST_USER_ACCOUNT_COMMON','user_account/common/',NULL);
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','REST_USER_ACCOUNT_FOLLOW','user_account_follow/',NULL);
+INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','REST_USER_ACCOUNT_FORGOT','user_account/password_reset/',NULL);
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','REST_USER_ACCOUNT_LIKE','user_account_like/',NULL);
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','REST_USER_ACCOUNT_LOGIN','user_account/login',NULL);
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','REST_USER_ACCOUNT_PROFILE_DETAIL','user_account/profile/detail/',NULL);
@@ -1877,23 +1909,23 @@ INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_na
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (2,'2','SERVICE_DB_DB2_APP_PASSWORD','{DB_PASSWORD}',NULL);
 
 --
--- Dumping data for table `app1_place`
+-- Dumping data for table app1_place
 --
 INSERT INTO app_portfolio.app1_place (id, title, latitude, longitude, timezone, country1_id, country2_id, group_place1_id, group_place2_id) VALUES (40002,'Kaaba, Masjid al-Haram, Makkah','+21.4225','+39.8262','Asia/Riyadh',438,NULL,9,4);
 INSERT INTO app_portfolio.app1_place (id, title, latitude, longitude, timezone, country1_id, country2_id, group_place1_id, group_place2_id) VALUES (40003,'Al-Masjid an-Nabawi, Medina','+24.469','+39.611','Asia/Riyadh',438,NULL,9,4);
 INSERT INTO app_portfolio.app1_place (id, title, latitude, longitude, timezone, country1_id, country2_id, group_place1_id, group_place2_id) VALUES (40004,'Al-Aqsa, Jerusalem','+31.7765','+35.2356','Asia/Riyadh',420,360,9,4);
 --
--- Dumping data for table `app1_theme_category`
+-- Dumping data for table app1_theme_category
 --
 INSERT INTO app_portfolio.app1_theme_category (id, title) VALUES (1,'Basic');
 --
--- Dumping data for table `app1_theme_type`
+-- Dumping data for table app1_theme_type
 --
 INSERT INTO app_portfolio.app1_theme_type (id, title) VALUES (1,'DAY');
 INSERT INTO app_portfolio.app1_theme_type (id, title) VALUES (2,'MONTH');
 INSERT INTO app_portfolio.app1_theme_type (id, title) VALUES (3,'YEAR');
 --
--- Dumping data for table `app1_theme`
+-- Dumping data for table app1_theme
 --
 INSERT INTO app_portfolio.app1_theme (id, title, author, author_url, premium, image_preview, image_preview_url, image_header, image_header_url, image_footer, image_footer_url, image_background, image_background_url, app1_theme_type_id, app1_theme_category_id) VALUES (10001,'Blue','GF','',NULL,NULL,'/app1/css/images/theme_day_10001.jpg',NULL,NULL,NULL,NULL,NULL,NULL,1,1);
 INSERT INTO app_portfolio.app1_theme (id, title, author, author_url, premium, image_preview, image_preview_url, image_header, image_header_url, image_footer, image_footer_url, image_background, image_background_url, app1_theme_type_id, app1_theme_category_id) VALUES (10002,'Green','GF','',NULL,NULL,'/app1/css/images/theme_day_10002.jpg',NULL,NULL,NULL,NULL,NULL,NULL,1,1);

@@ -171,6 +171,9 @@
 	font-size: 16px;
     margin-top: 20px;
 }
+#user_verification_type{
+	display: none;
+}
 #user_verify_verification_container{
 	margin-top:40px;
 	margin-bottom:40px;	
@@ -214,7 +217,7 @@
 	height: 40px;
 	margin: 0 auto;
 }
-.login_input, .signup_input, .forgot_input{
+.login_input, .signup_input, .forgot_input, .new_password_input{
 	border-radius: 16px;
 	border: 1px solid #ddd;
 	height:40px;
@@ -265,15 +268,12 @@
 #dialogue_user_edit{
 	visibility: hidden;
 }
-
 #dialogue_user_edit_content{
 	width: 360px;
 	height: auto;
-	font-size: 11px;
 }
 #dialogue_user_edit_content input{
 	width: 100%;
-	font-size: 11px;
 }
 #user_edit_avatar{
 	width:64px;
@@ -285,7 +285,7 @@
 	border-radius: 50%;
 	position:fixed;
 	left: 26px;
-    top: 17px;
+    top: 20px;
 	z-index: -1;
 }
 #user_edit_input_avatar_img{
@@ -297,7 +297,6 @@
     margin-top: 20px;
     -webkit-appearance: none;
 }
-
 #dialogue_user_edit_content .setting_horizontal_row{
 	display: block;
 }
@@ -307,10 +306,12 @@
 #dialogue_user_edit_content #user_edit_common .setting_horizontal_row:first-child .setting_horizontal_col:nth-child(2){
 	text-align: center !important;
 }
-
-#dialogue_user_edit_content .setting_horizontal_col:nth-child(1),
+#dialogue_user_edit_content .setting_horizontal_col:nth-child(1){
+	width :5%;
+	display: inline-block;
+}
 #dialogue_user_edit_content .setting_horizontal_col:nth-child(2){
-	width :170px;
+	width :90%;
 	text-align: left;
 	display: inline-block;
 }
@@ -323,9 +324,9 @@
 	width: 100%;
 	text-align: center !important;
 }
-#setting_label_data_last_logontime_edit,
-#setting_label_data_account_created_edit,
-#setting_label_data_account_modified_edit {
+#user_edit_label_data_last_logontime,
+#user_edit_label_data_account_created,
+#user_edit_label_data_account_modified {
 	font-size: 8px;
 }
 
@@ -646,8 +647,8 @@
 	border-radius: 50%;
 }
 /*User */
-#setting_btn_label_user_update,
-#setting_btn_label_user_delete_account{
+#user_edit_btn_label_user_update,
+#user_edit_btn_label_user_delete_account{
 	display:inline-block;
 	width:120px;
 	text-align: center;
@@ -655,24 +656,24 @@
 	vertical-align: top;
 	text-transform: uppercase;
 }
-#setting_label_provider_id_edit,
-#setting_label_provider_id_edit_data,
-#setting_label_provider_image_url_edit,
-#setting_label_provider_image_url_edit_data{
+#user_edit_label_provider_id_edit,
+#user_edit_label_provider_id_edit_data,
+#user_edit_label_provider_image_url_edit,
+#user_edit_label_provider_image_url_edit_data{
 	display:none !important;
 }
 /*signup*/
 .input_error{
 	border:1px solid red !important;
 }
-#setting_btn_user_update,
-#setting_btn_user_delete_account
+#user_edit_btn_user_update,
+#user_edit_btn_user_delete_account
 {
 	width:100px;
 	height: 30px;
 }
-#setting_btn_user_update,
-#setting_btn_user_delete_account{
+#user_edit_btn_user_update,
+#user_edit_btn_user_delete_account{
 	font-size:30px;
 }
 
@@ -889,14 +890,11 @@
 		width:500px;
 		font-size: 16px;
 	}
-	#dialogue_user_edit_content .setting_horizontal_col:nth-child(1), #dialogue_user_edit_content .setting_horizontal_col:nth-child(2) {
-		width: 240px;
-	}
 	#dialogue_user_edit_content input{
 		font-size: 16px;
 	}
 	#user_edit_avatar_img{
-		top:20px;
+		left:28px;
 	}
 
 	#profile_public {
@@ -905,9 +903,9 @@
 	#profile_main_col1 {
 		width: 250px;
 	}
-	#setting_label_data_last_logontime_edit,
-	#setting_label_data_account_created_edit,
-	#setting_label_data_account_modified_edit {
+	#user_edit_label_data_last_logontime,
+	#user_edit_label_data_account_created,
+	#user_edit_label_data_account_modified {
 		font-size: 11px;
 	}
 	#profile_main_stat_row1 div{

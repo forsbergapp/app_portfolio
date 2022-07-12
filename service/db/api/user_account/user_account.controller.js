@@ -188,6 +188,39 @@ module.exports = {
                 });
         });
     },
+    passwordResetUser: (req, res) => {
+        /*
+        const verification_code = req.body.verification_code;
+        let email = req.params.email ?? '';
+        if (email !='')
+            getemailUser(req.query.app_id, email, verification_code, (err, results) => {
+                if (err) {
+                    return res.status(500).send(
+                        err
+                    );
+                }
+                else
+                    if (results.email)
+                    return res.status(200).json({
+                        count: results.changedRows,
+                        success: 1,
+                        items: Array(results)
+                    });
+            })
+        else
+            return res.status(200).json({
+                count: 0,
+                success: 1,
+                items: null
+            });
+            */
+        return res.status(200).json({
+            count: 0,
+            success: 1,
+            sent: 0,
+            items: null
+        });
+    },
     getUserByUserId: (req, res) => {
         const id = req.params.id;
         getUserByUserId(req.query.app_id, id, (err, results) => {
