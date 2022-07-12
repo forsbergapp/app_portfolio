@@ -994,11 +994,21 @@ GRANT ALL PRIVILEGES ON app_portfolio.user_account_app_hist TO role_app_dba;
 GRANT SELECT, INSERT ON app_portfolio.user_account_app_hist TO role_app1;
 
 CREATE TABLE app_portfolio.user_account_event (
-    user_account_id INTEGER NOT NULL,
-    event_id        INTEGER NOT NULL,
-    event_status_id INTEGER NOT NULL,
-    date_created    DATETIME NOT NULL,
-    date_modified   DATETIME
+    user_account_id             INTEGER NOT NULL,
+    event_id                    INTEGER NOT NULL,
+    event_status_id             INTEGER NOT NULL,
+    date_created                DATETIME NOT NULL,
+    date_modified               DATETIME,
+    user_language               VARCHAR(1000),
+    user_timezone               VARCHAR(1000),
+    user_number_system          VARCHAR(1000),
+    user_platform               VARCHAR(1000),
+    client_latitude             VARCHAR(1000),
+    client_longitude            VARCHAR(1000),
+    server_remote_addr          VARCHAR(1000),
+    server_user_agent           VARCHAR(1000),
+    server_http_host            VARCHAR(1000),
+    server_http_accept_language VARCHAR(1000)
 );
 
 GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.user_account_event TO role_app0;

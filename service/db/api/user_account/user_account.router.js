@@ -2,6 +2,7 @@ const router = require("express").Router();
 const {
     userSignup,
     activateUser,
+    passwordResetUser,
     getUserByUserId,
     getProfileUser,
     searchProfileUser,
@@ -25,6 +26,7 @@ router.post("/login", checkDataToken, userLogin);
 router.post("/signup", checkDataToken, userSignup);
 //local user
 router.put("/activate/:id", checkDataToken, activateUser);
+router.post("/password_reset/:email", checkDataToken, passwordResetUser);
 router.put("/:id", checkAccessToken, updateUserLocal);
 //provider user
 router.post("/provider/:id", checkDataToken, getUserByProviderId);

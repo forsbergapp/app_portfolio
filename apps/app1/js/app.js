@@ -3036,11 +3036,10 @@ function setEvents() {
     });
     document.getElementById('login_button').addEventListener('click', function() { user_login_app() }, false);
     document.getElementById('signup_button').addEventListener('click', function() { user_signup(document.getElementById('user_account_userid_logged_in'), get_lang_code()) }, false);
-    document.getElementById('forgot_button').addEventListener('click', function() { alert('send email...') }, false);
     //dialogue user edit
     document.getElementById('user_edit_btn_avatar_img').addEventListener('click', function() { document.getElementById('user_edit_input_avatar_img').click() }, false);
     document.getElementById('user_edit_input_avatar_img').addEventListener('change', function() { show_image(document.getElementById('user_edit_avatar_img'), this.id, window.global_user_image_avatar_width, window.global_user_image_avatar_height, get_lang_code()) }, false);
-    document.getElementById('setting_btn_user_update').addEventListener('click', function() { user_update_app(); }, false);
+    document.getElementById('user_edit_btn_user_update').addEventListener('click', function() { user_update_app(); }, false);
     document.getElementById('user_edit_close').addEventListener('click', function() { user_edit_app() }, false);
     //dialogue profile
     document.getElementById('profile_main_btn_following').addEventListener('click', function() { profile_detail_app(1,document.getElementById('user_account_userid_logged_in').innerHTML, get_lang_code(), null, true, null, 'profile_show_app') }, false);
@@ -3158,12 +3157,14 @@ async function get_app_globals() {
                         window.global_rest_user_account_app = json.data[i].parameter_value;
                     if (json.data[i].parameter_name=='REST_USER_ACCOUNT_COMMON')
                         window.global_rest_user_account_common = json.data[i].parameter_value;
+                    if (json.data[i].parameter_name=='REST_USER_ACCOUNT_FOLLOW')
+                        window.global_rest_user_account_follow = json.data[i].parameter_value;
+                    if (json.data[i].parameter_name=='REST_USER_ACCOUNT_FORGOT')
+                        window.global_rest_user_account_forgot = json.data[i].parameter_value;
                     if (json.data[i].parameter_name=='REST_USER_ACCOUNT_LIKE')
                         window.global_rest_user_account_like = json.data[i].parameter_value;
                     if (json.data[i].parameter_name=='REST_USER_ACCOUNT_LOGIN')
                         window.global_rest_user_account_login = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='REST_USER_ACCOUNT_FOLLOW')
-                        window.global_rest_user_account_follow = json.data[i].parameter_value;
                     if (json.data[i].parameter_name=='REST_USER_ACCOUNT_PROFILE_DETAIL')
                         window.global_rest_user_account_profile_detail = json.data[i].parameter_value;
                     if (json.data[i].parameter_name=='REST_USER_ACCOUNT_PROFILE_SEARCHA')
