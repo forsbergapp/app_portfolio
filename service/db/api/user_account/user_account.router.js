@@ -9,6 +9,7 @@ const {
     getProfileDetail,
     getProfileTop,
     updateUserLocal,
+    updatePassword,
     updateUserCommon,
     deleteUser,
     userLogin,
@@ -26,7 +27,8 @@ router.post("/login", checkDataToken, userLogin);
 router.post("/signup", checkDataToken, userSignup);
 //local user
 router.put("/activate/:id", checkDataToken, activateUser);
-router.post("/password_reset/:email", checkDataToken, passwordResetUser);
+router.post("/password_reset/", checkDataToken, passwordResetUser);
+router.post("/password/:id", checkAccessToken, updatePassword);
 router.put("/:id", checkAccessToken, updateUserLocal);
 //provider user
 router.post("/provider/:id", checkDataToken, getUserByProviderId);
