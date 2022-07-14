@@ -12,10 +12,13 @@
  */
 /*----------------------- */
 /* MISC                   */
-
-
-
 /*----------------------- */
+function toBase64(str) {
+    return window.btoa(unescape(encodeURIComponent(str)));
+}	
+function fromBase64(str) {
+    return decodeURIComponent(escape(window.atob(str)));
+}
 function common_translate_ui(lang_code){
     let json;
     let status;
@@ -148,7 +151,7 @@ function mobile(){
    }
    
 //function to convert buffert to one string
-function toBase64(arr) {
+function toBase64_arr(arr) {
     //arr = new Uint8Array(arr) if it's an ArrayBuffer
     return atob(
         arr.reduce((data, byte) => data + String.fromCharCode(byte), '')
@@ -184,7 +187,7 @@ function image_format(arr) {
         //Oracle returns buffer for BLOB
         if (arr.data) {
             //buffer
-            return toBase64(arr.data);
+            return toBase64_arr(arr.data);
         } else {
             //not buffer
             return atob(arr);
