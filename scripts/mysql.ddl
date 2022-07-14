@@ -2290,9 +2290,6 @@ CREATE TRIGGER app_portfolio.user_account_before_insert
 	ELSEIF NOT REGEXP_LIKE(new.email, '^[A-Za-z]+[A-Za-z0-9.]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$') THEN
 		signal SQLSTATE '45000'
 		SET message_text = 'not valid email', MYSQL_ERRNO = 20105;
-	ELSEIF (LENGTH(new.password) < 10 OR LENGTH(new.password) > 100) THEN 
-		signal SQLSTATE '45000'
-		SET message_text = 'Password 10 - 100 characters', MYSQL_ERRNO = 20106;
 	ELSEIF new.provider1_id IS NULL AND new.provider2_id IS NULL AND
 		   (new.username IS NULL OR new.password IS NULL OR new.email IS NULL) THEN 
            signal SQLSTATE '45000'
@@ -2403,9 +2400,6 @@ CREATE TRIGGER app_portfolio.user_account_before_update
 	ELSEIF NOT REGEXP_LIKE(new.email, '^[A-Za-z]+[A-Za-z0-9.]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$') THEN
 		signal SQLSTATE '45000'
 		SET message_text = 'not valid email', MYSQL_ERRNO = 20105;
-	ELSEIF (LENGTH(new.password) < 10 OR LENGTH(new.password) > 100) THEN 
-		signal SQLSTATE '45000'
-		SET message_text = 'Password 10 - 100 characters', MYSQL_ERRNO = 20106;
 	ELSEIF new.provider1_id IS NULL AND new.provider2_id IS NULL AND
 		   (new.username IS NULL OR new.password IS NULL OR new.email IS NULL) THEN 
            signal SQLSTATE '45000'
