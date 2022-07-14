@@ -193,6 +193,16 @@
 	height:40px;
 	border: 1px solid;
 }
+#user_new_password_icon{
+	font-size: 30px;
+    height: 30px;
+}
+#user_new_password_auth{
+	display: none;
+}
+#user_new_password{
+	margin-top: 40px;
+}
 /*Dialogue login/signup/forgot*/
 #dialogue_login,
 #dialogue_signup,
@@ -809,7 +819,6 @@
 	width:100px;
 	height:100px;
 }
-
 #broadcast_col2 {	
 	width:100%;
 	float:right;

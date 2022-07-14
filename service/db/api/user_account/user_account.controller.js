@@ -8,19 +8,22 @@ const {
     getProfileDetail,
     getProfileTop,
     checkPassword,
+    updatePassword,
     updateUserLocal,
     updateUserCommon,
     deleteUser,
     userLogin,
     updateSigninProvider,
     getUserByProviderId,
-    getStatCount
+    getStatCount,
+    getEmailUser
 } = require("./user_account.service");
 
 const { genSaltSync, hashSync, compareSync } = require("bcryptjs");
 const { getMessage } = require("../message_translation/message_translation.service");
 const { insertProfileSearch } = require("../profile_search/profile_search.controller");
 const { createUserAccountApp } = require("../user_account_app/user_account_app.service");
+const { getLastUserEvent, insertUserEvent } = require("../user_account_event/user_account_event.service");
 const { insertUserAccountLogon } = require("../user_account_logon/user_account_logon.controller");
 const { insertUserAccountView } = require("../user_account_view/user_account_view.controller");
 const { getParameter } = require ("../app_parameter/app_parameter.service");
@@ -110,36 +113,31 @@ module.exports = {
             else{
                 //set variable for accesstoken
                 req.body.app_id = req.query.app_id;
-                
-                body.user_account_id = results.insertId;
-                body.server_remote_addr = req.ip,
-                body.server_user_agent = req.headers["user-agent"],
-                body.server_http_host = req.headers["host"],
-                body.server_http_accept_language = req.headers["accept-language"]
                 if (typeof req.body.provider1_id == 'undefined' &&
                     typeof req.body.provider2_id == 'undefined') {
-                    getParameter(0,'SERVICE_MAIL_TYPE_SIGNUP', (err3, parameter_value)=>{
+                    getParameter(process.env.MAIN_APP_ID,'SERVICE_MAIL_TYPE_SIGNUP', (err3, parameter_value)=>{
                         //send email for local users only
                         const emailData = {
                             lang_code : req.query.lang_code,
                             app_id : process.env.MAIN_APP_ID,
-                            app_user_id : req.body.user_account_id,
+                            app_user_id : results.insertId,
                             emailType : parameter_value,
                             toEmail : req.body.email,
                             verificationCode : body.verification_code,
-                            user_language:body.user_language,
-                            user_timezone:body.user_timezone,
-                            user_number_system:body.user_number_system,
-                            user_platform:body.user_platform,
-                            server_remote_addr : req.body.server_remote_addr,
-                            server_user_agent : req.body.server_user_agent,
-                            server_http_host : req.body.server_http_host,
-                            server_http_accept_language : req.body.server_http_accept_language,
+                            user_language: body.user_language,
+                            user_timezone: body.user_timezone,
+                            user_number_system: body.user_number_system,
+                            user_platform: body.user_platform,
+                            server_remote_addr : req.ip,
+                            server_user_agent : req.headers["user-agent"],
+                            server_http_host : req.headers["host"],
+                            server_http_accept_language : req.headers["accept-language"],
                             client_latitude : req.body.client_latitude,
                             client_longitude : req.body.client_longitude,
                             protocol : req.protocol,
                             host : req.get('host')
                         }
+                        //send email SIGNUP
                         sendEmail(emailData, (err4, result4) => {
                             if (err4) {
                                 //return res from userSignup
@@ -172,54 +170,154 @@ module.exports = {
         });
     },
     activateUser: (req, res) => {
-        const verification_code = req.body.verification_code;
+        const verification_code_to_check = req.body.verification_code;
         const id = req.params.id;
-        activateUser(req.query.app_id, id, verification_code, (err, results) => {
+        let auth_new_password;
+        if (req.body.verification_type==3)
+            auth_new_password = verification_code();
+        else
+            auth_new_password = null;
+        activateUser(req.query.app_id, id, verification_code_to_check, auth_new_password, (err, results) => {
             if (err) {
                 return res.status(500).send(
                     err
                 );
             }
             else
-                return res.status(200).json({
-                    count: results.changedRows,
-                    success: 1,
-                    items: Array(results)
-                });
+                if (auth_new_password == null)
+                    return res.status(200).json({
+                        count: results.changedRows,
+                        success: 1,
+                        items: Array(results)
+                    });
+                else{
+                    //return accessToken since PASSWORD_RESET is in progress
+                    //email was verified and activated with data token, but now the password will be updated
+                    //using accessToken and authentication code
+                    req.body.app_id = req.query.app_id
+                    accessToken(req, (err, Token)=>{
+                        return res.status(200).json({
+                            count: results.changedRows,
+                            success: 1,
+                            auth: auth_new_password,
+                            accessToken: Token,
+                            items: Array(results)
+                        });
+                    });
+                }
         });
     },
     passwordResetUser: (req, res) => {
-        /*
-        const verification_code = req.body.verification_code;
-        let email = req.params.email ?? '';
+        let email = req.body.email ?? '';
         if (email !='')
-            getemailUser(req.query.app_id, email, verification_code, (err, results) => {
+            getEmailUser(req.query.app_id, email, (err, results) => {
                 if (err) {
                     return res.status(500).send(
                         err
                     );
                 }
                 else
-                    if (results.email)
-                    return res.status(200).json({
-                        count: results.changedRows,
-                        success: 1,
-                        items: Array(results)
-                    });
+                    if (results){
+                        getLastUserEvent(req.query.app_id, results.id, 'PASSWORD_RESET', (err, result_user_event)=>{
+                            if (err)
+                                return res.status(200).json({
+                                    success: 1,
+                                    sent: 0
+                                });
+                            else
+                                if (result_user_event &&
+                                    result_user_event.status_name == 'INPROGRESS' &&
+                                    result_user_event.event_days < 1)
+                                    return res.status(200).json({
+                                        success: 1,
+                                        sent: 0
+                                    });
+                                else{
+                                    const eventData = {
+                                        app_id : req.query.app_id,
+                                        user_account_id: results.id,
+                                        event: 'PASSWORD_RESET',
+                                        event_status: 'INPROGRESS',
+                                        user_language: req.body.user_language,
+                                        user_timezone: req.body.user_timezone,
+                                        user_number_system: req.body.user_number_system,
+                                        user_platform: req.body.user_platform,
+                                        server_remote_addr : req.ip,
+                                        server_user_agent : req.headers["user-agent"],
+                                        server_http_host : req.headers["host"],
+                                        server_http_accept_language : req.headers["accept-language"],
+                                        client_latitude : req.body.client_latitude,
+                                        client_longitude : req.body.client_longitude
+                                    }
+                                    insertUserEvent(eventData, (err, result_new_user_event)=>{
+                                        if (err)
+                                            return res.status(200).json({
+                                                success: 1,
+                                                sent: 0
+                                            });
+                                        else{
+                                            let new_code = verification_code();
+                                            updateUserVerificationCode(req.query.app_id, results.id, new_code, (err_verification,result_verification) => {
+                                                if (err_verification)
+                                                    return res.status(500),send(
+                                                        err_verification
+                                                    );
+                                                else{
+                                                    getParameter(process.env.MAIN_APP_ID,'SERVICE_MAIL_TYPE_PASSWORD_RESET', (err3, parameter_value)=>{
+                                                        const emailData = {
+                                                            lang_code : req.query.lang_code,
+                                                            app_id : process.env.MAIN_APP_ID,
+                                                            app_user_id : req.body.user_account_id,
+                                                            emailType : parameter_value,
+                                                            toEmail : email,
+                                                            verificationCode : new_code,
+                                                            user_language: req.body.user_language,
+                                                            user_timezone: req.body.user_timezone,
+                                                            user_number_system: req.body.user_number_system,
+                                                            user_platform: req.body.user_platform,
+                                                            server_remote_addr : req.ip,
+                                                            server_user_agent : req.headers["user-agent"],
+                                                            server_http_host : req.headers["host"],
+                                                            server_http_accept_language : req.headers["accept-language"],
+                                                            client_latitude : req.body.client_latitude,
+                                                            client_longitude : req.body.client_longitude,
+                                                            protocol : req.protocol,
+                                                            host : req.get('host')
+                                                        }
+                                                        //send email PASSWORD_RESET
+                                                        sendEmail(emailData, (err4, result_sendemail) => {
+                                                            if (err4) {
+                                                                return res.status(500).send(
+                                                                    err4
+                                                                );
+                                                            } 
+                                                            else
+                                                                return res.status(200).json({
+                                                                    success: 1,
+                                                                    sent: 1,
+                                                                    id: results.id
+                                                                });  
+                                                        })
+                                                    })
+                                                }
+                                            })
+                                        }
+                                    })
+                                }    
+                        })
+                    }
+                    else
+                        return res.status(200).json({
+                            success: 1,
+                            sent: 0
+                        });
             })
         else
             return res.status(200).json({
-                count: 0,
                 success: 1,
-                items: null
+                sent: 0
             });
-            */
-        return res.status(200).json({
-            count: 0,
-            success: 1,
-            sent: 0,
-            items: null
-        });
+        
     },
     getUserByUserId: (req, res) => {
         const id = req.params.id;
@@ -496,6 +594,73 @@ module.exports = {
             }
         });
     },
+    updatePassword: (req, res) =>{
+        const salt = genSaltSync(10);
+        req.body.new_password = hashSync(req.body.new_password, salt);
+        updatePassword(req.query.app_id, req.params.id, req.body, (err, results) => {
+            if (err) {
+                var app_code = get_app_code(err.errorNum, 
+                                            err.message, 
+                                            err.code, 
+                                            err.errno, 
+                                            err.sqlMessage);
+                if (app_code != null){
+                    getMessage(app_code, 
+                               process.env.MAIN_APP_ID, 
+                               req.query.lang_code, (err2,results2)  => {
+                                    return res.status(500).send(
+                                        results2.text
+                                    );
+                               });
+                }
+                else
+                    return res.status(500).send(
+                        err
+                    );
+            }
+            else {
+                if (!results) {
+                    //record not found
+                    getMessage(20400, 
+                                process.env.MAIN_APP_ID, 
+                                req.query.lang_code, (err2,results2)  => {
+                                    return res.status(500).send(
+                                        results2.text
+                                    );
+                                });
+                }
+                else{
+                    const eventData = {
+                        app_id : req.query.app_id,
+                        user_account_id: req.params.id,
+                        event: 'PASSWORD_RESET',
+                        event_status: 'SUCCESSFUL',
+                        user_language: req.body.user_language,
+                        user_timezone: req.body.user_timezone,
+                        user_number_system: req.body.user_number_system,
+                        user_platform: req.body.user_platform,
+                        server_remote_addr : req.ip,
+                        server_user_agent : req.headers["user-agent"],
+                        server_http_host : req.headers["host"],
+                        server_http_accept_language : req.headers["accept-language"],
+                        client_latitude : req.body.client_latitude,
+                        client_longitude : req.body.client_longitude
+                    }
+                    insertUserEvent(eventData, (err, result_new_user_event)=>{
+                        if (err)
+                            return res.status(200).json({
+                                success: 1,
+                                sent: 0
+                            });
+                        else
+                            return res.status(200).json({
+                                success: 1
+                            });
+                    })
+                }
+            }
+        });
+    },
     updateUserCommon: (req, res) => {
         const id = req.params.id;
         updateUserCommon(req.query.app_id, req.body, id, (err, results) => {
@@ -685,7 +850,7 @@ module.exports = {
                                         err_verification
                                     );
                                 else{
-                                    getParameter(0,'SERVICE_MAIL_TYPE_UNVERIFIED', (err3, parameter_value)=>{
+                                    getParameter(process.env.MAIN_APP_ID,'SERVICE_MAIL_TYPE_UNVERIFIED', (err3, parameter_value)=>{
                                         const emailData = {
                                             lang_code : req.query.lang_code,
                                             app_id : process.env.MAIN_APP_ID,
@@ -706,6 +871,7 @@ module.exports = {
                                             protocol : req.protocol,
                                             host : req.get('host')
                                         }
+                                        //send email UNVERIFIED
                                         sendEmail(emailData, (err_email, result_email) => {
                                             if (err_email) {
                                                 return res.status(500).send(

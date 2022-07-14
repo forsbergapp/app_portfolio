@@ -170,10 +170,7 @@ async function get_parameters() {
         if (status==200){
             json = JSON.parse(result);
             for (var i = 0; i < json.data.length; i++) {
-                if (json.data[i].parameter_name=='APP_COPYRIGHT')
-                    window.global_app_copyright =json.data[i].parameter_value;
-                if (json.data[i].parameter_name=='APP_EMAIL')
-                    window.global_app_email = json.data[i].parameter_value;
+                //app 0 variables same for all apps
                 if (json.data[i].parameter_name=='IMAGE_FILE_ALLOWED_TYPE1')
                     window.global_image_file_allowed_type1 = json.data[i].parameter_value;
                 if (json.data[i].parameter_name=='IMAGE_FILE_ALLOWED_TYPE2')
@@ -210,8 +207,6 @@ async function get_parameters() {
                     window.global_app_user_provider2_api_src2 = json.data[i].parameter_value;
                 if (json.data[i].parameter_name=='REST_APP')
                     window.global_rest_app = json.data[i].parameter_value;
-                if (json.data[i].parameter_name=='REST_APP_LOG')
-                    window.global_rest_app_log = json.data[i].parameter_value;
                 if (json.data[i].parameter_name=='REST_APP_OBJECT')
                     window.global_rest_app_object = json.data[i].parameter_value;
                 if (json.data[i].parameter_name=='REST_MESSAGE_TRANSLATION')
@@ -222,12 +217,12 @@ async function get_parameters() {
                     window.global_rest_user_account_activate = json.data[i].parameter_value;
                 if (json.data[i].parameter_name=='REST_USER_ACCOUNT_APP')
                     window.global_rest_user_account_app = json.data[i].parameter_value;
-                if (json.data[i].parameter_name=='REST_USER_ACCOUNT_LIKE')
-                    window.global_rest_user_account_like = json.data[i].parameter_value;
                 if (json.data[i].parameter_name=='REST_USER_ACCOUNT_FOLLOW')
                     window.global_rest_user_account_follow = json.data[i].parameter_value;
                 if (json.data[i].parameter_name=='REST_USER_ACCOUNT_FORGOT')
                     window.global_rest_user_account_forgot = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='REST_USER_ACCOUNT_LIKE')
+                    window.global_rest_user_account_like = json.data[i].parameter_value;
                 if (json.data[i].parameter_name=='REST_USER_ACCOUNT_LOGIN')
                     window.global_rest_user_account_login = json.data[i].parameter_value;
                 if (json.data[i].parameter_name=='REST_USER_ACCOUNT_PROFILE_DETAIL')
@@ -246,6 +241,13 @@ async function get_parameters() {
                     window.global_rest_user_account_provider = json.data[i].parameter_value;
                 if (json.data[i].parameter_name=='REST_USER_ACCOUNT_SIGNUP')
                     window.global_rest_user_account_signup = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='REST_USER_ACCOUNT_PASSWORD')
+                    window.global_rest_user_account_password = json.data[i].parameter_value;
+                //app 0 specific variables
+                if (json.data[i].parameter_name=='APP_COPYRIGHT')
+                    window.global_app_copyright =json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='APP_EMAIL') //0
+                    window.global_app_email = json.data[i].parameter_value;
                 //QR
                 if (json.data[i].parameter_name=='QR_LOGO_FILE_PATH')
                     window.global_qr_logo_file_path = json.data[i].parameter_value;
@@ -427,7 +429,10 @@ async function user_verify_check_input_app(item, nextField){
     await user_verify_check_input(item, nextField, window.global_lang_code, (err, result) => {
         if ((err==null && result==null)==false)
             if(err==null){
-                user_login_app();
+                //login if LOGIN  or SIGNUP were verified succesfully
+                if (result.verification_type==1 ||
+                    result.verification_type==2)
+                    user_login_app();
             }
     })
 }
