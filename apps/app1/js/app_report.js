@@ -1403,7 +1403,9 @@ async function init_app_report(user_account_id, lang_code) {
 }
 
 function init_report(parameters) {
-    let urlParams = new URLSearchParams(window.location.search);
+	let encodedParams = new URLSearchParams(window.location.search);
+	let decodedparameters = fromBase64(encodedParams.get('reportid'))
+	let urlParams = new URLSearchParams(decodedparameters);
 	let user_account_id = urlParams.get('id');
 	let user_setting_id = urlParams.get('sid');
 	let lang_code = urlParams.get('lang_code');

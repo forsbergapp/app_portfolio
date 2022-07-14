@@ -288,15 +288,26 @@ function update_timetable_report(timetable_type = 0, item_id = null, settings, l
 	}
 	return null;
 }
-function get_report_url(id, sid, papersize){
-    
-    return getHostname() + `${window.global_service_report}` +
-         `?app_id=${window.global_app_id}&lang_code=${get_lang_code()}` +
-         `&id=${id}` +
-         `&sid=${sid}` +
-         `&ps=${papersize}` +
-         `&hf=0` + 
-         `&module=${window.global_app_report_timetable}`;
+function get_report_url(id, sid, papersize, item, format){
+    let server_url = getHostname() + `${window.global_service_report}`;
+    let app_parameters = `app_id=${window.global_app_id}`;
+    let report_module = `&module=${window.global_app_report_timetable}`;
+    let module_parameters = `&id=${id}&sid=${sid}`
+    if (item =='profile_user_settings_day' || item.substr(0,8)=='user_day')
+        module_parameters += '&type=0';
+    if (item =='profile_user_settings_month' || item.substr(0,10)=='user_month')
+        module_parameters += '&type=1';
+    if (item == 'profile_user_settings_year' || item.substr(0,9)=='user_year')
+        module_parameters += '&type=2';
+    let language_parameter = `&lang_code=${get_lang_code()}`;
+    let service_parameter = `&format=${format}&ps=${papersize}&hf=0`; //html/pdf, papersize, header/footer
+    let encodedurl = toBase64(app_parameters +
+                              report_module +
+                              module_parameters + 
+                              language_parameter +
+                              service_parameter);
+    //url query parameters are decoded in report module and in report service
+    return server_url + '?reportid=' + encodedurl;
 }
 function updateViewStat_app(user_setting_id, user_setting_user_account_id = null) {
     let user_account_id;
@@ -310,7 +321,7 @@ function updateViewStat_app(user_setting_id, user_setting_user_account_id = null
     }
 }
 function preview_report(url, type){
-    if (type=='html'){
+    if (type=='HTML'){
         document.getElementById("window_preview_report").style.visibility = "visible";
         create_qr("window_preview_toolbar_qr", url);
         dialogue_loading(1);
@@ -318,7 +329,7 @@ function preview_report(url, type){
         dialogue_loading(0);
     }
     else
-        if (type=='pdf'){
+        if (type=='PDF'){
             document.getElementById("window_preview_report").style.visibility = "visible";
             create_qr("window_preview_toolbar_qr", url);
             dialogue_loading(1);
@@ -342,14 +353,6 @@ function preview_report(url, type){
                 }
             })
         }
-}
-function get_report_url_type(item, format){
-    if (item =='profile_user_settings_day' || item.substr(0,8)=='user_day')
-        return url_type = '&type=0';
-    if (item =='profile_user_settings_month' || item.substr(0,10)=='user_month')
-        return url_type = '&type=1';
-    if (item == 'profile_user_settings_year' || item.substr(0,9)=='user_year')
-        return url_type = '&type=2';
 }
 /*----------------------- */
 /* MAP                    */
@@ -2041,25 +2044,29 @@ async function user_settings_get(userid, show_ui = 1, user_setting_id = '') {
 
 function user_setting_link(item){
     let paper_size_select = document.getElementById('setting_select_report_papersize');
-    let common_url;
-    let url_type='';
     let select_user_setting = document.getElementById('setting_select_user_setting');
     let user_account_id = select_user_setting[select_user_setting.selectedIndex].getAttribute('user_account_id');
     let sid = select_user_setting[select_user_setting.selectedIndex].getAttribute('id');
-    common_url = get_report_url(user_account_id, sid, paper_size_select.options[paper_size_select.selectedIndex].value);
     switch (item.id){
         case 'user_day_html':
         case 'user_month_html':
         case 'user_year_html':{
-            url_type = get_report_url_type(item.id, 'HTML');
-            preview_report(`${common_url}&format=html${url_type}`, 'html');
+            preview_report(get_report_url(user_account_id, 
+                                          sid, 
+                                          paper_size_select.options[paper_size_select.selectedIndex].value,
+                                          item.id,
+                                          'HTML'), 
+                           'HTML');
             break;
         }
         case 'user_day_html_copy':
         case 'user_month_html_copy':
         case 'user_year_html_copy':{
-            url_type = get_report_url_type(item.id, 'HTML');
-            let text_copy = `${common_url}&format=html${url_type}`;
+            let text_copy = get_report_url(user_account_id, 
+                                           sid, 
+                                           paper_size_select.options[paper_size_select.selectedIndex].value,
+                                           item.id,
+                                           'HTML');
             navigator.clipboard.writeText(text_copy) .then(() => {
                 show_message('INFO', null, null, window.global_button_default_icon_link, window.global_main_app_id, window.global_lang_code);
             });
@@ -2068,15 +2075,22 @@ function user_setting_link(item){
         case 'user_day_pdf':
         case 'user_month_pdf':
         case 'user_year_pdf':{
-            url_type = get_report_url_type(item.id, 'PDF');
-            preview_report(`${common_url}&format=pdf${url_type}`, 'pdf');
+            preview_report(get_report_url(user_account_id, 
+                                          sid, 
+                                          paper_size_select.options[paper_size_select.selectedIndex].value,
+                                          item.id,
+                                          'PDF'), 
+                           'PDF');
             break;
         }
         case 'user_day_pdf_copy':
         case 'user_month_pdf_copy':
         case 'user_year_pdf_copy':{
-            url_type = get_report_url_type(item.id, 'PDF');
-            let text_copy = `${common_url}&format=pdf${url_type}`;
+            let text_copy = get_report_url(user_account_id, 
+                                           sid, 
+                                           paper_size_select.options[paper_size_select.selectedIndex].value,
+                                           item.id,
+                                           'PDF');
             navigator.clipboard.writeText(text_copy) .then(() => {
                 show_message('INFO', null, null, window.global_button_default_icon_link, window.global_main_app_id, window.global_lang_code);
             });
@@ -2735,19 +2749,22 @@ function profile_user_setting_stat(id){
 
 function profile_user_setting_link(item){
     let paper_size_select = document.getElementById('setting_select_report_papersize');
-    let common_url;
-    let url_type='';
+    
     let select_user_setting = document.getElementById('profile_select_user_settings');
     let user_account_id = select_user_setting[select_user_setting.selectedIndex].getAttribute('user_account_id');
     let sid = select_user_setting[select_user_setting.selectedIndex].getAttribute('sid');
-    common_url = get_report_url(user_account_id, sid, paper_size_select.options[paper_size_select.selectedIndex].value);
-    url_type = get_report_url_type(item.id, 'HTML');
+
     switch (item.id){
         case 'profile_user_settings_day':
         case 'profile_user_settings_month':
         case 'profile_user_settings_year':{
             updateViewStat_app(sid,user_account_id);
-            preview_report(`${common_url}&format=html${url_type}`, 'html');
+            preview_report(get_report_url(user_account_id, 
+                                          sid, 
+                                          paper_size_select.options[paper_size_select.selectedIndex].value,
+                                          item.id,
+                                          'HTML'), 
+                           'HTML');
             break;
         }
         case 'profile_user_settings_like':{

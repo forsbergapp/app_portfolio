@@ -28,8 +28,16 @@ function app_log(app_id, app_module_type, request, result, app_user_id,
 module.exports = {
 	getReport: async (data, res) => {
 		var pdf;
+
+		let decodedparameters = Buffer.from(data.query.reportid, 'base64').toString('utf-8')
+		const querystring = require('querystring');
+		data.query.app_id = querystring.parse(decodedparameters).app_id;
+		data.query.module = querystring.parse(decodedparameters).module;
+		data.query.format = querystring.parse(decodedparameters).format;
+		data.query.ps = querystring.parse(decodedparameters).ps;
+		data.query.hf = querystring.parse(decodedparameters).hf;
 		//generate url to return as html or PDF
-		if (data.query.format == 'pdf' && typeof data.query.service == "undefined" ){
+		if (data.query.format.toUpperCase() == 'PDF' && typeof data.query.service == "undefined" ){
 			const url = data.protocol + ':/' + data.get('host') + data.originalUrl + '&service=1';
 			//PDF
 			const { getReportService} = require ("./report.service");
@@ -51,8 +59,8 @@ module.exports = {
 				const { getReport} = require(`../../apps/app${data.query.app_id}/report`);
 				const report = getReport(data.query.app_id, 
 										 data.query.module, 
-										 result.gps_latitude, 
-										 result.gps_longitude, 
+										 result.geoplugin_latitude, 
+										 result.geoplugin_longitude, 
 										 gps_place)
 				.then(function(report_result){
 					app_log(data.query.app_id,
