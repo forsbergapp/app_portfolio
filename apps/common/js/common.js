@@ -309,6 +309,14 @@ function check_input(text, lang_code, text_length=100){
 /*----------------------- */
 function show_common_dialogue(dialogue, user_verification_type, title=null, icon=null, click_cancel_event) {
     switch (dialogue) {
+        case 'NEW_PASSWORD':
+            {    
+                document.getElementById('user_new_password_auth').innerHTML=title;
+                document.getElementById('user_new_password').value='';
+                document.getElementById('user_new_password_confirm').value='';
+                document.getElementById('dialogue_user_new_password').style.visibility = 'visible';
+                break;
+            }
         case 'VERIFY':
             {    
                 dialogue_verify_clear();
@@ -333,6 +341,7 @@ function show_common_dialogue(dialogue, user_verification_type, title=null, icon
                 
                 document.getElementById('dialogue_login').style.visibility = 'hidden';
                 document.getElementById('dialogue_signup').style.visibility = 'hidden';
+                document.getElementById('dialogue_forgot').style.visibility = 'hidden';
                 document.getElementById('dialogue_user_verify').style.visibility = 'visible';
                 break;
             }
@@ -466,6 +475,7 @@ function dialogue_verify_clear(){
     let old_cancel = document.getElementById('user_verify_cancel');
     let button_cancel = old_cancel.cloneNode(true);
     old_cancel.parentNode.replaceChild(button_cancel, old_cancel);
+    document.getElementById('user_verification_type').innerHTML='';
     document.getElementById('user_verify_email').innerHTML='';
     document.getElementById('user_verify_cancel').innerHTML='';
     document.getElementById('user_verify_verification_char1').value = '';
@@ -474,6 +484,14 @@ function dialogue_verify_clear(){
     document.getElementById('user_verify_verification_char4').value = '';
     document.getElementById('user_verify_verification_char5').value = '';
     document.getElementById('user_verify_verification_char6').value = '';
+}
+function dialogue_new_password_clear(){
+    document.getElementById("dialogue_user_new_password").style.visibility = "hidden";
+    document.getElementById("user_new_password_auth").innerHTML='';
+    document.getElementById("user_new_password").value='';
+    document.getElementById("user_new_password_confirm").value='';
+    window.global_user_account_id = '';
+    window.global_rest_at = '';
 }
 /*----------------------- */
 /* BROADCAST              */
@@ -1680,6 +1698,7 @@ async function user_verify_check_input(item, nextField, lang_code, callBack) {
     let status;
     let json;
     let json_data;
+    let verification_type = parseInt(document.getElementById('user_verification_type').innerHTML);
     //only accept 0-9
     if (['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'].indexOf(document.getElementById(item.id).value) > -1)
         if (nextField == '' || (document.getElementById('user_verify_verification_char1').value != '' &
@@ -1705,7 +1724,8 @@ async function user_verify_check_input(item, nextField, lang_code, callBack) {
             document.getElementById('user_verify_verification_char6').classList.remove('input_error');
 
             //activate user
-            json_data = '{"verification_code":"' + verification_code + '"}';
+            json_data = `{"verification_code":${verification_code},
+                          "verification_type": ${verification_type}}`;
             fetch(window.global_rest_url_base + window.global_rest_user_account_activate + window.global_user_account_id +
                     '?app_id=' + window.global_app_id + 
                     '&lang_code=' + lang_code, {
@@ -1725,7 +1745,7 @@ async function user_verify_check_input(item, nextField, lang_code, callBack) {
                     if (status == 200) {
                         json = JSON.parse(result);
                         if (json.items[0].affectedRows == 1) {
-                            switch (document.getElementById('verification_type').innerHTML){
+                            switch (verification_type){
                                 case 1:{
                                     //LOGIN
                                     break;
@@ -1741,7 +1761,9 @@ async function user_verify_check_input(item, nextField, lang_code, callBack) {
                                 }
                                 case 3:{
                                     //FORGOT
+                                    window.global_rest_at	= json.accessToken;
                                     //show dialogue new password
+                                    show_common_dialogue('NEW_PASSWORD', null, json.auth);
                                     break;
                                 }
                             }
@@ -1755,7 +1777,8 @@ async function user_verify_check_input(item, nextField, lang_code, callBack) {
                             document.getElementById('signup_password_confirm').value = '';
                             document.getElementById('signup_password_reminder').value = '';
                             dialogue_verify_clear();
-                            return callBack(null, {actived: 1});
+                            return callBack(null, {"actived": 1, 
+                                                   "verification_type" : verification_type});
 
                         } else {
                             document.getElementById('user_verify_verification_char1').classList.add('input_error');
@@ -2018,13 +2041,21 @@ function user_account_app_delete(choice=null, user_account_id, app_id, lang_code
 }
 async function user_forgot(){
     let email = document.getElementById('forgot_email').value;
-    let json_data;
+    let json_data = `{
+                    "email": "${email}",
+                    "user_language": "${navigator.language}",
+                    "user_timezone": "${Intl.DateTimeFormat().resolvedOptions().timeZone}",
+                    "user_number_system": "${Intl.NumberFormat().resolvedOptions().numberingSystem}",
+                    "user_platform": "${navigator.platform}",
+                    "client_latitude": "${window.global_client_latitude}",
+                    "client_longitude": "${window.global_client_longitude}"
+                    }`;
     if (check_input(email, window.global_lang_code) == false || email =='')
         return;
     else{
         let old_button = document.getElementById('forgot_button').innerHTML;
         document.getElementById('forgot_button').innerHTML = window.global_button_spinner;
-        fetch(window.global_rest_url_base + window.global_rest_user_account_forgot + email +
+        fetch(window.global_rest_url_base + window.global_rest_user_account_forgot +
             '?app_id=' + window.global_app_id +
             '&lang_code=' + window.global_lang_code, {
             method: 'POST',
@@ -2053,7 +2084,63 @@ async function user_forgot(){
         })
     }
 }
-
+function updatePassword(){
+    let new_password = document.getElementById('user_new_password').value;
+    let new_password_confirm = document.getElementById('user_new_password_confirm').value;
+    let user_new_password_auth = document.getElementById('user_new_password_auth').innerHTML;
+    let json_data = `{
+                    "new_password" : "${new_password}",
+                    "auth" : "${user_new_password_auth}",
+                    "user_language": "${navigator.language}",
+                    "user_timezone": "${Intl.DateTimeFormat().resolvedOptions().timeZone}",
+                    "user_number_system": "${Intl.NumberFormat().resolvedOptions().numberingSystem}",
+                    "user_platform": "${navigator.platform}",
+                    "client_latitude": "${window.global_client_latitude}",
+                    "client_longitude": "${window.global_client_longitude}"
+                    }`;
+    if (check_input(new_password, window.global_lang_code) == false ||
+        check_input(new_password_confirm, window.global_lang_code) == false)
+        return;
+    else{
+        if (new_password == '') {
+            //"Please enter password"
+            document.getElementById('user_new_password').classList.add('input_error');
+            show_message('ERROR', 20304, null, null, window.global_main_app_id, lang_code);
+            return callBack('ERROR', null);
+        }
+        if (new_password != new_password_confirm) {
+            //Password not the same
+            show_message('ERROR', 20301, null, null, window.global_main_app_id, lang_code);
+            return null;
+        }
+        let old_button = document.getElementById('user_new_password_icon').innerHTML;
+        document.getElementById('user_new_password_icon').innerHTML = window.global_button_spinner;
+        fetch(window.global_rest_url_base + window.global_rest_user_account_password + window.global_user_account_id +
+            '?app_id=' + window.global_app_id +
+            '&lang_code=' + window.global_lang_code, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + window.global_rest_at
+            },
+            body: json_data
+        })
+        .then(function(response) {
+            status = response.status;
+            return response.text();
+        })
+        .then(function(result) {
+            document.getElementById('user_new_password_icon').innerHTML = old_button;
+            if (status == 200) {
+                json = JSON.parse(result);
+                dialogue_new_password_clear();
+                show_common_dialogue('LOGIN');
+            } else {
+                exception(status, result, window.global_lang_code);
+            }
+        })
+    }
+}
 /*----------------------- */
 /* USER PROVIDER          */
 /*----------------------- */
@@ -2291,7 +2378,6 @@ function set_globals(parameters){
     window.global_rest_at;
     window.global_rest_dt;
     window.global_rest_app;
-    window.global_rest_app_log;
     window.global_rest_app_object;
     window.global_rest_country;
     window.global_rest_language_locale;
@@ -2312,6 +2398,7 @@ function set_globals(parameters){
     window.global_rest_user_account_profile_userid;
     window.global_rest_user_account_provider;
     window.global_rest_user_account_signup;
+    window.global_rest_user_account_update_password;
     //Images uploaded
     window.global_image_file_allowed_type1;
     window.global_image_file_allowed_type2;
@@ -2508,7 +2595,7 @@ function init_common(parameters){
         //dialogue new password
         document.getElementById('user_new_password_icon').innerHTML = window.global_button_default_icon_password;
         document.getElementById('user_new_password_cancel').innerHTML = window.global_button_default_icon_cancel;
-        document.getElementById('user_new_password_close').innerHTML = window.global_button_default_icon_close;
+        document.getElementById('user_new_password_ok').innerHTML = window.global_button_default_icon_close;
         
         //dialogue user edit
         document.getElementById('user_edit_btn_avatar_img').innerHTML = window.global_button_default_icon_avatar_edit;
@@ -2560,10 +2647,9 @@ function init_common(parameters){
         document.getElementById('profile_top_row1_1').innerHTML = window.global_button_default_icon_follows;
         document.getElementById('profile_top_row1_2').innerHTML = window.global_button_default_icon_like + window.global_button_default_icon_follows;
         document.getElementById('profile_top_row1_3').innerHTML = window.global_button_default_icon_views;
-        //buttons
         document.getElementById('profile_home').innerHTML = window.global_button_default_icon_profile_top;
         document.getElementById('profile_close').innerHTML = window.global_button_default_icon_close;
-        //events
+        //login/signup/forgot
         document.getElementById('login_tab2').addEventListener('click', function() { show_common_dialogue('SIGNUP') }, false);
         document.getElementById('login_tab3').addEventListener('click', function() { show_common_dialogue('FORGOT') }, false);
         document.getElementById('login_close').addEventListener('click', function() { document.getElementById('dialogue_login').style.visibility = 'hidden' }, false);
@@ -2586,8 +2672,11 @@ function init_common(parameters){
         });
         document.getElementById('forgot_button').addEventListener('click', function() { user_forgot()}, false);
         document.getElementById('forgot_close').addEventListener('click', function() { document.getElementById('dialogue_forgot').style.visibility = 'hidden' }, false);
-
+        //dialogue message
         document.getElementById('message_cancel').addEventListener('click', function() { document.getElementById("dialogue_message").style.visibility = "hidden" }, false);
-
+        //dialogue new password
+        document.getElementById('user_new_password_cancel').addEventListener('click', function() { dialogue_new_password_clear(); }, false);
+        document.getElementById('user_new_password_ok').addEventListener('click', function() { updatePassword(); }, false);
+        
     }
 };

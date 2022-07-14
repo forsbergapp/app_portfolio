@@ -1747,7 +1747,10 @@ async function user_verify_check_input_app(item, nextField){
     await user_verify_check_input(item, nextField, get_lang_code(), (err, result) => {
         if ((err==null && result==null)==false)
             if(err==null){
-                user_login_app();
+                //login if LOGIN  or SIGNUP were verified succesfully
+                if (result.verification_type==1 ||
+                    result.verification_type==2)
+                    user_login_app();
             }
     })
 }
@@ -3138,7 +3141,6 @@ async function get_app_globals() {
                         window.global_app_user_provider2_api_src = json.data[i].parameter_value;
                     if (json.data[i].parameter_name=='USER_PROVIDER2_API_SRC2')
                         window.global_app_user_provider2_api_src2 = json.data[i].parameter_value;
-                    //REST
                     if (json.data[i].parameter_name=='REST_APP')
                         window.global_rest_app = json.data[i].parameter_value;
                     if (json.data[i].parameter_name=='REST_APP_OBJECT')
@@ -3181,6 +3183,8 @@ async function get_app_globals() {
                         window.global_rest_user_account_provider = json.data[i].parameter_value;
                     if (json.data[i].parameter_name=='REST_USER_ACCOUNT_SIGNUP')
                         window.global_rest_user_account_signup = json.data[i].parameter_value;
+                    if (json.data[i].parameter_name=='REST_USER_ACCOUNT_PASSWORD')
+                        window.global_rest_user_account_password = json.data[i].parameter_value;    
                     if (json.data[i].parameter_name=='SERVICE_GEOLOCATION')
                         window.global_service_geolocation = json.data[i].parameter_value;
                     if (json.data[i].parameter_name=='SERVICE_GEOLOCATION_GPS_PLACE')
