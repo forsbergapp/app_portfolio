@@ -1,5 +1,63 @@
 const {oracledb, get_pool, get_pool_admin} = require ("../../config/database");
 const { createLogAppSE } = require("../../../../service/log/log.service");
+function password_length_wrong(password){
+    //constraint should be in db but password is encrypted when in db trigger
+    //and saved with constant 60 characters length
+    //check length before encrypted here
+    if (password.length < 10 || password.length > 100){
+        //'Password 10 - 100 characters'
+        return true;
+    }
+    else
+        return false;
+}
+function get_app_code (errorNum, message, code, errno, sqlMessage){
+    var app_error_code = parseInt((JSON.stringify(errno) ?? JSON.stringify(errorNum)));
+    //check if user defined exception
+    if (app_error_code >= 20000){
+        return app_error_code;
+    } 
+    else{
+        //if known sql error
+        if (errorNum ==1 || code == "ER_DUP_ENTRY") {
+            var text_check;
+            if (sqlMessage)
+                text_check = JSON.stringify(sqlMessage);
+            else
+                text_check = JSON.stringify(message);
+            var app_message_code = '';
+            //check constraints errors, must be same name in mySQL and Oracle
+            if (text_check.toUpperCase().includes("USER_ACCOUNT_EMAIL_UN"))
+                app_message_code = 20200;
+            if (text_check.toUpperCase().includes("USER_ACCOUNT_PROVIDER1_ID_UN"))
+                app_message_code = 20201;
+            if (text_check.toUpperCase().includes("USER_ACCOUNT_PROVIDER2_ID_UN"))
+                app_message_code = 20202;
+            if (text_check.toUpperCase().includes("USER_ACCOUNT_USERNAME_UN"))
+                app_message_code = 20203;
+            if (app_message_code != ''){
+                return app_message_code;
+            }
+            else
+                return null;	
+        }
+        else
+            //Oracle: value too large for column...
+            //returns errorNum, message and offset 
+            //mySQL:  gives more info
+            //"code":"ER_DATA_TOO_LONG",
+            //"errno":1406,
+            //"sqlMessage":"Data too long for column 'password_reminder' at row 1",
+            //"sqlState":"22001"
+            if (errorNum ==12899 || errno==1406)
+                return 20204;
+            else
+                return null;
+    }
+};
+function verification_code(){
+    return Math.floor(100000 + Math.random() * 900000);
+}
 module.exports = {
     create: (app_id, data, callBack) => {
 		if (typeof data.provider1_id != 'undefined' && 
@@ -1945,3 +2003,6 @@ module.exports = {
         }
     }
 };
+module.exports.password_length_wrong = password_length_wrong;
+module.exports.get_app_code = get_app_code;
+module.exports.verification_code = verification_code;

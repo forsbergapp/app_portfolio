@@ -1,4 +1,7 @@
 const {
+    password_length_wrong, 
+    get_app_code,
+    verification_code,
     create,
     activateUser,
     updateUserVerificationCode,
@@ -30,53 +33,7 @@ const { getParameter } = require ("../app_parameter/app_parameter.service");
 const { sendEmail } = require("../../../../service/mail/mail.controller");
 const { createLogAppCI } = require("../../../../service/log/log.service");
 const { accessToken } = require("../../../../service/auth/auth.controller");
-function get_app_code (errorNum, message, code, errno, sqlMessage){
-    var app_error_code = parseInt((JSON.stringify(errno) ?? JSON.stringify(errorNum)));
-    //check if user defined exception
-    if (app_error_code >= 20000){
-        return app_error_code;
-    } 
-    else{
-        //if known sql error
-        if (errorNum ==1 || code == "ER_DUP_ENTRY") {
-            var text_check;
-            if (sqlMessage)
-                text_check = JSON.stringify(sqlMessage);
-            else
-                text_check = JSON.stringify(message);
-            var app_message_code = '';
-            //check constraints errors, must be same name in mySQL and Oracle
-            if (text_check.toUpperCase().includes("USER_ACCOUNT_EMAIL_UN"))
-                app_message_code = 20200;
-            if (text_check.toUpperCase().includes("USER_ACCOUNT_PROVIDER1_ID_UN"))
-                app_message_code = 20201;
-            if (text_check.toUpperCase().includes("USER_ACCOUNT_PROVIDER2_ID_UN"))
-                app_message_code = 20202;
-            if (text_check.toUpperCase().includes("USER_ACCOUNT_USERNAME_UN"))
-                app_message_code = 20203;
-            if (app_message_code != ''){
-                return app_message_code;
-            }
-            else
-                return null;	
-        }
-        else
-            //Oracle: value too large for column...
-            //returns errorNum, message and offset 
-            //mySQL:  gives more info
-            //"code":"ER_DATA_TOO_LONG",
-            //"errno":1406,
-            //"sqlMessage":"Data too long for column 'password_reminder' at row 1",
-            //"sqlState":"22001"
-            if (errorNum ==12899 || errno==1406)
-                return 20204;
-            else
-                return null;
-    }
-};
-function verification_code(){
-    return Math.floor(100000 + Math.random() * 900000);
-}
+
 module.exports = {
     
     userSignup: (req, res) => {
@@ -87,87 +44,97 @@ module.exports = {
             //generate verification code for local users only
             body.verification_code = verification_code();
         }
-        if (body.password)
-            body.password = hashSync(body.password, salt);
-        create(req.query.app_id, body, (err, results) => {
-            if (err) {
-                var app_code = get_app_code(err.errorNum, 
-                                            err.message, 
-                                            err.code, 
-                                            err.errno, 
-                                            err.sqlMessage);
-                if (app_code != null){
-                    getMessage(app_code, 
-                               process.env.MAIN_APP_ID, 
-                               req.query.lang_code, (err2,results2)  => {
-                                    return res.status(500).send(
-                                        results2.text
-                                    );
-                               });
-                }
-                else
-                    return res.status(500).send(
-                        err
-                    );
-            }
-            else{
-                //set variable for accesstoken
-                req.body.app_id = req.query.app_id;
-                if (typeof req.body.provider1_id == 'undefined' &&
-                    typeof req.body.provider2_id == 'undefined') {
-                    getParameter(process.env.MAIN_APP_ID,'SERVICE_MAIL_TYPE_SIGNUP', (err3, parameter_value)=>{
-                        //send email for local users only
-                        const emailData = {
-                            lang_code : req.query.lang_code,
-                            app_id : process.env.MAIN_APP_ID,
-                            app_user_id : results.insertId,
-                            emailType : parameter_value,
-                            toEmail : req.body.email,
-                            verificationCode : body.verification_code,
-                            user_language: body.user_language,
-                            user_timezone: body.user_timezone,
-                            user_number_system: body.user_number_system,
-                            user_platform: body.user_platform,
-                            server_remote_addr : req.ip,
-                            server_user_agent : req.headers["user-agent"],
-                            server_http_host : req.headers["host"],
-                            server_http_accept_language : req.headers["accept-language"],
-                            client_latitude : req.body.client_latitude,
-                            client_longitude : req.body.client_longitude,
-                            protocol : req.protocol,
-                            host : req.get('host')
-                        }
-                        //send email SIGNUP
-                        sendEmail(emailData, (err4, result4) => {
-                            if (err4) {
-                                //return res from userSignup
-                                return res.status(500).send(
-                                    err4
-                                );
-                            } 
-                            else
-                                accessToken(req, (err5, Token)=>{
-                                    return res.status(200).json({
-                                        success: 1,
-                                        accessToken: Token,
-                                        id: results.insertId,
-                                        data: results
-                                    });
+        if (password_length_wrong(body.password))
+            getMessage(20106, 
+                       process.env.MAIN_APP_ID, 
+                       req.query.lang_code, (err2,results2)  => {
+                            return res.status(500).send(
+                                results2.text
+                            );
+                       });
+        else{
+            if (body.password)
+                body.password = hashSync(body.password, salt);
+            create(req.query.app_id, body, (err, results) => {
+                if (err) {
+                    var app_code = get_app_code(err.errorNum, 
+                                                err.message, 
+                                                err.code, 
+                                                err.errno, 
+                                                err.sqlMessage);
+                    if (app_code != null){
+                        getMessage(app_code, 
+                                process.env.MAIN_APP_ID, 
+                                req.query.lang_code, (err2,results2)  => {
+                                        return res.status(500).send(
+                                            results2.text
+                                        );
                                 });
-                        });  
-                    })
+                    }
+                    else
+                        return res.status(500).send(
+                            err
+                        );
                 }
-                else
-                    accessToken(req, (err6, Token)=>{
-                        return res.status(200).json({
-                            success: 1,
-                            accessToken: Token,
-                            id: results.insertId,
-                            data: results
+                else{
+                    //set variable for accesstoken
+                    req.body.app_id = req.query.app_id;
+                    if (typeof req.body.provider1_id == 'undefined' &&
+                        typeof req.body.provider2_id == 'undefined') {
+                        getParameter(process.env.MAIN_APP_ID,'SERVICE_MAIL_TYPE_SIGNUP', (err3, parameter_value)=>{
+                            //send email for local users only
+                            const emailData = {
+                                lang_code : req.query.lang_code,
+                                app_id : process.env.MAIN_APP_ID,
+                                app_user_id : results.insertId,
+                                emailType : parameter_value,
+                                toEmail : req.body.email,
+                                verificationCode : body.verification_code,
+                                user_language: body.user_language,
+                                user_timezone: body.user_timezone,
+                                user_number_system: body.user_number_system,
+                                user_platform: body.user_platform,
+                                server_remote_addr : req.ip,
+                                server_user_agent : req.headers["user-agent"],
+                                server_http_host : req.headers["host"],
+                                server_http_accept_language : req.headers["accept-language"],
+                                client_latitude : req.body.client_latitude,
+                                client_longitude : req.body.client_longitude,
+                                protocol : req.protocol,
+                                host : req.get('host')
+                            }
+                            //send email SIGNUP
+                            sendEmail(emailData, (err4, result4) => {
+                                if (err4) {
+                                    //return res from userSignup
+                                    return res.status(500).send(
+                                        err4
+                                    );
+                                } 
+                                else
+                                    accessToken(req, (err5, Token)=>{
+                                        return res.status(200).json({
+                                            success: 1,
+                                            accessToken: Token,
+                                            id: results.insertId,
+                                            data: results
+                                        });
+                                    });
+                            });  
+                        })
+                    }
+                    else
+                        accessToken(req, (err6, Token)=>{
+                            return res.status(200).json({
+                                success: 1,
+                                accessToken: Token,
+                                id: results.insertId,
+                                data: results
+                            });
                         });
-                    });
-            }
-        });
+                }
+            });
+        }
     },
     activateUser: (req, res) => {
         const verification_code_to_check = req.body.verification_code;
@@ -527,49 +494,61 @@ module.exports = {
                 if (results) {
                     const result = compareSync(body.password, results.password);
                     if (result) {
-                        if (typeof body.new_password !== 'undefined' && body.new_password != '') {
-                            body.password = hashSync(body.new_password, salt);
-                        } else {
-                            if (body.password)
-                                body.password = hashSync(body.password, salt);
-                        }
-                        updateUserLocal(req.query.app_id, body, id, (err_update, results_update) => {
-                            if (err_update) {
-                                var app_code = get_app_code(err_update.errorNum, 
-                                                            err_update.message, 
-                                                            err_update.code, 
-                                                            err_update.errno, 
-                                                            err_update.sqlMessage);
-                                if (app_code != null)
-                                    getMessage(app_code, 
-                                                process.env.MAIN_APP_ID, 
-                                                req.query.lang_code, (err2,results2)  => {
-                                                    return res.status(500).send(
-                                                        results2.text
-                                                    );
-                                                });
-                                else
-                                    return res.status(500).send(
-                                        err_update
-                                    );
+                        if (typeof body.new_password !== 'undefined' && 
+                            body.new_password != '' &&
+                            password_length_wrong(body.new_password))
+                                getMessage(20106, 
+                                        process.env.MAIN_APP_ID, 
+                                        req.query.lang_code, (err2,results2)  => {
+                                                return res.status(500).send(
+                                                    results2.text
+                                                );
+                                        });
+                        else{
+                            if (typeof body.new_password !== 'undefined' && body.new_password != '') {
+                                body.password = hashSync(body.new_password, salt);
+                            } else {
+                                if (body.password)
+                                    body.password = hashSync(body.password, salt);
                             }
-                            else{
-                                if (!results_update) {
-                                    //"Failed to update user"
-                                    getMessage(20402, 
-                                                process.env.MAIN_APP_ID, 
-                                                req.query.lang_code, (err2,results2)  => {
-                                                    return res.status(500).send(
-                                                        results2.text
-                                                    );
-                                                });
+                            updateUserLocal(req.query.app_id, body, id, (err_update, results_update) => {
+                                if (err_update) {
+                                    var app_code = get_app_code(err_update.errorNum, 
+                                                                err_update.message, 
+                                                                err_update.code, 
+                                                                err_update.errno, 
+                                                                err_update.sqlMessage);
+                                    if (app_code != null)
+                                        getMessage(app_code, 
+                                                    process.env.MAIN_APP_ID, 
+                                                    req.query.lang_code, (err2,results2)  => {
+                                                        return res.status(500).send(
+                                                            results2.text
+                                                        );
+                                                    });
+                                    else
+                                        return res.status(500).send(
+                                            err_update
+                                        );
                                 }
-                                else
-                                    return res.status(200).json({
-                                        success: 1
-                                    });
-                            }
-                        });
+                                else{
+                                    if (!results_update) {
+                                        //"Failed to update user"
+                                        getMessage(20402, 
+                                                    process.env.MAIN_APP_ID, 
+                                                    req.query.lang_code, (err2,results2)  => {
+                                                        return res.status(500).send(
+                                                            results2.text
+                                                        );
+                                                    });
+                                    }
+                                    else
+                                        return res.status(200).json({
+                                            success: 1
+                                        });
+                                }
+                            });
+                        }
                     } else {
                         createLogAppCI(req, res, req.query.app_id, __appfilename, __appfunction, __appline, 'invalid password attempt for user id:' + id);
                         //invalid password
@@ -595,71 +574,81 @@ module.exports = {
         });
     },
     updatePassword: (req, res) =>{
-        const salt = genSaltSync(10);
-        req.body.new_password = hashSync(req.body.new_password, salt);
-        updatePassword(req.query.app_id, req.params.id, req.body, (err, results) => {
-            if (err) {
-                var app_code = get_app_code(err.errorNum, 
-                                            err.message, 
-                                            err.code, 
-                                            err.errno, 
-                                            err.sqlMessage);
-                if (app_code != null){
-                    getMessage(app_code, 
-                               process.env.MAIN_APP_ID, 
-                               req.query.lang_code, (err2,results2)  => {
-                                    return res.status(500).send(
-                                        results2.text
-                                    );
-                               });
-                }
-                else
-                    return res.status(500).send(
-                        err
-                    );
-            }
-            else {
-                if (!results) {
-                    //record not found
-                    getMessage(20400, 
-                                process.env.MAIN_APP_ID, 
-                                req.query.lang_code, (err2,results2)  => {
-                                    return res.status(500).send(
-                                        results2.text
-                                    );
-                                });
-                }
-                else{
-                    const eventData = {
-                        app_id : req.query.app_id,
-                        user_account_id: req.params.id,
-                        event: 'PASSWORD_RESET',
-                        event_status: 'SUCCESSFUL',
-                        user_language: req.body.user_language,
-                        user_timezone: req.body.user_timezone,
-                        user_number_system: req.body.user_number_system,
-                        user_platform: req.body.user_platform,
-                        server_remote_addr : req.ip,
-                        server_user_agent : req.headers["user-agent"],
-                        server_http_host : req.headers["host"],
-                        server_http_accept_language : req.headers["accept-language"],
-                        client_latitude : req.body.client_latitude,
-                        client_longitude : req.body.client_longitude
+        if (password_length_wrong(req.body.new_password))
+            getMessage(20106, 
+                       process.env.MAIN_APP_ID, 
+                       req.query.lang_code, (err2,results2)  => {
+                            return res.status(500).send(
+                                results2.text
+                            );
+                       });
+        else{
+            const salt = genSaltSync(10);
+            req.body.new_password = hashSync(req.body.new_password, salt);
+            updatePassword(req.query.app_id, req.params.id, req.body, (err, results) => {
+                if (err) {
+                    var app_code = get_app_code(err.errorNum, 
+                                                err.message, 
+                                                err.code, 
+                                                err.errno, 
+                                                err.sqlMessage);
+                    if (app_code != null){
+                        getMessage(app_code, 
+                                   process.env.MAIN_APP_ID, 
+                                   req.query.lang_code, (err2,results2)  => {
+                                        return res.status(500).send(
+                                            results2.text
+                                        );
+                                   });
                     }
-                    insertUserEvent(eventData, (err, result_new_user_event)=>{
-                        if (err)
-                            return res.status(200).json({
-                                success: 1,
-                                sent: 0
-                            });
-                        else
-                            return res.status(200).json({
-                                success: 1
-                            });
-                    })
+                    else
+                        return res.status(500).send(
+                            err
+                        );
                 }
-            }
-        });
+                else {
+                    if (!results) {
+                        //record not found
+                        getMessage(20400, 
+                                    process.env.MAIN_APP_ID, 
+                                    req.query.lang_code, (err2,results2)  => {
+                                        return res.status(500).send(
+                                            results2.text
+                                        );
+                                    });
+                    }
+                    else{
+                        const eventData = {
+                            app_id : req.query.app_id,
+                            user_account_id: req.params.id,
+                            event: 'PASSWORD_RESET',
+                            event_status: 'SUCCESSFUL',
+                            user_language: req.body.user_language,
+                            user_timezone: req.body.user_timezone,
+                            user_number_system: req.body.user_number_system,
+                            user_platform: req.body.user_platform,
+                            server_remote_addr : req.ip,
+                            server_user_agent : req.headers["user-agent"],
+                            server_http_host : req.headers["host"],
+                            server_http_accept_language : req.headers["accept-language"],
+                            client_latitude : req.body.client_latitude,
+                            client_longitude : req.body.client_longitude
+                        }
+                        insertUserEvent(eventData, (err, result_new_user_event)=>{
+                            if (err)
+                                return res.status(200).json({
+                                    success: 1,
+                                    sent: 0
+                                });
+                            else
+                                return res.status(200).json({
+                                    success: 1
+                                });
+                        })
+                    }
+                }
+            });
+        }
     },
     updateUserCommon: (req, res) => {
         const id = req.params.id;
