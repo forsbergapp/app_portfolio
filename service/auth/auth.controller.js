@@ -3,6 +3,7 @@ const { verify } = require("jsonwebtoken");
 const { createLog} = require ("../../service/db/api/app_log/app_log.service");
 const { getParameter, getParameters_server } = require ("../db/api/app_parameter/app_parameter.service");
 const { createLogAppSE, createLogAppCI } = require("../../service/log/log.service");
+const { json } = require("express");
 function app_log(app_id, app_module_type, request, result, app_user_id,
                  user_language, user_timezone,user_number_system,user_platform,
                  server_remote_addr, server_user_agent, server_http_host,server_http_accept_language,
@@ -32,9 +33,9 @@ function app_log(app_id, app_module_type, request, result, app_user_id,
 module.exports = {
     access_control: (req, res, callBack) => {
         let ip_v4 = req.ip.replace('::ffff:','');
+        const fs = require("fs");
         async function block_ip_control(callBack){
             if (process.env.SERVICE_AUTH_BLOCK_IP_RANGE){
-                const fs = require("fs");
                 let ranges;
                 fs.readFile(process.env.SERVICE_AUTH_BLOCK_IP_RANGE, 'utf8', (error, fileBuffer) => {
                     if (error)
@@ -66,6 +67,34 @@ module.exports = {
             else
                 return callBack(null, null);
         }
+        async function safe_user_agents(user_agent, callBack){
+            /*format file
+                {"user_agent": [
+                                {"Name": "YahooMailProxy", 
+                                 "user_agent": "YahooMailProxy; https://help.yahoo.com/kb/yahoo-mail-proxy-SLN28749.html"},
+                                 {"Name": "OtherSafe", 
+                                 "user_agent": "Some known user agent description with missing accept_language"}
+                               ]
+                }
+            */
+            if (process.env.SERVICE_AUTH_SAFE_USER_AGENT){
+                let json;
+                fs.readFile(process.env.SERVICE_AUTH_SAFE_USER_AGENT, 'utf8', (error, fileBuffer) => {
+                    if (error)
+                        return callBack(error, null);
+                    else{
+                        json = JSON.parse(fileBuffer.toString());
+                        for (var i = 0; i < json.user_agent.length; i++){
+                            if (json.user_agent[i].user_agent == user_agent)
+                                return callBack(null, true);
+                        }
+                        return callBack(null, false);
+                    }
+                })
+            }
+            else
+                return callBack(null, false);
+        }
         block_ip_control((err, result) =>{
             if (err)
                 return callBack(err,null);
@@ -83,19 +112,29 @@ module.exports = {
                     //406 Not Acceptable
                     return callBack(406,null);
                 }
-                //check if user-agent exists
-                if (typeof req.headers["user-agent"]=='undefined'){
-                    createLogAppCI(req, res, null, __appfilename, __appfunction, __appline, `ip ${ip_v4} blocked, no user-agent, tried URL: ${req.originalUrl}`);
-                    //406 Not Acceptable
-                    return callBack(406,null);
-                }
-                //check if accept-language exists
-                if (typeof req.headers["accept-language"]=='undefined'){
-                    createLogAppCI(req, res, null, __appfilename, __appfunction, __appline, `ip ${ip_v4} blocked, no accept-language, tried URL: ${req.originalUrl}`);
-                    //406 Not Acceptable
-                    return callBack(406,null);
-                }
-                return callBack(null,1);
+                safe_user_agents(req.headers["user-agent"], (err, safe)=>{
+                    if (err)
+                        null;
+                    else{
+                        if (safe==true)
+                            return callBack(null,1);
+                        else{
+                            //check if user-agent exists
+                            if (typeof req.headers["user-agent"]=='undefined'){
+                                createLogAppCI(req, res, null, __appfilename, __appfunction, __appline, `ip ${ip_v4} blocked, no user-agent, tried URL: ${req.originalUrl}`);
+                                //406 Not Acceptable
+                                return callBack(406,null);
+                            }
+                            //check if accept-language exists
+                            if (typeof req.headers["accept-language"]=='undefined'){
+                                createLogAppCI(req, res, null, __appfilename, __appfunction, __appline, `ip ${ip_v4} blocked, no accept-language, tried URL: ${req.originalUrl}`);
+                                //406 Not Acceptable
+                                return callBack(406,null);
+                            }
+                            return callBack(null,1);
+                        }
+                    }
+                })
             }
         })
     },
