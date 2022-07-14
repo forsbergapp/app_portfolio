@@ -217,16 +217,17 @@ module.exports = {
             execute_sql();
         }
     },
-    activateUser: (app_id, id, verification_code, callBack) => {
+    activateUser: (app_id, id, verification_code, auth, callBack) => {
         if (process.env.SERVICE_DB_USE == 1) {
             get_pool(app_id).query(
                 `UPDATE ${process.env.SERVICE_DB_DB1_NAME}.user_account
 					SET	active = 1,
-				  	    verification_code = null,
+				  	    verification_code = ?,
 						date_modified = SYSDATE()
 				  WHERE id = ?
 					AND verification_code = ?`, 
-				[id,
+				[auth,
+				 id,
                  verification_code
                 ],
                 (error, results, fields) => {
@@ -249,11 +250,12 @@ module.exports = {
                     const result_sql = await pool2.execute(
                         `UPDATE ${process.env.SERVICE_DB_DB2_NAME}.user_account
 						    SET	active = 1,
-								verification_code = null,
+								verification_code = :auth,
 								date_modified = SYSDATE
 						  WHERE id = :id
 						    AND verification_code = :verification_code `, 
 						{
+							auth: auth,
                             id: id,
                             verification_code: verification_code
                         },
@@ -291,6 +293,7 @@ module.exports = {
             get_pool(app_id).query(
                 `UPDATE ${process.env.SERVICE_DB_DB1_NAME}.user_account
 					SET	verification_code = ?,
+					    active = 0,
 						date_modified = SYSDATE()
 				  WHERE id = ?`, 
 				[verification_code,
@@ -316,6 +319,7 @@ module.exports = {
                     const result_sql = await pool2.execute(
                         `UPDATE ${process.env.SERVICE_DB_DB2_NAME}.user_account
 						    SET	verification_code = :verification_code,
+							    active = 0,
 								date_modified = SYSDATE
 						  WHERE id = :id `, 
 						{verification_code: verification_code,
@@ -1214,6 +1218,65 @@ module.exports = {
             execute_sql();
         }
     },
+	updatePassword: (app_id, id, data, callBack) => {
+        if (process.env.SERVICE_DB_USE == 1) {
+            get_pool(app_id).query(
+                `UPDATE ${process.env.SERVICE_DB_DB1_NAME}.user_account
+				    SET password = ?
+				  WHERE id = ? 
+				    AND verification_code = ?
+				    AND verification_code IS NOT NULL`, 
+				[data.new_password,
+				 id,
+				 data.auth],
+                (error, results, fields) => {
+                    if (error) {
+						createLogAppSE(app_id, __appfilename, __appfunction, __appline, error);
+                        return callBack(error);
+                    }
+                    return callBack(null, results);
+                }
+            )
+        } else if (process.env.SERVICE_DB_USE == 2) {
+            async function execute_sql(err, result) {
+				let pool2;
+                try {
+                    pool2 = await oracledb.getConnection(get_pool(app_id));
+                    const result = await pool2.execute(
+                        `UPDATE ${process.env.SERVICE_DB_DB2_NAME}.user_account
+							SET password = :new_password
+						  WHERE id = :id  
+						    AND verification_code = :auth
+						    AND verification_code IS NOT NULL`, 
+						{
+							new_password: data.new_password,
+                            id: id,
+							auth: data.auth
+                        },
+                        (err, result) => {
+                            if (err) {
+								createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
+                                return callBack(err);
+                            } else {
+                                return callBack(null, result);
+                            }
+                        });
+                } catch (err) {
+					createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
+                    return callBack(err.message);
+                } finally {
+                    if (pool2) {
+						try {
+							await pool2.close(); 
+						} catch (err) {
+							createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
+						}
+					}
+                }
+            }
+            execute_sql();
+        }
+    },
     updateUserLocal: (app_id, data, search_id, callBack) => {
         if (process.env.SERVICE_DB_USE == 1) {
             get_pool(app_id).query(
@@ -1804,6 +1867,59 @@ module.exports = {
 								  WHERE provider2_id IS NOT NULL) "count_provider2"
 						FROM DUAL`,  
 				 		{},
+                        (err, result) => {
+                            if (err) {
+								createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
+                                return callBack(err);
+                            } else {
+                                return callBack(null, result.rows[0]);
+                            }
+                        });
+                } catch (err) {
+					createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
+                    return callBack(err.message);
+                } finally {
+                    if (pool2) {
+						try {
+							await pool2.close(); 
+						} catch (err) {
+							createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
+						}
+					}
+                }
+            }
+            execute_sql();
+        }
+    },
+	getEmailUser: (app_id, email, callBack) => {
+        if (process.env.SERVICE_DB_USE == 1) {
+            get_pool(app_id).query(
+                `SELECT id,
+						email
+				   FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account
+				  WHERE email = ? `,
+				[email],
+                (error, results, fields) => {
+                    if (error) {
+						createLogAppSE(app_id, __appfilename, __appfunction, __appline, error);
+                        return callBack(error);
+                    }
+                    return callBack(null, results[0]);
+                }
+            )
+        } else if (process.env.SERVICE_DB_USE == 2) {
+            async function execute_sql(err, result) {
+				let pool2;
+                try {
+                    pool2 = await oracledb.getConnection(get_pool(app_id));
+                    const result = await pool2.execute(
+                        `SELECT id "id,
+								email "email"
+						   FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account
+						  WHERE email = :email `, 
+						{
+                            email: email
+                        },
                         (err, result) => {
                             if (err) {
 								createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);

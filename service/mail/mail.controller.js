@@ -78,7 +78,7 @@ module.exports = {
     sendEmail: (data, callBack) => {
         let emailData;
         let db_SERVICE_MAIL_TYPE_CHANGE_EMAIL_FROM_NAME;
-        let db_SERVICE_MAIL_TYPE_RESET_PASSWORD_FROM_NAME;
+        let db_SERVICE_MAIL_TYPE_PASSWORD_RESET_FROM_NAME;
         let db_SERVICE_MAIL_TYPE_SIGNUP_FROM_NAME;
         let db_SERVICE_MAIL_TYPE_UNVERIFIED_FROM_NAME;
         let db_SERVICE_MAIL_HOST;
@@ -99,8 +99,8 @@ module.exports = {
                 for (var i = 0; i < json.length; i++){
                     if (json[i].parameter_name=='SERVICE_MAIL_TYPE_CHANGE_EMAIL_FROM_NAME')
                         db_SERVICE_MAIL_TYPE_CHANGE_EMAIL_FROM_NAME = json[i].parameter_value;
-                    if (json[i].parameter_name=='SERVICE_MAIL_TYPE_RESET_PASSWORD_FROM_NAME')
-                        db_SERVICE_MAIL_TYPE_RESET_PASSWORD_FROM_NAME = json[i].parameter_value;
+                    if (json[i].parameter_name=='SERVICE_MAIL_TYPE_PASSWORD_RESET_FROM_NAME')
+                        db_SERVICE_MAIL_TYPE_PASSWORD_RESET_FROM_NAME = json[i].parameter_value;
                     if (json[i].parameter_name=='SERVICE_MAIL_TYPE_SIGNUP_FROM_NAME')
                         db_SERVICE_MAIL_TYPE_SIGNUP_FROM_NAME = json[i].parameter_value;
                     if (json[i].parameter_name=='SERVICE_MAIL_TYPE_UNVERIFIED_FROM_NAME')
