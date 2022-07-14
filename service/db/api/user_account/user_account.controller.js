@@ -267,7 +267,7 @@ module.exports = {
                                                         const emailData = {
                                                             lang_code : req.query.lang_code,
                                                             app_id : process.env.MAIN_APP_ID,
-                                                            app_user_id : req.body.user_account_id,
+                                                            app_user_id : results.id,
                                                             emailType : parameter_value,
                                                             toEmail : email,
                                                             verificationCode : new_code,
@@ -854,7 +854,7 @@ module.exports = {
                                         const emailData = {
                                             lang_code : req.query.lang_code,
                                             app_id : process.env.MAIN_APP_ID,
-                                            app_user_id : req.body.user_account_id,
+                                            app_user_id : results.id,
                                             emailType : parameter_value,
                                             toEmail : results.email,
                                             verificationCode : new_code,
