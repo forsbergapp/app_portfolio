@@ -392,6 +392,7 @@
 }
 #profile_search_icon{
 	display: inline-block;
+	cursor: pointer;
 }
 #profile_search_list{
 	height:120px;
