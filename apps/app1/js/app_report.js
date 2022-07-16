@@ -177,7 +177,7 @@ async function timetable_user_setting_get(user_setting_id, lang_code, callBack) 
 				callBack(result, null);
         })
 }
-function updateReportViewStat(user_account_id, user_setting_id, lang_code) {
+function updateReportViewStat(user_account_id, user_setting_id) {
     let status;
     let json_data =`{
                     "user_account_id":${user_account_id},
@@ -187,7 +187,7 @@ function updateReportViewStat(user_account_id, user_setting_id, lang_code) {
                     }`;
     fetch(window.global_rest_url_base + window.global_rest_app1_user_setting_view +
             '?app_id=' + window.global_app_id + 
-            '&lang_code=' + lang_code, {
+            '&lang_code=' + window.global_lang_code, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -1415,7 +1415,7 @@ function init_report(parameters) {
         get_report_globals().then(function(){
             //report start
             if (inIframe() == false) {
-                updateReportViewStat(user_account_id, user_setting_id, lang_code);
+                updateReportViewStat(user_account_id, user_setting_id);
             }
 			switch (reporttype) {
                 //day
