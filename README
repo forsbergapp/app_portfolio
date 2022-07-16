@@ -33,7 +33,7 @@ Includes
 	Centralized data model error handling of database errors, constraints errors and 
 	application errors and showed in users language.
 	Timetables can be displayed with different themes using CSS3.
-	User interface and timetables can be displayed in any language with help of Google Noto Fonts
+	User interface and timetables can be displayed in any language
 	and translation of user interface is fetched from translation objects data model.
 	
 	Server generated PDF and HTML generated timetables are pixel perfect designed using pt font sizes
@@ -123,25 +123,26 @@ installation instructions
    import scripts/import.sql
    import language scripts/*.sql files
 
-3. register sign in provider 1 - Google Identity
-   requires hostname
-   https://console.developers.google.com/
+3. register sign in provider 1
+   
+   default USER_PROVIDER1_USE=0 hides login button and app will not use SDK
+	
+   TABLE app_parameter
+   USER_PROVIDER1_USE		0
+   USER_PROVIDER1_API_SRC	{PROVIDER1_SRC}
+   USER_PROVIDER1_ID		{PROVIDER1_ID}
+   USER_PROVIDER1_NAME		{PROVIDER1_NAME}
 
-   if not using Google
-   set database parameter USER_PROVIDER1_USE=0
-   hides login button and app will not use SDK
+4. register sign in provider 2
+   
+   default USER_PROVIDER2_USE=0 hides login button and app will not use SDK
 
-   default USER_PROVIDER1_USE=1
-
-4. register sign in provider 2 - Facebook login
-
-   https://developers.facebook.com/docs/facebook-login/web
-
-   if not using Facebook 
-   set database parameter USER_PROVIDER1_USE=0
-   hides login button and app will not use SDK
-
-   default USER_PROVIDER2_USE=1
+   TABLE app_parameter
+   USER_PROVIDER2_USE		0
+   USER_PROVIDER2_API_SRC	{PROVIDER1_SRC_PATH}
+   USER_PROVIDER2_API_SRC2	{PROVIDER1_SRC_SDKFILE}
+   USER_PROVIDER2_ID		{PROVIDER1_ID}
+   USER_PROVIDER2_NAME		{PROVIDER1_NAME}
 
 5. register mapbox 
    get access token
@@ -183,7 +184,9 @@ SERVER_JSON_LIMIT                          			=10MB
 SERVER_ADMIN_NAME									={ADMIN_USERNAME}
 SERVER_ADMIN_PASSWORD								={ADMIN_PASSWORD}
 #service variables
-SERVICE_AUTH_BLOCK_IP_RANGE                 		={PATH/BLOCKIP.txt}
+SERVICE_AUTH_BLOCK_IP_RANGE                 		={PATH/BLOCKIP.JSON}
+SERVICE_AUTH_SAFE_USER_AGENT						={PATH/SAFE_USER_AGENTS.JSON}
+SERVICE_AUTH_POLICY_DIRECTIVES						={PATH/POLICY_DIRETIVES.JSON}
 SERVICE_AUTH_ADMIN_TOKEN_EXPIRE_ACCESS				=1d
 SERVICE_AUTH_ADMIN_TOKEN_SECRET						={ADMIN_TOKEN_SECRET}
 #What database to use
