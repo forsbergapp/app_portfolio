@@ -286,7 +286,6 @@ a:active {
 }	
 /*Dialogue profile*/
 #profile_main_btn_cloud{
-	font-size: 16px;
 	height: 20px;
 }
 /*Dialogue login/signup/forgot*/
@@ -865,6 +864,7 @@ div.ray8 {
 	color: #404040;
 	background: rgb(81, 171, 255);
 	font-size: 16px;
+	font-family: 'Noto Sans';
 }
 .theme_sun a:link{
 	color:#a49775;
@@ -891,8 +891,6 @@ div.ray8 {
 .theme_sun #user_menu_dropdown{
 	background-color: #fefefe;
 	box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);	
-	font-family: 'Noto Sans';
-	font-size: 16px;
 }
 .theme_sun .cloud {
 		background: #fff;
@@ -1008,6 +1006,7 @@ div.ray8 {
 	color: #e2e2e2;
 	background: rgb(0 2 70);
 	font-size: 16px;
+	font-family: 'Noto Sans';
 }
 .theme_moon a:link{
 	color:#a49775;
@@ -1035,8 +1034,6 @@ div.ray8 {
 	color: #e2e2e2;
 	background: rgb(68, 68, 68);
 	box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
-	font-family: 'Noto Sans';
-	font-size: 16px;
 }
 .theme_moon .cloud {
 	background: #f1f1f1;

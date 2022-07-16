@@ -318,5 +318,81 @@ module.exports = {
                 return  callBack(null,jsontoken_at);
             }
         })
+    },
+    policy_directives:(callBack)=>{
+        /* format json with directives:
+          {"directives":
+                [
+                    { "type": "script",
+                    "domain": "'self', 'unsafe-inline', 'unsafe-eval', domain1, domain2"
+                    },
+                    { "type": "style",
+                    "domain": "'self', 'unsafe-inline', domain1, domain2"
+                    },
+                    { "type": "font",
+                    "domain": "self, domain1, domain2"
+                    },
+                    { "type": "frame",
+                    "domain": "'self', data:, domain1, domain2"
+                    }
+                ]
+            }
+        */
+        const fs = require("fs");
+        if (process.env.SERVICE_AUTH_POLICY_DIRECTIVES){
+            let json;
+            let script_src = '';
+            let style_src = '';
+            let font_src = '';
+            let frame_src = '';
+            fs.readFile(process.env.SERVICE_AUTH_POLICY_DIRECTIVES, 'utf8', (error, fileBuffer) => {
+                if (error){
+                    createLogAppSE(process.env.MAIN_APP_ID, __appfilename, __appfunction, __appline, error);
+                    return callBack(error, null);
+                }
+                else{
+                    json = JSON.parse(fileBuffer.toString());
+                    for (var i = 0; i < json.directives.length; i++){
+                        json.directives[i].domain = json.directives[i].domain.replace(' ','');
+                        let arr = json.directives[i].domain.split(",");
+                        for (let i=0;i<=arr.length-1;i++){
+                            arr[i] = arr[i].replace(' ','');
+                        }
+                        switch (json.directives[i].type){
+                            case 'script':{
+                                script_src = arr;
+                                break;
+                            }
+                            case 'style':{
+                                style_src = arr;
+                                break;
+                            }
+                            case 'font':{
+                                font_src = arr;
+                                break;
+                            }
+                            case 'frame':{
+                                frame_src = arr;
+                                break;
+                            }
+                        }
+                    }
+                    return callBack(null, {
+                                            "default-src": ["'self'"], 
+                                            "script-src": script_src,
+                                            "script-src-attr": ["'self'", "'unsafe-inline'"],
+                                            "style-src": style_src,
+                                            "font-src": font_src,
+                                            "img-src": ["*", 'data:', 'blob:'],
+                                            connectSrc: ["*"],
+                                            childSrc: ["'self'", 'blob:'],
+                                            "object-src": ["'self'", 'data:'],
+                                            frameSrc: frame_src
+                                          } );
+                }
+            })
+        }
+        else
+            return callBack(null, null);
     }
 }
