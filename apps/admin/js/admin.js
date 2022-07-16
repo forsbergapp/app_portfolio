@@ -56,12 +56,12 @@ function admin_login(){
                                 }
                             }
                             else
-                                show_message('EXCEPTION', null,null, result, window.global_main_app_id, window.global_lang_code);
+                                show_message('EXCEPTION', null,null, result, window.global_main_app_id);
                         });
                 }
             }
             else
-                show_message('EXCEPTION', null,null, result, window.global_main_app_id, window.global_lang_code);
+                show_message('EXCEPTION', null,null, result, window.global_main_app_id);
         });
 }
 function setEvents(){

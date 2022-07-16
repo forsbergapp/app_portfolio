@@ -169,17 +169,12 @@ a:active {
 	float:right;
 }
 /* USER ACCOUNT*/
-#user_account_userid_logged_in, #user_menu_dropdown_logged_in{
+#user_menu_dropdown_logged_in{
 	display:none;
-}
-#user_account_userid_logged_in{
-	display:none !important;
 }
 #user_account_username_logged_in{
 	font-size: 11px;
 }
-
-
 /* PROFILE*/
 #profile_main_stat_row2{
 	margin-top: 20px;

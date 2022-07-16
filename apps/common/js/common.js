@@ -3,6 +3,7 @@
     MESSAGE & DIALOGUE
     BROADCAST
     GPS
+    COUNTRY & CITIES
     QR
     PROFILE
     USER
@@ -102,7 +103,7 @@ function get_null_or_value(value) {
     else
         return value;
 }
-function format_json_date(db_date, short, timezone, lang_code) {
+function format_json_date(db_date, short, timezone) {
     if (db_date == null)
         return null;
     else {
@@ -112,7 +113,7 @@ function format_json_date(db_date, short, timezone, lang_code) {
         //"yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'"
         let settings = {
             timezone_current: timezone,
-            locale: lang_code
+            locale: window.global_lang_code
         }
         let options;
         if (short)
@@ -228,7 +229,7 @@ function inIframe() {
         return true;
     }
 }
-function show_image(item_img, item_input, image_width, image_height, lang_code) {
+function show_image(item_img, item_input, image_width, image_height) {
     let file = document.getElementById(item_input).files[0];
     let reader = new FileReader();
 
@@ -240,12 +241,12 @@ function show_image(item_img, item_input, image_width, image_height, lang_code) 
     const fileExtension = fileName.split(".").pop();
     if (!allowedExtensions.includes(fileExtension)){
         //File type not allowed
-        show_message('ERROR', 20307, null,null, window.global_main_app_id, lang_code);
+        show_message('ERROR', 20307, null,null, window.global_main_app_id);
     }
     else
         if (fileSize > window.global_image_file_max_size){
             //File size too large
-            show_message('ERROR', 20308, null, null, window.global_main_app_id, lang_code);
+            show_message('ERROR', 20308, null, null, window.global_main_app_id);
         }
         else {
             /*Save all file in mime type format specified in parameter
@@ -277,7 +278,7 @@ function show_image(item_img, item_input, image_width, image_height, lang_code) 
 function getHostname(){
     return `${location.protocol}//${location.hostname}${location.port==''?'':':' + location.port}`;
 }
-function check_input(text, lang_code, text_length=100){
+function check_input(text, text_length=100){
     if (text==null || text=='')
         return true;
     else{
@@ -286,19 +287,19 @@ function check_input(text, lang_code, text_length=100){
             if (text.includes('"') ||
                 text.includes('\\')){
                 //not valid text
-                show_message('ERROR', 20309, null, null, window.global_main_app_id,lang_code);
+                show_message('ERROR', 20309, null, null, window.global_main_app_id);
                 return false;
             }
         } catch (error) {
             //not valid text
-            show_message('ERROR', 20309, null, null, window.global_main_app_id,lang_code);
+            show_message('ERROR', 20309, null, null, window.global_main_app_id);
             return false;
         }
         try {
             //check default max length 100 characters or parameter value
             if (text.length>text_length){
                 //text too long
-                show_message('ERROR', 20310, null, null, window.global_main_app_id,lang_code);
+                show_message('ERROR', 20310, null, null, window.global_main_app_id);
                 return false;
             }
         } catch (error) {
@@ -376,7 +377,7 @@ function show_common_dialogue(dialogue, user_verification_type, title=null, icon
     return null;   
 }
 
-function show_message(message_type, code, function_event, message_text='', app_id, lang_code='en-us'){
+function show_message(message_type, code, function_event, message_text='', app_id){
     let confirm_question = document.getElementById('confirm_question');
     let message_title = document.getElementById('message_title');
     let dialogue = document.getElementById('dialogue_message');
@@ -393,7 +394,7 @@ function show_message(message_type, code, function_event, message_text='', app_i
         case 'ERROR':{
             fetch(window.global_rest_url_base + window.global_rest_message_translation + code + 
                 '?app_id=' + app_id +
-                '&lang_code=' + lang_code, 
+                '&lang_code=' + window.global_lang_code, 
             {
                 method: 'GET',
                 headers: {
@@ -412,7 +413,7 @@ function show_message(message_type, code, function_event, message_text='', app_i
                 dialogue.style.visibility = 'visible';
                 button_close.focus();
             }).catch(function(error) {
-                show_message('EXCEPTION', null,null, error, app_id, lang_code);
+                show_message('EXCEPTION', null,null, error, app_id);
             })
             break;
         }
@@ -497,6 +498,9 @@ function dialogue_new_password_clear(){
     window.global_rest_at = '';
 }
 function dialogue_user_edit_clear(){
+    document.getElementById('dialogue_user_edit').style.visibility = "hidden";
+    document.getElementById('user_edit_avatar').style.display = 'none';
+                
     //common
     document.getElementById('user_edit_checkbox_profile_private').checked = false;
     document.getElementById('user_edit_input_username').value = '';
@@ -520,10 +524,12 @@ function dialogue_user_edit_clear(){
     document.getElementById('user_edit_label_data_account_modified').innerHTML = '';
 }
 function dialogue_login_clear(){
+    document.getElementById('dialogue_login').style.visibility = 'hidden';
     document.getElementById('login_username').value = '';
     document.getElementById('login_password').value = '';
 }
 function dialogue_signup_clear(){
+    document.getElementById('dialogue_signup').style.visibility = 'hidden';
     document.getElementById('signup_username').value = '';
     document.getElementById('signup_email').value = '';
     document.getElementById('signup_password').value = '';
@@ -534,7 +540,11 @@ function dialogue_forgot_clear(){
     document.getElementById('forgot_email').value = '';
 }
 function dialogue_profile_clear(){
-
+    document.getElementById('profile_info').style.display = 'none';
+    document.getElementById('profile_top').style.display = 'none';
+    document.getElementById('profile_detail').style.display = 'none';
+    document.getElementById('profile_search_list').style.display = 'none';
+    
     document.getElementById('profile_follow').children[0].style.display = 'block';
     document.getElementById('profile_follow').children[1].style.display = 'none';
     document.getElementById('profile_like').children[0].style.display = 'block';
@@ -631,7 +641,7 @@ function reconnect(){
     setTimeout(connectOnline, 5000);
 }
 function updateOnlineStatus(){
-
+    let status;
     fetch(`/service/broadcast/update_connected?app_id=${window.global_app_id}&client_id=${window.global_clientId}&user_account_id=${window.global_user_account_id}`,
     {method: 'PUT',
         headers: {
@@ -647,7 +657,7 @@ function updateOnlineStatus(){
             null;
         }
         else{
-            exception(status, result, window.global_lang_code);
+            exception(status, result);
         }
     });
 }
@@ -687,8 +697,35 @@ function checkOnline(div_icon_online, user_account_id){
 /*----------------------- */
 /* GPS                    */
 /*----------------------- */
-async function get_gps_from_ip(user_id, lang_code) {
-
+async function get_place_from_gps(item, latitude, longitude) {
+    let status;
+    await fetch(window.global_service_geolocation + window.global_service_geolocation_gps_place + 
+                '?app_id= ' + window.global_app_id +
+                '&app_user_id=' + window.global_user_account_id +
+                '&latitude=' + latitude +
+                '&longitude=' + longitude +
+                '&lang_code=' + window.global_lang_code, {
+        method: 'GET',
+        headers: {
+            'Authorization': 'Bearer ' + window.global_rest_dt,
+        }
+    })
+    .then(function(response) {
+        status = response.status;
+        return response.text();
+    })
+    .then(function(result) {
+        if (status === 200) {
+            let json = JSON.parse(result);
+            item.value = json.geoplugin_place + ', ' +
+                json.geoplugin_region + ', ' +
+                json.geoplugin_countryCode;
+        } else {
+            exception(status, result);
+        }
+    })
+}
+async function get_gps_from_ip() {
     let status;
     let app_id;
     if (window.global_app_id != '')
@@ -697,8 +734,8 @@ async function get_gps_from_ip(user_id, lang_code) {
         app_id = window.global_main_app_id
     await fetch(window.global_service_geolocation + window.global_service_geolocation_gps_ip + 
                 '?app_id=' + app_id + 
-                '&app_user_id=' +  user_id +
-                '&lang_code=' + lang_code, {
+                '&app_user_id=' +  window.global_user_account_id +
+                '&lang_code=' + window.global_lang_code, {
         method: 'GET',
         headers: {
             'Authorization': 'Bearer ' + window.global_rest_dt,
@@ -717,7 +754,74 @@ async function get_gps_from_ip(user_id, lang_code) {
                                                 json.geoplugin_regionName + ', ' +
                                                 json.geoplugin_countryName;
         } else {
-            exception(status, result, lang_code);
+            exception(status, result);
+        }
+    })
+}
+/*----------------------- */
+/* COUNTRY & CITIES       */
+/*----------------------- */
+async function get_cities(countrycode, callBack){
+    let status;
+    await fetch(window.global_service_worldcities + '/' + countrycode +
+                '?app_id=' + window.global_app_id +
+                '&app_user_id=' + window.global_user_account_id +
+                '&lang_code=' + window.global_lang_code, {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Bearer ' + window.global_rest_dt,
+            }
+    })
+    .then(function(response) {
+        status = response.status;
+        return response.text();
+    })
+    .then(function(result) {
+        if (status === 200) {
+            let json = JSON.parse(result);
+            json.sort(function(a, b) {
+                let x = a.admin_name.toLowerCase() + a.city.toLowerCase();
+                let y = b.admin_name.toLowerCase() + b.city.toLowerCase();
+                if (x < y) {
+                    return -1;
+                }
+                if (x > y) {
+                    return 1;
+                }
+                return 0;
+            });
+
+            let current_admin_name;
+            //fill list with cities
+            let cities='';
+            for (let i = 0; i < json.length; i++) {
+                if (i == 0) {
+                    cities += `<option value='' id='' label='…' selected='selected'>…</option>
+                                <optgroup label='${json[i].admin_name}'>`;
+                    current_admin_name = json[i].admin_name;
+                } else
+                if (json[i].admin_name != current_admin_name) {
+                    cities += `</optgroup>
+                                <optgroup label='${json[i].admin_name}'>`;
+                    current_admin_name = json[i].admin_name;
+                }
+                cities +=
+                `<option 
+                    id=${json[i].id} 
+                    value=${i + 1}
+                    countrycode=${json[i].iso2}
+                    country='${json[i].country}'
+                    admin_name='${json[i].admin_name}'
+                    latitude=${json[i].lat}
+                    longitude=${json[i].lng}  
+                    >${json[i].city}
+                </option>`;
+            }
+            callBack(null, `${cities} </optgroup>`);
+        }
+        else {
+            exception(status, result);
+            callBack(result, null);
         }
     })
 }
@@ -741,16 +845,14 @@ function create_qr(div, url) {
 /*----------------------- */
 /* PROFILE                */
 /*----------------------- */
-function show_profile_click_events(item, user_id, timezone, lang_code, click_function){
+function show_profile_click_events(item, timezone, click_function){
     document.querySelectorAll(item).forEach(e => e.addEventListener('click', function(event) {
         //execute function from inparameter or use default when not specified
         let profile_id = event.target.parentNode.parentNode.parentNode.children[0].children[0].innerHTML;
         if (click_function ==null){
             profile_show(profile_id,
                         null,
-                        user_id,
                         timezone,
-                        lang_code,
                         (err, result)=>{
                             null;
                         });
@@ -758,12 +860,10 @@ function show_profile_click_events(item, user_id, timezone, lang_code, click_fun
         else
             eval(`(function (){${click_function}(${profile_id},
                     ${null},
-                    ${user_id==''?"''":user_id},
-                    '${timezone}',
-                    '${lang_code}')}());`);
+                    '${timezone}')}());`);
     }));
 }
-function profile_top(statschoice, user_id, timezone, lang_code, app_rest_url = null, click_function=null) {
+function profile_top(statschoice, timezone, app_rest_url = null, click_function=null) {
     let status;
     let url;
     document.getElementById('dialogue_profile').style.visibility = 'visible';
@@ -781,7 +881,7 @@ function profile_top(statschoice, user_id, timezone, lang_code, app_rest_url = n
     //TOP
     fetch(url + statschoice + 
             '?app_id=' + window.global_app_id +
-            '&lang_code=' + lang_code, 
+            '&lang_code=' + window.global_lang_code, 
         {
             method: 'GET',
             headers: {
@@ -822,14 +922,14 @@ function profile_top(statschoice, user_id, timezone, lang_code, app_rest_url = n
                     </div>`;
                 }
                 profile_top_list.innerHTML = html;
-                show_profile_click_events('.profile_top_list_username', user_id, timezone, lang_code, click_function);
+                show_profile_click_events('.profile_top_list_username', timezone, click_function);
             }
         })
         .catch(function(error) {
-            show_message('EXCEPTION', null,null, error, window.global_app_id, lang_code);
+            show_message('EXCEPTION', null,null, error, window.global_app_id);
         });
 }
-function profile_detail(detailchoice, user_id, timezone, lang_code, rest_url_app, fetch_detail, header_app, click_function) {
+function profile_detail(detailchoice, timezone, rest_url_app, fetch_detail, header_app, click_function) {
     let status;
     let url;
     if (detailchoice == 1 || detailchoice == 2 || detailchoice == 3 || detailchoice == 4){
@@ -842,7 +942,7 @@ function profile_detail(detailchoice, user_id, timezone, lang_code, rest_url_app
     }
     //DETAIL
     //show only if user logged in
-    if (parseInt(user_id) || 0 !== 0) {
+    if (parseInt(window.global_user_account_id) || 0 !== 0) {
         switch (detailchoice) {
             case 0:
                 {
@@ -921,7 +1021,7 @@ function profile_detail(detailchoice, user_id, timezone, lang_code, rest_url_app
         {
             fetch(url + document.getElementById('profile_id').innerHTML +
             '?app_id=' + window.global_app_id +
-            '&lang_code=' + lang_code +
+            '&lang_code=' + window.global_lang_code +
             '&detailchoice=' + detailchoice, {
             method: 'GET',
             headers: {
@@ -943,7 +1043,7 @@ function profile_detail(detailchoice, user_id, timezone, lang_code, rest_url_app
                     for (i = 0; i < json.count; i++) {
                         if (window.global_app_id == window.global_main_app_id && detailchoice==5){
                             if (json.items[i].app_id !=0){
-                                if (document.getElementById('profile_id').innerHTML==user_id)
+                                if (document.getElementById('profile_id').innerHTML==window.global_user_account_id)
                                     delete_div = `<div class='profile_detail_list_app_delete'>${global_button_default_icon_delete}</div>`;
                                     
                                 //App list in app 0
@@ -996,52 +1096,51 @@ function profile_detail(detailchoice, user_id, timezone, lang_code, rest_url_app
                             event.preventDefault();
                             window.open(event.target.parentNode.parentNode.parentNode.children[4].children[0].innerHTML, '_blank');
                         }))
-                        if (document.getElementById('profile_id').innerHTML==user_id){
+                        if (document.getElementById('profile_id').innerHTML==window.global_user_account_id){
                             document.querySelectorAll('.profile_detail_list_app_delete').forEach(e => e.addEventListener('click', function(event) {
                                 user_account_app_delete(null, 
                                                         document.getElementById('profile_id').innerHTML,
                                                         event.target.parentNode.parentNode.parentNode.children[0].children[0].innerHTML,
-                                                        window.global_lang_code,
                                                         function() { 
                                                             document.getElementById('dialogue_message').style.visibility = 'hidden';
                                                             user_account_app_delete(1, 
                                                                                     document.getElementById('profile_id').innerHTML, 
                                                                                     event.target.parentNode.parentNode.parentNode.children[0].children[0].innerHTML, 
-                                                                                    window.global_lang_code, null);
+                                                                                    null);
                                                         });
                             }))
                         }
                     }
                     else
-                        show_profile_click_events('.profile_detail_list_username', user_id, timezone, lang_code, click_function);
+                        show_profile_click_events('.profile_detail_list_username', timezone, click_function);
                 } else {
-                    exception(status, result, lang_code);
+                    exception(status, result);
                 }
             })
             .catch(function(error) {
-                show_message('EXCEPTION', null,null, error, window.global_app_id, lang_code);
+                show_message('EXCEPTION', null,null, error, window.global_app_id);
             });
         }
     } else
         show_common_dialogue('LOGIN');
 }
-function search_profile(user_id, timezone, lang_code, click_function) {
+function search_profile(timezone, click_function) {
     let status;
     let searched_username = document.getElementById('profile_search_input').value;
     let profile_search_list = document.getElementById('profile_search_list');
     profile_search_list.innerHTML = '';
-    document.getElementById('profile_search_list').style.display = "none";
+    document.getElementById('profile_search_list').style.display = 'none';
     let url;
     let token;
     let json_data;
-    if (check_input(searched_username, lang_code) == false)
+    if (check_input(searched_username) == false)
         return;
-    if (user_id!=''){
+    if (window.global_user_account_id!=''){
         //search using access token with logged in user_account_id
         url = window.global_rest_url_base + window.global_rest_user_account_profile_searchA;
         token = window.global_rest_at;
         json_data = `{
-                    "user_account_id":${user_id},
+                    "user_account_id":${window.global_user_account_id},
                     "client_latitude": "${window.global_client_latitude}",
                     "client_longitude": "${window.global_client_longitude}"
                     }`;
@@ -1057,7 +1156,7 @@ function search_profile(user_id, timezone, lang_code, click_function) {
     }
     fetch(url + searched_username +
           '?app_id=' + window.global_app_id +
-          '&lang_code=' + lang_code, 
+          '&lang_code=' + window.global_lang_code, 
           {
             method: 'POST',
             headers: {
@@ -1098,32 +1197,27 @@ function search_profile(user_id, timezone, lang_code, click_function) {
                     </div>`;
                 }
                 profile_search_list.innerHTML = html;
-                show_profile_click_events('.profile_search_list_username', user_id, timezone, lang_code, click_function);
+                show_profile_click_events('.profile_search_list_username', timezone, click_function);
             }
         })
         .catch(function(error) {
-            show_message('EXCEPTION', null,null, error, window.global_app_id, lang_code);
+            show_message('EXCEPTION', null,null, error, window.global_app_id);
         });
 }
 /* call 
-profile_show(null, null, user_id, lang_code)     from popupmenu
-profile_show(userid, null, user_id, lang_code) 	 from choosing profile in profile_top
-profile_show(userid, null, user_id, lang_code) 	 from choosing profile in profile_detail
-profile_show(userid, null, user_id, lang_code) 	 from choosing profile in search_profile
-profile_show(null, username, user_id, lang_code) from init startup when user enters url*/
-async function profile_show(user_account_id_other = null, username = null, user_id, timezone, lang_code, callBack) {
+profile_show(null, null)     from popupmenu in apps or choosing logged in users profile
+profile_show(userid, null) 	 from choosing profile in profile_top
+profile_show(userid, null) 	 from choosing profile in profile_detail
+profile_show(userid, null) 	 from choosing profile in search_profile
+profile_show(null, username) from init startup when user enters url*/
+async function profile_show(user_account_id_other = null, username = null, timezone, callBack) {
     let status;
     let json;
     let user_account_id_search;
     let url;
 
-    document.getElementById('profile_info').style.display = "none";
-    document.getElementById('profile_top').style.display = "none";
-    document.getElementById('profile_detail').style.display = "none";
-    document.getElementById('profile_search_list').style.display = "none";
-
     dialogue_profile_clear()
-    if (user_account_id_other == null && user_id == '' && username == null) {
+    if (user_account_id_other == null && window.global_user_account_id == '' && username == null) {
         
         return callBack(null,null);
 
@@ -1136,7 +1230,7 @@ async function profile_show(user_account_id_other = null, username = null, user_
             user_account_id_search = '';
             url = window.global_rest_url_base + window.global_rest_user_account_profile_username + username;
         } else {
-            user_account_id_search = user_id;
+            user_account_id_search = window.global_user_account_id;
             url = window.global_rest_url_base + window.global_rest_user_account_profile_userid + user_account_id_search;
         }
         //PROFILE MAIN
@@ -1147,8 +1241,8 @@ async function profile_show(user_account_id_other = null, username = null, user_
             }`;
         fetch(url + 
                 '?app_id=' + window.global_app_id + 
-                '&lang_code=' + lang_code +
-                '&id=' + user_id, {
+                '&lang_code=' + window.global_lang_code +
+                '&id=' + window.global_user_account_id, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -1172,7 +1266,7 @@ async function profile_show(user_account_id_other = null, username = null, user_
                     document.getElementById('profile_username').innerHTML = json.username;
 
                     document.getElementById('profile_bio').innerHTML = get_null_or_value(json.bio);
-                    document.getElementById('profile_joined_date').innerHTML = format_json_date(json.date_created, true, timezone, lang_code);
+                    document.getElementById('profile_joined_date').innerHTML = format_json_date(json.date_created, true, timezone);
                     document.getElementById("profile_qr").innerHTML = '';
                     create_qr('profile_qr', getHostname() + '/' + json.username);
                     //User account followed and liked
@@ -1209,7 +1303,7 @@ async function profile_show(user_account_id_other = null, username = null, user_
                         document.getElementById('profile_info_likes_count').innerHTML = json.count_likes;
                         document.getElementById('profile_info_liked_count').innerHTML = json.count_liked;
                     }    
-                    if (user_id =='')
+                    if (window.global_user_account_id =='')
                         setTimeout(function(){show_common_dialogue('LOGIN')}, 2000);
                     else
                         checkOnline('profile_avatar_online_status', json.id);
@@ -1219,28 +1313,25 @@ async function profile_show(user_account_id_other = null, username = null, user_
                     return callBack(status,null);
             })
             .catch(function(error) {
-                show_message('EXCEPTION', null,null, error, window.global_appp_id, lang_code);
+                show_message('EXCEPTION', null,null, error, window.global_appp_id);
                 return callBack(error,null);
             });
     }
 }
-function profile_home(user_id, timezone, lang_code, header_app, click_event_function){
+function profile_home(timezone, header_app, click_event_function){
     document.getElementById('dialogue_profile').style.visibility = 'visible';;
     document.getElementById('profile_info').style.display = 'none';
     document.getElementById('profile_detail').style.display = 'none';
     document.getElementById('profile_top').style.display = 'block';
     document.getElementById('profile_top_list').style.display = 'block';
     document.getElementById('profile_detail_list').innerHTML = '';
-    profile_top(1, user_id, timezone, lang_code, header_app, click_event_function);
+    profile_top(1, timezone, header_app, click_event_function);
 }
 function profile_close(){
     document.getElementById('dialogue_profile').style.visibility = 'hidden';
-    document.getElementById('profile_info').style.display = 'none';
-    document.getElementById('profile_detail').style.display = 'none';
-    document.getElementById('profile_top').style.display = 'none';
     dialogue_profile_clear();
 }
-async function profile_update_stat(lang_code, callBack){
+async function profile_update_stat(callBack){
     let profile_id = document.getElementById('profile_id');
     let json_data =
     `{
@@ -1253,7 +1344,7 @@ async function profile_update_stat(lang_code, callBack){
     let status;
     fetch(url + 
         '?app_id=' + window.global_app_id + 
-        '&lang_code=' + lang_code +
+        '&lang_code=' + window.global_lang_code +
         '&id=' + profile_id.innerHTML, {
         method: 'POST',
         headers: {
@@ -1283,23 +1374,23 @@ async function profile_update_stat(lang_code, callBack){
 /*----------------------- */
 /* USER                   */
 /*----------------------- */
-async function user_login(username, password, lang_code, callBack) {
+async function user_login(username, password, callBack) {
     
     let json;
     let json_data;
     let status;
 
-    if (check_input(username, lang_code) == false || check_input(password, lang_code)== false)
+    if (check_input(username) == false || check_input(password)== false)
         return callBack('ERROR', null);
 
     if (username == '') {
         //"Please enter username"
-        show_message('ERROR', 20303, null, null, window.global_main_app_id, lang_code);
+        show_message('ERROR', 20303, null, null, window.global_main_app_id);
         return callBack('ERROR', null);
     }
     if (password == '') {
         //"Please enter password"
-        show_message('ERROR', 20304, null, null, window.global_main_app_id,lang_code);
+        show_message('ERROR', 20304, null, null, window.global_main_app_id);
         return callBack('ERROR', null);
     }
 
@@ -1317,7 +1408,7 @@ async function user_login(username, password, lang_code, callBack) {
 
     //get user with username and password from REST API
     fetch(window.global_rest_url_base + window.global_rest_user_account_login + 
-            '?lang_code=' + lang_code, {
+            '?lang_code=' + window.global_lang_code, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -1340,31 +1431,33 @@ async function user_login(username, password, lang_code, callBack) {
                 show_common_dialogue('VERIFY', 'LOGIN', json.items[0].email, window.global_button_default_icon_logoff, function_cancel_event);
                 return callBack('ERROR', null);
             }
-            else    
+            else{
+                dialogue_login_clear();
+                dialogue_signup_clear();
                 return callBack(null, {user_id: json.items[0].id,
-                                       username: json.items[0].username,
-                                       bio: json.items[0].bio,
-                                       avatar: json.items[0].avatar})
-
+                    username: json.items[0].username,
+                    bio: json.items[0].bio,
+                    avatar: json.items[0].avatar})
+            }
         } else {
-            exception(status, result, lang_code);
+            exception(status, result);
             return callBack(result, null);
         }
     })
     .catch(function(error) {
-        show_message('EXCEPTION', null,null, error, window.global_app_id, lang_code);
+        show_message('EXCEPTION', null,null, error, window.global_app_id);
         return callBack(error, null);
     });
     
 }
-async function user_logoff(user_id, lang_code){
+async function user_logoff(){
     //remove access token
     window.global_rest_at ='';
     window.global_user_account_id = '';
     updateOnlineStatus();
     document.getElementById('profile_avatar_online_status').className='';
     //get new data token to avoid endless loop och invalid token
-    get_data_token(user_id, lang_code).then(function(){
+    get_data_token().then(function(){
         if (window.global_app_user_provider1_use==1){
             //nothing to do with provider1
             null;
@@ -1372,124 +1465,118 @@ async function user_logoff(user_id, lang_code){
         if (window.global_app_user_provider2_use==1){
             //nothing to do with provider2
             null;
-        }
-        document.getElementById('dialogue_user_edit').style.visibility = "hidden";
-        document.getElementById('dialogue_profile').style.visibility = 'hidden';
+        }        
         dialogue_user_edit_clear();
         dialogue_verify_clear();
         dialogue_new_password_clear();
         dialogue_login_clear();
         dialogue_signup_clear();
         dialogue_forgot_clear();
+        document.getElementById('dialogue_profile').style.visibility = 'hidden';
         dialogue_profile_clear();
     })
 }
-async function user_edit(user_id, timezone, lang_code,callBack) {
+async function user_edit(timezone, callBack) {
     let json;
-    if (document.getElementById('dialogue_user_edit').style.visibility == 'visible') {
-        document.getElementById('dialogue_user_edit').style.visibility = "hidden";
-        dialogue_user_edit_clear();
-        return callBack(null, null);
-    } else {
-        let status;
-        //get user from REST API
-        fetch(window.global_rest_url_base + window.global_rest_user_account + user_id +
-                '?app_id=' + window.global_app_id +
-                '&lang_code=' + lang_code, {
-                method: 'GET',
-                headers: {
-                    'Authorization': 'Bearer ' + window.global_rest_at
-                }
-            })
-            .then(function(response) {
-                status = response.status;
-                return response.text();
-            })
-            .then(function(result) {
-                if (status == 200) {
-                    json = JSON.parse(result);
-                    if (user_id == json.id) {
-                        document.getElementById('user_edit_local').style.display = 'none';
+
+    let status;
+    //get user from REST API
+    fetch(window.global_rest_url_base + window.global_rest_user_account + window.global_user_account_id +
+            '?app_id=' + window.global_app_id +
+            '&lang_code=' + window.global_lang_code, {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Bearer ' + window.global_rest_at
+            }
+        })
+        .then(function(response) {
+            status = response.status;
+            return response.text();
+        })
+        .then(function(result) {
+            if (status == 200) {
+                json = JSON.parse(result);
+                if (window.global_user_account_id == json.id) {
+                    document.getElementById('user_edit_local').style.display = 'none';
+                    document.getElementById('user_edit_provider').style.display = 'none';
+                    document.getElementById('dialogue_user_edit').style.visibility = "visible";
+
+                    document.getElementById('user_edit_checkbox_profile_private').checked = number_to_boolean(json.private);
+                    document.getElementById('user_edit_input_username').value = json.username;
+                    document.getElementById('user_edit_input_bio').value = get_null_or_value(json.bio);
+
+                    if (json.provider1_id == null && json.provider2_id == null) {
+                        document.getElementById('user_edit_local').style.display = 'block';
                         document.getElementById('user_edit_provider').style.display = 'none';
-                        document.getElementById('dialogue_user_edit').style.visibility = "visible";
 
-                        document.getElementById('user_edit_checkbox_profile_private').checked = number_to_boolean(json.private);
-                        document.getElementById('user_edit_input_username').value = json.username;
-                        document.getElementById('user_edit_input_bio').value = get_null_or_value(json.bio);
+                        //display fetched avatar editable
+                        document.getElementById('user_edit_avatar').style.display = 'block';
+                        if (json.avatar == null || json.avatar == '')
+                            recreate_img(document.getElementById('user_edit_avatar_img'));
+                        else
+                            document.getElementById('user_edit_avatar_img').src = image_format(json.avatar);
+                        document.getElementById('user_edit_input_email').value = json.email;
+                        document.getElementById('user_edit_input_password').value = '',
+                            document.getElementById('user_edit_input_password_confirm').value = '',
+                            document.getElementById('user_edit_input_new_password').value = '';
+                        document.getElementById('user_edit_input_new_password_confirm').value = '';
 
-                        if (json.provider1_id == null && json.provider2_id == null) {
-                            document.getElementById('user_edit_local').style.display = 'block';
-                            document.getElementById('user_edit_provider').style.display = 'none';
-
-                            //display fetched avatar editable
-                            document.getElementById('user_edit_avatar').style.display = 'block';
-                            if (json.avatar == null || json.avatar == '')
+                        document.getElementById('user_edit_input_password_reminder').value = json.password_reminder;
+                    } else
+                        if (json.provider1_id !== null) {
+                            document.getElementById('user_edit_provider').style.display = 'block';
+                            document.getElementById('user_edit_provider_logo').innerHTML = window.global_button_default_icon_provider1;
+                            document.getElementById('user_edit_local').style.display = 'none';
+                            document.getElementById('user_edit_label_provider_id_data').innerHTML = json.provider1_id;
+                            document.getElementById('user_edit_label_provider_name_data').innerHTML = json.provider1_first_name + ' ' + json.provider1_last_name;
+                            document.getElementById('user_edit_label_provider_email_data').innerHTML = json.provider1_email;
+                            document.getElementById('user_edit_label_provider_image_url_data').innerHTML = json.provider1_image_url;
+                            document.getElementById('user_edit_avatar').style.display = 'none';
+                            if (json.provider1_image == null || json.provider1_image == '')
                                 recreate_img(document.getElementById('user_edit_avatar_img'));
                             else
-                                document.getElementById('user_edit_avatar_img').src = image_format(json.avatar);
-                            document.getElementById('user_edit_input_email').value = json.email;
-                            document.getElementById('user_edit_input_password').value = '',
-                                document.getElementById('user_edit_input_password_confirm').value = '',
-                                document.getElementById('user_edit_input_new_password').value = '';
-                            document.getElementById('user_edit_input_new_password_confirm').value = '';
-
-                            document.getElementById('user_edit_input_password_reminder').value = json.password_reminder;
+                                document.getElementById('user_edit_avatar_img').src = image_format(json.provider1_image);
                         } else
-                            if (json.provider1_id !== null) {
+                            if (json.provider2_id !== null) {
                                 document.getElementById('user_edit_provider').style.display = 'block';
-                                document.getElementById('user_edit_provider_logo').innerHTML = window.global_button_default_icon_provider1;
+                                document.getElementById('user_edit_provider_logo').innerHTML = window.global_button_default_icon_provider2;
                                 document.getElementById('user_edit_local').style.display = 'none';
-                                document.getElementById('user_edit_label_provider_id_data').innerHTML = json.provider1_id;
-                                document.getElementById('user_edit_label_provider_name_data').innerHTML = json.provider1_first_name + ' ' + json.provider1_last_name;
-                                document.getElementById('user_edit_label_provider_email_data').innerHTML = json.provider1_email;
-                                document.getElementById('user_edit_label_provider_image_url_data').innerHTML = json.provider1_image_url;
+                                document.getElementById('user_edit_label_provider_id_data').innerHTML = json.provider2_id;
+                                document.getElementById('user_edit_label_provider_name_data').innerHTML = json.provider2_first_name + ' ' + json.provider2_last_name;
+                                document.getElementById('user_edit_label_provider_email_data').innerHTML = json.provider2_email;
+                                document.getElementById('user_edit_label_provider_image_url_data').innerHTML = json.provider2_image_url;
                                 document.getElementById('user_edit_avatar').style.display = 'none';
-                                if (json.provider1_image == null || json.provider1_image == '')
+                                if (json.provider2_image == null || json.provider2_image == '')
                                     recreate_img(document.getElementById('user_edit_avatar_img'));
                                 else
-                                    document.getElementById('user_edit_avatar_img').src = image_format(json.provider1_image);
-                            } else
-                                if (json.provider2_id !== null) {
-                                    document.getElementById('user_edit_provider').style.display = 'block';
-                                    document.getElementById('user_edit_provider_logo').innerHTML = window.global_button_default_icon_provider2;
-                                    document.getElementById('user_edit_local').style.display = 'none';
-                                    document.getElementById('user_edit_label_provider_id_data').innerHTML = json.provider2_id;
-                                    document.getElementById('user_edit_label_provider_name_data').innerHTML = json.provider2_first_name + ' ' + json.provider2_last_name;
-                                    document.getElementById('user_edit_label_provider_email_data').innerHTML = json.provider2_email;
-                                    document.getElementById('user_edit_label_provider_image_url_data').innerHTML = json.provider2_image_url;
-                                    document.getElementById('user_edit_avatar').style.display = 'none';
-                                    if (json.provider2_image == null || json.provider2_image == '')
-                                        recreate_img(document.getElementById('user_edit_avatar_img'));
-                                    else
-                                        document.getElementById('user_edit_avatar_img').src = image_format(json.provider2_image);
-                                }
-                        document.getElementById('user_edit_label_data_last_logontime').innerHTML = format_json_date(json.last_logontime, null, timezone, lang_code);
-                        document.getElementById('user_edit_label_data_account_created').innerHTML = format_json_date(json.date_created, null, timezone, lang_code);
-                        document.getElementById('user_edit_label_data_account_modified').innerHTML = format_json_date(json.date_modified, null, timezone, lang_code);
-                        return callBack(null, {id: json.id,
-                                               provider_1:      json.provider1_id,
-                                               provider_2:      json.provider2_id,
-                                               avatar:          json.avatar,
-                                               provider1_image: json.provider1_image,
-                                               provider2_image: json.provider2_image
-                                              });
-                    } else {
-                        //User not found
-                        show_message('ERROR', 20305, null, null, window.global_main_app_id, lang_code);
-                        return callBack('ERROR', null);
-                    }
+                                    document.getElementById('user_edit_avatar_img').src = image_format(json.provider2_image);
+                            }
+                    document.getElementById('user_edit_label_data_last_logontime').innerHTML = format_json_date(json.last_logontime, null, timezone);
+                    document.getElementById('user_edit_label_data_account_created').innerHTML = format_json_date(json.date_created, null, timezone);
+                    document.getElementById('user_edit_label_data_account_modified').innerHTML = format_json_date(json.date_modified, null, timezone);
+                    return callBack(null, {id: json.id,
+                                            provider_1:      json.provider1_id,
+                                            provider_2:      json.provider2_id,
+                                            avatar:          json.avatar,
+                                            provider1_image: json.provider1_image,
+                                            provider2_image: json.provider2_image
+                                            });
                 } else {
-                    exception(status, result, lang_code);
-                    return callBack(result, null);
+                    //User not found
+                    show_message('ERROR', 20305, null, null, window.global_main_app_id);
+                    return callBack('ERROR', null);
                 }
-            })
-            .catch(function(error) {
-                show_message('EXCEPTION', null,null, error, window.global_app_id, lang_code);
-                return callBack(error, null);
-            });
-    }
+            } else {
+                exception(status, result);
+                return callBack(result, null);
+            }
+        })
+        .catch(function(error) {
+            show_message('EXCEPTION', null,null, error, window.global_app_id);
+            return callBack(error, null);
+        });
 }
-async function user_update(user_id, lang_code, callBack) {
+async function user_update(callBack) {
     let avatar = btoa(document.getElementById('user_edit_avatar_img').src);
     let username = document.getElementById('user_edit_input_username').value;
     let bio = document.getElementById('user_edit_input_bio').value;
@@ -1505,20 +1592,20 @@ async function user_update(user_id, lang_code, callBack) {
     let json_data;
     let status;
 
-    if (check_input(username, lang_code) == false ||
-        check_input(bio, lang_code, 150) == false ||
-        check_input(email, lang_code) == false ||
-        check_input(password, lang_code) == false ||
-        check_input(password_confirm, lang_code) == false ||
-        check_input(new_password, lang_code) == false ||
-        check_input(new_password_confirm, lang_code) == false ||
-        check_input(password_reminder, lang_code) == false)
+    if (check_input(username) == false ||
+        check_input(bio, 150) == false ||
+        check_input(email) == false ||
+        check_input(password) == false ||
+        check_input(password_confirm) == false ||
+        check_input(new_password) == false ||
+        check_input(new_password_confirm) == false ||
+        check_input(password_reminder) == false)
         return callBack('ERROR', null);
     //validate input
     if (username == '') {
         //"Please enter username"
         document.getElementById('user_edit_input_username').classList.add('input_error');
-        show_message('ERROR', 20303, null, null, lang_code);
+        show_message('ERROR', 20303, null, null);
         return callBack('ERROR', null);
     }
     
@@ -1533,20 +1620,20 @@ async function user_update(user_id, lang_code, callBack) {
                         "email":"${email}",
                         "avatar":"${avatar}"
                     }`;
-        url = window.global_rest_url_base + window.global_rest_user_account + user_id;
+        url = window.global_rest_url_base + window.global_rest_user_account + window.global_user_account_id;
 
         dialogue_user_edit_remove_error();
         
         if (password == '') {
             //"Please enter password"
             document.getElementById('user_edit_input_password').classList.add('input_error');
-            show_message('ERROR', 20304, null, null, window.global_main_app_id, lang_code);
+            show_message('ERROR', 20304, null, null, window.global_main_app_id);
             return callBack('ERROR', null);
         }
         if (password != password_confirm) {
             //Password not the same
             document.getElementById('user_edit_input_password_confirm').classList.add('input_error');
-            show_message('ERROR', 20301, null, null, window.global_main_app_id, lang_code);
+            show_message('ERROR', 20301, null, null, window.global_main_app_id);
             return callBack('ERROR', null);
         }
         //check new passwords
@@ -1554,7 +1641,7 @@ async function user_update(user_id, lang_code, callBack) {
             //New Password are entered but they are not the same
             document.getElementById('user_edit_input_new_password').classList.add('input_error');
             document.getElementById('user_edit_input_new_password_confirm').classList.add('input_error');
-            show_message('ERROR', 20301, null, null, lang_code);
+            show_message('ERROR', 20301, null, null);
             return callBack('ERROR', null);
         }
     } else {
@@ -1562,13 +1649,13 @@ async function user_update(user_id, lang_code, callBack) {
                       "bio":"${bio}",
                       "private":${boolean_to_number(document.getElementById('user_edit_checkbox_profile_private').checked)}
                      }`;
-        url = window.global_rest_url_base + window.global_rest_user_account_common + user_id
+        url = window.global_rest_url_base + window.global_rest_user_account_common + window.global_user_account_id;
     }
     let old_button = document.getElementById('user_edit_btn_user_update').innerHTML;
     document.getElementById('user_edit_btn_user_update').innerHTML = window.global_button_spinner;
     //update user using REST API
     fetch(url + '?app_id=' + window.global_app_id +
-                '&lang_code=' + lang_code, {
+                '&lang_code=' + window.global_lang_code, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -1584,35 +1671,33 @@ async function user_update(user_id, lang_code, callBack) {
             document.getElementById('user_edit_btn_user_update').innerHTML = old_button;
             if (status == 200) {
                 json = JSON.parse(result);
-                document.getElementById('dialogue_user_edit').style.visibility = "hidden";
-                document.getElementById('user_edit_avatar').style.display = 'none';
                 dialogue_user_edit_clear();
                 return callBack(null, {username: username, 
                                        avatar: avatar,
                                        bio: bio});
             } else {
-                exception(status, result, lang_code);
+                exception(status, result);
                 return callBack(result, null);
             }
         })
         .catch(function(error) {
             document.getElementById('user_edit_btn_user_update').innerHTML = old_button;
-            show_message('EXCEPTION', null,null, error, window.global_app_id, lang_code);
+            show_message('EXCEPTION', null,null, error, window.global_app_id);
             return callBack(error, null);
         });
 }
-function user_signup(item_destination_user_id, lang_code) {
+function user_signup() {
     let username = document.getElementById('signup_username').value;
     let email = document.getElementById('signup_email').value;
     let password = document.getElementById('signup_password').value;
     let password_confirm = document.getElementById('signup_password_confirm').value;
     let password_reminder = document.getElementById('signup_password_reminder').value;
 
-    if (check_input(username, lang_code) == false || 
-        check_input(email, lang_code)== false ||
-        check_input(password, lang_code)== false ||
-        check_input(password_confirm, lang_code)== false ||
-        check_input(password_reminder, lang_code)== false)
+    if (check_input(username) == false || 
+        check_input(email)== false ||
+        check_input(password)== false ||
+        check_input(password_confirm)== false ||
+        check_input(password_reminder)== false)
         return null;
 
     let json_data = `{
@@ -1631,17 +1716,17 @@ function user_signup(item_destination_user_id, lang_code) {
     let status;
     if (username == '') {
         //"Please enter username"
-        show_message('ERROR', 20303, null, null, window.global_main_app_id, lang_code);
+        show_message('ERROR', 20303, null, null, window.global_main_app_id);
         return null;
     }
     if (password == '') {
         //"Please enter password"
-        show_message('ERROR', 20304, null, null, window.global_main_app_id, lang_code);
+        show_message('ERROR', 20304, null, null, window.global_main_app_id);
         return null;
     }
     if (password != password_confirm) {
         //Password not the same
-        show_message('ERROR', 20301, null, null, window.global_main_app_id, lang_code);
+        show_message('ERROR', 20301, null, null, window.global_main_app_id);
         return null;
     }
 
@@ -1649,7 +1734,7 @@ function user_signup(item_destination_user_id, lang_code) {
     document.getElementById('signup_button').innerHTML = window.global_button_spinner;
     fetch(window.global_rest_url_base + window.global_rest_user_account_signup +
             '?app_id=' + window.global_app_id +
-            '&lang_code=' + lang_code, {
+            '&lang_code=' + window.global_lang_code, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -1667,20 +1752,18 @@ function user_signup(item_destination_user_id, lang_code) {
                 json = JSON.parse(result);
                 window.global_rest_at = json.accessToken;
                 window.global_user_account_id = json.id;
-                //update item with new user_account.id
-                item_destination_user_id.innerHTML = json.id;
                 let function_cancel_event = function() { dialogue_verify_clear();eval(`(function (){${window.global_exception_app_function}()}());`);};
                 show_common_dialogue('VERIFY', 'SIGNUP', email, window.global_button_default_icon_logoff, function_cancel_event);
             } else {
-                exception(status, result, lang_code);
+                exception(status, result);
             }
         })
         .catch(function(error) {
             document.getElementById('signup_button').innerHTML = old_button;
-            show_message('EXCEPTION', null,null, error, window.global_app_id, lang_code);
+            show_message('EXCEPTION', null,null, error, window.global_app_id);
         });
 }
-async function user_verify_check_input(item, nextField, lang_code, callBack) {
+async function user_verify_check_input(item, nextField, callBack) {
 
     let status;
     let json;
@@ -1715,7 +1798,7 @@ async function user_verify_check_input(item, nextField, lang_code, callBack) {
                           "verification_type": ${verification_type}}`;
             fetch(window.global_rest_url_base + window.global_rest_user_account_activate + window.global_user_account_id +
                     '?app_id=' + window.global_app_id + 
-                    '&lang_code=' + lang_code, {
+                    '&lang_code=' + window.global_lang_code, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
@@ -1757,7 +1840,6 @@ async function user_verify_check_input(item, nextField, lang_code, callBack) {
                             
                             document.getElementById('dialogue_login').style.visibility = "hidden";
                             
-                            document.getElementById('dialogue_signup').style.visibility = 'hidden';
                             dialogue_signup_clear();
                             dialogue_forgot_clear();
                             dialogue_verify_clear();
@@ -1772,17 +1854,17 @@ async function user_verify_check_input(item, nextField, lang_code, callBack) {
                             document.getElementById('user_verify_verification_char5').classList.add('input_error');
                             document.getElementById('user_verify_verification_char6').classList.add('input_error');
                             //code not valid
-                            show_message('ERROR', 20306, null, null, window.global_main_app_id, lang_code);
+                            show_message('ERROR', 20306, null, null, window.global_main_app_id);
                             return callBack('ERROR', null);
                         }
                     } else {
-                        exception(status, result, lang_code);
+                        exception(status, result);
                         return callBack(result, null);
                     }
                 })
                 .catch(function(error) {
                     document.getElementById('user_verify_email').innerHTML = old_button;
-                    show_message('EXCEPTION', null,null, error, window.global_app_id, lang_code);
+                    show_message('EXCEPTION', null,null, error, window.global_app_id);
                     return callBack(error, null);
                 });
         } else{
@@ -1796,7 +1878,7 @@ async function user_verify_check_input(item, nextField, lang_code, callBack) {
         return callBack(null, null);
     }
 }
-async function user_delete(choice=null, user_account_id, user_local, function_delete_event, lang_code, callBack ) {
+async function user_delete(choice=null, user_local, function_delete_event, callBack ) {
     let password = document.getElementById('user_edit_input_password').value;
     let status;
     switch (choice){
@@ -1804,10 +1886,10 @@ async function user_delete(choice=null, user_account_id, user_local, function_de
             if (user_local==true && password == '') {
                 //"Please enter password"
                 document.getElementById('user_edit_input_password').classList.add('input_error');
-                show_message('ERROR', 20304, null, null, window.global_main_app_id, lang_code);
+                show_message('ERROR', 20304, null, null, window.global_main_app_id);
                 return null;
             }
-            show_message('CONFIRM',null,function_delete_event, null, null, window.global_app_id, lang_code);
+            show_message('CONFIRM',null,function_delete_event, null, null, window.global_app_id);
             return callBack('CONFIRM',null);
             break;
         }
@@ -1818,9 +1900,9 @@ async function user_delete(choice=null, user_account_id, user_local, function_de
             let old_button = document.getElementById('user_edit_btn_user_delete_account').innerHTML;
             document.getElementById('user_edit_btn_user_delete_account').innerHTML = window.global_button_spinner;
             let json_data = `{"password":"${password}"}`;
-            fetch(window.global_rest_url_base + window.global_rest_user_account + user_account_id + 
+            fetch(window.global_rest_url_base + window.global_rest_user_account + window.global_user_account_id + 
                     '?app_id=' + window.global_app_id +
-                    '&lang_code=' + lang_code, 
+                    '&lang_code=' + window.global_lang_code, 
                 {
                     method: 'DELETE',
                     headers: {
@@ -1838,13 +1920,13 @@ async function user_delete(choice=null, user_account_id, user_local, function_de
                     if (status == 200)
                         return callBack(null,{deleted: 1});
                     else{
-                        exception(status, result, lang_code);
+                        exception(status, result);
                         return callBack(result,null);
                     }
                 })
                 .catch(function(error) {
                     document.getElementById('user_edit_btn_user_delete_account').innerHTML = old_button;
-                    show_message('EXCEPTION', null,null, error, window.global_app_id, lang_code);
+                    show_message('EXCEPTION', null,null, error, window.global_app_id);
                     return callBack(error,null);
                 });
             break;
@@ -1853,7 +1935,7 @@ async function user_delete(choice=null, user_account_id, user_local, function_de
             break;
     }
 }
-function user_function(user_function, user_id, lang_code, callBack) {
+function user_function(user_function, callBack) {
     let user_id_profile = document.getElementById('profile_id').innerHTML;
     let status;
     let json_data;
@@ -1877,7 +1959,7 @@ function user_function(user_function, user_id, lang_code, callBack) {
             }
     }
 
-    if (user_id == '')
+    if (window.global_user_account_id == '')
         show_common_dialogue('LOGIN');
     else {
         if (check_div.children[0].style.display == 'block') {
@@ -1885,9 +1967,9 @@ function user_function(user_function, user_id, lang_code, callBack) {
         } else {
             method = 'DELETE';
         }
-        fetch(window.global_rest_url_base + rest_path + user_id +
+        fetch(window.global_rest_url_base + rest_path + window.global_user_account_id +
                 '?app_id=' + window.global_app_id + 
-                '&lang_code=' + lang_code, {
+                '&lang_code=' + window.global_lang_code, {
                 method: method,
                 headers: {
                     'Content-Type': 'application/json',
@@ -1934,52 +2016,22 @@ function user_function(user_function, user_id, lang_code, callBack) {
                     }
                     return callBack(null, {});
                 } else {
-                    exception(status, result, lang_code);
+                    exception(status, result);
                     return callBack(result, null);
                 }
             })
             .catch(function(error) {
-                show_message('EXCEPTION', null,null, error, window.global_app_id, lang_code);
+                show_message('EXCEPTION', null,null, error, window.global_app_id);
                 return callBack(error, null);
             });
     }
 }
-function user_account_app(app_id, user_account_id, lang_code) {
-    let status;
-    let json_data =
-        `{"app_id": ${app_id},
-          "user_account_id": ${user_account_id}
-         }`;
-    fetch(window.global_rest_url_base + window.global_rest_user_account_app +
-            '?lang_code=' + lang_code, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + window.global_rest_at
-            },
-            body: json_data
-        })
-        .then(function(response) {
-            status = response.status;
-            return response.text();
-        })
-        .then(function(result) {
-            if (status === 200) {
-                let json = JSON.parse(result);
-            } else {
-                exception(status, result, lang_code);
-            }
-        })
-        .catch(function(error) {
-            show_message('EXCEPTION', null,null, error, window.global_app_id, lang_code);
-        });
-}
-function user_account_app_delete(choice=null, user_account_id, app_id, lang_code, function_delete_event){
+function user_account_app_delete(choice=null, user_account_id, app_id, function_delete_event){
     let status;
     
     switch (choice){
         case null:{
-            show_message('CONFIRM',null,function_delete_event, null, null, window.global_app_id, lang_code);
+            show_message('CONFIRM',null,function_delete_event, null, null, window.global_app_id);
             break;
         }
         case 1:{
@@ -1987,7 +2039,7 @@ function user_account_app_delete(choice=null, user_account_id, app_id, lang_code
     
             fetch(window.global_rest_url_base + window.global_rest_user_account_app + user_account_id + '/' + app_id +
                     '?app_id=' + window.global_app_id +
-                    '&lang_code=' + lang_code, 
+                    '&lang_code=' + window.global_lang_code, 
                 {
                     method: 'DELETE',
                     headers: {
@@ -2005,11 +2057,11 @@ function user_account_app_delete(choice=null, user_account_id, app_id, lang_code
                         document.getElementById('profile_main_btn_cloud').click()
                     }
                     else{
-                        exception(status, result, lang_code);
+                        exception(status, result);
                     }
                 })
                 .catch(function(error) {
-                    show_message('EXCEPTION', null,null, error, window.global_app_id, lang_code);
+                    show_message('EXCEPTION', null,null, error, window.global_app_id);
                 });
         }
         default:
@@ -2027,7 +2079,7 @@ async function user_forgot(){
                     "client_latitude": "${window.global_client_latitude}",
                     "client_longitude": "${window.global_client_longitude}"
                     }`;
-    if (check_input(email, window.global_lang_code) == false || email =='')
+    if (check_input(email) == false || email =='')
         return;
     else{
         let old_button = document.getElementById('forgot_button').innerHTML;
@@ -2056,7 +2108,7 @@ async function user_forgot(){
                     show_common_dialogue('VERIFY', 'FORGOT', email, window.global_button_default_icon_cancel, function_cancel_event);
                 }            
             } else {
-                exception(status, result, window.global_lang_code);
+                exception(status, result);
             }
         })
     }
@@ -2075,19 +2127,19 @@ function updatePassword(){
                     "client_latitude": "${window.global_client_latitude}",
                     "client_longitude": "${window.global_client_longitude}"
                     }`;
-    if (check_input(new_password, window.global_lang_code) == false ||
-        check_input(new_password_confirm, window.global_lang_code) == false)
+    if (check_input(new_password) == false ||
+        check_input(new_password_confirm) == false)
         return;
     else{
         if (new_password == '') {
             //"Please enter password"
             document.getElementById('user_new_password').classList.add('input_error');
-            show_message('ERROR', 20304, null, null, window.global_main_app_id, lang_code);
+            show_message('ERROR', 20304, null, null, window.global_main_app_id);
             return callBack('ERROR', null);
         }
         if (new_password != new_password_confirm) {
             //Password not the same
-            show_message('ERROR', 20301, null, null, window.global_main_app_id, lang_code);
+            show_message('ERROR', 20301, null, null, window.global_main_app_id);
             return null;
         }
         let old_button = document.getElementById('user_new_password_icon').innerHTML;
@@ -2113,7 +2165,7 @@ function updatePassword(){
                 dialogue_new_password_clear();
                 show_common_dialogue('LOGIN');
             } else {
-                exception(status, result, window.global_lang_code);
+                exception(status, result);
             }
         })
     }
@@ -2190,7 +2242,7 @@ async function init_providers(provider1_function, provider2_function){
     else
         provider_hide(2);
 }
-async function updateProviderUser(provider_no, profile_id, profile_first_name, profile_last_name, profile_image_url, profile_email, lang_code, callBack) {
+async function updateProviderUser(provider_no, profile_id, profile_first_name, profile_last_name, profile_image_url, profile_email, callBack) {
     let json;
     let status;
     let profile_image;
@@ -2224,7 +2276,7 @@ async function updateProviderUser(provider_no, profile_id, profile_first_name, p
             "client_longitude": "${window.global_client_longitude}"
             }`;
         fetch(window.global_rest_url_base + window.global_rest_user_account_provider + profile_id +
-                '?lang_code=' + lang_code, {
+                '?lang_code=' + window.global_lang_code, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -2242,8 +2294,8 @@ async function updateProviderUser(provider_no, profile_id, profile_first_name, p
                     window.global_rest_at = json.accessToken;
                     window.global_user_account_id = json.items[0].id;
                     updateOnlineStatus();
-                    document.getElementById('dialogue_login').style.visibility = 'hidden';
-                    document.getElementById('dialogue_signup').style.visibility = 'hidden';
+                    dialogue_login_clear();
+                    dialogue_signup_clear();
                     return callBack(null, {user_account_id: json.items[0].id,
                                            username: json.items[0].username,
                                            bio: json.items[0].bio,
@@ -2253,12 +2305,12 @@ async function updateProviderUser(provider_no, profile_id, profile_first_name, p
                                            userCreated: json.userCreated});
                 } 
                 else {
-                    exception(status, result, lang_code);
+                    exception(status, result);
                     return callBack(result, null);
                 }
             })
             .catch(function(error) {
-                show_message('EXCEPTION', null,null, error, window.global_app_id, lang_code);
+                show_message('EXCEPTION', null,null, error, window.global_app_id);
                 return callBack(error, null);
             });
     }
@@ -2301,11 +2353,11 @@ async function onProviderSignIn(provider1User, callBack) {
 /*----------------------- */
 /* EXCEPTION              */
 /*----------------------- */
-function exception(status, message, lang_code){
+function exception(status, message){
     if (status == 401)
         eval(`(function (){${window.global_exception_app_function}()}());`);
     else
-        show_message('EXCEPTION',  null, null, message, window.global_app_id, lang_code);
+        show_message('EXCEPTION',  null, null, message, window.global_app_id);
 }
 /*----------------------- */
 /* INIT                   */
@@ -2316,7 +2368,7 @@ function set_app_globals_head() {
     document.title = window.global_app_name;
     document.querySelector('meta[name="apple-mobile-web-app-title"]').setAttribute("content", window.global_app_name)
 }
-async function get_data_token(user_id, lang_code) {
+async function get_data_token() {
     let status;
     let app_id;
     if (window.global_admin==true)
@@ -2325,8 +2377,8 @@ async function get_data_token(user_id, lang_code) {
         app_id = window.global_app_id;
     await fetch(window.global_service_auth + 
                 '?app_id=' + app_id + 
-                '&app_user_id=' + user_id +
-                '&lang_code=' + lang_code, {
+                '&app_user_id=' + window.global_user_account_id +
+                '&lang_code=' + window.global_lang_code, {
         method: 'POST',
         headers: {
             'Authorization': 'Basic ' + btoa(window.global_app_rest_client_id + ':' + window.global_app_rest_client_secret)
@@ -2575,7 +2627,7 @@ function init_common(parameters){
    
     if (parameters.ui==true){
         //icons
-        //
+        //dialogue user verify
         document.getElementById('user_verify_email_icon').innerHTML = window.global_button_default_icon_mail;
         //dialogue login
         document.getElementById('login_tab1').innerHTML = window.global_button_default_icon_login;
@@ -2599,18 +2651,15 @@ function init_common(parameters){
         document.getElementById('user_new_password_icon').innerHTML = window.global_button_default_icon_password;
         document.getElementById('user_new_password_cancel').innerHTML = window.global_button_default_icon_cancel;
         document.getElementById('user_new_password_ok').innerHTML = window.global_button_default_icon_close;
-        
         //dialogue user edit
         document.getElementById('user_edit_btn_avatar_img').innerHTML = window.global_button_default_icon_avatar_edit;
         document.getElementById('user_edit_private').innerHTML = window.global_button_default_icon_private;
         document.getElementById('user_edit_btn_user_update').innerHTML = window.global_button_default_icon_update;
         document.getElementById('user_edit_btn_user_delete_account').innerHTML = window.global_button_default_icon_delete_account;
         document.getElementById('user_edit_close').innerHTML = window.global_button_default_icon_close;
-
         document.getElementById('user_edit_label_provider').innerHTML = window.global_button_default_icon_provider 
         document.getElementById('user_edit_label_provider_id').innerHTML = window.global_button_default_icon_provider_id
         document.getElementById('user_edit_label_provider_email').innerHTML = window.global_button_default_icon_provider_email
-
         document.getElementById('user_edit_input_username_icon').innerHTML = window.global_button_default_icon_user;
         document.getElementById('user_edit_input_bio_icon').innerHTML = window.global_button_default_icon_profile;
         document.getElementById('user_edit_input_email_icon').innerHTML = window.global_button_default_icon_mail;
@@ -2619,11 +2668,9 @@ function init_common(parameters){
         document.getElementById('user_edit_input_new_password_icon').innerHTML = window.global_button_default_icon_password;
         document.getElementById('user_edit_input_new_password_confirm_icon').innerHTML = window.global_button_default_icon_password;
         document.getElementById('user_edit_input_password_reminder_icon').innerHTML = window.global_button_default_icon_account_reminder;
-
         document.getElementById('user_edit_label_last_logontime').innerHTML = window.global_button_default_icon_last_logontime;
         document.getElementById('user_edit_label_account_created').innerHTML = window.global_button_default_icon_account_created;
         document.getElementById('user_edit_label_account_modified').innerHTML = window.global_button_default_icon_account_modified;
-
         //dialogue message
         document.getElementById('message_cancel').innerHTML = window.global_button_default_icon_cancel;
         document.getElementById('message_close').innerHTML = window.global_button_default_icon_close;
@@ -2656,18 +2703,16 @@ function init_common(parameters){
         document.getElementById('profile_top_row1_3').innerHTML = window.global_button_default_icon_views;
         document.getElementById('profile_home').innerHTML = window.global_button_default_icon_profile_top;
         document.getElementById('profile_close').innerHTML = window.global_button_default_icon_close;
+        //events
         //login/signup/forgot
         document.getElementById('login_tab2').addEventListener('click', function() { show_common_dialogue('SIGNUP') }, false);
         document.getElementById('login_tab3').addEventListener('click', function() { show_common_dialogue('FORGOT') }, false);
         document.getElementById('login_close').addEventListener('click', function() { document.getElementById('dialogue_login').style.visibility = 'hidden' }, false);
-
         document.getElementById('signup_tab1').addEventListener('click', function() { show_common_dialogue('LOGIN') }, false);
         document.getElementById('signup_tab3').addEventListener('click', function() { show_common_dialogue('FORGOT') }, false);
         document.getElementById('signup_close').addEventListener('click', function() { document.getElementById('dialogue_signup').style.visibility = 'hidden' }, false);
-
         document.getElementById('forgot_tab1').addEventListener('click', function() { show_common_dialogue('LOGIN') }, false);
         document.getElementById('forgot_tab2').addEventListener('click', function() { show_common_dialogue('SIGNUP') }, false);
-
         document.getElementById("forgot_email").addEventListener("keyup", function(event) {
             if (event.keyCode === 13) {
                 event.preventDefault();
@@ -2684,6 +2729,7 @@ function init_common(parameters){
         //dialogue new password
         document.getElementById('user_new_password_cancel').addEventListener('click', function() { dialogue_new_password_clear(); }, false);
         document.getElementById('user_new_password_ok').addEventListener('click', function() { updatePassword(); }, false);
-        
+        //profile search
+        document.getElementById('profile_search_icon').addEventListener('click', function() { document.getElementById('profile_search_input').dispatchEvent(new KeyboardEvent('keyup')); }, false);
     }
 };
