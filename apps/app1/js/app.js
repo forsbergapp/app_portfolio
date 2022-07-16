@@ -1841,7 +1841,8 @@ async function updateProviderUser_app(provider_no, profile_id, profile_first_nam
                         user_settings_load().then(function(){
                             settings_translate(true).then(function(){
                                 settings_translate(false).then(function(){
-                                    app_show();
+                                    //show default startup
+                                    toolbar_bottom(window.global_app_default_startup_page);
                                     dialogue_loading(0);
                                 })
                             })
@@ -1852,8 +1853,8 @@ async function updateProviderUser_app(provider_no, profile_id, profile_first_nam
         }
     })
 }
-async function onProviderSignIn_app(googleUser){
-    await onProviderSignIn(googleUser, (err, result)=>{
+async function onProviderSignIn_app(provider1User){
+    await onProviderSignIn(provider1User, (err, result)=>{
         if (err==null){
             updateProviderUser_app(result.provider_no, 
                                result.profile_id, 

@@ -11,7 +11,7 @@ const fs = require("fs");
 //module to configure Content Security Policy
 const helmet = require("helmet");
 //module to save variables outside code
-require("dotenv").config();
+require('dotenv').config({path:__dirname+'/config/.env'})
 
 //Create express application
 const app = express();
@@ -46,27 +46,23 @@ Object.defineProperty(global, '__appfilename', {
       } 
 });
 //set Helmet to configure Content Security Policy
-app.use(
-  helmet({
-    crossOriginEmbedderPolicy: false,
-    contentSecurityPolicy: {
-      directives: {
-        "default-src": ["'self'"], 
-        "script-src": ["'self'", "'unsafe-inline'", "'unsafe-eval'", 'api.mapbox.com', 'accounts.google.com', 'www.google.com', 'play.google.com', 'connect.facebook.net', '*.facebook.com', 'cdn.jsdelivr.net'],
-        "script-src-attr": ["'self'", "'unsafe-inline'"],
-        "style-src": ["'self'", "'unsafe-inline'", 'fonts.googleapis.com', 'accounts.google.com', 'ssl.gstatic.com', 'use.fontawesome.com', 'api.mapbox.com'],
-        "font-src": ["self", 'fonts.gstatic.com', 'use.fontawesome.com'],
-        "img-src": ["*", 'data:', 'blob:'],
-        connectSrc: ["*"],
-        childSrc: ["'self'", 'blob:'],
-        "object-src": ["'self'", 'data:'],
-        frameSrc: ["'self'", 'data:', 'accounts.google.com', 'www.facebook.com'],
-      },
-    }
-  })
-);
-// Helmet referrer policy
-app.use(helmet.referrerPolicy({ policy: 'strict-origin-when-cross-origin' }));
+const { policy_directives} = require("./service/auth/auth.controller");
+policy_directives((err, result_directives)=>{
+  if (err)
+    null;
+  else{
+      app.use(
+        helmet({
+          crossOriginEmbedderPolicy: false,
+          contentSecurityPolicy: {
+            directives: result_directives
+          }
+        })
+      );
+      // Helmet referrer policy
+      app.use(helmet.referrerPolicy({ policy: 'strict-origin-when-cross-origin' }));
+  }
+})
 // set middleware JSON maximum size
 app.use(express.json({ limit: process.env.SERVER_JSON_LIMIT }));
 //define what headers are allowed

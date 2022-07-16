@@ -1,5 +1,5 @@
-.env
 .vscode/
+config/
 dev/
 logs/
 production_.env/
