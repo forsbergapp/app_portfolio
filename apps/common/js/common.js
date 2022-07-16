@@ -496,6 +496,80 @@ function dialogue_new_password_clear(){
     window.global_user_account_id = '';
     window.global_rest_at = '';
 }
+function dialogue_user_edit_clear(){
+    //common
+    document.getElementById('user_edit_checkbox_profile_private').checked = false;
+    document.getElementById('user_edit_input_username').value = '';
+    document.getElementById('user_edit_input_bio').value = '';
+    //local
+    document.getElementById('user_edit_input_email').value = '';
+    document.getElementById('user_edit_input_password').value = '';
+    document.getElementById('user_edit_input_password_confirm').value = '';
+    document.getElementById('user_edit_input_new_password').value = '';
+    document.getElementById('user_edit_input_new_password_confirm').value = '';
+    document.getElementById('user_edit_input_password_reminder').value = '';
+    //provider
+    document.getElementById('user_edit_provider_logo').innerHTML = '';
+    document.getElementById('user_edit_label_provider_id_data').innerHTML = '';
+    document.getElementById('user_edit_label_provider_name_data').innerHTML = '';
+    document.getElementById('user_edit_label_provider_email_data').innerHTML = '';
+    document.getElementById('user_edit_label_provider_image_url_data').innerHTML = '';
+    //account info
+    document.getElementById('user_edit_label_data_last_logontime').innerHTML = '';
+    document.getElementById('user_edit_label_data_account_created').innerHTML = '';
+    document.getElementById('user_edit_label_data_account_modified').innerHTML = '';
+}
+function dialogue_login_clear(){
+    document.getElementById('login_username').value = '';
+    document.getElementById('login_password').value = '';
+}
+function dialogue_signup_clear(){
+    document.getElementById('signup_username').value = '';
+    document.getElementById('signup_email').value = '';
+    document.getElementById('signup_password').value = '';
+    document.getElementById('signup_password_confirm').value = '';
+    document.getElementById('signup_password_reminder').value = '';
+}
+function dialogue_forgot_clear(){
+    document.getElementById('forgot_email').value = '';
+}
+function dialogue_profile_clear(){
+
+    document.getElementById('profile_follow').children[0].style.display = 'block';
+    document.getElementById('profile_follow').children[1].style.display = 'none';
+    document.getElementById('profile_like').children[0].style.display = 'block';
+    document.getElementById('profile_like').children[1].style.display = 'none';
+
+    document.getElementById('profile_avatar').src = '';
+    document.getElementById('profile_username').innerHTML = '';
+    document.getElementById('profile_bio').innerHTML = '';
+    document.getElementById('profile_joined_date').innerHTML = '';
+
+    document.getElementById('profile_info_view_count').innerHTML = '';
+    document.getElementById('profile_info_following_count').innerHTML = '';
+    document.getElementById('profile_info_followers_count').innerHTML = '';
+    document.getElementById('profile_info_likes_count').innerHTML = '';
+    document.getElementById('profile_info_liked_count').innerHTML = '';
+    
+    document.getElementById('profile_qr').innerHTML = '';
+
+    document.getElementById('profile_search_input').value = '';
+    document.getElementById('profile_detail_list').innerHTML = '';
+    document.getElementById('profile_top_list').innerHTML = '';
+}
+function dialogue_user_edit_remove_error(){
+    document.getElementById('user_edit_input_username').classList.remove('input_error');
+
+    document.getElementById('user_edit_input_bio').classList.remove('input_error');
+    document.getElementById('user_edit_input_email').classList.remove('input_error');
+
+    document.getElementById('user_edit_input_password').classList.remove('input_error');
+    document.getElementById('user_edit_input_password_confirm').classList.remove('input_error');
+    document.getElementById('user_edit_input_new_password').classList.remove('input_error');
+    document.getElementById('user_edit_input_new_password_confirm').classList.remove('input_error');
+
+    document.getElementById('user_edit_input_password_reminder').classList.remove('input_error');
+}
 /*----------------------- */
 /* BROADCAST              */
 /*----------------------- */
@@ -1048,7 +1122,7 @@ async function profile_show(user_account_id_other = null, username = null, user_
     document.getElementById('profile_detail').style.display = "none";
     document.getElementById('profile_search_list').style.display = "none";
 
-    profile_clear()
+    dialogue_profile_clear()
     if (user_account_id_other == null && user_id == '' && username == null) {
         
         return callBack(null,null);
@@ -1159,36 +1233,12 @@ function profile_home(user_id, timezone, lang_code, header_app, click_event_func
     document.getElementById('profile_detail_list').innerHTML = '';
     profile_top(1, user_id, timezone, lang_code, header_app, click_event_function);
 }
-function profile_clear(){
-
-    document.getElementById('profile_follow').children[0].style.display = 'block';
-    document.getElementById('profile_follow').children[1].style.display = 'none';
-    document.getElementById('profile_like').children[0].style.display = 'block';
-    document.getElementById('profile_like').children[1].style.display = 'none';
-
-    document.getElementById('profile_avatar').src = '';
-    document.getElementById('profile_username').innerHTML = '';
-    document.getElementById('profile_bio').innerHTML = '';
-    document.getElementById('profile_joined_date').innerHTML = '';
-
-    document.getElementById('profile_info_view_count').innerHTML = '';
-    document.getElementById('profile_info_following_count').innerHTML = '';
-    document.getElementById('profile_info_followers_count').innerHTML = '';
-    document.getElementById('profile_info_likes_count').innerHTML = '';
-    document.getElementById('profile_info_liked_count').innerHTML = '';
-    
-    document.getElementById('profile_qr').innerHTML = '';
-
-    document.getElementById('profile_search_input').value = '';
-    document.getElementById('profile_detail_list').innerHTML = '';
-    document.getElementById('profile_top_list').innerHTML = '';
-}
 function profile_close(){
     document.getElementById('dialogue_profile').style.visibility = 'hidden';
     document.getElementById('profile_info').style.display = 'none';
     document.getElementById('profile_detail').style.display = 'none';
     document.getElementById('profile_top').style.display = 'none';
-    profile_clear();
+    dialogue_profile_clear();
 }
 async function profile_update_stat(lang_code, callBack){
     let profile_id = document.getElementById('profile_id');
@@ -1324,59 +1374,21 @@ async function user_logoff(user_id, lang_code){
             null;
         }
         document.getElementById('dialogue_user_edit').style.visibility = "hidden";
-
-        //clear user edit
-        document.getElementById('user_edit_checkbox_profile_private').checked = false;
-        document.getElementById('user_edit_input_username').value = '';
-        document.getElementById('user_edit_input_bio').value = '';
-        document.getElementById('user_edit_input_email').value = '';
-        document.getElementById('user_edit_input_password').value = '';
-        document.getElementById('user_edit_input_password_confirm').value = '';
-        document.getElementById('user_edit_input_new_password').value = '';
-        document.getElementById('user_edit_input_new_password_confirm').value = '';
-        document.getElementById('user_edit_input_password_reminder').value = '';
-
-        //clear login
-        document.getElementById('login_username').value = '';
-        document.getElementById('login_password').value = '';
-        //clear signup
-        document.getElementById('signup_username').value = '';
-        document.getElementById('signup_email').value = '';
-        document.getElementById('signup_password').value = '';
-        document.getElementById('signup_password_confirm').value = '';
-        document.getElementById('signup_password_reminder').value = '';
-
         document.getElementById('dialogue_profile').style.visibility = 'hidden';
-        profile_clear();
-        
+        dialogue_user_edit_clear();
+        dialogue_verify_clear();
+        dialogue_new_password_clear();
+        dialogue_login_clear();
+        dialogue_signup_clear();
+        dialogue_forgot_clear();
+        dialogue_profile_clear();
     })
 }
 async function user_edit(user_id, timezone, lang_code,callBack) {
     let json;
     if (document.getElementById('dialogue_user_edit').style.visibility == 'visible') {
         document.getElementById('dialogue_user_edit').style.visibility = "hidden";
-        document.getElementById('user_edit_checkbox_profile_private').checked = false;
-        //common
-        document.getElementById('user_edit_input_username').value = '';
-        document.getElementById('user_edit_input_bio').value = '';
-        //local
-        document.getElementById('user_edit_input_email').value = '';
-        document.getElementById('user_edit_input_password').value = '';
-        document.getElementById('user_edit_input_password_confirm').value = '';
-        document.getElementById('user_edit_input_new_password').value = '';
-        document.getElementById('user_edit_input_new_password_confirm').value = '';
-        document.getElementById('user_edit_input_password_reminder').value = '';
-        //provider
-        document.getElementById('user_edit_provider_logo').innerHTML = '';
-        document.getElementById('user_edit_label_provider_id_edit_data').innerHTML = '';
-        document.getElementById('user_edit_label_provider_name_edit_data').innerHTML = '';
-        document.getElementById('user_edit_label_provider_email_edit_data').innerHTML = '';
-        document.getElementById('user_edit_label_provider_image_url_edit_data').innerHTML = '';
-
-        //account info
-        document.getElementById('user_edit_label_data_last_logontime').value = '';
-        document.getElementById('user_edit_label_data_account_created').value = '';
-        document.getElementById('user_edit_label_data_account_modified').value = '';
+        dialogue_user_edit_clear();
         return callBack(null, null);
     } else {
         let status;
@@ -1427,10 +1439,10 @@ async function user_edit(user_id, timezone, lang_code,callBack) {
                                 document.getElementById('user_edit_provider').style.display = 'block';
                                 document.getElementById('user_edit_provider_logo').innerHTML = window.global_button_default_icon_provider1;
                                 document.getElementById('user_edit_local').style.display = 'none';
-                                document.getElementById('user_edit_label_provider_id_edit_data').innerHTML = json.provider1_id;
-                                document.getElementById('user_edit_label_provider_name_edit_data').innerHTML = json.provider1_first_name + ' ' + json.provider1_last_name;
-                                document.getElementById('user_edit_label_provider_email_edit_data').innerHTML = json.provider1_email;
-                                document.getElementById('user_edit_label_provider_image_url_edit_data').innerHTML = json.provider1_image_url;
+                                document.getElementById('user_edit_label_provider_id_data').innerHTML = json.provider1_id;
+                                document.getElementById('user_edit_label_provider_name_data').innerHTML = json.provider1_first_name + ' ' + json.provider1_last_name;
+                                document.getElementById('user_edit_label_provider_email_data').innerHTML = json.provider1_email;
+                                document.getElementById('user_edit_label_provider_image_url_data').innerHTML = json.provider1_image_url;
                                 document.getElementById('user_edit_avatar').style.display = 'none';
                                 if (json.provider1_image == null || json.provider1_image == '')
                                     recreate_img(document.getElementById('user_edit_avatar_img'));
@@ -1441,10 +1453,10 @@ async function user_edit(user_id, timezone, lang_code,callBack) {
                                     document.getElementById('user_edit_provider').style.display = 'block';
                                     document.getElementById('user_edit_provider_logo').innerHTML = window.global_button_default_icon_provider2;
                                     document.getElementById('user_edit_local').style.display = 'none';
-                                    document.getElementById('user_edit_label_provider_id_edit_data').innerHTML = json.provider2_id;
-                                    document.getElementById('user_edit_label_provider_name_edit_data').innerHTML = json.provider2_first_name + ' ' + json.provider2_last_name;
-                                    document.getElementById('user_edit_label_provider_email_edit_data').innerHTML = json.provider2_email;
-                                    document.getElementById('user_edit_label_provider_image_url_edit_data').innerHTML = json.provider2_image_url;
+                                    document.getElementById('user_edit_label_provider_id_data').innerHTML = json.provider2_id;
+                                    document.getElementById('user_edit_label_provider_name_data').innerHTML = json.provider2_first_name + ' ' + json.provider2_last_name;
+                                    document.getElementById('user_edit_label_provider_email_data').innerHTML = json.provider2_email;
+                                    document.getElementById('user_edit_label_provider_image_url_data').innerHTML = json.provider2_image_url;
                                     document.getElementById('user_edit_avatar').style.display = 'none';
                                     if (json.provider2_image == null || json.provider2_image == '')
                                         recreate_img(document.getElementById('user_edit_avatar_img'));
@@ -1522,18 +1534,9 @@ async function user_update(user_id, lang_code, callBack) {
                         "avatar":"${avatar}"
                     }`;
         url = window.global_rest_url_base + window.global_rest_user_account + user_id;
-        document.getElementById('user_edit_input_username').classList.remove('input_error');
 
-        document.getElementById('user_edit_input_bio').classList.remove('input_error');
-        document.getElementById('user_edit_input_email').classList.remove('input_error');
-
-        document.getElementById('user_edit_input_password').classList.remove('input_error');
-        document.getElementById('user_edit_input_password_confirm').classList.remove('input_error');
-        document.getElementById('user_edit_input_new_password').classList.remove('input_error');
-        document.getElementById('user_edit_input_new_password_confirm').classList.remove('input_error');
-
-        document.getElementById('user_edit_input_password_reminder').classList.remove('input_error');
-
+        dialogue_user_edit_remove_error();
+        
         if (password == '') {
             //"Please enter password"
             document.getElementById('user_edit_input_password').classList.add('input_error');
@@ -1583,26 +1586,7 @@ async function user_update(user_id, lang_code, callBack) {
                 json = JSON.parse(result);
                 document.getElementById('dialogue_user_edit').style.visibility = "hidden";
                 document.getElementById('user_edit_avatar').style.display = 'none';
-
-                document.getElementById('user_edit_checkbox_profile_private').checked = false;
-                document.getElementById('user_edit_input_username').value = '';
-                document.getElementById('user_edit_input_bio').value = '';
-                document.getElementById('user_edit_input_email').value = '';
-                document.getElementById('user_edit_input_password').value = '';
-                document.getElementById('user_edit_input_password_confirm').value = '';
-                document.getElementById('user_edit_input_new_password').value = '';
-                document.getElementById('user_edit_input_new_password_confirm').value = '';
-                document.getElementById('user_edit_input_password_reminder').value = '';
-                //provider
-                document.getElementById('user_edit_provider_logo').innerHTML = '';
-                document.getElementById('user_edit_label_provider_id_edit_data').innerHTML = '';
-                document.getElementById('user_edit_label_provider_name_edit_data').innerHTML = '';
-                document.getElementById('user_edit_label_provider_email_edit_data').innerHTML = '';
-                document.getElementById('user_edit_label_provider_image_url_edit_data').innerHTML = '';
-
-                document.getElementById('user_edit_label_data_last_logontime').innerHTML = '';
-                document.getElementById('user_edit_label_data_account_created').innerHTML = '';
-                document.getElementById('user_edit_label_data_account_modified').innerHTML = '';
+                dialogue_user_edit_clear();
                 return callBack(null, {username: username, 
                                        avatar: avatar,
                                        bio: bio});
@@ -1774,11 +1758,8 @@ async function user_verify_check_input(item, nextField, lang_code, callBack) {
                             document.getElementById('dialogue_login').style.visibility = "hidden";
                             
                             document.getElementById('dialogue_signup').style.visibility = 'hidden';
-                            document.getElementById('signup_username').value = '';
-                            document.getElementById('signup_email').value = '';
-                            document.getElementById('signup_password').value = '';
-                            document.getElementById('signup_password_confirm').value = '';
-                            document.getElementById('signup_password_reminder').value = '';
+                            dialogue_signup_clear();
+                            dialogue_forgot_clear();
                             dialogue_verify_clear();
                             return callBack(null, {"actived": 1, 
                                                    "verification_type" : verification_type});
@@ -1832,14 +1813,7 @@ async function user_delete(choice=null, user_account_id, user_local, function_de
         }
         case 1:{
             document.getElementById("dialogue_message").style.visibility = "hidden";
-            document.getElementById('user_edit_input_username').classList.remove('input_error');
-            document.getElementById('user_edit_input_bio').classList.remove('input_error');
-            document.getElementById('user_edit_input_email').classList.remove('input_error');
-            document.getElementById('user_edit_input_password').classList.remove('input_error');
-            document.getElementById('user_edit_input_password_confirm').classList.remove('input_error');
-            document.getElementById('user_edit_input_new_password').classList.remove('input_error');
-            document.getElementById('user_edit_input_new_password_confirm').classList.remove('input_error');
-            document.getElementById('user_edit_input_password_reminder').classList.remove('input_error');
+            dialogue_user_edit_remove_error();
     
             let old_button = document.getElementById('user_edit_btn_user_delete_account').innerHTML;
             document.getElementById('user_edit_btn_user_delete_account').innerHTML = window.global_button_spinner;
@@ -2147,50 +2121,74 @@ function updatePassword(){
 /*----------------------- */
 /* USER PROVIDER          */
 /*----------------------- */
-async function init_providers(provider1_function, provider2_function){
-    //enable provider 1 if used
-    if (window.global_app_user_provider1_use==1){
-        document.getElementById('g_id_onload').setAttribute('data-client_id', window.global_app_user_provider1_id);
-        document.getElementById('g_id_onload').setAttribute('data-callback', provider1_function);
-        document.getElementById('g_id_onload').setAttribute('data-auto_select', 'true');
-        document.getElementsByClassName('g_id_signin')[0].setAttribute('data-shape', 'circle');
-        document.getElementsByClassName('g_id_signin')[0].setAttribute('data-width', '268');
-        document.getElementsByClassName('g_id_signin')[0].setAttribute('data-text', 'continue_with');
+function provider_init(providertype, provider_function){
+    switch (providertype){
+        case 1:{
+            window.global_button_default_icon_provider1 = '<i class="fab fa-google"></i>';
 
-        /*Provider 1 SDK*/
-        let tag = document.createElement('script');
-        tag.src = window.global_app_user_provider1_api_src;
-        tag.defer = true;
-        let firstScriptTag = document.getElementsByTagName('script')[0];
-        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+            document.getElementById('g_id_onload').setAttribute('data-client_id', window.global_app_user_provider1_id);
+            document.getElementById('g_id_onload').setAttribute('data-callback', provider_function);
+            document.getElementById('g_id_onload').setAttribute('data-auto_select', 'true');
+            document.getElementsByClassName('g_id_signin')[0].setAttribute('data-shape', 'circle');
+            document.getElementsByClassName('g_id_signin')[0].setAttribute('data-width', '268');
+            document.getElementsByClassName('g_id_signin')[0].setAttribute('data-text', 'continue_with');
+
+            /*Provider 1 SDK*/
+            let tag = document.createElement('script');
+            tag.src = window.global_app_user_provider1_api_src;
+            tag.defer = true;
+            let firstScriptTag = document.getElementsByTagName('script')[0];
+            firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+            break;
+        }
+        case 2:{
+            window.global_button_default_icon_provider2 = '<i class="fab fa-facebook"></i>';
+            document.getElementById('logo_provider2').innerHTML = window.global_button_default_icon_provider2;
+            document.getElementById('login_provider2').addEventListener('click', provider_function, false);
+            /*Provider 2 SDK*/
+            window.fbAsyncInit = function() {
+                FB.init({
+                appId      : window.global_app_user_provider2_id,
+                cookie     : true,
+                xfbml      : true,
+                version    : window.global_app_user_provider2_api_version
+                });
+                
+            };
+            (function(d, s, id){
+                let js, fjs = d.getElementsByTagName(s)[0];
+                if (d.getElementById(id)) {return;}
+                js = d.createElement(s); js.id = id;
+                js.src = window.global_app_user_provider2_api_src + 
+                        navigator.language.replace(/-/g, '_') + 
+                        window.global_app_user_provider2_api_src2;
+                fjs.parentNode.insertBefore(js, fjs);
+            }(document, 'script', 'facebook-jssdk'));
+            break;
+        }
     }
-    else
-        document.getElementsByClassName('g_id_signin')[0].className += 'login_button_hidden';
-    //enable provider 2 if used
-    if (window.global_app_user_provider2_use==1){
-        document.getElementById('login_provider2').addEventListener('click', provider2_function, false);
-        /*Provider 2 SDK*/
-        window.fbAsyncInit = function() {
-            FB.init({
-            appId      : window.global_app_user_provider2_id,
-            cookie     : true,
-            xfbml      : true,
-            version    : window.global_app_user_provider2_api_version
-            });
-            
-        };
-        (function(d, s, id){
-            let js, fjs = d.getElementsByTagName(s)[0];
-            if (d.getElementById(id)) {return;}
-            js = d.createElement(s); js.id = id;
-            js.src = window.global_app_user_provider2_api_src + 
-                    navigator.language.replace(/-/g, '_') + 
-                    window.global_app_user_provider2_api_src2;
-            fjs.parentNode.insertBefore(js, fjs);
-        }(document, 'script', 'facebook-jssdk'));
+}
+function provider_hide(providertype){
+    switch (providertype){
+        case 1:{
+            document.getElementsByClassName('g_id_signin')[0].className += 'login_button_hidden';
+            break;
+        }
+        case 2:{
+            document.getElementById('login_provider2').className = 'login_button_hidden';
+            break;
+        }
     }
+}
+async function init_providers(provider1_function, provider2_function){
+    if (window.global_app_user_provider1_use==1)
+        provider_init(1, provider1_function);
     else
-        document.getElementById('login_provider2').className = 'login_button_hidden';
+        provider_hide(1);
+    if (window.global_app_user_provider2_use==1)
+        provider_init(2, provider2_function);
+    else
+        provider_hide(2);
 }
 async function updateProviderUser(provider_no, profile_id, profile_first_name, profile_last_name, profile_image_url, profile_email, lang_code, callBack) {
     let json;
@@ -2243,6 +2241,7 @@ async function updateProviderUser(provider_no, profile_id, profile_first_name, p
                     json = JSON.parse(result);
                     window.global_rest_at = json.accessToken;
                     window.global_user_account_id = json.items[0].id;
+                    updateOnlineStatus();
                     document.getElementById('dialogue_login').style.visibility = 'hidden';
                     document.getElementById('dialogue_signup').style.visibility = 'hidden';
                     return callBack(null, {user_account_id: json.items[0].id,
@@ -2264,7 +2263,7 @@ async function updateProviderUser(provider_no, profile_id, profile_first_name, p
             });
     }
 }
-async function onProviderSignIn(googleUser, callBack) {
+async function onProviderSignIn(provider1User, callBack) {
     let profile;
     function fb_api(){
         FB.api('/me?fields=id,first_name,last_name,picture, email', function(response) {
@@ -2276,8 +2275,8 @@ async function onProviderSignIn(googleUser, callBack) {
                                    profile_email: response.email});
         });
     }
-    if (googleUser) {
-        profile = parseJwt(googleUser.credential);
+    if (provider1User) {
+        profile = parseJwt(provider1User.credential);
         return callBack(null, {provider_no: 1,
                                profile_id: profile.sub,
                                profile_first_name: profile.given_name,
@@ -2473,6 +2472,10 @@ function set_globals(parameters){
         window.global_button_default_icon_avatar_edit = '<i class="fas fa-camera"></i>';
         window.global_button_default_icon_user_avatar = '<i class="fas fa-user-circle"></i>';
 
+        window.global_button_default_icon_provider = '<i class="fa-solid fa-passport"></i>';
+        window.global_button_default_icon_provider_id = '<i class="fa-solid fa-id-badge"></i>';
+        window.global_button_default_icon_provider_email = '<i class="fa-solid fa-envelope"></i>';
+        
         window.global_button_default_icon_user_joined_date = '<i class="fas fa-hands-helping"></i>';
         window.global_button_default_icon_user_follow_user = '<i class="fas fa-user-plus"></i>';
         window.global_button_default_icon_user_followed_user = '<i class="fas fa-user-check"></i';
@@ -2480,8 +2483,6 @@ function set_globals(parameters){
 
         window.global_button_default_icon_home = '<i class="fas fa-home"></i>';
         window.global_button_default_icon_cloud = '<i class="fas fa-cloud"></i>';
-        window.global_button_default_icon_provider1 = '<i class="fab fa-google"></i>';
-        window.global_button_default_icon_provider2 = '<i class="fab fa-facebook"></i>';
         window.global_button_default_icon_map_my_location = '<i class="fas fa-crosshairs"></i>';
 
         window.global_button_default_icon_mobile = '<i class="fa-solid fa-mobile-screen-button"></i>';
@@ -2581,7 +2582,6 @@ function init_common(parameters){
         document.getElementById('login_tab2').innerHTML = window.global_button_default_icon_signup;
         document.getElementById('login_tab3').innerHTML = window.global_button_default_icon_forgot;
         document.getElementById('login_button').innerHTML = window.global_button_default_icon_login;
-        document.getElementById('logo_provider2').innerHTML = window.global_button_default_icon_provider2;
         document.getElementById('login_close').innerHTML = window.global_button_default_icon_close;
         //dialogue signup
         document.getElementById('signup_tab1').innerHTML = window.global_button_default_icon_login;
@@ -2606,6 +2606,10 @@ function init_common(parameters){
         document.getElementById('user_edit_btn_user_update').innerHTML = window.global_button_default_icon_update;
         document.getElementById('user_edit_btn_user_delete_account').innerHTML = window.global_button_default_icon_delete_account;
         document.getElementById('user_edit_close').innerHTML = window.global_button_default_icon_close;
+
+        document.getElementById('user_edit_label_provider').innerHTML = window.global_button_default_icon_provider 
+        document.getElementById('user_edit_label_provider_id').innerHTML = window.global_button_default_icon_provider_id
+        document.getElementById('user_edit_label_provider_email').innerHTML = window.global_button_default_icon_provider_email
 
         document.getElementById('user_edit_input_username_icon').innerHTML = window.global_button_default_icon_user;
         document.getElementById('user_edit_input_bio_icon').innerHTML = window.global_button_default_icon_profile;
