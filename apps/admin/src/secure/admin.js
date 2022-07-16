@@ -147,7 +147,7 @@ async function get_apps() {
             document.getElementById('select_app_broadcast').innerHTML = html;
         }
         else
-            exception(status, result, window.global_lang_code);
+            exception(status, result);
         });
 }
 async function show_list(list_div, list_div_col_title, url, sort, order_by, cols){
@@ -501,7 +501,7 @@ async function show_list(list_div, list_div_col_title, url, sort, order_by, cols
                         break;
                     }
                 }
-                exception(status, result, window.global_lang_code);
+                exception(status, result);
             }
             });
     }
@@ -518,7 +518,7 @@ function sendBroadcast(){
     let destination_app;
 
     if (broadcast_message==''){
-        show_message('INFO', null, null, 'Please enter message', window.global_main_app_id, window.global_lang_code);
+        show_message('INFO', null, null, 'Please enter message', window.global_main_app_id);
         return null;
     }
     
@@ -554,10 +554,10 @@ function sendBroadcast(){
     })
     .then(function(result) {
         if (status == 200){
-            show_message('INFO', null, null, 'Sent!', window.global_main_app_id, window.global_lang_code);
+            show_message('INFO', null, null, 'Sent!', window.global_main_app_id);
         }
         else
-            exception(status, result, window.global_lang_code);
+            exception(status, result);
         });
 }    
 function closeBroadcast(){
@@ -815,7 +815,7 @@ async function show_chart(chart){
             }
             else{
                 document.getElementById(`box${chart}`).innerHTML = old_html;
-                exception(status, result, window.global_lang_code);
+                exception(status, result);
             }   
         })
     }
@@ -841,7 +841,7 @@ async function count_connected(){
                 document.getElementById('count_connected').innerHTML = json.data.length;
             }
             else
-                exception(status, result, window.global_lang_code);
+                exception(status, result);
             });
     }
 }
@@ -867,7 +867,7 @@ async function count_users(){
                 document.getElementById('count_provider2').innerHTML = json.data.count_provider2;
             }
             else
-                exception(status, result, window.global_lang_code);
+                exception(status, result);
         });
     }
 }
@@ -894,7 +894,7 @@ async function show_maintenance(){
                     document.getElementById('checkbox_maintenance').checked =false;
             }
             else
-                exception(status, result, window.global_lang_code);
+                exception(status, result);
             });
     }
 }
@@ -926,7 +926,7 @@ function set_maintenance(){
             null;
         }
         else
-            exception(status, result, window.global_lang_code);
+            exception(status, result);
         });
 }
 /*----------------------- */
@@ -984,7 +984,7 @@ async function show_apps(){
             }
             else{
                 document.getElementById('list_apps').innerHTML = old_html;
-                exception(status, result, window.global_lang_code);
+                exception(status, result);
             }
         })  
 }
@@ -1042,7 +1042,7 @@ function show_app_parameter(app_id){
             }
             else{
                 document.getElementById('list_app_parameter').innerHTML = old_html;
-                exception(status, result,window.global_lang_code);
+                exception(status, result);
             }
         })
 }
@@ -1089,7 +1089,7 @@ function update_record(table,
                     //app window.global_main_app_id should always be enabled
                     element.children[4].children[0].checked = true;
                     enabled=true;
-                    show_message('INFO', null, null, `App ${window.global_main_app_id} should always be enabled`, window.global_main_app_id, window.global_lang_code);
+                    show_message('INFO', null, null, `App ${window.global_main_app_id} should always be enabled`, window.global_main_app_id);
                 }
                 json_data = `{"app_name": "${app_name}",
                                 "url": "${url}",
@@ -1126,7 +1126,7 @@ function update_record(table,
             if (status === 200)
                 element.setAttribute('data-changed-record', '0');
             else
-                exception(status, result, window.global_lang_code);
+                exception(status, result);
         })
     }
 }
@@ -1152,7 +1152,7 @@ function get_parameter_type_name(row_item, item, old_value){
             }
         }
         else
-            exception(status, result, window.global_lang_code);
+            exception(status, result);
         });
 }
 function list_events(item_row, item_edit, column_start_index){
@@ -1246,7 +1246,7 @@ function show_parameter_type_names(lov, row_item, item_index){
                     }
                     else{
                         document.getElementById('lov_list').innerHTML = old_html;
-                        exception(status, result, window.global_lang_code);
+                        exception(status, result);
                     }
                 })
             break;
@@ -1422,7 +1422,7 @@ function list_item_action(item){
                            window.global_gps_map_jumpto);
             }
             else
-                exception(status, result, window.global_lang_code);
+                exception(status, result);
         })
     }
     else
@@ -1513,7 +1513,7 @@ async function get_server_log_parameters(){
                 document.getElementById('select_day_menu4').style.display = 'inline-block';
         }
         else
-            exception(status, result, window.global_lang_code);
+            exception(status, result);
     })
 }
 function show_server_logs(sort=1, order_by='desc'){
@@ -1595,7 +1595,7 @@ function show_existing_logfiles(){
             }
             else{
                 document.getElementById('lov_list').innerHTML = old_html;
-                exception(status, result, window.global_lang_code);
+                exception(status, result);
             }
         })
     }
@@ -1709,7 +1709,7 @@ async function get_parameters() {
             }
         }
         else
-            exception(status, result, window.global_lang_code);
+            exception(status, result);
     });
 }
 
@@ -1849,7 +1849,7 @@ function init_admin_secure(){
     document.getElementById('filesearch_menu4').addEventListener('click', function() { show_existing_logfiles();}, false);
     document.getElementById('list_pm2_log_title1').addEventListener('click', function() { list_click(this)}, false);
     document.getElementById('list_server_log_title2').addEventListener('click', function() { list_click(this)}, false);
-    get_data_token(null, window.global_lang_code).then(function(){
+    get_data_token().then(function(){
         get_parameters().then(function(){        
             get_apps().then(function(){
                 get_gps_from_ip().then(function(){

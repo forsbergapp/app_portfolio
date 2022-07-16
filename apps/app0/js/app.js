@@ -28,7 +28,7 @@ function setEvents(){
         document.getElementById( 'dialogue_info_content' ).className = 'dialogue_content dialogue_flip dialogue_flip-side-1';
         document.getElementById( 'dialogue_start_content' ).className = 'dialogue_content dialogue_flip dialogue_flip-side-2';
     }, false );
-    document.getElementById('start_profile').addEventListener('click', function() {profile_home(document.getElementById('user_menu_user_id').innerHTML, Intl.DateTimeFormat().resolvedOptions().timeZone, window.global_lang_code)}, false);
+    document.getElementById('start_profile').addEventListener('click', function() {profile_home(Intl.DateTimeFormat().resolvedOptions().timeZone)}, false);
     //second page
     document.getElementById('info_diagram').addEventListener('click', function() {info(1);}, false);
     document.getElementById('info_datamodel').addEventListener('click', function() {info(2);}, false);
@@ -46,19 +46,19 @@ function setEvents(){
     }, false );
     //common with app specific settings
     //dialogue profile
-    document.getElementById('profile_home').addEventListener('click', function() {profile_home(document.getElementById('user_menu_user_id').innerHTML, Intl.DateTimeFormat().resolvedOptions().timeZone, window.global_lang_code);}, false);
+    document.getElementById('profile_home').addEventListener('click', function() {profile_home(Intl.DateTimeFormat().resolvedOptions().timeZone);}, false);
     document.getElementById('profile_close').addEventListener('click', function() {profile_close()}, false);
-    document.getElementById('profile_search_input').addEventListener('keyup', function() { window.global_typewatch("search_profile(document.getElementById('user_menu_user_id').innerHTML, Intl.DateTimeFormat().resolvedOptions().timeZone, window.global_lang_code, null);", 500); }, false);
-    document.getElementById('profile_top_row1_1').addEventListener('click', function() { profile_top(1, document.getElementById('user_menu_user_id').innerHTML, Intl.DateTimeFormat().resolvedOptions().timeZone, window.global_lang_code)}, false);
-    document.getElementById('profile_top_row1_2').addEventListener('click', function() { profile_top(2, document.getElementById('user_menu_user_id').innerHTML, Intl.DateTimeFormat().resolvedOptions().timeZone, window.global_lang_code)}, false);
-    document.getElementById('profile_top_row1_3').addEventListener('click', function() { profile_top(3, document.getElementById('user_menu_user_id').innerHTML, Intl.DateTimeFormat().resolvedOptions().timeZone, window.global_lang_code)}, false);
+    document.getElementById('profile_search_input').addEventListener('keyup', function() { window.global_typewatch("search_profile(Intl.DateTimeFormat().resolvedOptions().timeZone, null);", 500); }, false);
+    document.getElementById('profile_top_row1_1').addEventListener('click', function() { profile_top(1, Intl.DateTimeFormat().resolvedOptions().timeZone)}, false);
+    document.getElementById('profile_top_row1_2').addEventListener('click', function() { profile_top(2, Intl.DateTimeFormat().resolvedOptions().timeZone)}, false);
+    document.getElementById('profile_top_row1_3').addEventListener('click', function() { profile_top(3, Intl.DateTimeFormat().resolvedOptions().timeZone)}, false);
     document.getElementById('profile_follow').addEventListener('click', function() { user_function_app('FOLLOW') }, false);
 	document.getElementById('profile_like').addEventListener('click', function() { user_function_app('LIKE') }, false);
-    document.getElementById('profile_main_btn_following').addEventListener('click', function() { profile_detail(1, document.getElementById('user_menu_user_id').innerHTML, Intl.DateTimeFormat().resolvedOptions().timeZone, window.global_lang_code, null, true, null) }, false);
-    document.getElementById('profile_main_btn_followed').addEventListener('click', function() { profile_detail(2, document.getElementById('user_menu_user_id').innerHTML, Intl.DateTimeFormat().resolvedOptions().timeZone, window.global_lang_code, null, true, null) }, false);
-    document.getElementById('profile_main_btn_likes').addEventListener('click', function() { profile_detail(3, document.getElementById('user_menu_user_id').innerHTML, Intl.DateTimeFormat().resolvedOptions().timeZone, window.global_lang_code, null, true, null) }, false);
-    document.getElementById('profile_main_btn_liked').addEventListener('click', function() { profile_detail(4, document.getElementById('user_menu_user_id').innerHTML, Intl.DateTimeFormat().resolvedOptions().timeZone, window.global_lang_code, null, true, null) }, false);
-    document.getElementById('profile_main_btn_cloud').addEventListener('click', function() { profile_detail(5, document.getElementById('user_menu_user_id').innerHTML, Intl.DateTimeFormat().resolvedOptions().timeZone, window.global_lang_code, window.global_rest_user_account_app, true, global_button_default_icon_cloud, null) }, false);
+    document.getElementById('profile_main_btn_following').addEventListener('click', function() { profile_detail(1, Intl.DateTimeFormat().resolvedOptions().timeZone, null, true, null) }, false);
+    document.getElementById('profile_main_btn_followed').addEventListener('click', function() { profile_detail(2, Intl.DateTimeFormat().resolvedOptions().timeZone, null, true, null) }, false);
+    document.getElementById('profile_main_btn_likes').addEventListener('click', function() { profile_detail(3, Intl.DateTimeFormat().resolvedOptions().timeZone, null, true, null) }, false);
+    document.getElementById('profile_main_btn_liked').addEventListener('click', function() { profile_detail(4, Intl.DateTimeFormat().resolvedOptions().timeZone, null, true, null) }, false);
+    document.getElementById('profile_main_btn_cloud').addEventListener('click', function() { profile_detail(5, Intl.DateTimeFormat().resolvedOptions().timeZone, window.global_rest_user_account_app, true, global_button_default_icon_cloud, null) }, false);
     //dialogue login/signup/forgot
     let input_username_login = document.getElementById("login_username");
     input_username_login.addEventListener("keyup", function(event) {
@@ -81,11 +81,11 @@ function setEvents(){
         }
     });
     document.getElementById('login_button').addEventListener('click', function() { user_login_app() }, false);    
-    document.getElementById('signup_button').addEventListener('click', function() { user_signup(document.getElementById('user_menu_user_id'), window.global_lang_code) }, false);
+    document.getElementById('signup_button').addEventListener('click', function() { user_signup() }, false);
     //dialogue user edit
-    document.getElementById('user_edit_close').addEventListener('click', function() { user_edit_app() }, false);
+    document.getElementById('user_edit_close').addEventListener('click', function() { dialogue_user_edit_clear() }, false);
     document.getElementById('user_edit_btn_avatar_img').addEventListener('click', function() { document.getElementById('user_edit_input_avatar_img').click() }, false);
-    document.getElementById('user_edit_input_avatar_img').addEventListener('change', function() { show_image(document.getElementById('user_edit_avatar_img'), this.id, window.global_user_image_avatar_width, window.global_user_image_avatar_height, window.global_lang_code); }, false);
+    document.getElementById('user_edit_input_avatar_img').addEventListener('change', function() { show_image(document.getElementById('user_edit_avatar_img'), this.id, window.global_user_image_avatar_width, window.global_user_image_avatar_height); }, false);
     document.getElementById('user_edit_close').addEventListener('click', function() { document.getElementById('dialogue_user_edit').style.visibility = 'hidden' }, false);    
     document.getElementById('user_edit_btn_user_update').addEventListener('click', function() { user_update_app(); }, false);
     document.getElementById('user_edit_btn_user_delete_account').addEventListener('click', function() { user_delete_app(); }, false);
@@ -149,7 +149,7 @@ function get_apps() {
             }))
           }
           else
-            show_message('EXCEPTION', null,null, result, window.global_app_id, window.global_lang_code);
+            show_message('EXCEPTION', null,null, result, window.global_app_id);
         });
 }
 
@@ -215,6 +215,8 @@ async function get_parameters() {
                     window.global_rest_user_account = json.data[i].parameter_value;
                 if (json.data[i].parameter_name=='REST_USER_ACCOUNT_ACTIVATE')
                     window.global_rest_user_account_activate = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='REST_USER_ACCOUNT_COMMON')
+                    window.global_rest_user_account_common = json.data[i].parameter_value;
                 if (json.data[i].parameter_name=='REST_USER_ACCOUNT_APP')
                     window.global_rest_user_account_app = json.data[i].parameter_value;
                 if (json.data[i].parameter_name=='REST_USER_ACCOUNT_FOLLOW')
@@ -268,7 +270,7 @@ async function get_parameters() {
             }
         }
         else
-            show_message('EXCEPTION', null,null, result, window.global_app_id, window.global_lang_code);
+            show_message('EXCEPTION', null,null, result, window.global_app_id);
     });
 }
 function zoom_info(zoomvalue = '') {
@@ -329,14 +331,12 @@ function user_menu_item_click(item){
         case 'user_menu_dropdown_profile':{
             //profile_home();
             document.getElementById('dialogue_profile').style.visibility = 'visible';
-            profile_show(document.getElementById('user_menu_user_id').innerHTML,
-                null,
-                document.getElementById('user_menu_user_id').innerHTML,
-                Intl.DateTimeFormat().resolvedOptions().timeZone,
-                window.global_lang_code,
-                (err, result)=>{
-                    null;
-                });
+            profile_show(null,
+                         null,
+                         Intl.DateTimeFormat().resolvedOptions().timeZone,
+                        (err, result)=>{
+                            null;
+                        });
             break;
         }
         case 'user_menu_dropdown_edit':{
@@ -362,17 +362,12 @@ function user_menu_item_click(item){
 async function user_login_app(){
     let username = document.getElementById('login_username');
     let password = document.getElementById('login_password');
-    let user_id_div = document.getElementById('user_menu_user_id');
     let old_button = document.getElementById('login_button').innerHTML;
     document.getElementById('login_button').innerHTML = window.global_button_spinner;
             
-    await user_login(username.value, password.value, window.global_lang_code, (err, result)=>{
+    await user_login(username.value, password.value, (err, result)=>{
         document.getElementById('login_button').innerHTML = old_button;
-        if (err==null){
-            username.value = '';
-            password.value = '';
-            
-            user_id_div.innerHTML = result.user_id;
+        if (err==null){            
             //set avatar or empty
             if (result.avatar == null || result.avatar == '') {
                 recreate_img(document.getElementById('user_menu_avatar_img'));
@@ -388,8 +383,8 @@ async function user_login_app(){
             document.getElementById('user_menu_dropdown_logged_in').style.display = 'inline-block';
             document.getElementById('user_menu_dropdown_logged_out').style.display = 'none';
 
-            document.getElementById('dialogue_login').style.visibility = 'hidden';
-            document.getElementById('dialogue_signup').style.visibility = 'hidden';
+            dialogue_login_clear();
+            dialogue_signup_clear();
         }
         
     })
@@ -398,8 +393,7 @@ function app_exception(){
     user_logoff_app();
 }
 function user_logoff_app() {
-    user_logoff(document.getElementById('user_menu_user_id').innerHTML, window.global_lang_code).then(function(){
-        document.getElementById('user_menu_user_id').innerHTML = '';
+    user_logoff().then(function(){
         recreate_img(document.getElementById('user_menu_avatar_img'));
         document.getElementById('user_menu_username').innerHTML = '';
         document.getElementById('user_menu_logged_in').style.display = 'none';
@@ -410,7 +404,7 @@ function user_logoff_app() {
     })
 }
 async function user_edit_app() {
-    await user_edit(document.getElementById('user_menu_user_id').innerHTML, Intl.DateTimeFormat().resolvedOptions().timeZone, window.global_lang_code.value,(err, result) => {
+    await user_edit(Intl.DateTimeFormat().resolvedOptions().timeZone,(err, result) => {
         if ((err==null && result==null) == false)
             if (err==null){
                 document.getElementById('user_menu_avatar_img').src = image_format(result.avatar ?? result.provider1_image ?? result.provider2_image);
@@ -418,7 +412,7 @@ async function user_edit_app() {
     });
 }
 async function user_update_app(){
-    await user_update(document.getElementById('user_menu_user_id').innerHTML, window.global_lang_code,(err, result) => {
+    await user_update((err, result) => {
         if (err==null){
             document.getElementById('user_menu_avatar_img').src = atob(result.avatar);
             document.getElementById('user_menu_username').innerHTML = result.username;
@@ -426,7 +420,7 @@ async function user_update_app(){
     });
 }
 async function user_verify_check_input_app(item, nextField){
-    await user_verify_check_input(item, nextField, window.global_lang_code, (err, result) => {
+    await user_verify_check_input(item, nextField, (err, result) => {
         if ((err==null && result==null)==false)
             if(err==null){
                 //login if LOGIN  or SIGNUP were verified succesfully
@@ -437,15 +431,10 @@ async function user_verify_check_input_app(item, nextField){
     })
 }
 async function user_function_app(function_name){
-    await user_function(function_name, document.getElementById('user_menu_user_id').innerHTML, window.global_lang_code, (err, result) => {
+    await user_function(function_name, (err, result) => {
         if (err==null){
-            profile_update_stat_app();
+            profile_update_stat();
         }
-    })
-}
-async function profile_update_stat_app(){
-    await profile_update_stat(window.global_lang_code, (err, result) =>{
-        null;
     })
 }
 async function  user_delete_app(){
@@ -456,23 +445,21 @@ async function  user_delete_app(){
         user_local = false;
     let function_delete_user_account = function() { 
                                             document.getElementById('dialogue_message').style.visibility = 'hidden';
-                                            user_delete(1, document.getElementById('user_menu_user_id').innerHTML, user_local, null, window.global_lang_code, (err, result)=>{
+                                            user_delete(1, user_local, null, (err, result)=>{
                                                 if (err==null){
                                                     user_logoff_app();
                                                 }
                                             }) 
                                         };
-    await user_delete(null, document.getElementById('user_menu_user_id').innerHTML, user_local, function_delete_user_account, window.global_lang_code, (err, result) =>{
+    await user_delete(null, user_local, function_delete_user_account, (err, result) =>{
         if (err==null){
             user_logoff_app();
         }
     })
 }
 async function updateProviderUser_app(provider_no, profile_id, profile_first_name, profile_last_name, profile_image_url, profile_email){
-    let user_id = document.getElementById('user_menu_user_id');
-    await updateProviderUser(provider_no, profile_id, profile_first_name, profile_last_name, profile_image_url, profile_email, window.global_lang_code, (err, result)=>{
+    await updateProviderUser(provider_no, profile_id, profile_first_name, profile_last_name, profile_image_url, profile_email, (err, result)=>{
         if(err==null){
-            user_id.innerHTML = result.user_account_id;
             //set avatar or empty
             if (result.avatar == null || result.avatar == '') {
                 recreate_img(document.getElementById('user_menu_avatar_img'));
@@ -534,7 +521,7 @@ async function init_app(){
     setEvents();
     zoom_info('');
     move_info(null,null);
-    await get_data_token(null, window.global_lang_code);
+    await get_data_token();
 }
 function init(parameters){
     init_common(parameters);
@@ -552,9 +539,7 @@ function init(parameters){
                     document.getElementById('dialogue_profile').style.visibility = "visible";
                     profile_show(null, 
                                  user, 
-                                 document.getElementById('user_menu_user_id').innerHTML,
                                  Intl.DateTimeFormat().resolvedOptions().timeZone,
-                                 window.global_lang_code,
                                  (err, result)=>{
                                     null;
                                  });

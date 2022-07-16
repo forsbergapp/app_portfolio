@@ -27,7 +27,7 @@ async function get_parameters() {
             }
         }
         else
-            show_message('EXCEPTION', null,null, result, window.global_app_id, window.global_lang_code);
+            show_message('EXCEPTION', null,null, result, window.global_app_id);
     });
 }
 function zoom_info(zoomvalue = '') {
@@ -107,16 +107,14 @@ async function init_app(){
     move_info(null,null);
     document.getElementById('window_info').style.visibility = 'visible';
     document.getElementById('info').innerHTML = `<img src="${window.global_img_datamodel_img}"/>`;
-    await get_data_token(null, window.global_lang_code);    
+    await get_data_token();
 
 }
 function init(parameters){
     init_common(parameters);
     init_app().then(function(){
         get_parameters().then(function(){
-            get_gps_from_ip(null, window.global_lang_code).then(function(){
-                null;
-            });
+            null;
         })    
     })
 }
