@@ -1,3 +1,19 @@
+/*  Functions and globals in this order:
+    GLOBALS APP & REPORT
+	COMMON REPORT
+	COMMON APP & REPORT
+	COMMON APP & REPORT TIMETABLE MONTH & YEAR
+	COMMON APP & REPORT TIMETABLE DAY
+	COMMON APP & REPORT TIMETABLE YEAR
+    EXCEPTION REPORT
+    INIT REPORT
+
+	APP    = USED IN APP
+	REPORT = USED IN REPORT
+*/
+/*----------------------- */
+/* GLOBALS APP & REPORT   */
+/*----------------------- */
 window.global_regional_def_calendar_lang;
 window.global_regional_def_locale_ext_prefix;
 window.global_regional_def_locale_ext_number_system;
@@ -76,10 +92,8 @@ window.global_second_language =
 				};
 
 /*----------------------- */
-/* Timetable common functions */
+/* COMMON REPORT		  */
 /*----------------------- */
-//lang_code is display message language who is running the report
-//use saved locale and second_locale user settings
 async function timetable_user_setting_get(user_setting_id, lang_code, callBack) {
     let json;
     let status;
@@ -173,11 +187,99 @@ async function timetable_user_setting_get(user_setting_id, lang_code, callBack) 
 						}
 				);
 			} 
-			else
+			else{
+				report_exception(result);
 				callBack(result, null);
+			}
         })
 }
-function updateReportViewStat(user_account_id, user_setting_id) {
+async function timetable_translate_settings(locale, locale_second, lang_code) {
+    let json;
+    let status;
+	async function fetch_translation(locale, first){
+		//fetch any message with first language always
+		//show translation using first or second language
+		await fetch(window.global_rest_url_base + window.global_rest_app_object + locale +
+			'?app_id=' + window.global_app_id + 
+			'&lang_code=' + lang_code, 
+			{
+			method: 'GET',
+			headers: {
+				'Authorization': 'Bearer ' + window.global_rest_dt,
+			}
+		})
+		.then(function(response) {
+			status = response.status;
+			return response.text();
+		})
+		.then(function(result) {
+			if (status === 200) {
+				json = JSON.parse(result);	
+				for (let i = 0; i < json.data.length; i++){
+					if (first == true){
+						if (json.data[i].object=='APP_OBJECT_ITEM' && json.data[i].object_name=='REPORT')
+							window.global_first_language[json.data[i].object_item_name.toLowerCase()] = json.data[i].text;
+						//Used by service report onle first language implemented:
+						//Regional
+						if (json.data[i].object=='APP_OBJECT_ITEM' && json.data[i].object_name=='SETTING_NAV_REGIONAL' && 
+							json.data[i].object_item_name=='SETTING_LABEL_REPORT_TIMEZONE')
+							window.global_first_language.timezone_text = json.data[i].text;
+						//GPS
+						if (json.data[i].object=='APP_OBJECT_ITEM' && json.data[i].object_name=='SETTING_NAV_GPS' && 
+							json.data[i].object_item_name=='SETTING_LABEL_LAT')
+							window.global_first_language.gps_lat_text = json.data[i].text;
+						if (json.data[i].object=='APP_OBJECT_ITEM' && json.data[i].object_name=='SETTING_NAV_GPS' && 
+							json.data[i].object_item_name=='SETTING_LABEL_LONG')
+							window.global_first_language.gps_long_text = json.data[i].text;
+					}
+					else{
+						for (let i = 0; i < json.data.length; i++){	
+							if (json.data[i].object=='APP_OBJECT_ITEM' && json.data[i].object_name=='REPORT')
+								window.global_second_language[json.data[i].object_item_name.toLowerCase()] = json.data[i].text;						
+						}
+					}
+				}
+			} 
+			else{
+				report_exception(result);
+			}
+		})
+	}
+	await fetch_translation(locale, true).then(function(){
+		if (locale_second ==0){
+			window.global_second_language.timetable_title = '';
+			window.global_second_language.coltitle_day = '';
+			window.global_second_language.coltitle_weekday = '';
+			window.global_second_language.coltitle_weekday_tr = '';
+			window.global_second_language.coltitle_caltype_hijri = '';
+			window.global_second_language.coltitle_caltype_gregorian = '';
+			window.global_second_language.coltitle_imsak = '';
+			window.global_second_language.coltitle_fajr = '';
+			window.global_second_language.coltitle_fajr_iqamat = '';
+			window.global_second_language.coltitle_sunrise = '';
+			window.global_second_language.coltitle_dhuhr = '';
+			window.global_second_language.coltitle_dhuhr_iqamat = '';
+			window.global_second_language.coltitle_asr = '';
+			window.global_second_language.coltitle_asr_iqamat = '';
+			window.global_second_language.coltitle_sunset = '';
+			window.global_second_language.coltitle_maghrib = '';
+			window.global_second_language.coltitle_maghrib_iqamat = '';
+			window.global_second_language.coltitle_isha = '';
+			window.global_second_language.coltitle_isha_iqamat = '';
+			window.global_second_language.coltitle_midnight = '';
+			window.global_second_language.coltitle_notes = '';
+		}
+		else
+			fetch_translation(locale.second, false);
+	})
+	return null;
+}
+/*----------------------- */
+/* COMMON APP & REPORT    */
+/*----------------------- */
+//lang_code is display message language who is running the report
+//use saved locale and second_locale user settings
+function updateReportViewStat(user_setting_id, user_account_id) {
     let status;
     let json_data =`{
                     "user_account_id":${user_account_id},
@@ -312,86 +414,6 @@ function getweekday(locale, locale2) {
 	else
 		return window.global_second_language.coltitle_weekday;
 }
-
-async function timetable_translate_settings(locale, locale_second, lang_code) {
-    let json;
-    let status;
-	async function fetch_translation(locale, first){
-		//fetch any message with first language always
-		//show translation using first or second language
-		await fetch(window.global_rest_url_base + window.global_rest_app_object + locale +
-			'?app_id=' + window.global_app_id + 
-			'&lang_code=' + lang_code, 
-			{
-			method: 'GET',
-			headers: {
-				'Authorization': 'Bearer ' + window.global_rest_dt,
-			}
-		})
-		.then(function(response) {
-			status = response.status;
-			return response.text();
-		})
-		.then(function(result) {
-			if (status === 200) {
-				json = JSON.parse(result);	
-				for (let i = 0; i < json.data.length; i++){
-					if (first == true){
-						if (json.data[i].object=='APP_OBJECT_ITEM' && json.data[i].object_name=='REPORT')
-							window.global_first_language[json.data[i].object_item_name.toLowerCase()] = json.data[i].text;
-						//Used by service report onle first language implemented:
-						//Regional
-						if (json.data[i].object=='APP_OBJECT_ITEM' && json.data[i].object_name=='SETTING_NAV_REGIONAL' && 
-							json.data[i].object_item_name=='SETTING_LABEL_REPORT_TIMEZONE')
-							window.global_first_language.timezone_text = json.data[i].text;
-						//GPS
-						if (json.data[i].object=='APP_OBJECT_ITEM' && json.data[i].object_name=='SETTING_NAV_GPS' && 
-							json.data[i].object_item_name=='SETTING_LABEL_LAT')
-							window.global_first_language.gps_lat_text = json.data[i].text;
-						if (json.data[i].object=='APP_OBJECT_ITEM' && json.data[i].object_name=='SETTING_NAV_GPS' && 
-							json.data[i].object_item_name=='SETTING_LABEL_LONG')
-							window.global_first_language.gps_long_text = json.data[i].text;
-					}
-					else{
-						for (let i = 0; i < json.data.length; i++){	
-							if (json.data[i].object=='APP_OBJECT_ITEM' && json.data[i].object_name=='REPORT')
-								window.global_second_language[json.data[i].object_item_name.toLowerCase()] = json.data[i].text;						
-						}
-					}
-				}
-			} 
-		})
-	}
-	await fetch_translation(locale, true).then(function(){
-		if (locale_second ==0){
-			window.global_second_language.timetable_title = '';
-			window.global_second_language.coltitle_day = '';
-			window.global_second_language.coltitle_weekday = '';
-			window.global_second_language.coltitle_weekday_tr = '';
-			window.global_second_language.coltitle_caltype_hijri = '';
-			window.global_second_language.coltitle_caltype_gregorian = '';
-			window.global_second_language.coltitle_imsak = '';
-			window.global_second_language.coltitle_fajr = '';
-			window.global_second_language.coltitle_fajr_iqamat = '';
-			window.global_second_language.coltitle_sunrise = '';
-			window.global_second_language.coltitle_dhuhr = '';
-			window.global_second_language.coltitle_dhuhr_iqamat = '';
-			window.global_second_language.coltitle_asr = '';
-			window.global_second_language.coltitle_asr_iqamat = '';
-			window.global_second_language.coltitle_sunset = '';
-			window.global_second_language.coltitle_maghrib = '';
-			window.global_second_language.coltitle_maghrib_iqamat = '';
-			window.global_second_language.coltitle_isha = '';
-			window.global_second_language.coltitle_isha_iqamat = '';
-			window.global_second_language.coltitle_midnight = '';
-			window.global_second_language.coltitle_notes = '';
-		}
-		else
-			fetch_translation(locale.second, false);
-	})
-	return null;
-}
-
 function isToday(checkdate){
     let today = new Date();
     return (checkdate.getMonth() == today.getMonth()) && 
@@ -524,7 +546,8 @@ function show_col(timetable, col, year, month, day, calendartype, show_fast_star
 			}
 }
 /*----------------------- */
-/* Timetable month and year functions */
+/* COMMON APP & REPORT    */
+/* TIMETABLE MONTH & YEAR */
 /*----------------------- */
 function timetable_headers_month(items, settings, locale){
 
@@ -920,9 +943,9 @@ function displayMonth(offset, prayertable, settings, locale) {
 	prayertable.innerHTML = month_html;
 }
 /*----------------------- */
-/* Timetable day functions */
+/* COMMON APP & REPORT    */
+/* TIMETABLE DAY          */
 /*----------------------- */
-
 function timetable_headers_day(settings, locale){
 	let header_row_index = 1;
 	let day_html ='';
@@ -1185,7 +1208,8 @@ async function timetable_day_user_settings_get(user_account_id, lang_code, callB
 	})
 }
 /*----------------------- */
-/* Timetable year functions */
+/* COMMON APP & REPORT    */
+/* TIMETABLE YEAR         */
 /*----------------------- */
 function displayYear(settings, item_id, locale){
 	
@@ -1380,14 +1404,39 @@ async function get_report_globals(lang_code) {
                 }
             }
         }
+		else
+			report_exception(result);
     })
 }
 /*----------------------- */
-/* Init report */
+/* EXCEPTION REPORT       */
 /*----------------------- */
-
-async function init_app_report(user_account_id, lang_code) {
-	await get_data_token(user_account_id, lang_code).then(function(){
+function report_exception(error){
+	if (typeof error !='undefined' && error !=''){
+		//report error
+		// hide everything except dialogue message
+		let divs = document.body.getElementsByTagName('div');
+		for (let i = 0; i < divs.length; i += 1) {
+			divs[i].style.visibility ='hidden';
+		}
+		let message_divs = document.getElementById('dialogue_message').getElementsByTagName('div');
+		for (let i = 0; i < message_divs.length; i += 1) {
+			message_divs[i].style.visibility ='visible';
+		}
+		document.getElementById('dialogue_message').style.visibility='visible';
+		show_message('EXCEPTION', null,null, error, window.global_app_id);
+	}	
+	else{
+		//app error
+		//remove everything
+		document.write('');
+	}
+}
+/*----------------------- */
+/* INIT REPORT            */
+/*----------------------- */
+async function init_app_report() {
+	await get_data_token().then(function(){
 		//set current date for report month
 		window.global_session_currentDate = new Date();
 		window.global_session_CurrentHijriDate = new Array();
@@ -1401,7 +1450,6 @@ async function init_app_report(user_account_id, lang_code) {
 	})
 	
 }
-
 function init_report(parameters) {
 	let encodedParams = new URLSearchParams(window.location.search);
 	let decodedparameters = fromBase64(encodedParams.get('reportid'))
@@ -1411,11 +1459,11 @@ function init_report(parameters) {
 	let lang_code = urlParams.get('lang_code');
 	let reporttype = urlParams.get('type');
 	init_common(parameters);
-    init_app_report(user_account_id, lang_code).then(function(){
+    init_app_report().then(function(){
         get_report_globals().then(function(){
             //report start
             if (inIframe() == false) {
-                updateReportViewStat(user_account_id, user_setting_id);
+                updateReportViewStat(user_setting_id, user_account_id);
             }
 			switch (reporttype) {
                 //day

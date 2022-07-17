@@ -1052,7 +1052,6 @@ body.app_theme1,
 }
 .app_theme1 .dialogue_content,
 .app_theme1 .common_dialogue_content{
-	background-color: #fefefe;
 	box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
 }
 .app_theme1 #scan_open_mobile_qrcode{
@@ -1232,7 +1231,6 @@ body.app_theme2,
 }
 .app_theme2 .dialogue_content,
 .app_theme2 .common_dialogue_content{
-	background-color: #fefefe;
 	box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
 }
 .app_theme2 #scan_open_mobile_qrcode{
@@ -1355,11 +1353,11 @@ body.app_theme3,
 .app_theme3 .dialogue_content,
 .app_theme3 .common_dialogue_content
 {
-	color : #FBF9F8 !important;
+	color : #d2b88f !important;
 }
 .app_theme3 .popup-content a:hover,
 .app_theme3 .popup-content a:active {
-	background-color:#FBF9F8;
+	background-color:#d2b88f;
 	color:#3A3632 !important;
 }
 .app_theme3 a:link{
@@ -1412,7 +1410,6 @@ body.app_theme3,
 }
 .app_theme3 .dialogue_content,
 .app_theme3 .common_dialogue_content{
-	background-color: #fefefe;
 	box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
 }
 .app_theme3 #scan_open_mobile_qrcode{
