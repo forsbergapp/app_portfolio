@@ -32,111 +32,123 @@ function app_log(app_id, app_module_type, request, result, app_user_id,
 }
 module.exports = {
     access_control: (req, res, callBack) => {
-        let ip_v4 = req.ip.replace('::ffff:','');
-        const fs = require("fs");
-        async function block_ip_control(callBack){
-            if (process.env.SERVICE_AUTH_BLOCK_IP_RANGE){
-                let ranges;
-                fs.readFile(process.env.SERVICE_AUTH_BLOCK_IP_RANGE, 'utf8', (error, fileBuffer) => {
-                    if (error)
-                        ranges = null;
-                    else{
-                        ranges = fileBuffer.toString();
-                        function IPtoNum(ip){
-                            return Number(
-                                ip.split(".")
-                                .map(d => ("000"+d).substr(-3) )
-                                .join("")
-                            );
-                        }
-                        //check if IP is blocked
-                        if ((ip_v4.match(/\./g)||[]).length==3){
-                            for (const element of JSON.parse(ranges)) {
-                                if (IPtoNum(element[0]) <= IPtoNum(ip_v4) &&
-                                    IPtoNum(element[1]) >= IPtoNum(ip_v4)) {
-                                        createLogAppCI(req, res, null, __appfilename, __appfunction, __appline, `ip ${ip_v4} blocked, range: ${IPtoNum(element[0])}-${IPtoNum(element[1])}, tried URL: ${req.originalUrl}`);
-                                        //403 Forbidden
-                                        return callBack(403,null);
+        if (process.env.SERVICE_AUTH_ACCESS_CONTROL_ENABLE==1){
+            let ip_v4 = req.ip.replace('::ffff:','');
+            const fs = require("fs");
+            async function block_ip_control(callBack){
+                if (process.env.SERVICE_AUTH_ACCESS_CONTROL_IP){
+                    let ranges;
+                    fs.readFile(process.env.SERVICE_AUTH_ACCESS_CONTROL_IP_PATH, 'utf8', (error, fileBuffer) => {
+                        if (error)
+                            ranges = null;
+                        else{
+                            ranges = fileBuffer.toString();
+                            function IPtoNum(ip){
+                                return Number(
+                                    ip.split(".")
+                                    .map(d => ("000"+d).substr(-3) )
+                                    .join("")
+                                );
+                            }
+                            //check if IP is blocked
+                            if ((ip_v4.match(/\./g)||[]).length==3){
+                                for (const element of JSON.parse(ranges)) {
+                                    if (IPtoNum(element[0]) <= IPtoNum(ip_v4) &&
+                                        IPtoNum(element[1]) >= IPtoNum(ip_v4)) {
+                                            createLogAppCI(req, res, null, __appfilename, __appfunction, __appline, `ip ${ip_v4} blocked, range: ${IPtoNum(element[0])}-${IPtoNum(element[1])}, tried URL: ${req.originalUrl}`);
+                                            //403 Forbidden
+                                            return callBack(403,null);
+                                    }
                                 }
                             }
                         }
-                    }
+                        return callBack(null, null);
+                    });
+                }
+                else
                     return callBack(null, null);
-                });
             }
-            else
-                return callBack(null, null);
-        }
-        async function safe_user_agents(user_agent, callBack){
-            /*format file
-                {"user_agent": [
-                                {"Name": "YahooMailProxy", 
-                                 "user_agent": "YahooMailProxy; https://help.yahoo.com/kb/yahoo-mail-proxy-SLN28749.html"},
-                                 {"Name": "OtherSafe", 
-                                 "user_agent": "Some known user agent description with missing accept_language"}
-                               ]
-                }
-            */
-            if (process.env.SERVICE_AUTH_SAFE_USER_AGENT){
-                let json;
-                fs.readFile(process.env.SERVICE_AUTH_SAFE_USER_AGENT, 'utf8', (error, fileBuffer) => {
-                    if (error)
-                        return callBack(error, null);
-                    else{
-                        json = JSON.parse(fileBuffer.toString());
-                        for (var i = 0; i < json.user_agent.length; i++){
-                            if (json.user_agent[i].user_agent == user_agent)
-                                return callBack(null, true);
-                        }
-                        return callBack(null, false);
+            async function safe_user_agents(user_agent, callBack){
+                /*format file
+                    {"user_agent": [
+                                    {"Name": "ID", 
+                                     "user_agent": "[user agent]"},
+                                     {"Name": "OtherSafe", 
+                                     "user_agent": "Some known user agent description with missing accept_language"}
+                                   ]
                     }
-                })
-            }
-            else
-                return callBack(null, false);
-        }
-        block_ip_control((err, result) =>{
-            if (err)
-                return callBack(err,null);
-            else{
-                //check if host exists
-                if (typeof req.headers.host=='undefined'){
-                    createLogAppCI(req, res, null, __appfilename, __appfunction, __appline, `ip ${ip_v4} blocked, no host, tried URL: ${req.originalUrl}`);
-                    //406 Not Acceptable
-                    return callBack(406,null);
-                }
-                //check if accessed from domain and not os hostname
-                var os = require("os");
-                if (req.headers.host==os.hostname()){
-                    createLogAppCI(req, res, null, __appfilename, __appfunction, __appline, `ip ${ip_v4} blocked, accessed from hostname ${os.hostname()} not domain, tried URL: ${req.originalUrl}`);
-                    //406 Not Acceptable
-                    return callBack(406,null);
-                }
-                safe_user_agents(req.headers["user-agent"], (err, safe)=>{
-                    if (err)
-                        null;
-                    else{
-                        if (safe==true)
-                            return callBack(null,1);
+                */
+                if (process.env.SERVICE_AUTH_ACCESS_CONTROL_USER_AGENT){
+                    let json;
+                    fs.readFile(process.env.SERVICE_AUTH_ACCESS_CONTROL_USER_AGENT_PATH, 'utf8', (error, fileBuffer) => {
+                        if (error)
+                            return callBack(error, null);
                         else{
-                            //check if user-agent exists
-                            if (typeof req.headers["user-agent"]=='undefined'){
-                                createLogAppCI(req, res, null, __appfilename, __appfunction, __appline, `ip ${ip_v4} blocked, no user-agent, tried URL: ${req.originalUrl}`);
-                                //406 Not Acceptable
-                                return callBack(406,null);
+                            json = JSON.parse(fileBuffer.toString());
+                            for (var i = 0; i < json.user_agent.length; i++){
+                                if (json.user_agent[i].user_agent == user_agent)
+                                    return callBack(null, true);
                             }
-                            //check if accept-language exists
-                            if (typeof req.headers["accept-language"]=='undefined'){
-                                createLogAppCI(req, res, null, __appfilename, __appfunction, __appline, `ip ${ip_v4} blocked, no accept-language, tried URL: ${req.originalUrl}`);
-                                //406 Not Acceptable
-                                return callBack(406,null);
-                            }
-                            return callBack(null,1);
+                            return callBack(null, false);
+                        }
+                    })
+                }
+                else
+                    return callBack(null, false);
+            }
+            block_ip_control((err, result) =>{
+                if (err)
+                    return callBack(err,null);
+                else{
+                    if (process.env.SERVICE_AUTH_ACCESS_CONTROL_HOST_EXIST==1){
+                        //check if host exists
+                        if (typeof req.headers.host=='undefined'){
+                            createLogAppCI(req, res, null, __appfilename, __appfunction, __appline, `ip ${ip_v4} blocked, no host, tried URL: ${req.originalUrl}`);
+                            //406 Not Acceptable
+                            return callBack(406,null);
                         }
                     }
-                })
-            }
-        })
+                    if (process.env.SERVICE_AUTH_ACCESS_CONTROL_ACCESS_FROM==1){
+                        //check if accessed from domain and not os hostname
+                        var os = require("os");
+                        if (req.headers.host==os.hostname()){
+                            createLogAppCI(req, res, null, __appfilename, __appfunction, __appline, `ip ${ip_v4} blocked, accessed from hostname ${os.hostname()} not domain, tried URL: ${req.originalUrl}`);
+                            //406 Not Acceptable
+                            return callBack(406,null);
+                        }
+                    }
+                    safe_user_agents(req.headers["user-agent"], (err, safe)=>{
+                        if (err)
+                            null;
+                        else{
+                            if (safe==true)
+                                return callBack(null,1);
+                            else{
+                                if(process.env.SERVICE_AUTH_ACCESS_CONTROL_USER_AGENT_EXIST==1){
+                                    //check if user-agent exists
+                                    if (typeof req.headers["user-agent"]=='undefined'){
+                                        createLogAppCI(req, res, null, __appfilename, __appfunction, __appline, `ip ${ip_v4} blocked, no user-agent, tried URL: ${req.originalUrl}`);
+                                        //406 Not Acceptable
+                                        return callBack(406,null);
+                                    }
+                                }
+                                if (process.env.SERVICE_AUTH_ACCESS_CONTROL_ACCEPT_LANGUAGE==1){
+                                    //check if accept-language exists
+                                    if (typeof req.headers["accept-language"]=='undefined'){
+                                        createLogAppCI(req, res, null, __appfilename, __appfunction, __appline, `ip ${ip_v4} blocked, no accept-language, tried URL: ${req.originalUrl}`);
+                                        //406 Not Acceptable
+                                        return callBack(406,null);
+                                    }
+                                }
+                                return callBack(null,1);
+                            }
+                        }
+                    })
+                }
+            })
+        }
+        else
+            return callBack(null,1);
     },
     checkAccessToken: (req, res, next) => {
 		let token = req.get("authorization");
