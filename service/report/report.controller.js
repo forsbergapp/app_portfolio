@@ -26,61 +26,94 @@ function app_log(app_id, app_module_type, request, result, app_user_id,
     }); 
 }
 module.exports = {
-	getReport: async (data, res) => {
-		var pdf;
-
-		let decodedparameters = Buffer.from(data.query.reportid, 'base64').toString('utf-8')
+	getReport: async (req, res) => {
+		let decodedparameters = Buffer.from(req.query.reportid, 'base64').toString('utf-8')
 		const querystring = require('querystring');
-		data.query.app_id = querystring.parse(decodedparameters).app_id;
-		data.query.module = querystring.parse(decodedparameters).module;
-		data.query.format = querystring.parse(decodedparameters).format;
-		data.query.ps = querystring.parse(decodedparameters).ps;
-		data.query.hf = querystring.parse(decodedparameters).hf;
-		//generate url to return as html or PDF
-		if (data.query.format.toUpperCase() == 'PDF' && typeof data.query.service == "undefined" ){
-			const url = data.protocol + ':/' + data.get('host') + data.originalUrl + '&service=1';
-			//PDF
-			const { getReportService} = require ("./report.service");
-			pdf = await getReportService(url, 
-											data.query.ps, 			//papersize		A4, Letter
-											(data.query.hf==1));	//headerfooter	1/0
-			res.type('application/pdf');
-			res.send(pdf);
-		}
-		else{
-			//HTML
-			//called if format=html or not PDF or puppeteer creating PDF
-			data.query.callback=1;
-			const { getIp} = require ("../../service/geolocation/geolocation.controller");
-			getIp(data, res, (err, result)=>{
-				let gps_place = result.geoplugin_city + ', ' +
-								result.geoplugin_regionName + ', ' +
-								result.geoplugin_countryName;
-				const { getReport} = require(`../../apps/app${data.query.app_id}/report`);
-				const report = getReport(data.query.app_id, 
-										 data.query.module, 
-										 result.geoplugin_latitude, 
-										 result.geoplugin_longitude, 
-										 gps_place)
-				.then(function(report_result){
-					app_log(data.query.app_id,
-							data.query.format.toUpperCase(), //HTML or PDF
-							data.protocol + '://' + data.get('host') + data.originalUrl,
-							gps_place,
-							null,
-							null,
-							null,
-							null,
-							null,
-							data.ip,
-							data.headers["user-agent"],
-							data.headers["host"],
-							data.headers["accept-language"],
-							result.geoplugin_latitude, 
-							result.geoplugin_longitude);
-					res.send(report_result);
-				})
+		req.query.app_id = querystring.parse(decodedparameters).app_id;
+		req.query.module = querystring.parse(decodedparameters).module;
+		req.query.format = querystring.parse(decodedparameters).format;
+		req.query.ps = querystring.parse(decodedparameters).ps;
+		req.query.hf = querystring.parse(decodedparameters).hf;
+		//called if format=html or not PDF or puppeteer creating PDF
+		req.query.callback=1;
+		const { getIp} = require ("../../service/geolocation/geolocation.controller");
+		getIp(req, res, (err, result)=>{
+			let gps_place = result.geoplugin_city + ', ' +
+							result.geoplugin_regionName + ', ' +
+							result.geoplugin_countryName;
+			//check if maintenance
+			const { getParameter} = require ("../../service/db/api/app_parameter/app_parameter.service");
+			getParameter(process.env.MAIN_APP_ID,'SERVER_MAINTENANCE', (err, db_SERVER_MAINTENANCE)=>{
+				if (err)
+					createLogAppSE(req.query.app_id, __appfilename, __appfunction, __appline, err);      
+				else{
+					if (db_SERVER_MAINTENANCE==1){
+						const { getMaintenance } = require("../../apps");
+						const app = getMaintenance(req.query.app_id,
+													result.geoplugin_latitude,
+													result.geoplugin_longitude,
+													gps_place)
+						.then(function(app_result){
+							app_log(req.query.app_id, 
+									'MAINTENANCE',
+									null,
+									gps_place,
+									null,
+									null,
+									null,
+									null,
+									null,
+									req.ip,
+									req.headers["user-agent"],
+									req.headers["host"],
+									req.headers["accept-language"],
+									result.geoplugin_latitude, 
+									result.geoplugin_longitude);
+							res.send(app_result);
+						});
+					}
+					else{
+						const { getReport} = require(`../../apps/app${req.query.app_id}/report`);
+						const report = getReport(req.query.app_id, 
+												req.query.module, 
+												result.geoplugin_latitude, 
+												result.geoplugin_longitude, 
+												gps_place)
+						.then(function(report_result){
+							if (typeof req.query.service == "undefined")
+								app_log(req.query.app_id,
+										req.query.format.toUpperCase(), //HTML or PDF
+										req.protocol + '://' + req.get('host') + req.originalUrl,
+										gps_place,
+										null,
+										null,
+										null,
+										null,
+										null,
+										req.ip,
+										req.headers["user-agent"],
+										req.headers["host"],
+										req.headers["accept-language"],
+										result.geoplugin_latitude, 
+										result.geoplugin_longitude);
+							if (req.query.format.toUpperCase() == 'PDF' && typeof req.query.service == "undefined" ){		
+								const url = req.protocol + ':/' + req.get('host') + req.originalUrl + '&service=1';
+								//PDF
+								const { getReportService} = require ("./report.service");
+								let pdf_result = getReportService(  url, 
+																	req.query.ps, 			//papersize		A4, Letter
+																	(req.query.hf==1))		//headerfooter	1/0
+													.then(function(pdf){
+														res.type('application/pdf');
+														res.send(pdf);
+													})
+							}
+							else
+								res.send(report_result);
+						})
+					}								
+				}
 			})
-		}
+		})
 	}		
 };

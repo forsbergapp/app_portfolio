@@ -52,9 +52,8 @@
 #printbody #paper {
 	box-shadow: none;
 	transform:scale(1) !important;
-	margin: 0px;
+	margin: 0 auto;
 	margin-top: 0px;
-	position:absolute;
 }
 #printbody #prayertable_day_time{
 	visibility: hidden;
