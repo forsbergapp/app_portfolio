@@ -309,15 +309,9 @@ function get_report_url(id, sid, papersize, item, format){
     //url query parameters are decoded in report module and in report service
     return server_url + '?reportid=' + encodedurl;
 }
-function updateViewStat_app(user_setting_id, user_setting_user_account_id = null) {
-    let user_account_id;
-    if (user_setting_user_account_id !== parseInt(window.global_user_account_id) ||
-        window.global_user_account_id == '') {
-        if (window.global_user_account_id == '')
-            user_account_id = 'null';
-        else
-            user_account_id = window.global_user_account_id;
-        updateReportViewStat(user_account_id, user_setting_id);
+function updateViewStat_app(user_setting_id, user_setting_user_account_id) {
+    if (parseInt(user_setting_user_account_id) !== parseInt(window.global_user_account_id)) {
+        updateReportViewStat(user_setting_id, parseInt(window.global_user_account_id));
     }
 }
 function preview_report(url, type){

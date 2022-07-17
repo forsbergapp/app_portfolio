@@ -2615,8 +2615,8 @@ function init_common(parameters){
      gps_place:
     }
     */
+    
     set_globals(parameters);
-
     if (parameters.close_eventsource==true){
         window.global_eventSource.close();
         connectOnline();
