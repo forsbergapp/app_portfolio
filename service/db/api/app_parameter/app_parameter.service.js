@@ -475,6 +475,15 @@ module.exports = {
 		if (process.env.SERVICE_DB_USE==1){
 			get_pool(app_id).query(
 				`SELECT
+						(SELECT a.app_name
+						   FROM ${process.env.SERVICE_DB_DB1_NAME}.app a
+						  WHERE a.id = ?) app_name,
+						(SELECT a.url
+						   FROM ${process.env.SERVICE_DB_DB1_NAME}.app a
+						  WHERE a.id = ?) app_url,
+						(SELECT a.logo
+						   FROM ${process.env.SERVICE_DB_DB1_NAME}.app a
+						  WHERE a.id = ?) app_logo,
 						(SELECT ap.parameter_value
 						   FROM ${process.env.SERVICE_DB_DB1_NAME}.app_parameter ap
                 		  WHERE ap.parameter_name = ?
@@ -492,7 +501,10 @@ module.exports = {
 							WHERE ap.parameter_name = ?
 								AND ap.app_id = ?) rest_app_parameter
 				  FROM DUAL`,
-				[service_auth,
+				[app_id,
+				 app_id,
+				 app_id,
+				 service_auth,
 				 app_id,
 				 app_rest_client_id,
 				 app_id,
@@ -516,6 +528,15 @@ module.exports = {
 				pool2 = await oracledb.getConnection(get_pool(process.env.MAIN_APP_ID));
 				const result = await pool2.execute(
 					`SELECT
+							(SELECT a.app_name
+							   FROM ${process.env.SERVICE_DB_DB2_NAME}.app a
+							  WHERE a.id = :app_id) app_name,
+							(SELECT a.url
+						 	   FROM ${process.env.SERVICE_DB_DB2_NAME}.app a
+							  WHERE a.id = :app_id) app_url,
+							(SELECT a.logo
+							   FROM ${process.env.SERVICE_DB_DB2_NAME}.app a
+							  WHERE a.id = :app_id) app_logo,
 							(SELECT ap.parameter_value
 							   FROM ${process.env.SERVICE_DB_DB2_NAME}.app_parameter ap
 							  WHERE ap.parameter_name = :service_auth

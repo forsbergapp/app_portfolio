@@ -28,18 +28,18 @@ window.global_info_social_link1_url;
 window.global_info_social_link2_url;
 window.global_info_social_link3_url;
 window.global_info_social_link4_url;
-window.global_info_social_link1_name;
-window.global_info_social_link2_name;
-window.global_info_social_link3_name;
-window.global_info_social_link4_name;
-window.global_info_link_1_url;
-window.global_info_link_2_url;
-window.global_info_link_3_url;
-window.global_info_link_4_url;
-window.global_info_link_1_name;
-window.global_info_link_2_name;
-window.global_info_link_3_name;
-window.global_info_link_4_name;
+window.global_info_social_link1_icon;
+window.global_info_social_link2_icon;
+window.global_info_social_link3_icon;
+window.global_info_social_link4_icon;
+window.global_info_link_policy_url;
+window.global_info_link_disclaimer_url;
+window.global_info_link_terms_url;
+window.global_info_link_about_url;
+window.global_info_link_policy_name;
+window.global_info_link_disclaimer_name;
+window.global_info_link_terms_name;
+window.global_info_link_about_name;
 
 window.global_info_email_policy;
 window.global_info_email_disclaimer;
@@ -313,40 +313,6 @@ function updateViewStat_app(user_setting_id, user_setting_user_account_id) {
     if (parseInt(user_setting_user_account_id) !== parseInt(window.global_user_account_id)) {
         updateReportViewStat(user_setting_id, parseInt(window.global_user_account_id));
     }
-}
-function preview_report(url, type){
-    if (type=='HTML'){
-        document.getElementById("window_preview_report").style.visibility = "visible";
-        create_qr("window_preview_toolbar_qr", url);
-        dialogue_loading(1);
-        document.getElementById("window_preview_content").src=url;
-        dialogue_loading(0);
-    }
-    else
-        if (type=='PDF'){
-            document.getElementById("window_preview_report").style.visibility = "visible";
-            create_qr("window_preview_toolbar_qr", url);
-            dialogue_loading(1);
-            fetch (url,
-                    {
-                        headers: {
-                            'Content-Type': 'application/pdf;charset=UTF-8'
-                        }
-                    }
-            )
-            .then(function(response) {
-                return response.blob();
-            })
-            .then(function(pdf) {      
-                let reader = new FileReader();
-                reader.readAsDataURL(pdf); 
-                reader.onloadend = function() {
-                    let base64PDF = reader.result;   
-                    document.getElementById("window_preview_content").src= base64PDF;
-                    dialogue_loading(0);
-                }
-            })
-        }
 }
 /*----------------------- */
 /* MAP                    */
@@ -996,11 +962,10 @@ function fix_toolbar_button_sizes() {
         document.getElementById('toolbar_btn_year_label').classList.add('toolbar_defaultsize');;
     }
 }
-
 function iframe_resize(){
     let paper_size_select = document.getElementById('setting_select_report_papersize');
-    document.getElementById('window_preview_content').className = paper_size_select.options[paper_size_select.selectedIndex].value;
-}
+    document.getElementById('common_window_info_content').className = paper_size_select.options[paper_size_select.selectedIndex].value;}        
+
 async function toolbar_bottom(choice) {
     let paper = document.getElementById('paper');
     let prayertable_day = document.getElementById('prayertable_day');
@@ -1175,93 +1140,9 @@ function set_null_or_value(value) {
     else
         return value;
 }
-function update_info(info) {
-    let button_close_about = `<button class='info_close toolbar_button' 
-                                onclick="document.getElementById('window_info').style.display = 'none';
-                                window.location='#info_empty';
-                                document.getElementById('window_preview_toolbar_qr').style.display = 'block';">
-                                ${window.global_button_default_icon_close}
-                            </button>`
-    let button_close_info = `<button class='info_close toolbar_button' 
-                                onclick="document.getElementById('window_info').style.display = 'none';
-                                window.location='#info_empty';">
-                                ${window.global_button_default_icon_close}
-                            </button>`;    
-    fetch(eval('window.global_info_link' + info + '_url'))
-        .then(function(response) {
-            return response.text();
-        })
-        .then(function(result) {
-            switch (info) {
-                //info/privacy_policy.html
-                case 1:
-                    {
-                        document.getElementById('info' + info).innerHTML = result + button_close_info;
-                        document.getElementById('policy_app_name1').innerHTML = window.global_app_name;
-                        document.getElementById('policy_app_name2').innerHTML = window.global_app_name;
-                        document.getElementById('policy_app_hostname').href = window.global_app_hostname;
-                        document.getElementById('policy_app_hostname').innerText = window.global_app_hostname;
-                        document.getElementById('policy_app_email').href = 'mailto:' + window.global_info_email_policy;
-                        document.getElementById('policy_app_email').innerText = window.global_info_email_policy;
-                        break;
-                    }
-                //info/disclaimer.html
-                case 2:
-                    {
-                        document.getElementById('info' + info).innerHTML = result + button_close_info;
-                        document.getElementById('disclaimer_app_name1').innerHTML = window.global_app_name;
-                        document.getElementById('disclaimer_app_name2').innerHTML = window.global_app_name;
-                        document.getElementById('disclaimer_app_name3').innerHTML = window.global_app_name;
-                        document.getElementById('disclaimer_app_email').href = 'mailto:' + window.global_info_email_disclaimer;
-                        document.getElementById('disclaimer_app_email').innerText = window.global_info_email_disclaimer;
-                        break;
-                    }
-                //info/terms.html
-                case 3:
-                    {
-                        document.getElementById('info' + info).innerHTML = result + button_close_info;
-                        document.getElementById('terms_app_name').innerHTML = window.global_app_name;
-                        document.getElementById('terms_app_hostname').href = window.global_app_hostname;
-                        document.getElementById('terms_app_hostname').innerText = window.global_app_hostname;
-                        document.getElementById('terms_app_email').href = 'mailto:' + window.global_info_email_terms;
-                        document.getElementById('terms_app_email').innerText = window.global_info_email_terms;
-                        break;
-                    }
-                //info/about.html
-                case 4:
-                    {
-                        document.getElementById('info' + info).innerHTML = result + button_close_about;
-                        break;
-                    }
-                default:
-                    {
-                        break;
-                    }
-            }
-        });
-    return null;
-};
 
 function show_dialogue(dialogue, file = '') {
     switch (dialogue) {
-        case 'INFO':
-            {
-                document.getElementById('dialogue_info').style.visibility = 'visible';
-                document.getElementById('app_copyright').innerHTML = window.global_app_copyright;
-                if (window.global_info_social_link1_url!=null)
-                    document.getElementById('social_link1').innerHTML = `<a href=${window.global_info_social_link1_url} target='_blank'>${window.global_info_social_link1_name}</a>`;
-                if (window.global_info_social_link2_url!=null)
-                    document.getElementById('social_link2').innerHTML = `<a href=${window.global_info_social_link2_url} target='_blank'>${window.global_info_social_link2_name}</a>`;
-                if (window.global_info_social_link3_url!=null)
-                    document.getElementById('social_link3').innerHTML = `<a href=${window.global_info_social_link3_url} target='_blank'>${window.global_info_social_link3_name}</a>`;
-                if (window.global_info_social_link4_url!=null)
-                    document.getElementById('social_link4').innerHTML = `<a href=${window.global_info_social_link4_url} target='_blank'>${window.global_info_social_link4_name}</a>`;
-                document.getElementById('info_link1').innerHTML = window.global_info_link1_name;
-                document.getElementById('info_link2').innerHTML = window.global_info_link2_name;
-                document.getElementById('info_link3').innerHTML = window.global_info_link3_name;
-                document.getElementById('info_link4').innerHTML = window.global_info_link4_name;
-                break;
-            }
         case 'SCAN':
             {
                 if (mobile())
@@ -1331,7 +1212,7 @@ async function update_ui(option, item_id=null) {
                 document.getElementById('settings').classList = prefix + select[select.selectedIndex].value;
                 document.getElementById('dialogues').classList = prefix + select[select.selectedIndex].value;
                 document.getElementById('common_dialogues').classList = prefix + select[select.selectedIndex].value;
-                document.getElementById('window_info').classList = prefix + select[select.selectedIndex].value;
+                document.getElementById('common_window_info').classList = prefix + select[select.selectedIndex].value;
                 document.getElementById('toolbar_bottom').classList = prefix + select[select.selectedIndex].value;
                 break;
             }
@@ -1934,12 +1815,12 @@ function user_setting_link(item){
         case 'user_day_html':
         case 'user_month_html':
         case 'user_year_html':{
-            preview_report(get_report_url(user_account_id, 
-                                          sid, 
-                                          paper_size_select.options[paper_size_select.selectedIndex].value,
-                                          item.id,
-                                          'HTML'), 
-                           'HTML');
+            let url = get_report_url(user_account_id, 
+                                     sid, 
+                                     paper_size_select.options[paper_size_select.selectedIndex].value,
+                                     item.id,
+                                     'HTML');
+            show_window_info(null, false, null, 'HTML', url, url);
             break;
         }
         case 'user_day_html_copy':
@@ -1958,12 +1839,12 @@ function user_setting_link(item){
         case 'user_day_pdf':
         case 'user_month_pdf':
         case 'user_year_pdf':{
-            preview_report(get_report_url(user_account_id, 
-                                          sid, 
-                                          paper_size_select.options[paper_size_select.selectedIndex].value,
-                                          item.id,
-                                          'PDF'), 
-                           'PDF');
+            let url = get_report_url(user_account_id, 
+                                     sid, 
+                                     paper_size_select.options[paper_size_select.selectedIndex].value,
+                                     item.id,
+                                     'PDF');
+            show_window_info(null, false, null, 'PDF', url, url);
             break;
         }
         case 'user_day_pdf_copy':
@@ -2630,12 +2511,12 @@ function profile_user_setting_link(item){
         case 'profile_user_settings_month':
         case 'profile_user_settings_year':{
             updateViewStat_app(sid,user_account_id);
-            preview_report(get_report_url(user_account_id, 
-                                          sid, 
-                                          paper_size_select.options[paper_size_select.selectedIndex].value,
-                                          item.id,
-                                          'HTML'), 
-                           'HTML');
+            let url = get_report_url(user_account_id, 
+                                     sid, 
+                                     paper_size_select.options[paper_size_select.selectedIndex].value,
+                                     item.id,
+                                     'HTML');
+            show_window_info(null, false, null, 'HTML', url, url);
             break;
         }
         case 'profile_user_settings_like':{
@@ -2880,26 +2761,32 @@ function setEvents() {
                                                       this.options[this.selectedIndex].getAttribute('count_likes'), 
                                                       this.options[this.selectedIndex].getAttribute('count_views')) }, false);
     //dialogue info
-    document.getElementById('info_close').addEventListener('click', function() { document.getElementById('dialogue_info').style.visibility = 'hidden' }, false);
-    document.getElementById('info_link1').addEventListener('click', function() {document.getElementById("window_info").style.display = "block"}, false);
-    document.getElementById('info_link2').addEventListener('click', function() {document.getElementById("window_info").style.display = "block"}, false);
-    document.getElementById('info_link3').addEventListener('click', function() {document.getElementById("window_info").style.display = "block"}, false);
-    document.getElementById('info_link4').addEventListener('click', function() {document.getElementById("window_info").style.display = "block"}, false);
-    document.getElementById('info_link5').addEventListener('click', function() {document.getElementById("window_info").style.display = "block"}, false);
+    document.getElementById('info_link1').addEventListener('click', function() { show_window_info(1);}, false);
+    document.getElementById('info_link2').addEventListener('click', function() { show_window_info(2);}, false);
+    document.getElementById('info_link3').addEventListener('click', function() { show_window_info(3);}, false);
+    document.getElementById('info_link4').addEventListener('click', function() { show_window_info(4);}, false);
+    document.getElementById('info_close').addEventListener('click', function() { document.getElementById('dialogue_info').style.visibility = 'hidden'}, false);
+    
     //dialogue scan mobile
     document.getElementById('scan_open_mobile_close').addEventListener('click', function() { document.getElementById('dialogue_scan_open_mobile').style.visibility = 'hidden' }, false);
-    //window preview
-    document.getElementById('window_preview_close').addEventListener('click', function() { document.getElementById('window_preview_content').onload='';document.getElementById('window_preview_content').src='';document.getElementById('window_preview_toolbar_qr').innerHTML='';document.getElementById('window_preview_report').style.visibility = 'hidden' }, false);
-    if(document.getElementById('window_preview_content').addEventListener)
-        document.getElementById('window_preview_content').addEventListener('load',function() { iframe_resize(); }, false);
-    else if(document.getElementById('window_preview_content').attachEvent)
-        document.getElementById('window_preview_content').attachEvent('onload',function() { iframe_resize(); });
-    //toolbar bottom
+    //window info
+    document.getElementById('common_window_info_toolbar_btn_close').addEventListener('click', function() { document.getElementById('common_window_info_content').onload='';
+                                                                                                           document.getElementById('common_window_info_content').src='';
+                                                                                                           document.getElementById('common_window_info_toolbar_qr').innerHTML='';
+                                                                                                           document.getElementById('common_window_info_content').style.display = 'none' }, false);
+    
+    if(document.getElementById('common_window_info_content').addEventListener)
+        document.getElementById('common_window_info_content').addEventListener('load',function() { iframe_resize(); }, false);
+    else if(document.getElementById('common_window_info_content').attachEvent)
+        document.getElementById('common_window_info_content').attachEvent('onload',function() { iframe_resize(); });
+                                                                                       
+    
+                                                                                           //toolbar bottom
     document.getElementById('toolbar_btn_print').addEventListener('click', function() { toolbar_bottom(1) }, false);
     document.getElementById('toolbar_btn_day').addEventListener('click', function() { toolbar_bottom(2) }, false);
     document.getElementById('toolbar_btn_month').addEventListener('click', function() { toolbar_bottom(3) }, false);
     document.getElementById('toolbar_btn_year').addEventListener('click', function() { toolbar_bottom(4) }, false);
-    document.getElementById('toolbar_btn_about').addEventListener('click', function() { show_dialogue('INFO') }, false);
+    document.getElementById('toolbar_btn_about').addEventListener('click', function() { document.getElementById('dialogue_info').style.visibility = 'visible'; }, false);
     //common with app secific settings
     //dialogue login/signup/forgot
     let input_username_login = document.getElementById("login_username");
@@ -3117,30 +3004,30 @@ async function get_app_globals() {
                         window.global_info_social_link3_url = json.data[i].parameter_value;
                     if (json.data[i].parameter_name=='INFO_SOCIAL_LINK4_URL')
                         window.global_info_social_link4_url = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='INFO_SOCIAL_LINK1_NAME')
-                        window.global_info_social_link1_name = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='INFO_SOCIAL_LINK2_NAME')
-                        window.global_info_social_link2_name = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='INFO_SOCIAL_LINK3_NAME')
-                        window.global_info_social_link3_name = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='INFO_SOCIAL_LINK4_NAME')
-                        window.global_info_social_link4_name = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='INFO_LINK1_URL')
-                        window.global_info_link1_url = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='INFO_LINK2_URL')
-                        window.global_info_link2_url = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='INFO_LINK3_URL')
-                        window.global_info_link3_url = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='INFO_LINK4_URL')
-                        window.global_info_link4_url = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='INFO_LINK1_NAME')
-                        window.global_info_link1_name = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='INFO_LINK2_NAME')
-                        window.global_info_link2_name = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='INFO_LINK3_NAME')
-                        window.global_info_link3_name = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='INFO_LINK4_NAME')
-                        window.global_info_link4_name = json.data[i].parameter_value;
+                    if (json.data[i].parameter_name=='INFO_SOCIAL_LINK1_ICON')
+                        window.global_info_social_link1_icon = json.data[i].parameter_value;
+                    if (json.data[i].parameter_name=='INFO_SOCIAL_LINK2_ICON')
+                        window.global_info_social_link2_icon = json.data[i].parameter_value;
+                    if (json.data[i].parameter_name=='INFO_SOCIAL_LINK3_ICON')
+                        window.global_info_social_link3_icon = json.data[i].parameter_value;
+                    if (json.data[i].parameter_name=='INFO_SOCIAL_LINK4_ICON')
+                        window.global_info_social_link4_icon = json.data[i].parameter_value;
+                    if (json.data[i].parameter_name=='INFO_LINK_POLICY_URL')
+                        window.global_info_link_policy_url = json.data[i].parameter_value;
+                    if (json.data[i].parameter_name=='INFO_LINK_DISCLAIMER_URL')
+                        window.global_info_link_disclaimer_url = json.data[i].parameter_value;
+                    if (json.data[i].parameter_name=='INFO_LINK_TERMS_URL')
+                        window.global_info_link_terms_url = json.data[i].parameter_value;
+                    if (json.data[i].parameter_name=='INFO_LINK_ABOUT_URL')
+                        window.global_info_link_about_url = json.data[i].parameter_value;
+                    if (json.data[i].parameter_name=='INFO_LINK_POLICY_NAME')
+                        window.global_info_link_policy_name = json.data[i].parameter_value;
+                    if (json.data[i].parameter_name=='INFO_LINK_DISCLAIMER_NAME')
+                        window.global_info_link_disclaimer_name = json.data[i].parameter_value;
+                    if (json.data[i].parameter_name=='INFO_LINK_TERMS_NAME')
+                        window.global_info_link_terms_name = json.data[i].parameter_value;
+                    if (json.data[i].parameter_name=='INFO_LINK_ABOUT_NAME')
+                        window.global_info_link_about_name = json.data[i].parameter_value;
                     if (json.data[i].parameter_name=='REGIONAL_DEFAULT_CALENDAR_LANG')
                         window.global_regional_def_calendar_lang = json.data[i].parameter_value;
                     if (json.data[i].parameter_name=='REGIONAL_DEFAULT_LOCALE_EXT_PREFIX')
@@ -3404,8 +3291,6 @@ async function init_app() {
     document.getElementById('popup_menu_profile_top').innerHTML = window.global_button_default_icon_profile_top;
     document.getElementById('popup_menu_settings').innerHTML = window.global_button_default_icon_settings;
 
-    //window preview report
-    document.getElementById('window_preview_close').innerHTML = window.global_button_default_icon_close;
     //themes from client server generation
     document.getElementById('slider_prev_day').innerHTML = window.global_button_default_icon_slider_left;
     document.getElementById('slider_next_day').innerHTML =  window.global_button_default_icon_slider_right;
@@ -3426,98 +3311,76 @@ async function init_app() {
             window.global_session_currentDate.getMonth(),
             window.global_session_currentDate.getDate()).toLocaleDateString("en-us-u-ca-islamic", { year: "numeric" }));
         get_app_globals().then(function(){
-            let status;
-            //app variables
-            fetch(window.global_rest_url_base + window.global_rest_app +
-                '?id=' + window.global_app_id + 
-                '&lang_code=' + window.global_lang_code, 
-                {
-                    method: 'GET',
-                    headers: {
-                        'Authorization': 'Bearer ' + window.global_rest_dt
-                    }
-            })
-            .then(function(response) {
-                status = response.status;
-                return response.text();
-            })
-            .then(function(result) {
-                if (status === 200) {
-                    json = JSON.parse(result);
-                    window.global_app_hostname = json.data[0].url;
-                    window.global_app_name = json.data[0].app_name;
-                    //set common head info
-                    set_app_globals_head();
-                    //set app globals in body
-                    document.getElementById('app_name').innerHTML = window.global_app_name;
-                    document.getElementById('login_app_name').innerHTML = window.global_app_name;
-                    document.getElementById('signup_app_name').innerHTML = window.global_app_name;
-                    document.getElementById('forgot_app_name').innerHTML = window.global_app_name;
-                    //set info pages
-                    update_info(1);
-                    update_info(2);
-                    update_info(3);
-                    update_info(4);
-                    //set default geolocation
-                    document.getElementById('setting_select_popular_place').selectedIndex = 0;
-                    document.getElementById('setting_input_lat').value = window.global_client_latitude;
-                    document.getElementById('setting_input_long').value = window.global_client_longitude;
-                    //init map thirdparty module
-                    init_map();
-                    //load themes in Design tab
-                    load_themes();
-                    //set papersize
-                    zoom_paper();
-                    //user interface font depending selected arabic script
-                    update_ui(3);
-                    //set events
-                    setEvents();
-                    //set timers
-                    //map doesnt update correct so set refresh
-                    setInterval(fixmap, 1000);
-                    //set current date and time for current locale and timezone
-                    clearInterval(showcurrenttime);
-                    setInterval(showcurrenttime, 1000);
-                    //set report date and time for current locale, report timezone
-                    clearInterval(showreporttime);
-                    setInterval(showreporttime, 1000);
-                    //show dialogue about using mobile and scan QR code after 5 seconds
-                    setTimeout(function(){show_dialogue('SCAN')}, 5000);
-                    //Start of app:
-                    //1.set default settings
-                    //2.translate ui
-                    //3.display default timetable settings
-                    //4.show profile if user in url
-                    //5.user provider login
-                    //5.service worker
-                    set_default_settings().then(function(){
-                        settings_translate(true).then(function(){
-                            settings_translate(false).then(function(){
-                                async function show_start(){
-                                    //show default startup
-                                    toolbar_bottom(window.global_app_default_startup_page);
-                                    let user = window.location.pathname.substring(1);
-                                    if (user !='') {
-                                        //show profile for user entered in url
-                                        document.getElementById('dialogue_profile').style.visibility = "visible";
-                                        profile_show_app(null, user, document.getElementById('setting_select_timezone_current').value);
-                                    }
-                                }
-                                show_start().then(function(){
-                                    init_providers('onProviderSignIn_app', function() { onProviderSignIn_app() }).then(function(){
-                                        serviceworker();
-                                        dialogue_loading(0);
-                                    });
-                                })
+            document.getElementById('app_name').innerHTML = window.global_app_name;
+            //set about info
+            document.getElementById('app_copyright').innerHTML = window.global_app_copyright;
+            if (window.global_info_social_link1_url!=null)
+                document.getElementById('social_link1').innerHTML = `<a href=${window.global_info_social_link1_url} target='_blank'>${window.global_info_social_link1_icon}</a>`;
+            if (window.global_info_social_link2_url!=null)
+                document.getElementById('social_link2').innerHTML = `<a href=${window.global_info_social_link2_url} target='_blank'>${window.global_info_social_link2_icon}</a>`;
+            if (window.global_info_social_link3_url!=null)
+                document.getElementById('social_link3').innerHTML = `<a href=${window.global_info_social_link3_url} target='_blank'>${window.global_info_social_link3_icon}</a>`;
+            if (window.global_info_social_link4_url!=null)
+                document.getElementById('social_link4').innerHTML = `<a href=${window.global_info_social_link4_url} target='_blank'>${window.global_info_social_link4_icon}</a>`;
+            document.getElementById('info_link1').innerHTML = window.global_info_link_policy_name;
+            document.getElementById('info_link2').innerHTML = window.global_info_link_disclaimer_name;
+            document.getElementById('info_link3').innerHTML = window.global_info_link_terms_name;
+            document.getElementById('info_link4').innerHTML = window.global_info_link_about_name;
+
+            //set default geolocation
+            document.getElementById('setting_select_popular_place').selectedIndex = 0;
+            document.getElementById('setting_input_lat').value = window.global_client_latitude;
+            document.getElementById('setting_input_long').value = window.global_client_longitude;
+            //init map thirdparty module
+            init_map();
+            //load themes in Design tab
+            load_themes();
+            //set papersize
+            zoom_paper();
+            //user interface font depending selected arabic script
+            update_ui(3);
+            //set events
+            setEvents();
+            //set timers
+            //map doesnt update correct so set refresh
+            setInterval(fixmap, 1000);
+            //set current date and time for current locale and timezone
+            clearInterval(showcurrenttime);
+            setInterval(showcurrenttime, 1000);
+            //set report date and time for current locale, report timezone
+            clearInterval(showreporttime);
+            setInterval(showreporttime, 1000);
+            //show dialogue about using mobile and scan QR code after 5 seconds
+            setTimeout(function(){show_dialogue('SCAN')}, 5000);
+            //Start of app:
+            //1.set default settings
+            //2.translate ui
+            //3.display default timetable settings
+            //4.show profile if user in url
+            //5.user provider login
+            //5.service worker
+            set_default_settings().then(function(){
+                settings_translate(true).then(function(){
+                    settings_translate(false).then(function(){
+                        async function show_start(){
+                            //show default startup
+                            toolbar_bottom(window.global_app_default_startup_page);
+                            let user = window.location.pathname.substring(1);
+                            if (user !='') {
+                                //show profile for user entered in url
+                                document.getElementById('dialogue_profile').style.visibility = "visible";
+                                profile_show_app(null, user, document.getElementById('setting_select_timezone_current').value);
+                            }
+                        }
+                        show_start().then(function(){
+                            init_providers('onProviderSignIn_app', function() { onProviderSignIn_app() }).then(function(){
+                                serviceworker();
+                                dialogue_loading(0);
                             });
-                        });
+                        })
                     });
-                }
-                else {
-                    dialogue_loading(0);
-                    show_message('EXCEPTION', null,null, result, window.global_app_id);
-                }
-            })
+                });
+            });
         })
     })
 }

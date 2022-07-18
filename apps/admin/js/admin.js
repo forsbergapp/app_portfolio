@@ -82,7 +82,6 @@ function setEvents(){
         }
     });
     document.getElementById('admin_login_button').addEventListener('click', function() { admin_login() }, false);
-    document.getElementById('message_close').addEventListener('click', function() { document.getElementById('dialogue_message').style.visibility='hidden'; }, false);}
 
 function admin_exception_before(){
     null;
