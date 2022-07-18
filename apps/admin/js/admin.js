@@ -82,7 +82,7 @@ function setEvents(){
         }
     });
     document.getElementById('admin_login_button').addEventListener('click', function() { admin_login() }, false);
-
+}
 function admin_exception_before(){
     null;
 }
