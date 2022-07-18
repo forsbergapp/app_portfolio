@@ -30,8 +30,6 @@ module.exports = {
 
                   ['<AppProfileInfo/>', __dirname + '/src/profile_info.html'], /*Profile tag in common body*/
                   ['<AppProfileTop/>', __dirname + '/src/profile_top.html'],   //Profile tag in common body
-                  ['<AppWindowInfo/>', __dirname + '/src/window_info.html'],
-                  ['<AppWindowPreviewReport/>', __dirname + '/src/window_preview_report.html'],
                   ['<AppDialogues/>', __dirname + '/src/dialogues.html'],
                   ['<AppToolbarBottom/>', __dirname + '/src/toolbar_bottom.html']
                 ];

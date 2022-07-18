@@ -186,11 +186,9 @@ app.use('/admin/css',express.static(__dirname + '/apps/admin/css'));
 app.use('/common/js',express.static(__dirname + '/apps/common/js'));
 app.use('/common/css',express.static(__dirname + '/apps/common/css'));
 //app 0 directories
-app.use('/app0/info',express.static(__dirname + '/apps/app0/info'));
 app.use('/app0/css',express.static(__dirname + '/apps/app0/css'));
 app.use('/app0/images',express.static(__dirname + '/apps/app0/images'));
 app.use('/app0/js',express.static(__dirname + '/apps/app0/js'));
-
 
 app.use(function(req, res, next) {
   var err = null;
@@ -208,20 +206,6 @@ app.use(function(req, res, next) {
   next();
 });
 
-app.get("/admin",function (req, res, next) {
-  //redirect from http to https
-  if (req.protocol=='http')
-    return res.redirect('https://' + req.headers.host + "/admin");
-  else{
-    const { getForm } = require ("./service/forms/forms.controller");
-    getForm(req, res, null, null, (err, app_result)=>{
-      return res.send(app_result);
-    })
-  }
-});
-app.get("/admin/:sub",function (req, res, next) {
-    return res.redirect('https://' + req.headers.host + "/admin");
-});
 
 const {init_db, mysql_pool, oracle_pool} = require ("./service/db/config/database");
 init_db((err, result) =>{
@@ -263,6 +247,50 @@ init_db((err, result) =>{
     }); 
   }
 })
+app.get("/admin",function (req, res, next) {
+  //redirect from http to https
+  if (req.protocol=='http')
+    return res.redirect('https://' + req.headers.host + "/admin");
+  else{
+    const { getForm } = require ("./service/forms/forms.controller");
+    getForm(req, res, null, null, (err, app_result)=>{
+      return res.send(app_result);
+    })
+  }
+});
+app.get("/admin/:sub",function (req, res, next) {
+    return res.redirect('https://' + req.headers.host + "/admin");
+});
+app.get("/info/:info",function (req, res, next) {
+  //redirect from http to https
+  if (req.protocol=='http')
+    res.redirect('https://' + req.headers.host);
+  else{
+    if (req.headers.host.substring(0,req.headers.host.indexOf('.'))=='' ||
+      req.headers.host.substring(0,req.headers.host.indexOf('.'))=='www'){
+        const { getInfo} = require("./apps");
+        switch (req.params.info){
+          case 'datamodel.jpg':{
+            res.sendFile(__dirname + "/apps/app0/info/datamodel.jpg");
+            break;
+          }
+          case 'app_portfolio.jpg':{
+              res.sendFile(__dirname + "/apps/app0/info/app_portfolio.jpg");
+              break;
+          }
+          default:{
+            getInfo(process.env.MAIN_APP_ID, req.params.info, (err, info_result)=>{
+              res.send(info_result);
+            })
+            break;
+          }
+        }
+    }
+    else
+      next();
+  }
+});
+
 //info for search bots, same for all apps
 app.get('/robots.txt', function (req, res) {
   res.type('text/plain');

@@ -8,8 +8,7 @@ module.exports = {
                 ['<AppCommonBody/>', __dirname + '/../common/src/body.html'],
                 /*Profile tag AppCommonProfileDetail in common body */
                 ['<AppCommonProfileDetail/>', __dirname + '/../common/src/profile_detail.html'], 
-                ['<AppHead/>', __dirname + '/src/head.html'],
-                ['<AppWindowInfo/>', __dirname + '/src/window_info.html']
+                ['<AppHead/>', __dirname + '/src/head.html']
               ];
             read_app_files(app_id, files, (err, app)=>{
                 if (err)

@@ -1,0 +1,15 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&display=swap');
+body {
+    font-family: 'Noto Sans';
+    font-size: 14px;
+}
+
+#policy_app_name1, 
+#policy_app_name2, 
+#disclaimer_app_name1,
+#disclaimer_app_name2,
+#disclaimer_app_name3,
+#terms_app_name {
+	padding: 0 !important;
+	display: inline-block;
+}

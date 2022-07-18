@@ -27,6 +27,22 @@ app.get("/sw.js",function (req, res,next) {
     next();
 });
 
+app.get("/info/:info",function (req, res, next) {
+  //redirect from http to https
+  if (req.protocol=='http')
+    res.redirect('https://' + req.headers.host);
+  else{
+    if (req.headers.host.substring(0,req.headers.host.indexOf('.')) == 'app1') {
+        const { getInfo} = require("./apps");
+        getInfo(APP1_ID, req.params.info, (err, info_result)=>{
+          res.send(info_result);
+        })
+    }
+    else
+      next();
+  }
+});
+
 //app 1 progressive webapp menifest
 app.get("/app1/manifest.json",function (req, res, next) {
   if (req.headers.host.substring(0,req.headers.host.indexOf('.')) == 'app1'){
