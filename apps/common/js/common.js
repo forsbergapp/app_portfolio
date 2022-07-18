@@ -1,6 +1,7 @@
 /*  Functions and globals in this order:
     MISC
     MESSAGE & DIALOGUE
+    WINDOW INFO
     BROADCAST
     GPS
     COUNTRY & CITIES
@@ -579,6 +580,122 @@ function dialogue_user_edit_remove_error(){
     document.getElementById('user_edit_input_new_password_confirm').classList.remove('input_error');
 
     document.getElementById('user_edit_input_password_reminder').classList.remove('input_error');
+}
+/*----------------------- */
+/* WINDOW INFO            */
+/*----------------------- */
+function zoom_info(zoomvalue = '') {
+    let old;
+    let old_scale;
+    let div = document.getElementById('common_window_info_info');
+    //called with null as argument at init() then used for zooming
+    //even if css set, this property is not set at startup
+    if (zoomvalue == '') {
+        div.style.transform = 'scale(1)';
+    } else {
+        old = div.style.transform;
+        old_scale = parseFloat(old.substr(old.indexOf("(") + 1, old.indexOf(")") - 1));
+        div.style.transform = 'scale(' + (old_scale + ((zoomvalue*5) / 10)) + ')';
+    }
+    return null;
+}
+function move_info(move1, move2) {
+    let old;
+    let div = document.getElementById('common_window_info_info');
+    if (move1==null && move2==null) {
+        div.style.transformOrigin = '50% 50%';
+    } else {
+        old = div.style.transformOrigin;
+        let old_move1 = parseFloat(old.substr(0, old.indexOf("%")));
+        let old_move2 = parseFloat(old.substr(old.indexOf("%") +1, old.length -1));
+        div.style.transformOrigin =  `${old_move1 + (move1*5)}% ${old_move2 + (move2*5)}%`;
+    }
+    return null;
+}
+function show_window_info(info, show_toolbar, content, content_type, qr_data, iframe_content){
+    let display;
+    if (show_toolbar)
+        display = 'inline-block';
+    else
+        display = 'none';
+    document.getElementById('common_window_info_toolbar_btn_zoomout').style.display = display;
+    document.getElementById('common_window_info_toolbar_btn_zoomin').style.display = display;
+    document.getElementById('common_window_info_toolbar_btn_left').style.display = display;
+    document.getElementById('common_window_info_toolbar_btn_right').style.display = display;
+    document.getElementById('common_window_info_toolbar_btn_up').style.display = display;
+    document.getElementById('common_window_info_toolbar_btn_down').style.display = display;
+    document.getElementById('common_window_info_toolbar_qr').style.display = 'none';
+    document.getElementById('common_window_info_content').style.display = 'none';
+    
+    zoom_info('');
+    move_info(null,null);
+
+
+    function show_url(url){
+        fetch(url)
+        .then(function(response) {
+            return response.text();
+        })
+        .then(function(result) {
+            document.getElementById('common_window_info_info').innerHTML = result; 
+            document.getElementById('common_window_info').style.visibility = 'visible';
+        })
+    }
+    switch(info){
+        case 0:{
+            document.getElementById('common_window_info_info').innerHTML = content;
+            document.getElementById('common_window_info').style.visibility = 'visible';
+            break;
+        }
+        case 1:{
+            show_url(window.global_info_link_policy_url);
+            break;
+        }    
+        case 2:{
+            show_url(window.global_info_link_disclaimer_url); 
+            break;
+        }    
+        case 3:{
+            show_url(window.global_info_link_terms_url); 
+            break;
+        }    
+        case 4:{
+            show_url(window.global_info_link_about_url); 
+            break;
+        }
+        case null:{
+            document.getElementById('common_window_info').style.visibility = 'visible';
+            document.getElementById('common_window_info_content').style.display = 'block';
+            create_qr('common_window_info_toolbar_qr', qr_data);
+            dialogue_loading(1);
+            if (content_type = 'HTML'){
+                document.getElementById('common_window_info_content').src=iframe_content;
+                dialogue_loading(0);    
+            }
+            else
+                if (content_type=='PDF'){
+                    fetch (iframe_content,
+                            {
+                                headers: {
+                                    'Content-Type': 'application/pdf;charset=UTF-8'
+                                }
+                            }
+                    )
+                    .then(function(response) {
+                        return response.blob();
+                    })
+                    .then(function(pdf) {      
+                        let reader = new FileReader();
+                        reader.readAsDataURL(pdf); 
+                        reader.onloadend = function() {
+                            let base64PDF = reader.result;   
+                            document.getElementById('common_window_info_content').src = base64PDF;
+                            dialogue_loading(0);
+                        }
+                    })
+                }
+        }
+    }
 }
 /*----------------------- */
 /* BROADCAST              */
@@ -2362,12 +2479,6 @@ function exception(status, message){
 /*----------------------- */
 /* INIT                   */
 /*----------------------- */
-function set_app_globals_head() {
-    //call this function from index.html i head before body is loaded
-    //set meta tags in header        
-    document.title = window.global_app_name;
-    document.querySelector('meta[name="apple-mobile-web-app-title"]').setAttribute("content", window.global_app_name)
-}
 async function get_data_token() {
     let status;
     let app_id;
@@ -2396,7 +2507,12 @@ async function get_data_token() {
     })
 }
 function set_globals(parameters){
+    window.global_main_app_id= 0;
     window.global_app_id = parameters.app_id;
+    window.global_app_name = parameters.app_name;
+    window.global_app_url = parameters.app_url;
+    window.global_app_logo = parameters.app_logo;
+
     window.global_exception_app_function = parameters.exception_app_function;
 
     window.global_admin = parameters.admin;
@@ -2409,10 +2525,7 @@ function set_globals(parameters){
     window.global_client_longitude = parameters.gps_long;
     window.global_client_place = parameters.gps_place;
     
-    window.global_app_name;
-    window.global_app_hostname;
-    window.global_main_app_id 					= 0;
-
+    
     // if app not using translation then use default lang_code from navigator
     window.global_lang_code                     = navigator.language;
     window.global_rest_url_base 				= '/service/db/api/';
@@ -2617,6 +2730,9 @@ function init_common(parameters){
     */
     
     set_globals(parameters);
+    //set header info
+    document.title = window.global_app_name;
+    
     if (parameters.close_eventsource==true){
         window.global_eventSource.close();
         connectOnline();
@@ -2626,6 +2742,7 @@ function init_common(parameters){
     }
    
     if (parameters.ui==true){
+        document.querySelector('meta[name="apple-mobile-web-app-title"]').setAttribute("content", window.global_app_name)
         //icons
         //dialogue user verify
         document.getElementById('user_verify_email_icon').innerHTML = window.global_button_default_icon_mail;
@@ -2703,6 +2820,14 @@ function init_common(parameters){
         document.getElementById('profile_top_row1_3').innerHTML = window.global_button_default_icon_views;
         document.getElementById('profile_home').innerHTML = window.global_button_default_icon_profile_top;
         document.getElementById('profile_close').innerHTML = window.global_button_default_icon_close;
+        //window info
+        document.getElementById('common_window_info_toolbar_btn_close').innerHTML = window.global_button_default_icon_close;
+        document.getElementById('common_window_info_toolbar_btn_zoomout').innerHTML = window.global_button_default_icon_zoomout;
+        document.getElementById('common_window_info_toolbar_btn_zoomin').innerHTML = window.global_button_default_icon_zoomin;
+        document.getElementById('common_window_info_toolbar_btn_left').innerHTML =  window.global_button_default_icon_left;
+        document.getElementById('common_window_info_toolbar_btn_right').innerHTML = window.global_button_default_icon_right;
+        document.getElementById('common_window_info_toolbar_btn_up').innerHTML =  window.global_button_default_icon_up;
+        document.getElementById('common_window_info_toolbar_btn_down').innerHTML = window.global_button_default_icon_down;
         //events
         //login/signup/forgot
         document.getElementById('login_tab2').addEventListener('click', function() { show_common_dialogue('SIGNUP') }, false);
@@ -2724,12 +2849,29 @@ function init_common(parameters){
         });
         document.getElementById('forgot_button').addEventListener('click', function() { user_forgot()}, false);
         document.getElementById('forgot_close').addEventListener('click', function() { document.getElementById('dialogue_forgot').style.visibility = 'hidden' }, false);
+        //set app info
+        document.getElementById('login_logo').style.backgroundImage = `url(${window.global_app_logo})`;
+        document.getElementById('signup_logo').style.backgroundImage = `url(${window.global_app_logo})`;
+        document.getElementById('forgot_logo').style.backgroundImage =`url(${window.global_app_logo})`;
+        document.getElementById('login_app_name').innerHTML = window.global_app_name;
+        document.getElementById('signup_app_name').innerHTML = window.global_app_name;
+        document.getElementById('forgot_app_name').innerHTML = window.global_app_name;
+
         //dialogue message
-        document.getElementById('message_cancel').addEventListener('click', function() { document.getElementById("dialogue_message").style.visibility = "hidden" }, false);
+        document.getElementById('message_cancel').addEventListener('click', function() { document.getElementById("dialogue_message").style.visibility = "hidden"; }, false);
         //dialogue new password
         document.getElementById('user_new_password_cancel').addEventListener('click', function() { dialogue_new_password_clear(); }, false);
         document.getElementById('user_new_password_ok').addEventListener('click', function() { updatePassword(); }, false);
         //profile search
         document.getElementById('profile_search_icon').addEventListener('click', function() { document.getElementById('profile_search_input').dispatchEvent(new KeyboardEvent('keyup')); }, false);
+        //window info
+        document.getElementById('common_window_info_toolbar_btn_close').addEventListener('click', function() { document.getElementById('common_window_info').style.visibility = "hidden"; }, false);
+        document.getElementById('common_window_info_toolbar_btn_zoomout').addEventListener('click', function() {zoom_info(-1);}, false);
+        document.getElementById('common_window_info_toolbar_btn_zoomin').addEventListener('click', function() {zoom_info(1);}, false);
+        document.getElementById('common_window_info_toolbar_btn_left').addEventListener('click', function() {move_info(-1,0);}, false);
+        document.getElementById('common_window_info_toolbar_btn_right').addEventListener('click', function() {move_info(1,0);}, false);
+        document.getElementById('common_window_info_toolbar_btn_up').addEventListener('click', function() {move_info(0,-1);}, false);
+        document.getElementById('common_window_info_toolbar_btn_down').addEventListener('click', function() {move_info(0,1);}, false);        
+     
     }
 };

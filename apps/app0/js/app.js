@@ -1,6 +1,6 @@
 window.global_app_email;
-window.global_img_diagram_img = '/app0/info/app_portfolio.jpg';
-window.global_img_datamodel_img = '/app0/info/datamodel.jpg';
+window.global_img_diagram_img = '/info/app_portfolio.jpg';
+window.global_img_datamodel_img = '/info/datamodel.jpg';
 
 
 window.global_qr_width;
@@ -28,17 +28,10 @@ function setEvents(){
         document.getElementById( 'dialogue_info_content' ).className = 'dialogue_content dialogue_flip dialogue_flip-side-1';
         document.getElementById( 'dialogue_start_content' ).className = 'dialogue_content dialogue_flip dialogue_flip-side-2';
     }, false );
-    document.getElementById('start_profile').addEventListener('click', function() {profile_home(Intl.DateTimeFormat().resolvedOptions().timeZone)}, false);
     //second page
-    document.getElementById('info_diagram').addEventListener('click', function() {info(1);}, false);
-    document.getElementById('info_datamodel').addEventListener('click', function() {info(2);}, false);
-    document.getElementById('toolbar_btn_close').addEventListener('click', function() {info(3);}, false);
-    document.getElementById('toolbar_btn_zoomout').addEventListener('click', function() {zoom_info(-1);}, false);
-    document.getElementById('toolbar_btn_zoomin').addEventListener('click', function() {zoom_info(1);}, false);
-    document.getElementById('toolbar_btn_left').addEventListener('click', function() {move_info(-1,0);}, false);
-    document.getElementById('toolbar_btn_right').addEventListener('click', function() {move_info(1,0);}, false);
-    document.getElementById('toolbar_btn_up').addEventListener('click', function() {move_info(0,-1);}, false);
-    document.getElementById('toolbar_btn_down').addEventListener('click', function() {move_info(0,1);}, false);
+    document.getElementById('info_diagram').addEventListener('click', function() {show_window_info(0, true, `<img src="${window.global_img_diagram_img}"/>`);}, false);
+    document.getElementById('info_datamodel').addEventListener('click', function() {show_window_info(0, true, `<img src="${window.global_img_datamodel_img}"/>`);}, false);
+   
     document.getElementById( 'info_message' ).addEventListener( 'click', function( event ) {
         event.preventDefault();
         document.getElementById( 'dialogue_info_content' ).className = 'dialogue_content dialogue_flip';
@@ -108,6 +101,7 @@ function toggle_switch(){
 function get_apps() {
 	let status;
     let json;
+    let old_button = document.getElementById('apps').innerHTML;
     document.getElementById('apps').innerHTML = window.global_button_spinner;
     fetch(window.global_rest_url_base + window.global_rest_app + '?id=' + window.global_app_id,
     {method: 'GET',
@@ -123,19 +117,8 @@ function get_apps() {
           if (status == 200){
             json = JSON.parse(result);
             let html='';
-            //read only app_name from app id 0
             for (var i = 0; i < json.data.length; i++) {
-                if (i==0){
-                    window.global_app_name = json.data[i].app_name;
-                    document.getElementById('login_logo').style.backgroundImage=`url(${json.data[i].logo})`;
-                    document.getElementById('signup_logo').style.backgroundImage=`url(${json.data[i].logo})`;
-                    document.getElementById('forgot_logo').style.backgroundImage=`url(${json.data[i].logo})`;
-                    document.getElementById('login_app_name').innerHTML = window.global_app_name;
-                    document.getElementById('signup_app_name').innerHTML = window.global_app_name;
-                    document.getElementById('forgot_app_name').innerHTML = window.global_app_name;
-                    set_app_globals_head();
-                }
-                else{   
+                if (i!=0){
                     html +=`<div class='app_link'>
                                 <div class='app_url'>${json.data[i].url}</div>
                                 <div class='app_logo_div'><img class='app_logo' src='${json.data[i].logo}' /></div>
@@ -148,8 +131,10 @@ function get_apps() {
                 window.open(event.target.parentNode.parentNode.children[0].innerHTML);
             }))
           }
-          else
+          else{
+            document.getElementById('apps').innerHTML = old_button;
             show_message('EXCEPTION', null,null, result, window.global_app_id);
+          }
         });
 }
 
@@ -250,6 +235,38 @@ async function get_parameters() {
                     window.global_app_copyright =json.data[i].parameter_value;
                 if (json.data[i].parameter_name=='APP_EMAIL') //0
                     window.global_app_email = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='INFO_SOCIAL_LINK1_URL')
+                    window.global_info_social_link1_url = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='INFO_SOCIAL_LINK2_URL')
+                    window.global_info_social_link2_url = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='INFO_SOCIAL_LINK3_URL')
+                    window.global_info_social_link3_url = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='INFO_SOCIAL_LINK4_URL')
+                    window.global_info_social_link4_url = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='INFO_SOCIAL_LINK1_ICON')
+                    window.global_info_social_link1_name = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='INFO_SOCIAL_LINK2_ICON')
+                    window.global_info_social_link2_name = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='INFO_SOCIAL_LINK3_ICON')
+                    window.global_info_social_link3_name = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='INFO_SOCIAL_LINK4_ICON')
+                    window.global_info_social_link4_name = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='INFO_LINK_POLICY_URL')
+                    window.global_info_link_policy_url = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='INFO_LINK_DISCLAIMER_URL')
+                    window.global_info_link_disclaimer_url = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='INFO_LINK_TERMS_URL')
+                    window.global_info_link_terms_url = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='INFO_LINK_ABOUT_URL')
+                    window.global_info_link_about_url = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='INFO_LINK_POLICY_NAME')
+                    window.global_info_link_policy_name = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='INFO_LINK_DISCLAIMER_NAME')
+                    window.global_info_link_disclaimer_name = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='INFO_LINK_TERMS_NAME')
+                    window.global_info_link_terms_name = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='INFO_LINK_ABOUT_NAME')
+                    window.global_info_link_about_name = json.data[i].parameter_value;
                 //QR
                 if (json.data[i].parameter_name=='QR_LOGO_FILE_PATH')
                     window.global_qr_logo_file_path = json.data[i].parameter_value;
@@ -273,59 +290,7 @@ async function get_parameters() {
             show_message('EXCEPTION', null,null, result, window.global_app_id);
     });
 }
-function zoom_info(zoomvalue = '') {
-    let old;
-    let old_scale;
-    let div = document.getElementById('info');
-    //called with null as argument at init() then used for zooming
-    //even if css set, this property is not set at startup
-    if (zoomvalue == '') {
-        div.style.transform = 'scale(1)';
-    } else {
-        old = div.style.transform;
-        old_scale = parseFloat(old.substr(old.indexOf("(") + 1, old.indexOf(")") - 1));
-        div.style.transform = 'scale(' + (old_scale + ((zoomvalue*5) / 10)) + ')';
-    }
-    return null;
-}
-function move_info(move1, move2) {
-    let old;
-    let div = document.getElementById('info');
-    if (move1==null && move2==null) {
-        div.style.transformOrigin = '50% 50%';
-    } else {
-        old = div.style.transformOrigin;
-        let old_move1 = parseFloat(old.substr(0, old.indexOf("%")));
-        let old_move2 = parseFloat(old.substr(old.indexOf("%") +1, old.length -1));
-        div.style.transformOrigin =  `${old_move1 + (move1*5)}% ${old_move2 + (move2*5)}%`;
-    }
-    return null;
-}
 
-function info(id){
-    switch (id){
-        case 1:{
-            document.getElementById('window_info').style.visibility = 'visible';
-            document.getElementById('info').innerHTML = `<img src="${window.global_img_diagram_img}"/>`;
-            break;
-        }
-        case 2:{
-            document.getElementById('window_info').style.visibility = 'visible';
-            document.getElementById('info').innerHTML = `<img src="${window.global_img_datamodel_img}"/>`;
-            break;
-        }
-        case 3:{
-            document.getElementById('window_info').style.visibility = 'hidden';
-            document.getElementById('info').innerHTML = '';
-            zoom_info('');
-            move_info(null,null);
-            break;
-        }
-        default:
-            break;
-    }
-
-}
 function user_menu_item_click(item){
     switch (item.id){
         case 'user_menu_dropdown_profile':{
@@ -509,28 +474,49 @@ async function init_app(){
     //profile info
     document.getElementById('profile_main_btn_cloud').innerHTML = window.global_button_default_icon_cloud;
     document.getElementById('user_menu_default_avatar').innerHTML = window.global_button_default_icon_user_avatar;
-    //window
-    document.getElementById('toolbar_btn_close').innerHTML = window.global_button_default_icon_close;
-    document.getElementById('toolbar_btn_zoomout').innerHTML = window.global_button_default_icon_zoomout;
-    document.getElementById('toolbar_btn_zoomin').innerHTML = window.global_button_default_icon_zoomin;
-    document.getElementById('toolbar_btn_left').innerHTML =  window.global_button_default_icon_left;
-    document.getElementById('toolbar_btn_right').innerHTML = window.global_button_default_icon_right;
-    document.getElementById('toolbar_btn_up').innerHTML =  window.global_button_default_icon_up;
-    document.getElementById('toolbar_btn_down').innerHTML = window.global_button_default_icon_down;
     
     setEvents();
     zoom_info('');
     move_info(null,null);
     await get_data_token();
 }
+
 function init(parameters){
     init_common(parameters);
     init_app().then(function(){
         get_parameters().then(function(){
+            
+            if (window.global_info_social_link1_url)
+                document.getElementById('social_link1').addEventListener('click', function() { window.open(window.global_info_social_link1_url,'_blank',''); }, false);
+            if (window.global_info_social_link2_url)
+                document.getElementById('social_link2').addEventListener('click', function() { window.open(window.global_info_social_link2_url,'_blank',''); }, false);
+            if (window.global_info_social_link3_url)
+                document.getElementById('social_link3').addEventListener('click', function() { window.open(window.global_info_social_link3_url,'_blank',''); }, false);
+            if (window.global_info_social_link4_url)
+                document.getElementById('social_link4').addEventListener('click', function() { window.open(window.global_info_social_link4_url,'_blank',''); }, false);            
+
+            document.getElementById('info_link1').addEventListener('click', function() { show_window_info(1);}, false);
+            document.getElementById('info_link2').addEventListener('click', function() { show_window_info(2);}, false);
+            document.getElementById('info_link3').addEventListener('click', function() { show_window_info(3);}, false);
+            document.getElementById('info_link4').addEventListener('click', function() { show_window_info(4);}, false);
+
+            document.getElementById('start_profile').addEventListener('click', function() {profile_home(Intl.DateTimeFormat().resolvedOptions().timeZone)}, false);
             common_translate_ui(window.global_lang_code);
             document.getElementById('copyright').innerHTML = window.global_app_copyright;
             document.getElementById('app_email').href='mailto:' + window.global_app_email;
             document.getElementById('app_email').innerHTML=window.global_app_email;
+            if (window.global_info_social_link1_url!=null)
+                document.getElementById('social_link1').innerHTML = window.global_info_social_link1_icon;;
+            if (window.global_info_social_link2_url!=null)
+                document.getElementById('social_link2').innerHTML = window.global_info_social_link2_icon;;
+            if (window.global_info_social_link3_url!=null)
+                document.getElementById('social_link3').innerHTML = window.global_info_social_link3_icon;;
+            if (window.global_info_social_link4_url!=null)
+                document.getElementById('social_link4').innerHTML = window.global_info_social_link4_icon;;
+            document.getElementById('info_link1').innerHTML = window.global_info_link_policy_name;
+            document.getElementById('info_link2').innerHTML = window.global_info_link_disclaimer_name;
+            document.getElementById('info_link3').innerHTML = window.global_info_link_terms_name;
+            document.getElementById('info_link4').innerHTML = window.global_info_link_about_name;
             get_apps();
             async function show_start(){
                 let user = window.location.pathname.substring(1);

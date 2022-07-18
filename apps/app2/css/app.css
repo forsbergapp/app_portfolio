@@ -8,8 +8,10 @@ body {
 	-ms-text-size-adjust: none;
 	padding: 0px;
 }
-
-#window_info{
+#common_window_info_content{
+	display: none;
+}
+#common_window_info{
 	width:100%;
 	height:100%;
 	visibility:visible;
@@ -18,14 +20,17 @@ body {
 	overflow:auto;
 	z-index:11;
 }
-#info img{
+#common_window_info_info img{
 	max-width:90%;
 }
-#info{
+#common_window_info_info{
 	position:relative;
 	margin:20px;
 	z-index:-1;
 	margin-top:-70px;
+}
+#common_window_info_toolbar_btn_close{
+	display: none;
 }
 
 .common_dialogue_content:hover, 
