@@ -2293,8 +2293,6 @@ function updatePassword(){
 function provider_init(providertype, provider_function){
     switch (providertype){
         case 1:{
-            window.global_button_default_icon_provider1 = '<i class="fab fa-google"></i>';
-
             document.getElementById('g_id_onload').setAttribute('data-client_id', window.global_app_user_provider1_id);
             document.getElementById('g_id_onload').setAttribute('data-callback', provider_function);
             document.getElementById('g_id_onload').setAttribute('data-auto_select', 'true');
@@ -2311,7 +2309,6 @@ function provider_init(providertype, provider_function){
             break;
         }
         case 2:{
-            window.global_button_default_icon_provider2 = '<i class="fab fa-facebook"></i>';
             document.getElementById('logo_provider2').innerHTML = window.global_button_default_icon_provider2;
             document.getElementById('login_provider2').addEventListener('click', provider_function, false);
             /*Provider 2 SDK*/
@@ -2640,7 +2637,18 @@ function set_globals(parameters){
         window.global_button_default_icon_provider = '<i class="fa-solid fa-passport"></i>';
         window.global_button_default_icon_provider_id = '<i class="fa-solid fa-id-badge"></i>';
         window.global_button_default_icon_provider_email = '<i class="fa-solid fa-envelope"></i>';
-        
+        //list of popular identity providers
+        window.global_button_default_icon_facebook = '<i class="fab fa-facebook"></i>';
+        window.global_button_default_icon_microsoft = '<i class="fa-brands fa-microsoft"></i>';
+        window.global_button_default_icon_twitch = '<i class="fa-brands fa-twitch"></i>';
+        window.global_button_default_icon_tiktok = '<i class="fa-brands fa-tiktok"></i>';
+        window.global_button_default_icon_yahoo = '<i class="fa-brands fa-yahoo"></i>';
+        window.global_button_default_icon_github = '<i class="fa-brands fa-github"></i>';
+        window.global_button_default_icon_google = '<i class="fab fa-google"></i>';
+        //set what provider to use:
+        window.global_button_default_icon_provider1 = window.global_button_default_icon_google;
+        window.global_button_default_icon_provider2 = window.global_button_default_icon_facebook;
+
         window.global_button_default_icon_user_joined_date = '<i class="fas fa-hands-helping"></i>';
         window.global_button_default_icon_user_follow_user = '<i class="fas fa-user-plus"></i>';
         window.global_button_default_icon_user_followed_user = '<i class="fas fa-user-check"></i';
@@ -2715,6 +2723,9 @@ function init_common(parameters){
     /*
     parameters:
     {app_id: 
+     app_name:
+     app_url:
+     app_logo:
      exception_app_function:
      close_eventsource:
      ui:
