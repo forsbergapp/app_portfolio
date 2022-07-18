@@ -1869,6 +1869,9 @@ function init_admin_secure(){
 }
 init_common({
     app_id: '',
+    app_name: 'ADMIN',
+    app_url: window.location.href,
+    app_logo: '/app0/images/logo_app.png',
     exception_app_function: 'admin_logoff_app',
     close_eventsource: true,
     ui: true,
@@ -1876,7 +1879,10 @@ init_common({
     service_auth: window.global_service_auth,
     app_rest_client_id: window.global_app_rest_client_id,
     app_rest_client_secret: window.global_app_rest_client_secret,
-    rest_app_parameter: window.global_rest_app_parameter
+    rest_app_parameter: window.global_rest_app_parameter,
+    gps_lat: window.global_client_latitude, 
+    gps_long: window.global_client_longitude, 
+    gps_place: window.global_client_place 
     });
 init_admin_secure();
 </script>
