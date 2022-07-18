@@ -14,8 +14,7 @@ module.exports = {
                     ['<AppToggle/>', __dirname + '/src/toogle.html'],
                     ['<AppBackground/>', __dirname + '/src/background.html'],
                     ['<AppDialogues/>', __dirname + '/src/dialogues.html'],
-                    ['<AppProfileInfo/>', __dirname + '/src/profile_info.html'],   /*Profile tag in common body*/
-                    ['<AppWindowInfo/>', __dirname + '/src/window_info.html']
+                    ['<AppProfileInfo/>', __dirname + '/src/profile_info.html']   /*Profile tag in common body*/
                   ];
                   read_app_files(app_id, files, (err, app)=>{
                     if (err)

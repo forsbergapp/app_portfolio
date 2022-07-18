@@ -1,3 +1,123 @@
+const { getParameters_server } = require ("../service/db/api/app_parameter/app_parameter.service");
+const { getApp } = require("../service/db/api/app/app.service");
+async function getInfo(app_id, info, callBack){
+    async function get_parameters(callBack){            
+        getApp(app_id, (err, result_app)=>{
+            getParameters_server(app_id, (err, result)=>{
+                //app_parameter table
+                let db_info_email_policy;
+                let db_info_email_disclaimer;
+                let db_info_email_terms;
+                let db_info_link_policy_url;
+                let db_info_link_disclaimer_url;
+                let db_info_link_terms_url;
+                let db_info_link_about_url;            
+                if (err) {
+                    createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
+                    callBack(err, null);
+                }
+                else{
+                    let json = JSON.parse(JSON.stringify(result));
+                    for (var i = 0; i < json.length; i++){
+                        if (json[i].parameter_name=='INFO_EMAIL_POLICY')
+                            db_info_email_policy = json[i].parameter_value;
+                        if (json[i].parameter_name=='INFO_EMAIL_DISCLAIMER')
+                            db_info_email_disclaimer = json[i].parameter_value;
+                        if (json[i].parameter_name=='INFO_EMAIL_TERMS')
+                            db_info_email_terms = json[i].parameter_value;
+                        if (json[i].parameter_name=='INFO_LINK_POLICY_URL')
+                            db_info_link_policy_url = json[i].parameter_value;
+                        if (json[i].parameter_name=='INFO_LINK_DISCLAIMER_URL')
+                            db_info_link_disclaimer_url = json[i].parameter_value;
+                        if (json[i].parameter_name=='INFO_LINK_TERMS_URL')
+                            db_info_link_terms_url = json[i].parameter_value;
+                        if (json[i].parameter_name=='INFO_LINK_ABOUT_URL')
+                            db_info_link_about_url = json[i].parameter_value;
+                    }
+                    callBack(null, {app_name: result_app[0].app_name,
+                                    app_url: result_app[0].url,
+                                    info_email_policy: db_info_email_policy,
+                                    info_email_disclaimer: db_info_email_disclaimer,
+                                    info_email_terms: db_info_email_terms,
+                                    info_link_policy_url: db_info_link_policy_url,
+                                    info_link_disclaimer_url: db_info_link_disclaimer_url,
+                                    info_link_terms_url: db_info_link_terms_url,
+                                    info_link_about_url: db_info_link_about_url
+                                    })
+                }
+            })    
+        })
+    }
+    let info_html1 = `<!DOCTYPE html>
+                      <html>
+                        <head>
+                            <meta charset='UTF-8'>
+                            <link rel='stylesheet' type='text/css' href='/common/css/common_info.css' />
+                        </head>	
+                        <body >`;
+    let info_html2 = `  </body>
+                      </html>`;
+    switch (info){
+    case 'privacy_policy':{
+        get_parameters((err, result)=>{
+            const fs = require("fs");
+            fs.readFile(__dirname + `/app${app_id}${result.info_link_policy_url}.html`, 'utf8', (error, fileBuffer) => {
+                let infopage = fileBuffer.toString();
+                infopage = infopage.replace('<APPNAME1/>', result.app_name );
+                infopage = infopage.replace('<APPNAME2/>', result.app_name );
+                infopage = infopage.replace('<APPURL_HREF/>', result.app_url );
+                infopage = infopage.replace('<APPURL_INNERTEXT/>', result.app_url );
+                infopage = infopage.replace('<APPEMAIL_HREF/>', 'mailto:' + result.info_email_policy );
+                infopage = infopage.replace('<APPEMAIL_INNERTEXT/>', result.info_email_policy );
+                callBack(null, info_html1 + infopage + info_html2);
+            })
+        })
+        break;
+    }
+    case 'disclaimer':{
+        get_parameters((err, result)=>{
+            const fs = require("fs");
+            fs.readFile(__dirname + `/app${app_id}${result.info_link_disclaimer_url}.html`, 'utf8', (error, fileBuffer) => {
+                let infopage = fileBuffer.toString();
+                infopage = infopage.replace('<APPNAME1/>', result.app_name );
+                infopage = infopage.replace('<APPNAME2/>', result.app_name );
+                infopage = infopage.replace('<APPNAME3/>', result.app_name );
+                infopage = infopage.replace('<APPEMAIL_HREF/>', 'mailto:' + result.info_email_disclaimer );
+                infopage = infopage.replace('<APPEMAIL_INNERTEXT/>', result.info_email_disclaimer );
+                callBack(null, info_html1 + infopage + info_html2);
+            })
+        })
+        break;
+    }
+    case 'terms':{
+        get_parameters((err, result)=>{
+            const fs = require("fs");
+            fs.readFile(__dirname + `/app${app_id}${result.info_link_terms_url}.html`, 'utf8', (error, fileBuffer) => {
+                let infopage = fileBuffer.toString();
+                infopage = infopage.replace('<APPNAME/>', result.app_name );
+                infopage = infopage.replace('<APPURL_HREF/>', result.app_url );
+                infopage = infopage.replace('<APPURL_INNERTEXT/>', result.app_url );
+                infopage = infopage.replace('<APPEMAIL_HREF/>', 'mailto:' + result.info_email_terms );
+                infopage = infopage.replace('<APPEMAIL_INNERTEXT/>', result.info_email_terms );
+                callBack(null, info_html1 + infopage + info_html2);
+            })
+        })
+        break;
+    }
+    case 'about':{
+        get_parameters((err, result)=>{
+            const fs = require("fs");
+            fs.readFile(__dirname + `/app${app_id}${result.info_link_about_url}.html`, 'utf8', (error, fileBuffer) => {
+                callBack(null, info_html1 + fileBuffer.toString() + info_html2);
+            })
+        });
+        break;
+    }
+    default:
+        callBack(null, null);
+        break;
+    }
+}
 async function read_app_files(app_id, files, callBack){
     const {promises: {readFile}} = require("fs");
     let i = 0;
@@ -38,6 +158,9 @@ async function get_module_with_init(app_id,
         else{
             let parameters = {   
                 app_id: app_id,
+                app_name: result[0].app_name,
+                app_url: result[0].app_url,
+                app_logo: result[0].app_logo,
                 exception_app_function: exception_app_function,
                 close_eventsource: close_eventsource,
                 ui: ui,
@@ -191,6 +314,7 @@ module.exports = {
         })
     }
 }
+module.exports.getInfo = getInfo;
 module.exports.read_app_files = read_app_files;
 module.exports.get_module_with_init = get_module_with_init;
 module.exports.get_email_verification = get_email_verification;

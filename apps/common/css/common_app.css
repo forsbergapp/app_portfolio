@@ -721,6 +721,39 @@
 	}
 
 }
+/*WINDOW INFO*/
+#common_window_info {
+    width:100%;
+    height:100%;
+	top: 0px;
+	position:fixed;
+	overflow:auto;
+	font-size: 16px;
+	z-index: 11;
+	margin-bottom: 100px;
+	visibility: hidden;
+	text-align:center;
+}
+#common_window_info_info,
+#common_window_info_info1,
+#common_window_info_info1,
+#common_window_info_info2,
+#common_window_info_info3,
+#common_window_info_info4{
+	text-align: left;
+}
+
+#common_window_info_toolbar_qr{
+	padding:3px;
+	padding-bottom:0px;
+	width:96px;
+	margin: 0 auto;
+}
+#common_window_info_toolbar_qr canvas{
+	width:96px;
+	height:96px;
+}
+
 /*RESPONSIVE SETTINGS*/
 /*CSS for minimum 768px*/
 @media only screen and (min-width: 768px) {
