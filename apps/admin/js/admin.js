@@ -12,7 +12,7 @@ function admin_login(){
     fetch('/service/auth/admin',
     {method: 'POST',
         headers: {
-        'Authorization': 'Basic ' + btoa(document.getElementById("admin_login_username").value + ':' + document.getElementById("admin_login_password").value)
+        'Authorization': 'Basic ' + window.btoa(document.getElementById("admin_login_username").value + ':' + document.getElementById("admin_login_password").value)
         },
         body: json_data
     })

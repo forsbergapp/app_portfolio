@@ -155,13 +155,13 @@ function mobile(){
 //function to convert buffert to one string
 function toBase64_arr(arr) {
     //arr = new Uint8Array(arr) if it's an ArrayBuffer
-    return atob(
+    return window.atob(
         arr.reduce((data, byte) => data + String.fromCharCode(byte), '')
     );
 }
 function parseJwt(token) {
     try {
-      return JSON.parse(atob(token.split('.')[1]));
+      return JSON.parse(window.atob(token.split('.')[1]));
     } catch (e) {
       return null;
     }
@@ -192,9 +192,19 @@ function image_format(arr) {
             return toBase64_arr(arr.data);
         } else {
             //not buffer
-            return atob(arr);
+            try {
+                return window.atob(arr);
+            } catch(e) {        
+                return arr;
+            }
         }
     }
+}
+function list_image_format_src(image){
+    if (image=='' ||image==null)
+        return '';
+    else
+        return `src='${image_format(image)}'`;
 }
 function recreate_img(img_item) {
     //cant set img src to null, it will containt url or show corrupt image
@@ -209,6 +219,12 @@ function recreate_img(img_item) {
     img.alt = alt;
     parentnode.appendChild(img);
     return null;
+}
+function set_avatar(avatar, item){
+    if (avatar == null || avatar == '')
+        recreate_img(item);
+    else
+        item.src = image_format(avatar);
 }
 function boolean_to_number(boolean_value) {
     if (boolean_value == true)
@@ -707,7 +723,7 @@ function maintenance_countdown(remaining) {
     setTimeout(function(){ maintenance_countdown(remaining - 1); }, 1000);
 };
 function show_broadcast(broadcast_message){
-    broadcast_message = atob(broadcast_message);
+    broadcast_message = window.atob(broadcast_message);
     let broadcast_type = JSON.parse(broadcast_message).broadcast_type;
     let message = JSON.parse(broadcast_message).broadcast_message;
     if (broadcast_type=='MAINTENANCE'){
@@ -1018,7 +1034,7 @@ function profile_top(statschoice, timezone, app_rest_url = null, click_function=
                 let image='';
                 let name='';
                 for (i = 0; i < json.count; i++) {
-                    image = image_format(json.items[i].avatar ?? json.items[i].provider1_image ?? json.items[i].provider2_image);
+                    image = list_image_format_src(json.items[i].avatar ?? json.items[i].provider1_image ?? json.items[i].provider2_image)
                     name = json.items[i].username;
                     html +=
                     `<div class='profile_top_list_row'>
@@ -1026,7 +1042,7 @@ function profile_top(statschoice, timezone, app_rest_url = null, click_function=
                             <div class='profile_top_list_user_account_id'>${json.items[i].id}</div>
                         </div>
                         <div class='profile_top_list_col'>
-                            <img class='profile_top_list_avatar' src='${image}'>
+                            <img class='profile_top_list_avatar' ${image}>
                         </div>
                         <div class='profile_top_list_col'>
                             <div class='profile_top_list_username'>
@@ -1156,6 +1172,7 @@ function profile_detail(detailchoice, timezone, rest_url_app, fetch_detail, head
                     profile_detail_list.innerHTML = '';
 
                     let html = '';
+                    let image = '';
                     let delete_div ='';
                     for (i = 0; i < json.count; i++) {
                         if (window.global_app_id == window.global_main_app_id && detailchoice==5){
@@ -1191,13 +1208,14 @@ function profile_detail(detailchoice, timezone, rest_url_app, fetch_detail, head
                         }
                         else{
                             //Username list
+                            image = list_image_format_src(json.items[i].avatar ?? json.items[i].provider1_image ?? json.items[i].provider2_image)
                             html += 
                             `<div class='profile_detail_list_row'>
                                 <div class='profile_detail_list_col'>
                                     <div class='profile_detail_list_user_account_id'>${json.items[i].id}</div>
                                 </div>
                                 <div class='profile_detail_list_col'>
-                                    <img class='profile_detail_list_avatar' src='${image_format(json.items[i].avatar ?? json.items[i].provider1_image ?? json.items[i].provider2_image)}'>
+                                    <img class='profile_detail_list_avatar' ${image}>
                                 </div>
                                 <div class='profile_detail_list_col'>
                                     <div class='profile_detail_list_username'>
@@ -1296,7 +1314,7 @@ function search_profile(timezone, click_function) {
                 let name = '';
                 profile_search_list.style.height = (json.count * 24).toString() + 'px';
                 for (i = 0; i < json.count; i++) {
-                    image = image_format(json.items[i].avatar ?? json.items[i].provider1_image ?? json.items[i].provider2_image);
+                    image = list_image_format_src(json.items[i].avatar ?? json.items[i].provider1_image ?? json.items[i].provider2_image)
                     name = json.items[i].username;
                     html +=
                     `<div class='profile_search_list_row'>
@@ -1304,7 +1322,7 @@ function search_profile(timezone, click_function) {
                             <div class='profile_search_list_user_account_id'>${json.items[i].id}</div>
                         </div>
                         <div class='profile_search_list_col'>
-                            <img class='profile_search_list_avatar' src='${image}'>
+                            <img class='profile_search_list_avatar' ${image}>
                         </div>
                         <div class='profile_search_list_col'>
                             <div class='profile_search_list_username'>
@@ -1322,7 +1340,7 @@ function search_profile(timezone, click_function) {
         });
 }
 /* call 
-profile_show(null, null)     from popupmenu in apps or choosing logged in users profile
+profile_show(null, null)     from dropdown menu in apps or choosing logged in users profile
 profile_show(userid, null) 	 from choosing profile in profile_top
 profile_show(userid, null) 	 from choosing profile in profile_detail
 profile_show(userid, null) 	 from choosing profile in search_profile
@@ -1377,8 +1395,7 @@ async function profile_show(user_account_id_other = null, username = null, timez
                     document.getElementById('profile_info').style.display = "block";
                     document.getElementById('profile_main').style.display = "block";
                     document.getElementById('profile_id').innerHTML = json.id;
-
-                    document.getElementById('profile_avatar').src = image_format(json.avatar ?? json.provider1_image ?? json.provider2_image);
+                    set_avatar(json.avatar ?? json.provider1_image ?? json.provider2_image, document.getElementById('profile_avatar')); 
                     //show local username
                     document.getElementById('profile_username').innerHTML = json.username;
 
@@ -1628,10 +1645,7 @@ async function user_edit(timezone, callBack) {
 
                         //display fetched avatar editable
                         document.getElementById('user_edit_avatar').style.display = 'block';
-                        if (json.avatar == null || json.avatar == '')
-                            recreate_img(document.getElementById('user_edit_avatar_img'));
-                        else
-                            document.getElementById('user_edit_avatar_img').src = image_format(json.avatar);
+                        set_avatar(json.avatar, document.getElementById('user_edit_avatar_img')); 
                         document.getElementById('user_edit_input_email').value = json.email;
                         document.getElementById('user_edit_input_password').value = '',
                             document.getElementById('user_edit_input_password_confirm').value = '',
@@ -1649,10 +1663,7 @@ async function user_edit(timezone, callBack) {
                             document.getElementById('user_edit_label_provider_email_data').innerHTML = json.provider1_email;
                             document.getElementById('user_edit_label_provider_image_url_data').innerHTML = json.provider1_image_url;
                             document.getElementById('user_edit_avatar').style.display = 'none';
-                            if (json.provider1_image == null || json.provider1_image == '')
-                                recreate_img(document.getElementById('user_edit_avatar_img'));
-                            else
-                                document.getElementById('user_edit_avatar_img').src = image_format(json.provider1_image);
+                            set_avatar(json.provider1_image, document.getElementById('user_edit_avatar_img')); 
                         } else
                             if (json.provider2_id !== null) {
                                 document.getElementById('user_edit_provider').style.display = 'block';
@@ -1663,10 +1674,7 @@ async function user_edit(timezone, callBack) {
                                 document.getElementById('user_edit_label_provider_email_data').innerHTML = json.provider2_email;
                                 document.getElementById('user_edit_label_provider_image_url_data').innerHTML = json.provider2_image_url;
                                 document.getElementById('user_edit_avatar').style.display = 'none';
-                                if (json.provider2_image == null || json.provider2_image == '')
-                                    recreate_img(document.getElementById('user_edit_avatar_img'));
-                                else
-                                    document.getElementById('user_edit_avatar_img').src = image_format(json.provider2_image);
+                                set_avatar(json.provider2_image, document.getElementById('user_edit_avatar_img'));
                             }
                     document.getElementById('user_edit_label_data_last_logontime').innerHTML = format_json_date(json.last_logontime, null, timezone);
                     document.getElementById('user_edit_label_data_account_created').innerHTML = format_json_date(json.date_created, null, timezone);
@@ -1694,53 +1702,40 @@ async function user_edit(timezone, callBack) {
         });
 }
 async function user_update(callBack) {
-    let avatar = btoa(document.getElementById('user_edit_avatar_img').src);
     let username = document.getElementById('user_edit_input_username').value;
     let bio = document.getElementById('user_edit_input_bio').value;
-    let email = document.getElementById('user_edit_input_email').value;
-    let password = document.getElementById('user_edit_input_password').value;
-    let password_confirm = document.getElementById('user_edit_input_password_confirm').value;
-    let new_password = document.getElementById('user_edit_input_new_password').value;
-    let new_password_confirm = document.getElementById('user_edit_input_new_password_confirm').value;
-    let password_reminder = document.getElementById('user_edit_input_password_reminder').value;
-    
+    let avatar = window.btoa(document.getElementById('user_edit_avatar_img').src);
     let url;
-    let json;
     let json_data;
-    let status;
 
-    if (check_input(username) == false ||
-        check_input(bio, 150) == false ||
-        check_input(email) == false ||
-        check_input(password) == false ||
-        check_input(password_confirm) == false ||
-        check_input(new_password) == false ||
-        check_input(new_password_confirm) == false ||
-        check_input(password_reminder) == false)
+    if (check_input(bio, 150) == false)
         return callBack('ERROR', null);
-    //validate input
-    if (username == '') {
-        //"Please enter username"
-        document.getElementById('user_edit_input_username').classList.add('input_error');
-        show_message('ERROR', 20303, null, null);
-        return callBack('ERROR', null);
-    }
-    
+        
     if (document.getElementById('user_edit_local').style.display == 'block') {
-        json_data = `{ 
-                        "username":"${username}",
-                        "bio":"${bio}",
-                        "private": ${boolean_to_number(document.getElementById('user_edit_checkbox_profile_private').checked)},
-                        "password":"${password}",
-                        "new_password":"${new_password}",
-                        "password_reminder":"${password_reminder}",
-                        "email":"${email}",
-                        "avatar":"${avatar}"
-                    }`;
-        url = window.global_rest_url_base + window.global_rest_user_account + window.global_user_account_id;
+        let email = document.getElementById('user_edit_input_email').value;
+        let password = document.getElementById('user_edit_input_password').value;
+        let password_confirm = document.getElementById('user_edit_input_password_confirm').value;
+        let new_password = document.getElementById('user_edit_input_new_password').value;
+        let new_password_confirm = document.getElementById('user_edit_input_new_password_confirm').value;
+        let password_reminder = document.getElementById('user_edit_input_password_reminder').value;
+        if (check_input(username) == false ||
+            check_input(email) == false ||
+            check_input(password) == false ||
+            check_input(password_confirm) == false ||
+            check_input(new_password) == false ||
+            check_input(new_password_confirm) == false ||
+            check_input(password_reminder) == false)
+            return callBack('ERROR', null);
 
         dialogue_user_edit_remove_error();
-        
+    
+        //validate input
+        if (username == '') {
+            //"Please enter username"
+            document.getElementById('user_edit_input_username').classList.add('input_error');
+            show_message('ERROR', 20303, null, null);
+            return callBack('ERROR', null);
+        }
         if (password == '') {
             //"Please enter password"
             document.getElementById('user_edit_input_password').classList.add('input_error');
@@ -1761,6 +1756,17 @@ async function user_update(callBack) {
             show_message('ERROR', 20301, null, null);
             return callBack('ERROR', null);
         }
+        json_data = `{ 
+            "username":"${username}",
+            "bio":"${bio}",
+            "private": ${boolean_to_number(document.getElementById('user_edit_checkbox_profile_private').checked)},
+            "password":"${password}",
+            "new_password":"${new_password}",
+            "password_reminder":"${password_reminder}",
+            "email":"${email}",
+            "avatar":"${avatar}"
+        }`;
+        url = window.global_rest_url_base + window.global_rest_user_account + window.global_user_account_id;
     } else {
         json_data = `{"username":"${username}",
                       "bio":"${bio}",
@@ -1769,6 +1775,8 @@ async function user_update(callBack) {
         url = window.global_rest_url_base + window.global_rest_user_account_common + window.global_user_account_id;
     }
     let old_button = document.getElementById('user_edit_btn_user_update').innerHTML;
+    let json;
+    let status;
     document.getElementById('user_edit_btn_user_update').innerHTML = window.global_button_spinner;
     //update user using REST API
     fetch(url + '?app_id=' + window.global_app_id +
@@ -2379,7 +2387,7 @@ async function updateProviderUser(provider_no, profile_id, profile_first_name, p
             "${'provider' + provider_no + '_id'}":"${profile_id}",
             "${'provider' + provider_no + '_first_name'}":"${profile_first_name}",
             "${'provider' + provider_no + '_last_name'}":"${profile_last_name}",
-            "${'provider' + provider_no + '_image'}":"${btoa(profile_image)}",
+            "${'provider' + provider_no + '_image'}":"${window.btoa(profile_image)}",
             "${'provider' + provider_no + '_image_url'}":"${profile_image_url}",
             "${'provider' + provider_no + '_email'}":"${profile_email}",
             "user_language": "${navigator.language}",
@@ -2489,7 +2497,7 @@ async function get_data_token() {
                 '&lang_code=' + window.global_lang_code, {
         method: 'POST',
         headers: {
-            'Authorization': 'Basic ' + btoa(window.global_app_rest_client_id + ':' + window.global_app_rest_client_secret)
+            'Authorization': 'Basic ' + window.btoa(window.global_app_rest_client_id + ':' + window.global_app_rest_client_secret)
         }
     })
     .then(function(response) {

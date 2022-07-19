@@ -25,6 +25,10 @@ a:active {
 	text-decoration: underline;
 }
 /*User account*/
+#user_account:hover #user_menu_dropdown,
+#user_account:active #user_menu_dropdown{
+	display: inline-block;
+}
 #user_menu{
 	visibility: visible;
 	top:10px;
@@ -33,20 +37,38 @@ a:active {
 	width: 40px;
 	height:40px;
 	z-index:1;
-	border-radius: 20px !important;
+	border-radius: 50% !important;
 	cursor:pointer;
 }
-.user_menu_logged_in{
-	width: auto !important;
-    height: auto !important;
-    padding: 10px;
+#user_menu_avatar_img{
+	width:40px;
+	height:40px;
+	border-radius:50%;
+	vertical-align: middle;
+}
+#user_menu_logged_in, #user_menu_dropdown_logged_in{
+	display: none;
+}
+#user_menu_logged_out{
+	display: inline-block;
+}
+#user_menu_username{
+	font-size: 16px;
+	cursor:pointer;
+	padding-top: 10px;
+    padding-bottom: 10px;
+}
+#user_menu_default_avatar{
+	font-size: 41px;
+    position: fixed;
+    top: 2px;
 }
 #user_menu_dropdown{
 	display: none;
 	top:50px;
 	right:10px;
 	position:fixed;
-	width:100px;
+	width:auto;
 	text-align: center;
 	font-size: 30px !important;
 	height:auto;
@@ -56,20 +78,6 @@ a:active {
 	box-shadow: 0 4px 8px 0 rgb(0 0 0 / 20%), 0 6px 20px 0 rgb(0 0 0 / 19%);
 	z-index:1;
 	padding-bottom: 10px;
-}
-#user_account:hover #user_menu_dropdown,
-#user_account:active #user_menu_dropdown{
-	display: inline-block;
-}
-#user_menu_logged_in, #user_menu_dropdown_logged_in{
-	display: none;
-}
-#user_menu_logged_out{
-	right: 15px;
-    position: fixed;
-}
-#user_menu_logged_out{
-	display: inline-block;
 }
 #user_menu_dropdown_logged_in{
 	display:none;
@@ -82,14 +90,6 @@ a:active {
 #user_menu_dropdown_logged_in div,
 #user_menu_dropdown_logged_out div{
 	cursor:pointer;
-}
-#user_menu_default_avatar{
-	font-size: 30px;
-}
-#user_menu_avatar_img{
-	width:40px;
-	height:40px;
-	border-radius:20px;
 }
 /* Common dialogue settings*/	
 .dialogue{
@@ -587,7 +587,7 @@ div.ray8 {
 /* TOOGLE*/
 #toggle_wrapper {
 	transform: scale(0.3);
-	transform-origin: 30% 0;
+	transform-origin: 50% 10px;
 	height: 60px;
 }
 #toggle_checkbox {
@@ -949,6 +949,8 @@ div.ray8 {
 	border: 1px solid #ddd;
 	background-color: white;	
 }
+.theme_sun #user_menu_username:hover,
+.theme_sun #user_menu_username:active,
 .theme_sun #user_menu_dropdown_logged_in div:hover,
 .theme_sun #user_menu_dropdown_logged_in div:active,
 .theme_sun #user_menu_dropdown_logged_out div:hover,
@@ -1100,6 +1102,8 @@ div.ray8 {
 	border: 1px solid #ddd;
 	background-color: white;	
 }
+.theme_moon #user_menu_username:hover,
+.theme_moon #user_menu_username:active,
 .theme_moon #user_menu_dropdown_logged_in div:hover,
 .theme_moon #user_menu_dropdown_logged_in div:active,
 .theme_moon #user_menu_dropdown_logged_out div:hover,
