@@ -695,7 +695,7 @@ async function settings_translate(first=true) {
                         }
                         if (json.data[i].object=='APP_OBJECT_ITEM_SUBITEM'){
                             if (json.data[i].object_name=='TOOLBAR')
-                                //popup menu items
+                                //user_menu_dropdown items
                                 document.getElementById(json.data[i].subitem_name.toLowerCase()).innerHTML = json.data[i].text;
                             else{
                                 //update select objects
@@ -1463,7 +1463,7 @@ async function user_edit_app() {
     await user_edit(document.getElementById('setting_select_timezone_current').value,(err, result) => {
         if ((err==null && result==null) == false){
             if (err==null){
-                update_settings_icon(image_format(result.avatar ?? result.provider1_image ?? result.provider2_image));
+                set_avatar(result.avatar ?? result.provider1_image ?? result.provider2_image, document.getElementById('user_menu_avatar_img')); 
             }
         }
     });
@@ -1471,9 +1471,8 @@ async function user_edit_app() {
 async function user_update_app(){
     await user_update((err, result) => {
         if (err==null){
-            //update_settings_icon(image_format(result.avatar));
-            update_settings_icon(atob(result.avatar));
-            document.getElementById('user_account_username_logged_in').innerHTML = result.username;
+            set_avatar(result.avatar, document.getElementById('user_menu_avatar_img'));
+            document.getElementById('user_menu_username').innerHTML = result.username;
         }
     });
 }
@@ -1491,8 +1490,11 @@ async function user_login_app(){
                 if (err)
                     null;
                 else{
-                    update_settings_icon(image_format(result.avatar));
-                    document.getElementById('user_account_username_logged_in').innerHTML = result.username;
+                    set_avatar(result.avatar, document.getElementById('user_menu_avatar_img')); 
+                    document.getElementById('user_menu_username').innerHTML = result.username;
+                    
+                    document.getElementById('user_menu_logged_in').style.display = 'inline-block';
+                    document.getElementById('user_menu_logged_out').style.display = 'none';
                     
                     document.getElementById('user_menu_dropdown_logged_in').style.display = 'block';
                     document.getElementById('user_menu_dropdown_logged_out').style.display = 'none';
@@ -1564,16 +1566,16 @@ function user_logoff_app() {
     let option;
     //get new data token to avoid endless loop and invalid token
     user_logoff().then(function(){
-        //remove user setting icon
-        update_settings_icon('', true);
-
+        set_avatar(null, document.getElementById('user_menu_avatar_img')); 
         //hide logged in, user_edit and user settings
+        document.getElementById('user_menu_logged_in').style.display = 'none';        
+        document.getElementById('user_menu_logged_out').style.display = 'inline-block';
         document.getElementById('user_menu_dropdown_logged_in').style.display = 'none';
         document.getElementById('user_menu_dropdown_logged_out').style.display = 'block';
         
         document.getElementById('user_settings').style.display = "none";
         //clear logged in info
-        document.getElementById('user_account_username_logged_in').innerHTML = '';
+        document.getElementById('user_menu_username').innerHTML = '';
         profile_clear_app();
         //empty user settings
         select.innerHTML = '';
@@ -1598,11 +1600,13 @@ async function updateProviderUser_app(provider_no, profile_id, profile_first_nam
             user_settings_function('ADD_LOGIN', true, (err, result_settings) =>{
                 if (err)
                     null;
-                else{        
-                    update_settings_icon(result.avatar);
+                else{       
+                    set_avatar(result.avatar, document.getElementById('user_menu_avatar_img')); 
 
-                    document.getElementById('user_account_username_logged_in').innerHTML = result.first_name + ' ' + result.last_name;
+                    document.getElementById('user_menu_username').innerHTML = result.first_name + ' ' + result.last_name;
         
+                    document.getElementById('user_menu_logged_in').style.display = 'inline-block';
+                    document.getElementById('user_menu_logged_out').style.display = 'none';
                     document.getElementById('user_menu_dropdown_logged_in').style.display = 'block';
                     document.getElementById('user_menu_dropdown_logged_out').style.display = 'none';
 
@@ -2101,8 +2105,8 @@ async function user_settings_function(function_name, initial_user_setting, callB
           "design_column_gps_checked": ${boolean_to_number(document.getElementById('setting_checkbox_report_show_gps').checked)},
           "design_column_timezone_checked": ${boolean_to_number(document.getElementById('setting_checkbox_report_show_timezone').checked)},
 
-          "image_header_image_img": "${btoa(document.getElementById('setting_reportheader_img').src)}",
-          "image_footer_image_img": "${btoa(document.getElementById('setting_reportfooter_img').src)}",
+          "image_header_image_img": "${window.btoa(document.getElementById('setting_reportheader_img').src)}",
+          "image_footer_image_img": "${window.btoa(document.getElementById('setting_reportfooter_img').src)}",
 
           "text_header_1_text": "${document.getElementById('setting_input_reporttitle1').value}",
           "text_header_2_text": "${document.getElementById('setting_input_reporttitle2').value}",
@@ -2456,22 +2460,6 @@ function set_settings_select() {
     option.setAttribute('prayer_column_fast_start_end', document.getElementById('setting_select_report_show_fast_start_end').value);
 }
 
-function update_settings_icon(url = '', logoff = false) {
-    let img_account_image_url = document.getElementById('user_account_image_url');
-    let default_avatar = document.getElementById('user_account_default_avatar');
-    if (logoff == true) {
-        //hide image url and show the icon
-        img_account_image_url.style.display = 'none';
-        img_account_image_url.src = '';
-        default_avatar.style.display = 'inline-block';
-    } else {
-        //show image url in user setting and hide the icon
-        img_account_image_url.style.display = 'inline-block';
-        img_account_image_url.src = url;
-        default_avatar.style.display = 'none';
-    }
-    return null;
-}
 function profile_user_setting_stat(id){
     let status;
     fetch(window.global_rest_url_base + window.global_rest_app1_user_setting_profile + id + 
@@ -2670,14 +2658,14 @@ function setEvents() {
 	document.getElementById('toolbar_btn_zoomin').addEventListener('click', function() { zoom_paper(1) }, false);
 	document.getElementById('toolbar_btn_left').addEventListener('click', function() { update_timetable_report(getTimetable_type(), 'toolbar_navigation_btn_left', getReportSettings(), get_lang_code()) }, false);
 	document.getElementById('toolbar_btn_right').addEventListener('click', function() { update_timetable_report(getTimetable_type(), 'toolbar_navigation_btn_right', getReportSettings(), get_lang_code()) }, false);
-    //user menu popup
-    document.getElementById('popup_menu_login').addEventListener('click', function() { show_common_dialogue('LOGIN') }, false);
-    document.getElementById('popup_menu_signup').addEventListener('click', function() { show_common_dialogue('SIGNUP') }, false);
-    document.getElementById('popup_menu_logoff').addEventListener('click', function() { user_logoff_app() }, false);
-    document.getElementById('popup_menu_edit').addEventListener('click', function() { user_edit_app() }, false);
-    document.getElementById('popup_menu_profile').addEventListener('click', function() { toolbar_bottom(6) }, false);
-    document.getElementById('popup_menu_profile_top').addEventListener('click', function() { toolbar_bottom(7) }, false);
-    document.getElementById('popup_menu_settings').addEventListener('click', function() { toolbar_bottom(5) }, false);    
+    //user menu dropdown
+    document.getElementById('user_menu_dropdown_login').addEventListener('click', function() { show_common_dialogue('LOGIN') }, false);
+    document.getElementById('user_menu_dropdown_signup').addEventListener('click', function() { show_common_dialogue('SIGNUP') }, false);
+    document.getElementById('user_menu_dropdown_logoff').addEventListener('click', function() { user_logoff_app() }, false);
+    document.getElementById('user_menu_dropdown_edit').addEventListener('click', function() { user_edit_app() }, false);
+    document.getElementById('user_menu_dropdown_profile').addEventListener('click', function() { toolbar_bottom(6) }, false);
+    document.getElementById('user_menu_dropdown_profile_top').addEventListener('click', function() { toolbar_bottom(7) }, false);
+    document.getElementById('user_menu_dropdown_settings').addEventListener('click', function() { toolbar_bottom(5) }, false);    
     //tab navigation
     document.getElementById('tab_nav_btn_1').addEventListener('click', function() { openTab('1') }, false);
     document.getElementById('tab_nav_btn_2').addEventListener('click', function() { openTab('2') }, false);
@@ -3281,15 +3269,15 @@ async function init_app() {
     document.getElementById('toolbar_btn_left').innerHTML = window.global_button_default_icon_left;
     document.getElementById('toolbar_btn_right').innerHTML = window.global_button_default_icon_right;
     document.getElementById('toolbar_btn_about').innerHTML = window.global_button_default_icon_info;
-    document.getElementById('user_account_default_avatar').innerHTML = window.global_button_default_icon_user;
-    //popup user menu
-    document.getElementById('popup_menu_login').innerHTML = window.global_button_default_icon_login;
-    document.getElementById('popup_menu_logoff').innerHTML = window.global_button_default_icon_logoff;
-    document.getElementById('popup_menu_signup').innerHTML = window.global_button_default_icon_signup;
-    document.getElementById('popup_menu_edit').innerHTML = window.global_button_default_icon_edit;
-    document.getElementById('popup_menu_profile').innerHTML = window.global_button_default_icon_profile;
-    document.getElementById('popup_menu_profile_top').innerHTML = window.global_button_default_icon_profile_top;
-    document.getElementById('popup_menu_settings').innerHTML = window.global_button_default_icon_settings;
+    document.getElementById('user_menu_default_avatar').innerHTML = window.global_button_default_icon_user;
+    //user menu dropdown
+    document.getElementById('user_menu_dropdown_login').innerHTML = window.global_button_default_icon_login;
+    document.getElementById('user_menu_dropdown_logoff').innerHTML = window.global_button_default_icon_logoff;
+    document.getElementById('user_menu_dropdown_signup').innerHTML = window.global_button_default_icon_signup;
+    document.getElementById('user_menu_dropdown_edit').innerHTML = window.global_button_default_icon_edit;
+    document.getElementById('user_menu_dropdown_profile').innerHTML = window.global_button_default_icon_profile;
+    document.getElementById('user_menu_dropdown_profile_top').innerHTML = window.global_button_default_icon_profile_top;
+    document.getElementById('user_menu_dropdown_settings').innerHTML = window.global_button_default_icon_settings;
 
     //themes from client server generation
     document.getElementById('slider_prev_day').innerHTML = window.global_button_default_icon_slider_left;
