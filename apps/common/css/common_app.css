@@ -409,9 +409,9 @@
 }
 #profile_avatar_online_status{
 	display:none;
-    position: fixed;
-    margin-left: -18px;
-    margin-top: 43px;
+    margin-left: 40px;
+    margin-top: -20px;
+    position: absolute;
 }
 #profile_avatar_online_status.online{
 	display: inline-block;

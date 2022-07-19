@@ -16,8 +16,10 @@ function setEvents(){
 
     //app
     //user menu
+    
+    document.getElementById('user_menu_username').addEventListener('click', function() { user_menu_item_click(this) }, false);
+
     document.getElementById('toggle_checkbox').addEventListener('click', function() { toggle_switch() }, false);
-    document.getElementById('user_menu_dropdown_profile').addEventListener('click', function() { user_menu_item_click(this) }, false);
     document.getElementById('user_menu_dropdown_edit').addEventListener('click', function() { user_menu_item_click(this) }, false);
     document.getElementById('user_menu_dropdown_log_out').addEventListener('click', function() { user_menu_item_click(this) }, false);
     document.getElementById('user_menu_dropdown_signup').addEventListener('click', function() { user_menu_item_click(this) }, false);
@@ -293,7 +295,7 @@ async function get_parameters() {
 
 function user_menu_item_click(item){
     switch (item.id){
-        case 'user_menu_dropdown_profile':{
+        case 'user_menu_username':{
             //profile_home();
             document.getElementById('dialogue_profile').style.visibility = 'visible';
             profile_show(null,
@@ -323,6 +325,7 @@ function user_menu_item_click(item){
         default:
             break;
     }
+    document.getElementById('user_menu_dropdown').style='none';
 }
 async function user_login_app(){
     let username = document.getElementById('login_username');
@@ -334,11 +337,7 @@ async function user_login_app(){
         document.getElementById('login_button').innerHTML = old_button;
         if (err==null){            
             //set avatar or empty
-            if (result.avatar == null || result.avatar == '') {
-                recreate_img(document.getElementById('user_menu_avatar_img'));
-                result.avatar = '';
-            } else
-                document.getElementById('user_menu_avatar_img').src = image_format(result.avatar);
+            set_avatar(result.avatar, document.getElementById('user_menu_avatar_img'));
             document.getElementById('user_menu_username').innerHTML = result.username;
             
             document.getElementById('user_menu_logged_in').style.display = 'inline-block';
@@ -359,7 +358,7 @@ function app_exception(){
 }
 function user_logoff_app() {
     user_logoff().then(function(){
-        recreate_img(document.getElementById('user_menu_avatar_img'));
+        set_avatar(null, document.getElementById('user_menu_avatar_img'));
         document.getElementById('user_menu_username').innerHTML = '';
         document.getElementById('user_menu_logged_in').style.display = 'none';
         document.getElementById('user_menu').classList.remove('user_menu_logged_in');
@@ -372,14 +371,14 @@ async function user_edit_app() {
     await user_edit(Intl.DateTimeFormat().resolvedOptions().timeZone,(err, result) => {
         if ((err==null && result==null) == false)
             if (err==null){
-                document.getElementById('user_menu_avatar_img').src = image_format(result.avatar ?? result.provider1_image ?? result.provider2_image);
+                set_avatar(result.avatar ?? result.provider1_image ?? result.provider2_image, document.getElementById('user_menu_avatar_img'));
             }
     });
 }
 async function user_update_app(){
     await user_update((err, result) => {
         if (err==null){
-            document.getElementById('user_menu_avatar_img').src = atob(result.avatar);
+            set_avatar(result.avatar, document.getElementById('user_menu_avatar_img'));
             document.getElementById('user_menu_username').innerHTML = result.username;
         }
     });
@@ -426,11 +425,7 @@ async function updateProviderUser_app(provider_no, profile_id, profile_first_nam
     await updateProviderUser(provider_no, profile_id, profile_first_name, profile_last_name, profile_image_url, profile_email, (err, result)=>{
         if(err==null){
             //set avatar or empty
-            if (result.avatar == null || result.avatar == '') {
-                recreate_img(document.getElementById('user_menu_avatar_img'));
-                result.avatar = '';
-            } else
-                document.getElementById('user_menu_avatar_img').src = result.avatar;
+            set_avatar(result.avatar, document.getElementById('user_menu_avatar_img'));
             document.getElementById('user_menu_username').innerHTML = result.username;
 
             document.getElementById('user_menu_logged_in').style.display = 'inline-block';
@@ -466,7 +461,7 @@ async function init_app(){
     document.getElementById('title2').innerHTML = 'App Portfolio Data model';
     document.getElementById('contact_text').innerHTML = 'Contact'    
     //user menu
-    document.getElementById('user_menu_dropdown_profile').innerHTML = window.global_button_default_icon_profile;
+    //document.getElementById('user_menu_dropdown_profile').innerHTML = window.global_button_default_icon_profile;
     document.getElementById('user_menu_dropdown_edit').innerHTML = window.global_button_default_icon_edit;
     document.getElementById('user_menu_dropdown_log_out').innerHTML = window.global_button_default_icon_logoff;
     document.getElementById('user_menu_dropdown_signup').innerHTML = window.global_button_default_icon_signup;
