@@ -137,18 +137,38 @@ a:active {
 #toolbar_btn_year_label {
 	font-size: 11px;
 }
-#user_account_image_url{
-	display:none;
+/* USER ACCOUNT*/
+#toolbar_btn_user_menu:hover .user_menu_dropdown,
+#toolbar_btn_user_menu:active .user_menu_dropdown 
+	{display: block;}
+#toolbar_btn_user_menu{
+	float:right;
+	width: auto;
+    text-align: right;
+	margin-right: 5px;
+}
+/*logged in */
+#user_menu_logged_in{
+	display: none;
+}
+#user_menu_username{
+	font-size: 11px;
+}
+#user_menu_avatar_img{
 	width:30px;
 	height:30px;
 	margin-bottom:-4px;
 	border-radius:25px;
 }
-#user_account_default_avatar{
+/*logged out*/
+#user_menu_logged_out{
 	display: inline-block;
 }
-/*POPUP MENU*/
-.popup-content {
+#user_menu_default_avatar{
+	display: inline-block;
+}
+/*USER MENU DROPDOWN*/
+.user_menu_dropdown {
 	display: none;
 	position: absolute;
 	right:0px;
@@ -156,25 +176,16 @@ a:active {
 	box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
 	z-index: 1;
 }
-.popup-content a {
+.user_menu_dropdown a {
 	padding: 10px 10px;
 	text-decoration: none;
 	display: block;
 	font-size:30px;
 }
-#toolbar_btn_user_menu:hover .popup-content,
-#toolbar_btn_user_menu:active .popup-content 
-	{display: block;}
-#toolbar_btn_user_menu{
-	float:right;
-}
-/* USER ACCOUNT*/
 #user_menu_dropdown_logged_in{
 	display:none;
 }
-#user_account_username_logged_in{
-	font-size: 11px;
-}
+
 /* PROFILE*/
 #profile_main_stat_row2{
 	margin-top: 20px;
@@ -895,7 +906,7 @@ body.app_theme1,
 .app_theme1 #tab_navigation .tab_nav_selected button,
 .app_theme1 #common_window_info,
 .app_theme1 #common_window_info_toolbar,
-.app_theme1 .popup-content
+.app_theme1 .user_menu_dropdown
 {
 	background-color : #2b2b32 !important;
 }
@@ -918,15 +929,15 @@ body.app_theme1,
 .app_theme1 #tab_navigation button,
 .app_theme1 #common_window_info,
 .app_theme1 #common_window_info_toolbar,
-.app_theme1 .popup-content a,
+.app_theme1 .user_menu_dropdown a,
 .app_theme1 .toolbar_button,
 .app_theme1 .dialogue_content,
 .app_theme1 .common_dialogue_content
 {
 	color : #a49775;
 }
-.app_theme1 .popup-content a:hover,
-.app_theme1 .popup-content a:active {
+.app_theme1 .user_menu_dropdown a:hover,
+.app_theme1 .user_menu_dropdown a:active {
 	background-color:#a49775;
 	color:#2b2b32;
 }
@@ -1073,7 +1084,7 @@ body.app_theme2,
 .app_theme2 #common_window_info,
 .app_theme2 #common_window_info_content,
 .app_theme2 #common_window_info_toolbar,
-.app_theme2 .popup-content
+.app_theme2 .user_menu_dropdown
 {
 	background-color:#f5f5f5 !important;
 }
@@ -1097,15 +1108,15 @@ body.app_theme2,
 .app_theme2 #tab_navigation button,
 .app_theme2 #common_window_info,
 .app_theme2 #common_window_info_toolbar,
-.app_theme2 .popup-content a,
+.app_theme2 .user_menu_dropdown a,
 .app_theme2 .toolbar_button,
 .app_theme2 .dialogue_content,
 .app_theme2 .common_dialogue_content
 {
 	color: #404040 !important;
 }
-.app_theme2 .popup-content a:hover,
-.app_theme2 .popup-content a:active {
+.app_theme2 .user_menu_dropdown a:hover,
+.app_theme2 .user_menu_dropdown a:active {
 	background-color:#FBF9F8;
 	color: #6ab344 !important;
 }
@@ -1253,7 +1264,7 @@ body.app_theme3,
 .app_theme3 #common_window_info,
 .app_theme3 #common_window_info_content,
 .app_theme3 #common_window_info_toolbar,
-.app_theme3 .popup-content
+.app_theme3 .user_menu_dropdown
 {
 	background-color : #584f46 !important;
 }
@@ -1276,15 +1287,15 @@ body.app_theme3,
 .app_theme3 #tab_navigation button,
 .app_theme3 #common_window_info,
 .app_theme3 #common_window_info_toolbar,
-.app_theme3 .popup-content a,
+.app_theme3 .user_menu_dropdown a,
 .app_theme3 .toolbar_button,
 .app_theme3 .dialogue_content,
 .app_theme3 .common_dialogue_content
 {
 	color : #d2b88f !important;
 }
-.app_theme3 .popup-content a:hover,
-.app_theme3 .popup-content a:active {
+.app_theme3 .user_menu_dropdown a:hover,
+.app_theme3 .user_menu_dropdown a:active {
 	background-color:#d2b88f;
 	color:#3A3632 !important;
 }
