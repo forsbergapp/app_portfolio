@@ -13,6 +13,7 @@ module.exports = {
                   ['<AppCommonHeadMap/>', __dirname + '/../common/src/head_map.html'],
                   ['<AppCommonBody/>', __dirname + '/../common/src/body.html'],
                   ['<AppCommonProfileDetail/>', __dirname + '/../common/src/profile_detail.html'], //Profile tag in common body
+                  ['<AppCommonProfileSearch/>', __dirname + '/../common/src/profile_search.html'],
 
                   ['<AppHead/>', __dirname + '/src/head.html'],
                   ['<AppToolbarTop/>', __dirname + '/src/toolbar_top.html'],

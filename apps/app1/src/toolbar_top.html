@@ -1,30 +1,34 @@
 <div id='toolbar_top'>
     <button id='toolbar_btn_zoomout' class='toolbar_button' ></button>
     <button id='toolbar_btn_zoomin' class='toolbar_button' ></button>
-    <button id='toolbar_btn_left' class='toolbar_button' ></i></button>
-    <button id='toolbar_btn_right' class='toolbar_button' ></i></button>
-    <button id='toolbar_btn_user_menu' class='toolbar_button'>	
-        <div id='user_menu_logged_in'>
-            <div id='user_menu_avatar'>
-                <img id="user_menu_avatar_img" src="" alt="">
+    <button id='toolbar_btn_left' class='toolbar_button' ></button>
+    <button id='toolbar_btn_right' class='toolbar_button' ></button>
+    <div id='toolbar_btn_search_and_user'>
+        <button id='toolbar_btn_search' class='toolbar_button'></button>
+        <button id='toolbar_btn_user_menu' class='toolbar_button'>	
+            <div id='user_menu_logged_in'>
+                <div id='user_menu_avatar'>
+                    <img id="user_menu_avatar_img" src="" alt="">
+                </div>
+                <div id='user_menu_username'></div>
             </div>
-            <div id='user_menu_username'></div>
-        </div>
-        <div id='user_menu_logged_out'>
-            <div id='user_menu_default_avatar'></div>
-        </div>
-        <div class='user_menu_dropdown'>
-            <div id="user_menu_dropdown_logged_in">
-                <a href='#' id='user_menu_dropdown_logoff' ></a>
-                <a href='#' id='user_menu_dropdown_edit' ></a>
-                <a href='#' id='user_menu_dropdown_profile'></a>
+            <div id='user_menu_logged_out'>
+                <div id='user_menu_default_avatar'></div>
             </div>
-            <div id="user_menu_dropdown_logged_out">
-                <a href='#' id='user_menu_dropdown_login' ></a>
-                <a href='#' id='user_menu_dropdown_signup' ></a>
-            </div>            
-            <a href='#' id='user_menu_dropdown_profile_top' ></a>
-            <a href='#' id='user_menu_dropdown_settings' ></a>
-        </div>
-    </button>
+            <div class='user_menu_dropdown'>
+                <div id="user_menu_dropdown_logged_in">
+                    <a href='#' id='user_menu_dropdown_logoff' ></a>
+                    <a href='#' id='user_menu_dropdown_edit' ></a>
+                    <a href='#' id='user_menu_dropdown_profile'></a>
+                </div>
+                <div id="user_menu_dropdown_logged_out">
+                    <a href='#' id='user_menu_dropdown_login' ></a>
+                    <a href='#' id='user_menu_dropdown_signup' ></a>
+                </div>            
+                <a href='#' id='user_menu_dropdown_profile_top' ></a>
+                <a href='#' id='user_menu_dropdown_settings' ></a>
+            </div>
+        </button>
+    </div>
 </div>
+<AppCommonProfileSearch/>

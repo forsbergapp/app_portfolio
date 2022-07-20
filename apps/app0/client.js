@@ -8,7 +8,8 @@ module.exports = {
                     ['<AppCommonHead/>', __dirname + '/../common/src/head.html'],
                     ['<AppCommonBody/>', __dirname + '/../common/src/body.html'],
                     ['<AppCommonProfileDetail/>', __dirname + '/../common/src/profile_detail.html'], //Profile tag in common body
-    
+                    ['<AppCommonProfileSearch/>', __dirname + '/../common/src/profile_search.html'],
+
                     ['<AppHead/>', __dirname + '/src/head.html'],
                     ['<AppUserAccount/>', __dirname + '/src/user_account.html'],
                     ['<AppToggle/>', __dirname + '/src/toogle.html'],
