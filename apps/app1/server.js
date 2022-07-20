@@ -34,7 +34,10 @@ app.get("/info/:info",function (req, res, next) {
   else{
     if (req.headers.host.substring(0,req.headers.host.indexOf('.')) == 'app1') {
         const { getInfo} = require("./apps");
-        getInfo(APP1_ID, req.params.info, (err, info_result)=>{
+        if (typeof req.query.lang_code !='undefined'){
+          req.query.lang_code = 'en';
+        }
+        getInfo(APP1_ID, req.params.info, req.query.lang_code, (err, info_result)=>{
           res.send(info_result);
         })
     }

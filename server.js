@@ -279,7 +279,10 @@ app.get("/info/:info",function (req, res, next) {
               break;
           }
           default:{
-            getInfo(process.env.MAIN_APP_ID, req.params.info, (err, info_result)=>{
+            if (typeof req.query.lang_code !='undefined'){
+              req.query.lang_code = 'en';
+            }
+            getInfo(process.env.MAIN_APP_ID, req.params.info, req.query.lang_code, (err, info_result)=>{
               res.send(info_result);
             })
             break;
