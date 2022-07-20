@@ -175,7 +175,8 @@ INSERT INTO app_object_subitem_translation (app_id, object_name, object_item_nam
 --
 -- Dumping data for table `app_object_translation`
 --
-INSERT INTO app_object_translation (app_id, object_name, language_id, text) VALUES (1,'APP_DESCRIPTION',506,'Horarios avanzados de oración musulmana tradicional');
+INSERT INTO app_object_translation (app_id, object_name, language_id, text) VALUES (1,'APP_DESCRIPTION',506,'Aplicación de una sola página (SPA) de aplicación web progresiva (PWA)');
+INSERT INTO app_object_translation (app_id, object_name, language_id, text) VALUES (2,'APP_DESCRIPTION',506,'Aplicación sencilla para mostrar el modelo de datos y cómo integrar una aplicación en la plataforma de la aplicación');
 INSERT INTO app_object_translation (app_id, object_name, language_id, text) VALUES (1,'SETTING_NAV_DESIGN',506,'Diseño');
 INSERT INTO app_object_translation (app_id, object_name, language_id, text) VALUES (1,'SETTING_NAV_GPS',506,'GPS');
 INSERT INTO app_object_translation (app_id, object_name, language_id, text) VALUES (1,'SETTING_NAV_IMAGE',506,'Imagen');

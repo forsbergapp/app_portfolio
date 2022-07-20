@@ -2,8 +2,7 @@ const { getApp, getAppsAdmin, updateApp } = require ("./app.service");
 
 module.exports = {
 	getApp: (req, res) => {
-		const id = req.query.id;
-		getApp(id, (err, results) =>{
+		getApp(req.query.id, req.query.lang_code, (err, results) =>{
 			if (err) {
 				return res.status(500).send({
 					success: 0,
@@ -17,8 +16,7 @@ module.exports = {
 		});
 	},
 	getAppsAdmin: (req, res) => {
-		const id = req.query.id;
-		getAppsAdmin(id, (err, results) =>{
+		getAppsAdmin(req.query.id, (err, results) =>{
 			if (err) {
 				return res.status(500).send({
 					success: 0,
