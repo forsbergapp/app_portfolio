@@ -330,6 +330,12 @@ function check_input(text, text_length=100){
 /*----------------------- */
 function show_common_dialogue(dialogue, user_verification_type, title=null, icon=null, click_cancel_event) {
     switch (dialogue) {
+        case 'PROFILE':
+            {    
+                dialogue_profile_clear();
+                document.getElementById('dialogue_profile').style.visibility = 'visible';
+                break;
+            }
         case 'NEW_PASSWORD':
             {    
                 document.getElementById('user_new_password_auth').innerHTML=title;
@@ -1260,98 +1266,104 @@ function profile_detail(detailchoice, timezone, rest_url_app, fetch_detail, head
         show_common_dialogue('LOGIN');
 }
 function search_profile(timezone, click_function) {
-    let status;
-    let searched_username = document.getElementById('profile_search_input').value;
+    document.getElementById('profile_search_input').classList.remove('input_error');
     let profile_search_list = document.getElementById('profile_search_list');
     profile_search_list.innerHTML = '';
     document.getElementById('profile_search_list').style.display = 'none';
-    let url;
-    let token;
-    let json_data;
-    if (check_input(searched_username) == false)
-        return;
-    if (window.global_user_account_id!=''){
-        //search using access token with logged in user_account_id
-        url = window.global_rest_url_base + window.global_rest_user_account_profile_searchA;
-        token = window.global_rest_at;
-        json_data = `{
-                    "user_account_id":${window.global_user_account_id},
-                    "client_latitude": "${window.global_client_latitude}",
-                    "client_longitude": "${window.global_client_longitude}"
-                    }`;
-    }
+    if (document.getElementById('profile_search_input').value=='')
+        document.getElementById('profile_search_input').classList.add('input_error');
     else{
-        //search using data token without logged in user_account_id
-        url = window.global_rest_url_base + window.global_rest_user_account_profile_searchD;
-        token = window.global_rest_dt;
-        json_data = `{
-                    "client_latitude": "${window.global_client_latitude}",
-                    "client_longitude": "${window.global_client_longitude}"
-                    }`;
-    }
-    fetch(url + searched_username +
-          '?app_id=' + window.global_app_id +
-          '&lang_code=' + window.global_lang_code, 
-          {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + token
-          },
-          body: json_data
-        })
-        .then(function(response) {
-            status = response.status;
-            return response.text();
-        })
-        .then(function(response) {
-            if (status == 200) {
-                json = JSON.parse(response);
-                if (json.count > 0)
-                    document.getElementById('profile_search_list').style.display = "block";
-                let html = '';
-                let image= '';
-                let name = '';
-                profile_search_list.style.height = (json.count * 24).toString() + 'px';
-                for (i = 0; i < json.count; i++) {
-                    image = list_image_format_src(json.items[i].avatar ?? json.items[i].provider1_image ?? json.items[i].provider2_image)
-                    name = json.items[i].username;
-                    html +=
-                    `<div class='profile_search_list_row'>
-                        <div class='profile_search_list_col'>
-                            <div class='profile_search_list_user_account_id'>${json.items[i].id}</div>
-                        </div>
-                        <div class='profile_search_list_col'>
-                            <img class='profile_search_list_avatar' ${image}>
-                        </div>
-                        <div class='profile_search_list_col'>
-                            <div class='profile_search_list_username'>
-                                <a href='#'>${name}</a>
+        let status;
+        let searched_username = document.getElementById('profile_search_input').value;
+        let url;
+        let token;
+        let json_data;
+        if (check_input(searched_username) == false)
+            return;
+        if (window.global_user_account_id!=''){
+            //search using access token with logged in user_account_id
+            url = window.global_rest_url_base + window.global_rest_user_account_profile_searchA;
+            token = window.global_rest_at;
+            json_data = `{
+                        "user_account_id":${window.global_user_account_id},
+                        "client_latitude": "${window.global_client_latitude}",
+                        "client_longitude": "${window.global_client_longitude}"
+                        }`;
+        }
+        else{
+            //search using data token without logged in user_account_id
+            url = window.global_rest_url_base + window.global_rest_user_account_profile_searchD;
+            token = window.global_rest_dt;
+            json_data = `{
+                        "client_latitude": "${window.global_client_latitude}",
+                        "client_longitude": "${window.global_client_longitude}"
+                        }`;
+        }
+        fetch(url + searched_username +
+              '?app_id=' + window.global_app_id +
+              '&lang_code=' + window.global_lang_code, 
+              {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + token
+              },
+              body: json_data
+            })
+            .then(function(response) {
+                status = response.status;
+                return response.text();
+            })
+            .then(function(response) {
+                if (status == 200) {
+                    json = JSON.parse(response);
+                    if (json.count > 0)
+                        document.getElementById('profile_search_list').style.display = "inline-block";
+                    let html = '';
+                    let image= '';
+                    let name = '';
+                    profile_search_list.style.height = (json.count * 24).toString() + 'px';
+                    for (i = 0; i < json.count; i++) {
+                        image = list_image_format_src(json.items[i].avatar ?? json.items[i].provider1_image ?? json.items[i].provider2_image)
+                        name = json.items[i].username;
+                        html +=
+                        `<div class='profile_search_list_row'>
+                            <div class='profile_search_list_col'>
+                                <div class='profile_search_list_user_account_id'>${json.items[i].id}</div>
                             </div>
-                        </div>
-                    </div>`;
+                            <div class='profile_search_list_col'>
+                                <img class='profile_search_list_avatar' ${image}>
+                            </div>
+                            <div class='profile_search_list_col'>
+                                <div class='profile_search_list_username'>
+                                    <a href='#'>${name}</a>
+                                </div>
+                            </div>
+                        </div>`;
+                    }
+                    profile_search_list.innerHTML = html;
+                    show_profile_click_events('.profile_search_list_username', timezone, click_function);
                 }
-                profile_search_list.innerHTML = html;
-                show_profile_click_events('.profile_search_list_username', timezone, click_function);
-            }
-        })
-        .catch(function(error) {
-            show_message('EXCEPTION', null,null, error, window.global_app_id);
-        });
+            })
+            .catch(function(error) {
+                show_message('EXCEPTION', null,null, error, window.global_app_id);
+            });
+    }
 }
-/* call 
+/*
 profile_show(null, null)     from dropdown menu in apps or choosing logged in users profile
 profile_show(userid, null) 	 from choosing profile in profile_top
 profile_show(userid, null) 	 from choosing profile in profile_detail
 profile_show(userid, null) 	 from choosing profile in search_profile
-profile_show(null, username) from init startup when user enters url*/
+profile_show(null, username) from init startup when user enters url
+*/
 async function profile_show(user_account_id_other = null, username = null, timezone, callBack) {
     let status;
     let json;
     let user_account_id_search;
     let url;
 
-    dialogue_profile_clear()
+    show_common_dialogue('PROFILE');
     if (user_account_id_other == null && window.global_user_account_id == '' && username == null) {
         
         return callBack(null,null);
@@ -1495,6 +1507,92 @@ async function profile_update_stat(callBack){
         else
             return callBack(result, null);
     })
+}
+function search_input(event, timezone, event_function){
+    //left 37, right 39, up 38, down 40, enter 13
+    switch (event.keyCode){
+        case 37:
+        case 39:{
+            break;
+        }
+        case 38:
+        case 40:{
+            //up 38
+            //down 40
+            if (document.getElementById('profile_search_list').style.display=='inline-block'){
+                var x = document.querySelectorAll('.profile_search_list_row');
+                for (i = 0; i <= x.length -1; i++) {
+                    if (x[i].classList.contains('profile_search_list_selected'))
+                        //if up and first or
+                        //if down and last
+                        if ((event.keyCode==38 && i == 0)||
+                            (event.keyCode==40 && i == x.length -1)){
+                            if(event.keyCode==38){
+                                //up
+                                //if the first, set the last
+                                x[i].classList.remove ('profile_search_list_selected');
+                                x[x.length -1].classList.add ('profile_search_list_selected');
+                            }
+                            else{
+                                //down
+                                //if the last, set the first
+                                x[i].classList.remove ('profile_search_list_selected');
+                                x[0].classList.add ('profile_search_list_selected');
+                            }
+                            return;
+                        }
+                        else{
+                            if(event.keyCode==38){
+                                //up
+                                //remove highlight, highlight previous
+                                x[i].classList.remove ('profile_search_list_selected');
+                                x[i-1].classList.add ('profile_search_list_selected');
+                            }
+                            else{
+                                //down
+                                //remove highlight, highlight next
+                                x[i].classList.remove ('profile_search_list_selected');
+                                x[i+1].classList.add ('profile_search_list_selected');
+                            }
+                            return;
+                        }
+                }
+                //no highlight found, highlight first
+                x[0].classList.add ('profile_search_list_selected');
+                return;
+            }
+            break
+        }
+        case 13:{
+            //enter
+            if (document.getElementById('profile_search_list').style.display=='inline-block'){
+                var x = document.querySelectorAll('.profile_search_list_row');
+                for (i = 0; i <= x.length -1; i++) {
+                    if (x[i].classList.contains('profile_search_list_selected')){
+                        if (event_function ==null){
+                            profile_show(x[i].children[0].children[0].innerHTML,
+                                         null,
+                                         timezone,
+                                        (err, result)=>{
+                                            null;
+                                        });
+                        }
+                        else
+                            eval(`(function (){${event_function}(${x[i].children[0].children[0].innerHTML},
+                                    ${null},
+                                    '${timezone}')}());`);
+                        x[i].classList.remove ('profile_search_list_selected');
+                    }
+                }
+                return;
+            }
+            break
+        }
+        default:{
+            window.global_typewatch(`search_profile('${timezone}', ${event_function==null?'':'"' + event_function +'"'});`, 500); 
+            break;
+        }            
+    }
 }
 /*----------------------- */
 /* USER                   */
@@ -2809,7 +2907,8 @@ function init_common(parameters){
         document.getElementById('profile_detail_header_like').innerHTML = window.global_button_default_icon_like + window.global_button_default_icon_follows;
         document.getElementById('profile_detail_header_liked').innerHTML = window.global_button_default_icon_like + window.global_button_default_icon_followed;
         //profile info search
-        document.getElementById('profile_search_icon').innerHTML = window.global_button_default_icon_search;
+        if (document.getElementById('profile_info_search'))
+            document.getElementById('profile_search_icon').innerHTML = window.global_button_default_icon_search;
         //profile info
         document.getElementById('profile_joined_date_icon').innerHTML = window.global_button_default_icon_user_joined_date;
         document.getElementById('profile_follow_follow').innerHTML = window.global_button_default_icon_user_follow_user;
@@ -2873,7 +2972,8 @@ function init_common(parameters){
         document.getElementById('user_new_password_cancel').addEventListener('click', function() { dialogue_new_password_clear(); }, false);
         document.getElementById('user_new_password_ok').addEventListener('click', function() { updatePassword(); }, false);
         //profile search
-        document.getElementById('profile_search_icon').addEventListener('click', function() { document.getElementById('profile_search_input').dispatchEvent(new KeyboardEvent('keyup')); }, false);
+        if (document.getElementById('profile_info_search'))
+            document.getElementById('profile_search_icon').addEventListener('click', function() { document.getElementById('profile_search_input').dispatchEvent(new KeyboardEvent('keyup')); }, false);
         //window info
         document.getElementById('common_window_info_toolbar_btn_close').addEventListener('click', function() { document.getElementById('common_window_info').style.visibility = "hidden"; }, false);
         document.getElementById('common_window_info_toolbar_btn_zoomout').addEventListener('click', function() {zoom_info(-1);}, false);
