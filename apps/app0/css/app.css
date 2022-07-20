@@ -58,6 +58,9 @@ a:active {
 	padding-top: 10px;
     padding-bottom: 10px;
 }
+#user_menu_dropdown_profile_top{
+	cursor:pointer;
+}
 #user_menu_default_avatar{
 	font-size: 41px;
     position: fixed;
@@ -141,7 +144,8 @@ a:active {
 /*DIALOGUE START*/
 #dialogue_start_content{
 	visibility:visible;
-	height:380px;
+	overflow: hidden;
+	height: 380px;
 	transform:             rotateY( 0deg );
         -moz-transform:    rotateY( 0deg );
         -ms-transform:     rotateY( 0deg );
@@ -150,11 +154,37 @@ a:active {
 }
 #apps{
 	margin-top:40px;
+	height: 145px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    padding-right: 26px;
+    box-sizing: content-box;
+    width: 106%;
+}
+.app_link{
+	text-align: left;
+}
+.app_link_row{
+	padding-top: 4px;
+    padding-bottom: 4px;
+}
+.app_link_col:nth-child(1){
+	width: 64px;
+    display: inline-block;
+	margin-left: 5px;
+    margin-top: 3px;
+}
+.app_link_col:nth-child(2){
+    text-align: left;
+    display: inline-block;
+    vertical-align: top;
+	font-size: 11px;
 }
 .app_name{
-	width: 200px;
-	height: 30px;
-	margin: 0 auto;
+	font-weight: bold;
+}
+.app_description{
+	width: 220px;
 }
 .app_logo:hover, .app_logo:active {
 	-webkit-animation: glowing 1300ms infinite;
@@ -163,23 +193,6 @@ a:active {
     animation: glowing 1300ms infinite;
 	border-radius:20px;
 	transform: scale(1.2);
-}
-.app_logo{
-	width: 40px;
-	height: 40px;
-	margin: 0 auto;
-}	
-.app_link{
-	cursor:pointer;
-}
-.app_url{
-	display:none;
-}
-#start_profile{
-	bottom: 0px;
-    position: fixed;
-	left:40%;
-    
 }
 @-webkit-keyframes glowing {
 	0% {
@@ -209,15 +222,29 @@ a:active {
 	  box-shadow: 0 0 3px #ececec;
 	}
   }
-  #start_links{
+.app_logo{
+	width: 40px;
+	height: 40px;
+	margin: 0 auto;
+}	
+.app_link{
+	cursor:pointer;
+}
+.app_url{
+	display:none;
+}
+#start_message{
+	margin-top: 30px;
+}
+#start_links{
 	font-size:11px;
 	display: block;
-  }
-  #start_links div{
+}
+#start_links div{
 	width: 24%;
-    display: inline-block;
+	display: inline-block;
 	cursor: pointer;
-  }
+}
 /*DIALOGUE INFO*/
 #dialogue_info_content{
 	visibility:visible;
@@ -285,11 +312,6 @@ a:active {
 	background-repeat: no-repeat;
 	height: 50px;
 	margin: 0 auto;
-}
-#start_message, #info_message{
-	bottom: 60px;
-    position: fixed;
-	left:40%;
 }
 /*Dialogue profile*/
 #profile_main_btn_cloud{
@@ -951,6 +973,10 @@ div.ray8 {
 }
 .theme_sun #user_menu_username:hover,
 .theme_sun #user_menu_username:active,
+.theme_sun #user_menu_dropdown_profile_top:hover,
+.theme_sun #user_menu_dropdown_profile_top:active,
+.theme_sun .app_link:hover,
+.theme_sun .app_link:active,
 .theme_sun #user_menu_dropdown_logged_in div:hover,
 .theme_sun #user_menu_dropdown_logged_in div:active,
 .theme_sun #user_menu_dropdown_logged_out div:hover,
@@ -1104,6 +1130,10 @@ div.ray8 {
 }
 .theme_moon #user_menu_username:hover,
 .theme_moon #user_menu_username:active,
+.theme_moon #user_menu_dropdown_profile_top:hover,
+.theme_moon #user_menu_dropdown_profile_top:active,
+.theme_moon .app_link:hover,
+.theme_moon .app_link:active,
 .theme_moon #user_menu_dropdown_logged_in div:hover,
 .theme_moon #user_menu_dropdown_logged_in div:active,
 .theme_moon #user_menu_dropdown_logged_out div:hover,

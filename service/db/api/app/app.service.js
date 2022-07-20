@@ -1,23 +1,48 @@
 const {oracledb, get_pool, get_pool_admin} = require ("../../config/database");
 const { createLogAppSE } = require("../../../../service/log/log.service");
 module.exports = {
-	getApp:(id, callBack) => {
+	getApp:(id, lang_code, callBack) => {
 		if (typeof id=='undefined')
 			id=null;
 		if (process.env.SERVICE_DB_USE==1){
 			get_pool(id).query(
 				`SELECT
-						id,
-						app_name,
-						url,
-						logo
-				FROM ${process.env.SERVICE_DB_DB1_NAME}.app
-				WHERE (id = COALESCE(?, id)
+						a.id,
+						a.app_name,
+						a.url,
+						a.logo,
+						aoit.text app_description
+				  FROM ${process.env.SERVICE_DB_DB1_NAME}.app a
+				       LEFT OUTER JOIN ${process.env.SERVICE_DB_DB1_NAME}.app_object_translation aoit
+				        ON aoit.app_id = a.id
+					   AND aoit.object_name = 'APP_DESCRIPTION'
+				   	   AND aoit.language_id IN (SELECT id 
+												  FROM ${process.env.SERVICE_DB_DB1_NAME}.language l
+												 WHERE (l.lang_code IN (?, SUBSTRING_INDEX(?,'-',2), SUBSTRING_INDEX(?,'-',1))
+														OR (l.lang_code = 'en'
+															AND NOT EXISTS(SELECT NULL
+																			 FROM ${process.env.SERVICE_DB_DB1_NAME}.app_object_translation aoit1,
+																				  ${process.env.SERVICE_DB_DB1_NAME}.language l1
+																			WHERE l1.id  = aoit1.language_id
+																			  AND aoit1.app_id  = aoit.app_id
+																			  AND aoit1.object_name = aoit.object_name
+																			  AND l1.lang_code IN (?, SUBSTRING_INDEX(?,'-',2), SUBSTRING_INDEX(?,'-',1))
+																		  )
+														   )
+													   )
+											   )
+				 WHERE (a.id = COALESCE(?, a.id)
 				       OR 
 					   ? = 0)
-				AND  enabled = 1
+				   AND a.enabled = 1
 				ORDER BY 1 `,
-				[id,
+				[lang_code,
+				 lang_code,
+				 lang_code,
+				 lang_code,
+				 lang_code,
+				 lang_code,
+				 id,
 				 id],
 				(error, results, fields) => {
 					if (error){
@@ -38,14 +63,36 @@ module.exports = {
 							id "id",
 							app_name "app_name",
 							url "url",
-							logo "logo"
-					FROM ${process.env.SERVICE_DB_DB2_NAME}.app
+							logo "logo",
+							aoit.text "app_description"
+					   FROM ${process.env.SERVICE_DB_DB2_NAME}.app a
+							LEFT OUTER JOIN ${process.env.SERVICE_DB_DB2_NAME}.app_object_translation aoit
+								ON aoit.app_id = a.id
+							AND aoit.object_name = 'APP_DESCRIPTION'
+							AND aoit.language_id IN (SELECT id 
+														FROM ${process.env.SERVICE_DB_DB2_NAME}.language l
+														WHERE (l.lang_code IN (:lang_code, 
+																			   SUBSTR(:lang_code, 0,INSTR(:lang_code,'-',1,2)-1), 
+																			   SUBSTR(:lang_code, 0,INSTR(:lang_code,'-',1,1)-1))
+																OR (l.lang_code = 'en'
+																	AND NOT EXISTS(SELECT NULL
+																					 FROM ${process.env.SERVICE_DB_DB2_NAME}.app_object_translation aoit1,
+																						  ${process.env.SERVICE_DB_DB2_NAME}.language l1
+																					WHERE l1.id  = aoit1.language_id
+																					  AND aoit1.app_id  = aoit.app_id
+																					  AND aoit1.object_name = aoit.object_name
+																					  AND l1.lang_code IN (:lang_code, SUBSTR(:lang_code, 0,INSTR(:lang_code,'-',1,2)-1), SUBSTR(:lang_code, 0,INSTR(:lang_code,'-',1,1)-1))
+																				)
+																)
+															)
+													)
 					WHERE (id= NVL(:id, id)
 						   OR 
 						   :id = 0)
 					AND enabled = 1
 					ORDER BY 1`,
-					{id: id}, 
+					{lang_code: lang_code,
+					 id: id}, 
 					(err,result) => {
 						if (err) {
 							createLogAppSE(id, __appfilename, __appfunction, __appline, err);
