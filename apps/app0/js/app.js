@@ -24,6 +24,7 @@ function setEvents(){
     document.getElementById('user_menu_dropdown_log_out').addEventListener('click', function() { user_menu_item_click(this) }, false);
     document.getElementById('user_menu_dropdown_signup').addEventListener('click', function() { user_menu_item_click(this) }, false);
     document.getElementById('user_menu_dropdown_log_in').addEventListener('click', function() { user_menu_item_click(this) }, false);
+    document.getElementById('user_menu_dropdown_profile_top').addEventListener('click', function() {user_menu_item_click(this)}, false);
     //start page
     document.getElementById( 'start_message' ).addEventListener( 'click', function( event ) {
         event.preventDefault();
@@ -41,7 +42,7 @@ function setEvents(){
     }, false );
     //common with app specific settings
     //dialogue profile
-    document.getElementById('profile_home').addEventListener('click', function() {profile_home(Intl.DateTimeFormat().resolvedOptions().timeZone);}, false);
+    document.getElementById('profile_home').addEventListener('click', function() {profile_top(1, Intl.DateTimeFormat().resolvedOptions().timeZone);}, false);
     document.getElementById('profile_close').addEventListener('click', function() {profile_close()}, false);
     document.getElementById('profile_search_input').addEventListener('keyup', function() { window.global_typewatch("search_profile(Intl.DateTimeFormat().resolvedOptions().timeZone, null);", 500); }, false);
     document.getElementById('profile_top_row1_1').addEventListener('click', function() { profile_top(1, Intl.DateTimeFormat().resolvedOptions().timeZone)}, false);
@@ -105,7 +106,7 @@ function get_apps() {
     let json;
     let old_button = document.getElementById('apps').innerHTML;
     document.getElementById('apps').innerHTML = window.global_button_spinner;
-    fetch(window.global_rest_url_base + window.global_rest_app + '?id=' + window.global_app_id,
+    fetch(window.global_rest_url_base + window.global_rest_app + `?id=${window.global_app_id}&lang_code=${window.global_lang_code}`,
     {method: 'GET',
      headers: {
 			'Authorization': 'Bearer ' + window.global_rest_dt
@@ -123,14 +124,21 @@ function get_apps() {
                 if (i!=0){
                     html +=`<div class='app_link'>
                                 <div class='app_url'>${json.data[i].url}</div>
-                                <div class='app_logo_div'><img class='app_logo' src='${json.data[i].logo}' /></div>
-                                <div class='app_name'>${json.data[i].app_name}</div>
+                                <div class='app_link_row'>
+                                    <div class='app_link_col'>
+                                        <img class='app_logo' src='${json.data[i].logo}' />
+                                    </div>
+                                    <div class='app_link_col'>
+                                        <div class='app_name'>${json.data[i].app_name}</div>
+                                        <div class='app_description'>${json.data[i].app_description==null?'':json.data[i].app_description}</div>
+                                    </div>
+                                </div>
                             </div>`;
                 }
             }
             document.getElementById('apps').innerHTML = html;
-            document.querySelectorAll('.app_link').forEach(e => e.addEventListener('click', function(event) {
-                window.open(event.target.parentNode.parentNode.children[0].innerHTML);
+            document.querySelectorAll('.app_link_row').forEach(e => e.addEventListener('click', function(event) {
+                window.open(event.target.parentNode.parentNode.parentNode.children[0].innerHTML);
             }))
           }
           else{
@@ -296,7 +304,6 @@ async function get_parameters() {
 function user_menu_item_click(item){
     switch (item.id){
         case 'user_menu_username':{
-            //profile_home();
             document.getElementById('dialogue_profile').style.visibility = 'visible';
             profile_show(null,
                          null,
@@ -320,6 +327,10 @@ function user_menu_item_click(item){
         }
         case 'user_menu_dropdown_log_in':{
             show_common_dialogue('LOGIN');
+            break;
+        }
+        case 'user_menu_dropdown_profile_top':{
+            profile_top(1,Intl.DateTimeFormat().resolvedOptions().timeZone)
             break;
         }
         default:
@@ -452,7 +463,6 @@ async function onProviderSignIn_app(provider1User){
 async function init_app(){
     //start
     document.getElementById('start_message').innerHTML = window.global_button_default_icon_info;
-    document.getElementById('start_profile').innerHTML = window.global_button_default_icon_user;
     document.getElementById('info_message').innerHTML = window.global_button_default_icon_close;
     document.getElementById("toggle_checkbox").checked = true;
     document.getElementById('info_diagram_img').src=window.global_img_diagram_img;
@@ -466,6 +476,8 @@ async function init_app(){
     document.getElementById('user_menu_dropdown_log_out').innerHTML = window.global_button_default_icon_logoff;
     document.getElementById('user_menu_dropdown_signup').innerHTML = window.global_button_default_icon_signup;
     document.getElementById('user_menu_dropdown_log_in').innerHTML = window.global_button_default_icon_login;
+    document.getElementById('user_menu_dropdown_profile_top').innerHTML = window.global_button_default_icon_profile_top;
+                                                                          
     //profile info
     document.getElementById('profile_main_btn_cloud').innerHTML = window.global_button_default_icon_cloud;
     document.getElementById('user_menu_default_avatar').innerHTML = window.global_button_default_icon_user_avatar;
@@ -495,7 +507,6 @@ function init(parameters){
             document.getElementById('info_link3').addEventListener('click', function() { show_window_info(3);}, false);
             document.getElementById('info_link4').addEventListener('click', function() { show_window_info(4);}, false);
 
-            document.getElementById('start_profile').addEventListener('click', function() {profile_home(Intl.DateTimeFormat().resolvedOptions().timeZone)}, false);
             common_translate_ui(window.global_lang_code);
             document.getElementById('copyright').innerHTML = window.global_app_copyright;
             document.getElementById('app_email').href='mailto:' + window.global_app_email;
