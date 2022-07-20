@@ -177,7 +177,8 @@ INSERT INTO app_object_subitem_translation (app_id, object_name, object_item_nam
 --
 -- Dumping data for table `app_object_translation`
 --
-INSERT INTO app_object_translation (app_id, object_name, language_id, text) VALUES (1,'APP_DESCRIPTION',107,'先进的传统穆斯林萨拉赫时间表');
+INSERT INTO app_object_translation (app_id, object_name, language_id, text) VALUES (1,'APP_DESCRIPTION',107,'渐进式 Web 应用 （PWA） 单页应用程序 （SPA）');
+INSERT INTO app_object_translation (app_id, object_name, language_id, text) VALUES (2,'APP_DESCRIPTION',107,'用于显示数据模型的简单应用程序以及如何在应用程序平台中集成应用程序');
 INSERT INTO app_object_translation (app_id, object_name, language_id, text) VALUES (1,'SETTING_NAV_DESIGN',107,'设计');
 INSERT INTO app_object_translation (app_id, object_name, language_id, text) VALUES (1,'SETTING_NAV_GPS',107,'GPS');
 INSERT INTO app_object_translation (app_id, object_name, language_id, text) VALUES (1,'SETTING_NAV_IMAGE',107,'图片');

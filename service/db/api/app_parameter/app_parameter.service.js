@@ -530,13 +530,13 @@ module.exports = {
 					`SELECT
 							(SELECT a.app_name
 							   FROM ${process.env.SERVICE_DB_DB2_NAME}.app a
-							  WHERE a.id = :app_id) app_name,
+							  WHERE a.id = :app_id) "app_name",
 							(SELECT a.url
 						 	   FROM ${process.env.SERVICE_DB_DB2_NAME}.app a
-							  WHERE a.id = :app_id) app_url,
+							  WHERE a.id = :app_id) "app_url",
 							(SELECT a.logo
 							   FROM ${process.env.SERVICE_DB_DB2_NAME}.app a
-							  WHERE a.id = :app_id) app_logo,
+							  WHERE a.id = :app_id) "app_logo",
 							(SELECT ap.parameter_value
 							   FROM ${process.env.SERVICE_DB_DB2_NAME}.app_parameter ap
 							  WHERE ap.parameter_name = :service_auth
@@ -550,7 +550,7 @@ module.exports = {
 							  WHERE ap.parameter_name = :app_rest_client_secret
 								AND ap.app_id = :app_id) "app_rest_client_secret",
 							(SELECT ap.parameter_value
-								FROM ${process.env.SERVICE_DB_DB1_NAME}.app_parameter ap
+								FROM ${process.env.SERVICE_DB_DB2_NAME}.app_parameter ap
 								WHERE ap.parameter_name = :rest_app_parameter
 									AND ap.app_id = :app_id) "rest_app_parameter"
 					  FROM DUAL`,
