@@ -1209,6 +1209,7 @@ async function update_ui(option, item_id=null) {
                 let select = document.getElementById('setting_select_report_arabic_script');
                 let prefix = 'font_';
                 document.getElementById('toolbar_top').classList = prefix + select[select.selectedIndex].value;
+                document.getElementById('profile_info_search').classList = prefix + select[select.selectedIndex].value;
                 document.getElementById('settings').classList = prefix + select[select.selectedIndex].value;
                 document.getElementById('dialogues').classList = prefix + select[select.selectedIndex].value;
                 document.getElementById('common_dialogues').classList = prefix + select[select.selectedIndex].value;
@@ -1658,6 +1659,8 @@ async function profile_show_app(user_account_id_other = null, username = null, t
     document.getElementById('profile_user_settings_row').style.display = "none";
     
     profile_clear_app();
+    document.getElementById('profile_info_search').style.visibility = "hidden";
+
     if (user_account_id_other == null && window.global_user_account_id == '' && username == null) {
         document.getElementById('profile_info').style.display = "none";
     }
@@ -1711,6 +1714,7 @@ function profile_detail_app(detailchoice, rest_url_app, fetch_detail, header_app
         show_common_dialogue('LOGIN');
                 
 }
+
 /*----------------------- */
 /* USER SETTINGS          */
 /*----------------------- */
@@ -2658,6 +2662,8 @@ function setEvents() {
 	document.getElementById('toolbar_btn_zoomin').addEventListener('click', function() { zoom_paper(1) }, false);
 	document.getElementById('toolbar_btn_left').addEventListener('click', function() { update_timetable_report(getTimetable_type(), 'toolbar_navigation_btn_left', getReportSettings(), get_lang_code()) }, false);
 	document.getElementById('toolbar_btn_right').addEventListener('click', function() { update_timetable_report(getTimetable_type(), 'toolbar_navigation_btn_right', getReportSettings(), get_lang_code()) }, false);
+
+    document.getElementById('toolbar_btn_search').addEventListener('click', function() { let x = document.getElementById('profile_info_search'); if (x.style.visibility == 'visible') x.style.visibility = 'hidden'; else x.style.visibility = 'visible'; }, false);
     //user menu dropdown
     document.getElementById('user_menu_dropdown_login').addEventListener('click', function() { show_common_dialogue('LOGIN') }, false);
     document.getElementById('user_menu_dropdown_signup').addEventListener('click', function() { show_common_dialogue('SIGNUP') }, false);
@@ -2743,7 +2749,7 @@ function setEvents() {
     document.getElementById('profile_user_settings_month').addEventListener('click', function() { profile_user_setting_link(this) }, false);
     document.getElementById('profile_user_settings_year').addEventListener('click', function() { profile_user_setting_link(this) }, false);
     document.getElementById('profile_user_settings_like').addEventListener('click', function() { profile_user_setting_link(this) }, false);
-    document.getElementById('profile_search_input').addEventListener('keyup', function() { window.global_typewatch("search_profile(document.getElementById('setting_select_timezone_current').value, 'profile_show_app');", 500); }, false);
+    document.getElementById('profile_search_input').addEventListener('keyup', function(event) { search_input(event, document.getElementById('setting_select_timezone_current').value, 'profile_show_app');}, false);
     document.getElementById('profile_select_user_settings').addEventListener('change', 
         function() { profile_show_user_setting_detail(this.options[this.selectedIndex].getAttribute('liked'), 
                                                       this.options[this.selectedIndex].getAttribute('count_likes'), 
@@ -2825,7 +2831,7 @@ function setEvents() {
     document.getElementById('user_verify_verification_char6').addEventListener('keyup', function() { user_verify_check_input_app(this, "") }, false);
 };
 /*----------------------- */
-/* SERCICE WORKER         */
+/* SERVICE WORKER         */
 /*----------------------- */
 function serviceworker(){
     if (!window.Promise) {
@@ -3270,6 +3276,9 @@ async function init_app() {
     document.getElementById('toolbar_btn_right').innerHTML = window.global_button_default_icon_right;
     document.getElementById('toolbar_btn_about').innerHTML = window.global_button_default_icon_info;
     document.getElementById('user_menu_default_avatar').innerHTML = window.global_button_default_icon_user;
+    
+    document.getElementById('toolbar_btn_search').innerHTML = window.global_button_default_icon_search;
+    
     //user menu dropdown
     document.getElementById('user_menu_dropdown_login').innerHTML = window.global_button_default_icon_login;
     document.getElementById('user_menu_dropdown_logoff').innerHTML = window.global_button_default_icon_logoff;
