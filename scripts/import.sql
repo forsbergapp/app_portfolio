@@ -7,7 +7,9 @@ INSERT INTO app_portfolio.app (id, app_name, url, logo) VALUES (2,'Property Mana
 --
 -- Dumping data for table app_object
 --
+INSERT INTO app_portfolio.app_object (app_id, object_name) VALUES (0,'APP_DESCRIPTION');
 INSERT INTO app_portfolio.app_object (app_id, object_name) VALUES (1,'APP_DESCRIPTION');
+INSERT INTO app_portfolio.app_object (app_id, object_name) VALUES (2,'APP_DESCRIPTION');
 INSERT INTO app_portfolio.app_object (app_id, object_name) VALUES (0,'DIALOGUE');
 INSERT INTO app_portfolio.app_object (app_id, object_name) VALUES (1,'PROFILE');
 INSERT INTO app_portfolio.app_object (app_id, object_name) VALUES (1,'REPORT');
@@ -1901,7 +1903,7 @@ INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_na
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','PRAYER_DEFAULT_SHOW_SUNSET','false','Column sunset: no');
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','PRAYER_DEFAULT_TIMEFORMAT','12hNS','Timeformat: 12h with no suffix');
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','PWA_BACKGROUND_COLOR','#FFFFFF',NULL);
-INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','PWA_DESCRIPTION','Advanced traditional muslim salah timetables',NULL);
+INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','PWA_DESCRIPTION','Progressive web app (PWA) single page application (SPA).',NULL);
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','PWA_DISPLAY','standalone',NULL);
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','PWA_ICONS1_SIZES','192x192',NULL);
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','PWA_ICONS1_SRC','/app1/images/pwa/icon-192x192.png',NULL);

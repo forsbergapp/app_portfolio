@@ -177,7 +177,8 @@ INSERT INTO app_object_subitem_translation (app_id, object_name, object_item_nam
 --
 -- Dumping data for table `app_object_translation`
 --
-INSERT INTO app_object_translation (app_id, object_name, language_id, text) VALUES (1,'APP_DESCRIPTION',453,'Расширенные традиционные мусульманские расписания салах');
+INSERT INTO app_object_translation (app_id, object_name, language_id, text) VALUES (1,'APP_DESCRIPTION',453,'Прогрессивное веб-приложение (PWA) одностраничное приложение (SPA)');
+INSERT INTO app_object_translation (app_id, object_name, language_id, text) VALUES (2,'APP_DESCRIPTION',453,'Простое приложение для отображения модели данных и интеграция приложения в платформу приложений');
 INSERT INTO app_object_translation (app_id, object_name, language_id, text) VALUES (1,'SETTING_NAV_DESIGN',453,'Проектировать');
 INSERT INTO app_object_translation (app_id, object_name, language_id, text) VALUES (1,'SETTING_NAV_GPS',453,'GPS');
 INSERT INTO app_object_translation (app_id, object_name, language_id, text) VALUES (1,'SETTING_NAV_IMAGE',453,'Образ');

@@ -1452,15 +1452,6 @@ async function profile_show(user_account_id_other = null, username = null, timez
             });
     }
 }
-function profile_home(timezone, header_app, click_event_function){
-    document.getElementById('dialogue_profile').style.visibility = 'visible';;
-    document.getElementById('profile_info').style.display = 'none';
-    document.getElementById('profile_detail').style.display = 'none';
-    document.getElementById('profile_top').style.display = 'block';
-    document.getElementById('profile_top_list').style.display = 'block';
-    document.getElementById('profile_detail_list').innerHTML = '';
-    profile_top(1, timezone, header_app, click_event_function);
-}
 function profile_close(){
     document.getElementById('dialogue_profile').style.visibility = 'hidden';
     dialogue_profile_clear();
