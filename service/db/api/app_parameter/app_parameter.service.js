@@ -505,13 +505,13 @@ module.exports = {
 				 app_id,
 				 app_id,
 				 service_auth,
-				 app_id,
+				 process.env.MAIN_APP_ID,
 				 app_rest_client_id,
-				 app_id,
+				 process.env.MAIN_APP_ID,
 				 app_rest_client_secret,
-				 app_id,
+				 process.env.MAIN_APP_ID,
 				 rest_app_parameter,
-				 app_id],
+				 process.env.MAIN_APP_ID],
 				(error, results, fields) => {
 					if (error){
 						createLogAppSE(app_id, __appfilename, __appfunction, __appline, error);
@@ -540,21 +540,22 @@ module.exports = {
 							(SELECT ap.parameter_value
 							   FROM ${process.env.SERVICE_DB_DB2_NAME}.app_parameter ap
 							  WHERE ap.parameter_name = :service_auth
-								AND ap.app_id = :app_id) "service_auth",
+								AND ap.app_id = :app_main_id) "service_auth",
 							(SELECT ap.parameter_value
 							   FROM ${process.env.SERVICE_DB_DB2_NAME}.app_parameter ap
 							  WHERE ap.parameter_name = :app_rest_client_id
-								AND ap.app_id = :app_id) "app_rest_client_id",
+								AND ap.app_id = :app_main_id) "app_rest_client_id",
 							(SELECT ap.parameter_value
 							   FROM ${process.env.SERVICE_DB_DB2_NAME}.app_parameter ap
 							  WHERE ap.parameter_name = :app_rest_client_secret
-								AND ap.app_id = :app_id) "app_rest_client_secret",
+								AND ap.app_id = :app_main_id) "app_rest_client_secret",
 							(SELECT ap.parameter_value
 								FROM ${process.env.SERVICE_DB_DB2_NAME}.app_parameter ap
 								WHERE ap.parameter_name = :rest_app_parameter
-									AND ap.app_id = :app_id) "rest_app_parameter"
+									AND ap.app_id = :app_main_id) "rest_app_parameter"
 					  FROM DUAL`,
 					{app_id: app_id,
+					 app_main_id: process.env.MAIN_APP_ID,
 					 service_auth: service_auth,
 					 app_rest_client_id: app_rest_client_id,
 					 app_rest_client_secret: app_rest_client_secret,
