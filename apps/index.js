@@ -152,7 +152,7 @@ async function get_module_with_init(app_id,
                                     gps_place,
                                     module, callBack){
     const { getAppStartParameters } = require("../service/db/api/app_parameter/app_parameter.service");
-    getAppStartParameters(process.env.MAIN_APP_ID, (err,result) =>{
+    getAppStartParameters(app_id, (err,result) =>{
         if (err)
             callBack(err, null);
         else{
