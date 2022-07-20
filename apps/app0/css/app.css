@@ -119,6 +119,10 @@ a:active {
 	-webkit-border-radius: 4px;
 	box-shadow: 0 4px 8px 0 rgb(0 0 0 / 20%), 0 6px 20px 0 rgb(0 0 0 / 19%);
 }
+#profile_info_search{
+	width: 100%;
+	position:fixed !important;
+}
 /* add animation effects */
 @-webkit-keyframes animatetop {
 	from {
