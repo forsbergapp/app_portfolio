@@ -44,7 +44,7 @@ function setEvents(){
     //dialogue profile
     document.getElementById('profile_home').addEventListener('click', function() {profile_top(1, Intl.DateTimeFormat().resolvedOptions().timeZone);}, false);
     document.getElementById('profile_close').addEventListener('click', function() {profile_close()}, false);
-    document.getElementById('profile_search_input').addEventListener('keyup', function() { window.global_typewatch("search_profile(Intl.DateTimeFormat().resolvedOptions().timeZone, null);", 500); }, false);
+    document.getElementById('profile_search_input').addEventListener('keyup', function(event) { search_input(event, Intl.DateTimeFormat().resolvedOptions().timeZone, null);}, false);
     document.getElementById('profile_top_row1_1').addEventListener('click', function() { profile_top(1, Intl.DateTimeFormat().resolvedOptions().timeZone)}, false);
     document.getElementById('profile_top_row1_2').addEventListener('click', function() { profile_top(2, Intl.DateTimeFormat().resolvedOptions().timeZone)}, false);
     document.getElementById('profile_top_row1_3').addEventListener('click', function() { profile_top(3, Intl.DateTimeFormat().resolvedOptions().timeZone)}, false);
