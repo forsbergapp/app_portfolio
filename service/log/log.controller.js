@@ -1,4 +1,5 @@
-const { getParameters, getLogs, getFiles, getPM2Logs} = require ("./log.service");
+const { getParameters, getLogs, getFiles, getPM2Logs,
+	    createLogServer, createLogAppS, createLogAppRI, createLogAppC} = require ("./log.service");
 module.exports = {
 	getParameters: (req, res) => {
 		getParameters((err, results) =>{
@@ -53,5 +54,36 @@ module.exports = {
 				data: results
 			});
 		});
+	},
+	createLogServer: (req, res, app_id, info, err) =>{
+		if (req && res)
+			createLogServer(app_id, info, err, 
+							req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, res.statusCode, 
+							req.headers['user-agent'], req.headers['accept-language'], req.headers['referer']);
+		else
+			createLogServer(app_id, info, err, 
+							null, null, null, null, null, null, 
+							null, null, null);
+	},
+	createLogAppRI:(req, res, app_id, app_filename, app_function_name, app_line, logtext) =>{
+		createLogAppRI(app_id, app_filename, app_function_name, app_line, logtext,
+					   req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, res.statusCode, 
+					   req.headers['user-agent'], req.headers['accept-language'], req.headers['referer']);
+	},
+	createLogAppSI: (app_id, app_filename, app_function_name, app_line, logtext) => {
+        createLogAppS(process.env.SERVICE_LOG_LEVEL_INFO, app_id, app_filename, app_function_name, app_line, logtext);
+	},
+    createLogAppSE: (app_id, app_filename, app_function_name, app_line, logtext) => {
+        createLogAppS(process.env.SERVICE_LOG_LEVEL_ERROR, app_id, app_filename, app_function_name, app_line, logtext);
+	},
+	createLogAppCI: (req, res, app_id, app_filename, app_function_name, app_line, logtext) => {
+		createLogAppC(app_id, process.env.SERVICE_LOG_LEVEL_INFO, app_filename, app_function_name, app_line, logtext,
+					   req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, res.statusCode, 
+			           req.headers['user-agent'], req.headers['accept-language'], req.headers['referer']);
+	},
+	createLogAppCE: (req, res, app_id, app_filename, app_function_name, app_line, logtext) => {
+		createLogAppC(app_id, process.env.SERVICE_LOG_LEVEL_ERROR, app_filename, app_function_name, app_line, logtext,
+					   req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, res.statusCode, 
+			           req.headers['user-agent'], req.headers['accept-language'], req.headers['referer']);
 	}
 }

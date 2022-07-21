@@ -78,48 +78,11 @@ function logdate(){
         logdate = logdate.toISOString();
     return logdate;
 }
-function createLogAppS(level_info, app_id, app_filename, app_function_name, app_line, logtext){
-    
-    let log_json =`{"logdate": "${logdate()}",
-                    "ip":"",
-                    "host": "${require('os').hostname()}",
-                    "protocol": "",
-                    "url": "",
-                    "method":"",
-                    "statusCode": "",
-                    "user-agent": "",
-                    "accept-language": "",
-                    "http_referer": "",
-                    "app_id": ${app_id},
-                    "app_filename": "${app_filename}",
-                    "app_function_name": "${app_function_name}",
-                    "app_app_line": ${app_line},
-                    "logtext": ${JSON.stringify(logtext)}
-                    }`;
-    sendLog(process.env.SERVICE_LOG_SCOPE_SERVICE, level_info, log_json);
-}
-function createLogAppC(level_info, req, res, app_id, app_filename, app_function_name, app_line, logtext){
-    let log_json =`{"logdate": "${logdate()}",
-                    "ip":"${req.ip}",
-                    "host": "${req.get('host')}",
-                    "protocol": "${req.protocol}",
-                    "url": "${req.originalUrl}",
-                    "method":"${req.method}",
-                    "status_code": ${res.statusCode},
-                    "user-agent": "${req.headers["user-agent"]}",
-                    "accept-language": "${req.headers["accept-language"]}",
-                    "http_referer": "${req.headers.referer}",
-                    "app_id": ${app_id},
-                    "app_filename": "${app_filename}",
-                    "app_function_name": "${app_function_name}",
-                    "app_app_line": ${app_line},
-                    "logtext": ${JSON.stringify(logtext)}
-                    }`;
-    sendLog(process.env.SERVICE_LOG_SCOPE_CONTROLLER, level_info, log_json);
-}
 module.exports = {
 
-	createLogServer: (err=null, req, res, info=null) =>{
+	createLogServer: (app_id, info=null, err=null,
+                      ip, host, protocol, originalUrl, method, statusCode, 
+					  user_agent, accept_language, referer) =>{
         let log_error_status = '';
         let log_error_message = '';
         let log_level;
@@ -158,15 +121,15 @@ module.exports = {
         else{
             log_json_server  =
             `{"logdate": "${logdate()}",
-             "ip":"${req.ip}",
-             "host": "${req.get('host')}",
-             "protocol": "${req.protocol}",
-             "url": "${JSON.stringify(req.originalUrl).replaceAll('"', '\'')}",
-             "method":"${req.method}",
-             "statusCode": ${res.statusCode},
-             "user-agent": "${req.headers["user-agent"]}",
-             "accept-language": "${req.headers["accept-language"]}",
-             "http_referer": "${req.headers["referer"]}",
+             "ip":"${ip}",
+             "host": "${host}",
+             "protocol": "${protocol}",
+             "url": "${JSON.stringify(originalUrl).replaceAll('"', '\'')}",
+             "method":"${method}",
+             "statusCode": ${statusCode},
+             "user-agent": "${user_agent}",
+             "accept-language": "${accept_language}",
+             "http_referer": "${referer}",
              "app_id": "",
              "app_filename": "",
              "app_function_name": "",
@@ -197,30 +160,60 @@ module.exports = {
             sendLog(process.env.SERVICE_LOG_SCOPE_DB, process.env.SERVICE_LOG_LEVEL_INFO, log_json_db);
         }
     },
-    createLogAppSI: (app_id, app_filename, app_function_name, app_line, logtext) => {
-        createLogAppS(process.env.SERVICE_LOG_LEVEL_INFO, app_id, app_filename, app_function_name, app_line, logtext);
-	},
-    createLogAppSE: (app_id, app_filename, app_function_name, app_line, logtext) => {
-        createLogAppS(process.env.SERVICE_LOG_LEVEL_ERROR, app_id, app_filename, app_function_name, app_line, logtext);
-	},
-    createLogAppCI: (req, res, app_id, app_filename, app_function_name, app_line, logtext) => {
-        createLogAppC(process.env.SERVICE_LOG_LEVEL_INFO, req, res, app_id, app_filename, app_function_name, app_line, logtext);
-	},
-    createLogAppCE: (req, res, app_id, app_filename, app_function_name, app_line, logtext) => {
-        createLogAppC(process.env.SERVICE_LOG_LEVEL_ERROR, req, res, app_id, app_filename, app_function_name, app_line, logtext);
-	},
-    createLogAppRI: (req, res, app_id, app_filename, app_function_name, app_line, logtext) => {
+    createLogAppS: (level_info, app_id, app_filename, app_function_name, app_line, logtext)=>{
+        let log_json =`{"logdate": "${logdate()}",
+                        "ip":"",
+                        "host": "${require('os').hostname()}",
+                        "protocol": "",
+                        "url": "",
+                        "method":"",
+                        "statusCode": "",
+                        "user-agent": "",
+                        "accept-language": "",
+                        "http_referer": "",
+                        "app_id": ${app_id},
+                        "app_filename": "${app_filename}",
+                        "app_function_name": "${app_function_name}",
+                        "app_app_line": ${app_line},
+                        "logtext": ${JSON.stringify(logtext)}
+                        }`;
+        sendLog(process.env.SERVICE_LOG_SCOPE_SERVICE, level_info, log_json);
+    },    
+    createLogAppC: (app_id, level_info, app_filename, app_function_name, app_line, logtext,
+                    ip, host, protocol, originalUrl, method, statusCode, 
+                    user_agent, accept_language, referer) =>{
+        let log_json =`{"logdate": "${logdate()}",
+            "ip":"${ip}",
+            "host": "${host}",
+            "protocol": "${protocol}",
+            "url": "${originalUrl}",
+            "method":"${method}",
+            "status_code": ${statusCode},
+            "user-agent": "${user_agent}",
+            "accept-language": "${accept_language}",
+            "http_referer": "${referer}",
+            "app_id": ${app_id},
+            "app_filename": "${app_filename}",
+            "app_function_name": "${app_function_name}",
+            "app_app_line": ${app_line},
+            "logtext": ${JSON.stringify(logtext)}
+            }`;
+        sendLog(process.env.SERVICE_LOG_SCOPE_CONTROLLER, level_info, log_json);
+    },
+    createLogAppRI: (app_id, app_filename, app_function_name, app_line, logtext,
+                     ip, host, protocol, originalUrl, method, statusCode, 
+                    user_agent, accept_language, referer) => {
         if (process.env.SERVICE_LOG_ENABLE_ROUTER==1){
             let log_json =`{"logdate": "${logdate()}",
-                            "ip":"${req.ip}",
-                            "host": "${req.get('host')}",
-                            "protocol": "${req.protocol}",
-                            "url": "${req.originalUrl}",
-                            "method":"${req.method}",
-                            "status_code": ${res.statusCode},
-                            "user-agent": "${req.headers["user-agent"]}",
-                            "accept-language": "${req.headers["accept-language"]}",
-                            "http_referer": "${req.headers.referer}",
+                            "ip":"${ip}",
+                            "host": "${host}",
+                            "protocol": "${protocol}",
+                            "url": "${originalUrl}",
+                            "method":"${method}",
+                            "status_code": ${statusCode},
+                            "user-agent": "${user_agent}",
+                            "accept-language": "${accept_language}",
+                            "http_referer": "${referer}",
                             "app_id": "${app_id}",
                             "app_filename": "${app_filename}",
                             "app_function_name": "${app_function_name}",

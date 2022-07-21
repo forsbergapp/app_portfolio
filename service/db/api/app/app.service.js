@@ -1,5 +1,5 @@
 const {oracledb, get_pool, get_pool_admin} = require ("../../config/database");
-const { createLogAppSE } = require("../../../../service/log/log.service");
+const { createLogAppSE } = require("../../../../service/log/log.controller");
 module.exports = {
 	getApp:(id, lang_code, callBack) => {
 		if (typeof id=='undefined')

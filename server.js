@@ -2,7 +2,7 @@
 //module to use Express framework
 const express = require ("express");
 //logging
-const { createLogServer, createLogAppSE} = require("./service/log/log.service");
+const { createLogServer, createLogAppSE} = require("./service/log/log.controller");
 
 //module to use https
 const https = require("https");
@@ -74,7 +74,7 @@ app.use(function(req, res, next) {
 
 //Logging middleware
 app.use((err,req,res,next) => {
-  createLogServer(err, req, res);
+  createLogServer(req, res, process.env.MAIN_APP_ID, null, err);
   next();
 })
 app.use((req,res,next) => {
@@ -97,11 +97,11 @@ app.use((req,res,next) => {
             return value;
           };
         };
-        createLogServer(null, null, null, 'res:' + JSON.stringify(res, getCircularReplacer()));
+        createLogServer(null, null, process.env.MAIN_APP_ID, 'res:' + JSON.stringify(res, getCircularReplacer()), null);
       }
       else{
         if (process.env.SERVICE_LOG_ENABLE_SERVER_INFO==1)
-          createLogServer(null, req, res);
+          createLogServer(req, res, process.env.MAIN_APP_ID, null, null);
       }        
       next();
 	});
@@ -359,7 +359,7 @@ app.get('/',function (req, res, next) {
 });
 //start HTTP and HTTPS
 app.listen(process.env.SERVER_PORT, () => {
-  createLogServer(null, null, null, "HTTP Server up and running on PORT: " + process.env.SERVER_PORT);
+  createLogServer(null, null, process.env.MAIN_APP_ID, "HTTP Server up and running on PORT: " + process.env.SERVER_PORT, null);
 });
 //SSL files for HTTPS
 let options;
@@ -372,7 +372,7 @@ fs.readFile(process.env.SERVER_HTTPS_KEY, 'utf8', (error, fileBuffer) => {
       cert: env_cert
     };
     https.createServer(options, app).listen(process.env.SERVER_HTTPS_PORT, () => {
-      createLogServer(null, null, null, "HTTPS Server up and running on PORT: " + process.env.SERVER_HTTPS_PORT);
+      createLogServer(null, null, process.env.MAIN_APP_ID, "HTTPS Server up and running on PORT: " + process.env.SERVER_HTTPS_PORT, null);
     });    
   });  
 });
