@@ -1,5 +1,5 @@
 const { createLog} = require ("../../service/db/api/app_log/app_log.service");
-const { createLogAppSE} = require("../../service/log/log.service");
+const { createLogAppSE} = require("../../service/log/log.controller");
 const { getIp} = require ("../../service/geolocation/geolocation.controller");
 function app_log(app_id, app_module_type, request, result, app_user_id,
                  user_language, user_timezone,user_number_system,user_platform,

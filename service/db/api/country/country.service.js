@@ -1,5 +1,5 @@
 const {oracledb, get_pool} = require ("../../config/database");
-const { createLogAppSE } = require("../../../../service/log/log.service");
+const { createLogAppSE } = require("../../../../service/log/log.controller");
 module.exports = {
         getCountries: (app_id, lang_code, callBack) => {
                 if (process.env.SERVICE_DB_USE == 1) {

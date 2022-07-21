@@ -2,8 +2,8 @@ const { sign } = require("jsonwebtoken");
 const { verify } = require("jsonwebtoken");
 const { createLog} = require ("../../service/db/api/app_log/app_log.service");
 const { getParameter, getParameters_server } = require ("../db/api/app_parameter/app_parameter.service");
-const { createLogAppSE, createLogAppCI } = require("../../service/log/log.service");
-const { json } = require("express");
+const { createLogAppSE, createLogAppCI } = require("../../service/log/log.controller");
+const {block_ip_control, safe_user_agents, policy_directives} = require ("./auth.service");
 function app_log(app_id, app_module_type, request, result, app_user_id,
                  user_language, user_timezone,user_number_system,user_platform,
                  server_remote_addr, server_user_agent, server_http_host,server_http_accept_language,
@@ -34,71 +34,11 @@ module.exports = {
     access_control: (req, res, callBack) => {
         if (process.env.SERVICE_AUTH_ACCESS_CONTROL_ENABLE==1){
             let ip_v4 = req.ip.replace('::ffff:','');
-            const fs = require("fs");
-            async function block_ip_control(callBack){
-                if (process.env.SERVICE_AUTH_ACCESS_CONTROL_IP){
-                    let ranges;
-                    fs.readFile(process.env.SERVICE_AUTH_ACCESS_CONTROL_IP_PATH, 'utf8', (error, fileBuffer) => {
-                        if (error)
-                            ranges = null;
-                        else{
-                            ranges = fileBuffer.toString();
-                            function IPtoNum(ip){
-                                return Number(
-                                    ip.split(".")
-                                    .map(d => ("000"+d).substr(-3) )
-                                    .join("")
-                                );
-                            }
-                            //check if IP is blocked
-                            if ((ip_v4.match(/\./g)||[]).length==3){
-                                for (const element of JSON.parse(ranges)) {
-                                    if (IPtoNum(element[0]) <= IPtoNum(ip_v4) &&
-                                        IPtoNum(element[1]) >= IPtoNum(ip_v4)) {
-                                            createLogAppCI(req, res, null, __appfilename, __appfunction, __appline, `ip ${ip_v4} blocked, range: ${IPtoNum(element[0])}-${IPtoNum(element[1])}, tried URL: ${req.originalUrl}`);
-                                            //403 Forbidden
-                                            return callBack(403,null);
-                                    }
-                                }
-                            }
-                        }
-                        return callBack(null, null);
-                    });
-                }
-                else
-                    return callBack(null, null);
-            }
-            async function safe_user_agents(user_agent, callBack){
-                /*format file
-                    {"user_agent": [
-                                    {"Name": "ID", 
-                                     "user_agent": "[user agent]"},
-                                     {"Name": "OtherSafe", 
-                                     "user_agent": "Some known user agent description with missing accept_language"}
-                                   ]
-                    }
-                */
-                if (process.env.SERVICE_AUTH_ACCESS_CONTROL_USER_AGENT){
-                    let json;
-                    fs.readFile(process.env.SERVICE_AUTH_ACCESS_CONTROL_USER_AGENT_PATH, 'utf8', (error, fileBuffer) => {
-                        if (error)
-                            return callBack(error, null);
-                        else{
-                            json = JSON.parse(fileBuffer.toString());
-                            for (var i = 0; i < json.user_agent.length; i++){
-                                if (json.user_agent[i].user_agent == user_agent)
-                                    return callBack(null, true);
-                            }
-                            return callBack(null, false);
-                        }
-                    })
-                }
-                else
-                    return callBack(null, false);
-            }
-            block_ip_control((err, result) =>{
-                if (err)
+            block_ip_control(ip_v4, (err, result_range) =>{
+                if (err){
+                    createLogAppCI(req, res, null, __appfilename, __appfunction, __appline, `ip ${ip_v4} blocked, range: ${result_range}, tried URL: ${req.originalUrl}`);
                     return callBack(err,null);
+                }
                 else{
                     if (process.env.SERVICE_AUTH_ACCESS_CONTROL_HOST_EXIST==1){
                         //check if host exists
@@ -293,7 +233,7 @@ module.exports = {
         getParameters_server(process.env.MAIN_APP_ID, (err, result)=>{
             if (err) {
                 createLogAppSE(req.body.app_id, __appfilename, __appfunction, __appline, err);
-                return  callBack(err);
+                callBack(err);
             }
             else{
                 let json = JSON.parse(JSON.stringify(result));
@@ -327,84 +267,13 @@ module.exports = {
                         req.headers["accept-language"],
                         req.body.client_latitude,
                         req.body.client_longitude);                                    
-                return  callBack(null,jsontoken_at);
+                callBack(null,jsontoken_at);
             }
         })
     },
     policy_directives:(callBack)=>{
-        /* format json with directives:
-          {"directives":
-                [
-                    { "type": "script",
-                    "domain": "'self', 'unsafe-inline', 'unsafe-eval', domain1, domain2"
-                    },
-                    { "type": "style",
-                    "domain": "'self', 'unsafe-inline', domain1, domain2"
-                    },
-                    { "type": "font",
-                    "domain": "self, domain1, domain2"
-                    },
-                    { "type": "frame",
-                    "domain": "'self', data:, domain1, domain2"
-                    }
-                ]
-            }
-        */
-        const fs = require("fs");
-        if (process.env.SERVICE_AUTH_POLICY_DIRECTIVES){
-            let json;
-            let script_src = '';
-            let style_src = '';
-            let font_src = '';
-            let frame_src = '';
-            fs.readFile(process.env.SERVICE_AUTH_POLICY_DIRECTIVES, 'utf8', (error, fileBuffer) => {
-                if (error){
-                    createLogAppSE(process.env.MAIN_APP_ID, __appfilename, __appfunction, __appline, error);
-                    return callBack(error, null);
-                }
-                else{
-                    json = JSON.parse(fileBuffer.toString());
-                    for (var i = 0; i < json.directives.length; i++){
-                        json.directives[i].domain = json.directives[i].domain.replace(' ','');
-                        let arr = json.directives[i].domain.split(",");
-                        for (let i=0;i<=arr.length-1;i++){
-                            arr[i] = arr[i].replace(' ','');
-                        }
-                        switch (json.directives[i].type){
-                            case 'script':{
-                                script_src = arr;
-                                break;
-                            }
-                            case 'style':{
-                                style_src = arr;
-                                break;
-                            }
-                            case 'font':{
-                                font_src = arr;
-                                break;
-                            }
-                            case 'frame':{
-                                frame_src = arr;
-                                break;
-                            }
-                        }
-                    }
-                    return callBack(null, {
-                                            "default-src": ["'self'"], 
-                                            "script-src": script_src,
-                                            "script-src-attr": ["'self'", "'unsafe-inline'"],
-                                            "style-src": style_src,
-                                            "font-src": font_src,
-                                            "img-src": ["*", 'data:', 'blob:'],
-                                            connectSrc: ["*"],
-                                            childSrc: ["'self'", 'blob:'],
-                                            "object-src": ["'self'", 'data:'],
-                                            frameSrc: frame_src
-                                          } );
-                }
-            })
-        }
-        else
-            return callBack(null, null);
+        policy_directives((err, result)=>{
+            callBack(null, result);
+        })
     }
 }

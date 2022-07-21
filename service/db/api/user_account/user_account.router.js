@@ -18,7 +18,7 @@ const {
 } = require("./user_account.controller");
 const { checkAccessToken, checkDataToken } = require("../../../auth/auth.controller");
 const { checkAdmin} = require ("../../../auth/admin/admin.controller");
-const { createLogAppRI } = require("../../../log/log.service");
+const { createLogAppRI } = require("../../../log/log.controller");
 router.use((req,res,next)=>{
     createLogAppRI(req, res, req.query.id, __appfilename, __appfunction, __appline, req.body);
     next();

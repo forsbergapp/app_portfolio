@@ -5,7 +5,8 @@ var pool_db2_app = [];
 const mysql = require("mysql");
 var oracledb = require('oracledb');
 
-const { createLogDB, createLogAppSI, createLogAppSE } = require("../../log/log.service");
+const { createLogAppSI, createLogAppSE } = require("../../log/log.controller");
+const { createLogDB } = require("../../log/log.service");
 
 function get_pool_admin(){
 	let pool;
