@@ -1,5 +1,5 @@
 const {oracledb, get_pool, get_pool_admin} = require ("../../config/database");
-const { createLogAppSE } = require("../../../../service/log/log.service");
+const { createLogAppSE } = require("../../../../service/log/log.controller");
 function password_length_wrong(password){
     //constraint should be in db but password is encrypted when in db trigger
     //and saved with constant 60 characters length

@@ -1,6 +1,6 @@
 const router = require("express").Router();
 const { getParameters, getParameters_admin, getParameter, setParameter, setParameterValue, getAppStartParameters } = require ("./app_parameter.controller");
-const { createLogAppRI } = require("../../../log/log.service");
+const { createLogAppRI } = require("../../../log/log.controller");
 const { checkAdmin} = require ("../../../auth/admin/admin.controller");
 const { checkDataToken } = require("../../../auth/auth.controller");
 router.use((req,res,next)=>{

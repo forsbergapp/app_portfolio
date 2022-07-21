@@ -1,5 +1,5 @@
 const {oracledb, get_pool} = require ("../../config/database");
-const { createLogAppSE } = require("../../../../service/log/log.service");
+const { createLogAppSE } = require("../../../../service/log/log.controller");
 module.exports = {
 	
 	getPlace: (app_id, callBack) => {

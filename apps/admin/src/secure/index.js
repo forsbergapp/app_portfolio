@@ -1,5 +1,5 @@
 const fs = require("fs");
-const { createLogAppSE } = require("../../../../service/log/log.service");
+const { createLogAppSE } = require("../../../../service/log/log.controller");
 module.exports = {
     getAdmin:(callBack) => {    
         const {promises: {readFile}} = require("fs");
