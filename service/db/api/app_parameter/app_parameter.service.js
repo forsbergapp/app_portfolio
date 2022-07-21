@@ -1,5 +1,5 @@
 const {oracledb, get_pool, get_pool_admin} = require ("../../config/database");
-const { createLogAppSE } = require("../../../../service/log/log.service");
+const { createLogAppSE } = require("../../../../service/log/log.controller");
 module.exports = {
 	//returns parameters for app_id=0 and given app_id
 	//and only public and private shared

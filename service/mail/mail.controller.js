@@ -2,7 +2,7 @@ const { sendEmailService } = require("./mail.service");
 const { getIp} = require ("../../service/geolocation/geolocation.controller");
 const { createLog} = require ("../../service/db/api/app_log/app_log.service");
 const { getParameters_server} = require ("../db/api/app_parameter/app_parameter.service");
-const { createLogAppSE } = require("../../service/log/log.service");
+const { createLogAppSE } = require("../../service/log/log.controller");
 function app_log(app_id, app_module_type, request, result, app_user_id,
                  user_language, user_timezone,user_number_system,user_platform,
                  server_remote_addr, server_user_agent, server_http_host,server_http_accept_language,

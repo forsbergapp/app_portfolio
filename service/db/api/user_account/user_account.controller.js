@@ -24,14 +24,14 @@ const {
 
 const { genSaltSync, hashSync, compareSync } = require("bcryptjs");
 const { getMessage } = require("../message_translation/message_translation.service");
-const { insertProfileSearch } = require("../profile_search/profile_search.controller");
+const { insertProfileSearch } = require("../profile_search/profile_search.service");
 const { createUserAccountApp } = require("../user_account_app/user_account_app.service");
 const { getLastUserEvent, insertUserEvent } = require("../user_account_event/user_account_event.service");
-const { insertUserAccountLogon } = require("../user_account_logon/user_account_logon.controller");
-const { insertUserAccountView } = require("../user_account_view/user_account_view.controller");
+const { insertUserAccountLogon } = require("../user_account_logon/user_account_logon.service");
+const { insertUserAccountView } = require("../user_account_view/user_account_view.service");
 const { getParameter } = require ("../app_parameter/app_parameter.service");
 const { sendEmail } = require("../../../../service/mail/mail.controller");
-const { createLogAppCI } = require("../../../../service/log/log.service");
+const { createLogAppCI } = require("../../../../service/log/log.controller");
 const { accessToken } = require("../../../../service/auth/auth.controller");
 
 module.exports = {
