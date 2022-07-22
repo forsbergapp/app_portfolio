@@ -913,15 +913,16 @@ GRANT SELECT, INSERT ON app_portfolio.profile_search_hist TO role_app1;
 	
 CREATE TABLE app_portfolio.user_account (
     id                    INT NOT NULL AUTO_INCREMENT,
+    username              VARCHAR(100),
     bio                   VARCHAR(150),
     private               DECIMAL(1,0),
     user_level            DECIMAL(1,0),
     date_created          DATETIME,
     date_modified         DATETIME,
-    username              VARCHAR(100),
     password              VARCHAR(100),
     password_reminder     VARCHAR(100),
     email                 VARCHAR(100),
+    email_unverified      VARCHAR(100),
     avatar                LONGBLOB,
     verification_code     VARCHAR(6),
     active                DECIMAL(1,0),
@@ -1064,15 +1065,16 @@ CREATE TABLE app_portfolio.user_account_hist (
     dml                   VARCHAR(1),
     dml_date              DATETIME,
     user_account_id       INTEGER,
+    username              VARCHAR(100),
     bio                   VARCHAR(150),
     private               DECIMAL(1,0),
     user_level            DECIMAL(1,0),
     date_created          DATETIME,
     date_modified         DATETIME,
-    username              VARCHAR(100),
     password              VARCHAR(100),
     password_reminder     VARCHAR(100),
     email                 VARCHAR(100),
+    email_unverified      VARCHAR(100),
     avatar                LONGBLOB,
     verification_code     VARCHAR(6),
     active                DECIMAL(1,0),
@@ -2192,15 +2194,16 @@ INSERT INTO user_account_hist
 	(dml,
 	dml_date,
 	user_account_id,
+    username,
 	bio,
 	private,
 	user_level,
 	date_created,
 	date_modified,
-	username,
 	password,
 	password_reminder,
 	email,
+    email_unverified,
 	avatar,
 	verification_code,
 	active,
@@ -2218,15 +2221,16 @@ INSERT INTO user_account_hist
 	('D',
 	SYSDATE(),
 	old.id,
+    old.username,
 	old.bio,
 	old.private,
 	old.user_level,
 	old.date_created,
 	old.date_modified,
-	old.username,
 	old.password,
 	old.password_reminder,
 	old.email,
+    old.email_unverified,
 	null,
 	old.verification_code,
 	old.active,
@@ -2251,6 +2255,7 @@ CREATE TRIGGER app_portfolio.user_account_before_insert
         SET new.password = null;
 		SET new.password_reminder = null;
 		SET new.email = null;
+        SET new.email_unverified = null;
 		SET new.avatar = null;
 		SET new.verification_code = null;
 		IF new.provider1_id IS NOT NULL THEN
@@ -2290,6 +2295,9 @@ CREATE TRIGGER app_portfolio.user_account_before_insert
 	ELSEIF NOT REGEXP_LIKE(new.email, '^[A-Za-z]+[A-Za-z0-9.]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$') THEN
 		signal SQLSTATE '45000'
 		SET message_text = 'not valid email', MYSQL_ERRNO = 20105;
+	ELSEIF NOT REGEXP_LIKE(new.email_unverified, '^[A-Za-z]+[A-Za-z0-9.]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$') THEN
+		signal SQLSTATE '45000'
+		SET message_text = 'not valid email', MYSQL_ERRNO = 20105;
 	ELSEIF new.provider1_id IS NULL AND new.provider2_id IS NULL AND
 		   (new.username IS NULL OR new.password IS NULL OR new.email IS NULL) THEN 
            signal SQLSTATE '45000'
@@ -2302,15 +2310,16 @@ CREATE TRIGGER app_portfolio.user_account_before_insert
 	(dml,
 	dml_date,
 	user_account_id,
+    username,
 	bio,
 	private,
 	user_level,
 	date_created,
 	date_modified,
-	username,
 	password,
 	password_reminder,
 	email,
+    email_unverified,
 	avatar,
 	verification_code,
 	active,
@@ -2328,15 +2337,16 @@ CREATE TRIGGER app_portfolio.user_account_before_insert
 	('I',
 	SYSDATE(),
 	new.id,
+    new.username,
 	new.bio,
 	new.private,
 	new.user_level,
 	new.date_created,
 	new.date_modified,
-	new.username,
 	new.password,
 	new.password_reminder,
 	new.email,
+    new.email_unverified,
 	null,
 	new.verification_code,
 	new.active,
@@ -2361,6 +2371,7 @@ CREATE TRIGGER app_portfolio.user_account_before_update
         SET new.password = null;
 		SET new.password_reminder = null;
 		SET new.email = null;
+        SET new.email_unverified = null;
 		SET new.avatar = null;
 		SET new.verification_code = null;
 		IF new.provider1_id IS NOT NULL THEN
@@ -2400,6 +2411,9 @@ CREATE TRIGGER app_portfolio.user_account_before_update
 	ELSEIF NOT REGEXP_LIKE(new.email, '^[A-Za-z]+[A-Za-z0-9.]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$') THEN
 		signal SQLSTATE '45000'
 		SET message_text = 'not valid email', MYSQL_ERRNO = 20105;
+	ELSEIF NOT REGEXP_LIKE(new.email_unverified, '^[A-Za-z]+[A-Za-z0-9.]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$') THEN
+		signal SQLSTATE '45000'
+		SET message_text = 'not valid email', MYSQL_ERRNO = 20105;
 	ELSEIF new.provider1_id IS NULL AND new.provider2_id IS NULL AND
 		   (new.username IS NULL OR new.password IS NULL OR new.email IS NULL) THEN 
            signal SQLSTATE '45000'
@@ -2412,15 +2426,16 @@ CREATE TRIGGER app_portfolio.user_account_before_update
 		(dml,
 		dml_date,
 		user_account_id,
+        username,
 		bio,
 		private,
 		user_level,
 		date_created,
 		date_modified,
-		username,
 		password,
 		password_reminder,
 		email,
+        email_unverified,
 		avatar,
 		verification_code,
 		active,
@@ -2438,15 +2453,16 @@ CREATE TRIGGER app_portfolio.user_account_before_update
 		('U',
 		SYSDATE(),
 		old.id,
+        old.username,
 		old.bio,
 		old.private,
 		old.user_level,
 		old.date_created,
 		old.date_modified,
-		old.username,
 		old.password,
 		old.password_reminder,
 		old.email,
+        old.email_unverified,
 		null,
 		old.verification_code,
 		old.active,

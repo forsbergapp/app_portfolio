@@ -29,6 +29,7 @@ INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name
 INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (0,'DIALOGUE','USERNAME');
 INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (0,'DIALOGUE','BIO');
 INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (0,'DIALOGUE','EMAIL');
+INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (0,'DIALOGUE','NEW_EMAIL');
 INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (0,'DIALOGUE','PASSWORD_CONFIRM');
 INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (0,'DIALOGUE','PASSWORD_REMINDER');
 INSERT INTO app_portfolio.app_object_item (app_id, object_name, object_item_name) VALUES (0,'DIALOGUE','NEW_PASSWORD_CONFIRM');

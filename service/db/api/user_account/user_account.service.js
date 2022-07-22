@@ -275,16 +275,30 @@ module.exports = {
             execute_sql();
         }
     },
-    activateUser: (app_id, id, verification_code, auth, callBack) => {
+    activateUser: (app_id, id, verification_type, verification_code, auth, callBack) => {
         if (process.env.SERVICE_DB_USE == 1) {
             get_pool(app_id).query(
                 `UPDATE ${process.env.SERVICE_DB_DB1_NAME}.user_account
 					SET	active = 1,
 				  	    verification_code = ?,
+						email = CASE 
+								WHEN  ? = 4 THEN 
+									email_unverified
+								ELSE 
+									email
+								END,
+						email_unverified = CASE 
+										   WHEN  ? = 4 THEN 
+												null
+										   ELSE 
+											    email_unverified
+										   END,
 						date_modified = SYSDATE()
 				  WHERE id = ?
 					AND verification_code = ?`, 
 				[auth,
+				 verification_type,
+				 verification_type,
 				 id,
                  verification_code
                 ],
@@ -309,11 +323,24 @@ module.exports = {
                         `UPDATE ${process.env.SERVICE_DB_DB2_NAME}.user_account
 						    SET	active = 1,
 								verification_code = :auth,
+								email = CASE 
+										WHEN  :verification_type = 4 THEN 
+											email_unverified
+										ELSE 
+											email
+										END,
+								email_unverified = CASE 
+												   WHEN  :verification_type = 4 THEN 
+														null
+												   ELSE 
+														email_unverified
+												   END,
 								date_modified = SYSDATE
 						  WHERE id = :id
 						    AND verification_code = :verification_code `, 
 						{
 							auth: auth,
+							verification_type: verification_type,
                             id: id,
                             verification_code: verification_code
                         },
@@ -430,6 +457,7 @@ module.exports = {
 					u.password,
 					u.password_reminder,
 					u.email,
+					u.email_unverified,
 					CONVERT(u.avatar USING UTF8) avatar,
 					u.verification_code,
 					u.active,
@@ -477,6 +505,7 @@ module.exports = {
 							u.password "password",
 							u.password_reminder "password_reminder",
 							u.email "email",
+							u.email_unverified "email_unverified",
 							u.avatar "avatar",
 							u.verification_code "verification_code",
 							u.active "active",
@@ -1346,9 +1375,12 @@ module.exports = {
 					password = ?,
 					password_reminder = ?,
 					email = ?,
+					email_unverified = ?,
 					avatar = ?,
+					verification_code = ?,
 					date_modified = SYSDATE()
-				WHERE id = ? `, [
+				WHERE id = ? `, 
+				[
                     data.bio,
                     data.private,
                     data.user_level,
@@ -1356,7 +1388,9 @@ module.exports = {
                     data.password,
                     data.password_reminder,
                     data.email,
+					data.new_email,
                     data.avatar,
+					data.verification_code,
                     search_id
                 ],
                 (error, results, fields) => {
@@ -1381,9 +1415,12 @@ module.exports = {
 							password = :password,
 							password_reminder = :password_reminder,
 							email = :email,
+							email_unverified = :new_email,
 							avatar = :avatar,
+							verification_code = :verification_code,
 							date_modified = SYSDATE
-						WHERE id = :id `, {
+						WHERE id = :id `, 
+						{
                             bio: data.bio,
                             private: data.private,
                             user_level: data.user_level,
@@ -1391,7 +1428,9 @@ module.exports = {
                             password: data.password,
                             password_reminder: data.password_reminder,
                             email: data.email,
+							new_email: data.new_email,
                             avatar: Buffer.from(data.avatar, 'utf8'),
+							verification_code: data.verification_code,
                             id: search_id
                         },
                         (err, result) => {
