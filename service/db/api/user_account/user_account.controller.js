@@ -138,25 +138,57 @@ module.exports = {
     },
     activateUser: (req, res) => {
         const verification_code_to_check = req.body.verification_code;
-        const id = req.params.id;
-        let auth_new_password;
-        if (req.body.verification_type==3)
+        let auth_new_password = null;
+        if (req.body.verification_type == 3){
+            //reset password
             auth_new_password = verification_code();
-        else
-            auth_new_password = null;
-        activateUser(req.query.app_id, id, verification_code_to_check, auth_new_password, (err, results) => {
+        }
+        activateUser(req.query.app_id, req.params.id, req.body.verification_type, verification_code_to_check, auth_new_password, (err, results) => {
             if (err) {
                 return res.status(500).send(
                     err
                 );
             }
             else
-                if (auth_new_password == null)
-                    return res.status(200).json({
-                        count: results.changedRows,
-                        success: 1,
-                        items: Array(results)
-                    });
+                if (auth_new_password == null){
+                    if (results.affectedRows==1 && req.body.verification_type==4){
+                        //new email verified
+                        const eventData = {
+                            app_id : req.query.app_id,
+                            user_account_id: req.params.id,
+                            event: 'EMAIL_VERIFIED_CHANGE_EMAIL',
+                            event_status: 'SUCCESSFUL',
+                            user_language: req.body.user_language,
+                            user_timezone: req.body.user_timezone,
+                            user_number_system: req.body.user_number_system,
+                            user_platform: req.body.user_platform,
+                            server_remote_addr : req.ip,
+                            server_user_agent : req.headers["user-agent"],
+                            server_http_host : req.headers["host"],
+                            server_http_accept_language : req.headers["accept-language"],
+                            client_latitude : req.body.client_latitude,
+                            client_longitude : req.body.client_longitude
+                        }
+                        insertUserEvent(eventData, (err, result_new_user_event)=>{
+                            if (err)
+                                return res.status(500).send(
+                                    err
+                                );
+                            else
+                                return res.status(200).json({
+                                    count: results.changedRows,
+                                    success: 1,
+                                    items: Array(results)
+                                });
+                        })
+                    }
+                    else
+                        return res.status(200).json({
+                            count: results.changedRows,
+                            success: 1,
+                            items: Array(results)
+                        });
+                }
                 else{
                     //return accessToken since PASSWORD_RESET is in progress
                     //email was verified and activated with data token, but now the password will be updated
@@ -483,8 +515,7 @@ module.exports = {
     updateUserLocal: (req, res) => {
         const body = req.body;
         const salt = genSaltSync(10);
-        const id = req.params.id;
-        checkPassword(req.query.app_id, id, (err, results) => {
+        checkPassword(req.query.app_id, req.params.id, (err, results) => {
             if (err) {
                 return res.status(500).send(
                     err
@@ -511,43 +542,126 @@ module.exports = {
                                 if (body.password)
                                     body.password = hashSync(body.password, salt);
                             }
-                            updateUserLocal(req.query.app_id, body, id, (err_update, results_update) => {
-                                if (err_update) {
-                                    var app_code = get_app_code(err_update.errorNum, 
-                                                                err_update.message, 
-                                                                err_update.code, 
-                                                                err_update.errno, 
-                                                                err_update.sqlMessage);
-                                    if (app_code != null)
-                                        getMessage(app_code, 
-                                                    process.env.MAIN_APP_ID, 
-                                                    req.query.lang_code, (err2,results2)  => {
-                                                        return res.status(500).send(
-                                                            results2.text
-                                                        );
-                                                    });
-                                    else
-                                        return res.status(500).send(
-                                            err_update
-                                        );
-                                }
-                                else{
-                                    if (!results_update) {
-                                        //"Failed to update user"
-                                        getMessage(20402, 
-                                                    process.env.MAIN_APP_ID, 
-                                                    req.query.lang_code, (err2,results2)  => {
-                                                        return res.status(500).send(
-                                                            results2.text
-                                                        );
-                                                    });
+                            function updateLocal(send_email){
+                                updateUserLocal(req.query.app_id, body, req.params.id, (err_update, results_update) => {
+                                    if (err_update) {
+                                        var app_code = get_app_code(err_update.errorNum, 
+                                                                    err_update.message, 
+                                                                    err_update.code, 
+                                                                    err_update.errno, 
+                                                                    err_update.sqlMessage);
+                                        if (app_code != null)
+                                            getMessage(app_code, 
+                                                        process.env.MAIN_APP_ID, 
+                                                        req.query.lang_code, (err2,results2)  => {
+                                                            return res.status(500).send(
+                                                                results2.text
+                                                            );
+                                                        });
+                                        else
+                                            return res.status(500).send(
+                                                err_update
+                                            );
                                     }
-                                    else
-                                        return res.status(200).json({
-                                            success: 1
+                                    else{
+                                        if (!results_update) {
+                                            //"Failed to update user"
+                                            getMessage(20402, 
+                                                        process.env.MAIN_APP_ID, 
+                                                        req.query.lang_code, (err2,results2)  => {
+                                                            return res.status(500).send(
+                                                                results2.text
+                                                            );
+                                                        });
+                                        }
+                                        else
+                                            if (send_email){
+                                                getParameter(process.env.MAIN_APP_ID,'SERVICE_MAIL_TYPE_PASSWORD_RESET', (err3, parameter_value)=>{
+                                                    const emailData = {
+                                                        lang_code : req.query.lang_code,
+                                                        app_id : process.env.MAIN_APP_ID,
+                                                        app_user_id : req.params.id,
+                                                        emailType : parameter_value,
+                                                        toEmail : req.body.new_email,
+                                                        verificationCode : body.verification_code,
+                                                        user_language: req.body.user_language,
+                                                        user_timezone: req.body.user_timezone,
+                                                        user_number_system: req.body.user_number_system,
+                                                        user_platform: req.body.user_platform,
+                                                        server_remote_addr : req.ip,
+                                                        server_user_agent : req.headers["user-agent"],
+                                                        server_http_host : req.headers["host"],
+                                                        server_http_accept_language : req.headers["accept-language"],
+                                                        client_latitude : req.body.client_latitude,
+                                                        client_longitude : req.body.client_longitude,
+                                                        protocol : req.protocol,
+                                                        host : req.get('host')
+                                                    }
+                                                    //send email PASSWORD_RESET
+                                                    sendEmail(emailData, (err4, result_sendemail) => {
+                                                        if (err4) {
+                                                            return res.status(500).send(
+                                                                err4
+                                                            );
+                                                        } 
+                                                        else
+                                                            return res.status(200).json({
+                                                                success: 1,
+                                                                sent_change_email: 1
+                                                            });
+                                                    })
+                                                })
+                                            }
+                                            else    
+                                                return res.status(200).json({
+                                                    success: 1,
+                                                    sent_change_email: 0
+                                                });
+                                    }
+                                });
+                            }
+                            if (typeof req.body.new_email != 'undefined' && req.body.new_email!='')
+                                getLastUserEvent(req.query.app_id, req.params.id, 'EMAIL_VERIFIED_CHANGE_EMAIL', (err, result_user_event)=>{
+                                    if (err)
+                                        return res.status(500).json({
+                                            err
                                         });
-                                }
-                            });
+                                    else
+                                        if ((result_user_event && result_user_event.event_days >= 1)||
+                                            typeof result_user_event == 'undefined'){
+                                            //no change email in progress or older than at least 1 day
+                                            const eventData = {
+                                                app_id : req.query.app_id,
+                                                user_account_id: req.params.id,
+                                                event: 'EMAIL_VERIFIED_CHANGE_EMAIL',
+                                                event_status: 'INPROGRESS',
+                                                user_language: req.body.user_language,
+                                                user_timezone: req.body.user_timezone,
+                                                user_number_system: req.body.user_number_system,
+                                                user_platform: req.body.user_platform,
+                                                server_remote_addr : req.ip,
+                                                server_user_agent : req.headers["user-agent"],
+                                                server_http_host : req.headers["host"],
+                                                server_http_accept_language : req.headers["accept-language"],
+                                                client_latitude : req.body.client_latitude,
+                                                client_longitude : req.body.client_longitude
+                                            }
+                                            insertUserEvent(eventData, (err, result_new_user_event)=>{
+                                                if (err)
+                                                    return res.status(500).json({
+                                                        err
+                                                    });
+                                                else{
+                                                    body.verification_code = verification_code();
+                                                    updateLocal(true);
+                                                }
+                                            })
+                                        }
+                                        else
+                                            updateLocal();
+                                })
+                            else
+                                updateLocal();
                         }
                     } else {
                         createLogAppCI(req, res, req.query.app_id, __appfilename, __appfunction, __appline, 'invalid password attempt for user id:' + id);

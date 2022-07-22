@@ -85,8 +85,10 @@
 	}
 
 }
-
 /* Dialogue message*/
+#dialogue_message{
+	z-index: 60;
+}
 #confirm_question{
 	cursor:default;
 	display:inline-block;
@@ -107,6 +109,7 @@
 /* Dialogue Verifcation code*/
 #dialogue_user_verify{
 	visibility: hidden;
+	z-index: 51;
 }
 #dialogue_user_verify_content{
 	height:280px;
@@ -117,6 +120,7 @@
 }
 #user_verify_email{
     margin-top: 20px;
+	height: 30px;
 }
 #user_verification_type{
 	display: none;
