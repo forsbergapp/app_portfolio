@@ -53,7 +53,10 @@ function common_translate_ui(lang_code){
                         case 'EMAIL':{
                             document.getElementById('signup_email').placeholder = json.data[i].text;
                             document.getElementById('forgot_email').placeholder = json.data[i].text;
-                            document.getElementById('user_edit_input_email').placeholder = json.data[i].text;
+                            break;
+                        }
+                        case 'NEW_EMAIL':{
+                            document.getElementById('user_edit_input_new_email').placeholder = json.data[i].text;
                             break;
                         }
                         case 'BIO':{
@@ -325,6 +328,15 @@ function check_input(text, text_length=100){
         return true;
     }
 }
+function get_uservariables(){
+    return `"user_language": "${navigator.language}",
+            "user_timezone": "${Intl.DateTimeFormat().resolvedOptions().timeZone}",
+            "user_number_system": "${Intl.NumberFormat().resolvedOptions().numberingSystem}",
+            "user_platform": "${navigator.platform}",
+            "client_latitude": "${window.global_client_latitude}",
+            "client_longitude": "${window.global_client_longitude}"`;
+}
+
 /*----------------------- */
 /* MESSAGE & DIALOGUE     */
 /*----------------------- */
@@ -358,6 +370,10 @@ function show_common_dialogue(dialogue, user_verification_type, title=null, icon
                     }
                     case 'FORGOT':{
                         document.getElementById('user_verification_type').innerHTML = 3;
+                        break;
+                    }
+                    case 'NEW_EMAIL':{
+                        document.getElementById('user_verification_type').innerHTML = 4;
                         break;
                     }
                 }
@@ -529,7 +545,8 @@ function dialogue_user_edit_clear(){
     document.getElementById('user_edit_input_username').value = '';
     document.getElementById('user_edit_input_bio').value = '';
     //local
-    document.getElementById('user_edit_input_email').value = '';
+    document.getElementById('user_edit_input_email').innerHTML = '';
+    document.getElementById('user_edit_input_new_email').value = '';
     document.getElementById('user_edit_input_password').value = '';
     document.getElementById('user_edit_input_password_confirm').value = '';
     document.getElementById('user_edit_input_new_password').value = '';
@@ -594,7 +611,7 @@ function dialogue_user_edit_remove_error(){
     document.getElementById('user_edit_input_username').classList.remove('input_error');
 
     document.getElementById('user_edit_input_bio').classList.remove('input_error');
-    document.getElementById('user_edit_input_email').classList.remove('input_error');
+    document.getElementById('user_edit_input_new_email').classList.remove('input_error');
 
     document.getElementById('user_edit_input_password').classList.remove('input_error');
     document.getElementById('user_edit_input_password_confirm').classList.remove('input_error');
@@ -1621,12 +1638,7 @@ async function user_login(username, password, callBack) {
                     "app_id": ${window.global_app_id},
                     "username":"${username}",
                     "password":"${password}",
-                    "user_language": "${navigator.language}",
-                    "user_timezone": "${Intl.DateTimeFormat().resolvedOptions().timeZone}",
-                    "user_number_system": "${Intl.NumberFormat().resolvedOptions().numberingSystem}",
-                    "user_platform": "${navigator.platform}",
-                    "client_latitude":"${window.global_client_latitude}",
-                    "client_longitude":"${window.global_client_longitude}"
+                    ${get_uservariables()}
                  }`;
 
     //get user with username and password from REST API
@@ -1735,7 +1747,8 @@ async function user_edit(timezone, callBack) {
                         //display fetched avatar editable
                         document.getElementById('user_edit_avatar').style.display = 'block';
                         set_avatar(json.avatar, document.getElementById('user_edit_avatar_img')); 
-                        document.getElementById('user_edit_input_email').value = json.email;
+                        document.getElementById('user_edit_input_email').innerHTML = json.email;
+                        document.getElementById('user_edit_input_new_email').value = json.email_unverified;
                         document.getElementById('user_edit_input_password').value = '',
                             document.getElementById('user_edit_input_password_confirm').value = '',
                             document.getElementById('user_edit_input_new_password').value = '';
@@ -1794,6 +1807,8 @@ async function user_update(callBack) {
     let username = document.getElementById('user_edit_input_username').value;
     let bio = document.getElementById('user_edit_input_bio').value;
     let avatar = window.btoa(document.getElementById('user_edit_avatar_img').src);
+    let new_email = document.getElementById('user_edit_input_new_email').value;
+
     let url;
     let json_data;
 
@@ -1801,14 +1816,14 @@ async function user_update(callBack) {
         return callBack('ERROR', null);
         
     if (document.getElementById('user_edit_local').style.display == 'block') {
-        let email = document.getElementById('user_edit_input_email').value;
+        let email = document.getElementById('user_edit_input_email').innerHTML;    
         let password = document.getElementById('user_edit_input_password').value;
         let password_confirm = document.getElementById('user_edit_input_password_confirm').value;
         let new_password = document.getElementById('user_edit_input_new_password').value;
         let new_password_confirm = document.getElementById('user_edit_input_new_password_confirm').value;
         let password_reminder = document.getElementById('user_edit_input_password_reminder').value;
         if (check_input(username) == false ||
-            check_input(email) == false ||
+            check_input(new_email) == false ||
             check_input(password) == false ||
             check_input(password_confirm) == false ||
             check_input(new_password) == false ||
@@ -1846,15 +1861,17 @@ async function user_update(callBack) {
             return callBack('ERROR', null);
         }
         json_data = `{ 
-            "username":"${username}",
-            "bio":"${bio}",
-            "private": ${boolean_to_number(document.getElementById('user_edit_checkbox_profile_private').checked)},
-            "password":"${password}",
-            "new_password":"${new_password}",
-            "password_reminder":"${password_reminder}",
-            "email":"${email}",
-            "avatar":"${avatar}"
-        }`;
+                        "username":"${username}",
+                        "bio":"${bio}",
+                        "private": ${boolean_to_number(document.getElementById('user_edit_checkbox_profile_private').checked)},
+                        "password":"${password}",
+                        "new_password":"${new_password}",
+                        "password_reminder":"${password_reminder}",
+                        "email":"${email}",
+                        "new_email":"${new_email}",
+                        "avatar":"${avatar}",
+                        ${get_uservariables()}
+                    }`;
         url = window.global_rest_url_base + window.global_rest_user_account + window.global_user_account_id;
     } else {
         json_data = `{"username":"${username}",
@@ -1885,7 +1902,12 @@ async function user_update(callBack) {
             document.getElementById('user_edit_btn_user_update').innerHTML = old_button;
             if (status == 200) {
                 json = JSON.parse(result);
-                dialogue_user_edit_clear();
+                if (json.sent_change_email == 1){
+                    let function_cancel_event = function() { document.getElementById('dialogue_user_verify').style.visibility='hidden';};
+                    show_common_dialogue('VERIFY', 'NEW_EMAIL', new_email, window.global_button_default_icon_cancel, function_cancel_event);
+                }
+                else
+                    dialogue_user_edit_clear();
                 return callBack(null, {username: username, 
                                        avatar: avatar,
                                        bio: bio});
@@ -1915,18 +1937,13 @@ function user_signup() {
         return null;
 
     let json_data = `{
-                    "username":"${username}",
-                    "password":"${password}",
-                    "password_reminder":"${password_reminder}",
-                    "email":"${email}",
-                    "active":0 ,
-                    "user_language": "${navigator.language}",
-                    "user_timezone": "${Intl.DateTimeFormat().resolvedOptions().timeZone}",
-                    "user_number_system": "${Intl.NumberFormat().resolvedOptions().numberingSystem}",
-                    "user_platform": "${navigator.platform}",
-                    "client_latitude": "${window.global_client_latitude}",
-                    "client_longitude": "${window.global_client_longitude}"
-                    }`;
+                        "username":"${username}",
+                        "password":"${password}",
+                        "password_reminder":"${password_reminder}",
+                        "email":"${email}",
+                        "active":0 ,
+                        ${get_uservariables()}
+                     }`;
     let status;
     if (username == '') {
         //"Please enter username"
@@ -2009,7 +2026,9 @@ async function user_verify_check_input(item, nextField, callBack) {
 
             //activate user
             json_data = `{"verification_code":${verification_code},
-                          "verification_type": ${verification_type}}`;
+                          "verification_type": ${verification_type},
+                          ${get_uservariables()}
+                         }`;
             fetch(window.global_rest_url_base + window.global_rest_user_account_activate + window.global_user_account_id +
                     '?app_id=' + window.global_app_id + 
                     '&lang_code=' + window.global_lang_code, {
@@ -2050,6 +2069,10 @@ async function user_verify_check_input(item, nextField, callBack) {
                                     show_common_dialogue('NEW_PASSWORD', null, json.auth);
                                     break;
                                 }
+                                case 4:{
+                                    //NEW EMAIL
+                                    break;
+                                }
                             }
                             
                             document.getElementById('dialogue_login').style.visibility = "hidden";
@@ -2057,6 +2080,7 @@ async function user_verify_check_input(item, nextField, callBack) {
                             dialogue_signup_clear();
                             dialogue_forgot_clear();
                             dialogue_verify_clear();
+                            dialogue_user_edit_clear();
                             return callBack(null, {"actived": 1, 
                                                    "verification_type" : verification_type});
 
@@ -2285,14 +2309,9 @@ function user_account_app_delete(choice=null, user_account_id, app_id, function_
 async function user_forgot(){
     let email = document.getElementById('forgot_email').value;
     let json_data = `{
-                    "email": "${email}",
-                    "user_language": "${navigator.language}",
-                    "user_timezone": "${Intl.DateTimeFormat().resolvedOptions().timeZone}",
-                    "user_number_system": "${Intl.NumberFormat().resolvedOptions().numberingSystem}",
-                    "user_platform": "${navigator.platform}",
-                    "client_latitude": "${window.global_client_latitude}",
-                    "client_longitude": "${window.global_client_longitude}"
-                    }`;
+                        "email": "${email}",
+                        ${get_uservariables()}
+                     }`;
     if (check_input(email) == false || email =='')
         return;
     else{
@@ -2320,7 +2339,7 @@ async function user_forgot(){
                     window.global_user_account_id = json.id;
                     let function_cancel_event = function() { document.getElementById('dialogue_user_verify').style.visibility='hidden';};
                     show_common_dialogue('VERIFY', 'FORGOT', email, window.global_button_default_icon_cancel, function_cancel_event);
-                }            
+                }
             } else {
                 exception(status, result);
             }
@@ -2332,15 +2351,10 @@ function updatePassword(){
     let new_password_confirm = document.getElementById('user_new_password_confirm').value;
     let user_new_password_auth = document.getElementById('user_new_password_auth').innerHTML;
     let json_data = `{
-                    "new_password" : "${new_password}",
-                    "auth" : "${user_new_password_auth}",
-                    "user_language": "${navigator.language}",
-                    "user_timezone": "${Intl.DateTimeFormat().resolvedOptions().timeZone}",
-                    "user_number_system": "${Intl.NumberFormat().resolvedOptions().numberingSystem}",
-                    "user_platform": "${navigator.platform}",
-                    "client_latitude": "${window.global_client_latitude}",
-                    "client_longitude": "${window.global_client_longitude}"
-                    }`;
+                        "new_password" : "${new_password}",
+                        "auth" : "${user_new_password_auth}",
+                        ${get_uservariables()}
+                     }`;
     if (check_input(new_password) == false ||
         check_input(new_password_confirm) == false)
         return;
@@ -2479,12 +2493,7 @@ async function updateProviderUser(provider_no, profile_id, profile_first_name, p
             "${'provider' + provider_no + '_image'}":"${window.btoa(profile_image)}",
             "${'provider' + provider_no + '_image_url'}":"${profile_image_url}",
             "${'provider' + provider_no + '_email'}":"${profile_email}",
-            "user_language": "${navigator.language}",
-            "user_timezone": "${Intl.DateTimeFormat().resolvedOptions().timeZone}",
-            "user_number_system": "${Intl.NumberFormat().resolvedOptions().numberingSystem}",
-            "user_platform": "${navigator.platform}",
-            "client_latitude": "${window.global_client_latitude}",
-            "client_longitude": "${window.global_client_longitude}"
+            ${get_uservariables()}
             }`;
         fetch(window.global_rest_url_base + window.global_rest_user_account_provider + profile_id +
                 '?lang_code=' + window.global_lang_code, {
@@ -2888,6 +2897,7 @@ function init_common(parameters){
         document.getElementById('user_edit_input_username_icon').innerHTML = window.global_button_default_icon_user;
         document.getElementById('user_edit_input_bio_icon').innerHTML = window.global_button_default_icon_profile;
         document.getElementById('user_edit_input_email_icon').innerHTML = window.global_button_default_icon_mail;
+        document.getElementById('user_edit_input_new_email_icon').innerHTML = window.global_button_default_icon_mail;
         document.getElementById('user_edit_input_password_icon').innerHTML = window.global_button_default_icon_password;
         document.getElementById('user_edit_input_password_confirm_icon').innerHTML = window.global_button_default_icon_password;
         document.getElementById('user_edit_input_new_password_icon').innerHTML = window.global_button_default_icon_password;
