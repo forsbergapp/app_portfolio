@@ -70,7 +70,7 @@ module.exports = {
 						user_number_system : data.user_number_system, 
 						user_platform : data.user_platform,
 						client_latitude : data.client_latitude, 
-						client_logntitude : data.client_longitude,
+						client_longitude : data.client_longitude,
 						server_remote_addr : data.server_remote_addr,
 						server_user_agent : data.server_user_agent,
 						server_http_host : data.server_http_host, 
