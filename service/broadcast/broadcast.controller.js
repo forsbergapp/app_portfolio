@@ -1,33 +1,6 @@
 global.broadcast_clients = [];
 const { createLog} = require ("../../service/db/api/app_log/app_log.service");
 const { getListConnected, sendBroadcast, updateConnected, checkConnected} = require ("./broadcast.service");
-
-function app_log(app_id, app_module_type, request, result, app_user_id,
-				 user_language, user_timezone,user_number_system,user_platform,
-				 server_remote_addr, server_user_agent, server_http_host,server_http_accept_language,
-				 client_latitude,client_longitude){
-    const logData ={
-        app_id : app_id,
-        app_module : 'BROADCAST',
-        app_module_type : app_module_type,
-        app_module_request : request,
-        app_module_result : result,
-        app_user_id : app_user_id,
-        user_language : user_language,
-        user_timezone : user_timezone,
-        user_number_system : user_number_system,
-        user_platform : user_platform,
-        server_remote_addr : server_remote_addr,
-        server_user_agent : server_user_agent,
-        server_http_host : server_http_host,
-        server_http_accept_language : server_http_accept_language,
-        client_latitude : client_latitude,
-        client_longitude : client_longitude
-    }
-    createLog(logData, (err,results)  => {
-        null;
-    }); 
-}
 module.exports = {
 	connectBroadcast: (req, res) => {
         const headers = {
@@ -73,21 +46,25 @@ module.exports = {
                 response: res
             };
             broadcast_clients.push(newClient);
-            app_log(req.query.app_id,
-                    'CONNECT',
-                    req.originalUrl,
-                    JSON.stringify(geodata),
-                    req.query.user_account_id,
-                    null,
-                    null,
-                    null,
-                    null,
-                    req.ip,
-                    req.headers["user-agent"],
-                    req.headers["host"],
-                    req.headers["accept-language"],
-                    geodata.geoplugin_latitude,
-                    geodata.geoplugin_longitude);
+            createLog({ app_id : req.query.app_id,
+                        app_module : 'BROADCAST',
+                        app_module_type : 'CONNECT',
+                        app_module_request : req.originalUrl,
+                        app_module_result : JSON.stringify(geodata),
+                        app_user_id : req.query.user_account_id,
+                        user_language : null,
+                        user_timezone : null,
+                        user_number_system : null,
+                        user_platform : null,
+                        server_remote_addr : req.ip,
+                        server_user_agent : req.headers["user-agent"],
+                        server_http_host : req.headers["host"],
+                        server_http_accept_language : req.headers["accept-language"],
+                        client_latitude : geodata.geoplugin_latitude,
+                        client_longitude : geodata.geoplugin_longitude
+                        }, (err,results)  => {
+                            null;
+            });
             res.on('close', ()=>{
                 broadcast_clients = broadcast_clients.filter(client => client.id !== req.params.clientId);
                 clearInterval(intervalId);

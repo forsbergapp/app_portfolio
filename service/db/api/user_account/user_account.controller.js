@@ -37,14 +37,13 @@ const { accessToken } = require("../../../../service/auth/auth.controller");
 module.exports = {
     
     userSignup: (req, res) => {
-        let body = req.body;
         const salt = genSaltSync(10);
-        if (typeof body.provider1_id == 'undefined' &&
-            typeof body.provider2_id == 'undefined') {
+        if (typeof req.body.provider1_id == 'undefined' &&
+            typeof req.body.provider2_id == 'undefined') {
             //generate verification code for local users only
-            body.verification_code = verification_code();
+            req.body.verification_code = verification_code();
         }
-        if (password_length_wrong(body.password))
+        if (password_length_wrong(req.body.password))
             getMessage(20106, 
                        process.env.MAIN_APP_ID, 
                        req.query.lang_code, (err2,results2)  => {
@@ -53,9 +52,9 @@ module.exports = {
                             );
                        });
         else{
-            if (body.password)
-                body.password = hashSync(body.password, salt);
-            create(req.query.app_id, body, (err, results) => {
+            if (req.body.password)
+                req.body.password = hashSync(req.body.password, salt);
+            create(req.query.app_id, req.body, (err, results) => {
                 if (err) {
                     var app_code = get_app_code(err.errorNum, 
                                                 err.message, 
@@ -89,22 +88,10 @@ module.exports = {
                                 app_user_id : results.insertId,
                                 emailType : parameter_value,
                                 toEmail : req.body.email,
-                                verificationCode : body.verification_code,
-                                user_language: body.user_language,
-                                user_timezone: body.user_timezone,
-                                user_number_system: body.user_number_system,
-                                user_platform: body.user_platform,
-                                server_remote_addr : req.ip,
-                                server_user_agent : req.headers["user-agent"],
-                                server_http_host : req.headers["host"],
-                                server_http_accept_language : req.headers["accept-language"],
-                                client_latitude : req.body.client_latitude,
-                                client_longitude : req.body.client_longitude,
-                                protocol : req.protocol,
-                                host : req.get('host')
+                                verificationCode : req.body.verification_code
                             }
                             //send email SIGNUP
-                            sendEmail(emailData, (err4, result4) => {
+                            sendEmail(req, emailData, (err4, result4) => {
                                 if (err4) {
                                     //return res from userSignup
                                     return res.status(500).send(
@@ -269,22 +256,10 @@ module.exports = {
                                                             app_user_id : results.id,
                                                             emailType : parameter_value,
                                                             toEmail : email,
-                                                            verificationCode : new_code,
-                                                            user_language: req.body.user_language,
-                                                            user_timezone: req.body.user_timezone,
-                                                            user_number_system: req.body.user_number_system,
-                                                            user_platform: req.body.user_platform,
-                                                            server_remote_addr : req.ip,
-                                                            server_user_agent : req.headers["user-agent"],
-                                                            server_http_host : req.headers["host"],
-                                                            server_http_accept_language : req.headers["accept-language"],
-                                                            client_latitude : req.body.client_latitude,
-                                                            client_longitude : req.body.client_longitude,
-                                                            protocol : req.protocol,
-                                                            host : req.get('host')
+                                                            verificationCode : new_code
                                                         }
                                                         //send email PASSWORD_RESET
-                                                        sendEmail(emailData, (err4, result_sendemail) => {
+                                                        sendEmail(req, emailData, (err4, result_sendemail) => {
                                                             if (err4) {
                                                                 return res.status(500).send(
                                                                     err4
@@ -319,8 +294,7 @@ module.exports = {
         
     },
     getUserByUserId: (req, res) => {
-        const id = req.params.id;
-        getUserByUserId(req.query.app_id, id, (err, results) => {
+        getUserByUserId(req.query.app_id, req.params.id, (err, results) => {
             if (err) {
                 return res.status(500).send(
                     err
@@ -350,7 +324,6 @@ module.exports = {
             req.params.id = null;
         if (typeof req.params.username == 'undefined')
             req.params.username = null;
-        const id = req.params.id;
         const username = req.params.username;
         var id_current_user;
 
@@ -362,13 +335,13 @@ module.exports = {
         else
             id_current_user = parseInt(id_current_user);
         req.body.user_account_id = id_current_user;
-        req.body.user_account_id_view = id;
+        req.body.user_account_id_view = req.params.id;
         req.body.client_ip = req.ip;
         req.body.client_user_agent = req.headers["user-agent"];
         req.body.client_longitude = req.body.client_longitude;
         req.body.client_latitude = req.body.client_latitude;
 
-        getProfileUser(req.query.app_id, id, username, id_current_user, (err, results) => {
+        getProfileUser(req.query.app_id, req.params.id, username, id_current_user, (err, results) => {
             if (err) {
                 return res.status(500).send(
                     err
@@ -447,12 +420,11 @@ module.exports = {
         });
     },
     getProfileDetail: (req, res) => {
-        const id = req.params.id;
         var detailchoice;
         if (typeof req.query.detailchoice !== 'undefined')
             detailchoice = req.query.detailchoice;
 
-        getProfileDetail(req.query.app_id, id, detailchoice, (err, results) => {
+        getProfileDetail(req.query.app_id, req.params.id, detailchoice, (err, results) => {
             if (err) {
                 return res.status(500).send(
                     err
@@ -513,7 +485,6 @@ module.exports = {
         });
     },
     updateUserLocal: (req, res) => {
-        const body = req.body;
         const salt = genSaltSync(10);
         checkPassword(req.query.app_id, req.params.id, (err, results) => {
             if (err) {
@@ -523,11 +494,11 @@ module.exports = {
             }
             else {
                 if (results) {
-                    const result = compareSync(body.password, results.password);
+                    const result = compareSync(req.body.password, results.password);
                     if (result) {
-                        if (typeof body.new_password !== 'undefined' && 
-                            body.new_password != '' &&
-                            password_length_wrong(body.new_password))
+                        if (typeof req.body.new_password !== 'undefined' && 
+                            req.body.new_password != '' &&
+                            password_length_wrong(req.body.new_password))
                                 getMessage(20106, 
                                         process.env.MAIN_APP_ID, 
                                         req.query.lang_code, (err2,results2)  => {
@@ -536,14 +507,14 @@ module.exports = {
                                                 );
                                         });
                         else{
-                            if (typeof body.new_password !== 'undefined' && body.new_password != '') {
-                                body.password = hashSync(body.new_password, salt);
+                            if (typeof req.body.new_password !== 'undefined' && req.body.new_password != '') {
+                                req.body.password = hashSync(req.body.new_password, salt);
                             } else {
-                                if (body.password)
-                                    body.password = hashSync(body.password, salt);
+                                if (req.body.password)
+                                    req.body.password = hashSync(req.body.password, salt);
                             }
                             function updateLocal(send_email){
-                                updateUserLocal(req.query.app_id, body, req.params.id, (err_update, results_update) => {
+                                updateUserLocal(req.query.app_id, req.body, req.params.id, (err_update, results_update) => {
                                     if (err_update) {
                                         var app_code = get_app_code(err_update.errorNum, 
                                                                     err_update.message, 
@@ -576,29 +547,17 @@ module.exports = {
                                         }
                                         else
                                             if (send_email){
-                                                getParameter(process.env.MAIN_APP_ID,'SERVICE_MAIL_TYPE_PASSWORD_RESET', (err3, parameter_value)=>{
+                                                getParameter(process.env.MAIN_APP_ID,'SERVICE_MAIL_TYPE_CHANGE_EMAIL', (err3, parameter_value)=>{
                                                     const emailData = {
                                                         lang_code : req.query.lang_code,
                                                         app_id : process.env.MAIN_APP_ID,
                                                         app_user_id : req.params.id,
                                                         emailType : parameter_value,
                                                         toEmail : req.body.new_email,
-                                                        verificationCode : body.verification_code,
-                                                        user_language: req.body.user_language,
-                                                        user_timezone: req.body.user_timezone,
-                                                        user_number_system: req.body.user_number_system,
-                                                        user_platform: req.body.user_platform,
-                                                        server_remote_addr : req.ip,
-                                                        server_user_agent : req.headers["user-agent"],
-                                                        server_http_host : req.headers["host"],
-                                                        server_http_accept_language : req.headers["accept-language"],
-                                                        client_latitude : req.body.client_latitude,
-                                                        client_longitude : req.body.client_longitude,
-                                                        protocol : req.protocol,
-                                                        host : req.get('host')
+                                                        verificationCode : req.body.verification_code
                                                     }
-                                                    //send email PASSWORD_RESET
-                                                    sendEmail(emailData, (err4, result_sendemail) => {
+                                                    //send email SERVICE_MAIL_TYPE_CHANGE_EMAIL
+                                                    sendEmail(req, emailData, (err4, result_sendemail) => {
                                                         if (err4) {
                                                             return res.status(500).send(
                                                                 err4
@@ -652,7 +611,7 @@ module.exports = {
                                                         err
                                                     });
                                                 else{
-                                                    body.verification_code = verification_code();
+                                                    req.body.verification_code = verification_code();
                                                     updateLocal(true);
                                                 }
                                             })
@@ -664,7 +623,8 @@ module.exports = {
                                 updateLocal();
                         }
                     } else {
-                        createLogAppCI(req, res, req.query.app_id, __appfilename, __appfunction, __appline, 'invalid password attempt for user id:' + id);
+                        createLogAppCI(req, res, req.query.app_id, __appfilename, __appfunction, __appline, 
+                                       'invalid password attempt for user id:' + req.params.id);
                         //invalid password
                         getMessage(20403, 
                                     process.env.MAIN_APP_ID, 
@@ -765,8 +725,7 @@ module.exports = {
         }
     },
     updateUserCommon: (req, res) => {
-        const id = req.params.id;
-        updateUserCommon(req.query.app_id, req.body, id, (err, results) => {
+        updateUserCommon(req.query.app_id, req.body, req.params.id, (err, results) => {
             if (err) {
                 return res.status(500).send(
                     err
@@ -791,8 +750,7 @@ module.exports = {
         });
     },
     deleteUser: (req, res) => {
-        const id = req.params.id;
-        getUserByUserId(req.query.app_id, id, (err, results) => {
+        getUserByUserId(req.query.app_id, req.params.id, (err, results) => {
             if (err) {
                 return res.status(500).send(
                     err
@@ -801,7 +759,7 @@ module.exports = {
             else {
                 if (results) {
                     if (results.provider1_id !=null || results.provider2_id !=null){
-                        deleteUser(req.query.app_id, id, (err, results) => {
+                        deleteUser(req.query.app_id, req.params.id, (err, results) => {
                             if (err) {
                                 return res.status(500).send(
                                     err
@@ -828,7 +786,7 @@ module.exports = {
                     }
                     else{
                         const salt = genSaltSync(10);
-                        checkPassword(req.query.app_id, id, (err, results) => {
+                        checkPassword(req.query.app_id, req.params.id, (err, results) => {
                             if (err) {
                                 return res.status(500).send(
                                     err
@@ -837,7 +795,7 @@ module.exports = {
                             else {
                                 if (results) {
                                     if (compareSync(req.body.password, results.password)){
-                                        deleteUser(req.query.app_id, id, (err, results) => {
+                                        deleteUser(req.query.app_id, req.params.id, (err, results) => {
                                             if (err) {
                                                 return res.status(500).send(
                                                     err
@@ -863,7 +821,8 @@ module.exports = {
                                         });
                                     }
                                     else{
-                                        createLogAppCI(req, res, req.query.app_id, __appfilename, __appfunction, __appline, 'invalid password attempt for user id:' + id);
+                                        createLogAppCI(req, res, req.query.app_id, __appfilename, __appfunction, __appline, 
+                                                       'invalid password attempt for user id:' + req.params.id);
                                         //invalid password
                                         getMessage(20403, 
                                                     process.env.MAIN_APP_ID, 
@@ -903,9 +862,8 @@ module.exports = {
 
     },
     userLogin: (req, res) => {
-        const body = req.body;
         var result_pw;
-        userLogin(body, (err, results) => {
+        userLogin(req.body, (err, results) => {
             if (err) {
                 return res.status(500).send(
                     err
@@ -921,7 +879,7 @@ module.exports = {
 
                 if (results) {
                     req.body.user_account_id = results.id;
-                    const result = compareSync(body.password, results.password);
+                    const result = compareSync(req.body.password, results.password);
                     if (result) {
                         result_pw = 1;
                         req.body.result = 1;
@@ -960,22 +918,10 @@ module.exports = {
                                             app_user_id : results.id,
                                             emailType : parameter_value,
                                             toEmail : results.email,
-                                            verificationCode : new_code,
-                                            user_language: req.body.user_language,
-                                            user_timezone: req.body.user_timezone,
-                                            user_number_system: req.body.user_number_system,
-                                            user_platform: req.body.user_platform,
-                                            server_remote_addr : req.ip,
-                                            server_user_agent : req.headers["user-agent"],
-                                            server_http_host : req.headers["host"],
-                                            server_http_accept_language : req.headers["accept-language"],
-                                            client_latitude : req.body.client_latitude,
-                                            client_longitude : req.body.client_longitude,
-                                            protocol : req.protocol,
-                                            host : req.get('host')
+                                            verificationCode : new_code
                                         }
                                         //send email UNVERIFIED
-                                        sendEmail(emailData, (err_email, result_email) => {
+                                        sendEmail(req, emailData, (err_email, result_email) => {
                                             if (err_email) {
                                                 return res.status(500).send(
                                                     err_email
@@ -1008,7 +954,8 @@ module.exports = {
                         }           
                     } else {
                         //Username or password not found
-                        createLogAppCI(req, res, req.body.app_id, __appfilename, __appfunction, __appline, 'invalid password attempt for user id:' + req.body.user_account_id + ', username:' + req.body.username);
+                        createLogAppCI(req, res, req.body.app_id, __appfilename, __appfunction, __appline, 
+                                       'invalid password attempt for user id:' + req.body.user_account_id + ', username:' + req.body.username);
                         getMessage(20300, 
                                    process.env.MAIN_APP_ID, 
                                    req.query.lang_code, (err2,results2)  => {
@@ -1019,7 +966,8 @@ module.exports = {
                     }
                 } else{
                     //User not found
-                    createLogAppCI(req, res, req.body.app_id, __appfilename, __appfunction, __appline, 'user not found:' + req.body.username);
+                    createLogAppCI(req, res, req.body.app_id, __appfilename, __appfunction, __appline, 
+                                   'user not found:' + req.body.username);
                     getMessage(20305, 
                                 process.env.MAIN_APP_ID, 
                                 req.query.lang_code, (err2,results2)  => {

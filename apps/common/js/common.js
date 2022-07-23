@@ -1868,7 +1868,7 @@ async function user_update(callBack) {
                         "new_password":"${new_password}",
                         "password_reminder":"${password_reminder}",
                         "email":"${email}",
-                        "new_email":"${new_email}",
+                        "new_email":${new_email==''?null:'"' + new_email + '"'},
                         "avatar":"${avatar}",
                         ${get_uservariables()}
                     }`;
