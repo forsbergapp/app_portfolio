@@ -1309,7 +1309,8 @@ module.exports = {
         if (process.env.SERVICE_DB_USE == 1) {
             get_pool(app_id).query(
                 `UPDATE ${process.env.SERVICE_DB_DB1_NAME}.user_account
-				    SET password = ?
+				    SET password = ?,
+					    verification_code = null
 				  WHERE id = ? 
 				    AND verification_code = ?
 				    AND verification_code IS NOT NULL`, 
@@ -1331,7 +1332,8 @@ module.exports = {
                     pool2 = await oracledb.getConnection(get_pool(app_id));
                     const result = await pool2.execute(
                         `UPDATE ${process.env.SERVICE_DB_DB2_NAME}.user_account
-							SET password = :new_password
+							SET password = :new_password,
+							    verification_code = null
 						  WHERE id = :id  
 						    AND verification_code = :auth
 						    AND verification_code IS NOT NULL`, 
@@ -2010,7 +2012,7 @@ module.exports = {
                 try {
                     pool2 = await oracledb.getConnection(get_pool(app_id));
                     const result = await pool2.execute(
-                        `SELECT id "id,
+                        `SELECT id "id",
 								email "email"
 						   FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account
 						  WHERE email = :email `, 
