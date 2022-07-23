@@ -579,7 +579,9 @@ module.exports = {
                                     }
                                 });
                             }
-                            if (typeof req.body.new_email != 'undefined' && req.body.new_email!='')
+                            if (typeof req.body.new_email != 'undefined' && 
+                                req.body.new_email!='' &&
+                                req.body.new_email!= null)
                                 getLastUserEvent(req.query.app_id, req.params.id, 'EMAIL_VERIFIED_CHANGE_EMAIL', (err, result_user_event)=>{
                                     if (err)
                                         return res.status(500).json({
