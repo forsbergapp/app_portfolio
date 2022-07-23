@@ -136,7 +136,7 @@ module.exports = {
                         createLog({ app_id : data.app_id,
                                     app_module : 'MAIL',
                                     app_module_type : 'SEND',
-                                    app_module_request : `mailhost: ${emailData.email_host}, type: ${data.emailType}, from: ${emailData.from}, to: ${data.toEmail}, subject: ${emailData.subject}`,
+                                    app_module_request : `mailhost: ${emailData.email_host}, type: ${data.emailType}, from: ${emailData.from} (${emailData.email_auth_user}), to: ${data.toEmail}, subject: ${emailData.subject}`,
                                     app_module_result : `${(err)?JSON.stringify(err):JSON.stringify(result)}`,
                                     app_user_id : data.app_user_id,
                                     user_language : req.body.user_language,

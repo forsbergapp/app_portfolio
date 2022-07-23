@@ -968,5 +968,4 @@ INSERT INTO message_translation (language_id, message_code, text) VALUES (25,'20
 INSERT INTO message_translation (language_id, message_code, text) VALUES (25,'20402','فشل تحديث المستخدم');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (25,'20403','رمز مرور خاطئ');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (25,'20500','خط العرض أو خط الطول مفقود');
-INSERT INTO message_translation (language_id, message_code, text) VALUES (25,'20501','اشتراك');
-INSERT INTO message_translation (language_id, message_code, text) VALUES (25,'20502','رمز التحقق');
+INSERT INTO message_translation (language_id, message_code, text) VALUES (25,'20501','رمز التحقق');

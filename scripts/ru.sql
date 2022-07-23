@@ -1066,5 +1066,4 @@ INSERT INTO message_translation (language_id, message_code, text) VALUES (453,'2
 INSERT INTO message_translation (language_id, message_code, text) VALUES (453,'20402','Не удалось обновить пользователя');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (453,'20403','Неверный пароль');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (453,'20500','Отсутствующая широта или долгота');
-INSERT INTO message_translation (language_id, message_code, text) VALUES (453,'20501','Зарегистрируйтесь');
-INSERT INTO message_translation (language_id, message_code, text) VALUES (453,'20502','Проверочный код');
+INSERT INTO message_translation (language_id, message_code, text) VALUES (453,'20501','Проверочный код');
