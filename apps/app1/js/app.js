@@ -694,20 +694,15 @@ async function settings_translate(first=true) {
                             }
                         }
                         if (json.data[i].object=='APP_OBJECT_ITEM_SUBITEM'){
-                            if (json.data[i].object_name=='TOOLBAR')
-                                //user_menu_dropdown items
-                                document.getElementById(json.data[i].subitem_name.toLowerCase()).innerHTML = json.data[i].text;
-                            else{
-                                //update select objects
-                                let select_element = json.data[i].object_item_name;
-                                //option number not saved in column but end with the option number
-                                let select_option = json.data[i].subitem_name.substr(json.data[i].subitem_name.lastIndexOf('_')+1);
-                                try{
-                                    document.getElementById(select_element.toLowerCase()).options[select_option].text = json.data[i].text;
-                                }
-                                catch(err){
-                                    console.log(json.data[i].object_item_name.toLowerCase());
-                                }
+                            //update select objects
+                            let select_element = json.data[i].object_item_name;
+                            //option number not saved in column but end with the option number
+                            let select_option = json.data[i].subitem_name.substr(json.data[i].subitem_name.lastIndexOf('_')+1);
+                            try{
+                                document.getElementById(select_element.toLowerCase()).options[select_option].text = json.data[i].text;
+                            }
+                            catch(err){
+                                console.log(json.data[i].object_item_name.toLowerCase());
                             }
                         }
                     }
