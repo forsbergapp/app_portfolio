@@ -181,62 +181,25 @@ async function get_module_with_init(app_id,
     })
 }
 async function get_email_verification(data, email, baseUrl, lang_code, callBack){
-    let email_subject_code;
-    switch (parseInt(data.emailType)){
-        case 1:{
-            //Signup text
-            email_subject_code = 20501;
-            break;
-        }
-        case 2:{
-            //Unverified text
-            email_subject_code = 20501;
-            break;
-        }
-        case 3:{
-            //Reset password text
-            email_subject_code = 20501;
-            break;
-        }
-        case 4:{
-            //Change email text
-            email_subject_code = 20501;
-            break;
-        }
-    }
     const { getMessage } = require("../service/db/api/message_translation/message_translation.service");
     const { createLogAppSE } = require("../service/log/log.controller");
-    getMessage(email_subject_code,
+    //Verification code text
+    getMessage(20501,
         process.env.MAIN_APP_ID, 
-        lang_code, (err,results)  => {
+        lang_code, (err,email_subject)  => {
         if (err){
             createLogAppSE(data.app_id, __appfilename, __appfunction, __appline, err);
             callBack(err, null);
         }
         else{
-            let email_subject = results.text;
-            //Verification code text
-            getMessage(20502, 
-                    process.env.MAIN_APP_ID, 
-                    lang_code, (err,results)  => {
-                    if (err){
-                        createLogAppSE(data.app_id, __appfilename, __appfunction, __appline, err);
-                        callBack(err, null);
-                    }
-                    else{
-                        let verification_title = results.text;
-                        email = email.replace('<Logo/>', 
-                                            `<img id='app_logo' src='${data.protocol}://${data.host}${baseUrl}/logo?id=${data.app_id}&uid=${data.app_user_id}&et=${data.emailType}'>`);
-                        email = email.replace('<Verification_code_title/>', 
-                                            `${verification_title}`);
-                        email = email.replace('<Verification_code/>', 
-                                            `${data.verificationCode}`);
-                        email = email.replace('<Footer/>', 
-                                            `<a target='_blank' href='${data.protocol}://${data.host}'>${data.protocol}://${data.host}</a>`);
-                        callBack(null, {"subject": email_subject,
-                                        "email": email});
-                    }
-            })
+            email = email.replace('<Logo/>', 
+                                `<img id='app_logo' src='${data.protocol}://${data.host}${baseUrl}/logo?id=${data.app_id}&uid=${data.app_user_id}&et=${data.emailType}'>`);
+            email = email.replace('<Verification_code/>', 
+                                `${data.verificationCode}`);
+            email = email.replace('<Footer/>', 
+                                `<a target='_blank' href='${data.protocol}://${data.host}'>${data.protocol}://${data.host}</a>`);
+            callBack(null, {"subject": email_subject.text,
+                            "email": email});
         }
     })
 }

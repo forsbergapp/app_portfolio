@@ -1637,7 +1637,6 @@ INSERT INTO app_portfolio.message (message_level_id, message_type_id, code) VALU
 INSERT INTO app_portfolio.message (message_level_id, message_type_id, code) VALUES (1,1,'20403');
 INSERT INTO app_portfolio.message (message_level_id, message_type_id, code) VALUES (1,1,'20500');
 INSERT INTO app_portfolio.message (message_level_id, message_type_id, code) VALUES (1,2,'20501');
-INSERT INTO app_portfolio.message (message_level_id, message_type_id, code) VALUES (1,2,'20502');
 --
 -- Dumping data for table app_message
 --
@@ -1673,7 +1672,6 @@ INSERT INTO app_portfolio.app_message (message_code, app_id) VALUES ('20402',0);
 INSERT INTO app_portfolio.app_message (message_code, app_id) VALUES ('20403',0);
 INSERT INTO app_portfolio.app_message (message_code, app_id) VALUES ('20500',0);
 INSERT INTO app_portfolio.app_message (message_code, app_id) VALUES ('20501',0);
-INSERT INTO app_portfolio.app_message (message_code, app_id) VALUES ('20502',0);
 --
 -- Dumping data for table parameter_type
 --
