@@ -3,32 +3,6 @@ const { getIp} = require ("../../service/geolocation/geolocation.controller");
 const { createLog} = require ("../../service/db/api/app_log/app_log.service");
 const { getParameters_server} = require ("../db/api/app_parameter/app_parameter.service");
 const { createLogAppSE } = require("../../service/log/log.controller");
-function app_log(app_id, app_module_type, request, result, app_user_id,
-                 user_language, user_timezone,user_number_system,user_platform,
-                 server_remote_addr, server_user_agent, server_http_host,server_http_accept_language,
-                 client_latitude,client_longitude){
-    const logData ={
-        app_id : app_id,
-        app_module : 'MAIL',
-        app_module_type : app_module_type,
-        app_module_request : request,
-        app_module_result : result,
-        app_user_id : app_user_id,
-        user_language : user_language,
-        user_timezone : user_timezone,
-        user_number_system : user_number_system,
-        user_platform : user_platform,
-        server_remote_addr : server_remote_addr,
-        server_user_agent : server_user_agent,
-        server_http_host : server_http_host,
-        server_http_accept_language : server_http_accept_language,
-        client_latitude : client_latitude,
-        client_longitude : client_longitude
-    }
-    createLog(logData, (err,results)  => {
-        null;
-    }); 
-}
 module.exports = {
     getLogo: (req, res) => {
         if (typeof req.query.id == 'undefined'){
@@ -54,28 +28,32 @@ module.exports = {
             else {
                 req.query.callback = 1;
                 getIp(req, res, (err, result)=>{
-                    app_log(req.body.app_id,
-                            'READ',
-                            req.protocol + '://' + req.get('host') + req.originalUrl,
-                            result.geoplugin_city + ', ' +
-                            result.geoplugin_regionName + ', ' +
-                            result.geoplugin_countryName,
-                            req.query.app_user_id,
-                            null,
-                            null,
-                            null,
-                            null,
-                            req.ip,
-                            req.headers["user-agent"],
-                            req.headers["host"],
-                            req.headers["accept-language"],
-                            result.geoplugin_latitude,
-                            result.geoplugin_longitude);
+                    createLog({ app_id : req.body.app_id,
+                                app_module : 'MAIL',
+                                app_module_type : 'READ',
+                                app_module_request : req.protocol + '://' + req.get('host') + req.originalUrl,
+                                app_module_result : result.geoplugin_city + ', ' +
+                                                    result.geoplugin_regionName + ', ' +
+                                                    result.geoplugin_countryName,
+                                app_user_id : req.query.app_user_id,
+                                user_language : null,
+                                user_timezone : null,
+                                user_number_system : null,
+                                user_platform : null,
+                                server_remote_addr : req.ip,
+                                server_user_agent : req.headers["user-agent"],
+                                server_http_host : req.headers["host"],
+                                server_http_accept_language : req.headers["accept-language"],
+                                client_latitude : result.geoplugin_latitude,
+                                client_longitude : result.geoplugin_longitude
+                                }, (err,results)  => {
+                                    null;
+                    });
                 })
             }
         });
     },
-    sendEmail: (data, callBack) => {
+    sendEmail: (req, data, callBack) => {
         let emailData;
         let db_SERVICE_MAIL_TYPE_CHANGE_EMAIL_FROM_NAME;
         let db_SERVICE_MAIL_TYPE_PASSWORD_RESET_FROM_NAME;
@@ -86,9 +64,15 @@ module.exports = {
         let db_SERVICE_MAIL_SECURE;
         let db_SERVICE_MAIL_USERNAME;
         let db_SERVICE_MAIL_PASSWORD;
-        const { getMail} = require(`../../apps/`);
+        
+        //set variables for image link in email
+        data.protocol = req.protocol;
+        data.host = req.get('host');
         // return /service/mail not the full OS path and with forward slash
         const baseUrl = __dirname.substring(process.cwd().length).replace(/\\/g, "/");
+
+        const { getMail} = require(`../../apps/`);
+        
         getParameters_server(data.app_id, (err, result)=>{
             if (err) {
                 createLogAppSE(data.app_id, __appfilename, __appfunction, __appline, err);
@@ -149,21 +133,25 @@ module.exports = {
                         html:               mail_result.html		
                         };
                     sendEmailService(emailData, (err, result) => {
-                        app_log(data.app_id,
-                                'SEND',
-                                data.toEmail,
-                                `${(err)?JSON.stringify(err):JSON.stringify(result)}`,
-                                data.app_user_id,
-                                data.user_language,
-                                data.user_timezone,
-                                data.user_number_system,
-                                data.user_platform,
-                                data.server_remote_addr,
-                                data.server_user_agent,
-                                data.server_http_host,
-                                data.server_http_accept_language,
-                                data.client_latitude,
-                                data.client_longitude);
+                        createLog({ app_id : data.app_id,
+                                    app_module : 'MAIL',
+                                    app_module_type : 'SEND',
+                                    app_module_request : `mailhost: ${emailData.email_host}, type: ${data.emailType}, from: ${emailData.from}, to: ${data.toEmail}, subject: ${emailData.subject}`,
+                                    app_module_result : `${(err)?JSON.stringify(err):JSON.stringify(result)}`,
+                                    app_user_id : data.app_user_id,
+                                    user_language : req.body.user_language,
+                                    user_timezone : req.body.user_timezone,
+                                    user_number_system : req.body.user_number_system,
+                                    user_platform : req.body.user_platform,
+                                    server_remote_addr : req.ip,
+                                    server_user_agent : req.headers["user-agent"],
+                                    server_http_host : req.headers["host"],
+                                    server_http_accept_language : req.headers["accept-language"],
+                                    client_latitude : req.body.client_latitude,
+                                    client_longitude : req.body.client_longitude
+                                    }, (err,results)  => {
+                                        null;
+                        });
                         if (err) {    
                             return callBack(err, result);
                         } else
