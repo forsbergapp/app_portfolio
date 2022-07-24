@@ -10,25 +10,28 @@ module.exports = {
             let ip_v4 = req.ip.replace('::ffff:','');
             block_ip_control(ip_v4, (err, result_range) =>{
                 if (err){
-                    createLogAppCI(req, res, null, __appfilename, __appfunction, __appline, `ip ${ip_v4} blocked, range: ${result_range}, tried URL: ${req.originalUrl}`);
-                    return callBack(err,null);
+                    createLogAppCI(req, res, null, __appfilename, __appfunction, __appline, `ip ${ip_v4} blocked, range: ${result_range}, tried URL: ${req.originalUrl}`, (err_log, result_log)=>{
+                        return callBack(err,null);
+                    })
                 }
                 else{
                     if (process.env.SERVICE_AUTH_ACCESS_CONTROL_HOST_EXIST==1){
                         //check if host exists
                         if (typeof req.headers.host=='undefined'){
-                            createLogAppCI(req, res, null, __appfilename, __appfunction, __appline, `ip ${ip_v4} blocked, no host, tried URL: ${req.originalUrl}`);
-                            //406 Not Acceptable
-                            return callBack(406,null);
+                            createLogAppCI(req, res, null, __appfilename, __appfunction, __appline, `ip ${ip_v4} blocked, no host, tried URL: ${req.originalUrl}`, (err_log, result_log)=>{
+                                //406 Not Acceptable
+                                return callBack(406,null);
+                            })
                         }
                     }
                     if (process.env.SERVICE_AUTH_ACCESS_CONTROL_ACCESS_FROM==1){
                         //check if accessed from domain and not os hostname
                         var os = require("os");
                         if (req.headers.host==os.hostname()){
-                            createLogAppCI(req, res, null, __appfilename, __appfunction, __appline, `ip ${ip_v4} blocked, accessed from hostname ${os.hostname()} not domain, tried URL: ${req.originalUrl}`);
-                            //406 Not Acceptable
-                            return callBack(406,null);
+                            createLogAppCI(req, res, null, __appfilename, __appfunction, __appline, `ip ${ip_v4} blocked, accessed from hostname ${os.hostname()} not domain, tried URL: ${req.originalUrl}`, (err_log, result_log)=>{
+                                //406 Not Acceptable
+                                return callBack(406,null);
+                            })
                         }
                     }
                     safe_user_agents(req.headers["user-agent"], (err, safe)=>{
@@ -41,17 +44,19 @@ module.exports = {
                                 if(process.env.SERVICE_AUTH_ACCESS_CONTROL_USER_AGENT_EXIST==1){
                                     //check if user-agent exists
                                     if (typeof req.headers["user-agent"]=='undefined'){
-                                        createLogAppCI(req, res, null, __appfilename, __appfunction, __appline, `ip ${ip_v4} blocked, no user-agent, tried URL: ${req.originalUrl}`);
-                                        //406 Not Acceptable
-                                        return callBack(406,null);
+                                        createLogAppCI(req, res, null, __appfilename, __appfunction, __appline, `ip ${ip_v4} blocked, no user-agent, tried URL: ${req.originalUrl}`, (err_log, result_log)=>{
+                                            //406 Not Acceptable
+                                            return callBack(406,null);
+                                        })
                                     }
                                 }
                                 if (process.env.SERVICE_AUTH_ACCESS_CONTROL_ACCEPT_LANGUAGE==1){
                                     //check if accept-language exists
                                     if (typeof req.headers["accept-language"]=='undefined'){
-                                        createLogAppCI(req, res, null, __appfilename, __appfunction, __appline, `ip ${ip_v4} blocked, no accept-language, tried URL: ${req.originalUrl}`);
-                                        //406 Not Acceptable
-                                        return callBack(406,null);
+                                        createLogAppCI(req, res, null, __appfilename, __appfunction, __appline, `ip ${ip_v4} blocked, no accept-language, tried URL: ${req.originalUrl}`, (err_log, result_log)=>{
+                                            //406 Not Acceptable
+                                            return callBack(406,null);
+                                        })
                                     }
                                 }
                                 return callBack(null,1);
@@ -69,7 +74,9 @@ module.exports = {
 		if (token){
             getParameter(process.env.MAIN_APP_ID,'SERVICE_AUTH_TOKEN_ACCESS_SECRET', (err, db_SERVICE_AUTH_TOKEN_ACCESS_SECRET)=>{
 				if (err) {
-                    createLogAppSE(req.query.app_id, __appfilename, __appfunction, __appline, err);
+                    createLogAppSE(req.query.app_id, __appfilename, __appfunction, __appline, err, (err_log, result_log)=>{
+                        null;
+                    })
                 }
                 else{
                     token = token.slice(7);
@@ -98,7 +105,9 @@ module.exports = {
 		if (token){
             getParameter(process.env.MAIN_APP_ID,'SERVICE_AUTH_TOKEN_DATA_SECRET', (err, db_SERVICE_AUTH_TOKEN_DATA_SECRET)=>{
 				if (err) {
-                    createLogAppSE(req.query.app_id, __appfilename, __appfunction, __appline, err);
+                    createLogAppSE(req.query.app_id, __appfilename, __appfunction, __appline, err, (err_log, result_log)=>{
+                        null;
+                    })
                 }
                 else{
                     token = token.slice(7);
@@ -126,7 +135,9 @@ module.exports = {
         if(req.headers.authorization){
             getParameters_server(process.env.MAIN_APP_ID, (err, result)=>{
                 if (err) {
-                    createLogAppSE(req.query.app_id, __appfilename, __appfunction, __appline, err);
+                    createLogAppSE(req.query.app_id, __appfilename, __appfunction, __appline, err, (err_log, result_log)=>{
+                        null;
+                    })
                 }
                 else{
                     let json = JSON.parse(JSON.stringify(result));
@@ -214,8 +225,9 @@ module.exports = {
     accessToken: (req, callBack) => {
         getParameters_server(process.env.MAIN_APP_ID, (err, result)=>{
             if (err) {
-                createLogAppSE(req.body.app_id, __appfilename, __appfunction, __appline, err);
-                callBack(err);
+                createLogAppSE(req.body.app_id, __appfilename, __appfunction, __appline, err, (err_log, result_log)=>{
+                    callBack(err);
+                })
             }
             else{
                 let json = JSON.parse(JSON.stringify(result));

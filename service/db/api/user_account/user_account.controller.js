@@ -626,15 +626,17 @@ module.exports = {
                         }
                     } else {
                         createLogAppCI(req, res, req.query.app_id, __appfilename, __appfunction, __appline, 
-                                       'invalid password attempt for user id:' + req.params.id);
-                        //invalid password
-                        getMessage(20403, 
-                                    process.env.MAIN_APP_ID, 
-                                    req.query.lang_code, (err2,results2)  => {
-                                        return res.status(500).send(
-                                            results2.text
-                                        );
-                                    });
+                                       'invalid password attempt for user id:' + req.params.id, (err_log, result_log)=>{
+                            //invalid password
+                            getMessage(20403, 
+                                process.env.MAIN_APP_ID, 
+                                req.query.lang_code, (err2,results2)  => {
+                                    return res.status(500).send(
+                                        results2.text
+                                    );
+                                });
+                        })
+                        
                     }
                 } else {
                     //user not found
@@ -824,15 +826,16 @@ module.exports = {
                                     }
                                     else{
                                         createLogAppCI(req, res, req.query.app_id, __appfilename, __appfunction, __appline, 
-                                                       'invalid password attempt for user id:' + req.params.id);
-                                        //invalid password
-                                        getMessage(20403, 
-                                                    process.env.MAIN_APP_ID, 
-                                                    req.query.lang_code, (err2,results2)  => {
-                                                        return res.status(500).send(
-                                                            results2.text
-                                                        );
-                                                    });
+                                                       'invalid password attempt for user id:' + req.params.id, (err_log, result_log)=>{
+                                            //invalid password
+                                            getMessage(20403, 
+                                                process.env.MAIN_APP_ID, 
+                                                req.query.lang_code, (err2,results2)  => {
+                                                    return res.status(500).send(
+                                                        results2.text
+                                                    );
+                                                });
+                                        })
                                     } 
                                 }
                                 else{
@@ -957,26 +960,28 @@ module.exports = {
                     } else {
                         //Username or password not found
                         createLogAppCI(req, res, req.body.app_id, __appfilename, __appfunction, __appline, 
-                                       'invalid password attempt for user id:' + req.body.user_account_id + ', username:' + req.body.username);
-                        getMessage(20300, 
-                                   process.env.MAIN_APP_ID, 
-                                   req.query.lang_code, (err2,results2)  => {
-                                        return res.status(500).send(
-                                            results2.text
-                                        );
-                                   });
+                                       'invalid password attempt for user id:' + req.body.user_account_id + ', username:' + req.body.username, (err_log, result_log)=>{
+                            getMessage(20300, 
+                                    process.env.MAIN_APP_ID, 
+                                    req.query.lang_code, (err2,results2)  => {
+                                            return res.status(500).send(
+                                                results2.text
+                                            );
+                                    });
+                        })
                     }
                 } else{
                     //User not found
                     createLogAppCI(req, res, req.body.app_id, __appfilename, __appfunction, __appline, 
-                                   'user not found:' + req.body.username);
-                    getMessage(20305, 
-                                process.env.MAIN_APP_ID, 
-                                req.query.lang_code, (err2,results2)  => {
-                                    return res.status(500).send(
-                                        results2.text
-                                    );
-                                });
+                                   'user not found:' + req.body.username, (err_log, result_log)=>{
+                        getMessage(20305, 
+                                    process.env.MAIN_APP_ID, 
+                                    req.query.lang_code, (err2,results2)  => {
+                                        return res.status(500).send(
+                                            results2.text
+                                        );
+                                    });
+                    })
                 }
             }
         });

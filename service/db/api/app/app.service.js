@@ -79,7 +79,8 @@ module.exports = {
 			parameters = {	lang_code: lang_code,
 							id: id};
 		}
-		execute_db_sql(id, id, sql, parameters, null, (err, result)=>{
+		execute_db_sql(id, id, sql, parameters, null, 
+			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);
 			else
@@ -109,7 +110,8 @@ module.exports = {
 					ORDER BY 1`;
 			parameters = {};
 		}
-		execute_db_sql(id, null, sql, parameters, true, (err, result)=>{
+		execute_db_sql(id, null, sql, parameters, true, 
+			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);
 			else
@@ -145,7 +147,8 @@ module.exports = {
 							enabled: body.enabled,
 							id: id};
 		}
-		execute_db_sql(id, null, sql, parameters, true, (err, result)=>{
+		execute_db_sql(id, null, sql, parameters, true, 
+			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);
 			else
