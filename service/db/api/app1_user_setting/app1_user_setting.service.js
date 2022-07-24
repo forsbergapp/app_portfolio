@@ -305,7 +305,8 @@ module.exports = {
 							initial_setting: initial
 						};
 		}
-		execute_db_sql(app_id, app_id, sql, parameters, null, (err, result)=>{
+		execute_db_sql(app_id, app_id, sql, parameters, null, 
+			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);
 			else
@@ -330,7 +331,8 @@ module.exports = {
 							parameters = {
 											lastRowid: lastRowid
 										};
-							execute_db_sql(app_id, app_id, sql, parameters, null, (err, result_id2)=>{
+							execute_db_sql(app_id, app_id, sql, parameters, null, 
+										   __appfilename, __appfunction, __appline, (err, result_id2)=>{
 								if (err)
 									return callBack(err, null);
 								else
@@ -466,7 +468,8 @@ module.exports = {
 							id: id
 						 };
 		}
-		execute_db_sql(app_id, app_id, sql, parameters, null, (err, result)=>{
+		execute_db_sql(app_id, app_id, sql, parameters, null, 
+			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);
 			else
@@ -604,7 +607,8 @@ module.exports = {
 							app_id: app_id
 						 };
 		}
-		execute_db_sql(app_id, app_id, sql, parameters, null, (err, result)=>{
+		execute_db_sql(app_id, app_id, sql, parameters, null, 
+			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);
 			else
@@ -652,7 +656,8 @@ module.exports = {
 							app_id: app_id
 						}; 
         }
-		execute_db_sql(app_id, app_id, sql, parameters, null, (err, result)=>{
+		execute_db_sql(app_id, app_id, sql, parameters, null, 
+			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);
 			else
@@ -707,7 +712,8 @@ module.exports = {
 							app_id: app_id
 						 };
 		}
-		execute_db_sql(app_id, app_id, sql, parameters, null, (err, result)=>{
+		execute_db_sql(app_id, app_id, sql, parameters, null, 
+			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);
 			else
@@ -828,7 +834,8 @@ module.exports = {
 							detailchoice_liked_setting: detailchoice
 						 };
         }
-		execute_db_sql(app_id, app_id, sql, parameters, null, (err, result)=>{
+		execute_db_sql(app_id, app_id, sql, parameters, null, 
+			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);
 			else
@@ -947,7 +954,8 @@ module.exports = {
 							statchoice_visited_setting: statchoice
 						 };
         }
-		execute_db_sql(app_id, app_id, sql, parameters, null, (err, result)=>{
+		execute_db_sql(app_id, app_id, sql, parameters, null, 
+			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);
 			else
@@ -1184,7 +1192,8 @@ module.exports = {
 							id: id
 						};
 		}
-		execute_db_sql(app_id, app_id, sql, parameters, null, (err, result)=>{
+		execute_db_sql(app_id, app_id, sql, parameters, null, 
+			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);
 			else
@@ -1205,7 +1214,8 @@ module.exports = {
 							id: id
 						 };
 		}
-		execute_db_sql(app_id, app_id, sql, parameters, null, (err, result)=>{
+		execute_db_sql(app_id, app_id, sql, parameters, null, 
+			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);
 			else

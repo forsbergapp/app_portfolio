@@ -199,9 +199,9 @@ app.use(function(req, res, next) {
       err = e;
   }
   if (err){
-      console.log(err, req.url);
-      createLogAppSE(process.env.MAIN_APP_ID, __appfilename, __appfunction, __appline, `Not valid url input, req.url ${req.url} err:${err}`);
-      return res.redirect('https://' + req.headers.host);
+      createLogAppSE(process.env.MAIN_APP_ID, __appfilename, __appfunction, __appline, `Not valid url input, req.url ${req.url} err:${err}`, (err_log, result_log)=>{
+        return res.redirect('https://' + req.headers.host);
+      });
   }
   next();
 });
@@ -210,14 +210,16 @@ app.use(function(req, res, next) {
 const {init_db, mysql_pool, oracle_pool} = require ("./service/db/config/database");
 init_db((err, result) =>{
   if (err)
-    createLogAppSE(process.env.MAIN_APP_ID, __appfilename, __appfunction, __appline, `DB init_db, err:${err}`);  
+      null;
   else{
     let json;
     const { getAppDBParameters } = require ("./service/db/api/app_parameter/app_parameter.service");
     //app_id inparameter for log, all apps will be returned
     getAppDBParameters(process.env.MAIN_APP_ID,(err, results) =>{
       if (err) {
-        createLogAppSE(process.env.MAIN_APP_ID, __appfilename, __appfunction, __appline, `DB getApp, err:${err}`);
+        createLogAppSE(process.env.MAIN_APP_ID, __appfilename, __appfunction, __appline, `getAppDBParameters, err:${err}`, (err_log, result_log)=>{
+          null;
+        })
       }
       else {
         json = JSON.parse(JSON.stringify(results));

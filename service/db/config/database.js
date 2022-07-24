@@ -8,15 +8,17 @@ var oracledb = require('oracledb');
 const { createLogAppSI, createLogAppSE } = require("../../log/log.controller");
 const { createLogDB } = require("../../log/log.service");
 
-async function execute_db_sql(app_id, pool_app_id, sql, parameters, admin, callBack){
+async function execute_db_sql(app_id, pool_app_id, sql, parameters, admin, 
+							  app_filename, app_function, app_line, callBack){
 	switch (process.env.SERVICE_DB_USE){
 		case '1':{
 			if (admin==true)
 				get_pool_admin().query(sql, parameters,
 					(error, results, fields) => {
 						if (error){
-							createLogAppSE(app_id, __appfilename, __appfunction, __appline, error);
-							return callBack(error);
+							createLogAppSE(app_id, app_filename, app_function, app_line, error, (err_log, result_log)=>{
+								return callBack(error);
+							})
 						}
 						return callBack(null, results);
 					}
@@ -25,8 +27,9 @@ async function execute_db_sql(app_id, pool_app_id, sql, parameters, admin, callB
 				get_pool(pool_app_id).query(sql, parameters, 
 					(error, results, fields) => {
 						if (error){
-							createLogAppSE(app_id, __appfilename, __appfunction, __appline, error);
-							return callBack(error);
+							createLogAppSE(app_id, app_filename, app_function, app_line, error, (err_log, result_log)=>{
+								return callBack(error);
+							})
 						}
 						return callBack(null, results);
 				})
@@ -38,12 +41,11 @@ async function execute_db_sql(app_id, pool_app_id, sql, parameters, admin, callB
 				if (admin==true)
 					pool2 = await oracledb.getConnection(get_pool_admin());
 				else
-					pool2 = await oracledb.getConnection(get_pool(process.env.MAIN_APP_ID));
+					pool2 = await oracledb.getConnection(get_pool(pool_app_id));
 				const result = await pool2.execute(sql, parameters,
 														(err,result) => {
 															if (err) {
-																createLogAppSE(app_id, __appfilename, __appfunction, __appline, err)
-																.then(function(){
+																createLogAppSE(app_id, app_filename, app_function, app_line, `${err.message}, SQL:${sql.substring(0,100)}...`, (err_log, result_log)=>{
 																	return callBack(err);
 																})
 															}
@@ -52,14 +54,17 @@ async function execute_db_sql(app_id, pool_app_id, sql, parameters, admin, callB
 															}
 														});
 			}catch (err) {
-				createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
-				return callBack(err.message);
+				createLogAppSE(app_id, __appfilename, __appfunction, __appline, err.message, (err_log, result_log)=>{
+					return callBack(err.message);
+				})
 			} finally {
 				if (pool2) {
 					try {
 						await pool2.close(); 
 					} catch (err) {
-						createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
+						createLogAppSE(app_id, __appfilename, __appfunction, __appline, err.message, (err_log, result_log)=>{
+							return callBack(err.message);
+						})
 					}
 				}
 			}
@@ -77,14 +82,16 @@ function get_pool_admin(){
 			return pool_db2_app_admin;
 }
 function get_pool(app_id){
-	let pool;
+	let pool = null;
 	try{
 		if (process.env.SERVICE_DB_USE==1)
-			pool = pool_db1_app[parseInt(app_id)];	
+			pool = pool_db1_app[parseInt(app_id)];
 		if (process.env.SERVICE_DB_USE==2)
 			pool = pool_db2_app[parseInt(app_id)];
 	}catch (err) {
-		createLogAppSE(null, __appfilename, __appfunction, __appline, 'get_pool error app_id: ' + app_id);
+		createLogAppSE(null, __appfilename, __appfunction, __appline, 
+			           'get_pool error app_id: ' + app_id, (err_log, result_log)=>{
+		})
 	}
 	return pool;
 }
@@ -102,18 +109,25 @@ async function oracle_pool(app_id, db_user, db_password, callBack){
 			poolAlias: pool_db2_app[app_id]
 		}, (err,result) => {
 			if (err){
-				createLogAppSE(app_id, __appfilename, __appfunction, __appline, `oracledb.createPool ${app_id} user: ` + db_user + `, err:${err}`);
-				callBack(err, null);
+				createLogAppSE(app_id, __appfilename, __appfunction, __appline, 
+					           `oracledb.createPool ${app_id} user: ` + db_user + `, err:${err}`, (err_log, result_log)=>{
+					callBack(err, null);
+				})
 			}
 			else{
-				createLogAppSI(app_id, __appfilename, __appfunction, __appline, `oracledb.createPool ${app_id} ok user: ` + db_user);
-				callBack(null, result);
+				createLogAppSI(app_id, __appfilename, __appfunction, __appline, 
+					           `oracledb.createPool ${app_id} ok user: ` + db_user, (err_log, result_log)=>{
+					callBack(null, result);
+				});
+				
 			}
 				
 		});
 	}catch (err) {
-		createLogAppSE(app_id, __appfilename, __appfunction, __appline, `oracledb.createPool ${app_id} err:${err.message}`);
-		callBack(err,null);
+		createLogAppSE(app_id, __appfilename, __appfunction, __appline, 
+			           `oracledb.createPool ${app_id} err:${err.message}`, (err_log, result_log)=>{
+			callBack(err,null);
+		})
 	}
 }
 async function mysql_pool(app_id, db_user, db_password, callBack){
@@ -126,9 +140,13 @@ async function mysql_pool(app_id, db_user, db_password, callBack){
 		charset: process.env.SERVICE_DB_DB1_CHARACTERSET,
 		connnectionLimit: process.env.SERVICE_DB_DB1_CONNECTION_LIMIT
 	}));
-	createLogAppSI(app_id, __appfilename, __appfunction, __appline, `mysql createPool ${app_id} user: ` + db_user);
+	createLogAppSI(app_id, __appfilename, __appfunction, __appline, 
+		           `mysql createPool ${app_id} user: ` + db_user, (err_log, result_log)=>{
+		null;
+	})
+	/*
 	if (process.env.SERVICE_LOG_ENABLE_DB==1){
-		pool_db1_app[i].on('connection', function(connection) {
+		pool_db1_app[pool_db1_app.length].on('connection', function(connection) {
 			connection.on('enqueue', function(sequence) {
 				// if (sequence instanceof mysql.Sequence.Query) {
 				if ('Query' === sequence.constructor.name) {
@@ -137,7 +155,9 @@ async function mysql_pool(app_id, db_user, db_password, callBack){
 			});
 		});
 	}
+	*/
 	callBack(null, null);
+
 }
 async function init_db(callBack){
 	if (process.env.SERVICE_DB_USE==1){
@@ -150,7 +170,10 @@ async function init_db(callBack){
 			charset: process.env.SERVICE_DB_DB1_CHARACTERSET,
 			connnectionLimit: process.env.SERVICE_DB_DB1_CONNECTION_LIMIT
 		});
-		createLogAppSI(process.env.MAIN_APP_ID, __appfilename, __appfunction, __appline, `mysql createPool ADMIN user: ${process.env.SERVICE_DB_DB1_APP_ADMIN_USER}`);
+		createLogAppSI(process.env.MAIN_APP_ID, __appfilename, __appfunction, __appline, 
+			           `mysql createPool ADMIN user: ${process.env.SERVICE_DB_DB1_APP_ADMIN_USER}`, (err_log, result_log)=>{
+			null;
+		})
 		if (process.env.SERVICE_LOG_ENABLE_DB==1){
 			pool_db1_app_admin.on('connection', function(connection) {
 				connection.on('enqueue', function(sequence) {
@@ -170,7 +193,10 @@ async function init_db(callBack){
 			charset: process.env.SERVICE_DB_DB1_CHARACTERSET,
 			connnectionLimit: process.env.SERVICE_DB_DB1_CONNECTION_LIMIT
 		}));
-		createLogAppSI(process.env.MAIN_APP_ID, __appfilename, __appfunction, __appline, `mysql createPool ${process.env.MAIN_APP_ID} user: ${process.env.SERVICE_DB_DB1_APP0_USER}`);
+		createLogAppSI(process.env.MAIN_APP_ID, __appfilename, __appfunction, __appline, 
+			           `mysql createPool ${process.env.MAIN_APP_ID} user: ${process.env.SERVICE_DB_DB1_APP0_USER}`, (err_log, result_log)=>{
+			null;
+		})
 		if (process.env.SERVICE_LOG_ENABLE_DB==1){		
 			pool_db1_app[0].on('connection', function(connection) {
 				connection.on('enqueue', function(sequence) {
@@ -234,22 +260,31 @@ async function init_db(callBack){
 						process.env.SERVICE_DB_DB2_APP_ADMIN_PASS,
 						pool_db2_app_admin, (err, result) =>{
 				if (err){
-					createLogAppSE(process.env.MAIN_APP_ID, __appfilename, __appfunction, __appline, `oracledb.createPool ADMIN user: ${process.env.SERVICE_DB_DB2_APP_ADMIN_USER}, err:${err}`);
-					callBack(err, null);
+					createLogAppSE(process.env.MAIN_APP_ID, __appfilename, __appfunction, __appline, 
+						           `oracledb.createPool ADMIN user: ${process.env.SERVICE_DB_DB2_APP_ADMIN_USER}, err:${err}`, (err_log, result_log)=>{
+						callBack(err, null);
+					})
 				}
 				else{
-					createLogAppSI(process.env.MAIN_APP_ID, __appfilename, __appfunction, __appline, `oracledb.createPool ADMIN ok user: ${process.env.SERVICE_DB_DB2_APP_ADMIN_USER}`);
+					createLogAppSI(process.env.MAIN_APP_ID, __appfilename, __appfunction, __appline, 
+						           `oracledb.createPool ADMIN ok user: ${process.env.SERVICE_DB_DB2_APP_ADMIN_USER}`, (err_log, result_log)=>{
+						null;
+					})
 					pool_db2_app.push('pool_db2_app_0');
 					create_pool(process.env.SERVICE_DB_DB2_APP0_USER,
 						process.env.SERVICE_DB_DB2_APP0_PASS,
 						pool_db2_app[0], (err, result) =>{
 							if (err){
-								createLogAppSE(process.env.MAIN_APP_ID, __appfilename, __appfunction, __appline, `oracledb.createPool ${process.env.MAIN_APP_ID} user: ${process.env.SERVICE_DB_DB2_APP0_USER}, err:${err}`);
-								callBack(err, null);
+								createLogAppSE(process.env.MAIN_APP_ID, __appfilename, __appfunction, __appline, 
+											   `oracledb.createPool ${process.env.MAIN_APP_ID} user: ${process.env.SERVICE_DB_DB2_APP0_USER}, err:${err}`, (err_log, result_log)=>{
+									callBack(err, null);
+								})
 							}
 							else{				
-								createLogAppSI(process.env.MAIN_APP_ID, __appfilename, __appfunction, __appline, `oracledb.createPool ${process.env.MAIN_APP_ID} ok user: ${process.env.SERVICE_DB_DB2_APP0_USER}`);				
-								callBack(null, null);
+								createLogAppSI(process.env.MAIN_APP_ID, __appfilename, __appfunction, __appline, 
+											   `oracledb.createPool ${process.env.MAIN_APP_ID} ok user: ${process.env.SERVICE_DB_DB2_APP0_USER}`, (err_log, result_log)=>{
+									callBack(null, null);
+								})
 							}
 						});
 				}

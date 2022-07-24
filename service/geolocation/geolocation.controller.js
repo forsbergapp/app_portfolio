@@ -22,7 +22,9 @@ module.exports = {
 		else{	
 			getParameter(process.env.MAIN_APP_ID,'SERVICE_GEOLOCATION_URL_GPS_PLACE', (err, db_SERVICE_GEOLOCATION_URL_GPS_PLACE)=>{
 				if (err) {
-					createLogAppSE(req.query.app_id, __appfilename, __appfunction, __appline, err);
+					createLogAppSE(req.query.app_id, __appfilename, __appfunction, __appline, err, (err_log, result_log)=>{
+                        return callBack(err, null);
+                    })
                 }
                 else{
 					//service can return other formats, set json
@@ -62,7 +64,9 @@ module.exports = {
 		var url;
 		getParameter(process.env.MAIN_APP_ID,'SERVICE_GEOLOCATION_URL_GPS_IP', (err, db_SERVICE_GEOLOCATION_URL_GPS_IP)=>{
 			if (err) {
-				createLogAppSE(req.query.app_id, __appfilename, __appfunction, __appline, err);
+				createLogAppSE(req.query.app_id, __appfilename, __appfunction, __appline, err, (err_log, result_log)=>{
+					return callBack(err, null);
+				})
 			}
 			else{
 				if (typeof req.query.ip == 'undefined')

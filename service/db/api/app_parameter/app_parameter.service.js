@@ -35,7 +35,8 @@ module.exports = {
 			parameters = {app_id: app_id};
 			
 		}
-		execute_db_sql(app_id, app_id, sql, parameters, null, (err, result)=>{
+		execute_db_sql(app_id, app_id, sql, parameters, null, 
+			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);
 			else
@@ -76,7 +77,8 @@ module.exports = {
 					ORDER BY 1, 3`;
 			parameters = {app_id: app_id};
 		}
-		execute_db_sql(app_id, app_id, sql, parameters, null, (err, result)=>{
+		execute_db_sql(app_id, app_id, sql, parameters, null, 
+			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);
 			else
@@ -114,11 +116,43 @@ module.exports = {
 					ORDER BY 1, 4`;
 			parameters = {app_id: app_id};
 		}
-		execute_db_sql(app_id, null, sql, parameters, true, (err, result)=>{
+		execute_db_sql(app_id, null, sql, parameters, true, 
+					   __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);
 			else
 				return callBack(null, result); 
+		});
+	},
+	getParameter_admin: (app_id, parameter_name, callBack) =>{
+		let sql;
+		let parameters;
+		if (process.env.SERVICE_DB_USE==1){
+			sql = `SELECT parameter_value
+					 FROM ${process.env.SERVICE_DB_DB1_NAME}.app_parameter
+				    WHERE app_id = ?
+  					  AND parameter_name = ?
+					  AND parameter_type_id IN (0,1,2)
+				 ORDER BY 1 `;
+			parameters = [app_id,
+						  parameter_name];
+		}
+		else if (process.env.SERVICE_DB_USE==2){
+			sql = `SELECT parameter_value "parameter_value"
+					 FROM ${process.env.SERVICE_DB_DB2_NAME}.app_parameter
+				    WHERE app_id = :app_id
+ 					  AND parameter_name = :parameter_name
+					  AND parameter_type_id IN (0,1,2)
+				 ORDER BY 1`;
+		    parameters = {app_id: app_id,
+					      parameter_name:parameter_name};
+		}
+		execute_db_sql(app_id, null, sql, parameters, true, 
+			           __appfilename, __appfunction, __appline, (err, result)=>{
+			if (err)
+				return callBack(err, null);
+			else
+				return callBack(null, result[0].parameter_value);
 		});
 	},
 	getParameter: (app_id, parameter_name, callBack) =>{
@@ -144,14 +178,15 @@ module.exports = {
 		    parameters = {app_id: app_id,
 					      parameter_name:parameter_name};
 		}
-		execute_db_sql(app_id, null, sql, parameters, true, (err, result)=>{
+		execute_db_sql(app_id, app_id, sql, parameters, null, 
+					   __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);
 			else
 				return callBack(null, result[0].parameter_value);
 		});
 	},
-	setParameter: (body, callBack) =>{
+	setParameter_admin: (body, callBack) =>{
 		let sql;
 		let parameters;
 		if (process.env.SERVICE_DB_USE==1){
@@ -180,14 +215,15 @@ module.exports = {
 						  app_id: body.app_id,
 						  parameter_name: body.parameter_name};
 		}
-		execute_db_sql(body.app_id, null, sql, parameters, true, (err, result)=>{
+		execute_db_sql(body.app_id, null, sql, parameters, true, 
+			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);
 			else
 				return callBack(null, result);
 		});
 	},
-	setParameterValue: (body, callBack) =>{
+	setParameterValue_admin: (body, callBack) =>{
 		let sql;
 		let parameters;
 		if (process.env.SERVICE_DB_USE==1){
@@ -208,7 +244,8 @@ module.exports = {
 						  app_id: body.app_id,
 						  parameter_name: body.parameter_name};
 		}
-		execute_db_sql(body.app_id, null, sql, parameters, true, (err, result)=>{
+		execute_db_sql(body.app_id, null, sql, parameters, true, 
+					   __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);
 			else
@@ -250,7 +287,8 @@ module.exports = {
 			parameters = {db_user: db_user,
 						  db_password: db_password};
 		}
-		execute_db_sql(app_id, process.env.MAIN_APP_ID, sql, parameters, null, (err, result)=>{
+		execute_db_sql(app_id, process.env.MAIN_APP_ID, sql, parameters, null, 
+			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);
 			else
@@ -338,7 +376,8 @@ module.exports = {
 							app_rest_client_secret: app_rest_client_secret,
 							rest_app_parameter: rest_app_parameter}
 		}
-		execute_db_sql(app_id, app_id, sql, parameters, null, (err, result)=>{
+		execute_db_sql(app_id, app_id, sql, parameters, null, 
+					   __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);
 			else
