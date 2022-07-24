@@ -19,7 +19,8 @@ module.exports = {
 					ORDER BY 1`;
 			parameters = {id: id};
 		}
-		execute_db_sql(id, null, sql, parameters, true, (err, result)=>{
+		execute_db_sql(id, null, sql, parameters, true, 
+			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);
 			else

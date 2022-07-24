@@ -19,7 +19,8 @@ module.exports = {
 							app1_user_setting_id: id_like
 						};
 		}
-		execute_db_sql(app_id, app_id, sql, parameters, null, (err, result)=>{
+		execute_db_sql(app_id, app_id, sql, parameters, null, 
+			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);
 			else
@@ -46,7 +47,8 @@ module.exports = {
 							app1_user_setting_id: id_unlike
 						 };
 		}
-		execute_db_sql(app_id, app_id, sql, parameters, null, (err, result)=>{
+		execute_db_sql(app_id, app_id, sql, parameters, null, 
+			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);
 			else
