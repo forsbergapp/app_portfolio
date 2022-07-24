@@ -1,84 +1,54 @@
-const {oracledb, get_pool} = require ("../../config/database");
-const { createLogAppSE } = require("../../../../service/log/log.controller");
+const {execute_db_sql} = require ("../../config/database");
 module.exports = {
 	insertUserSettingView: (app_id, data, callBack) => {
+		let sql;
+		let parameters;
 		if (process.env.SERVICE_DB_USE == 1) {
-			get_pool(app_id).query(
-			`INSERT INTO ${process.env.SERVICE_DB_DB1_NAME}.app1_user_setting_view(
-							user_account_id,
-							app1_user_setting_id,
-							client_ip,
-							client_user_agent,
-							client_longitude,
-							client_latitude,
-							date_created)
-				VALUES(?,?,?,?,?,?, SYSDATE()) `,
-				[data.user_account_id,
-				data.app1_user_setting_id,
-				data.client_ip,
-				data.client_user_agent,
-				data.client_longitude,
-				data.client_latitude],
-				(error, results, fields) => {
-					if (error){
-						createLogAppSE(app_id, __appfilename, __appfunction, __appline, error);
-						return callBack(error);
-					}
-					return callBack(null, results);
-				}	
-			);
+			sql = `INSERT INTO ${process.env.SERVICE_DB_DB1_NAME}.app1_user_setting_view(
+								user_account_id,
+								app1_user_setting_id,
+								client_ip,
+								client_user_agent,
+								client_longitude,
+								client_latitude,
+								date_created)
+					VALUES(?,?,?,?,?,?, SYSDATE()) `;
+			parameters = [	data.user_account_id,
+							data.app1_user_setting_id,
+							data.client_ip,
+							data.client_user_agent,
+							data.client_longitude,
+							data.client_latitude];
 		}else if (process.env.SERVICE_DB_USE==2){
-			async function execute_sql(err, result){
-				let pool2;
-				try{
-				pool2 = await oracledb.getConnection(get_pool(app_id));
-				const result_sql = await pool2.execute(
-					`INSERT INTO ${process.env.SERVICE_DB_DB2_NAME}.app1_user_setting_view(
-									user_account_id,
-									app1_user_setting_id,
-									client_ip,
-									client_user_agent,
-									client_longitude, 
-									client_latitude, 
-									date_created)
-						VALUES( :user_account_id,
-								:app1_user_setting_id,
-								:client_ip,
-								:client_user_agent,
-								:client_longitude,
-								:client_latitude,
-								SYSDATE) `,
-					{
-						user_account_id: data.user_account_id,
-						app1_user_setting_id: data.app1_user_setting_id,
-						client_ip: data.client_ip,
-						client_user_agent: data.client_user_agent,
-						client_longitude: data.client_longitude,
-						client_latitude: data.client_latitude
-					},
-					(err_ins,result_ins) => {
-						if (err_ins) {
-							createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
-							return callBack(err_ins);
-						}
-						else{
-							return callBack(null, result_ins);
-						}
-					});
-				}catch (err) {
-					createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
-					return callBack(err.message);
-				} finally {
-					if (pool2) {
-						try {
-							await pool2.close(); 
-						} catch (err) {
-							createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
-						}
-					}
-				}
-			}
-			execute_sql();
+			sql = `INSERT INTO ${process.env.SERVICE_DB_DB2_NAME}.app1_user_setting_view(
+								user_account_id,
+								app1_user_setting_id,
+								client_ip,
+								client_user_agent,
+								client_longitude, 
+								client_latitude, 
+								date_created)
+					VALUES( :user_account_id,
+							:app1_user_setting_id,
+							:client_ip,
+							:client_user_agent,
+							:client_longitude,
+							:client_latitude,
+							SYSDATE) `;
+			parameters = {
+							user_account_id: data.user_account_id,
+							app1_user_setting_id: data.app1_user_setting_id,
+							client_ip: data.client_ip,
+							client_user_agent: data.client_user_agent,
+							client_longitude: data.client_longitude,
+							client_latitude: data.client_latitude
+						 };
 		}
+		execute_db_sql(app_id, app_id, sql, parameters, null, (err, result)=>{
+			if (err)
+				return callBack(err, null);
+			else
+				return callBack(null, result);
+		});
 	}
 };

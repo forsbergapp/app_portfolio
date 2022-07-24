@@ -1,11 +1,11 @@
-const {oracledb, get_pool} = require ("../../config/database");
-const { createLogAppSE } = require("../../../../service/log/log.controller");
+const {execute_db_sql} = require ("../../config/database");
 module.exports = {
 	
 	getPlace: (app_id, callBack) => {
+		let sql;
+		let parameters;
 		if (process.env.SERVICE_DB_USE == 1) {
-			get_pool(app_id).query(
-				` SELECT	p.id,
+			sql = ` SELECT	p.id,
 							p.title,
 							p.latitude,
 							p.longitude,
@@ -27,23 +27,10 @@ module.exports = {
 							ON c2.id = p.country2_id  
 						WHERE gp1.id = p.group_place1_id
 							AND   gp2.id = p.group_place2_id
-							AND   c1.id = p.country1_id `,
-				[],
-				(error, results, fields) => {
-					if (error){
-						createLogAppSE(app_id, __appfilename, __appfunction, __appline, error);
-						return callBack(error);
-					}
-					return callBack(null, results);
-				}
-			);
+							AND   c1.id = p.country1_id `;
+			parameters = [];
 		}else if (process.env.SERVICE_DB_USE==2){
-			async function execute_sql(err, result){
-				let pool2;
-				try{
-				pool2 = await oracledb.getConnection(get_pool(app_id));
-				const result = await pool2.execute(
-					`SELECT	p.id "id",
+			sql = `SELECT	p.id "id",
 							p.title "title",
 							p.latitude "latitude",
 							p.longitude "longitude",
@@ -65,31 +52,14 @@ module.exports = {
 							ON c2.id = p.country2_id  
 						WHERE gp1.id = p.group_place1_id
 							AND   gp2.id = p.group_place2_id
-							AND   c1.id = p.country1_id`,
-					{},
-					(err,result) => {
-						if (err) {
-							createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
-							return callBack(err);
-						}
-						else{
-							return callBack(null, result.rows);
-						}
-					});
-				}catch (err) {
-					createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
-					return callBack(err.message);
-				} finally {
-					if (pool2) {
-						try {
-							await pool2.close(); 
-						} catch (err) {
-							createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
-						}
-					}
-				}
-			}
-			execute_sql();
+							AND   c1.id = p.country1_id`;
+			parameters = {};
 		}
+		execute_db_sql(app_id, app_id, sql, parameters, null, (err, result)=>{
+			if (err)
+				return callBack(err, null);
+			else
+				return callBack(null, result);
+		});
 	}
 };
