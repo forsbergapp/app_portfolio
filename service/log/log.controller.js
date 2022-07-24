@@ -70,20 +70,28 @@ module.exports = {
 					   req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, res.statusCode, 
 					   req.headers['user-agent'], req.headers['accept-language'], req.headers['referer']);
 	},
-	createLogAppSI: (app_id, app_filename, app_function_name, app_line, logtext) => {
-        createLogAppS(process.env.SERVICE_LOG_LEVEL_INFO, app_id, app_filename, app_function_name, app_line, logtext);
+	createLogAppSI: (app_id, app_filename, app_function_name, app_line, logtext, callBack) => {
+        createLogAppS(process.env.SERVICE_LOG_LEVEL_INFO, app_id, app_filename, app_function_name, app_line, logtext, (err, result)=>{
+			callBack(null, result);
+		});
 	},
-    createLogAppSE: (app_id, app_filename, app_function_name, app_line, logtext) => {
-        createLogAppS(process.env.SERVICE_LOG_LEVEL_ERROR, app_id, app_filename, app_function_name, app_line, logtext);
+    createLogAppSE: (app_id, app_filename, app_function_name, app_line, logtext, callBack) => {
+        createLogAppS(process.env.SERVICE_LOG_LEVEL_ERROR, app_id, app_filename, app_function_name, app_line, logtext, (err, result)=>{
+			callBack(null, result);
+		});
 	},
-	createLogAppCI: (req, res, app_id, app_filename, app_function_name, app_line, logtext) => {
+	createLogAppCI: (req, res, app_id, app_filename, app_function_name, app_line, logtext, callBack) => {
 		createLogAppC(app_id, process.env.SERVICE_LOG_LEVEL_INFO, app_filename, app_function_name, app_line, logtext,
 					   req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, res.statusCode, 
-			           req.headers['user-agent'], req.headers['accept-language'], req.headers['referer']);
+			           req.headers['user-agent'], req.headers['accept-language'], req.headers['referer'], (err, result)=>{
+			callBack(null, result);
+		});
 	},
-	createLogAppCE: (req, res, app_id, app_filename, app_function_name, app_line, logtext) => {
+	createLogAppCE: (req, res, app_id, app_filename, app_function_name, app_line, logtext, callBack) => {
 		createLogAppC(app_id, process.env.SERVICE_LOG_LEVEL_ERROR, app_filename, app_function_name, app_line, logtext,
 					   req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, res.statusCode, 
-			           req.headers['user-agent'], req.headers['accept-language'], req.headers['referer']);
+			           req.headers['user-agent'], req.headers['accept-language'], req.headers['referer'], (err, result)=>{
+			callBack(null, result);
+		});
 	}
 }

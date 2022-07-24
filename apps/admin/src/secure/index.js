@@ -25,8 +25,9 @@ module.exports = {
             });
             return callBack(null, app);
         }).catch(err => {
-            createLogAppSE(null, __appfilename, __appfunction, __appline, err);
-            return callBack(err);
+            createLogAppSE(null, __appfilename, __appfunction, __appline, err, (err_log, result_log)=>{
+                return callBack(err);
+            });
         });
     }
 }
