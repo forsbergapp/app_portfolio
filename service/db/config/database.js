@@ -8,6 +8,66 @@ var oracledb = require('oracledb');
 const { createLogAppSI, createLogAppSE } = require("../../log/log.controller");
 const { createLogDB } = require("../../log/log.service");
 
+async function execute_db_sql(app_id, pool_app_id, sql, parameters, admin, callBack){
+	switch (process.env.SERVICE_DB_USE){
+		case '1':{
+			if (admin==true)
+				get_pool_admin().query(sql, parameters,
+					(error, results, fields) => {
+						if (error){
+							createLogAppSE(app_id, __appfilename, __appfunction, __appline, error);
+							return callBack(error);
+						}
+						return callBack(null, results);
+					}
+				);
+			else
+				get_pool(pool_app_id).query(sql, parameters, 
+					(error, results, fields) => {
+						if (error){
+							createLogAppSE(app_id, __appfilename, __appfunction, __appline, error);
+							return callBack(error);
+						}
+						return callBack(null, results);
+				})
+			break;
+		}
+		case '2':{
+			let pool2;
+			try{
+				if (admin==true)
+					pool2 = await oracledb.getConnection(get_pool_admin());
+				else
+					pool2 = await oracledb.getConnection(get_pool(process.env.MAIN_APP_ID));
+				const result = await pool2.execute(sql, parameters,
+														(err,result) => {
+															if (err) {
+																createLogAppSE(app_id, __appfilename, __appfunction, __appline, err)
+																.then(function(){
+																	return callBack(err);
+																})
+															}
+															else{
+																return callBack(null, result.rows);
+															}
+														});
+			}catch (err) {
+				createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
+				return callBack(err.message);
+			} finally {
+				if (pool2) {
+					try {
+						await pool2.close(); 
+					} catch (err) {
+						createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
+					}
+				}
+			}
+			break;
+		}
+	}
+}
+
 function get_pool_admin(){
 	let pool;
 	if (process.env.SERVICE_DB_USE==1)
@@ -198,7 +258,7 @@ async function init_db(callBack){
 		init();
 	}
 }
-
+module.exports.execute_db_sql = execute_db_sql;
 module.exports.get_pool = get_pool;
 module.exports.get_pool_admin = get_pool_admin;
 module.exports.oracledb = oracledb;
