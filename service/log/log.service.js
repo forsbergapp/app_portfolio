@@ -2,38 +2,7 @@ function pm2log(log){
     console.log(log);
 }
     
-function sendLog(logscope, loglevel, log){
-    let filename;
-    let logdate = new Date();
-    //make log nice and compact
-    try{
-        //replace backslash \ with [BACKSLASH]
-        log = log.replaceAll('\\', '[BACKSLASH]');
-        log = JSON.stringify(JSON.parse(log));
-    }
-    catch(err){
-        pm2log(err)
-        pm2log(log);
-    }
-    let month = logdate.toLocaleString("en-US", { month: "2-digit"});
-    let day   = logdate.toLocaleString("en-US", { day: "2-digit"});
-    if (process.env.SERVICE_LOG_FILE_INTERVAL=='1D')
-        filename = `${logscope}_${loglevel}_${logdate.getFullYear()}${month}${day}.log`;
-    else
-        if (process.env.SERVICE_LOG_FILE_INTERVAL=='1M')
-            filename = `${logscope}_${loglevel}_${logdate.getFullYear()}${month}.log`;
-        else
-            filename = `${logscope}_${loglevel}_${logdate.getFullYear()}${month}.log`;
-    if (process.env.SERVICE_LOG_DESTINATION==0 ||
-        process.env.SERVICE_LOG_DESTINATION==2){
-        //file destination
-        var fs = require('fs');
-        fs.appendFile(process.env.SERVICE_LOG_FILE_PATH_SERVER + filename, log + '\r\n', 'utf8', (err) => {
-            if (err) {
-                pm2log(err);
-            }
-        });
-    }
+async function remote_log(log, callBack){
     if (process.env.SERVICE_LOG_DESTINATION==1 ||
         process.env.SERVICE_LOG_DESTINATION==2){
         //url destination
@@ -63,9 +32,52 @@ function sendLog(logscope, loglevel, log){
         url_log.logtext = url_old.logtext;
 
         url_log = JSON.stringify(url_log);
-        axios.post(process.env.SERVICE_LOG_URL_DESTINATION, url_log);
-        
+        axios.post(process.env.SERVICE_LOG_URL_DESTINATION, url_log)
+        .then(function(){
+            callBack(null, 1);
+        })
     }   
+    else
+        callBack(null, 1);
+}
+async function sendLog(logscope, loglevel, log, callBack){
+    let filename;
+    let logdate = new Date();
+    //make log nice and compact
+    try{        
+        log = JSON.stringify(JSON.parse(log));
+    }
+    catch(err){
+        pm2log(err)
+        pm2log(log);
+    }
+    let month = logdate.toLocaleString("en-US", { month: "2-digit"});
+    let day   = logdate.toLocaleString("en-US", { day: "2-digit"});
+    if (process.env.SERVICE_LOG_FILE_INTERVAL=='1D')
+        filename = `${logscope}_${loglevel}_${logdate.getFullYear()}${month}${day}.log`;
+    else
+        if (process.env.SERVICE_LOG_FILE_INTERVAL=='1M')
+            filename = `${logscope}_${loglevel}_${logdate.getFullYear()}${month}.log`;
+        else
+            filename = `${logscope}_${loglevel}_${logdate.getFullYear()}${month}.log`;
+    if (process.env.SERVICE_LOG_DESTINATION==0 ||
+        process.env.SERVICE_LOG_DESTINATION==2){
+        //file destination
+        var fs = require('fs');
+        fs.appendFile(process.env.SERVICE_LOG_FILE_PATH_SERVER + filename, log + '\r\n', 'utf8', (err) => {
+            if (err) {
+                pm2log(err);
+            }
+            else
+                remote_log(log, (err, result)=>{
+                    callBack(null, result);
+                });
+        });
+    }
+    else
+        remote_log(log, (err, result)=>{
+            callBack(null, result);
+        });
 }
 function logdate(){
     let logdate = new Date();
@@ -137,7 +149,9 @@ module.exports = {
              "logtext": ${JSON.stringify(log_error_status + '-' + log_error_message)}
             }`;
         }
-        sendLog(process.env.SERVICE_LOG_SCOPE_SERVER, log_level, log_json_server);
+        sendLog(process.env.SERVICE_LOG_SCOPE_SERVER, log_level, log_json_server, (err, result)=>{
+            null;
+        });
     },
     createLogDB: (app_id, logtext) =>{
         if (process.env.SERVICE_LOG_ENABLE_DB==1){
@@ -157,10 +171,12 @@ module.exports = {
                                 "app_app_line": "",
                                 "logtext": ${JSON.stringify(logtext)}
                                 }`;
-            sendLog(process.env.SERVICE_LOG_SCOPE_DB, process.env.SERVICE_LOG_LEVEL_INFO, log_json_db);
+            sendLog(process.env.SERVICE_LOG_SCOPE_DB, process.env.SERVICE_LOG_LEVEL_INFO, log_json_db, (err, result)=>{
+                null;
+            });
         }
     },
-    createLogAppS: (level_info, app_id, app_filename, app_function_name, app_line, logtext)=>{
+    createLogAppS: (level_info, app_id, app_filename, app_function_name, app_line, logtext, callBack)=>{
         let log_json =`{"logdate": "${logdate()}",
                         "ip":"",
                         "host": "${require('os').hostname()}",
@@ -177,11 +193,13 @@ module.exports = {
                         "app_app_line": ${app_line},
                         "logtext": ${JSON.stringify(logtext)}
                         }`;
-        sendLog(process.env.SERVICE_LOG_SCOPE_SERVICE, level_info, log_json);
+        sendLog(process.env.SERVICE_LOG_SCOPE_SERVICE, level_info, log_json, (err, result)=>{
+            callBack(null, 1);
+        });
     },    
     createLogAppC: (app_id, level_info, app_filename, app_function_name, app_line, logtext,
                     ip, host, protocol, originalUrl, method, statusCode, 
-                    user_agent, accept_language, referer) =>{
+                    user_agent, accept_language, referer, callBack) =>{
         let log_json =`{"logdate": "${logdate()}",
             "ip":"${ip}",
             "host": "${host}",
@@ -198,7 +216,9 @@ module.exports = {
             "app_app_line": ${app_line},
             "logtext": ${JSON.stringify(logtext)}
             }`;
-        sendLog(process.env.SERVICE_LOG_SCOPE_CONTROLLER, level_info, log_json);
+        sendLog(process.env.SERVICE_LOG_SCOPE_CONTROLLER, level_info, log_json, (err, result)=>{
+            callBack(null, 1);
+        });
     },
     createLogAppRI: (app_id, app_filename, app_function_name, app_line, logtext,
                      ip, host, protocol, originalUrl, method, statusCode, 
@@ -220,7 +240,9 @@ module.exports = {
                             "app_app_line": ${app_line},
                             "logtext": ${JSON.stringify(logtext)}
                             }`;
-            sendLog(process.env.SERVICE_LOG_SCOPE_ROUTER, process.env.SERVICE_LOG_LEVEL_INFO, log_json);
+            sendLog(process.env.SERVICE_LOG_SCOPE_ROUTER, process.env.SERVICE_LOG_LEVEL_INFO, log_json, (err, result)=>{
+               null;
+            });
         }
 	},
     getParameters: (callBack) => {
@@ -268,8 +290,6 @@ module.exports = {
                 if (error)
                     return callBack(null, fixed_log);
                 else{
-                    //replace backslash \ with [BACKSLASH]
-                    fileBuffer = fileBuffer.replaceAll('\\', '[BACKSLASH]');
                     fileBuffer.toString().split('\r\n').forEach(function (record) {
                         if (record.length>0){
                             let log_app_id = JSON.parse(record).app_id;

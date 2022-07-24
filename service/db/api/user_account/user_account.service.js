@@ -1,5 +1,4 @@
 const {execute_db_sql} = require ("../../config/database");
-const { param } = require("./user_account.router");
 function password_length_wrong(password){
     //constraint should be in db but password is encrypted when in db trigger
     //and saved with constant 60 characters length
@@ -206,7 +205,8 @@ module.exports = {
 							provider2_email: data.provider2_email
 						};
         }
-		execute_db_sql(app_id, app_id, sql, parameters, null, (err, result)=>{
+		execute_db_sql(app_id, app_id, sql, parameters, null, 
+			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);
 			else
@@ -224,7 +224,8 @@ module.exports = {
 					parameters = {
 									lastRowid: lastRowid
 								 };
-					execute_db_sql(app_id, app_id, sql, parameters, null, (err, result_id2)=>{
+					execute_db_sql(app_id, app_id, sql, parameters, null, 
+						           __appfilename, __appfunction, __appline, (err, result_id2)=>{
 						if (err)
 							return callBack(err, null);
 						else
@@ -287,7 +288,8 @@ module.exports = {
 							verification_code: verification_code
 						};
         }
-		execute_db_sql(app_id, app_id, sql, parameters, null, (err, result)=>{
+		execute_db_sql(app_id, app_id, sql, parameters, null, 
+			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);
 			else{
@@ -328,7 +330,8 @@ module.exports = {
 						 id: id   
 						}; 
         }
-		execute_db_sql(app_id, app_id, sql, parameters, null, (err, result)=>{
+		execute_db_sql(app_id, app_id, sql, parameters, null, 
+			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);
 			else{
@@ -421,7 +424,8 @@ module.exports = {
 							id: id
 						 }; 
         }
-		execute_db_sql(app_id, app_id, sql, parameters, null, (err, result)=>{
+		execute_db_sql(app_id, app_id, sql, parameters, null, 
+			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);
 			else
@@ -592,7 +596,8 @@ module.exports = {
 							app_id: app_id
 						}; 
         }
-		execute_db_sql(app_id, app_id, sql, parameters, null, (err, result)=>{
+		execute_db_sql(app_id, app_id, sql, parameters, null, 
+			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);
 			else
@@ -660,7 +665,8 @@ module.exports = {
 							app_id: app_id
 						};
         }
-		execute_db_sql(app_id, app_id, sql, parameters, null, (err, result)=>{
+		execute_db_sql(app_id, app_id, sql, parameters, null, 
+			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);
 			else
@@ -850,7 +856,8 @@ module.exports = {
 							detailchoice_liked_user: detailchoice
 						}; 
         }
-		execute_db_sql(app_id, app_id, sql, parameters, null, (err, result)=>{
+		execute_db_sql(app_id, app_id, sql, parameters, null, 
+			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);
 			else
@@ -1010,7 +1017,8 @@ module.exports = {
 							app_id: app_id
 						};
         }
-		execute_db_sql(app_id, app_id, sql, parameters, null, (err, result)=>{
+		execute_db_sql(app_id, app_id, sql, parameters, null, 
+			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);
 			else
@@ -1033,7 +1041,8 @@ module.exports = {
 							id: id
 						};
         }
-		execute_db_sql(app_id, app_id, sql, parameters, null, (err, result)=>{
+		execute_db_sql(app_id, app_id, sql, parameters, null, 
+			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);
 			else
@@ -1066,7 +1075,8 @@ module.exports = {
 							auth: data.auth
 						}; 
         }
-		execute_db_sql(app_id, app_id, sql, parameters, null, (err, result)=>{
+		execute_db_sql(app_id, app_id, sql, parameters, null, 
+			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);
 			else
@@ -1131,7 +1141,8 @@ module.exports = {
 							id: search_id
 						}; 
         }
-		execute_db_sql(app_id, app_id, sql, parameters, null, (err, result)=>{
+		execute_db_sql(app_id, app_id, sql, parameters, null, 
+			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);
 			else
@@ -1171,7 +1182,8 @@ module.exports = {
 							id: id
 						}; 
         }
-		execute_db_sql(app_id, app_id, sql, parameters, null, (err, result)=>{
+		execute_db_sql(app_id, app_id, sql, parameters, null, 
+			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);
 			else
@@ -1192,7 +1204,8 @@ module.exports = {
 							id: id
 						 };
         }
-		execute_db_sql(app_id, app_id, sql, parameters, null, (err, result)=>{
+		execute_db_sql(app_id, app_id, sql, parameters, null, 
+			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);
 			else
@@ -1232,7 +1245,8 @@ module.exports = {
 							username: data.username
 						}; 
         }
-		execute_db_sql(data.app_id, data.app_id, sql, parameters, null, (err, result)=>{
+		execute_db_sql(data.app_id, data.app_id, sql, parameters, null, 
+			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);
 			else
@@ -1326,7 +1340,8 @@ module.exports = {
 							}; 
             }
         }
-		execute_db_sql(app_id, app_id, sql, parameters, null, (err, result)=>{
+		execute_db_sql(app_id, app_id, sql, parameters, null, 
+			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);
 			else
@@ -1418,7 +1433,8 @@ module.exports = {
 							provider2_no: provider_no
 						};
         }
-		execute_db_sql(app_id, app_id, sql, parameters, null, (err, result)=>{
+		execute_db_sql(app_id, app_id, sql, parameters, null, 
+			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);
 			else
@@ -1455,7 +1471,8 @@ module.exports = {
 					FROM DUAL`;
 			parameters = {};
         }
-		execute_db_sql(process.env.MAIN_APP_ID, null, sql, parameters, true, (err, result)=>{
+		execute_db_sql(process.env.MAIN_APP_ID, null, sql, parameters, true, 
+			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);
 			else
@@ -1480,7 +1497,8 @@ module.exports = {
 							email: email
 						}; 
         }
-		execute_db_sql(app_id, app_id, sql, parameters, null, (err, result)=>{
+		execute_db_sql(app_id, app_id, sql, parameters, null, 
+			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);
 			else

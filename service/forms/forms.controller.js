@@ -46,7 +46,9 @@ module.exports = {
             const { getParameter} = require ("../../service/db/api/app_parameter/app_parameter.service");
             getParameter(process.env.MAIN_APP_ID,'SERVER_MAINTENANCE', (err, db_SERVER_MAINTENANCE)=>{
                 if (err)
-                    createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);      
+                    createLogAppSE(app_id, __appfilename, __appfunction, __appline, err, (err_log, result_log)=>{
+                        return callBack(err, null);
+                    })
                 else{
                     if (db_SERVER_MAINTENANCE==1){
                         const { getMaintenance } = require("../../apps");

@@ -22,8 +22,9 @@ module.exports = {
         var path = require('path');
         res.sendFile(path.resolve(__dirname + `/../../apps/app${req.body.app_id}/mail/logo.png`), (err) =>{
             if (err){
-                createLogAppSE(req.body.app_id, __appfilename, __appfunction, __appline, err);
-                return res.send(null);
+                createLogAppSE(req.body.app_id, __appfilename, __appfunction, __appline, err, (err_log, result_log)=>{
+                    return res.send(null);
+                })
             }
             else {
                 req.query.callback = 1;
@@ -74,9 +75,10 @@ module.exports = {
         const { getMail} = require(`../../apps/`);
         
         getParameters_server(data.app_id, (err, result)=>{
-            if (err) {
-                createLogAppSE(data.app_id, __appfilename, __appfunction, __appline, err);
-                reject(err);
+            if (err) {                
+                createLogAppSE(data.app_id, __appfilename, __appfunction, __appline, err, (err_log, result_log)=>{
+                    return callBack(err, null);
+                })
             }
             else{
                 let json = JSON.parse(JSON.stringify(result));

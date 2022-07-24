@@ -138,8 +138,9 @@ async function read_app_files(app_id, files, callBack){
     })
     .catch(err => {
         const { createLogAppSE } = require("../service/log/log.controller");
-        createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
-        callBack(err, null);
+        createLogAppSE(app_id, __appfilename, __appfunction, __appline, err, (err_log, result_log)=>{
+            callBack(err, null);
+        })
     });
 }
 async function get_module_with_init(app_id, 
@@ -188,8 +189,9 @@ async function get_email_verification(data, email, baseUrl, lang_code, callBack)
         process.env.MAIN_APP_ID, 
         lang_code, (err,email_subject)  => {
         if (err){
-            createLogAppSE(data.app_id, __appfilename, __appfunction, __appline, err);
-            callBack(err, null);
+            createLogAppSE(data.app_id, __appfilename, __appfunction, __appline, err, (err_log, result_log)=>{
+                callBack(err, null);
+            })
         }
         else{
             email = email.replace('<Logo/>', 

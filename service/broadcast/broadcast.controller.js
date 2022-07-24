@@ -13,7 +13,9 @@ module.exports = {
             getParameter(process.env.MAIN_APP_ID,'SERVER_MAINTENANCE', (err, db_SERVER_MAINTENANCE)=>{
                 if (err){
                     const {createLogAppSE} = require("../log/log.controller");
-                    createLogAppSE(process.env.MAIN_APP_ID, __appfilename, __appfunction, __appline, err);
+                    createLogAppSE(process.env.MAIN_APP_ID, __appfilename, __appfunction, __appline, err, (err_log, result_log)=>{
+                        null;
+                    })
                 }
                 else{
                     if (db_SERVER_MAINTENANCE==1){
