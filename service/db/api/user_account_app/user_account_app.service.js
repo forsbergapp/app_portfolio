@@ -1,196 +1,108 @@
-const {oracledb, get_pool} = require ("../../config/database");
-const { createLogAppSE } = require("../../../../service/log/log.controller");
+const {execute_db_sql} = require ("../../config/database");
 module.exports = {
 	createUserAccountApp: (app_id, user_account_id, callBack) => {
+		let sql;
+		let parameters;
 		if (process.env.SERVICE_DB_USE == 1) {
-			get_pool(app_id).query(
-			`INSERT INTO ${process.env.SERVICE_DB_DB1_NAME}.user_account_app(
-							app_id, user_account_id, date_created)
-				SELECT ?,?, SYSDATE()
-				  FROM DUAL
-				  WHERE NOT EXISTS (SELECT NULL
-									  FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_app uap
-									 WHERE uap.app_id = ?
-									   AND uap.user_account_id = ?)`,
-				[
-				app_id,
-				user_account_id,
-				app_id,
-				user_account_id
-				],
-				(error, results, fields) => {
-					if (error){
-						createLogAppSE(app_id, __appfilename, __appfunction, __appline, error);
-						return callBack(error);
-					}
-					return callBack(null, results);
-				}	
-			);
+			sql = `INSERT INTO ${process.env.SERVICE_DB_DB1_NAME}.user_account_app(
+								app_id, user_account_id, date_created)
+					SELECT ?,?, SYSDATE()
+					FROM DUAL
+					WHERE NOT EXISTS (SELECT NULL
+										FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_app uap
+										WHERE uap.app_id = ?
+										AND uap.user_account_id = ?)`;
+			parameters = [
+							app_id,
+							user_account_id,
+							app_id,
+							user_account_id
+						 ];
 		}else if (process.env.SERVICE_DB_USE==2){
-			async function execute_sql(err, result){
-				let pool2;
-				try{
-				pool2 = await oracledb.getConnection(get_pool(app_id));
-				const result = await pool2.execute(
-					`INSERT INTO ${process.env.SERVICE_DB_DB2_NAME}.user_account_app(
-									app_id, user_account_id, date_created)
-						SELECT :app_id, :user_account_id, SYSDATE
-						  FROM DUAL
-						 WHERE NOT EXISTS (SELECT NULL
-										     FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_app uap
-										    WHERE uap.app_id = :app_id
-										 	  AND uap.user_account_id = :user_account_id)`,
-					{
-						app_id: app_id,
-						user_account_id: user_account_id
-					},
-					(err,result) => {
-						if (err) {
-							createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
-							return callBack(err);
-						}
-						else{
-							return callBack(null, result);
-						}
-					});
-				}catch (err) {
-					createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
-					return callBack(err.message);
-				} finally {
-					if (pool2) {
-						try {
-							await pool2.close(); 
-						} catch (err) {
-							createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
-						}
-					}
-				}
-			}
-			execute_sql();
+			sql = `INSERT INTO ${process.env.SERVICE_DB_DB2_NAME}.user_account_app(
+								app_id, user_account_id, date_created)
+					SELECT :app_id, :user_account_id, SYSDATE
+					FROM DUAL
+					WHERE NOT EXISTS (SELECT NULL
+										FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_app uap
+										WHERE uap.app_id = :app_id
+										AND uap.user_account_id = :user_account_id)`;
+			parameters = {
+							app_id: app_id,
+							user_account_id: user_account_id
+						};
 		}
+		execute_db_sql(app_id, app_id, sql, parameters, null, (err, result)=>{
+			if (err)
+				return callBack(err, null);
+			else
+				return callBack(null, result);
+		});
 	},
 	getUserAccountApps: (app_id, user_account_id, callBack) => {
+		let sql;
+		let parameters;
 		if (process.env.SERVICE_DB_USE == 1) {
-			get_pool(app_id).query(
-				`SELECT uap.app_id,
-				        a.app_name,
-						a.url,
-						a.logo,
-						uap.date_created
-				   FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_app uap,
-				        ${process.env.SERVICE_DB_DB1_NAME}.app a
-				  WHERE a.id = uap.app_id
-				    AND uap.user_account_id = ?
-					AND a.enabled = 1`,
-				[
-				user_account_id
-				],
-				(error, results, fields) => {
-					if (error){
-						createLogAppSE(app_id, __appfilename, __appfunction, __appline, error);
-						return callBack(error);
-					}
-					return callBack(null, results);
-				}	
-			);
+			sql = `SELECT 	uap.app_id,
+							a.app_name,
+							a.url,
+							a.logo,
+							uap.date_created
+					FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_app uap,
+							${process.env.SERVICE_DB_DB1_NAME}.app a
+					WHERE a.id = uap.app_id
+						AND uap.user_account_id = ?
+						AND a.enabled = 1`;
+			parameters = [
+							user_account_id
+						 ];
 		}else if (process.env.SERVICE_DB_USE==2){
-			async function execute_sql(err, result){
-				let pool2;
-				try{
-				pool2 = await oracledb.getConnection(get_pool(app_id));
-				const result = await pool2.execute(
-					`SELECT uap.app_id "app_id",
+			sql = `SELECT 	uap.app_id "app_id",
 							a.app_name "app_name",
 							a.url "url",
 							a.logo "logo",
 							uap.date_created "date_created"
-					   FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_app uap,
-					        ${process.env.SERVICE_DB_DB2_NAME}.app a
-					  WHERE a.id = uap.app_id
-					    AND uap.user_account_id = :user_account_id
-						AND a.enabled = 1`,
-					{
-						user_account_id: user_account_id
-					},
-					(err,result) => {
-						if (err) {
-							createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
-							return callBack(err);
-						}
-						else{
-							return callBack(null, result);
-						}
-					});
-				}catch (err) {
-					createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
-					return callBack(err.message);
-				} finally {
-					if (pool2) {
-						try {
-							await pool2.close(); 
-						} catch (err) {
-							createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
-						}
-					}
-				}
-			}
-			execute_sql();
+					FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_app uap,
+							${process.env.SERVICE_DB_DB2_NAME}.app a
+					WHERE a.id = uap.app_id
+						AND uap.user_account_id = :user_account_id
+						AND a.enabled = 1`;
+			parameters = {
+							user_account_id: user_account_id
+						 };
 		}
+		execute_db_sql(app_id, app_id, sql, parameters, null, (err, result)=>{
+			if (err)
+				return callBack(err, null);
+			else
+				return callBack(null, result);
+		});
 	},
 	deleteUserAccountApps: (app_id_app, user_account_id, app_id, callBack) => {
+		let sql;
+		let parameters;
 		if (process.env.SERVICE_DB_USE == 1) {
-			get_pool(app_id_app).query(
-				`DELETE FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_app
-				  WHERE user_account_id = ?
-				    AND app_id = ?`,
-				[
-				user_account_id,
-				app_id
-				],
-				(error, results, fields) => {
-					if (error){
-						createLogAppSE(app_id_app, __appfilename, __appfunction, __appline, error);
-						return callBack(error);
-					}
-					return callBack(null, results);
-				}	
-			);
+			sql = `DELETE FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_app
+					WHERE user_account_id = ?
+					AND app_id = ?`;
+			parametes = [
+						user_account_id,
+						app_id
+						];
 		}else if (process.env.SERVICE_DB_USE==2){
-			async function execute_sql(err, result){
-				let pool2;
-				try{
-				pool2 = await oracledb.getConnection(get_pool(app_id_app));
-				const result = await pool2.execute(
-					`DELETE FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_app
-					  WHERE user_account_id = :user_account_id
-					    AND app_id = :app_id`,
-					{
-						user_account_id: user_account_id,
-						app_id: app_id
-					},
-					(err,result) => {
-						if (err) {
-							createLogAppSE(app_id_app, __appfilename, __appfunction, __appline, err);
-							return callBack(err);
-						}
-						else{
-							return callBack(null, result);
-						}
-					});
-				}catch (err) {
-					createLogAppSE(app_id_app, __appfilename, __appfunction, __appline, err);
-					return callBack(err.message);
-				} finally {
-					if (pool2) {
-						try {
-							await pool2.close(); 
-						} catch (err) {
-							createLogAppSE(app_id_app, __appfilename, __appfunction, __appline, err);
-						}
-					}
-				}
-			}
-			execute_sql();
+			sql = `DELETE FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_app
+					WHERE user_account_id = :user_account_id
+					AND app_id = :app_id`;
+			parameters = {
+							user_account_id: user_account_id,
+							app_id: app_id
+						 };
 		}
+		execute_db_sql(app_id, app_id, sql, parameters, null, (err, result)=>{
+			if (err)
+				return callBack(err, null);
+			else
+				return callBack(null, result);
+		});
 	}
 };
