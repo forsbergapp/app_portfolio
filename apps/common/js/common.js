@@ -2384,7 +2384,7 @@ function updatePassword(){
 function provider_init(providertype, provider_function){
     switch (providertype){
         case 1:{
-            document.getElementById('g_id_onload').setAttribute('data-client_id', window.global_app_user_provider1_id);
+            document.getElementById('g_id_onload').setAttribute('data-client_id', window.global_identity_provider1_api_id);
             document.getElementById('g_id_onload').setAttribute('data-callback', provider_function);
             document.getElementById('g_id_onload').setAttribute('data-auto_select', 'true');
             document.getElementsByClassName('g_id_signin')[0].setAttribute('data-shape', 'circle');
@@ -2393,22 +2393,21 @@ function provider_init(providertype, provider_function){
 
             /*Provider 1 SDK*/
             let tag = document.createElement('script');
-            tag.src = window.global_app_user_provider1_api_src;
+            tag.src = window.global_identity_provider1_api_src;
             tag.defer = true;
             let firstScriptTag = document.getElementsByTagName('script')[0];
             firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
             break;
         }
         case 2:{
-            document.getElementById('logo_provider2').innerHTML = window.global_button_default_icon_provider2;
             document.getElementById('login_provider2').addEventListener('click', provider_function, false);
             /*Provider 2 SDK*/
             window.fbAsyncInit = function() {
                 FB.init({
-                appId      : window.global_app_user_provider2_id,
+                appId      : window.global_identity_provider2_api_id,
                 cookie     : true,
                 xfbml      : true,
-                version    : window.global_app_user_provider2_api_version
+                version    : window.global_identity_provider2_api_version
                 });
                 
             };
@@ -2416,36 +2415,69 @@ function provider_init(providertype, provider_function){
                 let js, fjs = d.getElementsByTagName(s)[0];
                 if (d.getElementById(id)) {return;}
                 js = d.createElement(s); js.id = id;
-                js.src = window.global_app_user_provider2_api_src + 
+                js.src = window.global_identity_provider2_api_src + 
                         navigator.language.replace(/-/g, '_') + 
-                        window.global_app_user_provider2_api_src2;
+                        window.global_identity_provider2_api_src2;
                 fjs.parentNode.insertBefore(js, fjs);
             }(document, 'script', 'facebook-jssdk'));
             break;
         }
     }
 }
-function provider_hide(providertype){
-    switch (providertype){
-        case 1:{
-            document.getElementsByClassName('g_id_signin')[0].className += 'login_button_hidden';
-            break;
-        }
-        case 2:{
-            document.getElementById('login_provider2').className = 'login_button_hidden';
-            break;
-        }
-    }
-}
 async function init_providers(provider1_function, provider2_function){
-    if (window.global_app_user_provider1_use==1)
-        provider_init(1, provider1_function);
-    else
-        provider_hide(1);
-    if (window.global_app_user_provider2_use==1)
-        provider_init(2, provider2_function);
-    else
-        provider_hide(2);
+    let div = document.getElementById('identity_provider_login');
+    let json;
+    let status;
+    fetch(window.global_rest_url_base + window.global_rest_identity_provider + '?app_id=' + window.global_app_id +
+        '&lang_code=' + window.global_lang_code, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + window.global_rest_dt
+        }
+    })
+    .then(function(response) {
+        status = response.status;
+        return response.text();
+    })
+    .then(function(result) {
+        if (status == 200) {
+            json = JSON.parse(result);
+            div.innerHTML = '';
+            for (i=0;i <=json.items.length-1;i++){
+                switch (json.items[i].id){
+                    case 1:{
+                        window.global_identity_provider1_id             = json.items[i].id;
+                        window.global_identity_provider1_name           = json.items[i].provider_name;
+                        window.global_identity_provider1_api_src        = json.items[i].api_src;
+                        window.global_identity_provider1_api_id         = json.items[i].api_id;
+                        window.global_button_default_icon_provider1     = window.global_button_default_icon_google;
+                        div.innerHTML += `<div id="g_id_onload" data-client_id='' data-callback=''></div>
+                                          <div class='g_id_signin login_button' data-type='standard'></div>`;
+                        provider_init(1, provider1_function);
+                        break;
+                    }
+                    case 2:{
+                        window.global_identity_provider2_id             = json.items[i].id;
+                        window.global_identity_provider2_name           = json.items[i].provider_name;
+                        window.global_identity_provider2_api_version    = json.items[i].api_version;
+                        window.global_identity_provider2_api_src        = json.items[i].api_src;
+                        window.global_identity_provider2_api_src2       = json.items[i].api_src2;
+                        window.global_identity_provider2_api_id         = json.items[i].api_id;
+                        window.global_button_default_icon_provider2     = window.global_button_default_icon_facebook;
+
+                        div.innerHTML += `<button id='login_provider2' class='login_button' >
+                                            <div id='logo_provider2'>${window.global_button_default_icon_provider2}</div>
+                                            <div id='login_btn_provider2'></div>
+                                          </button>`;
+                        provider_init(2, provider2_function);
+                        break;
+                    }
+                }
+            }
+            
+        }
+    })
 }
 async function updateProviderUser(identity_provider_id, profile_id, profile_first_name, profile_last_name, profile_image_url, profile_email, callBack) {
     let json;
@@ -2615,21 +2647,23 @@ function set_globals(parameters){
 
     window.global_app_copyright;
     
-    window.global_app_user_provider1_use;
-    window.global_app_user_provider1_id;
-    window.global_app_user_provider1_name;
-    window.global_app_user_provider1_api_src;
-    window.global_app_user_provider2_use;
-    window.global_app_user_provider2_id;
-    window.global_app_user_provider2_name;
-    window.global_app_user_provider2_api_version;
-    window.global_app_user_provider2_api_src;
-    window.global_app_user_provider2_api_src2;
+    window.global_identity_provider1_id;
+    window.global_identity_provider1_name;
+    window.global_identity_provider1_api_src;
+    window.global_identity_provider1_api_id;
+    window.global_identity_provider2_id;
+    window.global_identity_provider2_name;
+    window.global_identity_provider2_api_version;
+    window.global_identity_provider2_api_src;
+    window.global_identity_provider2_api_src2;
+    window.global_identity_provider2_api_id;
+
     window.global_rest_at;
     window.global_rest_dt;
     window.global_rest_app;
     window.global_rest_app_object;
     window.global_rest_country;
+    window.global_rest_identity_provider;
     window.global_rest_language_locale;
     window.global_rest_message_translation;
     window.global_rest_user_account;
@@ -2731,9 +2765,6 @@ function set_globals(parameters){
         window.global_button_default_icon_yahoo = '<i class="fa-brands fa-yahoo"></i>';
         window.global_button_default_icon_github = '<i class="fa-brands fa-github"></i>';
         window.global_button_default_icon_google = '<i class="fab fa-google"></i>';
-        //set what provider to use:
-        window.global_button_default_icon_provider1 = window.global_button_default_icon_google;
-        window.global_button_default_icon_provider2 = window.global_button_default_icon_facebook;
 
         window.global_button_default_icon_user_joined_date = '<i class="fas fa-hands-helping"></i>';
         window.global_button_default_icon_user_follow_user = '<i class="fas fa-user-plus"></i>';
