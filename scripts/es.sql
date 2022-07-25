@@ -1,4 +1,15 @@
 --
+-- Dumping data for table `app_category_translation`
+--
+INSERT INTO app_portfolio.app_category_translation(app_category_id, language_id, text) VALUES(1, 506, 'Negocio');
+INSERT INTO app_portfolio.app_category_translation(app_category_id, language_id, text) VALUES(2, 506, 'Comunicaciones');
+INSERT INTO app_portfolio.app_category_translation(app_category_id, language_id, text) VALUES(3, 506, 'Educación');
+INSERT INTO app_portfolio.app_category_translation(app_category_id, language_id, text) VALUES(4, 506, 'Finanzas');
+INSERT INTO app_portfolio.app_category_translation(app_category_id, language_id, text) VALUES(5, 506, 'Casa & home');
+INSERT INTO app_portfolio.app_category_translation(app_category_id, language_id, text) VALUES(6, 506, 'Productividad');
+INSERT INTO app_portfolio.app_category_translation(app_category_id, language_id, text) VALUES(7, 506, 'Compras');
+INSERT INTO app_portfolio.app_category_translation(app_category_id, language_id, text) VALUES(8, 506, 'Juego');
+--
 -- Dumping data for table `app_object_item_translation`
 --
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (0,'DIALOGUE','USERNAME',506,'Nombre de ususario');

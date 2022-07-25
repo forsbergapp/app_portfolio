@@ -69,11 +69,29 @@ GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_category TO role_app_a
 
 GRANT ALL PRIVILEGES ON app_portfolio.app_category TO role_app_dba;
 
+CREATE TABLE app_category_translation (
+    app_category_id INTEGER NOT NULL,
+    language_id     INTEGER NOT NULL,
+    text            VARCHAR(1000) NOT NULL,
+    CONSTRAINT app_category_translation_pk PRIMARY KEY ( app_category_id,
+                                                         language_id )
+);
+
+GRANT SELECT ON app_category_translation TO role_app0;
+
+GRANT SELECT ON app_category_translation TO role_app1;
+
+GRANT SELECT ON app_category_translation TO role_app2;
+
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_category_translation TO role_app_admin;
+
+GRANT ALL PRIVILEGES ON app_category_translation TO role_app_dba;
+
 CREATE TABLE app_portfolio.app_device (
     app_id    INTEGER NOT NULL,
     device_id INTEGER NOT NULL,
     CONSTRAINT app_device_pk PRIMARY KEY ( app_id,
-                                           device_id );
+                                           device_id )
 );
 
 GRANT SELECT ON app_portfolio.app_device TO role_app0;
@@ -384,7 +402,7 @@ CREATE TABLE app_portfolio.app_screenshot (
     app_device_app_id    INTEGER NOT NULL,
     app_device_device_id INTEGER NOT NULL,
     screenshot           BLOB NOT NULL,
-    CONSTRAINT app_screenshot_pk PRIMARY KEY ( id );
+    CONSTRAINT app_screenshot_pk PRIMARY KEY ( id )
 );
 
 GRANT SELECT ON app_portfolio.app_screenshot TO role_app0;
@@ -740,7 +758,7 @@ CREATE TABLE app_portfolio.device (
     screen_x       INTEGER,
     screen_y       INTEGER,
     device_type_id INTEGER NOT NULL,
-    CONSTRAINT device_pk PRIMARY KEY ( id );
+    CONSTRAINT device_pk PRIMARY KEY ( id )
 );
 
 GRANT SELECT ON app_portfolio.device TO role_app0;
@@ -756,7 +774,7 @@ GRANT ALL PRIVILEGES ON app_portfolio.device TO role_app_dba;
 CREATE TABLE app_portfolio.device_type (
     id                          INT NOT NULL AUTO_INCREMENT,
     device_type_name            VARCHAR(100) NOT NULL,
-    CONSTRAINT device_type_pk   PRIMARY KEY ( id );
+    CONSTRAINT device_type_pk   PRIMARY KEY ( id )
 );
 
 GRANT SELECT ON app_portfolio.device_type TO role_app0;
@@ -824,7 +842,7 @@ CREATE TABLE app_portfolio.identity_provider (
     api_src                 VARCHAR(100),
     api_src2                VARCHAR(100),
     api_version             VARCHAR(100),
-	api_id                  VARCHAR2(100),
+	api_id                  VARCHAR(100),
     identity_provider_order INTEGER NOT NULL,
     enabled                 INTEGER,
     date_created            DATETIME NOT NULL,
@@ -1373,6 +1391,14 @@ GRANT trigger on app_portfolio.user_account_view to role_app1;
 ALTER TABLE app_portfolio.app
     ADD CONSTRAINT app_app_category_fk FOREIGN KEY ( app_category_id )
         REFERENCES app_portfolio.app_category ( id );
+
+ALTER TABLE app_category_translation
+    ADD CONSTRAINT app_category_translation_app_category_fk FOREIGN KEY ( app_category_id )
+        REFERENCES app_portfolio.app_category ( id );
+
+ALTER TABLE app_category_translation
+    ADD CONSTRAINT app_category_translation_language_fk FOREIGN KEY ( language_id )
+        REFERENCES app_portfolio.language ( id );
 
 ALTER TABLE app_portfolio.app_device
     ADD CONSTRAINT app_device_app_fk FOREIGN KEY ( app_id )

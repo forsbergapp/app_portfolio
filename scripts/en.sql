@@ -1,6 +1,17 @@
 --Oracle, uncomment:
 --SET DEFINE OFF;
 --
+-- Dumping data for table `app_category_translation`
+--
+INSERT INTO app_portfolio.app_category_translation(app_category_id, language_id, text) VALUES(1, 147, 'Business');
+INSERT INTO app_portfolio.app_category_translation(app_category_id, language_id, text) VALUES(2, 147, 'Communications');
+INSERT INTO app_portfolio.app_category_translation(app_category_id, language_id, text) VALUES(3, 147, 'Education');
+INSERT INTO app_portfolio.app_category_translation(app_category_id, language_id, text) VALUES(4, 147, 'Finance');
+INSERT INTO app_portfolio.app_category_translation(app_category_id, language_id, text) VALUES(5, 147, 'House & Home');
+INSERT INTO app_portfolio.app_category_translation(app_category_id, language_id, text) VALUES(6, 147, 'Productivity');
+INSERT INTO app_portfolio.app_category_translation(app_category_id, language_id, text) VALUES(7, 147, 'Shopping');
+INSERT INTO app_portfolio.app_category_translation(app_category_id, language_id, text) VALUES(8, 147, 'Game');
+--
 -- Dumping data for table `app_object_item_translation`
 --
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (0,'DIALOGUE','USERNAME',147,'Username');
