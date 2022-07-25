@@ -1044,10 +1044,8 @@ INSERT INTO message_translation (language_id, message_code, text) VALUES (515,'2
 INSERT INTO message_translation (language_id, message_code, text) VALUES (515,'20105','Vänlingen ange giltig e-post');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (515,'20106','Lösenord 10 - 100 tecken');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (515,'20107','Användarnamn, lösenord och e-post är obligatoriskt');
-INSERT INTO message_translation (language_id, message_code, text) VALUES (515,'20108','En provider en användare');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (515,'20200','E-post finns redan');
-INSERT INTO message_translation (language_id, message_code, text) VALUES (515,'20201','Provider1 finns redan');
-INSERT INTO message_translation (language_id, message_code, text) VALUES (515,'20202','Provider2 finns redan');
+INSERT INTO message_translation (language_id, message_code, text) VALUES (515,'20201','Provider finns redan');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (515,'20203','Användare finns redan');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (515,'20204','För långt värde');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (515,'20300','Användare eller lösenord hittades inte');

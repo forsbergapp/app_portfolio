@@ -28,10 +28,8 @@ function get_app_code (errorNum, message, code, errno, sqlMessage){
             //check constraints errors, must be same name in mySQL and Oracle
             if (text_check.toUpperCase().includes("USER_ACCOUNT_EMAIL_UN"))
                 app_message_code = 20200;
-            if (text_check.toUpperCase().includes("USER_ACCOUNT_PROVIDER1_ID_UN"))
+            if (text_check.toUpperCase().includes("USER_ACCOUNT_PROVIDER_ID_UN"))
                 app_message_code = 20201;
-            if (text_check.toUpperCase().includes("USER_ACCOUNT_PROVIDER2_ID_UN"))
-                app_message_code = 20202;
             if (text_check.toUpperCase().includes("USER_ACCOUNT_USERNAME_UN"))
                 app_message_code = 20203;
             if (app_message_code != ''){
@@ -61,17 +59,11 @@ module.exports = {
     create: (app_id, data, callBack) => {
 		let sql;
     	let parameters;
-		if (typeof data.provider1_id != 'undefined' && 
-		    data.provider1_id != '' && 
-			data.provider1_id){
+		if (typeof data.provider_id != 'undefined' && 
+		    data.provider_id != '' && 
+			data.provider_id){
             //generate local username for provider 1
-            data.username = `${data.provider1_first_name}${Date.now()}`;
-        }
-		if (typeof data.provider2_id != 'undefined' && 
-		    data.provider2_id != '' && 
-			data.provider2_id){
-            //generate local username for provider 2
-            data.username = `${data.provider2_first_name}${Date.now()}`;
+            data.username = `${data.provider_first_name}${Date.now()}`;
         }
         if (process.env.SERVICE_DB_USE == 1) {
 			sql = `INSERT INTO ${process.env.SERVICE_DB_DB1_NAME}.user_account(
@@ -87,19 +79,14 @@ module.exports = {
 						avatar,
 						verification_code,
 						active,
-						provider1_id,
-						provider1_first_name,
-						provider1_last_name,
-						provider1_image,
-						provider1_image_url,
-						provider1_email,
-						provider2_id,
-						provider2_first_name,
-						provider2_last_name,
-						provider2_image,
-						provider2_image_url,
-						provider2_email)
-					VALUES(?,?,?,SYSDATE(),SYSDATE(),?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) `;
+						identity_provider_id,
+						provider_id,
+						provider_first_name,
+						provider_last_name,
+						provider_image,
+						provider_image_url,
+						provider_email)
+					VALUES(?,?,?,SYSDATE(),SYSDATE(),?,?,?,?,?,?,?,?,?,?,?,?,?,?) `;
 			parameters = [
 							data.bio,
 							data.private,
@@ -111,18 +98,13 @@ module.exports = {
 							data.avatar,
 							data.verification_code,
 							data.active,
-							data.provider1_id,
-							data.provider1_first_name,
-							data.provider1_last_name,
-							data.provider1_image,
-							data.provider1_image_url,
-							data.provider1_email,
-							data.provider2_id,
-							data.provider2_first_name,
-							data.provider2_last_name,
-							data.provider2_image,
-							data.provider2_image_url,
-							data.provider2_email
+							data.identity_provider_id,
+							data.provider_id,
+							data.provider_first_name,
+							data.provider_last_name,
+							data.provider_image,
+							data.provider_image_url,
+							data.provider_email
 						];
         } else if (process.env.SERVICE_DB_USE == 2) {
 			sql = `INSERT INTO ${process.env.SERVICE_DB_DB2_NAME}.user_account(
@@ -138,18 +120,13 @@ module.exports = {
 						avatar,
 						verification_code,
 						active,
-						provider1_id,
-						provider1_first_name,
-						provider1_last_name,
-						provider1_image,
-						provider1_image_url,
-						provider1_email,
-						provider2_id,
-						provider2_first_name,
-						provider2_last_name,
-						provider2_image,
-						provider2_image_url,
-						provider2_email)
+						identity_provider_id,
+						provider_id,
+						provider_first_name,
+						provider_last_name,
+						provider_image,
+						provider_image_url,
+						provider_email)
 					VALUES(:bio,
 						:private,
 						:user_level,
@@ -162,24 +139,17 @@ module.exports = {
 						:avatar,
 						:verification_code,
 						:active,
-						:provider1_id,
-						:provider1_first_name,
-						:provider1_last_name,
-						:provider1_image,
-						:provider1_image_url,
-						:provider1_email,
-						:provider2_id,
-						:provider2_first_name,
-						:provider2_last_name,
-						:provider2_image,
-						:provider2_image_url,
-						:provider2_email) `;
+						:identity_provider_id,
+						:provider_id,
+						:provider_first_name,
+						:provider_last_name,
+						:provider_image,
+						:provider_image_url,
+						:provider_email) `;
 			if (data.avatar != null)
 				data.avatar = Buffer.from(data.avatar, 'utf8');
-			if (data.provider1_image != null)
-				data.provider1_image = Buffer.from(data.provider1_image, 'utf8');
-			if (data.provider2_image != null)
-				data.provider2_image = Buffer.from(data.provider2_image, 'utf8');
+			if (data.provider_image != null)
+				data.provider_image = Buffer.from(data.provider_image, 'utf8');
 			parameters = {
 							bio: data.bio,
 							private: data.private,
@@ -191,18 +161,13 @@ module.exports = {
 							avatar: data.avatar,
 							verification_code: data.verification_code,
 							active: data.active,
-							provider1_id: data.provider1_id,
-							provider1_first_name: data.provider1_first_name,
-							provider1_last_name: data.provider1_last_name,
-							provider1_image: data.provider1_image,
-							provider1_image_url: data.provider1_image_url,
-							provider1_email: data.provider1_email,
-							provider2_id: data.provider2_id,
-							provider2_first_name: data.provider2_first_name,
-							provider2_last_name: data.provider2_last_name,
-							provider2_image: data.provider2_image,
-							provider2_image_url: data.provider2_image_url,
-							provider2_email: data.provider2_email
+							identity_provider_id: data.identity_provider_id,
+							provider_id: data.provider_id,
+							provider_first_name: data.provider_first_name,
+							provider_last_name: data.provider_last_name,
+							provider_image: data.provider_image,
+							provider_image_url: data.provider_image_url,
+							provider_email: data.provider_email
 						};
         }
 		execute_db_sql(app_id, app_id, sql, parameters, null, 
@@ -357,8 +322,8 @@ module.exports = {
 			sql = `SELECT	u.id,
 							u.bio,
 							(SELECT MAX(ul.date_created)
-							FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_logon ul
-							WHERE ul.user_account_id = u.id
+							   FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_logon ul
+							  WHERE ul.user_account_id = u.id
 								AND ul.result=1) last_logontime,
 							u.private,
 							u.user_level,
@@ -372,18 +337,13 @@ module.exports = {
 							CONVERT(u.avatar USING UTF8) avatar,
 							u.verification_code,
 							u.active,
-							u.provider1_id,
-							u.provider1_first_name,
-							u.provider1_last_name,
-							CONVERT(u.provider1_image USING UTF8) provider1_image,
-							u.provider1_image_url,
-							u.provider1_email,
-							u.provider2_id,
-							u.provider2_first_name,
-							u.provider2_last_name,
-							CONVERT(u.provider2_image USING UTF8) provider2_image,
-							u.provider2_image_url,
-							u.provider2_email
+							u.identity_provider_id,
+							u.provider_id,
+							u.provider_first_name,
+							u.provider_last_name,
+							CONVERT(u.provider_image USING UTF8) provider_image,
+							u.provider_image_url,
+							u.provider_email
 						FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account u
 						WHERE u.id = ? `;
 			parameters = [id];
@@ -391,8 +351,8 @@ module.exports = {
 			sql = `SELECT	u.id "id",
 							u.bio "bio",
 							(SELECT MAX(ul.date_created)
-							FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_logon ul
-							WHERE ul.user_account_id = u.id
+							   FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_logon ul
+							  WHERE ul.user_account_id = u.id
 								AND ul.result=1) "last_logontime",
 							u.private "private",
 							u.user_level "user_level",
@@ -406,18 +366,13 @@ module.exports = {
 							u.avatar "avatar",
 							u.verification_code "verification_code",
 							u.active "active",
-							u.provider1_id "provider1_id",
-							u.provider1_first_name "provider1_first_name",
-							u.provider1_last_name "provider1_last_name",
-							u.provider1_image "provider1_image",
-							u.provider1_image_url "provider1_image_url",
-							u.provider1_email "provider1_email",
-							u.provider2_id "provider2_id",
-							u.provider2_first_name "provider2_first_name",
-							u.provider2_last_name "provider2_last_name",
-							u.provider2_image "provider2_image",
-							u.provider2_image_url "provider2_image_url",
-							u.provider2_email "provider2_email"
+							u.identity_provider_id "identity_provider_id",
+							u.provider_id "provider_id",
+							u.provider_first_name "provider_first_name",
+							u.provider_last_name "provider_last_name",
+							u.provider_image "provider_image",
+							u.provider_image_url "provider_image_url",
+							u.provider_email "provider_email"
 						FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account u
 						WHERE u.id = :id `;
 			parameters = {
@@ -465,38 +420,34 @@ module.exports = {
 							u.date_created,
 							u.username,
 							CONVERT(u.avatar USING UTF8) avatar,
-							u.provider1_id,
-							u.provider1_first_name,
-							u.provider1_last_name,
-							CONVERT(u.provider1_image USING UTF8) provider1_image,
-							u.provider1_image_url,
-							u.provider2_id,
-							u.provider2_first_name,
-							u.provider2_last_name,
-							CONVERT(u.provider2_image USING UTF8) provider2_image,
-							u.provider2_image_url,
+							u.identity_provider_id,
+							u.provider_id,
+							u.provider_first_name,
+							u.provider_last_name,
+							CONVERT(u.provider_image USING UTF8) provider_image,
+							u.provider_image_url,
 							(SELECT COUNT(u_following.user_account_id)   
-							FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_follow  u_following
-							WHERE u_following.user_account_id = u.id) 					count_following,
+							   FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_follow  u_following
+							  WHERE u_following.user_account_id = u.id) 					count_following,
 							(SELECT COUNT(u_followed.user_account_id_follow) 
-							FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_follow  u_followed
-							WHERE u_followed.user_account_id_follow = u.id) 				count_followed,
+							   FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_follow  u_followed
+							  WHERE u_followed.user_account_id_follow = u.id) 				count_followed,
 							(SELECT COUNT(u_likes.user_account_id)
-							FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_like    u_likes
-							WHERE u_likes.user_account_id = u.id ) 						count_likes,
+ 							   FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_like    u_likes
+							  WHERE u_likes.user_account_id = u.id ) 						count_likes,
 							(SELECT COUNT(u_likes.user_account_id_like)
-							FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_like    u_likes
-							WHERE u_likes.user_account_id_like = u.id )					count_liked,
+							   FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_like    u_likes
+							  WHERE u_likes.user_account_id_like = u.id )					count_liked,
 							(SELECT COUNT(u_views.user_account_id_view)
-							FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_view    u_views
-							WHERE u_views.user_account_id_view = u.id ) 					count_views,
+							   FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_view    u_views
+							  WHERE u_views.user_account_id_view = u.id ) 					count_views,
 							(SELECT COUNT(u_followed_current_user.user_account_id)
-							FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_follow  u_followed_current_user 
-							WHERE u_followed_current_user.user_account_id_follow = u.id
+							   FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_follow  u_followed_current_user 
+							  WHERE u_followed_current_user.user_account_id_follow = u.id
 								AND u_followed_current_user.user_account_id = ?) 			followed,
 							(SELECT COUNT(u_liked_current_user.user_account_id)  
-							FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_like    u_liked_current_user
-							WHERE u_liked_current_user.user_account_id_like = u.id
+							   FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_like    u_liked_current_user
+							  WHERE u_liked_current_user.user_account_id_like = u.id
 								AND u_liked_current_user.user_account_id = ?)      			liked
 						FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account u
 					WHERE (u.id = ? 
@@ -522,8 +473,8 @@ module.exports = {
 							u.bio "bio",
 							(SELECT 1
 								FROM DUAL
-							WHERE u.private = 1
-								AND (NOT EXISTS (SELECT NULL
+							   WHERE u.private = 1
+								 AND (NOT EXISTS (SELECT NULL
 												FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_follow  uaf 
 												WHERE uaf.user_account_id = u.id
 													AND uaf.user_account_id_follow = :user_accound_id_current_user)
@@ -547,38 +498,34 @@ module.exports = {
 							u.date_created "date_created",
 							u.username "username",
 							u.avatar "avatar",
-							u.provider1_id "provider1_id",
-							u.provider1_first_name "provider1_first_name",
-							u.provider1_last_name "provider1_last_name",
-							u.provider1_image "provider1_image",
-							u.provider1_image_url "provider1_image_url",
-							u.provider2_id "provider2_id",
-							u.provider2_first_name "provider2_first_name",
-							u.provider2_last_name "provider2_last_name",
-							u.provider2_image "provider2_image",
-							u.provider2_image_url "provider2_image_url",
+							u.identity_provider_id "identity_provider_id",
+							u.provider_id "provider_id",
+							u.provider_first_name "provider_first_name",
+							u.provider_last_name "provider_last_name",
+							u.provider_image "provider_image",
+							u.provider_image_url "provider_image_url",
 							(SELECT COUNT(u_following.user_account_id)   
-							FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_follow  u_following
-							WHERE u_following.user_account_id = u.id) 					"count_following",
+						 	   FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_follow  u_following
+							  WHERE u_following.user_account_id = u.id) 					"count_following",
 							(SELECT COUNT(u_followed.user_account_id_follow) 
-							FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_follow  u_followed
-							WHERE u_followed.user_account_id_follow = u.id) 				"count_followed",
+							   FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_follow  u_followed
+							  WHERE u_followed.user_account_id_follow = u.id) 				"count_followed",
 							(SELECT COUNT(u_likes.user_account_id)
-							FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_like    u_likes
-							WHERE u_likes.user_account_id = u.id ) 						"count_likes",
+							   FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_like    u_likes
+							  WHERE u_likes.user_account_id = u.id ) 						"count_likes",
 							(SELECT COUNT(u_likes.user_account_id_like)
-							FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_like    u_likes
-							WHERE u_likes.user_account_id_like = u.id )					"count_liked",
+							   FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_like    u_likes
+							  WHERE u_likes.user_account_id_like = u.id )					"count_liked",
 							(SELECT COUNT(u_views.user_account_id_view)
-							FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_view    u_views
-							WHERE u_views.user_account_id_view = u.id ) 					"count_views",
+							   FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_view    u_views
+							  WHERE u_views.user_account_id_view = u.id ) 					"count_views",
 							(SELECT COUNT(u_followed_current_user.user_account_id)
-							FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_follow  u_followed_current_user 
-							WHERE u_followed_current_user.user_account_id_follow = u.id
+							   FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_follow  u_followed_current_user 
+							  WHERE u_followed_current_user.user_account_id_follow = u.id
 								AND u_followed_current_user.user_account_id = :user_accound_id_current_user) 	"followed",
 							(SELECT COUNT(u_liked_current_user.user_account_id)  
-							FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_like    u_liked_current_user
-							WHERE u_liked_current_user.user_account_id_like = u.id
+							   FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_like    u_liked_current_user
+							  WHERE u_liked_current_user.user_account_id_like = u.id
 								AND u_liked_current_user.user_account_id = :user_accound_id_current_user)      "liked"
 						FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account u
 					WHERE (u.id = :id 
@@ -611,20 +558,15 @@ module.exports = {
 			sql = `SELECT	u.id,
 							u.username,
 							CONVERT(u.avatar USING UTF8) avatar,
-							u.provider1_id,
-							u.provider1_first_name,
-							CONVERT(u.provider1_image USING UTF8) provider1_image,
-							u.provider1_image_url,
-							u.provider2_id,
-							u.provider2_first_name,
-							CONVERT(u.provider2_image USING UTF8) provider2_image,
-							u.provider2_image_url
+							u.identity_provider_id,
+							u.provider_id,
+							u.provider_first_name,
+							CONVERT(u.provider_image USING UTF8) provider_image,
+							u.provider_image_url
 					FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account u
 					WHERE (u.username LIKE ?
 							OR
-							u.provider1_first_name LIKE ?
-							OR
-							u.provider2_first_name LIKE ?)
+							u.provider_first_name LIKE ?)
 					AND u.active = 1
 					AND EXISTS(SELECT NULL
 								FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_app uap
@@ -632,36 +574,29 @@ module.exports = {
 									AND uap.app_id = ?)`;
 			parameters = [	'%' + username + '%',
 							'%' + username + '%',
-							'%' + username + '%',
 							app_id
 						];
         } else if (process.env.SERVICE_DB_USE == 2) {
 			sql= `SELECT	u.id "id",
 							u.username "username",
 							u.avatar "avatar",
-							u.provider1_id "provider1_id",
-							u.provider1_first_name "provider1_first_name",
-							u.provider1_image "provider1_image",
-							u.provider1_image_url "provider1_image_url",
-							u.provider2_id "provider2_id",
-							u.provider2_first_name "provider2_first_name",
-							u.provider2_image "provider2_image",
-							u.provider2_image_url "provider2_image_url"
+							u.identity_provider_id "identity_provider_id",
+							u.provider_id "provider_id",
+							u.provider_first_name "provider_first_name",
+							u.provider_image "provider_image",
+							u.provider_image_url "provider_image_url"
 					FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account u
 					WHERE (u.username LIKE :username
 							OR
-							u.provider1_first_name LIKE :provider1_first_name
-							OR
-							u.provider2_first_name LIKE :provider2_first_name)
+							u.provider_first_name LIKE :provider_first_name)
 					AND u.active = 1 
 					AND EXISTS(SELECT NULL
-									FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_app uap
+								 FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_app uap
 								WHERE uap.user_account_id = u.id
-									AND uap.app_id = :app_id)`;
+								  AND uap.app_id = :app_id)`;
 			parameters = {
 							username: '%' + username + '%',
-							provider1_first_name: '%' + username + '%',
-							provider2_first_name: '%' + username + '%',
+							provider_first_name: '%' + username + '%',
 							app_id: app_id
 						};
         }
@@ -680,16 +615,12 @@ module.exports = {
 			sql = `SELECT *
 					FROM (SELECT 'FOLLOWING' detail,
 									u.id,
-									u.provider1_id,
-									u.provider2_id,
+									u.provider_id,
 									CONVERT(u.avatar USING UTF8) avatar,
-									CONVERT(u.provider1_image USING UTF8) provider1_image,
-									u.provider1_image_url,
-									CONVERT(u.provider2_image USING UTF8) provider2_image,
-									u.provider2_image_url,
+									CONVERT(u.provider_image USING UTF8) provider_image,
+									u.provider_image_url,
 									u.username,
-									u.provider1_first_name,
-									u.provider2_first_name
+									u.provider_first_name
 							FROM    ${process.env.SERVICE_DB_DB1_NAME}.user_account_follow u_follow,
 									${process.env.SERVICE_DB_DB1_NAME}.user_account u
 							WHERE  u_follow.user_account_id = ?
@@ -699,16 +630,12 @@ module.exports = {
 							UNION ALL
 							SELECT 'FOLLOWED' detail,
 									u.id,
-									u.provider1_id,
-									u.provider2_id,
+									u.provider_id,
 									CONVERT(u.avatar USING UTF8) avatar,
-									CONVERT(u.provider1_image USING UTF8) provider1_image,
-									u.provider1_image_url,
-									CONVERT(u.provider2_image USING UTF8) provider2_image,
-									u.provider2_image_url,
+									CONVERT(u.provider_image USING UTF8) provider_image,
+									u.provider_image_url,
 									u.username,
-									u.provider1_first_name,
-									u.provider2_first_name
+									u.provider_first_name
 							FROM    ${process.env.SERVICE_DB_DB1_NAME}.user_account_follow u_followed,
 									${process.env.SERVICE_DB_DB1_NAME}.user_account u
 							WHERE  u_followed.user_account_id_follow = ?
@@ -718,16 +645,12 @@ module.exports = {
 							UNION ALL
 							SELECT 'LIKE_USER' detail,
 									u.id,
-									u.provider1_id,
-									u.provider2_id,
+									u.provider_id,
 									CONVERT(u.avatar USING UTF8) avatar,
-									CONVERT(u.provider1_image USING UTF8) provider1_image,
-									u.provider1_image_url,
-									CONVERT(u.provider2_image USING UTF8) provider2_image,
-									u.provider2_image_url,
+									CONVERT(u.provider_image USING UTF8) provider_image,
+									u.provider_image_url,
 									u.username,
-									u.provider1_first_name,
-									u.provider2_first_name
+									u.provider_first_name
 							FROM    ${process.env.SERVICE_DB_DB1_NAME}.user_account_like u_like,
 									${process.env.SERVICE_DB_DB1_NAME}.user_account u
 							WHERE  u_like.user_account_id = ?
@@ -737,16 +660,12 @@ module.exports = {
 							UNION ALL
 							SELECT 'LIKED_USER' detail,
 									u.id,
-									u.provider1_id,
-									u.provider2_id,
+									u.provider_id,
 									CONVERT(u.avatar USING UTF8) avatar,
-									CONVERT(u.provider1_image USING UTF8) provider1_image,
-									u.provider1_image_url,
-									CONVERT(u.provider2_image USING UTF8) provider2_image,
-									u.provider2_image_url,
+									CONVERT(u.provider_image USING UTF8) provider_image,
+									u.provider_image_url,
 									u.username,
-									u.provider1_first_name,
-									u.provider2_first_name
+									u.provider_first_name
 							FROM    ${process.env.SERVICE_DB_DB1_NAME}.user_account_like u_liked,
 									${process.env.SERVICE_DB_DB1_NAME}.user_account u
 							WHERE  u_liked.user_account_id_like = ?
@@ -754,8 +673,7 @@ module.exports = {
 							AND    u.active = 1
 							AND    4 = ?) t
 						ORDER BY 1, COALESCE(username, 
-											provider1_first_name,
-											provider2_first_name)`;
+											provider_first_name)`;
 			parameters = [	id,
 							detailchoice,
 							id,
@@ -769,16 +687,12 @@ module.exports = {
 			sql = `SELECT *
 					FROM (SELECT 'FOLLOWING' "detail",
 									u.id "id",
-									u.provider1_id "provider1_id",
-									u.provider2_id "provider2_id",
+									u.provider_id "provider_id",
 									u.avatar "avatar",
-									u.provider1_image "provider1_image",
-									u.provider1_image_url "provider1_image_url",
-									u.provider2_image "provider2_image",
-									u.provider2_image_url "provider2_image_url",
+									u.provider_image "provider_image",
+									u.provider_image_url "provider_image_url",
 									u.username "username",
-									u.provider1_first_name "provider1_first_name",
-									u.provider2_first_name "provider2_first_name"
+									u.provider_first_name "provider_first_name"
 							FROM   	${process.env.SERVICE_DB_DB2_NAME}.user_account_follow u_follow,
 									${process.env.SERVICE_DB_DB2_NAME}.user_account u
 							WHERE  u_follow.user_account_id = :user_account_id_following
@@ -788,16 +702,12 @@ module.exports = {
 							UNION ALL
 							SELECT 'FOLLOWED' "detail",
 									u.id "id",
-									u.provider1_id "provider1_id",
-									u.provider2_id "provider2_id",
+									u.provider_id "provider_id"
 									u.avatar "avatar",
-									u.provider1_image "provider1_image",
-									u.provider1_image_url "provider1_image_url",
-									u.provider2_image "provider2_image",
-									u.provider2_image_url "provider2_image_url",
+									u.provider_image "provider_image",
+									u.provider_image_url "provider_image_url",
 									u.username "username",
-									u.provider1_first_name "provider1_first_name",
-									u.provider2_first_name "provider2_first_name"
+									u.provider_first_name "provider_first_name"
 							FROM   	${process.env.SERVICE_DB_DB2_NAME}.user_account_follow u_followed,
 									${process.env.SERVICE_DB_DB2_NAME}.user_account u
 							WHERE  u_followed.user_account_id_follow = :user_account_id_followed
@@ -807,16 +717,12 @@ module.exports = {
 							UNION ALL
 							SELECT 'LIKE_USER' "detail",
 									u.id "id",
-									u.provider1_id "provider1_id",
-									u.provider2_id "provider2_id",
+									u.provider_id "provider_id",
 									u.avatar "avatar",
-									u.provider1_image "provider1_image",
-									u.provider1_image_url "provider1_image_url",
-									u.provider2_image "provider2_image",
-									u.provider2_image_url "provider2_image_url",
+									u.provider_image "provider_image",
+									u.provider_image_url "provider_image_url",
 									u.username "username",
-									u.provider1_first_name "provider1_first_name",
-									u.provider2_first_name "provider2_first_name"
+									u.provider_first_name "provider_first_name"
 							FROM   	${process.env.SERVICE_DB_DB2_NAME}.user_account_like u_like,
 									${process.env.SERVICE_DB_DB2_NAME}.user_account u
 							WHERE  u_like.user_account_id = :user_account_id_like_user
@@ -826,16 +732,12 @@ module.exports = {
 							UNION ALL
 							SELECT 'LIKED_USER' "detail",
 									u.id "id",
-									u.provider1_id "provider1_id",
-									u.provider2_id "provider2_id",
+									u.provider_id "provider_id"
 									u.avatar "avatar",
-									u.provider1_image "provider1_image",
-									u.provider1_image_url "provider1_image_url",
-									u.provider2_image "provider2_image",
-									u.provider2_image_url "provider2_image_url",
+									u.provider_image "provider_image",
+									u.provider_image_url "provider_image_url"
 									u.username "username",
-									u.provider1_first_name "provider1_first_name",
-									u.provider2_first_name "provider2_first_name"
+									u.provider_first_name "provider_first_name"
 							FROM   	${process.env.SERVICE_DB_DB2_NAME}.user_account_like u_liked,
 									${process.env.SERVICE_DB_DB2_NAME}.user_account u
 							WHERE  u_liked.user_account_id_like = :user_account_id_liked_user
@@ -843,8 +745,7 @@ module.exports = {
 							AND    u.active = 1
 							AND    4 = :detailchoice_liked_user) t
 						ORDER BY 1, COALESCE("username", 
-											"provider1_first_name",
-											"provider2_first_name") `;
+											"provider_first_name") `;
 			parameters ={
 							user_account_id_following: id,
 							detailchoice_following: detailchoice,
@@ -871,19 +772,16 @@ module.exports = {
 			sql = `SELECT *
 					FROM (SELECT 'FOLLOWING' top,
 									u.id,
-									u.provider1_id,
-									u.provider2_id,
+									u.identity_provider_id,
+									u.provider_id,
 									CONVERT(u.avatar USING UTF8) avatar,
-									CONVERT(u.provider1_image USING UTF8) provider1_image,
-									u.provider1_image_url,
-									CONVERT(u.provider2_image USING UTF8) provider2_image,
-									u.provider2_image_url,
+									CONVERT(u.provider_image USING UTF8) provider_image,
+									u.provider_image_url,
 									u.username,
-									u.provider1_first_name,
-									u.provider2_first_name,
+									u.provider_first_name,
 									(SELECT COUNT(u_follow.user_account_id_follow)
-									FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_follow u_follow
-									WHERE u_follow.user_account_id_follow = u.id) count
+									   FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_follow u_follow
+									  WHERE u_follow.user_account_id_follow = u.id) count
 							FROM 	${process.env.SERVICE_DB_DB1_NAME}.user_account u
 							WHERE   u.active = 1
 							AND   u.private <> 1
@@ -891,19 +789,16 @@ module.exports = {
 							UNION ALL
 							SELECT 'LIKE_USER' top,
 									u.id,
-									u.provider1_id,
-									u.provider2_id,
+									u.identity_provider_id,
+									u.provider_id,
 									CONVERT(u.avatar USING UTF8) avatar,
-									CONVERT(u.provider1_image USING UTF8) provider1_image,
-									u.provider1_image_url,
-									CONVERT(u.provider2_image USING UTF8) provider2_image,
-									u.provider2_image_url,
+									CONVERT(u.provider_image USING UTF8) provider_image,
+									u.provider_image_url,
 									u.username,
-									u.provider1_first_name,
-									u.provider2_first_name,
+									u.provider_first_name,
 									(SELECT COUNT(u_like.user_account_id_like)
-									FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_like u_like
-									WHERE u_like.user_account_id_like = u.id) count
+									   FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_like u_like
+									  WHERE u_like.user_account_id_like = u.id) count
 							FROM  ${process.env.SERVICE_DB_DB1_NAME}.user_account u
 							WHERE  u.active = 1
 							AND  u.private <> 1
@@ -911,19 +806,16 @@ module.exports = {
 							UNION ALL
 							SELECT 'VISITED' top,
 									u.id,
-									u.provider1_id,
-									u.provider2_id,
+									u.identity_provider_id,
+									u.provider_id,
 									CONVERT(u.avatar USING UTF8) avatar,
-									CONVERT(u.provider1_image USING UTF8) provider1_image,
-									u.provider1_image_url,
-									CONVERT(u.provider2_image USING UTF8) provider2_image,
-									u.provider2_image_url,
+									CONVERT(u.provider_image USING UTF8) provider_image,
+									u.provider_image_url,
 									u.username,
-									u.provider1_first_name,
-									u.provider2_first_name,
+									u.provider_first_name,
 									(SELECT COUNT(u_visited.user_account_id_view)
-									FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_view u_visited
-									WHERE u_visited.user_account_id_view = u.id) count
+									   FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_view u_visited
+									  WHERE u_visited.user_account_id_view = u.id) count
 							FROM  ${process.env.SERVICE_DB_DB1_NAME}.user_account u
 							WHERE  u.active = 1
 							AND  u.private <> 1
@@ -932,9 +824,8 @@ module.exports = {
 								FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_app uap
 								WHERE uap.user_account_id = t.id
 									AND uap.app_id = ?)
-					ORDER BY 1,13 DESC, COALESCE(username, 
-												provider1_first_name,
-												provider2_first_name)
+					ORDER BY 1,10 DESC, COALESCE(username, 
+												provider_first_name)
 					LIMIT 10`;
 			parameters = [	statchoice,
 							statchoice,
@@ -945,19 +836,16 @@ module.exports = {
 			sql = `SELECT *
 					FROM (SELECT 'FOLLOWING' "top",
 									u.id "id",
-									u.provider1_id "provider1_id",
-									u.provider2_id "provider2_id",
+									u.identity_provider_id "identity_provider_id",
+									u.provider_id "provider_id",
 									u.avatar "avatar",
-									u.provider1_image "provider1_image",
-									u.provider1_image_url "provider1_image_url",
-									u.provider2_image "provider2_image",
-									u.provider2_image_url "provider2_image_url",
+									u.provider_image "provider_image",
+									u.provider_image_url "provider_image_url",
 									u.username "username",
-									u.provider1_first_name "provider1_first_name",
-									u.provider2_first_name "provider2_first_name",
+									u.provider_first_name "provider_first_name",
 									(SELECT COUNT(u_follow.user_account_id_follow)
-									FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_follow u_follow
-									WHERE u_follow.user_account_id_follow = u.id) "count"
+									   FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_follow u_follow
+									  WHERE u_follow.user_account_id_follow = u.id) "count"
 							FROM  	${process.env.SERVICE_DB_DB2_NAME}.user_account u
 							WHERE   u.active = 1
 							AND   u.private <> 1
@@ -965,19 +853,16 @@ module.exports = {
 							UNION ALL
 							SELECT 'LIKE_USER' "top",
 									u.id "id",
-									u.provider1_id "provider1_id",
-									u.provider2_id "provider2_id",
+									u.identity_provider_id "identity_provider_id",
+									u.provider_id "provider_id",
 									u.avatar "avatar",
-									u.provider1_image "provider1_image",
-									u.provider1_image_url "provider1_image_url",
-									u.provider2_image "provider2_image",
-									u.provider2_image_url "provider2_image_url",
+									u.provider_image "provider_image",
+									u.provider_image_url "provider_image_url",
 									u.username "username",
-									u.provider1_first_name "provider1_first_name",
-									u.provider2_first_name "provider2_first_name",
+									u.provider_first_name "provider_first_name",
 									(SELECT COUNT(u_like.user_account_id_like)
-									FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_like u_like
-									WHERE u_like.user_account_id_like = u.id) "count"
+									   FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_like u_like
+									  WHERE u_like.user_account_id_like = u.id) "count"
 							FROM  ${process.env.SERVICE_DB_DB2_NAME}.user_account u
 							WHERE  u.active = 1
 							AND  u.private <> 1
@@ -985,19 +870,16 @@ module.exports = {
 							UNION ALL
 							SELECT 'VISITED' "top",
 									u.id "id",
-									u.provider1_id "provider1_id",
-									u.provider2_id "provider2_id",
+									u.identity_provider_id "identity_provider_id",
+									u.provider_id "provider_id",
 									u.avatar "avatar",
-									u.provider1_image "provider1_image",
-									u.provider1_image_url "provider1_image_url",
-									u.provider2_image "provider2_image",
-									u.provider2_image_url "provider2_image_url",
+									u.provider_image "provider_image",
+									u.provider_image_url "provider_image_url",
 									u.username "username",
-									u.provider1_first_name "provider1_first_name",
-									u.provider2_first_name "provider2_first_name",
+									u.provider_first_name "provider_first_name",
 									(SELECT COUNT(u_visited.user_account_id_view)
-									FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_view u_visited
-									WHERE u_visited.user_account_id_view = u.id) "count"
+									   FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_view u_visited
+									  WHERE u_visited.user_account_id_view = u.id) "count"
 							FROM  ${process.env.SERVICE_DB_DB2_NAME}.user_account u
 							WHERE  u.active = 1
 							AND  u.private <> 1
@@ -1007,9 +889,8 @@ module.exports = {
 								WHERE uap.user_account_id = t."id"
 									AND uap.app_id = :app_id)
 					AND    ROWNUM <=10
-					ORDER BY 1,13 DESC, COALESCE("username", 
-												"provider1_first_name",
-												"provider2_first_name") `;
+					ORDER BY 1,10 DESC, COALESCE("username", 
+												"provider_first_name") `;
 			parameters = {
 							statchoice_following: statchoice,
 							statchoice_like_user: statchoice,
@@ -1030,12 +911,12 @@ module.exports = {
 		let parameters;
         if (process.env.SERVICE_DB_USE == 1) {
 			sql = `SELECT password
-					FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account
-				WHERE id = ? `;
+					 FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account
+				    WHERE id = ? `;
 			parameters = [id];
         } else if (process.env.SERVICE_DB_USE == 2) {
 			sql = `SELECT password "password"
-					FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account
+					 FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account
 					WHERE id = :id `;
 			parameters = {
 							id: id
@@ -1225,8 +1106,7 @@ module.exports = {
 							CONVERT(avatar USING UTF8) avatar
 						FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account
 					WHERE username = ? 
-						AND provider1_id IS NULL
-						AND provider2_id IS NULL`;
+						AND provider_id IS NULL`;
 			parameters = [data.username
 						 ];
         } else if (process.env.SERVICE_DB_USE == 2) {
@@ -1239,8 +1119,7 @@ module.exports = {
 							avatar "avatar"
 						FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account
 					WHERE username = :username 
-						AND provider1_id IS NULL
-						AND provider2_id IS NULL`;
+						AND provider_id IS NULL`;
 			parameters ={
 							username: data.username
 						}; 
@@ -1253,93 +1132,53 @@ module.exports = {
 				return callBack(null, result[0]);
 		});
     },
-    updateSigninProvider: (app_id, provider_no, id, data, callBack) => {
+    updateSigninProvider: (app_id, id, data, callBack) => {
 		let sql;
 		let parameters;
-        if (provider_no == 1) {
-            if (process.env.SERVICE_DB_USE == 1) {
-				sql = `UPDATE ${process.env.SERVICE_DB_DB1_NAME}.user_account
-							SET provider1_id = ?,
-								provider1_first_name = ?,
-								provider1_last_name = ?,
-								provider1_image = ?,
-								provider1_image_url = ?,
-								provider1_email = ?,
-								date_modified = SYSDATE()
-						WHERE id = ?
-							AND active =1 `;
-				parameters = [	data.provider1_id,
-								data.provider1_first_name,
-								data.provider1_last_name,
-								data.provider1_image,
-								data.provider1_image_url,
-								data.provider1_email,
-								id
-							]
-            } else if (process.env.SERVICE_DB_USE == 2) {
-				sql = `UPDATE ${process.env.SERVICE_DB_DB2_NAME}.user_account
-							SET provider1_id = :provider1_id,
-								provider1_first_name = :provider1_first_name,
-								provider1_last_name = :provider1_last_name,
-								provider1_image = :provider1_image,
-								provider1_image_url = :provider1_image_url,
-								provider1_email = :provider1_email,
-								date_modified = SYSDATE
-						WHERE id = :id
-							AND active =1 `;
-				parameters ={
-								provider1_id: data.provider1_id,
-								provider1_first_name: data.provider1_first_name,
-								provider1_last_name: data.provider1_last_name,
-								provider1_image: Buffer.from(data.provider1_image, 'utf8'),
-								provider1_image_url: data.provider1_image_url,
-								provider1_email: data.provider1_email,
-								id: id
-							}; 
-            }
-        } else {
-            if (process.env.SERVICE_DB_USE == 1) {
-				sql = `UPDATE ${process.env.SERVICE_DB_DB1_NAME}.user_account
-							SET provider2_id = ?,
-								provider2_first_name = ?,
-								provider2_last_name = ?,
-								provider2_image = ?,
-								provider2_image_url = ?,
-								provider2_email = ?,
-								date_modified = SYSDATE()
-						WHERE id = ?
-							AND active =1 `;
-				parameters = [
-								data.provider2_id,
-								data.provider2_first_name,
-								data.provider2_last_name,
-								data.provider2_image,
-								data.provider2_image_url,
-								data.provider2_email,
-								id
-							];
-            } else if (process.env.SERVICE_DB_USE == 2) {
-				sql = `UPDATE ${process.env.SERVICE_DB_DB2_NAME}.user_account
-							SET provider2_id = :provider2_id,
-								provider2_first_name = :provider2_first_name,
-								provider2_last_name = :provider2_last_name,
-								provider2_image = :provider2_image,
-								provider2_image_url = :provider2_image_url,
-								provider2_email = :provider2_email,
-								date_modified = SYSDATE
-						WHERE id = :id
-							AND active =1 `;
-				parameters ={
-								provider2_id: data.provider2_id,
-								provider2_first_name: data.provider2_first_name,
-								provider2_last_name: data.provider2_last_name,
-								provider2_image: Buffer.from(data.provider2_image, 'utf8'),
-								provider2_image_url: data.provider2_image_url,
-								provider2_email: data.provider2_email,
-								id: id
-							}; 
-            }
-        }
+		if (process.env.SERVICE_DB_USE == 1) {
+			sql = `UPDATE ${process.env.SERVICE_DB_DB1_NAME}.user_account
+						SET identity_provider_id = ?,
+							provider_id = ?,
+							provider_first_name = ?,
+							provider_last_name = ?,
+							provider_image = ?,
+							provider_image_url = ?,
+							provider_email = ?,
+							date_modified = SYSDATE()
+					WHERE id = ?
+						AND active =1 `;
+			parameters = [	data.identity_provider_id,
+							data.provider_id,
+							data.provider_first_name,
+							data.provider_last_name,
+							data.provider_image,
+							data.provider_image_url,
+							data.provider_email,
+							id
+						]
+		} else if (process.env.SERVICE_DB_USE == 2) {
+			sql = `UPDATE ${process.env.SERVICE_DB_DB2_NAME}.user_account
+						SET identity_provider_id = :identity_provider_id,
+							provider_id = :provider_id,
+							provider_first_name = :provider_first_name,
+							provider_last_name = :provider_last_name,
+							provider_image = :provider_image,
+							provider_image_url = :provider_image_url,
+							provider_email = :provider_email,
+							date_modified = SYSDATE
+					WHERE id = :id
+					  AND active =1 `;
+			parameters ={
+							identity_provider_id: data.identity_provider_id,
+							provider_id: data.provider_id,
+							provider_first_name: data.provider_first_name,
+							provider_last_name: data.provider_last_name,
+							provider_image: Buffer.from(data.provider_image, 'utf8'),
+							provider_image_url: data.provider_image_url,
+							provider_email: data.provider_email,
+							id: id
+						}; 
+		}
 		execute_db_sql(app_id, app_id, sql, parameters, null, 
 			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
@@ -1348,15 +1187,15 @@ module.exports = {
 				return callBack(null, result[0]);
 		});
     },
-    getUserByProviderId: (app_id, provider_no, search_id, callBack) => {
+    getUserByProviderId: (app_id, identity_provider_id, search_id, callBack) => {
 		let sql;
 		let parameters;
         if (process.env.SERVICE_DB_USE == 1) {
 			sql = `SELECT	u.id,
 							u.bio,
 							(SELECT MAX(ul.date_created)
-							FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_logon ul
-							WHERE ul.user_account_id = u.id
+							   FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_logon ul
+							  WHERE ul.user_account_id = u.id
 								AND ul.result=1) last_logontime,
 							u.date_created,
 							u.date_modified,
@@ -1367,29 +1206,18 @@ module.exports = {
 							CONVERT(u.avatar USING UTF8) avatar,
 							u.verification_code,
 							u.active,
-							u.provider1_id,
-							u.provider1_first_name,
-							u.provider1_last_name,
-							CONVERT(u.provider1_image USING UTF8) provider1_image,
-							u.provider1_image_url,
-							u.provider1_email,
-							u.provider2_id,
-							u.provider2_first_name,
-							u.provider2_last_name,
-							CONVERT(u.provider2_image USING UTF8) provider2_image,
-							u.provider2_image_url,
-							u.provider2_email
-						FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account u
-						WHERE (u.provider1_id = ?
-							AND
-							1 = ?) 
-						OR    (u.provider2_id = ?
-							AND
-							2 = ?)`;
+							u.identity_provider_id,
+							u.provider_id,
+							u.provider_first_name,
+							u.provider_last_name,
+							CONVERT(u.provider_image USING UTF8) provider_image,
+							u.provider_image_url,
+							u.provider_email
+					   FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account u
+					  WHERE u.provider_id = ? 
+					    AND u.identity_provider_id = ?`;
 			parameters = [search_id,
-							provider_no,
-							search_id,
-							provider_no
+						  identity_provider_id
 						];
         } else if (process.env.SERVICE_DB_USE == 2) {
 			sql = `SELECT	u.id "id",
@@ -1407,30 +1235,19 @@ module.exports = {
 							u.avatar "avatar",
 							u.verification_code "verification_code",
 							u.active "active",
-							u.provider1_id "provider1_id",
-							u.provider1_first_name "provider1_first_name",
-							u.provider1_last_name "provider1_last_name",
-							u.provider1_image "provider1_image",
-							u.provider1_image_url "provider1_image_url",
-							u.provider1_email "provider1_email",
-							u.provider2_id "provider2_id",
-							u.provider2_first_name "provider2_first_name",
-							u.provider2_last_name "provider2_last_name",
-							u.provider2_image "provider2_image",
-							u.provider2_image_url "provider2_image_url",
-							u.provider2_email "provider2_email"
-						FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account u
-						WHERE (u.provider1_id = :provider1_id
-							AND
-							1 = :provider1_no) 
-						OR    (u.provider2_id = :provider2_id
-							AND
-							2 = :provider2_no) `;
+							u.identity_provider_id "identity_provider_id",
+							u.provider_id "provider_id",
+							u.provider_first_name "provider_first_name",
+							u.provider_last_name "provider_last_name",
+							u.provider_image "provider_image",
+							u.provider_image_url "provider_image_url",
+							u.provider_email "provider_email"
+					   FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account u
+					  WHERE u.provider_id = :provider_id
+						AND u.identity_provider_id = :identity_provider_id`;
 			parameters = {
-							provider1_id: search_id,
-							provider1_no: provider_no,
-							provider2_id: search_id,
-							provider2_no: provider_no
+							provider_id: search_id,
+							identity_provider_id: identity_provider_id
 						};
         }
 		execute_db_sql(app_id, app_id, sql, parameters, null, 
@@ -1446,28 +1263,30 @@ module.exports = {
 		let parameters;
         if (process.env.SERVICE_DB_USE == 1) {
 			sql = `SELECT  (SELECT COUNT(*)
-							FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account
-							WHERE provider1_id IS NULL
-								AND provider2_id IS NULL) count_local,
+							  FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account
+							 WHERE provider_id IS NULL) count_local,
 							(SELECT COUNT(*)
-							FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account
-							WHERE provider1_id IS NOT NULL) count_provider1,
+							   FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account
+							  WHERE provider_id IS NOT NULL
+							   AND  identity_provider_id = 1) count_provider1,
 							(SELECT COUNT(*)
-							FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account
-							WHERE provider2_id IS NOT NULL) count_provider2
+							   FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account
+							  WHERE provider_id IS NOT NULL
+  							    AND identity_provider_id = 2) count_provider2
 					FROM DUAL`;
 			parameters = [];
         } else if (process.env.SERVICE_DB_USE == 2) {
 			sql = `SELECT  (SELECT COUNT(*)
-							FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account
-							WHERE provider1_id IS NULL
-								AND provider2_id IS NULL) "count_local",
+							  FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account
+							 WHERE provider_id IS NULL) "count_local",
 							(SELECT COUNT(*)
-							FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account
-							WHERE provider1_id IS NOT NULL) "count_provider1",
+							   FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account
+							  WHERE provider_id IS NOT NULL
+							    AND identity_provider_id = 1) "count_provider1",
 							(SELECT COUNT(*)
-							FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account
-							WHERE provider2_id IS NOT NULL) "count_provider2"
+							   FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account
+							  WHERE provider_id IS NOT NULL
+							    AND identity_provider_id = 2) "count_provider2"
 					FROM DUAL`;
 			parameters = {};
         }
