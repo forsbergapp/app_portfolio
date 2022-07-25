@@ -389,7 +389,7 @@ async function user_edit_app() {
     await user_edit(Intl.DateTimeFormat().resolvedOptions().timeZone,(err, result) => {
         if ((err==null && result==null) == false)
             if (err==null){
-                set_avatar(result.avatar ?? result.provider1_image ?? result.provider2_image, document.getElementById('user_menu_avatar_img'));
+                set_avatar(result.avatar ?? result.provider_image, document.getElementById('user_menu_avatar_img'));
             }
     });
 }
