@@ -160,9 +160,6 @@
 #dialogue_forgot{
 	visibility: hidden;
 }
-.login_button_hidden{
-	display:none !important;
-}
 #dialogue_login_content,
 #dialogue_signup_content,
 #dialogue_forgot_content{
