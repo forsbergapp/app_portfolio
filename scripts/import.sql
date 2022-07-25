@@ -1617,7 +1617,6 @@ INSERT INTO app_portfolio.message (message_level_id, message_type_id, code) VALU
 INSERT INTO app_portfolio.message (message_level_id, message_type_id, code) VALUES (1,1,'20108');
 INSERT INTO app_portfolio.message (message_level_id, message_type_id, code) VALUES (1,1,'20200');
 INSERT INTO app_portfolio.message (message_level_id, message_type_id, code) VALUES (1,1,'20201');
-INSERT INTO app_portfolio.message (message_level_id, message_type_id, code) VALUES (1,1,'20202');
 INSERT INTO app_portfolio.message (message_level_id, message_type_id, code) VALUES (1,1,'20203');
 INSERT INTO app_portfolio.message (message_level_id, message_type_id, code) VALUES (1,1,'20204');
 INSERT INTO app_portfolio.message (message_level_id, message_type_id, code) VALUES (1,1,'20300');
@@ -1648,10 +1647,8 @@ INSERT INTO app_portfolio.app_message (message_code, app_id) VALUES ('20104',0);
 INSERT INTO app_portfolio.app_message (message_code, app_id) VALUES ('20105',0);
 INSERT INTO app_portfolio.app_message (message_code, app_id) VALUES ('20106',0);
 INSERT INTO app_portfolio.app_message (message_code, app_id) VALUES ('20107',0);
-INSERT INTO app_portfolio.app_message (message_code, app_id) VALUES ('20108',0);
 INSERT INTO app_portfolio.app_message (message_code, app_id) VALUES ('20200',0);
 INSERT INTO app_portfolio.app_message (message_code, app_id) VALUES ('20201',0);
-INSERT INTO app_portfolio.app_message (message_code, app_id) VALUES ('20202',0);
 INSERT INTO app_portfolio.app_message (message_code, app_id) VALUES ('20203',0);
 INSERT INTO app_portfolio.app_message (message_code, app_id) VALUES ('20204',0);
 INSERT INTO app_portfolio.app_message (message_code, app_id) VALUES ('20300',0);

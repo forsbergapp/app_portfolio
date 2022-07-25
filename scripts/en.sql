@@ -1083,10 +1083,8 @@ INSERT INTO message_translation (language_id, message_code, text) VALUES (147,'2
 INSERT INTO message_translation (language_id, message_code, text) VALUES (147,'20105','Not valid email');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (147,'20106','Password 10 - 100 characters');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (147,'20107','Username, password and email are required');
-INSERT INTO message_translation (language_id, message_code, text) VALUES (147,'20108','One provider one user');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (147,'20200','Email already exist');
-INSERT INTO message_translation (language_id, message_code, text) VALUES (147,'20201','Provider1 already exist');
-INSERT INTO message_translation (language_id, message_code, text) VALUES (147,'20202','Provider2 already exist');
+INSERT INTO message_translation (language_id, message_code, text) VALUES (147,'20201','Provider already exist');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (147,'20203','Username already exist');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (147,'20204','Too long value');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (147,'20300','Username or password not found');
