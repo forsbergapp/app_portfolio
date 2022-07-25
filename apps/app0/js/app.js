@@ -187,30 +187,12 @@ async function get_parameters() {
                     window.global_user_image_avatar_width = json.data[i].parameter_value;
                 if (json.data[i].parameter_name=='USER_IMAGE_AVATAR_HEIGHT')
                     window.global_user_image_avatar_height = json.data[i].parameter_value;
-                if (json.data[i].parameter_name=='USER_PROVIDER1_USE')
-                    window.global_app_user_provider1_use = json.data[i].parameter_value;
-                if (json.data[i].parameter_name=='USER_PROVIDER1_ID')
-                    window.global_app_user_provider1_id = json.data[i].parameter_value;
-                if (json.data[i].parameter_name=='USER_PROVIDER1_NAME')
-                    window.global_app_user_provider1_name = json.data[i].parameter_value;
-                if (json.data[i].parameter_name=='USER_PROVIDER1_API_SRC')
-                    window.global_app_user_provider1_api_src = json.data[i].parameter_value;
-                if (json.data[i].parameter_name=='USER_PROVIDER2_USE')
-                    window.global_app_user_provider2_use = json.data[i].parameter_value;
-                if (json.data[i].parameter_name=='USER_PROVIDER2_ID')
-                    window.global_app_user_provider2_id = json.data[i].parameter_value;
-                if (json.data[i].parameter_name=='USER_PROVIDER2_NAME')
-                    window.global_app_user_provider2_name = json.data[i].parameter_value;
-                if (json.data[i].parameter_name=='USER_PROVIDER2_API_VERSION')
-                    window.global_app_user_provider2_api_version = json.data[i].parameter_value;
-                if (json.data[i].parameter_name=='USER_PROVIDER2_API_SRC')
-                    window.global_app_user_provider2_api_src = json.data[i].parameter_value;
-                if (json.data[i].parameter_name=='USER_PROVIDER2_API_SRC2')
-                    window.global_app_user_provider2_api_src2 = json.data[i].parameter_value;
                 if (json.data[i].parameter_name=='REST_APP')
                     window.global_rest_app = json.data[i].parameter_value;
                 if (json.data[i].parameter_name=='REST_APP_OBJECT')
                     window.global_rest_app_object = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='REST_IDENTITY_PROVIDER')
+                    window.global_rest_identity_provider = json.data[i].parameter_value;
                 if (json.data[i].parameter_name=='REST_MESSAGE_TRANSLATION')
                     window.global_rest_message_translation = json.data[i].parameter_value;
                 if (json.data[i].parameter_name=='REST_USER_ACCOUNT')
