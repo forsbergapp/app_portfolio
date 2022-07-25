@@ -1057,7 +1057,7 @@ function profile_top(statschoice, timezone, app_rest_url = null, click_function=
                 let image='';
                 let name='';
                 for (i = 0; i < json.count; i++) {
-                    image = list_image_format_src(json.items[i].avatar ?? json.items[i].provider1_image ?? json.items[i].provider2_image)
+                    image = list_image_format_src(json.items[i].avatar ?? json.items[i].provider_image)
                     name = json.items[i].username;
                     html +=
                     `<div class='profile_top_list_row'>
@@ -1231,7 +1231,7 @@ function profile_detail(detailchoice, timezone, rest_url_app, fetch_detail, head
                         }
                         else{
                             //Username list
-                            image = list_image_format_src(json.items[i].avatar ?? json.items[i].provider1_image ?? json.items[i].provider2_image)
+                            image = list_image_format_src(json.items[i].avatar ?? json.items[i].provider_image)
                             html += 
                             `<div class='profile_detail_list_row'>
                                 <div class='profile_detail_list_col'>
@@ -1341,7 +1341,7 @@ function search_profile(timezone, click_function) {
                     let name = '';
                     profile_search_list.style.height = (json.count * 24).toString() + 'px';
                     for (i = 0; i < json.count; i++) {
-                        image = list_image_format_src(json.items[i].avatar ?? json.items[i].provider1_image ?? json.items[i].provider2_image)
+                        image = list_image_format_src(json.items[i].avatar ?? json.items[i].provider_image)
                         name = json.items[i].username;
                         html +=
                         `<div class='profile_search_list_row'>
@@ -1424,7 +1424,7 @@ async function profile_show(user_account_id_other = null, username = null, timez
                     document.getElementById('profile_info').style.display = "block";
                     document.getElementById('profile_main').style.display = "block";
                     document.getElementById('profile_id').innerHTML = json.id;
-                    set_avatar(json.avatar ?? json.provider1_image ?? json.provider2_image, document.getElementById('profile_avatar')); 
+                    set_avatar(json.avatar ?? json.provider_image, document.getElementById('profile_avatar')); 
                     //show local username
                     document.getElementById('profile_username').innerHTML = json.username;
 
@@ -1693,14 +1693,6 @@ async function user_logoff(){
     document.getElementById('profile_avatar_online_status').className='';
     //get new data token to avoid endless loop och invalid token
     get_data_token().then(function(){
-        if (window.global_app_user_provider1_use==1){
-            //nothing to do with provider1
-            null;
-        }
-        if (window.global_app_user_provider2_use==1){
-            //nothing to do with provider2
-            null;
-        }        
         dialogue_user_edit_clear();
         dialogue_verify_clear();
         dialogue_new_password_clear();
@@ -1740,7 +1732,7 @@ async function user_edit(timezone, callBack) {
                     document.getElementById('user_edit_input_username').value = json.username;
                     document.getElementById('user_edit_input_bio').value = get_null_or_value(json.bio);
 
-                    if (json.provider1_id == null && json.provider2_id == null) {
+                    if (json.provider_id == null) {
                         document.getElementById('user_edit_local').style.display = 'block';
                         document.getElementById('user_edit_provider').style.display = 'none';
 
@@ -1755,38 +1747,26 @@ async function user_edit(timezone, callBack) {
                         document.getElementById('user_edit_input_new_password_confirm').value = '';
 
                         document.getElementById('user_edit_input_password_reminder').value = json.password_reminder;
-                    } else
-                        if (json.provider1_id !== null) {
+                    } else{
                             document.getElementById('user_edit_provider').style.display = 'block';
-                            document.getElementById('user_edit_provider_logo').innerHTML = window.global_button_default_icon_provider1;
-                            document.getElementById('user_edit_local').style.display = 'none';
-                            document.getElementById('user_edit_label_provider_id_data').innerHTML = json.provider1_id;
-                            document.getElementById('user_edit_label_provider_name_data').innerHTML = json.provider1_first_name + ' ' + json.provider1_last_name;
-                            document.getElementById('user_edit_label_provider_email_data').innerHTML = json.provider1_email;
-                            document.getElementById('user_edit_label_provider_image_url_data').innerHTML = json.provider1_image_url;
-                            document.getElementById('user_edit_avatar').style.display = 'none';
-                            set_avatar(json.provider1_image, document.getElementById('user_edit_avatar_img')); 
-                        } else
-                            if (json.provider2_id !== null) {
-                                document.getElementById('user_edit_provider').style.display = 'block';
+                            if (json.identity_provider_id==1)
+                                document.getElementById('user_edit_provider_logo').innerHTML = window.global_button_default_icon_provider1;
+                            if (json.identity_provider_id==2)
                                 document.getElementById('user_edit_provider_logo').innerHTML = window.global_button_default_icon_provider2;
-                                document.getElementById('user_edit_local').style.display = 'none';
-                                document.getElementById('user_edit_label_provider_id_data').innerHTML = json.provider2_id;
-                                document.getElementById('user_edit_label_provider_name_data').innerHTML = json.provider2_first_name + ' ' + json.provider2_last_name;
-                                document.getElementById('user_edit_label_provider_email_data').innerHTML = json.provider2_email;
-                                document.getElementById('user_edit_label_provider_image_url_data').innerHTML = json.provider2_image_url;
-                                document.getElementById('user_edit_avatar').style.display = 'none';
-                                set_avatar(json.provider2_image, document.getElementById('user_edit_avatar_img'));
-                            }
+                            document.getElementById('user_edit_local').style.display = 'none';
+                            document.getElementById('user_edit_label_provider_id_data').innerHTML = json.provider_id;
+                            document.getElementById('user_edit_label_provider_name_data').innerHTML = json.provider_first_name + ' ' + json.provider_last_name;
+                            document.getElementById('user_edit_label_provider_email_data').innerHTML = json.provider_email;
+                            document.getElementById('user_edit_label_provider_image_url_data').innerHTML = json.provider_image_url;
+                            document.getElementById('user_edit_avatar').style.display = 'none';
+                            set_avatar(json.provider_image, document.getElementById('user_edit_avatar_img')); 
+                        } 
                     document.getElementById('user_edit_label_data_last_logontime').innerHTML = format_json_date(json.last_logontime, null, timezone);
                     document.getElementById('user_edit_label_data_account_created').innerHTML = format_json_date(json.date_created, null, timezone);
                     document.getElementById('user_edit_label_data_account_modified').innerHTML = format_json_date(json.date_modified, null, timezone);
                     return callBack(null, {id: json.id,
-                                            provider_1:      json.provider1_id,
-                                            provider_2:      json.provider2_id,
-                                            avatar:          json.avatar,
-                                            provider1_image: json.provider1_image,
-                                            provider2_image: json.provider2_image
+                                           avatar:          json.avatar,
+                                           provider_image: json.provider_image
                                             });
                 } else {
                     //User not found
@@ -2467,7 +2447,7 @@ async function init_providers(provider1_function, provider2_function){
     else
         provider_hide(2);
 }
-async function updateProviderUser(provider_no, profile_id, profile_first_name, profile_last_name, profile_image_url, profile_email, callBack) {
+async function updateProviderUser(identity_provider_id, profile_id, profile_first_name, profile_last_name, profile_image_url, profile_email, callBack) {
     let json;
     let status;
     let profile_image;
@@ -2486,13 +2466,13 @@ async function updateProviderUser(provider_no, profile_id, profile_first_name, p
             `{
             "app_id": ${window.global_app_id},
             "active": 1,
-            "provider_no": ${provider_no},
-            "${'provider' + provider_no + '_id'}":"${profile_id}",
-            "${'provider' + provider_no + '_first_name'}":"${profile_first_name}",
-            "${'provider' + provider_no + '_last_name'}":"${profile_last_name}",
-            "${'provider' + provider_no + '_image'}":"${window.btoa(profile_image)}",
-            "${'provider' + provider_no + '_image_url'}":"${profile_image_url}",
-            "${'provider' + provider_no + '_email'}":"${profile_email}",
+            "identity_provider_id": ${identity_provider_id},
+            "provider_id":"${profile_id}",
+            "provider_first_name":"${profile_first_name}",
+            "provider_last_name":"${profile_last_name}",
+            "provider_image":"${window.btoa(profile_image)}",
+            "provider_image_url":"${profile_image_url}",
+            "provider_email":"${profile_email}",
             ${get_uservariables()}
             }`;
         fetch(window.global_rest_url_base + window.global_rest_user_account_provider + profile_id +
@@ -2539,7 +2519,7 @@ async function onProviderSignIn(provider1User, callBack) {
     let profile;
     function fb_api(){
         FB.api('/me?fields=id,first_name,last_name,picture, email', function(response) {
-            return callBack(null, {provider_no: 2,
+            return callBack(null, {identity_provider_id: 2,
                                    profile_id: response.id,
                                    profile_first_name: response.first_name,
                                    profile_last_name: response.last_name,
@@ -2549,7 +2529,7 @@ async function onProviderSignIn(provider1User, callBack) {
     }
     if (provider1User) {
         profile = parseJwt(provider1User.credential);
-        return callBack(null, {provider_no: 1,
+        return callBack(null, {identity_provider_id: 1,
                                profile_id: profile.sub,
                                profile_first_name: profile.given_name,
                                profile_last_name: profile.family_name,

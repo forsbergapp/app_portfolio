@@ -38,8 +38,7 @@ module.exports = {
     
     userSignup: (req, res) => {
         const salt = genSaltSync(10);
-        if (typeof req.body.provider1_id == 'undefined' &&
-            typeof req.body.provider2_id == 'undefined') {
+        if (typeof req.body.provider_id == 'undefined') {
             //generate verification code for local users only
             req.body.verification_code = verification_code();
         }
@@ -78,8 +77,7 @@ module.exports = {
                 else{
                     //set variable for accesstoken
                     req.body.app_id = req.query.app_id;
-                    if (typeof req.body.provider1_id == 'undefined' &&
-                        typeof req.body.provider2_id == 'undefined') {
+                    if (typeof req.body.provider_id == 'undefined' ) {
                         getParameter(process.env.MAIN_APP_ID,'SERVICE_MAIL_TYPE_SIGNUP', (err3, parameter_value)=>{
                             //send email for local users only
                             const emailData = {
@@ -762,7 +760,7 @@ module.exports = {
             }
             else {
                 if (results) {
-                    if (results.provider1_id !=null || results.provider2_id !=null){
+                    if (results.provider_id !=null){
                         deleteUser(req.query.app_id, req.params.id, (err, results) => {
                             if (err) {
                                 return res.status(500).send(
@@ -987,13 +985,12 @@ module.exports = {
         });
     },
     getUserByProviderId: (req, res) => {
-        const provider_id = req.params.id;
         req.body.result = 1;
         req.body.client_ip = req.ip;
         req.body.client_user_agent = req.headers["user-agent"];
         req.body.client_longitude = req.body.client_longitude;
         req.body.client_latitude = req.body.client_latitude;
-        getUserByProviderId(req.body.app_id, req.body.provider_no, provider_id, (err, results) => {
+        getUserByProviderId(req.body.app_id, req.body.identity_provider_id, req.params.id, (err, results) => {
             if (err) {
                 return res.status(500).send(
                     err
@@ -1001,7 +998,7 @@ module.exports = {
             }
             else{
                 if (results.length > 0) {
-                    updateSigninProvider(req.body.app_id, req.body.provider_no, results[0].id, req.body, (err2, results2) => {
+                    updateSigninProvider(req.body.app_id, results[0].id, req.body, (err2, results2) => {
                         if (err2) {
                             return res.status(500).send(
                                 err2
@@ -1041,10 +1038,8 @@ module.exports = {
                     if (typeof req.body.avatar == 'undefined')
                         req.body.avatar = null;
                     //one of the images should be empty, set defaul null
-                    if (typeof req.body.provider1_image == 'undefined')
-                        req.body.provider1_image = null;
-                    if (typeof req.body.provider2_image == 'undefined')
-                        req.body.provider2_image = null;
+                    if (typeof req.body.provider_image == 'undefined')
+                        req.body.provider_image = null;
 
                     create(req.body.app_id, req.body, (err4, results4) => {
                         if (err4) {
@@ -1068,7 +1063,7 @@ module.exports = {
                                     );
                                 }
                             });        
-                            getUserByProviderId(req.body.app_id, req.body.provider_no, provider_id, (err7, results7) => {
+                            getUserByProviderId(req.body.app_id, req.body.identity_provider_id, req.params.id, (err7, results7) => {
                                 if (err7) {
                                     return res.status(500).send(
                                         err7

@@ -946,10 +946,8 @@ INSERT INTO message_translation (language_id, message_code, text) VALUES (25,'20
 INSERT INTO message_translation (language_id, message_code, text) VALUES (25,'20105','بريد إلكتروني غير صالح');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (25,'20106','كلمة المرور 10-100 حرف');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (25,'20107','مطلوب اسم المستخدم وكلمة المرور والبريد الإلكتروني');
-INSERT INTO message_translation (language_id, message_code, text) VALUES (25,'20108','مزود واحد مستخدم واحد');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (25,'20200','البريد الالكتروني موجود مسبقا');
-INSERT INTO message_translation (language_id, message_code, text) VALUES (25,'20201','Provider1 موجود بالفعل');
-INSERT INTO message_translation (language_id, message_code, text) VALUES (25,'20202','Provider2 موجود بالفعل');
+INSERT INTO message_translation (language_id, message_code, text) VALUES (25,'20201','Provider موجود بالفعل');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (25,'20203','اسم المستخدم موجود بالفعل');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (25,'20204','قيمة طويلة جدًا');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (25,'20300','لم يتم العثور على اسم المستخدم أو كلمة المرور');

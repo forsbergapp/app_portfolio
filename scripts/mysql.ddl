@@ -39,6 +39,7 @@ CREATE TABLE app_portfolio.app (
     url       VARCHAR(100),
     logo      VARCHAR(100),
     enabled   INTEGER NOT NULL,
+    app_category_id INTEGER,
 	CONSTRAINT app_pk PRIMARY KEY ( id )
 );
 
@@ -51,6 +52,39 @@ GRANT ALL PRIVILEGES ON app_portfolio.app TO role_app_dba;
 GRANT SELECT ON app_portfolio.app TO role_app1;
 
 GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app TO role_app_admin;
+
+CREATE TABLE app_portfolio.app_category (
+    id            INT NOT NULL AUTO_INCREMENT,
+    category_name VARCHAR(100) NOT NULL,
+    CONSTRAINT app_category_pk PRIMARY KEY ( id );
+);
+
+GRANT SELECT ON app_portfolio.app_category TO role_app0;
+
+GRANT SELECT ON app_portfolio.app_category TO role_app1;
+
+GRANT SELECT ON app_portfolio.app_category TO role_app2;
+
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_category TO role_app_admin;
+
+GRANT ALL PRIVILEGES ON app_portfolio.app_category TO role_app_dba;
+
+CREATE TABLE app_portfolio.app_device (
+    app_id    INTEGER NOT NULL,
+    device_id INTEGER NOT NULL,
+    CONSTRAINT app_device_pk PRIMARY KEY ( app_id,
+                                           device_id );
+);
+
+GRANT SELECT ON app_portfolio.app_device TO role_app0;
+
+GRANT SELECT ON app_portfolio.app_device TO role_app1;
+
+GRANT SELECT ON app_portfolio.app_device TO role_app2;
+
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_device TO role_app_admin;
+
+GRANT ALL PRIVILEGES ON app_portfolio.app_device TO role_app_dba;
 
 CREATE TABLE app_portfolio.app_log (
     id                           INT NOT NULL AUTO_INCREMENT,
@@ -344,6 +378,24 @@ GRANT SELECT ON app_portfolio.app_parameter TO role_app0;
 GRANT SELECT ON app_portfolio.app_parameter TO role_app2;
 
 GRANT ALL PRIVILEGES ON app_portfolio.app_parameter TO role_app_dba;
+
+CREATE TABLE app_portfolio.app_screenshot (
+    id                   INT NOT NULL AUTO_INCREMENT,
+    app_device_app_id    INTEGER NOT NULL,
+    app_device_device_id INTEGER NOT NULL,
+    screenshot           BLOB NOT NULL,
+    CONSTRAINT app_screenshot_pk PRIMARY KEY ( id );
+);
+
+GRANT SELECT ON app_portfolio.app_screenshot TO role_app0;
+
+GRANT SELECT ON app_portfolio.app_screenshot TO role_app1;
+
+GRANT SELECT ON app_portfolio.app_screenshot TO role_app2;
+
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_screenshot TO role_app_admin;
+
+GRANT ALL PRIVILEGES ON app_portfolio.app_screenshot TO role_app_dba;
 
 CREATE TABLE app_portfolio.app1_group_place (
     id          INT NOT NULL AUTO_INCREMENT,
@@ -682,6 +734,41 @@ GRANT SELECT ON app_portfolio.country_translation TO role_app2;
 
 GRANT ALL PRIVILEGES ON app_portfolio.country_translation TO role_app_dba;
 
+CREATE TABLE app_portfolio.device (
+    id             INT NOT NULL AUTO_INCREMENT,
+    device_name    VARCHAR(100) NOT NULL,
+    screen_x       INTEGER,
+    screen_y       INTEGER,
+    device_type_id INTEGER NOT NULL,
+    CONSTRAINT device_pk PRIMARY KEY ( id );
+);
+
+GRANT SELECT ON app_portfolio.device TO role_app0;
+
+GRANT SELECT ON app_portfolio.device TO role_app1;
+
+GRANT SELECT ON app_portfolio.device TO role_app2;
+
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.device TO role_app_admin;
+
+GRANT ALL PRIVILEGES ON app_portfolio.device TO role_app_dba;
+
+CREATE TABLE app_portfolio.device_type (
+    id                          INT NOT NULL AUTO_INCREMENT,
+    device_type_name            VARCHAR(100) NOT NULL,
+    CONSTRAINT device_type_pk   PRIMARY KEY ( id );
+);
+
+GRANT SELECT ON app_portfolio.device_type TO role_app0;
+
+GRANT SELECT ON app_portfolio.device_type TO role_app1;
+
+GRANT SELECT ON app_portfolio.device_type TO role_app2;
+
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.device_type TO role_app_admin;
+
+GRANT ALL PRIVILEGES ON app_portfolio.device_type TO role_app_dba;
+
 CREATE TABLE app_portfolio.event (
     id            INT NOT NULL AUTO_INCREMENT,
     event_name    VARCHAR(100) NOT NULL,
@@ -730,6 +817,28 @@ GRANT SELECT ON app_portfolio.event_type TO role_app0;
 GRANT SELECT ON app_portfolio.event_type TO role_app1;
 
 GRANT SELECT ON app_portfolio.event_type TO role_app2;
+
+CREATE TABLE app_portfolio.identity_provider (
+    id            INTEGER NOT NULL,
+    provider_name VARCHAR(100) NOT NULL,
+    api_src       VARCHAR(100),
+    api_src2      VARCHAR(100),
+    api_version   VARCHAR(100),
+    enabled       INTEGER,
+    date_created  DATETIME NOT NULL,
+    date_modified DATETIME,
+    CONSTRAINT identity_provider_pk PRIMARY KEY ( id );
+);
+
+GRANT SELECT ON app_portfolio.identity_provider TO role_app0;
+
+GRANT SELECT ON app_portfolio.identity_provider TO role_app1;
+
+GRANT SELECT ON app_portfolio.identity_provider TO role_app2;
+
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.identity_provider TO role_app_admin;
+
+GRANT ALL PRIVILEGES ON app_portfolio.identity_provider TO role_app_dba;
 
 CREATE TABLE app_portfolio.language (
     id         INT NOT NULL AUTO_INCREMENT,
@@ -926,18 +1035,13 @@ CREATE TABLE app_portfolio.user_account (
     avatar                LONGBLOB,
     verification_code     VARCHAR(6),
     active                DECIMAL(1,0),
-    provider1_id          VARCHAR(21),
-    provider1_first_name  VARCHAR(1000),
-    provider1_last_name   VARCHAR(1000),
-    provider1_image		  LONGBLOB,
-    provider1_image_url   VARCHAR(1000),
-    provider1_email       VARCHAR(1000),
-    provider2_id          VARCHAR(15),
-    provider2_first_name  VARCHAR(1000),
-    provider2_last_name   VARCHAR(1000),
-    provider2_image		  LONGBLOB,
-    provider2_image_url   VARCHAR(1000),
-    provider2_email       VARCHAR(1000),
+    identity_provider_id  INTEGER,
+    provider_id           VARCHAR(100),
+    provider_first_name   VARCHAR(1000),
+    provider_last_name    VARCHAR(1000),
+    provider_image        LONGBLOB,
+    provider_image_url    VARCHAR(1000),
+    provider_email        VARCHAR(1000),
 	CONSTRAINT user_account_pk PRIMARY KEY ( id )
 );
 GRANT SELECT, INSERT, DELETE, UPDATE ON app_portfolio.user_account TO role_app0;
@@ -950,9 +1054,7 @@ GRANT ALL PRIVILEGES ON app_portfolio.user_account TO role_app_dba;
 
 GRANT SELECT, INSERT, DELETE, UPDATE ON app_portfolio.user_account TO role_app1;
 
-ALTER TABLE app_portfolio.user_account ADD CONSTRAINT user_account_provider1_id_un UNIQUE ( provider1_id );
-
-ALTER TABLE app_portfolio.user_account ADD CONSTRAINT user_account_provider2_id_un UNIQUE ( provider2_id );
+ALTER TABLE app_portfolio.user_account ADD CONSTRAINT user_account_provider_id_un UNIQUE ( provider_id );
 
 ALTER TABLE app_portfolio.user_account ADD CONSTRAINT user_account_username_un UNIQUE ( username );
 
@@ -1078,16 +1180,12 @@ CREATE TABLE app_portfolio.user_account_hist (
     avatar                LONGBLOB,
     verification_code     VARCHAR(6),
     active                DECIMAL(1,0),
-    provider1_id          VARCHAR(21),
-    provider1_first_name  VARCHAR(1000),
-    provider1_last_name   VARCHAR(1000),
-    provider1_image_url   VARCHAR(1000),
-    provider1_email       VARCHAR(1000),
-    provider2_id          VARCHAR(15),
-    provider2_first_name  VARCHAR(1000),
-    provider2_last_name   VARCHAR(1000),
-    provider2_image_url   VARCHAR(1000),
-    provider2_email       VARCHAR(1000),
+    identity_provider_id  INTEGER,
+    provider_id           VARCHAR(100),
+    provider_first_name   VARCHAR(1000),
+    provider_last_name    VARCHAR(1000),
+    provider_image_url    VARCHAR(1000),
+    provider_email        VARCHAR(1000),
 	CONSTRAINT user_account_hist_pk PRIMARY KEY ( id )
 );
 GRANT SELECT, INSERT ON app_portfolio.user_account_hist TO role_app0;
@@ -1268,6 +1366,18 @@ GRANT trigger on app_portfolio.user_account_view to role_app0;
 GRANT trigger on app_portfolio.user_account_view to role_app2;
 GRANT trigger on app_portfolio.user_account_view to role_app1;
 
+ALTER TABLE app_portfolio.app
+    ADD CONSTRAINT app_app_category_fk FOREIGN KEY ( app_category_id )
+        REFERENCES app_portfolio.app_category ( id );
+
+ALTER TABLE app_portfolio.app_device
+    ADD CONSTRAINT app_device_app_fk FOREIGN KEY ( app_id )
+        REFERENCES app_portfolio.app ( id );
+
+ALTER TABLE app_portfolio.app_device
+    ADD CONSTRAINT app_device_device_fk FOREIGN KEY ( device_id )
+        REFERENCES app_portfolio.device ( id );
+
 ALTER TABLE app_portfolio.app_log
     ADD CONSTRAINT app_log_app_fk FOREIGN KEY ( app_id )
         REFERENCES app ( id );
@@ -1349,6 +1459,12 @@ ALTER TABLE app_portfolio.app_parameter
 ALTER TABLE app_portfolio.app_parameter
     ADD CONSTRAINT app_parameter_parameter_type_fk FOREIGN KEY ( parameter_type_id )
         REFERENCES parameter_type ( id );
+
+ALTER TABLE app_portfolio.app_screenshot
+    ADD CONSTRAINT app_screenshot_app_device_fk FOREIGN KEY ( app_device_app_id,
+                                                              app_device_device_id )
+        REFERENCES app_portfolio.app_device ( app_id,
+                                              device_id );
 
 ALTER TABLE app_portfolio.app1_place
     ADD CONSTRAINT app1_place_country1_fk FOREIGN KEY ( country1_id )
@@ -1432,6 +1548,10 @@ ALTER TABLE app_portfolio.country_translation
 ALTER TABLE app_portfolio.country_translation
     ADD CONSTRAINT country_translation_language_fk FOREIGN KEY ( language_id )
         REFERENCES language ( id );
+
+ALTER TABLE app_portfolio.device
+    ADD CONSTRAINT device_device_type_fk FOREIGN KEY ( device_type_id )
+        REFERENCES app_portfolio.device_type ( id );
 
 ALTER TABLE app_portfolio.event
     ADD CONSTRAINT event_event_type_fk FOREIGN KEY ( event_type_id )
@@ -2207,16 +2327,12 @@ INSERT INTO user_account_hist
 	avatar,
 	verification_code,
 	active,
-	provider1_id,
-	provider1_first_name,
-	provider1_last_name,
-	provider1_image_url,
-	provider1_email,
-	provider2_id,
-	provider2_first_name,
-	provider2_last_name,
-	provider2_image_url,
-	provider2_email)
+	identity_provider_id,
+	provider_id,
+	provider_first_name,
+	provider_last_name,
+	provider_image_url,
+	provider_email)
 	VALUES
 	('D',
 	SYSDATE(),
@@ -2234,16 +2350,12 @@ INSERT INTO user_account_hist
 	null,
 	old.verification_code,
 	old.active,
-	old.provider1_id,
-	old.provider1_first_name,
-	old.provider1_last_name,
-	old.provider1_image_url,
-	old.provider1_email,
-	old.provider2_id,
-	old.provider2_first_name,
-	old.provider2_last_name,
-	old.provider2_image_url,
-	old.provider2_email);
+	old.identity_provider_id,
+	old.provider_id,
+	old.provider_first_name,
+	old.provider_last_name,
+	old.provider_image_url,
+	old.provider_email);
 END; 
 /
 		
@@ -2251,26 +2363,13 @@ CREATE TRIGGER app_portfolio.user_account_before_insert
     BEFORE INSERT ON app_portfolio.user_account 
     FOR EACH ROW 
 	BEGIN
-	IF new.provider1_id IS NOT NULL OR new.provider2_id IS NOT NULL THEN
+	IF new.provider_id IS NOT NULL THEN
         SET new.password = null;
 		SET new.password_reminder = null;
 		SET new.email = null;
         SET new.email_unverified = null;
 		SET new.avatar = null;
 		SET new.verification_code = null;
-		IF new.provider1_id IS NOT NULL THEN
-			SET new.provider2_first_name = null;
-			SET	new.provider2_last_name = null;
-			SET new.provider2_image = null;
-			SET new.provider2_image_url = null;
-			SET new.provider2_email = null;
-		ELSE
-			SET new.provider1_first_name = null;
-			SET	new.provider1_last_name = null;
-			SET new.provider1_image = null;
-			SET new.provider1_image_url = null;
-			SET new.provider1_email = null;
-		END IF;
 	END IF;
     IF (LENGTH(new.username) < 5 OR LENGTH(new.username) > 100) THEN 
 		signal SQLSTATE '45000'
@@ -2298,13 +2397,10 @@ CREATE TRIGGER app_portfolio.user_account_before_insert
 	ELSEIF NOT REGEXP_LIKE(new.email_unverified, '^[A-Za-z]+[A-Za-z0-9.]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$') THEN
 		signal SQLSTATE '45000'
 		SET message_text = 'not valid email', MYSQL_ERRNO = 20105;
-	ELSEIF new.provider1_id IS NULL AND new.provider2_id IS NULL AND
+	ELSEIF new.provider_id IS NULL AND
 		   (new.username IS NULL OR new.password IS NULL OR new.email IS NULL) THEN 
            signal SQLSTATE '45000'
 		SET message_text = 'Username, password and email are required', MYSQL_ERRNO = 20107;
-	ELSEIF new.provider1_id IS NOT NULL AND new.provider2_id IS NOT NULL THEN 
-           signal SQLSTATE '45000'
-		SET message_text = 'One provider one user', MYSQL_ERRNO = 20108;
     END IF;
 	INSERT INTO user_account_hist
 	(dml,
@@ -2323,16 +2419,12 @@ CREATE TRIGGER app_portfolio.user_account_before_insert
 	avatar,
 	verification_code,
 	active,
-	provider1_id,
-	provider1_first_name,
-	provider1_last_name,
-	provider1_image_url,
-	provider1_email,
-	provider2_id,
-	provider2_first_name,
-	provider2_last_name,
-	provider2_image_url,
-	provider2_email)
+	identity_provider_id,
+	provider_id,
+	provider_first_name,
+	provider_last_name,
+	provider_image_url,
+	provider_email)
 	VALUES
 	('I',
 	SYSDATE(),
@@ -2350,16 +2442,12 @@ CREATE TRIGGER app_portfolio.user_account_before_insert
 	null,
 	new.verification_code,
 	new.active,
-	new.provider1_id,
-	new.provider1_first_name,
-	new.provider1_last_name,
-	new.provider1_image_url,
-	new.provider1_email,
-	new.provider2_id,
-	new.provider2_first_name,
-	new.provider2_last_name,
-	new.provider2_image_url,
-	new.provider2_email);
+	new.identity_provider_id,
+	new.provider_id,
+	new.provider_first_name,
+	new.provider_last_name,
+	new.provider_image_url,
+	new.provider_email);
 END; 
 /
 
@@ -2367,26 +2455,13 @@ CREATE TRIGGER app_portfolio.user_account_before_update
     BEFORE UPDATE ON app_portfolio.user_account 
     FOR EACH ROW 
     BEGIN
-	IF new.provider1_id IS NOT NULL OR new.provider2_id IS NOT NULL THEN
+	IF new.provider_id IS NOT NULL THEN
         SET new.password = null;
 		SET new.password_reminder = null;
 		SET new.email = null;
         SET new.email_unverified = null;
 		SET new.avatar = null;
 		SET new.verification_code = null;
-		IF new.provider1_id IS NOT NULL THEN
-			SET new.provider2_first_name = null;
-			SET	new.provider2_last_name = null;
-			SET new.provider2_image = null;
-			SET new.provider2_image_url = null;
-			SET new.provider2_email = null;
-		ELSE
-			SET new.provider1_first_name = null;
-			SET	new.provider1_last_name = null;
-			SET new.provider1_image = null;
-			SET new.provider1_image_url = null;
-			SET new.provider1_email = null;
-		END IF;
 	END IF;
     IF (LENGTH(new.username) < 5 OR LENGTH(new.username) > 100) THEN 
 		signal SQLSTATE '45000'
@@ -2414,14 +2489,11 @@ CREATE TRIGGER app_portfolio.user_account_before_update
 	ELSEIF NOT REGEXP_LIKE(new.email_unverified, '^[A-Za-z]+[A-Za-z0-9.]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$') THEN
 		signal SQLSTATE '45000'
 		SET message_text = 'not valid email', MYSQL_ERRNO = 20105;
-	ELSEIF new.provider1_id IS NULL AND new.provider2_id IS NULL AND
+	ELSEIF new.provider_id IS NULL AND
 		   (new.username IS NULL OR new.password IS NULL OR new.email IS NULL) THEN 
            signal SQLSTATE '45000'
 		SET message_text = 'Username, password and email are required', MYSQL_ERRNO = 20107;
-	ELSEIF new.provider1_id IS NOT NULL AND new.provider2_id IS NOT NULL THEN 
-           signal SQLSTATE '45000'
-		SET message_text = 'One provider one user', MYSQL_ERRNO = 20108;
-    END IF;
+	END IF;
 	INSERT INTO user_account_hist
 		(dml,
 		dml_date,
@@ -2439,16 +2511,12 @@ CREATE TRIGGER app_portfolio.user_account_before_update
 		avatar,
 		verification_code,
 		active,
-		provider1_id,
-		provider1_first_name,
-		provider1_last_name,
-		provider1_image_url,
-		provider1_email,
-		provider2_id,
-		provider2_first_name,
-		provider2_last_name,
-		provider2_image_url,
-		provider2_email)
+        identity_provider_id,
+        provider_id,
+        provider_first_name,
+        provider_last_name,
+        provider_image_url,
+        provider_email)
 		VALUES
 		('U',
 		SYSDATE(),
@@ -2466,16 +2534,12 @@ CREATE TRIGGER app_portfolio.user_account_before_update
 		null,
 		old.verification_code,
 		old.active,
-		old.provider1_id,
-		old.provider1_first_name,
-		old.provider1_last_name,
-		old.provider1_image_url,
-		old.provider1_email,
-		old.provider2_id,
-		old.provider2_first_name,
-		old.provider2_last_name,
-		old.provider2_image_url,
-		old.provider2_email);
+        old.identity_provider_id,
+        old.provider_id,
+        old.provider_first_name,
+        old.provider_last_name,
+        old.provider_image_url,
+        old.provider_email);
 END;
 /
 

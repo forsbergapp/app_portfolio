@@ -1044,10 +1044,8 @@ INSERT INTO message_translation (language_id, message_code, text) VALUES (453,'2
 INSERT INTO message_translation (language_id, message_code, text) VALUES (453,'20105','Недопустимый адрес электронной почты');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (453,'20106','Пароль от 10 до 100 символов');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (453,'20107','Требуется имя пользователя, пароль и адрес электронной почты');
-INSERT INTO message_translation (language_id, message_code, text) VALUES (453,'20108','Один провайдер один пользователь');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (453,'20200','Электронная почта уже существует');
-INSERT INTO message_translation (language_id, message_code, text) VALUES (453,'20201','Провайдер1 уже существует');
-INSERT INTO message_translation (language_id, message_code, text) VALUES (453,'20202','Провайдер2 уже существует');
+INSERT INTO message_translation (language_id, message_code, text) VALUES (453,'20201','Провайдер уже существует');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (453,'20203','Имя пользователя уже существует');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (453,'20204','Слишком длинное значение');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (453,'20300','Имя пользователя или пароль не найдены');
