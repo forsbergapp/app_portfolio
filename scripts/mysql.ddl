@@ -819,14 +819,16 @@ GRANT SELECT ON app_portfolio.event_type TO role_app1;
 GRANT SELECT ON app_portfolio.event_type TO role_app2;
 
 CREATE TABLE app_portfolio.identity_provider (
-    id            INTEGER NOT NULL,
-    provider_name VARCHAR(100) NOT NULL,
-    api_src       VARCHAR(100),
-    api_src2      VARCHAR(100),
-    api_version   VARCHAR(100),
-    enabled       INTEGER,
-    date_created  DATETIME NOT NULL,
-    date_modified DATETIME,
+    id                      INTEGER NOT NULL,
+    provider_name           VARCHAR(100) NOT NULL,
+    api_src                 VARCHAR(100),
+    api_src2                VARCHAR(100),
+    api_version             VARCHAR(100),
+	api_id                  VARCHAR2(100),
+    identity_provider_order INTEGER NOT NULL,
+    enabled                 INTEGER,
+    date_created            DATETIME NOT NULL,
+    date_modified           DATETIME,
     CONSTRAINT identity_provider_pk PRIMARY KEY ( id );
 );
 
@@ -839,6 +841,8 @@ GRANT SELECT ON app_portfolio.identity_provider TO role_app2;
 GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.identity_provider TO role_app_admin;
 
 GRANT ALL PRIVILEGES ON app_portfolio.identity_provider TO role_app_dba;
+
+ALTER TABLE app_portfolio.identity_provider ADD CONSTRAINT identity_provider_order_un UNIQUE ( identity_provider_order );
 
 CREATE TABLE app_portfolio.language (
     id         INT NOT NULL AUTO_INCREMENT,
