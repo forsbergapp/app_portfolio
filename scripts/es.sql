@@ -1042,10 +1042,8 @@ INSERT INTO message_translation (language_id, message_code, text) VALUES (506,'2
 INSERT INTO message_translation (language_id, message_code, text) VALUES (506,'20105','Correo electrónico no válido');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (506,'20106','Contraseña 10 - 100 caracteres');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (506,'20107','Se requiere nombre de usuario, contraseña y correo electrónico');
-INSERT INTO message_translation (language_id, message_code, text) VALUES (506,'20108','Un proveedor un usuario');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (506,'20200','Correo electrónico ya existe');
-INSERT INTO message_translation (language_id, message_code, text) VALUES (506,'20201','Provider1 ya existe');
-INSERT INTO message_translation (language_id, message_code, text) VALUES (506,'20202','Provider2 ya existe');
+INSERT INTO message_translation (language_id, message_code, text) VALUES (506,'20201','Provider ya existe');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (506,'20203','Usuario ya existe');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (506,'20204','Demasiado largo');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (506,'20300','Usuario o contraseña no encontrado');
