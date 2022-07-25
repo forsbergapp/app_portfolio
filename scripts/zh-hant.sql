@@ -1043,10 +1043,8 @@ INSERT INTO message_translation (language_id, message_code, text) VALUES (546,'2
 INSERT INTO message_translation (language_id, message_code, text) VALUES (546,'20105','無效的電子郵件');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (546,'20106','密碼 10 - 100 個字符');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (546,'20107','需要用戶名、密碼和電子郵件');
-INSERT INTO message_translation (language_id, message_code, text) VALUES (546,'20108','一個提供者一個用戶');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (546,'20200','電子郵件已存在');
-INSERT INTO message_translation (language_id, message_code, text) VALUES (546,'20201','Provider1 已存在');
-INSERT INTO message_translation (language_id, message_code, text) VALUES (546,'20202','Provider2 已存在');
+INSERT INTO message_translation (language_id, message_code, text) VALUES (546,'20201','Provider 已存在');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (546,'20203','用戶名已存在');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (546,'20204','值太長');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (546,'20300','未找到用戶名或密碼');

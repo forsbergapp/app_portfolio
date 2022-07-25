@@ -950,10 +950,8 @@ INSERT INTO message_translation (language_id, message_code, text) VALUES (107,'2
 INSERT INTO message_translation (language_id, message_code, text) VALUES (107,'20105','无效的电子邮件');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (107,'20106','密码 10 - 100 个字符');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (107,'20107','需要用户名、密码和电子邮件');
-INSERT INTO message_translation (language_id, message_code, text) VALUES (107,'20108','一个提供者一个用户');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (107,'20200','电子邮件已存在');
-INSERT INTO message_translation (language_id, message_code, text) VALUES (107,'20201','Provider1 已存在');
-INSERT INTO message_translation (language_id, message_code, text) VALUES (107,'20202','Provider2 已存在');
+INSERT INTO message_translation (language_id, message_code, text) VALUES (107,'20201','Provider 已存在');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (107,'20203','用户名已存在');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (107,'20204','值太长');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (107,'20300','未找到用户名或密码');

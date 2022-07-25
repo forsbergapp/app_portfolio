@@ -1459,7 +1459,7 @@ async function user_edit_app() {
     await user_edit(document.getElementById('setting_select_timezone_current').value,(err, result) => {
         if ((err==null && result==null) == false){
             if (err==null){
-                set_avatar(result.avatar ?? result.provider1_image ?? result.provider2_image, document.getElementById('user_menu_avatar_img')); 
+                set_avatar(result.avatar ?? result.provider_image, document.getElementById('user_menu_avatar_img')); 
             }
         }
     });
@@ -1589,8 +1589,8 @@ function user_logoff_app() {
         });
     })    
 }
-async function updateProviderUser_app(provider_no, profile_id, profile_first_name, profile_last_name, profile_image_url, profile_email){
-    await updateProviderUser(provider_no, profile_id, profile_first_name, profile_last_name, profile_image_url, profile_email, (err, result)=>{
+async function updateProviderUser_app(identity_provider_id, profile_id, profile_first_name, profile_last_name, profile_image_url, profile_email){
+    await updateProviderUser(identity_provider_id, profile_id, profile_first_name, profile_last_name, profile_image_url, profile_email, (err, result)=>{
         if(err==null){
             //create intitial user setting if not exist, send initial=true
             user_settings_function('ADD_LOGIN', true, (err, result_settings) =>{
@@ -1631,12 +1631,12 @@ async function updateProviderUser_app(provider_no, profile_id, profile_first_nam
 async function onProviderSignIn_app(provider1User){
     await onProviderSignIn(provider1User, (err, result)=>{
         if (err==null){
-            updateProviderUser_app(result.provider_no, 
-                               result.profile_id, 
-                               result.profile_first_name, 
-                               result.profile_last_name, 
-                               result.profile_image_url, 
-                               result.profile_email);
+            updateProviderUser_app(result.identity_provider_id, 
+                                    result.profile_id, 
+                                    result.profile_first_name, 
+                                    result.profile_last_name, 
+                                    result.profile_image_url, 
+                                    result.profile_email);
         }
     })
 }

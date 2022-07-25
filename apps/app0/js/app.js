@@ -439,8 +439,8 @@ async function  user_delete_app(){
         }
     })
 }
-async function updateProviderUser_app(provider_no, profile_id, profile_first_name, profile_last_name, profile_image_url, profile_email){
-    await updateProviderUser(provider_no, profile_id, profile_first_name, profile_last_name, profile_image_url, profile_email, (err, result)=>{
+async function updateProviderUser_app(identity_provider_id, profile_id, profile_first_name, profile_last_name, profile_image_url, profile_email){
+    await updateProviderUser(identity_provider_id, profile_id, profile_first_name, profile_last_name, profile_image_url, profile_email, (err, result)=>{
         if(err==null){
             //set avatar or empty
             set_avatar(result.avatar, document.getElementById('user_menu_avatar_img'));
@@ -458,7 +458,7 @@ async function updateProviderUser_app(provider_no, profile_id, profile_first_nam
 async function onProviderSignIn_app(provider1User){
     await onProviderSignIn(provider1User, (err, result)=>{
         if (err==null){
-            updateProviderUser_app(result.provider_no, 
+            updateProviderUser_app(result.identity_provider_id, 
                                    result.profile_id, 
                                    result.profile_first_name, 
                                    result.profile_last_name, 
