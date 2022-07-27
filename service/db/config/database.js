@@ -20,7 +20,8 @@ async function execute_db_sql(app_id, pool_app_id, sql, parameters, admin,
 								return callBack(error);
 							})
 						}
-						return callBack(null, results);
+						else
+							return callBack(null, results);
 					}
 				);
 			else
@@ -31,7 +32,8 @@ async function execute_db_sql(app_id, pool_app_id, sql, parameters, admin,
 								return callBack(error);
 							})
 						}
-						return callBack(null, results);
+						else
+							return callBack(null, results);
 				})
 			break;
 		}

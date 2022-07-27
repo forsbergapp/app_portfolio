@@ -24,10 +24,8 @@ function show_menu(menu){
         case 1:{
             show_chart(1).then(function(){
                 show_chart(2).then(function(){
-                    count_connected().then(function(){
-                        count_users().then(function(){
-                            show_maintenance();
-                        });
+                    count_users().then(function(){
+                        show_maintenance();
                     });
                 });
             });                
@@ -820,12 +818,11 @@ async function show_chart(chart){
         })
     }
 }
-async function count_connected(){
+async function count_connected(identity_provider_id, count_logged_in, callBack){
     if (admin_token_has_value()){
         let status;
         let json;
-        let app_id = document.getElementById('select_app_menu1').options[document.getElementById('select_app_menu1').selectedIndex].value;
-        await fetch(`/service/broadcast/connected?app_id=${app_id}`,
+        await fetch(`/service/broadcast/connected/count?identity_provider_id=${identity_provider_id}&count_logged_in=${count_logged_in}`,
         {method: 'GET',
         headers: {
                 'Authorization': 'Bearer ' + window.global_rest_admin_at,
@@ -837,18 +834,22 @@ async function count_connected(){
         })
         .then(function(result) {
             if (status == 200){
-                json = JSON.parse(result);
-                document.getElementById('count_connected').innerHTML = json.data.length;
+                callBack(null, result);
             }
-            else
+            else{
+                callBack(result, null);
                 exception(status, result);
-            });
+            }
+        });
     }
 }
 async function count_users(){
     if (admin_token_has_value()){
         let status;
         let json;
+        let old_html = document.getElementById('list_user_stat').innerHTML;
+        document.getElementById('list_user_stat').innerHTML = window.global_button_spinner;
+
         await fetch(window.global_rest_url_base + window.global_rest_user_account + '/admin/count',
         {method: 'GET',
         headers: {
@@ -862,12 +863,58 @@ async function count_users(){
         .then(function(result) {
             if (status == 200){
                 json = JSON.parse(result);
-                document.getElementById('count_local').innerHTML = json.data.count_local;
-                document.getElementById('count_provider1').innerHTML = json.data.count_provider1;
-                document.getElementById('count_provider2').innerHTML = json.data.count_provider2;
+                let html='';
+                let i;
+                for (i=0;i<=json.data.length-1;i++){
+                    html +=  `<div id='list_user_stat_row_${i}' class='list_user_stat_row'>
+                                    <div class='list_user_stat_col'>
+                                        <div>${json.data[i].identity_provider_id==null?'':json.data[i].identity_provider_id}</div>
+                                    </div>
+                                    <div class='list_user_stat_col'>
+                                        <div>${json.data[i].provider_name}</div>
+                                    </div>
+                                    <div class='list_user_stat_col'>
+                                        <div>${json.data[i].count_users}</div>
+                                    </div>
+                                    <div class='list_user_stat_col'>
+                                        <div></div>
+                                    </div>
+                              </div>`;
+                }
+                //count not logged in
+                html += `<div id='list_user_stat_row_not_connected' class='list_user_stat_row'>
+                            <div class='list_user_stat_col'>
+                                <div></div>
+                            </div>
+                            <div class='list_user_stat_col'>
+                                <div>Not logged in</div>
+                            </div>
+                            <div class='list_user_stat_col'>
+                                <div></div>
+                            </div>
+                            <div class='list_user_stat_col'>
+                                <div></div>
+                            </div>
+                        </div>`;
+                document.getElementById('list_user_stat').innerHTML = html;
+                //count logged in
+                document.querySelectorAll('.list_user_stat_row').forEach(e => {
+                    if (e.id !='list_user_stat_row_title'){
+                        if (e.id=='list_user_stat_row_not_connected')
+                            count_connected(e.children[0].children[0].innerHTML,0, (err, result)=>{
+                                e.children[3].children[0].innerHTML = JSON.parse(result).data;
+                            })
+                        else
+                            count_connected(e.children[0].children[0].innerHTML,1, (err, result)=>{
+                                    e.children[3].children[0].innerHTML = JSON.parse(result).data;
+                            })
+                    }
+                })
             }
-            else
+            else{
+                document.getElementById('list_user_stat').innerHTML = old_button;
                 exception(status, result);
+            }
         });
     }
 }
@@ -1783,9 +1830,6 @@ function init_admin_secure(){
     document.getElementById('send_broadcast_send').innerHTML = window.global_button_default_icon_send;
     document.getElementById('send_broadcast_close').innerHTML = window.global_button_default_icon_close;
     document.getElementById('lov_close').innerHTML = window.global_button_default_icon_close;
-
-    document.getElementById('count_local_label').innerHTML = window.global_button_default_icon_user;
-    document.getElementById('count_provider2_label').innerHTML = window.global_button_default_icon_provider2;
 
     document.getElementById('menu_1_content').style.display = 'block';
 
