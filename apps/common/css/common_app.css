@@ -1,3 +1,31 @@
+body{
+	font-size: 11px;
+	margin: 0;
+	height: 100%;
+	width: -webkit-fit-content;
+	-webkit-text-size-adjust:none;
+	-moz-text-size-adjust: none;
+	-ms-text-size-adjust: none;
+	padding: 0px;
+	width: auto;
+}
+select,input, button {
+	font-family: inherit;
+	font-size:inherit;
+}
+
+a:link{
+	text-decoration: none;
+}
+a:visited {
+	text-decoration: none;
+}
+a:hover {
+	text-decoration: underline;
+}
+a:active {
+	text-decoration: underline;
+}
 /*checkbox with switch ui*/
 .switch-input {
 	display: none;
@@ -55,10 +83,6 @@
 	-webkit-animation-duration: 0.4s;
 	animation-name: common_animatetop;
 	animation-duration: 0.4s;
-}
-.common_dialogue_content a,
-.common_dialogue_content input{
-	font-size:14px;
 }
 
 /* add animation effects */
@@ -611,7 +635,6 @@
 	display:inline-block;
 	width:120px;
 	text-align: center;
-	font-size: 11px;
 	vertical-align: top;
 	text-transform: uppercase;
 }
@@ -730,7 +753,6 @@
 	top: 0px;
 	position:fixed;
 	overflow:auto;
-	font-size: 16px;
 	z-index: 11;
 	margin-bottom: 100px;
 	visibility: hidden;
@@ -759,19 +781,15 @@
 /*RESPONSIVE SETTINGS*/
 /*CSS for minimum 768px*/
 @media only screen and (min-width: 768px) {
+	body{
+		font-size: 14px;
+	}
 	#dialogue_profile_content{
 		width:500px;
 		height:500px;
 	}
 	#dialogue_user_edit_content{
 		width:500px;
-	}
-	.common_dialogue_content{
-		font-size:16px;
-	}
-	.common_dialogue_content a,
-	.common_dialogue_content input{
-		font-size:16px;
 	}
 	#user_edit_avatar{
 		left: 12px;
@@ -793,9 +811,6 @@
 	#profile_main_col1{
 		width:250px;
 	}
-}
-.common_dialogue_content{
-	font-family: 'Noto Sans';
 }
 .common_dialogue_content a:hover, a:active {
 	color:#6ab344;

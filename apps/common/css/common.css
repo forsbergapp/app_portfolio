@@ -1,6 +1,68 @@
 /*css for both forms and reports for maintenance and broadcast*/
 /*Noto Sans font*/
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&display=swap');
+/*Noto Sans regional fonts*/
+/*Arabic NotoSans*/
+@import url('https://fonts.googleapis.com/earlyaccess/notosanskufiarabic.css');
+/*Arabic NotoKufi*/
+@import url('https://fonts.googleapis.com/earlyaccess/notokufiarabic.css');
+/*Arabic NotoNashk*/
+@import url('https://fonts.googleapis.com/earlyaccess/notonaskharabic.css');
+/*Arabic NotoNastaliq*/
+@import url('https://fonts.googleapis.com/earlyaccess/notonastaliqurdu.css');
+/*Arabic NotoSansUI*/
+@import url('https://fonts.googleapis.com/earlyaccess/notonaskharabicui.css');
+/*Japanese*/
+/*Noto Sans JP*/
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap');
+/*Korean*/
+/*Noto Sans KR*/
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
+/*HK*/
+/*Noto Sans HK*/
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+HK:wght@400;700&display=swap');
+/*Chinese simplified*/
+/*Noto Sans SC*/
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700&display=swap');
+/*Chinese traditional*/
+/*Noto Sans TC*/
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap');
+
+/*default font*/
+body
+{
+	font-family: 'Noto Sans', "Noto Kufi Sans Arabic", "Noto Sans JP", "Noto Sans KR", "Noto Sans SC", "Noto Sans TC", "Noto Sans HK";
+}
+/*Arabic NotoSans, Arabic*/
+body.font_arabic_sans_kufi
+{
+	font-family: 'Noto Sans', "Noto Kufi Sans Arabic", "Noto Sans JP", "Noto Sans KR", "Noto Sans SC", "Noto Sans TC", "Noto Sans HK";
+}
+/*Arabic NotoKufi*/
+body.font_arabic_kufi{
+	font-family: 'Noto Sans', "Noto Kufi Arabic", "Noto Sans JP", "Noto Sans KR", "Noto Sans SC", "Noto Sans TC", "Noto Sans HK";
+	line-height:1.5;
+}
+/*Arabic NotoNashk*/
+body.font_arabic_nashk{
+	font-family: 'Noto Sans', "Noto Naskh Arabic", "Noto Sans JP", "Noto Sans KR", "Noto Sans SC", "Noto Sans TC", "Noto Sans HK";
+}
+/*Arabic NotoNastaliq*/
+body.font_arabic_nastaliq{
+	font-family: 'Noto Sans', "Noto Nastaliq Urdu", "Noto Sans JP", "Noto Sans KR", "Noto Sans SC", "Noto Sans TC", "Noto Sans HK";
+	line-height:1.7;
+}
+body.font_arabic_nastaliq button{
+	line-height:1.5 !important;
+}
+body.font_arabic_nastaliq input{
+	height:35px;
+}
+/*Arabic NotoSansUI*/
+body.font_arabic_ui{
+	font-family: 'Noto Sans', "Noto Naskh Arabic UI", "Noto Sans JP", "Noto Sans KR", "Noto Sans SC", "Noto Sans TC", "Noto Sans HK";
+}
+
 /*common*/
 .common_dialogue{
 	visibility:hidden;
@@ -14,7 +76,6 @@
 	overflow: auto;
 }
 .common_dialogue_content{
-	font-size:14px;
 	text-align:center;
 	top: 50%;
     left: 50%;
@@ -66,7 +127,6 @@
 	text-align: center;
 	margin-left: -10px !important;
 	margin:10px;
-	font-family: 'Noto Sans';
 }
 #broadcast_banner {
 	width:96%;

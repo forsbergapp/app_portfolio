@@ -1,29 +1,11 @@
-body {
-	margin: 0;
-	height: 100%;
-	width: -webkit-fit-content;
-	-webkit-text-size-adjust:none;
-	-moz-text-size-adjust: none;
-	-ms-text-size-adjust: none;
-	padding: 0px;
+body.font_arabic_nastaliq #user_menu_default_avatar{
+	top: -5px;
 }
-/* common*/
-select,input, button {
-	font-family: inherit;
+body.font_arabic_nastaliq #dialogue_start_content,
+body.font_arabic_nastaliq #dialogue_info_content{
+	height: 400px;
 }
-a:link{
-	text-decoration: none;
-}
-a:visited {
-	text-decoration: none;
-}
-a:hover,
-a:active {
-	text-decoration: underline;
-}
-a:active {
-	text-decoration: underline;
-}
+
 /*User account*/
 #user_account:hover #user_menu_dropdown,
 #user_account:active #user_menu_dropdown{
@@ -53,7 +35,6 @@ a:active {
 	display: inline-block;
 }
 #user_menu_username{
-	font-size: 16px;
 	cursor:pointer;
 	padding-top: 10px;
     padding-bottom: 10px;
@@ -182,7 +163,6 @@ a:active {
     text-align: left;
     display: inline-block;
     vertical-align: top;
-	font-size: 11px;
 }
 .app_name{
 	font-weight: bold;
@@ -241,7 +221,6 @@ a:active {
 	margin-top: 30px;
 }
 #start_links{
-	font-size:11px;
 	display: block;
 }
 #start_links div{
@@ -261,17 +240,6 @@ a:active {
 }
 #app_portfolio{
 	margin-top:30px;
-}
-#copyright{
-	text-align: center;
-	bottom: 10px;
-    position: fixed;
-    left: 35%;
-}
-#contact{
-	bottom: 30px;
-    position: fixed;
-    left: 20%;
 }
 #contact_text, #app_email{
 	display: inline-block;
@@ -336,9 +304,14 @@ a:active {
 /*RESPONSIVE SETTINGS*/
 /*CSS for minimum 768px*/
 @media only screen and (min-width: 768px) {
-	body {
-		margin: 10;
-		width: auto;
+	#dialogue_start_content, #dialogue_info_content{
+		width: 400px;
+	}
+	#about_logo, #info_logo{
+		height:60px;
+	}
+	.app_description{
+		width: 320px;
 	}
 	@-webkit-keyframes animateCloud {
 		0% {
@@ -889,8 +862,6 @@ div.ray8 {
 .theme_sun{
 	color: #404040;
 	background: rgb(81, 171, 255);
-	font-size: 16px;
-	font-family: 'Noto Sans';
 }
 .theme_sun a:link{
 	color:#a49775;
@@ -961,13 +932,6 @@ div.ray8 {
 .theme_sun #common_window_info{
 	background-color:#ffffff;
 }
-.theme_sun #copyright{
-	font-size: 11px;
-	font-family: 'Noto Sans';
-}
-.theme_sun #contact{
-	font-size:11px;
-}
 .theme_sun #profile_search_input{
 	border: 1px solid #ddd;
 }
@@ -1037,8 +1001,6 @@ div.ray8 {
 .theme_moon{
 	color: #e2e2e2;
 	background: rgb(0 2 70);
-	font-size: 16px;
-	font-family: 'Noto Sans';
 }
 .theme_moon a:link{
 	color:#a49775;
@@ -1117,13 +1079,6 @@ div.ray8 {
 }
 .theme_moon #common_window_info{
 	background-color:#ffffff;
-}
-.theme_moon #copyright{
-	font-size: 11px;
-	font-family: 'Noto Sans';
-}
-.theme_moon #contact{
-	font-size:11px;
 }
 .theme_moon #profile_search_input{
 	border: 1px solid #ddd;
