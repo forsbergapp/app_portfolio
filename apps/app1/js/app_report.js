@@ -767,7 +767,8 @@ function displayMonth(offset, prayertable, settings, locale) {
 	prayertable.classList = settings.prayertable_month + ' ' + 
 							settings.theme_month + ' ' +
 							'prayertable_font_' + settings.arabic_script;
-	
+	if (document.body.id == 'printbody')
+		document.body.classList = 'font_' + settings.arabic_script;
 	if (settings.reporttype =='MONTH'){
 		//Set direction
 		//set LTR or RTL on table layout if MONTH, on YEAR direction is set on the whole year layout
@@ -1023,7 +1024,9 @@ function displayDay(settings, item_id, locale, user_settings){
 	let date_title5 = date_current.toLocaleDateString(settings.locale + window.global_regional_def_locale_ext_prefix + window.global_regional_def_locale_ext_calendar + settings.calendar_hijri_type + window.global_regional_def_locale_ext_number_system + settings.number_system, options_hijri).toUpperCase();
 	
 	//Set theme and font classes on main div
-	settings.ui_prayertable_day.classList = settings.theme_day + ' ' + 'prayertable_font_' + settings.arabic_script;		
+	settings.ui_prayertable_day.classList = settings.theme_day + ' ' + 'prayertable_font_' + settings.arabic_script;
+	if (document.body.id == 'printbody')
+		document.body.classList = 'font_' + settings.arabic_script;
 	//set LTR or RTL on table layout
 	settings.ui_prayertable_day.style.direction = settings.direction;
 
@@ -1221,6 +1224,8 @@ function displayYear(settings, item_id, locale){
 	
 	//Set theme and font class
 	settings.ui_prayertable_year.classList = settings.theme_year + ' ' + 'prayertable_font_' + settings.arabic_script;
+	if (document.body.id == 'printbody')
+		document.body.classList = 'font_' + settings.arabic_script;
 	//set LTR or RTL on year layout
 	settings.ui_prayertable_year.style.direction = settings.direction;
 
