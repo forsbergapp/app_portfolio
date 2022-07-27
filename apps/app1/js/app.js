@@ -537,10 +537,6 @@ function update_map(longitude, latitude, zoom, text1, text2, text3, marker_id, f
 /*----------------------- */
 /* THEME                  */
 /*----------------------- */
-function app_select_theme() {
-    document.body.className = 'app_theme' + document.getElementById('app_select_theme').value;
-    return null;
-}
 function get_theme_id(type) {
     let select_user_setting = document.getElementById('setting_select_user_setting');
     if (document.getElementsByClassName('slider_active_' + type)[0])
@@ -1202,14 +1198,7 @@ async function update_ui(option, item_id=null) {
         case 3:
             {
                 let select = document.getElementById('setting_select_report_arabic_script');
-                let prefix = 'font_';
-                document.getElementById('toolbar_top').classList = prefix + select[select.selectedIndex].value;
-                document.getElementById('profile_info_search').classList = prefix + select[select.selectedIndex].value;
-                document.getElementById('settings').classList = prefix + select[select.selectedIndex].value;
-                document.getElementById('dialogues').classList = prefix + select[select.selectedIndex].value;
-                document.getElementById('common_dialogues').classList = prefix + select[select.selectedIndex].value;
-                document.getElementById('common_window_info').classList = prefix + select[select.selectedIndex].value;
-                document.getElementById('toolbar_bottom').classList = prefix + select[select.selectedIndex].value;
+                document.body.classList = 'app_theme' + document.getElementById('app_select_theme').value + ' font_' + select[select.selectedIndex].value;    
                 break;
             }
         //GPS, update map
@@ -2691,7 +2680,7 @@ function setEvents() {
     document.getElementById('setting_input_long').addEventListener('keyup', function() { window.global_typewatch("update_ui(9);", 1000); }, false);    
     //settings design
     document.getElementById('setting_select_report_papersize').addEventListener('change', function() { update_ui(10); }, false);
-    document.getElementById('app_select_theme').addEventListener('change', function() { app_select_theme() }, false);
+    document.getElementById('app_select_theme').addEventListener('change', function() { update_ui(3) }, false);
     //settings image
     document.getElementById('setting_btn_reportheader_img').addEventListener('click', function() { document.getElementById('setting_input_reportheader_img').click() }, false);
     document.getElementById('setting_input_reportheader_clear').addEventListener('click', function() { update_ui(12) }, false);
