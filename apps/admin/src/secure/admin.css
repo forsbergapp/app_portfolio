@@ -163,63 +163,45 @@
         margin-left: 49%;
     }
     #menu_1_content_widget2{
-        height:50px;
+        height:150px;
         display: block;
         text-align: center;
     }
-    #users_connected, #count_connected{
-        display:inline-block;
+    #menu_1_content_widget2a{
+        width: 70%;
     }
-    #count_local_label, #count_provider2_label{
+    #menu_1_content_widget2b{
+        width: 25%;
+    }
+    #menu_1_content_widget2a, #menu_1_content_widget2b{
+        display: inline-block;
+        vertical-align: top;
+        margin-top: 10px;
+    }
+    #list_user_stat{
+        overflow-y: auto;
+        height:90px;
+    }
+    .list_user_stat_row{
+        display: block;
+        text-align: left;
+    }
+    .list_user_stat_col{
         display: inline-block;
     }
-    #count_local, #count_provider1, #count_provider2{
-        display:inline-block;
-        margin-right:10px;
+    .list_user_stat_col:nth-child(1){
+        width:20px;
     }
-    .provider1text{
-        font-family: 'Noto Sans';
-        font-weight: bold;
-        margin-left:-2px;
-        margin-right:-2px;
+    .list_user_stat_col:nth-child(2){
+        width:100px;
     }
-    #users_count #provider1_1{
-        color: #4285F4;
-        display:inline-block;
+    .list_user_stat_col:nth-child(3){
+        width: 60px;
+        text-align: right;
     }
-    #users_count #provider1_2{
-        color: #DB4437;
-        display:inline-block;
-    }
-    #users_count #provider1_3{
-        color: #F4B400;
-        display:inline-block;
-    }
-    #users_count #provider1_4{
-        color: #4285F4;
-        display:inline-block;
-    }
-    #users_count #provider1_5{
-        color: #0F9D58;
-        display:inline-block;
-    }
-    #users_count #provider1_6{
-        color: #DB4437;
-        display:inline-block;
-    }
-    #users_count #count_provider2_label{
-        color: #4267b2;
-    }
-    #menu_1_content_widget3{
-        height:50px;
-    }
-    #maintenance, #maintenance_broadcast_info{
-        display:inline-block;
-        margin:10px;
-        vertical-align: middle;
-    }
-    #maintenance_broadcast_info{
-        margin-left: 10px;
+    #maintenance_checkbox{
+        margin-top: 10px;
+        margin-bottom: 5px;
     }
     .switch-input {
         display: none;
@@ -723,6 +705,7 @@
     .theme_light .list_pm2_log_process_event_row{
         background-color: rgb(197 227 255);
     }
+    .theme_light .list_user_stat_row:nth-child(odd),
     .theme_light .list_lov_row:nth-child(odd),
     .theme_light .list_app_log_row:nth-child(odd),
     .theme_light .list_connected_row:nth-child(odd),
@@ -731,12 +714,16 @@
     .theme_light .list_pm2_log_process_event_row:nth-child(odd){
         background-color: rgb(197 227 255);
     }
+    .theme_light .list_user_stat_row:nth-child(even),
     .theme_light .list_lov_row:nth-child(even),
     .theme_light .list_app_log_row:nth-child(even),
     .theme_light .list_connected_row:nth-child(even),
     .theme_light .list_server_log_row:nth-of-type(even),
     .theme_light .list_pm2_log_row:nth-child(even),
     .theme_light .list_pm2_log_process_event_row:nth-child(even){
+        background-color: #FFF;
+    }
+    .theme_light #list_user_stat_row_title{
         background-color: #FFF;
     }
     .theme_light #list_apps_row_title, 
