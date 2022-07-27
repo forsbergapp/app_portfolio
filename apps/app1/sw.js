@@ -12,7 +12,6 @@ const assetsToCache = [
     '/common/js/easy.qrcode.js',
     '/common/js/maintenance.js',
     '/app1/css/app.css',
-    '/app1/css/app_fonts.css',
     '/app1/css/app_report.css',
     '/app1/css/images/theme_day_10001.jpg',
     '/app1/css/images/theme_day_10002.jpg',

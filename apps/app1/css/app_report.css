@@ -1,3 +1,23 @@
+/*Fonts*/
+/*Roboto*/
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+/*Roboto Condensed*/
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700&display=swap');
+/*Press Start 2P*/
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+/*Exo*/
+@import url('https://fonts.googleapis.com/css2?family=Exo:wght@400;700&display=swap');
+/*Lato*/
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap');
+/*Source Sans Pro*/
+@import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;700&display=swap');
+/*Merriweather*/
+@import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap');
+/*Montserrat*/
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+/*Cinzel Decorative*/
+@import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&display=swap');
+
 #printbody #settings{
 	visibility: hidden;
 }
@@ -557,89 +577,19 @@
 }
 
 /*Themes*/
-/*Fonts*/
-/*Roboto*/
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
-/*Roboto Condensed*/
-@import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700&display=swap');
-/*Press Start 2P*/
-@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
-/*Exo*/
-@import url('https://fonts.googleapis.com/css2?family=Exo:wght@400;700&display=swap');
-/*Lato*/
-@import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap');
-/*Source Sans Pro*/
-@import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;700&display=swap');
-/*Merriweather*/
-@import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap');
-/*Montserrat*/
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
-/*Cinzel Decorative*/
-@import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&display=swap');
-
 /*DAY*/
 /*THEME 1*/
 /*DISPLAY FONT*/
-/*Arabic NotoSans, Arabic*/
-.theme_day_10001.prayertable_font_arabic_sans_kufi #prayertable_day_header_row,
-.theme_day_10001.prayertable_font_arabic_sans_kufi #prayertable_day_timetable_header, 
-.theme_day_10001.prayertable_font_arabic_sans_kufi #prayertable_day_footer_row{
-	font-family: 'Roboto', 'Noto Sans', 'Noto Sans Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoKufi*/
-.theme_day_10001.prayertable_font_arabic_kufi #prayertable_day_header_row,
-.theme_day_10001.prayertable_font_arabic_kufi #prayertable_day_timetable_header, 
-.theme_day_10001.prayertable_font_arabic_kufi #prayertable_day_footer_row{
-	font-family: 'Roboto', 'Noto Sans', 'Noto Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoNashk*/
-.theme_day_10001.prayertable_font_arabic_nashk #prayertable_day_header_row,
-.theme_day_10001.prayertable_font_arabic_nashk #prayertable_day_timetable_header, 
-.theme_day_10001.prayertable_font_arabic_nashk #prayertable_day_footer_row{
-	font-family: 'Roboto', 'Noto Sans', 'Noto Naskh Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoNastaliq*/
-.theme_day_10001.prayertable_font_arabic_nastaliq #prayertable_day_header_row,
-.theme_day_10001.prayertable_font_arabic_nastaliq #prayertable_day_timetable_header, 
-.theme_day_10001.prayertable_font_arabic_nastaliq #prayertable_day_footer_row{
-	font-family: 'Roboto', 'Noto Sans', 'Noto Nastaliq Urdu', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoSansUI*/
-.theme_day_10001.prayertable_font_arabic_ui #prayertable_day_header_row,
-.theme_day_10001.prayertable_font_arabic_ui #prayertable_day_timetable_header, 
-.theme_day_10001.prayertable_font_arabic_ui #prayertable_day_footer_row{
-	font-family: 'Roboto', 'Noto Sans', 'Noto Naskh Arabic UI', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+.theme_day_10001 #prayertable_day_header_row,
+.theme_day_10001 #prayertable_day_timetable_header, 
+.theme_day_10001 #prayertable_day_footer_row{
+	font-family: 'Roboto';
 }
 /*DEFAULT FONT*/
-/*Arabic NotoSans, Arabic*/
-.theme_day_10001.prayertable_font_arabic_sans_kufi #prayertable_day_timetable, 
-.theme_day_10001.prayertable_font_arabic_sans_kufi #prayertable_day_timetable_settings,
-.theme_day_10001.prayertable_font_arabic_sans_kufi #prayertable_day_time{
-	font-family: 'Roboto', 'Noto Sans', 'Noto Sans Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoKufi*/
-.theme_day_10001.prayertable_font_arabic_kufi #prayertable_day_timetable, 
-.theme_day_10001.prayertable_font_arabic_kufi #prayertable_day_timetable_settings,
-.theme_day_10001.prayertable_font_arabic_kufi #prayertable_day_time{
-	font-family: 'Roboto', 'Noto Sans', 'Noto Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoNashk*/
-.theme_day_10001.prayertable_font_arabic_nashk #prayertable_day_timetable, 
-.theme_day_10001.prayertable_font_arabic_nashk #prayertable_day_timetable_settings,
-.theme_day_10001.prayertable_font_arabic_nashk #prayertable_day_time{
-	font-family: 'Roboto', 'Noto Sans', 'Noto Naskh Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoNastaliq*/
-.theme_day_10001.prayertable_font_arabic_nastaliq #prayertable_day_timetable, 
-.theme_day_10001.prayertable_font_arabic_nastaliq #prayertable_day_timetable_settings,
-.theme_day_10001.prayertable_font_arabic_nastaliq #prayertable_day_time{
-	font-family: 'Roboto', 'Noto Sans', 'Noto Nastaliq Urdu', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoSansUI*/
-.theme_day_10001.prayertable_font_arabic_ui #prayertable_day_timetable, 
-.theme_day_10001.prayertable_font_arabic_ui #prayertable_day_timetable_settings,
-.theme_day_10001.prayertable_font_arabic_ui #prayertable_day_time{
-	font-family: 'Roboto', 'Noto Sans', 'Noto Naskh Arabic UI', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+.theme_day_10001 #prayertable_day_timetable, 
+.theme_day_10001 #prayertable_day_timetable_settings,
+.theme_day_10001 #prayertable_day_time{
+	font-family: 'Roboto';
 }
 .theme_day_10001{
 	background-color: white
@@ -675,66 +625,16 @@
 
 /*THEME 2*/
 /*DISPLAY FONT*/
-/*Arabic NotoSans, Arabic*/
-.theme_day_10002.prayertable_font_arabic_sans_kufi #prayertable_day_header, 
-.theme_day_10002.prayertable_font_arabic_sans_kufi #prayertable_day_timetable_header, 
-.theme_day_10002.prayertable_font_arabic_sans_kufi #prayertable_day_footer_row{
-	font-family: 'Exo', 'Noto Sans', 'Noto Sans Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoKufi*/
-.theme_day_10002.prayertable_font_arabic_kufi #prayertable_day_header, 
-.theme_day_10002.prayertable_font_arabic_kufi #prayertable_day_timetable_header, 
-.theme_day_10002.prayertable_font_arabic_kufi #prayertable_day_footer_row{
-	font-family: 'Exo', 'Noto Sans', 'Noto Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoNashk*/
-.theme_day_10002.prayertable_font_arabic_nashk #prayertable_day_header, 
-.theme_day_10002.prayertable_font_arabic_nashk #prayertable_day_timetable_header, 
-.theme_day_10002.prayertable_font_arabic_nashk #prayertable_day_footer_row{
-	font-family: 'Exo', 'Noto Sans', 'Noto Naskh Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoNastaliq*/
-.theme_day_10002.prayertable_font_arabic_nastaliq #prayertable_day_header, 
-.theme_day_10002.prayertable_font_arabic_nastaliq #prayertable_day_timetable_header, 
-.theme_day_10002.prayertable_font_arabic_nastaliq #prayertable_day_footer_row{
-	font-family: 'Exo', 'Noto Sans', 'Noto Nastaliq Urdu', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoSansUI*/
-.theme_day_10002.prayertable_font_arabic_ui #prayertable_day_header, 
-.theme_day_10002.prayertable_font_arabic_ui #prayertable_day_timetable_header, 
-.theme_day_10002.prayertable_font_arabic_ui #prayertable_day_footer_row{
-	font-family: 'Exo', 'Noto Sans', 'Noto Naskh Arabic UI', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+.theme_day_10002 #prayertable_day_header, 
+.theme_day_10002 #prayertable_day_timetable_header, 
+.theme_day_10002 #prayertable_day_footer_row{
+	font-family: 'Exo';
 }
 /*DEFAULT FONT*/
-/*Arabic NotoSans, Arabic*/
-.theme_day_10002.prayertable_font_arabic_sans_kufi #prayertable_day_timetable, 
-.theme_day_10002.prayertable_font_arabic_sans_kufi #prayertable_day_timetable_settings,
-.theme_day_10002.prayertable_font_arabic_sans_kufi #prayertable_day_time{
-	font-family: 'Exo', 'Noto Sans', 'Noto Sans Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoKufi*/
-.theme_day_10002.prayertable_font_arabic_kufi #prayertable_day_timetable, 
-.theme_day_10002.prayertable_font_arabic_kufi #prayertable_day_timetable_settings,
-.theme_day_10002.prayertable_font_arabic_kufi #prayertable_day_time{
-	font-family: 'Exo', 'Noto Sans', 'Noto Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoNashk*/
-.theme_day_10002.prayertable_font_arabic_nashk #prayertable_day_timetable, 
-.theme_day_10002.prayertable_font_arabic_nashk #prayertable_day_timetable_settings,
-.theme_day_10002.prayertable_font_arabic_nashk #prayertable_day_time{
-	font-family: 'Exo', 'Noto Sans', 'Noto Naskh Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoNastaliq*/
-.theme_day_10002.prayertable_font_arabic_nastaliq #prayertable_day_timetable, 
-.theme_day_10002.prayertable_font_arabic_nastaliq #prayertable_day_timetable_settings,
-.theme_day_10002.prayertable_font_arabic_nastaliq #prayertable_day_time{
-	font-family: 'Exo', 'Noto Sans', 'Noto Nastaliq Urdu', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoSansUI*/
-.theme_day_10002.prayertable_font_arabic_ui #prayertable_day_timetable, 
-.theme_day_10002.prayertable_font_arabic_ui #prayertable_day_timetable_settings,
-.theme_day_10002.prayertable_font_arabic_ui #prayertable_day_time{
-	font-family: 'Exo', 'Noto Sans', 'Noto Naskh Arabic UI', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+.theme_day_10002 #prayertable_day_timetable, 
+.theme_day_10002 #prayertable_day_timetable_settings,
+.theme_day_10002 #prayertable_day_time{
+	font-family: 'Exo';
 }
 .theme_day_10002{
 	background-color: white
@@ -767,66 +667,16 @@
 
 /*THEME 3*/
 /*DISPLAY FONT*/
-/*Arabic NotoSans, Arabic*/
-.theme_day_10003.prayertable_font_arabic_sans_kufi #prayertable_day_header, 
-.theme_day_10003.prayertable_font_arabic_sans_kufi #prayertable_day_timetable_header, 
-.theme_day_10003.prayertable_font_arabic_sans_kufi #prayertable_day_footer_row{
-	font-family: 'Roboto', 'Noto Sans', 'Noto Sans Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoKufi*/
-.theme_day_10003.prayertable_font_arabic_kufi #prayertable_day_header, 
-.theme_day_10003.prayertable_font_arabic_kufi #prayertable_day_timetable_header, 
-.theme_day_10003.prayertable_font_arabic_kufi #prayertable_day_footer_row{
-	font-family: 'Roboto', 'Noto Sans', 'Noto Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoNashk*/
-.theme_day_10003.prayertable_font_arabic_nashk #prayertable_day_header, 
-.theme_day_10003.prayertable_font_arabic_nashk #prayertable_day_timetable_header, 
-.theme_day_10003.prayertable_font_arabic_nashk #prayertable_day_footer_row{
-	font-family: 'Roboto', 'Noto Sans', 'Noto Naskh Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoNastaliq*/
-.theme_day_10003.prayertable_font_arabic_nastaliq #prayertable_day_header, 
-.theme_day_10003.prayertable_font_arabic_nastaliq #prayertable_day_timetable_header, 
-.theme_day_10003.prayertable_font_arabic_nastaliq #prayertable_day_footer_row{
-	font-family: 'Roboto', 'Noto Sans', 'Noto Nastaliq Urdu', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoSansUI*/
-.theme_day_10003.prayertable_font_arabic_ui #prayertable_day_header, 
-.theme_day_10003.prayertable_font_arabic_ui #prayertable_day_timetable_header, 
-.theme_day_10003.prayertable_font_arabic_ui #prayertable_day_footer_row{
-	font-family: 'Roboto', 'Noto Sans', 'Noto Naskh Arabic UI', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+.theme_day_10003 #prayertable_day_header, 
+.theme_day_10003 #prayertable_day_timetable_header, 
+.theme_day_10003 #prayertable_day_footer_row{
+	font-family: 'Roboto';
 }
 /*DEFAULT FONT*/
-/*Arabic NotoSans, Arabic*/
-.theme_day_10003.prayertable_font_arabic_sans_kufi #prayertable_day_timetable, 
-.theme_day_10003.prayertable_font_arabic_sans_kufi #prayertable_day_timetable_settings,
-.theme_day_10003.prayertable_font_arabic_sans_kufi #prayertable_day_time{
-	font-family: 'Roboto', 'Noto Sans', 'Noto Sans Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoKufi*/
-.theme_day_10003.prayertable_font_arabic_kufi #prayertable_day_timetable, 
-.theme_day_10003.prayertable_font_arabic_kufi #prayertable_day_timetable_settings,
-.theme_day_10003.prayertable_font_arabic_kufi #prayertable_day_time{
-	font-family: 'Roboto', 'Noto Sans', 'Noto Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoNashk*/
-.theme_day_10003.prayertable_font_arabic_nashk #prayertable_day_timetable, 
-.theme_day_10003.prayertable_font_arabic_nashk #prayertable_day_timetable_settings,
-.theme_day_10003.prayertable_font_arabic_nashk #prayertable_day_time{
-	font-family: 'Roboto', 'Noto Sans', 'Noto Naskh Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoNastaliq*/
-.theme_day_10003.prayertable_font_arabic_nastaliq #prayertable_day_timetable, 
-.theme_day_10003.prayertable_font_arabic_nastaliq #prayertable_day_timetable_settings,
-.theme_day_10003.prayertable_font_arabic_nastaliq #prayertable_day_time{
-	font-family: 'Roboto', 'Noto Sans', 'Noto Nastaliq Urdu', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoSansUI*/
-.theme_day_10003.prayertable_font_arabic_ui #prayertable_day_timetable, 
-.theme_day_10003.prayertable_font_arabic_ui #prayertable_day_timetable_settings,
-.theme_day_10003.prayertable_font_arabic_ui #prayertable_day_time{
-	font-family: 'Roboto', 'Noto Sans', 'Noto Naskh Arabic UI', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+.theme_day_10003 #prayertable_day_timetable, 
+.theme_day_10003 #prayertable_day_timetable_settings,
+.theme_day_10003 #prayertable_day_time{
+	font-family: 'Roboto';
 }
 .theme_day_10003{
 	background-color: white
@@ -864,62 +714,7 @@
 /*MONTH*/
 /*THEME 1*/
 /*DISPLAY FONT*/
-/*Arabic NotoSans, Arabic*/
-.theme_month_20001.prayertable_font_arabic_sans_kufi #prayertable_month_header, 
-.theme_month_20001.prayertable_font_arabic_sans_kufi #timetable_header, 
-.theme_month_20001.prayertable_font_arabic_sans_kufi #prayertable_month_footer{
-	font-family: 'Noto Sans', 'Noto Sans Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoKufi*/
-.theme_month_20001.prayertable_font_arabic_kufi #prayertable_month_header, 
-.theme_month_20001.prayertable_font_arabic_kufi #timetable_header, 
-.theme_month_20001.prayertable_font_arabic_kufi #prayertable_month_footer{
-	font-family: 'Noto Sans', 'Noto Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoNashk*/
-.theme_month_20001.prayertable_font_arabic_nashk #prayertable_month_header, 
-.theme_month_20001.prayertable_font_arabic_nashk #timetable_header, 
-.theme_month_20001.prayertable_font_arabic_nashk #prayertable_month_footer{
-	font-family: 'Noto Sans', 'Noto Naskh Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoNastaliq*/
-.theme_month_20001.prayertable_font_arabic_nastaliq #prayertable_month_header, 
-.theme_month_20001.prayertable_font_arabic_nastaliq #timetable_header, 
-.theme_month_20001.prayertable_font_arabic_nastaliq #prayertable_month_footer{
-	font-family: 'Noto Sans', 'Noto Nastaliq Urdu', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoSansUI*/
-.theme_month_20001.prayertable_font_arabic_ui #prayertable_month_header, 
-.theme_month_20001.prayertable_font_arabic_ui #timetable_header, 
-.theme_month_20001.prayertable_font_arabic_ui #prayertable_month_footer{
-	font-family: 'Noto Sans', 'Noto Naskh Arabic UI', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*DEFAULT FONT*/
-/*Arabic NotoSans, Arabic*/
-.theme_month_20001.prayertable_font_arabic_sans_kufi #timetable, 
-.theme_month_20001.prayertable_font_arabic_sans_kufi #timetable_footer{
-	font-family: 'Noto Sans', 'Noto Sans Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoKufi*/
-.theme_month_20001.prayertable_font_arabic_kufi #timetable, 
-.theme_month_20001.prayertable_font_arabic_kufi #timetable_footer{
-	font-family: 'Noto Sans', 'Noto Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoNashk*/
-.theme_month_20001.prayertable_font_arabic_nashk #timetable, 
-.theme_month_20001.prayertable_font_arabic_nashk #timetable_footer{
-	font-family: 'Noto Sans', 'Noto Naskh Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoNastaliq*/
-.theme_month_20001.prayertable_font_arabic_nastaliq #timetable, 
-.theme_month_20001.prayertable_font_arabic_nastaliq #timetable_footer{
-	font-family: 'Noto Sans', 'Noto Nastaliq Urdu', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoSansUI*/
-.theme_month_20001.prayertable_font_arabic_ui #timetable, 
-.theme_month_20001.prayertable_font_arabic_ui #timetable_footer{
-	font-family: 'Noto Sans', 'Noto Naskh Arabic UI', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
+/*default font*/
 .theme_month_20001 {
 	background-color: white;
 	color: #404040;
@@ -954,62 +749,7 @@
 
 /*THEME 2*/
 /*DISPLAY FONT*/
-/*Arabic NotoSans, Arabic*/
-.theme_month_20002.prayertable_font_arabic_sans_kufi #prayertable_month_header, 
-.theme_month_20002.prayertable_font_arabic_sans_kufi #timetable_header, 
-.theme_month_20002.prayertable_font_arabic_sans_kufi #prayertable_month_footer{
-	font-family: 'Noto Sans', 'Noto Sans Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoKufi*/
-.theme_month_20002.prayertable_font_arabic_kufi #prayertable_month_header, 
-.theme_month_20002.prayertable_font_arabic_kufi #timetable_header, 
-.theme_month_20002.prayertable_font_arabic_kufi #prayertable_month_footer{
-	font-family: 'Noto Sans', 'Noto Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoNashk*/
-.theme_month_20002.prayertable_font_arabic_nashk #prayertable_month_header, 
-.theme_month_20002.prayertable_font_arabic_nashk #timetable_header, 
-.theme_month_20002.prayertable_font_arabic_nashk #prayertable_month_footer{
-	font-family: 'Noto Sans', 'Noto Naskh Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoNastaliq*/
-.theme_month_20002.prayertable_font_arabic_nastaliq #prayertable_month_header, 
-.theme_month_20002.prayertable_font_arabic_nastaliq #timetable_header, 
-.theme_month_20002.prayertable_font_arabic_nastaliq #prayertable_month_footer{
-	font-family: 'Noto Sans', 'Noto Nastaliq Urdu', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoSansUI*/
-.theme_month_20002.prayertable_font_arabic_ui #prayertable_month_header, 
-.theme_month_20002.prayertable_font_arabic_ui #timetable_header, 
-.theme_month_20002.prayertable_font_arabic_ui #prayertable_month_footer{
-	font-family: 'Noto Sans', 'Noto Naskh Arabic UI', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*DEFAULT FONT*/
-/*Arabic NotoSans, Arabic*/
-.theme_month_20002.prayertable_font_arabic_sans_kufi #timetable, 
-.theme_month_20002.prayertable_font_arabic_sans_kufi #timetable_footer{
-	font-family: 'Noto Sans', 'Noto Sans Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoKufi*/
-.theme_month_20002.prayertable_font_arabic_kufi #timetable, 
-.theme_month_20002.prayertable_font_arabic_kufi #timetable_footer{
-	font-family: 'Noto Sans', 'Noto Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoNashk*/
-.theme_month_20002.prayertable_font_arabic_nashk #timetable, 
-.theme_month_20002.prayertable_font_arabic_nashk #timetable_footer{
-	font-family: 'Noto Sans', 'Noto Naskh Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoNastaliq*/
-.theme_month_20002.prayertable_font_arabic_nastaliq #timetable, 
-.theme_month_20002.prayertable_font_arabic_nastaliq #timetable_footer{
-	font-family: 'Noto Sans', 'Noto Nastaliq Urdu', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoSansUI*/
-.theme_month_20002.prayertable_font_arabic_ui #timetable, 
-.theme_month_20002.prayertable_font_arabic_ui #timetable_footer{
-	font-family: 'Noto Sans', 'Noto Naskh Arabic UI', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
+/*default font*/
 .theme_month_20002 {
 	background-color: white;
 	color: #404040;
@@ -1055,61 +795,15 @@
 }
 /*THEME 3*/
 /*DISPLAY FONT*/
-/*Arabic NotoSans, Arabic*/
-.theme_month_20003.prayertable_font_arabic_sans_kufi #prayertable_month_header, 
-.theme_month_20003.prayertable_font_arabic_sans_kufi #timetable_header, 
-.theme_month_20003.prayertable_font_arabic_sans_kufi #prayertable_month_footer{
-	font-family: 'Roboto', 'Noto Sans', 'Noto Sans Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoKufi*/
-.theme_month_20003.prayertable_font_arabic_kufi #prayertable_month_header, 
-.theme_month_20003.prayertable_font_arabic_kufi #timetable_header, 
-.theme_month_20003.prayertable_font_arabic_kufi #prayertable_month_footer{
-	font-family: 'Roboto', 'Noto Sans', 'Noto Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoNashk*/
-.theme_month_20003.prayertable_font_arabic_nashk #prayertable_month_header, 
-.theme_month_20003.prayertable_font_arabic_nashk #timetable_header, 
-.theme_month_20003.prayertable_font_arabic_nashk #prayertable_month_footer{
-	font-family: 'Roboto', 'Noto Sans', 'Noto Naskh Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoNastaliq*/
-.theme_month_20003.prayertable_font_arabic_nastaliq #prayertable_month_header, 
-.theme_month_20003.prayertable_font_arabic_nastaliq #timetable_header, 
-.theme_month_20003.prayertable_font_arabic_nastaliq #prayertable_month_footer{
-	font-family: 'Roboto', 'Noto Sans', 'Noto Nastaliq Urdu', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoSansUI*/
-.theme_month_20003.prayertable_font_arabic_ui #prayertable_month_header, 
-.theme_month_20003.prayertable_font_arabic_ui #timetable_header, 
-.theme_month_20003.prayertable_font_arabic_ui #prayertable_month_footer{
-	font-family: 'Roboto', 'Noto Sans', 'Noto Naskh Arabic UI', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+.theme_month_20003 #prayertable_month_header, 
+.theme_month_20003 #timetable_header, 
+.theme_month_20003 #prayertable_month_footer{
+	font-family: 'Roboto';
 }
 /*DEFAULT FONT*/
-/*Arabic NotoSans, Arabic*/
-.theme_month_20003.prayertable_font_arabic_sans_kufi #timetable, 
-.theme_month_20003.prayertable_font_arabic_sans_kufi #timetable_footer{
-	font-family: 'Roboto', 'Noto Sans', 'Noto Sans Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoKufi*/
-.theme_month_20003.prayertable_font_arabic_kufi #timetable, 
-.theme_month_20003.prayertable_font_arabic_kufi #timetable_footer{
-	font-family: 'Roboto', 'Noto Sans', 'Noto Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoNashk*/
-.theme_month_20003.prayertable_font_arabic_nashk #timetable, 
-.theme_month_20003.prayertable_font_arabic_nashk #timetable_footer{
-	font-family: 'Roboto', 'Noto Sans', 'Noto Naskh Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoNastaliq*/
-.theme_month_20003.prayertable_font_arabic_nastaliq #timetable, 
-.theme_month_20003.prayertable_font_arabic_nastaliq #timetable_footer{
-	font-family: 'Roboto', 'Noto Sans', 'Noto Nastaliq Urdu', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoSansUI*/
-.theme_month_20003.prayertable_font_arabic_ui #timetable, 
-.theme_month_20003.prayertable_font_arabic_ui #timetable_footer{
-	font-family: 'Roboto', 'Noto Sans', 'Noto Naskh Arabic UI', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+.theme_month_20003 #timetable, 
+.theme_month_20003 #timetable_footer{
+	font-family: 'Roboto';
 }
 .theme_month_20003 {
 	background-color: white
@@ -1163,63 +857,17 @@
 .theme_month_20003 #prayertable_month_footer {
 	color: #333;
 }
-/*THEME4*/
+/*THEME 4*/
 /*DISPLAY FONT*/
-/*Arabic NotoSans, Arabic*/
-.theme_month_20004.prayertable_font_arabic_sans_kufi #prayertable_month_header, 
-.theme_month_20004.prayertable_font_arabic_sans_kufi #timetable_header, 
-.theme_month_20004.prayertable_font_arabic_sans_kufi #prayertable_month_footer{
-	font-family: 'Press Start 2P', 'Noto Sans', 'Noto Sans Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoKufi*/
-.theme_month_20004.prayertable_font_arabic_kufi #prayertable_month_header, 
-.theme_month_20004.prayertable_font_arabic_kufi #timetable_header, 
-.theme_month_20004.prayertable_font_arabic_kufi #prayertable_month_footer{
-	font-family: 'Press Start 2P', 'Noto Sans', 'Noto Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoNashk*/
-.theme_month_20004.prayertable_font_arabic_nashk #prayertable_month_header, 
-.theme_month_20004.prayertable_font_arabic_nashk #timetable_header, 
-.theme_month_20004.prayertable_font_arabic_nashk #prayertable_month_footer{
-	font-family: 'Press Start 2P', 'Noto Sans', 'Noto Naskh Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoNastaliq*/
-.theme_month_20004.prayertable_font_arabic_nastaliq #prayertable_month_header, 
-.theme_month_20004.prayertable_font_arabic_nastaliq #timetable_header, 
-.theme_month_20004.prayertable_font_arabic_nastaliq #prayertable_month_footer{
-	font-family: 'Press Start 2P', 'Noto Sans', 'Noto Nastaliq Urdu', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoSansUI*/
-.theme_month_20004.prayertable_font_arabic_ui #prayertable_month_header, 
-.theme_month_20004.prayertable_font_arabic_ui #timetable_header, 
-.theme_month_20004.prayertable_font_arabic_ui #prayertable_month_footer{
-	font-family: 'Press Start 2P', 'Noto Sans', 'Noto Naskh Arabic UI', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+.theme_month_20004 #prayertable_month_header, 
+.theme_month_20004 #timetable_header, 
+.theme_month_20004 #prayertable_month_footer{
+	font-family: 'Press Start 2P';
 }
 /*DEFAULT FONT*/
-/*Arabic NotoSans, Arabic*/
-.theme_month_20004.prayertable_font_arabic_sans_kufi #timetable, 
-.theme_month_20004.prayertable_font_arabic_sans_kufi #timetable_footer{
-	font-family: 'Press Start 2P', 'Noto Sans', 'Noto Sans Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoKufi*/
-.theme_month_20004.prayertable_font_arabic_kufi #timetable, 
-.theme_month_20004.prayertable_font_arabic_kufi #timetable_footer{
-	font-family: 'Press Start 2P', 'Noto Sans', 'Noto Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoNashk*/
-.theme_month_20004.prayertable_font_arabic_nashk #timetable, 
-.theme_month_20004.prayertable_font_arabic_nashk #timetable_footer{
-	font-family: 'Press Start 2P', 'Noto Sans', 'Noto Naskh Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoNastaliq*/
-.theme_month_20004.prayertable_font_arabic_nastaliq #timetable, 
-.theme_month_20004.prayertable_font_arabic_nastaliq #timetable_footer{
-	font-family: 'Press Start 2P', 'Noto Sans', 'Noto Nastaliq Urdu', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoSansUI*/
-.theme_month_20004.prayertable_font_arabic_ui #timetable, 
-.theme_month_20004.prayertable_font_arabic_ui #timetable_footer{
-	font-family: 'Press Start 2P', 'Noto Sans', 'Noto Naskh Arabic UI', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+.theme_month_20004 #timetable, 
+.theme_month_20004 #timetable_footer{
+	font-family: 'Press Start 2P';
 }
 /*shrink font size compared to parent div for this font on this theme*/
 .theme_month_20004 .timetable_row, 
@@ -1294,63 +942,17 @@
 	padding: 5px;
 }
 
-/*START PRAYERTABLE THEME 5*/
+/*THEME 5*/
 /*DISPLAY FONT*/
-/*Arabic NotoSans, Arabic*/
-.theme_month_20005.prayertable_font_arabic_sans_kufi #prayertable_month_header, 
-.theme_month_20005.prayertable_font_arabic_sans_kufi #timetable_header, 
-.theme_month_20005.prayertable_font_arabic_sans_kufi #prayertable_month_footer{
-	font-family: 'Roboto Condensed', 'Noto Sans', 'Noto Sans Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoKufi*/
-.theme_month_20005.prayertable_font_arabic_kufi #prayertable_month_header, 
-.theme_month_20005.prayertable_font_arabic_kufi #timetable_header, 
-.theme_month_20005.prayertable_font_arabic_kufi #prayertable_month_footer{
-	font-family: 'Roboto Condensed', 'Noto Sans', 'Noto Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoNashk*/
-.theme_month_20005.prayertable_font_arabic_nashk #prayertable_month_header, 
-.theme_month_20005.prayertable_font_arabic_nashk #timetable_header, 
-.theme_month_20005.prayertable_font_arabic_nashk #prayertable_month_footer{
-	font-family: 'Roboto Condensed', 'Noto Sans', 'Noto Naskh Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoNastaliq*/
-.theme_month_20005.prayertable_font_arabic_nastaliq #prayertable_month_header, 
-.theme_month_20005.prayertable_font_arabic_nastaliq #timetable_header, 
-.theme_month_20005.prayertable_font_arabic_nastaliq #prayertable_month_footer{
-	font-family: 'Roboto Condensed', 'Noto Sans', 'Noto Nastaliq Urdu', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoSansUI*/
-.theme_month_20005.prayertable_font_arabic_ui #prayertable_month_header, 
-.theme_month_20005.prayertable_font_arabic_ui #timetable_header, 
-.theme_month_20005.prayertable_font_arabic_ui #prayertable_month_footer{
-	font-family: 'Roboto Condensed', 'Noto Sans', 'Noto Naskh Arabic UI', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+.theme_month_20005 #prayertable_month_header, 
+.theme_month_20005 #timetable_header, 
+.theme_month_20005 #prayertable_month_footer{
+	font-family: 'Roboto Condensed';
 }
 /*DEFAULT FONT*/
-/*Arabic NotoSans, Arabic*/
-.theme_month_20005.prayertable_font_arabic_sans_kufi #timetable, 
-.theme_month_20005.prayertable_font_arabic_sans_kufi #timetable_footer{
-	font-family: 'Roboto Condensed', 'Noto Sans', 'Noto Sans Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoKufi*/
-.theme_month_20005.prayertable_font_arabic_kufi #timetable, 
-.theme_month_20005.prayertable_font_arabic_kufi #timetable_footer{
-	font-family: 'Roboto Condensed', 'Noto Sans', 'Noto Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoNashk*/
-.theme_month_20005.prayertable_font_arabic_nashk #timetable, 
-.theme_month_20005.prayertable_font_arabic_nashk #timetable_footer{
-	font-family: 'Roboto Condensed', 'Noto Sans', 'Noto Naskh Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoNastaliq*/
-.theme_month_20005.prayertable_font_arabic_nastaliq #timetable, 
-.theme_month_20005.prayertable_font_arabic_nastaliq #timetable_footer{
-	font-family: 'Roboto Condensed', 'Noto Sans', 'Noto Nastaliq Urdu', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoSansUI*/
-.theme_month_20005.prayertable_font_arabic_ui #timetable, 
-.theme_month_20005.prayertable_font_arabic_ui #timetable_footer{
-	font-family: 'Roboto Condensed', 'Noto Sans', 'Noto Naskh Arabic UI', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+.theme_month_20005 #timetable, 
+.theme_month_20005 #timetable_footer{
+	font-family: 'Roboto Condensed';
 }
 .theme_month_20005 {
 	background-color: white;
@@ -1402,63 +1004,17 @@
 	border-right: 2px solid #009900;
 }
 
-/*START PRAYERTABLE THEME 6*/
+/*THEME 6*/
 /*DISPLAY FONT*/
-/*Arabic NotoSans, Arabic*/
-.theme_month_20006.prayertable_font_arabic_sans_kufi #prayertable_month_header, 
-.theme_month_20006.prayertable_font_arabic_sans_kufi #timetable_header, 
-.theme_month_20006.prayertable_font_arabic_sans_kufi #prayertable_month_footer{
-	font-family: 'Roboto Condensed', 'Noto Sans', 'Noto Sans Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoKufi*/
-.theme_month_20006.prayertable_font_arabic_kufi #prayertable_month_header, 
-.theme_month_20006.prayertable_font_arabic_kufi #timetable_header, 
-.theme_month_20006.prayertable_font_arabic_kufi #prayertable_month_footer{
-	font-family: 'Roboto Condensed', 'Noto Sans', 'Noto Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoNashk*/
-.theme_month_20006.prayertable_font_arabic_nashk #prayertable_month_header, 
-.theme_month_20006.prayertable_font_arabic_nashk #timetable_header, 
-.theme_month_20006.prayertable_font_arabic_nashk #prayertable_month_footer{
-	font-family: 'Roboto Condensed', 'Noto Sans', 'Noto Naskh Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoNastaliq*/
-.theme_month_20006.prayertable_font_arabic_nastaliq #prayertable_month_header, 
-.theme_month_20006.prayertable_font_arabic_nastaliq #timetable_header, 
-.theme_month_20006.prayertable_font_arabic_nastaliq #prayertable_month_footer{
-	font-family: 'Roboto Condensed', 'Noto Sans', 'Noto Nastaliq Urdu', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoSansUI*/
-.theme_month_20006.prayertable_font_arabic_ui #prayertable_month_header, 
-.theme_month_20006.prayertable_font_arabic_ui #timetable_header, 
-.theme_month_20006.prayertable_font_arabic_ui #prayertable_month_footer{
-	font-family: 'Roboto Condensed', 'Noto Sans', 'Noto Naskh Arabic UI', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+.theme_month_20006 #prayertable_month_header, 
+.theme_month_20006 #timetable_header, 
+.theme_month_20006 #prayertable_month_footer{
+	font-family: 'Roboto Condensed';
 }
 /*DEFAULT FONT*/
-/*Arabic NotoSans, Arabic*/
-.theme_month_20006.prayertable_font_arabic_sans_kufi #timetable, 
-.theme_month_20006.prayertable_font_arabic_sans_kufi #timetable_footer{
-	font-family: 'Roboto Condensed', 'Noto Sans', 'Noto Sans Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoKufi*/
-.theme_month_20006.prayertable_font_arabic_kufi #timetable, 
-.theme_month_20006.prayertable_font_arabic_kufi #timetable_footer{
-	font-family: 'Roboto Condensed', 'Noto Sans', 'Noto Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoNashk*/
-.theme_month_20006.prayertable_font_arabic_nashk #timetable, 
-.theme_month_20006.prayertable_font_arabic_nashk #timetable_footer{
-	font-family: 'Roboto Condensed', 'Noto Sans', 'Noto Naskh Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoNastaliq*/
-.theme_month_20006.prayertable_font_arabic_nastaliq #timetable, 
-.theme_month_20006.prayertable_font_arabic_nastaliq #timetable_footer{
-	font-family: 'Roboto Condensed', 'Noto Sans', 'Noto Nastaliq Urdu', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoSansUI*/
-.theme_month_20006.prayertable_font_arabic_ui #timetable, 
-.theme_month_20006.prayertable_font_arabic_ui #timetable_footer{
-	font-family: 'Roboto Condensed', 'Noto Sans', 'Noto Naskh Arabic UI', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+.theme_month_20006 #timetable, 
+.theme_month_20006 #timetable_footer{
+	font-family: 'Roboto Condensed';
 }
 .theme_month_20006 {
 	background-color: white;
@@ -1522,63 +1078,17 @@
 	color : #2a5d99;
 }
 
-/*START PRAYERTABLE THEME 7*/
+/*THEME 7*/
 /*DISPLAY FONT*/
-/*Arabic NotoSans, Arabic*/
-.theme_month_20007.prayertable_font_arabic_sans_kufi #prayertable_month_header, 
-.theme_month_20007.prayertable_font_arabic_sans_kufi #timetable_header, 
-.theme_month_20007.prayertable_font_arabic_sans_kufi #prayertable_month_footer{
-	font-family: 'Roboto Condensed', 'Noto Sans', 'Noto Sans Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoKufi*/
-.theme_month_20007.prayertable_font_arabic_kufi #prayertable_month_header, 
-.theme_month_20007.prayertable_font_arabic_kufi #timetable_header, 
-.theme_month_20007.prayertable_font_arabic_kufi #prayertable_month_footer{
-	font-family: 'Roboto Condensed', 'Noto Sans', 'Noto Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoNashk*/
-.theme_month_20007.prayertable_font_arabic_nashk #prayertable_month_header, 
-.theme_month_20007.prayertable_font_arabic_nashk #timetable_header, 
-.theme_month_20007.prayertable_font_arabic_nashk #prayertable_month_footer{
-	font-family: 'Roboto Condensed', 'Noto Sans', 'Noto Naskh Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoNastaliq*/
-.theme_month_20007.prayertable_font_arabic_nastaliq #prayertable_month_header, 
-.theme_month_20007.prayertable_font_arabic_nastaliq #timetable_header, 
-.theme_month_20007.prayertable_font_arabic_nastaliq #prayertable_month_footer{
-	font-family: 'Roboto Condensed', 'Noto Sans', 'Noto Nastaliq Urdu', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoSansUI*/
-.theme_month_20007.prayertable_font_arabic_ui #prayertable_month_header, 
-.theme_month_20007.prayertable_font_arabic_ui #timetable_header, 
-.theme_month_20007.prayertable_font_arabic_ui #prayertable_month_footer{
-	font-family: 'Roboto Condensed', 'Noto Sans', 'Noto Naskh Arabic UI', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+.theme_month_20007 #prayertable_month_header, 
+.theme_month_20007 #timetable_header, 
+.theme_month_20007 #prayertable_month_footer{
+	font-family: 'Roboto Condensed';
 }
 /*DEFAULT FONT*/
-/*Arabic NotoSans, Arabic*/
-.theme_month_20007.prayertable_font_arabic_sans_kufi #timetable, 
-.theme_month_20007.prayertable_font_arabic_sans_kufi #timetable_footer{
-	font-family: 'Roboto Condensed', 'Noto Sans', 'Noto Sans Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoKufi*/
-.theme_month_20007.prayertable_font_arabic_kufi #timetable, 
-.theme_month_20007.prayertable_font_arabic_kufi #timetable_footer{
-	font-family: 'Roboto Condensed', 'Noto Sans', 'Noto Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoNashk*/
-.theme_month_20007.prayertable_font_arabic_nashk #timetable, 
-.theme_month_20007.prayertable_font_arabic_nashk #timetable_footer{
-	font-family: 'Roboto Condensed', 'Noto Sans', 'Noto Naskh Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoNastaliq*/
-.theme_month_20007.prayertable_font_arabic_nastaliq #timetable, 
-.theme_month_20007.prayertable_font_arabic_nastaliq #timetable_footer{
-	font-family: 'Roboto Condensed', 'Noto Sans', 'Noto Nastaliq Urdu', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoSansUI*/
-.theme_month_20007.prayertable_font_arabic_ui #timetable, 
-.theme_month_20007.prayertable_font_arabic_ui #timetable_footer{
-	font-family: 'Roboto Condensed', 'Noto Sans', 'Noto Naskh Arabic UI', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+.theme_month_20007 #timetable, 
+.theme_month_20007 #timetable_footer{
+	font-family: 'Roboto Condensed';
 }
 .theme_month_20007 {
 	background-color: white;
@@ -1660,64 +1170,15 @@
 	color : #704c21;
 }
 
-/*START PRAYERTABLE THEME 8*/
+/*THEME 8*/
 /*DISPLAY FONT*/
-/*Arabic NotoSans, Arabic*/
-.theme_month_20008.prayertable_font_arabic_sans_kufi #prayertable_month_header, 
-.theme_month_20008.prayertable_font_arabic_sans_kufi #timetable_header, 
-.theme_month_20008.prayertable_font_arabic_sans_kufi #prayertable_month_footer{
-	font-family: 'Cinzel Decorative', 'Noto Sans', 'Noto Sans Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoKufi*/
-.theme_month_20008.prayertable_font_arabic_kufi #prayertable_month_header, 
-.theme_month_20008.prayertable_font_arabic_kufi #timetable_header, 
-.theme_month_20008.prayertable_font_arabic_kufi #prayertable_month_footer{
-	font-family: 'Cinzel Decorative', 'Noto Sans', 'Noto Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoNashk*/
-.theme_month_20008.prayertable_font_arabic_nashk #prayertable_month_header, 
-.theme_month_20008.prayertable_font_arabic_nashk #timetable_header, 
-.theme_month_20008.prayertable_font_arabic_nashk #prayertable_month_footer{
-	font-family: 'Cinzel Decorative', 'Noto Sans', 'Noto Naskh Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoNastaliq*/
-.theme_month_20008.prayertable_font_arabic_nastaliq #prayertable_month_header, 
-.theme_month_20008.prayertable_font_arabic_nastaliq #timetable_header, 
-.theme_month_20008.prayertable_font_arabic_nastaliq #prayertable_month_footer{
-	font-family: 'Cinzel Decorative', 'Noto Sans', 'Noto Nastaliq Urdu', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoSansUI*/
-.theme_month_20008.prayertable_font_arabic_ui #prayertable_month_header, 
-.theme_month_20008.prayertable_font_arabic_ui #timetable_header, 
-.theme_month_20008.prayertable_font_arabic_ui #prayertable_month_footer{
-	font-family: 'Cinzel Decorative', 'Noto Sans', 'Noto Naskh Arabic UI', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+.theme_month_20008 #prayertable_month_header, 
+.theme_month_20008 #timetable_header, 
+.theme_month_20008 #prayertable_month_footer{
+	font-family: 'Cinzel Decorative';
 }
 /*DEFAULT FONT*/
-/*Arabic NotoSans, Arabic*/
-.theme_month_20008.prayertable_font_arabic_sans_kufi #timetable, 
-.theme_month_20008.prayertable_font_arabic_sans_kufi #timetable_footer{
-	font-family: 'Noto Sans', 'Noto Sans Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoKufi*/
-.theme_month_20008.prayertable_font_arabic_kufi #timetable, 
-.theme_month_20008.prayertable_font_arabic_kufi #timetable_footer{
-	font-family: 'Noto Sans', 'Noto Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoNashk*/
-.theme_month_20008.prayertable_font_arabic_nashk #timetable, 
-.theme_month_20008.prayertable_font_arabic_nashk #timetable_footer{
-	font-family: 'Noto Sans', 'Noto Naskh Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoNastaliq*/
-.theme_month_20008.prayertable_font_arabic_nastaliq #timetable, 
-.theme_month_20008.prayertable_font_arabic_nastaliq #timetable_footer{
-	font-family: 'Noto Sans', 'Noto Nastaliq Urdu', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoSansUI*/
-.theme_month_20008.prayertable_font_arabic_ui #timetable, 
-.theme_month_20008.prayertable_font_arabic_ui #timetable_footer{
-	font-family: 'Noto Sans', 'Noto Naskh Arabic UI', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
+/*default font*/
 .theme_month_20008 {
 	background-color: #ffffff;
 	color: #000000;
@@ -1774,65 +1235,11 @@
 	background-color:#ffffff !important;
 }
 
-
 /*THEME 9*/
 /*DISPLAY FONT*/
-/*Arabic NotoSans, Arabic*/
-.theme_month_20009.prayertable_font_arabic_sans_kufi #prayertable_month_header, 
-.theme_month_20009.prayertable_font_arabic_sans_kufi #timetable_header, 
-.theme_month_20009.prayertable_font_arabic_sans_kufi #prayertable_month_footer{
-	font-family: 'Noto Sans', 'Noto Sans Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoKufi*/
-.theme_month_20009.prayertable_font_arabic_kufi #prayertable_month_header, 
-.theme_month_20009.prayertable_font_arabic_kufi #timetable_header, 
-.theme_month_20009.prayertable_font_arabic_kufi #prayertable_month_footer{
-	font-family: 'Noto Sans', 'Noto Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoNashk*/
-.theme_month_20009.prayertable_font_arabic_nashk #prayertable_month_header, 
-.theme_month_20009.prayertable_font_arabic_nashk #timetable_header, 
-.theme_month_20009.prayertable_font_arabic_nashk #prayertable_month_footer{
-	font-family: 'Noto Sans', 'Noto Naskh Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoNastaliq*/
-.theme_month_20009.prayertable_font_arabic_nastaliq #prayertable_month_header, 
-.theme_month_20009.prayertable_font_arabic_nastaliq #timetable_header, 
-.theme_month_20009.prayertable_font_arabic_nastaliq #prayertable_month_footer{
-	font-family: 'Noto Sans', 'Noto Nastaliq Urdu', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoSansUI*/
-.theme_month_20009.prayertable_font_arabic_ui #prayertable_month_header, 
-.theme_month_20009.prayertable_font_arabic_ui #timetable_header, 
-.theme_month_20009.prayertable_font_arabic_ui #prayertable_month_footer{
-	font-family: 'Noto Sans', 'Noto Naskh Arabic UI', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
+/*default font*/
 /*DEFAULT FONT*/
-/*Arabic NotoSans, Arabic*/
-.theme_month_20009.prayertable_font_arabic_sans_kufi #timetable, 
-.theme_month_20009.prayertable_font_arabic_sans_kufi #timetable_footer{
-	font-family: 'Noto Sans', 'Noto Sans Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoKufi*/
-.theme_month_20009.prayertable_font_arabic_kufi #timetable, 
-.theme_month_20009.prayertable_font_arabic_kufi #timetable_footer{
-	font-family: 'Noto Sans', 'Noto Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoNashk*/
-.theme_month_20009.prayertable_font_arabic_nashk #timetable, 
-.theme_month_20009.prayertable_font_arabic_nashk #timetable_footer{
-	font-family: 'Noto Sans', 'Noto Naskh Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoNastaliq*/
-.theme_month_20009.prayertable_font_arabic_nastaliq #timetable, 
-.theme_month_20009.prayertable_font_arabic_nastaliq #timetable_footer{
-	font-family: 'Noto Sans', 'Noto Nastaliq Urdu', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoSansUI*/
-.theme_month_20009.prayertable_font_arabic_ui #timetable, 
-.theme_month_20009.prayertable_font_arabic_ui #timetable_footer{
-	font-family: 'Noto Sans', 'Noto Naskh Arabic UI', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
+/*default font*/
 .theme_month_20009 {
 	background-color: white;
 	color: #404040;
@@ -1874,61 +1281,15 @@
 
 /*THEME 10*/
 /*DISPLAY FONT*/
-/*Arabic NotoSans, Arabic*/
-.theme_month_20010.prayertable_font_arabic_sans_kufi #prayertable_month_header, 
-.theme_month_20010.prayertable_font_arabic_sans_kufi #timetable_header, 
-.theme_month_20010.prayertable_font_arabic_sans_kufi #prayertable_month_footer{
-	font-family: 'Exo', 'Noto Sans', 'Noto Sans Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoKufi*/
-.theme_month_20010.prayertable_font_arabic_kufi #prayertable_month_header, 
-.theme_month_20010.prayertable_font_arabic_kufi #timetable_header, 
-.theme_month_20010.prayertable_font_arabic_kufi #prayertable_month_footer{
-	font-family: 'Exo', 'Noto Sans', 'Noto Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoNashk*/
-.theme_month_20010.prayertable_font_arabic_nashk #prayertable_month_header, 
-.theme_month_20010.prayertable_font_arabic_nashk #timetable_header, 
-.theme_month_20010.prayertable_font_arabic_nashk #prayertable_month_footer{
-	font-family: 'Exo', 'Noto Sans', 'Noto Naskh Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoNastaliq*/
-.theme_month_20010.prayertable_font_arabic_nastaliq #prayertable_month_header, 
-.theme_month_20010.prayertable_font_arabic_nastaliq #timetable_header, 
-.theme_month_20010.prayertable_font_arabic_nastaliq #prayertable_month_footer{
-	font-family: 'Exo', 'Noto Sans', 'Noto Nastaliq Urdu', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoSansUI*/
-.theme_month_20010.prayertable_font_arabic_ui #prayertable_month_header, 
-.theme_month_20010.prayertable_font_arabic_ui #timetable_header, 
-.theme_month_20010.prayertable_font_arabic_ui #prayertable_month_footer{
-	font-family: 'Exo', 'Noto Sans', 'Noto Naskh Arabic UI', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+.theme_month_20010 #prayertable_month_header, 
+.theme_month_20010 #timetable_header, 
+.theme_month_20010 #prayertable_month_footer{
+	font-family: 'Exo';
 }
 /*DEFAULT FONT*/
-/*Arabic NotoSans, Arabic*/
-.theme_month_20010.prayertable_font_arabic_sans_kufi #timetable, 
-.theme_month_20010.prayertable_font_arabic_sans_kufi #timetable_footer{
-	font-family: 'Exo', 'Noto Sans', 'Noto Sans Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoKufi*/
-.theme_month_20010.prayertable_font_arabic_kufi #timetable, 
-.theme_month_20010.prayertable_font_arabic_kufi #timetable_footer{
-	font-family: 'Exo', 'Noto Sans', 'Noto Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoNashk*/
-.theme_month_20010.prayertable_font_arabic_nashk #timetable, 
-.theme_month_20010.prayertable_font_arabic_nashk #timetable_footer{
-	font-family: 'Exo', 'Noto Sans', 'Noto Naskh Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoNastaliq*/
-.theme_month_20010.prayertable_font_arabic_nastaliq #timetable, 
-.theme_month_20010.prayertable_font_arabic_nastaliq #timetable_footer{
-	font-family: 'Exo', 'Noto Sans', 'Noto Nastaliq Urdu', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoSansUI*/
-.theme_month_20010.prayertable_font_arabic_ui #timetable, 
-.theme_month_20010.prayertable_font_arabic_ui #timetable_footer{
-	font-family: 'Exo', 'Noto Sans', 'Noto Naskh Arabic UI', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+.theme_month_20010 #timetable, 
+.theme_month_20010 #timetable_footer{
+	font-family: 'Exo';
 }
 .theme_month_20010 {
 	background-color: white
@@ -1982,61 +1343,15 @@
 
 /*THEME 11*/
 /*DISPLAY FONT*/
-/*Arabic NotoSans, Arabic*/
-.theme_month_20011.prayertable_font_arabic_sans_kufi #prayertable_month_header, 
-.theme_month_20011.prayertable_font_arabic_sans_kufi #timetable_header, 
-.theme_month_20011.prayertable_font_arabic_sans_kufi #prayertable_month_footer{
-	font-family: 'Merriweather', 'Noto Sans', 'Noto Sans Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoKufi*/
-.theme_month_20011.prayertable_font_arabic_kufi #prayertable_month_header, 
-.theme_month_20011.prayertable_font_arabic_kufi #timetable_header, 
-.theme_month_20011.prayertable_font_arabic_kufi #prayertable_month_footer{
-	font-family: 'Merriweather', 'Noto Sans', 'Noto Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoNashk*/
-.theme_month_20011.prayertable_font_arabic_nashk #prayertable_month_header, 
-.theme_month_20011.prayertable_font_arabic_nashk #timetable_header, 
-.theme_month_20011.prayertable_font_arabic_nashk #prayertable_month_footer{
-	font-family: 'Merriweather', 'Noto Sans', 'Noto Naskh Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoNastaliq*/
-.theme_month_20011.prayertable_font_arabic_nastaliq #prayertable_month_header, 
-.theme_month_20011.prayertable_font_arabic_nastaliq #timetable_header, 
-.theme_month_20011.prayertable_font_arabic_nastaliq #prayertable_month_footer{
-	font-family: 'Merriweather', 'Noto Sans', 'Noto Nastaliq Urdu', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoSansUI*/
-.theme_month_20011.prayertable_font_arabic_ui #prayertable_month_header, 
-.theme_month_20011.prayertable_font_arabic_ui #timetable_header, 
-.theme_month_20011.prayertable_font_arabic_ui #prayertable_month_footer{
-	font-family: 'Merriweather', 'Noto Sans', 'Noto Naskh Arabic UI', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+.theme_month_20011 #prayertable_month_header, 
+.theme_month_20011 #timetable_header, 
+.theme_month_20011 #prayertable_month_footer{
+	font-family: 'Merriweather';
 }
 /*DEFAULT FONT*/
-/*Arabic NotoSans, Arabic*/
-.theme_month_20011.prayertable_font_arabic_sans_kufi #timetable, 
-.theme_month_20011.prayertable_font_arabic_sans_kufi #timetable_footer{
-	font-family: 'Merriweather', 'Noto Sans', 'Noto Sans Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoKufi*/
-.theme_month_20011.prayertable_font_arabic_kufi #timetable, 
-.theme_month_20011.prayertable_font_arabic_kufi #timetable_footer{
-	font-family: 'Merriweather', 'Noto Sans', 'Noto Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoNashk*/
-.theme_month_20011.prayertable_font_arabic_nashk #timetable, 
-.theme_month_20011.prayertable_font_arabic_nashk #timetable_footer{
-	font-family: 'Merriweather', 'Noto Sans', 'Noto Naskh Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoNastaliq*/
-.theme_month_20011.prayertable_font_arabic_nastaliq #timetable, 
-.theme_month_20011.prayertable_font_arabic_nastaliq #timetable_footer{
-	font-family: 'Merriweather', 'Noto Sans', 'Noto Nastaliq Urdu', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoSansUI*/
-.theme_month_20011.prayertable_font_arabic_ui #timetable, 
-.theme_month_20011.prayertable_font_arabic_ui #timetable_footer{
-	font-family: 'Merriweather', 'Noto Sans', 'Noto Naskh Arabic UI', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+.theme_month_20011 #timetable, 
+.theme_month_20011 #timetable_footer{
+	font-family: 'Merriweather';
 }
 .theme_month_20011 {
 	background-color: #ffffff;
@@ -2117,61 +1432,15 @@
 
 /*THEME 12*/
 /*DISPLAY FONT*/
-/*Arabic NotoSans, Arabic*/
-.theme_month_20012.prayertable_font_arabic_sans_kufi #prayertable_month_header, 
-.theme_month_20012.prayertable_font_arabic_sans_kufi #timetable_header, 
-.theme_month_20012.prayertable_font_arabic_sans_kufi #prayertable_month_footer{
-	font-family: 'Lato', 'Noto Sans', 'Noto Sans Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoKufi*/
-.theme_month_20012.prayertable_font_arabic_kufi #prayertable_month_header, 
-.theme_month_20012.prayertable_font_arabic_kufi #timetable_header, 
-.theme_month_20012.prayertable_font_arabic_kufi #prayertable_month_footer{
-	font-family: 'Lato', 'Noto Sans', 'Noto Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoNashk*/
-.theme_month_20012.prayertable_font_arabic_nashk #prayertable_month_header, 
-.theme_month_20012.prayertable_font_arabic_nashk #timetable_header, 
-.theme_month_20012.prayertable_font_arabic_nashk #prayertable_month_footer{
-	font-family: 'Lato', 'Noto Sans', 'Noto Naskh Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoNastaliq*/
-.theme_month_20012.prayertable_font_arabic_nastaliq #prayertable_month_header, 
-.theme_month_20012.prayertable_font_arabic_nastaliq #timetable_header, 
-.theme_month_20012.prayertable_font_arabic_nastaliq #prayertable_month_footer{
-	font-family: 'Lato', 'Noto Sans', 'Noto Nastaliq Urdu', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoSansUI*/
-.theme_month_20012.prayertable_font_arabic_ui #prayertable_month_header, 
-.theme_month_20012.prayertable_font_arabic_ui #timetable_header, 
-.theme_month_20012.prayertable_font_arabic_ui #prayertable_month_footer{
-	font-family: 'Lato', 'Noto Sans', 'Noto Naskh Arabic UI', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+.theme_month_20012 #prayertable_month_header, 
+.theme_month_20012 #timetable_header, 
+.theme_month_20012 #prayertable_month_footer{
+	font-family: 'Lato';
 }
 /*DEFAULT FONT*/
-/*Arabic NotoSans, Arabic*/
-.theme_month_20012.prayertable_font_arabic_sans_kufi #timetable, 
-.theme_month_20012.prayertable_font_arabic_sans_kufi #timetable_footer{
-	font-family: 'Lato', 'Noto Sans', 'Noto Sans Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoKufi*/
-.theme_month_20012.prayertable_font_arabic_kufi #timetable, 
-.theme_month_20012.prayertable_font_arabic_kufi #timetable_footer{
-	font-family: 'Lato', 'Noto Sans', 'Noto Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoNashk*/
-.theme_month_20012.prayertable_font_arabic_nashk #timetable, 
-.theme_month_20012.prayertable_font_arabic_nashk #timetable_footer{
-	font-family: 'Lato', 'Noto Sans', 'Noto Naskh Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoNastaliq*/
-.theme_month_20012.prayertable_font_arabic_nastaliq #timetable, 
-.theme_month_20012.prayertable_font_arabic_nastaliq #timetable_footer{
-	font-family: 'Lato', 'Noto Sans', 'Noto Nastaliq Urdu', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoSansUI*/
-.theme_month_20012.prayertable_font_arabic_ui #timetable, 
-.theme_month_20012.prayertable_font_arabic_ui #timetable_footer{
-	font-family: 'Lato', 'Noto Sans', 'Noto Naskh Arabic UI', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+.theme_month_20012 #timetable, 
+.theme_month_20012 #timetable_footer{
+	font-family: 'Lato';
 }
 .theme_month_20012 {
 	background-color: white
@@ -2224,61 +1493,15 @@
 
 /*THEME 13*/
 /*DISPLAY FONT*/
-/*Arabic NotoSans, Arabic*/
-.theme_month_20013.prayertable_font_arabic_sans_kufi #prayertable_month_header, 
-.theme_month_20013.prayertable_font_arabic_sans_kufi #timetable_header, 
-.theme_month_20013.prayertable_font_arabic_sans_kufi #prayertable_month_footer{
-	font-family: 'Merriweather', 'Noto Sans', 'Noto Sans Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoKufi*/
-.theme_month_20013.prayertable_font_arabic_kufi #prayertable_month_header, 
-.theme_month_20013.prayertable_font_arabic_kufi #timetable_header, 
-.theme_month_20013.prayertable_font_arabic_kufi #prayertable_month_footer{
-	font-family: 'Merriweather', 'Noto Sans', 'Noto Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoNashk*/
-.theme_month_20013.prayertable_font_arabic_nashk #prayertable_month_header, 
-.theme_month_20013.prayertable_font_arabic_nashk #timetable_header, 
-.theme_month_20013.prayertable_font_arabic_nashk #prayertable_month_footer{
-	font-family: 'Merriweather', 'Noto Sans', 'Noto Naskh Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoNastaliq*/
-.theme_month_20013.prayertable_font_arabic_nastaliq #prayertable_month_header, 
-.theme_month_20013.prayertable_font_arabic_nastaliq #timetable_header, 
-.theme_month_20013.prayertable_font_arabic_nastaliq #prayertable_month_footer{
-	font-family: 'Merriweather', 'Noto Sans', 'Noto Nastaliq Urdu', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoSansUI*/
-.theme_month_20013.prayertable_font_arabic_ui #prayertable_month_header, 
-.theme_month_20013.prayertable_font_arabic_ui #timetable_header, 
-.theme_month_20013.prayertable_font_arabic_ui #prayertable_month_footer{
-	font-family: 'Merriweather', 'Noto Sans', 'Noto Naskh Arabic UI', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+.theme_month_20013 #prayertable_month_header, 
+.theme_month_20013 #timetable_header, 
+.theme_month_20013 #prayertable_month_footer{
+	font-family: 'Merriweather';
 }
 /*DEFAULT FONT*/
-/*Arabic NotoSans, Arabic*/
-.theme_month_20013.prayertable_font_arabic_sans_kufi #timetable, 
-.theme_month_20013.prayertable_font_arabic_sans_kufi #timetable_footer{
-	font-family: 'Source Sans Pro', 'Noto Sans', 'Noto Sans Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoKufi*/
-.theme_month_20013.prayertable_font_arabic_kufi #timetable, 
-.theme_month_20013.prayertable_font_arabic_kufi #timetable_footer{
-	font-family: 'Source Sans Pro', 'Noto Sans', 'Noto Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoNashk*/
-.theme_month_20013.prayertable_font_arabic_nashk #timetable, 
-.theme_month_20013.prayertable_font_arabic_nashk #timetable_footer{
-	font-family: 'Source Sans Pro', 'Noto Sans', 'Noto Naskh Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoNastaliq*/
-.theme_month_20013.prayertable_font_arabic_nastaliq #timetable, 
-.theme_month_20013.prayertable_font_arabic_nastaliq #timetable_footer{
-	font-family: 'Source Sans Pro', 'Noto Sans', 'Noto Nastaliq Urdu', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoSansUI*/
-.theme_month_20013.prayertable_font_arabic_ui #timetable, 
-.theme_month_20013.prayertable_font_arabic_ui #timetable_footer{
-	font-family: 'Source Sans Pro', 'Noto Sans', 'Noto Naskh Arabic UI', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+.theme_month_20013 #timetable, 
+.theme_month_20013 #timetable_footer{
+	font-family: 'Source Sans Pro';
 }
 .theme_month_20013 {
 	background-image: linear-gradient(to bottom,#ebebed 0%,#fff 100%);
@@ -2335,61 +1558,15 @@
 
 /*THEME 14*/
 /*DISPLAY FONT*/
-/*Arabic NotoSans, Arabic*/
-.theme_month_20014.prayertable_font_arabic_sans_kufi #prayertable_month_header, 
-.theme_month_20014.prayertable_font_arabic_sans_kufi #timetable_header, 
-.theme_month_20014.prayertable_font_arabic_sans_kufi #prayertable_month_footer{
-	font-family: 'Montserrat', 'Noto Sans', 'Noto Sans Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoKufi*/
-.theme_month_20014.prayertable_font_arabic_kufi #prayertable_month_header, 
-.theme_month_20014.prayertable_font_arabic_kufi #timetable_header, 
-.theme_month_20014.prayertable_font_arabic_kufi #prayertable_month_footer{
-	font-family: 'Montserrat', 'Noto Sans', 'Noto Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoNashk*/
-.theme_month_20014.prayertable_font_arabic_nashk #prayertable_month_header, 
-.theme_month_20014.prayertable_font_arabic_nashk #timetable_header, 
-.theme_month_20014.prayertable_font_arabic_nashk #prayertable_month_footer{
-	font-family: 'Montserrat', 'Noto Sans', 'Noto Naskh Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoNastaliq*/
-.theme_month_20014.prayertable_font_arabic_nastaliq #prayertable_month_header, 
-.theme_month_20014.prayertable_font_arabic_nastaliq #timetable_header, 
-.theme_month_20014.prayertable_font_arabic_nastaliq #prayertable_month_footer{
-	font-family: 'Montserrat', 'Noto Sans', 'Noto Nastaliq Urdu', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoSansUI*/
-.theme_month_20014.prayertable_font_arabic_ui #prayertable_month_header, 
-.theme_month_20014.prayertable_font_arabic_ui #timetable_header, 
-.theme_month_20014.prayertable_font_arabic_ui #prayertable_month_footer{
-	font-family: 'Montserrat', 'Noto Sans', 'Noto Naskh Arabic UI', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+.theme_month_20014 #prayertable_month_header, 
+.theme_month_20014 #timetable_header, 
+.theme_month_20014 #prayertable_month_footer{
+	font-family: 'Montserrat';
 }
 /*DEFAULT FONT*/
-/*Arabic NotoSans, Arabic*/
-.theme_month_20014.prayertable_font_arabic_sans_kufi #timetable, 
-.theme_month_20014.prayertable_font_arabic_sans_kufi #timetable_footer{
-	font-family: 'Merriweather', 'Noto Sans', 'Noto Sans Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoKufi*/
-.theme_month_20014.prayertable_font_arabic_kufi #timetable, 
-.theme_month_20014.prayertable_font_arabic_kufi #timetable_footer{
-	font-family: 'Merriweather', 'Noto Sans', 'Noto Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoNashk*/
-.theme_month_20014.prayertable_font_arabic_nashk #timetable, 
-.theme_month_20014.prayertable_font_arabic_nashk #timetable_footer{
-	font-family: 'Merriweather', 'Noto Sans', 'Noto Naskh Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoNastaliq*/
-.theme_month_20014.prayertable_font_arabic_nastaliq #timetable, 
-.theme_month_20014.prayertable_font_arabic_nastaliq #timetable_footer{
-	font-family: 'Merriweather', 'Noto Sans', 'Noto Nastaliq Urdu', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoSansUI*/
-.theme_month_20014.prayertable_font_arabic_ui #timetable, 
-.theme_month_20014.prayertable_font_arabic_ui #timetable_footer{
-	font-family: 'Merriweather', 'Noto Sans', 'Noto Naskh Arabic UI', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+.theme_month_20014 #timetable, 
+.theme_month_20014 #timetable_footer{
+	font-family: 'Merriweather';
 }
 .theme_month_20014 {
 	background-color: white
@@ -2444,64 +1621,11 @@
 	color: #363635;
 }
 
-/*THEME15*/
+/*THEME 15*/
 /*DISPLAY FONT*/
-/*Arabic NotoSans, Arabic*/
-.theme_month_20015.prayertable_font_arabic_sans_kufi #prayertable_month_header, 
-.theme_month_20015.prayertable_font_arabic_sans_kufi #timetable_header, 
-.theme_month_20015.prayertable_font_arabic_sans_kufi #prayertable_month_footer{
-	font-family: 'Noto Sans', 'Noto Sans Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoKufi*/
-.theme_month_20015.prayertable_font_arabic_kufi #prayertable_month_header, 
-.theme_month_20015.prayertable_font_arabic_kufi #timetable_header, 
-.theme_month_20015.prayertable_font_arabic_kufi #prayertable_month_footer{
-	font-family: 'Noto Sans', 'Noto Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoNashk*/
-.theme_month_20015.prayertable_font_arabic_nashk #prayertable_month_header, 
-.theme_month_20015.prayertable_font_arabic_nashk #timetable_header, 
-.theme_month_20015.prayertable_font_arabic_nashk #prayertable_month_footer{
-	font-family: 'Noto Sans', 'Noto Naskh Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoNastaliq*/
-.theme_month_20015.prayertable_font_arabic_nastaliq #prayertable_month_header, 
-.theme_month_20015.prayertable_font_arabic_nastaliq #timetable_header, 
-.theme_month_20015.prayertable_font_arabic_nastaliq #prayertable_month_footer{
-	font-family: 'Noto Sans', 'Noto Nastaliq Urdu', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoSansUI*/
-.theme_month_20015.prayertable_font_arabic_ui #prayertable_month_header, 
-.theme_month_20015.prayertable_font_arabic_ui #timetable_header, 
-.theme_month_20015.prayertable_font_arabic_ui #prayertable_month_footer{
-	font-family: 'Noto Sans', 'Noto Naskh Arabic UI', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
+/*default font*/
 /*DEFAULT FONT*/
-/*Arabic NotoSans, Arabic*/
-.theme_month_20015.prayertable_font_arabic_sans_kufi #timetable, 
-.theme_month_20015.prayertable_font_arabic_sans_kufi #timetable_footer{
-	font-family: 'Noto Sans', 'Noto Sans Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoKufi*/
-.theme_month_20015.prayertable_font_arabic_kufi #timetable, 
-.theme_month_20015.prayertable_font_arabic_kufi #timetable_footer{
-	font-family: 'Noto Sans', 'Noto Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoNashk*/
-.theme_month_20015.prayertable_font_arabic_nashk #timetable, 
-.theme_month_20015.prayertable_font_arabic_nashk #timetable_footer{
-	font-family: 'Noto Sans', 'Noto Naskh Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoNastaliq*/
-.theme_month_20015.prayertable_font_arabic_nastaliq #timetable, 
-.theme_month_20015.prayertable_font_arabic_nastaliq #timetable_footer{
-	font-family: 'Noto Sans', 'Noto Nastaliq Urdu', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoSansUI*/
-.theme_month_20015.prayertable_font_arabic_ui #timetable, 
-.theme_month_20015.prayertable_font_arabic_ui #timetable_footer{
-	font-family: 'Noto Sans', 'Noto Naskh Arabic UI', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
+/*default font*/
 .theme_month_20015 {
 	background-color: white;
 	color: #404040;
@@ -2557,57 +1681,9 @@
 /*YEAR*/
 /*THEME 1*/
 /*DISPLAY FONT*/
-/*Arabic NotoSans, Arabic*/
-.theme_year_30001.prayertable_font_arabic_sans_kufi #prayertable_year_header_row, 
-.theme_year_30001.prayertable_font_arabic_sans_kufi #prayertable_year_timetable_header, 
-.theme_year_30001.prayertable_font_arabic_sans_kufi #prayertable_year_footer_row{
-	font-family: 'Noto Sans', 'Noto Sans Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoKufi*/
-.theme_year_30001.prayertable_font_arabic_kufi #prayertable_year_header_row, 
-.theme_year_30001.prayertable_font_arabic_kufi #prayertable_year_timetable_header, 
-.theme_year_30001.prayertable_font_arabic_kufi #prayertable_year_footer_row{
-	font-family: 'Noto Sans', 'Noto Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoNashk*/
-.theme_year_30001.prayertable_font_arabic_nashk #prayertable_year_header_row, 
-.theme_year_30001.prayertable_font_arabic_nashk #prayertable_year_timetable_header, 
-.theme_year_30001.prayertable_font_arabic_nashk #prayertable_year_footer_row{
-	font-family: 'Noto Sans', 'Noto Naskh Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoNastaliq*/
-.theme_year_30001.prayertable_font_arabic_nastaliq #prayertable_year_header_row, 
-.theme_year_30001.prayertable_font_arabic_nastaliq #prayertable_year_timetable_header, 
-.theme_year_30001.prayertable_font_arabic_nastaliq #prayertable_year_footer_row{
-	font-family: 'Noto Sans', 'Noto Nastaliq Urdu', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoSansUI*/
-.theme_year_30001.prayertable_font_arabic_ui #prayertable_year_header_row, 
-.theme_year_30001.prayertable_font_arabic_ui #prayertable_year_timetable_header, 
-.theme_year_30001.prayertable_font_arabic_ui #prayertable_year_footer_row{
-	font-family: 'Noto Sans', 'Noto Naskh Arabic UI', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
+/*default font*/
 /*DEFAULT FONT*/
-/*Arabic NotoSans, Arabic*/
-.theme_year_30001.prayertable_font_arabic_sans_kufi #prayertable_year_timetable_footer{
-	font-family: 'Noto Sans', 'Noto Sans Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoKufi*/
-.theme_year_30001.prayertable_font_arabic_kufi #prayertable_year_timetable_footer{
-	font-family: 'Noto Sans', 'Noto Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoNashk*/
-.theme_year_30001.prayertable_font_arabic_nashk #prayertable_year_timetable_footer{
-	font-family: 'Noto Sans', 'Noto Naskh Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoNastaliq*/
-.theme_year_30001.prayertable_font_arabic_nastaliq #prayertable_year_timetable_footer{
-	font-family: 'Noto Sans', 'Noto Nastaliq Urdu', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
-/*Arabic NotoSansUI*/
-.theme_year_30001.prayertable_font_arabic_ui #prayertable_year_timetable_footer{
-	font-family: 'Noto Sans', 'Noto Naskh Arabic UI', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
-}
+/*default font*/
 .theme_year_30001{
 	background-color: white
 }
