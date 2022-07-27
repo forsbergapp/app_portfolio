@@ -1262,32 +1262,34 @@ module.exports = {
 		let sql;
 		let parameters;
         if (process.env.SERVICE_DB_USE == 1) {
-			sql = `SELECT  (SELECT COUNT(*)
-							  FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account
-							 WHERE provider_id IS NULL) count_local,
-							(SELECT COUNT(*)
-							   FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account
-							  WHERE provider_id IS NOT NULL
-							   AND  identity_provider_id = 1) count_provider1,
-							(SELECT COUNT(*)
-							   FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account
-							  WHERE provider_id IS NOT NULL
-  							    AND identity_provider_id = 2) count_provider2
-					FROM DUAL`;
+			sql = `SELECT ua.identity_provider_id,
+						  CASE 
+						  WHEN ip.provider_name IS NULL THEN 
+						     'Local' 
+						  ELSE 
+						     ip.provider_name 
+						  END provider_name,
+			              COUNT(*) count_users
+					 FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account ua
+					      LEFT OUTER JOIN ${process.env.SERVICE_DB_DB1_NAME}.identity_provider ip
+					      ON ip.id = ua.identity_provider_id
+					GROUP BY ua.identity_provider_id
+					ORDER BY ua.identity_provider_id`;
 			parameters = [];
         } else if (process.env.SERVICE_DB_USE == 2) {
-			sql = `SELECT  (SELECT COUNT(*)
-							  FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account
-							 WHERE provider_id IS NULL) "count_local",
-							(SELECT COUNT(*)
-							   FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account
-							  WHERE provider_id IS NOT NULL
-							    AND identity_provider_id = 1) "count_provider1",
-							(SELECT COUNT(*)
-							   FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account
-							  WHERE provider_id IS NOT NULL
-							    AND identity_provider_id = 2) "count_provider2"
-					FROM DUAL`;
+			sql = `SELECT ua.identity_provider_id "identity_provider_id",
+						  CASE 
+						  WHEN ip.provider_name IS NULL THEN 
+						     'Local' 
+						  ELSE 
+						     ip.provider_name 
+						  END "provider_name",
+						  COUNT(*) "count_users"
+					 FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account ua
+							LEFT OUTER JOIN ${process.env.SERVICE_DB_DB2_NAME}.identity_provider ip
+							ON ip.id = ua.identity_provider_id
+					GROUP BY ua.identity_provider_id
+					ORDER BY NVL(ua.identity_provider_id,0)`;
 			parameters = {};
         }
 		execute_db_sql(process.env.MAIN_APP_ID, null, sql, parameters, true, 
@@ -1295,7 +1297,7 @@ module.exports = {
 			if (err)
 				return callBack(err, null);
 			else
-				return callBack(null, result[0]);
+				return callBack(null, result);
 		});
     },
 	getEmailUser: (app_id, email, callBack) => {

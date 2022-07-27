@@ -798,7 +798,10 @@ function reconnect(){
 }
 function updateOnlineStatus(){
     let status;
-    fetch(`/service/broadcast/update_connected?app_id=${window.global_app_id}&client_id=${window.global_clientId}&user_account_id=${window.global_user_account_id}`,
+    fetch(`/service/broadcast/update_connected?app_id=${window.global_app_id}`+ 
+          `&client_id=${window.global_clientId}`+
+          `&user_account_id=${window.global_user_account_id}` + 
+          `&identity_provider_id=${window.global_user_identity_provider_id}`,
     {method: 'PUT',
         headers: {
             'Authorization': 'Bearer ' + window.global_rest_dt,
@@ -819,7 +822,10 @@ function updateOnlineStatus(){
 }
 function connectOnline(updateOnline=false){
     window.global_clientId = Date.now();
-    window.global_eventSource = new EventSource(`/service/broadcast/connect/${window.global_clientId}?app_id=${window.global_app_id}&user_account_id=${window.global_user_account_id}`);
+    window.global_eventSource = new EventSource(`/service/broadcast/connect/${window.global_clientId}` +
+                                                `?app_id=${window.global_app_id}` +
+                                                `&user_account_id=${window.global_user_account_id}` +
+                                                `&identity_provider_id=${window.global_user_identity_provider_id}`);
     window.global_eventSource.onmessage = function (event) {
         if (window.global_admin == true)
             null;
@@ -1659,6 +1665,7 @@ async function user_login(username, password, callBack) {
         if (status == 200) {
             json = JSON.parse(result);
             window.global_user_account_id = json.items[0].id;
+            window.global_user_identity_provider_id = '';
             updateOnlineStatus();
             window.global_rest_at	= json.accessToken;
             if (json.items[0].active==0){
@@ -2525,6 +2532,7 @@ async function updateProviderUser(identity_provider_id, profile_id, profile_firs
                     json = JSON.parse(result);
                     window.global_rest_at = json.accessToken;
                     window.global_user_account_id = json.items[0].id;
+                    window.global_user_identity_provider_id = json.items[0].identity_provider_id;
                     updateOnlineStatus();
                     dialogue_login_clear();
                     dialogue_signup_clear();
@@ -2622,31 +2630,43 @@ async function get_data_token() {
     })
 }
 function set_globals(parameters){
+    //app info
     window.global_main_app_id= 0;
     window.global_app_id = parameters.app_id;
     window.global_app_name = parameters.app_name;
     window.global_app_url = parameters.app_url;
     window.global_app_logo = parameters.app_logo;
 
-    window.global_exception_app_function = parameters.exception_app_function;
+    window.global_app_copyright;
 
+    //app exception function
+    window.global_exception_app_function = parameters.exception_app_function;
+    //admin true/false
     window.global_admin = parameters.admin;
+    //service auth path
     window.global_service_auth = parameters.service_auth;
+    //client credentials
     window.global_app_rest_client_id = parameters.app_rest_client_id;
     window.global_app_rest_client_secret = parameters.app_rest_client_secret;
+    //rest app parameters
     window.global_rest_app_parameter = parameters.rest_app_parameter;
 
+    //user info
+    window.global_user_account_id = '';
+    window.global_user_identity_provider_id='';
+    window.global_clientId;
     window.global_client_latitude = parameters.gps_lat;
     window.global_client_longitude = parameters.gps_long;
     window.global_client_place = parameters.gps_place;
     
-    
+    //broadcast connection
+    window.global_eventSource;
+
     // if app not using translation then use default lang_code from navigator
     window.global_lang_code                     = navigator.language;
     window.global_rest_url_base 				= '/service/db/api/';
 
-    window.global_app_copyright;
-    
+    //identity provider
     window.global_identity_provider1_id;
     window.global_identity_provider1_name;
     window.global_identity_provider1_api_src;
@@ -2658,6 +2678,7 @@ function set_globals(parameters){
     window.global_identity_provider2_api_src2;
     window.global_identity_provider2_api_id;
 
+    //rest api endpoints
     window.global_rest_at;
     window.global_rest_dt;
     window.global_rest_app;
@@ -2683,13 +2704,14 @@ function set_globals(parameters){
     window.global_rest_user_account_provider;
     window.global_rest_user_account_signup;
     window.global_rest_user_account_update_password;
-    //Images uploaded
+    
+    //image rules
     window.global_image_file_allowed_type1;
     window.global_image_file_allowed_type2;
     window.global_image_file_allowed_type3;
     window.global_image_file_mime_type;
     window.global_image_file_max_size;
-    
+    //avatar size
     window.global_user_image_avatar_width;
     window.global_user_image_avatar_height;
 
@@ -2700,10 +2722,6 @@ function set_globals(parameters){
     window.global_service_report;
     window.global_service_worldcities;
         
-    window.global_user_account_id = '';
-    window.global_clientId;
-    window.global_eventSource;
-    window.global_exception_app_function;
     if (parameters.ui==true){
         //spinner
         window.global_button_spinner = `<div id="button_spinner" class="load-spinner">

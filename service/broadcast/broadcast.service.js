@@ -28,7 +28,8 @@ module.exports = {
                                 connection_date: client.connection_date,
                                 ip: client.ip,
                                 gps_latitude: client.gps_latitude,
-                                gps_longitude: client.gps_longitude
+                                gps_longitude: client.gps_longitude,
+                                identity_provider_id: client.identity_provider_id
                             };
                             broadcast_clients_no_res.push(copyClient);
                         }
@@ -80,6 +81,22 @@ module.exports = {
         }
         callBack(null, broadcast_clients_no_res.sort(sortByProperty(column_sort, order_by_num)));
     },
+    getCountConnected: (identity_provider_id, count_logged_in, callBack)=>{
+        let i=0;
+        let count_connected=0;
+        for (let i = 0; i < broadcast_clients.length; i++){
+            //do not count admin without app_id
+            if (broadcast_clients[i].app_id !='' &&
+                ((count_logged_in==1 &&
+                  broadcast_clients[i].identity_provider_id == identity_provider_id &&
+                  broadcast_clients[i].user_account_id != '') ||
+                (count_logged_in==0 && broadcast_clients[i].user_account_id =='')))
+                {
+                count_connected = count_connected + 1;
+            }
+        }
+        return callBack(null, count_connected);
+    },
     sendBroadcast: (app_id, client_id, destination_app, broadcast_type, broadcast_message, callBack) =>{
         let broadcast;
         if (destination_app ==true){
@@ -105,12 +122,13 @@ module.exports = {
         }
         callBack(null, null);
     },
-    updateConnected: (client_id, user_account_id, callBack) =>{
+    updateConnected: (client_id, user_account_id, identity_provider_id, callBack) =>{
         let i=0;
         for (let i = 0; i < broadcast_clients.length; i++){
             if (broadcast_clients[i].id==client_id){
                 broadcast_clients[i].user_account_id = user_account_id;
                 broadcast_clients[i].connection_date = new Date().toISOString();
+                broadcast_clients[i].identity_provider_id = identity_provider_id;
                 return callBack(null, null);
             }
         }

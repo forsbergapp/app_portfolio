@@ -6,6 +6,7 @@ body {
 	-moz-text-size-adjust: none;
 	-ms-text-size-adjust: none;
 	padding: 0px;
+	font-size:11px;
 }
 
 /* common*/
@@ -112,13 +113,13 @@ a:active {
 	body {
 		margin: 10;
 		width: auto;
+		font-size:14px;
 	}	
 }
 
 body.theme_light{
 	color: #404040;
 	background: rgb(81, 171, 255);
-	font-size: 16px;
 	font-family: 'Noto Sans';
 }
 .theme_light .dialogue_content:hover, 
