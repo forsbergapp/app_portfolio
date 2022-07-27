@@ -1,28 +1,11 @@
 <style>
-    select,input, button {
-        font-family: inherit;
-    }
-    a:link{
-        text-decoration: none;
-    }
-    a:visited {
-        text-decoration: none;
-    }
-    a:hover {
-        text-decoration: underline;
-    }
-    a:active {
-        text-decoration: underline;
-    }
     /*DIALOGUE*/
     .dialogue{
         visibility:hidden;
-        position: fixed;
-        z-index: 10;
         padding-top: 10px;
         left: 0;
         top: 0;
-        width: 100%;
+
         height: 100% !important;
         overflow: auto;
     }
@@ -32,12 +15,6 @@
         left: 50%;
         position: fixed;
         transform: translate(-50%, -50%);
-        padding: 10px;
-        width: 300px;
-        height: auto;
-        border-radius: 4px;
-        -moz-border-radius: 4px;
-        -webkit-border-radius: 4px;
         -webkit-animation-name: animatetop;
         -webkit-animation-duration: 0.4s;
         animation-name: animatetop;
@@ -590,7 +567,6 @@
         display:none;
     }
     #list_pm2_log_path_info div{
-        font-size: 11px;
         display: inline-block;
     }
     #list_pm2_log_path_info div:nth-child(2){
@@ -773,9 +749,6 @@
     .theme_light #list_app_pagination div:active{
         color:#6ab344 !important;
     }
-    .theme_light .list_button{
-        font-size: 16px;
-    }
     .theme_light .switch-label {
         color: transparent;
     }
@@ -796,12 +769,6 @@
         font-size: 20px;
         background-color: #fefefe;
     }    
-    #menu4_row_parameters div{
-        font-size: 11px;
-    }
-    #filesearch_menu4{
-        font-size: 16px;
-    }
     #menu4_row_parameters_col1_1,
     #menu4_row_parameters_col2_1,
     #menu4_row_parameters_col3_1,
@@ -816,19 +783,12 @@
     #menu4_row_parameters_col5_0{
         color:#d82139;
     }
-    .theme_light #list_pm2_log_title_out, #list_pm2_log_title_err, #list_pm2_log_title_process_event{
-        font-size:11px;
-    }
     .theme_light .dialogue{
         background-color: rgba(0,0,0,0.4);
     }
     .theme_light .dialogue_content{
         background-color: #fefefe;
-        font-size:16px;
         box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
-    }
-    .theme_light #maintenance_broadcast_info{
-        font-size: 24px;
     }
 
 </style>
