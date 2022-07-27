@@ -1,10 +1,11 @@
-const { connectBroadcast, getListConnected, sendBroadcast, updateConnected, checkConnected} = require ("./broadcast.controller");
+const { connectBroadcast, getListConnected, getCountConnected, updateConnected, checkConnected, sendBroadcast} = require ("./broadcast.controller");
 const { checkAdmin} = require ("../auth/admin/admin.controller");
 const { checkDataToken } = require("../auth/auth.controller");
 const router = require("express").Router();
 
 router.get("/connect/:clientId",connectBroadcast);
 router.get("/connected", checkAdmin, getListConnected);
+router.get("/connected/count", checkAdmin, getCountConnected);
 router.put("/update_connected", checkDataToken, updateConnected);
 router.get("/checkconnected/:user_account_id", checkDataToken, checkConnected);
 
