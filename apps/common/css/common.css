@@ -28,28 +28,36 @@
 /*Noto Sans TC*/
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap');
 
+:root {
+	--global_font_arabic_sans_kufi: 'Noto Sans', 'Noto Kufi Sans Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+	--global_font_arabic_kufi: 'Noto Sans', 'Noto Kufi Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+	--global_font_arabic_nashk: 'Noto Sans', 'Noto Nashk Arabic', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+	--global_font_arabic_nastaliq: 'Noto Sans', 'Noto Nastaliq Urdu', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+	--global_font_arabic_ui: 'Noto Sans', 'Noto Nashk Arabic UI', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK';
+}
+
 /*default font*/
 body
 {
-	font-family: 'Noto Sans', "Noto Kufi Sans Arabic", "Noto Sans JP", "Noto Sans KR", "Noto Sans SC", "Noto Sans TC", "Noto Sans HK";
+	font-family: var(--global_font_arabic_sans_kufi);
 }
 /*Arabic NotoSans, Arabic*/
 body.font_arabic_sans_kufi
 {
-	font-family: 'Noto Sans', "Noto Kufi Sans Arabic", "Noto Sans JP", "Noto Sans KR", "Noto Sans SC", "Noto Sans TC", "Noto Sans HK";
+	font-family: var(--global_font_arabic_sans_kufi);
 }
 /*Arabic NotoKufi*/
 body.font_arabic_kufi{
-	font-family: 'Noto Sans', "Noto Kufi Arabic", "Noto Sans JP", "Noto Sans KR", "Noto Sans SC", "Noto Sans TC", "Noto Sans HK";
+	font-family: var(--global_font_arabic_kufi);
 	line-height:1.5;
 }
 /*Arabic NotoNashk*/
 body.font_arabic_nashk{
-	font-family: 'Noto Sans', "Noto Naskh Arabic", "Noto Sans JP", "Noto Sans KR", "Noto Sans SC", "Noto Sans TC", "Noto Sans HK";
+	font-family: var(--global_font_arabic_nashk);
 }
 /*Arabic NotoNastaliq*/
 body.font_arabic_nastaliq{
-	font-family: 'Noto Sans', "Noto Nastaliq Urdu", "Noto Sans JP", "Noto Sans KR", "Noto Sans SC", "Noto Sans TC", "Noto Sans HK";
+	font-family: var(--global_font_arabic_nastaliq);
 	line-height:1.7;
 }
 body.font_arabic_nastaliq button{
@@ -60,7 +68,7 @@ body.font_arabic_nastaliq input{
 }
 /*Arabic NotoSansUI*/
 body.font_arabic_ui{
-	font-family: 'Noto Sans', "Noto Naskh Arabic UI", "Noto Sans JP", "Noto Sans KR", "Noto Sans SC", "Noto Sans TC", "Noto Sans HK";
+	font-family: var(--global_font_arabic_ui);
 }
 
 /*common*/
