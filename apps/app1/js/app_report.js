@@ -766,9 +766,7 @@ function displayMonth(offset, prayertable, settings, locale) {
 	//add default class, theme class and font class		
 	prayertable.classList = settings.prayertable_month + ' ' + 
 							settings.theme_month + ' ' +
-							'prayertable_font_' + settings.arabic_script;
-	if (document.body.id == 'printbody')
-		document.body.classList = 'font_' + settings.arabic_script;
+							'font_' + settings.arabic_script;
 	if (settings.reporttype =='MONTH'){
 		//Set direction
 		//set LTR or RTL on table layout if MONTH, on YEAR direction is set on the whole year layout
@@ -778,7 +776,7 @@ function displayMonth(offset, prayertable, settings, locale) {
 		footer_style = getstyle(settings.footer_img_src, settings.footer_align);
 
 		month_html +=
-			`<div id='prayertable_month_header' style='${header_style}'>
+			`<div id='prayertable_month_header' class='display_font' style='${header_style}'>
 				<div id='prayertable_month_header_title1'>${settings.header_txt1}</div>
 				<div id='prayertable_month_header_title2'>${settings.header_txt2}</div>
 				<div id='prayertable_month_header_title3'>${settings.header_txt3}</div>
@@ -834,11 +832,11 @@ function displayMonth(offset, prayertable, settings, locale) {
 
 	let items = getColumnTitles(0, settings.calendartype, settings.locale, settings.second_locale, null, locale);
 	month_html+=
-	`<div id='timetable_header'>
+	`<div id='timetable_header' class='display_font'>
 		<div id='prayertable_month_header_title4'>${title4}</div>
 		<div id='prayertable_month_header_title5'>${settings.second_locale!=0?gettimetabletitle(settings.locale, locale) + ' ' + gettimetabletitle(settings.second_locale, locale):gettimetabletitle(settings.locale, locale)}</div>
 	</div>
-	<div id='timetable'>
+	<div id='timetable' class='default_font'>
 		${timetable_headers_month(items, settings, locale)}`;
 
 	let date;
@@ -916,7 +914,7 @@ function displayMonth(offset, prayertable, settings, locale) {
 	//footer
 	if (settings.reporttype =='MONTH'){
 		month_html +=
-		`<div id='timetable_footer'>
+		`<div id='timetable_footer' class='default_font'>
 			<div id='timetable_footer_row'>
 				<div id='timetable_footer_col'>
 					<div id='prayertable_month_footer_r1c1'>${settings.place}</div>
@@ -935,7 +933,7 @@ function displayMonth(offset, prayertable, settings, locale) {
 			</div>
 		</div>
 		<div id='copyright'>${window.global_app_copyright}</div>
-		<div id='prayertable_month_footer' style='${footer_style}'>
+		<div id='prayertable_month_footer' class='display_font' style='${footer_style}'>
 			<div id='prayertable_month_footer_title1'>${settings.footer_txt1}</div>
 			<div id='prayertable_month_footer_title2'>${settings.footer_txt2}</div>
 			<div id='prayertable_month_footer_title3'>${settings.footer_txt3}</div>
@@ -1024,9 +1022,7 @@ function displayDay(settings, item_id, locale, user_settings){
 	let date_title5 = date_current.toLocaleDateString(settings.locale + window.global_regional_def_locale_ext_prefix + window.global_regional_def_locale_ext_calendar + settings.calendar_hijri_type + window.global_regional_def_locale_ext_number_system + settings.number_system, options_hijri).toUpperCase();
 	
 	//Set theme and font classes on main div
-	settings.ui_prayertable_day.classList = settings.theme_day + ' ' + 'prayertable_font_' + settings.arabic_script;
-	if (document.body.id == 'printbody')
-		document.body.classList = 'font_' + settings.arabic_script;
+	settings.ui_prayertable_day.classList = settings.theme_day + ' ' + 'font_' + settings.arabic_script;
 	//set LTR or RTL on table layout
 	settings.ui_prayertable_day.style.direction = settings.direction;
 
@@ -1035,20 +1031,20 @@ function displayDay(settings, item_id, locale, user_settings){
 
 	day_html += 
 	`
-	<div id='prayertable_day_header_row' style='${header_style}'>
+	<div id='prayertable_day_header_row' class='display_font' style='${header_style}'>
 		<div id='prayertable_day_header_title1' class='prayertable_day_header' >${settings.header_txt1}</div>
 		<div id='prayertable_day_header_title2' class='prayertable_day_header' >${settings.header_txt2}</div>
 		<div id='prayertable_day_header_title3' class='prayertable_day_header' >${settings.header_txt3}</div>
 	</div>
-	<div id='prayertable_day_timetable_header'>
+	<div id='prayertable_day_timetable_header' class='display_font'>
 		<div id='prayertable_day_header_title4' class='prayertable_day_header' >${date_title4}</div>
 		<div id='prayertable_day_header_title5' class='prayertable_day_header' >${date_title5}</div>
 	</div>
-	<div id='prayertable_day_timetable' class='${settings.show_imsak=='YES' && 
-												 settings.show_sunset=='YES' && 
-												 settings.show_midnight=='YES'?'prayertable_day_wide':''}'>
+	<div id='prayertable_day_timetable' class='default_font ${settings.show_imsak=='YES' && 
+															  settings.show_sunset=='YES' && 
+															  settings.show_midnight=='YES'?'prayertable_day_wide':''}'>
 		${timetable_headers_day(settings, locale)}
-		<div class='prayertable_day_timetable_settings'>`;
+		<div class='prayertable_day_timetable_settings' class='default font'>`;
 	
 	let user_locale;
 	let user_timezone;
@@ -1151,13 +1147,13 @@ function displayDay(settings, item_id, locale, user_settings){
 	`	</div>
 	</div>
 	<div id='copyright'>${window.global_app_copyright}</div>
-	<div id='prayertable_day_footer_row' style='${footer_style}'>
+	<div id='prayertable_day_footer_row' class='display_font' style='${footer_style}'>
 		<div id='prayertable_day_footer_title1' class='prayertable_day_footer' >${settings.footer_txt1}</div>
 		<div id='prayertable_day_footer_title2' class='prayertable_day_footer' >${settings.footer_txt2}</div>
 		<div id='prayertable_day_footer_title3' class='prayertable_day_footer' >${settings.footer_txt3}</div>
 		<div></div>
 	</div>
-	<div id='prayertable_day_time'>
+	<div id='prayertable_day_time' class='default font'>
 	</div>`;
 	settings.ui_prayertable_day.innerHTML = day_html;
 }
@@ -1223,9 +1219,7 @@ function displayYear(settings, item_id, locale){
 	settings.reporttype        = 'YEAR';
 	
 	//Set theme and font class
-	settings.ui_prayertable_year.classList = settings.theme_year + ' ' + 'prayertable_font_' + settings.arabic_script;
-	if (document.body.id == 'printbody')
-		document.body.classList = 'font_' + settings.arabic_script;
+	settings.ui_prayertable_year.classList = settings.theme_year + ' ' + 'font_' + settings.arabic_script;
 	//set LTR or RTL on year layout
 	settings.ui_prayertable_year.style.direction = settings.direction;
 
@@ -1237,18 +1231,18 @@ function displayYear(settings, item_id, locale){
 		//transliteration OR translation
 		if (settings.coltitle=='0' || settings.coltitle=='3'){
 			timetable_class = 'class="two_columntitles"';
-			timetable_footer_class = 'class="two_columntitles"';
+			timetable_footer_class = 'class="default font two_columntitles"';
 		}
 		else{
 			timetable_class = 'class="three_columntitles"';
-			timetable_footer_class = 'class="three_columntitles"';
+			timetable_footer_class = 'class="default font three_columntitles"';
 		}
 	}
 	else{
 		//transliteration and translation are in the column titles
 		if (settings.coltitle=='1' || settings.coltitle=='2'){
 			timetable_class = 'class="two_columntitles"';
-			timetable_footer_class = 'class="two_columntitles"';
+			timetable_footer_class = 'class="default font two_columntitles"';
 		}
 	}
 
@@ -1298,12 +1292,12 @@ function displayYear(settings, item_id, locale){
 		months[monthindex-1] = timetable_month.outerHTML;
 	}
 	year_html +=
-	`<div class='prayertable_year_row' id='prayertable_year_header_row' style='${header_style}'>
+	`<div class='prayertable_year_row' id='prayertable_year_header_row' class='display_font' style='${header_style}'>
 		<div id='prayertable_year_header_title1' class='prayertable_year_header' >${settings.header_txt1}</div>
 		<div id='prayertable_year_header_title2' class='prayertable_year_header' >${settings.header_txt2}</div>
 		<div id='prayertable_year_header_title3' class='prayertable_year_header' >${settings.header_txt3}</div>
 	</div>
-	<div class='prayertable_year_row' id='prayertable_year_timetable_header'>
+	<div class='prayertable_year_row' id='prayertable_year_timetable_header' class='display_font'>
 		<div id='prayertable_year_header_title4' class='prayertable_year_header' >${year_title4}</div>
 		<div id='prayertable_year_header_title5' class='prayertable_year_header' >${settings.second_locale!=0?gettimetabletitle(settings.locale, locale) + ' ' + gettimetabletitle(settings.second_locale, locale):gettimetabletitle(settings.locale, locale)}</div>
 	</div>
@@ -1341,7 +1335,7 @@ function displayYear(settings, item_id, locale){
 		</div>
 	</div>
 	<div id='copyright'>${window.global_app_copyright}</div>
-	<div class='prayertable_year_row' id='prayertable_year_footer_row' style='${footer_style}'>
+	<div class='prayertable_year_row' id='prayertable_year_footer_row' class='display_font' style='${footer_style}'>
 		<div id='prayertable_year_footer_title1' class='prayertable_year_footer' >${settings.footer_txt1}</div>
 		<div id='prayertable_year_footer_title2' class='prayertable_year_footer' >${settings.footer_txt2}</div>
 		<div id='prayertable_year_footer_title3' class='prayertable_year_footer' >${settings.footer_txt3}</div>
@@ -1480,6 +1474,7 @@ function init_report(parameters) {
 				if (err)
 					null;
 				else{
+					document.body.classList = 'font_' + report_parameters.arabic_script;
 					timetable_translate_settings(report_parameters.locale, report_parameters.second_locale).then(function(){
 						if (err)
 							null;

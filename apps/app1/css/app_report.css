@@ -580,16 +580,36 @@
 /*DAY*/
 /*THEME 1*/
 /*DISPLAY FONT*/
-.theme_day_10001 #prayertable_day_header_row,
-.theme_day_10001 #prayertable_day_timetable_header, 
-.theme_day_10001 #prayertable_day_footer_row{
-	font-family: 'Roboto';
+.theme_day_10001.font_arabic_sans_kufi .display_font{
+	font-family: 'Roboto', var(--global_font_arabic_sans_kufi);
+}
+.theme_day_10001.font_arabic_kufi .display_font{
+	font-family: 'Roboto', var(--global_font_arabic_kufi);
+}
+.theme_day_10001.font_arabic_nashk .display_font{
+	font-family: 'Roboto', var(--global_font_arabic_nashk);
+}
+.theme_day_10001.font_arabic_nastaliq .display_font{
+	font-family: 'Roboto', var(--global_font_arabic_nastaliq);
+}
+.theme_day_10001.font_arabic_ui .display_font{
+	font-family: 'Roboto', var(--global_font_arabic_ui);
 }
 /*DEFAULT FONT*/
-.theme_day_10001 #prayertable_day_timetable, 
-.theme_day_10001 #prayertable_day_timetable_settings,
-.theme_day_10001 #prayertable_day_time{
-	font-family: 'Roboto';
+.theme_day_10001.font_arabic_sans_kufi .default_font{
+	font-family: 'Roboto', var(--global_font_arabic_sans_kufi);
+}
+.theme_day_10001.font_arabic_kufi .default_font{
+	font-family: 'Roboto', var(--global_font_arabic_kufi);
+}
+.theme_day_10001.font_arabic_nashk .default_font{
+	font-family: 'Roboto', var(--global_font_arabic_nashk);
+}
+.theme_day_10001.font_arabic_nastaliq .default_font{
+	font-family: 'Roboto', var(--global_font_arabic_nastaliq);
+}
+.theme_day_10001.font_arabic_ui .default_font{
+	font-family: 'Roboto', var(--global_font_arabic_ui);
 }
 .theme_day_10001{
 	background-color: white
@@ -625,16 +645,36 @@
 
 /*THEME 2*/
 /*DISPLAY FONT*/
-.theme_day_10002 #prayertable_day_header, 
-.theme_day_10002 #prayertable_day_timetable_header, 
-.theme_day_10002 #prayertable_day_footer_row{
-	font-family: 'Exo';
+.theme_day_10002.font_arabic_sans_kufi .display_font{
+	font-family: 'Exo', var(--global_font_arabic_sans_kufi);
+}
+.theme_day_10002.font_arabic_kufi .display_font{
+	font-family: 'Exo', var(--global_font_arabic_kufi);
+}
+.theme_day_10002.font_arabic_nashk .display_font{
+	font-family: 'Exo', var(--global_font_arabic_nashk);
+}
+.theme_day_10002.font_arabic_nastaliq .display_font{
+	font-family: 'Exo', var(--global_font_arabic_nastaliq);
+}
+.theme_day_10002.font_arabic_ui .display_font{
+	font-family: 'Exo', var(--global_font_arabic_ui);
 }
 /*DEFAULT FONT*/
-.theme_day_10002 #prayertable_day_timetable, 
-.theme_day_10002 #prayertable_day_timetable_settings,
-.theme_day_10002 #prayertable_day_time{
-	font-family: 'Exo';
+.theme_day_10002.font_arabic_sans_kufi .default_font{
+	font-family: 'Exo', var(--global_font_arabic_sans_kufi);
+}
+.theme_day_10002.font_arabic_kufi .default_font{
+	font-family: 'Exo', var(--global_font_arabic_kufi);
+}
+.theme_day_10002.font_arabic_nashk .default_font{
+	font-family: 'Exo', var(--global_font_arabic_nashk);
+}
+.theme_day_10002.font_arabic_nastaliq .default_font{
+	font-family: 'Exo', var(--global_font_arabic_nastaliq);
+}
+.theme_day_10002.font_arabic_ui .default_font{
+	font-family: 'Exo', var(--global_font_arabic_ui);
 }
 .theme_day_10002{
 	background-color: white
@@ -667,16 +707,36 @@
 
 /*THEME 3*/
 /*DISPLAY FONT*/
-.theme_day_10003 #prayertable_day_header, 
-.theme_day_10003 #prayertable_day_timetable_header, 
-.theme_day_10003 #prayertable_day_footer_row{
-	font-family: 'Roboto';
+.theme_day_10003.font_arabic_sans_kufi .display_font{
+	font-family: 'Roboto', var(--global_font_arabic_sans_kufi);
+}
+.theme_day_10003.font_arabic_kufi .display_font{
+	font-family: 'Roboto', var(--global_font_arabic_kufi);
+}
+.theme_day_10003.font_arabic_nashk .display_font{
+	font-family: 'Roboto', var(--global_font_arabic_nashk);
+}
+.theme_day_10003.font_arabic_nastaliq .display_font{
+	font-family: 'Roboto', var(--global_font_arabic_nastaliq);
+}
+.theme_day_10003.font_arabic_ui .display_font{
+	font-family: 'Roboto', var(--global_font_arabic_ui);
 }
 /*DEFAULT FONT*/
-.theme_day_10003 #prayertable_day_timetable, 
-.theme_day_10003 #prayertable_day_timetable_settings,
-.theme_day_10003 #prayertable_day_time{
-	font-family: 'Roboto';
+.theme_day_10003.font_arabic_sans_kufi .default_font{
+	font-family: 'Roboto', var(--global_font_arabic_sans_kufi);
+}
+.theme_day_10003.font_arabic_kufi .default_font{
+	font-family: 'Roboto', var(--global_font_arabic_kufi);
+}
+.theme_day_10003.font_arabic_nashk .default_font{
+	font-family: 'Roboto', var(--global_font_arabic_nashk);
+}
+.theme_day_10003.font_arabic_nastaliq .default_font{
+	font-family: 'Roboto', var(--global_font_arabic_nastaliq);
+}
+.theme_day_10003.font_arabic_ui .default_font{
+	font-family: 'Roboto', var(--global_font_arabic_ui);
 }
 .theme_day_10003{
 	background-color: white
@@ -714,7 +774,37 @@
 /*MONTH*/
 /*THEME 1*/
 /*DISPLAY FONT*/
-/*default font*/
+.theme_month_20001.font_arabic_sans_kufi .display_font{
+	font-family: var(--global_font_arabic_sans_kufi);
+}
+.theme_month_20001.font_arabic_kufi .display_font{
+	font-family: var(--global_font_arabic_kufi);
+}
+.theme_month_20001.font_arabic_nashk .display_font{
+	font-family: var(--global_font_arabic_nashk);
+}
+.theme_month_20001.font_arabic_nastaliq .display_font{
+	font-family: var(--global_font_arabic_nastaliq);
+}
+.theme_month_20001.font_arabic_ui .display_font{
+	font-family: var(--global_font_arabic_ui);
+}
+/*DEFAULT FONT*/
+.theme_month_20001.font_arabic_sans_kufi .default_font{
+	font-family: var(--global_font_arabic_sans_kufi);
+}
+.theme_month_20001.font_arabic_kufi .default_font{
+	font-family: var(--global_font_arabic_kufi);
+}
+.theme_month_20001.font_arabic_nashk .default_font{
+	font-family: var(--global_font_arabic_nashk);
+}
+.theme_month_20001.font_arabic_nastaliq .default_font{
+	font-family: var(--global_font_arabic_nastaliq);
+}
+.theme_month_20001.font_arabic_ui .default_font{
+	font-family: var(--global_font_arabic_ui);
+}
 .theme_month_20001 {
 	background-color: white;
 	color: #404040;
@@ -749,7 +839,37 @@
 
 /*THEME 2*/
 /*DISPLAY FONT*/
-/*default font*/
+.theme_month_20002.font_arabic_sans_kufi .display_font{
+	font-family: var(--global_font_arabic_sans_kufi);
+}
+.theme_month_20002.font_arabic_kufi .display_font{
+	font-family: var(--global_font_arabic_kufi);
+}
+.theme_month_20002.font_arabic_nashk .display_font{
+	font-family: var(--global_font_arabic_nashk);
+}
+.theme_month_20002.font_arabic_nastaliq .display_font{
+	font-family: var(--global_font_arabic_nastaliq);
+}
+.theme_month_20002.font_arabic_ui .display_font{
+	font-family: var(--global_font_arabic_ui);
+}
+/*DEFAULT FONT*/
+.theme_month_20002.font_arabic_sans_kufi .default_font{
+	font-family: var(--global_font_arabic_sans_kufi);
+}
+.theme_month_20002.font_arabic_kufi .default_font{
+	font-family: var(--global_font_arabic_kufi);
+}
+.theme_month_20002.font_arabic_nashk .default_font{
+	font-family: var(--global_font_arabic_nashk);
+}
+.theme_month_20002.font_arabic_nastaliq .default_font{
+	font-family: var(--global_font_arabic_nastaliq);
+}
+.theme_month_20002.font_arabic_ui .default_font{
+	font-family: var(--global_font_arabic_ui);
+}
 .theme_month_20002 {
 	background-color: white;
 	color: #404040;
@@ -795,15 +915,36 @@
 }
 /*THEME 3*/
 /*DISPLAY FONT*/
-.theme_month_20003 #prayertable_month_header, 
-.theme_month_20003 #timetable_header, 
-.theme_month_20003 #prayertable_month_footer{
-	font-family: 'Roboto';
+.theme_month_20003.font_arabic_sans_kufi .display_font{
+	font-family: 'Roboto', var(--global_font_arabic_sans_kufi);
+}
+.theme_month_20003.font_arabic_kufi .display_font{
+	font-family: 'Roboto', var(--global_font_arabic_kufi);
+}
+.theme_month_20003.font_arabic_nashk .display_font{
+	font-family: 'Roboto', var(--global_font_arabic_nashk);
+}
+.theme_month_20003.font_arabic_nastaliq .display_font{
+	font-family: 'Roboto', var(--global_font_arabic_nastaliq);
+}
+.theme_month_20003.font_arabic_ui .display_font{
+	font-family: 'Roboto', var(--global_font_arabic_ui);
 }
 /*DEFAULT FONT*/
-.theme_month_20003 #timetable, 
-.theme_month_20003 #timetable_footer{
-	font-family: 'Roboto';
+.theme_month_20003.font_arabic_sans_kufi .default_font{
+	font-family: 'Roboto', var(--global_font_arabic_sans_kufi);
+}
+.theme_month_20003.font_arabic_kufi .default_font{
+	font-family: 'Roboto', var(--global_font_arabic_kufi);
+}
+.theme_month_20003.font_arabic_nashk .default_font{
+	font-family: 'Roboto', var(--global_font_arabic_nashk);
+}
+.theme_month_20003.font_arabic_nastaliq .default_font{
+	font-family: 'Roboto', var(--global_font_arabic_nastaliq);
+}
+.theme_month_20003.font_arabic_ui .default_font{
+	font-family: 'Roboto', var(--global_font_arabic_ui);
 }
 .theme_month_20003 {
 	background-color: white
@@ -859,15 +1000,36 @@
 }
 /*THEME 4*/
 /*DISPLAY FONT*/
-.theme_month_20004 #prayertable_month_header, 
-.theme_month_20004 #timetable_header, 
-.theme_month_20004 #prayertable_month_footer{
-	font-family: 'Press Start 2P';
+.theme_month_20004.font_arabic_sans_kufi .display_font{
+	font-family: 'Press Start 2P', var(--global_font_arabic_sans_kufi);
+}
+.theme_month_20004.font_arabic_kufi .display_font{
+	font-family: 'Press Start 2P', var(--global_font_arabic_kufi);
+}
+.theme_month_20004.font_arabic_nashk .display_font{
+	font-family: 'Press Start 2P', var(--global_font_arabic_nashk);
+}
+.theme_month_20004.font_arabic_nastaliq .display_font{
+	font-family: 'Press Start 2P', var(--global_font_arabic_nastaliq);
+}
+.theme_month_20004.font_arabic_ui .display_font{
+	font-family: 'Press Start 2P', var(--global_font_arabic_ui);
 }
 /*DEFAULT FONT*/
-.theme_month_20004 #timetable, 
-.theme_month_20004 #timetable_footer{
-	font-family: 'Press Start 2P';
+.theme_month_20004.font_arabic_sans_kufi .default_font{
+	font-family: 'Press Start 2P', var(--global_font_arabic_sans_kufi);
+}
+.theme_month_20004.font_arabic_kufi .default_font{
+	font-family: 'Press Start 2P', var(--global_font_arabic_kufi);
+}
+.theme_month_20004.font_arabic_nashk .default_font{
+	font-family: 'Press Start 2P', var(--global_font_arabic_nashk);
+}
+.theme_month_20004.font_arabic_nastaliq .default_font{
+	font-family: 'Press Start 2P', var(--global_font_arabic_nastaliq);
+}
+.theme_month_20004.font_arabic_ui .default_font{
+	font-family: 'Press Start 2P', var(--global_font_arabic_ui);
 }
 /*shrink font size compared to parent div for this font on this theme*/
 .theme_month_20004 .timetable_row, 
@@ -944,15 +1106,36 @@
 
 /*THEME 5*/
 /*DISPLAY FONT*/
-.theme_month_20005 #prayertable_month_header, 
-.theme_month_20005 #timetable_header, 
-.theme_month_20005 #prayertable_month_footer{
-	font-family: 'Roboto Condensed';
+.theme_month_20005.font_arabic_sans_kufi .display_font{
+	font-family: 'Roboto Condensed', var(--global_font_arabic_sans_kufi);
+}
+.theme_month_20005.font_arabic_kufi .display_font{
+	font-family: 'Roboto Condensed', var(--global_font_arabic_kufi);
+}
+.theme_month_20005.font_arabic_nashk .display_font{
+	font-family: 'Roboto Condensed', var(--global_font_arabic_nashk);
+}
+.theme_month_20005.font_arabic_nastaliq .display_font{
+	font-family: 'Roboto Condensed', var(--global_font_arabic_nastaliq);
+}
+.theme_month_20005.font_arabic_ui .display_font{
+	font-family: 'Roboto Condensed', var(--global_font_arabic_ui);
 }
 /*DEFAULT FONT*/
-.theme_month_20005 #timetable, 
-.theme_month_20005 #timetable_footer{
-	font-family: 'Roboto Condensed';
+.theme_month_20005.font_arabic_sans_kufi .default_font{
+	font-family: 'Roboto Condensed', var(--global_font_arabic_sans_kufi);
+}
+.theme_month_20005.font_arabic_kufi .default_font{
+	font-family: 'Roboto Condensed', var(--global_font_arabic_kufi);
+}
+.theme_month_20005.font_arabic_nashk .default_font{
+	font-family: 'Roboto Condensed', var(--global_font_arabic_nashk);
+}
+.theme_month_20005.font_arabic_nastaliq .default_font{
+	font-family: 'Roboto Condensed', var(--global_font_arabic_nastaliq);
+}
+.theme_month_20005.font_arabic_ui .default_font{
+	font-family: 'Roboto Condensed', var(--global_font_arabic_ui);
 }
 .theme_month_20005 {
 	background-color: white;
@@ -1006,15 +1189,36 @@
 
 /*THEME 6*/
 /*DISPLAY FONT*/
-.theme_month_20006 #prayertable_month_header, 
-.theme_month_20006 #timetable_header, 
-.theme_month_20006 #prayertable_month_footer{
-	font-family: 'Roboto Condensed';
+.theme_month_20006.font_arabic_sans_kufi .display_font{
+	font-family: 'Roboto Condensed', var(--global_font_arabic_sans_kufi);
+}
+.theme_month_20006.font_arabic_kufi .display_font{
+	font-family: 'Roboto Condensed', var(--global_font_arabic_kufi);
+}
+.theme_month_20006.font_arabic_nashk .display_font{
+	font-family: 'Roboto Condensed', var(--global_font_arabic_nashk);
+}
+.theme_month_20006.font_arabic_nastaliq .display_font{
+	font-family: 'Roboto Condensed', var(--global_font_arabic_nastaliq);
+}
+.theme_month_20006.font_arabic_ui .display_font{
+	font-family: 'Roboto Condensed', var(--global_font_arabic_ui);
 }
 /*DEFAULT FONT*/
-.theme_month_20006 #timetable, 
-.theme_month_20006 #timetable_footer{
-	font-family: 'Roboto Condensed';
+.theme_month_20006.font_arabic_sans_kufi .default_font{
+	font-family: 'Roboto Condensed', var(--global_font_arabic_sans_kufi);
+}
+.theme_month_20006.font_arabic_kufi .default_font{
+	font-family: 'Roboto Condensed', var(--global_font_arabic_kufi);
+}
+.theme_month_20006.font_arabic_nashk .default_font{
+	font-family: 'Roboto Condensed', var(--global_font_arabic_nashk);
+}
+.theme_month_20006.font_arabic_nastaliq .default_font{
+	font-family: 'Roboto Condensed', var(--global_font_arabic_nastaliq);
+}
+.theme_month_20006.font_arabic_ui .default_font{
+	font-family: 'Roboto Condensed', var(--global_font_arabic_ui);
 }
 .theme_month_20006 {
 	background-color: white;
@@ -1080,15 +1284,36 @@
 
 /*THEME 7*/
 /*DISPLAY FONT*/
-.theme_month_20007 #prayertable_month_header, 
-.theme_month_20007 #timetable_header, 
-.theme_month_20007 #prayertable_month_footer{
-	font-family: 'Roboto Condensed';
+.theme_month_20007.font_arabic_sans_kufi .display_font{
+	font-family: 'Roboto Condensed', var(--global_font_arabic_sans_kufi);
+}
+.theme_month_20007.font_arabic_kufi .display_font{
+	font-family: 'Roboto Condensed', var(--global_font_arabic_kufi);
+}
+.theme_month_20007.font_arabic_nashk .display_font{
+	font-family: 'Roboto Condensed', var(--global_font_arabic_nashk);
+}
+.theme_month_20007.font_arabic_nastaliq .display_font{
+	font-family: 'Roboto Condensed', var(--global_font_arabic_nastaliq);
+}
+.theme_month_20007.font_arabic_ui .display_font{
+	font-family: 'Roboto Condensed', var(--global_font_arabic_ui);
 }
 /*DEFAULT FONT*/
-.theme_month_20007 #timetable, 
-.theme_month_20007 #timetable_footer{
-	font-family: 'Roboto Condensed';
+.theme_month_20007.font_arabic_sans_kufi .default_font{
+	font-family: 'Roboto Condensed', var(--global_font_arabic_sans_kufi);
+}
+.theme_month_20007.font_arabic_kufi .default_font{
+	font-family: 'Roboto Condensed', var(--global_font_arabic_kufi);
+}
+.theme_month_20007.font_arabic_nashk .default_font{
+	font-family: 'Roboto Condensed', var(--global_font_arabic_nashk);
+}
+.theme_month_20007.font_arabic_nastaliq .default_font{
+	font-family: 'Roboto Condensed', var(--global_font_arabic_nastaliq);
+}
+.theme_month_20007.font_arabic_ui .default_font{
+	font-family: 'Roboto Condensed', var(--global_font_arabic_ui);
 }
 .theme_month_20007 {
 	background-color: white;
@@ -1172,13 +1397,37 @@
 
 /*THEME 8*/
 /*DISPLAY FONT*/
-.theme_month_20008 #prayertable_month_header, 
-.theme_month_20008 #timetable_header, 
-.theme_month_20008 #prayertable_month_footer{
-	font-family: 'Cinzel Decorative';
+.theme_month_20008.font_arabic_sans_kufi .display_font{
+	font-family: 'Cinzel Decorative', var(--global_font_arabic_sans_kufi);
+}
+.theme_month_20008.font_arabic_kufi .display_font{
+	font-family: 'Cinzel Decorative', var(--global_font_arabic_kufi);
+}
+.theme_month_20008.font_arabic_nashk .display_font{
+	font-family: 'Cinzel Decorative', var(--global_font_arabic_nashk);
+}
+.theme_month_20008.font_arabic_nastaliq .display_font{
+	font-family: 'Cinzel Decorative', var(--global_font_arabic_nastaliq);
+}
+.theme_month_20008.font_arabic_ui .display_font{
+	font-family: 'Cinzel Decorative', var(--global_font_arabic_ui);
 }
 /*DEFAULT FONT*/
-/*default font*/
+.theme_month_20008.font_arabic_sans_kufi .default_font{
+	font-family: var(--global_font_arabic_sans_kufi);
+}
+.theme_month_20008.font_arabic_kufi .default_font{
+	font-family: var(--global_font_arabic_kufi);
+}
+.theme_month_20008.font_arabic_nashk .default_font{
+	font-family: var(--global_font_arabic_nashk);
+}
+.theme_month_20008.font_arabic_nastaliq .default_font{
+	font-family: var(--global_font_arabic_nastaliq);
+}
+.theme_month_20008.font_arabic_ui .default_font{
+	font-family: var(--global_font_arabic_ui);
+}
 .theme_month_20008 {
 	background-color: #ffffff;
 	color: #000000;
@@ -1237,9 +1486,37 @@
 
 /*THEME 9*/
 /*DISPLAY FONT*/
-/*default font*/
+.theme_month_20009.font_arabic_sans_kufi .display_font{
+	font-family: var(--global_font_arabic_sans_kufi);
+}
+.theme_month_20009.font_arabic_kufi .display_font{
+	font-family: var(--global_font_arabic_kufi);
+}
+.theme_month_20009.font_arabic_nashk .display_font{
+	font-family: var(--global_font_arabic_nashk);
+}
+.theme_month_20009.font_arabic_nastaliq .display_font{
+	font-family: var(--global_font_arabic_nastaliq);
+}
+.theme_month_20009.font_arabic_ui .display_font{
+	font-family: var(--global_font_arabic_ui);
+}
 /*DEFAULT FONT*/
-/*default font*/
+.theme_month_20009.font_arabic_sans_kufi .default_font{
+	font-family: var(--global_font_arabic_sans_kufi);
+}
+.theme_month_20009.font_arabic_kufi .default_font{
+	font-family: var(--global_font_arabic_kufi);
+}
+.theme_month_20009.font_arabic_nashk .default_font{
+	font-family: var(--global_font_arabic_nashk);
+}
+.theme_month_20009.font_arabic_nastaliq .default_font{
+	font-family: var(--global_font_arabic_nastaliq);
+}
+.theme_month_20009.font_arabic_ui .default_font{
+	font-family: var(--global_font_arabic_ui);
+}
 .theme_month_20009 {
 	background-color: white;
 	color: #404040;
@@ -1281,15 +1558,36 @@
 
 /*THEME 10*/
 /*DISPLAY FONT*/
-.theme_month_20010 #prayertable_month_header, 
-.theme_month_20010 #timetable_header, 
-.theme_month_20010 #prayertable_month_footer{
-	font-family: 'Exo';
+.theme_month_20010.font_arabic_sans_kufi .display_font{
+	font-family: 'Exo', var(--global_font_arabic_sans_kufi);
+}
+.theme_month_20010.font_arabic_kufi .display_font{
+	font-family: 'Exo', var(--global_font_arabic_kufi);
+}
+.theme_month_20010.font_arabic_nashk .display_font{
+	font-family: 'Exo', var(--global_font_arabic_nashk);
+}
+.theme_month_20010.font_arabic_nastaliq .display_font{
+	font-family: 'Exo', var(--global_font_arabic_nastaliq);
+}
+.theme_month_20010.font_arabic_ui .display_font{
+	font-family: 'Exo', var(--global_font_arabic_ui);
 }
 /*DEFAULT FONT*/
-.theme_month_20010 #timetable, 
-.theme_month_20010 #timetable_footer{
-	font-family: 'Exo';
+.theme_month_20010.font_arabic_sans_kufi .default_font{
+	font-family: 'Exo', var(--global_font_arabic_sans_kufi);
+}
+.theme_month_20010.font_arabic_kufi .default_font{
+	font-family: 'Exo', var(--global_font_arabic_kufi);
+}
+.theme_month_20010.font_arabic_nashk .default_font{
+	font-family: 'Exo', var(--global_font_arabic_nashk);
+}
+.theme_month_20010.font_arabic_nastaliq .default_font{
+	font-family: 'Exo', var(--global_font_arabic_nastaliq);
+}
+.theme_month_20010.font_arabic_ui .default_font{
+	font-family: 'Exo', var(--global_font_arabic_ui);
 }
 .theme_month_20010 {
 	background-color: white
@@ -1343,15 +1641,36 @@
 
 /*THEME 11*/
 /*DISPLAY FONT*/
-.theme_month_20011 #prayertable_month_header, 
-.theme_month_20011 #timetable_header, 
-.theme_month_20011 #prayertable_month_footer{
-	font-family: 'Merriweather';
+.theme_month_20011.font_arabic_sans_kufi .display_font{
+	font-family: 'Merriweather', var(--global_font_arabic_sans_kufi);
+}
+.theme_month_20011.font_arabic_kufi .display_font{
+	font-family: 'Merriweather', var(--global_font_arabic_kufi);
+}
+.theme_month_20011.font_arabic_nashk .display_font{
+	font-family: 'Merriweather', var(--global_font_arabic_nashk);
+}
+.theme_month_20011.font_arabic_nastaliq .display_font{
+	font-family: 'Merriweather', var(--global_font_arabic_nastaliq);
+}
+.theme_month_20011.font_arabic_ui .display_font{
+	font-family: 'Merriweather', var(--global_font_arabic_ui);
 }
 /*DEFAULT FONT*/
-.theme_month_20011 #timetable, 
-.theme_month_20011 #timetable_footer{
-	font-family: 'Merriweather';
+.theme_month_20011.font_arabic_sans_kufi .default_font{
+	font-family: 'Merriweather', var(--global_font_arabic_sans_kufi);
+}
+.theme_month_20011.font_arabic_kufi .default_font{
+	font-family: 'Merriweather', var(--global_font_arabic_kufi);
+}
+.theme_month_20011.font_arabic_nashk .default_font{
+	font-family: 'Merriweather', var(--global_font_arabic_nashk);
+}
+.theme_month_20011.font_arabic_nastaliq .default_font{
+	font-family: 'Merriweather', var(--global_font_arabic_nastaliq);
+}
+.theme_month_20011.font_arabic_ui .default_font{
+	font-family: 'Merriweather', var(--global_font_arabic_ui);
 }
 .theme_month_20011 {
 	background-color: #ffffff;
@@ -1432,15 +1751,36 @@
 
 /*THEME 12*/
 /*DISPLAY FONT*/
-.theme_month_20012 #prayertable_month_header, 
-.theme_month_20012 #timetable_header, 
-.theme_month_20012 #prayertable_month_footer{
-	font-family: 'Lato';
+.theme_month_20012.font_arabic_sans_kufi .display_font{
+	font-family: 'Lato', var(--global_font_arabic_sans_kufi);
+}
+.theme_month_20012.font_arabic_kufi .display_font{
+	font-family: 'Lato', var(--global_font_arabic_kufi);
+}
+.theme_month_20012.font_arabic_nashk .display_font{
+	font-family: 'Lato', var(--global_font_arabic_nashk);
+}
+.theme_month_20012.font_arabic_nastaliq .display_font{
+	font-family: 'Lato', var(--global_font_arabic_nastaliq);
+}
+.theme_month_20012.font_arabic_ui .display_font{
+	font-family: 'Lato', var(--global_font_arabic_ui);
 }
 /*DEFAULT FONT*/
-.theme_month_20012 #timetable, 
-.theme_month_20012 #timetable_footer{
-	font-family: 'Lato';
+.theme_month_20012.font_arabic_sans_kufi .default_font{
+	font-family: 'Lato', var(--global_font_arabic_sans_kufi);
+}
+.theme_month_20012.font_arabic_kufi .default_font{
+	font-family: 'Lato', var(--global_font_arabic_kufi);
+}
+.theme_month_20012.font_arabic_nashk .default_font{
+	font-family: 'Lato', var(--global_font_arabic_nashk);
+}
+.theme_month_20012.font_arabic_nastaliq .default_font{
+	font-family: 'Lato', var(--global_font_arabic_nastaliq);
+}
+.theme_month_20012.font_arabic_ui .default_font{
+	font-family: 'Lato', var(--global_font_arabic_ui);
 }
 .theme_month_20012 {
 	background-color: white
@@ -1493,15 +1833,36 @@
 
 /*THEME 13*/
 /*DISPLAY FONT*/
-.theme_month_20013 #prayertable_month_header, 
-.theme_month_20013 #timetable_header, 
-.theme_month_20013 #prayertable_month_footer{
-	font-family: 'Merriweather';
+.theme_month_20013.font_arabic_sans_kufi .display_font{
+	font-family: 'Merriweather', var(--global_font_arabic_sans_kufi);
+}
+.theme_month_20013.font_arabic_kufi .display_font{
+	font-family: 'Merriweather', var(--global_font_arabic_kufi);
+}
+.theme_month_20013.font_arabic_nashk .display_font{
+	font-family: 'Merriweather', var(--global_font_arabic_nashk);
+}
+.theme_month_20013.font_arabic_nastaliq .display_font{
+	font-family: 'Merriweather', var(--global_font_arabic_nastaliq);
+}
+.theme_month_20013.font_arabic_ui .display_font{
+	font-family: 'Merriweather', var(--global_font_arabic_ui);
 }
 /*DEFAULT FONT*/
-.theme_month_20013 #timetable, 
-.theme_month_20013 #timetable_footer{
-	font-family: 'Source Sans Pro';
+.theme_month_20013.font_arabic_sans_kufi .default_font{
+	font-family: 'Source Sans Pro', var(--global_font_arabic_sans_kufi);
+}
+.theme_month_20013.font_arabic_kufi .default_font{
+	font-family: 'Source Sans Pro', var(--global_font_arabic_kufi);
+}
+.theme_month_20013.font_arabic_nashk .default_font{
+	font-family: 'Source Sans Pro', var(--global_font_arabic_nashk);
+}
+.theme_month_20013.font_arabic_nastaliq .default_font{
+	font-family: 'Source Sans Pro', var(--global_font_arabic_nastaliq);
+}
+.theme_month_20013.font_arabic_ui .default_font{
+	font-family: 'Source Sans Pro', var(--global_font_arabic_ui);
 }
 .theme_month_20013 {
 	background-image: linear-gradient(to bottom,#ebebed 0%,#fff 100%);
@@ -1558,15 +1919,36 @@
 
 /*THEME 14*/
 /*DISPLAY FONT*/
-.theme_month_20014 #prayertable_month_header, 
-.theme_month_20014 #timetable_header, 
-.theme_month_20014 #prayertable_month_footer{
-	font-family: 'Montserrat';
+.theme_month_20014.font_arabic_sans_kufi .display_font{
+	font-family: 'Montserrat', var(--global_font_arabic_sans_kufi);
+}
+.theme_month_20014.font_arabic_kufi .display_font{
+	font-family: 'Montserrat', var(--global_font_arabic_kufi);
+}
+.theme_month_20014.font_arabic_nashk .display_font{
+	font-family: 'Montserrat', var(--global_font_arabic_nashk);
+}
+.theme_month_20014.font_arabic_nastaliq .display_font{
+	font-family: 'Montserrat', var(--global_font_arabic_nastaliq);
+}
+.theme_month_20014.font_arabic_ui .display_font{
+	font-family: 'Montserrat', var(--global_font_arabic_ui);
 }
 /*DEFAULT FONT*/
-.theme_month_20014 #timetable, 
-.theme_month_20014 #timetable_footer{
-	font-family: 'Merriweather';
+.theme_month_20014.font_arabic_sans_kufi .default_font{
+	font-family: 'Merriweather', var(--global_font_arabic_sans_kufi);
+}
+.theme_month_20014.font_arabic_kufi .default_font{
+	font-family: 'Merriweather', var(--global_font_arabic_kufi);
+}
+.theme_month_20014.font_arabic_nashk .default_font{
+	font-family: 'Merriweather', var(--global_font_arabic_nashk);
+}
+.theme_month_20014.font_arabic_nastaliq .default_font{
+	font-family: 'Merriweather', var(--global_font_arabic_nastaliq);
+}
+.theme_month_20014.font_arabic_ui .default_font{
+	font-family: 'Merriweather', var(--global_font_arabic_ui);
 }
 .theme_month_20014 {
 	background-color: white
@@ -1623,9 +2005,37 @@
 
 /*THEME 15*/
 /*DISPLAY FONT*/
-/*default font*/
+.theme_month_20015.font_arabic_sans_kufi .display_font{
+	font-family: var(--global_font_arabic_sans_kufi);
+}
+.theme_month_20015.font_arabic_kufi .display_font{
+	font-family: var(--global_font_arabic_kufi);
+}
+.theme_month_20015.font_arabic_nashk .display_font{
+	font-family: var(--global_font_arabic_nashk);
+}
+.theme_month_20015.font_arabic_nastaliq .display_font{
+	font-family: var(--global_font_arabic_nastaliq);
+}
+.theme_month_20015.font_arabic_ui .display_font{
+	font-family: var(--global_font_arabic_ui);
+}
 /*DEFAULT FONT*/
-/*default font*/
+.theme_month_20015.font_arabic_sans_kufi .default_font{
+	font-family: var(--global_font_arabic_sans_kufi);
+}
+.theme_month_20015.font_arabic_kufi .default_font{
+	font-family: var(--global_font_arabic_kufi);
+}
+.theme_month_20015.font_arabic_nashk .default_font{
+	font-family: var(--global_font_arabic_nashk);
+}
+.theme_month_20015.font_arabic_nastaliq .default_font{
+	font-family: var(--global_font_arabic_nastaliq);
+}
+.theme_month_20015.font_arabic_ui .default_font{
+	font-family: var(--global_font_arabic_ui);
+}
 .theme_month_20015 {
 	background-color: white;
 	color: #404040;
@@ -1681,9 +2091,37 @@
 /*YEAR*/
 /*THEME 1*/
 /*DISPLAY FONT*/
-/*default font*/
+.theme_year_30001.font_arabic_sans_kufi .display_font{
+	font-family: var(--global_font_arabic_sans_kufi);
+}
+.theme_year_30001.font_arabic_kufi .display_font{
+	font-family: var(--global_font_arabic_kufi);
+}
+.theme_year_30001.font_arabic_nashk .display_font{
+	font-family: var(--global_font_arabic_nashk);
+}
+.theme_year_30001.font_arabic_nastaliq .display_font{
+	font-family: var(--global_font_arabic_nastaliq);
+}
+.theme_year_30001.font_arabic_ui .display_font{
+	font-family: var(--global_font_arabic_ui);
+}
 /*DEFAULT FONT*/
-/*default font*/
+.theme_year_30001.font_arabic_sans_kufi .default_font{
+	font-family: var(--global_font_arabic_sans_kufi);
+}
+.theme_year_30001.font_arabic_kufi .default_font{
+	font-family: var(--global_font_arabic_kufi);
+}
+.theme_year_30001.font_arabic_nashk .default_font{
+	font-family: var(--global_font_arabic_nashk);
+}
+.theme_year_30001.font_arabic_nastaliq .default_font{
+	font-family: var(--global_font_arabic_nastaliq);
+}
+.theme_year_30001.font_arabic_ui .default_font{
+	font-family: var(--global_font_arabic_ui);
+}
 .theme_year_30001{
 	background-color: white
 }
