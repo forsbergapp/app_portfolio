@@ -78,12 +78,9 @@
 #printbody #prayertable_day_time{
 	visibility: hidden;
 }
-/* set copyright text on fixed place on paper div*/
+
 #paper #copyright{
- font-size:8pt;
- margin:2px;
- text-align: center;
- font-family:"Noto Sans";
+ 	font-family:"Noto Sans";
 }	
 
 /*DAY*/
@@ -105,9 +102,17 @@
 	font-weight: bold;
 }
 /*fix too big height of nastaliq font in timetable header*/
-#prayertable_day.prayertable_font_arabic_nastaliq #prayertable_day_timetable_header{
-	font-size: 10pt !important;
+#prayertable_day.font_arabic_nastaliq .display_font{
+	line-height: initial;
 }
+#prayertable_day.font_arabic_nastaliq #prayertable_day_timetable_header{
+	font-size: 0.71em !important;
+}
+#prayertable_day.font_arabic_nastaliq #prayertable_day_timetable .prayertable_day_timetable_header-row{
+	font-size:0.71em !important;
+	line-height: initial;
+}
+
 #prayertable_day .prayertable_day_timetable_header-row{
 	font-size: 8pt;
 }
@@ -241,9 +246,21 @@
 	font-size:11pt;
 	font-weight: bold;
 }
-/*fix too big height of nastaliq font in timetable header*/
-.prayertable_month.prayertable_font_arabic_nastaliq #timetable_header{
-	font-size:9pt !important;
+/*Arabic Nastaliq fixes too big height*/
+.prayertable_month.font_arabic_nastaliq .display_font{
+	line-height: initial;
+}
+.prayertable_month.font_arabic_nastaliq #timetable_header{
+	font-size:0.71em !important;
+	line-height: initial;
+}
+.prayertable_month.font_arabic_nastaliq #timetable .prayertable_month_header-row{
+	font-size:0.61em !important;
+	line-height: initial;
+}
+.prayertable_month.font_arabic_nastaliq #timetable .prayertable_month_date{
+	font-size:0.71em !important;
+	line-height: initial;
 }
 .prayertable_month #timetable{
 	font-size:8pt;
@@ -433,6 +450,16 @@
 	left:0px;
 	top:0px;
 }
+/*Arabic Nastaliq fixes*/
+#prayertable_year.font_arabic_nastaliq .display_font{
+	line-height: initial;
+}
+#prayertable_year.font_arabic_nastaliq #prayertable_year_timetable_header{
+	font-size: 0.51em !important;
+}
+#prayertable_year.font_arabic_nastaliq .prayertable_year_month #timetable_header #prayertable_month_header_title4{
+	font-size: 0.71em !important;
+}
 #prayertable_year .prayertable_year_row {
 	display: flex;
 	justify-content: space-around;
@@ -471,11 +498,11 @@
 }
 /* Three columntitles fixes*/
 #prayertable_year #prayertable_year_timetables.three_columntitles{
-	margin-top:-20px;
+	margin-top:-40px;
 	transform:scale(0.9);
 }
 #prayertable_year #prayertable_year_timetable_footer.three_columntitles{
-	margin-top:-20px;
+	margin-top:-40px;
 }
 
 /*Footer timetable info*/
