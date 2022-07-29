@@ -623,15 +623,19 @@ height: 25px;
 }
 .setting_paper_preview{
 	width: 84mm;
-    height: 118.8mm;
+    height: 114mm;
 	margin: 0 auto;
 	background-color: white;
+	display:flex;
+    flex-direction:column;
+    justify-content:space-between;
 }
-#setting_paper_preview_header_image{
-    margin-bottom: 69mm;
-}
-#setting_paper_preview_header_image div{
+#setting_paper_preview_header_image div,
+#setting_paper_preview_footer_image div{
 	min-height: 69px;
+}
+#setting_paper_preview_footer_image{
+	margin-bottom: -7px;
 }
 .setting_paper_preview_header,
 .setting_paper_preview_footer{
@@ -669,10 +673,16 @@ height: 25px;
 	text-align: center;
 }
 #settings #tab5 #setting_paper_preview_header_text{
-	margin-bottom: 66mm;
+	padding-top:3px;
 }
 #settings #tab5 #setting_input_reporttitle3{
 	margin-bottom: 4px;
+}
+#settings #tab5 #setting_paper_preview_footer_text{
+	padding-bottom:3px;
+}
+#settings #tab5 #setting_input_reportfooter1{
+	margin-top: 4px;
 }
 /* Settings for alignment buttons*/
 #settings .setting_button {
