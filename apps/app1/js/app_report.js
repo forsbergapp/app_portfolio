@@ -929,10 +929,10 @@ function displayMonth(offset, prayertable, settings, locale) {
 						`<div id='prayertable_month_footer_r1c6'>${window.global_first_language.timezone_text}</div>
 						<div id='prayertable_month_footer_r1c7'>${settings.timezone}</div>`
 						:''}
+					<div id='copyright'>${window.global_app_copyright}</div>
 				</div>
 			</div>
 		</div>
-		<div id='copyright'>${window.global_app_copyright}</div>
 		<div id='prayertable_month_footer' class='display_font' style='${footer_style}'>
 			<div id='prayertable_month_footer_title1'>${settings.footer_txt1}</div>
 			<div id='prayertable_month_footer_title2'>${settings.footer_txt2}</div>
@@ -1044,7 +1044,7 @@ function displayDay(settings, item_id, locale, user_settings){
 															  settings.show_sunset=='YES' && 
 															  settings.show_midnight=='YES'?'prayertable_day_wide':''}'>
 		${timetable_headers_day(settings, locale)}
-		<div class='prayertable_day_timetable_settings' class='default font'>`;
+		<div class='prayertable_day_timetable_settings' class='default_font'>`;
 	
 	let user_locale;
 	let user_timezone;
@@ -1153,7 +1153,7 @@ function displayDay(settings, item_id, locale, user_settings){
 		<div id='prayertable_day_footer_title3' class='prayertable_day_footer' >${settings.footer_txt3}</div>
 		<div></div>
 	</div>
-	<div id='prayertable_day_time' class='default font'>
+	<div id='prayertable_day_time' class='default_font'>
 	</div>`;
 	settings.ui_prayertable_day.innerHTML = day_html;
 }
@@ -1231,18 +1231,18 @@ function displayYear(settings, item_id, locale){
 		//transliteration OR translation
 		if (settings.coltitle=='0' || settings.coltitle=='3'){
 			timetable_class = 'class="two_columntitles"';
-			timetable_footer_class = 'class="default font two_columntitles"';
+			timetable_footer_class = 'class="default_font two_columntitles"';
 		}
 		else{
 			timetable_class = 'class="three_columntitles"';
-			timetable_footer_class = 'class="default font three_columntitles"';
+			timetable_footer_class = 'class="default_font three_columntitles"';
 		}
 	}
 	else{
 		//transliteration and translation are in the column titles
 		if (settings.coltitle=='1' || settings.coltitle=='2'){
 			timetable_class = 'class="two_columntitles"';
-			timetable_footer_class = 'class="default font two_columntitles"';
+			timetable_footer_class = 'class="default_font two_columntitles"';
 		}
 	}
 
@@ -1292,12 +1292,12 @@ function displayYear(settings, item_id, locale){
 		months[monthindex-1] = timetable_month.outerHTML;
 	}
 	year_html +=
-	`<div class='prayertable_year_row' id='prayertable_year_header_row' class='display_font' style='${header_style}'>
+	`<div id='prayertable_year_header_row' class='prayertable_year_row display_font' style='${header_style}'>
 		<div id='prayertable_year_header_title1' class='prayertable_year_header' >${settings.header_txt1}</div>
 		<div id='prayertable_year_header_title2' class='prayertable_year_header' >${settings.header_txt2}</div>
 		<div id='prayertable_year_header_title3' class='prayertable_year_header' >${settings.header_txt3}</div>
 	</div>
-	<div class='prayertable_year_row' id='prayertable_year_timetable_header' class='display_font'>
+	<div id='prayertable_year_timetable_header' class='prayertable_year_row display_font'>
 		<div id='prayertable_year_header_title4' class='prayertable_year_header' >${year_title4}</div>
 		<div id='prayertable_year_header_title5' class='prayertable_year_header' >${settings.second_locale!=0?gettimetabletitle(settings.locale, locale) + ' ' + gettimetabletitle(settings.second_locale, locale):gettimetabletitle(settings.locale, locale)}</div>
 	</div>
@@ -1331,11 +1331,11 @@ function displayYear(settings, item_id, locale){
 				<div id='prayertable_year_timetable_footer_r1c5' ${settings.show_gps == 'YES'?'class=""':'class="hidden"'}>${settings.show_gps == 'YES'?settings.gps_long.toLocaleString(settings.locale + window.global_regional_def_locale_ext_prefix + window.global_regional_def_locale_ext_number_system + settings.number_system):''}</div>
 				<div id='prayertable_year_timetable_footer_r1c6' ${settings.show_timezone == 'YES'?'class=""':'class="hidden"'}>${settings.show_timezone == 'YES'?window.global_first_language.timezone_text:''}</div>
 				<div id='prayertable_year_timetable_footer_r1c7' ${settings.show_timezone == 'YES'?'class=""':'class="hidden"'}>${settings.show_timezone == 'YES'?settings.timezone:''}</div>
+				<div id='copyright'>${window.global_app_copyright}</div>
 			</div>
 		</div>
 	</div>
-	<div id='copyright'>${window.global_app_copyright}</div>
-	<div class='prayertable_year_row' id='prayertable_year_footer_row' class='display_font' style='${footer_style}'>
+	<div id='prayertable_year_footer_row' class='prayertable_year_row display_font' style='${footer_style}'>
 		<div id='prayertable_year_footer_title1' class='prayertable_year_footer' >${settings.footer_txt1}</div>
 		<div id='prayertable_year_footer_title2' class='prayertable_year_footer' >${settings.footer_txt2}</div>
 		<div id='prayertable_year_footer_title3' class='prayertable_year_footer' >${settings.footer_txt3}</div>
