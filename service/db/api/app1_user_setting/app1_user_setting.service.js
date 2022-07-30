@@ -727,16 +727,13 @@ module.exports = {
 			sql = `SELECT *
 					FROM (SELECT 'LIKE_SETTING' detail,
 									u.id,
-									u.provider1_id,
-									u.provider2_id,
+									u.identity_provider_id,
+									u.provider_id,
 									CONVERT(u.avatar USING UTF8) avatar,
-									CONVERT(u.provider1_image USING UTF8) provider1_image,
-									u.provider1_image_url,
-									CONVERT(u.provider2_image USING UTF8) provider2_image,
-									u.provider2_image_url,
+									CONVERT(u.provider_image USING UTF8) provider_image,
+									u.provider_image_url,
 									u.username,
-									u.provider1_first_name,
-									u.provider2_first_name
+									u.provider_first_name
 							FROM   ${process.env.SERVICE_DB_DB1_NAME}.user_account u
 							WHERE  u.id IN (SELECT us.user_account_id
 											FROM ${process.env.SERVICE_DB_DB1_NAME}.app1_user_setting_like u_like,
@@ -749,16 +746,13 @@ module.exports = {
 							UNION ALL
 							SELECT 'LIKED_SETTING' detail,
 									u.id,
-									u.provider1_id,
-									u.provider2_id,
+									u.identity_provider_id,
+									u.provider_id,
 									CONVERT(u.avatar USING UTF8) avatar,
-									CONVERT(u.provider1_image USING UTF8) provider1_image,
-									u.provider1_image_url,
-									CONVERT(u.provider2_image USING UTF8) provider2_image,
-									u.provider2_image_url,
+									CONVERT(u.provider_image USING UTF8) provider_image,
+									u.provider_image_url,
 									u.username,
-									u.provider1_first_name,
-									u.provider2_first_name
+									u.provider_first_name
 							FROM   ${process.env.SERVICE_DB_DB1_NAME}.user_account u
 							WHERE  u.id IN (SELECT u_like.user_account_id
 											FROM ${process.env.SERVICE_DB_DB1_NAME}.app1_user_setting us,
@@ -769,8 +763,7 @@ module.exports = {
 							AND    u.active = 1
 							AND    6 = ?) t
 						ORDER BY 1, COALESCE(username, 
-											provider1_first_name,
-											provider2_first_name)`;
+											 provider_first_name)`;
 			parameters = [	id,
 							app_id,
 							detailchoice,
@@ -782,16 +775,13 @@ module.exports = {
 			sql = `SELECT *
 					FROM (SELECT 'LIKE_SETTING' "detail",
 									u.id "id",
-									u.provider1_id "provider1_id",
-									u.provider2_id "provider2_id",
+									u.identity_provider_id "identity_provider_id",
+									u.provider_id "provider_id",
 									u.avatar "avatar",
-									u.provider1_image "provider1_image",
-									u.provider1_image_url "provider1_image_url",
-									u.provider2_image "provider2_image",
-									u.provider2_image_url "provider2_image_url",
+									u.provider_image "provider_image",
+									u.provider_image_url "provider_image_url",
 									u.username "username",
-									u.provider1_first_name "provider1_first_name",
-									u.provider2_first_name "provider2_first_name"
+									u.provider_first_name "provider_first_name"
 							FROM    ${process.env.SERVICE_DB_DB2_NAME}.user_account u
 							WHERE  u.id IN (SELECT us.user_account_id
 											FROM ${process.env.SERVICE_DB_DB2_NAME}.app1_user_setting_like u_like,
@@ -804,16 +794,13 @@ module.exports = {
 							UNION ALL
 							SELECT 'LIKED_SETTING' "detail",
 									u.id "id",
-									u.provider1_id "provider1_id",
-									u.provider2_id "provider2_id",
+									u.identity_provider_id "identity_provider_id",
+									u.provider_id "provider_id",
 									u.avatar "avatar",
-									u.provider1_image "provider1_image",
-									u.provider1_image_url "provider1_image_url",
-									u.provider2_image "provider2_image",
-									u.provider2_image_url "provider2_image_url",
+									u.provider_image "provider_image",
+									u.provider_image_url "provider_image_url",
 									u.username "username",
-									u.provider1_first_name "provider1_first_name",
-									u.provider2_first_name "provider2_first_name"
+									u.provider_first_name "provider_first_name"
 							FROM    ${process.env.SERVICE_DB_DB2_NAME}.user_account u
 							WHERE  u.id IN (SELECT u_like.user_account_id
 											FROM ${process.env.SERVICE_DB_DB2_NAME}.app1_user_setting us,
@@ -824,8 +811,7 @@ module.exports = {
 							AND    u.active = 1
 							AND    6 = :detailchoice_liked_setting) t
 						ORDER BY 1, COALESCE("username", 
-											"provider1_first_name",
-											"provider2_first_name") `;
+											"provider_first_name") `;
 			parameters = {
 							user_account_id_like_setting: id,
 							app_id: app_id,
@@ -849,16 +835,13 @@ module.exports = {
 			sql = `SELECT *
 					FROM (SELECT 'LIKE_SETTING' top,
 									u.id,
-									u.provider1_id,
-									u.provider2_id,
+									u.identity_provider_id,
+									u.provider_id,
 									CONVERT(u.avatar USING UTF8) avatar,
-									CONVERT(u.provider1_image USING UTF8) provider1_image,
-									u.provider1_image_url,
-									CONVERT(u.provider2_image USING UTF8) provider2_image,
-									u.provider2_image_url,
+									CONVERT(u.provider_image USING UTF8) provider_image,
+									u.provider_image_url,
 									u.username,
-									u.provider1_first_name,
-									u.provider2_first_name,
+									u.provider_first_name,
 									(SELECT COUNT(us.user_account_id)
 									FROM ${process.env.SERVICE_DB_DB1_NAME}.app1_user_setting_like u_like,
 											${process.env.SERVICE_DB_DB1_NAME}.app1_user_setting us
@@ -871,16 +854,13 @@ module.exports = {
 							UNION ALL
 							SELECT 'VISITED_SETTING' top,
 									u.id,
-									u.provider1_id,
-									u.provider2_id,
+									u.identity_provider_id,
+									u.provider_id,
 									CONVERT(u.avatar USING UTF8) avatar,
-									CONVERT(u.provider1_image USING UTF8) provider1_image,
-									u.provider1_image_url,
-									CONVERT(u.provider2_image USING UTF8) provider2_image,
-									u.provider2_image_url,
+									CONVERT(u.provider_image USING UTF8) provider_image,
+									u.provider_image_url,
 									u.username,
-									u.provider1_first_name,
-									u.provider2_first_name,
+									u.provider_first_name,
 									(SELECT COUNT(us.user_account_id)
 									FROM ${process.env.SERVICE_DB_DB1_NAME}.app1_user_setting_view u_view,
 											${process.env.SERVICE_DB_DB1_NAME}.app1_user_setting us
@@ -891,8 +871,7 @@ module.exports = {
 							WHERE  u.active = 1
 							AND    5 = ?)  t
 					ORDER BY 1,13 DESC, COALESCE(username, 
-												provider1_first_name,
-												provider2_first_name)
+												 provider_first_name)
 					LIMIT 10`;
 			parameters = [app_id,
 							statchoice,
@@ -903,16 +882,13 @@ module.exports = {
 			sql = `SELECT *
 					FROM (	SELECT 'LIKE_SETTING' "top",
 									u.id "id",
-									u.provider1_id "provider1_id",
-									u.provider2_id "provider2_id",
+									u.identity_provider_id "identity_provider_id",
+									u.provider_id "provider_id",
 									u.avatar "avatar",
-									u.provider1_image "provider1_image",
-									u.provider1_image_url "provider1_image_url",
-									u.provider2_image "provider2_image",
-									u.provider2_image_url "provider2_image_url",
+									u.provider_image "provider_image",
+									u.provider_image_url "provider_image_url",
 									u.username "username",
-									u.provider1_first_name "provider1_first_name",
-									u.provider2_first_name "provider2_first_name",
+									u.provider_first_name "provider_first_name",
 									(SELECT COUNT(us.user_account_id)
 									FROM ${process.env.SERVICE_DB_DB2_NAME}.app1_user_setting_like u_like,
 											${process.env.SERVICE_DB_DB2_NAME}.app1_user_setting us
@@ -925,16 +901,13 @@ module.exports = {
 							UNION ALL
 							SELECT 'VISITED_SETTING' "top",
 									u.id "id",
-									u.provider1_id "provider1_id",
-									u.provider2_id "provider2_id",
+									u.identity_provider_id "identity_provider_id",
+									u.provider_id "provider_id",
 									u.avatar "avatar",
-									u.provider1_image "provider1_image",
-									u.provider1_image_url "provider1_image_url",
-									u.provider2_image "provider2_image",
-									u.provider2_image_url "provider2_image_url",
+									u.provider_image "provider_image",
+									u.provider_image_url "provider_image_url",
 									u.username "username",
-									u.provider1_first_name "provider1_first_name",
-									u.provider2_first_name "provider2_first_name",
+									u.provider_first_name "provider_first_name",
 									(SELECT COUNT(us.user_account_id)
 									FROM ${process.env.SERVICE_DB_DB2_NAME}.app1_user_setting_view u_view,
 											${process.env.SERVICE_DB_DB2_NAME}.app1_user_setting us
@@ -946,8 +919,7 @@ module.exports = {
 							AND    5 = :statchoice_visited_setting) t
 					WHERE    ROWNUM <=10
 					ORDER BY 1,13 DESC, COALESCE("username", 
-												"provider1_first_name",
-												"provider2_first_name") `;
+												"provider_first_name") `;
 			parameters = {
 							app_id: app_id,
 							statchoice_like_setting: statchoice,
