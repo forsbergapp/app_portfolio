@@ -96,124 +96,101 @@ window.global_second_language =
 /*----------------------- */
 async function timetable_user_setting_get(user_setting_id, lang_code, callBack) {
     let json;
-    let status;
+	await common_fetch(window.global_rest_url_base + window.global_rest_app1_user_setting + user_setting_id + '?',
+					   'GET', 0, null, null, (err, result) =>{
+		if (err){
+			report_exception(err);
+			callBack(err, null);
+		}
+		else{
+			json = JSON.parse(result);
+			//set papersize on paper div
+			document.getElementById('paper').className= json.design_paper_size;
+			callBack(null,
+						//id
+						{  prayertable_month       : 'prayertable_month', //class to add for month
+						prayertable_year_month  : 'prayertable_year_month', //class to add for year
+						reporttype          	: 'MONTH', //MONTH: normal month with more info, YEAR: month with less info
+						locale              	: json.regional_language_locale,  
+						timezone            	: json.regional_timezone,
+						number_system       	: json.regional_number_system,
+						direction           	: json.regional_layout_direction,
+						second_locale       	: json.regional_second_language_locale,
+						coltitle            	: json.regional_column_title,
+						arabic_script       	: json.regional_arabic_script,
+						calendartype        	: json.regional_calendar_type,
+						calendar_hijri_type 	: json.regional_calendar_hijri_type,
 
-    await fetch(window.global_rest_url_base + window.global_rest_app1_user_setting + user_setting_id +
-                '?app_id=' + window.global_app_id + 
-                '&lang_code=' + lang_code, {
-            method: 'GET',
-            headers: {
-                'Authorization': 'Bearer ' + window.global_rest_dt
-            }
-        })
-        .then(function(response) {
-            status = response.status;
-            return response.text();
-        })
-        .then(function(result) {
-            if (status == 200) {
-                json = JSON.parse(result);
-				//set papersize on paper div
-				document.getElementById('paper').className= json.design_paper_size;
-				callBack(null,
-							//id
-						 {  prayertable_month       : 'prayertable_month', //class to add for month
-							prayertable_year_month  : 'prayertable_year_month', //class to add for year
-							reporttype          	: 'MONTH', //MONTH: normal month with more info, YEAR: month with less info
-							locale              	: json.regional_language_locale,  
-							timezone            	: json.regional_timezone,
-							number_system       	: json.regional_number_system,
-							direction           	: json.regional_layout_direction,
-							second_locale       	: json.regional_second_language_locale,
-							coltitle            	: json.regional_column_title,
-							arabic_script       	: json.regional_arabic_script,
-							calendartype        	: json.regional_calendar_type,
-							calendar_hijri_type 	: json.regional_calendar_hijri_type,
+						/* app ui settings
+						json.gps_map_type
+						json.gps_country_id		
+						json.gps_city_id		
+						json.gps_popular_place_id
+						*/              
+						place               	: json.description,
+						gps_lat             	: parseFloat(json.gps_lat_text),
+						gps_long            	: parseFloat(json.gps_long_text),
+						
+						theme_day           	: 'theme_day_' + json.design_theme_day_id,
+						theme_month         	: 'theme_month_' + json.design_theme_month_id,
+						theme_year          	: 'theme_year_' + json.design_theme_year_id,
+						//send from app and url query parameter to instruct papersize for PDF generation
+						//in report service
+						//papersize				: json.design_paper_size
+						highlight           	: json.design_row_highlight,
+						show_weekday        	: checkbox_checked(json.design_column_weekday_checked),
+						show_calendartype   	: checkbox_checked(json.design_column_calendartype_checked),
+						show_notes          	: checkbox_checked(json.design_column_notes_checked),
+						show_gps   	       		: checkbox_checked(json.design_column_gps_checked),
+						show_timezone       	: checkbox_checked(json.design_column_timezone_checked),
+									
+						header_img_src      	: image_format(json.image_header_image_img),
+						footer_img_src      	: image_format(json.image_footer_image_img),
 
-							/* app ui settings
-							json.gps_map_type
-							json.gps_country_id		
-							json.gps_city_id		
-							json.gps_popular_place_id
-							*/              
-							place               	: json.description,
-							gps_lat             	: parseFloat(json.gps_lat_text),
-							gps_long            	: parseFloat(json.gps_long_text),
-							
-							theme_day           	: 'theme_day_' + json.design_theme_day_id,
-							theme_month         	: 'theme_month_' + json.design_theme_month_id,
-							theme_year          	: 'theme_year_' + json.design_theme_year_id,
-							//send from app and url query parameter to instruct papersize for PDF generation
-							//in report service
-							//papersize				: json.design_paper_size
-							highlight           	: json.design_row_highlight,
-							show_weekday        	: checkbox_checked(json.design_column_weekday_checked),
-							show_calendartype   	: checkbox_checked(json.design_column_calendartype_checked),
-							show_notes          	: checkbox_checked(json.design_column_notes_checked),
-							show_gps   	       		: checkbox_checked(json.design_column_gps_checked),
-							show_timezone       	: checkbox_checked(json.design_column_timezone_checked),
-										
-							header_img_src      	: image_format(json.image_header_image_img),
-							footer_img_src      	: image_format(json.image_footer_image_img),
+						header_txt1         	: json.text_header_1_text,
+						header_txt2         	: json.text_header_2_text,
+						header_txt3         	: json.text_header_3_text,
+						header_align      		: json.text_header_align,
+						footer_txt1         	: json.text_footer_1_text,
+						footer_txt2         	: json.text_footer_2_text,
+						footer_txt3    	   		: json.text_footer_3_text,
+						footer_align			: json.text_footer_align,
 
-							header_txt1         	: json.text_header_1_text,
-							header_txt2         	: json.text_header_2_text,
-							header_txt3         	: json.text_header_3_text,
-							header_align      		: json.text_header_align,
-							footer_txt1         	: json.text_footer_1_text,
-							footer_txt2         	: json.text_footer_2_text,
-							footer_txt3    	   		: json.text_footer_3_text,
-							footer_align			: json.text_footer_align,
-
-							method              	: json.prayer_method,
-							asr                 	: json.prayer_asr_method,
-							highlat             	: json.prayer_high_latitude_adjustment,
-							format              	: json.prayer_time_format,
-							hijri_adj           	: json.prayer_hijri_date_adjustment,
-							iqamat_fajr         	: json.prayer_fajr_iqamat,
-							iqamat_dhuhr        	: json.prayer_dhuhr_iqamat,
-							iqamat_asr          	: json.prayer_asr_iqamat,
-							iqamat_maghrib      	: json.prayer_maghrib_iqamat,
-							iqamat_isha         	: json.prayer_isha_iqamat,
-							show_imsak          	: checkbox_checked(json.prayer_column_imsak_checked),
-							show_sunset         	: checkbox_checked(json.prayer_column_sunset_checked),
-							show_midnight       	: checkbox_checked(json.prayer_column_midnight_checked),
-							show_fast_start_end 	: json.prayer_column_fast_start_end,
-							ui_navigation_left      : 'toolbar_navigation_btn_left',
-							ui_navigation_right     : 'toolbar_navigation_btn_right',
-							ui_prayertable_day      : document.getElementById('prayertable_day'),
-							ui_prayertable_month    : document.getElementById('prayertable_month'),
-							ui_prayertable_year     : document.getElementById('prayertable_year')
-						}
-				);
-			} 
-			else{
-				report_exception(result);
-				callBack(result, null);
-			}
-        })
+						method              	: json.prayer_method,
+						asr                 	: json.prayer_asr_method,
+						highlat             	: json.prayer_high_latitude_adjustment,
+						format              	: json.prayer_time_format,
+						hijri_adj           	: json.prayer_hijri_date_adjustment,
+						iqamat_fajr         	: json.prayer_fajr_iqamat,
+						iqamat_dhuhr        	: json.prayer_dhuhr_iqamat,
+						iqamat_asr          	: json.prayer_asr_iqamat,
+						iqamat_maghrib      	: json.prayer_maghrib_iqamat,
+						iqamat_isha         	: json.prayer_isha_iqamat,
+						show_imsak          	: checkbox_checked(json.prayer_column_imsak_checked),
+						show_sunset         	: checkbox_checked(json.prayer_column_sunset_checked),
+						show_midnight       	: checkbox_checked(json.prayer_column_midnight_checked),
+						show_fast_start_end 	: json.prayer_column_fast_start_end,
+						ui_navigation_left      : 'toolbar_navigation_btn_left',
+						ui_navigation_right     : 'toolbar_navigation_btn_right',
+						ui_prayertable_day      : document.getElementById('prayertable_day'),
+						ui_prayertable_month    : document.getElementById('prayertable_month'),
+						ui_prayertable_year     : document.getElementById('prayertable_year')
+					}
+			);
+		} 
+    })
 }
 async function timetable_translate_settings(locale, locale_second, lang_code) {
     let json;
-    let status;
 	async function fetch_translation(locale, first){
 		//fetch any message with first language always
 		//show translation using first or second language
-		await fetch(window.global_rest_url_base + window.global_rest_app_object + locale +
-			'?app_id=' + window.global_app_id + 
-			'&lang_code=' + lang_code, 
-			{
-			method: 'GET',
-			headers: {
-				'Authorization': 'Bearer ' + window.global_rest_dt,
+		await common_fetch(window.global_rest_url_base + window.global_rest_app_object + locale + '?',
+					       'GET', 0, null, lang_code, (err, result) =>{
+			if (err){
+				report_exception(err);
 			}
-		})
-		.then(function(response) {
-			status = response.status;
-			return response.text();
-		})
-		.then(function(result) {
-			if (status === 200) {
+			else{
 				json = JSON.parse(result);	
 				for (let i = 0; i < json.data.length; i++){
 					if (first == true){
@@ -240,9 +217,6 @@ async function timetable_translate_settings(locale, locale_second, lang_code) {
 					}
 				}
 			} 
-			else{
-				report_exception(result);
-			}
 		})
 	}
 	await fetch_translation(locale, true).then(function(){
@@ -280,30 +254,16 @@ async function timetable_translate_settings(locale, locale_second, lang_code) {
 //lang_code is display message language who is running the report
 //use saved locale and second_locale user settings
 function updateReportViewStat(user_setting_id, user_account_id) {
-    let status;
     let json_data =`{
                     "user_account_id":${user_account_id},
                     "app1_user_setting_id":${user_setting_id},
                     "client_longitude": "${window.global_client_longitude}",
                     "client_latitude": "${window.global_client_latitude}"
                     }`;
-    fetch(window.global_rest_url_base + window.global_rest_app1_user_setting_view +
-            '?app_id=' + window.global_app_id + 
-            '&lang_code=' + window.global_lang_code, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + window.global_rest_dt
-            },
-            body: json_data
-        })
-        .then(function(response) {
-            status = response.status;
-            return response.text();
-        })
-        .then(function(result) {
-            null;
-        })
+	common_fetch(window.global_rest_url_base + window.global_rest_app1_user_setting_view + '?',
+				 'POST', 0, json_data, null, (err, result) =>{
+		null;
+	})
 }
 function getColumnTitles(transliteration = 0, calendartype, locale, second_locale, check_second = 'Y', locale2) {
 	let coltitle = {day: '',
@@ -1160,23 +1120,13 @@ function displayDay(settings, item_id, locale, user_settings){
 async function timetable_day_user_settings_get(user_account_id, lang_code, callBack){
 	let json;
     let i;
-    let status;
 	let user_settings = [];
 
-    await fetch(window.global_rest_url_base + window.global_rest_app1_user_setting_user_account_id + user_account_id +
-		'?app_id=' + window.global_app_id + 
-		'&lang_code=' + lang_code, {
-	method: 'GET',
-	headers: {
-		'Authorization': 'Bearer ' + window.global_rest_dt
-	}
-	})
-	.then(function(response) {
-		status = response.status;
-		return response.text();
-	})
-	.then(function(result) {
-		if (status == 200) {
+	await common_fetch(window.global_rest_url_base + window.global_rest_app1_user_setting_user_account_id + user_account_id + '?',
+					   'GET', 0, null, null, (err, result) =>{
+		if (err)
+			callBack(err, null);
+		else{
 			json = JSON.parse(result);
 			for (i = 0; i < json.count; i++) {
 				//use settings that can be used on a day timetable showing different user settings
@@ -1201,8 +1151,6 @@ async function timetable_day_user_settings_get(user_account_id, lang_code, callB
 				)
 			}
 			callBack(null, user_settings)
-		} else {
-			callBack(result, null);
 		}
 	})
 }
@@ -1347,20 +1295,12 @@ function displayYear(settings, item_id, locale){
 	window.global_session_CurrentHijriDate[0] = starthijrimonth;
 }
 async function get_report_globals(lang_code) {
-    let status;
     let json;
-    await fetch(window.global_rest_url_base + window.global_rest_app_parameter + window.global_app_id +
-                '?lang_code=' + lang_code, 
-                {method: 'GET',
-                 headers: {
-                   'Authorization': 'Bearer ' + window.global_rest_dt
-                }})
-    .then(function(response) {
-        status = response.status;
-        return response.text();
-    })
-    .then(function(result) {
-        if (status === 200) {
+	await common_fetch(window.global_rest_url_base + window.global_rest_app_parameter + window.global_app_id + '?',
+					   'GET', 0, null, null, (err, result) =>{
+		if (err)
+			report_exception(err);
+		else{
             json = JSON.parse(result);
             for (let i = 0; i < json.data.length; i++) {
                 //variables for app_id=0
@@ -1403,8 +1343,6 @@ async function get_report_globals(lang_code) {
                 }
             }
         }
-		else
-			report_exception(result);
     })
 }
 /*----------------------- */
@@ -1435,8 +1373,8 @@ function report_exception(error){
 /* INIT REPORT            */
 /*----------------------- */
 async function init_app_report() {
-	await get_data_token().then(function(){
-		//set current date for report month
+	await common_fetch_token(0, null,  null, null, (err, result)=>{
+        //set current date for report month
 		window.global_session_currentDate = new Date();
 		window.global_session_CurrentHijriDate = new Array();
 		//get Hijri date from initial Gregorian date
@@ -1446,8 +1384,7 @@ async function init_app_report() {
 		window.global_session_CurrentHijriDate[1] = parseInt(new Date(window.global_session_currentDate.getFullYear(),
 			window.global_session_currentDate.getMonth(),
 			window.global_session_currentDate.getDate()).toLocaleDateString("en-us-u-ca-islamic", { year: "numeric" }));
-	})
-	
+    })	
 }
 function init_report(parameters) {
 	let encodedParams = new URLSearchParams(window.location.search);

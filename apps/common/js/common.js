@@ -15,6 +15,129 @@
 /*----------------------- */
 /* MISC                   */
 /*----------------------- */
+async function common_fetch_token(token_type, json_data,  username, password, callBack) {
+    let app_id;
+    let url;
+    if (window.global_admin==true)
+        app_id = window.global_main_app_id;
+    else
+        app_id = window.global_app_id;
+    if (token_type==0){
+        //data token
+        url = window.global_service_auth + 
+              '?app_user_id=' + window.global_user_account_id +
+              '&app_id=' + app_id + 
+              '&lang_code=' + window.global_lang_code;
+        username = window.global_app_rest_client_id;
+        password = window.global_app_rest_client_secret;
+    }
+    else{
+        //admin token
+        url = '/service/auth/admin' + 
+              '?app_id=' + app_id + 
+              '&lang_code=' + window.global_lang_code;
+    }
+    await fetch(url,
+                {method: 'POST',
+                 headers: {
+                            'Authorization': 'Basic ' + window.btoa(username + ':' + password)
+                          },
+                 body: json_data
+    })
+    .then(function(response) {
+        status = response.status;
+        return response.text();
+    })
+    .then(function(result) {
+        switch (token_type){
+            case 0:{
+                //data token
+                window.global_rest_dt = JSON.parse(result).token_dt;
+                break;
+            }
+            case 1:{
+                //admin token
+                window.global_rest_admin_at = JSON.parse(result).token_at;
+                break;
+            }
+        }
+        callBack(null, result);
+    })
+}
+async function common_fetch(url_parameters, method, token_type, json_data, lang_code_override, callBack) {
+    let status;
+
+    let token;
+    switch (token_type){
+        case 0:{
+            //data token
+            token = window.global_rest_dt;
+            break;
+        }
+        case 1:{
+            //access token
+            token = window.global_rest_at;
+            break;
+        }
+        case 2:{
+            //admin token
+            token = window.global_rest_admin_at;
+            break;
+        }
+    }
+    if (json_data !='' && json_data !=null){
+        headers = {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + token
+                  };
+    }
+    else{
+        headers = {
+                    'Authorization': 'Bearer ' + token
+                  };
+    }
+    let fetch_parameters = {
+                                method: method,
+                                headers: headers,
+                                body: json_data
+                           };
+    let app_id;
+    if (window.global_app_id=='')
+        app_id = window.global_main_app_id;
+    else
+        app_id = window.global_app_id;                       
+    let lang_code;
+    if (lang_code_override !='')
+       lang_code = lang_code_override;
+    else
+       lang_code = window.global_lang_code;
+    let url = url_parameters +
+              '&app_id=' + app_id + 
+              '&lang_code=' + lang_code;
+    await fetch(url, 
+                fetch_parameters)
+    .then(function(response) {
+        status = response.status;
+        return response.text();
+    })
+    .then(function(result) {
+        switch (status){
+            case 200:{
+                callBack(null, result);
+                break;
+            }
+            case 401:{
+                eval(`(function (){${window.global_exception_app_function}()}());`);
+                break;
+            }
+            case 500:{
+                show_message('EXCEPTION', null,null, result, app_id);
+                callBack(result, null);
+                break;
+            }
+        }
+    })
+}
 function toBase64(str) {
     return window.btoa(unescape(encodeURIComponent(str)));
 }	
@@ -23,22 +146,11 @@ function fromBase64(str) {
 }
 function common_translate_ui(lang_code){
     let json;
-    let status;
-    let url = `${window.global_rest_url_base}${window.global_rest_app_object}${lang_code}` +
-                  `?app_id=${window.global_main_app_id}` + 
-                  `&lang_code=${lang_code}`;
-    fetch(url, {
-        method: 'GET',
-        headers: {
-            'Authorization': 'Bearer ' + window.global_rest_dt,
-        }
-    })
-    .then(function(response) {
-        status = response.status;
-        return response.text();
-    })
-    .then(function(result) {
-        if (status == 200) {
+    common_fetch(`${window.global_rest_url_base}${window.global_rest_app_object}${lang_code}?`, 
+                 'GET', 0, null, null, (err, result) =>{
+        if (err)
+            null;
+        else{
             json = JSON.parse(result);
             for (let i = 0; i < json.data.length; i++){
                 //app 0 placeholder text
@@ -431,28 +543,15 @@ function show_message(message_type, code, function_event, message_text='', app_i
     //INFO, ERROR, CONFIRM, EXCEPTION
     switch (message_type){
         case 'ERROR':{
-            fetch(window.global_rest_url_base + window.global_rest_message_translation + code + 
-                '?app_id=' + app_id +
-                '&lang_code=' + window.global_lang_code, 
-            {
-                method: 'GET',
-                headers: {
-                    'Authorization': 'Bearer ' + window.global_rest_dt
-                }
-            })
-            .then(function(response) {
-                return response.text();
-            })
-            .then(function(response) {
+            common_fetch(window.global_rest_url_base + window.global_rest_message_translation + code + '?', 
+                         'GET', 0, null, null, (err, result) =>{
                 confirm_question.style.display = hide;
                 button_cancel.style.display = hide;
                 message_title.style.display = show;
-                message_title.innerHTML = JSON.parse(response).data.text;
+                message_title.innerHTML = JSON.parse(result).data.text;
                 button_close.addEventListener('click', function_close, false);
                 dialogue.style.visibility = 'visible';
                 button_close.focus();
-            }).catch(function(error) {
-                show_message('EXCEPTION', null,null, error, app_id);
             })
             break;
         }
@@ -797,28 +896,13 @@ function reconnect(){
     setTimeout(connectOnline, 5000);
 }
 function updateOnlineStatus(){
-    let status;
-    fetch(`/service/broadcast/update_connected?app_id=${window.global_app_id}`+ 
-          `&client_id=${window.global_clientId}`+
-          `&user_account_id=${window.global_user_account_id}` + 
-          `&identity_provider_id=${window.global_user_identity_provider_id}`,
-    {method: 'PUT',
-        headers: {
-            'Authorization': 'Bearer ' + window.global_rest_dt,
-        }
+    common_fetch(`/service/broadcast/update_connected`+ 
+                 `?client_id=${window.global_clientId}`+
+                 `&user_account_id=${window.global_user_account_id}` + 
+                 `&identity_provider_id=${window.global_user_identity_provider_id}`, 
+                 'PUT', 0, null, null, (err, result) =>{
+        null;
     })
-    .then(function(response) {
-        status = response.status;
-        return response.text();
-    })
-    .then(function(result) {
-        if (status == 200){
-            null;
-        }
-        else{
-            exception(status, result);
-        }
-    });
 }
 function connectOnline(updateOnline=false){
     window.global_clientId = Date.now();
@@ -838,85 +922,47 @@ function connectOnline(updateOnline=false){
     }
 }
 function checkOnline(div_icon_online, user_account_id){
-    fetch(`/service/broadcast/checkconnected/${user_account_id}`,
-    {method: 'GET',
-        headers: {
-            'Authorization': 'Bearer ' + window.global_rest_dt,
-        }
-    })
-    .then(function(response) {
-        status = response.status;
-        return response.text();
-    })
-    .then(function(result) {
+    common_fetch(`/service/broadcast/checkconnected/${user_account_id}?`, 
+                 'GET', 0, null, null, (err, result) =>{
         if (JSON.parse(result).online == 1)
             document.getElementById(div_icon_online).className = 'online';
         else
             document.getElementById(div_icon_online).className= 'offline';
-    });
-    
+    })
 }
 /*----------------------- */
 /* GPS                    */
 /*----------------------- */
 async function get_place_from_gps(item, latitude, longitude) {
-    let status;
-    await fetch(window.global_service_geolocation + window.global_service_geolocation_gps_place + 
-                '?app_id= ' + window.global_app_id +
-                '&app_user_id=' + window.global_user_account_id +
-                '&latitude=' + latitude +
-                '&longitude=' + longitude +
-                '&lang_code=' + window.global_lang_code, {
-        method: 'GET',
-        headers: {
-            'Authorization': 'Bearer ' + window.global_rest_dt,
-        }
-    })
-    .then(function(response) {
-        status = response.status;
-        return response.text();
-    })
-    .then(function(result) {
-        if (status === 200) {
+    await common_fetch(window.global_service_geolocation + window.global_service_geolocation_gps_place + 
+                       '?app_user_id=' + window.global_user_account_id +
+                       '&latitude=' + latitude +
+                       '&longitude=' + longitude, 
+                       'GET', 0, null, null, (err, result) =>{
+        if (err)
+            null;
+        else{
             let json = JSON.parse(result);
             item.value = json.geoplugin_place + ', ' +
-                json.geoplugin_region + ', ' +
-                json.geoplugin_countryCode;
-        } else {
-            exception(status, result);
+                         json.geoplugin_region + ', ' +
+                         json.geoplugin_countryCode;
         }
     })
 }
 async function get_gps_from_ip() {
-    let status;
-    let app_id;
-    if (window.global_app_id != '')
-        app_id = window.global_app_id
-    else
-        app_id = window.global_main_app_id
-    await fetch(window.global_service_geolocation + window.global_service_geolocation_gps_ip + 
-                '?app_id=' + app_id + 
-                '&app_user_id=' +  window.global_user_account_id +
-                '&lang_code=' + window.global_lang_code, {
-        method: 'GET',
-        headers: {
-            'Authorization': 'Bearer ' + window.global_rest_dt,
-        }
-    })
-    .then(function(response) {
-        status = response.status;
-        return response.text();
-    })
-    .then(function(result) {
-        if (status === 200) {
+
+    await common_fetch(window.global_service_geolocation + window.global_service_geolocation_gps_ip + 
+                       '?app_user_id=' +  window.global_user_account_id, 
+                       'GET', 0, null, null, (err, result) =>{
+        if (err)
+            null;
+        else{
             let json = JSON.parse(result);
             window.global_client_latitude  = json.geoplugin_latitude;
             window.global_client_longitude = json.geoplugin_longitude;
             window.global_client_place     = json.geoplugin_city + ', ' +
                                                 json.geoplugin_regionName + ', ' +
                                                 json.geoplugin_countryName;
-        } else {
-            exception(status, result);
         }
     })
 }
@@ -924,22 +970,12 @@ async function get_gps_from_ip() {
 /* COUNTRY & CITIES       */
 /*----------------------- */
 async function get_cities(countrycode, callBack){
-    let status;
-    await fetch(window.global_service_worldcities + '/' + countrycode +
-                '?app_id=' + window.global_app_id +
-                '&app_user_id=' + window.global_user_account_id +
-                '&lang_code=' + window.global_lang_code, {
-            method: 'GET',
-            headers: {
-                'Authorization': 'Bearer ' + window.global_rest_dt,
-            }
-    })
-    .then(function(response) {
-        status = response.status;
-        return response.text();
-    })
-    .then(function(result) {
-        if (status === 200) {
+    await common_fetch(window.global_service_worldcities + '/' + countrycode +
+                       '?app_user_id=' + window.global_user_account_id, 
+                       'GET', 0, null, null, (err, result) =>{
+        if (err)
+            callBack(err, null);
+        else{
             let json = JSON.parse(result);
             json.sort(function(a, b) {
                 let x = a.admin_name.toLowerCase() + a.city.toLowerCase();
@@ -980,10 +1016,6 @@ async function get_cities(countrycode, callBack){
                 </option>`;
             }
             callBack(null, `${cities} </optgroup>`);
-        }
-        else {
-            exception(status, result);
-            callBack(result, null);
         }
     })
 }
@@ -1026,7 +1058,6 @@ function show_profile_click_events(item, timezone, click_function){
     }));
 }
 function profile_top(statschoice, timezone, app_rest_url = null, click_function=null) {
-    let status;
     let url;
     document.getElementById('dialogue_profile').style.visibility = 'visible';
     document.getElementById('profile_info').style.display = 'none';
@@ -1041,58 +1072,44 @@ function profile_top(statschoice, timezone, app_rest_url = null, click_function=
         url = window.global_rest_url_base + app_rest_url;
     }
     //TOP
-    fetch(url + statschoice + 
-            '?app_id=' + window.global_app_id +
-            '&lang_code=' + window.global_lang_code, 
-        {
-            method: 'GET',
-            headers: {
-                'Authorization': 'Bearer ' + window.global_rest_dt
+    common_fetch(url + statschoice + '?', 
+                 'GET', 0, null, null, (err, result) =>{
+        if (err)
+            null;
+        else{
+            json = JSON.parse(result);
+            let profile_top_list = document.getElementById('profile_top_list');
+            profile_top_list.innerHTML = '';
+            let html ='';
+            let image='';
+            let name='';
+            for (i = 0; i < json.count; i++) {
+                image = list_image_format_src(json.items[i].avatar ?? json.items[i].provider_image)
+                name = json.items[i].username;
+                html +=
+                `<div class='profile_top_list_row'>
+                    <div class='profile_top_list_col'>
+                        <div class='profile_top_list_user_account_id'>${json.items[i].id}</div>
+                    </div>
+                    <div class='profile_top_list_col'>
+                        <img class='profile_top_list_avatar' ${image}>
+                    </div>
+                    <div class='profile_top_list_col'>
+                        <div class='profile_top_list_username'>
+                            <a href='#'>${name}</a>
+                        </div>
+                    </div>
+                    <div class='profile_top_list_col'>
+                        <div class='profile_top_list_count'>${json.items[i].count}</div>
+                    </div>
+                </div>`;
             }
-        })
-        .then(function(response) {
-            status = response.status;
-            return response.text();
-        })
-        .then(function(response) {
-            if (status == 200) {
-                json = JSON.parse(response);
-                let profile_top_list = document.getElementById('profile_top_list');
-                profile_top_list.innerHTML = '';
-                let html ='';
-                let image='';
-                let name='';
-                for (i = 0; i < json.count; i++) {
-                    image = list_image_format_src(json.items[i].avatar ?? json.items[i].provider_image)
-                    name = json.items[i].username;
-                    html +=
-                    `<div class='profile_top_list_row'>
-                        <div class='profile_top_list_col'>
-                            <div class='profile_top_list_user_account_id'>${json.items[i].id}</div>
-                        </div>
-                        <div class='profile_top_list_col'>
-                            <img class='profile_top_list_avatar' ${image}>
-                        </div>
-                        <div class='profile_top_list_col'>
-                            <div class='profile_top_list_username'>
-                                <a href='#'>${name}</a>
-                            </div>
-                        </div>
-                        <div class='profile_top_list_col'>
-                            <div class='profile_top_list_count'>${json.items[i].count}</div>
-                        </div>
-                    </div>`;
-                }
-                profile_top_list.innerHTML = html;
-                show_profile_click_events('.profile_top_list_username', timezone, click_function);
-            }
-        })
-        .catch(function(error) {
-            show_message('EXCEPTION', null,null, error, window.global_app_id);
-        });
+            profile_top_list.innerHTML = html;
+            show_profile_click_events('.profile_top_list_username', timezone, click_function);
+        }
+    })
 }
 function profile_detail(detailchoice, timezone, rest_url_app, fetch_detail, header_app, click_function) {
-    let status;
     let url;
     if (detailchoice == 1 || detailchoice == 2 || detailchoice == 3 || detailchoice == 4){
         /*detailchoice 1,2,3, 4: user_account*/
@@ -1179,23 +1196,13 @@ function profile_detail(detailchoice, timezone, rest_url_app, fetch_detail, head
                     break;
                 }
         }
-        if (fetch_detail)
-        {
-            fetch(url + document.getElementById('profile_id').innerHTML +
-            '?app_id=' + window.global_app_id +
-            '&lang_code=' + window.global_lang_code +
-            '&detailchoice=' + detailchoice, {
-            method: 'GET',
-            headers: {
-                'Authorization': 'Bearer ' + window.global_rest_at
-            }
-            })
-            .then(function(response) {
-                status = response.status;
-                return response.text();
-            })
-            .then(function(result) {
-                if (status == 200) {
+        if (fetch_detail){
+            common_fetch(url + document.getElementById('profile_id').innerHTML +
+                        '?detailchoice=' + detailchoice, 
+                         'GET', 1, null, null, (err, result) =>{
+                if (err)
+                    null;
+                else{
                     json = JSON.parse(result);
                     let profile_detail_list = document.getElementById('profile_detail_list');
                     profile_detail_list.innerHTML = '';
@@ -1277,13 +1284,8 @@ function profile_detail(detailchoice, timezone, rest_url_app, fetch_detail, head
                     }
                     else
                         show_profile_click_events('.profile_detail_list_username', timezone, click_function);
-                } else {
-                    exception(status, result);
                 }
             })
-            .catch(function(error) {
-                show_message('EXCEPTION', null,null, error, window.global_app_id);
-            });
         }
     } else
         show_common_dialogue('LOGIN');
@@ -1296,7 +1298,6 @@ function search_profile(timezone, click_function) {
     if (document.getElementById('profile_search_input').value=='')
         document.getElementById('profile_search_input').classList.add('input_error');
     else{
-        let status;
         let searched_username = document.getElementById('profile_search_input').value;
         let url;
         let token;
@@ -1306,7 +1307,7 @@ function search_profile(timezone, click_function) {
         if (window.global_user_account_id!=''){
             //search using access token with logged in user_account_id
             url = window.global_rest_url_base + window.global_rest_user_account_profile_searchA;
-            token = window.global_rest_at;
+            token = 1;
             json_data = `{
                         "user_account_id":${window.global_user_account_id},
                         "client_latitude": "${window.global_client_latitude}",
@@ -1316,61 +1317,46 @@ function search_profile(timezone, click_function) {
         else{
             //search using data token without logged in user_account_id
             url = window.global_rest_url_base + window.global_rest_user_account_profile_searchD;
-            token = window.global_rest_dt;
+            token = 0;
             json_data = `{
                         "client_latitude": "${window.global_client_latitude}",
                         "client_longitude": "${window.global_client_longitude}"
                         }`;
         }
-        fetch(url + searched_username +
-              '?app_id=' + window.global_app_id +
-              '&lang_code=' + window.global_lang_code, 
-              {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + token
-              },
-              body: json_data
-            })
-            .then(function(response) {
-                status = response.status;
-                return response.text();
-            })
-            .then(function(response) {
-                if (status == 200) {
-                    json = JSON.parse(response);
-                    if (json.count > 0)
-                        document.getElementById('profile_search_list').style.display = "inline-block";
-                    let html = '';
-                    let image= '';
-                    let name = '';
-                    profile_search_list.style.height = (json.count * 24).toString() + 'px';
-                    for (i = 0; i < json.count; i++) {
-                        image = list_image_format_src(json.items[i].avatar ?? json.items[i].provider_image)
-                        name = json.items[i].username;
-                        html +=
-                        `<div class='profile_search_list_row'>
-                            <div class='profile_search_list_col'>
-                                <div class='profile_search_list_user_account_id'>${json.items[i].id}</div>
+        common_fetch(url + searched_username + '?', 
+                     'POST', token, json_data, null, (err, result) =>{
+            if (err)
+                null;
+            else{
+                json = JSON.parse(result);
+                if (json.count > 0)
+                    document.getElementById('profile_search_list').style.display = "inline-block";
+                let html = '';
+                let image= '';
+                let name = '';
+                profile_search_list.style.height = (json.count * 24).toString() + 'px';
+                for (i = 0; i < json.count; i++) {
+                    image = list_image_format_src(json.items[i].avatar ?? json.items[i].provider_image)
+                    name = json.items[i].username;
+                    html +=
+                    `<div class='profile_search_list_row'>
+                        <div class='profile_search_list_col'>
+                            <div class='profile_search_list_user_account_id'>${json.items[i].id}</div>
+                        </div>
+                        <div class='profile_search_list_col'>
+                            <img class='profile_search_list_avatar' ${image}>
+                        </div>
+                        <div class='profile_search_list_col'>
+                            <div class='profile_search_list_username'>
+                                <a href='#'>${name}</a>
                             </div>
-                            <div class='profile_search_list_col'>
-                                <img class='profile_search_list_avatar' ${image}>
-                            </div>
-                            <div class='profile_search_list_col'>
-                                <div class='profile_search_list_username'>
-                                    <a href='#'>${name}</a>
-                                </div>
-                            </div>
-                        </div>`;
-                    }
-                    profile_search_list.innerHTML = html;
-                    show_profile_click_events('.profile_search_list_username', timezone, click_function);
+                        </div>
+                    </div>`;
                 }
-            })
-            .catch(function(error) {
-                show_message('EXCEPTION', null,null, error, window.global_app_id);
-            });
+                profile_search_list.innerHTML = html;
+                show_profile_click_events('.profile_search_list_username', timezone, click_function);
+            }
+        })
     }
 }
 /*
@@ -1381,16 +1367,13 @@ profile_show(userid, null) 	 from choosing profile in search_profile
 profile_show(null, username) from init startup when user enters url
 */
 async function profile_show(user_account_id_other = null, username = null, timezone, callBack) {
-    let status;
     let json;
     let user_account_id_search;
     let url;
 
     show_common_dialogue('PROFILE');
     if (user_account_id_other == null && window.global_user_account_id == '' && username == null) {
-        
         return callBack(null,null);
-
     } else {
         if (user_account_id_other !== null) {
             user_account_id_search = user_account_id_other;
@@ -1409,82 +1392,66 @@ async function profile_show(user_account_id_other = null, username = null, timez
             "client_latitude": "${window.global_client_latitude}",
             "client_longitude": "${window.global_client_longitude}"
             }`;
-        fetch(url + 
-                '?app_id=' + window.global_app_id + 
-                '&lang_code=' + window.global_lang_code +
-                '&id=' + window.global_user_account_id, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + window.global_rest_dt
-                },
-                body: json_data
-            })
-            .then(function(response) {
-                status = response.status;
-                return response.text();
-            })
-            .then(function(response) {
-                if (status == 200) {
-                    json = JSON.parse(response);
-                    document.getElementById('profile_info').style.display = "block";
-                    document.getElementById('profile_main').style.display = "block";
-                    document.getElementById('profile_id').innerHTML = json.id;
-                    set_avatar(json.avatar ?? json.provider_image, document.getElementById('profile_avatar')); 
-                    //show local username
-                    document.getElementById('profile_username').innerHTML = json.username;
 
-                    document.getElementById('profile_bio').innerHTML = get_null_or_value(json.bio);
-                    document.getElementById('profile_joined_date').innerHTML = format_json_date(json.date_created, true, timezone);
-                    document.getElementById("profile_qr").innerHTML = '';
-                    create_qr('profile_qr', getHostname() + '/' + json.username);
-                    //User account followed and liked
-                    if (json.followed == 1) {
-                        //followed
-                        document.getElementById('profile_follow').children[0].style.display = 'none';
-                        document.getElementById('profile_follow').children[1].style.display = 'block';
-                    } else {
-                        //not followed
-                        document.getElementById('profile_follow').children[0].style.display = 'block';
-                        document.getElementById('profile_follow').children[1].style.display = 'none';
-                    }
-                    if (json.liked == 1) {
-                        //liked
-                        document.getElementById('profile_like').children[0].style.display = 'none';
-                        document.getElementById('profile_like').children[1].style.display = 'block';
-                    } else {
-                        //not liked
-                        document.getElementById('profile_like').children[0].style.display = 'block';
-                        document.getElementById('profile_like').children[1].style.display = 'none';
-                    } 
-                    //if private then hide info, sql decides if private, no need to check here if same user
-                    if (json.private==1) {
-                        //private
-                        document.getElementById('profile_public').style.display = "none";
-                        document.getElementById('profile_private').style.display = "block";
-                    } else {
-                        //public
-                        document.getElementById('profile_public').style.display = "block";
-                        document.getElementById('profile_private').style.display = "none";
-                        document.getElementById('profile_info_view_count').innerHTML = json.count_views;
-                        document.getElementById('profile_info_following_count').innerHTML = json.count_following;
-                        document.getElementById('profile_info_followers_count').innerHTML = json.count_followed;
-                        document.getElementById('profile_info_likes_count').innerHTML = json.count_likes;
-                        document.getElementById('profile_info_liked_count').innerHTML = json.count_liked;
-                    }    
-                    if (window.global_user_account_id =='')
-                        setTimeout(function(){show_common_dialogue('LOGIN')}, 2000);
-                    else
-                        checkOnline('profile_avatar_online_status', json.id);
-                    return callBack(null,{profile_id: json.id,
-                                          private: json.private});                    
-                } else
-                    return callBack(status,null);
-            })
-            .catch(function(error) {
-                show_message('EXCEPTION', null,null, error, window.global_appp_id);
-                return callBack(error,null);
-            });
+        common_fetch(url + '?id=' + window.global_user_account_id, 
+                     'POST', 0, json_data, null, (err, result) =>{
+            if (err)
+                return callBack(err,null);
+            else{
+                json = JSON.parse(result);
+                document.getElementById('profile_info').style.display = "block";
+                document.getElementById('profile_main').style.display = "block";
+                document.getElementById('profile_id').innerHTML = json.id;
+                set_avatar(json.avatar ?? json.provider_image, document.getElementById('profile_avatar')); 
+                //show local username
+                document.getElementById('profile_username').innerHTML = json.username;
+
+                document.getElementById('profile_bio').innerHTML = get_null_or_value(json.bio);
+                document.getElementById('profile_joined_date').innerHTML = format_json_date(json.date_created, true, timezone);
+                document.getElementById("profile_qr").innerHTML = '';
+                create_qr('profile_qr', getHostname() + '/' + json.username);
+                //User account followed and liked
+                if (json.followed == 1) {
+                    //followed
+                    document.getElementById('profile_follow').children[0].style.display = 'none';
+                    document.getElementById('profile_follow').children[1].style.display = 'block';
+                } else {
+                    //not followed
+                    document.getElementById('profile_follow').children[0].style.display = 'block';
+                    document.getElementById('profile_follow').children[1].style.display = 'none';
+                }
+                if (json.liked == 1) {
+                    //liked
+                    document.getElementById('profile_like').children[0].style.display = 'none';
+                    document.getElementById('profile_like').children[1].style.display = 'block';
+                } else {
+                    //not liked
+                    document.getElementById('profile_like').children[0].style.display = 'block';
+                    document.getElementById('profile_like').children[1].style.display = 'none';
+                } 
+                //if private then hide info, sql decides if private, no need to check here if same user
+                if (json.private==1) {
+                    //private
+                    document.getElementById('profile_public').style.display = "none";
+                    document.getElementById('profile_private').style.display = "block";
+                } else {
+                    //public
+                    document.getElementById('profile_public').style.display = "block";
+                    document.getElementById('profile_private').style.display = "none";
+                    document.getElementById('profile_info_view_count').innerHTML = json.count_views;
+                    document.getElementById('profile_info_following_count').innerHTML = json.count_following;
+                    document.getElementById('profile_info_followers_count').innerHTML = json.count_followed;
+                    document.getElementById('profile_info_likes_count').innerHTML = json.count_likes;
+                    document.getElementById('profile_info_liked_count').innerHTML = json.count_liked;
+                }    
+                if (window.global_user_account_id =='')
+                    setTimeout(function(){show_common_dialogue('LOGIN')}, 2000);
+                else
+                    checkOnline('profile_avatar_online_status', json.id);
+                return callBack(null,{profile_id: json.id,
+                                      private: json.private});   
+            }
+        })
     }
 }
 function profile_close(){
@@ -1501,24 +1468,11 @@ async function profile_update_stat(callBack){
     //get updated stat for given user
     //to avoid update in stat set searched by same user
     let url = window.global_rest_url_base + window.global_rest_user_account_profile_userid + profile_id.innerHTML;
-    let status;
-    fetch(url + 
-        '?app_id=' + window.global_app_id + 
-        '&lang_code=' + window.global_lang_code +
-        '&id=' + profile_id.innerHTML, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + window.global_rest_dt
-        },
-        body: json_data
-    })
-    .then(function(response) {
-        status = response.status;
-        return response.text();
-    })
-    .then(function(result) {
-        if (status == 200) {
+    common_fetch(url + '?id=' + profile_id.innerHTML, 
+                 'POST', 0, json_data, null, (err, result) =>{
+        if (err)
+            return callBack(err,null);
+        else{
             json = JSON.parse(result);
             document.getElementById('profile_info_view_count').innerHTML = json.count_views;
             document.getElementById('profile_info_following_count').innerHTML = json.count_following;
@@ -1527,8 +1481,6 @@ async function profile_update_stat(callBack){
             document.getElementById('profile_info_liked_count').innerHTML = json.count_liked;
             return callBack(null, {id : json.id})
         }
-        else
-            return callBack(result, null);
     })
 }
 function search_input(event, timezone, event_function){
@@ -1624,7 +1576,6 @@ async function user_login(username, password, callBack) {
     
     let json;
     let json_data;
-    let status;
 
     if (check_input(username) == false || check_input(password)== false)
         return callBack('ERROR', null);
@@ -1648,21 +1599,11 @@ async function user_login(username, password, callBack) {
                  }`;
 
     //get user with username and password from REST API
-    fetch(window.global_rest_url_base + window.global_rest_user_account_login + 
-            '?lang_code=' + window.global_lang_code, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + window.global_rest_dt
-        },
-        body: json_data
-    })
-    .then(function(response) {
-        status = response.status;
-        return response.text();
-    })
-    .then(function(result) {
-        if (status == 200) {
+    common_fetch(window.global_rest_url_base + window.global_rest_user_account_login + '?', 
+                 'POST', 0, json_data, null, (err, result) =>{
+        if (err)
+            return callBack(err, null);
+        else{
             json = JSON.parse(result);
             window.global_user_account_id = json.items[0].id;
             window.global_user_identity_provider_id = '';
@@ -1681,16 +1622,8 @@ async function user_login(username, password, callBack) {
                     bio: json.items[0].bio,
                     avatar: json.items[0].avatar})
             }
-        } else {
-            exception(status, result);
-            return callBack(result, null);
         }
-    })
-    .catch(function(error) {
-        show_message('EXCEPTION', null,null, error, window.global_app_id);
-        return callBack(error, null);
-    });
-    
+    })    
 }
 async function user_logoff(){
     //remove access token
@@ -1699,7 +1632,7 @@ async function user_logoff(){
     updateOnlineStatus();
     document.getElementById('profile_avatar_online_status').className='';
     //get new data token to avoid endless loop och invalid token
-    get_data_token().then(function(){
+    await common_fetch_token(0, null,  null, null, (err, result)=>{
         dialogue_user_edit_clear();
         dialogue_verify_clear();
         dialogue_new_password_clear();
@@ -1712,83 +1645,65 @@ async function user_logoff(){
 }
 async function user_edit(timezone, callBack) {
     let json;
-
-    let status;
     //get user from REST API
-    fetch(window.global_rest_url_base + window.global_rest_user_account + window.global_user_account_id +
-            '?app_id=' + window.global_app_id +
-            '&lang_code=' + window.global_lang_code, {
-            method: 'GET',
-            headers: {
-                'Authorization': 'Bearer ' + window.global_rest_at
-            }
-        })
-        .then(function(response) {
-            status = response.status;
-            return response.text();
-        })
-        .then(function(result) {
-            if (status == 200) {
-                json = JSON.parse(result);
-                if (window.global_user_account_id == json.id) {
-                    document.getElementById('user_edit_local').style.display = 'none';
+    common_fetch(window.global_rest_url_base + window.global_rest_user_account + window.global_user_account_id + '?', 
+                 'GET', 1, null, null, (err, result) =>{
+        if (err)
+            return callBack(err, null);
+        else{
+            json = JSON.parse(result);
+            if (window.global_user_account_id == json.id) {
+                document.getElementById('user_edit_local').style.display = 'none';
+                document.getElementById('user_edit_provider').style.display = 'none';
+                document.getElementById('dialogue_user_edit').style.visibility = "visible";
+
+                document.getElementById('user_edit_checkbox_profile_private').checked = number_to_boolean(json.private);
+                document.getElementById('user_edit_input_username').value = json.username;
+                document.getElementById('user_edit_input_bio').value = get_null_or_value(json.bio);
+
+                if (json.provider_id == null) {
+                    document.getElementById('user_edit_local').style.display = 'block';
                     document.getElementById('user_edit_provider').style.display = 'none';
-                    document.getElementById('dialogue_user_edit').style.visibility = "visible";
 
-                    document.getElementById('user_edit_checkbox_profile_private').checked = number_to_boolean(json.private);
-                    document.getElementById('user_edit_input_username').value = json.username;
-                    document.getElementById('user_edit_input_bio').value = get_null_or_value(json.bio);
+                    //display fetched avatar editable
+                    document.getElementById('user_edit_avatar').style.display = 'block';
+                    set_avatar(json.avatar, document.getElementById('user_edit_avatar_img')); 
+                    document.getElementById('user_edit_input_email').innerHTML = json.email;
+                    document.getElementById('user_edit_input_new_email').value = json.email_unverified;
+                    document.getElementById('user_edit_input_password').value = '',
+                        document.getElementById('user_edit_input_password_confirm').value = '',
+                        document.getElementById('user_edit_input_new_password').value = '';
+                    document.getElementById('user_edit_input_new_password_confirm').value = '';
 
-                    if (json.provider_id == null) {
-                        document.getElementById('user_edit_local').style.display = 'block';
-                        document.getElementById('user_edit_provider').style.display = 'none';
-
-                        //display fetched avatar editable
-                        document.getElementById('user_edit_avatar').style.display = 'block';
-                        set_avatar(json.avatar, document.getElementById('user_edit_avatar_img')); 
-                        document.getElementById('user_edit_input_email').innerHTML = json.email;
-                        document.getElementById('user_edit_input_new_email').value = json.email_unverified;
-                        document.getElementById('user_edit_input_password').value = '',
-                            document.getElementById('user_edit_input_password_confirm').value = '',
-                            document.getElementById('user_edit_input_new_password').value = '';
-                        document.getElementById('user_edit_input_new_password_confirm').value = '';
-
-                        document.getElementById('user_edit_input_password_reminder').value = json.password_reminder;
-                    } else{
-                            document.getElementById('user_edit_provider').style.display = 'block';
-                            if (json.identity_provider_id==1)
-                                document.getElementById('user_edit_provider_logo').innerHTML = window.global_button_default_icon_provider1;
-                            if (json.identity_provider_id==2)
-                                document.getElementById('user_edit_provider_logo').innerHTML = window.global_button_default_icon_provider2;
-                            document.getElementById('user_edit_local').style.display = 'none';
-                            document.getElementById('user_edit_label_provider_id_data').innerHTML = json.provider_id;
-                            document.getElementById('user_edit_label_provider_name_data').innerHTML = json.provider_first_name + ' ' + json.provider_last_name;
-                            document.getElementById('user_edit_label_provider_email_data').innerHTML = json.provider_email;
-                            document.getElementById('user_edit_label_provider_image_url_data').innerHTML = json.provider_image_url;
-                            document.getElementById('user_edit_avatar').style.display = 'none';
-                            set_avatar(json.provider_image, document.getElementById('user_edit_avatar_img')); 
-                        } 
-                    document.getElementById('user_edit_label_data_last_logontime').innerHTML = format_json_date(json.last_logontime, null, timezone);
-                    document.getElementById('user_edit_label_data_account_created').innerHTML = format_json_date(json.date_created, null, timezone);
-                    document.getElementById('user_edit_label_data_account_modified').innerHTML = format_json_date(json.date_modified, null, timezone);
-                    return callBack(null, {id: json.id,
-                                           avatar:          json.avatar,
-                                           provider_image: json.provider_image
-                                            });
-                } else {
-                    //User not found
-                    show_message('ERROR', 20305, null, null, window.global_main_app_id);
-                    return callBack('ERROR', null);
-                }
+                    document.getElementById('user_edit_input_password_reminder').value = json.password_reminder;
+                } else{
+                        document.getElementById('user_edit_provider').style.display = 'block';
+                        if (json.identity_provider_id==1)
+                            document.getElementById('user_edit_provider_logo').innerHTML = window.global_button_default_icon_provider1;
+                        if (json.identity_provider_id==2)
+                            document.getElementById('user_edit_provider_logo').innerHTML = window.global_button_default_icon_provider2;
+                        document.getElementById('user_edit_local').style.display = 'none';
+                        document.getElementById('user_edit_label_provider_id_data').innerHTML = json.provider_id;
+                        document.getElementById('user_edit_label_provider_name_data').innerHTML = json.provider_first_name + ' ' + json.provider_last_name;
+                        document.getElementById('user_edit_label_provider_email_data').innerHTML = json.provider_email;
+                        document.getElementById('user_edit_label_provider_image_url_data').innerHTML = json.provider_image_url;
+                        document.getElementById('user_edit_avatar').style.display = 'none';
+                        set_avatar(json.provider_image, document.getElementById('user_edit_avatar_img')); 
+                    } 
+                document.getElementById('user_edit_label_data_last_logontime').innerHTML = format_json_date(json.last_logontime, null, timezone);
+                document.getElementById('user_edit_label_data_account_created').innerHTML = format_json_date(json.date_created, null, timezone);
+                document.getElementById('user_edit_label_data_account_modified').innerHTML = format_json_date(json.date_modified, null, timezone);
+                return callBack(null, {id: json.id,
+                                       avatar:          json.avatar,
+                                       provider_image: json.provider_image
+                                        });
             } else {
-                exception(status, result);
-                return callBack(result, null);
+                //User not found
+                show_message('ERROR', 20305, null, null, window.global_main_app_id);
+                return callBack('ERROR', null);
             }
-        })
-        .catch(function(error) {
-            show_message('EXCEPTION', null,null, error, window.global_app_id);
-            return callBack(error, null);
-        });
+        }
+    })
 }
 async function user_update(callBack) {
     let username = document.getElementById('user_edit_input_username').value;
@@ -1869,45 +1784,27 @@ async function user_update(callBack) {
     }
     let old_button = document.getElementById('user_edit_btn_user_update').innerHTML;
     let json;
-    let status;
     document.getElementById('user_edit_btn_user_update').innerHTML = window.global_button_spinner;
     //update user using REST API
-    fetch(url + '?app_id=' + window.global_app_id +
-                '&lang_code=' + window.global_lang_code, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + window.global_rest_at
-            },
-            body: json_data
-        })
-        .then(function(response) {
-            status = response.status;
-            return response.text();
-        })
-        .then(function(result) {
-            document.getElementById('user_edit_btn_user_update').innerHTML = old_button;
-            if (status == 200) {
-                json = JSON.parse(result);
-                if (json.sent_change_email == 1){
-                    let function_cancel_event = function() { document.getElementById('dialogue_user_verify').style.visibility='hidden';};
-                    show_common_dialogue('VERIFY', 'NEW_EMAIL', new_email, window.global_button_default_icon_cancel, function_cancel_event);
-                }
-                else
-                    dialogue_user_edit_clear();
-                return callBack(null, {username: username, 
-                                       avatar: avatar,
-                                       bio: bio});
-            } else {
-                exception(status, result);
-                return callBack(result, null);
-            }
-        })
-        .catch(function(error) {
-            document.getElementById('user_edit_btn_user_update').innerHTML = old_button;
-            show_message('EXCEPTION', null,null, error, window.global_app_id);
+    common_fetch(url + '?', 
+                 'PUT', 1, json_data, null, (err, result) =>{
+        document.getElementById('user_edit_btn_user_update').innerHTML = old_button;
+        if (err){    
             return callBack(error, null);
-        });
+        }
+        else{
+            json = JSON.parse(result);
+            if (json.sent_change_email == 1){
+                let function_cancel_event = function() { document.getElementById('dialogue_user_verify').style.visibility='hidden';};
+                show_common_dialogue('VERIFY', 'NEW_EMAIL', new_email, window.global_button_default_icon_cancel, function_cancel_event);
+            }
+            else
+                dialogue_user_edit_clear();
+            return callBack(null, {username: username, 
+                                    avatar: avatar,
+                                    bio: bio});
+        }
+    })
 }
 function user_signup() {
     let username = document.getElementById('signup_username').value;
@@ -1931,7 +1828,6 @@ function user_signup() {
                         "active":0 ,
                         ${get_uservariables()}
                      }`;
-    let status;
     if (username == '') {
         //"Please enter username"
         show_message('ERROR', 20303, null, null, window.global_main_app_id);
@@ -1950,40 +1846,23 @@ function user_signup() {
 
     let old_button = document.getElementById('signup_button').innerHTML;
     document.getElementById('signup_button').innerHTML = window.global_button_spinner;
-    fetch(window.global_rest_url_base + window.global_rest_user_account_signup +
-            '?app_id=' + window.global_app_id +
-            '&lang_code=' + window.global_lang_code, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + window.global_rest_dt
-            },
-            body: json_data
-        })
-        .then(function(response) {
-            status = response.status;
-            return response.text();
-        })
-        .then(function(result) {
-            document.getElementById('signup_button').innerHTML = old_button;
-            if (status == 200) {
-                json = JSON.parse(result);
-                window.global_rest_at = json.accessToken;
-                window.global_user_account_id = json.id;
-                let function_cancel_event = function() { dialogue_verify_clear();eval(`(function (){${window.global_exception_app_function}()}());`);};
-                show_common_dialogue('VERIFY', 'SIGNUP', email, window.global_button_default_icon_logoff, function_cancel_event);
-            } else {
-                exception(status, result);
-            }
-        })
-        .catch(function(error) {
-            document.getElementById('signup_button').innerHTML = old_button;
-            show_message('EXCEPTION', null,null, error, window.global_app_id);
-        });
+    common_fetch(window.global_rest_url_base + window.global_rest_user_account_signup + '?', 
+                 'POST', 0, json_data, null, (err, result) =>{    
+        document.getElementById('signup_button').innerHTML = old_button;
+        if (err){    
+            null;
+        }
+        else{
+            json = JSON.parse(result);
+            window.global_rest_at = json.accessToken;
+            window.global_user_account_id = json.id;
+            let function_cancel_event = function() { dialogue_verify_clear();eval(`(function (){${window.global_exception_app_function}()}());`);};
+            show_common_dialogue('VERIFY', 'SIGNUP', email, window.global_button_default_icon_logoff, function_cancel_event);
+        }
+    })
 }
 async function user_verify_check_input(item, nextField, callBack) {
 
-    let status;
     let json;
     let json_data;
     let verification_type = parseInt(document.getElementById('user_verification_type').innerHTML);
@@ -2016,60 +1895,50 @@ async function user_verify_check_input(item, nextField, callBack) {
                           "verification_type": ${verification_type},
                           ${get_uservariables()}
                          }`;
-            fetch(window.global_rest_url_base + window.global_rest_user_account_activate + window.global_user_account_id +
-                    '?app_id=' + window.global_app_id + 
-                    '&lang_code=' + window.global_lang_code, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': 'Bearer ' + window.global_rest_dt
-                    },
-                    body: json_data
-                })
-                .then(function(response) {
-                    status = response.status;
-                    return response.text();
-                })
-                .then(function(result) {
-                    document.getElementById('user_verify_email').innerHTML = old_button;
-                    if (status == 200) {
-                        json = JSON.parse(result);
-                        if (json.items[0].affectedRows == 1) {
-                            switch (verification_type){
-                                case 1:{
-                                    //LOGIN
-                                    break;
-                                }
-                                case 2:{
-                                    //SIGNUP
-                                    //login with username and password from signup fields
-                                    document.getElementById('login_username').value =
-                                        document.getElementById('signup_username').value;
-                                    document.getElementById('login_password').value =
-                                        document.getElementById('signup_password').value;
-                                    break;
-                                }
-                                case 3:{
-                                    //FORGOT
-                                    window.global_rest_at	= json.accessToken;
-                                    //show dialogue new password
-                                    show_common_dialogue('NEW_PASSWORD', null, json.auth);
-                                    break;
-                                }
-                                case 4:{
-                                    //NEW EMAIL
-                                    break;
-                                }
+            common_fetch(window.global_rest_url_base + window.global_rest_user_account_activate + window.global_user_account_id + '?', 
+                         'PUT', 0, json_data, null, (err, result) =>{    
+                document.getElementById('user_verify_email').innerHTML = old_button;
+                if (err){    
+                    return callBack(err, null);
+                }
+                else{
+                    json = JSON.parse(result);
+                    if (json.items[0].affectedRows == 1) {
+                        switch (verification_type){
+                            case 1:{
+                                //LOGIN
+                                break;
                             }
-                            
-                            document.getElementById('dialogue_login').style.visibility = "hidden";
-                            
-                            dialogue_signup_clear();
-                            dialogue_forgot_clear();
-                            dialogue_verify_clear();
-                            dialogue_user_edit_clear();
-                            return callBack(null, {"actived": 1, 
-                                                   "verification_type" : verification_type});
+                            case 2:{
+                                //SIGNUP
+                                //login with username and password from signup fields
+                                document.getElementById('login_username').value =
+                                    document.getElementById('signup_username').value;
+                                document.getElementById('login_password').value =
+                                    document.getElementById('signup_password').value;
+                                break;
+                            }
+                            case 3:{
+                                //FORGOT
+                                window.global_rest_at	= json.accessToken;
+                                //show dialogue new password
+                                show_common_dialogue('NEW_PASSWORD', null, json.auth);
+                                break;
+                            }
+                            case 4:{
+                                //NEW EMAIL
+                                break;
+                            }
+                        }
+                        
+                        document.getElementById('dialogue_login').style.visibility = "hidden";
+                        
+                        dialogue_signup_clear();
+                        dialogue_forgot_clear();
+                        dialogue_verify_clear();
+                        dialogue_user_edit_clear();
+                        return callBack(null, {"actived": 1, 
+                                                "verification_type" : verification_type});
 
                         } else {
                             document.getElementById('user_verify_verification_char1').classList.add('input_error');
@@ -2082,16 +1951,8 @@ async function user_verify_check_input(item, nextField, callBack) {
                             show_message('ERROR', 20306, null, null, window.global_main_app_id);
                             return callBack('ERROR', null);
                         }
-                    } else {
-                        exception(status, result);
-                        return callBack(result, null);
-                    }
-                })
-                .catch(function(error) {
-                    document.getElementById('user_verify_email').innerHTML = old_button;
-                    show_message('EXCEPTION', null,null, error, window.global_app_id);
-                    return callBack(error, null);
-                });
+                }
+            })
         } else{
             //not last, next!
             document.getElementById(nextField).focus();
@@ -2105,7 +1966,6 @@ async function user_verify_check_input(item, nextField, callBack) {
 }
 async function user_delete(choice=null, user_local, function_delete_event, callBack ) {
     let password = document.getElementById('user_edit_input_password').value;
-    let status;
     switch (choice){
         case null:{
             if (user_local==true && password == '') {
@@ -2125,35 +1985,17 @@ async function user_delete(choice=null, user_local, function_delete_event, callB
             let old_button = document.getElementById('user_edit_btn_user_delete_account').innerHTML;
             document.getElementById('user_edit_btn_user_delete_account').innerHTML = window.global_button_spinner;
             let json_data = `{"password":"${password}"}`;
-            fetch(window.global_rest_url_base + window.global_rest_user_account + window.global_user_account_id + 
-                    '?app_id=' + window.global_app_id +
-                    '&lang_code=' + window.global_lang_code, 
-                {
-                    method: 'DELETE',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': 'Bearer ' + window.global_rest_at
-                    },
-                    body: json_data
-                })
-                .then(function(response) {
-                    status = response.status;
-                    return response.text();
-                })
-                .then(function(result) {
-                    document.getElementById('user_edit_btn_user_delete_account').innerHTML = old_button;
-                    if (status == 200)
-                        return callBack(null,{deleted: 1});
-                    else{
-                        exception(status, result);
-                        return callBack(result,null);
-                    }
-                })
-                .catch(function(error) {
-                    document.getElementById('user_edit_btn_user_delete_account').innerHTML = old_button;
-                    show_message('EXCEPTION', null,null, error, window.global_app_id);
-                    return callBack(error,null);
-                });
+
+            common_fetch(window.global_rest_url_base + window.global_rest_user_account + window.global_user_account_id + '?', 
+                         'DELETE', 1, json_data, null, (err, result) =>{    
+                document.getElementById('user_edit_btn_user_delete_account').innerHTML = old_button;
+                if (err){
+                    return callBack(err,null);
+                }
+                else{
+                    return callBack(null,{deleted: 1});
+                }
+            })
             break;
         }
         default:
@@ -2162,7 +2004,6 @@ async function user_delete(choice=null, user_local, function_delete_event, callB
 }
 function user_function(user_function, callBack) {
     let user_id_profile = document.getElementById('profile_id').innerHTML;
-    let status;
     let json_data;
     let method;
     let rest_path;
@@ -2192,68 +2033,48 @@ function user_function(user_function, callBack) {
         } else {
             method = 'DELETE';
         }
-        fetch(window.global_rest_url_base + rest_path + window.global_user_account_id +
-                '?app_id=' + window.global_app_id + 
-                '&lang_code=' + window.global_lang_code, {
-                method: method,
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + window.global_rest_at
-                },
-                body: json_data
-            })
-            .then(function(response) {
-                status = response.status;
-                return response.text();
-            })
-            .then(function(result) {
-                if (status == 200) {
-                    json = JSON.parse(result);
-                    switch (user_function) {
-                        case 'FOLLOW':
-                            {
-                                if (document.getElementById('profile_follow').children[0].style.display == 'block'){
-                                    //follow
-                                    document.getElementById('profile_follow').children[0].style.display = 'none';
-                                    document.getElementById('profile_follow').children[1].style.display = 'block';
-                                }
-                                else{
-                                    //unfollow
-                                    document.getElementById('profile_follow').children[0].style.display = 'block';
-                                    document.getElementById('profile_follow').children[1].style.display = 'none';
-                                }
-                                break;
+        common_fetch(window.global_rest_url_base + rest_path + window.global_user_account_id + '?', 
+                         method, 1, json_data, null, (err, result) =>{    
+            if (err)
+                return callBack(err, null);
+            else{
+                json = JSON.parse(result);
+                switch (user_function) {
+                    case 'FOLLOW':
+                        {
+                            if (document.getElementById('profile_follow').children[0].style.display == 'block'){
+                                //follow
+                                document.getElementById('profile_follow').children[0].style.display = 'none';
+                                document.getElementById('profile_follow').children[1].style.display = 'block';
                             }
-                        case 'LIKE':
-                            {
-                                if (document.getElementById('profile_like').children[0].style.display == 'block'){
-                                    //like
-                                    document.getElementById('profile_like').children[0].style.display = 'none';
-                                    document.getElementById('profile_like').children[1].style.display = 'block';
-                                }
-                                else{
-                                    //unlike
-                                    document.getElementById('profile_like').children[0].style.display = 'block';
-                                    document.getElementById('profile_like').children[1].style.display = 'none';
-                                }
-                                break;
+                            else{
+                                //unfollow
+                                document.getElementById('profile_follow').children[0].style.display = 'block';
+                                document.getElementById('profile_follow').children[1].style.display = 'none';
                             }
-                    }
-                    return callBack(null, {});
-                } else {
-                    exception(status, result);
-                    return callBack(result, null);
+                            break;
+                        }
+                    case 'LIKE':
+                        {
+                            if (document.getElementById('profile_like').children[0].style.display == 'block'){
+                                //like
+                                document.getElementById('profile_like').children[0].style.display = 'none';
+                                document.getElementById('profile_like').children[1].style.display = 'block';
+                            }
+                            else{
+                                //unlike
+                                document.getElementById('profile_like').children[0].style.display = 'block';
+                                document.getElementById('profile_like').children[1].style.display = 'none';
+                            }
+                            break;
+                        }
                 }
-            })
-            .catch(function(error) {
-                show_message('EXCEPTION', null,null, error, window.global_app_id);
-                return callBack(error, null);
-            });
+                return callBack(null, {});
+            }
+        })
     }
 }
-function user_account_app_delete(choice=null, user_account_id, app_id, function_delete_event){
-    let status;
-    
+function user_account_app_delete(choice=null, user_account_id, app_id, function_delete_event){    
     switch (choice){
         case null:{
             show_message('CONFIRM',null,function_delete_event, null, null, window.global_app_id);
@@ -2261,33 +2082,16 @@ function user_account_app_delete(choice=null, user_account_id, app_id, function_
         }
         case 1:{
             document.getElementById("dialogue_message").style.visibility = "hidden";
-    
-            fetch(window.global_rest_url_base + window.global_rest_user_account_app + user_account_id + '/' + app_id +
-                    '?app_id=' + window.global_app_id +
-                    '&lang_code=' + window.global_lang_code, 
-                {
-                    method: 'DELETE',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': 'Bearer ' + window.global_rest_at
-                    }
-                })
-                .then(function(response) {
-                    status = response.status;
-                    return response.text();
-                })
-                .then(function(result) {
-                    if (status == 200){
-                        //execute event and refresh app list
-                        document.getElementById('profile_main_btn_cloud').click()
-                    }
-                    else{
-                        exception(status, result);
-                    }
-                })
-                .catch(function(error) {
-                    show_message('EXCEPTION', null,null, error, window.global_app_id);
-                });
+            common_fetch(window.global_rest_url_base + window.global_rest_user_account_app + user_account_id + '/' + app_id + '?', 
+                         'DELETE', 1, null, null, (err, result) =>{    
+                if (err)
+                    null;
+                else{
+                    //execute event and refresh app list
+                    document.getElementById('profile_main_btn_cloud').click()
+                }
+            })
+            break;
         }
         default:
             break;
@@ -2304,31 +2108,18 @@ async function user_forgot(){
     else{
         let old_button = document.getElementById('forgot_button').innerHTML;
         document.getElementById('forgot_button').innerHTML = window.global_button_spinner;
-        fetch(window.global_rest_url_base + window.global_rest_user_account_forgot +
-            '?app_id=' + window.global_app_id +
-            '&lang_code=' + window.global_lang_code, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + window.global_rest_dt
-            },
-            body: json_data
-        })
-        .then(function(response) {
-            status = response.status;
-            return response.text();
-        })
-        .then(function(result) {
+        common_fetch(window.global_rest_url_base + window.global_rest_user_account_forgot + '?', 
+                     'POST', 0, json_data, null, (err, result) =>{
             document.getElementById('forgot_button').innerHTML = old_button;
-            if (status == 200) {
+            if (err)
+                null;
+            else{
                 json = JSON.parse(result);
                 if (json.sent == 1){
                     window.global_user_account_id = json.id;
                     let function_cancel_event = function() { document.getElementById('dialogue_user_verify').style.visibility='hidden';};
                     show_common_dialogue('VERIFY', 'FORGOT', email, window.global_button_default_icon_cancel, function_cancel_event);
                 }
-            } else {
-                exception(status, result);
             }
         })
     }
@@ -2359,28 +2150,16 @@ function updatePassword(){
         }
         let old_button = document.getElementById('user_new_password_icon').innerHTML;
         document.getElementById('user_new_password_icon').innerHTML = window.global_button_spinner;
-        fetch(window.global_rest_url_base + window.global_rest_user_account_password + window.global_user_account_id +
-            '?app_id=' + window.global_app_id +
-            '&lang_code=' + window.global_lang_code, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + window.global_rest_at
-            },
-            body: json_data
-        })
-        .then(function(response) {
-            status = response.status;
-            return response.text();
-        })
-        .then(function(result) {
+
+        common_fetch(window.global_rest_url_base + window.global_rest_user_account_password + window.global_user_account_id + '?', 
+                     'POST', 1, json_data, null, (err, result) =>{
             document.getElementById('user_new_password_icon').innerHTML = old_button;
-            if (status == 200) {
+            if (err)
+                null;
+            else{
                 json = JSON.parse(result);
                 dialogue_new_password_clear();
                 show_common_dialogue('LOGIN');
-            } else {
-                exception(status, result);
             }
         })
     }
@@ -2434,21 +2213,11 @@ function provider_init(providertype, provider_function){
 async function init_providers(provider1_function, provider2_function){
     let div = document.getElementById('identity_provider_login');
     let json;
-    let status;
-    fetch(window.global_rest_url_base + window.global_rest_identity_provider + '?app_id=' + window.global_app_id +
-        '&lang_code=' + window.global_lang_code, {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + window.global_rest_dt
-        }
-    })
-    .then(function(response) {
-        status = response.status;
-        return response.text();
-    })
-    .then(function(result) {
-        if (status == 200) {
+    common_fetch(window.global_rest_url_base + window.global_rest_identity_provider + '?', 
+                 'GET', 0, null, null, (err, result) =>{
+        if (err)
+            null;
+        else{
             json = JSON.parse(result);
             div.innerHTML = '';
             for (i=0;i <=json.items.length-1;i++){
@@ -2460,7 +2229,7 @@ async function init_providers(provider1_function, provider2_function){
                         window.global_identity_provider1_api_id         = json.items[i].api_id;
                         window.global_button_default_icon_provider1     = window.global_button_default_icon_google;
                         div.innerHTML += `<div id="g_id_onload" data-client_id='' data-callback=''></div>
-                                          <div class='g_id_signin login_button' data-type='standard'></div>`;
+                                            <div class='g_id_signin login_button' data-type='standard'></div>`;
                         provider_init(1, provider1_function);
                         break;
                     }
@@ -2476,19 +2245,17 @@ async function init_providers(provider1_function, provider2_function){
                         div.innerHTML += `<button id='login_provider2' class='login_button' >
                                             <div id='logo_provider2'>${window.global_button_default_icon_provider2}</div>
                                             <div id='login_btn_provider2'></div>
-                                          </button>`;
+                                            </button>`;
                         provider_init(2, provider2_function);
                         break;
                     }
                 }
             }
-            
         }
     })
 }
 async function updateProviderUser(identity_provider_id, profile_id, profile_first_name, profile_last_name, profile_image_url, profile_email, callBack) {
     let json;
-    let status;
     let profile_image;
     let img = new Image();
 
@@ -2514,45 +2281,27 @@ async function updateProviderUser(identity_provider_id, profile_id, profile_firs
             "provider_email":"${profile_email}",
             ${get_uservariables()}
             }`;
-        fetch(window.global_rest_url_base + window.global_rest_user_account_provider + profile_id +
-                '?lang_code=' + window.global_lang_code, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + window.global_rest_dt
-                },
-                body: json_data
-            })
-            .then(function(response) {
-                status = response.status;
-                return response.text();
-            })
-            .then(function(result) {
-                if (status == 200) {
-                    json = JSON.parse(result);
-                    window.global_rest_at = json.accessToken;
-                    window.global_user_account_id = json.items[0].id;
-                    window.global_user_identity_provider_id = json.items[0].identity_provider_id;
-                    updateOnlineStatus();
-                    dialogue_login_clear();
-                    dialogue_signup_clear();
-                    return callBack(null, {user_account_id: json.items[0].id,
-                                           username: json.items[0].username,
-                                           bio: json.items[0].bio,
-                                           avatar: profile_image,
-                                           first_name: profile_first_name,
-                                           last_name: profile_last_name,
-                                           userCreated: json.userCreated});
-                } 
-                else {
-                    exception(status, result);
-                    return callBack(result, null);
-                }
-            })
-            .catch(function(error) {
-                show_message('EXCEPTION', null,null, error, window.global_app_id);
-                return callBack(error, null);
-            });
+        common_fetch(window.global_rest_url_base + window.global_rest_user_account_provider + profile_id + '?', 
+                     'POST', 0, json_data, null, (err, result) =>{
+            if (err)
+                return callBack(err, null);
+            else{
+                json = JSON.parse(result);
+                window.global_rest_at = json.accessToken;
+                window.global_user_account_id = json.items[0].id;
+                window.global_user_identity_provider_id = json.items[0].identity_provider_id;
+                updateOnlineStatus();
+                dialogue_login_clear();
+                dialogue_signup_clear();
+                return callBack(null, {user_account_id: json.items[0].id,
+                                        username: json.items[0].username,
+                                        bio: json.items[0].bio,
+                                        avatar: profile_image,
+                                        first_name: profile_first_name,
+                                        last_name: profile_last_name,
+                                        userCreated: json.userCreated});
+            }
+        })
     }
 }
 async function onProviderSignIn(provider1User, callBack) {
@@ -2602,33 +2351,6 @@ function exception(status, message){
 /*----------------------- */
 /* INIT                   */
 /*----------------------- */
-async function get_data_token() {
-    let status;
-    let app_id;
-    if (window.global_admin==true)
-        app_id = window.global_main_app_id;
-    else
-        app_id = window.global_app_id;
-    await fetch(window.global_service_auth + 
-                '?app_id=' + app_id + 
-                '&app_user_id=' + window.global_user_account_id +
-                '&lang_code=' + window.global_lang_code, {
-        method: 'POST',
-        headers: {
-            'Authorization': 'Basic ' + window.btoa(window.global_app_rest_client_id + ':' + window.global_app_rest_client_secret)
-        }
-    })
-    .then(function(response) {
-        status = response.status;
-        return response.text();
-    })
-    .then(function(result) {
-        if (status === 200) {
-            let json = JSON.parse(result);
-            window.global_rest_dt = json.token_dt;
-        }   
-    })
-}
 function set_globals(parameters){
     //app info
     window.global_main_app_id= 0;
