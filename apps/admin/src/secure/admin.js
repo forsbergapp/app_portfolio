@@ -793,7 +793,7 @@ async function count_users(){
         await common_fetch(window.global_rest_url_base + window.global_rest_user_account + '/admin/count?',
                            'GET', 2, null, null, null, (err, result) =>{
             if (err)
-                document.getElementById('list_user_stat').innerHTML = old_button;
+                document.getElementById('list_user_stat').innerHTML = old_html;
             else{
                 json = JSON.parse(result);
                 let html='';
@@ -874,7 +874,7 @@ function set_maintenance(){
                       "parameter_name":"SERVER_MAINTENANCE",
                       "parameter_value":${check_value}}`;
     common_fetch(window.global_rest_url_base + window.global_rest_app_parameter + 'admin/value?',
-                 'PUT', 2, json_data, null, null, (err, result) =>{
+                 'PATCH', 2, json_data, null, null, (err, result) =>{
         null;
     })
 }

@@ -23,15 +23,15 @@ router.use((req,res,next)=>{
     createLogAppRI(req, res, req.query.id, __appfilename, __appfunction, __appline, req.body);
     next();
 })
-router.post("/login", checkDataToken, userLogin);
+router.put("/login", checkDataToken, userLogin);
 router.post("/signup", checkDataToken, userSignup);
 //local user
 router.put("/activate/:id", checkDataToken, activateUser);
-router.post("/password_reset/", checkDataToken, passwordResetUser);
-router.post("/password/:id", checkAccessToken, updatePassword);
+router.put("/password_reset/", checkDataToken, passwordResetUser);
+router.put("/password/:id", checkAccessToken, updatePassword);
 router.put("/:id", checkAccessToken, updateUserLocal);
 //provider user
-router.post("/provider/:id", checkDataToken, getUserByProviderId);
+router.put("/provider/:id", checkDataToken, getUserByProviderId);
 //common user
 router.get("/:id", checkAccessToken, getUserByUserId);
 router.put("/common/:id", checkAccessToken, updateUserCommon);

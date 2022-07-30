@@ -68,7 +68,7 @@ app.use(express.json({ limit: process.env.SERVER_JSON_LIMIT }));
 //define what headers are allowed
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Headers", "Authorization, Origin, X-Requested-With, Content-Type, Accept, Service-Worker-Allowed");
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE');
   next();
 });
 

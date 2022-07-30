@@ -1273,7 +1273,7 @@ module.exports = {
 					 FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account ua
 					      LEFT OUTER JOIN ${process.env.SERVICE_DB_DB1_NAME}.identity_provider ip
 					      ON ip.id = ua.identity_provider_id
-					GROUP BY ua.identity_provider_id
+					GROUP BY ua.identity_provider_id, ip.provider_name
 					ORDER BY ua.identity_provider_id`;
 			parameters = [];
         } else if (process.env.SERVICE_DB_USE == 2) {
@@ -1288,7 +1288,7 @@ module.exports = {
 					 FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account ua
 							LEFT OUTER JOIN ${process.env.SERVICE_DB_DB2_NAME}.identity_provider ip
 							ON ip.id = ua.identity_provider_id
-					GROUP BY ua.identity_provider_id
+					GROUP BY ua.identity_provider_id, ip.provider_name
 					ORDER BY NVL(ua.identity_provider_id,0)`;
 			parameters = {};
         }
