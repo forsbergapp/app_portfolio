@@ -37,7 +37,7 @@ module.exports = {
 				getMessage(20400, 
 					req.query.app_id, 
 					req.query.lang_code, (err2,results2)  => {
-						return res.status(500).send(
+						return res.status(404).send(
 								results2.text
 						);
 					});
@@ -62,7 +62,7 @@ module.exports = {
 				getMessage(20400, 
 					req.query.app_id, 
 					req.query.lang_code, (err2,results2)  => {
-						return res.status(500).send(
+						return res.status(404).send(
 							results2.text
 						);
 					});
@@ -90,7 +90,7 @@ module.exports = {
 				getMessage(20400, 
 					req.query.app_id, 
 					req.query.lang_code, (err2,results2)  => {
-						return res.status(500).send(
+						return res.status(404).send(
 							results2.text
 						);
 					});
@@ -121,7 +121,7 @@ module.exports = {
                     getMessage(20400, 
                         req.query.app_id, 
                         req.query.lang_code, (err2,results2)  => {
-                            return res.status(200).json({
+                            return res.status(404).json({
                                     count: 0,
                                     message: results2.text
                                 });
@@ -153,7 +153,7 @@ module.exports = {
                     getMessage(20400, 
                         req.query.app_id, 
                         req.query.lang_code, (err2,results2)  => {
-                            return res.status(200).json({
+                            return res.status(404).json({
                                     count: 0,
                                     message: results2.text
                                 });
@@ -193,11 +193,11 @@ module.exports = {
 			}
 			else{
 				if (!results){
-					//Failed to update user setting
-					getMessage(20401, 
+					//id, not found, nothing updated
+					getMessage(20400, 
 						req.query.app_id, 
 						req.query.lang_code, (err2,results2)  => {
-							return res.status(500).send(
+							return res.status(404).send(
 								results2.text
 							);
 						});
@@ -222,7 +222,7 @@ module.exports = {
 				getMessage(20400, 
 					req.query.app_id, 
 					req.query.lang_code, (err2,results2)  => {
-						return res.status(500).send(
+						return res.status(404).send(
 							results2.text
 						);
 					});

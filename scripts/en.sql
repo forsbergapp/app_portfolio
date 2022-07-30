@@ -1110,8 +1110,6 @@ INSERT INTO message_translation (language_id, message_code, text) VALUES (147,'2
 INSERT INTO message_translation (language_id, message_code, text) VALUES (147,'20309','Text not valid');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (147,'20310','Text too long');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (147,'20400','Record not found');
-INSERT INTO message_translation (language_id, message_code, text) VALUES (147,'20401','Failed to update user setting');
-INSERT INTO message_translation (language_id, message_code, text) VALUES (147,'20402','Failed to update user');
-INSERT INTO message_translation (language_id, message_code, text) VALUES (147,'20403','Invalid password');
+INSERT INTO message_translation (language_id, message_code, text) VALUES (147,'20401','Invalid password');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (147,'20500','Missing latitude or longitude');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (147,'20501','Verification code');

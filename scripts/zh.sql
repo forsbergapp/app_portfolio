@@ -977,8 +977,6 @@ INSERT INTO message_translation (language_id, message_code, text) VALUES (107,'2
 INSERT INTO message_translation (language_id, message_code, text) VALUES (107,'20309','文本无效');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (107,'20310','文本太长');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (107,'20400','记录不存在');
-INSERT INTO message_translation (language_id, message_code, text) VALUES (107,'20401','更新用户设置失败');
-INSERT INTO message_translation (language_id, message_code, text) VALUES (107,'20402','更新用户失败');
-INSERT INTO message_translation (language_id, message_code, text) VALUES (107,'20403','无效的密码');
+INSERT INTO message_translation (language_id, message_code, text) VALUES (107,'20401','无效的密码');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (107,'20500','缺少纬度或经度');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (107,'20501','验证码');
