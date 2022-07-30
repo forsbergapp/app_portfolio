@@ -204,7 +204,7 @@ module.exports = {
             "ip":"${ip}",
             "host": "${host}",
             "protocol": "${protocol}",
-            "url": "${originalUrl}",
+            "url": "${JSON.stringify(originalUrl).replaceAll('"', '\'')}",
             "method":"${method}",
             "status_code": ${statusCode},
             "user-agent": "${user_agent}",
