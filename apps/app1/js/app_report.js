@@ -97,7 +97,7 @@ window.global_second_language =
 async function timetable_user_setting_get(user_setting_id, lang_code, callBack) {
     let json;
 	await common_fetch(window.global_rest_url_base + window.global_rest_app1_user_setting + user_setting_id + '?',
-					   'GET', 0, null, null, (err, result) =>{
+					   'GET', 0, null, null, null, (err, result) =>{
 		if (err){
 			report_exception(err);
 			callBack(err, null);
@@ -186,7 +186,7 @@ async function timetable_translate_settings(locale, locale_second, lang_code) {
 		//fetch any message with first language always
 		//show translation using first or second language
 		await common_fetch(window.global_rest_url_base + window.global_rest_app_object + locale + '?',
-					       'GET', 0, null, lang_code, (err, result) =>{
+					       'GET', 0, null, lang_code, null, (err, result) =>{
 			if (err){
 				report_exception(err);
 			}
@@ -261,7 +261,7 @@ function updateReportViewStat(user_setting_id, user_account_id) {
                     "client_latitude": "${window.global_client_latitude}"
                     }`;
 	common_fetch(window.global_rest_url_base + window.global_rest_app1_user_setting_view + '?',
-				 'POST', 0, json_data, null, (err, result) =>{
+				 'POST', 0, json_data, null, null, (err, result) =>{
 		null;
 	})
 }
@@ -1123,7 +1123,7 @@ async function timetable_day_user_settings_get(user_account_id, lang_code, callB
 	let user_settings = [];
 
 	await common_fetch(window.global_rest_url_base + window.global_rest_app1_user_setting_user_account_id + user_account_id + '?',
-					   'GET', 0, null, null, (err, result) =>{
+					   'GET', 0, null, null, null, (err, result) =>{
 		if (err)
 			callBack(err, null);
 		else{
@@ -1297,7 +1297,7 @@ function displayYear(settings, item_id, locale){
 async function get_report_globals(lang_code) {
     let json;
 	await common_fetch(window.global_rest_url_base + window.global_rest_app_parameter + window.global_app_id + '?',
-					   'GET', 0, null, null, (err, result) =>{
+					   'GET', 0, null, null, null, (err, result) =>{
 		if (err)
 			report_exception(err);
 		else{

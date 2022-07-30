@@ -14,7 +14,7 @@ module.exports = {
 			 getMessage(20500, 
 				process.env.MAIN_APP_ID, 
 				req.query.lang_code, (err,results)  => {
-					return res.status(500).send(
+					return res.status(400).send(
 						results.text
 						);
 				});

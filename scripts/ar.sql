@@ -973,8 +973,6 @@ INSERT INTO message_translation (language_id, message_code, text) VALUES (25,'20
 INSERT INTO message_translation (language_id, message_code, text) VALUES (25,'20309','النص غير صالح');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (25,'20310','نص طويل جدا');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (25,'20400','لم يتم العثور على السجل');
-INSERT INTO message_translation (language_id, message_code, text) VALUES (25,'20401','فشل تحديث إعدادات المستخدم');
-INSERT INTO message_translation (language_id, message_code, text) VALUES (25,'20402','فشل تحديث المستخدم');
-INSERT INTO message_translation (language_id, message_code, text) VALUES (25,'20403','رمز مرور خاطئ');
+INSERT INTO message_translation (language_id, message_code, text) VALUES (25,'20401','رمز مرور خاطئ');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (25,'20500','خط العرض أو خط الطول مفقود');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (25,'20501','رمز التحقق');

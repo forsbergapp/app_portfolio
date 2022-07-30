@@ -107,7 +107,7 @@ function get_apps() {
     document.getElementById('apps').innerHTML = window.global_button_spinner;
 
     common_fetch(window.global_rest_url_base + window.global_rest_app + `?id=${window.global_app_id}`, 
-                 'GET', 0, null, null, (err, result) =>{
+                 'GET', 0, null, null,null, (err, result) =>{
         if (err)
             document.getElementById('apps').innerHTML = old_button;
         else{
@@ -145,8 +145,8 @@ function get_apps() {
 
 async function get_parameters() {
     let json;
-    await common_fetch(window.global_rest_url_base + window.global_rest_app_parameter + window.global_app_id, 
-                 'GET', 0, null, null, (err, result) =>{
+    await common_fetch(window.global_rest_url_base + window.global_rest_app_parameter + window.global_app_id + '?', 
+                 'GET', 0, null, null, null, (err, result) =>{
         if (err)
            null;
         else{
