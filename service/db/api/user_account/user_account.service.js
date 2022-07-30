@@ -702,7 +702,7 @@ module.exports = {
 							UNION ALL
 							SELECT 'FOLLOWED' "detail",
 									u.id "id",
-									u.provider_id "provider_id"
+									u.provider_id "provider_id",
 									u.avatar "avatar",
 									u.provider_image "provider_image",
 									u.provider_image_url "provider_image_url",
@@ -732,10 +732,10 @@ module.exports = {
 							UNION ALL
 							SELECT 'LIKED_USER' "detail",
 									u.id "id",
-									u.provider_id "provider_id"
+									u.provider_id "provider_id",
 									u.avatar "avatar",
 									u.provider_image "provider_image",
-									u.provider_image_url "provider_image_url"
+									u.provider_image_url "provider_image_url",
 									u.username "username",
 									u.provider_first_name "provider_first_name"
 							FROM   	${process.env.SERVICE_DB_DB2_NAME}.user_account_like u_liked,
