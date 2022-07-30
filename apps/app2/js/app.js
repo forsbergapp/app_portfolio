@@ -8,7 +8,9 @@ async function init_app(){
     move_info(null,null);
     document.getElementById('common_window_info').style.visibility = 'visible';
     document.getElementById('common_window_info_info').innerHTML = `<img src="${window.global_img_datamodel_img}"/>`;
-    await get_data_token();
+    await common_fetch_token(0, null,  null, null, (err, result)=>{
+        null;
+    })
 
 }
 function init(parameters){

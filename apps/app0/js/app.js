@@ -102,22 +102,15 @@ function toggle_switch(){
 }
 
 function get_apps() {
-	let status;
     let json;
     let old_button = document.getElementById('apps').innerHTML;
     document.getElementById('apps').innerHTML = window.global_button_spinner;
-    fetch(window.global_rest_url_base + window.global_rest_app + `?id=${window.global_app_id}&lang_code=${window.global_lang_code}`,
-    {method: 'GET',
-     headers: {
-			'Authorization': 'Bearer ' + window.global_rest_dt
-        }
-    })
-      .then(function(response) {
-            status = response.status;
-            return response.text();
-      })
-      .then(function(result) {
-          if (status == 200){
+
+    common_fetch(window.global_rest_url_base + window.global_rest_app + `?id=${window.global_app_id}`, 
+                 'GET', 0, null, null, (err, result) =>{
+        if (err)
+            document.getElementById('apps').innerHTML = old_button;
+        else{
             json = JSON.parse(result);
             let html='';
             for (var i = 0; i < json.data.length; i++) {
@@ -145,31 +138,18 @@ function get_apps() {
                         window.open(event.target.parentNode.parentNode.children[0].innerHTML);
                     else
                         window.open(event.target.parentNode.parentNode.parentNode.children[0].innerHTML);
-            }))
-            
-          }
-          else{
-            document.getElementById('apps').innerHTML = old_button;
-            show_message('EXCEPTION', null,null, result, window.global_app_id);
-          }
-        });
+            }))   
+        }
+    })
 }
 
 async function get_parameters() {
-    let status;
     let json;
-    await fetch( window.global_rest_url_base + window.global_rest_app_parameter + window.global_app_id,
-                {method: 'GET',
-                headers: {
-                    'Authorization': 'Bearer ' + window.global_rest_dt
-                }
-                })
-    .then(function(response) {
-        status = response.status;
-        return response.text();
-    })
-    .then(function(result) {
-        if (status==200){
+    await common_fetch(window.global_rest_url_base + window.global_rest_app_parameter + window.global_app_id, 
+                 'GET', 0, null, null, (err, result) =>{
+        if (err)
+           null;
+        else{
             json = JSON.parse(result);
             for (var i = 0; i < json.data.length; i++) {
                 //app 0 variables same for all apps
@@ -285,9 +265,7 @@ async function get_parameters() {
                     window.global_qr_background_color = json.data[i].parameter_value;
             }
         }
-        else
-            show_message('EXCEPTION', null,null, result, window.global_app_id);
-    });
+    })
 }
 
 function user_menu_item_click(item){
@@ -474,7 +452,9 @@ async function init_app(){
     setEvents();
     zoom_info('');
     move_info(null,null);
-    await get_data_token();
+    await common_fetch_token(0, null,  null, null, (err, result)=>{
+        null;
+    })
 }
 
 function init(parameters){

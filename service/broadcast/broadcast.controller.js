@@ -76,7 +76,7 @@ module.exports = {
         })
     },
     getListConnected: (req, res) => {
-        getListConnected(req.query.app_id, req.query.limit, req.query.year, req.query.month, 
+        getListConnected(req.query.select_app_id, req.query.limit, req.query.year, req.query.month, 
                          req.query.order_by, req.query.sort,  (err, result) => {
             return res.status(200).json({
                 success: 1,
