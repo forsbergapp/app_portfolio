@@ -6,7 +6,7 @@ const router = require("express").Router();
 router.get("/connect/:clientId",connectBroadcast);
 router.get("/connected", checkAdmin, getListConnected);
 router.get("/connected/count", checkAdmin, getCountConnected);
-router.put("/update_connected", checkDataToken, updateConnected);
+router.patch("/update_connected", checkDataToken, updateConnected);
 router.get("/checkconnected/:user_account_id", checkDataToken, checkConnected);
 
 router.post("/",checkAdmin, sendBroadcast);
