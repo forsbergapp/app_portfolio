@@ -52,7 +52,10 @@ async function execute_db_sql(app_id, pool_app_id, sql, parameters, admin,
 																})
 															}
 															else{
-																return callBack(null, result.rows);
+																if (!result.rows && result)
+																	return callBack(null, result);
+																else
+																	return callBack(null, result.rows);
 															}
 														});
 			}catch (err) {

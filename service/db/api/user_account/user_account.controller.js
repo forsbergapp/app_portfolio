@@ -46,7 +46,7 @@ module.exports = {
             getMessage(20106, 
                        process.env.MAIN_APP_ID, 
                        req.query.lang_code, (err2,results2)  => {
-                            return res.status(500).send(
+                            return res.status(400).send(
                                 results2.text
                             );
                        });
@@ -64,7 +64,7 @@ module.exports = {
                         getMessage(app_code, 
                                 process.env.MAIN_APP_ID, 
                                 req.query.lang_code, (err2,results2)  => {
-                                        return res.status(500).send(
+                                        return res.status(400).send(
                                             results2.text
                                         );
                                 });
@@ -304,7 +304,7 @@ module.exports = {
                     getMessage(20400, 
                                 process.env.MAIN_APP_ID, 
                                 req.query.lang_code, (err2,results2)  => {
-                                    return res.status(500).send(
+                                    return res.status(404).send(
                                         results2.text
                                         );
                                 });
@@ -351,7 +351,7 @@ module.exports = {
                     getMessage(20400, 
                                 process.env.MAIN_APP_ID, 
                                 req.query.lang_code, (err2,results2)  => {
-                                    return res.status(500).send(
+                                    return res.status(404).send(
                                         results2.text
                                     );
                                 });
@@ -403,7 +403,7 @@ module.exports = {
                     getMessage(20400, 
                                 process.env.MAIN_APP_ID, 
                                 req.query.lang_code, (err2,results2)  => {
-                                    return res.status(500).send(
+                                    return res.status(404).send(
                                         results2.text
                                     );
                                 });
@@ -435,7 +435,7 @@ module.exports = {
                     getMessage(20400, 
                                 process.env.MAIN_APP_ID, 
                                 req.query.lang_code, (err2,results2)  => {
-                                    return res.status(200).json({
+                                    return res.status(404).json({
                                             count: 0,
                                             message: results2.text
                                         });
@@ -467,7 +467,7 @@ module.exports = {
                     getMessage(20400, 
                                 process.env.MAIN_APP_ID, 
                                 req.query.lang_code, (err2,results2)  => {
-                                    return res.status(200).json({
+                                    return res.status(404).json({
                                             count: 0,
                                             message: results2.text
                                         });
@@ -500,7 +500,7 @@ module.exports = {
                                 getMessage(20106, 
                                         process.env.MAIN_APP_ID, 
                                         req.query.lang_code, (err2,results2)  => {
-                                                return res.status(500).send(
+                                                return res.status(400).send(
                                                     results2.text
                                                 );
                                         });
@@ -523,7 +523,7 @@ module.exports = {
                                             getMessage(app_code, 
                                                         process.env.MAIN_APP_ID, 
                                                         req.query.lang_code, (err2,results2)  => {
-                                                            return res.status(500).send(
+                                                            return res.status(400).send(
                                                                 results2.text
                                                             );
                                                         });
@@ -534,11 +534,11 @@ module.exports = {
                                     }
                                     else{
                                         if (!results_update) {
-                                            //"Failed to update user"
-                                            getMessage(20402, 
+                                            //record not found
+                                            getMessage(20400, 
                                                         process.env.MAIN_APP_ID, 
                                                         req.query.lang_code, (err2,results2)  => {
-                                                            return res.status(500).send(
+                                                            return res.status(404).send(
                                                                 results2.text
                                                             );
                                                         });
@@ -626,10 +626,10 @@ module.exports = {
                         createLogAppCI(req, res, req.query.app_id, __appfilename, __appfunction, __appline, 
                                        'invalid password attempt for user id:' + req.params.id, (err_log, result_log)=>{
                             //invalid password
-                            getMessage(20403, 
+                            getMessage(20401, 
                                 process.env.MAIN_APP_ID, 
                                 req.query.lang_code, (err2,results2)  => {
-                                    return res.status(500).send(
+                                    return res.status(400).send(
                                         results2.text
                                     );
                                 });
@@ -641,7 +641,7 @@ module.exports = {
                     getMessage(20305, 
                                 process.env.MAIN_APP_ID, 
                                 req.query.lang_code, (err2,results2)  => {
-                                    return res.status(500).send(
+                                    return res.status(404).send(
                                         results2.text
                                     );
                                 });
@@ -654,7 +654,7 @@ module.exports = {
             getMessage(20106, 
                        process.env.MAIN_APP_ID, 
                        req.query.lang_code, (err2,results2)  => {
-                            return res.status(500).send(
+                            return res.status(400).send(
                                 results2.text
                             );
                        });
@@ -688,7 +688,7 @@ module.exports = {
                         getMessage(20400, 
                                     process.env.MAIN_APP_ID, 
                                     req.query.lang_code, (err2,results2)  => {
-                                        return res.status(500).send(
+                                        return res.status(404).send(
                                             results2.text
                                         );
                                     });
@@ -739,7 +739,7 @@ module.exports = {
                     getMessage(20400, 
                                 process.env.MAIN_APP_ID, 
                                 req.query.lang_code, (err2,results2)  => {
-                                    return res.status(500).send(
+                                    return res.status(404).send(
                                         results2.text
                                     );
                                 });
@@ -773,7 +773,7 @@ module.exports = {
                                     getMessage(20400, 
                                                 process.env.MAIN_APP_ID, 
                                                 req.query.lang_code, (err2,results2)  => {
-                                                    return res.status(500).send(
+                                                    return res.status(404).send(
                                                         results2.text
                                                     );
                                                 });
@@ -809,7 +809,7 @@ module.exports = {
                                                     getMessage(20400, 
                                                                 process.env.MAIN_APP_ID, 
                                                                 req.query.lang_code, (err2,results2)  => {
-                                                                    return res.status(500).send(
+                                                                    return res.status(404).send(
                                                                         results2.text
                                                                     );
                                                                 });
@@ -826,10 +826,10 @@ module.exports = {
                                         createLogAppCI(req, res, req.query.app_id, __appfilename, __appfunction, __appline, 
                                                        'invalid password attempt for user id:' + req.params.id, (err_log, result_log)=>{
                                             //invalid password
-                                            getMessage(20403, 
+                                            getMessage(20401, 
                                                 process.env.MAIN_APP_ID, 
                                                 req.query.lang_code, (err2,results2)  => {
-                                                    return res.status(500).send(
+                                                    return res.status(400).send(
                                                         results2.text
                                                     );
                                                 });
@@ -841,7 +841,7 @@ module.exports = {
                                     getMessage(20305, 
                                                 process.env.MAIN_APP_ID, 
                                                 req.query.lang_code, (err2,results2)  => {
-                                                    return res.status(500).send(
+                                                    return res.status(404).send(
                                                         results2.text
                                                     );
                                                 });
@@ -855,7 +855,7 @@ module.exports = {
                     getMessage(20305, 
                                process.env.MAIN_APP_ID, 
                                req.query.lang_code, (err2,results2)  => {
-                                    return res.status(500).send(
+                                    return res.status(404).send(
                                         results2.text
                                     );
                                });
@@ -962,7 +962,7 @@ module.exports = {
                             getMessage(20300, 
                                     process.env.MAIN_APP_ID, 
                                     req.query.lang_code, (err2,results2)  => {
-                                            return res.status(500).send(
+                                            return res.status(400).send(
                                                 results2.text
                                             );
                                     });
@@ -975,7 +975,7 @@ module.exports = {
                         getMessage(20305, 
                                     process.env.MAIN_APP_ID, 
                                     req.query.lang_code, (err2,results2)  => {
-                                        return res.status(500).send(
+                                        return res.status(404).send(
                                             results2.text
                                         );
                                     });

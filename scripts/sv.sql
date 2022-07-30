@@ -1071,8 +1071,6 @@ INSERT INTO message_translation (language_id, message_code, text) VALUES (515,'2
 INSERT INTO message_translation (language_id, message_code, text) VALUES (515,'20309','Text inte giltig');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (515,'20310','Text för lång');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (515,'20400','Post finns inte');
-INSERT INTO message_translation (language_id, message_code, text) VALUES (515,'20401','Misslyckades att uppdatera användareinställningar');
-INSERT INTO message_translation (language_id, message_code, text) VALUES (515,'20402','Misslyckades att uppdatera användare');
-INSERT INTO message_translation (language_id, message_code, text) VALUES (515,'20403','Ogiltigt lösenord');
+INSERT INTO message_translation (language_id, message_code, text) VALUES (515,'20401','Ogiltigt lösenord');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (515,'20500','Saknar latitud eller longitud');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (515,'20501','Verifieringskod');

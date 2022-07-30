@@ -870,7 +870,7 @@ module.exports = {
 							FROM   ${process.env.SERVICE_DB_DB1_NAME}.user_account u
 							WHERE  u.active = 1
 							AND    5 = ?)  t
-					ORDER BY 1,13 DESC, COALESCE(username, 
+					ORDER BY 1,10 DESC, COALESCE(username, 
 												 provider_first_name)
 					LIMIT 10`;
 			parameters = [app_id,
@@ -918,7 +918,7 @@ module.exports = {
 							WHERE  u.active = 1
 							AND    5 = :statchoice_visited_setting) t
 					WHERE    ROWNUM <=10
-					ORDER BY 1,13 DESC, COALESCE("username", 
+					ORDER BY 1,10 DESC, COALESCE("username", 
 												"provider_first_name") `;
 			parameters = {
 							app_id: app_id,

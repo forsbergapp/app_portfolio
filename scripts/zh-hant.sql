@@ -1070,8 +1070,6 @@ INSERT INTO message_translation (language_id, message_code, text) VALUES (546,'2
 INSERT INTO message_translation (language_id, message_code, text) VALUES (546,'20309','文本無效');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (546,'20310','文本太長');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (546,'20400','記錄不存在');
-INSERT INTO message_translation (language_id, message_code, text) VALUES (546,'20401','更新用戶設置失敗');
-INSERT INTO message_translation (language_id, message_code, text) VALUES (546,'20402','更新用戶失敗');
-INSERT INTO message_translation (language_id, message_code, text) VALUES (546,'20403','無效的密碼');
+INSERT INTO message_translation (language_id, message_code, text) VALUES (546,'20401','無效的密碼');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (546,'20500','缺少緯度或經度');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (546,'20501','驗證碼');

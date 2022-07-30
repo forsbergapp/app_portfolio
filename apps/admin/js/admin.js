@@ -13,7 +13,7 @@ function admin_login(){
             json = JSON.parse(result);
             if (json.success == 1){
                 common_fetch('/service/forms/admin/secure' + '?', 
-                                'GET', 2, null, null, (err, result) =>{
+                                'GET', 2, null, null, null, (err, result) =>{
                     if (err)
                         null;
                     else{

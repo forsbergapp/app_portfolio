@@ -64,7 +64,7 @@ async function common_fetch_token(token_type, json_data,  username, password, ca
         callBack(null, result);
     })
 }
-async function common_fetch(url_parameters, method, token_type, json_data, lang_code_override, callBack) {
+async function common_fetch(url_parameters, method, token_type, json_data, app_id_override, lang_code_override, callBack) {
     let status;
 
     let token;
@@ -102,12 +102,17 @@ async function common_fetch(url_parameters, method, token_type, json_data, lang_
                                 body: json_data
                            };
     let app_id;
-    if (window.global_app_id=='')
-        app_id = window.global_main_app_id;
-    else
-        app_id = window.global_app_id;                       
+    if (app_id_override !=null)
+        app_id = app_id_override;
+    else{
+        if (window.global_app_id=='')
+            app_id = window.global_main_app_id;
+        else
+            app_id = window.global_app_id;
+    }
+    
     let lang_code;
-    if (lang_code_override !='')
+    if (lang_code_override != null && lang_code_override !='')
        lang_code = lang_code_override;
     else
        lang_code = window.global_lang_code;
@@ -123,14 +128,29 @@ async function common_fetch(url_parameters, method, token_type, json_data, lang_
     .then(function(result) {
         switch (status){
             case 200:{
+                //Success
                 callBack(null, result);
                 break;
             }
+            case 400:{
+                //Bad request
+                show_message('INFO', null,null, result, app_id);
+                callBack(result, null);
+                break;
+            }
+            case 404:{
+                //Not found
+                show_message('INFO', null,null, result, app_id);
+                callBack(result, null);
+                break;
+            }
             case 401:{
+                //Unauthorized, token expired
                 eval(`(function (){${window.global_exception_app_function}()}());`);
                 break;
             }
             case 500:{
+                //Unknown error
                 show_message('EXCEPTION', null,null, result, app_id);
                 callBack(result, null);
                 break;
@@ -147,7 +167,7 @@ function fromBase64(str) {
 function common_translate_ui(lang_code){
     let json;
     common_fetch(`${window.global_rest_url_base}${window.global_rest_app_object}${lang_code}?`, 
-                 'GET', 0, null, null, (err, result) =>{
+                 'GET', 0, null, window.global_main_app_id, null, (err, result) =>{
         if (err)
             null;
         else{
@@ -544,7 +564,7 @@ function show_message(message_type, code, function_event, message_text='', app_i
     switch (message_type){
         case 'ERROR':{
             common_fetch(window.global_rest_url_base + window.global_rest_message_translation + code + '?', 
-                         'GET', 0, null, null, (err, result) =>{
+                         'GET', 0, null, null, null, (err, result) =>{
                 confirm_question.style.display = hide;
                 button_cancel.style.display = hide;
                 message_title.style.display = show;
@@ -900,7 +920,7 @@ function updateOnlineStatus(){
                  `?client_id=${window.global_clientId}`+
                  `&user_account_id=${window.global_user_account_id}` + 
                  `&identity_provider_id=${window.global_user_identity_provider_id}`, 
-                 'PUT', 0, null, null, (err, result) =>{
+                 'PUT', 0, null, null, null, (err, result) =>{
         null;
     })
 }
@@ -923,7 +943,7 @@ function connectOnline(updateOnline=false){
 }
 function checkOnline(div_icon_online, user_account_id){
     common_fetch(`/service/broadcast/checkconnected/${user_account_id}?`, 
-                 'GET', 0, null, null, (err, result) =>{
+                 'GET', 0, null, null, null, (err, result) =>{
         if (JSON.parse(result).online == 1)
             document.getElementById(div_icon_online).className = 'online';
         else
@@ -938,7 +958,7 @@ async function get_place_from_gps(item, latitude, longitude) {
                        '?app_user_id=' + window.global_user_account_id +
                        '&latitude=' + latitude +
                        '&longitude=' + longitude, 
-                       'GET', 0, null, null, (err, result) =>{
+                       'GET', 0, null, null, null, (err, result) =>{
         if (err)
             null;
         else{
@@ -953,7 +973,7 @@ async function get_gps_from_ip() {
 
     await common_fetch(window.global_service_geolocation + window.global_service_geolocation_gps_ip + 
                        '?app_user_id=' +  window.global_user_account_id, 
-                       'GET', 0, null, null, (err, result) =>{
+                       'GET', 0, null, null, null, (err, result) =>{
         if (err)
             null;
         else{
@@ -972,7 +992,7 @@ async function get_gps_from_ip() {
 async function get_cities(countrycode, callBack){
     await common_fetch(window.global_service_worldcities + '/' + countrycode +
                        '?app_user_id=' + window.global_user_account_id, 
-                       'GET', 0, null, null, (err, result) =>{
+                       'GET', 0, null, null, null, (err, result) =>{
         if (err)
             callBack(err, null);
         else{
@@ -1073,7 +1093,7 @@ function profile_top(statschoice, timezone, app_rest_url = null, click_function=
     }
     //TOP
     common_fetch(url + statschoice + '?', 
-                 'GET', 0, null, null, (err, result) =>{
+                 'GET', 0, null, null, null, (err, result) =>{
         if (err)
             null;
         else{
@@ -1199,7 +1219,7 @@ function profile_detail(detailchoice, timezone, rest_url_app, fetch_detail, head
         if (fetch_detail){
             common_fetch(url + document.getElementById('profile_id').innerHTML +
                         '?detailchoice=' + detailchoice, 
-                         'GET', 1, null, null, (err, result) =>{
+                         'GET', 1, null, null, null, (err, result) =>{
                 if (err)
                     null;
                 else{
@@ -1324,7 +1344,7 @@ function search_profile(timezone, click_function) {
                         }`;
         }
         common_fetch(url + searched_username + '?', 
-                     'POST', token, json_data, null, (err, result) =>{
+                     'POST', token, json_data, null, null, (err, result) =>{
             if (err)
                 null;
             else{
@@ -1394,7 +1414,7 @@ async function profile_show(user_account_id_other = null, username = null, timez
             }`;
 
         common_fetch(url + '?id=' + window.global_user_account_id, 
-                     'POST', 0, json_data, null, (err, result) =>{
+                     'POST', 0, json_data, null, null, (err, result) =>{
             if (err)
                 return callBack(err,null);
             else{
@@ -1469,7 +1489,7 @@ async function profile_update_stat(callBack){
     //to avoid update in stat set searched by same user
     let url = window.global_rest_url_base + window.global_rest_user_account_profile_userid + profile_id.innerHTML;
     common_fetch(url + '?id=' + profile_id.innerHTML, 
-                 'POST', 0, json_data, null, (err, result) =>{
+                 'POST', 0, json_data, null, null, (err, result) =>{
         if (err)
             return callBack(err,null);
         else{
@@ -1600,7 +1620,7 @@ async function user_login(username, password, callBack) {
 
     //get user with username and password from REST API
     common_fetch(window.global_rest_url_base + window.global_rest_user_account_login + '?', 
-                 'POST', 0, json_data, null, (err, result) =>{
+                 'POST', 0, json_data, null, null, (err, result) =>{
         if (err)
             return callBack(err, null);
         else{
@@ -1632,7 +1652,7 @@ async function user_logoff(){
     updateOnlineStatus();
     document.getElementById('profile_avatar_online_status').className='';
     //get new data token to avoid endless loop och invalid token
-    await common_fetch_token(0, null,  null, null, (err, result)=>{
+    await common_fetch_token(0, null,  null, null,  (err, result)=>{
         dialogue_user_edit_clear();
         dialogue_verify_clear();
         dialogue_new_password_clear();
@@ -1647,7 +1667,7 @@ async function user_edit(timezone, callBack) {
     let json;
     //get user from REST API
     common_fetch(window.global_rest_url_base + window.global_rest_user_account + window.global_user_account_id + '?', 
-                 'GET', 1, null, null, (err, result) =>{
+                 'GET', 1, null, null, null, (err, result) =>{
         if (err)
             return callBack(err, null);
         else{
@@ -1787,7 +1807,7 @@ async function user_update(callBack) {
     document.getElementById('user_edit_btn_user_update').innerHTML = window.global_button_spinner;
     //update user using REST API
     common_fetch(url + '?', 
-                 'PUT', 1, json_data, null, (err, result) =>{
+                 'PUT', 1, json_data, null, null, (err, result) =>{
         document.getElementById('user_edit_btn_user_update').innerHTML = old_button;
         if (err){    
             return callBack(error, null);
@@ -1847,7 +1867,7 @@ function user_signup() {
     let old_button = document.getElementById('signup_button').innerHTML;
     document.getElementById('signup_button').innerHTML = window.global_button_spinner;
     common_fetch(window.global_rest_url_base + window.global_rest_user_account_signup + '?', 
-                 'POST', 0, json_data, null, (err, result) =>{    
+                 'POST', 0, json_data, null, null, (err, result) =>{    
         document.getElementById('signup_button').innerHTML = old_button;
         if (err){    
             null;
@@ -1896,7 +1916,7 @@ async function user_verify_check_input(item, nextField, callBack) {
                           ${get_uservariables()}
                          }`;
             common_fetch(window.global_rest_url_base + window.global_rest_user_account_activate + window.global_user_account_id + '?', 
-                         'PUT', 0, json_data, null, (err, result) =>{    
+                         'PUT', 0, json_data, null, null, (err, result) =>{    
                 document.getElementById('user_verify_email').innerHTML = old_button;
                 if (err){    
                     return callBack(err, null);
@@ -1987,7 +2007,7 @@ async function user_delete(choice=null, user_local, function_delete_event, callB
             let json_data = `{"password":"${password}"}`;
 
             common_fetch(window.global_rest_url_base + window.global_rest_user_account + window.global_user_account_id + '?', 
-                         'DELETE', 1, json_data, null, (err, result) =>{    
+                         'DELETE', 1, json_data, null, null, (err, result) =>{    
                 document.getElementById('user_edit_btn_user_delete_account').innerHTML = old_button;
                 if (err){
                     return callBack(err,null);
@@ -2034,7 +2054,7 @@ function user_function(user_function, callBack) {
             method = 'DELETE';
         }
         common_fetch(window.global_rest_url_base + rest_path + window.global_user_account_id + '?', 
-                         method, 1, json_data, null, (err, result) =>{    
+                         method, 1, json_data, null, null, (err, result) =>{    
             if (err)
                 return callBack(err, null);
             else{
@@ -2083,7 +2103,7 @@ function user_account_app_delete(choice=null, user_account_id, app_id, function_
         case 1:{
             document.getElementById("dialogue_message").style.visibility = "hidden";
             common_fetch(window.global_rest_url_base + window.global_rest_user_account_app + user_account_id + '/' + app_id + '?', 
-                         'DELETE', 1, null, null, (err, result) =>{    
+                         'DELETE', 1, null, null, null, (err, result) =>{    
                 if (err)
                     null;
                 else{
@@ -2109,7 +2129,7 @@ async function user_forgot(){
         let old_button = document.getElementById('forgot_button').innerHTML;
         document.getElementById('forgot_button').innerHTML = window.global_button_spinner;
         common_fetch(window.global_rest_url_base + window.global_rest_user_account_forgot + '?', 
-                     'POST', 0, json_data, null, (err, result) =>{
+                     'POST', 0, json_data, null, null, (err, result) =>{
             document.getElementById('forgot_button').innerHTML = old_button;
             if (err)
                 null;
@@ -2152,7 +2172,7 @@ function updatePassword(){
         document.getElementById('user_new_password_icon').innerHTML = window.global_button_spinner;
 
         common_fetch(window.global_rest_url_base + window.global_rest_user_account_password + window.global_user_account_id + '?', 
-                     'POST', 1, json_data, null, (err, result) =>{
+                     'POST', 1, json_data, null, null, (err, result) =>{
             document.getElementById('user_new_password_icon').innerHTML = old_button;
             if (err)
                 null;
@@ -2214,7 +2234,7 @@ async function init_providers(provider1_function, provider2_function){
     let div = document.getElementById('identity_provider_login');
     let json;
     common_fetch(window.global_rest_url_base + window.global_rest_identity_provider + '?', 
-                 'GET', 0, null, null, (err, result) =>{
+                 'GET', 0, null, null, null, (err, result) =>{
         if (err)
             null;
         else{
@@ -2282,7 +2302,7 @@ async function updateProviderUser(identity_provider_id, profile_id, profile_firs
             ${get_uservariables()}
             }`;
         common_fetch(window.global_rest_url_base + window.global_rest_user_account_provider + profile_id + '?', 
-                     'POST', 0, json_data, null, (err, result) =>{
+                     'POST', 0, json_data, null, null, (err, result) =>{
             if (err)
                 return callBack(err, null);
             else{
