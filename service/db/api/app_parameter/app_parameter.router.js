@@ -11,7 +11,7 @@ router.get("/:app_id", checkDataToken, getParameters);
 router.get("/admin/all/:app_id", checkAdmin, getParameters_admin);
 router.get("/admin/:app_id", checkAdmin, getParameter_admin);
 router.put("/admin", checkAdmin, setParameter_admin);
-router.put("/admin/value", checkAdmin, setParameterValue_admin);
+router.patch("/admin/value", checkAdmin, setParameterValue_admin);
 
 router.get("/start/:app_id", checkDataToken, getAppStartParameters);
 
