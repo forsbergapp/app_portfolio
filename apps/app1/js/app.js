@@ -645,7 +645,7 @@ async function settings_translate(first=true) {
         //fetch any message with first language always
         //show translation using first or second language
         await common_fetch(`${window.global_rest_url_base}${window.global_rest_app_object}${locale}?`, 
-                           'GET', 0, null, get_lang_code(), (err, result) =>{
+                           'GET', 0, null, null, get_lang_code(), (err, result) =>{
             if (err)
                 null;
             else{
@@ -702,7 +702,7 @@ async function settings_translate(first=true) {
                 if (first==true){
                     //country
                     common_fetch(window.global_rest_url_base + window.global_rest_country + get_lang_code() + '?', 
-                           'GET', 0, null, null, (err, result) =>{
+                           'GET', 0, null, null, null, (err, result) =>{
                         if (err)
                             null;
                         else{
@@ -734,7 +734,7 @@ async function settings_translate(first=true) {
                                                       document.getElementById('setting_select_country'),0);
                             //locale
                             common_fetch(window.global_rest_url_base + window.global_rest_language_locale + get_lang_code() + '?', 
-                                         'GET', 0, null, null, (err, result) =>{
+                                         'GET', 0, null, null, null, (err, result) =>{
                                 if (err)
                                     null;
                                 else{
@@ -1673,7 +1673,7 @@ async function user_settings_get(user_setting_id = '') {
     let i;
     
     await common_fetch(window.global_rest_url_base + window.global_rest_app1_user_setting_user_account_id + window.global_user_account_id + '?', 
-                       'GET', 0, null, null, (err, result) =>{
+                       'GET', 0, null, null, null, (err, result) =>{
         if (err)
             null;
         else{
@@ -2098,7 +2098,7 @@ async function user_settings_function(function_name, initial_user_setting, callB
         }
     }
     await common_fetch(url, 
-                       method, 1, json_data, null, (err, result) =>{
+                       method, 1, json_data, null, null, (err, result) =>{
         if (err){
             if (function_name !='ADD_LOGIN')
                 spinner_item.innerHTML = old_button;
@@ -2149,7 +2149,7 @@ function user_settings_delete(choice=null) {
                 let old_button = document.getElementById('setting_btn_user_delete').innerHTML;
                 document.getElementById('setting_btn_user_delete').innerHTML = window.global_button_spinner;
                 common_fetch(window.global_rest_url_base + window.global_rest_app1_user_setting + user_setting_id + '?', 
-                                    'DELETE', 1, null, null, (err, result) =>{
+                                    'DELETE', 1, null, null, null, (err, result) =>{
                     if (err){
                         document.getElementById('setting_btn_user_delete').innerHTML = old_button;
                     }
@@ -2358,7 +2358,7 @@ function set_settings_select() {
 function profile_user_setting_stat(id){
     let json;
     common_fetch(window.global_rest_url_base + window.global_rest_app1_user_setting_profile + id + '?', 
-                 'GET', 0, null, null, (err, result) =>{
+                 'GET', 0, null, null, null, (err, result) =>{
         if (err)
             null;
         else{
@@ -2409,7 +2409,7 @@ function profile_show_user_setting() {
 
     common_fetch(window.global_rest_url_base + window.global_rest_app1_user_setting_profile_all + document.getElementById('profile_id').innerHTML + 
                  '?id=' + window.global_user_account_id,
-                 'GET', 0, null, null, (err, result) =>{
+                 'GET', 0, null, null, null, (err, result) =>{
         if (err)
             null;
         else{
@@ -2440,7 +2440,7 @@ function profile_user_setting_update_stat(){
     let json;
     common_fetch(window.global_rest_url_base + window.global_rest_app1_user_setting_profile_all + profile_id +
                  '?id=' + window.global_user_account_id,
-                 'GET', 0, null, null, (err, result) =>{
+                 'GET', 0, null, null, null, (err, result) =>{
         if (err)
             null;
         else{
@@ -2479,7 +2479,7 @@ function user_settings_like(user_setting_id) {
             method = 'DELETE';
         }
         common_fetch(window.global_rest_url_base + window.global_rest_app1_user_setting_like + window.global_user_account_id + '?',
-                     method, 1, json_data, null, (err, result) =>{
+                     method, 1, json_data, null, null, (err, result) =>{
             if (err)
                 null;
             else{
@@ -2692,7 +2692,7 @@ async function get_app_globals() {
     //app parameter variables
     //returns parameters for given app_id and app_id=0
     await common_fetch(window.global_rest_url_base + window.global_rest_app_parameter + window.global_app_id + '?',
-                       'GET', 0, null, null, (err, result) =>{
+                       'GET', 0, null, null, null, (err, result) =>{
         if (err)
             null;
         else{

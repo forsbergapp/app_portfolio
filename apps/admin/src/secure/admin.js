@@ -122,7 +122,7 @@ async function get_apps() {
     let json;
 
     common_fetch(window.global_rest_url_base + window.global_rest_app + '/admin?id=0', 
-                 'GET', 2, null, null, (err, result) =>{
+                 'GET', 2, null, null, null, (err, result) =>{
         if (err)
             null;
         else{
@@ -176,7 +176,7 @@ async function show_list(list_div, list_div_col_title, url, sort, order_by, cols
             }
         }
         await common_fetch(url, 
-                           'GET', 2, null, null, (err, result) =>{
+                           'GET', 2, null, null, null, (err, result) =>{
             if (err){
                 switch (list_div){
                     case 'list_pm2_log':{
@@ -519,7 +519,7 @@ function sendBroadcast(){
                         "broadcast_type" :"${broadcast_type}", 
                         "broadcast_message":"${broadcast_message}"}`;
     common_fetch('/service/broadcast?',
-                 'POST', 2, json_data, null, (err, result) =>{
+                 'POST', 2, json_data, null, null, (err, result) =>{
         if (err)
             null;
         else{
@@ -628,7 +628,7 @@ function update_map(longitude, latitude, zoom, text_place, marker_id, flyto) {
             window.global_session_map.jumpTo({ 'center': [longitude, latitude], 'zoom': zoom });
     }
     common_fetch(`/service/geolocation/getTimezone?latitude=${latitude}&longitude=${longitude}`,
-                 'GET', 0, null, null, (err, text_timezone) =>{
+                 'GET', 0, null, null, null, (err, text_timezone) =>{
         if (err)
             null;
         else{
@@ -665,7 +665,7 @@ async function show_chart(chart){
         document.getElementById(`box${chart}`).innerHTML = window.global_button_spinner;
 
         await common_fetch(window.global_rest_url_base + `app_log/admin/stat/uniquevisitor?select_app_id=${app_id}&statchoice=${chart}&year=${current_year}&month=${current_month}`,
-                 'GET', 2, null, null, (err, result) =>{
+                 'GET', 2, null, null, null, (err, result) =>{
             if (err)
                 document.getElementById(`box${chart}`).innerHTML = old_html;
             else{
@@ -775,7 +775,7 @@ async function count_connected(identity_provider_id, count_logged_in, callBack){
     if (admin_token_has_value()){
         let json;
         await common_fetch(`/service/broadcast/connected/count?identity_provider_id=${identity_provider_id}&count_logged_in=${count_logged_in}`,
-                 'GET', 2, null, null, (err, result) =>{
+                 'GET', 2, null, null, null, (err, result) =>{
             if (err)
                 callBack(result, null);
             else{
@@ -791,7 +791,7 @@ async function count_users(){
         document.getElementById('list_user_stat').innerHTML = window.global_button_spinner;
 
         await common_fetch(window.global_rest_url_base + window.global_rest_user_account + '/admin/count?',
-                           'GET', 2, null, null, (err, result) =>{
+                           'GET', 2, null, null, null, (err, result) =>{
             if (err)
                 document.getElementById('list_user_stat').innerHTML = old_button;
             else{
@@ -851,7 +851,7 @@ async function show_maintenance(){
     if (admin_token_has_value()){
         let json;
         await common_fetch(window.global_rest_url_base + window.global_rest_app_parameter + 'admin/0?parameter_name=SERVER_MAINTENANCE',
-                           'GET', 2, null, null, (err, result) =>{
+                           'GET', 2, null, null, null, (err, result) =>{
             if (err)
                 null;
             else{
@@ -874,7 +874,7 @@ function set_maintenance(){
                       "parameter_name":"SERVER_MAINTENANCE",
                       "parameter_value":${check_value}}`;
     common_fetch(window.global_rest_url_base + window.global_rest_app_parameter + 'admin/value?',
-                 'PUT', 2, json_data, null, (err, result) =>{
+                 'PUT', 2, json_data, null, null, (err, result) =>{
         null;
     })
 }
@@ -887,7 +887,7 @@ async function show_apps(){
     document.getElementById('list_apps').innerHTML = window.global_button_spinner;
 
     await common_fetch(window.global_rest_url_base + window.global_rest_app + '/admin?id=0',
-                       'GET', 2, null, null, (err, result) =>{
+                       'GET', 2, null, null, null, (err, result) =>{
         if (err)
             document.getElementById('list_apps').innerHTML = old_html;
         else{
@@ -932,7 +932,7 @@ function show_app_parameter(app_id){
     document.getElementById('list_app_parameter').innerHTML = window.global_button_spinner;
 
     common_fetch(window.global_rest_url_base + window.global_rest_app_parameter + `admin/all/${parseInt(app_id)}?`,
-                 'GET', 2, null, null, (err, result) =>{
+                 'GET', 2, null, null, null, (err, result) =>{
         if (err)
             document.getElementById('list_app_parameter').innerHTML = old_html;
         else{
@@ -1035,7 +1035,7 @@ function update_record(table,
             }
         }
         common_fetch(window.global_rest_url_base + rest_url,
-                     'PUT', 2, json_data, null, (err, result) =>{
+                     'PUT', 2, json_data, null, null,(err, result) =>{
             document.getElementById('apps_save').innerHTML = old_button;
             if (err)
                 null;
@@ -1047,7 +1047,7 @@ function update_record(table,
 }
 function get_parameter_type_name(row_item, item, old_value){
     common_fetch(`${window.global_rest_url_base}${window.global_rest_parameter_type}admin?id=${item.value}`,
-                 'GET', 2, null, null, (err, result) =>{
+                 'GET', 2, null, null, null, (err, result) =>{
         if (err)
             null;
         else{
@@ -1114,7 +1114,7 @@ function show_parameter_type_names(lov, row_item, item_index){
             show_lov('PARAMETER TYPE', window.global_button_spinner);
 
             common_fetch(window.global_rest_url_base + window.global_rest_parameter_type + `admin?`,
-                         'GET', 2, null, null, (err, result) =>{
+                         'GET', 2, null, null, null, (err, result) =>{
                 if (err)
                     document.getElementById('lov_list').innerHTML = old_html;
                 else{
@@ -1292,7 +1292,7 @@ function list_item_action(item){
                      '?app_user_id=' +
                      '&latitude=' + item.parentNode.children[5].children[0].innerHTML +
                      '&longitude=' + item.parentNode.children[6].children[0].innerHTML,
-                     'GET', 0, null, null, (err, result) =>{
+                     'GET', 0, null, null, null, (err, result) =>{
                 if (err)
                     null;
                 else{
@@ -1320,7 +1320,7 @@ function list_item_action(item){
 async function get_server_log_parameters(){
     let json;
     await common_fetch(window.global_service_log + '/parameters?',
-                       'GET', 2, null, null, (err, result) =>{
+                       'GET', 2, null, null, null, (err, result) =>{
         if (err)
             null;
         else{
@@ -1415,7 +1415,7 @@ function show_existing_logfiles(){
         show_lov('SERVER LOG FILES', window.global_button_spinner);
 
         common_fetch(window.global_service_log + '/files?',
-                     'GET', 2, null, null, (err, result) =>{
+                     'GET', 2, null, null, null, (err, result) =>{
             if (err)
                 document.getElementById('lov_list').innerHTML = old_html;
             else{
@@ -1541,7 +1541,7 @@ async function get_parameters() {
     let json;
 
     await common_fetch(`${window.global_rest_url_base}${window.global_rest_app_parameter}0?`,
-                       'GET', 0, null, null, (err, result) =>{
+                       'GET', 0, null, null, null, (err, result) =>{
         if (err)
             null;
         else{
