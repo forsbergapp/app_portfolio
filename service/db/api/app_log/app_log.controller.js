@@ -28,7 +28,7 @@ module.exports = {
 		let offset = parseInt(req.query.offset);
 		let limit = parseInt(req.query.limit);
 		
-		getLogs(req.query.app_id, year, month, sort, order_by, offset, limit, (err, results) =>{
+		getLogs(req.query.select_app_id, year, month, sort, order_by, offset, limit, (err, results) =>{
 			if (err) {
 				return res.status(500).send({
 					success: 0,
@@ -42,7 +42,7 @@ module.exports = {
 		});
 	},
 	getStatUniqueVisitor: (req, res) =>{
-		getStatUniqueVisitor(req.query.app_id, req.query.statchoice, req.query.year, req.query.month, (err, results)=>{
+		getStatUniqueVisitor(req.query.select_app_id, req.query.statchoice, req.query.year, req.query.month, (err, results)=>{
 			if (err) {
 				return res.status(500).send({
 					success: 0,
