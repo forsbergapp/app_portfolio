@@ -920,7 +920,7 @@ function updateOnlineStatus(){
                  `?client_id=${window.global_clientId}`+
                  `&user_account_id=${window.global_user_account_id}` + 
                  `&identity_provider_id=${window.global_user_identity_provider_id}`, 
-                 'PUT', 0, null, null, null, (err, result) =>{
+                 'PATCH', 0, null, null, null, (err, result) =>{
         null;
     })
 }
@@ -1620,7 +1620,7 @@ async function user_login(username, password, callBack) {
 
     //get user with username and password from REST API
     common_fetch(window.global_rest_url_base + window.global_rest_user_account_login + '?', 
-                 'POST', 0, json_data, null, null, (err, result) =>{
+                 'PUT', 0, json_data, null, null, (err, result) =>{
         if (err)
             return callBack(err, null);
         else{
@@ -2129,7 +2129,7 @@ async function user_forgot(){
         let old_button = document.getElementById('forgot_button').innerHTML;
         document.getElementById('forgot_button').innerHTML = window.global_button_spinner;
         common_fetch(window.global_rest_url_base + window.global_rest_user_account_forgot + '?', 
-                     'POST', 0, json_data, null, null, (err, result) =>{
+                     'PUT', 0, json_data, null, null, (err, result) =>{
             document.getElementById('forgot_button').innerHTML = old_button;
             if (err)
                 null;
@@ -2172,7 +2172,7 @@ function updatePassword(){
         document.getElementById('user_new_password_icon').innerHTML = window.global_button_spinner;
 
         common_fetch(window.global_rest_url_base + window.global_rest_user_account_password + window.global_user_account_id + '?', 
-                     'POST', 1, json_data, null, null, (err, result) =>{
+                     'PUT', 1, json_data, null, null, (err, result) =>{
             document.getElementById('user_new_password_icon').innerHTML = old_button;
             if (err)
                 null;
@@ -2302,7 +2302,7 @@ async function updateProviderUser(identity_provider_id, profile_id, profile_firs
             ${get_uservariables()}
             }`;
         common_fetch(window.global_rest_url_base + window.global_rest_user_account_provider + profile_id + '?', 
-                     'POST', 0, json_data, null, null, (err, result) =>{
+                     'PUT', 0, json_data, null, null, (err, result) =>{
             if (err)
                 return callBack(err, null);
             else{
