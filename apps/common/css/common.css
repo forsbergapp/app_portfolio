@@ -456,6 +456,7 @@ body.font_arabic_ui{
 }
 #dialogue_maintenance_content{
 	height:250px;
+	width:300px;
 }
 #maintenance_logo {
 	background-image: url('/app0/images/logo.png');
