@@ -1,8 +1,9 @@
 const { sign } = require("jsonwebtoken");
 const { verify } = require("jsonwebtoken");
 const { createLog} = require ("../../service/db/api/app_log/app_log.service");
-const { getParameter, getParameters_server } = require ("../db/api/app_parameter/app_parameter.service");
+const { getParameter, getParameters_server } = require ("../../service/db/api/app_parameter/app_parameter.service");
 const { createLogAppSE, createLogAppCI } = require("../../service/log/log.controller");
+const { checkLogin } = require("../../service/db/api/user_account_logon/user_account_logon.service");
 const {block_ip_control, safe_user_agents, policy_directives} = require ("./auth.service");
 module.exports = {
     access_control: (req, res, callBack) => {
@@ -87,7 +88,27 @@ module.exports = {
                                 message: "Invalid token"
                             });
                         } else {
-                            next();
+                            //check access token belongs to user_account.id, app_id and ip saved when logged in
+                            checkLogin(req.query.user_account_logon_user_account_id, req.query.app_id, req.headers.authorization.replace('Bearer ',''), req.ip, (err, result)=>{
+                                if (err)
+                                    createLogAppSE(req.query.app_id, __appfilename, __appfunction, __appline, err, (err_log, result_log)=>{
+                                        res.status(500).send(
+                                            err
+                                        );
+                                    })
+                                else{
+                                    if (result.length==1)
+                                        next();
+                                    else
+                                        createLogAppCI(req, res, null, __appfilename, __appfunction, __appline, `user  ${req.query.user_account_id} app_id ${req.query.app_id} with ip ${req.ip} accesstoken unauthorized`, (err_log, result_log)=>{
+                                            res.status(401).send({
+                                                success: 0,
+				                                message: 'Not authorized'
+                                            });
+                                        })
+                                        
+                                }
+                            })
                         }
                     });
                 }
