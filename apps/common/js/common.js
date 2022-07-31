@@ -119,6 +119,9 @@ async function common_fetch(url_parameters, method, token_type, json_data, app_i
     let url = url_parameters +
               '&app_id=' + app_id + 
               '&lang_code=' + lang_code;
+    //for accesstoken add parameter for authorization check
+    if (token_type==1)
+        url = url + '&user_account_logon_user_account_id=' + window.global_user_account_id;
     await fetch(url, 
                 fetch_parameters)
     .then(function(response) {
