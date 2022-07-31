@@ -890,13 +890,6 @@ module.exports = {
                         result_pw = 0;
                         req.body.result = 0;
                     }
-                    insertUserAccountLogon(req.body, (err2, results2) => {
-                        if (err2) {
-                            return res.status(500).send(
-                                err2
-                            );
-                        }
-                    });
                     createUserAccountApp(req.body.app_id, results.id, (err3, results3) => {
                         if (err3) {
                             return res.status(500).send(
@@ -932,11 +925,20 @@ module.exports = {
                                             }
                                             else{
                                                 accessToken(req, (err, Token)=>{
-                                                    return res.status(200).json({
-                                                        count: Array(results.items).length,
-                                                        success: 1,
-                                                        accessToken: Token,
-                                                        items: Array(results)
+                                                    req.body.access_token = Token;
+                                                    insertUserAccountLogon(req.body, (err_user_account_logon, result_user_account_logon) => {
+                                                        if (err_user_account_logon) {
+                                                            return res.status(500).send(
+                                                                err_user_account_logon
+                                                            );
+                                                        }
+                                                        else
+                                                            return res.status(200).json({
+                                                                count: Array(results.items).length,
+                                                                success: 1,
+                                                                accessToken: Token,
+                                                                items: Array(results)
+                                                            });
                                                     });
                                                 });
                                             }
@@ -947,25 +949,43 @@ module.exports = {
                         }
                         else{
                             accessToken(req, (err, Token)=>{
-                                return res.status(200).json({
-                                    count: Array(results.items).length,
-                                    success: 1,
-                                    accessToken: Token,
-                                    items: Array(results)
-                                });
+                                req.body.access_token = Token;
+                                insertUserAccountLogon(req.body, (err_user_account_logon, result_user_account_logon) => {
+                                    if (err_user_account_logon) {
+                                        return res.status(500).send(
+                                            err_user_account_logon
+                                        );
+                                    }
+                                    else
+                                        return res.status(200).json({
+                                            count: Array(results.items).length,
+                                            success: 1,
+                                            accessToken: Token,
+                                            items: Array(results)
+                                        });
+                                })
                             });
                         }           
                     } else {
-                        //Username or password not found
-                        createLogAppCI(req, res, req.body.app_id, __appfilename, __appfunction, __appline, 
-                                       'invalid password attempt for user id:' + req.body.user_account_id + ', username:' + req.body.username, (err_log, result_log)=>{
-                            getMessage(20300, 
-                                    process.env.MAIN_APP_ID, 
-                                    req.query.lang_code, (err2,results2)  => {
-                                            return res.status(400).send(
-                                                results2.text
-                                            );
-                                    });
+                        insertUserAccountLogon(req.body, (err_user_account_logon, result_user_account_logon) => {
+                            if (err_user_account_logon) {
+                                return res.status(500).send(
+                                    err_user_account_logon
+                                );
+                            }
+                            else{
+                                //Username or password not found
+                                createLogAppCI(req, res, req.body.app_id, __appfilename, __appfunction, __appline, 
+                                    'invalid password attempt for user id:' + req.body.user_account_id + ', username:' + req.body.username, (err_log, result_log)=>{
+                                getMessage(20300, 
+                                process.env.MAIN_APP_ID, 
+                                req.query.lang_code, (err2,results2)  => {
+                                        return res.status(400).send(
+                                            results2.text
+                                        );
+                                });
+                                })
+                            }
                         })
                     }
                 } else{
@@ -1006,13 +1026,6 @@ module.exports = {
                         }
                         else{
                             req.body.user_account_id = results[0].id;
-                            insertUserAccountLogon(req.body, (err3, results3) => {
-                                if (err3) {
-                                    return res.status(500).send(
-                                        err3
-                                    );
-                                }
-                            });
                             createUserAccountApp(req.body.app_id, results[0].id, (err4, results4) => {
                                 if (err4) {
                                     return res.status(500).send(
@@ -1021,12 +1034,21 @@ module.exports = {
                                 }
                             });        
                             accessToken(req, (err5, Token)=>{
-                                return res.status(200).json({
-                                    count: results.length,
-                                    success: 1,
-                                    accessToken: Token,
-                                    items: results,
-                                    userCreated: 0
+                                req.body.access_token = Token;
+                                insertUserAccountLogon(req.body, (err_user_account_logon, results_user_account_logon) => {
+                                    if (err_user_account_logon) {
+                                        return res.status(500).send(
+                                            err_user_account_logon
+                                        );
+                                    }
+                                    else
+                                        return res.status(200).json({
+                                            count: results.length,
+                                            success: 1,
+                                            accessToken: Token,
+                                            items: results,
+                                            userCreated: 0
+                                        });
                                 });
                             });
                         }
@@ -1049,13 +1071,6 @@ module.exports = {
                         }
                         else{
                             req.body.user_account_id = results4.insertId;
-                            insertUserAccountLogon(req.body, (err5, results5) => {
-                                if (err5) {
-                                    return res.status(500).send(
-                                        err5
-                                    );
-                                }
-                            });
                             createUserAccountApp(req.body.app_id, results4.insertId, (err6, results6) => {
                                 if (err6) {
                                     return res.status(500).send(
@@ -1071,13 +1086,22 @@ module.exports = {
                                 }
                                 else{
                                     accessToken(req, (err8, Token)=>{
-                                        return res.status(200).json({
-                                            count: results7.length,
-                                            success: 1,
-                                            accessToken: Token,
-                                            items: results7,
-                                            userCreated: 1
-                                        });
+                                        req.body.access_token = Token;
+                                        insertUserAccountLogon(req.body, (err_user_account_logon, results_user_account_logon) => {
+                                            if (err_user_account_logon) {
+                                                return res.status(500).send(
+                                                    err_user_account_logon
+                                                );
+                                            }
+                                            else
+                                                return res.status(200).json({
+                                                    count: results7.length,
+                                                    success: 1,
+                                                    accessToken: Token,
+                                                    items: results7,
+                                                    userCreated: 1
+                                                });
+                                        })
                                     });
                                 }
                             });
