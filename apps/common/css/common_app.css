@@ -800,6 +800,9 @@ a:active {
 	#profile_main_col1 {
 		width: 250px;
 	}
+	.profile_detail_list{
+		height:115px;
+	}	
 	#user_edit_label_data_last_logontime,
 	#user_edit_label_data_account_created,
 	#user_edit_label_data_account_modified {
