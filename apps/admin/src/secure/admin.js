@@ -128,6 +128,7 @@ async function get_apps() {
         else{
             json = JSON.parse(result);
             let html='<option value="">ALL</option>';
+            html +='<option value="ADMIN">ADMIN SQL</option>';
             for (var i = 0; i < json.data.length; i++) {
                     html +=
                     `<option value='${json.data[i].id}'>APP${json.data[i].id}</option>`;

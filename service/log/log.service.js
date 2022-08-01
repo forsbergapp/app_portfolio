@@ -292,9 +292,14 @@ module.exports = {
                 else{
                     fileBuffer.toString().split('\r\n').forEach(function (record) {
                         if (record.length>0){
-                            let log_app_id = JSON.parse(record).app_id;
-                            if (log_app_id == parseInt(data.select_app_id) || data.select_app_id=='')
+                            if (data.select_app_id=='')
                                 fixed_log.push(JSON.parse(record));
+                            else
+                                if (JSON.parse(record).app_id =='ADMIN' && data.select_app_id=='ADMIN')
+                                    fixed_log.push(JSON.parse(record));
+                                else
+                                    if (JSON.parse(record).app_id == parseInt(data.select_app_id))
+                                        fixed_log.push(JSON.parse(record));
                         }
                     })
                 }
