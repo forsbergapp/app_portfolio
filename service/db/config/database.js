@@ -10,8 +10,22 @@ const { createLogDB } = require("../../log/log.service");
 
 async function execute_db_sql(app_id, pool_app_id, sql, parameters, admin, 
 							  app_filename, app_function, app_line, callBack){
+
 	switch (process.env.SERVICE_DB_USE){
 		case '1':{
+			if (process.env.SERVICE_LOG_ENABLE_DB==1){
+				let parsed_sql = sql;
+				parameters.forEach(function(parameter){
+					if (parameter == null)
+						parsed_sql = parsed_sql.replace('?', `${parameter}`);
+					else
+						parsed_sql = parsed_sql.replace('?', `'${parameter}'`);
+				});
+				if (admin==true)
+					createLogDB('"ADMIN"', `DB:${process.env.SERVICE_DB_USE} Pool: ADMIN  SQL: ${parsed_sql}`);
+				else
+					createLogDB(app_id, `DB:${process.env.SERVICE_DB_USE} Pool: ${pool_app_id} SQL: ${parsed_sql}`);
+			}
 			if (admin==true)
 				get_pool_admin().query(sql, parameters,
 					(error, results, fields) => {
@@ -38,6 +52,20 @@ async function execute_db_sql(app_id, pool_app_id, sql, parameters, admin,
 			break;
 		}
 		case '2':{
+			if (process.env.SERVICE_LOG_ENABLE_DB==1){
+				let parsed_sql = sql;
+				Object.entries(parameters).forEach(function(parameter){
+					if (parameter[1] == null)
+						parsed_sql = parsed_sql.replace(`:${parameter[0]}`, `${parameter[1]}`);
+					else
+						parsed_sql = parsed_sql.replace(`:${parameter[0]}`, `'${parameter[1]}'`);
+					
+				});
+				if (admin==true)
+					createLogDB('"ADMIN"', `DB:${process.env.SERVICE_DB_USE} Pool: ADMIN  SQL: ${parsed_sql}`);
+				else
+					createLogDB(app_id, `DB:${process.env.SERVICE_DB_USE} Pool: ${pool_app_id} SQL: ${parsed_sql}`);
+			}
 			let pool2;
 			try{
 				if (admin==true)
@@ -149,18 +177,6 @@ async function mysql_pool(app_id, db_user, db_password, callBack){
 		           `mysql createPool ${app_id} user: ` + db_user, (err_log, result_log)=>{
 		null;
 	})
-	/*
-	if (process.env.SERVICE_LOG_ENABLE_DB==1){
-		pool_db1_app[pool_db1_app.length].on('connection', function(connection) {
-			connection.on('enqueue', function(sequence) {
-				// if (sequence instanceof mysql.Sequence.Query) {
-				if ('Query' === sequence.constructor.name) {
-					createLogDB(app_id, sequence.sql);
-				}
-			});
-		});
-	}
-	*/
 	callBack(null, null);
 
 }
@@ -179,16 +195,6 @@ async function init_db(callBack){
 			           `mysql createPool ADMIN user: ${process.env.SERVICE_DB_DB1_APP_ADMIN_USER}`, (err_log, result_log)=>{
 			null;
 		})
-		if (process.env.SERVICE_LOG_ENABLE_DB==1){
-			pool_db1_app_admin.on('connection', function(connection) {
-				connection.on('enqueue', function(sequence) {
-					// if (sequence instanceof mysql.Sequence.Query) {
-					if ('Query' === sequence.constructor.name) {
-						createLogDB(process.env.MAIN_APP_ID, sequence.sql);
-					}
-				});
-			});
-		}
 		pool_db1_app.push(mysql.createPool({
 			port: process.env.SERVICE_DB_DB1_PORT,
 			host: process.env.SERVICE_DB_DB1_HOST,
@@ -202,16 +208,6 @@ async function init_db(callBack){
 			           `mysql createPool ${process.env.MAIN_APP_ID} user: ${process.env.SERVICE_DB_DB1_APP0_USER}`, (err_log, result_log)=>{
 			null;
 		})
-		if (process.env.SERVICE_LOG_ENABLE_DB==1){		
-			pool_db1_app[0].on('connection', function(connection) {
-				connection.on('enqueue', function(sequence) {
-					// if (sequence instanceof mysql.Sequence.Query) {
-					if ('Query' === sequence.constructor.name) {
-						createLogDB(process.env.MAIN_APP_ID, sequence.sql);
-					}
-				});
-			});
-		}
 		callBack(null, null);
 	}
 	else if (process.env.SERVICE_DB_USE==2){
