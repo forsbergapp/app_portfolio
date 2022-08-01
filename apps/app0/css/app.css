@@ -279,7 +279,7 @@ body.font_arabic_nastaliq #dialogue_info_content{
 }
 
 #about_logo, #info_logo {
-	background-image: url('/app0/images/logo.png');
+	background-image: url('/app0/images/logo_title.png');
 	background-size: cover;
 	background-repeat: no-repeat;
 	height: 50px;
@@ -1073,7 +1073,7 @@ div.ray8 {
 	color:#6ab344 !important;
 }
 .theme_moon #about_logo, .theme_moon #info_logo{
-	background: linear-gradient(0deg, rgba(68 68 68 / 50%), rgba(68, 68, 68, 50%)), url(/app0/images/logo.png);
+	background: linear-gradient(0deg, rgba(68 68 68 / 50%), rgba(68, 68, 68, 50%)), url(/app0/images/logo_title.png);
 	background-size: cover;
 	background-repeat: no-repeat;
 }
