@@ -848,9 +848,10 @@ module.exports = {
 									WHERE us.user_account_id = u.id
 										AND us.app_id = ?
 										AND u_like.app1_user_setting_id = us.id) count
-							FROM   ${process.env.SERVICE_DB_DB1_NAME}.user_account u
-							WHERE  u.active = 1
-							AND    4 = ?
+							FROM  ${process.env.SERVICE_DB_DB1_NAME}.user_account u
+						   WHERE  u.active = 1
+							 AND  u.private <> 1
+							 AND  4 = ?
 							UNION ALL
 							SELECT 'VISITED_SETTING' top,
 									u.id,
@@ -867,9 +868,10 @@ module.exports = {
 									WHERE us.user_account_id = u.id
 										AND us.app_id = ?
 										AND u_view.app1_user_setting_id = us.id) count
-							FROM   ${process.env.SERVICE_DB_DB1_NAME}.user_account u
-							WHERE  u.active = 1
-							AND    5 = ?)  t
+							FROM  ${process.env.SERVICE_DB_DB1_NAME}.user_account u
+						   WHERE  u.active = 1
+							 AND  u.private <> 1
+							 AND  5 = ?)  t
 					ORDER BY 1,10 DESC, COALESCE(username, 
 												 provider_first_name)
 					LIMIT 10`;
@@ -895,9 +897,10 @@ module.exports = {
 									WHERE us.user_account_id = u.id
 										AND us.app_id = :app_id
 										AND u_like.app1_user_setting_id = us.id) "count"
-							FROM   ${process.env.SERVICE_DB_DB2_NAME}.user_account u
-							WHERE  u.active = 1
-							AND    4 = :statchoice_like_setting
+							FROM  ${process.env.SERVICE_DB_DB2_NAME}.user_account u
+						   WHERE  u.active = 
+							 AND  u.private <> 1
+							 AND  4 = :statchoice_like_setting
 							UNION ALL
 							SELECT 'VISITED_SETTING' "top",
 									u.id "id",
@@ -914,9 +917,10 @@ module.exports = {
 									WHERE us.user_account_id = u.id
 										AND us.app_id = :app_id
 										AND u_view.app1_user_setting_id = us.id) "count"
-							FROM   ${process.env.SERVICE_DB_DB2_NAME}.user_account u
-							WHERE  u.active = 1
-							AND    5 = :statchoice_visited_setting) t
+							FROM  ${process.env.SERVICE_DB_DB2_NAME}.user_account u
+						   WHERE  u.active = 1
+							 AND  u.private <> 1
+							 AND  5 = :statchoice_visited_setting) t
 					WHERE    ROWNUM <=10
 					ORDER BY 1,10 DESC, COALESCE("username", 
 												"provider_first_name") `;
