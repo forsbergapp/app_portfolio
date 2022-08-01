@@ -12,7 +12,7 @@ INSERT INTO app_portfolio.app_category(id, category_name) VALUES(8, 'Game');
 --
 -- app
 --
-INSERT INTO app_portfolio.app (id, app_name, url, logo, enabled, app_category_id) VALUES (0,'App Portfolio', 'https://localhost','/app0/images/logo_app.png',1, 1);
+INSERT INTO app_portfolio.app (id, app_name, url, logo, enabled, app_category_id) VALUES (0,'App Portfolio', 'https://localhost','/app0/images/logo.png',1, 1);
 INSERT INTO app_portfolio.app (id, app_name, url, logo, enabled, app_category_id) VALUES (1,'Timetables','https://app1.localhost','/app1/images/logo.png',1, 6);
 INSERT INTO app_portfolio.app (id, app_name, url, logo, enabled, app_category_id) VALUES (2,'Property Management','https://app2.localhost','/app2/images/logo.png', 1, 5);
 --
