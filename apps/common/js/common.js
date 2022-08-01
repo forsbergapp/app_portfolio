@@ -2633,7 +2633,6 @@ function init_common(parameters){
     }
    
     if (parameters.ui==true){
-        document.querySelector('meta[name="apple-mobile-web-app-title"]').setAttribute("content", window.global_app_name)
         //icons
         //dialogue user verify
         document.getElementById('user_verify_email_icon').innerHTML = window.global_button_default_icon_mail;
@@ -2743,9 +2742,6 @@ function init_common(parameters){
         document.getElementById('forgot_button').addEventListener('click', function() { user_forgot()}, false);
         document.getElementById('forgot_close').addEventListener('click', function() { document.getElementById('dialogue_forgot').style.visibility = 'hidden' }, false);
         //set app info
-        document.getElementById('login_logo').style.backgroundImage = `url(${window.global_app_logo})`;
-        document.getElementById('signup_logo').style.backgroundImage = `url(${window.global_app_logo})`;
-        document.getElementById('forgot_logo').style.backgroundImage =`url(${window.global_app_logo})`;
         document.getElementById('login_app_name').innerHTML = window.global_app_name;
         document.getElementById('signup_app_name').innerHTML = window.global_app_name;
         document.getElementById('forgot_app_name').innerHTML = window.global_app_name;
