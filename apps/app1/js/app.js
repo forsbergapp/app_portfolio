@@ -200,20 +200,20 @@ function getReportSettings(){
                 header_img_src      	: document.getElementById('setting_reportheader_img').src,
                 footer_img_src      	: document.getElementById('setting_reportfooter_img').src,
 
-                header_txt1         	: document.getElementById('setting_input_reporttitle1').value,
-                header_txt2         	: document.getElementById('setting_input_reporttitle2').value,
-                header_txt3         	: document.getElementById('setting_input_reporttitle3').value,
+                header_txt1         	: document.getElementById('setting_input_reportheader1').value,
+                header_txt2         	: document.getElementById('setting_input_reportheader2').value,
+                header_txt3         	: document.getElementById('setting_input_reportheader3').value,
                 //button is active set left, center or right true/false
-                header_align            : get_align(document.getElementById('setting_input_reporttitle_aleft').classList.contains('setting_button_active'), 
-                                                    document.getElementById('setting_input_reporttitle_acenter').classList.contains('setting_button_active'), 
-                                                    document.getElementById('setting_input_reporttitle_aright').classList.contains('setting_button_active')),
+                header_align            : get_align(document.getElementById('setting_icon_text_header_aleft').classList.contains('setting_button_active'), 
+                                                    document.getElementById('setting_icon_text_header_acenter').classList.contains('setting_button_active'), 
+                                                    document.getElementById('setting_icon_text_header_aright').classList.contains('setting_button_active')),
                 footer_txt1         	: document.getElementById('setting_input_reportfooter1').value,
                 footer_txt2         	: document.getElementById('setting_input_reportfooter2').value,
                 footer_txt3    	   		: document.getElementById('setting_input_reportfooter3').value,
                 //button is active set left, center or right true/false
-                footer_align            : get_align(document.getElementById('setting_input_reportfooter_aleft').classList.contains('setting_button_active'),
-                                                    document.getElementById('setting_input_reportfooter_acenter').classList.contains('setting_button_active'),
-                                                    document.getElementById('setting_input_reportfooter_aright').classList.contains('setting_button_active')),
+                footer_align            : get_align(document.getElementById('setting_icon_text_footer_aleft').classList.contains('setting_button_active'),
+                                                    document.getElementById('setting_icon_text_footer_acenter').classList.contains('setting_button_active'),
+                                                    document.getElementById('setting_icon_text_footer_aright').classList.contains('setting_button_active')),
                 
                 method              	: document.getElementById('setting_select_method').value,
                 asr                 	: document.getElementById('setting_select_asr').value,
@@ -334,7 +334,7 @@ function update_map_popup() {
     let popup_sub_title_div = document.getElementById('settings_gps_map_popup_sub_title');
     let city_current = document.getElementById('setting_select_city');
     let place = document.getElementById('setting_input_place');
-    let timezone = document.getElementById('setting_label_report_timezone');
+    let timezone = document.getElementById('setting_icon_regional_timezone');
 
     //check if popup exists
     if (popup_title_div) {
@@ -805,7 +805,7 @@ function showcurrenttime() {
     let settings = {
         timezone_current: document.getElementById('setting_select_timezone_current').value,
         locale: get_lang_code(),
-        timedisplay_item: document.getElementById('setting_label_current_date_time_display')
+        timedisplay_item: document.getElementById('setting_current_date_time_display')
     }
     let options = {
         timeZone: settings.timezone_current,
@@ -827,7 +827,7 @@ function showreporttime() {
     let settings = {
         timezone_report: document.getElementById('setting_select_report_timezone')[document.getElementById('setting_select_report_timezone').selectedIndex].value,
         locale: get_lang_code(),
-        timedisplay_item: document.getElementById('setting_label_report_date_time_display')
+        timedisplay_item: document.getElementById('setting_report_date_time_display')
     }
     let options = {
         timeZone: settings.timezone_report,
@@ -1016,11 +1016,11 @@ function openTab(tab_selected) {
 
 function align_button_value(report_align_where) {
 
-    if (document.getElementById('setting_input_' + report_align_where + '_aleft').classList.contains('setting_button_active'))
+    if (document.getElementById('setting_icon_text_' + report_align_where + '_aleft').classList.contains('setting_button_active'))
         return 'left';
-    if (document.getElementById('setting_input_' + report_align_where + '_acenter').classList.contains('setting_button_active'))
+    if (document.getElementById('setting_icon_text_' + report_align_where + '_acenter').classList.contains('setting_button_active'))
         return 'center';
-    if (document.getElementById('setting_input_' + report_align_where + '_aright').classList.contains('setting_button_active'))
+    if (document.getElementById('setting_icon_text_' + report_align_where + '_aright').classList.contains('setting_button_active'))
         return 'right';
     return '';
 }
@@ -1128,12 +1128,12 @@ async function update_ui(option, item_id=null) {
         header_preview_img_item : document.getElementById('setting_reportheader_img'),
         footer_preview_img_item : document.getElementById('setting_reportfooter_img'),
         button_active_class     : 'setting_button_active',
-        reportheader_aleft      : document.getElementById('setting_input_reporttitle_aleft'),
-        reportheader_acenter    : document.getElementById('setting_input_reporttitle_acenter'),
-        reportheader_aright     : document.getElementById('setting_input_reporttitle_aright'),
-        reportfooter_aleft      : document.getElementById('setting_input_reportfooter_aleft'),
-        reportfooter_acenter    : document.getElementById('setting_input_reportfooter_acenter'),
-        reportfooter_aright     : document.getElementById('setting_input_reportfooter_aright'),
+        reportheader_aleft      : document.getElementById('setting_icon_text_header_aleft'),
+        reportheader_acenter    : document.getElementById('setting_icon_text_header_acenter'),
+        reportheader_aright     : document.getElementById('setting_icon_text_header_aright'),
+        reportfooter_aleft      : document.getElementById('setting_icon_text_footer_aleft'),
+        reportfooter_acenter    : document.getElementById('setting_icon_text_footer_acenter'),
+        reportfooter_aright     : document.getElementById('setting_icon_text_footer_aright'),
         select_user_setting     : document.getElementById('setting_select_user_setting')
     };
 
@@ -1171,8 +1171,8 @@ async function update_ui(option, item_id=null) {
                     settings.gps_lat_input.value,
                     window.global_gps_map_zoom,
                     document.getElementById('setting_input_place').value, //text1
-                    document.getElementById('setting_label_report_timezone').innerHTML, //text2
-                    tzlookup(settings.gps_lat_input.value, settings.gps_long_input.value), //text3
+                    document.getElementById('setting_icon_regional_timezone').innerHTML, //icon
+                    tzlookup(settings.gps_lat_input.value, settings.gps_long_input.value), //text2
                     window.global_gps_map_marker_div_gps,
                     window.global_gps_map_jumpto);
                 break;
@@ -1216,8 +1216,8 @@ async function update_ui(option, item_id=null) {
                     settings.gps_lat_input.value,
                     window.global_gps_map_zoom_city,
                     document.getElementById('setting_input_place').value, //text1
-                    document.getElementById('setting_label_report_timezone').innerHTML, //text2
-                    timezone_selected, //text3
+                    document.getElementById('setting_icon_regional_timezone').innerHTML, //icon
+                    timezone_selected, //text2 
                     window.global_gps_map_marker_div_city,
                     window.global_gps_map_flyto);
                 settings.timezone_report.value = timezone_selected;
@@ -1237,8 +1237,8 @@ async function update_ui(option, item_id=null) {
                     settings.gps_lat_input.value,
                     window.global_gps_map_zoom_pp, //zoom for popular places
                     settings.select_place.options[settings.select_place.selectedIndex].text, //text1
-                    document.getElementById('setting_label_report_timezone').innerHTML, //text2
-                    timezone_selected, //text3
+                    document.getElementById('setting_icon_regional_timezone').innerHTML, //icon
+                    timezone_selected, //text2 
                     window.global_gps_map_marker_div_pp, //marker for popular places
                     window.global_gps_map_flyto);
                 settings.timezone_report.value = timezone_selected;
@@ -1271,9 +1271,9 @@ async function update_ui(option, item_id=null) {
                     update_map(settings.gps_long_input.value,
                         settings.gps_lat_input.value,
                         '', //do not change zoom 
-                        document.getElementById('setting_input_place').value, //text1
-                        document.getElementById('setting_label_report_timezone').innerHTML, //text2
-                        tzlookup(settings.gps_lat_input.value, settings.gps_long_input.value), //text3
+                        document.getElementById('setting_input_place').value, //text1 
+                        document.getElementById('setting_icon_regional_timezone').innerHTML, //icon
+                        tzlookup(settings.gps_lat_input.value, settings.gps_long_input.value), //text2
                         window.global_gps_map_marker_div_gps,
                         window.global_gps_map_jumpto);
                     settings.timezone_report.value = tzlookup(settings.gps_lat_input.value, settings.gps_long_input.value);
@@ -1351,12 +1351,12 @@ async function update_ui(option, item_id=null) {
                     settings.reportheader_aright.classList.remove(settings.button_active_class);
                     document.getElementById(item_id).classList.add(settings.button_active_class);
                 }
-                let header_align = get_align(document.getElementById('setting_input_reporttitle_aleft').classList.contains('setting_button_active'),
-                                                 document.getElementById('setting_input_reporttitle_acenter').classList.contains('setting_button_active'),
-                                                 document.getElementById('setting_input_reporttitle_aright').classList.contains('setting_button_active'));
-                document.getElementById('setting_input_reporttitle1').style.textAlign= header_align;
-                document.getElementById('setting_input_reporttitle2').style.textAlign= header_align;
-                document.getElementById('setting_input_reporttitle3').style.textAlign= header_align;
+                let header_align = get_align(document.getElementById('setting_icon_text_header_aleft').classList.contains('setting_button_active'),
+                                                 document.getElementById('setting_icon_text_header_acenter').classList.contains('setting_button_active'),
+                                                 document.getElementById('setting_icon_text_header_aright').classList.contains('setting_button_active'));
+                document.getElementById('setting_input_reportheader1').style.textAlign= header_align;
+                document.getElementById('setting_input_reportheader2').style.textAlign= header_align;
+                document.getElementById('setting_input_reportheader3').style.textAlign= header_align;
                 break;
             }
         //16=Texts, Report footer align
@@ -1372,9 +1372,9 @@ async function update_ui(option, item_id=null) {
                     settings.reportfooter_aright.classList.remove(settings.button_active_class);
                     document.getElementById(item_id).classList.add(settings.button_active_class);
                 }
-                let footer_align = get_align(document.getElementById('setting_input_reportfooter_aleft').classList.contains('setting_button_active'),
-                                                 document.getElementById('setting_input_reportfooter_acenter').classList.contains('setting_button_active'),
-                                                 document.getElementById('setting_input_reportfooter_aright').classList.contains('setting_button_active'));
+                let footer_align = get_align(document.getElementById('setting_icon_text_footer_aleft').classList.contains('setting_button_active'),
+                                                 document.getElementById('setting_icon_text_footer_acenter').classList.contains('setting_button_active'),
+                                                 document.getElementById('setting_icon_text_footer_aright').classList.contains('setting_button_active'));
                 document.getElementById('setting_input_reportfooter1').style.textAlign= footer_align;
                 document.getElementById('setting_input_reportfooter2').style.textAlign= footer_align;
                 document.getElementById('setting_input_reportfooter3').style.textAlign= footer_align;
@@ -1865,8 +1865,8 @@ async function user_settings_load() {
             document.getElementById('setting_input_lat').value,
             window.global_gps_map_zoom, //default zoom
             document.getElementById('setting_input_place').value, //text1
-            document.getElementById('setting_label_report_timezone').innerHTML, //text2
-            document.getElementById('setting_select_report_timezone').value, //text3
+            document.getElementById('setting_icon_regional_timezone').innerHTML, //icon
+            document.getElementById('setting_select_report_timezone').value, //text2 
             window.global_gps_map_marker_div_gps, //marker for GPS
             window.global_gps_map_jumpto);
     }
@@ -1915,21 +1915,21 @@ async function user_settings_load() {
             select_user_setting[select_user_setting.selectedIndex].getAttribute('image_footer_image_img');
     }
     //Text
-    document.getElementById('setting_input_reporttitle1').value =
+    document.getElementById('setting_input_reportheader1').value =
         select_user_setting[select_user_setting.selectedIndex].getAttribute('text_header_1_text');
-    document.getElementById('setting_input_reporttitle2').value =
+    document.getElementById('setting_input_reportheader2').value =
         select_user_setting[select_user_setting.selectedIndex].getAttribute('text_header_2_text');
-    document.getElementById('setting_input_reporttitle3').value =
+    document.getElementById('setting_input_reportheader3').value =
         select_user_setting[select_user_setting.selectedIndex].getAttribute('text_header_3_text');
     if (select_user_setting[select_user_setting.selectedIndex].getAttribute('text_header_align') == '') {
-        document.getElementById('setting_input_reporttitle_aleft').classList.remove('setting_button_active');
-        document.getElementById('setting_input_reporttitle_acenter').classList.remove('setting_button_active');
-        document.getElementById('setting_input_reporttitle_aright').classList.remove('setting_button_active');
+        document.getElementById('setting_icon_text_header_aleft').classList.remove('setting_button_active');
+        document.getElementById('setting_icon_text_header_acenter').classList.remove('setting_button_active');
+        document.getElementById('setting_icon_text_header_aright').classList.remove('setting_button_active');
     } else { //update with 'left', 'center' or 'right' adding to bject name and add active class to this object
         //remove active class if it is active
-        document.getElementById('setting_input_reporttitle_a' +
+        document.getElementById('setting_icon_text_header_a' +
             select_user_setting[select_user_setting.selectedIndex].getAttribute('text_header_align')).classList.remove('setting_button_active');
-        update_ui(15, 'setting_input_reporttitle_a' +
+        update_ui(15, 'setting_icon_text_header_a' +
             select_user_setting[select_user_setting.selectedIndex].getAttribute('text_header_align'));
     }
     document.getElementById('setting_input_reportfooter1').value =
@@ -1939,14 +1939,14 @@ async function user_settings_load() {
     document.getElementById('setting_input_reportfooter3').value =
         select_user_setting[select_user_setting.selectedIndex].getAttribute('text_footer_3_text');
     if (select_user_setting[select_user_setting.selectedIndex].getAttribute('text_footer_align') == '') {
-        document.getElementById('setting_input_reportfooter_aleft').classList.remove('setting_button_active');
-        document.getElementById('setting_input_reportfooter_acenter').classList.remove('setting_button_active');
-        document.getElementById('setting_input_reportfooter_aright').classList.remove('setting_button_active');
+        document.getElementById('setting_icon_text_footer_aleft').classList.remove('setting_button_active');
+        document.getElementById('setting_icon_text_footer_acenter').classList.remove('setting_button_active');
+        document.getElementById('setting_icon_text_footer_aright').classList.remove('setting_button_active');
     } else { //update with 'left', 'center' or 'right' adding to bject name and add active class to this object
         //remove active class if it is active
-        document.getElementById('setting_input_reportfooter_a' +
+        document.getElementById('setting_icon_text_footer_a' +
             select_user_setting[select_user_setting.selectedIndex].getAttribute('text_footer_align')).classList.remove('setting_button_active');
-        update_ui(16, 'setting_input_reportfooter_a' +
+        update_ui(16, 'setting_icon_text_footer_a' +
             select_user_setting[select_user_setting.selectedIndex].getAttribute('text_footer_align'));
     }
     //Prayer
@@ -1995,9 +1995,9 @@ async function user_settings_function(function_name, initial_user_setting, callB
     if (check_input(description) == false ||
         check_input(document.getElementById('setting_input_lat').value) == false ||
         check_input(document.getElementById('setting_input_long').value) == false ||
-        check_input(document.getElementById('setting_input_reporttitle1').value) == false ||
-        check_input(document.getElementById('setting_input_reporttitle2').value) == false ||
-        check_input(document.getElementById('setting_input_reporttitle3').value) == false ||
+        check_input(document.getElementById('setting_input_reportheader1').value) == false ||
+        check_input(document.getElementById('setting_input_reportheader2').value) == false ||
+        check_input(document.getElementById('setting_input_reportheader3').value) == false ||
         check_input(document.getElementById('setting_input_reportfooter1').value) == false ||
         check_input(document.getElementById('setting_input_reportfooter2').value) == false ||
         check_input(document.getElementById('setting_input_reportfooter3').value) == false ||
@@ -2040,14 +2040,14 @@ async function user_settings_function(function_name, initial_user_setting, callB
           "image_header_image_img": "${window.btoa(document.getElementById('setting_reportheader_img').src)}",
           "image_footer_image_img": "${window.btoa(document.getElementById('setting_reportfooter_img').src)}",
 
-          "text_header_1_text": "${document.getElementById('setting_input_reporttitle1').value}",
-          "text_header_2_text": "${document.getElementById('setting_input_reporttitle2').value}",
-          "text_header_3_text": "${document.getElementById('setting_input_reporttitle3').value}",
-          "text_header_align": "${align_button_value('reporttitle')}",
+          "text_header_1_text": "${document.getElementById('setting_input_reportheader1').value}",
+          "text_header_2_text": "${document.getElementById('setting_input_reportheader2').value}",
+          "text_header_3_text": "${document.getElementById('setting_input_reportheader3').value}",
+          "text_header_align": "${align_button_value('header')}",
           "text_footer_1_text": "${document.getElementById('setting_input_reportfooter1').value}",
           "text_footer_2_text": "${document.getElementById('setting_input_reportfooter2').value}",
           "text_footer_3_text": "${document.getElementById('setting_input_reportfooter3').value}",
-          "text_footer_align": "${align_button_value('reportfooter')}",
+          "text_footer_align": "${align_button_value('footer')}",
 
           "prayer_method": "${document.getElementById('setting_select_method').value}",
           "prayer_asr_method": "${document.getElementById('setting_select_asr').value}",
@@ -2251,18 +2251,18 @@ async function set_default_settings() {
         document.getElementById('setting_reportfooter_img').src = window.global_image_default_report_footer_src;
     }
     //Text
-    document.getElementById('setting_input_reporttitle1').value = window.global_text_default_reporttitle1;
-    document.getElementById('setting_input_reporttitle2').value = window.global_text_default_reporttitle2;
-    document.getElementById('setting_input_reporttitle3').value = window.global_text_default_reporttitle3;
-    document.getElementById('setting_input_reporttitle_aleft').classList = 'setting_button'; //Align left not active
-    document.getElementById('setting_input_reporttitle_acenter').classList = 'setting_button'; //Align center not active
-    document.getElementById('setting_input_reporttitle_aright').classList = 'setting_button'; //Align right not active
+    document.getElementById('setting_input_reportheader1').value = window.global_text_default_reporttitle1;
+    document.getElementById('setting_input_reportheader2').value = window.global_text_default_reporttitle2;
+    document.getElementById('setting_input_reportheader3').value = window.global_text_default_reporttitle3;
+    document.getElementById('setting_icon_text_header_aleft').classList = 'setting_button'; //Align left not active
+    document.getElementById('setting_icon_text_header_acenter').classList = 'setting_button'; //Align center not active
+    document.getElementById('setting_icon_text_header_aright').classList = 'setting_button'; //Align right not active
     document.getElementById('setting_input_reportfooter1').value = window.global_text_default_reportfooter1;
     document.getElementById('setting_input_reportfooter2').value = window.global_text_default_reportfooter2;
     document.getElementById('setting_input_reportfooter3').value = window.global_text_default_reportfooter3;
-    document.getElementById('setting_input_reportfooter_aleft').classList = 'setting_button'; //Align left not active
-    document.getElementById('setting_input_reportfooter_acenter').classList = 'setting_button'; //Align center not active
-    document.getElementById('setting_input_reportfooter_aright').classList = 'setting_button'; //Align right not active
+    document.getElementById('setting_icon_text_footer_aleft').classList = 'setting_button'; //Align left not active
+    document.getElementById('setting_icon_text_footer_acenter').classList = 'setting_button'; //Align center not active
+    document.getElementById('setting_icon_text_footer_aright').classList = 'setting_button'; //Align right not active
 
     //Prayer
     SearchAndSetSelectedIndex(window.global_prayer_default_method, document.getElementById('setting_select_method'),1);
@@ -2330,14 +2330,14 @@ function set_settings_select() {
     option.setAttribute('image_footer_image_img', document.getElementById('setting_reportfooter_img').src);
 
     //fix null value that returns the word "null" without quotes
-    option.setAttribute('text_header_1_text', document.getElementById('setting_input_reporttitle1').value);
-    option.setAttribute('text_header_2_text', document.getElementById('setting_input_reporttitle2').value);
-    option.setAttribute('text_header_3_text', document.getElementById('setting_input_reporttitle3').value);
-    option.setAttribute('text_header_align', align_button_value('reporttitle'));
+    option.setAttribute('text_header_1_text', document.getElementById('setting_input_reportheader1').value);
+    option.setAttribute('text_header_2_text', document.getElementById('setting_input_reportheader2').value);
+    option.setAttribute('text_header_3_text', document.getElementById('setting_input_reportheader3').value);
+    option.setAttribute('text_header_align', align_button_value('header'));
     option.setAttribute('text_footer_1_text', document.getElementById('setting_input_reportfooter1').value);
     option.setAttribute('text_footer_2_text', document.getElementById('setting_input_reportfooter2').value);
     option.setAttribute('text_footer_3_text', document.getElementById('setting_input_reportfooter3').value);
-    option.setAttribute('text_footer_align', align_button_value('reportfooter'));
+    option.setAttribute('text_footer_align', align_button_value('footer'));
 
     option.setAttribute('prayer_method', document.getElementById('setting_select_method').value);
     option.setAttribute('prayer_asr_method', document.getElementById('setting_select_asr').value);
@@ -2535,19 +2535,19 @@ function setEvents() {
     document.getElementById('setting_select_report_papersize').addEventListener('change', function() { update_ui(10); }, false);
     document.getElementById('app_select_theme').addEventListener('change', function() { update_ui(3) }, false);
     //settings image
-    document.getElementById('setting_btn_reportheader_img').addEventListener('click', function() { document.getElementById('setting_input_reportheader_img').click() }, false);
-    document.getElementById('setting_input_reportheader_clear').addEventListener('click', function() { update_ui(12) }, false);
+    document.getElementById('setting_icon_image_header_img').addEventListener('click', function() { document.getElementById('setting_input_reportheader_img').click() }, false);
+    document.getElementById('setting_icon_image_header_clear').addEventListener('click', function() { update_ui(12) }, false);
     document.getElementById('setting_input_reportheader_img').addEventListener('change', function() { update_ui(11, this.id) }, false);
-    document.getElementById('setting_btn_reportfooter_img').addEventListener('click', function() { document.getElementById('setting_input_reportfooter_img').click() }, false);
-    document.getElementById('setting_input_reportfooter_clear').addEventListener('click', function() { update_ui(14) }, false);
+    document.getElementById('setting_icon_image_footer_img').addEventListener('click', function() { document.getElementById('setting_input_reportfooter_img').click() }, false);
+    document.getElementById('setting_icon_image_footer_clear').addEventListener('click', function() { update_ui(14) }, false);
     document.getElementById('setting_input_reportfooter_img').addEventListener('change', function() { update_ui(13, this.id) }, false);
     //settings text
-    document.getElementById('setting_input_reporttitle_aleft').addEventListener('click', function() { update_ui(15, this.id) }, false);
-    document.getElementById('setting_input_reporttitle_acenter').addEventListener('click', function() { update_ui(15, this.id) }, false);
-    document.getElementById('setting_input_reporttitle_aright').addEventListener('click', function() { update_ui(15, this.id) }, false);
-    document.getElementById('setting_input_reportfooter_aleft').addEventListener('click', function() { update_ui(16, this.id) }, false);
-    document.getElementById('setting_input_reportfooter_acenter').addEventListener('click', function() { update_ui(16, this.id) }, false);
-    document.getElementById('setting_input_reportfooter_aright').addEventListener('click', function() { update_ui(16, this.id) }, false);
+    document.getElementById('setting_icon_text_header_aleft').addEventListener('click', function() { update_ui(15, this.id) }, false);
+    document.getElementById('setting_icon_text_header_acenter').addEventListener('click', function() { update_ui(15, this.id) }, false);
+    document.getElementById('setting_icon_text_header_aright').addEventListener('click', function() { update_ui(15, this.id) }, false);
+    document.getElementById('setting_icon_text_footer_aleft').addEventListener('click', function() { update_ui(16, this.id) }, false);
+    document.getElementById('setting_icon_text_footer_acenter').addEventListener('click', function() { update_ui(16, this.id) }, false);
+    document.getElementById('setting_icon_text_footer_aright').addEventListener('click', function() { update_ui(16, this.id) }, false);
     //settings prayer                 
     document.getElementById('setting_select_method').addEventListener('change', function() { update_ui(17);}, false);
     //settings user
@@ -3033,37 +3033,6 @@ async function init_app() {
     //profile top
     document.getElementById('profile_top_row2_1').innerHTML = window.global_button_default_icon_like + window.global_button_default_icon_day  + window.global_button_default_icon_month + window.global_button_default_icon_year;
     document.getElementById('profile_top_row2_2').innerHTML = window.global_button_default_icon_views + window.global_button_default_icon_day  + window.global_button_default_icon_month + window.global_button_default_icon_year;
-    //settings tab 4
-    document.getElementById('setting_input_reportheader_clear').innerHTML = window.global_button_default_icon_remove;
-    document.getElementById('setting_input_reportfooter_clear').innerHTML = window.global_button_default_icon_remove;
-
-    document.getElementById('setting_btn_reportheader_img').innerHTML = window.global_button_default_icon_search;
-    document.getElementById('setting_btn_reportfooter_img').innerHTML = window.global_button_default_icon_search;
-    
-    //settings tab 5
-    document.getElementById('setting_input_reporttitle_aleft').innerHTML =  window.global_button_default_icon_align_left;
-    document.getElementById('setting_input_reporttitle_acenter').innerHTML = window.global_button_default_icon_align_center
-    document.getElementById('setting_input_reporttitle_aright').innerHTML = window.global_button_default_icon_align_right;
-    document.getElementById('setting_input_reportfooter_aleft').innerHTML = window.global_button_default_icon_align_left;
-    document.getElementById('setting_input_reportfooter_acenter').innerHTML = window.global_button_default_icon_align_center;
-    document.getElementById('setting_input_reportfooter_aright').innerHTML = window.global_button_default_icon_align_right;
-    //settings tab 7 user settings
-    document.getElementById('user_day_html').innerHTML = window.global_button_default_icon_html + '<div id="user_day_label_html">HTML</div>';
-    document.getElementById('user_day_html_copy').innerHTML = window.global_button_default_icon_copy;
-    document.getElementById('user_day_pdf').innerHTML = window.global_button_default_icon_pdf + '<div id="user_day_label_pdf">PDF</div>';
-    document.getElementById('user_day_pdf_copy').innerHTML = window.global_button_default_icon_copy;
-    document.getElementById('user_month_html').innerHTML = window.global_button_default_icon_html + '<div id="user_month_label_html">HTML</div>';
-    document.getElementById('user_month_html_copy').innerHTML = window.global_button_default_icon_copy;
-    document.getElementById('user_month_pdf').innerHTML = window.global_button_default_icon_pdf + '<div id="user_month_label_pdf">PDF</div>';
-    document.getElementById('user_month_pdf_copy').innerHTML = window.global_button_default_icon_copy;
-    document.getElementById('user_year_html').innerHTML = window.global_button_default_icon_html + '<div id="user_year_label_html">HTML</div>';
-    document.getElementById('user_year_html_copy').innerHTML = window.global_button_default_icon_copy;
-    document.getElementById('user_year_pdf').innerHTML = window.global_button_default_icon_pdf + '<div id="user_year_label_pdf">PDF</div>';
-    document.getElementById('user_year_pdf_copy').innerHTML = window.global_button_default_icon_copy;
-
-    document.getElementById('setting_btn_user_save').innerHTML = window.global_button_default_icon_save;
-    document.getElementById('setting_btn_user_add').innerHTML = window.global_button_default_icon_add;
-    document.getElementById('setting_btn_user_delete').innerHTML = window.global_button_default_icon_delete;
     //tab navigation
     document.getElementById('tab_nav_btn_1').innerHTML = window.global_button_default_icon_tab_regional;
     document.getElementById('tab_nav_btn_2').innerHTML = window.global_button_default_icon_tab_gps;
@@ -3072,6 +3041,103 @@ async function init_app() {
     document.getElementById('tab_nav_btn_5').innerHTML = window.global_button_default_icon_tab_text;
     document.getElementById('tab_nav_btn_6').innerHTML = window.global_button_default_icon_tab_prayer;
     document.getElementById('tab_nav_btn_7').innerHTML = window.global_button_default_icon_tab_user;
+    //settings tab 1 Regional
+    document.getElementById('setting_icon_regional_locale').innerHTML = window.global_button_default_icon_regional_locale;
+    document.getElementById('setting_icon_regional_timezone_current').innerHTML = window.global_button_default_icon_regional_timezone + window.global_button_default_icon_gps_position;
+    document.getElementById('setting_icon_regional_timezone').innerHTML = window.global_button_default_icon_regional_timezone + window.global_button_default_icon_regional_calendar;
+    document.getElementById('setting_icon_regional_numbersystem').innerHTML = window.global_button_default_icon_regional_numbersystem;
+    document.getElementById('setting_icon_regional_direction').innerHTML = window.global_button_default_icon_regional_direction;
+    document.getElementById('setting_icon_regional_locale_second').innerHTML = window.global_button_default_icon_regional_locale + window.global_button_default_icon_second;
+    document.getElementById('setting_icon_regional_coltitle').innerHTML = window.global_button_default_icon_title;
+    document.getElementById('setting_icon_regional_arabic_script').innerHTML = window.global_button_default_icon_regional_script;
+    document.getElementById('setting_icon_regional_calendartype').innerHTML = window.global_button_default_icon_regional_calendar;
+    document.getElementById('setting_icon_regional_calendar_hijri_type').innerHTML = window.global_button_default_icon_regional_calendar_hijri_type;
+    //settings tab 2 GPS
+    document.getElementById('setting_icon_gps_maptype').innerHTML = window.global_button_default_icon_gps_map;
+    document.getElementById('setting_icon_gps_country').innerHTML = window.global_button_default_icon_gps_country;
+    document.getElementById('setting_icon_gps_city').innerHTML = window.global_button_default_icon_gps_city;
+    document.getElementById('setting_icon_gps_popular_place').innerHTML = window.global_button_default_icon_gps_popular_place;
+    document.getElementById('setting_icon_gps_place').innerHTML = window.global_button_default_icon_gps_position;
+    //settings tab 3 Design
+    document.getElementById('setting_icon_design_theme_day').innerHTML = window.global_button_default_icon_day;
+    document.getElementById('setting_icon_design_theme_month').innerHTML = window.global_button_default_icon_month;
+    document.getElementById('setting_icon_design_theme_year').innerHTML = window.global_button_default_icon_year;
+    document.getElementById('setting_icon_design_papersize').innerHTML = window.global_button_default_icon_design_papersize;
+    document.getElementById('setting_icon_design_highlight_row').innerHTML = window.global_button_default_icon_design_highlight;
+    document.getElementById('setting_icon_design_show_weekday').innerHTML = window.global_button_default_icon_design_show;
+    document.getElementById('setting_icon_design_show_calendartype').innerHTML = window.global_button_default_icon_design_show + window.global_button_default_icon_regional_calendartype;
+    document.getElementById('setting_icon_design_show_notes').innerHTML = window.global_button_default_icon_design_show + window.global_button_default_icon_design_notes;
+    document.getElementById('setting_icon_design_show_gps').innerHTML = window.global_button_default_icon_design_show + window.global_button_default_icon_gps_position;
+    document.getElementById('setting_icon_design_show_timezone').innerHTML = window.global_button_default_icon_design_show + window.global_button_default_icon_regional_timezone;
+    //settings tab 4 Image
+    document.getElementById('setting_icon_image_header_clear').innerHTML = window.global_button_default_icon_remove;
+    document.getElementById('setting_icon_image_footer_clear').innerHTML = window.global_button_default_icon_remove;
+    document.getElementById('setting_icon_image_header_img').innerHTML = window.global_button_default_icon_search;
+    document.getElementById('setting_icon_image_footer_img').innerHTML = window.global_button_default_icon_search;    
+    //settings tab 5 Text
+    document.getElementById('setting_icon_text_header_aleft').innerHTML =  window.global_button_default_icon_text_align_left;
+    document.getElementById('setting_icon_text_header_acenter').innerHTML = window.global_button_default_icon_text_align_center
+    document.getElementById('setting_icon_text_header_aright').innerHTML = window.global_button_default_icon_text_align_right;
+    document.getElementById('setting_icon_text_footer_aleft').innerHTML = window.global_button_default_icon_text_align_left;
+    document.getElementById('setting_icon_text_footer_acenter').innerHTML = window.global_button_default_icon_text_align_center;
+    document.getElementById('setting_icon_text_footer_aright').innerHTML = window.global_button_default_icon_text_align_right;
+    //settings tab 6 Prayer
+    document.getElementById('setting_icon_prayer_method').innerHTML = window.global_button_default_icon_design_book;
+    document.getElementById('setting_icon_prayer_asr').innerHTML = window.global_button_default_icon_design_book + window.global_button_default_icon_sky_afternoon;
+    document.getElementById('setting_icon_prayer_highlatitude').innerHTML = window.global_button_default_icon_regional_timezone + 
+                                                                            window.global_button_default_icon_gps_high_latitude;
+    document.getElementById('setting_icon_prayer_timeformat').innerHTML = window.global_button_default_icon_regional_timeformat;
+    document.getElementById('setting_icon_prayer_hijri_adjustment').innerHTML = window.global_button_default_icon_settings + window.global_button_default_icon_regional_calendar;
+    document.getElementById('setting_icon_prayer_report_iqamat_title_fajr').innerHTML = window.global_button_default_icon_misc_calling + 
+                                                                                        window.global_button_default_icon_misc_prayer + 
+                                                                                        window.global_button_default_icon_sky_sunrise;
+    document.getElementById('setting_icon_prayer_report_iqamat_title_dhuhr').innerHTML = window.global_button_default_icon_misc_calling + 
+                                                                                        window.global_button_default_icon_misc_prayer +
+                                                                                        window.global_button_default_icon_sky_midday;
+    document.getElementById('setting_icon_prayer_report_iqamat_title_asr').innerHTML = window.global_button_default_icon_misc_calling + 
+                                                                                        window.global_button_default_icon_misc_prayer + 
+                                                                                        window.global_button_default_icon_sky_afternoon;
+    document.getElementById('setting_icon_prayer_report_iqamat_title_maghrib').innerHTML = window.global_button_default_icon_misc_calling + 
+                                                                                        window.global_button_default_icon_misc_prayer + 
+                                                                                        window.global_button_default_icon_sky_sunset;
+    document.getElementById('setting_icon_prayer_report_iqamat_title_isha').innerHTML = window.global_button_default_icon_misc_calling + 
+                                                                                        window.global_button_default_icon_misc_prayer + 
+                                                                                        window.global_button_default_icon_sky_night;
+    document.getElementById('setting_icon_prayer_report_show_imsak').innerHTML = window.global_button_default_icon_design_show + 
+                                                                                 window.global_button_default_icon_sky_sunrise + 
+                                                                                 window.global_button_default_icon_misc_food;
+    document.getElementById('setting_icon_prayer_report_show_sunset').innerHTML = window.global_button_default_icon_design_show + 
+                                                                                  window.global_button_default_icon_sky_sunset;
+    document.getElementById('setting_icon_prayer_report_show_midnight').innerHTML = window.global_button_default_icon_design_show +
+                                                                                    window.global_button_default_icon_sky_midnight +
+                                                                                    window.global_button_default_icon_misc_prayer;
+    document.getElementById('setting_icon_prayer_report_show_fast_start_end').innerHTML = window.global_button_default_icon_design_show + 
+                                                                                          window.global_button_default_icon_misc_food +
+                                                                                          window.global_button_default_icon_misc_ban;
+    //settings tab 7 User settings
+    document.getElementById('setting_icon_user_settings').innerHTML = window.global_button_default_icon_settings + 
+                                                                      window.global_button_default_icon_gps_position;
+    document.getElementById('setting_icon_user_url_day').innerHTML = window.global_button_default_icon_day;
+    document.getElementById('setting_icon_user_url_month').innerHTML = window.global_button_default_icon_month;
+    document.getElementById('setting_icon_user_url_year').innerHTML = window.global_button_default_icon_year;
+
+    document.getElementById('user_day_html').innerHTML = window.global_button_default_icon_html;
+    document.getElementById('user_day_html_copy').innerHTML = window.global_button_default_icon_copy;
+    document.getElementById('user_day_pdf').innerHTML = window.global_button_default_icon_pdf;
+    document.getElementById('user_day_pdf_copy').innerHTML = window.global_button_default_icon_copy;
+    document.getElementById('user_month_html').innerHTML = window.global_button_default_icon_html;
+    document.getElementById('user_month_html_copy').innerHTML = window.global_button_default_icon_copy;
+    document.getElementById('user_month_pdf').innerHTML = window.global_button_default_icon_pdf;
+    document.getElementById('user_month_pdf_copy').innerHTML = window.global_button_default_icon_copy;
+    document.getElementById('user_year_html').innerHTML = window.global_button_default_icon_html;
+    document.getElementById('user_year_html_copy').innerHTML = window.global_button_default_icon_copy;
+    document.getElementById('user_year_pdf').innerHTML = window.global_button_default_icon_pdf;
+    document.getElementById('user_year_pdf_copy').innerHTML = window.global_button_default_icon_copy;
+
+    document.getElementById('setting_btn_user_save').innerHTML = window.global_button_default_icon_save;
+    document.getElementById('setting_btn_user_add').innerHTML = window.global_button_default_icon_add;
+    document.getElementById('setting_btn_user_delete').innerHTML = window.global_button_default_icon_delete;
+    
     //toolbar bottom
     document.getElementById('toolbar_btn_print').innerHTML = window.global_button_default_icon_print + '<div id="toolbar_btn_print_label">Print</div>';
     document.getElementById('toolbar_btn_day').innerHTML = window.global_button_default_icon_day + '<div id="toolbar_btn_day_label">Day</div>';

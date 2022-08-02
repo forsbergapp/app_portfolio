@@ -1,5 +1,5 @@
 body{
-	font-size: 11px;
+	font-size: 14px;
 	margin: 0;
 	height: 100%;
 	width: -webkit-fit-content;
@@ -21,10 +21,10 @@ a:visited {
 	text-decoration: none;
 }
 a:hover {
-	text-decoration: underline;
+	text-decoration: none;
 }
 a:active {
-	text-decoration: underline;
+	text-decoration: none;
 }
 /*checkbox with switch ui*/
 .switch-input {
@@ -437,17 +437,21 @@ a:active {
 }
 #profile_avatar_online_status{
 	display:none;
-    margin-left: 40px;
+    margin-left: 45px;
     margin-top: -20px;
     position: absolute;
+	border-radius: 50%;
+	font-size:11px;
 }
 #profile_avatar_online_status.online{
 	display: inline-block;
 	color:#6ab344;
+	background-color: #6ab344;
 }
 #profile_avatar_online_status.offline{
 	display: inline-block;
 	color:rgb(224, 38, 38);
+	background-color: rgb(224, 38, 38);
 }
 
 #profile_joined_date_icon{
@@ -783,7 +787,7 @@ a:active {
 /*CSS for minimum 768px*/
 @media only screen and (min-width: 768px) {
 	body{
-		font-size: 14px;
+		font-size: 16px;
 	}
 	#dialogue_profile_content{
 		width:500px;
