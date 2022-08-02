@@ -356,6 +356,7 @@
 	bottom: 0px;
 	right: 0px;
 	position: fixed;
+	text-align: center;
 }
 
 /*SETTINGS TAB NAVIGATION */
@@ -438,16 +439,22 @@ height: 25px;
 	max-height: 30px;
 	display: inline-table;
 }
-#settings .setting_horizontal_col:nth-child(1),
-#settings .setting_horizontal_col:nth-child(4){
-	width:5%;
+#settings .setting_horizontal_col{
 	display: inline-block;
 }
-#settings .setting_horizontal_col:nth-child(2),
+#settings .setting_horizontal_col:nth-child(1){
+	width:15%;
+}
+#settings .setting_horizontal_col:nth-child(2){
+	width:15%;
+	text-align: left;
+}
 #settings .setting_horizontal_col:nth-child(3){
-	width:45%;
-	display: inline-block;
+	width:55%;
 	text-align:left;
+}
+#settings .setting_horizontal_col:nth-child(4){
+	width:15%;
 }
 #settings .setting_horizontal_col:nth-child(3) select,
 #settings .setting_horizontal_col:nth-child(3) input{
@@ -460,20 +467,15 @@ height: 25px;
 	margin-right: 5%;
 	margin-bottom: 10px;
 }
-#settings #tab2 .setting_horizontal_col:nth-child(1),
-#settings #tab2 .setting_horizontal_col:nth-child(4){
-	width:5%;
-}
-#settings #tab2 .setting_horizontal_col:nth-child(2),
-#settings #tab2 .setting_horizontal_col:nth-child(3){
-	width:45%;
-}
 .mapboxgl-popup{
 	max-width:unset !important;
 }
 /*These are created dynamically when updating map with popup texts*/
-#settings_gps_map_popup_title {
+#settings_gps_map_popup_title,
+#settings_gps_map_popup_sub_title,
+#settings_gps_map_popup_sub_title_timezone {
 	font-weight: bold;
+	text-align: center;
 }
 #map_marker_popular_place {
 	background-image: url('images/marker-icon-green.png');
@@ -548,6 +550,7 @@ height: 25px;
   	margin-top: -20px;
   	box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.3);
   	z-index: 2;
+	font-size: 32px;
 }
 .slider_prev,
 .slider_next {
@@ -576,7 +579,7 @@ height: 25px;
 }
 .slider_prev,
 .slider_next {
-    margin-top: -160px;
+    margin-top: -170px;
     position: fixed;
 	text-align: center;
     display: inline-block;
@@ -617,6 +620,7 @@ height: 25px;
 	display:flex;
     flex-direction:column;
     justify-content:space-between;
+	border: 1px solid;
 }
 #setting_paper_preview_header_image div,
 #setting_paper_preview_footer_image div{
@@ -663,7 +667,7 @@ height: 25px;
 #settings #tab5 #setting_paper_preview_header_text{
 	padding-top:3px;
 }
-#settings #tab5 #setting_input_reporttitle3{
+#settings #tab5 #setting_input_reportheader3{
 	margin-bottom: 4px;
 }
 #settings #tab5 #setting_paper_preview_footer_text{
@@ -683,20 +687,15 @@ height: 25px;
 	display:inline-block;
 }
 /* SETTINGS USER SETTINGS*/
-#settings #tab7 .setting_horizontal_row .setting_horizontal_col:nth-child(1),
-#settings #tab7 .setting_horizontal_row .setting_horizontal_col:nth-child(4){
-	width:10%;
+#settings #tab7 .setting_horizontal_row:nth-child(5) .setting_horizontal_col:nth-child(1),
+#settings #tab7 .setting_horizontal_row:nth-child(5) .setting_horizontal_col:nth-child(4){
+	width: 10%;
 }
-#settings #tab7 .setting_horizontal_row .setting_horizontal_col:nth-child(2),
-#settings #tab7 .setting_horizontal_row .setting_horizontal_col:nth-child(3){
-	width:40%;
-}
-#settings #tab7 .setting_horizontal_row:nth-child(5) .setting_horizontal_col:nth-child(2),
-#settings #tab7 .setting_horizontal_row:nth-child(6) .setting_horizontal_col:nth-child(2){
+
+#settings #tab7 .setting_horizontal_row:nth-child(5) .setting_horizontal_col:nth-child(2){
 	width: 0%;
 }
-#settings #tab7 .setting_horizontal_row:nth-child(5) .setting_horizontal_col:nth-child(3),
-#settings #tab7 .setting_horizontal_row:nth-child(6) .setting_horizontal_col:nth-child(3){
+#settings #tab7 .setting_horizontal_row:nth-child(5) .setting_horizontal_col:nth-child(3){
 	width: 80%;
 	text-align: center;
 }
@@ -735,22 +734,6 @@ height: 25px;
 #settings #setting_data_user_url_month,
 #settings #setting_data_user_url_year{
 	display:flex;
-}
-#user_day_html,
-#user_month_html,
-#user_year_html,
-#user_day_pdf,
-#user_month_pdf,
-#user_year_pdf{
-	font-size: inherit;
-}
-#settings #setting_data_user_url_day #user_day_html_copy,
-#settings #setting_data_user_url_day #user_day_pdf_copy,
-#settings #setting_data_user_url_month #user_month_html_copy,
-#settings #setting_data_user_url_month #user_month_pdf_copy,
-#settings #setting_data_user_url_year #user_year_html_copy,
-#settings #setting_data_user_url_year #user_year_pdf_copy{
-	font-size:30px;
 }
 
 /*RESPONSIVE SETTINGS*/

@@ -8,7 +8,7 @@ module.exports = {
         if (err){
             resolve (
                       `<div class='setting_horizontal_col'>
-                          <label id='setting_label_report_theme_day'>Report theme day</label>
+                          <div id='setting_icon_theme_day'></div>
                           <div id='setting_themes_day_slider' class='slider'>
                           <div class='slider_wrapper'>
                               <div id='slides_day' class='slides'>
@@ -20,7 +20,7 @@ module.exports = {
                           <div id='slider_theme_day_id'></div>
                       </div>
                       <div class='setting_horizontal_col'>
-                          <label id='setting_label_report_theme_month'>Report theme month</label>
+                          <div id='setting_icon_theme_month'></div>
                           <div id='setting_themes_month_slider' class='slider'>
                           <div class='slider_wrapper'>
                               <div id='slides_month' class='slides'>
@@ -32,7 +32,7 @@ module.exports = {
                           <div id='slider_theme_month_id'></div>
                       </div>
                       <div class='setting_horizontal_col'>
-                          <label id='setting_label_report_theme_year'>Report theme year</label>
+                          <div id='setting_icon_report_theme_year'></div>
                           <div id='setting_themes_year_slider' class='slider'>
                           <div class='slider_wrapper'>
                               <div id='slides_year' class='slides'>
@@ -80,7 +80,7 @@ module.exports = {
             theme_type_arr.forEach(themes_type => {
                 html_themes += 
                 `<div class='setting_horizontal_col'>
-                    <label id='setting_label_report_theme_${themes_type}'>Report theme ${themes_type}</label>
+                    <div id='setting_icon_design_theme_${themes_type}'></div>
                     <div id='setting_themes_${themes_type}_slider' class='slider'>
                     <div class='slider_wrapper'>
                         <div id='slides_${themes_type}' class='slides'>
