@@ -2484,42 +2484,42 @@ function set_globals(parameters){
                                             <div></div>
                                         </div>`;
         //Icons
-        window.global_button_default_icon_save = '<i class="fas fa-save"></i>';
-        window.global_button_default_icon_add = '<i class="fas fa-plus-square"></i>';
-        window.global_button_default_icon_delete = '<i class="fas fa-trash-alt"></i>';
-        window.global_button_default_icon_edit = '<i class="fas fa-edit"></i>';
+        window.global_button_default_icon_save = '💾';
+        window.global_button_default_icon_add = '➕';
+        window.global_button_default_icon_delete = '🗑';
+        window.global_button_default_icon_edit = '📝';
 
-        window.global_button_default_icon_delete_account = '<i class="fa-solid fa-user-minus"></i>';
+        window.global_button_default_icon_delete_account = '👤➖';
         window.global_button_default_icon_last_logontime = '<i class="fa-solid fa-right-to-bracket"></i>';
-        window.global_button_default_icon_account_created = '<i class="fas fa-hands-helping"></i>';
-        window.global_button_default_icon_account_modified = '<i class="fas fa-edit"></i>';
+        window.global_button_default_icon_account_created = '🤝';
+        window.global_button_default_icon_account_modified = '📝';
 
-        window.global_button_default_icon_send = '<i class="fas fa-arrow-alt-circle-right"></i>';
+        window.global_button_default_icon_send = '🚀';
         window.global_button_default_icon_login = '<i class="fa-solid fa-right-to-bracket"></i>';
         window.global_button_default_icon_logoff = '<i class="fa-solid fa-right-from-bracket"></i>';
-        window.global_button_default_icon_signup = '<i class="fa-solid fa-user-pen"></i>';
-        window.global_button_default_icon_forgot = '<i class="fa-solid fa-circle-question"></i>';
-        window.global_button_default_icon_password = '<i class="fa-solid fa-unlock-keyhole"></i>';
-        window.global_button_default_icon_sendmail = '<i class="fa-solid fa-envelope"></i>';
-        window.global_button_default_icon_update = '<i class="fas fa-save"></i>';
-        window.global_button_default_icon_delete_account = '<i class="fas fa-trash-alt"></i>';                                
-        window.global_button_default_icon_profile = '<i class="fa-solid fa-id-card"></i>';
-        window.global_button_default_icon_profile_top = '<i class="fa-solid fa-medal"></i>';
-        window.global_button_default_icon_settings = '<i class="fa-solid fa-gear"></i>';
-        window.global_button_default_icon_account_reminder = '<i class="fa-solid fa-circle-question"></i>';
+        window.global_button_default_icon_signup = '📝';
+        window.global_button_default_icon_forgot = '❔';
+        window.global_button_default_icon_password = '🔓';
+        window.global_button_default_icon_sendmail = '📨';
+        window.global_button_default_icon_update = '💾';
+        window.global_button_default_icon_delete_account = '🗑';
+        window.global_button_default_icon_profile = '📇';
+        window.global_button_default_icon_profile_top = '🏅';
+        window.global_button_default_icon_settings = '⚙';
+        window.global_button_default_icon_account_reminder = '❔';
         
-        window.global_button_default_icon_chat = '<i class="fas fa-comment"></i>';
-        window.global_button_default_icon_checkbox_checked = '<i class="fas fa-check-square"></i>';
-        window.global_button_default_icon_checkbox_empty = '<i class="fas fa-square"></i>';
-        window.global_button_default_icon_info = '<i class="fas fa-info-circle"></i>';
-        window.global_button_default_icon_close = '<i class="fas fa-check-circle"></i>';
-        window.global_button_default_icon_user = '<i class="fas fa-user"></i>';
-        window.global_button_default_icon_avatar_edit = '<i class="fas fa-camera"></i>';
+        window.global_button_default_icon_chat ='💬';
+        window.global_button_default_icon_checkbox_checked = '✅';
+        window.global_button_default_icon_checkbox_empty = '⬜';
+        window.global_button_default_icon_info = 'ℹ';
+        window.global_button_default_icon_close = '✅';
+        window.global_button_default_icon_user = '<i class="fas fa-user-circle"></i>';
+        window.global_button_default_icon_avatar_edit = '📷';
         window.global_button_default_icon_user_avatar = '<i class="fas fa-user-circle"></i>';
 
         window.global_button_default_icon_provider = '<i class="fa-solid fa-passport"></i>';
-        window.global_button_default_icon_provider_id = '<i class="fa-solid fa-id-badge"></i>';
-        window.global_button_default_icon_provider_email = '<i class="fa-solid fa-envelope"></i>';
+        window.global_button_default_icon_provider_id = '🆔';
+        window.global_button_default_icon_provider_email = '📧';
         //list of popular identity providers
         window.global_button_default_icon_facebook = '<i class="fab fa-facebook"></i>';
         window.global_button_default_icon_microsoft = '<i class="fa-brands fa-microsoft"></i>';
@@ -2529,66 +2529,107 @@ function set_globals(parameters){
         window.global_button_default_icon_github = '<i class="fa-brands fa-github"></i>';
         window.global_button_default_icon_google = '<i class="fab fa-google"></i>';
 
-        window.global_button_default_icon_user_joined_date = '<i class="fas fa-hands-helping"></i>';
+        window.global_button_default_icon_user_joined_date = '🤝';
         window.global_button_default_icon_user_follow_user = '<i class="fas fa-user-plus"></i>';
-        window.global_button_default_icon_user_followed_user = '<i class="fas fa-user-check"></i';
-        window.global_button_default_icon_online = '<i class="fa-solid fa-circle"></i>';
+        window.global_button_default_icon_user_followed_user = '<i class="fas fa-user-check"></i>';
+        window.global_button_default_icon_online = '⚪';
 
-        window.global_button_default_icon_home = '<i class="fas fa-home"></i>';
-        window.global_button_default_icon_cloud = '<i class="fas fa-cloud"></i>';
+        window.global_button_default_icon_cloud = '☁';
         window.global_button_default_icon_map_my_location = '<i class="fas fa-crosshairs"></i>';
 
-        window.global_button_default_icon_mobile = '<i class="fa-solid fa-mobile-screen-button"></i>';
-        window.global_button_default_icon_search = '<i class="fas fa-search"></i>';
+        window.global_button_default_icon_mobile = '📱';
+        window.global_button_default_icon_search = '🔍';
         window.global_button_default_icon_menu_open = '<i class="fas fa-bars"></i>';
-        window.global_button_default_icon_menu_close = '<i class="fas fa-times-circle"></i>';
-        window.global_button_default_icon_broadcast_close = '<i class="fas fa-times-circle"></i>';
-        window.global_button_default_icon_first = '<i class="fas fa-fast-backward"></i>';
-        window.global_button_default_icon_previous = '<i class="fas fa-backward"></i>';
-        window.global_button_default_icon_next = '<i class="fas fa-forward"></i>';
-        window.global_button_default_icon_last = '<i class="fas fa-fast-forward"></i>';
+        window.global_button_default_icon_menu_close = '❎';
+        window.global_button_default_icon_broadcast_close = '❎';
+        window.global_button_default_icon_first = '⏮';
+        window.global_button_default_icon_previous = '◀';
+        window.global_button_default_icon_next = '▶';
+        window.global_button_default_icon_last = '⏭';
 
-        window.global_button_default_icon_cancel =  '<i class="fas fa-times-circle"></i>';
+        window.global_button_default_icon_cancel =  '❎';
 
-        window.global_button_default_icon_zoomout = '<i class="fas fa-search-minus"></i>';
-        window.global_button_default_icon_zoomin = '<i class="fas fa-search-plus"></i>';
-        window.global_button_default_icon_left = '<i class="fas fa-arrow-alt-circle-left"></i>';
-        window.global_button_default_icon_right = '<i class="fas fa-arrow-alt-circle-right"></i>';
-        window.global_button_default_icon_up = '<i class="fas fa-arrow-alt-circle-up"></i>';
-        window.global_button_default_icon_down = '<i class="fas fa-arrow-alt-circle-down"></i>';
-
-        window.global_button_default_icon_day = '<i class="fas fa-calendar-day"></i>';
-        window.global_button_default_icon_month = '<i class="fas fa-calendar-week"></i>';
-        window.global_button_default_icon_year = '<i class="fas fa-calendar-alt"></i>';
+        window.global_button_default_icon_zoomout = '➖';
+        window.global_button_default_icon_zoomin = '➕';
+        window.global_button_default_icon_left = '⬅';
+        window.global_button_default_icon_right = '➡';
+        window.global_button_default_icon_up = '⬆';
+        window.global_button_default_icon_down = '⬇';
 
         window.global_button_default_icon_like = '<i class="fas fa-heart"></i>';
         window.global_button_default_icon_unlike = '<i class="fas fa-heart-broken"></i>';
-        window.global_button_default_icon_views = '<i class="fas fa-eye"></i>';
+        window.global_button_default_icon_views = '👁';
         window.global_button_default_icon_follows = '<i class="fas fa-user-friends"></i>';
         window.global_button_default_icon_followed = '<i class="fas fa-users"></i>';
 
-        window.global_button_default_icon_align_left = '<i class="fa fa-align-left" tabindex="1"></i>';
-        window.global_button_default_icon_align_center = '<i class="fa fa-align-center" tabindex="1"></i>';
-        window.global_button_default_icon_align_right = '<i class="fa fa-align-left" tabindex="1"></i>';
         window.global_button_default_icon_remove = '<i class="fa fa-times" ></i>';
         window.global_button_default_icon_html = '<i class="fa-solid fa-file-code"></i>';
         window.global_button_default_icon_copy = '<i class="fas fa-copy"></i>';
         window.global_button_default_icon_pdf  = '<i class="fas fa-file-pdf"></i>';
-        window.global_button_default_icon_link = '<i class="fa-solid fa-link"></i>';
-        window.global_button_default_icon_tab_regional  = '<i class="fas fa-globe"></i>';
-        window.global_button_default_icon_tab_gps  = '<i class="fas fa-map-marked-alt"></i>';
-        window.global_button_default_icon_tab_design  = '<i class="fas fa-palette"></i>';
-        window.global_button_default_icon_tab_image = '<i class="fas fa-images"></i>';
-        window.global_button_default_icon_tab_text = '<i class="fas fa-text-height"></i>';
-        window.global_button_default_icon_tab_prayer = '<i class="fas fa-pray"></i>';
-        window.global_button_default_icon_tab_user = '<i class="fas fa-user"></i>';
+        window.global_button_default_icon_link = '🔗';
+        
+        window.global_button_default_icon_tab_regional  = '🌐';
+        window.global_button_default_icon_tab_gps  = '🗺';
+        window.global_button_default_icon_tab_design  = '🎨';
+        window.global_button_default_icon_tab_image = '🖼';
+        window.global_button_default_icon_tab_text = '🔤';
+        window.global_button_default_icon_tab_prayer = '🛐';
+        window.global_button_default_icon_tab_user = '<i class="fas fa-user-circle"></i>';
 
-        window.global_button_default_icon_slider_left = '<i class="fas fa-chevron-left"></i>';
-        window.global_button_default_icon_slider_right = '<i class="fas fa-chevron-right"></i>';
+        window.global_button_default_icon_slider_left = '◀';
+        window.global_button_default_icon_slider_right = '▶';
 
-        window.global_button_default_icon_print = '<i class="fas fa-print"></i>';
-        window.global_button_default_icon_mail = '<i class="fas fa-envelope-square"></i>';
-        window.global_button_default_icon_private = '<i class="fas fa-lock"></i>';
+        window.global_button_default_icon_print = '🖨';
+        window.global_button_default_icon_mail = '📧';
+        window.global_button_default_icon_private = '🔒';
+
+        //regional icons
+        window.global_button_default_icon_day = '☀';
+        window.global_button_default_icon_month = '🌙';
+        window.global_button_default_icon_year = '☸';
+        window.global_button_default_icon_weekday = '🗓';
+        window.global_button_default_icon_regional_locale = '🔤';
+        window.global_button_default_icon_regional_timezone = '🌐';
+        window.global_button_default_icon_regional_calendar = '📅';
+        window.global_button_default_icon_regional_numbersystem = '🔢';
+        window.global_button_default_icon_regional_direction = '➡⬅';
+        window.global_button_default_icon_second = '2️⃣';
+        window.global_button_default_icon_title = '📰';
+        window.global_button_default_icon_regional_script = '📜';
+        window.global_button_default_icon_regional_calendartype = '📅';
+        window.global_button_default_icon_regional_calendar_hijri_type = '📆';
+        window.global_button_default_icon_regional_timeformat = '1️⃣2️⃣/2️⃣4️⃣';
+        //gps icons
+        window.global_button_default_icon_gps_map = '🗺';
+        window.global_button_default_icon_gps_country = '🌍';
+        window.global_button_default_icon_gps_city = '🏙';
+        window.global_button_default_icon_gps_popular_place = '⭐';
+        window.global_button_default_icon_gps_position = '📍';
+        window.global_button_default_icon_gps_high_latitude = '❄';
+        //design icons
+        window.global_button_default_icon_design_papersize = '📄';
+        window.global_button_default_icon_design_highlight = '🔦';
+        window.global_button_default_icon_design_show = '👁';
+        window.global_button_default_icon_design_papersize = '📄';
+        window.global_button_default_icon_design_notes = '📓';
+        window.global_button_default_icon_design_book = '📖';
+        //text icons
+        window.global_button_default_icon_text_align_left = '<i class="fa fa-align-left" tabindex="1"></i>';
+        window.global_button_default_icon_text_align_center = '<i class="fa fa-align-center" tabindex="1"></i>';
+        window.global_button_default_icon_text_align_right = '<i class="fa fa-align-left" tabindex="1"></i>';
+
+        window.global_button_default_icon_sky_sunrise = '🌅';
+        window.global_button_default_icon_sky_midday = '☀';
+        window.global_button_default_icon_sky_afternoon = '⛅';
+        window.global_button_default_icon_sky_sunset = '🌇';
+        window.global_button_default_icon_sky_night = '🌃';
+        window.global_button_default_icon_sky_midnight = '🌃';
+
+        window.global_button_default_icon_misc_food = '🍞';
+        window.global_button_default_icon_misc_prayer = '🛐';
+        window.global_button_default_icon_misc_calling = '🗣';
+        window.global_button_default_icon_misc_ban = '🚫';
+
         //delay API calls when typing to avoid too many calls 
         window.global_typewatch = function() {
             let timer = 0;
