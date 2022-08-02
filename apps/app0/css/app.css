@@ -220,8 +220,9 @@ body.font_arabic_nastaliq #dialogue_info_content{
 #start_message{
 	margin-top: 30px;
 }
-#start_links{
+#start_links, #contact, #copyright{
 	display: block;
+	font-size: 11px;
 }
 #start_links div{
 	width: 24%;
@@ -306,6 +307,9 @@ body.font_arabic_nastaliq #dialogue_info_content{
 @media only screen and (min-width: 768px) {
 	#dialogue_start_content, #dialogue_info_content{
 		width: 400px;
+	}
+	#start_links, #contact, #copyright{
+		font-size: 14px;
 	}
 	#about_logo, #info_logo{
 		height:60px;
@@ -924,7 +928,7 @@ div.ray8 {
 }
 
 .theme_sun .toolbar_button{
-	color: #404040 !important;
+	color: #a49775 !important;
 }
 .theme_sun .toolbar_button:hover, .theme_sun .toolbar_button:active{
 	color:#6ab344 !important;
@@ -938,6 +942,9 @@ div.ray8 {
 .theme_sun #profile_search_list{
 	border: 1px solid #ddd;
 	background-color: white;	
+}
+.theme_sun #user_menu_dropdown{
+	color:#a49775;
 }
 .theme_sun #user_menu_username:hover,
 .theme_sun #user_menu_username:active,
