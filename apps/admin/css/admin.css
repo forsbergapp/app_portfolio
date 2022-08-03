@@ -87,9 +87,7 @@ body.theme_light{
 	background: rgb(81, 171, 255);
 }
 .theme_light .dialogue_content:hover, 
-.theme_light .dialogue_content:active,
-.theme_light .common_dialogue_content:hover, 
-.theme_light .common_dialogue_content:active{
+.theme_light .dialogue_content:active{
 	box-shadow: 0 0 35px 4px rgb(255,255,255,0.25);
 }  
 .theme_light .dialogue_content,
