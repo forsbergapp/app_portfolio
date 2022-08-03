@@ -1,4 +1,7 @@
 <style>
+    body{
+    	font-size: 11px;
+    }
     /*DIALOGUE*/
     .dialogue{
         visibility:hidden;
@@ -218,6 +221,9 @@
     }
     .switch-input:checked + .switch-label::after {
         left: 24px;
+    }
+    #maintenance_broadcast_info{
+        font-size: 30px;
     }
     /* MENU 2 APP ADMIN*/
     #menu_2_content_widget{
@@ -606,6 +612,9 @@
     }
     /*RESPONSIVE*/
     @media only screen and (min-width: 768px) {
+        body{
+            font-size: 14px;
+        }
         #menu_open, #menu_close{
             display: none;
         }

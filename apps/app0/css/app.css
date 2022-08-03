@@ -878,8 +878,6 @@ div.ray8 {
 }
 .theme_sun .dialogue_content:hover, 
 .theme_sun .dialogue_content:active,
-.theme_sun .common_dialogue_content:hover, 
-.theme_sun .common_dialogue_content:active,
 .theme_sun #user_menu:hover,
 .theme_sun #user_menu:active,
 .theme_sun #user_menu_dropdown:hover,
@@ -1020,8 +1018,6 @@ div.ray8 {
 }
 .theme_moon .dialogue_content:hover, 
 .theme_moon .dialogue_content:active,
-.theme_moon .common_dialogue_content:hover, 
-.theme_moon .common_dialogue_content:active,
 .theme_moon #user_menu:hover,
 .theme_moon #user_menu:active,
 .theme_moon #user_menu_dropdown:hover,

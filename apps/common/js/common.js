@@ -18,6 +18,7 @@
 async function common_fetch_token(token_type, json_data,  username, password, callBack) {
     let app_id;
     let url;
+    let status;
     if (window.global_admin==true)
         app_id = window.global_main_app_id;
     else
@@ -49,19 +50,49 @@ async function common_fetch_token(token_type, json_data,  username, password, ca
         return response.text();
     })
     .then(function(result) {
-        switch (token_type){
-            case 0:{
-                //data token
-                window.global_rest_dt = JSON.parse(result).token_dt;
+        switch (status){
+            case 200:{
+                //Success
+                switch (token_type){
+                    case 0:{
+                        //data token
+                        window.global_rest_dt = JSON.parse(result).token_dt;
+                        break;
+                    }
+                    case 1:{
+                        //admin token
+                        window.global_rest_admin_at = JSON.parse(result).token_at;
+                        break;
+                    }
+                }
+                callBack(null, result);
                 break;
             }
-            case 1:{
-                //admin token
-                window.global_rest_admin_at = JSON.parse(result).token_at;
+            case 400:{
+                //Bad request
+                show_message('INFO', null,null, result, app_id);
+                callBack(result, null);
+                break;
+            }
+            case 404:{
+                //Not found
+                show_message('INFO', null,null, result, app_id);
+                callBack(result, null);
+                break;
+            }
+            case 401:{
+                //Unauthorized, wrong credentials
+                show_message('INFO', null,null, JSON.parse(result).message, app_id);
+                callBack(result, null);
+                break;
+            }
+            case 500:{
+                //Unknown error
+                show_message('EXCEPTION', null,null, result, app_id);
+                callBack(result, null);
                 break;
             }
         }
-        callBack(null, result);
     })
 }
 async function common_fetch(url_parameters, method, token_type, json_data, app_id_override, lang_code_override, callBack) {
