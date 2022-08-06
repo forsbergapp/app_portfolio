@@ -766,4 +766,3 @@ INSERT INTO message_translation (language_id, message_code, text) VALUES (506,'2
 INSERT INTO message_translation (language_id, message_code, text) VALUES (506,'20400','Registro no encontrado');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (506,'20401','Contraseña inválida');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (506,'20500','Falta latitud or longitud');
-INSERT INTO message_translation (language_id, message_code, text) VALUES (506,'20501','Código de verificación');

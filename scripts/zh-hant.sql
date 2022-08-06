@@ -768,4 +768,3 @@ INSERT INTO message_translation (language_id, message_code, text) VALUES (546,'2
 INSERT INTO message_translation (language_id, message_code, text) VALUES (546,'20400','記錄不存在');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (546,'20401','無效的密碼');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (546,'20500','缺少緯度或經度');
-INSERT INTO message_translation (language_id, message_code, text) VALUES (546,'20501','驗證碼');
