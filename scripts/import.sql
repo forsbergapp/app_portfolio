@@ -1595,7 +1595,6 @@ INSERT INTO app_portfolio.message (message_level_id, message_type_id, code) VALU
 INSERT INTO app_portfolio.message (message_level_id, message_type_id, code) VALUES (1,1,'20400');
 INSERT INTO app_portfolio.message (message_level_id, message_type_id, code) VALUES (1,1,'20401');
 INSERT INTO app_portfolio.message (message_level_id, message_type_id, code) VALUES (1,1,'20500');
-INSERT INTO app_portfolio.message (message_level_id, message_type_id, code) VALUES (1,2,'20501');
 --
 -- app_message
 --
@@ -1626,7 +1625,6 @@ INSERT INTO app_portfolio.app_message (message_code, app_id) VALUES ('20400',0);
 INSERT INTO app_portfolio.app_message (message_code, app_id) VALUES ('20400',1);
 INSERT INTO app_portfolio.app_message (message_code, app_id) VALUES ('20401',0);
 INSERT INTO app_portfolio.app_message (message_code, app_id) VALUES ('20500',0);
-INSERT INTO app_portfolio.app_message (message_code, app_id) VALUES ('20501',0);
 --
 -- parameter_type
 --

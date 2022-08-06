@@ -674,4 +674,3 @@ INSERT INTO message_translation (language_id, message_code, text) VALUES (107,'2
 INSERT INTO message_translation (language_id, message_code, text) VALUES (107,'20400','记录不存在');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (107,'20401','无效的密码');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (107,'20500','缺少纬度或经度');
-INSERT INTO message_translation (language_id, message_code, text) VALUES (107,'20501','验证码');

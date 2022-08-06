@@ -63,7 +63,7 @@ function admin_exception_before(){
     null;
 }
 function init_app(){
-    document.getElementById('admin_login_button').innerHTML = window.global_button_default_icon_login;
+    document.getElementById('admin_login_button').innerHTML = window.global_icon_app_login;
     setEvents();
 }
 function init(parameters){

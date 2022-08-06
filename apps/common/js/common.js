@@ -582,7 +582,7 @@ function show_common_dialogue(dialogue, user_verification_type, title=null, icon
     return null;   
 }
 
-function show_message(message_type, code, function_event, message_text='', app_id){
+function show_message(message_type, code, function_event, message_text='', app_id=null){
     let confirm_question = document.getElementById('confirm_question');
     let message_title = document.getElementById('message_title');
     let dialogue = document.getElementById('dialogue_message');
@@ -598,7 +598,7 @@ function show_message(message_type, code, function_event, message_text='', app_i
     switch (message_type){
         case 'ERROR':{
             common_fetch(window.global_rest_url_base + window.global_rest_message_translation + code + '?', 
-                         'GET', 0, null, null, null, (err, result) =>{
+                         'GET', 0, null, app_id, null, (err, result) =>{
                 confirm_question.style.display = hide;
                 button_cancel.style.display = hide;
                 message_title.style.display = show;
@@ -1268,7 +1268,7 @@ function profile_detail(detailchoice, timezone, rest_url_app, fetch_detail, head
                         if (window.global_app_id == window.global_main_app_id && detailchoice==5){
                             if (json.items[i].app_id !=0){
                                 if (document.getElementById('profile_id').innerHTML==window.global_user_account_id)
-                                    delete_div = `<div class='profile_detail_list_app_delete'>${global_button_default_icon_delete}</div>`;
+                                    delete_div = `<div class='profile_detail_list_app_delete'>${global_icon_app_delete}</div>`;
                                     
                                 //App list in app 0
                                 html += 
@@ -1665,7 +1665,7 @@ async function user_login(username, password, callBack) {
             window.global_rest_at	= json.accessToken;
             if (json.items[0].active==0){
                 let function_cancel_event = function() { dialogue_verify_clear();eval(`(function (){${window.global_exception_app_function}()}());`);};
-                show_common_dialogue('VERIFY', 'LOGIN', json.items[0].email, window.global_button_default_icon_logoff, function_cancel_event);
+                show_common_dialogue('VERIFY', 'LOGIN', json.items[0].email, window.global_icon_app_logoff, function_cancel_event);
                 return callBack('ERROR', null);
             }
             else{
@@ -1733,9 +1733,9 @@ async function user_edit(timezone, callBack) {
                 } else{
                         document.getElementById('user_edit_provider').style.display = 'block';
                         if (json.identity_provider_id==1)
-                            document.getElementById('user_edit_provider_logo').innerHTML = window.global_button_default_icon_provider1;
+                            document.getElementById('user_edit_provider_logo').innerHTML = window.global_icon_provider_provider1;
                         if (json.identity_provider_id==2)
-                            document.getElementById('user_edit_provider_logo').innerHTML = window.global_button_default_icon_provider2;
+                            document.getElementById('user_edit_provider_logo').innerHTML = window.global_icon_provider_provider2;
                         document.getElementById('user_edit_local').style.display = 'none';
                         document.getElementById('user_edit_label_provider_id_data').innerHTML = json.provider_id;
                         document.getElementById('user_edit_label_provider_name_data').innerHTML = json.provider_first_name + ' ' + json.provider_last_name;
@@ -1850,7 +1850,7 @@ async function user_update(callBack) {
             json = JSON.parse(result);
             if (json.sent_change_email == 1){
                 let function_cancel_event = function() { document.getElementById('dialogue_user_verify').style.visibility='hidden';};
-                show_common_dialogue('VERIFY', 'NEW_EMAIL', new_email, window.global_button_default_icon_cancel, function_cancel_event);
+                show_common_dialogue('VERIFY', 'NEW_EMAIL', new_email, window.global_icon_app_cancel, function_cancel_event);
             }
             else
                 dialogue_user_edit_clear();
@@ -1911,7 +1911,7 @@ function user_signup() {
             window.global_rest_at = json.accessToken;
             window.global_user_account_id = json.id;
             let function_cancel_event = function() { dialogue_verify_clear();eval(`(function (){${window.global_exception_app_function}()}());`);};
-            show_common_dialogue('VERIFY', 'SIGNUP', email, window.global_button_default_icon_logoff, function_cancel_event);
+            show_common_dialogue('VERIFY', 'SIGNUP', email, window.global_icon_app_logoff, function_cancel_event);
         }
     })
 }
@@ -2172,7 +2172,7 @@ async function user_forgot(){
                 if (json.sent == 1){
                     window.global_user_account_id = json.id;
                     let function_cancel_event = function() { document.getElementById('dialogue_user_verify').style.visibility='hidden';};
-                    show_common_dialogue('VERIFY', 'FORGOT', email, window.global_button_default_icon_cancel, function_cancel_event);
+                    show_common_dialogue('VERIFY', 'FORGOT', email, window.global_icon_app_cancel, function_cancel_event);
                 }
             }
         })
@@ -2281,7 +2281,7 @@ async function init_providers(provider1_function, provider2_function){
                         window.global_identity_provider1_name           = json.items[i].provider_name;
                         window.global_identity_provider1_api_src        = json.items[i].api_src;
                         window.global_identity_provider1_api_id         = json.items[i].api_id;
-                        window.global_button_default_icon_provider1     = window.global_button_default_icon_google;
+                        window.global_icon_provider_provider1           = window.global_icon_provider_google;
                         div.innerHTML += `<div id="g_id_onload" data-client_id='' data-callback=''></div>
                                             <div class='g_id_signin login_button' data-type='standard'></div>`;
                         provider_init(1, provider1_function);
@@ -2294,10 +2294,10 @@ async function init_providers(provider1_function, provider2_function){
                         window.global_identity_provider2_api_src        = json.items[i].api_src;
                         window.global_identity_provider2_api_src2       = json.items[i].api_src2;
                         window.global_identity_provider2_api_id         = json.items[i].api_id;
-                        window.global_button_default_icon_provider2     = window.global_button_default_icon_facebook;
+                        window.global_icon_provider_provider2           = window.global_icon_provider_facebook;
 
                         div.innerHTML += `<button id='login_provider2' class='login_button' >
-                                            <div id='logo_provider2'>${window.global_button_default_icon_provider2}</div>
+                                            <div id='logo_provider2'>${window.global_icon_provider_provider2}</div>
                                             <div id='login_btn_provider2'></div>
                                             </button>`;
                         provider_init(2, provider2_function);
@@ -2405,6 +2405,144 @@ function exception(status, message){
 /*----------------------- */
 /* INIT                   */
 /*----------------------- */
+function seticons(){
+    //app
+    window.global_icon_app_mobile = '<i class="fa-solid fa-mobile-screen"></i>';
+    window.global_icon_app_save = '<i class="fa-solid fa-floppy-disk"></i>';
+    window.global_icon_app_add = '<i class="fa-solid fa-plus"></i>';
+    window.global_icon_app_delete = '<i class="fa-solid fa-trash-can"></i>';
+    window.global_icon_app_update = '<i class="fa-solid fa-floppy-disk"></i>';
+    window.global_icon_app_edit = '<i class="fa-solid fa-pen-to-square"></i>';
+    window.global_icon_app_send = '<i class="fa-solid fa-paper-plane"></i>';
+    window.global_icon_app_sendmail = '<i class="fa-solid fa-envelope"></i>';
+    window.global_icon_app_email = '<i class="fa-solid fa-envelope"></i>';
+    window.global_icon_app_settings = '<i class="fa-solid fa-gear"></i>';
+    window.global_icon_app_chat ='<i class="fa-solid fa-comment"></i>';
+    window.global_icon_app_checkbox_checked = '<i class="fa-solid fa-square-check"></i>';
+    window.global_icon_app_checkbox_empty = '<i class="fa-solid fa-square"></i>';
+    window.global_icon_app_info = '<i class="fa-solid fa-circle-info"></i>';
+    window.global_icon_app_close = '<i class="fa-solid fa-circle-check"></i>';
+    window.global_icon_app_online = '<i class="fa-solid fa-circle"></i>';
+    window.global_icon_app_search = '<i class="fa-solid fa-magnifying-glass"></i>';
+    window.global_icon_app_menu_open = '<i class="fas fa-bars"></i>';
+    window.global_icon_app_menu_close = '<i class="fa-solid fa-rectangle-xmark"></i>';
+    window.global_icon_app_broadcast_close = '<i class="fa-solid fa-rectangle-xmark"></i>';
+    window.global_icon_app_first = '<i class="fa-solid fa-backward-step"></i>';
+    window.global_icon_app_previous = '<i class="fa-solid fa-caret-left"></i>';
+    window.global_icon_app_next = '<i class="fa-solid fa-caret-right"></i>';
+    window.global_icon_app_last = '<i class="fa-solid fa-forward-step"></i>';
+    window.global_icon_app_slider_left = '<i class="fa-solid fa-chevron-left"></i>';
+    window.global_icon_app_slider_right = '<i class="fa-solid fa-chevron-right"></i>';
+    window.global_icon_app_align_left = '<i class="fa fa-align-left" tabindex="1"></i>';
+    window.global_icon_app_align_center = '<i class="fa fa-align-center" tabindex="1"></i>';
+    window.global_icon_app_align_right = '<i class="fa fa-align-left" tabindex="1"></i>';
+    window.global_icon_app_cancel =  '<i class="fa-solid fa-circle-xmark"></i>';
+    window.global_icon_app_zoomout = '<i class="fa-solid fa-magnifying-glass-minus"></i>';
+    window.global_icon_app_zoomin = '<i class="fa-solid fa-magnifying-glass-plus"></i>';
+    window.global_icon_app_left = '<i class="fa-solid fa-circle-left"></i>';
+    window.global_icon_app_right = '<i class="fa-solid fa-circle-right"></i>';
+    window.global_icon_app_up = '<i class="fa-solid fa-circle-up"></i>';
+    window.global_icon_app_down = '<i class="fa-solid fa-circle-down"></i>';
+    window.global_icon_app_remove = '<i class="fa fa-times" ></i>';
+    window.global_icon_app_html = '<i class="fa-solid fa-file-code"></i>';
+    window.global_icon_app_copy = '<i class="fas fa-copy"></i>';
+    window.global_icon_app_pdf  = '<i class="fas fa-file-pdf"></i>';
+    window.global_icon_app_link = '<i class="fa-solid fa-link"></i>';
+    window.global_icon_app_print = '<i class="fa-solid fa-print"></i>';
+    window.global_icon_app_private = '<i class="fa-solid fa-lock"></i>';
+    window.global_icon_app_papersize = '<i class="fa-solid fa-file"></i>';
+    window.global_icon_app_highlight = '🔦';
+    window.global_icon_app_show = '<i class="fa-solid fa-eye"></i>';
+    window.global_icon_app_notes = '<i class="fa-solid fa-note-sticky"></i>';
+    window.global_icon_app_login = '<i class="fa-solid fa-right-to-bracket"></i>';
+    window.global_icon_app_logoff = '<i class="fa-solid fa-right-from-bracket"></i>';
+    window.global_icon_app_signup = '<i class="fa-solid fa-user-pen"></i>';
+    window.global_icon_app_forgot = '<i class="fa-solid fa-circle-question"></i>';
+    window.global_icon_app_timetable = '<i class="fa-solid fa-calendar-days"></i>';
+    //user
+    window.global_icon_user = '<i class="fas fa-user-circle"></i>';
+    window.global_icon_user_last_logontime = '<i class="fa-solid fa-right-to-bracket"></i>';
+    window.global_icon_user_account_created = '<i class="fa-solid fa-handshake-simple"></i>';
+    window.global_icon_user_account_modified = '<i class="fa-solid fa-pen-to-square"></i>';
+    window.global_icon_user_password = '<i class="fa-solid fa-key"></i>';
+    window.global_icon_user_delete_account = '<i class="fa-solid fa-trash-can"></i>';
+    window.global_icon_user_account_reminder = '<i class="fa-solid fa-circle-question"></i>';
+    window.global_icon_user_avatar_edit = '<i class="fa-solid fa-camera"></i>';
+    window.global_icon_user_avatar = '<i class="fas fa-user-circle"></i>';
+    window.global_icon_user_follow_user = '<i class="fas fa-user-plus"></i>';
+    window.global_icon_user_followed_user = '<i class="fas fa-user-check"></i>';
+    window.global_icon_user_like = '<i class="fas fa-heart"></i>';
+    window.global_icon_user_unlike = '<i class="fas fa-heart-broken"></i>';
+    window.global_icon_user_views = '<i class="fa-solid fa-eye"></i>';
+    window.global_icon_user_follows = '<i class="fas fa-user-friends"></i>';
+    window.global_icon_user_followed = '<i class="fas fa-users"></i>';
+    window.global_icon_user_profile = '<i class="fa-solid fa-id-card"></i>';
+    window.global_icon_user_profile_top = '<i class="fa-solid fa-medal"></i>';
+    //provider
+    window.global_icon_provider = '<i class="fa-solid fa-passport"></i>';
+    window.global_icon_provider_id = '<i class="fa-solid fa-id-badge"></i>';
+    window.global_icon_provider_facebook = '<i class="fab fa-facebook"></i>';
+    window.global_icon_provider_microsoft = '<i class="fa-brands fa-microsoft"></i>';
+    window.global_icon_provider_twitch = '<i class="fa-brands fa-twitch"></i>';
+    window.global_icon_provider_tiktok = '<i class="fa-brands fa-tiktok"></i>';
+    window.global_icon_provider_yahoo = '<i class="fa-brands fa-yahoo"></i>';
+    window.global_icon_provider_github = '<i class="fa-brands fa-github"></i>';
+    window.global_icon_provider_google = '<i class="fab fa-google"></i>';
+    //gps
+    window.global_icon_gps = '<i class="fa-solid fa-location-dot"></i>';
+    window.global_icon_gps_map_my_location = '<i class="fa-solid fa-location-crosshairs"></i>';
+    window.global_icon_gps_map = '<i class="fa-solid fa-map"></i>';
+    window.global_icon_gps_country = '<i class="fa-solid fa-earth-africa"></i>';
+    window.global_icon_gps_city = '<i class="fa-solid fa-city"></i>';
+    window.global_icon_gps_popular_place = '<i class="fa-solid fa-star"></i>';
+    window.global_icon_gps_position = '<i class="fa-solid fa-map-pin"></i>';
+    window.global_icon_gps_high_latitude = '<i class="fa-solid fa-globe"></i><i class="fa-solid fa-snowflake"></i>';
+    //regional
+    window.global_icon_regional = '<i class="fa-solid fa-globe"></i>';
+    window.global_icon_regional_day = '<i class="fa-solid fa-sun"></i>';
+    window.global_icon_regional_month = '<i class="fa-solid fa-moon"></i>';
+    window.global_icon_regional_year = '<i class="fa-solid fa-calendar-days"></i>';
+    window.global_icon_regional_weekday = '<i class="fa-solid fa-calendar-week"></i>';
+    window.global_icon_regional_locale = '<i class="fa-solid fa-language"></i>';
+    window.global_icon_regional_timezone = '<i class="fa-solid fa-globe"></i>';
+    window.global_icon_regional_calendar = '<i class="fa-solid fa-calendar-days"></i>';
+    window.global_icon_regional_numbersystem = '<i class="fa-solid fa-1"></i><i class="fa-solid fa-2"></i><i class="fa-solid fa-3"></i>';
+    window.global_icon_regional_direction = '<i class="fa-solid fa-right-left"></i>';
+    window.global_icon_regional_script = '<i class="fa-solid fa-scroll"></i>';
+    window.global_icon_regional_calendartype = '<i class="fa-solid fa-calendar-days"></i>';
+    window.global_icon_regional_calendar_hijri_type = '<i class="fa-solid fa-calendar-days"></i>';
+    window.global_icon_regional_timeformat = '<i class="fa-solid fa-1"></i><i class="fa-solid fa-2"></i>/<i class="fa-solid fa-2"></i><i class="fa-solid fa-4"></i>';
+    //sky
+    window.global_icon_sky_cloud = '<i class="fa-solid fa-cloud"></i>';
+    window.global_icon_sky_sunrise = '<i class="fa-solid fa-sun"></i><i class="fa-solid fa-up-long"></i>';
+    window.global_icon_sky_midday = '<i class="fa-solid fa-sun"></i>';
+    window.global_icon_sky_afternoon = '<i class="fa-solid fa-cloud-sun"></i>';
+    window.global_icon_sky_sunset = '<i class="fa-solid fa-sun"></i><i class="fa-solid fa-down-long"></i>';
+    window.global_icon_sky_night = '<i class="fa-solid fa-cloud-moon"></i>';
+    window.global_icon_sky_midnight = '<i class="fa-solid fa-cloud-moon"></i>';
+    //misc
+    window.global_icon_misc_design  = '<i class="fa-solid fa-palette"></i>';
+    window.global_icon_misc_image = '<i class="fa-solid fa-image"></i>';
+    window.global_icon_misc_text = '<i class="fas fa-text-height"></i>';
+    window.global_icon_misc_text_prayer = '<i class="fa-solid fa-person-praying"></i>';
+    window.global_icon_misc_second = '<i class="fa-solid fa-2"></i>';
+    window.global_icon_misc_title = '<i class="fa-solid fa-newspaper"></i>';
+    window.global_icon_misc_book = '<i class="fa-solid fa-book"></i>';
+    window.global_icon_misc_food = '<i class="fa-solid fa-utensils"></i>';
+    window.global_icon_misc_prayer = '<i class="fa-solid fa-person-praying"></i>';
+    window.global_icon_misc_calling = '🗣';
+    window.global_icon_misc_ban = '<i class="fa-solid fa-ban"></i>';
+    //message
+    window.global_icon_message_user	= '<i class="fas fa-user-circle"></i>';
+    window.global_icon_message_error = '<i class="fa-solid fa-xmark"></i>';
+    window.global_icon_message_error_file = '<i class="fa-solid fa-file-circle-exclamation"></i>';
+    window.global_icon_message_missing = '<i class="fa-solid fa-exclamation"></i>';
+    window.global_icon_message_not_found = '<i class="fa-solid fa-question"></i>';
+    window.global_icon_message_text = '<i class="fa-solid fa-a"></i><i class="fa-solid fa-b"></i><i class="fa-solid fa-c"></i>';
+    window.global_icon_message_password = '<i class="fa-solid fa-key"></i>';
+    window.global_icon_message_email = '<i class="fa-solid fa-envelope"></i>';
+    window.global_icon_message_record = '<i class="fa-solid fa-database"></i>';
+}         
 function set_globals(parameters){
     //app info
     window.global_main_app_id= 0;
@@ -2513,153 +2651,8 @@ function set_globals(parameters){
                                             <div></div>
                                             <div></div>
                                             <div></div>
-                                        </div>`;
-        //Icons
-        window.global_button_default_icon_save = '💾';
-        window.global_button_default_icon_add = '➕';
-        window.global_button_default_icon_delete = '🗑';
-        window.global_button_default_icon_edit = '📝';
-
-        window.global_button_default_icon_delete_account = '👤➖';
-        window.global_button_default_icon_last_logontime = '<i class="fa-solid fa-right-to-bracket"></i>';
-        window.global_button_default_icon_account_created = '🤝';
-        window.global_button_default_icon_account_modified = '📝';
-
-        window.global_button_default_icon_send = '🚀';
-        window.global_button_default_icon_login = '<i class="fa-solid fa-right-to-bracket"></i>';
-        window.global_button_default_icon_logoff = '<i class="fa-solid fa-right-from-bracket"></i>';
-        window.global_button_default_icon_signup = '📝';
-        window.global_button_default_icon_forgot = '❔';
-        window.global_button_default_icon_password = '🔓';
-        window.global_button_default_icon_sendmail = '📨';
-        window.global_button_default_icon_update = '💾';
-        window.global_button_default_icon_delete_account = '🗑';
-        window.global_button_default_icon_profile = '📇';
-        window.global_button_default_icon_profile_top = '🏅';
-        window.global_button_default_icon_settings = '⚙';
-        window.global_button_default_icon_account_reminder = '❔';
-        
-        window.global_button_default_icon_chat ='💬';
-        window.global_button_default_icon_checkbox_checked = '✅';
-        window.global_button_default_icon_checkbox_empty = '⬜';
-        window.global_button_default_icon_info = 'ℹ';
-        window.global_button_default_icon_close = '✅';
-        window.global_button_default_icon_user = '<i class="fas fa-user-circle"></i>';
-        window.global_button_default_icon_avatar_edit = '📷';
-        window.global_button_default_icon_user_avatar = '<i class="fas fa-user-circle"></i>';
-
-        window.global_button_default_icon_provider = '<i class="fa-solid fa-passport"></i>';
-        window.global_button_default_icon_provider_id = '🆔';
-        window.global_button_default_icon_provider_email = '📧';
-        //list of popular identity providers
-        window.global_button_default_icon_facebook = '<i class="fab fa-facebook"></i>';
-        window.global_button_default_icon_microsoft = '<i class="fa-brands fa-microsoft"></i>';
-        window.global_button_default_icon_twitch = '<i class="fa-brands fa-twitch"></i>';
-        window.global_button_default_icon_tiktok = '<i class="fa-brands fa-tiktok"></i>';
-        window.global_button_default_icon_yahoo = '<i class="fa-brands fa-yahoo"></i>';
-        window.global_button_default_icon_github = '<i class="fa-brands fa-github"></i>';
-        window.global_button_default_icon_google = '<i class="fab fa-google"></i>';
-
-        window.global_button_default_icon_user_joined_date = '🤝';
-        window.global_button_default_icon_user_follow_user = '<i class="fas fa-user-plus"></i>';
-        window.global_button_default_icon_user_followed_user = '<i class="fas fa-user-check"></i>';
-        window.global_button_default_icon_online = '⚪';
-
-        window.global_button_default_icon_cloud = '☁';
-        window.global_button_default_icon_map_my_location = '<i class="fas fa-crosshairs"></i>';
-
-        window.global_button_default_icon_mobile = '📱';
-        window.global_button_default_icon_search = '🔍';
-        window.global_button_default_icon_menu_open = '<i class="fas fa-bars"></i>';
-        window.global_button_default_icon_menu_close = '❎';
-        window.global_button_default_icon_broadcast_close = '❎';
-        window.global_button_default_icon_first = '⏮';
-        window.global_button_default_icon_previous = '◀';
-        window.global_button_default_icon_next = '▶';
-        window.global_button_default_icon_last = '⏭';
-
-        window.global_button_default_icon_cancel =  '❎';
-
-        window.global_button_default_icon_zoomout = '➖';
-        window.global_button_default_icon_zoomin = '➕';
-        window.global_button_default_icon_left = '⬅';
-        window.global_button_default_icon_right = '➡';
-        window.global_button_default_icon_up = '⬆';
-        window.global_button_default_icon_down = '⬇';
-
-        window.global_button_default_icon_like = '<i class="fas fa-heart"></i>';
-        window.global_button_default_icon_unlike = '<i class="fas fa-heart-broken"></i>';
-        window.global_button_default_icon_views = '👁';
-        window.global_button_default_icon_follows = '<i class="fas fa-user-friends"></i>';
-        window.global_button_default_icon_followed = '<i class="fas fa-users"></i>';
-
-        window.global_button_default_icon_remove = '<i class="fa fa-times" ></i>';
-        window.global_button_default_icon_html = '<i class="fa-solid fa-file-code"></i>';
-        window.global_button_default_icon_copy = '<i class="fas fa-copy"></i>';
-        window.global_button_default_icon_pdf  = '<i class="fas fa-file-pdf"></i>';
-        window.global_button_default_icon_link = '🔗';
-        
-        window.global_button_default_icon_tab_regional  = '🌐';
-        window.global_button_default_icon_tab_gps  = '🗺';
-        window.global_button_default_icon_tab_design  = '🎨';
-        window.global_button_default_icon_tab_image = '🖼';
-        window.global_button_default_icon_tab_text = '🔤';
-        window.global_button_default_icon_tab_prayer = '🛐';
-        window.global_button_default_icon_tab_user = '<i class="fas fa-user-circle"></i>';
-
-        window.global_button_default_icon_slider_left = '◀';
-        window.global_button_default_icon_slider_right = '▶';
-
-        window.global_button_default_icon_print = '🖨';
-        window.global_button_default_icon_mail = '📧';
-        window.global_button_default_icon_private = '🔒';
-
-        //regional icons
-        window.global_button_default_icon_day = '☀';
-        window.global_button_default_icon_month = '🌙';
-        window.global_button_default_icon_year = '☸';
-        window.global_button_default_icon_weekday = '🗓';
-        window.global_button_default_icon_regional_locale = '🔤';
-        window.global_button_default_icon_regional_timezone = '🌐';
-        window.global_button_default_icon_regional_calendar = '📅';
-        window.global_button_default_icon_regional_numbersystem = '🔢';
-        window.global_button_default_icon_regional_direction = '➡⬅';
-        window.global_button_default_icon_second = '2️⃣';
-        window.global_button_default_icon_title = '📰';
-        window.global_button_default_icon_regional_script = '📜';
-        window.global_button_default_icon_regional_calendartype = '📅';
-        window.global_button_default_icon_regional_calendar_hijri_type = '📆';
-        window.global_button_default_icon_regional_timeformat = '1️⃣2️⃣/2️⃣4️⃣';
-        //gps icons
-        window.global_button_default_icon_gps_map = '🗺';
-        window.global_button_default_icon_gps_country = '🌍';
-        window.global_button_default_icon_gps_city = '🏙';
-        window.global_button_default_icon_gps_popular_place = '⭐';
-        window.global_button_default_icon_gps_position = '📍';
-        window.global_button_default_icon_gps_high_latitude = '❄';
-        //design icons
-        window.global_button_default_icon_design_papersize = '📄';
-        window.global_button_default_icon_design_highlight = '🔦';
-        window.global_button_default_icon_design_show = '👁';
-        window.global_button_default_icon_design_papersize = '📄';
-        window.global_button_default_icon_design_notes = '📓';
-        window.global_button_default_icon_design_book = '📖';
-        //text icons
-        window.global_button_default_icon_text_align_left = '<i class="fa fa-align-left" tabindex="1"></i>';
-        window.global_button_default_icon_text_align_center = '<i class="fa fa-align-center" tabindex="1"></i>';
-        window.global_button_default_icon_text_align_right = '<i class="fa fa-align-left" tabindex="1"></i>';
-
-        window.global_button_default_icon_sky_sunrise = '🌅';
-        window.global_button_default_icon_sky_midday = '☀';
-        window.global_button_default_icon_sky_afternoon = '⛅';
-        window.global_button_default_icon_sky_sunset = '🌇';
-        window.global_button_default_icon_sky_night = '🌃';
-        window.global_button_default_icon_sky_midnight = '🌃';
-
-        window.global_button_default_icon_misc_food = '🍞';
-        window.global_button_default_icon_misc_prayer = '🛐';
-        window.global_button_default_icon_misc_calling = '🗣';
-        window.global_button_default_icon_misc_ban = '🚫';
+                                        </div>`;               
+        seticons();
 
         //delay API calls when typing to avoid too many calls 
         window.global_typewatch = function() {
@@ -2707,91 +2700,91 @@ function init_common(parameters){
     if (parameters.ui==true){
         //icons
         //dialogue user verify
-        document.getElementById('user_verify_email_icon').innerHTML = window.global_button_default_icon_mail;
+        document.getElementById('user_verify_email_icon').innerHTML = window.global_icon_app_mail;
         //dialogue login
-        document.getElementById('login_tab1').innerHTML = window.global_button_default_icon_login;
-        document.getElementById('login_tab2').innerHTML = window.global_button_default_icon_signup;
-        document.getElementById('login_tab3').innerHTML = window.global_button_default_icon_forgot;
-        document.getElementById('login_button').innerHTML = window.global_button_default_icon_login;
-        document.getElementById('login_close').innerHTML = window.global_button_default_icon_close;
+        document.getElementById('login_tab1').innerHTML = window.global_icon_app_login;
+        document.getElementById('login_tab2').innerHTML = window.global_icon_app_signup;
+        document.getElementById('login_tab3').innerHTML = window.global_icon_app_forgot;
+        document.getElementById('login_button').innerHTML = window.global_icon_app_login;
+        document.getElementById('login_close').innerHTML = window.global_icon_app_close;
         //dialogue signup
-        document.getElementById('signup_tab1').innerHTML = window.global_button_default_icon_login;
-        document.getElementById('signup_tab2').innerHTML = window.global_button_default_icon_signup;
-        document.getElementById('signup_tab3').innerHTML = window.global_button_default_icon_forgot;
-        document.getElementById('signup_button').innerHTML = window.global_button_default_icon_signup;
-        document.getElementById('signup_close').innerHTML = window.global_button_default_icon_close;
+        document.getElementById('signup_tab1').innerHTML = window.global_icon_app_login;
+        document.getElementById('signup_tab2').innerHTML = window.global_icon_app_signup;
+        document.getElementById('signup_tab3').innerHTML = window.global_icon_app_forgot;
+        document.getElementById('signup_button').innerHTML = window.global_icon_app_signup;
+        document.getElementById('signup_close').innerHTML = window.global_icon_app_close;
         //dialogue forgot
-        document.getElementById('forgot_tab1').innerHTML = window.global_button_default_icon_login;
-        document.getElementById('forgot_tab2').innerHTML = window.global_button_default_icon_signup;
-        document.getElementById('forgot_tab3').innerHTML = window.global_button_default_icon_forgot;
-        document.getElementById('forgot_button').innerHTML = window.global_button_default_icon_sendmail;
-        document.getElementById('forgot_close').innerHTML = window.global_button_default_icon_close;
+        document.getElementById('forgot_tab1').innerHTML = window.global_icon_app_login;
+        document.getElementById('forgot_tab2').innerHTML = window.global_icon_app_signup;
+        document.getElementById('forgot_tab3').innerHTML = window.global_icon_app_forgot;
+        document.getElementById('forgot_button').innerHTML = window.global_icon_app_sendmail;
+        document.getElementById('forgot_close').innerHTML = window.global_icon_app_close;
         //dialogue new password
-        document.getElementById('user_new_password_icon').innerHTML = window.global_button_default_icon_password;
-        document.getElementById('user_new_password_cancel').innerHTML = window.global_button_default_icon_cancel;
-        document.getElementById('user_new_password_ok').innerHTML = window.global_button_default_icon_close;
+        document.getElementById('user_new_password_icon').innerHTML = window.global_icon_user_password;
+        document.getElementById('user_new_password_cancel').innerHTML = window.global_icon_app_cancel;
+        document.getElementById('user_new_password_ok').innerHTML = window.global_icon_app_close;
         //dialogue user edit
-        document.getElementById('user_edit_btn_avatar_img').innerHTML = window.global_button_default_icon_avatar_edit;
-        document.getElementById('user_edit_private').innerHTML = window.global_button_default_icon_private;
-        document.getElementById('user_edit_btn_user_update').innerHTML = window.global_button_default_icon_update;
-        document.getElementById('user_edit_btn_user_delete_account').innerHTML = window.global_button_default_icon_delete_account;
-        document.getElementById('user_edit_close').innerHTML = window.global_button_default_icon_close;
-        document.getElementById('user_edit_label_provider').innerHTML = window.global_button_default_icon_provider 
-        document.getElementById('user_edit_label_provider_id').innerHTML = window.global_button_default_icon_provider_id
-        document.getElementById('user_edit_label_provider_email').innerHTML = window.global_button_default_icon_provider_email
-        document.getElementById('user_edit_input_username_icon').innerHTML = window.global_button_default_icon_user;
-        document.getElementById('user_edit_input_bio_icon').innerHTML = window.global_button_default_icon_profile;
-        document.getElementById('user_edit_input_email_icon').innerHTML = window.global_button_default_icon_mail;
-        document.getElementById('user_edit_input_new_email_icon').innerHTML = window.global_button_default_icon_mail;
-        document.getElementById('user_edit_input_password_icon').innerHTML = window.global_button_default_icon_password;
-        document.getElementById('user_edit_input_password_confirm_icon').innerHTML = window.global_button_default_icon_password;
-        document.getElementById('user_edit_input_new_password_icon').innerHTML = window.global_button_default_icon_password;
-        document.getElementById('user_edit_input_new_password_confirm_icon').innerHTML = window.global_button_default_icon_password;
-        document.getElementById('user_edit_input_password_reminder_icon').innerHTML = window.global_button_default_icon_account_reminder;
-        document.getElementById('user_edit_label_last_logontime').innerHTML = window.global_button_default_icon_last_logontime;
-        document.getElementById('user_edit_label_account_created').innerHTML = window.global_button_default_icon_account_created;
-        document.getElementById('user_edit_label_account_modified').innerHTML = window.global_button_default_icon_account_modified;
+        document.getElementById('user_edit_btn_avatar_img').innerHTML = window.global_icon_user_avatar_edit;
+        document.getElementById('user_edit_private').innerHTML = window.global_icon_app_private;
+        document.getElementById('user_edit_btn_user_update').innerHTML = window.global_icon_app_update;
+        document.getElementById('user_edit_btn_user_delete_account').innerHTML = window.global_icon_user_delete_account;
+        document.getElementById('user_edit_close').innerHTML = window.global_icon_app_close;
+        document.getElementById('user_edit_label_provider').innerHTML = window.global_icon_provider;
+        document.getElementById('user_edit_label_provider_id').innerHTML = window.global_icon_provider_id;
+        document.getElementById('user_edit_label_provider_email').innerHTML = window.global_icon_app_email;
+        document.getElementById('user_edit_input_username_icon').innerHTML = window.global_icon_user;
+        document.getElementById('user_edit_input_bio_icon').innerHTML = window.global_icon_user_profile;
+        document.getElementById('user_edit_input_email_icon').innerHTML = window.global_icon_app_email;
+        document.getElementById('user_edit_input_new_email_icon').innerHTML = window.global_icon_app_email;
+        document.getElementById('user_edit_input_password_icon').innerHTML = window.global_icon_user_password;
+        document.getElementById('user_edit_input_password_confirm_icon').innerHTML = window.global_icon_user_password;
+        document.getElementById('user_edit_input_new_password_icon').innerHTML = window.global_icon_user_password;
+        document.getElementById('user_edit_input_new_password_confirm_icon').innerHTML = window.global_icon_user_password;
+        document.getElementById('user_edit_input_password_reminder_icon').innerHTML = window.global_icon_user_account_reminder;
+        document.getElementById('user_edit_label_last_logontime').innerHTML = window.global_icon_user_last_logontime;
+        document.getElementById('user_edit_label_account_created').innerHTML = window.global_icon_user_account_created;
+        document.getElementById('user_edit_label_account_modified').innerHTML = window.global_icon_user_account_modified;
         //dialogue message
-        document.getElementById('message_cancel').innerHTML = window.global_button_default_icon_cancel;
-        document.getElementById('message_close').innerHTML = window.global_button_default_icon_close;
+        document.getElementById('message_cancel').innerHTML = window.global_icon_app_cancel;
+        document.getElementById('message_close').innerHTML = window.global_icon_app_close;
         //broadcast
-        document.getElementById('broadcast_close').innerHTML = window.global_button_default_icon_broadcast_close;
+        document.getElementById('broadcast_close').innerHTML = window.global_icon_app_broadcast_close;
         //profile detail
-        document.getElementById('profile_detail_header_following').innerHTML = window.global_button_default_icon_follows;
-        document.getElementById('profile_detail_header_followed').innerHTML = window.global_button_default_icon_followed;
-        document.getElementById('profile_detail_header_like').innerHTML = window.global_button_default_icon_like + window.global_button_default_icon_follows;
-        document.getElementById('profile_detail_header_liked').innerHTML = window.global_button_default_icon_like + window.global_button_default_icon_followed;
+        document.getElementById('profile_detail_header_following').innerHTML = window.global_icon_user_follows;
+        document.getElementById('profile_detail_header_followed').innerHTML = window.global_icon_user_followed;
+        document.getElementById('profile_detail_header_like').innerHTML = window.global_icon_user_like + window.global_icon_user_follows;
+        document.getElementById('profile_detail_header_liked').innerHTML = window.global_icon_user_like + window.global_icon_user_followed;
         //profile info search
         if (document.getElementById('profile_info_search'))
-            document.getElementById('profile_search_icon').innerHTML = window.global_button_default_icon_search;
+            document.getElementById('profile_search_icon').innerHTML = window.global_icon_app_search;
         //profile info
-        document.getElementById('profile_joined_date_icon').innerHTML = window.global_button_default_icon_user_joined_date;
-        document.getElementById('profile_follow_follow').innerHTML = window.global_button_default_icon_user_follow_user;
-        document.getElementById('profile_follow_followed').innerHTML = window.global_button_default_icon_user_followed_user;
-        document.getElementById('profile_like_like').innerHTML = window.global_button_default_icon_like;
-        document.getElementById('profile_like_unlike').innerHTML = window.global_button_default_icon_unlike;
-        document.getElementById('profile_info_view_count_icon').innerHTML = window.global_button_default_icon_views;
-        document.getElementById('profile_main_btn_following').innerHTML = window.global_button_default_icon_follows;
-        document.getElementById('profile_main_btn_followed').innerHTML = window.global_button_default_icon_followed;
-        document.getElementById('profile_main_btn_likes').innerHTML = window.global_button_default_icon_like;
-        document.getElementById('profile_main_btn_liked').innerHTML = window.global_button_default_icon_like + window.global_button_default_icon_followed;
-        document.getElementById('profile_private_title').innerHTML = window.global_button_default_icon_private;
-        document.getElementById('profile_avatar_online_status').innerHTML = window.global_button_default_icon_online;
+        document.getElementById('profile_joined_date_icon').innerHTML = window.global_icon_user_account_created;
+        document.getElementById('profile_follow_follow').innerHTML = window.global_icon_user_follow_user;
+        document.getElementById('profile_follow_followed').innerHTML = window.global_icon_user_followed_user;
+        document.getElementById('profile_like_like').innerHTML = window.global_icon_user_like;
+        document.getElementById('profile_like_unlike').innerHTML = window.global_icon_user_unlike;
+        document.getElementById('profile_info_view_count_icon').innerHTML = window.global_icon_user_views;
+        document.getElementById('profile_main_btn_following').innerHTML = window.global_icon_user_follows;
+        document.getElementById('profile_main_btn_followed').innerHTML = window.global_icon_user_followed;
+        document.getElementById('profile_main_btn_likes').innerHTML = window.global_icon_user_like;
+        document.getElementById('profile_main_btn_liked').innerHTML = window.global_icon_user_like + window.global_icon_user_followed;
+        document.getElementById('profile_private_title').innerHTML = window.global_icon_app_private;
+        document.getElementById('profile_avatar_online_status').innerHTML = window.global_icon_app_online;
         //profile top
-        document.getElementById('profile_top_header').innerHTML = window.global_button_default_icon_profile_top;
-        document.getElementById('profile_top_row1_1').innerHTML = window.global_button_default_icon_follows;
-        document.getElementById('profile_top_row1_2').innerHTML = window.global_button_default_icon_like + window.global_button_default_icon_follows;
-        document.getElementById('profile_top_row1_3').innerHTML = window.global_button_default_icon_views;
-        document.getElementById('profile_home').innerHTML = window.global_button_default_icon_profile_top;
-        document.getElementById('profile_close').innerHTML = window.global_button_default_icon_close;
+        document.getElementById('profile_top_header').innerHTML = window.global_icon_user_profile_top;
+        document.getElementById('profile_top_row1_1').innerHTML = window.global_icon_user_follows;
+        document.getElementById('profile_top_row1_2').innerHTML = window.global_icon_user_like + window.global_icon_user_follows;
+        document.getElementById('profile_top_row1_3').innerHTML = window.global_icon_user_views;
+        document.getElementById('profile_home').innerHTML = window.global_icon_user_profile_top;
+        document.getElementById('profile_close').innerHTML = window.global_icon_app_close;
         //window info
-        document.getElementById('common_window_info_toolbar_btn_close').innerHTML = window.global_button_default_icon_close;
-        document.getElementById('common_window_info_toolbar_btn_zoomout').innerHTML = window.global_button_default_icon_zoomout;
-        document.getElementById('common_window_info_toolbar_btn_zoomin').innerHTML = window.global_button_default_icon_zoomin;
-        document.getElementById('common_window_info_toolbar_btn_left').innerHTML =  window.global_button_default_icon_left;
-        document.getElementById('common_window_info_toolbar_btn_right').innerHTML = window.global_button_default_icon_right;
-        document.getElementById('common_window_info_toolbar_btn_up').innerHTML =  window.global_button_default_icon_up;
-        document.getElementById('common_window_info_toolbar_btn_down').innerHTML = window.global_button_default_icon_down;
+        document.getElementById('common_window_info_toolbar_btn_close').innerHTML = window.global_icon_app_close;
+        document.getElementById('common_window_info_toolbar_btn_zoomout').innerHTML = window.global_icon_app_zoomout;
+        document.getElementById('common_window_info_toolbar_btn_zoomin').innerHTML = window.global_icon_app_zoomin;
+        document.getElementById('common_window_info_toolbar_btn_left').innerHTML =  window.global_icon_app_left;
+        document.getElementById('common_window_info_toolbar_btn_right').innerHTML = window.global_icon_app_right;
+        document.getElementById('common_window_info_toolbar_btn_up').innerHTML =  window.global_icon_app_up;
+        document.getElementById('common_window_info_toolbar_btn_down').innerHTML = window.global_icon_app_down;
         //events
         //login/signup/forgot
         document.getElementById('login_tab2').addEventListener('click', function() { show_common_dialogue('SIGNUP') }, false);

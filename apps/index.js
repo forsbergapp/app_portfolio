@@ -184,26 +184,14 @@ async function get_module_with_init(app_id,
 async function get_email_verification(data, email, baseUrl, lang_code, callBack){
     const { getMessage } = require("../service/db/api/message_translation/message_translation.service");
     const { createLogAppSE } = require("../service/log/log.controller");
-    //Verification code text
-    getMessage(20501,
-        process.env.MAIN_APP_ID, 
-        lang_code, (err,email_subject)  => {
-        if (err){
-            createLogAppSE(data.app_id, __appfilename, __appfunction, __appline, err, (err_log, result_log)=>{
-                callBack(err, null);
-            })
-        }
-        else{
-            email = email.replace('<Logo/>', 
-                                `<img id='app_logo' src='${data.protocol}://${data.host}${baseUrl}/logo?id=${data.app_id}&uid=${data.app_user_id}&et=${data.emailType}'>`);
-            email = email.replace('<Verification_code/>', 
-                                `${data.verificationCode}`);
-            email = email.replace('<Footer/>', 
-                                `<a target='_blank' href='${data.protocol}://${data.host}'>${data.protocol}://${data.host}</a>`);
-            callBack(null, {"subject": email_subject.text,
-                            "email": email});
-        }
-    })
+    email = email.replace('<Logo/>', 
+                        `<img id='app_logo' src='${data.protocol}://${data.host}${baseUrl}/logo?id=${data.app_id}&uid=${data.app_user_id}&et=${data.emailType}'>`);
+    email = email.replace('<Verification_code/>', 
+                        `${data.verificationCode}`);
+    email = email.replace('<Footer/>', 
+                        `<a target='_blank' href='${data.protocol}://${data.host}'>${data.protocol}://${data.host}</a>`);
+    callBack(null, {"subject": '❂❂❂❂❂❂',
+                    "email": email});
 }
 module.exports = {
     getMaintenance:(app_id, gps_lat, gps_long, gps_place) => {

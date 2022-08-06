@@ -54,7 +54,7 @@ function setEvents(){
     document.getElementById('profile_main_btn_followed').addEventListener('click', function() { profile_detail(2, Intl.DateTimeFormat().resolvedOptions().timeZone, null, true, null) }, false);
     document.getElementById('profile_main_btn_likes').addEventListener('click', function() { profile_detail(3, Intl.DateTimeFormat().resolvedOptions().timeZone, null, true, null) }, false);
     document.getElementById('profile_main_btn_liked').addEventListener('click', function() { profile_detail(4, Intl.DateTimeFormat().resolvedOptions().timeZone, null, true, null) }, false);
-    document.getElementById('profile_main_btn_cloud').addEventListener('click', function() { profile_detail(5, Intl.DateTimeFormat().resolvedOptions().timeZone, window.global_rest_user_account_app, true, global_button_default_icon_cloud, null) }, false);
+    document.getElementById('profile_main_btn_cloud').addEventListener('click', function() { profile_detail(5, Intl.DateTimeFormat().resolvedOptions().timeZone, window.global_rest_user_account_app, true, global_icon_sky_cloud, null) }, false);
     //dialogue login/signup/forgot
     let input_username_login = document.getElementById("login_username");
     input_username_login.addEventListener("keyup", function(event) {
@@ -429,8 +429,8 @@ async function onProviderSignIn_app(provider1User){
 }
 async function init_app(){
     //start
-    document.getElementById('start_message').innerHTML = window.global_button_default_icon_info;
-    document.getElementById('info_message').innerHTML = window.global_button_default_icon_close;
+    document.getElementById('start_message').innerHTML = window.global_icon_app_info;
+    document.getElementById('info_message').innerHTML = window.global_icon_app_close;
     document.getElementById("toggle_checkbox").checked = true;
     document.getElementById('info_diagram_img').src=window.global_img_diagram_img;
     document.getElementById('info_datamodel_img').src=window.global_img_datamodel_img;
@@ -439,15 +439,15 @@ async function init_app(){
     document.getElementById('contact_text').innerHTML = 'Contact'    
     //user menu
     //document.getElementById('user_menu_dropdown_profile').innerHTML = window.global_button_default_icon_profile;
-    document.getElementById('user_menu_dropdown_edit').innerHTML = window.global_button_default_icon_edit;
-    document.getElementById('user_menu_dropdown_log_out').innerHTML = window.global_button_default_icon_logoff;
-    document.getElementById('user_menu_dropdown_signup').innerHTML = window.global_button_default_icon_signup;
-    document.getElementById('user_menu_dropdown_log_in').innerHTML = window.global_button_default_icon_login;
-    document.getElementById('user_menu_dropdown_profile_top').innerHTML = window.global_button_default_icon_profile_top;
+    document.getElementById('user_menu_dropdown_edit').innerHTML = window.global_icon_app_edit;
+    document.getElementById('user_menu_dropdown_log_out').innerHTML = window.global_icon_app_logoff;
+    document.getElementById('user_menu_dropdown_signup').innerHTML = window.global_icon_app_signup;
+    document.getElementById('user_menu_dropdown_log_in').innerHTML = window.global_icon_app_login;
+    document.getElementById('user_menu_dropdown_profile_top').innerHTML = window.global_icon_user_profile_top;
                                                                           
     //profile info
-    document.getElementById('profile_main_btn_cloud').innerHTML = window.global_button_default_icon_cloud;
-    document.getElementById('user_menu_default_avatar').innerHTML = window.global_button_default_icon_user_avatar;
+    document.getElementById('profile_main_btn_cloud').innerHTML = window.global_icon_sky_cloud;
+    document.getElementById('user_menu_default_avatar').innerHTML = window.global_icon_user_avatar;
     
     setEvents();
     zoom_info('');
