@@ -768,4 +768,3 @@ INSERT INTO message_translation (language_id, message_code, text) VALUES (453,'2
 INSERT INTO message_translation (language_id, message_code, text) VALUES (453,'20400','Запись не найдена');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (453,'20401','Неверный пароль');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (453,'20500','Отсутствующая широта или долгота');
-INSERT INTO message_translation (language_id, message_code, text) VALUES (453,'20501','Проверочный код');

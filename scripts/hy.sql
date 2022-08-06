@@ -175,4 +175,3 @@ INSERT INTO message_translation (language_id, message_code, text) VALUES (31,'20
 INSERT INTO message_translation (language_id, message_code, text) VALUES (31,'20400','Չհայտնաբերված արձանագրություն');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (31,'20401','Անվավեր ծածկագիր');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (31,'20500','Բաց թողնված լայնություն կամ երկարություն');
-INSERT INTO message_translation (language_id, message_code, text) VALUES (31,'20501','Ստուգման կոդ');
