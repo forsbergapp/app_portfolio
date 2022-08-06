@@ -449,6 +449,10 @@ body.font_arabic_ui{
 	-moz-border-radius: 4px;
 	-webkit-border-radius: 4px;
 }
+/* DIALOGUE MESSAGE*/
+#dialogue_message_content{
+	min-width: 200px;
+}
 /*DIALOGUE MAINTENANCE */
 #dialogue_maintenance{
 	visibility: hidden;

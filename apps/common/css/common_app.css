@@ -130,7 +130,7 @@ a:active {
 	cursor:pointer;
 	display:inline-block;
 }
-/* Dialogue Verifcation code*/
+/* Dialogue Verification code*/
 #dialogue_user_verify{
 	visibility: hidden;
 	z-index: 51;

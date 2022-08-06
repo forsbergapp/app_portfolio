@@ -669,4 +669,3 @@ INSERT INTO message_translation (language_id, message_code, text) VALUES (25,'20
 INSERT INTO message_translation (language_id, message_code, text) VALUES (25,'20400','لم يتم العثور على السجل');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (25,'20401','رمز مرور خاطئ');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (25,'20500','خط العرض أو خط الطول مفقود');
-INSERT INTO message_translation (language_id, message_code, text) VALUES (25,'20501','رمز التحقق');

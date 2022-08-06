@@ -175,4 +175,3 @@ INSERT INTO message_translation (language_id, message_code, text) VALUES (162,'2
 INSERT INTO message_translation (language_id, message_code, text) VALUES (162,'20400','Record not found');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (162,'20401','Invalid password');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (162,'20500','Missing latitude or longitude');
-INSERT INTO message_translation (language_id, message_code, text) VALUES (162,'20501','Verification code');
