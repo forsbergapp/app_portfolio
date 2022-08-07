@@ -1,4 +1,4 @@
-const { getThemes } = require("../../../service/db/api/app1_theme/app1_theme.service");
+const { getThemes } = require("../../../service/db/app_portfolio/app1_theme/app1_theme.service");
 
 module.exports = {
   themes:(app_id) => {

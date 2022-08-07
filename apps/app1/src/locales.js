@@ -1,4 +1,4 @@
-const { getLocales } = require("../../../service/db/api/language/locale/locale.service");
+const { getLocales } = require("../../../service/db/app_portfolio/language/locale/locale.service");
 
 module.exports = {
   locales:(app_id) => {
