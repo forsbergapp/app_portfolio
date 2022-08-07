@@ -85,7 +85,7 @@ module.exports = {
                 });
             }
             if (username!=null){
-                const {getProfileUser} = require("../../service/db/api/user_account/user_account.service");
+                const {getProfileUser} = require("../../service/db/app_portfolio/user_account/user_account.service");
                 getProfileUser(app_id, null, username, null, (err,result)=>{
                     if (result)
                         main(app_id);

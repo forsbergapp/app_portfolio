@@ -2578,7 +2578,7 @@ function set_globals(parameters){
 
     // if app not using translation then use default lang_code from navigator
     window.global_lang_code                     = navigator.language;
-    window.global_rest_url_base 				= '/service/db/api/';
+    window.global_rest_url_base 				= '/service/db/app_portfolio/';
 
     //identity provider
     window.global_identity_provider1_id;
