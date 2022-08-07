@@ -28,7 +28,7 @@ async function common_fetch_token(token_type, json_data,  username, password, ca
         url = window.global_service_auth + 
               '?app_user_id=' + window.global_user_account_id +
               '&app_id=' + app_id + 
-              '&lang_code=' + window.global_lang_code;
+              '&lang_code=' + window.global_locale;
         username = window.global_app_rest_client_id;
         password = window.global_app_rest_client_secret;
     }
@@ -36,7 +36,7 @@ async function common_fetch_token(token_type, json_data,  username, password, ca
         //admin token
         url = '/service/auth/admin' + 
               '?app_id=' + app_id + 
-              '&lang_code=' + window.global_lang_code;
+              '&lang_code=' + window.global_locale;
     }
     await fetch(url,
                 {method: 'POST',
@@ -146,7 +146,7 @@ async function common_fetch(url_parameters, method, token_type, json_data, app_i
     if (lang_code_override != null && lang_code_override !='')
        lang_code = lang_code_override;
     else
-       lang_code = window.global_lang_code;
+       lang_code = window.global_locale;
     let url = url_parameters +
               '&app_id=' + app_id + 
               '&lang_code=' + lang_code;
@@ -283,7 +283,7 @@ function format_json_date(db_date, short, timezone) {
         //"yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'"
         let settings = {
             timezone_current: timezone,
-            locale: window.global_lang_code
+            locale: window.global_locale
         }
         let options;
         if (short)
@@ -2577,7 +2577,7 @@ function set_globals(parameters){
     window.global_eventSource;
 
     // if app not using translation then use default lang_code from navigator
-    window.global_lang_code                     = navigator.language;
+    window.global_locale                     = navigator.language;
     window.global_rest_url_base 				= '/service/db/app_portfolio/';
 
     //identity provider

@@ -638,6 +638,7 @@ async function settings_translate(first=true) {
     if (first ==true){
         locale = get_lang_code();
         common_translate_ui(locale);
+        window.global_locale = locale;
     }
     else
         locale = document.getElementById('setting_select_report_locale_second').value
