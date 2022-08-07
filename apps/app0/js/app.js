@@ -54,7 +54,7 @@ function setEvents(){
     document.getElementById('profile_main_btn_followed').addEventListener('click', function() { profile_detail(2, Intl.DateTimeFormat().resolvedOptions().timeZone, null, true, null) }, false);
     document.getElementById('profile_main_btn_likes').addEventListener('click', function() { profile_detail(3, Intl.DateTimeFormat().resolvedOptions().timeZone, null, true, null) }, false);
     document.getElementById('profile_main_btn_liked').addEventListener('click', function() { profile_detail(4, Intl.DateTimeFormat().resolvedOptions().timeZone, null, true, null) }, false);
-    document.getElementById('profile_main_btn_cloud').addEventListener('click', function() { profile_detail(5, Intl.DateTimeFormat().resolvedOptions().timeZone, window.global_rest_user_account_app, true, global_icon_sky_cloud, null) }, false);
+    document.getElementById('profile_main_btn_cloud').addEventListener('click', function() { profile_detail(5, Intl.DateTimeFormat().resolvedOptions().timeZone, window.global_rest_user_account_app + 'apps/', true, global_icon_sky_cloud, null) }, false);
     //dialogue login/signup/forgot
     let input_username_login = document.getElementById("login_username");
     input_username_login.addEventListener("keyup", function(event) {
