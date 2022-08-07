@@ -1,5 +1,5 @@
-const { getParameters_server } = require ("../service/db/api/app_parameter/app_parameter.service");
-const { getApp } = require("../service/db/api/app/app.service");
+const { getParameters_server } = require ("../service/db/app_portfolio/app_parameter/app_parameter.service");
+const { getApp } = require("../service/db/app_portfolio/app/app.service");
 async function getInfo(app_id, info, lang_code, callBack){
     async function get_parameters(callBack){            
         getApp(app_id, lang_code, (err, result_app)=>{
@@ -152,7 +152,7 @@ async function get_module_with_init(app_id,
                                     gps_long,
                                     gps_place,
                                     module, callBack){
-    const { getAppStartParameters } = require("../service/db/api/app_parameter/app_parameter.service");
+    const { getAppStartParameters } = require("../service/db/app_portfolio/app_parameter/app_parameter.service");
     getAppStartParameters(app_id, (err,result) =>{
         if (err)
             callBack(err, null);
@@ -182,7 +182,7 @@ async function get_module_with_init(app_id,
     })
 }
 async function get_email_verification(data, email, baseUrl, lang_code, callBack){
-    const { getMessage } = require("../service/db/api/message_translation/message_translation.service");
+    const { getMessage } = require("../service/db/app_portfolio/message_translation/message_translation.service");
     const { createLogAppSE } = require("../service/log/log.controller");
     email = email.replace('<Logo/>', 
                         `<img id='app_logo' src='${data.protocol}://${data.host}${baseUrl}/logo?id=${data.app_id}&uid=${data.app_user_id}&et=${data.emailType}'>`);

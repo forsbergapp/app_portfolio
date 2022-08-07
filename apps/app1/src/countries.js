@@ -1,4 +1,4 @@
-const { getCountries } = require("../../../service/db/api/country/country.service");
+const { getCountries } = require("../../../service/db/app_portfolio/country/country.service");
 
 module.exports = {
   countries:(app_id) => {

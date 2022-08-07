@@ -113,19 +113,19 @@ const authAdminRouter = require("./service/auth/admin/admin.router");
 //service broadcast
 const broadcastRouter = require("./service/broadcast/broadcast.router");
 //service db
-const appRouter = require("./service/db/api/app/app.router");
-const app_logRouter = require("./service/db/api/app_log/app_log.router");
-const app_objectRouter = require("./service/db/api/app_object/app_object.router");
-const app_parameterRouter = require("./service/db/api/app_parameter/app_parameter.router");
-const countryRouter = require("./service/db/api/country/country.router");
-const identity_providerRouter = require("./service/db/api/identity_provider/identity_provider.router");
-const languageLocaleRouter = require("./service/db/api/language/locale/locale.router");
-const message_translationRouter = require("./service/db/api/message_translation/message_translation.router");
-const parameter_typeRouter = require("./service/db/api/parameter_type/parameter_type.router");
-const user_accountRouter = require("./service/db/api/user_account/user_account.router");
-const user_account_appRouter = require("./service/db/api/user_account_app/user_account_app.router");
-const user_account_likeRouter = require("./service/db/api/user_account_like/user_account_like.router");
-const user_account_followRouter = require("./service/db/api/user_account_follow/user_account_follow.router");
+const appRouter = require("./service/db/app_portfolio/app/app.router");
+const app_logRouter = require("./service/db/app_portfolio/app_log/app_log.router");
+const app_objectRouter = require("./service/db/app_portfolio/app_object/app_object.router");
+const app_parameterRouter = require("./service/db/app_portfolio/app_parameter/app_parameter.router");
+const countryRouter = require("./service/db/app_portfolio/country/country.router");
+const identity_providerRouter = require("./service/db/app_portfolio/identity_provider/identity_provider.router");
+const languageLocaleRouter = require("./service/db/app_portfolio/language/locale/locale.router");
+const message_translationRouter = require("./service/db/app_portfolio/message_translation/message_translation.router");
+const parameter_typeRouter = require("./service/db/app_portfolio/parameter_type/parameter_type.router");
+const user_accountRouter = require("./service/db/app_portfolio/user_account/user_account.router");
+const user_account_appRouter = require("./service/db/app_portfolio/user_account_app/user_account_app.router");
+const user_account_likeRouter = require("./service/db/app_portfolio/user_account_like/user_account_like.router");
+const user_account_followRouter = require("./service/db/app_portfolio/user_account_follow/user_account_follow.router");
 //service geolocation
 const geolocationRouter = require("./service/geolocation/geolocation.router");
 //service log
@@ -147,19 +147,19 @@ app.use("/service/auth/admin", authAdminRouter);
 //service broadcast
 app.use("/service/broadcast", broadcastRouter);
 //service database
-app.use("/service/db/api/app", appRouter);
-app.use("/service/db/api/app_log", app_logRouter);
-app.use("/service/db/api/app_object", app_objectRouter);
-app.use("/service/db/api/app_parameter", app_parameterRouter);
-app.use("/service/db/api/country", countryRouter);
-app.use("/service/db/api/identity_provider", identity_providerRouter);
-app.use("/service/db/api/language/locale", languageLocaleRouter);
-app.use("/service/db/api/message_translation", message_translationRouter);
-app.use("/service/db/api/parameter_type", parameter_typeRouter);
-app.use("/service/db/api/user_account", user_accountRouter);
-app.use("/service/db/api/user_account_app", user_account_appRouter);
-app.use("/service/db/api/user_account_like", user_account_likeRouter);
-app.use("/service/db/api/user_account_follow", user_account_followRouter);
+app.use("/service/db/app_portfolio/app", appRouter);
+app.use("/service/db/app_portfolio/app_log", app_logRouter);
+app.use("/service/db/app_portfolio/app_object", app_objectRouter);
+app.use("/service/db/app_portfolio/app_parameter", app_parameterRouter);
+app.use("/service/db/app_portfolio/country", countryRouter);
+app.use("/service/db/app_portfolio/identity_provider", identity_providerRouter);
+app.use("/service/db/app_portfolio/language/locale", languageLocaleRouter);
+app.use("/service/db/app_portfolio/message_translation", message_translationRouter);
+app.use("/service/db/app_portfolio/parameter_type", parameter_typeRouter);
+app.use("/service/db/app_portfolio/user_account", user_accountRouter);
+app.use("/service/db/app_portfolio/user_account_app", user_account_appRouter);
+app.use("/service/db/app_portfolio/user_account_like", user_account_likeRouter);
+app.use("/service/db/app_portfolio/user_account_follow", user_account_followRouter);
 //service geolocation
 app.use("/service/geolocation", geolocationRouter);
 //service log
@@ -209,13 +209,13 @@ app.use(function(req, res, next) {
 });
 
 
-const {init_db, mysql_pool, oracle_pool} = require ("./service/db/config/database");
+const {init_db, mysql_pool, oracle_pool} = require ("./service/db/common/database");
 init_db((err, result) =>{
   if (err)
       null;
   else{
     let json;
-    const { getAppDBParameters } = require ("./service/db/api/app_parameter/app_parameter.service");
+    const { getAppDBParameters } = require ("./service/db/app_portfolio/app_parameter/app_parameter.service");
     //app_id inparameter for log, all apps will be returned
     getAppDBParameters(process.env.MAIN_APP_ID,(err, results) =>{
       if (err) {
