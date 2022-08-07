@@ -476,7 +476,7 @@ function init(parameters){
             document.getElementById('info_link3').addEventListener('click', function() { show_window_info(3);}, false);
             document.getElementById('info_link4').addEventListener('click', function() { show_window_info(4);}, false);
 
-            common_translate_ui(window.global_lang_code);
+            common_translate_ui(window.global_locale);
             document.getElementById('copyright').innerHTML = window.global_app_copyright;
             document.getElementById('app_email').href='mailto:' + window.global_app_email;
             document.getElementById('app_email').innerHTML=window.global_app_email;
