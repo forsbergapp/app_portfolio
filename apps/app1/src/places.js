@@ -1,4 +1,4 @@
-const { getPlace } = require("../../../service/db/api/app1_place/app1_place.service");
+const { getPlace } = require("../../../service/db/app_portfolio/app1_place/app1_place.service");
 
 module.exports = {
   places:(app_id) => {

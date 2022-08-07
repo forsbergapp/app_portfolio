@@ -1,9 +1,9 @@
 const { sign } = require("jsonwebtoken");
 const { verify } = require("jsonwebtoken");
-const { createLog} = require ("../../service/db/api/app_log/app_log.service");
-const { getParameter, getParameters_server } = require ("../../service/db/api/app_parameter/app_parameter.service");
+const { createLog} = require ("../../service/db/app_portfolio/app_log/app_log.service");
+const { getParameter, getParameters_server } = require ("../../service/db/app_portfolio/app_parameter/app_parameter.service");
 const { createLogAppSE, createLogAppCI } = require("../../service/log/log.controller");
-const { checkLogin } = require("../../service/db/api/user_account_logon/user_account_logon.service");
+const { checkLogin } = require("../../service/db/app_portfolio/user_account_logon/user_account_logon.service");
 const {block_ip_control, safe_user_agents, policy_directives} = require ("./auth.service");
 module.exports = {
     access_control: (req, res, callBack) => {

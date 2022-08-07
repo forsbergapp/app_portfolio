@@ -1,4 +1,4 @@
-const { createLog} = require ("../../service/db/api/app_log/app_log.service");
+const { createLog} = require ("../../service/db/app_portfolio/app_log/app_log.service");
 module.exports = {
 	getReport: async (req, res) => {
 		let decodedparameters = Buffer.from(req.query.reportid, 'base64').toString('utf-8')
@@ -16,7 +16,7 @@ module.exports = {
 							result.geoplugin_regionName + ', ' +
 							result.geoplugin_countryName;
 			//check if maintenance
-			const { getParameter} = require ("../../service/db/api/app_parameter/app_parameter.service");
+			const { getParameter} = require ("../../service/db/app_portfolio/app_parameter/app_parameter.service");
 			getParameter(process.env.MAIN_APP_ID,'SERVER_MAINTENANCE', (err, db_SERVER_MAINTENANCE)=>{
 				if (err)
 					createLogAppSE(req.query.app_id, __appfilename, __appfunction, __appline, err, (err_log, result_log)=>{
