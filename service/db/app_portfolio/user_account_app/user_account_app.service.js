@@ -80,6 +80,90 @@ module.exports = {
 				return callBack(null, result);
 		});
 	},
+	getUserAccountApp: (app_id, user_account_id, callBack) => {
+		let sql;
+		let parameters;
+		if (process.env.SERVICE_DB_USE == 1) {
+			sql = `SELECT preference_locale,
+			              preference_timezone,
+						  preference_direction,
+						  preference_arabic_script,
+						  date_created
+					 FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_app
+					WHERE user_account_id = ?
+					  AND app_id = ?`;
+			parameters = [
+							user_account_id,
+							app_id
+						 ];
+		}else if (process.env.SERVICE_DB_USE==2){
+			sql = `SELECT preference_locale "preference_locale",
+						  preference_timezone "preference_timezone",
+						  preference_direction "preference_direction",
+						  preference_arabic_script "preference_arabic_script",
+						  date_created "date_created"
+					 FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_app
+					WHERE user_account_id = :user_account_id
+					  AND app_id = :app_id`;
+			parameters = {
+							user_account_id: user_account_id,
+							app_id: app_id
+						 };
+		}
+		execute_db_sql(app_id, app_id, sql, parameters, null, 
+			           __appfilename, __appfunction, __appline, (err, result)=>{
+			if (err)
+				return callBack(err, null);
+			else
+				return callBack(null, result);
+		});
+	},
+	updateUserAccountApp: (app_id, user_account_id, data, callBack) => {
+		let sql;
+		let parameters;
+		if (process.env.SERVICE_DB_USE == 1) {
+			sql = `UPDATE ${process.env.SERVICE_DB_DB1_NAME}.user_account_app
+					  SET preference_locale = ?,
+			              preference_timezone = ?,
+						  preference_direction = ?,
+						  preference_arabic_script = ?,
+						  date_created = SYSDATE()
+					WHERE user_account_id = ?
+					  AND app_id = ?`;
+			parameters = [
+							data.preference_locale,
+							data.preference_timezone,
+							data.preference_direction,
+							data.preference_arabic_script,
+							user_account_id,
+							app_id
+						 ];
+		}else if (process.env.SERVICE_DB_USE==2){
+			sql = `UPDATE ${process.env.SERVICE_DB_DB1_NAME}.user_account_app
+					  SET preference_locale = :preference_locale,
+						  preference_timezone = :preference_timezone,
+					  	  preference_direction = :preference_direction,
+						  preference_arabic_script = :preference_arabic_script,
+						  date_created = SYSDATE
+					WHERE user_account_id = :user_account_id
+						AND app_id = :app_id`;
+			parameters = {
+							preference_locale: data.preference_locale,
+							preference_timezone: data.preference_timezone,
+							preference_direction: data.preference_direction,
+							preference_arabic_script: data.preference_arabic_script,
+							user_account_id: user_account_id,
+							app_id: app_id
+						 };
+		}
+		execute_db_sql(app_id, app_id, sql, parameters, null, 
+			           __appfilename, __appfunction, __appline, (err, result)=>{
+			if (err)
+				return callBack(err, null);
+			else
+				return callBack(null, result);
+		});
+	},
 	deleteUserAccountApps: (app_id_app, user_account_id, app_id, callBack) => {
 		let sql;
 		let parameters;
