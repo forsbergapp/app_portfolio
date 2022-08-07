@@ -14,16 +14,16 @@ INSERT INTO app_portfolio.app_category_translation(app_category_id, language_id,
 --
 -- Dumping data for table `app_object_item_translation`
 --
-INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (0,'DIALOGUE','USERNAME',31,'Username');
-INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (0,'DIALOGUE','PASSWORD',31,'Անձնագիր');
-INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (0,'DIALOGUE','BIO',31,'Էր');
-INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (0,'DIALOGUE','EMAIL',31,'Էլ. փոստ');
-INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (0,'DIALOGUE','NEW_EMAIL',31,'Նոր է-փոստ');
-INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (0,'DIALOGUE','PASSWORD_CONFIRM',31,'Գաղտնաբառը հաստատում է');
-INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (0,'DIALOGUE','PASSWORD_REMINDER',31,'Անձնագրի հիշեցում');
-INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (0,'DIALOGUE','NEW_PASSWORD_CONFIRM',31,'Նոր գաղտնաբառը հաստատում է');
-INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (0,'DIALOGUE','NEW_PASSWORD',31,'Նոր գաղտնաբառ');
-INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (0,'DIALOGUE','CONFIRM_QUESTION',31,'Վստահ ես?');
+INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (0,'DIALOGUE','USERNAME',31,'Օգտագործողի անունը');
+INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (0,'DIALOGUE','PASSWORD',31,'Գաղտնաբառ');
+INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (0,'DIALOGUE','BIO',31,'Կենսագրություն');
+INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (0,'DIALOGUE','EMAIL',31,'Էլ');
+INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (0,'DIALOGUE','NEW_EMAIL',31,'Նոր էլ');
+INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (0,'DIALOGUE','PASSWORD_CONFIRM',31,'Հաստատել գաղտնաբառը');
+INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (0,'DIALOGUE','PASSWORD_REMINDER',31,'Գաղտնաբառի հիշեցում');
+INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (0,'DIALOGUE','NEW_PASSWORD_CONFIRM',31,'Նոր գաղտնաբառի հաստատում');
+INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (0,'DIALOGUE','NEW_PASSWORD',31,'Նոր ծածկագիր');
+INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (0,'DIALOGUE','CONFIRM_QUESTION',31,'Համոզված ես?');
 
 
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'REPORT','COLTITLE_ASR',31,'Կեսօրից հետո');
