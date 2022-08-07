@@ -1083,9 +1083,13 @@ ALTER TABLE app_portfolio.user_account ADD CONSTRAINT user_account_username_un U
 ALTER TABLE app_portfolio.user_account ADD CONSTRAINT user_account_email_un UNIQUE ( email );
 
 CREATE TABLE app_portfolio.user_account_app (
-    user_account_id INTEGER NOT NULL,
-    app_id          INTEGER NOT NULL,
-    date_created    DATETIME NOT NULL,
+    user_account_id          INTEGER NOT NULL,
+    app_id                   INTEGER NOT NULL,
+    preference_locale        VARCHAR(100),
+    preference_timezone      VARCHAR(100),
+    preference_direction     VARCHAR(100),
+    preference_arabic_script VARCHAR(100),
+    date_created             DATETIME NOT NULL,
     CONSTRAINT user_account_app_pk PRIMARY KEY ( app_id,
                                                 user_account_id )
 );
