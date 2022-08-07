@@ -1,5 +1,5 @@
 global.broadcast_clients = [];
-const { createLog} = require ("../../service/db/api/app_log/app_log.service");
+const { createLog} = require ("../../service/db/app_portfolio/app_log/app_log.service");
 const { getListConnected, getCountConnected, sendBroadcast, updateConnected, checkConnected} = require ("./broadcast.service");
 module.exports = {
 	connectBroadcast: (req, res) => {
@@ -9,7 +9,7 @@ module.exports = {
           };
         res.writeHead(200, headers);
         const intervalId = setInterval(() => {
-            const { getParameter } = require ("../db/api/app_parameter/app_parameter.service");
+            const { getParameter } = require ("../db/app_portfolio/app_parameter/app_parameter.service");
             getParameter(process.env.MAIN_APP_ID,'SERVER_MAINTENANCE', (err, db_SERVER_MAINTENANCE)=>{
                 if (err){
                     const {createLogAppSE} = require("../log/log.controller");

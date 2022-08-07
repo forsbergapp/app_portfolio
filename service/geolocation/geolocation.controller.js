@@ -1,7 +1,7 @@
 const { getService, getTimezone} = require ("./geolocation.service");
-const { createLog} = require ("../../service/db/api/app_log/app_log.service");
-const { getMessage } = require("../db/api/message_translation/message_translation.service");
-const { getParameter } = require ("../db/api/app_parameter/app_parameter.service");
+const { createLog} = require ("../../service/db/app_portfolio/app_log/app_log.service");
+const { getMessage } = require("../db/app_portfolio/message_translation/message_translation.service");
+const { getParameter } = require ("../db/app_portfolio/app_parameter/app_parameter.service");
 const { createLogAppSE } = require("../../service/log/log.controller");
 module.exports = {
 	getPlace: (req, res) => {

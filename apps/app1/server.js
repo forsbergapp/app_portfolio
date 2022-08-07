@@ -1,14 +1,14 @@
-const app1_placeRouter = require("./service/db/api/app1_place/app1_place.router");
-const app1_themeRouter = require("./service/db/api/app1_theme/app1_theme.router");
-const app1_user_settingRouter = require("./service/db/api/app1_user_setting/app1_user_setting.router");
-const app1_user_setting_likeRouter = require("./service/db/api/app1_user_setting_like/app1_user_setting_like.router");
-const app1_user_setting_viewRouter = require("./service/db/api/app1_user_setting_view/app1_user_setting_view.router");
+const app1_placeRouter = require("./service/db/app_portfolio/app1_place/app1_place.router");
+const app1_themeRouter = require("./service/db/app_portfolio/app1_theme/app1_theme.router");
+const app1_user_settingRouter = require("./service/db/app_portfolio/app1_user_setting/app1_user_setting.router");
+const app1_user_setting_likeRouter = require("./service/db/app_portfolio/app1_user_setting_like/app1_user_setting_like.router");
+const app1_user_setting_viewRouter = require("./service/db/app_portfolio/app1_user_setting_view/app1_user_setting_view.router");
 const APP1_ID = 1;
-app.use("/service/db/api/app1_place", app1_placeRouter);
-app.use("/service/db/api/app1_theme", app1_themeRouter);
-app.use("/service/db/api/app1_user_setting", app1_user_settingRouter);
-app.use("/service/db/api/app1_user_setting_like", app1_user_setting_likeRouter);
-app.use("/service/db/api/app1_user_setting_view", app1_user_setting_viewRouter);
+app.use("/service/db/app_portfolio/app1_place", app1_placeRouter);
+app.use("/service/db/app_portfolio/app1_theme", app1_themeRouter);
+app.use("/service/db/app_portfolio/app1_user_setting", app1_user_settingRouter);
+app.use("/service/db/app_portfolio/app1_user_setting_like", app1_user_setting_likeRouter);
+app.use("/service/db/app_portfolio/app1_user_setting_view", app1_user_setting_viewRouter);
 
 app.use('/app1/css',express.static(__dirname + '/apps/app1/css'));
 app.use('/app1/js',express.static(__dirname + '/apps/app1/js'));
@@ -49,7 +49,7 @@ app.get("/info/:info",function (req, res, next) {
 //app 1 progressive webapp menifest
 app.get("/app1/manifest.json",function (req, res, next) {
   if (req.headers.host.substring(0,req.headers.host.indexOf('.')) == 'app1'){
-    const { getParameters } = require ("./service/db/api/app_parameter/app_parameter.service");
+    const { getParameters } = require ("./service/db/app_portfolio/app_parameter/app_parameter.service");
     getParameters(APP1_ID,(err, results) =>{
       if (err) {
         return res.send(err);
