@@ -16,54 +16,57 @@ module.exports = {
                     })
                 }
                 else{
-                    if (process.env.SERVICE_AUTH_ACCESS_CONTROL_HOST_EXIST==1){
+                    if (process.env.SERVICE_AUTH_ACCESS_CONTROL_HOST_EXIST==1 &&
+                        typeof req.headers.host=='undefined'){
                         //check if host exists
-                        if (typeof req.headers.host=='undefined'){
-                            createLogAppCI(req, res, null, __appfilename, __appfunction, __appline, `ip ${ip_v4} blocked, no host, tried URL: ${req.originalUrl}`, (err_log, result_log)=>{
-                                //406 Not Acceptable
-                                return callBack(406,null);
-                            })
-                        }
+                        createLogAppCI(req, res, null, __appfilename, __appfunction, __appline, `ip ${ip_v4} blocked, no host, tried URL: ${req.originalUrl}`, (err_log, result_log)=>{
+                            //406 Not Acceptable
+                            return callBack(406,null);
+                        })
                     }
-                    if (process.env.SERVICE_AUTH_ACCESS_CONTROL_ACCESS_FROM==1){
-                        //check if accessed from domain and not os hostname
+                    else{
                         var os = require("os");
-                        if (req.headers.host==os.hostname()){
+                        if (process.env.SERVICE_AUTH_ACCESS_CONTROL_ACCESS_FROM==1 &&
+                            req.headers.host==os.hostname()){
+                            //check if accessed from domain and not os hostname
                             createLogAppCI(req, res, null, __appfilename, __appfunction, __appline, `ip ${ip_v4} blocked, accessed from hostname ${os.hostname()} not domain, tried URL: ${req.originalUrl}`, (err_log, result_log)=>{
                                 //406 Not Acceptable
                                 return callBack(406,null);
                             })
                         }
-                    }
-                    safe_user_agents(req.headers["user-agent"], (err, safe)=>{
-                        if (err)
-                            null;
                         else{
-                            if (safe==true)
-                                return callBack(null,1);
-                            else{
-                                if(process.env.SERVICE_AUTH_ACCESS_CONTROL_USER_AGENT_EXIST==1){
-                                    //check if user-agent exists
-                                    if (typeof req.headers["user-agent"]=='undefined'){
-                                        createLogAppCI(req, res, null, __appfilename, __appfunction, __appline, `ip ${ip_v4} blocked, no user-agent, tried URL: ${req.originalUrl}`, (err_log, result_log)=>{
-                                            //406 Not Acceptable
-                                            return callBack(406,null);
-                                        })
+                            safe_user_agents(req.headers["user-agent"], (err, safe)=>{
+                                if (err)
+                                    null;
+                                else{
+                                    if (safe==true)
+                                        return callBack(null,1);
+                                    else{
+                                        if(process.env.SERVICE_AUTH_ACCESS_CONTROL_USER_AGENT_EXIST==1 &&
+                                           typeof req.headers["user-agent"]=='undefined'){
+                                            //check if user-agent exists
+                                            createLogAppCI(req, res, null, __appfilename, __appfunction, __appline, `ip ${ip_v4} blocked, no user-agent, tried URL: ${req.originalUrl}`, (err_log, result_log)=>{
+                                                //406 Not Acceptable
+                                                return callBack(406,null);
+                                            })
+                                        }
+                                        else{
+                                            if (process.env.SERVICE_AUTH_ACCESS_CONTROL_ACCEPT_LANGUAGE==1 &&
+                                                typeof req.headers["accept-language"]=='undefined'){
+                                                //check if accept-language exists
+                                                createLogAppCI(req, res, null, __appfilename, __appfunction, __appline, `ip ${ip_v4} blocked, no accept-language, tried URL: ${req.originalUrl}`, (err_log, result_log)=>{
+                                                    //406 Not Acceptable
+                                                    return callBack(406,null);
+                                                })
+                                            }
+                                            else
+                                                return callBack(null,1);
+                                        }
                                     }
                                 }
-                                if (process.env.SERVICE_AUTH_ACCESS_CONTROL_ACCEPT_LANGUAGE==1){
-                                    //check if accept-language exists
-                                    if (typeof req.headers["accept-language"]=='undefined'){
-                                        createLogAppCI(req, res, null, __appfilename, __appfunction, __appline, `ip ${ip_v4} blocked, no accept-language, tried URL: ${req.originalUrl}`, (err_log, result_log)=>{
-                                            //406 Not Acceptable
-                                            return callBack(406,null);
-                                        })
-                                    }
-                                }
-                                return callBack(null,1);
-                            }
+                            })
                         }
-                    })
+                    }
                 }
             })
         }

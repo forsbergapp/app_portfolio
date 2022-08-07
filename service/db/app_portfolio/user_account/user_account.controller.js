@@ -977,13 +977,13 @@ module.exports = {
                                 //Username or password not found
                                 createLogAppCI(req, res, req.body.app_id, __appfilename, __appfunction, __appline, 
                                     'invalid password attempt for user id:' + req.body.user_account_id + ', username:' + req.body.username, (err_log, result_log)=>{
-                                getMessage(20300, 
-                                process.env.MAIN_APP_ID, 
-                                req.query.lang_code, (err2,results2)  => {
-                                        return res.status(400).send(
-                                            results2.text
-                                        );
-                                });
+                                    getMessage(20300, 
+                                    process.env.MAIN_APP_ID, 
+                                    req.query.lang_code, (err2,results2)  => {
+                                            return res.status(400).send(
+                                                results2.text
+                                            );
+                                    });
                                 })
                             }
                         })
