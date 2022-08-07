@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const { createUserAccountApp, getUserAccountApps, deleteUserAccountApps} = require ("./user_account_app.controller");
+const { createUserAccountApp, getUserAccountApps, getUserAccountApp, updateUserAccountApp, deleteUserAccountApps} = require ("./user_account_app.controller");
 const { checkAccessToken } = require("../../../auth/auth.controller");
 const { createLogAppRI } = require("../../../log/log.controller");
 router.use((req,res,next)=>{
@@ -7,6 +7,8 @@ router.use((req,res,next)=>{
     next();
 })
 router.post("/", checkAccessToken, createUserAccountApp);
-router.get("/:user_account_id", checkAccessToken, getUserAccountApps);
+router.get("/:user_account_id", checkAccessToken, getUserAccountApp);
+router.get("/apps/:user_account_id", checkAccessToken, getUserAccountApps);
+router.patch("/:user_account_id", checkAccessToken, updateUserAccountApp);
 router.delete("/:user_account_id/:app_id", checkAccessToken, deleteUserAccountApps);
 module.exports = router;

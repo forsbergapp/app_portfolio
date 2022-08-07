@@ -1722,7 +1722,7 @@ init_common({
     app_id: '',
     app_name: 'ADMIN',
     app_url: window.location.href,
-    app_logo: '/app0/images/logo_app.png',
+    app_logo: '/app0/images/logo.png',
     exception_app_function: 'admin_logoff_app',
     close_eventsource: true,
     ui: true,
