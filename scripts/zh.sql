@@ -1,7 +1,7 @@
 --Oracle, uncomment:
 --SET DEFINE OFF;
 --
--- Dumping data for table `app_category_translation`
+-- app_category_translation
 --
 INSERT INTO app_portfolio.app_category_translation(app_category_id, language_id, text) VALUES(1, 107, '商');
 INSERT INTO app_portfolio.app_category_translation(app_category_id, language_id, text) VALUES(2, 107, '通信');
@@ -12,7 +12,7 @@ INSERT INTO app_portfolio.app_category_translation(app_category_id, language_id,
 INSERT INTO app_portfolio.app_category_translation(app_category_id, language_id, text) VALUES(7, 107, '购物');
 INSERT INTO app_portfolio.app_category_translation(app_category_id, language_id, text) VALUES(8, 107, '游戏');
 --
--- Dumping data for table `app_object_item_translation`
+-- app_object_item_translation
 --
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (0,'DIALOGUE','USERNAME',107,'用户名');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (0,'DIALOGUE','PASSWORD',107,'密码');
@@ -65,7 +65,7 @@ INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, 
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'TOOLBAR','TOOLBAR_BTN_PRINT_LABEL',107,'打印');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'TOOLBAR','TOOLBAR_BTN_YEAR_LABEL',107,'年');
 --
--- Dumping data for table `app_object_subitem_translation`
+-- app_object_subitem_translation
 --
 INSERT INTO app_object_subitem_translation (app_id, object_name, object_item_name, subitem_name, language_id, text) VALUES (1,'SETTING_NAV_PRAYER','SETTING_SELECT_ASR','SETTING_SELECT_ASR_0',107,'标准');
 INSERT INTO app_object_subitem_translation (app_id, object_name, object_item_name, subitem_name, language_id, text) VALUES (1,'SETTING_NAV_PRAYER','SETTING_SELECT_ASR','SETTING_SELECT_ASR_1',107,'Hanafi');
@@ -141,12 +141,12 @@ INSERT INTO app_object_subitem_translation (app_id, object_name, object_item_nam
 INSERT INTO app_object_subitem_translation (app_id, object_name, object_item_name, subitem_name, language_id, text) VALUES (1,'SETTING_NAV_PRAYER','SETTING_SELECT_TIMEFORMAT','SETTING_SELECT_TIMEFORMAT_1',107,'24小时');
 INSERT INTO app_object_subitem_translation (app_id, object_name, object_item_name, subitem_name, language_id, text) VALUES (1,'SETTING_NAV_PRAYER','SETTING_SELECT_TIMEFORMAT','SETTING_SELECT_TIMEFORMAT_2',107,'12小时带后缀');
 --
--- Dumping data for table `app_object_translation`
+-- app_object_translation
 --
 INSERT INTO app_object_translation (app_id, object_name, language_id, text) VALUES (1,'APP_DESCRIPTION',107,'渐进式 Web 应用 （PWA） 单页应用程序 （SPA）');
 INSERT INTO app_object_translation (app_id, object_name, language_id, text) VALUES (2,'APP_DESCRIPTION',107,'用于显示数据模型的简单应用程序以及如何在应用程序平台中集成应用程序');
 --
--- Dumping data for table `language_translation`
+-- language_translation
 --
 INSERT INTO language_translation (language_id, language_translation_id, text) VALUES (1,107,'阿布哈西亚文');
 INSERT INTO language_translation (language_id, language_translation_id, text) VALUES (2,107,'亚齐文');
@@ -646,7 +646,7 @@ INSERT INTO language_translation (language_id, language_translation_id, text) VA
 INSERT INTO language_translation (language_id, language_translation_id, text) VALUES (608,107,'祖鲁文');
 INSERT INTO language_translation (language_id, language_translation_id, text) VALUES (609,107,'祖尼文');
 --
--- Dumping data for table `message_translation`
+-- message_translation
 --
 INSERT INTO message_translation (language_id, message_code, text) VALUES (107,'20100','用户名 5 - 100 个字符');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (107,'20101','无效的用户名');
@@ -674,3 +674,14 @@ INSERT INTO message_translation (language_id, message_code, text) VALUES (107,'2
 INSERT INTO message_translation (language_id, message_code, text) VALUES (107,'20400','记录不存在');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (107,'20401','无效的密码');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (107,'20500','缺少纬度或经度');
+--
+-- regional_setting_translation
+--
+INSERT INTO app_portfolio.regional_setting_translation (regional_setting_id, language_id, text) VALUES (490,107,'格里高利安');
+INSERT INTO app_portfolio.regional_setting_translation (regional_setting_id, language_id, text) VALUES (491,107,'Hijri');
+INSERT INTO app_portfolio.regional_setting_translation (regional_setting_id, language_id, text) VALUES (481,107,'音译');
+INSERT INTO app_portfolio.regional_setting_translation (regional_setting_id, language_id, text) VALUES (482,107,'音译, 翻译');
+INSERT INTO app_portfolio.regional_setting_translation (regional_setting_id, language_id, text) VALUES (483,107,'翻译, 音译');
+INSERT INTO app_portfolio.regional_setting_translation (regional_setting_id, language_id, text) VALUES (484,107,'翻译');
+INSERT INTO app_portfolio.regional_setting_translation (regional_setting_id, language_id, text) VALUES (479,107,'左到右');
+INSERT INTO app_portfolio.regional_setting_translation (regional_setting_id, language_id, text) VALUES (480,107,'右到左');
