@@ -1,5 +1,5 @@
 --
--- Dumping data for table `country_translation`
+-- country_translation
 --
 INSERT INTO country_translation (country_id, language_id, text) VALUES (251,8,'Afganistan');
 INSERT INTO country_translation (country_id, language_id, text) VALUES (251,11,'Afganistan');
