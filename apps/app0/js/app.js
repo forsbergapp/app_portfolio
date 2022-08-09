@@ -322,6 +322,7 @@ async function user_login_app(){
             document.getElementById('user_menu').classList.add('user_menu_logged_in');
             document.getElementById('user_menu_logged_out').style.display = 'none';
 
+            document.getElementById('user_menu_username').style.display = 'block';
             document.getElementById('user_menu_dropdown_logged_in').style.display = 'inline-block';
             document.getElementById('user_menu_dropdown_logged_out').style.display = 'none';
 
@@ -337,6 +338,7 @@ function app_exception(){
 function user_logoff_app() {
     user_logoff().then(function(){
         set_avatar(null, document.getElementById('user_menu_avatar_img'));
+        document.getElementById('user_menu_username').style.display = 'none';
         document.getElementById('user_menu_username').innerHTML = '';
         document.getElementById('user_menu_logged_in').style.display = 'none';
         document.getElementById('user_menu').classList.remove('user_menu_logged_in');
