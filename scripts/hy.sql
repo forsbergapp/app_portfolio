@@ -1,7 +1,7 @@
 --Oracle, uncomment:
 --SET DEFINE OFF;
 --
--- Dumping data for table `app_category_translation`
+-- app_category_translation
 --
 INSERT INTO app_portfolio.app_category_translation(app_category_id, language_id, text) VALUES(1, 31, 'Բիզնես');
 INSERT INTO app_portfolio.app_category_translation(app_category_id, language_id, text) VALUES(2, 31, 'Հաղորդակցություն');
@@ -12,7 +12,7 @@ INSERT INTO app_portfolio.app_category_translation(app_category_id, language_id,
 INSERT INTO app_portfolio.app_category_translation(app_category_id, language_id, text) VALUES(7, 31, 'Գնումներ');
 INSERT INTO app_portfolio.app_category_translation(app_category_id, language_id, text) VALUES(8, 31, 'Խաղ');
 --
--- Dumping data for table `app_object_item_translation`
+-- app_object_item_translation
 --
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (0,'DIALOGUE','USERNAME',31,'Օգտագործողի անունը');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (0,'DIALOGUE','PASSWORD',31,'Գաղտնաբառ');
@@ -66,7 +66,7 @@ INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, 
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'TOOLBAR','TOOLBAR_BTN_PRINT_LABEL',31,'Տպել');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'TOOLBAR','TOOLBAR_BTN_YEAR_LABEL',31,'Տարի');
 --
--- Dumping data for table `app_object_subitem_translation`
+-- app_object_subitem_translation
 --
 INSERT INTO app_object_subitem_translation (app_id, object_name, object_item_name, subitem_name, language_id, text) VALUES (1,'SETTING_NAV_PRAYER','SETTING_SELECT_ASR','SETTING_SELECT_ASR_0',31,'Ստանդարտ');
 INSERT INTO app_object_subitem_translation (app_id, object_name, object_item_name, subitem_name, language_id, text) VALUES (1,'SETTING_NAV_PRAYER','SETTING_SELECT_ASR','SETTING_SELECT_ASR_1',31,'Հանաֆի');
@@ -142,12 +142,12 @@ INSERT INTO app_object_subitem_translation (app_id, object_name, object_item_nam
 INSERT INTO app_object_subitem_translation (app_id, object_name, object_item_name, subitem_name, language_id, text) VALUES (1,'SETTING_NAV_PRAYER','SETTING_SELECT_TIMEFORMAT','SETTING_SELECT_TIMEFORMAT_1',31,'24-ժամյա');
 INSERT INTO app_object_subitem_translation (app_id, object_name, object_item_name, subitem_name, language_id, text) VALUES (1,'SETTING_NAV_PRAYER','SETTING_SELECT_TIMEFORMAT','SETTING_SELECT_TIMEFORMAT_2',31,'12-ժամյա վերջածանցով');
 --
--- Dumping data for table `app_object_translation`
+-- app_object_translation
 --
 INSERT INTO app_object_translation (app_id, object_name, language_id, text) VALUES (1,'APP_DESCRIPTION',31,'Պրոգրեսիվ վեբ հավելված (PWA) մեկ էջի ծրագիր (SPA)');
 INSERT INTO app_object_translation (app_id, object_name, language_id, text) VALUES (2,'APP_DESCRIPTION',31,'Պարզ հավելված՝ datamodel-ի ցուցադրման համար եւ ինչպես հավելվածի հարթակում միացնել հավելվածը');
 --
--- Dumping data for table `message_translation`
+-- message_translation
 --
 INSERT INTO message_translation (language_id, message_code, text) VALUES (31,'20100','Օգտվողի անունը 5 - 100 նիշ');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (31,'20101','Անվավեր օգտանուն');
@@ -175,3 +175,14 @@ INSERT INTO message_translation (language_id, message_code, text) VALUES (31,'20
 INSERT INTO message_translation (language_id, message_code, text) VALUES (31,'20400','Գրառումը չի գտնվել');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (31,'20401','Անվավեր գաղտնաբառ');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (31,'20500','Բացակայում է լայնությունը կամ երկայնությունը');
+--
+-- regional_setting_translation
+--
+INSERT INTO app_portfolio.regional_setting_translation (regional_setting_id, language_id, text) VALUES (490,31,'Գրիգորյանը');
+INSERT INTO app_portfolio.regional_setting_translation (regional_setting_id, language_id, text) VALUES (491,31,'հիջրի');
+INSERT INTO app_portfolio.regional_setting_translation (regional_setting_id, language_id, text) VALUES (481,31,'Տառադարձություն');
+INSERT INTO app_portfolio.regional_setting_translation (regional_setting_id, language_id, text) VALUES (482,31,'Տառադարձություն, թարգմանությունը');
+INSERT INTO app_portfolio.regional_setting_translation (regional_setting_id, language_id, text) VALUES (483,31,'Թարգմանություն, տառադարձություն');
+INSERT INTO app_portfolio.regional_setting_translation (regional_setting_id, language_id, text) VALUES (484,31,'Թարգմանություն');
+INSERT INTO app_portfolio.regional_setting_translation (regional_setting_id, language_id, text) VALUES (479,31,'Ձախից աջ');
+INSERT INTO app_portfolio.regional_setting_translation (regional_setting_id, language_id, text) VALUES (480,31,'Աջից ձախ');

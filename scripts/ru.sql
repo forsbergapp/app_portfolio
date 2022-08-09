@@ -1,7 +1,7 @@
 --Oracle, uncomment:
 --SET DEFINE OFF;
 --
--- Dumping data for table `app_category_translation`
+-- app_category_translation
 --
 INSERT INTO app_portfolio.app_category_translation(app_category_id, language_id, text) VALUES(1, 453, 'дело');
 INSERT INTO app_portfolio.app_category_translation(app_category_id, language_id, text) VALUES(2, 453, 'Связь');
@@ -12,7 +12,7 @@ INSERT INTO app_portfolio.app_category_translation(app_category_id, language_id,
 INSERT INTO app_portfolio.app_category_translation(app_category_id, language_id, text) VALUES(7, 453, 'Шоппинг');
 INSERT INTO app_portfolio.app_category_translation(app_category_id, language_id, text) VALUES(8, 453, 'Игра');
 --
--- Dumping data for table `app_object_item_translation`
+-- app_object_item_translation
 --
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (0,'DIALOGUE','USERNAME',453,'Имя пользователя');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (0,'DIALOGUE','PASSWORD',453,'Пароль');
@@ -65,7 +65,7 @@ INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, 
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'TOOLBAR','TOOLBAR_BTN_PRINT_LABEL',453,'Печатать');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'TOOLBAR','TOOLBAR_BTN_YEAR_LABEL',453,'Год');
 --
--- Dumping data for table `app_object_subitem_translation`
+-- app_object_subitem_translation
 --
 INSERT INTO app_object_subitem_translation (app_id, object_name, object_item_name, subitem_name, language_id, text) VALUES (1,'SETTING_NAV_PRAYER','SETTING_SELECT_ASR','SETTING_SELECT_ASR_0',453,'Стандарт');
 INSERT INTO app_object_subitem_translation (app_id, object_name, object_item_name, subitem_name, language_id, text) VALUES (1,'SETTING_NAV_PRAYER','SETTING_SELECT_ASR','SETTING_SELECT_ASR_1',453,'Ханафи');
@@ -141,12 +141,12 @@ INSERT INTO app_object_subitem_translation (app_id, object_name, object_item_nam
 INSERT INTO app_object_subitem_translation (app_id, object_name, object_item_name, subitem_name, language_id, text) VALUES (1,'SETTING_NAV_PRAYER','SETTING_SELECT_TIMEFORMAT','SETTING_SELECT_TIMEFORMAT_1',453,'24 часа в сутки');
 INSERT INTO app_object_subitem_translation (app_id, object_name, object_item_name, subitem_name, language_id, text) VALUES (1,'SETTING_NAV_PRAYER','SETTING_SELECT_TIMEFORMAT','SETTING_SELECT_TIMEFORMAT_2',453,'12 часов с суффиксом');
 --
--- Dumping data for table `app_object_translation`
+-- app_object_translation
 --
 INSERT INTO app_object_translation (app_id, object_name, language_id, text) VALUES (1,'APP_DESCRIPTION',453,'Прогрессивное веб-приложение (PWA) одностраничное приложение (SPA)');
 INSERT INTO app_object_translation (app_id, object_name, language_id, text) VALUES (2,'APP_DESCRIPTION',453,'Простое приложение для отображения модели данных и интеграция приложения в платформу приложений');
 --
--- Dumping data for table `language_translation`
+-- language_translation
 --
 INSERT INTO language_translation (language_id, language_translation_id, text) VALUES (1,453,'абхазский');
 INSERT INTO language_translation (language_id, language_translation_id, text) VALUES (2,453,'ачехский');
@@ -740,7 +740,7 @@ INSERT INTO language_translation (language_id, language_translation_id, text) VA
 INSERT INTO language_translation (language_id, language_translation_id, text) VALUES (608,453,'зулу');
 INSERT INTO language_translation (language_id, language_translation_id, text) VALUES (609,453,'зуньи');
 --
--- Dumping data for table `message_translation`
+-- message_translation
 --
 INSERT INTO message_translation (language_id, message_code, text) VALUES (453,'20100','Имя пользователя 5 - 100 символов');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (453,'20101','Недопустимое имя пользователя');
@@ -768,3 +768,14 @@ INSERT INTO message_translation (language_id, message_code, text) VALUES (453,'2
 INSERT INTO message_translation (language_id, message_code, text) VALUES (453,'20400','Запись не найдена');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (453,'20401','Неверный пароль');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (453,'20500','Отсутствующая широта или долгота');
+--
+-- regional_setting_translation
+--
+INSERT INTO app_portfolio.regional_setting_translation (regional_setting_id, language_id, text) VALUES (490,453,'Григорианский');
+INSERT INTO app_portfolio.regional_setting_translation (regional_setting_id, language_id, text) VALUES (491,453,'Хиджра');
+INSERT INTO app_portfolio.regional_setting_translation (regional_setting_id, language_id, text) VALUES (481,453,'Транслитерация');
+INSERT INTO app_portfolio.regional_setting_translation (regional_setting_id, language_id, text) VALUES (482,453,'Транслитерация, перевод');
+INSERT INTO app_portfolio.regional_setting_translation (regional_setting_id, language_id, text) VALUES (483,453,'Перевод, транслитерация');
+INSERT INTO app_portfolio.regional_setting_translation (regional_setting_id, language_id, text) VALUES (484,453,'Перевод');
+INSERT INTO app_portfolio.regional_setting_translation (regional_setting_id, language_id, text) VALUES (479,453,'Слева направо');
+INSERT INTO app_portfolio.regional_setting_translation (regional_setting_id, language_id, text) VALUES (480,453,'Справа налево');

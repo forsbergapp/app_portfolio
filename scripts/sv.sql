@@ -1,7 +1,7 @@
 --Oracle, uncomment:
 --SET DEFINE OFF;
 --
--- Dumping data for table `app_category_translation`
+-- app_category_translation
 --
 INSERT INTO app_portfolio.app_category_translation(app_category_id, language_id, text) VALUES(1, 515, 'Affär');
 INSERT INTO app_portfolio.app_category_translation(app_category_id, language_id, text) VALUES(2, 515, 'Kommunikation');
@@ -12,7 +12,7 @@ INSERT INTO app_portfolio.app_category_translation(app_category_id, language_id,
 INSERT INTO app_portfolio.app_category_translation(app_category_id, language_id, text) VALUES(7, 515, 'Shopping');
 INSERT INTO app_portfolio.app_category_translation(app_category_id, language_id, text) VALUES(8, 515, 'Spel');
 --
--- Dumping data for table `app_object_item_translation`
+-- app_object_item_translation
 --
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (0,'DIALOGUE','USERNAME',515,'Användarnamn');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (0,'DIALOGUE','PASSWORD',515,'Lösenord');
@@ -65,7 +65,7 @@ INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, 
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'TOOLBAR','TOOLBAR_BTN_PRINT_LABEL',515,'Skriv ut');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'TOOLBAR','TOOLBAR_BTN_YEAR_LABEL',515,'År');
 --
--- Dumping data for table `app_object_subitem_translation`
+-- app_object_subitem_translation
 --
 INSERT INTO app_object_subitem_translation (app_id, object_name, object_item_name, subitem_name, language_id, text) VALUES (1,'SETTING_NAV_PRAYER','SETTING_SELECT_ASR','SETTING_SELECT_ASR_0',515,'Standard');
 INSERT INTO app_object_subitem_translation (app_id, object_name, object_item_name, subitem_name, language_id, text) VALUES (1,'SETTING_NAV_PRAYER','SETTING_SELECT_ASR','SETTING_SELECT_ASR_1',515,'Hanafi');
@@ -141,12 +141,12 @@ INSERT INTO app_object_subitem_translation (app_id, object_name, object_item_nam
 INSERT INTO app_object_subitem_translation (app_id, object_name, object_item_name, subitem_name, language_id, text) VALUES (1,'SETTING_NAV_PRAYER','SETTING_SELECT_TIMEFORMAT','SETTING_SELECT_TIMEFORMAT_1',515,'24-tim');
 INSERT INTO app_object_subitem_translation (app_id, object_name, object_item_name, subitem_name, language_id, text) VALUES (1,'SETTING_NAV_PRAYER','SETTING_SELECT_TIMEFORMAT','SETTING_SELECT_TIMEFORMAT_2',515,'12-tim med suffix');
 --
--- Dumping data for table `app_object_translation`
+-- app_object_translation
 --
 INSERT INTO app_object_translation (app_id, object_name, language_id, text) VALUES (1,'APP_DESCRIPTION',515,'Ensidesprogram för progressiv webbapp (PWA) (SPA)');
 INSERT INTO app_object_translation (app_id, object_name, language_id, text) VALUES (2,'APP_DESCRIPTION',515,'Enkel app för att visa datamodell och hur man integrerar en app i app plattformen');
 --
--- Dumping data for table `language_translation`
+-- language_translation
 --
 INSERT INTO language_translation (language_id, language_translation_id, text) VALUES (1,515,'abchaziska');
 INSERT INTO language_translation (language_id, language_translation_id, text) VALUES (2,515,'acehnesiska');
@@ -740,7 +740,7 @@ INSERT INTO language_translation (language_id, language_translation_id, text) VA
 INSERT INTO language_translation (language_id, language_translation_id, text) VALUES (608,515,'zulu');
 INSERT INTO language_translation (language_id, language_translation_id, text) VALUES (609,515,'zuni');
 --
--- Dumping data for table `message_translation`
+-- message_translation
 --
 INSERT INTO message_translation (language_id, message_code, text) VALUES (515,'20100','Username 5 - 100 characters');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (515,'20101','Not valid username');
@@ -768,3 +768,14 @@ INSERT INTO message_translation (language_id, message_code, text) VALUES (515,'2
 INSERT INTO message_translation (language_id, message_code, text) VALUES (515,'20400','Post finns inte');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (515,'20401','Ogiltigt lösenord');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (515,'20500','Saknar latitud eller longitud');
+--
+-- regional_setting_translation
+--
+INSERT INTO app_portfolio.regional_setting_translation (regional_setting_id, language_id, text) VALUES (490,515,'Gregoriansk');
+INSERT INTO app_portfolio.regional_setting_translation (regional_setting_id, language_id, text) VALUES (491,515,'Hijri');
+INSERT INTO app_portfolio.regional_setting_translation (regional_setting_id, language_id, text) VALUES (481,515,'Translitterering');
+INSERT INTO app_portfolio.regional_setting_translation (regional_setting_id, language_id, text) VALUES (482,515,'Translitterering, översättning');
+INSERT INTO app_portfolio.regional_setting_translation (regional_setting_id, language_id, text) VALUES (483,515,'Översättning, translitterering');
+INSERT INTO app_portfolio.regional_setting_translation (regional_setting_id, language_id, text) VALUES (484,515,'Översättning');
+INSERT INTO app_portfolio.regional_setting_translation (regional_setting_id, language_id, text) VALUES (479,515,'Vänster till höger');
+INSERT INTO app_portfolio.regional_setting_translation (regional_setting_id, language_id, text) VALUES (480,515,'Höger till vänster');

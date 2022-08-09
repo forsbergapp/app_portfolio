@@ -1,7 +1,7 @@
 --Oracle, uncomment:
 --SET DEFINE OFF;
 --
--- Dumping data for table `app_category_translation`
+-- app_category_translation
 --
 INSERT INTO app_portfolio.app_category_translation(app_category_id, language_id, text) VALUES(1, 63, 'ব্যবসা');
 INSERT INTO app_portfolio.app_category_translation(app_category_id, language_id, text) VALUES(2, 63, 'যোগাযোগ');
@@ -12,7 +12,7 @@ INSERT INTO app_portfolio.app_category_translation(app_category_id, language_id,
 INSERT INTO app_portfolio.app_category_translation(app_category_id, language_id, text) VALUES(7, 63, 'কেনাকাটা');
 INSERT INTO app_portfolio.app_category_translation(app_category_id, language_id, text) VALUES(8, 63, 'খেলা');
 --
--- Dumping data for table `app_object_item_translation`
+-- app_object_item_translation
 --
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (0,'DIALOGUE','USERNAME',63,'ব্যবহারকারীর নাম');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (0,'DIALOGUE','PASSWORD',63,'পাসওয়ার্ড');
@@ -66,7 +66,7 @@ INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, 
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'TOOLBAR','TOOLBAR_BTN_PRINT_LABEL',63,'ছাপা');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'TOOLBAR','TOOLBAR_BTN_YEAR_LABEL',63,'বছর');
 --
--- Dumping data for table `app_object_subitem_translation`
+-- app_object_subitem_translation
 --
 INSERT INTO app_object_subitem_translation (app_id, object_name, object_item_name, subitem_name, language_id, text) VALUES (1,'SETTING_NAV_PRAYER','SETTING_SELECT_ASR','SETTING_SELECT_ASR_0',63,'স্ট্যান্ডার্ড');
 INSERT INTO app_object_subitem_translation (app_id, object_name, object_item_name, subitem_name, language_id, text) VALUES (1,'SETTING_NAV_PRAYER','SETTING_SELECT_ASR','SETTING_SELECT_ASR_1',63,'Hanafi');
@@ -142,12 +142,12 @@ INSERT INTO app_object_subitem_translation (app_id, object_name, object_item_nam
 INSERT INTO app_object_subitem_translation (app_id, object_name, object_item_name, subitem_name, language_id, text) VALUES (1,'SETTING_NAV_PRAYER','SETTING_SELECT_TIMEFORMAT','SETTING_SELECT_TIMEFORMAT_1',63,'২ 4 ঘন্টা');
 INSERT INTO app_object_subitem_translation (app_id, object_name, object_item_name, subitem_name, language_id, text) VALUES (1,'SETTING_NAV_PRAYER','SETTING_SELECT_TIMEFORMAT','SETTING_SELECT_TIMEFORMAT_2',63,'12-ঘন্টা প্রত্যয় সহ');
 --
--- Dumping data for table `app_object_translation`
+-- app_object_translation
 --
 INSERT INTO app_object_translation (app_id, object_name, language_id, text) VALUES (1,'APP_DESCRIPTION',63,'প্রগতিশীল ওয়েব অ্যাপ (PWA) একক পৃষ্ঠা অ্যাপ্লিকেশন (SPA)');
 INSERT INTO app_object_translation (app_id, object_name, language_id, text) VALUES (2,'APP_DESCRIPTION',63,'ডেটা মডেল প্রদর্শনের জন্য সহজ অ্যাপ এবং অ্যাপ প্ল্যাটফর্মে একটি অ্যাপকে কীভাবে সংহত করা যায়');
 --
--- Dumping data for table `message_translation`
+-- message_translation
 --
 INSERT INTO message_translation (language_id, message_code, text) VALUES (63,'20100','ব্যবহারকারীর নাম 5 - 100 অক্ষর');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (63,'20101','বৈধ ব্যবহারকারীর নাম নয়');
@@ -175,3 +175,14 @@ INSERT INTO message_translation (language_id, message_code, text) VALUES (63,'20
 INSERT INTO message_translation (language_id, message_code, text) VALUES (63,'20400','রেকর্ড পাওয়া যায়নি');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (63,'20401','অবৈধ পাসওয়ার্ড');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (63,'20500','অনুপস্থিত অক্ষাংশ বা দ্রাঘিমাংশ');
+--
+-- regional_setting_translation
+--
+INSERT INTO app_portfolio.regional_setting_translation (regional_setting_id, language_id, text) VALUES (490,63,'গ্রেগরিয়ান');
+INSERT INTO app_portfolio.regional_setting_translation (regional_setting_id, language_id, text) VALUES (491,63,'হিজরি');
+INSERT INTO app_portfolio.regional_setting_translation (regional_setting_id, language_id, text) VALUES (481,63,'ট্রান্সলিটারেশন');
+INSERT INTO app_portfolio.regional_setting_translation (regional_setting_id, language_id, text) VALUES (482,63,'ট্রান্সলিটারেশন, অনুবাদ');
+INSERT INTO app_portfolio.regional_setting_translation (regional_setting_id, language_id, text) VALUES (483,63,'অনুবাদ, ট্রান্সলিটারেশন');
+INSERT INTO app_portfolio.regional_setting_translation (regional_setting_id, language_id, text) VALUES (484,63,'অনুবাদ');
+INSERT INTO app_portfolio.regional_setting_translation (regional_setting_id, language_id, text) VALUES (479,63,'বাম থেকে ডান');
+INSERT INTO app_portfolio.regional_setting_translation (regional_setting_id, language_id, text) VALUES (480,63,'ডান থেকে বাম');
