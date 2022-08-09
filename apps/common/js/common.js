@@ -2700,7 +2700,7 @@ function init_common(parameters){
     if (parameters.ui==true){
         //icons
         //dialogue user verify
-        document.getElementById('user_verify_email_icon').innerHTML = window.global_icon_app_mail;
+        document.getElementById('user_verify_email_icon').innerHTML = window.global_icon_app_email;
         //dialogue login
         document.getElementById('login_tab1').innerHTML = window.global_icon_app_login;
         document.getElementById('login_tab2').innerHTML = window.global_icon_app_signup;
