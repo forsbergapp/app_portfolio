@@ -1,5 +1,5 @@
 --
--- Dumping data for table `app_category_translation`
+-- app_category_translation
 --
 INSERT INTO app_portfolio.app_category_translation(app_category_id, language_id, text) VALUES(1, 506, 'Negocio');
 INSERT INTO app_portfolio.app_category_translation(app_category_id, language_id, text) VALUES(2, 506, 'Comunicaciones');
@@ -10,7 +10,7 @@ INSERT INTO app_portfolio.app_category_translation(app_category_id, language_id,
 INSERT INTO app_portfolio.app_category_translation(app_category_id, language_id, text) VALUES(7, 506, 'Compras');
 INSERT INTO app_portfolio.app_category_translation(app_category_id, language_id, text) VALUES(8, 506, 'Juego');
 --
--- Dumping data for table `app_object_item_translation`
+-- app_object_item_translation
 --
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (0,'DIALOGUE','USERNAME',506,'Nombre de ususario');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (0,'DIALOGUE','PASSWORD',506,'Contraseña');
@@ -63,7 +63,7 @@ INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, 
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'TOOLBAR','TOOLBAR_BTN_PRINT_LABEL',506,'Imprimir');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'TOOLBAR','TOOLBAR_BTN_YEAR_LABEL',506,'Año');
 --
--- Dumping data for table `app_object_subitem_translation`
+-- app_object_subitem_translation
 --
 INSERT INTO app_object_subitem_translation (app_id, object_name, object_item_name, subitem_name, language_id, text) VALUES (1,'SETTING_NAV_PRAYER','SETTING_SELECT_ASR','SETTING_SELECT_ASR_0',506,'Estándard');
 INSERT INTO app_object_subitem_translation (app_id, object_name, object_item_name, subitem_name, language_id, text) VALUES (1,'SETTING_NAV_PRAYER','SETTING_SELECT_ASR','SETTING_SELECT_ASR_1',506,'Hanafi');
@@ -139,12 +139,12 @@ INSERT INTO app_object_subitem_translation (app_id, object_name, object_item_nam
 INSERT INTO app_object_subitem_translation (app_id, object_name, object_item_name, subitem_name, language_id, text) VALUES (1,'SETTING_NAV_PRAYER','SETTING_SELECT_TIMEFORMAT','SETTING_SELECT_TIMEFORMAT_1',506,'24-horas');
 INSERT INTO app_object_subitem_translation (app_id, object_name, object_item_name, subitem_name, language_id, text) VALUES (1,'SETTING_NAV_PRAYER','SETTING_SELECT_TIMEFORMAT','SETTING_SELECT_TIMEFORMAT_2',506,'12-horas con sufijo');
 --
--- Dumping data for table `app_object_translation`
+-- app_object_translation
 --
 INSERT INTO app_object_translation (app_id, object_name, language_id, text) VALUES (1,'APP_DESCRIPTION',506,'Aplicación de una sola página (SPA) de aplicación web progresiva (PWA)');
 INSERT INTO app_object_translation (app_id, object_name, language_id, text) VALUES (2,'APP_DESCRIPTION',506,'Aplicación sencilla para mostrar el modelo de datos y cómo integrar una aplicación en la plataforma de la aplicación');
 --
--- Dumping data for table `language_translation`
+-- language_translation
 --
 INSERT INTO language_translation (language_id, language_translation_id, text) VALUES (1,506,'abjasio');
 INSERT INTO language_translation (language_id, language_translation_id, text) VALUES (2,506,'acehnés');
@@ -738,7 +738,7 @@ INSERT INTO language_translation (language_id, language_translation_id, text) VA
 INSERT INTO language_translation (language_id, language_translation_id, text) VALUES (608,506,'zulú');
 INSERT INTO language_translation (language_id, language_translation_id, text) VALUES (609,506,'zuni');
 --
--- Dumping data for table `message_translation`
+-- message_translation
 --
 INSERT INTO message_translation (language_id, message_code, text) VALUES (506,'20100','Nombre de usuario 5 - 100 caracteres');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (506,'20101','Nombre de usuario no válido');
@@ -766,3 +766,14 @@ INSERT INTO message_translation (language_id, message_code, text) VALUES (506,'2
 INSERT INTO message_translation (language_id, message_code, text) VALUES (506,'20400','Registro no encontrado');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (506,'20401','Contraseña inválida');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (506,'20500','Falta latitud or longitud');
+--
+-- regional_setting_translation
+--
+INSERT INTO app_portfolio.regional_setting_translation (regional_setting_id, language_id, text) VALUES (490,506,'Gregoriano');
+INSERT INTO app_portfolio.regional_setting_translation (regional_setting_id, language_id, text) VALUES (491,506,'Hijri');
+INSERT INTO app_portfolio.regional_setting_translation (regional_setting_id, language_id, text) VALUES (481,506,'Transliteración');
+INSERT INTO app_portfolio.regional_setting_translation (regional_setting_id, language_id, text) VALUES (482,506,'Transliteración, traducción');
+INSERT INTO app_portfolio.regional_setting_translation (regional_setting_id, language_id, text) VALUES (483,506,'Traducción, transliteración');
+INSERT INTO app_portfolio.regional_setting_translation (regional_setting_id, language_id, text) VALUES (484,506,'Traducción');
+INSERT INTO app_portfolio.regional_setting_translation (regional_setting_id, language_id, text) VALUES (479,506,'Izquierda a derecha');
+INSERT INTO app_portfolio.regional_setting_translation (regional_setting_id, language_id, text) VALUES (480,506,'Derecha a izquierda');

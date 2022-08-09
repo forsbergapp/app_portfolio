@@ -1,7 +1,7 @@
 --Oracle, uncomment:
 --SET DEFINE OFF;
 --
--- Dumping data for table `app_category_translation`
+-- app_category_translation
 --
 INSERT INTO app_portfolio.app_category_translation(app_category_id, language_id, text) VALUES(1, 555, 'İş');
 INSERT INTO app_portfolio.app_category_translation(app_category_id, language_id, text) VALUES(2, 555, 'Iletişim');
@@ -12,7 +12,7 @@ INSERT INTO app_portfolio.app_category_translation(app_category_id, language_id,
 INSERT INTO app_portfolio.app_category_translation(app_category_id, language_id, text) VALUES(7, 555, 'Alışveriş');
 INSERT INTO app_portfolio.app_category_translation(app_category_id, language_id, text) VALUES(8, 555, 'Oyun');
 --
--- Dumping data for table `app_object_item_translation`
+-- app_object_item_translation
 --
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (0,'DIALOGUE','USERNAME',555,'Kullanıcı adı');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (0,'DIALOGUE','PASSWORD',555,'Parola');
@@ -66,7 +66,7 @@ INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, 
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'TOOLBAR','TOOLBAR_BTN_PRINT_LABEL',555,'Yazdırmak');
 INSERT INTO app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (1,'TOOLBAR','TOOLBAR_BTN_YEAR_LABEL',555,'Yıl');
 --
--- Dumping data for table `app_object_subitem_translation`
+-- app_object_subitem_translation
 --
 INSERT INTO app_object_subitem_translation (app_id, object_name, object_item_name, subitem_name, language_id, text) VALUES (1,'SETTING_NAV_PRAYER','SETTING_SELECT_ASR','SETTING_SELECT_ASR_0',555,'Standart');
 INSERT INTO app_object_subitem_translation (app_id, object_name, object_item_name, subitem_name, language_id, text) VALUES (1,'SETTING_NAV_PRAYER','SETTING_SELECT_ASR','SETTING_SELECT_ASR_1',555,'Hanefi');
@@ -142,12 +142,12 @@ INSERT INTO app_object_subitem_translation (app_id, object_name, object_item_nam
 INSERT INTO app_object_subitem_translation (app_id, object_name, object_item_name, subitem_name, language_id, text) VALUES (1,'SETTING_NAV_PRAYER','SETTING_SELECT_TIMEFORMAT','SETTING_SELECT_TIMEFORMAT_1',555,'24 saat');
 INSERT INTO app_object_subitem_translation (app_id, object_name, object_item_name, subitem_name, language_id, text) VALUES (1,'SETTING_NAV_PRAYER','SETTING_SELECT_TIMEFORMAT','SETTING_SELECT_TIMEFORMAT_2',555,'son ek ile 12 saat');
 --
--- Dumping data for table `app_object_translation`
+-- app_object_translation
 --
 INSERT INTO app_object_translation (app_id, object_name, language_id, text) VALUES (1,'APP_DESCRIPTION',555,'Aşamalı web uygulaması (PWA) tek sayfa uygulaması (SPA)');
 INSERT INTO app_object_translation (app_id, object_name, language_id, text) VALUES (2,'APP_DESCRIPTION',555,'Veri modelini görüntülemek için basit bir uygulama ve bir uygulamanın uygulama platformuna nasıl entegre edileceği');
 --
--- Dumping data for table `message_translation`
+-- message_translation
 --
 INSERT INTO message_translation (language_id, message_code, text) VALUES (555,'20100','Kullanıcı adı 5 - 100 karakter');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (555,'20101','Geçerli kullanıcı adı değil');
@@ -175,3 +175,14 @@ INSERT INTO message_translation (language_id, message_code, text) VALUES (555,'2
 INSERT INTO message_translation (language_id, message_code, text) VALUES (555,'20400','Kayıt bulunamadı');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (555,'20401','Geçersiz şifre');
 INSERT INTO message_translation (language_id, message_code, text) VALUES (555,'20500','Eksik enlem veya boylam');
+--
+-- regional_setting_translation
+--
+INSERT INTO app_portfolio.regional_setting_translation (regional_setting_id, language_id, text) VALUES (490,555,'Gregoryen');
+INSERT INTO app_portfolio.regional_setting_translation (regional_setting_id, language_id, text) VALUES (491,555,'Hicri');
+INSERT INTO app_portfolio.regional_setting_translation (regional_setting_id, language_id, text) VALUES (481,555,'Başka alfabeyle yazma');
+INSERT INTO app_portfolio.regional_setting_translation (regional_setting_id, language_id, text) VALUES (482,555,'Başka alfabeyle yazma, Çeviri');
+INSERT INTO app_portfolio.regional_setting_translation (regional_setting_id, language_id, text) VALUES (483,555,'Çeviri, başka alfabeyle yazma');
+INSERT INTO app_portfolio.regional_setting_translation (regional_setting_id, language_id, text) VALUES (484,555,'Çeviri');
+INSERT INTO app_portfolio.regional_setting_translation (regional_setting_id, language_id, text) VALUES (479,555,'Soldan sağa');
+INSERT INTO app_portfolio.regional_setting_translation (regional_setting_id, language_id, text) VALUES (480,555,'Sağdan sola');
