@@ -37,6 +37,7 @@ body.font_arabic_nastaliq #dialogue_info_content{
 #user_menu_username{
 	cursor:pointer;
 	padding: 10px;
+	display: none;
 }
 #user_menu_default_avatar{
 	font-size: 41px;
@@ -593,6 +594,7 @@ div.ray8 {
 	transform: scale(0.3);
 	transform-origin: 50% 10px;
 	height: 60px;
+	margin-top: 10px;
 }
 #toggle_checkbox {
 	opacity: 0;
