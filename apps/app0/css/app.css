@@ -6,77 +6,7 @@ body.font_arabic_nastaliq #dialogue_info_content{
 	height: 400px;
 }
 
-/*User account*/
-#user_account:hover #user_menu_dropdown,
-#user_account:active #user_menu_dropdown{
-	display: inline-block;
-}
-#user_menu{
-	visibility: visible;
-	top:10px;
-	right:10px;
-	position:fixed;
-	width: 40px;
-	height:40px;
-	z-index:1;
-	border-radius: 50% !important;
-	cursor:pointer;
-}
-#user_menu_avatar_img{
-	width:40px;
-	height:40px;
-	border-radius:50%;
-	vertical-align: middle;
-}
-#user_menu_logged_in, #user_menu_dropdown_logged_in{
-	display: none;
-}
-#user_menu_logged_out{
-	display: inline-block;
-}
-#user_menu_username{
-	cursor:pointer;
-	padding: 10px;
-	display: none;
-}
-#user_menu_default_avatar{
-	font-size: 41px;
-    position: fixed;
-    top: 2px;
-}
-#user_menu_dropdown{
-	display: none;
-	top:50px;
-	right:10px;
-	position:fixed;
-	width:auto;
-	text-align: center;
-	height:auto;
-	border-radius: 4px;
-	-moz-border-radius: 4px;
-	-webkit-border-radius: 4px;
-	box-shadow: 0 4px 8px 0 rgb(0 0 0 / 20%), 0 6px 20px 0 rgb(0 0 0 / 19%);
-	z-index:1;
-	padding-bottom: 10px;
-}
-#user_menu_dropdown_profile_top{
-	font-size: 30px;
-	cursor:pointer;
-}
-#user_menu_dropdown_logged_in{
-	display:none;
-	width:100%;
-	font-size: 30px !important;
-}
-#user_menu_dropdown_logged_out{
-	display: inline-block;
-	width:100%;
-	font-size: 30px !important;
-}
-#user_menu_dropdown_logged_in div,
-#user_menu_dropdown_logged_out div{
-	cursor:pointer;
-}
+
 /* Common dialogue settings*/	
 .dialogue{
 	visibility:hidden;
@@ -141,7 +71,7 @@ body.font_arabic_nastaliq #dialogue_info_content{
 }
 #apps{
 	margin-top:40px;
-	height: 145px;
+	height: auto;
     overflow-y: scroll;
     overflow-x: hidden;
     padding-right: 26px;
@@ -310,6 +240,11 @@ body.font_arabic_nastaliq #dialogue_info_content{
 	#dialogue_start_content, #dialogue_info_content{
 		width: 400px;
 	}
+	body.font_arabic_nastaliq #dialogue_start_content,
+	body.font_arabic_nastaliq #dialogue_info_content{
+		height: 420px;
+	}
+
 	#start_links, #contact, #copyright{
 		font-size: 14px;
 	}
@@ -894,6 +829,22 @@ div.ray8 {
 	background-color: #fefefe;
 	box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);	
 }
+.theme_sun #user_menu_dropdown{
+	color:#a49775;
+}
+.theme_sun #user_menu_username:hover,
+.theme_sun #user_menu_username:active,
+.theme_sun #user_menu_dropdown_profile_top:hover,
+.theme_sun #user_menu_dropdown_profile_top:active,
+.theme_sun .app_link:hover,
+.theme_sun .app_link:active,
+.theme_sun #user_menu_dropdown_logged_in div:hover,
+.theme_sun #user_menu_dropdown_logged_in div:active,
+.theme_sun #user_menu_dropdown_logged_out div:hover,
+.theme_sun #user_menu_dropdown_logged_out div:active{
+	background-color:#ddd;
+}
+
 .theme_sun .cloud {
 		background: #fff;
 		background: -moz-linear-gradient(top,  #fff 5%, #f1f1f1 100%);
@@ -943,21 +894,6 @@ div.ray8 {
 .theme_sun #profile_search_list{
 	border: 1px solid #ddd;
 	background-color: white;	
-}
-.theme_sun #user_menu_dropdown{
-	color:#a49775;
-}
-.theme_sun #user_menu_username:hover,
-.theme_sun #user_menu_username:active,
-.theme_sun #user_menu_dropdown_profile_top:hover,
-.theme_sun #user_menu_dropdown_profile_top:active,
-.theme_sun .app_link:hover,
-.theme_sun .app_link:active,
-.theme_sun #user_menu_dropdown_logged_in div:hover,
-.theme_sun #user_menu_dropdown_logged_in div:active,
-.theme_sun #user_menu_dropdown_logged_out div:hover,
-.theme_sun #user_menu_dropdown_logged_out div:active{
-	background-color:#ddd;
 }
 .theme_sun .switch-label {
 	color: transparent;
@@ -1035,6 +971,19 @@ div.ray8 {
 	background: rgb(68, 68, 68);
 	box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
 }
+.theme_moon #user_menu_username:hover,
+.theme_moon #user_menu_username:active,
+.theme_moon #user_menu_dropdown_profile_top:hover,
+.theme_moon #user_menu_dropdown_profile_top:active,
+.theme_moon .app_link:hover,
+.theme_moon .app_link:active,
+.theme_moon #user_menu_dropdown_logged_in div:hover,
+.theme_moon #user_menu_dropdown_logged_in div:active,
+.theme_moon #user_menu_dropdown_logged_out div:hover,
+.theme_moon #user_menu_dropdown_logged_out div:active{
+	background-color:#ddd;
+	color:rgb(68, 68, 68);
+}
 .theme_moon .cloud {
 	background: #f1f1f1;
 	background: -moz-linear-gradient(top,  #f1f1f1 5%, rgb(68, 68, 68) 100%);
@@ -1092,19 +1041,6 @@ div.ray8 {
 .theme_moon #profile_search_list{
 	border: 1px solid #ddd;
 	background-color: white;	
-}
-.theme_moon #user_menu_username:hover,
-.theme_moon #user_menu_username:active,
-.theme_moon #user_menu_dropdown_profile_top:hover,
-.theme_moon #user_menu_dropdown_profile_top:active,
-.theme_moon .app_link:hover,
-.theme_moon .app_link:active,
-.theme_moon #user_menu_dropdown_logged_in div:hover,
-.theme_moon #user_menu_dropdown_logged_in div:active,
-.theme_moon #user_menu_dropdown_logged_out div:hover,
-.theme_moon #user_menu_dropdown_logged_out div:active{
-	background-color:#ddd;
-	color:rgb(68, 68, 68);
 }
 .theme_moon .switch-label {
 	color: transparent;
