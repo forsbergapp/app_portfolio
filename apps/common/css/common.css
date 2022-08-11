@@ -418,6 +418,10 @@ body.font_arabic_nastaliq button{
 body.font_arabic_nastaliq input{
 	height:35px;
 }
+body.font_arabic_nastaliq #user_menu_default_avatar{
+	margin-top:-15px;
+}
+
 /*Arabic NotoSansUI*/
 body.font_arabic_ui{
 	font-family: var(--global_font_arabic_ui);
