@@ -25,6 +25,8 @@ function setEvents(){
     document.getElementById('user_menu_dropdown_signup').addEventListener('click', function() { user_menu_item_click(this) }, false);
     document.getElementById('user_menu_dropdown_log_in').addEventListener('click', function() { user_menu_item_click(this) }, false);
     document.getElementById('user_menu_dropdown_profile_top').addEventListener('click', function() {user_menu_item_click(this)}, false);
+    document.getElementById('user_arabic_script_select').addEventListener('change', function() { toggle_switch()}, false);
+
     //start page
     document.getElementById( 'start_message' ).addEventListener( 'click', function( event ) {
         event.preventDefault();
@@ -81,7 +83,7 @@ function setEvents(){
     //dialogue user edit
     document.getElementById('user_edit_close').addEventListener('click', function() { dialogue_user_edit_clear() }, false);
     document.getElementById('user_edit_btn_avatar_img').addEventListener('click', function() { document.getElementById('user_edit_input_avatar_img').click() }, false);
-    document.getElementById('user_edit_input_avatar_img').addEventListener('change', function() { show_image(document.getElementById('user_edit_avatar_img'), this.id, window.global_user_image_avatar_width, window.global_user_image_avatar_height); }, false);
+    document.getElementById('user_edit_input_avatar_img').addEventListener('change', function() { show_image(document.getElementById('user_edit_avatar_img'), this.id, window.global_image_avatar_width, window.global_image_avatar_height); }, false);
     document.getElementById('user_edit_close').addEventListener('click', function() { document.getElementById('dialogue_user_edit').style.visibility = 'hidden' }, false);    
     document.getElementById('user_edit_btn_user_update').addEventListener('click', function() { user_update_app(); }, false);
     document.getElementById('user_edit_btn_user_delete_account').addEventListener('click', function() { user_delete_app(); }, false);
@@ -94,10 +96,14 @@ function setEvents(){
     document.getElementById('user_verify_verification_char6').addEventListener('keyup', function() { user_verify_check_input_app(this, "") }, false);
 }
 function toggle_switch(){
-    if(document.getElementById('toggle_checkbox').checked)
-        document.body.className = 'theme_sun';
-    else
-        document.body.className = 'theme_moon';
+    if(document.getElementById('toggle_checkbox').checked){
+        document.body.className = 'theme_sun font_' + document.getElementById('user_arabic_script_select').value;
+        window.global_user_arabic_script = document.getElementById('user_arabic_script_select').value;
+    }
+    else{
+        document.body.className = 'theme_moon font_' + document.getElementById('user_arabic_script_select').value;
+        window.global_user_arabic_script = document.getElementById('user_arabic_script_select').value;
+    }
     return null;
 }
 
@@ -163,10 +169,10 @@ async function get_parameters() {
                     window.global_image_file_mime_type = json.data[i].parameter_value;
                 if (json.data[i].parameter_name=='IMAGE_FILE_MAX_SIZE')
                     window.global_image_file_max_size = json.data[i].parameter_value;
-                if (json.data[i].parameter_name=='USER_IMAGE_AVATAR_WIDTH')
-                    window.global_user_image_avatar_width = json.data[i].parameter_value;
-                if (json.data[i].parameter_name=='USER_IMAGE_AVATAR_HEIGHT')
-                    window.global_user_image_avatar_height = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='IMAGE_AVATAR_WIDTH')
+                    window.global_image_avatar_width = json.data[i].parameter_value;
+                if (json.data[i].parameter_name=='IMAGE_AVATAR_HEIGHT')
+                    window.global_image_avatar_height = json.data[i].parameter_value;
                 if (json.data[i].parameter_name=='REST_APP')
                     window.global_rest_app = json.data[i].parameter_value;
                 if (json.data[i].parameter_name=='REST_APP_OBJECT')
@@ -478,7 +484,7 @@ function init(parameters){
             document.getElementById('info_link3').addEventListener('click', function() { show_window_info(3);}, false);
             document.getElementById('info_link4').addEventListener('click', function() { show_window_info(4);}, false);
 
-            common_translate_ui(window.global_locale);
+            common_translate_ui(window.global_user_locale);
             document.getElementById('copyright').innerHTML = window.global_app_copyright;
             document.getElementById('app_email').href='mailto:' + window.global_app_email;
             document.getElementById('app_email').innerHTML=window.global_app_email;

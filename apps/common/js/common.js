@@ -28,7 +28,7 @@ async function common_fetch_token(token_type, json_data,  username, password, ca
         url = window.global_service_auth + 
               '?app_user_id=' + window.global_user_account_id +
               '&app_id=' + app_id + 
-              '&lang_code=' + window.global_locale;
+              '&lang_code=' + window.global_user_locale;
         username = window.global_app_rest_client_id;
         password = window.global_app_rest_client_secret;
     }
@@ -36,7 +36,7 @@ async function common_fetch_token(token_type, json_data,  username, password, ca
         //admin token
         url = '/service/auth/admin' + 
               '?app_id=' + app_id + 
-              '&lang_code=' + window.global_locale;
+              '&lang_code=' + window.global_user_locale;
     }
     await fetch(url,
                 {method: 'POST',
@@ -146,7 +146,7 @@ async function common_fetch(url_parameters, method, token_type, json_data, app_i
     if (lang_code_override != null && lang_code_override !='')
        lang_code = lang_code_override;
     else
-       lang_code = window.global_locale;
+       lang_code = window.global_user_locale;
     let url = url_parameters +
               '&app_id=' + app_id + 
               '&lang_code=' + lang_code;
@@ -283,7 +283,7 @@ function format_json_date(db_date, short, timezone) {
         //"yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'"
         let settings = {
             timezone_current: timezone,
-            locale: window.global_locale
+            locale: window.global_user_locale
         }
         let options;
         if (short)
@@ -2317,8 +2317,8 @@ async function updateProviderUser(identity_provider_id, profile_id, profile_firs
     img.crossOrigin = 'Anonymous';
     img.onload = function(el) {
         let elem = document.createElement('canvas');
-        elem.width = window.global_user_image_avatar_width;
-        elem.height = window.global_user_image_avatar_height;
+        elem.width = window.global_image_avatar_width;
+        elem.height = window.global_image_avatar_height;
         let ctx = elem.getContext('2d');
         ctx.drawImage(el.target, 0, 0, elem.width, elem.height);
         profile_image = ctx.canvas.toDataURL(window.global_image_file_mime_type);
@@ -2568,6 +2568,17 @@ function set_globals(parameters){
     //user info
     window.global_user_account_id = '';
     window.global_user_identity_provider_id='';
+    window.global_user_locale               = navigator.language;
+    window.global_user_timezone             = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    window.global_user_direction            = document.body.style.direction; // ltr, rtl, initial, inherit
+    window.global_user_font_arabic_script   = ''; /*classes 
+                                                    font_arabic_sans_kufi (default)
+                                                    font_arabic_kufi
+                                                    font_arabic_nashk
+                                                    font_arabic_nastaliq
+                                                    font_arabic_ui
+                                                  */
+    //user info set or used by services
     window.global_clientId;
     window.global_client_latitude = parameters.gps_lat;
     window.global_client_longitude = parameters.gps_long;
@@ -2575,9 +2586,7 @@ function set_globals(parameters){
     
     //broadcast connection
     window.global_eventSource;
-
-    // if app not using translation then use default lang_code from navigator
-    window.global_locale                     = navigator.language;
+    //rest api base
     window.global_rest_url_base 				= '/service/db/app_portfolio/';
 
     //identity provider
@@ -2626,8 +2635,8 @@ function set_globals(parameters){
     window.global_image_file_mime_type;
     window.global_image_file_max_size;
     //avatar size
-    window.global_user_image_avatar_width;
-    window.global_user_image_avatar_height;
+    window.global_image_avatar_width;
+    window.global_image_avatar_height;
 
     //services
     window.global_service_geolocation;
@@ -2785,6 +2794,12 @@ function init_common(parameters){
         document.getElementById('common_window_info_toolbar_btn_right').innerHTML = window.global_icon_app_right;
         document.getElementById('common_window_info_toolbar_btn_up').innerHTML =  window.global_icon_app_up;
         document.getElementById('common_window_info_toolbar_btn_down').innerHTML = window.global_icon_app_down;
+        //user menu
+        document.getElementById('user_preference_locale').innerHTML = window.global_icon_regional_locale;
+        document.getElementById('user_preference_timezone').innerHTML = window.global_icon_regional_timezone;
+        document.getElementById('user_preference_direction').innerHTML = window.global_icon_regional_direction;
+        document.getElementById('user_preference_arabic_script').innerHTML = window.global_icon_regional_script;
+        
         //events
         //login/signup/forgot
         document.getElementById('login_tab2').addEventListener('click', function() { show_common_dialogue('SIGNUP') }, false);
@@ -2827,6 +2842,10 @@ function init_common(parameters){
         document.getElementById('common_window_info_toolbar_btn_right').addEventListener('click', function() {move_info(1,0);}, false);
         document.getElementById('common_window_info_toolbar_btn_up').addEventListener('click', function() {move_info(0,-1);}, false);
         document.getElementById('common_window_info_toolbar_btn_down').addEventListener('click', function() {move_info(0,1);}, false);        
-     
+        
+        document.getElementById('user_locale_select').addEventListener('change', function() { common_translate_ui(this.value); window.global_user_locale = this.value;}, false);
+        document.getElementById('user_timezone_select').addEventListener('change', function() { window.global_user_timezone = this.value;}, false);
+        document.getElementById('user_direction_select').addEventListener('change', function() { document.body.style.direction = this.value; window.global_user_direction = this.value;}, false);
+        
     }
 };
