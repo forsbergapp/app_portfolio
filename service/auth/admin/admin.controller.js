@@ -1,6 +1,6 @@
 const { sign } = require("jsonwebtoken");
 const { verify } = require("jsonwebtoken");
-const { createLog} = require ("../../../service/db/app_portfolio/app_log/app_log.service");
+const { createLogAdmin} = require ("../../../service/db/app_portfolio/app_log/app_log.service");
 module.exports = {
     checkAdmin: (req, res, next) => {
 		let token = req.get("authorization");
@@ -28,7 +28,7 @@ module.exports = {
         if(req.headers.authorization){                
             var userpass = new Buffer.from((req.headers.authorization || '').split(' ')[1] || '', 'base64').toString();
             if (userpass !== process.env.SERVER_ADMIN_NAME + ':' + process.env.SERVER_ADMIN_PASSWORD) {
-                createLog({ app_id : process.env.MAIN_APP_ID,
+                createLogAdmin({ app_id : process.env.COMMON_APP_ID,
                             app_module : 'AUTH',
                             app_module_type : 'ADMINTOKEN_FAIL',
                             app_module_request : req.baseUrl,
@@ -44,7 +44,7 @@ module.exports = {
                             server_http_accept_language : req.headers["accept-language"],
                             client_latitude : req.body.client_latitude,
                             client_longitude : req.body.client_longitude
-                            }, (err,results)  => {
+                            }, req.query.app_id, (err,results)  => {
                                 null;
                 });
                 return res.status(401).send({ 
@@ -56,7 +56,7 @@ module.exports = {
             jsontoken_at = sign ({tokentimstamp: Date.now()}, process.env.SERVICE_AUTH_ADMIN_TOKEN_SECRET, {
                                 expiresIn: process.env.SERVICE_AUTH_ADMIN_TOKEN_EXPIRE_ACCESS
                                 });
-            createLog({ app_id : process.env.MAIN_APP_ID,
+            createLogAdmin({ app_id : process.env.COMMON_APP_ID,
                         app_module : 'AUTH',
                         app_module_type : 'ADMINTOKEN_OK',
                         app_module_request : req.baseUrl,
@@ -72,7 +72,7 @@ module.exports = {
                         server_http_accept_language : req.headers["accept-language"],
                         client_latitude : req.body.client_latitude,
                         client_longitude : req.body.client_longitude
-                        }, (err,results)  => {
+                        }, req.query.app_id, (err,results)  => {
                             null;
             });
             return res.status(200).json({ 

@@ -24,7 +24,7 @@ module.exports = {
                     app = app.replace(
                         '<AppProfileTop/>',
                         '');
-                    get_module_with_init(process.env.MAIN_APP_ID, 
+                    get_module_with_init(process.env.COMMON_APP_ID, 
                                          'admin_exception_before',
                                          null,
                                          true,

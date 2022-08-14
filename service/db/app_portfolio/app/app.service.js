@@ -1,6 +1,6 @@
 const {execute_db_sql} = require ("../../common/database");
 module.exports = {
-	getApp:(id, lang_code, callBack) => {
+	getApp:(id, app_id, lang_code, callBack) => {
 		let sql;
 		let parameters;
 		if (typeof id=='undefined')
@@ -79,7 +79,7 @@ module.exports = {
 			parameters = {	lang_code: lang_code,
 							id: id};
 		}
-		execute_db_sql(id, id, sql, parameters, null, 
+		execute_db_sql(app_id, app_id, sql, parameters, null, 
 			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);

@@ -1,6 +1,6 @@
 const {execute_db_sql} = require ("../../common/database");
 module.exports = {
-	createLog: (data, callBack) => {
+	createLog: (data, app_id, callBack) => {
 		let sql;
 		let parameters;
 		//max 4000 characters can be saved
@@ -99,7 +99,114 @@ module.exports = {
 							server_http_accept_language:data.server_http_accept_language
 						};
 		}
-		execute_db_sql(data.app_id, data.app_id, sql, parameters, null, 
+		execute_db_sql(app_id, app_id, sql, parameters, null, 
+			           __appfilename, __appfunction, __appline, (err, result)=>{
+			if (err)
+				return callBack(err, null);
+			else
+				return callBack(null, result);
+		});
+	},
+	createLogAdmin: (data, app_id, callBack) => {
+		let sql;
+		let parameters;
+		//max 4000 characters can be saved
+		if (data.app_module_result!=null)
+			data.app_module_result = data.app_module_result.substr(0,3999);
+		if (process.env.SERVICE_DB_USE==1){
+			sql = `INSERT INTO ${process.env.SERVICE_DB_DB1_NAME}.app_log(
+						app_id,
+						app_module,
+						app_module_type,
+						app_module_request,
+						app_module_result,
+						app_user_id,
+						user_language,
+						user_timezone,
+						user_number_system,
+						user_platform,
+						client_latitude,
+						client_longitude,
+						server_remote_addr,
+						server_user_agent,
+						server_http_host,
+						server_http_accept_language,
+						date_created)
+					VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,SYSDATE())`;
+			parameters = [
+							data.app_id,
+							data.app_module,
+							data.app_module_type,
+							data.app_module_request,
+							data.app_module_result,
+							data.app_user_id,
+							data.user_language,
+							data.user_timezone,
+							data.user_number_system,
+							data.user_platform,
+							data.client_latitude,
+							data.client_longitude,
+							data.server_remote_addr,
+							data.server_user_agent,
+							data.server_http_host,
+							data.server_http_accept_language
+							];
+		}else if (process.env.SERVICE_DB_USE==2){
+			sql = `INSERT INTO ${process.env.SERVICE_DB_DB2_NAME}.app_log(
+						app_id,
+						app_module,
+						app_module_type,
+						app_module_request,
+						app_module_result,
+						app_user_id,
+						user_language,
+						user_timezone,
+						user_number_system,
+						user_platform,
+						client_latitude,
+						client_longitude,
+						server_remote_addr,
+						server_user_agent,
+						server_http_host,
+						server_http_accept_language,
+						date_created)
+					VALUES(:app_id,
+						:app_module,
+						:app_module_type,
+						:app_module_request,
+						:app_module_result,
+						:app_user_id,
+						:user_language,
+						:user_timezone,
+						:user_number_system,
+						:user_platform,
+						:client_latitude,
+						:client_longitude,
+						:server_remote_addr,
+						:server_user_agent,
+						:server_http_host,
+						:server_http_accept_language,
+						SYSDATE)`;
+			parameters = {
+							app_id: data.app_id,
+							app_module:data.app_module,
+							app_module_type:data.app_module_type,
+							app_module_request:data.app_module_request,
+							app_module_result:data.app_module_result,
+							app_user_id:data.app_user_id,
+							user_language:data.user_language,
+							user_timezone:data.user_timezone,
+							user_number_system:data.user_number_system,
+							user_platform:data.user_platform,
+							client_latitude:data.client_latitude,
+							client_longitude:data.client_longitude,
+							server_remote_addr:data.server_remote_addr,
+							server_user_agent:data.server_user_agent,
+							server_http_host:data.server_http_host,
+							server_http_accept_language:data.server_http_accept_language
+						};
+		}
+		execute_db_sql(app_id, null, sql, parameters, true, 
 			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);
@@ -202,7 +309,7 @@ module.exports = {
 							offset:offset,
 							limit:limit};
 		}
-		execute_db_sql(process.env.MAIN_APP_ID, null, sql, parameters, true, 
+		execute_db_sql(process.env.COMMON_APP_ID, null, sql, parameters, true, 
 			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);

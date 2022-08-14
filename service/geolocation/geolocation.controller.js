@@ -12,7 +12,7 @@ module.exports = {
 			req.query.longitude=='undefined'){
 			 //Missing latitude or longitude
 			 getMessage(20500, 
-				process.env.MAIN_APP_ID, 
+				process.env.COMMON_APP_ID, 
 				req.query.lang_code, (err,results)  => {
 					return res.status(400).send(
 						results.text
@@ -20,7 +20,7 @@ module.exports = {
 				});
 			}
 		else{	
-			getParameter(process.env.MAIN_APP_ID,'SERVICE_GEOLOCATION_URL_GPS_PLACE', (err, db_SERVICE_GEOLOCATION_URL_GPS_PLACE)=>{
+			getParameter(process.env.COMMON_APP_ID,'SERVICE_GEOLOCATION_URL_GPS_PLACE', req.query.app_id, (err, db_SERVICE_GEOLOCATION_URL_GPS_PLACE)=>{
 				if (err) {
 					createLogAppSE(req.query.app_id, __appfilename, __appfunction, __appline, err, (err_log, result_log)=>{
                         return callBack(err, null);
@@ -47,7 +47,7 @@ module.exports = {
 									server_http_accept_language : req.headers["accept-language"],
 									client_latitude : geodata.geoplugin_latitude,
 									client_longitude : geodata.geoplugin_longitude
-									}, (err,results)  => {
+									}, req.query.app_id, (err,results)  => {
 										null;
 						});
 						return res.status(200).json(
@@ -62,7 +62,7 @@ module.exports = {
 	getIp: (req, res, callBack) => {
 		var geodata;
 		var url;
-		getParameter(process.env.MAIN_APP_ID,'SERVICE_GEOLOCATION_URL_GPS_IP', (err, db_SERVICE_GEOLOCATION_URL_GPS_IP)=>{
+		getParameter(process.env.COMMON_APP_ID,'SERVICE_GEOLOCATION_URL_GPS_IP', req.query.app_id, (err, db_SERVICE_GEOLOCATION_URL_GPS_IP)=>{
 			if (err) {
 				createLogAppSE(req.query.app_id, __appfilename, __appfunction, __appline, err, (err_log, result_log)=>{
 					return callBack(err, null);
@@ -94,7 +94,7 @@ module.exports = {
 								server_http_accept_language : req.headers["accept-language"],
 								client_latitude : geodata.geoplugin_latitude,
 								client_longitude : geodata.geoplugin_longitude
-								}, (err,results)  => {
+								}, req.query.app_id, (err,results)  => {
 									null;
 					});
 					if (req.query.callback==1)

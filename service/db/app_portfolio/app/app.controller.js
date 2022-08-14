@@ -2,7 +2,7 @@ const { getApp, getAppsAdmin, updateApp } = require ("./app.service");
 
 module.exports = {
 	getApp: (req, res) => {
-		getApp(req.query.id, req.query.lang_code, (err, results) =>{
+		getApp(req.query.id, req.query.app_id, req.query.lang_code, (err, results) =>{
 			if (err) {
 				return res.status(500).send({
 					success: 0,
