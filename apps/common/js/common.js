@@ -201,7 +201,7 @@ function fromBase64(str) {
 function common_translate_ui(lang_code){
     let json;
     common_fetch(`${window.global_rest_url_base}${window.global_rest_app_object}${lang_code}?`, 
-                 'GET', 0, null, window.global_common_app_id, null, (err, result) =>{
+                 'GET', 0, null, null, null, (err, result) =>{
         if (err)
             null;
         else{
