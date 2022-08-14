@@ -88,7 +88,7 @@ module.exports = {
             let frame_src = '';
             fs.readFile(process.env.SERVICE_AUTH_POLICY_DIRECTIVES, 'utf8', (error, fileBuffer) => {
                 if (error){
-                    createLogAppSE(process.env.MAIN_APP_ID, __appfilename, __appfunction, __appline, error, (err_log, result_log)=>{
+                    createLogAppSE(process.env.COMMON_APP_ID, __appfilename, __appfunction, __appline, error, (err_log, result_log)=>{
                         return callBack(error, null);
                     })
                 }

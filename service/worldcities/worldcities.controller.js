@@ -27,7 +27,7 @@ module.exports = {
 							server_http_accept_language : req.headers["accept-language"],
 							client_latitude : null,
 							client_longitude : null
-							}, (err,results)  => {
+							}, req.query.app_id, (err,results)  => {
 								null;
 				});
 				return res.status(200).json(

@@ -10,10 +10,10 @@ module.exports = {
         res.writeHead(200, headers);
         const intervalId = setInterval(() => {
             const { getParameter } = require ("../db/app_portfolio/app_parameter/app_parameter.service");
-            getParameter(process.env.MAIN_APP_ID,'SERVER_MAINTENANCE', (err, db_SERVER_MAINTENANCE)=>{
+            getParameter(process.env.COMMON_APP_ID,'SERVER_MAINTENANCE', req.query.app_id, (err, db_SERVER_MAINTENANCE)=>{
                 if (err){
                     const {createLogAppSE} = require("../log/log.controller");
-                    createLogAppSE(process.env.MAIN_APP_ID, __appfilename, __appfunction, __appline, err, (err_log, result_log)=>{
+                    createLogAppSE(process.env.COMMON_APP_ID, __appfilename, __appfunction, __appline, err, (err_log, result_log)=>{
                         null;
                     })
                 }
@@ -30,8 +30,8 @@ module.exports = {
         req.query.app_user_id ='';
         let app_id = req.query.app_id;
         if (req.query.app_id ==''){
-            //use MAIN_APP_ID to use in log if this is called from admin without app_id
-            req.query.app_id = process.env.MAIN_APP_ID;
+            //use COMMON_APP_ID to use in log if this is called from admin without app_id
+            req.query.app_id = process.env.COMMON_APP_ID;
         }
         let res2;
         req.query.callback=1;
@@ -65,7 +65,7 @@ module.exports = {
                         server_http_accept_language : req.headers["accept-language"],
                         client_latitude : geodata.geoplugin_latitude,
                         client_longitude : geodata.geoplugin_longitude
-                        }, (err,results)  => {
+                        }, req.query.app_id, (err,results)  => {
                             null;
             });
             res.on('close', ()=>{
