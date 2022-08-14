@@ -45,7 +45,7 @@ module.exports = {
 							AND   aost.object_name = aois.object_name
 							AND   aost.object_item_name = aois.object_item_name
 							AND   aost.subitem_name = aois.subitem_name) t
-					WHERE   t.app_id = ?
+					WHERE   t.app_id IN(?,?)
 					AND   (t.lang_code IN (?, SUBSTRING_INDEX(?,'-',2), SUBSTRING_INDEX(?,'-',1))
 							OR (t.lang_code = 'en'
 								AND NOT EXISTS(SELECT NULL
@@ -76,6 +76,7 @@ module.exports = {
 							)
 				ORDER BY 1,2,3,4, 5, 6`;
 			parameters = [	app_id,
+							process.env.COMMON_APP_ID,
 							lang_code,
 							lang_code,
 							lang_code,
@@ -124,7 +125,7 @@ module.exports = {
 							AND   aost.object_name = aois.object_name
 							AND   aost.object_item_name = aois.object_item_name
 							AND   aost.subitem_name = aois.subitem_name) t
-					WHERE   t.app_id = :app_id
+					WHERE   t.app_id IN(:app_id, :common_app_id)
 					AND   (t.lang_code IN (:lang_code, 
 											SUBSTR(:lang_code, 0,INSTR(:lang_code,'-',1,2)-1), 
 											SUBSTR(:lang_code, 0,INSTR(:lang_code,'-',1,1)-1))
@@ -157,6 +158,7 @@ module.exports = {
 							)
 				ORDER BY 1,2,3,4, 5, 6`;
 			parameters = {
+							common_app_id: process.env.COMMON_APP_ID,
 							app_id: app_id,
 							lang_code: lang_code
 						 };
