@@ -1292,7 +1292,7 @@ module.exports = {
 					ORDER BY NVL(ua.identity_provider_id,0)`;
 			parameters = {};
         }
-		execute_db_sql(process.env.MAIN_APP_ID, null, sql, parameters, true, 
+		execute_db_sql(process.env.COMMON_APP_ID, null, sql, parameters, true, 
 			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);

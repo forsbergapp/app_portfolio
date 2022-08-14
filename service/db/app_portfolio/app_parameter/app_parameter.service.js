@@ -3,7 +3,7 @@ const {execute_db_sql} = require ("../../common/database");
 module.exports = {
 	//returns parameters for app_id=0 and given app_id
 	//and only public and private shared
-	getParameters: (app_id, callBack) => {
+	getParameters: (data_app_id, app_id, callBack) => {
 		let sql;
 		let parameters;
 		if (process.env.SERVICE_DB_USE==1){
@@ -18,7 +18,7 @@ module.exports = {
 						app_id = 0)
 					AND parameter_type_id IN (0,1)
 					ORDER BY 1 `;
-			parameters = [app_id];
+			parameters = [data_app_id];
 		}
 		else if (process.env.SERVICE_DB_USE==2){
 			sql = `SELECT	app_id "app_id",
@@ -32,7 +32,7 @@ module.exports = {
 							app_id = 0)
 						AND parameter_type_id IN (0,1)
 					ORDER BY 1`;
-			parameters = {app_id: app_id};
+			parameters = {app_id: data_app_id};
 			
 		}
 		execute_db_sql(app_id, app_id, sql, parameters, null, 
@@ -46,7 +46,7 @@ module.exports = {
 	//returns parameters for app_id=0 and given app_id
 	//and parameter type 0,1,2, only to be called from server
 	//because 2 contains passwords or other sensitive data
-	getParameters_server: (app_id, callBack) => {
+	getParameters_server: (data_app_id, app_id, callBack) => {
 		let sql;
 		let parameters;
 		if (process.env.SERVICE_DB_USE==1){
@@ -61,7 +61,7 @@ module.exports = {
 						app_id = 0)
 					AND parameter_type_id IN (0,1,2)
 					ORDER BY 1, 3`;
-			parameters = [app_id];
+			parameters = [data_app_id];
 		}
 		else if (process.env.SERVICE_DB_USE==2){
 			sql = `SELECT	app_id "app_id",
@@ -75,7 +75,7 @@ module.exports = {
 							app_id = 0)
 						AND parameter_type_id IN (0,1,2)
 					ORDER BY 1, 3`;
-			parameters = {app_id: app_id};
+			parameters = {app_id: data_app_id};
 		}
 		execute_db_sql(app_id, app_id, sql, parameters, null, 
 			           __appfilename, __appfunction, __appline, (err, result)=>{
@@ -155,7 +155,7 @@ module.exports = {
 				return callBack(null, result[0].parameter_value);
 		});
 	},
-	getParameter: (app_id, parameter_name, callBack) =>{
+	getParameter: (data_app_id, parameter_name, app_id, callBack) =>{
 		let sql;
 		let parameters;
 		if (process.env.SERVICE_DB_USE==1){
@@ -165,7 +165,7 @@ module.exports = {
   					  AND parameter_name = ?
 					  AND parameter_type_id IN (0,1,2)
 				 ORDER BY 1 `;
-			parameters = [app_id,
+			parameters = [data_app_id,
 						  parameter_name];
 		}
 		else if (process.env.SERVICE_DB_USE==2){
@@ -175,7 +175,7 @@ module.exports = {
  					  AND parameter_name = :parameter_name
 					  AND parameter_type_id IN (0,1,2)
 				 ORDER BY 1`;
-		    parameters = {app_id: app_id,
+		    parameters = {app_id: data_app_id,
 					      parameter_name:parameter_name};
 		}
 		execute_db_sql(app_id, app_id, sql, parameters, null, 
@@ -252,7 +252,7 @@ module.exports = {
 				return callBack(null, result);
 		});
 	},
-	getAppDBParameters: (app_id, callBack) => {
+	getAppDBParametersAdmin: (app_id, callBack) => {
 		let sql;
 		let parameters;
 		let db_user = `SERVICE_DB_DB${process.env.SERVICE_DB_USE}_APP_USER`;
@@ -287,7 +287,7 @@ module.exports = {
 			parameters = {db_user: db_user,
 						  db_password: db_password};
 		}
-		execute_db_sql(app_id, process.env.MAIN_APP_ID, sql, parameters, null, 
+		execute_db_sql(process.env.COMMON_APP_ID, null, sql, parameters, true, 
 			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);
@@ -334,13 +334,13 @@ module.exports = {
 							app_id,
 							app_id,
 							service_auth,
-							process.env.MAIN_APP_ID,
+							process.env.COMMON_APP_ID,
 							app_rest_client_id,
-							process.env.MAIN_APP_ID,
+							process.env.COMMON_APP_ID,
 							app_rest_client_secret,
-							process.env.MAIN_APP_ID,
+							process.env.COMMON_APP_ID,
 							rest_app_parameter,
-							process.env.MAIN_APP_ID];
+							process.env.COMMON_APP_ID];
 		}
 		else if (process.env.SERVICE_DB_USE==2){
 			sql = `SELECT (SELECT a.app_name
@@ -370,7 +370,7 @@ module.exports = {
 								AND ap.app_id = :app_main_id) "rest_app_parameter"
 				FROM DUAL`;
 			parameters = {  app_id: app_id,
-							app_main_id: process.env.MAIN_APP_ID,
+							app_main_id: process.env.COMMON_APP_ID,
 							service_auth: service_auth,
 							app_rest_client_id: app_rest_client_id,
 							app_rest_client_secret: app_rest_client_secret,

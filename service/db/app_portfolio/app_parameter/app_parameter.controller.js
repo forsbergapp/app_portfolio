@@ -2,7 +2,7 @@ const { getParameters, getParameters_server, getParameters_admin, getParameter_a
 
 module.exports = {
 	getParameters: (req, res) => {
-		getParameters(req.params.app_id,(err, results) =>{
+		getParameters(req.params.app_id, req.query.app_id, (err, results) =>{
 			if (err) {
 				return res.status(500).send({
 					success: 0,
@@ -16,7 +16,7 @@ module.exports = {
 		});
 	},
 	getParameters_server: (req, res) => {
-		getParameters_server(req.params.app_id, (err, results) =>{
+		getParameters_server(req.params.app_id, req.query.app_id, (err, results) =>{
 			if (err) {
 				return res.status(500).send({
 					success: 0,
@@ -58,7 +58,7 @@ module.exports = {
 		});
 	},
 	getParameter: (req, res) => {
-		getParameter(req.params.app_id, req.query.parameter_name, (err, results) =>{
+		getParameter(req.params.app_id, req.query.parameter_name, req.query.app_id, (err, results) =>{
 			if (err) {
 				return res.status(500).send({
 					success: 0,

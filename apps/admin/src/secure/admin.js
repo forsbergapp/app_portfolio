@@ -497,7 +497,7 @@ function sendBroadcast(){
     let destination_app;
 
     if (broadcast_message==''){
-        show_message('INFO', null, null, 'Please enter message', window.global_main_app_id);
+        show_message('INFO', null, null, 'Please enter message', window.global_common_app_id);
         return null;
     }
     
@@ -524,7 +524,7 @@ function sendBroadcast(){
         if (err)
             null;
         else{
-            show_message('INFO', null, null, 'Sent!', window.global_main_app_id);
+            show_message('INFO', null, null, 'Sent!', window.global_common_app_id);
         }
     });
 }    
@@ -871,7 +871,7 @@ function set_maintenance(){
         check_value = 1;
     else
         check_value = 0;
-    let json_data = `{"app_id" : ${window.global_main_app_id}, 
+    let json_data = `{"app_id" : ${window.global_common_app_id}, 
                       "parameter_name":"SERVER_MAINTENANCE",
                       "parameter_value":${check_value}}`;
     common_fetch(window.global_rest_url_base + window.global_rest_app_parameter + 'admin/value?',
@@ -1012,11 +1012,11 @@ function update_record(table,
         document.getElementById('apps_save').innerHTML = window.global_button_spinner;
         switch (table){
             case 'app':{
-                if (id==window.global_main_app_id){
-                    //app window.global_main_app_id should always be enabled
+                if (id==window.global_common_app_id){
+                    //app window.global_common_app_id should always be enabled
                     element.children[4].children[0].checked = true;
                     enabled=true;
-                    show_message('INFO', null, null, `App ${window.global_main_app_id} should always be enabled`, window.global_main_app_id);
+                    show_message('INFO', null, null, `App ${window.global_common_app_id} should always be enabled`, window.global_common_app_id);
                 }
                 json_data = `{"app_name": "${app_name}",
                                 "url": "${url}",
@@ -1722,7 +1722,7 @@ init_common({
     app_id: '',
     app_name: 'ADMIN',
     app_url: window.location.href,
-    app_logo: '/app0/images/logo.png',
+    app_logo: '/app1/images/logo.png',
     exception_app_function: 'admin_logoff_app',
     close_eventsource: true,
     ui: true,

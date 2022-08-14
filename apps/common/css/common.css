@@ -467,7 +467,7 @@ body.font_arabic_ui{
 	width:300px;
 }
 #maintenance_logo {
-	background-image: url('/app0/images/logo_title.png');
+	background-image: url('/app1/images/logo_title.png');
 	background-size: cover;
 	background-repeat: no-repeat;
 	height: 50px;
@@ -519,7 +519,7 @@ body.font_arabic_ui{
 	display:inline-block;
 }
 #broadcast_info_logo {
-	background-image: url('/app0/images/logo.png');
+	background-image: url('/app1/images/logo.png');
 	background-size: cover;
 	background-repeat: no-repeat;
 	width:100px;

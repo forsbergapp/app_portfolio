@@ -74,7 +74,7 @@ app.use(function(req, res, next) {
 
 //Logging middleware
 app.use((err,req,res,next) => {
-  createLogServer(req, res, process.env.MAIN_APP_ID, null, err);
+  createLogServer(req, res, process.env.COMMON_APP_ID, null, err);
   next();
 })
 app.use((req,res,next) => {
@@ -97,11 +97,11 @@ app.use((req,res,next) => {
             return value;
           };
         };
-        createLogServer(null, null, process.env.MAIN_APP_ID, 'res:' + JSON.stringify(res, getCircularReplacer()), null);
+        createLogServer(null, null, process.env.COMMON_APP_ID, 'res:' + JSON.stringify(res, getCircularReplacer()), null);
       }
       else{
         if (process.env.SERVICE_LOG_ENABLE_SERVER_INFO==1)
-          createLogServer(req, res, process.env.MAIN_APP_ID, null, null);
+          createLogServer(req, res, process.env.COMMON_APP_ID, null, null);
       }        
       next();
 	});
@@ -187,10 +187,6 @@ app.use('/admin/css',express.static(__dirname + '/apps/admin/css'));
 //common directories
 app.use('/common/js',express.static(__dirname + '/apps/common/js'));
 app.use('/common/css',express.static(__dirname + '/apps/common/css'));
-//app 0 directories
-app.use('/app0/css',express.static(__dirname + '/apps/app0/css'));
-app.use('/app0/images',express.static(__dirname + '/apps/app0/images'));
-app.use('/app0/js',express.static(__dirname + '/apps/app0/js'));
 
 app.use(function(req, res, next) {
   var err = null;
@@ -201,25 +197,32 @@ app.use(function(req, res, next) {
       err = e;
   }
   if (err){
-      createLogAppSE(process.env.MAIN_APP_ID, __appfilename, __appfunction, __appline, `Not valid url input, req.url ${req.url} err:${err}`, (err_log, result_log)=>{
+      createLogAppSE(process.env.COMMON_APP_ID, __appfilename, __appfunction, __appline, `Not valid url input, req.url ${req.url} err:${err}`, (err_log, result_log)=>{
         return res.redirect('https://' + req.headers.host);
       });
   }
   next();
 });
 
-
 const {init_db, mysql_pool, oracle_pool} = require ("./service/db/common/database");
 init_db((err, result) =>{
   if (err)
       null;
   else{
+    function load_dynamic_code(app_id){
+      //load dynamic server app code
+      fs.readFile(`./apps/app${app_id}/server.js`, 'utf8', (error, fileBuffer) => {
+        eval(fileBuffer);
+      });
+    }
+    //load first app
+    load_dynamic_code(1);
     let json;
-    const { getAppDBParameters } = require ("./service/db/app_portfolio/app_parameter/app_parameter.service");
+    const { getAppDBParametersAdmin } = require ("./service/db/app_portfolio/app_parameter/app_parameter.service");
     //app_id inparameter for log, all apps will be returned
-    getAppDBParameters(process.env.MAIN_APP_ID,(err, results) =>{
+    getAppDBParametersAdmin(process.env.COMMON_APP_ID,(err, results) =>{
       if (err) {
-        createLogAppSE(process.env.MAIN_APP_ID, __appfilename, __appfunction, __appline, `getAppDBParameters, err:${err}`, (err_log, result_log)=>{
+        createLogAppSE(process.env.COMMON_APP_ID, __appfilename, __appfunction, __appline, `getAppDBParameters, err:${err}`, (err_log, result_log)=>{
           null;
         })
       }
@@ -227,12 +230,6 @@ init_db((err, result) =>{
         json = JSON.parse(JSON.stringify(results));
         function start_pool(app_id, db_user, db_password){
           const fs = require("fs");
-          function load_dynamic_code(app_id){
-            //load dynamic server app code
-            fs.readFile(`./apps/app${app_id}/server.js`, 'utf8', (error, fileBuffer) => {
-              eval(fileBuffer);
-            });
-          }
           if (process.env.SERVICE_DB_USE==1){
             mysql_pool(app_id, db_user, db_password, (err, result) =>{
               load_dynamic_code(app_id);
@@ -244,7 +241,8 @@ init_db((err, result) =>{
             });
           }
         }
-        for (var i = 1; i < json.length; i++) {
+        //start app 2
+        for (var i = 2; i < json.length; i++) {
           start_pool(json[i].id, json[i].db_user, json[i].db_password);
         }
       }
@@ -265,105 +263,16 @@ app.get("/admin",function (req, res, next) {
 app.get("/admin/:sub",function (req, res, next) {
     return res.redirect('https://' + req.headers.host + "/admin");
 });
-app.get("/info/:info",function (req, res, next) {
-  //redirect from http to https
-  if (req.protocol=='http')
-    res.redirect('https://' + req.headers.host);
-  else{
-    if (req.headers.host.substring(0,req.headers.host.indexOf('.'))=='' ||
-      req.headers.host.substring(0,req.headers.host.indexOf('.'))=='www'){
-        const { getInfo} = require("./apps");
-        switch (req.params.info){
-          case 'datamodel.jpg':{
-            res.sendFile(__dirname + "/apps/app0/info/datamodel.jpg");
-            break;
-          }
-          case 'app_portfolio.jpg':{
-              res.sendFile(__dirname + "/apps/app0/info/app_portfolio.jpg");
-              break;
-          }
-          default:{
-            if (typeof req.query.lang_code !='undefined'){
-              req.query.lang_code = 'en';
-            }
-            getInfo(process.env.MAIN_APP_ID, req.params.info, req.query.lang_code, (err, info_result)=>{
-              res.send(info_result);
-            })
-            break;
-          }
-        }
-    }
-    else
-      next();
-  }
-});
 
 //info for search bots, same for all apps
 app.get('/robots.txt', function (req, res) {
   res.type('text/plain');
   res.send("User-agent: *\nDisallow: /");
 });
-app.get('/favicon.ico', function (req, res, next) {
-  if (req.headers.host.substring(0,req.headers.host.indexOf('.'))=='' ||
-      req.headers.host.substring(0,req.headers.host.indexOf('.'))=='www'){
-        res.sendFile(__dirname + "/apps/app0/images/favicon.ico");
-  }
-  else
-    next();
-});
-app.get('/:user',function (req, res, next) {
-  //redirect from http to https
-  if (req.protocol=='http')
-    return res.redirect('https://' + req.headers.host);
-  //redirect naked domain to www
-  if (((req.headers.host.split('.').length - 1) == 1) &&
-      req.headers.host.indexOf('localhost')==-1)
-    return res.redirect('https://www.' + req.headers.host);
-  if ((req.headers.host.substring(0,req.headers.host.indexOf('.'))=='' ||
-      req.headers.host.substring(0,req.headers.host.indexOf('.'))=='www') &&
-      req.params.user !== '' && 
-      req.params.user!=='robots.txt' &&
-      req.params.user!=='manifest.json' &&
-      req.params.user!=='favicon.ico' &&
-      req.params.user!=='sw.js' &&
-      req.params.user!=='css' &&
-      req.params.user!=='images' &&
-      req.params.user!=='js' &&
-      req.params.user!=='service'){
-      const { getForm} = require("./service/forms/forms.controller");
-      getForm(req, res, process.env.MAIN_APP_ID, req.params.user,(err, app_result)=>{
-          //if app_result=0 means here redirect to /
-          if (app_result==0)
-            return res.redirect('/');
-          else
-            return res.send(app_result);
-      })
-  }
-  else
-      next();
-});
-//config root url
-app.get('/',function (req, res, next) {
-  //redirect from http to https
-  if (req.protocol=='http')
-    return res.redirect('https://' + req.headers.host);
-  //redirect naked domain to www
-  if (((req.headers.host.split('.').length - 1) == 1) &&
-      req.headers.host.indexOf('localhost')==-1)
-    return res.redirect('https://www.' + req.headers.host);
-  if (req.headers.host.substring(0,req.headers.host.indexOf('.'))=='' ||
-      req.headers.host.substring(0,req.headers.host.indexOf('.'))=='www'){
-      const { getForm} = require("./service/forms/forms.controller");
-      getForm(req, res, process.env.MAIN_APP_ID, null,(err, app_result)=>{
-          return res.send(app_result);
-      })
-  }
-  else
-      next();
-});
+
 //start HTTP and HTTPS
 app.listen(process.env.SERVER_PORT, () => {
-  createLogServer(null, null, process.env.MAIN_APP_ID, "HTTP Server up and running on PORT: " + process.env.SERVER_PORT, null);
+  createLogServer(null, null, process.env.COMMON_APP_ID, "HTTP Server up and running on PORT: " + process.env.SERVER_PORT, null);
 });
 //SSL files for HTTPS
 let options;
@@ -376,7 +285,7 @@ fs.readFile(process.env.SERVER_HTTPS_KEY, 'utf8', (error, fileBuffer) => {
       cert: env_cert
     };
     https.createServer(options, app).listen(process.env.SERVER_HTTPS_PORT, () => {
-      createLogServer(null, null, process.env.MAIN_APP_ID, "HTTPS Server up and running on PORT: " + process.env.SERVER_HTTPS_PORT, null);
+      createLogServer(null, null, process.env.COMMON_APP_ID, "HTTPS Server up and running on PORT: " + process.env.SERVER_HTTPS_PORT, null);
     });    
   });  
 });
