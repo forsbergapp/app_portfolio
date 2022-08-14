@@ -76,7 +76,7 @@ module.exports = {
     checkAccessToken: (req, res, next) => {
 		let token = req.get("authorization");
 		if (token){
-            getParameter(process.env.MAIN_APP_ID,'SERVICE_AUTH_TOKEN_ACCESS_SECRET', (err, db_SERVICE_AUTH_TOKEN_ACCESS_SECRET)=>{
+            getParameter(process.env.COMMON_APP_ID,'SERVICE_AUTH_TOKEN_ACCESS_SECRET', req.query.app_id, (err, db_SERVICE_AUTH_TOKEN_ACCESS_SECRET)=>{
 				if (err) {
                     createLogAppSE(req.query.app_id, __appfilename, __appfunction, __appline, err, (err_log, result_log)=>{
                         null;
@@ -127,7 +127,7 @@ module.exports = {
     checkDataToken: (req, res, next) => {
 		let token = req.get("authorization");
 		if (token){
-            getParameter(process.env.MAIN_APP_ID,'SERVICE_AUTH_TOKEN_DATA_SECRET', (err, db_SERVICE_AUTH_TOKEN_DATA_SECRET)=>{
+            getParameter(process.env.COMMON_APP_ID,'SERVICE_AUTH_TOKEN_DATA_SECRET', req.query.app_id, (err, db_SERVICE_AUTH_TOKEN_DATA_SECRET)=>{
 				if (err) {
                     createLogAppSE(req.query.app_id, __appfilename, __appfunction, __appline, err, (err_log, result_log)=>{
                         null;
@@ -157,7 +157,7 @@ module.exports = {
 	},
     dataToken: (req, res) => {
         if(req.headers.authorization){
-            getParameters_server(process.env.MAIN_APP_ID, (err, result)=>{
+            getParameters_server(process.env.COMMON_APP_ID, req.query.app_id, (err, result)=>{
                 if (err) {
                     createLogAppSE(req.query.app_id, __appfilename, __appfunction, __appline, err, (err_log, result_log)=>{
                         null;
@@ -197,7 +197,7 @@ module.exports = {
                                     server_http_accept_language : req.headers["accept-language"],
                                     client_latitude : null,
                                     client_longitude : null
-                                    }, (err,results)  => {
+                                    }, req.query.app_id, (err,results)  => {
                                         null;
                                 }); 
                         return res.status(401).send({ 
@@ -228,7 +228,7 @@ module.exports = {
                                 server_http_accept_language : req.headers["accept-language"],
                                 client_latitude : null,
                                 client_longitude : null
-                                }, (err,results)  => {
+                                }, req.query.app_id, (err,results)  => {
                                     null;
                     }); 
                     return res.status(200).json({ 
@@ -247,7 +247,7 @@ module.exports = {
         }
     },
     accessToken: (req, callBack) => {
-        getParameters_server(process.env.MAIN_APP_ID, (err, result)=>{
+        getParameters_server(process.env.COMMON_APP_ID, req.query.app_id, (err, result)=>{
             if (err) {
                 createLogAppSE(req.body.app_id, __appfilename, __appfunction, __appline, err, (err_log, result_log)=>{
                     callBack(err);
@@ -285,7 +285,7 @@ module.exports = {
                             server_http_accept_language : req.headers["accept-language"],
                             client_latitude : req.body.client_latitude,
                             client_longitude : req.body.client_longitude
-                            }, (err,results)  => {
+                            }, req.query.app_id, (err,results)  => {
                                 null;
                 });
                 callBack(null,jsontoken_at);

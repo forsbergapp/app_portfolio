@@ -20,7 +20,7 @@ async function common_fetch_token(token_type, json_data,  username, password, ca
     let url;
     let status;
     if (window.global_admin==true)
-        app_id = window.global_main_app_id;
+        app_id = window.global_common_app_id;
     else
         app_id = window.global_app_id;
     if (token_type==0){
@@ -137,7 +137,7 @@ async function common_fetch(url_parameters, method, token_type, json_data, app_i
         app_id = app_id_override;
     else{
         if (window.global_app_id=='')
-            app_id = window.global_main_app_id;
+            app_id = window.global_common_app_id;
         else
             app_id = window.global_app_id;
     }
@@ -201,13 +201,12 @@ function fromBase64(str) {
 function common_translate_ui(lang_code){
     let json;
     common_fetch(`${window.global_rest_url_base}${window.global_rest_app_object}${lang_code}?`, 
-                 'GET', 0, null, window.global_main_app_id, null, (err, result) =>{
+                 'GET', 0, null, window.global_common_app_id, null, (err, result) =>{
         if (err)
             null;
         else{
             json = JSON.parse(result);
             for (let i = 0; i < json.data.length; i++){
-                //app 0 placeholder text
                 if (json.data[i].object_name=='DIALOGUE'){
                     switch  (json.data[i].object_item_name){
                         case 'USERNAME':{
@@ -427,12 +426,12 @@ function show_image(item_img, item_input, image_width, image_height) {
     const fileExtension = fileName.split(".").pop();
     if (!allowedExtensions.includes(fileExtension)){
         //File type not allowed
-        show_message('ERROR', 20307, null,null, window.global_main_app_id);
+        show_message('ERROR', 20307, null,null, window.global_common_app_id);
     }
     else
         if (fileSize > window.global_image_file_max_size){
             //File size too large
-            show_message('ERROR', 20308, null, null, window.global_main_app_id);
+            show_message('ERROR', 20308, null, null, window.global_common_app_id);
         }
         else {
             /*Save all file in mime type format specified in parameter
@@ -473,19 +472,19 @@ function check_input(text, text_length=100){
             if (text.includes('"') ||
                 text.includes('\\')){
                 //not valid text
-                show_message('ERROR', 20309, null, null, window.global_main_app_id);
+                show_message('ERROR', 20309, null, null, window.global_common_app_id);
                 return false;
             }
         } catch (error) {
             //not valid text
-            show_message('ERROR', 20309, null, null, window.global_main_app_id);
+            show_message('ERROR', 20309, null, null, window.global_common_app_id);
             return false;
         }
         try {
             //check default max length 100 characters or parameter value
             if (text.length>text_length){
                 //text too long
-                show_message('ERROR', 20310, null, null, window.global_main_app_id);
+                show_message('ERROR', 20310, null, null, window.global_common_app_id);
                 return false;
             }
         } catch (error) {
@@ -502,7 +501,18 @@ function get_uservariables(){
             "client_latitude": "${window.global_client_latitude}",
             "client_longitude": "${window.global_client_longitude}"`;
 }
-
+function SearchAndSetSelectedIndex(search, select_item, colcheck) {
+    //colcheck=0 search id
+    //colcheck=1 search value
+    for (let i = 0; i < select_item.options.length; i++) {
+        if ((colcheck==0 && select_item.options[i].id == search) ||
+            (colcheck==1 && select_item.options[i].value == search)) {
+            select_item.selectedIndex = i;
+            return null;
+        }
+    }
+    return null;
+}
 /*----------------------- */
 /* MESSAGE & DIALOGUE     */
 /*----------------------- */
@@ -1636,12 +1646,12 @@ async function user_login(username, password, callBack) {
 
     if (username == '') {
         //"Please enter username"
-        show_message('ERROR', 20303, null, null, window.global_main_app_id);
+        show_message('ERROR', 20303, null, null, window.global_common_app_id);
         return callBack('ERROR', null);
     }
     if (password == '') {
         //"Please enter password"
-        show_message('ERROR', 20304, null, null, window.global_main_app_id);
+        show_message('ERROR', 20304, null, null, window.global_common_app_id);
         return callBack('ERROR', null);
     }
 
@@ -1753,7 +1763,7 @@ async function user_edit(timezone, callBack) {
                                         });
             } else {
                 //User not found
-                show_message('ERROR', 20305, null, null, window.global_main_app_id);
+                show_message('ERROR', 20305, null, null, window.global_common_app_id);
                 return callBack('ERROR', null);
             }
         }
@@ -1799,13 +1809,13 @@ async function user_update(callBack) {
         if (password == '') {
             //"Please enter password"
             document.getElementById('user_edit_input_password').classList.add('input_error');
-            show_message('ERROR', 20304, null, null, window.global_main_app_id);
+            show_message('ERROR', 20304, null, null, window.global_common_app_id);
             return callBack('ERROR', null);
         }
         if (password != password_confirm) {
             //Password not the same
             document.getElementById('user_edit_input_password_confirm').classList.add('input_error');
-            show_message('ERROR', 20301, null, null, window.global_main_app_id);
+            show_message('ERROR', 20301, null, null, window.global_common_app_id);
             return callBack('ERROR', null);
         }
         //check new passwords
@@ -1844,7 +1854,7 @@ async function user_update(callBack) {
                  'PUT', 1, json_data, null, null, (err, result) =>{
         document.getElementById('user_edit_btn_user_update').innerHTML = old_button;
         if (err){    
-            return callBack(error, null);
+            return callBack(err, null);
         }
         else{
             json = JSON.parse(result);
@@ -1884,17 +1894,17 @@ function user_signup() {
                      }`;
     if (username == '') {
         //"Please enter username"
-        show_message('ERROR', 20303, null, null, window.global_main_app_id);
+        show_message('ERROR', 20303, null, null, window.global_common_app_id);
         return null;
     }
     if (password == '') {
         //"Please enter password"
-        show_message('ERROR', 20304, null, null, window.global_main_app_id);
+        show_message('ERROR', 20304, null, null, window.global_common_app_id);
         return null;
     }
     if (password != password_confirm) {
         //Password not the same
-        show_message('ERROR', 20301, null, null, window.global_main_app_id);
+        show_message('ERROR', 20301, null, null, window.global_common_app_id);
         return null;
     }
 
@@ -2002,7 +2012,7 @@ async function user_verify_check_input(item, nextField, callBack) {
                             document.getElementById('user_verify_verification_char5').classList.add('input_error');
                             document.getElementById('user_verify_verification_char6').classList.add('input_error');
                             //code not valid
-                            show_message('ERROR', 20306, null, null, window.global_main_app_id);
+                            show_message('ERROR', 20306, null, null, window.global_common_app_id);
                             return callBack('ERROR', null);
                         }
                 }
@@ -2025,7 +2035,7 @@ async function user_delete(choice=null, user_local, function_delete_event, callB
             if (user_local==true && password == '') {
                 //"Please enter password"
                 document.getElementById('user_edit_input_password').classList.add('input_error');
-                show_message('ERROR', 20304, null, null, window.global_main_app_id);
+                show_message('ERROR', 20304, null, null, window.global_common_app_id);
                 return null;
             }
             show_message('CONFIRM',null,function_delete_event, null, null, window.global_app_id);
@@ -2194,12 +2204,12 @@ function updatePassword(){
         if (new_password == '') {
             //"Please enter password"
             document.getElementById('user_new_password').classList.add('input_error');
-            show_message('ERROR', 20304, null, null, window.global_main_app_id);
+            show_message('ERROR', 20304, null, null, window.global_common_app_id);
             return callBack('ERROR', null);
         }
         if (new_password != new_password_confirm) {
             //Password not the same
-            show_message('ERROR', 20301, null, null, window.global_main_app_id);
+            show_message('ERROR', 20301, null, null, window.global_common_app_id);
             return null;
         }
         let old_button = document.getElementById('user_new_password_icon').innerHTML;
@@ -2545,7 +2555,8 @@ function seticons(){
 }         
 function set_globals(parameters){
     //app info
-    window.global_main_app_id= 0;
+    window.global_common_app_id= 0;
+    window.global_main_app_id= 1;
     window.global_app_id = parameters.app_id;
     window.global_app_name = parameters.app_name;
     window.global_app_url = parameters.app_url;
@@ -2568,10 +2579,10 @@ function set_globals(parameters){
     //user info
     window.global_user_account_id = '';
     window.global_user_identity_provider_id='';
-    window.global_user_locale               = navigator.language;
+    window.global_user_locale               = navigator.language.toLowerCase();
     window.global_user_timezone             = Intl.DateTimeFormat().resolvedOptions().timeZone;
     window.global_user_direction            = document.body.style.direction; // ltr, rtl, initial, inherit
-    window.global_user_font_arabic_script   = ''; /*classes 
+    window.global_user_arabic_script        = ''; /*classes 
                                                     font_arabic_sans_kufi (default)
                                                     font_arabic_kufi
                                                     font_arabic_nashk
@@ -2795,10 +2806,14 @@ function init_common(parameters){
         document.getElementById('common_window_info_toolbar_btn_up').innerHTML =  window.global_icon_app_up;
         document.getElementById('common_window_info_toolbar_btn_down').innerHTML = window.global_icon_app_down;
         //user menu
-        document.getElementById('user_preference_locale').innerHTML = window.global_icon_regional_locale;
-        document.getElementById('user_preference_timezone').innerHTML = window.global_icon_regional_timezone;
-        document.getElementById('user_preference_direction').innerHTML = window.global_icon_regional_direction;
-        document.getElementById('user_preference_arabic_script').innerHTML = window.global_icon_regional_script;
+        if (document.getElementById('user_preference_locale'))
+            document.getElementById('user_preference_locale').innerHTML = window.global_icon_regional_locale;
+        if (document.getElementById('user_preference_timezone'))
+            document.getElementById('user_preference_timezone').innerHTML = window.global_icon_regional_timezone;
+        if (document.getElementById('user_preference_direction'))
+            document.getElementById('user_preference_direction').innerHTML = window.global_icon_regional_direction;
+        if (document.getElementById('user_preference_arabic_script'))            
+            document.getElementById('user_preference_arabic_script').innerHTML = window.global_icon_regional_script;
         
         //events
         //login/signup/forgot
@@ -2843,9 +2858,26 @@ function init_common(parameters){
         document.getElementById('common_window_info_toolbar_btn_up').addEventListener('click', function() {move_info(0,-1);}, false);
         document.getElementById('common_window_info_toolbar_btn_down').addEventListener('click', function() {move_info(0,1);}, false);        
         
-        document.getElementById('user_locale_select').addEventListener('change', function() { common_translate_ui(this.value); window.global_user_locale = this.value;}, false);
-        document.getElementById('user_timezone_select').addEventListener('change', function() { window.global_user_timezone = this.value;}, false);
-        document.getElementById('user_direction_select').addEventListener('change', function() { document.body.style.direction = this.value; window.global_user_direction = this.value;}, false);
+        if (document.getElementById('user_preference_locale'))
+            document.getElementById('user_locale_select').addEventListener('change', function() { common_translate_ui(this.value); window.global_user_locale = this.value;}, false);
+        if (document.getElementById('user_timezone_select'))
+            document.getElementById('user_timezone_select').addEventListener('change', function() { window.global_user_timezone = this.value;}, false);
+        //define also in app if needed to adjust ui
+        if (document.getElementById('user_direction_select'))
+            document.getElementById('user_direction_select').addEventListener('change', function() { document.body.style.direction = this.value; window.global_user_direction = this.value;}, false);
+        if (document.getElementById('user_arabic_script_select'))
+            document.getElementById('user_arabic_script_select').addEventListener('change', function() { window.global_user_arabic_script = this.value;}, false);
         
+        //set default user preferences        
+        if (document.getElementById('user_preference_locale'))
+            SearchAndSetSelectedIndex(window.global_user_locale, document.getElementById('user_locale_select'), 1);
+        if (document.getElementById('user_timezone_select'))
+            SearchAndSetSelectedIndex(window.global_user_timezone, document.getElementById('user_timezone_select'), 1);
+        if (document.getElementById('user_direction_select'))
+            SearchAndSetSelectedIndex(window.global_user_direction, document.getElementById('user_direction_select'), 1);
+        if (document.getElementById('user_arabic_script_select'))
+            SearchAndSetSelectedIndex(window.global_user_arabic_script, document.getElementById('user_arabic_script_select'), 1);
+        //translate ui
+        //common_translate_ui(window.global_user_locale);
     }
 };

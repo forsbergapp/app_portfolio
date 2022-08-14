@@ -47,7 +47,7 @@ module.exports = {
                                 server_http_accept_language : req.headers["accept-language"],
                                 client_latitude : result.geoplugin_latitude,
                                 client_longitude : result.geoplugin_longitude
-                                }, (err,results)  => {
+                                }, req.query.app_id, (err,results)  => {
                                     null;
                     });
                 })
@@ -74,7 +74,7 @@ module.exports = {
 
         const { getMail} = require(`../../apps/`);
         
-        getParameters_server(data.app_id, (err, result)=>{
+        getParameters_server(data.app_id, req.query.app_id, (err, result)=>{
             if (err) {                
                 createLogAppSE(data.app_id, __appfilename, __appfunction, __appline, err, (err_log, result_log)=>{
                     return callBack(err, null);
@@ -151,7 +151,7 @@ module.exports = {
                                     server_http_accept_language : req.headers["accept-language"],
                                     client_latitude : req.body.client_latitude,
                                     client_longitude : req.body.client_longitude
-                                    }, (err,results)  => {
+                                    }, req.query.app_id, (err,results)  => {
                                         null;
                         });
                         if (err) {    

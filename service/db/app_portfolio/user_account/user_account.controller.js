@@ -44,7 +44,7 @@ module.exports = {
         }
         if (password_length_wrong(req.body.password))
             getMessage(20106, 
-                       process.env.MAIN_APP_ID, 
+                       process.env.COMMON_APP_ID, 
                        req.query.lang_code, (err2,results2)  => {
                             return res.status(400).send(
                                 results2.text
@@ -62,7 +62,7 @@ module.exports = {
                                                 err.sqlMessage);
                     if (app_code != null){
                         getMessage(app_code, 
-                                process.env.MAIN_APP_ID, 
+                                process.env.COMMON_APP_ID, 
                                 req.query.lang_code, (err2,results2)  => {
                                         return res.status(400).send(
                                             results2.text
@@ -78,11 +78,11 @@ module.exports = {
                     //set variable for accesstoken
                     req.body.app_id = req.query.app_id;
                     if (typeof req.body.provider_id == 'undefined' ) {
-                        getParameter(process.env.MAIN_APP_ID,'SERVICE_MAIL_TYPE_SIGNUP', (err3, parameter_value)=>{
+                        getParameter(process.env.COMMON_APP_ID,'SERVICE_MAIL_TYPE_SIGNUP', req.query.app_id, (err3, parameter_value)=>{
                             //send email for local users only
                             const emailData = {
                                 lang_code : req.query.lang_code,
-                                app_id : process.env.MAIN_APP_ID,
+                                app_id : process.env.COMMON_APP_ID,
                                 app_user_id : results.insertId,
                                 emailType : parameter_value,
                                 toEmail : req.body.email,
@@ -247,10 +247,10 @@ module.exports = {
                                                         err_verification
                                                     );
                                                 else{
-                                                    getParameter(process.env.MAIN_APP_ID,'SERVICE_MAIL_TYPE_PASSWORD_RESET', (err3, parameter_value)=>{
+                                                    getParameter(process.env.COMMON_APP_ID,'SERVICE_MAIL_TYPE_PASSWORD_RESET', req.query.app_id, (err3, parameter_value)=>{
                                                         const emailData = {
                                                             lang_code : req.query.lang_code,
-                                                            app_id : process.env.MAIN_APP_ID,
+                                                            app_id : process.env.COMMON_APP_ID,
                                                             app_user_id : results.id,
                                                             emailType : parameter_value,
                                                             toEmail : email,
@@ -302,7 +302,7 @@ module.exports = {
                 if (!results) {
                     //Record not found
                     getMessage(20400, 
-                                process.env.MAIN_APP_ID, 
+                                process.env.COMMON_APP_ID, 
                                 req.query.lang_code, (err2,results2)  => {
                                     return res.status(404).send(
                                         results2.text
@@ -349,7 +349,7 @@ module.exports = {
                 if (!results){
                     //Record not found
                     getMessage(20400, 
-                                process.env.MAIN_APP_ID, 
+                                process.env.COMMON_APP_ID, 
                                 req.query.lang_code, (err2,results2)  => {
                                     return res.status(404).send(
                                         results2.text
@@ -401,7 +401,7 @@ module.exports = {
                 if (!results) {
                     //Record not found
                     getMessage(20400, 
-                                process.env.MAIN_APP_ID, 
+                                process.env.COMMON_APP_ID, 
                                 req.query.lang_code, (err2,results2)  => {
                                     return res.status(404).send(
                                         results2.text
@@ -433,7 +433,7 @@ module.exports = {
                     //Record not found
                     //return ok even if records not found
                     getMessage(20400, 
-                                process.env.MAIN_APP_ID, 
+                                process.env.COMMON_APP_ID, 
                                 req.query.lang_code, (err2,results2)  => {
                                     return res.status(404).json({
                                             count: 0,
@@ -465,7 +465,7 @@ module.exports = {
                     //Record not found
                     //return ok even if records not found
                     getMessage(20400, 
-                                process.env.MAIN_APP_ID, 
+                                process.env.COMMON_APP_ID, 
                                 req.query.lang_code, (err2,results2)  => {
                                     return res.status(404).json({
                                             count: 0,
@@ -498,7 +498,7 @@ module.exports = {
                             req.body.new_password != '' &&
                             password_length_wrong(req.body.new_password))
                                 getMessage(20106, 
-                                        process.env.MAIN_APP_ID, 
+                                        process.env.COMMON_APP_ID, 
                                         req.query.lang_code, (err2,results2)  => {
                                                 return res.status(400).send(
                                                     results2.text
@@ -521,7 +521,7 @@ module.exports = {
                                                                     err_update.sqlMessage);
                                         if (app_code != null)
                                             getMessage(app_code, 
-                                                        process.env.MAIN_APP_ID, 
+                                                        process.env.COMMON_APP_ID, 
                                                         req.query.lang_code, (err2,results2)  => {
                                                             return res.status(400).send(
                                                                 results2.text
@@ -536,7 +536,7 @@ module.exports = {
                                         if (!results_update) {
                                             //record not found
                                             getMessage(20400, 
-                                                        process.env.MAIN_APP_ID, 
+                                                        process.env.COMMON_APP_ID, 
                                                         req.query.lang_code, (err2,results2)  => {
                                                             return res.status(404).send(
                                                                 results2.text
@@ -545,10 +545,10 @@ module.exports = {
                                         }
                                         else
                                             if (send_email){
-                                                getParameter(process.env.MAIN_APP_ID,'SERVICE_MAIL_TYPE_CHANGE_EMAIL', (err3, parameter_value)=>{
+                                                getParameter(process.env.COMMON_APP_ID,'SERVICE_MAIL_TYPE_CHANGE_EMAIL', req.query.app_id, (err3, parameter_value)=>{
                                                     const emailData = {
                                                         lang_code : req.query.lang_code,
-                                                        app_id : process.env.MAIN_APP_ID,
+                                                        app_id : process.env.COMMON_APP_ID,
                                                         app_user_id : req.params.id,
                                                         emailType : parameter_value,
                                                         toEmail : req.body.new_email,
@@ -627,7 +627,7 @@ module.exports = {
                                        'invalid password attempt for user id:' + req.params.id, (err_log, result_log)=>{
                             //invalid password
                             getMessage(20401, 
-                                process.env.MAIN_APP_ID, 
+                                process.env.COMMON_APP_ID, 
                                 req.query.lang_code, (err2,results2)  => {
                                     return res.status(400).send(
                                         results2.text
@@ -639,7 +639,7 @@ module.exports = {
                 } else {
                     //user not found
                     getMessage(20305, 
-                                process.env.MAIN_APP_ID, 
+                                process.env.COMMON_APP_ID, 
                                 req.query.lang_code, (err2,results2)  => {
                                     return res.status(404).send(
                                         results2.text
@@ -652,7 +652,7 @@ module.exports = {
     updatePassword: (req, res) =>{
         if (password_length_wrong(req.body.new_password))
             getMessage(20106, 
-                       process.env.MAIN_APP_ID, 
+                       process.env.COMMON_APP_ID, 
                        req.query.lang_code, (err2,results2)  => {
                             return res.status(400).send(
                                 results2.text
@@ -670,7 +670,7 @@ module.exports = {
                                                 err.sqlMessage);
                     if (app_code != null){
                         getMessage(app_code, 
-                                   process.env.MAIN_APP_ID, 
+                                   process.env.COMMON_APP_ID, 
                                    req.query.lang_code, (err2,results2)  => {
                                         return res.status(500).send(
                                             results2.text
@@ -686,7 +686,7 @@ module.exports = {
                     if (!results) {
                         //record not found
                         getMessage(20400, 
-                                    process.env.MAIN_APP_ID, 
+                                    process.env.COMMON_APP_ID, 
                                     req.query.lang_code, (err2,results2)  => {
                                         return res.status(404).send(
                                             results2.text
@@ -737,7 +737,7 @@ module.exports = {
                 if (!results) {
                     //record not found
                     getMessage(20400, 
-                                process.env.MAIN_APP_ID, 
+                                process.env.COMMON_APP_ID, 
                                 req.query.lang_code, (err2,results2)  => {
                                     return res.status(404).send(
                                         results2.text
@@ -771,7 +771,7 @@ module.exports = {
                                 if (!results) {
                                     //record not found
                                     getMessage(20400, 
-                                                process.env.MAIN_APP_ID, 
+                                                process.env.COMMON_APP_ID, 
                                                 req.query.lang_code, (err2,results2)  => {
                                                     return res.status(404).send(
                                                         results2.text
@@ -807,7 +807,7 @@ module.exports = {
                                                 if (!results) {
                                                     //record not found
                                                     getMessage(20400, 
-                                                                process.env.MAIN_APP_ID, 
+                                                                process.env.COMMON_APP_ID, 
                                                                 req.query.lang_code, (err2,results2)  => {
                                                                     return res.status(404).send(
                                                                         results2.text
@@ -827,7 +827,7 @@ module.exports = {
                                                        'invalid password attempt for user id:' + req.params.id, (err_log, result_log)=>{
                                             //invalid password
                                             getMessage(20401, 
-                                                process.env.MAIN_APP_ID, 
+                                                process.env.COMMON_APP_ID, 
                                                 req.query.lang_code, (err2,results2)  => {
                                                     return res.status(400).send(
                                                         results2.text
@@ -839,7 +839,7 @@ module.exports = {
                                 else{
                                     //user not found
                                     getMessage(20305, 
-                                                process.env.MAIN_APP_ID, 
+                                                process.env.COMMON_APP_ID, 
                                                 req.query.lang_code, (err2,results2)  => {
                                                     return res.status(404).send(
                                                         results2.text
@@ -853,7 +853,7 @@ module.exports = {
                 else{
                     //user not found
                     getMessage(20305, 
-                               process.env.MAIN_APP_ID, 
+                               process.env.COMMON_APP_ID, 
                                req.query.lang_code, (err2,results2)  => {
                                     return res.status(404).send(
                                         results2.text
@@ -907,10 +907,10 @@ module.exports = {
                                         err_verification
                                     );
                                 else{
-                                    getParameter(process.env.MAIN_APP_ID,'SERVICE_MAIL_TYPE_UNVERIFIED', (err3, parameter_value)=>{
+                                    getParameter(process.env.COMMON_APP_ID,'SERVICE_MAIL_TYPE_UNVERIFIED', req.query.app_id, (err3, parameter_value)=>{
                                         const emailData = {
                                             lang_code : req.query.lang_code,
-                                            app_id : process.env.MAIN_APP_ID,
+                                            app_id : process.env.COMMON_APP_ID,
                                             app_user_id : results.id,
                                             emailType : parameter_value,
                                             toEmail : results.email,
@@ -978,7 +978,7 @@ module.exports = {
                                 createLogAppCI(req, res, req.body.app_id, __appfilename, __appfunction, __appline, 
                                     'invalid password attempt for user id:' + req.body.user_account_id + ', username:' + req.body.username, (err_log, result_log)=>{
                                     getMessage(20300, 
-                                    process.env.MAIN_APP_ID, 
+                                    process.env.COMMON_APP_ID, 
                                     req.query.lang_code, (err2,results2)  => {
                                             return res.status(400).send(
                                                 results2.text
@@ -993,7 +993,7 @@ module.exports = {
                     createLogAppCI(req, res, req.body.app_id, __appfilename, __appfunction, __appline, 
                                    'user not found:' + req.body.username, (err_log, result_log)=>{
                         getMessage(20305, 
-                                    process.env.MAIN_APP_ID, 
+                                    process.env.COMMON_APP_ID, 
                                     req.query.lang_code, (err2,results2)  => {
                                         return res.status(404).send(
                                             results2.text

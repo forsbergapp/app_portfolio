@@ -1,0 +1,34 @@
+#common_window_info_content{
+	display: none;
+}
+#common_window_info{
+	width:100%;
+	height:100%;
+	visibility:visible;
+	top:0px;
+	text-align:center;
+	overflow:auto;
+	z-index:11;
+}
+#common_window_info_info img{
+	max-width:90%;
+}
+#common_window_info_info{
+	position:relative;
+	margin:20px;
+	z-index:-1;
+	margin-top:-70px;
+}
+#common_window_info_toolbar_btn_close{
+	display: none;
+}
+
+.common_dialogue_content:hover, 
+.common_dialogue_content:active{
+	box-shadow: 0 0 35px 4px rgb(255,255,255,0.25);
+}  
+.common_dialogue_content{
+	z-index: 12;
+	background-color: #fefefe;
+	box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);	
+}
