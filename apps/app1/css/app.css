@@ -98,9 +98,11 @@ body.font_arabic_nastaliq #dialogue_info_content{
 }
 .app_name{
 	font-weight: bold;
+	cursor: default;
 }
 .app_description{
 	width: 220px;
+	cursor: default;
 }
 .app_logo:hover, .app_logo:active {
 	-webkit-animation: glowing 1300ms infinite;
@@ -109,6 +111,7 @@ body.font_arabic_nastaliq #dialogue_info_content{
     animation: glowing 1300ms infinite;
 	border-radius:20px;
 	transform: scale(1.2);
+	cursor: pointer;
 }
 @-webkit-keyframes glowing {
 	0% {
@@ -143,9 +146,6 @@ body.font_arabic_nastaliq #dialogue_info_content{
 	height: 40px;
 	margin: 0 auto;
 }	
-.app_link{
-	cursor:pointer;
-}
 .app_url{
 	display:none;
 }
@@ -836,8 +836,6 @@ div.ray8 {
 .theme_sun #user_menu_username:active,
 .theme_sun #user_menu_dropdown_profile_top:hover,
 .theme_sun #user_menu_dropdown_profile_top:active,
-.theme_sun .app_link:hover,
-.theme_sun .app_link:active,
 .theme_sun #user_menu_dropdown_logged_in div:hover,
 .theme_sun #user_menu_dropdown_logged_in div:active,
 .theme_sun #user_menu_dropdown_logged_out div:hover,
@@ -975,8 +973,6 @@ div.ray8 {
 .theme_moon #user_menu_username:active,
 .theme_moon #user_menu_dropdown_profile_top:hover,
 .theme_moon #user_menu_dropdown_profile_top:active,
-.theme_moon .app_link:hover,
-.theme_moon .app_link:active,
 .theme_moon #user_menu_dropdown_logged_in div:hover,
 .theme_moon #user_menu_dropdown_logged_in div:active,
 .theme_moon #user_menu_dropdown_logged_out div:hover,
