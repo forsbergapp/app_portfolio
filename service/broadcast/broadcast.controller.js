@@ -1,5 +1,5 @@
 global.broadcast_clients = [];
-const { createLog} = require ("../../service/db/app_portfolio/app_log/app_log.service");
+const { createLog, createLogAdmin} = require ("../../service/db/app_portfolio/app_log/app_log.service");
 const { getListConnected, getCountConnected, sendBroadcast, updateConnected, checkConnected} = require ("./broadcast.service");
 module.exports = {
 	connectBroadcast: (req, res) => {
@@ -7,73 +7,112 @@ module.exports = {
             "Content-Type": "text/event-stream",
             "Connection": "keep-alive",
           };
-        res.writeHead(200, headers);
-        const intervalId = setInterval(() => {
-            const { getParameter } = require ("../db/app_portfolio/app_parameter/app_parameter.service");
-            getParameter(process.env.COMMON_APP_ID,'SERVER_MAINTENANCE', req.query.app_id, (err, db_SERVER_MAINTENANCE)=>{
-                if (err){
-                    const {createLogAppSE} = require("../log/log.controller");
-                    createLogAppSE(process.env.COMMON_APP_ID, __appfilename, __appfunction, __appline, err, (err_log, result_log)=>{
-                        null;
-                    })
-                }
-                else{
-                    if (db_SERVER_MAINTENANCE==1){
-                        const broadcast =`{"broadcast_type" :"MAINTENANCE", 
-                                          "broadcast_message":""}`;
-                        res.write (`data: ${btoa(broadcast)}\n\n`);
-                    }
-                }
-            })
-        }, 5000);
-        const { getIp} = require ("../geolocation/geolocation.controller");
+        res.writeHead(200, headers);        
         req.query.app_user_id ='';
         let app_id = req.query.app_id;
-        if (req.query.app_id ==''){
-            //use COMMON_APP_ID to use in log if this is called from admin without app_id
-            req.query.app_id = process.env.COMMON_APP_ID;
-        }
         let res2;
         req.query.callback=1;
-        getIp(req, res2, (err, geodata) =>{
-            const newClient = {
-                id: req.params.clientId,
-                app_id: app_id,
-                user_account_id: req.query.user_account_id,
-                user_agent: req.headers["user-agent"],
-                connection_date: new Date().toISOString(),
-                ip: req.ip,
-                gps_latitude: geodata.geoplugin_latitude,
-                gps_longitude: geodata.geoplugin_longitude,
-                identity_provider_id: req.query.identity_provider_id,
-                response: res
-            };
-            broadcast_clients.push(newClient);
-            createLog({ app_id : req.query.app_id,
-                        app_module : 'BROADCAST',
-                        app_module_type : 'CONNECT',
-                        app_module_request : req.originalUrl,
-                        app_module_result : JSON.stringify(geodata),
-                        app_user_id : req.query.user_account_id,
-                        user_language : null,
-                        user_timezone : null,
-                        user_number_system : null,
-                        user_platform : null,
-                        server_remote_addr : req.ip,
-                        server_user_agent : req.headers["user-agent"],
-                        server_http_host : req.headers["host"],
-                        server_http_accept_language : req.headers["accept-language"],
-                        client_latitude : geodata.geoplugin_latitude,
-                        client_longitude : geodata.geoplugin_longitude
-                        }, req.query.app_id, (err,results)  => {
-                            null;
-            });
-            res.on('close', ()=>{
-                broadcast_clients = broadcast_clients.filter(client => client.id !== req.params.clientId);
-                clearInterval(intervalId);
-                res.end();
+        if (req.query.admin =='true'){
+            const { getIpAdmin} = require ("../geolocation/geolocation.controller");
+            getIpAdmin(req, res2, (err, geodata) =>{
+                const newClient = {
+                    id: req.params.clientId,
+                    app_id: app_id,
+                    user_account_id: req.query.user_account_id,
+                    user_agent: req.headers["user-agent"],
+                    connection_date: new Date().toISOString(),
+                    ip: req.ip,
+                    gps_latitude: geodata.geoplugin_latitude,
+                    gps_longitude: geodata.geoplugin_longitude,
+                    identity_provider_id: req.query.identity_provider_id,
+                    response: res
+                };
+                broadcast_clients.push(newClient);
+                createLogAdmin({ app_id : process.env.COMMON_APP_ID,
+                            app_module : 'BROADCAST',
+                            app_module_type : 'CONNECT',
+                            app_module_request : req.originalUrl,
+                            app_module_result : JSON.stringify(geodata),
+                            app_user_id : req.query.user_account_id,
+                            user_language : null,
+                            user_timezone : null,
+                            user_number_system : null,
+                            user_platform : null,
+                            server_remote_addr : req.ip,
+                            server_user_agent : req.headers["user-agent"],
+                            server_http_host : req.headers["host"],
+                            server_http_accept_language : req.headers["accept-language"],
+                            client_latitude : geodata.geoplugin_latitude,
+                            client_longitude : geodata.geoplugin_longitude
+                            }, req.query.app_id, (err,results)  => {
+                                null;
+                });
+                res.on('close', ()=>{
+                    broadcast_clients = broadcast_clients.filter(client => client.id !== req.params.clientId);
+                    res.end();
+                })
             })
-        })
+        }
+        else{
+            const intervalId = setInterval(() => {
+                const { getParameter } = require ("../db/app_portfolio/app_parameter/app_parameter.service");
+                getParameter(process.env.COMMON_APP_ID,'SERVER_MAINTENANCE', req.query.app_id, (err, db_SERVER_MAINTENANCE)=>{
+                    if (err){
+                        const {createLogAppSE} = require("../log/log.controller");
+                        createLogAppSE(process.env.COMMON_APP_ID, __appfilename, __appfunction, __appline, err, (err_log, result_log)=>{
+                            null;
+                        })
+                    }
+                    else{
+                        if (db_SERVER_MAINTENANCE==1){
+                            const broadcast =`{"broadcast_type" :"MAINTENANCE", 
+                                              "broadcast_message":""}`;
+                            res.write (`data: ${btoa(broadcast)}\n\n`);
+                        }
+                    }
+                })
+            }, 5000);
+            const { getIp} = require ("../geolocation/geolocation.controller");
+            getIp(req, res2, (err, geodata) =>{
+                const newClient = {
+                    id: req.params.clientId,
+                    app_id: app_id,
+                    user_account_id: req.query.user_account_id,
+                    user_agent: req.headers["user-agent"],
+                    connection_date: new Date().toISOString(),
+                    ip: req.ip,
+                    gps_latitude: geodata.geoplugin_latitude,
+                    gps_longitude: geodata.geoplugin_longitude,
+                    identity_provider_id: req.query.identity_provider_id,
+                    response: res
+                };
+                broadcast_clients.push(newClient);
+                createLog({ app_id : req.query.app_id,
+                            app_module : 'BROADCAST',
+                            app_module_type : 'CONNECT',
+                            app_module_request : req.originalUrl,
+                            app_module_result : JSON.stringify(geodata),
+                            app_user_id : req.query.user_account_id,
+                            user_language : null,
+                            user_timezone : null,
+                            user_number_system : null,
+                            user_platform : null,
+                            server_remote_addr : req.ip,
+                            server_user_agent : req.headers["user-agent"],
+                            server_http_host : req.headers["host"],
+                            server_http_accept_language : req.headers["accept-language"],
+                            client_latitude : geodata.geoplugin_latitude,
+                            client_longitude : geodata.geoplugin_longitude
+                            }, req.query.app_id, (err,results)  => {
+                                null;
+                });
+                res.on('close', ()=>{
+                    broadcast_clients = broadcast_clients.filter(client => client.id !== req.params.clientId);              
+                    clearInterval(intervalId);
+                    res.end();
+                })
+            })
+        }
     },
     getListConnected: (req, res) => {
         getListConnected(req.query.select_app_id, req.query.limit, req.query.year, req.query.month, 

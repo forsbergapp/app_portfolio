@@ -254,8 +254,8 @@ app.get("/admin",function (req, res, next) {
   if (req.protocol=='http')
     return res.redirect('https://' + req.headers.host + "/admin");
   else{
-    const { getForm } = require ("./service/forms/forms.controller");
-    getForm(req, res, null, null, (err, app_result)=>{
+    const { getFormAdmin } = require ("./service/forms/forms.controller");
+    getFormAdmin(req, res, (err, app_result)=>{
       return res.send(app_result);
     })
   }
