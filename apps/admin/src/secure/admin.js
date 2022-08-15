@@ -129,7 +129,7 @@ async function get_apps() {
             json = JSON.parse(result);
             let html='<option value="">ALL</option>';
             html +='<option value="ADMIN">ADMIN SQL</option>';
-            for (var i = 0; i < json.data.length; i++) {
+            for (var i = 1; i < json.data.length; i++) {
                     html +=
                     `<option value='${json.data[i].id}'>APP${json.data[i].id}</option>`;
             }
@@ -628,8 +628,8 @@ function update_map(longitude, latitude, zoom, text_place, marker_id, flyto) {
         else
             window.global_session_map.jumpTo({ 'center': [longitude, latitude], 'zoom': zoom });
     }
-    common_fetch(`/service/geolocation/getTimezone?latitude=${latitude}&longitude=${longitude}`,
-                 'GET', 0, null, null, null, (err, text_timezone) =>{
+    common_fetch(`/service/geolocation/getTimezone/admin?latitude=${latitude}&longitude=${longitude}`,
+                 'GET', 2, null, null, null, (err, text_timezone) =>{
         if (err)
             null;
         else{
@@ -1031,7 +1031,7 @@ function update_record(table,
                                 "parameter_type_id":"${parameter_type_id}",
                                 "parameter_value":"${parameter_value}",
                                 "parameter_comment":"${parameter_comment}"}`;
-                rest_url = `${window.global_rest_app_parameter}admin`;
+                rest_url = `${window.global_rest_app_parameter}admin?`;
                 break;
             }
         }
@@ -1290,10 +1290,10 @@ function page_navigation(item){
 function list_item_action(item){
     if (item.className.indexOf('gps_click')>0){
         common_fetch(window.global_service_geolocation + window.global_service_geolocation_gps_place + 
-                     '?app_user_id=' +
+                     '/admin?app_user_id=' +
                      '&latitude=' + item.parentNode.children[5].children[0].innerHTML +
                      '&longitude=' + item.parentNode.children[6].children[0].innerHTML,
-                     'GET', 0, null, null, null, (err, result) =>{
+                     'GET', 2, null, null, null, (err, result) =>{
                 if (err)
                     null;
                 else{
@@ -1541,8 +1541,8 @@ function admin_token_has_value(){
 async function get_parameters() {
     let json;
 
-    await common_fetch(`${window.global_rest_url_base}${window.global_rest_app_parameter}0?`,
-                       'GET', 0, null, null, null, (err, result) =>{
+    await common_fetch(`${window.global_rest_url_base}${window.global_rest_app_parameter}admin/all/0?`,
+                       'GET', 2, null, null, null, (err, result) =>{
         if (err)
             null;
         else{
@@ -1700,21 +1700,20 @@ function init_admin_secure(){
     document.getElementById('filesearch_menu4').addEventListener('click', function() { show_existing_logfiles();}, false);
     document.getElementById('list_pm2_log_title1').addEventListener('click', function() { list_click(this)}, false);
     document.getElementById('list_server_log_title2').addEventListener('click', function() { list_click(this)}, false);
-    common_fetch_token(0, null,  null, null, (err, result)=>{
-        get_parameters().then(function(){        
-            get_apps().then(function(){
-                get_gps_from_ip().then(function(){
-                    if (!window.global_session_map)
-                        init_map();
-                    update_map(window.global_client_longitude,
-                               window.global_client_latitude,
-                               window.global_gps_map_zoom,
-                               window.global_client_place,
-                               window.global_gps_map_marker_div_gps,
-                               window.global_gps_map_jumpto);
-                    show_menu(1);
-                })                
-            })
+
+    get_parameters().then(function(){        
+        get_apps().then(function(){
+            get_gps_from_ip().then(function(){
+                if (!window.global_session_map)
+                    init_map();
+                update_map(window.global_client_longitude,
+                            window.global_client_latitude,
+                            window.global_gps_map_zoom,
+                            window.global_client_place,
+                            window.global_gps_map_marker_div_gps,
+                            window.global_gps_map_jumpto);
+                show_menu(1);
+            })                
         })
     })
 }
