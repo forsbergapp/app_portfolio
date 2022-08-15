@@ -236,7 +236,7 @@
         width:100%;
     }
     #list_apps{
-        height:102px;
+        height:90px;
     }
     #list_app_parameter{
         height:341px;
@@ -631,7 +631,7 @@
             margin:20px;
         }
         #list_apps{
-            height:60px;
+            height:70px;
         }    
         #list_app_parameter{
             height:309px;
