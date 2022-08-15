@@ -50,7 +50,7 @@ app.get("/info/:info",function (req, res, next) {
 app.get("/app2/manifest.json",function (req, res, next) {
   if (req.headers.host.substring(0,req.headers.host.indexOf('.')) == 'app2'){
     const { getParameters } = require ("./service/db/app_portfolio/app_parameter/app_parameter.service");
-    getParameters(APP2_ID,(err, results) =>{
+    getParameters(APP2_ID, APP2_ID, (err, results) =>{
       if (err) {
         return res.send(err);
       }
