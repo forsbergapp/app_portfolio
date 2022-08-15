@@ -273,10 +273,10 @@ async function init_db(callBack){
 						           `oracledb.createPool ADMIN ok user: ${process.env.SERVICE_DB_DB2_APP_ADMIN_USER}`, (err_log, result_log)=>{
 						null;
 					})
-					pool_db2_app.push('pool_db2_app_0');
+					pool_db2_app.push('pool_db2_app_1');
 					create_pool(process.env.SERVICE_DB_DB2_APP1_USER,
 						process.env.SERVICE_DB_DB2_APP1_PASS,
-						pool_db2_app[0], (err, result) =>{
+						pool_db2_app[1], (err, result) =>{
 							if (err){
 								createLogAppSE(process.env.COMMON_APP_ID, __appfilename, __appfunction, __appline, 
 											   `oracledb.createPool ${process.env.COMMON_APP_ID} user: ${process.env.SERVICE_DB_DB2_APP1_USER}, err:${err}`, (err_log, result_log)=>{
