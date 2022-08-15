@@ -383,5 +383,88 @@ module.exports = {
 			else
 				return callBack(null, result);
 		});
+	},
+	getAppStartParametersAdmin: (app_id, callBack) => {
+		let sql;
+		let parameters;
+		let service_auth = 'SERVICE_AUTH';
+		let app_rest_client_id = 'APP_REST_CLIENT_ID';
+		let app_rest_client_secret ='APP_REST_CLIENT_SECRET';
+		let rest_app_parameter ='REST_APP_PARAMETER';
+		if (process.env.SERVICE_DB_USE==1){
+			sql = `SELECT	'ADMIN' app_name,
+							(SELECT a.url
+								FROM ${process.env.SERVICE_DB_DB1_NAME}.app a
+								WHERE a.id = ?) app_url,
+							(SELECT a.logo
+								FROM ${process.env.SERVICE_DB_DB1_NAME}.app a
+								WHERE a.id = ?) app_logo,
+							(SELECT ap.parameter_value
+								FROM ${process.env.SERVICE_DB_DB1_NAME}.app_parameter ap
+								WHERE ap.parameter_name = ?
+								AND ap.app_id = ?) service_auth,
+							(SELECT ap.parameter_value
+								FROM ${process.env.SERVICE_DB_DB1_NAME}.app_parameter ap
+								WHERE ap.parameter_name = ?
+									AND ap.app_id = ?) app_rest_client_id,
+							(SELECT ap.parameter_value
+								FROM ${process.env.SERVICE_DB_DB1_NAME}.app_parameter ap
+								WHERE ap.parameter_name = ?
+								AND ap.app_id = ?) app_rest_client_secret,
+							(SELECT ap.parameter_value
+								FROM ${process.env.SERVICE_DB_DB1_NAME}.app_parameter ap
+								WHERE ap.parameter_name = ?
+									AND ap.app_id = ?) rest_app_parameter
+							FROM DUAL`;
+			parameters = [	app_id,
+							app_id,
+							service_auth,
+							process.env.COMMON_APP_ID,
+							app_rest_client_id,
+							process.env.COMMON_APP_ID,
+							app_rest_client_secret,
+							process.env.COMMON_APP_ID,
+							rest_app_parameter,
+							process.env.COMMON_APP_ID];
+		}
+		else if (process.env.SERVICE_DB_USE==2){
+			sql = `SELECT (  'ADMIN' "app_name",
+							(SELECT a.url
+							   FROM ${process.env.SERVICE_DB_DB2_NAME}.app a
+							  WHERE a.id = :app_id) "app_url",
+							(SELECT a.logo
+							   FROM ${process.env.SERVICE_DB_DB2_NAME}.app a
+							  WHERE a.id = :app_id) "app_logo",
+							(SELECT ap.parameter_value
+							   FROM ${process.env.SERVICE_DB_DB2_NAME}.app_parameter ap
+							  WHERE ap.parameter_name = :service_auth
+								AND ap.app_id = :app_common_id) "service_auth",
+							(SELECT ap.parameter_value
+							   FROM ${process.env.SERVICE_DB_DB2_NAME}.app_parameter ap
+							  WHERE ap.parameter_name = :app_rest_client_id
+								AND ap.app_id = :app_common_id) "app_rest_client_id",
+							(SELECT ap.parameter_value
+							   FROM ${process.env.SERVICE_DB_DB2_NAME}.app_parameter ap
+							  WHERE ap.parameter_name = :app_rest_client_secret
+								AND ap.app_id = :app_common_id) "app_rest_client_secret",
+							(SELECT ap.parameter_value
+							   FROM ${process.env.SERVICE_DB_DB2_NAME}.app_parameter ap
+							  WHERE ap.parameter_name = :rest_app_parameter
+								AND ap.app_id = :app_common_id) "rest_app_parameter"
+				FROM DUAL`;
+			parameters = {  app_id: app_id,
+							app_common_id: process.env.COMMON_APP_ID,
+							service_auth: service_auth,
+							app_rest_client_id: app_rest_client_id,
+							app_rest_client_secret: app_rest_client_secret,
+							rest_app_parameter: rest_app_parameter}
+		}
+		execute_db_sql(app_id, null, sql, parameters, true, 
+					   __appfilename, __appfunction, __appline, (err, result)=>{
+			if (err)
+				return callBack(err, null);
+			else
+				return callBack(null, result);
+		});
 	}
 };

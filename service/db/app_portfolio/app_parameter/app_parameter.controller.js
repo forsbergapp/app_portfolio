@@ -1,4 +1,4 @@
-const { getParameters, getParameters_server, getParameters_admin, getParameter_admin, setParameter_admin, setParameterValue_admin, getAppStartParameters } = require ("./app_parameter.service");
+const { getParameters, getParameters_server, getParameters_admin, getParameter_admin, setParameter_admin, setParameterValue_admin } = require ("./app_parameter.service");
 
 module.exports = {
 	getParameters: (req, res) => {
@@ -87,20 +87,6 @@ module.exports = {
 	},
 	setParameterValue_admin: (req, res) => {
 		setParameterValue_admin(req.body, (err, results) =>{
-			if (err) {
-				return res.status(500).send({
-					success: 0,
-					data: err
-				});
-			}
-			return res.status(200).json({
-				success: 1,
-				data: results
-			});
-		});
-	},
-	getAppStartParameters: (req, res) => {
-		getAppStartParameters(req.params.app_id, (err, results) =>{
 			if (err) {
 				return res.status(500).send({
 					success: 0,
