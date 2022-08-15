@@ -134,15 +134,12 @@ function get_apps() {
                 }
             }
             document.getElementById('apps').innerHTML = html;
-            document.querySelectorAll('.app_link_row, .app_link_col, .app_logo, .app_name, .app_description').forEach(e => e.addEventListener('click', function(event) {
-                if (event.target.className == 'app_link_row')
-                    window.open(event.target.parentNode.children[0].innerHTML);
-                else
-                    if (event.target.className == 'app_link_col')
-                        window.open(event.target.parentNode.parentNode.children[0].innerHTML);
-                    else
-                        window.open(event.target.parentNode.parentNode.parentNode.children[0].innerHTML);
-            }))   
+
+
+            var clickappevent = function(event) { 
+                window.open(event.target.parentNode.parentNode.parentNode.children[0].innerHTML);};
+
+            document.querySelectorAll('.app_logo').forEach(e => e.addEventListener('click', clickappevent));
         }
     })
 }
