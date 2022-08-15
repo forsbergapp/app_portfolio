@@ -1,4 +1,4 @@
-const { read_app_files, get_module_with_init } = require("../");
+const { read_app_files, get_module_with_init_admin } = require("../");
 module.exports = {
     getAdmin:(gps_lat, gps_long, gps_place) => {
         return new Promise(function (resolve, reject){
@@ -24,7 +24,7 @@ module.exports = {
                     app = app.replace(
                         '<AppProfileTop/>',
                         '');
-                    get_module_with_init(process.env.COMMON_APP_ID, 
+                    get_module_with_init_admin('', 
                                          'admin_exception_before',
                                          null,
                                          true,

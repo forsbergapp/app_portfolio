@@ -973,7 +973,8 @@ function connectOnline(updateOnline=false){
     window.global_eventSource = new EventSource(`/service/broadcast/connect/${window.global_clientId}` +
                                                 `?app_id=${window.global_app_id}` +
                                                 `&user_account_id=${window.global_user_account_id}` +
-                                                `&identity_provider_id=${window.global_user_identity_provider_id}`);
+                                                `&identity_provider_id=${window.global_user_identity_provider_id}` +
+                                                `&admin=${window.global_admin}`);
     window.global_eventSource.onmessage = function (event) {
         if (window.global_admin == true)
             null;
@@ -1015,20 +1016,38 @@ async function get_place_from_gps(item, latitude, longitude) {
 }
 async function get_gps_from_ip() {
 
-    await common_fetch(window.global_service_geolocation + window.global_service_geolocation_gps_ip + 
+    if (window.global_admin){
+        await common_fetch(window.global_service_geolocation + window.global_service_geolocation_gps_ip + 
+                                '/admin?app_user_id=' +  window.global_user_account_id, 
+                                'GET', 2, null, null, null, (err, result) =>{
+            if (err)
+                null;
+            else{
+                let json = JSON.parse(result);
+                window.global_client_latitude  = json.geoplugin_latitude;
+                window.global_client_longitude = json.geoplugin_longitude;
+                window.global_client_place     = json.geoplugin_city + ', ' +
+                                                    json.geoplugin_regionName + ', ' +
+                                                    json.geoplugin_countryName;
+            }
+        })
+    }
+    else{
+        await common_fetch(window.global_service_geolocation + window.global_service_geolocation_gps_ip + 
                        '?app_user_id=' +  window.global_user_account_id, 
                        'GET', 0, null, null, null, (err, result) =>{
-        if (err)
-            null;
-        else{
-            let json = JSON.parse(result);
-            window.global_client_latitude  = json.geoplugin_latitude;
-            window.global_client_longitude = json.geoplugin_longitude;
-            window.global_client_place     = json.geoplugin_city + ', ' +
-                                                json.geoplugin_regionName + ', ' +
-                                                json.geoplugin_countryName;
-        }
-    })
+            if (err)
+                null;
+            else{
+                let json = JSON.parse(result);
+                window.global_client_latitude  = json.geoplugin_latitude;
+                window.global_client_longitude = json.geoplugin_longitude;
+                window.global_client_place     = json.geoplugin_city + ', ' +
+                                                    json.geoplugin_regionName + ', ' +
+                                                    json.geoplugin_countryName;
+            }
+        })
+    }
 }
 /*----------------------- */
 /* COUNTRY & CITIES       */

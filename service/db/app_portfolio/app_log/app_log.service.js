@@ -245,6 +245,8 @@ module.exports = {
 				break
 			}
 		}
+		if (app_id=='')
+		  app_id = null;
 		if (process.env.SERVICE_DB_USE==1){
 			sql = `SELECT	id,
 							app_id,

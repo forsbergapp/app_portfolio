@@ -181,6 +181,44 @@ async function get_module_with_init(app_id,
         }
     })
 }
+async function get_module_with_init_admin(app_id, 
+                                    exception_app_function,
+                                    close_eventsource,
+                                    ui,
+                                    admin,
+                                    gps_lat,
+                                    gps_long,
+                                    gps_place,
+                                    module, callBack){
+    const { getAppStartParametersAdmin } = require("../service/db/app_portfolio/app_parameter/app_parameter.service");
+    getAppStartParametersAdmin(app_id, (err,result) =>{
+        if (err)
+            callBack(err, null);
+        else{
+            let parameters = {   
+                app_id: app_id,
+                app_name: result[0].app_name,
+                app_url: result[0].app_url,
+                app_logo: result[0].app_logo,
+                exception_app_function: exception_app_function,
+                close_eventsource: close_eventsource,
+                ui: ui,
+                admin: admin,
+                service_auth: result[0].service_auth,
+                app_rest_client_id: result[0].app_rest_client_id,
+                app_rest_client_secret: result[0].app_rest_client_secret,
+                rest_app_parameter: result[0].rest_app_parameter,
+                gps_lat: gps_lat, 
+                gps_long: gps_long, 
+                gps_place: gps_place
+            };
+            module = module.replace(
+                    '<ITEM_COMMON_PARAMETERS/>',
+                    JSON.stringify(parameters));
+            callBack(null, module);
+        }
+    })
+}
 async function get_email_verification(data, email, baseUrl, lang_code, callBack){
     const { getMessage } = require("../service/db/app_portfolio/message_translation/message_translation.service");
     const { createLogAppSE } = require("../service/log/log.controller");
@@ -270,4 +308,5 @@ module.exports = {
 module.exports.getInfo = getInfo;
 module.exports.read_app_files = read_app_files;
 module.exports.get_module_with_init = get_module_with_init;
+module.exports.get_module_with_init_admin = get_module_with_init_admin;
 module.exports.get_email_verification = get_email_verification;
