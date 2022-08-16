@@ -200,6 +200,7 @@ function fromBase64(str) {
 }
 async function common_translate_ui(lang_code){
     let json;
+    //translate objects
     await common_fetch(`${window.global_rest_url_base}${window.global_rest_app_object}${lang_code}?`, 
                  'GET', 0, null, null, null, (err, result) =>{
         if (err)
@@ -207,63 +208,114 @@ async function common_translate_ui(lang_code){
         else{
             json = JSON.parse(result);
             for (let i = 0; i < json.data.length; i++){
-                if (json.data[i].object_name=='DIALOGUE'){
-                    switch  (json.data[i].object_item_name){
-                        case 'USERNAME':{
-                            document.getElementById('login_username').placeholder = json.data[i].text;
-                            document.getElementById('signup_username').placeholder = json.data[i].text;
-                            document.getElementById('user_edit_input_username').placeholder = json.data[i].text;
-                            break;
+                switch(json.data[i].object_name){
+                    case 'DIALOGUE':{
+                        switch  (json.data[i].object_item_name){
+                            case 'USERNAME':{
+                                document.getElementById('login_username').placeholder = json.data[i].text;
+                                document.getElementById('signup_username').placeholder = json.data[i].text;
+                                document.getElementById('user_edit_input_username').placeholder = json.data[i].text;
+                                break;
+                            }
+                            case 'EMAIL':{
+                                document.getElementById('signup_email').placeholder = json.data[i].text;
+                                document.getElementById('forgot_email').placeholder = json.data[i].text;
+                                break;
+                            }
+                            case 'NEW_EMAIL':{
+                                document.getElementById('user_edit_input_new_email').placeholder = json.data[i].text;
+                                break;
+                            }
+                            case 'BIO':{
+                                document.getElementById('signup_email').placeholder = json.data[i].text;
+                                document.getElementById('forgot_email').placeholder = json.data[i].text;
+                                document.getElementById('user_edit_input_bio').placeholder = json.data[i].text;
+                                break;
+                            }
+                            case 'PASSWORD':{
+                                document.getElementById('login_password').placeholder = json.data[i].text;
+                                document.getElementById('signup_password').placeholder = json.data[i].text;
+                                document.getElementById('user_edit_input_password').placeholder = json.data[i].text;
+                                break;
+                            }
+                            case 'PASSWORD_CONFIRM':{
+                                document.getElementById('signup_password_confirm').placeholder = json.data[i].text;
+                                document.getElementById('user_edit_input_password_confirm').placeholder = json.data[i].text;
+                                break;
+                            }
+                            case 'PASSWORD_REMINDER':{
+                                document.getElementById('signup_password_reminder').placeholder = json.data[i].text;
+                                document.getElementById('user_edit_input_password_reminder').placeholder = json.data[i].text;
+                                break;
+                            }
+                            case 'NEW_PASSWORD_CONFIRM':{
+                                document.getElementById('user_edit_input_new_password_confirm').placeholder = json.data[i].text;
+                                document.getElementById('user_new_password_confirm').placeholder = json.data[i].text;    
+                                break;
+                            }
+                            case 'NEW_PASSWORD':{
+                                document.getElementById('user_edit_input_new_password').placeholder = json.data[i].text;
+                                document.getElementById('user_new_password').placeholder = json.data[i].text;    
+                                break;
+                            }
+                            default:{
+                                document.getElementById(json.data[i].object_item_name.toLowerCase()).innerHTML = json.data[i].text;
+                                break;
+                            }
+                        } 
+                        break;
+                    }
+                    case 'APP_DESCRIPTION':{
+                        if (window.global_app_id == window.global_main_app_id){
+                            var x = document.querySelectorAll('.app_link_row');
+                            for (let app_id = 0; app_id <= x.length -1; app_id++) {
+                                if (x[app_id].children[0].children[0].innerHTML == json.data[i].app_id )
+                                    x[app_id].children[3].children[1].innerHTML = json.data[i].text;
+                            }
                         }
-                        case 'EMAIL':{
-                            document.getElementById('signup_email').placeholder = json.data[i].text;
-                            document.getElementById('forgot_email').placeholder = json.data[i].text;
-                            break;
-                        }
-                        case 'NEW_EMAIL':{
-                            document.getElementById('user_edit_input_new_email').placeholder = json.data[i].text;
-                            break;
-                        }
-                        case 'BIO':{
-                            document.getElementById('signup_email').placeholder = json.data[i].text;
-                            document.getElementById('forgot_email').placeholder = json.data[i].text;
-                            document.getElementById('user_edit_input_bio').placeholder = json.data[i].text;
-                            break;
-                        }
-                        case 'PASSWORD':{
-                            document.getElementById('login_password').placeholder = json.data[i].text;
-                            document.getElementById('signup_password').placeholder = json.data[i].text;
-                            document.getElementById('user_edit_input_password').placeholder = json.data[i].text;
-                            break;
-                        }
-                        case 'PASSWORD_CONFIRM':{
-                            document.getElementById('signup_password_confirm').placeholder = json.data[i].text;
-                            document.getElementById('user_edit_input_password_confirm').placeholder = json.data[i].text;
-                            break;
-                        }
-                        case 'PASSWORD_REMINDER':{
-                            document.getElementById('signup_password_reminder').placeholder = json.data[i].text;
-                            document.getElementById('user_edit_input_password_reminder').placeholder = json.data[i].text;
-                            break;
-                        }
-                        case 'NEW_PASSWORD_CONFIRM':{
-                            document.getElementById('user_edit_input_new_password_confirm').placeholder = json.data[i].text;
-                            document.getElementById('user_new_password_confirm').placeholder = json.data[i].text;    
-                            break;
-                        }
-                        case 'NEW_PASSWORD':{
-                            document.getElementById('user_edit_input_new_password').placeholder = json.data[i].text;
-                            document.getElementById('user_new_password').placeholder = json.data[i].text;    
-                            break;
-                        }
-                        default:{
-                            document.getElementById(json.data[i].object_item_name.toLowerCase()).innerHTML = json.data[i].text;
-                            break;
-                        }
-                    }                                        
-                }   
+                        break;
+                    }
+                }
             }
+            //translate locales
+            json = '';
+            common_fetch(window.global_rest_url_base + window.global_rest_language_locale + lang_code + '?', 
+                            'GET', 0, null, null, null, (err, result) =>{
+                if (err)
+                    null;
+                else{
+                    json = JSON.parse(result);
+                    let html='';
+                    let select_locale = document.getElementById('user_locale_select');
+                    let current_locale = select_locale.value;
+                    for (let i = 0; i < json.locales.length; i++){
+                        html += `<option id="${i}" value="${json.locales[i].locale}">${json.locales[i].text}</option>`;
+                    }
+                    select_locale.innerHTML = html;
+                    select_locale.value = current_locale;
+                }
+                //translate regional settings
+                json = '';
+                common_fetch(window.global_rest_url_base + window.global_rest_regional_setting + '?' +
+                             'regional_type=DIRECTION', 
+                             'GET', 0, null, null, null, (err, result) =>{
+                    if (err)
+                        null;
+                    else{
+                        json = JSON.parse(result);
+                        let html='';
+                        let select_locale = document.getElementById('user_direction_select');
+                        let current_locale = select_locale.value;
+                        for (let i = 0; i < json.locales.length; i++){
+                            html += `<option id="${i}" value="${json.locales[i].locale}">${json.locales[i].text}</option>`;
+                        }
+                        select_locale.innerHTML = html;
+                        select_locale.value = current_locale;
+                    }
+                })
+            })
         }
+
     })                            
 }
 function get_null_or_value(value) {
@@ -2926,6 +2978,7 @@ async function init_common(parameters, callBack){
                 case 'REST_LANGUAGE_LOCALE'                 :{window.global_rest_language_locale = parameter_value;break;}
                 case 'REST_MESSAGE_TRANSLATION'             :{window.global_rest_message_translation = parameter_value;break;}
                 case 'REST_PARAMETER_TYPE'                  :{window.global_rest_parameter_type = parameter_value;break;}
+                case 'REST_REGIONAL_SETTING'                :{window.global_rest_regional_setting = parameter_value;break;}
                 case 'REST_USER_ACCOUNT'                    :{window.global_rest_user_account = parameter_value;break;}
                 case 'REST_USER_ACCOUNT_ACTIVATE'           :{window.global_rest_user_account_activate = parameter_value;break;}
                 case 'REST_USER_ACCOUNT_COMMON'             :{window.global_rest_user_account_common = parameter_value;break;}

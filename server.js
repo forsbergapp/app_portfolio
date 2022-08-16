@@ -122,6 +122,7 @@ const identity_providerRouter = require("./service/db/app_portfolio/identity_pro
 const languageLocaleRouter = require("./service/db/app_portfolio/language/locale/locale.router");
 const message_translationRouter = require("./service/db/app_portfolio/message_translation/message_translation.router");
 const parameter_typeRouter = require("./service/db/app_portfolio/parameter_type/parameter_type.router");
+const regional_settingRouter = require("./service/db/app_portfolio/regional_setting/regional_setting.router");
 const user_accountRouter = require("./service/db/app_portfolio/user_account/user_account.router");
 const user_account_appRouter = require("./service/db/app_portfolio/user_account_app/user_account_app.router");
 const user_account_likeRouter = require("./service/db/app_portfolio/user_account_like/user_account_like.router");
@@ -156,6 +157,7 @@ app.use("/service/db/app_portfolio/identity_provider", identity_providerRouter);
 app.use("/service/db/app_portfolio/language/locale", languageLocaleRouter);
 app.use("/service/db/app_portfolio/message_translation", message_translationRouter);
 app.use("/service/db/app_portfolio/parameter_type", parameter_typeRouter);
+app.use("/service/db/app_portfolio/regional_setting", regional_settingRouter);
 app.use("/service/db/app_portfolio/user_account", user_accountRouter);
 app.use("/service/db/app_portfolio/user_account_app", user_account_appRouter);
 app.use("/service/db/app_portfolio/user_account_like", user_account_likeRouter);
