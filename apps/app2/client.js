@@ -18,7 +18,7 @@ module.exports = {
                   ['<AppHead/>', __dirname + '/src/head.html'],
                   ['<AppToolbarTop/>', __dirname + '/src/toolbar_top.html'],
 
-                  ['<AppUserAccount/>', __dirname + '/../common/src/user_account.html'],
+                  ['<AppCommonUserAccount/>', __dirname + '/../common/src/user_account.html'],
                   ['<AppThemes/>', __dirname + '/src/app_themes.html'],
                   ['<AppCommonProfileSearch/>', __dirname + '/../common/src/profile_search.html'],
 

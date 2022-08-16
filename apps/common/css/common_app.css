@@ -662,12 +662,7 @@ a:active {
 }
 
 /*User account*/
-#user_account:hover #user_menu_dropdown,
-#user_account:active #user_menu_dropdown{
-	display: inline-block;
-}
 #user_menu{
-	visibility: visible;
 	top:10px;
 	right:10px;
 	position:fixed;
@@ -701,9 +696,10 @@ a:active {
 }
 
 #user_menu_dropdown{
-	display: none;
+	visibility: hidden;
 	top:50px;
 	right:10px;
+	left:10px;
 	position:fixed;
 	width:auto;
 	text-align: center;

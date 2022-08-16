@@ -986,6 +986,7 @@ async function toolbar_bottom(choice) {
         case 6:
             {
                 settings.style.visibility = 'hidden';
+                document.getElementById('user_menu_dropdown').style.visibility = 'hidden';
                 profile_show_app(null,null, document.getElementById('setting_select_timezone_current').value);
                 break;
             }
@@ -993,6 +994,7 @@ async function toolbar_bottom(choice) {
         case 7:
             {
                 settings.style.visibility = 'hidden';
+                document.getElementById('user_menu_dropdown').style.visibility = 'hidden';
                 profile_top(1, document.getElementById('setting_select_timezone_current').value, null, 'profile_show_app');
                 break;
             }
@@ -2495,13 +2497,11 @@ function setEvents() {
 
     document.getElementById('user_arabic_script_select').addEventListener('change', function() { update_ui(3);}, false);
     //user menu dropdown
-    document.getElementById('user_menu_dropdown_log_in').addEventListener('click', function() { show_common_dialogue('LOGIN') }, false);
-    document.getElementById('user_menu_dropdown_signup').addEventListener('click', function() { show_common_dialogue('SIGNUP') }, false);
     document.getElementById('user_menu_dropdown_log_out').addEventListener('click', function() { user_logoff_app() }, false);
     document.getElementById('user_menu_dropdown_edit').addEventListener('click', function() { user_edit_app() }, false);
     document.getElementById('user_menu_username').addEventListener('click', function() { toolbar_bottom(6) }, false);
     document.getElementById('user_menu_dropdown_profile_top').addEventListener('click', function() { toolbar_bottom(7) }, false);
-    
+
     //tab navigation
     document.getElementById('tab_nav_btn_1').addEventListener('click', function() { openTab('1') }, false);
     document.getElementById('tab_nav_btn_2').addEventListener('click', function() { openTab('2') }, false);
@@ -2694,8 +2694,6 @@ async function get_app_globals() {
             for (let i = 0; i < json.data.length; i++) {
                 //variables for app_id=0
                 if (json.data[i].app_id == 0){
-                    if (json.data[i].parameter_name=='APP_COPYRIGHT')
-                        window.global_app_copyright = json.data[i].parameter_value;
                     if (json.data[i].parameter_name=='IMAGE_FILE_ALLOWED_TYPE1')
                         window.global_image_file_allowed_type1 = json.data[i].parameter_value;
                     if (json.data[i].parameter_name=='IMAGE_FILE_ALLOWED_TYPE2')
@@ -2766,7 +2764,8 @@ async function get_app_globals() {
                         window.global_gps_map_access_token = json.data[i].parameter_value;
                 }
                 if (json.data[i].app_id == window.global_app_id){
-                    //App variables registered for this apps app_id
+                    if (json.data[i].parameter_name=='APP_COPYRIGHT')
+                        window.global_app_copyright = json.data[i].parameter_value;
                     if (json.data[i].parameter_name=='APP_DEFAULT_STARTUP_PAGE')
                         window.global_app_default_startup_page = parseInt(json.data[i].parameter_value);
                     if (json.data[i].parameter_name=='REST_APP2_USER_SETTING')

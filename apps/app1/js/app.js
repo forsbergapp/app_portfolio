@@ -22,8 +22,6 @@ function setEvents(){
     document.getElementById('toggle_checkbox').addEventListener('click', function() { toggle_switch() }, false);
     document.getElementById('user_menu_dropdown_edit').addEventListener('click', function() { user_menu_item_click(this) }, false);
     document.getElementById('user_menu_dropdown_log_out').addEventListener('click', function() { user_menu_item_click(this) }, false);
-    document.getElementById('user_menu_dropdown_signup').addEventListener('click', function() { user_menu_item_click(this) }, false);
-    document.getElementById('user_menu_dropdown_log_in').addEventListener('click', function() { user_menu_item_click(this) }, false);
     document.getElementById('user_menu_dropdown_profile_top').addEventListener('click', function() {user_menu_item_click(this)}, false);
     document.getElementById('user_arabic_script_select').addEventListener('change', function() { toggle_switch()}, false);
 
@@ -210,60 +208,61 @@ async function get_parameters() {
                     window.global_rest_user_account_signup = json.data[i].parameter_value;
                 if (json.data[i].parameter_name=='REST_USER_ACCOUNT_PASSWORD')
                     window.global_rest_user_account_password = json.data[i].parameter_value;
-                //app 0 specific variables
-                if (json.data[i].parameter_name=='APP_COPYRIGHT')
-                    window.global_app_copyright =json.data[i].parameter_value;
-                if (json.data[i].parameter_name=='APP_EMAIL') //0
-                    window.global_app_email = json.data[i].parameter_value;
-                if (json.data[i].parameter_name=='INFO_SOCIAL_LINK1_URL')
-                    window.global_info_social_link1_url = json.data[i].parameter_value;
-                if (json.data[i].parameter_name=='INFO_SOCIAL_LINK2_URL')
-                    window.global_info_social_link2_url = json.data[i].parameter_value;
-                if (json.data[i].parameter_name=='INFO_SOCIAL_LINK3_URL')
-                    window.global_info_social_link3_url = json.data[i].parameter_value;
-                if (json.data[i].parameter_name=='INFO_SOCIAL_LINK4_URL')
-                    window.global_info_social_link4_url = json.data[i].parameter_value;
-                if (json.data[i].parameter_name=='INFO_SOCIAL_LINK1_ICON')
-                    window.global_info_social_link1_name = json.data[i].parameter_value;
-                if (json.data[i].parameter_name=='INFO_SOCIAL_LINK2_ICON')
-                    window.global_info_social_link2_name = json.data[i].parameter_value;
-                if (json.data[i].parameter_name=='INFO_SOCIAL_LINK3_ICON')
-                    window.global_info_social_link3_name = json.data[i].parameter_value;
-                if (json.data[i].parameter_name=='INFO_SOCIAL_LINK4_ICON')
-                    window.global_info_social_link4_name = json.data[i].parameter_value;
-                if (json.data[i].parameter_name=='INFO_LINK_POLICY_URL')
-                    window.global_info_link_policy_url = json.data[i].parameter_value;
-                if (json.data[i].parameter_name=='INFO_LINK_DISCLAIMER_URL')
-                    window.global_info_link_disclaimer_url = json.data[i].parameter_value;
-                if (json.data[i].parameter_name=='INFO_LINK_TERMS_URL')
-                    window.global_info_link_terms_url = json.data[i].parameter_value;
-                if (json.data[i].parameter_name=='INFO_LINK_ABOUT_URL')
-                    window.global_info_link_about_url = json.data[i].parameter_value;
-                if (json.data[i].parameter_name=='INFO_LINK_POLICY_NAME')
-                    window.global_info_link_policy_name = json.data[i].parameter_value;
-                if (json.data[i].parameter_name=='INFO_LINK_DISCLAIMER_NAME')
-                    window.global_info_link_disclaimer_name = json.data[i].parameter_value;
-                if (json.data[i].parameter_name=='INFO_LINK_TERMS_NAME')
-                    window.global_info_link_terms_name = json.data[i].parameter_value;
-                if (json.data[i].parameter_name=='INFO_LINK_ABOUT_NAME')
-                    window.global_info_link_about_name = json.data[i].parameter_value;
-                //QR
-                if (json.data[i].parameter_name=='QR_LOGO_FILE_PATH')
-                    window.global_qr_logo_file_path = json.data[i].parameter_value;
-                if (json.data[i].parameter_name=='QR_WIDTH')
-                    window.global_qr_width = parseInt(json.data[i].parameter_value);
-                if (json.data[i].parameter_name=='QR_HEIGHT')
-                    window.global_qr_height = parseInt(json.data[i].parameter_value);
-                if (json.data[i].parameter_name=='QR_COLOR_DARK')
-                    window.global_qr_color_dark = json.data[i].parameter_value;
-                if (json.data[i].parameter_name=='QR_COLOR_LIGHT')
-                    window.global_qr_color_light = json.data[i].parameter_value;
-                if (json.data[i].parameter_name=='QR_LOGO_WIDTH')
-                    window.global_qr_logo_width = parseInt(json.data[i].parameter_value);
-                if (json.data[i].parameter_name=='QR_LOGO_HEIGHT')
-                    window.global_qr_logo_height = parseInt(json.data[i].parameter_value);
-                if (json.data[i].parameter_name=='QR_BACKGROUND_COLOR')
-                    window.global_qr_background_color = json.data[i].parameter_value;
+                if (json.data[i].app_id == window.global_app_id){
+                    if (json.data[i].parameter_name=='APP_COPYRIGHT')
+                        window.global_app_copyright =json.data[i].parameter_value;
+                    if (json.data[i].parameter_name=='APP_EMAIL') //0
+                        window.global_app_email = json.data[i].parameter_value;
+                    if (json.data[i].parameter_name=='INFO_SOCIAL_LINK1_URL')
+                        window.global_info_social_link1_url = json.data[i].parameter_value;
+                    if (json.data[i].parameter_name=='INFO_SOCIAL_LINK2_URL')
+                        window.global_info_social_link2_url = json.data[i].parameter_value;
+                    if (json.data[i].parameter_name=='INFO_SOCIAL_LINK3_URL')
+                        window.global_info_social_link3_url = json.data[i].parameter_value;
+                    if (json.data[i].parameter_name=='INFO_SOCIAL_LINK4_URL')
+                        window.global_info_social_link4_url = json.data[i].parameter_value;
+                    if (json.data[i].parameter_name=='INFO_SOCIAL_LINK1_ICON')
+                        window.global_info_social_link1_name = json.data[i].parameter_value;
+                    if (json.data[i].parameter_name=='INFO_SOCIAL_LINK2_ICON')
+                        window.global_info_social_link2_name = json.data[i].parameter_value;
+                    if (json.data[i].parameter_name=='INFO_SOCIAL_LINK3_ICON')
+                        window.global_info_social_link3_name = json.data[i].parameter_value;
+                    if (json.data[i].parameter_name=='INFO_SOCIAL_LINK4_ICON')
+                        window.global_info_social_link4_name = json.data[i].parameter_value;
+                    if (json.data[i].parameter_name=='INFO_LINK_POLICY_URL')
+                        window.global_info_link_policy_url = json.data[i].parameter_value;
+                    if (json.data[i].parameter_name=='INFO_LINK_DISCLAIMER_URL')
+                        window.global_info_link_disclaimer_url = json.data[i].parameter_value;
+                    if (json.data[i].parameter_name=='INFO_LINK_TERMS_URL')
+                        window.global_info_link_terms_url = json.data[i].parameter_value;
+                    if (json.data[i].parameter_name=='INFO_LINK_ABOUT_URL')
+                        window.global_info_link_about_url = json.data[i].parameter_value;
+                    if (json.data[i].parameter_name=='INFO_LINK_POLICY_NAME')
+                        window.global_info_link_policy_name = json.data[i].parameter_value;
+                    if (json.data[i].parameter_name=='INFO_LINK_DISCLAIMER_NAME')
+                        window.global_info_link_disclaimer_name = json.data[i].parameter_value;
+                    if (json.data[i].parameter_name=='INFO_LINK_TERMS_NAME')
+                        window.global_info_link_terms_name = json.data[i].parameter_value;
+                    if (json.data[i].parameter_name=='INFO_LINK_ABOUT_NAME')
+                        window.global_info_link_about_name = json.data[i].parameter_value;
+                    //QR
+                    if (json.data[i].parameter_name=='QR_LOGO_FILE_PATH')
+                        window.global_qr_logo_file_path = json.data[i].parameter_value;
+                    if (json.data[i].parameter_name=='QR_WIDTH')
+                        window.global_qr_width = parseInt(json.data[i].parameter_value);
+                    if (json.data[i].parameter_name=='QR_HEIGHT')
+                        window.global_qr_height = parseInt(json.data[i].parameter_value);
+                    if (json.data[i].parameter_name=='QR_COLOR_DARK')
+                        window.global_qr_color_dark = json.data[i].parameter_value;
+                    if (json.data[i].parameter_name=='QR_COLOR_LIGHT')
+                        window.global_qr_color_light = json.data[i].parameter_value;
+                    if (json.data[i].parameter_name=='QR_LOGO_WIDTH')
+                        window.global_qr_logo_width = parseInt(json.data[i].parameter_value);
+                    if (json.data[i].parameter_name=='QR_LOGO_HEIGHT')
+                        window.global_qr_logo_height = parseInt(json.data[i].parameter_value);
+                    if (json.data[i].parameter_name=='QR_BACKGROUND_COLOR')
+                        window.global_qr_background_color = json.data[i].parameter_value;
+                }
             }
         }
     })
@@ -287,14 +286,6 @@ function user_menu_item_click(item){
         }
         case 'user_menu_dropdown_log_out':{
             user_logoff_app();            
-            break;
-        }
-        case 'user_menu_dropdown_signup':{
-            show_common_dialogue('SIGNUP');
-            break;
-        }
-        case 'user_menu_dropdown_log_in':{
-            show_common_dialogue('LOGIN');
             break;
         }
         case 'user_menu_dropdown_profile_top':{
@@ -440,17 +431,9 @@ async function init_app(){
     document.getElementById('title1').innerHTML = 'App Portfolio Diagram';
     document.getElementById('title2').innerHTML = 'App Portfolio Data model';
     document.getElementById('contact_text').innerHTML = 'Contact'    
-    //user menu
-    //document.getElementById('user_menu_dropdown_profile').innerHTML = window.global_button_default_icon_profile;
-    document.getElementById('user_menu_dropdown_edit').innerHTML = window.global_icon_app_edit;
-    document.getElementById('user_menu_dropdown_log_out').innerHTML = window.global_icon_app_logoff;
-    document.getElementById('user_menu_dropdown_signup').innerHTML = window.global_icon_app_signup;
-    document.getElementById('user_menu_dropdown_log_in').innerHTML = window.global_icon_app_login;
-    document.getElementById('user_menu_dropdown_profile_top').innerHTML = window.global_icon_user_profile_top;
                                                                           
     //profile info
     document.getElementById('profile_main_btn_cloud').innerHTML = window.global_icon_sky_cloud;
-    document.getElementById('user_menu_default_avatar').innerHTML = window.global_icon_user_avatar;
     
     setEvents();
     zoom_info('');
