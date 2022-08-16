@@ -2,7 +2,7 @@ const { getParameters_server } = require ("../service/db/app_portfolio/app_param
 const { getApp } = require("../service/db/app_portfolio/app/app.service");
 async function getInfo(app_id, info, lang_code, callBack){
     async function get_parameters(callBack){            
-        getApp(app_id, lang_code, (err, result_app)=>{
+        getApp(app_id, app_id, lang_code, (err, result_app)=>{
             getParameters_server(app_id, app_id, (err, result)=>{
                 //app_parameter table
                 let db_info_email_policy;

@@ -2794,8 +2794,7 @@ function init_common(parameters){
         document.getElementById('profile_detail_header_like').innerHTML = window.global_icon_user_like + window.global_icon_user_follows;
         document.getElementById('profile_detail_header_liked').innerHTML = window.global_icon_user_like + window.global_icon_user_followed;
         //profile info search
-        if (document.getElementById('profile_info_search'))
-            document.getElementById('profile_search_icon').innerHTML = window.global_icon_app_search;
+        document.getElementById('profile_search_icon').innerHTML = window.global_icon_app_search;
         //profile info
         document.getElementById('profile_joined_date_icon').innerHTML = window.global_icon_user_account_created;
         document.getElementById('profile_follow_follow').innerHTML = window.global_icon_user_follow_user;
@@ -2825,14 +2824,17 @@ function init_common(parameters){
         document.getElementById('common_window_info_toolbar_btn_up').innerHTML =  window.global_icon_app_up;
         document.getElementById('common_window_info_toolbar_btn_down').innerHTML = window.global_icon_app_down;
         //user menu
-        if (document.getElementById('user_preference_locale'))
-            document.getElementById('user_preference_locale').innerHTML = window.global_icon_regional_locale;
-        if (document.getElementById('user_preference_timezone'))
-            document.getElementById('user_preference_timezone').innerHTML = window.global_icon_regional_timezone;
-        if (document.getElementById('user_preference_direction'))
-            document.getElementById('user_preference_direction').innerHTML = window.global_icon_regional_direction;
-        if (document.getElementById('user_preference_arabic_script'))            
-            document.getElementById('user_preference_arabic_script').innerHTML = window.global_icon_regional_script;
+        //document.getElementById('user_menu_dropdown_profile').innerHTML = window.global_button_default_icon_profile;
+        document.getElementById('user_menu_dropdown_edit').innerHTML = window.global_icon_app_edit;
+        document.getElementById('user_menu_dropdown_log_out').innerHTML = window.global_icon_app_logoff;
+        document.getElementById('user_menu_dropdown_signup').innerHTML = window.global_icon_app_signup;
+        document.getElementById('user_menu_dropdown_log_in').innerHTML = window.global_icon_app_login;
+        document.getElementById('user_menu_dropdown_profile_top').innerHTML = window.global_icon_user_profile_top;
+        document.getElementById('user_menu_default_avatar').innerHTML = window.global_icon_user_avatar;
+        document.getElementById('user_preference_locale').innerHTML = window.global_icon_regional_locale;
+        document.getElementById('user_preference_timezone').innerHTML = window.global_icon_regional_timezone;
+        document.getElementById('user_preference_direction').innerHTML = window.global_icon_regional_direction;        
+        document.getElementById('user_preference_arabic_script').innerHTML = window.global_icon_regional_script;
         
         //events
         //login/signup/forgot
@@ -2877,6 +2879,16 @@ function init_common(parameters){
         document.getElementById('common_window_info_toolbar_btn_up').addEventListener('click', function() {move_info(0,-1);}, false);
         document.getElementById('common_window_info_toolbar_btn_down').addEventListener('click', function() {move_info(0,1);}, false);        
         
+        //user menu
+        document.getElementById('user_menu').addEventListener('click', function() { let menu = document.getElementById('user_menu_dropdown');
+                                                                                       document.getElementById('profile_info_search').style.visibility = 'hidden'; 
+                                                                                       if (menu.style.visibility == 'visible') 
+                                                                                            menu.style.visibility = 'hidden'; 
+                                                                                       else 
+                                                                                            menu.style.visibility = 'visible' }, false);
+        document.getElementById('user_menu_dropdown_log_in').addEventListener('click', function() { show_common_dialogue('LOGIN'); document.getElementById('user_menu_dropdown').style.visibility = 'hidden';}, false);
+        document.getElementById('user_menu_dropdown_signup').addEventListener('click', function() { show_common_dialogue('SIGNUP'); document.getElementById('user_menu_dropdown').style.visibility = 'hidden'; }, false);
+    
         if (document.getElementById('user_preference_locale'))
             document.getElementById('user_locale_select').addEventListener('change', function() { common_translate_ui(this.value); window.global_user_locale = this.value;}, false);
         if (document.getElementById('user_timezone_select'))
