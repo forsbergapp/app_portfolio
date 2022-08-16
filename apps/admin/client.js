@@ -8,6 +8,8 @@ module.exports = {
                 ['<AppCommonHead/>', __dirname + '/../common/src/head.html'],
                 ['<AppCommonHeadMap/>', __dirname + '/../common/src/head_map.html'],
                 ['<AppCommonHeadChart/>', __dirname + '/../common/src/head_chart.html'],
+                ['<AppCommonProfileSearch/>', __dirname + '/../common/src/profile_search.html'],
+                ['<AppCommonUserAccount/>', __dirname + '/../common/src/user_account.html'],
                 ['<AppCommonBody/>', __dirname + '/../common/src/body.html'],
                 ['<AppCommonProfileDetail/>', __dirname + '/../common/src/profile_detail.html'], //Profile tag in common body
                 ['<AppDialogues/>', __dirname + '/src/dialogues.html']

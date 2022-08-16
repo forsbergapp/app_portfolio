@@ -67,6 +67,8 @@ function init_app(){
     setEvents();
 }
 function init(parameters){
-    init_common(parameters);
+    set_globals(parameters);
+    document.title = window.global_app_name;
+    connectOnline();
     init_app();
 }
