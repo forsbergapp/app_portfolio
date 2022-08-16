@@ -1294,57 +1294,6 @@ function displayYear(settings, item_id, locale){
 	window.global_session_currentDate.setMonth(startmonth);
 	window.global_session_CurrentHijriDate[0] = starthijrimonth;
 }
-async function get_report_globals(lang_code) {
-    let json;
-	await common_fetch(window.global_rest_url_base + window.global_rest_app_parameter + window.global_app_id + '?',
-					   'GET', 0, null, null, null, (err, result) =>{
-		if (err)
-			report_exception(err);
-		else{
-            json = JSON.parse(result);
-            for (let i = 0; i < json.data.length; i++) {
-                //variables for app_id=0
-                if (json.data[i].app_id == 0){
-                    if (json.data[i].parameter_name=='APP_COPYRIGHT')
-                        window.global_app_copyright = json.data[i].parameter_value;
-                    //REST
-                    if (json.data[i].parameter_name=='REST_APP_OBJECT')
-                        window.global_rest_app_object = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='SERVICE_GEOLOCATION')
-                        window.global_service_geolocation = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='SERVICE_GEOLOCATION_GPS_PLACE')
-                        window.global_service_geolocation_gps_place = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='SERVICE_REPORT')
-                        window.global_service_report = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='SERVICE_WORLDCITIES')
-                        window.global_service_worldcities = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='GPS_MAP_ACCESS_TOKEN')
-                        window.global_gps_map_access_token = json.data[i].parameter_value;
-                }
-                if (json.data[i].app_id == window.global_app_id){
-                    if (json.data[i].parameter_name=='REST_APP2_USER_SETTING')
-                        window.global_rest_app2_user_setting = json.data[i].parameter_value;
-					if (json.data[i].parameter_name=='REST_APP2_USER_SETTING_USER_ACCOUNT_ID')
-                        window.global_rest_app2_user_setting_user_account_id = json.data[i].parameter_value;
-					if (json.data[i].parameter_name=='REST_APP2_USER_SETTING_VIEW')
-                        window.global_rest_app2_user_setting_view = json.data[i].parameter_value;
-					if (json.data[i].parameter_name=='REGIONAL_DEFAULT_CALENDAR_LANG')
-                        window.global_regional_def_calendar_lang = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='REGIONAL_DEFAULT_LOCALE_EXT_PREFIX')
-                        window.global_regional_def_locale_ext_prefix = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='REGIONAL_DEFAULT_LOCALE_EXT_NUMBER_SYSTEM')
-                        window.global_regional_def_locale_ext_number_system = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='REGIONAL_DEFAULT_LOCALE_EXT_CALENDAR')
-                        window.global_regional_def_locale_ext_calendar = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='REGIONAL_DEFAULT_CALENDAR_TYPE_GREG')
-                        window.global_regional_def_calendar_type_greg = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='REGIONAL_DEFAULT_CALENDAR_NUMBER_SYSTEM')
-                        window.global_regional_def_calendar_number_system = json.data[i].parameter_value;
-                }
-            }
-        }
-    })
-}
 /*----------------------- */
 /* EXCEPTION REPORT       */
 /*----------------------- */
@@ -1373,18 +1322,16 @@ function report_exception(error){
 /* INIT REPORT            */
 /*----------------------- */
 async function init_app_report() {
-	await common_fetch_token(0, null,  null, null, (err, result)=>{
-        //set current date for report month
-		window.global_session_currentDate = new Date();
-		window.global_session_CurrentHijriDate = new Array();
-		//get Hijri date from initial Gregorian date
-		window.global_session_CurrentHijriDate[0] = parseInt(new Date(window.global_session_currentDate.getFullYear(),
-			window.global_session_currentDate.getMonth(),
-			window.global_session_currentDate.getDate()).toLocaleDateString("en-us-u-ca-islamic", { month: "numeric" }));
-		window.global_session_CurrentHijriDate[1] = parseInt(new Date(window.global_session_currentDate.getFullYear(),
-			window.global_session_currentDate.getMonth(),
-			window.global_session_currentDate.getDate()).toLocaleDateString("en-us-u-ca-islamic", { year: "numeric" }));
-    })	
+	//set current date for report month
+	window.global_session_currentDate = new Date();
+	window.global_session_CurrentHijriDate = new Array();
+	//get Hijri date from initial Gregorian date
+	window.global_session_CurrentHijriDate[0] = parseInt(new Date(window.global_session_currentDate.getFullYear(),
+		window.global_session_currentDate.getMonth(),
+		window.global_session_currentDate.getDate()).toLocaleDateString("en-us-u-ca-islamic", { month: "numeric" }));
+	window.global_session_CurrentHijriDate[1] = parseInt(new Date(window.global_session_currentDate.getFullYear(),
+		window.global_session_currentDate.getMonth(),
+		window.global_session_currentDate.getDate()).toLocaleDateString("en-us-u-ca-islamic", { year: "numeric" }));
 }
 function init_report(parameters) {
 	let encodedParams = new URLSearchParams(window.location.search);
@@ -1394,45 +1341,70 @@ function init_report(parameters) {
 	let user_setting_id = urlParams.get('sid');
 	let lang_code = urlParams.get('lang_code');
 	let reporttype = urlParams.get('type');
-	init_common(parameters);
-    init_app_report().then(function(){
-        get_report_globals().then(function(){
-            //report start
-            if (inIframe() == false) {
-                updateReportViewStat(user_setting_id, user_account_id);
-            }
-			switch (reporttype) {
-                //day
-                case '0':{document.getElementById('prayertable_day').style.visibility = 'visible';break;}
-				case '1':{document.getElementById('prayertable_month').style.visibility = 'visible';break;}
-				case '2':{document.getElementById('prayertable_year').style.visibility = 'visible';break;}
+	init_common(parameters, (err, global_app_parameters)=>{
+        if (err)
+			report_exception(err);
+        else{
+			for (let i = 0; i < global_app_parameters.length; i++) {
+				if (global_app_parameters[i].parameter_name=='APP_COPYRIGHT')
+					window.global_app_copyright = global_app_parameters[i].parameter_value;
+				if (global_app_parameters[i].parameter_name=='REST_APP2_USER_SETTING')
+					window.global_rest_app2_user_setting = global_app_parameters[i].parameter_value;
+				if (global_app_parameters[i].parameter_name=='REST_APP2_USER_SETTING_USER_ACCOUNT_ID')
+					window.global_rest_app2_user_setting_user_account_id = global_app_parameters[i].parameter_value;
+				if (global_app_parameters[i].parameter_name=='REST_APP2_USER_SETTING_VIEW')
+					window.global_rest_app2_user_setting_view = global_app_parameters[i].parameter_value;
+				if (global_app_parameters[i].parameter_name=='REGIONAL_DEFAULT_CALENDAR_LANG')
+					window.global_regional_def_calendar_lang = global_app_parameters[i].parameter_value;
+				if (global_app_parameters[i].parameter_name=='REGIONAL_DEFAULT_LOCALE_EXT_PREFIX')
+					window.global_regional_def_locale_ext_prefix = global_app_parameters[i].parameter_value;
+				if (global_app_parameters[i].parameter_name=='REGIONAL_DEFAULT_LOCALE_EXT_NUMBER_SYSTEM')
+					window.global_regional_def_locale_ext_number_system = global_app_parameters[i].parameter_value;
+				if (global_app_parameters[i].parameter_name=='REGIONAL_DEFAULT_LOCALE_EXT_CALENDAR')
+					window.global_regional_def_locale_ext_calendar = global_app_parameters[i].parameter_value;
+				if (global_app_parameters[i].parameter_name=='REGIONAL_DEFAULT_CALENDAR_TYPE_GREG')
+					window.global_regional_def_calendar_type_greg = global_app_parameters[i].parameter_value;
+				if (global_app_parameters[i].parameter_name=='REGIONAL_DEFAULT_CALENDAR_NUMBER_SYSTEM')
+					window.global_regional_def_calendar_number_system = global_app_parameters[i].parameter_value;
 			}
-			timetable_user_setting_get(user_setting_id, lang_code, (err, report_parameters) =>{
-				if (err)
-					null;
-				else{
-					document.body.classList = 'font_' + report_parameters.arabic_script;
-					timetable_translate_settings(report_parameters.locale, report_parameters.second_locale).then(function(){
-						if (err)
-							null;
-						else
-							if (reporttype==0){
-								timetable_day_user_settings_get(user_account_id, lang_code, (err, user_settings_parameters) =>{
-									if (err)
-										null;
-									else
-										displayDay(report_parameters, null, report_parameters.locale, user_settings_parameters);
-								})
-							}
-							else
-								if (reporttype==1)
-									displayMonth(0, report_parameters.ui_prayertable_month, report_parameters, report_parameters.locale);
-								else 
-									if (reporttype==2)
-										displayYear(report_parameters, null, report_parameters.locale);
-					});
+			init_app_report().then(function(){
+				//report start
+				if (inIframe() == false) {
+					updateReportViewStat(user_setting_id, user_account_id);
 				}
-			});
-        })
-    }) 
+				switch (reporttype) {
+					//day
+					case '0':{document.getElementById('prayertable_day').style.visibility = 'visible';break;}
+					case '1':{document.getElementById('prayertable_month').style.visibility = 'visible';break;}
+					case '2':{document.getElementById('prayertable_year').style.visibility = 'visible';break;}
+				}
+				timetable_user_setting_get(user_setting_id, lang_code, (err, report_parameters) =>{
+					if (err)
+						null;
+					else{
+						document.body.classList = 'font_' + report_parameters.arabic_script;
+						timetable_translate_settings(report_parameters.locale, report_parameters.second_locale).then(function(){
+							if (err)
+								null;
+							else
+								if (reporttype==0){
+									timetable_day_user_settings_get(user_account_id, lang_code, (err, user_settings_parameters) =>{
+										if (err)
+											null;
+										else
+											displayDay(report_parameters, null, report_parameters.locale, user_settings_parameters);
+									})
+								}
+								else
+									if (reporttype==1)
+										displayMonth(0, report_parameters.ui_prayertable_month, report_parameters, report_parameters.locale);
+									else 
+										if (reporttype==2)
+											displayYear(report_parameters, null, report_parameters.locale);
+						});
+					}
+				});
+			}) 
+		}
+	})
 }
