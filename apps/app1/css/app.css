@@ -62,7 +62,7 @@ body.font_arabic_nastaliq #dialogue_info_content{
 #dialogue_start_content{
 	visibility:visible;
 	overflow: hidden;
-	height: 380px;
+	height: 420px;
 	transform:             rotateY( 0deg );
         -moz-transform:    rotateY( 0deg );
         -ms-transform:     rotateY( 0deg );
@@ -149,9 +149,6 @@ body.font_arabic_nastaliq #dialogue_info_content{
 .app_url{
 	display:none;
 }
-#start_message{
-	margin-top: 30px;
-}
 #start_links, #contact, #copyright{
 	display: block;
 	font-size: 11px;
@@ -164,7 +161,7 @@ body.font_arabic_nastaliq #dialogue_info_content{
 /*DIALOGUE INFO*/
 #dialogue_info_content{
 	visibility:visible;
-	height: 380px;
+	height: 420px;
 	transform:             rotateY( 180deg );
         -moz-transform:    rotateY( 180deg );
         -ms-transform:     rotateY( 180deg );

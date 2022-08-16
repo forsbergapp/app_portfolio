@@ -11,7 +11,7 @@ module.exports = {
                     ['<AppCommonBody/>', __dirname + '/../common/src/body.html'],
                     ['<AppCommonProfileDetail/>', __dirname + '/../common/src/profile_detail.html'], //Profile tag in common body
                     ['<AppCommonProfileSearch/>', __dirname + '/../common/src/profile_search.html'],
-                    ['<AppUserAccount/>', __dirname + '/../common/src/user_account.html'],
+                    ['<AppCommonUserAccount/>', __dirname + '/../common/src/user_account.html'],
 
                     ['<AppHead/>', __dirname + '/src/head.html'],
                     ['<AppThemes/>', __dirname + '/src/toogle.html'],
