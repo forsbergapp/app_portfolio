@@ -1,4 +1,12 @@
 /* common*/
+#profile_info_search{
+	visibility: hidden;
+	display:	none !important;
+}
+#user_account{
+	visibility: hidden;
+	display:	none !important;
+}
 .dialogue{
 	width: 100%;
 	height: 100%;

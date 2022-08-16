@@ -637,7 +637,6 @@ async function settings_translate(first=true) {
     let locale;
     if (first ==true){
         locale = get_lang_code();
-        common_translate_ui(locale);
         window.global_user_locale = locale;
     }
     else
@@ -2681,329 +2680,6 @@ function app_exception(){
 /*----------------------- */
 /* INIT                   */
 /*----------------------- */
-async function get_app_globals() {
-    let json;
-    //app parameter variables
-    //returns parameters for given app_id and app_id=0
-    await common_fetch(window.global_rest_url_base + window.global_rest_app_parameter + window.global_app_id + '?',
-                       'GET', 0, null, null, null, (err, result) =>{
-        if (err)
-            null;
-        else{
-            json = JSON.parse(result);
-            for (let i = 0; i < json.data.length; i++) {
-                //variables for app_id=0
-                if (json.data[i].app_id == 0){
-                    if (json.data[i].parameter_name=='IMAGE_FILE_ALLOWED_TYPE1')
-                        window.global_image_file_allowed_type1 = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='IMAGE_FILE_ALLOWED_TYPE2')
-                        window.global_image_file_allowed_type2 = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='IMAGE_FILE_ALLOWED_TYPE3')
-                        window.global_image_file_allowed_type3 = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='IMAGE_FILE_MIME_TYPE')
-                        window.global_image_file_mime_type = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='IMAGE_FILE_MAX_SIZE')
-                        window.global_image_file_max_size = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='IMAGE_AVATAR_WIDTH')
-                        window.global_image_avatar_width = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='IMAGE_AVATAR_HEIGHT')
-                        window.global_image_avatar_height = json.data[i].parameter_value;                          
-                    if (json.data[i].parameter_name=='REST_APP')
-                        window.global_rest_app = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='REST_APP_OBJECT')
-                        window.global_rest_app_object = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='REST_COUNTRY')
-                        window.global_rest_country = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='REST_IDENTITY_PROVIDER')
-                        window.global_rest_identity_provider = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='REST_LANGUAGE_LOCALE')
-                        window.global_rest_language_locale = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='REST_MESSAGE_TRANSLATION')
-                        window.global_rest_message_translation = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='REST_USER_ACCOUNT')
-                        window.global_rest_user_account = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='REST_USER_ACCOUNT_ACTIVATE')
-                        window.global_rest_user_account_activate = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='REST_USER_ACCOUNT_COMMON')
-                        window.global_rest_user_account_common = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='REST_USER_ACCOUNT_FOLLOW')
-                        window.global_rest_user_account_follow = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='REST_USER_ACCOUNT_FORGOT')
-                        window.global_rest_user_account_forgot = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='REST_USER_ACCOUNT_LIKE')
-                        window.global_rest_user_account_like = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='REST_USER_ACCOUNT_LOGIN')
-                        window.global_rest_user_account_login = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='REST_USER_ACCOUNT_PROFILE_DETAIL')
-                        window.global_rest_user_account_profile_detail = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='REST_USER_ACCOUNT_PROFILE_SEARCHA')
-                        window.global_rest_user_account_profile_searchA = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='REST_USER_ACCOUNT_PROFILE_SEARCHD')
-                        window.global_rest_user_account_profile_searchD = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='REST_USER_ACCOUNT_PROFILE_TOP')
-                        window.global_rest_user_account_profile_top = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='REST_USER_ACCOUNT_PROFILE_USERID')
-                        window.global_rest_user_account_profile_userid = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='REST_USER_ACCOUNT_PROFILE_USERNAME')
-                        window.global_rest_user_account_profile_username = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='REST_USER_ACCOUNT_PROVIDER')
-                        window.global_rest_user_account_provider = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='REST_USER_ACCOUNT_SIGNUP')
-                        window.global_rest_user_account_signup = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='REST_USER_ACCOUNT_PASSWORD')
-                        window.global_rest_user_account_password = json.data[i].parameter_value;    
-                    if (json.data[i].parameter_name=='SERVICE_GEOLOCATION')
-                        window.global_service_geolocation = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='SERVICE_GEOLOCATION_GPS_PLACE')
-                        window.global_service_geolocation_gps_place = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='SERVICE_REPORT')
-                        window.global_service_report = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='SERVICE_WORLDCITIES')
-                        window.global_service_worldcities = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='GPS_MAP_ACCESS_TOKEN')
-                        window.global_gps_map_access_token = json.data[i].parameter_value;
-                }
-                if (json.data[i].app_id == window.global_app_id){
-                    if (json.data[i].parameter_name=='APP_COPYRIGHT')
-                        window.global_app_copyright = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='APP_DEFAULT_STARTUP_PAGE')
-                        window.global_app_default_startup_page = parseInt(json.data[i].parameter_value);
-                    if (json.data[i].parameter_name=='REST_APP2_USER_SETTING')
-                        window.global_rest_app2_user_setting = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='REST_APP2_USER_SETTING_USER_ACCOUNT_ID')
-                        window.global_rest_app2_user_setting_user_account_id = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='REST_APP2_USER_SETTING_PROFILE')
-                        window.global_rest_app2_user_setting_profile = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='REST_APP2_USER_SETTING_PROFILE_ALL')
-                        window.global_rest_app2_user_setting_profile_all = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='REST_APP2_USER_SETTING_PROFILE_DETAIL')
-                        window.global_rest_app2_user_setting_profile_detail = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='REST_APP2_USER_SETTING_PROFILE_TOP')
-                        window.global_rest_app2_user_setting_profile_top = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='REST_APP2_USER_SETTING_LIKE')
-                        window.global_rest_app2_user_setting_like = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='REST_APP2_USER_SETTING_VIEW')
-                        window.global_rest_app2_user_setting_view = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='APP_REPORT_TIMETABLE')
-                        window.global_app_report_timetable = json.data[i].parameter_value; 
-                    if (json.data[i].parameter_name=='PWA_SCOPE')
-                        window.global_pwa_scope = json.data[i].parameter_value; 
-                    if (json.data[i].parameter_name=='INFO_EMAIL_POLICY')
-                        window.global_info_email_policy = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='INFO_EMAIL_DISCLAIMER')
-                        window.global_info_email_disclaimer = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='INFO_EMAIL_TERMS')
-                        window.global_info_email_terms = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='INFO_SOCIAL_LINK1_URL')
-                        window.global_info_social_link1_url = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='INFO_SOCIAL_LINK2_URL')
-                        window.global_info_social_link2_url = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='INFO_SOCIAL_LINK3_URL')
-                        window.global_info_social_link3_url = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='INFO_SOCIAL_LINK4_URL')
-                        window.global_info_social_link4_url = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='INFO_SOCIAL_LINK1_ICON')
-                        window.global_info_social_link1_icon = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='INFO_SOCIAL_LINK2_ICON')
-                        window.global_info_social_link2_icon = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='INFO_SOCIAL_LINK3_ICON')
-                        window.global_info_social_link3_icon = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='INFO_SOCIAL_LINK4_ICON')
-                        window.global_info_social_link4_icon = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='INFO_LINK_POLICY_URL')
-                        window.global_info_link_policy_url = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='INFO_LINK_DISCLAIMER_URL')
-                        window.global_info_link_disclaimer_url = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='INFO_LINK_TERMS_URL')
-                        window.global_info_link_terms_url = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='INFO_LINK_ABOUT_URL')
-                        window.global_info_link_about_url = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='INFO_LINK_POLICY_NAME')
-                        window.global_info_link_policy_name = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='INFO_LINK_DISCLAIMER_NAME')
-                        window.global_info_link_disclaimer_name = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='INFO_LINK_TERMS_NAME')
-                        window.global_info_link_terms_name = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='INFO_LINK_ABOUT_NAME')
-                        window.global_info_link_about_name = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='REGIONAL_DEFAULT_CALENDAR_LANG')
-                        window.global_regional_def_calendar_lang = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='REGIONAL_DEFAULT_LOCALE_EXT_PREFIX')
-                        window.global_regional_def_locale_ext_prefix = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='REGIONAL_DEFAULT_LOCALE_EXT_NUMBER_SYSTEM')
-                        window.global_regional_def_locale_ext_number_system = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='REGIONAL_DEFAULT_LOCALE_EXT_CALENDAR')
-                        window.global_regional_def_locale_ext_calendar = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='REGIONAL_DEFAULT_CALENDAR_TYPE_GREG')
-                        window.global_regional_def_calendar_type_greg = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='REGIONAL_DEFAULT_CALENDAR_NUMBER_SYSTEM')
-                        window.global_regional_def_calendar_number_system = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='REGIONAL_DEFAULT_DIRECTION')
-                        window.global_regional_default_direction = parseInt(json.data[i].parameter_value);
-                    if (json.data[i].parameter_name=='REGIONAL_DEFAULT_LOCALE_SECOND')
-                        window.global_regional_default_locale_second = parseInt(json.data[i].parameter_value);
-                    if (json.data[i].parameter_name=='REGIONAL_DEFAULT_COLTITLE')
-                        window.global_regional_default_coltitle = parseInt(json.data[i].parameter_value);
-                    if (json.data[i].parameter_name=='REGIONAL_DEFAULT_ARABIC_SCRIPT')
-                        window.global_regional_default_arabic_script = parseInt(json.data[i].parameter_value);
-                    if (json.data[i].parameter_name=='REGIONAL_DEFAULT_CALENDARTYPE')
-                        window.global_regional_default_calendartype = parseInt(json.data[i].parameter_value);
-                    if (json.data[i].parameter_name=='REGIONAL_DEFAULT_CALENDAR_HIJRI_TYPE')
-                        window.global_regional_default_calendar_hijri_type = parseInt(json.data[i].parameter_value);
-                    if (json.data[i].parameter_name=='GPS_MAP_MAPTYPE')
-                        window.global_gps_maptype = parseInt(json.data[i].parameter_value);
-                    if (json.data[i].parameter_name=='GPS_DEFAULT_COUNTRY')
-                        window.global_gps_default_country = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='GPS_DEFAULT_CITY')
-                        window.global_gps_default_city = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='GPS_DEFAULT_PLACE_ID')
-                        window.global_gps_default_place_id = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='GPS_MAP_CONTAINER')
-                        window.global_gps_map_container = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='GPS_MAP_ZOOM')
-                        window.global_gps_map_zoom = parseInt(json.data[i].parameter_value);
-                    if (json.data[i].parameter_name=='GPS_MAP_ZOOM_CITY')
-                        window.global_gps_map_zoom_city = parseInt(json.data[i].parameter_value);
-                    if (json.data[i].parameter_name=='GPS_MAP_ZOOM_PP')
-                        window.global_gps_map_zoom_pp = parseInt(json.data[i].parameter_value);
-                    if (json.data[i].parameter_name=='GPS_MAP_STYLE_BASEURL')
-                        window.global_gps_map_style_baseurl = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='GPS_MAP_STYLE')
-                        window.global_gps_map_style = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='GPS_MAP_MARKER_DIV_PP')
-                        window.global_gps_map_marker_div_pp = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='GPS_MAP_MARKER_DIV_CITY')
-                        window.global_gps_map_marker_div_city = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='GPS_MAP_MARKER_DIV_GPS')
-                        window.global_gps_map_marker_div_gps = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='GPS_MAP_QIBBLA_TITLE')
-                        window.global_gps_map_qibbla_title = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='GPS_MAP_QIBBLA_TEXT_SIZE')
-                        window.global_gps_map_qibbla_text_size = parseFloat(json.data[i].parameter_value);
-                    if (json.data[i].parameter_name=='GPS_MAP_QIBBLA_LAT')
-                        window.global_gps_map_qibbla_lat = parseFloat(json.data[i].parameter_value);
-                    if (json.data[i].parameter_name=='GPS_MAP_QIBBLA_LONG')
-                        window.global_gps_map_qibbla_long = parseFloat(json.data[i].parameter_value);
-                    if (json.data[i].parameter_name=='GPS_MAP_QIBBLA_COLOR')
-                        window.global_gps_map_qibbla_color = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='GPS_MAP_QIBBLA_WIDTH')
-                        window.global_gps_map_qibbla_width = parseFloat(json.data[i].parameter_value);
-                    if (json.data[i].parameter_name=='GPS_MAP_QIBBLA_OPACITY')
-                        window.global_gps_map_qibbla_opacity = parseFloat(json.data[i].parameter_value);
-                    if (json.data[i].parameter_name=='GPS_MAP_QIBBLA_OLD_TITLE')
-                        window.global_gps_map_qibbla_old_title = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='GPS_MAP_QIBBLA_OLD_TEXT_SIZE')
-                        window.global_gps_map_qibbla_old_text_size = parseFloat(json.data[i].parameter_value);
-                    if (json.data[i].parameter_name=='GPS_MAP_QIBBLA_OLD_LAT')
-                        window.global_gps_map_qibbla_old_lat = parseFloat(json.data[i].parameter_value);
-                    if (json.data[i].parameter_name=='GPS_MAP_QIBBLA_OLD_LONG')
-                        window.global_gps_map_qibbla_old_long = parseFloat(json.data[i].parameter_value);
-                    if (json.data[i].parameter_name=='GPS_MAP_QIBBLA_OLD_COLOR')
-                        window.global_gps_map_qibbla_old_color = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='GPS_MAP_QIBBLA_OLD_WIDTH')
-                        window.global_gps_map_qibbla_old_width = parseFloat(json.data[i].parameter_value);
-                    if (json.data[i].parameter_name=='GPS_MAP_QIBBLA_OLD_OPACITY')
-                        window.global_gps_map_qibbla_old_opacity = parseFloat(json.data[i].parameter_value);
-                    if (json.data[i].parameter_name=='GPS_MAP_FLYTO')
-                        window.global_gps_map_flyto = parseInt(json.data[i].parameter_value);
-                    if (json.data[i].parameter_name=='GPS_MAP_JUMPTO')
-                        window.global_gps_map_jumpto = parseInt(json.data[i].parameter_value);
-                    if (json.data[i].parameter_name=='GPS_MAP_POPUP_OFFSET')
-                        window.global_gps_map_popup_offset = parseInt(json.data[i].parameter_value);
-                    if (json.data[i].parameter_name=='DESIGN_DEFAULT_THEME_DAY')
-                        window.global_design_default_theme_day = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='DESIGN_DEFAULT_THEME_MONTH')
-                        window.global_design_default_theme_month = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='DESIGN_DEFAULT_THEME_YEAR')
-                        window.global_design_default_theme_year = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='DESIGN_DEFAULT_PAPERSIZE')
-                        window.global_design_default_papersize = parseInt(json.data[i].parameter_value);
-                    if (json.data[i].parameter_name=='DESIGN_DEFAULT_HIGHLIGHT_ROW')
-                        window.global_design_default_highlight_row = parseInt(json.data[i].parameter_value);
-                    if (json.data[i].parameter_name=='DESIGN_DEFAULT_SHOW_WEEKDAY')
-                        window.global_design_default_show_weekday = (json.data[i].parameter_value=== 'true');
-                    if (json.data[i].parameter_name=='DESIGN_DEFAULT_SHOW_CALENDARTYPE')
-                        window.global_design_default_show_calendartype = (json.data[i].parameter_value=== 'true');
-                    if (json.data[i].parameter_name=='DESIGN_DEFAULT_SHOW_NOTES')
-                        window.global_design_default_show_notes = (json.data[i].parameter_value=== 'true');
-                    if (json.data[i].parameter_name=='DESIGN_DEFAULT_SHOW_GPS')
-                        window.global_design_default_show_gps = (json.data[i].parameter_value=== 'true');
-                    if (json.data[i].parameter_name=='DESIGN_DEFAULT_SHOW_TIMEZONE')
-                        window.global_design_default_show_timezone = (json.data[i].parameter_value=== 'true');
-                    if (json.data[i].parameter_name=='TEXT_DEFAULT_REPORTTITLE1')
-                        window.global_text_default_reporttitle1 = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='TEXT_DEFAULT_REPORTTITLE2')
-                        window.global_text_default_reporttitle2 = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='TEXT_DEFAULT_REPORTTITLE3')
-                        window.global_text_default_reporttitle3 = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='TEXT_DEFAULT_REPORTFOOTER1')
-                        window.global_text_default_reportfooter1 = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='TEXT_DEFAULT_REPORTFOOTER2')
-                        window.global_text_default_reportfooter2 = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='TEXT_DEFAULT_REPORTFOOTER3')
-                        window.global_text_default_reportfooter3 = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='IMAGE_HEADER_FOOTER_WIDTH')
-                        window.global_image_header_footer_width = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='IMAGE_HEADER_FOOTER_HEIGHT')
-                        window.global_image_header_footer_height = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='IMAGE_DEFAULT_REPORT_HEADER_SRC'){
-                        if (json.data[i].parameter_value!='')
-                            window.global_image_default_report_header_src = json.data[i].parameter_value;
-                    }                    
-                    if (json.data[i].parameter_name=='IMAGE_DEFAULT_REPORT_FOOTER_SRC'){
-                        if (json.data[i].parameter_value!='')
-                            window.global_image_default_report_footer_src = json.data[i].parameter_value;
-                    }                             
-                    if (json.data[i].parameter_name=='PRAYER_DEFAULT_METHOD')
-                        window.global_prayer_default_method = parseInt(json.data[i].parameter_value);
-                    if (json.data[i].parameter_name=='PRAYER_DEFAULT_ASR')
-                        window.global_prayer_default_asr = parseInt(json.data[i].parameter_value);
-                    if (json.data[i].parameter_name=='PRAYER_DEFAULT_HIGHLATITUDE')
-                        window.global_prayer_default_highlatitude = parseInt(json.data[i].parameter_value);
-                    if (json.data[i].parameter_name=='PRAYER_DEFAULT_TIMEFORMAT')
-                        window.global_prayer_default_timeformat = parseInt(json.data[i].parameter_value);
-                    if (json.data[i].parameter_name=='PRAYER_DEFAULT_HIJRI_ADJUSTMENT')
-                        window.global_prayer_default_hijri_adjustment = parseInt(json.data[i].parameter_value);
-                    if (json.data[i].parameter_name=='PRAYER_DEFAULT_IQAMAT_TITLE_FAJR')
-                        window.global_prayer_default_iqamat_title_fajr = parseInt(json.data[i].parameter_value);
-                    if (json.data[i].parameter_name=='PRAYER_DEFAULT_IQAMAT_TITLE_DHUHR')
-                        window.global_prayer_default_iqamat_title_dhuhr = parseInt(json.data[i].parameter_value);
-                    if (json.data[i].parameter_name=='PRAYER_DEFAULT_IQAMAT_TITLE_ASR')
-                        window.global_prayer_default_iqamat_title_asr = parseInt(json.data[i].parameter_value);
-                    if (json.data[i].parameter_name=='PRAYER_DEFAULT_IQAMAT_TITLE_MAGHRIB')
-                        window.global_prayer_default_iqamat_title_maghrib = parseInt(json.data[i].parameter_value);
-                    if (json.data[i].parameter_name=='PRAYER_DEFAULT_IQAMAT_TITLE_ISHA')
-                        window.global_prayer_default_iqamat_title_isha = parseInt(json.data[i].parameter_value);
-                    if (json.data[i].parameter_name=='PRAYER_DEFAULT_SHOW_IMSAK')
-                        window.global_prayer_default_show_imsak = (json.data[i].parameter_value=== 'true');
-                    if (json.data[i].parameter_name=='PRAYER_DEFAULT_SHOW_SUNSET')
-                        window.global_prayer_default_show_sunset = (json.data[i].parameter_value=== 'true');
-                    if (json.data[i].parameter_name=='PRAYER_DEFAULT_SHOW_MIDNIGHT')
-                        window.global_prayer_default_show_midnight = (json.data[i].parameter_value=== 'true');
-                    if (json.data[i].parameter_name=='PRAYER_DEFAULT_SHOW_FAST_START_END')
-                        window.global_prayer_default_show_fast_start_end = parseInt(json.data[i].parameter_value);
-                    //QR
-                    if (json.data[i].parameter_name=='QR_LOGO_FILE_PATH')
-                        window.global_qr_logo_file_path = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='QR_WIDTH')
-                        window.global_qr_width = parseInt(json.data[i].parameter_value);
-                    if (json.data[i].parameter_name=='QR_HEIGHT')
-                        window.global_qr_height = parseInt(json.data[i].parameter_value);
-                    if (json.data[i].parameter_name=='QR_COLOR_DARK')
-                        window.global_qr_color_dark = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='QR_COLOR_LIGHT')
-                        window.global_qr_color_light = json.data[i].parameter_value;
-                    if (json.data[i].parameter_name=='QR_LOGO_WIDTH')
-                        window.global_qr_logo_width = parseInt(json.data[i].parameter_value);
-                    if (json.data[i].parameter_name=='QR_LOGO_HEIGHT')
-                        window.global_qr_logo_height = parseInt(json.data[i].parameter_value);
-                    if (json.data[i].parameter_name=='QR_BACKGROUND_COLOR')
-                        window.global_qr_background_color = json.data[i].parameter_value;
-                }
-            }
-        }
-    })
-}
 async function init_app() {
     dialogue_loading(1);
     //set initial default language from clients settings
@@ -3153,7 +2829,6 @@ async function init_app() {
     document.getElementById('user_menu_dropdown_edit').innerHTML = window.global_icon_app_edit;
     document.getElementById('user_menu_dropdown_profile_top').innerHTML = window.global_icon_user_profile_top;
     
-
     //themes from client server generation
     document.getElementById('slider_prev_day').innerHTML = window.global_icon_app_slider_left;
     document.getElementById('slider_next_day').innerHTML =  window.global_icon_app_slider_right;
@@ -3162,92 +2837,330 @@ async function init_app() {
     document.getElementById('slider_prev_year').innerHTML = window.global_icon_app_slider_left;
     document.getElementById('slider_next_year').innerHTML = window.global_icon_app_slider_right;
     
-    await common_fetch_token(0, null,  null, null, (err, result)=>{
-        //set current date for report month
-        window.global_session_currentDate = new Date();
-        window.global_session_CurrentHijriDate = new Array();
-        //get Hijri date from initial Gregorian date
-        window.global_session_CurrentHijriDate[0] = parseInt(new Date(window.global_session_currentDate.getFullYear(),
-            window.global_session_currentDate.getMonth(),
-            window.global_session_currentDate.getDate()).toLocaleDateString("en-us-u-ca-islamic", { month: "numeric" }));
-        window.global_session_CurrentHijriDate[1] = parseInt(new Date(window.global_session_currentDate.getFullYear(),
-            window.global_session_currentDate.getMonth(),
-            window.global_session_currentDate.getDate()).toLocaleDateString("en-us-u-ca-islamic", { year: "numeric" }));
-        get_app_globals().then(function(){
-            document.getElementById('app_name').innerHTML = window.global_app_name;
-            //set about info
-            document.getElementById('app_copyright').innerHTML = window.global_app_copyright;
-            if (window.global_info_social_link1_url!=null)
-                document.getElementById('social_link1').innerHTML = `<a href=${window.global_info_social_link1_url} target='_blank'>${window.global_info_social_link1_icon}</a>`;
-            if (window.global_info_social_link2_url!=null)
-                document.getElementById('social_link2').innerHTML = `<a href=${window.global_info_social_link2_url} target='_blank'>${window.global_info_social_link2_icon}</a>`;
-            if (window.global_info_social_link3_url!=null)
-                document.getElementById('social_link3').innerHTML = `<a href=${window.global_info_social_link3_url} target='_blank'>${window.global_info_social_link3_icon}</a>`;
-            if (window.global_info_social_link4_url!=null)
-                document.getElementById('social_link4').innerHTML = `<a href=${window.global_info_social_link4_url} target='_blank'>${window.global_info_social_link4_icon}</a>`;
-            document.getElementById('info_link1').innerHTML = window.global_info_link_policy_name;
-            document.getElementById('info_link2').innerHTML = window.global_info_link_disclaimer_name;
-            document.getElementById('info_link3').innerHTML = window.global_info_link_terms_name;
-            document.getElementById('info_link4').innerHTML = window.global_info_link_about_name;
+    //set current date for report month
+    window.global_session_currentDate = new Date();
+    window.global_session_CurrentHijriDate = new Array();
+    //get Hijri date from initial Gregorian date
+    window.global_session_CurrentHijriDate[0] = parseInt(new Date(window.global_session_currentDate.getFullYear(),
+        window.global_session_currentDate.getMonth(),
+        window.global_session_currentDate.getDate()).toLocaleDateString("en-us-u-ca-islamic", { month: "numeric" }));
+    window.global_session_CurrentHijriDate[1] = parseInt(new Date(window.global_session_currentDate.getFullYear(),
+        window.global_session_currentDate.getMonth(),
+        window.global_session_currentDate.getDate()).toLocaleDateString("en-us-u-ca-islamic", { year: "numeric" }));
+    document.getElementById('app_name').innerHTML = window.global_app_name;
+    //set about info
+    document.getElementById('app_copyright').innerHTML = window.global_app_copyright;
+    if (window.global_info_social_link1_url!=null)
+        document.getElementById('social_link1').innerHTML = `<a href=${window.global_info_social_link1_url} target='_blank'>${window.global_info_social_link1_icon}</a>`;
+    if (window.global_info_social_link2_url!=null)
+        document.getElementById('social_link2').innerHTML = `<a href=${window.global_info_social_link2_url} target='_blank'>${window.global_info_social_link2_icon}</a>`;
+    if (window.global_info_social_link3_url!=null)
+        document.getElementById('social_link3').innerHTML = `<a href=${window.global_info_social_link3_url} target='_blank'>${window.global_info_social_link3_icon}</a>`;
+    if (window.global_info_social_link4_url!=null)
+        document.getElementById('social_link4').innerHTML = `<a href=${window.global_info_social_link4_url} target='_blank'>${window.global_info_social_link4_icon}</a>`;
+    document.getElementById('info_link1').innerHTML = window.global_info_link_policy_name;
+    document.getElementById('info_link2').innerHTML = window.global_info_link_disclaimer_name;
+    document.getElementById('info_link3').innerHTML = window.global_info_link_terms_name;
+    document.getElementById('info_link4').innerHTML = window.global_info_link_about_name;
 
-            //set default geolocation
-            document.getElementById('setting_select_popular_place').selectedIndex = 0;
-            document.getElementById('setting_input_lat').value = window.global_client_latitude;
-            document.getElementById('setting_input_long').value = window.global_client_longitude;
-            //init map thirdparty module
-            init_map();
-            //load themes in Design tab
-            load_themes();
-            //set papersize
-            zoom_paper();
-            //user interface font depending selected arabic script in user preference, not in settings
-            update_ui(3);
-            //set events
-            setEvents();
-            //set timers
-            //map doesnt update correct so set refresh
-            setInterval(fixmap, 1000);
-            //set current date and time for current locale and timezone
-            clearInterval(showcurrenttime);
-            setInterval(showcurrenttime, 1000);
-            //set report date and time for current locale, report timezone
-            clearInterval(showreporttime);
-            setInterval(showreporttime, 1000);
-            //show dialogue about using mobile and scan QR code after 5 seconds
-            setTimeout(function(){show_dialogue('SCAN')}, 5000);
-            //Start of app:
-            //1.set default settings
-            //2.translate ui
-            //3.display default timetable settings
-            //4.show profile if user in url
-            //5.user provider login
-            //5.service worker
-            set_default_settings().then(function(){
-                settings_translate(true).then(function(){
-                    settings_translate(false).then(function(){
-                        async function show_start(){
-                            //show default startup
-                            toolbar_bottom(window.global_app_default_startup_page);
-                            let user = window.location.pathname.substring(1);
-                            if (user !='') {
-                                //show profile for user entered in url
-                                document.getElementById('dialogue_profile').style.visibility = "visible";
-                                profile_show_app(null, user, document.getElementById('setting_select_timezone_current').value);
-                            }
-                        }
-                        show_start().then(function(){
-                            init_providers('onProviderSignIn_app', function() { onProviderSignIn_app() }).then(function(){
-                                serviceworker();
-                                dialogue_loading(0);
-                            });
-                        })
+    //set default geolocation
+    document.getElementById('setting_select_popular_place').selectedIndex = 0;
+    document.getElementById('setting_input_lat').value = window.global_client_latitude;
+    document.getElementById('setting_input_long').value = window.global_client_longitude;
+    //init map thirdparty module
+    init_map();
+    //load themes in Design tab
+    load_themes();
+    //set papersize
+    zoom_paper();
+    //user interface font depending selected arabic script in user preference, not in settings
+    update_ui(3);
+    //set events
+    setEvents();
+    //set timers
+    //map doesnt update correct so set refresh
+    setInterval(fixmap, 1000);
+    //set current date and time for current locale and timezone
+    clearInterval(showcurrenttime);
+    setInterval(showcurrenttime, 1000);
+    //set report date and time for current locale, report timezone
+    clearInterval(showreporttime);
+    setInterval(showreporttime, 1000);
+    //show dialogue about using mobile and scan QR code after 5 seconds
+    setTimeout(function(){show_dialogue('SCAN')}, 5000);
+    //Start of app:
+    //1.set default settings
+    //2.translate ui
+    //3.display default timetable settings
+    //4.show profile if user in url
+    //5.user provider login
+    //5.service worker
+    set_default_settings().then(function(){
+        settings_translate(true).then(function(){
+            settings_translate(false).then(function(){
+                async function show_start(){
+                    //show default startup
+                    toolbar_bottom(window.global_app_default_startup_page);
+                    let user = window.location.pathname.substring(1);
+                    if (user !='') {
+                        //show profile for user entered in url
+                        document.getElementById('dialogue_profile').style.visibility = "visible";
+                        profile_show_app(null, user, document.getElementById('setting_select_timezone_current').value);
+                    }
+                }
+                show_start().then(function(){
+                    init_providers('onProviderSignIn_app', function() { onProviderSignIn_app() }).then(function(){
+                        serviceworker();
+                        dialogue_loading(0);
                     });
-                });
+                })
             });
-        })
-    })
+        });
+    });
 }
 function init(parameters) {
-    init_common(parameters);
-    init_app();
+    init_common(parameters, (err, global_app_parameters)=>{
+        if (err)
+            null;
+        else{
+            for (let i = 0; i < global_app_parameters.length; i++) {
+                if (global_app_parameters[i].parameter_name=='APP_COPYRIGHT')
+                    window.global_app_copyright = global_app_parameters[i].parameter_value;
+                if (global_app_parameters[i].parameter_name=='APP_DEFAULT_STARTUP_PAGE')
+                    window.global_app_default_startup_page = parseInt(global_app_parameters[i].parameter_value);
+                if (global_app_parameters[i].parameter_name=='REST_APP2_USER_SETTING')
+                    window.global_rest_app2_user_setting = global_app_parameters[i].parameter_value;
+                if (global_app_parameters[i].parameter_name=='REST_APP2_USER_SETTING_USER_ACCOUNT_ID')
+                    window.global_rest_app2_user_setting_user_account_id = global_app_parameters[i].parameter_value;
+                if (global_app_parameters[i].parameter_name=='REST_APP2_USER_SETTING_PROFILE')
+                    window.global_rest_app2_user_setting_profile = global_app_parameters[i].parameter_value;
+                if (global_app_parameters[i].parameter_name=='REST_APP2_USER_SETTING_PROFILE_ALL')
+                    window.global_rest_app2_user_setting_profile_all = global_app_parameters[i].parameter_value;
+                if (global_app_parameters[i].parameter_name=='REST_APP2_USER_SETTING_PROFILE_DETAIL')
+                    window.global_rest_app2_user_setting_profile_detail = global_app_parameters[i].parameter_value;
+                if (global_app_parameters[i].parameter_name=='REST_APP2_USER_SETTING_PROFILE_TOP')
+                    window.global_rest_app2_user_setting_profile_top = global_app_parameters[i].parameter_value;
+                if (global_app_parameters[i].parameter_name=='REST_APP2_USER_SETTING_LIKE')
+                    window.global_rest_app2_user_setting_like = global_app_parameters[i].parameter_value;
+                if (global_app_parameters[i].parameter_name=='REST_APP2_USER_SETTING_VIEW')
+                    window.global_rest_app2_user_setting_view = global_app_parameters[i].parameter_value;
+                if (global_app_parameters[i].parameter_name=='APP_REPORT_TIMETABLE')
+                    window.global_app_report_timetable = global_app_parameters[i].parameter_value; 
+                if (global_app_parameters[i].parameter_name=='PWA_SCOPE')
+                    window.global_pwa_scope = global_app_parameters[i].parameter_value; 
+                if (global_app_parameters[i].parameter_name=='INFO_EMAIL_POLICY')
+                    window.global_info_email_policy = global_app_parameters[i].parameter_value;
+                if (global_app_parameters[i].parameter_name=='INFO_EMAIL_DISCLAIMER')
+                    window.global_info_email_disclaimer = global_app_parameters[i].parameter_value;
+                if (global_app_parameters[i].parameter_name=='INFO_EMAIL_TERMS')
+                    window.global_info_email_terms = global_app_parameters[i].parameter_value;
+                if (global_app_parameters[i].parameter_name=='INFO_SOCIAL_LINK1_URL')
+                    window.global_info_social_link1_url = global_app_parameters[i].parameter_value;
+                if (global_app_parameters[i].parameter_name=='INFO_SOCIAL_LINK2_URL')
+                    window.global_info_social_link2_url = global_app_parameters[i].parameter_value;
+                if (global_app_parameters[i].parameter_name=='INFO_SOCIAL_LINK3_URL')
+                    window.global_info_social_link3_url = global_app_parameters[i].parameter_value;
+                if (global_app_parameters[i].parameter_name=='INFO_SOCIAL_LINK4_URL')
+                    window.global_info_social_link4_url = global_app_parameters[i].parameter_value;
+                if (global_app_parameters[i].parameter_name=='INFO_SOCIAL_LINK1_ICON')
+                    window.global_info_social_link1_icon = global_app_parameters[i].parameter_value;
+                if (global_app_parameters[i].parameter_name=='INFO_SOCIAL_LINK2_ICON')
+                    window.global_info_social_link2_icon = global_app_parameters[i].parameter_value;
+                if (global_app_parameters[i].parameter_name=='INFO_SOCIAL_LINK3_ICON')
+                    window.global_info_social_link3_icon = global_app_parameters[i].parameter_value;
+                if (global_app_parameters[i].parameter_name=='INFO_SOCIAL_LINK4_ICON')
+                    window.global_info_social_link4_icon = global_app_parameters[i].parameter_value;
+                if (global_app_parameters[i].parameter_name=='INFO_LINK_POLICY_URL')
+                    window.global_info_link_policy_url = global_app_parameters[i].parameter_value;
+                if (global_app_parameters[i].parameter_name=='INFO_LINK_DISCLAIMER_URL')
+                    window.global_info_link_disclaimer_url = global_app_parameters[i].parameter_value;
+                if (global_app_parameters[i].parameter_name=='INFO_LINK_TERMS_URL')
+                    window.global_info_link_terms_url = global_app_parameters[i].parameter_value;
+                if (global_app_parameters[i].parameter_name=='INFO_LINK_ABOUT_URL')
+                    window.global_info_link_about_url = global_app_parameters[i].parameter_value;
+                if (global_app_parameters[i].parameter_name=='INFO_LINK_POLICY_NAME')
+                    window.global_info_link_policy_name = global_app_parameters[i].parameter_value;
+                if (global_app_parameters[i].parameter_name=='INFO_LINK_DISCLAIMER_NAME')
+                    window.global_info_link_disclaimer_name = global_app_parameters[i].parameter_value;
+                if (global_app_parameters[i].parameter_name=='INFO_LINK_TERMS_NAME')
+                    window.global_info_link_terms_name = global_app_parameters[i].parameter_value;
+                if (global_app_parameters[i].parameter_name=='INFO_LINK_ABOUT_NAME')
+                    window.global_info_link_about_name = global_app_parameters[i].parameter_value;
+                if (global_app_parameters[i].parameter_name=='REGIONAL_DEFAULT_CALENDAR_LANG')
+                    window.global_regional_def_calendar_lang = global_app_parameters[i].parameter_value;
+                if (global_app_parameters[i].parameter_name=='REGIONAL_DEFAULT_LOCALE_EXT_PREFIX')
+                    window.global_regional_def_locale_ext_prefix = global_app_parameters[i].parameter_value;
+                if (global_app_parameters[i].parameter_name=='REGIONAL_DEFAULT_LOCALE_EXT_NUMBER_SYSTEM')
+                    window.global_regional_def_locale_ext_number_system = global_app_parameters[i].parameter_value;
+                if (global_app_parameters[i].parameter_name=='REGIONAL_DEFAULT_LOCALE_EXT_CALENDAR')
+                    window.global_regional_def_locale_ext_calendar = global_app_parameters[i].parameter_value;
+                if (global_app_parameters[i].parameter_name=='REGIONAL_DEFAULT_CALENDAR_TYPE_GREG')
+                    window.global_regional_def_calendar_type_greg = global_app_parameters[i].parameter_value;
+                if (global_app_parameters[i].parameter_name=='REGIONAL_DEFAULT_CALENDAR_NUMBER_SYSTEM')
+                    window.global_regional_def_calendar_number_system = global_app_parameters[i].parameter_value;
+                if (global_app_parameters[i].parameter_name=='REGIONAL_DEFAULT_DIRECTION')
+                    window.global_regional_default_direction = parseInt(global_app_parameters[i].parameter_value);
+                if (global_app_parameters[i].parameter_name=='REGIONAL_DEFAULT_LOCALE_SECOND')
+                    window.global_regional_default_locale_second = parseInt(global_app_parameters[i].parameter_value);
+                if (global_app_parameters[i].parameter_name=='REGIONAL_DEFAULT_COLTITLE')
+                    window.global_regional_default_coltitle = parseInt(global_app_parameters[i].parameter_value);
+                if (global_app_parameters[i].parameter_name=='REGIONAL_DEFAULT_ARABIC_SCRIPT')
+                    window.global_regional_default_arabic_script = parseInt(global_app_parameters[i].parameter_value);
+                if (global_app_parameters[i].parameter_name=='REGIONAL_DEFAULT_CALENDARTYPE')
+                    window.global_regional_default_calendartype = parseInt(global_app_parameters[i].parameter_value);
+                if (global_app_parameters[i].parameter_name=='REGIONAL_DEFAULT_CALENDAR_HIJRI_TYPE')
+                    window.global_regional_default_calendar_hijri_type = parseInt(global_app_parameters[i].parameter_value);
+                if (global_app_parameters[i].parameter_name=='GPS_MAP_MAPTYPE')
+                    window.global_gps_maptype = parseInt(global_app_parameters[i].parameter_value);
+                if (global_app_parameters[i].parameter_name=='GPS_DEFAULT_COUNTRY')
+                    window.global_gps_default_country = global_app_parameters[i].parameter_value;
+                if (global_app_parameters[i].parameter_name=='GPS_DEFAULT_CITY')
+                    window.global_gps_default_city = global_app_parameters[i].parameter_value;
+                if (global_app_parameters[i].parameter_name=='GPS_DEFAULT_PLACE_ID')
+                    window.global_gps_default_place_id = global_app_parameters[i].parameter_value;
+                if (global_app_parameters[i].parameter_name=='GPS_MAP_CONTAINER')
+                    window.global_gps_map_container = global_app_parameters[i].parameter_value;
+                if (global_app_parameters[i].parameter_name=='GPS_MAP_ZOOM')
+                    window.global_gps_map_zoom = parseInt(global_app_parameters[i].parameter_value);
+                if (global_app_parameters[i].parameter_name=='GPS_MAP_ZOOM_CITY')
+                    window.global_gps_map_zoom_city = parseInt(global_app_parameters[i].parameter_value);
+                if (global_app_parameters[i].parameter_name=='GPS_MAP_ZOOM_PP')
+                    window.global_gps_map_zoom_pp = parseInt(global_app_parameters[i].parameter_value);
+                if (global_app_parameters[i].parameter_name=='GPS_MAP_STYLE_BASEURL')
+                    window.global_gps_map_style_baseurl = global_app_parameters[i].parameter_value;
+                if (global_app_parameters[i].parameter_name=='GPS_MAP_STYLE')
+                    window.global_gps_map_style = global_app_parameters[i].parameter_value;
+                if (global_app_parameters[i].parameter_name=='GPS_MAP_MARKER_DIV_PP')
+                    window.global_gps_map_marker_div_pp = global_app_parameters[i].parameter_value;
+                if (global_app_parameters[i].parameter_name=='GPS_MAP_MARKER_DIV_CITY')
+                    window.global_gps_map_marker_div_city = global_app_parameters[i].parameter_value;
+                if (global_app_parameters[i].parameter_name=='GPS_MAP_MARKER_DIV_GPS')
+                    window.global_gps_map_marker_div_gps = global_app_parameters[i].parameter_value;
+                if (global_app_parameters[i].parameter_name=='GPS_MAP_QIBBLA_TITLE')
+                    window.global_gps_map_qibbla_title = global_app_parameters[i].parameter_value;
+                if (global_app_parameters[i].parameter_name=='GPS_MAP_QIBBLA_TEXT_SIZE')
+                    window.global_gps_map_qibbla_text_size = parseFloat(global_app_parameters[i].parameter_value);
+                if (global_app_parameters[i].parameter_name=='GPS_MAP_QIBBLA_LAT')
+                    window.global_gps_map_qibbla_lat = parseFloat(global_app_parameters[i].parameter_value);
+                if (global_app_parameters[i].parameter_name=='GPS_MAP_QIBBLA_LONG')
+                    window.global_gps_map_qibbla_long = parseFloat(global_app_parameters[i].parameter_value);
+                if (global_app_parameters[i].parameter_name=='GPS_MAP_QIBBLA_COLOR')
+                    window.global_gps_map_qibbla_color = global_app_parameters[i].parameter_value;
+                if (global_app_parameters[i].parameter_name=='GPS_MAP_QIBBLA_WIDTH')
+                    window.global_gps_map_qibbla_width = parseFloat(global_app_parameters[i].parameter_value);
+                if (global_app_parameters[i].parameter_name=='GPS_MAP_QIBBLA_OPACITY')
+                    window.global_gps_map_qibbla_opacity = parseFloat(global_app_parameters[i].parameter_value);
+                if (global_app_parameters[i].parameter_name=='GPS_MAP_QIBBLA_OLD_TITLE')
+                    window.global_gps_map_qibbla_old_title = global_app_parameters[i].parameter_value;
+                if (global_app_parameters[i].parameter_name=='GPS_MAP_QIBBLA_OLD_TEXT_SIZE')
+                    window.global_gps_map_qibbla_old_text_size = parseFloat(global_app_parameters[i].parameter_value);
+                if (global_app_parameters[i].parameter_name=='GPS_MAP_QIBBLA_OLD_LAT')
+                    window.global_gps_map_qibbla_old_lat = parseFloat(global_app_parameters[i].parameter_value);
+                if (global_app_parameters[i].parameter_name=='GPS_MAP_QIBBLA_OLD_LONG')
+                    window.global_gps_map_qibbla_old_long = parseFloat(global_app_parameters[i].parameter_value);
+                if (global_app_parameters[i].parameter_name=='GPS_MAP_QIBBLA_OLD_COLOR')
+                    window.global_gps_map_qibbla_old_color = global_app_parameters[i].parameter_value;
+                if (global_app_parameters[i].parameter_name=='GPS_MAP_QIBBLA_OLD_WIDTH')
+                    window.global_gps_map_qibbla_old_width = parseFloat(global_app_parameters[i].parameter_value);
+                if (global_app_parameters[i].parameter_name=='GPS_MAP_QIBBLA_OLD_OPACITY')
+                    window.global_gps_map_qibbla_old_opacity = parseFloat(global_app_parameters[i].parameter_value);
+                if (global_app_parameters[i].parameter_name=='GPS_MAP_FLYTO')
+                    window.global_gps_map_flyto = parseInt(global_app_parameters[i].parameter_value);
+                if (global_app_parameters[i].parameter_name=='GPS_MAP_JUMPTO')
+                    window.global_gps_map_jumpto = parseInt(global_app_parameters[i].parameter_value);
+                if (global_app_parameters[i].parameter_name=='GPS_MAP_POPUP_OFFSET')
+                    window.global_gps_map_popup_offset = parseInt(global_app_parameters[i].parameter_value);
+                if (global_app_parameters[i].parameter_name=='DESIGN_DEFAULT_THEME_DAY')
+                    window.global_design_default_theme_day = global_app_parameters[i].parameter_value;
+                if (global_app_parameters[i].parameter_name=='DESIGN_DEFAULT_THEME_MONTH')
+                    window.global_design_default_theme_month = global_app_parameters[i].parameter_value;
+                if (global_app_parameters[i].parameter_name=='DESIGN_DEFAULT_THEME_YEAR')
+                    window.global_design_default_theme_year = global_app_parameters[i].parameter_value;
+                if (global_app_parameters[i].parameter_name=='DESIGN_DEFAULT_PAPERSIZE')
+                    window.global_design_default_papersize = parseInt(global_app_parameters[i].parameter_value);
+                if (global_app_parameters[i].parameter_name=='DESIGN_DEFAULT_HIGHLIGHT_ROW')
+                    window.global_design_default_highlight_row = parseInt(global_app_parameters[i].parameter_value);
+                if (global_app_parameters[i].parameter_name=='DESIGN_DEFAULT_SHOW_WEEKDAY')
+                    window.global_design_default_show_weekday = (global_app_parameters[i].parameter_value=== 'true');
+                if (global_app_parameters[i].parameter_name=='DESIGN_DEFAULT_SHOW_CALENDARTYPE')
+                    window.global_design_default_show_calendartype = (global_app_parameters[i].parameter_value=== 'true');
+                if (global_app_parameters[i].parameter_name=='DESIGN_DEFAULT_SHOW_NOTES')
+                    window.global_design_default_show_notes = (global_app_parameters[i].parameter_value=== 'true');
+                if (global_app_parameters[i].parameter_name=='DESIGN_DEFAULT_SHOW_GPS')
+                    window.global_design_default_show_gps = (global_app_parameters[i].parameter_value=== 'true');
+                if (global_app_parameters[i].parameter_name=='DESIGN_DEFAULT_SHOW_TIMEZONE')
+                    window.global_design_default_show_timezone = (global_app_parameters[i].parameter_value=== 'true');
+                if (global_app_parameters[i].parameter_name=='TEXT_DEFAULT_REPORTTITLE1')
+                    window.global_text_default_reporttitle1 = global_app_parameters[i].parameter_value;
+                if (global_app_parameters[i].parameter_name=='TEXT_DEFAULT_REPORTTITLE2')
+                    window.global_text_default_reporttitle2 = global_app_parameters[i].parameter_value;
+                if (global_app_parameters[i].parameter_name=='TEXT_DEFAULT_REPORTTITLE3')
+                    window.global_text_default_reporttitle3 = global_app_parameters[i].parameter_value;
+                if (global_app_parameters[i].parameter_name=='TEXT_DEFAULT_REPORTFOOTER1')
+                    window.global_text_default_reportfooter1 = global_app_parameters[i].parameter_value;
+                if (global_app_parameters[i].parameter_name=='TEXT_DEFAULT_REPORTFOOTER2')
+                    window.global_text_default_reportfooter2 = global_app_parameters[i].parameter_value;
+                if (global_app_parameters[i].parameter_name=='TEXT_DEFAULT_REPORTFOOTER3')
+                    window.global_text_default_reportfooter3 = global_app_parameters[i].parameter_value;
+                if (global_app_parameters[i].parameter_name=='IMAGE_HEADER_FOOTER_WIDTH')
+                    window.global_image_header_footer_width = global_app_parameters[i].parameter_value;
+                if (global_app_parameters[i].parameter_name=='IMAGE_HEADER_FOOTER_HEIGHT')
+                    window.global_image_header_footer_height = global_app_parameters[i].parameter_value;
+                if (global_app_parameters[i].parameter_name=='IMAGE_DEFAULT_REPORT_HEADER_SRC'){
+                    if (global_app_parameters[i].parameter_value!='')
+                        window.global_image_default_report_header_src = global_app_parameters[i].parameter_value;
+                }                    
+                if (global_app_parameters[i].parameter_name=='IMAGE_DEFAULT_REPORT_FOOTER_SRC'){
+                    if (global_app_parameters[i].parameter_value!='')
+                        window.global_image_default_report_footer_src = global_app_parameters[i].parameter_value;
+                }                             
+                if (global_app_parameters[i].parameter_name=='PRAYER_DEFAULT_METHOD')
+                    window.global_prayer_default_method = parseInt(global_app_parameters[i].parameter_value);
+                if (global_app_parameters[i].parameter_name=='PRAYER_DEFAULT_ASR')
+                    window.global_prayer_default_asr = parseInt(global_app_parameters[i].parameter_value);
+                if (global_app_parameters[i].parameter_name=='PRAYER_DEFAULT_HIGHLATITUDE')
+                    window.global_prayer_default_highlatitude = parseInt(global_app_parameters[i].parameter_value);
+                if (global_app_parameters[i].parameter_name=='PRAYER_DEFAULT_TIMEFORMAT')
+                    window.global_prayer_default_timeformat = parseInt(global_app_parameters[i].parameter_value);
+                if (global_app_parameters[i].parameter_name=='PRAYER_DEFAULT_HIJRI_ADJUSTMENT')
+                    window.global_prayer_default_hijri_adjustment = parseInt(global_app_parameters[i].parameter_value);
+                if (global_app_parameters[i].parameter_name=='PRAYER_DEFAULT_IQAMAT_TITLE_FAJR')
+                    window.global_prayer_default_iqamat_title_fajr = parseInt(global_app_parameters[i].parameter_value);
+                if (global_app_parameters[i].parameter_name=='PRAYER_DEFAULT_IQAMAT_TITLE_DHUHR')
+                    window.global_prayer_default_iqamat_title_dhuhr = parseInt(global_app_parameters[i].parameter_value);
+                if (global_app_parameters[i].parameter_name=='PRAYER_DEFAULT_IQAMAT_TITLE_ASR')
+                    window.global_prayer_default_iqamat_title_asr = parseInt(global_app_parameters[i].parameter_value);
+                if (global_app_parameters[i].parameter_name=='PRAYER_DEFAULT_IQAMAT_TITLE_MAGHRIB')
+                    window.global_prayer_default_iqamat_title_maghrib = parseInt(global_app_parameters[i].parameter_value);
+                if (global_app_parameters[i].parameter_name=='PRAYER_DEFAULT_IQAMAT_TITLE_ISHA')
+                    window.global_prayer_default_iqamat_title_isha = parseInt(global_app_parameters[i].parameter_value);
+                if (global_app_parameters[i].parameter_name=='PRAYER_DEFAULT_SHOW_IMSAK')
+                    window.global_prayer_default_show_imsak = (global_app_parameters[i].parameter_value=== 'true');
+                if (global_app_parameters[i].parameter_name=='PRAYER_DEFAULT_SHOW_SUNSET')
+                    window.global_prayer_default_show_sunset = (global_app_parameters[i].parameter_value=== 'true');
+                if (global_app_parameters[i].parameter_name=='PRAYER_DEFAULT_SHOW_MIDNIGHT')
+                    window.global_prayer_default_show_midnight = (global_app_parameters[i].parameter_value=== 'true');
+                if (global_app_parameters[i].parameter_name=='PRAYER_DEFAULT_SHOW_FAST_START_END')
+                    window.global_prayer_default_show_fast_start_end = parseInt(global_app_parameters[i].parameter_value);
+                //QR
+                if (global_app_parameters[i].parameter_name=='QR_LOGO_FILE_PATH')
+                    window.global_qr_logo_file_path = global_app_parameters[i].parameter_value;
+                if (global_app_parameters[i].parameter_name=='QR_WIDTH')
+                    window.global_qr_width = parseInt(global_app_parameters[i].parameter_value);
+                if (global_app_parameters[i].parameter_name=='QR_HEIGHT')
+                    window.global_qr_height = parseInt(global_app_parameters[i].parameter_value);
+                if (global_app_parameters[i].parameter_name=='QR_COLOR_DARK')
+                    window.global_qr_color_dark = global_app_parameters[i].parameter_value;
+                if (global_app_parameters[i].parameter_name=='QR_COLOR_LIGHT')
+                    window.global_qr_color_light = global_app_parameters[i].parameter_value;
+                if (global_app_parameters[i].parameter_name=='QR_LOGO_WIDTH')
+                    window.global_qr_logo_width = parseInt(global_app_parameters[i].parameter_value);
+                if (global_app_parameters[i].parameter_name=='QR_LOGO_HEIGHT')
+                    window.global_qr_logo_height = parseInt(global_app_parameters[i].parameter_value);
+                if (global_app_parameters[i].parameter_name=='QR_BACKGROUND_COLOR')
+                    window.global_qr_background_color = global_app_parameters[i].parameter_value;
+            }
+            init_app();
+        }
+    })
 }
