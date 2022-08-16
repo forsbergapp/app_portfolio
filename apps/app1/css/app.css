@@ -78,20 +78,20 @@ body.font_arabic_nastaliq #dialogue_info_content{
     box-sizing: content-box;
     width: 106%;
 }
-.app_link{
-	text-align: left;
-}
 .app_link_row{
 	padding-top: 4px;
     padding-bottom: 4px;
 }
-.app_link_col:nth-child(1){
+.app_link_col:nth-child(1),.app_link_col:nth-child(2){
+	display: none;
+}
+.app_link_col:nth-child(3){
 	width: 64px;
     display: inline-block;
 	margin-left: 5px;
     margin-top: 3px;
 }
-.app_link_col:nth-child(2){
+.app_link_col:nth-child(4){
     text-align: left;
     display: inline-block;
     vertical-align: top;

@@ -8,6 +8,7 @@ module.exports = {
 	//if zh-hans-cn, zh-hans-cn, zh-hant-hk, sr-cyrl-ba, sr-latn-ba not found then
 	//use zh-hans, zh-hans, zh-hant, sr-cyrl, sr-latn
 	//else use zh, zh, zh, sr, sr
+	//get objects for common app id and current app id plus all APP_DESCRIPTION
 	getObjects: (app_id, lang_code, callBack) => {
 		let sql;
 		let parameters;
@@ -45,7 +46,7 @@ module.exports = {
 							AND   aost.object_name = aois.object_name
 							AND   aost.object_item_name = aois.object_item_name
 							AND   aost.subitem_name = aois.subitem_name) t
-					WHERE   t.app_id IN(?,?)
+					WHERE   (t.app_id IN(?,?) OR t.object_name = 'APP_DESCRIPTION')
 					AND   (t.lang_code IN (?, SUBSTRING_INDEX(?,'-',2), SUBSTRING_INDEX(?,'-',1))
 							OR (t.lang_code = 'en'
 								AND NOT EXISTS(SELECT NULL
@@ -125,7 +126,7 @@ module.exports = {
 							AND   aost.object_name = aois.object_name
 							AND   aost.object_item_name = aois.object_item_name
 							AND   aost.subitem_name = aois.subitem_name) t
-					WHERE   t.app_id IN(:app_id, :common_app_id)
+					WHERE   (t.app_id IN(:app_id, :common_app_id) OR t.object_name = 'APP_DESCRIPTION')
 					AND   (t.lang_code IN (:lang_code, 
 											SUBSTR(:lang_code, 0,INSTR(:lang_code,'-',1,2)-1), 
 											SUBSTR(:lang_code, 0,INSTR(:lang_code,'-',1,1)-1))
