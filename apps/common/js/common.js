@@ -198,9 +198,9 @@ function toBase64(str) {
 function fromBase64(str) {
     return decodeURIComponent(escape(window.atob(str)));
 }
-function common_translate_ui(lang_code){
+async function common_translate_ui(lang_code){
     let json;
-    common_fetch(`${window.global_rest_url_base}${window.global_rest_app_object}${lang_code}?`, 
+    await common_fetch(`${window.global_rest_url_base}${window.global_rest_app_object}${lang_code}?`, 
                  'GET', 0, null, null, null, (err, result) =>{
         if (err)
             null;
@@ -2703,7 +2703,7 @@ function set_globals(parameters){
         }();
     }   
 }
-function init_common(parameters){
+async function init_common(parameters, callBack){
     /*
     parameters:
     {app_id: 
@@ -2908,7 +2908,92 @@ function init_common(parameters){
             SearchAndSetSelectedIndex(window.global_user_direction, document.getElementById('user_direction_select'), 1);
         if (document.getElementById('user_arabic_script_select'))
             SearchAndSetSelectedIndex(window.global_user_arabic_script, document.getElementById('user_arabic_script_select'), 1);
-        //translate ui
-        //common_translate_ui(window.global_user_locale);
+    }
+    function set_common_parameters(app_id, parameter_name, parameter_value){
+        if (app_id == 0){
+            switch (parameter_name){
+                case 'IMAGE_FILE_ALLOWED_TYPE1'             :{window.global_image_file_allowed_type1 = parameter_value;break;}
+                case 'IMAGE_FILE_ALLOWED_TYPE2'             :{window.global_image_file_allowed_type2 = parameter_value;break;}
+                case 'IMAGE_FILE_ALLOWED_TYPE3'             :{window.global_image_file_allowed_type3 = parameter_value;break;}
+                case 'IMAGE_FILE_MIME_TYPE'                 :{window.global_image_file_mime_type = parameter_value;break;}
+                case 'IMAGE_FILE_MAX_SIZE'                  :{window.global_image_file_max_size = parameter_value;break;}
+                case 'IMAGE_AVATAR_WIDTH'                   :{window.global_image_avatar_width = parameter_value;break;}
+                case 'IMAGE_AVATAR_HEIGHT'                  :{window.global_image_avatar_height = parameter_value;break;}
+                case 'REST_APP'                             :{window.global_rest_app = parameter_value;break;}
+                case 'REST_APP_OBJECT'                      :{window.global_rest_app_object = parameter_value;break;}
+                case 'REST_COUNTRY'                         :{window.global_rest_country = parameter_value;break;}
+                case 'REST_IDENTITY_PROVIDER'               :{window.global_rest_identity_provider = parameter_value;break;}
+                case 'REST_LANGUAGE_LOCALE'                 :{window.global_rest_language_locale = parameter_value;break;}
+                case 'REST_MESSAGE_TRANSLATION'             :{window.global_rest_message_translation = parameter_value;break;}
+                case 'REST_PARAMETER_TYPE'                  :{window.global_rest_parameter_type = parameter_value;break;}
+                case 'REST_USER_ACCOUNT'                    :{window.global_rest_user_account = parameter_value;break;}
+                case 'REST_USER_ACCOUNT_ACTIVATE'           :{window.global_rest_user_account_activate = parameter_value;break;}
+                case 'REST_USER_ACCOUNT_COMMON'             :{window.global_rest_user_account_common = parameter_value;break;}
+                case 'REST_USER_ACCOUNT_FOLLOW'             :{window.global_rest_user_account_follow = parameter_value;break;}
+                case 'REST_USER_ACCOUNT_FORGOT'             :{window.global_rest_user_account_forgot = parameter_value;break;}
+                case 'REST_USER_ACCOUNT_LIKE'               :{window.global_rest_user_account_like = parameter_value;break;}
+                case 'REST_USER_ACCOUNT_LOGIN'              :{window.global_rest_user_account_login = parameter_value;break;}
+                case 'REST_USER_ACCOUNT_PROFILE_DETAIL'     :{window.global_rest_user_account_profile_detail = parameter_value;break;}
+                case 'REST_USER_ACCOUNT_PROFILE_SEARCHA'    :{window.global_rest_user_account_profile_searchA = parameter_value;break;}
+                case 'REST_USER_ACCOUNT_PROFILE_SEARCHD'    :{window.global_rest_user_account_profile_searchD = parameter_value;break;}
+                case 'REST_USER_ACCOUNT_PROFILE_TOP'        :{window.global_rest_user_account_profile_top = parameter_value;break;}
+                case 'REST_USER_ACCOUNT_PROFILE_USERID'     :{window.global_rest_user_account_profile_userid = parameter_value;break;}
+                case 'REST_USER_ACCOUNT_PROFILE_USERNAME'   :{window.global_rest_user_account_profile_username = parameter_value;break;}
+                case 'REST_USER_ACCOUNT_PROVIDER'           :{window.global_rest_user_account_provider = parameter_value;break;}
+                case 'REST_USER_ACCOUNT_SIGNUP'             :{window.global_rest_user_account_signup = parameter_value;break;}
+                case 'REST_USER_ACCOUNT_PASSWORD'           :{window.global_rest_user_account_password = parameter_value;break;}
+                case 'SERVICE_GEOLOCATION'                  :{window.global_service_geolocation = parameter_value;break;}
+                case 'SERVICE_GEOLOCATION_GPS_IP'           :{window.global_service_geolocation_gps_ip = parameter_value;break;}
+                case 'SERVICE_GEOLOCATION_GPS_PLACE'        :{window.global_service_geolocation_gps_place = parameter_value;break;}
+                case 'SERVICE_REPORT'                       :{window.global_service_report = parameter_value;break;}
+                case 'SERVICE_WORLDCITIES'                  :{window.global_service_worldcities = parameter_value;break;}
+                case 'GPS_MAP_ACCESS_TOKEN'                 :{window.global_gps_map_access_token = parameter_value;break;}
+            }
+        }
+    }
+    //get parameters for window.common_app_id and window.global_app_id
+    let json;
+    if (window.global_admin){
+        await common_fetch(`${window.global_rest_url_base}${window.global_rest_app_parameter}admin/all/0?`,
+                            'GET', 2, null, null, null, (err, result) =>{
+            if (err)
+                null;
+            else{
+                json = JSON.parse(result);
+                for (let i = 0; i < json.data.length; i++) {
+                    if (json.data[i].app_id == 0)
+                        set_common_parameters(json.data[i].app_id, json.data[i].parameter_name, json.data[i].parameter_value);                            
+                }
+                callBack(null, null);
+            }
+        })
+    }
+    else{
+        await common_fetch_token(0, null,  null, null, (err, result)=>{
+            null;
+        })
+        await common_fetch(window.global_rest_url_base + window.global_rest_app_parameter + window.global_app_id + '?',
+                            'GET', 0, null, null, null, (err, result) =>{
+            if (err)
+                null;
+            else{
+                let global_app_parameters = [];
+                json = JSON.parse(result);
+                for (let i = 0; i < json.data.length; i++) {
+                    if (json.data[i].app_id == 0)
+                        set_common_parameters(json.data[i].app_id, json.data[i].parameter_name, json.data[i].parameter_value);
+                    else{
+                        global_app_parameters.push(JSON.parse(`{"app_id":${json.data[i].app_id}, 
+                                                                "parameter_name":"${json.data[i].parameter_name}",
+                                                                "parameter_value":${json.data[i].parameter_value==null?null:'"' + json.data[i].parameter_value + '"'}}`));
+                    }
+                }
+                if (parameters.ui==true){
+                    //translate ui
+                    common_translate_ui(window.global_user_locale);
+                }
+                callBack(null, global_app_parameters)
+            }
+        })
     }
 };
