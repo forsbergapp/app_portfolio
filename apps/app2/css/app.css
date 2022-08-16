@@ -12,25 +12,20 @@
 /* TOOLBAR TOP*/
 #toolbar_top {
 	top: 0;
+	text-align: center;
 	width: 100%;
 	position: fixed;
 	display: block;
 	z-index: 1;
 }
-#toolbar_btn_zoomin,#toolbar_btn_zoomout,#toolbar_btn_left, #toolbar_btn_right {
-	font-size: 30px;
+#toolbar_btn_zoomin,#toolbar_btn_zoomout,#toolbar_btn_left, #toolbar_btn_right, #toolbar_btn_search {
+	font-size: 48px;
 	vertical-align: top;
 }
-#toolbar_btn_about {
-	float: right;
-	font-size: 48px;
+#user_account{
+	display: inline-block;
+    width: 60px;
 }
-#toolbar_btn_search_and_user{
-	float: right;
-	width: 180px;
-    display: inline-block;
-}
-
 /* TOOLBAR BOTTOM*/
 #toolbar_bottom {
 	width: -webkit-fill-available;
@@ -50,6 +45,14 @@
 #toolbar_btn_year_label {
 	font-size: 11px;
 }
+#toolbar_btn_settings {
+	font-size: 48px;
+    vertical-align: middle;
+}
+#toolbar_btn_about {
+	float: right;
+	font-size: 48px;
+}
 
 /* PROFILE*/
 #profile_info_search{
@@ -57,7 +60,6 @@
 	position: fixed !important;
     margin-top: 60px;
     display: block !important;
-    text-align: right !important;
 }
 #profile_search_icon{
 	display: none !important;
@@ -736,9 +738,6 @@ height: 25px;
 	#icons {
 		width: auto;
 	}
-	#toolbar_btn_search_and_user{
-		width: 220px;
-	}
 	#profile_user_settings_title_row div:nth-child(1),
 	.profile_user_settings_row div:nth-child(1){
 		width:200px;
@@ -756,7 +755,6 @@ height: 25px;
 }
 
 /* APP THEME 1*/
-/* Dark*/
 /* Darker colors*/
 body.app_theme1,
 .app_theme1 .dialogue_content,
@@ -942,7 +940,6 @@ body.app_theme1,
 	color: white;
 }
 /* APP THEME 2*/
-/* Light*/
 /* darker colors*/
 body.app_theme2,
 .app_theme2 .dialogue_content,
@@ -1130,7 +1127,6 @@ body.app_theme2,
 }
 
 /* APP THEME 3*/
-/* Wood*/
 /* Darker colors*/
 body.app_theme3,
 .app_theme3 .dialogue_content,
