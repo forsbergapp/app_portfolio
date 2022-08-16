@@ -1538,42 +1538,9 @@ function admin_token_has_value(){
     else
         return true;
 }
-async function get_parameters() {
-    let json;
-
-    await common_fetch(`${window.global_rest_url_base}${window.global_rest_app_parameter}admin/all/0?`,
-                       'GET', 2, null, null, null, (err, result) =>{
-        if (err)
-            null;
-        else{
-            json = JSON.parse(result);
-            for (var i = 0; i < json.data.length; i++) {
-                if (json.data[i].parameter_name=='REST_APP')
-                    window.global_rest_app = json.data[i].parameter_value;
-                if (json.data[i].parameter_name=='REST_PARAMETER_TYPE')
-                    window.global_rest_parameter_type = json.data[i].parameter_value;
-                if (json.data[i].parameter_name=='REST_USER_ACCOUNT')
-                    window.global_rest_user_account = json.data[i].parameter_value;
-                if (json.data[i].parameter_name=='SERVICE_GEOLOCATION')
-                    window.global_service_geolocation = json.data[i].parameter_value;
-                if (json.data[i].parameter_name=='SERVICE_GEOLOCATION_GPS_IP')
-                    window.global_service_geolocation_gps_ip = json.data[i].parameter_value;
-                if (json.data[i].parameter_name=='SERVICE_GEOLOCATION_GPS_PLACE')
-                    window.global_service_geolocation_gps_place = json.data[i].parameter_value;
-                if (json.data[i].parameter_name=='GPS_MAP_ACCESS_TOKEN')
-                    window.global_gps_map_access_token = json.data[i].parameter_value;        
-            }
-        }
-    });
-}
 
 function init_admin_secure(){
-    window.global_rest_app= '';
-    window.global_rest_parameter_type= '';
-    window.global_rest_user_account= '';
-    window.global_service_geolocation= '';
-    window.global_service_geolocation_gps_ip= '';
-    window.global_service_geolocation_gps_place= '';
+
     window.global_service_log = '/service/log';
     window.global_service_log_scope_server= '';
     window.global_service_log_scope_service= '';
@@ -1701,20 +1668,18 @@ function init_admin_secure(){
     document.getElementById('list_pm2_log_title1').addEventListener('click', function() { list_click(this)}, false);
     document.getElementById('list_server_log_title2').addEventListener('click', function() { list_click(this)}, false);
 
-    get_parameters().then(function(){        
-        get_apps().then(function(){
-            get_gps_from_ip().then(function(){
-                if (!window.global_session_map)
-                    init_map();
-                update_map(window.global_client_longitude,
-                            window.global_client_latitude,
-                            window.global_gps_map_zoom,
-                            window.global_client_place,
-                            window.global_gps_map_marker_div_gps,
-                            window.global_gps_map_jumpto);
-                show_menu(1);
-            })                
-        })
+    get_apps().then(function(){
+        get_gps_from_ip().then(function(){
+            if (!window.global_session_map)
+                init_map();
+            update_map(window.global_client_longitude,
+                        window.global_client_latitude,
+                        window.global_gps_map_zoom,
+                        window.global_client_place,
+                        window.global_gps_map_marker_div_gps,
+                        window.global_gps_map_jumpto);
+            show_menu(1);
+        })                
     })
 }
 init_common({
@@ -1724,7 +1689,7 @@ init_common({
     app_logo: '/app1/images/logo.png',
     exception_app_function: 'admin_logoff_app',
     close_eventsource: true,
-    ui: true,
+    ui: false,
     admin: true,
     service_auth: window.global_service_auth,
     app_rest_client_id: window.global_app_rest_client_id,
@@ -1733,6 +1698,12 @@ init_common({
     gps_lat: window.global_client_latitude, 
     gps_long: window.global_client_longitude, 
     gps_place: window.global_client_place 
-    });
-init_admin_secure();
+    }, (err, global_app_parameters)=>{
+    if (err)
+        null;
+    else{
+        init_admin_secure();
+    }
+})
+
 </script>
