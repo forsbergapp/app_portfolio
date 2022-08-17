@@ -7,7 +7,6 @@ module.exports = {
 			sql = `INSERT INTO ${process.env.SERVICE_DB_DB1_NAME}.app2_user_setting(
 						description,
 						regional_language_locale,
-						regional_current_timezone,
 						regional_timezone,
 						regional_number_system,
 						regional_layout_direction,
@@ -60,7 +59,7 @@ module.exports = {
 						date_modified,
 						user_account_id,
 						app_id)
-					SELECT ?,?,?,?,?,?,?,?,?,?,
+					SELECT ?,?,?,?,?,?,?,?,?,
 						?,?,?,?,?,?,?,?,?,?,
 						?,?,?,?,?,?,?,?,?,?,
 						?,?,?,?,?,?,?,?,?,?,
@@ -75,7 +74,6 @@ module.exports = {
 			parameters = [
 							data.description,
 							data.regional_language_locale,
-							data.regional_current_timezone,
 							data.regional_timezone,
 							data.regional_number_system,
 							data.regional_layout_direction,
@@ -134,7 +132,6 @@ module.exports = {
 			sql = `INSERT INTO ${process.env.SERVICE_DB_DB2_NAME}.app2_user_setting(
 						description,
 						regional_language_locale,
-						regional_current_timezone,
 						regional_timezone,
 						regional_number_system,
 						regional_layout_direction,
@@ -189,7 +186,6 @@ module.exports = {
 						app_id)
 					SELECT	:description,
 							:regional_language_locale,
-							:regional_current_timezone,
 							:regional_timezone,
 							:regional_number_system,
 							:regional_layout_direction,
@@ -251,7 +247,6 @@ module.exports = {
 			parameters = {
 							description: data.description,
 							regional_language_locale: data.regional_language_locale,
-							regional_current_timezone: data.regional_current_timezone,
 							regional_timezone: data.regional_timezone,
 							regional_number_system: data.regional_number_system,
 							regional_layout_direction: data.regional_layout_direction,
@@ -349,7 +344,6 @@ module.exports = {
 			sql = `SELECT	id,
 							description,
 							regional_language_locale,
-							regional_current_timezone,
 							regional_timezone,
 							regional_number_system,
 							regional_layout_direction,
@@ -409,7 +403,6 @@ module.exports = {
 			sql = `SELECT	id "id",
 							description "description",
 							regional_language_locale "regional_language_locale",
-							regional_current_timezone "regional_current_timezone",
 							regional_timezone "regional_timezone",
 							regional_number_system "regional_number_system",
 							regional_layout_direction "regional_layout_direction",
@@ -483,7 +476,6 @@ module.exports = {
 			sql = `SELECT	us.id,
 							us.description,
 							us.regional_language_locale,
-							us.regional_current_timezone,
 							us.regional_timezone,
 							us.regional_number_system,
 							us.regional_layout_direction,
@@ -546,7 +538,6 @@ module.exports = {
 			sql = `SELECT	id "id",
 							description "description",
 							regional_language_locale "regional_language_locale",
-							regional_current_timezone "regional_current_timezone",
 							regional_timezone "regional_timezone",
 							regional_number_system "regional_number_system",
 							regional_layout_direction "regional_layout_direction",
@@ -945,7 +936,6 @@ module.exports = {
 			sql = `UPDATE ${process.env.SERVICE_DB_DB1_NAME}.app2_user_setting
 					SET description = ?,
 						regional_language_locale = ?,
-						regional_current_timezone = ?,
 						regional_timezone = ?,
 						regional_number_system = ?,
 						regional_layout_direction = ?,
@@ -1001,7 +991,6 @@ module.exports = {
 			parameters = [
 							data.description,
 							data.regional_language_locale,
-							data.regional_current_timezone,
 							data.regional_timezone,
 							data.regional_number_system,
 							data.regional_layout_direction,
@@ -1058,7 +1047,6 @@ module.exports = {
 			sql = `UPDATE ${process.env.SERVICE_DB_DB2_NAME}.app2_user_setting
 					SET description = :description,
 						regional_language_locale = :regional_language_locale,
-						regional_current_timezone = :regional_current_timezone,
 						regional_timezone = :regional_timezone,
 						regional_number_system = :regional_number_system,
 						regional_layout_direction = :regional_layout_direction,
@@ -1114,7 +1102,6 @@ module.exports = {
 			parameters = {
 							description: data.description,
 							regional_language_locale: data.regional_language_locale,
-							regional_current_timezone: data.regional_current_timezone,
 							regional_timezone: data.regional_timezone,
 							regional_number_system: data.regional_number_system,
 							regional_layout_direction: data.regional_layout_direction,
