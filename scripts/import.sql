@@ -1763,7 +1763,7 @@ INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_na
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (2,'1','INFO_SOCIAL_LINK3_URL',NULL,NULL);
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (2,'1','INFO_SOCIAL_LINK4_ICON',NULL,NULL);
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (2,'1','INFO_SOCIAL_LINK4_URL',NULL,NULL);
-INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (2,'0','REGIONAL_DEFAULT_ARABIC_SCRIPT','arabic_sans_kufi','Arabic script:Sans Kufi');
+INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (2,'0','REGIONAL_DEFAULT_ARABIC_SCRIPT','font_arabic_sans_kufi','Arabic script:Sans Kufi');
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (2,'0','REGIONAL_DEFAULT_CALENDAR_HIJRI_TYPE','islamic','Calendar hijri type: islamic');
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (2,'0','REGIONAL_DEFAULT_CALENDAR_LANG','en-us',NULL);
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (2,'0','REGIONAL_DEFAULT_CALENDAR_NUMBER_SYSTEM','latn','ex "-nu-latn"');
@@ -2387,11 +2387,11 @@ INSERT INTO app_portfolio.regional_setting (id, data, regional_type_id) VALUES (
 INSERT INTO app_portfolio.regional_setting (id, data, regional_type_id) VALUES (482,'1',4);
 INSERT INTO app_portfolio.regional_setting (id, data, regional_type_id) VALUES (483,'2',4);
 INSERT INTO app_portfolio.regional_setting (id, data, regional_type_id) VALUES (484,'3',4);
-INSERT INTO app_portfolio.regional_setting (id, data, regional_type_id) VALUES (485,'arabic_sans_kufi',5);
-INSERT INTO app_portfolio.regional_setting (id, data, regional_type_id) VALUES (486,'arabic_kufi',5);
-INSERT INTO app_portfolio.regional_setting (id, data, regional_type_id) VALUES (487,'arabic_nashk',5);
-INSERT INTO app_portfolio.regional_setting (id, data, regional_type_id) VALUES (488,'arabic_nastaliq',5);
-INSERT INTO app_portfolio.regional_setting (id, data, regional_type_id) VALUES (489,'arabic_ui',5);
+INSERT INTO app_portfolio.regional_setting (id, data, regional_type_id) VALUES (485,'font_arabic_sans_kufi',5);
+INSERT INTO app_portfolio.regional_setting (id, data, regional_type_id) VALUES (486,'font_arabic_kufi',5);
+INSERT INTO app_portfolio.regional_setting (id, data, regional_type_id) VALUES (487,'font_arabic_nashk',5);
+INSERT INTO app_portfolio.regional_setting (id, data, regional_type_id) VALUES (488,'font_arabic_nastaliq',5);
+INSERT INTO app_portfolio.regional_setting (id, data, regional_type_id) VALUES (489,'font_arabic_ui',5);
 INSERT INTO app_portfolio.regional_setting (id, data, regional_type_id) VALUES (490,'GREGORIAN',6);
 INSERT INTO app_portfolio.regional_setting (id, data, regional_type_id) VALUES (491,'HIJRI',6);
 INSERT INTO app_portfolio.regional_setting (id, data, regional_type_id) VALUES (492,'islamic',7);
