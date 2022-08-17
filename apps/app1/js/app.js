@@ -95,10 +95,10 @@ function setEvents(){
 }
 function toggle_switch(){
     if(document.getElementById('toggle_checkbox').checked){
-        document.body.className = 'theme_sun font_' + document.getElementById('user_arabic_script_select').value;        
+        document.body.className = 'theme_sun ' + document.getElementById('user_arabic_script_select').value;
     }
     else{
-        document.body.className = 'theme_moon font_' + document.getElementById('user_arabic_script_select').value;
+        document.body.className = 'theme_moon ' + document.getElementById('user_arabic_script_select').value;
     }
     return null;
 }
