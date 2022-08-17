@@ -57,11 +57,6 @@ INSERT INTO app_portfolio.app_object_item_translation (app_id, object_name, obje
 INSERT INTO app_portfolio.app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (2,'REPORT','COLTITLE_TRANSLITERATION_SUNSET',506,'Sunset');
 INSERT INTO app_portfolio.app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (2,'REPORT','COLTITLE_WEEKDAY',506,'Día de semana');
 INSERT INTO app_portfolio.app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (2,'REPORT','TIMETABLE_TITLE',506,'Horario');
-
-INSERT INTO app_portfolio.app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (2,'TOOLBAR','TOOLBAR_BTN_DAY_LABEL',506,'Día');
-INSERT INTO app_portfolio.app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (2,'TOOLBAR','TOOLBAR_BTN_MONTH_LABEL',506,'Mes');
-INSERT INTO app_portfolio.app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (2,'TOOLBAR','TOOLBAR_BTN_PRINT_LABEL',506,'Imprimir');
-INSERT INTO app_portfolio.app_object_item_translation (app_id, object_name, object_item_name, language_id, text) VALUES (2,'TOOLBAR','TOOLBAR_BTN_YEAR_LABEL',506,'Año');
 --
 -- app_object_subitem_translation
 --

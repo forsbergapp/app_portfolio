@@ -1,13 +1,3 @@
-/*TOOLBAR*/
-.toolbar_defaultsize{
-	font-size:11px !important;
-}
-.toolbar_bigsize{
-	font-size:14px !important;
-}
-.toolbar_smallsize{
-	font-size:10px !important;
-}
 
 /* TOOLBAR TOP*/
 #toolbar_top {
@@ -35,25 +25,15 @@
 	position: fixed;
 	z-index: 1;
 }
-
 #icons {
 	width: -webkit-fill-available;
 }
-#icons #toolbar_btn_print_label,
-#toolbar_btn_day_label,
-#toolbar_btn_month_label,
-#toolbar_btn_year_label {
-	font-size: 11px;
-}
-#toolbar_btn_settings {
-	font-size: 48px;
-    vertical-align: middle;
+#toolbar_bottom .toolbar_button{
+	font-size: 48px !important;
 }
 #toolbar_btn_about {
 	float: right;
-	font-size: 48px;
 }
-
 /* PROFILE*/
 #profile_info_search{
 	visibility: hidden;
@@ -1178,7 +1158,7 @@ body.app_theme3,
 .app_theme3 #user_menu_dropdown_logged_in div:hover,
 .app_theme3 #user_menu_dropdown_logged_in div:active,
 .app_theme3 #user_menu_dropdown_logged_out div:hover,
-.app_theme3 #width: 220px; div:active{
+.app_theme3 #user_menu_dropdown_logged_out div:active{
 	background-color:#d2b88f;
 	color:#3A3632 !important;
 }
