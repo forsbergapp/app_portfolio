@@ -23,6 +23,7 @@ function setEvents(){
     document.getElementById('user_menu_dropdown_edit').addEventListener('click', function() { user_menu_item_click(this) }, false);
     document.getElementById('user_menu_dropdown_log_out').addEventListener('click', function() { user_menu_item_click(this) }, false);
     document.getElementById('user_menu_dropdown_profile_top').addEventListener('click', function() {user_menu_item_click(this)}, false);
+    document.getElementById('user_locale_select').addEventListener('change', function() { common_translate_ui(this.value, (err, result)=>{null});}, false);
     document.getElementById('user_arabic_script_select').addEventListener('change', function() { toggle_switch()}, false);
 
     //start page

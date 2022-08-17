@@ -198,8 +198,9 @@ function toBase64(str) {
 function fromBase64(str) {
     return decodeURIComponent(escape(window.atob(str)));
 }
-async function common_translate_ui(lang_code){
+async function common_translate_ui(lang_code, callBack){
     let json;
+    window.global_user_locale = lang_code;
     //translate objects
     await common_fetch(`${window.global_rest_url_base}${window.global_rest_app_object}${lang_code}?`, 
                  'GET', 0, null, null, null, (err, result) =>{
@@ -208,69 +209,104 @@ async function common_translate_ui(lang_code){
         else{
             json = JSON.parse(result);
             for (let i = 0; i < json.data.length; i++){
-                switch(json.data[i].object_name){
-                    case 'DIALOGUE':{
-                        switch  (json.data[i].object_item_name){
-                            case 'USERNAME':{
-                                document.getElementById('login_username').placeholder = json.data[i].text;
-                                document.getElementById('signup_username').placeholder = json.data[i].text;
-                                document.getElementById('user_edit_input_username').placeholder = json.data[i].text;
+                switch (json.data[i].object){
+                    case 'APP_OBJECT':{
+                        switch (json.data[i].object_name){
+                            case 'APP_DESCRIPTION':{
+                                if (window.global_app_id == window.global_main_app_id){
+                                    //translate app descriptions for all apps in main app
+                                    var x = document.querySelectorAll('.app_link_row');
+                                    for (let app_id = 0; app_id <= x.length -1; app_id++) {
+                                        if (x[app_id].children[0].children[0].innerHTML == json.data[i].app_id )
+                                            x[app_id].children[3].children[1].innerHTML = json.data[i].text;
+                                    }
+                                }
                                 break;
                             }
-                            case 'EMAIL':{
-                                document.getElementById('signup_email').placeholder = json.data[i].text;
-                                document.getElementById('forgot_email').placeholder = json.data[i].text;
+                        }
+                        break;
+                    }
+                    case 'APP_OBJECT_ITEM':{
+                        switch(json.data[i].object_name){
+                            case 'DIALOGUE':{
+                                if (json.data[i].app_id  == window.global_common_app_id){
+                                    //translate common items
+                                    switch  (json.data[i].object_item_name){
+                                        case 'USERNAME':{
+                                            document.getElementById('login_username').placeholder = json.data[i].text;
+                                            document.getElementById('signup_username').placeholder = json.data[i].text;
+                                            document.getElementById('user_edit_input_username').placeholder = json.data[i].text;
+                                            break;
+                                        }
+                                        case 'EMAIL':{
+                                            document.getElementById('signup_email').placeholder = json.data[i].text;
+                                            document.getElementById('forgot_email').placeholder = json.data[i].text;
+                                            break;
+                                        }
+                                        case 'NEW_EMAIL':{
+                                            document.getElementById('user_edit_input_new_email').placeholder = json.data[i].text;
+                                            break;
+                                        }
+                                        case 'BIO':{
+                                            document.getElementById('signup_email').placeholder = json.data[i].text;
+                                            document.getElementById('forgot_email').placeholder = json.data[i].text;
+                                            document.getElementById('user_edit_input_bio').placeholder = json.data[i].text;
+                                            break;
+                                        }
+                                        case 'PASSWORD':{
+                                            document.getElementById('login_password').placeholder = json.data[i].text;
+                                            document.getElementById('signup_password').placeholder = json.data[i].text;
+                                            document.getElementById('user_edit_input_password').placeholder = json.data[i].text;
+                                            break;
+                                        }
+                                        case 'PASSWORD_CONFIRM':{
+                                            document.getElementById('signup_password_confirm').placeholder = json.data[i].text;
+                                            document.getElementById('user_edit_input_password_confirm').placeholder = json.data[i].text;
+                                            break;
+                                        }
+                                        case 'PASSWORD_REMINDER':{
+                                            document.getElementById('signup_password_reminder').placeholder = json.data[i].text;
+                                            document.getElementById('user_edit_input_password_reminder').placeholder = json.data[i].text;
+                                            break;
+                                        }
+                                        case 'NEW_PASSWORD_CONFIRM':{
+                                            document.getElementById('user_edit_input_new_password_confirm').placeholder = json.data[i].text;
+                                            document.getElementById('user_new_password_confirm').placeholder = json.data[i].text;    
+                                            break;
+                                        }
+                                        case 'NEW_PASSWORD':{
+                                            document.getElementById('user_edit_input_new_password').placeholder = json.data[i].text;
+                                            document.getElementById('user_new_password').placeholder = json.data[i].text;    
+                                            break;
+                                        }
+                                    } 
+                                }
                                 break;
                             }
-                            case 'NEW_EMAIL':{
-                                document.getElementById('user_edit_input_new_email').placeholder = json.data[i].text;
-                                break;
-                            }
-                            case 'BIO':{
-                                document.getElementById('signup_email').placeholder = json.data[i].text;
-                                document.getElementById('forgot_email').placeholder = json.data[i].text;
-                                document.getElementById('user_edit_input_bio').placeholder = json.data[i].text;
-                                break;
-                            }
-                            case 'PASSWORD':{
-                                document.getElementById('login_password').placeholder = json.data[i].text;
-                                document.getElementById('signup_password').placeholder = json.data[i].text;
-                                document.getElementById('user_edit_input_password').placeholder = json.data[i].text;
-                                break;
-                            }
-                            case 'PASSWORD_CONFIRM':{
-                                document.getElementById('signup_password_confirm').placeholder = json.data[i].text;
-                                document.getElementById('user_edit_input_password_confirm').placeholder = json.data[i].text;
-                                break;
-                            }
-                            case 'PASSWORD_REMINDER':{
-                                document.getElementById('signup_password_reminder').placeholder = json.data[i].text;
-                                document.getElementById('user_edit_input_password_reminder').placeholder = json.data[i].text;
-                                break;
-                            }
-                            case 'NEW_PASSWORD_CONFIRM':{
-                                document.getElementById('user_edit_input_new_password_confirm').placeholder = json.data[i].text;
-                                document.getElementById('user_new_password_confirm').placeholder = json.data[i].text;    
-                                break;
-                            }
-                            case 'NEW_PASSWORD':{
-                                document.getElementById('user_edit_input_new_password').placeholder = json.data[i].text;
-                                document.getElementById('user_new_password').placeholder = json.data[i].text;    
+                            case 'REPORT':{
                                 break;
                             }
                             default:{
-                                document.getElementById(json.data[i].object_item_name.toLowerCase()).innerHTML = json.data[i].text;
+                                if (json.data[i].app_id  == window.global_app_id){
+                                    //translate items in current app
+                                    document.getElementById(json.data[i].object_item_name.toLowerCase()).innerHTML = json.data[i].text;
+                                }
                                 break;
                             }
-                        } 
+                        }
                         break;
                     }
-                    case 'APP_DESCRIPTION':{
-                        if (window.global_app_id == window.global_main_app_id){
-                            var x = document.querySelectorAll('.app_link_row');
-                            for (let app_id = 0; app_id <= x.length -1; app_id++) {
-                                if (x[app_id].children[0].children[0].innerHTML == json.data[i].app_id )
-                                    x[app_id].children[3].children[1].innerHTML = json.data[i].text;
+                    case 'APP_OBJECT_ITEM_SUBITEM':{
+                        if (json.data[i].app_id  == window.global_app_id){
+                            //translate items in select lists in current app
+                            let select_element = json.data[i].object_item_name;
+                            //option number not saved in column but end with the option number
+                            let select_option = json.data[i].subitem_name.substr(json.data[i].subitem_name.lastIndexOf('_')+1);
+                            try{
+                                document.getElementById(select_element.toLowerCase()).options[select_option].text = json.data[i].text;
+                            }
+                            catch(err){
+                                console.log(json.data[i].object_item_name.toLowerCase());
                             }
                         }
                         break;
@@ -311,6 +347,7 @@ async function common_translate_ui(lang_code){
                         }
                         select_locale.innerHTML = html;
                         select_locale.value = current_locale;
+                        callBack(null,null);
                     }
                 })
             })
@@ -2941,8 +2978,6 @@ async function init_common(parameters, callBack){
         document.getElementById('user_menu_dropdown_log_in').addEventListener('click', function() { show_common_dialogue('LOGIN'); document.getElementById('user_menu_dropdown').style.visibility = 'hidden';}, false);
         document.getElementById('user_menu_dropdown_signup').addEventListener('click', function() { show_common_dialogue('SIGNUP'); document.getElementById('user_menu_dropdown').style.visibility = 'hidden'; }, false);
     
-        if (document.getElementById('user_preference_locale'))
-            document.getElementById('user_locale_select').addEventListener('change', function() { common_translate_ui(this.value); window.global_user_locale = this.value;}, false);
         if (document.getElementById('user_timezone_select'))
             document.getElementById('user_timezone_select').addEventListener('change', function() { window.global_user_timezone = this.value;}, false);
         //define also in app if needed to adjust ui
@@ -3043,9 +3078,12 @@ async function init_common(parameters, callBack){
                 }
                 if (parameters.ui==true){
                     //translate ui
-                    common_translate_ui(window.global_user_locale);
+                    common_translate_ui(window.global_user_locale, (err, result)=>{
+                        callBack(null, global_app_parameters)
+                    });
                 }
-                callBack(null, global_app_parameters)
+                else
+                    callBack(null, global_app_parameters)
             }
         })
     }
