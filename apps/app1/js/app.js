@@ -20,7 +20,6 @@ function setEvents(){
     document.getElementById('user_menu_username').addEventListener('click', function() { user_menu_item_click(this) }, false);
 
     document.getElementById('toggle_checkbox').addEventListener('click', function() { toggle_switch() }, false);
-    document.getElementById('user_menu_dropdown_edit').addEventListener('click', function() { user_menu_item_click(this) }, false);
     document.getElementById('user_menu_dropdown_log_out').addEventListener('click', function() { user_menu_item_click(this) }, false);
     document.getElementById('user_menu_dropdown_profile_top').addEventListener('click', function() {user_menu_item_click(this)}, false);
     document.getElementById('user_locale_select').addEventListener('change', function() { common_translate_ui(this.value, (err, result)=>{null});}, false);
@@ -43,19 +42,19 @@ function setEvents(){
     }, false );
     //common with app specific settings
     //dialogue profile
-    document.getElementById('profile_home').addEventListener('click', function() {profile_top(1, Intl.DateTimeFormat().resolvedOptions().timeZone);}, false);
+    document.getElementById('profile_home').addEventListener('click', function() {profile_top(1);}, false);
     document.getElementById('profile_close').addEventListener('click', function() {profile_close()}, false);
-    document.getElementById('profile_search_input').addEventListener('keyup', function(event) { search_input(event, Intl.DateTimeFormat().resolvedOptions().timeZone, null);}, false);
-    document.getElementById('profile_top_row1_1').addEventListener('click', function() { profile_top(1, Intl.DateTimeFormat().resolvedOptions().timeZone)}, false);
-    document.getElementById('profile_top_row1_2').addEventListener('click', function() { profile_top(2, Intl.DateTimeFormat().resolvedOptions().timeZone)}, false);
-    document.getElementById('profile_top_row1_3').addEventListener('click', function() { profile_top(3, Intl.DateTimeFormat().resolvedOptions().timeZone)}, false);
+    document.getElementById('profile_search_input').addEventListener('keyup', function(event) { search_input(event, null);}, false);
+    document.getElementById('profile_top_row1_1').addEventListener('click', function() { profile_top(1)}, false);
+    document.getElementById('profile_top_row1_2').addEventListener('click', function() { profile_top(2)}, false);
+    document.getElementById('profile_top_row1_3').addEventListener('click', function() { profile_top(3)}, false);
     document.getElementById('profile_follow').addEventListener('click', function() { user_function_app('FOLLOW') }, false);
 	document.getElementById('profile_like').addEventListener('click', function() { user_function_app('LIKE') }, false);
-    document.getElementById('profile_main_btn_following').addEventListener('click', function() { profile_detail(1, Intl.DateTimeFormat().resolvedOptions().timeZone, null, true, null) }, false);
-    document.getElementById('profile_main_btn_followed').addEventListener('click', function() { profile_detail(2, Intl.DateTimeFormat().resolvedOptions().timeZone, null, true, null) }, false);
-    document.getElementById('profile_main_btn_likes').addEventListener('click', function() { profile_detail(3, Intl.DateTimeFormat().resolvedOptions().timeZone, null, true, null) }, false);
-    document.getElementById('profile_main_btn_liked').addEventListener('click', function() { profile_detail(4, Intl.DateTimeFormat().resolvedOptions().timeZone, null, true, null) }, false);
-    document.getElementById('profile_main_btn_cloud').addEventListener('click', function() { profile_detail(5, Intl.DateTimeFormat().resolvedOptions().timeZone, window.global_rest_user_account_app + 'apps/', true, global_icon_sky_cloud, null) }, false);
+    document.getElementById('profile_main_btn_following').addEventListener('click', function() { profile_detail(1, null, true, null) }, false);
+    document.getElementById('profile_main_btn_followed').addEventListener('click', function() { profile_detail(2, null, true, null) }, false);
+    document.getElementById('profile_main_btn_likes').addEventListener('click', function() { profile_detail(3, null, true, null) }, false);
+    document.getElementById('profile_main_btn_liked').addEventListener('click', function() { profile_detail(4, null, true, null) }, false);
+    document.getElementById('profile_main_btn_cloud').addEventListener('click', function() { profile_detail(5, window.global_rest_user_account_app + 'apps/', true, global_icon_sky_cloud, null) }, false);
     //dialogue login/signup/forgot
     let input_username_login = document.getElementById("login_username");
     input_username_login.addEventListener("keyup", function(event) {
@@ -152,14 +151,9 @@ function user_menu_item_click(item){
             document.getElementById('dialogue_profile').style.visibility = 'visible';
             profile_show(null,
                          null,
-                         Intl.DateTimeFormat().resolvedOptions().timeZone,
                         (err, result)=>{
                             null;
                         });
-            break;
-        }
-        case 'user_menu_dropdown_edit':{
-            user_edit_app();
             break;
         }
         case 'user_menu_dropdown_log_out':{
@@ -167,7 +161,7 @@ function user_menu_item_click(item){
             break;
         }
         case 'user_menu_dropdown_profile_top':{
-            profile_top(1,Intl.DateTimeFormat().resolvedOptions().timeZone)
+            profile_top(1)
             break;
         }
         default:
@@ -216,14 +210,6 @@ function user_logoff_app() {
         document.getElementById('user_menu_dropdown_logged_in').style.display = 'none';
         document.getElementById('user_menu_dropdown_logged_out').style.display = 'inline-block';
     })
-}
-async function user_edit_app() {
-    await user_edit(Intl.DateTimeFormat().resolvedOptions().timeZone,(err, result) => {
-        if ((err==null && result==null) == false)
-            if (err==null){
-                set_avatar(result.avatar ?? result.provider_image, document.getElementById('user_menu_avatar_img'));
-            }
-    });
 }
 async function user_update_app(){
     await user_update((err, result) => {
@@ -415,8 +401,7 @@ function init(parameters){
                         //show profile for user entered in url
                         document.getElementById('dialogue_profile').style.visibility = "visible";
                         profile_show(null, 
-                                        user, 
-                                        Intl.DateTimeFormat().resolvedOptions().timeZone,
+                                        user,
                                         (err, result)=>{
                                         null;
                                         });
