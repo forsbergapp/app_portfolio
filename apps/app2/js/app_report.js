@@ -196,7 +196,7 @@ async function timetable_translate_settings(locale, locale_second, lang_code) {
 					if (first == true){
 						if (json.data[i].object=='APP_OBJECT_ITEM' && json.data[i].object_name=='REPORT')
 							window.global_first_language[json.data[i].object_item_name.toLowerCase()] = json.data[i].text;
-						//Used by service report onle first language implemented:
+						//Used by service report only first language implemented:
 						//Regional
 						if (json.data[i].object=='APP_OBJECT_ITEM' && json.data[i].object_name=='SETTING_NAV_REGIONAL' && 
 							json.data[i].object_item_name=='SETTING_LABEL_REPORT_TIMEZONE')
