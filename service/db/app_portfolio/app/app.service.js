@@ -13,8 +13,8 @@ module.exports = {
 							aoit.text app_description
 					FROM ${process.env.SERVICE_DB_DB1_NAME}.app a
 						LEFT OUTER JOIN ${process.env.SERVICE_DB_DB1_NAME}.app_object_translation aoit
-							ON aoit.app_id = a.id
-						AND aoit.object_name = 'APP_DESCRIPTION'
+							ON aoit.app_object_app_id = a.id
+						AND aoit.app_object_object_name = 'APP_DESCRIPTION'
 							AND aoit.language_id IN (SELECT id 
 													FROM ${process.env.SERVICE_DB_DB1_NAME}.language l
 													WHERE (l.lang_code IN (?, SUBSTRING_INDEX(?,'-',2), SUBSTRING_INDEX(?,'-',1))
@@ -23,8 +23,8 @@ module.exports = {
 																				FROM ${process.env.SERVICE_DB_DB1_NAME}.app_object_translation aoit1,
 																					${process.env.SERVICE_DB_DB1_NAME}.language l1
 																				WHERE l1.id  = aoit1.language_id
-																				AND aoit1.app_id  = aoit.app_id
-																				AND aoit1.object_name = aoit.object_name
+																				AND aoit1.app_object_app_id  = aoit.app_object_app_id
+																				AND aoit1.app_object_object_name = aoit.app_object_object_name
 																				AND l1.lang_code IN (?, SUBSTRING_INDEX(?,'-',2), SUBSTRING_INDEX(?,'-',1))
 																			)
 															)
@@ -52,8 +52,8 @@ module.exports = {
 							aoit.text "app_description"
 					FROM ${process.env.SERVICE_DB_DB2_NAME}.app a
 							LEFT OUTER JOIN ${process.env.SERVICE_DB_DB2_NAME}.app_object_translation aoit
-								ON aoit.app_id = a.id
-							AND aoit.object_name = 'APP_DESCRIPTION'
+								ON aoit.app_object_app_id = a.id
+							AND aoit.app_object_object_name = 'APP_DESCRIPTION'
 							AND aoit.language_id IN (SELECT id 
 														FROM ${process.env.SERVICE_DB_DB2_NAME}.language l
 														WHERE (l.lang_code IN (:lang_code, 
@@ -64,8 +64,8 @@ module.exports = {
 																					FROM ${process.env.SERVICE_DB_DB2_NAME}.app_object_translation aoit1,
 																						${process.env.SERVICE_DB_DB2_NAME}.language l1
 																					WHERE l1.id  = aoit1.language_id
-																					AND aoit1.app_id  = aoit.app_id
-																					AND aoit1.object_name = aoit.object_name
+																					AND aoit1.app_object_app_id  = aoit.app_object_app_id
+																					AND aoit1.app_object_object_name = aoit.app_object_object_name
 																					AND l1.lang_code IN (:lang_code, SUBSTR(:lang_code, 0,INSTR(:lang_code,'-',1,2)-1), SUBSTR(:lang_code, 0,INSTR(:lang_code,'-',1,1)-1))
 																				)
 																)
