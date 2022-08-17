@@ -31,8 +31,6 @@ module.exports = {
                   ['<AppSettingsTabNavigationTab5/>', __dirname + '/src/settings_tab_navigation_tab5.html'],
                   ['<AppSettingsTabNavigationTab6/>', __dirname + '/src/settings_tab_navigation_tab6.html'],
                   ['<AppSettingsTabNavigationTab7/>', __dirname + '/src/settings_tab_navigation_tab7.html'],
-                  ['<AppTimezones/>', __dirname + '/src/settings_tab_navigation_tab1_timezones.html'],
-                  ['<AppTimezones/>', __dirname + '/src/settings_tab_navigation_tab1_timezones.html'],
 
                   ['<AppProfileInfo/>', __dirname + '/src/profile_info.html'], /*Profile tag in common body*/
                   ['<AppProfileTop/>', __dirname + '/src/profile_top.html'],   //Profile tag in common body
@@ -77,6 +75,9 @@ module.exports = {
                             app = app.replace(
                                     '<USER_LOCALE/>',
                                     `${AppLocales}`);
+                            app = app.replace(
+                                    '<AppTimezones/>',
+                                    `${USER_TIMEZONE}`);
                             app = app.replace(
                                     '<USER_TIMEZONE/>',
                                     `${USER_TIMEZONE}`);
