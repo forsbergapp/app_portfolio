@@ -200,7 +200,6 @@ function fromBase64(str) {
 }
 async function common_translate_ui(lang_code, callBack){
     let json;
-    window.global_user_locale = lang_code;
     //translate objects
     await common_fetch(`${window.global_rest_url_base}${window.global_rest_app_object}${lang_code}?`, 
                  'GET', 0, null, null, null, (err, result) =>{
@@ -361,7 +360,7 @@ function get_null_or_value(value) {
     else
         return value;
 }
-function format_json_date(db_date, short, timezone) {
+function format_json_date(db_date, short) {
     if (db_date == null)
         return null;
     else {
@@ -369,20 +368,16 @@ function format_json_date(db_date, short, timezone) {
         //in ISO 8601 format
         //JSON returns format 2020-08-08T05:15:28Z
         //"yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'"
-        let settings = {
-            timezone_current: timezone,
-            locale: window.global_user_locale
-        }
         let options;
         if (short)
             options = {
-                timeZone: settings.timezone_current,
+                timeZone: window.global_user_timezone,
                 year: 'numeric',
                 month: 'long'
             };
         else
             options = {
-                timeZone: settings.timezone_current,
+                timeZone: window.global_user_timezone,
                 weekday: 'long',
                 year: 'numeric',
                 month: 'long',
@@ -400,7 +395,7 @@ function format_json_date(db_date, short, timezone) {
             db_date.substr(14, 2), //min
             db_date.substr(17, 2) //sec
         ));
-        let format_date = utc_date.toLocaleDateString(settings.locale, options);
+        let format_date = utc_date.toLocaleDateString(window.global_user_locale, options);
         return format_date;
     }
 }
@@ -1211,25 +1206,23 @@ function create_qr(div, url) {
 /*----------------------- */
 /* PROFILE                */
 /*----------------------- */
-function show_profile_click_events(item, timezone, click_function){
+function show_profile_click_events(item, click_function){
     document.querySelectorAll(item).forEach(e => e.addEventListener('click', function(event) {
         //execute function from inparameter or use default when not specified
         let profile_id = event.target.parentNode.parentNode.parentNode.children[0].children[0].innerHTML;
         if (click_function ==null){
             profile_show(profile_id,
                         null,
-                        timezone,
                         (err, result)=>{
                             null;
                         });
         }
         else
             eval(`(function (){${click_function}(${profile_id},
-                    ${null},
-                    '${timezone}')}());`);
+                    ${null})}());`);
     }));
 }
-function profile_top(statschoice, timezone, app_rest_url = null, click_function=null) {
+function profile_top(statschoice, app_rest_url = null, click_function=null) {
     let url;
     document.getElementById('dialogue_profile').style.visibility = 'visible';
     document.getElementById('profile_info').style.display = 'none';
@@ -1277,11 +1270,11 @@ function profile_top(statschoice, timezone, app_rest_url = null, click_function=
                 </div>`;
             }
             profile_top_list.innerHTML = html;
-            show_profile_click_events('.profile_top_list_username', timezone, click_function);
+            show_profile_click_events('.profile_top_list_username', click_function);
         }
     })
 }
-function profile_detail(detailchoice, timezone, rest_url_app, fetch_detail, header_app, click_function) {
+function profile_detail(detailchoice, rest_url_app, fetch_detail, header_app, click_function) {
     let url;
     if (detailchoice == 1 || detailchoice == 2 || detailchoice == 3 || detailchoice == 4){
         /*detailchoice 1,2,3, 4: user_account*/
@@ -1455,14 +1448,14 @@ function profile_detail(detailchoice, timezone, rest_url_app, fetch_detail, head
                         }
                     }
                     else
-                        show_profile_click_events('.profile_detail_list_username', timezone, click_function);
+                        show_profile_click_events('.profile_detail_list_username', click_function);
                 }
             })
         }
     } else
         show_common_dialogue('LOGIN');
 }
-function search_profile(timezone, click_function) {
+function search_profile(click_function) {
     document.getElementById('profile_search_input').classList.remove('input_error');
     let profile_search_list = document.getElementById('profile_search_list');
     profile_search_list.innerHTML = '';
@@ -1526,7 +1519,7 @@ function search_profile(timezone, click_function) {
                     </div>`;
                 }
                 profile_search_list.innerHTML = html;
-                show_profile_click_events('.profile_search_list_username', timezone, click_function);
+                show_profile_click_events('.profile_search_list_username', click_function);
             }
         })
     }
@@ -1538,7 +1531,7 @@ profile_show(userid, null) 	 from choosing profile in profile_detail
 profile_show(userid, null) 	 from choosing profile in search_profile
 profile_show(null, username) from init startup when user enters url
 */
-async function profile_show(user_account_id_other = null, username = null, timezone, callBack) {
+async function profile_show(user_account_id_other = null, username = null, callBack) {
     let json;
     let user_account_id_search;
     let url;
@@ -1579,7 +1572,7 @@ async function profile_show(user_account_id_other = null, username = null, timez
                 document.getElementById('profile_username').innerHTML = json.username;
 
                 document.getElementById('profile_bio').innerHTML = get_null_or_value(json.bio);
-                document.getElementById('profile_joined_date').innerHTML = format_json_date(json.date_created, true, timezone);
+                document.getElementById('profile_joined_date').innerHTML = format_json_date(json.date_created, true);
                 document.getElementById("profile_qr").innerHTML = '';
                 create_qr('profile_qr', getHostname() + '/' + json.username);
                 //User account followed and liked
@@ -1655,7 +1648,7 @@ async function profile_update_stat(callBack){
         }
     })
 }
-function search_input(event, timezone, event_function){
+function search_input(event, event_function){
     //left 37, right 39, up 38, down 40, enter 13
     switch (event.keyCode){
         case 37:
@@ -1719,15 +1712,13 @@ function search_input(event, timezone, event_function){
                         if (event_function ==null){
                             profile_show(x[i].children[0].children[0].innerHTML,
                                          null,
-                                         timezone,
                                         (err, result)=>{
                                             null;
                                         });
                         }
                         else
                             eval(`(function (){${event_function}(${x[i].children[0].children[0].innerHTML},
-                                    ${null},
-                                    '${timezone}')}());`);
+                                    ${null})}());`);
                         x[i].classList.remove ('profile_search_list_selected');
                     }
                 }
@@ -1736,7 +1727,7 @@ function search_input(event, timezone, event_function){
             break
         }
         default:{
-            window.global_typewatch(`search_profile('${timezone}', ${event_function==null?'':'"' + event_function +'"'});`, 500); 
+            window.global_typewatch(`search_profile(${event_function==null?'':'"' + event_function +'"'});`, 500); 
             break;
         }            
     }
@@ -1815,7 +1806,7 @@ async function user_logoff(){
         dialogue_profile_clear();
     })
 }
-async function user_edit(timezone, callBack) {
+async function user_edit() {
     let json;
     //get user from REST API
     common_fetch(window.global_rest_url_base + window.global_rest_user_account + window.global_user_account_id + '?', 
@@ -1862,17 +1853,13 @@ async function user_edit(timezone, callBack) {
                         document.getElementById('user_edit_avatar').style.display = 'none';
                         set_avatar(json.provider_image, document.getElementById('user_edit_avatar_img')); 
                     } 
-                document.getElementById('user_edit_label_data_last_logontime').innerHTML = format_json_date(json.last_logontime, null, timezone);
-                document.getElementById('user_edit_label_data_account_created').innerHTML = format_json_date(json.date_created, null, timezone);
-                document.getElementById('user_edit_label_data_account_modified').innerHTML = format_json_date(json.date_modified, null, timezone);
-                return callBack(null, {id: json.id,
-                                       avatar:          json.avatar,
-                                       provider_image: json.provider_image
-                                        });
+                document.getElementById('user_edit_label_data_last_logontime').innerHTML = format_json_date(json.last_logontime, null);
+                document.getElementById('user_edit_label_data_account_created').innerHTML = format_json_date(json.date_created, null);
+                document.getElementById('user_edit_label_data_account_modified').innerHTML = format_json_date(json.date_modified, null);
+                set_avatar(json.avatar ?? json.provider_image, document.getElementById('user_menu_avatar_img'));
             } else {
                 //User not found
                 show_message('ERROR', 20305, null, null, window.global_common_app_id);
-                return callBack('ERROR', null);
             }
         }
     })
@@ -2976,10 +2963,17 @@ async function init_common(parameters, callBack){
                                                                                        else 
                                                                                             menu.style.visibility = 'visible' }, false);
         document.getElementById('user_menu_dropdown_log_in').addEventListener('click', function() { show_common_dialogue('LOGIN'); document.getElementById('user_menu_dropdown').style.visibility = 'hidden';}, false);
+        document.getElementById('user_menu_dropdown_edit').addEventListener('click', function() { user_edit() }, false);
         document.getElementById('user_menu_dropdown_signup').addEventListener('click', function() { show_common_dialogue('SIGNUP'); document.getElementById('user_menu_dropdown').style.visibility = 'hidden'; }, false);
     
+        if (document.getElementById('user_locale_select'))
+            document.getElementById('user_locale_select').addEventListener('change', function() { window.global_user_locale = this.value;}, false);
         if (document.getElementById('user_timezone_select'))
-            document.getElementById('user_timezone_select').addEventListener('change', function() { window.global_user_timezone = this.value;}, false);
+            document.getElementById('user_timezone_select').addEventListener('change', function() { window.global_user_timezone = this.value;
+                                                                                                    if (document.getElementById('dialogue_user_edit').style.visibility == 'visible') {
+                                                                                                        dialogue_user_edit_clear();
+                                                                                                        user_edit();
+                                                                                                    }}, false);
         //define also in app if needed to adjust ui
         if (document.getElementById('user_direction_select'))
             document.getElementById('user_direction_select').addEventListener('change', function() { document.body.style.direction = this.value; window.global_user_direction = this.value;}, false);

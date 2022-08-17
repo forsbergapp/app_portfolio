@@ -755,8 +755,6 @@ async function settings_translate(first=true) {
                     window.global_second_language.coltitle_midnight = '';
                     window.global_second_language.coltitle_notes = '';
                 }
-                //Update timezone language setting
-                update_ui(1);
             }
         })
     }
@@ -772,13 +770,8 @@ function get_align(al,ac,ar){
 	return '';
 }
 function showcurrenttime() {
-    let settings = {
-        timezone_current: document.getElementById('setting_select_timezone_current').value,
-        locale: get_lang_code(),
-        timedisplay_item: document.getElementById('setting_current_date_time_display')
-    }
     let options = {
-        timeZone: settings.timezone_current,
+        timeZone: window.global_user_timezone,
         weekday: 'long',
         year: 'numeric',
         month: 'long',
@@ -788,19 +781,14 @@ function showcurrenttime() {
         second: '2-digit',
         timeZoneName: 'long'
     };
-    settings.timedisplay_item.innerHTML = new Date().toLocaleTimeString(settings.locale, options);
+    document.getElementById('setting_current_date_time_display').innerHTML = new Date().toLocaleTimeString(window.global_user_locale, options);
     return null;
 }
 
 function showreporttime() {
 
-    let settings = {
-        timezone_report: document.getElementById('setting_select_report_timezone')[document.getElementById('setting_select_report_timezone').selectedIndex].value,
-        locale: get_lang_code(),
-        timedisplay_item: document.getElementById('setting_report_date_time_display')
-    }
     let options = {
-        timeZone: settings.timezone_report,
+        timeZone: document.getElementById('setting_select_report_timezone')[document.getElementById('setting_select_report_timezone').selectedIndex].value,
         weekday: 'long',
         year: 'numeric',
         month: 'long',
@@ -810,10 +798,10 @@ function showreporttime() {
         second: '2-digit',
         timeZoneName: 'long'
     };
-    settings.timedisplay_item.innerHTML = new Date().toLocaleTimeString(settings.locale, options);
+    document.getElementById('setting_report_date_time_display').innerHTML = new Date().toLocaleTimeString(get_lang_code(), options);
     //If day report created with time, display time there also
     if (document.getElementById('prayertable_day_time')) {
-        document.getElementById('prayertable_day_time').innerHTML = settings.timedisplay_item.innerHTML;
+        document.getElementById('prayertable_day_time').innerHTML = document.getElementById('setting_report_date_time_display').innerHTML;
     }
     //if day report created with div class prayertable_day_current_time
     if (document.getElementsByClassName('prayertable_day_current_time').length > 0) {
@@ -914,7 +902,7 @@ async function toolbar_bottom(choice) {
             {
                 settings.style.visibility = 'hidden';
                 document.getElementById('user_menu_dropdown').style.visibility = 'hidden';
-                profile_show_app(null,null, document.getElementById('setting_select_timezone_current').value);
+                profile_show_app(null,null);
                 break;
             }
             //profile top
@@ -922,7 +910,7 @@ async function toolbar_bottom(choice) {
             {
                 settings.style.visibility = 'hidden';
                 document.getElementById('user_menu_dropdown').style.visibility = 'hidden';
-                profile_top(1, document.getElementById('setting_select_timezone_current').value, null, 'profile_show_app');
+                profile_top(1, null, 'profile_show_app');
                 break;
             }
     }
@@ -1056,16 +1044,6 @@ async function update_ui(option, item_id=null) {
     };
 
     switch (option) {
-        //Regional, timezone current
-        case 1:
-            {
-                //Update user edit info in case user is changing timezone while editing user
-                if (document.getElementById('dialogue_user_edit').style.visibility == 'visible') {
-                    dialogue_user_edit_clear();
-                    user_edit_app();
-                }
-                break;
-            }
         //Regional, timezone report
         case 2:
             {
@@ -1323,15 +1301,6 @@ async function update_ui(option, item_id=null) {
 /*----------------------- */
 /* USER                   */
 /*----------------------- */
-async function user_edit_app() {
-    await user_edit(document.getElementById('setting_select_timezone_current').value,(err, result) => {
-        if ((err==null && result==null) == false){
-            if (err==null){
-                set_avatar(result.avatar ?? result.provider_image, document.getElementById('user_menu_avatar_img')); 
-            }
-        }
-    });
-}
 async function user_update_app(){
     await user_update((err, result) => {
         if (err==null){
@@ -1343,7 +1312,6 @@ async function user_update_app(){
 async function user_login_app(){
     let username = document.getElementById('login_username');
     let password = document.getElementById('login_password');
-    let lang_code = get_lang_code();
     let old_button = document.getElementById('login_button').innerHTML;
     document.getElementById('login_button').innerHTML = window.global_button_spinner;
     await user_login(username.value, password.value, (err, result)=>{
@@ -1517,7 +1485,7 @@ async function profile_update_stat_app(){
         }
     })
 }
-async function profile_show_app(user_account_id_other = null, username = null, timezone) {
+async function profile_show_app(user_account_id_other = null, username = null) {
     document.getElementById('dialogue_profile').style.visibility = "visible";
     document.getElementById('profile_top').style.display = "none";
     document.getElementById('profile_main_stat_row2').style.display = "none";
@@ -1530,7 +1498,7 @@ async function profile_show_app(user_account_id_other = null, username = null, t
         document.getElementById('profile_info').style.display = "none";
     }
     else
-        await profile_show(user_account_id_other, username, timezone, (err, result)=>{
+        await profile_show(user_account_id_other, username, (err, result)=>{
             if (err==null){
                 if (result.profile_id != null){
                     if (result.private==1 && parseInt(window.global_user_account_id) !== result.profile_id) {
@@ -1573,7 +1541,7 @@ function profile_detail_app(detailchoice, rest_url_app, fetch_detail, header_app
             //Liked user setting
             document.getElementById('profile_user_settings_row').style.display = 'none';
         }
-        profile_detail(detailchoice, document.getElementById('setting_select_timezone_current').value, rest_url_app, fetch_detail, header_app, click_function);
+        profile_detail(detailchoice, rest_url_app, fetch_detail, header_app, click_function);
     } 
     else
         show_common_dialogue('LOGIN');
@@ -1603,7 +1571,6 @@ async function user_settings_get(user_setting_id = '') {
             for (i = 0; i < json.count; i++) {
                 option_html += `<option value=${i} id=${json.items[i].id} description='${json.items[i].description}'
                                     regional_language_locale=${json.items[i].regional_language_locale}
-                                    regional_current_timezone=${json.items[i].regional_current_timezone}
                                     regional_timezone=${json.items[i].regional_timezone}
                                     regional_number_system=${json.items[i].regional_number_system}
                                     regional_layout_direction=${json.items[i].regional_layout_direction}
@@ -1725,8 +1692,6 @@ async function user_settings_load() {
     SearchAndSetSelectedIndex(select_user_setting[select_user_setting.selectedIndex].getAttribute('regional_language_locale'),
         document.getElementById('setting_select_locale'), 1);
 
-    SearchAndSetSelectedIndex(select_user_setting[select_user_setting.selectedIndex].getAttribute('regional_current_timezone'),
-        document.getElementById('setting_select_timezone_current'), 1);
     SearchAndSetSelectedIndex(select_user_setting[select_user_setting.selectedIndex].getAttribute('regional_timezone'),
         document.getElementById('setting_select_report_timezone'), 1)
 
@@ -1928,7 +1893,6 @@ async function user_settings_function(function_name, initial_user_setting, callB
     let json_data =
         `{"description": "${description}",
           "regional_language_locale": "${get_lang_code()}",
-          "regional_current_timezone": "${document.getElementById('setting_select_timezone_current').value}",
           "regional_timezone": "${document.getElementById('setting_select_report_timezone').value}",
           "regional_number_system": "${document.getElementById('setting_select_report_numbersystem').value}",
           "regional_layout_direction": "${document.getElementById('setting_select_report_direction').value}",
@@ -2096,21 +2060,16 @@ function user_settings_delete(choice=null) {
 }
 
 async function set_default_settings() {
-    let current_timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     let current_number_system = Intl.NumberFormat().resolvedOptions().numberingSystem;
 
     //Regional
-    //set according to users browser settings
     //set default language
-    //navigator.userLanguage is for IE only, Edge reads navigator.language
-    //reads lowercase since Chromium/Chrome returns en-US, safari returns en
-    //and select options are saved with lowercase
-    SearchAndSetSelectedIndex(navigator.language.toLowerCase(), document.getElementById('setting_select_locale'),1);
+    SearchAndSetSelectedIndex(window.global_user_locale, document.getElementById('setting_select_locale'),1);
     //default timezone current timezone
-    SearchAndSetSelectedIndex(current_timezone, document.getElementById('setting_select_timezone_current'),1);
+    document.getElementById('setting_timezone_current').innerHTML = window.global_user_timezone;
     //default report timezone current timezone, 
     //will be changed user timezone to place timezone if no GPS can be set and default place will be used
-    SearchAndSetSelectedIndex(current_timezone, document.getElementById('setting_select_report_timezone'),1);
+    SearchAndSetSelectedIndex(window.global_user_timezone, document.getElementById('setting_select_report_timezone'),1);
     //set default numberformat numbersystem
     SearchAndSetSelectedIndex(current_number_system, document.getElementById('setting_select_report_numbersystem'),1);
     //set default for others in Regional
@@ -2217,7 +2176,6 @@ function set_settings_select() {
     
     option.setAttribute('description', document.getElementById('setting_input_place').value);
     option.setAttribute('regional_language_locale', get_lang_code());
-    option.setAttribute('regional_current_timezone', document.getElementById('setting_select_timezone_current').value);
     option.setAttribute('regional_timezone', document.getElementById('setting_select_report_timezone').value);
     option.setAttribute('regional_number_system', document.getElementById('setting_select_report_numbersystem').value);
     option.setAttribute('regional_layout_direction', document.getElementById('setting_select_report_direction').value);
@@ -2423,11 +2381,12 @@ function setEvents() {
     document.getElementById('toolbar_btn_settings').addEventListener('click', function() { toolbar_bottom(5) }, false);    
 
     document.getElementById('user_locale_select').addEventListener('change', function() { common_translate_ui_app(this.value);}, false);
-
+    
+    document.getElementById('user_timezone_select').addEventListener('change', function() { document.getElementById('setting_timezone_current').innerHTML = this.value;}, false);
+    
     document.getElementById('user_arabic_script_select').addEventListener('change', function() { update_ui(3);}, false);
     //user menu dropdown
     document.getElementById('user_menu_dropdown_log_out').addEventListener('click', function() { user_logoff_app() }, false);
-    document.getElementById('user_menu_dropdown_edit').addEventListener('click', function() { user_edit_app() }, false);
     document.getElementById('user_menu_username').addEventListener('click', function() { toolbar_bottom(6) }, false);
     document.getElementById('user_menu_dropdown_profile_top').addEventListener('click', function() { toolbar_bottom(7) }, false);
 
@@ -2441,7 +2400,6 @@ function setEvents() {
     document.getElementById('tab_nav_btn_7').addEventListener('click', function() { openTab('7') }, false);
     //settings regional    
     document.getElementById('setting_select_locale').addEventListener('change', function() { settings_translate(true) }, false);
-    document.getElementById('setting_select_timezone_current').addEventListener('change', function() { update_ui(1) }, false);
     document.getElementById('setting_select_report_timezone').addEventListener('change', function() { update_ui(2); }, false);
     document.getElementById('setting_select_report_locale_second').addEventListener('change', function() { settings_translate(false) }, false);
     
@@ -2503,13 +2461,13 @@ function setEvents() {
         window.global_icon_regional_month +
         window.global_icon_regional_year +
         window.global_icon_user_followed, 'profile_show_app') }, false);
-    document.getElementById('profile_top_row2_1').addEventListener('click', function() { profile_top(4, document.getElementById('setting_select_timezone_current').value, window.global_rest_app2_user_setting_profile_top, 'profile_show_app') }, false);
-    document.getElementById('profile_top_row2_2').addEventListener('click', function() { profile_top(5, document.getElementById('setting_select_timezone_current').value, window.global_rest_app2_user_setting_profile_top, 'profile_show_app') }, false);
+    document.getElementById('profile_top_row2_1').addEventListener('click', function() { profile_top(4, window.global_rest_app2_user_setting_profile_top, 'profile_show_app') }, false);
+    document.getElementById('profile_top_row2_2').addEventListener('click', function() { profile_top(5, window.global_rest_app2_user_setting_profile_top, 'profile_show_app') }, false);
     document.getElementById('profile_user_settings_day').addEventListener('click', function() { profile_user_setting_link(this) }, false);
     document.getElementById('profile_user_settings_month').addEventListener('click', function() { profile_user_setting_link(this) }, false);
     document.getElementById('profile_user_settings_year').addEventListener('click', function() { profile_user_setting_link(this) }, false);
     document.getElementById('profile_user_settings_like').addEventListener('click', function() { profile_user_setting_link(this) }, false);
-    document.getElementById('profile_search_input').addEventListener('keyup', function(event) { search_input(event, document.getElementById('setting_select_timezone_current').value, 'profile_show_app');}, false);
+    document.getElementById('profile_search_input').addEventListener('keyup', function(event) { search_input(event, 'profile_show_app');}, false);
     document.getElementById('profile_select_user_settings').addEventListener('change', 
         function() { profile_show_user_setting_detail(this.options[this.selectedIndex].getAttribute('liked'), 
                                                       this.options[this.selectedIndex].getAttribute('count_likes'), 
@@ -2577,9 +2535,9 @@ function setEvents() {
     document.getElementById('profile_main_btn_liked').addEventListener('click', function() { profile_detail_app(4, null, true, null, 'profile_show_app') }, false);
     document.getElementById('profile_follow').addEventListener('click', function() { user_function_app('FOLLOW') }, false);
     document.getElementById('profile_like').addEventListener('click', function() { user_function_app('LIKE') }, false);
-    document.getElementById('profile_top_row1_1').addEventListener('click', function() { profile_top(1, document.getElementById('setting_select_timezone_current').value, null, 'profile_show_app') }, false);
-    document.getElementById('profile_top_row1_2').addEventListener('click', function() { profile_top(2, document.getElementById('setting_select_timezone_current').value, null, 'profile_show_app') }, false);
-    document.getElementById('profile_top_row1_3').addEventListener('click', function() { profile_top(3, document.getElementById('setting_select_timezone_current').value, null, 'profile_show_app') }, false);
+    document.getElementById('profile_top_row1_1').addEventListener('click', function() { profile_top(1, null, 'profile_show_app') }, false);
+    document.getElementById('profile_top_row1_2').addEventListener('click', function() { profile_top(2, null, 'profile_show_app') }, false);
+    document.getElementById('profile_top_row1_3').addEventListener('click', function() { profile_top(3, null, 'profile_show_app') }, false);
     document.getElementById('profile_home').addEventListener('click', function() {toolbar_bottom(7)}, false);
     document.getElementById('profile_close').addEventListener('click', function() {profile_close_app()}, false);
     //dialogue verify
@@ -2835,7 +2793,7 @@ async function init_app() {
                     if (user !='') {
                         //show profile for user entered in url
                         document.getElementById('dialogue_profile').style.visibility = "visible";
-                        profile_show_app(null, user, document.getElementById('setting_select_timezone_current').value);
+                        profile_show_app(null, user);
                     }
                 }
                 show_start().then(function(){

@@ -5,14 +5,18 @@ DEFAULT COLLATE utf8mb4_0900_ai_ci;
 CREATE ROLE role_app_admin;
 CREATE ROLE role_app_dba;
 CREATE ROLE role_app1;
-CREATE ROLE role_app2;
 CREATE ROLE role_app3;
+CREATE ROLE role_app2;
 
 CREATE USER app_admin IDENTIFIED BY 'APP_1_portfolio'
     ACCOUNT UNLOCK;
 GRANT role_app_admin TO app_admin;
 SET DEFAULT ROLE ALL TO app_admin;
 
+CREATE USER app0 IDENTIFIED BY 'APP_1_portfolio'
+    ACCOUNT UNLOCK;
+GRANT role_app1 TO app0;
+SET DEFAULT ROLE ALL TO app0;
 
 CREATE USER app_portfolio IDENTIFIED BY 'APP_1_portfolio'
     ACCOUNT UNLOCK;
@@ -21,18 +25,13 @@ SET DEFAULT ROLE ALL TO app_portfolio;
 
 CREATE USER app1 IDENTIFIED BY 'APP_1_portfolio'
     ACCOUNT UNLOCK;
-GRANT role_app1 TO app1;
+GRANT role_app2 TO app1;
 SET DEFAULT ROLE ALL TO app1;
 
 CREATE USER app2 IDENTIFIED BY 'APP_1_portfolio'
     ACCOUNT UNLOCK;
-GRANT role_app2 TO app2;
+GRANT role_app3 TO app2;
 SET DEFAULT ROLE ALL TO app2;
-
-CREATE USER app3 IDENTIFIED BY 'APP_1_portfolio'
-    ACCOUNT UNLOCK;
-GRANT role_app3 TO app3;
-SET DEFAULT ROLE ALL TO app3;
 
 CREATE TABLE app_portfolio.app (
     id        INTEGER NOT NULL,
@@ -500,7 +499,6 @@ CREATE TABLE app_portfolio.app2_user_setting (
     id                                         INT NOT NULL AUTO_INCREMENT,
     description                                VARCHAR(100),
     regional_language_locale	               VARCHAR(100),
-    regional_current_timezone                  VARCHAR(100),
     regional_timezone                          VARCHAR(100),
     regional_number_system                     VARCHAR(100),
     regional_layout_direction                  VARCHAR(100),
@@ -577,7 +575,6 @@ CREATE TABLE app_portfolio.app2_user_setting_hist (
     app2_user_setting_id                       INTEGER,
     description                                VARCHAR(100),
     regional_language_locale	               VARCHAR(100),
-    regional_current_timezone                  VARCHAR(100),
     regional_timezone                          VARCHAR(100),
     regional_number_system                     VARCHAR(100),
     regional_layout_direction                  VARCHAR(100),
@@ -1784,7 +1781,6 @@ dml_date,
 app2_user_setting_id,
 description,
 regional_language_locale,
-regional_current_timezone,
 regional_timezone,
 regional_number_system,
 regional_layout_direction,
@@ -1843,7 +1839,6 @@ SYSDATE(),
 old.id,
 old.description,
 old.regional_language_locale,
-old.regional_current_timezone,
 old.regional_timezone,
 old.regional_number_system,
 old.regional_layout_direction,
@@ -1909,7 +1904,6 @@ dml_date,
 app2_user_setting_id,
 description,
 regional_language_locale,
-regional_current_timezone,
 regional_timezone,
 regional_number_system,
 regional_layout_direction,
@@ -1968,7 +1962,6 @@ SYSDATE(),
 new.id,
 new.description,
 new.regional_language_locale,
-new.regional_current_timezone,
 new.regional_timezone,
 new.regional_number_system,
 new.regional_layout_direction,
@@ -2034,7 +2027,6 @@ dml_date,
 app2_user_setting_id,
 description,
 regional_language_locale,
-regional_current_timezone,
 regional_timezone,
 regional_number_system,
 regional_layout_direction,
@@ -2093,7 +2085,6 @@ SYSDATE(),
 old.id,
 old.description,
 old.regional_language_locale,
-old.regional_current_timezone,
 old.regional_timezone,
 old.regional_number_system,
 old.regional_layout_direction,
