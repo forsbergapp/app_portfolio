@@ -94,7 +94,7 @@ window.global_second_language =
 /*----------------------- */
 /* COMMON REPORT		  */
 /*----------------------- */
-async function timetable_user_setting_get(user_setting_id, lang_code, callBack) {
+async function timetable_user_setting_get(user_setting_id, callBack) {
     let json;
 	await common_fetch(window.global_rest_url_base + window.global_rest_app2_user_setting + user_setting_id + '?',
 					   'GET', 0, null, null, null, (err, result) =>{
@@ -1117,7 +1117,7 @@ function displayDay(settings, item_id, locale, user_settings){
 	</div>`;
 	settings.ui_prayertable_day.innerHTML = day_html;
 }
-async function timetable_day_user_settings_get(user_account_id, lang_code, callBack){
+async function timetable_day_user_settings_get(user_account_id, callBack){
 	let json;
     let i;
 	let user_settings = [];
@@ -1137,7 +1137,7 @@ async function timetable_day_user_settings_get(user_account_id, lang_code, callB
 					{
 					"description" : json.items[i].description,
 					"regional_language_locale" : json.items[i].regional_language_locale,
-					"regional_timezone" : json.items[i].regional_current_timezone,
+					"regional_timezone" : json.items[i].regional_timezone,
 					"regional_number_system" : json.items[i].regional_number_system,
 					"regional_calendar_hijri_type" : json.items[i].regional_calendar_hijri_type,
 					"gps_lat_text" : parseFloat(json.items[i].gps_lat_text),
@@ -1378,7 +1378,7 @@ function init_report(parameters) {
 					case '1':{document.getElementById('prayertable_month').style.visibility = 'visible';break;}
 					case '2':{document.getElementById('prayertable_year').style.visibility = 'visible';break;}
 				}
-				timetable_user_setting_get(user_setting_id, lang_code, (err, report_parameters) =>{
+				timetable_user_setting_get(user_setting_id, (err, report_parameters) =>{
 					if (err)
 						null;
 					else{
@@ -1388,7 +1388,7 @@ function init_report(parameters) {
 								null;
 							else
 								if (reporttype==0){
-									timetable_day_user_settings_get(user_account_id, lang_code, (err, user_settings_parameters) =>{
+									timetable_day_user_settings_get(user_account_id, (err, user_settings_parameters) =>{
 										if (err)
 											null;
 										else
