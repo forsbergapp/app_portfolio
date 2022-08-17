@@ -1055,7 +1055,7 @@ async function update_ui(option, item_id=null) {
         //Update font, arabic script
         case 3:{
                 //app themes and user preference font
-                document.body.className = 'app_theme' + document.getElementById('app_select_theme').value + ' font_' + document.getElementById('user_arabic_script_select').value;
+                document.body.className = 'app_theme' + document.getElementById('app_select_theme').value + ' ' + document.getElementById('user_arabic_script_select').value;
                 break;
             }
         //GPS, update map
