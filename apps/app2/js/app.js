@@ -632,6 +632,58 @@ function slide(wrapper, items, prev, next, type) {
 /*----------------------- */
 /* UI                     */
 /*----------------------- */
+async function common_translate_ui_app(lang_code){
+    await common_translate_ui(lang_code,(err, result) => {
+        if (err)
+            null;
+        else{
+            //translate locale in this app
+            let select_locale = document.getElementById('setting_select_locale');
+            let select_second_locale = document.getElementById('setting_select_report_locale_second'); 
+            let current_locale = select_locale.value;
+            let current_second_locale = select_second_locale.value;
+            select_locale.innerHTML = document.getElementById('user_locale_select').innerHTML;
+            select_locale.value = current_locale;
+            select_second_locale.innerHTML = select_second_locale.options[0].outerHTML + document.getElementById('user_locale_select').innerHTML;
+            select_second_locale.value = current_second_locale;   
+            
+            //country
+            common_fetch(window.global_rest_url_base + window.global_rest_country + lang_code + '?', 
+                         'GET', 0, null, null, null, (err, result) =>{
+                if (err)
+                    null;
+                else{
+                    json = JSON.parse(result);
+                    let select_country = document.getElementById('setting_select_country');
+                    let html=`<option value='' id='' label='…' selected='selected'>…</option>`;
+                    let current_country = document.getElementById('setting_select_country')[document.getElementById('setting_select_country').selectedIndex].id;
+                    for (let i = 0; i < json.countries.length; i++){
+                        if (i === 0){
+                            html += `<optgroup label=${json.countries[i].group_name} />`;
+                            current_group_name = json.countries[i].group_name;
+                        }
+                        else{
+                            if (json.countries[i].group_name !== current_group_name){
+                                html += `<optgroup label=${json.countries[i].group_name} />`;
+                                current_group_name = json.countries[i].group_name;
+                            }
+                            html +=
+                            `<option value=${i}
+                                    id=${json.countries[i].id} 
+                                    country_code=${json.countries[i].country_code} 
+                                    flag_emoji=${json.countries[i].flag_emoji} 
+                                    group_name=${json.countries[i].group_name}>${json.countries[i].flag_emoji} ${json.countries[i].text}
+                            </option>`
+                        }
+                    }
+                    select_country.innerHTML = html;
+                    SearchAndSetSelectedIndex(current_country,
+                                            document.getElementById('setting_select_country'),0);
+                }
+            })
+        }
+    });
+}
 async function settings_translate(first=true) {
 	let json;
     let locale;
@@ -667,27 +719,6 @@ async function settings_translate(first=true) {
                                 if (json.data[i].object=='APP_OBJECT_ITEM' && json.data[i].object_name=='SETTING_NAV_GPS' && 
                                     json.data[i].object_item_name=='SETTING_LABEL_LONG')
                                     window.global_first_language.gps_long_text = json.data[i].text;
-                                else{
-                                    //set text on the rest objects in innerHTML
-                                    try{
-                                        document.getElementById(json.data[i].object_item_name.toLowerCase()).innerHTML = json.data[i].text;
-                                    }
-                                    catch (err){
-                                        console.log(json.data[i].object_item_name.toLowerCase());
-                                    }
-                                }								
-                            }
-                        }
-                        if (json.data[i].object=='APP_OBJECT_ITEM_SUBITEM'){
-                            //update select objects
-                            let select_element = json.data[i].object_item_name;
-                            //option number not saved in column but end with the option number
-                            let select_option = json.data[i].subitem_name.substr(json.data[i].subitem_name.lastIndexOf('_')+1);
-                            try{
-                                document.getElementById(select_element.toLowerCase()).options[select_option].text = json.data[i].text;
-                            }
-                            catch(err){
-                                console.log(json.data[i].object_item_name.toLowerCase());
                             }
                         }
                     }
@@ -698,63 +729,6 @@ async function settings_translate(first=true) {
                         }
                     }
                     
-                }
-                if (first==true){
-                    //country
-                    common_fetch(window.global_rest_url_base + window.global_rest_country + get_lang_code() + '?', 
-                           'GET', 0, null, null, null, (err, result) =>{
-                        if (err)
-                            null;
-                        else{
-                            json = JSON.parse(result);
-                            let select_country = document.getElementById('setting_select_country');
-                            let html=`<option value='' id='' label='…' selected='selected'>…</option>`;
-                            let current_country = document.getElementById('setting_select_country')[document.getElementById('setting_select_country').selectedIndex].id;
-                            for (let i = 0; i < json.countries.length; i++){
-                                if (i === 0){
-                                    html += `<optgroup label=${json.countries[i].group_name} />`;
-                                    current_group_name = json.countries[i].group_name;
-                                  }
-                                  else{
-                                    if (json.countries[i].group_name !== current_group_name){
-                                        html += `<optgroup label=${json.countries[i].group_name} />`;
-                                        current_group_name = json.countries[i].group_name;
-                                    }
-                                    html +=
-                                    `<option value=${i}
-                                            id=${json.countries[i].id} 
-                                            country_code=${json.countries[i].country_code} 
-                                            flag_emoji=${json.countries[i].flag_emoji} 
-                                            group_name=${json.countries[i].group_name}>${json.countries[i].flag_emoji} ${json.countries[i].text}
-                                    </option>`
-                                  }
-                            }
-                            select_country.innerHTML = html;
-                            SearchAndSetSelectedIndex(current_country,
-                                                      document.getElementById('setting_select_country'),0);
-                            //locale
-                            common_fetch(window.global_rest_url_base + window.global_rest_language_locale + get_lang_code() + '?', 
-                                         'GET', 0, null, null, null, (err, result) =>{
-                                if (err)
-                                    null;
-                                else{
-                                    json = JSON.parse(result);
-                                    let html='';
-                                    let select_locale = document.getElementById('setting_select_locale');
-                                    let select_second_locale = document.getElementById('setting_select_report_locale_second');        
-                                    let current_locale = select_locale.value;
-                                    let current_second_locale = select_second_locale.value;
-                                    for (let i = 0; i < json.locales.length; i++){
-                                        html += `<option id="${i}" value="${json.locales[i].locale}">${json.locales[i].text}</option>`;
-                                    }
-                                    select_locale.innerHTML = html;
-                                    select_locale.value = current_locale;
-                                    select_second_locale.innerHTML = select_second_locale.options[0].outerHTML + html;
-                                    select_second_locale.value = current_second_locale;
-                                }
-                            })
-                        }
-                    })
                 }
                 //if translating first language and second language is not used
                 if (first == true &&
@@ -781,10 +755,6 @@ async function settings_translate(first=true) {
                     window.global_second_language.coltitle_midnight = '';
                     window.global_second_language.coltitle_notes = '';
                 }
-                //fix fontsizes for toolbar button translated text
-                fix_toolbar_button_sizes();
-                //map popup contains translated text
-                update_map_popup();
                 //Update timezone language setting
                 update_ui(1);
             }
@@ -873,48 +843,6 @@ function showreporttime() {
     return null;
 }
 
-function fix_toolbar_button_sizes() {
-    //if any label has more than 10 characters decrease size for all
-    document.getElementById('toolbar_btn_print_label').classList = 'toolbar_button';
-    document.getElementById('toolbar_btn_day_label').classList = 'toolbar_button';
-    document.getElementById('toolbar_btn_month_label').classList = 'toolbar_button';
-    document.getElementById('toolbar_btn_year_label').classList = 'toolbar_button';
-
-    if (document.getElementById('toolbar_btn_print_label').innerHTML.length > 9 ||
-        document.getElementById('toolbar_btn_day_label').innerHTML.length > 9 ||
-        document.getElementById('toolbar_btn_month_label').innerHTML.length > 9 ||
-        document.getElementById('toolbar_btn_year_label').innerHTML.length > 9 ) {
-        document.getElementById('toolbar_btn_print_label').classList.add('toolbar_smallsize');
-        document.getElementById('toolbar_btn_day_label').classList.add('toolbar_smallsize');
-        document.getElementById('toolbar_btn_month_label').classList.add('toolbar_smallsize');
-        document.getElementById('toolbar_btn_year_label').classList.add('toolbar_smallsize');        
-    }
-    //if all labels are shorter than 5 characters
-    if (document.getElementById('toolbar_btn_print_label').innerHTML.length < 5 &&
-        document.getElementById('toolbar_btn_day_label').innerHTML.length < 5 &&
-        document.getElementById('toolbar_btn_month_label').innerHTML.length < 5 &&
-        document.getElementById('toolbar_btn_year_label').innerHTML.length < 5 ) {
-        document.getElementById('toolbar_btn_print_label').classList.add('toolbar_bigsize');
-        document.getElementById('toolbar_btn_day_label').classList.add('toolbar_bigsize');
-        document.getElementById('toolbar_btn_month_label').classList.add('toolbar_bigsize');
-        document.getElementById('toolbar_btn_year_label').classList.add('toolbar_bigsize');
-    }
-    //if non of above then show default font size
-    if (!(document.getElementById('toolbar_btn_print_label').innerHTML.length > 9 ||
-            document.getElementById('toolbar_btn_day_label').innerHTML.length > 9 ||
-            document.getElementById('toolbar_btn_month_label').innerHTML.length > 9 ||
-            document.getElementById('toolbar_btn_year_label').innerHTML.length > 9 ) &&
-        !(document.getElementById('toolbar_btn_print_label').innerHTML.length < 5 &&
-            document.getElementById('toolbar_btn_day_label').innerHTML.length < 5 &&
-            document.getElementById('toolbar_btn_month_label').innerHTML.length < 5 &&
-            document.getElementById('toolbar_btn_year_label').innerHTML.length < 5 )) {
-
-        document.getElementById('toolbar_btn_print_label').classList.add('toolbar_defaultsize');
-        document.getElementById('toolbar_btn_day_label').classList.add('toolbar_defaultsize');
-        document.getElementById('toolbar_btn_month_label').classList.add('toolbar_defaultsize');
-        document.getElementById('toolbar_btn_year_label').classList.add('toolbar_defaultsize');;
-    }
-}
 function iframe_resize(){
     let paper_size_select = document.getElementById('setting_select_report_papersize');
     document.getElementById('common_window_info_content').className = paper_size_select.options[paper_size_select.selectedIndex].value;}        
@@ -2494,6 +2422,8 @@ function setEvents() {
     document.getElementById('toolbar_btn_search').addEventListener('click', function() { let x = document.getElementById('profile_info_search'); if (x.style.visibility == 'visible') x.style.visibility = 'hidden'; else x.style.visibility = 'visible'; }, false);
     document.getElementById('toolbar_btn_settings').addEventListener('click', function() { toolbar_bottom(5) }, false);    
 
+    document.getElementById('user_locale_select').addEventListener('change', function() { common_translate_ui_app(this.value);}, false);
+
     document.getElementById('user_arabic_script_select').addEventListener('change', function() { update_ui(3);}, false);
     //user menu dropdown
     document.getElementById('user_menu_dropdown_log_out').addEventListener('click', function() { user_logoff_app() }, false);
@@ -2807,10 +2737,10 @@ async function init_app() {
     document.getElementById('setting_btn_user_delete').innerHTML = window.global_icon_app_delete;
     
     //toolbar bottom
-    document.getElementById('toolbar_btn_print').innerHTML = window.global_icon_app_print + '<div id="toolbar_btn_print_label">Print</div>';
-    document.getElementById('toolbar_btn_day').innerHTML = window.global_icon_regional_day + '<div id="toolbar_btn_day_label">Day</div>';
-    document.getElementById('toolbar_btn_month').innerHTML = window.global_icon_regional_month + '<div id="toolbar_btn_month_label">Month</div>';
-    document.getElementById('toolbar_btn_year').innerHTML = window.global_icon_regional_year + '<div id="toolbar_btn_year_label">Year</div>';
+    document.getElementById('toolbar_btn_print').innerHTML = window.global_icon_app_print;
+    document.getElementById('toolbar_btn_day').innerHTML = window.global_icon_regional_day;
+    document.getElementById('toolbar_btn_month').innerHTML = window.global_icon_regional_month;
+    document.getElementById('toolbar_btn_year').innerHTML = window.global_icon_regional_year;
     //toolbar top
     document.getElementById('toolbar_btn_zoomout').innerHTML = window.global_icon_app_zoomout;
     document.getElementById('toolbar_btn_zoomin').innerHTML = window.global_icon_app_zoomin;
