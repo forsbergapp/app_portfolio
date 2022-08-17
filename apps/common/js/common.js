@@ -3010,6 +3010,7 @@ async function init_common(parameters, callBack){
                 case 'REST_REGIONAL_SETTING'                :{window.global_rest_regional_setting = parameter_value;break;}
                 case 'REST_USER_ACCOUNT'                    :{window.global_rest_user_account = parameter_value;break;}
                 case 'REST_USER_ACCOUNT_ACTIVATE'           :{window.global_rest_user_account_activate = parameter_value;break;}
+                case 'REST_USER_ACCOUNT_APP'                :{window.global_rest_user_account_app = parameter_value;break;}
                 case 'REST_USER_ACCOUNT_COMMON'             :{window.global_rest_user_account_common = parameter_value;break;}
                 case 'REST_USER_ACCOUNT_FOLLOW'             :{window.global_rest_user_account_follow = parameter_value;break;}
                 case 'REST_USER_ACCOUNT_FORGOT'             :{window.global_rest_user_account_forgot = parameter_value;break;}
