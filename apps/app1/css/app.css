@@ -1,10 +1,6 @@
 body.font_arabic_nastaliq #user_menu_default_avatar{
 	top: -5px;
 }
-body.font_arabic_nastaliq #dialogue_start_content,
-body.font_arabic_nastaliq #dialogue_info_content{
-	height: 400px;
-}
 
 
 /* Common dialogue settings*/	
@@ -62,8 +58,9 @@ body.font_arabic_nastaliq #dialogue_info_content{
 #dialogue_start_content{
 	visibility:visible;
 	overflow: hidden;
-	height: 420px;
+	height: auto;
 	width: auto;
+	min-width: 350px;
 	transform:             rotateY( 0deg );
         -moz-transform:    rotateY( 0deg );
         -ms-transform:     rotateY( 0deg );
@@ -163,8 +160,9 @@ body.font_arabic_nastaliq #dialogue_info_content{
 /*DIALOGUE INFO*/
 #dialogue_info_content{
 	visibility:visible;
-	height: 420px;
+	height: auto;
 	width: auto;
+	min-width: 350px;
 	transform:             rotateY( 180deg );
         -moz-transform:    rotateY( 180deg );
         -ms-transform:     rotateY( 180deg );
@@ -213,10 +211,11 @@ body.font_arabic_nastaliq #dialogue_info_content{
 
 #about_logo, #info_logo {
 	background-image: url('/app1/images/logo_title.png');
-	background-size: cover;
+	background-size: contain;
 	background-repeat: no-repeat;
+	background-position: center;
+	width:100%;
 	height: 50px;
-	margin: 0 auto;
 }
 /*Dialogue profile*/
 #profile_main_btn_cloud{
@@ -237,19 +236,11 @@ body.font_arabic_nastaliq #dialogue_info_content{
 /*RESPONSIVE SETTINGS*/
 /*CSS for minimum 768px*/
 @media only screen and (min-width: 768px) {
-	body.font_arabic_nastaliq #dialogue_start_content,
-	body.font_arabic_nastaliq #dialogue_info_content{
-		height: 420px;
-	}
-
 	#start_links, #contact, #copyright{
 		font-size: 14px;
 	}
-	#about_logo, #info_logo{
-		height:60px;
-	}
 	.app_description{
-		width: 320px;
+		width: 450px;
 	}
 	@-webkit-keyframes animateCloud {
 		0% {
