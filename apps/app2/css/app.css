@@ -433,6 +433,9 @@ height: 25px;
 	cursor: pointer;
 }
 /* SETTINGS DESIGN*/
+#settings #tab3 .setting_horizontal_row:nth-child(1){
+	direction:ltr;
+}
 #settings #tab3 .setting_horizontal_row:first-child .setting_horizontal_col:nth-child(1),
 #settings #tab3 .setting_horizontal_row:first-child .setting_horizontal_col:nth-child(2),
 #settings #tab3 .setting_horizontal_row:first-child .setting_horizontal_col:nth-child(3){
