@@ -57,8 +57,8 @@ module.exports = {
 						prayer_column_fast_start_end,
 						date_created,
 						date_modified,
-						user_account_id,
-						app_id)
+						user_account_app_user_account_id,
+						user_account_app_app_id)
 					SELECT ?,?,?,?,?,?,?,?,?,
 						?,?,?,?,?,?,?,?,?,?,
 						?,?,?,?,?,?,?,?,?,?,
@@ -68,9 +68,9 @@ module.exports = {
 					FROM DUAL
 					WHERE NOT EXISTS (SELECT null
 										FROM ${process.env.SERVICE_DB_DB1_NAME}.app2_user_setting aus
-									WHERE ? = 1
-										AND aus.user_account_id = ?
-										AND aus.app_id = ?)`;
+									   WHERE ? = 1
+										 AND aus.user_account_app_user_account_id = ?
+										 AND aus.user_account_app_app_id = ?)`;
 			parameters = [
 							data.description,
 							data.regional_language_locale,
@@ -182,8 +182,8 @@ module.exports = {
 						prayer_column_fast_start_end,
 						date_created,
 						date_modified,
-						user_account_id,
-						app_id)
+						user_account_app_user_account_id,
+						user_account_app_app_id)
 					SELECT	:description,
 							:regional_language_locale,
 							:regional_timezone,
@@ -241,9 +241,9 @@ module.exports = {
 					FROM DUAL 
 					WHERE NOT EXISTS (SELECT null
 										FROM ${process.env.SERVICE_DB_DB2_NAME}.app2_user_setting aus
-									WHERE :initial_setting = 1
-										AND aus.user_account_id = :user_account_id
-										AND aus.app_id = :app_id)`;
+								  	   WHERE :initial_setting = 1
+										 AND aus.user_account_app_user_account_id = :user_account_id
+										 AND aus.user_account_app_app_id = :app_id)`;
 			parameters = {
 							description: data.description,
 							regional_language_locale: data.regional_language_locale,
@@ -394,8 +394,8 @@ module.exports = {
 							prayer_column_fast_start_end,
 							date_created,
 							date_modified,
-							user_account_id,
-							app_id
+							user_account_app_user_account_id,
+							user_account_app_app_id
 						FROM ${process.env.SERVICE_DB_DB1_NAME}.app2_user_setting 
 						WHERE id = ? `;
 			parameters = [id];
@@ -453,8 +453,8 @@ module.exports = {
 							prayer_column_fast_start_end "prayer_column_fast_start_end",
 							date_created "date_created",
 							date_modified "date_modified",
-							user_account_id "user_account_id",
-							app_id "app_id"
+							user_account_app_user_account_id "user_account_id",
+							user_account_app_app_id "app_id"
 						FROM ${process.env.SERVICE_DB_DB2_NAME}.app2_user_setting 
 						WHERE id = :id `;
 			parameters = {
@@ -526,11 +526,11 @@ module.exports = {
 							us.prayer_column_fast_start_end,
 							us.date_created,
 							us.date_modified,
-							us.user_account_id,
-							us.app_id
+							us.user_account_app_user_account_id,
+							us.user_account_app_app_id
 						FROM ${process.env.SERVICE_DB_DB1_NAME}.app2_user_setting us
-						WHERE us.user_account_id = ?
-						AND us.app_id = ?`;
+						WHERE us.user_account_app_user_account_id = ?
+						AND us.user_account_app_app_id = ?`;
 			parameters = [	id,
 							app_id];
 		}
@@ -588,11 +588,11 @@ module.exports = {
 							prayer_column_fast_start_end "prayer_column_fast_start_end",
 							date_created "date_created",
 							date_modified "date_modified",
-							user_account_id "user_account_id",
-							app_id "app_id"
+							user_account_app_user_account_id "user_account_id",
+							user_account_app_app_id "app_id"
 						FROM ${process.env.SERVICE_DB_DB2_NAME}.app2_user_setting
-						WHERE user_account_id = :user_account_id 
-						AND app_id = :app_id`;
+						WHERE user_account_app_user_account_id = :user_account_id 
+						AND user_account_app_app_id = :app_id`;
 			parameters = {
 							user_account_id: id,
 							app_id: app_id
@@ -610,17 +610,17 @@ module.exports = {
 		let sql;
 		let parameters;
         if (process.env.SERVICE_DB_USE == 1) {
-			sql = `SELECT   (SELECT COUNT(DISTINCT us.user_account_id)
+			sql = `SELECT   (SELECT COUNT(DISTINCT us.user_account_app_user_account_id)
 							   FROM ${process.env.SERVICE_DB_DB1_NAME}.app2_user_setting_like u_like,
 									${process.env.SERVICE_DB_DB1_NAME}.app2_user_setting us
 							  WHERE u_like.user_account_id = u.id
 								AND us.id = u_like.app2_user_setting_id
-								AND us.app_id = ?)													count_user_setting_likes,
+								AND us.user_account_app_app_id = ?)													count_user_setting_likes,
 							(SELECT COUNT(DISTINCT u_like.user_account_id)
 							   FROM ${process.env.SERVICE_DB_DB1_NAME}.app2_user_setting_like u_like,
 									${process.env.SERVICE_DB_DB1_NAME}.app2_user_setting us
-							  WHERE us.user_account_id = u.id
-								AND us.app_id = ?
+							  WHERE us.user_account_app_user_account_id = u.id
+								AND us.user_account_app_app_id = ?
 								AND u_like.app2_user_setting_id = us.id)							count_user_setting_liked
 						FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account u
 						WHERE u.id = ? `;
@@ -628,17 +628,17 @@ module.exports = {
 							app_id,
 							id];
         } else if (process.env.SERVICE_DB_USE == 2) {
-			sql = `SELECT	(SELECT COUNT(DISTINCT us.user_account_id)
+			sql = `SELECT	(SELECT COUNT(DISTINCT us.user_account_app_user_account_id)
 							   FROM ${process.env.SERVICE_DB_DB2_NAME}.app2_user_setting_like u_like,
 									${process.env.SERVICE_DB_DB2_NAME}.app2_user_setting us
 							  WHERE u_like.user_account_id = u.id
 								AND us.id = u_like.app2_user_setting_id
-								AND us.app_id = :app_id)													"count_user_setting_likes",
+								AND us.user_account_app_app_id = :app_id)													"count_user_setting_likes",
 							(SELECT COUNT(DISTINCT u_like.user_account_id)
 							   FROM ${process.env.SERVICE_DB_DB2_NAME}.app2_user_setting_like u_like,
 									${process.env.SERVICE_DB_DB2_NAME}.app2_user_setting us
-							  WHERE us.user_account_id = u.id
-								AND us.app_id = :app_id
+							  WHERE us.user_account_app_user_account_id = u.id
+								AND us.user_account_app_app_id = :app_id
 								AND u_like.app2_user_setting_id = us.id)							"count_user_setting_liked"
 						FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account u
 						WHERE u.id = :id`;
@@ -661,7 +661,7 @@ module.exports = {
 		if (process.env.SERVICE_DB_USE == 1) {
 			sql = `SELECT	us.id,
 							us.description,
-							us.user_account_id,
+							us.user_account_app_user_account_id,
 							(SELECT COUNT(u_like.id)
 							FROM ${process.env.SERVICE_DB_DB1_NAME}.app2_user_setting_like u_like
 							WHERE u_like.app2_user_setting_id = us.id)				count_likes,
@@ -674,15 +674,15 @@ module.exports = {
 								AND u_liked_current_user.app2_user_setting_id = us.id) 	liked,
 							us.design_paper_size
 						FROM ${process.env.SERVICE_DB_DB1_NAME}.app2_user_setting us
-						WHERE us.user_account_id = ? 
-						AND us.app_id = ?`;
+						WHERE us.user_account_app_user_account_id = ? 
+						AND us.user_account_app_app_id = ?`;
 			parameters = [	id_current_user,
 							id,
 							app_id];
 		}else if (process.env.SERVICE_DB_USE==2){
 			sql = `SELECT	us.id "id",
 							us.description "description",
-							us.user_account_id "user_account_id",
+							us.user_account_app_user_account_id "user_account_id",
 							(SELECT COUNT(u_like.id)
 							FROM ${process.env.SERVICE_DB_DB2_NAME}.app2_user_setting_like u_like
 							WHERE u_like.app2_user_setting_id = us.id)				"count_likes",
@@ -695,8 +695,8 @@ module.exports = {
 								AND u_liked_current_user.app2_user_setting_id = us.id) 	"liked",
 							us.design_paper_size "design_paper_size"
 						FROM ${process.env.SERVICE_DB_DB2_NAME}.app2_user_setting us
-						WHERE us.user_account_id = :user_account_id
-						AND us.app_id = :app_id `;
+						WHERE us.user_account_app_user_account_id = :user_account_id
+						AND us.user_account_app_app_id = :app_id `;
 			parameters = {
 							user_account_id_current: id_current_user,
 							user_account_id: id,
@@ -726,11 +726,11 @@ module.exports = {
 									u.username,
 									u.provider_first_name
 							FROM   ${process.env.SERVICE_DB_DB1_NAME}.user_account u
-							WHERE  u.id IN (SELECT us.user_account_id
+							WHERE  u.id IN (SELECT us.user_account_app_user_account_id
 											FROM ${process.env.SERVICE_DB_DB1_NAME}.app2_user_setting_like u_like,
 													${process.env.SERVICE_DB_DB1_NAME}.app2_user_setting us
 											WHERE u_like.user_account_id = ?
-											AND us.app_id = ?
+											AND us.user_account_app_app_id = ?
 											AND us.id = u_like.app2_user_setting_id)
 							AND    u.active = 1
 							AND    5 = ?
@@ -748,8 +748,8 @@ module.exports = {
 							WHERE  u.id IN (SELECT u_like.user_account_id
 											FROM ${process.env.SERVICE_DB_DB1_NAME}.app2_user_setting us,
 												${process.env.SERVICE_DB_DB1_NAME}.app2_user_setting_like u_like
-											WHERE us.user_account_id = ?
-											AND us.app_id = ?
+											WHERE us.user_account_app_user_account_id = ?
+											AND us.user_account_app_app_id = ?
 											AND us.id = u_like.app2_user_setting_id)
 							AND    u.active = 1
 							AND    6 = ?) t
@@ -774,11 +774,11 @@ module.exports = {
 									u.username "username",
 									u.provider_first_name "provider_first_name"
 							FROM    ${process.env.SERVICE_DB_DB2_NAME}.user_account u
-							WHERE  u.id IN (SELECT us.user_account_id
+							WHERE  u.id IN (SELECT us.user_account_app_user_account_id
 											FROM ${process.env.SERVICE_DB_DB2_NAME}.app2_user_setting_like u_like,
 												${process.env.SERVICE_DB_DB2_NAME}.app2_user_setting us
 											WHERE u_like.user_account_id = :user_account_id_like_setting
-											AND us.app_id = :app_id
+											AND us.user_account_app_app_id = :app_id
 											AND us.id = u_like.app2_user_setting_id)
 							AND    u.active = 1
 							AND    5 = :detailchoice_like_setting
@@ -796,8 +796,8 @@ module.exports = {
 							WHERE  u.id IN (SELECT u_like.user_account_id
 											FROM ${process.env.SERVICE_DB_DB2_NAME}.app2_user_setting us,
 												${process.env.SERVICE_DB_DB2_NAME}.app2_user_setting_like u_like
-											WHERE us.user_account_id = :user_account_id_liked_setting
-											AND us.app_id = :app_id
+											WHERE us.user_account_app_user_account_id = :user_account_id_liked_setting
+											AND us.user_account_app_app_id = :app_id
 											AND us.id = u_like.app2_user_setting_id)
 							AND    u.active = 1
 							AND    6 = :detailchoice_liked_setting) t
@@ -833,11 +833,11 @@ module.exports = {
 									u.provider_image_url,
 									u.username,
 									u.provider_first_name,
-									(SELECT COUNT(us.user_account_id)
+									(SELECT COUNT(us.user_account_app_user_account_id)
 									FROM ${process.env.SERVICE_DB_DB1_NAME}.app2_user_setting_like u_like,
 											${process.env.SERVICE_DB_DB1_NAME}.app2_user_setting us
-									WHERE us.user_account_id = u.id
-										AND us.app_id = ?
+									WHERE us.user_account_app_user_account_id = u.id
+										AND us.user_account_app_app_id = ?
 										AND u_like.app2_user_setting_id = us.id) count
 							FROM  ${process.env.SERVICE_DB_DB1_NAME}.user_account u
 						   WHERE  u.active = 1
@@ -853,11 +853,11 @@ module.exports = {
 									u.provider_image_url,
 									u.username,
 									u.provider_first_name,
-									(SELECT COUNT(us.user_account_id)
+									(SELECT COUNT(us.user_account_app_user_account_id)
 									FROM ${process.env.SERVICE_DB_DB1_NAME}.app2_user_setting_view u_view,
 											${process.env.SERVICE_DB_DB1_NAME}.app2_user_setting us
-									WHERE us.user_account_id = u.id
-										AND us.app_id = ?
+									WHERE us.user_account_app_user_account_id = u.id
+										AND us.user_account_app_app_id = ?
 										AND u_view.app2_user_setting_id = us.id) count
 							FROM  ${process.env.SERVICE_DB_DB1_NAME}.user_account u
 						   WHERE  u.active = 1
@@ -882,11 +882,11 @@ module.exports = {
 									u.provider_image_url "provider_image_url",
 									u.username "username",
 									u.provider_first_name "provider_first_name",
-									(SELECT COUNT(us.user_account_id)
+									(SELECT COUNT(us.user_account_app_user_account_id)
 									FROM ${process.env.SERVICE_DB_DB2_NAME}.app2_user_setting_like u_like,
 											${process.env.SERVICE_DB_DB2_NAME}.app2_user_setting us
-									WHERE us.user_account_id = u.id
-										AND us.app_id = :app_id
+									WHERE us.user_account_app_user_account_id = u.id
+										AND us.user_account_app_app_id = :app_id
 										AND u_like.app2_user_setting_id = us.id) "count"
 							FROM  ${process.env.SERVICE_DB_DB2_NAME}.user_account u
 						   WHERE  u.active = 
@@ -902,11 +902,11 @@ module.exports = {
 									u.provider_image_url "provider_image_url",
 									u.username "username",
 									u.provider_first_name "provider_first_name",
-									(SELECT COUNT(us.user_account_id)
+									(SELECT COUNT(us.user_account_app_user_account_id)
 									FROM ${process.env.SERVICE_DB_DB2_NAME}.app2_user_setting_view u_view,
 											${process.env.SERVICE_DB_DB2_NAME}.app2_user_setting us
-									WHERE us.user_account_id = u.id
-										AND us.app_id = :app_id
+									WHERE us.user_account_app_user_account_id = u.id
+										AND us.user_account_app_app_id = :app_id
 										AND u_view.app2_user_setting_id = us.id) "count"
 							FROM  ${process.env.SERVICE_DB_DB2_NAME}.user_account u
 						   WHERE  u.active = 1
@@ -984,8 +984,8 @@ module.exports = {
 						prayer_column_sunset_checked = ?,
 						prayer_column_midnight_checked = ?,
 						prayer_column_fast_start_end = ?,
-						user_account_id = ?,
-						app_id = ?,
+						user_account_app_user_account_id = ?,
+						user_account_app_app_id = ?,
 						date_modified = SYSDATE()
 					WHERE id = ? `;
 			parameters = [
@@ -1095,8 +1095,8 @@ module.exports = {
 						prayer_column_sunset_checked = :prayer_column_sunset_checked,
 						prayer_column_midnight_checked = :prayer_column_midnight_checked,
 						prayer_column_fast_start_end = :prayer_column_fast_start_end,
-						user_account_id = :user_account_id,
-						app_id = :app_id,
+						user_account_app_user_account_id = :user_account_id,
+						user_account_app_app_id = :app_id,
 						date_modified = SYSDATE
 					WHERE id = :id `;
 			parameters = {
