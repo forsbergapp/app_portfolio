@@ -3071,14 +3071,7 @@ async function init_common(parameters, callBack){
                                                                 "parameter_value":${json.data[i].parameter_value==null?null:'"' + json.data[i].parameter_value + '"'}}`));
                     }
                 }
-                if (parameters.ui==true){
-                    //translate ui
-                    common_translate_ui(window.global_user_locale, (err, result)=>{
-                        callBack(null, global_app_parameters)
-                    });
-                }
-                else
-                    callBack(null, global_app_parameters)
+                callBack(null, global_app_parameters)
             }
         })
     }
