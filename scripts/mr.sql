@@ -170,3 +170,14 @@ INSERT INTO app_portfolio.message_translation (language_id, message_code, text) 
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (338,'20400','Record not found');
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (338,'20401','Invalid password');
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (338,'20500','Missing latitude or longitude');
+--
+-- regional_setting_translation
+--
+INSERT INTO app_portfolio.regional_setting_translation (regional_setting_id, language_id, text) VALUES (490,338,'Gregorian');
+INSERT INTO app_portfolio.regional_setting_translation (regional_setting_id, language_id, text) VALUES (491,338,'Hijri');
+INSERT INTO app_portfolio.regional_setting_translation (regional_setting_id, language_id, text) VALUES (481,338,'Transliteration');
+INSERT INTO app_portfolio.regional_setting_translation (regional_setting_id, language_id, text) VALUES (482,338,'Transliteration, translation');
+INSERT INTO app_portfolio.regional_setting_translation (regional_setting_id, language_id, text) VALUES (483,338,'Translation, transliteration');
+INSERT INTO app_portfolio.regional_setting_translation (regional_setting_id, language_id, text) VALUES (484,338,'Translation');
+INSERT INTO app_portfolio.regional_setting_translation (regional_setting_id, language_id, text) VALUES (479,338,'Left to right');
+INSERT INTO app_portfolio.regional_setting_translation (regional_setting_id, language_id, text) VALUES (480,338,'Right to left');
