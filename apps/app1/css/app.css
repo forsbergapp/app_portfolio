@@ -63,6 +63,7 @@ body.font_arabic_nastaliq #dialogue_info_content{
 	visibility:visible;
 	overflow: hidden;
 	height: 420px;
+	width: auto;
 	transform:             rotateY( 0deg );
         -moz-transform:    rotateY( 0deg );
         -ms-transform:     rotateY( 0deg );
@@ -75,6 +76,7 @@ body.font_arabic_nastaliq #dialogue_info_content{
     overflow-y: scroll;
     overflow-x: hidden;
     padding-right: 26px;
+	text-align: initial;
     box-sizing: content-box;
     width: 106%;
 }
