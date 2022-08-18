@@ -116,7 +116,7 @@ function get_apps() {
             json = JSON.parse(result);
             let html='';
             for (var i = 0; i < json.data.length; i++) {
-                if (i!=0){
+                if (i>1){
                     html +=`<div class='app_link_row'>
                                 <div class='app_link_col'>
                                     <div class='app_id'>${json.data[i].id}</div>
