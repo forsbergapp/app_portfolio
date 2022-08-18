@@ -3049,7 +3049,9 @@ function init(parameters) {
                     window.global_qr_background_color = global_app_parameters[i].parameter_value;
             }
             init_app();
-            common_translate_ui_app(window.global_user_locale);
+            common_translate_ui_app(window.global_user_locale, (err, result)=>{
+                null
+            });
         }
     })
 }

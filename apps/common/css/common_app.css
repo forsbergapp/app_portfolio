@@ -256,10 +256,9 @@ a:active {
 	width: 100%;
 }
 #user_edit_avatar{
-	width:64px;
-	height:64px;
+	width:48px;
+	height:48px;
 	position: fixed;
-	left: 9px;
     top: 4px;
 }
 #user_edit_avatar_img{
@@ -293,7 +292,7 @@ a:active {
 }
 #dialogue_user_edit_content .setting_horizontal_col:nth-child(2){
 	width :90%;
-	text-align: left;
+	text-align: start;
 	display: inline-block;
 }
 #dialogue_user_edit_content #user_edit_provider .setting_horizontal_row:nth-child(5){
@@ -385,6 +384,8 @@ a:active {
 }
 .profile_search_list_col:nth-child(2){
 	width:24px;
+	padding-left:10px;
+	padding-right:10px;
 	display:table-cell;
 }
 .profile_search_list_col:nth-child(3),
@@ -392,10 +393,11 @@ a:active {
 	display:table-cell;
 	vertical-align: middle;
 	padding-left:10px;
+	padding-right:10px;
 }
 .profile_search_list_col:nth-child(4){
 	width:100%;
-	text-align:right;
+	text-align:end;
 }
 .profile_search_list_avatar{
 	height:24px;
@@ -412,7 +414,7 @@ a:active {
 #profile_main_col1{
 	display:inline-block;
 	width:200px;
-	text-align:left;
+	text-align:start;
 }
 #profile_main_col2{
 	display:inline-block;
@@ -482,7 +484,7 @@ a:active {
 #profile_main_btn_likes,
 #profile_main_btn_liked{
 	height:20px;
-	text-align:left;
+	text-align:start;
 }
 #profile_main_btn_following,
 #profile_main_btn_followed,
@@ -529,7 +531,6 @@ a:active {
 }
 #profile_private_title{
 	font-size:48px;
-	text-align: left;
 	margin: 10px;
 	display:inline-block;
 }
@@ -551,7 +552,7 @@ a:active {
 .profile_detail_list_row{
 	height:24px;
 	margin-top: 4px;
-    margin-left: -90px;
+    text-align: start;
 }
 .profile_detail_list_col:nth-child(1){
 	display: none;
@@ -559,6 +560,8 @@ a:active {
 .profile_detail_list_col:nth-child(2){
 	width:24px;
 	vertical-align: middle;
+	padding-left:10px;
+	padding-right:10px;
 	display:inline-block;
 }
 .profile_detail_list_col:nth-child(3){
@@ -566,12 +569,13 @@ a:active {
 	width:200px;
 	vertical-align: middle;
 	padding-left:10px;
+	padding-right:10px;
 	text-align:left;
 }
 .profile_detail_list_col:nth-child(4){
 	width:24px;
 	vertical-align: middle;
-	float: right;
+	display: inline-block;
     margin-right: 10px;
 }
 .profile_detail_list_app_delete{
@@ -616,6 +620,8 @@ a:active {
 }
 .profile_top_list_col:nth-child(2){
 	width:24px;
+	padding-left:10px;
+	padding-right:10px;
 	display:table-cell;
 }
 .profile_top_list_col:nth-child(3),
@@ -623,10 +629,11 @@ a:active {
 	display:table-cell;
 	vertical-align: middle;
 	padding-left:10px;
+	padding-right:10px;
 }
 .profile_top_list_col:nth-child(4){
 	width:100%;
-	text-align:right;
+	text-align:end;
 }
 .profile_top_list_avatar{
 	height:24px;
@@ -844,12 +851,7 @@ a:active {
 	visibility: hidden;
 	text-align:center;
 }
-#common_window_info_info,
-#common_window_info_info1,
-#common_window_info_info1,
-#common_window_info_info2,
-#common_window_info_info3,
-#common_window_info_info4{
+#common_window_info_info{
 	text-align: left;
 }
 
