@@ -164,6 +164,7 @@ body.font_arabic_nastaliq #dialogue_info_content{
 #dialogue_info_content{
 	visibility:visible;
 	height: 420px;
+	width: auto;
 	transform:             rotateY( 180deg );
         -moz-transform:    rotateY( 180deg );
         -ms-transform:     rotateY( 180deg );
@@ -236,9 +237,6 @@ body.font_arabic_nastaliq #dialogue_info_content{
 /*RESPONSIVE SETTINGS*/
 /*CSS for minimum 768px*/
 @media only screen and (min-width: 768px) {
-	#dialogue_start_content, #dialogue_info_content{
-		width: 400px;
-	}
 	body.font_arabic_nastaliq #dialogue_start_content,
 	body.font_arabic_nastaliq #dialogue_info_content{
 		height: 420px;
