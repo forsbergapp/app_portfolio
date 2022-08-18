@@ -409,7 +409,7 @@ function init(parameters){
                 }
                 show_start().then(function(){
                     init_providers('onProviderSignIn_app', function() { onProviderSignIn_app() }).then(function(){
-                        null;
+                        common_translate_ui(window.global_user_locale);
                     });
                 })
             })
