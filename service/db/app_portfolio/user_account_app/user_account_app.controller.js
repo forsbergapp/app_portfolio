@@ -44,7 +44,7 @@ module.exports = {
 		});
 	},
 	updateUserAccountApp: (req, res) => {
-		updateUserAccountApp(req.query.app_id, req.params.user_account_id, (err,results) => {
+		updateUserAccountApp(req.query.app_id, req.params.user_account_id, req.body, (err,results) => {
 			if (err) {
 				return res.status(500).send(
 					err

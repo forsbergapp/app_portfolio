@@ -326,7 +326,8 @@ async function common_translate_ui(lang_code, callBack){
                     for (let i = 0; i < json.locales.length; i++){
                         html += `<option id="${i}" value="${json.locales[i].locale}">${json.locales[i].text}</option>`;
                     }
-                    select_locale.innerHTML = html;
+                    //keep first with null
+                    select_locale.innerHTML = select_locale.options[0].outerHTML + html;
                     select_locale.value = current_locale;
                 }
                 //translate regional settings
@@ -339,13 +340,13 @@ async function common_translate_ui(lang_code, callBack){
                     else{
                         json = JSON.parse(result);
                         let html='';
-                        let select_locale = document.getElementById('user_direction_select');
-                        let current_locale = select_locale.value;
-                        for (let i = 0; i < json.locales.length; i++){
-                            html += `<option id="${i}" value="${json.locales[i].data}">${json.locales[i].text}</option>`;
+                        let select = document.getElementById('user_direction_select');
+                        let current_value = select.value;
+                        for (let i = 0; i < json.settings.length; i++){
+                            html += `<option id="${json.settings[i].id}" value="${json.settings[i].data}">${json.settings[i].text}</option>`;
                         }
-                        select_locale.innerHTML = html;
-                        select_locale.value = current_locale;
+                        select.innerHTML = select.options[0].outerHTML + html;
+                        select.value = current_value;
                         callBack(null,null);
                     }
                 })
@@ -1770,8 +1771,9 @@ async function user_login(username, password, callBack) {
             json = JSON.parse(result);
             window.global_user_account_id = json.items[0].id;
             window.global_user_identity_provider_id = '';
-            updateOnlineStatus();
             window.global_rest_at	= json.accessToken;
+            updateOnlineStatus();
+            user_preference_get();
             if (json.items[0].active==0){
                 let function_cancel_event = function() { dialogue_verify_clear();eval(`(function (){${window.global_exception_app_function}()}());`);};
                 show_common_dialogue('VERIFY', 'LOGIN', json.items[0].email, window.global_icon_app_logoff, function_cancel_event);
@@ -1793,6 +1795,11 @@ async function user_logoff(){
     window.global_rest_at ='';
     window.global_user_account_id = '';
     updateOnlineStatus();
+    user_preferences_set_default_globals('LOCALE');
+    user_preferences_set_default_globals('TIMEZONE');
+    user_preferences_set_default_globals('DIRECTION');
+    user_preferences_set_default_globals('ARABIC_SCRIPT');
+    user_preferences_update_select();
     document.getElementById('profile_avatar_online_status').className='';
     //get new data token to avoid endless loop och invalid token
     await common_fetch_token(0, null,  null, null,  (err, result)=>{
@@ -2323,6 +2330,100 @@ function updatePassword(){
         })
     }
 }
+async function user_preference_save(){
+    if (typeof window.global_user_preference_save=='undefined' && window.global_user_account_id != ''){
+        let json_data =
+        `{
+        "preference_locale": "${document.getElementById('user_locale_select').value}",
+        "regional_setting_preference_timezone_id": "${document.getElementById('user_timezone_select').options[document.getElementById('user_timezone_select').selectedIndex].id}",
+        "regional_setting_preference_direction_id": "${document.getElementById('user_direction_select').options[document.getElementById('user_direction_select').selectedIndex].id}",
+        "regional_setting_preference_arabic_script_id": "${document.getElementById('user_arabic_script_select').options[document.getElementById('user_arabic_script_select').selectedIndex].id}"
+        }`;
+
+        await common_fetch(window.global_rest_url_base + window.global_rest_user_account_app + window.global_user_account_id + '?', 
+                    'PATCH', 1, json_data, null, null, (err, result) =>{
+            if (err)
+                null;
+            else{
+                null;
+            }
+        })
+    }
+    
+}
+async function user_preference_get(){
+    await common_fetch(window.global_rest_url_base + window.global_rest_user_account_app + window.global_user_account_id + '?', 
+                 'GET', 1, null, null, null, (err, result) =>{
+        if (err)
+            null;
+        else{
+            json = JSON.parse(result);
+            //locale
+            if (json.items[0].preference_locale==null){
+                user_preferences_set_default_globals('LOCALE');
+            }
+            else{
+                window.global_user_locale = json.items[0].preference_locale
+            }
+            //timezone
+            if (json.items[0].regional_setting_preference_timezone_id==null){
+                user_preferences_set_default_globals('TIMEZONE');
+            }
+            else{
+                SearchAndSetSelectedIndex(json.items[0].regional_setting_preference_timezone_id, document.getElementById('user_timezone_select'), 0);
+                window.global_user_timezone = document.getElementById('user_timezone_select').value;
+            }
+            //direction
+            SearchAndSetSelectedIndex(json.items[0].regional_setting_preference_direction_id, document.getElementById('user_direction_select'), 0);
+            window.global_user_direction = document.getElementById('user_direction_select').value;
+            //arabic script
+            SearchAndSetSelectedIndex(json.items[0].regional_setting_preference_arabic_script_id, document.getElementById('user_arabic_script_select'), 0);
+            window.global_user_arabic_script = document.getElementById('user_arabic_script_select').value;
+            user_preferences_update_select();
+        }
+    })
+}
+function user_preferences_set_default_globals(preference){
+    switch (preference){
+        case 'LOCALE':{
+            window.global_user_locale           = navigator.language.toLowerCase();
+            break;
+        }
+        case 'TIMEZONE':{
+            window.global_user_timezone         = Intl.DateTimeFormat().resolvedOptions().timeZone;
+            break;
+        }
+        case 'DIRECTION':{
+            window.global_user_direction        = ''; // ltr, rtl, initial, inherit
+            break;
+        }
+        case 'ARABIC_SCRIPT':{
+            window.global_user_arabic_script    = ''; /*classes 
+                                                    font_arabic_sans_kufi (default)
+                                                    font_arabic_kufi
+                                                    font_arabic_nashk
+                                                    font_arabic_nastaliq
+                                                    font_arabic_ui
+                                                  */
+            break;
+        }
+    }
+}
+function user_preferences_update_select(){
+    SearchAndSetSelectedIndex(window.global_user_locale, document.getElementById('user_locale_select'), 1);
+    SearchAndSetSelectedIndex(window.global_user_timezone, document.getElementById('user_timezone_select'), 1);
+    SearchAndSetSelectedIndex(window.global_user_direction, document.getElementById('user_direction_select'), 1);
+    SearchAndSetSelectedIndex(window.global_user_arabic_script, document.getElementById('user_arabic_script_select'), 1);
+
+    //don't save changes now, just execute other code
+    //or it would save preferences 4 times
+    window.global_user_preference_save = false;
+    document.getElementById('user_locale_select').dispatchEvent(new Event('change'))
+	document.getElementById('user_timezone_select').dispatchEvent(new Event('change'))
+	document.getElementById('user_direction_select').dispatchEvent(new Event('change'))
+	document.getElementById('user_arabic_script_select').dispatchEvent(new Event('change'))
+    delete window.global_user_preference_save;
+}
 /*----------------------- */
 /* USER PROVIDER          */
 /*----------------------- */
@@ -2450,6 +2551,7 @@ async function updateProviderUser(identity_provider_id, profile_id, profile_firs
                 window.global_user_account_id = json.items[0].id;
                 window.global_user_identity_provider_id = json.items[0].identity_provider_id;
                 updateOnlineStatus();
+                user_preference_get();
                 dialogue_login_clear();
                 dialogue_signup_clear();
                 return callBack(null, {user_account_id: json.items[0].id,
@@ -2674,16 +2776,11 @@ function set_globals(parameters){
     //user info
     window.global_user_account_id = '';
     window.global_user_identity_provider_id='';
-    window.global_user_locale               = navigator.language.toLowerCase();
-    window.global_user_timezone             = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    window.global_user_direction            = document.body.style.direction; // ltr, rtl, initial, inherit
-    window.global_user_arabic_script        = ''; /*classes 
-                                                    font_arabic_sans_kufi (default)
-                                                    font_arabic_kufi
-                                                    font_arabic_nashk
-                                                    font_arabic_nastaliq
-                                                    font_arabic_ui
-                                                  */
+    user_preferences_set_default_globals('LOCALE');
+    user_preferences_set_default_globals('TIMEZONE');
+    user_preferences_set_default_globals('DIRECTION');
+    user_preferences_set_default_globals('ARABIC_SCRIPT');
+    
     //user info set or used by services
     window.global_clientId;
     window.global_client_latitude = parameters.gps_lat;
@@ -2967,28 +3064,32 @@ async function init_common(parameters, callBack){
         document.getElementById('user_menu_dropdown_signup').addEventListener('click', function() { show_common_dialogue('SIGNUP'); document.getElementById('user_menu_dropdown').style.visibility = 'hidden'; }, false);
     
         if (document.getElementById('user_locale_select'))
-            document.getElementById('user_locale_select').addEventListener('change', function() { window.global_user_locale = this.value;}, false);
+            document.getElementById('user_locale_select').addEventListener('change', function() { window.global_user_locale = this.value; 
+                                                                                                  user_preference_save(); }, false);
         if (document.getElementById('user_timezone_select'))
             document.getElementById('user_timezone_select').addEventListener('change', function() { window.global_user_timezone = this.value;
-                                                                                                    if (document.getElementById('dialogue_user_edit').style.visibility == 'visible') {
-                                                                                                        dialogue_user_edit_clear();
-                                                                                                        user_edit();
-                                                                                                    }}, false);
+                                                                                                    user_preference_save().then(function(){
+                                                                                                        if (document.getElementById('dialogue_user_edit').style.visibility == 'visible') {
+                                                                                                            dialogue_user_edit_clear();
+                                                                                                            user_edit();
+                                                                                                        }
+                                                                                                    });
+                                                                                                    }, false);
         //define also in app if needed to adjust ui
         if (document.getElementById('user_direction_select'))
-            document.getElementById('user_direction_select').addEventListener('change', function() { document.body.style.direction = this.value; window.global_user_direction = this.value;}, false);
+            document.getElementById('user_direction_select').addEventListener('change', function() { document.body.style.direction = this.value;
+                                                                                                     window.global_user_direction = this.value;  
+                                                                                                     user_preference_save();
+                                                                                                     }, false);
         if (document.getElementById('user_arabic_script_select'))
-            document.getElementById('user_arabic_script_select').addEventListener('change', function() { window.global_user_arabic_script = this.value;}, false);
+            document.getElementById('user_arabic_script_select').addEventListener('change', function() { window.global_user_arabic_script = this.value;
+                                                                                                         user_preference_save();
+                                                                                                         }, false);
+        SearchAndSetSelectedIndex(window.global_user_locale, document.getElementById('user_locale_select'), 1);
+        SearchAndSetSelectedIndex(window.global_user_timezone, document.getElementById('user_timezone_select'), 1);
+        SearchAndSetSelectedIndex(window.global_user_direction, document.getElementById('user_direction_select'), 1);
+        SearchAndSetSelectedIndex(window.global_user_arabic_script, document.getElementById('user_arabic_script_select'), 1);
         
-        //set default user preferences        
-        if (document.getElementById('user_preference_locale'))
-            SearchAndSetSelectedIndex(window.global_user_locale, document.getElementById('user_locale_select'), 1);
-        if (document.getElementById('user_timezone_select'))
-            SearchAndSetSelectedIndex(window.global_user_timezone, document.getElementById('user_timezone_select'), 1);
-        if (document.getElementById('user_direction_select'))
-            SearchAndSetSelectedIndex(window.global_user_direction, document.getElementById('user_direction_select'), 1);
-        if (document.getElementById('user_arabic_script_select'))
-            SearchAndSetSelectedIndex(window.global_user_arabic_script, document.getElementById('user_arabic_script_select'), 1);
     }
     function set_common_parameters(app_id, parameter_name, parameter_value){
         if (app_id == 0){
