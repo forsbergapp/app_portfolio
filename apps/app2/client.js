@@ -83,10 +83,10 @@ module.exports = {
                                     `${USER_TIMEZONE}`);
                             app = app.replace(
                                     '<USER_DIRECTION/>',
-                                    `${USER_DIRECTION}`);
+                                    `<option id='' value=''></option>${USER_DIRECTION}`);
                             app = app.replace(
                                     '<USER_ARABIC_SCRIPT/>',
-                                    `${USER_ARABIC_SCRIPT}`);
+                                    `<option id='' value=''></option>${USER_ARABIC_SCRIPT}`);
                             get_module_with_init(app_id, 
                                                  'app_exception',
                                                  null,

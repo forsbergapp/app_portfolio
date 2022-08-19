@@ -11,7 +11,7 @@ module.exports = {
 			}
 			return res.status(200).json({
 				success: 1,
-				locales: results
+				settings: results
 			});
 		});
 	}

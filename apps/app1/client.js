@@ -43,10 +43,10 @@ module.exports = {
                                     `${USER_TIMEZONE}`);
                             app = app.replace(
                                     '<USER_DIRECTION/>',
-                                    `${USER_DIRECTION}`);
+                                    `<option id='' value=''></option>${USER_DIRECTION}`);
                             app = app.replace(
                                     '<USER_ARABIC_SCRIPT/>',
-                                    `${USER_ARABIC_SCRIPT}`);
+                                    `<option id='' value=''></option>${USER_ARABIC_SCRIPT}`);
                             //Profile tag not used in common body
                             app = app.replace(
                                     '<AppProfileTop/>',
