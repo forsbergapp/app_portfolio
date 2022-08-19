@@ -448,12 +448,10 @@ a:active {
 #profile_avatar_online_status.online{
 	display: inline-block;
 	color:#6ab344;
-	background-color: #6ab344;
 }
 #profile_avatar_online_status.offline{
 	display: inline-block;
 	color:rgb(224, 38, 38);
-	background-color: rgb(224, 38, 38);
 }
 
 #profile_joined_date_icon{

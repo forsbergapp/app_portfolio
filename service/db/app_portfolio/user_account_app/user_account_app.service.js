@@ -85,9 +85,9 @@ module.exports = {
 		let parameters;
 		if (process.env.SERVICE_DB_USE == 1) {
 			sql = `SELECT preference_locale,
-			              preference_timezone,
-						  preference_direction,
-						  preference_arabic_script,
+						  regional_setting_preference_timezone_id,
+						  regional_setting_preference_direction_id,
+						  regional_setting_preference_arabic_script_id,
 						  date_created
 					 FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_app
 					WHERE user_account_id = ?
@@ -98,9 +98,9 @@ module.exports = {
 						 ];
 		}else if (process.env.SERVICE_DB_USE==2){
 			sql = `SELECT preference_locale "preference_locale",
-						  preference_timezone "preference_timezone",
-						  preference_direction "preference_direction",
-						  preference_arabic_script "preference_arabic_script",
+						  regional_setting_preference_timezone_id "regional_setting_preference_timezone_id",
+  						  regional_setting_preference_direction_id "regional_setting_preference_direction_id",
+						  regional_setting_preference_arabic_script_id "regional_setting_preference_arabic_script_id",
 						  date_created "date_created"
 					 FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_app
 					WHERE user_account_id = :user_account_id
@@ -121,37 +121,41 @@ module.exports = {
 	updateUserAccountApp: (app_id, user_account_id, data, callBack) => {
 		let sql;
 		let parameters;
+		if (data.regional_setting_preference_direction_id=='')
+			data.regional_setting_preference_direction_id = null;
+		if (data.regional_setting_preference_arabic_script_id=='')
+			data.regional_setting_preference_arabic_script_id = null;
 		if (process.env.SERVICE_DB_USE == 1) {
 			sql = `UPDATE ${process.env.SERVICE_DB_DB1_NAME}.user_account_app
 					  SET preference_locale = ?,
-			              preference_timezone = ?,
-						  preference_direction = ?,
-						  preference_arabic_script = ?,
+					  	  regional_setting_preference_timezone_id = ?,
+						  regional_setting_preference_direction_id = ?,
+						  regional_setting_preference_arabic_script_id = ?,
 						  date_created = SYSDATE()
 					WHERE user_account_id = ?
 					  AND app_id = ?`;
 			parameters = [
 							data.preference_locale,
-							data.preference_timezone,
-							data.preference_direction,
-							data.preference_arabic_script,
+							data.regional_setting_preference_timezone_id,
+							data.regional_setting_preference_direction_id,
+							data.regional_setting_preference_arabic_script_id,
 							user_account_id,
 							app_id
 						 ];
 		}else if (process.env.SERVICE_DB_USE==2){
-			sql = `UPDATE ${process.env.SERVICE_DB_DB1_NAME}.user_account_app
+			sql = `UPDATE ${process.env.SERVICE_DB_DB2_NAME}.user_account_app
 					  SET preference_locale = :preference_locale,
-						  preference_timezone = :preference_timezone,
-					  	  preference_direction = :preference_direction,
-						  preference_arabic_script = :preference_arabic_script,
+						  regional_setting_preference_timezone_id = :regional_setting_preference_timezone_id,
+						  regional_setting_preference_direction_id = :regional_setting_preference_direction_id,
+						  regional_setting_preference_arabic_script_id = :regional_setting_preference_arabic_script_id,
 						  date_created = SYSDATE
 					WHERE user_account_id = :user_account_id
 						AND app_id = :app_id`;
 			parameters = {
 							preference_locale: data.preference_locale,
-							preference_timezone: data.preference_timezone,
-							preference_direction: data.preference_direction,
-							preference_arabic_script: data.preference_arabic_script,
+							preference_timezone: data.regional_setting_preference_timezone_id,
+							preference_direction: data.regional_setting_preference_direction_id,
+							preference_arabic_script: data.regional_setting_preference_arabic_script_id,
 							user_account_id: user_account_id,
 							app_id: app_id
 						 };
