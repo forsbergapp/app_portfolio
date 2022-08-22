@@ -99,6 +99,9 @@ body.font_arabic_nastaliq #user_menu_default_avatar{
 	font-weight: bold;
 	cursor: default;
 }
+.app_category{
+	font-size: 0.7em;
+}
 .app_description{
 	width: 220px;
 	cursor: default;
