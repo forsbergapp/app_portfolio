@@ -20,8 +20,19 @@ function show_menu(menu){
     document.getElementById('menu_3_content').style.display='none';
     document.getElementById('menu_4_content').style.display='none';
     document.getElementById(`menu_${menu}_content`).style.display='block';
+    let current_year = new Date().getFullYear();
+    let yearvalues =   `<option value="${current_year}">${current_year}</option>
+                        <option value="${current_year -1}">${current_year-1}</option>
+                        <option value="${current_year -2}">${current_year-2}</option>
+                        <option value="${current_year -3}">${current_year-3}</option>
+                        <option value="${current_year -4}">${current_year-4}</option>
+                        <option value="${current_year -5}">${current_year-5}</option>
+                        `;
     switch(menu){
         case 1:{
+            document.getElementById('select_year_menu1').innerHTML = yearvalues;
+            document.getElementById('select_year_menu1').selectedIndex = 0;
+            document.getElementById('select_month_menu1').selectedIndex = new Date().getMonth();
             show_chart(1).then(function(){
                 show_chart(2).then(function(){
                     count_users().then(function(){
@@ -37,15 +48,7 @@ function show_menu(menu){
         }
         case 3:{
             window.global_page = 0;
-            let current_year = new Date().getFullYear();
-            document.getElementById('select_year_menu3').innerHTML = 
-                `<option value="${current_year}">${current_year}</option>
-                    <option value="${current_year -1}">${current_year-1}</option>
-                    <option value="${current_year -2}">${current_year-2}</option>
-                    <option value="${current_year -3}">${current_year-3}</option>
-                    <option value="${current_year -4}">${current_year-4}</option>
-                    <option value="${current_year -5}">${current_year-5}</option>
-                    `;
+            document.getElementById('select_year_menu3').innerHTML = yearvalues;
             document.getElementById('select_year_menu3').selectedIndex = 0;
             document.getElementById('select_month_menu3').selectedIndex = new Date().getMonth();
             show_app_stat().then(function(){
@@ -56,15 +59,7 @@ function show_menu(menu){
             break;    
         }
         case 4:{
-            let current_year = new Date().getFullYear();
-            document.getElementById('select_year_menu4').innerHTML = 
-                `<option value="${current_year}">${current_year}</option>
-                    <option value="${current_year -1}">${current_year-1}</option>
-                    <option value="${current_year -2}">${current_year-2}</option>
-                    <option value="${current_year -3}">${current_year-3}</option>
-                    <option value="${current_year -4}">${current_year-4}</option>
-                    <option value="${current_year -5}">${current_year-5}</option>
-                    `;
+            document.getElementById('select_year_menu4').innerHTML = yearvalues;
             document.getElementById('select_year_menu4').selectedIndex = 0;
             document.getElementById('select_month_menu4').selectedIndex = new Date().getMonth();
             document.getElementById('select_day_menu4').selectedIndex = new Date().getDate() -1;
@@ -658,14 +653,14 @@ function map_set_style(){
 //chart 1=Left Piechart, 2= Right Barchart
 async function show_chart(chart){
     if (admin_token_has_value()){
-        let current_year = new Date().getFullYear();
-        let current_month = new Date().getMonth()+1;
+        let year = document.getElementById('select_year_menu1').value;
+        let month = document.getElementById('select_month_menu1').value;
         let json;
         let app_id ='';
         let old_html = document.getElementById(`box${chart}`).innerHTML;
         document.getElementById(`box${chart}`).innerHTML = window.global_button_spinner;
 
-        await common_fetch(window.global_rest_url_base + `app_log/admin/stat/uniquevisitor?select_app_id=${app_id}&statchoice=${chart}&year=${current_year}&month=${current_month}`,
+        await common_fetch(window.global_rest_url_base + `app_log/admin/stat/uniquevisitor?select_app_id=${app_id}&statchoice=${chart}&year=${year}&month=${month}`,
                  'GET', 2, null, null, null, (err, result) =>{
             if (err)
                 document.getElementById(`box${chart}`).innerHTML = old_html;
@@ -700,7 +695,7 @@ async function show_chart(chart){
                                 plugins: {
                                     title: {
                                         display: true,
-                                        text: `Unique Visitors ${current_year}-${current_month} per app`
+                                        text: `Unique Visitors ${year}-${month} per app`
                                     }
                                 }
                             }
@@ -720,7 +715,7 @@ async function show_chart(chart){
                                 data: {
                                     labels: day_array,
                                     datasets: [{
-                                        label: `Unique Visitors ${current_year}-${current_month} per day`,
+                                        label: `Unique Visitors ${year}-${month} per day`,
                                         data: amount_array,
                                         backgroundColor: [
                                             'rgba(54, 162, 235, 1)',
@@ -1617,6 +1612,8 @@ function init_admin_secure(){
     document.getElementById('menu_5').addEventListener('click', function() { admin_logoff_app() }, false);
 
     document.getElementById('select_app_menu1').addEventListener('change', function() { show_chart(2); }, false);
+    document.getElementById('select_year_menu1').addEventListener('change', function() { show_chart(1);show_chart(2);}, false);
+    document.getElementById('select_month_menu1').addEventListener('change', function() { show_chart(1);show_chart(2);}, false);
     document.getElementById('select_broadcast_type').addEventListener('change', function() { set_broadcast_type(); }, false);
     document.getElementById('maintenance_broadcast_info').addEventListener('click', function() { show_broadcast_dialogue('ALL'); }, false);
     document.getElementById('send_broadcast_send').addEventListener('click', function() { sendBroadcast(); }, false);
