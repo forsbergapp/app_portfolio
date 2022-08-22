@@ -212,14 +212,8 @@ async function common_translate_ui(lang_code, callBack){
                     case 'APP_OBJECT':{
                         switch (json.data[i].object_name){
                             case 'APP_DESCRIPTION':{
-                                if (window.global_app_id == window.global_main_app_id){
-                                    //translate app descriptions for all apps in main app
-                                    var x = document.querySelectorAll('.app_link_row');
-                                    for (let app_id = 0; app_id <= x.length -1; app_id++) {
-                                        if (x[app_id].children[0].children[0].innerHTML == json.data[i].app_id )
-                                            x[app_id].children[3].children[1].innerHTML = json.data[i].text;
-                                    }
-                                }
+                                //translate in each app if needed
+                                null;
                                 break;
                             }
                         }
