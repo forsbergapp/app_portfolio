@@ -22,7 +22,7 @@ function setEvents(){
     document.getElementById('toggle_checkbox').addEventListener('click', function() { toggle_switch() }, false);
     document.getElementById('user_menu_dropdown_log_out').addEventListener('click', function() { user_menu_item_click(this) }, false);
     document.getElementById('user_menu_dropdown_profile_top').addEventListener('click', function() {user_menu_item_click(this)}, false);
-    document.getElementById('user_locale_select').addEventListener('change', function() { common_translate_ui(this.value, (err, result)=>{null});}, false);
+    document.getElementById('user_locale_select').addEventListener('change', function() { common_translate_ui(this.value, (err, result)=>{get_apps()});}, false);
     document.getElementById('user_arabic_script_select').addEventListener('change', function() { toggle_switch()}, false);
 
     //start page
@@ -129,17 +129,17 @@ function get_apps() {
                                 </div>
                                 <div class='app_link_col'>
                                     <div class='app_name'>${json.data[i].app_name}</div>
+                                    <div class='app_category'>${json.data[i].app_category}</div>
                                     <div class='app_description'>${json.data[i].app_description==null?'':json.data[i].app_description}</div>
                                 </div>
                             </div>`;
                 }
             }
-            document.getElementById('apps').innerHTML = html;
-
-
             var clickappevent = function(event) { 
                 window.open(event.target.parentNode.parentNode.children[1].children[0].innerHTML);};
 
+            document.querySelectorAll('.app_logo').forEach(e => e.removeEventListener('click', clickappevent));
+            document.getElementById('apps').innerHTML = html;
             document.querySelectorAll('.app_logo').forEach(e => e.addEventListener('click', clickappevent));
         }
     })
