@@ -1128,6 +1128,16 @@ async function get_gps_from_ip() {
         })
     }
 }
+async function tzlookup(latitude, longitude){
+    return new Promise(function (resolve, reject){
+        common_fetch(window.global_service_geolocation + window.global_service_geolocation_gps_timezone +
+            `?latitude=${latitude}&longitude=${longitude}`,
+            'GET', 0, null, null, null, (err, text_timezone) =>{
+                    resolve (text_timezone);
+})
+    })
+    
+}
 /*----------------------- */
 /* COUNTRY & CITIES       */
 /*----------------------- */
@@ -2837,6 +2847,7 @@ function set_globals(parameters){
 
     //services
     window.global_service_geolocation;
+    window.global_service_geolocation_gps_timezone;
     window.global_service_geolocation_gps_place;
     window.global_service_geolocation_gps_ip;
     window.global_service_report;
@@ -3123,6 +3134,7 @@ async function init_common(parameters, callBack){
                 case 'SERVICE_GEOLOCATION'                  :{window.global_service_geolocation = parameter_value;break;}
                 case 'SERVICE_GEOLOCATION_GPS_IP'           :{window.global_service_geolocation_gps_ip = parameter_value;break;}
                 case 'SERVICE_GEOLOCATION_GPS_PLACE'        :{window.global_service_geolocation_gps_place = parameter_value;break;}
+                case 'SERVICE_GEOLOCATION_GPS_TIMEZONE'     :{window.global_service_geolocation_gps_timezone = parameter_value;break;}
                 case 'SERVICE_REPORT'                       :{window.global_service_report = parameter_value;break;}
                 case 'SERVICE_WORLDCITIES'                  :{window.global_service_worldcities = parameter_value;break;}
                 case 'GPS_MAP_ACCESS_TOKEN'                 :{window.global_gps_map_access_token = parameter_value;break;}
