@@ -214,14 +214,14 @@ module.exports = {
 	},
 	getTimezone: (req, res) =>{
 		getTimezone(req.query.latitude, req.query.longitude, (err, result)=>{
-			return res.status(200).json(
+			return res.status(200).send(
 				result
 			)
 		})
 	},
 	getTimezoneAdmin: (req, res) =>{
 		getTimezone(req.query.latitude, req.query.longitude, (err, result)=>{
-			return res.status(200).json(
+			return res.status(200).send(
 				result
 			)
 		})
