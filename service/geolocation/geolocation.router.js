@@ -2,10 +2,10 @@ const { getPlace, getPlaceAdmin, getIp, getIpAdmin, getTimezone, getTimezoneAdmi
 const router = require("express").Router();
 const { checkAdmin} = require ("../auth/admin/admin.controller");
 const { checkDataToken } = require("../auth/auth.controller");
-router.get("/getplace", checkDataToken, getPlace);
-router.get("/getplace/admin", checkAdmin, getPlaceAdmin);
-router.get("/getip", checkDataToken, getIp);
-router.get("/getip/admin", checkAdmin, getIpAdmin);
-router.get("/getTimezone", checkDataToken, getTimezone);
-router.get("/getTimezone/admin", checkAdmin, getTimezoneAdmin);
+router.get("/place", checkDataToken, getPlace);
+router.get("/place/admin", checkAdmin, getPlaceAdmin);
+router.get("/ip", checkDataToken, getIp);
+router.get("/ip/admin", checkAdmin, getIpAdmin);
+router.get("/timezone", checkDataToken, getTimezone);
+router.get("/timezone/admin", checkAdmin, getTimezoneAdmin);
 module.exports = router;
