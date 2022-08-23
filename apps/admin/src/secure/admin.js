@@ -626,7 +626,7 @@ function update_map(longitude, latitude, zoom, text_place, marker_id, flyto) {
         else
             window.global_session_map.jumpTo({ 'center': [longitude, latitude], 'zoom': zoom });
     }
-    common_fetch(`/service/geolocation/getTimezone/admin?latitude=${latitude}&longitude=${longitude}`,
+    common_fetch(window.global_service_geolocation + window.global_service_geolocation_gps_timezone + `/admin?latitude=${latitude}&longitude=${longitude}`,
                  'GET', 2, null, null, null, (err, text_timezone) =>{
         if (err)
             null;
