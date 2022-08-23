@@ -310,6 +310,9 @@ async function show_list(list_div, list_div_col_title, url, sort, order_by, cols
                                                 <div class='list_app_log_col'>
                                                     <div>${json.data[i].app_id}</div>
                                                 </div>
+                                                <div class='list_connected_col'>
+                                                    <div>${json.data[i].app_user_id}</div>
+                                                </div>
                                                 <div class='list_app_log_col'>
                                                     <div>${json.data[i].app_module}</div>
                                                 </div>
@@ -1286,15 +1289,15 @@ function list_item_action(item){
     if (item.className.indexOf('gps_click')>0){
         common_fetch(window.global_service_geolocation + window.global_service_geolocation_gps_place + 
                      '/admin?app_user_id=' +
-                     '&latitude=' + item.parentNode.children[5].children[0].innerHTML +
-                     '&longitude=' + item.parentNode.children[6].children[0].innerHTML,
+                     '&latitude=' + item.parentNode.children[6].children[0].innerHTML +
+                     '&longitude=' + item.parentNode.children[7].children[0].innerHTML,
                      'GET', 2, null, null, null, (err, result) =>{
                 if (err)
                     null;
                 else{
                     let json = JSON.parse(result);
-                    update_map(item.parentNode.children[6].children[0].innerHTML,
-                               item.parentNode.children[5].children[0].innerHTML,
+                    update_map(item.parentNode.children[7].children[0].innerHTML,
+                               item.parentNode.children[6].children[0].innerHTML,
                                window.global_gps_map_zoom,
                                json.geoplugin_place + ', ' + 
                                json.geoplugin_region + ', ' + 
@@ -1574,6 +1577,13 @@ function init_admin_secure(){
     window.global_limit =1000;
     window.global_previous_row= '';
 
+    //common, since ui=false when called init_common, set some common items here
+    document.getElementById('message_close').innerHTML = window.global_icon_app_close;
+    //if CONFIRM message is used
+    document.getElementById('message_cancel').innerHTML = window.global_icon_app_cancel;
+    document.getElementById('message_cancel').addEventListener('click', function() { document.getElementById("dialogue_message").style.visibility = "hidden"; }, false);
+
+    //other in admin
     document.getElementById('menu_open').innerHTML = window.global_icon_app_menu_open;
     document.getElementById('menu_close').innerHTML = window.global_icon_app_menu_close;
     document.getElementById('maintenance_broadcast_info').innerHTML = window.global_icon_app_chat;
