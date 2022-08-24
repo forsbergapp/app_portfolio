@@ -1081,7 +1081,7 @@ async function update_ui(option, item_id=null) {
                 settings.city.innerHTML=`<option value='' id='' label='…' selected='selected'>…</option>`;
                 SearchAndSetSelectedIndex('', settings.select_place,0);
                 if (settings.country[settings.country.selectedIndex].getAttribute('country_code')!=null){
-                    get_cities(settings.country[settings.country.selectedIndex].getAttribute('country_code').toUpperCase(), (err, cities)=>{
+                    await get_cities(settings.country[settings.country.selectedIndex].getAttribute('country_code').toUpperCase(), (err, cities)=>{
                         if (err)
                             null;
                         else{
