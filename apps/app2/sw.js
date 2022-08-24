@@ -36,7 +36,6 @@ const assetsToCache = [
     '/app2/images/logo.png',
     '/app2/js/app_globals.js',
     '/app2/js/app_report.js',
-    '/app2/js/app_thirdparty.js',
     '/app2/js/app.js',
     '/app2/js/PrayTimes.js'
 ]
