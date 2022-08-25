@@ -209,21 +209,21 @@ async function common_translate_ui(lang_code, callBack){
         else{
             json = JSON.parse(result);
             for (let i = 0; i < json.data.length; i++){
-                switch (json.data[i].object){
-                    case 'APP_OBJECT':{
-                        switch (json.data[i].object_name){
-                            case 'APP_DESCRIPTION':{
-                                //translate in each app if needed
-                                null;
-                                break;
+                if (json.data[i].app_id  == window.global_common_app_id){
+                    switch (json.data[i].object){
+                        case 'APP_OBJECT':{
+                            switch (json.data[i].object_name){
+                                case 'APP_DESCRIPTION':{
+                                    //translate in each app if needed
+                                    null;
+                                    break;
+                                }
                             }
+                            break;
                         }
-                        break;
-                    }
-                    case 'APP_OBJECT_ITEM':{
-                        switch(json.data[i].object_name){
-                            case 'DIALOGUE':{
-                                if (json.data[i].app_id  == window.global_common_app_id){
+                        case 'APP_OBJECT_ITEM':{
+                            switch(json.data[i].object_name){
+                                case 'DIALOGUE':{
                                     //translate common items
                                     switch  (json.data[i].object_item_name){
                                         case 'USERNAME':{
@@ -273,39 +273,61 @@ async function common_translate_ui(lang_code, callBack){
                                             document.getElementById('user_new_password').placeholder = json.data[i].text;    
                                             break;
                                         }
+                                        case 'CONFIRM_QUESTION':{
+                                            document.getElementById(json.data[i].object_item_name.toLowerCase()).innerHTML = json.data[i].text;
+                                            break;
+                                        }
                                     } 
+                                    break;
                                 }
-                                break;
-                            }
-                            case 'REPORT':{
-                                break;
-                            }
-                            default:{
-                                if (json.data[i].app_id  == window.global_app_id){
-                                    //translate items in current app
-                                    document.getElementById(json.data[i].object_item_name.toLowerCase()).innerHTML = json.data[i].text;
+                                case 'REPORT':{
+                                    break;
                                 }
-                                break;
                             }
-                        }
-                        break;
-                    }
-                    case 'APP_OBJECT_ITEM_SUBITEM':{
-                        if (json.data[i].app_id  == window.global_app_id){
-                            //translate items in select lists in current app
-                            let select_element = json.data[i].object_item_name;
-                            //option number not saved in column but end with the option number
-                            let select_option = json.data[i].subitem_name.substr(json.data[i].subitem_name.lastIndexOf('_')+1);
-                            try{
-                                document.getElementById(select_element.toLowerCase()).options[select_option].text = json.data[i].text;
-                            }
-                            catch(err){
-                                console.log(json.data[i].object_item_name.toLowerCase());
-                            }
-                        }
-                        break;
+                            break;
+                        }   
                     }
                 }
+                else
+                    if (json.data[i].app_id  == window.global_app_id){
+                        switch (json.data[i].object){
+                            case 'APP_OBJECT':{
+                                switch (json.data[i].object_name){
+                                    case 'APP_DESCRIPTION':{
+                                        //translate in each app if needed
+                                        null;
+                                        break;
+                                    }
+                                }
+                                break;
+                            }
+                            case  'APP_OBJECT_ITEM':{
+                                switch(json.data[i].object_name){
+                                    case 'REPORT':{
+                                        break;
+                                    }
+                                    default:{
+                                        //translate items in current app
+                                        document.getElementById(json.data[i].object_item_name.toLowerCase()).innerHTML = json.data[i].text;
+                                    }
+                                }
+                                break;
+                            }
+                            case 'APP_OBJECT_ITEM_SUBITEM':{
+                                //translate items in select lists in current app
+                                let select_element = json.data[i].object_item_name;
+                                //option number not saved in column but end with the option number
+                                let select_option = json.data[i].subitem_name.substr(json.data[i].subitem_name.lastIndexOf('_')+1);
+                                try{
+                                    document.getElementById(select_element.toLowerCase()).options[select_option].text = json.data[i].text;
+                                }
+                                catch(err){
+                                    console.log(json.data[i].object_item_name.toLowerCase());
+                                }
+                                break;
+                            }
+                        }
+                    }
             }
             //translate locales
             json = '';

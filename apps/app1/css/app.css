@@ -72,14 +72,14 @@ body.font_arabic_nastaliq #user_menu_default_avatar{
 	height: auto;
     overflow-y: scroll;
     overflow-x: hidden;
-    padding-right: 26px;
-	text-align: initial;
+	text-align: center;
     box-sizing: content-box;
     width: 106%;
 }
 .app_link_row{
 	padding-top: 4px;
     padding-bottom: 4px;
+	margin-inline-start: -20px;
 }
 .app_link_col:nth-child(1),.app_link_col:nth-child(2){
 	display: none;
@@ -107,42 +107,10 @@ body.font_arabic_nastaliq #user_menu_default_avatar{
 	cursor: default;
 }
 .app_logo:hover, .app_logo:active {
-	-webkit-animation: glowing 1300ms infinite;
-	-moz-animation: glowing 1300ms infinite;
-    -o-animation: glowing 1300ms infinite;
-    animation: glowing 1300ms infinite;
 	border-radius:20px;
 	transform: scale(1.2);
 	cursor: pointer;
 }
-@-webkit-keyframes glowing {
-	0% {
-	  background-color: #ececec;
-	  -webkit-box-shadow: 0 0 3px #ececec;
-	}
-	50% {
-	  background-color: #64daf5;
-	  -webkit-box-shadow: 0 0 15px #64daf5;
-	}
-	100% {
-	  background-color: #ececec;
-	  -webkit-box-shadow: 0 0 3px #ececec;
-	}
-  }
-  @keyframes glowing {
-	0% {
-	  background-color: #ececec;
-	  box-shadow: 0 0 3px #ececec;
-	}
-	50% {
-	  background-color: #64daf5;
-	  box-shadow: 0 0 15px #64daf5;
-	}
-	100% {
-	  background-color: #ececec;
-	  box-shadow: 0 0 3px #ececec;
-	}
-  }
 .app_logo{
 	width: 40px;
 	height: 40px;
