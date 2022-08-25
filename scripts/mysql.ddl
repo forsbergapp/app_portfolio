@@ -271,15 +271,15 @@ GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_object_item TO role_ap
 GRANT SELECT ON app_portfolio.app_object_item TO role_app2;
 
 CREATE TABLE app_portfolio.app_object_item_subitem (
-    app_object_item_app_id            INTEGER NOT NULL,
-    app_object_item_object_name       VARCHAR(100) NOT NULL,
-    app_object_item_object_item_name  VARCHAR(100) NOT NULL,
-    subitem_name                      VARCHAR(100) NOT NULL,
+    app_object_item_app_object_app_id      INTEGER NOT NULL,
+    app_object_item_app_object_object_name VARCHAR(100) NOT NULL,
+    app_object_item_object_item_name       VARCHAR(100) NOT NULL,
+    subitem_name                           VARCHAR(100) NOT NULL,
 	CONSTRAINT app_object_item_subitem_pk PRIMARY KEY ( subitem_name,
-	                                                            app_object_item_app_id,
-                                                                app_object_item_object_name,
-                                                                app_object_item_object_item_name
-	                                                             )
+                                                        app_object_item_app_object_app_id,
+                                                        app_object_item_app_object_object_name,
+                                                        app_object_item_object_item_name
+                                                            )
 );
 GRANT SELECT ON app_portfolio.app_object_item_subitem TO role_app1;
 
@@ -293,16 +293,16 @@ GRANT SELECT ON app_portfolio.app_object_item_subitem TO role_app2;
 
 
 CREATE TABLE app_portfolio.app_object_item_subitem_fixed (
-    app_object_item_app_id            INTEGER NOT NULL,
-    app_object_item_object_name       VARCHAR(100) NOT NULL,
-    app_object_item_object_item_name  VARCHAR(100) NOT NULL,
-    subitem_name                      VARCHAR(100) NOT NULL,
-    subitem_text                      VARCHAR(2000) NOT NULL,
+    app_object_item_app_object_app_id      INTEGER NOT NULL,
+    app_object_item_app_object_object_name VARCHAR(100) NOT NULL,
+    app_object_item_object_item_name       VARCHAR(100) NOT NULL,
+    subitem_name                           VARCHAR(100) NOT NULL,
+    subitem_text                           VARCHAR(2000) NOT NULL,
 	CONSTRAINT app_object_item_subitem_fixed_pk PRIMARY KEY ( subitem_name,
-                                                                app_object_item_app_id
-                                                                app_object_item_object_name,
-                                                                app_object_item_object_item_name
-                                                                )
+                                                              app_object_item_app_object_app_id
+                                                              app_object_item_app_object_object_name,
+                                                              app_object_item_object_item_name
+                                                            )
 );
 
 GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_object_item_subitem_fixed TO role_app_admin;
@@ -317,16 +317,16 @@ GRANT SELECT ON app_portfolio.app_object_item_subitem_fixed TO role_app2;
 
 
 CREATE TABLE app_portfolio.app_object_item_translation (
-    app_object_item_app_id            INTEGER NOT NULL,
-    app_object_item_object_name       VARCHAR(100) NOT NULL,
-    app_object_item_object_item_name  VARCHAR(100) NOT NULL,
-    language_id                       INTEGER NOT NULL,
-    text                              VARCHAR(2000) NOT NULL,
+    app_object_item_app_object_app_id      INTEGER NOT NULL,
+    app_object_item_app_object_object_name VARCHAR(100) NOT NULL,
+    app_object_item_object_item_name       VARCHAR(100) NOT NULL,
+    language_id                            INTEGER NOT NULL,
+    text                                   VARCHAR(2000) NOT NULL,
 	CONSTRAINT app_object_item_translation_pk PRIMARY KEY ( language_id,
-                                                            app_object_item_app_id,
-                                                            app_object_item_object_name,
+                                                            app_object_item_app_object_app_id,
+                                                            app_object_item_app_object_object_name,
                                                             app_object_item_object_item_name
-                                                                )
+                                                          )
 );
 GRANT SELECT ON app_portfolio.app_object_item_translation TO role_app2;
 
@@ -340,16 +340,16 @@ GRANT ALL PRIVILEGES ON app_portfolio.app_object_item_translation TO role_app_db
 
 
 CREATE TABLE app_portfolio.app_object_subitem_translation (
-    app_object_item_subitem_app_id            INTEGER NOT NULL,
-    app_object_item_subitem_object_name       VARCHAR(100) NOT NULL,
-    app_object_item_subitem_object_item_name  VARCHAR(100) NOT NULL,
-    app_object_item_subitem_subitem_name      VARCHAR(100) NOT NULL,
-    language_id                               INTEGER NOT NULL,
-    text                                      VARCHAR(2000) NOT NULL,
+    app_object_item_subitem_app_object_item_app_id           INTEGER NOT NULL,
+    app_object_item_subitem_app_object_item_object_name      VARCHAR(100) NOT NULL,
+    app_object_item_subitem_app_object_item_object_item_name VARCHAR(100) NOT NULL,
+    app_object_item_subitem_subitem_name                     VARCHAR(100) NOT NULL,
+    language_id                                              INTEGER NOT NULL,
+    text                                                     VARCHAR(2000) NOT NULL,
 	CONSTRAINT app_object_subitem_translation_pk PRIMARY KEY ( language_id,
-                                                                app_object_item_subitem_app_id,
-                                                                app_object_item_subitem_object_name,
-                                                                app_object_item_subitem_object_item_name,
+                                                                app_object_item_subitem_app_object_item_app_id,
+                                                                app_object_item_subitem_app_object_item_object_name,
+                                                                app_object_item_subitem_app_object_item_object_item_name,
                                                                 app_object_item_subitem_subitem_name
                                                                 )
 );
@@ -452,6 +452,45 @@ GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app2_place TO role_app_adm
 GRANT SELECT ON app_portfolio.app2_place TO role_app2;
 
 GRANT ALL PRIVILEGES ON app_portfolio.app2_place TO role_app_dba;
+
+CREATE TABLE app_portfolio.app2_setting (
+    id                   INT NOT NULL AUTO_INCREMENT,
+    data                 VARCHAR(100) NOT NULL,
+    app2_setting_type_id INTEGER NOT NULL,
+    CONSTRAINT app2_setting_pk PRIMARY KEY ( id )
+);
+
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app2_setting TO role_app_admin;
+
+GRANT ALL PRIVILEGES ON app_portfolio.app2_setting TO role_app_dba;
+
+GRANT SELECT ON app_portfolio.app2_setting TO role_app2;
+
+CREATE TABLE app_portfolio.app2_setting_translation (
+    app2_setting_id INTEGER NOT NULL,
+    language_id     INTEGER NOT NULL,
+    text            VARCHAR(2000) NOT NULL,
+    CONSTRAINT app2_setting_translation_pk PRIMARY KEY ( app2_setting_id,
+                                                         language_id )
+);
+
+GRANT SELECT ON app_portfolio.app2_setting_translation TO role_app2;
+
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app2_setting_translation TO role_app_admin;
+
+GRANT ALL PRIVILEGES ON app_portfolio.app2_setting_translation TO role_app_dba;
+
+CREATE TABLE app_portfolio.app2_setting_type (
+    id                INT NOT NULL AUTO_INCREMENT,
+    setting_type_name VARCHAR2(100) NOT NULL,
+    CONSTRAINT app2_setting_type_pk PRIMARY KEY ( id )
+);
+
+GRANT SELECT ON app_portfolio.app2_setting_type TO role_app2;
+
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app2_setting_type TO role_app_admin;
+
+GRANT ALL PRIVILEGES ON app_portfolio.app2_setting_type TO role_app_dba;
 
 CREATE TABLE app_portfolio.app2_theme (
     id                    INTEGER NOT NULL,
@@ -1338,7 +1377,7 @@ GRANT ALL PRIVILEGES ON app_portfolio.user_account_logon TO role_app_dba;
 
 GRANT SELECT, INSERT, DELETE, UPDATE ON app_portfolio.user_account_logon TO role_app2;
 
-ALTER TABLE app_portfolio.user_account_logon ADD CONSTRAINT user_account_logon_accesstoken_un UNIQUE ( access_token );
+ALTER TABLE app_portfolio.user_account_logon ADD CONSTRAINT user_account_logon_access_token_un UNIQUE ( access_token );
 
 CREATE TABLE app_portfolio.user_account_logon_hist (
     id                 INT NOT NULL AUTO_INCREMENT,
@@ -1494,24 +1533,24 @@ ALTER TABLE app_portfolio.app_object_item
                                               app_id );
 
 ALTER TABLE app_portfolio.app_object_item_subitem
-    ADD CONSTRAINT app_object_item_subitem_app_object_item_fk FOREIGN KEY ( app_object_item_app_id,
-                                                                            app_object_item_object_name,
+    ADD CONSTRAINT app_object_item_subitem_app_object_item_fk FOREIGN KEY ( app_object_item_app_object_app_id,
+                                                                            app_object_item_app_object_object_name,
                                                                             app_object_item_object_item_name )
         REFERENCES app_portfolio.app_object_item ( app_object_app_id,
                                                    app_object_object_name,
                                                    object_item_name );
 
 ALTER TABLE app_portfolio.app_object_item_subitem_fixed
-    ADD CONSTRAINT app_object_item_subitem_fixed_app_object_item_fk FOREIGN KEY ( app_object_item_app_id,
-                                                                                  app_object_item_object_name,
+    ADD CONSTRAINT app_object_item_subitem_fixed_app_object_item_fk FOREIGN KEY ( app_object_item_app_object_app_id,
+                                                                                  app_object_item_app_object_object_name,
                                                                                   app_object_item_object_item_name )
         REFERENCES app_portfolio.app_object_item ( app_object_app_id,
                                                    app_object_object_name,
                                                    object_item_name );
 
 ALTER TABLE app_portfolio.app_object_item_translation
-    ADD CONSTRAINT app_object_item_translation_app_object_item_fk FOREIGN KEY ( app_object_item_app_id,
-                                                                                app_object_item_object_name,
+    ADD CONSTRAINT app_object_item_translation_app_object_item_fk FOREIGN KEY ( app_object_item_app_object_app_id,
+                                                                                app_object_item_app_object_object_name,
                                                                                 app_object_item_object_item_name )
         REFERENCES app_portfolio.app_object_item ( app_object_app_id,
                                                    app_object_object_name,
@@ -1523,12 +1562,12 @@ ALTER TABLE app_portfolio.app_object_item_translation
 
 ALTER TABLE app_portfolio.app_object_subitem_translation
     ADD CONSTRAINT app_object_subitem_translation_app_object_item_subitem_fk FOREIGN KEY ( app_object_item_subitem_subitem_name,
-                                                                                           app_object_item_subitem_app_id,
-                                                                                           app_object_item_subitem_object_name,
-                                                                                           app_object_item_subitem_object_item_name )
+                                                                                           app_object_item_subitem_app_object_item_app_id,
+                                                                                           app_object_item_subitem_app_object_item_object_name,
+                                                                                           app_object_item_subitem_app_object_item_object_item_name )
         REFERENCES app_portfolio.app_object_item_subitem ( subitem_name,
-                                                           app_object_item_app_id,
-                                                           app_object_item_object_name,
+                                                           app_object_item_app_object_app_id,
+                                                           app_object_item_app_object_object_name,
                                                            app_object_item_object_item_name );
 
 ALTER TABLE app_portfolio.app_object_subitem_translation
@@ -1560,6 +1599,14 @@ ALTER TABLE app_portfolio.app_screenshot
                                               device_id );
 
 ALTER TABLE app_portfolio.app2_place
+    ADD CONSTRAINT app2_place_group_place_fk FOREIGN KEY ( group_place1_id )
+        REFERENCES group_place ( id );
+
+ALTER TABLE app_portfolio.app2_place
+    ADD CONSTRAINT app2_place_group_place2_fk FOREIGN KEY ( group_place2_id )
+        REFERENCES group_place ( id );
+
+ALTER TABLE app_portfolio.app2_place
     ADD CONSTRAINT app2_place_country1_fk FOREIGN KEY ( country1_id )
         REFERENCES country ( id );
 
@@ -1567,13 +1614,17 @@ ALTER TABLE app_portfolio.app2_place
     ADD CONSTRAINT app2_place_country2_fk FOREIGN KEY ( country2_id )
         REFERENCES country ( id );
 
-ALTER TABLE app_portfolio.app2_place
-    ADD CONSTRAINT app2_place_group_place_fk FOREIGN KEY ( group_place1_id )
-        REFERENCES group_place ( id );
+ALTER TABLE app_portfolio.app2_setting
+    ADD CONSTRAINT app2_setting_app2_setting_type_fk FOREIGN KEY ( app2_setting_type_id )
+        REFERENCES app_portfolio.app2_setting_type ( id );
 
-ALTER TABLE app_portfolio.app2_place
-    ADD CONSTRAINT app2_place_group_place2_fk FOREIGN KEY ( group_place2_id )
-        REFERENCES group_place ( id );
+ALTER TABLE app_portfolio.app2_setting_translation
+    ADD CONSTRAINT app2_setting_translation_app2_setting_fk FOREIGN KEY ( app2_setting_id )
+        REFERENCES app_portfolio.app2_setting ( id );
+
+ALTER TABLE app_portfolio.app2_setting_translation
+    ADD CONSTRAINT app2_setting_translation_language_fk FOREIGN KEY ( language_id )
+        REFERENCES app_portfolio.language ( id );
 
 ALTER TABLE app_portfolio.app2_theme
     ADD CONSTRAINT app2_theme_theme_category_fk FOREIGN KEY ( theme_category_id )
