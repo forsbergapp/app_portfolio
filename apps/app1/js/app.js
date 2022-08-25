@@ -22,7 +22,7 @@ function setEvents(){
     document.getElementById('toggle_checkbox').addEventListener('click', function() { toggle_switch() }, false);
     document.getElementById('user_menu_dropdown_log_out').addEventListener('click', function() { user_menu_item_click(this) }, false);
     document.getElementById('user_menu_dropdown_profile_top').addEventListener('click', function() {user_menu_item_click(this)}, false);
-    document.getElementById('user_locale_select').addEventListener('change', function() { common_translate_ui(this.value, (err, result)=>{get_apps()});}, false);
+    document.getElementById('user_locale_select').addEventListener('change', function() { document.getElementById('apps').innerHTML = window.global_button_spinner;common_translate_ui(this.value, (err, result)=>{get_apps()});}, false);
     document.getElementById('user_arabic_script_select').addEventListener('change', function() { toggle_switch()}, false);
 
     //start page
@@ -106,7 +106,6 @@ function toggle_switch(){
 function get_apps() {
     let json;
     let old_button = document.getElementById('apps').innerHTML;
-    document.getElementById('apps').innerHTML = window.global_button_spinner;
 
     common_fetch(window.global_rest_url_base + window.global_rest_app + `?id=${window.global_common_app_id}`, 
                  'GET', 0, null, null,null, (err, result) =>{
@@ -394,7 +393,10 @@ function init(parameters){
                 document.getElementById('info_link2').innerHTML = window.global_info_link_disclaimer_name;
                 document.getElementById('info_link3').innerHTML = window.global_info_link_terms_name;
                 document.getElementById('info_link4').innerHTML = window.global_info_link_about_name;
-                get_apps();
+                document.getElementById('apps').innerHTML = window.global_button_spinner;
+                common_translate_ui(window.global_user_locale, (err, result)=>{
+                        get_apps();
+                })
                 async function show_start(){
                     let user = window.location.pathname.substring(1);
                     if (user !='') {
