@@ -455,7 +455,12 @@ GRANT ALL PRIVILEGES ON app_portfolio.app2_place TO role_app_dba;
 
 CREATE TABLE app_portfolio.app2_setting (
     id                   INT NOT NULL AUTO_INCREMENT,
+    description          VARCHAR(100) NOT NULL,
     data                 VARCHAR(100) NOT NULL,
+    data2                VARCHAR(100),
+    data3                VARCHAR(100),
+    data4                VARCHAR(100),
+    data5                VARCHAR(100),
     app2_setting_type_id INTEGER NOT NULL,
     CONSTRAINT app2_setting_pk PRIMARY KEY ( id )
 );
