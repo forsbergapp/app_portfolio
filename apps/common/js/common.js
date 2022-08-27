@@ -209,125 +209,88 @@ async function common_translate_ui(lang_code, callBack){
         else{
             json = JSON.parse(result);
             for (let i = 0; i < json.data.length; i++){
-                if (json.data[i].app_id  == window.global_common_app_id){
-                    switch (json.data[i].object){
-                        case 'APP_OBJECT':{
-                            switch (json.data[i].object_name){
-                                case 'APP_DESCRIPTION':{
-                                    //translate in each app if needed
-                                    null;
-                                    break;
-                                }
+                switch (json.data[i].object){
+                    case 'APP_OBJECT_ITEM':{
+                        switch(json.data[i].object_name){
+                            case 'COMMON':{
+                                //translate common items
+                                switch  (json.data[i].object_item_name){
+                                    case 'USERNAME':{
+                                        document.getElementById('login_username').placeholder = json.data[i].text;
+                                        document.getElementById('signup_username').placeholder = json.data[i].text;
+                                        document.getElementById('user_edit_input_username').placeholder = json.data[i].text;
+                                        break;
+                                    }
+                                    case 'EMAIL':{
+                                        document.getElementById('signup_email').placeholder = json.data[i].text;
+                                        document.getElementById('forgot_email').placeholder = json.data[i].text;
+                                        break;
+                                    }
+                                    case 'NEW_EMAIL':{
+                                        document.getElementById('user_edit_input_new_email').placeholder = json.data[i].text;
+                                        break;
+                                    }
+                                    case 'BIO':{
+                                        document.getElementById('signup_email').placeholder = json.data[i].text;
+                                        document.getElementById('forgot_email').placeholder = json.data[i].text;
+                                        document.getElementById('user_edit_input_bio').placeholder = json.data[i].text;
+                                        break;
+                                    }
+                                    case 'PASSWORD':{
+                                        document.getElementById('login_password').placeholder = json.data[i].text;
+                                        document.getElementById('signup_password').placeholder = json.data[i].text;
+                                        document.getElementById('user_edit_input_password').placeholder = json.data[i].text;
+                                        break;
+                                    }
+                                    case 'PASSWORD_CONFIRM':{
+                                        document.getElementById('signup_password_confirm').placeholder = json.data[i].text;
+                                        document.getElementById('user_edit_input_password_confirm').placeholder = json.data[i].text;
+                                        break;
+                                    }
+                                    case 'PASSWORD_REMINDER':{
+                                        document.getElementById('signup_password_reminder').placeholder = json.data[i].text;
+                                        document.getElementById('user_edit_input_password_reminder').placeholder = json.data[i].text;
+                                        break;
+                                    }
+                                    case 'NEW_PASSWORD_CONFIRM':{
+                                        document.getElementById('user_edit_input_new_password_confirm').placeholder = json.data[i].text;
+                                        document.getElementById('user_new_password_confirm').placeholder = json.data[i].text;    
+                                        break;
+                                    }
+                                    case 'NEW_PASSWORD':{
+                                        document.getElementById('user_edit_input_new_password').placeholder = json.data[i].text;
+                                        document.getElementById('user_new_password').placeholder = json.data[i].text;    
+                                        break;
+                                    }
+                                    case 'CONFIRM_QUESTION':{
+                                        document.getElementById(json.data[i].object_item_name.toLowerCase()).innerHTML = json.data[i].text;
+                                        break;
+                                    }
+                                } 
+                                break;
                             }
-                            break;
+                            case 'APP':{
+                                //translate items in current app
+                                document.getElementById(json.data[i].object_item_name.toLowerCase()).innerHTML = json.data[i].text;
+                                break;
+                            }
                         }
-                        case 'APP_OBJECT_ITEM':{
-                            switch(json.data[i].object_name){
-                                case 'DIALOGUE':{
-                                    //translate common items
-                                    switch  (json.data[i].object_item_name){
-                                        case 'USERNAME':{
-                                            document.getElementById('login_username').placeholder = json.data[i].text;
-                                            document.getElementById('signup_username').placeholder = json.data[i].text;
-                                            document.getElementById('user_edit_input_username').placeholder = json.data[i].text;
-                                            break;
-                                        }
-                                        case 'EMAIL':{
-                                            document.getElementById('signup_email').placeholder = json.data[i].text;
-                                            document.getElementById('forgot_email').placeholder = json.data[i].text;
-                                            break;
-                                        }
-                                        case 'NEW_EMAIL':{
-                                            document.getElementById('user_edit_input_new_email').placeholder = json.data[i].text;
-                                            break;
-                                        }
-                                        case 'BIO':{
-                                            document.getElementById('signup_email').placeholder = json.data[i].text;
-                                            document.getElementById('forgot_email').placeholder = json.data[i].text;
-                                            document.getElementById('user_edit_input_bio').placeholder = json.data[i].text;
-                                            break;
-                                        }
-                                        case 'PASSWORD':{
-                                            document.getElementById('login_password').placeholder = json.data[i].text;
-                                            document.getElementById('signup_password').placeholder = json.data[i].text;
-                                            document.getElementById('user_edit_input_password').placeholder = json.data[i].text;
-                                            break;
-                                        }
-                                        case 'PASSWORD_CONFIRM':{
-                                            document.getElementById('signup_password_confirm').placeholder = json.data[i].text;
-                                            document.getElementById('user_edit_input_password_confirm').placeholder = json.data[i].text;
-                                            break;
-                                        }
-                                        case 'PASSWORD_REMINDER':{
-                                            document.getElementById('signup_password_reminder').placeholder = json.data[i].text;
-                                            document.getElementById('user_edit_input_password_reminder').placeholder = json.data[i].text;
-                                            break;
-                                        }
-                                        case 'NEW_PASSWORD_CONFIRM':{
-                                            document.getElementById('user_edit_input_new_password_confirm').placeholder = json.data[i].text;
-                                            document.getElementById('user_new_password_confirm').placeholder = json.data[i].text;    
-                                            break;
-                                        }
-                                        case 'NEW_PASSWORD':{
-                                            document.getElementById('user_edit_input_new_password').placeholder = json.data[i].text;
-                                            document.getElementById('user_new_password').placeholder = json.data[i].text;    
-                                            break;
-                                        }
-                                        case 'CONFIRM_QUESTION':{
-                                            document.getElementById(json.data[i].object_item_name.toLowerCase()).innerHTML = json.data[i].text;
-                                            break;
-                                        }
-                                    } 
-                                    break;
-                                }
-                                case 'REPORT':{
-                                    break;
-                                }
-                            }
-                            break;
-                        }   
+                        break;
+                    }   
+                    case 'APP_OBJECT_ITEM_SUBITEM':{
+                        //translate items in select lists in current app
+                        let select_element = json.data[i].object_item_name;
+                        //option number not saved in column but end with the option number
+                        let select_option = json.data[i].subitem_name.substr(json.data[i].subitem_name.lastIndexOf('_')+1);
+                        try{
+                            document.getElementById(select_element.toLowerCase()).options[select_option].text = json.data[i].text;
+                        }
+                        catch(err){
+                            console.log(json.data[i].object_item_name.toLowerCase());
+                        }
+                        break;
                     }
                 }
-                else
-                    if (json.data[i].app_id  == window.global_app_id){
-                        switch (json.data[i].object){
-                            case 'APP_OBJECT':{
-                                switch (json.data[i].object_name){
-                                    case 'APP_DESCRIPTION':{
-                                        //translate in each app if needed
-                                        null;
-                                        break;
-                                    }
-                                }
-                                break;
-                            }
-                            case  'APP_OBJECT_ITEM':{
-                                switch(json.data[i].object_name){
-                                    case 'REPORT':{
-                                        break;
-                                    }
-                                    default:{
-                                        //translate items in current app
-                                        document.getElementById(json.data[i].object_item_name.toLowerCase()).innerHTML = json.data[i].text;
-                                    }
-                                }
-                                break;
-                            }
-                            case 'APP_OBJECT_ITEM_SUBITEM':{
-                                //translate items in select lists in current app
-                                let select_element = json.data[i].object_item_name;
-                                //option number not saved in column but end with the option number
-                                let select_option = json.data[i].subitem_name.substr(json.data[i].subitem_name.lastIndexOf('_')+1);
-                                try{
-                                    document.getElementById(select_element.toLowerCase()).options[select_option].text = json.data[i].text;
-                                }
-                                catch(err){
-                                    console.log(json.data[i].object_item_name.toLowerCase());
-                                }
-                                break;
-                            }
-                        }
-                    }
             }
             //translate locales
             json = '';
