@@ -704,23 +704,8 @@ async function settings_translate(first=true) {
                 json = JSON.parse(result);
                 for (let i = 0; i < json.data.length; i++){
                     if (first==true){
-                        if (json.data[i].object=='APP_OBJECT_ITEM'){
-                            if (json.data[i].object=='APP_OBJECT_ITEM' && json.data[i].object_name=='REPORT')
+                        if (json.data[i].object=='APP_OBJECT_ITEM' && json.data[i].object_name=='REPORT')
                                 window.global_first_language[json.data[i].object_item_name.toLowerCase()] = json.data[i].text;
-                            else{
-                                //Regional
-                                if (json.data[i].object=='APP_OBJECT_ITEM' && json.data[i].object_name=='SETTING_NAV_REGIONAL' && 
-                                    json.data[i].object_item_name=='SETTING_LABEL_REPORT_TIMEZONE')
-                                    window.global_first_language.timezone_text = json.data[i].text;
-                                //GPS
-                                if (json.data[i].object=='APP_OBJECT_ITEM' && json.data[i].object_name=='SETTING_NAV_GPS' && 
-                                    json.data[i].object_item_name=='SETTING_LABEL_LAT')
-                                    window.global_first_language.gps_lat_text = json.data[i].text;
-                                if (json.data[i].object=='APP_OBJECT_ITEM' && json.data[i].object_name=='SETTING_NAV_GPS' && 
-                                    json.data[i].object_item_name=='SETTING_LABEL_LONG')
-                                    window.global_first_language.gps_long_text = json.data[i].text;
-                            }
-                        }
                     }
                     else{
                         for (let i = 0; i < json.data.length; i++){
