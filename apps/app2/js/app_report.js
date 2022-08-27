@@ -58,9 +58,9 @@ window.global_first_language =
 					"coltitle_isha_iqamat": "Iqamat",
 					"coltitle_midnight": "Midnight",
 					"coltitle_notes": "Notes",
-					"timezone_text": "Timezone",
-					"gps_lat_text":"GPS Latitude",
-					"gps_long_text":"GPS Longitude"
+					"timezone_text": "🌐",
+					"gps_lat_text":"📍",
+					"gps_long_text":""
 				};
 
 //second language objects that are displayed are column titles
@@ -196,18 +196,6 @@ async function timetable_translate_settings(locale, locale_second, lang_code) {
 					if (first == true){
 						if (json.data[i].object=='APP_OBJECT_ITEM' && json.data[i].object_name=='REPORT')
 							window.global_first_language[json.data[i].object_item_name.toLowerCase()] = json.data[i].text;
-						//Used by service report only first language implemented:
-						//Regional
-						if (json.data[i].object=='APP_OBJECT_ITEM' && json.data[i].object_name=='SETTING_NAV_REGIONAL' && 
-							json.data[i].object_item_name=='SETTING_LABEL_REPORT_TIMEZONE')
-							window.global_first_language.timezone_text = json.data[i].text;
-						//GPS
-						if (json.data[i].object=='APP_OBJECT_ITEM' && json.data[i].object_name=='SETTING_NAV_GPS' && 
-							json.data[i].object_item_name=='SETTING_LABEL_LAT')
-							window.global_first_language.gps_lat_text = json.data[i].text;
-						if (json.data[i].object=='APP_OBJECT_ITEM' && json.data[i].object_name=='SETTING_NAV_GPS' && 
-							json.data[i].object_item_name=='SETTING_LABEL_LONG')
-							window.global_first_language.gps_long_text = json.data[i].text;
 					}
 					else{
 						for (let i = 0; i < json.data.length; i++){	
