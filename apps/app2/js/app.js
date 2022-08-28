@@ -2141,7 +2141,7 @@ async function set_default_settings() {
     SearchAndSetSelectedIndex(window.global_prayer_default_asr, document.getElementById('setting_select_asr'),1);
     SearchAndSetSelectedIndex(window.global_prayer_default_highlatitude, document.getElementById('setting_select_highlatitude'),1);
     SearchAndSetSelectedIndex(window.global_prayer_default_timeformat, document.getElementById('setting_select_timeformat'),1);
-    SearchAndSetSelectedIndex(window.global_prayer_default_hijri_adjustment, document.getElementById('setting_select_method'),1);
+    SearchAndSetSelectedIndex(window.global_prayer_default_hijri_adjustment, document.getElementById('setting_select_hijri_adjustment'),1);
     
     SearchAndSetSelectedIndex(window.global_prayer_default_iqamat_title_fajr, document.getElementById('setting_select_report_iqamat_title_fajr'),1);
     SearchAndSetSelectedIndex(window.global_prayer_default_iqamat_title_dhuhr, document.getElementById('setting_select_report_iqamat_title_dhuhr'),1);
@@ -2994,25 +2994,25 @@ function init(parameters) {
                         window.global_image_default_report_footer_src = global_app_parameters[i].parameter_value;
                 }                             
                 if (global_app_parameters[i].parameter_name=='PRAYER_DEFAULT_METHOD')
-                    window.global_prayer_default_method = parseInt(global_app_parameters[i].parameter_value);
+                    window.global_prayer_default_method = global_app_parameters[i].parameter_value;
                 if (global_app_parameters[i].parameter_name=='PRAYER_DEFAULT_ASR')
-                    window.global_prayer_default_asr = parseInt(global_app_parameters[i].parameter_value);
+                    window.global_prayer_default_asr = global_app_parameters[i].parameter_value;
                 if (global_app_parameters[i].parameter_name=='PRAYER_DEFAULT_HIGHLATITUDE')
-                    window.global_prayer_default_highlatitude = parseInt(global_app_parameters[i].parameter_value);
+                    window.global_prayer_default_highlatitude = global_app_parameters[i].parameter_value;
                 if (global_app_parameters[i].parameter_name=='PRAYER_DEFAULT_TIMEFORMAT')
-                    window.global_prayer_default_timeformat = parseInt(global_app_parameters[i].parameter_value);
+                    window.global_prayer_default_timeformat = global_app_parameters[i].parameter_value;
                 if (global_app_parameters[i].parameter_name=='PRAYER_DEFAULT_HIJRI_ADJUSTMENT')
-                    window.global_prayer_default_hijri_adjustment = parseInt(global_app_parameters[i].parameter_value);
+                    window.global_prayer_default_hijri_adjustment = global_app_parameters[i].parameter_value;
                 if (global_app_parameters[i].parameter_name=='PRAYER_DEFAULT_IQAMAT_TITLE_FAJR')
-                    window.global_prayer_default_iqamat_title_fajr = parseInt(global_app_parameters[i].parameter_value);
+                    window.global_prayer_default_iqamat_title_fajr = global_app_parameters[i].parameter_value;
                 if (global_app_parameters[i].parameter_name=='PRAYER_DEFAULT_IQAMAT_TITLE_DHUHR')
-                    window.global_prayer_default_iqamat_title_dhuhr = parseInt(global_app_parameters[i].parameter_value);
+                    window.global_prayer_default_iqamat_title_dhuhr = global_app_parameters[i].parameter_value;
                 if (global_app_parameters[i].parameter_name=='PRAYER_DEFAULT_IQAMAT_TITLE_ASR')
-                    window.global_prayer_default_iqamat_title_asr = parseInt(global_app_parameters[i].parameter_value);
+                    window.global_prayer_default_iqamat_title_asr = global_app_parameters[i].parameter_value;
                 if (global_app_parameters[i].parameter_name=='PRAYER_DEFAULT_IQAMAT_TITLE_MAGHRIB')
-                    window.global_prayer_default_iqamat_title_maghrib = parseInt(global_app_parameters[i].parameter_value);
+                    window.global_prayer_default_iqamat_title_maghrib = global_app_parameters[i].parameter_value;
                 if (global_app_parameters[i].parameter_name=='PRAYER_DEFAULT_IQAMAT_TITLE_ISHA')
-                    window.global_prayer_default_iqamat_title_isha = parseInt(global_app_parameters[i].parameter_value);
+                    window.global_prayer_default_iqamat_title_isha = global_app_parameters[i].parameter_value;
                 if (global_app_parameters[i].parameter_name=='PRAYER_DEFAULT_SHOW_IMSAK')
                     window.global_prayer_default_show_imsak = (global_app_parameters[i].parameter_value=== 'true');
                 if (global_app_parameters[i].parameter_name=='PRAYER_DEFAULT_SHOW_SUNSET')
@@ -3020,7 +3020,7 @@ function init(parameters) {
                 if (global_app_parameters[i].parameter_name=='PRAYER_DEFAULT_SHOW_MIDNIGHT')
                     window.global_prayer_default_show_midnight = (global_app_parameters[i].parameter_value=== 'true');
                 if (global_app_parameters[i].parameter_name=='PRAYER_DEFAULT_SHOW_FAST_START_END')
-                    window.global_prayer_default_show_fast_start_end = parseInt(global_app_parameters[i].parameter_value);
+                    window.global_prayer_default_show_fast_start_end = global_app_parameters[i].parameter_value;
                 //QR
                 if (global_app_parameters[i].parameter_name=='QR_LOGO_FILE_PATH')
                     window.global_qr_logo_file_path = global_app_parameters[i].parameter_value;
