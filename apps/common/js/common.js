@@ -312,7 +312,7 @@ async function common_translate_ui(lang_code, callBack){
                 }
                 //translate regional settings
                 json = '';
-                common_fetch(window.global_rest_url_base + window.global_rest_regional_setting + '?' +
+                common_fetch(window.global_rest_url_base + window.global_rest_setting + '?' +
                              'regional_type=DIRECTION', 
                              'GET', 0, null, null, null, (err, result) =>{
                     if (err)
@@ -3120,7 +3120,7 @@ async function init_common(parameters, callBack){
                 case 'REST_LANGUAGE_LOCALE'                 :{window.global_rest_language_locale = parameter_value;break;}
                 case 'REST_MESSAGE_TRANSLATION'             :{window.global_rest_message_translation = parameter_value;break;}
                 case 'REST_PARAMETER_TYPE'                  :{window.global_rest_parameter_type = parameter_value;break;}
-                case 'REST_REGIONAL_SETTING'                :{window.global_rest_regional_setting = parameter_value;break;}
+                case 'REST_SETTING'                         :{window.global_rest_setting = parameter_value;break;}
                 case 'REST_USER_ACCOUNT'                    :{window.global_rest_user_account = parameter_value;break;}
                 case 'REST_USER_ACCOUNT_ACTIVATE'           :{window.global_rest_user_account_activate = parameter_value;break;}
                 case 'REST_USER_ACCOUNT_APP'                :{window.global_rest_user_account_app = parameter_value;break;}

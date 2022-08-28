@@ -168,13 +168,41 @@ INSERT INTO app_portfolio.message_translation (language_id, message_code, text) 
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (25,'20401','رمز مرور خاطئ');
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (25,'20500','خط العرض أو خط الطول مفقود');
 --
--- regional_setting_translation
+-- setting_translation
 --
-INSERT INTO app_portfolio.regional_setting_translation (regional_setting_id, language_id, text) VALUES (490,25,'التقويم الغريغوري');
-INSERT INTO app_portfolio.regional_setting_translation (regional_setting_id, language_id, text) VALUES (491,25,'الهجرية');
-INSERT INTO app_portfolio.regional_setting_translation (regional_setting_id, language_id, text) VALUES (481,25,'حرفي');
-INSERT INTO app_portfolio.regional_setting_translation (regional_setting_id, language_id, text) VALUES (482,25,'حرفي, ترجمة');
-INSERT INTO app_portfolio.regional_setting_translation (regional_setting_id, language_id, text) VALUES (483,25,'ترجمة, حرفي');
-INSERT INTO app_portfolio.regional_setting_translation (regional_setting_id, language_id, text) VALUES (484,25,'ترجمة');
-INSERT INTO app_portfolio.regional_setting_translation (regional_setting_id, language_id, text) VALUES (479,25,'من اليسار إلى اليمين');
-INSERT INTO app_portfolio.regional_setting_translation (regional_setting_id, language_id, text) VALUES (480,25,'من اليمين الى اليسار');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (3,25,'لا شيء');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (4,25,'يوم الجمعة');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (5,25,'يوم السبت');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (6,25,'الأحد');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (7,25,'مجموعات عشرة أيام');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (26,25,'اساسي');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (27,25,'حنفي');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (28,25,'منتصف الليل');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (29,25,'زاوية / 60 من الليل (موصى به)');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (30,25,'1/7 الليل');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (31,25,'لا تعديل');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (32,25,'12 ساعة بدون لاحقة');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (33,25,'24 ساعة');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (34,25,'12 ساعة مع لاحقة');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (40,25,'لا شيء');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (41,25,'عشر دقائق');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (42,25,'خمس عشرة دقيقة');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (43,25,'عشرون دقيقة');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (44,25,'خمس وعشرون دقيقة');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (45,25,'ثلاثون دقيقة');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (46,25,'الساعة القادمة');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (47,25,'الساعة القادمة + خمسة عشر دقيقة');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (48,25,'الساعة القادمة + ثلاثون دقيقة');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (49,25,'لا');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (50,25,'الفجر والمغرب');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (51,25,'امساك و المغرب');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (52,25,'الفجر والعشاء');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (53,25,'إمساك وعشاء');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (532,25,'من اليسار إلى اليمين');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (533,25,'من اليمين الى اليسار');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (534,25,'حرفي');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (535,25,'حرفي, ترجمة');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (536,25,'ترجمة, حرفي');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (537,25,'ترجمة');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (543,25,'التقويم الغريغوري');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (544,25,'الهجرية');

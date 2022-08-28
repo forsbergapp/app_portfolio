@@ -170,13 +170,41 @@ INSERT INTO app_portfolio.message_translation (language_id, message_code, text) 
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (107,'20401','无效的密码');
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (107,'20500','缺少纬度或经度');
 --
--- regional_setting_translation
+-- setting_translation
 --
-INSERT INTO app_portfolio.regional_setting_translation (regional_setting_id, language_id, text) VALUES (490,107,'格里高利安');
-INSERT INTO app_portfolio.regional_setting_translation (regional_setting_id, language_id, text) VALUES (491,107,'Hijri');
-INSERT INTO app_portfolio.regional_setting_translation (regional_setting_id, language_id, text) VALUES (481,107,'音译');
-INSERT INTO app_portfolio.regional_setting_translation (regional_setting_id, language_id, text) VALUES (482,107,'音译, 翻译');
-INSERT INTO app_portfolio.regional_setting_translation (regional_setting_id, language_id, text) VALUES (483,107,'翻译, 音译');
-INSERT INTO app_portfolio.regional_setting_translation (regional_setting_id, language_id, text) VALUES (484,107,'翻译');
-INSERT INTO app_portfolio.regional_setting_translation (regional_setting_id, language_id, text) VALUES (479,107,'左到右');
-INSERT INTO app_portfolio.regional_setting_translation (regional_setting_id, language_id, text) VALUES (480,107,'右到左');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (3,107,'没有');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (4,107,'星期五');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (5,107,'星期六');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (6,107,'星期日');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (7,107,'10天组');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (26,107,'标准');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (27,107,'Hanafi');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (28,107,'午夜');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (29,107,'角度/夜间60度（推荐）');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (30,107,'晚上1/7');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (31,107,'没有调整');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (32,107,'12小时无后缀');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (33,107,'24小时');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (34,107,'12小时带后缀');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (40,107,'没有');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (41,107,'10 分钟');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (42,107,'15 分钟');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (43,107,'20 分钟');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (44,107,'25 分钟');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (45,107,'30 分钟');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (46,107,'下一个小时');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (47,107,'下一个小时 + 15 分钟');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (48,107,'下一个小时 + 30 分钟');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (49,107,'没有');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (50,107,'Fajr & Mahgrib');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (51,107,'Imsak & Mahgrib');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (52,107,'Fajr & Isha');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (53,107,'Imsak & Isha');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (532,107,'左到右');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (533,107,'右到左');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (534,107,'音译');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (535,107,'音译, 翻译');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (536,107,'翻译, 音译');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (537,107,'翻译');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (543,107,'格里高利安');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (544,107,'Hijri');
