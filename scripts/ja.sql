@@ -171,13 +171,41 @@ INSERT INTO app_portfolio.message_translation (language_id, message_code, text) 
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (224,'20401','無効なパスワード');
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (224,'20500','緯度または経度がありません');
 --
--- regional_setting_translation
+-- setting_translation
 --
-INSERT INTO app_portfolio.regional_setting_translation (regional_setting_id, language_id, text) VALUES (490,224,'グレゴリオ暦');
-INSERT INTO app_portfolio.regional_setting_translation (regional_setting_id, language_id, text) VALUES (491,224,'Hijri');
-INSERT INTO app_portfolio.regional_setting_translation (regional_setting_id, language_id, text) VALUES (481,224,'音訳');
-INSERT INTO app_portfolio.regional_setting_translation (regional_setting_id, language_id, text) VALUES (482,224,'音訳、翻訳');
-INSERT INTO app_portfolio.regional_setting_translation (regional_setting_id, language_id, text) VALUES (483,224,'翻訳・音訳');
-INSERT INTO app_portfolio.regional_setting_translation (regional_setting_id, language_id, text) VALUES (484,224,'翻訳');
-INSERT INTO app_portfolio.regional_setting_translation (regional_setting_id, language_id, text) VALUES (479,224,'左から右へ');
-INSERT INTO app_portfolio.regional_setting_translation (regional_setting_id, language_id, text) VALUES (480,224,'右から左へ');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (3,224,'なし');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (4,224,'金曜日');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (5,224,'土曜日');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (6,224,'日曜日');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (7,224,'10日間のグループ');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (26,224,'標準');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (27,224,'ハナフィ');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (28,224,'真夜中');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (29,224,'角度/夜の60度（推奨）');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (30,224,'夜の1/7');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (31,224,'調整なし');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (32,224,'サフィックスなしの 12 時間');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (33,224,'24時間');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (34,224,'接尾辞付きの 12 時間');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (40,224,'なし');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (41,224,'10 分');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (42,224,'15 分');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (43,224,'20 分');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (44,224,'25 分');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (45,224,'30 分');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (46,224,'次の時間');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (47,224,'次の時間 + 15 分');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (48,224,'次の時間 + 30 分');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (49,224,'いいえ');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (50,224,'Fajr & Mahgrib');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (51,224,'Imsak & Mahgrib');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (52,224,'Fajr & Isha');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (53,224,'Imsak & Isha');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (532,224,'左から右へ');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (533,224,'右から左へ');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (534,224,'音訳');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (535,224,'音訳、翻訳');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (536,224,'翻訳・音訳');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (537,224,'翻訳');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (543,224,'グレゴリオ暦');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (544,224,'Hijri');

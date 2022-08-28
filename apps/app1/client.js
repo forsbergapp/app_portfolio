@@ -4,7 +4,7 @@ module.exports = {
         return new Promise(function (resolve, reject){
             function main(app_id){
                 const { locales } = require(__dirname + '/../common/src/locales');
-                const { regional_setting } = require(__dirname + '/../common/src/regional');
+                const { setting } = require(__dirname + '/../common/src/setting');
                 const files = [
                     ['APP', __dirname + '/src/index.html'],
                     ['<AppCommonHead/>', __dirname + '/../common/src/head.html'],
@@ -26,9 +26,9 @@ module.exports = {
                 async function getAppComponents() {
                     //modules with fetch from database
                     USER_LOCALE = await locales(app_id);
-                    USER_TIMEZONE = await regional_setting(app_id, 'en', 'TIMEZONE');
-                    USER_DIRECTION = await regional_setting(app_id, 'en', 'DIRECTION');
-                    USER_ARABIC_SCRIPT = await regional_setting(app_id, 'en', 'ARABIC_SCRIPT');
+                    USER_TIMEZONE = await setting(app_id, 'en', 'TIMEZONE');
+                    USER_DIRECTION = await setting(app_id, 'en', 'DIRECTION');
+                    USER_ARABIC_SCRIPT = await setting(app_id, 'en', 'ARABIC_SCRIPT');
                 }
                 getAppComponents().then(function(){
                     read_app_files(app_id, files, (err, app)=>{

@@ -1,11 +1,11 @@
-const { getSettings } = require("../../../service/db/app_portfolio/regional_setting/regional_setting.service");
+const { getSettings } = require("../../../service/db/app_portfolio/setting/setting.service");
 
 module.exports = {
-  regional_setting:(app_id, lang_code, regional_type) => {
+  setting:(app_id, lang_code, setting_type) => {
     return new Promise(function (resolve, reject){
         //get options for SELECT list
         //used by 2 SELECT
-        getSettings(app_id,lang_code, regional_type, (err, results)  => {
+        getSettings(app_id,lang_code, setting_type, (err, results)  => {
         var select_settings ='';
         if (err){
           resolve (

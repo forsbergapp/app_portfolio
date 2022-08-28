@@ -255,6 +255,7 @@ CREATE TABLE app_portfolio.app_object_item (
     app_object_app_id            INTEGER NOT NULL,
     app_object_object_name       VARCHAR(100) NOT NULL,
     object_item_name             VARCHAR(100) NOT NULL,
+    setting_type_id              INTEGER,
 	CONSTRAINT app_object_item_pk PRIMARY KEY ( app_object_app_id,
                                                 app_object_object_name,
                                                 object_item_name )
@@ -453,49 +454,6 @@ GRANT SELECT ON app_portfolio.app2_place TO role_app2;
 
 GRANT ALL PRIVILEGES ON app_portfolio.app2_place TO role_app_dba;
 
-CREATE TABLE app_portfolio.app2_setting (
-    id                   INT NOT NULL AUTO_INCREMENT,
-    description          VARCHAR(100) NOT NULL,
-    data                 VARCHAR(100) NOT NULL,
-    data2                VARCHAR(100),
-    data3                VARCHAR(100),
-    data4                VARCHAR(100),
-    data5                VARCHAR(100),
-    app2_setting_type_id INTEGER NOT NULL,
-    CONSTRAINT app2_setting_pk PRIMARY KEY ( id )
-);
-
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app2_setting TO role_app_admin;
-
-GRANT ALL PRIVILEGES ON app_portfolio.app2_setting TO role_app_dba;
-
-GRANT SELECT ON app_portfolio.app2_setting TO role_app2;
-
-CREATE TABLE app_portfolio.app2_setting_translation (
-    app2_setting_id INTEGER NOT NULL,
-    language_id     INTEGER NOT NULL,
-    text            VARCHAR(2000) NOT NULL,
-    CONSTRAINT app2_setting_translation_pk PRIMARY KEY ( app2_setting_id,
-                                                         language_id )
-);
-
-GRANT SELECT ON app_portfolio.app2_setting_translation TO role_app2;
-
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app2_setting_translation TO role_app_admin;
-
-GRANT ALL PRIVILEGES ON app_portfolio.app2_setting_translation TO role_app_dba;
-
-CREATE TABLE app_portfolio.app2_setting_type (
-    id                INT NOT NULL AUTO_INCREMENT,
-    setting_type_name VARCHAR2(100) NOT NULL,
-    CONSTRAINT app2_setting_type_pk PRIMARY KEY ( id )
-);
-
-GRANT SELECT ON app_portfolio.app2_setting_type TO role_app2;
-
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app2_setting_type TO role_app_admin;
-
-GRANT ALL PRIVILEGES ON app_portfolio.app2_setting_type TO role_app_dba;
 
 CREATE TABLE app_portfolio.app2_theme (
     id                    INTEGER NOT NULL,
@@ -1087,54 +1045,63 @@ GRANT ALL PRIVILEGES ON app_portfolio.profile_search_hist TO role_app_dba;
 
 GRANT SELECT, INSERT ON app_portfolio.profile_search_hist TO role_app2;
 
-CREATE TABLE app_portfolio.regional_setting (
-    id               INT NOT NULL AUTO_INCREMENT,
-    data             VARCHAR(100) NOT NULL,
-    regional_type_id INTEGER NOT NULL,
-    CONSTRAINT regional_setting_pk PRIMARY KEY ( id )
+CREATE TABLE app_portfolio.setting (
+    id              INT NOT NULLL AUTO_INCREMENT,
+    description     VARCHAR(100) NOT NULL,
+    data            VARCHAR(100) NOT NULL,
+    data2           VARCHAR(100),
+    data3           VARCHAR(100),
+    data4           VARCHAR(100),
+    data5           VARCHAR(100),
+    setting_type_id INTEGER NOT NULL,
+    CONSTRAINT setting_pk PRIMARY KEY ( id )
 );
 
-GRANT SELECT ON app_portfolio.regional_setting TO role_app1;
+GRANT SELECT ON app_portfolio.setting TO role_app1;
 
-GRANT SELECT ON app_portfolio.regional_setting TO role_app2;
+GRANT SELECT ON app_portfolio.setting TO role_app3;
 
-GRANT SELECT ON app_portfolio.regional_setting TO role_app3;
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.setting TO role_app_admin;
 
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.regional_setting TO role_app_admin;
+GRANT ALL PRIVILEGES ON app_portfolio.setting TO role_app_dba;
 
-GRANT ALL PRIVILEGES ON app_portfolio.regional_setting TO role_app_dba;
+GRANT SELECT ON app_portfolio.setting TO role_app2;
 
-CREATE TABLE app_portfolio.regional_setting_translation (
-    regional_setting_id INTEGER NOT NULL,
-    language_id              INTEGER NOT NULL,
-    text                     VARCHAR(2000) NOT NULL
+CREATE TABLE app_portfolio.setting_translation (
+    setting_id  INTEGER NOT NULL,
+    language_id INTEGER NOT NULL,
+    text        VARCHAR(2000) NOT NULL,
+    CONSTRAINT setting_translation_pk PRIMARY KEY ( setting_id,
+                                                    language_id)
 );
 
-GRANT SELECT ON app_portfolio.regional_setting_translation TO role_app1;
+GRANT SELECT ON app_portfolio.setting_translation TO role_app1;
 
-GRANT SELECT ON app_portfolio.regional_setting_translation TO role_app2;
+GRANT SELECT ON app_portfolio.setting_translation TO role_app2;
 
-GRANT SELECT ON app_portfolio.regional_setting_translation TO role_app3;
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.setting_translation TO role_app_admin;
 
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.regional_setting_translation TO role_app_admin;
+GRANT ALL PRIVILEGES ON app_portfolio.setting_translation TO role_app_dba;
 
-GRANT ALL PRIVILEGES ON app_portfolio.regional_setting_translation TO role_app_dba;
+GRANT SELECT ON app_portfolio.setting_translation TO role_app3;
 
-CREATE TABLE app_portfolio.regional_type (
-    id            INT NOT NULL AUTO_INCREMENT,
-    regional_type VARCHAR(100) NOT NULL,
-    CONSTRAINT regional_type_pk PRIMARY KEY ( id )
+                    
+CREATE TABLE app_portfolio.setting_type (
+    id                          INT NOT NULL AUTO_INCREMENT,
+    setting_type_name           VARCHAR(100) NOT NULL,
+    CONSTRAINT setting_type_pk PRIMARY KEY ( id )
 );
 
-GRANT SELECT ON app_portfolio.regional_type TO role_app1;
+GRANT SELECT ON app_portfolio.setting_type TO role_app2;
 
-GRANT SELECT ON app_portfolio.regional_type TO role_app2;
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.setting_type TO role_app_admin;
 
-GRANT SELECT ON app_portfolio.regional_type TO role_app3;
+GRANT ALL PRIVILEGES ON app_portfolio.setting_type TO role_app_dba;
 
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.regional_type TO role_app_admin;
+GRANT SELECT ON app_portfolio.setting_type TO role_app1;
 
-GRANT ALL PRIVILEGES ON app_portfolio.regional_type TO role_app_dba;
+GRANT SELECT ON app_portfolio.setting_type TO role_app3;
+
 	
 CREATE TABLE app_portfolio.user_account (
     id                    INT NOT NULL AUTO_INCREMENT,
@@ -1180,9 +1147,9 @@ CREATE TABLE app_portfolio.user_account_app (
     user_account_id                                   INTEGER NOT NULL,
     app_id                                            INTEGER NOT NULL,
     preference_locale                                 VARCHAR(100),
-    regional_setting_preference_timezone_id           INTEGER,
-    regional_setting_preference_direction_id          INTEGER,
-    regional_setting_preference_arabic_script_id      INTEGER,
+    setting_preference_timezone_id                    INTEGER,
+    setting_preference_direction_id                   INTEGER,
+    setting_preference_arabic_script_id               INTEGER,
     date_created                                      DATETIME NOT NULL,
     CONSTRAINT user_account_app_pk PRIMARY KEY ( user_account_id,
                                                  app_id
@@ -1205,9 +1172,9 @@ CREATE TABLE app_portfolio.user_account_app_hist (
     user_account_id                                   INTEGER,
     app_id                                            INTEGER,
     preference_locale                                 VARCHAR(100),
-    regional_setting_preference_timezone_id           INTEGER,
-    regional_setting_preference_direction_id          INTEGER,
-    regional_setting_preference_arabic_script_id      INTEGER,
+    setting_preference_timezone_id                    INTEGER,
+    setting_preference_direction_id                   INTEGER,
+    setting_preference_arabic_script_id               INTEGER,
     date_created                                      DATETIME,
     CONSTRAINT user_account_app_hist_pk PRIMARY KEY ( id )
 );
@@ -1537,6 +1504,10 @@ ALTER TABLE app_portfolio.app_object_item
         REFERENCES app_portfolio.app_object ( object_name,
                                               app_id );
 
+ALTER TABLE app_portfolio.app_object_item
+    ADD CONSTRAINT app_object_item_setting_type_fk FOREIGN KEY ( setting_type_id )
+        REFERENCES app_portfolio.setting_type ( id );
+
 ALTER TABLE app_portfolio.app_object_item_subitem
     ADD CONSTRAINT app_object_item_subitem_app_object_item_fk FOREIGN KEY ( app_object_item_app_object_app_id,
                                                                             app_object_item_app_object_object_name,
@@ -1618,18 +1589,6 @@ ALTER TABLE app_portfolio.app2_place
 ALTER TABLE app_portfolio.app2_place
     ADD CONSTRAINT app2_place_country2_fk FOREIGN KEY ( country2_id )
         REFERENCES country ( id );
-
-ALTER TABLE app_portfolio.app2_setting
-    ADD CONSTRAINT app2_setting_app2_setting_type_fk FOREIGN KEY ( app2_setting_type_id )
-        REFERENCES app_portfolio.app2_setting_type ( id );
-
-ALTER TABLE app_portfolio.app2_setting_translation
-    ADD CONSTRAINT app2_setting_translation_app2_setting_fk FOREIGN KEY ( app2_setting_id )
-        REFERENCES app_portfolio.app2_setting ( id );
-
-ALTER TABLE app_portfolio.app2_setting_translation
-    ADD CONSTRAINT app2_setting_translation_language_fk FOREIGN KEY ( language_id )
-        REFERENCES app_portfolio.language ( id );
 
 ALTER TABLE app_portfolio.app2_theme
     ADD CONSTRAINT app2_theme_theme_category_fk FOREIGN KEY ( theme_category_id )
@@ -1745,17 +1704,17 @@ ALTER TABLE app_portfolio.profile_search
         REFERENCES user_account ( id )
         ON DELETE CASCADE;
 
-ALTER TABLE app_portfolio.regional_setting_translation
-    ADD CONSTRAINT regional_setting_translation_language_fk FOREIGN KEY ( language_id )
+ALTER TABLE app_portfolio.setting
+    ADD CONSTRAINT setting_setting_type_fk FOREIGN KEY ( setting_type_id )
+        REFERENCES app_portfolio.setting_type ( id );
+
+ALTER TABLE app_portfolio.setting_translation
+    ADD CONSTRAINT setting_translation_language_fk FOREIGN KEY ( language_id )
         REFERENCES app_portfolio.language ( id );
 
-ALTER TABLE app_portfolio.regional_setting_translation
-    ADD CONSTRAINT regional_setting_translation_regional_setting_fk FOREIGN KEY ( regional_setting_id )
-        REFERENCES app_portfolio.regional_setting ( id );
-
-ALTER TABLE app_portfolio.regional_setting
-    ADD CONSTRAINT regional_setting_regional_type_fk FOREIGN KEY ( regional_type_id )
-        REFERENCES app_portfolio.regional_type ( id );
+ALTER TABLE app_portfolio.setting_translation
+    ADD CONSTRAINT setting_translation_setting_fk FOREIGN KEY ( setting_id )
+        REFERENCES app_portfolio.setting ( id );
 
 ALTER TABLE app_portfolio.user_account_app
     ADD CONSTRAINT user_account_app_app_fk FOREIGN KEY ( app_id )
@@ -1763,16 +1722,16 @@ ALTER TABLE app_portfolio.user_account_app
         ON DELETE CASCADE;
 
 ALTER TABLE app_portfolio.user_account_app
-    ADD CONSTRAINT user_account_app_regional_setting_preference_arabic_script_fk FOREIGN KEY ( regional_setting_preference_arabic_script_id )
-        REFERENCES app_portfolio.regional_setting ( id );
+    ADD CONSTRAINT user_account_app_setting_arabic_script_fk FOREIGN KEY ( setting_preference_arabic_script_id )
+        REFERENCES app_portfolio.setting ( id );
 
 ALTER TABLE app_portfolio.user_account_app
-    ADD CONSTRAINT user_account_app_regional_setting_preference_direction_fk FOREIGN KEY ( regional_setting_preference_direction_id )
-        REFERENCES app_portfolio.regional_setting ( id );
+    ADD CONSTRAINT user_account_app_setting_direction_fk FOREIGN KEY ( setting_preference_direction_id )
+        REFERENCES app_portfolio.setting ( id );
 
 ALTER TABLE app_portfolio.user_account_app
-    ADD CONSTRAINT user_account_app_regional_setting_preference_timezone_fk FOREIGN KEY ( regional_setting_preference_timezone_id )
-        REFERENCES app_portfolio.regional_setting ( id );
+    ADD CONSTRAINT user_account_app_setting_timezone_fk FOREIGN KEY ( setting_preference_timezone_id )
+        REFERENCES app_portfolio.setting ( id );
 
 ALTER TABLE app_portfolio.user_account_app
     ADD CONSTRAINT user_account_app_user_account_fk FOREIGN KEY ( user_account_id )
@@ -2430,9 +2389,9 @@ dml_date,
 user_account_id,
 app_id,
 preference_locale,
-regional_setting_preference_timezone_id,
-regional_setting_preference_direction_id,
-regional_setting_preference_arabic_script_id,
+setting_preference_timezone_id,
+setting_preference_direction_id,
+setting_preference_arabic_script_id,
 date_created)
 VALUES
 ('D',
@@ -2440,9 +2399,9 @@ SYSDATE(),
 old.user_account_id,
 old.app_id,
 old.preference_locale,
-old.regional_setting_preference_timezone_id,
-old.regional_setting_preference_direction_id,
-old.regional_setting_preference_arabic_script_id,
+old.setting_preference_timezone_id,
+old.setting_preference_direction_id,
+old.setting_preference_arabic_script_id,
 old.date_created);
 END; 
 /
@@ -2456,9 +2415,9 @@ dml_date,
 user_account_id,
 app_id,
 preference_locale,
-regional_setting_preference_timezone_id,
-regional_setting_preference_direction_id,
-regional_setting_preference_arabic_script_id,
+setting_preference_timezone_id,
+setting_preference_direction_id,
+setting_preference_arabic_script_id,
 date_created)
 VALUES
 ('I',
@@ -2466,9 +2425,9 @@ SYSDATE(),
 new.user_account_id,
 new.app_id,
 new.preference_locale,
-new.regional_setting_preference_timezone_id,
-new.regional_setting_preference_direction_id,
-new.regional_setting_preference_arabic_script_id,
+new.setting_preference_timezone_id,
+new.setting_preference_direction_id,
+new.setting_preference_arabic_script_id,
 new.date_created);
 END; 
 /
@@ -2482,9 +2441,9 @@ dml_date,
 user_account_id,
 app_id,
 preference_locale,
-regional_setting_preference_timezone_id,
-regional_setting_preference_direction_id,
-regional_setting_preference_arabic_script_id,
+setting_preference_timezone_id,
+setting_preference_direction_id,
+setting_preference_arabic_script_id,
 date_created)
 VALUES
 ('U',
@@ -2492,9 +2451,9 @@ SYSDATE(),
 old.user_account_id,
 old.app_id,
 old.preference_locale,
-old.regional_setting_preference_timezone_id,
-old.regional_setting_preference_direction_id,
-old.regional_setting_preference_arabic_script_id,
+old.setting_preference_timezone_id,
+old.setting_preference_direction_id,
+old.setting_preference_arabic_script_id,
 old.date_created);
 END; 
 /
