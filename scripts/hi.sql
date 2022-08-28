@@ -171,13 +171,41 @@ INSERT INTO app_portfolio.message_translation (language_id, message_code, text) 
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (201,'20401','अवैध पासवर्ड');
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (201,'20500','लापता अक्षांश या देशांतर');
 --
--- regional_setting_translation
+-- setting_translation
 --
-INSERT INTO app_portfolio.regional_setting_translation (regional_setting_id, language_id, text) VALUES (490,201,'ग्रेगोरियन');
-INSERT INTO app_portfolio.regional_setting_translation (regional_setting_id, language_id, text) VALUES (491,201,'हिजरी');
-INSERT INTO app_portfolio.regional_setting_translation (regional_setting_id, language_id, text) VALUES (481,201,'लिप्यंतरण');
-INSERT INTO app_portfolio.regional_setting_translation (regional_setting_id, language_id, text) VALUES (482,201,'लिप्यंतरण, अनुवाद');
-INSERT INTO app_portfolio.regional_setting_translation (regional_setting_id, language_id, text) VALUES (483,201,'अनुवाद, लिप्यंतरण');
-INSERT INTO app_portfolio.regional_setting_translation (regional_setting_id, language_id, text) VALUES (484,201,'अनुवाद');
-INSERT INTO app_portfolio.regional_setting_translation (regional_setting_id, language_id, text) VALUES (479,201,'बाएं से दायां');
-INSERT INTO app_portfolio.regional_setting_translation (regional_setting_id, language_id, text) VALUES (480,201,'दाएं से बाएं');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (3,201,'कोई भी नहीं');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (4,201,'शुक्रवार');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (5,201,'शनिवार');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (6,201,'रविवार');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (7,201,'10 दिन समूह');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (26,201,'मानक');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (27,201,'हनाफी');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (28,201,'आधी रात');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (29,201,'रात का कोण/60वां (अनुशंसित)');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (30,201,'1/7 रात');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (31,201,'कोई समायोजन नहीं');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (32,201,'प्रत्यय के बिना 12 घंटे');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (33,201,'24 घंटे');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (34,201,'प्रत्यय के साथ 12 घंटे');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (40,201,'कोई भी नहीं');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (41,201,'10 मिनटों');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (42,201,'15 मिनटों');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (43,201,'20 मिनटों');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (44,201,'25 मिनटों');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (45,201,'30 मिनटों');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (46,201,'अगले घंटे');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (47,201,'अगले घंटे + 15 मिनटों');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (48,201,'अगले घंटे + 30 मिनटों');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (49,201,'नहीं');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (50,201,'Fajr & Mahgrib');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (51,201,'Imsak & Mahgrib');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (52,201,'Fajr & Isha');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (53,201,'Imsak & Isha');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (532,201,'बाएं से दायां');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (533,201,'दाएं से बाएं');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (534,201,'लिप्यंतरण');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (535,201,'लिप्यंतरण, अनुवाद');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (536,201,'अनुवाद, लिप्यंतरण');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (537,201,'अनुवाद');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (543,201,'ग्रेगोरियन');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (544,201,'हिजरी');
