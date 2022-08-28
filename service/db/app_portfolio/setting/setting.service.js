@@ -3,10 +3,13 @@ module.exports = {
 	getSettings: (app_id, lang_code, setting_type_name, callBack) => {
     let sql;
     let parameters;
+    if (typeof setting_type_name=='undefined' ||setting_type_name=='' ||setting_type_name==null)
+          setting_type_name = null;
     if (process.env.SERVICE_DB_USE == 1) {
-      sql = `SELECT s.id,
+      sql = `SELECT st.setting_type_name,
+                    s.id,
                     s.data,
-                    COALESCE(str.text, s.data) text
+                    COALESCE(str.text, s.description) text
                FROM ${process.env.SERVICE_DB_DB1_NAME}.setting_type st,
                     ${process.env.SERVICE_DB_DB1_NAME}.setting s
                     LEFT OUTER JOIN(SELECT str.setting_id,
@@ -32,9 +35,9 @@ module.exports = {
                                                 )
                                            ))  str
                     ON str.setting_id = s.id
-              WHERE st.setting_type_name = ?
+              WHERE st.setting_type_name = COALESCE(?, st.setting_type_name)
                 AND s.setting_type_id = st.id  
-            ORDER BY 2 `;
+            ORDER BY 1, 2 `;
       parameters = [lang_code,
                     lang_code,
                     lang_code,
@@ -43,9 +46,10 @@ module.exports = {
                     lang_code,
                     setting_type_name];
     }else if (process.env.SERVICE_DB_USE==2){
-      sql = `SELECT s.id "id",
+      sql = `SELECT st.setting_type_name "setting_type_name",
+                    s.id "id",
                     s.data "data",
-                    NVL(str.text, s.data) "text"
+                    NVL(str.text, s.description) "text"
                FROM ${process.env.SERVICE_DB_DB2_NAME}.setting_type st,
                     ${process.env.SERVICE_DB_DB2_NAME}.setting s
                     LEFT OUTER JOIN(SELECT str.setting_id,
@@ -71,9 +75,9 @@ module.exports = {
                                                )
                                             ))  str
                   ON str.setting_id = s.id
-              WHERE st.setting_type_name = :setting_type_name
+              WHERE st.setting_type_name = NVL(:setting_type_name, st.setting_type_name)
                 AND s.setting_type_id = st.id  
-              ORDER BY 2`;
+              ORDER BY 1, 2`;
       parameters = {
                     lang_code: lang_code,
                     setting_type_name: setting_type_name
