@@ -1,4 +1,4 @@
-const { getSettings } = require ("./regional_setting.service");
+const { getSettings } = require ("./setting.service");
 
 module.exports = {
 	getSettings: (req, res) => {
