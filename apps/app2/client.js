@@ -1,10 +1,12 @@
 const { read_app_files, get_module_with_init } = require('../');
+const { options } = require('../../service/auth/auth.router');
 module.exports = {
     getApp:(app_id, username, gps_lat, gps_long, gps_place) => {
         return new Promise(function (resolve, reject){
             function main(app_id){
                 const { locales } = require(__dirname + '/../common/src/locales');
-                const { setting } = require(__dirname + '/../common/src/setting');
+                //const { setting } = require(__dirname + '/../common/src/setting');
+                const { getSettings } = require("../../service/db/app_portfolio/setting/setting.service");
                 const { countries } = require('./src/countries');                
                 const { places } = require('./src/places');
                 const { themes } = require('./src/themes');
@@ -41,69 +43,211 @@ module.exports = {
                 let AppLocales;
                 let AppPlaces;
                 let AppSettingsThemes;
-                let USER_TIMEZONE;
-                let USER_DIRECTION;
-                let USER_ARABIC_SCRIPT;
                 async function getAppComponents() {
                     //modules with fetch from database
                     AppCountries = await countries(app_id);
                     AppLocales = await locales(app_id);
                     AppPlaces = await places(app_id);
                     AppSettingsThemes = await themes(app_id);
-                    USER_TIMEZONE = await setting(app_id, 'en', 'TIMEZONE');
-                    USER_DIRECTION = await setting(app_id, 'en', 'DIRECTION');
-                    USER_ARABIC_SCRIPT = await setting(app_id, 'en', 'ARABIC_SCRIPT');
+                    
                 }
                 getAppComponents().then(function(){
-                    read_app_files(app_id, files, (err, app)=>{
-                        if (err)
-                            reject(err);
-                        else{
-                            //Locales tag used more than once, use RegExp for that
-                            app = app.replace(
-                                new RegExp('<AppLocales/>', 'g'),
-                                `${AppLocales}`);
-                            app = app.replace(
-                                    '<AppCountries/>',
-                                    `${AppCountries}`);
-                            app = app.replace(
-                                    '<AppPlaces/>',
-                                    `${AppPlaces}`);
-                            app = app.replace(
-                                    '<AppSettingsThemes/>',
-                                    `${AppSettingsThemes}`);
-                            app = app.replace(
-                                    '<USER_LOCALE/>',
-                                    `${AppLocales}`);
-                            app = app.replace(
-                                    '<AppTimezones/>',
-                                    `${USER_TIMEZONE}`);
-                            app = app.replace(
-                                    '<USER_TIMEZONE/>',
-                                    `${USER_TIMEZONE}`);
-                            app = app.replace(
-                                    '<USER_DIRECTION/>',
-                                    `<option id='' value=''></option>${USER_DIRECTION}`);
-                            app = app.replace(
-                                    '<USER_ARABIC_SCRIPT/>',
-                                    `<option id='' value=''></option>${USER_ARABIC_SCRIPT}`);
-                            get_module_with_init(app_id, 
-                                                 'app_exception',
-                                                 null,
-                                                 true,
-                                                 null,
-                                                 gps_lat,
-                                                 gps_long,
-                                                 gps_place,
-                                                 app, (err, app_init) =>{
-                                if (err)
-                                    reject(err);
-                                else{
-                                    resolve(app_init);
+                    let USER_TIMEZONE ='';
+                    let USER_DIRECTION='';
+                    let USER_ARABIC_SCRIPT='';
+                    let APP_NUMBER_SYSTEM='';
+                    let APP_COLUMN_TITLE='';
+                    let APP_CALENDAR_TYPE='';
+                    let APP_CALENDAR_HIJRI_TYPE='';
+                    let APP_PAPER_SIZE='';
+                    let APP_HIGHLIGHT_ROW='';
+                    let APP_METHOD='';
+                    let APP_METHOD_ASR='';
+                    let APP_HIGH_LATITUDE_ADJUSTMENT='';
+                    let APP_TIMEFORMAT='';
+                    let APP_HIJRI_DATE_ADJUSTMENT='';
+                    let APP_IQAMAT='';
+                    let APP_FAST_START_END='';
+                    let APP_MAP_TYPE='';
+                    getSettings(app_id, 'en', null, (err, settings) => {
+                        let option;
+                        for (i = 0; i < settings.length; i++) {
+                            option = `<option id=${settings[i].id} value='${settings[i].data}'>${settings[i].text}</option>`;
+                            switch (settings[i].setting_type_name){
+                                case 'TIMEZONE':{
+                                    USER_TIMEZONE += option;
+                                    break;
                                 }
-                            })
-                        } 
-                    })                       
+                                case 'DIRECTION':{
+                                    USER_DIRECTION += option;
+                                    break;
+                                }
+                                case 'ARABIC_SCRIPT':{
+                                    USER_ARABIC_SCRIPT += option;
+                                    break;
+                                }
+                                case 'NUMBER_SYSTEM':{
+                                    APP_NUMBER_SYSTEM += option;
+                                    break;
+                                }
+                                case 'COLUMN_TITLE':{
+                                    APP_COLUMN_TITLE += option;
+                                    break;
+                                }
+                                case 'CALENDAR_TYPE':{
+                                    APP_CALENDAR_TYPE += option;
+                                    break;
+                                }
+                                case 'CALENDAR_HIJRI_TYPE':{
+                                    APP_CALENDAR_HIJRI_TYPE += option;
+                                    break;
+                                }
+                                case 'MAP_TYPE':{
+                                    APP_MAP_TYPE += option;
+                                    break;
+                                }
+                                case 'PAPER_SIZE':{
+                                    APP_PAPER_SIZE += option;
+                                    break;
+                                }
+                                case 'HIGHLIGHT_ROW':{
+                                    APP_HIGHLIGHT_ROW += option;
+                                    break;
+                                }
+                                case 'METHOD':{
+                                    APP_METHOD += option;
+                                    break;
+                                }
+                                case 'METHOD_ASR':{
+                                    APP_METHOD_ASR += option;
+                                    break;
+                                }
+                                case 'HIGH_LATITUDE_ADJUSTMENT':{
+                                    APP_HIGH_LATITUDE_ADJUSTMENT += option;
+                                    break;
+                                }
+                                case 'TIMEFORMAT':{
+                                    APP_TIMEFORMAT += option;
+                                    break;
+                                }
+                                case 'HIJRI_DATE_ADJUSTMENT':{
+                                    APP_HIJRI_DATE_ADJUSTMENT += option;
+                                    break;
+                                }
+                                case 'IQAMAT':{
+                                    APP_IQAMAT += option;
+                                    break;
+                                }
+                                case 'FAST_START_END':{
+                                    APP_FAST_START_END += option;
+                                    break;
+                                }
+                            }
+                        }
+                        read_app_files(app_id, files, (err, app)=>{
+                            if (err)
+                                reject(err);
+                            else{
+                                app = app.replace(
+                                        '<AppLocales/>',
+                                        `${AppLocales}`);
+                                //add extra option for second locale
+                                app = app.replace(
+                                        '<AppLocalessecond/>',
+                                        `<option id='' value='0' selected='selected'>None</option>${AppLocales}`);
+                                app = app.replace(
+                                        '<AppCountries/>',
+                                        `${AppCountries}`);
+                                app = app.replace(
+                                        '<AppPlaces/>',
+                                        `${AppPlaces}`);
+                                app = app.replace(
+                                        '<AppSettingsThemes/>',
+                                        `${AppSettingsThemes}`);
+                                //app SETTING
+                                app = app.replace(
+                                        '<AppTimezones/>',
+                                        `${USER_TIMEZONE}`);
+                                app = app.replace(
+                                        '<AppDirection/>',
+                                        `${USER_DIRECTION}`);
+                                app = app.replace(
+                                        '<AppNumbersystem/>',
+                                        `${APP_NUMBER_SYSTEM}`);
+                                app = app.replace(
+                                        '<AppColumntitle/>',
+                                        `${APP_COLUMN_TITLE}`);
+                                app = app.replace(
+                                        '<AppArabicscript/>',
+                                        `${USER_ARABIC_SCRIPT}`);
+                                app = app.replace(
+                                        '<AppCalendartype/>',
+                                        `${APP_CALENDAR_TYPE}`);
+                                app = app.replace(
+                                        '<AppCalendarhijritype/>',
+                                        `${APP_CALENDAR_HIJRI_TYPE}`);
+                                app = app.replace(
+                                        '<AppMaptype/>',
+                                        `${APP_MAP_TYPE}`);
+                                app = app.replace(
+                                        '<AppPapersize/>',
+                                        `${APP_PAPER_SIZE}`);
+                                app = app.replace(
+                                        '<AppHighlightrow/>',
+                                        `${APP_HIGHLIGHT_ROW}`);
+                                app = app.replace(
+                                        '<AppMethod/>',
+                                        `${APP_METHOD}`);
+                                app = app.replace(
+                                        '<AppMethodAsr/>',
+                                        `${APP_METHOD_ASR}`);
+                                app = app.replace(
+                                        '<AppHighlatitudeadjustment/>',
+                                        `${APP_HIGH_LATITUDE_ADJUSTMENT}`);
+                                app = app.replace(
+                                        '<AppTimeformat/>',
+                                        `${APP_TIMEFORMAT}`);
+                                app = app.replace(
+                                        '<AppHijridateadjustment/>',
+                                        `${APP_HIJRI_DATE_ADJUSTMENT}`);
+                                //used several times:
+                                app = app.replace(
+                                        new RegExp('<AppIqamat/>', 'g'),
+                                        `${APP_IQAMAT}`);
+                                app = app.replace(
+                                        '<AppFaststartend/>',
+                                        `${APP_FAST_START_END}`);
+                                //common SETTING
+                                app = app.replace(
+                                        '<USER_LOCALE/>',
+                                        `${AppLocales}`);
+                                app = app.replace(
+                                        '<USER_TIMEZONE/>',
+                                        `${USER_TIMEZONE}`);
+                                app = app.replace(
+                                        '<USER_DIRECTION/>',
+                                        `<option id='' value=''></option>${USER_DIRECTION}`);
+                                app = app.replace(
+                                        '<USER_ARABIC_SCRIPT/>',
+                                        `<option id='' value=''></option>${USER_ARABIC_SCRIPT}`);
+                                get_module_with_init(app_id, 
+                                                     'app_exception',
+                                                     null,
+                                                     true,
+                                                     null,
+                                                     gps_lat,
+                                                     gps_long,
+                                                     gps_place,
+                                                     app, (err, app_init) =>{
+                                    if (err)
+                                        reject(err);
+                                    else{
+                                        resolve(app_init);
+                                    }
+                                })
+                            } 
+                        }) 
+                    })                      
                 });
             }
             if (username!=null){
