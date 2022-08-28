@@ -274,22 +274,18 @@ async function common_translate_ui(lang_code, callBack){
                                 document.getElementById(json.data[i].object_item_name.toLowerCase()).innerHTML = json.data[i].text;
                                 break;
                             }
+                            case 'APP_LOV':{
+                                //translate items in select lists in current app
+                                let select_element = document.getElementById(json.data[i].object_item_name.toLowerCase());
+                                for (let option_element = 0; option_element < select_element.options.length; option_element++){
+                                    if (select_element.options[option_element].id == json.data[i].subitem_name)
+                                        select_element.options[option_element].text = json.data[i].text
+                                }
+                                break;
+                            }
                         }
                         break;
                     }   
-                    case 'APP_OBJECT_ITEM_SUBITEM':{
-                        //translate items in select lists in current app
-                        let select_element = json.data[i].object_item_name;
-                        //option number not saved in column but end with the option number
-                        let select_option = json.data[i].subitem_name.substr(json.data[i].subitem_name.lastIndexOf('_')+1);
-                        try{
-                            document.getElementById(select_element.toLowerCase()).options[select_option].text = json.data[i].text;
-                        }
-                        catch(err){
-                            console.log(json.data[i].object_item_name.toLowerCase());
-                        }
-                        break;
-                    }
                 }
             }
             //translate locales
@@ -313,7 +309,7 @@ async function common_translate_ui(lang_code, callBack){
                 //translate regional settings
                 json = '';
                 common_fetch(window.global_rest_url_base + window.global_rest_setting + '?' +
-                             'regional_type=DIRECTION', 
+                             'setting_type=DIRECTION', 
                              'GET', 0, null, null, null, (err, result) =>{
                     if (err)
                         null;

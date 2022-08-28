@@ -9,6 +9,12 @@ module.exports = {
 	//use zh-hans, zh-hans, zh-hant, sr-cyrl, sr-latn
 	//else use zh, zh, zh, sr, sr
 	//get objects for common app id and current app id plus all APP_DESCRIPTION
+
+	/*fetch APP_OBJECT
+			APP_OBJECT_ITEM with APP_LOV with setting list to update translation
+			APP_OBJECT_ITEM with APP items to update translation
+			APP_OBJECT_ITEM_SUBITEM with APP items in an app
+	*/
 	getObjects: (app_id, lang_code, callBack) => {
 		let sql;
 		let parameters;
@@ -27,6 +33,17 @@ module.exports = {
 						   WHERE l.id = aot.language_id
 							 AND aot.app_object_app_id = ao.app_id
 							 AND aot.app_object_object_name = ao.object_name
+						  UNION ALL
+						  SELECT 'APP_OBJECT_ITEM', aoi.app_object_app_id app_id, aoi.app_object_object_name object_name, aoi.object_item_name, s.id subitem_name, l.lang_code, str.text
+							FROM ${process.env.SERVICE_DB_DB1_NAME}.app_object_item aoi,
+								 ${process.env.SERVICE_DB_DB1_NAME}.setting_type st,
+								 ${process.env.SERVICE_DB_DB1_NAME}.setting s,
+								 ${process.env.SERVICE_DB_DB1_NAME}.setting_translation str,
+								 ${process.env.SERVICE_DB_DB1_NAME}.language l
+						   WHERE st.id = aoi.setting_type_id
+							 AND s.setting_type_id = st.id  
+							 AND str.setting_id = s.id
+							 AND l.id = str.language_id
 						  UNION ALL
 						  SELECT 'APP_OBJECT_ITEM', aoi.app_object_app_id app_id, aoi.app_object_object_name object_name, aoi.object_item_name,null subitem_name, l.lang_code, aoit.text
 							FROM ${process.env.SERVICE_DB_DB1_NAME}.app_object_item aoi,
@@ -56,6 +73,13 @@ module.exports = {
 												  AND t1.app_object_object_name = t.object_name
 												  AND l1.id = t1.language_id
 												  AND l1.lang_code IN (?, SUBSTRING_INDEX(?,'-',2), SUBSTRING_INDEX(?,'-',1))
+											   UNION ALL
+                                               SELECT NULL
+												 FROM ${process.env.SERVICE_DB_DB1_NAME}.setting_translation st,
+												      ${process.env.SERVICE_DB_DB1_NAME}.language l2
+												WHERE st.setting_id = t.subitem_name
+												  AND l2.id = st.language_id
+												  AND l2.lang_code IN (?, SUBSTRING_INDEX(?,'-',2), SUBSTRING_INDEX(?,'-',1))
 											   UNION ALL
 											   SELECT NULL
 												 FROM ${process.env.SERVICE_DB_DB1_NAME}.app_object_item_translation t2,
@@ -92,6 +116,9 @@ module.exports = {
 							lang_code,
 							lang_code,
 							lang_code,
+							lang_code,
+							lang_code,
+							lang_code,
 							lang_code
 							];
 		}
@@ -110,6 +137,17 @@ module.exports = {
 							WHERE l.id = aot.language_id
 							  AND aot.app_object_app_id = ao.app_id
 							  AND aot.app_object_object_name = ao.object_name
+						  UNION ALL
+						  SELECT 'APP_OBJECT_ITEM', aoi.app_object_app_id app_id, aoi.app_object_object_name object_name, aoi.object_item_name, s.id subitem_name, l.lang_code, str.text
+							FROM ${process.env.SERVICE_DB_DB2_NAME}.app_object_item aoi,
+								 ${process.env.SERVICE_DB_DB2_NAME}.setting_type st,
+								 ${process.env.SERVICE_DB_DB2_NAME}.setting s,
+								 ${process.env.SERVICE_DB_DB2_NAME}.setting_translation str,
+								 ${process.env.SERVICE_DB_DB2_NAME}.language l
+						   WHERE st.id = aoi.setting_type_id
+							 AND s.setting_type_id = st.id  
+							 AND str.setting_id = s.id
+							 AND l.id = str.language_id
 						  UNION ALL
 						  SELECT 'APP_OBJECT_ITEM', aoi.app_object_app_id app_id, aoi.app_object_object_name object_name, aoi.object_item_name,null subitem_name, l.lang_code, aoit.text
 							FROM ${process.env.SERVICE_DB_DB2_NAME}.app_object_item aoi,
@@ -141,6 +179,13 @@ module.exports = {
 												  AND t1.app_object_object_name = t.object_name
 												  AND l1.id = t1.language_id
 												  AND l1.lang_code IN (:lang_code, SUBSTR(:lang_code, 0,INSTR(:lang_code,'-',1,2)-1), SUBSTR(:lang_code, 0,INSTR(:lang_code,'-',1,1)-1))
+											   UNION ALL
+                                               SELECT NULL
+												 FROM ${process.env.SERVICE_DB_DB2_NAME}.setting_translation st,
+												      ${process.env.SERVICE_DB_DB2_NAME}.language l2
+												WHERE st.setting_id = t.subitem_name
+												  AND l2.id = st.language_id
+												  AND l2.lang_code IN (:lang_code, SUBSTR(:lang_code, 0,INSTR(:lang_code,'-',1,2)-1), SUBSTR(:lang_code, 0,INSTR(:lang_code,'-',1,1)-1))
 											   UNION ALL
 											   SELECT NULL
 												 FROM ${process.env.SERVICE_DB_DB2_NAME}.app_object_item_translation t2,
