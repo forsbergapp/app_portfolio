@@ -293,30 +293,6 @@ GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_object_item_subitem TO
 GRANT SELECT ON app_portfolio.app_object_item_subitem TO role_app2;
 
 
-CREATE TABLE app_portfolio.app_object_item_subitem_fixed (
-    app_object_item_app_object_app_id      INTEGER NOT NULL,
-    app_object_item_app_object_object_name VARCHAR(100) NOT NULL,
-    app_object_item_object_item_name       VARCHAR(100) NOT NULL,
-    subitem_name                           VARCHAR(100) NOT NULL,
-    subitem_text                           VARCHAR(2000) NOT NULL,
-	CONSTRAINT app_object_item_subitem_fixed_pk PRIMARY KEY ( subitem_name,
-                                                              app_object_item_app_object_app_id
-                                                              app_object_item_app_object_object_name,
-                                                              app_object_item_object_item_name
-                                                            )
-);
-
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_object_item_subitem_fixed TO role_app_admin;
-
-GRANT SELECT ON app_portfolio.app_object_item_subitem_fixed TO role_app1;
-
-GRANT SELECT ON app_portfolio.app_object_item_subitem_fixed TO role_app3;
-
-GRANT ALL PRIVILEGES ON app_portfolio.app_object_item_subitem_fixed TO role_app_dba;
-
-GRANT SELECT ON app_portfolio.app_object_item_subitem_fixed TO role_app2;
-
-
 CREATE TABLE app_portfolio.app_object_item_translation (
     app_object_item_app_object_app_id      INTEGER NOT NULL,
     app_object_item_app_object_object_name VARCHAR(100) NOT NULL,
@@ -1512,14 +1488,6 @@ ALTER TABLE app_portfolio.app_object_item_subitem
     ADD CONSTRAINT app_object_item_subitem_app_object_item_fk FOREIGN KEY ( app_object_item_app_object_app_id,
                                                                             app_object_item_app_object_object_name,
                                                                             app_object_item_object_item_name )
-        REFERENCES app_portfolio.app_object_item ( app_object_app_id,
-                                                   app_object_object_name,
-                                                   object_item_name );
-
-ALTER TABLE app_portfolio.app_object_item_subitem_fixed
-    ADD CONSTRAINT app_object_item_subitem_fixed_app_object_item_fk FOREIGN KEY ( app_object_item_app_object_app_id,
-                                                                                  app_object_item_app_object_object_name,
-                                                                                  app_object_item_object_item_name )
         REFERENCES app_portfolio.app_object_item ( app_object_app_id,
                                                    app_object_object_name,
                                                    object_item_name );
