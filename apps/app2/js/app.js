@@ -586,12 +586,8 @@ function load_themes() {
 function slide(wrapper, items, prev, next, type) {
     let posInitial,
         slides = items.getElementsByClassName('slide_' + type),
-        slidesLength = slides.length,
-        index_day = 0,
-        index_month = 0,
-        index_year = 0;
-    slideSize = 96;
-    document.getElementById(items.children[eval('index_' + type)].children[0].id).classList.add('slider_active_' + type);
+        slidesLength = slides.length;
+    document.getElementById(items.children[0].children[0].id).classList.add('slider_active_' + type);
     set_theme_title(type);
     wrapper.classList.add('loaded');
 
