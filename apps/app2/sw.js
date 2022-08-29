@@ -32,7 +32,7 @@ const assetsToCache = [
     '/app2/css/images/theme_month_20014.jpg',
     '/app2/css/images/theme_month_20015.jpg',
     '/app2/css/images/theme_year_30001.jpg',
-    '/app2/images/banner_kaaba.jpg',
+    '/app2/images/banner_default.png',
     '/app2/images/logo.png',
     '/app2/js/app_globals.js',
     '/app2/js/app_report.js',
