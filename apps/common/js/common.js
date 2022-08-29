@@ -2339,9 +2339,9 @@ async function user_preference_save(){
         let json_data =
         `{
         "preference_locale": "${document.getElementById('user_locale_select').value}",
-        "regional_setting_preference_timezone_id": "${document.getElementById('user_timezone_select').options[document.getElementById('user_timezone_select').selectedIndex].id}",
-        "regional_setting_preference_direction_id": "${document.getElementById('user_direction_select').options[document.getElementById('user_direction_select').selectedIndex].id}",
-        "regional_setting_preference_arabic_script_id": "${document.getElementById('user_arabic_script_select').options[document.getElementById('user_arabic_script_select').selectedIndex].id}"
+        "setting_preference_timezone_id": "${document.getElementById('user_timezone_select').options[document.getElementById('user_timezone_select').selectedIndex].id}",
+        "setting_preference_direction_id": "${document.getElementById('user_direction_select').options[document.getElementById('user_direction_select').selectedIndex].id}",
+        "setting_preference_arabic_script_id": "${document.getElementById('user_arabic_script_select').options[document.getElementById('user_arabic_script_select').selectedIndex].id}"
         }`;
 
         await common_fetch(window.global_rest_url_base + window.global_rest_user_account_app + window.global_user_account_id + '?', 
@@ -2370,18 +2370,18 @@ async function user_preference_get(){
                 window.global_user_locale = json.items[0].preference_locale
             }
             //timezone
-            if (json.items[0].regional_setting_preference_timezone_id==null){
+            if (json.items[0].setting_preference_timezone_id==null){
                 user_preferences_set_default_globals('TIMEZONE');
             }
             else{
-                SearchAndSetSelectedIndex(json.items[0].regional_setting_preference_timezone_id, document.getElementById('user_timezone_select'), 0);
+                SearchAndSetSelectedIndex(json.items[0].setting_preference_timezone_id, document.getElementById('user_timezone_select'), 0);
                 window.global_user_timezone = document.getElementById('user_timezone_select').value;
             }
             //direction
-            SearchAndSetSelectedIndex(json.items[0].regional_setting_preference_direction_id, document.getElementById('user_direction_select'), 0);
+            SearchAndSetSelectedIndex(json.items[0].setting_preference_direction_id, document.getElementById('user_direction_select'), 0);
             window.global_user_direction = document.getElementById('user_direction_select').value;
             //arabic script
-            SearchAndSetSelectedIndex(json.items[0].regional_setting_preference_arabic_script_id, document.getElementById('user_arabic_script_select'), 0);
+            SearchAndSetSelectedIndex(json.items[0].setting_preference_arabic_script_id, document.getElementById('user_arabic_script_select'), 0);
             window.global_user_arabic_script = document.getElementById('user_arabic_script_select').value;
             user_preferences_update_select();
         }
