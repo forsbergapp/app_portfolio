@@ -10,37 +10,34 @@ module.exports = {
                       `<div class='setting_horizontal_col'>
                           <div id='setting_icon_theme_day'></div>
                           <div id='setting_themes_day_slider' class='slider'>
-                          <div class='slider_wrapper'>
-                              <div id='slides_day' class='slides'>
-                              </div>
+                            <div class='slider_wrapper'>
+                               <div id='slides_day' class='slides'></div>
+                            </div>
                           </div>
-                          <a id='slider_prev_day' class='slider_control slider_prev'></i></a>
-                          <a id='slider_next_day' class='slider_control slider_next'></a>
-                          </div>
+                          <div id='slider_prev_day' class='slider_control slider_prev'></i></div>
+                          <div id='slider_next_day' class='slider_control slider_next'></div>
                           <div id='slider_theme_day_id'></div>
                       </div>
                       <div class='setting_horizontal_col'>
                           <div id='setting_icon_theme_month'></div>
                           <div id='setting_themes_month_slider' class='slider'>
-                          <div class='slider_wrapper'>
-                              <div id='slides_month' class='slides'>
-                              </div>
+                            <div class='slider_wrapper'>
+                               <div id='slides_month' class='slides'></div>
+                            </div>
                           </div>
-                          <a id='slider_prev_month' class='slider_control slider_prev'></a>
-                          <a id='slider_next_month' class='slider_control slider_next'></a>
-                          </div>
+                          <div id='slider_prev_month' class='slider_control slider_prev'></div>
+                          <div id='slider_next_month' class='slider_control slider_next'></div>
                           <div id='slider_theme_month_id'></div>
                       </div>
                       <div class='setting_horizontal_col'>
                           <div id='setting_icon_report_theme_year'></div>
                           <div id='setting_themes_year_slider' class='slider'>
-                          <div class='slider_wrapper'>
-                              <div id='slides_year' class='slides'>
-                              </div>
+                            <div class='slider_wrapper'>
+                               <div id='slides_year' class='slides'></div>
+                            </div>
                           </div>
-                          <a id='slider_prev_year' class='slider_control slider_prev'></a>
-                          <a id='slider_next_year' class='slider_control slider_next'></a>
-                          </div>
+                          <div id='slider_prev_year' class='slider_control slider_prev'></div>
+                          <div id='slider_next_year' class='slider_control slider_next'></div>
                           <div id='slider_theme_year_id'></div>
                       </div>`
                   )
@@ -82,14 +79,14 @@ module.exports = {
                 `<div class='setting_horizontal_col'>
                     <div id='setting_icon_design_theme_${themes_type}'></div>
                     <div id='setting_themes_${themes_type}_slider' class='slider'>
-                    <div class='slider_wrapper'>
-                        <div id='slides_${themes_type}' class='slides'>
+                      <div class='slider_wrapper'>
+                         <div id='slides_${themes_type}' class='slides'>
                             ${eval('span_themes_' + themes_type)}
-                        </div>
+                         </div>
+                      </div>
                     </div>
-                    <a id='slider_prev_${themes_type}' class='slider_control slider_prev'></a>
-                    <a id='slider_next_${themes_type}' class='slider_control slider_next'></a>
-                    </div>
+                    <div id='slider_prev_${themes_type}' class='slider_control slider_prev'></div>
+                    <div id='slider_next_${themes_type}' class='slider_control slider_next'></div>
                     <div id='slider_theme_${themes_type}_id'></div>
                 </div>`;
             })
