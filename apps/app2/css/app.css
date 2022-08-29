@@ -451,21 +451,16 @@ height: 25px;
 	text-align: center !important;
 }
 
-
-
 /* THEME SLIDER*/
 .slider {
 	display: inline-block;
-  	width: 96px;
-  	height: 136px;
   	box-shadow: 3px 3px 10px rgba(0,0,0,.2);
-}
-.slider .slider_wrapper {
   	overflow: hidden;
   	position: relative;
+	margin-bottom: 10px;
+}
+.slider_wrapper {
   	width: 96px;
-  	height: 136px;
-  	z-index: 1;
 }
 .slider .slides {
   	display: flex;
@@ -478,56 +473,21 @@ height: 25px;
   	height: 136px;
   	cursor: pointer;
 }
-.slider_control {
-  	top: 50%;
-  	width: 50px;
-  	height: 50px;
-  	background: #fff;
-  	border-radius: 50px;
-  	margin-top: -20px;
-  	box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.3);
-  	z-index: 2;
-	font-size: 32px;
+.slider_prev{
+	text-align: start;
+}
+.slider_next{
+	text-align: end;
 }
 .slider_prev,
 .slider_next {
-  	background-size: 22px;
-  	background-position: center;
-  	background-repeat: no-repeat;
   	cursor: pointer;
-}
-#slider_prev_day{
-	margin-left: -60px;
-}
-#slider_next_day{
-	margin-left: 10px;
-}
-#slider_prev_month{
-	margin-left: -60px;
-}
-#slider_next_month{
-	margin-left: 10px;
-}
-#slider_prev_year{
-	margin-left: -60px;
-}
-#slider_next_year{
-	margin-left: 10px;
-}
-.slider_prev,
-.slider_next {
-    margin-top: -170px;
-    position: fixed;
+	display: inline-block;
+	font-size:30px;
+	width: 40px;
+    height: 40px;
 	text-align: center;
-    display: inline-block;
-}
-.slider_prev i{
-  	font-size:30px;
-  	margin-top:25%;
-}
-.slider_next i{
-  	font-size:30px;
-  	margin-top:25%;
+	border-radius: 50px;
 }
 #setting_themes_day_slider img {
 	width:96px;
@@ -692,10 +652,6 @@ height: 25px;
 	#settings .setting_horizontal_row{
 		height: 24px;
 	}	
-	.slider_prev,
-	.slider_next {
-    	margin-top: -165px;
-	}
 	#tab_navigation button {
 		border:0px;
 		width:75px;
@@ -736,9 +692,8 @@ height: 25px;
 	  	transform-origin: inherit;
 	}
 }
-
 /* APP THEME 1*/
-/* Darker colors*/
+/* darker colors*/
 body.app_theme1,
 .app_theme1 .dialogue_content,
 .app_theme1 .common_dialogue_content,
@@ -748,11 +703,12 @@ body.app_theme1,
 .app_theme1 #common_dialogues input,
 .app_theme1 #tab_navigation .tab_nav_selected button,
 .app_theme1 #common_window_info,
+.app_theme1 #common_window_info_content,
 .app_theme1 #common_window_info_toolbar,
 .app_theme1 #user_menu,
 .app_theme1 #user_menu_dropdown
 {
-	background-color : #2b2b32 !important;
+	background-color:#f5f5f5 !important;
 }
 /* dark color*/
 .app_theme1 #toolbar_top,
@@ -762,7 +718,8 @@ body.app_theme1,
 .app_theme1 .tab_navigation_content,
 .app_theme1 #toolbar_bottom
 {
-	background-color : #1c1c1f;
+	background: white;
+	color: #404040;
 }
 /* text color*/
 .app_theme1 #settings,
@@ -779,7 +736,7 @@ body.app_theme1,
 .app_theme1 .common_dialogue_content,
 .app_theme1 #profile_search_icon
 {
-	color : #a49775;
+	color: #404040 !important;
 }
 .app_theme1 #user_menu_username:hover,
 .app_theme1 #user_menu_username:active,
@@ -790,9 +747,8 @@ body.app_theme1,
 .app_theme1 #user_menu_dropdown_logged_out div:hover,
 .app_theme1 #user_menu_dropdown_logged_out div:active{
 	background-color:#ddd;
-	color:#2b2b32;
+	color: #6ab344 !important;
 }
-
 .app_theme1 a:link{
 	color:#a49775;
 }
@@ -855,7 +811,7 @@ body.app_theme1,
 .app_theme1 #scan_open_mobile_title3{
 	color: #a3a3a3;
 }
-.app_theme1 .login_tab_button,
+.app_theme1 .login_tab_button, 
 .app_theme1 .signup_tab_button,
 .app_theme1 .forgot_tab_button{
 	color: #a49775;
@@ -891,16 +847,16 @@ body.app_theme1,
 }
 .app_theme1 .switch-label {
 	color: transparent;
-} 
+}
 .app_theme1 .switch-label::before {
 	background-color: #dedede;
 }
 .app_theme1 .switch-label::after {
-	background-color: #a49775;
+	background-color: #fff;
 	box-shadow: 0 0 2px rgba(0, 0, 0, 0.45);
-}
+}  
 .app_theme1 .switch-input:checked + .switch-label::before {
-	background-color: #2b2b32;
+	background-color: #6ddc5f;
 }
 .app_theme1 .slider_prev,
 .app_theme1 .slider_next {
@@ -923,7 +879,7 @@ body.app_theme1,
 	color: white;
 }
 /* APP THEME 2*/
-/* darker colors*/
+/* Darker colors*/
 body.app_theme2,
 .app_theme2 .dialogue_content,
 .app_theme2 .common_dialogue_content,
@@ -933,12 +889,11 @@ body.app_theme2,
 .app_theme2 #common_dialogues input,
 .app_theme2 #tab_navigation .tab_nav_selected button,
 .app_theme2 #common_window_info,
-.app_theme2 #common_window_info_content,
 .app_theme2 #common_window_info_toolbar,
 .app_theme2 #user_menu,
 .app_theme2 #user_menu_dropdown
 {
-	background-color:#f5f5f5 !important;
+	background-color : #2b2b32 !important;
 }
 /* dark color*/
 .app_theme2 #toolbar_top,
@@ -948,8 +903,7 @@ body.app_theme2,
 .app_theme2 .tab_navigation_content,
 .app_theme2 #toolbar_bottom
 {
-	background: white;
-	color: #404040;
+	background-color : #1c1c1f;
 }
 /* text color*/
 .app_theme2 #settings,
@@ -966,7 +920,7 @@ body.app_theme2,
 .app_theme2 .common_dialogue_content,
 .app_theme2 #profile_search_icon
 {
-	color: #404040 !important;
+	color : #a49775;
 }
 .app_theme2 #user_menu_username:hover,
 .app_theme2 #user_menu_username:active,
@@ -977,8 +931,9 @@ body.app_theme2,
 .app_theme2 #user_menu_dropdown_logged_out div:hover,
 .app_theme2 #user_menu_dropdown_logged_out div:active{
 	background-color:#ddd;
-	color: #6ab344 !important;
+	color:#2b2b32;
 }
+
 .app_theme2 a:link{
 	color:#a49775;
 }
@@ -1041,7 +996,7 @@ body.app_theme2,
 .app_theme2 #scan_open_mobile_title3{
 	color: #a3a3a3;
 }
-.app_theme2 .login_tab_button, 
+.app_theme2 .login_tab_button,
 .app_theme2 .signup_tab_button,
 .app_theme2 .forgot_tab_button{
 	color: #a49775;
@@ -1077,16 +1032,16 @@ body.app_theme2,
 }
 .app_theme2 .switch-label {
 	color: transparent;
-}
+} 
 .app_theme2 .switch-label::before {
 	background-color: #dedede;
 }
 .app_theme2 .switch-label::after {
-	background-color: #fff;
+	background-color: #a49775;
 	box-shadow: 0 0 2px rgba(0, 0, 0, 0.45);
-}  
+}
 .app_theme2 .switch-input:checked + .switch-label::before {
-	background-color: #6ddc5f;
+	background-color: #2b2b32;
 }
 .app_theme2 .slider_prev,
 .app_theme2 .slider_next {
@@ -1108,7 +1063,6 @@ body.app_theme2,
 	background-color: #a49775;
 	color: white;
 }
-
 /* APP THEME 3*/
 /* Darker colors*/
 body.app_theme3,
