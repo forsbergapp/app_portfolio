@@ -560,6 +560,7 @@ height: 25px;
 	color: #333;
 	margin: -2px;
 	text-align: center;
+	font-size: 0.7em;
 }
 #settings #tab5 #setting_paper_preview_header_text{
 	padding-top:3px;
