@@ -851,6 +851,12 @@ a:active {
 }
 #common_window_info_info{
 	text-align: left;
+	display: inline-block;
+}
+#common_window_info_info #button_spinner{
+	margin-top:100px;
+	margin-bottom:unset;
+	transform: unset;
 }
 #common_window_info_content{
 	margin-bottom:20px;

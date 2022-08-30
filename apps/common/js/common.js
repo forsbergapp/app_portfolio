@@ -887,8 +887,6 @@ function show_window_info(info, show_toolbar, content, content_type, qr_data, if
     document.getElementById('common_window_info_toolbar_btn_right').style.display = display;
     document.getElementById('common_window_info_toolbar_btn_up').style.display = display;
     document.getElementById('common_window_info_toolbar_btn_down').style.display = display;
-    document.getElementById('common_window_info_toolbar_qr').style.display = 'none';
-    document.getElementById('common_window_info_content').style.display = 'none';
     
     zoom_info('');
     move_info(null,null);
@@ -928,12 +926,12 @@ function show_window_info(info, show_toolbar, content, content_type, qr_data, if
         }
         case null:{
             document.getElementById('common_window_info').style.visibility = 'visible';
-            document.getElementById('common_window_info_content').style.display = 'block';
             create_qr('common_window_info_toolbar_qr', qr_data);
-            dialogue_loading(1);
-            if (content_type = 'HTML'){
+            document.getElementById('common_window_info_info').innerHTML = window.global_button_spinner;
+            
+            if (content_type == 'HTML'){
+                document.getElementById('common_window_info_info').innerHTML = ''
                 document.getElementById('common_window_info_content').src=iframe_content;
-                dialogue_loading(0);    
             }
             else
                 if (content_type=='PDF'){
@@ -951,9 +949,9 @@ function show_window_info(info, show_toolbar, content, content_type, qr_data, if
                         let reader = new FileReader();
                         reader.readAsDataURL(pdf); 
                         reader.onloadend = function() {
-                            let base64PDF = reader.result;   
+                            let base64PDF = reader.result;
+                            document.getElementById('common_window_info_info').innerHTML = '';
                             document.getElementById('common_window_info_content').src = base64PDF;
-                            dialogue_loading(0);
                         }
                     })
                 }
@@ -3052,7 +3050,10 @@ async function init_common(parameters, callBack){
         if (document.getElementById('profile_info_search'))
             document.getElementById('profile_search_icon').addEventListener('click', function() { document.getElementById('profile_search_input').dispatchEvent(new KeyboardEvent('keyup')); }, false);
         //window info
-        document.getElementById('common_window_info_toolbar_btn_close').addEventListener('click', function() { document.getElementById('common_window_info').style.visibility = "hidden"; }, false);
+        document.getElementById('common_window_info_toolbar_btn_close').addEventListener('click', function() { document.getElementById('common_window_info').style.visibility = "hidden"; 
+                                                                                                               document.getElementById('common_window_info_info').innerHTML='';
+                                                                                                               document.getElementById('common_window_info_content').src='';
+                                                                                                               document.getElementById('common_window_info_toolbar_qr').innerHTML='';}, false);
         document.getElementById('common_window_info_toolbar_btn_zoomout').addEventListener('click', function() {zoom_info(-1);}, false);
         document.getElementById('common_window_info_toolbar_btn_zoomin').addEventListener('click', function() {zoom_info(1);}, false);
         document.getElementById('common_window_info_toolbar_btn_left').addEventListener('click', function() {move_info(-1,0);}, false);
