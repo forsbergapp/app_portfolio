@@ -368,6 +368,144 @@ function isToday(checkdate){
             (checkdate.getDate() == today.getDate()) && 
             (checkdate.getFullYear() == today.getFullYear());
 }
+async function set_prayer_method(ui){
+		/* praytimes.org override without modifying original code
+		   should look like this
+		window.global_prayer_praytimes_methods = {
+			ALGERIAN: {
+				name: 'Algerian Ministry of Religious Affairs and Wakfs',
+				params: { fajr: 18, isha: 17 } },
+			DIYANET: {
+				name: 'Diyanet İşleri Başkanlığı',
+				params: { fajr: 18, isha: 17 } },
+			EGYPT: {
+				name: 'Egyptian General Authority of Survey',
+				params: { fajr: 19.5, isha: 17.5 } },
+			EGYPTBIS: {
+				name: 'Egyptian General Authority of Survey Bis',
+				params: { fajr: 20, isha: 18 } },
+			FRANCE15: {
+				name: 'French15',
+				params: { fajr: 15, isha: 15 } },
+			FRANCE18: {
+				name: 'French18',
+				params: { fajr: 18, isha: 18 } },
+			GULF: {
+				name: 'Gulf region',
+				params: { fajr: 19.5, isha: '90 min' } },
+			KARACHI: {
+				name: 'University of Islamic Sciences, Karachi',
+				params: { fajr: 18, isha: 18 } },
+			KEMENAG: {
+				name: 'Kementerian Agama Republik Indonesia',
+				params: { fajr: 20, isha: 18 } },
+			ISNA: {
+				name: 'Islamic Society of North America (ISNA)',
+				params: { fajr: 15, isha: 15 } },
+			JAFARI: {
+				name: 'Shia Ithna-Ashari, Leva Institute, Qum',
+				params: { fajr: 16, isha: 14, maghrib: 4, midnight: 'Jafari' } },
+			JAKIM: {
+				name: 'Jabatan Kemajuan Islam Malaysia',
+				params: { fajr: 20, isha: 18} },
+			MAKKAH: {
+				name: 'Umm Al-Qura University, Makkah',
+				params: { fajr: 18.5, isha: '90 min' } },  // fajr was 19 degrees before 1430 hijri
+			MUIS: {
+				name: 'Majlis Ugama Islam Singapura',
+				params: { fajr: 20, isha: 18 } },	
+			MWL: {
+				name: 'Muslim World League',
+				params: { fajr: 18, isha: 17 } },
+			TUNISIA: {
+				name: 'Tunisian Ministry of Religious Affairs',
+				params: { fajr: 18, isha: 18 } },
+			TEHRAN: {
+				name: 'Institute of Geophysics, University of Tehran',
+				params: { fajr: 17.7, isha: 14, maghrib: 4.5, midnight: 'Jafari' } },  // isha is not explicitly specified in this method
+			UOIF: {
+				name: 'Union des Organisations Islamiques de France',
+				params: { fajr: 12, isha: 12 } }
+		};
+		*/
+
+	let isha;
+	let maghrib;
+	let midnight;
+	function set_prayer_value(isha_data, maghrib_data, midnight_data){
+		//first two parameters always have values		
+		//check if integer or number with decimal 
+		if (/^\d+$/.test(isha_data) ||
+			/^\d+\.\d+$/.test(isha_data)){
+			//do not convert
+			isha = `isha: ${isha_data}`;
+		}			
+		else{
+			isha = `isha: '${isha_data}'`;
+		}
+		//show only maghrib if there is a value
+		if (get_null_or_value(maghrib_data) != '')
+			  maghrib = `,maghrib: ${maghrib_data}`;
+		else
+			maghrib = '';
+		//show only midnight if there is a value
+		if (get_null_or_value(midnight_data) != '')
+			  midnight = `,midnight: '${midnight_data}'`;
+		else
+			midnight = '';
+	}
+	window.global_prayer_praytimes_methods = '';
+	let praytime_methods = '';
+	if (ui==true){
+		//called from app where there is a DOM select
+		let methods = document.getElementById('setting_select_method');
+		for (let i=0;i <methods.options.length;i++){
+			set_prayer_value(methods[i].getAttribute('data3'),
+							 methods[i].getAttribute('data4'),
+							 methods[i].getAttribute('data5'));
+			if (praytime_methods!='')
+				praytime_methods += ',';
+			praytime_methods += `${methods[i].value.toUpperCase()}:{
+									name:  '${methods[i].text}',
+									params: { fajr: ${methods[i].getAttribute('data2')},
+											  ${isha}
+											  ${maghrib}
+											  ${midnight}
+											}
+								}`;
+		}	
+		praytime_methods = `{${praytime_methods}}`;
+		eval('window.global_prayer_praytimes_methods='+praytime_methods);
+	}
+	else{
+		//called from report
+		await common_fetch(window.global_rest_url_base + window.global_rest_setting + '?setting_type=METHOD' , 
+					'GET', 0, null, null, null, (err, result) =>{
+			if (err)
+				null;
+			else{
+				json = JSON.parse(result);
+				for (let i=0;i <json.settings.length;i++){
+					set_prayer_value(json.settings[i].data3,
+									json.settings[i].data4,
+									json.settings[i].data5);
+					if (praytime_methods!='')
+						praytime_methods += ',';
+					praytime_methods += `${json.settings[i].data.toUpperCase()}:{
+											name:  '${json.settings[i].text}',
+											params: { fajr: ${json.settings[i].data2},
+													  ${isha}
+													  ${maghrib}
+													  ${midnight}
+													}
+										}`;
+				}
+				praytime_methods = `{${praytime_methods}}`;
+				eval('window.global_prayer_praytimes_methods='+praytime_methods);
+			}
+		})
+	}
+}
 
 //check if day is ramadan day
 function is_ramadan_day(year, month, day, timezone, calendartype, calendar_hijri_type, hijri_adj){
@@ -1321,6 +1459,7 @@ async function init_app_report() {
 	window.global_session_CurrentHijriDate[1] = parseInt(new Date(window.global_session_currentDate.getFullYear(),
 		window.global_session_currentDate.getMonth(),
 		window.global_session_currentDate.getDate()).toLocaleDateString("en-us-u-ca-islamic", { year: "numeric" }));
+	await set_prayer_method();
 }
 function init_report(parameters) {
 	let encodedParams = new URLSearchParams(window.location.search);
