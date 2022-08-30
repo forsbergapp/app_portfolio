@@ -1606,7 +1606,7 @@ async function user_settings_get(user_setting_id = '') {
                                     prayer_column_sunset_checked=${json.items[i].prayer_column_sunset_checked}
                                     prayer_column_midnight_checked=${json.items[i].prayer_column_midnight_checked}
                                     prayer_column_fast_start_end=${json.items[i].prayer_column_fast_start_end}
-                                    user_account_id=${json.items[i].user_account_id}
+                                    user_account_id=${json.items[i].user_account_app_user_account_id}
                                     >${json.items[i].description}
                                 </option>`
             }
@@ -2742,6 +2742,8 @@ async function init_app() {
     document.getElementById('setting_select_popular_place').selectedIndex = 0;
     document.getElementById('setting_input_lat').value = window.global_client_latitude;
     document.getElementById('setting_input_long').value = window.global_client_longitude;
+    //set prayer method variable, select filled from db when server generated
+    set_prayer_method(true);
     //init map thirdparty module
     init_map();
     //load themes in Design tab
