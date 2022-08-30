@@ -18,6 +18,10 @@
 /*Cinzel Decorative*/
 @import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&display=swap');
 
+#printbody {
+	margin: 0px;
+}
+
 #printbody #settings{
 	visibility: hidden;
 }
