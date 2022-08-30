@@ -236,7 +236,7 @@ function getReportSettings(){
                 ui_prayertable_year     : document.getElementById('prayertable_year')};
 }
 // update timetable
-function update_timetable_report(timetable_type = 0, item_id = null, settings, lang_code) {
+function update_timetable_report(timetable_type = 0, item_id = null, settings) {
 
 	switch (timetable_type){
 	//create timetable month or day or year if they are visible instead
@@ -262,24 +262,24 @@ function update_timetable_report(timetable_type = 0, item_id = null, settings, l
             "prayer_hijri_date_adjustment" : select_user_settings[i].getAttribute('prayer_hijri_date_adjustment')
             });
         }
-		displayDay(settings, item_id, lang_code, current_user_settings);
+		displayDay(settings, item_id, current_user_settings);
 		break;
 	}
 	//1=create timetable month
 	case 1:{
 		if (item_id==null)
-			displayMonth(0, settings.ui_prayertable_month, settings, lang_code);
+			displayMonth(0, settings.ui_prayertable_month, settings);
 		else
 			if (item_id == settings.ui_navigation_left)
-				displayMonth(-1, settings.ui_prayertable_month, settings, lang_code);
+				displayMonth(-1, settings.ui_prayertable_month, settings);
 			else 
 				if (item_id == settings.ui_navigation_right)
-					displayMonth(+1, settings.ui_prayertable_month, settings, lang_code);
+					displayMonth(+1, settings.ui_prayertable_month, settings);
 		break;
 	}
 	//2=create timetable year
 	case 2:{
-		displayYear(settings, item_id, lang_code);
+		displayYear(settings, item_id);
 		break;
 	}
 	default:{
@@ -299,7 +299,7 @@ function get_report_url(id, sid, papersize, item, format){
         module_parameters += '&type=1';
     if (item == 'profile_user_settings_year' || item.substr(0,9)=='user_year')
         module_parameters += '&type=2';
-    let language_parameter = `&lang_code=${get_lang_code()}`;
+    let language_parameter = `&lang_code=${window.global_user_locale}`;
     let service_parameter = `&format=${format}&ps=${papersize}&hf=0`; //html/pdf, papersize, header/footer
     let encodedurl = toBase64(app_parameters +
                               report_module +
@@ -684,7 +684,7 @@ async function settings_translate(first=true) {
 	let json;
     let locale;
     if (first ==true){
-        locale = get_lang_code();
+        locale = document.getElementById('setting_select_locale').value
         window.global_user_locale = locale;
     }
     else
@@ -693,7 +693,7 @@ async function settings_translate(first=true) {
         //fetch any message with first language always
         //show translation using first or second language
         await common_fetch(`${window.global_rest_url_base}${window.global_rest_app_object}${locale}?`, 
-                           'GET', 0, null, null, get_lang_code(), (err, result) =>{
+                           'GET', 0, null, null, null, (err, result) =>{
             if (err)
                 null;
             else{
@@ -704,12 +704,9 @@ async function settings_translate(first=true) {
                                 window.global_first_language[json.data[i].object_item_name.toLowerCase()] = json.data[i].text;
                     }
                     else{
-                        for (let i = 0; i < json.data.length; i++){
-                            if (json.data[i].object=='APP_OBJECT_ITEM' && json.data[i].object_name=='REPORT')
-                                window.global_second_language[json.data[i].object_item_name.toLowerCase()] = json.data[i].text;						
-                        }
+                        if (json.data[i].object=='APP_OBJECT_ITEM' && json.data[i].object_name=='REPORT')
+                            window.global_second_language[json.data[i].object_item_name.toLowerCase()] = json.data[i].text;
                     }
-                    
                 }
                 //if translating first language and second language is not used
                 if (first == true &&
@@ -779,7 +776,7 @@ function showreporttime() {
         second: '2-digit',
         timeZoneName: 'long'
     };
-    document.getElementById('setting_report_date_time_display').innerHTML = new Date().toLocaleTimeString(get_lang_code(), options);
+    document.getElementById('setting_report_date_time_display').innerHTML = new Date().toLocaleTimeString(document.getElementById('setting_select_locale').value, options);
     //If day report created with time, display time there also
     if (document.getElementById('prayertable_day_time')) {
         document.getElementById('prayertable_day_time').innerHTML = document.getElementById('setting_report_date_time_display').innerHTML;
@@ -842,7 +839,7 @@ async function toolbar_bottom(choice) {
                 prayertable_month.style.visibility = 'hidden';
                 prayertable_year.style.visibility = 'hidden';
                 settings.style.visibility = 'hidden';
-                update_timetable_report(0, null, getReportSettings(), get_lang_code());
+                update_timetable_report(0, null, getReportSettings());
                 break;
             }
             //month
@@ -854,7 +851,7 @@ async function toolbar_bottom(choice) {
                 prayertable_month.style.visibility = 'visible';
                 prayertable_year.style.visibility = 'hidden';
                 settings.style.visibility = 'hidden';
-                update_timetable_report(1, null, getReportSettings(), get_lang_code());
+                update_timetable_report(1, null, getReportSettings());
                 break;
             }
             //year
@@ -866,7 +863,7 @@ async function toolbar_bottom(choice) {
                 prayertable_month.style.visibility = 'hidden';
                 prayertable_year.style.visibility = 'visible';
                 settings.style.visibility = 'hidden';
-                update_timetable_report(2, null, getReportSettings(), get_lang_code());
+                update_timetable_report(2, null, getReportSettings());
                 break;
             }
             //settings
@@ -1538,9 +1535,6 @@ function profile_detail_app(detailchoice, rest_url_app, fetch_detail, header_app
 /*----------------------- */
 /* USER SETTINGS          */
 /*----------------------- */
-function get_lang_code(){
-    return document.getElementById('setting_select_locale').value;
-}
 async function user_settings_get(user_setting_id = '') {
     let select = document.getElementById("setting_select_user_setting");
     let json;
@@ -1879,7 +1873,7 @@ async function user_settings_function(function_name, initial_user_setting, callB
     //use btoa() for images to encode with BASE64 to BLOB column.
     let json_data =
         `{"description": "${description}",
-          "regional_language_locale": "${get_lang_code()}",
+          "regional_language_locale": "${document.getElementById('setting_select_locale').value}",
           "regional_timezone": "${document.getElementById('setting_select_report_timezone').value}",
           "regional_number_system": "${document.getElementById('setting_select_report_numbersystem').value}",
           "regional_layout_direction": "${document.getElementById('setting_select_report_direction').value}",
@@ -2162,7 +2156,7 @@ function set_settings_select() {
     option.text = document.getElementById('setting_input_place').value;
     
     option.setAttribute('description', document.getElementById('setting_input_place').value);
-    option.setAttribute('regional_language_locale', get_lang_code());
+    option.setAttribute('regional_language_locale', document.getElementById('setting_select_locale').value);
     option.setAttribute('regional_timezone', document.getElementById('setting_select_report_timezone').value);
     option.setAttribute('regional_number_system', document.getElementById('setting_select_report_numbersystem').value);
     option.setAttribute('regional_layout_direction', document.getElementById('setting_select_report_direction').value);
@@ -2361,8 +2355,8 @@ function setEvents() {
     //toolbar top
     document.getElementById('toolbar_btn_zoomout').addEventListener('click', function() { zoom_paper(-1) }, false);
 	document.getElementById('toolbar_btn_zoomin').addEventListener('click', function() { zoom_paper(1) }, false);
-	document.getElementById('toolbar_btn_left').addEventListener('click', function() { update_timetable_report(getTimetable_type(), 'toolbar_navigation_btn_left', getReportSettings(), get_lang_code()) }, false);
-	document.getElementById('toolbar_btn_right').addEventListener('click', function() { update_timetable_report(getTimetable_type(), 'toolbar_navigation_btn_right', getReportSettings(), get_lang_code()) }, false);
+	document.getElementById('toolbar_btn_left').addEventListener('click', function() { update_timetable_report(getTimetable_type(), 'toolbar_navigation_btn_left', getReportSettings()) }, false);
+	document.getElementById('toolbar_btn_right').addEventListener('click', function() { update_timetable_report(getTimetable_type(), 'toolbar_navigation_btn_right', getReportSettings()) }, false);
 
     document.getElementById('toolbar_btn_search').addEventListener('click', function() { let x = document.getElementById('profile_info_search'); if (x.style.visibility == 'visible') x.style.visibility = 'hidden'; else x.style.visibility = 'visible'; }, false);
     document.getElementById('toolbar_btn_settings').addEventListener('click', function() { toolbar_bottom(5) }, false);    
