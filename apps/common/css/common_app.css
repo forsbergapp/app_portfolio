@@ -852,6 +852,9 @@ a:active {
 #common_window_info_info{
 	text-align: left;
 }
+#common_window_info_content{
+	margin-bottom:20px;
+}
 
 #common_window_info_toolbar_qr{
 	padding:3px;
