@@ -338,6 +338,8 @@
 	display: table-cell;
 	text-align: center;
 	padding: 1px;
+	overflow-x: hidden;
+	font-size: 0.7em !important;
 	vertical-align: middle;
 }
 .prayertable_month #timetable .timetable_col {
