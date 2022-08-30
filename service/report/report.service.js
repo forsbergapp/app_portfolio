@@ -10,7 +10,7 @@ module.exports = {
         });
         const webPage = await browser.newPage();
         await webPage.goto(url, {
-                timeout: 12000,
+                timeout: 20000,
                 waitUntil: "networkidle2"
             });
         
