@@ -91,6 +91,7 @@
 	height:100%;
 	position: absolute;
 	display: flex;
+	text-align: center;
 	flex-direction: column;
 	visibility:visible;
 }
@@ -129,10 +130,6 @@
 #prayertable_day #prayertable_day_footer_row{
 	font-size: 14pt;
 }
-.prayertable_day_wide{
-	transform: scale(0.89);
-	margin-left: -40px !important;
-}
 #prayertable_day #prayertable_day_header_row {
 	height: 160px;
 	display: flex;
@@ -154,17 +151,15 @@
 }
 
 #prayertable_day_timetable {
-	display: table;
+	display: block;
 	margin: 0 auto;
 }
 #prayertable_day .prayertable_day_timetable_header-row{
-	display: table-caption;
+	display: block;
 }
 #prayertable_day .prayertable_day_timetable_header-row div {
-	display: table-cell;
-	padding-left:2px;
-	padding-right:2px;
-	min-width: 87px;
+	display: inline-block;
+	width: 110px;
 }
 #prayertable_day #prayertable_day_timetable_settings{
 	margin-top: 10px;
@@ -172,7 +167,7 @@
 
 #prayertable_day .prayertable_day_timetable_row_data{
 	margin-top:10px;
-	display: table-row;
+	display: inline-block;
 }
 #prayertable_day .prayertable_day_timetable_row_data.prayertable_day_today-row{
 	animation: pulsate 2s ease-out;
@@ -182,13 +177,12 @@
     opacity: 0.5;
 	font-weight:bold;
 }
-	
+
 #prayertable_day .prayertable_day_timetable_row_data div {
-	display: table-cell;
-	padding-left:2px;
-	padding-right:2px;
-	min-width: 87px;
+	display: inline-block;
+	width: 111px;
 	height: 25px;
+	margin: 1px;
 	vertical-align: middle;
 }
 
@@ -236,6 +230,7 @@
 /*MONTH common*/
 #prayertable_month {
 	width: 100%;
+	text-align: center;
 	visibility:hidden;
 }
 /*font sizes*/
@@ -448,6 +443,7 @@
 	display: inline-block;
 	flex-direction: column;
 	visibility:hidden;
+	text-align: center;
 	left:0px;
 	top:0px;
 }
@@ -646,19 +642,15 @@
 	color: #28708c;
 }
 .theme_day_10001#prayertable_day .prayertable_day_timetable_header-row{
-	background-color: #28708c;
 	color: white;
 }
 .theme_day_10001#prayertable_day .prayertable_day_timetable_header-row div{
-	border-left: 3px solid white;
-	border-right: 3px solid white;
+	background-color: #28708c;
 	text-transform: uppercase;
 } 
 .theme_day_10001#prayertable_day .prayertable_day_timetable_row_data div {
 	background-color: #28708c;
 	color: white;
-	border-left: 3px solid white;
-	border-right: 3px solid white;
 }
 /*Fasting column information*/
 .theme_day_10001#prayertable_day  .prayertable_day_timetable_row_data .prayertable_fast_start {
@@ -714,14 +706,10 @@
 	background-color: #0d8149;
 	color: white;
 	text-transform: uppercase;
-	border-left: 3px solid white;
-	border-right: 3px solid white;
 }
 .theme_day_10002#prayertable_day .prayertable_day_timetable_row_data div {
 	background-color: #0d8149;
 	color: white;
-	border-left: 3px solid white;
-	border-right: 3px solid white;
 }
 /*Fasting column information*/
 .theme_day_10002#prayertable_day  .prayertable_day_timetable_row_data .prayertable_fast_start {
@@ -774,16 +762,11 @@
 }
 .theme_day_10003#prayertable_day .prayertable_day_timetable_header-row div {
 	background-color: #00ab67;
-	color: white;
+	color:white;
 	text-transform: uppercase;
-	border-left: 3px solid white;
-	border-right: 3px solid white;
 }
 .theme_day_10003#prayertable_day .prayertable_day_timetable_row_data div {
-	background-color: white;
 	color: #333;
-	border-left: 3px solid white;
-	border-right: 3px solid white;
 }
 /*Fasting column information*/
 .theme_day_10003#prayertable_day  .prayertable_day_timetable_row_data .prayertable_fast_start {
