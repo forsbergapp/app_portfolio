@@ -809,10 +809,6 @@ function showreporttime() {
     return null;
 }
 
-function iframe_resize(){
-    let paper_size_select = document.getElementById('setting_select_report_papersize');
-    document.getElementById('common_window_info_content').className = paper_size_select.options[paper_size_select.selectedIndex].value;}        
-
 async function toolbar_bottom(choice) {
     let paper = document.getElementById('paper');
     let prayertable_day = document.getElementById('prayertable_day');
@@ -1615,6 +1611,7 @@ function user_setting_link(item){
     let select_user_setting = document.getElementById('setting_select_user_setting');
     let user_account_id = select_user_setting[select_user_setting.selectedIndex].getAttribute('user_account_id');
     let sid = select_user_setting[select_user_setting.selectedIndex].getAttribute('id');
+    document.getElementById('common_window_info_content').className = paper_size_select.options[paper_size_select.selectedIndex].value;
     switch (item.id){
         case 'user_day_html':
         case 'user_month_html':
@@ -2462,19 +2459,7 @@ function setEvents() {
     
     //dialogue scan mobile
     document.getElementById('scan_open_mobile_close').addEventListener('click', function() { document.getElementById('dialogue_scan_open_mobile').style.visibility = 'hidden' }, false);
-    //window info
-    document.getElementById('common_window_info_toolbar_btn_close').addEventListener('click', function() { document.getElementById('common_window_info_content').onload='';
-                                                                                                           document.getElementById('common_window_info_content').src='';
-                                                                                                           document.getElementById('common_window_info_toolbar_qr').innerHTML='';
-                                                                                                           document.getElementById('common_window_info_content').style.display = 'none' }, false);
-    
-    if(document.getElementById('common_window_info_content').addEventListener)
-        document.getElementById('common_window_info_content').addEventListener('load',function() { iframe_resize(); }, false);
-    else if(document.getElementById('common_window_info_content').attachEvent)
-        document.getElementById('common_window_info_content').attachEvent('onload',function() { iframe_resize(); });
-                                                                                       
-    
-                                                                                           //toolbar bottom
+    //toolbar bottom
     document.getElementById('toolbar_btn_print').addEventListener('click', function() { toolbar_bottom(1) }, false);
     document.getElementById('toolbar_btn_day').addEventListener('click', function() { toolbar_bottom(2) }, false);
     document.getElementById('toolbar_btn_month').addEventListener('click', function() { toolbar_bottom(3) }, false);
