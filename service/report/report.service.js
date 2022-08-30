@@ -16,19 +16,19 @@ module.exports = {
         
         if (ps=='A4'){
             //https://pixelsconverter.com/a-paper-sizes-to-pixels
-            //72DPI
+            //96DPI
             await webPage.setViewport({
-                        width: 595,
-                        height: 842,
+                        width: 794,
+                        height: 1123,
                         deviceScaleFactor: 1,
                     });
         }
         if (ps=='Letter'){
             //https://pixelsconverter.com/us-paper-sizes-to-pixels
-            //72DPI
+            //96DPI
             await webPage.setViewport({
-                        width: 612,
-                        height: 791,
+                        width: 816,
+                        height: 1054,
                         deviceScaleFactor: 1,
                     });
         }
