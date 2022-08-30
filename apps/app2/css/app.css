@@ -240,9 +240,6 @@
 }
 
 /* WINDOW INFO*/
-#common_window_info div{
-	padding: 20px;
-}
 
 #common_window_info #about_table{
 	display:table;
