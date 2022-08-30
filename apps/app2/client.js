@@ -115,6 +115,9 @@ module.exports = {
                                     break;
                                 }
                                 case 'METHOD':{
+                                    function nvl(value){return value==null?'':value}
+                                    option = `<option id=${settings[i].id} value='${settings[i].data}' ` +
+                                             `data2='${nvl(settings[i].data2)}' data3='${nvl(settings[i].data3)}' data4='${nvl(settings[i].data4)}' data5='${nvl(settings[i].data5)}'>${settings[i].text}</option>`;
                                     APP_METHOD += option;
                                     break;
                                 }

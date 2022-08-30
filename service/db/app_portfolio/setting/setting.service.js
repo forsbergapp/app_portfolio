@@ -9,6 +9,10 @@ module.exports = {
       sql = `SELECT st.setting_type_name,
                     s.id,
                     s.data,
+                    s.data2,
+                    s.data3,
+                    s.data4,
+                    s.data5,
                     COALESCE(str.text, s.description) text
                FROM ${process.env.SERVICE_DB_DB1_NAME}.setting_type st,
                     ${process.env.SERVICE_DB_DB1_NAME}.setting s
@@ -49,6 +53,10 @@ module.exports = {
       sql = `SELECT st.setting_type_name "setting_type_name",
                     s.id "id",
                     s.data "data",
+                    s.data2 "data2",
+                    s.data3 "data3",
+                    s.data4 "data4",
+                    s.data5 "data5",
                     NVL(str.text, s.description) "text"
                FROM ${process.env.SERVICE_DB_DB2_NAME}.setting_type st,
                     ${process.env.SERVICE_DB_DB2_NAME}.setting s
