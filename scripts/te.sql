@@ -3,47 +3,47 @@
 --
 -- app_category_translation
 --
-INSERT INTO app_portfolio.app_category_translation(app_category_id, language_id, text) VALUES(1, 531, 'Business');
-INSERT INTO app_portfolio.app_category_translation(app_category_id, language_id, text) VALUES(2, 531, 'Communications');
-INSERT INTO app_portfolio.app_category_translation(app_category_id, language_id, text) VALUES(3, 531, 'Education');
-INSERT INTO app_portfolio.app_category_translation(app_category_id, language_id, text) VALUES(4, 531, 'Finance');
-INSERT INTO app_portfolio.app_category_translation(app_category_id, language_id, text) VALUES(5, 531, 'House & Home');
-INSERT INTO app_portfolio.app_category_translation(app_category_id, language_id, text) VALUES(6, 531, 'Productivity');
-INSERT INTO app_portfolio.app_category_translation(app_category_id, language_id, text) VALUES(7, 531, 'Shopping');
-INSERT INTO app_portfolio.app_category_translation(app_category_id, language_id, text) VALUES(8, 531, 'Game');
+INSERT INTO app_portfolio.app_category_translation(app_category_id, language_id, text) VALUES(1, 531, 'వ్యాపారం');
+INSERT INTO app_portfolio.app_category_translation(app_category_id, language_id, text) VALUES(2, 531, 'కమ్యూనికేషన్స్');
+INSERT INTO app_portfolio.app_category_translation(app_category_id, language_id, text) VALUES(3, 531, 'చదువు');
+INSERT INTO app_portfolio.app_category_translation(app_category_id, language_id, text) VALUES(4, 531, 'ఫైనాన్స్');
+INSERT INTO app_portfolio.app_category_translation(app_category_id, language_id, text) VALUES(5, 531, 'ఇల్లు & ఇల్లు');
+INSERT INTO app_portfolio.app_category_translation(app_category_id, language_id, text) VALUES(6, 531, 'ఉత్పాదకత');
+INSERT INTO app_portfolio.app_category_translation(app_category_id, language_id, text) VALUES(7, 531, 'షాపింగ్');
+INSERT INTO app_portfolio.app_category_translation(app_category_id, language_id, text) VALUES(8, 531, 'గేమ్');
 --
 -- app_object_item_translation
 --
-INSERT INTO app_portfolio.app_object_item_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (0,'COMMON','USERNAME',531,'Username');
-INSERT INTO app_portfolio.app_object_item_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (0,'COMMON','PASSWORD',531,'Password');
-INSERT INTO app_portfolio.app_object_item_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (0,'COMMON','BIO',531,'Bio');
-INSERT INTO app_portfolio.app_object_item_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (0,'COMMON','EMAIL',531,'Email');
-INSERT INTO app_portfolio.app_object_item_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (0,'COMMON','NEW_EMAIL',531,'New email');
-INSERT INTO app_portfolio.app_object_item_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (0,'COMMON','PASSWORD_CONFIRM',531,'Password confirm');
-INSERT INTO app_portfolio.app_object_item_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (0,'COMMON','PASSWORD_REMINDER',531,'Password reminder');
-INSERT INTO app_portfolio.app_object_item_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (0,'COMMON','NEW_PASSWORD_CONFIRM',531,'New password confirm');
-INSERT INTO app_portfolio.app_object_item_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (0,'COMMON','NEW_PASSWORD',531,'New password');
-INSERT INTO app_portfolio.app_object_item_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (0,'COMMON','CONFIRM_QUESTION',531,'Are you sure?');
+INSERT INTO app_portfolio.app_object_item_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (0,'COMMON','USERNAME',531,'వినియోగదారు పేరు');
+INSERT INTO app_portfolio.app_object_item_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (0,'COMMON','PASSWORD',531,'పాస్వర్డ్');
+INSERT INTO app_portfolio.app_object_item_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (0,'COMMON','BIO',531,'బయో');
+INSERT INTO app_portfolio.app_object_item_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (0,'COMMON','EMAIL',531,'ఇమెయిల్');
+INSERT INTO app_portfolio.app_object_item_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (0,'COMMON','NEW_EMAIL',531,'కొత్త ఇమెయిల్');
+INSERT INTO app_portfolio.app_object_item_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (0,'COMMON','PASSWORD_CONFIRM',531,'పాస్వర్డ్ నిర్ధారించండి');
+INSERT INTO app_portfolio.app_object_item_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (0,'COMMON','PASSWORD_REMINDER',531,'పాస్వర్డ్ రిమైండర్');
+INSERT INTO app_portfolio.app_object_item_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (0,'COMMON','NEW_PASSWORD_CONFIRM',531,'కొత్త పాస్‌వర్డ్ నిర్ధారించండి');
+INSERT INTO app_portfolio.app_object_item_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (0,'COMMON','NEW_PASSWORD',531,'కొత్త పాస్వర్డ్');
+INSERT INTO app_portfolio.app_object_item_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (0,'COMMON','CONFIRM_QUESTION',531,'మీరు చెప్పేది నిజమా?');
 
 
-INSERT INTO app_portfolio.app_object_item_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (2,'REPORT','COLTITLE_ASR',531,'Afternoon');
+INSERT INTO app_portfolio.app_object_item_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (2,'REPORT','COLTITLE_ASR',531,'మధ్యాహ్నం');
 INSERT INTO app_portfolio.app_object_item_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (2,'REPORT','COLTITLE_ASR_IQAMAT',531,'Iqamat');
-INSERT INTO app_portfolio.app_object_item_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (2,'REPORT','COLTITLE_CALTYPE_GREGORIAN',531,'Gregorian');
-INSERT INTO app_portfolio.app_object_item_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (2,'REPORT','COLTITLE_CALTYPE_HIJRI',531,'Hijri');
-INSERT INTO app_portfolio.app_object_item_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (2,'REPORT','COLTITLE_DAY',531,'Day');
-INSERT INTO app_portfolio.app_object_item_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (2,'REPORT','COLTITLE_DHUHR',531,'Noon');
+INSERT INTO app_portfolio.app_object_item_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (2,'REPORT','COLTITLE_CALTYPE_GREGORIAN',531,'గ్రెగోరియన్');
+INSERT INTO app_portfolio.app_object_item_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (2,'REPORT','COLTITLE_CALTYPE_HIJRI',531,'హిజ్రీ');
+INSERT INTO app_portfolio.app_object_item_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (2,'REPORT','COLTITLE_DAY',531,'రోజు');
+INSERT INTO app_portfolio.app_object_item_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (2,'REPORT','COLTITLE_DHUHR',531,'మధ్యాహ్నం');
 INSERT INTO app_portfolio.app_object_item_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (2,'REPORT','COLTITLE_DHUHR_IQAMAT',531,'Iqamat');
-INSERT INTO app_portfolio.app_object_item_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (2,'REPORT','COLTITLE_FAJR',531,'Dawn');
+INSERT INTO app_portfolio.app_object_item_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (2,'REPORT','COLTITLE_FAJR',531,'తెల్లవారుజాము');
 INSERT INTO app_portfolio.app_object_item_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (2,'REPORT','COLTITLE_FAJR_IQAMAT',531,'Iqamat');
 INSERT INTO app_portfolio.app_object_item_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (2,'REPORT','COLTITLE_IMSAK',531,'Imsak');
-INSERT INTO app_portfolio.app_object_item_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (2,'REPORT','COLTITLE_ISHA',531,'Night');
+INSERT INTO app_portfolio.app_object_item_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (2,'REPORT','COLTITLE_ISHA',531,'రాత్రి');
 INSERT INTO app_portfolio.app_object_item_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (2,'REPORT','COLTITLE_ISHA_IQAMAT',531,'Iqamat');
-INSERT INTO app_portfolio.app_object_item_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (2,'REPORT','COLTITLE_MAGHRIB',531,'Sunset');
+INSERT INTO app_portfolio.app_object_item_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (2,'REPORT','COLTITLE_MAGHRIB',531,'సూర్యాస్తమయం');
 INSERT INTO app_portfolio.app_object_item_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (2,'REPORT','COLTITLE_MAGHRIB_IQAMAT',531,'Iqamat');
-INSERT INTO app_portfolio.app_object_item_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (2,'REPORT','COLTITLE_MIDNIGHT',531,'Midnight');
-INSERT INTO app_portfolio.app_object_item_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (2,'REPORT','COLTITLE_NOTES',531,'Notes');
-INSERT INTO app_portfolio.app_object_item_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (2,'REPORT','COLTITLE_SUNRISE',531,'Sunrise');
-INSERT INTO app_portfolio.app_object_item_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (2,'REPORT','COLTITLE_SUNSET',531,'Sunset');
+INSERT INTO app_portfolio.app_object_item_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (2,'REPORT','COLTITLE_MIDNIGHT',531,'అర్ధరాత్రి');
+INSERT INTO app_portfolio.app_object_item_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (2,'REPORT','COLTITLE_NOTES',531,'గమనికలు');
+INSERT INTO app_portfolio.app_object_item_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (2,'REPORT','COLTITLE_SUNRISE',531,'సూర్యోదయం');
+INSERT INTO app_portfolio.app_object_item_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (2,'REPORT','COLTITLE_SUNSET',531,'సూర్యాస్తమయం');
 INSERT INTO app_portfolio.app_object_item_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (2,'REPORT','COLTITLE_TRANSLITERATION_ASR',531,'Asr');
 INSERT INTO app_portfolio.app_object_item_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (2,'REPORT','COLTITLE_TRANSLITERATION_ASR_IQAMAT',531,'Iqamat');
 INSERT INTO app_portfolio.app_object_item_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (2,'REPORT','COLTITLE_TRANSLITERATION_DHUHR',531,'Dhuhr');
@@ -58,50 +58,78 @@ INSERT INTO app_portfolio.app_object_item_translation (app_object_item_app_objec
 INSERT INTO app_portfolio.app_object_item_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (2,'REPORT','COLTITLE_TRANSLITERATION_MIDNIGHT',531,'Midnight');
 INSERT INTO app_portfolio.app_object_item_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (2,'REPORT','COLTITLE_TRANSLITERATION_SUNRISE',531,'Shorook');
 INSERT INTO app_portfolio.app_object_item_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (2,'REPORT','COLTITLE_TRANSLITERATION_SUNSET',531,'Sunset');
-INSERT INTO app_portfolio.app_object_item_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (2,'REPORT','COLTITLE_WEEKDAY',531,'Weekday');
-INSERT INTO app_portfolio.app_object_item_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (2,'REPORT','TIMETABLE_TITLE',531,'Timetable');
+INSERT INTO app_portfolio.app_object_item_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (2,'REPORT','COLTITLE_WEEKDAY',531,'వారంరోజు');
+INSERT INTO app_portfolio.app_object_item_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (2,'REPORT','TIMETABLE_TITLE',531,'కాలపట్టిక');
 --
 -- app_object_translation
 --
-INSERT INTO app_portfolio.app_object_translation (app_object_app_id, app_object_object_name, language_id, text) VALUES (2,'APP_DESCRIPTION',531,'Progressive web app (PWA) single page application (SPA)');
-INSERT INTO app_portfolio.app_object_translation (app_object_app_id, app_object_object_name, language_id, text) VALUES (3,'APP_DESCRIPTION',531,'Simple app to display datamodel and how to integrate an app in the app platform');
+INSERT INTO app_portfolio.app_object_translation (app_object_app_id, app_object_object_name, language_id, text) VALUES (2,'APP_DESCRIPTION',531,'ప్రోగ్రెసివ్ వెబ్ యాప్ (PWA) సింగిల్ పేజీ అప్లికేషన్ (SPA)');
+INSERT INTO app_portfolio.app_object_translation (app_object_app_id, app_object_object_name, language_id, text) VALUES (3,'APP_DESCRIPTION',531,'డేటామోడల్‌ని ప్రదర్శించడానికి మరియు యాప్ ప్లాట్‌ఫారమ్‌లో యాప్‌ను ఎలా ఇంటిగ్రేట్ చేయడానికి సులభమైన యాప్');
 --
 -- message_translation
 --
-INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (531,'20100','Username 5 - 100 characters');
-INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (531,'20101','Not valid username');
-INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (531,'20102','Bio max 100 characters');
-INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (531,'20103','Email max 100 characters');
-INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (531,'20104','Reminder max 100 characters');
-INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (531,'20105','Not valid email');
-INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (531,'20106','Password 10 - 100 characters');
-INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (531,'20107','Username, password and email are required');
-INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (531,'20200','Email already exist');
-INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (531,'20201','Provider already exist');
-INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (531,'20203','Username already exist');
-INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (531,'20204','Too long value');
-INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (531,'20300','Username or password not found');
-INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (531,'20301','Password not the same');
-INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (531,'20302','You can not delete last user setting');
-INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (531,'20303','Please enter username');
-INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (531,'20304','Please enter password');
-INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (531,'20305','User not found');
-INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (531,'20306','Code not valid');
-INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (531,'20307','File type not allowed');
-INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (531,'20308','File size too large');
-INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (531,'20309','Text not valid');
-INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (531,'20310','Text too long');
-INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (531,'20400','Record not found');
-INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (531,'20401','Invalid password');
-INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (531,'20500','Missing latitude or longitude');
+INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (531,'20100','వినియోగదారు పేరు 5 - 100 అక్షరాలు');
+INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (531,'20101','చెల్లుబాటు అయ్యే వినియోగదారు పేరు కాదు');
+INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (531,'20102','బయో గరిష్టంగా 100 అక్షరాలు');
+INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (531,'20103','గరిష్టంగా 100 అక్షరాలు ఇమెయిల్ చేయండి');
+INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (531,'20104','రిమైండర్ గరిష్టంగా 100 అక్షరాలు');
+INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (531,'20105','చెల్లని ఇమెయిల్');
+INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (531,'20106','పాస్వర్డ్ 10 - 100 అక్షరాలు');
+INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (531,'20107','వినియోగదారు పేరు, పాస్‌వర్డ్ మరియు ఇమెయిల్ అవసరం');
+INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (531,'20200','ఇమెయిల్ ఇప్పటికే ఉంది');
+INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (531,'20201','ప్రొవైడర్ ఇప్పటికే ఉన్నారు');
+INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (531,'20203','వినియోగదారు పేరు ఇప్పటికే ఉంది');
+INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (531,'20204','చాలా పొడవు విలువ');
+INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (531,'20300','వినియోగదారు పేరు లేదా పాస్‌వర్డ్ కనుగొనబడలేదు');
+INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (531,'20301','పాస్‌వర్డ్ ఒకేలా ఉండదు');
+INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (531,'20302','మీరు చివరి వినియోగదారు సెట్టింగ్‌ని తొలగించలేరు');
+INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (531,'20303','దయచేసి వినియోగదారు పేరును నమోదు చేయండి');
+INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (531,'20304','దయచేసి పాస్‌వర్డ్‌ని నమోదు చేయండి');
+INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (531,'20305','వినియోగదారుడు కనపడలేదు');
+INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (531,'20306','కోడ్ చెల్లదు');
+INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (531,'20307','ఫైల్ రకం అనుమతించబడదు');
+INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (531,'20308','ఫైల్ పరిమాణం చాలా పెద్దది');
+INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (531,'20309','వచనం చెల్లదు');
+INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (531,'20310','టెక్స్ట్ చాలా పొడవుగా ఉంది');
+INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (531,'20400','రికార్డు దొరకలేదు');
+INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (531,'20401','చెల్లని పాస్వర్డ్');
+INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (531,'20500','అక్షాంశం లేదా రేఖాంశం లేదు');
 --
--- regional_setting_translation
+-- setting_translation
 --
-INSERT INTO app_portfolio.regional_setting_translation (regional_setting_id, language_id, text) VALUES (490,531,'Gregorian');
-INSERT INTO app_portfolio.regional_setting_translation (regional_setting_id, language_id, text) VALUES (491,531,'Hijri');
-INSERT INTO app_portfolio.regional_setting_translation (regional_setting_id, language_id, text) VALUES (481,531,'Transliteration');
-INSERT INTO app_portfolio.regional_setting_translation (regional_setting_id, language_id, text) VALUES (482,531,'Transliteration, translation');
-INSERT INTO app_portfolio.regional_setting_translation (regional_setting_id, language_id, text) VALUES (483,531,'Translation, transliteration');
-INSERT INTO app_portfolio.regional_setting_translation (regional_setting_id, language_id, text) VALUES (484,531,'Translation');
-INSERT INTO app_portfolio.regional_setting_translation (regional_setting_id, language_id, text) VALUES (479,531,'Left to right');
-INSERT INTO app_portfolio.regional_setting_translation (regional_setting_id, language_id, text) VALUES (480,531,'Right to left');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (3,531,'ఏదీ లేదు');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (4,531,'శుక్రవారం');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (5,531,'శనివారం');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (6,531,'ఆదివారం');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (7,531,'10 రోజుల సమూహాలు');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (26,531,'ప్రామాణికం');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (27,531,'హనాఫీ');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (28,531,'అర్ధరాత్రి');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (29,531,'కోణం/రాత్రి 60వ తేదీ (సిఫార్సు చేయబడింది)');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (30,531,'రాత్రి 1/7వ వంతు');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (31,531,'సర్దుబాటు లేదు');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (32,531,'ప్రత్యయం లేకుండా 12-గంటలు');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (33,531,'24-గంటలు');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (34,531,'ప్రత్యయంతో 12-గంటలు');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (40,531,'ఏదీ లేదు');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (41,531,'10 నిమిషాల');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (42,531,'15 నిమిషాల');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (43,531,'20 నిమిషాల');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (44,531,'25 నిమిషాల');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (45,531,'30 నిమిషాల');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (46,531,'తదుపరి గంట');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (47,531,'తదుపరి గంట + 15 నిమిషాల');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (48,531,'తదుపరి గంట + 30 నిమిషాల');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (49,531,'సంఖ్య');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (50,531,'Fajr & Mahgrib');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (51,531,'Imsak & Mahgrib');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (52,531,'Fajr & Isha');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (53,531,'Imsak & Isha');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (532,531,'ఎడమ నుండి కుడికి');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (533,531,'కుడి నుండి ఎడమ');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (534,531,'లిప్యంతరీకరణ');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (535,531,'లిప్యంతరీకరణ, అనువాదం');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (536,531,'అనువాదం, లిప్యంతరీకరణ');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (537,531,'అనువాదం');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (543,531,'గ్రెగోరియన్');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (544,531,'హిజ్రీ');
