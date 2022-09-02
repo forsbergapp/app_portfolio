@@ -453,8 +453,8 @@ module.exports = {
 							prayer_column_fast_start_end "prayer_column_fast_start_end",
 							date_created "date_created",
 							date_modified "date_modified",
-							user_account_app_user_account_id "user_account_id",
-							user_account_app_app_id "app_id"
+							user_account_app_user_account_id "user_account_app_user_account_id",
+							user_account_app_app_id "user_account_app_app_id"
 						FROM ${process.env.SERVICE_DB_DB2_NAME}.app2_user_setting 
 						WHERE id = :id `;
 			parameters = {
@@ -588,7 +588,7 @@ module.exports = {
 							prayer_column_fast_start_end "prayer_column_fast_start_end",
 							date_created "date_created",
 							date_modified "date_modified",
-							user_account_app_user_account_id "user_account_id",
+							user_account_app_user_account_id "user_account_app_user_account_id",
 							user_account_app_app_id "app_id"
 						FROM ${process.env.SERVICE_DB_DB2_NAME}.app2_user_setting
 						WHERE user_account_app_user_account_id = :user_account_id 
@@ -615,7 +615,7 @@ module.exports = {
 									${process.env.SERVICE_DB_DB1_NAME}.app2_user_setting us
 							  WHERE u_like.user_account_id = u.id
 								AND us.id = u_like.app2_user_setting_id
-								AND us.user_account_app_app_id = ?)													count_user_setting_likes,
+								AND us.user_account_app_app_id = ?)									count_user_setting_likes,
 							(SELECT COUNT(DISTINCT u_like.user_account_id)
 							   FROM ${process.env.SERVICE_DB_DB1_NAME}.app2_user_setting_like u_like,
 									${process.env.SERVICE_DB_DB1_NAME}.app2_user_setting us
@@ -633,7 +633,7 @@ module.exports = {
 									${process.env.SERVICE_DB_DB2_NAME}.app2_user_setting us
 							  WHERE u_like.user_account_id = u.id
 								AND us.id = u_like.app2_user_setting_id
-								AND us.user_account_app_app_id = :app_id)													"count_user_setting_likes",
+								AND us.user_account_app_app_id = :app_id)							"count_user_setting_likes",
 							(SELECT COUNT(DISTINCT u_like.user_account_id)
 							   FROM ${process.env.SERVICE_DB_DB2_NAME}.app2_user_setting_like u_like,
 									${process.env.SERVICE_DB_DB2_NAME}.app2_user_setting us
@@ -659,44 +659,44 @@ module.exports = {
 		let sql;
 		let parameters;
 		if (process.env.SERVICE_DB_USE == 1) {
-			sql = `SELECT	us.id,
-							us.description,
-							us.user_account_app_user_account_id,
-							(SELECT COUNT(u_like.id)
-							FROM ${process.env.SERVICE_DB_DB1_NAME}.app2_user_setting_like u_like
-							WHERE u_like.app2_user_setting_id = us.id)				count_likes,
-							(SELECT COUNT(u_view.app2_user_setting_id)
-							FROM ${process.env.SERVICE_DB_DB1_NAME}.app2_user_setting_view u_view
-							WHERE u_view.app2_user_setting_id = us.id)				count_views,
-							(SELECT COUNT(u_liked_current_user.id)
-							FROM ${process.env.SERVICE_DB_DB1_NAME}.app2_user_setting_like u_liked_current_user
-							WHERE u_liked_current_user.user_account_id = ?
-								AND u_liked_current_user.app2_user_setting_id = us.id) 	liked,
-							us.design_paper_size
-						FROM ${process.env.SERVICE_DB_DB1_NAME}.app2_user_setting us
-						WHERE us.user_account_app_user_account_id = ? 
-						AND us.user_account_app_app_id = ?`;
+			sql = `SELECT us.id,
+						  us.description,
+						  us.user_account_app_user_account_id,
+						  (SELECT COUNT(u_like.id)
+						     FROM ${process.env.SERVICE_DB_DB1_NAME}.app2_user_setting_like u_like
+						    WHERE u_like.app2_user_setting_id = us.id)				count_likes,
+						  (SELECT COUNT(u_view.app2_user_setting_id)
+  						     FROM ${process.env.SERVICE_DB_DB1_NAME}.app2_user_setting_view u_view
+						    WHERE u_view.app2_user_setting_id = us.id)				count_views,
+						  (SELECT COUNT(u_liked_current_user.id)
+ 						     FROM ${process.env.SERVICE_DB_DB1_NAME}.app2_user_setting_like u_liked_current_user
+						    WHERE u_liked_current_user.user_account_id = ?
+						      AND u_liked_current_user.app2_user_setting_id = us.id) 	liked,
+						  us.design_paper_size
+					 FROM ${process.env.SERVICE_DB_DB1_NAME}.app2_user_setting us
+				    WHERE us.user_account_app_user_account_id = ? 
+					  AND us.user_account_app_app_id = ?`;
 			parameters = [	id_current_user,
 							id,
 							app_id];
 		}else if (process.env.SERVICE_DB_USE==2){
-			sql = `SELECT	us.id "id",
-							us.description "description",
-							us.user_account_app_user_account_id "user_account_id",
-							(SELECT COUNT(u_like.id)
-							FROM ${process.env.SERVICE_DB_DB2_NAME}.app2_user_setting_like u_like
+			sql = `SELECT us.id "id",
+						  us.description "description",
+						  us.user_account_app_user_account_id "user_account_app_user_account_id",
+						  (SELECT COUNT(u_like.id)
+						     FROM ${process.env.SERVICE_DB_DB2_NAME}.app2_user_setting_like u_like
 							WHERE u_like.app2_user_setting_id = us.id)				"count_likes",
-							(SELECT COUNT(u_view.app2_user_setting_id)
-							FROM ${process.env.SERVICE_DB_DB2_NAME}.app2_user_setting_view u_view
+						  (SELECT COUNT(u_view.app2_user_setting_id)
+							 FROM ${process.env.SERVICE_DB_DB2_NAME}.app2_user_setting_view u_view
 							WHERE u_view.app2_user_setting_id = us.id)				"count_views",
-							(SELECT COUNT(u_liked_current_user.id)
-							FROM ${process.env.SERVICE_DB_DB2_NAME}.app2_user_setting_like u_liked_current_user
+						  (SELECT COUNT(u_liked_current_user.id)
+							 FROM ${process.env.SERVICE_DB_DB2_NAME}.app2_user_setting_like u_liked_current_user
 							WHERE u_liked_current_user.user_account_id = :user_account_id_current
-								AND u_liked_current_user.app2_user_setting_id = us.id) 	"liked",
-							us.design_paper_size "design_paper_size"
-						FROM ${process.env.SERVICE_DB_DB2_NAME}.app2_user_setting us
-						WHERE us.user_account_app_user_account_id = :user_account_id
-						AND us.user_account_app_app_id = :app_id `;
+							  AND u_liked_current_user.app2_user_setting_id = us.id) 	"liked",
+						  us.design_paper_size "design_paper_size"
+					 FROM ${process.env.SERVICE_DB_DB2_NAME}.app2_user_setting us
+					WHERE us.user_account_app_user_account_id = :user_account_id
+					  AND us.user_account_app_app_id = :app_id `;
 			parameters = {
 							user_account_id_current: id_current_user,
 							user_account_id: id,
