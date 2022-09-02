@@ -44,10 +44,11 @@ module.exports = {
         }
         if (password_length_wrong(req.body.password))
             getMessage(20106, 
-                       process.env.COMMON_APP_ID, 
+                       process.env.COMMON_APP_ID,
+                       req.query.app_id, 
                        req.query.lang_code, (err2,results2)  => {
                             return res.status(400).send(
-                                results2.text
+                                err2 ?? results2.text
                             );
                        });
         else{
@@ -63,9 +64,10 @@ module.exports = {
                     if (app_code != null){
                         getMessage(app_code, 
                                 process.env.COMMON_APP_ID, 
+                                req.query.app_id,
                                 req.query.lang_code, (err2,results2)  => {
                                         return res.status(400).send(
-                                            results2.text
+                                            err2 ?? results2.text
                                         );
                                 });
                     }
@@ -303,9 +305,10 @@ module.exports = {
                     //Record not found
                     getMessage(20400, 
                                 process.env.COMMON_APP_ID, 
+                                req.query.app_id,
                                 req.query.lang_code, (err2,results2)  => {
                                     return res.status(404).send(
-                                        results2.text
+                                        err2 ?? results2.text
                                         );
                                 });
                 }
@@ -350,9 +353,10 @@ module.exports = {
                     //Record not found
                     getMessage(20400, 
                                 process.env.COMMON_APP_ID, 
+                                req.query.app_id,
                                 req.query.lang_code, (err2,results2)  => {
                                     return res.status(404).send(
-                                        results2.text
+                                        err2 ?? results2.text
                                     );
                                 });
                 }
@@ -402,9 +406,10 @@ module.exports = {
                     //Record not found
                     getMessage(20400, 
                                 process.env.COMMON_APP_ID, 
+                                req.query.app_id,
                                 req.query.lang_code, (err2,results2)  => {
                                     return res.status(404).send(
-                                        results2.text
+                                        err2 ?? results2.text
                                     );
                                 });
                 }
@@ -431,13 +436,13 @@ module.exports = {
             else{
                 if (!results) {
                     //Record not found
-                    //return ok even if records not found
                     getMessage(20400, 
                                 process.env.COMMON_APP_ID, 
+                                req.query.app_id,
                                 req.query.lang_code, (err2,results2)  => {
                                     return res.status(404).json({
                                             count: 0,
-                                            message: results2.text
+                                            message: err2 ?? results2.text
                                         });
                                 });
                 }
@@ -463,13 +468,13 @@ module.exports = {
             else{
                 if (!results) {
                     //Record not found
-                    //return ok even if records not found
                     getMessage(20400, 
                                 process.env.COMMON_APP_ID, 
+                                req.query.app_id,
                                 req.query.lang_code, (err2,results2)  => {
                                     return res.status(404).json({
                                             count: 0,
-                                            message: results2.text
+                                            message: err2 ?? results2.text
                                         });
                                 });
                 }
@@ -498,12 +503,13 @@ module.exports = {
                             req.body.new_password != '' &&
                             password_length_wrong(req.body.new_password))
                                 getMessage(20106, 
-                                        process.env.COMMON_APP_ID, 
-                                        req.query.lang_code, (err2,results2)  => {
-                                                return res.status(400).send(
-                                                    results2.text
-                                                );
-                                        });
+                                            process.env.COMMON_APP_ID, 
+                                            req.query.app_id,
+                                            req.query.lang_code, (err2,results2)  => {
+                                                    return res.status(400).send(
+                                                        err2 ?? results2.text
+                                                    );
+                                            });
                         else{
                             if (typeof req.body.new_password !== 'undefined' && req.body.new_password != '') {
                                 req.body.password = hashSync(req.body.new_password, salt);
@@ -522,9 +528,10 @@ module.exports = {
                                         if (app_code != null)
                                             getMessage(app_code, 
                                                         process.env.COMMON_APP_ID, 
+                                                        req.query.app_id,
                                                         req.query.lang_code, (err2,results2)  => {
                                                             return res.status(400).send(
-                                                                results2.text
+                                                                err2 ?? results2.text
                                                             );
                                                         });
                                         else
@@ -537,9 +544,10 @@ module.exports = {
                                             //record not found
                                             getMessage(20400, 
                                                         process.env.COMMON_APP_ID, 
+                                                        req.query.app_id,
                                                         req.query.lang_code, (err2,results2)  => {
                                                             return res.status(404).send(
-                                                                results2.text
+                                                                err2 ?? results2.text
                                                             );
                                                         });
                                         }
@@ -628,9 +636,10 @@ module.exports = {
                             //invalid password
                             getMessage(20401, 
                                 process.env.COMMON_APP_ID, 
+                                req.query.app_id,
                                 req.query.lang_code, (err2,results2)  => {
                                     return res.status(400).send(
-                                        results2.text
+                                        err2 ?? results2.text
                                     );
                                 });
                         })
@@ -640,9 +649,10 @@ module.exports = {
                     //user not found
                     getMessage(20305, 
                                 process.env.COMMON_APP_ID, 
+                                req.query.app_id,
                                 req.query.lang_code, (err2,results2)  => {
                                     return res.status(404).send(
-                                        results2.text
+                                        err2 ?? results2.text
                                     );
                                 });
                 }
@@ -653,9 +663,10 @@ module.exports = {
         if (password_length_wrong(req.body.new_password))
             getMessage(20106, 
                        process.env.COMMON_APP_ID, 
+                       req.query.app_id,
                        req.query.lang_code, (err2,results2)  => {
                             return res.status(400).send(
-                                results2.text
+                                err2 ?? results2.text
                             );
                        });
         else{
@@ -671,9 +682,10 @@ module.exports = {
                     if (app_code != null){
                         getMessage(app_code, 
                                    process.env.COMMON_APP_ID, 
+                                   req.query.app_id,
                                    req.query.lang_code, (err2,results2)  => {
                                         return res.status(500).send(
-                                            results2.text
+                                            err2 ?? results2.text
                                         );
                                    });
                     }
@@ -687,9 +699,10 @@ module.exports = {
                         //record not found
                         getMessage(20400, 
                                     process.env.COMMON_APP_ID, 
+                                    req.query.app_id,
                                     req.query.lang_code, (err2,results2)  => {
                                         return res.status(404).send(
-                                            results2.text
+                                            err2 ?? results2.text
                                         );
                                     });
                     }
@@ -738,9 +751,10 @@ module.exports = {
                     //record not found
                     getMessage(20400, 
                                 process.env.COMMON_APP_ID, 
+                                req.query.app_id,
                                 req.query.lang_code, (err2,results2)  => {
                                     return res.status(404).send(
-                                        results2.text
+                                        err2 ?? results2.text
                                     );
                                 });
                 }
@@ -772,9 +786,10 @@ module.exports = {
                                     //record not found
                                     getMessage(20400, 
                                                 process.env.COMMON_APP_ID, 
+                                                req.query.app_id,
                                                 req.query.lang_code, (err2,results2)  => {
                                                     return res.status(404).send(
-                                                        results2.text
+                                                        err2 ?? results2.text
                                                     );
                                                 });
                                 }
@@ -808,9 +823,10 @@ module.exports = {
                                                     //record not found
                                                     getMessage(20400, 
                                                                 process.env.COMMON_APP_ID, 
+                                                                req.query.app_id,
                                                                 req.query.lang_code, (err2,results2)  => {
                                                                     return res.status(404).send(
-                                                                        results2.text
+                                                                        err2 ?? results2.text
                                                                     );
                                                                 });
                                                 }
@@ -827,12 +843,13 @@ module.exports = {
                                                        'invalid password attempt for user id:' + req.params.id, (err_log, result_log)=>{
                                             //invalid password
                                             getMessage(20401, 
-                                                process.env.COMMON_APP_ID, 
-                                                req.query.lang_code, (err2,results2)  => {
-                                                    return res.status(400).send(
-                                                        results2.text
-                                                    );
-                                                });
+                                                        process.env.COMMON_APP_ID, 
+                                                        req.query.app_id,
+                                                        req.query.lang_code, (err2,results2)  => {
+                                                            return res.status(400).send(
+                                                                err2 ?? results2.text
+                                                            );
+                                                        });
                                         })
                                     } 
                                 }
@@ -840,9 +857,10 @@ module.exports = {
                                     //user not found
                                     getMessage(20305, 
                                                 process.env.COMMON_APP_ID, 
+                                                req.query.app_id,
                                                 req.query.lang_code, (err2,results2)  => {
                                                     return res.status(404).send(
-                                                        results2.text
+                                                        err2 ?? results2.text
                                                     );
                                                 });
                                 }
@@ -854,9 +872,10 @@ module.exports = {
                     //user not found
                     getMessage(20305, 
                                process.env.COMMON_APP_ID, 
+                               req.query.app_id,
                                req.query.lang_code, (err2,results2)  => {
                                     return res.status(404).send(
-                                        results2.text
+                                        err2 ?? results2.text
                                     );
                                });
                 }
@@ -978,12 +997,13 @@ module.exports = {
                                 createLogAppCI(req, res, req.body.app_id, __appfilename, __appfunction, __appline, 
                                     'invalid password attempt for user id:' + req.body.user_account_id + ', username:' + req.body.username, (err_log, result_log)=>{
                                     getMessage(20300, 
-                                    process.env.COMMON_APP_ID, 
-                                    req.query.lang_code, (err2,results2)  => {
-                                            return res.status(400).send(
-                                                results2.text
-                                            );
-                                    });
+                                                process.env.COMMON_APP_ID, 
+                                                req.query.app_id,
+                                                req.query.lang_code, (err2,results2)  => {
+                                                        return res.status(400).send(
+                                                            err2 ?? results2.text
+                                                        );
+                                                });
                                 })
                             }
                         })
@@ -994,9 +1014,10 @@ module.exports = {
                                    'user not found:' + req.body.username, (err_log, result_log)=>{
                         getMessage(20305, 
                                     process.env.COMMON_APP_ID, 
+                                    req.query.app_id,
                                     req.query.lang_code, (err2,results2)  => {
                                         return res.status(404).send(
-                                            results2.text
+                                            err2 ?? results2.text
                                         );
                                     });
                     })
