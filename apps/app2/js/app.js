@@ -2230,7 +2230,7 @@ function profile_user_setting_link(item){
     let select_user_setting = document.getElementById('profile_select_user_settings');
     let user_account_id = select_user_setting[select_user_setting.selectedIndex].getAttribute('user_account_id');
     let sid = select_user_setting[select_user_setting.selectedIndex].getAttribute('sid');
-
+    document.getElementById('common_window_info_content').className = paper_size_select.options[paper_size_select.selectedIndex].value;
     switch (item.id){
         case 'profile_user_settings_day':
         case 'profile_user_settings_month':
@@ -2276,7 +2276,7 @@ function profile_show_user_setting() {
                 html += `<option id="${i}" 
                         value=""
                         sid=${json.items[i].id} 
-                        user_account_id=${json.items[i].user_account_id}
+                        user_account_id=${json.items[i].user_account_app_user_account_id}
                         liked=${json.items[i].liked}
                         count_likes=${json.items[i].count_likes}
                         count_views=${json.items[i].count_views}

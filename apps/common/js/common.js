@@ -653,7 +653,7 @@ function show_common_dialogue(dialogue, user_verification_type, title=null, icon
     return null;   
 }
 
-function show_message(message_type, code, function_event, message_text='', app_id=null){
+function show_message(message_type, code, function_event, message_text='', data_app_id=null){
     let confirm_question = document.getElementById('confirm_question');
     let message_title = document.getElementById('message_title');
     let dialogue = document.getElementById('dialogue_message');
@@ -668,12 +668,15 @@ function show_message(message_type, code, function_event, message_text='', app_i
     //INFO, ERROR, CONFIRM, EXCEPTION
     switch (message_type){
         case 'ERROR':{
-            common_fetch(window.global_rest_url_base + window.global_rest_message_translation + code + '?', 
-                         'GET', 0, null, app_id, null, (err, result) =>{
+            common_fetch(window.global_rest_url_base + window.global_rest_message_translation + code + `?data_app_id=${data_app_id}`, 
+                         'GET', 0, null, null, null, (err, result) =>{
                 confirm_question.style.display = hide;
                 button_cancel.style.display = hide;
                 message_title.style.display = show;
-                message_title.innerHTML = JSON.parse(result).data.text;
+                if(err)
+                    message_title.innerHTML = err;
+                else
+                    message_title.innerHTML = JSON.parse(result).data.text;
                 button_close.addEventListener('click', function_close, false);
                 dialogue.style.visibility = 'visible';
                 button_close.focus();

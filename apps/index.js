@@ -1,5 +1,6 @@
 const { getParameters_server } = require ("../service/db/app_portfolio/app_parameter/app_parameter.service");
 const { getApp } = require("../service/db/app_portfolio/app/app.service");
+const { createLogAppSE } = require("../service/log/log.controller");
 async function getInfo(app_id, info, lang_code, callBack){
     async function get_parameters(callBack){            
         getApp(app_id, app_id, lang_code, (err, result_app)=>{
@@ -137,7 +138,6 @@ async function read_app_files(app_id, files, callBack){
         callBack(null, app);
     })
     .catch(err => {
-        const { createLogAppSE } = require("../service/log/log.controller");
         createLogAppSE(app_id, __appfilename, __appfunction, __appline, err, (err_log, result_log)=>{
             callBack(err, null);
         })
@@ -220,8 +220,6 @@ async function get_module_with_init_admin(app_id,
     })
 }
 async function get_email_verification(data, email, baseUrl, lang_code, callBack){
-    const { getMessage } = require("../service/db/app_portfolio/message_translation/message_translation.service");
-    const { createLogAppSE } = require("../service/log/log.controller");
     email = email.replace('<Logo/>', 
                         `<img id='app_logo' src='${data.protocol}://${data.host}${baseUrl}/logo?id=${data.app_id}&uid=${data.app_user_id}&et=${data.emailType}'>`);
     email = email.replace('<Verification_code/>', 
