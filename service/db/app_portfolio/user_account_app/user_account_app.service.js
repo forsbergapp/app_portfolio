@@ -153,9 +153,9 @@ module.exports = {
 						AND app_id = :app_id`;
 			parameters = {
 							preference_locale: data.preference_locale,
-							preference_timezone: data.setting_preference_timezone_id,
-							preference_direction: data.setting_preference_direction_id,
-							preference_arabic_script: data.setting_preference_arabic_script_id,
+							setting_preference_timezone_id: data.setting_preference_timezone_id,
+							setting_preference_direction_id: data.setting_preference_direction_id,
+							setting_preference_arabic_script_id: data.setting_preference_arabic_script_id,
 							user_account_id: user_account_id,
 							app_id: app_id
 						 };
