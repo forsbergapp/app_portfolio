@@ -278,7 +278,7 @@ async function common_translate_ui(lang_code, callBack){
                                 //translate items in select lists in current app
                                 let select_element = document.getElementById(json.data[i].object_item_name.toLowerCase());
                                 for (let option_element = 0; option_element < select_element.options.length; option_element++){
-                                    if (select_element.options[option_element].id == json.data[i].subitem_name)
+                                    if (select_element.options[option_element].id == json.data[i].id)
                                         select_element.options[option_element].text = json.data[i].text
                                 }
                                 break;

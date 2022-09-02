@@ -25,8 +25,9 @@ module.exports = {
 							object_item_name, 
 							subitem_name, 
 							lang_code, 
+							id,
 							text 
-					FROM (SELECT 'APP_OBJECT' object, ao.app_id,  ao.object_name, null object_item_name,null subitem_name, l.lang_code,  aot.text
+					FROM (SELECT 'APP_OBJECT' object, ao.app_id,  ao.object_name, null object_item_name,null subitem_name, l.lang_code, null id, aot.text
 							FROM ${process.env.SERVICE_DB_DB1_NAME}.app_object ao,
 								 ${process.env.SERVICE_DB_DB1_NAME}.app_object_translation aot,
 								 ${process.env.SERVICE_DB_DB1_NAME}.language l
@@ -34,7 +35,7 @@ module.exports = {
 							 AND aot.app_object_app_id = ao.app_id
 							 AND aot.app_object_object_name = ao.object_name
 						  UNION ALL
-						  SELECT 'APP_OBJECT_ITEM', aoi.app_object_app_id app_id, aoi.app_object_object_name object_name, aoi.object_item_name, s.id subitem_name, l.lang_code, str.text
+						  SELECT 'APP_OBJECT_ITEM', aoi.app_object_app_id app_id, aoi.app_object_object_name object_name, aoi.object_item_name, null subitem_name, l.lang_code, s.id, str.text
 							FROM ${process.env.SERVICE_DB_DB1_NAME}.app_object_item aoi,
 								 ${process.env.SERVICE_DB_DB1_NAME}.setting_type st,
 								 ${process.env.SERVICE_DB_DB1_NAME}.setting s,
@@ -45,7 +46,7 @@ module.exports = {
 							 AND str.setting_id = s.id
 							 AND l.id = str.language_id
 						  UNION ALL
-						  SELECT 'APP_OBJECT_ITEM', aoi.app_object_app_id app_id, aoi.app_object_object_name object_name, aoi.object_item_name,null subitem_name, l.lang_code, aoit.text
+						  SELECT 'APP_OBJECT_ITEM', aoi.app_object_app_id app_id, aoi.app_object_object_name object_name, aoi.object_item_name,null subitem_name, l.lang_code, null id, aoit.text
 							FROM ${process.env.SERVICE_DB_DB1_NAME}.app_object_item aoi,
 								 ${process.env.SERVICE_DB_DB1_NAME}.app_object_item_translation aoit,
 								 ${process.env.SERVICE_DB_DB1_NAME}.language l
@@ -54,7 +55,7 @@ module.exports = {
 							 AND aoit.app_object_item_app_object_object_name = aoi.app_object_object_name
 							 AND aoit.app_object_item_object_item_name = aoi.object_item_name
 						  UNION ALL
-						  SELECT 'APP_OBJECT_ITEM_SUBITEM', aois.app_object_item_app_object_app_id app_id, aois.app_object_item_app_object_object_name object_name, aois.app_object_item_object_item_name object_item_name, aois.subitem_name, l.lang_code, aost.text
+						  SELECT 'APP_OBJECT_ITEM_SUBITEM', aois.app_object_item_app_object_app_id app_id, aois.app_object_item_app_object_object_name object_name, aois.app_object_item_object_item_name object_item_name, aois.subitem_name, l.lang_code, null id, aost.text
 							FROM ${process.env.SERVICE_DB_DB1_NAME}.app_object_item_subitem aois,
 								 ${process.env.SERVICE_DB_DB1_NAME}.app_object_subitem_translation aost,
 								 ${process.env.SERVICE_DB_DB1_NAME}.language l
@@ -129,8 +130,9 @@ module.exports = {
 							object_item_name "object_item_name", 
 							subitem_name "subitem_name", 
 							lang_code "lang_code", 
+							id "id",
 							text "text"
-					FROM (SELECT 'APP_OBJECT' object, ao.app_id,  ao.object_name, null object_item_name,null subitem_name, l.lang_code,  aot.text
+					FROM (SELECT 'APP_OBJECT' object, ao.app_id,  ao.object_name, null object_item_name,null subitem_name, l.lang_code, null id, aot.text
 							FROM ${process.env.SERVICE_DB_DB2_NAME}.app_object ao,
 								 ${process.env.SERVICE_DB_DB2_NAME}.app_object_translation aot,
 								 ${process.env.SERVICE_DB_DB2_NAME}.language l
@@ -138,7 +140,7 @@ module.exports = {
 							  AND aot.app_object_app_id = ao.app_id
 							  AND aot.app_object_object_name = ao.object_name
 						  UNION ALL
-						  SELECT 'APP_OBJECT_ITEM', aoi.app_object_app_id app_id, aoi.app_object_object_name object_name, aoi.object_item_name, s.id subitem_name, l.lang_code, str.text
+						  SELECT 'APP_OBJECT_ITEM', aoi.app_object_app_id app_id, aoi.app_object_object_name object_name, aoi.object_item_name, null subitem_name, l.lang_code, s.id, str.text
 							FROM ${process.env.SERVICE_DB_DB2_NAME}.app_object_item aoi,
 								 ${process.env.SERVICE_DB_DB2_NAME}.setting_type st,
 								 ${process.env.SERVICE_DB_DB2_NAME}.setting s,
@@ -149,7 +151,7 @@ module.exports = {
 							 AND str.setting_id = s.id
 							 AND l.id = str.language_id
 						  UNION ALL
-						  SELECT 'APP_OBJECT_ITEM', aoi.app_object_app_id app_id, aoi.app_object_object_name object_name, aoi.object_item_name,null subitem_name, l.lang_code, aoit.text
+						  SELECT 'APP_OBJECT_ITEM', aoi.app_object_app_id app_id, aoi.app_object_object_name object_name, aoi.object_item_name,null subitem_name, l.lang_code, null id, aoit.text
 							FROM ${process.env.SERVICE_DB_DB2_NAME}.app_object_item aoi,
 								 ${process.env.SERVICE_DB_DB2_NAME}.app_object_item_translation aoit,
 								 ${process.env.SERVICE_DB_DB2_NAME}.language l
@@ -158,7 +160,7 @@ module.exports = {
 							  AND aoit.app_object_item_app_object_object_name = aoi.app_object_object_name
 							  AND aoit.app_object_item_object_item_name = aoi.object_item_name
 						  UNION ALL
-						  SELECT 'APP_OBJECT_ITEM_SUBITEM', aois.app_object_item_app_object_app_id app_id, aois.app_object_item_app_object_object_name object_name, aois.app_object_item_object_item_name object_item_name, aois.subitem_name, l.lang_code, aost.text
+						  SELECT 'APP_OBJECT_ITEM_SUBITEM', aois.app_object_item_app_object_app_id app_id, aois.app_object_item_app_object_object_name object_name, aois.app_object_item_object_item_name object_item_name, aois.subitem_name, l.lang_code, null id, aost.text
 							FROM ${process.env.SERVICE_DB_DB2_NAME}.app_object_item_subitem aois,
 								 ${process.env.SERVICE_DB_DB2_NAME}.app_object_subitem_translation aost,
 								 ${process.env.SERVICE_DB_DB2_NAME}.language l
