@@ -1,6 +1,6 @@
 const { getService, getTimezone} = require ("./geolocation.service");
 const { createLogAdmin, createLog} = require ("../../service/db/app_portfolio/app_log/app_log.service");
-const { getMessage } = require("../db/app_portfolio/message_translation/message_translation.service");
+const { getMessage, getMessage_admin } = require("../db/app_portfolio/message_translation/message_translation.service");
 const { getParameter_admin, getParameter } = require ("../db/app_portfolio/app_parameter/app_parameter.service");
 const { createLogAppSE } = require("../../service/log/log.controller");
 module.exports = {
@@ -12,12 +12,13 @@ module.exports = {
 			req.query.longitude=='undefined'){
 			 //Missing latitude or longitude
 			 getMessage(20500, 
-				process.env.COMMON_APP_ID, 
-				req.query.lang_code, (err,results)  => {
-					return res.status(400).send(
-						results.text
-						);
-				});
+						process.env.COMMON_APP_ID, 
+						req.query.app_id,
+						req.query.lang_code, (err,results)  => {
+							return res.status(400).send(
+								err ?? results.text
+								);
+						});
 			}
 		else{	
 			getParameter(process.env.COMMON_APP_ID,'SERVICE_GEOLOCATION_URL_GPS_PLACE', req.query.app_id, (err, db_SERVICE_GEOLOCATION_URL_GPS_PLACE)=>{
@@ -66,11 +67,11 @@ module.exports = {
 			req.query.latitude=='undefined' ||
 			req.query.longitude=='undefined'){
 			 //Missing latitude or longitude
-			 getMessage(20500, 
+			 getMessage_admin(20500, 
 				process.env.COMMON_APP_ID, 
 				req.query.lang_code, (err,results)  => {
 					return res.status(400).send(
-						results.text
+						err ?? results.text
 						);
 				});
 			}
