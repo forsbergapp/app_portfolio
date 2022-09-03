@@ -97,6 +97,8 @@ INSERT INTO app_portfolio.message_translation (language_id, message_code, text) 
 --
 -- setting_translation
 --
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (1,198,'דיוקן A4 (210 x 297 מ"מ).');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (2,198,"דיוקן אותיות (8.5 אינץ' x 11 אינץ').");
 INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (3,198,'אף אחד');
 INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (4,198,'יוֹם שִׁישִׁי');
 INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (5,198,'יום שבת');
