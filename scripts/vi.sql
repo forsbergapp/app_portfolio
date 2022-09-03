@@ -97,6 +97,8 @@ INSERT INTO app_portfolio.message_translation (language_id, message_code, text) 
 --
 -- setting_translation
 --
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (1,575,'A4 (210 x 297 mm) dọc');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (2,575,'Chân dung Letter (8,5in x 11 inch)');
 INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (3,575,'Không có');
 INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (4,575,'Thứ sáu');
 INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (5,575,'Thứ bảy');
