@@ -845,7 +845,7 @@ function makeTableRow(data, items, timerow, year, month, settings, date) {
 	return html;
 }
 // display timetable month
-async function displayMonth(offset, prayertable, settings) {
+async function displayMonth(offset, prayertable, settings, qrcode_url) {
 	return new Promise(function (resolve, reject){
 		let month;
 		let year;
@@ -853,7 +853,6 @@ async function displayMonth(offset, prayertable, settings) {
 		let header_style ='';
 		let footer_style ='';
 		
-		prayertable.innerHTML =window.global_button_spinner;
 		//add default class, theme class and font class		
 		prayertable.classList = settings.prayertable_month + ' ' + 
 								settings.theme_month + ' ' +
@@ -871,6 +870,7 @@ async function displayMonth(offset, prayertable, settings) {
 					<div id='prayertable_month_header_title1'>${settings.header_txt1}</div>
 					<div id='prayertable_month_header_title2'>${settings.header_txt2}</div>
 					<div id='prayertable_month_header_title3'>${settings.header_txt3}</div>
+					<div id='prayertable_month_qr_code' class='prayertable_qr_code'></div>
 				</div>`;
 		}
 	
@@ -990,6 +990,9 @@ async function displayMonth(offset, prayertable, settings) {
 					</div>`;
 				}	
 				prayertable.innerHTML = month_html;
+				//qr code only on month timetable, not on year timetable
+				if (settings.reporttype=='MONTH')
+					create_qr('prayertable_month_qr_code', qrcode_url ?? getHostname());
 				resolve(prayertable);
 			}
 			get_date_enddate((err, date, endDate)=>{
@@ -1091,7 +1094,7 @@ function create_day_title_row (col_titles, title_index, show_imsak, show_sunset,
 			</div>`;
 }
 
-function displayDay(settings, item_id, user_settings){
+function displayDay(settings, item_id, user_settings, qrcode_url = null){
 
 	let day_html='';
 	let times; 
@@ -1131,6 +1134,7 @@ function displayDay(settings, item_id, user_settings){
 		<div id='prayertable_day_header_title1' class='prayertable_day_header' >${settings.header_txt1}</div>
 		<div id='prayertable_day_header_title2' class='prayertable_day_header' >${settings.header_txt2}</div>
 		<div id='prayertable_day_header_title3' class='prayertable_day_header' >${settings.header_txt3}</div>
+		<div id='prayertable_day_qr_code' class='prayertable_qr_code'></div>
 	</div>
 	<div id='prayertable_day_timetable_header' class='display_font'>
 		<div id='prayertable_day_header_title4' class='prayertable_day_header' >${date_title4}</div>
@@ -1188,6 +1192,7 @@ function displayDay(settings, item_id, user_settings){
 		<div id='prayertable_day_time' class='default_font'>
 		</div>`;
 		settings.ui_prayertable_day.innerHTML = day_html;
+		create_qr('prayertable_day_qr_code', qrcode_url ?? getHostname());
 	}
 	let tot_day_async_html = 0;
 	for (i=0;i<=user_settings.length-1;i++){	
@@ -1247,7 +1252,7 @@ async function timetable_day_user_settings_get(user_account_id, callBack){
 /* COMMON APP & REPORT    */
 /* TIMETABLE YEAR         */
 /*----------------------- */
-function displayYear(settings, item_id){
+function displayYear(settings, item_id, qrcode_url){
 	
 	let startmonth            = window.global_session_currentDate.getMonth();
 	let starthijrimonth       = window.global_session_CurrentHijriDate[0];
@@ -1325,6 +1330,7 @@ function displayYear(settings, item_id){
 			<div id='prayertable_year_header_title1' class='prayertable_year_header' >${settings.header_txt1}</div>
 			<div id='prayertable_year_header_title2' class='prayertable_year_header' >${settings.header_txt2}</div>
 			<div id='prayertable_year_header_title3' class='prayertable_year_header' >${settings.header_txt3}</div>
+			<div id='prayertable_year_qr_code' class='prayertable_qr_code'></div>
 		</div>
 		<div id='prayertable_year_timetable_header' class='prayertable_year_row display_font'>
 			<div id='prayertable_year_header_title4' class='prayertable_year_header' >${year_title4}</div>
@@ -1371,6 +1377,7 @@ function displayYear(settings, item_id){
 			<div></div>
 		</div>`;
 		settings.ui_prayertable_year.innerHTML = year_html;
+		create_qr('prayertable_year_qr_code', qrcode_url ?? getHostname());
 	
 		window.global_session_currentDate.setMonth(startmonth);
 		window.global_session_CurrentHijriDate[0] = starthijrimonth;
@@ -1464,6 +1471,24 @@ function init_report(parameters) {
 					window.global_regional_def_calendar_type_greg = global_app_parameters[i].parameter_value;
 				if (global_app_parameters[i].parameter_name=='REGIONAL_DEFAULT_CALENDAR_NUMBER_SYSTEM')
 					window.global_regional_def_calendar_number_system = global_app_parameters[i].parameter_value;
+				//QR
+				if (global_app_parameters[i].parameter_name=='QR_LOGO_FILE_PATH')
+					window.global_qr_logo_file_path = global_app_parameters[i].parameter_value;
+				if (global_app_parameters[i].parameter_name=='QR_WIDTH')
+					window.global_qr_width = parseInt(global_app_parameters[i].parameter_value);
+				if (global_app_parameters[i].parameter_name=='QR_HEIGHT')
+					window.global_qr_height = parseInt(global_app_parameters[i].parameter_value);
+				if (global_app_parameters[i].parameter_name=='QR_COLOR_DARK')
+					window.global_qr_color_dark = global_app_parameters[i].parameter_value;
+				if (global_app_parameters[i].parameter_name=='QR_COLOR_LIGHT')
+					window.global_qr_color_light = global_app_parameters[i].parameter_value;
+				if (global_app_parameters[i].parameter_name=='QR_LOGO_WIDTH')
+					window.global_qr_logo_width = parseInt(global_app_parameters[i].parameter_value);
+				if (global_app_parameters[i].parameter_name=='QR_LOGO_HEIGHT')
+					window.global_qr_logo_height = parseInt(global_app_parameters[i].parameter_value);
+				if (global_app_parameters[i].parameter_name=='QR_BACKGROUND_COLOR')
+					window.global_qr_background_color = global_app_parameters[i].parameter_value;
+			
 			}
 			init_app_report().then(function(){
 				//report start
@@ -1490,15 +1515,15 @@ function init_report(parameters) {
 										if (err)
 											null;
 										else
-											displayDay(report_parameters, null, user_settings_parameters);
+											displayDay(report_parameters, null, user_settings_parameters, window.location.href);
 									})
 								}
 								else
 									if (reporttype==1)
-										displayMonth(0, report_parameters.ui_prayertable_month, report_parameters);
+										displayMonth(0, report_parameters.ui_prayertable_month, report_parameters, window.location.href);
 									else 
 										if (reporttype==2)
-											displayYear(report_parameters, null);
+											displayYear(report_parameters, null, window.location.href);
 						});
 					}
 				});
