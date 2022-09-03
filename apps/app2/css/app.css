@@ -840,9 +840,6 @@ body.app_theme1,
 	background-color: #4267b2;
 	color:#ffffff;
 }
-.app_theme1 #common_window_info_toolbar_qr{
-	background-color:white;
-}
 .app_theme1 .switch-label {
 	color: transparent;
 }
@@ -1024,9 +1021,6 @@ body.app_theme2,
 .app_theme2 #login_provider2{
 	background-color: #4267b2;
 	color:#ffffff;
-}
-.app_theme2 #common_window_info_toolbar_qr{
-	background-color:white;
 }
 .app_theme2 .switch-label {
 	color: transparent;
@@ -1210,9 +1204,6 @@ body.app_theme3,
 .app_theme3 #login_provider2{
 	background-color: #4267b2;
 	color:#ffffff;
-}
-.app_theme3 #common_window_info_toolbar_qr{
-	background-color:white;
 }
 .app_theme3 .switch-label {
 	color: transparent;

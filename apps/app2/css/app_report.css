@@ -88,6 +88,22 @@
 	 text-align: center;	
 }	
 
+.prayertable_qr_code{
+	border: 4px solid white;
+    width: 116px;
+    transform: scale(0.8);
+	opacity: 0.8;
+    height: 116px;
+    position: fixed;
+    align-self: end;
+    top: 0px;
+	box-shadow: 0 4px 8px 0 rgb(0 0 0 / 20%), 0 6px 20px 0 rgb(0 0 0 / 19%);
+}
+.prayertable_qr_code canvas{
+	width: 116px;
+	height: 116px;
+}
+
 /*DAY*/
 /*common settings*/
 #prayertable_day {
