@@ -96,6 +96,8 @@ INSERT INTO app_portfolio.message_translation (language_id, message_code, text) 
 --
 -- setting_translation
 --
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (1,338,'A4 (210 x 297 मिमी) पोर्ट्रेट');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (2,338,'पत्र (8.5in x 11 इंच) पोर्ट्रेट');
 INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (3,338,'काहीही नाही');
 INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (4,338,'शुक्रवार');
 INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (5,338,'शनिवार');

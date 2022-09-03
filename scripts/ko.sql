@@ -97,6 +97,8 @@ INSERT INTO app_portfolio.message_translation (language_id, message_code, text) 
 --
 -- setting_translation
 --
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (1,267,'A4(210 x 297mm) 세로');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (2,267,'레터(8.5인치 x 11인치) 세로');
 INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (3,267,'없음');
 INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (4,267,'금요일');
 INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (5,267,'토요일');

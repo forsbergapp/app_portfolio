@@ -97,6 +97,8 @@ INSERT INTO app_portfolio.message_translation (language_id, message_code, text) 
 --
 -- setting_translation
 --
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (1,527,'A4 (210 x 297 மிமீ) உருவப்படம்');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (2,527,'கடிதம் (8.5in x 11 in) உருவப்படம்');
 INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (3,527,'இல்லை');
 INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (4,527,'வெள்ளி');
 INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (5,527,'சனிக்கிழமை');

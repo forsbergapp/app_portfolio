@@ -97,6 +97,8 @@ INSERT INTO app_portfolio.message_translation (language_id, message_code, text) 
 --
 -- setting_translation
 --
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (1,564,'А4 (210 х 297 мм) портрет');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (2,564,'Лист (8,5 x 11 дюймів) портрет');
 INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (3,564,'Жодного');
 INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (4,564,"П'ятниця");
 INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (5,564,'Субота');

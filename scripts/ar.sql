@@ -94,6 +94,8 @@ INSERT INTO app_portfolio.message_translation (language_id, message_code, text) 
 --
 -- setting_translation
 --
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (1,25,'A4 (210 × 297 مم) عمودي');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (2,25,'صورة شخصية (8.5 بوصة × 11 بوصة)');
 INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (3,25,'لا شيء');
 INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (4,25,'يوم الجمعة');
 INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (5,25,'يوم السبت');

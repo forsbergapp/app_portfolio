@@ -97,6 +97,8 @@ INSERT INTO app_portfolio.message_translation (language_id, message_code, text) 
 --
 -- setting_translation
 --
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (1,162,'A4 (210 x 297 mm) muotokuva');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (2,162,'Letter (8,5 x 11 tuumaa) muotokuva');
 INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (3,162,'Ei mitään');
 INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (4,162,'Perjantai');
 INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (5,162,'Lauantai');
