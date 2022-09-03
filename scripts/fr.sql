@@ -97,6 +97,8 @@ INSERT INTO app_portfolio.message_translation (language_id, message_code, text) 
 --
 -- setting_translation
 --
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (1,166,'A4 (210 x 297 mm) portrait');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (2,166,'Lettre (8,5 po x 11 po) portrait');
 INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (3,166,'Aucune');
 INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (4,166,'Vendredi');
 INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (5,166,'Samedi');

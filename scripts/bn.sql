@@ -97,6 +97,8 @@ INSERT INTO app_portfolio.message_translation (language_id, message_code, text) 
 --
 -- setting_translation
 --
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (1,63,'A4 (210 x 297 মিমি) প্রতিকৃতি');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (2,63,'চিঠি (8.5in x 11 in) পোর্ট্রেট');
 INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (3,63,'কোনোটিই নয়');
 INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (4,63,'শুক্রবার');
 INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (5,63,'শনিবার');

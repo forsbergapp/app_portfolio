@@ -97,6 +97,8 @@ INSERT INTO app_portfolio.message_translation (language_id, message_code, text) 
 --
 -- setting_translation
 --
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (1,31,'A4 (210 x 297 մմ) դիմանկար');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (2,31,'Նամակ (8,5 x 11 դյույմ) դիմանկար');
 INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (3,31,'Ոչ ոք');
 INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (4,31,'Ուրբաթ');
 INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (5,31,'շաբաթ օրը');
