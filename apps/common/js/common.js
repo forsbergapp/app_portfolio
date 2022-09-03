@@ -929,7 +929,6 @@ function show_window_info(info, show_toolbar, content, content_type, qr_data, if
         }
         case null:{
             document.getElementById('common_window_info').style.visibility = 'visible';
-            create_qr('common_window_info_toolbar_qr', qr_data);
             document.getElementById('common_window_info_info').innerHTML = window.global_button_spinner;
             
             if (content_type == 'HTML'){
@@ -3055,8 +3054,7 @@ async function init_common(parameters, callBack){
         //window info
         document.getElementById('common_window_info_toolbar_btn_close').addEventListener('click', function() { document.getElementById('common_window_info').style.visibility = "hidden"; 
                                                                                                                document.getElementById('common_window_info_info').innerHTML='';
-                                                                                                               document.getElementById('common_window_info_content').src='';
-                                                                                                               document.getElementById('common_window_info_toolbar_qr').innerHTML='';}, false);
+                                                                                                               document.getElementById('common_window_info_content').src='';}, false);
         document.getElementById('common_window_info_toolbar_btn_zoomout').addEventListener('click', function() {zoom_info(-1);}, false);
         document.getElementById('common_window_info_toolbar_btn_zoomin').addEventListener('click', function() {zoom_info(1);}, false);
         document.getElementById('common_window_info_toolbar_btn_left').addEventListener('click', function() {move_info(-1,0);}, false);

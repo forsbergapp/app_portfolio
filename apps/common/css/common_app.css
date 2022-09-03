@@ -862,17 +862,6 @@ a:active {
 	margin-bottom:20px;
 }
 
-#common_window_info_toolbar_qr{
-	padding:3px;
-	padding-bottom:0px;
-	width:96px;
-	margin: 0 auto;
-}
-#common_window_info_toolbar_qr canvas{
-	width:96px;
-	height:96px;
-}
-
 /*RESPONSIVE SETTINGS*/
 /*CSS for minimum 768px*/
 @media only screen and (min-width: 768px) {
