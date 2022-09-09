@@ -1,5 +1,5 @@
 body{
-	font-size: 14px;
+	font-size: 16px;
 	margin: 0;
 	height: 100%;
 	width: -webkit-fit-content;
@@ -254,6 +254,7 @@ a:active {
 }
 #dialogue_user_edit_content input{
 	width: 100%;
+	border: 0.5px solid;
 }
 #user_edit_avatar{
 	width:48px;
@@ -313,7 +314,7 @@ a:active {
 #user_edit_label_data_last_logontime,
 #user_edit_label_data_account_created,
 #user_edit_label_data_account_modified {
-	font-size: 8px;
+	font-size: 0.6em;
 }
 
 /*Dialogue profile*/
@@ -696,7 +697,6 @@ a:active {
 }
 #user_menu_default_avatar{
 	font-size: 41px;
-    top: 2px;
 	margin-top:-9px;
 }
 
@@ -866,7 +866,7 @@ a:active {
 /*CSS for minimum 768px*/
 @media only screen and (min-width: 768px) {
 	body{
-		font-size: 16px;
+		font-size: 18px;
 	}
 	#dialogue_profile_content{
 		width:500px;
@@ -875,9 +875,6 @@ a:active {
 	#dialogue_user_edit_content{
 		width:500px;
 	}
-	#user_edit_avatar{
-		left: 12px;
-	}
 	#profile_public {
 		width:400px;
 	}
@@ -885,12 +882,12 @@ a:active {
 		width: 250px;
 	}
 	.profile_detail_list{
-		height:115px;
+		height:90px;
 	}	
 	#user_edit_label_data_last_logontime,
 	#user_edit_label_data_account_created,
 	#user_edit_label_data_account_modified {
-		font-size: 11px;
+		font-size: 0.7em;
 	}
 	#profile_main_stat_row1 div{
 		margin-right:10px;

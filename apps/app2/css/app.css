@@ -1,6 +1,6 @@
-
 /* TOOLBAR TOP*/
 #toolbar_top {
+	width: -webkit-fill-available;
 	top: 0;
 	text-align: center;
 	width: 100%;
@@ -10,11 +10,13 @@
 }
 #toolbar_btn_zoomin,#toolbar_btn_zoomout,#toolbar_btn_left, #toolbar_btn_right, #toolbar_btn_search {
 	font-size: 48px;
-	vertical-align: top;
 }
 #user_account{
 	display: inline-block;
-    width: 60px;
+	margin-top: 13px;
+	vertical-align: top;
+	width: 30px;
+	float:right;
 }
 /* TOOLBAR BOTTOM*/
 #toolbar_bottom {
@@ -59,9 +61,8 @@
 #profile_main_btn_user_settings,
 #profile_main_btn_user_setting_likes,
 #profile_main_btn_user_setting_liked{
-	font-size:16px;
 	height:20px;
-	text-align:left;
+	text-align:start;
 }
 #profile_main_btn_user_setting_likes,
 #profile_main_btn_user_setting_liked{
@@ -97,11 +98,10 @@
 #profile_user_settings_row i{
 	width: 26px;
 	height: 26px;
-	font-size:20px;
 }
 #profile_user_settings_row
 {
-	text-align: left;
+	text-align: start;
 }
 #profile_user_settings_row div{
 	display:inline-block;
@@ -339,9 +339,10 @@ height: 25px;
 	display: block;
 	font-weight: bold;
 }
-#settings #setting_label_current_date_time_display,
-#settings #setting_label_report_date_time_display{
-	font-size: 8px;
+#settings #setting_current_date_time_display,
+#settings #setting_report_date_time_display{
+	font-size: 0.7em;
+	margin-inline-start: 5px;
 }
 
 #settings select {
@@ -354,7 +355,6 @@ height: 25px;
 	max-width: 52%;
 	min-width: 52%;
 	outline: none;
-	height: 21px;
 }
 #settings input {
 	box-sizing: border-box;
@@ -363,7 +363,6 @@ height: 25px;
 	margin: 1px;
 	width: 360px;
 	max-width:52%;
-	height: 21px;
 }
 #settings .setting_horizontal_row{
 	width:100%;
@@ -374,18 +373,18 @@ height: 25px;
 	display: inline-block;
 }
 #settings .setting_horizontal_col:nth-child(1){
-	width:15%;
+	width:5%;
 }
 #settings .setting_horizontal_col:nth-child(2){
-	width:15%;
-	text-align: left;
+	width:25%;
+	text-align: start;
 }
 #settings .setting_horizontal_col:nth-child(3){
-	width:55%;
-	text-align:left;
+	width:65%;
+	text-align:start;
 }
 #settings .setting_horizontal_col:nth-child(4){
-	width:15%;
+	width:5%;
 }
 #settings .setting_horizontal_col:nth-child(3) select,
 #settings .setting_horizontal_col:nth-child(3) input{
@@ -393,7 +392,7 @@ height: 25px;
 }
 /* SETTINGS GPS*/
 #mapid {
-	height: 250px;
+	height: 350px;
 	margin-left: 5%;
 	margin-right: 5%;
 	margin-bottom: 10px;
@@ -689,6 +688,10 @@ height: 25px;
 		transform: inherit;
 	  	transform-origin: inherit;
 	}
+
+	#mapid {
+		height: 225px;
+	}	
 }
 /* APP THEME 1*/
 /* darker colors*/
