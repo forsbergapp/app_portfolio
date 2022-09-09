@@ -137,7 +137,9 @@ window.global_qr_background_color;
 
 function printTable(){
 	let win = window.open('','printwindow','');
-	let whatToPrint = document.getElementById('paper');
+	document.getElementById('prayertable_month_qr_code').children[0].id = 'destinationCanvas';
+    let whatToPrint = document.getElementById('paper');
+    
 	let html;
 	
 	html = `<!DOCTYPE html>
@@ -145,19 +147,31 @@ function printTable(){
 			<head>
 				<meta charset='UTF-8'>
 				<title></title>
-				<link rel="stylesheet" type="text/css" href="/app${window.global_app_id}/css/app_fonts.css" />
-				<link rel="stylesheet" type="text/css" href="/app${window.global_app_id}/css/app.css" />
-				<link rel="stylesheet" type="text/css" href="/app${window.global_app_id}/css/app_report.css" />
+                <link rel='stylesheet' type='text/css' href='/app${window.global_app_id}/css/app_report.css' />
+                <link rel='stylesheet' type='text/css' href='https://use.fontawesome.com/releases/v6.1.1/css/all.css' />
+                <link rel='stylesheet' type='text/css' href='/common/css/common.css' />
 			</head>
 			<body id="printbody">
 				${whatToPrint.outerHTML}
 			</body>
 			</html>`;
 	win.document.write(html);
-	win.print();
+	
+    function copyCanvas(){
+        let destinationCtx;
+        let destinationCanvas = win.document.getElementById('destinationCanvas');
+        document.getElementById('destinationCanvas').id = 'sourceCanvas';
+        let sourceCanvas = document.getElementById('sourceCanvas');
+        destinationCtx = destinationCanvas.getContext('2d');
+        destinationCtx.drawImage(sourceCanvas, 0, 0);
+        document.getElementById('sourceCanvas').removeAttribute('id');
+    }
+    copyCanvas();
+    win.print();
 	win.onafterprint = function(){
 		win.close();
 	}
+    
 	return null;
 }
 function getTimetable_type(){
