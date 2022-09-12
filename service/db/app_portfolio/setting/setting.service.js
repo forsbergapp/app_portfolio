@@ -21,7 +21,7 @@ module.exports = {
                                       FROM ${process.env.SERVICE_DB_DB1_NAME}.setting_translation str,
                                            ${process.env.SERVICE_DB_DB1_NAME}.language l
                                       WHERE l.id = str.language_id
-                                        AND l.lang_code = (SELECT COALESCE(MIN(l1.lang_code),'en')
+                                        AND l.lang_code = (SELECT COALESCE(MAX(l1.lang_code),'en')
                                                               FROM ${process.env.SERVICE_DB_DB1_NAME}.setting_translation str1,
                                                                    ${process.env.SERVICE_DB_DB1_NAME}.language l1
                                                             WHERE l1.id  = str1.language_id
@@ -53,7 +53,7 @@ module.exports = {
                                       FROM ${process.env.SERVICE_DB_DB2_NAME}.setting_translation str,
                                            ${process.env.SERVICE_DB_DB2_NAME}.language l
                                      WHERE l.id = str.language_id
-                                       AND l.lang_code = (SELECT NVL(MIN(l1.lang_code),'en')
+                                       AND l.lang_code = (SELECT NVL(MAX(l1.lang_code),'en')
                                                              FROM ${process.env.SERVICE_DB_DB2_NAME}.setting_translation str1,
                                                                   ${process.env.SERVICE_DB_DB2_NAME}.language l1
                                                             WHERE l1.id  = str1.language_id

@@ -20,7 +20,7 @@ module.exports = {
 					  AND am.message_code = m.code
 					  AND am.app_id = ?
 					  AND m.code = ?
-					  AND l.lang_code = (SELECT COALESCE(MIN(l1.lang_code),'en')
+					  AND l.lang_code = (SELECT COALESCE(MAX(l1.lang_code),'en')
 										   FROM ${process.env.SERVICE_DB_DB1_NAME}.message_translation mt1,
 											    ${process.env.SERVICE_DB_DB1_NAME}.language l1
 										  WHERE mt1.message_code = mt.message_code
@@ -51,7 +51,7 @@ module.exports = {
 					  AND am.message_code = m.code
 					  AND am.app_id = :app_id
 					  AND m.code = :code
-					  AND l.lang_code = (SELECT NVL(MIN(l1.lang_code),'en')
+					  AND l.lang_code = (SELECT NVL(MAX(l1.lang_code),'en')
 										   FROM ${process.env.SERVICE_DB_DB2_NAME}.message_translation mt1,
 												${process.env.SERVICE_DB_DB2_NAME}.language l1
 										  WHERE mt1.message_code = mt.message_code
@@ -92,7 +92,7 @@ module.exports = {
 					  AND am.message_code = m.code
 					  AND am.app_id = :app_id
 					  AND m.code = :code
-					  AND l.lang_code = (SELECT NVL(MIN(l1.lang_code),'en')
+					  AND l.lang_code = (SELECT NVL(MAX(l1.lang_code),'en')
 										   FROM ${process.env.SERVICE_DB_DB2_NAME}.message_translation mt1,
   											    ${process.env.SERVICE_DB_DB2_NAME}.language l1
 										  WHERE mt1.message_code = mt.message_code
@@ -126,7 +126,7 @@ module.exports = {
 					  AND am.message_code = m.code
 					  AND am.app_id = :app_id
 					  AND m.code = :code
-					  AND l.lang_code = (SELECT NVL(MIN(l1.lang_code),'en')
+					  AND l.lang_code = (SELECT NVL(MAX(l1.lang_code),'en')
 										   FROM ${process.env.SERVICE_DB_DB2_NAME}.message_translation mt1,
 												${process.env.SERVICE_DB_DB2_NAME}.language l1
 										  WHERE mt1.message_code = mt.message_code
