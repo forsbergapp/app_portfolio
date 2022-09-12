@@ -34,35 +34,27 @@ module.exports = {
                              FROM ${process.env.SERVICE_DB_DB1_NAME}.locale loc
                             WHERE loc.country_id = c.id
                               AND loc.language_id = lt.language_id)
-               AND lt.language_translation_id = (SELECT COALESCE(MIN(lt1.language_translation_id),?)
-                                                   FROM ${process.env.SERVICE_DB_DB1_NAME}.language_translation lt1,
-                                                        ${process.env.SERVICE_DB_DB1_NAME}.language l1
-                                                  WHERE l1.id  = lt1.language_translation_id
-                                                    AND lt1.language_id = lt.language_id
-                                                    AND l1.lang_code = (SELECT MIN(search.lang_code)
-                                                                          FROM (SELECT ? lang_code
-                                                                                  FROM DUAL
-                                                                                UNION ALL
-                                                                                SELECT SUBSTRING_INDEX(?,'-',2)
-                                                                                  FROM DUAL
-                                                                                UNION ALL 
-                                                                                SELECT SUBSTRING_INDEX(?,'-',1)
-                                                                                  FROM DUAL)search)
+               AND lt.language_translation_id = (SELECT COALESCE(MIN(l3.id),?)
+                                                   FROM ${process.env.SERVICE_DB_DB1_NAME}.language l3
+                                                  WHERE l3.lang_code = (
+                                                        SELECT MAX(l4.lang_code )
+                                                          FROM ${process.env.SERVICE_DB_DB1_NAME}.language_translation lt4,
+                                                               ${process.env.SERVICE_DB_DB1_NAME}.language l4
+                                                         WHERE l4.id  = lt4.language_translation_id
+                                                           AND lt4.language_id = l2.id
+                                                           AND l4.lang_code IN (?, SUBSTRING_INDEX(?,'-',2), SUBSTRING_INDEX(?,'-',1))
+                                                                        )
                                                 )
-              AND ct.language_id = (SELECT COALESCE(MIN(l1.id),?)
-                                      FROM ${process.env.SERVICE_DB_DB1_NAME}.country_translation ct1,
-                                           ${process.env.SERVICE_DB_DB1_NAME}.language l1
-                                      WHERE l1.id  = ct1.language_id
-                                        AND ct1.country_id = c.id
-                                        AND l1.lang_code = (SELECT MIN(search.lang_code)
-                                                              FROM (SELECT ? lang_code
-                                                                      FROM DUAL
-                                                                    UNION ALL
-                                                                    SELECT SUBSTRING_INDEX(?,'-',2)
-                                                                      FROM DUAL
-                                                                    UNION ALL 
-                                                                    SELECT SUBSTRING_INDEX(?,'-',1)
-                                                                      FROM DUAL)search)
+               AND ct.language_id = (SELECT COALESCE(MIN(l3.id),?)
+                                       FROM ${process.env.SERVICE_DB_DB1_NAME}.language l3
+                                      WHERE l3.lang_code = (
+                                            SELECT MAX(l1.lang_code )
+                                              FROM ${process.env.SERVICE_DB_DB1_NAME}.country_translation ct1,
+                                                  ${process.env.SERVICE_DB_DB1_NAME}.language l1
+                                            WHERE l1.id  = ct1.language_id
+                                              AND ct1.country_id = c.id
+                                              AND l1.lang_code IN (?, SUBSTRING_INDEX(?,'-',2), SUBSTRING_INDEX(?,'-',1))
+                                                            )
                                     )
             UNION ALL
             SELECT l2.lang_code locale,
@@ -71,20 +63,16 @@ module.exports = {
                    ${process.env.SERVICE_DB_DB1_NAME}.language l2
              WHERE INSTR(l2.lang_code,'-') = 0
                AND l2.id = lt.language_id
-               AND lt.language_translation_id = (SELECT COALESCE(MIN(lt3.language_translation_id),?)
-                                                   FROM ${process.env.SERVICE_DB_DB1_NAME}.language_translation lt3,
-                                                        ${process.env.SERVICE_DB_DB1_NAME}.language l3
-                                                  WHERE l3.id  = lt3.language_translation_id
-                                                    AND lt3.language_id = lt.language_id
-                                                    AND l3.lang_code = (SELECT MIN(search.lang_code)
-                                                                          FROM (SELECT ? lang_code
-                                                                                  FROM DUAL
-                                                                                UNION ALL
-                                                                                SELECT SUBSTRING_INDEX(?,'-',2)
-                                                                                  FROM DUAL
-                                                                                UNION ALL 
-                                                                                SELECT SUBSTRING_INDEX(?,'-',1)
-                                                                                  FROM DUAL)search)
+               AND lt.language_translation_id = (SELECT COALESCE(MIN(l3.id),?)
+                                                   FROM ${process.env.SERVICE_DB_DB1_NAME}.language l3
+                                                  WHERE l3.lang_code = (
+                                                        SELECT MAX(l4.lang_code )
+                                                          FROM ${process.env.SERVICE_DB_DB1_NAME}.language_translation lt4,
+                                                               ${process.env.SERVICE_DB_DB1_NAME}.language l4
+                                                         WHERE l4.id  = lt4.language_translation_id
+                                                           AND lt4.language_id = l2.id
+                                                           AND l4.lang_code IN (?, SUBSTRING_INDEX(?,'-',2), SUBSTRING_INDEX(?,'-',1))
+                                                                        )
                                                 )
                AND  EXISTS(SELECT NULL
                              FROM ${process.env.SERVICE_DB_DB1_NAME}.locale loc
@@ -132,35 +120,27 @@ module.exports = {
                             FROM ${process.env.SERVICE_DB_DB2_NAME}.locale loc
                            WHERE loc.country_id = c.id
                              AND loc.language_id = lt.language_id)
-              AND lt.language_translation_id = (SELECT NVL(MIN(lt1.language_translation_id),:default_language_id)
-                                                   FROM ${process.env.SERVICE_DB_DB2_NAME}.language_translation lt1,
-                                                        ${process.env.SERVICE_DB_DB2_NAME}.language l1
-                                                  WHERE l1.id  = lt1.language_translation_id
-                                                    AND lt1.language_id = lt.language_id
-                                                    AND l1.lang_code = (SELECT MIN(search.lang_code)
-                                                                          FROM (SELECT :lang_code lang_code
-                                                                                  FROM DUAL
-                                                                                UNION ALL
-                                                                                SELECT SUBSTR(:lang_code, 0,INSTR(:lang_code,'-',1,2)-1)
-                                                                                  FROM DUAL
-                                                                                UNION ALL 
-                                                                                SELECT SUBSTR(:lang_code, 0,INSTR(:lang_code,'-',1,1)-1)
-                                                                                  FROM DUAL)search)
+              AND lt.language_translation_id = (SELECT NVL(MIN(l3.id),:default_language_id)
+                                                  FROM ${process.env.SERVICE_DB_DB2_NAME}.language l3
+                                                  WHERE l3.lang_code = (
+                                                        SELECT MAX(l4.lang_code )
+                                                          FROM ${process.env.SERVICE_DB_DB2_NAME}.language_translation lt4,
+                                                               ${process.env.SERVICE_DB_DB2_NAME}.language l4
+                                                         WHERE l4.id  = lt4.language_translation_id
+                                                           AND lt4.language_id = l2.id
+                                                           AND l4.lang_code IN (:lang_code, SUBSTR(:lang_code, 0,INSTR(:lang_code,'-',1,2)-1), SUBSTR(:lang_code, 0,INSTR(:lang_code,'-',1,1)-1))
+                                                                        )
                                                 )
-              AND ct.language_id = (SELECT NVL(MIN(l1.id),:default_language_id)
-                                      FROM ${process.env.SERVICE_DB_DB2_NAME}.country_translation ct1,
-                                           ${process.env.SERVICE_DB_DB2_NAME}.language l1
-                                     WHERE l1.id  = ct1.language_id
-                                       AND ct1.country_id = c.id
-                                       AND l1.lang_code = (SELECT MIN(search.lang_code)
-                                                             FROM (SELECT :lang_code lang_code
-                                                                     FROM DUAL
-                                                                   UNION ALL
-                                                                   SELECT SUBSTR(:lang_code, 0,INSTR(:lang_code,'-',1,2)-1)
-                                                                     FROM DUAL
-                                                                   UNION ALL 
-                                                                   SELECT SUBSTR(:lang_code, 0,INSTR(:lang_code,'-',1,1)-1)
-                                                                     FROM DUAL)search)
+              AND ct.language_id = (SELECT NVL(MIN(l3.id),:default_language_id)
+                                      FROM ${process.env.SERVICE_DB_DB2_NAME}.language l3
+                                      WHERE l3.lang_code = (
+                                            SELECT MAX(l1.lang_code )
+                                              FROM ${process.env.SERVICE_DB_DB2_NAME}.country_translation ct1,
+                                                   ${process.env.SERVICE_DB_DB2_NAME}.language l1
+                                             WHERE l1.id  = ct1.language_id
+                                               AND ct1.country_id = c.id
+                                               AND l1.lang_code IN (:lang_code, SUBSTR(:lang_code, 0,INSTR(:lang_code,'-',1,2)-1), SUBSTR(:lang_code, 0,INSTR(:lang_code,'-',1,1)-1))
+                                                            )
                                     )
             UNION ALL
             SELECT l2.lang_code "locale",
@@ -169,20 +149,16 @@ module.exports = {
                    ${process.env.SERVICE_DB_DB2_NAME}.language l2
              WHERE INSTR(l2.lang_code,'-') = 0
                AND l2.id = lt.language_id
-               AND lt.language_translation_id = (SELECT NVL(MIN(lt3.language_translation_id),:default_language_id)
-                                                   FROM ${process.env.SERVICE_DB_DB2_NAME}.language_translation lt3,
-                                                        ${process.env.SERVICE_DB_DB2_NAME}.language l3
-                                                  WHERE l3.id  = lt3.language_translation_id
-                                                    AND lt3.language_id = lt.language_id
-                                                    AND l3.lang_code = (SELECT MIN(search.lang_code)
-                                                                          FROM (SELECT :lang_code lang_code
-                                                                                  FROM DUAL
-                                                                                UNION ALL
-                                                                                SELECT SUBSTR(:lang_code, 0,INSTR(:lang_code,'-',1,2)-1)
-                                                                                  FROM DUAL
-                                                                                UNION ALL 
-                                                                                SELECT SUBSTR(:lang_code, 0,INSTR(:lang_code,'-',1,1)-1)
-                                                                                  FROM DUAL)search)
+               AND lt.language_translation_id = (SELECT NVL(MIN(l3.id),:default_language_id)
+                                                   FROM ${process.env.SERVICE_DB_DB2_NAME}.language l3
+                                                  WHERE l3.lang_code = (
+                                                        SELECT MAX(l4.lang_code )
+                                                          FROM ${process.env.SERVICE_DB_DB2_NAME}.language_translation lt4,
+                                                               ${process.env.SERVICE_DB_DB2_NAME}.language l4
+                                                         WHERE l4.id  = lt4.language_translation_id
+                                                           AND lt4.language_id = l2.id
+                                                           AND l4.lang_code IN (:lang_code, SUBSTR(:lang_code, 0,INSTR(:lang_code,'-',1,2)-1), SUBSTR(:lang_code, 0,INSTR(:lang_code,'-',1,1)-1))
+                                                                        )
                                                 )
                AND  EXISTS(SELECT NULL
                              FROM ${process.env.SERVICE_DB_DB2_NAME}.locale loc
