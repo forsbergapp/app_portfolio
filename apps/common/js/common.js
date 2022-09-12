@@ -302,8 +302,7 @@ async function common_translate_ui(lang_code, callBack){
                     for (let i = 0; i < json.locales.length; i++){
                         html += `<option id="${i}" value="${json.locales[i].locale}">${json.locales[i].text}</option>`;
                     }
-                    //keep first with null
-                    select_locale.innerHTML = select_locale.options[0].outerHTML + html;
+                    select_locale.innerHTML = html;
                     select_locale.value = current_locale;
                 }
                 //translate regional settings
