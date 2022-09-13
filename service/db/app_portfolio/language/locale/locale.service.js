@@ -34,10 +34,10 @@ module.exports = {
                              FROM ${process.env.SERVICE_DB_DB1_NAME}.locale loc
                             WHERE loc.country_id = c.id
                               AND loc.language_id = lt.language_id)
-               AND lt.language_translation_id = (SELECT COALESCE(MIN(l3.id),?)
+               AND lt.language_translation_id = (SELECT l3.id
                                                    FROM ${process.env.SERVICE_DB_DB1_NAME}.language l3
                                                   WHERE l3.lang_code = (
-                                                        SELECT MAX(l4.lang_code )
+                                                        SELECT COALESCE(MAX(l4.lang_code),'en')
                                                           FROM ${process.env.SERVICE_DB_DB1_NAME}.language_translation lt4,
                                                                ${process.env.SERVICE_DB_DB1_NAME}.language l4
                                                          WHERE l4.id  = lt4.language_translation_id
@@ -45,10 +45,10 @@ module.exports = {
                                                            AND l4.lang_code IN (?, SUBSTRING_INDEX(?,'-',2), SUBSTRING_INDEX(?,'-',1))
                                                                         )
                                                 )
-               AND ct.language_id = (SELECT COALESCE(MIN(l3.id),?)
+               AND ct.language_id = (SELECT l3.id
                                        FROM ${process.env.SERVICE_DB_DB1_NAME}.language l3
                                       WHERE l3.lang_code = (
-                                            SELECT MAX(l1.lang_code )
+                                            SELECT COALESCE(MAX(l1.lang_code),'en')
                                               FROM ${process.env.SERVICE_DB_DB1_NAME}.country_translation ct1,
                                                   ${process.env.SERVICE_DB_DB1_NAME}.language l1
                                             WHERE l1.id  = ct1.language_id
@@ -63,10 +63,10 @@ module.exports = {
                    ${process.env.SERVICE_DB_DB1_NAME}.language l2
              WHERE INSTR(l2.lang_code,'-') = 0
                AND l2.id = lt.language_id
-               AND lt.language_translation_id = (SELECT COALESCE(MIN(l3.id),?)
+               AND lt.language_translation_id = (SELECT l3.id
                                                    FROM ${process.env.SERVICE_DB_DB1_NAME}.language l3
                                                   WHERE l3.lang_code = (
-                                                        SELECT MAX(l4.lang_code )
+                                                        SELECT COALESCE(MAX(l4.lang_code),'en')
                                                           FROM ${process.env.SERVICE_DB_DB1_NAME}.language_translation lt4,
                                                                ${process.env.SERVICE_DB_DB1_NAME}.language l4
                                                          WHERE l4.id  = lt4.language_translation_id
@@ -78,15 +78,12 @@ module.exports = {
                              FROM ${process.env.SERVICE_DB_DB1_NAME}.locale loc
                             WHERE loc.language_id = lt.language_id)
             ORDER BY 2 `;
-      parameters = [default_language_id,
+      parameters = [lang_code,
                     lang_code,
                     lang_code,
                     lang_code,
-                    default_language_id,
                     lang_code,
                     lang_code,
-                    lang_code,
-                    default_language_id,
                     lang_code,
                     lang_code,
                     lang_code];
@@ -120,10 +117,10 @@ module.exports = {
                             FROM ${process.env.SERVICE_DB_DB2_NAME}.locale loc
                            WHERE loc.country_id = c.id
                              AND loc.language_id = lt.language_id)
-              AND lt.language_translation_id = (SELECT NVL(MIN(l3.id),:default_language_id)
+              AND lt.language_translation_id = (SELECT l3.id
                                                   FROM ${process.env.SERVICE_DB_DB2_NAME}.language l3
                                                   WHERE l3.lang_code = (
-                                                        SELECT MAX(l4.lang_code )
+                                                        SELECT COALESCE(MAX(l4.lang_code),'en')
                                                           FROM ${process.env.SERVICE_DB_DB2_NAME}.language_translation lt4,
                                                                ${process.env.SERVICE_DB_DB2_NAME}.language l4
                                                          WHERE l4.id  = lt4.language_translation_id
@@ -131,10 +128,10 @@ module.exports = {
                                                            AND l4.lang_code IN (:lang_code, SUBSTR(:lang_code, 0,INSTR(:lang_code,'-',1,2)-1), SUBSTR(:lang_code, 0,INSTR(:lang_code,'-',1,1)-1))
                                                                         )
                                                 )
-              AND ct.language_id = (SELECT NVL(MIN(l3.id),:default_language_id)
+              AND ct.language_id = (SELECT l3.id
                                       FROM ${process.env.SERVICE_DB_DB2_NAME}.language l3
                                       WHERE l3.lang_code = (
-                                            SELECT MAX(l1.lang_code )
+                                            SELECT COALESCE(MAX(l1.lang_code), 'en')
                                               FROM ${process.env.SERVICE_DB_DB2_NAME}.country_translation ct1,
                                                    ${process.env.SERVICE_DB_DB2_NAME}.language l1
                                              WHERE l1.id  = ct1.language_id
@@ -149,10 +146,10 @@ module.exports = {
                    ${process.env.SERVICE_DB_DB2_NAME}.language l2
              WHERE INSTR(l2.lang_code,'-') = 0
                AND l2.id = lt.language_id
-               AND lt.language_translation_id = (SELECT NVL(MIN(l3.id),:default_language_id)
+               AND lt.language_translation_id = (SELECT l3.id
                                                    FROM ${process.env.SERVICE_DB_DB2_NAME}.language l3
                                                   WHERE l3.lang_code = (
-                                                        SELECT MAX(l4.lang_code )
+                                                        SELECT COALESCE(MAX(l4.lang_code),'en')
                                                           FROM ${process.env.SERVICE_DB_DB2_NAME}.language_translation lt4,
                                                                ${process.env.SERVICE_DB_DB2_NAME}.language l4
                                                          WHERE l4.id  = lt4.language_translation_id
@@ -165,8 +162,7 @@ module.exports = {
                             WHERE loc.language_id = lt.language_id)
             ORDER BY 2`;
       parameters = {
-                    lang_code: lang_code,
-                    default_language_id: default_language_id
+                    lang_code: lang_code
                    };
 		}
     execute_db_sql(app_id, app_id, sql, parameters, null, 
