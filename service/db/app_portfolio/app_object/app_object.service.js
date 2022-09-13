@@ -34,6 +34,14 @@ module.exports = {
 						   WHERE l.id = aot.language_id
 							 AND aot.app_object_app_id = ao.app_id
 							 AND aot.app_object_object_name = ao.object_name
+							 AND l.lang_code = (SELECT COALESCE(MAX(l1.lang_code),'en')
+												  FROM ${process.env.SERVICE_DB_DB1_NAME}.language l1,
+												       ${process.env.SERVICE_DB_DB1_NAME}.app_object_translation aot1
+												 WHERE aot1.language_id = l1.id
+												   AND aot1.app_object_app_id = ao.app_id
+												   AND aot1.app_object_object_name = ao.object_name
+												   AND l1.lang_code IN (?, SUBSTRING_INDEX(?,'-',2), SUBSTRING_INDEX(?,'-',1))
+											   )
 						  UNION ALL
 						  SELECT 'APP_OBJECT_ITEM', aoi.app_object_app_id app_id, aoi.app_object_object_name object_name, aoi.object_item_name, null subitem_name, l.lang_code, s.id, str.text
 							FROM ${process.env.SERVICE_DB_DB1_NAME}.app_object_item aoi,
@@ -45,6 +53,13 @@ module.exports = {
 							 AND s.setting_type_id = st.id  
 							 AND str.setting_id = s.id
 							 AND l.id = str.language_id
+							 AND l.lang_code = (SELECT COALESCE(MAX(l1.lang_code),'en')
+												  FROM ${process.env.SERVICE_DB_DB1_NAME}.language l1,
+												       ${process.env.SERVICE_DB_DB1_NAME}.setting_translation str1
+												 WHERE str1.language_id = l1.id
+												   AND str1.setting_id = s.id
+												   AND l1.lang_code IN (?, SUBSTRING_INDEX(?,'-',2), SUBSTRING_INDEX(?,'-',1))
+											   )
 						  UNION ALL
 						  SELECT 'APP_OBJECT_ITEM', aoi.app_object_app_id app_id, aoi.app_object_object_name object_name, aoi.object_item_name,null subitem_name, l.lang_code, null id, aoit.text
 							FROM ${process.env.SERVICE_DB_DB1_NAME}.app_object_item aoi,
@@ -54,6 +69,15 @@ module.exports = {
 							 AND aoit.app_object_item_app_object_app_id = aoi.app_object_app_id
 							 AND aoit.app_object_item_app_object_object_name = aoi.app_object_object_name
 							 AND aoit.app_object_item_object_item_name = aoi.object_item_name
+							 AND l.lang_code = (SELECT COALESCE(MAX(l1.lang_code),'en')
+												  FROM ${process.env.SERVICE_DB_DB1_NAME}.language l1,
+												       ${process.env.SERVICE_DB_DB1_NAME}.app_object_item_translation aoit1
+												 WHERE aoit1.language_id = l1.id
+												   AND aoit1.app_object_item_app_object_app_id = aoi.app_object_app_id
+												   AND aoit1.app_object_item_app_object_object_name = aoi.app_object_object_name
+												   AND aoit1.app_object_item_object_item_name = aoi.object_item_name
+												   AND l1.lang_code IN (?, SUBSTRING_INDEX(?,'-',2), SUBSTRING_INDEX(?,'-',1))
+											   )
 						  UNION ALL
 						  SELECT 'APP_OBJECT_ITEM_SUBITEM', aois.app_object_item_app_object_app_id app_id, aois.app_object_item_app_object_object_name object_name, aois.app_object_item_object_item_name object_item_name, aois.subitem_name, l.lang_code, null id, aost.text
 							FROM ${process.env.SERVICE_DB_DB1_NAME}.app_object_item_subitem aois,
@@ -63,49 +87,20 @@ module.exports = {
 							 AND aost.app_object_item_subitem_app_object_item_app_id = aois.app_object_item_app_object_app_id
 							 AND aost.app_object_item_subitem_app_object_item_object_name = aois.app_object_item_app_object_object_name
 							 AND aost.app_object_item_subitem_app_object_item_object_item_name = aois.app_object_item_object_item_name
-							 AND aost.app_object_item_subitem_subitem_name = aois.subitem_name) t
+							 AND aost.app_object_item_subitem_subitem_name = aois.subitem_name
+							 AND l.lang_code = (SELECT COALESCE(MAX(l1.lang_code),'en')
+												  FROM ${process.env.SERVICE_DB_DB1_NAME}.language l1,
+												       ${process.env.SERVICE_DB_DB1_NAME}.app_object_subitem_translation aost1
+												 WHERE aost1.language_id = l1.id
+												   AND aost1.app_object_item_subitem_app_object_item_app_id = aois.app_object_item_app_object_app_id
+												   AND aost1.app_object_item_subitem_app_object_item_object_name = aois.app_object_item_app_object_object_name
+												   AND aost1.app_object_item_subitem_app_object_item_object_item_name = aois.app_object_item_object_item_name
+												   AND aost1.app_object_item_subitem_subitem_name = aois.subitem_name
+												   AND l1.lang_code IN (?, SUBSTRING_INDEX(?,'-',2), SUBSTRING_INDEX(?,'-',1))
+											   )) t
 					WHERE   (t.app_id IN(?,?) OR t.object_name = 'APP_DESCRIPTION')
-					AND   (t.lang_code IN (?, SUBSTRING_INDEX(?,'-',2), SUBSTRING_INDEX(?,'-',1))
-							OR (t.lang_code = 'en'
-								AND NOT EXISTS(SELECT NULL
-												 FROM ${process.env.SERVICE_DB_DB1_NAME}.app_object_translation t1,
- 													  ${process.env.SERVICE_DB_DB1_NAME}.language l1
-												WHERE t1.app_object_app_id = t.app_id
-												  AND t1.app_object_object_name = t.object_name
-												  AND l1.id = t1.language_id
-												  AND l1.lang_code IN (?, SUBSTRING_INDEX(?,'-',2), SUBSTRING_INDEX(?,'-',1))
-											   UNION ALL
-                                               SELECT NULL
-												 FROM ${process.env.SERVICE_DB_DB1_NAME}.setting_translation st,
-												      ${process.env.SERVICE_DB_DB1_NAME}.language l2
-												WHERE st.setting_id = t.subitem_name
-												  AND l2.id = st.language_id
-												  AND l2.lang_code IN (?, SUBSTRING_INDEX(?,'-',2), SUBSTRING_INDEX(?,'-',1))
-											   UNION ALL
-											   SELECT NULL
-												 FROM ${process.env.SERVICE_DB_DB1_NAME}.app_object_item_translation t2,
-													  ${process.env.SERVICE_DB_DB1_NAME}.language l2
-												WHERE t2.app_object_item_app_object_app_id = t.app_id
-												  AND t2.app_object_item_app_object_object_name = t.object_name
-												  AND t2.app_object_item_object_item_name = t.object_item_name
-												  AND l2.id = t2.language_id
-												  AND l2.lang_code IN (?, SUBSTRING_INDEX(?,'-',2), SUBSTRING_INDEX(?,'-',1))
-											   UNION ALL
-											   SELECT NULL
-												 FROM ${process.env.SERVICE_DB_DB1_NAME}.app_object_subitem_translation t3,
-													  ${process.env.SERVICE_DB_DB1_NAME}.language l3
-												WHERE t3.app_object_item_subitem_app_object_item_app_id = t.app_id
-												  AND t3.app_object_item_subitem_app_object_item_object_name = t.object_name
- 												  AND t3.app_object_item_subitem_app_object_item_object_item_name = t.object_item_name
-												  AND t3.app_object_item_subitem_subitem_name = t.subitem_name
-												  AND l3.id = t3.language_id
-												  AND l3.lang_code IN (?, SUBSTRING_INDEX(?,'-',2), SUBSTRING_INDEX(?,'-',1))
-												)
-								)
-							)
-				ORDER BY 1,2,3,4, 5, 6`;
-			parameters = [	app_id,
-							process.env.COMMON_APP_ID,
+				ORDER BY 1, 2, 3, 4, 5, 6`;
+			parameters = [	lang_code,
 							lang_code,
 							lang_code,
 							lang_code,
@@ -117,10 +112,8 @@ module.exports = {
 							lang_code,
 							lang_code,
 							lang_code,
-							lang_code,
-							lang_code,
-							lang_code,
-							lang_code
+							app_id,
+							process.env.COMMON_APP_ID
 							];
 		}
 		else if (process.env.SERVICE_DB_USE==2){
@@ -132,13 +125,21 @@ module.exports = {
 							lang_code "lang_code", 
 							id "id",
 							text "text"
-					FROM (SELECT 'APP_OBJECT' object, ao.app_id,  ao.object_name, null object_item_name,null subitem_name, l.lang_code, null id, aot.text
+							FROM (SELECT 'APP_OBJECT' object, ao.app_id,  ao.object_name, null object_item_name,null subitem_name, l.lang_code, null id, aot.text
 							FROM ${process.env.SERVICE_DB_DB2_NAME}.app_object ao,
 								 ${process.env.SERVICE_DB_DB2_NAME}.app_object_translation aot,
 								 ${process.env.SERVICE_DB_DB2_NAME}.language l
-							WHERE l.id = aot.language_id
-							  AND aot.app_object_app_id = ao.app_id
-							  AND aot.app_object_object_name = ao.object_name
+						   WHERE l.id = aot.language_id
+							 AND aot.app_object_app_id = ao.app_id
+							 AND aot.app_object_object_name = ao.object_name
+							 AND l.lang_code = (SELECT COALESCE(MAX(l1.lang_code),'en')
+												  FROM ${process.env.SERVICE_DB_DB2_NAME}.language l1,
+												       ${process.env.SERVICE_DB_DB2_NAME}.app_object_translation aot1
+												 WHERE aot1.language_id = l1.id
+												   AND aot1.app_object_app_id = ao.app_id
+												   AND aot1.app_object_object_name = ao.object_name
+												   AND l1.lang_code IN (:lang_code, SUBSTR(:lang_code, 0,INSTR(:lang_code,'-',1,2)-1), SUBSTR(:lang_code, 0,INSTR(:lang_code,'-',1,1)-1))
+											   )
 						  UNION ALL
 						  SELECT 'APP_OBJECT_ITEM', aoi.app_object_app_id app_id, aoi.app_object_object_name object_name, aoi.object_item_name, null subitem_name, l.lang_code, s.id, str.text
 							FROM ${process.env.SERVICE_DB_DB2_NAME}.app_object_item aoi,
@@ -150,15 +151,31 @@ module.exports = {
 							 AND s.setting_type_id = st.id  
 							 AND str.setting_id = s.id
 							 AND l.id = str.language_id
+							 AND l.lang_code = (SELECT COALESCE(MAX(l1.lang_code),'en')
+												  FROM ${process.env.SERVICE_DB_DB2_NAME}.language l1,
+												       ${process.env.SERVICE_DB_DB2_NAME}.setting_translation str1
+												 WHERE str1.language_id = l1.id
+												   AND str1.setting_id = s.id
+												   AND l1.lang_code IN (:lang_code, SUBSTR(:lang_code, 0,INSTR(:lang_code,'-',1,2)-1), SUBSTR(:lang_code, 0,INSTR(:lang_code,'-',1,1)-1))
+											   )
 						  UNION ALL
 						  SELECT 'APP_OBJECT_ITEM', aoi.app_object_app_id app_id, aoi.app_object_object_name object_name, aoi.object_item_name,null subitem_name, l.lang_code, null id, aoit.text
 							FROM ${process.env.SERVICE_DB_DB2_NAME}.app_object_item aoi,
 								 ${process.env.SERVICE_DB_DB2_NAME}.app_object_item_translation aoit,
 								 ${process.env.SERVICE_DB_DB2_NAME}.language l
-							WHERE l.id = aoit.language_id
-							  AND aoit.app_object_item_app_object_app_id = aoi.app_object_app_id
-							  AND aoit.app_object_item_app_object_object_name = aoi.app_object_object_name
-							  AND aoit.app_object_item_object_item_name = aoi.object_item_name
+						   WHERE l.id = aoit.language_id
+							 AND aoit.app_object_item_app_object_app_id = aoi.app_object_app_id
+							 AND aoit.app_object_item_app_object_object_name = aoi.app_object_object_name
+							 AND aoit.app_object_item_object_item_name = aoi.object_item_name
+							 AND l.lang_code = (SELECT COALESCE(MAX(l1.lang_code),'en')
+												  FROM ${process.env.SERVICE_DB_DB2_NAME}.language l1,
+												       ${process.env.SERVICE_DB_DB2_NAME}.app_object_item_translation aoit1
+												 WHERE aoit1.language_id = l1.id
+												   AND aoit1.app_object_item_app_object_app_id = aoi.app_object_app_id
+												   AND aoit1.app_object_item_app_object_object_name = aoi.app_object_object_name
+												   AND aoit1.app_object_item_object_item_name = aoi.object_item_name
+												   AND l1.lang_code IN (:lang_code, SUBSTR(:lang_code, 0,INSTR(:lang_code,'-',1,2)-1), SUBSTR(:lang_code, 0,INSTR(:lang_code,'-',1,1)-1))
+											   )
 						  UNION ALL
 						  SELECT 'APP_OBJECT_ITEM_SUBITEM', aois.app_object_item_app_object_app_id app_id, aois.app_object_item_app_object_object_name object_name, aois.app_object_item_object_item_name object_item_name, aois.subitem_name, l.lang_code, null id, aost.text
 							FROM ${process.env.SERVICE_DB_DB2_NAME}.app_object_item_subitem aois,
@@ -168,49 +185,19 @@ module.exports = {
 							 AND aost.app_object_item_subitem_app_object_item_app_id = aois.app_object_item_app_object_app_id
 							 AND aost.app_object_item_subitem_app_object_item_object_name = aois.app_object_item_app_object_object_name
 							 AND aost.app_object_item_subitem_app_object_item_object_item_name = aois.app_object_item_object_item_name
-							 AND aost.app_object_item_subitem_subitem_name = aois.subitem_name) t
+							 AND aost.app_object_item_subitem_subitem_name = aois.subitem_name
+							 AND l.lang_code = (SELECT COALESCE(MAX(l1.lang_code),'en')
+												  FROM ${process.env.SERVICE_DB_DB2_NAME}.language l1,
+												       ${process.env.SERVICE_DB_DB2_NAME}.app_object_subitem_translation aost1
+												 WHERE aost1.language_id = l1.id
+												   AND aost1.app_object_item_subitem_app_object_item_app_id = aois.app_object_item_app_object_app_id
+												   AND aost1.app_object_item_subitem_app_object_item_object_name = aois.app_object_item_app_object_object_name
+												   AND aost1.app_object_item_subitem_app_object_item_object_item_name = aois.app_object_item_object_item_name
+												   AND aost1.app_object_item_subitem_subitem_name = aois.subitem_name
+												   AND l1.lang_code IN (:lang_code, SUBSTR(:lang_code, 0,INSTR(:lang_code,'-',1,2)-1), SUBSTR(:lang_code, 0,INSTR(:lang_code,'-',1,1)-1))
+											   )) t
 					WHERE   (t.app_id IN(:app_id, :common_app_id) OR t.object_name = 'APP_DESCRIPTION')
-					AND   (t.lang_code IN (:lang_code, 
-											SUBSTR(:lang_code, 0,INSTR(:lang_code,'-',1,2)-1), 
-											SUBSTR(:lang_code, 0,INSTR(:lang_code,'-',1,1)-1))
-							OR (t.lang_code = 'en'
-								AND NOT EXISTS(SELECT NULL
-												 FROM ${process.env.SERVICE_DB_DB2_NAME}.app_object_translation t1,
-													  ${process.env.SERVICE_DB_DB2_NAME}.language l1
-												WHERE t1.app_object_app_id = t.app_id
-												  AND t1.app_object_object_name = t.object_name
-												  AND l1.id = t1.language_id
-												  AND l1.lang_code IN (:lang_code, SUBSTR(:lang_code, 0,INSTR(:lang_code,'-',1,2)-1), SUBSTR(:lang_code, 0,INSTR(:lang_code,'-',1,1)-1))
-											   UNION ALL
-                                               SELECT NULL
-												 FROM ${process.env.SERVICE_DB_DB2_NAME}.setting_translation st,
-												      ${process.env.SERVICE_DB_DB2_NAME}.language l2
-												WHERE st.setting_id = t.subitem_name
-												  AND l2.id = st.language_id
-												  AND l2.lang_code IN (:lang_code, SUBSTR(:lang_code, 0,INSTR(:lang_code,'-',1,2)-1), SUBSTR(:lang_code, 0,INSTR(:lang_code,'-',1,1)-1))
-											   UNION ALL
-											   SELECT NULL
-												 FROM ${process.env.SERVICE_DB_DB2_NAME}.app_object_item_translation t2,
-													  ${process.env.SERVICE_DB_DB2_NAME}.language l2
-												WHERE t2.app_object_item_app_object_app_id = t.app_id
-												  AND t2.app_object_item_app_object_object_name = t.object_name
-												  AND t2.app_object_item_object_item_name = t.object_item_name
-												  AND l2.id = t2.language_id
-												  AND l2.lang_code IN (:lang_code, SUBSTR(:lang_code, 0,INSTR(:lang_code,'-',1,2)-1), SUBSTR(:lang_code, 0,INSTR(:lang_code,'-',1,1)-1))
-											   UNION ALL
-											   SELECT NULL
-												 FROM ${process.env.SERVICE_DB_DB2_NAME}.app_object_subitem_translation t3,
-													  ${process.env.SERVICE_DB_DB2_NAME}.language l3
-												WHERE t3.app_object_item_subitem_app_object_item_app_id = t.app_id
-												  AND t3.app_object_item_subitem_app_object_item_object_name = t.object_name
-												  AND t3.app_object_item_subitem_app_object_item_object_item_name = t.object_item_name
-												  AND t3.app_object_item_subitem_subitem_name = t.subitem_name
-												  AND l3.id = t3.language_id
-												  AND l3.lang_code IN (:lang_code, SUBSTR(:lang_code, 0,INSTR(:lang_code,'-',1,2)-1), SUBSTR(:lang_code, 0,INSTR(:lang_code,'-',1,1)-1))
-												)
-								)
-							)
-				ORDER BY 1,2,3,4, 5, 6`;
+				ORDER BY 1, 2, 3, 4, 5, 6`;
 			parameters = {
 							common_app_id: process.env.COMMON_APP_ID,
 							app_id: app_id,
