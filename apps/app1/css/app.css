@@ -19,10 +19,7 @@ body.font_arabic_nastaliq #user_menu_default_avatar{
 }
 .dialogue_content{
 	padding: 10px;
-	width: 300px;
 	display:inline-block;
-    top: 20%;
-	height: auto;
 	border-radius: 4px;
 	-moz-border-radius: 4px;
 	-webkit-border-radius: 4px;
@@ -60,7 +57,6 @@ body.font_arabic_nastaliq #user_menu_default_avatar{
 	overflow: hidden;
 	height: auto;
 	width: auto;
-	min-width: 350px;
 	transform:             rotateY( 0deg );
         -moz-transform:    rotateY( 0deg );
         -ms-transform:     rotateY( 0deg );
@@ -68,30 +64,35 @@ body.font_arabic_nastaliq #user_menu_default_avatar{
         -webkit-transform: rotateY( 0deg );
 }
 #apps{
-	margin-top:40px;
-	height: auto;
-    overflow-y: scroll;
+	margin-top:10px;
+	height: 150px;
+    overflow-y: auto;
     overflow-x: hidden;
 	text-align: center;
     box-sizing: content-box;
-    width: 106%;
+	padding: 0px;
 }
+			
+#apps::-webkit-scrollbar {
+	width: 10px; 
+	height: 10px;
+}
+  
 .app_link_row{
 	padding-top: 4px;
     padding-bottom: 4px;
-	margin-inline-start: -20px;
 }
 .app_link_col:nth-child(1),.app_link_col:nth-child(2){
 	display: none;
 }
 .app_link_col:nth-child(3){
-	width: 64px;
+	width: 80px;
     display: inline-block;
 	margin-left: 5px;
     margin-top: 3px;
 }
 .app_link_col:nth-child(4){
-    text-align: left;
+    text-align: start;
     display: inline-block;
     vertical-align: top;
 }
@@ -103,11 +104,11 @@ body.font_arabic_nastaliq #user_menu_default_avatar{
 	font-size: 0.7em;
 }
 .app_description{
-	width: 220px;
+	width: 200px;
 	cursor: default;
+	font-size: 0.7em;
 }
 .app_logo:hover, .app_logo:active {
-	border-radius:20px;
 	transform: scale(1.2);
 	cursor: pointer;
 }
@@ -119,21 +120,16 @@ body.font_arabic_nastaliq #user_menu_default_avatar{
 .app_url{
 	display:none;
 }
-#start_links, #contact, #copyright{
-	display: block;
-	font-size: 11px;
+#start_message{
+	width: 30px;
+    height: 30px;
 }
-#start_links div{
-	width: 24%;
-	display: inline-block;
-	cursor: pointer;
-}
+
 /*DIALOGUE INFO*/
 #dialogue_info_content{
 	visibility:visible;
 	height: auto;
 	width: auto;
-	min-width: 350px;
 	transform:             rotateY( 180deg );
         -moz-transform:    rotateY( 180deg );
         -ms-transform:     rotateY( 180deg );
@@ -179,15 +175,17 @@ body.font_arabic_nastaliq #user_menu_default_avatar{
     height: 30px;
     margin: 0 auto;
 }
-
-#about_logo, #info_logo {
-	background-image: url('/app1/images/logo_title.png');
-	background-size: contain;
-	background-repeat: no-repeat;
-	background-position: center;
-	width:100%;
-	height: 50px;
+#start_links, #contact, #copyright{
+	display: block;
+	font-size: 11px;
+	width: 300px;
 }
+#start_links div{
+	width: 24%;
+	display: inline-block;
+	cursor: pointer;
+}
+
 /*Dialogue profile*/
 #profile_main_btn_cloud{
 	height: 20px;
@@ -773,6 +771,16 @@ div.ray8 {
 .theme_sun a:hover, .theme_sun a:active {
 	color:#6ab344;
 }
+.theme_sun #apps{
+	scrollbar-color: #a49775 #ddd;
+}
+.theme_sun #apps::-webkit-scrollbar-thumb { 
+	background: #a49775;
+}
+.theme_sun #apps::-webkit-scrollbar-track { 
+	background: #ddd;
+}
+
 .theme_sun .dialogue_content:hover, 
 .theme_sun .dialogue_content:active,
 .theme_sun #user_menu:hover,
@@ -912,6 +920,15 @@ div.ray8 {
 .theme_moon a:hover, .theme_moon a:active {
 	color:#6ab344;
 }
+.theme_moon #apps{
+	scrollbar-color: #a49775 #ddd;
+}
+.theme_moon #apps::-webkit-scrollbar-thumb { 
+	background: #a49775;
+}
+.theme_moon #apps::-webkit-scrollbar-track { 
+	background: #ddd;
+}
 .theme_moon .dialogue_content:hover, 
 .theme_moon .dialogue_content:active,
 .theme_moon #user_menu:hover,
@@ -981,11 +998,6 @@ div.ray8 {
 }
 .theme_moon .toolbar_button:hover, .theme_sun .toolbar_button:active{
 	color:#6ab344 !important;
-}
-.theme_moon #about_logo, .theme_moon #info_logo{
-	background: linear-gradient(0deg, rgba(68 68 68 / 50%), rgba(68, 68, 68, 50%)), url(/app1/images/logo_title.png);
-	background-size: cover;
-	background-repeat: no-repeat;
 }
 .theme_moon #common_window_info{
 	background-color:#ffffff;
