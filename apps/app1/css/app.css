@@ -171,7 +171,6 @@ body.font_arabic_nastaliq #user_menu_default_avatar{
 }
 
 #title1, #title2{
-	width: 200px;
     height: 30px;
     margin: 0 auto;
 }
@@ -207,9 +206,10 @@ body.font_arabic_nastaliq #user_menu_default_avatar{
 @media only screen and (min-width: 768px) {
 	#start_links, #contact, #copyright{
 		font-size: 14px;
+		width: 390px;
 	}
 	.app_description{
-		width: 450px;
+		width: 300px;
 	}
 	@-webkit-keyframes animateCloud {
 		0% {
