@@ -134,12 +134,6 @@ app.get("/app2/manifest.json",function (req, res, next) {
   else
     next();
 });
-app.get('/favicon.ico', function (req, res, next) {
-  if (req.headers.host.substring(0,req.headers.host.indexOf('.')) == 'app2')
-    res.sendFile(__dirname + "/apps/app2/images/favicon.ico");
-  else
-    next();
-});
 //app 2 show profile directly from url
 app.get('/:user', function(req, res,next) {
   if (req.headers.host.substring(0,req.headers.host.indexOf('.')) == 'app2' &&
