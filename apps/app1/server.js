@@ -85,11 +85,3 @@ app.get('/',function (req, res, next) {
   else
       next();
 });
-app.get('/favicon.ico', function (req, res, next) {
-  if (req.headers.host.substring(0,req.headers.host.indexOf('.'))=='' ||
-      req.headers.host.substring(0,req.headers.host.indexOf('.'))=='www'){
-        res.sendFile(__dirname + "/apps/app1/images/favicon.ico");
-  }
-  else
-    next();
-});

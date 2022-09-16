@@ -113,7 +113,22 @@ function get_apps() {
             document.getElementById('apps').innerHTML = old_button;
         else{
             json = JSON.parse(result);
-            let html='';
+            let html =`<div class='app_link_row'>
+                            <div class='app_link_col'>
+                                <div class='app_id'></div>
+                            </div>
+                            <div class='app_link_col'>
+                                <div class='app_url'>${window.global_app_url}/admin</div>
+                            </div>
+                            <div class='app_link_col'>
+                                <img class='app_logo' src='${window.global_app_url}/admin/images/logo.png' />
+                            </div>
+                            <div class='app_link_col'>
+                                <div class='app_name'>Admin</div>
+                                <div class='app_category'></div>
+                                <div class='app_description'></div>
+                            </div>
+                        </div>`;
             for (var i = 0; i < json.data.length; i++) {
                 if (i>1){
                     html +=`<div class='app_link_row'>
@@ -286,15 +301,48 @@ async function onProviderSignIn_app(provider1User){
 }
 async function init_app(){
     //start
-    document.getElementById('start_message').innerHTML = window.global_icon_app_info;
-    document.getElementById('info_message').innerHTML = window.global_icon_app_close;
+    document.getElementById('about_name').innerHTML = window.global_app_name;
+    document.getElementById('start_message').innerHTML = window.global_icon_app_info;    
+    //theme switcher
     document.getElementById("toggle_checkbox").checked = true;
+    //info
     document.getElementById('info_diagram_img').src=window.global_img_diagram_img;
     document.getElementById('info_datamodel_img').src=window.global_img_datamodel_img;
     document.getElementById('title1').innerHTML = 'App Portfolio Diagram';
     document.getElementById('title2').innerHTML = 'App Portfolio Data model';
+    document.getElementById('info_message').innerHTML = window.global_icon_app_close;
     document.getElementById('contact_text').innerHTML = 'Contact'    
-                                                                          
+    document.getElementById('copyright').innerHTML = window.global_app_copyright;
+    document.getElementById('app_email').href='mailto:' + window.global_app_email;
+    document.getElementById('app_email').innerHTML=window.global_app_email;
+
+    if (window.global_info_social_link1_url)
+        document.getElementById('social_link1').addEventListener('click', function() { window.open(window.global_info_social_link1_url,'_blank',''); }, false);
+    if (window.global_info_social_link2_url)
+        document.getElementById('social_link2').addEventListener('click', function() { window.open(window.global_info_social_link2_url,'_blank',''); }, false);
+    if (window.global_info_social_link3_url)
+        document.getElementById('social_link3').addEventListener('click', function() { window.open(window.global_info_social_link3_url,'_blank',''); }, false);
+    if (window.global_info_social_link4_url)
+        document.getElementById('social_link4').addEventListener('click', function() { window.open(window.global_info_social_link4_url,'_blank',''); }, false);            
+
+    if (window.global_info_social_link1_url!=null)
+        document.getElementById('social_link1').innerHTML = window.global_info_social_link1_icon;;
+    if (window.global_info_social_link2_url!=null)
+        document.getElementById('social_link2').innerHTML = window.global_info_social_link2_icon;;
+    if (window.global_info_social_link3_url!=null)
+        document.getElementById('social_link3').innerHTML = window.global_info_social_link3_icon;;
+    if (window.global_info_social_link4_url!=null)
+        document.getElementById('social_link4').innerHTML = window.global_info_social_link4_icon;;
+    document.getElementById('info_link1').innerHTML = window.global_info_link_policy_name;
+    document.getElementById('info_link2').innerHTML = window.global_info_link_disclaimer_name;
+    document.getElementById('info_link3').innerHTML = window.global_info_link_terms_name;
+    document.getElementById('info_link4').innerHTML = window.global_info_link_about_name;
+
+    document.getElementById('info_link1').addEventListener('click', function() { show_window_info(1);}, false);
+    document.getElementById('info_link2').addEventListener('click', function() { show_window_info(2);}, false);
+    document.getElementById('info_link3').addEventListener('click', function() { show_window_info(3);}, false);
+    document.getElementById('info_link4').addEventListener('click', function() { show_window_info(4);}, false);
+
     //profile info
     document.getElementById('profile_main_btn_cloud').innerHTML = window.global_icon_sky_cloud;
     
@@ -363,36 +411,7 @@ function init(parameters){
                 if (global_app_parameters[i].parameter_name=='QR_BACKGROUND_COLOR')
                     window.global_qr_background_color = global_app_parameters[i].parameter_value;
             }
-            init_app().then(function(){    
-                if (window.global_info_social_link1_url)
-                    document.getElementById('social_link1').addEventListener('click', function() { window.open(window.global_info_social_link1_url,'_blank',''); }, false);
-                if (window.global_info_social_link2_url)
-                    document.getElementById('social_link2').addEventListener('click', function() { window.open(window.global_info_social_link2_url,'_blank',''); }, false);
-                if (window.global_info_social_link3_url)
-                    document.getElementById('social_link3').addEventListener('click', function() { window.open(window.global_info_social_link3_url,'_blank',''); }, false);
-                if (window.global_info_social_link4_url)
-                    document.getElementById('social_link4').addEventListener('click', function() { window.open(window.global_info_social_link4_url,'_blank',''); }, false);            
-    
-                document.getElementById('info_link1').addEventListener('click', function() { show_window_info(1);}, false);
-                document.getElementById('info_link2').addEventListener('click', function() { show_window_info(2);}, false);
-                document.getElementById('info_link3').addEventListener('click', function() { show_window_info(3);}, false);
-                document.getElementById('info_link4').addEventListener('click', function() { show_window_info(4);}, false);
-    
-                document.getElementById('copyright').innerHTML = window.global_app_copyright;
-                document.getElementById('app_email').href='mailto:' + window.global_app_email;
-                document.getElementById('app_email').innerHTML=window.global_app_email;
-                if (window.global_info_social_link1_url!=null)
-                    document.getElementById('social_link1').innerHTML = window.global_info_social_link1_icon;;
-                if (window.global_info_social_link2_url!=null)
-                    document.getElementById('social_link2').innerHTML = window.global_info_social_link2_icon;;
-                if (window.global_info_social_link3_url!=null)
-                    document.getElementById('social_link3').innerHTML = window.global_info_social_link3_icon;;
-                if (window.global_info_social_link4_url!=null)
-                    document.getElementById('social_link4').innerHTML = window.global_info_social_link4_icon;;
-                document.getElementById('info_link1').innerHTML = window.global_info_link_policy_name;
-                document.getElementById('info_link2').innerHTML = window.global_info_link_disclaimer_name;
-                document.getElementById('info_link3').innerHTML = window.global_info_link_terms_name;
-                document.getElementById('info_link4').innerHTML = window.global_info_link_about_name;
+            init_app().then(function(){
                 document.getElementById('apps').innerHTML = window.global_button_spinner;
                 common_translate_ui(window.global_user_locale, (err, result)=>{
                         get_apps();
