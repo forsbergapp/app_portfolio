@@ -188,9 +188,11 @@ process.env.TZ = 'UTC';
 //app.use(express.static(__dirname, { dotfiles: 'allow' }));
 
 //admin directories
+app.use('/admin/images',express.static(__dirname + '/apps/admin/images'));
 app.use('/admin/js',express.static(__dirname + '/apps/admin/js'));
 app.use('/admin/css',express.static(__dirname + '/apps/admin/css'));
 //common directories
+app.use('/common/images',express.static(__dirname + '/apps/common/images'));
 app.use('/common/js',express.static(__dirname + '/apps/common/js'));
 app.use('/common/css',express.static(__dirname + '/apps/common/css'));
 
@@ -269,6 +271,7 @@ app.get("/admin",function (req, res, next) {
 app.get("/admin/:sub",function (req, res, next) {
     return res.redirect('https://' + req.headers.host + "/admin");
 });
+
 
 //info for search bots, same for all apps
 app.get('/robots.txt', function (req, res) {
