@@ -861,6 +861,14 @@ a:active {
 #common_window_info_content{
 	margin-bottom:20px;
 }
+#common_window_info_toolbar_btn_fullscreen{
+	display: none;
+}
+#common_window_info_toolbar_btn_fullscreen svg{
+	vertical-align: middle;
+	transform: scale(1.4);
+	margin-bottom: 1px;
+}
 
 /*RESPONSIVE SETTINGS*/
 /*CSS for minimum 768px*/
