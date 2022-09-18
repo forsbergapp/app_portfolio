@@ -453,6 +453,29 @@ body.font_arabic_ui{
 	-moz-border-radius: 4px;
 	-webkit-border-radius: 4px;
 }
+/* add animation effects */
+@-webkit-keyframes animatetop {
+	from {
+		top: -60%;
+		opacity: 0
+	}
+	to {
+		top: 15%;
+		opacity: 1
+	}
+}
+
+@keyframes animatetop {
+	from {
+		top: -60%;
+		opacity: 0
+	}
+	to {
+		top: 15%;
+		opacity: 1
+	}
+}
+
 /* DIALOGUE MESSAGE*/
 #dialogue_message_content{
 	min-width: 200px;

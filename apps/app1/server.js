@@ -13,11 +13,11 @@ app.get("/info/:info",function (req, res, next) {
           const { getInfo} = require("./apps");
           switch (req.params.info){
             case 'datamodel.jpg':{
-              res.sendFile(__dirname + "/apps/app1/info/datamodel.jpg");
+              res.sendFile(__dirname + "/apps/app1/images/datamodel.jpg");
               break;
             }
             case 'app_portfolio.jpg':{
-                res.sendFile(__dirname + "/apps/app1/info/app_portfolio.jpg");
+                res.sendFile(__dirname + "/apps/app1/images/app_portfolio.jpg");
                 break;
             }
             default:{

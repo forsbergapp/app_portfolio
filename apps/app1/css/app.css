@@ -2,8 +2,6 @@ body.font_arabic_nastaliq #user_menu_default_avatar{
 	top: -5px;
 }
 
-
-/* Common dialogue settings*/	
 .dialogue{
 	visibility:hidden;
 	width: 100%;
@@ -28,28 +26,6 @@ body.font_arabic_nastaliq #user_menu_default_avatar{
 #profile_info_search{
 	width: 100%;
 	position:fixed !important;
-}
-/* add animation effects */
-@-webkit-keyframes animatetop {
-	from {
-		top: -60%;
-		opacity: 0
-	}
-	to {
-		top: 15%;
-		opacity: 1
-	}
-}
-
-@keyframes animatetop {
-	from {
-		top: -60%;
-		opacity: 0
-	}
-	to {
-		top: 15%;
-		opacity: 1
-	}
 }
 /*DIALOGUE START*/
 #dialogue_start_content{
