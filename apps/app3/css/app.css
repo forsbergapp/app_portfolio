@@ -1,3 +1,12 @@
+
+.toolbar_button{
+	color: #404040 !important;
+}
+.toolbar_button:hover,
+.toolbar_button:active{
+	color:#6ab344 !important;
+}
+
 #profile_info_search{
 	visibility: hidden;
 }
@@ -12,7 +21,7 @@
 	z-index: 0 !important;
 }
 #common_window_info_info img{
-	max-width:90%;
+	max-width:100%;
 }
 #common_window_info_info{
 	position:relative;
@@ -22,6 +31,16 @@
 }
 #common_window_info_toolbar_btn_close{
 	display: none;
+}
+#common_window_info_toolbar_btn_fullscreen svg path{
+	stroke: #404040;
+}
+#common_window_info_toolbar_btn_fullscreen svg:hover path,
+#common_window_info_toolbar_btn_fullscreen svg:active path{
+	stroke:#6ab344;
+}
+#common_window_info_toolbar_btn_fullscreen{
+	display: inline-block !important; 
 }
 
 .common_dialogue_content:hover, 
