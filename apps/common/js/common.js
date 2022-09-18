@@ -2742,6 +2742,10 @@ function seticons(){
     window.global_icon_misc_prayer = '<i class="fa-solid fa-person-praying"></i>';
     window.global_icon_misc_calling = '🗣';
     window.global_icon_misc_ban = '<i class="fa-solid fa-ban"></i>';
+    window.global_icon_presentation = `<svg height="28.5px" width="28.5px">
+                                            <path d=\"M2 4h8a1 1 0 0 1 1-1h1a1 1 0 0 1 1 1h8v1h-1v11h-5.732l1.608 6H14.84l-1.607-6H9.767L8.16 22H7.124l1.608-6H3V5H2V4Zm17 11V5H4v10h15Zm-9-8h1l3 3l-3 3h-1V7Zm1 1.414v3.172L12.586 10L11 8.414Z\"
+                                            stroke="black" stroke-width="2" stroke-linejoin="round"/>;
+                                       </svg>`;
     //message
     window.global_icon_message_user	= '<i class="fas fa-user-circle"></i>';
     window.global_icon_message_error = '<i class="fa-solid fa-xmark"></i>';
@@ -3003,6 +3007,8 @@ async function init_common(parameters, callBack){
         document.getElementById('common_window_info_toolbar_btn_right').innerHTML = window.global_icon_app_right;
         document.getElementById('common_window_info_toolbar_btn_up').innerHTML =  window.global_icon_app_up;
         document.getElementById('common_window_info_toolbar_btn_down').innerHTML = window.global_icon_app_down;
+        document.getElementById('common_window_info_toolbar_btn_fullscreen').innerHTML = window.global_icon_presentation;
+        
         //user menu
         //document.getElementById('user_menu_dropdown_profile').innerHTML = window.global_button_default_icon_profile;
         document.getElementById('user_menu_dropdown_edit').innerHTML = window.global_icon_app_edit;
@@ -3060,6 +3066,11 @@ async function init_common(parameters, callBack){
         document.getElementById('common_window_info_toolbar_btn_right').addEventListener('click', function() {move_info(1,0);}, false);
         document.getElementById('common_window_info_toolbar_btn_up').addEventListener('click', function() {move_info(0,-1);}, false);
         document.getElementById('common_window_info_toolbar_btn_down').addEventListener('click', function() {move_info(0,1);}, false);        
+        document.getElementById('common_window_info_toolbar_btn_fullscreen').addEventListener('click', function() { if (document.fullscreenElement)
+                                                                                                                        document.exitFullscreen();
+                                                                                                                    else
+                                                                                                                        document.body.requestFullscreen();
+                                                                                                                  }, false);
         
         //user menu
         document.getElementById('user_menu').addEventListener('click', function() { let menu = document.getElementById('user_menu_dropdown');

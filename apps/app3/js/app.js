@@ -14,8 +14,9 @@ async function init_app(){
 
 }
 function init(parameters){
-    init_common(parameters);
-    init_app().then(function(){
-        null;
+    init_common(parameters, (err, global_app_parameters)=>{
+        init_app().then(function(){
+            null;
+        })
     })
 }
