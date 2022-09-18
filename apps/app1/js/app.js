@@ -1,6 +1,6 @@
 window.global_app_email;
-window.global_img_diagram_img = '/info/app_portfolio.jpg';
-window.global_img_datamodel_img = '/info/datamodel.jpg';
+window.global_img_diagram_img = '/app1/images/app_portfolio.jpg';
+window.global_img_datamodel_img = '/app1/images/datamodel.jpg';
 
 
 window.global_qr_width;

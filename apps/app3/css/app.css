@@ -1,4 +1,46 @@
+body {
+	color: #404040;
+	background: rgb(81, 171, 255);
+}
+#app_title{
+	margin-bottom: 20px;
+}
 
+.dialogue{
+	visibility:hidden;
+	width: 100%;
+	height: 100%;
+	text-align: center;
+	top:15%;
+	position:fixed;
+	-webkit-animation-name: animatetop;
+	-webkit-animation-duration: 0.4s;
+	animation-name: animatetop;
+	animation-duration: 0.4s;
+
+}
+.dialogue_content{
+	padding: 10px;
+	display:inline-block;
+	border-radius: 4px;
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+	box-shadow: 0 4px 8px 0 rgb(0 0 0 / 20%), 0 6px 20px 0 rgb(0 0 0 / 19%);
+	background-color: #fefefe;
+}
+
+#dialogue_documents{
+	visibility:hidden;
+}
+#dialogue_documents:hover, 
+#dialogue_documents .dialogue_content:active{
+	box-shadow: 0 0 35px 4px rgb(255,255,255,0.25);
+}
+.doc_list_item_image img{
+	width:128px;
+	height:64px;
+	cursor: pointer;
+}
 .toolbar_button{
 	color: #404040 !important;
 }
