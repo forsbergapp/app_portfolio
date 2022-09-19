@@ -64,7 +64,7 @@ INSERT INTO app_portfolio.app_object_item_translation (app_object_item_app_objec
 -- app_object_translation
 --
 INSERT INTO app_portfolio.app_object_translation (app_object_app_id, app_object_object_name, language_id, text) VALUES (2,'APP_DESCRIPTION',575,'Ứng dụng một trang ứng dụng web tiến bộ (PWA) (SPA)');
-INSERT INTO app_portfolio.app_object_translation (app_object_app_id, app_object_object_name, language_id, text) VALUES (3,'APP_DESCRIPTION',575,'Ứng dụng đơn giản để hiển thị mô hình dữ liệu và cách tích hợp một ứng dụng trong nền tảng ứng dụng');
+INSERT INTO app_portfolio.app_object_translation (app_object_app_id, app_object_object_name, language_id, text) VALUES (3,'APP_DESCRIPTION',575,'Trình bày tài liệu');
 --
 -- message_translation
 --

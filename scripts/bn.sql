@@ -64,7 +64,7 @@ INSERT INTO app_portfolio.app_object_item_translation (app_object_item_app_objec
 -- app_object_translation
 --
 INSERT INTO app_portfolio.app_object_translation (app_object_app_id, app_object_object_name, language_id, text) VALUES (2,'APP_DESCRIPTION',63,'প্রগতিশীল ওয়েব অ্যাপ (PWA) একক পৃষ্ঠা অ্যাপ্লিকেশন (SPA)');
-INSERT INTO app_portfolio.app_object_translation (app_object_app_id, app_object_object_name, language_id, text) VALUES (3,'APP_DESCRIPTION',63,'ডেটা মডেল প্রদর্শনের জন্য সহজ অ্যাপ এবং অ্যাপ প্ল্যাটফর্মে একটি অ্যাপকে কীভাবে সংহত করা যায়');
+INSERT INTO app_portfolio.app_object_translation (app_object_app_id, app_object_object_name, language_id, text) VALUES (3,'APP_DESCRIPTION',63,'নথি উপস্থাপন');
 --
 -- message_translation
 --

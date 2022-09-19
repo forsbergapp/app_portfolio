@@ -61,7 +61,7 @@ INSERT INTO app_portfolio.app_object_item_translation (app_object_item_app_objec
 -- app_object_translation
 --
 INSERT INTO app_portfolio.app_object_translation (app_object_app_id, app_object_object_name, language_id, text) VALUES (2,'APP_DESCRIPTION',25,'تطبيق الويب التقدمي (PWA) تطبيق صفحة واحدة (SPA)');
-INSERT INTO app_portfolio.app_object_translation (app_object_app_id, app_object_object_name, language_id, text) VALUES (3,'APP_DESCRIPTION',25,'تطبيق بسيط لعرض نموذج البيانات وكيفية دمج تطبيق في النظام الأساسي للتطبيق');
+INSERT INTO app_portfolio.app_object_translation (app_object_app_id, app_object_object_name, language_id, text) VALUES (3,'APP_DESCRIPTION',25,'تقديم الوثائق');
 --
 -- message_translation
 --
