@@ -64,7 +64,7 @@ INSERT INTO app_portfolio.app_object_item_translation (app_object_item_app_objec
 -- app_object_translation
 --
 INSERT INTO app_portfolio.app_object_translation (app_object_app_id, app_object_object_name, language_id, text) VALUES (2,'APP_DESCRIPTION',201,'प्रोग्रेसिव वेब ऐप (PWA) सिंगल पेज एप्लिकेशन (SPA)');
-INSERT INTO app_portfolio.app_object_translation (app_object_app_id, app_object_object_name, language_id, text) VALUES (3,'APP_DESCRIPTION',201,'डेटामॉडल प्रदर्शित करने के लिए सरल ऐप और ऐप प्लेटफ़ॉर्म में ऐप को कैसे एकीकृत किया जाए');
+INSERT INTO app_portfolio.app_object_translation (app_object_app_id, app_object_object_name, language_id, text) VALUES (3,'APP_DESCRIPTION',201,'दस्तावेजों की प्रस्तुति');
 --
 -- message_translation
 --

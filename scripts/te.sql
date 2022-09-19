@@ -64,7 +64,7 @@ INSERT INTO app_portfolio.app_object_item_translation (app_object_item_app_objec
 -- app_object_translation
 --
 INSERT INTO app_portfolio.app_object_translation (app_object_app_id, app_object_object_name, language_id, text) VALUES (2,'APP_DESCRIPTION',531,'ప్రోగ్రెసివ్ వెబ్ యాప్ (PWA) సింగిల్ పేజీ అప్లికేషన్ (SPA)');
-INSERT INTO app_portfolio.app_object_translation (app_object_app_id, app_object_object_name, language_id, text) VALUES (3,'APP_DESCRIPTION',531,'డేటామోడల్‌ని ప్రదర్శించడానికి మరియు యాప్ ప్లాట్‌ఫారమ్‌లో యాప్‌ను ఎలా ఇంటిగ్రేట్ చేయడానికి సులభమైన యాప్');
+INSERT INTO app_portfolio.app_object_translation (app_object_app_id, app_object_object_name, language_id, text) VALUES (3,'APP_DESCRIPTION',531,'పత్రాల ప్రదర్శన');
 --
 -- message_translation
 --
