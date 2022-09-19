@@ -64,7 +64,7 @@ INSERT INTO app_portfolio.app_object_item_translation (app_object_item_app_objec
 -- app_object_translation
 --
 INSERT INTO app_portfolio.app_object_translation (app_object_app_id, app_object_object_name, language_id, text) VALUES (2,'APP_DESCRIPTION',31,'Պրոգրեսիվ վեբ հավելված (PWA) մեկ էջի ծրագիր (SPA)');
-INSERT INTO app_portfolio.app_object_translation (app_object_app_id, app_object_object_name, language_id, text) VALUES (3,'APP_DESCRIPTION',31,'Պարզ հավելված՝ datamodel-ի ցուցադրման համար եւ ինչպես հավելվածի հարթակում միացնել հավելվածը');
+INSERT INTO app_portfolio.app_object_translation (app_object_app_id, app_object_object_name, language_id, text) VALUES (3,'APP_DESCRIPTION',31,'Փաստաթղթերի ներկայացում');
 --
 -- message_translation
 --

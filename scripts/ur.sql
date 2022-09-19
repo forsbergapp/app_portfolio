@@ -64,7 +64,7 @@ INSERT INTO app_portfolio.app_object_item_translation (app_object_item_app_objec
 -- app_object_translation
 --
 INSERT INTO app_portfolio.app_object_translation (app_object_app_id, app_object_object_name, language_id, text) VALUES (2,'APP_DESCRIPTION',568,'پروگریسو ویب ایپ (PWA) سنگل پیج ایپلی کیشن (SPA)');
-INSERT INTO app_portfolio.app_object_translation (app_object_app_id, app_object_object_name, language_id, text) VALUES (3,'APP_DESCRIPTION',568,'ڈیٹا ماڈل ڈسپلے کرنے کے لیے آسان ایپ اور ایپ پلیٹ فارم میں ایپ کو کیسے ضم کیا جائے۔');
+INSERT INTO app_portfolio.app_object_translation (app_object_app_id, app_object_object_name, language_id, text) VALUES (3,'APP_DESCRIPTION',568,'دستاویزات کی پیشکش');
 --
 -- message_translation
 --

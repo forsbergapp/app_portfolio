@@ -63,7 +63,7 @@ INSERT INTO app_portfolio.app_object_item_translation (app_object_item_app_objec
 -- app_object_translation
 --
 INSERT INTO app_portfolio.app_object_translation (app_object_app_id, app_object_object_name, language_id, text) VALUES (2,'APP_DESCRIPTION',178,'Progressive Web App (PWA) Einzelseitenanwendung (SPA)');
-INSERT INTO app_portfolio.app_object_translation (app_object_app_id, app_object_object_name, language_id, text) VALUES (3,'APP_DESCRIPTION',178,'Einfache App zum Anzeigen des Datenmodells und wie man eine App in die App-Plattform integriert');
+INSERT INTO app_portfolio.app_object_translation (app_object_app_id, app_object_object_name, language_id, text) VALUES (3,'APP_DESCRIPTION',178,'Präsentation von Dokumenten');
 --
 -- message_translation
 --
