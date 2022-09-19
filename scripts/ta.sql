@@ -64,7 +64,7 @@ INSERT INTO app_portfolio.app_object_item_translation (app_object_item_app_objec
 -- app_object_translation
 --
 INSERT INTO app_portfolio.app_object_translation (app_object_app_id, app_object_object_name, language_id, text) VALUES (2,'APP_DESCRIPTION',527,'முற்போக்கான வலை பயன்பாடு (PWA) ஒற்றை பக்க பயன்பாடு (SPA)');
-INSERT INTO app_portfolio.app_object_translation (app_object_app_id, app_object_object_name, language_id, text) VALUES (3,'APP_DESCRIPTION',527,'டேட்டாமாடலைக் காண்பிப்பதற்கான எளிய பயன்பாடு மற்றும் ஆப்ஸ் இயங்குதளத்தில் பயன்பாட்டை எவ்வாறு ஒருங்கிணைப்பது');
+INSERT INTO app_portfolio.app_object_translation (app_object_app_id, app_object_object_name, language_id, text) VALUES (3,'APP_DESCRIPTION',527,'ஆவணங்களை வழங்குதல்');
 --
 -- message_translation
 --

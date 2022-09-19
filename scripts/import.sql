@@ -15,7 +15,7 @@ INSERT INTO app_portfolio.app_category(id, category_name) VALUES(8, 'Game');
 INSERT INTO app_portfolio.app (id, app_name, url, logo, enabled, app_category_id) VALUES (0,'Common', '', '', 1, null);
 INSERT INTO app_portfolio.app (id, app_name, url, logo, enabled, app_category_id) VALUES (1,'App Portfolio', 'https://localhost','/app1/images/logo.png',1, 1);
 INSERT INTO app_portfolio.app (id, app_name, url, logo, enabled, app_category_id) VALUES (2,'Timetables','https://app2.localhost','/app2/images/logo.png',1, 6);
-INSERT INTO app_portfolio.app (id, app_name, url, logo, enabled, app_category_id) VALUES (3,'Presentation','https://app3.localhost','/app3/images/logo.png', 1, 5);
+INSERT INTO app_portfolio.app (id, app_name, url, logo, enabled, app_category_id) VALUES (3,'Presentation','https://app3.localhost','/app3/images/logo.png', 1, 1);
 --
 -- app_object
 --

@@ -64,7 +64,7 @@ INSERT INTO app_portfolio.app_object_item_translation (app_object_item_app_objec
 -- app_object_translation
 --
 INSERT INTO app_portfolio.app_object_translation (app_object_app_id, app_object_object_name, language_id, text) VALUES (2,'APP_DESCRIPTION',267,'프로그레시브 웹 앱(PWA) 단일 페이지 애플리케이션(SPA)');
-INSERT INTO app_portfolio.app_object_translation (app_object_app_id, app_object_object_name, language_id, text) VALUES (3,'APP_DESCRIPTION',267,'데이터 모델을 표시하는 간단한 앱 및 앱 플랫폼에 앱을 통합하는 방법');
+INSERT INTO app_portfolio.app_object_translation (app_object_app_id, app_object_object_name, language_id, text) VALUES (3,'APP_DESCRIPTION',267,'문서 제시');
 --
 -- message_translation
 --

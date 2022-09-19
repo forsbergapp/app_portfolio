@@ -63,7 +63,7 @@ INSERT INTO app_portfolio.app_object_item_translation (app_object_item_app_objec
 -- app_object_translation
 --
 INSERT INTO app_portfolio.app_object_translation (app_object_app_id, app_object_object_name, language_id, text) VALUES (2,'APP_DESCRIPTION',546,'漸進式 Web 應用 （PWA） 單頁應用程式 （SPA）');
-INSERT INTO app_portfolio.app_object_translation (app_object_app_id, app_object_object_name, language_id, text) VALUES (3,'APP_DESCRIPTION',546,'用於顯示數據模型的簡單應用程式以及如何在應用程式平臺中集成應用程式');
+INSERT INTO app_portfolio.app_object_translation (app_object_app_id, app_object_object_name, language_id, text) VALUES (3,'APP_DESCRIPTION',546,'提交文件');
 --
 -- message_translation
 --
