@@ -204,11 +204,6 @@
 #app_select_theme{
 	margin: 20px;
 }
-/*dialogue_info_content and windows_info buttons*/
-.info_close{
-	width: 100% !important;
-}
-
 
 /* Dialogue scan_open_mobile*/
 #dialogue_scan_open_mobile{
@@ -732,6 +727,7 @@ body.app_theme1,
 .app_theme1 #common_window_info,
 .app_theme1 #common_window_info_toolbar,
 .app_theme1 #user_menu_dropdown,
+.app_theme1 .dialogue_button,
 .app_theme1 .toolbar_button,
 .app_theme1 .dialogue_content,
 .app_theme1 .common_dialogue_content,
@@ -760,6 +756,8 @@ body.app_theme1,
 .app_theme1 a:active {
 	color:#6ab344;
 }
+.app_theme1 .dialogue_button:hover,
+.app_theme1 .dialogue_button:active,
 .app_theme1 .toolbar_button:hover,
 .app_theme1 .toolbar_button:active,
 .app_theme1 #tab_navigation button:hover,
@@ -913,6 +911,7 @@ body.app_theme2,
 .app_theme2 #common_window_info,
 .app_theme2 #common_window_info_toolbar,
 .app_theme2 #user_menu_dropdown,
+.app_theme2 .dialogue_button,
 .app_theme2 .toolbar_button,
 .app_theme2 .dialogue_content,
 .app_theme2 .common_dialogue_content,
@@ -942,6 +941,8 @@ body.app_theme2,
 .app_theme2 a:active {
 	color:#6ab344;
 }
+.app_theme2 .dialogue_button:hover,
+.app_theme2 .dialogue_button:active,
 .app_theme2 .toolbar_button:hover,
 .app_theme2 .toolbar_button:active,
 .app_theme2 #tab_navigation button:hover,
@@ -1096,6 +1097,7 @@ body.app_theme3,
 .app_theme3 #common_window_info,
 .app_theme3 #common_window_info_toolbar,
 .app_theme3 #user_menu_dropdown,
+.app_theme3 .dialogue_button,
 .app_theme3 .toolbar_button,
 .app_theme3 .dialogue_content,
 .app_theme3 .common_dialogue_content,
@@ -1125,6 +1127,8 @@ body.app_theme3,
 .app_theme3 a:active {
 	color:#6ab344;
 }
+.app_theme3 .dialogue_button:hover,
+.app_theme3 .dialogue_button:active,
 .app_theme3 .toolbar_button:hover,
 .app_theme3 .toolbar_button:active,
 .app_theme3 #tab_navigation button:hover,

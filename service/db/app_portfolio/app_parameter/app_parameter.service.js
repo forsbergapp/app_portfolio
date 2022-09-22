@@ -428,7 +428,7 @@ module.exports = {
 							process.env.COMMON_APP_ID];
 		}
 		else if (process.env.SERVICE_DB_USE==2){
-			sql = `SELECT (  'ADMIN' "app_name",
+			sql = `SELECT   'ADMIN' "app_name",
 							(SELECT a.url
 							   FROM ${process.env.SERVICE_DB_DB2_NAME}.app a
 							  WHERE a.id = :app_id) "app_url",

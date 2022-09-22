@@ -80,16 +80,6 @@
 	box-sizing: border-box;
 }
 
-.button {
-	background: none;
-	border: none;
-	width: 60px;
-	height: 60px;
-	padding:0px;
-	text-transform: uppercase;
-	cursor:pointer;
-}
-
 body.theme_light{
 	color: #404040;
 	background: rgb(81, 171, 255);
@@ -106,11 +96,11 @@ body.theme_light{
 .theme_light .admin_login_input{
 	border: 1px solid #ddd;
 }
-.theme_light .button:hover, .theme_light .button:active{
-	color:#6ab344 !important;
+.theme_light .dialogue_button{
+	color: #404040 !important;
 }
-.theme_light .button {
-	font-size: 30px;
+.theme_light .dialogue_button:hover, .theme_light .dialogue_button:active{
+	color:#6ab344 !important;
 }
 .theme_light .toolbar_button{
 	color: #404040 !important;

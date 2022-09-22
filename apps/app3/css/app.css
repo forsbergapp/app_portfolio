@@ -40,6 +40,13 @@ body {
 	height:64px;
 	cursor: pointer;
 }
+.dialogue_button{
+	color: #404040 !important;
+}
+.dialogue_button:hover,
+.dialogue_button:active{
+	color:#6ab344 !important;
+}
 .toolbar_button{
 	color: #404040 !important;
 }
