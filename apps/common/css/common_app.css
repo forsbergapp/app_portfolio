@@ -30,7 +30,7 @@ a:active {
 .switch-input {
 	display: none;
   }
-  .switch-label {
+.switch-label {
 	display: inline-block !important;
 	position:relative;
 	width: 48px;
@@ -39,22 +39,22 @@ a:active {
 	clip: rect(0 0 0 0);
 	user-select: none;
 	vertical-align: middle;
-  }
-  .switch-label::before,
-  .switch-label::after {
+}
+.switch-label::before,
+.switch-label::after {
 	content: "";
 	display: block;
 	position: absolute;
 	cursor: pointer;
-  }
-  .switch-label::before {
+}
+.switch-label::before {
 	width: 48px;
 	height: 24px;
 	border-radius: 9999em;
 	-webkit-transition: background-color 0.25s ease;
 	transition: background-color 0.25s ease;
-  }
-  .switch-label::after {
+}
+.switch-label::after {
 	top: 0px;
 	left: 0px;
 	width: 24px;
@@ -62,10 +62,21 @@ a:active {
 	border-radius: 50%;
 	-webkit-transition: left 0.25s ease;
 	transition: left 0.25s ease;
-  }
-  .switch-input:checked + .switch-label::after {
+}
+.switch-input:checked + .switch-label::after {
 	left: 24px;
-  }
+}
+
+.dialogue_button {
+	background: none;
+	border: none;
+	font-size: 30px;
+	width: 60px;
+	height: 60px;
+	padding:0px;
+	text-transform: uppercase;
+	cursor:pointer;
+}
 
 .toolbar_button {
 	background: none;
@@ -76,6 +87,24 @@ a:active {
 	padding:0px;
 	text-transform: uppercase;
 	cursor:pointer;
+}
+.list_scrollbar{
+	scrollbar-color: #a49775 #ddd;
+	overflow-y: auto;
+	overflow-x: auto;
+	white-space: nowrap;
+    display: grid;
+    grid-auto-rows: max-content;
+}
+.list_scrollbar::-webkit-scrollbar {
+	width: 10px;
+	height: 10px;
+}
+.list_scrollbar::-webkit-scrollbar-thumb {
+	background: #a49775;
+}
+.list_scrollbar::-webkit-scrollbar-track {
+	background: #ddd;
 }
 
 .common_dialogue_content{
@@ -345,6 +374,41 @@ a:active {
 	bottom:10px;
 	position:fixed;
 }
+/*Dialogue lov*/
+#dialogue_lov_content{
+	height:auto;
+	width: 250px;
+}
+#lov_list{
+	height: 230px;
+    border-radius: 4px;
+    text-align: start;
+}
+#lov_list #button_spinner{
+	visibility: unset;
+}
+.list_lov_row{
+	width:100%;
+	display:block;
+	cursor:pointer;
+}
+.list_lov_col:nth-child(1){
+	width:50px;
+	display:inline-block;
+	padding-left: 3px;
+	padding-right: 3px;
+	margin: 1px;
+	border-radius: 4px
+}
+.list_lov_col:nth-child(2){
+	width:150px;
+	display:inline-block;
+	padding-left: 3px;
+	padding-right: 3px;
+	margin: 1px;
+	border-radius: 4px
+}
+
 /*profile search*/
 #profile_info_search {
 	height:50px;
