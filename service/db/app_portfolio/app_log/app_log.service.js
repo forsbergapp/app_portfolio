@@ -343,7 +343,7 @@ module.exports = {
 							app_id,
 							DATE_FORMAT(date_created, '%Y') year,
 							DATE_FORMAT(date_created, '%c') month,
-							DATE_FORMAT(date_created, '%e') day,
+							CAST(DATE_FORMAT(date_created, '%e') AS SIGNED) day,
 							COUNT(DISTINCT server_remote_addr) amount
 					FROM ${process.env.SERVICE_DB_DB1_NAME}.app_log
 					WHERE 2 = ?
@@ -353,7 +353,7 @@ module.exports = {
 					GROUP BY app_id,
 							DATE_FORMAT(date_created, '%Y'),
 							DATE_FORMAT(date_created, '%c'),
-							DATE_FORMAT(date_created, '%e')
+							CAST(DATE_FORMAT(date_created, '%e') AS SIGNED)
 					ORDER BY 4`;
 			parameters = [	statchoice,
 							app_id,
@@ -383,7 +383,7 @@ module.exports = {
 							app_id "app_id",
 							TO_CHAR(date_created, 'YYYY') 	"year",
 							TO_CHAR(date_created, 'fmMM') 	"month",
-							TO_CHAR(date_created, 'DD') 	"day",
+							TO_NUMBER(TO_CHAR(date_created, 'DD')) 	"day",
 							COUNT(DISTINCT server_remote_addr) "amount"
 					FROM ${process.env.SERVICE_DB_DB2_NAME}.app_log
 					WHERE 2 = :statchoice
@@ -393,7 +393,7 @@ module.exports = {
 					GROUP BY app_id,
 							TO_CHAR(date_created, 'YYYY'),
 							TO_CHAR(date_created, 'fmMM'),
-							TO_CHAR(date_created, 'DD')
+							TO_NUMBER(TO_CHAR(date_created, 'DD'))
 					ORDER BY 4`;
 			parameters = {	statchoice: statchoice,
 							app_id: app_id,

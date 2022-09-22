@@ -26,16 +26,6 @@
     #dialogue_send_broadcast_content{
         height:320px;
     }
-    #dialogue_lov_content{
-        height:300px;
-    }
-    #lov_list{
-        overflow-y: auto;
-        height: 230px;
-    }
-    #lov_list #button_spinner{
-        visibility: unset;
-    }
     #select_app_broadcast{
         width:50%;
         display: block;
@@ -89,7 +79,7 @@
     }
     .menuitem{
         cursor: pointer;
-        text-align: left;
+        text-align: start;
         margin: 20px;
         text-transform:uppercase;
     }
@@ -99,8 +89,9 @@
     }
     #menu_close{
         display: block;
-        float: right;
-        width: 40px;
+        text-align: end;
+        width: 90%;
+        height: 20px;
     }
 
     #main{
@@ -112,17 +103,24 @@
     }
 
     .main_content{
-        position:fixed;
         display: none;
+        height: 85%;
     }
     .widget{
-        height: 50%;
+        width: 87%;
         margin:20px;
         padding: 5px;
         text-align: center;
         border-radius: 4px;
     }
     /*MENU 1 DASHBOARD*/
+    #menu_1_content_widget1{
+        height:calc(70% - 10px);
+    }
+    #menu_1_content_widget1 select{
+        display:inline-block;
+    }
+    
     #box1{
         width: 49%;
         height: 200px;
@@ -139,11 +137,8 @@
     #box1 canvas, #box2 canvas{
         max-height: 100%;
     }
-    #select_app_menu1{
-        margin-left: 49%;
-    }
     #menu_1_content_widget2{
-        height:150px;
+        height:calc(30% - 10px);
         display: block;
         text-align: center;
     }
@@ -164,7 +159,7 @@
     }
     .list_user_stat_row{
         display: block;
-        text-align: left;
+        text-align: start;
     }
     .list_user_stat_col{
         display: inline-block;
@@ -226,20 +221,23 @@
         font-size: 30px;
     }
     /* MENU 2 APP ADMIN*/
-    #menu_2_content_widget{
-        width: 87%;
-        height:640px;
+    #menu_2_content_widget1{
+        height: calc(30% - 10px);
+        display: flex;
+        flex-direction: column;
+    }
+    #menu_2_content_widget2{
+        height: calc(70% - 10px);
+        display: flex;
+        flex-direction: column;
     }
     #list_apps_title1, #list_app_parameter_title{
         text-transform: uppercase;
         display:inline-block;
         width:100%;
     }
-    #list_apps{
-        height:90px;
-    }
     #list_app_parameter{
-        height:341px;
+        height: 70%;
     }
     #list_apps, #list_app_parameter{
         overflow-y: auto;
@@ -250,11 +248,8 @@
     #list_apps_row_title, #list_app_parameter_row_title{
         height: auto;
     }
-    .list_apps_row{
-        height: 24px;
-    }
-    .list_app_parameter_row{
-        height: 40px;
+    .list_apps_row, .list_app_parameter_row{
+        height: auto;
     }
     .list_apps_row, .list_app_parameter_row{
         padding-top:4px;
@@ -340,38 +335,17 @@
         margin: 1px;
         box-sizing: border-box;
         border-radius: 4px
-    }
-    #list_lov{
-        border-radius: 4px;
-        text-align: left;
-    }
-    .list_lov_row{
-        width:100%;
-        display:block;
-        cursor:pointer;
-    }
-    .list_lov_col:nth-child(1){
-        width:50px;
-        display:inline-block;
-        padding-left: 3px;
-        padding-right: 3px;
-        margin: 1px;
-        border-radius: 4px
-    }
-    .list_lov_col:nth-child(2){
-        width:150px;
-        display:inline-block;
-        padding-left: 3px;
-        padding-right: 3px;
-        margin: 1px;
-        border-radius: 4px
-    }
+    }    
     /*MENU 3 APP STAT*/
     #menu_3_content_widget1{
-        height:260px;
+        height:calc(63% - 10px);
     }
     #menu_3_content_widget2{
-        height:340px;
+        height:calc(37% - 10px);
+    }
+    #menu3_row_sample_app_log, #menu3_row_sample_list_connected{
+        margin-top:10px;
+        margin-bottom:10px;
     }
     #list_app_log_title1, #list_connected_title2{
         text-transform: uppercase;
@@ -386,11 +360,17 @@
         display:inline-block;
         width:30%;
     }    
+    #list_app_log_form{
+        display:flex;
+        flex-direction: column;
+        height: 100%;
+    }
     #list_connected_form{
         display: none;
+        flex-direction: column;
+        height: 100%;
     }
     #list_app_log, #list_connected{
-        height:150px;
         overflow-y: auto;
         overflow-x: auto;
         margin-bottom: 10px;
@@ -403,7 +383,7 @@
         height: auto;
     }
     .list_app_log_row, .list_connected_row{
-        height: 30px;
+        height: auto;
         padding-top:4px;
         padding-left:5px;
         text-align: start;
@@ -478,43 +458,54 @@
     #mapid{
         width: 100%;
         height: 87%;
+        direction: ltr;
     }
     #map_my_location{
         position: absolute;
-        top: 320px;
-        left: 30px;
+        display:block;
+        z-index: 1;
+        margin: 10px;
         border-radius: 4px;
         height: 29px;
         width: 29px;
     }
     /*MENU 4 APP STAT*/
-    #menu_4_content{
-        width:90%;
-    }
     #menu_4_content_widget{
-        height:500px;
-        width:100%;
+        height: 100%;
     }
     #filesearch_menu4{
-        height: 32px;
+        font-size: 1.4em;
     }
+    #menu4_row_sample1, #menu4_row_sample2{
+        margin-top:10px;
+        margin-bottom:10px;
+    }
+    #menu4_row_parameters{
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }    
     #menu4_row_parameters div{
         display: inline-block;
     }
-    #list_server_log_title1, #list_pm2_log_title2{
+    #list_server_log_form, #list_pm2_log_form{
+        height: calc(100% - 50px);
+    }
+    #list_server_log_title1, #list_pm2_log_title1,
+    #list_server_log_title2, #list_pm2_log_title2,
+    #list_app_log_title1, #list_connected_title1,
+    #list_app_log_title2, #list_connected_title2 {
         text-transform: uppercase;
         display:inline-block;
         width:30%;
+        margin-top:10px;
+        margin-bottom:10px;    
     }
     #list_server_log{
-        height:380px;
+        height:70%;
         overflow-y: auto;
         overflow-x: auto;
         margin-bottom: 10px;
         border-radius: 4px;
-        white-space: nowrap;
-        display: grid;
-        grid-auto-rows: max-content;
     }
     .list_server_log_col:nth-child(1){
         width:120px;
@@ -570,7 +561,8 @@
         overflow: auto;
     }
     #list_pm2_log{
-        text-align: left;
+        text-align: start;
+        height: 100%;
     }
     #list_pm2_log_form{
         display:none;
@@ -579,20 +571,19 @@
         display: inline-block;
     }
     #list_pm2_log_path_info div:nth-child(2){
-        margin-left: 10px;
+        margin-inline-start: 10px;
     }
     #list_pm2_log_out, #list_pm2_log_err, #list_pm2_log_process_event{
-        height:100px;
+        height: calc(33% - 50px);
         overflow-y: auto;
         overflow-x: auto;
         margin-bottom: 10px;
         border-radius: 4px;
-        white-space: nowrap;
     }
     .list_pm2_log_row, .list_pm2_log_process_event_row{
         padding-top:4px;
         padding-left:5px;
-        text-align: left;
+        text-align: start;
         display: inline-block;
     }
     .list_pm2_log_col, .list_pm2_log_process_event_col{
@@ -605,10 +596,10 @@
         width:100px;
     }
     .list_pm2_log_col:nth-child(3), .list_pm2_log_col:nth-child(3){
-        width:auto;
+        width:60px;
     }
     .list_pm2_log_col:nth-child(4), .list_pm2_log_col:nth-child(4){
-        width:50px;
+        width:auto;
     }
     .list_pm2_log_process_event_col:nth-child(3){
         width:50px;
@@ -625,33 +616,16 @@
             display:block !important;
         }
         #main{
-            margin-left:150px
+            margin-inline-start:150px
             }
 
         .main_content{
-            width: 75% !important;
-            height: 100%;
+            width: 75%;
+            height:90%;
             margin:20px;
         }
-        #list_apps{
-            height:70px;
-        }    
-        #list_app_parameter{
-            height:309px;
-        }
-        #menu_2_content_widget{
+        .widget{
             width: 100%;
-            height:500px;
-        }
-        
-        #menu_3_content_widget2{
-            height: 170px
-        }
-        .list_apps_row, .list_app_parameter_row{
-            height: 8px;
-        }
-        .list_app_log_row, .list_connected_row{
-            height: 18px;
         }
         #list_app_pagination{
             margin-top: unset;
@@ -686,20 +660,14 @@
     .theme_light #users_count #count_local_label{
         color: #a49775;
     }
-    .theme_light .list_apps_row,
-    .theme_light .list_app_parameter_row,
-    .theme_light .list_server_log_row,
-    .theme_light .list_pm2_log_row,
-    .theme_light .list_pm2_log_process_event_row{
-        background-color: rgb(197 227 255);
-    }
     .theme_light .list_user_stat_row:nth-child(odd),
     .theme_light .list_lov_row:nth-child(odd),
     .theme_light .list_app_log_row:nth-child(odd),
     .theme_light .list_connected_row:nth-child(odd),
     .theme_light .list_server_log_row:nth-of-type(odd),
-    .theme_light .list_pm2_log_row:nth-child(odd),
-    .theme_light .list_pm2_log_process_event_row:nth-child(odd){
+    .theme_light #list_pm2_log_out .list_pm2_log_row:nth-child(odd),
+	.theme_light #list_pm2_log_err .list_pm2_log_row:nth-child(odd),
+    .theme_light #list_pm2_log_process_event .list_pm2_log_row:nth-child(odd){
         background-color: rgb(197 227 255);
     }
     .theme_light .list_user_stat_row:nth-child(even),
@@ -707,8 +675,9 @@
     .theme_light .list_app_log_row:nth-child(even),
     .theme_light .list_connected_row:nth-child(even),
     .theme_light .list_server_log_row:nth-of-type(even),
-    .theme_light .list_pm2_log_row:nth-child(even),
-    .theme_light .list_pm2_log_process_event_row:nth-child(even){
+    .theme_light #list_pm2_log_out .list_pm2_log_row:nth-child(even),
+	.theme_light #list_pm2_log_err .list_pm2_log_row:nth-child(even),
+    .theme_light #list_pm2_log_process_event .list_pm2_log_row:nth-child(even){
         background-color: #FFF;
     }
     .theme_light #list_user_stat_row_title{
@@ -744,7 +713,7 @@
     .theme_light .list_lov_row:hover, .theme_light .list_lov_row:active{
         color:#6ab344 !important;
     }
-    .theme_light #list_lov,
+    .theme_light #lov_list,
     .theme_light #list_app_log,
     .theme_light #list_connected,
     .theme_light #list_server_log,
@@ -781,18 +750,18 @@
         font-size: 20px;
         background-color: #fefefe;
     }    
-    #menu4_row_parameters_col1_1,
-    #menu4_row_parameters_col2_1,
-    #menu4_row_parameters_col3_1,
-    #menu4_row_parameters_col4_1,
-    #menu4_row_parameters_col5_1{
+    .theme_light #menu4_row_parameters_col1_1,
+    .theme_light #menu4_row_parameters_col2_1,
+    .theme_light #menu4_row_parameters_col3_1,
+    .theme_light #menu4_row_parameters_col4_1,
+    .theme_light #menu4_row_parameters_col5_1{
         color:#6ab344;
     }
-    #menu4_row_parameters_col1_0,
-    #menu4_row_parameters_col2_0,
-    #menu4_row_parameters_col3_0,
-    #menu4_row_parameters_col4_0,
-    #menu4_row_parameters_col5_0{
+    .theme_light #menu4_row_parameters_col1_0,
+    .theme_light #menu4_row_parameters_col2_0,
+    .theme_light #menu4_row_parameters_col3_0,
+    .theme_light #menu4_row_parameters_col4_0,
+    .theme_light #menu4_row_parameters_col5_0{
         color:#d82139;
     }
     .theme_light .dialogue{
