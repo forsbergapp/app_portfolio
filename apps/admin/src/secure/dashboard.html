@@ -1,6 +1,6 @@
 <div id='dashboard'>
     <div id='menu'>
-        <div id='menu_close' class='button'></div>
+        <div id='menu_close' class='dialogue_button'></div>
         <div id='menu_1' class='menuitem'>DASHBOARD</div>
         <div id='menu_2' class='menuitem'>APP ADMIN</div>
         <div id='menu_3' class='menuitem'>APP STAT</div>
@@ -8,26 +8,26 @@
         <div id='menu_5' class='menuitem'>Logout</div>
     </div>
     <div id='main'>
-        <div id='menu_open' class='button'></div>
+        <div id='menu_open' class='dialogue_button'></div>
         <div id='menu_1_content' class='main_content'>
             <div id='menu_1_content_widget1' class='widget'>
+                <select id='select_app_menu1'></select>
+                <select id='select_year_menu1'></select>
+                <select id='select_month_menu1'>
+                    <option value='1'>1</option>
+                    <option value='2'>2</option>
+                    <option value='3'>3</option>
+                    <option value='4'>4</option>
+                    <option value='5'>5</option>
+                    <option value='6'>6</option>
+                    <option value='7'>7</option>
+                    <option value='8'>8</option>
+                    <option value='9'>9</option>
+                    <option value='10'>10</option>
+                    <option value='11'>11</option>
+                    <option value='12'>12</option>
+                </select>
                 <div class='graphBox'>
-                    <select id='select_app_menu1'></select>
-                    <select id='select_year_menu1'></select>
-                    <select id='select_month_menu1'>
-                        <option value='1'>1</option>
-                        <option value='2'>2</option>
-                        <option value='3'>3</option>
-                        <option value='4'>4</option>
-                        <option value='5'>5</option>
-                        <option value='6'>6</option>
-                        <option value='7'>7</option>
-                        <option value='8'>8</option>
-                        <option value='9'>9</option>
-                        <option value='10'>10</option>
-                        <option value='11'>11</option>
-                        <option value='12'>12</option>
-                    </select>
                     <div id='box1'>
                         <canvas id='Chart1'></canvas>
                     </div>
@@ -68,7 +68,7 @@
             </div>
         </div>
         <div id='menu_2_content' class='main_content'>
-            <div id='menu_2_content_widget' class='widget'>
+            <div id='menu_2_content_widget1' class='widget'>
                 <div id='list_apps_title'>APPS</div>
                 <div id='list_apps_row_title' class='list_apps_row'>
                     <div id='list_apps_col_title1' class='list_apps_col'>
@@ -87,7 +87,9 @@
                         <div>ENABLED</div>
                     </div>
                 </div>
-                <div id='list_apps'></div>
+                <div id='list_apps' class='list_scrollbar'></div>
+            </div>
+            <div id='menu_2_content_widget2' class='widget'>
                 <div id='list_app_parameter_title'>APP PARAMETERS</div>
                 <div id='list_app_parameter_row_title' class='list_app_parameter_row'>
                     <div id='list_app_parameter_col_title1' class='list_app_parameter_col'>
@@ -109,33 +111,37 @@
                         <div>COMMENT</div>
                     </div>
                 </div>
-                <div id='list_app_parameter'></div>
+                <div id='list_app_parameter' class='list_scrollbar'></div>
                 <div id='apps_buttons'>
-                    <button id='apps_save' class='button' ></button>
+                    <button id='apps_save' class='dialogue_button' ></button>
                 </div>
             </div>
         </div>
         <div id='menu_3_content' class='main_content'>
             <div id='menu_3_content_widget1' class='widget'>
-                <select id='select_app_menu3'></select>
-                <select id='select_year_menu3'></select>
-                <select id='select_month_menu3'>
-                    <option value='1'>1</option>
-                    <option value='2'>2</option>
-                    <option value='3'>3</option>
-                    <option value='4'>4</option>
-                    <option value='5'>5</option>
-                    <option value='6'>6</option>
-                    <option value='7'>7</option>
-                    <option value='8'>8</option>
-                    <option value='9'>9</option>
-                    <option value='10'>10</option>
-                    <option value='11'>11</option>
-                    <option value='12'>12</option>
-                </select>
                 <div id='list_app_log_form'>
-                    <div id='list_app_log_title1'>App Log</div>
-                    <button id='list_connected_title1' class='list_button' >Connected</button>
+                    <div id='list_app_log_nav'>
+                        <div id='list_app_log_title1'>App Log</div>
+                        <button id='list_connected_title1' class='list_button' >Connected</button>
+                    </div>
+                    <div id='menu3_row_sample_app_log'>
+                        <select id='select_app_menu3_app_log'></select>
+                        <select id='select_year_menu3_app_log'></select>
+                        <select id='select_month_menu3_app_log'>
+                            <option value='1'>1</option>
+                            <option value='2'>2</option>
+                            <option value='3'>3</option>
+                            <option value='4'>4</option>
+                            <option value='5'>5</option>
+                            <option value='6'>6</option>
+                            <option value='7'>7</option>
+                            <option value='8'>8</option>
+                            <option value='9'>9</option>
+                            <option value='10'>10</option>
+                            <option value='11'>11</option>
+                            <option value='12'>12</option>
+                        </select>
+                    </div>
                     <div id='list_app_log_row_title' class='list_app_log_row'>
                         <div id='list_app_log_col_title1' class='list_app_log_col'>
                             <div>ID</div>
@@ -165,7 +171,7 @@
                             <div>DATE</div>
                         </div>
                     </div>
-                    <div id='list_app_log' ></div>
+                    <div id='list_app_log' class='list_scrollbar'></div>
                     <div id='list_app_pagination'>
                         <div id='list_app_log_first' ></div>
                         <div id='list_app_log_previous' ></div>
@@ -174,8 +180,28 @@
                     </div>
                 </div>
                 <div id='list_connected_form'>
-                    <button id='list_app_log_title2' class='list_button' >App Log</button>
-                    <div id='list_connected_title2'>Connected</div>
+                    <div id='list_app_log_nav'>
+                        <button id='list_app_log_title2' class='list_button' >App Log</button>
+                        <div id='list_connected_title2'>Connected</div>
+                    </div>
+                    <div id='menu3_row_sample_list_connected'>
+                        <select id='select_app_menu3_list_connected'></select>
+                        <select id='select_year_menu3_list_connected'></select>
+                        <select id='select_month_menu3_list_connected'>
+                            <option value='1'>1</option>
+                            <option value='2'>2</option>
+                            <option value='3'>3</option>
+                            <option value='4'>4</option>
+                            <option value='5'>5</option>
+                            <option value='6'>6</option>
+                            <option value='7'>7</option>
+                            <option value='8'>8</option>
+                            <option value='9'>9</option>
+                            <option value='10'>10</option>
+                            <option value='11'>11</option>
+                            <option value='12'>12</option>
+                        </select>
+                    </div>
                     <div id='list_connected_row_title' class='list_connected_row'>
                         <div id='list_connected_col_title1' class='list_connected_col'>
                             <div>ID</div>
@@ -205,12 +231,14 @@
                             <div>BROADCAST</div>
                         </div>
                     </div>
-                    <div id='list_connected' ></div>
+                    <div id='list_connected' class='list_scrollbar'></div>
                 </div>
             </div>
             <div id='menu_3_content_widget2' class='widget'>
-                <div id='mapid'></div>
-                <button id='map_my_location' class='button' title='My location'></button>
+                <div id='mapid'>
+                    <button id='map_my_location' class='dialogue_button' title='My location'></button>
+                </div>
+                
                 <select id='select_maptype' >
                     <option value='streets-v11' selected='selected'>streets-v11</option>
                     <option value='outdoors-v11'>outdoors-v11</option>
@@ -231,10 +259,12 @@
                 <div id='list_server_log_form'>
                     <div id='list_server_log_title1'>Server Log</div>
                     <button id='list_pm2_log_title1' class='list_button' >PM2 Log</button>
-                    <div id='menu4_row_sample' >
+                    <div id='menu4_row_sample1' >
                         <select id='select_logscope4'></select>
                         <select id='select_loglevel4'></select>
                         <select id='select_app_menu4'></select>
+                    </div>
+                    <div id='menu4_row_sample2'>
                         <select id='select_year_menu4'></select>
                         <select id='select_month_menu4'>
                             <option value='1'>1</option>
@@ -283,7 +313,7 @@
                             <option value='30'>30</option>
                             <option value='31'>31</option>
                         </select>
-                        <button id='filesearch_menu4' class='button' ></button>
+                        <button id='filesearch_menu4' class='dialogue_button' ></button>
                     </div>
                     <div id='menu4_row_parameters'>
                         <div id='menu4_row_parameters_col1'>Server info</div>
@@ -302,7 +332,7 @@
                         <div id='menu4_row_parameters_col5_1'></div>
                         <div id='menu4_row_parameters_col5_0'></div>
                     </div>
-                    <div id='list_server_log' ></div>
+                    <div id='list_server_log' class='list_scrollbar'></div>
                 </div>
                 <div id='list_pm2_log_form'>
                     <button id='list_server_log_title2' class='list_button' >Server Log</button>
@@ -317,33 +347,33 @@
                             <div id='list_pm2_log_out_col_title1' class='list_pm2_log_col'>
                                 <div>TIMESTAMP</div>
                             </div>
-                            <div id='list_pm2_log_out_col_title4' class='list_pm2_log_col'>
-                                <div>APP_NAME</div>
-                            </div>
                             <div id='list_pm2_log_out_col_title2' class='list_pm2_log_col'>
-                                <div>MESSAGE</div>
+                                <div>APP_NAME</div>
                             </div>
                             <div id='list_pm2_log_out_col_title3' class='list_pm2_log_col'>
                                 <div>PROCESS_ID</div>
                             </div>
+                            <div id='list_pm2_log_out_col_title4' class='list_pm2_log_col'>
+                                <div>MESSAGE</div>
+                            </div>
                         </div>
-                        <div id='list_pm2_log_out'></div>
+                        <div id='list_pm2_log_out' class='list_scrollbar'></div>
                         <div id='list_pm2_log_title_err'>PM2 Log Error</div>
                         <div id='list_pm2_log_err_row_title' class='list_pm2_log_row'>
                             <div id='list_pm2_log_err_col_title1' class='list_pm2_log_col'>
                                 <div>TIMESTAMP</div>
                             </div>
-                            <div id='list_pm2_log_err_col_title4' class='list_pm2_log_col'>
-                                <div>APP_NAME</div>
-                            </div>
                             <div id='list_pm2_log_err_col_title2' class='list_pm2_log_col'>
-                                <div>MESSAGE</div>
+                                <div>APP_NAME</div>
                             </div>
                             <div id='list_pm2_log_err_col_title3' class='list_pm2_log_col'>
                                 <div>PROCESS_ID</div>
                             </div>
+                            <div id='list_pm2_log_err_col_title4' class='list_pm2_log_col'>
+                                <div>MESSAGE</div>
+                            </div>
                         </div>
-                        <div id='list_pm2_log_err'></div>
+                        <div id='list_pm2_log_err' class='list_scrollbar'></div>
                         <div id='list_pm2_log_title_process_event'>PM2 Log Process event</div>
                         <div id='list_pm2_log_process_event_row_title' class='list_pm2_log_process_event_row'>
                             <div id='list_pm2_log_process_event_col_title2' class='list_pm2_log_process_event_col'>
@@ -356,7 +386,7 @@
                                 <div>STATUS</div>
                             </div>
                         </div>
-                        <div id='list_pm2_log_process_event'></div>
+                        <div id='list_pm2_log_process_event' class='list_scrollbar'></div>
                     </div>
                 </div>
             </div>
@@ -373,17 +403,8 @@
                 <div id='client_id_label'>CLIENT ID</div><div id='client_id'></div>
                 <select id='select_app_broadcast'></select>
                 <textarea id='send_broadcast_message' ></textarea>
-                <button id='send_broadcast_send' class='button' ></button>
-                <button id='send_broadcast_close' class='button' ></button>
-            </div>
-        </div>
-    </div>
-    <div id='dialogue_lov' class='dialogue'>
-        <div id='dialogue_lov_content' class='dialogue_content'>
-            <div id='lov_form'>
-                <div id='lov_title'></div>
-                <div id='lov_list'></div>
-                <button id='lov_close' class='button' ></button>
+                <button id='send_broadcast_send' class='dialogue_button' ></button>
+                <button id='send_broadcast_close' class='dialogue_button' ></button>
             </div>
         </div>
     </div>

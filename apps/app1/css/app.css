@@ -820,6 +820,13 @@ div.ray8 {
     border-left: 12px solid yellow;
 }
 
+.theme_sun .dialogue_button{
+	color: #a49775 !important;
+}
+.theme_sun .dialogue_button:hover, .theme_sun .dialogue_button:active{
+	color:#6ab344 !important;
+}
+
 .theme_sun .toolbar_button{
 	color: #a49775 !important;
 }
@@ -969,10 +976,16 @@ div.ray8 {
 .theme_moon div.sunholder {
     animation: unset;
 }
+.theme_moon .dialogue_button{
+	color : #a49775;
+}
+.theme_moon .dialogue_button:hover, .theme_moon .dialogue_button:active{
+	color:#6ab344 !important;
+}
 .theme_moon .toolbar_button{
 	color : #a49775;
 }
-.theme_moon .toolbar_button:hover, .theme_sun .toolbar_button:active{
+.theme_moon .toolbar_button:hover, .theme_moon .toolbar_button:active{
 	color:#6ab344 !important;
 }
 .theme_moon #common_window_info{

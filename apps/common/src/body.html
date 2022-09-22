@@ -20,7 +20,7 @@
                 <div class='user_verify_verification_wrap'><input id='user_verify_verification_char5' maxLength='1' autoCorrect='off' autoComplete='off' autoCapitalize='off' spellCheck='false' type='tel' class='user_verify_input_verification_char' /></div>
                 <div class='user_verify_verification_wrap'><input id='user_verify_verification_char6' maxLength='1' autoCorrect='off' autoComplete='off' autoCapitalize='off' spellCheck='false' type='tel' class='user_verify_input_verification_char' /></div>
             </div>
-            <button id="user_verify_cancel" class="toolbar_button toolbar_button_cancel"></button>
+            <button id='user_verify_cancel' class='dialogue_button'></button>
         </div>
     </div>
     <div id='dialogue_user_new_password' class='common_dialogue'>
@@ -29,8 +29,8 @@
             <div id='user_new_password_auth'></div>
             <input id='user_new_password' type='password' class='new_password_input'/>
             <input id='user_new_password_confirm' type='password' class='new_password_input'/>
-            <button id="user_new_password_cancel" class="toolbar_button toolbar_button_cancel"></button>
-            <button id="user_new_password_ok" class="toolbar_button toolbar_button_ok"></button>
+            <button id='user_new_password_cancel' class='dialogue_button'></button>
+            <button id='user_new_password_ok' class='dialogue_button'></button>
         </div>
     </div>
     <div id='dialogue_login' class='common_dialogue'>
@@ -45,7 +45,7 @@
                 <input id='login_password' type='password' class='login_input'/>
                 <button id='login_button' class='login_button' ></button>
                 <div id='identity_provider_login'></div>
-                <button id='login_close' class='toolbar_button' ></button>
+                <button id='login_close' class='dialogue_button' ></button>
             </div>
         </div>
     </div>
@@ -63,7 +63,7 @@
                 <input id='signup_password_confirm' type='password' class='signup_input'/>
                 <input id='signup_password_reminder' type='text' class='signup_input'/>
                 <button id='signup_button' class='signup_button' ></button>
-                <button id='signup_close' class='toolbar_button' ></button>
+                <button id='signup_close' class='dialogue_button' ></button>
             </div>
         </div>
     </div>
@@ -77,7 +77,7 @@
                 <div id='forgot_tab3'></div>
                 <input id='forgot_email' type='text' class='forgot_input'/>
                 <button id='forgot_button' class='forgot_button' ></button>
-                <button id='forgot_close' class='toolbar_button' ></button>
+                <button id='forgot_close' class='dialogue_button' ></button>
             </div>
         </div>
     </div>
@@ -248,12 +248,12 @@
                     <div class='setting_horizontal_col'>
                     </div>
                     <div class='setting_horizontal_col'>
-                        <button id='user_edit_btn_user_update' class='toolbar_button' ></button>
-                        <button id='user_edit_btn_user_delete_account' class='toolbar_button' ></button>
+                        <button id='user_edit_btn_user_update' class='dialogue_button' ></button>
+                        <button id='user_edit_btn_user_delete_account' class='dialogue_button' ></button>
                     </div>
                 </div>
             </div>
-            <button id='user_edit_close' class='toolbar_button' ></button>
+            <button id='user_edit_close' class='dialogue_button' ></button>
         </div>
     </div>  
     <div id='dialogue_message' class='common_dialogue'>
@@ -261,19 +261,19 @@
             <div id='confirm_question'></div>
             <div id='message_title'></div>
             <div id='message_buttons'>
-                <button id='message_cancel' class='toolbar_button toolbar_button_cancel' ></button>
-                <button id='message_close' class='toolbar_button toolbar_button_ok' ></button>
+                <button id='message_cancel' class='dialogue_button' ></button>
+                <button id='message_close' class='dialogue_button' ></button>
             </div>
         </div>
     </div>
     <div id='dialogue_profile' class='common_dialogue'>
 		<div id='dialogue_profile_content' class='common_dialogue_content'>
-            <button id='profile_home' class='toolbar_button' ></button>
+            <button id='profile_home' class='dialogue_button' ></button>
 			<div id='profile_info'>
                 <div id='profile_main'>
                     <div id='profile_main_col1'>
                         <div id='profile_id'></div>
-                        <div id="profile_avatar_container">
+                        <div id='profile_avatar_container'>
                             <div id='profile_avatar_image'>
                                 <img id='profile_avatar' src='' alt=''/>
                             </div>
@@ -346,9 +346,19 @@
                 <AppProfileTop/>
 			    <div id='profile_top_list'></div>
             </div>
-			<button id='profile_close' class='toolbar_button' ></button>
+			<button id='profile_close' class='dialogue_button' ></button>
 		</div>
 	</div>
+    <div id='dialogue_lov' class='common_dialogue'>
+        <div id='dialogue_lov_content' class='common_dialogue_content'>
+            <div id='lov_form'>
+                <div id='lov_title'></div>
+                <div id='lov_list' class='list_scrollbar'></div>
+                <button id='lov_close' class='dialogue_button' ></button>
+            </div>
+        </div>
+    </div>
+
 </div>
 <div id='common_window_info'>
     <div id=common_window_info_toolbar>
