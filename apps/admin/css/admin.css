@@ -23,10 +23,8 @@
 }
 .dialogue_content{
 	padding: 10px;
-	width: 300px;
 	display:inline-block;
     top: 20%;
-	height: auto;
 	border-radius: 4px;
 	-moz-border-radius: 4px;
 	-webkit-border-radius: 4px;
@@ -58,7 +56,8 @@
 	visibility:visible;
 }
 #dialogue_admin_login_content{
-	height:270px;
+	height:auto;
+	width: 350px;
 }
 
 #admin_login_logo {
@@ -68,8 +67,9 @@
 	background-position: center;
 	height: 50px;
 }
-#admin_login_title{
-    margin-top:20px;
+.admin_login_icon{
+	display: inline-block;
+	font-size: 1.5em;
 }
 .admin_login_input{
 	border-radius: 16px;
@@ -96,7 +96,8 @@ body.theme_light{
 .theme_light .admin_login_input{
 	border: 1px solid #ddd;
 }
-.theme_light .dialogue_button{
+.theme_light .dialogue_button,
+.theme_light .admin_login_icon{
 	color: #404040 !important;
 }
 .theme_light .dialogue_button:hover, .theme_light .dialogue_button:active{
