@@ -7,7 +7,7 @@ function show_doc(docid){
     document.getElementById('common_window_info_info').innerHTML = `<img src="${document.getElementById(`${docid}`).src}"/>`;
 }
 function getdocs(docid = null){
-    document.getElementById('doc_list').innerHTML = window.global_button_spinner;
+    document.getElementById('doc_list').innerHTML = window.global_app_spinner;
     let result = `{"success":1,
                     "data":[{"id":1,
                             "doc_title":"Diagram",

@@ -120,7 +120,10 @@
     #menu_1_content_widget1 select{
         display:inline-block;
     }
-    
+    #menu_1_row_sample{
+        margin-top:10px;
+        margin-bottom:10px;
+    }
     #box1{
         width: 49%;
         height: 200px;
@@ -298,7 +301,7 @@
         height:30px;
         display:inline-block;
     }
-    #apps_save #button_spinner{
+    #apps_save #app_spinner{
         position:unset;
         margin:0px;
         margin-top:-20px;
@@ -471,7 +474,7 @@
     }
     /*MENU 4 APP STAT*/
     #menu_4_content_widget{
-        height: 100%;
+        height: calc(100% + 10px)
     }
     #filesearch_menu4{
         font-size: 1.4em;
