@@ -326,21 +326,21 @@ module.exports = {
 			app_id = null;
 		if (process.env.SERVICE_DB_USE==1){
 			sql = `SELECT	app_id,
-							DATE_FORMAT(date_created, '%Y') year,
-							DATE_FORMAT(date_created, '%c') month,
-							null 							day,
-							COUNT(DISTINCT server_remote_addr) amount
+							DATE_FORMAT(date_created, '%Y') 	year,
+							DATE_FORMAT(date_created, '%c') 	month,
+							null 								day,
+							COUNT(DISTINCT server_remote_addr) 	amount
 					FROM ${process.env.SERVICE_DB_DB1_NAME}.app_log
 					WHERE 1 = ?
 					AND   app_id = COALESCE(?, app_id)
 					AND   DATE_FORMAT(date_created, '%Y') = ?
 					AND   DATE_FORMAT(date_created, '%c') = ?
 					GROUP BY app_id,
-							DATE_FORMAT(date_created, '%Y'),
-							DATE_FORMAT(date_created, '%c')
+							 DATE_FORMAT(date_created, '%Y'),
+							 DATE_FORMAT(date_created, '%c')
 					UNION ALL
 					SELECT
-							app_id,
+							NULL,
 							DATE_FORMAT(date_created, '%Y') year,
 							DATE_FORMAT(date_created, '%c') month,
 							CAST(DATE_FORMAT(date_created, '%e') AS SIGNED) day,
@@ -350,10 +350,9 @@ module.exports = {
 					AND   app_id = COALESCE(?, app_id)
 					AND   DATE_FORMAT(date_created, '%Y') = ?
 					AND   DATE_FORMAT(date_created, '%c') = ?
-					GROUP BY app_id,
-							DATE_FORMAT(date_created, '%Y'),
-							DATE_FORMAT(date_created, '%c'),
-							CAST(DATE_FORMAT(date_created, '%e') AS SIGNED)
+					GROUP BY DATE_FORMAT(date_created, '%Y'),
+							 DATE_FORMAT(date_created, '%c'),
+							 CAST(DATE_FORMAT(date_created, '%e') AS SIGNED)
 					ORDER BY 4`;
 			parameters = [	statchoice,
 							app_id,
@@ -365,11 +364,11 @@ module.exports = {
 							month];
 		}
 		else if (process.env.SERVICE_DB_USE==2){
-			sql = `SELECT	app_id "app_id",
-							TO_CHAR(date_created, 'YYYY') 	"year",
-							TO_CHAR(date_created, 'fmMM') 	"month",
-							null 							"day",
-							COUNT(DISTINCT server_remote_addr) "amount"
+			sql = `SELECT	app_id 								"app_id",
+							TO_CHAR(date_created, 'YYYY') 		"year",
+							TO_CHAR(date_created, 'fmMM') 		"month",
+							null 								"day",
+							COUNT(DISTINCT server_remote_addr) 	"amount"
 					FROM ${process.env.SERVICE_DB_DB2_NAME}.app_log
 					WHERE 1 = :statchoice
 					AND  app_id = NVL(:app_id, app_id)
@@ -380,7 +379,7 @@ module.exports = {
 							TO_CHAR(date_created, 'fmMM')
 					UNION ALL
 					SELECT
-							app_id "app_id",
+							null "app_id",
 							TO_CHAR(date_created, 'YYYY') 	"year",
 							TO_CHAR(date_created, 'fmMM') 	"month",
 							TO_NUMBER(TO_CHAR(date_created, 'DD')) 	"day",
@@ -390,10 +389,9 @@ module.exports = {
 					AND  app_id = NVL(:app_id, app_id)
 					AND TO_CHAR(date_created, 'YYYY') = :year
 					AND TO_CHAR(date_created, 'fmMM') = :month
-					GROUP BY app_id,
-							TO_CHAR(date_created, 'YYYY'),
-							TO_CHAR(date_created, 'fmMM'),
-							TO_NUMBER(TO_CHAR(date_created, 'DD'))
+					GROUP BY TO_CHAR(date_created, 'YYYY'),
+							 TO_CHAR(date_created, 'fmMM'),
+							 TO_NUMBER(TO_CHAR(date_created, 'DD'))
 					ORDER BY 4`;
 			parameters = {	statchoice: statchoice,
 							app_id: app_id,

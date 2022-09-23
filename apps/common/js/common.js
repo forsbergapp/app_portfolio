@@ -928,7 +928,7 @@ function show_window_info(info, show_toolbar, content, content_type, qr_data, if
         }
         case null:{
             document.getElementById('common_window_info').style.visibility = 'visible';
-            document.getElementById('common_window_info_info').innerHTML = window.global_button_spinner;
+            document.getElementById('common_window_info_info').innerHTML = window.global_app_spinner;
             
             if (content_type == 'HTML'){
                 document.getElementById('common_window_info_info').innerHTML = ''
@@ -1953,7 +1953,7 @@ async function user_update(callBack) {
     }
     let old_button = document.getElementById('user_edit_btn_user_update').innerHTML;
     let json;
-    document.getElementById('user_edit_btn_user_update').innerHTML = window.global_button_spinner;
+    document.getElementById('user_edit_btn_user_update').innerHTML = window.global_app_spinner;
     //update user using REST API
     common_fetch(url + '?', 
                  'PUT', 1, json_data, null, null, (err, result) =>{
@@ -2014,7 +2014,7 @@ function user_signup() {
     }
 
     let old_button = document.getElementById('signup_button').innerHTML;
-    document.getElementById('signup_button').innerHTML = window.global_button_spinner;
+    document.getElementById('signup_button').innerHTML = window.global_app_spinner;
     common_fetch(window.global_rest_url_base + window.global_rest_user_account_signup + '?', 
                  'POST', 0, json_data, null, null, (err, result) =>{    
         document.getElementById('signup_button').innerHTML = old_button;
@@ -2051,7 +2051,7 @@ async function user_verify_check_input(item, nextField, callBack) {
                 document.getElementById('user_verify_verification_char5').value +
                 document.getElementById('user_verify_verification_char6').value);
             let old_button = document.getElementById('user_verify_email').innerHTML;
-            document.getElementById('user_verify_email').innerHTML = window.global_button_spinner;
+            document.getElementById('user_verify_email').innerHTML = window.global_app_spinner;
             document.getElementById('user_verify_verification_char1').classList.remove('input_error');
             document.getElementById('user_verify_verification_char2').classList.remove('input_error');
             document.getElementById('user_verify_verification_char3').classList.remove('input_error');
@@ -2152,7 +2152,7 @@ async function user_delete(choice=null, user_local, function_delete_event, callB
             dialogue_user_edit_remove_error();
     
             let old_button = document.getElementById('user_edit_btn_user_delete_account').innerHTML;
-            document.getElementById('user_edit_btn_user_delete_account').innerHTML = window.global_button_spinner;
+            document.getElementById('user_edit_btn_user_delete_account').innerHTML = window.global_app_spinner;
             let json_data = `{"password":"${password}"}`;
 
             common_fetch(window.global_rest_url_base + window.global_rest_user_account + window.global_user_account_id + '?', 
@@ -2276,7 +2276,7 @@ async function user_forgot(){
         return;
     else{
         let old_button = document.getElementById('forgot_button').innerHTML;
-        document.getElementById('forgot_button').innerHTML = window.global_button_spinner;
+        document.getElementById('forgot_button').innerHTML = window.global_app_spinner;
         common_fetch(window.global_rest_url_base + window.global_rest_user_account_forgot + '?', 
                      'PUT', 0, json_data, null, null, (err, result) =>{
             document.getElementById('forgot_button').innerHTML = old_button;
@@ -2318,7 +2318,7 @@ function updatePassword(){
             return null;
         }
         let old_button = document.getElementById('user_new_password_icon').innerHTML;
-        document.getElementById('user_new_password_icon').innerHTML = window.global_button_spinner;
+        document.getElementById('user_new_password_icon').innerHTML = window.global_app_spinner;
 
         common_fetch(window.global_rest_url_base + window.global_rest_user_account_password + window.global_user_account_id + '?', 
                      'PUT', 1, json_data, null, null, (err, result) =>{
@@ -2861,7 +2861,7 @@ function set_globals(parameters){
         
     if (parameters.ui==true){
         //spinner
-        window.global_button_spinner = `<div id="button_spinner" class="load-spinner">
+        window.global_app_spinner = `<div id="app_spinner" class="load-spinner">
                                             <div></div>
                                             <div></div>
                                             <div></div>
