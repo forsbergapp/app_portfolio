@@ -126,15 +126,14 @@ async function get_apps() {
         else{
             json = JSON.parse(result);
             let html='<option value="">ALL</option>';
-            html +='<option value="ADMIN">ADMIN SQL</option>';
             for (var i = 1; i < json.data.length; i++) {
                     html +=
-                    `<option value='${json.data[i].id}'>APP${json.data[i].id}</option>`;
+                    `<option value='${json.data[i].id}'>${json.data[i].id} - ${json.data[i].app_name}</option>`;
             }
             document.getElementById('select_app_menu1').innerHTML = html;
             document.getElementById('select_app_menu3_app_log').innerHTML = html;
             document.getElementById('select_app_menu3_list_connected').innerHTML = html;
-            document.getElementById('select_app_menu4').innerHTML = html;
+            document.getElementById('select_app_menu4').innerHTML = html  + '<option value="ADMIN">ADMIN SQL</option>';
             document.getElementById('select_app_broadcast').innerHTML = html;
         }
     })
@@ -147,9 +146,9 @@ async function show_list(list_div, list_div_col_title, url, sort, order_by, cols
                 let old_html1 = document.getElementById(list_div + '_out').innerHTML;
                 let old_html2 = document.getElementById(list_div + '_err').innerHTML;
                 let old_html3 = document.getElementById(list_div + '_process_event').innerHTML;
-                document.getElementById(list_div + '_out').innerHTML = window.global_button_spinner;
-                document.getElementById(list_div + '_err').innerHTML = window.global_button_spinner;
-                document.getElementById(list_div + '_process_event').innerHTML = window.global_button_spinner;
+                document.getElementById(list_div + '_out').innerHTML = window.global_app_spinner;
+                document.getElementById(list_div + '_err').innerHTML = window.global_app_spinner;
+                document.getElementById(list_div + '_process_event').innerHTML = window.global_app_spinner;
                 //sort not implemented for pm2 with different content in one json file
                 break;
             }
@@ -157,12 +156,12 @@ async function show_list(list_div, list_div_col_title, url, sort, order_by, cols
                 //remove sort events, title is included in list
                 set_list_eventlisteners('server_log', '',0);
                 let old_html = document.getElementById(list_div).innerHTML;
-                document.getElementById(list_div).innerHTML = window.global_button_spinner;
+                document.getElementById(list_div).innerHTML = window.global_app_spinner;
                 break;
             }
             default:{
                 let old_html = document.getElementById(list_div).innerHTML;
-                document.getElementById(list_div).innerHTML = window.global_button_spinner;
+                document.getElementById(list_div).innerHTML = window.global_app_spinner;
                 //sort on all columns except last column for list connect with chat icon
                 for (let i=1;i<=cols;i++){
                     document.getElementById(list_div_col_title + i).classList.remove('asc');
@@ -657,28 +656,40 @@ function map_set_style(){
 //chart 1=Left Piechart, 2= Right Barchart
 async function show_chart(chart){
     if (admin_token_has_value()){
+        let app_id =document.getElementById('select_app_menu1').value;
         let year = document.getElementById('select_year_menu1').value;
         let month = document.getElementById('select_month_menu1').value;
         let json;
-        let app_id ='';
-        let old_html = document.getElementById(`box${chart}`).innerHTML;
-        document.getElementById(`box${chart}`).innerHTML = window.global_button_spinner;
+        let old_html = document.getElementById(`box${chart}_title`).innerHTML;
+        document.getElementById(`box${chart}_title`).innerHTML = window.global_app_spinner;
+
+        document.getElementById(`Chart${chart}`).outerHTML = `<canvas id='Chart${chart}'></canvas>`;
 
         await common_fetch(window.global_rest_url_base + `app_log/admin/stat/uniquevisitor?select_app_id=${app_id}&statchoice=${chart}&year=${year}&month=${month}`,
                  'GET', 2, null, null, null, (err, result) =>{
             if (err)
-                document.getElementById(`box${chart}`).innerHTML = old_html;
+                document.getElementById(`box1${chart}_title`).innerHTML = old_html;
             else{
                 json = JSON.parse(result);
                 if (json.success == 1){
-                    document.getElementById(`box${chart}`).innerHTML = `<canvas id="Chart${chart}"></canvas>`;
+                    //document.getElementById(`box${chart}`).innerHTML = `<canvas id="Chart${chart}"></canvas>`;
                     const ctx = document.getElementById(`Chart${chart}`).getContext('2d');
                     if (chart==1){
                         let app_id_array = [];
                         let amount_array = [];
+                        function SearchAndGetText(item, search){
+                            for (let i=0;i<item.options.length;i++){
+                                if (item.options[i].value == search)
+                                    return item.options[i].text
+                            }
+                            return null;
+                        }
+                        document.getElementById('box1_title').innerHTML = `Unique Visitors ${year}-${month} per app`;
                         for (let i = 0; i < json.data.length; i++) {
-                            app_id_array.push('APP' + json.data[i].app_id);
-                            amount_array.push(json.data[i].amount);
+                            if (json.data[i].app_id>0){
+                                app_id_array.push(SearchAndGetText(document.getElementById('select_app_menu1'), json.data[i].app_id));
+                                amount_array.push(json.data[i].amount);
+                            }
                         }
                         const pieChart = new Chart(ctx, {
                             type: 'pie',
@@ -695,13 +706,7 @@ async function show_chart(chart){
                                 }]
                             },
                             options: {
-                                responsive:true,
-                                plugins: {
-                                    title: {
-                                        display: true,
-                                        text: `Unique Visitors ${year}-${month} per app`
-                                    }
-                                }
+                                responsive:true
                             }
                             
                         });
@@ -710,6 +715,12 @@ async function show_chart(chart){
                         if (chart==2){
                             let day_array = [];
                             let amount_array = [];
+                            let bar_color;
+                            if (app_id == '')
+                                bar_color = 'rgb(81, 171, 255)';
+                            else
+                                bar_color = 'rgb(197 227 255)';
+                            document.getElementById('box2_title').innerHTML = `Unique Visitors ${year}-${month} per day`;
                             for (let i = 0; i < json.data.length; i++) {
                                 day_array.push(json.data[i].day);
                                 amount_array.push(json.data[i].amount);
@@ -719,40 +730,40 @@ async function show_chart(chart){
                                 data: {
                                     labels: day_array,
                                     datasets: [{
-                                        label: `Unique Visitors ${year}-${month} per day`,
+                                        label:document.getElementById('select_app_menu1').options[document.getElementById('select_app_menu1').selectedIndex].text,
                                         data: amount_array,
                                         backgroundColor: [
-                                            'rgba(54, 162, 235, 1)',
-                                            'rgba(54, 162, 235, 1)',
-                                            'rgba(54, 162, 235, 1)',
-                                            'rgba(54, 162, 235, 1)',
-                                            'rgba(54, 162, 235, 1)',
-                                            'rgba(54, 162, 235, 1)',
-                                            'rgba(54, 162, 235, 1)',
-                                            'rgba(54, 162, 235, 1)',
-                                            'rgba(54, 162, 235, 1)',
-                                            'rgba(54, 162, 235, 1)',
-                                            'rgba(54, 162, 235, 1)',
-                                            'rgba(54, 162, 235, 1)',
-                                            'rgba(54, 162, 235, 1)',
-                                            'rgba(54, 162, 235, 1)',
-                                            'rgba(54, 162, 235, 1)',
-                                            'rgba(54, 162, 235, 1)',
-                                            'rgba(54, 162, 235, 1)',
-                                            'rgba(54, 162, 235, 1)',
-                                            'rgba(54, 162, 235, 1)',
-                                            'rgba(54, 162, 235, 1)',
-                                            'rgba(54, 162, 235, 1)',
-                                            'rgba(54, 162, 235, 1)',
-                                            'rgba(54, 162, 235, 1)',
-                                            'rgba(54, 162, 235, 1)',
-                                            'rgba(54, 162, 235, 1)',
-                                            'rgba(54, 162, 235, 1)',
-                                            'rgba(54, 162, 235, 1)',
-                                            'rgba(54, 162, 235, 1)',
-                                            'rgba(54, 162, 235, 1)',
-                                            'rgba(54, 162, 235, 1)',
-                                            'rgba(54, 162, 235, 1)'
+                                            bar_color,
+                                            bar_color,
+                                            bar_color,
+                                            bar_color,
+                                            bar_color,
+                                            bar_color,
+                                            bar_color,
+                                            bar_color,
+                                            bar_color,
+                                            bar_color,
+                                            bar_color,
+                                            bar_color,
+                                            bar_color,
+                                            bar_color,
+                                            bar_color,
+                                            bar_color,
+                                            bar_color,
+                                            bar_color,
+                                            bar_color,
+                                            bar_color,
+                                            bar_color,
+                                            bar_color,
+                                            bar_color,
+                                            bar_color,
+                                            bar_color,
+                                            bar_color,
+                                            bar_color,
+                                            bar_color,
+                                            bar_color,
+                                            bar_color,
+                                            bar_color
                                         ]
                                     }]
                                 },
@@ -761,6 +772,11 @@ async function show_chart(chart){
                                     scale: {
                                         ticks: {
                                             precision: 0
+                                        }
+                                    },
+                                    plugins: {
+                                        title: {
+                                            display: false
                                         }
                                     }
                                 }
@@ -788,7 +804,7 @@ async function count_users(){
     if (admin_token_has_value()){
         let json;
         let old_html = document.getElementById('list_user_stat').innerHTML;
-        document.getElementById('list_user_stat').innerHTML = window.global_button_spinner;
+        document.getElementById('list_user_stat').innerHTML = window.global_app_spinner;
 
         await common_fetch(window.global_rest_url_base + window.global_rest_user_account + '/admin/count?',
                            'GET', 2, null, null, null, (err, result) =>{
@@ -884,7 +900,7 @@ function set_maintenance(){
 async function show_apps(){
     let json;
     let old_html = document.getElementById('list_apps').innerHTML;
-    document.getElementById('list_apps').innerHTML = window.global_button_spinner;
+    document.getElementById('list_apps').innerHTML = window.global_app_spinner;
 
     await common_fetch(window.global_rest_url_base + window.global_rest_app + '/admin?id=0',
                        'GET', 2, null, null, null, (err, result) =>{
@@ -929,7 +945,7 @@ async function show_apps(){
 function show_app_parameter(app_id){
     let json;
     let old_html = document.getElementById('list_app_parameter').innerHTML;
-    document.getElementById('list_app_parameter').innerHTML = window.global_button_spinner;
+    document.getElementById('list_app_parameter').innerHTML = window.global_app_spinner;
 
     common_fetch(window.global_rest_url_base + window.global_rest_app_parameter + `admin/all/${parseInt(app_id)}?`,
                  'GET', 2, null, null, null, (err, result) =>{
@@ -1010,7 +1026,7 @@ async function update_record(table,
         let rest_url;
         let json_data;
         let old_button = document.getElementById('apps_save').innerHTML;
-        document.getElementById('apps_save').innerHTML = window.global_button_spinner;
+        document.getElementById('apps_save').innerHTML = window.global_app_spinner;
         switch (table){
             case 'app':{
                 if (id==window.global_common_app_id){
@@ -1115,7 +1131,7 @@ function show_parameter_type_names(lov, row_item, item_index){
         case 1:{
             let json;
             let old_html = document.getElementById('lov_list').innerHTML;
-            show_lov('PARAMETER TYPE', window.global_button_spinner);
+            show_lov('PARAMETER TYPE', window.global_app_spinner);
 
             common_fetch(window.global_rest_url_base + window.global_rest_parameter_type + `admin?`,
                          'GET', 2, null, null, null, (err, result) =>{
@@ -1416,7 +1432,7 @@ function show_existing_logfiles(){
         let json;
         let url_parameters;
         let old_html = document.getElementById('lov_list').innerHTML;
-        show_lov('SERVER LOG FILES', window.global_button_spinner);
+        show_lov('SERVER LOG FILES', window.global_app_spinner);
 
         common_fetch(window.global_service_log + '/files?',
                      'GET', 2, null, null, null, (err, result) =>{
@@ -1626,7 +1642,7 @@ function init_admin_secure(){
     document.getElementById('menu_4').addEventListener('click', function() { show_menu(4) }, false);
     document.getElementById('menu_5').addEventListener('click', function() { admin_logoff_app() }, false);
 
-    document.getElementById('select_app_menu1').addEventListener('change', function() { show_chart(2); }, false);
+    document.getElementById('select_app_menu1').addEventListener('change', function() { show_chart(1); show_chart(2);}, false);
     document.getElementById('select_year_menu1').addEventListener('change', function() { show_chart(1);show_chart(2);}, false);
     document.getElementById('select_month_menu1').addEventListener('change', function() { show_chart(1);show_chart(2);}, false);
     document.getElementById('select_broadcast_type').addEventListener('change', function() { set_broadcast_type(); }, false);

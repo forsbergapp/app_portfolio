@@ -384,7 +384,7 @@ a:active {
     border-radius: 4px;
     text-align: start;
 }
-#lov_list #button_spinner{
+#lov_list #app_spinner{
 	visibility: unset;
 }
 .list_lov_row{
@@ -811,7 +811,7 @@ a:active {
 	width: 100%;
 }
 
-#button_spinner{
+#app_spinner{
 	visibility: visible;
 	display: inline-block;
 	margin-top:-13px;
@@ -819,6 +819,9 @@ a:active {
 	transform: scale(0.5);
 	position: relative;
 	z-index:1;
+}
+.list_scrollbar #app_spinner{
+	justify-self: center;
 }
 
 /* SPINNER */
@@ -917,7 +920,7 @@ a:active {
 	text-align: left;
 	display: inline-block;
 }
-#common_window_info_info #button_spinner{
+#common_window_info_info #app_spinner{
 	margin-top:100px;
 	margin-bottom:unset;
 	transform: unset;

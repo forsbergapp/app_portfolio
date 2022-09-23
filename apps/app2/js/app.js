@@ -933,7 +933,7 @@ function align_button_value(report_align_where) {
 
 function dialogue_loading(visible){
     if (visible==1){
-        document.getElementById('dialogue_loading').innerHTML = window.global_button_spinner;
+        document.getElementById('dialogue_loading').innerHTML = window.global_app_spinner;
         document.getElementById('dialogue_loading').style.visibility='visible';
     }
     else{
@@ -1307,7 +1307,7 @@ async function user_login_app(){
     let username = document.getElementById('login_username');
     let password = document.getElementById('login_password');
     let old_button = document.getElementById('login_button').innerHTML;
-    document.getElementById('login_button').innerHTML = window.global_button_spinner;
+    document.getElementById('login_button').innerHTML = window.global_app_spinner;
     await user_login(username.value, password.value, (err, result)=>{
         document.getElementById('login_button').innerHTML = old_button;
         if (err==null){
@@ -1951,7 +1951,7 @@ async function user_settings_function(function_name, initial_user_setting, callB
             if (function_name=='ADD'){
                 spinner_item = document.getElementById('setting_btn_user_add')
                 old_button = spinner_item.innerHTML;
-                spinner_item.innerHTML = window.global_button_spinner;    
+                spinner_item.innerHTML = window.global_app_spinner;    
             }
             method = 'POST';
             url = window.global_rest_url_base + window.global_rest_app2_user_setting + 
@@ -1961,7 +1961,7 @@ async function user_settings_function(function_name, initial_user_setting, callB
         case 'SAVE':{
             spinner_item = document.getElementById('setting_btn_user_save')
             old_button = spinner_item.innerHTML;
-            spinner_item.innerHTML = window.global_button_spinner;
+            spinner_item.innerHTML = window.global_app_spinner;
             method = 'PUT';
             let select_user_setting = document.getElementById('setting_select_user_setting');
             let user_setting_id = select_user_setting[select_user_setting.selectedIndex].getAttribute('id');
@@ -2022,7 +2022,7 @@ function user_settings_delete(choice=null) {
         case 1:{
             if (select_user_setting.length > 1) {
                 let old_button = document.getElementById('setting_btn_user_delete').innerHTML;
-                document.getElementById('setting_btn_user_delete').innerHTML = window.global_button_spinner;
+                document.getElementById('setting_btn_user_delete').innerHTML = window.global_app_spinner;
                 common_fetch(window.global_rest_url_base + window.global_rest_app2_user_setting + user_setting_id + '?', 
                                     'DELETE', 1, null, null, null, (err, result) =>{
                     if (err){

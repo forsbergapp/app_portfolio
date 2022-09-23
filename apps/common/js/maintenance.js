@@ -3,6 +3,6 @@ function app_exception(){
 }
 function init_maintenance(parameters){
     init_common(parameters)
-    document.getElementById('maintenance_footer').innerHTML= window.global_button_spinner;
+    document.getElementById('maintenance_footer').innerHTML= window.global_app_spinner;
     show_maintenance(null,1);
 }
