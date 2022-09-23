@@ -22,7 +22,7 @@ function setEvents(){
     document.getElementById('toggle_checkbox').addEventListener('click', function() { toggle_switch() }, false);
     document.getElementById('user_menu_dropdown_log_out').addEventListener('click', function() { user_menu_item_click(this) }, false);
     document.getElementById('user_menu_dropdown_profile_top').addEventListener('click', function() {user_menu_item_click(this)}, false);
-    document.getElementById('user_locale_select').addEventListener('change', function() { document.getElementById('apps').innerHTML = window.global_button_spinner;common_translate_ui(this.value, (err, result)=>{get_apps()});}, false);
+    document.getElementById('user_locale_select').addEventListener('change', function() { document.getElementById('apps').innerHTML = window.global_app_spinner;common_translate_ui(this.value, (err, result)=>{get_apps()});}, false);
     document.getElementById('user_arabic_script_select').addEventListener('change', function() { toggle_switch()}, false);
 
     //start page
@@ -187,7 +187,7 @@ async function user_login_app(){
     let username = document.getElementById('login_username');
     let password = document.getElementById('login_password');
     let old_button = document.getElementById('login_button').innerHTML;
-    document.getElementById('login_button').innerHTML = window.global_button_spinner;
+    document.getElementById('login_button').innerHTML = window.global_app_spinner;
             
     await user_login(username.value, password.value, (err, result)=>{
         document.getElementById('login_button').innerHTML = old_button;
@@ -412,7 +412,7 @@ function init(parameters){
                     window.global_qr_background_color = global_app_parameters[i].parameter_value;
             }
             init_app().then(function(){
-                document.getElementById('apps').innerHTML = window.global_button_spinner;
+                document.getElementById('apps').innerHTML = window.global_app_spinner;
                 common_translate_ui(window.global_user_locale, (err, result)=>{
                         get_apps();
                 })
