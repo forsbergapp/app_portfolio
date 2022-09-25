@@ -600,6 +600,9 @@
 	line-height: 3.75pt;
 }
 /*theme specific month fontsize and lineheight fixes*/
+#prayertable_year .theme_month_20001 #timetable {
+	line-height: 3pt !important;
+}
 #prayertable_year .theme_month_20002 #timetable {
 	line-height: 3pt !important;
 }
@@ -610,9 +613,6 @@
 	font-size: 2pt !important;
 }
 #prayertable_year .theme_month_20005 #timetable {
-	line-height: 3pt !important;
-}
-#prayertable_year .theme_month_20006 #timetable {
 	line-height: 3pt !important;
 }
 #prayertable_year .theme_month_20007 #timetable {
@@ -808,66 +808,96 @@
 /*THEME 1*/
 /*DISPLAY FONT*/
 .theme_month_20001.font_arabic_sans_kufi .display_font{
-	font-family: var(--global_font_arabic_sans_kufi);
+	font-family: 'Roboto Condensed', var(--global_font_arabic_sans_kufi);
 }
 .theme_month_20001.font_arabic_kufi .display_font{
-	font-family: var(--global_font_arabic_kufi);
+	font-family: 'Roboto Condensed', var(--global_font_arabic_kufi);
 }
 .theme_month_20001.font_arabic_nashk .display_font{
-	font-family: var(--global_font_arabic_nashk);
+	font-family: 'Roboto Condensed', var(--global_font_arabic_nashk);
 }
 .theme_month_20001.font_arabic_nastaliq .display_font{
-	font-family: var(--global_font_arabic_nastaliq);
+	font-family: 'Roboto Condensed', var(--global_font_arabic_nastaliq);
 }
 .theme_month_20001.font_arabic_ui .display_font{
-	font-family: var(--global_font_arabic_ui);
+	font-family: 'Roboto Condensed', var(--global_font_arabic_ui);
 }
 /*DEFAULT FONT*/
 .theme_month_20001.font_arabic_sans_kufi .default_font{
-	font-family: var(--global_font_arabic_sans_kufi);
+	font-family: 'Roboto Condensed', var(--global_font_arabic_sans_kufi);
 }
 .theme_month_20001.font_arabic_kufi .default_font{
-	font-family: var(--global_font_arabic_kufi);
+	font-family: 'Roboto Condensed', var(--global_font_arabic_kufi);
 }
 .theme_month_20001.font_arabic_nashk .default_font{
-	font-family: var(--global_font_arabic_nashk);
+	font-family: 'Roboto Condensed', var(--global_font_arabic_nashk);
 }
 .theme_month_20001.font_arabic_nastaliq .default_font{
-	font-family: var(--global_font_arabic_nastaliq);
+	font-family: 'Roboto Condensed', var(--global_font_arabic_nastaliq);
 }
 .theme_month_20001.font_arabic_ui .default_font{
-	font-family: var(--global_font_arabic_ui);
+	font-family: 'Roboto Condensed', var(--global_font_arabic_ui);
 }
 .theme_month_20001 {
 	background-color: white;
 	color: #404040;
 }
-/*Timetable*/
-.theme_month_20001 #timetable{
-	border : 0px !important;
+.theme_month_20001 #prayertable_month_header {
+	color: #2a5d99;
+}
+.theme_month_20001 #timetable_header {
+	color: #2a5d99;
+}
+.theme_month_20001 #timetable .prayertable_month_header-row .timetable_col_header {
+	background-color: #2a5d99 !important;
+	color: white !important;
+	text-transform: uppercase;
+}
+.theme_month_20001 .timetable_row:last-child {
+	border-bottom: none
+}
+.theme_month_20001 #timetable .timetable_col_header {
+	border-bottom: 0.5px solid #2a5d99;
+}
+.theme_month_20001 #timetable .timetable_col {
+	border-bottom: 0.5px solid #2a5d99;
 }
 .theme_month_20001 .timetable_row.prayertable_month_highlight_row .timetable_col {
-	background-color: #e6e6e6;
+	background-color: #7bcae9 !important;
 }
 .theme_month_20001 .timetable_row.prayertable_month_day_01-10-row .timetable_col {
-	background-color: #e6e6e6 !important;
+	background-color: #c9edf7 !important;
 }
 .theme_month_20001 .timetable_row.prayertable_month_day_11-20-row .timetable_col {
 	background-color: #FFF !important;
 }
 .theme_month_20001 .timetable_row.prayertable_month_day_21-30-row .timetable_col {
-	background-color: #e6e6e6 !important;
+	background-color: #7bcae9 !important;
 }
-/*notes*/
 .theme_month_20001 #timetable .prayertable_month_notes {
 	background-color: white !important;
 }
-
+.theme_month_20001 #timetable .timetable_col:nth-child(odd) {
+	background-color: #c9edf7;
+	color: #404040;
+}
+.theme_month_20001 #timetable .timetable_col:nth-child(even) {
+	background-color: #FFF;
+}
 .theme_month_20001 #timetable .timetable_col.prayertable_fast_start {
-	background-color: #e6e6e6 !important;
+	background-color: #2a5d99 !important;
+	color: white;
 }
 .theme_month_20001 #timetable .timetable_col.prayertable_fast_end {
-	background-color: #e6e6e6 !important;
+	background-color: #2a5d99 !important;
+	color: white;
+}
+.theme_month_20001 #timetable_footer {
+	color: #2a5d99;
+}
+/*Footer*/
+.theme_month_20001 #prayertable_month_footer {
+	color : #2a5d99;
 }
 
 /*THEME 2*/
@@ -1223,96 +1253,66 @@
 /*THEME 6*/
 /*DISPLAY FONT*/
 .theme_month_20006.font_arabic_sans_kufi .display_font{
-	font-family: 'Roboto Condensed', var(--global_font_arabic_sans_kufi);
+	font-family: var(--global_font_arabic_sans_kufi);
 }
 .theme_month_20006.font_arabic_kufi .display_font{
-	font-family: 'Roboto Condensed', var(--global_font_arabic_kufi);
+	font-family: var(--global_font_arabic_kufi);
 }
 .theme_month_20006.font_arabic_nashk .display_font{
-	font-family: 'Roboto Condensed', var(--global_font_arabic_nashk);
+	font-family: var(--global_font_arabic_nashk);
 }
 .theme_month_20006.font_arabic_nastaliq .display_font{
-	font-family: 'Roboto Condensed', var(--global_font_arabic_nastaliq);
+	font-family: var(--global_font_arabic_nastaliq);
 }
 .theme_month_20006.font_arabic_ui .display_font{
-	font-family: 'Roboto Condensed', var(--global_font_arabic_ui);
+	font-family: var(--global_font_arabic_ui);
 }
 /*DEFAULT FONT*/
 .theme_month_20006.font_arabic_sans_kufi .default_font{
-	font-family: 'Roboto Condensed', var(--global_font_arabic_sans_kufi);
+	font-family: var(--global_font_arabic_sans_kufi);
 }
 .theme_month_20006.font_arabic_kufi .default_font{
-	font-family: 'Roboto Condensed', var(--global_font_arabic_kufi);
+	font-family: var(--global_font_arabic_kufi);
 }
 .theme_month_20006.font_arabic_nashk .default_font{
-	font-family: 'Roboto Condensed', var(--global_font_arabic_nashk);
+	font-family: var(--global_font_arabic_nashk);
 }
 .theme_month_20006.font_arabic_nastaliq .default_font{
-	font-family: 'Roboto Condensed', var(--global_font_arabic_nastaliq);
+	font-family: var(--global_font_arabic_nastaliq);
 }
 .theme_month_20006.font_arabic_ui .default_font{
-	font-family: 'Roboto Condensed', var(--global_font_arabic_ui);
+	font-family: var(--global_font_arabic_ui);
 }
 .theme_month_20006 {
 	background-color: white;
 	color: #404040;
 }
-.theme_month_20006 #prayertable_month_header {
-	color: #2a5d99;
-}
-.theme_month_20006 #timetable_header {
-	color: #2a5d99;
-}
-.theme_month_20006 #timetable .prayertable_month_header-row .timetable_col_header {
-	background-color: #2a5d99 !important;
-	color: white !important;
-	text-transform: uppercase;
-}
-.theme_month_20006 .timetable_row:last-child {
-	border-bottom: none
-}
-.theme_month_20006 #timetable .timetable_col_header {
-	border-bottom: 0.5px solid #2a5d99;
-}
-.theme_month_20006 #timetable .timetable_col {
-	border-bottom: 0.5px solid #2a5d99;
+/*Timetable*/
+.theme_month_20006 #timetable{
+	border : 0px !important;
 }
 .theme_month_20006 .timetable_row.prayertable_month_highlight_row .timetable_col {
-	background-color: #7bcae9 !important;
+	background-color: #e6e6e6;
 }
 .theme_month_20006 .timetable_row.prayertable_month_day_01-10-row .timetable_col {
-	background-color: #c9edf7 !important;
+	background-color: #e6e6e6 !important;
 }
 .theme_month_20006 .timetable_row.prayertable_month_day_11-20-row .timetable_col {
 	background-color: #FFF !important;
 }
 .theme_month_20006 .timetable_row.prayertable_month_day_21-30-row .timetable_col {
-	background-color: #7bcae9 !important;
+	background-color: #e6e6e6 !important;
 }
+/*notes*/
 .theme_month_20006 #timetable .prayertable_month_notes {
 	background-color: white !important;
 }
-.theme_month_20006 #timetable .timetable_col:nth-child(odd) {
-	background-color: #c9edf7;
-	color: #404040;
-}
-.theme_month_20006 #timetable .timetable_col:nth-child(even) {
-	background-color: #FFF;
-}
+
 .theme_month_20006 #timetable .timetable_col.prayertable_fast_start {
-	background-color: #2a5d99 !important;
-	color: white;
+	background-color: #e6e6e6 !important;
 }
 .theme_month_20006 #timetable .timetable_col.prayertable_fast_end {
-	background-color: #2a5d99 !important;
-	color: white;
-}
-.theme_month_20006 #timetable_footer {
-	color: #2a5d99;
-}
-/*Footer*/
-.theme_month_20006 #prayertable_month_footer {
-	color : #2a5d99;
+	background-color: #e6e6e6 !important;
 }
 
 /*THEME 7*/
