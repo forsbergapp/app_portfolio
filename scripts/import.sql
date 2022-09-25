@@ -1729,8 +1729,8 @@ INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_na
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (2,'0','DESIGN_DEFAULT_SHOW_NOTES','false','Show notes: false');
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (2,'0','DESIGN_DEFAULT_SHOW_TIMEZONE','false','Show timezone: false');
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (2,'0','DESIGN_DEFAULT_SHOW_WEEKDAY','true','Show weekday: true');
-INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (2,'0','DESIGN_DEFAULT_THEME_DAY','10003',NULL);
-INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (2,'0','DESIGN_DEFAULT_THEME_MONTH','20003',NULL);
+INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (2,'0','DESIGN_DEFAULT_THEME_DAY','10001',NULL);
+INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (2,'0','DESIGN_DEFAULT_THEME_MONTH','20001',NULL);
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (2,'0','DESIGN_DEFAULT_THEME_YEAR','30001',NULL);
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (2,'0','TEXT_DEFAULT_REPORTFOOTER1','بِسْمِ اللهِ الرَّحْمٰنِ الرَّحِيْمِ',NULL);
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (2,'0','TEXT_DEFAULT_REPORTFOOTER2','In the name of God, the Almighty, the Merciful',NULL);
