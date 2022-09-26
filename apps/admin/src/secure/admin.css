@@ -514,6 +514,7 @@
     #menu4_row_parameters{
         margin-top: 10px;
         margin-bottom: 10px;
+        font-size:0.7em;
     }    
     #menu4_row_parameters div{
         display: inline-block;
@@ -601,11 +602,20 @@
     #list_pm2_log_form{
         display:none;
     }
+    #list_pm2_log_path_info{
+        display: block;
+        text-align: center;
+        font-size: 0.7em;
+    }
     #list_pm2_log_path_info div{
         display: inline-block;
     }
     #list_pm2_log_path_info div:nth-child(2){
         margin-inline-start: 10px;
+    }
+    #list_pm2_log_title_out, #list_pm2_log_title_err, #list_pm2_log_title_process_event{
+        text-align: center;
+        margin-top: 10px;
     }
     #list_pm2_log_out, #list_pm2_log_err, #list_pm2_log_process_event{
         height: calc(33% - 50px);
