@@ -119,14 +119,12 @@ module.exports = {
                          req.query.order_by, req.query.sort,  (err, result) => {
             if (err) {
                 return res.status(500).send({
-                    success: 0,
                     data: err
                 });
             }
             else{
                 if (result.length>0)
                     return res.status(200).json({
-                        success: 1,
                         data: result
                     });
                 else{
@@ -146,7 +144,6 @@ module.exports = {
     getCountConnected: (req, res) => {
         getCountConnected(req.query.identity_provider_id, req.query.count_logged_in, (err, count_connected) => {
             return res.status(200).json({
-                success: 1,
                 data: count_connected
             });
         })
@@ -154,16 +151,16 @@ module.exports = {
     sendBroadcast: (req, res) => {
         sendBroadcast(req.body.app_id, req.body.client_id, req.body.destination_app, 
                       req.body.broadcast_type, req.body.broadcast_message, (err, result) =>{
-            return res.status(200).json({
-                success: 1
-            });
+            return res.status(200).send(
+                null
+            );
         });
     },
     updateConnected: (req, res) => {
         updateConnected(req.query.client_id, req.query.user_account_id, req.query.identity_provider_id, (err, result) =>{
-            return res.status(200).json({
-                success: 1
-            });
+            return res.status(200).json(
+                null
+            );
         })
     },
     checkConnected: (req, res) => {

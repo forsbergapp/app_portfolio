@@ -11,32 +11,30 @@ function admin_login(){
             null;
         else{
             json = JSON.parse(result);
-            if (json.success == 1){
-                common_fetch('/service/forms/admin/secure' + '?', 
-                                'GET', 2, null, null, null, (err, result) =>{
-                    if (err)
-                        null;
-                    else{
-                        document.getElementById('admin_login_username_input').value='';
-                        document.getElementById('admin_login_password_input').value='';                        
-                        document.getElementById('dialogue_admin_login').style.visibility = 'hidden';
-                        document.getElementById('secure').style.visibility = 'visible';
-                        document.getElementById('secure').innerHTML = result
-                        //make script in innerHTML work:
-                        var scripts = Array.prototype.slice.call(document.getElementById('secure').getElementsByTagName('script'));
-                        for (var i = 0; i < scripts.length; i++) {
-                            if (scripts[i].src != '') {
-                                var tag = document.createElement('script');
-                                tag.src = scripts[i].src;
-                                document.getElementById('secure').insertBefore(tag, document.getElementById('secure').firstChild);
-                            }
-                            else {
-                                eval(scripts[i].innerHTML);
-                            }
-                        }   
-                    }                             
-                })
-            }
+            common_fetch('/service/forms/admin/secure' + '?', 
+                            'GET', 2, null, null, null, (err, result) =>{
+                if (err)
+                    null;
+                else{
+                    document.getElementById('admin_login_username_input').value='';
+                    document.getElementById('admin_login_password_input').value='';                        
+                    document.getElementById('dialogue_admin_login').style.visibility = 'hidden';
+                    document.getElementById('secure').style.visibility = 'visible';
+                    document.getElementById('secure').innerHTML = result
+                    //make script in innerHTML work:
+                    var scripts = Array.prototype.slice.call(document.getElementById('secure').getElementsByTagName('script'));
+                    for (var i = 0; i < scripts.length; i++) {
+                        if (scripts[i].src != '') {
+                            var tag = document.createElement('script');
+                            tag.src = scripts[i].src;
+                            document.getElementById('secure').insertBefore(tag, document.getElementById('secure').firstChild);
+                        }
+                        else {
+                            eval(scripts[i].innerHTML);
+                        }
+                    }   
+                }                             
+            })
         }
     });
 }

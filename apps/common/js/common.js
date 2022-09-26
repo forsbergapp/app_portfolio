@@ -53,7 +53,7 @@ async function common_fetch_token(token_type, json_data,  username, password, ca
     .then(function(result) {
         switch (status){
             case 200:{
-                //Success
+                //OK
                 switch (token_type){
                     case 0:{
                         //data token
@@ -163,7 +163,7 @@ async function common_fetch(url_parameters, method, token_type, json_data, app_i
     .then(function(result) {
         switch (status){
             case 200:{
-                //Success
+                //OK
                 callBack(null, result);
                 break;
             }
