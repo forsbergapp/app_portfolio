@@ -5,12 +5,10 @@ module.exports = {
 		getApp(req.query.id, req.query.app_id, req.query.lang_code, (err, results) =>{
 			if (err) {
 				return res.status(500).send({
-					success: 0,
 					data: err
 				});
 			}
 			return res.status(200).json({
-				success: 1,
 				data: results
 			});
 		});
@@ -19,12 +17,10 @@ module.exports = {
 		getAppsAdmin(req.query.id, (err, results) =>{
 			if (err) {
 				return res.status(500).send({
-					success: 0,
 					data: err
 				});
 			}
 			return res.status(200).json({
-				success: 1,
 				data: results
 			});
 		});
@@ -33,12 +29,10 @@ module.exports = {
 		updateApp(req.params.id, req.body, (err, results) =>{
 			if (err) {
 				return res.status(500).send({
-					success: 0,
 					data: err
 				});
 			}
 			return res.status(200).json({
-				success: 1,
 				data: results
 			});
 		});

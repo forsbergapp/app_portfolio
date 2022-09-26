@@ -18,7 +18,6 @@ module.exports = {
 				);
 			}
 			return res.status(200).json({
-				success: 1,
 				id: results.insertId,
 				data: results
 			})
@@ -45,7 +44,6 @@ module.exports = {
 			}
 			return res.status(200).json({
 				count: results.length,
-				success: 1,
 				items: results
 			});
 		});
@@ -71,7 +69,6 @@ module.exports = {
 			}
 			return res.status(200).json({
 				count: results.length,
-				success: 1,
 				items: results
 			});
 		});
@@ -100,7 +97,6 @@ module.exports = {
 			}
 			return res.status(200).json({
 				count: results.length,
-				success: 1,
 				items: results
 			});
 		});
@@ -133,7 +129,6 @@ module.exports = {
                 else
                     return res.status(200).json({
                         count: results.length,
-                        success: 1,
                         items: results
                     });
             }
@@ -165,7 +160,6 @@ module.exports = {
                 else
                     return res.status(200).json({
                         count: results.length,
-                        success: 1,
                         items: results
                     });
             }
@@ -207,9 +201,9 @@ module.exports = {
 								});
 				}
 				else
-					return res.status(200).json({
-						success: 1
-					});
+					return res.status(200).send(
+						null
+					);
 			}
 		});
 	},
@@ -232,9 +226,9 @@ module.exports = {
 								);
 							});
 			}
-			return res.status(200).json({
-				success: 1
-			});
+			return res.status(200).json(
+				null
+			);
 		});
 	}
 }

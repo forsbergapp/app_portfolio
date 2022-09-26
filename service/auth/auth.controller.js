@@ -87,7 +87,6 @@ module.exports = {
                     verify(token, db_SERVICE_AUTH_TOKEN_ACCESS_SECRET, (err, decoded) => {
                         if (err){
                             res.status(401).send({
-                                succes: 0,
                                 message: "Invalid token"
                             });
                         } else {
@@ -105,7 +104,6 @@ module.exports = {
                                     else
                                         createLogAppCI(req, res, null, __appfilename, __appfunction, __appline, `user  ${req.query.user_account_id} app_id ${req.query.app_id} with ip ${req.ip} accesstoken unauthorized`, (err_log, result_log)=>{
                                             res.status(401).send({
-                                                success: 0,
 				                                message: 'Not authorized'
                                             });
                                         })
@@ -119,7 +117,6 @@ module.exports = {
 			
 		}else{
 			res.status(401).json({
-				success: 0,
 				message: 'Not authorized'
 			});
 		}
@@ -138,7 +135,6 @@ module.exports = {
                     verify(token, db_SERVICE_AUTH_TOKEN_DATA_SECRET, (err, decoded) => {
                         if (err){
                             res.status(401).send({
-                                succes: 0,
                                 message: "Invalid token"
                             });
                         } else {
@@ -150,7 +146,6 @@ module.exports = {
 			
 		}else{
 			res.status(401).json({
-				success: 0,
 				message: 'Not authorized'
 			});
 		}
@@ -201,7 +196,6 @@ module.exports = {
                                         null;
                                 }); 
                         return res.status(401).send({ 
-                            success: 0,
                             message: "HTTP Error 401 Unauthorized: Access is denied."
                         });
                     } 
@@ -232,8 +226,6 @@ module.exports = {
                                     null;
                     }); 
                     return res.status(200).json({ 
-                            success: 1,
-                            message: "OK",
                             token_dt: jsontoken_dt
                     });
                 }
@@ -241,7 +233,6 @@ module.exports = {
         }
         else{
             return res.status(401).send({ 
-                success: 0,
                 message: "HTTP Error 401 Unauthorized: Access is denied"
             });
         }

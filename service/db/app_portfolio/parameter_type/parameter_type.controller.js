@@ -7,14 +7,12 @@ module.exports = {
 		getParameterType(req.query.id,(err, results) =>{
 			if (err) {
 				return res.status(500).send({
-					success: 0,
 					data: err
 				});
 			}
 			else{
                 if (results.length>0)
                     return res.status(200).json({
-                        success: 1,
 						data: results
                     });
                 else{
