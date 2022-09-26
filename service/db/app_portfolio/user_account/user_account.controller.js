@@ -101,7 +101,6 @@ module.exports = {
                                 else
                                     accessToken(req, (err5, Token)=>{
                                         return res.status(200).json({
-                                            success: 1,
                                             accessToken: Token,
                                             id: results.insertId,
                                             data: results
@@ -113,7 +112,6 @@ module.exports = {
                     else
                         accessToken(req, (err6, Token)=>{
                             return res.status(200).json({
-                                success: 1,
                                 accessToken: Token,
                                 id: results.insertId,
                                 data: results
@@ -164,7 +162,6 @@ module.exports = {
                             else
                                 return res.status(200).json({
                                     count: results.changedRows,
-                                    success: 1,
                                     items: Array(results)
                                 });
                         })
@@ -172,7 +169,6 @@ module.exports = {
                     else
                         return res.status(200).json({
                             count: results.changedRows,
-                            success: 1,
                             items: Array(results)
                         });
                 }
@@ -184,7 +180,6 @@ module.exports = {
                     accessToken(req, (err, Token)=>{
                         return res.status(200).json({
                             count: results.changedRows,
-                            success: 1,
                             auth: auth_new_password,
                             accessToken: Token,
                             items: Array(results)
@@ -207,7 +202,6 @@ module.exports = {
                         getLastUserEvent(req.query.app_id, results.id, 'PASSWORD_RESET', (err, result_user_event)=>{
                             if (err)
                                 return res.status(200).json({
-                                    success: 1,
                                     sent: 0
                                 });
                             else
@@ -215,7 +209,6 @@ module.exports = {
                                     result_user_event.status_name == 'INPROGRESS' &&
                                     result_user_event.event_days < 1)
                                     return res.status(200).json({
-                                        success: 1,
                                         sent: 0
                                     });
                                 else{
@@ -238,7 +231,6 @@ module.exports = {
                                     insertUserEvent(eventData, (err, result_new_user_event)=>{
                                         if (err)
                                             return res.status(200).json({
-                                                success: 1,
                                                 sent: 0
                                             });
                                         else{
@@ -267,7 +259,6 @@ module.exports = {
                                                             } 
                                                             else
                                                                 return res.status(200).json({
-                                                                    success: 1,
                                                                     sent: 1,
                                                                     id: results.id
                                                                 });  
@@ -282,13 +273,11 @@ module.exports = {
                     }
                     else
                         return res.status(200).json({
-                            success: 1,
                             sent: 0
                         });
             })
         else
             return res.status(200).json({
-                success: 1,
                 sent: 0
             });
         
@@ -416,7 +405,6 @@ module.exports = {
                 else
                     return res.status(200).json({
                         count: results.length,
-                        success: 1,
                         items: results
                     });
             }
@@ -449,7 +437,6 @@ module.exports = {
                 else
                     return res.status(200).json({
                         count: results.length,
-                        success: 1,
                         items: results
                     });
             }
@@ -481,7 +468,6 @@ module.exports = {
                 else
                     return res.status(200).json({
                         count: results.length,
-                        success: 1,
                         items: results
                     });
             }
@@ -571,7 +557,6 @@ module.exports = {
                                                         } 
                                                         else
                                                             return res.status(200).json({
-                                                                success: 1,
                                                                 sent_change_email: 1
                                                             });
                                                     })
@@ -579,7 +564,6 @@ module.exports = {
                                             }
                                             else    
                                                 return res.status(200).json({
-                                                    success: 1,
                                                     sent_change_email: 0
                                                 });
                                     }
@@ -726,13 +710,12 @@ module.exports = {
                         insertUserEvent(eventData, (err, result_new_user_event)=>{
                             if (err)
                                 return res.status(200).json({
-                                    success: 1,
                                     sent: 0
                                 });
                             else
-                                return res.status(200).json({
-                                    success: 1
-                                });
+                                return res.status(200).send(
+                                    null
+                                );
                         })
                     }
                 }
@@ -759,9 +742,9 @@ module.exports = {
                                 });
                 }
                 else
-                    return res.status(200).json({
-                        success: 1
-                    });
+                    return res.status(200).send(
+                        null
+                    );
             }
         });
     },
@@ -794,9 +777,9 @@ module.exports = {
                                                 });
                                 }
                                 else{
-                                    return res.status(200).json({
-                                        success: 1
-                                    });
+                                    return res.status(200).send(
+                                        null
+                                    );
                                 }
                             }
                         });
@@ -831,9 +814,9 @@ module.exports = {
                                                                 });
                                                 }
                                                 else{
-                                                    return res.status(200).json({
-                                                        success: 1
-                                                    });
+                                                    return res.status(200).send(
+                                                        null
+                                                    );
                                                 }
                                             }
                                         });
@@ -954,7 +937,6 @@ module.exports = {
                                                         else
                                                             return res.status(200).json({
                                                                 count: Array(results.items).length,
-                                                                success: 1,
                                                                 accessToken: Token,
                                                                 items: Array(results)
                                                             });
@@ -978,7 +960,6 @@ module.exports = {
                                     else
                                         return res.status(200).json({
                                             count: Array(results.items).length,
-                                            success: 1,
                                             accessToken: Token,
                                             items: Array(results)
                                         });
@@ -1065,7 +1046,6 @@ module.exports = {
                                     else
                                         return res.status(200).json({
                                             count: results.length,
-                                            success: 1,
                                             accessToken: Token,
                                             items: results,
                                             userCreated: 0
@@ -1117,7 +1097,6 @@ module.exports = {
                                             else
                                                 return res.status(200).json({
                                                     count: results7.length,
-                                                    success: 1,
                                                     accessToken: Token,
                                                     items: results7,
                                                     userCreated: 1
@@ -1141,7 +1120,6 @@ module.exports = {
             }
             else{
                 return res.status(200).json({
-                    success: 1,
                     data: results
                 });
             }

@@ -14,7 +14,6 @@ likeUserSetting: (req, res) => {
 		}
 		return res.status(200).json({
 			count: results.changedRows,
-			success: 1,
 			items: Array(results)
 		});
 	});
@@ -30,7 +29,6 @@ unlikeUserSetting: (req, res) => {
 		}
 		return res.status(200).json({
 			count: results.changedRows,
-			success: 1,
 			items: Array(results)
 		});
 	});

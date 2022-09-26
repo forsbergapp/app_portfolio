@@ -8,8 +8,7 @@ function show_doc(docid){
 }
 function getdocs(docid = null){
     document.getElementById('doc_list').innerHTML = window.global_app_spinner;
-    let result = `{"success":1,
-                    "data":[{"id":1,
+    let result = `{"data":[{"id":1,
                             "doc_title":"Diagram",
                             "doc_url":"/app1/images/app_portfolio.jpg"},
                             {"id":2,

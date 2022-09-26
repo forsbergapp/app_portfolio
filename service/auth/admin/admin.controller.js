@@ -9,7 +9,6 @@ module.exports = {
             verify(token, process.env.SERVICE_AUTH_ADMIN_TOKEN_SECRET, (err, decoded) => {
                 if (err){
                     res.status(401).send({
-                        succes: 0,
                         message: "Invalid token"
                     });
                 } else {
@@ -19,7 +18,6 @@ module.exports = {
             
 		}else{
 			res.status(401).json({
-				success: 0,
 				message: 'Not authorized'
 			});
 		}
@@ -48,7 +46,6 @@ module.exports = {
                                 null;
                 });
                 return res.status(401).send({ 
-                    success: 0,
                     message: "Unauthorized: Access is denied."
                 });
             } 
@@ -76,14 +73,11 @@ module.exports = {
                             null;
             });
             return res.status(200).json({ 
-                    success: 1,
-                    message: "OK",
                     token_at: jsontoken_at
             });
         }
         else{
             return res.status(401).send({ 
-                success: 0,
                 message: "Unauthorized: Access is denied"
             });
         }
