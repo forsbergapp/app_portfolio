@@ -144,9 +144,6 @@ async function show_list(list_div, list_div_col_title, url, sort, order_by, cols
         //set spinner
         switch (list_div){
             case 'list_pm2_log':{
-                let old_html1 = document.getElementById(list_div + '_out').innerHTML;
-                let old_html2 = document.getElementById(list_div + '_err').innerHTML;
-                let old_html3 = document.getElementById(list_div + '_process_event').innerHTML;
                 document.getElementById(list_div + '_out').innerHTML = window.global_app_spinner;
                 document.getElementById(list_div + '_err').innerHTML = window.global_app_spinner;
                 document.getElementById(list_div + '_process_event').innerHTML = window.global_app_spinner;
@@ -154,7 +151,6 @@ async function show_list(list_div, list_div_col_title, url, sort, order_by, cols
                 break;
             }
             default:{
-                let old_html = document.getElementById(list_div).innerHTML;
                 document.getElementById(list_div).innerHTML = window.global_app_spinner;
                 break;
             }
@@ -163,13 +159,14 @@ async function show_list(list_div, list_div_col_title, url, sort, order_by, cols
             if (err){
                 switch (list_div){
                     case 'list_pm2_log':{
-                        document.getElementById(list_div + '_out').innerHTML = old_html1;
-                        document.getElementById(list_div + '_err').innerHTML = old_html2;
-                        document.getElementById(list_div + '_process_event').innerHTML = old_html3;
+                        document.getElementById(list_div + '_path').innerHTML = '';
+                        document.getElementById(list_div + '_out').innerHTML = '';
+                        document.getElementById(list_div + '_err').innerHTML = '';
+                        document.getElementById(list_div + '_process_event').innerHTML = '';
                         break;
                     }
                     default:{
-                        document.getElementById(list_div).innerHTML = old_html;
+                        document.getElementById(list_div).innerHTML = '';
                         break;
                     }
                 }
@@ -1003,13 +1000,12 @@ function set_maintenance(){
 /*----------------------- */
 async function show_apps(){
     let json;
-    let old_html = document.getElementById('list_apps').innerHTML;
     document.getElementById('list_apps').innerHTML = window.global_app_spinner;
 
     await common_fetch(window.global_rest_url_base + window.global_rest_app + '/admin?id=0',
                        'GET', 2, null, null, null, (err, result) =>{
         if (err)
-            document.getElementById('list_apps').innerHTML = old_html;
+            document.getElementById('list_apps').innerHTML = '';
         else{
             json = JSON.parse(result);
             if (json.success === 1){
@@ -1064,13 +1060,12 @@ async function show_apps(){
 }
 function show_app_parameter(app_id){
     let json;
-    let old_html = document.getElementById('list_app_parameter').innerHTML;
     document.getElementById('list_app_parameter').innerHTML = window.global_app_spinner;
 
     common_fetch(window.global_rest_url_base + window.global_rest_app_parameter + `admin/all/${parseInt(app_id)}?`,
                  'GET', 2, null, null, null, (err, result) =>{
         if (err)
-            document.getElementById('list_app_parameter').innerHTML = old_html;
+            document.getElementById('list_app_parameter').innerHTML = '';
         else{
             json = JSON.parse(result);
             if (json.success === 1){
@@ -1269,13 +1264,12 @@ function show_parameter_type_names(lov, row_item, item_index){
     switch(lov){
         case 1:{
             let json;
-            let old_html = document.getElementById('lov_list').innerHTML;
             show_lov('PARAMETER TYPE', window.global_app_spinner);
 
             common_fetch(window.global_rest_url_base + window.global_rest_parameter_type + `admin?`,
                          'GET', 2, null, null, null, (err, result) =>{
                 if (err)
-                    document.getElementById('lov_list').innerHTML = old_html;
+                    document.getElementById('lov_list').innerHTML = '';
                 else{
                     json = JSON.parse(result);
                     if (json.success === 1){
@@ -1322,7 +1316,7 @@ async function show_connected(sort=4, order_by='desc'){
               8);
 }    
 async function show_app_stat(){
-    if (document.getElementById('list_connected_form').style.display=='block')
+    if (document.getElementById('list_connected_form').style.display=='flex')
         list_click(document.getElementById('list_connected_title1'));
     else
         list_click(document.getElementById('list_app_log_title2'));
@@ -1572,13 +1566,12 @@ function show_existing_logfiles(){
     if (admin_token_has_value()){
         let json;
         let url_parameters;
-        let old_html = document.getElementById('lov_list').innerHTML;
         show_lov('SERVER LOG FILES', window.global_app_spinner);
 
         common_fetch(window.global_service_log + '/files?',
                      'GET', 2, null, null, null, (err, result) =>{
             if (err)
-                document.getElementById('lov_list').innerHTML = old_html;
+                document.getElementById('lov_list').innerHTML = '';
             else{
                 json = JSON.parse(result);
                 let logfiles_list = document.getElementById('lov_list');

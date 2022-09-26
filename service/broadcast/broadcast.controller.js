@@ -117,10 +117,30 @@ module.exports = {
     getListConnected: (req, res) => {
         getListConnected(req.query.select_app_id, req.query.limit, req.query.year, req.query.month, 
                          req.query.order_by, req.query.sort,  (err, result) => {
-            return res.status(200).json({
-                success: 1,
-                data: result
-            });
+            if (err) {
+                return res.status(500).send({
+                    success: 0,
+                    data: err
+                });
+            }
+            else{
+                if (result.length>0)
+                    return res.status(200).json({
+                        success: 1,
+                        data: result
+                    });
+                else{
+                    const { getMessage_admin } = require("../../service/db/app_portfolio/message_translation/message_translation.service");
+                    //Record not found
+                    getMessage_admin(20400, 
+                        req.query.app_id, 
+                        req.query.lang_code, (err2,result2)  => {
+                            return res.status(404).send(
+                                    err2 ?? result2.text
+                            );
+                        });
+                }
+            }
         })
     },
     getCountConnected: (req, res) => {
