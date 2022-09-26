@@ -1,5 +1,6 @@
 const { getParameters, getLogs, getFiles, getPM2Logs,
 	    createLogServer, createLogAppS, createLogAppRI, createLogAppC} = require ("./log.service");
+
 module.exports = {
 	getParameters: (req, res) => {
 		getParameters((err, results) =>{
@@ -22,10 +23,24 @@ module.exports = {
                     err
                 );
 			}
-			return res.status(200).json({
-				success: 1,
-				data: results
-			});
+			else{
+				if (results.length>0)
+					return res.status(200).json({
+						success: 1,
+						data: results
+					});
+				else{
+					const { getMessage_admin } = require("../../service/db/app_portfolio/message_translation/message_translation.service");
+					//Record not found
+					getMessage_admin(20400, 
+						req.query.app_id, 
+						req.query.lang_code, (err2,results2)  => {
+							return res.status(404).send(
+									err2 ?? results2.text
+							);
+						});
+				}
+			}
 		});
 	},
 	getFiles: (req, res) => {
@@ -35,9 +50,23 @@ module.exports = {
                     err
                 );
 			}
-			return res.status(200).send(
-				results
-			);
+			else{
+                if (results.length>0)
+                    return res.status(200).send(
+                        results
+                    );
+                else{
+                    const { getMessage_admin } = require("../../service/db/app_portfolio/message_translation/message_translation.service");
+                    //Record not found
+                    getMessage_admin(20400, 
+                        req.query.app_id, 
+                        req.query.lang_code, (err2,results2)  => {
+                            return res.status(404).send(
+                                    err2 ?? results2.text
+                            );
+                        });
+                }
+            }
 		});
 	},
 	getPM2Logs: (req, res) => {
@@ -47,12 +76,26 @@ module.exports = {
                     err
                 );
 			}
-			return res.status(200).json({
-				success: 1,
-				path: process.env.SERVICE_LOG_FILE_PATH_SERVER,
-				file: process.env.SERVICE_LOG_PM2_FILE,
-				data: results
-			});
+			else{
+				if (results.length>0)
+					return res.status(200).json({
+						success: 1,
+						path: process.env.SERVICE_LOG_FILE_PATH_SERVER,
+						file: process.env.SERVICE_LOG_PM2_FILE,
+						data: results
+					});
+				else{
+					const { getMessage_admin } = require("../../service/db/app_portfolio/message_translation/message_translation.service");
+					//Record not found
+					getMessage_admin(20400, 
+						req.query.app_id, 
+						req.query.lang_code, (err2,results2)  => {
+							return res.status(404).send(
+									err2 ?? results2.text
+							);
+						});
+				}
+			}
 		});
 	},
 	createLogServer: (req, res, app_id, info, err) =>{
