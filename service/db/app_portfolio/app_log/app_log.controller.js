@@ -82,10 +82,24 @@ module.exports = {
 					data: err
 				});
 			}
-			return res.status(200).json({
-				success: 1,
-				data: results
-			});
+			else{
+				if (results.length>0)
+					return res.status(200).json({
+						success: 1,
+						data: results
+					});
+				else{
+					const { getMessage_admin } = require("../message_translation/message_translation.service");
+					//Record not found
+					getMessage_admin(20400, 
+						req.query.app_id, 
+						req.query.lang_code, (err2,results2)  => {
+							return res.status(404).send(
+									err2 ?? results2.text
+							);
+						});
+				}
+			}
 		})
 	}
 }
