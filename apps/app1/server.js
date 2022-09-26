@@ -16,8 +16,8 @@ app.get("/info/:info",function (req, res, next) {
               res.sendFile(__dirname + "/apps/app1/images/datamodel.jpg");
               break;
             }
-            case 'app_portfolio.jpg':{
-                res.sendFile(__dirname + "/apps/app1/images/app_portfolio.jpg");
+            case 'app_portfolio.png':{
+                res.sendFile(__dirname + "/apps/app1/images/app_portfolio.png");
                 break;
             }
             default:{

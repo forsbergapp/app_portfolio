@@ -921,6 +921,9 @@ a:active {
 	text-align: left;
 	display: inline-block;
 }
+#common_window_info_info img{
+	max-width: 100%;
+}
 #common_window_info_info #app_spinner{
 	margin-top:100px;
 	margin-bottom:unset;
