@@ -68,9 +68,6 @@ body {
 	visibility:visible;
 	z-index: 0 !important;
 }
-#common_window_info_info img{
-	max-width:100%;
-}
 #common_window_info_info{
 	position:relative;
 	margin:20px;

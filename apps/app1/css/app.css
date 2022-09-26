@@ -724,9 +724,6 @@ div.ray8 {
 #info_diagram, #info_datamodel{
 	cursor:pointer;
 }
-#common_window_info_info img{
-	max-width:90%;
-}
 #common_window_info_info{
 	position:relative;
 	margin:20px;
