@@ -2746,6 +2746,7 @@ function seticons(){
                                             <path d=\"M2 4h8a1 1 0 0 1 1-1h1a1 1 0 0 1 1 1h8v1h-1v11h-5.732l1.608 6H14.84l-1.607-6H9.767L8.16 22H7.124l1.608-6H3V5H2V4Zm17 11V5H4v10h15Zm-9-8h1l3 3l-3 3h-1V7Zm1 1.414v3.172L12.586 10L11 8.414Z\"
                                             stroke="black" stroke-width="2" stroke-linejoin="round"/>;
                                        </svg>`;
+    window.global_icon_infinite = `∞`;
     //message
     window.global_icon_message_user	= '<i class="fas fa-user-circle"></i>';
     window.global_icon_message_error = '<i class="fa-solid fa-xmark"></i>';
