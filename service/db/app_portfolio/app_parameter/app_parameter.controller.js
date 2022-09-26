@@ -5,12 +5,10 @@ module.exports = {
 		getParameters(req.params.app_id, req.query.app_id, (err, results) =>{
 			if (err) {
 				return res.status(500).send({
-					success: 0,
 					data: err
 				});
 			}
 			return res.status(200).json({
-				success: 1,
 				data: results
 			});
 		});
@@ -19,12 +17,10 @@ module.exports = {
 		getParameters_server(req.params.app_id, req.query.app_id, (err, results) =>{
 			if (err) {
 				return res.status(500).send({
-					success: 0,
 					data: err
 				});
 			}
 			return res.status(200).json({
-				success: 1,
 				data: results
 			});
 		});
@@ -33,12 +29,10 @@ module.exports = {
 		getParameters_admin(req.params.app_id, (err, results) =>{
 			if (err) {
 				return res.status(500).send({
-					success: 0,
 					data: err
 				});
 			}
 			return res.status(200).json({
-				success: 1,
 				data: results
 			});
 		});
@@ -47,12 +41,10 @@ module.exports = {
 		getParameter_admin(req.params.app_id, req.query.parameter_name, (err, results) =>{
 			if (err) {
 				return res.status(500).send({
-					success: 0,
 					data: err
 				});
 			}
 			return res.status(200).json({
-				success: 1,
 				data: results
 			});
 		});
@@ -61,12 +53,10 @@ module.exports = {
 		getParameter(req.params.app_id, req.query.parameter_name, req.query.app_id, (err, results) =>{
 			if (err) {
 				return res.status(500).send({
-					success: 0,
 					data: err
 				});
 			}
 			return res.status(200).json({
-				success: 1,
 				data: results
 			});
 		});
@@ -75,12 +65,10 @@ module.exports = {
 		setParameter_admin(req.body, (err, results) =>{
 			if (err) {
 				return res.status(500).send({
-					success: 0,
 					data: err
 				});
 			}
 			return res.status(200).json({
-				success: 1,
 				data: results
 			});
 		});
@@ -89,12 +77,10 @@ module.exports = {
 		setParameterValue_admin(req.body, (err, results) =>{
 			if (err) {
 				return res.status(500).send({
-					success: 0,
 					data: err
 				});
 			}
 			return res.status(200).json({
-				success: 1,
 				data: results
 			});
 		});

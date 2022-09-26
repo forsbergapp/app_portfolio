@@ -175,449 +175,447 @@ async function show_list(list_div, list_div_col_title, url, sort, order_by, cols
             }
             else{
                 json = JSON.parse(result);
-                if (json.success === 1){
-                    let html = '';
-                    let html_out = '';
-                    let html_err = '';
-                    let html_process_event = '';
-                    switch (list_div){
-                        /*
-                        use this grouping to decide column orders
-                        [log colums][server columns][user columns][detail columms][app columns(broadcast, edit etc)]
-                        */
-                        case 'list_app_log':{
-                            window.global_page_last = Math.floor(json.data[0].total_rows/window.global_limit) * window.global_limit;
-                            html = `<div id='list_app_log_row_title' class='list_app_log_row'>
-                                        <div id='list_app_log_col_title1' class='list_app_log_col list_app_log_sort_click'>
-                                            <div>ID</div>
-                                        </div>
-                                        <div id='list_app_log_col_title2' class='list_app_log_col list_app_log_sort_click'>
-                                            <div>DATE</div>
-                                        </div>
-                                        <div id='list_app_log_col_title3' class='list_app_log_col list_app_log_sort_click'>
-                                            <div>HOST</div>
-                                        </div>
-                                        <div id='list_app_log_col_title3' class='list_app_log_col list_app_log_sort_click'>
-                                            <div>APP ID</div>
-                                        </div>
-                                        <div id='list_app_log_col_title4' class='list_app_log_col list_app_log_sort_click'>
-                                            <div>MODULE</div>
-                                        </div>
-                                        <div id='list_app_log_col_title5' class='list_app_log_col list_app_log_sort_click'>
-                                            <div>MODULE TYPE</div>
-                                        </div>
-                                        <div id='list_app_log_col_title6' class='list_app_log_col list_app_log_sort_click'>
-                                            <div>MODULE REQUEST</div>
-                                        </div>
-                                        <div id='list_app_log_col_title7' class='list_app_log_col list_app_log_sort_click'>
-                                            <div>MODULE RESULT</div>
-                                        </div>
-                                        <div id='list_app_log_col_title8' class='list_app_log_col list_app_log_sort_click'>
-                                            <div>USER ID</div>
-                                        </div>
-                                        <div id='list_app_log_col_title9' class='list_app_log_col list_app_log_sort_click'>
-                                            <div>IP</div>
-                                        </div>
-                                        <div id='list_app_log_col_title10' class='list_app_log_col list_app_log_sort_click'>
-                                            <div>GPS LAT</div>
-                                        </div>
-                                        <div id='list_app_log_col_title11' class='list_app_log_col list_app_log_sort_click'>
-                                            <div>GPS LONG</div>
-                                        </div>
-                                        <div id='list_app_log_col_title12' class='list_app_log_col list_app_log_sort_click'>
-                                            <div>USER LANGUAGE</div>
-                                        </div>
-                                        <div id='list_app_log_col_title13' class='list_app_log_col list_app_log_sort_click'>
-                                            <div>USER TIMEZONE</div>
-                                        </div>
-                                        <div id='list_app_log_col_title14' class='list_app_log_col list_app_log_sort_click'>
-                                            <div>USER NUMBER_SYSTEM</div>
-                                        </div>
-                                        <div id='list_app_log_col_title15' class='list_app_log_col list_app_log_sort_click'>
-                                            <div>USER PLATFORM</div>
-                                        </div>
-                                        <div id='list_app_log_col_title16' class='list_app_log_col list_app_log_sort_click'>
-                                            <div>USER AGENT</div>
-                                        </div>
-                                        <div id='list_app_log_col_title17' class='list_app_log_col list_app_log_sort_click'>
-                                            <div>ACCEPT LANGUAGE</div>
-                                        </div>
-                                    </div>`;
-                            break;
-                        }
-                        case 'list_connected':{
-                            html = `<div id='list_connected_row_title' class='list_connected_row'>
-                                        <div id='list_connected_col_title1' class='list_connected_col list_connected_sort_click'>
-                                            <div>ID</div>
-                                        </div>
-                                        <div id='list_connected_col_title5' class='list_connected_col list_connected_sort_click'>
-                                            <div>CONNECTION DATE</div>
-                                        </div>
-                                        <div id='list_connected_col_title2' class='list_connected_col list_connected_sort_click'>
-                                            <div>APP ID</div>
-                                        </div>
-                                        <div id='list_connected_col_title3' class='list_connected_col list_connected_sort_click'>
-                                            <div>USER ID</div>
-                                        </div>
-                                        <div id='list_connected_col_title6' class='list_connected_col list_connected_sort_click'>
-                                            <div>IP</div>
-                                        </div>
-                                        <div id='list_connected_col_title7' class='list_connected_col list_connected_sort_click'>
-                                            <div>GPS LAT</div>
-                                        </div>
-                                        <div id='list_connected_col_title8' class='list_connected_col list_connected_sort_click'>
-                                            <div>GPS LONG</div>
-                                        </div>
-                                        <div id='list_connected_col_title4' class='list_connected_col list_connected_sort_click'>
-                                            <div>USER AGENT</div>
-                                        </div>
-                                        <div id='list_connected_col_title9' class='list_connected_col'>
-                                            <div>BROADCAST</div>
-                                        </div>
-                                    </div>`;
-                            break;
-                        }
-                        case 'list_server_log':{
-                            html =`<div id='list_server_log_row_title' class='list_server_log_row'>
-                                        <div id='list_server_log_col_title1' class='list_server_log_col list_server_log_sort_click'>
-                                            <div>LOGDATE</div>
-                                        </div>
-                                        <div id='list_server_log_col_title3' class='list_server_log_col list_server_log_sort_click'>
-                                            <div>HOST</div>
-                                        </div>
-                                        <div id='list_server_log_col_title11' class='list_server_log_col list_server_log_sort_click'>
-                                            <div>APP ID</div>
-                                        </div>
-                                        <div id='list_server_log_col_title2' class='list_server_log_col list_server_log_sort_click'>
-                                            <div>IP</div>
-                                        </div>
-                                        <div id='list_server_log_col_title4' class='list_server_log_col list_server_log_sort_click'>
-                                            <div>PROTOCOL</div>
-                                        </div>
-                                        <div id='list_server_log_col_title5' class='list_server_log_col list_server_log_sort_click'>
-                                            <div>URL</div>
-                                        </div>
-                                        <div id='list_server_log_col_title6' class='list_server_log_col list_server_log_sort_click'>
-                                            <div>METHOD</div>
-                                        </div>
-                                        <div id='list_server_log_col_title7' class='list_server_log_col list_server_log_sort_click'>
-                                            <div>STATUSCODE</div>
-                                        </div>
-                                        <div id='list_server_log_col_title8' class='list_server_log_col list_server_log_sort_click'>
-                                            <div>USER AGENT</div>
-                                        </div>
-                                        <div id='list_server_log_col_title9' class='list_server_log_col list_server_log_sort_click'>
-                                            <div>ACCEPT LANGUAGE</div>
-                                        </div>
-                                        <div id='list_server_log_col_title10' class='list_server_log_col list_server_log_sort_click'>
-                                            <div>HTTP REFERER</div>
-                                        </div>
-                                        <div id='list_server_log_col_title12' class='list_server_log_col list_server_log_sort_click'>
-                                            <div>APP FILENAME</div>
-                                        </div>
-                                        <div id='list_server_log_col_title13' class='list_server_log_col list_server_log_sort_click'>
-                                            <div>APP FUNCTION NAME</div>
-                                        </div>
-                                        <div id='list_server_log_col_title14' class='list_server_log_col list_server_log_sort_click'>
-                                            <div>APP APP LINE</div>
-                                        </div>
-                                        <div id='list_server_log_col_title15' class='list_server_log_col list_server_log_sort_click'>
-                                            <div>LOG TEXT</div>
-                                        </div>
-                                    </div>`;
-                            break;
-                        }
-                        case 'list_pm2_log':{
-                            document.getElementById(list_div + '_path').innerHTML = json.path + json.file;
-                            html_out = `<div id='list_pm2_log_out_row_title' class='list_pm2_log_row'>
-                                            <div id='list_pm2_log_out_col_title1' class='list_pm2_log_col'>
-                                                <div>TIMESTAMP</div>
-                                            </div>
-                                            <div id='list_pm2_log_out_col_title2' class='list_pm2_log_col'>
-                                                <div>APP_NAME</div>
-                                            </div>
-                                            <div id='list_pm2_log_out_col_title3' class='list_pm2_log_col'>
-                                                <div>PROCESS_ID</div>
-                                            </div>
-                                            <div id='list_pm2_log_out_col_title4' class='list_pm2_log_col'>
-                                                <div>MESSAGE</div>
-                                            </div>
-                                        </div>`;
-                            html_err = `<div id='list_pm2_log_err_row_title' class='list_pm2_log_row'>
-                                            <div id='list_pm2_log_err_col_title1' class='list_pm2_log_col'>
-                                                <div>TIMESTAMP</div>
-                                            </div>
-                                            <div id='list_pm2_log_err_col_title2' class='list_pm2_log_col'>
-                                                <div>APP_NAME</div>
-                                            </div>
-                                            <div id='list_pm2_log_err_col_title3' class='list_pm2_log_col'>
-                                                <div>PROCESS_ID</div>
-                                            </div>
-                                            <div id='list_pm2_log_err_col_title4' class='list_pm2_log_col'>
-                                                <div>MESSAGE</div>
-                                            </div>
-                                        </div>`;
-                            html_process_event = `<div id='list_pm2_log_process_event_row_title' class='list_pm2_log_row'>
-                                                    <div id='list_pm2_log_process_event_col_title2' class='list_pm2_log_process_event_col'>
-                                                        <div>TIMESTAMP</div>
-                                                    </div>
-                                                    <div id='list_pm2_log_process_event_col_title5' class='list_pm2_log_process_event_col'>
-                                                        <div>APP_NAME</div>
-                                                    </div>
-                                                    <div id='list_pm2_log_process_event_col_title4' class='list_pm2_log_process_event_col'>
-                                                        <div>STATUS</div>
-                                                    </div>
-                                                </div>`;
-                            break;
-                        }
+                let html = '';
+                let html_out = '';
+                let html_err = '';
+                let html_process_event = '';
+                switch (list_div){
+                    /*
+                    use this grouping to decide column orders
+                    [log colums][server columns][user columns][detail columms][app columns(broadcast, edit etc)]
+                    */
+                    case 'list_app_log':{
+                        window.global_page_last = Math.floor(json.data[0].total_rows/window.global_limit) * window.global_limit;
+                        html = `<div id='list_app_log_row_title' class='list_app_log_row'>
+                                    <div id='list_app_log_col_title1' class='list_app_log_col list_app_log_sort_click'>
+                                        <div>ID</div>
+                                    </div>
+                                    <div id='list_app_log_col_title2' class='list_app_log_col list_app_log_sort_click'>
+                                        <div>DATE</div>
+                                    </div>
+                                    <div id='list_app_log_col_title3' class='list_app_log_col list_app_log_sort_click'>
+                                        <div>HOST</div>
+                                    </div>
+                                    <div id='list_app_log_col_title3' class='list_app_log_col list_app_log_sort_click'>
+                                        <div>APP ID</div>
+                                    </div>
+                                    <div id='list_app_log_col_title4' class='list_app_log_col list_app_log_sort_click'>
+                                        <div>MODULE</div>
+                                    </div>
+                                    <div id='list_app_log_col_title5' class='list_app_log_col list_app_log_sort_click'>
+                                        <div>MODULE TYPE</div>
+                                    </div>
+                                    <div id='list_app_log_col_title6' class='list_app_log_col list_app_log_sort_click'>
+                                        <div>MODULE REQUEST</div>
+                                    </div>
+                                    <div id='list_app_log_col_title7' class='list_app_log_col list_app_log_sort_click'>
+                                        <div>MODULE RESULT</div>
+                                    </div>
+                                    <div id='list_app_log_col_title8' class='list_app_log_col list_app_log_sort_click'>
+                                        <div>USER ID</div>
+                                    </div>
+                                    <div id='list_app_log_col_title9' class='list_app_log_col list_app_log_sort_click'>
+                                        <div>IP</div>
+                                    </div>
+                                    <div id='list_app_log_col_title10' class='list_app_log_col list_app_log_sort_click'>
+                                        <div>GPS LAT</div>
+                                    </div>
+                                    <div id='list_app_log_col_title11' class='list_app_log_col list_app_log_sort_click'>
+                                        <div>GPS LONG</div>
+                                    </div>
+                                    <div id='list_app_log_col_title12' class='list_app_log_col list_app_log_sort_click'>
+                                        <div>USER LANGUAGE</div>
+                                    </div>
+                                    <div id='list_app_log_col_title13' class='list_app_log_col list_app_log_sort_click'>
+                                        <div>USER TIMEZONE</div>
+                                    </div>
+                                    <div id='list_app_log_col_title14' class='list_app_log_col list_app_log_sort_click'>
+                                        <div>USER NUMBER_SYSTEM</div>
+                                    </div>
+                                    <div id='list_app_log_col_title15' class='list_app_log_col list_app_log_sort_click'>
+                                        <div>USER PLATFORM</div>
+                                    </div>
+                                    <div id='list_app_log_col_title16' class='list_app_log_col list_app_log_sort_click'>
+                                        <div>USER AGENT</div>
+                                    </div>
+                                    <div id='list_app_log_col_title17' class='list_app_log_col list_app_log_sort_click'>
+                                        <div>ACCEPT LANGUAGE</div>
+                                    </div>
+                                </div>`;
+                        break;
                     }
-                    if (json.data.length >0){
-                        for (i = 0; i < json.data.length; i++) {
-                            switch (list_div){
-                                case 'list_app_log':{
-                                    html += `<div class='list_app_log_row'>
-                                                <div class='list_app_log_col'>
-                                                    <div>${json.data[i].id}</div>
+                    case 'list_connected':{
+                        html = `<div id='list_connected_row_title' class='list_connected_row'>
+                                    <div id='list_connected_col_title1' class='list_connected_col list_connected_sort_click'>
+                                        <div>ID</div>
+                                    </div>
+                                    <div id='list_connected_col_title5' class='list_connected_col list_connected_sort_click'>
+                                        <div>CONNECTION DATE</div>
+                                    </div>
+                                    <div id='list_connected_col_title2' class='list_connected_col list_connected_sort_click'>
+                                        <div>APP ID</div>
+                                    </div>
+                                    <div id='list_connected_col_title3' class='list_connected_col list_connected_sort_click'>
+                                        <div>USER ID</div>
+                                    </div>
+                                    <div id='list_connected_col_title6' class='list_connected_col list_connected_sort_click'>
+                                        <div>IP</div>
+                                    </div>
+                                    <div id='list_connected_col_title7' class='list_connected_col list_connected_sort_click'>
+                                        <div>GPS LAT</div>
+                                    </div>
+                                    <div id='list_connected_col_title8' class='list_connected_col list_connected_sort_click'>
+                                        <div>GPS LONG</div>
+                                    </div>
+                                    <div id='list_connected_col_title4' class='list_connected_col list_connected_sort_click'>
+                                        <div>USER AGENT</div>
+                                    </div>
+                                    <div id='list_connected_col_title9' class='list_connected_col'>
+                                        <div>BROADCAST</div>
+                                    </div>
+                                </div>`;
+                        break;
+                    }
+                    case 'list_server_log':{
+                        html =`<div id='list_server_log_row_title' class='list_server_log_row'>
+                                    <div id='list_server_log_col_title1' class='list_server_log_col list_server_log_sort_click'>
+                                        <div>LOGDATE</div>
+                                    </div>
+                                    <div id='list_server_log_col_title3' class='list_server_log_col list_server_log_sort_click'>
+                                        <div>HOST</div>
+                                    </div>
+                                    <div id='list_server_log_col_title11' class='list_server_log_col list_server_log_sort_click'>
+                                        <div>APP ID</div>
+                                    </div>
+                                    <div id='list_server_log_col_title2' class='list_server_log_col list_server_log_sort_click'>
+                                        <div>IP</div>
+                                    </div>
+                                    <div id='list_server_log_col_title4' class='list_server_log_col list_server_log_sort_click'>
+                                        <div>PROTOCOL</div>
+                                    </div>
+                                    <div id='list_server_log_col_title5' class='list_server_log_col list_server_log_sort_click'>
+                                        <div>URL</div>
+                                    </div>
+                                    <div id='list_server_log_col_title6' class='list_server_log_col list_server_log_sort_click'>
+                                        <div>METHOD</div>
+                                    </div>
+                                    <div id='list_server_log_col_title7' class='list_server_log_col list_server_log_sort_click'>
+                                        <div>STATUSCODE</div>
+                                    </div>
+                                    <div id='list_server_log_col_title8' class='list_server_log_col list_server_log_sort_click'>
+                                        <div>USER AGENT</div>
+                                    </div>
+                                    <div id='list_server_log_col_title9' class='list_server_log_col list_server_log_sort_click'>
+                                        <div>ACCEPT LANGUAGE</div>
+                                    </div>
+                                    <div id='list_server_log_col_title10' class='list_server_log_col list_server_log_sort_click'>
+                                        <div>HTTP REFERER</div>
+                                    </div>
+                                    <div id='list_server_log_col_title12' class='list_server_log_col list_server_log_sort_click'>
+                                        <div>APP FILENAME</div>
+                                    </div>
+                                    <div id='list_server_log_col_title13' class='list_server_log_col list_server_log_sort_click'>
+                                        <div>APP FUNCTION NAME</div>
+                                    </div>
+                                    <div id='list_server_log_col_title14' class='list_server_log_col list_server_log_sort_click'>
+                                        <div>APP APP LINE</div>
+                                    </div>
+                                    <div id='list_server_log_col_title15' class='list_server_log_col list_server_log_sort_click'>
+                                        <div>LOG TEXT</div>
+                                    </div>
+                                </div>`;
+                        break;
+                    }
+                    case 'list_pm2_log':{
+                        document.getElementById(list_div + '_path').innerHTML = json.path + json.file;
+                        html_out = `<div id='list_pm2_log_out_row_title' class='list_pm2_log_row'>
+                                        <div id='list_pm2_log_out_col_title1' class='list_pm2_log_col'>
+                                            <div>TIMESTAMP</div>
+                                        </div>
+                                        <div id='list_pm2_log_out_col_title2' class='list_pm2_log_col'>
+                                            <div>APP_NAME</div>
+                                        </div>
+                                        <div id='list_pm2_log_out_col_title3' class='list_pm2_log_col'>
+                                            <div>PROCESS_ID</div>
+                                        </div>
+                                        <div id='list_pm2_log_out_col_title4' class='list_pm2_log_col'>
+                                            <div>MESSAGE</div>
+                                        </div>
+                                    </div>`;
+                        html_err = `<div id='list_pm2_log_err_row_title' class='list_pm2_log_row'>
+                                        <div id='list_pm2_log_err_col_title1' class='list_pm2_log_col'>
+                                            <div>TIMESTAMP</div>
+                                        </div>
+                                        <div id='list_pm2_log_err_col_title2' class='list_pm2_log_col'>
+                                            <div>APP_NAME</div>
+                                        </div>
+                                        <div id='list_pm2_log_err_col_title3' class='list_pm2_log_col'>
+                                            <div>PROCESS_ID</div>
+                                        </div>
+                                        <div id='list_pm2_log_err_col_title4' class='list_pm2_log_col'>
+                                            <div>MESSAGE</div>
+                                        </div>
+                                    </div>`;
+                        html_process_event = `<div id='list_pm2_log_process_event_row_title' class='list_pm2_log_row'>
+                                                <div id='list_pm2_log_process_event_col_title2' class='list_pm2_log_process_event_col'>
+                                                    <div>TIMESTAMP</div>
                                                 </div>
-                                                <div class='list_app_log_col'>
-                                                    <div>${json.data[i].date_created}</div>
+                                                <div id='list_pm2_log_process_event_col_title5' class='list_pm2_log_process_event_col'>
+                                                    <div>APP_NAME</div>
                                                 </div>
-                                                <div class='list_app_log_col'>
-                                                    <div>${json.data[i].server_http_host}</div>
-                                                </div>
-                                                <div class='list_app_log_col'>
-                                                    <div>${json.data[i].app_id}</div>
-                                                </div>
-                                                <div class='list_app_log_col'>
-                                                    <div>${json.data[i].app_module}</div>
-                                                </div>
-                                                <div class='list_app_log_col'>
-                                                    <div>${json.data[i].app_module_type}</div>
-                                                </div>
-                                                <div class='list_app_log_col'>
-                                                    <div>${json.data[i].app_module_request}</div>
-                                                </div>
-                                                <div class='list_app_log_col'>
-                                                    <div>${json.data[i].app_module_result}</div>
-                                                </div>
-                                                <div class='list_app_log_col'>
-                                                    <div>${json.data[i].app_user_id}</div>
-                                                </div>
-                                                <div class='list_app_log_col'>
-                                                    <div>${json.data[i].server_remote_addr.replace('::ffff:','')}</div>
-                                                </div>
-                                                <div class='list_app_log_col list_app_log_gps_click gps_click'>
-                                                    <div>${json.data[i].client_latitude}</div>
-                                                </div>
-                                                <div class='list_app_log_col list_app_log_gps_click gps_click'>
-                                                    <div>${json.data[i].client_longitude}</div>
-                                                </div>
-                                                <div class='list_app_log_col'>
-                                                    <div>${json.data[i].user_language}</div>
-                                                </div>
-                                                <div class='list_app_log_col'>
-                                                    <div>${json.data[i].user_timezone}</div>
-                                                </div>
-                                                <div class='list_app_log_col'>
-                                                    <div>${json.data[i].user_number_system}</div>
-                                                </div>
-                                                <div class='list_app_log_col'>
-                                                    <div>${json.data[i].user_platform}</div>
-                                                </div>
-                                                <div class='list_app_log_col'>
-                                                    <div>${json.data[i].server_user_agent}</div>
-                                                </div>
-                                                <div class='list_app_log_col'>
-                                                    <div>${json.data[i].server_http_accept_language}</div>
-                                                </div>
-                                            </div>`;
-                                    break;
-                                }
-                                case 'list_connected':{
-                                    html += `<div class='list_connected_row'>
-                                                <div class='list_connected_col'>
-                                                    <div>${json.data[i].id}</div>
-                                                </div>
-                                                <div class='list_connected_col'>
-                                                    <div>${json.data[i].connection_date}</div>
-                                                </div>
-                                                <div class='list_connected_col'>
-                                                    <div>${json.data[i].app_id}</div>
-                                                </div>
-                                                <div class='list_connected_col'>
-                                                    <div>${json.data[i].user_account_id}</div>
-                                                </div>
-                                                <div class='list_connected_col'>
-                                                    <div>${json.data[i].ip.replace('::ffff:','')}</div>
-                                                </div>
-                                                <div class='list_connected_col list_connected_gps_click gps_click'>
-                                                    <div>${json.data[i].gps_latitude}</div>
-                                                </div>
-                                                <div class='list_connected_col list_connected_gps_click gps_click'>
-                                                    <div>${json.data[i].gps_longitude}</div>
-                                                </div>
-                                                <div class='list_connected_col'>
-                                                    <div>${show_user_agent(json.data[i].user_agent)}</div>
-                                                </div>
-                                                <div class='list_connected_col list_connected_chat_click chat_click'>
-                                                    <div>${window.global_icon_app_chat}</div>
-                                                </div>
-                                            </div>`;
-                                    break;
-                                }
-                                case 'list_server_log':{
-                                    for (i = 0; i < json.data.length; i++) {
-                                        //test if JSON in logtext
-                                        if (typeof json.data[i].logtext === 'object')
-                                            json.data[i].logtext = JSON.stringify(json.data[i].logtext);
-                                        html += 
-                                        `<div class='list_server_log_row'>
-                                            <div class='list_server_log_col'>
-                                                <div>${json.data[i].logdate}</div>
-                                            </div>
-                                            <div class='list_server_log_col'>
-                                                <div>${json.data[i].host}</div>
-                                            </div>
-                                            <div class='list_server_log_col'>
-                                                <div>${json.data[i].app_id}</div>
-                                            </div>
-                                            <div class='list_server_log_col'>
-                                                <div>${json.data[i].ip==""?"":json.data[i].ip.replace('::ffff:','')}</div>
-                                            </div>
-                                            <div class='list_server_log_col'>
-                                                <div>${json.data[i].protocol}</div>
-                                            </div>
-                                            <div class='list_server_log_col'>
-                                                <div>${json.data[i].url}</div>
-                                            </div>
-                                            <div class='list_server_log_col'>
-                                                <div>${json.data[i].method}</div>
-                                            </div>
-                                            <div class='list_server_log_col'>
-                                                <div>${json.data[i].statusCode}</div>
-                                            </div>
-                                            <div class='list_server_log_col'>
-                                                <div>${json.data[i]['user-agent']}</div>
-                                            </div>
-                                            <div class='list_server_log_col'>
-                                                <div>${json.data[i]['accept-language']}</div>
-                                            </div>
-                                            <div class='list_server_log_col'>
-                                                <div>${json.data[i].http_referer}</div>
-                                            </div>
-                                            <div class='list_server_log_col'>
-                                                <div>${json.data[i].app_filename}</div>
-                                            </div>
-                                            <div class='list_server_log_col'>
-                                                <div>${json.data[i].app_function_name}</div>
-                                            </div>
-                                            <div class='list_server_log_col'>
-                                                <div>${json.data[i].app_app_line}</div>
-                                            </div>
-                                            <div class='list_server_log_col'>
-                                                <div>${json.data[i].logtext}</div>
-                                            </div>
-                                        </div>`;
-                                    }
-                                    break;
-                                }
-                                case 'list_pm2_log':{
-                                    //original pm2 attributes:
-                                    //out               message, timestamp, type, process_id, app_name
-                                    //err               message, timestamp, type, process_id, app_name
-                                    //process event,    timestamp, type, status, app_name
-                                    switch (json.data[i].type){
-                                        case 'out':{
-                                            html_out += 
-                                            `<div class='list_pm2_log_row'>
-                                                <div class='list_pm2_log_col'>
-                                                    <div>${json.data[i].timestamp}</div>
-                                                </div>
-                                                <div class='list_pm2_log_col'>
-                                                    <div>${json.data[i].app_name}</div>
-                                                </div>
-                                                <div class='list_pm2_log_col'>
-                                                    <div>${json.data[i].process_id}</div>
-                                                </div>
-                                                <div class='list_pm2_log_col'>
-                                                    <div>${json.data[i].message}</div>
-                                                </div>
-                                            </div>`;        
-                                            break;
-                                        }
-                                        case 'err':{
-                                            html_err += 
-                                            `<div class='list_pm2_log_row'>
-                                                <div class='list_pm2_log_col'>
-                                                    <div>${json.data[i].timestamp}</div>
-                                                </div>
-                                                <div class='list_pm2_log_col'>
-                                                    <div>${json.data[i].app_name}</div>
-                                                </div>
-                                                <div class='list_pm2_log_col'>
-                                                    <div>${json.data[i].process_id}</div>
-                                                </div>
-                                                <div class='list_pm2_log_col'>
-                                                    <div>${json.data[i].message}</div>
+                                                <div id='list_pm2_log_process_event_col_title4' class='list_pm2_log_process_event_col'>
+                                                    <div>STATUS</div>
                                                 </div>
                                             </div>`;
-                                            break;
-                                        }
-                                        case 'process_event':{
-                                            html_process_event += 
-                                            `<div class='list_pm2_log_row'>
-                                                <div class='list_pm2_log_col'>
-                                                    <div>${json.data[i].timestamp}</div>
-                                                </div>
-                                                <div class='list_pm2_log_col'>
-                                                    <div>${json.data[i].app_name}</div>
-                                                </div>
-                                                <div class='list_pm2_log_col'>
-                                                    <div>${json.data[i].status}</div>
-                                                </div>
-                                            </div>`;
-                                            break;
-                                        }
-                                    }
-                                    break;
-                                }
-                            }
-                        }
+                        break;
+                    }
+                }
+                if (json.data.length >0){
+                    for (i = 0; i < json.data.length; i++) {
                         switch (list_div){
                             case 'list_app_log':{
-                                document.getElementById(list_div).innerHTML = html;
-                                document.getElementById(list_div_col_title + sort).classList.add(order_by);
-                                //add events on some columns searching in all rows
-                                set_list_eventlisteners('app_log', 'sort',1);
-                                set_list_eventlisteners('app_log', 'gps',1);
+                                html += `<div class='list_app_log_row'>
+                                            <div class='list_app_log_col'>
+                                                <div>${json.data[i].id}</div>
+                                            </div>
+                                            <div class='list_app_log_col'>
+                                                <div>${json.data[i].date_created}</div>
+                                            </div>
+                                            <div class='list_app_log_col'>
+                                                <div>${json.data[i].server_http_host}</div>
+                                            </div>
+                                            <div class='list_app_log_col'>
+                                                <div>${json.data[i].app_id}</div>
+                                            </div>
+                                            <div class='list_app_log_col'>
+                                                <div>${json.data[i].app_module}</div>
+                                            </div>
+                                            <div class='list_app_log_col'>
+                                                <div>${json.data[i].app_module_type}</div>
+                                            </div>
+                                            <div class='list_app_log_col'>
+                                                <div>${json.data[i].app_module_request}</div>
+                                            </div>
+                                            <div class='list_app_log_col'>
+                                                <div>${json.data[i].app_module_result}</div>
+                                            </div>
+                                            <div class='list_app_log_col'>
+                                                <div>${json.data[i].app_user_id}</div>
+                                            </div>
+                                            <div class='list_app_log_col'>
+                                                <div>${json.data[i].server_remote_addr.replace('::ffff:','')}</div>
+                                            </div>
+                                            <div class='list_app_log_col list_app_log_gps_click gps_click'>
+                                                <div>${json.data[i].client_latitude}</div>
+                                            </div>
+                                            <div class='list_app_log_col list_app_log_gps_click gps_click'>
+                                                <div>${json.data[i].client_longitude}</div>
+                                            </div>
+                                            <div class='list_app_log_col'>
+                                                <div>${json.data[i].user_language}</div>
+                                            </div>
+                                            <div class='list_app_log_col'>
+                                                <div>${json.data[i].user_timezone}</div>
+                                            </div>
+                                            <div class='list_app_log_col'>
+                                                <div>${json.data[i].user_number_system}</div>
+                                            </div>
+                                            <div class='list_app_log_col'>
+                                                <div>${json.data[i].user_platform}</div>
+                                            </div>
+                                            <div class='list_app_log_col'>
+                                                <div>${json.data[i].server_user_agent}</div>
+                                            </div>
+                                            <div class='list_app_log_col'>
+                                                <div>${json.data[i].server_http_accept_language}</div>
+                                            </div>
+                                        </div>`;
                                 break;
                             }
                             case 'list_connected':{
-                                document.getElementById(list_div).innerHTML = html;
-                                document.getElementById(list_div_col_title + sort).classList.add(order_by);
-                                //add sort events on title
-                                set_list_eventlisteners('connected', 'sort',1);
-                                //add events on some columns searching in all rows
-                                set_list_eventlisteners('connected', 'gps',1);
-                                set_list_eventlisteners('connected', 'chat',1);
+                                html += `<div class='list_connected_row'>
+                                            <div class='list_connected_col'>
+                                                <div>${json.data[i].id}</div>
+                                            </div>
+                                            <div class='list_connected_col'>
+                                                <div>${json.data[i].connection_date}</div>
+                                            </div>
+                                            <div class='list_connected_col'>
+                                                <div>${json.data[i].app_id}</div>
+                                            </div>
+                                            <div class='list_connected_col'>
+                                                <div>${json.data[i].user_account_id}</div>
+                                            </div>
+                                            <div class='list_connected_col'>
+                                                <div>${json.data[i].ip.replace('::ffff:','')}</div>
+                                            </div>
+                                            <div class='list_connected_col list_connected_gps_click gps_click'>
+                                                <div>${json.data[i].gps_latitude}</div>
+                                            </div>
+                                            <div class='list_connected_col list_connected_gps_click gps_click'>
+                                                <div>${json.data[i].gps_longitude}</div>
+                                            </div>
+                                            <div class='list_connected_col'>
+                                                <div>${show_user_agent(json.data[i].user_agent)}</div>
+                                            </div>
+                                            <div class='list_connected_col list_connected_chat_click chat_click'>
+                                                <div>${window.global_icon_app_chat}</div>
+                                            </div>
+                                        </div>`;
                                 break;
                             }
                             case 'list_server_log':{
-                                document.getElementById(list_div).innerHTML = html;
-                                document.getElementById(list_div_col_title + sort).classList.add(order_by);
-                                //add events on some columns searching in all rows
-                                set_list_eventlisteners('server_log', 'sort',1);
+                                for (i = 0; i < json.data.length; i++) {
+                                    //test if JSON in logtext
+                                    if (typeof json.data[i].logtext === 'object')
+                                        json.data[i].logtext = JSON.stringify(json.data[i].logtext);
+                                    html += 
+                                    `<div class='list_server_log_row'>
+                                        <div class='list_server_log_col'>
+                                            <div>${json.data[i].logdate}</div>
+                                        </div>
+                                        <div class='list_server_log_col'>
+                                            <div>${json.data[i].host}</div>
+                                        </div>
+                                        <div class='list_server_log_col'>
+                                            <div>${json.data[i].app_id}</div>
+                                        </div>
+                                        <div class='list_server_log_col'>
+                                            <div>${json.data[i].ip==""?"":json.data[i].ip.replace('::ffff:','')}</div>
+                                        </div>
+                                        <div class='list_server_log_col'>
+                                            <div>${json.data[i].protocol}</div>
+                                        </div>
+                                        <div class='list_server_log_col'>
+                                            <div>${json.data[i].url}</div>
+                                        </div>
+                                        <div class='list_server_log_col'>
+                                            <div>${json.data[i].method}</div>
+                                        </div>
+                                        <div class='list_server_log_col'>
+                                            <div>${json.data[i].statusCode}</div>
+                                        </div>
+                                        <div class='list_server_log_col'>
+                                            <div>${json.data[i]['user-agent']}</div>
+                                        </div>
+                                        <div class='list_server_log_col'>
+                                            <div>${json.data[i]['accept-language']}</div>
+                                        </div>
+                                        <div class='list_server_log_col'>
+                                            <div>${json.data[i].http_referer}</div>
+                                        </div>
+                                        <div class='list_server_log_col'>
+                                            <div>${json.data[i].app_filename}</div>
+                                        </div>
+                                        <div class='list_server_log_col'>
+                                            <div>${json.data[i].app_function_name}</div>
+                                        </div>
+                                        <div class='list_server_log_col'>
+                                            <div>${json.data[i].app_app_line}</div>
+                                        </div>
+                                        <div class='list_server_log_col'>
+                                            <div>${json.data[i].logtext}</div>
+                                        </div>
+                                    </div>`;
+                                }
                                 break;
                             }
                             case 'list_pm2_log':{
-                                document.getElementById(list_div + '_out').innerHTML = html_out;
-                                document.getElementById(list_div + '_err').innerHTML = html_err;
-                                document.getElementById(list_div + '_process_event').innerHTML = html_process_event;
+                                //original pm2 attributes:
+                                //out               message, timestamp, type, process_id, app_name
+                                //err               message, timestamp, type, process_id, app_name
+                                //process event,    timestamp, type, status, app_name
+                                switch (json.data[i].type){
+                                    case 'out':{
+                                        html_out += 
+                                        `<div class='list_pm2_log_row'>
+                                            <div class='list_pm2_log_col'>
+                                                <div>${json.data[i].timestamp}</div>
+                                            </div>
+                                            <div class='list_pm2_log_col'>
+                                                <div>${json.data[i].app_name}</div>
+                                            </div>
+                                            <div class='list_pm2_log_col'>
+                                                <div>${json.data[i].process_id}</div>
+                                            </div>
+                                            <div class='list_pm2_log_col'>
+                                                <div>${json.data[i].message}</div>
+                                            </div>
+                                        </div>`;        
+                                        break;
+                                    }
+                                    case 'err':{
+                                        html_err += 
+                                        `<div class='list_pm2_log_row'>
+                                            <div class='list_pm2_log_col'>
+                                                <div>${json.data[i].timestamp}</div>
+                                            </div>
+                                            <div class='list_pm2_log_col'>
+                                                <div>${json.data[i].app_name}</div>
+                                            </div>
+                                            <div class='list_pm2_log_col'>
+                                                <div>${json.data[i].process_id}</div>
+                                            </div>
+                                            <div class='list_pm2_log_col'>
+                                                <div>${json.data[i].message}</div>
+                                            </div>
+                                        </div>`;
+                                        break;
+                                    }
+                                    case 'process_event':{
+                                        html_process_event += 
+                                        `<div class='list_pm2_log_row'>
+                                            <div class='list_pm2_log_col'>
+                                                <div>${json.data[i].timestamp}</div>
+                                            </div>
+                                            <div class='list_pm2_log_col'>
+                                                <div>${json.data[i].app_name}</div>
+                                            </div>
+                                            <div class='list_pm2_log_col'>
+                                                <div>${json.data[i].status}</div>
+                                            </div>
+                                        </div>`;
+                                        break;
+                                    }
+                                }
                                 break;
                             }
                         }
-                    }   
-                }
+                    }
+                    switch (list_div){
+                        case 'list_app_log':{
+                            document.getElementById(list_div).innerHTML = html;
+                            document.getElementById(list_div_col_title + sort).classList.add(order_by);
+                            //add events on some columns searching in all rows
+                            set_list_eventlisteners('app_log', 'sort',1);
+                            set_list_eventlisteners('app_log', 'gps',1);
+                            break;
+                        }
+                        case 'list_connected':{
+                            document.getElementById(list_div).innerHTML = html;
+                            document.getElementById(list_div_col_title + sort).classList.add(order_by);
+                            //add sort events on title
+                            set_list_eventlisteners('connected', 'sort',1);
+                            //add events on some columns searching in all rows
+                            set_list_eventlisteners('connected', 'gps',1);
+                            set_list_eventlisteners('connected', 'chat',1);
+                            break;
+                        }
+                        case 'list_server_log':{
+                            document.getElementById(list_div).innerHTML = html;
+                            document.getElementById(list_div_col_title + sort).classList.add(order_by);
+                            //add events on some columns searching in all rows
+                            set_list_eventlisteners('server_log', 'sort',1);
+                            break;
+                        }
+                        case 'list_pm2_log':{
+                            document.getElementById(list_div + '_out').innerHTML = html_out;
+                            document.getElementById(list_div + '_err').innerHTML = html_err;
+                            document.getElementById(list_div + '_process_event').innerHTML = html_process_event;
+                            break;
+                        }
+                    }
+                }   
             }
         })        
     }
@@ -811,116 +809,114 @@ async function show_chart(chart){
             else{
                 json = JSON.parse(result);
                 document.getElementById(`box${chart}_title`).innerHTML = old_html;
-                if (json.success == 1){
-                    //document.getElementById(`box${chart}`).innerHTML = `<canvas id="Chart${chart}"></canvas>`;
-                    const ctx = document.getElementById(`Chart${chart}`).getContext('2d');
-                    if (chart==1){
-                        let app_id_array = [];
+                //document.getElementById(`box${chart}`).innerHTML = `<canvas id="Chart${chart}"></canvas>`;
+                const ctx = document.getElementById(`Chart${chart}`).getContext('2d');
+                if (chart==1){
+                    let app_id_array = [];
+                    let amount_array = [];
+                    function SearchAndGetText(item, search){
+                        for (let i=0;i<item.options.length;i++){
+                            if (item.options[i].value == search)
+                                return item.options[i].text
+                        }
+                        return null;
+                    }
+                    for (let i = 0; i < json.data.length; i++) {
+                        if (json.data[i].app_id>0){
+                            app_id_array.push(SearchAndGetText(document.getElementById('select_app_menu1'), json.data[i].app_id));
+                            amount_array.push(json.data[i].amount);
+                        }
+                    }
+                    const pieChart = new Chart(ctx, {
+                        type: 'pie',
+                        data: {
+                            labels: app_id_array,
+                            datasets: [{
+                                label: '',
+                                data: amount_array,
+                                backgroundColor: [
+                                    'rgba(255, 99, 132, 1)',
+                                    'rgba(54, 162, 235, 1)',
+                                    'rgba(255, 206, 86, 1)'
+                                ]
+                            }]
+                        },
+                        options: {
+                            responsive:true
+                        }
+                        
+                    });
+                }
+                else
+                    if (chart==2){
+                        let day_array = [];
                         let amount_array = [];
-                        function SearchAndGetText(item, search){
-                            for (let i=0;i<item.options.length;i++){
-                                if (item.options[i].value == search)
-                                    return item.options[i].text
-                            }
-                            return null;
-                        }
+                        let bar_color;
+                        if (app_id == '')
+                            bar_color = 'rgb(81, 171, 255)';
+                        else
+                            bar_color = 'rgb(197 227 255)';
                         for (let i = 0; i < json.data.length; i++) {
-                            if (json.data[i].app_id>0){
-                                app_id_array.push(SearchAndGetText(document.getElementById('select_app_menu1'), json.data[i].app_id));
-                                amount_array.push(json.data[i].amount);
-                            }
+                            day_array.push(json.data[i].day);
+                            amount_array.push(json.data[i].amount);
                         }
-                        const pieChart = new Chart(ctx, {
-                            type: 'pie',
+                        const barChart = new Chart(ctx, {
+                            type: 'bar',
                             data: {
-                                labels: app_id_array,
+                                labels: day_array,
                                 datasets: [{
-                                    label: '',
+                                    label:document.getElementById('select_app_menu1').options[document.getElementById('select_app_menu1').selectedIndex].text,
                                     data: amount_array,
                                     backgroundColor: [
-                                        'rgba(255, 99, 132, 1)',
-                                        'rgba(54, 162, 235, 1)',
-                                        'rgba(255, 206, 86, 1)'
+                                        bar_color,
+                                        bar_color,
+                                        bar_color,
+                                        bar_color,
+                                        bar_color,
+                                        bar_color,
+                                        bar_color,
+                                        bar_color,
+                                        bar_color,
+                                        bar_color,
+                                        bar_color,
+                                        bar_color,
+                                        bar_color,
+                                        bar_color,
+                                        bar_color,
+                                        bar_color,
+                                        bar_color,
+                                        bar_color,
+                                        bar_color,
+                                        bar_color,
+                                        bar_color,
+                                        bar_color,
+                                        bar_color,
+                                        bar_color,
+                                        bar_color,
+                                        bar_color,
+                                        bar_color,
+                                        bar_color,
+                                        bar_color,
+                                        bar_color,
+                                        bar_color
                                     ]
                                 }]
                             },
                             options: {
-                                responsive:true
-                            }
-                            
-                        });
-                    }
-                    else
-                        if (chart==2){
-                            let day_array = [];
-                            let amount_array = [];
-                            let bar_color;
-                            if (app_id == '')
-                                bar_color = 'rgb(81, 171, 255)';
-                            else
-                                bar_color = 'rgb(197 227 255)';
-                            for (let i = 0; i < json.data.length; i++) {
-                                day_array.push(json.data[i].day);
-                                amount_array.push(json.data[i].amount);
-                            }
-                            const barChart = new Chart(ctx, {
-                                type: 'bar',
-                                data: {
-                                    labels: day_array,
-                                    datasets: [{
-                                        label:document.getElementById('select_app_menu1').options[document.getElementById('select_app_menu1').selectedIndex].text,
-                                        data: amount_array,
-                                        backgroundColor: [
-                                            bar_color,
-                                            bar_color,
-                                            bar_color,
-                                            bar_color,
-                                            bar_color,
-                                            bar_color,
-                                            bar_color,
-                                            bar_color,
-                                            bar_color,
-                                            bar_color,
-                                            bar_color,
-                                            bar_color,
-                                            bar_color,
-                                            bar_color,
-                                            bar_color,
-                                            bar_color,
-                                            bar_color,
-                                            bar_color,
-                                            bar_color,
-                                            bar_color,
-                                            bar_color,
-                                            bar_color,
-                                            bar_color,
-                                            bar_color,
-                                            bar_color,
-                                            bar_color,
-                                            bar_color,
-                                            bar_color,
-                                            bar_color,
-                                            bar_color,
-                                            bar_color
-                                        ]
-                                    }]
+                                responsive:true,
+                                scale: {
+                                    ticks: {
+                                        precision: 0
+                                    }
                                 },
-                                options: {
-                                    responsive:true,
-                                    scale: {
-                                        ticks: {
-                                            precision: 0
-                                        }
-                                    },
-                                    plugins: {
-                                        title: {
-                                            display: false
-                                        }
+                                plugins: {
+                                    title: {
+                                        display: false
                                     }
                                 }
-                            });
-                        }       
-                }
+                            }
+                        });
+                    }       
             }
         })
     }
@@ -1045,55 +1041,53 @@ async function show_apps(){
             document.getElementById('list_apps').innerHTML = '';
         else{
             json = JSON.parse(result);
-            if (json.success === 1){
-                let list_apps = document.getElementById('list_apps');
-                list_apps.innerHTML = '';
-                let html = `<div id='list_apps_row_title' class='list_apps_row'>
-                                <div id='list_apps_col_title1' class='list_apps_col'>
-                                    <div>ID</div>
-                                </div>
-                                <div id='list_apps_col_title2' class='list_apps_col'>
-                                    <div>NAME</div>
-                                </div>
-                                <div id='list_apps_col_title3' class='list_apps_col'>
-                                    <div>URL</div>
-                                </div>
-                                <div id='list_apps_col_title4' class='list_apps_col'>
-                                    <div>LOGO</div>
-                                </div>
-                                <div id='list_apps_col_title5' class='list_apps_col'>
-                                    <div>ENABLED</div>
-                                </div>
-                            </div>`;
-                for (i = 0; i < json.data.length; i++) {
-                    html += 
-                    `<div id='list_apps_row_${i}' data-changed-record='0' class='list_apps_row' >
-                        <div class='list_apps_col'>
-                            <div class='list_readonly_app'>${json.data[i].id}</div>
-                        </div>
-                        <div class='list_apps_col'>
-                            <input type=text class='list_edit_app' value='${json.data[i].app_name}'>
-                        </div>
-                        <div class='list_apps_col'>
-                            <input type=text class='list_edit_app' value='${json.data[i].url}'>
-                        </div>
-                        <div class='list_apps_col'>
-                            <input type=text class='list_edit_app' value='${json.data[i].logo}'>
-                        </div>
-                        <div class='list_apps_col'>
-                            <input type='checkbox' class='list_edit_app' ${json.data[i].enabled==1?'checked':''} />
-                        </div>
-                    </div>`;
-                }
-                list_apps.innerHTML = html;
-                list_events('list_apps_row', '.list_edit_app', 1);
-                //disable enebaled checkbox for app 0 common
-                document.getElementById('list_apps_row_0').children[4].children[0].disabled = true;
-
-                //set focus first column in first row
-                //this will trigger to show detail records
-                document.querySelectorAll('.list_edit_app')[0].focus();
+            let list_apps = document.getElementById('list_apps');
+            list_apps.innerHTML = '';
+            let html = `<div id='list_apps_row_title' class='list_apps_row'>
+                            <div id='list_apps_col_title1' class='list_apps_col'>
+                                <div>ID</div>
+                            </div>
+                            <div id='list_apps_col_title2' class='list_apps_col'>
+                                <div>NAME</div>
+                            </div>
+                            <div id='list_apps_col_title3' class='list_apps_col'>
+                                <div>URL</div>
+                            </div>
+                            <div id='list_apps_col_title4' class='list_apps_col'>
+                                <div>LOGO</div>
+                            </div>
+                            <div id='list_apps_col_title5' class='list_apps_col'>
+                                <div>ENABLED</div>
+                            </div>
+                        </div>`;
+            for (i = 0; i < json.data.length; i++) {
+                html += 
+                `<div id='list_apps_row_${i}' data-changed-record='0' class='list_apps_row' >
+                    <div class='list_apps_col'>
+                        <div class='list_readonly_app'>${json.data[i].id}</div>
+                    </div>
+                    <div class='list_apps_col'>
+                        <input type=text class='list_edit_app' value='${json.data[i].app_name}'>
+                    </div>
+                    <div class='list_apps_col'>
+                        <input type=text class='list_edit_app' value='${json.data[i].url}'>
+                    </div>
+                    <div class='list_apps_col'>
+                        <input type=text class='list_edit_app' value='${json.data[i].logo}'>
+                    </div>
+                    <div class='list_apps_col'>
+                        <input type='checkbox' class='list_edit_app' ${json.data[i].enabled==1?'checked':''} />
+                    </div>
+                </div>`;
             }
+            list_apps.innerHTML = html;
+            list_events('list_apps_row', '.list_edit_app', 1);
+            //disable enebaled checkbox for app 0 common
+            document.getElementById('list_apps_row_0').children[4].children[0].disabled = true;
+
+            //set focus first column in first row
+            //this will trigger to show detail records
+            document.querySelectorAll('.list_edit_app')[0].focus();
         }
     })
 }
@@ -1107,58 +1101,56 @@ function show_app_parameter(app_id){
             document.getElementById('list_app_parameter').innerHTML = '';
         else{
             json = JSON.parse(result);
-            if (json.success === 1){
-                let list_app_parameter = document.getElementById('list_app_parameter');
-                list_app_parameter.innerHTML = '';
-                let html = `<div id='list_app_parameter_row_title' class='list_app_parameter_row'>
-                                <div id='list_app_parameter_col_title1' class='list_app_parameter_col'>
-                                    <div>APP ID</div>
-                                </div>
-                                <div id='list_app_parameter_col_title1' class='list_app_parameter_col'>
-                                    <div>TYPE ID</div>
-                                </div>
-                                <div id='list_app_parameter_col_title1' class='list_app_parameter_col'>
-                                    <div>TYPE NAME</div>
-                                </div>
-                                <div id='list_app_parameter_col_title2' class='list_app_parameter_col'>
-                                    <div>NAME</div>
-                                </div>
-                                <div id='list_app_parameter_col_title3' class='list_app_parameter_col'>
-                                    <div>VALUE</div>
-                                </div>
-                                <div id='list_app_parameter_col_title4' class='list_app_parameter_col'>
-                                    <div>COMMENT</div>
-                                </div>
-                            </div>`;
-                for (i = 0; i < json.data.length; i++) {
-                    html += 
-                    `<div id='list_app_parameter_row_${i}' data-changed-record='0' class='list_app_parameter_row'>
-                        <div class='list_app_parameter_col'>
-                            <input type=number class='list_edit_app_parameter' value=${json.data[i].app_id}>
-                        </div>
-                        <div class='list_app_parameter_col'>
-                            <input type=number class='list_edit_app_parameter' value=${json.data[i].parameter_type_id}>
-                        </div>
-                        <div class='list_app_parameter_col'>
-                            <div class='list_readonly_app_parameter list_lov_click'>${json.data[i].parameter_type_name}</div>
-                        </div>
-                        <div class='list_app_parameter_col'>
-                            <div class='list_readonly_app_parameter'>${json.data[i].parameter_name}</div>
-                        </div>
-                        <div class='list_app_parameter_col'>
-                            <input type=text class='list_edit_app_parameter' value='${json.data[i].parameter_value==null?'':json.data[i].parameter_value}'>
-                        </div>
-                        <div class='list_app_parameter_col'>
-                            <input type=text class='list_edit_app_parameter' value='${json.data[i].parameter_comment==null?'':json.data[i].parameter_comment}'>
-                        </div>
-                    </div>`;
-                }
-                list_app_parameter.innerHTML = html;
-                list_events('list_app_parameter_row', '.list_edit_app_parameter', 1);
-                document.querySelectorAll('.list_lov_click').forEach(e => e.addEventListener('click', function(event) {
-                    show_parameter_type_names(1, this, 1);
-                }));
+            let list_app_parameter = document.getElementById('list_app_parameter');
+            list_app_parameter.innerHTML = '';
+            let html = `<div id='list_app_parameter_row_title' class='list_app_parameter_row'>
+                            <div id='list_app_parameter_col_title1' class='list_app_parameter_col'>
+                                <div>APP ID</div>
+                            </div>
+                            <div id='list_app_parameter_col_title1' class='list_app_parameter_col'>
+                                <div>TYPE ID</div>
+                            </div>
+                            <div id='list_app_parameter_col_title1' class='list_app_parameter_col'>
+                                <div>TYPE NAME</div>
+                            </div>
+                            <div id='list_app_parameter_col_title2' class='list_app_parameter_col'>
+                                <div>NAME</div>
+                            </div>
+                            <div id='list_app_parameter_col_title3' class='list_app_parameter_col'>
+                                <div>VALUE</div>
+                            </div>
+                            <div id='list_app_parameter_col_title4' class='list_app_parameter_col'>
+                                <div>COMMENT</div>
+                            </div>
+                        </div>`;
+            for (i = 0; i < json.data.length; i++) {
+                html += 
+                `<div id='list_app_parameter_row_${i}' data-changed-record='0' class='list_app_parameter_row'>
+                    <div class='list_app_parameter_col'>
+                        <input type=number class='list_edit_app_parameter' value=${json.data[i].app_id}>
+                    </div>
+                    <div class='list_app_parameter_col'>
+                        <input type=number class='list_edit_app_parameter' value=${json.data[i].parameter_type_id}>
+                    </div>
+                    <div class='list_app_parameter_col'>
+                        <div class='list_readonly_app_parameter list_lov_click'>${json.data[i].parameter_type_name}</div>
+                    </div>
+                    <div class='list_app_parameter_col'>
+                        <div class='list_readonly_app_parameter'>${json.data[i].parameter_name}</div>
+                    </div>
+                    <div class='list_app_parameter_col'>
+                        <input type=text class='list_edit_app_parameter' value='${json.data[i].parameter_value==null?'':json.data[i].parameter_value}'>
+                    </div>
+                    <div class='list_app_parameter_col'>
+                        <input type=text class='list_edit_app_parameter' value='${json.data[i].parameter_comment==null?'':json.data[i].parameter_comment}'>
+                    </div>
+                </div>`;
             }
+            list_app_parameter.innerHTML = html;
+            list_events('list_app_parameter_row', '.list_edit_app_parameter', 1);
+            document.querySelectorAll('.list_lov_click').forEach(e => e.addEventListener('click', function(event) {
+                show_parameter_type_names(1, this, 1);
+            }));
         }
     })
 }
@@ -1310,29 +1302,27 @@ function show_parameter_type_names(lov, row_item, item_index){
                     document.getElementById('lov_list').innerHTML = '';
                 else{
                     json = JSON.parse(result);
-                    if (json.success === 1){
-                        let lov_list = document.getElementById('lov_list');
-                        lov_list.innerHTML = '';
-                        let html = '';
-                        for (i = 0; i < json.data.length; i++) {
-                            html += 
-                            `<div id='list_lov_row_${i}' class='list_lov_row'>
-                                <div class='list_lov_col'>
-                                    <div>${json.data[i].id}</div>
-                                </div>
-                                <div class='list_lov_col'>
-                                    <div>${json.data[i].parameter_type_name}</div>
-                                </div>
-                            </div>`;
-                        }
-                        lov_list.innerHTML = html;
-                        document.querySelectorAll('.list_lov_row').forEach(e => e.addEventListener('click', function(event) {
-                            row_item.parentNode.parentNode.children[item_index].children[0].value = this.children[0].children[0].innerHTML;
-                            row_item.parentNode.parentNode.children[item_index].children[0].focus();
-                            row_item.parentNode.parentNode.children[item_index].children[0].dispatchEvent(new Event('change'));
-                            close_lov();
-                        }));
+                    let lov_list = document.getElementById('lov_list');
+                    lov_list.innerHTML = '';
+                    let html = '';
+                    for (i = 0; i < json.data.length; i++) {
+                        html += 
+                        `<div id='list_lov_row_${i}' class='list_lov_row'>
+                            <div class='list_lov_col'>
+                                <div>${json.data[i].id}</div>
+                            </div>
+                            <div class='list_lov_col'>
+                                <div>${json.data[i].parameter_type_name}</div>
+                            </div>
+                        </div>`;
                     }
+                    lov_list.innerHTML = html;
+                    document.querySelectorAll('.list_lov_row').forEach(e => e.addEventListener('click', function(event) {
+                        row_item.parentNode.parentNode.children[item_index].children[0].value = this.children[0].children[0].innerHTML;
+                        row_item.parentNode.parentNode.children[item_index].children[0].focus();
+                        row_item.parentNode.parentNode.children[item_index].children[0].dispatchEvent(new Event('change'));
+                        close_lov();
+                    }));
                 }
             })
             break;

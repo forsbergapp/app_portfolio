@@ -1358,7 +1358,7 @@ async function user_verify_check_input_app(item, nextField){
     await user_verify_check_input(item, nextField, (err, result) => {
         if ((err==null && result==null)==false)
             if(err==null){
-                //login if LOGIN  or SIGNUP were verified succesfully
+                //login if LOGIN  or SIGNUP were verified successfully
                 if (result.verification_type==1 ||
                     result.verification_type==2)
                     user_login_app();
