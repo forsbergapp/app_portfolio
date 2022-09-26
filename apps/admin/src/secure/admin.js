@@ -125,7 +125,8 @@ async function get_apps() {
             null;
         else{
             json = JSON.parse(result);
-            let html='<option value="">ALL</option>';
+            
+            let html=`<option value="">${window.global_icon_infinite}</option>`;
             for (var i = 1; i < json.data.length; i++) {
                     html +=
                     `<option value='${json.data[i].id}'>${json.data[i].id} - ${json.data[i].app_name}</option>`;
@@ -135,6 +136,7 @@ async function get_apps() {
             document.getElementById('select_app_menu3_list_connected').innerHTML = html;
             document.getElementById('select_app_menu4').innerHTML = html  + '<option value="ADMIN">ADMIN SQL</option>';
             document.getElementById('select_app_broadcast').innerHTML = html;
+        
         }
     })
 }
@@ -632,7 +634,7 @@ function sendBroadcast(){
     let destination_app;
 
     if (broadcast_message==''){
-        show_message('INFO', null, null, 'Please enter message', window.global_common_app_id);
+        show_message('INFO', null, null, `${window.global_icon_message_text}!`, window.global_common_app_id);
         return null;
     }
     
@@ -659,7 +661,7 @@ function sendBroadcast(){
         if (err)
             null;
         else{
-            show_message('INFO', null, null, 'Sent!', window.global_common_app_id);
+            show_message('INFO', null, null, `${window.global_icon_app_send}!`, window.global_common_app_id);
         }
     });
 }    
@@ -805,9 +807,10 @@ async function show_chart(chart){
         await common_fetch(window.global_rest_url_base + `app_log/admin/stat/uniquevisitor?select_app_id=${app_id}&statchoice=${chart}&year=${year}&month=${month}`,
                  'GET', 2, null, null, null, (err, result) =>{
             if (err)
-                document.getElementById(`box1${chart}_title`).innerHTML = old_html;
+                document.getElementById(`box${chart}_title`).innerHTML = old_html;
             else{
                 json = JSON.parse(result);
+                document.getElementById(`box${chart}_title`).innerHTML = old_html;
                 if (json.success == 1){
                     //document.getElementById(`box${chart}`).innerHTML = `<canvas id="Chart${chart}"></canvas>`;
                     const ctx = document.getElementById(`Chart${chart}`).getContext('2d');
@@ -821,7 +824,6 @@ async function show_chart(chart){
                             }
                             return null;
                         }
-                        document.getElementById('box1_title').innerHTML = `Unique Visitors ${year}-${month} per app`;
                         for (let i = 0; i < json.data.length; i++) {
                             if (json.data[i].app_id>0){
                                 app_id_array.push(SearchAndGetText(document.getElementById('select_app_menu1'), json.data[i].app_id));
@@ -857,7 +859,6 @@ async function show_chart(chart){
                                 bar_color = 'rgb(81, 171, 255)';
                             else
                                 bar_color = 'rgb(197 227 255)';
-                            document.getElementById('box2_title').innerHTML = `Unique Visitors ${year}-${month} per day`;
                             for (let i = 0; i < json.data.length; i++) {
                                 day_array.push(json.data[i].day);
                                 amount_array.push(json.data[i].amount);
@@ -1086,6 +1087,8 @@ async function show_apps(){
                 }
                 list_apps.innerHTML = html;
                 list_events('list_apps_row', '.list_edit_app', 1);
+                //disable enebaled checkbox for app 0 common
+                document.getElementById('list_apps_row_0').children[4].children[0].disabled = true;
 
                 //set focus first column in first row
                 //this will trigger to show detail records
@@ -1204,7 +1207,6 @@ async function update_record(table,
                         //app window.global_common_app_id should always be enabled
                         element.children[4].children[0].checked = true;
                         enabled=true;
-                        show_message('INFO', null, null, `App ${window.global_common_app_id} should always be enabled`, window.global_common_app_id);
                     }
                 }
                 json_data = `{"app_name": "${app_name}",
@@ -1857,6 +1859,53 @@ function init_admin_secure(){
     document.getElementById('filesearch_menu4').addEventListener('click', function() { show_existing_logfiles();}, false);
     document.getElementById('list_pm2_log_title1').addEventListener('click', function() { list_click(this)}, false);
     document.getElementById('list_server_log_title2').addEventListener('click', function() { list_click(this)}, false);
+
+    //set texts
+    document.getElementById('menu_1').innerHTML = 'DASHBOARD';
+    document.getElementById('menu_2').innerHTML = 'APP ADMIN';
+    document.getElementById('menu_3').innerHTML = 'APP STAT';
+    document.getElementById('menu_4').innerHTML = 'SERVER LOG';
+    document.getElementById('menu_5').innerHTML = 'LOGOUT';
+
+    document.getElementById('box1_title').innerHTML = 'Unique Visitors';
+    document.getElementById('box2_title').innerHTML = 'Unique Visitors';
+    document.getElementById('list_user_stat_col_title1').innerHTML = 'ID';
+    document.getElementById('list_user_stat_col_title2').innerHTML = 'PROVIDER';
+    document.getElementById('list_user_stat_col_title3').innerHTML = 'COUNT';
+    document.getElementById('list_user_stat_col_title4').innerHTML = 'CONNECTED';
+    document.getElementById('maintenance_title').innerHTML = 'Maintenance';
+
+    document.getElementById('list_apps_title').innerHTML = 'APPS';
+    document.getElementById('list_app_parameter_title').innerHTML = 'APP PARAMETERS';
+    document.getElementById('list_app_log_title1').innerHTML = 'App Log';
+    document.getElementById('list_app_log_title2').innerHTML = 'App Log';
+    document.getElementById('list_connected_title1').innerHTML = 'Connected';
+    document.getElementById('list_connected_title2').innerHTML = 'Connected';
+
+    document.getElementById('map_my_location').title = 'My location';
+
+    document.getElementById('list_server_log_title1').innerHTML = 'Server Log';
+    document.getElementById('list_server_log_title2').innerHTML = 'Server Log';
+    document.getElementById('list_pm2_log_title1').innerHTML = 'PM2 Log';
+    document.getElementById('list_pm2_log_title2').innerHTML = 'PM2 Log';
+
+    document.getElementById('menu4_row_parameters_col1').innerHTML = 'Server info';
+    document.getElementById('menu4_row_parameters_col2').innerHTML = 'Server verbose';
+    document.getElementById('menu4_row_parameters_col3').innerHTML = 'DB';
+    document.getElementById('menu4_row_parameters_col4').innerHTML = 'Router';
+    document.getElementById('menu4_row_parameters_col5').innerHTML = 'PM2 JSON log';
+
+    document.getElementById('list_pm2_log_path_title').innerHTML = 'FILE PATH';
+
+    document.getElementById('list_pm2_log_title_out').innerHTML = 'PM2 Log Out';
+    document.getElementById('list_pm2_log_title_err').innerHTML = 'PM2 Log Error';
+    document.getElementById('list_pm2_log_title_process_event').innerHTML = 'PM2 Log Process event';
+
+    document.getElementById('send_broadcast_title').innerHTML = 'Broadcast';
+    document.getElementById('select_broadcast_type').options[0].text = 'INFO';
+    document.getElementById('select_broadcast_type').options[1].text = 'MAINTENANCE';
+
+    document.getElementById('client_id_label').innerHTML = 'CLIENT ID';
 
     get_apps().then(function(){
         get_gps_from_ip().then(function(){
