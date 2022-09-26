@@ -1,5 +1,5 @@
 window.global_app_email;
-window.global_img_diagram_img = '/app1/images/app_portfolio.jpg';
+window.global_img_diagram_img = '/app1/images/app_portfolio.png';
 window.global_img_datamodel_img = '/app1/images/datamodel.jpg';
 
 
