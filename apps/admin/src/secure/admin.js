@@ -327,9 +327,45 @@ async function show_list(list_div, list_div_col_title, url, sort, order_by, cols
                         }
                         case 'list_pm2_log':{
                             document.getElementById(list_div + '_path').innerHTML = json.path + json.file;
-                            document.getElementById(list_div + '_out').innerHTML = '';
-                            document.getElementById(list_div + '_err').innerHTML = '';
-                            document.getElementById(list_div + '_process_event').innerHTML = '';
+                            html_out = `<div id='list_pm2_log_out_row_title' class='list_pm2_log_row'>
+                                            <div id='list_pm2_log_out_col_title1' class='list_pm2_log_col'>
+                                                <div>TIMESTAMP</div>
+                                            </div>
+                                            <div id='list_pm2_log_out_col_title2' class='list_pm2_log_col'>
+                                                <div>APP_NAME</div>
+                                            </div>
+                                            <div id='list_pm2_log_out_col_title3' class='list_pm2_log_col'>
+                                                <div>PROCESS_ID</div>
+                                            </div>
+                                            <div id='list_pm2_log_out_col_title4' class='list_pm2_log_col'>
+                                                <div>MESSAGE</div>
+                                            </div>
+                                        </div>`;
+                            html_err = `<div id='list_pm2_log_err_row_title' class='list_pm2_log_row'>
+                                            <div id='list_pm2_log_err_col_title1' class='list_pm2_log_col'>
+                                                <div>TIMESTAMP</div>
+                                            </div>
+                                            <div id='list_pm2_log_err_col_title2' class='list_pm2_log_col'>
+                                                <div>APP_NAME</div>
+                                            </div>
+                                            <div id='list_pm2_log_err_col_title3' class='list_pm2_log_col'>
+                                                <div>PROCESS_ID</div>
+                                            </div>
+                                            <div id='list_pm2_log_err_col_title4' class='list_pm2_log_col'>
+                                                <div>MESSAGE</div>
+                                            </div>
+                                        </div>`;
+                            html_process_event = `<div id='list_pm2_log_process_event_row_title' class='list_pm2_log_row'>
+                                                    <div id='list_pm2_log_process_event_col_title2' class='list_pm2_log_process_event_col'>
+                                                        <div>TIMESTAMP</div>
+                                                    </div>
+                                                    <div id='list_pm2_log_process_event_col_title5' class='list_pm2_log_process_event_col'>
+                                                        <div>APP_NAME</div>
+                                                    </div>
+                                                    <div id='list_pm2_log_process_event_col_title4' class='list_pm2_log_process_event_col'>
+                                                        <div>STATUS</div>
+                                                    </div>
+                                                </div>`;
                             break;
                         }
                     }
