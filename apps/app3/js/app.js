@@ -10,7 +10,7 @@ function getdocs(docid = null){
     document.getElementById('doc_list').innerHTML = window.global_app_spinner;
     let result = `{"data":[{"id":1,
                             "doc_title":"Diagram",
-                            "doc_url":"/app1/images/app_portfolio.jpg"},
+                            "doc_url":"/app1/images/app_portfolio.png"},
                             {"id":2,
                             "doc_title":"Data Model",
                             "doc_url":"/app1/images/datamodel.jpg"},
