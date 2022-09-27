@@ -178,10 +178,13 @@ function printTable(){
     document.getElementById('common_window_info_content').classList = document.getElementById('paper').classList;
     window.frames['common_window_info_content'].focus()
     setTimeout(function(){document.getElementById('common_window_info_content').contentWindow.print();dialogue_loading(0);}, 500);
-    document.getElementById('common_window_info_content').contentWindow.onafterprint = function(){
-		document.getElementById('common_window_info_content').src='';
-        document.getElementById('common_window_info_content').classList ='';
-	}
+    if (mobile())
+        null;
+    else
+        document.getElementById('common_window_info_content').contentWindow.onafterprint = function(){
+            document.getElementById('common_window_info_content').src='';
+            document.getElementById('common_window_info_content').classList ='';
+        }
 }
 function getTimetable_type(){
     //by unknown reason style.display can be '' in document.getElementById even if the value is 'block'
