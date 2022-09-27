@@ -136,8 +136,14 @@ window.global_qr_background_color;
 /*----------------------- */
 
 function printTable(){
-	let win = window.open('','printwindow','');
-	document.getElementById('prayertable_month_qr_code').children[0].id = 'destinationCanvas';
+    dialogue_loading(1);
+    let timetable_type = getTimetable_type();
+    if (timetable_type==0)
+	    document.getElementById('prayertable_day_qr_code').children[0].id = 'destinationCanvas';
+    if (timetable_type==1)
+	    document.getElementById('prayertable_month_qr_code').children[0].id = 'destinationCanvas';
+    if (timetable_type==2)
+	    document.getElementById('prayertable_year_qr_code').children[0].id = 'destinationCanvas';
     let whatToPrint = document.getElementById('paper');
     
 	let html;
@@ -155,24 +161,27 @@ function printTable(){
 				${whatToPrint.outerHTML}
 			</body>
 			</html>`;
-	win.document.write(html);
 	
     function copyCanvas(){
         let destinationCtx;
-        let destinationCanvas = win.document.getElementById('destinationCanvas');
+        let destinationCanvas = document.getElementById('common_window_info_content').contentDocument.getElementById('destinationCanvas');
         document.getElementById('destinationCanvas').id = 'sourceCanvas';
         let sourceCanvas = document.getElementById('sourceCanvas');
         destinationCtx = destinationCanvas.getContext('2d');
         destinationCtx.drawImage(sourceCanvas, 0, 0);
         document.getElementById('sourceCanvas').removeAttribute('id');
     }
-    copyCanvas();
-    win.print();
-	win.onafterprint = function(){
-		win.close();
-	}
     
-	return null;
+    document.getElementById('common_window_info_content').contentWindow.document.open();
+    document.getElementById('common_window_info_content').contentWindow.document.write(html);
+    copyCanvas();
+    document.getElementById('common_window_info_content').classList = document.getElementById('paper').classList;
+    window.frames['common_window_info_content'].focus()
+    setTimeout(function(){document.getElementById('common_window_info_content').contentWindow.print();dialogue_loading(0);}, 500);
+    document.getElementById('common_window_info_content').contentWindow.onafterprint = function(){
+		document.getElementById('common_window_info_content').src='';
+        document.getElementById('common_window_info_content').classList ='';
+	}
 }
 function getTimetable_type(){
     //by unknown reason style.display can be '' in document.getElementById even if the value is 'block'
