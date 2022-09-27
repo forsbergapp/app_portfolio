@@ -1,3 +1,7 @@
+#paper #app_spinner{
+	margin-top: 50%;
+    transform: scale(1);
+}
 /* TOOLBAR TOP*/
 #toolbar_top {
 	width: -webkit-fill-available;
@@ -232,6 +236,7 @@
 
 #dialogue_loading #app_spinner{
 	top: 50%;
+	transform: scale(1);
 }
 
 /* WINDOW INFO*/

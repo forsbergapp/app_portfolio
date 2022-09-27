@@ -110,10 +110,8 @@
 	width: 100%;
 	height:100%;
 	position: absolute;
-	display: flex;
+	display: block;
 	text-align: center;
-	flex-direction: column;
-	visibility:visible;
 }
 /*font sizes*/
 #prayertable_day #prayertable_day_header_row{
@@ -251,7 +249,7 @@
 #prayertable_month {
 	width: 100%;
 	text-align: center;
-	visibility:hidden;
+	display: block;
 }
 /*font sizes*/
 .prayertable_month #prayertable_month_header{
@@ -462,9 +460,8 @@
 	width: 100%;
 	height:100%;
 	position: absolute;
-	display: inline-block;
+	display: block;
 	flex-direction: column;
-	visibility:hidden;
 	text-align: center;
 	left:0px;
 	top:0px;
