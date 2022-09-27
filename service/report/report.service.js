@@ -1,14 +1,22 @@
 const puppeteer = require('puppeteer');
+global.browser;
+async function initReportService(){
+    global.browser = await puppeteer.launch({
+        pipe:true,
+        headless: true,
+        ignoreHTTPSErrors: true,
+        args: [ '--ignore-certificate-errors',
+                '--disable-gpu',
+                '--user-data-dir=' + __dirname + '/tmp']
+    });
+    
+};
+
 module.exports = {
     getReportService: async (url, ps, hf) => {
-        const browser = await puppeteer.launch({
-            pipe:true,
-            headless: true,
-            ignoreHTTPSErrors: true,
-            args: [ '--ignore-certificate-errors',
-                    '--disable-gpu']
-        });
-        const webPage = await browser.newPage();
+        if (!global.browser)
+            await initReportService();
+        const webPage = await global.browser.newPage();
         await webPage.goto(url, {
                 timeout: 20000,
                 waitUntil: "networkidle2"
@@ -43,7 +51,8 @@ module.exports = {
                 right: "0px"
             }
         });
-        await browser.close();
+        await webPage.close();
+        //await global.browser.close();
         return pdf;
     }
 }
