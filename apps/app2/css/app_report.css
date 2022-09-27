@@ -22,6 +22,14 @@
 	margin: 0px;
 }
 
+#printbody .prayertable_month #timetable .prayertable_month_today-row {
+    animation: unset;
+    -webkit-animation: unset;
+    animation-iteration-count: unset;
+    -webkit-animation-iteration-count: unset;
+    opacity: inherit;
+    font-weight: inherit;
+}
 #printbody #settings{
 	visibility: hidden;
 }
