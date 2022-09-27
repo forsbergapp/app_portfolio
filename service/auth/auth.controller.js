@@ -122,33 +122,38 @@ module.exports = {
 		}
 	},
     checkDataToken: (req, res, next) => {
-		let token = req.get("authorization");
-		if (token){
-            getParameter(process.env.COMMON_APP_ID,'SERVICE_AUTH_TOKEN_DATA_SECRET', req.query.app_id, (err, db_SERVICE_AUTH_TOKEN_DATA_SECRET)=>{
-				if (err) {
-                    createLogAppSE(req.query.app_id, __appfilename, __appfunction, __appline, err, (err_log, result_log)=>{
-                        null;
-                    })
-                }
-                else{
-                    token = token.slice(7);
-                    verify(token, db_SERVICE_AUTH_TOKEN_DATA_SECRET, (err, decoded) => {
-                        if (err){
-                            res.status(401).send({
-                                message: "Invalid token"
-                            });
-                        } else {
-                            next();
-                        }
-                    });
-                }
-            });
-			
-		}else{
-			res.status(401).json({
-				message: 'Not authorized'
-			});
-		}
+        if (req.baseUrl == '/service/regional')
+            // no validation for functions in this service
+            next();
+        else{
+            let token = req.get("authorization");
+            if (token){
+                getParameter(process.env.COMMON_APP_ID,'SERVICE_AUTH_TOKEN_DATA_SECRET', req.query.app_id, (err, db_SERVICE_AUTH_TOKEN_DATA_SECRET)=>{
+                    if (err) {
+                        createLogAppSE(req.query.app_id, __appfilename, __appfunction, __appline, err, (err_log, result_log)=>{
+                            null;
+                        })
+                    }
+                    else{
+                        token = token.slice(7);
+                        verify(token, db_SERVICE_AUTH_TOKEN_DATA_SECRET, (err, decoded) => {
+                            if (err){
+                                res.status(401).send({
+                                    message: "Invalid token"
+                                });
+                            } else {
+                                next();
+                            }
+                        });
+                    }
+                });
+                
+            }else{
+                res.status(401).json({
+                    message: 'Not authorized'
+                });
+            }
+        }
 	},
     dataToken: (req, res) => {
         if(req.headers.authorization){
