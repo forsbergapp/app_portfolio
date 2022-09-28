@@ -17,18 +17,13 @@
 /* MISC                   */
 /*----------------------- */
 async function common_fetch_token(token_type, json_data,  username, password, callBack) {
-    let app_id;
     let url;
     let status;
-    if (window.global_admin==true)
-        app_id = window.global_common_app_id;
-    else
-        app_id = window.global_app_id;
     if (token_type==0){
         //data token
         url = window.global_service_auth + 
               '?app_user_id=' + window.global_user_account_id +
-              '&app_id=' + app_id + 
+              '&app_id=' + window.global_app_id + 
               '&lang_code=' + window.global_user_locale;
         username = window.global_app_rest_client_id;
         password = window.global_app_rest_client_secret;
@@ -36,7 +31,7 @@ async function common_fetch_token(token_type, json_data,  username, password, ca
     else{
         //admin token
         url = '/service/auth/admin' + 
-              '?app_id=' + app_id + 
+              '?app_id=' + window.global_app_id + 
               '&lang_code=' + window.global_user_locale;
     }
     await fetch(url,
@@ -71,25 +66,25 @@ async function common_fetch_token(token_type, json_data,  username, password, ca
             }
             case 400:{
                 //Bad request
-                show_message('INFO', null,null, result, app_id);
+                show_message('INFO', null,null, result, window.global_app_id);
                 callBack(result, null);
                 break;
             }
             case 404:{
                 //Not found
-                show_message('INFO', null,null, result, app_id);
+                show_message('INFO', null,null, result, window.global_app_id);
                 callBack(result, null);
                 break;
             }
             case 401:{
                 //Unauthorized, wrong credentials
-                show_message('INFO', null,null, JSON.parse(result).message, app_id);
+                show_message('INFO', null,null, JSON.parse(result).message, window.global_app_id);
                 callBack(result, null);
                 break;
             }
             case 500:{
                 //Unknown error
-                show_message('EXCEPTION', null,null, result, app_id);
+                show_message('EXCEPTION', null,null, result, window.global_app_id);
                 callBack(result, null);
                 break;
             }
@@ -137,10 +132,7 @@ async function common_fetch(url_parameters, method, token_type, json_data, app_i
     if (app_id_override !=null)
         app_id = app_id_override;
     else{
-        if (window.global_app_id=='')
-            app_id = window.global_common_app_id;
-        else
-            app_id = window.global_app_id;
+        app_id = window.global_app_id;
     }
     
     let lang_code;
@@ -3160,10 +3152,10 @@ async function init_common(parameters, callBack){
             }
         }
     }
-    //get parameters for window.common_app_id and window.global_app_id
+    //get parameters
     let json;
     if (window.global_admin){
-        await common_fetch(`${window.global_rest_url_base}${window.global_rest_app_parameter}admin/all/0?`,
+        await common_fetch(`${window.global_rest_url_base}${window.global_rest_app_parameter}admin/all/${window.global_app_id}?`,
                             'GET', 2, null, null, null, (err, result) =>{
             if (err)
                 null;
