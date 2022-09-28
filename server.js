@@ -213,6 +213,7 @@ app.use(function(req, res, next) {
 });
 
 const {init_db, mysql_pool, oracle_pool} = require ("./service/db/common/database");
+//set db parameters and start admin pool
 init_db((err, result) =>{
   if (err)
       null;
@@ -223,8 +224,6 @@ init_db((err, result) =>{
         eval(fileBuffer);
       });
     }
-    //load first app
-    load_dynamic_code(1);
     let json;
     const { getAppDBParametersAdmin } = require ("./service/db/app_portfolio/app_parameter/app_parameter.service");
     //app_id inparameter for log, all apps will be returned
@@ -249,8 +248,8 @@ init_db((err, result) =>{
             });
           }
         }
-        //start app 2
-        for (var i = 2; i < json.length; i++) {
+        //start app pools
+        for (var i = 1; i < json.length; i++) {
           start_pool(json[i].id, json[i].db_user, json[i].db_password);
         }
       }
