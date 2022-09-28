@@ -1,3 +1,4 @@
+const ADMIN_ID = 0;
 const { read_app_files, get_module_with_init_admin } = require("../");
 module.exports = {
     getAdmin:(gps_lat, gps_long, gps_place) => {
@@ -26,7 +27,7 @@ module.exports = {
                     app = app.replace(
                         '<AppProfileTop/>',
                         '');
-                    get_module_with_init_admin('', 
+                    get_module_with_init_admin(ADMIN_ID, 
                                          'admin_exception_before',
                                          null,
                                          true,

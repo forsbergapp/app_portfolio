@@ -113,24 +113,9 @@ function get_apps() {
             document.getElementById('apps').innerHTML = old_button;
         else{
             json = JSON.parse(result);
-            let html =`<div class='app_link_row'>
-                            <div class='app_link_col'>
-                                <div class='app_id'></div>
-                            </div>
-                            <div class='app_link_col'>
-                                <div class='app_url'>${window.global_app_url}/admin</div>
-                            </div>
-                            <div class='app_link_col'>
-                                <img class='app_logo' src='${window.global_app_url}/admin/images/logo.png' />
-                            </div>
-                            <div class='app_link_col'>
-                                <div class='app_name'>Admin</div>
-                                <div class='app_category'></div>
-                                <div class='app_description'></div>
-                            </div>
-                        </div>`;
+            let html ='';
             for (var i = 0; i < json.data.length; i++) {
-                if (i>1){
+                if (i!=1){
                     html +=`<div class='app_link_row'>
                                 <div class='app_link_col'>
                                     <div class='app_id'>${json.data[i].id}</div>
@@ -143,7 +128,7 @@ function get_apps() {
                                 </div>
                                 <div class='app_link_col'>
                                     <div class='app_name'>${json.data[i].app_name}</div>
-                                    <div class='app_category'>${json.data[i].app_category}</div>
+                                    <div class='app_category'>${json.data[i].app_category==null?'':json.data[i].app_category}</div>
                                     <div class='app_description'>${json.data[i].app_description==null?'':json.data[i].app_description}</div>
                                 </div>
                             </div>`;

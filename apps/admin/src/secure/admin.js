@@ -127,14 +127,14 @@ async function get_apps() {
             json = JSON.parse(result);
             
             let html=`<option value="">${window.global_icon_infinite}</option>`;
-            for (var i = 1; i < json.data.length; i++) {
+            for (var i = 0; i < json.data.length; i++) {
                     html +=
                     `<option value='${json.data[i].id}'>${json.data[i].id} - ${json.data[i].app_name}</option>`;
             }
             document.getElementById('select_app_menu1').innerHTML = html;
             document.getElementById('select_app_menu3_app_log').innerHTML = html;
             document.getElementById('select_app_menu3_list_connected').innerHTML = html;
-            document.getElementById('select_app_menu4').innerHTML = html  + '<option value="ADMIN">ADMIN SQL</option>';
+            document.getElementById('select_app_menu4').innerHTML = html;
             document.getElementById('select_app_broadcast').innerHTML = html;
         
         }
@@ -632,7 +632,7 @@ function sendBroadcast(){
     let destination_app;
 
     if (broadcast_message==''){
-        show_message('INFO', null, null, `${window.global_icon_message_text}!`, window.global_common_app_id);
+        show_message('INFO', null, null, `${window.global_icon_message_text}!`, window.global_app_id);
         return null;
     }
     
@@ -659,7 +659,7 @@ function sendBroadcast(){
         if (err)
             null;
         else{
-            show_message('INFO', null, null, `${window.global_icon_app_send}!`, window.global_common_app_id);
+            show_message('INFO', null, null, `${window.global_icon_app_send}!`, window.global_app_id);
         }
     });
 }    
@@ -1020,7 +1020,7 @@ function set_maintenance(){
         check_value = 1;
     else
         check_value = 0;
-    let json_data = `{"app_id" : ${window.global_common_app_id}, 
+    let json_data = `{"app_id" : ${window.global_app_id}, 
                       "parameter_name":"SERVER_MAINTENANCE",
                       "parameter_value":${check_value}}`;
     common_fetch(window.global_rest_url_base + window.global_rest_app_parameter + 'admin/value?',
@@ -1553,17 +1553,18 @@ async function get_server_log_parameters(){
             window.global_service_log_file_interval = json.data.SERVICE_LOG_FILE_INTERVAL;
 
             let html = '';
-            html +=`<option value='${window.global_service_log_scope_server}'>${window.global_service_log_scope_server}</option>`;
-            html +=`<option value='${window.global_service_log_scope_service}'>${window.global_service_log_scope_service}</option>`;
-            html +=`<option value='${window.global_service_log_scope_db}'>${window.global_service_log_scope_db}</option>`;
-            html +=`<option value='${window.global_service_log_scope_router}'>${window.global_service_log_scope_router}</option>`;
-            html +=`<option value='${window.global_service_log_scope_controller}'>${window.global_service_log_scope_controller}</option>`;
+            html +=`<option value=0 log_scope='${window.global_service_log_scope_server}'       log_level='${window.global_service_log_level_info}'>${window.global_service_log_scope_server} - ${window.global_service_log_level_info}</option>`;
+            html +=`<option value=1 log_scope='${window.global_service_log_scope_server}'       log_level='${window.global_service_log_level_error}'>${window.global_service_log_scope_server} - ${window.global_service_log_level_error}</option>`;
+            html +=`<option value=2 log_scope='${window.global_service_log_scope_server}'       log_level='${window.global_service_log_level_verbose}'>${window.global_service_log_scope_server} - ${window.global_service_log_level_verbose}</option>`;
+            html +=`<option value=3 log_scope='${window.global_service_log_scope_service}'      log_level='${window.global_service_log_level_info}'>${window.global_service_log_scope_service} - ${window.global_service_log_level_info}</option>`;
+            html +=`<option value=4 log_scope='${window.global_service_log_scope_service}'      log_level='${window.global_service_log_level_error}'>${window.global_service_log_scope_service} - ${window.global_service_log_level_error}</option>`;
+            html +=`<option value=5 log_scope='${window.global_service_log_scope_db}'           log_level='${window.global_service_log_level_info}'>${window.global_service_log_scope_db} - ${window.global_service_log_level_info}</option>`;
+            html +=`<option value=6 log_scope='${window.global_service_log_scope_router}'       log_level='${window.global_service_log_level_info}'>${window.global_service_log_scope_router} - ${window.global_service_log_level_info}</option>`;
+            html +=`<option value=7 log_scope='${window.global_service_log_scope_controller}'   log_level='${window.global_service_log_level_info}'>${window.global_service_log_scope_controller} - ${window.global_service_log_level_info}</option>`;
+            html +=`<option value=8 log_scope='${window.global_service_log_scope_controller}'   log_level='${window.global_service_log_level_error}'>${window.global_service_log_scope_controller} - ${window.global_service_log_level_error}</option>`;
+            
             document.getElementById('select_logscope4').innerHTML = html;
-            html =`<option value='${window.global_service_log_level_info}'>${window.global_service_log_level_info}</option>`;
-            html +=`<option value='${window.global_service_log_level_verbose}'>${window.global_service_log_level_verbose}</option>`;
-            html +=`<option value='${window.global_service_log_level_error}'>${window.global_service_log_level_error}</option>`;
 
-            document.getElementById('select_loglevel4').innerHTML = html;
             if (window.global_service_log_file_interval=='1M')
                 document.getElementById('select_day_menu4').style.display = 'none';
             else
@@ -1572,17 +1573,27 @@ async function get_server_log_parameters(){
     })
 }
 function show_server_logs(sort=1, order_by='desc'){
-    let logscope = document.getElementById('select_logscope4').value;
-    let loglevel = document.getElementById('select_loglevel4').value;
+    let logscope = document.getElementById('select_logscope4')[document.getElementById('select_logscope4').selectedIndex].getAttribute('log_scope');
+    let loglevel = document.getElementById('select_logscope4')[document.getElementById('select_logscope4').selectedIndex].getAttribute('log_level');
     let year = document.getElementById('select_year_menu4').value;
     let month= document.getElementById('select_month_menu4').value;
     let day  = document.getElementById('select_day_menu4').value;
-    let app_id = document.getElementById('select_app_menu4').options[document.getElementById('select_app_menu4').selectedIndex].value;
+    let app_id_filter='';
+    if (logscope=='SERVER'){
+        //no app filter for server, since this is a server log
+        document.getElementById('select_app_menu4').style.visibility = 'hidden';
+        app_id_filter = `select_app_id=&`;
+    }
+    else{
+        //show app filter and use it
+        document.getElementById('select_app_menu4').style.visibility = 'visible';
+        app_id_filter = `select_app_id=${document.getElementById('select_app_menu4').options[document.getElementById('select_app_menu4').selectedIndex].value}&`;
+    }
     let url_parameters;
     if (window.global_service_log_file_interval=='1M')
-        url_parameters = `select_app_id=${app_id}&logscope=${logscope}&loglevel=${loglevel}&year=${year}&month=${month}`;
+        url_parameters = `${app_id_filter}logscope=${logscope}&loglevel=${loglevel}&year=${year}&month=${month}`;
     else
-        url_parameters = `select_app_id=${app_id}&logscope=${logscope}&loglevel=${loglevel}&year=${year}&month=${month}&day=${day}`;
+        url_parameters = `${app_id_filter}logscope=${logscope}&loglevel=${loglevel}&year=${year}&month=${month}&day=${day}`;
     show_list('list_server_log', 
                 'list_server_log_col_title', 
                 window.global_service_log + `/logs?${url_parameters}&sort=${sort}&order_by=${order_by}`,
@@ -1614,28 +1625,37 @@ function show_existing_logfiles(){
                     </div>`;
                 }
                 logfiles_list.innerHTML = html;
-                document.querySelectorAll('.list_lov_row').forEach(e => e.addEventListener('click', function(event) {
-                    let i = 0;
-                    this.children[0].children[0].innerHTML.split('_').forEach(function (record) {
-                        i++;
-                        switch (i){
-                            case 1:{
-                                document.getElementById('select_logscope4').value = record;
-                                break;
-                            }
-                            case 2:{
-                                document.getElementById('select_loglevel4').value = record;
-                                break;
-                            }
-                            case 3:{
-                                document.getElementById('select_year_menu4').value = parseInt(record.substring(0,4));
-                                document.getElementById('select_month_menu4').value = parseInt(record.substring(4,6));
-                                if (window.global_service_log_file_interval=='1D')
-                                    document.getElementById('select_day_menu4').value = parseInt(record.substring(6,8));
-                                break;
-                            }
-                        } 
-                    })   
+                function setlogscopelevel(select, logscope, loglevel){
+                    for (let i = 0; i < select.options.length; i++) {
+                        if (select[i].getAttribute('log_scope') == logscope &&
+                            select[i].getAttribute('log_level') == loglevel) {
+                            select.selectedIndex = i;
+                            return null;
+                        }
+                    }
+                }
+                document.querySelectorAll('.list_lov_row').forEach(e => e.addEventListener('click', function(event) {                    
+                    //format: 'LOGSCOPE_LOGLEVEL_20220101.log'
+                    //logscope and loglevel
+                    let filename = this.children[0].children[0].innerHTML;
+                    let logscope = filename.substring(0,filename.indexOf('_'));
+                    filename = filename.substring(filename.indexOf('_')+1);
+                    let loglevel = filename.substring(0,filename.indexOf('_'));
+                    filename = filename.substring(filename.indexOf('_')+1);
+                    let year     = parseInt(filename.substring(0, 4));
+                    let month    = parseInt(filename.substring(4, 6));
+                    let day      = parseInt(filename.substring(6, 8));
+                    setlogscopelevel(document.getElementById('select_logscope4'),
+                                     logscope, 
+                                     loglevel);
+                    //year
+                    document.getElementById('select_year_menu4').value = year;
+                    //month
+                    document.getElementById('select_month_menu4').value = month;
+                    //day if applicable
+                    if (window.global_service_log_file_interval=='1D')
+                        document.getElementById('select_day_menu4').value = day;
+
                     document.getElementById('select_logscope4').dispatchEvent(new Event('change'));
                     close_lov();
                 }));
@@ -1840,8 +1860,7 @@ function init_admin_secure(){
                    window.global_client_place,
                    window.global_gps_map_marker_div_gps,
                    window.global_gps_map_jumpto);})}, false);
-    document.getElementById('select_logscope4').addEventListener('change', function() { show_server_logs();}, false);
-    document.getElementById('select_loglevel4').addEventListener('change', function() { show_server_logs();}, false);
+    document.getElementById('select_logscope4').addEventListener('change', function() { show_server_logs();}, false);    
     document.getElementById('select_app_menu4').addEventListener('change', function() { show_server_logs();}, false);
     document.getElementById('select_year_menu4').addEventListener('change', function() { show_server_logs();}, false);
     document.getElementById('select_month_menu4').addEventListener('change', function() { show_server_logs();}, false);
@@ -1912,7 +1931,7 @@ function init_admin_secure(){
     })
 }
 init_common({
-    app_id: '',
+    app_id: window.global_app_id,
     app_name: 'ADMIN',
     app_url: window.location.href,
     app_logo: '/app1/images/logo.png',
