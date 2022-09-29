@@ -11,10 +11,36 @@
         <div id='menu_open' class='dialogue_button'></div>
         <div id='menu_1_content' class='main_content'>
             <div id='menu_1_content_widget1' class='widget'>
-                <div id='menu_1_row_sample'>
-                    <select id='select_app_menu1'></select>
-                    <select id='select_year_menu1'></select>
-                    <select id='select_month_menu1'>
+                <div id='menu_1_db_info1'>
+                    <div id='menu_1_db_info_database_title'></div><div id='menu_1_db_info_database_data'></div>
+                    <div id='menu_1_db_info_name_title'></div><div id='menu_1_db_info_name_data'></div>
+                    <div id='menu_1_db_info_version_title'></div><div id='menu_1_db_info_version_data'></div>
+                    <div id='menu_1_db_info_host_title'></div><div id='menu_1_db_info_host_data'></div>
+                    <div id='menu_1_db_info_connections_title'></div><div id='menu_1_db_info_connections_data'></div>
+                    <div id='menu_1_db_info_started_title'></div><div id='menu_1_db_info_started_data'></div>
+                </div>
+            </div>
+            <div id='menu_1_content_widget2' class='widget'>
+                <div id='menu_1_db_info_space_detail'></div>
+                <div id='menu_1_db_info_space_total'></div>
+            </div>
+            <div id='menu_1_content_widget3' class='widget'>
+                <div id='menu_1_maintenance'>
+                    <div id='menu_1_maintenance_title'></div>
+                    <div id='menu_1_maintenance_checkbox'>
+                        <input id='menu_1_checkbox_maintenance' type='checkbox' class='switch-input' />
+                        <label for='menu_1_checkbox_maintenance' class='switch-label'></label>
+                    </div>
+                </div>
+                <div id='menu_1_broadcast_button' class='chat_click'></div>
+            </div>
+        </div>
+        <div id='menu_2_content' class='main_content'>
+            <div id='menu_2_content_widget1' class='widget'>
+                <div id='menu_2_row_sample'>
+                    <select id='select_app_menu2'></select>
+                    <select id='select_year_menu2'></select>
+                    <select id='select_month_menu2'>
                         <option value='1'>1</option>
                         <option value='2'>2</option>
                         <option value='3'>3</option>
@@ -40,53 +66,64 @@
                     </div>
                 </div>
             </div>
-            <div id='menu_1_content_widget2' class='widget'>
-                <div id='menu_1_content_widget2a' >
-                    <div id='list_user_stat_row_title' class='list_user_stat_row'>
-                        <div id='list_user_stat_col_title1' class='list_user_stat_col'></div>
-                        <div id='list_user_stat_col_title2' class='list_user_stat_col'></div>
-                        <div id='list_user_stat_col_title3' class='list_user_stat_col'></div>
-                        <div id='list_user_stat_col_title4' class='list_user_stat_col'></div>
-                    </div>
-                    <div id='list_user_stat'>
-                    </div>
-                </div>
-                <div id='menu_1_content_widget2b'>
-                    <div id='maintenance'>
-                        <div id='maintenance_title'></div>
-                        <div id='maintenance_checkbox'>
-                            <input id='checkbox_maintenance' type='checkbox' class='switch-input' />
-                            <label for='checkbox_maintenance' class='switch-label'></label>
-                        </div>
-                    </div>
-                    <div id='maintenance_broadcast_info' class='chat_click'></div>
-                </div> 
-            </div>
-        </div>
-        <div id='menu_2_content' class='main_content'>
-            <div id='menu_2_content_widget1' class='widget'>
-                <div id='list_apps_title'></div>
-                <div id='list_apps' class='list_scrollbar'></div>
-            </div>
             <div id='menu_2_content_widget2' class='widget'>
-                <div id='list_app_parameter_title'></div>
-                <div id='list_app_parameter' class='list_scrollbar'></div>
-                <div id='apps_buttons'>
-                    <button id='apps_save' class='dialogue_button' ></button>
+                <div id='list_user_stat_row_title' class='list_user_stat_row'>
+                    <div id='list_user_stat_col_title1' class='list_user_stat_col'></div>
+                    <div id='list_user_stat_col_title2' class='list_user_stat_col'></div>
+                    <div id='list_user_stat_col_title3' class='list_user_stat_col'></div>
+                    <div id='list_user_stat_col_title4' class='list_user_stat_col'></div>
+                </div>
+                <div id='list_user_stat'>
                 </div>
             </div>
         </div>
         <div id='menu_3_content' class='main_content'>
             <div id='menu_3_content_widget1' class='widget'>
-                <div id='list_app_log_form'>
-                    <div id='list_app_log_nav'>
-                        <div id='list_app_log_title1'></div>
-                        <button id='list_connected_title1' class='list_button' ></button>
+                <div id='list_apps_title'></div>
+                <div id='list_apps' class='list_scrollbar'></div>
+            </div>
+            <div id='menu_3_content_widget2' class='widget'>
+                <div id='list_app_parameter_title'></div>
+                <div id='list_app_parameter' class='list_scrollbar'></div>
+                <div id='apps_buttons'>
+                    <button id='apps_save' class='dialogue_button' ></button>
+                </div>
+            </div>            
+        </div>
+        <div id='menu_4_content' class='main_content'>
+            <div id='menu_4_content_widget1' class='widget'>
+                <ul id='list_monitor_nav'>
+                    <li id='list_monitor_nav_1'><button id='list_connected_title' class='list_button' ></button></li>
+                    <li id='list_monitor_nav_2'><button id='list_app_log_title' class='list_button' ></button></li>
+                    <li id='list_monitor_nav_3'><button id='list_server_log_title' class='list_button' ></button></li>
+                    <li id='list_monitor_nav_4'><button id='list_pm2_log_title' class='list_button' ></button></li>                    
+                </ul>
+                <div id='list_connected_form'>
+                    <div id='menu4_row_sample_list_connected'>
+                        <select id='select_app_menu4_list_connected'></select>
+                        <select id='select_year_menu4_list_connected'></select>
+                        <select id='select_month_menu4_list_connected'>
+                            <option value='1'>1</option>
+                            <option value='2'>2</option>
+                            <option value='3'>3</option>
+                            <option value='4'>4</option>
+                            <option value='5'>5</option>
+                            <option value='6'>6</option>
+                            <option value='7'>7</option>
+                            <option value='8'>8</option>
+                            <option value='9'>9</option>
+                            <option value='10'>10</option>
+                            <option value='11'>11</option>
+                            <option value='12'>12</option>
+                        </select>
                     </div>
-                    <div id='menu3_row_sample_app_log'>
-                        <select id='select_app_menu3_app_log'></select>
-                        <select id='select_year_menu3_app_log'></select>
-                        <select id='select_month_menu3_app_log'>
+                    <div id='list_connected' class='list_scrollbar'></div>
+                </div>
+                <div id='list_app_log_form'>
+                    <div id='menu4_row_sample_app_log'>
+                        <select id='select_app_menu4_app_log'></select>
+                        <select id='select_year_menu4_app_log'></select>
+                        <select id='select_month_menu4_app_log'>
                             <option value='1'>1</option>
                             <option value='2'>2</option>
                             <option value='3'>3</option>
@@ -109,57 +146,7 @@
                         <div id='list_app_log_last' ></div>
                     </div>
                 </div>
-                <div id='list_connected_form'>
-                    <div id='list_app_log_nav'>
-                        <button id='list_app_log_title2' class='list_button' ></button>
-                        <div id='list_connected_title2'></div>
-                    </div>
-                    <div id='menu3_row_sample_list_connected'>
-                        <select id='select_app_menu3_list_connected'></select>
-                        <select id='select_year_menu3_list_connected'></select>
-                        <select id='select_month_menu3_list_connected'>
-                            <option value='1'>1</option>
-                            <option value='2'>2</option>
-                            <option value='3'>3</option>
-                            <option value='4'>4</option>
-                            <option value='5'>5</option>
-                            <option value='6'>6</option>
-                            <option value='7'>7</option>
-                            <option value='8'>8</option>
-                            <option value='9'>9</option>
-                            <option value='10'>10</option>
-                            <option value='11'>11</option>
-                            <option value='12'>12</option>
-                        </select>
-                    </div>
-                    <div id='list_connected' class='list_scrollbar'></div>
-                </div>
-            </div>
-            <div id='menu_3_content_widget2' class='widget'>
-                <div id='mapid'>
-                    <button id='map_my_location' class='dialogue_button' title=''></button>
-                </div>
-                
-                <select id='select_maptype' >
-                    <option value='streets-v11' selected='selected'>streets-v11</option>
-                    <option value='outdoors-v11'>outdoors-v11</option>
-                    <option value='light-v10'>light-v10</option>
-                    <option value='dark-v10'>dark-v10</option>
-                    <option value='satellite-v9'>satellite-v9</option>
-                    <option value='satellite-streets-v11'>satellite-streets-v11</option>
-                    <option value='navigation-preview-day-v4'>navigation-preview-day-v4</option>
-                    <option value='navigation-preview-night-v4'>navigation-preview-night-v4</option>
-                    <option value='navigation-guidance-day-v4'>navigation-guidance-day-v4</option>
-                    <option value='navigation-guidance-night-v4'>navigation-guidance-night-v4</option>
-                </select>
-            </div>
-            
-        </div>
-        <div id='menu_4_content' class='main_content'>
-            <div id='menu_4_content_widget' class='widget'>
                 <div id='list_server_log_form'>
-                    <div id='list_server_log_title1'></div>
-                    <button id='list_pm2_log_title1' class='list_button' ></button>
                     <div id='menu4_row_sample1' >
                         <select id='select_logscope4'></select>
                         <select id='select_app_menu4'></select>
@@ -235,8 +222,6 @@
                     <div id='list_server_log' class='list_scrollbar'></div>
                 </div>
                 <div id='list_pm2_log_form'>
-                    <button id='list_server_log_title2' class='list_button' ></button>
-                    <div id='list_pm2_log_title2'></div>
                     <div id='list_pm2_log_path_info'>
                         <div id='list_pm2_log_path_title'></div>
                         <div id='list_pm2_log_path'></div>
@@ -250,6 +235,24 @@
                         <div id='list_pm2_log_process_event' class='list_scrollbar'></div>
                     </div>
                 </div>
+            </div>
+            <div id='menu_4_content_widget2' class='widget'>
+                <div id='mapid'>
+                    <button id='map_my_location' class='dialogue_button' title=''></button>
+                </div>
+                
+                <select id='select_maptype' >
+                    <option value='streets-v11' selected='selected'>streets-v11</option>
+                    <option value='outdoors-v11'>outdoors-v11</option>
+                    <option value='light-v10'>light-v10</option>
+                    <option value='dark-v10'>dark-v10</option>
+                    <option value='satellite-v9'>satellite-v9</option>
+                    <option value='satellite-streets-v11'>satellite-streets-v11</option>
+                    <option value='navigation-preview-day-v4'>navigation-preview-day-v4</option>
+                    <option value='navigation-preview-night-v4'>navigation-preview-night-v4</option>
+                    <option value='navigation-guidance-day-v4'>navigation-guidance-day-v4</option>
+                    <option value='navigation-guidance-night-v4'>navigation-guidance-night-v4</option>
+                </select>
             </div>
         </div>
     </div>
