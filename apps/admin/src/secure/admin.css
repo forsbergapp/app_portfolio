@@ -110,69 +110,28 @@
     }
     /*MENU 1 DASHBOARD*/
     #menu_1_content_widget1{
-        height:calc(70% - 10px);
+        height:calc(25% - 16.6px);
+        vertical-align: middle;
     }
-    #menu_1_content_widget1 select{
-        display:inline-block;
-    }
-    #menu_1_row_sample{
-        margin-top:10px;
-        margin-bottom:10px;
-    }
-    #box1{
-        width: 49%;
-        height: 200px;
-        display:inline-block;
-        vertical-align: top;
-    }
-    #box2{
-        width: 49%;
-        height: 200px;
-        display:inline-block;
-        vertical-align: top;
-        
-    }
-    #box1 canvas, #box2 canvas{
-        max-height: 100%;
-    }
-    #menu_1_content_widget2{
-        height:calc(30% - 10px);
-        display: block;
-        text-align: center;
-    }
-    #menu_1_content_widget2a{
-        width: 70%;
-    }
-    #menu_1_content_widget2b{
-        width: 25%;
-    }
-    #menu_1_content_widget2a, #menu_1_content_widget2b{
-        display: inline-block;
-        vertical-align: top;
-        margin-top: 10px;
-    }
-    #list_user_stat{
-        overflow-y: auto;
-        height:90px;
-    }
-    .list_user_stat_row{
-        display: block;
+    #menu_1_db_info1 div{
         text-align: start;
     }
-    .list_user_stat_col{
-        display: inline-block;
+    #menu_1_content_widget2{
+        height:calc(50% - 16.6px);
     }
-    .list_user_stat_col:nth-child(1){
-        width:20px;
+    #menu_1_content_widget3{
+        height:calc(25% - 16.6px);
+        vertical-align: middle;
     }
-    .list_user_stat_col:nth-child(2){
-        width:100px;
+    #menu_1_broadcast_button{
+        font-size: 30px;
+        cursor:pointer;
+        transform: translate(0%, 10%);
     }
-    .list_user_stat_col:nth-child(3){
-        width: 60px;
-        text-align: end;
+    #menu_1_maintenance{
+        transform: translate(0%, 10%);
     }
-    #maintenance_checkbox{
+    #menu_1_maintenance_checkbox{
         margin-top: 10px;
         margin-bottom: 5px;
     }
@@ -215,16 +174,67 @@
     .switch-input:checked + .switch-label::after {
         left: 24px;
     }
-    #maintenance_broadcast_info{
-        font-size: 30px;
-    }
-    /* MENU 2 APP ADMIN*/
+
+    /*MENU 2 USER STAT*/
     #menu_2_content_widget1{
+        height:calc(70% - 10px);
+    }
+    #menu_2_content_widget1 select{
+        display:inline-block;
+    }
+    #menu_2_row_sample{
+        margin-top:10px;
+        margin-bottom:10px;
+    }
+    #box1{
+        width: 49%;
+        height: 200px;
+        display:inline-block;
+        vertical-align: top;
+    }
+    #box2{
+        width: 49%;
+        height: 200px;
+        display:inline-block;
+        vertical-align: top;
+        
+    }
+    #box1 canvas, #box2 canvas{
+        max-height: 100%;
+    }
+    #menu_2_content_widget2{
+        height:calc(30% - 10px);
+        display: block;
+        text-align: center;
+    }
+    #list_user_stat{
+        overflow-y: auto;
+        height:90px;
+    }
+    .list_user_stat_row{
+        display: block;
+        text-align: start;
+    }
+    .list_user_stat_col{
+        display: inline-block;
+    }
+    .list_user_stat_col:nth-child(1){
+        width:20px;
+    }
+    .list_user_stat_col:nth-child(2){
+        width:100px;
+    }
+    .list_user_stat_col:nth-child(3){
+        width: 60px;
+        text-align: end;
+    }
+    /* MENU 3 APP ADMIN*/
+    #menu_3_content_widget1{
         height: calc(30% - 10px);
         display: flex;
         flex-direction: column;
     }
-    #menu_2_content_widget2{
+    #menu_3_content_widget2{
         height: calc(70% - 10px);
         display: flex;
         flex-direction: column;
@@ -334,21 +344,84 @@
         box-sizing: border-box;
         border-radius: 4px
     }    
-    /*MENU 3 APP STAT*/
-    #menu_3_content_widget1{
+    /*MENU 4 APP STAT*/
+    #menu_4_content_widget1{
         height:calc(63% - 10px);
+        display: flex;
+        flex-direction: column;
     }
-    #menu_3_content_widget2{
+    #menu_4_content_widget2{
         height:calc(37% - 10px);
     }
-    #menu3_row_sample_app_log, #menu3_row_sample_list_connected{
-        margin-top:10px;
-        margin-bottom:10px;
+    /*Navigation*/
+    #list_monitor_nav{
+        margin: 0px;
+        padding: 0px;
     }
-    #list_app_log_title1, #list_connected_title2{
+    #list_monitor_nav li{
+        display: inline-block;
+        list-style: none;
+    }
+    
+    #list_connected_title,
+    #list_app_log_title, 
+    #list_server_log_title,
+    #list_pm2_log_title {
         text-transform: uppercase;
         display:inline-block;
-        width:30%;
+        margin-top:10px;
+        margin-bottom:10px;    
+    }
+    #list_connected_form{
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+    }
+    #list_app_log_form{
+        display:none;
+        flex-direction: column;
+        height: 85%;
+    }
+    #list_server_log_form{
+        display:none;
+        height: 75%;
+    }
+    #list_pm2_log_form{
+        display:none;
+        height: 100%;
+    }
+    /*CONNECTED*/
+    .list_connected_col:nth-child(1){
+        width:70px;
+    }
+    .list_connected_col:nth-child(2){
+        width:120px;
+    }
+    .list_connected_col:nth-child(3){
+        width:40px;
+    }
+    .list_connected_col:nth-child(4){
+        width:70px;
+    }
+    .list_connected_col:nth-child(5){
+        width:90px;
+    }
+    .list_connected_col:nth-child(6){
+        width:70px;
+    }
+    .list_connected_col:nth-child(7){
+        width:70px;
+    }
+    .list_connected_col:nth-child(8){
+        width:120px;
+    }
+    .list_connected_col:nth-child(9){
+        width:70px;
+    }
+    /*APP LOG*/
+    #menu4_row_sample_app_log, #menu4_row_sample_list_connected{
+        margin-top:10px;
+        margin-bottom:10px;
     }
     .list_button{
         border: none;
@@ -356,18 +429,8 @@
         cursor: pointer;
         background:none;
         display:inline-block;
-        width:30%;
     }    
-    #list_app_log_form{
-        display:flex;
-        flex-direction: column;
-        height: 100%;
-    }
-    #list_connected_form{
-        display: none;
-        flex-direction: column;
-        height: 100%;
-    }
+    
     #list_app_log, #list_connected{
         overflow-y: auto;
         overflow-x: auto;
@@ -386,7 +449,7 @@
         padding-inline-start: 5px;
         text-align: start;
     }   
-    .list_app_log_gps_click, .list_connected_gps_click, .list_connected_chat_click, #maintenance_broadcast_info{
+    .list_connected_gps_click, .list_connected_chat_click, .list_app_log_gps_click, .list_server_log_gps_click  {
         cursor:pointer;
     }
     .list_app_log_col, .list_connected_col{
@@ -459,53 +522,10 @@
         margin-right: 10px;
         cursor:pointer;
     }
-    .list_connected_col:nth-child(1){
-        width:70px;
-    }
-    .list_connected_col:nth-child(2){
-        width:120px;
-    }
-    .list_connected_col:nth-child(3){
-        width:40px;
-    }
-    .list_connected_col:nth-child(4){
-        width:70px;
-    }
-    .list_connected_col:nth-child(5){
-        width:90px;
-    }
-    .list_connected_col:nth-child(6){
-        width:70px;
-    }
-    .list_connected_col:nth-child(7){
-        width:70px;
-    }
-    .list_connected_col:nth-child(8){
-        width:120px;
-    }
-    .list_connected_col:nth-child(9){
-        width:70px;
-    }
-    #mapid{
-        width: 100%;
-        height: 87%;
-        direction: ltr;
-    }
-    #map_my_location{
-        position: absolute;
-        display:block;
-        z-index: 1;
-        margin: 10px;
-        border-radius: 4px;
-        height: 29px;
-        width: 29px;
-    }
-    /*MENU 4 APP STAT*/
-    #menu_4_content_widget{
-        height: calc(100% + 10px)
-    }
+    /* SERVER LOG*/
     #filesearch_menu4{
         font-size: 1.4em;
+        height: auto;
     }
     #menu4_row_sample1, #menu4_row_sample2{
         margin-top:10px;
@@ -518,19 +538,6 @@
     }    
     #menu4_row_parameters div{
         display: inline-block;
-    }
-    #list_server_log_form, #list_pm2_log_form{
-        height: calc(100% - 50px);
-    }
-    #list_server_log_title1, #list_pm2_log_title1,
-    #list_server_log_title2, #list_pm2_log_title2,
-    #list_app_log_title1, #list_connected_title1,
-    #list_app_log_title2, #list_connected_title2 {
-        text-transform: uppercase;
-        display:inline-block;
-        width:30%;
-        margin-top:10px;
-        margin-bottom:10px;    
     }
     #list_server_log{
         height:70%;
@@ -595,12 +602,10 @@
         margin-inline-end: 10px;
         overflow: auto;
     }
+    /*PM2 LOG*/
     #list_pm2_log{
         text-align: start;
         height: 100%;
-    }
-    #list_pm2_log_form{
-        display:none;
     }
     #list_pm2_log_path_info{
         display: block;
@@ -616,9 +621,11 @@
     #list_pm2_log_title_out, #list_pm2_log_title_err, #list_pm2_log_title_process_event{
         text-align: center;
         margin-top: 10px;
+        font-size: 9px;
+        font-weight: bold;
     }
     #list_pm2_log_out, #list_pm2_log_err, #list_pm2_log_process_event{
-        height: calc(33% - 50px);
+        height: 19%;
         overflow-y: auto;
         overflow-x: auto;
         margin-bottom: 10px;
@@ -648,6 +655,22 @@
     .list_pm2_log_process_event_col:nth-child(3){
         width:50px;
     }
+    /*MAP*/
+    #mapid{
+        width: 100%;
+        height: 87%;
+        direction: ltr;
+    }
+    #map_my_location{
+        position: absolute;
+        display:block;
+        z-index: 1;
+        margin: 10px;
+        border-radius: 4px;
+        height: 29px;
+        width: 29px;
+    }
+
     /*RESPONSIVE*/
     @media only screen and (min-width: 768px) {
         body{
@@ -688,7 +711,8 @@
     }
     .theme_light .menuitem:hover, .theme_light .menuitem:active, 
     .theme_light .chat_click:hover, .theme_light .chat_click:active,
-    .theme_light .gps_click:hover, .theme_light .gps_click:active{
+    .theme_light .gps_click:hover, .theme_light .gps_click:active,
+    #list_monitor_nav .list_monitor_nav_selected_tab button{
         color:#6ab344 !important;
     }
     .theme_light .widget:hover, .theme_light .widget:active{

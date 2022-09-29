@@ -30,9 +30,12 @@ function show_menu(menu){
                         `;
     switch(menu){
         case 1:{
-            document.getElementById('select_year_menu1').innerHTML = yearvalues;
-            document.getElementById('select_year_menu1').selectedIndex = 0;
-            document.getElementById('select_month_menu1').selectedIndex = new Date().getMonth();
+            break;
+        }
+        case 2:{
+            document.getElementById('select_year_menu2').innerHTML = yearvalues;
+            document.getElementById('select_year_menu2').selectedIndex = 0;
+            document.getElementById('select_month_menu2').selectedIndex = new Date().getMonth();
             show_chart(1).then(function(){
                 show_chart(2).then(function(){
                     count_users().then(function(){
@@ -42,33 +45,31 @@ function show_menu(menu){
             });                
             break;    
         }
-        case 2:{
+        case 3:{
             show_apps();
             break;    
         }
-        case 3:{
-            window.global_page = 0;
-            document.getElementById('select_year_menu3_app_log').innerHTML = yearvalues;
-            document.getElementById('select_year_menu3_app_log').selectedIndex = 0;
-            document.getElementById('select_month_menu3_app_log').selectedIndex = new Date().getMonth();
-            document.getElementById('select_year_menu3_list_connected').innerHTML = yearvalues;
-            document.getElementById('select_year_menu3_list_connected').selectedIndex = 0;
-            document.getElementById('select_month_menu3_list_connected').selectedIndex = new Date().getMonth();
-            show_app_stat().then(function(){
-                if (admin_token_has_value()){
-                    window.global_session_map.resize();
-                }
-            });
-            break;    
-        }
         case 4:{
+            window.global_page = 0;
+            //connected
+            document.getElementById('select_year_menu4_list_connected').innerHTML = yearvalues;
+            document.getElementById('select_year_menu4_list_connected').selectedIndex = 0;
+            document.getElementById('select_month_menu4_list_connected').selectedIndex = new Date().getMonth();
+            //log
+            document.getElementById('select_year_menu4_app_log').innerHTML = yearvalues;
+            document.getElementById('select_year_menu4_app_log').selectedIndex = 0;
+            document.getElementById('select_month_menu4_app_log').selectedIndex = new Date().getMonth();
+            //server log
             document.getElementById('select_year_menu4').innerHTML = yearvalues;
             document.getElementById('select_year_menu4').selectedIndex = 0;
             document.getElementById('select_month_menu4').selectedIndex = new Date().getMonth();
             document.getElementById('select_day_menu4').selectedIndex = new Date().getDate() -1;
+            nav_click(document.getElementById('list_connected_title'));
             get_server_log_parameters().then(function() {
-                show_server_logs();
-            });
+                if (admin_token_has_value()){
+                    window.global_session_map.resize();
+                }
+            })
             break;
         }
     }            
@@ -76,30 +77,46 @@ function show_menu(menu){
 function show_user_agent(user_agent){
     return null;
 }
-function list_click(item){
+function nav_click(item){
+    document.getElementById('list_monitor_nav_1').classList='';
+    document.getElementById('list_monitor_nav_2').classList='';
+    document.getElementById('list_monitor_nav_3').classList='';
+    document.getElementById('list_monitor_nav_4').classList='';
     switch (item.id){
-        case 'list_app_log_title2':{
-            document.getElementById('list_app_log_form').style.display='flex';
+        case 'list_connected_title':{
+            document.getElementById('list_connected_form').style.display='flex';
+            document.getElementById('list_app_log_form').style.display='none';
+            document.getElementById('list_server_log_form').style.display='none';
+            document.getElementById('list_pm2_log_form').style.display='none';
+            document.getElementById('list_monitor_nav_1').classList= 'list_monitor_nav_selected_tab';
+            show_connected();
+            break;
+        }
+        case 'list_app_log_title':{
             document.getElementById('list_connected_form').style.display='none';
+            document.getElementById('list_app_log_form').style.display='flex';
+            document.getElementById('list_server_log_form').style.display='none';
+            document.getElementById('list_pm2_log_form').style.display='none';
+            document.getElementById('list_monitor_nav_2').classList= 'list_monitor_nav_selected_tab';
             window.global_page = 0;
             show_app_log();
             break;
         }
-        case 'list_connected_title1':{
-            document.getElementById('list_connected_form').style.display='flex';
+        case 'list_server_log_title':{
+            document.getElementById('list_connected_form').style.display='none';
             document.getElementById('list_app_log_form').style.display='none';
-            show_connected();
-            break;
-        }
-        case 'list_server_log_title2':{
             document.getElementById('list_server_log_form').style.display='block';
             document.getElementById('list_pm2_log_form').style.display='none';
+            document.getElementById('list_monitor_nav_3').classList= 'list_monitor_nav_selected_tab';
             show_server_logs();
             break;
         }
-        case 'list_pm2_log_title1':{
-            document.getElementById('list_pm2_log_form').style.display='block';
+        case 'list_pm2_log_title':{
+            document.getElementById('list_connected_form').style.display='none';
+            document.getElementById('list_app_log_form').style.display='none';
             document.getElementById('list_server_log_form').style.display='none';
+            document.getElementById('list_pm2_log_form').style.display='block';
+            document.getElementById('list_monitor_nav_4').classList= 'list_monitor_nav_selected_tab';
             show_pm2_logs();
             break;
         }
@@ -131,9 +148,9 @@ async function get_apps() {
                     html +=
                     `<option value='${json.data[i].id}'>${json.data[i].id} - ${json.data[i].app_name}</option>`;
             }
-            document.getElementById('select_app_menu1').innerHTML = html;
-            document.getElementById('select_app_menu3_app_log').innerHTML = html;
-            document.getElementById('select_app_menu3_list_connected').innerHTML = html;
+            document.getElementById('select_app_menu2').innerHTML = html;
+            document.getElementById('select_app_menu4_app_log').innerHTML = html;
+            document.getElementById('select_app_menu4_list_connected').innerHTML = html;
             document.getElementById('select_app_menu4').innerHTML = html;
             document.getElementById('select_app_broadcast').innerHTML = html;
         
@@ -184,6 +201,38 @@ async function show_list(list_div, list_div_col_title, url, sort, order_by, cols
                     use this grouping to decide column orders
                     [log colums][server columns][user columns][detail columms][app columns(broadcast, edit etc)]
                     */
+                    case 'list_connected':{
+                        html = `<div id='list_connected_row_title' class='list_connected_row'>
+                                    <div id='list_connected_col_title1' class='list_connected_col list_connected_sort_click'>
+                                        <div>ID</div>
+                                    </div>
+                                    <div id='list_connected_col_title5' class='list_connected_col list_connected_sort_click'>
+                                        <div>CONNECTION DATE</div>
+                                    </div>
+                                    <div id='list_connected_col_title2' class='list_connected_col list_connected_sort_click'>
+                                        <div>APP ID</div>
+                                    </div>
+                                    <div id='list_connected_col_title3' class='list_connected_col list_connected_sort_click'>
+                                        <div>USER ID</div>
+                                    </div>
+                                    <div id='list_connected_col_title6' class='list_connected_col list_connected_sort_click'>
+                                        <div>IP</div>
+                                    </div>
+                                    <div id='list_connected_col_title7' class='list_connected_col list_connected_sort_click'>
+                                        <div>GPS LAT</div>
+                                    </div>
+                                    <div id='list_connected_col_title8' class='list_connected_col list_connected_sort_click'>
+                                        <div>GPS LONG</div>
+                                    </div>
+                                    <div id='list_connected_col_title4' class='list_connected_col list_connected_sort_click'>
+                                        <div>USER AGENT</div>
+                                    </div>
+                                    <div id='list_connected_col_title9' class='list_connected_col'>
+                                        <div>BROADCAST</div>
+                                    </div>
+                                </div>`;
+                        break;
+                    }
                     case 'list_app_log':{
                         window.global_page_last = Math.floor(json.data[0].total_rows/window.global_limit) * window.global_limit;
                         html = `<div id='list_app_log_row_title' class='list_app_log_row'>
@@ -240,38 +289,6 @@ async function show_list(list_div, list_div_col_title, url, sort, order_by, cols
                                     </div>
                                     <div id='list_app_log_col_title17' class='list_app_log_col list_app_log_sort_click'>
                                         <div>ACCEPT LANGUAGE</div>
-                                    </div>
-                                </div>`;
-                        break;
-                    }
-                    case 'list_connected':{
-                        html = `<div id='list_connected_row_title' class='list_connected_row'>
-                                    <div id='list_connected_col_title1' class='list_connected_col list_connected_sort_click'>
-                                        <div>ID</div>
-                                    </div>
-                                    <div id='list_connected_col_title5' class='list_connected_col list_connected_sort_click'>
-                                        <div>CONNECTION DATE</div>
-                                    </div>
-                                    <div id='list_connected_col_title2' class='list_connected_col list_connected_sort_click'>
-                                        <div>APP ID</div>
-                                    </div>
-                                    <div id='list_connected_col_title3' class='list_connected_col list_connected_sort_click'>
-                                        <div>USER ID</div>
-                                    </div>
-                                    <div id='list_connected_col_title6' class='list_connected_col list_connected_sort_click'>
-                                        <div>IP</div>
-                                    </div>
-                                    <div id='list_connected_col_title7' class='list_connected_col list_connected_sort_click'>
-                                        <div>GPS LAT</div>
-                                    </div>
-                                    <div id='list_connected_col_title8' class='list_connected_col list_connected_sort_click'>
-                                        <div>GPS LONG</div>
-                                    </div>
-                                    <div id='list_connected_col_title4' class='list_connected_col list_connected_sort_click'>
-                                        <div>USER AGENT</div>
-                                    </div>
-                                    <div id='list_connected_col_title9' class='list_connected_col'>
-                                        <div>BROADCAST</div>
                                     </div>
                                 </div>`;
                         break;
@@ -373,6 +390,38 @@ async function show_list(list_div, list_div_col_title, url, sort, order_by, cols
                 if (json.data.length >0){
                     for (i = 0; i < json.data.length; i++) {
                         switch (list_div){
+                            case 'list_connected':{
+                                html += `<div class='list_connected_row'>
+                                            <div class='list_connected_col'>
+                                                <div>${json.data[i].id}</div>
+                                            </div>
+                                            <div class='list_connected_col'>
+                                                <div>${json.data[i].connection_date}</div>
+                                            </div>
+                                            <div class='list_connected_col'>
+                                                <div>${json.data[i].app_id}</div>
+                                            </div>
+                                            <div class='list_connected_col'>
+                                                <div>${json.data[i].user_account_id}</div>
+                                            </div>
+                                            <div class='list_connected_col'>
+                                                <div>${json.data[i].ip.replace('::ffff:','')}</div>
+                                            </div>
+                                            <div class='list_connected_col list_connected_gps_click gps_click'>
+                                                <div>${json.data[i].gps_latitude}</div>
+                                            </div>
+                                            <div class='list_connected_col list_connected_gps_click gps_click'>
+                                                <div>${json.data[i].gps_longitude}</div>
+                                            </div>
+                                            <div class='list_connected_col'>
+                                                <div>${show_user_agent(json.data[i].user_agent)}</div>
+                                            </div>
+                                            <div class='list_connected_col list_connected_chat_click chat_click'>
+                                                <div>${window.global_icon_app_chat}</div>
+                                            </div>
+                                        </div>`;
+                                break;
+                            }
                             case 'list_app_log':{
                                 html += `<div class='list_app_log_row'>
                                             <div class='list_app_log_col'>
@@ -432,38 +481,6 @@ async function show_list(list_div, list_div_col_title, url, sort, order_by, cols
                                         </div>`;
                                 break;
                             }
-                            case 'list_connected':{
-                                html += `<div class='list_connected_row'>
-                                            <div class='list_connected_col'>
-                                                <div>${json.data[i].id}</div>
-                                            </div>
-                                            <div class='list_connected_col'>
-                                                <div>${json.data[i].connection_date}</div>
-                                            </div>
-                                            <div class='list_connected_col'>
-                                                <div>${json.data[i].app_id}</div>
-                                            </div>
-                                            <div class='list_connected_col'>
-                                                <div>${json.data[i].user_account_id}</div>
-                                            </div>
-                                            <div class='list_connected_col'>
-                                                <div>${json.data[i].ip.replace('::ffff:','')}</div>
-                                            </div>
-                                            <div class='list_connected_col list_connected_gps_click gps_click'>
-                                                <div>${json.data[i].gps_latitude}</div>
-                                            </div>
-                                            <div class='list_connected_col list_connected_gps_click gps_click'>
-                                                <div>${json.data[i].gps_longitude}</div>
-                                            </div>
-                                            <div class='list_connected_col'>
-                                                <div>${show_user_agent(json.data[i].user_agent)}</div>
-                                            </div>
-                                            <div class='list_connected_col list_connected_chat_click chat_click'>
-                                                <div>${window.global_icon_app_chat}</div>
-                                            </div>
-                                        </div>`;
-                                break;
-                            }
                             case 'list_server_log':{
                                 for (i = 0; i < json.data.length; i++) {
                                     //test if JSON in logtext
@@ -480,7 +497,7 @@ async function show_list(list_div, list_div_col_title, url, sort, order_by, cols
                                         <div class='list_server_log_col'>
                                             <div>${json.data[i].app_id}</div>
                                         </div>
-                                        <div class='list_server_log_col'>
+                                        <div class='list_server_log_col list_server_log_gps_click gps_click'>
                                             <div>${json.data[i].ip==""?"":json.data[i].ip.replace('::ffff:','')}</div>
                                         </div>
                                         <div class='list_server_log_col'>
@@ -583,14 +600,6 @@ async function show_list(list_div, list_div_col_title, url, sort, order_by, cols
                         }
                     }
                     switch (list_div){
-                        case 'list_app_log':{
-                            document.getElementById(list_div).innerHTML = html;
-                            document.getElementById(list_div_col_title + sort).classList.add(order_by);
-                            //add events on some columns searching in all rows
-                            set_list_eventlisteners('app_log', 'sort',1);
-                            set_list_eventlisteners('app_log', 'gps',1);
-                            break;
-                        }
                         case 'list_connected':{
                             document.getElementById(list_div).innerHTML = html;
                             document.getElementById(list_div_col_title + sort).classList.add(order_by);
@@ -601,11 +610,20 @@ async function show_list(list_div, list_div_col_title, url, sort, order_by, cols
                             set_list_eventlisteners('connected', 'chat',1);
                             break;
                         }
+                        case 'list_app_log':{
+                            document.getElementById(list_div).innerHTML = html;
+                            document.getElementById(list_div_col_title + sort).classList.add(order_by);
+                            //add events on some columns searching in all rows
+                            set_list_eventlisteners('app_log', 'sort',1);
+                            set_list_eventlisteners('app_log', 'gps',1);
+                            break;
+                        }
                         case 'list_server_log':{
                             document.getElementById(list_div).innerHTML = html;
                             document.getElementById(list_div_col_title + sort).classList.add(order_by);
                             //add events on some columns searching in all rows
                             set_list_eventlisteners('server_log', 'sort',1);
+                            set_list_eventlisteners('server_log', 'gps',1);
                             break;
                         }
                         case 'list_pm2_log':{
@@ -793,9 +811,9 @@ function map_set_style(){
 //chart 1=Left Piechart, 2= Right Barchart
 async function show_chart(chart){
     if (admin_token_has_value()){
-        let app_id =document.getElementById('select_app_menu1').value;
-        let year = document.getElementById('select_year_menu1').value;
-        let month = document.getElementById('select_month_menu1').value;
+        let app_id =document.getElementById('select_app_menu2').value;
+        let year = document.getElementById('select_year_menu2').value;
+        let month = document.getElementById('select_month_menu2').value;
         let json;
         let old_html = document.getElementById(`box${chart}_title`).innerHTML;
         document.getElementById(`box${chart}_title`).innerHTML = window.global_app_spinner;
@@ -823,7 +841,7 @@ async function show_chart(chart){
                     }
                     for (let i = 0; i < json.data.length; i++) {
                         if (json.data[i].app_id>0){
-                            app_id_array.push(SearchAndGetText(document.getElementById('select_app_menu1'), json.data[i].app_id));
+                            app_id_array.push(SearchAndGetText(document.getElementById('select_app_menu2'), json.data[i].app_id));
                             amount_array.push(json.data[i].amount);
                         }
                     }
@@ -865,7 +883,7 @@ async function show_chart(chart){
                             data: {
                                 labels: day_array,
                                 datasets: [{
-                                    label:document.getElementById('select_app_menu1').options[document.getElementById('select_app_menu1').selectedIndex].text,
+                                    label:document.getElementById('select_app_menu2').options[document.getElementById('select_app_menu2').selectedIndex].text,
                                     data: amount_array,
                                     backgroundColor: [
                                         bar_color,
@@ -1007,16 +1025,16 @@ async function show_maintenance(){
             else{
                 json = JSON.parse(result);
                 if (json.data==1)
-                    document.getElementById('checkbox_maintenance').checked =true;
+                    document.getElementById('menu_1_checkbox_maintenance').checked =true;
                 else
-                    document.getElementById('checkbox_maintenance').checked =false;
+                    document.getElementById('menu_1_checkbox_maintenance').checked =false;
             }
         })
     }
 }
 function set_maintenance(){
     let check_value;
-    if (document.getElementById('checkbox_maintenance').checked ==true)
+    if (document.getElementById('menu_1_checkbox_maintenance').checked ==true)
         check_value = 1;
     else
         check_value = 0;
@@ -1333,9 +1351,9 @@ function show_parameter_type_names(lov, row_item, item_index){
 /* APP STAT               */
 /*----------------------- */
 async function show_connected(sort=4, order_by='desc'){
-    let app_id = document.getElementById('select_app_menu3_list_connected').options[document.getElementById('select_app_menu3_list_connected').selectedIndex].value;
-    let year = document.getElementById('select_year_menu3_list_connected').value;
-    let month = document.getElementById('select_month_menu3_list_connected').value;
+    let app_id = document.getElementById('select_app_menu4_list_connected').options[document.getElementById('select_app_menu4_list_connected').selectedIndex].value;
+    let year = document.getElementById('select_year_menu4_list_connected').value;
+    let month = document.getElementById('select_month_menu4_list_connected').value;
     show_list('list_connected', 
               'list_connected_col_title', 
               `/service/broadcast/connected?select_app_id=${app_id}&year=${year}&month=${month}&sort=${sort}&order_by=${order_by}&limit=${window.global_limit}`, 
@@ -1343,16 +1361,11 @@ async function show_connected(sort=4, order_by='desc'){
               order_by,
               8);
 }    
-async function show_app_stat(){
-    if (document.getElementById('list_connected_form').style.display=='flex')
-        list_click(document.getElementById('list_connected_title1'));
-    else
-        list_click(document.getElementById('list_app_log_title2'));
-}
+
 async function show_app_log(sort=8, order_by='desc', offset=0, limit=window.global_limit){
-    let app_id = document.getElementById('select_app_menu3_app_log').options[document.getElementById('select_app_menu3_app_log').selectedIndex].value;
-    let year = document.getElementById('select_year_menu3_app_log').value;
-    let month = document.getElementById('select_month_menu3_app_log').value;
+    let app_id = document.getElementById('select_app_menu4_app_log').options[document.getElementById('select_app_menu4_app_log').selectedIndex].value;
+    let year = document.getElementById('select_year_menu4_app_log').value;
+    let month = document.getElementById('select_month_menu4_app_log').value;
     show_list('list_app_log', 
               'list_app_log_col_title', 
               window.global_rest_url_base + `app_log?select_app_id=${app_id}&year=${year}&month=${month}&sort=${sort}&order_by=${order_by}&offset=${offset}&limit=${limit}`, 
@@ -1461,35 +1474,62 @@ function page_navigation(item){
 }
 function list_item_click(item){
     if (item.className.indexOf('gps_click')>0){
-        let lat;
-        let long;
-        //make sure column lat and long are beside eachother and lat is before long
-        for (let i=0;i<item.parentNode.children.length;i++){
-            if (item.parentNode.children[i].classList.contains('gps_click')){
-                lat = item.parentNode.children[i].children[0].innerHTML;
-                long = item.parentNode.children[i+1].children[0].innerHTML;
-                break;
-            }       
+        if (item.parentNode.parentNode.id =='list_server_log'){
+            //clicking on IP, get GPS, show on map
+            let ip_filter='';
+            //if localhost show default position
+            if (item.children[0].innerHTML != '::1')
+                ip_filter = `&ip=${item.children[0].innerHTML}`;
+            common_fetch(window.global_service_geolocation + window.global_service_geolocation_gps_ip + 
+                            `/admin?app_user_id=${ip_filter}`,
+                            'GET', 2, null, null, null, (err, result) =>{
+                    if (err)
+                        null;
+                    else{
+                        let json = JSON.parse(result);
+                        update_map(json.geoplugin_longitude,
+                                    json.geoplugin_latitude,
+                                    window.global_gps_map_zoom,
+                                    json.geoplugin_city + ', ' +
+                                    json.geoplugin_regionName + ', ' +
+                                    json.geoplugin_countryName,
+                                    window.global_gps_map_marker_div_gps,
+                                    window.global_gps_map_jumpto);
+                    }
+            })
         }
-        common_fetch(window.global_service_geolocation + window.global_service_geolocation_gps_place + 
-                     '/admin?app_user_id=' +
-                     '&latitude=' + lat +
-                     '&longitude=' + long,
-                     'GET', 2, null, null, null, (err, result) =>{
-                if (err)
-                    null;
-                else{
-                    let json = JSON.parse(result);
-                    update_map(long,
-                               lat,
-                               window.global_gps_map_zoom,
-                               json.geoplugin_place + ', ' + 
-                               json.geoplugin_region + ', ' + 
-                               json.geoplugin_countryCode,
-                               window.global_gps_map_marker_div_gps,
-                               window.global_gps_map_jumpto);
-                }
-        })
+        else{
+            //clicking on GPS, show on map
+            let lat;
+            let long;
+            //make sure column lat and long are beside eachother and lat is before long
+            for (let i=0;i<item.parentNode.children.length;i++){
+                if (item.parentNode.children[i].classList.contains('gps_click')){
+                    lat = item.parentNode.children[i].children[0].innerHTML;
+                    long = item.parentNode.children[i+1].children[0].innerHTML;
+                    break;
+                }       
+            }    
+            common_fetch(window.global_service_geolocation + window.global_service_geolocation_gps_place + 
+                            '/admin?app_user_id=' +
+                            '&latitude=' + lat +
+                            '&longitude=' + long,
+                            'GET', 2, null, null, null, (err, result) =>{
+                    if (err)
+                        null;
+                    else{
+                        let json = JSON.parse(result);
+                        update_map(long,
+                                    lat,
+                                    window.global_gps_map_zoom,
+                                    json.geoplugin_place + ', ' + 
+                                    json.geoplugin_region + ', ' + 
+                                    json.geoplugin_countryCode,
+                                    window.global_gps_map_marker_div_gps,
+                                    window.global_gps_map_jumpto);
+                    }
+            })
+        }
     }
     else
         if (item.className.indexOf('chat_click')>0){
@@ -1581,12 +1621,12 @@ function show_server_logs(sort=1, order_by='desc'){
     let app_id_filter='';
     if (logscope=='SERVER'){
         //no app filter for server, since this is a server log
-        document.getElementById('select_app_menu4').style.visibility = 'hidden';
+        document.getElementById('select_app_menu4').style.display = 'none';
         app_id_filter = `select_app_id=&`;
     }
     else{
         //show app filter and use it
-        document.getElementById('select_app_menu4').style.visibility = 'visible';
+        document.getElementById('select_app_menu4').style.display = 'inline-block';
         app_id_filter = `select_app_id=${document.getElementById('select_app_menu4').options[document.getElementById('select_app_menu4').selectedIndex].value}&`;
     }
     let url_parameters;
@@ -1789,7 +1829,7 @@ function init_admin_secure(){
     //other in admin
     document.getElementById('menu_open').innerHTML = window.global_icon_app_menu_open;
     document.getElementById('menu_close').innerHTML = window.global_icon_app_menu_close;
-    document.getElementById('maintenance_broadcast_info').innerHTML = window.global_icon_app_chat;
+    document.getElementById('menu_1_broadcast_button').innerHTML = window.global_icon_app_chat;
     document.getElementById('apps_save').innerHTML = window.global_icon_app_save;
     document.getElementById('list_app_log_first').innerHTML = window.global_icon_app_first;
     document.getElementById('list_app_log_previous').innerHTML = window.global_icon_app_previous;
@@ -1824,34 +1864,44 @@ function init_admin_secure(){
     document.getElementById('menu_4').addEventListener('click', function() { show_menu(4) }, false);
     document.getElementById('menu_5').addEventListener('click', function() { admin_logoff_app() }, false);
 
-    document.getElementById('select_app_menu1').addEventListener('change', function() { show_chart(1); show_chart(2);}, false);
-    document.getElementById('select_year_menu1').addEventListener('change', function() { show_chart(1);show_chart(2);}, false);
-    document.getElementById('select_month_menu1').addEventListener('change', function() { show_chart(1);show_chart(2);}, false);
+    document.getElementById('select_app_menu2').addEventListener('change', function() { show_chart(1); show_chart(2);}, false);
+    document.getElementById('select_year_menu2').addEventListener('change', function() { show_chart(1);show_chart(2);}, false);
+    document.getElementById('select_month_menu2').addEventListener('change', function() { show_chart(1);show_chart(2);}, false);
+    document.getElementById('menu_1_broadcast_button').addEventListener('click', function() { show_broadcast_dialogue('ALL'); }, false);
+    document.getElementById('menu_1_checkbox_maintenance').addEventListener('click', function() { set_maintenance() }, false);
     document.getElementById('select_broadcast_type').addEventListener('change', function() { set_broadcast_type(); }, false);
-    document.getElementById('maintenance_broadcast_info').addEventListener('click', function() { show_broadcast_dialogue('ALL'); }, false);
     document.getElementById('send_broadcast_send').addEventListener('click', function() { sendBroadcast(); }, false);
     document.getElementById('send_broadcast_close').addEventListener('click', function() { closeBroadcast()}, false);
-    document.getElementById('checkbox_maintenance').addEventListener('click', function() { set_maintenance() }, false);
+
 
     document.getElementById('lov_close').addEventListener('click', function() { close_lov()}, false); 
     document.getElementById('apps_save').addEventListener('click', function() { apps_save()}, false); 
 
-    document.getElementById('select_app_menu3_app_log').addEventListener('change', function() { show_app_stat()}, false);
-    document.getElementById('select_year_menu3_app_log').addEventListener('change', function() { show_app_stat()}, false);
-    document.getElementById('select_month_menu3_app_log').addEventListener('change', function() { show_app_stat()}, false);
+    document.getElementById('list_app_log_title').addEventListener('click', function() { nav_click(this)}, false);
+    document.getElementById('select_app_menu4_app_log').addEventListener('change', function() { nav_click(document.getElementById('list_app_log_title'))}, false);
+    document.getElementById('select_year_menu4_app_log').addEventListener('change', function() { nav_click(document.getElementById('list_app_log_title'))}, false);
+    document.getElementById('select_month_menu4_app_log').addEventListener('change', function() { nav_click(document.getElementById('list_app_log_title'))}, false);
     
-    document.getElementById('list_app_log_title2').addEventListener('click', function() { list_click(this)}, false);
     document.getElementById('list_app_log_first').addEventListener('click', function() { page_navigation(this)}, false);
     document.getElementById('list_app_log_previous').addEventListener('click', function() { page_navigation(this)}, false);
     document.getElementById('list_app_log_next').addEventListener('click', function() { page_navigation(this)}, false);
     document.getElementById('list_app_log_last').addEventListener('click', function() { page_navigation(this)}, false);
     
-    document.getElementById('select_app_menu3_list_connected').addEventListener('change', function() { show_app_stat()}, false);
-    document.getElementById('select_year_menu3_list_connected').addEventListener('change', function() { show_app_stat()}, false);
-    document.getElementById('select_month_menu3_list_connected').addEventListener('change', function() { show_app_stat()}, false);
-    
-    document.getElementById('list_connected_title1').addEventListener('click', function() { list_click(this)}, false);
+    document.getElementById('list_connected_title').addEventListener('click', function() { nav_click(this)}, false);
+    document.getElementById('select_app_menu4_list_connected').addEventListener('change', function() { nav_click(document.getElementById('list_list_connected_title'))}, false);
+    document.getElementById('select_year_menu4_list_connected').addEventListener('change', function() { nav_click(document.getElementById('list_list_connected_title'))}, false);
+    document.getElementById('select_month_menu4_list_connected').addEventListener('change', function() { nav_click(document.getElementById('list_list_connected_title'))}, false);
 
+    document.getElementById('list_server_log_title').addEventListener('click', function() { nav_click(this)}, false);
+    document.getElementById('select_logscope4').addEventListener('change', function() { nav_click(document.getElementById('list_server_log_title'))}, false);    
+    document.getElementById('select_app_menu4').addEventListener('change', function() { nav_click(document.getElementById('list_server_log_title'))}, false);
+    document.getElementById('select_year_menu4').addEventListener('change', function() { nav_click(document.getElementById('list_server_log_title'))}, false);
+    document.getElementById('select_month_menu4').addEventListener('change', function() { nav_click(document.getElementById('list_server_log_title'))}, false);
+    document.getElementById('select_day_menu4').addEventListener('change', function() { nav_click(document.getElementById('list_server_log_title'))}, false);
+
+    document.getElementById('filesearch_menu4').addEventListener('click', function() { show_existing_logfiles();}, false);
+    
+    document.getElementById('list_pm2_log_title').addEventListener('click', function() { nav_click(this)}, false);
     document.getElementById('select_maptype').addEventListener('change', function() { map_set_style(); }, false);
     document.getElementById('map_my_location').addEventListener('click', function() { get_gps_from_ip().then(function(){
         update_map(window.global_client_longitude,
@@ -1860,43 +1910,38 @@ function init_admin_secure(){
                    window.global_client_place,
                    window.global_gps_map_marker_div_gps,
                    window.global_gps_map_jumpto);})}, false);
-    document.getElementById('select_logscope4').addEventListener('change', function() { show_server_logs();}, false);    
-    document.getElementById('select_app_menu4').addEventListener('change', function() { show_server_logs();}, false);
-    document.getElementById('select_year_menu4').addEventListener('change', function() { show_server_logs();}, false);
-    document.getElementById('select_month_menu4').addEventListener('change', function() { show_server_logs();}, false);
-    document.getElementById('select_day_menu4').addEventListener('change', function() { show_server_logs();}, false);
-    document.getElementById('filesearch_menu4').addEventListener('click', function() { show_existing_logfiles();}, false);
-    document.getElementById('list_pm2_log_title1').addEventListener('click', function() { list_click(this)}, false);
-    document.getElementById('list_server_log_title2').addEventListener('click', function() { list_click(this)}, false);
 
     //set texts
     document.getElementById('menu_1').innerHTML = 'DASHBOARD';
-    document.getElementById('menu_2').innerHTML = 'APP ADMIN';
-    document.getElementById('menu_3').innerHTML = 'APP STAT';
-    document.getElementById('menu_4').innerHTML = 'SERVER LOG';
+    document.getElementById('menu_2').innerHTML = 'USER STAT';
+    document.getElementById('menu_3').innerHTML = 'APP ADMIN';
+    document.getElementById('menu_4').innerHTML = 'MONITOR';
     document.getElementById('menu_5').innerHTML = 'LOGOUT';
 
+    //menu 1
+    document.getElementById('menu_1_db_info_database_title').innerHTML = 'Database';
+    document.getElementById('menu_1_db_info_name_title').innerHTML = 'Name';
+    document.getElementById('menu_1_db_info_version_title').innerHTML = 'Version';
+    document.getElementById('menu_1_db_info_host_title').innerHTML = 'Host';
+    document.getElementById('menu_1_db_info_connections_title').innerHTML = 'Connections';
+    document.getElementById('menu_1_db_info_started_title').innerHTML = 'Started';
+
+    document.getElementById('menu_1_maintenance_title').innerHTML = 'Maintenance';
+    //menu 2
     document.getElementById('box1_title').innerHTML = 'Unique Visitors';
     document.getElementById('box2_title').innerHTML = 'Unique Visitors';
     document.getElementById('list_user_stat_col_title1').innerHTML = 'ID';
     document.getElementById('list_user_stat_col_title2').innerHTML = 'PROVIDER';
     document.getElementById('list_user_stat_col_title3').innerHTML = 'COUNT';
     document.getElementById('list_user_stat_col_title4').innerHTML = 'CONNECTED';
-    document.getElementById('maintenance_title').innerHTML = 'Maintenance';
-
+    //menu 3
     document.getElementById('list_apps_title').innerHTML = 'APPS';
     document.getElementById('list_app_parameter_title').innerHTML = 'APP PARAMETERS';
-    document.getElementById('list_app_log_title1').innerHTML = 'App Log';
-    document.getElementById('list_app_log_title2').innerHTML = 'App Log';
-    document.getElementById('list_connected_title1').innerHTML = 'Connected';
-    document.getElementById('list_connected_title2').innerHTML = 'Connected';
-
-    document.getElementById('map_my_location').title = 'My location';
-
-    document.getElementById('list_server_log_title1').innerHTML = 'Server Log';
-    document.getElementById('list_server_log_title2').innerHTML = 'Server Log';
-    document.getElementById('list_pm2_log_title1').innerHTML = 'PM2 Log';
-    document.getElementById('list_pm2_log_title2').innerHTML = 'PM2 Log';
+    //menu 4
+    document.getElementById('list_connected_title').innerHTML = 'Connected';
+    document.getElementById('list_app_log_title').innerHTML = 'App Log';
+    document.getElementById('list_server_log_title').innerHTML = 'Server Log';
+    document.getElementById('list_pm2_log_title').innerHTML = 'PM2 Log';
 
     document.getElementById('menu4_row_parameters_col1').innerHTML = 'Server info';
     document.getElementById('menu4_row_parameters_col2').innerHTML = 'Server verbose';
@@ -1909,6 +1954,8 @@ function init_admin_secure(){
     document.getElementById('list_pm2_log_title_out').innerHTML = 'PM2 Log Out';
     document.getElementById('list_pm2_log_title_err').innerHTML = 'PM2 Log Error';
     document.getElementById('list_pm2_log_title_process_event').innerHTML = 'PM2 Log Process event';
+
+    document.getElementById('map_my_location').title = 'My location';
 
     document.getElementById('send_broadcast_title').innerHTML = 'Broadcast';
     document.getElementById('select_broadcast_type').options[0].text = 'INFO';
