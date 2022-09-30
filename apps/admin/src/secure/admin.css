@@ -110,26 +110,73 @@
     }
     /*MENU 1 DASHBOARD*/
     #menu_1_content_widget1{
-        height:calc(25% - 16.6px);
-        vertical-align: middle;
+        height: 130px;
     }
     #menu_1_db_info1 div{
         text-align: start;
+        display: inline-block;
+        font-size: 9px;
     }
+    #menu_1_db_info1 div:nth-child(odd){
+        width: 150px;
+        text-transform: uppercase;
+    }
+    #menu_1_db_info1 div:nth-child(even){
+        width: calc(100% - 150px);
+    }
+
     #menu_1_content_widget2{
-        height:calc(50% - 16.6px);
+        height:calc(100% - 280px);;
+        display: flex;
+        flex-direction: column;
     }
+
+    #menu_1_db_info_space_title{
+        display: inline-block;
+        text-align: start;
+        margin-bottom:10px;
+        text-transform: uppercase;
+    }
+    #menu_1_db_info_space_detail{
+        overflow-y: auto;
+        overflow-x: auto;
+        margin-bottom: 10px;
+        border-radius: 4px;
+    }
+
+    .menu_1_db_info_space_detail_row{
+        height: auto;
+        padding-top:4px;
+        padding-inline-start: 5px;
+        text-align: start;
+    }   
+    #menu_1_db_info_space_detail_row_total{
+        border-top: 1px solid black;
+        margin-top: 2px;
+    }
+    .menu_1_db_info_space_detail_col{
+        display:inline-block;
+        margin-inline-end: 10px;
+        overflow: auto;
+        width: 70px;
+        text-align: end;
+    }
+    .menu_1_db_info_space_detail_col:nth-child(1){
+        width:250px;
+        text-align: start;
+    }
+
     #menu_1_content_widget3{
-        height:calc(25% - 16.6px);
+        height:100px;
         vertical-align: middle;
     }
     #menu_1_broadcast_button{
         font-size: 30px;
         cursor:pointer;
-        transform: translate(0%, 10%);
+        transform: translate(0%, 5%);
     }
     #menu_1_maintenance{
-        transform: translate(0%, 10%);
+        transform: translate(0%, 5%);
     }
     #menu_1_maintenance_checkbox{
         margin-top: 10px;
@@ -728,6 +775,7 @@
     .theme_light #users_count #count_local_label{
         color: #a49775;
     }
+    .theme_light .menu_1_db_info_space_detail_row:nth-child(odd),
     .theme_light .list_user_stat_row:nth-child(odd),
     .theme_light .list_lov_row:nth-child(odd),
     .theme_light .list_app_log_row:nth-child(odd),
@@ -738,6 +786,8 @@
     .theme_light #list_pm2_log_process_event .list_pm2_log_row:nth-child(odd){
         background-color: rgb(197 227 255);
     }
+    .theme_light .menu_1_db_info_space_detail_row:last-child,
+    .theme_light .menu_1_db_info_space_detail_row:nth-child(even),
     .theme_light .list_user_stat_row:nth-child(even),
     .theme_light .list_lov_row:nth-child(even),
     .theme_light .list_app_log_row:nth-child(even),
@@ -751,16 +801,10 @@
     .theme_light #list_user_stat_row_title{
         background-color: #FFF;
     }
-    .theme_light #list_apps_row_title, 
-    .theme_light #list_app_parameter_row_title, 
-    .theme_light #list_app_log_row_title, 
-    .theme_light #list_connected_row_title,
-    .theme_light #list_server_log_row_title,
-    .theme_light #list_pm2_log_out_row_title,
-    .theme_light #list_pm2_log_err_row_title,
-    .theme_light #list_pm2_log_process_event_row_title{
+    .theme_light .list_title{
         font-weight: bold;
     }
+    .theme_light .menu_1_db_info_space_detail_row,
     .theme_light .list_apps_row,
     .theme_light .list_app_parameter_row,
     .theme_light .list_app_log_row,
@@ -781,6 +825,7 @@
     .theme_light .list_lov_row:hover, .theme_light .list_lov_row:active{
         color:#6ab344 !important;
     }
+    .theme_light #menu_1_db_info_space_detail,
     .theme_light #lov_list,
     .theme_light #list_app_log,
     .theme_light #list_connected,
