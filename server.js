@@ -113,6 +113,7 @@ const authAdminRouter = require("./service/auth/admin/admin.router");
 //service broadcast
 const broadcastRouter = require("./service/broadcast/broadcast.router");
 //service db
+const adminRouter = require("./service/db/admin/admin.router");
 const appRouter = require("./service/db/app_portfolio/app/app.router");
 const app_logRouter = require("./service/db/app_portfolio/app_log/app_log.router");
 const app_objectRouter = require("./service/db/app_portfolio/app_object/app_object.router");
@@ -150,6 +151,7 @@ app.use("/service/auth/admin", authAdminRouter);
 //service broadcast
 app.use("/service/broadcast", broadcastRouter);
 //service database
+app.use("/service/db/admin", adminRouter);
 app.use("/service/db/app_portfolio/app", appRouter);
 app.use("/service/db/app_portfolio/app_log", app_logRouter);
 app.use("/service/db/app_portfolio/app_object", app_objectRouter);
