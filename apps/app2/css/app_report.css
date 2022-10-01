@@ -24,9 +24,7 @@
 
 #printbody .prayertable_month #timetable .prayertable_month_today-row {
     animation: unset;
-    -webkit-animation: unset;
     animation-iteration-count: unset;
-    -webkit-animation-iteration-count: unset;
     opacity: inherit;
     font-weight: inherit;
 }
@@ -197,9 +195,7 @@
 }
 #prayertable_day .prayertable_day_timetable_row_data.prayertable_day_today-row{
 	animation: pulsate 2s ease-out;
-	-webkit-animation: pulsate 2s ease-out;
 	animation-iteration-count: infinite; 
-    -webkit-animation-iteration-count: infinite; 
     opacity: 0.5;
 	font-weight:bold;
 }
@@ -380,24 +376,11 @@
 }
 .prayertable_month #timetable .prayertable_month_today-row{
 	animation: pulsate 2s ease-out;
-	-webkit-animation: pulsate 2s ease-out;
-	animation-iteration-count: infinite; 
-    -webkit-animation-iteration-count: infinite; 
+	animation-iteration-count: infinite;
     opacity: 0.5;
 	font-weight:bold;
 }
 @keyframes pulsate {
-    0% { 
-        opacity: 0.5;
-    }
-    50% { 
-        opacity: 1.0;
-    }
-    100% { 
-        opacity: 0.5;
-    }
-}
-@-webkit-keyframes pulsate {
     0% { 
         opacity: 0.5;
     }

@@ -568,6 +568,24 @@ function SearchAndSetSelectedIndex(search, select_item, colcheck) {
 /*----------------------- */
 /* MESSAGE & DIALOGUE     */
 /*----------------------- */
+async function dialogue_close(dialogue){
+    return new Promise(function (resolve, reject){
+        //misc    
+        let meepmeep = document.createElement("audio");
+        meepmeep.src = '/common/audio/meepmeep.ogg';
+
+        var animationDuration = 400;
+        meepmeep.play();
+        setTimeout(function(){
+            document.getElementById(dialogue).classList.add('dialogue_close');
+            setTimeout(function(){
+                document.getElementById(dialogue).style.visibility = 'hidden';
+                document.getElementById(dialogue).classList.remove('dialogue_close');
+                resolve();
+            }, animationDuration);
+        }, animationDuration);
+    })
+}
 function show_common_dialogue(dialogue, user_verification_type, title=null, icon=null, click_cancel_event) {
     switch (dialogue) {
         case 'PROFILE':
@@ -870,35 +888,40 @@ function move_info(move1, move2) {
     return null;
 }
 function show_window_info(info, show_toolbar, content, content_type, qr_data, iframe_content){
-    let display;
+    /*
+    common_window_info_info     use to display image                    case 0
+    common_window_info_info     use to display spinner                  case null
+    common_window_info_content  url in iframe, HTML or PDF              case null
+    common_window_info_content  url in iframe, use overflowY=hidden     case 1-4
+    */
+    let display_toolbar;
     if (show_toolbar)
-        display = 'inline-block';
+        display_toolbar = 'inline-block';
     else
-        display = 'none';
-    document.getElementById('common_window_info_toolbar_btn_zoomout').style.display = display;
-    document.getElementById('common_window_info_toolbar_btn_zoomin').style.display = display;
-    document.getElementById('common_window_info_toolbar_btn_left').style.display = display;
-    document.getElementById('common_window_info_toolbar_btn_right').style.display = display;
-    document.getElementById('common_window_info_toolbar_btn_up').style.display = display;
-    document.getElementById('common_window_info_toolbar_btn_down').style.display = display;
-    
+        display_toolbar = 'none';
+    document.getElementById('common_window_info_toolbar_btn_zoomout').style.display = display_toolbar;
+    document.getElementById('common_window_info_toolbar_btn_zoomin').style.display = display_toolbar;
+    document.getElementById('common_window_info_toolbar_btn_left').style.display = display_toolbar;
+    document.getElementById('common_window_info_toolbar_btn_right').style.display = display_toolbar;
+    document.getElementById('common_window_info_toolbar_btn_up').style.display = display_toolbar;
+    document.getElementById('common_window_info_toolbar_btn_down').style.display = display_toolbar;
+    document.getElementById('common_window_info').style.overflowY = 'auto'
+    document.getElementById('common_window_info_info').innerHTML = '';
+    document.getElementById('common_window_info_info').style.display = 'none';
+    document.getElementById('common_window_info_content').src='';
     zoom_info('');
     move_info(null,null);
 
 
     function show_url(url){
-        fetch(url)
-        .then(function(response) {
-            return response.text();
-        })
-        .then(function(result) {
-            document.getElementById('common_window_info_info').innerHTML = result; 
-            document.getElementById('common_window_info').style.visibility = 'visible';
-        })
+        document.getElementById('common_window_info_content').src=url;
+        document.getElementById('common_window_info').style.overflowY = 'hidden'
+        document.getElementById('common_window_info').style.visibility = 'visible';
     }
     switch(info){
         case 0:{
-            document.getElementById('common_window_info_info').innerHTML = content;
+            document.getElementById('common_window_info_info').style.display = 'inline-block';
+            document.getElementById('common_window_info_info').innerHTML = `<img src='${content}'/>`;
             document.getElementById('common_window_info').style.visibility = 'visible';
             break;
         }
@@ -921,7 +944,7 @@ function show_window_info(info, show_toolbar, content, content_type, qr_data, if
         case null:{
             document.getElementById('common_window_info').style.visibility = 'visible';
             document.getElementById('common_window_info_info').innerHTML = window.global_app_spinner;
-            
+            document.getElementById('common_window_info_info').style.display = 'inline-block';
             if (content_type == 'HTML'){
                 document.getElementById('common_window_info_info').innerHTML = ''
                 document.getElementById('common_window_info_content').src=iframe_content;
@@ -944,6 +967,7 @@ function show_window_info(info, show_toolbar, content, content_type, qr_data, if
                         reader.onloadend = function() {
                             let base64PDF = reader.result;
                             document.getElementById('common_window_info_info').innerHTML = '';
+                            document.getElementById('common_window_info_info').style.display = 'none';
                             document.getElementById('common_window_info_content').src = base64PDF;
                         }
                     })
@@ -3052,7 +3076,9 @@ async function init_common(parameters, callBack){
         //window info
         document.getElementById('common_window_info_toolbar_btn_close').addEventListener('click', function() { document.getElementById('common_window_info').style.visibility = "hidden"; 
                                                                                                                document.getElementById('common_window_info_info').innerHTML='';
-                                                                                                               document.getElementById('common_window_info_content').src='';}, false);
+                                                                                                               document.getElementById('common_window_info_content').src='';
+                                                                                                               document.getElementById('common_window_info_content').classList=''
+                                                                                                               document.getElementById('common_window_info_toolbar').classList=''}, false);
         document.getElementById('common_window_info_toolbar_btn_zoomout').addEventListener('click', function() {zoom_info(-1);}, false);
         document.getElementById('common_window_info_toolbar_btn_zoomin').addEventListener('click', function() {zoom_info(1);}, false);
         document.getElementById('common_window_info_toolbar_btn_left').addEventListener('click', function() {move_info(-1,0);}, false);

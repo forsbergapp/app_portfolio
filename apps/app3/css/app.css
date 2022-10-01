@@ -12,18 +12,13 @@ body {
 	text-align: center;
 	top:15%;
 	position:fixed;
-	-webkit-animation-name: animatetop;
-	-webkit-animation-duration: 0.4s;
-	animation-name: animatetop;
+	animation-name: common_animatetop;
 	animation-duration: 0.4s;
-
 }
 .dialogue_content{
 	padding: 10px;
 	display:inline-block;
 	border-radius: 4px;
-	-moz-border-radius: 4px;
-	-webkit-border-radius: 4px;
 	box-shadow: 0 4px 8px 0 rgb(0 0 0 / 20%), 0 6px 20px 0 rgb(0 0 0 / 19%);
 	background-color: #fefefe;
 }
@@ -67,6 +62,7 @@ body {
 #common_window_info{
 	visibility:visible;
 	z-index: 0 !important;
+	display:grid;
 }
 #common_window_info_info{
 	position:relative;
