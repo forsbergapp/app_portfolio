@@ -9,9 +9,7 @@ body.font_arabic_nastaliq #user_menu_default_avatar{
 	text-align: center;
 	top:15%;
 	position:fixed;
-	-webkit-animation-name: animatetop;
-	-webkit-animation-duration: 0.4s;
-	animation-name: animatetop;
+	animation-name: common_animatetop;
 	animation-duration: 0.4s;
 
 }
@@ -19,8 +17,6 @@ body.font_arabic_nastaliq #user_menu_default_avatar{
 	padding: 10px;
 	display:inline-block;
 	border-radius: 4px;
-	-moz-border-radius: 4px;
-	-webkit-border-radius: 4px;
 	box-shadow: 0 4px 8px 0 rgb(0 0 0 / 20%), 0 6px 20px 0 rgb(0 0 0 / 19%);
 }
 #profile_info_search{
@@ -34,10 +30,6 @@ body.font_arabic_nastaliq #user_menu_default_avatar{
 	height: auto;
 	width: auto;
 	transform:             rotateY( 0deg );
-        -moz-transform:    rotateY( 0deg );
-        -ms-transform:     rotateY( 0deg );
-        -o-transform:      rotateY( 0deg );
-        -webkit-transform: rotateY( 0deg );
 }
 #apps{
 	margin-top:10px;
@@ -48,12 +40,7 @@ body.font_arabic_nastaliq #user_menu_default_avatar{
     box-sizing: content-box;
 	padding: 0px;
 }
-			
-#apps::-webkit-scrollbar {
-	width: 10px; 
-	height: 10px;
-}
-  
+			  
 .app_link_row{
 	padding-top: 4px;
     padding-bottom: 4px;
@@ -107,10 +94,6 @@ body.font_arabic_nastaliq #user_menu_default_avatar{
 	height: auto;
 	width: auto;
 	transform:             rotateY( 180deg );
-        -moz-transform:    rotateY( 180deg );
-        -ms-transform:     rotateY( 180deg );
-        -o-transform:      rotateY( 180deg );
-        -webkit-transform: rotateY( 180deg );
 }
 #app_portfolio{
 	margin-top:30px;
@@ -120,30 +103,14 @@ body.font_arabic_nastaliq #user_menu_default_avatar{
 }
 .dialogue_flip {
     backface-visibility:             hidden;
-        -moz-backface-visibility:    hidden;
-        -ms-backface-visibility:     hidden;
-        -o-backface-visibility:      hidden;
-        -webkit-backface-visibility: hidden;
     transition: all 1s;
-        -moz-transition:    all 1s;
-        -ms-transition:     all 1s;
-        -o-transition:      all 1s;
-        -webkit-transition: all 1s;
 }
 .dialogue_flip-side-1 {    
     transform:             rotateY( 0deg ) !important;
-        -moz-transform:    rotateY( 0deg ) !important;
-        -ms-transform:     rotateY( 0deg ) !important;
-        -o-transform:      rotateY( 0deg ) !important;
-        -webkit-transform: rotateY( 0deg ) !important;
 }
 
 .dialogue_flip-side-2 {
     transform:             rotateY( 180deg ) !important;
-        -moz-transform:    rotateY( 180deg ) !important;
-        -ms-transform:     rotateY( 180deg ) !important;
-        -o-transform:      rotateY( 180deg ) !important;
-        -webkit-transform: rotateY( 180deg ) !important;
 }
 
 #title1, #title2{
@@ -172,10 +139,6 @@ body.font_arabic_nastaliq #user_menu_default_avatar{
 #dialogue_signup_content:active{
 	box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19) !important;
 }
-/*WINDOW INFO*/
-#common_window_info_content{
-	display: none;
-}
 
 /*RESPONSIVE SETTINGS*/
 /*CSS for minimum 768px*/
@@ -186,22 +149,6 @@ body.font_arabic_nastaliq #user_menu_default_avatar{
 	}
 	.app_description{
 		width: 300px;
-	}
-	@-webkit-keyframes animateCloud {
-		0% {
-			margin-left: -1000px;
-		}
-		100% {
-			margin-left: 100%;
-		}
-	}
-	@-moz-keyframes animateCloud {
-		0% {
-			margin-left: -1000px;
-		}
-		100% {
-			margin-left: 100%;
-		}
 	}
 	@keyframes animateCloud {
 		0% {
@@ -221,23 +168,8 @@ body.font_arabic_nastaliq #user_menu_default_avatar{
 	top: 0;
 	z-index: 0;
 }
-/* KEYFRAMES */
-@-webkit-keyframes animateCloud {
-    0% {
-        margin-left: -500px;
-    }
-    100% {
-        margin-left: 100%;
-    }
-}
-@-moz-keyframes animateCloud {
-    0% {
-        margin-left: -500px;
-    }
-    100% {
-        margin-left: 100%;
-    }
-}
+
+/* ANIMATIONS */
 @keyframes animateCloud {
     0% {
         margin-left: -500px;
@@ -246,62 +178,33 @@ body.font_arabic_nastaliq #user_menu_default_avatar{
         margin-left: 100%;
     }
 }
-
-/* ANIMATIONS */
 .x1 {
-	-webkit-animation: animateCloud 35s linear infinite;
-	-moz-animation: animateCloud 35s linear infinite;
-	animation: animateCloud 35s linear infinite;
-	
-	-webkit-transform: scale(0.65);
-	-moz-transform: scale(0.65);
+	animation: animateCloud 35s linear infinite;	
 	transform: scale(0.65);
 }
 
 .x2 {
-	-webkit-animation: animateCloud 20s linear infinite;
-	-moz-animation: animateCloud 20s linear infinite;
 	animation: animateCloud 20s linear infinite;
-	
-	-webkit-transform: scale(0.3);
-	-moz-transform: scale(0.3);
 	transform: scale(0.3);
 }
 
 .x3 {
-	-webkit-animation: animateCloud 30s linear infinite;
-	-moz-animation: animateCloud 30s linear infinite;
 	animation: animateCloud 30s linear infinite;
-	
-	-webkit-transform: scale(0.8);
-	-moz-transform: scale(0.8);
 	transform: scale(0.8);
 }
 
 .x4 {
-	-webkit-animation: animateCloud 18s linear infinite;
-	-moz-animation: animateCloud 18s linear infinite;
 	animation: animateCloud 18s linear infinite;
-	
-	-webkit-transform: scale(0.7);
-	-moz-transform: scale(0.7);
 	transform: scale(0.7);
 }
 
 .x5 {
-	-webkit-animation: animateCloud 25s linear infinite;
-	-moz-animation: animateCloud 25s linear infinite;
 	animation: animateCloud 25s linear infinite;
-	
-	-webkit-transform: scale(0.55);
-	-moz-transform: scale(0.55);
 	transform: scale(0.55);
 }
 
 /* CLOUD */
 .cloud {
-	-webkit-border-radius: 100px;
-	-moz-border-radius: 100px;
 	border-radius: 100px;
 	height: 120px;
 	position: relative;
@@ -313,8 +216,6 @@ body.font_arabic_nastaliq #user_menu_default_avatar{
 	z-indeX: -1;
 }
 .cloud:after {
-	-webkit-border-radius: 100px;
-	-moz-border-radius: 100px;
 	border-radius: 100px;
 	height: 100px;
 	left: 50px;
@@ -322,8 +223,6 @@ body.font_arabic_nastaliq #user_menu_default_avatar{
 	width: 100px;
 }
 .cloud:before {
-	-webkit-border-radius: 200px;
-	-moz-border-radius: 200px;
 	border-radius: 200px;
 	width: 180px;
 	height: 180px;
@@ -747,12 +646,6 @@ div.ray8 {
 .theme_sun #apps{
 	scrollbar-color: #a49775 #ddd;
 }
-.theme_sun #apps::-webkit-scrollbar-thumb { 
-	background: #a49775;
-}
-.theme_sun #apps::-webkit-scrollbar-track { 
-	background: #ddd;
-}
 
 .theme_sun .dialogue_content:hover, 
 .theme_sun .dialogue_content:active,
@@ -785,16 +678,7 @@ div.ray8 {
 
 .theme_sun .cloud {
 		background: #fff;
-		background: -moz-linear-gradient(top,  #fff 5%, #f1f1f1 100%);
-		background: -webkit-gradient(linear, left top, left bottom, color-stop(5%,#fff), color-stop(100%,#f1f1f1));
-		background: -webkit-linear-gradient(top,  #fff 5%,#f1f1f1 100%);
-		background: -o-linear-gradient(top,  #fff 5%,#f1f1f1 100%);
-		background: -ms-linear-gradient(top,  #fff 5%,#f1f1f1 100%);
 		background: linear-gradient(top,  #fff 5%,#f1f1f1 100%);
-		filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fff', endColorstr='#f1f1f1',GradientType=0 );
-
-		-webkit-box-shadow: 0 8px 5px rgba(0, 0, 0, 0.1);
-		-moz-box-shadow: 0 8px 5px rgba(0, 0, 0, 0.1);
 		box-shadow: 0 8px 5px rgba(0, 0, 0, 0.1);	
 }
 .theme_sun .cloud:after, .theme_sun .cloud:before {
@@ -903,12 +787,6 @@ div.ray8 {
 .theme_moon #apps{
 	scrollbar-color: #a49775 #ddd;
 }
-.theme_moon #apps::-webkit-scrollbar-thumb { 
-	background: #a49775;
-}
-.theme_moon #apps::-webkit-scrollbar-track { 
-	background: #ddd;
-}
 .theme_moon .dialogue_content:hover, 
 .theme_moon .dialogue_content:active,
 .theme_moon #user_menu:hover,
@@ -938,16 +816,7 @@ div.ray8 {
 }
 .theme_moon .cloud {
 	background: #f1f1f1;
-	background: -moz-linear-gradient(top,  #f1f1f1 5%, rgb(68, 68, 68) 100%);
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(5%,#f1f1f1), color-stop(100%,rgb(68, 68, 68)));
-	background: -webkit-linear-gradient(top,  #f1f1f1 5%,rgb(68, 68, 68) 100%);
-	background: -o-linear-gradient(top,  #f1f1f1 5%,rgb(68, 68, 68) 100%);
-	background: -ms-linear-gradient(top,  #f1f1f1 5%,rgb(68, 68, 68) 100%);
 	background: linear-gradient(top,  #f1f1f1 5%,rgb(68, 68, 68) 100%);
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f1f1f1', endColorstr='rgb(68, 68, 68)',GradientType=0 );
-
-	-webkit-box-shadow: 0 8px 5px rgba(0, 0, 0, 0.1);
-	-moz-box-shadow: 0 8px 5px rgba(0, 0, 0, 0.1);
 	box-shadow: 0 8px 5px rgba(0, 0, 0, 0.1);	
 }
 .theme_moon .cloud:after, .theme_moon .cloud:before {

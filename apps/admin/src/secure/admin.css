@@ -10,11 +10,9 @@
         top: 0;
         height: 100% !important;
         overflow: auto;
-        text-align:center;
         display:block;
     }
     .dialogue_content{
-        display:inline-block;
         transform: translate(0%, 40%);
     }
     #dialogue_send_broadcast_content{
@@ -39,26 +37,7 @@
         width:100%;
     }
     
-    @-webkit-keyframes animatetop {
-        from {
-            top: -300px;
-            opacity: 0
-        }
-        to {
-            top: 0;
-            opacity: 1
-        }
-    }
-    @keyframes animatetop {
-        from {
-            top: -300px;
-            opacity: 0
-        }
-        to {
-            top: 0;
-            opacity: 1
-        }
-    }
+    
     /*DASHBOARD COMMON*/
     #dashboard{
         width:100%;
@@ -206,7 +185,6 @@
         width: 48px;
         height: 24px;
         border-radius: 9999em;
-        -webkit-transition: background-color 0.25s ease;
         transition: background-color 0.25s ease;
     }
     .switch-label::after {
@@ -215,7 +193,6 @@
         width: 24px;
         height: 24px;
         border-radius: 50%;
-        -webkit-transition: left 0.25s ease;
         transition: left 0.25s ease;
     }
     .switch-input:checked + .switch-label::after {
@@ -370,13 +347,6 @@
         margin: 1px;
         box-sizing: border-box;
         border-radius: 4px
-    }
-    input[type=number]::-webkit-inner-spin-button, 
-    input[type=number]::-webkit-outer-spin-button { 
-        -webkit-appearance: none;
-        -moz-appearance: none;
-        appearance: none;
-        margin: 0; 
     }
     .list_lov_click{
         cursor:pointer;
