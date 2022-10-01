@@ -4,7 +4,6 @@
 }
 /* TOOLBAR TOP*/
 #toolbar_top {
-	width: -webkit-fill-available;
 	top: 0;
 	text-align: center;
 	width: 100%;
@@ -24,15 +23,12 @@
 }
 /* TOOLBAR BOTTOM*/
 #toolbar_bottom {
-	width: -webkit-fill-available;
+	width: 100%;
 	text-align: center;
 	background: white;
 	bottom: 0;
 	position: fixed;
 	z-index: 1;
-}
-#icons {
-	width: -webkit-fill-available;
 }
 #toolbar_bottom .toolbar_button{
 	font-size: 48px !important;
@@ -115,7 +111,7 @@
 #profile_user_settings_row div:nth-child(6){
 	display:inline-block;
 	width:78px;
-	text-align:right;
+	text-align: end;
 }
 
 #profile_user_settings_info_like_count,
@@ -157,38 +153,10 @@
 	width: 300px;
 	height: 540px;
 	border-radius: 4px;
-	-moz-border-radius: 4px;
-	-webkit-border-radius: 4px;
-	-webkit-animation-name: animatetop;
-	-webkit-animation-duration: 0.4s;
-	animation-name: animatetop;
+	animation-name: common_animatetop;
 	animation-duration: 0.4s;
 }
 
-/* add animation effects */
-@-webkit-keyframes animatetop {
-	from {
-		top: -300px;
-		opacity: 0
-	}
-	to {
-		top: 0;
-		opacity: 1
-	}
-
-}
-
-@keyframes animatetop {
-	from {
-		top: -300px;
-		opacity: 0
-	}
-	to {
-		top: 0;
-		opacity: 1
-	}
-
-}
 /*Dialogue loading */
 #dialogue_loading{
 	text-align:center;
@@ -253,27 +221,9 @@
 	padding: 5px;
 }
 #common_window_info_content{
-	border: 0px;
 	display:block;
 	margin: 0 auto;
-	-moz-transform: scale(0.5);
-  	-moz-transform-origin: 0 0;
-  	-o-transform: scale(0.5);
-  	-o-transform-origin: 0 0;
-  	-webkit-transform: scale(0.5);
-  	-webkit-transform-origin: 0 0;
-	transform: scale(0.5);
-  	transform-origin: 0 0;
 }
-#common_window_info_content.A4{
-	width : 210mm;
-	height : 297mm;
-}
-#common_window_info_content.Letter{
-	width : 8.5in;
-	height : 11in;
-}
-
 /* SETTINGS*/
 #settings {
 	visibility: hidden;
@@ -347,8 +297,6 @@ height: 25px;
 
 #settings select {
 	box-sizing: border-box;
-	-webkit-box-sizing: border-box;
-	-moz-box-sizing: border-box;
 	border: 0px;
 	padding: 0px;
 	margin: 1px;
@@ -574,7 +522,6 @@ height: 25px;
 #settings .setting_button {
 	border: none;
 	width: 26px;
-	-webkit-appearance: none;
 }
 /*SETTINGS PRAYER*/
 #setting_method_params div{
@@ -678,17 +625,6 @@ height: 25px;
 	.profile_user_settings_row div:nth-child(1){
 		width:200px;
 	}
-	#common_window_info_content{
-		-moz-transform: inherit;
-	  	-moz-transform-origin: inherit;
-	  	-o-transform: inherit;
-	  	-o-transform-origin: inherit;
-	  	-webkit-transform: inherit;
-	  	-webkit-transform-origin: inherit;
-		transform: inherit;
-	  	transform-origin: inherit;
-	}
-
 	#mapid {
 		height: 225px;
 	}	

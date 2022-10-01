@@ -32,8 +32,8 @@ function setEvents(){
         document.getElementById( 'dialogue_start_content' ).className = 'dialogue_content dialogue_flip dialogue_flip-side-2';
     }, false );
     //second page
-    document.getElementById('info_diagram').addEventListener('click', function() {show_window_info(0, true, `<img src="${window.global_img_diagram_img}"/>`);}, false);
-    document.getElementById('info_datamodel').addEventListener('click', function() {show_window_info(0, true, `<img src="${window.global_img_datamodel_img}"/>`);}, false);
+    document.getElementById('info_diagram').addEventListener('click', function() {show_window_info(0, true, window.global_img_diagram_img)}, false);
+    document.getElementById('info_datamodel').addEventListener('click', function() {show_window_info(0, true, window.global_img_datamodel_img)}, false);
    
     document.getElementById( 'info_message' ).addEventListener( 'click', function( event ) {
         event.preventDefault();

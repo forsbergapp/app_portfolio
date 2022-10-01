@@ -15,9 +15,7 @@
 
 	position:fixed;
 	z-index: 10;
-	-webkit-animation-name: animatetop;
-	-webkit-animation-duration: 0.4s;
-	animation-name: animatetop;
+	animation-name: common_roadRunnerIn;
 	animation-duration: 0.4s;
 
 }
@@ -26,30 +24,6 @@
 	display:inline-block;
     top: 20%;
 	border-radius: 4px;
-	-moz-border-radius: 4px;
-	-webkit-border-radius: 4px;
-}
-/* add animation effects */
-@-webkit-keyframes animatetop {
-	from {
-		top: -60%;
-		opacity: 0
-	}
-	to {
-		top: 15%;
-		opacity: 1
-	}
-}
-
-@keyframes animatetop {
-	from {
-		top: -60%;
-		opacity: 0
-	}
-	to {
-		top: 15%;
-		opacity: 1
-	}
 }
 
 #dialogue_admin_login{
