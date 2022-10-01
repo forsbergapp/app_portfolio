@@ -194,6 +194,7 @@ app.use('/admin/images',express.static(__dirname + '/apps/admin/images'));
 app.use('/admin/js',express.static(__dirname + '/apps/admin/js'));
 app.use('/admin/css',express.static(__dirname + '/apps/admin/css'));
 //common directories
+app.use('/common/audio',express.static(__dirname + '/apps/common/audio'));
 app.use('/common/images',express.static(__dirname + '/apps/common/images'));
 app.use('/common/js',express.static(__dirname + '/apps/common/js'));
 app.use('/common/css',express.static(__dirname + '/apps/common/css'));

@@ -450,22 +450,16 @@ body.font_arabic_ui{
 	height: auto;
 	word-break: break-word;
 	border-radius: 4px;
-	-moz-border-radius: 4px;
-	-webkit-border-radius: 4px;
+	animation-name: common_animatetop;
+	animation-duration: 0.4s;
 }
-/* add animation effects */
-@-webkit-keyframes animatetop {
-	from {
-		top: -60%;
-		opacity: 0
-	}
-	to {
-		top: 15%;
-		opacity: 1
-	}
+.dialogue_close{
+	animation-name: common_roadRunnerOut;
+	animation-duration: 0.4s;
 }
 
-@keyframes animatetop {
+/* add animation effects */
+@keyframes common_animatetop {
 	from {
 		top: -60%;
 		opacity: 0
@@ -475,12 +469,62 @@ body.font_arabic_ui{
 		opacity: 1
 	}
 }
+@keyframes common_animatetop2 {
+	from {
+		top: -300px;
+		opacity: 0
+	}
+	to {
+		top: 0;
+		opacity: 1
+	}
+}
+@keyframes common_roadRunnerIn {
+    0% {
+      transform:translateX(-1500px) skewX(30deg) scaleX(1.3);
+    }
+    70% {
+      transform:translateX(30px) skewX(0deg) scaleX(.9);
+    }
+    100% {
+      transform:translateX(0px) skewX(0deg) scaleX(1);
+    }
+}
+@keyframes common_roadRunnerOut {
+    0% {
+      transform:translateX(0px) skewX(0deg) scaleX(1);
+    }
+    30% {
+      transform:translateX(-30px) skewX(-5deg) scaleX(.9);
+    }
+    100% {
+      transform:translateX(1500px) skewX(30deg) scaleX(1.3);
+    }
+}
+  
 
 /* DIALOGUE MESSAGE*/
 #dialogue_message_content{
 	min-width: 200px;
 	overflow-y: auto;
     max-height: 90%;
+}
+#confirm_question{
+	cursor:default;
+	display:inline-block;
+	margin-bottom:10px;
+}
+#message_title{
+	cursor:default;
+	display:inline-block;
+}
+#message_cancel{
+	cursor:pointer;
+}
+#message_close{
+	outline:none;
+	cursor:pointer;
+	display:inline-block;
 }
 /*DIALOGUE MAINTENANCE */
 #dialogue_maintenance{
@@ -576,39 +620,23 @@ body.font_arabic_ui{
 	height: 65px;
 	white-space: nowrap;
 	box-sizing: content-box;
-	-webkit-animation-iteration-count: infinite;
 	animation-iteration-count: infinite;
-	-webkit-animation-timing-function: linear;
 	animation-timing-function: linear;
-	-webkit-animation-name: ticker;
 	animation-name: ticker;
-	-webkit-animation-duration: 10s ;
 	animation-duration: 10s;
 }
 #broadcast_info_message_item{
 	font-size:30px;
 	display: inline-block;
 }
-@-webkit-keyframes ticker {
+@keyframes ticker {
 	0% {
-	  -webkit-transform: translate3d(100%, 0, 0);
 	  transform: translate3d(100%, 0, 0);
 	}
 	100% {
-	  -webkit-transform: translate3d(-100%, 0, 0);
 	  transform: translate3d(-100%, 0, 0);
 	}
-  }
-  @keyframes ticker {
-	0% {
-	  -webkit-transform: translate3d(100%, 0, 0);
-	  transform: translate3d(100%, 0, 0);
-	}
-	100% {
-	  -webkit-transform: translate3d(-100%, 0, 0);
-	  transform: translate3d(-100%, 0, 0);
-	}
-  }
+}
 #broadcast_info_title {
 	width:100%;
 	height: 35px;

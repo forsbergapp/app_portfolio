@@ -1,5 +1,5 @@
 window.global_rest_admin_at = '';
-
+                    
 function admin_login(){
     var json;
     var json_data = `{${get_uservariables()}}`;
@@ -15,24 +15,25 @@ function admin_login(){
                             'GET', 2, null, null, null, (err, result) =>{
                 if (err)
                     null;
-                else{
-                    document.getElementById('admin_login_username_input').value='';
-                    document.getElementById('admin_login_password_input').value='';                        
-                    document.getElementById('dialogue_admin_login').style.visibility = 'hidden';
-                    document.getElementById('secure').style.visibility = 'visible';
-                    document.getElementById('secure').innerHTML = result
-                    //make script in innerHTML work:
-                    var scripts = Array.prototype.slice.call(document.getElementById('secure').getElementsByTagName('script'));
-                    for (var i = 0; i < scripts.length; i++) {
-                        if (scripts[i].src != '') {
-                            var tag = document.createElement('script');
-                            tag.src = scripts[i].src;
-                            document.getElementById('secure').insertBefore(tag, document.getElementById('secure').firstChild);
+                else{                
+                    dialogue_close('dialogue_admin_login').then(function(){
+                        document.getElementById('admin_login_username_input').value='';
+                        document.getElementById('admin_login_password_input').value='';                        
+                        document.getElementById('secure').style.visibility = 'visible';
+                        document.getElementById('secure').innerHTML = result
+                        //make script in innerHTML work:
+                        var scripts = Array.prototype.slice.call(document.getElementById('secure').getElementsByTagName('script'));
+                        for (var i = 0; i < scripts.length; i++) {
+                            if (scripts[i].src != '') {
+                                var tag = document.createElement('script');
+                                tag.src = scripts[i].src;
+                                document.getElementById('secure').insertBefore(tag, document.getElementById('secure').firstChild);
+                            }
+                            else {
+                                eval(scripts[i].innerHTML);
+                            }
                         }
-                        else {
-                            eval(scripts[i].innerHTML);
-                        }
-                    }   
+                    })
                 }                             
             })
         }
