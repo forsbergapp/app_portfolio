@@ -1,6 +1,6 @@
 const {execute_db_sql} = require ("../../common/database");
 module.exports = {
-	getApp:(id, app_id, lang_code, callBack) => {
+	getApp:(app_id, id,lang_code, callBack) => {
 		let sql;
 		let parameters;
 		if (typeof id=='undefined')
@@ -95,7 +95,7 @@ module.exports = {
 			parameters = {	lang_code: lang_code,
 							id: id};
 		}
-		execute_db_sql(app_id, app_id, sql, parameters, null, 
+		execute_db_sql(app_id, sql, parameters, null, 
 			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);
@@ -103,7 +103,7 @@ module.exports = {
 				return callBack(null, result);
 		});
 	},
-	getAppsAdmin:(id, callBack) => {
+	getAppsAdmin:(app_id, id, callBack) => {
 		let sql;
 		let parameters;
 		if (process.env.SERVICE_DB_USE==1){
@@ -126,7 +126,7 @@ module.exports = {
 					ORDER BY 1`;
 			parameters = {};
 		}
-		execute_db_sql(id, null, sql, parameters, true, 
+		execute_db_sql(app_id, sql, parameters, true, 
 			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);
@@ -134,7 +134,7 @@ module.exports = {
 				return callBack(null, result);
 		});
 	},
-	updateApp:(id, body, callBack) => {
+	updateApp:(app_id, id, body, callBack) => {
 		let sql;
 		let parameters;
 		if (process.env.SERVICE_DB_USE==1){
@@ -163,7 +163,7 @@ module.exports = {
 							enabled: body.enabled,
 							id: id};
 		}
-		execute_db_sql(id, null, sql, parameters, true, 
+		execute_db_sql(app_id, sql, parameters, true, 
 			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);

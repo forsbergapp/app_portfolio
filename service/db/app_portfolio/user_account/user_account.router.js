@@ -14,13 +14,13 @@ const {
     deleteUser,
     userLogin,
     getUserByProviderId,
-    getStatCount
+    getStatCountAdmin
 } = require("./user_account.controller");
 const { checkAccessToken, checkDataToken } = require("../../../auth/auth.controller");
 const { checkAdmin} = require ("../../../auth/admin/admin.controller");
 const { createLogAppRI } = require("../../../log/log.controller");
 router.use((req,res,next)=>{
-    createLogAppRI(req, res, req.query.id, __appfilename, __appfunction, __appline, req.body);
+    createLogAppRI(req, res, __appfilename, __appfunction, __appline, req.body);
     next();
 })
 router.put("/login", checkDataToken, userLogin);
@@ -43,6 +43,6 @@ router.post("/profile/id/:id", checkDataToken, getProfileUser);
 router.post("/profile/username/:username", checkDataToken, getProfileUser);
 router.post("/profile/username/searchD/:username", checkDataToken, searchProfileUser);
 router.post("/profile/username/searchA/:username", checkAccessToken, searchProfileUser);
-router.get("/admin/count", checkAdmin, getStatCount);
+router.get("/admin/count", checkAdmin, getStatCountAdmin);
 
 module.exports = router;

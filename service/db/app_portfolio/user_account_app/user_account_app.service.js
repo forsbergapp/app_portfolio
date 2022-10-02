@@ -32,7 +32,7 @@ module.exports = {
 							user_account_id: user_account_id
 						};
 		}
-		execute_db_sql(app_id, app_id, sql, parameters, null, 
+		execute_db_sql(app_id, sql, parameters, null, 
 			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);
@@ -72,7 +72,7 @@ module.exports = {
 							user_account_id: user_account_id
 						 };
 		}
-		execute_db_sql(app_id, app_id, sql, parameters, null, 
+		execute_db_sql(app_id, sql, parameters, null, 
 			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);
@@ -110,7 +110,7 @@ module.exports = {
 							app_id: app_id
 						 };
 		}
-		execute_db_sql(app_id, app_id, sql, parameters, null, 
+		execute_db_sql(app_id, sql, parameters, null, 
 			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);
@@ -160,7 +160,7 @@ module.exports = {
 							app_id: app_id
 						 };
 		}
-		execute_db_sql(app_id, app_id, sql, parameters, null, 
+		execute_db_sql(app_id, sql, parameters, null, 
 			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);
@@ -168,7 +168,7 @@ module.exports = {
 				return callBack(null, result);
 		});
 	},
-	deleteUserAccountApps: (app_id_app, user_account_id, app_id, callBack) => {
+	deleteUserAccountApps: (app_id, user_account_id, data_app_id, callBack) => {
 		let sql;
 		let parameters;
 		if (process.env.SERVICE_DB_USE == 1) {
@@ -177,7 +177,7 @@ module.exports = {
 					AND app_id = ?`;
 			parametes = [
 						user_account_id,
-						app_id
+						data_app_id
 						];
 		}else if (process.env.SERVICE_DB_USE==2){
 			sql = `DELETE FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_app
@@ -185,10 +185,10 @@ module.exports = {
 					AND app_id = :app_id`;
 			parameters = {
 							user_account_id: user_account_id,
-							app_id: app_id
+							app_id: data_app_id
 						 };
 		}
-		execute_db_sql(app_id, app_id, sql, parameters, null, 
+		execute_db_sql(app_id, sql, parameters, null, 
 			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);

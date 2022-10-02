@@ -6,11 +6,9 @@ const { createLogAppSE } = require("../../service/log/log.controller");
 module.exports = {
     getLogo: (req, res) => {
         if (typeof req.query.id == 'undefined'){
-            req.body.app_id = 0;
-            req.query.app_id = 0;
+            req.query.app_id = process.env.COMMON_APP_ID;
         }
         else{
-            req.body.app_id = req.query.id;
             req.query.app_id = req.query.id;
         }
         if (typeof req.query.app_user_id == 'undefined')
@@ -20,16 +18,17 @@ module.exports = {
             req.query.et = null;
         }
         var path = require('path');
-        res.sendFile(path.resolve(__dirname + `/../../apps/app${req.body.app_id}/mail/logo.png`), (err) =>{
+        res.sendFile(path.resolve(__dirname + `/../../apps/app${req.query.app_id}/mail/logo.png`), (err) =>{
             if (err){
-                createLogAppSE(req.body.app_id, __appfilename, __appfunction, __appline, err, (err_log, result_log)=>{
+                createLogAppSE(req.query.app_id, __appfilename, __appfunction, __appline, err, (err_log, result_log)=>{
                     return res.send(null);
                 })
             }
             else {
                 req.query.callback = 1;
                 getIp(req, res, (err, result)=>{
-                    createLog({ app_id : req.body.app_id,
+                    createLog(req.query.app_id,
+                              { app_id : req.query.app_id,
                                 app_module : 'MAIL',
                                 app_module_type : 'READ',
                                 app_module_request : req.protocol + '://' + req.get('host') + req.originalUrl,
@@ -47,7 +46,7 @@ module.exports = {
                                 server_http_accept_language : req.headers["accept-language"],
                                 client_latitude : result.geoplugin_latitude,
                                 client_longitude : result.geoplugin_longitude
-                                }, req.query.app_id, (err,results)  => {
+                                }, (err,results)  => {
                                     null;
                     });
                 })
@@ -74,9 +73,9 @@ module.exports = {
 
         const { getMail} = require(`../../apps/`);
         
-        getParameters_server(data.app_id, req.query.app_id, (err, result)=>{
+        getParameters_server(req.query.app_id, data.app_id, (err, result)=>{
             if (err) {                
-                createLogAppSE(data.app_id, __appfilename, __appfunction, __appline, err, (err_log, result_log)=>{
+                createLogAppSE(req.query.app_id, __appfilename, __appfunction, __appline, err, (err_log, result_log)=>{
                     return callBack(err, null);
                 })
             }
@@ -135,7 +134,8 @@ module.exports = {
                         html:               mail_result.html		
                         };
                     sendEmailService(emailData, (err, result) => {
-                        createLog({ app_id : data.app_id,
+                        createLog(req.query.app_id,
+                                  { app_id : data.app_id,
                                     app_module : 'MAIL',
                                     app_module_type : 'SEND',
                                     app_module_request : `mailhost: ${emailData.email_host}, type: ${data.emailType}, from: ${emailData.from} (${emailData.email_auth_user}), to: ${data.toEmail}, subject: ${emailData.subject}`,
@@ -151,7 +151,7 @@ module.exports = {
                                     server_http_accept_language : req.headers["accept-language"],
                                     client_latitude : req.body.client_latitude,
                                     client_longitude : req.body.client_longitude
-                                    }, req.query.app_id, (err,results)  => {
+                                    }, (err,results)  => {
                                         null;
                         });
                         if (err) {    

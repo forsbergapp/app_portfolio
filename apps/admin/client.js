@@ -1,7 +1,6 @@
-const ADMIN_ID = 0;
 const { read_app_files, get_module_with_init_admin } = require("../");
 module.exports = {
-    getAdmin:(gps_lat, gps_long, gps_place) => {
+    getAdmin:(app_id, gps_lat, gps_long, gps_place) => {
         return new Promise(function (resolve, reject){
             const files = [
                 ['APP', __dirname + '/src/index.html'],
@@ -27,7 +26,7 @@ module.exports = {
                     app = app.replace(
                         '<AppProfileTop/>',
                         '');
-                    get_module_with_init_admin(ADMIN_ID, 
+                    get_module_with_init_admin(app_id, 
                                          'admin_exception_before',
                                          null,
                                          true,

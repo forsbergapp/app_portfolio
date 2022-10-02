@@ -255,6 +255,11 @@ async function show_db_info(){
 async function show_db_info_space(){
     if (admin_token_has_value()){
         let json;
+        let size = '(Mb)';
+        let roundOff = (num) => {
+            const x = Math.pow(10,2);
+            return Math.round(num * x) / x;
+          }
         document.getElementById('menu_1_db_info_space_detail').innerHTML = window.global_app_spinner;
         await common_fetch('/service/db/admin/getDBInfoSpace?', 'GET', 2, null, null, null, (err, result) =>{
             if (err)
@@ -266,13 +271,13 @@ async function show_db_info_space(){
                                     <div>TABLE NAME</div>
                                 </div>
                                 <div id='menu_1_db_info_space_detail_col_title2' class='menu_1_db_info_space_detail_col list_title'>
-                                    <div>SIZE</div>
+                                    <div>SIZE ${size}</div>
                                 </div>
                                 <div id='menu_1_db_info_space_detail_col_title3' class='menu_1_db_info_space_detail_col list_title'>
-                                    <div>DATA USED</div>
+                                    <div>DATA USED ${size}</div>
                                 </div>
                                 <div id='menu_1_db_info_space_detail_col_title4' class='menu_1_db_info_space_detail_col list_title'>
-                                    <div>DATA FREE</div>
+                                    <div>DATA FREE ${size}</div>
                                 </div>
                                 <div id='menu_1_db_info_space_detail_col_title5' class='menu_1_db_info_space_detail_col list_title'>
                                     <div>% USED</div>
@@ -285,16 +290,16 @@ async function show_db_info_space(){
                             <div>${json.data[i].table_name}</div>
                         </div>
                         <div class='menu_1_db_info_space_detail_col'>
-                            <div>${json.data[i].total_size}</div>
+                            <div>${roundOff(json.data[i].total_size)}</div>
                         </div>
                         <div class='menu_1_db_info_space_detail_col'>
-                            <div>${json.data[i].data_used}</div>
+                            <div>${roundOff(json.data[i].data_used)}</div>
                         </div>
                         <div class='menu_1_db_info_space_detail_col'>
-                            <div>${json.data[i].data_free}</div>
+                            <div>${roundOff(json.data[i].data_free)}</div>
                         </div>
                         <div class='menu_1_db_info_space_detail_col'>
-                            <div>${json.data[i].pct_used}</div>
+                            <div>${roundOff(json.data[i].pct_used)}</div>
                         </div>
                     </div>`;
                 }
@@ -310,16 +315,16 @@ async function show_db_info_space(){
                                     <div>TOTAL</div>
                                 </div>
                                 <div class='menu_1_db_info_space_detail_col'>
-                                    <div>${json.data.total_size}</div>
+                                    <div>${roundOff(json.data.total_size)}</div>
                                 </div>
                                 <div class='menu_1_db_info_space_detail_col'>
-                                    <div>${json.data.data_used}</div>
+                                    <div>${roundOff(json.data.data_used)}</div>
                                 </div>
                                 <div class='menu_1_db_info_space_detail_col'>
-                                    <div>${json.data.data_free}</div>
+                                    <div>${roundOff(json.data.data_free)}</div>
                                 </div>
                                 <div class='menu_1_db_info_space_detail_col'>
-                                    <div>${json.data.pct_used}</div>
+                                    <div>${roundOff(json.data.pct_used)}</div>
                                 </div>
                             </div>`;
                     }
@@ -1984,9 +1989,9 @@ function init_admin_secure(){
     document.getElementById('list_app_log_last').addEventListener('click', function() { page_navigation(this)}, false);
     
     document.getElementById('list_connected_title').addEventListener('click', function() { nav_click(this)}, false);
-    document.getElementById('select_app_menu4_list_connected').addEventListener('change', function() { nav_click(document.getElementById('list_list_connected_title'))}, false);
-    document.getElementById('select_year_menu4_list_connected').addEventListener('change', function() { nav_click(document.getElementById('list_list_connected_title'))}, false);
-    document.getElementById('select_month_menu4_list_connected').addEventListener('change', function() { nav_click(document.getElementById('list_list_connected_title'))}, false);
+    document.getElementById('select_app_menu4_list_connected').addEventListener('change', function() { nav_click(document.getElementById('list_connected_title'))}, false);
+    document.getElementById('select_year_menu4_list_connected').addEventListener('change', function() { nav_click(document.getElementById('list_connected_title'))}, false);
+    document.getElementById('select_month_menu4_list_connected').addEventListener('change', function() { nav_click(document.getElementById('list_connected_title'))}, false);
 
     document.getElementById('list_server_log_title').addEventListener('click', function() { nav_click(this)}, false);
     document.getElementById('select_logscope4').addEventListener('change', function() { nav_click(document.getElementById('list_server_log_title'))}, false);    

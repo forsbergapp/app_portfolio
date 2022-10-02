@@ -18,7 +18,7 @@ const {
     userLogin,
     updateSigninProvider,
     getUserByProviderId,
-    getStatCount,
+    getStatCountAdmin,
     getEmailUser
 } = require("./user_account.service");
 
@@ -43,9 +43,9 @@ module.exports = {
             req.body.verification_code = verification_code();
         }
         if (password_length_wrong(req.body.password))
-            getMessage(20106, 
+            getMessage(req.query.app_id, 
                        process.env.COMMON_APP_ID,
-                       req.query.app_id, 
+                       20106, 
                        req.query.lang_code, (err2,results2)  => {
                             return res.status(400).send(
                                 err2 ?? results2.text
@@ -62,14 +62,14 @@ module.exports = {
                                                 err.errno, 
                                                 err.sqlMessage);
                     if (app_code != null){
-                        getMessage(app_code, 
-                                process.env.COMMON_APP_ID, 
-                                req.query.app_id,
-                                req.query.lang_code, (err2,results2)  => {
-                                        return res.status(400).send(
-                                            err2 ?? results2.text
-                                        );
-                                });
+                        getMessage(req.query.app_id,
+                                   process.env.COMMON_APP_ID, 
+                                   app_code, 
+                                   req.query.lang_code, (err2,results2)  => {
+                                            return res.status(400).send(
+                                                err2 ?? results2.text
+                                            );
+                                   });
                     }
                     else
                         return res.status(500).send(
@@ -77,10 +77,8 @@ module.exports = {
                         );
                 }
                 else{
-                    //set variable for accesstoken
-                    req.body.app_id = req.query.app_id;
                     if (typeof req.body.provider_id == 'undefined' ) {
-                        getParameter(process.env.COMMON_APP_ID,'SERVICE_MAIL_TYPE_SIGNUP', req.query.app_id, (err3, parameter_value)=>{
+                        getParameter(req.query.app_id, process.env.COMMON_APP_ID,'SERVICE_MAIL_TYPE_SIGNUP', (err3, parameter_value)=>{
                             //send email for local users only
                             const emailData = {
                                 lang_code : req.query.lang_code,
@@ -154,7 +152,7 @@ module.exports = {
                             client_latitude : req.body.client_latitude,
                             client_longitude : req.body.client_longitude
                         }
-                        insertUserEvent(eventData, (err, result_new_user_event)=>{
+                        insertUserEvent(req.query.app_id, eventData, (err, result_new_user_event)=>{
                             if (err)
                                 return res.status(500).send(
                                     err
@@ -176,7 +174,6 @@ module.exports = {
                     //return accessToken since PASSWORD_RESET is in progress
                     //email was verified and activated with data token, but now the password will be updated
                     //using accessToken and authentication code
-                    req.body.app_id = req.query.app_id
                     accessToken(req, (err, Token)=>{
                         return res.status(200).json({
                             count: results.changedRows,
@@ -228,7 +225,7 @@ module.exports = {
                                         client_latitude : req.body.client_latitude,
                                         client_longitude : req.body.client_longitude
                                     }
-                                    insertUserEvent(eventData, (err, result_new_user_event)=>{
+                                    insertUserEvent(req.query.app_id, eventData, (err, result_new_user_event)=>{
                                         if (err)
                                             return res.status(200).json({
                                                 sent: 0
@@ -241,7 +238,7 @@ module.exports = {
                                                         err_verification
                                                     );
                                                 else{
-                                                    getParameter(process.env.COMMON_APP_ID,'SERVICE_MAIL_TYPE_PASSWORD_RESET', req.query.app_id, (err3, parameter_value)=>{
+                                                    getParameter(req.query.app_id, process.env.COMMON_APP_ID,'SERVICE_MAIL_TYPE_PASSWORD_RESET', (err3, parameter_value)=>{
                                                         const emailData = {
                                                             lang_code : req.query.lang_code,
                                                             app_id : process.env.COMMON_APP_ID,
@@ -292,9 +289,9 @@ module.exports = {
             else
                 if (!results) {
                     //Record not found
-                    getMessage(20400, 
+                    getMessage( req.query.app_id,
                                 process.env.COMMON_APP_ID, 
-                                req.query.app_id,
+                                20400, 
                                 req.query.lang_code, (err2,results2)  => {
                                     return res.status(404).send(
                                         err2 ?? results2.text
@@ -340,9 +337,9 @@ module.exports = {
             else{
                 if (!results){
                     //Record not found
-                    getMessage(20400, 
+                    getMessage( req.query.app_id,
                                 process.env.COMMON_APP_ID, 
-                                req.query.app_id,
+                                20400, 
                                 req.query.lang_code, (err2,results2)  => {
                                     return res.status(404).send(
                                         err2 ?? results2.text
@@ -393,9 +390,9 @@ module.exports = {
 
                 if (!results) {
                     //Record not found
-                    getMessage(20400, 
+                    getMessage( req.query.app_id,
                                 process.env.COMMON_APP_ID, 
-                                req.query.app_id,
+                                20400, 
                                 req.query.lang_code, (err2,results2)  => {
                                     return res.status(404).send(
                                         err2 ?? results2.text
@@ -424,9 +421,9 @@ module.exports = {
             else{
                 if (!results) {
                     //Record not found
-                    getMessage(20400, 
+                    getMessage( req.query.app_id,
                                 process.env.COMMON_APP_ID, 
-                                req.query.app_id,
+                                20400, 
                                 req.query.lang_code, (err2,results2)  => {
                                     return res.status(404).json({
                                             count: 0,
@@ -455,9 +452,9 @@ module.exports = {
             else{
                 if (!results) {
                     //Record not found
-                    getMessage(20400, 
+                    getMessage( req.query.app_id,
                                 process.env.COMMON_APP_ID, 
-                                req.query.app_id,
+                                20400, 
                                 req.query.lang_code, (err2,results2)  => {
                                     return res.status(404).json({
                                             count: 0,
@@ -488,9 +485,9 @@ module.exports = {
                         if (typeof req.body.new_password !== 'undefined' && 
                             req.body.new_password != '' &&
                             password_length_wrong(req.body.new_password))
-                                getMessage(20106, 
+                                getMessage( req.query.app_id,
                                             process.env.COMMON_APP_ID, 
-                                            req.query.app_id,
+                                            20106, 
                                             req.query.lang_code, (err2,results2)  => {
                                                     return res.status(400).send(
                                                         err2 ?? results2.text
@@ -512,9 +509,9 @@ module.exports = {
                                                                     err_update.errno, 
                                                                     err_update.sqlMessage);
                                         if (app_code != null)
-                                            getMessage(app_code, 
+                                            getMessage( req.query.app_id,
                                                         process.env.COMMON_APP_ID, 
-                                                        req.query.app_id,
+                                                        app_code, 
                                                         req.query.lang_code, (err2,results2)  => {
                                                             return res.status(400).send(
                                                                 err2 ?? results2.text
@@ -528,9 +525,9 @@ module.exports = {
                                     else{
                                         if (!results_update) {
                                             //record not found
-                                            getMessage(20400, 
+                                            getMessage( req.query.app_id,
                                                         process.env.COMMON_APP_ID, 
-                                                        req.query.app_id,
+                                                        20400, 
                                                         req.query.lang_code, (err2,results2)  => {
                                                             return res.status(404).send(
                                                                 err2 ?? results2.text
@@ -539,7 +536,7 @@ module.exports = {
                                         }
                                         else
                                             if (send_email){
-                                                getParameter(process.env.COMMON_APP_ID,'SERVICE_MAIL_TYPE_CHANGE_EMAIL', req.query.app_id, (err3, parameter_value)=>{
+                                                getParameter(req.query.app_id, process.env.COMMON_APP_ID,'SERVICE_MAIL_TYPE_CHANGE_EMAIL',  (err3, parameter_value)=>{
                                                     const emailData = {
                                                         lang_code : req.query.lang_code,
                                                         app_id : process.env.COMMON_APP_ID,
@@ -597,7 +594,7 @@ module.exports = {
                                                 client_latitude : req.body.client_latitude,
                                                 client_longitude : req.body.client_longitude
                                             }
-                                            insertUserEvent(eventData, (err, result_new_user_event)=>{
+                                            insertUserEvent(req.query.app_id, eventData, (err, result_new_user_event)=>{
                                                 if (err)
                                                     return res.status(500).json({
                                                         err
@@ -615,25 +612,25 @@ module.exports = {
                                 updateLocal();
                         }
                     } else {
-                        createLogAppCI(req, res, req.query.app_id, __appfilename, __appfunction, __appline, 
+                        createLogAppCI(req, res, __appfilename, __appfunction, __appline, 
                                        'invalid password attempt for user id:' + req.params.id, (err_log, result_log)=>{
                             //invalid password
-                            getMessage(20401, 
-                                process.env.COMMON_APP_ID, 
-                                req.query.app_id,
-                                req.query.lang_code, (err2,results2)  => {
-                                    return res.status(400).send(
-                                        err2 ?? results2.text
-                                    );
-                                });
+                            getMessage(req.query.app_id,
+                                       process.env.COMMON_APP_ID, 
+                                       20401, 
+                                       req.query.lang_code, (err2,results2)  => {
+                                            return res.status(400).send(
+                                                err2 ?? results2.text
+                                            );
+                                       });
                         })
                         
                     }
                 } else {
                     //user not found
-                    getMessage(20305, 
+                    getMessage( req.query.app_id,
                                 process.env.COMMON_APP_ID, 
-                                req.query.app_id,
+                                20305, 
                                 req.query.lang_code, (err2,results2)  => {
                                     return res.status(404).send(
                                         err2 ?? results2.text
@@ -645,9 +642,9 @@ module.exports = {
     },
     updatePassword: (req, res) =>{
         if (password_length_wrong(req.body.new_password))
-            getMessage(20106, 
+            getMessage(req.query.app_id,
                        process.env.COMMON_APP_ID, 
-                       req.query.app_id,
+                       20106, 
                        req.query.lang_code, (err2,results2)  => {
                             return res.status(400).send(
                                 err2 ?? results2.text
@@ -664,9 +661,9 @@ module.exports = {
                                                 err.errno, 
                                                 err.sqlMessage);
                     if (app_code != null){
-                        getMessage(app_code, 
+                        getMessage(req.query.app_id,
                                    process.env.COMMON_APP_ID, 
-                                   req.query.app_id,
+                                   app_code, 
                                    req.query.lang_code, (err2,results2)  => {
                                         return res.status(500).send(
                                             err2 ?? results2.text
@@ -681,9 +678,9 @@ module.exports = {
                 else {
                     if (!results) {
                         //record not found
-                        getMessage(20400, 
+                        getMessage( req.query.app_id,
                                     process.env.COMMON_APP_ID, 
-                                    req.query.app_id,
+                                    20400, 
                                     req.query.lang_code, (err2,results2)  => {
                                         return res.status(404).send(
                                             err2 ?? results2.text
@@ -707,7 +704,7 @@ module.exports = {
                             client_latitude : req.body.client_latitude,
                             client_longitude : req.body.client_longitude
                         }
-                        insertUserEvent(eventData, (err, result_new_user_event)=>{
+                        insertUserEvent(req.query.app_id, eventData, (err, result_new_user_event)=>{
                             if (err)
                                 return res.status(200).json({
                                     sent: 0
@@ -732,9 +729,9 @@ module.exports = {
             else {
                 if (!results) {
                     //record not found
-                    getMessage(20400, 
+                    getMessage( req.query.app_id,
                                 process.env.COMMON_APP_ID, 
-                                req.query.app_id,
+                                20400, 
                                 req.query.lang_code, (err2,results2)  => {
                                     return res.status(404).send(
                                         err2 ?? results2.text
@@ -767,9 +764,9 @@ module.exports = {
                             else{
                                 if (!results) {
                                     //record not found
-                                    getMessage(20400, 
+                                    getMessage( req.query.app_id,
                                                 process.env.COMMON_APP_ID, 
-                                                req.query.app_id,
+                                                20400, 
                                                 req.query.lang_code, (err2,results2)  => {
                                                     return res.status(404).send(
                                                         err2 ?? results2.text
@@ -804,9 +801,9 @@ module.exports = {
                                             else{
                                                 if (!results) {
                                                     //record not found
-                                                    getMessage(20400, 
+                                                    getMessage( req.query.app_id,
                                                                 process.env.COMMON_APP_ID, 
-                                                                req.query.app_id,
+                                                                20400, 
                                                                 req.query.lang_code, (err2,results2)  => {
                                                                     return res.status(404).send(
                                                                         err2 ?? results2.text
@@ -822,12 +819,12 @@ module.exports = {
                                         });
                                     }
                                     else{
-                                        createLogAppCI(req, res, req.query.app_id, __appfilename, __appfunction, __appline, 
+                                        createLogAppCI(req, res, __appfilename, __appfunction, __appline, 
                                                        'invalid password attempt for user id:' + req.params.id, (err_log, result_log)=>{
                                             //invalid password
-                                            getMessage(20401, 
+                                            getMessage( req.query.app_id,
                                                         process.env.COMMON_APP_ID, 
-                                                        req.query.app_id,
+                                                        20401, 
                                                         req.query.lang_code, (err2,results2)  => {
                                                             return res.status(400).send(
                                                                 err2 ?? results2.text
@@ -838,9 +835,9 @@ module.exports = {
                                 }
                                 else{
                                     //user not found
-                                    getMessage(20305, 
+                                    getMessage( req.query.app_id,
                                                 process.env.COMMON_APP_ID, 
-                                                req.query.app_id,
+                                                20305, 
                                                 req.query.lang_code, (err2,results2)  => {
                                                     return res.status(404).send(
                                                         err2 ?? results2.text
@@ -853,9 +850,9 @@ module.exports = {
                 }
                 else{
                     //user not found
-                    getMessage(20305, 
+                    getMessage(req.query.app_id,
                                process.env.COMMON_APP_ID, 
-                               req.query.app_id,
+                               20305, 
                                req.query.lang_code, (err2,results2)  => {
                                     return res.status(404).send(
                                         err2 ?? results2.text
@@ -868,7 +865,7 @@ module.exports = {
     },
     userLogin: (req, res) => {
         var result_pw;
-        userLogin(req.body, (err, results) => {
+        userLogin(req.query.app_id, req.body, (err, results) => {
             if (err) {
                 return res.status(500).send(
                     err
@@ -892,7 +889,7 @@ module.exports = {
                         result_pw = 0;
                         req.body.result = 0;
                     }
-                    createUserAccountApp(req.body.app_id, results.id, (err3, results3) => {
+                    createUserAccountApp(req.query.app_id, results.id, (err3, results3) => {
                         if (err3) {
                             return res.status(500).send(
                                 err3
@@ -903,13 +900,13 @@ module.exports = {
                         //if user not activated then send email with new verification code
                         let new_code = verification_code();
                         if (results.active == 0){
-                            updateUserVerificationCode(req.body.app_id, results.id, new_code, (err_verification,result_verification) => {
+                            updateUserVerificationCode(req.query.app_id, results.id, new_code, (err_verification,result_verification) => {
                                 if (err_verification)
                                     return res.status(500),send(
                                         err_verification
                                     );
                                 else{
-                                    getParameter(process.env.COMMON_APP_ID,'SERVICE_MAIL_TYPE_UNVERIFIED', req.query.app_id, (err3, parameter_value)=>{
+                                    getParameter(req.query.app_id, process.env.COMMON_APP_ID,'SERVICE_MAIL_TYPE_UNVERIFIED',  (err3, parameter_value)=>{
                                         const emailData = {
                                             lang_code : req.query.lang_code,
                                             app_id : process.env.COMMON_APP_ID,
@@ -928,7 +925,7 @@ module.exports = {
                                             else{
                                                 accessToken(req, (err, Token)=>{
                                                     req.body.access_token = Token;
-                                                    insertUserAccountLogon(req.body, (err_user_account_logon, result_user_account_logon) => {
+                                                    insertUserAccountLogon(req.query.app_id, req.body, (err_user_account_logon, result_user_account_logon) => {
                                                         if (err_user_account_logon) {
                                                             return res.status(500).send(
                                                                 err_user_account_logon
@@ -951,7 +948,7 @@ module.exports = {
                         else{
                             accessToken(req, (err, Token)=>{
                                 req.body.access_token = Token;
-                                insertUserAccountLogon(req.body, (err_user_account_logon, result_user_account_logon) => {
+                                insertUserAccountLogon(req.query.app_id, req.body, (err_user_account_logon, result_user_account_logon) => {
                                     if (err_user_account_logon) {
                                         return res.status(500).send(
                                             err_user_account_logon
@@ -967,7 +964,7 @@ module.exports = {
                             });
                         }           
                     } else {
-                        insertUserAccountLogon(req.body, (err_user_account_logon, result_user_account_logon) => {
+                        insertUserAccountLogon(req.query.app_id, req.body, (err_user_account_logon, result_user_account_logon) => {
                             if (err_user_account_logon) {
                                 return res.status(500).send(
                                     err_user_account_logon
@@ -975,11 +972,11 @@ module.exports = {
                             }
                             else{
                                 //Username or password not found
-                                createLogAppCI(req, res, req.body.app_id, __appfilename, __appfunction, __appline, 
+                                createLogAppCI(req, res, __appfilename, __appfunction, __appline, 
                                     'invalid password attempt for user id:' + req.body.user_account_id + ', username:' + req.body.username, (err_log, result_log)=>{
-                                    getMessage(20300, 
+                                    getMessage( req.query.app_id,
                                                 process.env.COMMON_APP_ID, 
-                                                req.query.app_id,
+                                                20300, 
                                                 req.query.lang_code, (err2,results2)  => {
                                                         return res.status(400).send(
                                                             err2 ?? results2.text
@@ -991,11 +988,11 @@ module.exports = {
                     }
                 } else{
                     //User not found
-                    createLogAppCI(req, res, req.body.app_id, __appfilename, __appfunction, __appline, 
+                    createLogAppCI(req, res, __appfilename, __appfunction, __appline, 
                                    'user not found:' + req.body.username, (err_log, result_log)=>{
-                        getMessage(20305, 
+                        getMessage( req.query.app_id,
                                     process.env.COMMON_APP_ID, 
-                                    req.query.app_id,
+                                    20305, 
                                     req.query.lang_code, (err2,results2)  => {
                                         return res.status(404).send(
                                             err2 ?? results2.text
@@ -1012,7 +1009,7 @@ module.exports = {
         req.body.client_user_agent = req.headers["user-agent"];
         req.body.client_longitude = req.body.client_longitude;
         req.body.client_latitude = req.body.client_latitude;
-        getUserByProviderId(req.body.app_id, req.body.identity_provider_id, req.params.id, (err, results) => {
+        getUserByProviderId(req.query.app_id, req.body.identity_provider_id, req.params.id, (err, results) => {
             if (err) {
                 return res.status(500).send(
                     err
@@ -1020,7 +1017,7 @@ module.exports = {
             }
             else{
                 if (results.length > 0) {
-                    updateSigninProvider(req.body.app_id, results[0].id, req.body, (err2, results2) => {
+                    updateSigninProvider(req.query.app_id, results[0].id, req.body, (err2, results2) => {
                         if (err2) {
                             return res.status(500).send(
                                 err2
@@ -1028,7 +1025,7 @@ module.exports = {
                         }
                         else{
                             req.body.user_account_id = results[0].id;
-                            createUserAccountApp(req.body.app_id, results[0].id, (err4, results4) => {
+                            createUserAccountApp(req.query.app_id, results[0].id, (err4, results4) => {
                                 if (err4) {
                                     return res.status(500).send(
                                         err4
@@ -1037,7 +1034,7 @@ module.exports = {
                             });        
                             accessToken(req, (err5, Token)=>{
                                 req.body.access_token = Token;
-                                insertUserAccountLogon(req.body, (err_user_account_logon, results_user_account_logon) => {
+                                insertUserAccountLogon(req.query.app_id, req.body, (err_user_account_logon, results_user_account_logon) => {
                                     if (err_user_account_logon) {
                                         return res.status(500).send(
                                             err_user_account_logon
@@ -1064,7 +1061,7 @@ module.exports = {
                     if (typeof req.body.provider_image == 'undefined')
                         req.body.provider_image = null;
 
-                    create(req.body.app_id, req.body, (err4, results4) => {
+                    create(req.query.app_id, req.body, (err4, results4) => {
                         if (err4) {
                             return res.status(500).send(
                                 err4
@@ -1072,14 +1069,14 @@ module.exports = {
                         }
                         else{
                             req.body.user_account_id = results4.insertId;
-                            createUserAccountApp(req.body.app_id, results4.insertId, (err6, results6) => {
+                            createUserAccountApp(req.query.app_id, results4.insertId, (err6, results6) => {
                                 if (err6) {
                                     return res.status(500).send(
                                         err6
                                     );
                                 }
                             });        
-                            getUserByProviderId(req.body.app_id, req.body.identity_provider_id, req.params.id, (err7, results7) => {
+                            getUserByProviderId(req.query.app_id, req.body.identity_provider_id, req.params.id, (err7, results7) => {
                                 if (err7) {
                                     return res.status(500).send(
                                         err7
@@ -1088,7 +1085,7 @@ module.exports = {
                                 else{
                                     accessToken(req, (err8, Token)=>{
                                         req.body.access_token = Token;
-                                        insertUserAccountLogon(req.body, (err_user_account_logon, results_user_account_logon) => {
+                                        insertUserAccountLogon(req.query.app_id, req.body, (err_user_account_logon, results_user_account_logon) => {
                                             if (err_user_account_logon) {
                                                 return res.status(500).send(
                                                     err_user_account_logon
@@ -1111,8 +1108,8 @@ module.exports = {
             }
         });
     },
-    getStatCount: (req, res) => {
-        getStatCount((err, results) => {
+    getStatCountAdmin: (req, res) => {
+        getStatCountAdmin(req.query.app_id, (err, results) => {
             if (err) {
                 return res.status(500).send(
                     err
