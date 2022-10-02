@@ -1,6 +1,6 @@
 const {execute_db_sql} = require ("../../common/database");
 module.exports = {
-	insertUserEvent: (data, callBack) => {
+	insertUserEvent: (app_id, data, callBack) => {
 		let sql;
 		let parameters;
 		if (process.env.SERVICE_DB_USE == 1) {
@@ -66,7 +66,7 @@ module.exports = {
 							event_status : data.event_status
 						};
 		}
-		execute_db_sql(data.app_id, data.app_id, sql, parameters, null, 
+		execute_db_sql(app_id, sql, parameters, null, 
 			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);
@@ -130,7 +130,7 @@ module.exports = {
 							event : event
 						 };
 		}
-		execute_db_sql(app_id, app_id, sql, parameters, null, 
+		execute_db_sql(app_id, sql, parameters, null, 
 			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);

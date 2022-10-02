@@ -9,7 +9,6 @@ module.exports = {
           };
         res.writeHead(200, headers);        
         req.query.app_user_id ='';
-        let app_id = req.query.app_id;
         let res2;
         req.query.callback=1;
         if (req.query.admin =='true'){
@@ -17,7 +16,7 @@ module.exports = {
             getIpAdmin(req, res2, (err, geodata) =>{
                 const newClient = {
                     id: req.params.clientId,
-                    app_id: app_id,
+                    app_id: req.query.app_id,
                     user_account_id: req.query.user_account_id,
                     user_agent: req.headers["user-agent"],
                     connection_date: new Date().toISOString(),
@@ -28,25 +27,26 @@ module.exports = {
                     response: res
                 };
                 broadcast_clients.push(newClient);
-                createLogAdmin({ app_id : process.env.COMMON_APP_ID,
-                            app_module : 'BROADCAST',
-                            app_module_type : 'CONNECT',
-                            app_module_request : req.originalUrl,
-                            app_module_result : JSON.stringify(geodata),
-                            app_user_id : req.query.user_account_id,
-                            user_language : null,
-                            user_timezone : null,
-                            user_number_system : null,
-                            user_platform : null,
-                            server_remote_addr : req.ip,
-                            server_user_agent : req.headers["user-agent"],
-                            server_http_host : req.headers["host"],
-                            server_http_accept_language : req.headers["accept-language"],
-                            client_latitude : geodata.geoplugin_latitude,
-                            client_longitude : geodata.geoplugin_longitude
-                            }, req.query.app_id, (err,results)  => {
-                                null;
-                });
+                createLogAdmin(req.query.app_id,
+                                { app_id : req.query.app_id,
+                                    app_module : 'BROADCAST',
+                                    app_module_type : 'CONNECT',
+                                    app_module_request : req.originalUrl,
+                                    app_module_result : JSON.stringify(geodata),
+                                    app_user_id : req.query.user_account_id,
+                                    user_language : null,
+                                    user_timezone : null,
+                                    user_number_system : null,
+                                    user_platform : null,
+                                    server_remote_addr : req.ip,
+                                    server_user_agent : req.headers["user-agent"],
+                                    server_http_host : req.headers["host"],
+                                    server_http_accept_language : req.headers["accept-language"],
+                                    client_latitude : geodata.geoplugin_latitude,
+                                    client_longitude : geodata.geoplugin_longitude
+                                    }, (err,results)  => {
+                                        null;
+                                });
                 res.on('close', ()=>{
                     broadcast_clients = broadcast_clients.filter(client => client.id !== req.params.clientId);
                     res.end();
@@ -56,10 +56,10 @@ module.exports = {
         else{
             const intervalId = setInterval(() => {
                 const { getParameter } = require ("../db/app_portfolio/app_parameter/app_parameter.service");
-                getParameter(process.env.COMMON_APP_ID,'SERVER_MAINTENANCE', req.query.app_id, (err, db_SERVER_MAINTENANCE)=>{
+                getParameter(req.query.app_id, process.env.COMMON_APP_ID,'SERVER_MAINTENANCE', (err, db_SERVER_MAINTENANCE)=>{
                     if (err){
                         const {createLogAppSE} = require("../log/log.controller");
-                        createLogAppSE(process.env.COMMON_APP_ID, __appfilename, __appfunction, __appline, err, (err_log, result_log)=>{
+                        createLogAppSE(req.query.app_id, __appfilename, __appfunction, __appline, err, (err_log, result_log)=>{
                             null;
                         })
                     }
@@ -76,7 +76,7 @@ module.exports = {
             getIp(req, res2, (err, geodata) =>{
                 const newClient = {
                     id: req.params.clientId,
-                    app_id: app_id,
+                    app_id: req.query.app_id,
                     user_account_id: req.query.user_account_id,
                     user_agent: req.headers["user-agent"],
                     connection_date: new Date().toISOString(),
@@ -87,7 +87,8 @@ module.exports = {
                     response: res
                 };
                 broadcast_clients.push(newClient);
-                createLog({ app_id : req.query.app_id,
+                createLog(req.query.app_id,
+                          { app_id : req.query.app_id,
                             app_module : 'BROADCAST',
                             app_module_type : 'CONNECT',
                             app_module_request : req.originalUrl,
@@ -103,7 +104,7 @@ module.exports = {
                             server_http_accept_language : req.headers["accept-language"],
                             client_latitude : geodata.geoplugin_latitude,
                             client_longitude : geodata.geoplugin_longitude
-                            }, req.query.app_id, (err,results)  => {
+                            }, (err,results)  => {
                                 null;
                 });
                 res.on('close', ()=>{
@@ -130,13 +131,14 @@ module.exports = {
                 else{
                     const { getMessage_admin } = require("../../service/db/app_portfolio/message_translation/message_translation.service");
                     //Record not found
-                    getMessage_admin(20400, 
-                        req.query.app_id, 
-                        req.query.lang_code, (err2,result2)  => {
-                            return res.status(404).send(
-                                    err2 ?? result2.text
-                            );
-                        });
+                    getMessage_admin(req.query.app_id,
+                                     process.env.COMMON_APP_ID,
+                                     20400,
+                                     req.query.lang_code, (err2,result2)  => {
+                                        return res.status(404).send(
+                                                err2 ?? result2.text
+                                        );
+                                    });
                 }
             }
         })

@@ -11,9 +11,9 @@ module.exports = {
 			req.query.latitude=='undefined' ||
 			req.query.longitude=='undefined'){
 			 //Missing latitude or longitude
-			 getMessage(20500, 
+			 getMessage(req.query.app_id,
 						process.env.COMMON_APP_ID, 
-						req.query.app_id,
+						20500, 
 						req.query.lang_code, (err,results)  => {
 							return res.status(400).send(
 								err ?? results.text
@@ -21,7 +21,7 @@ module.exports = {
 						});
 			}
 		else{	
-			getParameter(process.env.COMMON_APP_ID,'SERVICE_GEOLOCATION_URL_GPS_PLACE', req.query.app_id, (err, db_SERVICE_GEOLOCATION_URL_GPS_PLACE)=>{
+			getParameter(req.query.app_id, process.env.COMMON_APP_ID,'SERVICE_GEOLOCATION_URL_GPS_PLACE',  (err, db_SERVICE_GEOLOCATION_URL_GPS_PLACE)=>{
 				if (err) {
 					createLogAppSE(req.query.app_id, __appfilename, __appfunction, __appline, err, (err_log, result_log)=>{
                         return callBack(err, null);
@@ -32,7 +32,8 @@ module.exports = {
 					const url = `${db_SERVICE_GEOLOCATION_URL_GPS_PLACE}?format=json&lat=${req.query.latitude}&lon=${req.query.longitude}`;
 					async function getasync(){
 						geodata = await getService(url);
-						createLog({ app_id : req.query.app_id,
+						createLog(req.query.app_id,
+							      { app_id : req.query.app_id,
 									app_module : 'GEOLOCATION',
 									app_module_type : 'PLACE',
 									app_module_request : url,
@@ -48,7 +49,7 @@ module.exports = {
 									server_http_accept_language : req.headers["accept-language"],
 									client_latitude : geodata.geoplugin_latitude,
 									client_longitude : geodata.geoplugin_longitude
-									}, req.query.app_id, (err,results)  => {
+									}, (err,results)  => {
 										null;
 						});
 						return res.status(200).json(
@@ -67,16 +68,17 @@ module.exports = {
 			req.query.latitude=='undefined' ||
 			req.query.longitude=='undefined'){
 			 //Missing latitude or longitude
-			 getMessage_admin(20500, 
-				process.env.COMMON_APP_ID, 
-				req.query.lang_code, (err,results)  => {
-					return res.status(400).send(
-						err ?? results.text
-						);
-				});
+			 getMessage_admin(req.query.app_id,
+							  process.env.COMMON_APP_ID, 
+							  20500, 
+							  req.query.lang_code, (err,results)  => {
+								return res.status(400).send(
+									err ?? results.text
+									);
+							  });
 			}
 		else{	
-			getParameter_admin(process.env.COMMON_APP_ID,'SERVICE_GEOLOCATION_URL_GPS_PLACE', (err, db_SERVICE_GEOLOCATION_URL_GPS_PLACE)=>{
+			getParameter_admin(req.query.app_id, process.env.COMMON_APP_ID,'SERVICE_GEOLOCATION_URL_GPS_PLACE', (err, db_SERVICE_GEOLOCATION_URL_GPS_PLACE)=>{
 				if (err) {
 					createLogAppSE(req.query.app_id, __appfilename, __appfunction, __appline, err, (err_log, result_log)=>{
                         return callBack(err, null);
@@ -87,25 +89,26 @@ module.exports = {
 					const url = `${db_SERVICE_GEOLOCATION_URL_GPS_PLACE}?format=json&lat=${req.query.latitude}&lon=${req.query.longitude}`;
 					async function getasync(){
 						geodata = await getService(url);
-						createLogAdmin({ app_id : process.env.COMMON_APP_ID,
-									app_module : 'GEOLOCATION',
-									app_module_type : 'PLACE',
-									app_module_request : url,
-									app_module_result : JSON.stringify(geodata),
-									app_user_id : req.query.app_user_id,
-									user_language : null,
-									user_timezone : null,
-									user_number_system : null,
-									user_platform : null,
-									server_remote_addr : req.ip,
-									server_user_agent : req.headers["user-agent"],
-									server_http_host : req.headers["host"],
-									server_http_accept_language : req.headers["accept-language"],
-									client_latitude : geodata.geoplugin_latitude,
-									client_longitude : geodata.geoplugin_longitude
-									}, req.query.app_id, (err,results)  => {
-										null;
-						});
+						createLogAdmin(req.query.app_id,
+										{ app_id : process.env.COMMON_APP_ID,
+											app_module : 'GEOLOCATION',
+											app_module_type : 'PLACE',
+											app_module_request : url,
+											app_module_result : JSON.stringify(geodata),
+											app_user_id : req.query.app_user_id,
+											user_language : null,
+											user_timezone : null,
+											user_number_system : null,
+											user_platform : null,
+											server_remote_addr : req.ip,
+											server_user_agent : req.headers["user-agent"],
+											server_http_host : req.headers["host"],
+											server_http_accept_language : req.headers["accept-language"],
+											client_latitude : geodata.geoplugin_latitude,
+											client_longitude : geodata.geoplugin_longitude
+											}, (err,results)  => {
+												null;
+										});
 						return res.status(200).json(
 							geodata
 						)
@@ -118,7 +121,7 @@ module.exports = {
 	getIp: (req, res, callBack) => {
 		var geodata;
 		var url;
-		getParameter(process.env.COMMON_APP_ID,'SERVICE_GEOLOCATION_URL_GPS_IP', req.query.app_id, (err, db_SERVICE_GEOLOCATION_URL_GPS_IP)=>{
+		getParameter(req.query.app_id, process.env.COMMON_APP_ID,'SERVICE_GEOLOCATION_URL_GPS_IP',  (err, db_SERVICE_GEOLOCATION_URL_GPS_IP)=>{
 			if (err) {
 				createLogAppSE(req.query.app_id, __appfilename, __appfunction, __appline, err, (err_log, result_log)=>{
 					return callBack(err, null);
@@ -134,7 +137,8 @@ module.exports = {
 					url = db_SERVICE_GEOLOCATION_URL_GPS_IP + '?ip=' + req.query.ip;
 				async function getasync(){
 					geodata = await getService(url);
-					createLog({ app_id : req.query.app_id,
+					createLog(req.query.app_id,
+						      { app_id : req.query.app_id,
 								app_module : 'GEOLOCATION',
 								app_module_type : 'IP',
 								app_module_request : url,
@@ -150,7 +154,7 @@ module.exports = {
 								server_http_accept_language : req.headers["accept-language"],
 								client_latitude : geodata.geoplugin_latitude,
 								client_longitude : geodata.geoplugin_longitude
-								}, req.query.app_id, (err,results)  => {
+								}, (err,results)  => {
 									null;
 					});
 					if (req.query.callback==1)
@@ -167,7 +171,7 @@ module.exports = {
 	getIpAdmin: (req, res, callBack) => {
 		var geodata;
 		var url;
-		getParameter_admin(process.env.COMMON_APP_ID,'SERVICE_GEOLOCATION_URL_GPS_IP', (err, db_SERVICE_GEOLOCATION_URL_GPS_IP)=>{
+		getParameter_admin(req.query.app_id, process.env.COMMON_APP_ID, 'SERVICE_GEOLOCATION_URL_GPS_IP', (err, db_SERVICE_GEOLOCATION_URL_GPS_IP)=>{
 			if (err) {
 				createLogAppSE(req.query.app_id, __appfilename, __appfunction, __appline, err, (err_log, result_log)=>{
 					return callBack(err, null);
@@ -183,25 +187,26 @@ module.exports = {
 					url = db_SERVICE_GEOLOCATION_URL_GPS_IP + '?ip=' + req.query.ip;
 				async function getasync(){
 					geodata = await getService(url);
-					createLogAdmin({ app_id : process.env.COMMON_APP_ID,
-								app_module : 'GEOLOCATION',
-								app_module_type : 'IP',
-								app_module_request : url,
-								app_module_result : JSON.stringify(geodata),
-								app_user_id : req.query.app_user_id,
-								user_language : null,
-								user_timezone : null,
-								user_number_system : null,
-								user_platform : null,
-								server_remote_addr : req.ip,
-								server_user_agent : req.headers["user-agent"],
-								server_http_host : req.headers["host"],
-								server_http_accept_language : req.headers["accept-language"],
-								client_latitude : geodata.geoplugin_latitude,
-								client_longitude : geodata.geoplugin_longitude
-								}, req.query.app_id, (err,results)  => {
-									null;
-					});
+					createLogAdmin(req.query.app_id,
+									{ app_id : req.query.app_id,
+										app_module : 'GEOLOCATION',
+										app_module_type : 'IP',
+										app_module_request : url,
+										app_module_result : JSON.stringify(geodata),
+										app_user_id : req.query.app_user_id,
+										user_language : null,
+										user_timezone : null,
+										user_number_system : null,
+										user_platform : null,
+										server_remote_addr : req.ip,
+										server_user_agent : req.headers["user-agent"],
+										server_http_host : req.headers["host"],
+										server_http_accept_language : req.headers["accept-language"],
+										client_latitude : geodata.geoplugin_latitude,
+										client_longitude : geodata.geoplugin_longitude
+										}, (err,results)  => {
+											null;
+									});
 					if (req.query.callback==1)
 						return callBack(null, geodata);
 					else

@@ -13,7 +13,7 @@ module.exports = {
                         result.geoplugin_countryName;
         //check if maintenance
         const { getParameter} = require ("../../service/db/app_portfolio/app_parameter/app_parameter.service");
-        getParameter(process.env.COMMON_APP_ID,'SERVER_MAINTENANCE', req.query.app_id, (err, db_SERVER_MAINTENANCE)=>{
+        getParameter(req.query.app_id, process.env.COMMON_APP_ID,'SERVER_MAINTENANCE',  (err, db_SERVER_MAINTENANCE)=>{
             if (err)
                 createLogAppSE(app_id, __appfilename, __appfunction, __appline, err, (err_log, result_log)=>{
                     return callBack(err, null);
@@ -26,7 +26,8 @@ module.exports = {
                                                 result.geoplugin_longitude,
                                                 gps_place)
                     .then(function(app_result){
-                        createLog({ app_id : app_id,
+                        createLog(req.query.app_id,
+                                  { app_id : app_id,
                                     app_module : 'FORMS',
                                     app_module_type : 'MAINTENANCE',
                                     app_module_request : null,
@@ -42,7 +43,7 @@ module.exports = {
                                     server_http_accept_language : req.headers["accept-language"],
                                     client_latitude : result.geoplugin_latitude,
                                     client_longitude : result.geoplugin_longitude
-                                    }, req.query.app_id, (err,results)  => {
+                                    }, (err,results)  => {
                                         null;
                         });
                         return callBack(null, app_result);
@@ -56,7 +57,8 @@ module.exports = {
                                         result.geoplugin_longitude, 
                                         gps_place)
                     .then(function(app_result){
-                        createLog({ app_id : app_id,
+                        createLog(req.query.app_id,
+                                  { app_id : app_id,
                                     app_module : 'FORMS',
                                     app_module_type : 'APP',
                                     app_module_request : params,
@@ -72,7 +74,7 @@ module.exports = {
                                     server_http_accept_language : req.headers["accept-language"],
                                     client_latitude : result.geoplugin_latitude,
                                     client_longitude : result.geoplugin_longitude
-                                    }, req.query.app_id, (err,results)  => {
+                                    }, (err,results)  => {
                                         null;
                         });
                         return callBack(null, app_result)
@@ -82,9 +84,9 @@ module.exports = {
         })
     })
   },
-  getFormAdmin: (req, res, callBack) => {
+  getFormAdmin: (req, res, app_id, callBack) => {
     //getIp and createLog needs app_id
-    req.query.app_id = process.env.COMMON_APP_ID;
+    req.query.app_id = app_id;
     req.query.app_user_id = null;
     req.query.callback=1;
     getIpAdmin(req, res, (err, result)=>{
@@ -92,64 +94,64 @@ module.exports = {
                         result.geoplugin_regionName + ', ' +
                         result.geoplugin_countryName;
         const { getAdmin } = require("../../apps/admin/client");
-        const app = getAdmin(result.geoplugin_latitude,
-                                result.geoplugin_longitude, 
-                                gps_place)
+        const app = getAdmin(app_id,
+                             result.geoplugin_latitude,
+                             result.geoplugin_longitude, 
+                             gps_place)
         .then(function(app_result){
-            createLogAdmin({ app_id : process.env.COMMON_APP_ID,
-                        app_module : 'FORMS',
-                        app_module_type : 'ADMIN',
-                        app_module_request : null,
-                        app_module_result : gps_place,
-                        app_user_id : null,
-                        user_language : null,
-                        user_timezone : null,
-                        user_number_system : null,
-                        user_platform : null,
-                        server_remote_addr : req.ip,
-                        server_user_agent : req.headers["user-agent"],
-                        server_http_host : req.headers["host"],
-                        server_http_accept_language : req.headers["accept-language"],
-                        client_latitude : result.geoplugin_latitude,
-                        client_longitude : result.geoplugin_longitude
-                        }, req.query.app_id, (err,results)  => {
-                            null;
-            });
+            createLogAdmin(req.query.app_id,
+                            { app_id : app_id,
+                                app_module : 'FORMS',
+                                app_module_type : 'ADMIN',
+                                app_module_request : null,
+                                app_module_result : gps_place,
+                                app_user_id : null,
+                                user_language : null,
+                                user_timezone : null,
+                                user_number_system : null,
+                                user_platform : null,
+                                server_remote_addr : req.ip,
+                                server_user_agent : req.headers["user-agent"],
+                                server_http_host : req.headers["host"],
+                                server_http_accept_language : req.headers["accept-language"],
+                                client_latitude : result.geoplugin_latitude,
+                                client_longitude : result.geoplugin_longitude
+                                }, (err,results)  => {
+                                    null;
+                            });
             return callBack(null, app_result);
         })
     })
   },
   getAdminSecure: (req, res) => {
-        const { getAdmin } = require("../../apps/admin/src/secure");
-        //admin does not use app_id so use main app_id when calling
-        //main app functionality
-        req.query.app_id = process.env.COMMON_APP_ID;
+        const { getAdminSecure } = require("../../apps/admin/src/secure");
         req.query.app_user_id = null;
         req.query.callback=1;    
         getIpAdmin(req, res, (err, result)=>{
             let gps_place = result.geoplugin_city + ', ' +
                             result.geoplugin_regionName + ', ' +
                             result.geoplugin_countryName;
-            getAdmin((err, app_result)=>{
-                createLogAdmin({ app_id : process.env.COMMON_APP_ID, 
-                            app_module : 'FORMS',
-                            app_module_type : 'ADMIN_SECURE',
-                            app_module_request : null,
-                            app_module_result : gps_place,
-                            app_user_id : null,
-                            user_language : null,
-                            user_timezone : null,
-                            user_number_system : null,
-                            user_platform : null,
-                            server_remote_addr : req.ip,
-                            server_user_agent : req.headers["user-agent"],
-                            server_http_host : req.headers["host"],
-                            server_http_accept_language : req.headers["accept-language"],
-                            client_latitude : result.geoplugin_latitude,
-                            client_longitude : result.geoplugin_longitude
-                            }, req.query.app_id, (err,results)  => {
-                                null;
-                });
+            getAdminSecure(req.query.app_id, (err, app_result)=>{
+                createLogAdmin(req.query.app_id,
+                                { app_id : req.query.app_id,
+                                    app_module : 'FORMS',
+                                    app_module_type : 'ADMIN_SECURE',
+                                    app_module_request : null,
+                                    app_module_result : gps_place,
+                                    app_user_id : null,
+                                    user_language : null,
+                                    user_timezone : null,
+                                    user_number_system : null,
+                                    user_platform : null,
+                                    server_remote_addr : req.ip,
+                                    server_user_agent : req.headers["user-agent"],
+                                    server_http_host : req.headers["host"],
+                                    server_http_accept_language : req.headers["accept-language"],
+                                    client_latitude : result.geoplugin_latitude,
+                                    client_longitude : result.geoplugin_longitude
+                                    }, (err,results)  => {
+                                        null;
+                                });
                 return res.status(200).send(
                     app_result
                 );
