@@ -1,6 +1,6 @@
 const {execute_db_sql} = require ("../../common/database");
 module.exports = {
-	createLog: (data, app_id, callBack) => {
+	createLog: (app_id, data, callBack) => {
 		let sql;
 		let parameters;
 		//max 4000 characters can be saved
@@ -99,7 +99,7 @@ module.exports = {
 							server_http_accept_language:data.server_http_accept_language
 						};
 		}
-		execute_db_sql(app_id, app_id, sql, parameters, null, 
+		execute_db_sql(app_id, sql, parameters, null, 
 			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);
@@ -107,7 +107,7 @@ module.exports = {
 				return callBack(null, result);
 		});
 	},
-	createLogAdmin: (data, app_id, callBack) => {
+	createLogAdmin: (app_id, data, callBack) => {
 		let sql;
 		let parameters;
 		//max 4000 characters can be saved
@@ -206,7 +206,7 @@ module.exports = {
 							server_http_accept_language:data.server_http_accept_language
 						};
 		}
-		execute_db_sql(app_id, null, sql, parameters, true, 
+		execute_db_sql(app_id, sql, parameters, true, 
 			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);
@@ -214,7 +214,7 @@ module.exports = {
 				return callBack(null, result);
 		});
 	},
-	getLogs: (app_id, year, month, sort, order_by, offset, limit, callBack) => {
+	getLogs: (app_id, data_app_id, year, month, sort, order_by, offset, limit, callBack) => {
 		/* 	sort in UI:
 			1=ID
 			2=APP ID
@@ -245,8 +245,8 @@ module.exports = {
 				break
 			}
 		}
-		if (app_id=='')
-		  app_id = null;
+		if (data_app_id=='')
+			data_app_id = null;
 		if (process.env.SERVICE_DB_USE==1){
 			sql = `SELECT	id,
 							app_id,
@@ -273,7 +273,7 @@ module.exports = {
 					AND   DATE_FORMAT(date_created, '%c') = ?
 					ORDER BY ${sort} ${order_by}
 					LIMIT ?,?`;
-			parameters = [	app_id,
+			parameters = [	data_app_id,
 							year,
 							month,
 							offset,
@@ -305,13 +305,13 @@ module.exports = {
 					AND   TO_CHAR(date_created, 'fmMM') = :month
 					ORDER BY ${sort} ${order_by}
 					OFFSET :offset ROWS FETCH NEXT :limit ROWS ONLY`;
-			parameters = {	app_id:app_id,
+			parameters = {	app_id:data_app_id,
 							year:year,
 							month:month,
 							offset:offset,
 							limit:limit};
 		}
-		execute_db_sql(process.env.COMMON_APP_ID, null, sql, parameters, true, 
+		execute_db_sql(app_id, sql, parameters, true, 
 			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);
@@ -319,11 +319,11 @@ module.exports = {
 				return callBack(null, result);
 		});
 	},
-	getStatUniqueVisitor: (app_id, statchoice, year, month, callBack) => {
+	getStatUniqueVisitor: (app_id, data_app_id, statchoice, year, month, callBack) => {
 		let sql;
 		let parameters;
-		if (app_id=='')
-			app_id = null;
+		if (data_app_id=='')
+			data_app_id = null;
 		if (process.env.SERVICE_DB_USE==1){
 			sql = `SELECT	app_id,
 							DATE_FORMAT(date_created, '%Y') 	year,
@@ -355,7 +355,7 @@ module.exports = {
 							 CAST(DATE_FORMAT(date_created, '%e') AS SIGNED)
 					ORDER BY 4`;
 			parameters = [	statchoice,
-							app_id,
+							data_app_id,
 							year,
 							month,
 							statchoice,
@@ -394,11 +394,11 @@ module.exports = {
 							 TO_NUMBER(TO_CHAR(date_created, 'DD'))
 					ORDER BY 4`;
 			parameters = {	statchoice: statchoice,
-							app_id: app_id,
+							app_id: data_app_id,
 							year: year,
 							month:month};
 		}
-		execute_db_sql(app_id, null, sql, parameters, true, 
+		execute_db_sql(app_id, sql, parameters, true, 
 			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);

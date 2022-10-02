@@ -92,7 +92,7 @@ function logdate(){
 }
 module.exports = {
 
-	createLogServer: (app_id, info=null, err=null,
+	createLogServer: (info=null, err=null,
                       ip, host, protocol, originalUrl, method, statusCode, 
 					  user_agent, accept_language, referer) =>{
         let log_error_status = '';
@@ -245,7 +245,7 @@ module.exports = {
             });
         }
 	},
-    getParameters: (callBack) => {
+    getParameters: (app_id, callBack) => {
         let results = {};
         results.SERVICE_LOG_SCOPE_SERVER = process.env.SERVICE_LOG_SCOPE_SERVER;
         results.SERVICE_LOG_SCOPE_SERVICE = process.env.SERVICE_LOG_SCOPE_SERVICE;
@@ -265,7 +265,7 @@ module.exports = {
         results.SERVICE_LOG_PM2_FILE = process.env.SERVICE_LOG_PM2_FILE;
         return callBack(null, results);
     },
-    getLogs: (data, callBack) => {
+    getLogs: (app_id, data, callBack) => {
         let fs = require('fs');
         let filename;
 
@@ -392,7 +392,7 @@ module.exports = {
                 return callBack(error.message);
         }
     },
-    getFiles: (callBack) => {
+    getFiles: (app_id, callBack) => {
         let fs = require('fs');
         let logfiles =[];
         fs.readdir(process.env.SERVICE_LOG_FILE_PATH_SERVER, (err, files) => {
@@ -413,7 +413,7 @@ module.exports = {
             return callBack(null, logfiles);
         });
     },
-    getPM2Logs: (callBack) => {
+    getPM2Logs: (app_id, callBack) => {
         let fs = require('fs');
         try {
             let fixed_log = [];

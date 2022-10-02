@@ -17,7 +17,7 @@ module.exports = {
 							result.geoplugin_countryName;
 			//check if maintenance
 			const { getParameter} = require ("../../service/db/app_portfolio/app_parameter/app_parameter.service");
-			getParameter(process.env.COMMON_APP_ID,'SERVER_MAINTENANCE', req.query.app_id, (err, db_SERVER_MAINTENANCE)=>{
+			getParameter(req.query.app_id, process.env.COMMON_APP_ID,'SERVER_MAINTENANCE', (err, db_SERVER_MAINTENANCE)=>{
 				if (err)
 					createLogAppSE(req.query.app_id, __appfilename, __appfunction, __appline, err, (err_log, result_log)=>{
 						return res.send(null);
@@ -30,7 +30,8 @@ module.exports = {
 													result.geoplugin_longitude,
 													gps_place)
 						.then(function(app_result){
-							createLog({ app_id : req.query.app_id,
+							createLog(req.query.app_id,
+								      { app_id : req.query.app_id,
 										app_module : 'REPORT',
 										app_module_type : 'MAINTENANCE',
 										app_module_request : null,
@@ -46,7 +47,7 @@ module.exports = {
 										server_http_accept_language : req.headers["accept-language"],
 										client_latitude : result.geoplugin_latitude,
 										client_longitude : result.geoplugin_longitude
-										}, req.query.app_id, (err,results)  => {
+										}, (err,results)  => {
 											null;
 							});
 							res.send(app_result);
@@ -61,7 +62,8 @@ module.exports = {
 												gps_place)
 						.then(function(report_result){
 							if (typeof req.query.service == "undefined")
-								createLog({ app_id : req.query.app_id,
+								createLog(req.query.app_id,
+									      { app_id : req.query.app_id,
 											app_module : 'REPORT',
 											app_module_type : req.query.format.toUpperCase(), //HTML or PDF
 											app_module_request : req.protocol + '://' + req.get('host') + req.originalUrl,
@@ -77,7 +79,7 @@ module.exports = {
 											server_http_accept_language : req.headers["accept-language"],
 											client_latitude : result.geoplugin_latitude,
 											client_longitude : result.geoplugin_longitude
-											}, req.query.app_id, (err,results)  => {
+											}, (err,results)  => {
 												null;
 								});
 							if (req.query.format.toUpperCase() == 'PDF' && typeof req.query.service == "undefined" ){		

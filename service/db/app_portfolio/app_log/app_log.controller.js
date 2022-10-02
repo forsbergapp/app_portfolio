@@ -7,7 +7,7 @@ module.exports = {
 		body.server_user_agent 			 = req.headers["user-agent"];
 		body.server_http_host 			 = req.headers["host"];
 		body.server_http_accept_language = req.headers["accept-language"];	
-		createLog(body, req.query.app_id, (err,results) => {
+		createLog(req.query.app_id, body, (err,results) => {
 			if (err) {
 				return res.status(500).send({
 					message: err
@@ -24,7 +24,7 @@ module.exports = {
 		body.server_user_agent 			 = req.headers["user-agent"];
 		body.server_http_host 			 = req.headers["host"];
 		body.server_http_accept_language = req.headers["accept-language"];	
-		createLogAdmin(body, req.query.app_id, (err,results) => {
+		createLogAdmin(req.query.app_id, body, (err,results) => {
 			if (err) {
 				return res.status(500).send({
 					message: err
@@ -43,7 +43,7 @@ module.exports = {
 		let offset = parseInt(req.query.offset);
 		let limit = parseInt(req.query.limit);
 		
-		getLogs(req.query.select_app_id, year, month, sort, order_by, offset, limit, (err, results) =>{
+		getLogs(req.query.app_id, req.query.select_app_id, year, month, sort, order_by, offset, limit, (err, results) =>{
 			if (err) {
 				return res.status(500).send({
 					data: err
@@ -57,19 +57,20 @@ module.exports = {
 				else{
 					const { getMessage_admin } = require("../message_translation/message_translation.service");
 					//Record not found
-					getMessage_admin(20400, 
-						req.query.app_id, 
-						req.query.lang_code, (err2,results2)  => {
-							return res.status(404).send(
-									err2 ?? results2.text
-							);
-						});
+					getMessage_admin(req.query.app_id, 
+									 process.env.COMMON_APP_ID,
+									 20400, 
+									 req.query.lang_code, (err2,results2)  => {
+											return res.status(404).send(
+													err2 ?? results2.text
+											);
+									 });
 				}
 			}
 		});
 	},
 	getStatUniqueVisitor: (req, res) =>{
-		getStatUniqueVisitor(req.query.select_app_id, req.query.statchoice, req.query.year, req.query.month,  (err, results)=>{
+		getStatUniqueVisitor(req.query.app_id, req.query.select_app_id, req.query.statchoice, req.query.year, req.query.month,  (err, results)=>{
 			if (err) {
 				return res.status(500).send({
 					data: err
@@ -83,13 +84,14 @@ module.exports = {
 				else{
 					const { getMessage_admin } = require("../message_translation/message_translation.service");
 					//Record not found
-					getMessage_admin(20400, 
-						req.query.app_id, 
-						req.query.lang_code, (err2,results2)  => {
-							return res.status(404).send(
-									err2 ?? results2.text
-							);
-						});
+					getMessage_admin(req.query.app_id,
+									 process.env.COMMON_APP_ID,
+									 20400,
+									 req.query.lang_code, (err2,results2)  => {
+										return res.status(404).send(
+												err2 ?? results2.text
+										);
+									 });
 				}
 			}
 		})

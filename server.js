@@ -74,7 +74,7 @@ app.use(function(req, res, next) {
 
 //Logging middleware
 app.use((err,req,res,next) => {
-  createLogServer(req, res, process.env.COMMON_APP_ID, null, err);
+  createLogServer(req, res, null, err);
   next();
 })
 app.use((req,res,next) => {
@@ -97,11 +97,11 @@ app.use((req,res,next) => {
             return value;
           };
         };
-        createLogServer(null, null, process.env.COMMON_APP_ID, 'res:' + JSON.stringify(res, getCircularReplacer()), null);
+        createLogServer(req, null, 'res:' + JSON.stringify(res, getCircularReplacer()), null);
       }
       else{
         if (process.env.SERVICE_LOG_ENABLE_SERVER_INFO==1)
-          createLogServer(req, res, process.env.COMMON_APP_ID, null, null);
+          createLogServer(req, res, null, null);
       }        
       next();
 	});
@@ -189,10 +189,6 @@ process.env.TZ = 'UTC';
 //app.use("/.well-known/acme-challenge/",express.static(__dirname + '/.well-known/acme-challenge/'));
 //app.use(express.static(__dirname, { dotfiles: 'allow' }));
 
-//admin directories
-app.use('/admin/images',express.static(__dirname + '/apps/admin/images'));
-app.use('/admin/js',express.static(__dirname + '/apps/admin/js'));
-app.use('/admin/css',express.static(__dirname + '/apps/admin/css'));
 //common directories
 app.use('/common/audio',express.static(__dirname + '/apps/common/audio'));
 app.use('/common/images',express.static(__dirname + '/apps/common/images'));
@@ -208,9 +204,14 @@ app.use(function(req, res, next) {
       err = e;
   }
   if (err){
-      createLogAppSE(process.env.COMMON_APP_ID, __appfilename, __appfunction, __appline, `Not valid url input, req.url ${req.url} err:${err}`, (err_log, result_log)=>{
-        return res.redirect('https://' + req.headers.host);
-      });
+    let log_app_id;
+    if (typeof req.query.app_id !='undefined')
+      log_app_id = req.query.app_id;
+    else
+      log_app_id = process.env.COMMON_APP_ID;
+    createLogAppSE(log_app_id, __appfilename, __appfunction, __appline, `Not valid url input, req.url ${req.url} err:${err}`, (err_log, result_log)=>{
+      return res.redirect('https://' + req.headers.host);
+    });
   }
   next();
 });
@@ -222,11 +223,18 @@ init_db((err, result) =>{
       null;
   else{
     function load_dynamic_code(app_id){
+      let filename;
       //load dynamic server app code
-      fs.readFile(`./apps/app${app_id}/server.js`, 'utf8', (error, fileBuffer) => {
+      if (app_id == process.env.COMMON_APP_ID)
+        filename = `./apps/admin/server.js`;
+      else
+        filename = `./apps/app${app_id}/server.js`
+      fs.readFile(filename, 'utf8', (error, fileBuffer) => {
         eval(fileBuffer);
       });
     }
+    //load admin app
+    load_dynamic_code(process.env.COMMON_APP_ID);
     let json;
     const { getAppDBParametersAdmin } = require ("./service/db/app_portfolio/app_parameter/app_parameter.service");
     //app_id inparameter for log, all apps will be returned
@@ -259,21 +267,6 @@ init_db((err, result) =>{
     }); 
   }
 })
-app.get("/admin",function (req, res, next) {
-  //redirect from http to https
-  if (req.protocol=='http')
-    return res.redirect('https://' + req.headers.host + "/admin");
-  else{
-    const { getFormAdmin } = require ("./service/forms/forms.controller");
-    getFormAdmin(req, res, (err, app_result)=>{
-      return res.send(app_result);
-    })
-  }
-});
-app.get("/admin/:sub",function (req, res, next) {
-    return res.redirect('https://' + req.headers.host + "/admin");
-});
-
 
 //info for search bots, same for all apps
 app.get('/robots.txt', function (req, res) {
@@ -283,7 +276,7 @@ app.get('/robots.txt', function (req, res) {
 
 //start HTTP and HTTPS
 app.listen(process.env.SERVER_PORT, () => {
-  createLogServer(null, null, process.env.COMMON_APP_ID, "HTTP Server up and running on PORT: " + process.env.SERVER_PORT, null);
+  createLogServer(null, null, "HTTP Server up and running on PORT: " + process.env.SERVER_PORT, null);
 });
 //SSL files for HTTPS
 let options;
@@ -296,7 +289,7 @@ fs.readFile(process.env.SERVER_HTTPS_KEY, 'utf8', (error, fileBuffer) => {
       cert: env_cert
     };
     https.createServer(options, app).listen(process.env.SERVER_HTTPS_PORT, () => {
-      createLogServer(null, null, process.env.COMMON_APP_ID, "HTTPS Server up and running on PORT: " + process.env.SERVER_HTTPS_PORT, null);
+      createLogServer(null, null, "HTTPS Server up and running on PORT: " + process.env.SERVER_HTTPS_PORT, null);
     });    
   });  
 });

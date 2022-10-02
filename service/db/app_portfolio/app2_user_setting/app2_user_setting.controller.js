@@ -33,9 +33,9 @@ module.exports = {
 			}
 			if (!results){
 				//Record not found
-				getMessage(20400, 
-							req.query.app_id, 
+				getMessage( req.query.app_id, 
 							req.query.app_id,
+							20400, 
 							req.query.lang_code, (err2,results2)  => {
 								return res.status(404).send(
 										err2 ?? results2.text
@@ -58,9 +58,9 @@ module.exports = {
 			}
 			if (!results){
 				//Record not found
-				getMessage(20400, 
+				getMessage( req.query.app_id, 
 							req.query.app_id, 
-							req.query.app_id, 
+							20400, 
 							req.query.lang_code, (err2,results2)  => {
 								return res.status(404).send(
 									err2 ?? results2.text
@@ -86,9 +86,9 @@ module.exports = {
 			}
 			if (!results){
 				//Record not found
-				getMessage(20400, 
+				getMessage( req.query.app_id, 
 							req.query.app_id, 
-							req.query.app_id, 
+							20400, 
 							req.query.lang_code, (err2,results2)  => {
 								return res.status(404).send(
 									err2 ?? results2.text
@@ -116,9 +116,9 @@ module.exports = {
             else{
                 if (!results) {
                     //Record not found
-                    getMessage(20400, 
+                    getMessage( req.query.app_id, 
 								req.query.app_id, 
-								req.query.app_id, 
+								20400, 
 								req.query.lang_code, (err2,results2)  => {
 									return res.status(404).json({
 											count: 0,
@@ -147,9 +147,9 @@ module.exports = {
             else{
                 if (!results) {
                     //Record not found
-                    getMessage(20400, 
+                    getMessage( req.query.app_id, 
 								req.query.app_id, 
-								req.query.app_id, 
+								20400, 
 								req.query.lang_code, (err2,results2)  => {
 									return res.status(404).json({
 											count: 0,
@@ -191,9 +191,9 @@ module.exports = {
 			else{
 				if (!results){
 					//id, not found, nothing updated
-					getMessage(20400, 
+					getMessage( req.query.app_id, 
 								req.query.app_id, 
-								req.query.app_id, 
+								20400, 
 								req.query.lang_code, (err2,results2)  => {
 									return res.status(404).send(
 										err2 ?? results2.text
@@ -217,9 +217,9 @@ module.exports = {
 			}
 			if (!results){
 				//Record not found
-				getMessage(20400, 
+				getMessage( req.query.app_id, 
 							req.query.app_id, 
-							req.query.app_id, 
+							20400, 
 							req.query.lang_code, (err2,results2)  => {
 								return res.status(404).send(
 									err2 ?? results2.text

@@ -1,7 +1,7 @@
 const fs = require("fs");
 const { createLogAppSE } = require("../../../../service/log/log.controller");
 module.exports = {
-    getAdmin:(callBack) => {    
+    getAdminSecure:(app_id, callBack) => {    
         const {promises: {readFile}} = require("fs");
         const files = [
             ['APP', __dirname + '/index.html'],
@@ -25,7 +25,7 @@ module.exports = {
             });
             return callBack(null, app);
         }).catch(err => {
-            createLogAppSE(null, __appfilename, __appfunction, __appline, err, (err_log, result_log)=>{
+            createLogAppSE(app_id, __appfilename, __appfunction, __appline, err, (err_log, result_log)=>{
                 return callBack(err);
             });
         });
