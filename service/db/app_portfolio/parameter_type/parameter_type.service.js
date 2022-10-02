@@ -1,6 +1,6 @@
 const {execute_db_sql} = require ("../../common/database");
 module.exports = {
-	getParameterType: (id, callBack) => {
+	getParameterType: (app_id, id, callBack) => {
 		let sql;
     	let parameters;
 		if (process.env.SERVICE_DB_USE==1){
@@ -19,7 +19,7 @@ module.exports = {
 					ORDER BY 1`;
 			parameters = {id: id};
 		}
-		execute_db_sql(id, null, sql, parameters, true, 
+		execute_db_sql(app_id, sql, parameters, true, 
 			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);

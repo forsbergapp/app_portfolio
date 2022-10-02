@@ -7,11 +7,13 @@ const { checkLogin } = require("../../service/db/app_portfolio/user_account_logo
 const {block_ip_control, safe_user_agents, policy_directives} = require ("./auth.service");
 module.exports = {
     access_control: (req, res, callBack) => {
+        if (typeof req.query.app_id=='undefined' || req.query.app_id=='')
+            req.query.app_id = process.env.COMMON_APP_ID;
         if (process.env.SERVICE_AUTH_ACCESS_CONTROL_ENABLE==1){
             let ip_v4 = req.ip.replace('::ffff:','');
             block_ip_control(ip_v4, (err, result_range) =>{
                 if (err){
-                    createLogAppCI(req, res, null, __appfilename, __appfunction, __appline, `ip ${ip_v4} blocked, range: ${result_range}, tried URL: ${req.originalUrl}`, (err_log, result_log)=>{
+                    createLogAppCI(req, res, __appfilename, __appfunction, __appline, `ip ${ip_v4} blocked, range: ${result_range}, tried URL: ${req.originalUrl}`, (err_log, result_log)=>{
                         return callBack(err,null);
                     })
                 }
@@ -19,7 +21,7 @@ module.exports = {
                     if (process.env.SERVICE_AUTH_ACCESS_CONTROL_HOST_EXIST==1 &&
                         typeof req.headers.host=='undefined'){
                         //check if host exists
-                        createLogAppCI(req, res, null, __appfilename, __appfunction, __appline, `ip ${ip_v4} blocked, no host, tried URL: ${req.originalUrl}`, (err_log, result_log)=>{
+                        createLogAppCI(req, res, __appfilename, __appfunction, __appline, `ip ${ip_v4} blocked, no host, tried URL: ${req.originalUrl}`, (err_log, result_log)=>{
                             //406 Not Acceptable
                             return callBack(406,null);
                         })
@@ -29,7 +31,7 @@ module.exports = {
                         if (process.env.SERVICE_AUTH_ACCESS_CONTROL_ACCESS_FROM==1 &&
                             req.headers.host==os.hostname()){
                             //check if accessed from domain and not os hostname
-                            createLogAppCI(req, res, null, __appfilename, __appfunction, __appline, `ip ${ip_v4} blocked, accessed from hostname ${os.hostname()} not domain, tried URL: ${req.originalUrl}`, (err_log, result_log)=>{
+                            createLogAppCI(req, res, __appfilename, __appfunction, __appline, `ip ${ip_v4} blocked, accessed from hostname ${os.hostname()} not domain, tried URL: ${req.originalUrl}`, (err_log, result_log)=>{
                                 //406 Not Acceptable
                                 return callBack(406,null);
                             })
@@ -45,7 +47,7 @@ module.exports = {
                                         if(process.env.SERVICE_AUTH_ACCESS_CONTROL_USER_AGENT_EXIST==1 &&
                                            typeof req.headers["user-agent"]=='undefined'){
                                             //check if user-agent exists
-                                            createLogAppCI(req, res, null, __appfilename, __appfunction, __appline, `ip ${ip_v4} blocked, no user-agent, tried URL: ${req.originalUrl}`, (err_log, result_log)=>{
+                                            createLogAppCI(req, res, __appfilename, __appfunction, __appline, `ip ${ip_v4} blocked, no user-agent, tried URL: ${req.originalUrl}`, (err_log, result_log)=>{
                                                 //406 Not Acceptable
                                                 return callBack(406,null);
                                             })
@@ -54,7 +56,7 @@ module.exports = {
                                             if (process.env.SERVICE_AUTH_ACCESS_CONTROL_ACCEPT_LANGUAGE==1 &&
                                                 typeof req.headers["accept-language"]=='undefined'){
                                                 //check if accept-language exists
-                                                createLogAppCI(req, res, null, __appfilename, __appfunction, __appline, `ip ${ip_v4} blocked, no accept-language, tried URL: ${req.originalUrl}`, (err_log, result_log)=>{
+                                                createLogAppCI(req, res, __appfilename, __appfunction, __appline, `ip ${ip_v4} blocked, no accept-language, tried URL: ${req.originalUrl}`, (err_log, result_log)=>{
                                                     //406 Not Acceptable
                                                     return callBack(406,null);
                                                 })
@@ -76,7 +78,7 @@ module.exports = {
     checkAccessToken: (req, res, next) => {
 		let token = req.get("authorization");
 		if (token){
-            getParameter(process.env.COMMON_APP_ID,'SERVICE_AUTH_TOKEN_ACCESS_SECRET', req.query.app_id, (err, db_SERVICE_AUTH_TOKEN_ACCESS_SECRET)=>{
+            getParameter(req.query.app_id, process.env.COMMON_APP_ID,'SERVICE_AUTH_TOKEN_ACCESS_SECRET', (err, db_SERVICE_AUTH_TOKEN_ACCESS_SECRET)=>{
 				if (err) {
                     createLogAppSE(req.query.app_id, __appfilename, __appfunction, __appline, err, (err_log, result_log)=>{
                         null;
@@ -91,7 +93,7 @@ module.exports = {
                             });
                         } else {
                             //check access token belongs to user_account.id, app_id and ip saved when logged in
-                            checkLogin(req.query.user_account_logon_user_account_id, req.query.app_id, req.headers.authorization.replace('Bearer ',''), req.ip, (err, result)=>{
+                            checkLogin(req.query.app_id, req.query.user_account_logon_user_account_id, req.headers.authorization.replace('Bearer ',''), req.ip, (err, result)=>{
                                 if (err)
                                     createLogAppSE(req.query.app_id, __appfilename, __appfunction, __appline, err, (err_log, result_log)=>{
                                         res.status(500).send(
@@ -102,7 +104,7 @@ module.exports = {
                                     if (result.length==1)
                                         next();
                                     else
-                                        createLogAppCI(req, res, null, __appfilename, __appfunction, __appline, `user  ${req.query.user_account_id} app_id ${req.query.app_id} with ip ${req.ip} accesstoken unauthorized`, (err_log, result_log)=>{
+                                        createLogAppCI(req, res, null, __appfilename, __appfunction, __appline, `user  ${req.query.user_account_logon_user_account_id} app_id ${req.query.app_id} with ip ${req.ip} accesstoken unauthorized`, (err_log, result_log)=>{
                                             res.status(401).send({
 				                                message: 'Not authorized'
                                             });
@@ -128,7 +130,7 @@ module.exports = {
         else{
             let token = req.get("authorization");
             if (token){
-                getParameter(process.env.COMMON_APP_ID,'SERVICE_AUTH_TOKEN_DATA_SECRET', req.query.app_id, (err, db_SERVICE_AUTH_TOKEN_DATA_SECRET)=>{
+                getParameter(req.query.app_id, process.env.COMMON_APP_ID,'SERVICE_AUTH_TOKEN_DATA_SECRET', (err, db_SERVICE_AUTH_TOKEN_DATA_SECRET)=>{
                     if (err) {
                         createLogAppSE(req.query.app_id, __appfilename, __appfunction, __appline, err, (err_log, result_log)=>{
                             null;
@@ -157,7 +159,7 @@ module.exports = {
 	},
     dataToken: (req, res) => {
         if(req.headers.authorization){
-            getParameters_server(process.env.COMMON_APP_ID, req.query.app_id, (err, result)=>{
+            getParameters_server(req.query.app_id, process.env.COMMON_APP_ID,  (err, result)=>{
                 if (err) {
                     createLogAppSE(req.query.app_id, __appfilename, __appfunction, __appline, err, (err_log, result_log)=>{
                         null;
@@ -181,14 +183,15 @@ module.exports = {
                     }                    
                     var userpass = new Buffer.from((req.headers.authorization || '').split(' ')[1] || '', 'base64').toString();
                     if (userpass !== db_APP_REST_CLIENT_ID + ':' + db_APP_REST_CLIENT_SECRET) {
-                        createLog({ app_id : req.query.app_id,
+                        createLog(req.query.app_id,
+                                  { app_id : req.query.app_id,
                                     app_module : 'AUTH',
                                     app_module_type : 'DATATOKEN_FAIL',
                                     app_module_request : req.baseUrl,
                                     app_module_result : 'HTTP Error 401 Unauthorized: Access is denied.',
                                     app_user_id : req.query.app_user_id,
                                     user_language : null,
-                                    user_timezone : null,
+                                    user_stimezone : null,
                                     user_number_system : null,
                                     user_platform : null,
                                     server_remote_addr : req.ip,
@@ -197,7 +200,7 @@ module.exports = {
                                     server_http_accept_language : req.headers["accept-language"],
                                     client_latitude : null,
                                     client_longitude : null
-                                    }, req.query.app_id, (err,results)  => {
+                                    }, (err,results)  => {
                                         null;
                                 }); 
                         return res.status(401).send({ 
@@ -211,7 +214,8 @@ module.exports = {
                                         {
                                         expiresIn: db_SERVICE_AUTH_TOKEN_DATA_EXPIRE
                                         });
-                    createLog({ app_id : req.query.app_id,
+                    createLog(req.query.app_id,
+                              { app_id : req.query.app_id,
                                 app_module : 'AUTH',
                                 app_module_type : 'DATATOKEN_OK',
                                 app_module_request : req.baseUrl,
@@ -227,7 +231,7 @@ module.exports = {
                                 server_http_accept_language : req.headers["accept-language"],
                                 client_latitude : null,
                                 client_longitude : null
-                                }, req.query.app_id, (err,results)  => {
+                                }, (err,results)  => {
                                     null;
                     }); 
                     return res.status(200).json({ 
@@ -243,9 +247,9 @@ module.exports = {
         }
     },
     accessToken: (req, callBack) => {
-        getParameters_server(process.env.COMMON_APP_ID, req.query.app_id, (err, result)=>{
+        getParameters_server(req.query.app_id, process.env.COMMON_APP_ID,  (err, result)=>{
             if (err) {
-                createLogAppSE(req.body.app_id, __appfilename, __appfunction, __appline, err, (err_log, result_log)=>{
+                createLogAppSE(req.query.app_id, __appfilename, __appfunction, __appline, err, (err_log, result_log)=>{
                     callBack(err);
                 })
             }
@@ -265,7 +269,8 @@ module.exports = {
                                     {
                                     expiresIn: db_SERVICE_AUTH_TOKEN_ACCESS_EXPIRE
                                     });
-                createLog({ app_id : req.body.app_id,
+                createLog(req.query.app_id,
+                          { app_id : req.query.app_id,
                             app_module : 'AUTH',
                             app_module_type : 'ACCESSTOKEN_OK',
                             app_module_request : req.baseUrl,
@@ -281,7 +286,7 @@ module.exports = {
                             server_http_accept_language : req.headers["accept-language"],
                             client_latitude : req.body.client_latitude,
                             client_longitude : req.body.client_longitude
-                            }, req.query.app_id, (err,results)  => {
+                            }, (err,results)  => {
                                 null;
                 });
                 callBack(null,jsontoken_at);

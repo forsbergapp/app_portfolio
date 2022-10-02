@@ -3,7 +3,7 @@ const { createUserAccountApp, getUserAccountApps, getUserAccountApp, updateUserA
 module.exports = {
 	
 	createUserAccountApp: (req, res) => {
-		createUserAccountApp(req.body.app_id, req.body.user_account_id, (err,results) => {
+		createUserAccountApp(req.query.app_id, req.body.user_account_id, (err,results) => {
 			if (err) {
 				return res.status(500).send(
 					err
