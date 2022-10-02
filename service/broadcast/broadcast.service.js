@@ -19,7 +19,7 @@ module.exports = {
                     //connection date in ISO8601 format: "yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'"
                     //return selected year and month
                     if (parseInt(client.connection_date.substring(0,4)) == parseInt(year) && 
-                        parseInt(client.connection_date.substring(6,7)) == parseInt(month)){
+                        parseInt(client.connection_date.substring(5,7)) == parseInt(month)){
                             copyClient = {
                                 id: client.id,
                                 app_id: client.app_id,

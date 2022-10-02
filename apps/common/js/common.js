@@ -570,20 +570,21 @@ function SearchAndSetSelectedIndex(search, select_item, colcheck) {
 /*----------------------- */
 async function dialogue_close(dialogue){
     return new Promise(function (resolve, reject){
-        //misc    
+        var animationDuration = 400;
+        /*
+        //add sound effect if needed
         let meepmeep = document.createElement("audio");
         meepmeep.src = '/common/audio/meepmeep.ogg';
-
-        var animationDuration = 400;
         meepmeep.play();
-        setTimeout(function(){
+        */
+        //setTimeout(function(){
             document.getElementById(dialogue).classList.add('dialogue_close');
             setTimeout(function(){
                 document.getElementById(dialogue).style.visibility = 'hidden';
                 document.getElementById(dialogue).classList.remove('dialogue_close');
                 resolve();
             }, animationDuration);
-        }, animationDuration);
+        //}, animationDuration);
     })
 }
 function show_common_dialogue(dialogue, user_verification_type, title=null, icon=null, click_cancel_event) {
@@ -1792,20 +1793,21 @@ async function user_login(username, password, callBack) {
             window.global_user_identity_provider_id = '';
             window.global_rest_at	= json.accessToken;
             updateOnlineStatus();
-            user_preference_get();
-            if (json.items[0].active==0){
-                let function_cancel_event = function() { dialogue_verify_clear();eval(`(function (){${window.global_exception_app_function}()}());`);};
-                show_common_dialogue('VERIFY', 'LOGIN', json.items[0].email, window.global_icon_app_logoff, function_cancel_event);
-                return callBack('ERROR', null);
-            }
-            else{
-                dialogue_login_clear();
-                dialogue_signup_clear();
-                return callBack(null, {user_id: json.items[0].id,
-                    username: json.items[0].username,
-                    bio: json.items[0].bio,
-                    avatar: json.items[0].avatar})
-            }
+            user_preference_get((err, results) =>{
+                if (json.items[0].active==0){
+                    let function_cancel_event = function() { dialogue_verify_clear();eval(`(function (){${window.global_exception_app_function}()}());`);};
+                    show_common_dialogue('VERIFY', 'LOGIN', json.items[0].email, window.global_icon_app_logoff, function_cancel_event);
+                    return callBack('ERROR', null);
+                }
+                else{
+                    dialogue_login_clear();
+                    dialogue_signup_clear();
+                    return callBack(null, {user_id: json.items[0].id,
+                        username: json.items[0].username,
+                        bio: json.items[0].bio,
+                        avatar: json.items[0].avatar})
+                }
+            })
         }
     })    
 }
@@ -2370,7 +2372,7 @@ async function user_preference_save(){
     }
     
 }
-async function user_preference_get(){
+async function user_preference_get(callBack){
     await common_fetch(window.global_rest_url_base + window.global_rest_user_account_app + window.global_user_account_id + '?', 
                  'GET', 1, null, null, null, (err, result) =>{
         if (err)
@@ -2399,6 +2401,7 @@ async function user_preference_get(){
             SearchAndSetSelectedIndex(json.items[0].setting_preference_arabic_script_id, document.getElementById('user_arabic_script_select'), 0);
             window.global_user_arabic_script = document.getElementById('user_arabic_script_select').value;
             user_preferences_update_select();
+            return callBack(null, null)
         }
     })
 }
@@ -2570,16 +2573,17 @@ async function updateProviderUser(identity_provider_id, profile_id, profile_firs
                 window.global_user_account_id = json.items[0].id;
                 window.global_user_identity_provider_id = json.items[0].identity_provider_id;
                 updateOnlineStatus();
-                user_preference_get();
-                dialogue_login_clear();
-                dialogue_signup_clear();
-                return callBack(null, {user_account_id: json.items[0].id,
-                                        username: json.items[0].username,
-                                        bio: json.items[0].bio,
-                                        avatar: profile_image,
-                                        first_name: profile_first_name,
-                                        last_name: profile_last_name,
-                                        userCreated: json.userCreated});
+                user_preference_get((err, results) =>{
+                    dialogue_login_clear();
+                    dialogue_signup_clear();
+                    return callBack(null, {user_account_id: json.items[0].id,
+                                            username: json.items[0].username,
+                                            bio: json.items[0].bio,
+                                            avatar: profile_image,
+                                            first_name: profile_first_name,
+                                            last_name: profile_last_name,
+                                            userCreated: json.userCreated});
+                });
             }
         })
     }
