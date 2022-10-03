@@ -1,4 +1,4 @@
-const {execute_db_sql} = require ("../../common/database");
+const {execute_db_sql} = require ("../../common/common.service");
 
 module.exports = {
 	//returns parameters for app_id=0 and given app_id

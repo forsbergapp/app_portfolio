@@ -1,8 +1,8 @@
 const APP1_ID = 1;
 //app 1 directories
-app.use('/app1/css',express.static(__dirname + '/apps/app1/css'));
-app.use('/app1/images',express.static(__dirname + '/apps/app1/images'));
-app.use('/app1/js',express.static(__dirname + '/apps/app1/js'));
+app.use('/app1/css',express.static(__dirname + '/app1/css'));
+app.use('/app1/images',express.static(__dirname + '/app1/images'));
+app.use('/app1/js',express.static(__dirname + '/app1/js'));
 app.get("/info/:info",function (req, res, next) {
     //redirect from http to https
     if (req.protocol=='http')
@@ -10,14 +10,14 @@ app.get("/info/:info",function (req, res, next) {
     else{
       if (req.headers.host.substring(0,req.headers.host.indexOf('.'))=='' ||
         req.headers.host.substring(0,req.headers.host.indexOf('.'))=='www'){
-          const { getInfo} = require("./apps");
+          const { getInfo} = require("./");
           switch (req.params.info){
             case 'datamodel.jpg':{
-              res.sendFile(__dirname + "/apps/app1/images/datamodel.jpg");
+              res.sendFile(__dirname + "/app1/images/datamodel.jpg");
               break;
             }
             case 'app_portfolio.png':{
-                res.sendFile(__dirname + "/apps/app1/images/app_portfolio.png");
+                res.sendFile(__dirname + "/app1/images/app_portfolio.png");
                 break;
             }
             default:{
@@ -54,7 +54,7 @@ app.get('/:user',function (req, res, next) {
       req.params.user!=='images' &&
       req.params.user!=='js' &&
       req.params.user!=='service'){
-      const { getForm} = require("./service/forms/forms.controller");
+      const { getForm} = require("../service/forms/forms.controller");
       getForm(req, res, APP1_ID, req.params.user,(err, app_result)=>{
           //if app_result=0 means here redirect to /
           if (app_result==0)
@@ -77,7 +77,7 @@ app.get('/',function (req, res, next) {
     return res.redirect('https://www.' + req.headers.host);
   if (req.headers.host.substring(0,req.headers.host.indexOf('.'))=='' ||
       req.headers.host.substring(0,req.headers.host.indexOf('.'))=='www'){
-      const { getForm} = require("./service/forms/forms.controller");
+      const { getForm} = require("../service/forms/forms.controller");
       getForm(req, res, APP1_ID, null,(err, app_result)=>{
           return res.send(app_result);
       })

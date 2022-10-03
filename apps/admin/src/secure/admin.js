@@ -94,7 +94,7 @@ function show_lov(title_text, lov_list_content){
 async function get_apps() {
     let json;
 
-    common_fetch(window.global_rest_url_base + window.global_rest_app + '/admin?id=0', 
+    common_fetch(window.global_rest_url_base + window.global_rest_app + '/admin?', 
                  'GET', 2, null, null, null, (err, result) =>{
         if (err)
             null;
@@ -235,7 +235,7 @@ function set_broadcast_type(){
 async function show_db_info(){
     if (admin_token_has_value()){
         let json;
-        await common_fetch('/service/db/admin/getDBInfo?',
+        await common_fetch('/service/db/admin/DBInfo?',
                            'GET', 2, null, null, null, (err, result) =>{
             if (err)
                 null;
@@ -261,7 +261,7 @@ async function show_db_info_space(){
             return Math.round(num * x) / x;
           }
         document.getElementById('menu_1_db_info_space_detail').innerHTML = window.global_app_spinner;
-        await common_fetch('/service/db/admin/getDBInfoSpace?', 'GET', 2, null, null, null, (err, result) =>{
+        await common_fetch('/service/db/admin/DBInfoSpace?', 'GET', 2, null, null, null, (err, result) =>{
             if (err)
                 null;
             else{
@@ -304,7 +304,7 @@ async function show_db_info_space(){
                     </div>`;
                 }
                 document.getElementById('menu_1_db_info_space_detail').innerHTML = html;
-                common_fetch('/service/db/admin/getDBInfoSpaceSum?', 'GET', 2, null, null, null, (err, result) =>{
+                common_fetch('/service/db/admin/DBInfoSpaceSum?', 'GET', 2, null, null, null, (err, result) =>{
                     if (err)
                         null;
                     else{

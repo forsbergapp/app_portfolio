@@ -1,8 +1,8 @@
 const ADMIN_ID = 0;
 //admin directories
-app.use('/admin/images',express.static(__dirname + '/apps/admin/images'));
-app.use('/admin/js',express.static(__dirname + '/apps/admin/js'));
-app.use('/admin/css',express.static(__dirname + '/apps/admin/css'));
+app.use('/admin/images',express.static(__dirname + '/admin/images'));
+app.use('/admin/js',express.static(__dirname + '/admin/js'));
+app.use('/admin/css',express.static(__dirname + '/admin/css'));
 
 app.get("/admin",function (req, res, next) {
     //redirect from http to https
@@ -14,7 +14,7 @@ app.get("/admin",function (req, res, next) {
         return res.redirect('https://www.' + req.headers.host + "/admin");
     if (req.headers.host.substring(0,req.headers.host.indexOf('.'))=='' ||
         req.headers.host.substring(0,req.headers.host.indexOf('.'))=='www'){
-        const { getFormAdmin } = require ("./service/forms/forms.controller");
+        const { getFormAdmin } = require ("../service/forms/forms.controller");
         getFormAdmin(req, res, ADMIN_ID, (err, app_result)=>{
             return res.send(app_result);
         })
