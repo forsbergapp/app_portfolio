@@ -11,7 +11,7 @@ app.get("/admin",function (req, res, next) {
     //redirect naked domain to www
     if (((req.headers.host.split('.').length - 1) == 1) &&
         req.headers.host.indexOf('localhost')==-1)
-        return res.redirect('https://www.' + req.headers.host);
+        return res.redirect('https://www.' + req.headers.host + "/admin");
     if (req.headers.host.substring(0,req.headers.host.indexOf('.'))=='' ||
         req.headers.host.substring(0,req.headers.host.indexOf('.'))=='www'){
         const { getFormAdmin } = require ("./service/forms/forms.controller");
