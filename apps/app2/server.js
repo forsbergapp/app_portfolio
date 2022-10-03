@@ -1,8 +1,8 @@
-const app2_placeRouter = require("./service/db/app_portfolio/app2_place/app2_place.router");
-const app2_themeRouter = require("./service/db/app_portfolio/app2_theme/app2_theme.router");
-const app2_user_settingRouter = require("./service/db/app_portfolio/app2_user_setting/app2_user_setting.router");
-const app2_user_setting_likeRouter = require("./service/db/app_portfolio/app2_user_setting_like/app2_user_setting_like.router");
-const app2_user_setting_viewRouter = require("./service/db/app_portfolio/app2_user_setting_view/app2_user_setting_view.router");
+const app2_placeRouter = require("../service/db/app_portfolio/app2_place/app2_place.router");
+const app2_themeRouter = require("../service/db/app_portfolio/app2_theme/app2_theme.router");
+const app2_user_settingRouter = require("../service/db/app_portfolio/app2_user_setting/app2_user_setting.router");
+const app2_user_setting_likeRouter = require("../service/db/app_portfolio/app2_user_setting_like/app2_user_setting_like.router");
+const app2_user_setting_viewRouter = require("../service/db/app_portfolio/app2_user_setting_view/app2_user_setting_view.router");
 const APP2_ID = 2;
 app.use("/service/db/app_portfolio/app2_place", app2_placeRouter);
 app.use("/service/db/app_portfolio/app2_theme", app2_themeRouter);
@@ -10,10 +10,10 @@ app.use("/service/db/app_portfolio/app2_user_setting", app2_user_settingRouter);
 app.use("/service/db/app_portfolio/app2_user_setting_like", app2_user_setting_likeRouter);
 app.use("/service/db/app_portfolio/app2_user_setting_view", app2_user_setting_viewRouter);
 
-app.use('/app2/css',express.static(__dirname + '/apps/app2/css'));
-app.use('/app2/js',express.static(__dirname + '/apps/app2/js'));
-app.use('/app2/info',express.static(__dirname + '/apps/app2/info'));
-app.use('/app2/images',express.static(__dirname + '/apps/app2/images'));
+app.use('/app2/css',express.static(__dirname + '/app2/css'));
+app.use('/app2/js',express.static(__dirname + '/app2/js'));
+app.use('/app2/info',express.static(__dirname + '/app2/info'));
+app.use('/app2/images',express.static(__dirname + '/app2/images'));
 
 //app 2 pwa service worker, placed in root
 app.get("/sw.js",function (req, res,next) {
@@ -21,7 +21,7 @@ app.get("/sw.js",function (req, res,next) {
       res.type('application/javascript');
       res.setHeader('Service-Worker-Allowed', '/')
       res.status(200);
-      return res.sendFile(__dirname + "/apps/app2/sw.js");
+      return res.sendFile(__dirname + "/app2/sw.js");
   }
   else
     next();
@@ -33,7 +33,7 @@ app.get("/info/:info",function (req, res, next) {
     res.redirect('https://' + req.headers.host);
   else{
     if (req.headers.host.substring(0,req.headers.host.indexOf('.')) == 'app2') {
-        const { getInfo} = require("./apps");
+        const { getInfo} = require("./");
         if (typeof req.query.lang_code !='undefined'){
           req.query.lang_code = 'en';
         }
@@ -49,7 +49,7 @@ app.get("/info/:info",function (req, res, next) {
 //app 2 progressive webapp menifest
 app.get("/app2/manifest.json",function (req, res, next) {
   if (req.headers.host.substring(0,req.headers.host.indexOf('.')) == 'app2'){
-    const { getParameters } = require ("./service/db/app_portfolio/app_parameter/app_parameter.service");
+    const { getParameters } = require ("../service/db/app_portfolio/app_parameter/app_parameter.service");
     getParameters(APP2_ID, APP2_ID, (err, results) =>{
       if (err) {
         return res.send(err);
@@ -149,7 +149,7 @@ app.get('/:user', function(req, res,next) {
       if (req.protocol=='http')
         return res.redirect('https://' + req.headers.host);
       else{
-        const { getForm} = require("./service/forms/forms.controller");
+        const { getForm} = require("../service/forms/forms.controller");
         getForm(req, res, APP2_ID, req.params.user, (err, app_result)=>{
           //if app_result=0 means here redirect to /
           if (app_result==0)
@@ -167,7 +167,7 @@ app.get('/',function (req, res, next) {
     //redirect from http to https
     if (req.protocol=='http')
       return res.redirect('https://' + req.headers.host);
-    const { getForm} = require("./service/forms/forms.controller");
+    const { getForm} = require("../service/forms/forms.controller");
     getForm(req, res, APP2_ID, null,(err, app_result)=>{
         return res.send(app_result);
     })
