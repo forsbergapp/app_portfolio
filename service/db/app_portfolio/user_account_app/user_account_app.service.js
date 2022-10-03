@@ -1,4 +1,4 @@
-const {execute_db_sql} = require ("../../common/database");
+const {execute_db_sql} = require ("../../common/common.service");
 module.exports = {
 	createUserAccountApp: (app_id, user_account_id, callBack) => {
 		let sql;

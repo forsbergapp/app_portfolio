@@ -1,4 +1,4 @@
-const {execute_db_sql} = require ("../../common/database");
+const {execute_db_sql} = require ("../../common/common.service");
 module.exports = {
 	insertUserSettingView: (app_id, data, callBack) => {
 		let sql;

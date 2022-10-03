@@ -230,6 +230,37 @@ async function get_email_verification(data, email, baseUrl, lang_code, callBack)
                     "email": email});
 }
 module.exports = {
+    AppsStart:async (app) => {
+        const express = require ("express");
+        function load_dynamic_code(app_id){
+            const fs = require("fs");
+            let filename;
+            //load dynamic server app code
+            if (app_id == parseInt(process.env.COMMON_APP_ID))
+              filename = `/admin/server.js`;
+            else
+              filename = `/app${app_id}/server.js`
+            fs.readFile(__dirname + filename, 'utf8', (error, fileBuffer) => {
+                eval(fileBuffer);
+            });
+        }
+        const { getAppsAdmin } = require ("../service/db/app_portfolio/app/app.service");
+        getAppsAdmin(process.env.COMMON_APP_ID,(err, results) =>{
+            if (err) {
+                createLogAppSE(process.env.COMMON_APP_ID, __appfilename, __appfunction, __appline, `getAppsAdmin, err:${err}`, (err_log, result_log)=>{
+                null;
+                })
+            }
+            else {
+                let json;
+                json = JSON.parse(JSON.stringify(results));
+                //start app pools
+                for (var app_id = 0; app_id < json.length; app_id++) {
+                    load_dynamic_code(app_id);
+                }
+            }
+        })
+    },
     getMaintenance:(app_id, gps_lat, gps_long, gps_place) => {
         return new Promise(function (resolve, reject){
             const files = [
