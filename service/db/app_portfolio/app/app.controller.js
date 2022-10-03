@@ -14,7 +14,7 @@ module.exports = {
 		});
 	},
 	getAppsAdmin: (req, res) => {
-		getAppsAdmin(req.query.app_id, req.query.id, (err, results) =>{
+		getAppsAdmin(req.query.app_id, (err, results) =>{
 			if (err) {
 				return res.status(500).send({
 					data: err
