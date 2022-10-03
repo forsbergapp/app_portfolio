@@ -1,4 +1,4 @@
-const {execute_db_sql} = require ("../../common/database");
+const {execute_db_sql} = require ("../../common/common.service");
 module.exports = {
 	getApp:(app_id, id,lang_code, callBack) => {
 		let sql;
@@ -103,7 +103,7 @@ module.exports = {
 				return callBack(null, result);
 		});
 	},
-	getAppsAdmin:(app_id, id, callBack) => {
+	getAppsAdmin:(app_id, callBack) => {
 		let sql;
 		let parameters;
 		if (process.env.SERVICE_DB_USE==1){

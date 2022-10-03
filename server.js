@@ -216,55 +216,15 @@ app.use(function(req, res, next) {
   next();
 });
 
-const {init_db, mysql_pool, oracle_pool} = require ("./service/db/common/database");
-//set db parameters and start admin pool
-init_db((err, result) =>{
+const {DBStart} = require ("./service/db/admin/admin.service");
+const {AppsStart} = require ("./apps");
+DBStart((err, result) =>{
   if (err)
       null;
   else{
-    function load_dynamic_code(app_id){
-      let filename;
-      //load dynamic server app code
-      if (app_id == process.env.COMMON_APP_ID)
-        filename = `./apps/admin/server.js`;
-      else
-        filename = `./apps/app${app_id}/server.js`
-      fs.readFile(filename, 'utf8', (error, fileBuffer) => {
-        eval(fileBuffer);
-      });
-    }
-    //load admin app
-    load_dynamic_code(process.env.COMMON_APP_ID);
-    let json;
-    const { getAppDBParametersAdmin } = require ("./service/db/app_portfolio/app_parameter/app_parameter.service");
-    //app_id inparameter for log, all apps will be returned
-    getAppDBParametersAdmin(process.env.COMMON_APP_ID,(err, results) =>{
-      if (err) {
-        createLogAppSE(process.env.COMMON_APP_ID, __appfilename, __appfunction, __appline, `getAppDBParameters, err:${err}`, (err_log, result_log)=>{
-          null;
-        })
-      }
-      else {
-        json = JSON.parse(JSON.stringify(results));
-        function start_pool(app_id, db_user, db_password){
-          const fs = require("fs");
-          if (process.env.SERVICE_DB_USE==1){
-            mysql_pool(app_id, db_user, db_password, (err, result) =>{
-              load_dynamic_code(app_id);
-            });
-          }
-          else if (process.env.SERVICE_DB_USE==2){
-            oracle_pool(app_id, db_user, db_password, (err, result)=>{
-              load_dynamic_code(app_id);
-            });
-          }
-        }
-        //start app pools
-        for (var i = 1; i < json.length; i++) {
-          start_pool(json[i].id, json[i].db_user, json[i].db_password);
-        }
-      }
-    }); 
+    AppsStart(app, (err, result) =>{
+      null;
+    })
   }
 })
 
