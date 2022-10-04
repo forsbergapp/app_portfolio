@@ -214,27 +214,37 @@
         height:calc(100% - 40px);
     }
     #box1{
-        width: 40%;
-        height: 100%;
+        width: 100%;
+        height: calc(50% - 20px);
         display:inline-block;
         vertical-align: top;
+        
     }
-    #box_chart{
-        min-height: 150px;
+    #box1_chart{
+        width: 49%;
+        display: inline-block;
     }
     #box1_pie{
         border-radius: 50%;
         border: 1px solid #5c83ce;
         box-shadow: 3px 3px rgb(81 171 255);
-        width: 150px;
-        height: 150px;
+        width: calc(20% + (100px - 20%));
         display: inline-block;
     }
+    #box1_pie:after {
+        content: "";
+        display: block;
+        padding-bottom: 100%;
+      }
     .box_title{
         margin-bottom:10px;
     }
     .box_legend{
         text-align: start;
+        display: inline-block;
+        width: 50%;
+        vertical-align: top;
+        overflow-y: auto;
     }
     .box_legend_row{
         width: 100%;
@@ -250,8 +260,8 @@
         width: calc(90% - 5px);
     }
     #box2{
-        width: 59%;
-        height: 200px;
+        width: 100%;
+        height: calc(50% - 20px);
         display:inline-block;
         vertical-align: top;
         
@@ -260,19 +270,20 @@
         display: flex;
         align-items: flex-end;
         width: 100%;
-        height: 150px;
+        height: 70%;
         margin-bottom: 20px;
         font-size: 0.7em;
     }
     #box2_bar_legendY{
         height:100%;
+        width:15px;
         display: inline-block;
     }
     #box2_bar_legend_max{
         margin-top: -8px;
     }
     #box2_bar_legend_max, #box2_bar_legend_medium{
-        height: 76px;
+        height: 50px;
     }
     #box2_bar_data{
         height:100%;
@@ -285,14 +296,21 @@
     .box2_barcol{
         display:none;
         height:100%;
-        border: 1px solid white;
         align-self: baseline;
+    }
+    .box2_barcol_color{
+        border: 1px solid white;
     }
     .box2_barcol_legend{
         height:20px;
     }
     .box2_barcol_display{
         display:inline-block;
+    }
+    #box2_legend{
+        width: 100%;
+        margin-inline-start: 15px;
+        text-align: start;
     }
     #menu_2_content_widget2{
         height:calc(30% - 10px);

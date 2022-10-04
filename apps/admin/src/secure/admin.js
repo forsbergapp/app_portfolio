@@ -367,7 +367,7 @@ function set_maintenance(){
 /*----------------------- */
 /* USER STAT              */
 /*----------------------- */
-//chart 1=Left Piechart, 2= Right Barchart
+//chart 1=Piechart, 2= Barchart
 async function show_chart(chart){
     if (admin_token_has_value()){
         let app_id;
