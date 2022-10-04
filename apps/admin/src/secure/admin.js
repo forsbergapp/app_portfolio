@@ -370,130 +370,99 @@ function set_maintenance(){
 //chart 1=Left Piechart, 2= Right Barchart
 async function show_chart(chart){
     if (admin_token_has_value()){
-        let app_id =document.getElementById('select_app_menu2').value;
+        let app_id;
         let year = document.getElementById('select_year_menu2').value;
         let month = document.getElementById('select_month_menu2').value;
         let json;
-        let old_html = document.getElementById(`box${chart}_title`).innerHTML;
-        document.getElementById(`box${chart}_title`).innerHTML = window.global_app_spinner;
-
-        document.getElementById(`Chart${chart}`).outerHTML = `<canvas id='Chart${chart}'></canvas>`;
-
+        document.getElementById(`box${chart}_chart`).innerHTML = window.global_app_spinner;        
+        document.getElementById(`box${chart}_legend`).innerHTML = window.global_app_spinner;
+        //no meaning showing one app in a pie chart will always be full
+        if (chart==1)
+            app_id = '';
+        else
+            app_id =document.getElementById('select_app_menu2').value;
         await common_fetch(window.global_rest_url_base + `app_log/admin/stat/uniquevisitor?select_app_id=${app_id}&statchoice=${chart}&year=${year}&month=${month}`,
                  'GET', 2, null, null, null, (err, result) =>{
-            if (err)
-                document.getElementById(`box${chart}_title`).innerHTML = old_html;
+            if (err){
+                document.getElementById(`box${chart}_chart`).innerHTML = '';
+                document.getElementById(`box${chart}_legend`).innerHTML = '';
+            }
             else{
                 json = JSON.parse(result);
-                document.getElementById(`box${chart}_title`).innerHTML = old_html;
-                //document.getElementById(`box${chart}`).innerHTML = `<canvas id="Chart${chart}"></canvas>`;
-                const ctx = document.getElementById(`Chart${chart}`).getContext('2d');
+                document.getElementById(`box${chart}_chart`).innerHTML = '';
+                document.getElementById(`box${chart}_legend`).innerHTML = '';
                 if (chart==1){
-                    let app_id_array = [];
-                    let amount_array = [];
                     function SearchAndGetText(item, search){
-                        for (let i=0;i<item.options.length;i++){
+                        for (let i=1;i<item.options.length;i++){
                             if (item.options[i].value == search)
                                 return item.options[i].text
                         }
                         return null;
                     }
+                    let sum_amount =0;
                     for (let i = 0; i < json.data.length; i++) {
-                        if (json.data[i].app_id>0){
-                            app_id_array.push(SearchAndGetText(document.getElementById('select_app_menu2'), json.data[i].app_id));
-                            amount_array.push(json.data[i].amount);
-                        }
+                        sum_amount += json.data[i].amount;
                     }
-                    const pieChart = new Chart(ctx, {
-                        type: 'pie',
-                        data: {
-                            labels: app_id_array,
-                            datasets: [{
-                                label: '',
-                                data: amount_array,
-                                backgroundColor: [
-                                    'rgba(255, 99, 132, 1)',
-                                    'rgba(54, 162, 235, 1)',
-                                    'rgba(255, 206, 86, 1)'
-                                ]
-                            }]
-                        },
-                        options: {
-                            responsive:true
-                        }
-                        
-                    });
+                    let apps_color = '';
+                    let degree_start = 0;
+                    let degree_stop = 0;
+                    let html = '';
+                    let app_color;
+                    for (let i = 0; i < json.data.length; i++) {
+                        //calculate colors and degree
+                        degree_stop = degree_start + json.data[i].amount/sum_amount*360;
+                        app_color = `rgb(${i/json.data.length*200},${i/json.data.length*200},255) ${degree_start}deg ${degree_stop}deg`;
+                        if (i < json.data.length - 1)
+                            apps_color += app_color + ',';
+                        else
+                            apps_color += app_color;
+                        //add to legend below chart
+                        html += `<div id='box1_legend_row' class='box_legend_row'>
+                                    <div id='box1_legend_col1' class='box_legend_col' style='background-color:rgb(${i/json.data.length*200},${i/json.data.length*200},255)'></div>
+                                    <div id='box1_legend_col2' class='box_legend_col'>${SearchAndGetText(document.getElementById('select_app_menu2'), json.data[i].app_id)}</div>
+                                </div>`;
+                        degree_start = degree_start + json.data[i].amount/sum_amount*360;
+                    }
+                    //display pie chart
+                    document.getElementById('box1_chart').innerHTML = `<div id='box1_pie'></div>`;
+                    document.getElementById('box1_pie').style.backgroundImage = `conic-gradient(${apps_color})`
+                    //show legend below chart
+                    document.getElementById('box1_legend').innerHTML = html;
                 }
                 else
                     if (chart==2){
-                        let day_array = [];
-                        let amount_array = [];
+                        let max_amount =0;
+                        for (let i = 0; i < json.data.length; i++) {
+                            if (json.data[i].amount>max_amount)
+                                max_amount = json.data[i].amount;
+                        }
+                        //set bar data
+                        let html='';
                         let bar_color;
                         if (app_id == '')
                             bar_color = 'rgb(81, 171, 255)';
                         else
                             bar_color = 'rgb(197 227 255)';
+
                         for (let i = 0; i < json.data.length; i++) {
-                            day_array.push(json.data[i].day);
-                            amount_array.push(json.data[i].amount);
+                            html += `<div class='box2_barcol box2_barcol_display' style='width:${100/json.data.length}%'>
+                                        <div class='box2_barcol_color' style='background-color:${bar_color};height:${json.data[i].amount/max_amount*100}%'></div>
+                                        <div class='box2_barcol_legendX'>${json.data[i].day}</div>
+                                    </div>`;
                         }
-                        const barChart = new Chart(ctx, {
-                            type: 'bar',
-                            data: {
-                                labels: day_array,
-                                datasets: [{
-                                    label:document.getElementById('select_app_menu2').options[document.getElementById('select_app_menu2').selectedIndex].text,
-                                    data: amount_array,
-                                    backgroundColor: [
-                                        bar_color,
-                                        bar_color,
-                                        bar_color,
-                                        bar_color,
-                                        bar_color,
-                                        bar_color,
-                                        bar_color,
-                                        bar_color,
-                                        bar_color,
-                                        bar_color,
-                                        bar_color,
-                                        bar_color,
-                                        bar_color,
-                                        bar_color,
-                                        bar_color,
-                                        bar_color,
-                                        bar_color,
-                                        bar_color,
-                                        bar_color,
-                                        bar_color,
-                                        bar_color,
-                                        bar_color,
-                                        bar_color,
-                                        bar_color,
-                                        bar_color,
-                                        bar_color,
-                                        bar_color,
-                                        bar_color,
-                                        bar_color,
-                                        bar_color,
-                                        bar_color
-                                    ]
-                                }]
-                            },
-                            options: {
-                                responsive:true,
-                                scale: {
-                                    ticks: {
-                                        precision: 0
-                                    }
-                                },
-                                plugins: {
-                                    title: {
-                                        display: false
-                                    }
-                                }
-                            }
-                        });
-                    }       
+                        //create bar chart
+                        document.getElementById('box2_chart').innerHTML = `<div id='box2_bar_legendY'>
+                                                                                <div id='box2_bar_legend_max'>${max_amount}</div>
+                                                                                <div id='box2_bar_legend_medium'>${max_amount/2}</div>
+                                                                                <div id='box2_bar_legend_min'>0</div>
+                                                                          </div>
+                                                                          <div id='box2_bar_data'>${html}</div>`;
+                        //legend below chart
+                        document.getElementById('box2_legend').innerHTML = `<div id='box2_legend_row' class='box_legend_row'>
+                                                                                <div id='box2_legend_col1' class='box_legend_col' style='background-color:${bar_color}'></div>
+                                                                                <div id='box2_legend_col2' class='box_legend_col'>${document.getElementById('select_app_menu2').options[document.getElementById('select_app_menu2').selectedIndex].text}</div>
+                                                                            </div>` ;
+                    }
             }
         })
     }
