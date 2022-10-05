@@ -324,7 +324,7 @@ module.exports = {
                                 at QueryReqWrap.callbackTrampoline (node:internal/async_hooks:130:17)'
                  */
                 //use only resolve here, no reject to avoid .catch statement in calling function
-                if (err.code=='ECONNREFUSED') {
+                if ((err) && err.code=='ECONNREFUSED') {
                     createLogAppSE(req.query.app_id, __appfilename, __appfunction, __appline, err, (err_log, result_log)=>{
                         resolve(0);
                     })
