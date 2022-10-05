@@ -4,6 +4,7 @@
     WINDOW INFO
     BROADCAST
     GPS
+    MAP
     REGIONAL
     COUNTRY & CITIES
     QR
@@ -16,6 +17,15 @@
 /*----------------------- */
 /* MISC                   */
 /*----------------------- */
+checkconnected = async () => {
+    try {
+      const testconnection = await fetch("https://fonts.googleapis.com");
+      return true;
+    } catch (err) {
+      return false;
+    }
+  };
+
 async function common_fetch_token(token_type, json_data,  username, password, callBack) {
     let url;
     let status;
@@ -1075,66 +1085,230 @@ function checkOnline(div_icon_online, user_account_id){
 /*----------------------- */
 /* GPS                    */
 /*----------------------- */
-async function get_place_from_gps(item, latitude, longitude) {
-    await common_fetch(window.global_service_geolocation + window.global_service_geolocation_gps_place + 
-                       '?app_user_id=' + window.global_user_account_id +
-                       '&latitude=' + latitude +
-                       '&longitude=' + longitude, 
-                       'GET', 0, null, null, null, (err, result) =>{
-        if (err)
-            null;
-        else{
-            let json = JSON.parse(result);
-            item.value = json.geoplugin_place + ', ' +
-                         json.geoplugin_region + ', ' +
-                         json.geoplugin_countryCode;
+async function get_place_from_gps(longitude, latitude) {
+    return await new Promise(function (resolve){
+        let url;
+        let tokentype;
+        if (window.global_admin){
+            url = window.global_service_geolocation + window.global_service_geolocation_gps_place + 
+                    '/admin/?app_user_id=' + window.global_user_account_id +
+                    '&longitude=' + longitude +
+                    '&latitude=' + latitude;
+            tokentype = 2;
         }
+        else{
+            url = window.global_service_geolocation + window.global_service_geolocation_gps_place + 
+                    '?app_user_id=' + window.global_user_account_id +
+                    '&longitude=' + longitude +
+                    '&latitude=' + latitude;
+            tokentype = 0;
+        }
+        common_fetch(url, 'GET', tokentype, null, null, null, (err, result) =>{
+            if (err)
+                resolve('');
+            else{
+                let json = JSON.parse(result);
+                if (json.geoplugin_place=='' && json.geoplugin_region =='' && json.geoplugin_countryCode =='')
+                    resolve('');
+                else
+                    resolve(json.geoplugin_place + ', ' +
+                            json.geoplugin_region + ', ' +
+                            json.geoplugin_countryCode);
+            }
+        })
     })
 }
 async function get_gps_from_ip() {
 
+    let url;
+    let tokentype;
     if (window.global_admin){
-        await common_fetch(window.global_service_geolocation + window.global_service_geolocation_gps_ip + 
-                                '/admin?app_user_id=' +  window.global_user_account_id, 
-                                'GET', 2, null, null, null, (err, result) =>{
-            if (err)
-                null;
-            else{
-                let json = JSON.parse(result);
-                window.global_client_latitude  = json.geoplugin_latitude;
-                window.global_client_longitude = json.geoplugin_longitude;
-                window.global_client_place     = json.geoplugin_city + ', ' +
-                                                    json.geoplugin_regionName + ', ' +
-                                                    json.geoplugin_countryName;
-            }
-        })
+        url = window.global_service_geolocation + window.global_service_geolocation_gps_ip + 
+              '/admin?app_user_id=' +  window.global_user_account_id;
+        tokentype = 2;
     }
     else{
-        await common_fetch(window.global_service_geolocation + window.global_service_geolocation_gps_ip + 
-                       '?app_user_id=' +  window.global_user_account_id, 
-                       'GET', 0, null, null, null, (err, result) =>{
-            if (err)
-                null;
-            else{
-                let json = JSON.parse(result);
-                window.global_client_latitude  = json.geoplugin_latitude;
-                window.global_client_longitude = json.geoplugin_longitude;
-                window.global_client_place     = json.geoplugin_city + ', ' +
-                                                    json.geoplugin_regionName + ', ' +
-                                                    json.geoplugin_countryName;
-            }
-        })
+        url = window.global_service_geolocation + window.global_service_geolocation_gps_ip + 
+              '?app_user_id=' +  window.global_user_account_id;
+        tokentype = 0;
     }
+    await common_fetch(url, 'GET', tokentype, null, null, null, (err, result) =>{
+        if (err)
+            null;
+        else{
+            let json = JSON.parse(result);
+            window.global_client_latitude  = json.geoplugin_latitude;
+            window.global_client_longitude = json.geoplugin_longitude;
+            if (json.geoplugin_city=='' && json.geoplugin_regionName =='' && json.geoplugin_countryName =='')
+                window.global_client_place = '';
+            else
+                window.global_client_place = json.geoplugin_city + ', ' +
+                                                json.geoplugin_regionName + ', ' +
+                                                json.geoplugin_countryName;
+        }
+    })
 }
 async function tzlookup(latitude, longitude){
     return new Promise(function (resolve, reject){
-        common_fetch(window.global_service_geolocation + window.global_service_geolocation_gps_timezone +
-            `?latitude=${latitude}&longitude=${longitude}`,
-            'GET', 0, null, null, null, (err, text_timezone) =>{
-                    resolve (text_timezone);
+        let url;
+        let tokentype;
+        if (window.global_admin){
+            url = window.global_service_geolocation + window.global_service_geolocation_gps_timezone +
+                  `/admin?latitude=${latitude}&longitude=${longitude}`;
+            tokentype = 2;
+        }
+        else{
+            url = window.global_service_geolocation + window.global_service_geolocation_gps_timezone +
+                  `?latitude=${latitude}&longitude=${longitude}`;
+            tokentype = 0;
+        }
+        common_fetch(url, 'GET', tokentype, null, null, null, (err, text_timezone) =>{
+            resolve (text_timezone);
         })
     })
 }
+/*----------------------- */
+/* MAP                    */
+/*----------------------- */
+async function map_init(accesstoken, containervalue, stylebaseurl, stylevalue, longitude, latitude, zoomvalue) {
+    if (checkconnected()) {
+        window.global_session_service_map = '';
+        return await new Promise(function (resolve){
+            mapboxgl.accessToken = accesstoken;
+            window.global_session_service_map = new mapboxgl.Map({  container: containervalue,
+                                                                    style: stylebaseurl + stylevalue,
+                                                                    center: [
+                                                                            longitude,
+                                                                            latitude
+                                                                            ],
+                                                                    zoom: zoomvalue
+                                                                });
+            window.global_session_service_map.addControl(new mapboxgl.NavigationControl());
+            window.global_session_service_map.addControl(new mapboxgl.FullscreenControl());
+            resolve();
+        })
+    }
+    else
+        resolve();
+}
+function map_popup(popup_offset, popuptext, longitude, latitude){
+    if (checkconnected()) {
+        let popup = new mapboxgl.Popup({ offset: popup_offset, closeOnClick: false })
+            .setLngLat([longitude, latitude])
+            .setHTML(popuptext)
+            .addTo(window.global_session_service_map);
+    }
+}
+function map_marker(marker_id, longitude, latitude){
+    if (checkconnected()) {
+        let el = document.createElement('div');
+        el.id = marker_id;
+        new mapboxgl.Marker(el)
+            .setLngLat([longitude, latitude])
+            .addTo(window.global_session_service_map);
+    }
+}
+function map_update(to_method, zoomvalue, longitude, latitude){
+    if (checkconnected()) {
+        switch (to_method){
+            case 0:{
+                if (zoomvalue == '')
+                    window.global_session_service_map.jumpTo({ 'center': [longitude, latitude] });
+                else
+                    window.global_session_service_map.jumpTo({ 'center': [longitude, latitude], 'zoom': zoomvalue });
+                break;
+            }
+            case 1:{
+                window.global_session_service_map.flyTo({
+                    'center': [longitude, latitude],
+                    essential: true
+                });
+                break;
+            }
+        }
+    }
+}
+async function map_resize() {
+    if (checkconnected()) {
+        //not rendering correct at startup
+        window.global_session_service_map.resize();
+    }
+}
+function map_check_source(id){
+    if (checkconnected()) {
+        return window.global_session_service_map.getSource(id);
+    }
+}
+function map_line_create(id, title, text_size, from_longitude, from_latitude, to_longitude, to_latitude, color, width, opacity){
+    if (checkconnected()) {
+        window.global_session_service_map.addSource(id, {
+            'type': 'geojson',
+            'data': {
+                'type': 'Feature',
+                'properties': { "title": title },
+                'geometry': {
+                    'type': 'LineString',
+                    'coordinates': [
+                        [from_longitude, from_latitude],
+                        [to_longitude, to_latitude]
+                    ]
+                }
+            }
+        });
+        window.global_session_service_map.addLayer({
+            'id': id + '_layer_id',
+            'type': 'line',
+            'source': id,
+            'layout': {
+                'line-join': 'round',
+                'line-cap': 'round'
+            },
+            'paint': {
+                'line-color': color,
+                'line-width': width,
+                'line-opacity': opacity
+            }
+        });
+        window.global_session_service_map.addLayer({
+            "id": id + '_symbol_id',
+            "type": "symbol",
+            "source": id,
+            "layout": {
+                "symbol-placement": "line",
+                "text-field": title,
+                "text-size": text_size
+            }
+        });
+    }
+}
+function map_line_update(id, from_longitude, from_latitude, to_longitude, to_latitude){
+    if (checkconnected()) {
+        window.global_session_service_map.getSource(id).setData({
+            'type': 'FeatureCollection',
+            'features': [{
+                'type': 'Feature',
+                'geometry': {
+                    'type': 'LineString',
+                    'coordinates': [
+                        [from_longitude, from_latitude],
+                        [to_longitude,to_latitude]
+                    ]
+                }
+            }]
+        });
+    }
+}
+function map_setevent(event, function_event){
+    if (checkconnected()) {
+        window.global_session_service_map.on(event, function_event);
+    }
+}
+function map_setstyle(mapstylebaseurl, mapstyle){
+    if (checkconnected()) {
+        window.global_session_service_map.setStyle(mapstylebaseurl + mapstyle);
+    }
+}
+
 /*----------------------- */
 /* REGIONAL               */
 /*----------------------- */
