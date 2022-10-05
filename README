@@ -248,6 +248,7 @@ Installation instructions
 	SERVICE_AUTH_POLICY_DIRECTIVES              		={PATH}\policy_directives.json
 	SERVICE_AUTH_ADMIN_TOKEN_EXPIRE_ACCESS	    		=1d
 	SERVICE_AUTH_ADMIN_TOKEN_SECRET		        		={ADMIN_TOKEN_SECRET}
+	SERVICE_AUTH_ENABLE_GEOLOCATION						={0=NO, 1=YES}
 	#What database to use
 	#1=DB1 mySQL, 2=DB2 Oracle
 	SERVICE_DB_USE                           			=1

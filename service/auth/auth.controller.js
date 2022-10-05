@@ -297,5 +297,41 @@ module.exports = {
         policy_directives((err, result)=>{
             callBack(null, result);
         })
+    },
+    check_internet:async (req)=>{
+        return await new Promise(function (resolve){
+            //test connection with localhost
+            //no need to specify other domain to test internet
+            require('dns').resolve('localhost', 'A', function (err, result) {
+                /*  error if disconnected internet:
+                    code:       'ECONNREFUSED'
+                    errno:      undefined
+                    hostname:   'localhost'
+                    syscall:    'queryA'
+                    message:    'queryA ECONNREFUSED localhost'
+                    stack:      'Error: queryA ECONNREFUSED localhost\n    
+                                 at QueryReqWrap.onresolve [as oncomplete] (node:dns:256:19)\n    
+                                 at QueryReqWrap.callbackTrampoline (node:internal/async_hooks:130:17)'
+                  
+                    error if not found              
+                    code:       'ENOTFOUND'
+                    errno:      undefined
+                    hostname:   'localhost'
+                    syscall:    'queryA'
+                    message:    'queryA ENOTFOUND localhost'
+                    stack:      'Error: queryA ENOTFOUND localhost\n    
+                                at QueryReqWrap.onresolve [as oncomplete] (node:dns:256:19)\n    
+                                at QueryReqWrap.callbackTrampoline (node:internal/async_hooks:130:17)'
+                 */
+                //use only resolve here, no reject to avoid .catch statement in calling function
+                if (err.code=='ECONNREFUSED') {
+                    createLogAppSE(req.query.app_id, __appfilename, __appfunction, __appline, err, (err_log, result_log)=>{
+                        resolve(0);
+                    })
+                } else {
+                    resolve(1);
+                }
+            });
+        })
     }
 }
