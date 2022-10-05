@@ -70,7 +70,7 @@ function show_menu(menu){
             nav_click(document.getElementById('list_connected_title'));
             get_server_log_parameters().then(function() {
                 if (admin_token_has_value()){
-                    window.global_session_map.resize();
+                    map_resize();
                 }
             })
             break;
@@ -1732,55 +1732,21 @@ function show_pm2_logs(){
 /*----------------------- */
 /* MAP                    */
 /*----------------------- */
-function init_map() {
-    mapboxgl.accessToken = window.global_gps_map_access_token;
-    window.global_session_map = new mapboxgl.Map({
-        container: window.global_gps_map_container,
-        style: window.global_gps_map_style_baseurl + window.global_gps_map_style,
-        center: [window.global_client_latitude,
-                 window.global_client_longitude
-        ],
-        zoom: window.global_gps_map_zoom
-    });
-
-    window.global_session_map.addControl(new mapboxgl.NavigationControl());
-    window.global_session_map.addControl(new mapboxgl.FullscreenControl());
-}
-function update_map(longitude, latitude, zoom, text_place, marker_id, flyto) {
-    if (flyto == 1) {
-        window.global_session_gps_map_mymap.flyTo({
-            'center': [longitude, latitude],
-            essential: true // this animation is considered essential with respect to prefers-reduced-motion
-        });
-    } else {
-        if (zoom == '')
-            window.global_session_map.jumpTo({ 'center': [longitude, latitude] });
-        else
-            window.global_session_map.jumpTo({ 'center': [longitude, latitude], 'zoom': zoom });
-    }
+function update_map(longitude, latitude, zoom, text_place, marker_id, to_method) {
     common_fetch(window.global_service_geolocation + window.global_service_geolocation_gps_timezone + `/admin?latitude=${latitude}&longitude=${longitude}`,
                  'GET', 2, null, null, null, (err, text_timezone) =>{
         if (err)
             null;
         else{
+            map_update(to_method, zoom, longitude, latitude);
             let popuptext = `<div id="map_popup_title">${text_place}</div>
-                             <div id="map_popup_sub_title">Timezone</div>
+                             <div id="map_popup_sub_title">${window.global_icon_regional_timezone + window.global_icon_gps_position}</div>
                              <div id="map_popup_sub_title_timezone">${text_timezone}</div>`;
-            let popup = new mapboxgl.Popup({ offset: window.global_gps_map_popup_offset, closeOnClick: false })
-            .setLngLat([longitude, latitude])
-            .setHTML(popuptext)
-            .addTo(window.global_session_map);
-            let el = document.createElement('div');
-            el.id = marker_id;
-            new mapboxgl.Marker(el)
-            .setLngLat([longitude, latitude])
-            .addTo(window.global_session_map);
+            map_popup(window.global_gps_map_popup_offset, popuptext, longitude, latitude);
+            map_marker(marker_id, longitude, latitude);
             return null;
         }
     })
-}
-function map_set_style(){
-    window.global_session_map.setStyle(window.global_gps_map_style_baseurl + document.getElementById('select_maptype').value);
 }
 
 /*----------------------- */
@@ -1819,7 +1785,6 @@ function delete_globals(){
     delete window.global_gps_map_jumpto;
     delete window.global_gps_map_marker_div_gps;
     delete window.global_gps_map_popup_offset;
-    delete window.global_session_map;
     delete window.global_client_latitude;
     delete window.global_client_longitude;
     delete window.global_client_place;
@@ -1972,7 +1937,7 @@ function init_admin_secure(){
     document.getElementById('filesearch_menu4').addEventListener('click', function() { show_existing_logfiles();}, false);
     
     document.getElementById('list_pm2_log_title').addEventListener('click', function() { nav_click(this)}, false);
-    document.getElementById('select_maptype').addEventListener('change', function() { map_set_style(); }, false);
+    document.getElementById('select_maptype').addEventListener('change', function() { map_setstyle(window.global_gps_map_style_baseurl, document.getElementById('select_maptype').value) }, false);
     document.getElementById('map_my_location').addEventListener('click', function() { get_gps_from_ip().then(function(){
         update_map(window.global_client_longitude,
                    window.global_client_latitude,
@@ -2038,8 +2003,28 @@ function init_admin_secure(){
 
     get_apps().then(function(){
         get_gps_from_ip().then(function(){
-            if (!window.global_session_map)
-                init_map();
+            map_init(window.global_gps_map_access_token, 
+                     window.global_gps_map_container,
+                     window.global_gps_map_style_baseurl, 
+                     window.global_gps_map_style,
+                     window.global_client_longitude, 
+                     window.global_client_latitude, 
+                     window.global_gps_map_zoom);
+            map_setevent('dblclick', function(e) {
+                e.preventDefault()
+                let lng = e.lngLat['lng'];
+                let lat = e.lngLat['lat'];
+                //Update GPS position
+                get_place_from_gps(lng, lat).then(function(gps_place){
+                    update_map(lng,
+                                lat,
+                                '', //do not change zoom 
+                                gps_place,
+                                window.global_gps_map_marker_div_gps,
+                                window.global_gps_map_jumpto);
+                })
+            })
+                
             update_map(window.global_client_longitude,
                         window.global_client_latitude,
                         window.global_gps_map_zoom,
