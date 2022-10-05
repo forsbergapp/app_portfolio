@@ -5,6 +5,5 @@ window.global_rest_app2_user_setting_view;
 //session variables
 window.global_session_currentDate;
 window.global_session_CurrentHijriDate;
-window.global_session_gps_map_mymap;
 
 window.global_prayer_praytimes_methods;
