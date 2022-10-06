@@ -1602,12 +1602,17 @@ INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_na
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'2','SERVICE_MAIL_SECURE','{EMAIL_SECURE}',NULL);
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'2','SERVICE_MAIL_USERNAME','{EMAIL_USERNAME}',NULL);
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'2','SERVICE_MAIL_PASSWORD','{EMAIL_PASSWORD}',NULL);
+
+INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','SERVICE_MAP_POPUP_OFFSET','-25',NULL);
+INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','SERVICE_MAP_FLYTO','1',NULL);
+INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','SERVICE_MAP_JUMPTO','0',NULL);
+INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','SERVICE_MAP_STYLE','OpenStreetMap_Mapnik',NULL);
+
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','SERVICE_REGIONAL','/service/regional',NULL);
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','SERVICE_REGIONAL_TIMEZONEOFFSET','/timezoneoffset',NULL);
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','SERVICE_REGIONAL_HIJRI','/hijri',NULL);
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','SERVICE_REPORT','/service/report',NULL);
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','SERVICE_WORLDCITIES','/service/worldcities',NULL);
-INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'1','GPS_MAP_ACCESS_TOKEN','{MAPBOX_ID}',NULL);
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','IMAGE_FILE_ALLOWED_TYPE1','jpg',NULL);
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','IMAGE_FILE_ALLOWED_TYPE2','png',NULL);
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','IMAGE_FILE_ALLOWED_TYPE3','gif',NULL);
@@ -1699,18 +1704,12 @@ INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_na
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (2,'0','GPS_DEFAULT_COUNTRY',NULL,'Country:... (none)');
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (2,'0','GPS_DEFAULT_PLACE_ID','40002','Default place: Kabba, Makkah');
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (2,'0','GPS_MAP_CONTAINER','mapid',NULL);
-INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (2,'0','GPS_MAP_STYLE','satellite-streets-v11',NULL);
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (2,'0','GPS_MAP_ZOOM','14',NULL);
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (2,'0','GPS_MAP_ZOOM_CITY','8',NULL);
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (2,'0','GPS_MAP_ZOOM_PP','14',NULL);
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (2,'0','GPS_MAP_MARKER_DIV_CITY','map_marker_city',NULL);
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (2,'0','GPS_MAP_MARKER_DIV_GPS','map_marker_gps',NULL);
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (2,'0','GPS_MAP_MARKER_DIV_PP','map_marker_popular_place',NULL);
-INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (2,'0','GPS_MAP_STYLE_BASEURL','mapbox://styles/mapbox/',NULL);
-INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (2,'0','GPS_MAP_MAPTYPE','5','Maptype:satellite-streets-v11');
-INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (2,'0','GPS_MAP_FLYTO','1',NULL);
-INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (2,'0','GPS_MAP_JUMPTO','0',NULL);
-INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (2,'0','GPS_MAP_POPUP_OFFSET','25',NULL);
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (2,'0','GPS_MAP_QIBBLA_COLOR','#a49775',NULL);
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (2,'0','GPS_MAP_QIBBLA_LAT','21.4226',NULL);
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (2,'0','GPS_MAP_QIBBLA_LONG','39.8261',NULL);
@@ -2383,13 +2382,5 @@ INSERT INTO app_portfolio.setting (id, description, data, data2, data3, data4, d
 INSERT INTO app_portfolio.setting (id, description, data, data2, data3, data4, data5, setting_type_id) VALUES (547,'islamic-tbla','islamic-tbla',NULL,NULL,NULL,NULL,16);
 INSERT INTO app_portfolio.setting (id, description, data, data2, data3, data4, data5, setting_type_id) VALUES (548,'islamic-civil','islamic-civil',NULL,NULL,NULL,NULL,16);
 INSERT INTO app_portfolio.setting (id, description, data, data2, data3, data4, data5, setting_type_id) VALUES (549,'islamic-rgsa','islamic-rgsa',NULL,NULL,NULL,NULL,16);
-INSERT INTO app_portfolio.setting (id, description, data, data2, data3, data4, data5, setting_type_id) VALUES (550,'streets-v11','streets-v11',NULL,NULL,NULL,NULL,17);
-INSERT INTO app_portfolio.setting (id, description, data, data2, data3, data4, data5, setting_type_id) VALUES (551,'outdoors-v11','outdoors-v11',NULL,NULL,NULL,NULL,17);
-INSERT INTO app_portfolio.setting (id, description, data, data2, data3, data4, data5, setting_type_id) VALUES (552,'light-v10','light-v10',NULL,NULL,NULL,NULL,17);
-INSERT INTO app_portfolio.setting (id, description, data, data2, data3, data4, data5, setting_type_id) VALUES (553,'dark-v10','dark-v10',NULL,NULL,NULL,NULL,17);
-INSERT INTO app_portfolio.setting (id, description, data, data2, data3, data4, data5, setting_type_id) VALUES (554,'satellite-v9','satellite-v9',NULL,NULL,NULL,NULL,17);
-INSERT INTO app_portfolio.setting (id, description, data, data2, data3, data4, data5, setting_type_id) VALUES (555,'satellite-streets-v11','satellite-streets-v11',NULL,NULL,NULL,NULL,17);
-INSERT INTO app_portfolio.setting (id, description, data, data2, data3, data4, data5, setting_type_id) VALUES (556,'navigation-preview-day-v4','navigation-preview-day-v4',NULL,NULL,NULL,NULL,17);
-INSERT INTO app_portfolio.setting (id, description, data, data2, data3, data4, data5, setting_type_id) VALUES (557,'navigation-preview-night-v4','navigation-preview-night-v4',NULL,NULL,NULL,NULL,17);
-INSERT INTO app_portfolio.setting (id, description, data, data2, data3, data4, data5, setting_type_id) VALUES (558,'navigation-guidance-day-v4','navigation-guidance-day-v4',NULL,NULL,NULL,NULL,17);
-INSERT INTO app_portfolio.setting (id, description, data, data2, data3, data4, data5, setting_type_id) VALUES (559,'navigation-guidance-night-v4','navigation-guidance-night-v4',NULL,NULL,NULL,NULL,17);
+INSERT INTO app_portfolio.setting (id, description, data, data2, data3, data4, data5, setting_type_id) VALUES (550,'OpenStreetMap_Mapnik','OpenStreetMap_Mapnik',NULL,NULL,NULL,NULL,17);
+INSERT INTO app_portfolio.setting (id, description, data, data2, data3, data4, data5, setting_type_id) VALUES (551,'Esri.WorldImagery','Esri.WorldImagery',NULL,NULL,NULL,NULL,17);
