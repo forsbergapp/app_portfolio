@@ -59,11 +59,10 @@ window.global_gps_map_container;
 window.global_gps_map_zoom;
 window.global_gps_map_zoom_city;
 window.global_gps_map_zoom_pp;
-window.global_gps_map_flyto;
-window.global_gps_map_jumpto;
-window.global_gps_map_popup_offset;
-window.global_gps_map_style_baseurl;
-window.global_gps_map_default_style;
+window.global_service_map_flyto;
+window.global_service_map_jumpto;
+window.global_service_map_popup_offset;
+window.global_service_map_style;
 window.global_gps_map_marker_div_pp;
 window.global_gps_map_marker_div_city;
 window.global_gps_map_marker_div_gps;
@@ -399,69 +398,52 @@ function update_map_popup() {
 }
 
 async function init_map() {
-    map_init(   window.global_gps_map_access_token, 
-                window.global_gps_map_container, 
-                window.global_gps_map_style_baseurl, 
-                window.global_gps_map_style, 
+    map_init(   window.global_gps_map_container,
+                window.global_service_map_style, 
                 document.getElementById('setting_input_long').value, 
                 document.getElementById('setting_input_lat').value, 
                 window.global_gps_map_zoom);
     map_setevent('dblclick', function(e) {
-        e.preventDefault()
-        document.getElementById('setting_input_lat').value = e.lngLat['lat'];
-        document.getElementById('setting_input_long').value = e.lngLat['lng'];
+        document.getElementById('setting_input_lat').value = e.latlng['lat'];
+        document.getElementById('setting_input_long').value = e.latlng['lng'];
         //Update GPS position
         update_ui(9);
     })
 }
 
 function map_show_qibbla() {
-    if (map_check_source('qibbla')) {
-        map_line_update('qibbla', 
-                        window.global_gps_map_qibbla_long, 
-                        window.global_gps_map_qibbla_lat, 
-                        document.getElementById('setting_input_long').value, 
-                        document.getElementById('setting_input_lat').value);
-        map_line_update('qibbla_old', 
-                        window.global_gps_map_qibbla_old_long, 
-                        window.global_gps_map_qibbla_old_lat, 
-                        document.getElementById('setting_input_long').value, 
-                        document.getElementById('setting_input_lat').value);
-    } else {
-        map_setevent('load', function() {
-            map_line_create('qibbla', 
-                            window.global_gps_map_qibbla_title, 
-                            window.global_gps_map_qibbla_text_size, 
-                            window.global_gps_map_qibbla_long, 
-                            window.global_gps_map_qibbla_lat, 
-                            document.getElementById('setting_input_long').value, 
-                            document.getElementById('setting_input_lat').value, 
-                            window.global_gps_map_qibbla_color, 
-                            window.global_gps_map_qibbla_width, 
-                            window.global_gps_map_qibbla_opacity);
-            map_line_create('qibbla_old', 
-                            window.global_gps_map_qibbla_old_title, 
-                            window.global_gps_map_qibbla_old_text_size,
-                            window.global_gps_map_qibbla_old_long, 
-                            window.global_gps_map_qibbla_old_lat,
-                            document.getElementById('setting_input_long').value, 
-                            document.getElementById('setting_input_lat').value, 
-                            window.global_gps_map_qibbla_old_color, 
-                            window.global_gps_map_qibbla_old_width, 
-                            window.global_gps_map_qibbla_old_opacity);
-        });
-    }
+    map_line_removeall();
+    map_line_create('qibbla', 
+                    window.global_gps_map_qibbla_title, 
+                    window.global_gps_map_qibbla_text_size, 
+                    window.global_gps_map_qibbla_long, 
+                    window.global_gps_map_qibbla_lat, 
+                    document.getElementById('setting_input_long').value, 
+                    document.getElementById('setting_input_lat').value, 
+                    window.global_gps_map_qibbla_color, 
+                    window.global_gps_map_qibbla_width, 
+                    window.global_gps_map_qibbla_opacity);
+    map_line_create('qibbla_old', 
+                    window.global_gps_map_qibbla_old_title, 
+                    window.global_gps_map_qibbla_old_text_size,
+                    window.global_gps_map_qibbla_old_long, 
+                    window.global_gps_map_qibbla_old_lat,
+                    document.getElementById('setting_input_long').value, 
+                    document.getElementById('setting_input_lat').value, 
+                    window.global_gps_map_qibbla_old_color, 
+                    window.global_gps_map_qibbla_old_width, 
+                    window.global_gps_map_qibbla_old_opacity);
     return null;
 }
 
 function update_map(longitude, latitude, zoom, text1, text2, text3, marker_id, to_method) {
 
+    map_show_qibbla();
     map_update(to_method, zoom, longitude, latitude);
     let popuptext = create_map_popup_text(text1,text2,text3);
-    map_popup(window.global_gps_map_popup_offset, 
+    map_popup(window.global_service_map_popup_offset, 
               popuptext, longitude, latitude);
     map_marker(marker_id, longitude, latitude);
-    map_show_qibbla();
     return null;
 }
 /*----------------------- */
@@ -962,7 +944,7 @@ async function update_ui(option, item_id=null) {
         //GPS, update map
         case 4:
             {
-                map_setstyle(window.global_gps_map_style_baseurl, settings.maptype.value);
+                map_setstyle(settings.maptype.value);
                 tzlookup(settings.gps_lat_input.value, settings.gps_long_input.value).then(function(tzlookup_text){
                     update_map(settings.gps_long_input.value,
                         settings.gps_lat_input.value,
@@ -971,7 +953,7 @@ async function update_ui(option, item_id=null) {
                         document.getElementById('setting_icon_regional_timezone').innerHTML, //icon
                         tzlookup_text, //text2
                         window.global_gps_map_marker_div_gps,
-                        window.global_gps_map_jumpto);
+                        window.global_service_map_jumpto);
                 });
                 break;
             }
@@ -1017,7 +999,7 @@ async function update_ui(option, item_id=null) {
                         document.getElementById('setting_icon_regional_timezone').innerHTML, //icon
                         timezone_selected, //text2 
                         window.global_gps_map_marker_div_city,
-                        window.global_gps_map_flyto);
+                        window.global_service_map_flyto);
                     settings.timezone_report.value = timezone_selected;
                 })
                 
@@ -1040,7 +1022,7 @@ async function update_ui(option, item_id=null) {
                     document.getElementById('setting_icon_regional_timezone').innerHTML, //icon
                     timezone_selected, //text2 
                     window.global_gps_map_marker_div_pp, //marker for popular places
-                    window.global_gps_map_flyto);
+                    window.global_service_map_flyto);
                 settings.timezone_report.value = timezone_selected;
 
                 //display empty country
@@ -1077,7 +1059,7 @@ async function update_ui(option, item_id=null) {
                             document.getElementById('setting_icon_regional_timezone').innerHTML, //icon
                             tzlookup_text, //text2
                             window.global_gps_map_marker_div_gps,
-                            window.global_gps_map_jumpto);
+                            window.global_service_map_jumpto);
                         settings.timezone_report.value = tzlookup_text;
                         //display empty country
                         SearchAndSetSelectedIndex('', settings.country,0);
@@ -1658,7 +1640,7 @@ async function user_settings_load() {
             document.getElementById('setting_icon_regional_timezone').innerHTML, //icon
             document.getElementById('setting_select_report_timezone').value, //text2 
             window.global_gps_map_marker_div_gps, //marker for GPS
-            window.global_gps_map_jumpto);
+            window.global_service_map_jumpto);
     }
     //Design
     set_theme_id('day', select_user_setting[select_user_setting.selectedIndex].getAttribute('design_theme_day_id'));
@@ -2792,8 +2774,6 @@ function init(parameters) {
                     window.global_regional_default_calendartype = parseInt(global_app_parameters[i].parameter_value);
                 if (global_app_parameters[i].parameter_name=='REGIONAL_DEFAULT_CALENDAR_HIJRI_TYPE')
                     window.global_regional_default_calendar_hijri_type = parseInt(global_app_parameters[i].parameter_value);
-                if (global_app_parameters[i].parameter_name=='GPS_MAP_MAPTYPE')
-                    window.global_gps_maptype = parseInt(global_app_parameters[i].parameter_value);
                 if (global_app_parameters[i].parameter_name=='GPS_DEFAULT_COUNTRY')
                     window.global_gps_default_country = global_app_parameters[i].parameter_value;
                 if (global_app_parameters[i].parameter_name=='GPS_DEFAULT_CITY')
@@ -2808,10 +2788,6 @@ function init(parameters) {
                     window.global_gps_map_zoom_city = parseInt(global_app_parameters[i].parameter_value);
                 if (global_app_parameters[i].parameter_name=='GPS_MAP_ZOOM_PP')
                     window.global_gps_map_zoom_pp = parseInt(global_app_parameters[i].parameter_value);
-                if (global_app_parameters[i].parameter_name=='GPS_MAP_STYLE_BASEURL')
-                    window.global_gps_map_style_baseurl = global_app_parameters[i].parameter_value;
-                if (global_app_parameters[i].parameter_name=='GPS_MAP_STYLE')
-                    window.global_gps_map_style = global_app_parameters[i].parameter_value;
                 if (global_app_parameters[i].parameter_name=='GPS_MAP_MARKER_DIV_PP')
                     window.global_gps_map_marker_div_pp = global_app_parameters[i].parameter_value;
                 if (global_app_parameters[i].parameter_name=='GPS_MAP_MARKER_DIV_CITY')
@@ -2846,12 +2822,6 @@ function init(parameters) {
                     window.global_gps_map_qibbla_old_width = parseFloat(global_app_parameters[i].parameter_value);
                 if (global_app_parameters[i].parameter_name=='GPS_MAP_QIBBLA_OLD_OPACITY')
                     window.global_gps_map_qibbla_old_opacity = parseFloat(global_app_parameters[i].parameter_value);
-                if (global_app_parameters[i].parameter_name=='GPS_MAP_FLYTO')
-                    window.global_gps_map_flyto = parseInt(global_app_parameters[i].parameter_value);
-                if (global_app_parameters[i].parameter_name=='GPS_MAP_JUMPTO')
-                    window.global_gps_map_jumpto = parseInt(global_app_parameters[i].parameter_value);
-                if (global_app_parameters[i].parameter_name=='GPS_MAP_POPUP_OFFSET')
-                    window.global_gps_map_popup_offset = parseInt(global_app_parameters[i].parameter_value);
                 if (global_app_parameters[i].parameter_name=='DESIGN_DEFAULT_THEME_DAY')
                     window.global_design_default_theme_day = global_app_parameters[i].parameter_value;
                 if (global_app_parameters[i].parameter_name=='DESIGN_DEFAULT_THEME_MONTH')

@@ -3,7 +3,7 @@ const { createLogDB } = require("../../log/log.service");
 
 const { oracledb, get_pool} = require("../admin/admin.service");
 
-function log_db_sql(app_id, parameters){
+function log_db_sql(app_id, sql, parameters){
 	let parsed_sql = sql;
 	switch (process.env.SERVICE_DB_USE){
 		case '1':
@@ -33,7 +33,7 @@ async function execute_db_sql(app_id, sql, parameters, admin,
 	switch (process.env.SERVICE_DB_USE){
 		case '1':{
 			if (process.env.SERVICE_LOG_ENABLE_DB==1){
-				log_db_sql(app_id, parameters);
+				log_db_sql(app_id, sql, parameters);
 			}
 			get_pool(app_id).query(sql, parameters, 
 				(error, results, fields) => {
@@ -49,7 +49,7 @@ async function execute_db_sql(app_id, sql, parameters, admin,
 		}
 		case '2':{
 			if (process.env.SERVICE_LOG_ENABLE_DB==1){
-				log_db_sql(app_id, parameters);
+				log_db_sql(app_id, sql, parameters);
 			}
 			let pool2;
 			try{
