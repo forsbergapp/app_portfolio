@@ -1513,7 +1513,7 @@ function list_item_click(item){
                                     json.geoplugin_regionName + ', ' +
                                     json.geoplugin_countryName,
                                     window.global_gps_map_marker_div_gps,
-                                    window.global_gps_map_jumpto);
+                                    window.global_service_map_jumpto);
                     }
             })
         }
@@ -1545,7 +1545,7 @@ function list_item_click(item){
                                     json.geoplugin_region + ', ' + 
                                     json.geoplugin_countryCode,
                                     window.global_gps_map_marker_div_gps,
-                                    window.global_gps_map_jumpto);
+                                    window.global_service_map_jumpto);
                     }
             })
         }
@@ -1742,7 +1742,7 @@ function update_map(longitude, latitude, zoom, text_place, marker_id, to_method)
             let popuptext = `<div id="map_popup_title">${text_place}</div>
                              <div id="map_popup_sub_title">${window.global_icon_regional_timezone + window.global_icon_gps_position}</div>
                              <div id="map_popup_sub_title_timezone">${text_timezone}</div>`;
-            map_popup(window.global_gps_map_popup_offset, popuptext, longitude, latitude);
+            map_popup(window.global_service_map_popup_offset, popuptext, longitude, latitude);
             map_marker(marker_id, longitude, latitude);
             return null;
         }
@@ -1778,13 +1778,12 @@ function delete_globals(){
     delete window.global_service_log_file_path_server;
     delete window.global_service_log_date_format;
     delete window.global_gps_map_container;
-    delete window.global_gps_map_style_baseurl;
-    delete window.global_gps_map_style;
     delete window.global_gps_map_zoom;
-    delete window.global_gps_map_flyto;
-    delete window.global_gps_map_jumpto;
+    delete window.global_service_map_style;
+    delete window.global_service_map_flyto;
+    delete window.global_service_map_jumpto;
+    delete window.global_service_map_popup_offset;
     delete window.global_gps_map_marker_div_gps;
-    delete window.global_gps_map_popup_offset;
     delete window.global_client_latitude;
     delete window.global_client_longitude;
     delete window.global_client_place;
@@ -1836,13 +1835,8 @@ function init_admin_secure(){
     window.global_service_log_date_format= '';
     //map variables
     window.global_gps_map_container      ='mapid';
-    window.global_gps_map_style_baseurl  ='mapbox://styles/mapbox/';
-    window.global_gps_map_style          ='satellite-streets-v11';
     window.global_gps_map_zoom           = 14;
-    window.global_gps_map_flyto          = 1;
-    window.global_gps_map_jumpto         = 0;
     window.global_gps_map_marker_div_gps = 'map_marker_gps';
-    window.global_gps_map_popup_offset   = 25;
     //session variables
     window.global_client_latitude = '';
     window.global_client_longitude = '';
@@ -1937,14 +1931,14 @@ function init_admin_secure(){
     document.getElementById('filesearch_menu4').addEventListener('click', function() { show_existing_logfiles();}, false);
     
     document.getElementById('list_pm2_log_title').addEventListener('click', function() { nav_click(this)}, false);
-    document.getElementById('select_maptype').addEventListener('change', function() { map_setstyle(window.global_gps_map_style_baseurl, document.getElementById('select_maptype').value) }, false);
+    document.getElementById('select_maptype').addEventListener('change', function() { map_setstyle(document.getElementById('select_maptype').value) }, false);
     document.getElementById('map_my_location').addEventListener('click', function() { get_gps_from_ip().then(function(){
         update_map(window.global_client_longitude,
                    window.global_client_latitude,
                    window.global_gps_map_zoom,
                    window.global_client_place,
                    window.global_gps_map_marker_div_gps,
-                   window.global_gps_map_jumpto);})}, false);
+                   window.global_service_map_jumpto);})}, false);
 
     //set texts
     document.getElementById('menu_1').innerHTML = 'DASHBOARD';
@@ -2003,25 +1997,23 @@ function init_admin_secure(){
 
     get_apps().then(function(){
         get_gps_from_ip().then(function(){
-            map_init(window.global_gps_map_access_token, 
-                     window.global_gps_map_container,
-                     window.global_gps_map_style_baseurl, 
-                     window.global_gps_map_style,
+            map_init(window.global_gps_map_container,
+                     window.global_service_map_style,
                      window.global_client_longitude, 
                      window.global_client_latitude, 
                      window.global_gps_map_zoom);
             map_setevent('dblclick', function(e) {
                 e.preventDefault()
-                let lng = e.lngLat['lng'];
-                let lat = e.lngLat['lat'];
+                let lng = e.latlng['lng'];
+                let lat = e.latlng['lat'];
                 //Update GPS position
                 get_place_from_gps(lng, lat).then(function(gps_place){
                     update_map(lng,
-                                lat,
-                                '', //do not change zoom 
-                                gps_place,
-                                window.global_gps_map_marker_div_gps,
-                                window.global_gps_map_jumpto);
+                               lat,
+                               '', //do not change zoom 
+                               gps_place,
+                               window.global_gps_map_marker_div_gps,
+                               window.global_service_map_jumpto);
                 })
             })
                 
@@ -2030,7 +2022,7 @@ function init_admin_secure(){
                         window.global_gps_map_zoom,
                         window.global_client_place,
                         window.global_gps_map_marker_div_gps,
-                        window.global_gps_map_jumpto);
+                        window.global_service_map_jumpto);
             show_menu(1);
         })                
     })
