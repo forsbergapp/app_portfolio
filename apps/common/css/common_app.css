@@ -925,3 +925,7 @@ a:active {
 .common_dialogue_content .fas.fa-heart-broken{
 	color:red;
 }
+/*service map*/
+.leaflet-popup-content{
+	width:200px !important;
+}

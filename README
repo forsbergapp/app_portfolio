@@ -185,20 +185,14 @@ Installation instructions
 		updateProviderUser()	provider login
 		onProviderSignIn()		provider login management
 
-4. register mapbox 
-   	get access token
-   	https://docs.mapbox.com/api/overview/
-
-   	map does not work without this access token.
-   
-5. register email provider to send from server
+4. register email provider to send from server
    	hostname, port, username, password
    	Check if email provider allows sending from apps if using free account.
 
-6. generate ssl files for https, start using letsencrypt for a domain and
+5. generate ssl files for https, start using letsencrypt for a domain and
 	use self sign for localhost or use ssl provider of your choice
 
-7. download from Github
+6. download from Github
 
 	mkdir app_portfolio
    	cd app_portfolio
@@ -216,7 +210,7 @@ Installation instructions
 		ssl/										SSL certificates used by parameters
 													SERVER_HTTPS_KEY and SERVER_HTTPS_CERT
 
-8. create .env file in /app_portfolio
+7. create .env file in /app_portfolio
 	recommended paths
 	/config				configuration files
 	/logs				log files
@@ -348,7 +342,7 @@ Installation instructions
 		/service/auth/auth.controller.js 
 		policy_directives() 	checks at startup in /server.js the file content
 								and loads content into Content Security Policy using helmet middleware
-9.  database parameters
+8.  database parameters
 	update scripts/import.sql or after import, observe db username and password for apps 
 	are in APP_PARAMETER table, admin and app1 in .env file.
 
@@ -363,7 +357,7 @@ Installation instructions
 	2 = Private values with account names and passwords and sensitive data only available from NodeJS server
 		such as database, auth control and email parameters
 
-10. run app on any supported Node.js platform
+9. run app on any supported Node.js platform
    	starts without logging and restarts automatically when files are changed:
    	pm2 start server.js --name app_portfolio -o "/dev/null" -e "/dev/null" --watch --ignore-watch=".well-known logs node_modules"
 	start JSON log:
@@ -372,7 +366,7 @@ Installation instructions
 	linux:   
 	nohup pm2 logs --json>{SERVICE_LOG_FILE_PATH_SERVER}{SERVICE_LOG_PM2_FILE} &
 
-11. how to add new app
+10. how to add new app
 	optional db script:
 	scripts/mysql.ddl
 	script/oracle.ddl
@@ -399,7 +393,7 @@ Installation instructions
 	/apps/{APP_ID}/sw.js			service worker for PWA apps
 	/service/db/api/app{APP_ID}*	rest api for app{APP_ID}
 
-12. App identification
+11. App identification
 	Common, admin and main app uses window.global_main_app_id that is 0 by default.
 	
 	Apps clients use window.global_app_id to identify themselves.

@@ -345,9 +345,6 @@ height: 25px;
 	margin-right: 5%;
 	margin-bottom: 10px;
 }
-.mapboxgl-popup{
-	max-width:unset !important;
-}
 /*These are created dynamically when updating map with popup texts*/
 #settings_gps_map_popup_title,
 #settings_gps_map_popup_sub_title,

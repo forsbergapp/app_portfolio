@@ -19,7 +19,7 @@
 /*----------------------- */
 checkconnected = async () => {
     try {
-      const testconnection = await fetch("https://fonts.googleapis.com");
+      const testconnection = await fetch("https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&display=swap", {method: "head", mode : 'no-cors'});
       return true;
     } catch (err) {
       return false;
@@ -1170,42 +1170,44 @@ async function tzlookup(latitude, longitude){
 /*----------------------- */
 /* MAP                    */
 /*----------------------- */
-async function map_init(accesstoken, containervalue, stylebaseurl, stylevalue, longitude, latitude, zoomvalue) {
-    if (checkconnected()) {
-        window.global_session_service_map = '';
-        return await new Promise(function (resolve){
-            mapboxgl.accessToken = accesstoken;
-            window.global_session_service_map = new mapboxgl.Map({  container: containervalue,
-                                                                    style: stylebaseurl + stylevalue,
-                                                                    center: [
-                                                                            longitude,
-                                                                            latitude
-                                                                            ],
-                                                                    zoom: zoomvalue
-                                                                });
-            window.global_session_service_map.addControl(new mapboxgl.NavigationControl());
-            window.global_session_service_map.addControl(new mapboxgl.FullscreenControl());
+async function map_init(containervalue, stylevalue, longitude, latitude, zoomvalue) {
+    return await new Promise(function (resolve){
+        if (checkconnected()) {
+            window.global_session_service_map = '';
+            window.global_session_service_map = L.map(containervalue).setView([latitude, longitude], zoomvalue);
+            map_setstyle(window.global_service_map_style);
+            //disable doubleclick in event dblclick since e.preventdefault() does not work
+            window.global_session_service_map.doubleClickZoom.disable(); 
+
+            //add fullscreen button with eventlistener
+            let mapcontrol = document.querySelectorAll(`#${containervalue} .leaflet-control`)
+            mapcontrol[0].innerHTML += `<a id='map_fullscreen_id' href="#" title="Full Screen" role="button" aria-label="Full Screen"></a>`;
+            document.getElementById('map_fullscreen_id').innerHTML= '⛶';
+            document.getElementById('map_fullscreen_id').addEventListener('click', function() { 
+                if (document.fullscreenElement)
+                    document.exitFullscreen();
+                else
+                    document.getElementById(containervalue).requestFullscreen();
+            }, false);
+            //navigation control?
+        }
+        else
             resolve();
-        })
-    }
-    else
-        resolve();
+    })
+    
 }
 function map_popup(popup_offset, popuptext, longitude, latitude){
     if (checkconnected()) {
-        let popup = new mapboxgl.Popup({ offset: popup_offset, closeOnClick: false })
-            .setLngLat([longitude, latitude])
-            .setHTML(popuptext)
-            .addTo(window.global_session_service_map);
+        var popup = L.popup({ offset: [0, popup_offset], closeOnClick: false })
+                    .setLatLng([latitude, longitude])
+                    .setContent(popuptext)
+                    .openOn(window.global_session_service_map);
     }
 }
 function map_marker(marker_id, longitude, latitude){
     if (checkconnected()) {
-        let el = document.createElement('div');
-        el.id = marker_id;
-        new mapboxgl.Marker(el)
-            .setLngLat([longitude, latitude])
-            .addTo(window.global_session_service_map);
+        var marker = L.marker([latitude, longitude]).addTo(window.global_session_service_map);
+        marker.id = marker_id;
     }
 }
 function map_update(to_method, zoomvalue, longitude, latitude){
@@ -1213,99 +1215,92 @@ function map_update(to_method, zoomvalue, longitude, latitude){
         switch (to_method){
             case 0:{
                 if (zoomvalue == '')
-                    window.global_session_service_map.jumpTo({ 'center': [longitude, latitude] });
+                    window.global_session_service_map.setView(new L.LatLng(latitude, longitude));
                 else
-                    window.global_session_service_map.jumpTo({ 'center': [longitude, latitude], 'zoom': zoomvalue });
+                    window.global_session_service_map.setView(new L.LatLng(latitude, longitude), zoomvalue);
                 break;
             }
             case 1:{
-                window.global_session_service_map.flyTo({
-                    'center': [longitude, latitude],
-                    essential: true
-                });
+                window.global_session_service_map.flyTo([latitude, longitude], zoomvalue)
                 break;
             }
+            //also have window.global_session_service_map.panTo(new L.LatLng({lng: longitude, lat: latitude}));
         }
     }
 }
 async function map_resize() {
     if (checkconnected()) {
-        //not rendering correct at startup
-        window.global_session_service_map.resize();
+        //fixes not rendering correct showing map div
+        window.global_session_service_map.invalidateSize();
     }
 }
 function map_check_source(id){
     if (checkconnected()) {
-        return window.global_session_service_map.getSource(id);
+        return false;
     }
+}
+function map_line_removeall(){
+    if(window.global_session_service_map_layer)
+        for (i=0;i<window.global_session_service_map_layer.length;i++)
+            window.global_session_service_map.removeLayer(window.global_session_service_map_layer[i]);
+    window.global_session_service_map_layer=[];
 }
 function map_line_create(id, title, text_size, from_longitude, from_latitude, to_longitude, to_latitude, color, width, opacity){
     if (checkconnected()) {
-        window.global_session_service_map.addSource(id, {
-            'type': 'geojson',
-            'data': {
-                'type': 'Feature',
-                'properties': { "title": title },
-                'geometry': {
-                    'type': 'LineString',
-                    'coordinates': [
+        var geojsonFeature = {
+            "id": `"${id}"`,
+            "type": "Feature",
+            "properties": { "title": title },
+            "geometry": {
+                "type": "LineString",
+                    "coordinates": [
                         [from_longitude, from_latitude],
                         [to_longitude, to_latitude]
                     ]
-                }
             }
-        });
-        window.global_session_service_map.addLayer({
-            'id': id + '_layer_id',
-            'type': 'line',
-            'source': id,
-            'layout': {
-                'line-join': 'round',
-                'line-cap': 'round'
-            },
-            'paint': {
-                'line-color': color,
-                'line-width': width,
-                'line-opacity': opacity
-            }
-        });
-        window.global_session_service_map.addLayer({
-            "id": id + '_symbol_id',
-            "type": "symbol",
-            "source": id,
-            "layout": {
-                "symbol-placement": "line",
-                "text-field": title,
-                "text-size": text_size
-            }
-        });
-    }
-}
-function map_line_update(id, from_longitude, from_latitude, to_longitude, to_latitude){
-    if (checkconnected()) {
-        window.global_session_service_map.getSource(id).setData({
-            'type': 'FeatureCollection',
-            'features': [{
-                'type': 'Feature',
-                'geometry': {
-                    'type': 'LineString',
-                    'coordinates': [
-                        [from_longitude, from_latitude],
-                        [to_longitude,to_latitude]
-                    ]
-                }
-            }]
-        });
+        };
+        //use GeoJSON to draw a line
+        var myStyle = {
+            "color": color,
+            "weight": width,
+            "opacity": opacity
+        };
+        let layer = L.geoJSON(geojsonFeature, {style: myStyle}).addTo(window.global_session_service_map);
+        if(!window.global_session_service_map_layer)
+            window.global_session_service_map_layer=[];
+        window.global_session_service_map_layer.push(layer);
     }
 }
 function map_setevent(event, function_event){
     if (checkconnected()) {
+        //also creates event:
+        //L.DomEvent.addListener(window.global_session_service_map, 'dblclick', function_event);
         window.global_session_service_map.on(event, function_event);
     }
 }
-function map_setstyle(mapstylebaseurl, mapstyle){
+function map_setstyle(mapstyle){
     if (checkconnected()) {
-        window.global_session_service_map.setStyle(mapstylebaseurl + mapstyle);
+        if(window.global_session_service_map_OpenStreetMap_Mapnik)
+            window.global_session_service_map.removeLayer(window.global_session_service_map_OpenStreetMap_Mapnik);
+        if (window.global_session_service_map_Esri_WorldImagery)
+            window.global_session_service_map.removeLayer(window.global_session_service_map_Esri_WorldImagery);
+        switch (mapstyle){
+            case 'OpenStreetMap_Mapnik':{
+                window.global_session_service_map_OpenStreetMap_Mapnik = 
+                    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                        maxZoom: 19,
+                        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+                    }).addTo(window.global_session_service_map);
+                break;
+            }
+            case 'Esri.WorldImagery':{
+                window.global_session_service_map_Esri_WorldImagery = 
+                    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+                        attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+                    }).addTo(window.global_session_service_map);
+                break;
+            }
+        }
     }
 }
 
@@ -3347,12 +3342,15 @@ async function init_common(parameters, callBack){
                 case 'SERVICE_GEOLOCATION_GPS_IP'           :{window.global_service_geolocation_gps_ip = parameter_value;break;}
                 case 'SERVICE_GEOLOCATION_GPS_PLACE'        :{window.global_service_geolocation_gps_place = parameter_value;break;}
                 case 'SERVICE_GEOLOCATION_GPS_TIMEZONE'     :{window.global_service_geolocation_gps_timezone = parameter_value;break;}
+                case 'SERVICE_MAP_FLYTO'                    :{window.global_service_map_flyto = parseInt(parameter_value);break;}
+                case 'SERVICE_MAP_JUMPTO'                   :{window.global_service_map_jumpto = parseInt(parameter_value);break;}
+                case 'SERVICE_MAP_POPUP_OFFSET'             :{window.global_service_map_popup_offset = parseInt(parameter_value);break;}
+                case 'SERVICE_MAP_STYLE'                    :{window.global_service_map_style = parameter_value;break;}
                 case 'SERVICE_REGIONAL'                     :{window.global_service_regional = parameter_value;break;}
                 case 'SERVICE_REGIONAL_TIMEZONEOFFSET'      :{window.global_service_regional_timezoneoffset = parameter_value;break;}
                 case 'SERVICE_REGIONAL_GREGORIAN'           :{window.global_service_regional_gregorian = parameter_value;break;}
                 case 'SERVICE_REPORT'                       :{window.global_service_report = parameter_value;break;}
                 case 'SERVICE_WORLDCITIES'                  :{window.global_service_worldcities = parameter_value;break;}
-                case 'GPS_MAP_ACCESS_TOKEN'                 :{window.global_gps_map_access_token = parameter_value;break;}
             }
         }
     }
