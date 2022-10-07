@@ -28,22 +28,17 @@ app.get("/sw.js",function (req, res,next) {
 });
 
 app.get("/info/:info",function (req, res, next) {
-  //redirect from http to https
-  if (req.protocol=='http')
-    res.redirect('https://' + req.headers.host);
-  else{
-    if (req.headers.host.substring(0,req.headers.host.indexOf('.')) == 'app2') {
-        const { getInfo} = require("./");
-        if (typeof req.query.lang_code !='undefined'){
-          req.query.lang_code = 'en';
-        }
-        getInfo(APP2_ID, req.params.info, req.query.lang_code, (err, info_result)=>{
-          res.send(info_result);
-        })
-    }
-    else
-      next();
+  if (req.headers.host.substring(0,req.headers.host.indexOf('.')) == 'app2') {
+      const { getInfo} = require("./");
+      if (typeof req.query.lang_code !='undefined'){
+        req.query.lang_code = 'en';
+      }
+      getInfo(APP2_ID, req.params.info, req.query.lang_code, (err, info_result)=>{
+        res.send(info_result);
+      })
   }
+  else
+    next();
 });
 
 //app 2 progressive webapp menifest
@@ -138,35 +133,26 @@ app.get("/app2/manifest.json",function (req, res, next) {
 app.get('/:user', function(req, res,next) {
   if (req.headers.host.substring(0,req.headers.host.indexOf('.')) == 'app2' &&
       req.params.user !== '' && 
-      req.params.user!=='robots.txt' &&
       req.params.user!=='manifest.json' &&
-      req.params.user!=='favicon.ico' &&
       req.params.user!=='sw.js' &&
       req.params.user!=='css' &&
       req.params.user!=='images' &&
-      req.params.user!=='js' &&
-      req.params.user!=='service') {
-      if (req.protocol=='http')
-        return res.redirect('https://' + req.headers.host);
-      else{
-        const { getForm} = require("../service/forms/forms.controller");
-        getForm(req, res, APP2_ID, req.params.user, (err, app_result)=>{
-          //if app_result=0 means here redirect to /
-          if (app_result==0)
-            return res.redirect('/');
-          else
-            return res.send(app_result);
-        })
-      }
+      req.params.user!=='info' &&
+      req.params.user!=='js') {
+      const { getForm} = require("../service/forms/forms.controller");
+      getForm(req, res, APP2_ID, req.params.user, (err, app_result)=>{
+        //if app_result=0 means here redirect to /
+        if (app_result==0)
+          return res.redirect('/');
+        else
+          return res.send(app_result);
+      })
     }
   else
     next();
 });
 app.get('/',function (req, res, next) {
   if (req.headers.host.substring(0,req.headers.host.indexOf('.')) == 'app2'){
-    //redirect from http to https
-    if (req.protocol=='http')
-      return res.redirect('https://' + req.headers.host);
     const { getForm} = require("../service/forms/forms.controller");
     getForm(req, res, APP2_ID, null,(err, app_result)=>{
         return res.send(app_result);

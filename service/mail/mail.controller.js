@@ -134,30 +134,30 @@ module.exports = {
                         html:               mail_result.html		
                         };
                     sendEmailService(emailData, (err, result) => {
-                        createLog(req.query.app_id,
-                                  { app_id : data.app_id,
-                                    app_module : 'MAIL',
-                                    app_module_type : 'SEND',
-                                    app_module_request : `mailhost: ${emailData.email_host}, type: ${data.emailType}, from: ${emailData.from} (${emailData.email_auth_user}), to: ${data.toEmail}, subject: ${emailData.subject}`,
-                                    app_module_result : `${(err)?JSON.stringify(err):JSON.stringify(result)}`,
-                                    app_user_id : data.app_user_id,
-                                    user_language : req.body.user_language,
-                                    user_timezone : req.body.user_timezone,
-                                    user_number_system : req.body.user_number_system,
-                                    user_platform : req.body.user_platform,
-                                    server_remote_addr : req.ip,
-                                    server_user_agent : req.headers["user-agent"],
-                                    server_http_host : req.headers["host"],
-                                    server_http_accept_language : req.headers["accept-language"],
-                                    client_latitude : req.body.client_latitude,
-                                    client_longitude : req.body.client_longitude
-                                    }, (err,results)  => {
-                                        null;
-                        });
-                        if (err) {    
+                        if (err)
                             return callBack(err, result);
-                        } else
-                            return callBack(null, result);
+                        else
+                            createLog(req.query.app_id,
+                                    { app_id : data.app_id,
+                                        app_module : 'MAIL',
+                                        app_module_type : 'SEND',
+                                        app_module_request : `mailhost: ${emailData.email_host}, type: ${data.emailType}, from: ${emailData.from} (${emailData.email_auth_user}), to: ${data.toEmail}, subject: ${emailData.subject}`,
+                                        app_module_result : `${(err)?JSON.stringify(err):JSON.stringify(result)}`,
+                                        app_user_id : data.app_user_id,
+                                        user_language : req.body.user_language,
+                                        user_timezone : req.body.user_timezone,
+                                        user_number_system : req.body.user_number_system,
+                                        user_platform : req.body.user_platform,
+                                        server_remote_addr : req.ip,
+                                        server_user_agent : req.headers["user-agent"],
+                                        server_http_host : req.headers["host"],
+                                        server_http_accept_language : req.headers["accept-language"],
+                                        client_latitude : req.body.client_latitude,
+                                        client_longitude : req.body.client_longitude
+                                        }, (err,results)  => {
+                                            //email is sent ignore any error here
+                                            return callBack(null, result);
+                            });
                     });
                 }) 
             }

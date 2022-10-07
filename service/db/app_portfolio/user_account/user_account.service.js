@@ -214,7 +214,7 @@ module.exports = {
 									END,
 							email_unverified = CASE 
 											WHEN  ? = 4 THEN 
-													null
+													NULL
 											ELSE 
 													email_unverified
 											END,
@@ -239,7 +239,7 @@ module.exports = {
 									END,
 							email_unverified = CASE 
 											WHEN  :verification_type = 4 THEN 
-													null
+													NULL
 											ELSE 
 													email_unverified
 											END,
