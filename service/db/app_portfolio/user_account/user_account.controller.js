@@ -46,9 +46,9 @@ module.exports = {
             getMessage(req.query.app_id, 
                        process.env.COMMON_APP_ID,
                        20106, 
-                       req.query.lang_code, (err2,results2)  => {
+                       req.query.lang_code, (err,results_message)  => {
                             return res.status(400).send(
-                                err2 ?? results2.text
+                                err ?? results_message.text
                             );
                        });
         else{
@@ -65,9 +65,9 @@ module.exports = {
                         getMessage(req.query.app_id,
                                    process.env.COMMON_APP_ID, 
                                    app_code, 
-                                   req.query.lang_code, (err2,results2)  => {
+                                   req.query.lang_code, (err,results_message)  => {
                                             return res.status(400).send(
-                                                err2 ?? results2.text
+                                                err ?? results_message.text
                                             );
                                    });
                     }
@@ -78,7 +78,7 @@ module.exports = {
                 }
                 else{
                     if (typeof req.body.provider_id == 'undefined' ) {
-                        getParameter(req.query.app_id, process.env.COMMON_APP_ID,'SERVICE_MAIL_TYPE_SIGNUP', (err3, parameter_value)=>{
+                        getParameter(req.query.app_id, process.env.COMMON_APP_ID,'SERVICE_MAIL_TYPE_SIGNUP', (err, parameter_value)=>{
                             //send email for local users only
                             const emailData = {
                                 lang_code : req.query.lang_code,
@@ -89,15 +89,15 @@ module.exports = {
                                 verificationCode : req.body.verification_code
                             }
                             //send email SIGNUP
-                            sendEmail(req, emailData, (err4, result4) => {
-                                if (err4) {
+                            sendEmail(req, emailData, (err, result_sendemail) => {
+                                if (err) {
                                     //return res from userSignup
                                     return res.status(500).send(
-                                        err4
+                                        err
                                     );
                                 } 
                                 else
-                                    accessToken(req, (err5, Token)=>{
+                                    accessToken(req, (err, Token)=>{
                                         return res.status(200).json({
                                             accessToken: Token,
                                             id: results.insertId,
@@ -108,7 +108,7 @@ module.exports = {
                         })
                     }
                     else
-                        accessToken(req, (err6, Token)=>{
+                        accessToken(req, (err, Token)=>{
                             return res.status(200).json({
                                 accessToken: Token,
                                 id: results.insertId,
@@ -232,13 +232,13 @@ module.exports = {
                                             });
                                         else{
                                             let new_code = verification_code();
-                                            updateUserVerificationCode(req.query.app_id, results.id, new_code, (err_verification,result_verification) => {
-                                                if (err_verification)
+                                            updateUserVerificationCode(req.query.app_id, results.id, new_code, (err,result_verification) => {
+                                                if (err)
                                                     return res.status(500),send(
-                                                        err_verification
+                                                        err
                                                     );
                                                 else{
-                                                    getParameter(req.query.app_id, process.env.COMMON_APP_ID,'SERVICE_MAIL_TYPE_PASSWORD_RESET', (err3, parameter_value)=>{
+                                                    getParameter(req.query.app_id, process.env.COMMON_APP_ID,'SERVICE_MAIL_TYPE_PASSWORD_RESET', (err, parameter_value)=>{
                                                         const emailData = {
                                                             lang_code : req.query.lang_code,
                                                             app_id : process.env.COMMON_APP_ID,
@@ -248,10 +248,10 @@ module.exports = {
                                                             verificationCode : new_code
                                                         }
                                                         //send email PASSWORD_RESET
-                                                        sendEmail(req, emailData, (err4, result_sendemail) => {
-                                                            if (err4) {
+                                                        sendEmail(req, emailData, (err, result_sendemail) => {
+                                                            if (err) {
                                                                 return res.status(500).send(
-                                                                    err4
+                                                                    err
                                                                 );
                                                             } 
                                                             else
@@ -287,22 +287,22 @@ module.exports = {
                 );
             }
             else
-                if (!results) {
-                    //Record not found
-                    getMessage( req.query.app_id,
-                                process.env.COMMON_APP_ID, 
-                                20400, 
-                                req.query.lang_code, (err2,results2)  => {
-                                    return res.status(404).send(
-                                        err2 ?? results2.text
-                                        );
-                                });
-                }
-                else{
+                if (results) {
                     //send without {} so the variablename is not sent
                     return res.status(200).json(
                         results
                     );
+                }
+                else{
+                    //Record not found
+                    getMessage( req.query.app_id,
+                                process.env.COMMON_APP_ID, 
+                                20400, 
+                                req.query.lang_code, (err,results_message)  => {
+                                    return res.status(404).send(
+                                        err ?? results_message.text
+                                        );
+                                });
                 }
         });
     },
@@ -335,35 +335,41 @@ module.exports = {
                 );
             }
             else{
-                if (!results){
-                    //Record not found
-                    getMessage( req.query.app_id,
-                                process.env.COMMON_APP_ID, 
-                                20400, 
-                                req.query.lang_code, (err2,results2)  => {
-                                    return res.status(404).send(
-                                        err2 ?? results2.text
-                                    );
-                                });
-                }
-                else{
+                if (results){
                     if ((results.id == id_current_user) == false) {
-                        insertUserAccountView(req.query.app_id, req.body, (err, results) => {
+                        insertUserAccountView(req.query.app_id, req.body, (err, results_insert) => {
                             if (err) {
                                 return res.status(500).send(
                                     err
                                 );
                             }
+                            else{
+                                //send without {} so the variablename is not sent
+                                return res.status(200).json(
+                                    results
+                                );
+                            }
                         });
                     }
-                    //send without {} so the variablename is not sent
-                    return res.status(200).json(
-                        results
-                    );
+                    else{
+                        //send without {} so the variablename is not sent
+                        return res.status(200).json(
+                            results
+                        );
+                    }
                 }
-                
-            }         
-            
+                else{
+                    //Record not found
+                    getMessage( req.query.app_id,
+                                process.env.COMMON_APP_ID, 
+                                20400, 
+                                req.query.lang_code, (err,results_message)  => {
+                                    return res.status(404).send(
+                                        err ?? results_message.text
+                                    );
+                                });
+                }
+            }            
         });
     },
     searchProfileUser: (req, res) => {
@@ -380,30 +386,31 @@ module.exports = {
                 req.body.client_user_agent = req.headers["user-agent"];
                 req.body.client_longitude = req.body.client_longitude;
                 req.body.client_latitude = req.body.client_latitude;
-                insertProfileSearch(req.query.app_id, req.body, (err, results2) => {
+                insertProfileSearch(req.query.app_id, req.body, (err, results_insert) => {
                     if (err) {
                         return res.status(500).send(
                             err
                         );
                     }
+                    else{
+                        if (results)
+                            return res.status(200).json({
+                                count: results.length,
+                                items: results
+                            });
+                        else {
+                            //Record not found
+                            getMessage( req.query.app_id,
+                                        process.env.COMMON_APP_ID, 
+                                        20400, 
+                                        req.query.lang_code, (err,results_message)  => {
+                                            return res.status(404).send(
+                                                err ?? results_message.text
+                                            );
+                                        });
+                        }
+                    }
                 });
-
-                if (!results) {
-                    //Record not found
-                    getMessage( req.query.app_id,
-                                process.env.COMMON_APP_ID, 
-                                20400, 
-                                req.query.lang_code, (err2,results2)  => {
-                                    return res.status(404).send(
-                                        err2 ?? results2.text
-                                    );
-                                });
-                }
-                else
-                    return res.status(200).json({
-                        count: results.length,
-                        items: results
-                    });
             }
         });
     },
@@ -419,23 +426,23 @@ module.exports = {
                 );
             }
             else{
-                if (!results) {
-                    //Record not found
-                    getMessage( req.query.app_id,
-                                process.env.COMMON_APP_ID, 
-                                20400, 
-                                req.query.lang_code, (err2,results2)  => {
-                                    return res.status(404).json({
-                                            count: 0,
-                                            message: err2 ?? results2.text
-                                        });
-                                });
-                }
-                else
+                if (results)
                     return res.status(200).json({
                         count: results.length,
                         items: results
                     });
+                else {
+                    //Record not found
+                    getMessage( req.query.app_id,
+                                process.env.COMMON_APP_ID, 
+                                20400, 
+                                req.query.lang_code, (err,results_message)  => {
+                                    return res.status(404).json({
+                                            count: 0,
+                                            message: err ?? results_message.text
+                                        });
+                                });
+                }
             }
         });
     },
@@ -450,23 +457,23 @@ module.exports = {
                 );
             }
             else{
-                if (!results) {
-                    //Record not found
-                    getMessage( req.query.app_id,
-                                process.env.COMMON_APP_ID, 
-                                20400, 
-                                req.query.lang_code, (err2,results2)  => {
-                                    return res.status(404).json({
-                                            count: 0,
-                                            message: err2 ?? results2.text
-                                        });
-                                });
-                }
-                else
+                if (results)
                     return res.status(200).json({
                         count: results.length,
                         items: results
                     });
+                else {
+                    //Record not found
+                    getMessage( req.query.app_id,
+                                process.env.COMMON_APP_ID, 
+                                20400, 
+                                req.query.lang_code, (err,results_message)  => {
+                                    return res.status(404).json({
+                                            count: 0,
+                                            message: err ?? results_message.text
+                                        });
+                                });
+                }                    
             }
         });
     },
@@ -488,9 +495,9 @@ module.exports = {
                                 getMessage( req.query.app_id,
                                             process.env.COMMON_APP_ID, 
                                             20106, 
-                                            req.query.lang_code, (err2,results2)  => {
+                                            req.query.lang_code, (err,results_message)  => {
                                                     return res.status(400).send(
-                                                        err2 ?? results2.text
+                                                        err ?? results_message.text
                                                     );
                                             });
                         else{
@@ -501,42 +508,31 @@ module.exports = {
                                     req.body.password = hashSync(req.body.password, salt);
                             }
                             function updateLocal(send_email){
-                                updateUserLocal(req.query.app_id, req.body, req.params.id, (err_update, results_update) => {
-                                    if (err_update) {
-                                        var app_code = get_app_code(err_update.errorNum, 
-                                                                    err_update.message, 
-                                                                    err_update.code, 
-                                                                    err_update.errno, 
-                                                                    err_update.sqlMessage);
+                                updateUserLocal(req.query.app_id, req.body, req.params.id, (err, results_update) => {
+                                    if (err) {
+                                        var app_code = get_app_code(err.errorNum, 
+                                                                    err.message, 
+                                                                    err.code, 
+                                                                    err.errno, 
+                                                                    err.sqlMessage);
                                         if (app_code != null)
                                             getMessage( req.query.app_id,
                                                         process.env.COMMON_APP_ID, 
                                                         app_code, 
-                                                        req.query.lang_code, (err2,results2)  => {
+                                                        req.query.lang_code, (err,results_message)  => {
                                                             return res.status(400).send(
-                                                                err2 ?? results2.text
+                                                                err ?? results_message.text
                                                             );
                                                         });
                                         else
                                             return res.status(500).send(
-                                                err_update
+                                                err
                                             );
                                     }
                                     else{
-                                        if (!results_update) {
-                                            //record not found
-                                            getMessage( req.query.app_id,
-                                                        process.env.COMMON_APP_ID, 
-                                                        20400, 
-                                                        req.query.lang_code, (err2,results2)  => {
-                                                            return res.status(404).send(
-                                                                err2 ?? results2.text
-                                                            );
-                                                        });
-                                        }
-                                        else
+                                        if (results_update){
                                             if (send_email){
-                                                getParameter(req.query.app_id, process.env.COMMON_APP_ID,'SERVICE_MAIL_TYPE_CHANGE_EMAIL',  (err3, parameter_value)=>{
+                                                getParameter(req.query.app_id, process.env.COMMON_APP_ID,'SERVICE_MAIL_TYPE_CHANGE_EMAIL',  (err, parameter_value)=>{
                                                     const emailData = {
                                                         lang_code : req.query.lang_code,
                                                         app_id : process.env.COMMON_APP_ID,
@@ -546,10 +542,10 @@ module.exports = {
                                                         verificationCode : req.body.verification_code
                                                     }
                                                     //send email SERVICE_MAIL_TYPE_CHANGE_EMAIL
-                                                    sendEmail(req, emailData, (err4, result_sendemail) => {
-                                                        if (err4) {
+                                                    sendEmail(req, emailData, (err, result_sendemail) => {
+                                                        if (err) {
                                                             return res.status(500).send(
-                                                                err4
+                                                                err
                                                             );
                                                         } 
                                                         else
@@ -563,6 +559,18 @@ module.exports = {
                                                 return res.status(200).json({
                                                     sent_change_email: 0
                                                 });
+                                        } 
+                                        else{
+                                            //record not found
+                                            getMessage( req.query.app_id,
+                                                        process.env.COMMON_APP_ID, 
+                                                        20400, 
+                                                        req.query.lang_code, (err,results_message)  => {
+                                                            return res.status(404).send(
+                                                                err ?? results_message.text
+                                                            );
+                                                        });
+                                        }
                                     }
                                 });
                             }
@@ -613,14 +621,14 @@ module.exports = {
                         }
                     } else {
                         createLogAppCI(req, res, __appfilename, __appfunction, __appline, 
-                                       'invalid password attempt for user id:' + req.params.id, (err_log, result_log)=>{
+                                       'invalid password attempt for user id:' + req.params.id, (err, result_log)=>{
                             //invalid password
                             getMessage(req.query.app_id,
                                        process.env.COMMON_APP_ID, 
                                        20401, 
-                                       req.query.lang_code, (err2,results2)  => {
+                                       req.query.lang_code, (err,results_message)  => {
                                             return res.status(400).send(
-                                                err2 ?? results2.text
+                                                err ?? results_message.text
                                             );
                                        });
                         })
@@ -631,9 +639,9 @@ module.exports = {
                     getMessage( req.query.app_id,
                                 process.env.COMMON_APP_ID, 
                                 20305, 
-                                req.query.lang_code, (err2,results2)  => {
+                                req.query.lang_code, (err,results_message)  => {
                                     return res.status(404).send(
-                                        err2 ?? results2.text
+                                        err ?? results_message.text
                                     );
                                 });
                 }
@@ -645,9 +653,9 @@ module.exports = {
             getMessage(req.query.app_id,
                        process.env.COMMON_APP_ID, 
                        20106, 
-                       req.query.lang_code, (err2,results2)  => {
+                       req.query.lang_code, (err,results_message)  => {
                             return res.status(400).send(
-                                err2 ?? results2.text
+                                err ?? results_message.text
                             );
                        });
         else{
@@ -664,9 +672,9 @@ module.exports = {
                         getMessage(req.query.app_id,
                                    process.env.COMMON_APP_ID, 
                                    app_code, 
-                                   req.query.lang_code, (err2,results2)  => {
+                                   req.query.lang_code, (err,results_message)  => {
                                         return res.status(500).send(
-                                            err2 ?? results2.text
+                                            err ?? results_message.text
                                         );
                                    });
                     }
@@ -676,18 +684,7 @@ module.exports = {
                         );
                 }
                 else {
-                    if (!results) {
-                        //record not found
-                        getMessage( req.query.app_id,
-                                    process.env.COMMON_APP_ID, 
-                                    20400, 
-                                    req.query.lang_code, (err2,results2)  => {
-                                        return res.status(404).send(
-                                            err2 ?? results2.text
-                                        );
-                                    });
-                    }
-                    else{
+                    if (results) {
                         const eventData = {
                             app_id : req.query.app_id,
                             user_account_id: req.params.id,
@@ -704,16 +701,27 @@ module.exports = {
                             client_latitude : req.body.client_latitude,
                             client_longitude : req.body.client_longitude
                         }
-                        insertUserEvent(req.query.app_id, eventData, (err, result_new_user_event)=>{
+                        insertUserEvent(req.query.app_id, eventData, (err, result_insert)=>{
                             if (err)
                                 return res.status(200).json({
                                     sent: 0
                                 });
                             else
                                 return res.status(200).send(
-                                    null
+                                    results
                                 );
                         })
+                    }
+                    else{
+                        //record not found
+                        getMessage( req.query.app_id,
+                                    process.env.COMMON_APP_ID, 
+                                    20400, 
+                                    req.query.lang_code, (err,results_message)  => {
+                                        return res.status(404).send(
+                                            err ?? results_message.text
+                                        );
+                                    });
                     }
                 }
             });
@@ -727,21 +735,22 @@ module.exports = {
                 );
             }
             else {
-                if (!results) {
+                if (results) {
+                    return res.status(200).send(
+                        results
+                    );
+                }
+                else{
                     //record not found
                     getMessage( req.query.app_id,
-                                process.env.COMMON_APP_ID, 
-                                20400, 
-                                req.query.lang_code, (err2,results2)  => {
-                                    return res.status(404).send(
-                                        err2 ?? results2.text
-                                    );
-                                });
+                        process.env.COMMON_APP_ID, 
+                        20400, 
+                        req.query.lang_code, (err,results_message)  => {
+                            return res.status(404).send(
+                                err ?? results_message.text
+                            );
+                        });
                 }
-                else
-                    return res.status(200).send(
-                        null
-                    );
             }
         });
     },
@@ -755,28 +764,28 @@ module.exports = {
             else {
                 if (results) {
                     if (results.provider_id !=null){
-                        deleteUser(req.query.app_id, req.params.id, (err, results) => {
+                        deleteUser(req.query.app_id, req.params.id, (err, results_delete) => {
                             if (err) {
                                 return res.status(500).send(
                                     err
                                 );
                             }
                             else{
-                                if (!results) {
-                                    //record not found
-                                    getMessage( req.query.app_id,
-                                                process.env.COMMON_APP_ID, 
-                                                20400, 
-                                                req.query.lang_code, (err2,results2)  => {
-                                                    return res.status(404).send(
-                                                        err2 ?? results2.text
-                                                    );
-                                                });
+                                if (results_delete) {
+                                    return res.status(200).send(
+                                        results_delete
+                                    );
                                 }
                                 else{
-                                    return res.status(200).send(
-                                        null
-                                    );
+                                    //record not found
+                                    getMessage( req.query.app_id,
+                                        process.env.COMMON_APP_ID, 
+                                        20400, 
+                                        req.query.lang_code, (err,results_message)  => {
+                                            return res.status(404).send(
+                                                err ?? results_message.text
+                                            );
+                                        });
                                 }
                             }
                         });
@@ -792,42 +801,42 @@ module.exports = {
                             else {
                                 if (results) {
                                     if (compareSync(req.body.password, results.password)){
-                                        deleteUser(req.query.app_id, req.params.id, (err, results) => {
+                                        deleteUser(req.query.app_id, req.params.id, (err, results_delete) => {
                                             if (err) {
                                                 return res.status(500).send(
                                                     err
                                                 );
                                             }
                                             else{
-                                                if (!results) {
-                                                    //record not found
-                                                    getMessage( req.query.app_id,
-                                                                process.env.COMMON_APP_ID, 
-                                                                20400, 
-                                                                req.query.lang_code, (err2,results2)  => {
-                                                                    return res.status(404).send(
-                                                                        err2 ?? results2.text
-                                                                    );
-                                                                });
+                                                if (results_delete) {
+                                                    return res.status(200).send(
+                                                        results_delete
+                                                    );
                                                 }
                                                 else{
-                                                    return res.status(200).send(
-                                                        null
-                                                    );
+                                                    //record not found
+                                                    getMessage( req.query.app_id,
+                                                        process.env.COMMON_APP_ID, 
+                                                        20400, 
+                                                        req.query.lang_code, (err,results_message)  => {
+                                                            return res.status(404).send(
+                                                                err ?? results_message.text
+                                                            );
+                                                        });
                                                 }
                                             }
                                         });
                                     }
                                     else{
                                         createLogAppCI(req, res, __appfilename, __appfunction, __appline, 
-                                                       'invalid password attempt for user id:' + req.params.id, (err_log, result_log)=>{
+                                                       'invalid password attempt for user id:' + req.params.id, (err, result_log)=>{
                                             //invalid password
                                             getMessage( req.query.app_id,
                                                         process.env.COMMON_APP_ID, 
                                                         20401, 
-                                                        req.query.lang_code, (err2,results2)  => {
+                                                        req.query.lang_code, (err,results_message)  => {
                                                             return res.status(400).send(
-                                                                err2 ?? results2.text
+                                                                err ?? results_message.text
                                                             );
                                                         });
                                         })
@@ -838,9 +847,9 @@ module.exports = {
                                     getMessage( req.query.app_id,
                                                 process.env.COMMON_APP_ID, 
                                                 20305, 
-                                                req.query.lang_code, (err2,results2)  => {
+                                                req.query.lang_code, (err,results_message)  => {
                                                     return res.status(404).send(
-                                                        err2 ?? results2.text
+                                                        err ?? results_message.text
                                                     );
                                                 });
                                 }
@@ -853,9 +862,9 @@ module.exports = {
                     getMessage(req.query.app_id,
                                process.env.COMMON_APP_ID, 
                                20305, 
-                               req.query.lang_code, (err2,results2)  => {
+                               req.query.lang_code, (err,results_message)  => {
                                     return res.status(404).send(
-                                        err2 ?? results2.text
+                                        err ?? results_message.text
                                     );
                                });
                 }
@@ -889,113 +898,115 @@ module.exports = {
                         result_pw = 0;
                         req.body.result = 0;
                     }
-                    createUserAccountApp(req.query.app_id, results.id, (err3, results3) => {
-                        if (err3) {
+                    createUserAccountApp(req.query.app_id, results.id, (err, results_create) => {
+                        if (err) {
                             return res.status(500).send(
-                                err3
+                                err
                             );
                         }
-                    });
-                    if (result_pw == 1) {
-                        //if user not activated then send email with new verification code
-                        let new_code = verification_code();
-                        if (results.active == 0){
-                            updateUserVerificationCode(req.query.app_id, results.id, new_code, (err_verification,result_verification) => {
-                                if (err_verification)
-                                    return res.status(500),send(
-                                        err_verification
-                                    );
-                                else{
-                                    getParameter(req.query.app_id, process.env.COMMON_APP_ID,'SERVICE_MAIL_TYPE_UNVERIFIED',  (err3, parameter_value)=>{
-                                        const emailData = {
-                                            lang_code : req.query.lang_code,
-                                            app_id : process.env.COMMON_APP_ID,
-                                            app_user_id : results.id,
-                                            emailType : parameter_value,
-                                            toEmail : results.email,
-                                            verificationCode : new_code
-                                        }
-                                        //send email UNVERIFIED
-                                        sendEmail(req, emailData, (err_email, result_email) => {
-                                            if (err_email) {
-                                                return res.status(500).send(
-                                                    err_email
-                                                );
-                                            }
-                                            else{
-                                                accessToken(req, (err, Token)=>{
-                                                    req.body.access_token = Token;
-                                                    insertUserAccountLogon(req.query.app_id, req.body, (err_user_account_logon, result_user_account_logon) => {
-                                                        if (err_user_account_logon) {
-                                                            return res.status(500).send(
-                                                                err_user_account_logon
-                                                            );
-                                                        }
-                                                        else
-                                                            return res.status(200).json({
-                                                                count: Array(results.items).length,
-                                                                accessToken: Token,
-                                                                items: Array(results)
+                        else{
+                            if (result_pw == 1) {
+                                //if user not activated then send email with new verification code
+                                let new_code = verification_code();
+                                if (results.active == 0){
+                                    updateUserVerificationCode(req.query.app_id, results.id, new_code, (err,result_verification) => {
+                                        if (err)
+                                            return res.status(500),send(
+                                                err
+                                            );
+                                        else{
+                                            getParameter(req.query.app_id, process.env.COMMON_APP_ID,'SERVICE_MAIL_TYPE_UNVERIFIED',  (err, parameter_value)=>{
+                                                const emailData = {
+                                                    lang_code : req.query.lang_code,
+                                                    app_id : process.env.COMMON_APP_ID,
+                                                    app_user_id : results.id,
+                                                    emailType : parameter_value,
+                                                    toEmail : results.email,
+                                                    verificationCode : new_code
+                                                }
+                                                //send email UNVERIFIED
+                                                sendEmail(req, emailData, (err, result_email) => {
+                                                    if (err) {
+                                                        return res.status(500).send(
+                                                            err
+                                                        );
+                                                    }
+                                                    else{
+                                                        accessToken(req, (err, Token)=>{
+                                                            req.body.access_token = Token;
+                                                            insertUserAccountLogon(req.query.app_id, req.body, (err, result_user_account_logon) => {
+                                                                if (err) {
+                                                                    return res.status(500).send(
+                                                                        err
+                                                                    );
+                                                                }
+                                                                else
+                                                                    return res.status(200).json({
+                                                                        count: Array(results.items).length,
+                                                                        accessToken: Token,
+                                                                        items: Array(results)
+                                                                    });
                                                             });
-                                                    });
-                                                });
-                                            }
-                                        })
+                                                        });
+                                                    }
+                                                })
+                                            })
+                                        }
                                     })
                                 }
-                            })
-                        }
-                        else{
-                            accessToken(req, (err, Token)=>{
-                                req.body.access_token = Token;
-                                insertUserAccountLogon(req.query.app_id, req.body, (err_user_account_logon, result_user_account_logon) => {
-                                    if (err_user_account_logon) {
+                                else{
+                                    accessToken(req, (err, Token)=>{
+                                        req.body.access_token = Token;
+                                        insertUserAccountLogon(req.query.app_id, req.body, (err, result_user_account_logon) => {
+                                            if (err) {
+                                                return res.status(500).send(
+                                                    err
+                                                );
+                                            }
+                                            else
+                                                return res.status(200).json({
+                                                    count: Array(results.items).length,
+                                                    accessToken: Token,
+                                                    items: Array(results)
+                                                });
+                                        })
+                                    });
+                                }           
+                            } else {
+                                insertUserAccountLogon(req.query.app_id, req.body, (err, result_user_account_logon) => {
+                                    if (err) {
                                         return res.status(500).send(
-                                            err_user_account_logon
+                                            err
                                         );
                                     }
-                                    else
-                                        return res.status(200).json({
-                                            count: Array(results.items).length,
-                                            accessToken: Token,
-                                            items: Array(results)
-                                        });
-                                })
-                            });
-                        }           
-                    } else {
-                        insertUserAccountLogon(req.query.app_id, req.body, (err_user_account_logon, result_user_account_logon) => {
-                            if (err_user_account_logon) {
-                                return res.status(500).send(
-                                    err_user_account_logon
-                                );
-                            }
-                            else{
-                                //Username or password not found
-                                createLogAppCI(req, res, __appfilename, __appfunction, __appline, 
-                                    'invalid password attempt for user id:' + req.body.user_account_id + ', username:' + req.body.username, (err_log, result_log)=>{
-                                    getMessage( req.query.app_id,
-                                                process.env.COMMON_APP_ID, 
-                                                20300, 
-                                                req.query.lang_code, (err2,results2)  => {
-                                                        return res.status(400).send(
-                                                            err2 ?? results2.text
-                                                        );
-                                                });
+                                    else{
+                                        //Username or password not found
+                                        createLogAppCI(req, res, __appfilename, __appfunction, __appline, 
+                                            'invalid password attempt for user id:' + req.body.user_account_id + ', username:' + req.body.username, (err, result_log)=>{
+                                            getMessage( req.query.app_id,
+                                                        process.env.COMMON_APP_ID, 
+                                                        20300, 
+                                                        req.query.lang_code, (err,results_message)  => {
+                                                                return res.status(400).send(
+                                                                    err ?? results_message.text
+                                                                );
+                                                        });
+                                        })
+                                    }
                                 })
                             }
-                        })
-                    }
+                        }
+                    });
                 } else{
                     //User not found
                     createLogAppCI(req, res, __appfilename, __appfunction, __appline, 
-                                   'user not found:' + req.body.username, (err_log, result_log)=>{
+                                   'user not found:' + req.body.username, (err, result_log)=>{
                         getMessage( req.query.app_id,
                                     process.env.COMMON_APP_ID, 
                                     20305, 
-                                    req.query.lang_code, (err2,results2)  => {
+                                    req.query.lang_code, (err,results_message)  => {
                                         return res.status(404).send(
-                                            err2 ?? results2.text
+                                            err ?? results_message.text
                                         );
                                     });
                     })
@@ -1017,38 +1028,40 @@ module.exports = {
             }
             else{
                 if (results.length > 0) {
-                    updateSigninProvider(req.query.app_id, results[0].id, req.body, (err2, results2) => {
-                        if (err2) {
+                    updateSigninProvider(req.query.app_id, results[0].id, req.body, (err, results_update) => {
+                        if (err) {
                             return res.status(500).send(
-                                err2
+                                err
                             );
                         }
                         else{
                             req.body.user_account_id = results[0].id;
-                            createUserAccountApp(req.query.app_id, results[0].id, (err4, results4) => {
-                                if (err4) {
+                            createUserAccountApp(req.query.app_id, results[0].id, (err, results_create_useraccountapp) => {
+                                if (err) {
                                     return res.status(500).send(
-                                        err4
+                                        err
                                     );
                                 }
-                            });        
-                            accessToken(req, (err5, Token)=>{
-                                req.body.access_token = Token;
-                                insertUserAccountLogon(req.query.app_id, req.body, (err_user_account_logon, results_user_account_logon) => {
-                                    if (err_user_account_logon) {
-                                        return res.status(500).send(
-                                            err_user_account_logon
-                                        );
-                                    }
-                                    else
-                                        return res.status(200).json({
-                                            count: results.length,
-                                            accessToken: Token,
-                                            items: results,
-                                            userCreated: 0
+                                else{
+                                    accessToken(req, (err, Token)=>{
+                                        req.body.access_token = Token;
+                                        insertUserAccountLogon(req.query.app_id, req.body, (err, results_insert_user_account_logon) => {
+                                            if (err) {
+                                                return res.status(500).send(
+                                                    err
+                                                );
+                                            }
+                                            else
+                                                return res.status(200).json({
+                                                    count: results.length,
+                                                    accessToken: Token,
+                                                    items: results,
+                                                    userCreated: 0
+                                                });
                                         });
-                                });
-                            });
+                                    });
+                                }
+                            });        
                         }
                     });
                     
@@ -1061,47 +1074,49 @@ module.exports = {
                     if (typeof req.body.provider_image == 'undefined')
                         req.body.provider_image = null;
 
-                    create(req.query.app_id, req.body, (err4, results4) => {
-                        if (err4) {
+                    create(req.query.app_id, req.body, (err, results) => {
+                        if (err) {
                             return res.status(500).send(
-                                err4
+                                err
                             );
                         }
                         else{
-                            req.body.user_account_id = results4.insertId;
-                            createUserAccountApp(req.query.app_id, results4.insertId, (err6, results6) => {
-                                if (err6) {
+                            req.body.user_account_id = results.insertId;
+                            createUserAccountApp(req.query.app_id, results.insertId, (err, results_create_useraccountapp) => {
+                                if (err) {
                                     return res.status(500).send(
-                                        err6
-                                    );
-                                }
-                            });        
-                            getUserByProviderId(req.query.app_id, req.body.identity_provider_id, req.params.id, (err7, results7) => {
-                                if (err7) {
-                                    return res.status(500).send(
-                                        err7
+                                        err
                                     );
                                 }
                                 else{
-                                    accessToken(req, (err8, Token)=>{
-                                        req.body.access_token = Token;
-                                        insertUserAccountLogon(req.query.app_id, req.body, (err_user_account_logon, results_user_account_logon) => {
-                                            if (err_user_account_logon) {
-                                                return res.status(500).send(
-                                                    err_user_account_logon
-                                                );
-                                            }
-                                            else
-                                                return res.status(200).json({
-                                                    count: results7.length,
-                                                    accessToken: Token,
-                                                    items: results7,
-                                                    userCreated: 1
-                                                });
-                                        })
+                                    getUserByProviderId(req.query.app_id, req.body.identity_provider_id, req.params.id, (err, results_getuser) => {
+                                        if (err) {
+                                            return res.status(500).send(
+                                                err
+                                            );
+                                        }
+                                        else{
+                                            accessToken(req, (err, Token)=>{
+                                                req.body.access_token = Token;
+                                                insertUserAccountLogon(req.query.app_id, req.body, (err, results_user_account_logon) => {
+                                                    if (err) {
+                                                        return res.status(500).send(
+                                                            err
+                                                        );
+                                                    }
+                                                    else
+                                                        return res.status(200).json({
+                                                            count: results.length,
+                                                            accessToken: Token,
+                                                            items: results,
+                                                            userCreated: 1
+                                                        });
+                                                })
+                                            });
+                                        }
                                     });
                                 }
-                            });
+                            });        
                         }
                     });
                 }

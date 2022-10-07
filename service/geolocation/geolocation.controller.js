@@ -105,11 +105,10 @@ module.exports = {
 										client_latitude : geodata.geoplugin_latitude,
 										client_longitude : geodata.geoplugin_longitude
 										}, (err,results)  => {
-											null;
+											return res.status(200).json(
+												geodata
+											)
 							});
-							return res.status(200).json(
-								geodata
-							)
 						};
 						getasync();
 					}
@@ -168,11 +167,10 @@ module.exports = {
 												client_latitude : geodata.geoplugin_latitude,
 												client_longitude : geodata.geoplugin_longitude
 												}, (err,results)  => {
-													null;
+													return res.status(200).json(
+														geodata
+													)
 											});
-							return res.status(200).json(
-								geodata
-							)
 						};
 						getasync();
 					}
@@ -222,14 +220,13 @@ module.exports = {
 									client_latitude : geodata.geoplugin_latitude,
 									client_longitude : geodata.geoplugin_longitude
 									}, (err,results)  => {
-										null;
+										if (req.query.callback==1)
+											return callBack(null, geodata);
+										else
+											return res.status(200).json(
+													geodata
+											);
 						});
-						if (req.query.callback==1)
-							return callBack(null, geodata);
-						else
-							return res.status(200).json(
-									geodata
-							);
 					};
 					getasync();
 				}
@@ -281,14 +278,13 @@ module.exports = {
 											client_latitude : geodata.geoplugin_latitude,
 											client_longitude : geodata.geoplugin_longitude
 											}, (err,results)  => {
-												null;
+												if (req.query.callback==1)
+													return callBack(null, geodata);
+												else
+													return res.status(200).json(
+															geodata
+													);
 										});
-						if (req.query.callback==1)
-							return callBack(null, geodata);
-						else
-							return res.status(200).json(
-									geodata
-							);
 					};
 					getasync();
 				}

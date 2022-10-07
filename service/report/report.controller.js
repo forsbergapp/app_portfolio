@@ -48,9 +48,8 @@ module.exports = {
 										client_latitude : result.geoplugin_latitude,
 										client_longitude : result.geoplugin_longitude
 										}, (err,results)  => {
-											null;
+											res.send(app_result);
 							});
-							res.send(app_result);
 						});
 					}
 					else{

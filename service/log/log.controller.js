@@ -4,23 +4,22 @@ const { getParameters, getLogs, getFiles, getPM2Logs,
 module.exports = {
 	getParameters: (req, res) => {
 		getParameters(req.query_app_id, (err, results) =>{
-			if (err) {
+			if (err)
 				return res.status(500).send({
 					data: err
 				});
-			}
-			return res.status(200).json({
-				data: results
-			});
+			else
+				return res.status(200).json({
+					data: results
+				});
 		});
 	},
 	getLogs: (req, res) => {
 		getLogs(req.query_app_id, req.query, (err, results) =>{
-			if (err) {
+			if (err)
 				return res.status(500).send(
                     err
                 );
-			}
 			else{
 				if (results.length>0)
 					return res.status(200).json({
@@ -32,9 +31,9 @@ module.exports = {
 					getMessage_admin(req.query.app_id, 
 									 process.env.COMMON_APP_ID,
 									 20400, 
-									 req.query.lang_code, (err2,results2)  => {
+									 req.query.lang_code, (err,result_message)  => {
 											return res.status(404).send(
-													err2 ?? results2.text
+													err ?? result_message.text
 											);
 									 });
 				}
@@ -43,11 +42,10 @@ module.exports = {
 	},
 	getFiles: (req, res) => {
 		getFiles(req.query_app_id, (err, results) =>{
-			if (err) {
+			if (err)
 				return res.status(500).send(
                     err
                 );
-			}
 			else{
                 if (results.length>0)
                     return res.status(200).send(
@@ -59,9 +57,9 @@ module.exports = {
                     getMessage_admin(req.query.app_id, 
 									 process.env.COMMON_APP_ID,
 									 20400, 
-									 req.query.lang_code, (err2,results2)  => {
+									 req.query.lang_code, (err,result_message)  => {
 										return res.status(404).send(
-												err2 ?? results2.text
+												err ?? result_message.text
 										);
 									 });
                 }
@@ -70,11 +68,10 @@ module.exports = {
 	},
 	getPM2Logs: (req, res) => {
 		getPM2Logs(req.query_app_id, (err, results) =>{
-			if (err) {
+			if (err)
 				return res.status(500).send(
                     err
                 );
-			}
 			else{
 				if (results.length>0)
 					return res.status(200).json({
@@ -88,9 +85,9 @@ module.exports = {
 					getMessage_admin(req.query.app_id, 
 									 process.env.COMMON_APP_ID,
 									 20400, 
-									 req.query.lang_code, (err2,results2)  => {
+									 req.query.lang_code, (err,result_message)  => {
 										return res.status(404).send(
-												err2 ?? results2.text
+												err ?? result_message.text
 										);
 									 });
 				}

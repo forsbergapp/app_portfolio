@@ -1,21 +1,20 @@
-//variables
-//module to use Express framework
+//Express framework
 const express = require ("express");
 //logging
-const { createLogServer, createLogAppSE} = require("./service/log/log.controller");
-
-//module to use https
+const { createLogServer} = require("./service/log/log.controller");
+//https
 const https = require("https");
-//module to read from file system
+//read from file system
 const fs = require("fs");
-//module to configure Content Security Policy
+//to configure Content Security Policy
 const helmet = require("helmet");
-//module to save variables outside code
-require('dotenv').config({path:__dirname+'/config/.env'})
-
 //Create express application
 const app = express();
+//configuration file
+require('dotenv').config({path:__dirname+'/config/.env'})
+
 //Logging variables
+//global declaration
 Object.defineProperty(global, '__stack', {
   get: function() {
           var orig = Error.prepareStackTrace;
@@ -45,6 +44,9 @@ Object.defineProperty(global, '__appfilename', {
       return filename.substring(__dirname.length).replace(/\\/g, "/");
       } 
 });
+//set timezone
+process.env.TZ = 'UTC';
+
 //set Helmet to configure Content Security Policy
 const { policy_directives} = require("./service/auth/auth.controller");
 policy_directives((err, result_directives)=>{
@@ -72,11 +74,14 @@ app.use(function(req, res, next) {
   next();
 });
 
-//Logging middleware
+//middleware
+//logging
 app.use((err,req,res,next) => {
   createLogServer(req, res, null, err);
   next();
 })
+//middleware
+//access control
 app.use((req,res,next) => {
   //access control
   const { access_control} = require("./service/auth/auth.controller");
@@ -106,6 +111,19 @@ app.use((req,res,next) => {
       next();
 	});
 })
+//middleware
+//check request
+app.use(function(req, res, next) {
+  const {check_request} = require ("./service/auth/auth.controller");
+  check_request(req, (err, result) =>{
+    if (err)
+      res.redirect('https://' + req.headers.host);
+    else{
+      next();
+    }
+  })
+});
+
 //set routing configuration
 //service auth
 const authRouter = require("./service/auth/auth.router");
@@ -143,7 +161,6 @@ const reportRouter = require("./service/report/report.router");
 //service worldcities
 const worldcitiesRouter = require("./service/worldcities/worldcities.router");
 
-//SERVER
 //set REST API endpoints and connect to routers
 //authorization
 app.use("/service/auth", authRouter);
@@ -181,41 +198,31 @@ app.use("/service/report", reportRouter);
 //service worldcities
 app.use("/service/worldcities", worldcitiesRouter);
 
-//set timezone
-process.env.TZ = 'UTC';
-
-//CLIENT
 //for SSL verification using letsencrypt, enable if validating domains
 //app.use("/.well-known/acme-challenge/",express.static(__dirname + '/.well-known/acme-challenge/'));
 //app.use(express.static(__dirname, { dotfiles: 'allow' }));
 
-//common directories
-app.use('/common/audio',express.static(__dirname + '/apps/common/audio'));
-app.use('/common/images',express.static(__dirname + '/apps/common/images'));
-app.use('/common/js',express.static(__dirname + '/apps/common/js'));
-app.use('/common/css',express.static(__dirname + '/apps/common/css'));
-
-app.use(function(req, res, next) {
-  var err = null;
-  try {
-      decodeURIComponent(req.path)
-  }
-  catch(e) {
-      err = e;
-  }
-  if (err){
-    let log_app_id;
-    if (typeof req.query.app_id !='undefined')
-      log_app_id = req.query.app_id;
-    else
-      log_app_id = process.env.COMMON_APP_ID;
-    createLogAppSE(log_app_id, __appfilename, __appfunction, __appline, `Not valid url input, req.url ${req.url} err:${err}`, (err_log, result_log)=>{
-      return res.redirect('https://' + req.headers.host);
-    });
-  }
-  next();
+//server get before apps code
+//info for search bots
+app.get('/robots.txt', function (req, res) {
+  res.type('text/plain');
+  res.send("User-agent: *\nDisallow: /");
 });
-
+app.get('/favicon.ico', function (req, res) {
+  res.send("");
+});
+//change all requests from http to https and naked domains with prefix https://www. except localhost
+app.get('*', function (req,res, next){
+    //redirect from http to https
+    if (req.protocol=='http')
+      return res.redirect('https://' + req.headers.host + req.originalUrl);
+    //redirect naked domain to www except for localhost
+    if (((req.headers.host.split('.').length - 1) == 1) &&
+       req.headers.host.indexOf('localhost')==-1)
+      return res.redirect('https://www.' + req.headers.host + req.originalUrl);
+    else
+      next();
+})
 const {DBStart} = require ("./service/db/admin/admin.service");
 const {AppsStart} = require ("./apps");
 DBStart((err, result) =>{
@@ -227,12 +234,6 @@ DBStart((err, result) =>{
     })
   }
 })
-
-//info for search bots, same for all apps
-app.get('/robots.txt', function (req, res) {
-  res.type('text/plain');
-  res.send("User-agent: *\nDisallow: /");
-});
 
 //start HTTP and HTTPS
 app.listen(process.env.SERVER_PORT, () => {
