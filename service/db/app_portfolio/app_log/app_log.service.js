@@ -328,7 +328,7 @@ module.exports = {
 			sql = `SELECT	app_id,
 							DATE_FORMAT(date_created, '%Y') 	year,
 							DATE_FORMAT(date_created, '%c') 	month,
-							null 								day,
+							NULL 								day,
 							COUNT(DISTINCT server_remote_addr) 	amount
 					FROM ${process.env.SERVICE_DB_DB1_NAME}.app_log
 					WHERE 1 = ?
@@ -367,7 +367,7 @@ module.exports = {
 			sql = `SELECT	app_id 								"app_id",
 							TO_CHAR(date_created, 'YYYY') 		"year",
 							TO_CHAR(date_created, 'fmMM') 		"month",
-							null 								"day",
+							NULL 								"day",
 							COUNT(DISTINCT server_remote_addr) 	"amount"
 					FROM ${process.env.SERVICE_DB_DB2_NAME}.app_log
 					WHERE 1 = :statchoice
@@ -379,7 +379,7 @@ module.exports = {
 							TO_CHAR(date_created, 'fmMM')
 					UNION ALL
 					SELECT
-							null "app_id",
+							NULL "app_id",
 							TO_CHAR(date_created, 'YYYY') 	"year",
 							TO_CHAR(date_created, 'fmMM') 	"month",
 							TO_NUMBER(TO_CHAR(date_created, 'DD')) 	"day",

@@ -209,7 +209,7 @@ module.exports = {
          getAppDBParametersAdmin(process.env.COMMON_APP_ID,(err, results) =>{
             if (err) {
                createLogAppSE(process.env.COMMON_APP_ID, __appfilename, __appfunction, __appline, `getAppDBParameters, err:${err}`, (err_log, result_log)=>{
-                  null;
+                  callBack(err, null);
                })
             }
             else {
