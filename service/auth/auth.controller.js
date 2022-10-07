@@ -38,8 +38,9 @@ module.exports = {
                         }
                         else{
                             safe_user_agents(req.headers["user-agent"], (err, safe)=>{
-                                if (err)
-                                    null;
+                                if (err){
+                                    return callBack(err, null);
+                                }
                                 else{
                                     if (safe==true)
                                         return callBack(null,1);
@@ -81,7 +82,9 @@ module.exports = {
             getParameter(req.query.app_id, process.env.COMMON_APP_ID,'SERVICE_AUTH_TOKEN_ACCESS_SECRET', (err, db_SERVICE_AUTH_TOKEN_ACCESS_SECRET)=>{
 				if (err) {
                     createLogAppSE(req.query.app_id, __appfilename, __appfunction, __appline, err, (err_log, result_log)=>{
-                        null;
+                        res.status(500).send(
+                            err
+                        );
                     })
                 }
                 else{
@@ -133,7 +136,9 @@ module.exports = {
                 getParameter(req.query.app_id, process.env.COMMON_APP_ID,'SERVICE_AUTH_TOKEN_DATA_SECRET', (err, db_SERVICE_AUTH_TOKEN_DATA_SECRET)=>{
                     if (err) {
                         createLogAppSE(req.query.app_id, __appfilename, __appfunction, __appline, err, (err_log, result_log)=>{
-                            null;
+                            res.status(500).send(
+                                err
+                            );
                         })
                     }
                     else{
@@ -162,7 +167,9 @@ module.exports = {
             getParameters_server(req.query.app_id, process.env.COMMON_APP_ID,  (err, result)=>{
                 if (err) {
                     createLogAppSE(req.query.app_id, __appfilename, __appfunction, __appline, err, (err_log, result_log)=>{
-                        null;
+                        res.status(500).send(
+                            err
+                        );
                     })
                 }
                 else{
@@ -201,42 +208,41 @@ module.exports = {
                                     client_latitude : null,
                                     client_longitude : null
                                     }, (err,results)  => {
-                                        null;
-                                }); 
-                        return res.status(401).send({ 
-                            message: "HTTP Error 401 Unauthorized: Access is denied."
-                        });
-                    } 
-                    var jsontoken_dt;
-                    
-                    jsontoken_dt = sign ({tokentimstamp: Date.now()}, 
-                                        db_SERVICE_AUTH_TOKEN_DATA_SECRET, 
-                                        {
-                                        expiresIn: db_SERVICE_AUTH_TOKEN_DATA_EXPIRE
+                                        return res.status(401).send({ 
+                                            message: "HTTP Error 401 Unauthorized: Access is denied."
                                         });
-                    createLog(req.query.app_id,
-                              { app_id : req.query.app_id,
-                                app_module : 'AUTH',
-                                app_module_type : 'DATATOKEN_OK',
-                                app_module_request : req.baseUrl,
-                                app_module_result : 'DT:' + jsontoken_dt,
-                                app_user_id : req.query.app_user_id,
-                                user_language : null,
-                                user_timezone : null,
-                                user_number_system : null,
-                                user_platform : null,
-                                server_remote_addr : req.ip,
-                                server_user_agent : req.headers["user-agent"],
-                                server_http_host : req.headers["host"],
-                                server_http_accept_language : req.headers["accept-language"],
-                                client_latitude : null,
-                                client_longitude : null
-                                }, (err,results)  => {
-                                    null;
-                    }); 
-                    return res.status(200).json({ 
-                            token_dt: jsontoken_dt
-                    });
+                                }); 
+                    } 
+                    else{
+                        var jsontoken_dt;
+                        jsontoken_dt = sign ({tokentimstamp: Date.now()}, 
+                                            db_SERVICE_AUTH_TOKEN_DATA_SECRET, 
+                                            {
+                                            expiresIn: db_SERVICE_AUTH_TOKEN_DATA_EXPIRE
+                                            });
+                        createLog(req.query.app_id,
+                                  { app_id : req.query.app_id,
+                                    app_module : 'AUTH',
+                                    app_module_type : 'DATATOKEN_OK',
+                                    app_module_request : req.baseUrl,
+                                    app_module_result : 'DT:' + jsontoken_dt,
+                                    app_user_id : req.query.app_user_id,
+                                    user_language : null,
+                                    user_timezone : null,
+                                    user_number_system : null,
+                                    user_platform : null,
+                                    server_remote_addr : req.ip,
+                                    server_user_agent : req.headers["user-agent"],
+                                    server_http_host : req.headers["host"],
+                                    server_http_accept_language : req.headers["accept-language"],
+                                    client_latitude : null,
+                                    client_longitude : null
+                                    }, (err,results)  => {
+                                        return res.status(200).json({ 
+                                            token_dt: jsontoken_dt
+                                    });
+                        }); 
+                    }
                 }
             })
         }
@@ -287,9 +293,8 @@ module.exports = {
                             client_latitude : req.body.client_latitude,
                             client_longitude : req.body.client_longitude
                             }, (err,results)  => {
-                                null;
+                                callBack(null,jsontoken_at);
                 });
-                callBack(null,jsontoken_at);
             }
         })
     },
@@ -333,5 +338,27 @@ module.exports = {
                 }
             });
         })
+    },
+    check_request: (req, callBack) => {
+        var err = null;
+        try {
+            decodeURIComponent(req.path)
+        }
+        catch(e) {
+            err = e;
+        }
+        if (err){
+            let log_app_id;
+            if (typeof req.query.app_id !='undefined')
+                log_app_id = req.query.app_id;
+            else
+                log_app_id = process.env.COMMON_APP_ID;
+            createLogAppSE(log_app_id, __appfilename, __appfunction, __appline, `Not valid url input, req.url ${req.url} err:${err}`, (err_log, result_log)=>{
+                //just return check request result even if log fails
+                callBack(err, null)
+            });
+        }
+        else
+            callBack(null, null)
     }
 }

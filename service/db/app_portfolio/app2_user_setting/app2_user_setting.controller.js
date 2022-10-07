@@ -12,40 +12,41 @@ module.exports = {
 	createUserSetting: (req, res) =>{
 		const body = req.body;
 		createUserSetting(req.query.app_id, req.query.initial, body, (err,results) => {
-			if (err) {
+			if (err)
 				return res.status(500).send(
 					err
 				);
-			}
-			return res.status(200).json({
-				id: results.insertId,
-				data: results
-			})
+			else
+				return res.status(200).json({
+					id: results.insertId,
+					data: results
+				})
 		});
 	},
 	getUserSettingsByUserId: (req, res) => {
 		const id = req.params.id;
 		getUserSettingsByUserId(req.query.app_id, id, (err, results) =>{
-			if (err) {
+			if (err)
 				return res.status(500).send(
 					err
 				);
-			}
-			if (!results){
-				//Record not found
-				getMessage( req.query.app_id, 
-							req.query.app_id,
-							20400, 
-							req.query.lang_code, (err2,results2)  => {
-								return res.status(404).send(
-										err2 ?? results2.text
-								);
-							});
-			}
-			return res.status(200).json({
-				count: results.length,
-				items: results
-			});
+			else
+				if (results)
+					return res.status(200).json({
+						count: results.length,
+						items: results
+					});
+				else{
+					//Record not found
+					getMessage( req.query.app_id, 
+								req.query.app_id,
+								20400, 
+								req.query.lang_code, (err,results_message)  => {
+									return res.status(404).send(
+											err ?? results_message.text
+									);
+								});
+				}
 		});
 	},
 	getProfileUserSetting: (req, res) => {
@@ -56,21 +57,23 @@ module.exports = {
 					err
 				);
 			}
-			if (!results){
-				//Record not found
-				getMessage( req.query.app_id, 
-							req.query.app_id, 
-							20400, 
-							req.query.lang_code, (err2,results2)  => {
-								return res.status(404).send(
-									err2 ?? results2.text
-								);
-							});
-			}
-			return res.status(200).json({
-				count: results.length,
-				items: results
-			});
+			else
+				if (results)
+					return res.status(200).json({
+						count: results.length,
+						items: results
+					});
+				else{
+					//Record not found
+					getMessage( req.query.app_id, 
+								req.query.app_id, 
+								20400, 
+								req.query.lang_code, (err,results_message)  => {
+									return res.status(404).send(
+										err ?? results_message.text
+									);
+								});
+				}
 		});
 	},
 	getProfileUserSettings: (req, res) => {
@@ -84,21 +87,23 @@ module.exports = {
 					err
 				);
 			}
-			if (!results){
-				//Record not found
-				getMessage( req.query.app_id, 
-							req.query.app_id, 
-							20400, 
-							req.query.lang_code, (err2,results2)  => {
-								return res.status(404).send(
-									err2 ?? results2.text
-								);
-							});
-			}
-			return res.status(200).json({
-				count: results.length,
-				items: results
-			});
+			else
+				if (results)
+					return res.status(200).json({
+						count: results.length,
+						items: results
+					});
+				else{
+					//Record not found
+					getMessage( req.query.app_id, 
+								req.query.app_id, 
+								20400, 
+								req.query.lang_code, (err,results_message)  => {
+									return res.status(404).send(
+										err ?? results_message.text
+									);
+								});
+				}
 		});
 	},
 	getProfileUserSettingDetail: (req, res) => {
@@ -114,23 +119,23 @@ module.exports = {
                 );
             }
             else{
-                if (!results) {
+                if (results)
+					return res.status(200).json({
+						count: results.length,
+						items: results
+					});
+				else {
                     //Record not found
                     getMessage( req.query.app_id, 
 								req.query.app_id, 
 								20400, 
-								req.query.lang_code, (err2,results2)  => {
+								req.query.lang_code, (err,results_message)  => {
 									return res.status(404).json({
 											count: 0,
-											message: err2 ?? results2.text
+											message: err ?? results_message.text
 										});
 								});
-						}
-                else
-                    return res.status(200).json({
-                        count: results.length,
-                        items: results
-                    });
+				}
             }
         });
     },
@@ -145,23 +150,23 @@ module.exports = {
                 );
             }
             else{
-                if (!results) {
+                if (results)
+					return res.status(200).json({
+						count: results.length,
+						items: results
+					}); 
+				else{
                     //Record not found
                     getMessage( req.query.app_id, 
 								req.query.app_id, 
 								20400, 
-								req.query.lang_code, (err2,results2)  => {
+								req.query.lang_code, (err,results_message)  => {
 									return res.status(404).json({
 											count: 0,
-											message: err2 ?? results2.text
+											message: err ?? results_message.text
 										});
 								});
-                }
-                else
-                    return res.status(200).json({
-                        count: results.length,
-                        items: results
-                    });
+                }   
             }
         });
     },
@@ -173,10 +178,12 @@ module.exports = {
 					err
 				);
 			}
-			//send without {} so the variablename is not sent
-			return res.status(200).json(
-				results[0]
-			);
+			else{
+				//send without {} so the variablename is not sent
+				return res.status(200).json(
+					results[0]
+				);
+			}
 		});
 	},
 	updateUserSetting: (req, res) => {
@@ -189,21 +196,20 @@ module.exports = {
 				);
 			}
 			else{
-				if (!results){
-					//id, not found, nothing updated
+				if (results)
+					return res.status(200).json(
+						results
+					);
+				else
+					//Record not found
 					getMessage( req.query.app_id, 
 								req.query.app_id, 
 								20400, 
-								req.query.lang_code, (err2,results2)  => {
+								req.query.lang_code, (err,results_message)  => {
 									return res.status(404).send(
-										err2 ?? results2.text
+										err ?? results_message.text
 									);
 								});
-				}
-				else
-					return res.status(200).send(
-						null
-					);
 			}
 		});
 	},
@@ -215,20 +221,22 @@ module.exports = {
 					err
 				);
 			}
-			if (!results){
-				//Record not found
-				getMessage( req.query.app_id, 
-							req.query.app_id, 
-							20400, 
-							req.query.lang_code, (err2,results2)  => {
-								return res.status(404).send(
-									err2 ?? results2.text
-								);
-							});
+			else{
+				if (results)
+					return res.status(200).json(
+						results
+					);
+				else
+					//Record not found
+					getMessage( req.query.app_id, 
+								req.query.app_id, 
+								20400, 
+								req.query.lang_code, (err,results_message)  => {
+									return res.status(404).send(
+										err ?? results_message.text
+									);
+								});
 			}
-			return res.status(200).json(
-				null
-			);
 		});
 	}
 }

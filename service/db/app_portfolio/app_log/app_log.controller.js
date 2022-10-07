@@ -8,14 +8,14 @@ module.exports = {
 		body.server_http_host 			 = req.headers["host"];
 		body.server_http_accept_language = req.headers["accept-language"];	
 		createLog(req.query.app_id, body, (err,results) => {
-			if (err) {
+			if (err)
 				return res.status(500).send({
 					message: err
 				});
-			}
-			return res.status(200).json({
-				data: results
-			})
+			else
+				return res.status(200).json({
+					data: results
+				})
 		});
 	},
 	createLogAdmin: (req, res) =>{
@@ -25,14 +25,14 @@ module.exports = {
 		body.server_http_host 			 = req.headers["host"];
 		body.server_http_accept_language = req.headers["accept-language"];	
 		createLogAdmin(req.query.app_id, body, (err,results) => {
-			if (err) {
+			if (err)
 				return res.status(500).send({
 					message: err
 				});
-			}
-			return res.status(200).json({
-				data: results
-			})
+			else
+				return res.status(200).json({
+					data: results
+				})
 		});
 	},
 	getLogs: (req, res) => {
@@ -60,9 +60,9 @@ module.exports = {
 					getMessage_admin(req.query.app_id, 
 									 process.env.COMMON_APP_ID,
 									 20400, 
-									 req.query.lang_code, (err2,results2)  => {
+									 req.query.lang_code, (err,result_message)  => {
 											return res.status(404).send(
-													err2 ?? results2.text
+													err ?? result_message.text
 											);
 									 });
 				}
@@ -87,9 +87,9 @@ module.exports = {
 					getMessage_admin(req.query.app_id,
 									 process.env.COMMON_APP_ID,
 									 20400,
-									 req.query.lang_code, (err2,results2)  => {
+									 req.query.lang_code, (err,result_message)  => {
 										return res.status(404).send(
-												err2 ?? results2.text
+												err ?? result_message.text
 										);
 									 });
 				}

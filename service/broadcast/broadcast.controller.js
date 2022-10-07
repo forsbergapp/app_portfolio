@@ -45,12 +45,11 @@ module.exports = {
                                     client_latitude : geodata.geoplugin_latitude,
                                     client_longitude : geodata.geoplugin_longitude
                                     }, (err,results)  => {
-                                        null;
+                                        res.on('close', ()=>{
+                                            broadcast_clients = broadcast_clients.filter(client => client.id !== req.params.clientId);
+                                            res.end();
+                                        })                        
                                 });
-                res.on('close', ()=>{
-                    broadcast_clients = broadcast_clients.filter(client => client.id !== req.params.clientId);
-                    res.end();
-                })
             })
         }
         else{
@@ -105,13 +104,12 @@ module.exports = {
                             client_latitude : geodata.geoplugin_latitude,
                             client_longitude : geodata.geoplugin_longitude
                             }, (err,results)  => {
-                                null;
+                                res.on('close', ()=>{
+                                    broadcast_clients = broadcast_clients.filter(client => client.id !== req.params.clientId);              
+                                    clearInterval(intervalId);
+                                    res.end();
+                                })
                 });
-                res.on('close', ()=>{
-                    broadcast_clients = broadcast_clients.filter(client => client.id !== req.params.clientId);              
-                    clearInterval(intervalId);
-                    res.end();
-                })
             })
         }
     },
@@ -134,9 +132,9 @@ module.exports = {
                     getMessage_admin(req.query.app_id,
                                      process.env.COMMON_APP_ID,
                                      20400,
-                                     req.query.lang_code, (err2,result2)  => {
+                                     req.query.lang_code, (err,result_message)  => {
                                         return res.status(404).send(
-                                                err2 ?? result2.text
+                                                err ?? result_message.text
                                         );
                                     });
                 }
@@ -154,14 +152,14 @@ module.exports = {
         sendBroadcast(req.body.app_id, req.body.client_id, req.body.destination_app, 
                       req.body.broadcast_type, req.body.broadcast_message, (err, result) =>{
             return res.status(200).send(
-                null
+                err ?? result
             );
         });
     },
     updateConnected: (req, res) => {
         updateConnected(req.query.client_id, req.query.user_account_id, req.query.identity_provider_id, (err, result) =>{
             return res.status(200).json(
-                null
+                err ?? result
             );
         })
     },

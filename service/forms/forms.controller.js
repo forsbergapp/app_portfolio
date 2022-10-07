@@ -44,9 +44,8 @@ module.exports = {
                                     client_latitude : result.geoplugin_latitude,
                                     client_longitude : result.geoplugin_longitude
                                     }, (err,results)  => {
-                                        null;
+                                        return callBack(null, app_result);
                         });
-                        return callBack(null, app_result);
                     });
                 }
                 else{
@@ -75,9 +74,8 @@ module.exports = {
                                     client_latitude : result.geoplugin_latitude,
                                     client_longitude : result.geoplugin_longitude
                                     }, (err,results)  => {
-                                        null;
+                                        return callBack(null, app_result)
                         });
-                        return callBack(null, app_result)
                     });            
                 }
             }
@@ -117,9 +115,8 @@ module.exports = {
                                 client_latitude : result.geoplugin_latitude,
                                 client_longitude : result.geoplugin_longitude
                                 }, (err,results)  => {
-                                    null;
+                                    return callBack(null, app_result);
                             });
-            return callBack(null, app_result);
         })
     })
   },
@@ -150,11 +147,10 @@ module.exports = {
                                     client_latitude : result.geoplugin_latitude,
                                     client_longitude : result.geoplugin_longitude
                                     }, (err,results)  => {
-                                        null;
+                                        return res.status(200).send(
+                                            app_result
+                                        );
                                 });
-                return res.status(200).send(
-                    app_result
-                );
             })
         })
   }

@@ -2513,7 +2513,6 @@ function updatePassword(){
             if (err)
                 null;
             else{
-                json = JSON.parse(result);
                 dialogue_new_password_clear();
                 show_common_dialogue('LOGIN');
             }
@@ -3026,7 +3025,6 @@ function set_globals(parameters){
     window.global_rest_user_account_profile_userid;
     window.global_rest_user_account_provider;
     window.global_rest_user_account_signup;
-    window.global_rest_user_account_update_password;
     
     //image rules
     window.global_image_file_allowed_type1;

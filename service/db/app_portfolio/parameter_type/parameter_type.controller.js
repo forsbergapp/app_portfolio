@@ -21,9 +21,9 @@ module.exports = {
                     getMessage_admin(req.query.app_id,
                                      process.env.COMMON_APP_ID,
                                      20400, 
-                                     req.query.lang_code, (err2,results2)  => {
+                                     req.query.lang_code, (err,results2)  => {
                                         return res.status(404).send(
-                                                err2 ?? results2.text
+                                                err ?? result_message.text
                                         );
                                      });
                 }
