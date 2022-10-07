@@ -29,11 +29,10 @@ module.exports = {
 							client_latitude : null,
 							client_longitude : null
 							}, (err,results)  => {
-								null;
+								return res.status(200).json(
+										cities
+								);
 				});
-				return res.status(200).json(
-						cities
-				);
 			}
 		})
 	}

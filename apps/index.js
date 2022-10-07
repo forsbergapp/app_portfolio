@@ -231,6 +231,8 @@ async function get_email_verification(data, email, baseUrl, lang_code, callBack)
 }
 module.exports = {
     AppsStart:async (app) => {
+        //express needed for dynamic code loading even if not used here, 
+        //inparameter app variable depends on express
         const express = require ("express");
         function load_dynamic_code(app_id){
             const fs = require("fs");
@@ -241,6 +243,7 @@ module.exports = {
             else
               filename = `/app${app_id}/server.js`
             fs.readFile(__dirname + filename, 'utf8', (error, fileBuffer) => {
+                //start one step debug server dynamic loaded code here
                 eval(fileBuffer);
             });
         }

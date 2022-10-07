@@ -46,7 +46,9 @@ module.exports = {
             let json;
             fs.readFile(process.env.SERVICE_AUTH_ACCESS_CONTROL_USER_AGENT_PATH, 'utf8', (error, fileBuffer) => {
                 if (error)
-                    return callBack(error, null);
+                    createLogAppSE(process.env.COMMON_APP_ID, __appfilename, __appfunction, __appline, error, (err_log, result_log)=>{
+                        return callBack(error, null);
+                    })
                 else{
                     json = JSON.parse(fileBuffer.toString());
                     for (var i = 0; i < json.user_agent.length; i++){

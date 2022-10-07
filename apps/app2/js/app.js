@@ -889,12 +889,14 @@ function show_dialogue(dialogue, file = '') {
             {
                 if (mobile())
                     return null;
-                //show once and store variable in localstorage
-                if (!localStorage.scan_open_mobile) {
-                    localStorage.setItem('scan_open_mobile', true);
-                    document.getElementById('dialogue_scan_open_mobile').style.visibility = 'visible';
-                    create_qr('scan_open_mobile_qrcode', getHostname());
-                };
+                else{
+                    //show once and store variable in localstorage
+                    if (!localStorage.scan_open_mobile) {
+                        localStorage.setItem('scan_open_mobile', true);
+                        document.getElementById('dialogue_scan_open_mobile').style.visibility = 'visible';
+                        create_qr('scan_open_mobile_qrcode', getHostname());
+                    };
+                }
                 break;
             }
     }

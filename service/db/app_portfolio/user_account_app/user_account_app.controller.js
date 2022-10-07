@@ -47,9 +47,10 @@ module.exports = {
 					err
 				);
 			}
-			return res.status(200).json({
-				items: results
-			});
+			else
+				return res.status(200).json({
+					items: results
+				});
 		});
 	},
 	deleteUserAccountApps: (req, res) => {
@@ -59,9 +60,10 @@ module.exports = {
 					err
 				);
 			}
-			return res.status(200).send(
-				null
-			);
+			else
+				return res.status(200).send(
+					results
+				);
 		});
 	}
 }
