@@ -8,11 +8,14 @@ module.exports = {
                 const files = [
                     ['APP', __dirname + '/src/index.html'],
                     ['<AppCommonHead/>', __dirname + '/../common/src/head.html'],
+                    ['<AppCommonHeadQRCode/>', __dirname + '/../common/src/head_qrcode.html'],
                     ['<AppCommonBody/>', __dirname + '/../common/src/body.html'],
+                    ['<AppCommonBodyMaintenance/>', __dirname + '/../common/src/body_maintenance.html'],
+                    ['<AppCommonBodyBroadcast/>', __dirname + '/../common/src/body_broadcast.html'],
                     ['<AppCommonProfileDetail/>', __dirname + '/../common/src/profile_detail.html'], //Profile tag in common body
                     ['<AppCommonProfileSearch/>', __dirname + '/../common/src/profile_search.html'],
                     ['<AppCommonUserAccount/>', __dirname + '/../common/src/user_account.html'],
-
+    
                     ['<AppHead/>', __dirname + '/src/head.html'],
                     ['<AppThemes/>', __dirname + '/src/toogle.html'],
                     ['<AppBackground/>', __dirname + '/src/background.html'],

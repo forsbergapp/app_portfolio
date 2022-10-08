@@ -6,6 +6,8 @@ module.exports = {
                 ['APP', __dirname + '/src/index.html'],
                 ['<AppCommonHead/>', __dirname + '/../common/src/head.html'],
                 ['<AppCommonBody/>', __dirname + '/../common/src/body.html'],
+                ['<AppCommonBodyMaintenance/>', __dirname + '/../common/src/body_maintenance.html'],
+                ['<AppCommonBodyBroadcast/>', __dirname + '/../common/src/body_broadcast.html'],    
                 /*Profile tag AppCommonProfileDetail in common body */
                 ['<AppCommonProfileDetail/>', __dirname + '/../common/src/profile_detail.html'], 
                 ['<AppCommonProfileSearch/>', __dirname + '/../common/src/profile_search.html'],
