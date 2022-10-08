@@ -336,33 +336,34 @@ async function show_db_info_space(){
 async function check_maintenance(){
     if (admin_token_has_value()){
         let json;
-        await common_fetch(window.global_rest_url_base + window.global_rest_app_parameter + 'admin/0?parameter_name=SERVER_MAINTENANCE',
-                           'GET', 2, null, null, null, (err, result) =>{
+        await common_fetch('/server?parameter_name=SERVER_MAINTENANCE', 'GET', 2, null, null, null, (err, result) =>{
             if (err)
                 null;
             else{
                 json = JSON.parse(result);
-                if (json.data==1)
+                if (json.parameter_value==1)
                     document.getElementById('menu_1_checkbox_maintenance').checked =true;
                 else
                     document.getElementById('menu_1_checkbox_maintenance').checked =false;
             }
         })
-    }
+}
 }
 function set_maintenance(){
-    let check_value;
-    if (document.getElementById('menu_1_checkbox_maintenance').checked ==true)
-        check_value = 1;
-    else
-        check_value = 0;
-    let json_data = `{"app_id" : ${window.global_app_id}, 
-                      "parameter_name":"SERVER_MAINTENANCE",
-                      "parameter_value":${check_value}}`;
-    common_fetch(window.global_rest_url_base + window.global_rest_app_parameter + 'admin/value?',
-                 'PATCH', 2, json_data, null, null, (err, result) =>{
-        null;
-    })
+    if (admin_token_has_value()){
+        let check_value;
+        if (document.getElementById('menu_1_checkbox_maintenance').checked ==true)
+            check_value = 1;
+        else
+            check_value = 0;
+        let json_data = `{
+                            "parameter_name":"SERVER_MAINTENANCE",
+                            "parameter_value": ${check_value}
+                        }`;
+        common_fetch('/server?', 'PATCH', 2, json_data, null, null, (err, result) =>{
+            null;
+        })
+    }
 }
 /*----------------------- */
 /* USER STAT              */

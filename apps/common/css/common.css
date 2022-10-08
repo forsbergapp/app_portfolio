@@ -546,7 +546,11 @@ body.font_arabic_ui{
 #maintenance_message{
 	padding-top:20px;
 	padding-bottom:20px;
+	font-weight: bold;
+	color: rgb(81, 171, 255);
+	font-size: 2em;
 }
+
 #maintenance_countdown{
 	font-size: 30px;
 	padding-bottom:20px;

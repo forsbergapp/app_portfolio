@@ -125,6 +125,8 @@ app.use(function(req, res, next) {
 });
 
 //set routing configuration
+//server
+const serverRouter = require("./server/server.router");
 //service auth
 const authRouter = require("./service/auth/auth.router");
 const authAdminRouter = require("./service/auth/admin/admin.router");
@@ -162,6 +164,8 @@ const reportRouter = require("./service/report/report.router");
 const worldcitiesRouter = require("./service/worldcities/worldcities.router");
 
 //set REST API endpoints and connect to routers
+//config
+app.use("/server", serverRouter);
 //authorization
 app.use("/service/auth", authRouter);
 app.use("/service/auth/admin", authAdminRouter);

@@ -12,74 +12,46 @@ module.exports = {
                         result.geoplugin_regionName + ', ' +
                         result.geoplugin_countryName;
         //check if maintenance
-        const { getParameter} = require ("../../service/db/app_portfolio/app_parameter/app_parameter.service");
-        getParameter(req.query.app_id, process.env.COMMON_APP_ID,'SERVER_MAINTENANCE',  (err, db_SERVER_MAINTENANCE)=>{
-            if (err)
-                createLogAppSE(app_id, __appfilename, __appfunction, __appline, err, (err_log, result_log)=>{
-                    return callBack(err, null);
-                })
-            else{
-                if (db_SERVER_MAINTENANCE==1){
-                    const { getMaintenance } = require("../../apps");
-                    const app = getMaintenance(app_id,
-                                                result.geoplugin_latitude,
-                                                result.geoplugin_longitude,
-                                                gps_place)
-                    .then(function(app_result){
-                        createLog(req.query.app_id,
-                                  { app_id : app_id,
-                                    app_module : 'FORMS',
-                                    app_module_type : 'MAINTENANCE',
-                                    app_module_request : null,
-                                    app_module_result : gps_place,
-                                    app_user_id : null,
-                                    user_language : null,
-                                    user_timezone : null,
-                                    user_number_system : null,
-                                    user_platform : null,
-                                    server_remote_addr : req.ip,
-                                    server_user_agent : req.headers["user-agent"],
-                                    server_http_host : req.headers["host"],
-                                    server_http_accept_language : req.headers["accept-language"],
-                                    client_latitude : result.geoplugin_latitude,
-                                    client_longitude : result.geoplugin_longitude
-                                    }, (err,results)  => {
-                                        return callBack(null, app_result);
-                        });
-                    });
-                }
-                else{
-                    const { getApp } = require(`../../apps/app${app_id}/client`);
-                    const app = getApp(app_id, 
-                                        params,
+        if (process.env.SERVER_MAINTENANCE==1){
+            const { getMaintenance } = require("../../apps");
+            const app = getMaintenance(app_id,
                                         result.geoplugin_latitude,
-                                        result.geoplugin_longitude, 
+                                        result.geoplugin_longitude,
                                         gps_place)
-                    .then(function(app_result){
-                        createLog(req.query.app_id,
-                                  { app_id : app_id,
-                                    app_module : 'FORMS',
-                                    app_module_type : 'APP',
-                                    app_module_request : params,
-                                    app_module_result : gps_place,
-                                    app_user_id : null,
-                                    user_language : null,
-                                    user_timezone : null,
-                                    user_number_system : null,
-                                    user_platform : null,
-                                    server_remote_addr : req.ip,
-                                    server_user_agent : req.headers["user-agent"],
-                                    server_http_host : req.headers["host"],
-                                    server_http_accept_language : req.headers["accept-language"],
-                                    client_latitude : result.geoplugin_latitude,
-                                    client_longitude : result.geoplugin_longitude
-                                    }, (err,results)  => {
-                                        return callBack(null, app_result)
-                        });
-                    });            
-                }
-            }
-        })
+            .then(function(app_result){
+                return callBack(null, app_result);
+            });
+        }
+        else{
+            const { getApp } = require(`../../apps/app${app_id}/client`);
+            const app = getApp(app_id, 
+                                params,
+                                result.geoplugin_latitude,
+                                result.geoplugin_longitude, 
+                                gps_place)
+            .then(function(app_result){
+                createLog(req.query.app_id,
+                            { app_id : app_id,
+                            app_module : 'FORMS',
+                            app_module_type : 'APP',
+                            app_module_request : params,
+                            app_module_result : gps_place,
+                            app_user_id : null,
+                            user_language : null,
+                            user_timezone : null,
+                            user_number_system : null,
+                            user_platform : null,
+                            server_remote_addr : req.ip,
+                            server_user_agent : req.headers["user-agent"],
+                            server_http_host : req.headers["host"],
+                            server_http_accept_language : req.headers["accept-language"],
+                            client_latitude : result.geoplugin_latitude,
+                            client_longitude : result.geoplugin_longitude
+                            }, (err,results)  => {
+                                return callBack(null, app_result)
+                });
+            });            
+        }
     })
   },
   getFormAdmin: (req, res, app_id, callBack) => {
