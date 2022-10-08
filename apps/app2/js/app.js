@@ -1319,8 +1319,8 @@ function user_logoff_app() {
         });
     })    
 }
-async function updateProviderUser_app(identity_provider_id, profile_id, profile_first_name, profile_last_name, profile_image_url, profile_email){
-    await updateProviderUser(identity_provider_id, profile_id, profile_first_name, profile_last_name, profile_image_url, profile_email, (err, result)=>{
+async function ProviderUser_update_app(identity_provider_id, profile_id, profile_first_name, profile_last_name, profile_image_url, profile_email){
+    await ProviderUser_update(identity_provider_id, profile_id, profile_first_name, profile_last_name, profile_image_url, profile_email, (err, result)=>{
         if(err==null){
             //create intitial user setting if not exist, send initial=true
             user_settings_function('ADD_LOGIN', true, (err, result_settings) =>{
@@ -1358,10 +1358,10 @@ async function updateProviderUser_app(identity_provider_id, profile_id, profile_
         }
     })
 }
-async function onProviderSignIn_app(provider1User){
-    await onProviderSignIn(provider1User, (err, result)=>{
+async function ProviderSignIn_app(provider_button){
+    await ProviderSignIn(provider_button, (err, result)=>{
         if (err==null){
-            updateProviderUser_app(result.identity_provider_id, 
+            ProviderUser_update_app(result.identity_provider_id, 
                                     result.profile_id, 
                                     result.profile_first_name, 
                                     result.profile_last_name, 
@@ -2675,7 +2675,7 @@ async function init_app() {
                     }
                 }
                 show_start().then(function(){
-                    init_providers('onProviderSignIn_app', function() { onProviderSignIn_app() }).then(function(){
+                    Providers_init(function() { ProviderSignIn_app(this); }).then(function(){
                         serviceworker();
                         dialogue_loading(0);
                     });

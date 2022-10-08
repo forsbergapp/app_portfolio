@@ -139,7 +139,11 @@ body.font_arabic_nastaliq #user_menu_default_avatar{
 #dialogue_signup_content:active{
 	box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19) !important;
 }
-
+/*common*/
+#dialogue_user_edit_content #user_edit_btn_user_delete_account
+{
+	display: inline-block;
+}
 /*RESPONSIVE SETTINGS*/
 /*CSS for minimum 768px*/
 @media only screen and (min-width: 768px) {
@@ -761,10 +765,8 @@ div.ray8 {
 .theme_sun .signup_button:hover,
 .theme_sun .signup_button:active,
 .theme_sun .forgot_button:hover,
-.theme_sun .forgot_button:active,
-.theme_sun #login_provider2{
-	background-color: #4267b2;
-	color:#ffffff;
+.theme_sun .forgot_button:active{
+	background-color:#6ab344 !important;
 }
 #info_diagram_img, #info_datamodel_img{
 	width: 128px;
@@ -901,8 +903,6 @@ div.ray8 {
 .theme_moon .signup_button:hover,
 .theme_moon .signup_button:active,
 .theme_moon .forgot_button:hover,
-.theme_moon .forgot_button:active,
-.theme_moon #login_provider2{
-	background-color: #4267b2;
-	color:#ffffff;
+.theme_moon .forgot_button:active{
+	background-color:#6ab344 !important;
 }
