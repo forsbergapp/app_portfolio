@@ -13,7 +13,7 @@ function getdocs(docid = null){
                             "doc_url":"/app1/images/app_portfolio.png"},
                             {"id":2,
                             "doc_title":"Data Model",
-                            "doc_url":"/app1/images/datamodel.jpg"},
+                            "doc_url":"/app1/images/data_model.png"},
                             {"id":3,
                             "doc_title":"Property Management",
                             "doc_url":"/app3/images/datamodel_pm.jpg"}
