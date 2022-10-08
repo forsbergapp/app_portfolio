@@ -775,10 +775,6 @@ body.app_theme1,
 .app_theme1 .forgot_button:active{
 	background-color:#6ab344 !important;
 }
-.app_theme1 #login_provider2{
-	background-color: #4267b2;
-	color:#ffffff;
-}
 .app_theme1 .switch-label {
 	color: transparent;
 }
@@ -959,10 +955,6 @@ body.app_theme2,
 .app_theme2 .forgot_button:hover,
 .app_theme2 .forgot_button:active{
 	background-color:#6ab344 !important;
-}
-.app_theme2 #login_provider2{
-	background-color: #4267b2;
-	color:#ffffff;
 }
 .app_theme2 .switch-label {
 	color: transparent;
@@ -1145,10 +1137,6 @@ body.app_theme3,
 .app_theme3 .forgot_button:hover,
 .app_theme3 .forgot_button:active{
 	background-color:#6ab344 !important;
-}
-.app_theme3 #login_provider2{
-	background-color: #4267b2;
-	color:#ffffff;
 }
 .app_theme3 .switch-label {
 	color: transparent;

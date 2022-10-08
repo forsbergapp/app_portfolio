@@ -8,8 +8,8 @@ app.get("/info/:info",function (req, res, next) {
       req.headers.host.substring(0,req.headers.host.indexOf('.'))=='www'){
         const { getInfo} = require("./");
         switch (req.params.info){
-          case 'datamodel.jpg':{
-            res.sendFile(__dirname + "/app1/images/datamodel.jpg");
+          case 'data_model.png':{
+            res.sendFile(__dirname + "/app1/images/data_model.png");
             break;
           }
           case 'app_portfolio.png':{

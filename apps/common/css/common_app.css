@@ -147,10 +147,14 @@ a:active {
 #dialogue_forgot{
 	visibility: hidden;
 }
+#dialogue_login_content{
+	overflow-y: auto;
+	max-height: 90%;
+}
 #dialogue_login_content,
 #dialogue_signup_content,
 #dialogue_forgot_content{
-	height:450px;
+	height:auto;
 }
 #login_form, #signup_form, #forgot_form{
 	margin: 0px auto;
@@ -194,17 +198,7 @@ a:active {
 	cursor:pointer;
 	background:none;
 }
-/*Dialogue login provider2*/
-#login_provider2{
-	display:block;
-	font-weight:bold;
-}
-#logo_provider2{
-	width:24px;
-	display:inline-block;
-	font-size:24px;
-}
-#login_btn_provider2{
+.login_provider_id, .login_provider_name{
 	display:inline-block;
 }
 /*Dialogue user edit*/
@@ -653,17 +647,16 @@ a:active {
 .input_error{
 	border:1px solid red !important;
 }
+#user_edit_btn_user_delete_account{
+	display: none;
+}
 #user_edit_btn_user_update,
 #user_edit_btn_user_delete_account
 {
 	width:100px;
 	height: 30px;
-}
-#user_edit_btn_user_update,
-#user_edit_btn_user_delete_account{
 	font-size:30px;
 }
-
 /*User account*/
 #user_menu{
 	top:10px;
