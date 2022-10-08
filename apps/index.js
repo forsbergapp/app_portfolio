@@ -268,39 +268,21 @@ module.exports = {
         return new Promise(function (resolve, reject){
             const files = [
                 ['APP', __dirname + '/common/src/index_maintenance.html'],
-                ['<AppHead/>', __dirname + '/common/src/head_maintenance.html'],
-                ['<AppCommonHead/>', __dirname + '/common/src/head.html'],
-                ['<AppCommonBody/>', __dirname + '/common/src/body.html'],
-                ['<AppCommonProfileDetail/>', __dirname + '/common/src/profile_detail.html'] //Profile tag in common body
+                ['<AppCommonHeadMaintenance/>', __dirname + '/common/src/head_maintenance.html'],
+                ['<AppCommonBodyMaintenance/>', __dirname + '/common/src/body_maintenance.html'],
+                ['<AppCommonBodyBroadcast/>', __dirname + '/common/src/body_broadcast.html'] 
               ];
             read_app_files(app_id, files, (err, app)=>{
                 if (err)
                     reject(err);
                 else{
-                    //Profile tag not used in common body
-                    app = app.replace(
-                        '<AppProfileInfo/>',
-                        '');
-                    //Profile tag not used in common body
-                    app = app.replace(
-                        '<AppProfileTop/>',
-                        '');   
-                    //maintenance can be used all app_id
-                    get_module_with_init(app_id, 
-                                         'app_exception',
-                                         null,
-                                         true,
-                                         null,
-                                         gps_lat,
-                                         gps_long,
-                                         gps_place,
-                                         app, (err, app_init) =>{
-                        if (err)
-                            reject(err);
-                        else{
-                            resolve(app_init);
-                        }
-                    })
+                    //maintenance can be used from all app_id
+                    let parameters = {   
+                        app_id: app_id
+                    };
+                    app = app.replace('<ITEM_COMMON_PARAMETERS/>',
+                                      JSON.stringify(parameters));
+                    resolve(app);
                 }
             })
         })
