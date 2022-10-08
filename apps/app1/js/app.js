@@ -1,6 +1,6 @@
 window.global_app_email;
 window.global_img_diagram_img = '/app1/images/app_portfolio.png';
-window.global_img_datamodel_img = '/app1/images/datamodel.jpg';
+window.global_img_datamodel_img = '/app1/images/data_model.png';
 
 
 window.global_qr_width;
@@ -256,8 +256,8 @@ async function  user_delete_app(){
         }
     })
 }
-async function updateProviderUser_app(identity_provider_id, profile_id, profile_first_name, profile_last_name, profile_image_url, profile_email){
-    await updateProviderUser(identity_provider_id, profile_id, profile_first_name, profile_last_name, profile_image_url, profile_email, (err, result)=>{
+async function ProviderUser_update_app(identity_provider_id, profile_id, profile_first_name, profile_last_name, profile_image_url, profile_email){
+    await ProviderUser_update(identity_provider_id, profile_id, profile_first_name, profile_last_name, profile_image_url, profile_email, (err, result)=>{
         if(err==null){
             //set avatar or empty
             set_avatar(result.avatar, document.getElementById('user_menu_avatar_img'));
@@ -272,10 +272,10 @@ async function updateProviderUser_app(identity_provider_id, profile_id, profile_
         }
     })
 }
-async function onProviderSignIn_app(provider1User){
-    await onProviderSignIn(provider1User, (err, result)=>{
+async function ProviderSignIn_app(provider_button){
+    await ProviderSignIn(provider_button, (err, result)=>{
         if (err==null){
-            updateProviderUser_app(result.identity_provider_id, 
+            ProviderUser_update_app(result.identity_provider_id, 
                                    result.profile_id, 
                                    result.profile_first_name, 
                                    result.profile_last_name, 
@@ -414,9 +414,7 @@ function init(parameters){
                     }
                 }
                 show_start().then(function(){
-                    init_providers('onProviderSignIn_app', function() { onProviderSignIn_app() }).then(function(){
-                        null;
-                    });
+                    Providers_init(function() { ProviderSignIn_app(this); });
                 })
             })
         }

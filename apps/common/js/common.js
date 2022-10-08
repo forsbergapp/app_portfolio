@@ -800,7 +800,7 @@ function dialogue_user_edit_clear(){
     document.getElementById('user_edit_input_new_password_confirm').value = '';
     document.getElementById('user_edit_input_password_reminder').value = '';
     //provider
-    document.getElementById('user_edit_provider_logo').innerHTML = '';
+    document.getElementById('user_edit_provider_id').innerHTML = '';
     document.getElementById('user_edit_label_provider_id_data').innerHTML = '';
     document.getElementById('user_edit_label_provider_name_data').innerHTML = '';
     document.getElementById('user_edit_label_provider_email_data').innerHTML = '';
@@ -1985,11 +1985,6 @@ async function user_logoff(){
     window.global_rest_at ='';
     window.global_user_account_id = '';
     updateOnlineStatus();
-    user_preferences_set_default_globals('LOCALE');
-    user_preferences_set_default_globals('TIMEZONE');
-    user_preferences_set_default_globals('DIRECTION');
-    user_preferences_set_default_globals('ARABIC_SCRIPT');
-    user_preferences_update_select();
     document.getElementById('profile_avatar_online_status').className='';
     //get new data token to avoid endless loop och invalid token
     await common_fetch_token(0, null,  null, null,  (err, result)=>{
@@ -2001,6 +1996,11 @@ async function user_logoff(){
         dialogue_forgot_clear();
         document.getElementById('dialogue_profile').style.visibility = 'hidden';
         dialogue_profile_clear();
+        user_preferences_set_default_globals('LOCALE');
+        user_preferences_set_default_globals('TIMEZONE');
+        user_preferences_set_default_globals('DIRECTION');
+        user_preferences_set_default_globals('ARABIC_SCRIPT');
+        user_preferences_update_select();
     })
 }
 async function user_edit() {
@@ -2009,7 +2009,7 @@ async function user_edit() {
     common_fetch(window.global_rest_url_base + window.global_rest_user_account + window.global_user_account_id + '?', 
                  'GET', 1, null, null, null, (err, result) =>{
         if (err)
-            return callBack(err, null);
+            null;
         else{
             json = JSON.parse(result);
             if (window.global_user_account_id == json.id) {
@@ -2037,12 +2037,9 @@ async function user_edit() {
 
                     document.getElementById('user_edit_input_password_reminder').value = json.password_reminder;
                 } else{
-                        document.getElementById('user_edit_provider').style.display = 'block';
-                        if (json.identity_provider_id==1)
-                            document.getElementById('user_edit_provider_logo').innerHTML = window.global_icon_provider_provider1;
-                        if (json.identity_provider_id==2)
-                            document.getElementById('user_edit_provider_logo').innerHTML = window.global_icon_provider_provider2;
                         document.getElementById('user_edit_local').style.display = 'none';
+                        document.getElementById('user_edit_provider').style.display = 'block';
+                        document.getElementById('user_edit_provider_id').innerHTML = json.identity_provider_id;
                         document.getElementById('user_edit_label_provider_id_data').innerHTML = json.provider_id;
                         document.getElementById('user_edit_label_provider_name_data').innerHTML = json.provider_first_name + ' ' + json.provider_last_name;
                         document.getElementById('user_edit_label_provider_email_data').innerHTML = json.provider_email;
@@ -2617,94 +2614,33 @@ function user_preferences_update_select(){
 /*----------------------- */
 /* USER PROVIDER          */
 /*----------------------- */
-function provider_init(providertype, provider_function){
-    switch (providertype){
-        case 1:{
-            document.getElementById('g_id_onload').setAttribute('data-client_id', window.global_identity_provider1_api_id);
-            document.getElementById('g_id_onload').setAttribute('data-callback', provider_function);
-            document.getElementById('g_id_onload').setAttribute('data-auto_select', 'true');
-            document.getElementsByClassName('g_id_signin')[0].setAttribute('data-shape', 'circle');
-            document.getElementsByClassName('g_id_signin')[0].setAttribute('data-width', '268');
-            document.getElementsByClassName('g_id_signin')[0].setAttribute('data-text', 'continue_with');
-
-            /*Provider 1 SDK*/
-            let tag = document.createElement('script');
-            tag.src = window.global_identity_provider1_api_src;
-            tag.defer = true;
-            let firstScriptTag = document.getElementsByTagName('script')[0];
-            firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-            break;
-        }
-        case 2:{
-            document.getElementById('login_provider2').addEventListener('click', provider_function, false);
-            /*Provider 2 SDK*/
-            window.fbAsyncInit = function() {
-                FB.init({
-                appId      : window.global_identity_provider2_api_id,
-                cookie     : true,
-                xfbml      : true,
-                version    : window.global_identity_provider2_api_version
-                });
-                
-            };
-            (function(d, s, id){
-                let js, fjs = d.getElementsByTagName(s)[0];
-                if (d.getElementById(id)) {return;}
-                js = d.createElement(s); js.id = id;
-                js.src = window.global_identity_provider2_api_src + 
-                        navigator.language.replace(/-/g, '_') + 
-                        window.global_identity_provider2_api_src2;
-                fjs.parentNode.insertBefore(js, fjs);
-            }(document, 'script', 'facebook-jssdk'));
-            break;
-        }
-    }
-}
-async function init_providers(provider1_function, provider2_function){
+async function Providers_init(function_event){
     let div = document.getElementById('identity_provider_login');
     let json;
+    div.innerHTML = window.global_app_spinner;
     common_fetch(window.global_rest_url_base + window.global_rest_identity_provider + '?', 
                  'GET', 0, null, null, null, (err, result) =>{
         if (err)
-            null;
-        else{
-            json = JSON.parse(result);
             div.innerHTML = '';
+        else{
+            div.innerHTML = '';
+            json = JSON.parse(result);
+            //load the buttons
+            //user provider should use REST API on server if used
+            let html = '';
             for (i=0;i <=json.items.length-1;i++){
-                switch (json.items[i].id){
-                    case 1:{
-                        window.global_identity_provider1_id             = json.items[i].id;
-                        window.global_identity_provider1_name           = json.items[i].provider_name;
-                        window.global_identity_provider1_api_src        = json.items[i].api_src;
-                        window.global_identity_provider1_api_id         = json.items[i].api_id;
-                        window.global_icon_provider_provider1           = window.global_icon_provider_google;
-                        div.innerHTML += `<div id="g_id_onload" data-client_id='' data-callback=''></div>
-                                            <div class='g_id_signin login_button' data-type='standard'></div>`;
-                        provider_init(1, provider1_function);
-                        break;
-                    }
-                    case 2:{
-                        window.global_identity_provider2_id             = json.items[i].id;
-                        window.global_identity_provider2_name           = json.items[i].provider_name;
-                        window.global_identity_provider2_api_version    = json.items[i].api_version;
-                        window.global_identity_provider2_api_src        = json.items[i].api_src;
-                        window.global_identity_provider2_api_src2       = json.items[i].api_src2;
-                        window.global_identity_provider2_api_id         = json.items[i].api_id;
-                        window.global_icon_provider_provider2           = window.global_icon_provider_facebook;
-
-                        div.innerHTML += `<button id='login_provider2' class='login_button' >
-                                            <div id='logo_provider2'>${window.global_icon_provider_provider2}</div>
-                                            <div id='login_btn_provider2'></div>
-                                            </button>`;
-                        provider_init(2, provider2_function);
-                        break;
-                    }
-                }
+                html += `<button id='login_provider_${i}' class='login_button login_provider_button' >
+                            <div class='login_provider_id'>${json.items[i].id}</div>
+                            <div class='login_provider_name'>${json.items[i].provider_name}</div>
+                         </button>`;
+                
             }
+            div.innerHTML = html;
+            document.querySelectorAll('.login_provider_button').forEach(e => e.addEventListener('click', function_event));
         }
     })
 }
-async function updateProviderUser(identity_provider_id, profile_id, profile_first_name, profile_last_name, profile_image_url, profile_email, callBack) {
+async function ProviderUser_update(identity_provider_id, profile_id, profile_first_name, profile_last_name, profile_image_url, profile_email, callBack) {
     let json;
     let profile_image;
     let img = new Image();
@@ -2756,40 +2692,15 @@ async function updateProviderUser(identity_provider_id, profile_id, profile_firs
         })
     }
 }
-async function onProviderSignIn(provider1User, callBack) {
-    let profile;
-    function fb_api(){
-        FB.api('/me?fields=id,first_name,last_name,picture, email', function(response) {
-            return callBack(null, {identity_provider_id: 2,
-                                   profile_id: response.id,
-                                   profile_first_name: response.first_name,
-                                   profile_last_name: response.last_name,
-                                   profile_image_url: response.picture.data.url,
-                                   profile_email: response.email});
-        });
-    }
-    if (provider1User) {
-        profile = parseJwt(provider1User.credential);
-        return callBack(null, {identity_provider_id: 1,
-                               profile_id: profile.sub,
-                               profile_first_name: profile.given_name,
-                               profile_last_name: profile.family_name,
-                               profile_image_url: profile.picture,
-                               profile_email: profile.email});
-    } else {
-        FB.getLoginStatus(function(response) {
-            if (response.status === 'connected') 
-                return fb_api();
-            else
-                FB.login(function(response) {
-                    if (response.authResponse) {
-                        return fb_api();
-                    } else
-                        console.log('User cancelled login or did not fully authorize.');
-                        return callBack('ERROR', null);
-                });
-        });
-    }
+async function ProviderSignIn(provider_button, callBack) {
+    //add REST API to get user provider data
+    return callBack(null, { identity_provider_id: provider_button.children[0].innerHTML,
+                            profile_id: provider_button.children[0].innerHTML,
+                            profile_first_name: `PROVIDER_USERNAME${provider_button.children[0].innerHTML}`,
+                            profile_last_name: `PROVIDER LAST_NAME${provider_button.children[0].innerHTML}`,
+                            profile_image_url: '/common/images/logo.png',
+                            profile_email: `PROVIDER_EMAIL${provider_button.children[0].innerHTML}@${location.hostname}`});
+    
 }
 /*----------------------- */
 /* EXCEPTION              */
@@ -2879,13 +2790,6 @@ function seticons(){
     //provider
     window.global_icon_provider = '<i class="fa-solid fa-passport"></i>';
     window.global_icon_provider_id = '<i class="fa-solid fa-id-badge"></i>';
-    window.global_icon_provider_facebook = '<i class="fab fa-facebook"></i>';
-    window.global_icon_provider_microsoft = '<i class="fa-brands fa-microsoft"></i>';
-    window.global_icon_provider_twitch = '<i class="fa-brands fa-twitch"></i>';
-    window.global_icon_provider_tiktok = '<i class="fa-brands fa-tiktok"></i>';
-    window.global_icon_provider_yahoo = '<i class="fa-brands fa-yahoo"></i>';
-    window.global_icon_provider_github = '<i class="fa-brands fa-github"></i>';
-    window.global_icon_provider_google = '<i class="fab fa-google"></i>';
     //gps
     window.global_icon_gps = '<i class="fa-solid fa-location-dot"></i>';
     window.global_icon_gps_map_my_location = '<i class="fa-solid fa-location-crosshairs"></i>';
@@ -2987,18 +2891,6 @@ function set_globals(parameters){
     window.global_eventSource;
     //rest api base
     window.global_rest_url_base 				= '/service/db/app_portfolio/';
-
-    //identity provider
-    window.global_identity_provider1_id;
-    window.global_identity_provider1_name;
-    window.global_identity_provider1_api_src;
-    window.global_identity_provider1_api_id;
-    window.global_identity_provider2_id;
-    window.global_identity_provider2_name;
-    window.global_identity_provider2_api_version;
-    window.global_identity_provider2_api_src;
-    window.global_identity_provider2_api_src2;
-    window.global_identity_provider2_api_id;
 
     //rest api endpoints
     window.global_rest_at;

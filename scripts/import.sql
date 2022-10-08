@@ -1810,7 +1810,13 @@ INSERT INTO app_portfolio.device (id, device_name, screen_x, screen_y, device_ty
 INSERT INTO app_portfolio.app_device(app_id, device_id) VALUES(1, 1);
 INSERT INTO app_portfolio.app_device(app_id, device_id) VALUES(2, 1);
 --
--- Dumping data for table setting_type
+-- identity_provider
+--
+INSERT INTO app_portfolio.identity_provider(id, provider_name, api_src, api_src2, api_version, api_id, identity_provider_order, enabled) VALUES( 0, 'Local', null, null, null, null, 1, 0);
+INSERT INTO app_portfolio.identity_provider(id, provider_name, api_src, api_src2, api_version, api_id, identity_provider_order, enabled) VALUES( 1, 'Provider 1 REST API', null, null, null, null, 2, 0);
+INSERT INTO app_portfolio.identity_provider(id, provider_name, api_src, api_src2, api_version, api_id, identity_provider_order, enabled) VALUES( 2, 'Provider 2 REST API', null, null, null, null, 3, 0);
+--
+-- setting_type
 --
 INSERT INTO app_portfolio.setting_type (id, setting_type_name) VALUES (1,'PAPER_SIZE');
 INSERT INTO app_portfolio.setting_type (id, setting_type_name) VALUES (2,'HIGHLIGHT_ROW');
