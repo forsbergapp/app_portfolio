@@ -54,22 +54,11 @@ module.exports = {
         }
         else{
             const intervalId = setInterval(() => {
-                const { getParameter } = require ("../db/app_portfolio/app_parameter/app_parameter.service");
-                getParameter(req.query.app_id, process.env.COMMON_APP_ID,'SERVER_MAINTENANCE', (err, db_SERVER_MAINTENANCE)=>{
-                    if (err){
-                        const {createLogAppSE} = require("../log/log.controller");
-                        createLogAppSE(req.query.app_id, __appfilename, __appfunction, __appline, err, (err_log, result_log)=>{
-                            null;
-                        })
-                    }
-                    else{
-                        if (db_SERVER_MAINTENANCE==1){
-                            const broadcast =`{"broadcast_type" :"MAINTENANCE", 
-                                              "broadcast_message":""}`;
-                            res.write (`data: ${btoa(broadcast)}\n\n`);
-                        }
-                    }
-                })
+                if (process.env.SERVER_MAINTENANCE==1){
+                    const broadcast =`{"broadcast_type" :"MAINTENANCE", 
+                                      "broadcast_message":""}`;
+                    res.write (`data: ${btoa(broadcast)}\n\n`);
+                }
             }, 5000);
             const { getIp} = require ("../geolocation/geolocation.controller");
             getIp(req, res2, (err, geodata) =>{
