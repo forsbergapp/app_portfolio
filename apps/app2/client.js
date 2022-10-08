@@ -14,7 +14,10 @@ module.exports = {
                   ['APP', __dirname + '/src/index.html'],
                   ['<AppCommonHead/>', __dirname + '/../common/src/head.html'],
                   ['<AppCommonHeadMap/>', __dirname + '/../common/src/head_map.html'],
+                  ['<AppCommonHeadQRCode/>', __dirname + '/../common/src/head_qrcode.html'],
                   ['<AppCommonBody/>', __dirname + '/../common/src/body.html'],
+                  ['<AppCommonBodyMaintenance/>', __dirname + '/../common/src/body_maintenance.html'],
+                  ['<AppCommonBodyBroadcast/>', __dirname + '/../common/src/body_broadcast.html'],  
                   ['<AppCommonProfileDetail/>', __dirname + '/../common/src/profile_detail.html'], //Profile tag in common body
                   
                   ['<AppHead/>', __dirname + '/src/head.html'],
