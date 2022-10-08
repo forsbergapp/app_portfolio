@@ -1074,22 +1074,22 @@ module.exports = {
                     if (typeof req.body.provider_image == 'undefined')
                         req.body.provider_image = null;
 
-                    create(req.query.app_id, req.body, (err, results) => {
+                    create(req.query.app_id, req.body, (err, results_create) => {
                         if (err) {
                             return res.status(500).send(
                                 err
                             );
                         }
                         else{
-                            req.body.user_account_id = results.insertId;
-                            createUserAccountApp(req.query.app_id, results.insertId, (err, results_create_useraccountapp) => {
+                            req.body.user_account_id = results_create.insertId;
+                            createUserAccountApp(req.query.app_id, results_create.insertId, (err, results_create_useraccountapp) => {
                                 if (err) {
                                     return res.status(500).send(
                                         err
                                     );
                                 }
                                 else{
-                                    getUserByProviderId(req.query.app_id, req.body.identity_provider_id, req.params.id, (err, results_getuser) => {
+                                    getUserByProviderId(req.query.app_id, req.body.identity_provider_id, req.params.id, (err, results) => {
                                         if (err) {
                                             return res.status(500).send(
                                                 err

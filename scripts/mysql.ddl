@@ -825,8 +825,6 @@ CREATE TABLE app_portfolio.identity_provider (
 	api_id                  VARCHAR(100),
     identity_provider_order INTEGER NOT NULL,
     enabled                 INTEGER,
-    date_created            DATETIME NOT NULL,
-    date_modified           DATETIME,
     CONSTRAINT identity_provider_pk PRIMARY KEY ( id );
 );
 
