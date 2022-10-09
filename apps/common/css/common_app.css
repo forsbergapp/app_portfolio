@@ -158,7 +158,7 @@ a:active {
 }
 #login_form, #signup_form, #forgot_form{
 	margin: 0px auto;
-	width:268px;
+	width:300px;
 }
 #login_logo, #signup_logo, #forgot_logo{
 	background-image: url('/common/images/logo.png');

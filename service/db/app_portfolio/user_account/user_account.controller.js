@@ -307,28 +307,29 @@ module.exports = {
         });
     },
     getProfileUser: (req, res) => {
-        if (typeof req.params.id == 'undefined')
+        if (typeof req.params.id == 'undefined'){
+            //searching for username, ignore user id search
+            //used when not logged in
             req.params.id = null;
-        if (typeof req.params.username == 'undefined')
-            req.params.username = null;
-        const username = req.params.username;
-        var id_current_user;
-
-        if (typeof req.query.id !== 'undefined')
-            id_current_user = req.query.id;
-
-        if (id_current_user == '')
-            id_current_user = null;
+            req.query.id = null;
+            req.body.user_account_id = null;
+            req.body.user_account_id_view = null;
+        }
         else
-            id_current_user = parseInt(id_current_user);
-        req.body.user_account_id = id_current_user;
-        req.body.user_account_id_view = req.params.id;
+            if (typeof req.params.username == 'undefined'){
+                //searching for user id, ignore username search
+                //user when logged in
+                req.params.username = null;
+                req.query.id = parseInt(req.query.id);
+                req.body.user_account_id = req.query.id;
+                req.body.user_account_id_view = parseInt(req.params.id);
+            }
         req.body.client_ip = req.ip;
         req.body.client_user_agent = req.headers["user-agent"];
         req.body.client_longitude = req.body.client_longitude;
         req.body.client_latitude = req.body.client_latitude;
 
-        getProfileUser(req.query.app_id, req.params.id, username, id_current_user, (err, results) => {
+        getProfileUser(req.query.app_id, req.params.id, req.params.username, req.query.id, (err, results) => {
             if (err) {
                 return res.status(500).send(
                     err
@@ -336,7 +337,16 @@ module.exports = {
             }
             else{
                 if (results){
-                    if ((results.id == id_current_user) == false) {
+                    if (results.id == req.query.id) {
+                        //send without {} so the variablename is not sent
+                        return res.status(200).json(
+                            results
+                        );
+                    }
+                    else{
+                        //set user id when username is searched
+                        if (req.body.user_account_id_view==null)
+                            req.body.user_account_id_view = results.id;
                         insertUserAccountView(req.query.app_id, req.body, (err, results_insert) => {
                             if (err) {
                                 return res.status(500).send(
@@ -350,12 +360,6 @@ module.exports = {
                                 );
                             }
                         });
-                    }
-                    else{
-                        //send without {} so the variablename is not sent
-                        return res.status(200).json(
-                            results
-                        );
                     }
                 }
                 else{
