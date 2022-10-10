@@ -4,7 +4,7 @@ const { createLog} = require ("../../service/db/app_portfolio/app_log/app_log.se
 const { getParameter, getParameters_server } = require ("../../service/db/app_portfolio/app_parameter/app_parameter.service");
 const { createLogAppSE, createLogAppCI } = require("../../service/log/log.controller");
 const { checkLogin } = require("../../service/db/app_portfolio/user_account_logon/user_account_logon.service");
-const {block_ip_control, safe_user_agents, policy_directives} = require ("./auth.service");
+const { block_ip_control, safe_user_agents, policy_directives} = require ("./auth.service");
 module.exports = {
     access_control: (req, res, callBack) => {
         if (typeof req.query.app_id=='undefined' || req.query.app_id=='')
@@ -77,54 +77,66 @@ module.exports = {
             return callBack(null,1);
     },
     checkAccessToken: (req, res, next) => {
-		let token = req.get("authorization");
-		if (token){
-            getParameter(req.query.app_id, process.env.COMMON_APP_ID,'SERVICE_AUTH_TOKEN_ACCESS_SECRET', (err, db_SERVICE_AUTH_TOKEN_ACCESS_SECRET)=>{
-				if (err) {
-                    createLogAppSE(req.query.app_id, __appfilename, __appfunction, __appline, err, (err_log, result_log)=>{
-                        res.status(500).send(
-                            err
-                        );
-                    })
-                }
-                else{
-                    token = token.slice(7);
-                    verify(token, db_SERVICE_AUTH_TOKEN_ACCESS_SECRET, (err, decoded) => {
-                        if (err){
-                            res.status(401).send({
-                                message: "Invalid token"
-                            });
-                        } else {
-                            //check access token belongs to user_account.id, app_id and ip saved when logged in
-                            checkLogin(req.query.app_id, req.query.user_account_logon_user_account_id, req.headers.authorization.replace('Bearer ',''), req.ip, (err, result)=>{
-                                if (err)
-                                    createLogAppSE(req.query.app_id, __appfilename, __appfunction, __appline, err, (err_log, result_log)=>{
-                                        res.status(500).send(
-                                            err
-                                        );
-                                    })
-                                else{
-                                    if (result.length==1)
-                                        next();
-                                    else
-                                        createLogAppCI(req, res, null, __appfilename, __appfunction, __appline, `user  ${req.query.user_account_logon_user_account_id} app_id ${req.query.app_id} with ip ${req.ip} accesstoken unauthorized`, (err_log, result_log)=>{
-                                            res.status(401).send({
-				                                message: 'Not authorized'
-                                            });
+        //if user login is disabled then check also current logged in user
+        //so they can't modify anything anymore with current accesstoken
+        if (process.env.SERVICE_AUTH_ENABLE_USER_LOGIN==1){
+            let token = req.get("authorization");
+            if (token){
+                getParameter(req.query.app_id, process.env.COMMON_APP_ID,'SERVICE_AUTH_TOKEN_ACCESS_SECRET', (err, db_SERVICE_AUTH_TOKEN_ACCESS_SECRET)=>{
+                    if (err) {
+                        createLogAppSE(req.query.app_id, __appfilename, __appfunction, __appline, err, (err_log, result_log)=>{
+                            res.status(500).send(
+                                err
+                            );
+                        })
+                    }
+                    else{
+                        token = token.slice(7);
+                        verify(token, db_SERVICE_AUTH_TOKEN_ACCESS_SECRET, (err, decoded) => {
+                            if (err){
+                                res.status(401).send({
+                                    message: "Invalid token"
+                                });
+                            } else {
+                                //check access token belongs to user_account.id, app_id and ip saved when logged in
+                                checkLogin(req.query.app_id, req.query.user_account_logon_user_account_id, req.headers.authorization.replace('Bearer ',''), req.ip, (err, result)=>{
+                                    if (err)
+                                        createLogAppSE(req.query.app_id, __appfilename, __appfunction, __appline, err, (err_log, result_log)=>{
+                                            res.status(500).send(
+                                                err
+                                            );
                                         })
-                                        
-                                }
-                            })
-                        }
-                    });
-                }
+                                    else{
+                                        if (result.length==1)
+                                            next();
+                                        else
+                                            createLogAppCI(req, res, null, __appfilename, __appfunction, __appline, `user  ${req.query.user_account_logon_user_account_id} app_id ${req.query.app_id} with ip ${req.ip} accesstoken unauthorized`, (err_log, result_log)=>{
+                                                res.status(401).send({
+                                                    message: 'Not authorized'
+                                                });
+                                            })
+                                            
+                                    }
+                                })
+                            }
+                        });
+                    }
+                });
+                
+            }else{
+                res.status(401).json({
+                    message: 'Not authorized'
+                });
+            }
+        }
+        else{
+            //return 401 Not authorized here instead of 403 Forbidden
+            //so a user will be logged out instead of getting a message
+            res.status(401).json({
+                message: '⛔'
             });
-			
-		}else{
-			res.status(401).json({
-				message: 'Not authorized'
-			});
-		}
+        }
+
 	},
     checkDataToken: (req, res, next) => {
         if (req.baseUrl == '/service/regional')
@@ -162,6 +174,27 @@ module.exports = {
             }
         }
 	},
+    checkDataTokenRegistration: (req, res, next) => {
+        if (process.env.SERVICE_AUTH_ENABLE_USER_REGISTRATION==1)
+            module.exports.checkDataToken(req, res, next);
+        else{
+            //return 403 Forbidden
+            res.status(403).json({
+                message: '⛔'
+            });
+        }
+            
+    },
+    checkDataTokenLogin: (req, res, next) => {
+        if (process.env.SERVICE_AUTH_ENABLE_USER_LOGIN==1)
+            module.exports.checkDataToken(req, res, next);
+        else{
+            //return 403 Forbidden
+            res.status(403).json({
+                message: '⛔'
+            });
+        }
+    },
     dataToken: (req, res) => {
         if(req.headers.authorization){
             getParameters_server(req.query.app_id, process.env.COMMON_APP_ID,  (err, result)=>{
