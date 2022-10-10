@@ -2589,11 +2589,10 @@ function user_preferences_set_default_globals(preference){
         }
         case 'ARABIC_SCRIPT':{
             window.global_user_arabic_script    = ''; /*classes 
-                                                    font_arabic_sans_kufi (default)
+                                                    font_arabic_sans (default)
                                                     font_arabic_kufi
                                                     font_arabic_nashk
                                                     font_arabic_nastaliq
-                                                    font_arabic_ui
                                                   */
             break;
         }

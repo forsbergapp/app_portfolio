@@ -2,16 +2,17 @@
 /*Noto Sans font*/
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&display=swap');
 /*Noto Sans regional fonts*/
-/*Arabic NotoSans*/
-@import url('https://fonts.googleapis.com/earlyaccess/notosanskufiarabic.css');
-/*Arabic NotoKufi*/
-@import url('https://fonts.googleapis.com/earlyaccess/notokufiarabic.css');
-/*Arabic NotoNashk*/
-@import url('https://fonts.googleapis.com/earlyaccess/notonaskharabic.css');
-/*Arabic NotoNastaliq*/
-@import url('https://fonts.googleapis.com/earlyaccess/notonastaliqurdu.css');
-/*Arabic NotoSansUI*/
-@import url('https://fonts.googleapis.com/earlyaccess/notonaskharabicui.css');
+
+/*Arabic*/
+/*Noto Sans Arabic*/
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;700&display=swap');
+/*Noto Kufi Arabic*/
+@import url('https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;700&display=swap');
+/*Noto Naskh Arabic*/
+@import url('https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400;700&display=swap');
+/*Noto Nastaliq Urdu*/
+@import url('https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;700&display=swap');
+
 /*Japanese*/
 /*Noto Sans JP*/
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap');
@@ -370,9 +371,8 @@ Prio 2 symbols:
 								"Noto Sans Tai Le", "Noto Sans Nabataean", "Noto Sans Rejang", 
 								"Noto Sans Manichaean", "Noto Sans Meroitic", "Noto Sans Lydian", 
 								"Noto Sans Modi";
-	--global_font_arabic_sans_kufi: 'Noto Sans', 'Noto Kufi Sans Arabic', 'Noto Sans JP', 
-								    'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 
-								    'Noto Sans HK', 
+	--global_font_arabic_sans: 		'Noto Sans', 'Noto Sans Arabic', 'Noto Sans JP', 
+								    'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK', 
 								    var(--global_font_languages_1), var(--global_font_symbols), var(--global_font_languages_2);
 	--global_font_arabic_kufi: 		'Noto Sans', 'Noto Kufi Arabic', 'Noto Sans JP', 
 									'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK',
@@ -383,20 +383,17 @@ Prio 2 symbols:
 	--global_font_arabic_nastaliq: 	'Noto Sans', 'Noto Nastaliq Urdu', 'Noto Sans JP', 
 									'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK',
 									var(--global_font_languages_1), var(--global_font_symbols), var(--global_font_languages_2);
-	--global_font_arabic_ui: 		'Noto Sans', 'Noto Nashk Arabic UI', 'Noto Sans JP', 
-									'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK',
-									var(--global_font_languages_1), var(--global_font_symbols), var(--global_font_languages_2);
 }
 
 /*default font*/
 body
 {
-	font-family: var(--global_font_arabic_sans_kufi);
+	font-family: var(--global_font_arabic_sans);
 }
 /*Arabic NotoSans, Arabic*/
 body.font_arabic_sans_kufi
 {
-	font-family: var(--global_font_arabic_sans_kufi);
+	font-family: var(--global_font_arabic_sans);
 }
 /*Arabic NotoKufi*/
 body.font_arabic_kufi{
@@ -420,11 +417,6 @@ body.font_arabic_nastaliq input{
 }
 body.font_arabic_nastaliq #user_menu_default_avatar{
 	margin-top:-15px;
-}
-
-/*Arabic NotoSansUI*/
-body.font_arabic_ui{
-	font-family: var(--global_font_arabic_ui);
 }
 
 /*common*/
