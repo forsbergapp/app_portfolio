@@ -1187,7 +1187,7 @@ module.exports = {
 				return callBack(null, result[0]);
 		});
     },
-    getUserByProviderId: (app_id, identity_provider_id, search_id, callBack) => {
+    providerSignIn: (app_id, identity_provider_id, search_id, callBack) => {
 		let sql;
 		let parameters;
         if (process.env.SERVICE_DB_USE == 1) {

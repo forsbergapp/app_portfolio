@@ -17,7 +17,7 @@ const {
     deleteUser,
     userLogin,
     updateSigninProvider,
-    getUserByProviderId,
+    providerSignIn,
     getStatCountAdmin,
     getEmailUser
 } = require("./user_account.service");
@@ -1025,13 +1025,13 @@ module.exports = {
             }
         });
     },
-    getUserByProviderId: (req, res) => {
+    providerSignIn: (req, res) => {
         req.body.result = 1;
         req.body.client_ip = req.ip;
         req.body.client_user_agent = req.headers["user-agent"];
         req.body.client_longitude = req.body.client_longitude;
         req.body.client_latitude = req.body.client_latitude;
-        getUserByProviderId(req.query.app_id, req.body.identity_provider_id, req.params.id, (err, results) => {
+        providerSignIn(req.query.app_id, req.body.identity_provider_id, req.params.id, (err, results) => {
             if (err) {
                 return res.status(500).send(
                     err
