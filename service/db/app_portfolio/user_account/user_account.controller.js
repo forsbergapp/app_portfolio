@@ -307,20 +307,27 @@ module.exports = {
         });
     },
     getProfileUser: (req, res) => {
-        if (typeof req.params.id == 'undefined'){
-            //searching for username, ignore user id search
-            //used when not logged in
+        if (typeof req.params.id == 'undefined' || req.params.id=='' || req.params.id==null){
+            //searching for username
+            //user not logged in
             req.params.id = null;
             req.query.id = null;
             req.body.user_account_id = null;
             req.body.user_account_id_view = null;
         }
         else
-            if (typeof req.params.username == 'undefined'){
+            if (typeof req.params.username == 'undefined' ||req.params.username=='' ||req.params.username==null){
                 //searching for user id, ignore username search
-                //user when logged in
+                //user logged in
                 req.params.username = null;
-                req.query.id = parseInt(req.query.id);
+                if (typeof req.query.id=='undefined' ||req.query.id == '' ||req.query.id == null){
+                    //user not logged in searching for profile id
+                    req.query.id = null;
+                }
+                else{
+                    //user logged in searching for profile id
+                    req.query.id = parseInt(req.query.id);
+                }
                 req.body.user_account_id = req.query.id;
                 req.body.user_account_id_view = parseInt(req.params.id);
             }
