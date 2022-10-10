@@ -13,25 +13,25 @@ const {
     updateUserCommon,
     deleteUser,
     userLogin,
-    getUserByProviderId,
+    providerSignIn,
     getStatCountAdmin
 } = require("./user_account.controller");
-const { checkAccessToken, checkDataToken } = require("../../../auth/auth.controller");
+const { checkAccessToken, checkDataToken, checkDataTokenRegistration, checkDataTokenLogin } = require("../../../auth/auth.controller");
 const { checkAdmin} = require ("../../../auth/admin/admin.controller");
 const { createLogAppRI } = require("../../../log/log.controller");
 router.use((req,res,next)=>{
     createLogAppRI(req, res, __appfilename, __appfunction, __appline, req.body);
     next();
 })
-router.put("/login", checkDataToken, userLogin);
-router.post("/signup", checkDataToken, userSignup);
+router.put("/login", checkDataTokenLogin, userLogin);
+router.post("/signup", checkDataTokenRegistration, userSignup);
 //local user
 router.put("/activate/:id", checkDataToken, activateUser);
 router.put("/password_reset/", checkDataToken, passwordResetUser);
 router.put("/password/:id", checkAccessToken, updatePassword);
 router.put("/:id", checkAccessToken, updateUserLocal);
 //provider user
-router.put("/provider/:id", checkDataToken, getUserByProviderId);
+router.put("/provider/:id", checkDataTokenLogin, providerSignIn);
 //common user
 router.get("/:id", checkAccessToken, getUserByUserId);
 router.put("/common/:id", checkAccessToken, updateUserCommon);
