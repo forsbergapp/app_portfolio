@@ -186,6 +186,12 @@ async function common_fetch(url_parameters, method, token_type, json_data, app_i
                 eval(`(function (){${window.global_exception_app_function}()}());`);
                 break;
             }
+            case 403:{
+                //Forbidden, not allowed to login or register new user
+                show_message('INFO', null,null, JSON.parse(result).message, app_id);
+                callBack(result, null);
+                break;
+            }
             case 500:{
                 //Unknown error
                 show_message('EXCEPTION', null,null, result, app_id);
