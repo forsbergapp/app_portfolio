@@ -922,3 +922,10 @@ a:active {
 .leaflet-popup-content{
 	width:200px !important;
 }
+/*Map dynamically created popup*/
+#map_popup_title,
+#map_popup_sub_title,
+#map_popup_sub_title_timezone {
+	font-weight: bold;
+	text-align: center;
+}

@@ -5,7 +5,7 @@
 --
 INSERT INTO app_portfolio.app2_place (id, title, latitude, longitude, timezone, country1_id, country2_id, group_place1_id, group_place2_id) VALUES (40002,'Kaaba, Masjid al-Haram, Makkah','+21.4225','+39.8262','Asia/Riyadh',438,NULL,9,4);
 INSERT INTO app_portfolio.app2_place (id, title, latitude, longitude, timezone, country1_id, country2_id, group_place1_id, group_place2_id) VALUES (40003,'Al-Masjid an-Nabawi, Medina','+24.469','+39.611','Asia/Riyadh',438,NULL,9,4);
-INSERT INTO app_portfolio.app2_place (id, title, latitude, longitude, timezone, country1_id, country2_id, group_place1_id, group_place2_id) VALUES (40004,'Al-Aqsa, Jerusalem','+31.7765','+35.2356','Asia/Riyadh',420,360,9,4);
+INSERT INTO app_portfolio.app2_place (id, title, latitude, longitude, timezone, country1_id, country2_id, group_place1_id, group_place2_id) VALUES (40004,'Al-Aqsa, Jerusalem','+31.7765','+35.2356','Asia/Jerusalem',420,360,9,4);
 --
 -- Dumping data for table app2_theme_category
 --

@@ -1184,21 +1184,36 @@ async function map_init(containervalue, stylevalue, longitude, latitude, zoomval
         if (checkconnected()) {
             window.global_session_service_map = '';
             window.global_session_service_map = L.map(containervalue).setView([latitude, longitude], zoomvalue);
-            map_setstyle(window.global_service_map_style);
+            map_setstyle(stylevalue);
             //disable doubleclick in event dblclick since e.preventdefault() does not work
             window.global_session_service_map.doubleClickZoom.disable(); 
 
-            //add fullscreen button with eventlistener
+            //add fullscreen button and my location button with eventlisteners
             let mapcontrol = document.querySelectorAll(`#${containervalue} .leaflet-control`)
             mapcontrol[0].innerHTML += `<a id='map_fullscreen_id' href="#" title="Full Screen" role="button" aria-label="Full Screen"></a>`;
-            document.getElementById('map_fullscreen_id').innerHTML= '⛶';
-            document.getElementById('map_fullscreen_id').addEventListener('click', function() { 
-                if (document.fullscreenElement)
-                    document.exitFullscreen();
-                else
-                    document.getElementById(containervalue).requestFullscreen();
-            }, false);
-            //navigation control?
+            document.getElementById('map_fullscreen_id').innerHTML= window.global_icon_map_fullscreen;
+            mapcontrol[0].innerHTML += `<a id='map_my_location_id' href="#" title="My location" role="button" aria-label="My location"></a>`;
+            document.getElementById('map_my_location_id').innerHTML= window.global_icon_map_my_location;
+            //add events to the buttons
+            document.getElementById('map_fullscreen_id').addEventListener('click', 
+                                    function() { 
+                                                if (document.fullscreenElement)
+                                                    document.exitFullscreen();
+                                                else
+                                                    document.getElementById(containervalue).requestFullscreen();
+                                                }, 
+                                    false);
+            document.getElementById('map_my_location_id').addEventListener('click', 
+                                    function() { 
+                                                map_update(window.global_client_longitude,
+                                                        window.global_client_latitude,
+                                                        window.global_gps_map_zoom,
+                                                        window.global_client_place,
+                                                        null,
+                                                        window.global_gps_map_marker_div_gps,
+                                                        window.global_service_map_jumpto);
+                                                }, 
+                                    false);
         }
         else
             resolve();
@@ -1216,10 +1231,11 @@ function map_popup(popup_offset, popuptext, longitude, latitude){
 function map_marker(marker_id, longitude, latitude){
     if (checkconnected()) {
         var marker = L.marker([latitude, longitude]).addTo(window.global_session_service_map);
-        marker.id = marker_id;
+        //setting id so apps can customize if necessary
+        marker._icon.id = marker_id;
     }
 }
-function map_update(to_method, zoomvalue, longitude, latitude){
+function map_update_gps(to_method, zoomvalue, longitude, latitude){
     if (checkconnected()) {
         switch (to_method){
             case 0:{
@@ -1311,6 +1327,29 @@ function map_setstyle(mapstyle){
             }
         }
     }
+}
+function map_update_popup(title) {
+    document.getElementById('map_popup_title').innerHTML = title;
+}
+async function map_update(longitude, latitude, zoom, text_place, timezone_text = null, marker_id, to_method) {
+    return new Promise(function (resolve){
+        function map_update_text(timezone_text){
+            let popuptext = `<div id="map_popup_title">${text_place}</div>
+                             <div id="map_popup_sub_title">${window.global_icon_regional_timezone + window.global_icon_gps_position}</div>
+                             <div id="map_popup_sub_title_timezone">${timezone_text}</div>`;
+            map_popup(window.global_service_map_popup_offset, popuptext, longitude, latitude);
+            map_marker(marker_id, longitude, latitude);
+            resolve(timezone_text);
+        }
+        map_update_gps(to_method, zoom, longitude, latitude);
+        if (timezone_text == null)
+            tzlookup(latitude, longitude).then(function(tzlookup_text){
+                map_update_text(tzlookup_text);
+            })
+        else{
+            map_update_text(timezone_text);
+        }
+    })
 }
 
 /*----------------------- */
