@@ -92,13 +92,15 @@ function seticons(){
     window.global_icon_provider_id = '<i class="fa-solid fa-id-badge"></i>';
     //gps
     window.global_icon_gps = '<i class="fa-solid fa-location-dot"></i>';
-    window.global_icon_gps_map_my_location = '<i class="fa-solid fa-location-crosshairs"></i>';
     window.global_icon_gps_map = '<i class="fa-solid fa-map"></i>';
     window.global_icon_gps_country = '<i class="fa-solid fa-earth-africa"></i>';
     window.global_icon_gps_city = '<i class="fa-solid fa-city"></i>';
     window.global_icon_gps_popular_place = '<i class="fa-solid fa-star"></i>';
     window.global_icon_gps_position = '<i class="fa-solid fa-map-pin"></i>';
     window.global_icon_gps_high_latitude = '<i class="fa-solid fa-globe"></i><i class="fa-solid fa-snowflake"></i>';
+    window.global_icon_map_my_location = '<i class="fa-solid fa-location-crosshairs"></i>';
+    window.global_icon_map_fullscreen = '⛶';
+
     //regional
     window.global_icon_regional = '<i class="fa-solid fa-globe"></i>';
     window.global_icon_regional_day = '<i class="fa-solid fa-sun"></i>';

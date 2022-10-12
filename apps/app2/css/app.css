@@ -345,34 +345,6 @@ height: 25px;
 	margin-right: 5%;
 	margin-bottom: 10px;
 }
-/*These are created dynamically when updating map with popup texts*/
-#settings_gps_map_popup_title,
-#settings_gps_map_popup_sub_title,
-#settings_gps_map_popup_sub_title_timezone {
-	font-weight: bold;
-	text-align: center;
-}
-#map_marker_popular_place {
-	background-image: url('images/marker-icon-green.png');
-	background-size: cover;
-	width: 25px;
-	height: 41px;
-	cursor: pointer;
-}
-#map_marker_city {
-	background-image: url('images/marker-icon-blue.png');
-	background-size: cover;
-	width: 25px;
-	height: 41px;
-	cursor: pointer;
-}
-#map_marker_gps {
-	background-image: url('images/marker-icon-red.png');
-	background-size: cover;
-	width: 25px;
-	height: 41px;
-	cursor: pointer;
-}
 /* SETTINGS DESIGN*/
 #settings #tab3 .setting_horizontal_row:nth-child(1){
 	direction:ltr;
