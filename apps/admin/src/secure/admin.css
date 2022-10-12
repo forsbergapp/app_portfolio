@@ -764,16 +764,6 @@
         height: 87%;
         direction: ltr;
     }
-    #map_my_location{
-        position: absolute;
-        display:block;
-        z-index: 1;
-        margin: 10px;
-        border-radius: 4px;
-        height: 29px;
-        width: 29px;
-    }
-
     /*RESPONSIVE*/
     @media only screen and (min-width: 768px) {
         body{
@@ -912,13 +902,6 @@
     .theme_light .switch-input:checked + .switch-label::before {
         background-color: rgb(81, 171, 255);
     }
-    .theme_light #map_popup_title{
-        font-weight: bold;
-    }
-    .theme_light #map_my_location{
-        font-size: 20px;
-        background-color: #fefefe;
-    }    
     .theme_light #menu4_row_parameters_col1_1,
     .theme_light #menu4_row_parameters_col2_1,
     .theme_light #menu4_row_parameters_col3_1,
