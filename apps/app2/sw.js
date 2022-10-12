@@ -1,16 +1,13 @@
-/*
-    '/app2/css/images/marker-icon-blue.png',
-    '/app2/css/images/marker-icon-green.png',
-    '/app2/css/images/marker-icon-red.png',
-
-*/
 const cacheName = 'site-cache-v1'
 const assetsToCache = [
     '/common/css/common.css',
-    '/common/css/maintenance.css',
+    '/common/css/common_app.css',
+	'/common/css/maintenance.css',
     '/common/js/common.js',
+    '/common/js/common_icons.js',
     '/common/js/easy.qrcode.js',
     '/common/js/maintenance.js',
+    '/common/images/logo.png',    
     '/app2/css/app.css',
     '/app2/css/app_report.css',
     '/app2/css/images/theme_day_10001.jpg',
@@ -33,6 +30,8 @@ const assetsToCache = [
     '/app2/css/images/theme_month_20015.jpg',
     '/app2/css/images/theme_year_30001.jpg',
     '/app2/images/banner_default.png',
+    '/app2/images/favicon_32x32.png',
+    '/app2/images/favicon_192x192.png',
     '/app2/images/logo.png',
     '/app2/js/app_globals.js',
     '/app2/js/app_report.js',
