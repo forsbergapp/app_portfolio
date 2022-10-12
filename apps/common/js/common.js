@@ -1192,8 +1192,10 @@ async function map_init(containervalue, stylevalue, longitude, latitude, zoomval
             let mapcontrol = document.querySelectorAll(`#${containervalue} .leaflet-control`)
             mapcontrol[0].innerHTML += `<a id='map_fullscreen_id' href="#" title="Full Screen" role="button" aria-label="Full Screen"></a>`;
             document.getElementById('map_fullscreen_id').innerHTML= window.global_icon_map_fullscreen;
-            mapcontrol[0].innerHTML += `<a id='map_my_location_id' href="#" title="My location" role="button" aria-label="My location"></a>`;
-            document.getElementById('map_my_location_id').innerHTML= window.global_icon_map_my_location;
+            if (window.global_client_latitude!='' && window.global_client_longitude!=''){
+                mapcontrol[0].innerHTML += `<a id='map_my_location_id' href="#" title="My location" role="button" aria-label="My location"></a>`;
+                document.getElementById('map_my_location_id').innerHTML= window.global_icon_map_my_location;
+            }
             //add events to the buttons
             document.getElementById('map_fullscreen_id').addEventListener('click', 
                                     function() { 
@@ -1203,17 +1205,18 @@ async function map_init(containervalue, stylevalue, longitude, latitude, zoomval
                                                     document.getElementById(containervalue).requestFullscreen();
                                                 }, 
                                     false);
-            document.getElementById('map_my_location_id').addEventListener('click', 
-                                    function() { 
-                                                map_update(window.global_client_longitude,
-                                                        window.global_client_latitude,
-                                                        window.global_gps_map_zoom,
-                                                        window.global_client_place,
-                                                        null,
-                                                        window.global_gps_map_marker_div_gps,
-                                                        window.global_service_map_jumpto);
-                                                }, 
-                                    false);
+            if (window.global_client_latitude!='' && window.global_client_longitude!='')
+                document.getElementById('map_my_location_id').addEventListener('click', 
+                                        function() { 
+                                                    map_update(window.global_client_longitude,
+                                                            window.global_client_latitude,
+                                                            window.global_gps_map_zoom,
+                                                            window.global_client_place,
+                                                            null,
+                                                            window.global_gps_map_marker_div_gps,
+                                                            window.global_service_map_jumpto);
+                                                    }, 
+                                        false);
         }
         else
             resolve();
