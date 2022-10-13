@@ -456,6 +456,28 @@ function recreate_img(img_item) {
     parentnode.appendChild(img);
     return null;
 }
+async function convert_image(image_url, image_width, image_height){
+    //function to convert images to specified size and mime type according to parameters
+    return new Promise(function (resolve){
+        if (image_url=='')
+            resolve('');
+        else{
+            let img = new Image();
+            img.src = image_url;
+            //update Content Security Policy with allowed domain
+            //to allow any image url source, uncomment:
+            //img.crossOrigin = 'Anonymous';
+            img.onload = function(el) {
+                let elem = document.createElement('canvas');
+                elem.width = image_width;
+                elem.height = image_height;
+                let ctx = elem.getContext('2d');
+                ctx.drawImage(el.target, 0, 0, elem.width, elem.height);
+                resolve(ctx.canvas.toDataURL(window.global_image_file_mime_type));    
+            }
+        }
+    })
+}
 function set_avatar(avatar, item){
     if (avatar == null || avatar == '')
         recreate_img(item);
@@ -502,24 +524,10 @@ function show_image(item_img, item_input, image_width, image_height) {
             show_message('ERROR', 20308, null, null, window.global_common_app_id);
         }
         else {
-            /*Save all file in mime type format specified in parameter
-             using direct "...item_img.src = event.target.result;..." instead
-             of "...ctx.canvas.toDataURL()..." usage would not convert uploaded file 
-             to desired format, for example uploading png file will convert to jpg image
-             and to specified size, this will save space in database */
             reader.onloadend = function(event) {
-                let img = new Image();
-                img.src = event.target.result;
-                
-                img.onload = function(el) {
-                    let elem = document.createElement('canvas');
-                    elem.width = image_width;
-                    elem.height = image_height;
-                    let ctx = elem.getContext('2d');
-                    ctx.drawImage(el.target, 0, 0, elem.width, elem.height);
-                    let srcEncoded = ctx.canvas.toDataURL(window.global_image_file_mime_type);
+                convert_image(event.target.result, image_width, image_height).then(function(srcEncoded){
                     item_img.src = srcEncoded;
-                }
+                });
             }
         }
     if (file)
@@ -2690,35 +2698,26 @@ async function Providers_init(function_event){
         }
     })
 }
-async function ProviderUser_update(identity_provider_id, profile_id, profile_first_name, profile_last_name, profile_image_url, profile_email, callBack) {
-    let json;
-    let profile_image;
-    let img = new Image();
-
-    img.src = profile_image_url;
-    img.crossOrigin = 'Anonymous';
-    img.onload = function(el) {
-        let elem = document.createElement('canvas');
-        elem.width = window.global_image_avatar_width;
-        elem.height = window.global_image_avatar_height;
-        let ctx = elem.getContext('2d');
-        ctx.drawImage(el.target, 0, 0, elem.width, elem.height);
-        profile_image = ctx.canvas.toDataURL(window.global_image_file_mime_type);
+async function ProviderUser_update(identity_provider_id, profile_id, profile_first_name, profile_last_name, profile_image_url, profile_email, callBack) {    
+    convert_image(profile_image_url, 
+                  window.global_image_avatar_width,
+                  window.global_image_avatar_height).then(function(profile_image){
+        let json;
         let json_data =
-            `{
-            "app_id": ${window.global_app_id},
-            "active": 1,
-            "identity_provider_id": ${identity_provider_id},
-            "provider_id":"${profile_id}",
-            "provider_first_name":"${profile_first_name}",
-            "provider_last_name":"${profile_last_name}",
-            "provider_image":"${window.btoa(profile_image)}",
-            "provider_image_url":"${profile_image_url}",
-            "provider_email":"${profile_email}",
-            ${get_uservariables()}
-            }`;
+        `{
+        "app_id": ${window.global_app_id},
+        "active": 1,
+        "identity_provider_id": ${identity_provider_id},
+        "provider_id":"${profile_id}",
+        "provider_first_name":"${profile_first_name}",
+        "provider_last_name":"${profile_last_name}",
+        "provider_image":"${window.btoa(profile_image)}",
+        "provider_image_url":"${profile_image_url}",
+        "provider_email":"${profile_email}",
+        ${get_uservariables()}
+        }`;
         common_fetch(window.global_rest_url_base + window.global_rest_user_account_provider + profile_id + '?', 
-                     'PUT', 0, json_data, null, null, (err, result) =>{
+                    'PUT', 0, json_data, null, null, (err, result) =>{
             if (err)
                 return callBack(err, null);
             else{
@@ -2740,7 +2739,7 @@ async function ProviderUser_update(identity_provider_id, profile_id, profile_fir
                 });
             }
         })
-    }
+    })
 }
 async function ProviderSignIn(provider_button, callBack) {
     //add REST API to get user provider data
@@ -2748,7 +2747,7 @@ async function ProviderSignIn(provider_button, callBack) {
                             profile_id: provider_button.children[0].innerHTML,
                             profile_first_name: `PROVIDER_USERNAME${provider_button.children[0].innerHTML}`,
                             profile_last_name: `PROVIDER LAST_NAME${provider_button.children[0].innerHTML}`,
-                            profile_image_url: '/common/images/logo.png',
+                            profile_image_url: '',
                             profile_email: `PROVIDER_EMAIL${provider_button.children[0].innerHTML}@${location.hostname}`});
     
 }

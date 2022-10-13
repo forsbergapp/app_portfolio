@@ -528,7 +528,7 @@ body.font_arabic_nastaliq #user_menu_default_avatar{
 	width:300px;
 }
 #maintenance_logo {
-	background-image: url('/common/images/logo.png');
+	background-image: url('/admin/images/logo.png');
 	background-size: contain;
 	background-position: center;
 	background-repeat: no-repeat;

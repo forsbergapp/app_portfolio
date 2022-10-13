@@ -2006,7 +2006,7 @@ init_common({
     app_id: window.global_app_id,
     app_name: 'ADMIN',
     app_url: window.location.href,
-    app_logo: '/app1/images/logo.png',
+    app_logo: '/admin/images/logo.png',
     exception_app_function: 'admin_logoff_app',
     close_eventsource: true,
     ui: false,

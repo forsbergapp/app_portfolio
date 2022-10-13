@@ -1811,9 +1811,9 @@ INSERT INTO app_portfolio.app_device(app_id, device_id) VALUES(2, 1);
 --
 -- identity_provider
 --
-INSERT INTO app_portfolio.identity_provider(id, provider_name, api_src, api_src2, api_version, api_id, identity_provider_order, enabled) VALUES( 0, 'Local', null, null, null, null, 1, 0);
-INSERT INTO app_portfolio.identity_provider(id, provider_name, api_src, api_src2, api_version, api_id, identity_provider_order, enabled) VALUES( 1, 'Provider 1 REST API', null, null, null, null, 2, 0);
-INSERT INTO app_portfolio.identity_provider(id, provider_name, api_src, api_src2, api_version, api_id, identity_provider_order, enabled) VALUES( 2, 'Provider 2 REST API', null, null, null, null, 3, 0);
+INSERT INTO app_portfolio.identity_provider(id, provider_name, provider_url_logo, api_src, api_src2, api_version, api_id, identity_provider_order, enabled) VALUES( 0, 'Local', null, null, null, null, null, 1, 0);
+INSERT INTO app_portfolio.identity_provider(id, provider_name, provider_url_logo, api_src, api_src2, api_version, api_id, identity_provider_order, enabled) VALUES( 1, 'Provider 1 REST API', null, null, null, null, null, 2, 0);
+INSERT INTO app_portfolio.identity_provider(id, provider_name, provider_url_logo, api_src, api_src2, api_version, api_id, identity_provider_order, enabled) VALUES( 2, 'Provider 2 REST API', null, null, null, null, null, 3, 0);
 --
 -- setting_type
 --
