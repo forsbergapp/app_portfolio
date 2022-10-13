@@ -115,24 +115,22 @@ function get_apps() {
             json = JSON.parse(result);
             let html ='';
             for (var i = 0; i < json.data.length; i++) {
-                if (i!=1){
-                    html +=`<div class='app_link_row'>
-                                <div class='app_link_col'>
-                                    <div class='app_id'>${json.data[i].id}</div>
-                                </div>
-                                <div class='app_link_col'>
-                                    <div class='app_url'>${json.data[i].url}</div>
-                                </div>
-                                <div class='app_link_col'>
-                                    <img class='app_logo' src='${json.data[i].logo}' />
-                                </div>
-                                <div class='app_link_col'>
-                                    <div class='app_name'>${json.data[i].app_name}</div>
-                                    <div class='app_category'>${json.data[i].app_category==null?'':json.data[i].app_category}</div>
-                                    <div class='app_description'>${json.data[i].app_description==null?'':json.data[i].app_description}</div>
-                                </div>
-                            </div>`;
-                }
+                html +=`<div class='app_link_row'>
+                            <div class='app_link_col'>
+                                <div class='app_id'>${json.data[i].id}</div>
+                            </div>
+                            <div class='app_link_col'>
+                                <div class='app_url'>${json.data[i].url}</div>
+                            </div>
+                            <div class='app_link_col'>
+                                <img class='app_logo' src='${json.data[i].logo}' />
+                            </div>
+                            <div class='app_link_col'>
+                                <div class='app_name'>${json.data[i].app_name}</div>
+                                <div class='app_category'>${json.data[i].app_category==null?'':json.data[i].app_category}</div>
+                                <div class='app_description'>${json.data[i].app_description==null?'':json.data[i].app_description}</div>
+                            </div>
+                        </div>`;
             }
             var clickappevent = function(event) { 
                 window.open(event.target.parentNode.parentNode.children[1].children[0].innerHTML);};

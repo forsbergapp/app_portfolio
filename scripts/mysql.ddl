@@ -819,6 +819,7 @@ GRANT SELECT ON app_portfolio.event_type TO role_app3;
 CREATE TABLE app_portfolio.identity_provider (
     id                      INTEGER NOT NULL,
     provider_name           VARCHAR(100) NOT NULL,
+    provider_url_logo       VARCHAR(100),
     api_src                 VARCHAR(100),
     api_src2                VARCHAR(100),
     api_version             VARCHAR(100),
