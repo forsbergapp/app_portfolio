@@ -26,7 +26,7 @@ checkconnected = async () => {
     }
   };
 
-async function common_fetch_token(token_type, json_data,  username, password, callBack) {
+async function common_fetch_basic(token_type, json_data,  username, password, callBack) {
     let url;
     let status;
     if (token_type==0){
@@ -40,7 +40,7 @@ async function common_fetch_token(token_type, json_data,  username, password, ca
     }
     else{
         //admin token
-        url = '/service/auth/admin' + 
+        url = '/service/forms/admin/secure' + 
               '?app_id=' + window.global_app_id + 
               '&lang_code=' + window.global_user_locale;
     }
@@ -80,15 +80,15 @@ async function common_fetch_token(token_type, json_data,  username, password, ca
                 callBack(result, null);
                 break;
             }
-            case 404:{
-                //Not found
-                show_message('INFO', null,null, result, window.global_app_id);
-                callBack(result, null);
-                break;
-            }
             case 401:{
                 //Unauthorized, wrong credentials
                 show_message('INFO', null,null, JSON.parse(result).message, window.global_app_id);
+                callBack(result, null);
+                break;
+            }
+            case 404:{
+                //Not found
+                show_message('INFO', null,null, result, window.global_app_id);
                 callBack(result, null);
                 break;
             }
@@ -1066,6 +1066,7 @@ function reconnect(){
 function updateOnlineStatus(){
     common_fetch(`/service/broadcast/update_connected`+ 
                  `?client_id=${window.global_clientId}`+
+                 `&admin_id=${window.global_admin_id}` + 
                  `&user_account_id=${window.global_user_account_id}` + 
                  `&identity_provider_id=${window.global_user_identity_provider_id}`, 
                  'PATCH', 0, null, null, null, (err, result) =>{
@@ -1076,6 +1077,7 @@ function connectOnline(updateOnline=false){
     window.global_clientId = Date.now();
     window.global_eventSource = new EventSource(`/service/broadcast/connect/${window.global_clientId}` +
                                                 `?app_id=${window.global_app_id}` +
+                                                `&admin_id=${window.global_admin_id}` +
                                                 `&user_account_id=${window.global_user_account_id}` +
                                                 `&identity_provider_id=${window.global_user_identity_provider_id}` +
                                                 `&admin=${window.global_admin}`);
@@ -2046,7 +2048,7 @@ async function user_logoff(){
     updateOnlineStatus();
     document.getElementById('profile_avatar_online_status').className='';
     //get new data token to avoid endless loop och invalid token
-    await common_fetch_token(0, null,  null, null,  (err, result)=>{
+    await common_fetch_basic(0, null,  null, null,  (err, result)=>{
         dialogue_user_edit_clear();
         dialogue_verify_clear();
         dialogue_new_password_clear();
@@ -2778,6 +2780,10 @@ function set_globals(parameters){
     window.global_exception_app_function = parameters.exception_app_function;
     //admin true/false
     window.global_admin = parameters.admin;
+    if(parameters.admin_id)
+        window.global_admin_id = parameters.admin_id;
+    else
+        window.global_admin_id = '';
     //service auth path
     window.global_service_auth = parameters.service_auth;
     //client credentials
@@ -2876,6 +2882,7 @@ async function init_common(parameters, callBack){
      close_eventsource:
      ui:
      admin:
+     admin_id:
      service_auth: 
      global_rest_client_id: 
      global_rest_client_secret:
@@ -3160,7 +3167,7 @@ async function init_common(parameters, callBack){
         })
     }
     else{
-        await common_fetch_token(0, null,  null, null, (err, result)=>{
+        await common_fetch_basic(0, null,  null, null, (err, result)=>{
             null;
         })
         await common_fetch(window.global_rest_url_base + window.global_rest_app_parameter + window.global_app_id + '?',

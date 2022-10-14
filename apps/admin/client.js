@@ -27,9 +27,10 @@ module.exports = {
                         '');
                     get_module_with_init_admin(app_id, 
                                          'admin_exception_before',
-                                         null,
-                                         true,
-                                         true,
+                                         null, //do not close eventsource before
+                                         true, //ui
+                                         true, //admin
+                                         '', //no admin_id yet
                                          gps_lat,
                                          gps_long,
                                          gps_place,

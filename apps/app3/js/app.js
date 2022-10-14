@@ -66,7 +66,7 @@ async function init_app(){
         document.getElementById('common_window_info').style.visibility = 'hidden';
     }
     
-    await common_fetch_token(0, null,  null, null, (err, result)=>{
+    await common_fetch_basic(0, null,  null, null, (err, result)=>{
         null;
     })
 
