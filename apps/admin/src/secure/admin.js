@@ -938,13 +938,16 @@ async function show_list(list_div, list_div_col_title, url, sort, order_by, cols
                                     <div id='list_connected_col_title1' class='list_connected_col list_connected_sort_click list_title'>
                                         <div>ID</div>
                                     </div>
-                                    <div id='list_connected_col_title5' class='list_connected_col list_connected_sort_click list_title'>
+                                    <div id='list_connected_col_title2' class='list_connected_col list_connected_sort_click list_title'>
                                         <div>CONNECTION DATE</div>
                                     </div>
-                                    <div id='list_connected_col_title2' class='list_connected_col list_connected_sort_click list_title'>
+                                    <div id='list_connected_col_title3' class='list_connected_col list_connected_sort_click list_title'>
                                         <div>APP ID</div>
                                     </div>
-                                    <div id='list_connected_col_title3' class='list_connected_col list_connected_sort_click list_title'>
+                                    <div id='list_connected_col_title4' class='list_connected_col list_connected_sort_click list_title'>
+                                        <div>ADMIN ID</div>
+                                    </div>
+                                    <div id='list_connected_col_title5' class='list_connected_col list_connected_sort_click list_title'>
                                         <div>USER ID</div>
                                     </div>
                                     <div id='list_connected_col_title6' class='list_connected_col list_connected_sort_click list_title'>
@@ -956,10 +959,10 @@ async function show_list(list_div, list_div_col_title, url, sort, order_by, cols
                                     <div id='list_connected_col_title8' class='list_connected_col list_connected_sort_click list_title'>
                                         <div>GPS LONG</div>
                                     </div>
-                                    <div id='list_connected_col_title4' class='list_connected_col list_connected_sort_click list_title'>
+                                    <div id='list_connected_col_title9' class='list_connected_col list_connected_sort_click list_title'>
                                         <div>USER AGENT</div>
                                     </div>
-                                    <div id='list_connected_col_title9' class='list_connected_col list_title'>
+                                    <div id='list_connected_col_title10' class='list_connected_col list_title'>
                                         <div>BROADCAST</div>
                                     </div>
                                 </div>`;
@@ -1132,6 +1135,9 @@ async function show_list(list_div, list_div_col_title, url, sort, order_by, cols
                                             </div>
                                             <div class='list_connected_col'>
                                                 <div>${json.data[i].app_id}</div>
+                                            </div>
+                                            <div class='list_connected_col'>
+                                                <div>${json.data[i].admin_id}</div>
                                             </div>
                                             <div class='list_connected_col'>
                                                 <div>${json.data[i].user_account_id}</div>
@@ -2002,23 +2008,7 @@ function init_admin_secure(){
         })                
     })
 }
-init_common({
-    app_id: window.global_app_id,
-    app_name: 'ADMIN',
-    app_url: window.location.href,
-    app_logo: '/admin/images/logo.png',
-    exception_app_function: 'admin_logoff_app',
-    close_eventsource: true,
-    ui: false,
-    admin: true,
-    service_auth: window.global_service_auth,
-    app_rest_client_id: window.global_app_rest_client_id,
-    app_rest_client_secret: window.global_app_rest_client_secret,
-    rest_app_parameter: window.global_rest_app_parameter,
-    gps_lat: window.global_client_latitude, 
-    gps_long: window.global_client_longitude, 
-    gps_place: window.global_client_place 
-    }, (err, global_app_parameters)=>{
+init_common(<ITEM_COMMON_PARAMETERS/>, (err, global_app_parameters)=>{
     if (err)
         null;
     else{

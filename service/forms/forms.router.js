@@ -1,6 +1,6 @@
 const { getAdminSecure } = require ("./forms.controller");
 const router = require("express").Router();
-const { checkAdmin} = require ("../auth/admin/admin.controller");
+const { authAdmin} = require ("../auth/admin/admin.controller");
 
-router.get("/admin/secure", checkAdmin, getAdminSecure);
+router.post("/admin/secure", authAdmin, getAdminSecure);
 module.exports = router;

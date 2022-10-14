@@ -17,7 +17,8 @@ module.exports = {
                 const newClient = {
                     id: req.params.clientId,
                     app_id: req.query.app_id,
-                    user_account_id: req.query.user_account_id,
+                    admin_id: req.query.admin_id,
+                    user_account_id: '',
                     user_agent: req.headers["user-agent"],
                     connection_date: new Date().toISOString(),
                     ip: req.ip,
@@ -33,7 +34,7 @@ module.exports = {
                                     app_module_type : 'CONNECT',
                                     app_module_request : req.originalUrl,
                                     app_module_result : JSON.stringify(geodata),
-                                    app_user_id : req.query.user_account_id,
+                                    app_user_id : null,
                                     user_language : null,
                                     user_timezone : null,
                                     user_number_system : null,
@@ -65,6 +66,7 @@ module.exports = {
                 const newClient = {
                     id: req.params.clientId,
                     app_id: req.query.app_id,
+                    admin_id: '',
                     user_account_id: req.query.user_account_id,
                     user_agent: req.headers["user-agent"],
                     connection_date: new Date().toISOString(),
@@ -146,7 +148,7 @@ module.exports = {
         });
     },
     updateConnected: (req, res) => {
-        updateConnected(req.query.client_id, req.query.user_account_id, req.query.identity_provider_id, (err, result) =>{
+        updateConnected(req.query.client_id, req.query.admin_id, req.query.user_account_id, req.query.identity_provider_id, (err, result) =>{
             return res.status(200).json(
                 err ?? result
             );

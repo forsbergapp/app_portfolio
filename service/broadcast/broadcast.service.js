@@ -23,6 +23,7 @@ module.exports = {
                             copyClient = {
                                 id: client.id,
                                 app_id: client.app_id,
+                                admin_id: client.admin_id,
                                 user_account_id: client.user_account_id,
                                 user_agent: client.user_agent,
                                 connection_date: client.connection_date,
@@ -52,26 +53,30 @@ module.exports = {
                 break;
             }
             case 3:{
-                column_sort = 'user_account_id';
+                column_sort = 'admin_id';
                 break;
             }
             case 4:{
-                column_sort = 'user_agent';
+                column_sort = 'user_account_id';
                 break;
             }
             case 5:{
-                column_sort = 'connection_date';
+                column_sort = 'user_agent';
                 break;
             }
             case 6:{
-                column_sort = 'ip';
+                column_sort = 'connection_date';
                 break;
             }
             case 7:{
-                column_sort = 'gps_latitude';
+                column_sort = 'ip';
                 break;
             }
             case 8:{
+                column_sort = 'gps_latitude';
+                break;
+            }
+            case 9:{
                 column_sort = 'gps_longitude';
                 break;
             }
@@ -85,12 +90,19 @@ module.exports = {
         let i=0;
         let count_connected=0;
         for (let i = 0; i < broadcast_clients.length; i++){
-            //do not count admin without app_id
-            if (broadcast_clients[i].app_id !='' &&
-                ((count_logged_in==1 &&
-                  broadcast_clients[i].identity_provider_id == identity_provider_id &&
-                  broadcast_clients[i].user_account_id != '') ||
-                (count_logged_in==0 && broadcast_clients[i].user_account_id =='')))
+            if ((count_logged_in==1 &&
+                 broadcast_clients[i].identity_provider_id == identity_provider_id &&
+                 broadcast_clients[i].user_account_id != '') ||
+                (count_logged_in==1 &&
+                 identity_provider_id =='' &&
+                 broadcast_clients[i].app_id == process.env.COMMON_APP_ID &&
+                 broadcast_clients[i].admin_id != '') ||
+                (count_logged_in==0 && 
+                 broadcast_clients[i].app_id != process.env.COMMON_APP_ID &&
+                 broadcast_clients[i].user_account_id =='')||
+                (count_logged_in==0 &&
+                 broadcast_clients[i].app_id == process.env.COMMON_APP_ID &&
+                 broadcast_clients[i].admin_id == ''))
                 {
                 count_connected = count_connected + 1;
             }
@@ -122,10 +134,11 @@ module.exports = {
         }
         callBack(null, null);
     },
-    updateConnected: (client_id, user_account_id, identity_provider_id, callBack) =>{
+    updateConnected: (client_id, admin_id, user_account_id, identity_provider_id, callBack) =>{
         let i=0;
         for (let i = 0; i < broadcast_clients.length; i++){
             if (broadcast_clients[i].id==client_id){
+                broadcast_clients[i].admin_id = admin_id;
                 broadcast_clients[i].user_account_id = user_account_id;
                 broadcast_clients[i].connection_date = new Date().toISOString();
                 broadcast_clients[i].identity_provider_id = identity_provider_id;
