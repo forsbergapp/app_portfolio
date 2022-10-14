@@ -1,33 +1,36 @@
 const fs = require("fs");
-const { createLogAppSE } = require("../../../../service/log/log.controller");
+const { read_app_files, get_module_with_init_admin } = require("../../../");
 module.exports = {
-    getAdminSecure:(app_id, callBack) => {    
-        const {promises: {readFile}} = require("fs");
-        const files = [
-            ['APP', __dirname + '/index.html'],
-            ['<AppHeadJS/>', __dirname + '/admin.js'],
-            ['<AppHeadCSS/>', __dirname + '/admin.css'],
-            ['<AppDashboard/>', __dirname + '/dashboard.html']
-          ];
-        let i = 0;
-        Promise.all(files.map(file => {
-            return readFile(file[1], 'utf8');
-        })).then(fileBuffers => {
-            let app ='';
-            fileBuffers.forEach(fileBuffer => {
-                if (app=='')
-                    app = fileBuffer.toString();
-                else
-                    app = app.replace(
-                            files[i][0],
-                            `${fileBuffer.toString()}`);
-                i++;
-            });
-            return callBack(null, app);
-        }).catch(err => {
-            createLogAppSE(app_id, __appfilename, __appfunction, __appline, err, (err_log, result_log)=>{
-                return callBack(err);
-            });
-        });
+    getAdminSecure:(app_id, gps_lat, gps_long, gps_place, admin_id) => {    
+        return new Promise(function (resolve, reject){
+            const files = [
+                ['APP', __dirname + '/index.html'],
+                ['<AppHeadJS/>', __dirname + '/admin.js'],
+                ['<AppHeadCSS/>', __dirname + '/admin.css'],
+                ['<AppDashboard/>', __dirname + '/dashboard.html']
+            ];
+            read_app_files('', files, (err, app)=>{
+                if (err)
+                    reject(err);
+                else{
+                    get_module_with_init_admin(app_id, 
+                                        'admin_logoff_app',
+                                        true, //close eventsource and create new as logged in
+                                        false, //ui
+                                        true, //admin
+                                        admin_id,
+                                        gps_lat,
+                                        gps_long,
+                                        gps_place,
+                                        app, (err, app_init) =>{
+                        if (err)
+                            reject(err);
+                        else{
+                            resolve(app_init);
+                        }
+                    })
+                }
+            })
+        })
     }
 }

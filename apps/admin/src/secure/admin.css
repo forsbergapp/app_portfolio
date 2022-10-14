@@ -332,7 +332,8 @@
         width:20px;
     }
     .list_user_stat_col:nth-child(2){
-        width:100px;
+        width:40%;
+        min-width: 150px;
     }
     .list_user_stat_col:nth-child(3){
         width: 60px;
