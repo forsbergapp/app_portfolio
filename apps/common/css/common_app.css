@@ -425,23 +425,23 @@ a:active {
 	margin-top:10px;
 	text-align:center;
 }
-#profile_main_col1{
+.profile_main_row{
+	width: 100%;
+	margin-bottom: 10px;
+}
+.profile_main_col:nth-child(1){
 	display:inline-block;
-	width:200px;
+	width: 50%;
 	text-align:start;
+	vertical-align: top;
 }
-#profile_main_col2{
+.profile_main_col:nth-child(2){
 	display:inline-block;
-	width:99px;
-	vertical-align:top;
+	width: 45%;
 }
-#profile_main_col3{
-	display:inline-block;
-	vertical-align:top;
-	margin: 10px;
-}
-#profile_main_col3 div{
-	padding-bottom:10px;
+.profile_main_row:nth-child(2) .profile_main_col:nth-child(2) div{
+	width: 66px;
+	display: inline-block;
 }
 #profile_id{
 	display:none;
@@ -476,9 +476,6 @@ a:active {
 	display:inline-block;
 	margin-right: 8px;
 }
-#profile_joined_date{
-	margin-top: 10px;
-}
 #profile_joined_date,
 #profile_info_following_count,
 #profile_info_followers_count,
@@ -486,7 +483,7 @@ a:active {
 #profile_info_view_count
 {
 	display:inline-block;
-	margin-left:10px;
+	margin-inline-start: 10px;
 }
 #profile_main_btn_following,
 #profile_main_btn_followed,
@@ -506,13 +503,10 @@ a:active {
 #profile_qr {
 	padding:3px;
 	padding-bottom:0px;
-	width:96px;
+	width: 132px;
+	display: inline-block;
 }
 
-#profile_qr canvas{
-	height:96px;
-	width:96px;
-}
 #profile_follow_followed,
 #profile_like_unlike{
 	display:none;
@@ -596,7 +590,7 @@ a:active {
 	border-radius: 50%;
 }
 .profile_detail_list_app_logo, .profile_detail_list_app_name{
-	margin-left: 20px;
+	margin-inline-start: 20px;
 }
 
 .profile_detail_list_app_url, .profile_detail_list_date_created{
@@ -907,9 +901,6 @@ a:active {
 	#profile_public {
 		width:400px;
 	}
-	#profile_main_col1 {
-		width: 250px;
-	}
 	.profile_detail_list{
 		height:90px;
 	}	
@@ -920,9 +911,6 @@ a:active {
 	}
 	#profile_main_stat_row1 div{
 		margin-right:10px;
-	}
-	#profile_main_col1{
-		width:250px;
 	}
 }
 .common_dialogue_content a:hover, a:active {
