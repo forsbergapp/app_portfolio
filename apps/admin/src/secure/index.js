@@ -16,7 +16,7 @@ module.exports = {
                     get_module_with_init_admin(app_id, 
                                         'admin_logoff_app',
                                         true, //close eventsource and create new as logged in
-                                        false, //ui
+                                        true, //ui
                                         true, //admin
                                         admin_id,
                                         gps_lat,

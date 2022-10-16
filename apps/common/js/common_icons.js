@@ -22,6 +22,7 @@ function seticons(){
     window.global_icon_app_delete = '<i class="fa-solid fa-trash-can"></i>';
     window.global_icon_app_update = '<i class="fa-solid fa-floppy-disk"></i>';
     window.global_icon_app_edit = '<i class="fa-solid fa-pen-to-square"></i>';
+    window.global_icon_app_lov = '<i class="fa-solid fa-chevron-up"></i>';
     window.global_icon_app_send = '<i class="fa-solid fa-paper-plane"></i>';
     window.global_icon_app_sendmail = '<i class="fa-solid fa-envelope"></i>';
     window.global_icon_app_email = '<i class="fa-solid fa-envelope"></i>';
