@@ -2171,6 +2171,7 @@ async function user_login(username, password, callBack) {
         if (err)
             return callBack(err, null);
         else{
+            profile_close();
             json = JSON.parse(result);
             window.global_user_account_id = json.items[0].id;
             window.global_user_identity_provider_id = '';
