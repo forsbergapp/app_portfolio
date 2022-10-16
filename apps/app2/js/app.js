@@ -135,13 +135,6 @@ window.global_qr_background_color;
 
 function printTable(){
     dialogue_loading(1);
-    let timetable_type = getTimetable_type();
-    if (timetable_type==0)
-	    document.getElementById('prayertable_day_qr_code').children[0].id = 'destinationCanvas';
-    if (timetable_type==1)
-	    document.getElementById('prayertable_month_qr_code').children[0].id = 'destinationCanvas';
-    if (timetable_type==2)
-	    document.getElementById('prayertable_year_qr_code').children[0].id = 'destinationCanvas';
     let whatToPrint = document.getElementById('paper');
     
 	let html;
@@ -152,7 +145,6 @@ function printTable(){
 				<meta charset='UTF-8'>
 				<title></title>
                 <link rel='stylesheet' type='text/css' href='/app${window.global_app_id}/css/app_report.css' />
-                <link rel='stylesheet' type='text/css' href='https://use.fontawesome.com/releases/v6.1.1/css/all.css' />
                 <link rel='stylesheet' type='text/css' href='/common/css/common.css' />
 			</head>
 			<body id="printbody">
@@ -160,19 +152,9 @@ function printTable(){
 			</body>
 			</html>`;
 	
-    function copyCanvas(){
-        let destinationCtx;
-        let destinationCanvas = document.getElementById('common_window_info_content').contentDocument.getElementById('destinationCanvas');
-        document.getElementById('destinationCanvas').id = 'sourceCanvas';
-        let sourceCanvas = document.getElementById('sourceCanvas');
-        destinationCtx = destinationCanvas.getContext('2d');
-        destinationCtx.drawImage(sourceCanvas, 0, 0);
-        document.getElementById('sourceCanvas').removeAttribute('id');
-    }
     
     document.getElementById('common_window_info_content').contentWindow.document.open();
     document.getElementById('common_window_info_content').contentWindow.document.write(html);
-    copyCanvas();
     document.getElementById('common_window_info_content').classList = document.getElementById('paper').classList;
     window.frames['common_window_info_content'].focus()
     setTimeout(function(){document.getElementById('common_window_info_content').contentWindow.print();dialogue_loading(0);}, 500);
@@ -1498,7 +1480,7 @@ function user_setting_link(item){
                                      paper_size_select.options[paper_size_select.selectedIndex].value,
                                      item.id,
                                      'HTML');
-            show_window_info(null, false, null, 'HTML', url, url);
+            show_window_info(null, false, null, 'HTML', url);
             break;
         }
         case 'user_day_html_copy':
@@ -1522,7 +1504,7 @@ function user_setting_link(item){
                                      paper_size_select.options[paper_size_select.selectedIndex].value,
                                      item.id,
                                      'PDF');
-            show_window_info(null, false, null, 'PDF', url, url);
+            show_window_info(null, false, null, 'PDF', url);
             break;
         }
         case 'user_day_pdf_copy':
@@ -2118,7 +2100,7 @@ function profile_user_setting_link(item){
                                      paper_size_select.options[paper_size_select.selectedIndex].value,
                                      item.id,
                                      'HTML');
-            show_window_info(null, false, null, 'HTML', url, url);
+            show_window_info(null, false, null, 'HTML', url);
             break;
         }
         case 'profile_user_settings_like':{

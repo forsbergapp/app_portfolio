@@ -186,15 +186,11 @@
 	height:340px;
 }
 #scan_open_mobile_qrcode{
-	padding:3px;
-	width:128px;
-	height: 128px;
-	margin: 0 auto;
 	margin-top: 42px;
 }
-#scan_open_mobile_qrcode canvas{
-	width: 128px;
-	height:128px;
+#scan_open_mobile_qrcode svg{
+	padding: 3px;
+    background-color: white;
 }
 #scan_open_mobile_title1{
 	margin-top:10px;
@@ -714,10 +710,6 @@ body.app_theme1,
 .app_theme1 .common_dialogue_content{
 	box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
 }
-.app_theme1 #scan_open_mobile_qrcode{
-	padding:3px;
-	background-color:white;
-}
 .app_theme1 #scan_open_mobile_title2{
 	color: #a3a3a3;
 }
@@ -920,10 +912,6 @@ body.app_theme2,
 .app_theme2 .dialogue_content,
 .app_theme2 .common_dialogue_content{
 	box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
-}
-.app_theme2 #scan_open_mobile_qrcode{
-	padding:3px;
-	background-color:white;
 }
 .app_theme2 #scan_open_mobile_title2{
 	color: #a3a3a3;
@@ -1128,10 +1116,6 @@ body.app_theme3,
 .app_theme3 .dialogue_content,
 .app_theme3 .common_dialogue_content{
 	box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
-}
-.app_theme3 #scan_open_mobile_qrcode{
-	padding:3px;
-	background-color:white;
 }
 .app_theme3 #scan_open_mobile_title2{
 	color: #a3a3a3;
