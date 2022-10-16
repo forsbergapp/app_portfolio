@@ -128,6 +128,11 @@ body.font_arabic_nastaliq #user_menu_default_avatar{
 	cursor: pointer;
 }
 
+#info_diagram_img, #info_datamodel_img{
+	width: 128px;
+	height: 64px;
+}
+
 /*Dialogue profile*/
 #profile_main_btn_cloud{
 	height: 20px;
@@ -721,7 +726,11 @@ div.ray8 {
 .theme_sun #common_window_info{
 	background-color:#ffffff;
 }
-.theme_sun #profile_search_input{
+.theme_sun #profile_search_input, 
+.theme_sun .login_input, 
+.theme_sun .signup_input, 
+.theme_sun .forgot_input, 
+.theme_sun .new_password_input{
 	border: 1px solid #ddd;
 }
 .theme_sun #profile_search_list{
@@ -768,9 +777,27 @@ div.ray8 {
 .theme_sun .forgot_button:active{
 	background-color:#6ab344 !important;
 }
-#info_diagram_img, #info_datamodel_img{
-	width: 128px;
-	height: 64px;
+.theme_sun .profile_search_list_selected{
+	background-color: #ddd;
+}
+.theme_sun .list_scrollbar{
+	scrollbar-color: #a49775 #ddd;
+}
+.theme_sun .common_dialogue_content a:hover, 
+.theme_sun .common_dialogue_content a:active {
+	color:#6ab344;
+}
+.theme_sun #profile_avatar_online_status.online{
+	color:#6ab344;
+}
+.theme_sun #profile_avatar_online_status.offline{
+	color:rgb(224, 38, 38);
+}
+.theme_sun .input_error{
+	border:1px solid red !important;
+}
+.theme_sun #user_menu_dropdown{
+	box-shadow: 0 4px 8px 0 rgb(0 0 0 / 20%), 0 6px 20px 0 rgb(0 0 0 / 19%);
 }
 /*MOON THEME*/
 .theme_moon{
@@ -859,7 +886,11 @@ div.ray8 {
 .theme_moon #common_window_info{
 	background-color:#ffffff;
 }
-.theme_moon #profile_search_input{
+.theme_moon #profile_search_input, 
+.theme_moon .login_input, 
+.theme_moon .signup_input, 
+.theme_moon .forgot_input, 
+.theme_moon .new_password_input{
 	border: 1px solid #ddd;
 }
 .theme_moon #profile_search_list{
@@ -905,4 +936,26 @@ div.ray8 {
 .theme_moon .forgot_button:hover,
 .theme_moon .forgot_button:active{
 	background-color:#6ab344 !important;
+}
+.theme_moon .profile_search_list_selected{
+	background-color: #ddd;
+}
+.theme_moon .list_scrollbar{
+	scrollbar-color: #a49775 #ddd;
+}
+.theme_moon .common_dialogue_content a:hover, 
+.theme_moon .common_dialogue_content a:active {
+	color:#6ab344;
+}
+.theme_moon #profile_avatar_online_status.online{
+	color:#6ab344;
+}
+.theme_moon #profile_avatar_online_status.offline{
+	color:rgb(224, 38, 38);
+}
+.theme_moon .input_error{
+	border:1px solid red !important;
+}
+.theme_moon #user_menu_dropdown{
+	box-shadow: 0 4px 8px 0 rgb(0 0 0 / 20%), 0 6px 20px 0 rgb(0 0 0 / 19%);
 }

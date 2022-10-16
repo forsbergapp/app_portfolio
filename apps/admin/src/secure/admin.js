@@ -80,16 +80,6 @@ function show_menu(menu){
 function show_user_agent(user_agent){
     return null;
 }
-function close_lov(){
-    document.getElementById('dialogue_lov').style.visibility = 'hidden';
-    document.getElementById('lov_title').innerHTML='';
-    document.getElementById('lov_list').innerHTML='';
-}
-function show_lov(title_text, lov_list_content){
-    document.getElementById('lov_title').innerHTML = title_text;
-    document.getElementById('dialogue_lov').style.visibility = 'visible';
-    document.getElementById('lov_list').innerHTML = lov_list_content;
-}    
 
 async function get_apps() {
     let json;
@@ -639,13 +629,14 @@ function show_app_parameter(app_id){
                 html += 
                 `<div id='list_app_parameter_row_${i}' data-changed-record='0' class='list_app_parameter_row'>
                     <div class='list_app_parameter_col'>
-                        <input type=number class='list_edit_app_parameter' value=${json.data[i].app_id}>
+                        <input type=text class='list_edit_app_parameter' value=${json.data[i].app_id}>
                     </div>
                     <div class='list_app_parameter_col'>
-                        <input type=number class='list_edit_app_parameter' value=${json.data[i].parameter_type_id}>
+                        <input type=text class='list_edit_app_parameter input_lov' value=${json.data[i].parameter_type_id}>
+                        <div class='common_lov_button list_lov_click'></div>
                     </div>
                     <div class='list_app_parameter_col'>
-                        <div class='list_readonly_app_parameter list_lov_click'>${json.data[i].parameter_type_name}</div>
+                        <div class='list_readonly_app_parameter'>${json.data[i].parameter_type_name}</div>
                     </div>
                     <div class='list_app_parameter_col'>
                         <div class='list_readonly_app_parameter'>${json.data[i].parameter_name}</div>
@@ -660,8 +651,15 @@ function show_app_parameter(app_id){
             }
             document.getElementById('list_app_parameter').innerHTML = html;
             list_events('list_app_parameter_row', '.list_edit_app_parameter', 1);
+            document.querySelectorAll('.common_lov_button').forEach(e => e.innerHTML = window.global_icon_app_lov);
             document.querySelectorAll('.list_lov_click').forEach(e => e.addEventListener('click', function(event) {
-                show_parameter_type_names(1, this, 1);
+                let function_event = function(event) {
+                    e.parentNode.parentNode.children[1].children[0].value = event.target.children[0].children[0].innerHTML;
+                    e.parentNode.parentNode.children[1].children[0].focus();
+                    e.parentNode.parentNode.children[1].children[0].dispatchEvent(new Event('change'));
+                    document.getElementById('lov_close').dispatchEvent(new Event('click'))
+                };
+                lov_show('PARAMETER TYPE', function_event);
             }));
         }
     })
@@ -741,33 +739,44 @@ async function update_record(table,
         })
     }
 }
-function get_parameter_type_name(row_item, item, old_value){
-    common_fetch(`${window.global_rest_url_base}${window.global_rest_parameter_type}admin?id=${item.value}`,
-                 'GET', 2, null, null, null, (err, result) =>{
-        if (err)
-            null;
-        else{
-            json = JSON.parse(result);
-            if (json.data.length == 1)
-                document.getElementById(row_item).children[2].children[0].innerHTML = json.data[0].parameter_type_name;
-            else{
-                item.value = old_value;
-                item.focus();
-            }
-        }
-    });
-}
 function list_events(item_row, item_edit, column_start_index){
     //on change on all editable fields
     //mark record as changed if any editable field is changed
     //get parameter_type_name for app_parameter rows
+    
     document.querySelectorAll(item_edit).forEach(e => e.addEventListener('change', function(event) {
         event.target.parentNode.parentNode.setAttribute('data-changed-record','1')
         if (item_row == 'list_app_parameter_row' && event.target.parentNode.parentNode.children[1].children[0] == event.target)
             if (this.value=='')
                 this.value = event.target.defaultValue;
-            else
-                get_parameter_type_name(event.target.parentNode.parentNode.id, this, event.target.defaultValue);
+            else{
+                common_fetch(`${window.global_rest_url_base}${window.global_rest_parameter_type}admin?id=${this.value}`,
+                            'GET', 2, null, null, null, (err, result) =>{
+                    if (err){
+                        event.stopPropagation();
+                        event.preventDefault();
+                        //set old value
+                        this.value = event.target.defaultValue;
+                        this.focus();
+                        this.nextElementSibling.dispatchEvent(new Event('click'));
+                    }
+                    else{
+                        json = JSON.parse(result);
+                        if (json.data.length == 1){
+                            //set new value
+                            document.getElementById(event.target.parentNode.parentNode.id).children[2].children[0].innerHTML = json.data[0].parameter_type_name;
+                        }
+                        else{
+                            event.stopPropagation();
+                            event.preventDefault();
+                            //set old value
+                            this.value = event.target.defaultValue;
+                            this.focus();
+                            this.nextElementSibling.dispatchEvent(new Event('click'));
+                        }
+                    }
+                });
+            }
     }));
     //key navigation key-up and key-down
     document.querySelectorAll(item_edit).forEach(e => e.addEventListener('keydown', function(event) {
@@ -800,45 +809,6 @@ function list_events(item_row, item_edit, column_start_index){
                 }
             }
         ));
-    }
-}
-function show_parameter_type_names(lov, row_item, item_index){
-    switch(lov){
-        case 1:{
-            let json;
-            show_lov('PARAMETER TYPE', window.global_app_spinner);
-
-            common_fetch(window.global_rest_url_base + window.global_rest_parameter_type + `admin?`,
-                         'GET', 2, null, null, null, (err, result) =>{
-                if (err)
-                    document.getElementById('lov_list').innerHTML = '';
-                else{
-                    json = JSON.parse(result);
-                    let lov_list = document.getElementById('lov_list');
-                    lov_list.innerHTML = '';
-                    let html = '';
-                    for (i = 0; i < json.data.length; i++) {
-                        html += 
-                        `<div id='list_lov_row_${i}' class='list_lov_row'>
-                            <div class='list_lov_col'>
-                                <div>${json.data[i].id}</div>
-                            </div>
-                            <div class='list_lov_col'>
-                                <div>${json.data[i].parameter_type_name}</div>
-                            </div>
-                        </div>`;
-                    }
-                    lov_list.innerHTML = html;
-                    document.querySelectorAll('.list_lov_row').forEach(e => e.addEventListener('click', function(event) {
-                        row_item.parentNode.parentNode.children[item_index].children[0].value = this.children[0].children[0].innerHTML;
-                        row_item.parentNode.parentNode.children[item_index].children[0].focus();
-                        row_item.parentNode.parentNode.children[item_index].children[0].dispatchEvent(new Event('change'));
-                        close_lov();
-                    }));
-                }
-            })
-            break;
-        }
     }
 }
 /*----------------------- */
@@ -1668,64 +1638,41 @@ function show_server_logs(sort=1, order_by='desc'){
 }
 function show_existing_logfiles(){
     if (admin_token_has_value()){
-        let json;
-        let url_parameters;
-        show_lov('SERVER LOG FILES', window.global_app_spinner);
+        let function_event = function(event) {                    
+                                //format: 'LOGSCOPE_LOGLEVEL_20220101.log'
+                                //logscope and loglevel
+                                let filename = this.children[1].children[0].innerHTML;
+                                let logscope = filename.substring(0,filename.indexOf('_'));
+                                filename = filename.substring(filename.indexOf('_')+1);
+                                let loglevel = filename.substring(0,filename.indexOf('_'));
+                                filename = filename.substring(filename.indexOf('_')+1);
+                                let year     = parseInt(filename.substring(0, 4));
+                                let month    = parseInt(filename.substring(4, 6));
+                                let day      = parseInt(filename.substring(6, 8));
+                                function setlogscopelevel(select, logscope, loglevel){
+                                    for (let i = 0; i < select.options.length; i++) {
+                                        if (select[i].getAttribute('log_scope') == logscope &&
+                                            select[i].getAttribute('log_level') == loglevel) {
+                                            select.selectedIndex = i;
+                                            return null;
+                                        }
+                                    }
+                                }
+                                setlogscopelevel(document.getElementById('select_logscope4'),
+                                                logscope, 
+                                                loglevel);
+                                //year
+                                document.getElementById('select_year_menu4').value = year;
+                                //month
+                                document.getElementById('select_month_menu4').value = month;
+                                //day if applicable
+                                if (window.global_service_log_file_interval=='1D')
+                                    document.getElementById('select_day_menu4').value = day;
 
-        common_fetch(window.global_service_log + '/files?',
-                     'GET', 2, null, null, null, (err, result) =>{
-            if (err)
-                document.getElementById('lov_list').innerHTML = '';
-            else{
-                json = JSON.parse(result);
-                let logfiles_list = document.getElementById('lov_list');
-                logfiles_list.innerHTML = '';
-                let html = '';
-                for (i = 0; i < json.length; i++) {
-                    html += 
-                    `<div id='list_logfiles_row_${i}' class='list_lov_row'>
-                        <div class='list_logfiles_col'>
-                            <div>${json[i]}</div>
-                        </div>
-                    </div>`;
-                }
-                logfiles_list.innerHTML = html;
-                function setlogscopelevel(select, logscope, loglevel){
-                    for (let i = 0; i < select.options.length; i++) {
-                        if (select[i].getAttribute('log_scope') == logscope &&
-                            select[i].getAttribute('log_level') == loglevel) {
-                            select.selectedIndex = i;
-                            return null;
-                        }
-                    }
-                }
-                document.querySelectorAll('.list_lov_row').forEach(e => e.addEventListener('click', function(event) {                    
-                    //format: 'LOGSCOPE_LOGLEVEL_20220101.log'
-                    //logscope and loglevel
-                    let filename = this.children[0].children[0].innerHTML;
-                    let logscope = filename.substring(0,filename.indexOf('_'));
-                    filename = filename.substring(filename.indexOf('_')+1);
-                    let loglevel = filename.substring(0,filename.indexOf('_'));
-                    filename = filename.substring(filename.indexOf('_')+1);
-                    let year     = parseInt(filename.substring(0, 4));
-                    let month    = parseInt(filename.substring(4, 6));
-                    let day      = parseInt(filename.substring(6, 8));
-                    setlogscopelevel(document.getElementById('select_logscope4'),
-                                     logscope, 
-                                     loglevel);
-                    //year
-                    document.getElementById('select_year_menu4').value = year;
-                    //month
-                    document.getElementById('select_month_menu4').value = month;
-                    //day if applicable
-                    if (window.global_service_log_file_interval=='1D')
-                        document.getElementById('select_day_menu4').value = day;
-
-                    document.getElementById('select_logscope4').dispatchEvent(new Event('change'));
-                    close_lov();
-                }));
-            }
-        })
+                                document.getElementById('select_logscope4').dispatchEvent(new Event('change'));
+                                lov_close();
+                            };
+        lov_show('SERVER LOG FILES', function_event);
     }
 }
 function show_pm2_logs(){
@@ -1890,8 +1837,6 @@ function init_admin_secure(){
     document.getElementById('send_broadcast_send').addEventListener('click', function() { sendBroadcast(); }, false);
     document.getElementById('send_broadcast_close').addEventListener('click', function() { closeBroadcast()}, false);
 
-
-    document.getElementById('lov_close').addEventListener('click', function() { close_lov()}, false); 
     document.getElementById('apps_save').addEventListener('click', function() { apps_save()}, false); 
 
     document.getElementById('list_app_log_title').addEventListener('click', function() { nav_click(this)}, false);
