@@ -1066,7 +1066,7 @@ function move_info(move1, move2) {
     }
     return null;
 }
-function show_window_info(info, show_toolbar, content, content_type, qr_data, iframe_content){
+function show_window_info(info, show_toolbar, content, content_type, iframe_content){
     /*
     common_window_info_info     use to display image                    case 0
     common_window_info_info     use to display spinner                  case null
@@ -1603,7 +1603,8 @@ function create_qr(div, url) {
         logoWidth: window.global_qr_logo_width,
         logoHeight: window.global_qr_logo_height,
         logoBackgroundColor: window.global_qr_background_color,
-        logoBackgroundTransparent: false
+        logoBackgroundTransparent: false,
+        drawer: 'svg'
     });
 }
 /*----------------------- */
