@@ -881,6 +881,160 @@ function dialogue_user_edit_remove_error(){
 
     document.getElementById('user_edit_input_password_reminder').classList.remove('input_error');
 }
+function lov_close(){
+    //remove all event listeners
+    document.querySelectorAll('.list_lov_row').forEach(e => 
+        e.replaceWith(e.cloneNode(true))
+    );
+    document.getElementById('dialogue_lov').style.visibility = 'hidden';
+    document.getElementById('lov_title').innerHTML='';
+    document.getElementById('lov_search_input').value='';
+    document.getElementById('lov_list').innerHTML='';
+    
+}
+function lov_show(lov, function_event){
+    document.getElementById('lov_title').innerHTML = lov;
+    document.getElementById('dialogue_lov').style.visibility = 'visible';
+    document.getElementById('lov_list').innerHTML = window.global_app_spinner;
+    let url = '';
+    let token_type = '';
+    let lov_column_value='';
+    switch (lov){
+        case 'PARAMETER TYPE':{
+            lov_column_value = 'parameter_type_name';
+            if (window.global_admin){
+                url = window.global_rest_url_base + window.global_rest_parameter_type + `admin?`;
+                token_type = 2;
+            }
+            else{
+                url = window.global_rest_url_base + window.global_rest_parameter_type + `?`;
+                token_type = 0;
+            }
+            break;
+        }
+        case 'SERVER LOG FILES':{
+            lov_column_value = 'filename';
+            url = window.global_service_log + '/files?';
+            token_type = 2;
+            break;
+        }
+    }
+    common_fetch(url, 'GET', token_type, null, null, null, (err, result) =>{
+        if (err)
+            document.getElementById('lov_list').innerHTML = '';
+        else{
+            document.getElementById('lov_list').innerHTML = '';
+            json = JSON.parse(result);
+            let html = '';
+            for (i = 0; i < json.data.length; i++) {
+                html += 
+                `<div id='list_lov_row_${i}' class='list_lov_row'>
+                    <div class='list_lov_col'>
+                        <div>${json.data[i].id}</div>
+                    </div>
+                    <div class='list_lov_col'>
+                        <div>${eval('json.data[i].' + lov_column_value)}</div>
+                    </div>
+                </div>`;
+            }
+            document.getElementById('lov_list').innerHTML = html;
+            document.getElementById('lov_search_input').focus();
+            document.querySelectorAll('.list_lov_row').forEach(e => e.addEventListener('click', function_event));
+        }
+    })
+}
+function lov_keys(event){
+    //left 37, right 39, up 38, down 40, enter 13
+    switch (event.keyCode){
+        case 37:
+        case 39:{
+            break;
+        }
+        case 38:
+        case 40:{
+            //up 38
+            //down 40
+            //loop rows not hidden
+            var x = document.querySelectorAll('.list_lov_row:not(.list_lov_row_hide)');
+            for (i = 0; i <= x.length -1; i++) {
+                if (x[i].classList.contains('list_lov_row_selected')){
+                    //if up and first or
+                    //if down and last
+                    if ((event.keyCode==38 && i == 0)||
+                        (event.keyCode==40 && i == x.length -1)){
+                        if(event.keyCode==38){
+                            //up
+                            //if the first, set the last
+                            x[i].classList.remove ('list_lov_row_selected');
+                            x[x.length -1].classList.add ('list_lov_row_selected');
+                        }
+                        else{
+                            //down
+                            //if the last, set the first
+                            x[i].classList.remove ('list_lov_row_selected');
+                            x[0].classList.add ('list_lov_row_selected');
+                        }
+                        return;
+                    }
+                    else{
+                        if(event.keyCode==38){
+                            //up
+                            //remove highlight, highlight previous
+                            x[i].classList.remove ('list_lov_row_selected');
+                            x[i-1].classList.add ('list_lov_row_selected');
+                        }
+                        else{
+                            //down
+                            //remove highlight, highlight next
+                            x[i].classList.remove ('list_lov_row_selected');
+                            x[i+1].classList.add ('list_lov_row_selected');
+                        }
+                        return;
+                    }
+                }
+            }
+            //no highlight found, highlight first
+            x[0].classList.add ('list_lov_row_selected');
+            break
+        }
+        case 13:{
+            //enter
+            var x = document.querySelectorAll('.list_lov_row');
+            for (i = 0; i <= x.length -1; i++) {
+                if (x[i].classList.contains('list_lov_row_selected')){
+                    //event on row is set in app when calling lov, dispatch it!
+                    x[i].dispatchEvent(new Event('click'))
+                    x[i].classList.remove ('list_lov_row_selected');
+                }
+            }
+            break
+        }
+        default:{
+            //if db call will be implemented, add delay
+            //window.global_typewatch(`lov_filter('${document.getElementById('lov_search_input').value}');`, 500); 
+            lov_filter(document.getElementById('lov_search_input').value); 
+            break;
+        }    
+    }
+}
+function lov_filter(text_filter){
+    var x = document.querySelectorAll('.list_lov_row');
+    for (i = 0; i <= x.length -1; i++) {
+        x[i].classList.remove ('list_lov_row_hide');
+        x[i].classList.remove ('list_lov_row_selected');
+    }
+    for (i = 0; i <= x.length -1; i++) {
+        if (x[i].children[0].children[0].innerHTML.toUpperCase().indexOf(text_filter.toUpperCase()) > -1 ||
+            x[i].children[1].children[0].innerHTML.toUpperCase().indexOf(text_filter.toUpperCase()) > -1){
+                x[i].classList.remove ('list_lov_row_hide');
+            }
+        else{
+            x[i].classList.remove ('list_lov_row_hide');
+            x[i].classList.add ('list_lov_row_hide');
+        }
+    }
+}
+
 /*----------------------- */
 /* WINDOW INFO            */
 /*----------------------- */
@@ -1082,9 +1236,7 @@ function connectOnline(updateOnline=false){
                                                 `&identity_provider_id=${window.global_user_identity_provider_id}` +
                                                 `&admin=${window.global_admin}`);
     window.global_eventSource.onmessage = function (event) {
-        if (window.global_admin == true)
-            null;
-        else
+        
             show_broadcast(event.data);
     }
     window.global_eventSource.onerror = function (err) {
@@ -2955,6 +3107,8 @@ async function init_common(parameters, callBack){
         //dialogue message
         document.getElementById('message_cancel').innerHTML = window.global_icon_app_cancel;
         document.getElementById('message_close').innerHTML = window.global_icon_app_close;
+        //dialog lov
+        document.getElementById('lov_search_icon').innerHTML = window.global_icon_app_search;
         //broadcast
         document.getElementById('broadcast_close').innerHTML = window.global_icon_app_broadcast_close;
         //profile detail
@@ -3038,6 +3192,10 @@ async function init_common(parameters, callBack){
         //dialogue new password
         document.getElementById('user_new_password_cancel').addEventListener('click', function() { dialogue_new_password_clear(); }, false);
         document.getElementById('user_new_password_ok').addEventListener('click', function() { updatePassword(); }, false);
+        //dialogue lov
+        document.getElementById('lov_search_input').addEventListener('keyup', function(event) {lov_keys(event)});
+        document.getElementById('lov_search_icon').addEventListener('click', function() {lov_filter(document.getElementById('lov_search_input').value);});
+        document.getElementById('lov_close').addEventListener('click', function() { lov_close()}, false); 
         //profile search
         if (document.getElementById('profile_info_search'))
             document.getElementById('profile_search_icon').addEventListener('click', function() { document.getElementById('profile_search_input').dispatchEvent(new KeyboardEvent('keyup')); }, false);

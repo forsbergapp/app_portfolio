@@ -48,9 +48,9 @@ module.exports = {
                 );
 			else{
                 if (results.length>0)
-                    return res.status(200).send(
-                        results
-                    );
+                    return res.status(200).json({
+						data: results
+					});
                 else{
                     const { getMessage_admin } = require("../../service/db/app_portfolio/message_translation/message_translation.service");
                     //Record not found
