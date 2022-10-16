@@ -399,6 +399,7 @@ module.exports = {
             if (err) {
                 return callBack(err, null);
             }
+            let i =1;
             files.forEach(file => {
                 if (file.indexOf('CONTROLLER_INFO_')==0||
                     file.indexOf('DB_INFO_')==0||
@@ -408,7 +409,7 @@ module.exports = {
                     file.indexOf('SERVER_VERBOSE_')==0||
                     file.indexOf('SERVICE_ERROR_')==0||
                     file.indexOf('SERVICE_INFO_')==0)
-                logfiles.push(file);
+                logfiles.push({"id": i++, "filename":file});
             });
             return callBack(null, logfiles);
         });
