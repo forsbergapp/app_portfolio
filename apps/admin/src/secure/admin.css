@@ -924,5 +924,30 @@
         background-color: #fefefe;
         box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
     }
-
+    .theme_light #lov_search_input{
+        border: 1px solid #ddd;
+    }
+    .theme_light .list_lov_row_selected {
+        background-color: #ddd !important;
+    }
+    .theme_light .list_scrollbar{
+        scrollbar-color: #a49775 #ddd;
+    }
+    .theme_light .common_dialogue_content a:hover, 
+    .theme_light .common_dialogue_content a:active {
+        color:#6ab344;
+    }
+    .theme_light #profile_avatar_online_status.online{
+        color:#6ab344;
+    }
+    .theme_light #profile_avatar_online_status.offline{
+        color:rgb(224, 38, 38);
+    }
+    .theme_light .input_error{
+        border:1px solid red !important;
+    }
+    .theme_light #user_menu_dropdown{
+        box-shadow: 0 4px 8px 0 rgb(0 0 0 / 20%), 0 6px 20px 0 rgb(0 0 0 / 19%);
+    }
+    
 </style>

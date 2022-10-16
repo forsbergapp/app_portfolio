@@ -674,7 +674,11 @@ body.app_theme1,
 .app_theme1 #tab_navigation button:active {
 	color:#6ab344 !important;
 }
-.app_theme1 #profile_search_input{
+.app_theme1 #profile_search_input,
+.app_theme1 .login_input, 
+.app_theme1 .signup_input, 
+.app_theme1 .forgot_input, 
+.app_theme1 .new_password_input{
 	border: 1px solid #ddd;
 }
 .app_theme1 #profile_search_list{
@@ -780,6 +784,28 @@ body.app_theme1,
 	background-color: #a49775;
 	color: white;
 }
+.app_theme1 .profile_search_list_selected{
+	background-color: #ddd;
+}
+.app_theme1 .list_scrollbar{
+	scrollbar-color: #a49775 #ddd;
+}
+.app_theme1 .common_dialogue_content a:hover, 
+.app_theme1 .common_dialogue_content a:active {
+	color:#6ab344;
+}
+.app_theme1 #profile_avatar_online_status.online{
+	color:#6ab344;
+}
+.app_theme1 #profile_avatar_online_status.offline{
+	color:rgb(224, 38, 38);
+}
+.app_theme1 .input_error{
+	border:1px solid red !important;
+}
+.app_theme1 #user_menu_dropdown{
+	box-shadow: 0 4px 8px 0 rgb(0 0 0 / 20%), 0 6px 20px 0 rgb(0 0 0 / 19%);
+}
 /* APP THEME 2*/
 /* Darker colors*/
 body.app_theme2,
@@ -855,7 +881,11 @@ body.app_theme2,
 .app_theme2 #tab_navigation button:active {
 	color:#6ab344 !important;
 }
-.app_theme2 #profile_search_input{
+.app_theme2 #profile_search_input, 
+.app_theme2 .login_input, 
+.app_theme2 .signup_input, 
+.app_theme2 .forgot_input, 
+.app_theme2 .new_password_input{
 	border: 1px solid #ddd;
 }
 .app_theme2 #profile_search_list{
@@ -961,6 +991,28 @@ body.app_theme2,
 	background-color: #a49775;
 	color: white;
 }
+.app_theme2 .profile_search_list_selected{
+	background-color: #ddd;
+}
+.app_theme2 .list_scrollbar{
+	scrollbar-color: #a49775 #ddd;
+}
+.app_theme2 .common_dialogue_content a:hover, 
+.app_theme2 .common_dialogue_content a:active {
+	color:#6ab344;
+}
+.app_theme2 #profile_avatar_online_status.online{
+	color:#6ab344;
+}
+.app_theme2 #profile_avatar_online_status.offline{
+	color:rgb(224, 38, 38);
+}
+.app_theme2 .input_error{
+	border:1px solid red !important;
+}
+.app_theme2 #user_menu_dropdown{
+	box-shadow: 0 4px 8px 0 rgb(0 0 0 / 20%), 0 6px 20px 0 rgb(0 0 0 / 19%);
+}
 /* APP THEME 3*/
 /* Darker colors*/
 body.app_theme3,
@@ -1037,7 +1089,11 @@ body.app_theme3,
 .app_theme3 #tab_navigation button:active {
 	color:#6ab344 !important;
 }
-.app_theme3 #profile_search_input{
+.app_theme3 #profile_search_input,
+.app_theme3 .login_input, 
+.app_theme3 .signup_input, 
+.app_theme3 .forgot_input, 
+.app_theme3 .new_password_input{
 	border: 1px solid #ddd;
 }
 .app_theme3 #profile_search_list{
@@ -1142,4 +1198,26 @@ body.app_theme3,
 .app_theme3 #settings .setting_button {
 	background-color: #a49775;
 	color: white;
+}
+.app_theme3 .profile_search_list_selected{
+	background-color: #ddd;
+}
+.app_theme3 .list_scrollbar{
+	scrollbar-color: #a49775 #ddd;
+}
+.app_theme3 .common_dialogue_content a:hover, 
+.app_theme3 .common_dialogue_content a:active {
+	color:#6ab344;
+}
+.app_theme3 #profile_avatar_online_status.online{
+	color:#6ab344;
+}
+.app_theme3 #profile_avatar_online_status.offline{
+	color:rgb(224, 38, 38);
+}
+.app_theme3 .input_error{
+	border:1px solid red !important;
+}
+.app_theme3 #user_menu_dropdown{
+	box-shadow: 0 4px 8px 0 rgb(0 0 0 / 20%), 0 6px 20px 0 rgb(0 0 0 / 19%);
 }
