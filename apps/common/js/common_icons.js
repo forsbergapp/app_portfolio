@@ -34,7 +34,7 @@ function seticons(){
     window.global_icon_app_close = '<i class="fa-solid fa-circle-check"></i>';
     window.global_icon_app_online = '<i class="fa-solid fa-circle"></i>';
     window.global_icon_app_search = '<i class="fa-solid fa-magnifying-glass"></i>';
-    window.global_icon_app_menu_open = '<i class="fas fa-bars"></i>';
+    window.global_icon_app_menu_open = '☰';
     window.global_icon_app_menu_close = '<i class="fa-solid fa-rectangle-xmark"></i>';
     window.global_icon_app_broadcast_close = '<i class="fa-solid fa-rectangle-xmark"></i>';
     window.global_icon_app_first = '<i class="fa-solid fa-backward-step"></i>';

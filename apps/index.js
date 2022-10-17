@@ -232,10 +232,10 @@ async function get_email_verification(data, email, baseUrl, lang_code, callBack)
                     "email": email});
 }
 module.exports = {
-    AppsStart:async (app) => {
+    AppsStart:async (express, app) => {
         //express needed for dynamic code loading even if not used here, 
         //inparameter app variable depends on express
-        const express = require ("express");
+        //const express = require ("express");
         function load_dynamic_code(app_id){
             const fs = require("fs");
             let filename;
@@ -250,7 +250,7 @@ module.exports = {
             });
         }
         const { getAppsAdmin } = require ("../service/db/app_portfolio/app/app.service");
-        getAppsAdmin(process.env.COMMON_APP_ID,(err, results) =>{
+        getAppsAdmin(process.env.COMMON_APP_ID, null, (err, results) =>{
             if (err) {
                 createLogAppSE(process.env.COMMON_APP_ID, __appfilename, __appfunction, __appline, `getAppsAdmin, err:${err}`, (err_log, result_log)=>{
                 null;
