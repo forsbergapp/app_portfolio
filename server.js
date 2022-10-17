@@ -135,6 +135,7 @@ const broadcastRouter = require("./service/broadcast/broadcast.router");
 //service db
 const adminRouter = require("./service/db/admin/admin.router");
 const appRouter = require("./service/db/app_portfolio/app/app.router");
+const app_categoryRouter = require("./service/db/app_portfolio/app_category/app_category.router");
 const app_logRouter = require("./service/db/app_portfolio/app_log/app_log.router");
 const app_objectRouter = require("./service/db/app_portfolio/app_object/app_object.router");
 const app_parameterRouter = require("./service/db/app_portfolio/app_parameter/app_parameter.router");
@@ -174,6 +175,7 @@ app.use("/service/broadcast", broadcastRouter);
 //service database
 app.use("/service/db/admin", adminRouter);
 app.use("/service/db/app_portfolio/app", appRouter);
+app.use("/service/db/app_portfolio/app_category", app_categoryRouter);
 app.use("/service/db/app_portfolio/app_log", app_logRouter);
 app.use("/service/db/app_portfolio/app_object", app_objectRouter);
 app.use("/service/db/app_portfolio/app_parameter", app_parameterRouter);
@@ -229,14 +231,11 @@ app.get('*', function (req,res, next){
 })
 const {DBStart} = require ("./service/db/admin/admin.service");
 const {AppsStart} = require ("./apps");
-DBStart((err, result) =>{
-  if (err)
-      null;
-  else{
-    AppsStart(app, (err, result) =>{
-      null;
-    })
-  }
+
+let dbstart = DBStart().then(function(){
+  AppsStart(express, app, (err, result) =>{
+    null;
+  })
 })
 
 //start HTTP and HTTPS

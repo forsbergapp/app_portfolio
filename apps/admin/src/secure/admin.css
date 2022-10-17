@@ -392,8 +392,14 @@
         width:150px;
     }
     .list_apps_col:nth-child(5) input{
-        width: unset;
+        width: 50px;
         vertical-align: middle;
+    }
+    .list_apps_col:nth-child(6){
+        width:70px;
+    }
+    .list_apps_col:nth-child(7){
+        width:200px;
     }
     .list_app_parameter_col:nth-child(1){
         display: none;
