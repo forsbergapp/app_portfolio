@@ -391,8 +391,10 @@
     .list_apps_col:nth-child(4){
         width:150px;
     }
-    .list_apps_col:nth-child(5) input{
+    .list_apps_col:nth-child(5){
         width: 50px;
+    }
+    .list_apps_col:nth-child(5) input{   
         vertical-align: middle;
     }
     .list_apps_col:nth-child(6){

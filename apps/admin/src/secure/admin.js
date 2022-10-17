@@ -566,7 +566,7 @@ async function show_apps(){
                             <div id='list_apps_col_title6' class='list_apps_col list_title'>
                                 <div>CATEGORY ID</div>
                             </div>
-                            <div id='list_apps_col_title6' class='list_apps_col list_title'>
+                            <div id='list_apps_col_title7' class='list_apps_col list_title'>
                                 <div>CATEGORY NAME</div>
                             </div>
                         </div>`;
@@ -772,7 +772,7 @@ function list_events(item_row, item_edit, column_start_index){
         event.target.parentNode.parentNode.setAttribute('data-changed-record','1');
         if (item_row == 'list_apps_row' && event.target.parentNode.parentNode.children[5].children[0] == event.target)
             if (this.value=='')
-                this.value = event.target.defaultValue;
+                event.target.parentNode.parentNode.children[6].children[0].innerHTML ='';
             else{
                 common_fetch(`${window.global_rest_url_base}${window.global_rest_app_category}admin?id=${this.value}`,
                             'GET', 2, null, null, null, (err, result) =>{
