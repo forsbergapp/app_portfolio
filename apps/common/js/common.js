@@ -893,14 +893,14 @@ function lov_close(){
     
 }
 function lov_show(lov, function_event){
-    document.getElementById('lov_title').innerHTML = lov;
+    document.getElementById('lov_title').innerHTML = lov.replace('_','');
     document.getElementById('dialogue_lov').style.visibility = 'visible';
     document.getElementById('lov_list').innerHTML = window.global_app_spinner;
     let url = '';
     let token_type = '';
     let lov_column_value='';
     switch (lov){
-        case 'PARAMETER TYPE':{
+        case 'PARAMETER_TYPE':{
             lov_column_value = 'parameter_type_name';
             if (window.global_admin){
                 url = window.global_rest_url_base + window.global_rest_parameter_type + `admin?`;
@@ -912,9 +912,15 @@ function lov_show(lov, function_event){
             }
             break;
         }
-        case 'SERVER LOG FILES':{
+        case 'SERVER_LOG_FILES':{
             lov_column_value = 'filename';
             url = window.global_service_log + '/files?';
+            token_type = 2;
+            break;
+        }
+        case 'APP_CATEGORY':{
+            lov_column_value = 'app_category_text';
+            url = window.global_rest_url_base + window.global_rest_app_category + '/admin?'
             token_type = 2;
             break;
         }
@@ -2969,6 +2975,7 @@ function set_globals(parameters){
     window.global_rest_at;
     window.global_rest_dt;
     window.global_rest_app;
+    window.global_rest_app_category;
     window.global_rest_app_object;
     window.global_rest_country;
     window.global_rest_identity_provider;
@@ -3269,6 +3276,7 @@ async function init_common(parameters, callBack){
                 case 'IMAGE_AVATAR_WIDTH'                   :{window.global_image_avatar_width = parameter_value;break;}
                 case 'IMAGE_AVATAR_HEIGHT'                  :{window.global_image_avatar_height = parameter_value;break;}
                 case 'REST_APP'                             :{window.global_rest_app = parameter_value;break;}
+                case 'REST_APP_CATEGORY'                    :{window.global_rest_app_category = parameter_value;break;}
                 case 'REST_APP_OBJECT'                      :{window.global_rest_app_object = parameter_value;break;}
                 case 'REST_COUNTRY'                         :{window.global_rest_country = parameter_value;break;}
                 case 'REST_IDENTITY_PROVIDER'               :{window.global_rest_identity_provider = parameter_value;break;}

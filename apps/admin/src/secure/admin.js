@@ -541,7 +541,7 @@ async function show_apps(){
     let json;
     document.getElementById('list_apps').innerHTML = window.global_app_spinner;
 
-    await common_fetch(window.global_rest_url_base + window.global_rest_app + '/admin?id=0',
+    await common_fetch(window.global_rest_url_base + window.global_rest_app + '/admin?',
                        'GET', 2, null, null, null, (err, result) =>{
         if (err)
             document.getElementById('list_apps').innerHTML = '';
@@ -563,6 +563,12 @@ async function show_apps(){
                             <div id='list_apps_col_title5' class='list_apps_col list_title'>
                                 <div>ENABLED</div>
                             </div>
+                            <div id='list_apps_col_title6' class='list_apps_col list_title'>
+                                <div>CATEGORY ID</div>
+                            </div>
+                            <div id='list_apps_col_title6' class='list_apps_col list_title'>
+                                <div>CATEGORY NAME</div>
+                            </div>
                         </div>`;
             for (i = 0; i < json.data.length; i++) {
                 html += 
@@ -582,12 +588,30 @@ async function show_apps(){
                     <div class='list_apps_col'>
                         <input type='checkbox' class='list_edit_app' ${json.data[i].enabled==1?'checked':''} />
                     </div>
+                    <div class='list_apps_col'>
+                        <input type='text' class='list_edit_app input_lov' value='${json.data[i].app_category_id==null?'':json.data[i].app_category_id}' />
+                        <div class='common_lov_button list_lov_click'></div>
+                    </div>
+                    <div class='list_apps_col'>
+                        <div class='list_readonly_app'>${json.data[i].app_category_text==null?'':json.data[i].app_category_text} </div>
+                    </div>
                 </div>`;
             }
             document.getElementById('list_apps').innerHTML = html;
             list_events('list_apps_row', '.list_edit_app', 1);
-            //disable enebaled checkbox for app 0 common
+            //disable enabled checkbox for app 0 common
             document.getElementById('list_apps_row_0').children[4].children[0].disabled = true;
+            
+            document.querySelectorAll('#list_apps .common_lov_button').forEach(e => e.innerHTML = window.global_icon_app_lov);
+            document.querySelectorAll('#list_apps .list_lov_click').forEach(e => e.addEventListener('click', function(event) {
+                let function_event = function(event) {
+                    e.parentNode.parentNode.children[5].children[0].value = event.currentTarget.children[0].children[0].innerHTML;
+                    e.parentNode.parentNode.children[5].children[0].focus();
+                    e.parentNode.parentNode.children[5].children[0].dispatchEvent(new Event('change'));
+                    document.getElementById('lov_close').dispatchEvent(new Event('click'))
+                };
+                lov_show('APP_CATEGORY', function_event);
+            }));
 
             //set focus first column in first row
             //this will trigger to show detail records
@@ -651,15 +675,15 @@ function show_app_parameter(app_id){
             }
             document.getElementById('list_app_parameter').innerHTML = html;
             list_events('list_app_parameter_row', '.list_edit_app_parameter', 1);
-            document.querySelectorAll('.common_lov_button').forEach(e => e.innerHTML = window.global_icon_app_lov);
-            document.querySelectorAll('.list_lov_click').forEach(e => e.addEventListener('click', function(event) {
+            document.querySelectorAll('#list_app_parameter .common_lov_button').forEach(e => e.innerHTML = window.global_icon_app_lov);
+            document.querySelectorAll('#list_app_parameter .list_lov_click').forEach(e => e.addEventListener('click', function(event) {
                 let function_event = function(event) {
-                    e.parentNode.parentNode.children[1].children[0].value = event.target.children[0].children[0].innerHTML;
+                    e.parentNode.parentNode.children[1].children[0].value = event.currentTarget.children[0].children[0].innerHTML;
                     e.parentNode.parentNode.children[1].children[0].focus();
                     e.parentNode.parentNode.children[1].children[0].dispatchEvent(new Event('change'));
                     document.getElementById('lov_close').dispatchEvent(new Event('click'))
                 };
-                lov_show('PARAMETER TYPE', function_event);
+                lov_show('PARAMETER_TYPE', function_event);
             }));
         }
     })
@@ -745,7 +769,39 @@ function list_events(item_row, item_edit, column_start_index){
     //get parameter_type_name for app_parameter rows
     
     document.querySelectorAll(item_edit).forEach(e => e.addEventListener('change', function(event) {
-        event.target.parentNode.parentNode.setAttribute('data-changed-record','1')
+        event.target.parentNode.parentNode.setAttribute('data-changed-record','1');
+        if (item_row == 'list_apps_row' && event.target.parentNode.parentNode.children[5].children[0] == event.target)
+            if (this.value=='')
+                this.value = event.target.defaultValue;
+            else{
+                common_fetch(`${window.global_rest_url_base}${window.global_rest_app_category}admin?id=${this.value}`,
+                            'GET', 2, null, null, null, (err, result) =>{
+                    if (err){
+                        event.stopPropagation();
+                        event.preventDefault();
+                        //set old value
+                        this.value = event.target.defaultValue;
+                        this.focus();
+                        this.nextElementSibling.dispatchEvent(new Event('click'));
+                    }
+                    else{
+                        json = JSON.parse(result);
+                        if (json.data.length == 1){
+                            //set new value
+                            document.getElementById(event.target.parentNode.parentNode.id).children[6].children[0].innerHTML = json.data[0].app_category_text;
+                        }
+                        else{
+                            event.stopPropagation();
+                            event.preventDefault();
+                            //set old value
+                            this.value = event.target.defaultValue;
+                            this.focus();
+                            this.nextElementSibling.dispatchEvent(new Event('click'));
+                        }
+                    }
+                });
+            }
+
         if (item_row == 'list_app_parameter_row' && event.target.parentNode.parentNode.children[1].children[0] == event.target)
             if (this.value=='')
                 this.value = event.target.defaultValue;
@@ -1672,7 +1728,7 @@ function show_existing_logfiles(){
                                 document.getElementById('select_logscope4').dispatchEvent(new Event('change'));
                                 lov_close();
                             };
-        lov_show('SERVER LOG FILES', function_event);
+        lov_show('SERVER_LOG_FILES', function_event);
     }
 }
 function show_pm2_logs(){
