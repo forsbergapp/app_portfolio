@@ -1,12 +1,3 @@
-/* common*/
-#profile_info_search{
-	visibility: hidden;
-	display:	none !important;
-}
-#user_account{
-	visibility: hidden;
-	display:	none !important;
-}
 .dialogue{
 	width: 100%;
 	height: 100%;
@@ -58,6 +49,16 @@
     height:100%;
 	visibility: hidden;
 }
+/* common*/
+#profile_info_search{
+	visibility: hidden;
+	display:	none !important;
+}
+#user_account{
+	visibility: hidden;
+	display:	none !important;
+}
+/*THEME*/
 .theme_light {
 	--blue1: rgb(81, 171, 255);
 	--blue2: rgb(197 227 255);
@@ -109,28 +110,32 @@ body.theme_light{
 	color: var(--app_theme_text_color);
 	background: var(--app_theme_background_color);
 }
-.theme_light .dialogue_content:hover, 
-.theme_light .dialogue_content:active{
+.dialogue_content:hover, 
+.dialogue_content:active{
 	box-shadow: 0 0 35px 4px var(--app_theme_dialogue_boxshadow_active_color);
 }  
-.theme_light .dialogue_content,
-.theme_light .common_dialogue_content{
+.dialogue_content{
 	background-color: var(--app_theme_dialogue_background_color);
 	box-shadow: 0 4px 8px 0 var(--app_theme_dialogue_boxshadow_color1), 0 6px 20px 0 var(--app_theme_dialogue_boxshadow_color2);
 }
-.theme_light .admin_login_input{
+.admin_login_input{
 	border: 1px solid var(--app_theme_input_border_color);
 }
-.theme_light .dialogue_button,
-.theme_light .admin_login_icon{
+.dialogue_button,
+.admin_login_icon{
 	color: var(--app_theme_text_color) !important;
 }
-.theme_light .dialogue_button:hover, 
-.theme_light .dialogue_button:active,
-.theme_light .toolbar_button:hover, 
-.theme_light .toolbar_button:active{
+.dialogue_button:hover, 
+.dialogue_button:active,
+.toolbar_button:hover, 
+.toolbar_button:active{
 	color:var(--app_theme_hover_color) !important;
 }
-.theme_light .toolbar_button{
+.toolbar_button{
 	color: var(--app_theme_text_color) !important;
+}
+/*common*/
+.common_dialogue_content{
+	background-color: var(--app_theme_dialogue_background_color);
+	box-shadow: 0 4px 8px 0 var(--app_theme_dialogue_boxshadow_color1), 0 6px 20px 0 var(--app_theme_dialogue_boxshadow_color2);
 }
