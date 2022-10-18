@@ -254,6 +254,7 @@ a:active {
 	border: none;
     width: 26px;	
     margin-top: 20px;
+	cursor: pointer;
 }
 #dialogue_user_edit_content .setting_horizontal_row{
 	display: block;
