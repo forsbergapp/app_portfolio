@@ -112,14 +112,23 @@ a:active {
     display: grid;
     grid-auto-rows: max-content;
 }
-/* Dialogue message*/
+/*dialogue*/
+#dialogue_login,
+#dialogue_signup,
+#dialogue_forgot{
+	z-index:51;
+}
+#dialogue_user_verify,
+#dialogue_user_new_password,
+#dialogue_user_new_password{
+	z-index:52;
+}
 #dialogue_message{
-	z-index: 60;
+	z-index:53;
 }
 /* Dialogue Verification code*/
 #dialogue_user_verify{
 	visibility: hidden;
-	z-index: 51;
 }
 #dialogue_user_verify_content{
 	height:280px;
