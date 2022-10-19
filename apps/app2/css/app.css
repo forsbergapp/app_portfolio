@@ -9,7 +9,7 @@
 	width: 100%;
 	position: fixed;
 	display: block;
-	z-index: 1;
+	z-index: 2;
 }
 #toolbar_btn_zoomin,#toolbar_btn_zoomout,#toolbar_btn_left, #toolbar_btn_right, #toolbar_btn_search {
 	font-size: 48px;
@@ -28,7 +28,7 @@
 	background: white;
 	bottom: 0;
 	position: fixed;
-	z-index: 1;
+	z-index: 2;
 }
 #toolbar_bottom .toolbar_button{
 	font-size: 48px !important;
@@ -50,13 +50,12 @@
 	margin-right: 10px !important;
 }
 #profile_main_stat_row2{
-	margin-top: 20px;
 	margin-bottom: 20px;
 	text-align: center;
 }
 #profile_main_stat_row2 div{
 	display:inline-block;
-	margin-right: 10px;
+	margin-inline-end: 10px;
 }
 #profile_main_btn_user_settings,
 #profile_main_btn_user_setting_likes,
@@ -66,7 +65,7 @@
 }
 #profile_main_btn_user_setting_likes,
 #profile_main_btn_user_setting_liked{
-	width:80px;
+	width:100px;
 }
 #profile_user_settings_day:hover,
 #profile_user_settings_day:active,
@@ -229,7 +228,7 @@
 	border-style: outset;
 	border-collapse: collapse;
 	margin: 0;
-	z-index: 1;
+	z-index: 2;
 	bottom: 0px;
 	right: 0px;
 	position: fixed;
@@ -652,15 +651,12 @@ body.app_theme1,
 	background-color:#ddd;
 	color: #6ab344 !important;
 }
-.app_theme1 a:link{
-	color:#a49775;
-}
-.app_theme1 a:visited {
+.app_theme1 a{
 	color:#a49775;
 }
 .app_theme1 a:hover,
 .app_theme1 a:active {
-	color:#6ab344;
+	color:#6ab344 !important;
 }
 .app_theme1 .dialogue_button:hover,
 .app_theme1 .dialogue_button:active,
@@ -855,10 +851,7 @@ body.app_theme2,
 	color:#2b2b32;
 }
 
-.app_theme2 a:link{
-	color:#a49775;
-}
-.app_theme2 a:visited {
+.app_theme2 a{
 	color:#a49775;
 }
 .app_theme2 a:hover,
@@ -1059,10 +1052,7 @@ body.app_theme3,
 	color:#3A3632 !important;
 }
 
-.app_theme3 a:link{
-	color:#a49775;
-}
-.app_theme3 a:visited {
+.app_theme3 a{
 	color:#a49775;
 }
 .app_theme3 a:hover,
