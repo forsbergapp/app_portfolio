@@ -2287,17 +2287,17 @@ function setEvents() {
     //profile
     document.getElementById('profile_main_btn_user_settings').addEventListener('click', function() { profile_detail_app(0, window.global_rest_app2_user_setting_profile_detail, false) }, false);
     document.getElementById('profile_main_btn_user_setting_likes').addEventListener('click', function() { profile_detail_app(5, window.global_rest_app2_user_setting_profile_detail, true, 
-        window.global_icon_user_like +
-        window.global_icon_regional_day +
-        window.global_icon_regional_month +
-        window.global_icon_regional_year +
-        window.global_icon_user_follows, 'profile_show_app') }, false);
+        `<div class='common_like_unlike'> ${window.global_icon_user_like}</div>
+         <div > ${window.global_icon_regional_day +
+                window.global_icon_regional_month +
+                window.global_icon_regional_year +
+                window.global_icon_user_follows}</div>`, 'profile_show_app') }, false);
     document.getElementById('profile_main_btn_user_setting_liked').addEventListener('click', function() { profile_detail_app(6, window.global_rest_app2_user_setting_profile_detail, true, 
-        window.global_icon_user_like +
-        window.global_icon_regional_day +
-        window.global_icon_regional_month +
-        window.global_icon_regional_year +
-        window.global_icon_user_followed, 'profile_show_app') }, false);
+        `<div class='common_like_unlike'> ${window.global_icon_user_like}</div>
+         <div > ${window.global_icon_regional_day +
+                window.global_icon_regional_month +
+                window.global_icon_regional_year +
+                window.global_icon_user_followed}</div>`, 'profile_show_app') }, false);
     document.getElementById('profile_top_row2_1').addEventListener('click', function() { profile_top(4, window.global_rest_app2_user_setting_profile_top, 'profile_show_app') }, false);
     document.getElementById('profile_top_row2_2').addEventListener('click', function() { profile_top(5, window.global_rest_app2_user_setting_profile_top, 'profile_show_app') }, false);
     document.getElementById('profile_user_settings_day').addEventListener('click', function() { profile_user_setting_link(this) }, false);
@@ -2403,8 +2403,11 @@ async function init_app() {
     document.getElementById('scan_open_mobile_title1').innerHTML = window.global_icon_app_mobile;
     //profile info
     document.getElementById('profile_main_btn_user_settings').innerHTML = window.global_icon_regional_day  + window.global_icon_regional_month + window.global_icon_regional_year;
-    document.getElementById('profile_main_btn_user_setting_likes').innerHTML = window.global_icon_user_like + window.global_icon_regional_day + window.global_icon_regional_month + window.global_icon_regional_year + window.global_icon_user_follows;
-    document.getElementById('profile_main_btn_user_setting_liked').innerHTML = window.global_icon_user_like + window.global_icon_regional_day + window.global_icon_regional_month + window.global_icon_regional_year + window.global_icon_user_followed;
+    document.getElementById('profile_main_btn_user_setting_likes_heart').innerHTML = window.global_icon_user_like;
+    document.getElementById('profile_main_btn_user_setting_likes_user_setting').innerHTML = window.global_icon_regional_day + window.global_icon_regional_month + window.global_icon_regional_year + window.global_icon_user_follows;
+    document.getElementById('profile_main_btn_user_setting_liked_heart').innerHTML = window.global_icon_user_like;
+    document.getElementById('profile_main_btn_user_setting_liked_user_setting').innerHTML = window.global_icon_regional_day + window.global_icon_regional_month + window.global_icon_regional_year + window.global_icon_user_followed;
+
     document.getElementById('profile_user_settings_day').innerHTML = window.global_icon_regional_day;
     document.getElementById('profile_user_settings_month').innerHTML = window.global_icon_regional_month;
     document.getElementById('profile_user_settings_year').innerHTML = window.global_icon_regional_year;

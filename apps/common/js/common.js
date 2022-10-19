@@ -1700,7 +1700,7 @@ function profile_detail(detailchoice, rest_url_app, fetch_detail, header_app, cl
         switch (detailchoice) {
             case 0:
                 {
-                    //show only other app specfic hide common
+                    //show only other app specific hide common
                     document.getElementById('profile_detail').style.display = 'none';
                     document.getElementById('profile_detail_header_following').style.display = 'none';
                     document.getElementById('profile_detail_header_followed').style.display = 'none';
@@ -3123,8 +3123,9 @@ async function init_common(parameters, callBack){
         //profile detail
         document.getElementById('profile_detail_header_following').innerHTML = window.global_icon_user_follows;
         document.getElementById('profile_detail_header_followed').innerHTML = window.global_icon_user_followed;
-        document.getElementById('profile_detail_header_like').innerHTML = window.global_icon_user_like + window.global_icon_user_follows;
-        document.getElementById('profile_detail_header_liked').innerHTML = window.global_icon_user_like + window.global_icon_user_followed;
+        document.getElementById('profile_detail_header_like').innerHTML = window.global_icon_user_like;
+        document.getElementById('profile_detail_header_liked_heart').innerHTML = window.global_icon_user_like;
+        document.getElementById('profile_detail_header_liked_users').innerHTML =  window.global_icon_user_followed;
         //profile info search
         document.getElementById('profile_search_icon').innerHTML = window.global_icon_app_search;
         //profile info
@@ -3137,7 +3138,9 @@ async function init_common(parameters, callBack){
         document.getElementById('profile_main_btn_following').innerHTML = window.global_icon_user_follows;
         document.getElementById('profile_main_btn_followed').innerHTML = window.global_icon_user_followed;
         document.getElementById('profile_main_btn_likes').innerHTML = window.global_icon_user_like;
-        document.getElementById('profile_main_btn_liked').innerHTML = window.global_icon_user_like + window.global_icon_user_followed;
+        document.getElementById('profile_main_btn_liked_heart').innerHTML = window.global_icon_user_like;
+        document.getElementById('profile_main_btn_liked_users').innerHTML = window.global_icon_user_followed;
+        
         document.getElementById('profile_private_title').innerHTML = window.global_icon_app_private;
         document.getElementById('profile_avatar_online_status').innerHTML = window.global_icon_app_online;
         //profile top
@@ -3228,7 +3231,6 @@ async function init_common(parameters, callBack){
         
         //user menu
         document.getElementById('user_menu').addEventListener('click', function() { let menu = document.getElementById('user_menu_dropdown');
-                                                                                       document.getElementById('profile_info_search').style.visibility = 'hidden'; 
                                                                                        if (menu.style.visibility == 'visible') 
                                                                                             menu.style.visibility = 'hidden'; 
                                                                                        else 

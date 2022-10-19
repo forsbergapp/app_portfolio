@@ -301,7 +301,6 @@ a:active {
 	visibility:hidden;
 	top: 0px;
     padding-top: 20px;
-	z-index:1;
 	width: 100%;
     height: 100%;
 	position:fixed;
@@ -313,10 +312,6 @@ a:active {
 	word-break: unset;
 	width:350px;
 	height:550px;
-}
-#profile_home{
-	display: inline-block;
-	z-index: 1;
 }
 #profile_close{
 	display: block;
@@ -375,7 +370,7 @@ a:active {
 	border-radius: 16px;
 	width:240px;
 	margin-top:10px;
-	margin-right:10px;
+	margin-inline-end:10px;
 	padding: 8px 16px;
 	box-sizing: border-box;
 }
@@ -454,7 +449,7 @@ a:active {
 }
 #profile_avatar_online_status{
 	display:none;
-    margin-left: 45px;
+    margin-inline-start: 45px;
     margin-top: -20px;
     position: absolute;
 	border-radius: 50%;
@@ -475,7 +470,7 @@ a:active {
 }
 #profile_main_stat_row1 div{
 	display:inline-block;
-	margin-right: 8px;
+	margin-inline-end: 8px;
 }
 #profile_joined_date,
 #profile_info_following_count,
@@ -499,7 +494,7 @@ a:active {
 	width:20px;
 }
 #profile_main_btn_liked{
-	width:40px;
+	width:50px;
 }
 #profile_qr {
 	padding:3px;
@@ -580,7 +575,7 @@ a:active {
 	width:24px;
 	vertical-align: middle;
 	display: inline-block;
-    margin-right: 10px;
+    margin-inline-end: 10px;
 }
 .profile_detail_list_app_delete{
 	cursor:pointer;
@@ -590,10 +585,6 @@ a:active {
 	width:24px;
 	border-radius: 50%;
 }
-.profile_detail_list_app_logo, .profile_detail_list_app_name{
-	margin-inline-start: 20px;
-}
-
 .profile_detail_list_app_url, .profile_detail_list_date_created{
 	display: none;
 }
@@ -608,7 +599,7 @@ a:active {
 	text-align: center;
 }
 #profile_top_row1 a{
-	margin-right:10px;
+	margin-inline-end:10px;
 }
 #profile_top_list{
 	width:100%;
@@ -846,7 +837,7 @@ a:active {
 	position:fixed;
 	overflow-y: hidden;
     overflow-x: auto;
-	z-index: 11;
+	z-index: 50;
 	margin-bottom: 100px;
 	visibility: hidden;
 	text-align:center;
@@ -910,16 +901,16 @@ a:active {
 	#user_edit_label_data_account_modified {
 		font-size: 0.7em;
 	}
-	#profile_main_stat_row1 div{
-		margin-right:10px;
-	}
 }
 .common_dialogue_content a:hover, a:active {
 	cursor: pointer;
 }
-.common_dialogue_content .fas.fa-heart,
-.common_dialogue_content .fas.fa-heart-broken{
-	color:red;
+.common_like_unlike{
+	color: red !important;
+}
+#profile_detail_header_liked div,
+#profile_detail_header_app div{
+	display: inline-block;
 }
 /*service map*/
 .leaflet-popup-content{
