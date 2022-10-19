@@ -288,16 +288,12 @@
                         </div>    
                         <div class='profile_main_col'>
                             <div id='profile_follow' >
-                                <div id='profile_follow_follow' >
-                                </div>
-                                <div id='profile_follow_followed' >
-                                </div>
+                                <a id='profile_follow_follow'></a>
+                                <a id='profile_follow_followed'></a>
                             </div>
-                            <div id='profile_like' >
-                                <div id='profile_like_unlike' >
-                                </div>
-                                <div id='profile_like_like' >
-                                </div>
+                            <div id='profile_like'>
+                                <a id='profile_like_unlike' class='common_like_unlike'></a>
+                                <a id='profile_like_like' class='common_like_unlike'></a>
                             </div>
                         </div>
                     </div>
@@ -317,11 +313,14 @@
                             <div id='profile_info_followers_count'></div>
                         </div>
                         <div id='profile_info_likes'>
-                            <a id='profile_main_btn_likes' ></a>
+                            <a id='profile_main_btn_likes' class='common_like_unlike'></a>
                             <div id='profile_info_likes_count'></div>
                         </div>
                         <div id='profile_info_liked'>
-                            <a id='profile_main_btn_liked' ></a>
+                            <div id='profile_main_btn_liked' >
+                                <a id='profile_main_btn_liked_heart' class='common_like_unlike'></a>
+                                <a id='profile_main_btn_liked_users'></a>
+                            </div>
                             <div id='profile_info_liked_count'></div>
                         </div>
                     </div>
