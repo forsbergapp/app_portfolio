@@ -147,14 +147,14 @@ async function timetable_user_setting_get(user_setting_id, callBack) {
 							header_img_src      	: image_format(json.image_header_image_img),
 							footer_img_src      	: image_format(json.image_footer_image_img),
 
-							header_txt1         	: json.text_header_1_text,
-							header_txt2         	: json.text_header_2_text,
-							header_txt3         	: json.text_header_3_text,
-							header_align      		: json.text_header_align,
-							footer_txt1         	: json.text_footer_1_text,
-							footer_txt2         	: json.text_footer_2_text,
-							footer_txt3    	   		: json.text_footer_3_text,
-							footer_align			: json.text_footer_align,
+							header_txt1         	: get_null_or_value(json.text_header_1_text),
+							header_txt2         	: get_null_or_value(json.text_header_2_text),
+							header_txt3         	: get_null_or_value(json.text_header_3_text),
+							header_align      		: get_null_or_value(json.text_header_align),
+							footer_txt1         	: get_null_or_value(json.text_footer_1_text),
+							footer_txt2         	: get_null_or_value(json.text_footer_2_text),
+							footer_txt3    	   		: get_null_or_value(json.text_footer_3_text),
+							footer_align			: get_null_or_value(json.text_footer_align),
 
 							method              	: json.prayer_method,
 							asr                 	: json.prayer_asr_method,
@@ -187,7 +187,7 @@ async function timetable_translate_settings(locale, locale_second) {
     let json;
 	async function fetch_translation(locale, first){
 		//show translation using first or second language
-		await common_fetch(window.global_rest_url_base + window.global_rest_app_object + locale + '?',
+		await common_fetch(window.global_rest_url_base + window.global_rest_app_object + locale + '?object=APP_OBJECT_ITEM&object_name=REPORT',
 					       'GET', 0, null, null, null, (err, result) =>{
 			if (err){
 				report_exception(err);
@@ -195,14 +195,10 @@ async function timetable_translate_settings(locale, locale_second) {
 			else{
 				json = JSON.parse(result);	
 				for (let i = 0; i < json.data.length; i++){
-					if (first == true){
-						if (json.data[i].object=='APP_OBJECT_ITEM' && json.data[i].object_name=='REPORT')
-							window.global_first_language[json.data[i].object_item_name.toLowerCase()] = json.data[i].text;
-					}
-					else{
-						if (json.data[i].object=='APP_OBJECT_ITEM' && json.data[i].object_name=='REPORT')
-							window.global_second_language[json.data[i].object_item_name.toLowerCase()] = json.data[i].text;
-					}
+					if (first == true)
+						window.global_first_language[json.data[i].object_item_name.toLowerCase()] = json.data[i].text;
+					else
+						window.global_second_language[json.data[i].object_item_name.toLowerCase()] = json.data[i].text;
 				}
 			} 
 		})

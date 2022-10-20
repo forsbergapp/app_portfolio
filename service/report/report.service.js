@@ -5,6 +5,7 @@ async function initReportService(){
         pipe:true,
         headless: true,
         ignoreHTTPSErrors: true,
+        ignoreDefaultArgs: ['--enable-automation'],
         args: [ '--ignore-certificate-errors',
                 '--disable-gpu',
                 '--disable-3d-apis',
@@ -43,6 +44,8 @@ async function initReportService(){
                 '--disable-test-root-certs',
                 '--disable-touch-drag-drop',
                 '--disable-webgl',
+                '--no-default-browser-check',
+                '--hide-crash-restore-bubble',
                 '--user-data-dir=' + __dirname + '/tmp']
     });
     
@@ -54,10 +57,9 @@ module.exports = {
             await initReportService();
         const webPage = await global.browser.newPage();
         await webPage.goto(url, {
+                waitUntil: "networkidle2",
                 timeout: 20000,
-                waitUntil: "networkidle2"
             });
-        
         if (ps=='A4'){
             //https://pixelsconverter.com/a-paper-sizes-to-pixels
             //96DPI
