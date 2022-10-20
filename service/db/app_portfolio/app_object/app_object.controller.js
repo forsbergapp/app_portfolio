@@ -2,7 +2,11 @@ const { getObjects } = require ("./app_object.service");
 
 module.exports = {
 	getObjects: (req, res) => {
-		getObjects(req.query.app_id, req.params.lang_code, (err, results) =>{
+		if (typeof req.query.object =='undefined')
+			req.query.object=null;
+		if (typeof req.query.object_name =='undefined')
+			req.query.object_name=null;
+		getObjects(req.query.app_id, req.params.lang_code, req.query.object, req.query.object_name, (err, results) =>{
 			if (err) {
 				return res.status(500).send({
 					data: err

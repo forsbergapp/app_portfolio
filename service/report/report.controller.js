@@ -27,50 +27,49 @@ module.exports = {
 				});
 			}
 			else{
-				const { getReport} = require(`../../apps/app${req.query.app_id}/report`);
-				const report = getReport(req.query.app_id, 
-										req.query.module, 
-										result.geoplugin_latitude, 
-										result.geoplugin_longitude, 
-										gps_place)
-				.then(function(report_result){
-					if (typeof req.query.service == "undefined")
-						createLog(req.query.app_id,
-									{ app_id : req.query.app_id,
-									app_module : 'REPORT',
-									app_module_type : req.query.format.toUpperCase(), //HTML or PDF
-									app_module_request : req.protocol + '://' + req.get('host') + req.originalUrl,
-									app_module_result : gps_place,
-									app_user_id : null,
-									user_language : null,
-									user_timezone : null,
-									user_number_system : null,
-									user_platform : null,
-									server_remote_addr : req.ip,
-									server_user_agent : req.headers["user-agent"],
-									server_http_host : req.headers["host"],
-									server_http_accept_language : req.headers["accept-language"],
-									client_latitude : result.geoplugin_latitude,
-									client_longitude : result.geoplugin_longitude
-									}, (err,results)  => {
-										null;
-						});
-					if (req.query.format.toUpperCase() == 'PDF' && typeof req.query.service == "undefined" ){		
-						const url = req.protocol + ':/' + req.get('host') + req.originalUrl + '&service=1';
-						//PDF
-						const { getReportService} = require ("./report.service");
-						let pdf_result = getReportService(  url, 
-															req.query.ps, 			//papersize		A4, Letter
-															(req.query.hf==1))		//headerfooter	1/0
-											.then(function(pdf){
-												res.type('application/pdf');
-												res.send(pdf);
-											})
-					}
-					else
-						res.send(report_result);
-				})
-			}								
+				if (req.query.format.toUpperCase() == 'PDF' && typeof req.query.service == "undefined" ){		
+					const url = req.protocol + ':/' + req.get('host') + req.originalUrl + '&service=1';
+					//PDF
+					const { getReportService} = require ("./report.service");
+					let pdf_result = getReportService(  url, 
+														req.query.ps, 			//papersize		A4, Letter
+														(req.query.hf==1))		//headerfooter	1/0
+										.then(function(pdf){
+											res.type('application/pdf');
+											res.send(pdf);
+										})
+				}
+				else{
+					const { getReport} = require(`../../apps/app${req.query.app_id}/report`);
+					const report = getReport(req.query.app_id, 
+											req.query.module, 
+											result.geoplugin_latitude, 
+											result.geoplugin_longitude, 
+											gps_place)
+					.then(function(report_result){
+							createLog(req.query.app_id,
+										{ app_id : req.query.app_id,
+										app_module : 'REPORT',
+										app_module_type : req.query.format.toUpperCase(), //HTML or PDF
+										app_module_request : req.protocol + '://' + req.get('host') + req.originalUrl,
+										app_module_result : gps_place,
+										app_user_id : null,
+										user_language : null,
+										user_timezone : null,
+										user_number_system : null,
+										user_platform : null,
+										server_remote_addr : req.ip,
+										server_user_agent : req.headers["user-agent"],
+										server_http_host : req.headers["host"],
+										server_http_accept_language : req.headers["accept-language"],
+										client_latitude : result.geoplugin_latitude,
+										client_longitude : result.geoplugin_longitude
+										}, (err,results)  => {
+											res.send(report_result);
+							});
+					})	
+				}	
+			}
 		})
 	}		
 };

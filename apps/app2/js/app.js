@@ -561,21 +561,17 @@ async function settings_translate(first=true) {
     if (locale != 0){
         //fetch any message with first language always
         //show translation using first or second language
-        await common_fetch(`${window.global_rest_url_base}${window.global_rest_app_object}${locale}?`, 
+        await common_fetch(`${window.global_rest_url_base}${window.global_rest_app_object}${locale}?object=APP_OBJECT_ITEM&object_name=REPORT`, 
                            'GET', 0, null, null, null, (err, result) =>{
             if (err)
                 null;
             else{
                 json = JSON.parse(result);
                 for (let i = 0; i < json.data.length; i++){
-                    if (first==true){
-                        if (json.data[i].object=='APP_OBJECT_ITEM' && json.data[i].object_name=='REPORT')
-                                window.global_first_language[json.data[i].object_item_name.toLowerCase()] = json.data[i].text;
-                    }
-                    else{
-                        if (json.data[i].object=='APP_OBJECT_ITEM' && json.data[i].object_name=='REPORT')
-                            window.global_second_language[json.data[i].object_item_name.toLowerCase()] = json.data[i].text;
-                    }
+                    if (first==true)
+                        window.global_first_language[json.data[i].object_item_name.toLowerCase()] = json.data[i].text;
+                    else
+                        window.global_second_language[json.data[i].object_item_name.toLowerCase()] = json.data[i].text;
                 }
                 //if translating first language and second language is not used
                 if (first == true &&
