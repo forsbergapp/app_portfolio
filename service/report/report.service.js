@@ -55,42 +55,49 @@ module.exports = {
     getReportService: async (url, ps, hf) => {
         if (!global.browser)
             await initReportService();
-        const webPage = await global.browser.newPage();
-        await webPage.goto(url, {
-                waitUntil: "networkidle2",
-                timeout: 20000,
-            });
-        if (ps=='A4'){
-            //https://pixelsconverter.com/a-paper-sizes-to-pixels
-            //96DPI
-            await webPage.setViewport({
-                        width: 794,
-                        height: 1123,
-                        deviceScaleFactor: 1,
-                    });
-        }
-        if (ps=='Letter'){
-            //https://pixelsconverter.com/us-paper-sizes-to-pixels
-            //96DPI
-            await webPage.setViewport({
-                        width: 816,
-                        height: 1054,
-                        deviceScaleFactor: 1,
-                    });
-        }
-        const pdf = await webPage.pdf({
-            printBackground: true,
-            format: ps,
-            displayHeaderFooter: hf,
-            margin: {
-                top: "0px",
-                bottom: "0px",
-                left: "0px",
-                right: "0px"
-            }
-        });
-        await webPage.close();
-        //await global.browser.close();
-        return pdf;
+        return await new Promise(function (resolve){
+            global.browser.newPage().then(function(webPage){
+                webPage.goto(url, {
+                    waitUntil: "networkidle2",
+                    timeout: process.env.SERVICE_REPORT_PDF_TIMEOUT,
+                }).then(function(){
+                    let width_viewport;
+                    let height_viewport;
+                    if (ps=='A4'){
+                        //https://pixelsconverter.com/a-paper-sizes-to-pixels
+                        //96DPI
+                        width_viewport = 794;
+                        height_viewport = 1123;
+                        }
+                    if (ps=='Letter'){
+                        //https://pixelsconverter.com/us-paper-sizes-to-pixels
+                        //96DPI
+                        width_viewport = 816;
+                        height_viewport = 1054;
+                    }
+                    webPage.setViewport({width: width_viewport,
+                                        height: height_viewport,
+                                        deviceScaleFactor: 1,
+                                        }).then(function(){
+                        setTimeout(() => {
+                            webPage.pdf({   printBackground: true,
+                                format: ps,
+                                displayHeaderFooter: hf,
+                                margin: {
+                                    top: "0px",
+                                    bottom: "0px",
+                                    left: "0px",
+                                    right: "0px"
+                                }}).then(function(pdf){
+                                            webPage.close().then(function(){
+                                                //global.browser.close();
+                                                resolve(pdf);
+                                            });
+                                        });    
+                        }, process.env.SERVICE_REPORT_PDF_DELAY);
+                    })
+                })
+            })
+        })
     }
 }
