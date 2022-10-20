@@ -8,6 +8,9 @@
 	box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
 }
 /*DIALOGUE MESSAGE*/
+#dialogue_message_content{
+	padding: 25px;
+}
 #dialogue_message, #confirm_question, #message_cancel, #message_close{
 	visibility: hidden;
 }
