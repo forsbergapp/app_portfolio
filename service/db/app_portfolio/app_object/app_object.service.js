@@ -15,7 +15,7 @@ module.exports = {
 			APP_OBJECT_ITEM with APP items to update translation
 			APP_OBJECT_ITEM_SUBITEM with APP items in an app
 	*/
-	getObjects: (app_id, lang_code, callBack) => {
+	getObjects: (app_id, lang_code, object, object_name, callBack) => {
 		let sql;
 		let parameters;
 		if (process.env.SERVICE_DB_USE==1){
@@ -99,6 +99,8 @@ module.exports = {
 												   AND l1.lang_code IN (?, SUBSTRING_INDEX(?,'-',2), SUBSTRING_INDEX(?,'-',1))
 											   )) t
 					WHERE   (t.app_id IN(?,?) OR t.object_name = 'APP_DESCRIPTION')
+					  AND   t.object = COALESCE(?, t.object)
+					  AND   t.object_name = COALESCE(?, t.object_name)
 				ORDER BY 1, 2, 3, 4, 5, 6`;
 			parameters = [	lang_code,
 							lang_code,
@@ -113,7 +115,9 @@ module.exports = {
 							lang_code,
 							lang_code,
 							app_id,
-							process.env.COMMON_APP_ID
+							process.env.COMMON_APP_ID,
+							object,
+							object_name
 							];
 		}
 		else if (process.env.SERVICE_DB_USE==2){
@@ -197,11 +201,15 @@ module.exports = {
 												   AND l1.lang_code IN (:lang_code, SUBSTR(:lang_code, 0,INSTR(:lang_code,'-',1,2)-1), SUBSTR(:lang_code, 0,INSTR(:lang_code,'-',1,1)-1))
 											   )) t
 					WHERE   (t.app_id IN(:app_id, :common_app_id) OR t.object_name = 'APP_DESCRIPTION')
+					  AND   t.object = COALESCE(:object, t.object)
+					  AND   t.object_name = COALESCE(:object_name, t.object_name)
 				ORDER BY 1, 2, 3, 4, 5, 6`;
 			parameters = {
 							common_app_id: process.env.COMMON_APP_ID,
 							app_id: app_id,
-							lang_code: lang_code
+							lang_code: lang_code,
+							object : object,
+							object_name: object_name
 						 };
 		}
 		execute_db_sql(app_id, sql, parameters, null, 
