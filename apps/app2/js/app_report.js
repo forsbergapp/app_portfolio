@@ -172,11 +172,8 @@ async function timetable_user_setting_get(user_setting_id, callBack) {
 							show_fast_start_end 	: json.prayer_column_fast_start_end,
 							ui_navigation_left      : 'toolbar_navigation_btn_left',
 							ui_navigation_right     : 'toolbar_navigation_btn_right',
-							ui_prayertable_day      : document.getElementById('prayertable_day'),
 							ui_prayertable_day_id   : 'prayertable_day',
-							ui_prayertable_month    : document.getElementById('prayertable_month'),
 							ui_prayertable_month_id : 'prayertable_month',
-							ui_prayertable_year     : document.getElementById('prayertable_year'),
 							ui_prayertable_year_id  : 'prayertable_year'
 						}
 			);
@@ -1447,7 +1444,7 @@ async function init_app_report() {
 		window.global_session_currentDate.getDate()).toLocaleDateString("en-us-u-ca-islamic", { year: "numeric" }));
 	await set_prayer_method();
 }
-function init_report(parameters) {
+async function init_report(parameters) {
 	let encodedParams = new URLSearchParams(window.location.search);
 	let decodedparameters = fromBase64(encodedParams.get('reportid'))
 	let urlParams = new URLSearchParams(decodedparameters);
@@ -1455,108 +1452,103 @@ function init_report(parameters) {
 	let user_setting_id = urlParams.get('sid');
 	let lang_code = urlParams.get('lang_code');
 	let reporttype = urlParams.get('type');
-	init_common(parameters, (err, global_app_parameters)=>{
-        if (err)
-			report_exception(err);
-        else{
-			for (let i = 0; i < global_app_parameters.length; i++) {
-				if (global_app_parameters[i].parameter_name=='APP_COPYRIGHT')
-					window.global_app_copyright = global_app_parameters[i].parameter_value;
-				if (global_app_parameters[i].parameter_name=='REST_APP2_USER_SETTING')
-					window.global_rest_app2_user_setting = global_app_parameters[i].parameter_value;
-				if (global_app_parameters[i].parameter_name=='REST_APP2_USER_SETTING_USER_ACCOUNT_ID')
-					window.global_rest_app2_user_setting_user_account_id = global_app_parameters[i].parameter_value;
-				if (global_app_parameters[i].parameter_name=='REST_APP2_USER_SETTING_VIEW')
-					window.global_rest_app2_user_setting_view = global_app_parameters[i].parameter_value;
-				if (global_app_parameters[i].parameter_name=='REGIONAL_DEFAULT_CALENDAR_LANG')
-					window.global_regional_def_calendar_lang = global_app_parameters[i].parameter_value;
-				if (global_app_parameters[i].parameter_name=='REGIONAL_DEFAULT_LOCALE_EXT_PREFIX')
-					window.global_regional_def_locale_ext_prefix = global_app_parameters[i].parameter_value;
-				if (global_app_parameters[i].parameter_name=='REGIONAL_DEFAULT_LOCALE_EXT_NUMBER_SYSTEM')
-					window.global_regional_def_locale_ext_number_system = global_app_parameters[i].parameter_value;
-				if (global_app_parameters[i].parameter_name=='REGIONAL_DEFAULT_LOCALE_EXT_CALENDAR')
-					window.global_regional_def_locale_ext_calendar = global_app_parameters[i].parameter_value;
-				if (global_app_parameters[i].parameter_name=='REGIONAL_DEFAULT_CALENDAR_TYPE_GREG')
-					window.global_regional_def_calendar_type_greg = global_app_parameters[i].parameter_value;
-				if (global_app_parameters[i].parameter_name=='REGIONAL_DEFAULT_CALENDAR_NUMBER_SYSTEM')
-					window.global_regional_def_calendar_number_system = global_app_parameters[i].parameter_value;
-				//QR
-				if (global_app_parameters[i].parameter_name=='QR_LOGO_FILE_PATH')
-					window.global_qr_logo_file_path = global_app_parameters[i].parameter_value;
-				if (global_app_parameters[i].parameter_name=='QR_WIDTH')
-					window.global_qr_width = parseInt(global_app_parameters[i].parameter_value);
-				if (global_app_parameters[i].parameter_name=='QR_HEIGHT')
-					window.global_qr_height = parseInt(global_app_parameters[i].parameter_value);
-				if (global_app_parameters[i].parameter_name=='QR_COLOR_DARK')
-					window.global_qr_color_dark = global_app_parameters[i].parameter_value;
-				if (global_app_parameters[i].parameter_name=='QR_COLOR_LIGHT')
-					window.global_qr_color_light = global_app_parameters[i].parameter_value;
-				if (global_app_parameters[i].parameter_name=='QR_LOGO_WIDTH')
-					window.global_qr_logo_width = parseInt(global_app_parameters[i].parameter_value);
-				if (global_app_parameters[i].parameter_name=='QR_LOGO_HEIGHT')
-					window.global_qr_logo_height = parseInt(global_app_parameters[i].parameter_value);
-				if (global_app_parameters[i].parameter_name=='QR_BACKGROUND_COLOR')
-					window.global_qr_background_color = global_app_parameters[i].parameter_value;
-			
+	return await new Promise(function (resolve){
+		init_common(parameters, (err, global_app_parameters)=>{
+			if (err){
+				report_exception(err);
+				resolve();
 			}
-			init_app_report().then(function(){
-				//report start
-				if (inIframe() == false) {
-					updateReportViewStat(user_setting_id, user_account_id);
+			else{
+				for (let i = 0; i < global_app_parameters.length; i++) {
+					if (global_app_parameters[i].parameter_name=='APP_COPYRIGHT')
+						window.global_app_copyright = global_app_parameters[i].parameter_value;
+					if (global_app_parameters[i].parameter_name=='REST_APP2_USER_SETTING')
+						window.global_rest_app2_user_setting = global_app_parameters[i].parameter_value;
+					if (global_app_parameters[i].parameter_name=='REST_APP2_USER_SETTING_USER_ACCOUNT_ID')
+						window.global_rest_app2_user_setting_user_account_id = global_app_parameters[i].parameter_value;
+					if (global_app_parameters[i].parameter_name=='REST_APP2_USER_SETTING_VIEW')
+						window.global_rest_app2_user_setting_view = global_app_parameters[i].parameter_value;
+					if (global_app_parameters[i].parameter_name=='REGIONAL_DEFAULT_CALENDAR_LANG')
+						window.global_regional_def_calendar_lang = global_app_parameters[i].parameter_value;
+					if (global_app_parameters[i].parameter_name=='REGIONAL_DEFAULT_LOCALE_EXT_PREFIX')
+						window.global_regional_def_locale_ext_prefix = global_app_parameters[i].parameter_value;
+					if (global_app_parameters[i].parameter_name=='REGIONAL_DEFAULT_LOCALE_EXT_NUMBER_SYSTEM')
+						window.global_regional_def_locale_ext_number_system = global_app_parameters[i].parameter_value;
+					if (global_app_parameters[i].parameter_name=='REGIONAL_DEFAULT_LOCALE_EXT_CALENDAR')
+						window.global_regional_def_locale_ext_calendar = global_app_parameters[i].parameter_value;
+					if (global_app_parameters[i].parameter_name=='REGIONAL_DEFAULT_CALENDAR_TYPE_GREG')
+						window.global_regional_def_calendar_type_greg = global_app_parameters[i].parameter_value;
+					if (global_app_parameters[i].parameter_name=='REGIONAL_DEFAULT_CALENDAR_NUMBER_SYSTEM')
+						window.global_regional_def_calendar_number_system = global_app_parameters[i].parameter_value;
+					//QR
+					if (global_app_parameters[i].parameter_name=='QR_LOGO_FILE_PATH')
+						window.global_qr_logo_file_path = global_app_parameters[i].parameter_value;
+					if (global_app_parameters[i].parameter_name=='QR_WIDTH')
+						window.global_qr_width = parseInt(global_app_parameters[i].parameter_value);
+					if (global_app_parameters[i].parameter_name=='QR_HEIGHT')
+						window.global_qr_height = parseInt(global_app_parameters[i].parameter_value);
+					if (global_app_parameters[i].parameter_name=='QR_COLOR_DARK')
+						window.global_qr_color_dark = global_app_parameters[i].parameter_value;
+					if (global_app_parameters[i].parameter_name=='QR_COLOR_LIGHT')
+						window.global_qr_color_light = global_app_parameters[i].parameter_value;
+					if (global_app_parameters[i].parameter_name=='QR_LOGO_WIDTH')
+						window.global_qr_logo_width = parseInt(global_app_parameters[i].parameter_value);
+					if (global_app_parameters[i].parameter_name=='QR_LOGO_HEIGHT')
+						window.global_qr_logo_height = parseInt(global_app_parameters[i].parameter_value);
+					if (global_app_parameters[i].parameter_name=='QR_BACKGROUND_COLOR')
+						window.global_qr_background_color = global_app_parameters[i].parameter_value;
+				
 				}
-				switch (reporttype) {
-					//day
-					case '0':{document.getElementById('prayertable_day').style.display = 'block';break;}
-					case '1':{document.getElementById('prayertable_month').style.display = 'block';break;}
-					case '2':{document.getElementById('prayertable_year').style.display = 'block';break;}
-				}
-				timetable_user_setting_get(user_setting_id, (err, report_parameters) =>{
-					if (err)
-						null;
-					else{
-						document.body.classList = report_parameters.arabic_script;
-						timetable_translate_settings(report_parameters.locale, report_parameters.second_locale).then(function(){
-							if (err)
-								null;
-							else
-								if (reporttype==0){
-									timetable_day_user_settings_get(user_account_id, (err, user_settings_parameters) =>{
-										if (err)
-											null;
-										else{
-											displayDay(report_parameters, null, user_settings_parameters).then(function(timetable){
-												report_parameters.ui_prayertable_day.id = timetable.id;
-            									report_parameters.ui_prayertable_day.classList = timetable.classList;
-            									report_parameters.ui_prayertable_day.style.direction = timetable.style.direction;
-            									report_parameters.ui_prayertable_day.innerHTML = timetable.innerHTML;
-												create_qr('prayertable_day_qr_code', window.location.href);
-											})
-										}
-											
-									})
-								}
-								else
-									if (reporttype==1)
-										displayMonth(report_parameters, null).then(function(timetable){
-											report_parameters.ui_prayertable_month.id = timetable.id;
-											report_parameters.ui_prayertable_month.classList = timetable.classList;
-											report_parameters.ui_prayertable_month.style.direction = timetable.style.direction;
-											report_parameters.ui_prayertable_month.innerHTML = timetable.innerHTML;
-											create_qr('prayertable_month_qr_code', window.location.href);
-										})
-									else 
-										if (reporttype==2)
-											displayYear(report_parameters, null).then(function(timetable){
-												report_parameters.ui_prayertable_year.id = timetable.id;
-												report_parameters.ui_prayertable_year.classList = timetable.classList;
-												report_parameters.ui_prayertable_year.style.direction = timetable.style.direction;
-												report_parameters.ui_prayertable_year.innerHTML = timetable.innerHTML;
-												create_qr('prayertable_year_qr_code', window.location.href);
-											})
-						});
+				init_app_report().then(function(){
+					//report start
+					if (inIframe() == false) {
+						updateReportViewStat(user_setting_id, user_account_id);
 					}
-				});
-			}) 
-		}
+					timetable_user_setting_get(user_setting_id, (err, report_parameters) =>{
+						if (err)
+							resolve();
+						else{
+							document.body.classList = report_parameters.arabic_script;
+							timetable_translate_settings(report_parameters.locale, report_parameters.second_locale).then(function(){
+								if (err)
+									resolve();
+								else
+									if (reporttype==0){
+										timetable_day_user_settings_get(user_account_id, (err, user_settings_parameters) =>{
+											if (err)
+												resolve();
+											else{
+												displayDay(report_parameters, null, user_settings_parameters).then(function(timetable){
+													timetable.style.display = 'block';
+													document.getElementById('paper').innerHTML = timetable.outerHTML;
+													create_qr('prayertable_day_qr_code', window.location.href);
+													resolve();
+												})
+											}
+												
+										})
+									}
+									else
+										if (reporttype==1)
+											displayMonth(report_parameters, null).then(function(timetable){
+												timetable.style.display = 'block';
+												document.getElementById('paper').innerHTML = timetable.outerHTML;
+												create_qr('prayertable_month_qr_code', window.location.href);
+												resolve();
+											})
+										else 
+											if (reporttype==2)
+												displayYear(report_parameters, null).then(function(timetable){
+													timetable.style.display = 'block';
+													document.getElementById('paper').innerHTML = timetable.outerHTML;
+													create_qr('prayertable_year_qr_code', window.location.href);
+													resolve();
+												})
+							});
+						}
+					});
+				}) 
+			}
+		})
 	})
 }
