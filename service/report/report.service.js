@@ -79,7 +79,10 @@ module.exports = {
                                         height: height_viewport,
                                         deviceScaleFactor: 1,
                                         }).then(function(){
+                    let wait_count=0;
+                    function waitpdf(){
                         setTimeout(() => {
+                            wait_count++;
                             webPage.pdf({   printBackground: true,
                                 format: ps,
                                 displayHeaderFooter: hf,
@@ -89,12 +92,79 @@ module.exports = {
                                     left: "0px",
                                     right: "0px"
                                 }}).then(function(pdf){
+                                        /*  empty string size 883 bytes from Pupeteer and chrome.exe:
+                                            %PDF-1.4
+                                            %����
+                                            1 0 obj
+                                            <</Creator (Chromium)
+                                            /Producer (Skia/PDF m103)
+                                            /CreationDate (D:20221021112120+00'00')
+                                            /ModDate (D:20221021112120+00'00')>>
+                                            endobj
+                                            3 0 obj
+                                            <</ca 1
+                                            /BM /Normal>>
+                                            endobj
+                                            4 0 obj
+                                            <</Filter /FlateDecode
+                                            /Length 112>> stream
+                                            x�U�1�0Ew���H��	>sY8j3�Tz�IX�����X��a(��� ��>a��C�א�%�6��Z�����QƢ��Bs�SQ*ˌ�93=fC�6sr��jս�Y�RB�
+                                            endstream
+                                            endobj
+                                            2 0 obj
+                                            <</Type /Page
+                                            /Resources <</ProcSet [/PDF /Text /ImageB /ImageC /ImageI]
+                                            /ExtGState <</G3 3 0 R>>>>
+                                            /MediaBox [0 0 594.95996 841.91998]
+                                            /Contents 4 0 R
+                                            /StructParents 0
+                                            /Parent 5 0 R>>
+                                            endobj
+                                            5 0 obj
+                                            <</Type /Pages
+                                            /Count 1
+                                            /Kids [2 0 R]>>
+                                            endobj
+                                            6 0 obj
+                                            <</Type /Catalog
+                                            /Pages 5 0 R>>
+                                            endobj
+                                            xref
+                                            0 7
+                                            0000000000 65535 f 
+                                            0000000015 00000 n 
+                                            0000000374 00000 n 
+                                            0000000155 00000 n 
+                                            0000000192 00000 n 
+                                            0000000574 00000 n 
+                                            0000000629 00000 n 
+                                            trailer
+                                            <</Size 7
+                                            /Root 6 0 R
+                                            /Info 1 0 R>>
+                                            startxref
+                                            676
+                                            %%EOF
+                                        */
+                                        if (pdf.toString().length < process.env.SERVICE_REPORT_PDF_EMPTY_SIZE_CHECK)
+                                            //try process.env.SERVICE_REPORT_PDF_WAIT_ATTEMPTS * process.env.SERVICE_REPORT_PDF_WAIT_INTERVAL = total time
+                                            //ex. 20 * 500 = 10 seconds
+                                            if (wait_count>process.env.SERVICE_REPORT_PDF_WAIT_ATTEMPTS)
+                                                resolve(null);
+                                            else{
+                                                //continue recursive call until PDF created with content
+                                                waitpdf();
+                                            }
+                                        else
                                             webPage.close().then(function(){
+                                                //if closing browser and not only page:
                                                 //global.browser.close();
                                                 resolve(pdf);
                                             });
                                         });    
-                        }, process.env.SERVICE_REPORT_PDF_DELAY);
+                        }, process.env.SERVICE_REPORT_PDF_WAIT_INTERVAL);
+                    }
+                    waitpdf();
                     })
                 })
             })

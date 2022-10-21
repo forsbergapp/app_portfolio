@@ -8,7 +8,32 @@ function sortByProperty(property, order_by){
     }  
 }
 module.exports = {
-    getListConnected: (app_id, limit, year, month, order_by, sort, callBack)=>{
+    BroadcastSend: (app_id, client_id, destination_app, broadcast_type, broadcast_message, callBack) =>{
+        let broadcast;
+        if (destination_app ==true){
+            //broadcast to all connected to given app_id
+            broadcast_clients.forEach(client=>{
+                if (client.app_id == app_id || app_id == null){
+                    broadcast =`{"broadcast_type"   : "${broadcast_type}", 
+                                 "broadcast_message": "${broadcast_message}"}`;
+                    client.response.write (`data: ${btoa(broadcast)}\n\n`);
+                }
+            })
+        }
+        if (client_id !==null){
+            //broadcast to specific client
+            broadcast_clients.forEach(client=>{
+                if (client.id == client_id){
+                    broadcast =`{"broadcast_type"   : "${broadcast_type}", 
+                                 "broadcast_message": "${broadcast_message}"}`;
+                    client.response.write (`data: ${btoa(broadcast)}\n\n`);
+                    
+                }
+            })
+        }
+        callBack(null, null);
+    },
+    ConnectedList: (app_id, limit, year, month, order_by, sort, callBack)=>{
         let broadcast_clients_no_res = [];
         let i=0;
         broadcast_clients.forEach(client=>{
@@ -86,7 +111,7 @@ module.exports = {
         }
         callBack(null, broadcast_clients_no_res.sort(sortByProperty(column_sort, order_by_num)));
     },
-    getCountConnected: (identity_provider_id, count_logged_in, callBack)=>{
+    ConnectedCount: (identity_provider_id, count_logged_in, callBack)=>{
         let i=0;
         let count_connected=0;
         for (let i = 0; i < broadcast_clients.length; i++){
@@ -109,32 +134,7 @@ module.exports = {
         }
         return callBack(null, count_connected);
     },
-    sendBroadcast: (app_id, client_id, destination_app, broadcast_type, broadcast_message, callBack) =>{
-        let broadcast;
-        if (destination_app ==true){
-            //broadcast to all connected to given app_id
-            broadcast_clients.forEach(client=>{
-                if (client.app_id == app_id || app_id == null){
-                    broadcast =`{"broadcast_type"   : "${broadcast_type}", 
-                                 "broadcast_message": "${broadcast_message}"}`;
-                    client.response.write (`data: ${btoa(broadcast)}\n\n`);
-                }
-            })
-        }
-        if (client_id !==null){
-            //broadcast to specific client
-            broadcast_clients.forEach(client=>{
-                if (client.id == client_id){
-                    broadcast =`{"broadcast_type"   : "${broadcast_type}", 
-                                 "broadcast_message": "${broadcast_message}"}`;
-                    client.response.write (`data: ${btoa(broadcast)}\n\n`);
-                    
-                }
-            })
-        }
-        callBack(null, null);
-    },
-    updateConnected: (client_id, admin_id, user_account_id, identity_provider_id, callBack) =>{
+    ConnectedUpdate: (client_id, admin_id, user_account_id, identity_provider_id, callBack) =>{
         let i=0;
         for (let i = 0; i < broadcast_clients.length; i++){
             if (broadcast_clients[i].id==client_id){
@@ -147,7 +147,7 @@ module.exports = {
         }
         return callBack(null, null);
     },
-    checkConnected: (user_account_id, callBack)=>{
+    ConnectedCheck: (user_account_id, callBack)=>{
         let i=0;
         for (let i = 0; i < broadcast_clients.length; i++){
             if (broadcast_clients[i].user_account_id == user_account_id){
