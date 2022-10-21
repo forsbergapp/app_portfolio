@@ -1,13 +1,13 @@
 global.broadcast_clients = [];
 const { createLog, createLogAdmin} = require ("../../service/db/app_portfolio/app_log/app_log.service");
-const { getListConnected, getCountConnected, sendBroadcast, updateConnected, checkConnected} = require ("./broadcast.service");
+const { BroadcastSend, ConnectedList, ConnectedCount, ConnectedUpdate, ConnectedCheck} = require ("./broadcast.service");
 module.exports = {
-	connectBroadcast: (req, res) => {
+	BroadcastConnect: (req, res) => {
         const headers = {
             "Content-Type": "text/event-stream",
             "Connection": "keep-alive",
           };
-        res.writeHead(200, headers);        
+        res.writeHead(200, headers);
         req.query.app_user_id ='';
         let res2;
         req.query.callback=1;
@@ -104,8 +104,16 @@ module.exports = {
             })
         }
     },
-    getListConnected: (req, res) => {
-        getListConnected(req.query.select_app_id, req.query.limit, req.query.year, req.query.month, 
+    BroadcastSend: (req, res) => {
+        BroadcastSend(req.body.app_id, req.body.client_id, req.body.destination_app, 
+                      req.body.broadcast_type, req.body.broadcast_message, (err, result) =>{
+            return res.status(200).send(
+                err ?? result
+            );
+        });
+    },
+    ConnectedList: (req, res) => {
+        ConnectedList(req.query.select_app_id, req.query.limit, req.query.year, req.query.month, 
                          req.query.order_by, req.query.sort,  (err, result) => {
             if (err) {
                 return res.status(500).send({
@@ -132,30 +140,22 @@ module.exports = {
             }
         })
     },
-    getCountConnected: (req, res) => {
-        getCountConnected(req.query.identity_provider_id, req.query.count_logged_in, (err, count_connected) => {
+    ConnectedCount: (req, res) => {
+        ConnectedCount(req.query.identity_provider_id, req.query.count_logged_in, (err, count_connected) => {
             return res.status(200).json({
                 data: count_connected
             });
         })
     },
-    sendBroadcast: (req, res) => {
-        sendBroadcast(req.body.app_id, req.body.client_id, req.body.destination_app, 
-                      req.body.broadcast_type, req.body.broadcast_message, (err, result) =>{
-            return res.status(200).send(
-                err ?? result
-            );
-        });
-    },
-    updateConnected: (req, res) => {
-        updateConnected(req.query.client_id, req.query.admin_id, req.query.user_account_id, req.query.identity_provider_id, (err, result) =>{
+    ConnectedUpdate: (req, res) => {
+        ConnectedUpdate(req.query.client_id, req.query.admin_id, req.query.user_account_id, req.query.identity_provider_id, (err, result) =>{
             return res.status(200).json(
                 err ?? result
             );
         })
     },
-    checkConnected: (req, res) => {
-        checkConnected(req.params.user_account_id, (err, result_connected)=>{
+    ConnectedCheck: (req, res) => {
+        ConnectedCheck(req.params.user_account_id, (err, result_connected)=>{
             return res.status(200).json({
                 online: result_connected
             });
