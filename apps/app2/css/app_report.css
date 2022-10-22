@@ -644,7 +644,6 @@
 	--red: #bf0909;
 	--brown: #704c21;
 	--pink: #ffd2e3;
-	--pink2: #cf34ce;
 	--orange: #ff7800;
 	--orange2: #f77c10;
 	--orange3: #f37c2f;
@@ -653,7 +652,6 @@
 	--lightblue3: #7194bd;
 	--blue: #1da1f2;
 	--blue2: #006dbf;
-	--blue3: #1a71d9;
 	--blue4: #09589b;
 	--darkblue: #012d74;
 	--darkblue2:#10498F;
@@ -1139,12 +1137,6 @@
 	background-color:var(--report_theme_footer_background_color);
 }
 
-.theme_month_20001 .timetable_row:last-child {
-	border-bottom: none
-}
-.theme_month_20001 #timetable .timetable_col_header {
-	border-bottom: 0.5px solid #2a5d99;
-}
 .theme_month_20001 #timetable .timetable_col {
 	border-bottom: 0.5px solid #2a5d99;
 }
@@ -1169,19 +1161,6 @@
 }
 
 
-.theme_month_20002 #timetable {
-	border : 0.5px solid #404040;
-}
-.theme_month_20002 #timetable .prayertable_month_header-row .timetable_col_header {
-	border-bottom: 0.5px solid #404040 !important;
-	border-top: 0.5px solid #404040 !important;
-}
-.theme_month_20002 #timetable .timetable_col_header {
-	border-bottom: 0.5px solid #404040;
-}
-.theme_month_20002 #timetable .timetable_col {
-	border-bottom: 0.5px solid #404040;
-}
 .theme_month_20002 .timetable_row.prayertable_month_highlight_row .timetable_col {
 	background-color: #e6e6e6 !important;
 }
@@ -1195,9 +1174,6 @@
 	background-color: #e6e6e6 !important;
 }
 
-.theme_month_20003 #timetable {
-	border : 0px !important;
-}
 .theme_month_20003 .timetable_row.prayertable_month_highlight_row .timetable_col {
 	background-color: #ebeae2 !important;
 }
@@ -1214,15 +1190,13 @@
 /*shrink font size compared to parent div for this font on this theme*/
 .theme_month_20004 .timetable_row, 
 .theme_month_20004 #timetable_footer_row, 
-.theme_month_20004 #prayertable_month_footer_row{
+.theme_month_20004 #prayertable_month_footer{
 	font-size:0.75em;
 }
-.theme_month_20004 .timetable_row:nth-child(odd) {
-	background-color: #f6fbf5;
+.theme_month_20004 #prayertable_month_footer div {
+	padding: 5px;
 }
-.theme_month_20004 .timetable_row:nth-child(even) {
-	background-color: #FFF;
-}
+
 .theme_month_20004 .timetable_row.prayertable_month_highlight_row .timetable_col {
 	background-color: #c5b28d !important;
 }
@@ -1235,15 +1209,13 @@
 .theme_month_20004 .timetable_row.prayertable_month_day_21-30-row .timetable_col {
 	background-color: #a49775 !important;
 }
-.theme_month_20004 #prayertable_month_footer #prayertable_month_footer_title1 {
-	padding: 5px;
+.theme_month_20004 .timetable_row:nth-child(odd) {
+	background-color: #f6fbf5;
 }
-.theme_month_20004 #prayertable_month_footer #prayertable_month_footer_title2 {
-	padding: 5px;
+.theme_month_20004 .timetable_row:nth-child(even) {
+	background-color: #FFF;
 }
-.theme_month_20004 #prayertable_month_footer #prayertable_month_footer_title3 {
-	padding: 5px;
-}
+
 
 .theme_month_20005 #timetable .timetable_col {
 	border-bottom: 0.5px solid #009900;
@@ -1267,9 +1239,6 @@
 	background-color: #FFF;
 }
 
-.theme_month_20006 #timetable{
-	border : 0px !important;
-}
 .theme_month_20006 .timetable_row.prayertable_month_highlight_row .timetable_col {
 	background-color: #e6e6e6 !important;
 }
@@ -1283,9 +1252,6 @@
 	background-color: #e6e6e6 !important;
 }
 
-.theme_month_20007 #timetable .timetable_col_header {
-	border-bottom: 0.5px solid #c9b47e;
-}
 .theme_month_20007 #timetable .timetable_col {
 	border-bottom: 0.5px solid #c9b47e;
 }
@@ -1301,6 +1267,7 @@
 .theme_month_20007 .timetable_row.prayertable_month_day_21-30-row .timetable_col {
 	background-color: #d2b88f !important;
 }
+
 .theme_month_20007 #timetable .timetable_row .timetable_col:nth-child(odd) {
 	background-color: #fcf9de;
 	color: #404040;
@@ -1312,18 +1279,6 @@
 .theme_month_20007 #timetable .timetable_row .timetable_col:nth-child(even) {
 	background-color: #FFF;
 	color: #404040;
-}
-.theme_month_20007 .timetable_row:first-child .timetable_col.prayertable_fast_start {
-	border-top: 2px solid #c9b47e;
-}
-.theme_month_20007 .timetable_row:last-child .timetable_col.prayertable_fast_start {
-	border-bottom: 2px solid #c9b47e;
-}
-.theme_month_20007 .timetable_row:first-child .timetable_col.prayertable_fast_end {
-	background-color: #c9b47e !important;
-}
-.theme_month_20007 .timetable_row:last-child .timetable_col.prayertable_fast_end {
-	border-bottom: 2px solid #c9b47e;
 }
 
 .theme_month_20008 .timetable_row.prayertable_month_highlight_row .timetable_col {
@@ -1367,53 +1322,18 @@
 	background-color: #ededed !important;
 }
 
-.theme_month_20011 #timetable_header {
-	border-radius:25px 25px 0px 0px;
-}
-.theme_month_20011 #timetable .timetable_col_header {
-	vertical-align: middle;
-}
-.theme_month_20011 .timetable_row:last-child{
-	background-color:#ffffff;
-}
-.theme_month_20011 #timetable .timetable_col {
-	vertical-align: middle;
-	background-color: #f0f0f0;
-}
-.theme_month_20011 #timetable .timetable_col:first-child{
-	color:#1a71d9;
-}
-.theme_month_20011 #timetable .prayertable_month_calendartype{
-	color:#cf34ce;
-}
-
-.theme_month_20011 .timetable_row.prayertable_month_highlight_row{
-	background-color:#f0f0f0 !important;
-}
 .theme_month_20011 .timetable_row.prayertable_month_highlight_row .timetable_col {
-	border-top: 0.5px solid #a6a6a6;
-	border-bottom: 0.5px solid #a6a6a6;
-	background-image: linear-gradient(to top,#d5d5d5 0%,#FAFAFA 100%);
-}
-.theme_month_20011 .timetable_row.prayertable_month_highlight_row .timetable_col:first-child {
-	border-top: 0.5px solid #a6a6a6;
-	border-bottom: 0.5px solid #a6a6a6;
-	background-image: linear-gradient(to top,#d5d5d5 0%,#FAFAFA 100%);
-}
-.theme_month_20011 .timetable_row.prayertable_month_highlight_row .timetable_col:last-child {
-	border-top: 0.5px solid #a6a6a6;
-	border-bottom: 0.5px solid #a6a6a6;
-	background-image: linear-gradient(to top,#d5d5d5 0%,#FAFAFA 100%);	
+	background-color:#e6e6e6 !important;
 }
 
 .theme_month_20011 .timetable_row.prayertable_month_day_01-10-row .timetable_col {
-	background-color: #d5d5d5 !important;
+	background-color: #e6e6e6  !important;
 }
 .theme_month_20011 .timetable_row.prayertable_month_day_11-20-row .timetable_col {
 	background-color: #FAFAFA !important;
 }
 .theme_month_20011 .timetable_row.prayertable_month_day_21-30-row .timetable_col {
-	background-color: #d5d5d5 !important;
+	background-color: #e6e6e6  !important;
 }
 
 .theme_month_20012 .timetable_row.prayertable_month_highlight_row .timetable_col {
@@ -1461,19 +1381,6 @@
 	background-color: #ececec !important;
 }
 
-.theme_month_20015 #timetable .prayertable_month_header-row .timetable_col_header {
-	border-bottom: 1px solid #a49775;
-	border-top: 1px solid #a49775;
-}
-.theme_month_20015 .timetable_row:nth-child(odd) {
-	background-color: #fefef6;
-}
-.theme_month_20015 .timetable_row:nth-child(even) {
-	background-color: #FFF;
-}
-.theme_month_20015 #timetable .timetable_col_header {
-	border-bottom: 0.5px solid #d2c196;
-}
 .theme_month_20015 #timetable .timetable_col {
 	border-bottom: 0.5px solid #d2c196;
 }
@@ -1489,6 +1396,9 @@
 .theme_month_20015 .timetable_row.prayertable_month_day_21-30-row .timetable_col {
 	background-color: #d2b88f !important;
 }
-.theme_month_20015 #timetable_footer {
-	border: 1px solid #d2c196;
+.theme_month_20015 .timetable_row:nth-child(odd) {
+	background-color: #fefef6;
+}
+.theme_month_20015 .timetable_row:nth-child(even) {
+	background-color: #FFF;
 }
