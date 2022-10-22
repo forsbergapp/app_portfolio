@@ -18,10 +18,93 @@
 /*Cinzel Decorative*/
 @import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&display=swap');
 
+/*Variables*/
+:root{
+	/*colors*/
+	--white: white;
+	--lightgreen:#0d8149;
+	--lightgreen2: #77c356;
+	--lightgreen3: #bbe3b8;
+	--lightgreen4: #bbf796;
+	--green: #00ab67;
+	--green2: #009900;
+	--green3: #57e944;
+	--lightyellow: #c3ba47;
+	--lightyellow2: #f4e7b8;
+	--lightyellow3: #ebeae2;
+	--lightyellow4: #fcf9de;
+	--lightyellow5: #fefef6;
+	--lightgold: #c9b47e;
+	--lightgold2: #d2b88f;
+	--lightgold3: #d2c196;
+	--gold: #cea87a;
+	--gold2: #a49775;
+	--gold3: #c5b28d;
+	--lightgrey: #e6e6e6;
+	--lightgrey2: #ebedee;
+	--lightgrey3: #ededed;
+	--lightgrey4: #f0f0f0;
+	--lightgrey6: #d5d5d5;
+	--lightgrey7: #CFCFCF;
+	--lightgrey8: #f6fbf5;
+	--lightgrey9: #e6ecf0;
+	--lightgre10: #FAFAFA;
+	--lightgrey11: #ececec;
+	--lightgrey12: #ebebed;
+	--red: #bf0909;
+	--brown: #704c21;
+	--pink: #ffd2e3;
+	--pink2: #f2c2d3;
+	--orange: #ff7800;
+	--orange2: #f77c10;
+	--orange3: #f37c2f;
+	--lightblue: #28708c;
+	--lightblue2: #2a5d99;
+	--lightblue3: #7194bd;
+	--lightblue4: #7bcae9;
+	--lightblue5: #c9edf7;
+	--blue: #1da1f2;
+	--blue2: #006dbf;
+	--blue4: #09589b;
+	--darkblue: #012d74;
+	--darkblue2:#10498F;
+	--darkblue3: #293340;
+	--darkblue4: #27313f;
+	--darkblue5: #344051;
+	--darkbrown: #323232;
+	--black: #404040;
+	--darkgrey: #333;
+	--grey: #5c686c;
+	--grey2: #484848;
+	--grey3: #6b6b6b;
+	--grey4: #666666;
+	--grey5: #363635;
+	--grey6: #444;
+
+	--shadow1: rgb(0 0 0 / 20%);
+	--shadow2: rgb(0 0 0 / 19%);
+
+	--font_1: 'Noto Sans';
+	--font_2: 'Roboto';
+	--font_3: 'Exo';
+	--font_4: 'Roboto Condensed';
+	--font_5: 'Press Start 2P';
+	--font_6: 'Cinzel Decorative';
+	--font_7: 'Merriweather';
+	--font_8: 'Source Sans Pro';
+	--font_9: 'Montserrat';
+	--font_10: 'Lato';
+
+	--report_theme_text_color: var(--black);
+	--report_theme_notes_background_color:inherit !important;
+	--report_qr_code_shadow_color1:var(--shadow1);
+	--report_qr_code_shadow_color2:var(--shadow2);
+
+}
+/*Print preview styles*/
 #printbody {
 	margin: 0px;
 }
-
 #printbody .prayertable_month #timetable .prayertable_month_today-row {
     animation: unset;
     animation-iteration-count: unset;
@@ -33,7 +116,7 @@
 }
 /* PAPER*/
 #paper {
-	background-color:white;
+	background-color:var(--white);
 	z-index: 0;
 	transform: scale(0.5);
 	transform-origin: 0 11%;
@@ -78,7 +161,7 @@
 		padding-top:inherit;
 	}
 }
-/*Report Common*/
+
 #printbody #paper {
 	box-shadow: none;
 	transform:scale(1) !important;
@@ -93,7 +176,8 @@
  	font-family:"Noto Sans";
 	 text-align: center;	
 }	
-
+/*Common styles for all timetables*/
+/*QR code*/
 #printbody .prayertable_qr_code{
     transform: scale(0.64);
 	margin-inline-end: -11px;
@@ -105,11 +189,25 @@
 	position: fixed;
 }
 .prayertable_qr_code svg{
-	border: 4px solid white;
-	box-shadow: 0 4px 8px 0 rgb(0 0 0 / 20%), 0 6px 20px 0 rgb(0 0 0 / 19%);
+	border: 4px solid var(--white);
+	box-shadow: 0 4px 8px 0 var(--report_qr_code_shadow_color1), 0 6px 20px 0 var(----report_qr_code_shadow_color2);
 }
+/*Fasting columns*/
+#prayertable_day .prayertable_fast_start,
+#prayertable_month .prayertable_fast_start,
+#prayertable_year .prayertable_fast_start,
+#prayertable_day .prayertable_fast_end,
+#prayertable_month .prayertable_fast_end,
+#prayertable_year .prayertable_fast_end {
+	font-weight: bold;
+}
+/*uppercase all timetable data header*/
+#prayertable_day .prayertable_day_timetable_header-row div,
+#prayertable_month .timetable_col_header {
+	text-transform: uppercase;
+}
+
 /*DAY*/
-/*common settings*/
 #prayertable_day {
 	width: 100%;
 	height:100%;
@@ -205,26 +303,10 @@
 	margin: 1px;
 	vertical-align: middle;
 }
-/*Fasting columns*/
-#prayertable_day .prayertable_fast_start,
-#prayertable_month .prayertable_fast_start,
-#prayertable_year .prayertable_fast_start,
-#prayertable_day .prayertable_fast_end,
-#prayertable_month .prayertable_fast_end,
-#prayertable_year .prayertable_fast_end {
-	font-weight: bold;
-}
 #prayertable_day .prayertable_fast_start,
 #prayertable_day .prayertable_fast_end {
 	font-size: 1.2em !important;
 }
-/*uppdercase all timetable data header*/
-#prayertable_day .prayertable_day_timetable_header-row div,
-#prayertable_month .timetable_col_header {
-	text-transform: uppercase;
-}
-
-
 /*Footer timetable info*/
 #prayertable_day .prayertable_day_timetable_footer {
 	vertical-align: middle;
@@ -266,7 +348,7 @@
 	z-index:-1;
 }
 
-/*MONTH common*/
+/*MONTH*/
 #prayertable_month {
 	width: 100%;
 	text-align: center;
@@ -330,7 +412,6 @@
 .prayertable_month #prayertable_month_footer #prayertable_month_footer_title3 {
 	unicode-bidi: plaintext;
 }
-/*Header*/
 .prayertable_month #prayertable_month_header {
 	display: flex;
 	width: 100%;
@@ -360,7 +441,6 @@
 	text-align: center;
 	padding-bottom:5px;
 }
-/*Timetable*/
 .prayertable_month #timetable {
 	display: table;
 	table-layout: fixed;
@@ -387,7 +467,6 @@
 	padding: 1px;
 	vertical-align: middle;
 }
-
 .prayertable_month_calendartype{
 	font-size:0.9em;
 }
@@ -408,8 +487,6 @@
         opacity: 0.5;
     }
 }
-
-/*notes*/
 .prayertable_month #timetable .prayertable_month_notes {
 	margin: 0px;
 	padding: 0px;
@@ -457,7 +534,7 @@
 	position:fixed;
 }
 
-/*YEAR common*/
+/*YEAR*/
 #prayertable_year {
 	width: 100%;
 	height:100%;
@@ -522,7 +599,6 @@
 #prayertable_year #prayertable_year_timetable_footer.three_columntitles{
 	margin-top:-40px;
 }
-
 /*Footer timetable info*/
 #prayertable_year #prayertable_year_timetable_footer {
 	width: 100%;
@@ -551,7 +627,6 @@
 #prayertable_year #prayertable_year_timetable_footer_col #prayertable_year_timetable_footer_r1c7.hidden {
 	display: none;
 }
-/*Footer*/
 #prayertable_year #prayertable_year_footer_row {
 	width:100%;
 	height: 160px;
@@ -566,7 +641,7 @@
 	bottom:0px;
 	position:fixed;
 }
-/* month fixes*/
+/* YEAR month fixes*/
 #prayertable_year .prayertable_year_month {
 	display: inline-block;
 	width:25% !important;
@@ -598,7 +673,7 @@
 #prayertable_year #timetable{
 	line-height: 3.75pt;
 }
-/*theme specific month fontsize and lineheight fixes*/
+/*YEAR theme specific month fontsize and lineheight fixes*/
 #prayertable_year .theme_month_20001 #timetable {
 	line-height: 3pt !important;
 }
@@ -620,70 +695,7 @@
 #prayertable_year .theme_month_20015 #timetable {
 	line-height: 3pt !important;
 }
-:root{
-	/*colors*/
-	--white: white;
-	--lightgreen:#0d8149;
-	--lightgreen2: #77c356;
-	--green: #00ab67;
-	--green2: #009900;
-	--green3: #57e944;
-	--lightyellow: #c3ba47;
-	--lightyellow2: #f4e7b8;
-	--lightgold: #c9b47e;
-	--lightgold2: #d2b88f;
-	--lightgold3: #d2c196;
-	--gold: #cea87a;
-	--gold2: #a49775;
-	--lightgrey: #e6e6e6;
-	--lightgrey2: #ebedee;
-	--lightgrey3: #ededed;
-	--lightgrey4: #f0f0f0;
-	--lightgrey6: #d5d5d5;
-	--lightgrey7: #CFCFCF;
-	--red: #bf0909;
-	--brown: #704c21;
-	--pink: #ffd2e3;
-	--orange: #ff7800;
-	--orange2: #f77c10;
-	--orange3: #f37c2f;
-	--lightblue: #28708c;
-	--lightblue2: #2a5d99;
-	--lightblue3: #7194bd;
-	--blue: #1da1f2;
-	--blue2: #006dbf;
-	--blue4: #09589b;
-	--darkblue: #012d74;
-	--darkblue2:#10498F;
-	--darkblue3: #293340;
-	--darkblue4: #27313f;
-	--darkblue5: #344051;
-	--darkbrown: #323232;
-	--black: #404040;
-	--darkgrey: #333;
-	--grey: #5c686c;
-	--grey2: #484848;
-	--grey3: #6b6b6b;
-	--grey4: #666666;
-	--grey5: #363635;
-	--grey6: #444;
-	
 
-
-	--font_1: 'Noto Sans';
-	--font_2: 'Roboto';
-	--font_3: 'Exo';
-	--font_4: 'Roboto Condensed';
-	--font_5: 'Press Start 2P';
-	--font_6: 'Cinzel Decorative';
-	--font_7: 'Merriweather';
-	--font_8: 'Source Sans Pro';
-	--font_9: 'Montserrat';
-	--font_10: 'Lato';
-
-	--report_theme_text_color: var(--black);
-	--report_theme_notes_background_color:inherit !important;
-}
 .theme_day_10001{
 	--report_theme_display_font_family:var(--font_2);
 	--report_theme_default_font_family:var(--font_2);
@@ -698,8 +710,8 @@
 	--report_theme_timetable_footer_color:var(--lightblue);
 	--report_theme_footer_color:inherit;
 	--report_theme_footer_background_color:inherit;
-	--report_theme_fast_start_end_color:inherit;
-	--report_theme_fast_start_end_background_color:inherit;
+	--report_theme_fast_start_end_color:var(--white);
+	--report_theme_fast_start_end_background_color:var(--lightblue);
 }
 .theme_day_10002{
 	--report_theme_display_font_family:var(--font_3);
@@ -715,8 +727,8 @@
 	--report_theme_timetable_footer_color:var(--lightgreen);
 	--report_theme_footer_color:inherit;
 	--report_theme_footer_background_color:inherit;
-	--report_theme_fast_start_end_color:inherit;
-	--report_theme_fast_start_end_background_color:inherit;
+	--report_theme_fast_start_end_color:var(--white);
+	--report_theme_fast_start_end_background_color:var(--lightgreen);
 }
 .theme_day_10003{
 	--report_theme_display_font_family:var(--font_2);
@@ -726,7 +738,7 @@
 	--report_theme_timetable_header_color:var(--lightyellow);
 	--report_theme_timetable_data_header_background_color:var(--lightgreen);
 	--report_theme_timetable_data_header_color:var(--white);
-	--report_theme_timetable_data_background_color:var(--lightgreen);
+	--report_theme_timetable_data_background_color:inherit;
 	--report_theme_timetable_data_color:var(--darkgrey);
 	--report_theme_timetable_footer_background_color:inherit;
 	--report_theme_timetable_footer_color:var(--lightgreen);
@@ -753,6 +765,17 @@
 	--report_theme_fast_start_end_color:var(--white);
 	--report_theme_fast_start_end_background_color:var(--lightblue2);
 	--report_theme_fast_start_end_border_color:inherit;
+
+	--report_theme_timetable_data_border_color:var(--lightblue2);
+	--report_theme_timetable_data_highlight_row_color:inherit;
+	--report_theme_timetable_data_highlight_row_background_color:var(--lightblue4);
+	--report_theme_timetable_data_highlight_1_10_background_color:var(--lightblue5);
+	--report_theme_timetable_data_highlight_11_20_background_color:var(--white);
+	--report_theme_timetable_data_highlight_21_30_background_color:var(--lightblue4);
+	--report_theme_timetable_data_column_odd_color:var(--black);
+	--report_theme_timetable_data_column_odd_background_color:var(--lightblue5);
+	--report_theme_timetable_data_column_even_color:inherit;
+	--report_theme_timetable_data_column_even_background_color:var(--white);
 }
 .theme_month_20002{
 	--report_theme_display_font_family:var(--font_1);
@@ -772,6 +795,17 @@
 	--report_theme_fast_start_end_color:inherit;
 	--report_theme_fast_start_end_background_color:var(--lightgrey);
 	--report_theme_fast_start_end_border_color:var(--black);
+
+	--report_theme_timetable_data_border_color:inherit;
+	--report_theme_timetable_data_highlight_row_color:inherit;
+	--report_theme_timetable_data_highlight_row_background_color:var(--lightgrey);
+	--report_theme_timetable_data_highlight_1_10_background_color:var(--lightgrey);
+	--report_theme_timetable_data_highlight_11_20_background_color:var(--white);
+	--report_theme_timetable_data_highlight_21_30_background_color:var(--lightgrey);
+	--report_theme_timetable_data_column_odd_color:inherit;
+	--report_theme_timetable_data_column_odd_background_color:inherit;
+	--report_theme_timetable_data_column_even_color:inherit;
+	--report_theme_timetable_data_column_even_background_color:inherit;
 }
 .theme_month_20003{
 	--report_theme_display_font_family:var(--font_2);
@@ -791,6 +825,17 @@
 	--report_theme_fast_start_end_color:var(--white);
 	--report_theme_fast_start_end_background_color:var(--lightyellow);
 	--report_theme_fast_start_end_border_color:var(--lightyellow);
+
+	--report_theme_timetable_data_border_color:inherit;
+	--report_theme_timetable_data_highlight_row_color:inherit;
+	--report_theme_timetable_data_highlight_row_background_color:var(--lightyellow3);
+	--report_theme_timetable_data_highlight_1_10_background_color:var(--lightyellow3);
+	--report_theme_timetable_data_highlight_11_20_background_color:var(--white);
+	--report_theme_timetable_data_highlight_21_30_background_color:var(--lightyellow3);
+	--report_theme_timetable_data_column_odd_color:inherit;
+	--report_theme_timetable_data_column_odd_background_color:inherit;
+	--report_theme_timetable_data_column_even_color:inherit;
+	--report_theme_timetable_data_column_even_background_color:inherit;
 }
 .theme_month_20004{
 	--report_theme_display_font_family:var(--font_5);
@@ -810,6 +855,26 @@
 	--report_theme_fast_start_end_color:inherit;
 	--report_theme_fast_start_end_background_color:var(--lightyellow2);
 	--report_theme_fast_start_end_border_color:var(--lightgold);
+
+	--report_theme_timetable_data_border_color:inherit;
+	--report_theme_timetable_data_highlight_row_color:inherit;
+	--report_theme_timetable_data_highlight_row_background_color:var(--gold3);
+	--report_theme_timetable_data_highlight_1_10_background_color:var(--gold3);
+	--report_theme_timetable_data_highlight_11_20_background_color:var(--white);
+	--report_theme_timetable_data_highlight_21_30_background_color:var(--gold2);
+	--report_theme_timetable_data_column_odd_color:inherit;
+	--report_theme_timetable_data_column_odd_background_color:var(--lightgrey8);
+	--report_theme_timetable_data_column_even_color:inherit;
+	--report_theme_timetable_data_column_even_background_color:var(--white);
+}
+/*shrink font size compared to parent div for this font on this theme*/
+.theme_month_20004 .timetable_row, 
+.theme_month_20004 #timetable_footer_row, 
+.theme_month_20004 #prayertable_month_footer{
+	font-size:0.75em;
+}
+.theme_month_20004 #prayertable_month_footer div {
+	padding: 5px;
 }
 .theme_month_20005{
 	--report_theme_display_font_family:var(--font_4);
@@ -829,6 +894,17 @@
 	--report_theme_fast_start_end_color:inherit;
 	--report_theme_fast_start_end_background_color:var(--green3);
 	--report_theme_fast_start_end_border_color:var(--green2);
+
+	--report_theme_timetable_data_border_color:var(--green2);
+	--report_theme_timetable_data_highlight_row_color:inherit;
+	--report_theme_timetable_data_highlight_row_background_color:var(--lightgreen3);
+	--report_theme_timetable_data_highlight_1_10_background_color:var(--lightgreen4);
+	--report_theme_timetable_data_highlight_11_20_background_color:var(--white);
+	--report_theme_timetable_data_highlight_21_30_background_color:var(--lightgreen3);
+	--report_theme_timetable_data_column_odd_color:inherit;
+	--report_theme_timetable_data_column_odd_background_color:var(--lightgreen4);
+	--report_theme_timetable_data_column_even_color:inherit;
+	--report_theme_timetable_data_column_even_background_color:var(--white);
 }
 .theme_month_20006{
 	--report_theme_display_font_family:var(--font_1);
@@ -848,6 +924,17 @@
 	--report_theme_fast_start_end_color:inherit;
 	--report_theme_fast_start_end_background_color:var(--lightgrey);
 	--report_theme_fast_start_end_border_color:inherit;
+
+	--report_theme_timetable_data_border_color:inherit;
+	--report_theme_timetable_data_highlight_row_color:inherit;
+	--report_theme_timetable_data_highlight_row_background_color:var(--lightgrey);
+	--report_theme_timetable_data_highlight_1_10_background_color:var(--lightgrey);
+	--report_theme_timetable_data_highlight_11_20_background_color:var(--white);
+	--report_theme_timetable_data_highlight_21_30_background_color:var(--lightgrey);
+	--report_theme_timetable_data_column_odd_color:inherit;
+	--report_theme_timetable_data_column_odd_background_color:inherit;
+	--report_theme_timetable_data_column_even_color:inherit;
+	--report_theme_timetable_data_column_even_background_color:inherit;
 }
 .theme_month_20007{
 	--report_theme_display_font_family:var(--font_4);
@@ -867,6 +954,21 @@
 	--report_theme_fast_start_end_color:inherit;
 	--report_theme_fast_start_end_background_color:var(--lightyellow2);
 	--report_theme_fast_start_end_border_color:var(--lightgold);
+
+	--report_theme_timetable_data_border_color:var(--lightgold);
+	--report_theme_timetable_data_highlight_row_color:inherit;
+	--report_theme_timetable_data_highlight_row_background_color:var(--lightgold);
+	--report_theme_timetable_data_highlight_1_10_background_color:var(--lightyellow2);
+	--report_theme_timetable_data_highlight_11_20_background_color:var(--white);
+	--report_theme_timetable_data_highlight_21_30_background_color:var(--lightgold2);
+	--report_theme_timetable_data_column_odd_color:var(--black);
+	--report_theme_timetable_data_column_odd_background_color:var(--lightyellow4);
+	--report_theme_timetable_data_column_even_color:var(--black);
+	--report_theme_timetable_data_column_even_background_color:var(--white);
+}
+.theme_month_20007.prayertable_month #timetable .timetable_row .timetable_col:first-child {
+	background-color: var(--lightgold2);
+	color: inherit;
 }
 .theme_month_20008{
 	--report_theme_display_font_family:var(--font_6);
@@ -886,6 +988,17 @@
 	--report_theme_fast_start_end_color:inherit;
 	--report_theme_fast_start_end_background_color:var(--pink);
 	--report_theme_fast_start_end_border_color:var(--black);
+
+	--report_theme_timetable_data_border_color:inherit;
+	--report_theme_timetable_data_highlight_row_color:var(--white);
+	--report_theme_timetable_data_highlight_row_background_color:var(--black);
+	--report_theme_timetable_data_highlight_1_10_background_color:var(--pink2);
+	--report_theme_timetable_data_highlight_11_20_background_color:var(--white);
+	--report_theme_timetable_data_highlight_21_30_background_color:var(--pink2);
+	--report_theme_timetable_data_column_odd_color:inherit;
+	--report_theme_timetable_data_column_odd_background_color:inherit;
+	--report_theme_timetable_data_column_even_color:inherit;
+	--report_theme_timetable_data_column_even_background_color:inherit;
 }
 .theme_month_20009{
 	--report_theme_display_font_family:var(--font_1);
@@ -905,6 +1018,17 @@
 	--report_theme_fast_start_end_color:var(--white);
 	--report_theme_fast_start_end_background_color:var(--blue2);
 	--report_theme_fast_start_end_border_color:var(--white);
+
+	--report_theme_timetable_data_border_color:inherit;
+	--report_theme_timetable_data_highlight_row_color:inherit;
+	--report_theme_timetable_data_highlight_row_background_color:var(--lightgrey9);
+	--report_theme_timetable_data_highlight_1_10_background_color:var(--lightgrey9);
+	--report_theme_timetable_data_highlight_11_20_background_color:var(--white);
+	--report_theme_timetable_data_highlight_21_30_background_color:var(--lightgrey9);
+	--report_theme_timetable_data_column_odd_color:inherit;
+	--report_theme_timetable_data_column_odd_background_color:inherit;
+	--report_theme_timetable_data_column_even_color:inherit;
+	--report_theme_timetable_data_column_even_background_color:inherit;
 }
 .theme_month_20010{
 	--report_theme_display_font_family:var(--font_3);
@@ -924,6 +1048,17 @@
 	--report_theme_fast_start_end_color:var(--white);
 	--report_theme_fast_start_end_background_color:var(--orange);
 	--report_theme_fast_start_end_border_color:inherit;
+
+	--report_theme_timetable_data_border_color:inherit;
+	--report_theme_timetable_data_highlight_row_color:var(--white);
+	--report_theme_timetable_data_highlight_row_background_color:var(--lightblue3);
+	--report_theme_timetable_data_highlight_1_10_background_color:var(--lightgrey3);
+	--report_theme_timetable_data_highlight_11_20_background_color:var(--white);
+	--report_theme_timetable_data_highlight_21_30_background_color:var(--lightgrey3);
+	--report_theme_timetable_data_column_odd_color:inherit;
+	--report_theme_timetable_data_column_odd_background_color:inherit;
+	--report_theme_timetable_data_column_even_color:inherit;
+	--report_theme_timetable_data_column_even_background_color:inherit;
 }
 .theme_month_20011{
 	--report_theme_display_font_family:var(--font_7);
@@ -943,6 +1078,17 @@
 	--report_theme_fast_start_end_color:inherit;
 	--report_theme_fast_start_end_background_color:var(--lightgrey6);
 	--report_theme_fast_start_end_border_color:inherit;
+
+	--report_theme_timetable_data_border_color:inherit;
+	--report_theme_timetable_data_highlight_row_color:inherit;
+	--report_theme_timetable_data_highlight_row_background_color:var(--lightgrey);
+	--report_theme_timetable_data_highlight_1_10_background_color:var(--lightgrey);
+	--report_theme_timetable_data_highlight_11_20_background_color:var(--lightgrey10);
+	--report_theme_timetable_data_highlight_21_30_background_color:var(--lightgrey);
+	--report_theme_timetable_data_column_odd_color:inherit;
+	--report_theme_timetable_data_column_odd_background_color:inherit;
+	--report_theme_timetable_data_column_even_color:inherit;
+	--report_theme_timetable_data_column_even_background_color:inherit;
 }
 .theme_month_20012{
 	--report_theme_display_font_family:var(--font_10);
@@ -962,6 +1108,17 @@
 	--report_theme_fast_start_end_color:var(--white);
 	--report_theme_fast_start_end_background_color:var(--blue4);
 	--report_theme_fast_start_end_border_color:inherit;
+
+	--report_theme_timetable_data_border_color:inherit;
+	--report_theme_timetable_data_highlight_row_color:var(--white);
+	--report_theme_timetable_data_highlight_row_background_color:var(--orange3);
+	--report_theme_timetable_data_highlight_1_10_background_color:var(--lightgrey3);
+	--report_theme_timetable_data_highlight_11_20_background_color:var(--white);
+	--report_theme_timetable_data_highlight_21_30_background_color:var(--lightgrey3);
+	--report_theme_timetable_data_column_odd_color:inherit;
+	--report_theme_timetable_data_column_odd_background_color:inherit;
+	--report_theme_timetable_data_column_even_color:inherit;
+	--report_theme_timetable_data_column_even_background_color:inherit;
 }
 .theme_month_20013{
 	--report_theme_display_font_family:var(--font_7);
@@ -981,6 +1138,19 @@
 	--report_theme_fast_start_end_color:var(--white);
 	--report_theme_fast_start_end_background_color:var(--gold);
 	--report_theme_fast_start_end_border_color:var(--darkblue5);
+
+	--report_theme_timetable_data_border_color:inherit;
+	--report_theme_timetable_data_highlight_row_color:var(--white);
+	--report_theme_timetable_data_highlight_row_background_color:var(--darkblue4);
+	--report_theme_timetable_data_highlight_1_10_background_color:inherit;
+	--report_theme_timetable_data_highlight_11_20_background_color:var(--white);
+	--report_theme_timetable_data_highlight_21_30_background_color:inherit;
+	--report_theme_timetable_data_column_odd_color:inherit;
+	--report_theme_timetable_data_column_odd_background_color:inherit;
+	--report_theme_timetable_data_column_even_color:inherit;
+	--report_theme_timetable_data_column_even_background_color:inherit;
+
+	background-image: linear-gradient(to bottom,var(--lightgrey12) 0%,var(--white) 100%);
 }
 .theme_month_20014{
 	--report_theme_display_font_family:var(--font_9);
@@ -1000,6 +1170,17 @@
 	--report_theme_fast_start_end_color:var(--grey5);
 	--report_theme_fast_start_end_background_color:var(--lightgrey7);
 	--report_theme_fast_start_end_border_color:var(--grey5);
+
+	--report_theme_timetable_data_border_color:inherit;
+	--report_theme_timetable_data_highlight_row_color:var(--white);
+	--report_theme_timetable_data_highlight_row_background_color:var(--grey5);
+	--report_theme_timetable_data_highlight_1_10_background_color:var(--lightgrey11);
+	--report_theme_timetable_data_highlight_11_20_background_color:var(--white);
+	--report_theme_timetable_data_highlight_21_30_background_color:var(--lightgrey11);
+	--report_theme_timetable_data_column_odd_color:inherit;
+	--report_theme_timetable_data_column_odd_background_color:inherit;
+	--report_theme_timetable_data_column_even_color:inherit;
+	--report_theme_timetable_data_column_even_background_color:inherit;
 }
 .theme_month_20015{
 	--report_theme_display_font_family:var(--font_1);
@@ -1019,7 +1200,17 @@
 	--report_theme_fast_start_end_color:inherit;
 	--report_theme_fast_start_end_background_color:var(--lightyellow2);
 	--report_theme_fast_start_end_border_color:inherit;
-	
+
+	--report_theme_timetable_data_border_color:var(--lightgold3);
+	--report_theme_timetable_data_highlight_row_color:inherit;
+	--report_theme_timetable_data_highlight_row_background_color:var(--lightgold2);
+	--report_theme_timetable_data_highlight_1_10_background_color:var(--lightgold2);
+	--report_theme_timetable_data_highlight_11_20_background_color:var(--white);
+	--report_theme_timetable_data_highlight_21_30_background_color:var(--lightgold2);
+	--report_theme_timetable_data_column_odd_color:inherit;
+	--report_theme_timetable_data_column_odd_background_color:var(--lightyellow5);
+	--report_theme_timetable_data_column_even_color:inherit;
+	--report_theme_timetable_data_column_even_background_color:var(--white);
 }
 .theme_year_30001{
 	--report_theme_display_font_family:var(--font_1);
@@ -1069,16 +1260,12 @@
 #prayertable_year.font_arabic_nastaliq .default_font{
 	font-family: var(--report_theme_default_font_family), var(--global_font_arabic_nastaliq);
 }
-
+/*set default text color for all timetables*/
 #prayertable_day,
-#prayertable_month,
+.prayertable_month,
 #prayertable_year{
 	color: var(--report_theme_text_color);
 }
-#prayertable_month .prayertable_month_notes {
-	background-color: var(--report_theme_notes_background_color) !important;
-}
-
 /*DAY*/
 #prayertable_day #prayertable_day_header_row{
 	color: var(--report_theme_header_color);
@@ -1111,294 +1298,54 @@
 }
 
 /*MONTH*/
-#prayertable_month #prayertable_month_header {
+#prayertable_month .prayertable_month_notes {
+	background-color: var(--report_theme_notes_background_color) !important;
+}
+.prayertable_month #prayertable_month_header {
 	color: var(--report_theme_header_color);
 	background-color:var(--report_theme_header_background_color);
 }
-#prayertable_month #timetable_header {
+.prayertable_month #timetable_header {
 	color: var(--report_theme_timetable_header_color);
 	background-color: var(--report_theme_timetable_header_background_color);
 }
-#prayertable_month #timetable .prayertable_month_header-row .timetable_col_header {
+.prayertable_month #timetable .prayertable_month_header-row .timetable_col_header {
 	color: var(--report_theme_timetable_data_header_color) !important;
 	background-color: var(--report_theme_timetable_data_header_background_color) !important;
 }
-#prayertable_month #timetable .timetable_col{
+.prayertable_month #timetable .timetable_col{
 	color: var(--report_theme_timetable_data_color);
-	background-color: var(--report_theme_timetable_data_background_color);
-	
+	background-color: var(--report_theme_timetable_data_background_color);	
 }
-#prayertable_month #timetable_footer {
+.prayertable_month #timetable_footer {
 	color: var(--report_theme_timetable_footer_color);
 	background-color: var(--report_theme_timetable_footer_background_color);
 }
-#prayertable_month #prayertable_month_footer {
+.prayertable_month #prayertable_month_footer {
 	color : var(--report_theme_footer_color);
 	background-color:var(--report_theme_footer_background_color);
 }
-
-.theme_month_20001 #timetable .timetable_col {
-	border-bottom: 0.5px solid #2a5d99;
+.prayertable_month #timetable .timetable_col {
+	border-bottom: 0.5px solid var(--report_theme_timetable_data_border_color);
 }
-.theme_month_20001 .timetable_row.prayertable_month_highlight_row .timetable_col {
-	background-color: #7bcae9 !important;
+.prayertable_month #timetable .timetable_row.prayertable_month_highlight_row .timetable_col {
+	color: var(--report_theme_timetable_data_highlight_row_color);
+	background-color: var(--report_theme_timetable_data_highlight_row_background_color);
 }
-.theme_month_20001 .timetable_row.prayertable_month_day_01-10-row .timetable_col {
-	background-color: #c9edf7 !important;
+.prayertable_month #timetable .timetable_row.prayertable_month_day_01-10-row .timetable_col {
+	background-color: var(--report_theme_timetable_data_highlight_1_10_background_color);
 }
-.theme_month_20001 .timetable_row.prayertable_month_day_11-20-row .timetable_col {
-	background-color: #FFF !important;
+.prayertable_month #timetable .timetable_row.prayertable_month_day_11-20-row .timetable_col {
+	background-color: var(--report_theme_timetable_data_highlight_11_20_background_color);
 }
-.theme_month_20001 .timetable_row.prayertable_month_day_21-30-row .timetable_col {
-	background-color: #7bcae9 !important;
+.prayertable_month #timetable .timetable_row.prayertable_month_day_21-30-row .timetable_col {
+	background-color: var(--report_theme_timetable_data_highlight_21_30_background_color);
 }
-.theme_month_20001 #timetable .timetable_col:nth-child(odd) {
-	background-color: #c9edf7;
-	color: #404040;
+.prayertable_month #timetable .timetable_col:nth-child(odd) {
+	color: var(--report_theme_timetable_data_column_odd_color);
+	background-color: var(--report_theme_timetable_data_column_odd_background_color);
 }
-.theme_month_20001 #timetable .timetable_col:nth-child(even) {
-	background-color: #FFF;
-}
-
-
-.theme_month_20002 .timetable_row.prayertable_month_highlight_row .timetable_col {
-	background-color: #e6e6e6 !important;
-}
-.theme_month_20002 .timetable_row.prayertable_month_day_01-10-row .timetable_col {
-	background-color: #e6e6e6 !important;
-}
-.theme_month_20002 .timetable_row.prayertable_month_day_11-20-row .timetable_col {
-	background-color: #FFF !important;
-}
-.theme_month_20002 .timetable_row.prayertable_month_day_21-30-row .timetable_col {
-	background-color: #e6e6e6 !important;
-}
-
-.theme_month_20003 .timetable_row.prayertable_month_highlight_row .timetable_col {
-	background-color: #ebeae2 !important;
-}
-.theme_month_20003 .timetable_row.prayertable_month_day_01-10-row .timetable_col {
-	background-color: #ebeae2 !important;
-}
-.theme_month_20003 .timetable_row.prayertable_month_day_11-20-row .timetable_col {
-	background-color: #FFF !important;
-}
-.theme_month_20003 .timetable_row.prayertable_month_day_21-30-row .timetable_col {
-	background-color: #ebeae2 !important;
-}
-/*THEME 4*/
-/*shrink font size compared to parent div for this font on this theme*/
-.theme_month_20004 .timetable_row, 
-.theme_month_20004 #timetable_footer_row, 
-.theme_month_20004 #prayertable_month_footer{
-	font-size:0.75em;
-}
-.theme_month_20004 #prayertable_month_footer div {
-	padding: 5px;
-}
-
-.theme_month_20004 .timetable_row.prayertable_month_highlight_row .timetable_col {
-	background-color: #c5b28d !important;
-}
-.theme_month_20004 .timetable_row.prayertable_month_day_01-10-row .timetable_col {
-	background-color: #c5b28d !important;
-}
-.theme_month_20004 .timetable_row.prayertable_month_day_11-20-row .timetable_col {
-	background-color: #ffffff !important;
-}
-.theme_month_20004 .timetable_row.prayertable_month_day_21-30-row .timetable_col {
-	background-color: #a49775 !important;
-}
-.theme_month_20004 .timetable_row:nth-child(odd) {
-	background-color: #f6fbf5;
-}
-.theme_month_20004 .timetable_row:nth-child(even) {
-	background-color: #FFF;
-}
-
-
-.theme_month_20005 #timetable .timetable_col {
-	border-bottom: 0.5px solid #009900;
-}
-.theme_month_20005 .timetable_row.prayertable_month_highlight_row .timetable_col {
-	background-color: #bbe3b8 !important;
-}
-.theme_month_20005 .timetable_row.prayertable_month_day_01-10-row .timetable_col {
-	background-color: #bbf796 !important;
-}
-.theme_month_20005 .timetable_row.prayertable_month_day_11-20-row .timetable_col {
-	background-color: #FFF !important;
-}
-.theme_month_20005 .timetable_row.prayertable_month_day_21-30-row .timetable_col {
-	background-color: #bbe3b8 !important;
-}
-.theme_month_20005 #timetable .timetable_col:nth-child(odd) {
-	background-color: #bbf796;
-}
-.theme_month_20005 #timetable .timetable_col:nth-child(even) {
-	background-color: #FFF;
-}
-
-.theme_month_20006 .timetable_row.prayertable_month_highlight_row .timetable_col {
-	background-color: #e6e6e6 !important;
-}
-.theme_month_20006 .timetable_row.prayertable_month_day_01-10-row .timetable_col {
-	background-color: #e6e6e6 !important;
-}
-.theme_month_20006 .timetable_row.prayertable_month_day_11-20-row .timetable_col {
-	background-color: #FFF !important;
-}
-.theme_month_20006 .timetable_row.prayertable_month_day_21-30-row .timetable_col {
-	background-color: #e6e6e6 !important;
-}
-
-.theme_month_20007 #timetable .timetable_col {
-	border-bottom: 0.5px solid #c9b47e;
-}
-.theme_month_20007 .timetable_row.prayertable_month_highlight_row .timetable_col {
-	background-color: #c9b47e !important;
-}
-.theme_month_20007 .timetable_row.prayertable_month_day_01-10-row .timetable_col {
-	background-color: #f4e7b8 !important;
-}
-.theme_month_20007 .timetable_row.prayertable_month_day_11-20-row .timetable_col {
-	background-color: #FFF !important;
-}
-.theme_month_20007 .timetable_row.prayertable_month_day_21-30-row .timetable_col {
-	background-color: #d2b88f !important;
-}
-
-.theme_month_20007 #timetable .timetable_row .timetable_col:nth-child(odd) {
-	background-color: #fcf9de;
-	color: #404040;
-}
-.theme_month_20007 #timetable .timetable_row .timetable_col:first-child {
-	background-color: #d2b88f !important;
-	color: #404040;
-}
-.theme_month_20007 #timetable .timetable_row .timetable_col:nth-child(even) {
-	background-color: #FFF;
-	color: #404040;
-}
-
-.theme_month_20008 .timetable_row.prayertable_month_highlight_row .timetable_col {
-	background-color: #000000 !important;
-	color: #ffffff !important;
-}
-.theme_month_20008 .timetable_row.prayertable_month_day_01-10-row .timetable_col {
-	background-color: #f2c2d3 !important;
-}
-.theme_month_20008 .timetable_row.prayertable_month_day_11-20-row .timetable_col {
-	background-color: #ffffff !important;
-}
-.theme_month_20008 .timetable_row.prayertable_month_day_21-30-row .timetable_col {
-	background-color: #f2c2d3 !important;
-}
-
-.theme_month_20009 .timetable_row.prayertable_month_highlight_row .timetable_col {
-	background-color: #e6ecf0 !important;
-}
-.theme_month_20009 .timetable_row.prayertable_month_day_01-10-row .timetable_col {
-	background-color: #e6ecf0 !important;
-}
-.theme_month_20009 .timetable_row.prayertable_month_day_11-20-row .timetable_col {
-	background-color: #FFF !important;
-}
-.theme_month_20009 .timetable_row.prayertable_month_day_21-30-row .timetable_col {
-	background-color: #e6ecf0 !important;
-}
-
-.theme_month_20010 .timetable_row.prayertable_month_highlight_row .timetable_col {
-	background-color: #7194bd !important;
-	color : white;
-}
-.theme_month_20010 .timetable_row.prayertable_month_day_01-10-row .timetable_col {
-	background-color: #ededed !important; 
-}
-.theme_month_20010 .timetable_row.prayertable_month_day_11-20-row .timetable_col {
-	background-color: #FFF !important;
-}
-.theme_month_20010 .timetable_row.prayertable_month_day_21-30-row .timetable_col {
-	background-color: #ededed !important;
-}
-
-.theme_month_20011 .timetable_row.prayertable_month_highlight_row .timetable_col {
-	background-color:#e6e6e6 !important;
-}
-
-.theme_month_20011 .timetable_row.prayertable_month_day_01-10-row .timetable_col {
-	background-color: #e6e6e6  !important;
-}
-.theme_month_20011 .timetable_row.prayertable_month_day_11-20-row .timetable_col {
-	background-color: #FAFAFA !important;
-}
-.theme_month_20011 .timetable_row.prayertable_month_day_21-30-row .timetable_col {
-	background-color: #e6e6e6  !important;
-}
-
-.theme_month_20012 .timetable_row.prayertable_month_highlight_row .timetable_col {
-	background-color: #f37c2f !important;
-	color : white !important;
-}
-.theme_month_20012 .timetable_row.prayertable_month_day_01-10-row .timetable_col {
-	background-color: #ededed !important;
-}
-.theme_month_20012 .timetable_row.prayertable_month_day_11-20-row .timetable_col {
-	background-color: #FFF !important;
-}
-.theme_month_20012 .timetable_row.prayertable_month_day_21-30-row .timetable_col {
-	background-color: #ededed !important;
-}
-
-.theme_month_20013 {
-	background-image: linear-gradient(to bottom,#ebebed 0%,#fff 100%);
-}
-.theme_month_20013 .timetable_row.prayertable_month_highlight_row .timetable_col {
-	background-color: #27313f !important;
-	color : white !important;
-}
-.theme_month_20013 .timetable_row.prayertable_month_day_01-10-row .timetable_col {
-	color : #293340 !important;
-}
-.theme_month_20013 .timetable_row.prayertable_month_day_11-20-row .timetable_col {
-	background-color: #FFF !important;
-}
-.theme_month_20013 .timetable_row.prayertable_month_day_21-30-row .timetable_col {
-	color : #293340 !important;
-}
-
-.theme_month_20014 .timetable_row.prayertable_month_highlight_row .timetable_col {
-	background-color: #363635 !important;
-	color: white !important;
-}
-.theme_month_20014 .timetable_row.prayertable_month_day_01-10-row .timetable_col {
-	background-color: #ececec !important;
-}
-.theme_month_20014 .timetable_row.prayertable_month_day_11-20-row .timetable_col {
-	background-color: #FFF !important;
-}
-.theme_month_20014 .timetable_row.prayertable_month_day_21-30-row .timetable_col {
-	background-color: #ececec !important;
-}
-
-.theme_month_20015 #timetable .timetable_col {
-	border-bottom: 0.5px solid #d2c196;
-}
-.theme_month_20015 .timetable_row.prayertable_month_highlight_row .timetable_col {
-	background-color: #d2b88f !important;
-}
-.theme_month_20015 .timetable_row.prayertable_month_day_01-10-row .timetable_col {
-	background-color: #d2b88f !important;
-}
-.theme_month_20015 .timetable_row.prayertable_month_day_11-20-row .timetable_col {
-	background-color: #FFF !important;
-}
-.theme_month_20015 .timetable_row.prayertable_month_day_21-30-row .timetable_col {
-	background-color: #d2b88f !important;
-}
-.theme_month_20015 .timetable_row:nth-child(odd) {
-	background-color: #fefef6;
-}
-.theme_month_20015 .timetable_row:nth-child(even) {
-	background-color: #FFF;
+.prayertable_month #timetable .timetable_col:nth-child(even) {
+	color: var(--report_theme_timetable_data_column_even_color);
+	background-color: var(--report_theme_timetable_data_column_even_background_color);
 }
