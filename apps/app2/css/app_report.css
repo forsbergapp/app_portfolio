@@ -193,12 +193,8 @@
 	box-shadow: 0 4px 8px 0 var(--report_qr_code_shadow_color1), 0 6px 20px 0 var(----report_qr_code_shadow_color2);
 }
 /*Fasting columns*/
-#prayertable_day .prayertable_fast_start,
-#prayertable_month .prayertable_fast_start,
-#prayertable_year .prayertable_fast_start,
-#prayertable_day .prayertable_fast_end,
-#prayertable_month .prayertable_fast_end,
-#prayertable_year .prayertable_fast_end {
+.timetable_class .prayertable_fast_start,
+.timetable_class .prayertable_fast_end {
 	font-weight: bold;
 }
 /*uppercase all timetable data header*/
@@ -1219,52 +1215,41 @@
 
 /*Themes*/
 /*DISPLAY FONT*/
-#prayertable_day.font_arabic_sans .display_font,
-#prayertable_month.font_arabic_sans .display_font,
-#prayertable_year.font_arabic_sans .display_font{
+.timetable_class.font_arabic_sans .display_font{
 	font-family: var(--report_theme_display_font_family), var(--global_font_arabic_sans);
 }
-#prayertable_day.font_arabic_kufi .display_font,
-#prayertable_month.font_arabic_kufi .display_font,
-#prayertable_year.font_arabic_kufi .display_font{
+.timetable_class.font_arabic_kufi .display_font{
 	font-family: var(--report_theme_display_font_family), var(--global_font_arabic_kufi);
 }
-#prayertable_day.font_arabic_nashk .display_font,
-#prayertable_month.font_arabic_nashk .display_font,
-#prayertable_year.font_arabic_nashk .display_font{
+.timetable_class.font_arabic_nashk .display_font{
 	font-family: var(--report_theme_display_font_family), var(--global_font_arabic_nashk);
 }
-#prayertable_day.font_arabic_nastaliq .display_font,
-#prayertable_month.font_arabic_nastaliq .display_font,
-#prayertable_year.font_arabic_nastaliq .display_font{
+.timetable_class.font_arabic_nastaliq .display_font{
 	font-family: var(--report_theme_display_font_family), var(--global_font_arabic_nastaliq);
 }
 /*DEFAULT FONT*/
-#prayertable_day.font_arabic_sans .default_font,
-#prayertable_month.font_arabic_sans .default_font,
-#prayertable_year.font_arabic_sans .default_font{
+.timetable_class.font_arabic_sans .default_font{
 	font-family: var(--report_theme_default_font_family), var(--global_font_arabic_sans);
 }
-#prayertable_day.font_arabic_kufi .default_font,
-#prayertable_month.font_arabic_kufi .default_font,
-#prayertable_year.font_arabic_kufi .default_font{
+.timetable_class.font_arabic_kufi .default_font{
 	font-family: var(--report_theme_default_font_family), var(--global_font_arabic_kufi);
 }
-#prayertable_day.font_arabic_nashk .default_font,
-#prayertable_month.font_arabic_nashk .default_font,
-#prayertable_year.font_arabic_nashk .default_font{
+.timetable_class.font_arabic_nashk .default_font{
 	font-family: var(--report_theme_default_font_family), var(--global_font_arabic_nashk);
 }
-#prayertable_day.font_arabic_nastaliq .default_font,
-#prayertable_month.font_arabic_nastaliq .default_font,
-#prayertable_year.font_arabic_nastaliq .default_font{
+.timetable_class.font_arabic_nastaliq .default_font{
 	font-family: var(--report_theme_default_font_family), var(--global_font_arabic_nastaliq);
 }
 /*set default text color for all timetables*/
-#prayertable_day,
-.prayertable_month,
-#prayertable_year{
+.timetable_class{
 	color: var(--report_theme_text_color);
+}
+.timetable_class .prayertable_fast_start, 
+.timetable_class .prayertable_fast_end{
+	color: var(--report_theme_fast_start_end_color) !important;
+	background-color: var(--report_theme_fast_start_end_background_color) !important;
+	border-left: 1px solid var(--report_theme_fast_start_end_border_color);
+	border-right: 1px solid var(--report_theme_fast_start_end_border_color);
 }
 /*DAY*/
 #prayertable_day #prayertable_day_header_row{
@@ -1284,17 +1269,6 @@
 #prayertable_day .prayertable_day_timetable_row_data div {
 	background-color: var(--report_theme_timetable_data_background_color);
 	color: var(--report_theme_timetable_data_color);
-}
-#prayertable_day .prayertable_fast_start, 
-#prayertable_day .prayertable_fast_end,
-#prayertable_month .prayertable_fast_start, 
-#prayertable_month .prayertable_fast_end,
-#prayertable_year .prayertable_fast_start, 
-#prayertable_year .prayertable_fast_end{
-	color: var(--report_theme_fast_start_end_color) !important;
-	background-color: var(--report_theme_fast_start_end_background_color) !important;
-	border-left: 1px solid var(--report_theme_fast_start_end_border_color);
-	border-right: 1px solid var(--report_theme_fast_start_end_border_color);
 }
 
 /*MONTH*/
