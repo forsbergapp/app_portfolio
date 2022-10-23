@@ -166,24 +166,9 @@ function printTable(){
             document.getElementById('common_window_info_content').classList ='';
         }
 }
-function getTimetable_type(){
-    //by unknown reason style.display can be '' in document.getElementById even if the value is 'block'
-    if (document.getElementById('prayertable_day').style.display == 'block' ||
-        document.getElementById('prayertable_day').style.display == '')
-        return 0;
-    if (document.getElementById('prayertable_month').style.display == 'block' ||
-        document.getElementById('prayertable_month').style.display == '')
-        return 1;
-    if (document.getElementById('prayertable_year').style.display == 'block' ||
-        document.getElementById('prayertable_year').style.display == '')
-        return 2;
-}
 
 function getReportSettings(){
-    return {    prayertable_month       : 'prayertable_month', //class to add for month
-                prayertable_year_month  : 'prayertable_year_month', //class to add for year
-                reporttype          	: 'MONTH', //MONTH: normal month with more info, YEAR: month with less info
-                locale              	: document.getElementById('setting_select_locale').value,  
+    return {    locale              	: document.getElementById('setting_select_locale').value,  
                 timezone            	: document.getElementById('setting_select_report_timezone').value,
                 number_system       	: document.getElementById('setting_select_report_numbersystem').value,
                 direction           	: document.getElementById('setting_select_report_direction').value,
@@ -239,18 +224,23 @@ function getReportSettings(){
                 show_sunset         	: checkbox_value(document.getElementById('setting_checkbox_report_show_sunset')),
                 show_midnight       	: checkbox_value(document.getElementById('setting_checkbox_report_show_midnight')),
                 show_fast_start_end 	: document.getElementById('setting_select_report_show_fast_start_end').value,
-                ui_navigation_left      : 'toolbar_navigation_btn_left',
-                ui_navigation_right     : 'toolbar_navigation_btn_right',
-                ui_prayertable_day      : document.getElementById('prayertable_day'),
+                
+                timetable_class			: 'timetable_class',
+                prayertable_month       : 'prayertable_month', //class to add for month
+                prayertable_year_month  : 'prayertable_year_month', //class to add for year
+                reporttype_year_month 	: 'MONTH',  //default MONTH: normal month with more info, 
+                                                    //YEAR: month with less info
+                
+                ui_navigation_left      : 'toolbar_btn_left',
+                ui_navigation_right     : 'toolbar_btn_right',
                 ui_prayertable_day_id   : 'prayertable_day',
-                ui_prayertable_month    : document.getElementById('prayertable_month'),
                 ui_prayertable_month_id : 'prayertable_month',
-                ui_prayertable_year     : document.getElementById('prayertable_year'),
                 ui_prayertable_year_id  : 'prayertable_year'};
 }
 // update timetable
 async function update_timetable_report(timetable_type = 0, item_id = null, settings) {
 
+    window.global_timetable_type = timetable_type;
 	switch (timetable_type){
 	//create timetable month or day or year if they are visible instead
 	case 0:{
@@ -275,36 +265,30 @@ async function update_timetable_report(timetable_type = 0, item_id = null, setti
             "prayer_hijri_date_adjustment" : select_user_settings[i].getAttribute('prayer_hijri_date_adjustment')
             });
         }
-        settings.ui_prayertable_day.innerHTML = window.global_app_spinner;
+        document.getElementById('paper').innerHTML = window.global_app_spinner;
 		await displayDay(settings, item_id, current_user_settings).then(function(timetable){
-            settings.ui_prayertable_day.id = timetable.id;
-            settings.ui_prayertable_day.classList = timetable.classList;
-            settings.ui_prayertable_day.style.direction = timetable.style.direction;
-            settings.ui_prayertable_day.innerHTML = timetable.innerHTML;
+            timetable.style.display = 'block';
+            document.getElementById('paper').innerHTML = timetable.outerHTML;
             create_qr('prayertable_day_qr_code', getHostname());
         })
 		break;
 	}
 	//1=create timetable month
 	case 1:{
-        settings.ui_prayertable_month.innerHTML = window.global_app_spinner;
+        document.getElementById('paper').innerHTML = window.global_app_spinner;
         await displayMonth(settings, item_id).then(function(timetable){
-            settings.ui_prayertable_month.id = timetable.id;
-            settings.ui_prayertable_month.classList = timetable.classList;
-            settings.ui_prayertable_month.style.direction = timetable.style.direction;
-            settings.ui_prayertable_month.innerHTML = timetable.innerHTML;
+            timetable.style.display = 'block';
+			document.getElementById('paper').innerHTML = timetable.outerHTML;
             create_qr('prayertable_month_qr_code', getHostname());
         })
 		break;
 	}
 	//2=create timetable year
 	case 2:{
-        settings.ui_prayertable_year.innerHTML = window.global_app_spinner;
+        document.getElementById('paper').innerHTML = window.global_app_spinner;
 		await displayYear(settings, item_id).then(function(timetable){
-            settings.ui_prayertable_year.id = timetable.id;
-            settings.ui_prayertable_year.classList = timetable.classList;
-            settings.ui_prayertable_year.style.direction = timetable.style.direction;
-            settings.ui_prayertable_year.innerHTML = timetable.innerHTML;
+            timetable.style.display = 'block';
+		    document.getElementById('paper').innerHTML = timetable.outerHTML;
             create_qr('prayertable_year_qr_code', getHostname());
         })
 		break;
@@ -673,12 +657,8 @@ function showreporttime() {
     }
     return null;
 }
-
 async function toolbar_bottom(choice) {
     let paper = document.getElementById('paper');
-    let prayertable_day = document.getElementById('prayertable_day');
-    let prayertable_month = document.getElementById('prayertable_month');
-    let prayertable_year = document.getElementById('prayertable_year');
     let settings = document.getElementById('settings');
 
     switch (choice) {
@@ -691,43 +671,34 @@ async function toolbar_bottom(choice) {
                 printTable();
                 break;
             }
-            //day
+        //day
         case 2:
             {
                 if (mobile())
                     paper.style.display = "block";
-                prayertable_day.style.display = 'block';
-                prayertable_month.style.display = 'none';
-                prayertable_year.style.display = 'none';
                 settings.style.visibility = 'hidden';
                 update_timetable_report(0, null, getReportSettings());
                 break;
             }
-            //month
+        //month
         case 3:
             {
                 if (mobile())
                     paper.style.display = "block";
-                prayertable_day.style.display = 'none';
-                prayertable_month.style.display = 'block';
-                prayertable_year.style.display = 'none';
                 settings.style.visibility = 'hidden';
                 update_timetable_report(1, null, getReportSettings());
                 break;
             }
-            //year
+        //year
         case 4:
             {
                 if (mobile())
                     paper.style.display = "block";
-                prayertable_day.style.display = 'none';
-                prayertable_month.style.display = 'none';
-                prayertable_year.style.display = 'block';
                 settings.style.visibility = 'hidden';
                 update_timetable_report(2, null, getReportSettings());
                 break;
             }
-            //settings
+        //settings
         case 5:
             {
                 //Hide paper on mobile device when showing settings, scrollbug in background
@@ -736,7 +707,7 @@ async function toolbar_bottom(choice) {
                 settings.style.visibility = 'visible';
                 break;
             }
-            //profile
+        //profile
         case 6:
             {
                 settings.style.visibility = 'hidden';
@@ -744,7 +715,7 @@ async function toolbar_bottom(choice) {
                 profile_show_app(null,null);
                 break;
             }
-            //profile top
+        //profile top
         case 7:
             {
                 settings.style.visibility = 'hidden';
@@ -1174,9 +1145,7 @@ async function user_login_app(){
                     //Hide profile
                     document.getElementById('dialogue_profile').style.visibility = 'hidden';
                     
-                    document.getElementById('prayertable_day').innerHTML='';
-                    document.getElementById('prayertable_month').innerHTML='';
-                    document.getElementById('prayertable_year').innerHTML='';
+                    document.getElementById('paper').innerHTML='';
                     dialogue_loading(1);
                     user_settings_get().then(function(){
                         user_settings_load().then(function(){
@@ -1281,9 +1250,7 @@ async function ProviderUser_update_app(identity_provider_id, profile_id, profile
 
                     //Show user tab
                     document.getElementById('tab_nav_7').style.display = 'inline-block';
-                    document.getElementById('prayertable_day').innerHTML='';
-                    document.getElementById('prayertable_month').innerHTML='';
-                    document.getElementById('prayertable_year').innerHTML='';
+                    document.getElementById('paper').innerHTML='';
                     dialogue_loading(1);
                     user_settings_get().then(function(){
                         user_settings_load().then(function(){
@@ -2207,8 +2174,8 @@ function setEvents() {
     //toolbar top
     document.getElementById('toolbar_btn_zoomout').addEventListener('click', function() { zoom_paper(-1) }, false);
 	document.getElementById('toolbar_btn_zoomin').addEventListener('click', function() { zoom_paper(1) }, false);
-	document.getElementById('toolbar_btn_left').addEventListener('click', function() { update_timetable_report(getTimetable_type(), 'toolbar_navigation_btn_left', getReportSettings()) }, false);
-	document.getElementById('toolbar_btn_right').addEventListener('click', function() { update_timetable_report(getTimetable_type(), 'toolbar_navigation_btn_right', getReportSettings()) }, false);
+	document.getElementById('toolbar_btn_left').addEventListener('click', function() { update_timetable_report(window.global_timetable_type, this.id, getReportSettings()) }, false);
+	document.getElementById('toolbar_btn_right').addEventListener('click', function() { update_timetable_report(window.global_timetable_type, this.id, getReportSettings()) }, false);
 
     document.getElementById('toolbar_btn_search').addEventListener('click', function() { let x = document.getElementById('profile_info_search'); if (x.style.visibility == 'visible') x.style.visibility = 'hidden'; else x.style.visibility = 'visible'; }, false);
     document.getElementById('toolbar_btn_settings').addEventListener('click', function() { toolbar_bottom(5) }, false);    
@@ -2391,6 +2358,19 @@ function app_exception(){
 /*----------------------- */
 async function init_app() {
     dialogue_loading(1);
+    //set app globals
+    //set current date for report month
+    window.global_session_currentDate = new Date();
+    window.global_session_CurrentHijriDate = new Array();
+    //get Hijri date from initial Gregorian date
+    window.global_session_CurrentHijriDate[0] = parseInt(new Date(window.global_session_currentDate.getFullYear(),
+        window.global_session_currentDate.getMonth(),
+        window.global_session_currentDate.getDate()).toLocaleDateString("en-us-u-ca-islamic", { month: "numeric" }));
+    window.global_session_CurrentHijriDate[1] = parseInt(new Date(window.global_session_currentDate.getFullYear(),
+        window.global_session_currentDate.getMonth(),
+        window.global_session_currentDate.getDate()).toLocaleDateString("en-us-u-ca-islamic", { year: "numeric" }));
+    window.global_timetable_type = '';
+
     //set initial default language from clients settings
     SearchAndSetSelectedIndex(navigator.language.toLowerCase(), document.getElementById('setting_select_locale'),1);
     //dialogues
@@ -2549,16 +2529,6 @@ async function init_app() {
     document.getElementById('slider_prev_year').innerHTML = window.global_icon_app_slider_left;
     document.getElementById('slider_next_year').innerHTML = window.global_icon_app_slider_right;
     
-    //set current date for report month
-    window.global_session_currentDate = new Date();
-    window.global_session_CurrentHijriDate = new Array();
-    //get Hijri date from initial Gregorian date
-    window.global_session_CurrentHijriDate[0] = parseInt(new Date(window.global_session_currentDate.getFullYear(),
-        window.global_session_currentDate.getMonth(),
-        window.global_session_currentDate.getDate()).toLocaleDateString("en-us-u-ca-islamic", { month: "numeric" }));
-    window.global_session_CurrentHijriDate[1] = parseInt(new Date(window.global_session_currentDate.getFullYear(),
-        window.global_session_currentDate.getMonth(),
-        window.global_session_currentDate.getDate()).toLocaleDateString("en-us-u-ca-islamic", { year: "numeric" }));
     document.getElementById('app_name').innerHTML = window.global_app_name;
     //set about info
     document.getElementById('app_copyright').innerHTML = window.global_app_copyright;
