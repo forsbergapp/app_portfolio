@@ -107,11 +107,7 @@ async function timetable_user_setting_get(user_setting_id, callBack) {
 			//set papersize on paper div
 			document.getElementById('paper').className= json.design_paper_size;
 			callBack(null,
-						//id
-						{  	prayertable_month       : 'prayertable_month', //class to add for month
-							prayertable_year_month  : 'prayertable_year_month', //class to add for year
-							reporttype          	: 'MONTH', //MONTH: normal month with more info, YEAR: month with less info
-							locale              	: json.regional_language_locale,  
+						{  	locale              	: json.regional_language_locale,  
 							timezone            	: json.regional_timezone,
 							number_system       	: json.regional_number_system,
 							direction           	: json.regional_layout_direction,
@@ -170,8 +166,15 @@ async function timetable_user_setting_get(user_setting_id, callBack) {
 							show_sunset         	: checkbox_checked(json.prayer_column_sunset_checked),
 							show_midnight       	: checkbox_checked(json.prayer_column_midnight_checked),
 							show_fast_start_end 	: json.prayer_column_fast_start_end,
-							ui_navigation_left      : 'toolbar_navigation_btn_left',
-							ui_navigation_right     : 'toolbar_navigation_btn_right',
+							
+							timetable_class			: 'timetable_class',
+							prayertable_month       : 'prayertable_month', //class to add for month
+							prayertable_year_month  : 'prayertable_year_month', //class to add for year
+							reporttype_year_month  	: 'MONTH', //default MONTH: normal month with more info, 
+															   //YEAR: month with less info
+
+							ui_navigation_left      : 'toolbar_btn_left',
+							ui_navigation_right     : 'toolbar_btn_right',
 							ui_prayertable_day_id   : 'prayertable_day',
 							ui_prayertable_month_id : 'prayertable_month',
 							ui_prayertable_year_id  : 'prayertable_year'
@@ -754,19 +757,19 @@ function makeTableRow(data, items, timerow, year, month, settings, date) {
 	for (let i in items) {
 		iqamat = '';
 		//Check if column should be displayed
-		if ( (i=='weekday' && (settings.show_weekday =='NO' || settings.reporttype =='YEAR'))||
+		if ( (i=='weekday' && (settings.show_weekday =='NO' || settings.reporttype_year_month =='YEAR'))||
 				(i=='weekday_tr' && ((settings.second_locale =='0' ||
-									settings.show_weekday =='NO') || settings.reporttype =='YEAR'))||
-				(i=='caltype' && (settings.show_calendartype =='NO' || settings.reporttype =='YEAR'))||
-				(i=='imsak' && (settings.show_imsak =='NO' || settings.reporttype =='YEAR'))||
-				(i=='fajr_iqamat' && (settings.iqamat_fajr =='0' || settings.reporttype =='YEAR'))||
-				(i=='dhuhr_iqamat' && (settings.iqamat_dhuhr=='0' || settings.reporttype =='YEAR'))||
-				(i=='asr_iqamat' && (settings.iqamat_asr=='0' || settings.reporttype =='YEAR'))||
-				(i=='maghrib_iqamat' && (settings.iqamat_maghrib=='0' || settings.reporttype =='YEAR'))||
-				(i=='isha_iqamat' && (settings.iqamat_isha=='0' || settings.reporttype =='YEAR'))||
-				(i=='sunset' && (settings.show_sunset =='NO' || settings.reporttype =='YEAR'))||
-				(i=='midnight' && (settings.show_midnight =='NO' || settings.reporttype =='YEAR'))||
-				(i=='notes' && (settings.show_notes =='NO' || settings.reporttype =='YEAR')))
+									settings.show_weekday =='NO') || settings.reporttype_year_month =='YEAR'))||
+				(i=='caltype' && (settings.show_calendartype =='NO' || settings.reporttype_year_month =='YEAR'))||
+				(i=='imsak' && (settings.show_imsak =='NO' || settings.reporttype_year_month =='YEAR'))||
+				(i=='fajr_iqamat' && (settings.iqamat_fajr =='0' || settings.reporttype_year_month =='YEAR'))||
+				(i=='dhuhr_iqamat' && (settings.iqamat_dhuhr=='0' || settings.reporttype_year_month =='YEAR'))||
+				(i=='asr_iqamat' && (settings.iqamat_asr=='0' || settings.reporttype_year_month =='YEAR'))||
+				(i=='maghrib_iqamat' && (settings.iqamat_maghrib=='0' || settings.reporttype_year_month =='YEAR'))||
+				(i=='isha_iqamat' && (settings.iqamat_isha=='0' || settings.reporttype_year_month =='YEAR'))||
+				(i=='sunset' && (settings.show_sunset =='NO' || settings.reporttype_year_month =='YEAR'))||
+				(i=='midnight' && (settings.show_midnight =='NO' || settings.reporttype_year_month =='YEAR'))||
+				(i=='notes' && (settings.show_notes =='NO' || settings.reporttype_year_month =='YEAR')))
 			null;
 		else{
 			if (parseInt(timerow)==0){
@@ -851,10 +854,11 @@ async function displayMonth(settings, item_id) {
 		let footer_style ='';
 		
 		//add default class, theme class and font class		
-		timetable.classList = settings.prayertable_month + ' ' + 
-								settings.theme_month + ' ' +
-								settings.arabic_script;
-		if (settings.reporttype =='MONTH'){
+		timetable.classList = settings.timetable_class + ' ' + 
+							  settings.prayertable_month + ' ' + 
+							  settings.theme_month + ' ' +
+							  settings.arabic_script;
+		if (settings.reporttype_year_month =='MONTH'){
 			//set only id for month timetable, not year
 			timetable.id = settings.ui_prayertable_month_id;
 			//Set direction
@@ -874,7 +878,7 @@ async function displayMonth(settings, item_id) {
 		}
 	
 		let options;
-		switch (settings.reporttype){
+		switch (settings.reporttype_year_month){
 			case 'MONTH':{
 				options = {month:'long', year: 'numeric'};
 				break;
@@ -967,7 +971,7 @@ async function displayMonth(settings, item_id) {
 			function month_footer(){
 				month_html += '</div>';
 				//footer
-				if (settings.reporttype =='MONTH'){
+				if (settings.reporttype_year_month =='MONTH'){
 					month_html +=
 					`<div id='timetable_footer' class='default_font'>
 						<div id='timetable_footer_row'>
@@ -1127,7 +1131,7 @@ async function displayDay(settings, item_id, user_settings){
 		let date_title5 = date_current.toLocaleDateString(settings.locale + window.global_regional_def_locale_ext_prefix + window.global_regional_def_locale_ext_calendar + settings.calendar_hijri_type + window.global_regional_def_locale_ext_number_system + settings.number_system, options_hijri).toUpperCase();
 		
 		//Set theme and font classes on main div
-		timetable.classList = settings.theme_day + ' ' + settings.arabic_script;
+		timetable.classList = settings.timetable_class + ' ' + settings.theme_day + ' ' + settings.arabic_script;
 		//set LTR or RTL on table layout
 		timetable.style.direction = settings.direction;
 
@@ -1265,10 +1269,10 @@ async function displayYear(settings, item_id){
 		let starthijrimonth       = window.global_session_CurrentHijriDate[0];
 		let year_html='';
 		
-		settings.reporttype        = 'YEAR';
+		settings.reporttype_year_month        = 'YEAR';
 		
 		//Set theme and font class
-		timetable.classList = settings.theme_year + ' ' + settings.arabic_script;
+		timetable.classList = settings.timetable_class + ' ' + settings.theme_year + ' ' + settings.arabic_script;
 		//set LTR or RTL on year layout
 		timetable.style.direction = settings.direction;
 
