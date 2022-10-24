@@ -157,8 +157,6 @@ const logRouter = require("./service/log/log.router");
 const mailRouter = require("./service/mail/mail.router");
 //service forms
 const formsRouter = require("./service/forms/forms.router");
-//service regional
-const regionalRouter = require("./service/regional/regional.router");
 //service report
 const reportRouter = require("./service/report/report.router");
 //service worldcities
@@ -197,8 +195,6 @@ app.use("/service/log", logRouter);
 app.use("/service/mail", mailRouter);
 //service forms
 app.use("/service/forms", formsRouter);
-//service regional
-app.use("/service/regional", regionalRouter);
 //service report
 app.use("/service/report", reportRouter);
 //service worldcities
