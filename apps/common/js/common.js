@@ -5,7 +5,6 @@
     BROADCAST
     GPS
     MAP
-    REGIONAL
     COUNTRY & CITIES
     QR
     PROFILE
@@ -1524,25 +1523,6 @@ async function map_update(longitude, latitude, zoom, text_place, timezone_text =
 }
 
 /*----------------------- */
-/* REGIONAL               */
-/*----------------------- */
-async function getTimezoneOffset(timezone){
-    return new Promise(function (resolve, reject){
-        common_fetch(`${window.global_service_regional}${window.global_service_regional_timezoneoffset}?timezone=${timezone}`,
-                     'GET', 0, null, null, null, (err, timezoneoffset) =>{
-                            resolve (timezoneoffset);
-        })
-    })
-}
-async function HijriToGreg(hijridate, adjustment){
-    return new Promise(function (resolve, reject){
-        common_fetch(`${window.global_service_regional}${window.global_service_regional_gregorian}?hijridate=${JSON.stringify(hijridate)}&adjustment=${adjustment}`,
-                     'GET', 0, null, null, null, (err, gregorian) =>{
-                            resolve (JSON.parse(gregorian));
-        })
-    })
-}
-/*----------------------- */
 /* COUNTRY & CITIES       */
 /*----------------------- */
 async function get_cities(countrycode, callBack){
@@ -3013,9 +2993,6 @@ function set_globals(parameters){
     window.global_service_geolocation_gps_timezone;
     window.global_service_geolocation_gps_place;
     window.global_service_geolocation_gps_ip;
-    window.global_service_regional;
-    window.global_service_regional_timezoneoffset;
-    window.global_service_regional_gregorian;
     window.global_service_report;
     window.global_service_worldcities;
         
@@ -3311,9 +3288,6 @@ async function init_common(parameters, callBack){
                 case 'SERVICE_MAP_JUMPTO'                   :{window.global_service_map_jumpto = parseInt(parameter_value);break;}
                 case 'SERVICE_MAP_POPUP_OFFSET'             :{window.global_service_map_popup_offset = parseInt(parameter_value);break;}
                 case 'SERVICE_MAP_STYLE'                    :{window.global_service_map_style = parameter_value;break;}
-                case 'SERVICE_REGIONAL'                     :{window.global_service_regional = parameter_value;break;}
-                case 'SERVICE_REGIONAL_TIMEZONEOFFSET'      :{window.global_service_regional_timezoneoffset = parameter_value;break;}
-                case 'SERVICE_REGIONAL_GREGORIAN'           :{window.global_service_regional_gregorian = parameter_value;break;}
                 case 'SERVICE_REPORT'                       :{window.global_service_report = parameter_value;break;}
                 case 'SERVICE_WORLDCITIES'                  :{window.global_service_worldcities = parameter_value;break;}
             }
