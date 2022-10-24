@@ -105,7 +105,7 @@
 #printbody {
 	margin: 0px;
 }
-#printbody .prayertable_month #timetable .prayertable_month_today-row {
+#printbody .timetable_month_class #timetable_month_data .timetable_month_data_today_row {
     animation: unset;
     animation-iteration-count: unset;
     opacity: inherit;
@@ -130,22 +130,22 @@
 	height : 11in;
 }
 /* Letter fixes*/
-#paper.Letter #prayertable_month #timetable {
+#paper.Letter #timetable_month #timetable_month_data {
 	height:650px;
 }
-#paper.Letter #prayertable_year #prayertable_year_timetables.two_columntitles{
+#paper.Letter #timetable_year #timetable_year_timetables.two_columntitles{
 	margin-top:-40px !important;
 	transform:scale(0.88) !important;
 }
-#paper.Letter #prayertable_year #prayertable_year_timetable_footer.two_columntitles{
+#paper.Letter #timetable_year #timetable_year_timetables_footer.two_columntitles{
 	margin-top:-40px !important;
 }
 /* Three columntitles fixes*/
-#paper.Letter #prayertable_year #prayertable_year_timetables.three_columntitles{
+#paper.Letter #timetable_year #timetable_year_timetables.three_columntitles{
 	margin-top:-55px;
 	transform:scale(0.85);
 }
-#paper.Letter #prayertable_year #prayertable_year_timetable_footer.three_columntitles{
+#paper.Letter #timetable_year #timetable_year_timetables_footer.three_columntitles{
 	margin-top:-55px;
 }
 /*CSS for minimum 768px*/
@@ -157,7 +157,7 @@
 		position: inherit;
 	}
 	/*iphone fix*/
-	#prayertable_month {
+	#timetable_month {
 		padding-top:inherit;
 	}
 }
@@ -168,7 +168,7 @@
 	margin: 0 auto;
 	margin-top: 0px;
 }
-#printbody #prayertable_day_time{
+#printbody #timetable_day_time{
 	visibility: hidden;
 }
 
@@ -178,33 +178,33 @@
 }	
 /*Common styles for all timetables*/
 /*QR code*/
-#printbody #prayertable_qr_code{
+#printbody #timetable_qr_code{
     transform: scale(0.64);
 	margin-inline-end: -11px;
 }
-#prayertable_qr_code{
+#timetable_qr_code{
     transform: scale(0.8);
 	opacity: 0.8;
     align-self: end;
 	position: fixed;
 }
-#prayertable_qr_code svg{
+#timetable_qr_code svg{
 	border: 4px solid var(--white);
 	box-shadow: 0 4px 8px 0 var(--report_qr_code_shadow_color1), 0 6px 20px 0 var(----report_qr_code_shadow_color2);
 }
 /*Fasting columns*/
-.timetable_class .prayertable_fast_start,
-.timetable_class .prayertable_fast_end {
+.timetable_class .timetable_data_fast_start,
+.timetable_class .timetable_data_fast_end {
 	font-weight: bold;
 }
 /*uppercase all timetable data header*/
-#prayertable_day .prayertable_day_timetable_header-row div,
-#prayertable_month .timetable_col_header {
+#timetable_day .timetable_day_timetable_header_row div,
+#timetable_month .timetable_month_data_header_col {
 	text-transform: uppercase;
 }
 
 /*DAY*/
-#prayertable_day {
+#timetable_day {
 	width: 100%;
 	height:100%;
 	position: absolute;
@@ -212,36 +212,36 @@
 	text-align: center;
 }
 /*font sizes*/
-#prayertable_day #prayertable_day_timetable_header{
+#timetable_day #timetable_day_timetable_header{
 	font-size: 26pt;
 	font-weight: bold;
 }
 /*fix too big height of nastaliq font in timetable header*/
-#prayertable_day.font_arabic_nastaliq .display_font{
+#timetable_day.font_arabic_nastaliq .display_font{
 	line-height: initial;
 }
-#prayertable_day.font_arabic_nastaliq #prayertable_day_timetable_header{
+#timetable_day.font_arabic_nastaliq #timetable_day_timetable_header{
 	font-size: 0.71em !important;
 }
-#prayertable_day.font_arabic_nastaliq #prayertable_day_timetable .prayertable_day_timetable_header-row{
+#timetable_day.font_arabic_nastaliq #timetable_day_timetable .timetable_day_timetable_header_row{
 	font-size:0.71em !important;
 	line-height: initial;
 }
 
-#prayertable_day .prayertable_day_timetable_header-row{
+#timetable_day .timetable_day_timetable_header_row{
 	font-size: 8pt;
 }
-#prayertable_day .prayertable_day_timetable_row_data{
+#timetable_day .timetable_day_timetable_row_data{
 	font-size: 12pt;
 }	
-#prayertable_day .prayertable_day_timetable_footer{
+#timetable_day .timetable_day_timetable_footer{
 	font-size: 10pt;
 }
-#prayertable_day #prayertable_day_time{
+#timetable_day #timetable_day_time{
 	font-size: 8pt;
 }
 /*Header timetable info*/
-#prayertable_day #prayertable_day_timetable_header {
+#timetable_day #timetable_day_timetable_header {
 	text-align: center;
 	display: inline-block;
 	position:relative;
@@ -249,92 +249,89 @@
 	margin-bottom:20px;
 }
 
-#prayertable_day_timetable {
+#timetable_day_timetable {
 	display: block;
 	margin: 0 auto;
 }
-#prayertable_day .prayertable_day_timetable_header-row{
+#timetable_day .timetable_day_timetable_header_row{
 	display: block;
 }
-#prayertable_day .prayertable_day_timetable_header-row div {
+#timetable_day .timetable_day_timetable_header_row div {
 	display: inline-block;
 	width: 110px;
 }
-#prayertable_day #prayertable_day_timetable_settings{
-	margin-top: 10px;
-}
 
-#prayertable_day .prayertable_day_timetable_row_data{
+#timetable_day .timetable_day_timetable_row_data{
 	margin-top:10px;
 	display: inline-block;
 }
-#prayertable_day .prayertable_day_timetable_row_data.prayertable_day_today-row{
+#timetable_day .timetable_day_timetable_row_data.timetable_day_today_row{
 	animation: pulsate 2s ease-out;
 	animation-iteration-count: infinite; 
     opacity: 0.5;
 	font-weight: bold;
 }
 
-#prayertable_day .prayertable_day_timetable_row_data div {
+#timetable_day .timetable_day_timetable_row_data div {
 	display: inline-block;
 	width: 111px;
 	height: 25px;
 	margin: 1px;
 	vertical-align: middle;
 }
-#prayertable_day .prayertable_fast_start,
-#prayertable_day .prayertable_fast_end {
+#timetable_day .timetable_data_fast_start,
+#timetable_day .timetable_data_fast_end {
 	font-size: 1.2em !important;
 }
 /*Footer timetable info*/
-#prayertable_day .prayertable_day_timetable_footer {
+#timetable_day .timetable_day_timetable_footer {
 	vertical-align: middle;
 	text-align: center;
 	margin-bottom:10px;
 	width: 100%;
 	display: table;
 }
-#prayertable_day .prayertable_day_timetable_footer_row:nth-child(odd) div {
+#timetable_day .timetable_day_timetable_footer_row:nth-child(odd) div {
 	display: inline-block;
 	padding-top: 2px;
 	padding-left: 5px;
 	padding-right: 5px;
 }
-#prayertable_day .prayertable_day_timetable_footer_row:nth-child(even) div {
+#timetable_day .timetable_day_timetable_footer_row:nth-child(even) div {
 	display: block;
 	padding-top: 2px;
 	padding-left: 5px;
 	padding-right: 5px;
 }
 
-#prayertable_day #prayertable_day_time{
+#timetable_day #timetable_day_time{
 	text-align: center;
 	z-index:-1;
 }
 
 /*MONTH*/
-#prayertable_month {
+#timetable_month {
 	width: 100%;
 	text-align: center;
 	display: block;
 }
 /*Arabic Nastaliq fixes too big height*/
-.prayertable_month.font_arabic_nastaliq .display_font{
+.timetable_month_class.font_arabic_nastaliq .display_font{
 	line-height: initial;
 }
-.prayertable_month.font_arabic_nastaliq #timetable_header{
+.timetable_month_class.font_arabic_nastaliq #timetable_month_data_header{
 	font-size:0.71em !important;
 	line-height: initial;
 }
-.prayertable_month.font_arabic_nastaliq #timetable .prayertable_month_header-row{
+.timetable_month_class.font_arabic_nastaliq #timetable_month_data .timetable_month_data_header_row{
 	font-size:0.61em !important;
 	line-height: initial;
 }
-.prayertable_month.font_arabic_nastaliq #timetable .prayertable_month_date{
+.timetable_month_class.font_arabic_nastaliq #timetable_month_data .timetable_month_data_date{
 	font-size:0.71em !important;
 	line-height: initial;
 }
-#prayertable_header{
+#timetable_header{
 	display: flex;
 	width: 100%;
 	height: 160px;
@@ -349,50 +346,47 @@
 	font-weight: bold;	
 }
 
-.prayertable_month #timetable_header{
+.timetable_month_class #timetable_month_data_header{
 	font-size:11pt;
 	font-weight: bold;
 }
-.prayertable_month #timetable{
+.timetable_month_class #timetable_month_data{
 	font-size:8pt;
 	line-height:1;
 }
-.prayertable_month #timetable_footer{
+.timetable_month_class #timetable_month_data_footer{
 	font-size:8pt;
 	font-weight: bold;
 }
-#prayertable_footer{
+#timetable_footer{
 	font-size:16pt;
 	font-weight: bold;
 }
 
 /*r2l and unicode fix when mixing arabic with non arabic text*/
-#prayertable_header,
-.prayertable_month #timetable_header,
-.prayertable_month #timetable .timetable_col_header,
-.prayertable_month #timetable .timetable_col,
-.prayertable_month #timetable_footer,
-#prayertable_footer {
+#timetable_header,
+.timetable_month_class #timetable_month_data_header,
+.timetable_month_class #timetable_month_data .timetable_month_data_header_col,
+.timetable_month_class #timetable_month_data .timetable_month_data_col,
+.timetable_month_class #timetable_month_data_footer,
+#timetable_footer {
 	unicode-bidi: plaintext;
 }
 /*Timetable header*/
-.prayertable_month #timetable_header {
+.timetable_month_class #timetable_month_data_header {
 	text-align: center;
 	padding-bottom:5px;
 }
-.prayertable_month #timetable {
+.timetable_month_class #timetable_month_data {
 	display: table;
 	table-layout: fixed;
 	width: 100%;
 	height:700px;
 }
-.prayertable_month #timetable #timetable_headers{
-	display:table-header-group
-}
-.prayertable_month #timetable .timetable_row {
+.timetable_month_class #timetable_month_data .timetable_month_data_row {
 	display: table-row;
 }
-.prayertable_month #timetable .timetable_col_header {
+.timetable_month_class #timetable_month_data .timetable_month_data_header_col {
 	display: table-cell;
 	text-align: center;
 	padding: 1px;
@@ -400,16 +394,16 @@
 	font-size: 0.7em !important;
 	vertical-align: middle;
 }
-.prayertable_month #timetable .timetable_col {
+.timetable_month_class #timetable_month_data .timetable_month_data_col {
 	display: table-cell;
 	text-align: center;
 	padding: 1px;
 	vertical-align: middle;
 }
-.prayertable_month_calendartype{
+.timetable_month_data_calendartype{
 	font-size:0.9em;
 }
-.prayertable_month #timetable .prayertable_month_today-row{
+.timetable_month_class #timetable_month_data .timetable_month_data_today_row{
 	animation: pulsate 2s ease-out;
 	animation-iteration-count: infinite;
     opacity: 0.5;
@@ -426,31 +420,31 @@
         opacity: 0.5;
     }
 }
-.prayertable_month #timetable .prayertable_month_notes {
+.timetable_month_class #timetable_month_data .timetable_month_data_notes {
 	margin: 0px;
 	padding: 0px;
 }
-.prayertable_month #timetable .prayertable_month_notes input {
+.timetable_month_class #timetable_month_data .timetable_month_data_notes input {
 	width: 85%;
 	margin: 0px;
 	padding: 0px;
 	border: 0px;
 }
 /*Timetable footer*/
-.prayertable_month #timetable_footer {
+.timetable_month_class #timetable_month_data_footer {
 	width: 100%;
 	display: table;
 	text-align: center;
 }
-.prayertable_month #timetable_footer_row {
+.timetable_month_class #timetable_month_data_footer_row {
 	display: table-row;
 }
-.prayertable_month #timetable_footer_col {
+.timetable_month_class #timetable_footer_col {
 	display: table-cell;
 	vertical-align: middle;
 	text-align: center;
 }
-.prayertable_month #timetable_footer_col div{
+.timetable_month_class #timetable_footer_col div{
 	display: inline-block;
 	padding-top: 2px;
 	padding-left: 5px;
@@ -458,7 +452,7 @@
 	white-space: nowrap;
 }
 /*Footer*/
-#prayertable_footer {
+#timetable_footer {
 	display: flex;
 	width: 100%;
 	height: 160px;
@@ -474,7 +468,7 @@
 }
 
 /*YEAR*/
-#prayertable_year {
+#timetable_year {
 	width: 100%;
 	height:100%;
 	position: absolute;
@@ -485,117 +479,117 @@
 	top:0px;
 }
 /*Arabic Nastaliq fixes*/
-#prayertable_year.font_arabic_nastaliq .display_font{
+#timetable_year.font_arabic_nastaliq .display_font{
 	line-height: initial;
 }
-#prayertable_year.font_arabic_nastaliq #prayertable_year_timetable_header{
+#timetable_year.font_arabic_nastaliq #timetable_year_timetables_header{
 	font-size: 0.51em !important;
 }
-#prayertable_year.font_arabic_nastaliq .prayertable_year_month #timetable_header #prayertable_month_header_title4{
+#timetable_year.font_arabic_nastaliq .timetable_year_month #timetable_month_data_header #timetable_month_data_header_title1{
 	font-size: 0.71em !important;
 }
 /*Header timetable info*/
-#prayertable_year #prayertable_year_timetable_header {
+#timetable_year #timetable_year_timetables_header {
 	text-align: center;
 	font-size: 9pt;
 	display: inline-block;
 	position:relative;
 }
-#prayertable_year #prayertable_year_timetables {
+#timetable_year #timetable_year_timetables {
 	position:relative;
 	margin:0px;
 }
 /* Two columntitles fixes*/
-#prayertable_year #prayertable_year_timetables.two_columntitles{
+#timetable_year #timetable_year_timetables.two_columntitles{
 	margin-top:-10px;
 	transform:scale(0.98);
 }
-#prayertable_year #prayertable_year_timetable_footer.two_columntitles{
+#timetable_year #timetable_year_timetables_footer.two_columntitles{
 	margin-top:-10px;
 }
 /* Three columntitles fixes*/
-#prayertable_year #prayertable_year_timetables.three_columntitles{
+#timetable_year #timetable_year_timetables.three_columntitles{
 	margin-top:-40px;
 	transform:scale(0.9);
 }
-#prayertable_year #prayertable_year_timetable_footer.three_columntitles{
+#timetable_year #timetable_year_timetables_footer.three_columntitles{
 	margin-top:-40px;
 }
 /*Footer timetable info*/
-#prayertable_year #prayertable_year_timetable_footer {
+#timetable_year #timetable_year_timetables_footer {
 	width: 100%;
 	display: table;
 }
-#prayertable_year #prayertable_year_timetable_footer_row {
+#timetable_year #timetable_year_timetables_footer_row {
 	display: table-row;
 	font-size: 7pt;
 }
-#prayertable_year #prayertable_year_timetable_footer_col {
+#timetable_year #timetable_year_timetables_footer_col {
 	display: table-cell;
 	vertical-align: middle;
 	text-align: center;
 }
-#prayertable_year #prayertable_year_timetable_footer_col div {
+#timetable_year #timetable_year_timetables_footer_col div {
 	display: inline-block;
 	padding-top: 2px;
 	padding-left: 5px;
 	padding-right: 5px;
 }
-#prayertable_year #prayertable_year_timetable_footer_col div.hidden {
+#timetable_year #timetable_year_timetables_footer_col div.hidden {
 	display: none;
 }
 /* YEAR month fixes*/
-#prayertable_year .prayertable_year_month {
+#timetable_year .timetable_year_month {
 	display: inline-block;
 	width:calc(25% - 5px) !important;
 }
-#prayertable_year .prayertable_year_month #timetable_header {
+#timetable_year .timetable_year_month #timetable_month_data_header {
 	height: 5px;
 }
-#prayertable_year .prayertable_year_month #timetable_header #prayertable_month_header_title4 {
+#timetable_year .timetable_year_month #timetable_month_data_header #timetable_month_data_header_title1 {
 	font-size: 6pt;
 	line-height:1;
 }
-#prayertable_year .prayertable_year_month #timetable_header #prayertable_month_header_title5 {
+#timetable_year .timetable_year_month #timetable_month_data_header #timetable_month_data_header_title2 {
 	display: none;
 }
-#prayertable_year .prayertable_year_month #timetable {
+#timetable_year .timetable_year_month #timetable_month_data {
 	font-size: 5pt !important;
 	height: inherit;
 }
-#prayertable_year .prayertable_year_month #timetable .prayertable_month_header-row .timetable_col_header {
+#timetable_year .timetable_year_month #timetable_month_data .timetable_month_data_header_row .timetable_month_data_header_col {
 	font-size: 4pt;
 }
-#prayertable_year .prayertable_year_month #timetable .timetable_col.prayertable_fast_start {
+#timetable_year .timetable_year_month #timetable_month_data .timetable_month_data_col.timetable_data_fast_start {
 	width: inherit;
 }
-#prayertable_year .prayertable_year_month #timetable .timetable_col.prayertable_fast_end {
+#timetable_year .timetable_year_month #timetable_month_data .timetable_month_data_col.timetable_data_fast_end {
 	width: inherit;
 }
 
-#prayertable_year #timetable{
+#timetable_year #timetable_month_data{
 	line-height: 3.75pt;
 }
 /*YEAR theme specific month fontsize and lineheight fixes*/
-#prayertable_year .theme_month_20001 #timetable {
+#timetable_year .theme_month_20001 #timetable_month_data {
 	line-height: 3pt !important;
 }
-#prayertable_year .theme_month_20002 #timetable {
+#timetable_year .theme_month_20002 #timetable_month_data {
 	line-height: 3pt !important;
 }
-#prayertable_year .theme_month_20004 #timetable {
+#timetable_year .theme_month_20004 #timetable_month_data {
 	font-size: 3pt !important;
 }
-#prayertable_year .theme_month_20004 .timetable_col_header {
+#timetable_year .theme_month_20004 .timetable_month_data_header_col {
 	font-size: 2pt !important;
 }
-#prayertable_year .theme_month_20005 #timetable {
+#timetable_year .theme_month_20005 #timetable_month_data {
 	line-height: 3pt !important;
 }
-#prayertable_year .theme_month_20007 #timetable {
+#timetable_year .theme_month_20007 #timetable_month_data {
 	line-height: 3pt !important;
 }
-#prayertable_year .theme_month_20015 #timetable {
+#timetable_year .theme_month_20015 #timetable_month_data {
 	line-height: 3pt !important;
 }
 
@@ -787,24 +781,14 @@
 	--report_theme_timetable_data_column_even_background_color:inherit;
 }
 /*shrink font size compared to parent div for this font on this theme*/
-.theme_month_20004 .timetable_row, 
-.theme_month_20004 #timetable_footer_row, 
-.theme_month_20004 #prayertable_footer{
+.theme_month_20004 .timetable_month_data_row, 
+.theme_month_20004 #timetable_month_data_footer_row, 
+.theme_month_20004 #timetable_footer{
 	font-size:0.75em;
 }
-.theme_month_20004 #prayertable_footer div {
+.theme_month_20004 #timetable_footer div {
 	padding: 5px;
 }
-/*theme with only odd even row colors, declare locally in theme*/
-.theme_month_20004 #timetable .timetable_row:nth-child(odd) {
-	color: var(--report_theme_timetable_data_row_odd_color);
-	background-color: var(--report_theme_timetable_data_row_odd_background_color);
-}
-.theme_month_20004 #timetable .timetable_row:nth-child(even) {
-	color: var(--report_theme_timetable_data_row_even_color);
-	background-color: var(--report_theme_timetable_data_row_even_background_color);
-}
-
 .theme_month_20005{
 	--report_theme_display_font_family:var(--font_4);
 	--report_theme_default_font_family:var(--font_4);
@@ -907,7 +891,7 @@
 	--report_theme_timetable_data_column_even_color:var(--black);
 	--report_theme_timetable_data_column_even_background_color:var(--white);
 }
-.theme_month_20007.prayertable_month #timetable .timetable_row .timetable_col:first-child {
+.theme_month_20007.timetable_month_class #timetable_month_data .timetable_month_data_row .timetable_month_data_col:first-child {
 	background-color: var(--lightgold2);
 	color: inherit;
 }
@@ -1004,10 +988,10 @@
 	--report_theme_timetable_data_highlight_1_10_background_color:var(--lightgrey3);
 	--report_theme_timetable_data_highlight_11_20_background_color:var(--white);
 	--report_theme_timetable_data_highlight_21_30_background_color:var(--lightgrey3);
-	--report_theme_timetable_data_row_odd_color:inherit;
-	--report_theme_timetable_data_row_odd_background_color:inherit;
-	--report_theme_timetable_data_row_even_color:inherit;
-	--report_theme_timetable_data_row_even_background_color:inherit;
+	--report_theme_timetable_data_row_odd_color:var(--grey2);
+	--report_theme_timetable_data_row_odd_background_color:var(--lightgrey3);
+	--report_theme_timetable_data_row_even_color:var(--grey2);
+	--report_theme_timetable_data_row_even_background_color:var(--lightgrey3);
 	--report_theme_timetable_data_column_odd_color:inherit;
 	--report_theme_timetable_data_column_odd_background_color:inherit;
 	--report_theme_timetable_data_column_even_color:inherit;
@@ -1038,10 +1022,10 @@
 	--report_theme_timetable_data_highlight_1_10_background_color:var(--lightgrey);
 	--report_theme_timetable_data_highlight_11_20_background_color:var(--lightgrey10);
 	--report_theme_timetable_data_highlight_21_30_background_color:var(--lightgrey);
-	--report_theme_timetable_data_row_odd_color:inherit;
-	--report_theme_timetable_data_row_odd_background_color:inherit;
-	--report_theme_timetable_data_row_even_color:inherit;
-	--report_theme_timetable_data_row_even_background_color:inherit;
+	--report_theme_timetable_data_row_odd_color:var(--darkbrown);
+	--report_theme_timetable_data_row_odd_background_color:var(--lightgrey4);
+	--report_theme_timetable_data_row_even_color:var(--darkbrown);
+	--report_theme_timetable_data_row_even_background_color:var(--lightgrey4);
 	--report_theme_timetable_data_column_odd_color:inherit;
 	--report_theme_timetable_data_column_odd_background_color:inherit;
 	--report_theme_timetable_data_column_even_color:inherit;
@@ -1221,92 +1205,102 @@
 .timetable_class{
 	color: var(--report_theme_text_color);
 }
-.timetable_class .timetable_col.prayertable_fast_start, 
-.timetable_class .timetable_col.prayertable_fast_end{
+.timetable_class .timetable_month_data_col.timetable_data_fast_start, 
+.timetable_class .timetable_month_data_col.timetable_data_fast_end{
 	color: var(--report_theme_fast_start_end_color) !important;
 	background-color: var(--report_theme_fast_start_end_background_color) !important;
 	border-left: 1px solid var(--report_theme_fast_start_end_border_color);
 	border-right: 1px solid var(--report_theme_fast_start_end_border_color);
 }
-#prayertable_header {
+#timetable_header {
 	color: var(--report_theme_header_color);
 	background-color:var(--report_theme_header_background_color);
 }
 /*DAY*/
-#prayertable_day #prayertable_day_timetable_header {
+#timetable_day #timetable_day_timetable_header {
 	background-color: var(--report_theme_timetable_header_background_color);
 	color: var(--report_theme_timetable_header_color);
 }
-#prayertable_day .prayertable_day_timetable_header-row{
+#timetable_day .timetable_day_timetable_header_row{
 	color: var(--report_theme_timetable_data_header_color);
 }
-#prayertable_day .prayertable_day_timetable_header-row div{
+#timetable_day .timetable_day_timetable_header_row div{
 	background-color: var(--report_theme_timetable_data_header_background_color);
 	text-transform: uppercase;
 } 
-#prayertable_day .prayertable_day_timetable_row_data div {
+#timetable_day .timetable_day_timetable_row_data div {
 	background-color: var(--report_theme_timetable_data_background_color);
 	color: var(--report_theme_timetable_data_color);
 }
 
 /*MONTH*/
 
-#prayertable_month .prayertable_month_notes {
+#timetable_month .timetable_month_data_notes {
 	background-color: var(--report_theme_notes_background_color) !important;
 }
-.prayertable_month #timetable_header {
+.timetable_month_class #timetable_month_data_header {
 	color: var(--report_theme_timetable_header_color);
 	background-color: var(--report_theme_timetable_header_background_color);
 }
-.prayertable_month #timetable .prayertable_month_header-row .timetable_col_header {
+.timetable_month_class #timetable_month_data .timetable_month_data_header_row .timetable_month_data_header_col {
 	color: var(--report_theme_timetable_data_header_color) !important;
 	background-color: var(--report_theme_timetable_data_header_background_color) !important;
 }
-.prayertable_month #timetable .timetable_row.prayertable_month_highlight_row .timetable_col {
+.timetable_month_class #timetable_month_data .timetable_month_data_row.timetable_month_data_highlight_row .timetable_month_data_col {
 	color: var(--report_theme_timetable_data_highlight_row_color) !important;
 	background-color: var(--report_theme_timetable_data_highlight_row_background_color) !important;
 }
-.prayertable_month #timetable .timetable_row.prayertable_month_day_01-10-row .timetable_col {
+.timetable_month_class #timetable_month_data .timetable_month_data_row.timetable_month_data_day_01-10_row .timetable_month_data_col {
 	background-color: var(--report_theme_timetable_data_highlight_1_10_background_color) !important;
 }
-.prayertable_month #timetable .timetable_row.prayertable_month_day_11-20-row .timetable_col {
+.timetable_month_class #timetable_month_data .timetable_month_data_row.timetable_month_data_day_11-20_row .timetable_month_data_col {
 	background-color: var(--report_theme_timetable_data_highlight_11_20_background_color) !important;
 }
-.prayertable_month #timetable .timetable_row.prayertable_month_day_21-30-row .timetable_col {
+.timetable_month_class #timetable_month_data .timetable_month_data_row.timetable_month_data_day_21-30_row .timetable_month_data_col {
 	background-color: var(--report_theme_timetable_data_highlight_21_30_background_color) !important;
 }
 /*when both hightlight and fasting info at the same time then choose fasting colors*/
-.prayertable_month #timetable .timetable_row.prayertable_month_highlight_row .timetable_col.prayertable_fast_start,
-.prayertable_month #timetable .timetable_row.prayertable_month_highlight_row .timetable_col.prayertable_fast_end,
-.prayertable_month #timetable .timetable_row.prayertable_month_day_01-10-row .timetable_col.prayertable_fast_start, 
-.prayertable_month #timetable .timetable_row.prayertable_month_day_01-10-row .timetable_col.prayertable_fast_end,
-.prayertable_month #timetable .timetable_row.prayertable_month_day_11-20-row .timetable_col.prayertable_fast_start, 
-.prayertable_month #timetable .timetable_row.prayertable_month_day_11-20-row .timetable_col.prayertable_fast_end,
-.prayertable_month #timetable .timetable_row.prayertable_month_day_21-30-row .timetable_col.prayertable_fast_start, 
-.prayertable_month #timetable .timetable_row.prayertable_month_day_21-30-row .timetable_col.prayertable_fast_end{
+.timetable_month_class #timetable_month_data .timetable_month_data_row.timetable_month_data_highlight_row .timetable_month_data_col.timetable_data_fast_start,
+.timetable_month_class #timetable_month_data .timetable_month_data_row.timetable_month_data_highlight_row .timetable_month_data_col.timetable_data_fast_end,
+.timetable_month_class #timetable_month_data .timetable_month_data_row.timetable_month_data_day_01-10_row .timetable_month_data_col.timetable_data_fast_start, 
+.timetable_month_class #timetable_month_data .timetable_month_data_row.timetable_month_data_day_01-10_row .timetable_month_data_col.timetable_data_fast_end,
+.timetable_month_class #timetable_month_data .timetable_month_data_row.timetable_month_data_day_11-20_row .timetable_month_data_col.timetable_data_fast_start, 
+.timetable_month_class #timetable_month_data .timetable_month_data_row.timetable_month_data_day_11-20_row .timetable_month_data_col.timetable_data_fast_end,
+.timetable_month_class #timetable_month_data .timetable_month_data_row.timetable_month_data_day_21-30_row .timetable_month_data_col.timetable_data_fast_start, 
+.timetable_month_class #timetable_month_data .timetable_month_data_row.timetable_month_data_day_21-30_row .timetable_month_data_col.timetable_data_fast_end{
 	color: var(--report_theme_fast_start_end_color) !important;
 	background-color: var(--report_theme_fast_start_end_background_color) !important;
 }
-.prayertable_month #timetable .timetable_row{
+/* odd and even row colors*/
+/* if not using this but using background colors or color then set the same for even and odd rows colors in theme*/
+.timetable_month_class #timetable_month_data .timetable_month_data_row:nth-child(odd) {
+	color: var(--report_theme_timetable_data_row_odd_color);
+	background-color: var(--report_theme_timetable_data_row_odd_background_color);
+}
+.timetable_month_class #timetable_month_data .timetable_month_data_row:nth-child(even) {
+	color: var(--report_theme_timetable_data_row_even_color);
+	background-color: var(--report_theme_timetable_data_row_even_background_color);
+}
+.timetable_month_class #timetable_month_data .timetable_month_data_row{
 	color: var(--report_theme_timetable_data_color);
 	background-color: var(--report_theme_timetable_data_background_color);	
 }
-.prayertable_month #timetable .timetable_row .timetable_col {
+.timetable_month_class #timetable_month_data .timetable_month_data_row .timetable_month_data_col {
 	border-bottom: 0.5px solid var(--report_theme_timetable_data_border_color);
 }
-.prayertable_month #timetable .timetable_row .timetable_col:nth-child(odd) {
+.timetable_month_class #timetable_month_data .timetable_month_data_row .timetable_month_data_col:nth-child(odd) {
 	color: var(--report_theme_timetable_data_column_odd_color);
 	background-color: var(--report_theme_timetable_data_column_odd_background_color);
 }
-.prayertable_month #timetable .timetable_row .timetable_col:nth-child(even) {
+.timetable_month_class #timetable_month_data .timetable_month_data_row .timetable_month_data_col:nth-child(even) {
 	color: var(--report_theme_timetable_data_column_even_color);
 	background-color: var(--report_theme_timetable_data_column_even_background_color);
 }
-.prayertable_month #timetable_footer {
+.timetable_month_class #timetable_month_data_footer {
 	color: var(--report_theme_timetable_footer_color);
 	background-color: var(--report_theme_timetable_footer_background_color);
 }
-#prayertable_footer {
+#timetable_footer {
 	color : var(--report_theme_footer_color);
 	background-color:var(--report_theme_footer_background_color);
 }

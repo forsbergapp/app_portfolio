@@ -226,16 +226,16 @@ function getReportSettings(){
                 show_fast_start_end 	: document.getElementById('setting_select_report_show_fast_start_end').value,
                 
                 timetable_class			: 'timetable_class',
-                prayertable_month       : 'prayertable_month', //class to add for month
-                prayertable_year_month  : 'prayertable_year_month', //class to add for year
+                timetable_month         : 'timetable_month_class', //class to add for month
+                timetable_year_month    : 'timetable_year_month', //class to add for year
                 reporttype_year_month 	: 'MONTH',  //default MONTH: normal month with more info, 
                                                     //YEAR: month with less info
                 
                 ui_navigation_left      : 'toolbar_btn_left',
                 ui_navigation_right     : 'toolbar_btn_right',
-                ui_prayertable_day_id   : 'prayertable_day',
-                ui_prayertable_month_id : 'prayertable_month',
-                ui_prayertable_year_id  : 'prayertable_year'};
+                ui_timetable_day_id     : 'timetable_day',
+                ui_timetable_month_id   : 'timetable_month',
+                ui_timetable_year_id    : 'timetable_year'};
 }
 // update timetable
 async function update_timetable_report(timetable_type = 0, item_id = null, settings) {
@@ -269,7 +269,7 @@ async function update_timetable_report(timetable_type = 0, item_id = null, setti
 		await displayDay(settings, item_id, current_user_settings).then(function(timetable){
             timetable.style.display = 'block';
             document.getElementById('paper').innerHTML = timetable.outerHTML;
-            create_qr('prayertable_qr_code', getHostname());
+            create_qr('timetable_qr_code', getHostname());
         })
 		break;
 	}
@@ -279,7 +279,7 @@ async function update_timetable_report(timetable_type = 0, item_id = null, setti
         await displayMonth(settings, item_id).then(function(timetable){
             timetable.style.display = 'block';
 			document.getElementById('paper').innerHTML = timetable.outerHTML;
-            create_qr('prayertable_qr_code', getHostname());
+            create_qr('timetable_qr_code', getHostname());
         })
 		break;
 	}
@@ -289,7 +289,7 @@ async function update_timetable_report(timetable_type = 0, item_id = null, setti
 		await displayYear(settings, item_id).then(function(timetable){
             timetable.style.display = 'block';
 		    document.getElementById('paper').innerHTML = timetable.outerHTML;
-            create_qr('prayertable_qr_code', getHostname());
+            create_qr('timetable_qr_code', getHostname());
         })
 		break;
 	}
@@ -627,12 +627,11 @@ function showreporttime() {
     };
     document.getElementById('setting_report_date_time_display').innerHTML = new Date().toLocaleTimeString(document.getElementById('setting_select_locale').value, options);
     //If day report created with time, display time there also
-    if (document.getElementById('prayertable_day_time')) {
-        document.getElementById('prayertable_day_time').innerHTML = document.getElementById('setting_report_date_time_display').innerHTML;
+    if (document.getElementById('tiemtable_day_time')) {
+        document.getElementById('timetable_day_time').innerHTML = document.getElementById('setting_report_date_time_display').innerHTML;
     }
-    //if day report created with div class prayertable_day_current_time
-    if (document.getElementsByClassName('prayertable_day_current_time').length > 0) {
-        let user_current_time = document.getElementsByClassName('prayertable_day_current_time');
+    if (document.getElementsByClassName('timetable_day_current_time').length > 0) {
+        let user_current_time = document.getElementsByClassName('timetable_day_current_time');
         let select_user_settings = document.getElementById('setting_select_user_setting');
         let user_locale;
         let user_options;
@@ -651,7 +650,7 @@ function showreporttime() {
             };
 
             user_locale = select_user_settings[i].getAttribute('regional_language_locale');
-            //set user setting time, select index and order should be the same as div prayertable_day_current_time indexes
+            //set user setting time, select index and order should be the same as div timetable_day_current_time indexes
             user_current_time[i].innerHTML = new Date().toLocaleTimeString(user_locale, user_options);
         }
     }
