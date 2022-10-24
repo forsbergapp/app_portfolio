@@ -269,7 +269,7 @@ async function update_timetable_report(timetable_type = 0, item_id = null, setti
 		await displayDay(settings, item_id, current_user_settings).then(function(timetable){
             timetable.style.display = 'block';
             document.getElementById('paper').innerHTML = timetable.outerHTML;
-            create_qr('prayertable_day_qr_code', getHostname());
+            create_qr('prayertable_qr_code', getHostname());
         })
 		break;
 	}
@@ -279,7 +279,7 @@ async function update_timetable_report(timetable_type = 0, item_id = null, setti
         await displayMonth(settings, item_id).then(function(timetable){
             timetable.style.display = 'block';
 			document.getElementById('paper').innerHTML = timetable.outerHTML;
-            create_qr('prayertable_month_qr_code', getHostname());
+            create_qr('prayertable_qr_code', getHostname());
         })
 		break;
 	}
@@ -289,7 +289,7 @@ async function update_timetable_report(timetable_type = 0, item_id = null, setti
 		await displayYear(settings, item_id).then(function(timetable){
             timetable.style.display = 'block';
 		    document.getElementById('paper').innerHTML = timetable.outerHTML;
-            create_qr('prayertable_year_qr_code', getHostname());
+            create_qr('prayertable_qr_code', getHostname());
         })
 		break;
 	}
