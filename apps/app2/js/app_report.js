@@ -619,7 +619,7 @@ function timetable_headers(reporttype, items, settings){
 										 header_row_index, settings.show_imsak, settings.show_sunset, settings.show_midnight);
 		else
 			if (reporttype==1)
-				html += `<div id='prayertable_month_header-row${header_row_index}' class='timetable_row prayertable_month_header-row'>
+				html += `<div class='timetable_row prayertable_month_header-row'>
 							${makeTableRow(getColumnTitles(1, settings.calendartype, settings.locale, null, settings.locale), 
 										   items, 0, null,null, settings)}
 						</div>`;
@@ -632,7 +632,7 @@ function timetable_headers(reporttype, items, settings){
 											 header_row_index, settings.show_imsak, settings.show_sunset, settings.show_midnight);
 			else
 				if (reporttype==1)
-				html += `<div id='prayertable_month_header-row${header_row_index}' class='timetable_row prayertable_month_header-row'>
+				html += `<div class='timetable_row prayertable_month_header-row'>
 							${makeTableRow(getColumnTitles(0, settings.calendartype, settings.locale, settings.second_locale, settings.locale), 
 										   items, 0, null,null, settings)}
 						</div>`;
@@ -647,7 +647,7 @@ function timetable_headers(reporttype, items, settings){
 											 header_row_index, settings.show_imsak, settings.show_sunset, settings.show_midnight);
 			else
 				if (reporttype==1)
-					html += `<div id='prayertable_month_header-row${header_row_index}' class='timetable_row prayertable_month_header-row'>
+					html += `<div class='timetable_row prayertable_month_header-row'>
 								${makeTableRow(getColumnTitles(0, settings.calendartype, settings.locale, settings.second_locale, settings.locale), 
 											   items, 0, null,null, settings)}
 							</div>`;
@@ -661,7 +661,7 @@ function timetable_headers(reporttype, items, settings){
 											     header_row_index, settings.show_imsak, settings.show_sunset, settings.show_midnight);
 				else
 					if (reporttype==1)
-						html += `<div id='prayertable_month_header-row${header_row_index}' class='timetable_row prayertable_month_header-row'>
+						html += `<div class='timetable_row prayertable_month_header-row'>
 									${makeTableRow(getColumnTitles(1, settings.calendartype, settings.locale, null, settings.locale), 
 												   items, 0, null,null, settings)}
 								</div>`;
@@ -679,7 +679,7 @@ function timetable_headers(reporttype, items, settings){
 				let second_locale_titles = getColumnTitles(0, settings.calendartype, settings.second_locale, '', settings.locale);
 				second_locale_titles['weekday']='';
 				second_locale_titles['weekday_tr']='';
-				html += `<div id='prayertable_month_header-row${header_row_index}' class='timetable_row prayertable_month_header-row'>
+				html += `<div class='timetable_row prayertable_month_header-row'>
 								${makeTableRow(second_locale_titles, items, 0, null,null, settings)}
 						</div>`;
 			}
@@ -869,11 +869,11 @@ async function displayMonth(settings, item_id) {
 			footer_style = getstyle(settings.footer_img_src, settings.footer_align);
 	
 			month_html +=
-				`<div id='prayertable_month_header' class='display_font' style='${header_style}'>
-					<div id='prayertable_month_header_title1'>${settings.header_txt1}</div>
-					<div id='prayertable_month_header_title2'>${settings.header_txt2}</div>
-					<div id='prayertable_month_header_title3'>${settings.header_txt3}</div>
-					<div id='prayertable_month_qr_code' class='prayertable_qr_code'></div>
+				`<div id='prayertable_header' class='display_font' style='${header_style}'>
+					<div >${settings.header_txt1}</div>
+					<div >${settings.header_txt2}</div>
+					<div >${settings.header_txt3}</div>
+					<div id='prayertable_qr_code'></div>
 				</div>`;
 		}
 	
@@ -976,26 +976,26 @@ async function displayMonth(settings, item_id) {
 					`<div id='timetable_footer' class='default_font'>
 						<div id='timetable_footer_row'>
 							<div id='timetable_footer_col'>
-								<div id='prayertable_month_footer_r1c1'>${settings.place}</div>
+								<div >${settings.place}</div>
 								${settings.show_gps == 'YES'?
 									`
-									<div id='prayertable_month_footer_r1c2'>${window.global_first_language.gps_lat_text}</div>
-									<div id='prayertable_month_footer_r1c3'>${settings.gps_lat.toLocaleString(settings.locale + window.global_regional_def_locale_ext_prefix + window.global_regional_def_locale_ext_number_system + settings.number_system)}</div>
-									<div id='prayertable_month_footer_r1c4'>${window.global_first_language.gps_long_text}</div>
-									<div id='prayertable_month_footer_r1c5'>${settings.gps_long.toLocaleString(settings.locale + window.global_regional_def_locale_ext_prefix + window.global_regional_def_locale_ext_number_system + settings.number_system)}</div>`
+									<div >${window.global_first_language.gps_lat_text}</div>
+									<div >${settings.gps_lat.toLocaleString(settings.locale + window.global_regional_def_locale_ext_prefix + window.global_regional_def_locale_ext_number_system + settings.number_system)}</div>
+									<div >${window.global_first_language.gps_long_text}</div>
+									<div >${settings.gps_long.toLocaleString(settings.locale + window.global_regional_def_locale_ext_prefix + window.global_regional_def_locale_ext_number_system + settings.number_system)}</div>`
 									:''}
 								${settings.show_timezone == 'YES'?
-									`<div id='prayertable_month_footer_r1c6'>${window.global_first_language.timezone_text}</div>
-									<div id='prayertable_month_footer_r1c7'>${settings.timezone}</div>`
+									`<div >${window.global_first_language.timezone_text}</div>
+									<div >${settings.timezone}</div>`
 									:''}
 								<div id='copyright'>${window.global_app_copyright}</div>
 							</div>
 						</div>
 					</div>
-					<div id='prayertable_month_footer' class='display_font' style='${footer_style}'>
-						<div id='prayertable_month_footer_title1'>${settings.footer_txt1}</div>
-						<div id='prayertable_month_footer_title2'>${settings.footer_txt2}</div>
-						<div id='prayertable_month_footer_title3'>${settings.footer_txt3}</div>
+					<div id='prayertable_footer' class='display_font' style='${footer_style}'>
+						<div>${settings.footer_txt1}</div>
+						<div>${settings.footer_txt2}</div>
+						<div>${settings.footer_txt3}</div>
 					</div>`;
 				}	
 				timetable.innerHTML = month_html;
@@ -1056,8 +1056,8 @@ async function displayMonth(settings, item_id) {
 							HijriToGreg(new Array(year,month,times['day']), settings.hijri_adj).then(function(date){
 								i_hijri_days++;
 								month_async_html[times['day']] = `<div class='${'timetable_row ' + row_class}'>
-													${makeTableRow(times, items, 1, year, month, settings, date)}
-											   </div>`;
+																		${makeTableRow(times, items, 1, year, month, settings, date)}
+																  </div>`;
 								if (i_hijri_days == tot_days){
 									month_async_html.forEach(html => {
 										month_html = month_html + html;
@@ -1069,7 +1069,7 @@ async function displayMonth(settings, item_id) {
 						else
 							month_html += `<div class='${'timetable_row ' + row_class}'>
 														${makeTableRow(times, items, 1, year, month, settings)}
-												</div>`;
+										   </div>`;
 						date.setDate(date.getDate()+ 1);  // next day
 					}
 					tot_days = i_days;
@@ -1138,19 +1138,18 @@ async function displayDay(settings, item_id, user_settings){
 		let header_style = getstyle(settings.header_img_src, settings.header_align);
 		let footer_style = getstyle(settings.footer_img_src, settings.footer_align);
 
-		day_html += 
-		`
-		<div id='prayertable_day_header_row' class='display_font' style='${header_style}'>
-			<div id='prayertable_day_header_title1' class='prayertable_day_header' >${settings.header_txt1}</div>
-			<div id='prayertable_day_header_title2' class='prayertable_day_header' >${settings.header_txt2}</div>
-			<div id='prayertable_day_header_title3' class='prayertable_day_header' >${settings.header_txt3}</div>
-			<div id='prayertable_day_qr_code' class='prayertable_qr_code'></div>
-		</div>
-		<div id='prayertable_day_timetable_header' class='display_font'>
-			<div id='prayertable_day_header_title4' class='prayertable_day_header' >${date_title4}</div>
-			<div id='prayertable_day_header_title5' class='prayertable_day_header' >${date_title5}</div>
-		</div>
-		<div id='prayertable_day_timetable' class='default_font'>
+		day_html += `<div id='prayertable_header' class='display_font' style='${header_style}'>
+						<div >${settings.header_txt1}</div>
+						<div >${settings.header_txt2}</div>
+						<div >${settings.header_txt3}</div>
+						<div id='prayertable_qr_code'></div>
+					</div>`
+		
+		day_html +=`<div id='prayertable_day_timetable_header' class='display_font'>
+						<div id='prayertable_day_header_title4' class='prayertable_day_header' >${date_title4}</div>
+						<div id='prayertable_day_header_title5' class='prayertable_day_header' >${date_title5}</div>
+					</div>
+					<div id='prayertable_day_timetable' class='default_font'>
 			${timetable_headers(0, null, settings)}`;
 		
 		function day_timetable(user_locale, user_timezone, user_number_system, user_calendar_hijri_type,
@@ -1173,11 +1172,11 @@ async function displayDay(settings, item_id, user_settings){
 						</div>
 						<div class='prayertable_day_timetable_footer'>
 							<div class='prayertable_day_timetable_footer_row'>
-								<div class='prayertable_day_timetable_footer_r1c1'>${user_place}</div>
-								<div class='prayertable_day_timetable_footer_r1c2'>${settings.show_gps == 'YES' ? window.global_first_language.gps_lat_text:''}</div>
-								<div class='prayertable_day_timetable_footer_r1c3'>${settings.show_gps == 'YES' ? user_gps_latitude.toLocaleString(user_locale + window.global_regional_def_locale_ext_prefix + window.global_regional_def_locale_ext_number_system + user_number_system):''}</div>
-								<div class='prayertable_day_timetable_footer_r1c4'>${settings.show_gps == 'YES' ? window.global_first_language.gps_long_text:''}</div>
-								<div class='prayertable_day_timetable_footer_r1c5'>${settings.show_gps == 'YES' ? user_gps_longitude.toLocaleString(user_locale + window.global_regional_def_locale_ext_prefix + window.global_regional_def_locale_ext_number_system + user_number_system):''}</div>
+								<div>${user_place}</div>
+								<div>${settings.show_gps == 'YES' ? window.global_first_language.gps_lat_text:''}</div>
+								<div>${settings.show_gps == 'YES' ? user_gps_latitude.toLocaleString(user_locale + window.global_regional_def_locale_ext_prefix + window.global_regional_def_locale_ext_number_system + user_number_system):''}</div>
+								<div>${settings.show_gps == 'YES' ? window.global_first_language.gps_long_text:''}</div>
+								<div>${settings.show_gps == 'YES' ? user_gps_longitude.toLocaleString(user_locale + window.global_regional_def_locale_ext_prefix + window.global_regional_def_locale_ext_number_system + user_number_system):''}</div>
 							</div>
 							${settings.show_timezone == 'YES'?`<div class='prayertable_day_timetable_footer_row'>
 																<div class='prayertable_day_current_time'></div>
@@ -1189,10 +1188,10 @@ async function displayDay(settings, item_id, user_settings){
 						day_html += 
 						`</div>
 						<div id='copyright'>${window.global_app_copyright}</div>
-						<div id='prayertable_day_footer_row' class='display_font' style='${footer_style}'>
-							<div id='prayertable_day_footer_title1' class='prayertable_day_footer' >${settings.footer_txt1}</div>
-							<div id='prayertable_day_footer_title2' class='prayertable_day_footer' >${settings.footer_txt2}</div>
-							<div id='prayertable_day_footer_title3' class='prayertable_day_footer' >${settings.footer_txt3}</div>
+						<div id='prayertable_footer' class='display_font' style='${footer_style}'>
+							<div>${settings.footer_txt1}</div>
+							<div>${settings.footer_txt2}</div>
+							<div>${settings.footer_txt3}</div>
 							<div></div>
 						</div>
 						<div id='prayertable_day_time' class='default_font'>
@@ -1335,57 +1334,56 @@ async function displayYear(settings, item_id){
 		//timetables
 		let months = new Array(12);
 		function year_timetable(){
-			year_html +=
-			`<div id='prayertable_year_header_row' class='prayertable_year_row display_font' style='${header_style}'>
-				<div id='prayertable_year_header_title1' class='prayertable_year_header' >${settings.header_txt1}</div>
-				<div id='prayertable_year_header_title2' class='prayertable_year_header' >${settings.header_txt2}</div>
-				<div id='prayertable_year_header_title3' class='prayertable_year_header' >${settings.header_txt3}</div>
-				<div id='prayertable_year_qr_code' class='prayertable_qr_code'></div>
-			</div>
-			<div id='prayertable_year_timetable_header' class='prayertable_year_row display_font'>
-				<div id='prayertable_year_header_title4' class='prayertable_year_header' >${year_title4}</div>
-				<div id='prayertable_year_header_title5' class='prayertable_year_header' >${window.global_first_language.timetable_title} ${settings.second_locale!=0?window.global_second_language.timetable_title:''}</div>
-			</div>
-			<div id='prayertable_year_timetables' ${timetable_class}'>
-				<div class='prayertable_year_row'>
-					${months[0]}
-					${months[1]}
-					${months[2]}
-					${months[3]}
-				</div>
-				<div class='prayertable_year_row'>
-					${months[4]}
-					${months[5]}
-					${months[6]}
-					${months[7]}
-				</div>
-				<div class='prayertable_year_row'>
-					${months[8]}
-					${months[9]}
-					${months[10]}
-					${months[11]}
-				</div>
-			</div>
-			<div id='prayertable_year_timetable_footer' ${timetable_footer_class}'>
-				<div id='prayertable_year_timetable_footer_row'>
-					<div id='prayertable_year_timetable_footer_col'>
-						<div id='prayertable_year_timetable_footer_r1c1' ${settings.show_gps == 'YES'?'class=""':'class="hidden"'}>${settings.place}</div>
-						<div id='prayertable_year_timetable_footer_r1c2' ${settings.show_gps == 'YES'?'class=""':'class="hidden"'}>${settings.show_gps == 'YES'?window.global_first_language.gps_lat_text:''}</div>
-						<div id='prayertable_year_timetable_footer_r1c3' ${settings.show_gps == 'YES'?'class=""':'class="hidden"'}>${settings.show_gps == 'YES'?settings.gps_lat.toLocaleString(settings.locale + window.global_regional_def_locale_ext_prefix + window.global_regional_def_locale_ext_number_system + settings.number_system):''}</div>
-						<div id='prayertable_year_timetable_footer_r1c4' ${settings.show_gps == 'YES'?'class=""':'class="hidden"'}>${settings.show_gps == 'YES'?window.global_first_language.gps_long_text:''}</div>
-						<div id='prayertable_year_timetable_footer_r1c5' ${settings.show_gps == 'YES'?'class=""':'class="hidden"'}>${settings.show_gps == 'YES'?settings.gps_long.toLocaleString(settings.locale + window.global_regional_def_locale_ext_prefix + window.global_regional_def_locale_ext_number_system + settings.number_system):''}</div>
-						<div id='prayertable_year_timetable_footer_r1c6' ${settings.show_timezone == 'YES'?'class=""':'class="hidden"'}>${settings.show_timezone == 'YES'?window.global_first_language.timezone_text:''}</div>
-						<div id='prayertable_year_timetable_footer_r1c7' ${settings.show_timezone == 'YES'?'class=""':'class="hidden"'}>${settings.show_timezone == 'YES'?settings.timezone:''}</div>
-						<div id='copyright'>${window.global_app_copyright}</div>
-					</div>
-				</div>
-			</div>
-			<div id='prayertable_year_footer_row' class='prayertable_year_row display_font' style='${footer_style}'>
-				<div id='prayertable_year_footer_title1' class='prayertable_year_footer' >${settings.footer_txt1}</div>
-				<div id='prayertable_year_footer_title2' class='prayertable_year_footer' >${settings.footer_txt2}</div>
-				<div id='prayertable_year_footer_title3' class='prayertable_year_footer' >${settings.footer_txt3}</div>
-				<div></div>
-			</div>`;
+			year_html += `<div id='prayertable_header' class='display_font' style='${header_style}'>
+							<div >${settings.header_txt1}</div>
+							<div >${settings.header_txt2}</div>
+							<div >${settings.header_txt3}</div>
+							<div id='prayertable_qr_code'></div>
+						</div>`;
+			year_html += `	<div id='prayertable_year_timetable_header' class='prayertable_year_row display_font'>
+								<div id='prayertable_year_header_title4' class='prayertable_year_header' >${year_title4}</div>
+								<div id='prayertable_year_header_title5' class='prayertable_year_header' >${window.global_first_language.timetable_title} ${settings.second_locale!=0?window.global_second_language.timetable_title:''}</div>
+							</div>
+							<div id='prayertable_year_timetables' ${timetable_class}'>
+								<div class='prayertable_year_row'>
+									${months[0]}
+									${months[1]}
+									${months[2]}
+									${months[3]}
+								</div>
+								<div class='prayertable_year_row'>
+									${months[4]}
+									${months[5]}
+									${months[6]}
+									${months[7]}
+								</div>
+								<div class='prayertable_year_row'>
+									${months[8]}
+									${months[9]}
+									${months[10]}
+									${months[11]}
+								</div>
+							</div>
+							<div id='prayertable_year_timetable_footer' ${timetable_footer_class}'>
+								<div id='prayertable_year_timetable_footer_row'>
+									<div id='prayertable_year_timetable_footer_col'>
+										<div ${settings.show_gps == 'YES'?'class=""':'class="hidden"'}>${settings.place}</div>
+										<div ${settings.show_gps == 'YES'?'class=""':'class="hidden"'}>${settings.show_gps == 'YES'?window.global_first_language.gps_lat_text:''}</div>
+										<div ${settings.show_gps == 'YES'?'class=""':'class="hidden"'}>${settings.show_gps == 'YES'?settings.gps_lat.toLocaleString(settings.locale + window.global_regional_def_locale_ext_prefix + window.global_regional_def_locale_ext_number_system + settings.number_system):''}</div>
+										<div ${settings.show_gps == 'YES'?'class=""':'class="hidden"'}>${settings.show_gps == 'YES'?window.global_first_language.gps_long_text:''}</div>
+										<div ${settings.show_gps == 'YES'?'class=""':'class="hidden"'}>${settings.show_gps == 'YES'?settings.gps_long.toLocaleString(settings.locale + window.global_regional_def_locale_ext_prefix + window.global_regional_def_locale_ext_number_system + settings.number_system):''}</div>
+										<div ${settings.show_timezone == 'YES'?'class=""':'class="hidden"'}>${settings.show_timezone == 'YES'?window.global_first_language.timezone_text:''}</div>
+										<div ${settings.show_timezone == 'YES'?'class=""':'class="hidden"'}>${settings.show_timezone == 'YES'?settings.timezone:''}</div>
+										<div id='copyright'>${window.global_app_copyright}</div>
+									</div>
+								</div>
+							</div>
+							<div id='prayertable_footer' display_font' style='${footer_style}'>
+								<div >${settings.footer_txt1}</div>
+								<div >${settings.footer_txt2}</div>
+								<div >${settings.footer_txt3}</div>
+								<div></div>
+							</div>`;
 			timetable.innerHTML = year_html;
 		
 			window.global_session_currentDate.setMonth(startmonth);
@@ -1525,7 +1523,7 @@ async function init_report(parameters) {
 												displayDay(report_parameters, null, user_settings_parameters).then(function(timetable){
 													timetable.style.display = 'block';
 													document.getElementById('paper').innerHTML = timetable.outerHTML;
-													create_qr('prayertable_day_qr_code', window.location.href);
+													create_qr('prayertable_qr_code', window.location.href);
 													resolve();
 												})
 											}
@@ -1537,7 +1535,7 @@ async function init_report(parameters) {
 											displayMonth(report_parameters, null).then(function(timetable){
 												timetable.style.display = 'block';
 												document.getElementById('paper').innerHTML = timetable.outerHTML;
-												create_qr('prayertable_month_qr_code', window.location.href);
+												create_qr('prayertable_qr_code', window.location.href);
 												resolve();
 											})
 										else 
@@ -1545,7 +1543,7 @@ async function init_report(parameters) {
 												displayYear(report_parameters, null).then(function(timetable){
 													timetable.style.display = 'block';
 													document.getElementById('paper').innerHTML = timetable.outerHTML;
-													create_qr('prayertable_year_qr_code', window.location.href);
+													create_qr('prayertable_qr_code', window.location.href);
 													resolve();
 												})
 							});
