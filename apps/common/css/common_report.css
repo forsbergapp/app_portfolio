@@ -1,11 +1,11 @@
 .common_dialogue{
-	background-color: rgba(0,0,0,0.4);
+	background-color: var(--app_shadow3);
 }
 .common_dialogue_content{
 	font-size: 11px;
-	background-color:#f5f5f5 !important;
-	color: #404040 !important;
-	box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+	background-color:var(--app_light) !important;
+	color: var(--app_black) !important;
+	box-shadow: 0 4px 8px 0 var(--app_shadow1),0 6px 20px 0 var(--app_shadow2);
 }
 /*DIALOGUE MESSAGE*/
 #dialogue_message_content{

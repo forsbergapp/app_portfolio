@@ -22,7 +22,7 @@ function seticons(){
     window.global_icon_app_delete = '<i class="fa-solid fa-trash-can"></i>';
     window.global_icon_app_update = '<i class="fa-solid fa-floppy-disk"></i>';
     window.global_icon_app_edit = '<i class="fa-solid fa-pen-to-square"></i>';
-    window.global_icon_app_lov = '<i class="fa-solid fa-chevron-up"></i>';
+    window.global_icon_app_lov = '<i class="fa-solid fa-circle-chevron-up"></i>';
     window.global_icon_app_send = '<i class="fa-solid fa-paper-plane"></i>';
     window.global_icon_app_sendmail = '<i class="fa-solid fa-envelope"></i>';
     window.global_icon_app_email = '<i class="fa-solid fa-envelope"></i>';
@@ -41,8 +41,8 @@ function seticons(){
     window.global_icon_app_previous = '<i class="fa-solid fa-caret-left"></i>';
     window.global_icon_app_next = '<i class="fa-solid fa-caret-right"></i>';
     window.global_icon_app_last = '<i class="fa-solid fa-forward-step"></i>';
-    window.global_icon_app_slider_left = '<i class="fa-solid fa-chevron-left"></i>';
-    window.global_icon_app_slider_right = '<i class="fa-solid fa-chevron-right"></i>';
+    window.global_icon_app_slider_left = '<i class="fa-solid fa-circle-chevron-left"></i>';
+    window.global_icon_app_slider_right = '<i class="fa-solid fa-circle-chevron-right"></i>';
     window.global_icon_app_align_left = '<i class="fa fa-align-left" tabindex="1"></i>';
     window.global_icon_app_align_center = '<i class="fa fa-align-center" tabindex="1"></i>';
     window.global_icon_app_align_right = '<i class="fa fa-align-left" tabindex="1"></i>';

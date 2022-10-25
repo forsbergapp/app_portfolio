@@ -60,41 +60,25 @@
 }
 /*THEME*/
 .theme_light {
-	--blue1: rgb(81, 171, 255);
-	--blue2: rgb(197 227 255);
-	--black: #404040;
-	--black_transperant1: rgba(0,0,0,0.2);
-	--black_transperant2: rgba(0,0,0,0.3);
-	--white1: #fefefe;
-	--white2: #dedede;
-	--white3: #f2f2f2;
-	--white_transperant: rgb(255,255,255,0.25);
-	--green: #6ab344;
-	--red: #d82139;
+	--app_theme_main_branding_color1: var(--app_blue1);
+	--app_theme_main_branding_color2: var(--app_blue2);
+	--app_theme_main_branding_color3: var(--app_white1);
+	--app_theme_main_branding_color4: var(--app_black);
+	--app_theme_main_branding_color5: var(--app_white2);
 
-	--app_theme_main_branding_color1: var(--blue1);
-	--app_theme_main_branding_color2: var(--blue2);
-	--app_theme_main_branding_color3: var(--white1);
-	--app_theme_main_branding_color4: var(--black);
-	--app_theme_main_branding_color5: var(--white2);
+	--app_theme_main_shadow_color1: var(--app_black_transparent1);
+	--app_theme_main_shadow_color2: var(--app_black_transparent2);
+	--app_theme_main_shadow_color3: var(--app_white_transparent);
+	--app_theme_main_select_color: var(--app_white2);
+	--app_theme_main_select_color2: var(--app_green);
+	--app_theme_main_select_color3: var(--app_red);
+	--app_theme_main_border_color: var(--app_white2);
+	--app_theme_main_border_color2: var(--app_blue2);
+	--app_theme_main_border_color3: var(--app_white1);
+	--app_theme_main_gradient_color1: var(--app_white3);
+	--app_theme_main_gradient_color2: var(--app_white2);
+	--app_theme_main_gradient_color3: var(--app_white1);
 
-	--app_theme_main_shadow_color1: var(--black_transperant1);
-	--app_theme_main_shadow_color2: var(--black_transperant2);
-	--app_theme_main_shadow_color3: var(--white_transperant);
-	--app_theme_main_select_color: var(--white2);
-	--app_theme_main_select_color2: var(--green);
-	--app_theme_main_select_color3: var(--red);
-	--app_theme_main_border_color: var(--white2);
-	--app_theme_main_border_color2: var(--blue2);
-	--app_theme_main_border_color3: var(--white1);
-	--app_theme_main_gradient_color1: var(--white3);
-	--app_theme_main_gradient_color2: var(--white2);
-	--app_theme_main_gradient_color3: var(--white1);
-
-	/*common
-	--blue3: #28708c;
-	--app_theme_main_spinner_color: var(--blue3);
-	*/
 	--app_theme_text_color: var(--app_theme_main_branding_color4);
 	--app_theme_background_color: var(--app_theme_main_branding_color1);
 	--app_theme_background_color2: var(--app_theme_main_branding_color5);
@@ -104,6 +88,8 @@
 	--app_theme_dialogue_boxshadow_active_color:var(--app_theme_main_shadow_color3);
 	--app_theme_input_border_color:var(--app_theme_main_branding_color2);
 	--app_theme_hover_color: var(--app_theme_main_select_color2);
+
+	--app_theme_spinner_background_color:var(--app_theme_main_branding_color1);
 }
 
 body.theme_light{
@@ -138,4 +124,7 @@ body.theme_light{
 .common_dialogue_content{
 	background-color: var(--app_theme_dialogue_background_color);
 	box-shadow: 0 4px 8px 0 var(--app_theme_dialogue_boxshadow_color1), 0 6px 20px 0 var(--app_theme_dialogue_boxshadow_color2);
+}
+.load-spinner div:after {
+	background-color: var(--app_theme_spinner_background_color);
 }

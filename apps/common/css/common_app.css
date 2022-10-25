@@ -779,7 +779,6 @@ a:active {
 	width: 5px;
 	height: 14px;
 	border-radius: 20%;
-	background: #28708c;
 }
 .load-spinner div:nth-child(1) {
 	transform: rotate(0deg);
@@ -913,9 +912,6 @@ a:active {
 }
 .common_dialogue_content a:hover, a:active {
 	cursor: pointer;
-}
-.common_like_unlike{
-	color: red !important;
 }
 #profile_detail_header_liked div,
 #profile_detail_header_app div{
