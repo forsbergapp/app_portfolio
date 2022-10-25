@@ -25,8 +25,8 @@ module.exports = {
                                <div id='slides_month' class='slides'></div>
                             </div>
                           </div>
-                          <div id='slider_prev_month' class='slider_control slider_prev'></div>
-                          <div id='slider_next_month' class='slider_control slider_next'></div>
+                          <div id='slider_prev_month' class='dialogue_button slider_prev'></div>
+                          <div id='slider_next_month' class='dialogue_button slider_next'></div>
                           <div id='slider_theme_month_id'></div>
                       </div>
                       <div class='setting_horizontal_col'>
@@ -36,8 +36,8 @@ module.exports = {
                                <div id='slides_year' class='slides'></div>
                             </div>
                           </div>
-                          <div id='slider_prev_year' class='slider_control slider_prev'></div>
-                          <div id='slider_next_year' class='slider_control slider_next'></div>
+                          <div id='slider_prev_year' class='dialogue_button slider_prev'></div>
+                          <div id='slider_next_year' class='dialogue_button slider_next'></div>
                           <div id='slider_theme_year_id'></div>
                       </div>`
                   )
@@ -85,8 +85,8 @@ module.exports = {
                          </div>
                       </div>
                     </div>
-                    <div id='slider_prev_${themes_type}' class='slider_control slider_prev'></div>
-                    <div id='slider_next_${themes_type}' class='slider_control slider_next'></div>
+                    <div id='slider_prev_${themes_type}' class='dialogue_button slider_prev'></div>
+                    <div id='slider_next_${themes_type}' class='dialogue_button slider_next'></div>
                     <div id='slider_theme_${themes_type}_id'></div>
                 </div>`;
             })
