@@ -3,12 +3,12 @@ body{
     margin: 0;
     height: 100%;
     padding: 0px;
-    color: #404040;
-    background: rgb(81, 171, 255);
+    color: var(--app_black);
+    background: var(--app_blue1);
 }
 .common_dialogue_content{
-    background-color: #fefefe;
-    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+    background-color: var(--app_light);
+    box-shadow: 0 4px 8px 0 var(--app_shadow1),0 6px 20px 0 var(--app_shadow2);
 }
 @media only screen and (min-width: 768px) {
     body{
