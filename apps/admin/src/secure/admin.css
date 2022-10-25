@@ -963,7 +963,8 @@
     }
     
     /*common*/
-    .common_dialogue_content a:hover,  .common_dialogue_content a:active{
+    .common_dialogue_content a:hover,  .common_dialogue_content a:active,
+    .common_lov_button:hover, .common_lov_button:active{
         color: var(--app_theme_hover_color) !important;
     }
     #user_menu_dropdown{

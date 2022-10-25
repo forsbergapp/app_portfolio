@@ -1,6 +1,6 @@
 body {
-	color: #404040;
-	background: rgb(81, 171, 255);
+	color: var(--app_black);
+	background: var(--app_blue1);
 }
 #app_title{
 	margin-bottom: 20px;
@@ -19,8 +19,8 @@ body {
 	padding: 10px;
 	display:inline-block;
 	border-radius: 4px;
-	box-shadow: 0 4px 8px 0 rgb(0 0 0 / 20%), 0 6px 20px 0 rgb(0 0 0 / 19%);
-	background-color: #fefefe;
+	box-shadow: 0 4px 8px 0 var(--app_shadow1), 0 6px 20px 0 var(--app_shadow2);
+	background-color: var(--app_white1);
 }
 
 #dialogue_documents{
@@ -28,28 +28,24 @@ body {
 }
 .dialogue_content:hover, 
 .dialogue_content:active{
-	box-shadow: 0 0 35px 4px rgb(255,255,255,0.25);
+	box-shadow: 0 0 35px 4px var(--app_white_transparent);
 }
 .doc_list_item_image{
 	width:128px;
 	height:64px;
 	cursor: pointer;
 }
-.dialogue_button{
-	color: #404040 !important;
+.dialogue_button,
+.toolbar_button{
+	color: var(--app_black) !important;
 }
 .dialogue_button:hover,
-.dialogue_button:active{
-	color:#6ab344 !important;
-}
-.toolbar_button{
-	color: #404040 !important;
-}
+.dialogue_button:active,
 .toolbar_button:hover,
 .toolbar_button:active{
-	color:#6ab344 !important;
+	color:var(--app_green) !important;
 }
-
+/*common*/
 #profile_info_search{
 	visibility: hidden;
 }
@@ -74,11 +70,11 @@ body {
 	display: none;
 }
 #common_window_info_toolbar_btn_fullscreen svg path{
-	stroke: #404040;
+	stroke: var(--app_black);
 }
 #common_window_info_toolbar_btn_fullscreen svg:hover path,
 #common_window_info_toolbar_btn_fullscreen svg:active path{
-	stroke:#6ab344;
+	stroke:var(--app_green);
 }
 #common_window_info_toolbar_btn_fullscreen{
 	display: inline-block !important; 
@@ -86,13 +82,13 @@ body {
 
 .common_dialogue_content:hover, 
 .common_dialogue_content:active{
-	box-shadow: 0 0 35px 4px rgb(255,255,255,0.25);
+	box-shadow: 0 0 35px 4px var(--app_white_transparent);
 }  
 .common_dialogue_content{
 	z-index: 12;
-	background-color: #fefefe;
-	box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);	
+	background-color: var(--app_white1);
+	box-shadow: 0 4px 8px 0 var(--app_shadow1),0 6px 20px 0 var(--app_shadow2);	
 }
 #user_menu_dropdown{
-	background-color: white;
+	background-color: var(--app_white);
 }
