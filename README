@@ -293,7 +293,7 @@ Installation instructions
 	SERVICE_REPORT_PDF_WAIT_INTERVAL            		={500 = milliseconds}
 	SERVICE_REPORT_PDF_WAIT_ATTEMPTS            		={20 = number of attempts}
 	SERVICE_REPORT_PDF_EMPTY_SIZE_CHECK         		={900 = bytes, PDF with content should be bigger than this}
-
+	SERVICE_REPORT_EXECUTABLE_PATH						={if using different browser for Puppeteer}
 	COMMON_APP_ID						                =0
 
 	detailed parameter info:
