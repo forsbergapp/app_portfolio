@@ -1,9 +1,11 @@
 const puppeteer = require('puppeteer');
 global.browser;
 async function initReportService(){
+    //if process.env.SERVICE_REPORT_EXECUTABLE_PATH is empty then default is used
     global.browser = await puppeteer.launch({
         pipe:true,
         headless: true,
+        executablePath: process.env.SERVICE_REPORT_EXECUTABLE_PATH,
         ignoreHTTPSErrors: true,
         ignoreDefaultArgs: ['--enable-automation'],
         args: [ '--ignore-certificate-errors',
