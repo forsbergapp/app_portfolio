@@ -1,5 +1,3 @@
---Oracle, uncomment:
---SET DEFINE OFF;
 --
 -- app2_group_place
 --

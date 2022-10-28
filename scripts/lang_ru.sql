@@ -1,5 +1,3 @@
---Oracle, uncomment:
---SET DEFINE OFF;
 --
 -- app_category_translation
 --
