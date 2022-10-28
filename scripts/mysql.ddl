@@ -56,7 +56,7 @@ GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app TO role_app_admin;
 CREATE TABLE app_portfolio.app_category (
     id            INT NOT NULL AUTO_INCREMENT,
     category_name VARCHAR(100) NOT NULL,
-    CONSTRAINT app_category_pk PRIMARY KEY ( id );
+    CONSTRAINT app_category_pk PRIMARY KEY ( id )
 );
 
 GRANT SELECT ON app_portfolio.app_category TO role_app1;
@@ -69,7 +69,7 @@ GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_category TO role_app_a
 
 GRANT ALL PRIVILEGES ON app_portfolio.app_category TO role_app_dba;
 
-CREATE TABLE app_category_translation (
+CREATE TABLE app_portfolio.app_category_translation (
     app_category_id INTEGER NOT NULL,
     language_id     INTEGER NOT NULL,
     text            VARCHAR(1000) NOT NULL,
@@ -83,9 +83,9 @@ GRANT SELECT ON app_category_translation TO role_app2;
 
 GRANT SELECT ON app_category_translation TO role_app3;
 
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_category_translation TO role_app_admin;
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_category_translation TO role_app_admin;
 
-GRANT ALL PRIVILEGES ON app_category_translation TO role_app_dba;
+GRANT ALL PRIVILEGES ON app_portfolio.app_category_translation TO role_app_dba;
 
 CREATE TABLE app_portfolio.app_device (
     app_id    INTEGER NOT NULL,
@@ -622,7 +622,8 @@ CREATE TABLE app_portfolio.app2_user_setting_like (
     user_account_id  INTEGER NOT NULL,
     app2_user_setting_id  INTEGER NOT NULL,
 	date_created     DATETIME,	
-	CONSTRAINT app2_user_setting_like_pk PRIMARY KEY ( user_account_id, app2_user_setting_id )
+	CONSTRAINT app2_user_setting_like_pk PRIMARY KEY ( user_account_id, app2_user_setting_id ),
+    UNIQUE KEY app2_user_setting_like_id_un (id)
 );
 GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app2_user_setting_like TO role_app_admin;
 
@@ -826,7 +827,7 @@ CREATE TABLE app_portfolio.identity_provider (
 	api_id                  VARCHAR(100),
     identity_provider_order INTEGER NOT NULL,
     enabled                 INTEGER,
-    CONSTRAINT identity_provider_pk PRIMARY KEY ( id );
+    CONSTRAINT identity_provider_pk PRIMARY KEY ( id )
 );
 
 GRANT SELECT ON app_portfolio.identity_provider TO role_app1;
@@ -848,7 +849,7 @@ CREATE TABLE app_portfolio.language (
 );
 
 CREATE INDEX lang_code_index ON
-    language (
+    app_portfolio.language (
         lang_code
     ASC );
 GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.language TO role_app_admin;
@@ -1021,7 +1022,7 @@ GRANT ALL PRIVILEGES ON app_portfolio.profile_search_hist TO role_app_dba;
 GRANT SELECT, INSERT ON app_portfolio.profile_search_hist TO role_app2;
 
 CREATE TABLE app_portfolio.setting (
-    id              INT NOT NULLL AUTO_INCREMENT,
+    id              INT NOT NULL AUTO_INCREMENT,
     description     VARCHAR(100) NOT NULL,
     data            VARCHAR(100) NOT NULL,
     data2           VARCHAR(100),
@@ -1441,11 +1442,11 @@ ALTER TABLE app_portfolio.app
     ADD CONSTRAINT app_app_category_fk FOREIGN KEY ( app_category_id )
         REFERENCES app_portfolio.app_category ( id );
 
-ALTER TABLE app_category_translation
+ALTER TABLE app_portfolio.app_category_translation
     ADD CONSTRAINT app_category_translation_app_category_fk FOREIGN KEY ( app_category_id )
         REFERENCES app_portfolio.app_category ( id );
 
-ALTER TABLE app_category_translation
+ALTER TABLE app_portfolio.app_category_translation
     ADD CONSTRAINT app_category_translation_language_fk FOREIGN KEY ( language_id )
         REFERENCES app_portfolio.language ( id );
 
@@ -1459,19 +1460,19 @@ ALTER TABLE app_portfolio.app_device
 
 ALTER TABLE app_portfolio.app_log
     ADD CONSTRAINT app_log_app_fk FOREIGN KEY ( app_id )
-        REFERENCES app ( id );
+        REFERENCES app_portfolio.app ( id );
 
 ALTER TABLE app_portfolio.app_message
     ADD CONSTRAINT app_message_app_fk FOREIGN KEY ( app_id )
-        REFERENCES app ( id );
+        REFERENCES app_portfolio.app ( id );
 
 ALTER TABLE app_portfolio.app_message
     ADD CONSTRAINT app_message_message_fk FOREIGN KEY ( message_code )
-        REFERENCES message ( code );
+        REFERENCES app_portfolio.message ( code );
 
 ALTER TABLE app_portfolio.app_object
     ADD CONSTRAINT app_object_app_fk FOREIGN KEY ( app_id )
-        REFERENCES app ( id );
+        REFERENCES app_portfolio.app ( id );
 
 ALTER TABLE app_portfolio.app_object_item
     ADD CONSTRAINT app_object_item_app_object_fk FOREIGN KEY ( app_object_object_name,
@@ -1525,15 +1526,15 @@ ALTER TABLE app_portfolio.app_object_translation
 
 ALTER TABLE app_portfolio.app_object_translation
     ADD CONSTRAINT app_object_translation_language_fk FOREIGN KEY ( language_id )
-        REFERENCES language ( id );
+        REFERENCES app_portfolio.language ( id );
 
 ALTER TABLE app_portfolio.app_parameter
     ADD CONSTRAINT app_parameter_app_fk FOREIGN KEY ( app_id )
-        REFERENCES app ( id );
+        REFERENCES app_portfolio.app ( id );
 
 ALTER TABLE app_portfolio.app_parameter
     ADD CONSTRAINT app_parameter_parameter_type_fk FOREIGN KEY ( parameter_type_id )
-        REFERENCES parameter_type ( id );
+        REFERENCES app_portfolio.parameter_type ( id );
 
 ALTER TABLE app_portfolio.app_screenshot
     ADD CONSTRAINT app_screenshot_app_device_fk FOREIGN KEY ( app_device_app_id,
@@ -1543,88 +1544,88 @@ ALTER TABLE app_portfolio.app_screenshot
 
 ALTER TABLE app_portfolio.app2_place
     ADD CONSTRAINT app2_place_group_place_fk FOREIGN KEY ( group_place1_id )
-        REFERENCES group_place ( id );
+        REFERENCES app_portfolio.app2_group_place ( id );
 
 ALTER TABLE app_portfolio.app2_place
     ADD CONSTRAINT app2_place_group_place2_fk FOREIGN KEY ( group_place2_id )
-        REFERENCES group_place ( id );
+        REFERENCES app_portfolio.app2_group_place ( id );
 
 ALTER TABLE app_portfolio.app2_place
     ADD CONSTRAINT app2_place_country1_fk FOREIGN KEY ( country1_id )
-        REFERENCES country ( id );
+        REFERENCES app_portfolio.country ( id );
 
 ALTER TABLE app_portfolio.app2_place
     ADD CONSTRAINT app2_place_country2_fk FOREIGN KEY ( country2_id )
-        REFERENCES country ( id );
+        REFERENCES app_portfolio.country ( id );
 
 ALTER TABLE app_portfolio.app2_theme
-    ADD CONSTRAINT app2_theme_theme_category_fk FOREIGN KEY ( theme_category_id )
-        REFERENCES theme_category ( id );
+    ADD CONSTRAINT app2_theme_theme_category_fk FOREIGN KEY ( app2_theme_category_id )
+        REFERENCES app_portfolio.app2_theme_category ( id );
 
 ALTER TABLE app_portfolio.app2_theme
-    ADD CONSTRAINT app2_theme_theme_type_fk FOREIGN KEY ( theme_type_id )
-        REFERENCES theme_type ( id );
+    ADD CONSTRAINT app2_theme_theme_type_fk FOREIGN KEY ( app2_theme_type_id )
+        REFERENCES app_portfolio.app2_theme_type ( id );
 
 ALTER TABLE app_portfolio.app2_user_setting
     ADD CONSTRAINT app2_user_setting_app2_place_fk FOREIGN KEY ( gps_popular_place_id )
-        REFERENCES app2_place ( id );
+        REFERENCES app_portfolio.app2_place ( id );
 
 ALTER TABLE app_portfolio.app2_user_setting
     ADD CONSTRAINT app2_user_setting_app2_theme_day_fk FOREIGN KEY ( design_theme_day_id )
-        REFERENCES app2_theme ( id );
+        REFERENCES app_portfolio.app2_theme ( id );
 
 ALTER TABLE app_portfolio.app2_user_setting
     ADD CONSTRAINT app2_user_setting_app2_theme_month_fk FOREIGN KEY ( design_theme_month_id )
-        REFERENCES app2_theme ( id );
+        REFERENCES app_portfolio.app2_theme ( id );
 
 ALTER TABLE app_portfolio.app2_user_setting
     ADD CONSTRAINT app2_user_setting_app2_theme_year_fk FOREIGN KEY ( design_theme_year_id )
-        REFERENCES app2_theme ( id );
+        REFERENCES app_portfolio.app2_theme ( id );
 
 ALTER TABLE app_portfolio.app2_user_setting
     ADD CONSTRAINT app2_user_setting_country_fk FOREIGN KEY ( gps_country_id )
-        REFERENCES country ( id );
+        REFERENCES app_portfolio.country ( id );
 
 ALTER TABLE app_portfolio.app2_user_setting_like
     ADD CONSTRAINT app2_user_setting_like_app2_user_setting_fk FOREIGN KEY ( app2_user_setting_id )
-        REFERENCES app2_user_setting ( id )
+        REFERENCES app_portfolio.app2_user_setting ( id )
 		ON DELETE CASCADE;
 
 ALTER TABLE app_portfolio.app2_user_setting_like
     ADD CONSTRAINT app2_user_setting_like_user_account_fk FOREIGN KEY ( user_account_id )
-        REFERENCES user_account ( id )
+        REFERENCES app_portfolio.user_account ( id )
 		ON DELETE CASCADE;
 
 ALTER TABLE app_portfolio.app2_user_setting
     ADD CONSTRAINT app2_user_setting_user_account_app_fk FOREIGN KEY ( user_account_app_user_account_id,
                                                                        user_account_app_app_id
                                                                         )
-        REFERENCES user_account_app ( user_account_id,
+        REFERENCES app_portfolio.user_account_app ( user_account_id,
                                       app_id
                                        )
             ON DELETE CASCADE;
 
 ALTER TABLE app_portfolio.app2_user_setting_view
     ADD CONSTRAINT app2_user_setting_view_app2_user_setting_fk FOREIGN KEY ( app2_user_setting_id )
-        REFERENCES app2_user_setting ( id )
+        REFERENCES app_portfolio.app2_user_setting ( id )
         ON DELETE CASCADE;
 
 ALTER TABLE app_portfolio.app2_user_setting_view
     ADD CONSTRAINT app2_user_setting_view_user_account_fk FOREIGN KEY ( user_account_id )
-        REFERENCES user_account ( id )
+        REFERENCES app_portfolio.user_account ( id )
         ON DELETE CASCADE;
 
 ALTER TABLE app_portfolio.country
     ADD CONSTRAINT country_country_group_fk FOREIGN KEY ( country_group_id )
-        REFERENCES country_group ( id );
+        REFERENCES app_portfolio.country_group ( id );
 
 ALTER TABLE app_portfolio.country_translation
     ADD CONSTRAINT country_translation_country_fk FOREIGN KEY ( country_id )
-        REFERENCES country ( id );
+        REFERENCES app_portfolio.country ( id );
 
 ALTER TABLE app_portfolio.country_translation
     ADD CONSTRAINT country_translation_language_fk FOREIGN KEY ( language_id )
-        REFERENCES language ( id );
+        REFERENCES app_portfolio.language ( id );
 
 ALTER TABLE app_portfolio.device
     ADD CONSTRAINT device_device_type_fk FOREIGN KEY ( device_type_id )
@@ -1636,39 +1637,39 @@ ALTER TABLE app_portfolio.event
 
 ALTER TABLE app_portfolio.language_translation
     ADD CONSTRAINT language_translation_language_fk FOREIGN KEY ( language_id )
-        REFERENCES language ( id );
+        REFERENCES app_portfolio.language ( id );
 
 ALTER TABLE app_portfolio.language_translation
     ADD CONSTRAINT language_translation_language_translation_fk FOREIGN KEY ( language_translation_id )
-        REFERENCES language ( id );
+        REFERENCES app_portfolio.language ( id );
 
 ALTER TABLE app_portfolio.locale
     ADD CONSTRAINT locale_country_fk FOREIGN KEY ( country_id )
-        REFERENCES country ( id );
+        REFERENCES app_portfolio.country ( id );
 
 ALTER TABLE app_portfolio.locale
     ADD CONSTRAINT locale_language_fk FOREIGN KEY ( language_id )
-        REFERENCES language ( id );
+        REFERENCES app_portfolio.language ( id );
 
 ALTER TABLE app_portfolio.message
     ADD CONSTRAINT message_message_level_fk FOREIGN KEY ( message_level_id )
-        REFERENCES message_level ( id );
+        REFERENCES app_portfolio.message_level ( id );
 
 ALTER TABLE app_portfolio.message
     ADD CONSTRAINT message_message_type_fk FOREIGN KEY ( message_type_id )
-        REFERENCES message_type ( id );
+        REFERENCES app_portfolio.message_type ( id );
 
 ALTER TABLE app_portfolio.message_translation
     ADD CONSTRAINT message_translation_language_fk FOREIGN KEY ( language_id )
-        REFERENCES language ( id );
+        REFERENCES app_portfolio.language ( id );
 
 ALTER TABLE app_portfolio.message_translation
     ADD CONSTRAINT message_translation_message_fk FOREIGN KEY ( message_code )
-        REFERENCES message ( code );
+        REFERENCES app_portfolio.message ( code );
 
 ALTER TABLE app_portfolio.profile_search
     ADD CONSTRAINT profile_search_user_account_fk FOREIGN KEY ( user_account_id )
-        REFERENCES user_account ( id )
+        REFERENCES app_portfolio.user_account ( id )
         ON DELETE CASCADE;
 
 ALTER TABLE app_portfolio.setting
@@ -1685,7 +1686,7 @@ ALTER TABLE app_portfolio.setting_translation
 
 ALTER TABLE app_portfolio.user_account_app
     ADD CONSTRAINT user_account_app_app_fk FOREIGN KEY ( app_id )
-        REFERENCES app ( id )
+        REFERENCES app_portfolio.app ( id )
         ON DELETE CASCADE;
 
 ALTER TABLE app_portfolio.user_account_app
@@ -1702,7 +1703,7 @@ ALTER TABLE app_portfolio.user_account_app
 
 ALTER TABLE app_portfolio.user_account_app
     ADD CONSTRAINT user_account_app_user_account_fk FOREIGN KEY ( user_account_id )
-        REFERENCES user_account ( id )
+        REFERENCES app_portfolio.user_account ( id )
         ON DELETE CASCADE;
 
 ALTER TABLE app_portfolio.user_account_event
@@ -1720,43 +1721,44 @@ ALTER TABLE app_portfolio.user_account_event
 	
 ALTER TABLE app_portfolio.user_account_follow
     ADD CONSTRAINT user_account_follow_user_account_fk FOREIGN KEY ( user_account_id )
-        REFERENCES user_account ( id )
+        REFERENCES app_portfolio.user_account ( id )
 		ON DELETE CASCADE;
 
 ALTER TABLE app_portfolio.user_account_follow
     ADD CONSTRAINT user_account_follow_user_account_follow_fk FOREIGN KEY ( user_account_id_follow )
-        REFERENCES user_account ( id )
+        REFERENCES app_portfolio.user_account ( id )
 		ON DELETE CASCADE;
 
 ALTER TABLE app_portfolio.user_account_like
     ADD CONSTRAINT user_account_like_user_account_fk FOREIGN KEY ( user_account_id )
-        REFERENCES user_account ( id )
+        REFERENCES app_portfolio.user_account ( id )
 		ON DELETE CASCADE;
 
 ALTER TABLE app_portfolio.user_account_like
     ADD CONSTRAINT user_account_like_user_account_like_fk FOREIGN KEY ( user_account_id_like )
-        REFERENCES user_account ( id )
+        REFERENCES app_portfolio.user_account ( id )
 		ON DELETE CASCADE;
 
 ALTER TABLE app_portfolio.user_account_logon
     ADD CONSTRAINT user_account_logon_app_fk FOREIGN KEY ( app_id )
-        REFERENCES app ( id );
+        REFERENCES app_portfolio.app ( id );
 
 ALTER TABLE app_portfolio.user_account_logon
     ADD CONSTRAINT user_account_logon_user_account_fk FOREIGN KEY ( user_account_id )
-        REFERENCES user_account ( id )
+        REFERENCES app_portfolio.user_account ( id )
             ON DELETE CASCADE;
 
 ALTER TABLE app_portfolio.user_account_view
     ADD CONSTRAINT user_account_view_user_account_fk FOREIGN KEY ( user_account_id )
-        REFERENCES user_account ( id )
+        REFERENCES app_portfolio.user_account ( id )
             ON DELETE CASCADE;
 
 ALTER TABLE app_portfolio.user_account_view
     ADD CONSTRAINT user_account_view_user_account_view_fk FOREIGN KEY ( user_account_id_view )
-        REFERENCES user_account ( id )
+        REFERENCES app_portfolio.user_account ( id )
         ON DELETE CASCADE;
 
+delimiter //
 CREATE TRIGGER app_portfolio.app2_user_setting_before_delete 
     BEFORE DELETE ON app_portfolio.app2_user_setting 
     FOR EACH ROW 
@@ -1878,8 +1880,9 @@ old.date_modified,
 old.user_account_app_user_account_id,
 old.user_account_app_app_id);
 END; 
-/
 
+
+delimiter //
 CREATE TRIGGER app_portfolio.app2_user_setting_before_insert 
     BEFORE INSERT ON app_portfolio.app2_user_setting 
     FOR EACH ROW 
@@ -2001,8 +2004,8 @@ new.date_modified,
 new.user_account_app_user_account_id,
 new.user_account_app_app_id);
 END; 
-/
 
+delimiter //
 CREATE TRIGGER app_portfolio.app2_user_setting_before_update 
     BEFORE UPDATE ON app_portfolio.app2_user_setting 
     FOR EACH ROW 
@@ -2124,8 +2127,8 @@ old.date_modified,
 old.user_account_app_user_account_id,
 old.user_account_app_app_id);
 END; 
-/
 
+delimiter //
 CREATE TRIGGER app_portfolio.app2_user_setting_like_before_delete 
     BEFORE DELETE ON app_portfolio.app2_user_setting_like 
     FOR EACH ROW 
@@ -2145,8 +2148,8 @@ old.user_account_id,
 old.app2_user_setting_id,
 old.date_created);
 END; 
-/
 
+delimiter //
 CREATE TRIGGER app_portfolio.app2_user_setting_like_before_insert 
     BEFORE INSERT ON app_portfolio.app2_user_setting_like 
     FOR EACH ROW 
@@ -2166,8 +2169,8 @@ new.user_account_id,
 new.app2_user_setting_id,
 new.date_created);
 END; 
-/
 
+delimiter //
 CREATE TRIGGER app_portfolio.app2_user_setting_like_before_update 
     BEFORE UPDATE ON app_portfolio.app2_user_setting_like 
     FOR EACH ROW 
@@ -2187,7 +2190,8 @@ old.user_account_id,
 old.app2_user_setting_id,
 old.date_created);
 END; 
-/
+
+delimiter //
 CREATE TRIGGER app_portfolio.app2_user_setting_view_before_delete 
     BEFORE DELETE ON app_portfolio.app2_user_setting_view 
     FOR EACH ROW 
@@ -2213,7 +2217,8 @@ old.client_longitude,
 old.client_latitude,
 old.date_created);
 END; 
-/
+
+delimiter //
 CREATE TRIGGER app_portfolio.app2_user_setting_view_before_insert 
     BEFORE INSERT ON app_portfolio.app2_user_setting_view 
     FOR EACH ROW 
@@ -2239,7 +2244,8 @@ new.client_longitude,
 new.client_latitude,
 new.date_created);
 END; 
-/
+
+delimiter //
 CREATE TRIGGER app_portfolio.app2_user_setting_view_before_update 
     BEFORE UPDATE ON app_portfolio.app2_user_setting_view 
     FOR EACH ROW 
@@ -2265,8 +2271,8 @@ old.client_longitude,
 old.client_latitude,
 old.date_created);
 END; 
-/
 
+delimiter //
 CREATE TRIGGER app_portfolio.profile_search_before_delete 
     BEFORE DELETE ON app_portfolio.profile_search 
     FOR EACH ROW 
@@ -2292,7 +2298,8 @@ old.client_longitude,
 old.client_latitude,
 old.date_created);
 END; 
-/
+
+delimiter //
 CREATE TRIGGER app_portfolio.profile_search_before_insert 
     BEFORE INSERT ON app_portfolio.profile_search 
     FOR EACH ROW 
@@ -2318,7 +2325,8 @@ new.client_longitude,
 new.client_latitude,
 new.date_created);
 END; 
-/
+
+delimiter //
 CREATE TRIGGER app_portfolio.profile_search_before_update 
     BEFORE UPDATE ON app_portfolio.profile_search 
     FOR EACH ROW 
@@ -2344,8 +2352,8 @@ old.client_longitude,
 old.client_latitude,
 old.date_created);
 END; 
-/
 
+delimiter //
 CREATE TRIGGER app_portfolio.user_account_app_before_delete 
     BEFORE DELETE ON app_portfolio.user_account_app 
     FOR EACH ROW 
@@ -2371,7 +2379,8 @@ old.setting_preference_direction_id,
 old.setting_preference_arabic_script_id,
 old.date_created);
 END; 
-/
+
+delimiter //
 CREATE TRIGGER app_portfolio.user_account_app_before_insert 
     BEFORE INSERT ON app_portfolio.user_account_app 
     FOR EACH ROW 
@@ -2397,7 +2406,8 @@ new.setting_preference_direction_id,
 new.setting_preference_arabic_script_id,
 new.date_created);
 END; 
-/
+
+delimiter //
 CREATE TRIGGER app_portfolio.user_account_app_before_update 
     BEFORE UPDATE ON app_portfolio.user_account_app 
     FOR EACH ROW 
@@ -2423,8 +2433,8 @@ old.setting_preference_direction_id,
 old.setting_preference_arabic_script_id,
 old.date_created);
 END; 
-/
 
+delimiter //
 CREATE TRIGGER app_portfolio.user_account_before_delete 
     BEFORE DELETE ON app_portfolio.user_account 
     FOR EACH ROW 
@@ -2476,8 +2486,8 @@ INSERT INTO user_account_hist
 	old.provider_image_url,
 	old.provider_email);
 END; 
-/
-		
+
+delimiter //		
 CREATE TRIGGER app_portfolio.user_account_before_insert 
     BEFORE INSERT ON app_portfolio.user_account 
     FOR EACH ROW 
@@ -2568,8 +2578,8 @@ CREATE TRIGGER app_portfolio.user_account_before_insert
 	new.provider_image_url,
 	new.provider_email);
 END; 
-/
 
+delimiter //
 CREATE TRIGGER app_portfolio.user_account_before_update 
     BEFORE UPDATE ON app_portfolio.user_account 
     FOR EACH ROW 
@@ -2660,8 +2670,8 @@ CREATE TRIGGER app_portfolio.user_account_before_update
         old.provider_image_url,
         old.provider_email);
 END;
-/
 
+delimiter //
 CREATE TRIGGER app_portfolio.user_account_follow_before_delete 
     BEFORE DELETE ON app_portfolio.user_account_follow 
     FOR EACH ROW 
@@ -2681,8 +2691,8 @@ old.user_account_id,
 old.user_account_id_follow,
 old.date_created);
 END; 
-/
 
+delimiter //
 CREATE TRIGGER app_portfolio.user_account_follow_before_insert 
     BEFORE INSERT ON app_portfolio.user_account_follow 
     FOR EACH ROW 
@@ -2702,8 +2712,8 @@ new.user_account_id,
 new.user_account_id_follow,
 new.date_created);
 END; 
-/
 
+delimiter //
 CREATE TRIGGER app_portfolio.user_account_follow_before_update 
     BEFORE UPDATE ON app_portfolio.user_account_follow 
     FOR EACH ROW 
@@ -2723,8 +2733,8 @@ old.user_account_id,
 old.user_account_id_follow,
 old.date_created);
 END; 
-/
 
+delimiter //
 CREATE TRIGGER app_portfolio.user_account_like_before_delete 
     BEFORE DELETE ON app_portfolio.user_account_like 
     FOR EACH ROW 
@@ -2744,8 +2754,8 @@ old.user_account_id,
 old.user_account_id_like,
 old.date_created);
 END; 
-/
 
+delimiter //
 CREATE TRIGGER app_portfolio.user_account_like_before_insert 
     BEFORE INSERT ON app_portfolio.user_account_like 
     FOR EACH ROW 
@@ -2765,8 +2775,8 @@ new.user_account_id,
 new.user_account_id_like,
 new.date_created);
 END; 
-/
 
+delimiter //
 CREATE TRIGGER app_portfolio.user_account_like_before_update 
     BEFORE UPDATE ON app_portfolio.user_account_like 
     FOR EACH ROW 
@@ -2786,7 +2796,8 @@ old.user_account_id,
 old.user_account_id_like,
 old.date_created);
 END; 
-/
+
+delimiter //
 CREATE TRIGGER app_portfolio.user_account_logon_before_delete 
     BEFORE DELETE ON app_portfolio.user_account_logon 
     FOR EACH ROW 
@@ -2816,7 +2827,8 @@ old.client_longitude,
 old.client_latitude,
 old.date_created);
 END; 
-/
+
+delimiter //
 CREATE TRIGGER app_portfolio.user_account_logon_before_insert 
     BEFORE INSERT ON app_portfolio.user_account_logon 
     FOR EACH ROW 
@@ -2846,7 +2858,8 @@ new.client_longitude,
 new.client_latitude,
 new.date_created);
 END; 
-/
+
+delimiter //
 CREATE TRIGGER app_portfolio.user_account_logon_before_update 
     BEFORE UPDATE ON app_portfolio.user_account_logon 
     FOR EACH ROW 
@@ -2876,7 +2889,8 @@ old.client_longitude,
 old.client_latitude,
 old.date_created);
 END; 
-/
+
+delimiter //
 CREATE TRIGGER app_portfolio.user_account_view_before_delete 
     BEFORE DELETE ON app_portfolio.user_account_view 
     FOR EACH ROW 
@@ -2902,7 +2916,8 @@ old.client_longitude,
 old.client_latitude,
 old.date_created);
 END; 
-/
+
+delimiter //
 CREATE TRIGGER app_portfolio.user_account_view_before_insert 
     BEFORE INSERT ON app_portfolio.user_account_view 
     FOR EACH ROW 
@@ -2928,7 +2943,8 @@ new.client_longitude,
 new.client_latitude,
 new.date_created);
 END; 
-/
+
+delimiter //
 CREATE TRIGGER app_portfolio.user_account_view_before_update 
     BEFORE UPDATE ON app_portfolio.user_account_view 
     FOR EACH ROW 
@@ -2954,4 +2970,3 @@ old.client_longitude,
 old.client_latitude,
 old.date_created);
 END; 
-/
