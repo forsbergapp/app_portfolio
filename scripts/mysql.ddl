@@ -5,18 +5,14 @@ DEFAULT COLLATE utf8mb4_0900_ai_ci;
 CREATE ROLE role_app_admin;
 CREATE ROLE role_app_dba;
 CREATE ROLE role_app1;
-CREATE ROLE role_app3;
 CREATE ROLE role_app2;
+CREATE ROLE role_app3;
+
 
 CREATE USER app_admin IDENTIFIED BY 'APP_1_portfolio'
     ACCOUNT UNLOCK;
 GRANT role_app_admin TO app_admin;
 SET DEFAULT ROLE ALL TO app_admin;
-
-CREATE USER app0 IDENTIFIED BY 'APP_1_portfolio'
-    ACCOUNT UNLOCK;
-GRANT role_app1 TO app0;
-SET DEFAULT ROLE ALL TO app0;
 
 CREATE USER app_portfolio IDENTIFIED BY 'APP_1_portfolio'
     ACCOUNT UNLOCK;
@@ -25,13 +21,19 @@ SET DEFAULT ROLE ALL TO app_portfolio;
 
 CREATE USER app1 IDENTIFIED BY 'APP_1_portfolio'
     ACCOUNT UNLOCK;
-GRANT role_app2 TO app1;
+GRANT role_app1 TO app1;
 SET DEFAULT ROLE ALL TO app1;
 
 CREATE USER app2 IDENTIFIED BY 'APP_1_portfolio'
     ACCOUNT UNLOCK;
-GRANT role_app3 TO app2;
+GRANT role_app2 TO app2;
 SET DEFAULT ROLE ALL TO app2;
+
+CREATE USER app3 IDENTIFIED BY 'APP_1_portfolio'
+    ACCOUNT UNLOCK;
+GRANT role_app3 TO app3;
+SET DEFAULT ROLE ALL TO app3;
+
 
 CREATE TABLE app_portfolio.app (
     id        INTEGER NOT NULL,
@@ -77,11 +79,11 @@ CREATE TABLE app_portfolio.app_category_translation (
                                                          language_id )
 );
 
-GRANT SELECT ON app_category_translation TO role_app1;
+GRANT SELECT ON app_portfolio.app_category_translation TO role_app1;
 
-GRANT SELECT ON app_category_translation TO role_app2;
+GRANT SELECT ON app_portfolio.app_category_translation TO role_app2;
 
-GRANT SELECT ON app_category_translation TO role_app3;
+GRANT SELECT ON app_portfolio.app_category_translation TO role_app3;
 
 GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_category_translation TO role_app_admin;
 
@@ -1172,10 +1174,10 @@ CREATE TABLE app_portfolio.user_account_event (
     date_modified               DATETIME,
     user_language               VARCHAR(1000),
     user_timezone               VARCHAR(1000),
-    user_number_system          VARCHAR(1000),
+    user_number_system          VARCHAR(100),
     user_platform               VARCHAR(1000),
-    client_latitude             VARCHAR(1000),
-    client_longitude            VARCHAR(1000),
+    client_latitude             VARCHAR(100),
+    client_longitude            VARCHAR(100),
     server_remote_addr          VARCHAR(1000),
     server_user_agent           VARCHAR(1000),
     server_http_host            VARCHAR(1000),
