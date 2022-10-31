@@ -12,9 +12,23 @@ window.global_qr_logo_width;
 window.global_qr_logo_height;
 window.global_qr_background_color;
 
+function show_hide_apps_dialogue(){
+    if (document.getElementById('dialogue_start_content').style.visibility=='visible' ||
+        document.getElementById('dialogue_start_content').style.visibility==''){
+        document.getElementById('dialogue_start_content').style.visibility='hidden';
+        document.getElementById('dialogue_info_content').style.visibility='hidden';
+    }
+    else{
+        document.getElementById('dialogue_start_content').style.visibility='visible';
+        document.getElementById('dialogue_info_content').style.visibility='visible';
+    }
+}
 function setEvents(){
 
     //app
+    document.getElementById('theme_background').addEventListener('click', function() { show_hide_apps_dialogue()  }, false);
+
+    //
     //user menu
     
     document.getElementById('user_menu_username').addEventListener('click', function() { user_menu_item_click(this) }, false);
