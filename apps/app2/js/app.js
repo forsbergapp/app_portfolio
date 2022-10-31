@@ -1128,6 +1128,9 @@ async function user_login_app(){
                     null;
                 else{
                     set_avatar(result.avatar, document.getElementById('user_menu_avatar_img')); 
+                    document.getElementById('tab_nav_btn_7').innerHTML = `<img id='user_setting_avatar_img' >`
+                    set_avatar(result.avatar, document.getElementById('user_setting_avatar_img')); 
+
                     document.getElementById('user_menu_username').innerHTML = result.username;
                     document.getElementById('user_menu_username').style.display = 'block';
                     
@@ -1203,6 +1206,7 @@ function user_logoff_app() {
     //get new data token to avoid endless loop and invalid token
     user_logoff().then(function(){
         set_avatar(null, document.getElementById('user_menu_avatar_img')); 
+        document.getElementById('tab_nav_btn_7').innerHTML = window.global_icon_user;
         //hide logged in, user_edit and user settings
         document.getElementById('user_menu_logged_in').style.display = 'none';        
         document.getElementById('user_menu_logged_out').style.display = 'inline-block';
@@ -1239,7 +1243,8 @@ async function ProviderUser_update_app(identity_provider_id, profile_id, profile
                     null;
                 else{       
                     set_avatar(result.avatar, document.getElementById('user_menu_avatar_img')); 
-
+                    document.getElementById('tab_nav_btn_7').innerHTML = `<img id='user_setting_avatar_img' >`
+                    set_avatar(result.avatar, document.getElementById('user_setting_avatar_img')); 
                     document.getElementById('user_menu_username').innerHTML = result.first_name + ' ' + result.last_name;
         
                     document.getElementById('user_menu_logged_in').style.display = 'inline-block';
@@ -2400,7 +2405,6 @@ async function init_app() {
     document.getElementById('tab_nav_btn_4').innerHTML = window.global_icon_misc_image;
     document.getElementById('tab_nav_btn_5').innerHTML = window.global_icon_misc_text;
     document.getElementById('tab_nav_btn_6').innerHTML = window.global_icon_misc_prayer;
-    document.getElementById('tab_nav_btn_7').innerHTML = window.global_icon_user;
     //settings tab 1 Regional
     document.getElementById('setting_icon_regional_locale').innerHTML = window.global_icon_regional_locale;
     document.getElementById('setting_icon_regional_timezone_current').innerHTML = window.global_icon_regional_timezone + window.global_icon_gps_position;
