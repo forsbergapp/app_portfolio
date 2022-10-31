@@ -111,6 +111,7 @@ module.exports = {
 							a.app_name,
 							a.url,
 							a.logo,
+							a.enabled,
 							a.app_category_id,
 							act.text app_category_text
 					FROM ${process.env.SERVICE_DB_DB1_NAME}.app a
@@ -136,6 +137,7 @@ module.exports = {
 							a.app_name "app_name",
 							a.url "url",
 							a.logo "logo",
+							a.enabled "enabled",
 							a.app_category_id "app_category_id",
 							act.text "app_category_text"
 					FROM ${process.env.SERVICE_DB_DB2_NAME}.app a
