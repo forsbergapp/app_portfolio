@@ -129,6 +129,12 @@ body.font_arabic_nastaliq #user_menu_default_avatar{
 }
 
 /*common*/
+#user_account{
+	display: flex !important;
+    flex-flow: row-reverse !important;
+	width: calc(100% - 10px) !important;
+}
+
 #profile_main_btn_cloud{
 	height: 20px;
 }
