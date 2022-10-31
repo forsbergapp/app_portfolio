@@ -17,10 +17,12 @@ function show_hide_apps_dialogue(){
         document.getElementById('dialogue_start_content').style.visibility==''){
         document.getElementById('dialogue_start_content').style.visibility='hidden';
         document.getElementById('dialogue_info_content').style.visibility='hidden';
+        document.getElementById('profile_btn_top').style.visibility='hidden';
     }
     else{
         document.getElementById('dialogue_start_content').style.visibility='visible';
         document.getElementById('dialogue_info_content').style.visibility='visible';
+        document.getElementById('profile_btn_top').style.visibility='visible';
     }
 }
 function setEvents(){
@@ -35,7 +37,7 @@ function setEvents(){
 
     document.getElementById('toggle_checkbox').addEventListener('click', function() { toggle_switch() }, false);
     document.getElementById('user_menu_dropdown_log_out').addEventListener('click', function() { user_menu_item_click(this) }, false);
-    document.getElementById('user_menu_dropdown_profile_top').addEventListener('click', function() {user_menu_item_click(this)}, false);
+    document.getElementById('profile_btn_top').addEventListener('click', function() {profile_top(1)}, false);
     document.getElementById('user_locale_select').addEventListener('change', function() { document.getElementById('apps').innerHTML = window.global_app_spinner;common_translate_ui(this.value, (err, result)=>{get_apps()});}, false);
     document.getElementById('user_arabic_script_select').addEventListener('change', function() { toggle_switch()}, false);
 
@@ -169,10 +171,6 @@ function user_menu_item_click(item){
         }
         case 'user_menu_dropdown_log_out':{
             user_logoff_app();            
-            break;
-        }
-        case 'user_menu_dropdown_profile_top':{
-            profile_top(1)
             break;
         }
         default:
