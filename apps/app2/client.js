@@ -40,7 +40,8 @@ module.exports = {
                   ['<AppProfileInfo/>', __dirname + '/src/profile_info.html'], /*Profile tag in common body*/
                   ['<AppProfileTop/>', __dirname + '/src/profile_top.html'],   //Profile tag in common body
                   ['<AppDialogues/>', __dirname + '/src/dialogues.html'],
-                  ['<AppToolbarBottom/>', __dirname + '/src/toolbar_bottom.html']
+                  ['<AppToolbarBottom/>', __dirname + '/src/toolbar_bottom.html'],
+                  ['<AppCommonProfileBtnTop/>', __dirname + '/../common/src/profile_btn_top.html']
                 ];
                 let AppCountries;
                 let AppLocales;

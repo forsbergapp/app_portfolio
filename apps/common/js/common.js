@@ -3127,6 +3127,10 @@ async function init_common(parameters, callBack){
         document.getElementById('profile_top_row1_3').innerHTML = window.global_icon_user_views;
         document.getElementById('profile_home').innerHTML = window.global_icon_user_profile_top;
         document.getElementById('profile_close').innerHTML = window.global_icon_app_close;
+
+        //profile button top
+        document.getElementById('profile_btn_top').innerHTML = window.global_icon_user_profile_top;
+
         //window info
         document.getElementById('common_window_info_toolbar_btn_close').innerHTML = window.global_icon_app_close;
         document.getElementById('common_window_info_toolbar_btn_zoomout').innerHTML = window.global_icon_app_zoomout;
@@ -3143,7 +3147,6 @@ async function init_common(parameters, callBack){
         document.getElementById('user_menu_dropdown_log_out').innerHTML = window.global_icon_app_logoff;
         document.getElementById('user_menu_dropdown_signup').innerHTML = window.global_icon_app_signup;
         document.getElementById('user_menu_dropdown_log_in').innerHTML = window.global_icon_app_login;
-        document.getElementById('user_menu_dropdown_profile_top').innerHTML = window.global_icon_user_profile_top;
         document.getElementById('user_menu_default_avatar').innerHTML = window.global_icon_user_avatar;
         document.getElementById('user_preference_locale').innerHTML = window.global_icon_regional_locale;
         document.getElementById('user_preference_timezone').innerHTML = window.global_icon_regional_timezone;

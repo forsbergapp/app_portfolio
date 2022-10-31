@@ -235,7 +235,7 @@ async function timetable_translate_settings(locale, locale_second) {
 /*----------------------- */
 function updateReportViewStat(user_setting_id, user_account_id) {
     let json_data =`{
-                    "user_account_id":${user_account_id},
+                    "user_account_id":${user_account_id==''?null:user_account_id},
                     "app2_user_setting_id":${user_setting_id},
                     "client_longitude": "${window.global_client_longitude}",
                     "client_latitude": "${window.global_client_latitude}"
