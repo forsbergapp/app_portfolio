@@ -320,9 +320,17 @@ function get_report_url(id, sid, papersize, item, format){
     return server_url + '?reportid=' + encodedurl;
 }
 function updateViewStat_app(user_setting_id, user_setting_user_account_id) {
-    if (parseInt(user_setting_user_account_id) !== parseInt(window.global_user_account_id)) {
-        updateReportViewStat(user_setting_id, parseInt(window.global_user_account_id));
+    if (parseInt(user_setting_user_account_id) == parseInt(window.global_user_account_id))
+        //do not update viewed stat if logged in user is the same as the user account in user setting
+        null;
+    else{
+        //update always viewed stat with or without user account logged in
+        if (window.global_user_account_id=='')
+            updateReportViewStat(user_setting_id, window.global_user_account_id);
+        else
+            updateReportViewStat(user_setting_id, parseInt(window.global_user_account_id));
     }
+        
 }
 /*----------------------- */
 /* MAP                    */
@@ -1312,12 +1320,13 @@ async function profile_show_app(user_account_id_other = null, username = null) {
                         null;
                     } else {
                         //public
+                        //show always user settings even if not logged in
+                        profile_show_user_setting();
                         if (window.global_user_account_id != ''){
                             document.getElementById('profile_main_stat_row2').style.display = "block";
                             document.getElementById('profile_user_settings_row').style.display = "block";
                             //user settings
                             profile_user_setting_stat(result.profile_id);
-                            profile_show_user_setting();
                         }
                     }    
                 }
@@ -2192,7 +2201,6 @@ function setEvents() {
     //user menu dropdown
     document.getElementById('user_menu_dropdown_log_out').addEventListener('click', function() { user_logoff_app() }, false);
     document.getElementById('user_menu_username').addEventListener('click', function() { toolbar_bottom(6) }, false);
-    document.getElementById('user_menu_dropdown_profile_top').addEventListener('click', function() { toolbar_bottom(7) }, false);
 
     //tab navigation
     document.getElementById('tab_nav_btn_1').addEventListener('click', function() { openTab('1') }, false);
@@ -2291,7 +2299,12 @@ function setEvents() {
     document.getElementById('toolbar_btn_month').addEventListener('click', function() { toolbar_bottom(3) }, false);
     document.getElementById('toolbar_btn_year').addEventListener('click', function() { toolbar_bottom(4) }, false);
     document.getElementById('toolbar_btn_about').addEventListener('click', function() { document.getElementById('dialogue_info').style.visibility = 'visible'; }, false);
-    //common with app secific settings
+    
+    //common
+
+    //profile button top
+    document.getElementById('profile_btn_top').addEventListener('click', function() { toolbar_bottom(7) }, false);
+
     //dialogue login/signup/forgot
     let input_username_login = document.getElementById("login_username");
     input_username_login.addEventListener("keyup", function(event) {
@@ -2502,27 +2515,24 @@ async function init_app() {
     document.getElementById('setting_btn_user_delete').innerHTML = window.global_icon_app_delete;
     
     //toolbar bottom
+    document.getElementById('toolbar_btn_about').innerHTML = window.global_icon_app_info;
     document.getElementById('toolbar_btn_print').innerHTML = window.global_icon_app_print;
     document.getElementById('toolbar_btn_day').innerHTML = window.global_icon_regional_day;
     document.getElementById('toolbar_btn_month').innerHTML = window.global_icon_regional_month;
     document.getElementById('toolbar_btn_year').innerHTML = window.global_icon_regional_year;
+    document.getElementById('toolbar_btn_settings').innerHTML = window.global_icon_app_settings;
     //toolbar top
+    document.getElementById('user_menu_default_avatar').innerHTML = window.global_icon_user;
     document.getElementById('toolbar_btn_zoomout').innerHTML = window.global_icon_app_zoomout;
     document.getElementById('toolbar_btn_zoomin').innerHTML = window.global_icon_app_zoomin;
     document.getElementById('toolbar_btn_left').innerHTML = window.global_icon_app_left;
     document.getElementById('toolbar_btn_right').innerHTML = window.global_icon_app_right;
-    document.getElementById('toolbar_btn_about').innerHTML = window.global_icon_app_info;
-    document.getElementById('user_menu_default_avatar').innerHTML = window.global_icon_user;
-    
     document.getElementById('toolbar_btn_search').innerHTML = window.global_icon_app_search;
-    document.getElementById('toolbar_btn_settings').innerHTML = window.global_icon_app_settings;
-    
     //user menu dropdown
     document.getElementById('user_menu_dropdown_log_in').innerHTML = window.global_icon_app_login;
     document.getElementById('user_menu_dropdown_log_out').innerHTML = window.global_icon_app_logoff;
     document.getElementById('user_menu_dropdown_signup').innerHTML = window.global_icon_app_signup;
     document.getElementById('user_menu_dropdown_edit').innerHTML = window.global_icon_app_edit;
-    document.getElementById('user_menu_dropdown_profile_top').innerHTML = window.global_icon_user_profile_top;
     
     //themes from client server generation
     document.getElementById('slider_prev_day').innerHTML = window.global_icon_app_slider_left;

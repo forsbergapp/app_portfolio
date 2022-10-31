@@ -15,12 +15,15 @@ module.exports = {
                     ['<AppCommonProfileDetail/>', __dirname + '/../common/src/profile_detail.html'], //Profile tag in common body
                     ['<AppCommonProfileSearch/>', __dirname + '/../common/src/profile_search.html'],
                     ['<AppCommonUserAccount/>', __dirname + '/../common/src/user_account.html'],
+                    
     
                     ['<AppHead/>', __dirname + '/src/head.html'],
                     ['<AppThemes/>', __dirname + '/src/toogle.html'],
                     ['<AppBackground/>', __dirname + '/src/background.html'],
+                    ['<AppToolbarBottom/>', __dirname + '/src/toolbar_bottom.html'],
                     ['<AppDialogues/>', __dirname + '/src/dialogues.html'],
-                    ['<AppProfileInfo/>', __dirname + '/src/profile_info.html']   /*Profile tag in common body*/
+                    ['<AppProfileInfo/>', __dirname + '/src/profile_info.html'],   /*Profile tag in common body*/
+                    ['<AppCommonProfileBtnTop/>', __dirname + '/../common/src/profile_btn_top.html'] /*AppCommonProfileBtnTop inside AppToolbarBttom */
                   ];
                 let USER_LOCALE;
                 let USER_TIMEZONE;

@@ -129,6 +129,9 @@ body.font_arabic_nastaliq #user_menu_default_avatar{
 }
 
 /*common*/
+#profile_btn_top{
+	bottom: 0px !important;
+}
 #user_account{
 	display: flex !important;
     flex-flow: row-reverse !important;
@@ -581,9 +584,6 @@ div.ray8 {
 	}
   }
 /*Other*/
-#toolbar_btn_close{
-	width:100%;
-}
 #info_diagram, #info_datamodel{
 	cursor:pointer;
 }
@@ -871,6 +871,7 @@ box-shadow: 0 0 35px 4px var(--app_theme_moon_shadow_color);
 .ray {
 border-left: 12px solid var(--app_theme_sun_color);
 }
+
 /*app other theme css*/
 .theme_sun .sunholder{
 	display:inline-block;
@@ -885,6 +886,11 @@ border-left: 12px solid var(--app_theme_sun_color);
 	display:inline-block;	
 }
 /*theme common*/
+#profile_btn_top{
+	background-color: var(--app_theme_dialogue_background_color);
+	box-shadow: 0 4px 8px 0 var(--app_theme_dialogue_boxshadow_color1),0 6px 20px 0 var(--app_theme_dialogue_boxshadow_color2);
+}
+
 .load-spinner div:after {
 	background-color: var(--app_theme_spinner_background_color);
 }
@@ -911,8 +917,8 @@ border-left: 12px solid var(--app_theme_sun_color);
 }
 #user_menu_username:hover,
 #user_menu_username:active,
-#user_menu_dropdown_profile_top:hover,
-#user_menu_dropdown_profile_top:active,
+#profile_btn_top:hover,
+#profile_btn_top:active,
 #user_menu_dropdown_logged_in div:hover,
 #user_menu_dropdown_logged_in div:active,
 #user_menu_dropdown_logged_out div:hover,
