@@ -115,7 +115,8 @@ a:active {
 /*dialogue*/
 #dialogue_login,
 #dialogue_signup,
-#dialogue_forgot{
+#dialogue_forgot,
+#user_menu_dropdown{
 	z-index:51;
 }
 #dialogue_user_verify,
@@ -368,7 +369,7 @@ a:active {
 
 /*profile search*/
 #profile_info_search {
-	height:50px;
+	height:0px;
 	text-align:center;
 	position: relative;
 	z-index:1;
@@ -669,12 +670,15 @@ a:active {
 	font-size:30px;
 }
 /*User account*/
+#user_account{
+	display: grid;
+	margin-top: 10px;
+	width: 60px;
+}
 #user_menu{
-	top:10px;
-	right:10px;
-	position:fixed;
-	width: 40px;
-	height:40px;
+	margin-inline-start: 10px;
+	width: 47px;
+	height:47px;
 	z-index:1;
 	border-radius: 50% !important;
 	cursor:pointer;
@@ -697,13 +701,13 @@ a:active {
 	display: none;
 }
 #user_menu_default_avatar{
-	font-size: 41px;
-	margin-top:-9px;
+	font-size: 48px;
+	margin-top:-10px;
 }
 
 #user_menu_dropdown{
 	visibility: hidden;
-	top:50px;
+	top:58px;
 	right:10px;
 	left:10px;
 	position:fixed;
@@ -711,7 +715,6 @@ a:active {
 	text-align: center;
 	height:auto;
 	border-radius: 4px;
-	z-index:1;
 	padding-bottom: 10px;
 }
 #user_menu_dropdown_profile_top{
