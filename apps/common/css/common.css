@@ -508,11 +508,10 @@ body.font_arabic_nastaliq{
 	font-family: var(--global_font_arabic_nastaliq);
 	line-height:1.7;
 }
-body.font_arabic_nastaliq button{
-	line-height:1.5 !important;
-}
+body.font_arabic_nastaliq select,
 body.font_arabic_nastaliq input{
-	height:35px;
+	font-size:0.7em;
+	height:2em;
 }
 body.font_arabic_nastaliq #user_menu_default_avatar{
 	margin-top:-15px;
