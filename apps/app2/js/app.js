@@ -675,6 +675,7 @@ async function toolbar_bottom(choice) {
                 if (mobile())
                     paper.style.display = "block";
                 settings.style.visibility = 'hidden';
+                document.getElementById('profile_btn_top').style.visibility='visible';
                 printTable();
                 break;
             }
@@ -684,6 +685,7 @@ async function toolbar_bottom(choice) {
                 if (mobile())
                     paper.style.display = "block";
                 settings.style.visibility = 'hidden';
+                document.getElementById('profile_btn_top').style.visibility='visible';
                 update_timetable_report(0, null, getReportSettings());
                 break;
             }
@@ -693,6 +695,7 @@ async function toolbar_bottom(choice) {
                 if (mobile())
                     paper.style.display = "block";
                 settings.style.visibility = 'hidden';
+                document.getElementById('profile_btn_top').style.visibility='visible';
                 update_timetable_report(1, null, getReportSettings());
                 break;
             }
@@ -702,6 +705,7 @@ async function toolbar_bottom(choice) {
                 if (mobile())
                     paper.style.display = "block";
                 settings.style.visibility = 'hidden';
+                document.getElementById('profile_btn_top').style.visibility='visible';
                 update_timetable_report(2, null, getReportSettings());
                 break;
             }
@@ -711,6 +715,7 @@ async function toolbar_bottom(choice) {
                 //Hide paper on mobile device when showing settings, scrollbug in background
                 if (mobile())
                     paper.style.display = "none";
+                document.getElementById('profile_btn_top').style.visibility='hidden';
                 settings.style.visibility = 'visible';
                 break;
             }
