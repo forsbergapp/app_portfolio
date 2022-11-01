@@ -240,6 +240,7 @@ a:active {
 #dialogue_user_edit_content{
 	width: 360px;
 	height: auto;
+	padding-bottom: 0px;
 }
 #dialogue_user_edit_content input{
 	width: 100%;
@@ -693,8 +694,8 @@ a:active {
 	cursor:pointer;
 }
 #user_menu_avatar_img{
-	width:40px;
-	height:40px;
+	width:47px;
+	height:47px;
 	border-radius:50%;
 	vertical-align: middle;
 }
