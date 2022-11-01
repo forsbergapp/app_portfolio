@@ -2464,19 +2464,24 @@ async function init_app() {
     document.getElementById('setting_icon_prayer_highlatitude').innerHTML = window.global_icon_gps_high_latitude;
     document.getElementById('setting_icon_prayer_timeformat').innerHTML = window.global_icon_regional_timeformat;
     document.getElementById('setting_icon_prayer_hijri_adjustment').innerHTML = window.global_icon_app_settings + window.global_icon_regional_calendar;
-    document.getElementById('setting_icon_prayer_report_iqamat_title_fajr').innerHTML = window.global_icon_misc_calling + 
+    document.getElementById('setting_icon_prayer_report_iqamat_title_fajr').innerHTML = window.global_icon_app_show + 
+                                                                                        window.global_icon_misc_calling + 
                                                                                         window.global_icon_misc_prayer + 
                                                                                         window.global_icon_sky_sunrise;
-    document.getElementById('setting_icon_prayer_report_iqamat_title_dhuhr').innerHTML = window.global_icon_misc_calling + 
-                                                                                        window.global_icon_misc_prayer +
-                                                                                        window.global_icon_sky_midday;
-    document.getElementById('setting_icon_prayer_report_iqamat_title_asr').innerHTML = window.global_icon_misc_calling + 
-                                                                                        window.global_icon_misc_prayer + 
-                                                                                        window.global_icon_sky_afternoon;
-    document.getElementById('setting_icon_prayer_report_iqamat_title_maghrib').innerHTML = window.global_icon_misc_calling + 
-                                                                                        window.global_icon_misc_prayer + 
-                                                                                        window.global_icon_sky_sunset;
-    document.getElementById('setting_icon_prayer_report_iqamat_title_isha').innerHTML = window.global_icon_misc_calling + 
+    document.getElementById('setting_icon_prayer_report_iqamat_title_dhuhr').innerHTML = window.global_icon_app_show + 
+                                                                                         window.global_icon_misc_calling + 
+                                                                                         window.global_icon_misc_prayer +
+                                                                                         window.global_icon_sky_midday;
+    document.getElementById('setting_icon_prayer_report_iqamat_title_asr').innerHTML = window.global_icon_app_show + 
+                                                                                       window.global_icon_misc_calling + 
+                                                                                       window.global_icon_misc_prayer + 
+                                                                                       window.global_icon_sky_afternoon;
+    document.getElementById('setting_icon_prayer_report_iqamat_title_maghrib').innerHTML = window.global_icon_app_show + 
+                                                                                           window.global_icon_misc_calling + 
+                                                                                           window.global_icon_misc_prayer + 
+                                                                                           window.global_icon_sky_sunset;
+    document.getElementById('setting_icon_prayer_report_iqamat_title_isha').innerHTML = window.global_icon_app_show + 
+                                                                                        window.global_icon_misc_calling + 
                                                                                         window.global_icon_misc_prayer + 
                                                                                         window.global_icon_sky_night;
     document.getElementById('setting_icon_prayer_report_show_imsak').innerHTML = window.global_icon_app_show + 
