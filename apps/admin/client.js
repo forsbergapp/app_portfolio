@@ -12,6 +12,7 @@ module.exports = {
                 ['<AppCommonBody/>', __dirname + '/../common/src/body.html'],
                 ['<AppCommonBodyBroadcast/>', __dirname + '/../common/src/body_broadcast.html'],
                 ['<AppCommonProfileDetail/>', __dirname + '/../common/src/profile_detail.html'], //Profile tag in common body
+                ['<AppCommonProfileBtnTop/>', __dirname + '/../common/src/profile_btn_top.html'],
                 ['<AppDialogues/>', __dirname + '/src/dialogues.html']
               ];
             read_app_files('', files, (err, app)=>{
