@@ -3216,7 +3216,7 @@ async function init_common(parameters, callBack){
                                                                                        else 
                                                                                             menu.style.visibility = 'visible' }, false);
         document.getElementById('user_menu_dropdown_log_in').addEventListener('click', function() { show_common_dialogue('LOGIN'); document.getElementById('user_menu_dropdown').style.visibility = 'hidden';}, false);
-        document.getElementById('user_menu_dropdown_edit').addEventListener('click', function() { user_edit() }, false);
+        document.getElementById('user_menu_dropdown_edit').addEventListener('click', function() { user_edit();document.getElementById('user_menu_dropdown').style.visibility = 'hidden'; }, false);
         document.getElementById('user_menu_dropdown_signup').addEventListener('click', function() { show_common_dialogue('SIGNUP'); document.getElementById('user_menu_dropdown').style.visibility = 'hidden'; }, false);
     
         if (document.getElementById('user_locale_select'))

@@ -337,7 +337,6 @@
 }
 .tab_content {
 	display:inline-block;
-	margin-top: 10px;
 }
 /*SETTINGS, common*/
 /*checkbox use switch ui*/
@@ -421,9 +420,6 @@ height: 25px;
 #settings #tab3 .setting_horizontal_row:first-child .setting_horizontal_col:nth-child(4){
 	width:0%;
 }
-#settings #tab3 .setting_horizontal_row:first-child{
-	margin-bottom: 10px;
-}
 #settings #tab3 .setting_horizontal_row:first-child .setting_horizontal_col{
 	text-align: center !important;
 }
@@ -462,6 +458,7 @@ height: 25px;
 	font-size:30px;
 	width: 40px !important;
     height: 40px !important;
+	margin-top: -15px;
 }
 #setting_themes_day_slider img {
 	width:96px;
@@ -658,11 +655,6 @@ height: 25px;
 /*RESPONSIVE SETTINGS*/
 /*CSS for minimum 768px*/
 @media only screen and (min-width: 768px) {
-	body.font_arabic_nastaliq select,
-	body.font_arabic_nastaliq input{
-		font-size:0.7em;
-		height:35px;
-	}
 	body {
 		margin: 10;
 		text-align: center;
@@ -671,9 +663,6 @@ height: 25px;
 	#settings {
 		margin: 0 auto;
 	}
-	#settings .setting_horizontal_row{
-		height: 24px;
-	}	
 	#tab_navigation button {
 		border:0px;
 		width:75px;
