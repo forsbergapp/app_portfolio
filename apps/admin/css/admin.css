@@ -54,6 +54,9 @@
 	visibility: hidden;
 	display:	none !important;
 }
+#profile_btn_top{
+	visibility: hidden;
+}
 #user_account{
 	visibility: hidden;
 	display:	none !important;
