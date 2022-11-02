@@ -843,7 +843,6 @@ function dialogue_profile_clear(){
     document.getElementById('profile_info').style.display = 'none';
     document.getElementById('profile_top').style.display = 'none';
     document.getElementById('profile_detail').style.display = 'none';
-    document.getElementById('profile_search_list').style.display = 'none';
     
     document.getElementById('profile_follow').children[0].style.display = 'block';
     document.getElementById('profile_follow').children[1].style.display = 'none';
@@ -862,8 +861,6 @@ function dialogue_profile_clear(){
     document.getElementById('profile_info_liked_count').innerHTML = '';
     
     document.getElementById('profile_qr').innerHTML = '';
-
-    document.getElementById('profile_search_input').value = '';
     document.getElementById('profile_detail_list').innerHTML = '';
     document.getElementById('profile_top_list').innerHTML = '';
 }
@@ -1849,7 +1846,8 @@ function search_profile(click_function) {
     document.getElementById('profile_search_input').classList.remove('input_error');
     let profile_search_list = document.getElementById('profile_search_list');
     profile_search_list.innerHTML = '';
-    document.getElementById('profile_search_list').style.display = 'none';
+    document.getElementById('profile_search_list_wrap').style.display = 'none';
+    profile_search_list.style.display = 'none';
     if (document.getElementById('profile_search_input').value=='')
         document.getElementById('profile_search_input').classList.add('input_error');
     else{
@@ -1884,8 +1882,10 @@ function search_profile(click_function) {
                 null;
             else{
                 json = JSON.parse(result);
-                if (json.count > 0)
-                    document.getElementById('profile_search_list').style.display = "inline-block";
+                if (json.count > 0){
+                    profile_search_list.style.display = "inline-block";
+                    document.getElementById('profile_search_list_wrap').style.display = 'flex';
+                }
                 let html = '';
                 let image= '';
                 let name = '';
@@ -2099,6 +2099,7 @@ function search_input(event, event_function){
                 var x = document.querySelectorAll('.profile_search_list_row');
                 for (i = 0; i <= x.length -1; i++) {
                     if (x[i].classList.contains('profile_search_list_selected')){
+                        /*Show profile and leave searchresult so user can go back to searchresult again*/
                         if (event_function ==null){
                             profile_show(x[i].children[0].children[0].innerHTML,
                                          null,

@@ -1311,7 +1311,6 @@ async function profile_show_app(user_account_id_other = null, username = null) {
     document.getElementById('profile_user_settings_row').style.display = "none";
     
     profile_clear_app();
-    document.getElementById('profile_info_search').style.visibility = "hidden";
 
     if (user_account_id_other == null && window.global_user_account_id == '' && username == null) {
         document.getElementById('profile_info').style.display = "none";
