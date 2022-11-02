@@ -1002,7 +1002,7 @@ GRANT SELECT, INSERT ON app_portfolio.profile_search TO role_app2;
 
 CREATE TABLE app_portfolio.profile_search_hist (
     id                 INT NOT NULL AUTO_INCREMENT,
-    dml_type           VARCHAR(1),
+    dml                VARCHAR(1),
     dml_date           DATETIME,
     user_account_id    INTEGER,
     search             VARCHAR(100),
@@ -1375,7 +1375,7 @@ GRANT SELECT, INSERT, DELETE, UPDATE ON app_portfolio.user_account_view TO role_
 
 CREATE TABLE app_portfolio.user_account_view_hist (
     id                    INT NOT NULL AUTO_INCREMENT,
-    dml_type              VARCHAR(1),
+    dml                   VARCHAR(1),
     dml_date              DATETIME,
     user_account_id       INTEGER,
     user_account_id_view  INTEGER,
