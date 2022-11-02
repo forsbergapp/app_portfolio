@@ -596,12 +596,12 @@ height: 25px;
 	display:flex;
 }
 /*COMMON*/
-#profile_info_search{
-	visibility: hidden;
-	max-height: calc(100% - 140px) !important;
+#profile_input_row{
+	visibility:hidden;
 }
 #profile_search_list_wrap{
-	max-height: calc(100% - 140px) !important;
+	max-height: calc(100% - 250px) !important;
+	top: 112px;
 }
 #profile_search_icon{
 	display: none !important;

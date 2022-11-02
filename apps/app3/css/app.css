@@ -46,7 +46,8 @@ body {
 	color:var(--app_green) !important;
 }
 /*common*/
-#profile_info_search{
+#profile_input_row,
+#profile_search_list_wrap{
 	visibility: hidden;
 }
 #user_account{

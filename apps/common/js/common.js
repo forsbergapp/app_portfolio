@@ -3130,7 +3130,8 @@ async function init_common(parameters, callBack){
         document.getElementById('profile_close').innerHTML = window.global_icon_app_close;
 
         //profile button top
-        document.getElementById('profile_btn_top').innerHTML = window.global_icon_user_profile_top;
+        if (document.getElementById('profile_btn_top'))
+            document.getElementById('profile_btn_top').innerHTML = window.global_icon_user_profile_top;
 
         //window info
         document.getElementById('common_window_info_toolbar_btn_close').innerHTML = window.global_icon_app_close;
@@ -3190,7 +3191,7 @@ async function init_common(parameters, callBack){
         document.getElementById('lov_search_icon').addEventListener('click', function() {lov_filter(document.getElementById('lov_search_input').value);});
         document.getElementById('lov_close').addEventListener('click', function() { lov_close()}, false); 
         //profile search
-        if (document.getElementById('profile_info_search'))
+        if (document.getElementById('profile_input_row'))
             document.getElementById('profile_search_icon').addEventListener('click', function() { document.getElementById('profile_search_input').dispatchEvent(new KeyboardEvent('keyup')); }, false);
         //window info
         document.getElementById('common_window_info_toolbar_btn_close').addEventListener('click', function() { document.getElementById('common_window_info').style.visibility = "hidden"; 

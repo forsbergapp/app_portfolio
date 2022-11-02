@@ -346,14 +346,10 @@ a:active {
 }
 
 /*profile search*/
-#profile_info_search {
-	height:100%;
-	text-align:center;
+#profile_input_row{
 	position: fixed;
-	z-index:1;
-	display: block;
-	width: 100%;
-	max-height: calc(100% - 70px);
+	z-index: 1;
+	margin-inline-start: calc(50% - 140px);
 }
 #profile_search_input{
 	border-radius: 16px;
@@ -371,8 +367,10 @@ a:active {
 	border-radius: 16px;
 	padding: 6px;
 	width: 275px;
-	margin:0 auto;
-	max-height: calc(100% - 70px);
+	z-index:1;
+	position:fixed;
+	max-height: calc(100% - 140px);
+	margin-inline-start: calc(50% - 140px);
 	display: none;
 	flex-direction: column;
 }

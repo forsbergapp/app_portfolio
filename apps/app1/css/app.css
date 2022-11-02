@@ -129,6 +129,9 @@ body.font_arabic_nastaliq #user_menu_default_avatar{
 }
 
 /*common*/
+#profile_search_list_wrap{
+	top:62px;
+}
 #profile_btn_top{
 	bottom: 0px !important;
 }
