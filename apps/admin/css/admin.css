@@ -50,7 +50,8 @@
 	visibility: hidden;
 }
 /* common*/
-#profile_info_search{
+#profile_input_row,
+#profile_search_list_wrap{
 	visibility: hidden;
 	display:	none !important;
 }
