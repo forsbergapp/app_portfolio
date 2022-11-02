@@ -307,29 +307,6 @@ a:active {
 	font-size: 0.6em;
 }
 
-/*Dialogue profile*/
-#dialogue_profile{
-	visibility:hidden;
-	top: 0px;
-    padding-top: 20px;
-	width: 100%;
-    height: 100%;
-	position:fixed;
-}
-#profile_info{
-	display:none;
-}
-#dialogue_profile_content{
-	word-break: unset;
-	width:350px;
-	height:550px;
-}
-#profile_close{
-	display: block;
-    width: 100%;
-	bottom:10px;
-	position:fixed;
-}
 /*Dialogue lov*/
 #dialogue_lov_content{
 	height:auto;
@@ -370,12 +347,13 @@ a:active {
 
 /*profile search*/
 #profile_info_search {
-	height:0px;
+	height:100%;
 	text-align:center;
-	position: relative;
+	position: fixed;
 	z-index:1;
-	display: inline-block;
+	display: block;
 	width: 100%;
+	max-height: calc(100% - 70px);
 }
 #profile_search_input{
 	border-radius: 16px;
@@ -389,12 +367,22 @@ a:active {
 	display: inline-block;
 	cursor: pointer;
 }
+#profile_search_list_wrap{
+	border-radius: 16px;
+	padding: 6px;
+	width: 275px;
+	margin:0 auto;
+	max-height: calc(100% - 70px);
+	display: none;
+	flex-direction: column;
+}
 #profile_search_list{
 	height:120px;
 	width:250px;
+	overflow-y: auto;
+    overflow-x: hidden;
 	padding: 10px;
 	margin:0 auto;
-	border-radius: 16px;
 	display:none;
 }
 .profile_search_list_row{
@@ -426,7 +414,29 @@ a:active {
 	border-radius: 50%;
 }
 
-/*profile main*/
+/*Dialogue profile*/
+#dialogue_profile{
+	visibility:hidden;
+	top: 0px;
+    padding-top: 20px;
+	width: 100%;
+    height: 100%;
+	position:fixed;
+}
+#profile_info{
+	display:none;
+}
+#dialogue_profile_content{
+	word-break: unset;
+	width:350px;
+	height:550px;
+}
+#profile_close{
+	display: block;
+    width: 100%;
+	bottom:10px;
+	position:fixed;
+}
 #profile_main {
 	width:100%;
 	margin-top:10px;
@@ -471,6 +481,9 @@ a:active {
 }
 #profile_avatar_online_status.offline{
 	display: inline-block;
+}
+#profile_bio{
+	font-size: 0.6em;
 }
 #profile_joined_date_icon{
 	display: inline-block;
@@ -655,7 +668,7 @@ a:active {
 	border-radius: 4px 4px 0px 0px;
 }
 
-/*User */
+/*Dialogue User Edit*/
 #user_edit_btn_label_user_update,
 #user_edit_btn_label_user_delete_account{
 	display:inline-block;
@@ -679,7 +692,7 @@ a:active {
 	height: 30px;
 	font-size:30px;
 }
-/*User account*/
+/*User account / user preferences*/
 #user_account{
 	display: grid;
 	margin-top: 10px;
@@ -727,10 +740,6 @@ a:active {
 	border-radius: 4px;
 	padding-bottom: 10px;
 }
-#profile_btn_top{
-	font-size: 30px;
-	cursor:pointer;
-}
 #user_menu_dropdown_logged_in{
 	display:none;
 	width:100%;
@@ -758,6 +767,13 @@ a:active {
 	width: 100%;
 }
 
+/*Profile button*/
+#profile_btn_top{
+	font-size: 30px;
+	cursor:pointer;
+}
+
+/* SPINNER */
 #app_spinner{
 	visibility: visible;
 	display: inline-block;
@@ -771,7 +787,6 @@ a:active {
 	justify-self: center;
 }
 
-/* SPINNER */
 .load-spinner {
 	visibility: hidden;
 	position: absolute;
@@ -908,6 +923,9 @@ a:active {
 		width:500px;
 		height:500px;
 	}
+	#profile_bio{
+		font-size: 0.7em;
+	}	
 	#dialogue_user_edit_content{
 		width:500px;
 	}
