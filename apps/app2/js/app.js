@@ -2194,7 +2194,15 @@ function setEvents() {
 	document.getElementById('toolbar_btn_left').addEventListener('click', function() { update_timetable_report(window.global_timetable_type, this.id, getReportSettings()) }, false);
 	document.getElementById('toolbar_btn_right').addEventListener('click', function() { update_timetable_report(window.global_timetable_type, this.id, getReportSettings()) }, false);
 
-    document.getElementById('toolbar_btn_search').addEventListener('click', function() { let x = document.getElementById('profile_info_search'); if (x.style.visibility == 'visible') x.style.visibility = 'hidden'; else x.style.visibility = 'visible'; }, false);
+    document.getElementById('toolbar_btn_search').addEventListener('click', function() { let x = document.getElementById('profile_input_row'); 
+                                                                                         if (x.style.visibility == 'visible') {
+                                                                                            x.style.visibility = 'hidden';
+                                                                                            document.getElementById('profile_search_list_wrap').style.visibility = 'hidden'
+                                                                                         } 
+                                                                                         else{
+                                                                                            x.style.visibility = 'visible'; 
+                                                                                            document.getElementById('profile_search_list_wrap').style.visibility = 'visible'
+                                                                                         }}, false);
     document.getElementById('toolbar_btn_settings').addEventListener('click', function() { toolbar_bottom(5) }, false);    
 
     document.getElementById('user_locale_select').addEventListener('change', function() { common_translate_ui_app(this.value);}, false);
