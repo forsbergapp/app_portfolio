@@ -598,7 +598,10 @@ height: 25px;
 /*COMMON*/
 #profile_info_search{
 	visibility: hidden;
-    display: block !important;
+	max-height: calc(100% - 140px) !important;
+}
+#profile_search_list_wrap{
+	max-height: calc(100% - 140px) !important;
 }
 #profile_search_icon{
 	display: none !important;
@@ -816,7 +819,7 @@ a:active,
 .signup_input, 
 .forgot_input, 
 .new_password_input,
-#profile_search_list{
+#profile_search_list_wrap{
 	border: 1px solid var(--app_theme_input_border_color);
 	background-color: var(--app_theme_input_background_color);
 }
