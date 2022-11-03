@@ -3121,7 +3121,6 @@ async function init_common(parameters, callBack){
         document.getElementById('profile_private_title').innerHTML = window.global_icon_app_private;
         document.getElementById('profile_avatar_online_status').innerHTML = window.global_icon_app_online;
         //profile top
-        document.getElementById('profile_top_header').innerHTML = window.global_icon_user_profile_top;
         document.getElementById('profile_top_row1_1').innerHTML = window.global_icon_user_follows;
         document.getElementById('profile_top_row1_2').innerHTML = window.global_icon_user_like + window.global_icon_user_follows;
         document.getElementById('profile_top_row1_3').innerHTML = window.global_icon_user_views;
