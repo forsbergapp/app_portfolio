@@ -917,7 +917,7 @@ async function displayMonth(settings, item_id) {
 						}	
 					month = window.global_session_CurrentHijriDate[0];
 					year  = window.global_session_CurrentHijriDate[1];
-					HijriToGreg(new Array(year,month,1), 0).then(function(title_date){
+					getGregorian(new Array(year,month,1), 0).then(function(title_date){
 						title4 = new Date(title_date[0],title_date[1]-1,title_date[2]).toLocaleDateString(settings.locale + window.global_regional_def_locale_ext_prefix + window.global_regional_def_locale_ext_calendar + settings.calendar_hijri_type + window.global_regional_def_locale_ext_number_system + settings.number_system, options).toUpperCase();
 						callBack(null, title4);
 					})
@@ -950,9 +950,9 @@ async function displayMonth(settings, item_id) {
 							endDate_hijri = new Array((year + 1), 1,1);
 						else
 							endDate_hijri = new Array(year,(month + 1),1);
-						HijriToGreg(date_hijri, settings.hijri_adj).then(function(date){
+						getGregorian(date_hijri, settings.hijri_adj).then(function(date){
 							date    = new Date(date[0], date[1]-1, date[2]);
-							HijriToGreg(endDate_hijri, settings.hijri_adj).then(function(endDate){
+							getGregorian(endDate_hijri, settings.hijri_adj).then(function(endDate){
 								endDate = new Date(endDate[0], endDate[1]-1, endDate[2]);
 								callBack(null, date, endDate);
 							})
@@ -1044,7 +1044,7 @@ async function displayMonth(settings, item_id) {
 							}
 						} 
 						if (settings.calendartype=='HIJRI')
-							HijriToGreg(new Array(year,month,times['day']), settings.hijri_adj).then(function(date){
+							getGregorian(new Array(year,month,times['day']), settings.hijri_adj).then(function(date){
 								i_hijri_days++;
 								month_async_html[times['day']] = `<div class='${'timetable_month_data_row ' + row_class}'>
 																		${makeTableRow(times, items, 1, year, month, settings, date)}
