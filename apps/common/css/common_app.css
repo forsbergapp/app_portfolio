@@ -375,7 +375,6 @@ a:active {
 	flex-direction: column;
 }
 #profile_search_list{
-	height:120px;
 	width:250px;
 	overflow-y: auto;
     overflow-x: hidden;

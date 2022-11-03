@@ -1889,7 +1889,6 @@ function search_profile(click_function) {
                 let html = '';
                 let image= '';
                 let name = '';
-                profile_search_list.style.height = (json.count * 24).toString() + 'px';
                 for (i = 0; i < json.count; i++) {
                     image = list_image_format_src(json.items[i].avatar ?? json.items[i].provider_image)
                     name = json.items[i].username;
