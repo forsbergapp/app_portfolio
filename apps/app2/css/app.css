@@ -610,12 +610,11 @@ height: 25px;
 	margin-right: 10px !important;
 }
 #profile_main_stat_row2{
-	margin-bottom: 20px;
 	text-align: center;
 }
 #profile_main_stat_row2 div{
 	display:inline-block;
-	margin-inline-end: 10px;
+	margin-inline-end: 0.3em;
 }
 #profile_main_btn_user_settings,
 #profile_main_btn_user_setting_likes,
