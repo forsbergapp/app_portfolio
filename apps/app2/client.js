@@ -12,9 +12,12 @@ module.exports = {
                 const { themes } = require('./src/themes');
                 const files = [
                   ['APP', __dirname + '/src/index.html'],
+                  ['<AppCommonHeadPrayTimes/>', __dirname + '/../common/src/head_praytimes.html'],
+                  ['<AppCommonHeadRegional/>', __dirname + '/../common/src/head_regional.html'],
                   ['<AppCommonHead/>', __dirname + '/../common/src/head.html'],
                   ['<AppCommonHeadMap/>', __dirname + '/../common/src/head_map.html'],
                   ['<AppCommonHeadQRCode/>', __dirname + '/../common/src/head_qrcode.html'],
+                  ['<AppCommonHeadFontawesome/>', __dirname + '/../common/src/head_fontawesome.html'],
                   ['<AppCommonBody/>', __dirname + '/../common/src/body.html'],
                   ['<AppCommonBodyMaintenance/>', __dirname + '/../common/src/body_maintenance.html'],
                   ['<AppCommonBodyBroadcast/>', __dirname + '/../common/src/body_broadcast.html'],  
