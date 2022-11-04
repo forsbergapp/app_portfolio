@@ -212,7 +212,7 @@
 #timetable_day .timetable_day_timetable_row_data div {
 	display: inline-block;
 	width: 111px;
-	height: 25px;
+	line-height: 2em;
 	margin: 1px;
 	vertical-align: middle;
 }
@@ -289,7 +289,7 @@
 }
 .timetable_month_class #timetable_month_data{
 	font-size:8pt;
-	line-height:1;
+	line-height: 0.33em !important;
 }
 .timetable_month_class #timetable_month_data_footer{
 	font-size:8pt;
@@ -338,7 +338,7 @@
 	vertical-align: middle;
 }
 .timetable_month_data_calendartype{
-	font-size:0.9em;
+	font-size:0.8em;
 }
 .timetable_month_class #timetable_month_data .timetable_month_data_today_row{
 	animation: pulsate 2s ease-out;
@@ -490,12 +490,17 @@
 #timetable_year .timetable_year_month #timetable_month_data_header #timetable_month_data_header_title2 {
 	display: none;
 }
+#timetable_year .timetable_year_month #timetable_month_data.bignumbers {
+	line-height: 0.33em !important;
+}
 #timetable_year .timetable_year_month #timetable_month_data {
+	line-height: 0.65em !important;
 	font-size: 5pt !important;
 	height: inherit;
 }
 #timetable_year .timetable_year_month #timetable_month_data .timetable_month_data_header_row .timetable_month_data_header_col {
 	font-size: 4pt;
+	overflow-x: unset;
 }
 #timetable_year .timetable_year_month #timetable_month_data .timetable_month_data_col.timetable_data_fast_start {
 	width: inherit;
@@ -503,31 +508,9 @@
 #timetable_year .timetable_year_month #timetable_month_data .timetable_month_data_col.timetable_data_fast_end {
 	width: inherit;
 }
-
-#timetable_year #timetable_month_data{
-	line-height: 3.75pt;
-}
 /*YEAR theme specific month fontsize and lineheight fixes*/
-#timetable_year .theme_month_20001 #timetable_month_data {
-	line-height: 3pt !important;
-}
-#timetable_year .theme_month_20002 #timetable_month_data {
-	line-height: 3pt !important;
-}
-#timetable_year .theme_month_20004 #timetable_month_data {
-	font-size: 3pt !important;
-}
-#timetable_year .theme_month_20004 .timetable_month_data_header_col {
-	font-size: 2pt !important;
-}
-#timetable_year .theme_month_20005 #timetable_month_data {
-	line-height: 3pt !important;
-}
-#timetable_year .theme_month_20007 #timetable_month_data {
-	line-height: 3pt !important;
-}
-#timetable_year .theme_month_20015 #timetable_month_data {
-	line-height: 3pt !important;
+#timetable_year .timetable_year_month.theme_month_20004 #timetable_month_data {
+	line-height: 0.75em !important;
 }
 
 .theme_day_10001{
