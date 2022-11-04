@@ -4,6 +4,7 @@ module.exports = {
         return new Promise(function (resolve, reject){
             const files = [
                 ['APP', __dirname + '/src/index.html'],
+                ['<AppCommonHeadFontawesome/>', __dirname + '/../common/src/head_fontawesome.html'],
                 ['<AppCommonHead/>', __dirname + '/../common/src/head.html'],
                 ['<AppCommonBody/>', __dirname + '/../common/src/body.html'],
                 ['<AppCommonBodyMaintenance/>', __dirname + '/../common/src/body_maintenance.html'],

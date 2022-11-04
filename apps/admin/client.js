@@ -5,6 +5,7 @@ module.exports = {
             const files = [
                 ['APP', __dirname + '/src/index.html'],
                 ['<AppHead/>', __dirname + '/src/head.html'],
+                ['<AppCommonHeadFontawesome/>', __dirname + '/../common/src/head_fontawesome.html'],
                 ['<AppCommonHead/>', __dirname + '/../common/src/head.html'],
                 ['<AppCommonHeadMap/>', __dirname + '/../common/src/head_map.html'],
                 ['<AppCommonProfileSearch/>', __dirname + '/../common/src/profile_search.html'],
