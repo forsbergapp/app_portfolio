@@ -925,12 +925,18 @@ async function displayMonth(settings, item_id) {
 		}
 		get_title4((err, title4)=>{
 			let items = getColumnTitles(0, settings.calendartype, settings.locale, settings.second_locale, settings.locale);
+			let month_data_class='';
+			if (settings.number_system=='hanidec')
+				month_data_class = 'default_font bignumbers';
+			else
+				month_data_class = 'default_font';
+
 			month_html+=
 			`<div id='timetable_month_data_header' class='display_font'>
 				<div id='timetable_month_data_header_title1'>${title4}</div>
 				<div id='timetable_month_data_header_title2'>${window.global_first_language.timetable_title} ${settings.second_locale!=0?window.global_second_language.timetable_title:''}</div>
 			</div>
-			<div id='timetable_month_data' class='default_font'>
+			<div id='timetable_month_data' class='${month_data_class}'>
 				${timetable_headers(1, items, settings)}`;
 		
 			let date;
