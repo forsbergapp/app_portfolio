@@ -7,6 +7,7 @@ module.exports = {
                 const { setting } = require(__dirname + '/../common/src/setting');
                 const files = [
                     ['APP', __dirname + '/src/index.html'],
+                    ['<AppCommonHeadFontawesome/>', __dirname + '/../common/src/head_fontawesome.html'],
                     ['<AppCommonHead/>', __dirname + '/../common/src/head.html'],
                     ['<AppCommonHeadQRCode/>', __dirname + '/../common/src/head_qrcode.html'],
                     ['<AppCommonBody/>', __dirname + '/../common/src/body.html'],
