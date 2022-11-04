@@ -5,6 +5,9 @@ module.exports = {
             const files = [
                 ['REPORT', __dirname + '/' + module],
                 ['<ReportHead/>', __dirname + '/head.html'],
+                ['<ReportCommonHeadPrayTimes/>', __dirname + '/../common/src/head_praytimes.html'],
+                ['<ReportCommonHeadRegional/>', __dirname + '/../common/src/head_regional.html'],
+                ['<ReportCommonHeadQRCode/>', __dirname + '/../common/src/head_qrcode.html'],
                 ['<ReportCommonHead/>', __dirname + '/../../common/report/head.html'],
                 ['<ReportPaper/>', __dirname + '/paper.html'],
                 ['<ReportCommonBody/>', __dirname + '/../../common/report/body.html'],
