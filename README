@@ -134,12 +134,14 @@ Installation instructions
 
    	use Unicode characterset to support emojis and all languages
 
-   	run as root or admin/dba:
+   	run as root or admin/dba in this order:
 	scripts/1.1.createDB_mariadb.ddl 		MariaDB
 	scripts/1.1.createDB_mysql.ddl 			MySQL
 	scripts/1.2.mariadb_mysql.ddl 			MariaDB or MySQL
+	scripts/1.3.default_role_mariadb.ddl	MariaDB
+	scripts/1.3.default_role_mysql.ddl		MySQL
    	scripts/1.oracle.ddl 					Oracle
-	scripts/2.oracle_grants_app_admin.sql 	Oracle
+	scripts/2.oracle_grants_app_admin.ddl 	Oracle
 											contains grants for admin app
 
 	scripts/3.import.sql					MariaDB, MySQL or Oracle
