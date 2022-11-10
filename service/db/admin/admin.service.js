@@ -1,6 +1,10 @@
 var global_pool_db1_app = [];
 var global_pool_db2_app = [];
-var mysql = require("mysql");
+var mysql;
+if (process.env.SERVICE_DB_DB1_VARIANT==1) 
+   mysql = require("mysql");
+else
+   mysql = require("mariadb");
 var oracledb = require('oracledb');
 function DBInit(){
    if (process.env.SERVICE_DB_USE==2){
@@ -20,26 +24,36 @@ module.exports = {
 		let sql;
 		let parameters;
 		if (process.env.SERVICE_DB_USE==1){
+         let table_global_variables;
+         if (process.env.SERVICE_DB_DB1_VARIANT==1){
+            //MySQL
+            table_global_variables = 'performance_schema';
+         }
+         else{
+            //MariaDB
+            table_global_variables = 'information_schema';
+         }
+            
 			sql = `SELECT	? database_use,
                             (SELECT variable_value
-                               FROM performance_schema.global_variables
+                               FROM ${table_global_variables}.global_variables
                               WHERE variable_name = 'version_comment') database_name,
 							(SELECT variable_value
-                               FROM performance_schema.global_variables
+                               FROM ${table_global_variables}.global_variables
                               WHERE variable_name='version') version,
                             ? database_schema,
 							(SELECT variable_value
-                               FROM performance_schema.global_variables
+                               FROM ${table_global_variables}.global_variables
                               WHERE variable_name='hostname') hostname,
 							(SELECT variable_value
-                               FROM performance_schema.global_status
+                               FROM ${table_global_variables}.global_status
                               WHERE variable_name='Threads_connected') connections,
 							(SELECT DATE_SUB( NOW(),  INTERVAL variable_value SECOND)
-                               FROM performance_schema.global_status
+                               FROM ${table_global_variables}.global_status
                               WHERE variable_name='Uptime') started
 					FROM DUAL`;
 			parameters = [	process.env.SERVICE_DB_USE,
-                            process.env.SERVICE_DB_DB1_NAME];
+                        process.env.SERVICE_DB_DB1_NAME];
 		}
 		else if (process.env.SERVICE_DB_USE==2){
 			sql = `SELECT :database "database_use",
@@ -55,7 +69,7 @@ module.exports = {
                           v.startup_time "started"
                      FROM V$INSTANCE v`;
 			parameters = {	database: process.env.SERVICE_DB_USE,
-                            database_schema: process.env.SERVICE_DB_DB2_NAME};
+                        database_schema: process.env.SERVICE_DB_DB2_NAME};
 		}
 		execute_db_sql(app_id, sql, parameters, true, 
 			           __appfilename, __appfunction, __appline, (err, result)=>{
@@ -297,7 +311,10 @@ module.exports = {
 		global_pool_db1_app = [];
       global_pool_db2_app = [];
       mysql = null;
-      mysql = require("mysql");
+      if (process.env.SERVICE_DB_DB1_VARIANT==1) 
+         mysql = require("mysql");
+      else
+         mysql = require("mariadb");
       oracledb = null;
       oracledb = require('oracledb');
 	},

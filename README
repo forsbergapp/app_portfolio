@@ -13,7 +13,7 @@ Secure REST API with authentication middleware supporting both mySQL and Oracle 
 Apps are written using pure CSS, HTML and Javascript and ES6+ Javascript using
 AJAX method and JSON in both client and server.
 Oracle SQL Developer Data model designed data model.
-Scripts to create in mySQL or Oracle Database.
+Scripts to create in MySQL, MariaDB or Oracle Database.
 Centralized data model error handling of database errors, constraints errors and 
 application errors and showed in users language.
 A global support implemented in client with ALL Unicode characters supported by Noto Sans font
@@ -107,9 +107,9 @@ Installation instructions
 1. install Node.js on server
 
 	modules required:
-	npm install axios bcryptjs dotenv express helmet jsonwebtoken mysql nodemailer oracledb
+	npm install axios bcryptjs dotenv express helmet jsonwebtoken nodemailer mysql mariadb oracledb
 	npm install puppeteer
-	//puppeteer on Linux with additional yum installations:
+	//puppeteer on some Linux with additional yum installations:
 		npm install puppeteer --unsafe-perm=true
 		sudo yum install atk
 		sudo yum install at-spi2-atk
@@ -125,7 +125,7 @@ Installation instructions
 
 	npm install -g pm2
 
-2. install mysql/oracle on same server or other server
+2. install MySQL/MariaDB/oracle on same server or other server
 
    	For Oracle Database, install Oracle Instant Client
    	www.oracle.com/database/technologies/instant-client.html
@@ -134,13 +134,22 @@ Installation instructions
 
    	use Unicode characterset to support emojis and all languages
 
-   	run 
-	scripts/mysql.ddl 					as root in mysql database
-   	script/oracle.ddl 					as admin/dba in oracle database
-	script/oracle_grants_app_admin.sql 	as admin/dba in oracle database
-										contains grants for admin app
-										not definable in Oracle SQL Developer Data model
+   	run as root or admin/dba:
+	scripts/1.1.createDB_mariadb.ddl 		MariaDB
+	scripts/1.1.createDB_mysql.ddl 			MySQL
+	scripts/1.2.mariadb_mysql.ddl 			MariaDB or MySQL
+   	scripts/1.oracle.ddl 					Oracle
+	scripts/2.oracle_grants_app_admin.sql 	Oracle
+											contains grants for admin app
 
+	scripts/3.import.sql					MariaDB, MySQL or Oracle
+	scripts/4.lang_*.sql					MariaDB, MySQL or Oracle
+											Linux:
+											cat 4.lang_*.sql|mysql -uroot -p --default-character-set=utf8mb4
+											Windows:
+											for %S in (4.lang_*.sql) do mysql -uroot -p[password] app_portfolio --default-character-set=utf8mb4  < %S
+	scripts/5.import_demo_accounts.sql		MariaDB, MySQL									 
+									 
    	USER CREATED		ROLE AND APP_ID INFO
    	------------		--------------------
    	app_portfolio		role ROLE_APP_DBA
@@ -161,10 +170,6 @@ Installation instructions
 						app_id=3
 
    	default passsword APP_1_portfolio for all users
-
-   	run in app_portfolio mysql database or oracle schema:
-   	import scripts/import.sql
-   	import language scripts/*.sql files
 
 3. sign in provider management
    
@@ -244,9 +249,10 @@ Installation instructions
 	SERVICE_AUTH_ADMIN_TOKEN_SECRET		        		={ADMIN_TOKEN_SECRET}
 	SERVICE_AUTH_ENABLE_GEOLOCATION						={0=NO, 1=YES}
 	#What database to use
-	#1=DB1 mySQL, 2=DB2 Oracle
+	#1=DB1 MySQL, 2=DB2 Oracle
 	SERVICE_DB_USE                           			=1
 	#mySQL
+	SERVICE_DB_DB1_VARIANT                      		={1=MySQL, 2=MariaDB}
 	SERVICE_DB_DB1_APP_ADMIN_USER               		=app_admin
 	SERVICE_DB_DB1_APP_ADMIN_PASS               		=APP_1_portfolio
 	SERVICE_DB_DB1_PORT                         		={PORT}
@@ -297,6 +303,14 @@ Installation instructions
 	COMMON_APP_ID						                =0
 
 	detailed parameter info:
+	SERVICE_DB_DB1_VARIANT
+		some minor adjustments between MySQL and MariaDB: 
+		- MariaDB returns BigInt in count statements.
+		- MariaDB global variables in INFORMATION_SCHEMA
+		- MySQL global variables in PERFORMANCE_SCHEMA
+		- MariaDB uses mariadb module
+		- MySQL uses mysql module
+
 	SERVICE_AUTH_ACCESS_CONTROL_IP_PATH
 		/config/blockip.json
 		contains IP v4 range to block, do not comment in file, array format:
@@ -346,8 +360,8 @@ Installation instructions
 		policy_directives() 	checks at startup in /server.js the file content
 								and loads content into Content Security Policy using helmet middleware
 8.  database parameters
-	update scripts/import.sql or after import, observe db username and password for apps 
-	are in APP_PARAMETER table, admin and app1 in .env file.
+	update scripts/3.import.sql or after import, observe db username and password for apps 
+	are in APP_PARAMETER table, admin in .env file.
 
 	table app
 	set app name, url, logo and app category
@@ -370,12 +384,9 @@ Installation instructions
 	nohup pm2 logs --json>{SERVICE_LOG_FILE_PATH_SERVER}{SERVICE_LOG_PM2_FILE} &
 
 10. how to add new app
-	optional db script:
-	scripts/mysql.ddl
-	script/oracle.ddl
-	scripts/import.sql
-	scripts/*.sql language files
-
+	optional db scripts:
+	scripts/*.*
+	
 	required files and folders
 	/apps/{APP_ID}*					contains client app files and server code
 	/apps/{APP_ID}/server.js		read by function load_apps_code() in /server.js

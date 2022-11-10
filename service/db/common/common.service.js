@@ -35,16 +35,38 @@ async function execute_db_sql(app_id, sql, parameters, admin,
 			if (process.env.SERVICE_LOG_ENABLE_DB==1){
 				log_db_sql(app_id, sql, parameters);
 			}
-			get_pool(app_id).query(sql, parameters, 
-				(error, results, fields) => {
-					if (error){
-						createLogAppSE(app_id, app_filename, app_function, app_line, error, (err_log, result_log)=>{
-							return callBack(error);
-						})
-					}
-					else
-						return callBack(null, results);
-			})
+			if (process.env.SERVICE_DB_DB1_VARIANT==1){
+				//MySQL
+				get_pool(app_id).query(sql, parameters, 
+					(error, results, fields) => {
+						if (error){
+							createLogAppSE(app_id, app_filename, app_function, app_line, error, (err_log, result_log)=>{
+								return callBack(error);
+							})
+						}
+						else
+							return callBack(null, results);
+				})
+			}
+			else{
+				//MariaDB
+				let conn;
+				//BigInt can be returned in MariaDB, to avoid: 'TypeError: Do not know how to serialize a BigInt\n    
+				BigInt.prototype.toJSON = function() { return this.toString() }
+				try {
+					conn = await get_pool(app_id).getConnection();
+					const conn_result = await conn.query(sql, parameters).then(function(result){
+						return callBack(null, result);
+					});														
+				} catch (err) {
+					createLogAppSE(app_id, app_filename, app_function, app_line, err, (err_log, result_log)=>{
+						return callBack(err);
+					})
+				} finally {
+					if (conn) 
+						return conn.end();
+				}
+			}
 			break;
 		}
 		case '2':{
@@ -54,20 +76,19 @@ async function execute_db_sql(app_id, sql, parameters, admin,
 			let pool2;
 			try{
 				pool2 = await oracledb.getConnection(get_pool(app_id));
-				const result = await pool2.execute(sql, parameters,
-														(err,result) => {
-															if (err) {
-																createLogAppSE(app_id, app_filename, app_function, app_line, `${err.message}, SQL:${sql.substring(0,100)}...`, (err_log, result_log)=>{
-																	return callBack(err);
-																})
-															}
-															else{
-																if (!result.rows && result)
-																	return callBack(null, result);
-																else
-																	return callBack(null, result.rows);
-															}
-														});
+				const result = await pool2.execute(sql, parameters, (err,result) => {
+														if (err) {
+															createLogAppSE(app_id, app_filename, app_function, app_line, `${err.message}, SQL:${sql.substring(0,100)}...`, (err_log, result_log)=>{
+																return callBack(err);
+															})
+														}
+														else{
+															if (!result.rows && result)
+																return callBack(null, result);
+															else
+																return callBack(null, result.rows);
+														}
+													});
 			}catch (err) {
 				createLogAppSE(app_id, __appfilename, __appfunction, __appline, err.message, (err_log, result_log)=>{
 					return callBack(err.message);

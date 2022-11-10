@@ -42,6 +42,7 @@ module.exports = {
 	insertUserAccountLogon: (app_id, data, callBack) => {
 		let sql;
 		let parameters;
+		data.access_token = data.access_token ?? null;
 		if (process.env.SERVICE_DB_USE == 1) {
 			sql = `INSERT INTO ${process.env.SERVICE_DB_DB1_NAME}.user_account_logon(
 								user_account_id, app_id, result, access_token, client_ip, client_user_agent, client_longitude, client_latitude, date_created)
