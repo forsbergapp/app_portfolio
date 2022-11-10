@@ -1,7 +1,3 @@
-CREATE DATABASE app_portfolio
-DEFAULT CHARACTER SET utf8mb4
-DEFAULT COLLATE utf8mb4_0900_ai_ci;
-
 CREATE ROLE role_app_admin;
 CREATE ROLE role_app_dba;
 CREATE ROLE role_app1;
@@ -12,27 +8,27 @@ CREATE ROLE role_app3;
 CREATE USER app_admin IDENTIFIED BY 'APP_1_portfolio'
     ACCOUNT UNLOCK;
 GRANT role_app_admin TO app_admin;
-SET DEFAULT ROLE ALL TO app_admin;
+SET DEFAULT ROLE role_app_admin TO app_admin;
 
 CREATE USER app_portfolio IDENTIFIED BY 'APP_1_portfolio'
     ACCOUNT UNLOCK;
 GRANT role_app_dba TO app_portfolio;
-SET DEFAULT ROLE ALL TO app_portfolio;
+SET DEFAULT ROLE role_app_dba TO app_portfolio;
 
 CREATE USER app1 IDENTIFIED BY 'APP_1_portfolio'
     ACCOUNT UNLOCK;
 GRANT role_app1 TO app1;
-SET DEFAULT ROLE ALL TO app1;
+SET DEFAULT ROLE role_app1 TO app1;
 
 CREATE USER app2 IDENTIFIED BY 'APP_1_portfolio'
     ACCOUNT UNLOCK;
 GRANT role_app2 TO app2;
-SET DEFAULT ROLE ALL TO app2;
+SET DEFAULT ROLE role_app2 TO app2;
 
 CREATE USER app3 IDENTIFIED BY 'APP_1_portfolio'
     ACCOUNT UNLOCK;
 GRANT role_app3 TO app3;
-SET DEFAULT ROLE ALL TO app3;
+SET DEFAULT ROLE role_app3 TO app3;
 
 
 CREATE TABLE app_portfolio.app (
