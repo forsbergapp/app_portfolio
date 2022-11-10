@@ -1882,9 +1882,8 @@ old.date_modified,
 old.user_account_app_user_account_id,
 old.user_account_app_app_id);
 END; 
+//
 
-
-delimiter //
 CREATE TRIGGER app_portfolio.app2_user_setting_before_insert 
     BEFORE INSERT ON app_portfolio.app2_user_setting 
     FOR EACH ROW 
@@ -2006,8 +2005,8 @@ new.date_modified,
 new.user_account_app_user_account_id,
 new.user_account_app_app_id);
 END; 
+//
 
-delimiter //
 CREATE TRIGGER app_portfolio.app2_user_setting_before_update 
     BEFORE UPDATE ON app_portfolio.app2_user_setting 
     FOR EACH ROW 
@@ -2129,8 +2128,7 @@ old.date_modified,
 old.user_account_app_user_account_id,
 old.user_account_app_app_id);
 END; 
-
-delimiter //
+//
 CREATE TRIGGER app_portfolio.app2_user_setting_like_before_delete 
     BEFORE DELETE ON app_portfolio.app2_user_setting_like 
     FOR EACH ROW 
@@ -2150,8 +2148,7 @@ old.user_account_id,
 old.app2_user_setting_id,
 old.date_created);
 END; 
-
-delimiter //
+//
 CREATE TRIGGER app_portfolio.app2_user_setting_like_before_insert 
     BEFORE INSERT ON app_portfolio.app2_user_setting_like 
     FOR EACH ROW 
@@ -2171,8 +2168,7 @@ new.user_account_id,
 new.app2_user_setting_id,
 new.date_created);
 END; 
-
-delimiter //
+//
 CREATE TRIGGER app_portfolio.app2_user_setting_like_before_update 
     BEFORE UPDATE ON app_portfolio.app2_user_setting_like 
     FOR EACH ROW 
@@ -2192,8 +2188,7 @@ old.user_account_id,
 old.app2_user_setting_id,
 old.date_created);
 END; 
-
-delimiter //
+//
 CREATE TRIGGER app_portfolio.app2_user_setting_view_before_delete 
     BEFORE DELETE ON app_portfolio.app2_user_setting_view 
     FOR EACH ROW 
@@ -2219,8 +2214,7 @@ old.client_longitude,
 old.client_latitude,
 old.date_created);
 END; 
-
-delimiter //
+//
 CREATE TRIGGER app_portfolio.app2_user_setting_view_before_insert 
     BEFORE INSERT ON app_portfolio.app2_user_setting_view 
     FOR EACH ROW 
@@ -2246,8 +2240,7 @@ new.client_longitude,
 new.client_latitude,
 new.date_created);
 END; 
-
-delimiter //
+//
 CREATE TRIGGER app_portfolio.app2_user_setting_view_before_update 
     BEFORE UPDATE ON app_portfolio.app2_user_setting_view 
     FOR EACH ROW 
@@ -2273,8 +2266,7 @@ old.client_longitude,
 old.client_latitude,
 old.date_created);
 END; 
-
-delimiter //
+//
 CREATE TRIGGER app_portfolio.profile_search_before_delete 
     BEFORE DELETE ON app_portfolio.profile_search 
     FOR EACH ROW 
@@ -2300,8 +2292,7 @@ old.client_longitude,
 old.client_latitude,
 old.date_created);
 END; 
-
-delimiter //
+//
 CREATE TRIGGER app_portfolio.profile_search_before_insert 
     BEFORE INSERT ON app_portfolio.profile_search 
     FOR EACH ROW 
@@ -2327,8 +2318,7 @@ new.client_longitude,
 new.client_latitude,
 new.date_created);
 END; 
-
-delimiter //
+//
 CREATE TRIGGER app_portfolio.profile_search_before_update 
     BEFORE UPDATE ON app_portfolio.profile_search 
     FOR EACH ROW 
@@ -2354,8 +2344,7 @@ old.client_longitude,
 old.client_latitude,
 old.date_created);
 END; 
-
-delimiter //
+//
 CREATE TRIGGER app_portfolio.user_account_app_before_delete 
     BEFORE DELETE ON app_portfolio.user_account_app 
     FOR EACH ROW 
@@ -2381,8 +2370,7 @@ old.setting_preference_direction_id,
 old.setting_preference_arabic_script_id,
 old.date_created);
 END; 
-
-delimiter //
+//
 CREATE TRIGGER app_portfolio.user_account_app_before_insert 
     BEFORE INSERT ON app_portfolio.user_account_app 
     FOR EACH ROW 
@@ -2408,8 +2396,7 @@ new.setting_preference_direction_id,
 new.setting_preference_arabic_script_id,
 new.date_created);
 END; 
-
-delimiter //
+//
 CREATE TRIGGER app_portfolio.user_account_app_before_update 
     BEFORE UPDATE ON app_portfolio.user_account_app 
     FOR EACH ROW 
@@ -2435,8 +2422,7 @@ old.setting_preference_direction_id,
 old.setting_preference_arabic_script_id,
 old.date_created);
 END; 
-
-delimiter //
+//
 CREATE TRIGGER app_portfolio.user_account_before_delete 
     BEFORE DELETE ON app_portfolio.user_account 
     FOR EACH ROW 
@@ -2488,8 +2474,7 @@ INSERT INTO user_account_hist
 	old.provider_image_url,
 	old.provider_email);
 END; 
-
-delimiter //		
+//
 CREATE TRIGGER app_portfolio.user_account_before_insert 
     BEFORE INSERT ON app_portfolio.user_account 
     FOR EACH ROW 
@@ -2580,8 +2565,7 @@ CREATE TRIGGER app_portfolio.user_account_before_insert
 	new.provider_image_url,
 	new.provider_email);
 END; 
-
-delimiter //
+//
 CREATE TRIGGER app_portfolio.user_account_before_update 
     BEFORE UPDATE ON app_portfolio.user_account 
     FOR EACH ROW 
@@ -2672,8 +2656,7 @@ CREATE TRIGGER app_portfolio.user_account_before_update
         old.provider_image_url,
         old.provider_email);
 END;
-
-delimiter //
+//
 CREATE TRIGGER app_portfolio.user_account_follow_before_delete 
     BEFORE DELETE ON app_portfolio.user_account_follow 
     FOR EACH ROW 
@@ -2693,8 +2676,7 @@ old.user_account_id,
 old.user_account_id_follow,
 old.date_created);
 END; 
-
-delimiter //
+//
 CREATE TRIGGER app_portfolio.user_account_follow_before_insert 
     BEFORE INSERT ON app_portfolio.user_account_follow 
     FOR EACH ROW 
@@ -2714,8 +2696,7 @@ new.user_account_id,
 new.user_account_id_follow,
 new.date_created);
 END; 
-
-delimiter //
+//
 CREATE TRIGGER app_portfolio.user_account_follow_before_update 
     BEFORE UPDATE ON app_portfolio.user_account_follow 
     FOR EACH ROW 
@@ -2735,8 +2716,7 @@ old.user_account_id,
 old.user_account_id_follow,
 old.date_created);
 END; 
-
-delimiter //
+//
 CREATE TRIGGER app_portfolio.user_account_like_before_delete 
     BEFORE DELETE ON app_portfolio.user_account_like 
     FOR EACH ROW 
@@ -2756,8 +2736,7 @@ old.user_account_id,
 old.user_account_id_like,
 old.date_created);
 END; 
-
-delimiter //
+//
 CREATE TRIGGER app_portfolio.user_account_like_before_insert 
     BEFORE INSERT ON app_portfolio.user_account_like 
     FOR EACH ROW 
@@ -2777,8 +2756,7 @@ new.user_account_id,
 new.user_account_id_like,
 new.date_created);
 END; 
-
-delimiter //
+//
 CREATE TRIGGER app_portfolio.user_account_like_before_update 
     BEFORE UPDATE ON app_portfolio.user_account_like 
     FOR EACH ROW 
@@ -2798,8 +2776,7 @@ old.user_account_id,
 old.user_account_id_like,
 old.date_created);
 END; 
-
-delimiter //
+//
 CREATE TRIGGER app_portfolio.user_account_logon_before_delete 
     BEFORE DELETE ON app_portfolio.user_account_logon 
     FOR EACH ROW 
@@ -2829,8 +2806,7 @@ old.client_longitude,
 old.client_latitude,
 old.date_created);
 END; 
-
-delimiter //
+//
 CREATE TRIGGER app_portfolio.user_account_logon_before_insert 
     BEFORE INSERT ON app_portfolio.user_account_logon 
     FOR EACH ROW 
@@ -2860,8 +2836,7 @@ new.client_longitude,
 new.client_latitude,
 new.date_created);
 END; 
-
-delimiter //
+//
 CREATE TRIGGER app_portfolio.user_account_logon_before_update 
     BEFORE UPDATE ON app_portfolio.user_account_logon 
     FOR EACH ROW 
@@ -2891,8 +2866,7 @@ old.client_longitude,
 old.client_latitude,
 old.date_created);
 END; 
-
-delimiter //
+//
 CREATE TRIGGER app_portfolio.user_account_view_before_delete 
     BEFORE DELETE ON app_portfolio.user_account_view 
     FOR EACH ROW 
@@ -2918,8 +2892,7 @@ old.client_longitude,
 old.client_latitude,
 old.date_created);
 END; 
-
-delimiter //
+//
 CREATE TRIGGER app_portfolio.user_account_view_before_insert 
     BEFORE INSERT ON app_portfolio.user_account_view 
     FOR EACH ROW 
@@ -2945,8 +2918,7 @@ new.client_longitude,
 new.client_latitude,
 new.date_created);
 END; 
-
-delimiter //
+//
 CREATE TRIGGER app_portfolio.user_account_view_before_update 
     BEFORE UPDATE ON app_portfolio.user_account_view 
     FOR EACH ROW 
@@ -2972,3 +2944,4 @@ old.client_longitude,
 old.client_latitude,
 old.date_created);
 END; 
+//
