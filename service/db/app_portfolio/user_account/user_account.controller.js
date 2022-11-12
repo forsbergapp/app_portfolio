@@ -128,9 +128,25 @@ module.exports = {
         }
         activateUser(req.query.app_id, req.params.id, req.body.verification_type, verification_code_to_check, auth_new_password, (err, results) => {
             if (err) {
-                return res.status(500).send(
-                    err
-                );
+                var app_code = get_app_code(err.errorNum, 
+                    err.message, 
+                    err.code, 
+                    err.errno, 
+                    err.sqlMessage);
+                if (app_code != null){
+                    getMessage(req.query.app_id,
+                        process.env.COMMON_APP_ID, 
+                        app_code, 
+                        req.query.lang_code, (err,results_message)  => {
+                                    return res.status(400).send(
+                                        err ?? results_message.text
+                                    );
+                        });
+                }
+                else
+                    return res.status(500).send(
+                        err
+                    );
             }
             else
                 if (auth_new_password == null){
@@ -741,9 +757,25 @@ module.exports = {
     updateUserCommon: (req, res) => {
         updateUserCommon(req.query.app_id, req.body, req.params.id, (err, results) => {
             if (err) {
-                return res.status(500).send(
-                    err
-                );
+                var app_code = get_app_code(err.errorNum, 
+                    err.message, 
+                    err.code, 
+                    err.errno, 
+                    err.sqlMessage);
+                if (app_code != null){
+                    getMessage(req.query.app_id,
+                        process.env.COMMON_APP_ID, 
+                        app_code, 
+                        req.query.lang_code, (err,results_message)  => {
+                                    return res.status(400).send(
+                                        err ?? results_message.text
+                                    );
+                        });
+                }
+                else
+                    return res.status(500).send(
+                        err
+                    );
             }
             else {
                 if (results) {
@@ -1041,9 +1073,25 @@ module.exports = {
                 if (results.length > 0) {
                     updateSigninProvider(req.query.app_id, results[0].id, req.body, (err, results_update) => {
                         if (err) {
-                            return res.status(500).send(
-                                err
-                            );
+                            var app_code = get_app_code(err.errorNum, 
+                                err.message, 
+                                err.code, 
+                                err.errno, 
+                                err.sqlMessage);
+                            if (app_code != null){
+                                getMessage(req.query.app_id,
+                                    process.env.COMMON_APP_ID, 
+                                    app_code, 
+                                    req.query.lang_code, (err,results_message)  => {
+                                                return res.status(400).send(
+                                                    err ?? results_message.text
+                                                );
+                                    });
+                            }
+                            else
+                                return res.status(500).send(
+                                    err
+                                );
                         }
                         else{
                             req.body.user_account_id = results[0].id;
