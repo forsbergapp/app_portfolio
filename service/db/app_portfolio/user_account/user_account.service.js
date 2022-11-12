@@ -55,6 +55,80 @@ function get_app_code (errorNum, message, code, errno, sqlMessage){
 function verification_code(){
     return Math.floor(100000 + Math.random() * 900000);
 }
+function data_validation(data){
+	data.provider_id = data.provider_id ?? null;
+	data.password_reminder = data.password_reminder ?? null;
+	data.email_unverified = data.email_unverified ?? null;
+	data.verification_code = data.verification_code ?? null;
+	if (data.provider_id != null){
+		data.password = null;
+		data.password_reminder = null;
+		data.email = null;
+		data.email_unverified = null;
+		data.avatar = null;
+		data.verification_code = null;
+	}
+    if (data.username.length < 5 || data.username.length > 100){
+		//'username 5 - 100 characters'
+		return 20100;
+	}
+	else 
+		if (data.username.indexOf(' ') > -1 || 
+		    data.username.indexOf('?') > -1 ||
+			data.username.indexOf('/') > -1 ||
+			data.username.indexOf('+') > -1 ||
+			data.username.indexOf('"') > -1 ||
+			data.username.indexOf('\'\'') > -1){
+			//'not valid username'
+			return 20101;
+		}
+		else
+			if (data.bio.length > 100){
+				//'bio max 100 characters'
+				return 20102;
+			}
+			else 
+				if (data.email.length > 100){
+					//'email max 100 characters'
+					return 20103;
+				}
+				else
+					if (data.password_reminder.length > 100){
+						//'reminder max 100 characters'
+						return 20104;
+					}
+					else
+						if (data.email.slice(-10) != '@localhost' && data.email.match(/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)==null){
+							//'not valid email' (ignore emails that ends with '@localhost')
+							return 20105;
+						}
+						else
+							if (data.email_unverified != null && data.email_unverified.match(/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)==null){
+								//'not valid email'
+								return 20105;
+							}
+							else
+								if (data.provider_id == null && (data.username == null || data.password==null || data.email==null)){
+									//'Username, password and email are required'
+									return 20107;
+								}
+								else
+									return null;
+}
+function validation_before_insert(data){
+	let error_code = data_validation(data);
+	if (error_code==null)
+		return null;
+	else
+		return {"errorNum" : error_code};
+}
+function validation_before_update(data){
+	let error_code = data_validation(data);
+	if (error_code==null)
+		return null;
+	else
+		return {"errorNum" : error_code};
+}
 module.exports = {
     create: (app_id, data, callBack) => {
 		let sql;
@@ -65,213 +139,224 @@ module.exports = {
             //generate local username for provider 1
             data.username = `${data.provider_first_name}${Date.now()}`;
         }
-        if (process.env.SERVICE_DB_USE == 1) {
-			sql = `INSERT INTO ${process.env.SERVICE_DB_DB1_NAME}.user_account(
-						bio,
-						private,
-						user_level,
-						date_created,
-						date_modified,
-						username,
-						password,
-						password_reminder,
-						email,
-						avatar,
-						verification_code,
-						active,
-						identity_provider_id,
-						provider_id,
-						provider_first_name,
-						provider_last_name,
-						provider_image,
-						provider_image_url,
-						provider_email)
-					VALUES(?,?,?,SYSDATE(),SYSDATE(),?,?,?,?,?,?,?,?,?,?,?,?,?,?) `;
-			parameters = [
-							data.bio,
-							data.private,
-							data.user_level,
-							data.username,
-							data.password,
-							data.password_reminder,
-							data.email,
-							data.avatar,
-							data.verification_code,
-							data.active,
-							data.identity_provider_id,
-							data.provider_id,
-							data.provider_first_name,
-							data.provider_last_name,
-							data.provider_image,
-							data.provider_image_url,
-							data.provider_email
-						];
-        } else if (process.env.SERVICE_DB_USE == 2) {
-			sql = `INSERT INTO ${process.env.SERVICE_DB_DB2_NAME}.user_account(
-						bio,
-						private,
-						user_level,
-						date_created,
-						date_modified,
-						username,
-						password,
-						password_reminder,
-						email,
-						avatar,
-						verification_code,
-						active,
-						identity_provider_id,
-						provider_id,
-						provider_first_name,
-						provider_last_name,
-						provider_image,
-						provider_image_url,
-						provider_email)
-					VALUES(:bio,
-						:private,
-						:user_level,
-						SYSDATE,
-						SYSDATE,
-						:username,
-						:password,
-						:password_reminder,
-						:email,
-						:avatar,
-						:verification_code,
-						:active,
-						:identity_provider_id,
-						:provider_id,
-						:provider_first_name,
-						:provider_last_name,
-						:provider_image,
-						:provider_image_url,
-						:provider_email) `;
-			if (data.avatar != null)
-				data.avatar = Buffer.from(data.avatar, 'utf8');
-			if (data.provider_image != null)
-				data.provider_image = Buffer.from(data.provider_image, 'utf8');
-			parameters = {
-							bio: data.bio,
-							private: data.private,
-							user_level: data.user_level,
-							username: data.username,
-							password: data.password,
-							password_reminder: data.password_reminder,
-							email: data.email,
-							avatar: data.avatar,
-							verification_code: data.verification_code,
-							active: data.active,
-							identity_provider_id: data.identity_provider_id,
-							provider_id: data.provider_id,
-							provider_first_name: data.provider_first_name,
-							provider_last_name: data.provider_last_name,
-							provider_image: data.provider_image,
-							provider_image_url: data.provider_image_url,
-							provider_email: data.provider_email
-						};
-        }
-		execute_db_sql(app_id, sql, parameters, null, 
-			           __appfilename, __appfunction, __appline, (err, result)=>{
-			if (err)
-				return callBack(err, null);
-			else
-				if (process.env.SERVICE_DB_USE==1)
-					return callBack(null, result);
-				else{
-					//Fetch id from rowid returned from Oracle
-					//sample output:
-					//{"lastRowid":"AAAWwdAAAAAAAdHAAC","rowsAffected":1}
-					//remove "" before and after
-					var lastRowid = JSON.stringify(result.lastRowid).replace(/"/g, '');
-					sql = `SELECT id "insertId"
-							 FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account
-							WHERE rowid = :lastRowid`;
-					parameters = {
-									lastRowid: lastRowid
-								 };
-					execute_db_sql(app_id, sql, parameters, null, 
-						           __appfilename, __appfunction, __appline, (err, result_id2)=>{
-						if (err)
-							return callBack(err, null);
-						else
-							return callBack(null, result_id2.rows[0]);
-					})
-				}
-		});
+		let error_code = validation_before_insert(data);
+		if (error_code==null){
+			if (process.env.SERVICE_DB_USE == 1) {
+				sql = `INSERT INTO ${process.env.SERVICE_DB_DB1_NAME}.user_account(
+							bio,
+							private,
+							user_level,
+							date_created,
+							date_modified,
+							username,
+							password,
+							password_reminder,
+							email,
+							avatar,
+							verification_code,
+							active,
+							identity_provider_id,
+							provider_id,
+							provider_first_name,
+							provider_last_name,
+							provider_image,
+							provider_image_url,
+							provider_email)
+						VALUES(?,?,?,SYSDATE(),SYSDATE(),?,?,?,?,?,?,?,?,?,?,?,?,?,?) `;
+				parameters = [
+								data.bio,
+								data.private,
+								data.user_level,
+								data.username,
+								data.password,
+								data.password_reminder,
+								data.email,
+								data.avatar,
+								data.verification_code,
+								data.active,
+								data.identity_provider_id,
+								data.provider_id,
+								data.provider_first_name,
+								data.provider_last_name,
+								data.provider_image,
+								data.provider_image_url,
+								data.provider_email
+							];
+			} else if (process.env.SERVICE_DB_USE == 2) {
+				sql = `INSERT INTO ${process.env.SERVICE_DB_DB2_NAME}.user_account(
+							bio,
+							private,
+							user_level,
+							date_created,
+							date_modified,
+							username,
+							password,
+							password_reminder,
+							email,
+							avatar,
+							verification_code,
+							active,
+							identity_provider_id,
+							provider_id,
+							provider_first_name,
+							provider_last_name,
+							provider_image,
+							provider_image_url,
+							provider_email)
+						VALUES(:bio,
+							:private,
+							:user_level,
+							SYSDATE,
+							SYSDATE,
+							:username,
+							:password,
+							:password_reminder,
+							:email,
+							:avatar,
+							:verification_code,
+							:active,
+							:identity_provider_id,
+							:provider_id,
+							:provider_first_name,
+							:provider_last_name,
+							:provider_image,
+							:provider_image_url,
+							:provider_email) `;
+				if (data.avatar != null)
+					data.avatar = Buffer.from(data.avatar, 'utf8');
+				if (data.provider_image != null)
+					data.provider_image = Buffer.from(data.provider_image, 'utf8');
+				parameters = {
+								bio: data.bio,
+								private: data.private,
+								user_level: data.user_level,
+								username: data.username,
+								password: data.password,
+								password_reminder: data.password_reminder,
+								email: data.email,
+								avatar: data.avatar,
+								verification_code: data.verification_code,
+								active: data.active,
+								identity_provider_id: data.identity_provider_id,
+								provider_id: data.provider_id,
+								provider_first_name: data.provider_first_name,
+								provider_last_name: data.provider_last_name,
+								provider_image: data.provider_image,
+								provider_image_url: data.provider_image_url,
+								provider_email: data.provider_email
+							};
+			}
+			execute_db_sql(app_id, sql, parameters, null, 
+						   __appfilename, __appfunction, __appline, (err, result)=>{
+				if (err)
+					return callBack(err, null);
+				else
+					if (process.env.SERVICE_DB_USE==1)
+						return callBack(null, result);
+					else{
+						//Fetch id from rowid returned from Oracle
+						//sample output:
+						//{"lastRowid":"AAAWwdAAAAAAAdHAAC","rowsAffected":1}
+						//remove "" before and after
+						var lastRowid = JSON.stringify(result.lastRowid).replace(/"/g, '');
+						sql = `SELECT id "insertId"
+								 FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account
+								WHERE rowid = :lastRowid`;
+						parameters = {
+										lastRowid: lastRowid
+									 };
+						execute_db_sql(app_id, sql, parameters, null, 
+									   __appfilename, __appfunction, __appline, (err, result_id2)=>{
+							if (err)
+								return callBack(err, null);
+							else
+								return callBack(null, result_id2.rows[0]);
+						})
+					}
+			});
+		}
+		else
+			callBack(error_code, null);
+        
     },
     activateUser: (app_id, id, verification_type, verification_code, auth, callBack) => {
 		let sql;
     	let parameters;
-        if (process.env.SERVICE_DB_USE == 1) {
-			sql = `UPDATE ${process.env.SERVICE_DB_DB1_NAME}.user_account
-						SET	active = 1,
-							verification_code = ?,
-							email = CASE 
-									WHEN  ? = 4 THEN 
-										email_unverified
-									ELSE 
-										email
-									END,
-							email_unverified = CASE 
-											WHEN  ? = 4 THEN 
-													NULL
-											ELSE 
-													email_unverified
-											END,
-							date_modified = SYSDATE()
-					WHERE id = ?
-						AND verification_code = ?`;
-			parameters = [	auth,
-							verification_type,
-							verification_type,
-							id,
-							verification_code
-						 ];
-        } else if (process.env.SERVICE_DB_USE == 2) {
-			sql = `UPDATE ${process.env.SERVICE_DB_DB2_NAME}.user_account
-						SET	active = 1,
-							verification_code = :auth,
-							email = CASE 
-									WHEN  :verification_type = 4 THEN 
-										email_unverified
-									ELSE 
-										email
-									END,
-							email_unverified = CASE 
-											WHEN  :verification_type = 4 THEN 
-													NULL
-											ELSE 
-													email_unverified
-											END,
-							date_modified = SYSDATE
-					WHERE id = :id
-						AND verification_code = :verification_code `;
-			parameters ={
-							auth: auth,
-							verification_type: verification_type,
-							id: id,
-							verification_code: verification_code
-						};
-        }
-		execute_db_sql(app_id, sql, parameters, null, 
-			           __appfilename, __appfunction, __appline, (err, result)=>{
-			if (err)
-				return callBack(err, null);
-			else{
-				if (process.env.SERVICE_DB_USE == 1) {
-					return callBack(null, result);
-				}
-				else
-					if (process.env.SERVICE_DB_USE == 2) {
-						var oracle_json = {
-							"count": result.rowsAffected,
-							"affectedRows": result.rowsAffected
-						};
-						//use affectedRows as mysql in app
-						return callBack(null, oracle_json);
-					}
+		let error_code = validation_before_update(data);
+		if (error_code==null){
+			if (process.env.SERVICE_DB_USE == 1) {
+				sql = `UPDATE ${process.env.SERVICE_DB_DB1_NAME}.user_account
+							SET	active = 1,
+								verification_code = ?,
+								email = CASE 
+										WHEN  ? = 4 THEN 
+											email_unverified
+										ELSE 
+											email
+										END,
+								email_unverified = CASE 
+												WHEN  ? = 4 THEN 
+														NULL
+												ELSE 
+														email_unverified
+												END,
+								date_modified = SYSDATE()
+						WHERE id = ?
+							AND verification_code = ?`;
+				parameters = [	auth,
+								verification_type,
+								verification_type,
+								id,
+								verification_code
+							];
+			} else if (process.env.SERVICE_DB_USE == 2) {
+				sql = `UPDATE ${process.env.SERVICE_DB_DB2_NAME}.user_account
+							SET	active = 1,
+								verification_code = :auth,
+								email = CASE 
+										WHEN  :verification_type = 4 THEN 
+											email_unverified
+										ELSE 
+											email
+										END,
+								email_unverified = CASE 
+												WHEN  :verification_type = 4 THEN 
+														NULL
+												ELSE 
+														email_unverified
+												END,
+								date_modified = SYSDATE
+						WHERE id = :id
+							AND verification_code = :verification_code `;
+				parameters ={
+								auth: auth,
+								verification_type: verification_type,
+								id: id,
+								verification_code: verification_code
+							};
 			}
-		});
+			execute_db_sql(app_id, sql, parameters, null, 
+						__appfilename, __appfunction, __appline, (err, result)=>{
+				if (err)
+					return callBack(err, null);
+				else{
+					if (process.env.SERVICE_DB_USE == 1) {
+						return callBack(null, result);
+					}
+					else
+						if (process.env.SERVICE_DB_USE == 2) {
+							var oracle_json = {
+								"count": result.rowsAffected,
+								"affectedRows": result.rowsAffected
+							};
+							//use affectedRows as mysql in app
+							return callBack(null, oracle_json);
+						}
+				}
+			});
+		}
+		else
+			callBack(error_code, null);
     },
 	updateUserVerificationCode: (app_id, id, verification_code, callBack) => {
 		let sql;
@@ -933,143 +1018,159 @@ module.exports = {
 	updatePassword: (app_id, id, data, callBack) => {
 		let sql;
 		let parameters;
-        if (process.env.SERVICE_DB_USE == 1) {
-			sql = `UPDATE ${process.env.SERVICE_DB_DB1_NAME}.user_account
-					SET password = ?,
-						verification_code = null
-					WHERE id = ? 
-						AND verification_code = ?
-						AND verification_code IS NOT NULL`;
-			parameters = [	data.new_password,
-							id,
-							data.auth];
-        } else if (process.env.SERVICE_DB_USE == 2) {
-			sql = `UPDATE ${process.env.SERVICE_DB_DB2_NAME}.user_account
-					SET password = :new_password,
-						verification_code = null
-					WHERE id = :id  
-						AND verification_code = :auth
-						AND verification_code IS NOT NULL`;
-			parameters ={
-							new_password: data.new_password,
-							id: id,
-							auth: data.auth
-						}; 
-        }
-		execute_db_sql(app_id, sql, parameters, null, 
-			           __appfilename, __appfunction, __appline, (err, result)=>{
-			if (err)
-				return callBack(err, null);
-			else
-				return callBack(null, result);
-		});
+		let error_code = validation_before_update(data);
+		if (error_code==null){
+			if (process.env.SERVICE_DB_USE == 1) {
+				sql = `UPDATE ${process.env.SERVICE_DB_DB1_NAME}.user_account
+						SET password = ?,
+							verification_code = null
+						WHERE id = ? 
+							AND verification_code = ?
+							AND verification_code IS NOT NULL`;
+				parameters = [	data.new_password,
+								id,
+								data.auth];
+			} else if (process.env.SERVICE_DB_USE == 2) {
+				sql = `UPDATE ${process.env.SERVICE_DB_DB2_NAME}.user_account
+						SET password = :new_password,
+							verification_code = null
+						WHERE id = :id  
+							AND verification_code = :auth
+							AND verification_code IS NOT NULL`;
+				parameters ={
+								new_password: data.new_password,
+								id: id,
+								auth: data.auth
+							}; 
+			}
+			execute_db_sql(app_id, sql, parameters, null, 
+						__appfilename, __appfunction, __appline, (err, result)=>{
+				if (err)
+					return callBack(err, null);
+				else
+					return callBack(null, result);
+			});
+		}
+		else
+			callBack(error_code, null);
     },
     updateUserLocal: (app_id, data, search_id, callBack) => {
 		let sql;
 		let parameters;
-        if (process.env.SERVICE_DB_USE == 1) {
-			sql = `UPDATE ${process.env.SERVICE_DB_DB1_NAME}.user_account
-						SET bio = ?,
-							private = ?,
-							user_level = ?,
-							username = ?,
-							password = ?,
-							password_reminder = ?,
-							email = ?,
-							email_unverified = ?,
-							avatar = ?,
-							verification_code = ?,
-							date_modified = SYSDATE()
-					WHERE id = ? `;
-			parameters = [
-							data.bio,
-							data.private,
-							data.user_level,
-							data.username,
-							data.password,
-							data.password_reminder,
-							data.email,
-							data.new_email,
-							data.avatar,
-							data.verification_code,
-							search_id
-						];
-        } else if (process.env.SERVICE_DB_USE == 2) {
-			sql = `UPDATE ${process.env.SERVICE_DB_DB2_NAME}.user_account
-					SET bio = :bio,
-						private = :private,
-						user_level = :user_level,
-						username = :username,
-						password = :password,
-						password_reminder = :password_reminder,
-						email = :email,
-						email_unverified = :new_email,
-						avatar = :avatar,
-						verification_code = :verification_code,
-						date_modified = SYSDATE
-					WHERE id = :id `;
-			parameters ={
-							bio: data.bio,
-							private: data.private,
-							user_level: data.user_level,
-							username: data.username,
-							password: data.password,
-							password_reminder: data.password_reminder,
-							email: data.email,
-							new_email: data.new_email,
-							avatar: Buffer.from(data.avatar, 'utf8'),
-							verification_code: data.verification_code,
-							id: search_id
-						}; 
-        }
-		execute_db_sql(app_id, sql, parameters, null, 
-			           __appfilename, __appfunction, __appline, (err, result)=>{
-			if (err)
-				return callBack(err, null);
-			else
-				return callBack(null, result);
-		});
+		let error_code = validation_before_update(data);
+		data.user_level = data.user_level ?? null;
+		if (error_code==null){
+			if (process.env.SERVICE_DB_USE == 1) {
+				sql = `UPDATE ${process.env.SERVICE_DB_DB1_NAME}.user_account
+							SET bio = ?,
+								private = ?,
+								user_level = ?,
+								username = ?,
+								password = ?,
+								password_reminder = ?,
+								email = ?,
+								email_unverified = ?,
+								avatar = ?,
+								verification_code = ?,
+								date_modified = SYSDATE()
+						WHERE id = ? `;
+				parameters = [
+								data.bio,
+								data.private,
+								data.user_level,
+								data.username,
+								data.password,
+								data.password_reminder,
+								data.email,
+								data.new_email,
+								data.avatar,
+								data.verification_code,
+								search_id
+							];
+			} else if (process.env.SERVICE_DB_USE == 2) {
+				sql = `UPDATE ${process.env.SERVICE_DB_DB2_NAME}.user_account
+						SET bio = :bio,
+							private = :private,
+							user_level = :user_level,
+							username = :username,
+							password = :password,
+							password_reminder = :password_reminder,
+							email = :email,
+							email_unverified = :new_email,
+							avatar = :avatar,
+							verification_code = :verification_code,
+							date_modified = SYSDATE
+						WHERE id = :id `;
+				parameters ={
+								bio: data.bio,
+								private: data.private,
+								user_level: data.user_level,
+								username: data.username,
+								password: data.password,
+								password_reminder: data.password_reminder,
+								email: data.email,
+								new_email: data.new_email,
+								avatar: Buffer.from(data.avatar, 'utf8'),
+								verification_code: data.verification_code,
+								id: search_id
+							}; 
+			}
+			execute_db_sql(app_id, sql, parameters, null, 
+						__appfilename, __appfunction, __appline, (err, result)=>{
+				if (err)
+					return callBack(err, null);
+				else
+					return callBack(null, result);
+			});
+		}
+		else
+			callBack(error_code, null);
     },
     updateUserCommon: (app_id, data, id, callBack) => {
 		let sql;
 		let parameters;
-        if (process.env.SERVICE_DB_USE == 1) {
-			sql = `UPDATE ${process.env.SERVICE_DB_DB1_NAME}.user_account
-					SET username = ?,
-						bio = ?,
-						private = ?,
-						user_level = ?,
-						date_modified = SYSDATE()
-					WHERE id = ? `;
-			parameters = [   
-							data.username,
-							data.bio,
-							data.private,
-							data.user_level,
-							id
-						];
-        } else if (process.env.SERVICE_DB_USE == 2) {
-			sql = `UPDATE ${process.env.SERVICE_DB_DB2_NAME}.user_account
-					SET username = :username,
-						bio = :bio,
-						private = :private,
-						user_level = :user_level,
-						date_modified = SYSDATE
-					WHERE id = :id `;
-			parameters ={	username: username,
-							bio: data.bio,
-							private: data.private,
-							user_level: data.user_level,
-							id: id
-						}; 
-        }
-		execute_db_sql(app_id, sql, parameters, null, 
-			           __appfilename, __appfunction, __appline, (err, result)=>{
-			if (err)
-				return callBack(err, null);
-			else
-				return callBack(null, result);
-		});
+		let error_code = validation_before_update(data);
+		if (error_code==null){
+			if (process.env.SERVICE_DB_USE == 1) {
+				sql = `UPDATE ${process.env.SERVICE_DB_DB1_NAME}.user_account
+						SET username = ?,
+							bio = ?,
+							private = ?,
+							user_level = ?,
+							date_modified = SYSDATE()
+						WHERE id = ? `;
+				parameters = [   
+								data.username,
+								data.bio,
+								data.private,
+								data.user_level,
+								id
+							];
+			} else if (process.env.SERVICE_DB_USE == 2) {
+				sql = `UPDATE ${process.env.SERVICE_DB_DB2_NAME}.user_account
+						SET username = :username,
+							bio = :bio,
+							private = :private,
+							user_level = :user_level,
+							date_modified = SYSDATE
+						WHERE id = :id `;
+				parameters ={	username: username,
+								bio: data.bio,
+								private: data.private,
+								user_level: data.user_level,
+								id: id
+							}; 
+			}
+			execute_db_sql(app_id, sql, parameters, null, 
+						__appfilename, __appfunction, __appline, (err, result)=>{
+				if (err)
+					return callBack(err, null);
+				else
+					return callBack(null, result);
+			});
+		}
+		else
+			callBack(error_code, null);
     },
     deleteUser: (app_id, id, callBack) => {
 		let sql;
@@ -1135,57 +1236,62 @@ module.exports = {
     updateSigninProvider: (app_id, id, data, callBack) => {
 		let sql;
 		let parameters;
-		if (process.env.SERVICE_DB_USE == 1) {
-			sql = `UPDATE ${process.env.SERVICE_DB_DB1_NAME}.user_account
-						SET identity_provider_id = ?,
-							provider_id = ?,
-							provider_first_name = ?,
-							provider_last_name = ?,
-							provider_image = ?,
-							provider_image_url = ?,
-							provider_email = ?,
-							date_modified = SYSDATE()
-					WHERE id = ?
+		let error_code = validation_before_update(data);
+		if (error_code==null){
+			if (process.env.SERVICE_DB_USE == 1) {
+				sql = `UPDATE ${process.env.SERVICE_DB_DB1_NAME}.user_account
+							SET identity_provider_id = ?,
+								provider_id = ?,
+								provider_first_name = ?,
+								provider_last_name = ?,
+								provider_image = ?,
+								provider_image_url = ?,
+								provider_email = ?,
+								date_modified = SYSDATE()
+						WHERE id = ?
+							AND active =1 `;
+				parameters = [	data.identity_provider_id,
+								data.provider_id,
+								data.provider_first_name,
+								data.provider_last_name,
+								data.provider_image,
+								data.provider_image_url,
+								data.provider_email,
+								id
+							]
+			} else if (process.env.SERVICE_DB_USE == 2) {
+				sql = `UPDATE ${process.env.SERVICE_DB_DB2_NAME}.user_account
+							SET identity_provider_id = :identity_provider_id,
+								provider_id = :provider_id,
+								provider_first_name = :provider_first_name,
+								provider_last_name = :provider_last_name,
+								provider_image = :provider_image,
+								provider_image_url = :provider_image_url,
+								provider_email = :provider_email,
+								date_modified = SYSDATE
+						WHERE id = :id
 						AND active =1 `;
-			parameters = [	data.identity_provider_id,
-							data.provider_id,
-							data.provider_first_name,
-							data.provider_last_name,
-							data.provider_image,
-							data.provider_image_url,
-							data.provider_email,
-							id
-						]
-		} else if (process.env.SERVICE_DB_USE == 2) {
-			sql = `UPDATE ${process.env.SERVICE_DB_DB2_NAME}.user_account
-						SET identity_provider_id = :identity_provider_id,
-							provider_id = :provider_id,
-							provider_first_name = :provider_first_name,
-							provider_last_name = :provider_last_name,
-							provider_image = :provider_image,
-							provider_image_url = :provider_image_url,
-							provider_email = :provider_email,
-							date_modified = SYSDATE
-					WHERE id = :id
-					  AND active =1 `;
-			parameters ={
-							identity_provider_id: data.identity_provider_id,
-							provider_id: data.provider_id,
-							provider_first_name: data.provider_first_name,
-							provider_last_name: data.provider_last_name,
-							provider_image: Buffer.from(data.provider_image, 'utf8'),
-							provider_image_url: data.provider_image_url,
-							provider_email: data.provider_email,
-							id: id
-						}; 
+				parameters ={
+								identity_provider_id: data.identity_provider_id,
+								provider_id: data.provider_id,
+								provider_first_name: data.provider_first_name,
+								provider_last_name: data.provider_last_name,
+								provider_image: Buffer.from(data.provider_image, 'utf8'),
+								provider_image_url: data.provider_image_url,
+								provider_email: data.provider_email,
+								id: id
+							}; 
+			}
+			execute_db_sql(app_id, sql, parameters, null, 
+						__appfilename, __appfunction, __appline, (err, result)=>{
+				if (err)
+					return callBack(err, null);
+				else
+					return callBack(null, result[0]);
+			});
 		}
-		execute_db_sql(app_id, sql, parameters, null, 
-			           __appfilename, __appfunction, __appline, (err, result)=>{
-			if (err)
-				return callBack(err, null);
-			else
-				return callBack(null, result[0]);
-		});
+		else
+			callBack(error_code, null);
     },
     providerSignIn: (app_id, identity_provider_id, search_id, callBack) => {
 		let sql;
