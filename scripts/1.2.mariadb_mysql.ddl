@@ -990,29 +990,6 @@ GRANT ALL PRIVILEGES ON app_portfolio.profile_search TO role_app_dba;
 
 GRANT SELECT, INSERT ON app_portfolio.profile_search TO role_app2;
 
-CREATE TABLE app_portfolio.profile_search_hist (
-    id                 INT NOT NULL AUTO_INCREMENT,
-    dml                VARCHAR(1),
-    dml_date           DATETIME,
-    user_account_id    INTEGER,
-    search             VARCHAR(100),
-    client_ip          VARCHAR(1000),
-    client_user_agent  VARCHAR(1000),
-    client_latitude    VARCHAR(100),
-    client_longitude   VARCHAR(100),
-    date_created       DATETIME,
-	CONSTRAINT profile_search_hist_pk PRIMARY KEY ( id )
-);
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.profile_search_hist TO role_app_admin;
-
-GRANT SELECT, INSERT ON app_portfolio.profile_search_hist TO role_app1;
-
-GRANT SELECT, INSERT ON app_portfolio.profile_search_hist TO role_app3;
-
-GRANT ALL PRIVILEGES ON app_portfolio.profile_search_hist TO role_app_dba;
-
-GRANT SELECT, INSERT ON app_portfolio.profile_search_hist TO role_app2;
-
 CREATE TABLE app_portfolio.setting (
     id              INT NOT NULL AUTO_INCREMENT,
     description     VARCHAR(100) NOT NULL,
@@ -1318,31 +1295,6 @@ GRANT ALL PRIVILEGES ON app_portfolio.user_account_logon TO role_app_dba;
 GRANT SELECT, INSERT, DELETE, UPDATE ON app_portfolio.user_account_logon TO role_app2;
 
 ALTER TABLE app_portfolio.user_account_logon ADD CONSTRAINT user_account_logon_access_token_un UNIQUE ( access_token );
-
-CREATE TABLE app_portfolio.user_account_logon_hist (
-    id                 INT NOT NULL AUTO_INCREMENT,
-    dml                VARCHAR(1),
-    dml_date           DATETIME,
-    user_account_id    INTEGER,
-    app_id             INTEGER,
-    result             INTEGER,
-    access_token       VARCHAR(500),
-    client_ip          VARCHAR(100),
-    client_user_agent  VARCHAR(500),
-    client_latitude    VARCHAR(100),
-    client_longitude   VARCHAR(100),
-    date_created       DATETIME,
-	CONSTRAINT user_account_logon_hist_pk PRIMARY KEY ( id )
-);
-GRANT SELECT, INSERT ON app_portfolio.user_account_logon_hist TO role_app1;
-
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.user_account_logon_hist TO role_app_admin;
-
-GRANT SELECT, INSERT ON app_portfolio.user_account_logon_hist TO role_app3;
-
-GRANT ALL PRIVILEGES ON app_portfolio.user_account_logon_hist TO role_app_dba;
-
-GRANT SELECT, INSERT ON app_portfolio.user_account_logon_hist TO role_app2;
 
 CREATE TABLE app_portfolio.user_account_view (
     user_account_id       INTEGER,
@@ -2257,84 +2209,6 @@ old.client_latitude,
 old.date_created);
 END; 
 //
-CREATE TRIGGER app_portfolio.profile_search_before_delete 
-    BEFORE DELETE ON app_portfolio.profile_search 
-    FOR EACH ROW 
-BEGIN
-INSERT INTO profile_search_hist
-(dml,
-dml_date,
-user_account_id,
-search,
-client_ip,
-client_user_agent,
-client_longitude,
-client_latitude,
-date_created)
-VALUES
-('D',
-SYSDATE(),
-old.user_account_id,
-old.search,
-old.client_ip,
-old.client_user_agent,
-old.client_longitude,
-old.client_latitude,
-old.date_created);
-END; 
-//
-CREATE TRIGGER app_portfolio.profile_search_before_insert 
-    BEFORE INSERT ON app_portfolio.profile_search 
-    FOR EACH ROW 
-BEGIN
-INSERT INTO profile_search_hist
-(dml,
-dml_date,
-user_account_id,
-search,
-client_ip,
-client_user_agent,
-client_longitude,
-client_latitude,
-date_created)
-VALUES
-('I',
-SYSDATE(),
-new.user_account_id,
-new.search,
-new.client_ip,
-new.client_user_agent,
-new.client_longitude,
-new.client_latitude,
-new.date_created);
-END; 
-//
-CREATE TRIGGER app_portfolio.profile_search_before_update 
-    BEFORE UPDATE ON app_portfolio.profile_search 
-    FOR EACH ROW 
-BEGIN
-INSERT INTO profile_search_hist
-(dml,
-dml_date,
-user_account_id,
-search,
-client_ip,
-client_user_agent,
-client_longitude,
-client_latitude,
-date_created)
-VALUES
-('U',
-SYSDATE(),
-old.user_account_id,
-old.search,
-old.client_ip,
-old.client_user_agent,
-old.client_longitude,
-old.client_latitude,
-old.date_created);
-END; 
-//
 CREATE TRIGGER app_portfolio.user_account_app_before_delete 
     BEFORE DELETE ON app_portfolio.user_account_app 
     FOR EACH ROW 
@@ -2764,96 +2638,6 @@ SYSDATE(),
 old.id,
 old.user_account_id,
 old.user_account_id_like,
-old.date_created);
-END; 
-//
-CREATE TRIGGER app_portfolio.user_account_logon_before_delete 
-    BEFORE DELETE ON app_portfolio.user_account_logon 
-    FOR EACH ROW 
-BEGIN
-INSERT INTO user_account_logon_hist
-(dml,
-dml_date,
-user_account_id,
-app_id,
-result,
-access_token,
-client_ip,
-client_user_agent,
-client_longitude,
-client_latitude,
-date_created)
-VALUES
-('D',
-SYSDATE(),
-old.user_account_id,
-old.app_id,
-old.result,
-old.access_token,
-old.client_ip,
-old.client_user_agent,
-old.client_longitude,
-old.client_latitude,
-old.date_created);
-END; 
-//
-CREATE TRIGGER app_portfolio.user_account_logon_before_insert 
-    BEFORE INSERT ON app_portfolio.user_account_logon 
-    FOR EACH ROW 
-BEGIN
-INSERT INTO user_account_logon_hist
-(dml,
-dml_date,
-user_account_id,
-app_id,
-result,
-access_token,
-client_ip,
-client_user_agent,
-client_longitude,
-client_latitude,
-date_created)
-VALUES
-('I',
-SYSDATE(),
-new.user_account_id,
-new.app_id,
-new.result,
-new.access_token,
-new.client_ip,
-new.client_user_agent,
-new.client_longitude,
-new.client_latitude,
-new.date_created);
-END; 
-//
-CREATE TRIGGER app_portfolio.user_account_logon_before_update 
-    BEFORE UPDATE ON app_portfolio.user_account_logon 
-    FOR EACH ROW 
-BEGIN
-INSERT INTO user_account_logon_hist
-(dml,
-dml_date,
-user_account_id,
-app_id,
-result,
-access_token,
-client_ip,
-client_user_agent,
-client_longitude,
-client_latitude,
-date_created)
-VALUES
-('U',
-SYSDATE(),
-old.user_account_id,
-old.app_id,
-old.result,
-old.access_token,
-old.client_ip,
-old.client_user_agent,
-old.client_longitude,
-old.client_latitude,
 old.date_created);
 END; 
 //
