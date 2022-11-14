@@ -1703,131 +1703,27 @@ ALTER TABLE app_portfolio.user_account_view
         ON DELETE CASCADE;
 
 delimiter //
-CREATE TRIGGER app_portfolio.app2_user_setting_before_delete 
-    BEFORE DELETE ON app_portfolio.app2_user_setting 
+CREATE TRIGGER app_portfolio.app2_user_setting_after_delete 
+    AFTER DELETE ON app_portfolio.app2_user_setting 
     FOR EACH ROW 
 BEGIN
-INSERT INTO app2_user_setting_hist
-(dml,
-dml_date,
-app2_user_setting_id,
-description,
-regional_language_locale,
-regional_timezone,
-regional_number_system,
-regional_layout_direction,
-regional_second_language_locale,
-regional_column_title,
-regional_arabic_script,
-regional_calendar_type,
-regional_calendar_hijri_type,
-gps_map_type,
-gps_country_id,
-gps_city_id,
-gps_popular_place_id,
-gps_lat_text,
-gps_long_text,
-design_theme_day_id,
-design_theme_month_id,
-design_theme_year_id,
-design_paper_size,
-design_row_highlight,
-design_column_weekday_checked,
-design_column_calendartype_checked,
-design_column_notes_checked,
-design_column_gps_checked,
-design_column_timezone_checked,
-image_header_image_img,
-image_footer_image_img,
-text_header_1_text,
-text_header_2_text,
-text_header_3_text,
-text_header_align,
-text_footer_1_text,
-text_footer_2_text,
-text_footer_3_text,
-text_footer_align,
-prayer_method,
-prayer_asr_method,
-prayer_high_latitude_adjustment,
-prayer_time_format,
-prayer_hijri_date_adjustment,
-prayer_fajr_iqamat,
-prayer_dhuhr_iqamat,
-prayer_asr_iqamat,
-prayer_maghrib_iqamat,
-prayer_isha_iqamat,
-prayer_column_imsak_checked,
-prayer_column_sunset_checked,
-prayer_column_midnight_checked,
-prayer_column_fast_start_end,
-date_created,
-date_modified,
-user_account_app_user_account_id,
-user_account_app_app_id)
-VALUES(
-'D',
-SYSDATE(),
-old.id,
-old.description,
-old.regional_language_locale,
-old.regional_timezone,
-old.regional_number_system,
-old.regional_layout_direction,
-old.regional_second_language_locale,
-old.regional_column_title,
-old.regional_arabic_script,
-old.regional_calendar_type,
-old.regional_calendar_hijri_type,
-old.gps_map_type,
-old.gps_country_id,
-old.gps_city_id,
-old.gps_popular_place_id,
-old.gps_lat_text,
-old.gps_long_text,
-old.design_theme_day_id,
-old.design_theme_month_id,
-old.design_theme_year_id,
-old.design_paper_size,
-old.design_row_highlight,
-old.design_column_weekday_checked,
-old.design_column_calendartype_checked,
-old.design_column_notes_checked,
-old.design_column_gps_checked,
-old.design_column_timezone_checked,
-null,
-null,
-old.text_header_1_text,
-old.text_header_2_text,
-old.text_header_3_text,
-old.text_header_align,
-old.text_footer_1_text,
-old.text_footer_2_text,
-old.text_footer_3_text,
-old.text_footer_align,
-old.prayer_method,
-old.prayer_asr_method,
-old.prayer_high_latitude_adjustment,
-old.prayer_time_format,
-old.prayer_hijri_date_adjustment,
-old.prayer_fajr_iqamat,
-old.prayer_dhuhr_iqamat,
-old.prayer_asr_iqamat,
-old.prayer_maghrib_iqamat,
-old.prayer_isha_iqamat,
-old.prayer_column_imsak_checked,
-old.prayer_column_sunset_checked,
-old.prayer_column_midnight_checked,
-old.prayer_column_fast_start_end,
-old.date_created,
-old.date_modified,
-old.user_account_app_user_account_id,
-old.user_account_app_app_id);
+	INSERT INTO app2_user_setting_hist
+	(dml,
+	dml_date,
+	app2_user_setting_id,
+	)
+	SELECT 
+	'D',
+	CURRENT_TIMESTAMP,
+	old.id
+	  FROM app_parameter
+	 WHERE parameter_name = 'SERVICE_DB_ENABLE_AUDIT'
+	   AND parameter_value= 1;
 END; 
 //
 
-CREATE TRIGGER app_portfolio.app2_user_setting_before_insert 
-    BEFORE INSERT ON app_portfolio.app2_user_setting 
+CREATE TRIGGER app_portfolio.app2_user_setting_after_insert 
+    AFTER INSERT ON app_portfolio.app2_user_setting 
     FOR EACH ROW 
 BEGIN
 INSERT INTO app2_user_setting_hist
@@ -1888,9 +1784,9 @@ date_created,
 date_modified,
 user_account_app_user_account_id,
 user_account_app_app_id)
-VALUES(
+SELECT
 'I',
-SYSDATE(),
+CURRENT_TIMESTAMP,
 new.id,
 new.description,
 new.regional_language_locale,
@@ -1945,12 +1841,15 @@ new.prayer_column_fast_start_end,
 new.date_created,
 new.date_modified,
 new.user_account_app_user_account_id,
-new.user_account_app_app_id);
+new.user_account_app_app_id
+FROM app_parameter
+WHERE parameter_name = 'SERVICE_DB_ENABLE_AUDIT'
+AND   parameter_value= 1;
 END; 
 //
 
-CREATE TRIGGER app_portfolio.app2_user_setting_before_update 
-    BEFORE UPDATE ON app_portfolio.app2_user_setting 
+CREATE TRIGGER app_portfolio.app2_user_setting_after_update 
+    AFTER UPDATE ON app_portfolio.app2_user_setting 
     FOR EACH ROW 
 BEGIN
 INSERT INTO app2_user_setting_hist
@@ -2011,68 +1910,94 @@ date_created,
 date_modified,
 user_account_app_user_account_id,
 user_account_app_app_id)
-VALUES(
+SELECT
 'U',
-SYSDATE(),
-old.id,
-old.description,
-old.regional_language_locale,
-old.regional_timezone,
-old.regional_number_system,
-old.regional_layout_direction,
-old.regional_second_language_locale,
-old.regional_column_title,
-old.regional_arabic_script,
-old.regional_calendar_type,
-old.regional_calendar_hijri_type,
-old.gps_map_type,
-old.gps_country_id,
-old.gps_city_id,
-old.gps_popular_place_id,
-old.gps_lat_text,
-old.gps_long_text,
-old.design_theme_day_id,
-old.design_theme_month_id,
-old.design_theme_year_id,
-old.design_paper_size,
-old.design_row_highlight,
-old.design_column_weekday_checked,
-old.design_column_calendartype_checked,
-old.design_column_notes_checked,
-old.design_column_gps_checked,
-old.design_column_timezone_checked,
+CURRENT_TIMESTAMP,
+new.id,
+new.description,
+new.regional_language_locale,
+new.regional_timezone,
+new.regional_number_system,
+new.regional_layout_direction,
+new.regional_second_language_locale,
+new.regional_column_title,
+new.regional_arabic_script,
+new.regional_calendar_type,
+new.regional_calendar_hijri_type,
+new.gps_map_type,
+new.gps_country_id,
+new.gps_city_id,
+new.gps_popular_place_id,
+new.gps_lat_text,
+new.gps_long_text,
+new.design_theme_day_id,
+new.design_theme_month_id,
+new.design_theme_year_id,
+new.design_paper_size,
+new.design_row_highlight,
+new.design_column_weekday_checked,
+new.design_column_calendartype_checked,
+new.design_column_notes_checked,
+new.design_column_gps_checked,
+new.design_column_timezone_checked,
 null,
 null,
-old.text_header_1_text,
-old.text_header_2_text,
-old.text_header_3_text,
-old.text_header_align,
-old.text_footer_1_text,
-old.text_footer_2_text,
-old.text_footer_3_text,
-old.text_footer_align,
-old.prayer_method,
-old.prayer_asr_method,
-old.prayer_high_latitude_adjustment,
-old.prayer_time_format,
-old.prayer_hijri_date_adjustment,
-old.prayer_fajr_iqamat,
-old.prayer_dhuhr_iqamat,
-old.prayer_asr_iqamat,
-old.prayer_maghrib_iqamat,
-old.prayer_isha_iqamat,
-old.prayer_column_imsak_checked,
-old.prayer_column_sunset_checked,
-old.prayer_column_midnight_checked,
-old.prayer_column_fast_start_end,
-old.date_created,
-old.date_modified,
-old.user_account_app_user_account_id,
-old.user_account_app_app_id);
+new.text_header_1_text,
+new.text_header_2_text,
+new.text_header_3_text,
+new.text_header_align,
+new.text_footer_1_text,
+new.text_footer_2_text,
+new.text_footer_3_text,
+new.text_footer_align,
+new.prayer_method,
+new.prayer_asr_method,
+new.prayer_high_latitude_adjustment,
+new.prayer_time_format,
+new.prayer_hijri_date_adjustment,
+new.prayer_fajr_iqamat,
+new.prayer_dhuhr_iqamat,
+new.prayer_asr_iqamat,
+new.prayer_maghrib_iqamat,
+new.prayer_isha_iqamat,
+new.prayer_column_imsak_checked,
+new.prayer_column_sunset_checked,
+new.prayer_column_midnight_checked,
+new.prayer_column_fast_start_end,
+new.date_created,
+new.date_modified,
+new.user_account_app_user_account_id,
+new.user_account_app_app_id
+FROM app_parameter
+WHERE parameter_name = 'SERVICE_DB_ENABLE_AUDIT'
+AND   parameter_value= 1;
 END; 
 //
-CREATE TRIGGER app_portfolio.app2_user_setting_like_before_delete 
-    BEFORE DELETE ON app_portfolio.app2_user_setting_like 
+
+CREATE TRIGGER app_portfolio.app2_user_setting_like_after_delete 
+    AFTER DELETE ON app_portfolio.app2_user_setting_like 
+    FOR EACH ROW 
+BEGIN
+	INSERT INTO app2_user_setting_like_hist
+	(dml,
+	dml_date,
+	app2_user_setting_like_id,
+	user_account_id,
+	app2_user_setting_id)
+	SELECT
+	'D',
+	CURRENT_TIMESTAMP,
+	old.id,
+	old.user_account_id,
+	old.app2_user_setting_id
+	FROM app_parameter
+	WHERE parameter_name = 'SERVICE_DB_ENABLE_AUDIT'
+	AND   parameter_value= 1;
+END; 
+//
+
+CREATE TRIGGER app_portfolio.app2_user_setting_like_after_insert 
+    AFTER INSERT ON app_portfolio.app2_user_setting_like 
     FOR EACH ROW 
 BEGIN
 INSERT INTO app2_user_setting_like_hist
@@ -2082,37 +2007,21 @@ app2_user_setting_like_id,
 user_account_id,
 app2_user_setting_id,
 date_created)
-VALUES
-('D',
-SYSDATE(),
-old.id,
-old.user_account_id,
-old.app2_user_setting_id,
-old.date_created);
-END; 
-//
-CREATE TRIGGER app_portfolio.app2_user_setting_like_before_insert 
-    BEFORE INSERT ON app_portfolio.app2_user_setting_like 
-    FOR EACH ROW 
-BEGIN
-INSERT INTO app2_user_setting_like_hist
-(dml,
-dml_date,
-app2_user_setting_like_id,
-user_account_id,
-app2_user_setting_id,
-date_created)
-VALUES
-('I',
-SYSDATE(),
+SELECT
+'I',
+CURRENT_TIMESTAMP,
 new.id,
 new.user_account_id,
 new.app2_user_setting_id,
-new.date_created);
+new.date_created
+FROM app_parameter
+WHERE parameter_name = 'SERVICE_DB_ENABLE_AUDIT'
+AND   parameter_value= 1;
 END; 
 //
-CREATE TRIGGER app_portfolio.app2_user_setting_like_before_update 
-    BEFORE UPDATE ON app_portfolio.app2_user_setting_like 
+
+CREATE TRIGGER app_portfolio.app2_user_setting_like_after_update 
+    AFTER UPDATE ON app_portfolio.app2_user_setting_like 
     FOR EACH ROW 
 BEGIN
 INSERT INTO app2_user_setting_like_hist
@@ -2122,17 +2031,41 @@ app2_user_setting_like_id,
 user_account_id,
 app2_user_setting_id,
 date_created)
-VALUES
-('U',
-SYSDATE(),
-old.id,
-old.user_account_id,
-old.app2_user_setting_id,
-old.date_created);
+SELECT
+'U',
+CURRENT_TIMESTAMP,
+new.id,
+new.user_account_id,
+new.app2_user_setting_id,
+new.date_created
+FROM app_parameter
+WHERE parameter_name = 'SERVICE_DB_ENABLE_AUDIT'
+AND   parameter_value= 1;
 END; 
 //
-CREATE TRIGGER app_portfolio.app2_user_setting_view_before_delete 
-    BEFORE DELETE ON app_portfolio.app2_user_setting_view 
+
+CREATE TRIGGER app_portfolio.app2_user_setting_view_after_delete 
+    AFTER DELETE ON app_portfolio.app2_user_setting_view 
+    FOR EACH ROW 
+BEGIN
+	INSERT INTO app2_user_setting_view_hist
+	(dml,
+	dml_date,
+	user_account_id,
+	app2_user_setting_id)
+	SELECT
+	'D',
+	CURRENT_TIMESTAMP,
+	old.user_account_id,
+	old.app2_user_setting_id
+	FROM app_parameter
+	WHERE parameter_name = 'SERVICE_DB_ENABLE_AUDIT'
+	AND   parameter_value= 1;
+END; 
+//
+
+CREATE TRIGGER app_portfolio.app2_user_setting_view_after_insert 
+    AFTER INSERT ON app_portfolio.app2_user_setting_view 
     FOR EACH ROW 
 BEGIN
 INSERT INTO app2_user_setting_view_hist
@@ -2145,46 +2078,24 @@ client_user_agent,
 client_longitude,
 client_latitude,
 date_created)
-VALUES
-('D',
-SYSDATE(),
-old.user_account_id,
-old.app2_user_setting_id,
-old.client_ip,
-old.client_user_agent,
-old.client_longitude,
-old.client_latitude,
-old.date_created);
-END; 
-//
-CREATE TRIGGER app_portfolio.app2_user_setting_view_before_insert 
-    BEFORE INSERT ON app_portfolio.app2_user_setting_view 
-    FOR EACH ROW 
-BEGIN
-INSERT INTO app2_user_setting_view_hist
-(dml,
-dml_date,
-user_account_id,
-app2_user_setting_id,
-client_ip,
-client_user_agent,
-client_longitude,
-client_latitude,
-date_created)
-VALUES
-('I',
-SYSDATE(),
+SELECT
+'I',
+CURRENT_TIMESTAMP,
 new.user_account_id,
 new.app2_user_setting_id,
 new.client_ip,
 new.client_user_agent,
 new.client_longitude,
 new.client_latitude,
-new.date_created);
+new.date_created
+FROM app_parameter
+WHERE parameter_name = 'SERVICE_DB_ENABLE_AUDIT'
+AND   parameter_value= 1;
 END; 
 //
-CREATE TRIGGER app_portfolio.app2_user_setting_view_before_update 
-    BEFORE UPDATE ON app_portfolio.app2_user_setting_view 
+
+CREATE TRIGGER app_portfolio.app2_user_setting_view_after_update 
+    AFTER UPDATE ON app_portfolio.app2_user_setting_view 
     FOR EACH ROW 
 BEGIN
 INSERT INTO app2_user_setting_view_hist
@@ -2197,196 +2108,49 @@ client_user_agent,
 client_longitude,
 client_latitude,
 date_created)
-VALUES
-('U',
-SYSDATE(),
-old.user_account_id,
-old.app2_user_setting_id,
-old.client_ip,
-old.client_user_agent,
-old.client_longitude,
-old.client_latitude,
-old.date_created);
-END; 
-//
-CREATE TRIGGER app_portfolio.user_account_app_before_delete 
-    BEFORE DELETE ON app_portfolio.user_account_app 
-    FOR EACH ROW 
-BEGIN
-INSERT INTO user_account_app_hist
-(dml,
-dml_date,
-user_account_id,
-app_id,
-preference_locale,
-setting_preference_timezone_id,
-setting_preference_direction_id,
-setting_preference_arabic_script_id,
-date_created)
-VALUES
-('D',
-SYSDATE(),
-old.user_account_id,
-old.app_id,
-old.preference_locale,
-old.setting_preference_timezone_id,
-old.setting_preference_direction_id,
-old.setting_preference_arabic_script_id,
-old.date_created);
-END; 
-//
-CREATE TRIGGER app_portfolio.user_account_app_before_insert 
-    BEFORE INSERT ON app_portfolio.user_account_app 
-    FOR EACH ROW 
-BEGIN
-INSERT INTO user_account_app_hist
-(dml,
-dml_date,
-user_account_id,
-app_id,
-preference_locale,
-setting_preference_timezone_id,
-setting_preference_direction_id,
-setting_preference_arabic_script_id,
-date_created)
-VALUES
-('I',
-SYSDATE(),
+SELECT
+'U',
+CURRENT_TIMESTAMP,
 new.user_account_id,
-new.app_id,
-new.preference_locale,
-new.setting_preference_timezone_id,
-new.setting_preference_direction_id,
-new.setting_preference_arabic_script_id,
-new.date_created);
+new.app2_user_setting_id,
+new.client_ip,
+new.client_user_agent,
+new.client_longitude,
+new.client_latitude,
+new.date_created
+FROM app_parameter
+WHERE parameter_name = 'SERVICE_DB_ENABLE_AUDIT'
+AND   parameter_value= 1;
 END; 
 //
-CREATE TRIGGER app_portfolio.user_account_app_before_update 
-    BEFORE UPDATE ON app_portfolio.user_account_app 
+
+CREATE TRIGGER app_portfolio.user_account_after_delete 
+    AFTER DELETE ON app_portfolio.user_account 
     FOR EACH ROW 
 BEGIN
-INSERT INTO user_account_app_hist
-(dml,
-dml_date,
-user_account_id,
-app_id,
-preference_locale,
-setting_preference_timezone_id,
-setting_preference_direction_id,
-setting_preference_arabic_script_id,
-date_created)
-VALUES
-('U',
-SYSDATE(),
-old.user_account_id,
-old.app_id,
-old.preference_locale,
-old.setting_preference_timezone_id,
-old.setting_preference_direction_id,
-old.setting_preference_arabic_script_id,
-old.date_created);
-END; 
-//
-CREATE TRIGGER app_portfolio.user_account_before_delete 
-    BEFORE DELETE ON app_portfolio.user_account 
-    FOR EACH ROW 
-BEGIN
-INSERT INTO user_account_hist
+	INSERT INTO user_account_hist
 	(dml,
-	dml_date,
-	user_account_id,
-    username,
-	bio,
-	private,
-	user_level,
-	date_created,
-	date_modified,
-	password,
-	password_reminder,
-	email,
-    email_unverified,
-	avatar,
-	verification_code,
-	active,
-	identity_provider_id,
-	provider_id,
-	provider_first_name,
-	provider_last_name,
-	provider_image_url,
-	provider_email)
-	VALUES
-	('D',
-	SYSDATE(),
-	old.id,
-    old.username,
-	old.bio,
-	old.private,
-	old.user_level,
-	old.date_created,
-	old.date_modified,
-	old.password,
-	old.password_reminder,
-	old.email,
-    old.email_unverified,
-	null,
-	old.verification_code,
-	old.active,
-	old.identity_provider_id,
-	old.provider_id,
-	old.provider_first_name,
-	old.provider_last_name,
-	old.provider_image_url,
-	old.provider_email);
+ 	dml_date,
+ 	user_account_id)
+ 	SELECT
+ 	'D',
+ 	CURRENT_TIMESTAMP,
+ 	old.id
+	FROM app_parameter
+    WHERE parameter_name = 'SERVICE_DB_ENABLE_AUDIT'
+	 AND parameter_value= 1;
 END; 
 //
-CREATE TRIGGER app_portfolio.user_account_before_insert 
-    BEFORE INSERT ON app_portfolio.user_account 
+
+CREATE TRIGGER app_portfolio.user_account_after_insert 
+    AFTER INSERT ON app_portfolio.user_account 
     FOR EACH ROW 
-	BEGIN
-	IF new.provider_id IS NOT NULL THEN
-        SET new.password = null;
-		SET new.password_reminder = null;
-		SET new.email = null;
-        SET new.email_unverified = null;
-		SET new.avatar = null;
-		SET new.verification_code = null;
-	END IF;
-    IF (LENGTH(new.username) < 5 OR LENGTH(new.username) > 100) THEN 
-		signal SQLSTATE '45000'
-		SET message_text = 'username 5 - 100 characters', MYSQL_ERRNO = 20100;
-	ELSEIF (new.username LIKE '% %' OR 
-		   new.username LIKE '%?%' OR
-		   new.username LIKE '%/%' OR
-		   new.username LIKE '%+%' OR
-             new.username LIKE '%"%' OR
-             new.username LIKE "%'%") THEN 
-		signal SQLSTATE '45000'
-		SET message_text = 'not valid username', MYSQL_ERRNO = 20101;
-	ELSEIF (LENGTH(new.bio) > 100) THEN 
-		signal SQLSTATE '45000'
-		SET message_text = 'bio max 100 characters', MYSQL_ERRNO = 20102;
-	ELSEIF (LENGTH(new.email) > 100) THEN 
-		signal SQLSTATE '45000'
-		SET message_text = 'email max 100 characters', MYSQL_ERRNO = 20103;
-	ELSEIF (LENGTH(new.password_reminder) > 100) THEN 
-		signal SQLSTATE '22001'
-		SET message_text = 'reminder max 100 characters', MYSQL_ERRNO = 20104;
-	ELSEIF NOT REGEXP_LIKE(new.email, '^[A-Za-z]+[A-Za-z0-9.]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$') THEN
-		signal SQLSTATE '45000'
-		SET message_text = 'not valid email', MYSQL_ERRNO = 20105;
-	ELSEIF NOT REGEXP_LIKE(new.email_unverified, '^[A-Za-z]+[A-Za-z0-9.]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$') THEN
-		signal SQLSTATE '45000'
-		SET message_text = 'not valid email', MYSQL_ERRNO = 20105;
-	ELSEIF new.provider_id IS NULL AND
-		   (new.username IS NULL OR new.password IS NULL OR new.email IS NULL) THEN 
-           signal SQLSTATE '45000'
-		SET message_text = 'Username, password and email are required', MYSQL_ERRNO = 20107;
-    END IF;
+BEGIN
 	INSERT INTO user_account_hist
 	(dml,
 	dml_date,
 	user_account_id,
-    username,
+	username,
 	bio,
 	private,
 	user_level,
@@ -2395,7 +2159,7 @@ CREATE TRIGGER app_portfolio.user_account_before_insert
 	password,
 	password_reminder,
 	email,
-    email_unverified,
+	email_unverified,
 	avatar,
 	verification_code,
 	active,
@@ -2405,11 +2169,11 @@ CREATE TRIGGER app_portfolio.user_account_before_insert
 	provider_last_name,
 	provider_image_url,
 	provider_email)
-	VALUES
-	('I',
-	SYSDATE(),
+	SELECT
+	'I',
+	CURRENT_TIMESTAMP,
 	new.id,
-    new.username,
+	new.username,
 	new.bio,
 	new.private,
 	new.user_level,
@@ -2418,7 +2182,7 @@ CREATE TRIGGER app_portfolio.user_account_before_insert
 	new.password,
 	new.password_reminder,
 	new.email,
-    new.email_unverified,
+	new.email_unverified,
 	null,
 	new.verification_code,
 	new.active,
@@ -2427,57 +2191,22 @@ CREATE TRIGGER app_portfolio.user_account_before_insert
 	new.provider_first_name,
 	new.provider_last_name,
 	new.provider_image_url,
-	new.provider_email);
+	new.provider_email
+	FROM app_parameter
+    WHERE parameter_name = 'SERVICE_DB_ENABLE_AUDIT'
+      AND parameter_value= 1;
 END; 
 //
-CREATE TRIGGER app_portfolio.user_account_before_update 
-    BEFORE UPDATE ON app_portfolio.user_account 
+
+CREATE TRIGGER app_portfolio.user_account_after_update 
+    AFTER UPDATE ON app_portfolio.user_account 
     FOR EACH ROW 
-    BEGIN
-	IF new.provider_id IS NOT NULL THEN
-        SET new.password = null;
-		SET new.password_reminder = null;
-		SET new.email = null;
-        SET new.email_unverified = null;
-		SET new.avatar = null;
-		SET new.verification_code = null;
-	END IF;
-    IF (LENGTH(new.username) < 5 OR LENGTH(new.username) > 100) THEN 
-		signal SQLSTATE '45000'
-		SET message_text = 'username 5 - 100 characters', MYSQL_ERRNO = 20100;
-	ELSEIF (new.username LIKE '% %' OR 
-		   new.username LIKE '%?%' OR
-		   new.username LIKE '%/%' OR
-		   new.username LIKE '%+%' OR
-             new.username LIKE '%"%' OR
-             new.username LIKE "%'%") THEN 
-		signal SQLSTATE '45000'
-		SET message_text = 'not valid username', MYSQL_ERRNO = 20101;
-	ELSEIF (LENGTH(new.bio) > 100) THEN 
-		signal SQLSTATE '45000'
-		SET message_text = 'bio max 100 characters', MYSQL_ERRNO = 20102;
-	ELSEIF (LENGTH(new.email) > 100) THEN 
-		signal SQLSTATE '45000'
-		SET message_text = 'email max 100 characters', MYSQL_ERRNO = 20103;
-	ELSEIF (LENGTH(new.password_reminder) > 100) THEN 
-		signal SQLSTATE '22001'
-		SET message_text = 'reminder max 100 characters', MYSQL_ERRNO = 20104;
-	ELSEIF NOT REGEXP_LIKE(new.email, '^[A-Za-z]+[A-Za-z0-9.]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$') THEN
-		signal SQLSTATE '45000'
-		SET message_text = 'not valid email', MYSQL_ERRNO = 20105;
-	ELSEIF NOT REGEXP_LIKE(new.email_unverified, '^[A-Za-z]+[A-Za-z0-9.]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$') THEN
-		signal SQLSTATE '45000'
-		SET message_text = 'not valid email', MYSQL_ERRNO = 20105;
-	ELSEIF new.provider_id IS NULL AND
-		   (new.username IS NULL OR new.password IS NULL OR new.email IS NULL) THEN 
-           signal SQLSTATE '45000'
-		SET message_text = 'Username, password and email are required', MYSQL_ERRNO = 20107;
-	END IF;
+BEGIN
 	INSERT INTO user_account_hist
 		(dml,
 		dml_date,
 		user_account_id,
-        username,
+		username,
 		bio,
 		private,
 		user_level,
@@ -2486,63 +2215,149 @@ CREATE TRIGGER app_portfolio.user_account_before_update
 		password,
 		password_reminder,
 		email,
-        email_unverified,
+		email_unverified,
 		avatar,
 		verification_code,
 		active,
-        identity_provider_id,
-        provider_id,
-        provider_first_name,
-        provider_last_name,
-        provider_image_url,
-        provider_email)
-		VALUES
-		('U',
-		SYSDATE(),
-		old.id,
-        old.username,
-		old.bio,
-		old.private,
-		old.user_level,
-		old.date_created,
-		old.date_modified,
-		old.password,
-		old.password_reminder,
-		old.email,
-        old.email_unverified,
+		identity_provider_id,
+		provider_id,
+		provider_first_name,
+		provider_last_name,
+		provider_image_url,
+		provider_email)
+		SELECT
+		'U',
+		CURRENT_TIMESTAMP,
+		new.id,
+		new.username,
+		new.bio,
+		new.private,
+		new.user_level,
+		new.date_created,
+		new.date_modified,
+		new.password,
+		new.password_reminder,
+		new.email,
+		new.email_unverified,
 		null,
-		old.verification_code,
-		old.active,
-        old.identity_provider_id,
-        old.provider_id,
-        old.provider_first_name,
-        old.provider_last_name,
-        old.provider_image_url,
-        old.provider_email);
-END;
-//
-CREATE TRIGGER app_portfolio.user_account_follow_before_delete 
-    BEFORE DELETE ON app_portfolio.user_account_follow 
-    FOR EACH ROW 
-BEGIN
-INSERT INTO user_account_follow_hist
-(dml,
-dml_date,
-user_account_follow_id,
-user_account_id,
-user_account_id_follow,
-date_created)
-VALUES
-('D',
-SYSDATE(),
-old.id,
-old.user_account_id,
-old.user_account_id_follow,
-old.date_created);
+		new.verification_code,
+		new.active,
+		new.identity_provider_id,
+		new.provider_id,
+		new.provider_first_name,
+		new.provider_last_name,
+		new.provider_image_url,
+		new.provider_email
+		FROM app_parameter
+	    WHERE parameter_name = 'SERVICE_DB_ENABLE_AUDIT'
+           AND parameter_value= 1;
 END; 
 //
-CREATE TRIGGER app_portfolio.user_account_follow_before_insert 
-    BEFORE INSERT ON app_portfolio.user_account_follow 
+
+CREATE TRIGGER app_portfolio.user_account_app_after_delete 
+    AFTER DELETE ON app_portfolio.user_account_app 
+    FOR EACH ROW 
+BEGIN
+	INSERT INTO user_account_app_hist
+	(dml,
+	dml_date,
+	user_account_id,
+	app_id)
+	SELECT
+	'D',
+	CURRENT_TIMESTAMP,
+	old.user_account_id,
+	old.app_id
+	FROM app_parameter
+	WHERE parameter_name = 'SERVICE_DB_ENABLE_AUDIT'
+	AND   parameter_value= 1;
+END; 
+//
+
+CREATE TRIGGER app_portfolio.user_account_app_after_insert 
+    AFTER INSERT ON app_portfolio.user_account_app 
+    FOR EACH ROW 
+BEGIN
+INSERT INTO user_account_app_hist
+(dml,
+dml_date,
+user_account_id,
+app_id,
+preference_locale,
+setting_preference_timezone_id,
+setting_preference_direction_id,
+setting_preference_arabic_script_id,
+date_created)
+SELECT
+'I',
+CURRENT_TIMESTAMP,
+new.user_account_id,
+new.app_id,
+new.preference_locale,
+new.setting_preference_timezone_id,
+new.setting_preference_direction_id,
+new.setting_preference_arabic_script_id,
+new.date_created
+FROM app_parameter
+WHERE parameter_name = 'SERVICE_DB_ENABLE_AUDIT'
+AND   parameter_value= 1;
+END; 
+//
+
+CREATE TRIGGER app_portfolio.user_account_app_after_update 
+    AFTER UPDATE ON app_portfolio.user_account_app 
+    FOR EACH ROW 
+BEGIN
+INSERT INTO user_account_app_hist
+(dml,
+dml_date,
+user_account_id,
+app_id,
+preference_locale,
+setting_preference_timezone_id,
+setting_preference_direction_id,
+setting_preference_arabic_script_id,
+date_created)
+SELECT
+'U',
+CURRENT_TIMESTAMP,
+new.user_account_id,
+new.app_id,
+new.preference_locale,
+new.setting_preference_timezone_id,
+new.setting_preference_direction_id,
+new.setting_preference_arabic_script_id,
+new.date_created
+FROM app_parameter
+WHERE parameter_name = 'SERVICE_DB_ENABLE_AUDIT'
+AND   parameter_value= 1;
+END; 
+//
+
+CREATE TRIGGER app_portfolio.user_account_follow_after_delete 
+    AFTER DELETE ON app_portfolio.user_account_follow 
+    FOR EACH ROW 
+BEGIN
+INSERT INTO user_account_follow_hist
+(dml,
+dml_date,
+user_account_follow_id,
+user_account_id,
+user_account_id_follow)
+SELECT
+'D',
+CURRENT_TIMESTAMP,
+old.id,
+old.user_account_id,
+old.user_account_id_follow
+FROM app_parameter
+WHERE parameter_name = 'SERVICE_DB_ENABLE_AUDIT'
+AND   parameter_value= 1;
+END; 
+//
+
+CREATE TRIGGER app_portfolio.user_account_follow_after_insert 
+    AFTER INSERT ON app_portfolio.user_account_follow 
     FOR EACH ROW 
 BEGIN
 INSERT INTO user_account_follow_hist
@@ -2552,17 +2367,21 @@ user_account_follow_id,
 user_account_id,
 user_account_id_follow,
 date_created)
-VALUES
-('I',
-SYSDATE(),
+SELECT
+'I',
+CURRENT_TIMESTAMP,
 new.id,
 new.user_account_id,
 new.user_account_id_follow,
-new.date_created);
+new.date_created
+FROM app_parameter
+WHERE parameter_name = 'SERVICE_DB_ENABLE_AUDIT'
+AND   parameter_value= 1;
 END; 
 //
-CREATE TRIGGER app_portfolio.user_account_follow_before_update 
-    BEFORE UPDATE ON app_portfolio.user_account_follow 
+
+CREATE TRIGGER app_portfolio.user_account_follow_after_update 
+    AFTER UPDATE ON app_portfolio.user_account_follow 
     FOR EACH ROW 
 BEGIN
 INSERT INTO user_account_follow_hist
@@ -2572,17 +2391,43 @@ user_account_follow_id,
 user_account_id,
 user_account_id_follow,
 date_created)
-VALUES
-('U',
-SYSDATE(),
-old.id,
-old.user_account_id,
-old.user_account_id_follow,
-old.date_created);
+SELECT
+'U',
+CURRENT_TIMESTAMP,
+new.id,
+new.user_account_id,
+new.user_account_id_follow,
+new.date_created
+FROM app_parameter
+WHERE parameter_name = 'SERVICE_DB_ENABLE_AUDIT'
+AND   parameter_value= 1;
 END; 
 //
-CREATE TRIGGER app_portfolio.user_account_like_before_delete 
-    BEFORE DELETE ON app_portfolio.user_account_like 
+
+CREATE TRIGGER app_portfolio.user_account_like_after_delete 
+    AFTER DELETE ON app_portfolio.user_account_like 
+    FOR EACH ROW 
+BEGIN
+	INSERT INTO user_account_like_hist
+	(dml,
+	dml_date,
+	user_account_like_id,
+	user_account_id,
+	user_account_id_like)
+	SELECT
+	'D',
+	CURRENT_TIMESTAMP,
+	old.id,
+	old.user_account_id,
+	old.user_account_id_like
+	FROM app_parameter
+	WHERE parameter_name = 'SERVICE_DB_ENABLE_AUDIT'
+	AND   parameter_value= 1;
+END; 
+//
+
+CREATE TRIGGER app_portfolio.user_account_like_after_insert 
+    AFTER INSERT ON app_portfolio.user_account_like 
     FOR EACH ROW 
 BEGIN
 INSERT INTO user_account_like_hist
@@ -2592,37 +2437,21 @@ user_account_like_id,
 user_account_id,
 user_account_id_like,
 date_created)
-VALUES
-('D',
-SYSDATE(),
-old.id,
-old.user_account_id,
-old.user_account_id_like,
-old.date_created);
-END; 
-//
-CREATE TRIGGER app_portfolio.user_account_like_before_insert 
-    BEFORE INSERT ON app_portfolio.user_account_like 
-    FOR EACH ROW 
-BEGIN
-INSERT INTO user_account_like_hist
-(dml,
-dml_date,
-user_account_like_id,
-user_account_id,
-user_account_id_like,
-date_created)
-VALUES
-('I',
-SYSDATE(),
+SELECT
+'I',
+CURRENT_TIMESTAMP,
 new.id,
 new.user_account_id,
 new.user_account_id_like,
-new.date_created);
+new.date_created
+FROM app_parameter
+WHERE parameter_name = 'SERVICE_DB_ENABLE_AUDIT'
+AND   parameter_value= 1;
 END; 
 //
-CREATE TRIGGER app_portfolio.user_account_like_before_update 
-    BEFORE UPDATE ON app_portfolio.user_account_like 
+
+CREATE TRIGGER app_portfolio.user_account_like_after_update 
+    AFTER UPDATE ON app_portfolio.user_account_like 
     FOR EACH ROW 
 BEGIN
 INSERT INTO user_account_like_hist
@@ -2632,17 +2461,41 @@ user_account_like_id,
 user_account_id,
 user_account_id_like,
 date_created)
-VALUES
-('U',
-SYSDATE(),
-old.id,
-old.user_account_id,
-old.user_account_id_like,
-old.date_created);
+SELECT
+'U',
+CURRENT_TIMESTAMP,
+new.id,
+new.user_account_id,
+new.user_account_id_like,
+new.date_created
+FROM app_parameter
+WHERE parameter_name = 'SERVICE_DB_ENABLE_AUDIT'
+AND   parameter_value= 1;
 END; 
 //
-CREATE TRIGGER app_portfolio.user_account_view_before_delete 
-    BEFORE DELETE ON app_portfolio.user_account_view 
+
+CREATE TRIGGER app_portfolio.user_account_view_after_delete 
+    AFTER DELETE ON app_portfolio.user_account_view 
+    FOR EACH ROW 
+BEGIN
+	INSERT INTO user_account_view_hist
+	(dml,
+	dml_date,
+	user_account_id,
+	user_account_id_view)
+	SELECT
+	'D',
+	CURRENT_TIMESTAMP,
+	old.user_account_id,
+	old.user_account_id_view
+	FROM app_parameter
+	WHERE parameter_name = 'SERVICE_DB_ENABLE_AUDIT'
+	AND   parameter_value= 1;
+END; 
+//
+
+CREATE TRIGGER app_portfolio.user_account_view_after_insert 
+    AFTER INSERT ON app_portfolio.user_account_view 
     FOR EACH ROW 
 BEGIN
 INSERT INTO user_account_view_hist
@@ -2655,46 +2508,24 @@ client_user_agent,
 client_longitude,
 client_latitude,
 date_created)
-VALUES
-('D',
-SYSDATE(),
-old.user_account_id,
-old.user_account_id_view,
-old.client_ip,
-old.client_user_agent,
-old.client_longitude,
-old.client_latitude,
-old.date_created);
-END; 
-//
-CREATE TRIGGER app_portfolio.user_account_view_before_insert 
-    BEFORE INSERT ON app_portfolio.user_account_view 
-    FOR EACH ROW 
-BEGIN
-INSERT INTO user_account_view_hist
-(dml,
-dml_date,
-user_account_id,
-user_account_id_view,
-client_ip,
-client_user_agent,
-client_longitude,
-client_latitude,
-date_created)
-VALUES
-('I',
-SYSDATE(),
+SELECT
+'I',
+CURRENT_TIMESTAMP,
 new.user_account_id,
 new.user_account_id_view,
 new.client_ip,
 new.client_user_agent,
 new.client_longitude,
 new.client_latitude,
-new.date_created);
+new.date_created
+FROM app_parameter
+WHERE parameter_name = 'SERVICE_DB_ENABLE_AUDIT'
+AND   parameter_value= 1;
 END; 
 //
-CREATE TRIGGER app_portfolio.user_account_view_before_update 
-    BEFORE UPDATE ON app_portfolio.user_account_view 
+
+CREATE TRIGGER app_portfolio.user_account_view_after_update 
+    AFTER UPDATE ON app_portfolio.user_account_view 
     FOR EACH ROW 
 BEGIN
 INSERT INTO user_account_view_hist
@@ -2707,15 +2538,18 @@ client_user_agent,
 client_longitude,
 client_latitude,
 date_created)
-VALUES
-('U',
-SYSDATE(),
-old.user_account_id,
-old.user_account_id_view,
-old.client_ip,
-old.client_user_agent,
-old.client_longitude,
-old.client_latitude,
-old.date_created);
+SELECT
+'U',
+CURRENT_TIMESTAMP,
+new.user_account_id,
+new.user_account_id_view,
+new.client_ip,
+new.client_user_agent,
+new.client_longitude,
+new.client_latitude,
+new.date_created
+FROM app_parameter
+WHERE parameter_name = 'SERVICE_DB_ENABLE_AUDIT'
+AND   parameter_value= 1;
 END; 
 //

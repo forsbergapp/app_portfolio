@@ -11,14 +11,14 @@ module.exports = {
 								client_latitude, client_longitude,
 								server_remote_addr,server_user_agent, server_http_host, server_http_accept_language)
 					SELECT ?, e.id, es.id, 
-						SYSDATE(), SYSDATE(),
-						?, ?, ?, ?, 
-						?, ?,
-						?, ?, ?, ?
-					FROM  ${process.env.SERVICE_DB_DB1_NAME}.event e,
-						${process.env.SERVICE_DB_DB1_NAME}.event_status es
-					WHERE  e.event_name = ?
-					AND  es.status_name = ?`;
+						   CURRENT_TIMESTAMP, CURRENT_TIMESTAMP,
+						   ?, ?, ?, ?, 
+						   ?, ?,
+						   ?, ?, ?, ?
+					  FROM ${process.env.SERVICE_DB_DB1_NAME}.event e,
+						   ${process.env.SERVICE_DB_DB1_NAME}.event_status es
+					 WHERE e.event_name = ?
+					   AND es.status_name = ?`;
 			parameters = [
 							data.user_account_id, 
 							data.user_language,
@@ -42,14 +42,14 @@ module.exports = {
 								client_latitude, client_longitude,
 								server_remote_addr,server_user_agent, server_http_host, server_http_accept_language)
 					SELECT :user_account_id, e.id, es.id, 
-						SYSDATE, SYSDATE,
-						:user_language, :user_timezone, :user_number_system, :user_platform, 
-						:client_latitude, :client_longitude,
-						:server_remote_addr, :server_user_agent, :server_http_host, :server_http_accept_language
-					FROM ${process.env.SERVICE_DB_DB2_NAME}.event e,
-						${process.env.SERVICE_DB_DB2_NAME}.event_status es
-						WHERE e.event_name = :event
-					AND es.status_name = :event_status`;
+						   CURRENT_TIMESTAMP, CURRENT_TIMESTAMP,
+						   :user_language, :user_timezone, :user_number_system, :user_platform, 
+						   :client_latitude, :client_longitude,
+						   :server_remote_addr, :server_user_agent, :server_http_host, :server_http_accept_language
+					  FROM ${process.env.SERVICE_DB_DB2_NAME}.event e,
+						   ${process.env.SERVICE_DB_DB2_NAME}.event_status es
+					 WHERE e.event_name = :event
+					   AND es.status_name = :event_status`;
 			parameters = {
 							user_account_id : data.user_account_id, 
 							user_language: data.user_language,
@@ -85,7 +85,7 @@ module.exports = {
 							es.status_name,
 							uae.date_created,
 							uae.date_modified,
-							to_days(sysdate()) - to_days(uae.date_created) event_days
+							TO_DAYS(CURRENT_TIMESTAMP) - TO_DAYS(uae.date_created) event_days
 					FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_event uae,
 							${process.env.SERVICE_DB_DB1_NAME}.event e,
 							${process.env.SERVICE_DB_DB1_NAME}.event_status es
@@ -111,7 +111,7 @@ module.exports = {
 							es.status_name "status_name",
 							uae.date_created "date_created",
 							uae.date_modified "date_modified",
-							TO_NUMBER(TO_CHAR(SYSDATE,'J')) - TO_NUMBER(TO_CHAR(date_created,'J')) "event_days"
+							TO_NUMBER(TO_CHAR(CURRENT_TIMESTAMP,'J')) - TO_NUMBER(TO_CHAR(date_created,'J')) "event_days"
 					FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_event uae,
 							${process.env.SERVICE_DB_DB2_NAME}.event e,
 							${process.env.SERVICE_DB_DB2_NAME}.event_status es

@@ -162,7 +162,7 @@ module.exports = {
 							provider_image,
 							provider_image_url,
 							provider_email)
-						VALUES(?,?,?,SYSDATE(),SYSDATE(),?,?,?,?,?,?,?,?,?,?,?,?,?,?) `;
+						VALUES(?,?,?,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP,?,?,?,?,?,?,?,?,?,?,?,?,?,?) `;
 				parameters = [
 								data.bio,
 								data.private,
@@ -206,8 +206,8 @@ module.exports = {
 						VALUES(:bio,
 							:private,
 							:user_level,
-							SYSDATE,
-							SYSDATE,
+							CURRENT_TIMESTAMP,
+							CURRENT_TIMESTAMP,
 							:username,
 							:password,
 							:password_reminder,
@@ -300,7 +300,7 @@ module.exports = {
 												ELSE 
 														email_unverified
 												END,
-								date_modified = SYSDATE()
+								date_modified = CURRENT_TIMESTAMP
 						WHERE id = ?
 							AND verification_code = ?`;
 				parameters = [	auth,
@@ -325,7 +325,7 @@ module.exports = {
 												ELSE 
 														email_unverified
 												END,
-								date_modified = SYSDATE
+								date_modified = CURRENT_TIMESTAMP
 						WHERE id = :id
 							AND verification_code = :verification_code `;
 				parameters ={
@@ -365,7 +365,7 @@ module.exports = {
 			sql = `UPDATE ${process.env.SERVICE_DB_DB1_NAME}.user_account
 						SET	verification_code = ?,
 							active = 0,
-							date_modified = SYSDATE()
+							date_modified = CURRENT_TIMESTAMP
 					WHERE id = ?`;
 			parameters = [verification_code,
 						  id
@@ -374,7 +374,7 @@ module.exports = {
 			sql = `UPDATE ${process.env.SERVICE_DB_DB2_NAME}.user_account
 						SET	verification_code = :verification_code,
 							active = 0,
-							date_modified = SYSDATE
+							date_modified = CURRENT_TIMESTAMP
 					WHERE id = :id `;
 			parameters ={verification_code: verification_code,
 						 id: id   
@@ -1072,7 +1072,7 @@ module.exports = {
 								email_unverified = ?,
 								avatar = ?,
 								verification_code = ?,
-								date_modified = SYSDATE()
+								date_modified = CURRENT_TIMESTAMP
 						WHERE id = ? `;
 				parameters = [
 								data.bio,
@@ -1099,7 +1099,7 @@ module.exports = {
 							email_unverified = :new_email,
 							avatar = :avatar,
 							verification_code = :verification_code,
-							date_modified = SYSDATE
+							date_modified = CURRENT_TIMESTAMP
 						WHERE id = :id `;
 				parameters ={
 								bio: data.bio,
@@ -1137,7 +1137,7 @@ module.exports = {
 							bio = ?,
 							private = ?,
 							user_level = ?,
-							date_modified = SYSDATE()
+							date_modified = CURRENT_TIMESTAMP
 						WHERE id = ? `;
 				parameters = [   
 								data.username,
@@ -1152,7 +1152,7 @@ module.exports = {
 							bio = :bio,
 							private = :private,
 							user_level = :user_level,
-							date_modified = SYSDATE
+							date_modified = CURRENT_TIMESTAMP
 						WHERE id = :id `;
 				parameters ={	username: username,
 								bio: data.bio,
@@ -1247,7 +1247,7 @@ module.exports = {
 								provider_image = ?,
 								provider_image_url = ?,
 								provider_email = ?,
-								date_modified = SYSDATE()
+								date_modified = CURRENT_TIMESTAMP
 						WHERE id = ?
 							AND active =1 `;
 				parameters = [	data.identity_provider_id,
@@ -1268,7 +1268,7 @@ module.exports = {
 								provider_image = :provider_image,
 								provider_image_url = :provider_image_url,
 								provider_email = :provider_email,
-								date_modified = SYSDATE
+								date_modified = CURRENT_TIMESTAMP
 						WHERE id = :id
 						AND active =1 `;
 				parameters ={
