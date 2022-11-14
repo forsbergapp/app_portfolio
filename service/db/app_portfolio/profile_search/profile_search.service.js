@@ -6,7 +6,7 @@ module.exports = {
 		if (process.env.SERVICE_DB_USE == 1) {
 			sql = `INSERT INTO ${process.env.SERVICE_DB_DB1_NAME}.profile_search(
 								user_account_id, search, client_ip, client_user_agent, client_longitude, client_latitude, date_created)
-					VALUES(?,?,?,?,?,?, SYSDATE()) `;
+					VALUES(?,?,?,?,?,?, CURRENT_TIMESTAMP) `;
 			parameters = [
 							data.user_account_id,
 							data.search,
@@ -18,7 +18,7 @@ module.exports = {
 		}else if (process.env.SERVICE_DB_USE==2){
 			sql = `INSERT INTO ${process.env.SERVICE_DB_DB2_NAME}.profile_search(
 								user_account_id, search, client_ip, client_user_agent, client_longitude, client_latitude, date_created)
-					VALUES(:user_account_id,:search,:client_ip,:client_user_agent,:client_longitude,:client_latitude, SYSDATE)`;
+					VALUES(:user_account_id,:search,:client_ip,:client_user_agent,:client_longitude,:client_latitude, CURRENT_TIMESTAMP)`;
 			parameters = {
 							user_account_id: data.user_account_id,
 							search: data.search,

@@ -64,7 +64,7 @@ module.exports = {
 						?,?,?,?,?,?,?,?,?,?,
 						?,?,?,?,?,?,?,?,?,?,
 						?,?,?,?,?,?,?,?,?,?,
-						?,SYSDATE(),SYSDATE(),?,?
+						?,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP,?,?
 					FROM DUAL
 					WHERE NOT EXISTS (SELECT null
 										FROM ${process.env.SERVICE_DB_DB1_NAME}.app2_user_setting aus
@@ -234,8 +234,8 @@ module.exports = {
 							:prayer_column_sunset_checked,
 							:prayer_column_midnight_checked,
 							:prayer_column_fast_start_end,
-							SYSDATE,
-							SYSDATE,
+							CURRENT_TIMESTAMP,
+							CURRENT_TIMESTAMP,
 							:user_account_id,
 							:app_id
 					FROM DUAL 
@@ -986,7 +986,7 @@ module.exports = {
 						prayer_column_fast_start_end = ?,
 						user_account_app_user_account_id = ?,
 						user_account_app_app_id = ?,
-						date_modified = SYSDATE()
+						date_modified = CURRENT_TIMESTAMP
 					WHERE id = ? `;
 			parameters = [
 							data.description,
@@ -1097,7 +1097,7 @@ module.exports = {
 						prayer_column_fast_start_end = :prayer_column_fast_start_end,
 						user_account_app_user_account_id = :user_account_id,
 						user_account_app_app_id = :app_id,
-						date_modified = SYSDATE
+						date_modified = CURRENT_TIMESTAMP
 					WHERE id = :id `;
 			parameters = {
 							description: data.description,

@@ -6,14 +6,14 @@ module.exports = {
 		if (process.env.SERVICE_DB_USE == 1) {
 			sql = `INSERT INTO ${process.env.SERVICE_DB_DB1_NAME}.app2_user_setting_like(
 								user_account_id, app2_user_setting_id, date_created)
-					VALUES(?,?, SYSDATE()) `;
+					VALUES(?,?, CURRENT_TIMESTAMP) `;
 			parameters = [id,
 						  id_like
 						 ];
 		}else if (process.env.SERVICE_DB_USE==2){
 			sql = `INSERT INTO ${process.env.SERVICE_DB_DB2_NAME}.app2_user_setting_like(
 								user_account_id, app2_user_setting_id, date_created)
-					VALUES(:user_account_id,:app2_user_setting_id, SYSDATE) `;
+					VALUES(:user_account_id,:app2_user_setting_id, CURRENT_TIMESTAMP) `;
 			parameters = {
 							user_account_id: id,
 							app2_user_setting_id: id_like

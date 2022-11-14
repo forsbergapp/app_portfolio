@@ -6,7 +6,7 @@ module.exports = {
 		if (process.env.SERVICE_DB_USE == 1) {
 			sql = `INSERT INTO ${process.env.SERVICE_DB_DB1_NAME}.user_account_follow(
 								user_account_id, user_account_id_follow, date_created)
-					VALUES(?,?, SYSDATE()) `;
+					VALUES(?,?, CURRENT_TIMESTAMP) `;
 			parameters = [
 						  id,
 						  id_follow
@@ -14,7 +14,7 @@ module.exports = {
 		}else if (process.env.SERVICE_DB_USE==2){
 			sql = `INSERT INTO ${process.env.SERVICE_DB_DB2_NAME}.user_account_follow(
 								user_account_id, user_account_id_follow, date_created)
-					VALUES(:user_account_id,:user_account_id_follow, SYSDATE)`;
+					VALUES(:user_account_id,:user_account_id_follow, CURRENT_TIMESTAMP)`;
 			parameters = {
 							user_account_id: id,
 							user_account_id_follow: id_follow
