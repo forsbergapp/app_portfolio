@@ -255,8 +255,8 @@ module.exports = {
 	getAppDBParametersAdmin: (app_id, callBack) => {
 		let sql;
 		let parameters;
-		let db_user = `SERVICE_DB_DB${process.env.SERVICE_DB_USE}_APP_USER`;
-		let db_password = `SERVICE_DB_DB${process.env.SERVICE_DB_USE}_APP_PASSWORD`;
+		let db_user = `SERVICE_DB_APP_USER`;
+		let db_password = `SERVICE_DB_APP_PASSWORD`;
 		if (process.env.SERVICE_DB_USE==1){
 			sql = `SELECT	a.id,
 							(SELECT ap.parameter_value
