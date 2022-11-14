@@ -6,7 +6,7 @@ module.exports = {
 		if (process.env.SERVICE_DB_USE == 1) {
 			sql = `INSERT INTO ${process.env.SERVICE_DB_DB1_NAME}.user_account_app(
 								app_id, user_account_id, date_created)
-					SELECT ?,?, SYSDATE()
+					SELECT ?,?, CURRENT_TIMESTAMP
 					FROM DUAL
 					WHERE NOT EXISTS (SELECT NULL
 										FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_app uap
@@ -21,7 +21,7 @@ module.exports = {
 		}else if (process.env.SERVICE_DB_USE==2){
 			sql = `INSERT INTO ${process.env.SERVICE_DB_DB2_NAME}.user_account_app(
 								app_id, user_account_id, date_created)
-					SELECT :app_id, :user_account_id, SYSDATE
+					SELECT :app_id, :user_account_id, CURRENT_TIMESTAMP
 					FROM DUAL
 					WHERE NOT EXISTS (SELECT NULL
 										FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_app uap
@@ -131,7 +131,7 @@ module.exports = {
 					  	  setting_preference_timezone_id = ?,
 						  setting_preference_direction_id = ?,
 						  setting_preference_arabic_script_id = ?,
-						  date_created = SYSDATE()
+						  date_created = CURRENT_TIMESTAMP
 					WHERE user_account_id = ?
 					  AND app_id = ?`;
 			parameters = [
@@ -148,7 +148,7 @@ module.exports = {
 						  setting_preference_timezone_id = :setting_preference_timezone_id,
 						  setting_preference_direction_id = :setting_preference_direction_id,
 						  setting_preference_arabic_script_id = :setting_preference_arabic_script_id,
-						  date_created = SYSDATE
+						  date_created = CURRENT_TIMESTAMP
 					WHERE user_account_id = :user_account_id
 						AND app_id = :app_id`;
 			parameters = {

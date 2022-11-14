@@ -46,7 +46,7 @@ module.exports = {
 		if (process.env.SERVICE_DB_USE == 1) {
 			sql = `INSERT INTO ${process.env.SERVICE_DB_DB1_NAME}.user_account_logon(
 								user_account_id, app_id, result, access_token, client_ip, client_user_agent, client_longitude, client_latitude, date_created)
-					VALUES(?,?,?,?,?,?,?,?, SYSDATE()) `;
+					VALUES(?,?,?,?,?,?,?,?, CURRENT_TIMESTAMP) `;
 			parameters = [
 							data.user_account_id,
 							data.app_id,
@@ -60,7 +60,7 @@ module.exports = {
 		}else if (process.env.SERVICE_DB_USE==2){
 			sql = `INSERT INTO ${process.env.SERVICE_DB_DB2_NAME}.user_account_logon(
 					user_account_id, app_id, result, access_token, client_ip,  client_user_agent,  client_longitude, client_latitude, date_created)
-					VALUES(:user_account_id, :app_id, :result_insert,:access_token,:client_ip,:client_user_agent, :client_longitude, :client_latitude, SYSDATE) `;
+					VALUES(:user_account_id, :app_id, :result_insert,:access_token,:client_ip,:client_user_agent, :client_longitude, :client_latitude, CURRENT_TIMESTAMP) `;
 			parameters = {
 							user_account_id: data.user_account_id,
 							app_id: data.app_id,
