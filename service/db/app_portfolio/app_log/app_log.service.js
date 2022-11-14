@@ -25,7 +25,7 @@ module.exports = {
 						server_http_host,
 						server_http_accept_language,
 						date_created)
-					VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,SYSDATE())`;
+					VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,CURRENT_TIMESTAMP)`;
 			parameters = [
 							data.app_id,
 							data.app_module,
@@ -79,7 +79,7 @@ module.exports = {
 						:server_user_agent,
 						:server_http_host,
 						:server_http_accept_language,
-						SYSDATE)`;
+						CURRENT_TIMESTAMP)`;
 			parameters = {
 							app_id: data.app_id,
 							app_module:data.app_module,
@@ -132,7 +132,7 @@ module.exports = {
 						server_http_host,
 						server_http_accept_language,
 						date_created)
-					VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,SYSDATE())`;
+					VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,CURRENT_TIMESTAMP)`;
 			parameters = [
 							data.app_id,
 							data.app_module,
@@ -186,7 +186,7 @@ module.exports = {
 						:server_user_agent,
 						:server_http_host,
 						:server_http_accept_language,
-						SYSDATE)`;
+						CURRENT_TIMESTAMP)`;
 			parameters = {
 							app_id: data.app_id,
 							app_module:data.app_module,
