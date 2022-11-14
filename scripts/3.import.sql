@@ -2205,10 +2205,8 @@ INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_na
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','QR_LOGO_HEIGHT','32',NULL);
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','QR_LOGO_WIDTH','32',NULL);
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'0','QR_WIDTH','128',NULL);
-INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'2','SERVICE_DB_DB1_APP_USER','{DB_USER}',NULL);
-INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'2','SERVICE_DB_DB1_APP_PASSWORD','{DB_PASSWORD}',NULL);
-INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'2','SERVICE_DB_DB2_APP_USER','{DB_USER}',NULL);
-INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'2','SERVICE_DB_DB2_APP_PASSWORD','{DB_PASSWORD}',NULL);
+INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'2','SERVICE_DB_APP_USER','{DB_USER}',NULL);
+INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (1,'2','SERVICE_DB_APP_PASSWORD','{DB_PASSWORD}',NULL);
 
 
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (2,'1','APP_COPYRIGHT','{COPYRIGHT TEXT}',NULL);
@@ -2336,16 +2334,12 @@ INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_na
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (2,'0','QR_LOGO_HEIGHT','32',NULL);
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (2,'0','QR_LOGO_WIDTH','32',NULL);
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (2,'0','QR_WIDTH','128',NULL);
-INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (2,'2','SERVICE_DB_DB1_APP_USER','{DB_USER}',NULL);
-INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (2,'2','SERVICE_DB_DB1_APP_PASSWORD','{DB_PASSWORD}',NULL);
-INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (2,'2','SERVICE_DB_DB2_APP_USER','{DB_USER}',NULL);
-INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (2,'2','SERVICE_DB_DB2_APP_PASSWORD','{DB_PASSWORD}',NULL);
+INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (2,'2','SERVICE_DB_APP_USER','{DB_USER}',NULL);
+INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (2,'2','SERVICE_DB_APP_PASSWORD','{DB_PASSWORD}',NULL);
 
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (3,'1','APP_COPYRIGHT','{COPYRIGHT TEXT}',NULL);
-INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (3,'2','SERVICE_DB_DB1_APP_USER','{DB_USER}',NULL);
-INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (3,'2','SERVICE_DB_DB1_APP_PASSWORD','{DB_PASSWORD}',NULL);
-INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (3,'2','SERVICE_DB_DB2_APP_USER','{DB_USER}',NULL);
-INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (3,'2','SERVICE_DB_DB2_APP_PASSWORD','{DB_PASSWORD}',NULL);
+INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (3,'2','SERVICE_DB_APP_USER','{DB_USER}',NULL);
+INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (3,'2','SERVICE_DB_APP_PASSWORD','{DB_PASSWORD}',NULL);
 --
 -- device_type
 --
