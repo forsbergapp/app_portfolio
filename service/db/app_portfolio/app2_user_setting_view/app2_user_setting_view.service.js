@@ -12,7 +12,7 @@ module.exports = {
 								client_longitude,
 								client_latitude,
 								date_created)
-					VALUES(?,?,?,?,?,?, SYSDATE()) `;
+					VALUES(?,?,?,?,?,?, CURRENT_TIMESTAMP) `;
 			parameters = [	data.user_account_id,
 							data.app2_user_setting_id,
 							data.client_ip,
@@ -34,7 +34,7 @@ module.exports = {
 							:client_user_agent,
 							:client_longitude,
 							:client_latitude,
-							SYSDATE) `;
+							CURRENT_TIMESTAMP) `;
 			parameters = {
 							user_account_id: data.user_account_id,
 							app2_user_setting_id: data.app2_user_setting_id,
