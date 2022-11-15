@@ -253,7 +253,7 @@ Installation instructions
 	#What database to use
 	#1=DB1 MySQL, 2=DB2 Oracle
 	SERVICE_DB_USE                           			=1
-	#mySQL
+	#mySQL/MariaDB
 	SERVICE_DB_DB1_VARIANT                      		={1=MySQL, 2=MariaDB}
 	SERVICE_DB_DB1_APP_ADMIN_USER               		=app_admin
 	SERVICE_DB_DB1_APP_ADMIN_PASS               		=APP_1_portfolio
@@ -307,11 +307,9 @@ Installation instructions
 	detailed parameter info:
 	SERVICE_DB_DB1_VARIANT
 		some minor adjustments between MySQL and MariaDB: 
-		- MariaDB returns BigInt in count statements.
 		- MariaDB global variables in INFORMATION_SCHEMA
 		- MySQL global variables in PERFORMANCE_SCHEMA
-		- MariaDB uses mariadb module
-		- MySQL uses mysql module
+		- both MariaDB and MySQL use npm MySQL module
 
 	SERVICE_AUTH_ACCESS_CONTROL_IP_PATH
 		/config/blockip.json

@@ -1,9 +1,8 @@
-const {execute_db_sql} = require ("../../../common/common.service");
+const {execute_db_sql, get_schema_name} = require ("../../../common/common.service");
 module.exports = {
 	getLocales: (app_id, lang_code, callBack) => {
     let sql;
     let parameters;
-    let default_language_id = 147;
     if (process.env.SERVICE_DB_USE == 1) {
       sql = `SELECT   CONCAT(l2.lang_code, CASE 
                                           WHEN c.country_code IS NOT NULL THEN 
@@ -24,69 +23,60 @@ module.exports = {
                                                       ELSE 
                                                         '' 
                                                       END),2)) text
-              FROM ${process.env.SERVICE_DB_DB1_NAME}.language_translation lt,
-                   ${process.env.SERVICE_DB_DB1_NAME}.language l2,
-                   ${process.env.SERVICE_DB_DB1_NAME}.country c,
-                   ${process.env.SERVICE_DB_DB1_NAME}.country_translation ct
+              FROM ${get_schema_name()}.language_translation lt,
+                   ${get_schema_name()}.language l2,
+                   ${get_schema_name()}.country c,
+                   ${get_schema_name()}.country_translation ct
              WHERE l2.id = lt.language_id
                AND ct.country_id = c.id
                AND EXISTS( SELECT NULL
-                             FROM ${process.env.SERVICE_DB_DB1_NAME}.locale loc
+                             FROM ${get_schema_name()}.locale loc
                             WHERE loc.country_id = c.id
                               AND loc.language_id = lt.language_id)
                AND lt.language_translation_id = (SELECT l3.id
-                                                   FROM ${process.env.SERVICE_DB_DB1_NAME}.language l3
+                                                   FROM ${get_schema_name()}.language l3
                                                   WHERE l3.lang_code = (
                                                         SELECT COALESCE(MAX(l4.lang_code),'en')
-                                                          FROM ${process.env.SERVICE_DB_DB1_NAME}.language_translation lt4,
-                                                               ${process.env.SERVICE_DB_DB1_NAME}.language l4
+                                                          FROM ${get_schema_name()}.language_translation lt4,
+                                                               ${get_schema_name()}.language l4
                                                          WHERE l4.id  = lt4.language_translation_id
                                                            AND lt4.language_id = l2.id
-                                                           AND l4.lang_code IN (?, SUBSTRING_INDEX(?,'-',2), SUBSTRING_INDEX(?,'-',1))
+                                                           AND l4.lang_code IN (:lang_code, SUBSTRING_INDEX(:lang_code,'-',2), SUBSTRING_INDEX(:lang_code,'-',1))
                                                                         )
                                                 )
                AND ct.language_id = (SELECT l3.id
-                                       FROM ${process.env.SERVICE_DB_DB1_NAME}.language l3
+                                       FROM ${get_schema_name()}.language l3
                                       WHERE l3.lang_code = (
                                             SELECT COALESCE(MAX(l1.lang_code),'en')
-                                              FROM ${process.env.SERVICE_DB_DB1_NAME}.country_translation ct1,
-                                                  ${process.env.SERVICE_DB_DB1_NAME}.language l1
+                                              FROM ${get_schema_name()}.country_translation ct1,
+                                                  ${get_schema_name()}.language l1
                                             WHERE l1.id  = ct1.language_id
                                               AND ct1.country_id = c.id
-                                              AND l1.lang_code IN (?, SUBSTRING_INDEX(?,'-',2), SUBSTRING_INDEX(?,'-',1))
+                                              AND l1.lang_code IN (:lang_code, SUBSTRING_INDEX(:lang_code,'-',2), SUBSTRING_INDEX(:lang_code,'-',1))
                                                             )
                                     )
             UNION ALL
             SELECT l2.lang_code locale,
                    CONCAT(UPPER(SUBSTR(lt.text,1,1)), SUBSTR(lt.text,2)) text
-              FROM ${process.env.SERVICE_DB_DB1_NAME}.language_translation lt,
-                   ${process.env.SERVICE_DB_DB1_NAME}.language l2
+              FROM ${get_schema_name()}.language_translation lt,
+                   ${get_schema_name()}.language l2
              WHERE INSTR(l2.lang_code,'-') = 0
                AND l2.id = lt.language_id
                AND lt.language_translation_id = (SELECT l3.id
-                                                   FROM ${process.env.SERVICE_DB_DB1_NAME}.language l3
+                                                   FROM ${get_schema_name()}.language l3
                                                   WHERE l3.lang_code = (
                                                         SELECT COALESCE(MAX(l4.lang_code),'en')
-                                                          FROM ${process.env.SERVICE_DB_DB1_NAME}.language_translation lt4,
-                                                               ${process.env.SERVICE_DB_DB1_NAME}.language l4
+                                                          FROM ${get_schema_name()}.language_translation lt4,
+                                                               ${get_schema_name()}.language l4
                                                          WHERE l4.id  = lt4.language_translation_id
                                                            AND lt4.language_id = l2.id
-                                                           AND l4.lang_code IN (?, SUBSTRING_INDEX(?,'-',2), SUBSTRING_INDEX(?,'-',1))
+                                                           AND l4.lang_code IN (:lang_code, SUBSTRING_INDEX(:lang_code,'-',2), SUBSTRING_INDEX(:lang_code,'-',1))
                                                                         )
                                                 )
                AND  EXISTS(SELECT NULL
-                             FROM ${process.env.SERVICE_DB_DB1_NAME}.locale loc
+                             FROM ${get_schema_name()}.locale loc
                             WHERE loc.language_id = lt.language_id)
             ORDER BY 2 `;
-      parameters = [lang_code,
-                    lang_code,
-                    lang_code,
-                    lang_code,
-                    lang_code,
-                    lang_code,
-                    lang_code,
-                    lang_code,
-                    lang_code];
     }else if (process.env.SERVICE_DB_USE==2){
       sql = `SELECT CONCAT(l2.lang_code, CASE 
                                           WHEN c.country_code IS NOT NULL THEN 
@@ -107,33 +97,33 @@ module.exports = {
                                               ELSE 
                                                 '' 
                                               END),2)) "text"
-             FROM ${process.env.SERVICE_DB_DB2_NAME}.language_translation lt,
-                  ${process.env.SERVICE_DB_DB2_NAME}.language l2,
-                  ${process.env.SERVICE_DB_DB2_NAME}.country c,
-                  ${process.env.SERVICE_DB_DB2_NAME}.country_translation ct
+             FROM ${get_schema_name()}.language_translation lt,
+                  ${get_schema_name()}.language l2,
+                  ${get_schema_name()}.country c,
+                  ${get_schema_name()}.country_translation ct
             WHERE l2.id = lt.language_id
               AND ct.country_id = c.id
               AND EXISTS( SELECT NULL
-                            FROM ${process.env.SERVICE_DB_DB2_NAME}.locale loc
+                            FROM ${get_schema_name()}.locale loc
                            WHERE loc.country_id = c.id
                              AND loc.language_id = lt.language_id)
               AND lt.language_translation_id = (SELECT l3.id
-                                                  FROM ${process.env.SERVICE_DB_DB2_NAME}.language l3
+                                                  FROM ${get_schema_name()}.language l3
                                                   WHERE l3.lang_code = (
                                                         SELECT COALESCE(MAX(l4.lang_code),'en')
-                                                          FROM ${process.env.SERVICE_DB_DB2_NAME}.language_translation lt4,
-                                                               ${process.env.SERVICE_DB_DB2_NAME}.language l4
+                                                          FROM ${get_schema_name()}.language_translation lt4,
+                                                               ${get_schema_name()}.language l4
                                                          WHERE l4.id  = lt4.language_translation_id
                                                            AND lt4.language_id = l2.id
                                                            AND l4.lang_code IN (:lang_code, SUBSTR(:lang_code, 0,INSTR(:lang_code,'-',1,2)-1), SUBSTR(:lang_code, 0,INSTR(:lang_code,'-',1,1)-1))
                                                                         )
                                                 )
               AND ct.language_id = (SELECT l3.id
-                                      FROM ${process.env.SERVICE_DB_DB2_NAME}.language l3
+                                      FROM ${get_schema_name()}.language l3
                                       WHERE l3.lang_code = (
                                             SELECT COALESCE(MAX(l1.lang_code), 'en')
-                                              FROM ${process.env.SERVICE_DB_DB2_NAME}.country_translation ct1,
-                                                   ${process.env.SERVICE_DB_DB2_NAME}.language l1
+                                              FROM ${get_schema_name()}.country_translation ct1,
+                                                   ${get_schema_name()}.language l1
                                              WHERE l1.id  = ct1.language_id
                                                AND ct1.country_id = c.id
                                                AND l1.lang_code IN (:lang_code, SUBSTR(:lang_code, 0,INSTR(:lang_code,'-',1,2)-1), SUBSTR(:lang_code, 0,INSTR(:lang_code,'-',1,1)-1))
@@ -142,29 +132,30 @@ module.exports = {
             UNION ALL
             SELECT l2.lang_code "locale",
                    CONCAT(UPPER(SUBSTR(lt.text,1,1)), SUBSTR(lt.text,2)) "text"
-              FROM ${process.env.SERVICE_DB_DB2_NAME}.language_translation lt,
-                   ${process.env.SERVICE_DB_DB2_NAME}.language l2
+              FROM ${get_schema_name()}.language_translation lt,
+                   ${get_schema_name()}.language l2
              WHERE INSTR(l2.lang_code,'-') = 0
                AND l2.id = lt.language_id
                AND lt.language_translation_id = (SELECT l3.id
-                                                   FROM ${process.env.SERVICE_DB_DB2_NAME}.language l3
+                                                   FROM ${get_schema_name()}.language l3
                                                   WHERE l3.lang_code = (
                                                         SELECT COALESCE(MAX(l4.lang_code),'en')
-                                                          FROM ${process.env.SERVICE_DB_DB2_NAME}.language_translation lt4,
-                                                               ${process.env.SERVICE_DB_DB2_NAME}.language l4
+                                                          FROM ${get_schema_name()}.language_translation lt4,
+                                                               ${get_schema_name()}.language l4
                                                          WHERE l4.id  = lt4.language_translation_id
                                                            AND lt4.language_id = l2.id
                                                            AND l4.lang_code IN (:lang_code, SUBSTR(:lang_code, 0,INSTR(:lang_code,'-',1,2)-1), SUBSTR(:lang_code, 0,INSTR(:lang_code,'-',1,1)-1))
                                                                         )
                                                 )
                AND  EXISTS(SELECT NULL
-                             FROM ${process.env.SERVICE_DB_DB2_NAME}.locale loc
+                             FROM ${get_schema_name()}.locale loc
                             WHERE loc.language_id = lt.language_id)
             ORDER BY 2`;
-      parameters = {
-                    lang_code: lang_code
-                   };
+      
 		}
+    parameters = {
+                  lang_code: lang_code
+                };
     execute_db_sql(app_id, sql, parameters, null, 
                    __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
