@@ -1,10 +1,6 @@
 var global_pool_db1_app = [];
 var global_pool_db2_app = [];
-var mysql;
-if (process.env.SERVICE_DB_DB1_VARIANT==1) 
-   mysql = require("mysql");
-else
-   mysql = require("mariadb");
+var mysql = require("mysql");
 var oracledb = require('oracledb');
 function DBInit(){
    if (process.env.SERVICE_DB_USE==2){
@@ -20,7 +16,7 @@ const { createLogAppSI, createLogAppSE } = require("../../log/log.controller");
 
 module.exports = {
 	DBInfo:(app_id, callBack) => {
-      const {execute_db_sql} = require ("../common/common.service");
+      const {execute_db_sql, get_schema_name} = require ("../common/common.service");
 		let sql;
 		let parameters;
 		if (process.env.SERVICE_DB_USE==1){
@@ -34,14 +30,14 @@ module.exports = {
             table_global_variables = 'information_schema';
          }
             
-			sql = `SELECT	? database_use,
+			sql = `SELECT	:database database_use,
                             (SELECT variable_value
                                FROM ${table_global_variables}.global_variables
                               WHERE variable_name = 'version_comment') database_name,
 							(SELECT variable_value
                                FROM ${table_global_variables}.global_variables
                               WHERE variable_name='version') version,
-                            ? database_schema,
+                            :database_schema database_schema,
 							(SELECT variable_value
                                FROM ${table_global_variables}.global_variables
                               WHERE variable_name='hostname') hostname,
@@ -52,8 +48,6 @@ module.exports = {
                                FROM ${table_global_variables}.global_status
                               WHERE variable_name='Uptime') started
 					FROM DUAL`;
-			parameters = [	process.env.SERVICE_DB_USE,
-                        process.env.SERVICE_DB_DB1_NAME];
 		}
 		else if (process.env.SERVICE_DB_USE==2){
 			sql = `SELECT :database "database_use",
@@ -68,10 +62,12 @@ module.exports = {
                              FROM v$session) "connections",
                           v.startup_time "started"
                      FROM V$INSTANCE v`;
-			parameters = {	database: process.env.SERVICE_DB_USE,
-                        database_schema: process.env.SERVICE_DB_DB2_NAME};
 		}
-		execute_db_sql(app_id, sql, parameters, true, 
+      parameters = {	
+                     database: process.env.SERVICE_DB_USE,
+                     database_schema: get_schema_name()
+                   };
+      execute_db_sql(app_id, sql, parameters, true, 
 			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);
@@ -88,7 +84,7 @@ module.exports = {
 		});
 	},
    DBInfoSpace:(app_id, callBack) => {
-      const {execute_db_sql} = require ("../common/common.service");
+      const {execute_db_sql, get_schema_name} = require ("../common/common.service");
 		let sql;
 		let parameters;
 		if (process.env.SERVICE_DB_USE==1){
@@ -100,10 +96,9 @@ module.exports = {
                      FROM INFORMATION_SCHEMA.SCHEMATA s, 
                           INFORMATION_SCHEMA.TABLES t
                     WHERE s.schema_name = t.table_schema
-                      AND s.schema_name = ?
+                      AND s.schema_name = :db_schema
                     GROUP BY table_name
                     ORDER BY IFNULL(ROUND((SUM(t.data_length)+SUM(t.index_length))/1024/1024,2),0.00) DESC`;
-			parameters = [process.env.SERVICE_DB_DB1_NAME];
 		}
 		else if (process.env.SERVICE_DB_USE==2){
 			sql = `SELECT dt.table_name "table_name",
@@ -118,9 +113,8 @@ module.exports = {
                    AND ds.segment_type = 'TABLE'
                  GROUP BY dt.table_name, dt.num_rows,dt.avg_row_len
                  ORDER BY 2 DESC`;
-
-			parameters = {db_schema: process.env.SERVICE_DB_DB2_NAME};
 		}
+      parameters = {db_schema: get_schema_name()};
 		execute_db_sql(app_id, sql, parameters, true, 
 			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
@@ -130,7 +124,7 @@ module.exports = {
 		});
 	},
 	DBInfoSpaceSum:(app_id, callBack) => {
-      const {execute_db_sql} = require ("../common/common.service");
+      const {execute_db_sql, get_schema_name} = require ("../common/common.service");
 		let sql;
 		let parameters;
 		if (process.env.SERVICE_DB_USE==1){
@@ -141,8 +135,7 @@ module.exports = {
                      FROM INFORMATION_SCHEMA.SCHEMATA s, 
                           INFORMATION_SCHEMA.TABLES t
                     WHERE s.schema_name = t.table_schema
-                      AND s.schema_name = ?`;
-			parameters = [process.env.SERVICE_DB_DB1_NAME];
+                      AND s.schema_name = :db_schema`;
 		}
 		else if (process.env.SERVICE_DB_USE==2){
 			sql = `SELECT SUM(ds.bytes)/1024/1024 "total_size",
@@ -154,8 +147,8 @@ module.exports = {
                  WHERE dt.owner = UPPER(:db_schema)
                    AND ds.segment_name = dt.table_name
                    AND ds.segment_type = 'TABLE'`
-			parameters = {db_schema: process.env.SERVICE_DB_DB2_NAME};
 		}
+      parameters = {db_schema: get_schema_name()};
 		execute_db_sql(app_id, sql, parameters, true, 
 			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
@@ -311,10 +304,7 @@ module.exports = {
 		global_pool_db1_app = [];
       global_pool_db2_app = [];
       mysql = null;
-      if (process.env.SERVICE_DB_DB1_VARIANT==1) 
-         mysql = require("mysql");
-      else
-         mysql = require("mariadb");
+      mysql = require("mysql");
       oracledb = null;
       oracledb = require('oracledb');
 	},
