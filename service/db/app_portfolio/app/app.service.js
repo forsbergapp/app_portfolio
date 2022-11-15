@@ -1,92 +1,51 @@
-const {execute_db_sql, get_schema_name} = require ("../../common/common.service");
+const {execute_db_sql, get_schema_name, get_locale} = require ("../../common/common.service");
 module.exports = {
 	getApp:(app_id, id,lang_code, callBack) => {
 		let sql;
 		let parameters;
 		if (typeof id=='undefined')
 			id=null;
-		if (process.env.SERVICE_DB_USE==1){
-			sql = `SELECT	a.id,
-							a.app_name,
-							a.url,
-							a.logo,
-							aot.text app_description,
-							act.text app_category
-					FROM ${get_schema_name()}.app a
+		sql = `SELECT	id "id",
+						app_name "app_name",
+						url "url",
+						logo "logo",
+						aot.text "app_description",
+						act.text "app_category"
+				FROM ${get_schema_name()}.app a
 						LEFT OUTER JOIN ${get_schema_name()}.app_object_translation aot
 							ON aot.app_object_app_id = a.id
-						AND aot.app_object_object_name = 'APP_DESCRIPTION'
+							AND aot.app_object_object_name = 'APP_DESCRIPTION'
 							AND aot.language_id IN (SELECT id 
-													  FROM ${get_schema_name()}.language l
-													  WHERE l.lang_code = (SELECT COALESCE(MAX(l1.lang_code),'en')
-																		     FROM ${get_schema_name()}.app_object_translation aot1,
-																				  ${get_schema_name()}.language l1
-																		    WHERE l1.id  = aot1.language_id
-  																			  AND aot1.app_object_app_id  = aot.app_object_app_id
-																			  AND aot1.app_object_object_name = aot.app_object_object_name
-																			  AND l1.lang_code IN (:lang_code, SUBSTRING_INDEX(:lang_code,'-',2), SUBSTRING_INDEX(:lang_code,'-',1))
-																		  )
-												   )
+													FROM ${get_schema_name()}.language l
+													WHERE l.lang_code = (SELECT COALESCE(MAX(l1.lang_code),'en')
+																			FROM ${get_schema_name()}.app_object_translation aot1,
+																				${get_schema_name()}.language l1
+																		WHERE l1.id  = aot1.language_id
+																			AND aot1.app_object_app_id  = aot.app_object_app_id
+																			AND aot1.app_object_object_name = aot.app_object_object_name
+																			AND l1.lang_code IN (:lang_code1, :lang_code2, :lang_code3)
+																		)
+												)
 						LEFT OUTER JOIN ${get_schema_name()}.app_category_translation act
 							ON act.app_category_id = a.app_category_id
 							AND act.language_id IN (SELECT id 
-													  FROM ${get_schema_name()}.language l
-													  WHERE l.lang_code = (SELECT COALESCE(MAX(l1.lang_code),'en')
-																			 FROM ${get_schema_name()}.app_category_translation act1,
-																				  ${get_schema_name()}.language l1
-																			WHERE l1.id  = act1.language_id
-																			  AND act1.app_category_id  = act.app_category_id
-																			  AND l1.lang_code IN (:lang_code, SUBSTRING_INDEX(:lang_code,'-',2), SUBSTRING_INDEX(:lang_code,'-',1))
-																		  )
-													)
-					WHERE (a.id = COALESCE(:id, a.id)
-						OR 
-						:id = 0)
-					AND a.enabled = 1
-					ORDER BY 1 `;
-		}
-		else if (process.env.SERVICE_DB_USE==2){
-			sql = `SELECT	id "id",
-							app_name "app_name",
-							url "url",
-							logo "logo",
-							aot.text "app_description",
-							act.text "app_category"
-					FROM ${get_schema_name()}.app a
-							LEFT OUTER JOIN ${get_schema_name()}.app_object_translation aot
-							  ON aot.app_object_app_id = a.id
-							 AND aot.app_object_object_name = 'APP_DESCRIPTION'
-							 AND aot.language_id IN (SELECT id 
-													   FROM ${get_schema_name()}.language l
-													  WHERE l.lang_code = (SELECT COALESCE(MAX(l1.lang_code),'en')
-																			 FROM ${get_schema_name()}.app_object_translation aot1,
-																				  ${get_schema_name()}.language l1
-																			WHERE l1.id  = aot1.language_id
- 																			  AND aot1.app_object_app_id  = aot.app_object_app_id
-																			  AND aot1.app_object_object_name = aot.app_object_object_name
-																			  AND l1.lang_code IN (:lang_code, SUBSTR(:lang_code, 0,INSTR(:lang_code,'-',1,2)-1), SUBSTR(:lang_code, 0,INSTR(:lang_code,'-',1,1)-1))
-																		  )
-													)
-							LEFT OUTER JOIN ${get_schema_name()}.app_category_translation act
-							  ON act.app_category_id = a.app_category_id
-							 AND act.language_id IN (SELECT id 
-													   FROM ${get_schema_name()}.language l
-													  WHERE l.lang_code = (SELECT COALESCE(MAX(l1.lang_code),'en')
-																			 FROM ${get_schema_name()}.app_category_translation act1,
-																				  ${get_schema_name()}.language l1
-																			WHERE l1.id  = act1.language_id
-																			  AND act1.app_category_id  = act.app_category_id
-																			  AND l1.lang_code IN (:lang_code, SUBSTR(:lang_code, 0,INSTR(:lang_code,'-',1,2)-1), SUBSTR(:lang_code, 0,INSTR(:lang_code,'-',1,1)-1))
-																		  )
-													)
-					WHERE (id= COALESCE(:id, id)
-						OR 
-						:id = 0)
-					AND enabled = 1
-					ORDER BY 1`;
-			
-		}
-		parameters = {	lang_code: lang_code,
+													FROM ${get_schema_name()}.language l
+													WHERE l.lang_code = (SELECT COALESCE(MAX(l1.lang_code),'en')
+																			FROM ${get_schema_name()}.app_category_translation act1,
+																				${get_schema_name()}.language l1
+																		WHERE l1.id  = act1.language_id
+																			AND act1.app_category_id  = act.app_category_id
+																			AND l1.lang_code IN (:lang_code1, :lang_code2, :lang_code3)
+																		)
+												)
+				WHERE (id= COALESCE(:id, id)
+					OR 
+					:id = 0)
+				AND enabled = 1
+				ORDER BY 1`;
+		parameters = {	lang_code1: get_locale(lang_code, 1),
+						lang_code2: get_locale(lang_code, 2),
+						lang_code3: get_locale(lang_code, 3),
 						id: id};
 		execute_db_sql(app_id, sql, parameters, null, 
 			           __appfilename, __appfunction, __appline, (err, result)=>{
@@ -99,53 +58,31 @@ module.exports = {
 	getAppsAdmin:(app_id, lang_code, callBack) => {
 		let sql;
 		let parameters;
-		if (process.env.SERVICE_DB_USE==1){
-			sql = `SELECT	a.id,
-							a.app_name,
-							a.url,
-							a.logo,
-							a.enabled,
-							a.app_category_id,
-							act.text app_category_text
-					FROM ${get_schema_name()}.app a
-						LEFT OUTER JOIN ${get_schema_name()}.app_category_translation act
-							ON act.app_category_id = a.app_category_id
-							AND act.language_id IN (SELECT id 
-													FROM ${get_schema_name()}.language l
-													WHERE l.lang_code = (SELECT COALESCE(MAX(l1.lang_code),'en')
-																			FROM ${get_schema_name()}.app_category_translation act1,
-																				${get_schema_name()}.language l1
-																			WHERE l1.id  = act1.language_id
-																			AND act1.app_category_id  = act.app_category_id
-																			AND l1.lang_code IN (:lang_code, SUBSTRING_INDEX(:lang_code,'-',2), SUBSTRING_INDEX(:lang_code,'-',1))
-																		)
-													)
-					ORDER BY 1`;
-		}
-		else if (process.env.SERVICE_DB_USE==2){
-			sql = `SELECT	a.id "id",
-							a.app_name "app_name",
-							a.url "url",
-							a.logo "logo",
-							a.enabled "enabled",
-							a.app_category_id "app_category_id",
-							act.text "app_category_text"
-					FROM ${get_schema_name()}.app a
-						LEFT OUTER JOIN ${get_schema_name()}.app_category_translation act
-							ON act.app_category_id = a.app_category_id
-							AND act.language_id IN (SELECT id 
-													FROM ${get_schema_name()}.language l
-													WHERE l.lang_code = (SELECT COALESCE(MAX(l1.lang_code),'en')
-																		   FROM ${get_schema_name()}.app_category_translation act1,
-																				${get_schema_name()}.language l1
-																		  WHERE l1.id  = act1.language_id
-																			AND act1.app_category_id  = act.app_category_id
-																			AND l1.lang_code IN (:lang_code, SUBSTR(:lang_code, 0,INSTR(:lang_code,'-',1,2)-1), SUBSTR(:lang_code, 0,INSTR(:lang_code,'-',1,1)-1))
-																		)
-													)
-					ORDER BY 1`;
-		}
-		parameters = {lang_code: lang_code};
+		sql = `SELECT	a.id "id",
+						a.app_name "app_name",
+						a.url "url",
+						a.logo "logo",
+						a.enabled "enabled",
+						a.app_category_id "app_category_id",
+						act.text "app_category_text"
+				FROM ${get_schema_name()}.app a
+					LEFT OUTER JOIN ${get_schema_name()}.app_category_translation act
+						ON act.app_category_id = a.app_category_id
+						AND act.language_id IN (SELECT id 
+												FROM ${get_schema_name()}.language l
+												WHERE l.lang_code = (SELECT COALESCE(MAX(l1.lang_code),'en')
+																		FROM ${get_schema_name()}.app_category_translation act1,
+																			${get_schema_name()}.language l1
+																		WHERE l1.id  = act1.language_id
+																		AND act1.app_category_id  = act.app_category_id
+																		AND l1.lang_code IN (:lang_code1, :lang_code2, :lang_code3)
+																	)
+												)
+				ORDER BY 1`;
+		parameters = {lang_code1: get_locale(lang_code, 1),
+					  lang_code2: get_locale(lang_code, 2),
+					  lang_code3: get_locale(lang_code, 3)
+					 };
 		execute_db_sql(app_id, sql, parameters, true, 
 			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
