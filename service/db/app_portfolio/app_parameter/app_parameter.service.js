@@ -236,7 +236,9 @@ module.exports = {
 		let app_rest_client_id = 'APP_REST_CLIENT_ID';
 		let app_rest_client_secret ='APP_REST_CLIENT_SECRET';
 		let rest_app_parameter ='REST_APP_PARAMETER';
-		sql = `SELECT   'ADMIN' "app_name",
+		sql = `SELECT   (SELECT a.app_name
+						   FROM ${get_schema_name()}.app a
+						  WHERE a.id = :app_id) "app_name",
 						(SELECT a.url
 							FROM ${get_schema_name()}.app a
 							WHERE a.id = :app_id) "app_url",
