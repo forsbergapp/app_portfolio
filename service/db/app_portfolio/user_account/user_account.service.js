@@ -56,10 +56,13 @@ function verification_code(){
     return Math.floor(100000 + Math.random() * 900000);
 }
 function data_validation(data){
-	data.provider_id = data.provider_id ?? null;
+	data.username = data.username ?? null;
+	data.bio = data.bio ?? null;
 	data.password_reminder = data.password_reminder ?? null;
 	data.email_unverified = data.email_unverified ?? null;
 	data.verification_code = data.verification_code ?? null;
+	data.provider_id = data.provider_id ?? null;
+	
 	if (data.provider_id != null){
 		data.password = null;
 		data.password_reminder = null;
@@ -68,37 +71,38 @@ function data_validation(data){
 		data.avatar = null;
 		data.verification_code = null;
 	}
-    if (data.username.length < 5 || data.username.length > 100){
+    if (data.username != null && (data.username.length < 5 || data.username.length > 100)){
 		//'username 5 - 100 characters'
 		return 20100;
 	}
 	else 
-		if (data.username.indexOf(' ') > -1 || 
-		    data.username.indexOf('?') > -1 ||
-			data.username.indexOf('/') > -1 ||
-			data.username.indexOf('+') > -1 ||
-			data.username.indexOf('"') > -1 ||
-			data.username.indexOf('\'\'') > -1){
+		if (data.username != null &&
+			(data.username.indexOf(' ') > -1 || 
+		     data.username.indexOf('?') > -1 ||
+			 data.username.indexOf('/') > -1 ||
+			 data.username.indexOf('+') > -1 ||
+			 data.username.indexOf('"') > -1 ||
+			 data.username.indexOf('\'\'') > -1)){
 			//'not valid username'
 			return 20101;
 		}
 		else
-			if (data.bio.length > 100){
+			if (data.bio != null && data.bio.length > 100){
 				//'bio max 100 characters'
 				return 20102;
 			}
 			else 
-				if (data.email.length > 100){
+				if (data.email != null && data.email.length > 100){
 					//'email max 100 characters'
 					return 20103;
 				}
 				else
-					if (data.password_reminder.length > 100){
+					if (data.password_reminder != null && data.password_reminder.length > 100){
 						//'reminder max 100 characters'
 						return 20104;
 					}
 					else
-						if (data.email.slice(-10) != '@localhost' && data.email.match(/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)==null){
+						if (data.email != null && data.email.slice(-10) != '@localhost' && data.email.match(/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)==null){
 							//'not valid email' (ignore emails that ends with '@localhost')
 							return 20105;
 						}
