@@ -104,5 +104,33 @@ function get_schema_name(){
 		}
 	}
 }
+function get_locale(lang_code, part){
+	if (lang_code==null)
+		return null;
+	else
+		switch (part){
+			case 1:{
+				return lang_code;
+				break;
+			}
+			case 2:{
+				if (lang_code.indexOf('-',lang_code.indexOf('-')+1) >-1)
+					//ex zh-hant from zh-hant-cn
+					return lang_code.substring(0,lang_code.indexOf('-',lang_code.indexOf('-')+1));
+				else
+					return lang_code;
+				break;
+			}
+			case 3:{
+				if (lang_code.indexOf('-')>-1)
+					//ex zh from zh-hant-cn
+					return lang_code.substring(0,lang_code.indexOf('-'));
+				else
+					return lang_code;
+				break;
+			}
+		}
+}
 module.exports.execute_db_sql = execute_db_sql;
 module.exports.get_schema_name = get_schema_name;
+module.exports.get_locale = get_locale;
