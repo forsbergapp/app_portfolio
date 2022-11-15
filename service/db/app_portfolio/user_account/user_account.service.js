@@ -1,4 +1,4 @@
-const {execute_db_sql} = require ("../../common/common.service");
+const {execute_db_sql, get_schema_name} = require ("../../common/common.service");
 function password_length_wrong(password){
     //constraint should be in db but password is encrypted when in db trigger
     //and saved with constant 60 characters length
@@ -141,111 +141,70 @@ module.exports = {
         }
 		let error_code = validation_before_insert(data);
 		if (error_code==null){
-			if (process.env.SERVICE_DB_USE == 1) {
-				sql = `INSERT INTO ${process.env.SERVICE_DB_DB1_NAME}.user_account(
-							bio,
-							private,
-							user_level,
-							date_created,
-							date_modified,
-							username,
-							password,
-							password_reminder,
-							email,
-							avatar,
-							verification_code,
-							active,
-							identity_provider_id,
-							provider_id,
-							provider_first_name,
-							provider_last_name,
-							provider_image,
-							provider_image_url,
-							provider_email)
-						VALUES(?,?,?,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP,?,?,?,?,?,?,?,?,?,?,?,?,?,?) `;
-				parameters = [
-								data.bio,
-								data.private,
-								data.user_level,
-								data.username,
-								data.password,
-								data.password_reminder,
-								data.email,
-								data.avatar,
-								data.verification_code,
-								data.active,
-								data.identity_provider_id,
-								data.provider_id,
-								data.provider_first_name,
-								data.provider_last_name,
-								data.provider_image,
-								data.provider_image_url,
-								data.provider_email
-							];
-			} else if (process.env.SERVICE_DB_USE == 2) {
-				sql = `INSERT INTO ${process.env.SERVICE_DB_DB2_NAME}.user_account(
-							bio,
-							private,
-							user_level,
-							date_created,
-							date_modified,
-							username,
-							password,
-							password_reminder,
-							email,
-							avatar,
-							verification_code,
-							active,
-							identity_provider_id,
-							provider_id,
-							provider_first_name,
-							provider_last_name,
-							provider_image,
-							provider_image_url,
-							provider_email)
-						VALUES(:bio,
-							:private,
-							:user_level,
-							CURRENT_TIMESTAMP,
-							CURRENT_TIMESTAMP,
-							:username,
-							:password,
-							:password_reminder,
-							:email,
-							:avatar,
-							:verification_code,
-							:active,
-							:identity_provider_id,
-							:provider_id,
-							:provider_first_name,
-							:provider_last_name,
-							:provider_image,
-							:provider_image_url,
-							:provider_email) `;
+			sql = `INSERT INTO ${get_schema_name()}.user_account(
+				bio,
+				private,
+				user_level,
+				date_created,
+				date_modified,
+				username,
+				password,
+				password_reminder,
+				email,
+				avatar,
+				verification_code,
+				active,
+				identity_provider_id,
+				provider_id,
+				provider_first_name,
+				provider_last_name,
+				provider_image,
+				provider_image_url,
+				provider_email)
+			VALUES( :bio,
+					:private,
+					:user_level,
+					CURRENT_TIMESTAMP,
+					CURRENT_TIMESTAMP,
+					:username,
+					:password,
+					:password_reminder,
+					:email,
+					:avatar,
+					:verification_code,
+					:active,
+					:identity_provider_id,
+					:provider_id,
+					:provider_first_name,
+					:provider_last_name,
+					:provider_image,
+					:provider_image_url,
+					:provider_email) `;				
+			if (process.env.SERVICE_DB_USE == 2) {
 				if (data.avatar != null)
 					data.avatar = Buffer.from(data.avatar, 'utf8');
 				if (data.provider_image != null)
 					data.provider_image = Buffer.from(data.provider_image, 'utf8');
-				parameters = {
-								bio: data.bio,
-								private: data.private,
-								user_level: data.user_level,
-								username: data.username,
-								password: data.password,
-								password_reminder: data.password_reminder,
-								email: data.email,
-								avatar: data.avatar,
-								verification_code: data.verification_code,
-								active: data.active,
-								identity_provider_id: data.identity_provider_id,
-								provider_id: data.provider_id,
-								provider_first_name: data.provider_first_name,
-								provider_last_name: data.provider_last_name,
-								provider_image: data.provider_image,
-								provider_image_url: data.provider_image_url,
-								provider_email: data.provider_email
-							};
 			}
+			parameters = {
+							bio: data.bio,
+							private: data.private,
+							user_level: data.user_level,
+							username: data.username,
+							password: data.password,
+							password_reminder: data.password_reminder,
+							email: data.email,
+							avatar: data.avatar,
+							verification_code: data.verification_code,
+							active: data.active,
+							identity_provider_id: data.identity_provider_id,
+							provider_id: data.provider_id,
+							provider_first_name: data.provider_first_name,
+							provider_last_name: data.provider_last_name,
+							provider_image: data.provider_image,
+							provider_image_url: data.provider_image_url,
+							provider_email: data.provider_email
+						 };
 			execute_db_sql(app_id, sql, parameters, null, 
 						   __appfilename, __appfunction, __appline, (err, result)=>{
 				if (err)
@@ -260,7 +219,7 @@ module.exports = {
 						//remove "" before and after
 						var lastRowid = JSON.stringify(result.lastRowid).replace(/"/g, '');
 						sql = `SELECT id "insertId"
-								 FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account
+								 FROM ${get_schema_name()}.user_account
 								WHERE rowid = :lastRowid`;
 						parameters = {
 										lastRowid: lastRowid
@@ -284,57 +243,30 @@ module.exports = {
     	let parameters;
 		let error_code = validation_before_update(data);
 		if (error_code==null){
-			if (process.env.SERVICE_DB_USE == 1) {
-				sql = `UPDATE ${process.env.SERVICE_DB_DB1_NAME}.user_account
-							SET	active = 1,
-								verification_code = ?,
-								email = CASE 
-										WHEN  ? = 4 THEN 
-											email_unverified
-										ELSE 
-											email
-										END,
-								email_unverified = CASE 
-												WHEN  ? = 4 THEN 
-														NULL
-												ELSE 
-														email_unverified
-												END,
-								date_modified = CURRENT_TIMESTAMP
-						WHERE id = ?
-							AND verification_code = ?`;
-				parameters = [	auth,
-								verification_type,
-								verification_type,
-								id,
-								verification_code
-							];
-			} else if (process.env.SERVICE_DB_USE == 2) {
-				sql = `UPDATE ${process.env.SERVICE_DB_DB2_NAME}.user_account
-							SET	active = 1,
-								verification_code = :auth,
-								email = CASE 
-										WHEN  :verification_type = 4 THEN 
-											email_unverified
-										ELSE 
-											email
-										END,
-								email_unverified = CASE 
-												WHEN  :verification_type = 4 THEN 
-														NULL
-												ELSE 
-														email_unverified
-												END,
-								date_modified = CURRENT_TIMESTAMP
-						WHERE id = :id
-							AND verification_code = :verification_code `;
-				parameters ={
-								auth: auth,
-								verification_type: verification_type,
-								id: id,
-								verification_code: verification_code
-							};
-			}
+			sql = `UPDATE ${get_schema_name()}.user_account
+					  SET active = 1,
+						  verification_code = :auth,
+						  email = CASE 
+						  		  WHEN  :verification_type = 4 THEN 
+										email_unverified
+								  ELSE 
+								  	    email
+								  END,
+						  email_unverified = CASE 
+											 WHEN  :verification_type = 4 THEN 
+													NULL
+											 ELSE 
+													email_unverified
+											 END,
+						  date_modified = CURRENT_TIMESTAMP
+					WHERE id = :id
+						AND verification_code = :verification_code `;
+			parameters ={
+							auth: auth,
+							verification_type: verification_type,
+							id: id,
+							verification_code: verification_code
+						};
 			execute_db_sql(app_id, sql, parameters, null, 
 						__appfilename, __appfunction, __appline, (err, result)=>{
 				if (err)
@@ -361,25 +293,14 @@ module.exports = {
 	updateUserVerificationCode: (app_id, id, verification_code, callBack) => {
 		let sql;
     	let parameters;
-        if (process.env.SERVICE_DB_USE == 1) {
-			sql = `UPDATE ${process.env.SERVICE_DB_DB1_NAME}.user_account
-						SET	verification_code = ?,
-							active = 0,
-							date_modified = CURRENT_TIMESTAMP
-					WHERE id = ?`;
-			parameters = [verification_code,
-						  id
-						 ];
-        } else if (process.env.SERVICE_DB_USE == 2) {
-			sql = `UPDATE ${process.env.SERVICE_DB_DB2_NAME}.user_account
-						SET	verification_code = :verification_code,
-							active = 0,
-							date_modified = CURRENT_TIMESTAMP
-					WHERE id = :id `;
-			parameters ={verification_code: verification_code,
-						 id: id   
-						}; 
-        }
+		sql = `UPDATE ${get_schema_name()}.user_account
+				  SET verification_code = :verification_code,
+					  active = 0,
+					  date_modified = CURRENT_TIMESTAMP
+				WHERE id = :id `;
+		parameters ={verification_code: verification_code,
+						id: id   
+					}; 
 		execute_db_sql(app_id, sql, parameters, null, 
 			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
@@ -403,67 +324,36 @@ module.exports = {
     getUserByUserId: (app_id, id, callBack) => {
 		let sql;
 		let parameters;
-        if (process.env.SERVICE_DB_USE == 1) {
-			sql = `SELECT	u.id,
-							u.bio,
-							(SELECT MAX(ul.date_created)
-							   FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_logon ul
-							  WHERE ul.user_account_id = u.id
-								AND ul.result=1) last_logontime,
-							u.private,
-							u.user_level,
-							u.date_created,
-							u.date_modified,
-							u.username,
-							u.password,
-							u.password_reminder,
-							u.email,
-							u.email_unverified,
-							CONVERT(u.avatar USING UTF8) avatar,
-							u.verification_code,
-							u.active,
-							u.identity_provider_id,
-							u.provider_id,
-							u.provider_first_name,
-							u.provider_last_name,
-							CONVERT(u.provider_image USING UTF8) provider_image,
-							u.provider_image_url,
-							u.provider_email
-						FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account u
-						WHERE u.id = ? `;
-			parameters = [id];
-        } else if (process.env.SERVICE_DB_USE == 2) {
-			sql = `SELECT	u.id "id",
-							u.bio "bio",
-							(SELECT MAX(ul.date_created)
-							   FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_logon ul
-							  WHERE ul.user_account_id = u.id
-								AND ul.result=1) "last_logontime",
-							u.private "private",
-							u.user_level "user_level",
-							u.date_created "date_created",
-							u.date_modified "date_modified",
-							u.username "username",
-							u.password "password",
-							u.password_reminder "password_reminder",
-							u.email "email",
-							u.email_unverified "email_unverified",
-							u.avatar "avatar",
-							u.verification_code "verification_code",
-							u.active "active",
-							u.identity_provider_id "identity_provider_id",
-							u.provider_id "provider_id",
-							u.provider_first_name "provider_first_name",
-							u.provider_last_name "provider_last_name",
-							u.provider_image "provider_image",
-							u.provider_image_url "provider_image_url",
-							u.provider_email "provider_email"
-						FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account u
-						WHERE u.id = :id `;
-			parameters = {
-							id: id
-						 }; 
-        }
+		sql = `SELECT	u.id "id",
+						u.bio "bio",
+						(SELECT MAX(ul.date_created)
+							FROM ${get_schema_name()}.user_account_logon ul
+							WHERE ul.user_account_id = u.id
+							AND ul.result=1) "last_logontime",
+						u.private "private",
+						u.user_level "user_level",
+						u.date_created "date_created",
+						u.date_modified "date_modified",
+						u.username "username",
+						u.password "password",
+						u.password_reminder "password_reminder",
+						u.email "email",
+						u.email_unverified "email_unverified",
+						u.avatar "avatar",
+						u.verification_code "verification_code",
+						u.active "active",
+						u.identity_provider_id "identity_provider_id",
+						u.provider_id "provider_id",
+						u.provider_first_name "provider_first_name",
+						u.provider_last_name "provider_last_name",
+						u.provider_image "provider_image",
+						u.provider_image_url "provider_image_url",
+						u.provider_email "provider_email"
+				 FROM   ${get_schema_name()}.user_account u
+				WHERE   u.id = :id `;
+		parameters = {
+					  id: id
+					 }; 
 		execute_db_sql(app_id, sql, parameters, null, 
 			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
@@ -482,25 +372,25 @@ module.exports = {
 							FROM DUAL
 							WHERE u.private = 1
 								AND (NOT EXISTS (SELECT NULL
-												FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_follow  uaf 
+												FROM ${get_schema_name()}.user_account_follow  uaf 
 												WHERE uaf.user_account_id = u.id
-												AND uaf.user_account_id_follow = ?)
+												AND uaf.user_account_id_follow = :user_accound_id_current_user)
 									OR 
 									NOT EXISTS (SELECT NULL
-												FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_follow  uaf 
+												FROM ${get_schema_name()}.user_account_follow  uaf 
 												WHERE uaf.user_account_id_follow = u.id
-													AND uaf.user_account_id = ?))
+													AND uaf.user_account_id = :user_accound_id_current_user))
 							UNION
 							SELECT NULL
 							FROM DUAL
 							WHERE EXISTS (SELECT NULL
-											FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_follow  uaf 
+											FROM ${get_schema_name()}.user_account_follow  uaf 
 											WHERE uaf.user_account_id = u.id
-											AND uaf.user_account_id_follow = ?)
+											AND uaf.user_account_id_follow = :user_accound_id_current_user)
 							AND EXISTS (SELECT NULL
-											FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_follow  uaf 
+											FROM ${get_schema_name()}.user_account_follow  uaf 
 											WHERE uaf.user_account_id_follow = u.id
-											AND uaf.user_account_id = ?)) private,
+											AND uaf.user_account_id = :user_accound_id_current_user)) private,
 							u.user_level,
 							u.date_created,
 							u.username,
@@ -512,47 +402,37 @@ module.exports = {
 							CONVERT(u.provider_image USING UTF8) provider_image,
 							u.provider_image_url,
 							(SELECT COUNT(u_following.user_account_id)   
-							   FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_follow  u_following
+							   FROM ${get_schema_name()}.user_account_follow  u_following
 							  WHERE u_following.user_account_id = u.id) 					count_following,
 							(SELECT COUNT(u_followed.user_account_id_follow) 
-							   FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_follow  u_followed
+							   FROM ${get_schema_name()}.user_account_follow  u_followed
 							  WHERE u_followed.user_account_id_follow = u.id) 				count_followed,
 							(SELECT COUNT(u_likes.user_account_id)
- 							   FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_like    u_likes
+ 							   FROM ${get_schema_name()}.user_account_like    u_likes
 							  WHERE u_likes.user_account_id = u.id ) 						count_likes,
 							(SELECT COUNT(u_likes.user_account_id_like)
-							   FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_like    u_likes
+							   FROM ${get_schema_name()}.user_account_like    u_likes
 							  WHERE u_likes.user_account_id_like = u.id )					count_liked,
 							(SELECT COUNT(u_views.user_account_id_view)
-							   FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_view    u_views
+							   FROM ${get_schema_name()}.user_account_view    u_views
 							  WHERE u_views.user_account_id_view = u.id ) 					count_views,
 							(SELECT COUNT(u_followed_current_user.user_account_id)
-							   FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_follow  u_followed_current_user 
+							   FROM ${get_schema_name()}.user_account_follow  u_followed_current_user 
 							  WHERE u_followed_current_user.user_account_id_follow = u.id
-								AND u_followed_current_user.user_account_id = ?) 			followed,
+								AND u_followed_current_user.user_account_id = :user_accound_id_current_user) 			followed,
 							(SELECT COUNT(u_liked_current_user.user_account_id)  
-							   FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_like    u_liked_current_user
+							   FROM ${get_schema_name()}.user_account_like    u_liked_current_user
 							  WHERE u_liked_current_user.user_account_id_like = u.id
-								AND u_liked_current_user.user_account_id = ?)      			liked
-						FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account u
-					WHERE (u.id = ? 
+								AND u_liked_current_user.user_account_id = :user_accound_id_current_user)      			liked
+						FROM ${get_schema_name()}.user_account u
+					WHERE (u.id = :id
 							OR 
-							u.username = ?)
+							u.username = :username)
 						AND u.active = 1
 						AND EXISTS(SELECT NULL
-									FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_app uap
+									FROM ${get_schema_name()}.user_account_app uap
 									WHERE uap.user_account_id = u.id
-									AND uap.app_id = ?)`;
-			parameters = [	id_current_user,
-							id_current_user,
-							id_current_user,
-							id_current_user,
-							id_current_user,
-							id_current_user,
-							id,
-							username,
-							app_id
-						];
+									AND uap.app_id = :app_id)`;
         } else if (process.env.SERVICE_DB_USE == 2) {
 			sql = `SELECT	u.id "id",
 							u.bio "bio",
@@ -560,23 +440,23 @@ module.exports = {
 								FROM DUAL
 							   WHERE u.private = 1
 								 AND (NOT EXISTS (SELECT NULL
-												FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_follow  uaf 
+												FROM ${get_schema_name()}.user_account_follow  uaf 
 												WHERE uaf.user_account_id = u.id
 													AND uaf.user_account_id_follow = :user_accound_id_current_user)
 									OR 
 									NOT EXISTS (SELECT NULL
-												FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_follow  uaf 
+												FROM ${get_schema_name()}.user_account_follow  uaf 
 												WHERE uaf.user_account_id_follow = u.id
 													AND uaf.user_account_id = :user_accound_id_current_user))
 							UNION
 							SELECT NULL
 							FROM DUAL
 							WHERE EXISTS (SELECT NULL
-											FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_follow  uaf 
+											FROM ${get_schema_name()}.user_account_follow  uaf 
 											WHERE uaf.user_account_id = u.id
 											AND uaf.user_account_id_follow = :user_accound_id_current_user)
 								AND EXISTS (SELECT NULL
-											FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_follow  uaf 
+											FROM ${get_schema_name()}.user_account_follow  uaf 
 											WHERE uaf.user_account_id_follow = u.id
 											AND uaf.user_account_id = :user_accound_id_current_user)) "private",
 							u.user_level "user_level",
@@ -590,44 +470,44 @@ module.exports = {
 							u.provider_image "provider_image",
 							u.provider_image_url "provider_image_url",
 							(SELECT COUNT(u_following.user_account_id)   
-						 	   FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_follow  u_following
+						 	   FROM ${get_schema_name()}.user_account_follow  u_following
 							  WHERE u_following.user_account_id = u.id) 					"count_following",
 							(SELECT COUNT(u_followed.user_account_id_follow) 
-							   FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_follow  u_followed
+							   FROM ${get_schema_name()}.user_account_follow  u_followed
 							  WHERE u_followed.user_account_id_follow = u.id) 				"count_followed",
 							(SELECT COUNT(u_likes.user_account_id)
-							   FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_like    u_likes
+							   FROM ${get_schema_name()}.user_account_like    u_likes
 							  WHERE u_likes.user_account_id = u.id ) 						"count_likes",
 							(SELECT COUNT(u_likes.user_account_id_like)
-							   FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_like    u_likes
+							   FROM ${get_schema_name()}.user_account_like    u_likes
 							  WHERE u_likes.user_account_id_like = u.id )					"count_liked",
 							(SELECT COUNT(u_views.user_account_id_view)
-							   FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_view    u_views
+							   FROM ${get_schema_name()}.user_account_view    u_views
 							  WHERE u_views.user_account_id_view = u.id ) 					"count_views",
 							(SELECT COUNT(u_followed_current_user.user_account_id)
-							   FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_follow  u_followed_current_user 
+							   FROM ${get_schema_name()}.user_account_follow  u_followed_current_user 
 							  WHERE u_followed_current_user.user_account_id_follow = u.id
 								AND u_followed_current_user.user_account_id = :user_accound_id_current_user) 	"followed",
 							(SELECT COUNT(u_liked_current_user.user_account_id)  
-							   FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_like    u_liked_current_user
+							   FROM ${get_schema_name()}.user_account_like    u_liked_current_user
 							  WHERE u_liked_current_user.user_account_id_like = u.id
 								AND u_liked_current_user.user_account_id = :user_accound_id_current_user)      "liked"
-						FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account u
+						FROM ${get_schema_name()}.user_account u
 					WHERE (u.id = :id 
 							OR 
 							u.username = :username)
 						AND u.active = 1
 						AND EXISTS(SELECT NULL
-									FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_app uap
+									FROM ${get_schema_name()}.user_account_app uap
 									WHERE uap.user_account_id = u.id
 										AND uap.app_id = :app_id)`;
-			parameters ={
-							user_accound_id_current_user: id_current_user,
-							id: id,
-							username: username,
-							app_id: app_id
-						}; 
         }
+		parameters ={
+			user_accound_id_current_user: id_current_user,
+			id: id,
+			username: username,
+			app_id: app_id
+		}; 
 		execute_db_sql(app_id, sql, parameters, null, 
 			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
@@ -648,19 +528,15 @@ module.exports = {
 							u.provider_first_name,
 							CONVERT(u.provider_image USING UTF8) provider_image,
 							u.provider_image_url
-					FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account u
-					WHERE (u.username LIKE ?
+					FROM ${get_schema_name()}.user_account u
+					WHERE (u.username LIKE :username
 							OR
-							u.provider_first_name LIKE ?)
+							u.provider_first_name LIKE :provider_first_name)
 					AND u.active = 1
 					AND EXISTS(SELECT NULL
-								FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_app uap
+								FROM ${get_schema_name()}.user_account_app uap
 								WHERE uap.user_account_id = u.id
-									AND uap.app_id = ?)`;
-			parameters = [	'%' + username + '%',
-							'%' + username + '%',
-							app_id
-						];
+									AND uap.app_id = :app_id)`;
         } else if (process.env.SERVICE_DB_USE == 2) {
 			sql= `SELECT	u.id "id",
 							u.username "username",
@@ -670,21 +546,21 @@ module.exports = {
 							u.provider_first_name "provider_first_name",
 							u.provider_image "provider_image",
 							u.provider_image_url "provider_image_url"
-					FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account u
+					FROM ${get_schema_name()}.user_account u
 					WHERE (u.username LIKE :username
 							OR
 							u.provider_first_name LIKE :provider_first_name)
 					AND u.active = 1 
 					AND EXISTS(SELECT NULL
-								 FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_app uap
+								 FROM ${get_schema_name()}.user_account_app uap
 								WHERE uap.user_account_id = u.id
 								  AND uap.app_id = :app_id)`;
-			parameters = {
-							username: '%' + username + '%',
-							provider_first_name: '%' + username + '%',
-							app_id: app_id
-						};
         }
+		parameters = {
+						username: '%' + username + '%',
+						provider_first_name: '%' + username + '%',
+						app_id: app_id
+					};
 		execute_db_sql(app_id, sql, parameters, null, 
 			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
@@ -706,12 +582,12 @@ module.exports = {
 									u.provider_image_url,
 									u.username,
 									u.provider_first_name
-							FROM    ${process.env.SERVICE_DB_DB1_NAME}.user_account_follow u_follow,
-									${process.env.SERVICE_DB_DB1_NAME}.user_account u
-							WHERE  u_follow.user_account_id = ?
+							FROM    ${get_schema_name()}.user_account_follow u_follow,
+									${get_schema_name()}.user_account u
+							WHERE  u_follow.user_account_id = :user_account_id_following
 							AND    u.id = u_follow.user_account_id_follow
 							AND    u.active = 1
-							AND    1 = ?
+							AND    1 = :detailchoice_following
 							UNION ALL
 							SELECT 'FOLLOWED' detail,
 									u.id,
@@ -721,12 +597,12 @@ module.exports = {
 									u.provider_image_url,
 									u.username,
 									u.provider_first_name
-							FROM    ${process.env.SERVICE_DB_DB1_NAME}.user_account_follow u_followed,
-									${process.env.SERVICE_DB_DB1_NAME}.user_account u
-							WHERE  u_followed.user_account_id_follow = ?
+							FROM    ${get_schema_name()}.user_account_follow u_followed,
+									${get_schema_name()}.user_account u
+							WHERE  u_followed.user_account_id_follow = :user_account_id_followed
 							AND    u.id = u_followed.user_account_id
 							AND    u.active = 1
-							AND    2 = ?
+							AND    2 = :detailchoice_followed
 							UNION ALL
 							SELECT 'LIKE_USER' detail,
 									u.id,
@@ -736,12 +612,12 @@ module.exports = {
 									u.provider_image_url,
 									u.username,
 									u.provider_first_name
-							FROM    ${process.env.SERVICE_DB_DB1_NAME}.user_account_like u_like,
-									${process.env.SERVICE_DB_DB1_NAME}.user_account u
-							WHERE  u_like.user_account_id = ?
+							FROM    ${get_schema_name()}.user_account_like u_like,
+									${get_schema_name()}.user_account u
+							WHERE  u_like.user_account_id = :user_account_id_like_user
 							AND    u.id = u_like.user_account_id_like
 							AND    u.active = 1
-							AND    3 = ?
+							AND    3 = :detailchoice_like_user
 							UNION ALL
 							SELECT 'LIKED_USER' detail,
 									u.id,
@@ -751,23 +627,14 @@ module.exports = {
 									u.provider_image_url,
 									u.username,
 									u.provider_first_name
-							FROM    ${process.env.SERVICE_DB_DB1_NAME}.user_account_like u_liked,
-									${process.env.SERVICE_DB_DB1_NAME}.user_account u
-							WHERE  u_liked.user_account_id_like = ?
+							FROM    ${get_schema_name()}.user_account_like u_liked,
+									${get_schema_name()}.user_account u
+							WHERE  u_liked.user_account_id_like = :user_account_id_liked_user
 							AND    u.id = u_liked.user_account_id
 							AND    u.active = 1
-							AND    4 = ?) t
+							AND    4 = :detailchoice_liked_user) t
 						ORDER BY 1, COALESCE(username, 
 											provider_first_name)`;
-			parameters = [	id,
-							detailchoice,
-							id,
-							detailchoice,
-							id,
-							detailchoice,
-							id,
-							detailchoice
-						];
         } else if (process.env.SERVICE_DB_USE == 2) {
 			sql = `SELECT *
 					FROM (SELECT 'FOLLOWING' "detail",
@@ -778,8 +645,8 @@ module.exports = {
 									u.provider_image_url "provider_image_url",
 									u.username "username",
 									u.provider_first_name "provider_first_name"
-							FROM   	${process.env.SERVICE_DB_DB2_NAME}.user_account_follow u_follow,
-									${process.env.SERVICE_DB_DB2_NAME}.user_account u
+							FROM   	${get_schema_name()}.user_account_follow u_follow,
+									${get_schema_name()}.user_account u
 							WHERE  u_follow.user_account_id = :user_account_id_following
 							AND    u.id = u_follow.user_account_id_follow
 							AND    u.active = 1
@@ -793,8 +660,8 @@ module.exports = {
 									u.provider_image_url "provider_image_url",
 									u.username "username",
 									u.provider_first_name "provider_first_name"
-							FROM   	${process.env.SERVICE_DB_DB2_NAME}.user_account_follow u_followed,
-									${process.env.SERVICE_DB_DB2_NAME}.user_account u
+							FROM   	${get_schema_name()}.user_account_follow u_followed,
+									${get_schema_name()}.user_account u
 							WHERE  u_followed.user_account_id_follow = :user_account_id_followed
 							AND    u.id = u_followed.user_account_id
 							AND    u.active = 1
@@ -808,8 +675,8 @@ module.exports = {
 									u.provider_image_url "provider_image_url",
 									u.username "username",
 									u.provider_first_name "provider_first_name"
-							FROM   	${process.env.SERVICE_DB_DB2_NAME}.user_account_like u_like,
-									${process.env.SERVICE_DB_DB2_NAME}.user_account u
+							FROM   	${get_schema_name()}.user_account_like u_like,
+									${get_schema_name()}.user_account u
 							WHERE  u_like.user_account_id = :user_account_id_like_user
 							AND    u.id = u_like.user_account_id_like
 							AND    u.active = 1
@@ -823,25 +690,25 @@ module.exports = {
 									u.provider_image_url "provider_image_url",
 									u.username "username",
 									u.provider_first_name "provider_first_name"
-							FROM   	${process.env.SERVICE_DB_DB2_NAME}.user_account_like u_liked,
-									${process.env.SERVICE_DB_DB2_NAME}.user_account u
+							FROM   	${get_schema_name()}.user_account_like u_liked,
+									${get_schema_name()}.user_account u
 							WHERE  u_liked.user_account_id_like = :user_account_id_liked_user
 							AND    u.id = u_liked.user_account_id
 							AND    u.active = 1
 							AND    4 = :detailchoice_liked_user) t
 						ORDER BY 1, COALESCE("username", 
 											"provider_first_name") `;
-			parameters ={
-							user_account_id_following: id,
-							detailchoice_following: detailchoice,
-							user_account_id_followed: id,
-							detailchoice_followed: detailchoice,
-							user_account_id_like_user: id,
-							detailchoice_like_user: detailchoice,
-							user_account_id_liked_user: id,
-							detailchoice_liked_user: detailchoice
-						}; 
         }
+		parameters ={
+						user_account_id_following: id,
+						detailchoice_following: detailchoice,
+						user_account_id_followed: id,
+						detailchoice_followed: detailchoice,
+						user_account_id_like_user: id,
+						detailchoice_like_user: detailchoice,
+						user_account_id_liked_user: id,
+						detailchoice_liked_user: detailchoice
+					}; 
 		execute_db_sql(app_id, sql, parameters, null, 
 			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
@@ -865,12 +732,12 @@ module.exports = {
 									u.username,
 									u.provider_first_name,
 									(SELECT COUNT(u_follow.user_account_id_follow)
-									   FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_follow u_follow
+									   FROM ${get_schema_name()}.user_account_follow u_follow
 									  WHERE u_follow.user_account_id_follow = u.id) count
-							FROM 	${process.env.SERVICE_DB_DB1_NAME}.user_account u
+							FROM 	${get_schema_name()}.user_account u
 							WHERE   u.active = 1
 							AND   u.private <> 1
-							AND   1 = ?
+							AND   1 = :statchoice_following
 							UNION ALL
 							SELECT 'LIKE_USER' top,
 									u.id,
@@ -882,12 +749,12 @@ module.exports = {
 									u.username,
 									u.provider_first_name,
 									(SELECT COUNT(u_like.user_account_id_like)
-									   FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_like u_like
+									   FROM ${get_schema_name()}.user_account_like u_like
 									  WHERE u_like.user_account_id_like = u.id) count
-							FROM  ${process.env.SERVICE_DB_DB1_NAME}.user_account u
+							FROM  ${get_schema_name()}.user_account u
 							WHERE  u.active = 1
 							AND  u.private <> 1
-							AND  2 = ?
+							AND  2 = :statchoice_like_user
 							UNION ALL
 							SELECT 'VISITED' top,
 									u.id,
@@ -899,24 +766,19 @@ module.exports = {
 									u.username,
 									u.provider_first_name,
 									(SELECT COUNT(u_visited.user_account_id_view)
-									   FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_view u_visited
+									   FROM ${get_schema_name()}.user_account_view u_visited
 									  WHERE u_visited.user_account_id_view = u.id) count
-							FROM  ${process.env.SERVICE_DB_DB1_NAME}.user_account u
+							FROM  ${get_schema_name()}.user_account u
 							WHERE  u.active = 1
 							AND  u.private <> 1
-							AND  3 = ?)  t
+							AND  3 = :statchoice_visited)  t
 					WHERE EXISTS(SELECT NULL
-								FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_app uap
+								FROM ${get_schema_name()}.user_account_app uap
 								WHERE uap.user_account_id = t.id
-									AND uap.app_id = ?)
+									AND uap.app_id = :app_id)
 					ORDER BY 1,10 DESC, COALESCE(username, 
 												provider_first_name)
 					LIMIT 10`;
-			parameters = [	statchoice,
-							statchoice,
-							statchoice,
-							app_id
-						];
         } else if (process.env.SERVICE_DB_USE == 2) {
 			sql = `SELECT *
 					FROM (SELECT 'FOLLOWING' "top",
@@ -929,9 +791,9 @@ module.exports = {
 									u.username "username",
 									u.provider_first_name "provider_first_name",
 									(SELECT COUNT(u_follow.user_account_id_follow)
-									   FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_follow u_follow
+									   FROM ${get_schema_name()}.user_account_follow u_follow
 									  WHERE u_follow.user_account_id_follow = u.id) "count"
-							FROM  	${process.env.SERVICE_DB_DB2_NAME}.user_account u
+							FROM  	${get_schema_name()}.user_account u
 							WHERE   u.active = 1
 							AND   u.private <> 1
 							AND   1 = :statchoice_following
@@ -946,9 +808,9 @@ module.exports = {
 									u.username "username",
 									u.provider_first_name "provider_first_name",
 									(SELECT COUNT(u_like.user_account_id_like)
-									   FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_like u_like
+									   FROM ${get_schema_name()}.user_account_like u_like
 									  WHERE u_like.user_account_id_like = u.id) "count"
-							FROM  ${process.env.SERVICE_DB_DB2_NAME}.user_account u
+							FROM  ${get_schema_name()}.user_account u
 							WHERE  u.active = 1
 							AND  u.private <> 1
 							AND  2 = :statchoice_like_user
@@ -963,26 +825,26 @@ module.exports = {
 									u.username "username",
 									u.provider_first_name "provider_first_name",
 									(SELECT COUNT(u_visited.user_account_id_view)
-									   FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_view u_visited
+									   FROM ${get_schema_name()}.user_account_view u_visited
 									  WHERE u_visited.user_account_id_view = u.id) "count"
-							FROM  ${process.env.SERVICE_DB_DB2_NAME}.user_account u
+							FROM  ${get_schema_name()}.user_account u
 							WHERE  u.active = 1
 							AND  u.private <> 1
 							AND  3 = :statchoice_visited) t
 					WHERE EXISTS(SELECT NULL
-								FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_app uap
+								FROM ${get_schema_name()}.user_account_app uap
 								WHERE uap.user_account_id = t."id"
 									AND uap.app_id = :app_id)
 					AND    ROWNUM <=10
 					ORDER BY 1,10 DESC, COALESCE("username", 
 												"provider_first_name") `;
-			parameters = {
-							statchoice_following: statchoice,
-							statchoice_like_user: statchoice,
-							statchoice_visited: statchoice,
-							app_id: app_id
-						};
         }
+		parameters = {
+						statchoice_following: statchoice,
+						statchoice_like_user: statchoice,
+						statchoice_visited: statchoice,
+						app_id: app_id
+					};
 		execute_db_sql(app_id, sql, parameters, null, 
 			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
@@ -994,19 +856,12 @@ module.exports = {
     checkPassword: (app_id, id, callBack) => {
 		let sql;
 		let parameters;
-        if (process.env.SERVICE_DB_USE == 1) {
-			sql = `SELECT password
-					 FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account
-				    WHERE id = ? `;
-			parameters = [id];
-        } else if (process.env.SERVICE_DB_USE == 2) {
-			sql = `SELECT password "password"
-					 FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account
-					WHERE id = :id `;
-			parameters = {
-							id: id
-						};
-        }
+		sql = `SELECT password "password"
+				 FROM ${get_schema_name()}.user_account
+				WHERE id = :id `;
+		parameters = {
+						id: id
+					};
 		execute_db_sql(app_id, sql, parameters, null, 
 			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
@@ -1020,29 +875,17 @@ module.exports = {
 		let parameters;
 		let error_code = validation_before_update(data);
 		if (error_code==null){
-			if (process.env.SERVICE_DB_USE == 1) {
-				sql = `UPDATE ${process.env.SERVICE_DB_DB1_NAME}.user_account
-						SET password = ?,
-							verification_code = null
-						WHERE id = ? 
-							AND verification_code = ?
-							AND verification_code IS NOT NULL`;
-				parameters = [	data.new_password,
-								id,
-								data.auth];
-			} else if (process.env.SERVICE_DB_USE == 2) {
-				sql = `UPDATE ${process.env.SERVICE_DB_DB2_NAME}.user_account
-						SET password = :new_password,
-							verification_code = null
-						WHERE id = :id  
-							AND verification_code = :auth
-							AND verification_code IS NOT NULL`;
-				parameters ={
-								new_password: data.new_password,
-								id: id,
-								auth: data.auth
-							}; 
-			}
+			sql = `UPDATE ${get_schema_name()}.user_account
+					  SET password = :new_password,
+						  verification_code = null
+					WHERE id = :id  
+					  AND verification_code = :auth
+					  AND verification_code IS NOT NULL`;
+			parameters ={
+							new_password: data.new_password,
+							id: id,
+							auth: data.auth
+						}; 
 			execute_db_sql(app_id, sql, parameters, null, 
 						__appfilename, __appfunction, __appline, (err, result)=>{
 				if (err)
@@ -1060,61 +903,35 @@ module.exports = {
 		let error_code = validation_before_update(data);
 		data.user_level = data.user_level ?? null;
 		if (error_code==null){
-			if (process.env.SERVICE_DB_USE == 1) {
-				sql = `UPDATE ${process.env.SERVICE_DB_DB1_NAME}.user_account
-							SET bio = ?,
-								private = ?,
-								user_level = ?,
-								username = ?,
-								password = ?,
-								password_reminder = ?,
-								email = ?,
-								email_unverified = ?,
-								avatar = ?,
-								verification_code = ?,
-								date_modified = CURRENT_TIMESTAMP
-						WHERE id = ? `;
-				parameters = [
-								data.bio,
-								data.private,
-								data.user_level,
-								data.username,
-								data.password,
-								data.password_reminder,
-								data.email,
-								data.new_email,
-								data.avatar,
-								data.verification_code,
-								search_id
-							];
-			} else if (process.env.SERVICE_DB_USE == 2) {
-				sql = `UPDATE ${process.env.SERVICE_DB_DB2_NAME}.user_account
-						SET bio = :bio,
-							private = :private,
-							user_level = :user_level,
-							username = :username,
-							password = :password,
-							password_reminder = :password_reminder,
-							email = :email,
-							email_unverified = :new_email,
-							avatar = :avatar,
-							verification_code = :verification_code,
-							date_modified = CURRENT_TIMESTAMP
-						WHERE id = :id `;
-				parameters ={
-								bio: data.bio,
-								private: data.private,
-								user_level: data.user_level,
-								username: data.username,
-								password: data.password,
-								password_reminder: data.password_reminder,
-								email: data.email,
-								new_email: data.new_email,
-								avatar: Buffer.from(data.avatar, 'utf8'),
-								verification_code: data.verification_code,
-								id: search_id
-							}; 
+			sql = `UPDATE ${get_schema_name()}.user_account
+					  SET bio = :bio,
+						  private = :private,
+						  user_level = :user_level,
+						  username = :username,
+						  password = :password,
+						  password_reminder = :password_reminder,
+						  email = :email,
+						  email_unverified = :new_email,
+						  avatar = :avatar,
+						  verification_code = :verification_code,
+						  date_modified = CURRENT_TIMESTAMP
+					WHERE id = :id `;
+			if (process.env.SERVICE_DB_USE == 2) {
+				data.avatar = Buffer.from(data.avatar, 'utf8');
 			}
+			parameters ={
+				bio: data.bio,
+				private: data.private,
+				user_level: data.user_level,
+				username: data.username,
+				password: data.password,
+				password_reminder: data.password_reminder,
+				email: data.email,
+				new_email: data.new_email,
+				avatar: data.avatar,
+				verification_code: data.verification_code,
+				id: search_id
+			}; 
 			execute_db_sql(app_id, sql, parameters, null, 
 						__appfilename, __appfunction, __appline, (err, result)=>{
 				if (err)
@@ -1131,36 +948,19 @@ module.exports = {
 		let parameters;
 		let error_code = validation_before_update(data);
 		if (error_code==null){
-			if (process.env.SERVICE_DB_USE == 1) {
-				sql = `UPDATE ${process.env.SERVICE_DB_DB1_NAME}.user_account
-						SET username = ?,
-							bio = ?,
-							private = ?,
-							user_level = ?,
-							date_modified = CURRENT_TIMESTAMP
-						WHERE id = ? `;
-				parameters = [   
-								data.username,
-								data.bio,
-								data.private,
-								data.user_level,
-								id
-							];
-			} else if (process.env.SERVICE_DB_USE == 2) {
-				sql = `UPDATE ${process.env.SERVICE_DB_DB2_NAME}.user_account
-						SET username = :username,
-							bio = :bio,
-							private = :private,
-							user_level = :user_level,
-							date_modified = CURRENT_TIMESTAMP
-						WHERE id = :id `;
-				parameters ={	username: username,
-								bio: data.bio,
-								private: data.private,
-								user_level: data.user_level,
-								id: id
-							}; 
-			}
+			sql = `UPDATE ${get_schema_name()}.user_account
+					  SET username = :username,
+						  bio = :bio,
+						  private = :private,
+						  user_level = :user_level,
+						  date_modified = CURRENT_TIMESTAMP
+					WHERE id = :id `;
+			parameters ={	username: username,
+							bio: data.bio,
+							private: data.private,
+							user_level: data.user_level,
+							id: id
+						}; 
 			execute_db_sql(app_id, sql, parameters, null, 
 						__appfilename, __appfunction, __appline, (err, result)=>{
 				if (err)
@@ -1175,17 +975,11 @@ module.exports = {
     deleteUser: (app_id, id, callBack) => {
 		let sql;
 		let parameters;
-        if (process.env.SERVICE_DB_USE == 1) {
-			sql = `DELETE FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account
-					WHERE id = ? `;
-			parameters = [id];
-        } else if (process.env.SERVICE_DB_USE == 2) {
-			sql = `DELETE FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account
-					WHERE id = :id `;
-			parameters = {
-							id: id
-						 };
-        }
+		sql = `DELETE FROM ${get_schema_name()}.user_account
+				WHERE id = :id `;
+		parameters = {
+						id: id
+					 };
 		execute_db_sql(app_id, sql, parameters, null, 
 			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
@@ -1205,11 +999,9 @@ module.exports = {
 							email,
 							active,
 							CONVERT(avatar USING UTF8) avatar
-						FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account
-					WHERE username = ? 
+						FROM ${get_schema_name()}.user_account
+					WHERE username = :username
 						AND provider_id IS NULL`;
-			parameters = [data.username
-						 ];
         } else if (process.env.SERVICE_DB_USE == 2) {
 			sql = `SELECT	id "id",
 							bio "bio",
@@ -1218,13 +1010,13 @@ module.exports = {
 							email "email",
 							active "active",
 							avatar "avatar"
-						FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account
+						FROM ${get_schema_name()}.user_account
 					WHERE username = :username 
 						AND provider_id IS NULL`;
-			parameters ={
-							username: data.username
-						}; 
         }
+		parameters ={
+						username: data.username
+					}; 
 		execute_db_sql(app_id, sql, parameters, null, 
 			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
@@ -1238,50 +1030,30 @@ module.exports = {
 		let parameters;
 		let error_code = validation_before_update(data);
 		if (error_code==null){
-			if (process.env.SERVICE_DB_USE == 1) {
-				sql = `UPDATE ${process.env.SERVICE_DB_DB1_NAME}.user_account
-							SET identity_provider_id = ?,
-								provider_id = ?,
-								provider_first_name = ?,
-								provider_last_name = ?,
-								provider_image = ?,
-								provider_image_url = ?,
-								provider_email = ?,
-								date_modified = CURRENT_TIMESTAMP
-						WHERE id = ?
-							AND active =1 `;
-				parameters = [	data.identity_provider_id,
-								data.provider_id,
-								data.provider_first_name,
-								data.provider_last_name,
-								data.provider_image,
-								data.provider_image_url,
-								data.provider_email,
-								id
-							]
-			} else if (process.env.SERVICE_DB_USE == 2) {
-				sql = `UPDATE ${process.env.SERVICE_DB_DB2_NAME}.user_account
-							SET identity_provider_id = :identity_provider_id,
-								provider_id = :provider_id,
-								provider_first_name = :provider_first_name,
-								provider_last_name = :provider_last_name,
-								provider_image = :provider_image,
-								provider_image_url = :provider_image_url,
-								provider_email = :provider_email,
-								date_modified = CURRENT_TIMESTAMP
-						WHERE id = :id
-						AND active =1 `;
-				parameters ={
-								identity_provider_id: data.identity_provider_id,
-								provider_id: data.provider_id,
-								provider_first_name: data.provider_first_name,
-								provider_last_name: data.provider_last_name,
-								provider_image: Buffer.from(data.provider_image, 'utf8'),
-								provider_image_url: data.provider_image_url,
-								provider_email: data.provider_email,
-								id: id
-							}; 
+			sql = `UPDATE ${get_schema_name()}.user_account
+					  SET identity_provider_id = :identity_provider_id,
+						  provider_id = :provider_id,
+						  provider_first_name = :provider_first_name,
+						  provider_last_name = :provider_last_name,
+						  provider_image = :provider_image,
+						  provider_image_url = :provider_image_url,
+						  provider_email = :provider_email,
+						  date_modified = CURRENT_TIMESTAMP
+					WHERE id = :id
+					  AND active =1 `;
+			if (process.env.SERVICE_DB_USE == 2) {
+				data.provider_image = Buffer.from(data.provider_image, 'utf8');
 			}
+			parameters ={
+							identity_provider_id: data.identity_provider_id,
+							provider_id: data.provider_id,
+							provider_first_name: data.provider_first_name,
+							provider_last_name: data.provider_last_name,
+							provider_image: data.provider_image,
+							provider_image_url: data.provider_image_url,
+							provider_email: data.provider_email,
+							id: id
+						}; 
 			execute_db_sql(app_id, sql, parameters, null, 
 						__appfilename, __appfunction, __appline, (err, result)=>{
 				if (err)
@@ -1300,7 +1072,7 @@ module.exports = {
 			sql = `SELECT	u.id,
 							u.bio,
 							(SELECT MAX(ul.date_created)
-							   FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account_logon ul
+							   FROM ${get_schema_name()}.user_account_logon ul
 							  WHERE ul.user_account_id = u.id
 								AND ul.result=1) last_logontime,
 							u.date_created,
@@ -1319,18 +1091,15 @@ module.exports = {
 							CONVERT(u.provider_image USING UTF8) provider_image,
 							u.provider_image_url,
 							u.provider_email
-					   FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account u
-					  WHERE u.provider_id = ? 
-					    AND u.identity_provider_id = ?`;
-			parameters = [search_id,
-						  identity_provider_id
-						];
+					   FROM ${get_schema_name()}.user_account u
+					  WHERE u.provider_id = :provider_id
+					    AND u.identity_provider_id = :identity_provider_id`;
         } else if (process.env.SERVICE_DB_USE == 2) {
 			sql = `SELECT	u.id "id",
 							u.bio "bio",
 							(SELECT MAX(ul.date_created)
-							FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account_logon ul
-							WHERE ul.user_account_id = u.id
+							   FROM ${get_schema_name()}.user_account_logon ul
+							  WHERE ul.user_account_id = u.id
 								AND ul.result=1) "last_logontime",
 							u.date_created "date_created",
 							u.date_modified "date_modified",
@@ -1348,14 +1117,14 @@ module.exports = {
 							u.provider_image "provider_image",
 							u.provider_image_url "provider_image_url",
 							u.provider_email "provider_email"
-					   FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account u
+					   FROM ${get_schema_name()}.user_account u
 					  WHERE u.provider_id = :provider_id
 						AND u.identity_provider_id = :identity_provider_id`;
-			parameters = {
-							provider_id: search_id,
-							identity_provider_id: identity_provider_id
-						};
         }
+		parameters = {
+						provider_id: search_id,
+						identity_provider_id: identity_provider_id
+					};
 		execute_db_sql(app_id, sql, parameters, null, 
 			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
@@ -1367,37 +1136,20 @@ module.exports = {
     getStatCountAdmin: (app_id, callBack) => {
 		let sql;
 		let parameters;
-        if (process.env.SERVICE_DB_USE == 1) {
-			sql = `SELECT ua.identity_provider_id,
-						  CASE 
-						  WHEN ip.provider_name IS NULL THEN 
-						     'Local' 
-						  ELSE 
-						     ip.provider_name 
-						  END provider_name,
-			              COUNT(*) count_users
-					 FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account ua
-					      LEFT OUTER JOIN ${process.env.SERVICE_DB_DB1_NAME}.identity_provider ip
-					      ON ip.id = ua.identity_provider_id
-					GROUP BY ua.identity_provider_id, ip.provider_name
-					ORDER BY ua.identity_provider_id`;
-			parameters = [];
-        } else if (process.env.SERVICE_DB_USE == 2) {
-			sql = `SELECT ua.identity_provider_id "identity_provider_id",
-						  CASE 
-						  WHEN ip.provider_name IS NULL THEN 
-						     'Local' 
-						  ELSE 
-						     ip.provider_name 
-						  END "provider_name",
-						  COUNT(*) "count_users"
-					 FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account ua
-							LEFT OUTER JOIN ${process.env.SERVICE_DB_DB2_NAME}.identity_provider ip
-							ON ip.id = ua.identity_provider_id
-					GROUP BY ua.identity_provider_id, ip.provider_name
-					ORDER BY NVL(ua.identity_provider_id,0)`;
-			parameters = {};
-        }
+		sql = `SELECT ua.identity_provider_id "identity_provider_id",
+						CASE 
+						WHEN ip.provider_name IS NULL THEN 
+							'Local' 
+						ELSE 
+							ip.provider_name 
+						END "provider_name",
+						COUNT(*) "count_users"
+				 FROM ${get_schema_name()}.user_account ua
+					  LEFT OUTER JOIN ${get_schema_name()}.identity_provider ip
+						ON ip.id = ua.identity_provider_id
+				GROUP BY ua.identity_provider_id, ip.provider_name
+				ORDER BY COALESCE(ua.identity_provider_id,0)`;
+		parameters = {};
 		execute_db_sql(app_id, sql, parameters, true, 
 			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
@@ -1409,21 +1161,13 @@ module.exports = {
 	getEmailUser: (app_id, email, callBack) => {
 		let sql;
 		let parameters;
-        if (process.env.SERVICE_DB_USE == 1) {
-			sql = `SELECT id,
-							email
-					FROM ${process.env.SERVICE_DB_DB1_NAME}.user_account
-					WHERE email = ? `;
-			parameters = [email];
-        } else if (process.env.SERVICE_DB_USE == 2) {
-			sql = `SELECT id "id",
-							email "email"
-					FROM ${process.env.SERVICE_DB_DB2_NAME}.user_account
-					WHERE email = :email `;
-			parameters ={
-							email: email
-						}; 
-        }
+		sql = `SELECT id "id",
+					  email "email"
+				 FROM ${get_schema_name()}.user_account
+				WHERE email = :email `;
+		parameters ={
+						email: email
+					}; 
 		execute_db_sql(app_id, sql, parameters, null, 
 			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
