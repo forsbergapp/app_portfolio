@@ -1152,7 +1152,7 @@ module.exports = {
 					  LEFT OUTER JOIN ${get_schema_name()}.identity_provider ip
 						ON ip.id = ua.identity_provider_id
 				GROUP BY ua.identity_provider_id, ip.provider_name
-				ORDER BY COALESCE(ua.identity_provider_id,0)`;
+				ORDER BY ua.identity_provider_id`;
 		parameters = {};
 		execute_db_sql(app_id, sql, parameters, true, 
 			           __appfilename, __appfunction, __appline, (err, result)=>{
