@@ -1673,6 +1673,10 @@ ALTER TABLE app_portfolio.user_account_follow
         REFERENCES app_portfolio.user_account ( id )
 		ON DELETE CASCADE;
 
+ALTER TABLE app_portfolio.user_account
+    ADD CONSTRAINT user_account_identity_provider_fk FOREIGN KEY ( identity_provider_id )
+        REFERENCES app_portfolio.identity_provider ( id );
+
 ALTER TABLE app_portfolio.user_account_like
     ADD CONSTRAINT user_account_like_user_account_fk FOREIGN KEY ( user_account_id )
         REFERENCES app_portfolio.user_account ( id )
