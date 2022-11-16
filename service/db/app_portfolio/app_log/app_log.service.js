@@ -167,59 +167,35 @@ module.exports = {
 		}
 		if (data_app_id=='')
 			data_app_id = null;
-		if (process.env.SERVICE_DB_USE==1){
-			sql = `SELECT	id,
-							app_id,
-							app_module,
-							app_module_type,
-							app_module_request,
-							app_module_result,
-							app_user_id,
-							user_language,
-							user_timezone,
-							user_number_system,
-							user_platform,
-							client_latitude,
-							client_longitude,
-							server_remote_addr,
-							server_user_agent,
-							server_http_host,
-							server_http_accept_language,
-							date_created,
-							count(*) over() total_rows
-					 FROM ${get_schema_name()}.app_log 
-					WHERE app_id = COALESCE(:app_id, app_id)
-					  AND DATE_FORMAT(date_created, '%Y') = :year
-					  AND DATE_FORMAT(date_created, '%c') = :month
-					ORDER BY ${sort} ${order_by}
-					LIMIT :offset,:limit`;
+		sql = `SELECT id "id",
+					  app_id "app_id",
+					  app_module "app_module",
+					  app_module_type "app_module_type",
+					  app_module_request "app_module_request",
+					  app_module_result "app_module_result",
+					  app_user_id "app_user_id",
+					  user_language "user_language",
+					  user_timezone "user_timezone",
+					  user_number_system "user_number_system",
+					  user_platform "user_platform",
+					  client_latitude "client_latitude",
+					  client_longitude "client_longitude",
+					  server_remote_addr "server_remote_addr",
+					  server_user_agent "server_user_agent",
+					  server_http_host "server_http_host",
+					  server_http_accept_language "server_http_accept_language",
+					  date_created "date_created",
+					  count(*) over() "total_rows"
+				 FROM ${get_schema_name()}.app_log
+				WHERE app_id = COALESCE(:app_id, app_id)
+				  AND EXTRACT(year from date_created) = :year
+				  AND EXTRACT(month from date_created) = :month
+				ORDER BY ${sort} ${order_by} `;
+		if (process.env.SERVICE_DB_USE == 1) {
+			sql = sql + ` LIMIT :offset,:limit`;
 		}
-		else if (process.env.SERVICE_DB_USE==2){
-			sql = `SELECT	id "id",
-							app_id "app_id",
-							app_module "app_module",
-							app_module_type "app_module_type",
-							app_module_request "app_module_request",
-							app_module_result "app_module_result",
-							app_user_id "app_user_id",
-							user_language "user_language",
-							user_timezone "user_timezone",
-							user_number_system "user_number_system",
-							user_platform "user_platform",
-							client_latitude "client_latitude",
-							client_longitude "client_longitude",
-							server_remote_addr "server_remote_addr",
-							server_user_agent "server_user_agent",
-							server_http_host "server_http_host",
-							server_http_accept_language "server_http_accept_language",
-							date_created "date_created",
-							count(*) over() "total_rows"
-					 FROM ${get_schema_name()}.app_log
-					WHERE app_id = COALESCE(:app_id, app_id)
-					  AND TO_CHAR(date_created, 'YYYY') = :year
-					  AND TO_CHAR(date_created, 'fmMM') = :month
-					ORDER BY ${sort} ${order_by}
-					OFFSET :offset ROWS FETCH NEXT :limit ROWS ONLY`;
+		else if (process.env.SERVICE_DB_USE == 2) {
+			sql = sql + ` OFFSET :offset ROWS FETCH NEXT :limit ROWS ONLY`;
 		}
 		parameters = {	app_id:data_app_id,
 						year:year,
@@ -239,68 +215,34 @@ module.exports = {
 		let parameters;
 		if (data_app_id=='')
 			data_app_id = null;
-		if (process.env.SERVICE_DB_USE==1){
-			sql = `SELECT	app_id,
-							DATE_FORMAT(date_created, '%Y') 	year,
-							DATE_FORMAT(date_created, '%c') 	month,
-							NULL 								day,
-							COUNT(DISTINCT server_remote_addr) 	amount
-					FROM ${get_schema_name()}.app_log
-					WHERE 1 = :statchoice
-					AND   app_id = COALESCE(:app_id, app_id)
-					AND   DATE_FORMAT(date_created, '%Y') = :year
-					AND   DATE_FORMAT(date_created, '%c') = :month
-					GROUP BY app_id,
-							 DATE_FORMAT(date_created, '%Y'),
-							 DATE_FORMAT(date_created, '%c')
-					UNION ALL
-					SELECT
-							NULL app_id,
-							DATE_FORMAT(date_created, '%Y') year,
-							DATE_FORMAT(date_created, '%c') month,
-							CAST(DATE_FORMAT(date_created, '%e') AS SIGNED) day,
-							COUNT(DISTINCT server_remote_addr) amount
-					FROM ${get_schema_name()}.app_log
-					WHERE 2 = :statchoice
-					AND   app_id = COALESCE(:app_id, app_id)
-					AND   DATE_FORMAT(date_created, '%Y') = :year
-					AND   DATE_FORMAT(date_created, '%c') = :month
-					GROUP BY DATE_FORMAT(date_created, '%Y'),
-							 DATE_FORMAT(date_created, '%c'),
-							 CAST(DATE_FORMAT(date_created, '%e') AS SIGNED)
-					ORDER BY 4`;
-		}
-		else if (process.env.SERVICE_DB_USE==2){
-			sql = `SELECT	app_id 								"app_id",
-							TO_CHAR(date_created, 'YYYY') 		"year",
-							TO_CHAR(date_created, 'fmMM') 		"month",
-							NULL 								"day",
-							COUNT(DISTINCT server_remote_addr) 	"amount"
-					FROM ${get_schema_name()}.app_log
-					WHERE 1 = :statchoice
-					AND  app_id = COALESCE(:app_id, app_id)
-					AND TO_CHAR(date_created, 'YYYY') = :year
-					AND TO_CHAR(date_created, 'fmMM') = :month
-					GROUP BY app_id,
-							TO_CHAR(date_created, 'YYYY'),
-							TO_CHAR(date_created, 'fmMM')
-					UNION ALL
-					SELECT
-							NULL "app_id",
-							TO_CHAR(date_created, 'YYYY') 	"year",
-							TO_CHAR(date_created, 'fmMM') 	"month",
-							TO_NUMBER(TO_CHAR(date_created, 'DD')) 	"day",
-							COUNT(DISTINCT server_remote_addr) "amount"
-					FROM ${get_schema_name()}.app_log
-					WHERE 2 = :statchoice
-					AND  app_id = COALESCE(:app_id, app_id)
-					AND TO_CHAR(date_created, 'YYYY') = :year
-					AND TO_CHAR(date_created, 'fmMM') = :month
-					GROUP BY TO_CHAR(date_created, 'YYYY'),
-							 TO_CHAR(date_created, 'fmMM'),
-							 TO_NUMBER(TO_CHAR(date_created, 'DD'))
-					ORDER BY 4`;
-		}
+		sql = `SELECT app_id 								"app_id",
+					  EXTRACT(YEAR FROM date_created)		"year",
+					  EXTRACT(MONTH FROM date_created) 		"month",
+					  NULL 									"day",
+					  COUNT(DISTINCT server_remote_addr)	"amount"
+				 FROM ${get_schema_name()}.app_log
+				WHERE 1 = :statchoice
+				  AND app_id = COALESCE(:app_id, app_id)
+				  AND EXTRACT(YEAR FROM date_created) = :year
+				  AND EXTRACT(MONTH FROM date_created) = :month
+				GROUP BY app_id,
+						 EXTRACT(YEAR FROM date_created),
+						 EXTRACT(MONTH FROM date_created)
+				UNION ALL
+				SELECT NULL 								"app_id",
+					   EXTRACT(YEAR FROM date_created) 		"year",
+					   EXTRACT(MONTH FROM date_created) 	"month",
+					   EXTRACT(DAY FROM date_created) 		"day",
+					   COUNT(DISTINCT server_remote_addr) 	"amount"
+				  FROM ${get_schema_name()}.app_log
+				 WHERE 2 = :statchoice
+				   AND app_id = COALESCE(:app_id, app_id)
+				   AND EXTRACT(YEAR FROM date_created) = :year
+				   AND EXTRACT(MONTH FROM date_created) = :month
+				GROUP BY EXTRACT(YEAR FROM date_created),
+						 EXTRACT(MONTH FROM date_created),
+						 EXTRACT(DAY FROM date_created)
+				ORDER BY 4`;
 		parameters = {	statchoice: statchoice,
 						app_id: data_app_id,
 						year: year,
