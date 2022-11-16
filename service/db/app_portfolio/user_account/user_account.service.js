@@ -245,54 +245,50 @@ module.exports = {
     activateUser: (app_id, id, verification_type, verification_code, auth, callBack) => {
 		let sql;
     	let parameters;
-		let error_code = validation_before_update(data);
-		if (error_code==null){
-			sql = `UPDATE ${get_schema_name()}.user_account
-					  SET active = 1,
-						  verification_code = :auth,
-						  email = CASE 
-						  		  WHEN  :verification_type = 4 THEN 
-										email_unverified
-								  ELSE 
-								  	    email
-								  END,
-						  email_unverified = CASE 
-											 WHEN  :verification_type = 4 THEN 
-													NULL
-											 ELSE 
-													email_unverified
-											 END,
-						  date_modified = CURRENT_TIMESTAMP
-					WHERE id = :id
-						AND verification_code = :verification_code `;
-			parameters ={
-							auth: auth,
-							verification_type: verification_type,
-							id: id,
-							verification_code: verification_code
-						};
-			execute_db_sql(app_id, sql, parameters, null, 
-						__appfilename, __appfunction, __appline, (err, result)=>{
-				if (err)
-					return callBack(err, null);
-				else{
-					if (process.env.SERVICE_DB_USE == 1) {
-						return callBack(null, result);
-					}
-					else
-						if (process.env.SERVICE_DB_USE == 2) {
-							var oracle_json = {
-								"count": result.rowsAffected,
-								"affectedRows": result.rowsAffected
-							};
-							//use affectedRows as mysql in app
-							return callBack(null, oracle_json);
-						}
+
+		sql = `UPDATE ${get_schema_name()}.user_account
+					SET active = 1,
+						verification_code = :auth,
+						email = CASE 
+								WHEN  :verification_type = 4 THEN 
+									email_unverified
+								ELSE 
+									email
+								END,
+						email_unverified = CASE 
+											WHEN  :verification_type = 4 THEN 
+												NULL
+											ELSE 
+												email_unverified
+											END,
+						date_modified = CURRENT_TIMESTAMP
+				WHERE id = :id
+					AND verification_code = :verification_code `;
+		parameters ={
+						auth: auth,
+						verification_type: verification_type,
+						id: id,
+						verification_code: verification_code
+					};
+		execute_db_sql(app_id, sql, parameters, null, 
+					__appfilename, __appfunction, __appline, (err, result)=>{
+			if (err)
+				return callBack(err, null);
+			else{
+				if (process.env.SERVICE_DB_USE == 1) {
+					return callBack(null, result);
 				}
-			});
-		}
-		else
-			callBack(error_code, null);
+				else
+					if (process.env.SERVICE_DB_USE == 2) {
+						var oracle_json = {
+							"count": result.rowsAffected,
+							"affectedRows": result.rowsAffected
+						};
+						//use affectedRows as mysql in app
+						return callBack(null, oracle_json);
+					}
+			}
+		});
     },
 	updateUserVerificationCode: (app_id, id, verification_code, callBack) => {
 		let sql;
@@ -369,143 +365,73 @@ module.exports = {
     getProfileUser: (app_id, id, username, id_current_user, callBack) => {
 		let sql;
 		let parameters;
-        if (process.env.SERVICE_DB_USE == 1) {
-			sql = `SELECT	u.id,
-							u.bio,
-							(SELECT 1
+		sql = `SELECT	u.id "id",
+						u.bio "bio",
+						(SELECT 1
 							FROM DUAL
 							WHERE u.private = 1
 								AND (NOT EXISTS (SELECT NULL
-												FROM ${get_schema_name()}.user_account_follow  uaf 
-												WHERE uaf.user_account_id = u.id
+											FROM ${get_schema_name()}.user_account_follow  uaf 
+											WHERE uaf.user_account_id = u.id
 												AND uaf.user_account_id_follow = :user_accound_id_current_user)
-									OR 
-									NOT EXISTS (SELECT NULL
-												FROM ${get_schema_name()}.user_account_follow  uaf 
-												WHERE uaf.user_account_id_follow = u.id
-													AND uaf.user_account_id = :user_accound_id_current_user))
-							UNION
-							SELECT NULL
-							FROM DUAL
-							WHERE EXISTS (SELECT NULL
+								OR 
+								NOT EXISTS (SELECT NULL
 											FROM ${get_schema_name()}.user_account_follow  uaf 
-											WHERE uaf.user_account_id = u.id
-											AND uaf.user_account_id_follow = :user_accound_id_current_user)
+											WHERE uaf.user_account_id_follow = u.id
+												AND uaf.user_account_id = :user_accound_id_current_user))
+						UNION
+						SELECT NULL
+						FROM DUAL
+						WHERE EXISTS (SELECT NULL
+										FROM ${get_schema_name()}.user_account_follow  uaf 
+										WHERE uaf.user_account_id = u.id
+										AND uaf.user_account_id_follow = :user_accound_id_current_user)
 							AND EXISTS (SELECT NULL
-											FROM ${get_schema_name()}.user_account_follow  uaf 
-											WHERE uaf.user_account_id_follow = u.id
-											AND uaf.user_account_id = :user_accound_id_current_user)) private,
-							u.user_level,
-							u.date_created,
-							u.username,
-							CONVERT(u.avatar USING UTF8) avatar,
-							u.identity_provider_id,
-							u.provider_id,
-							u.provider_first_name,
-							u.provider_last_name,
-							CONVERT(u.provider_image USING UTF8) provider_image,
-							u.provider_image_url,
-							(SELECT COUNT(u_following.user_account_id)   
-							   FROM ${get_schema_name()}.user_account_follow  u_following
-							  WHERE u_following.user_account_id = u.id) 					count_following,
-							(SELECT COUNT(u_followed.user_account_id_follow) 
-							   FROM ${get_schema_name()}.user_account_follow  u_followed
-							  WHERE u_followed.user_account_id_follow = u.id) 				count_followed,
-							(SELECT COUNT(u_likes.user_account_id)
- 							   FROM ${get_schema_name()}.user_account_like    u_likes
-							  WHERE u_likes.user_account_id = u.id ) 						count_likes,
-							(SELECT COUNT(u_likes.user_account_id_like)
-							   FROM ${get_schema_name()}.user_account_like    u_likes
-							  WHERE u_likes.user_account_id_like = u.id )					count_liked,
-							(SELECT COUNT(u_views.user_account_id_view)
-							   FROM ${get_schema_name()}.user_account_view    u_views
-							  WHERE u_views.user_account_id_view = u.id ) 					count_views,
-							(SELECT COUNT(u_followed_current_user.user_account_id)
-							   FROM ${get_schema_name()}.user_account_follow  u_followed_current_user 
-							  WHERE u_followed_current_user.user_account_id_follow = u.id
-								AND u_followed_current_user.user_account_id = :user_accound_id_current_user) 			followed,
-							(SELECT COUNT(u_liked_current_user.user_account_id)  
-							   FROM ${get_schema_name()}.user_account_like    u_liked_current_user
-							  WHERE u_liked_current_user.user_account_id_like = u.id
-								AND u_liked_current_user.user_account_id = :user_accound_id_current_user)      			liked
-						FROM ${get_schema_name()}.user_account u
-					WHERE (u.id = :id
-							OR 
-							u.username = :username)
-						AND u.active = 1
-						AND EXISTS(SELECT NULL
-									FROM ${get_schema_name()}.user_account_app uap
-									WHERE uap.user_account_id = u.id
+										FROM ${get_schema_name()}.user_account_follow  uaf 
+										WHERE uaf.user_account_id_follow = u.id
+										AND uaf.user_account_id = :user_accound_id_current_user)) "private",
+						u.user_level "user_level",
+						u.date_created "date_created",
+						u.username "username",
+						u.avatar "avatar",
+						u.identity_provider_id "identity_provider_id",
+						u.provider_id "provider_id",
+						u.provider_first_name "provider_first_name",
+						u.provider_last_name "provider_last_name",
+						u.provider_image "provider_image",
+						u.provider_image_url "provider_image_url",
+						(SELECT COUNT(u_following.user_account_id)   
+							FROM ${get_schema_name()}.user_account_follow  u_following
+							WHERE u_following.user_account_id = u.id) 					"count_following",
+						(SELECT COUNT(u_followed.user_account_id_follow) 
+							FROM ${get_schema_name()}.user_account_follow  u_followed
+							WHERE u_followed.user_account_id_follow = u.id) 				"count_followed",
+						(SELECT COUNT(u_likes.user_account_id)
+							FROM ${get_schema_name()}.user_account_like    u_likes
+							WHERE u_likes.user_account_id = u.id ) 						"count_likes",
+						(SELECT COUNT(u_likes.user_account_id_like)
+							FROM ${get_schema_name()}.user_account_like    u_likes
+							WHERE u_likes.user_account_id_like = u.id )					"count_liked",
+						(SELECT COUNT(u_views.user_account_id_view)
+							FROM ${get_schema_name()}.user_account_view    u_views
+							WHERE u_views.user_account_id_view = u.id ) 					"count_views",
+						(SELECT COUNT(u_followed_current_user.user_account_id)
+							FROM ${get_schema_name()}.user_account_follow  u_followed_current_user 
+							WHERE u_followed_current_user.user_account_id_follow = u.id
+							AND u_followed_current_user.user_account_id = :user_accound_id_current_user) 	"followed",
+						(SELECT COUNT(u_liked_current_user.user_account_id)  
+							FROM ${get_schema_name()}.user_account_like    u_liked_current_user
+							WHERE u_liked_current_user.user_account_id_like = u.id
+							AND u_liked_current_user.user_account_id = :user_accound_id_current_user)      "liked"
+					FROM ${get_schema_name()}.user_account u
+				WHERE (u.id = :id 
+						OR 
+						u.username = :username)
+					AND u.active = 1
+					AND EXISTS(SELECT NULL
+								FROM ${get_schema_name()}.user_account_app uap
+								WHERE uap.user_account_id = u.id
 									AND uap.app_id = :app_id)`;
-        } else if (process.env.SERVICE_DB_USE == 2) {
-			sql = `SELECT	u.id "id",
-							u.bio "bio",
-							(SELECT 1
-								FROM DUAL
-							   WHERE u.private = 1
-								 AND (NOT EXISTS (SELECT NULL
-												FROM ${get_schema_name()}.user_account_follow  uaf 
-												WHERE uaf.user_account_id = u.id
-													AND uaf.user_account_id_follow = :user_accound_id_current_user)
-									OR 
-									NOT EXISTS (SELECT NULL
-												FROM ${get_schema_name()}.user_account_follow  uaf 
-												WHERE uaf.user_account_id_follow = u.id
-													AND uaf.user_account_id = :user_accound_id_current_user))
-							UNION
-							SELECT NULL
-							FROM DUAL
-							WHERE EXISTS (SELECT NULL
-											FROM ${get_schema_name()}.user_account_follow  uaf 
-											WHERE uaf.user_account_id = u.id
-											AND uaf.user_account_id_follow = :user_accound_id_current_user)
-								AND EXISTS (SELECT NULL
-											FROM ${get_schema_name()}.user_account_follow  uaf 
-											WHERE uaf.user_account_id_follow = u.id
-											AND uaf.user_account_id = :user_accound_id_current_user)) "private",
-							u.user_level "user_level",
-							u.date_created "date_created",
-							u.username "username",
-							u.avatar "avatar",
-							u.identity_provider_id "identity_provider_id",
-							u.provider_id "provider_id",
-							u.provider_first_name "provider_first_name",
-							u.provider_last_name "provider_last_name",
-							u.provider_image "provider_image",
-							u.provider_image_url "provider_image_url",
-							(SELECT COUNT(u_following.user_account_id)   
-						 	   FROM ${get_schema_name()}.user_account_follow  u_following
-							  WHERE u_following.user_account_id = u.id) 					"count_following",
-							(SELECT COUNT(u_followed.user_account_id_follow) 
-							   FROM ${get_schema_name()}.user_account_follow  u_followed
-							  WHERE u_followed.user_account_id_follow = u.id) 				"count_followed",
-							(SELECT COUNT(u_likes.user_account_id)
-							   FROM ${get_schema_name()}.user_account_like    u_likes
-							  WHERE u_likes.user_account_id = u.id ) 						"count_likes",
-							(SELECT COUNT(u_likes.user_account_id_like)
-							   FROM ${get_schema_name()}.user_account_like    u_likes
-							  WHERE u_likes.user_account_id_like = u.id )					"count_liked",
-							(SELECT COUNT(u_views.user_account_id_view)
-							   FROM ${get_schema_name()}.user_account_view    u_views
-							  WHERE u_views.user_account_id_view = u.id ) 					"count_views",
-							(SELECT COUNT(u_followed_current_user.user_account_id)
-							   FROM ${get_schema_name()}.user_account_follow  u_followed_current_user 
-							  WHERE u_followed_current_user.user_account_id_follow = u.id
-								AND u_followed_current_user.user_account_id = :user_accound_id_current_user) 	"followed",
-							(SELECT COUNT(u_liked_current_user.user_account_id)  
-							   FROM ${get_schema_name()}.user_account_like    u_liked_current_user
-							  WHERE u_liked_current_user.user_account_id_like = u.id
-								AND u_liked_current_user.user_account_id = :user_accound_id_current_user)      "liked"
-						FROM ${get_schema_name()}.user_account u
-					WHERE (u.id = :id 
-							OR 
-							u.username = :username)
-						AND u.active = 1
-						AND EXISTS(SELECT NULL
-									FROM ${get_schema_name()}.user_account_app uap
-									WHERE uap.user_account_id = u.id
-										AND uap.app_id = :app_id)`;
-        }
 		parameters ={
 			user_accound_id_current_user: id_current_user,
 			id: id,
@@ -523,43 +449,23 @@ module.exports = {
     searchProfileUser: (app_id, username, callBack) => {
 		let sql;
 		let parameters;
-        if (process.env.SERVICE_DB_USE == 1) {
-			sql = `SELECT	u.id,
-							u.username,
-							CONVERT(u.avatar USING UTF8) avatar,
-							u.identity_provider_id,
-							u.provider_id,
-							u.provider_first_name,
-							CONVERT(u.provider_image USING UTF8) provider_image,
-							u.provider_image_url
-					FROM ${get_schema_name()}.user_account u
-					WHERE (u.username LIKE :username
-							OR
-							u.provider_first_name LIKE :provider_first_name)
-					AND u.active = 1
-					AND EXISTS(SELECT NULL
+		sql= `SELECT	u.id "id",
+						u.username "username",
+						u.avatar "avatar",
+						u.identity_provider_id "identity_provider_id",
+						u.provider_id "provider_id",
+						u.provider_first_name "provider_first_name",
+						u.provider_image "provider_image",
+						u.provider_image_url "provider_image_url"
+				FROM ${get_schema_name()}.user_account u
+				WHERE (u.username LIKE :username
+						OR
+						u.provider_first_name LIKE :provider_first_name)
+				AND u.active = 1 
+				AND EXISTS(SELECT NULL
 								FROM ${get_schema_name()}.user_account_app uap
-								WHERE uap.user_account_id = u.id
-									AND uap.app_id = :app_id)`;
-        } else if (process.env.SERVICE_DB_USE == 2) {
-			sql= `SELECT	u.id "id",
-							u.username "username",
-							u.avatar "avatar",
-							u.identity_provider_id "identity_provider_id",
-							u.provider_id "provider_id",
-							u.provider_first_name "provider_first_name",
-							u.provider_image "provider_image",
-							u.provider_image_url "provider_image_url"
-					FROM ${get_schema_name()}.user_account u
-					WHERE (u.username LIKE :username
-							OR
-							u.provider_first_name LIKE :provider_first_name)
-					AND u.active = 1 
-					AND EXISTS(SELECT NULL
-								 FROM ${get_schema_name()}.user_account_app uap
-								WHERE uap.user_account_id = u.id
-								  AND uap.app_id = :app_id)`;
-        }
+							WHERE uap.user_account_id = u.id
+								AND uap.app_id = :app_id)`;
 		parameters = {
 						username: '%' + username + '%',
 						provider_first_name: '%' + username + '%',
@@ -576,142 +482,77 @@ module.exports = {
     getProfileDetail: (app_id, id, detailchoice, callBack) => {
 		let sql;
 		let parameters;
-        if (process.env.SERVICE_DB_USE == 1) {
-			sql = `SELECT *
-					FROM (SELECT 'FOLLOWING' detail,
-									u.id,
-									u.provider_id,
-									CONVERT(u.avatar USING UTF8) avatar,
-									CONVERT(u.provider_image USING UTF8) provider_image,
-									u.provider_image_url,
-									u.username,
-									u.provider_first_name
-							FROM    ${get_schema_name()}.user_account_follow u_follow,
-									${get_schema_name()}.user_account u
-							WHERE  u_follow.user_account_id = :user_account_id_following
-							AND    u.id = u_follow.user_account_id_follow
-							AND    u.active = 1
-							AND    1 = :detailchoice_following
-							UNION ALL
-							SELECT 'FOLLOWED' detail,
-									u.id,
-									u.provider_id,
-									CONVERT(u.avatar USING UTF8) avatar,
-									CONVERT(u.provider_image USING UTF8) provider_image,
-									u.provider_image_url,
-									u.username,
-									u.provider_first_name
-							FROM    ${get_schema_name()}.user_account_follow u_followed,
-									${get_schema_name()}.user_account u
-							WHERE  u_followed.user_account_id_follow = :user_account_id_followed
-							AND    u.id = u_followed.user_account_id
-							AND    u.active = 1
-							AND    2 = :detailchoice_followed
-							UNION ALL
-							SELECT 'LIKE_USER' detail,
-									u.id,
-									u.provider_id,
-									CONVERT(u.avatar USING UTF8) avatar,
-									CONVERT(u.provider_image USING UTF8) provider_image,
-									u.provider_image_url,
-									u.username,
-									u.provider_first_name
-							FROM    ${get_schema_name()}.user_account_like u_like,
-									${get_schema_name()}.user_account u
-							WHERE  u_like.user_account_id = :user_account_id_like_user
-							AND    u.id = u_like.user_account_id_like
-							AND    u.active = 1
-							AND    3 = :detailchoice_like_user
-							UNION ALL
-							SELECT 'LIKED_USER' detail,
-									u.id,
-									u.provider_id,
-									CONVERT(u.avatar USING UTF8) avatar,
-									CONVERT(u.provider_image USING UTF8) provider_image,
-									u.provider_image_url,
-									u.username,
-									u.provider_first_name
-							FROM    ${get_schema_name()}.user_account_like u_liked,
-									${get_schema_name()}.user_account u
-							WHERE  u_liked.user_account_id_like = :user_account_id_liked_user
-							AND    u.id = u_liked.user_account_id
-							AND    u.active = 1
-							AND    4 = :detailchoice_liked_user) t
-						ORDER BY 1, COALESCE(username, 
-											provider_first_name)`;
-        } else if (process.env.SERVICE_DB_USE == 2) {
-			sql = `SELECT *
-					FROM (SELECT 'FOLLOWING' "detail",
-									u.id "id",
-									u.provider_id "provider_id",
-									u.avatar "avatar",
-									u.provider_image "provider_image",
-									u.provider_image_url "provider_image_url",
-									u.username "username",
-									u.provider_first_name "provider_first_name"
-							FROM   	${get_schema_name()}.user_account_follow u_follow,
-									${get_schema_name()}.user_account u
-							WHERE  u_follow.user_account_id = :user_account_id_following
-							AND    u.id = u_follow.user_account_id_follow
-							AND    u.active = 1
-							AND    1 = :detailchoice_following
-							UNION ALL
-							SELECT 'FOLLOWED' "detail",
-									u.id "id",
-									u.provider_id "provider_id",
-									u.avatar "avatar",
-									u.provider_image "provider_image",
-									u.provider_image_url "provider_image_url",
-									u.username "username",
-									u.provider_first_name "provider_first_name"
-							FROM   	${get_schema_name()}.user_account_follow u_followed,
-									${get_schema_name()}.user_account u
-							WHERE  u_followed.user_account_id_follow = :user_account_id_followed
-							AND    u.id = u_followed.user_account_id
-							AND    u.active = 1
-							AND    2 = :detailchoice_followed
-							UNION ALL
-							SELECT 'LIKE_USER' "detail",
-									u.id "id",
-									u.provider_id "provider_id",
-									u.avatar "avatar",
-									u.provider_image "provider_image",
-									u.provider_image_url "provider_image_url",
-									u.username "username",
-									u.provider_first_name "provider_first_name"
-							FROM   	${get_schema_name()}.user_account_like u_like,
-									${get_schema_name()}.user_account u
-							WHERE  u_like.user_account_id = :user_account_id_like_user
-							AND    u.id = u_like.user_account_id_like
-							AND    u.active = 1
-							AND    3 = :detailchoice_like_user
-							UNION ALL
-							SELECT 'LIKED_USER' "detail",
-									u.id "id",
-									u.provider_id "provider_id",
-									u.avatar "avatar",
-									u.provider_image "provider_image",
-									u.provider_image_url "provider_image_url",
-									u.username "username",
-									u.provider_first_name "provider_first_name"
-							FROM   	${get_schema_name()}.user_account_like u_liked,
-									${get_schema_name()}.user_account u
-							WHERE  u_liked.user_account_id_like = :user_account_id_liked_user
-							AND    u.id = u_liked.user_account_id
-							AND    u.active = 1
-							AND    4 = :detailchoice_liked_user) t
-						ORDER BY 1, COALESCE("username", 
-											"provider_first_name") `;
-        }
+		sql = `SELECT detail "detail",
+		              id "id",
+					  provider_id "provider_id",
+					  avatar "avatar",
+					  provider_image "provider_image",
+					  provider_image_url "provider_image_url",
+					  username "username",
+					  provider_first_name "provider_first_name"
+				 FROM (SELECT 'FOLLOWING' detail,
+							  u.id,
+							  u.provider_id,
+							  u.avatar,
+							  u.provider_image,
+							  u.provider_image_url,
+							  u.username,
+							  u.provider_first_name
+						 FROM ${get_schema_name()}.user_account_follow u_follow,
+							  ${get_schema_name()}.user_account u
+						WHERE u_follow.user_account_id = :user_account_id
+						  AND u.id = u_follow.user_account_id_follow
+						  AND u.active = 1
+						  AND 1 = :detailchoice
+					   UNION ALL
+					   SELECT 'FOLLOWED' detail,
+							  u.id,
+							  u.provider_id,
+							  u.avatar,
+							  u.provider_image,
+							  u.provider_image_url,
+							  u.username,
+							  u.provider_first_name
+						 FROM ${get_schema_name()}.user_account_follow u_followed,
+							  ${get_schema_name()}.user_account u
+						WHERE u_followed.user_account_id_follow = :user_account_id
+						  AND u.id = u_followed.user_account_id
+						  AND u.active = 1
+						  AND 2 = :detailchoice
+					   UNION ALL
+					   SELECT 'LIKE_USER' detail,
+							  u.id,
+							  u.provider_id,
+							  u.avatar,
+							  u.provider_image,
+							  u.provider_image_url,
+							  u.username,
+							  u.provider_first_name
+						 FROM ${get_schema_name()}.user_account_like u_like,
+							  ${get_schema_name()}.user_account u
+						WHERE u_like.user_account_id = :user_account_id
+						  AND u.id = u_like.user_account_id_like
+						  AND u.active = 1
+						  AND 3 = :detailchoice
+					   UNION ALL
+					   SELECT 'LIKED_USER' detail,
+							  u.id,
+							  u.provider_id,
+							  u.avatar,
+							  u.provider_image,
+							  u.provider_image_url,
+							  u.username,
+							  u.provider_first_name
+						 FROM ${get_schema_name()}.user_account_like u_liked,
+							  ${get_schema_name()}.user_account u
+						WHERE u_liked.user_account_id_like = :user_account_id
+						  AND u.id = u_liked.user_account_id
+						  AND u.active = 1
+						  AND 4 = :detailchoice) t
+					ORDER BY 1, COALESCE(username, provider_first_name) `;
 		parameters ={
-						user_account_id_following: id,
-						detailchoice_following: detailchoice,
-						user_account_id_followed: id,
-						detailchoice_followed: detailchoice,
-						user_account_id_like_user: id,
-						detailchoice_like_user: detailchoice,
-						user_account_id_liked_user: id,
-						detailchoice_liked_user: detailchoice
+						user_account_id: id,
+						detailchoice: detailchoice
 					}; 
 		execute_db_sql(app_id, sql, parameters, null, 
 			           __appfilename, __appfunction, __appline, (err, result)=>{
@@ -724,129 +565,80 @@ module.exports = {
     getProfileTop: (app_id, statchoice, callBack) => {
 		let sql;
 		let parameters;
-        if (process.env.SERVICE_DB_USE == 1) {
-			sql = `SELECT *
-					FROM (SELECT 'FOLLOWING' top,
-									u.id,
-									u.identity_provider_id,
-									u.provider_id,
-									CONVERT(u.avatar USING UTF8) avatar,
-									CONVERT(u.provider_image USING UTF8) provider_image,
-									u.provider_image_url,
-									u.username,
-									u.provider_first_name,
-									(SELECT COUNT(u_follow.user_account_id_follow)
-									   FROM ${get_schema_name()}.user_account_follow u_follow
-									  WHERE u_follow.user_account_id_follow = u.id) count
-							FROM 	${get_schema_name()}.user_account u
-							WHERE   u.active = 1
-							AND   u.private <> 1
-							AND   1 = :statchoice_following
-							UNION ALL
-							SELECT 'LIKE_USER' top,
-									u.id,
-									u.identity_provider_id,
-									u.provider_id,
-									CONVERT(u.avatar USING UTF8) avatar,
-									CONVERT(u.provider_image USING UTF8) provider_image,
-									u.provider_image_url,
-									u.username,
-									u.provider_first_name,
-									(SELECT COUNT(u_like.user_account_id_like)
-									   FROM ${get_schema_name()}.user_account_like u_like
-									  WHERE u_like.user_account_id_like = u.id) count
-							FROM  ${get_schema_name()}.user_account u
-							WHERE  u.active = 1
-							AND  u.private <> 1
-							AND  2 = :statchoice_like_user
-							UNION ALL
-							SELECT 'VISITED' top,
-									u.id,
-									u.identity_provider_id,
-									u.provider_id,
-									CONVERT(u.avatar USING UTF8) avatar,
-									CONVERT(u.provider_image USING UTF8) provider_image,
-									u.provider_image_url,
-									u.username,
-									u.provider_first_name,
-									(SELECT COUNT(u_visited.user_account_id_view)
-									   FROM ${get_schema_name()}.user_account_view u_visited
-									  WHERE u_visited.user_account_id_view = u.id) count
-							FROM  ${get_schema_name()}.user_account u
-							WHERE  u.active = 1
-							AND  u.private <> 1
-							AND  3 = :statchoice_visited)  t
-					WHERE EXISTS(SELECT NULL
-								FROM ${get_schema_name()}.user_account_app uap
-								WHERE uap.user_account_id = t.id
-									AND uap.app_id = :app_id)
-					ORDER BY 1,10 DESC, COALESCE(username, 
-												provider_first_name)
-					LIMIT 10`;
-        } else if (process.env.SERVICE_DB_USE == 2) {
-			sql = `SELECT *
-					FROM (SELECT 'FOLLOWING' "top",
-									u.id "id",
-									u.identity_provider_id "identity_provider_id",
-									u.provider_id "provider_id",
-									u.avatar "avatar",
-									u.provider_image "provider_image",
-									u.provider_image_url "provider_image_url",
-									u.username "username",
-									u.provider_first_name "provider_first_name",
-									(SELECT COUNT(u_follow.user_account_id_follow)
-									   FROM ${get_schema_name()}.user_account_follow u_follow
-									  WHERE u_follow.user_account_id_follow = u.id) "count"
-							FROM  	${get_schema_name()}.user_account u
-							WHERE   u.active = 1
-							AND   u.private <> 1
-							AND   1 = :statchoice_following
-							UNION ALL
-							SELECT 'LIKE_USER' "top",
-									u.id "id",
-									u.identity_provider_id "identity_provider_id",
-									u.provider_id "provider_id",
-									u.avatar "avatar",
-									u.provider_image "provider_image",
-									u.provider_image_url "provider_image_url",
-									u.username "username",
-									u.provider_first_name "provider_first_name",
-									(SELECT COUNT(u_like.user_account_id_like)
-									   FROM ${get_schema_name()}.user_account_like u_like
-									  WHERE u_like.user_account_id_like = u.id) "count"
-							FROM  ${get_schema_name()}.user_account u
-							WHERE  u.active = 1
-							AND  u.private <> 1
-							AND  2 = :statchoice_like_user
-							UNION ALL
-							SELECT 'VISITED' "top",
-									u.id "id",
-									u.identity_provider_id "identity_provider_id",
-									u.provider_id "provider_id",
-									u.avatar "avatar",
-									u.provider_image "provider_image",
-									u.provider_image_url "provider_image_url",
-									u.username "username",
-									u.provider_first_name "provider_first_name",
-									(SELECT COUNT(u_visited.user_account_id_view)
-									   FROM ${get_schema_name()}.user_account_view u_visited
-									  WHERE u_visited.user_account_id_view = u.id) "count"
-							FROM  ${get_schema_name()}.user_account u
-							WHERE  u.active = 1
-							AND  u.private <> 1
-							AND  3 = :statchoice_visited) t
-					WHERE EXISTS(SELECT NULL
-								FROM ${get_schema_name()}.user_account_app uap
-								WHERE uap.user_account_id = t."id"
-									AND uap.app_id = :app_id)
-					AND    ROWNUM <=10
-					ORDER BY 1,10 DESC, COALESCE("username", 
-												"provider_first_name") `;
-        }
+		sql = `SELECT top "top", 
+					  id "id", 
+					  identity_provider_id "identity_provider_id", 
+					  provider_id "provider_id", 
+					  avatar "avatar",
+					  provider_image "provider_image",
+					  provider_image_url "provider_image_url",
+					  username "username",
+					  provider_first_name "provider_first_name",
+					  count "count"
+				FROM (SELECT 'FOLLOWING' top,
+							 u.id,
+							 u.identity_provider_id,
+							 u.provider_id,
+							 u.avatar,
+							 u.provider_image,
+							 u.provider_image_url,
+							 u.username,
+							 u.provider_first_name,
+							 (SELECT COUNT(u_follow.user_account_id_follow)
+							    FROM ${get_schema_name()}.user_account_follow u_follow
+							   WHERE u_follow.user_account_id_follow = u.id) count
+						FROM ${get_schema_name()}.user_account u
+					   WHERE u.active = 1
+						 AND u.private <> 1
+						 AND 1 = :statchoice
+					  UNION ALL
+					  SELECT 'LIKE_USER' top,
+							 u.id,
+							 u.identity_provider_id,
+							 u.provider_id,
+							 u.avatar,
+							 u.provider_image,
+							 u.provider_image_url,
+							 u.username,
+							 u.provider_first_name,
+							 (SELECT COUNT(u_like.user_account_id_like)
+							 	FROM ${get_schema_name()}.user_account_like u_like
+							   WHERE u_like.user_account_id_like = u.id) count
+						FROM ${get_schema_name()}.user_account u
+					   WHERE  u.active = 1
+						 AND  u.private <> 1
+						 AND  2 = :statchoice
+					  UNION ALL
+					  SELECT 'VISITED' top,
+							 u.id,
+							 u.identity_provider_id,
+							 u.provider_id,
+							 u.avatar,
+							 u.provider_image,
+							 u.provider_image_url,
+							 u.username,
+							 u.provider_first_name,
+							 (SELECT COUNT(u_visited.user_account_id_view)
+							 	FROM ${get_schema_name()}.user_account_view u_visited
+							   WHERE u_visited.user_account_id_view = u.id) count
+						FROM ${get_schema_name()}.user_account u
+					   WHERE u.active = 1
+						 AND u.private <> 1
+						 AND 3 = :statchoice) t
+				WHERE EXISTS(SELECT NULL
+							   FROM ${get_schema_name()}.user_account_app uap
+							  WHERE uap.user_account_id = t.id
+								AND uap.app_id = :app_id)
+				ORDER BY 1,10 DESC, COALESCE(username, provider_first_name) `;
+		let limit = 10;
+		if (process.env.SERVICE_DB_USE == 1) {
+			sql = sql + ` LIMIT ${limit}`;
+		}
+		else if (process.env.SERVICE_DB_USE == 2) {
+			sql = sql + ` FETCH NEXT ${limit} ROWS ONLY`;
+		}
 		parameters = {
-						statchoice_following: statchoice,
-						statchoice_like_user: statchoice,
-						statchoice_visited: statchoice,
+						statchoice: statchoice,
 						app_id: app_id
 					};
 		execute_db_sql(app_id, sql, parameters, null, 
@@ -995,29 +787,16 @@ module.exports = {
     userLogin: (app_id, data, callBack) => {
 		let sql;
 		let parameters;
-        if (process.env.SERVICE_DB_USE == 1) {
-			sql =`SELECT	id,
-							bio,
-							username,
-							password,
-							email,
-							active,
-							CONVERT(avatar USING UTF8) avatar
-						FROM ${get_schema_name()}.user_account
-					WHERE username = :username
-						AND provider_id IS NULL`;
-        } else if (process.env.SERVICE_DB_USE == 2) {
-			sql = `SELECT	id "id",
-							bio "bio",
-							username "username",
-							password "password",
-							email "email",
-							active "active",
-							avatar "avatar"
-						FROM ${get_schema_name()}.user_account
-					WHERE username = :username 
-						AND provider_id IS NULL`;
-        }
+		sql = `SELECT	id "id",
+						bio "bio",
+						username "username",
+						password "password",
+						email "email",
+						active "active",
+						avatar "avatar"
+					FROM ${get_schema_name()}.user_account
+				WHERE username = :username 
+					AND provider_id IS NULL`;
 		parameters ={
 						username: data.username
 					}; 
@@ -1072,59 +851,31 @@ module.exports = {
     providerSignIn: (app_id, identity_provider_id, search_id, callBack) => {
 		let sql;
 		let parameters;
-        if (process.env.SERVICE_DB_USE == 1) {
-			sql = `SELECT	u.id,
-							u.bio,
-							(SELECT MAX(ul.date_created)
-							   FROM ${get_schema_name()}.user_account_logon ul
-							  WHERE ul.user_account_id = u.id
-								AND ul.result=1) last_logontime,
-							u.date_created,
-							u.date_modified,
-							u.username,
-							u.password,
-							u.password_reminder,
-							u.email,
-							CONVERT(u.avatar USING UTF8) avatar,
-							u.verification_code,
-							u.active,
-							u.identity_provider_id,
-							u.provider_id,
-							u.provider_first_name,
-							u.provider_last_name,
-							CONVERT(u.provider_image USING UTF8) provider_image,
-							u.provider_image_url,
-							u.provider_email
-					   FROM ${get_schema_name()}.user_account u
-					  WHERE u.provider_id = :provider_id
-					    AND u.identity_provider_id = :identity_provider_id`;
-        } else if (process.env.SERVICE_DB_USE == 2) {
-			sql = `SELECT	u.id "id",
-							u.bio "bio",
-							(SELECT MAX(ul.date_created)
-							   FROM ${get_schema_name()}.user_account_logon ul
-							  WHERE ul.user_account_id = u.id
-								AND ul.result=1) "last_logontime",
-							u.date_created "date_created",
-							u.date_modified "date_modified",
-							u.username "username",
-							u.password "password",
-							u.password_reminder "password_reminder",
-							u.email "email",
-							u.avatar "avatar",
-							u.verification_code "verification_code",
-							u.active "active",
-							u.identity_provider_id "identity_provider_id",
-							u.provider_id "provider_id",
-							u.provider_first_name "provider_first_name",
-							u.provider_last_name "provider_last_name",
-							u.provider_image "provider_image",
-							u.provider_image_url "provider_image_url",
-							u.provider_email "provider_email"
-					   FROM ${get_schema_name()}.user_account u
-					  WHERE u.provider_id = :provider_id
-						AND u.identity_provider_id = :identity_provider_id`;
-        }
+		sql = `SELECT	u.id "id",
+						u.bio "bio",
+						(SELECT MAX(ul.date_created)
+							FROM ${get_schema_name()}.user_account_logon ul
+							WHERE ul.user_account_id = u.id
+							AND ul.result=1) "last_logontime",
+						u.date_created "date_created",
+						u.date_modified "date_modified",
+						u.username "username",
+						u.password "password",
+						u.password_reminder "password_reminder",
+						u.email "email",
+						u.avatar "avatar",
+						u.verification_code "verification_code",
+						u.active "active",
+						u.identity_provider_id "identity_provider_id",
+						u.provider_id "provider_id",
+						u.provider_first_name "provider_first_name",
+						u.provider_last_name "provider_last_name",
+						u.provider_image "provider_image",
+						u.provider_image_url "provider_image_url",
+						u.provider_email "provider_email"
+					FROM ${get_schema_name()}.user_account u
+					WHERE u.provider_id = :provider_id
+					AND u.identity_provider_id = :identity_provider_id`;
 		parameters = {
 						provider_id: search_id,
 						identity_provider_id: identity_provider_id

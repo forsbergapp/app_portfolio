@@ -220,7 +220,7 @@ module.exports = {
                             else
                                 if (result_user_event &&
                                     result_user_event.status_name == 'INPROGRESS' &&
-                                    result_user_event.event_days < 1)
+                                    (result_user_event.current_timestamp - result_user_event.date_created)/ (1000 * 60 * 60 * 24) < 1)
                                     return res.status(200).json({
                                         sent: 0
                                     });
@@ -610,7 +610,7 @@ module.exports = {
                                             err
                                         });
                                     else
-                                        if ((result_user_event && result_user_event.event_days >= 1)||
+                                        if ((result_user_event && (result_user_event.current_timestamp - result_user_event.date_created)/ (1000 * 60 * 60 * 24) >= 1)||
                                             typeof result_user_event == 'undefined'){
                                             //no change email in progress or older than at least 1 day
                                             const eventData = {
