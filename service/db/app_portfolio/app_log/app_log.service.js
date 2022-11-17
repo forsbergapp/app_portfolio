@@ -215,38 +215,41 @@ module.exports = {
 		let parameters;
 		if (data_app_id=='')
 			data_app_id = null;
-		sql = `SELECT app_id 								"app_id",
-					  EXTRACT(YEAR FROM date_created)		"year",
-					  EXTRACT(MONTH FROM date_created) 		"month",
-					  NULL 									"day",
-					  COUNT(DISTINCT server_remote_addr)	"amount"
-				 FROM ${get_schema_name()}.app_log
-				WHERE 1 = :statchoice
-				  AND app_id = COALESCE(:app_id, app_id)
-				  AND EXTRACT(YEAR FROM date_created) = :year
-				  AND EXTRACT(MONTH FROM date_created) = :month
-				GROUP BY app_id,
-						 EXTRACT(YEAR FROM date_created),
-						 EXTRACT(MONTH FROM date_created)
-				UNION ALL
-				SELECT NULL 								"app_id",
-					   EXTRACT(YEAR FROM date_created) 		"year",
-					   EXTRACT(MONTH FROM date_created) 	"month",
-					   EXTRACT(DAY FROM date_created) 		"day",
-					   COUNT(DISTINCT server_remote_addr) 	"amount"
-				  FROM ${get_schema_name()}.app_log
-				 WHERE 2 = :statchoice
-				   AND app_id = COALESCE(:app_id, app_id)
-				   AND EXTRACT(YEAR FROM date_created) = :year
-				   AND EXTRACT(MONTH FROM date_created) = :month
-				GROUP BY EXTRACT(YEAR FROM date_created),
-						 EXTRACT(MONTH FROM date_created),
-						 EXTRACT(DAY FROM date_created)
+		sql = `SELECT t.app_id "app_id",
+					  t.year_log "year",
+					  t.month_log "month",
+					  t.day_log "day",
+					  COUNT(DISTINCT t.server_remote_addr) 	"amount"
+				 FROM (SELECT app_id,
+					          EXTRACT(YEAR FROM date_created)		year_log,
+					          EXTRACT(MONTH FROM date_created) 		month_log,
+					          NULL 									day_log,
+					          server_remote_addr
+						 FROM ${get_schema_name()}.app_log
+						WHERE 1 = :statchoice
+						  AND app_id = COALESCE(:app_id_log, app_id)
+						  AND EXTRACT(YEAR FROM date_created) = :year_log
+						  AND EXTRACT(MONTH FROM date_created) = :month_log
+						UNION ALL
+					   SELECT NULL 									app_id,
+							  EXTRACT(YEAR FROM date_created) 		year_log,
+							  EXTRACT(MONTH FROM date_created) 		month_log,
+							  EXTRACT(DAY FROM date_created) 		day_log,
+							  server_remote_addr
+						 FROM ${get_schema_name()}.app_log
+						WHERE 2 = :statchoice
+						  AND app_id = COALESCE(:app_id_log, app_id)
+						  AND EXTRACT(YEAR FROM date_created) = :year_log
+						  AND EXTRACT(MONTH FROM date_created) = :month_log) t
+				GROUP BY t.app_id,
+						 t.year_log,
+						 t.month_log,
+						 t.day_log
 				ORDER BY 4`;
 		parameters = {	statchoice: statchoice,
-						app_id: data_app_id,
-						year: year,
-						month:month};
+						app_id_log: data_app_id,
+						year_log: year,
+						month_log:month};
 		execute_db_sql(app_id, sql, parameters, true, 
 			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)

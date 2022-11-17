@@ -1,12 +1,12 @@
 const ADMIN_ID = 0;
+const { check_app_subdomain} = require("../apps");
 //admin directories
 app.use('/admin/images',express.static(__dirname + '/admin/images'));
 app.use('/admin/js',express.static(__dirname + '/admin/js'));
 app.use('/admin/css',express.static(__dirname + '/admin/css'));
 
 app.get("/admin",function (req, res, next) {
-    if (req.headers.host.substring(0,req.headers.host.indexOf('.'))=='' ||
-        req.headers.host.substring(0,req.headers.host.indexOf('.'))==process.env.SERVICE_DB_DB2_SUBDOMAIN ||
+    if (check_app_subdomain(app_id, req.headers.host) ||
         req.headers.host.substring(0,req.headers.host.indexOf('.'))=='www'){
         const { getFormAdmin } = require ("../service/forms/forms.controller");
         getFormAdmin(req, res, ADMIN_ID, (err, app_result)=>{

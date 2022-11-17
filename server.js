@@ -149,8 +149,6 @@ const user_accountRouter = require("./service/db/app_portfolio/user_account/user
 const user_account_appRouter = require("./service/db/app_portfolio/user_account_app/user_account_app.router");
 const user_account_likeRouter = require("./service/db/app_portfolio/user_account_like/user_account_like.router");
 const user_account_followRouter = require("./service/db/app_portfolio/user_account_follow/user_account_follow.router");
-//service db common
-const commonRouter = require("./service/db/common/common.router");
 //service geolocation
 const geolocationRouter = require("./service/geolocation/geolocation.router");
 //service log
@@ -189,8 +187,6 @@ app.use("/service/db/app_portfolio/user_account", user_accountRouter);
 app.use("/service/db/app_portfolio/user_account_app", user_account_appRouter);
 app.use("/service/db/app_portfolio/user_account_like", user_account_likeRouter);
 app.use("/service/db/app_portfolio/user_account_follow", user_account_followRouter);
-//service db common
-app.use("/service/db/common", commonRouter);
 //service geolocation
 app.use("/service/geolocation", geolocationRouter);
 //service log
