@@ -236,6 +236,7 @@ Installation instructions
 	SERVER_JSON_LIMIT                          			=10MB
 	SERVER_ADMIN_NAME									={ADMIN_USERNAME}
 	SERVER_ADMIN_PASSWORD								={ADMIN_PASSWORD}
+	SERVER_TEST_SUBDOMAIN								=test
 	#service variables
 	SERVICE_AUTH_ACCESS_CONTROL_ENABLE          		={0=NO, 1=YES}
 	SERVICE_AUTH_ACCESS_CONTROL_IP             			={0=NO, 1=YES}
@@ -305,6 +306,10 @@ Installation instructions
 	COMMON_APP_ID						                =0
 
 	detailed parameter info:
+	SERVER_TEST_SUBDOMAIN
+		- test.[domain] test network with subdomains for test environment
+		  update DNS to point to test.[domain], *.test.[domain]/admin,  app1.test.[domain] etc
+		  create SSL for *.test.[domain], *.[domain], [domain]
 	SERVICE_DB_DB1_VARIANT
 		some minor adjustments between MySQL and MariaDB: 
 		- MariaDB global variables in INFORMATION_SCHEMA
