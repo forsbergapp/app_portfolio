@@ -6,6 +6,7 @@ app.use('/admin/css',express.static(__dirname + '/admin/css'));
 
 app.get("/admin",function (req, res, next) {
     if (req.headers.host.substring(0,req.headers.host.indexOf('.'))=='' ||
+        req.headers.host.substring(0,req.headers.host.indexOf('.'))==process.env.SERVICE_DB_DB2_SUBDOMAIN ||
         req.headers.host.substring(0,req.headers.host.indexOf('.'))=='www'){
         const { getFormAdmin } = require ("../service/forms/forms.controller");
         getFormAdmin(req, res, ADMIN_ID, (err, app_result)=>{
