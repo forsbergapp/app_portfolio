@@ -323,7 +323,7 @@ module.exports = {
     check_app_subdomain: (app_id, host) =>{
         //if using test subdomains, dns wil point to correct server
         switch (app_id){
-            case process.env.COMMON_APP_ID:{
+            case parseInt(process.env.COMMON_APP_ID):{
                 //show admin app for all subdomains
                 return true;
             }
