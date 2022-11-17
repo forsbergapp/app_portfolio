@@ -1714,7 +1714,7 @@ BEGIN
 	INSERT INTO app2_user_setting_hist
 	(dml,
 	dml_date,
-	app2_user_setting_id,
+	app2_user_setting_id
 	)
 	SELECT 
 	'D',
