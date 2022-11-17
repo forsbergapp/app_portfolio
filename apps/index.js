@@ -261,7 +261,11 @@ module.exports = {
                 json = JSON.parse(JSON.stringify(results));
                 //start app pools
                 for (var app_id = 0; app_id < json.length; app_id++) {
-                    load_dynamic_code(app_id);
+                    if (app_id == process.env.COMMON_APP_ID)
+                        load_dynamic_code(app_id);
+                    else
+                        if (process.env.SERVER_APPS_START == 1)
+                            load_dynamic_code(app_id);
                 }
             }
         })
