@@ -11,67 +11,71 @@ module.exports = {
             req.query.app_id = process.env.COMMON_APP_ID;
         if (process.env.SERVICE_AUTH_ACCESS_CONTROL_ENABLE==1){
             let ip_v4 = req.ip.replace('::ffff:','');
-            block_ip_control(ip_v4, (err, result_range) =>{
-                if (err){
-                    createLogAppCI(req, res, __appfilename, __appfunction, __appline, `ip ${ip_v4} blocked, range: ${result_range}, tried URL: ${req.originalUrl}`, (err_log, result_log)=>{
-                        return callBack(err,null);
-                    })
-                }
-                else{
-                    if (process.env.SERVICE_AUTH_ACCESS_CONTROL_HOST_EXIST==1 &&
-                        typeof req.headers.host=='undefined'){
-                        //check if host exists
-                        createLogAppCI(req, res, __appfilename, __appfunction, __appline, `ip ${ip_v4} blocked, no host, tried URL: ${req.originalUrl}`, (err_log, result_log)=>{
-                            //406 Not Acceptable
-                            return callBack(406,null);
+            if (process.env.SERVICE_AUTH_ACCESS_DBURL_FROM_IP == ip_v4 && req.originalUrl == process.env.SERVICE_AUTH_ACCESS_DBURL_FROM_URL)
+                return callBack(null,1);
+            else{
+                block_ip_control(ip_v4, (err, result_range) =>{
+                    if (err){
+                        createLogAppCI(req, res, __appfilename, __appfunction, __appline, `ip ${ip_v4} blocked, range: ${result_range}, tried URL: ${req.originalUrl}`, (err_log, result_log)=>{
+                            return callBack(err,null);
                         })
                     }
                     else{
-                        var os = require("os");
-                        if (process.env.SERVICE_AUTH_ACCESS_CONTROL_ACCESS_FROM==1 &&
-                            req.headers.host==os.hostname()){
-                            //check if accessed from domain and not os hostname
-                            createLogAppCI(req, res, __appfilename, __appfunction, __appline, `ip ${ip_v4} blocked, accessed from hostname ${os.hostname()} not domain, tried URL: ${req.originalUrl}`, (err_log, result_log)=>{
+                        if (process.env.SERVICE_AUTH_ACCESS_CONTROL_HOST_EXIST==1 &&
+                            typeof req.headers.host=='undefined'){
+                            //check if host exists
+                            createLogAppCI(req, res, __appfilename, __appfunction, __appline, `ip ${ip_v4} blocked, no host, tried URL: ${req.originalUrl}`, (err_log, result_log)=>{
                                 //406 Not Acceptable
                                 return callBack(406,null);
                             })
                         }
                         else{
-                            safe_user_agents(req.headers["user-agent"], (err, safe)=>{
-                                if (err){
-                                    return callBack(err, null);
-                                }
-                                else{
-                                    if (safe==true)
-                                        return callBack(null,1);
+                            var os = require("os");
+                            if (process.env.SERVICE_AUTH_ACCESS_CONTROL_ACCESS_FROM==1 &&
+                                req.headers.host==os.hostname()){
+                                //check if accessed from domain and not os hostname
+                                createLogAppCI(req, res, __appfilename, __appfunction, __appline, `ip ${ip_v4} blocked, accessed from hostname ${os.hostname()} not domain, tried URL: ${req.originalUrl}`, (err_log, result_log)=>{
+                                    //406 Not Acceptable
+                                    return callBack(406,null);
+                                })
+                            }
+                            else{
+                                safe_user_agents(req.headers["user-agent"], (err, safe)=>{
+                                    if (err){
+                                        return callBack(err, null);
+                                    }
                                     else{
-                                        if(process.env.SERVICE_AUTH_ACCESS_CONTROL_USER_AGENT_EXIST==1 &&
-                                           typeof req.headers["user-agent"]=='undefined'){
-                                            //check if user-agent exists
-                                            createLogAppCI(req, res, __appfilename, __appfunction, __appline, `ip ${ip_v4} blocked, no user-agent, tried URL: ${req.originalUrl}`, (err_log, result_log)=>{
-                                                //406 Not Acceptable
-                                                return callBack(406,null);
-                                            })
-                                        }
+                                        if (safe==true)
+                                            return callBack(null,1);
                                         else{
-                                            if (process.env.SERVICE_AUTH_ACCESS_CONTROL_ACCEPT_LANGUAGE==1 &&
-                                                typeof req.headers["accept-language"]=='undefined'){
-                                                //check if accept-language exists
-                                                createLogAppCI(req, res, __appfilename, __appfunction, __appline, `ip ${ip_v4} blocked, no accept-language, tried URL: ${req.originalUrl}`, (err_log, result_log)=>{
+                                            if(process.env.SERVICE_AUTH_ACCESS_CONTROL_USER_AGENT_EXIST==1 &&
+                                               typeof req.headers["user-agent"]=='undefined'){
+                                                //check if user-agent exists
+                                                createLogAppCI(req, res, __appfilename, __appfunction, __appline, `ip ${ip_v4} blocked, no user-agent, tried URL: ${req.originalUrl}`, (err_log, result_log)=>{
                                                     //406 Not Acceptable
                                                     return callBack(406,null);
                                                 })
                                             }
-                                            else
-                                                return callBack(null,1);
+                                            else{
+                                                if (process.env.SERVICE_AUTH_ACCESS_CONTROL_ACCEPT_LANGUAGE==1 &&
+                                                    typeof req.headers["accept-language"]=='undefined'){
+                                                    //check if accept-language exists
+                                                    createLogAppCI(req, res, __appfilename, __appfunction, __appline, `ip ${ip_v4} blocked, no accept-language, tried URL: ${req.originalUrl}`, (err_log, result_log)=>{
+                                                        //406 Not Acceptable
+                                                        return callBack(406,null);
+                                                    })
+                                                }
+                                                else
+                                                    return callBack(null,1);
+                                            }
                                         }
                                     }
-                                }
-                            })
+                                })
+                            }
                         }
                     }
-                }
-            })
+                })
+            }
         }
         else
             return callBack(null,1);
@@ -388,5 +392,62 @@ module.exports = {
         }
         else
             callBack(null, null)
-    }
+    },
+    checkDBUrl:(req, res, next) => {
+        if(req.headers.authorization){
+            var userpass = new Buffer.from((req.headers.authorization || '').split(' ')[1] || '', 'base64').toString();
+            req.query.app_id = req.body.app_id;
+            if (userpass == process.env.SERVICE_DB_DB2_URL_USER + ':' + process.env.SERVICE_DB_DB2_URL_PASSWORD) {
+                createLog(req.query.app_id,
+                    { app_id : req.query.app_id,
+                      app_module : 'AUTH',
+                      app_module_type : 'DB_URL_OK',
+                      app_module_request : req.baseUrl,
+                      app_module_result : null,
+                      app_user_id : null,
+                      user_language : null,
+                      user_timezone : null,
+                      user_number_system : null,
+                      user_platform : null,
+                      server_remote_addr : req.ip,
+                      server_user_agent : req.headers["user-agent"],
+                      server_http_host : req.headers["host"],
+                      server_http_accept_language : req.headers["accept-language"],
+                      client_latitude : null,
+                      client_longitude : null
+                      }, (err,results)  => {
+                          next();
+                      });
+            } 
+            else{
+                createLog(req.query.app_id,
+                          { app_id : req.query.app_id,
+                            app_module : 'AUTH',
+                            app_module_type : 'DB_URL_FAIL',
+                            app_module_request : req.baseUrl,
+                            app_module_result : 'HTTP Error 401 Unauthorized: Access is denied.',
+                            app_user_id : null,
+                            user_language : null,
+                            user_stimezone : null,
+                            user_number_system : null,
+                            user_platform : null,
+                            server_remote_addr : req.ip,
+                            server_user_agent : req.headers["user-agent"],
+                            server_http_host : req.headers["host"],
+                            server_http_accept_language : req.headers["accept-language"],
+                            client_latitude : null,
+                            client_longitude : null
+                            }, (err,results)  => {
+                                return res.status(401).send({ 
+                                    message: "HTTP Error 401 Unauthorized: Access is denied."
+                                });
+                        }); 
+            }
+        }
+        else{
+            return res.status(401).send({ 
+                message: "HTTP Error 401 Unauthorized: Access is denied"
+            });
+        }
+    },
 }
