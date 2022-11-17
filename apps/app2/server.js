@@ -4,6 +4,7 @@ const app2_user_settingRouter = require("../service/db/app_portfolio/app2_user_s
 const app2_user_setting_likeRouter = require("../service/db/app_portfolio/app2_user_setting_like/app2_user_setting_like.router");
 const app2_user_setting_viewRouter = require("../service/db/app_portfolio/app2_user_setting_view/app2_user_setting_view.router");
 const APP2_ID = 2;
+const { check_app_subdomain} = require("../apps");
 app.use("/service/db/app_portfolio/app2_place", app2_placeRouter);
 app.use("/service/db/app_portfolio/app2_theme", app2_themeRouter);
 app.use("/service/db/app_portfolio/app2_user_setting", app2_user_settingRouter);
@@ -17,7 +18,7 @@ app.use('/app2/images',express.static(__dirname + '/app2/images'));
 
 //app 2 pwa service worker, placed in root
 app.get("/sw.js",function (req, res,next) {
-  if (req.headers.host.substring(0,req.headers.host.indexOf('.')) == 'app2') {
+  if (check_app_subdomain(app_id, req.headers.host)) {
       res.type('application/javascript');
       res.setHeader('Service-Worker-Allowed', '/')
       res.status(200);
@@ -28,7 +29,7 @@ app.get("/sw.js",function (req, res,next) {
 });
 
 app.get("/info/:info",function (req, res, next) {
-  if (req.headers.host.substring(0,req.headers.host.indexOf('.')) == 'app2') {
+  if (check_app_subdomain(app_id, req.headers.host)) {
       const { getInfo} = require("./");
       if (typeof req.query.lang_code !='undefined'){
         req.query.lang_code = 'en';
@@ -43,7 +44,7 @@ app.get("/info/:info",function (req, res, next) {
 
 //app 2 progressive webapp menifest
 app.get("/app2/manifest.json",function (req, res, next) {
-  if (req.headers.host.substring(0,req.headers.host.indexOf('.')) == 'app2'){
+  if (check_app_subdomain(app_id, req.headers.host)){
     const { getParameters } = require ("../service/db/app_portfolio/app_parameter/app_parameter.service");
     getParameters(APP2_ID, APP2_ID, (err, results) =>{
       if (err) {
@@ -131,7 +132,7 @@ app.get("/app2/manifest.json",function (req, res, next) {
 });
 //app 2 show profile directly from url
 app.get('/:user', function(req, res,next) {
-  if (req.headers.host.substring(0,req.headers.host.indexOf('.')) == 'app2' &&
+  if (check_app_subdomain(app_id, req.headers.host) &&
       req.params.user !== '' && 
       req.params.user!=='manifest.json' &&
       req.params.user!=='sw.js' &&
@@ -152,7 +153,7 @@ app.get('/:user', function(req, res,next) {
     next();
 });
 app.get('/',function (req, res, next) {
-  if (req.headers.host.substring(0,req.headers.host.indexOf('.')) == 'app2'){
+  if (check_app_subdomain(app_id, req.headers.host)){
     const { getForm} = require("../service/forms/forms.controller");
     getForm(req, res, APP2_ID, null,(err, app_result)=>{
         return res.send(app_result);
