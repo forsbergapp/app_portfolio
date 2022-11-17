@@ -233,7 +233,7 @@ module.exports = {
 							if (err)
 								return callBack(err, null);
 							else
-								return callBack(null, result_id2.rows[0]);
+								return callBack(null, result_id2[0]);
 						})
 					}
 			});
