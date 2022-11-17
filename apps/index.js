@@ -328,19 +328,19 @@ module.exports = {
                 return true;
             }
             case 1:{
-                //app1, www, test.app1, test or localhost
-                if (host.indexOf(process.env.SERVER_TEST_SUBDOMAIN + `.app${app_id}`) == 0 ||
-                    host.substring(0,host.indexOf('.')) == `app${app_id}` ||
+                //app1, app1.test, test, www  or localhost
+                if (host.substring(0,host.indexOf('.')) == `app${app_id}` ||
+                    host.indexOf(`app${app_id}.` + process.env.SERVER_TEST_SUBDOMAIN) == 0 ||
                     host.substring(0,host.indexOf('.')) == process.env.SERVER_TEST_SUBDOMAIN ||
-                    host.substring(0,host.indexOf('.')) == '' ||
-                    host.substring(0,host.indexOf('.')) == 'www')
+                    host.substring(0,host.indexOf('.')) == 'www' ||
+                    host.substring(0,host.indexOf('.')) == '')
                     return true;
                 else
                     return false;
             }
             default:{
-                //test.app[app_id] or app[app_id]
-                if (host.indexOf(process.env.SERVER_TEST_SUBDOMAIN + `.app${app_id}`) == 0 ||
+                //app[app_id].test or app[app_id]
+                if (host.indexOf(`app${app_id}.` + process.env.SERVER_TEST_SUBDOMAIN) == 0 ||
                     host.substring(0,host.indexOf('.')) == `app${app_id}`)
                     return true;
                 else
