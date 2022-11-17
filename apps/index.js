@@ -261,11 +261,7 @@ module.exports = {
                 json = JSON.parse(JSON.stringify(results));
                 //start app pools
                 for (var app_id = 0; app_id < json.length; app_id++) {
-                    if (app_id == process.env.COMMON_APP_ID)
-                        load_dynamic_code(app_id);
-                    else
-                        if (process.env.SERVER_APPS_START == 1)
-                            load_dynamic_code(app_id);
+                    load_dynamic_code(app_id);
                 }
             }
         })
@@ -323,6 +319,34 @@ module.exports = {
                 }
             })
         })
+    },
+    check_app_subdomain: (app_id, host) =>{
+        //if using test subdomains, dns wil point to correct server
+        switch (app_id){
+            case process.env.COMMON_APP_ID:{
+                //show admin app for all subdomains
+                return true;
+            }
+            case 1:{
+                //app1, www, test.app1, test or localhost
+                if (host.indexOf(process.env.SERVER_TEST_SUBDOMAIN + `.app${app_id}`) == 0 ||
+                    host.substring(0,host.indexOf('.')) == `app${app_id}` ||
+                    host.substring(0,host.indexOf('.')) == process.env.SERVER_TEST_SUBDOMAIN ||
+                    host.substring(0,host.indexOf('.')) == '' ||
+                    host.substring(0,host.indexOf('.')) == 'www')
+                    return true;
+                else
+                    return false;
+            }
+            default:{
+                //test.app[app_id] or app[app_id]
+                if (host.indexOf(process.env.SERVER_TEST_SUBDOMAIN + `.app${app_id}`) == 0 ||
+                    host.substring(0,host.indexOf('.')) == `app${app_id}`)
+                    return true;
+                else
+                    return false;
+            }
+        }
     }
 }
 module.exports.getInfo = getInfo;
