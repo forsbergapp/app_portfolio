@@ -54,63 +54,37 @@ async function execute_db_sql(app_id, sql, parameters, admin,
 			break;
 		}
 		case '2':{
-			if (process.env.SERVICE_DB_DB2_URL){
-				const axios = require('axios');
-				let result = await axios({
-					url: process.env.SERVICE_DB_DB2_URL,
-					method: 'post',
-					data:{ app_id: app_id,
-						  sql : sql,
-						  parameters: parameters,
-						  admin:admin,
-						  app_filename: app_filename, 
-						  app_function: app_function, 
-						  app_line : app_line},
-					auth: { username: process.env.SERVICE_DB_DB2_URL_USER,
-						    password: process.env.SERVICE_DB_DB2_URL_PASSWORD }
-				})
-				.then(function (response) {
-					return callBack(null, response.data);
-				  })
-				.catch(function (error) {
-					createLogAppSE(app_id, __appfilename, __appfunction, __appline, error.message, (err_log, result_log)=>{
-						return callBack('DB error', null);
-					});
-				});
+			if (process.env.SERVICE_LOG_ENABLE_DB==1){
+				log_db_sql(app_id, sql, parameters);
 			}
-			else{
-				if (process.env.SERVICE_LOG_ENABLE_DB==1){
-					log_db_sql(app_id, sql, parameters);
-				}
-				let pool2;
-				try{
-					pool2 = await oracledb.getConnection(get_pool(app_id));
-					const result = await pool2.execute(sql, parameters, (err,result) => {
-															if (err) {
-																createLogAppSE(app_id, app_filename, app_function, app_line, `${err.message}, SQL:${sql.substring(0,100)}...`, (err_log, result_log)=>{
-																	return callBack(err);
-																})
-															}
-															else{
-																if (!result.rows && result)
-																	return callBack(null, result);
-																else
-																	return callBack(null, result.rows);
-															}
-														});
-				}catch (err) {
-					createLogAppSE(app_id, __appfilename, __appfunction, __appline, err.message, (err_log, result_log)=>{
-						return callBack(err.message);
-					})
-				} finally {
-					if (pool2) {
-						try {
-							await pool2.close(); 
-						} catch (err) {
-							createLogAppSE(app_id, __appfilename, __appfunction, __appline, err.message, (err_log, result_log)=>{
-								return callBack(err.message);
-							})
-						}
+			let pool2;
+			try{
+				pool2 = await oracledb.getConnection(get_pool(app_id));
+				const result = await pool2.execute(sql, parameters, (err,result) => {
+														if (err) {
+															createLogAppSE(app_id, app_filename, app_function, app_line, `${err.message}, SQL:${sql.substring(0,100)}...`, (err_log, result_log)=>{
+																return callBack(err);
+															})
+														}
+														else{
+															if (!result.rows && result)
+																return callBack(null, result);
+															else
+																return callBack(null, result.rows);
+														}
+													});
+			}catch (err) {
+				createLogAppSE(app_id, __appfilename, __appfunction, __appline, err.message, (err_log, result_log)=>{
+					return callBack(err.message);
+				})
+			} finally {
+				if (pool2) {
+					try {
+						await pool2.close(); 
+					} catch (err) {
+						createLogAppSE(app_id, __appfilename, __appfunction, __appline, err.message, (err_log, result_log)=>{
+							return callBack(err.message);
+						})
 					}
 				}
 			}

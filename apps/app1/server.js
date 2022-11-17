@@ -1,11 +1,12 @@
 const APP1_ID = 1;
+const { check_app_subdomain} = require("../apps");
 //app 1 directories
 app.use('/app1/css',express.static(__dirname + '/app1/css'));
 app.use('/app1/images',express.static(__dirname + '/app1/images'));
 app.use('/app1/js',express.static(__dirname + '/app1/js'));
 app.get("/info/:info",function (req, res, next) {
-    if (req.headers.host.substring(0,req.headers.host.indexOf('.'))=='' ||
-      req.headers.host.substring(0,req.headers.host.indexOf('.'))=='www'){
+    if (check_app_subdomain(app_id, req.headers.host) ||
+        req.headers.host.substring(0,req.headers.host.indexOf('.'))=='www'){
         const { getInfo} = require("./");
         switch (req.params.info){
           case 'data_model.png':{
@@ -31,8 +32,8 @@ app.get("/info/:info",function (req, res, next) {
         next();
 });
 app.get('/:user',function (req, res, next) {
-  if ((req.headers.host.substring(0,req.headers.host.indexOf('.'))=='' ||
-      req.headers.host.substring(0,req.headers.host.indexOf('.'))=='www') &&
+  if ((check_app_subdomain(app_id, req.headers.host) ||
+       req.headers.host.substring(0,req.headers.host.indexOf('.'))=='www') &&
       req.params.user !== '' && 
       req.params.user!=='manifest.json' &&
       req.params.user!=='sw.js' &&
@@ -54,7 +55,7 @@ app.get('/:user',function (req, res, next) {
 });
 //config root url
 app.get('/',function (req, res, next) {
-  if (req.headers.host.substring(0,req.headers.host.indexOf('.'))=='' ||
+  if (check_app_subdomain(app_id, req.headers.host) ||
       req.headers.host.substring(0,req.headers.host.indexOf('.'))=='www'){
       const { getForm} = require("../service/forms/forms.controller");
       getForm(req, res, APP1_ID, null,(err, app_result)=>{
