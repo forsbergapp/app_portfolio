@@ -622,6 +622,10 @@ a:active {
 #profile_top_list{
 	width:100%;
 	margin-top: 10px;
+	overflow-x:auto;
+	display: flex;
+	flex-direction: column;
+	height: calc(100% - 160px);
 }
 .profile_top_list_row{
 	height: 1.8em;
