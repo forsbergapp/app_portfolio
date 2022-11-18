@@ -1,4 +1,4 @@
-const {execute_db_sql, get_schema_name} = require ("../../common/common.service");
+const {execute_db_sql, get_schema_name, limit_sql} = require ("../../common/common.service");
 module.exports = {
 	createUserSetting: (app_id, initial, data, callBack) => {
 		let sql;
@@ -470,6 +470,7 @@ module.exports = {
 						   AND  u.active = 1
 						   AND  6 = :detailchoice) t
 					ORDER BY 1, COALESCE(username, provider_first_name) `;
+		sql = limit_sql(sql,1);
 		parameters = {
 						user_account_id: id,
 						app_id: app_id,
@@ -537,13 +538,7 @@ module.exports = {
 						   AND  u.private <> 1
 						   AND  5 = :statchoice) t
 				ORDER BY 1,10 DESC, COALESCE(username, provider_first_name) `;
-		let limit = 10;
-		if (process.env.SERVICE_DB_USE == 1) {
-			sql = sql + ` LIMIT ${limit}`;
-		}
-		else if (process.env.SERVICE_DB_USE == 2) {
-			sql = sql + ` FETCH NEXT ${limit} ROWS ONLY`;
-		}
+		sql = limit_sql(sql,2);
 		parameters = {
 						app_id: app_id,
 						statchoice: statchoice,

@@ -254,6 +254,8 @@ Installation instructions
 	#What database to use
 	#1=DB1 MySQL, 2=DB2 Oracle
 	SERVICE_DB_USE                           			=1
+	SERVICE_DB_LIMIT_LIST_SEARCH						=100
+	SERVICE_DB_LIMIT_PROFILE_TOP						=100
 	#mySQL/MariaDB
 	SERVICE_DB_DB1_VARIANT                      		={1=MySQL, 2=MariaDB}
 	SERVICE_DB_DB1_APP_ADMIN_USER               		=app_admin

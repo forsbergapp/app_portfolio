@@ -154,7 +154,7 @@
 	bottom: 0;
 	display:grid;
 	position:fixed;
-	grid-template-columns: 1fr repeat(5, auto) 1fr;
+	grid-template-columns: 0.9fr repeat(5, auto) 1fr;
 	grid-column-gap: 5px;
 	z-index: 2;
 }
@@ -596,6 +596,9 @@ height: 25px;
 	display:flex;
 }
 /*COMMON*/
+#profile_btn_top{
+	margin-inline-start:inherit !important;
+}
 #profile_input_row{
 	visibility:hidden;
 }
