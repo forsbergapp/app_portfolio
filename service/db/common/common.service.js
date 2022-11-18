@@ -131,6 +131,22 @@ function get_locale(lang_code, part){
 			}
 		}
 }
+function limit_sql(sql, limit_type){
+	if (process.env.SERVICE_DB_USE == 1)
+		if (limit_type = 1)
+			return sql + ` LIMIT ${process.env.SERVICE_DB_LIMIT_LIST_SEARCH}`;
+		else
+			return sql + ` LIMIT ${process.env.SERVICE_DB_LIMIT_LIST_PROFILE_TOP}`;
+	else 
+		if (process.env.SERVICE_DB_USE == 2)
+			if (limit_type = 1)
+				return sql + ` FETCH NEXT ${process.env.SERVICE_DB_LIMIT_LIST_SEARCH} ROWS ONLY`;
+			else
+				return sql + ` FETCH NEXT ${process.env.SERVICE_DB_LIMIT_LIST_PROFILE_TOP} ROWS ONLY`;
+		else
+			return sql;
+}
 module.exports.execute_db_sql = execute_db_sql;
 module.exports.get_schema_name = get_schema_name;
 module.exports.get_locale = get_locale;
+module.exports.limit_sql = limit_sql;

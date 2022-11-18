@@ -1,4 +1,4 @@
-const {execute_db_sql, get_schema_name} = require ("../../common/common.service");
+const {execute_db_sql, get_schema_name, limit_sql} = require ("../../common/common.service");
 function password_length_wrong(password){
     //constraint should be in db but password is encrypted when in db trigger
     //and saved with constant 60 characters length
@@ -466,6 +466,7 @@ module.exports = {
 								FROM ${get_schema_name()}.user_account_app uap
 							WHERE uap.user_account_id = u.id
 								AND uap.app_id = :app_id)`;
+		sql = limit_sql(sql, 1);
 		parameters = {
 						username: '%' + username + '%',
 						provider_first_name: '%' + username + '%',
@@ -550,6 +551,7 @@ module.exports = {
 						  AND u.active = 1
 						  AND 4 = :detailchoice) t
 					ORDER BY 1, COALESCE(username, provider_first_name) `;
+		sql = limit_sql(sql,1);
 		parameters ={
 						user_account_id: id,
 						detailchoice: detailchoice
@@ -575,7 +577,24 @@ module.exports = {
 					  username "username",
 					  provider_first_name "provider_first_name",
 					  count "count"
-				FROM (SELECT 'FOLLOWING' top,
+				FROM (SELECT 'VISITED' top,
+							  u.id,
+							  u.identity_provider_id,
+							  u.provider_id,
+							  u.avatar,
+							  u.provider_image,
+							  u.provider_image_url,
+							  u.username,
+							  u.provider_first_name,
+							  (SELECT COUNT(u_visited.user_account_id_view)
+							     FROM ${get_schema_name()}.user_account_view u_visited
+							    WHERE u_visited.user_account_id_view = u.id) count
+						FROM ${get_schema_name()}.user_account u
+					   WHERE u.active = 1
+						 AND u.private <> 1
+						 AND 1 = :statchoice
+					  UNION ALL
+					  SELECT 'FOLLOWING' top,
 							 u.id,
 							 u.identity_provider_id,
 							 u.provider_id,
@@ -590,7 +609,7 @@ module.exports = {
 						FROM ${get_schema_name()}.user_account u
 					   WHERE u.active = 1
 						 AND u.private <> 1
-						 AND 1 = :statchoice
+						 AND 2 = :statchoice
 					  UNION ALL
 					  SELECT 'LIKE_USER' top,
 							 u.id,
@@ -607,36 +626,13 @@ module.exports = {
 						FROM ${get_schema_name()}.user_account u
 					   WHERE  u.active = 1
 						 AND  u.private <> 1
-						 AND  2 = :statchoice
-					  UNION ALL
-					  SELECT 'VISITED' top,
-							 u.id,
-							 u.identity_provider_id,
-							 u.provider_id,
-							 u.avatar,
-							 u.provider_image,
-							 u.provider_image_url,
-							 u.username,
-							 u.provider_first_name,
-							 (SELECT COUNT(u_visited.user_account_id_view)
-							 	FROM ${get_schema_name()}.user_account_view u_visited
-							   WHERE u_visited.user_account_id_view = u.id) count
-						FROM ${get_schema_name()}.user_account u
-					   WHERE u.active = 1
-						 AND u.private <> 1
-						 AND 3 = :statchoice) t
+						 AND  3 = :statchoice) t
 				WHERE EXISTS(SELECT NULL
 							   FROM ${get_schema_name()}.user_account_app uap
 							  WHERE uap.user_account_id = t.id
 								AND uap.app_id = :app_id)
 				ORDER BY 1,10 DESC, COALESCE(username, provider_first_name) `;
-		let limit = 10;
-		if (process.env.SERVICE_DB_USE == 1) {
-			sql = sql + ` LIMIT ${limit}`;
-		}
-		else if (process.env.SERVICE_DB_USE == 2) {
-			sql = sql + ` FETCH NEXT ${limit} ROWS ONLY`;
-		}
+		sql = limit_sql(sql,2);
 		parameters = {
 						statchoice: statchoice,
 						app_id: app_id
