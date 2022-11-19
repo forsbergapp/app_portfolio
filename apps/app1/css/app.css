@@ -185,12 +185,12 @@ body.font_arabic_nastaliq #user_menu_default_avatar{
 }
 .x1 {
 	animation: animateCloud 35s linear infinite;	
-	transform: scale(0.65);
+	transform: scale(0.7);
 }
 
 .x2 {
 	animation: animateCloud 20s linear infinite;
-	transform: scale(0.3);
+	transform: scale(0.6);
 }
 
 .x3 {
@@ -200,12 +200,13 @@ body.font_arabic_nastaliq #user_menu_default_avatar{
 
 .x4 {
 	animation: animateCloud 18s linear infinite;
-	transform: scale(0.7);
+	transform: scale(0.6);
 }
 
 .x5 {
 	animation: animateCloud 25s linear infinite;
-	transform: scale(0.55);
+	transform: scale(0.7);
+	margin-top: -160px;
 }
 
 /* CLOUD */
@@ -236,6 +237,19 @@ body.font_arabic_nastaliq #user_menu_default_avatar{
 }
 
 /* Certification images*/
+#mysql_explorer{
+	width:552px;
+	height:276px;
+	margin-left:-80px;
+	margin-top:-150px
+ }
+
+#mysql_database_service_explorer{
+	width:552px;
+	height:276px;
+	margin-left:-80px;
+	margin-top:-150px
+ }
 #oci{
 	width:225px;
 	height:225px;
