@@ -99,7 +99,7 @@ module.exports = {
 											 )) t
 				WHERE   (t.app_id IN(:app_id, :common_app_id) OR t.object_name = 'APP_DESCRIPTION')
 					AND   t.object = COALESCE(:object, t.object)
-					AND   t.object_name = COALESCE(:object_name, t.object_name)
+					AND   t.object_name = COALESCE(:Xobject_Xname, t.object_name)
 			ORDER BY 1, 2, 3, 4, 5, 6`;
 		parameters = {
 						common_app_id: process.env.COMMON_APP_ID,
@@ -108,7 +108,7 @@ module.exports = {
 					  	lang_code2: get_locale(lang_code, 2),
 					  	lang_code3: get_locale(lang_code, 3),
 						object : object,
-						object_name: object_name
+						Xobject_Xname: object_name
 					 };
 		execute_db_sql(app_id, sql, parameters, null, 
 			           __appfilename, __appfunction, __appline, (err, result)=>{
