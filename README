@@ -276,7 +276,17 @@ Installation instructions
 	#Oracle Instant Client path
 	SERVICE_DB_DB2_LIBDIR								={ORACLE_INSTANT_CLIENT_PATH}
 	SERVICE_DB_DB2_CONFIGDIR							={PATH_TNSNAMES_SQLNET_OR_WALLET_FILE_CONTENT}
-
+	#PostgreSQL
+	SERVICE_DB_DB3_APP_ADMIN_USER               		=app_admin
+	SERVICE_DB_DB3_APP_ADMIN_PASS               		=APP_1_portfolio
+	SERVICE_DB_DB3_HOST                         		={HOSTNAME} (or localhost)
+	SERVICE_DB_DB3_PORT                        	 		={PORT}
+	SERVICE_DB_DB3_NAME                         		=app_portfolio
+	SERVICE_DB_DB3_TIMEOUT_CONNECTION           		=5000
+	SERVICE_DB_DB3_TIMEOUT_IDLE                 		=30000
+	SERVICE_DB_DB3_MIN                          		=5
+	SERVICE_DB_DB3_MAX                          		=5
+	
 	SERVICE_LOG_SCOPE_SERVER                    		='SERVER'
 	SERVICE_LOG_SCOPE_SERVICE                   		='SERVICE'
 	SERVICE_LOG_SCOPE_DB                        		='DB'

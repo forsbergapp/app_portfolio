@@ -15,7 +15,7 @@ module.exports = {
 				WHERE (app_id = :app_id
 						OR 
 						app_id = 0)
-					AND parameter_type_id IN (0,1)
+					AND parameter_type_id IN ('0','1')
 				ORDER BY 1`;
 		parameters = {app_id: data_app_id};
 		execute_db_sql(app_id, sql, parameters, null, 
@@ -41,7 +41,7 @@ module.exports = {
 				WHERE (app_id = :app_id
 						OR 
 						app_id = 0)
-					AND parameter_type_id IN (0,1,2)
+					AND parameter_type_id IN ('0','1','2')
 				ORDER BY 1, 3`;
 		parameters = {app_id: data_app_id};
 		execute_db_sql(app_id, sql, parameters, null, 
@@ -82,7 +82,7 @@ module.exports = {
 				 FROM ${get_schema_name()}.app_parameter
 				WHERE app_id = :app_id
 				  AND parameter_name = :parameter_name
-				  AND parameter_type_id IN (0,1,2)
+				  AND parameter_type_id IN ('0','1','2')
 				ORDER BY 1`;
 		parameters = {app_id: data_app_id,
 					  parameter_name:parameter_name};
@@ -101,7 +101,7 @@ module.exports = {
 				 FROM ${get_schema_name()}.app_parameter
 				WHERE app_id = :app_id
 				  AND parameter_name = :parameter_name
-				  AND parameter_type_id IN (0,1,2)
+				  AND parameter_type_id IN ('0','1','2')
 				ORDER BY 1`;
 		parameters = {app_id: data_app_id,
 					  parameter_name:parameter_name};
@@ -189,15 +189,9 @@ module.exports = {
 		let app_rest_client_id = 'APP_REST_CLIENT_ID';
 		let app_rest_client_secret ='APP_REST_CLIENT_SECRET';
 		let rest_app_parameter ='REST_APP_PARAMETER';
-		sql = `SELECT (SELECT a.app_name
-						 FROM ${get_schema_name()}.app a
-						WHERE a.id = :app_id) "app_name",
-					  (SELECT a.url
-						 FROM ${get_schema_name()}.app a
-					    WHERE a.id = :app_id) "app_url",
-					  (SELECT a.logo
-						 FROM ${get_schema_name()}.app a
-						WHERE a.id = :app_id) "app_logo",
+		sql = `SELECT a.app_name "app_name",
+					  a.url "app_url",
+					  a.logo "app_logo",
 					  (SELECT ap.parameter_value
 						 FROM ${get_schema_name()}.app_parameter ap
 						WHERE ap.parameter_name = :service_auth
@@ -214,7 +208,8 @@ module.exports = {
 						 FROM ${get_schema_name()}.app_parameter ap
 						WHERE ap.parameter_name = :rest_app_parameter
 						  AND ap.app_id = :app_main_id) "rest_app_parameter"
-			   FROM DUAL`;
+			   FROM ${get_schema_name()}.app a
+			  WHERE a.id = :app_id`;
 		parameters = {  app_id: app_id,
 						app_main_id: process.env.COMMON_APP_ID,
 						service_auth: service_auth,
@@ -236,15 +231,9 @@ module.exports = {
 		let app_rest_client_id = 'APP_REST_CLIENT_ID';
 		let app_rest_client_secret ='APP_REST_CLIENT_SECRET';
 		let rest_app_parameter ='REST_APP_PARAMETER';
-		sql = `SELECT   (SELECT a.app_name
-						   FROM ${get_schema_name()}.app a
-						  WHERE a.id = :app_id) "app_name",
-						(SELECT a.url
-							FROM ${get_schema_name()}.app a
-							WHERE a.id = :app_id) "app_url",
-						(SELECT a.logo
-							FROM ${get_schema_name()}.app a
-							WHERE a.id = :app_id) "app_logo",
+		sql = `SELECT   a.app_name "app_name",
+						a.url "app_url",
+						a.logo "app_logo",
 						(SELECT ap.parameter_value
 							FROM ${get_schema_name()}.app_parameter ap
 							WHERE ap.parameter_name = :service_auth
@@ -261,7 +250,8 @@ module.exports = {
 							FROM ${get_schema_name()}.app_parameter ap
 							WHERE ap.parameter_name = :rest_app_parameter
 							AND ap.app_id = :app_common_id) "rest_app_parameter"
-			   FROM DUAL`;
+			   FROM ${get_schema_name()}.app a
+			  WHERE a.id = :app_id`;
 		parameters = {  app_id: app_id,
 						app_common_id: process.env.COMMON_APP_ID,
 						service_auth: service_auth,
