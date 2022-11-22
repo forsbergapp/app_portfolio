@@ -319,7 +319,11 @@ module.exports = {
 					  active = 0,
 					  date_modified = CURRENT_TIMESTAMP
 				WHERE id = :id `;
-		parameters ={verification_code: verification_code,
+		if (process.env.SERVICE_DB_USE==3){
+			sql = sql + ' RETURNING id';
+		}
+		parameters ={
+						verification_code: verification_code,
 						id: id   
 					}; 
 		execute_db_sql(app_id, sql, parameters, null, 
@@ -327,18 +331,30 @@ module.exports = {
 			if (err)
 				return callBack(err, null);
 			else{
-				if (process.env.SERVICE_DB_USE == 1) {
-					return callBack(null, result);
-				}
-				else
-					if (process.env.SERVICE_DB_USE == 2) {
-						var oracle_json = {
+				switch (process.env.SERVICE_DB_USE){
+					case '1':{
+						return callBack(null, result);
+						break;
+					}
+					case '2':{
+						let oracle_json = {
 							"count": result.rowsAffected,
 							"affectedRows": result.rowsAffected
 						};
 						//use affectedRows as mysql in app
 						return callBack(null, oracle_json);
-					}	
+						break;
+					}
+					case '3':{
+						let pg_json = {
+							"count": result.length,
+							"affectedRows": result.length
+						};
+						//use affectedRows as mysql in app
+						return callBack(null, pg_json);
+						break;
+					}
+				}
 			}
 		});
     },
