@@ -116,7 +116,7 @@ INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VA
 INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (43,506,'20 minutos');
 INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (44,506,'25 minutos');
 INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (45,506,'30 minutos');
-INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (46,506,'Next hour');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (46,506,'Siguiente hora');
 INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (47,506,'Siguiente hora + 15 minutos');
 INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (48,506,'Siguiente hora + 30 minutos');
 INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (49,506,'No');
