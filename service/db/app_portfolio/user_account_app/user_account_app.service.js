@@ -5,12 +5,13 @@ module.exports = {
 		let parameters;
 		sql = `INSERT INTO ${get_schema_name()}.user_account_app(
 							app_id, user_account_id, date_created)
-			   SELECT :app_id, :user_account_id, CURRENT_TIMESTAMP
-				 FROM DUAL
-				WHERE NOT EXISTS (SELECT NULL
+			   SELECT :app_id, ua.id, CURRENT_TIMESTAMP
+				 FROM ${get_schema_name()}.user_account ua
+				WHERE ua.id = :user_account_id
+				  AND NOT EXISTS (SELECT NULL
 									FROM ${get_schema_name()}.user_account_app uap
 								   WHERE uap.app_id = :app_id
-									 AND uap.user_account_id = :user_account_id)`;
+									 AND uap.user_account_id = ua.id)`;
 		parameters = {
 						app_id: app_id,
 						user_account_id: user_account_id

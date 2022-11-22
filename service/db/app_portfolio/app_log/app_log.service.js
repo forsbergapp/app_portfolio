@@ -1,4 +1,4 @@
-const {execute_db_sql, get_schema_name} = require ("../../common/common.service");
+const {execute_db_sql, get_schema_name, limit_sql} = require ("../../common/common.service");
 module.exports = {
 	createLog: (app_id, data, callBack) => {
 		let sql;
@@ -26,9 +26,9 @@ module.exports = {
 					date_created)
 				VALUES(:app_id,
 					:app_module,
-					:app_module_type,
-					:app_module_request,
-					:app_module_result,
+					:app_Xmodule_type,
+					:app_Xmodule_request,
+					:app_Xmodule_result,
 					:app_user_id,
 					:user_language,
 					:user_timezone,
@@ -43,21 +43,21 @@ module.exports = {
 					CURRENT_TIMESTAMP)`;
 		parameters = {
 						app_id: data.app_id,
-						app_module:data.app_module,
-						app_module_type:data.app_module_type,
-						app_module_request:data.app_module_request,
-						app_module_result:data.app_module_result,
-						app_user_id:data.app_user_id,
-						user_language:data.user_language,
-						user_timezone:data.user_timezone,
-						user_number_system:data.user_number_system,
-						user_platform:data.user_platform,
-						client_latitude:data.client_latitude,
-						client_longitude:data.client_longitude,
-						server_remote_addr:data.server_remote_addr,
-						server_user_agent:data.server_user_agent,
-						server_http_host:data.server_http_host,
-						server_http_accept_language:data.server_http_accept_language
+						app_module: data.app_module,
+						app_Xmodule_type: data.app_module_type,
+						app_Xmodule_request: data.app_module_request,
+						app_Xmodule_result: data.app_module_result,
+						app_user_id: data.app_user_id,
+						user_language: data.user_language,
+						user_timezone: data.user_timezone,
+						user_number_system: data.user_number_system,
+						user_platform: data.user_platform,
+						client_latitude: data.client_latitude,
+						client_longitude: data.client_longitude,
+						server_remote_addr: data.server_remote_addr,
+						server_user_agent: data.server_user_agent,
+						server_http_host: data.server_http_host,
+						server_http_accept_language: data.server_http_accept_language
 					};
 		execute_db_sql(app_id, sql, parameters, null, 
 			           __appfilename, __appfunction, __appline, (err, result)=>{
@@ -93,9 +93,9 @@ module.exports = {
 					date_created)
 				VALUES(:app_id,
 					:app_module,
-					:app_module_type,
-					:app_module_request,
-					:app_module_result,
+					:app_Xmoduletype,
+					:app_Xmodulerequest,
+					:app_Xmoduleresult,
 					:app_user_id,
 					:user_language,
 					:user_timezone,
@@ -110,21 +110,21 @@ module.exports = {
 					CURRENT_TIMESTAMP)`;
 		parameters = {
 						app_id: data.app_id,
-						app_module:data.app_module,
-						app_module_type:data.app_module_type,
-						app_module_request:data.app_module_request,
-						app_module_result:data.app_module_result,
-						app_user_id:data.app_user_id,
-						user_language:data.user_language,
-						user_timezone:data.user_timezone,
-						user_number_system:data.user_number_system,
-						user_platform:data.user_platform,
-						client_latitude:data.client_latitude,
-						client_longitude:data.client_longitude,
-						server_remote_addr:data.server_remote_addr,
-						server_user_agent:data.server_user_agent,
-						server_http_host:data.server_http_host,
-						server_http_accept_language:data.server_http_accept_language
+						app_module: data.app_module,
+						app_Xmoduletype: data.app_module_type,
+						app_Xmodulerequest: data.app_module_request,
+						app_Xmoduleresult: data.app_module_result,
+						app_user_id: data.app_user_id,
+						user_language: data.user_language,
+						user_timezone: data.user_timezone,
+						user_number_system: data.user_number_system,
+						user_platform: data.user_platform,
+						client_latitude: data.client_latitude,
+						client_longitude: data.client_longitude,
+						server_remote_addr: data.server_remote_addr,
+						server_user_agent: data.server_user_agent,
+						server_http_host: data.server_http_host,
+						server_http_accept_language: data.server_http_accept_language
 					};
 		execute_db_sql(app_id, sql, parameters, true, 
 			           __appfilename, __appfunction, __appline, (err, result)=>{
@@ -191,12 +191,7 @@ module.exports = {
 				  AND EXTRACT(year from date_created) = :year
 				  AND EXTRACT(month from date_created) = :month
 				ORDER BY ${sort} ${order_by} `;
-		if (process.env.SERVICE_DB_USE == 1) {
-			sql = sql + ` LIMIT :offset,:limit`;
-		}
-		else if (process.env.SERVICE_DB_USE == 2) {
-			sql = sql + ` OFFSET :offset ROWS FETCH NEXT :limit ROWS ONLY`;
-		}
+		sql = limit_sql(sql, null);
 		parameters = {	app_id:data_app_id,
 						year:year,
 						month:month,
