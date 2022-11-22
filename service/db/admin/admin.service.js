@@ -137,14 +137,17 @@ module.exports = {
          }
          case '3':{
             sql = `SELECT t.tablename "table_name",
-                          pg_relation_size(t.schemaname || '.' || t.tablename)/1024/1024 "total_size",
-                          null "data_used",
-                          null "data_free",
-                          null "pct_used"
+                          pg_table_size(t.schemaname || '.' || t.tablename)/1024/1024::decimal "total_size",
+                          pg_relation_size(t.schemaname || '.' || t.tablename)/1024/1024::decimal "data_used",
+                          (pg_table_size(t.schemaname || '.' || t.tablename) - pg_relation_size(t.schemaname || '.' || t.tablename))/1024/1024::decimal "data_free",
+                          pg_relation_size(t.schemaname || '.' || t.tablename) / CASE pg_table_size(t.schemaname || '.' || t.tablename) 
+                                                                                 WHEN 0 THEN 1 
+                                                                                 ELSE pg_table_size(t.schemaname || '.' || t.tablename)::decimal
+                                                                                 END *100 "pct_used"
                      FROM pg_tables t
                     WHERE t.tableowner = LOWER(:db_schema)
-                    GROUP BY t.schemaname, t.tablename
-                    ORDER BY 2 DESC`;
+                 GROUP BY t.schemaname, t.tablename
+                 ORDER BY 2 DESC`;
             break;
          }
       }
@@ -163,7 +166,7 @@ module.exports = {
 		let parameters;
       switch (process.env.SERVICE_DB_USE){
          case '1':{
-            sql = `SELECT    IFNULL(ROUND((SUM(t.data_length)+SUM(t.index_length))/1024/1024,2),0.00) total_size,
+            sql = `SELECT IFNULL(ROUND((SUM(t.data_length)+SUM(t.index_length))/1024/1024,2),0.00) total_size,
                           IFNULL(ROUND(((SUM(t.data_length)+SUM(t.index_length))-SUM(t.data_free))/1024/1024,2),0.00) data_used,
                           IFNULL(ROUND(SUM(data_free)/1024/1024,2),0.00) data_free,
                           IFNULL(ROUND((((SUM(t.data_length)+SUM(t.index_length))-SUM(t.data_free))/((SUM(t.data_length)+SUM(t.index_length)))*100),2),0) pct_used
@@ -175,24 +178,27 @@ module.exports = {
          }
          case '2':{
             sql = `SELECT SUM(ds.bytes)/1024/1024 "total_size",
-                       SUM(dt.num_rows*dt.avg_row_len/1024/1024) "data_used",
-                       (SUM(ds.bytes)/1024/1024) - SUM(dt.num_rows*dt.avg_row_len/1024/1024) "data_free",
-                       SUM(dt.num_rows*dt.avg_row_len/1024/1024) / (SUM(ds.bytes)/1024/1024)*100 "pct_used"
-                  FROM DBA_TABLES dt,
-                       DBA_SEGMENTS ds
-                 WHERE dt.owner = UPPER(:db_schema)
-                   AND ds.segment_name = dt.table_name
-                   AND ds.segment_type = 'TABLE'`
+                          SUM(dt.num_rows*dt.avg_row_len/1024/1024) "data_used",
+                          (SUM(ds.bytes)/1024/1024) - SUM(dt.num_rows*dt.avg_row_len/1024/1024) "data_free",
+                          SUM(dt.num_rows*dt.avg_row_len/1024/1024) / (SUM(ds.bytes)/1024/1024)*100 "pct_used"
+                     FROM DBA_TABLES dt,
+                          DBA_SEGMENTS ds
+                    WHERE dt.owner = UPPER(:db_schema)
+                      AND ds.segment_name = dt.table_name
+                      AND ds.segment_type = 'TABLE'`
             break;
          }
          case '3':{
-            sql = `SELECT SUM(pg_relation_size(t.schemaname || '.' || t.tablename)/1024/1024) "total_size",
-                          null "data_used",
-                          null "data_free",
-                          null "pct_used"
+            sql = `SELECT SUM(pg_table_size(t.schemaname || '.' || t.tablename)/1024/1024)::decimal "total_size",
+                          SUM(pg_relation_size(t.schemaname || '.' || t.tablename)/1024/1024)::decimal "data_used",
+                          SUM((pg_table_size(t.schemaname || '.' || t.tablename) - pg_relation_size(t.schemaname || '.' || t.tablename))/1024/1024)::decimal "data_free",
+                          SUM(pg_relation_size(t.schemaname || '.' || t.tablename)) / SUM(CASE pg_table_size(t.schemaname || '.' || t.tablename) 
+                                                                                          WHEN 0 THEN 1 
+                                                                                          ELSE pg_table_size(t.schemaname || '.' || t.tablename)::decimal
+                                                                                          END) *100 "pct_used"
                      FROM pg_tables t
                     WHERE t.tableowner = LOWER(:db_schema)
-                    ORDER BY 2 DESC`;
+                 ORDER BY 2 DESC`;
             break;
          }
       }
@@ -264,7 +270,6 @@ module.exports = {
                         port: process.env.SERVICE_DB_DB3_PORT,
                         connectionTimeoutMillis: process.env.SERVICE_DB_DB3_TIMEOUT_CONNECTION,
                         idleTimeoutMillis: process.env.SERVICE_DB_DB3_TIMEOUT_IDLE,
-                        min: process.env.SERVICE_DB_DB3_MIN,
                         max: process.env.SERVICE_DB_DB3_MAX
                      }));
                      // log with common app id at startup for all apps
@@ -376,7 +381,6 @@ module.exports = {
                   port: process.env.SERVICE_DB_DB3_PORT,
                   connectionTimeoutMillis: process.env.SERVICE_DB_DB3_TIMEOUT_CONNECTION,
 			         idleTimeoutMillis: process.env.SERVICE_DB_DB3_TIMEOUT_IDLE,
-                  min: process.env.SERVICE_DB_DB3_MIN,
                   max: process.env.SERVICE_DB_DB3_MAX
                }));
                // log with common app id at startup for all apps

@@ -284,7 +284,6 @@ Installation instructions
 	SERVICE_DB_DB3_NAME                         		=app_portfolio
 	SERVICE_DB_DB3_TIMEOUT_CONNECTION           		=5000
 	SERVICE_DB_DB3_TIMEOUT_IDLE                 		=30000
-	SERVICE_DB_DB3_MIN                          		=5
 	SERVICE_DB_DB3_MAX                          		=5
 	
 	SERVICE_LOG_SCOPE_SERVER                    		='SERVER'
