@@ -3,6 +3,7 @@ module.exports = {
 	createUserSetting: (app_id, initial, data, callBack) => {
 		let sql;
 		let parameters;
+		//insert user settings if first time and no user settings exists already
 		sql = `INSERT INTO ${get_schema_name()}.app2_user_setting(
 					description,
 					regional_language_locale,
@@ -112,16 +113,19 @@ module.exports = {
 						CURRENT_TIMESTAMP,
 						:user_account_id,
 						:app_id
-				FROM DUAL 
-				WHERE NOT EXISTS (SELECT null
-									FROM ${get_schema_name()}.app2_user_setting aus
-									WHERE :initial_setting = 1
-										AND aus.user_account_app_user_account_id = :user_account_id
-										AND aus.user_account_app_app_id = :app_id)`;
+				  FROM ${get_schema_name()}.user_account ua
+				 WHERE ua.id = :user_account_id
+				   AND NOT EXISTS (SELECT null
+									 FROM ${get_schema_name()}.app2_user_setting aus2
+									WHERE aus2.user_account_app_user_account_id = ua.id
+									  AND aus2.user_account_app_app_id = :app_id
+									  AND :initial_setting = 1)`;
 		if (process.env.SERVICE_DB_USE==2){
 			data.image_header_image_img = Buffer.from(data.image_header_image_img, 'utf8');
 			data.image_footer_image_img = Buffer.from(data.image_footer_image_img, 'utf8');
 		}
+		if (process.env.SERVICE_DB_USE==3)
+			sql = sql + ' RETURNING id';
 		parameters = {
 						description: data.description,
 						regional_language_locale: data.regional_language_locale,
@@ -182,10 +186,12 @@ module.exports = {
 			if (err)
 				return callBack(err, null);
 			else
-				if (process.env.SERVICE_DB_USE==1)
-					return callBack(null, result);
-				else
-					if (process.env.SERVICE_DB_USE==2){
+				switch (process.env.SERVICE_DB_USE){
+					case '1':{
+						return callBack(null, result);
+						break;
+					}
+					case '2':{
 						if (initial==1){
 							//user logged in and if user setting is created or not
 							//not used here
@@ -211,7 +217,20 @@ module.exports = {
 									return callBack(null, result_id2[0]);
 							});
 						}
+						break;
 					}
+					case '3':{
+						if (initial==1){
+							//user logged in and if user setting is created or not
+							//not used here
+							return callBack(null, result);
+						}									
+						else{
+							return callBack(null, {insertId: result[0].id});
+						}
+						break;
+					}
+				}
 		});
 	},
 	getUserSetting:  (app_id, id, callBack) => {
@@ -401,14 +420,14 @@ module.exports = {
 						WHERE u_view.app2_user_setting_id = us.id)					"count_views",
 					  (SELECT COUNT(u_liked_current_user.id)
 						 FROM ${get_schema_name()}.app2_user_setting_like u_liked_current_user
-						WHERE u_liked_current_user.user_account_id = :user_account_id_current
+						WHERE u_liked_current_user.user_account_id = :Xuser_Xaccount_id_current
 						  AND u_liked_current_user.app2_user_setting_id = us.id) 	"liked",
 					  us.design_paper_size "design_paper_size"
 				 FROM ${get_schema_name()}.app2_user_setting us
 				WHERE us.user_account_app_user_account_id = :user_account_id
 				  AND us.user_account_app_app_id = :app_id `;
 		parameters = {
-						user_account_id_current: id_current_user,
+						Xuser_Xaccount_id_current: id_current_user,
 						user_account_id: id,
 						app_id: app_id
 						};

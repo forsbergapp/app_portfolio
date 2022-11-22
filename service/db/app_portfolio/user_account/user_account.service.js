@@ -11,45 +11,39 @@ function password_length_wrong(password){
         return false;
 }
 function get_app_code (errorNum, message, code, errno, sqlMessage){
-    var app_error_code = parseInt((JSON.stringify(errno) ?? JSON.stringify(errorNum)));
-    //check if user defined exception
-    if (app_error_code >= 20000){
-        return app_error_code;
-    } 
-    else{
-        //if known sql error
-        if (errorNum ==1 || code == "ER_DUP_ENTRY") {
-            var text_check;
-            if (sqlMessage)
-                text_check = JSON.stringify(sqlMessage);
-            else
-                text_check = JSON.stringify(message);
-            var app_message_code = '';
-            //check constraints errors, must be same name in mySQL and Oracle
-            if (text_check.toUpperCase().includes("USER_ACCOUNT_EMAIL_UN"))
-                app_message_code = 20200;
-            if (text_check.toUpperCase().includes("USER_ACCOUNT_PROVIDER_ID_UN"))
-                app_message_code = 20201;
-            if (text_check.toUpperCase().includes("USER_ACCOUNT_USERNAME_UN"))
-                app_message_code = 20203;
-            if (app_message_code != ''){
-                return app_message_code;
-            }
-            else
-                return null;	
-        }
-        else
-            //Oracle: value too large for column...
-            //returns errorNum, message and offset 
-            //mySQL:  gives more info
-            //"code":"ER_DATA_TOO_LONG",
-            //"errno":1406,
-            //"sqlMessage":"Data too long for column 'password_reminder' at row 1",
-            //"sqlState":"22001"
-            if (errorNum ==12899 || errno==1406)
-                return 20204;
-            else
-                return null;
+	//if known sql error
+	if (errorNum ==1 || code == 'ER_DUP_ENTRY' || code=='23505') {
+		var text_check;
+		if (sqlMessage)
+			text_check = JSON.stringify(sqlMessage);
+		else
+			text_check = JSON.stringify(message);
+		var app_message_code = '';
+		//check constraints errors, must be same name in mySQL and Oracle
+		if (text_check.toUpperCase().includes("USER_ACCOUNT_EMAIL_UN"))
+			app_message_code = 20200;
+		if (text_check.toUpperCase().includes("USER_ACCOUNT_PROVIDER_ID_UN"))
+			app_message_code = 20201;
+		if (text_check.toUpperCase().includes("USER_ACCOUNT_USERNAME_UN"))
+			app_message_code = 20203;
+		if (app_message_code != ''){
+			return app_message_code;
+		}
+		else
+			return null;	
+	}
+	else{
+		//Oracle: value too large for column...
+		//returns errorNum, message and offset 
+		//mySQL:  gives more info
+		//"code":"ER_DATA_TOO_LONG",
+		//"errno":1406,
+		//"sqlMessage":"Data too long for column 'password_reminder' at row 1",
+		//"sqlState":"22001"
+		if (errorNum ==12899 || errno==1406)
+			return 20204;
+		else
+			return null;
     }
 };
 function verification_code(){
@@ -146,49 +140,52 @@ module.exports = {
 		let error_code = validation_before_insert(data);
 		if (error_code==null){
 			sql = `INSERT INTO ${get_schema_name()}.user_account(
-				bio,
-				private,
-				user_level,
-				date_created,
-				date_modified,
-				username,
-				password,
-				password_reminder,
-				email,
-				avatar,
-				verification_code,
-				active,
-				identity_provider_id,
-				provider_id,
-				provider_first_name,
-				provider_last_name,
-				provider_image,
-				provider_image_url,
-				provider_email)
-			VALUES( :bio,
-					:private,
-					:user_level,
-					CURRENT_TIMESTAMP,
-					CURRENT_TIMESTAMP,
-					:username,
-					:password,
-					:password_reminder,
-					:email,
-					:avatar,
-					:verification_code,
-					:active,
-					:identity_provider_id,
-					:provider_id,
-					:provider_first_name,
-					:provider_last_name,
-					:provider_image,
-					:provider_image_url,
-					:provider_email) `;				
+						bio,
+						private,
+						user_level,
+						date_created,
+						date_modified,
+						username,
+						password,
+						password_reminder,
+						email,
+						avatar,
+						verification_code,
+						active,
+						identity_provider_id,
+						provider_id,
+						provider_first_name,
+						provider_last_name,
+						provider_image,
+						provider_image_url,
+						provider_email)
+					VALUES( :bio,
+							:private,
+							:user_level,
+							CURRENT_TIMESTAMP,
+							CURRENT_TIMESTAMP,
+							:username,
+							:password,
+							:Xpassword_reminder,
+							:email,
+							:avatar,
+							:verification_code,
+							:active,
+							:identity_provider_id,
+							:provider_id,
+							:provider_first_name,
+							:provider_last_name,
+							:provider_image,
+							:provider_Ximage_url,
+							:provider_email) `;				
 			if (process.env.SERVICE_DB_USE == 2) {
 				if (data.avatar != null)
 					data.avatar = Buffer.from(data.avatar, 'utf8');
 				if (data.provider_image != null)
 					data.provider_image = Buffer.from(data.provider_image, 'utf8');
+			}
+			if (process.env.SERVICE_DB_USE == 3) {
+				sql = sql + ' RETURNING id ';
 			}
 			parameters = {
 							bio: data.bio,
@@ -196,7 +193,7 @@ module.exports = {
 							user_level: data.user_level,
 							username: data.username,
 							password: data.password,
-							password_reminder: data.password_reminder,
+							Xpassword_reminder: data.password_reminder,
 							email: data.email,
 							avatar: data.avatar,
 							verification_code: data.verification_code,
@@ -206,7 +203,7 @@ module.exports = {
 							provider_first_name: data.provider_first_name,
 							provider_last_name: data.provider_last_name,
 							provider_image: data.provider_image,
-							provider_image_url: data.provider_image_url,
+							provider_Ximage_url: data.provider_image_url,
 							provider_email: data.provider_email
 						 };
 			execute_db_sql(app_id, sql, parameters, null, 
@@ -214,27 +211,36 @@ module.exports = {
 				if (err)
 					return callBack(err, null);
 				else
-					if (process.env.SERVICE_DB_USE==1)
-						return callBack(null, result);
-					else{
-						//Fetch id from rowid returned from Oracle
-						//sample output:
-						//{"lastRowid":"AAAWwdAAAAAAAdHAAC","rowsAffected":1}
-						//remove "" before and after
-						var lastRowid = JSON.stringify(result.lastRowid).replace(/"/g, '');
-						sql = `SELECT id "insertId"
-								 FROM ${get_schema_name()}.user_account
-								WHERE rowid = :lastRowid`;
-						parameters = {
-										lastRowid: lastRowid
-									 };
-						execute_db_sql(app_id, sql, parameters, null, 
-									   __appfilename, __appfunction, __appline, (err, result_id2)=>{
-							if (err)
-								return callBack(err, null);
-							else
-								return callBack(null, result_id2[0]);
-						})
+					switch (process.env.SERVICE_DB_USE){
+						case '1':{
+							return callBack(null, result);
+							break;
+						}
+						case '2':{
+							//Fetch id from rowid returned from Oracle
+							//sample output:
+							//{"lastRowid":"AAAWwdAAAAAAAdHAAC","rowsAffected":1}
+							//remove "" before and after
+							var lastRowid = JSON.stringify(result.lastRowid).replace(/"/g, '');
+							sql = `SELECT id "insertId"
+									FROM ${get_schema_name()}.user_account
+									WHERE rowid = :lastRowid`;
+							parameters = {
+											lastRowid: lastRowid
+										};
+							execute_db_sql(app_id, sql, parameters, null, 
+										__appfilename, __appfunction, __appline, (err, result_id2)=>{
+								if (err)
+									return callBack(err, null);
+								else
+									return callBack(null, result_id2[0]);
+							})
+							break;
+						}
+						case '3':{
+							return callBack(null, {insertId: result[0].id});
+							break;
+						}
 					}
 			});
 		}
@@ -264,6 +270,9 @@ module.exports = {
 						date_modified = CURRENT_TIMESTAMP
 				WHERE id = :id
 					AND verification_code = :verification_code `;
+		if (process.env.SERVICE_DB_USE==3){
+			sql = sql + ' RETURNING id';
+		}
 		parameters ={
 						auth: auth,
 						verification_type: verification_type,
@@ -275,18 +284,30 @@ module.exports = {
 			if (err)
 				return callBack(err, null);
 			else{
-				if (process.env.SERVICE_DB_USE == 1) {
-					return callBack(null, result);
-				}
-				else
-					if (process.env.SERVICE_DB_USE == 2) {
-						var oracle_json = {
+				switch (process.env.SERVICE_DB_USE){
+					case '1':{
+						return callBack(null, result);
+						break;
+					}
+					case '2':{
+						let oracle_json = {
 							"count": result.rowsAffected,
 							"affectedRows": result.rowsAffected
 						};
 						//use affectedRows as mysql in app
 						return callBack(null, oracle_json);
+						break;
 					}
+					case '3':{
+						let pg_json = {
+							"count": result.length,
+							"affectedRows": result.length
+						};
+						//use affectedRows as mysql in app
+						return callBack(null, pg_json);
+						break;
+					}
+				}
 			}
 		});
     },
@@ -368,28 +389,31 @@ module.exports = {
 		sql = `SELECT	u.id "id",
 						u.bio "bio",
 						(SELECT 1
-							FROM DUAL
-							WHERE u.private = 1
-								AND (NOT EXISTS (SELECT NULL
-											FROM ${get_schema_name()}.user_account_follow  uaf 
-											WHERE uaf.user_account_id = u.id
-												AND uaf.user_account_id_follow = :user_accound_id_current_user)
-								OR 
-								NOT EXISTS (SELECT NULL
-											FROM ${get_schema_name()}.user_account_follow  uaf 
-											WHERE uaf.user_account_id_follow = u.id
-												AND uaf.user_account_id = :user_accound_id_current_user))
+						   FROM ${get_schema_name()}.user_account ua_current
+						  WHERE u.private = 1
+						    AND ua_current.id = :user_accound_id_current_user
+							AND (NOT EXISTS (SELECT NULL
+											   FROM ${get_schema_name()}.user_account_follow  uaf 
+											  WHERE uaf.user_account_id = u.id
+												AND uaf.user_account_id_follow = ua_current.id)
+								 OR 
+								 NOT EXISTS (SELECT NULL
+											   FROM ${get_schema_name()}.user_account_follow  uaf 
+											  WHERE uaf.user_account_id_follow = u.id
+												AND uaf.user_account_id = ua_current.id)
+								)
 						UNION
 						SELECT NULL
-						FROM DUAL
-						WHERE EXISTS (SELECT NULL
-										FROM ${get_schema_name()}.user_account_follow  uaf 
+						  FROM ${get_schema_name()}.user_account ua_current
+						 WHERE ua_current.id = :user_accound_id_current_user
+						   AND EXISTS (SELECT NULL
+										 FROM ${get_schema_name()}.user_account_follow  uaf 
 										WHERE uaf.user_account_id = u.id
-										AND uaf.user_account_id_follow = :user_accound_id_current_user)
-							AND EXISTS (SELECT NULL
-										FROM ${get_schema_name()}.user_account_follow  uaf 
+										  AND uaf.user_account_id_follow = ua_current.id)
+						   AND EXISTS (SELECT NULL
+										 FROM ${get_schema_name()}.user_account_follow  uaf 
 										WHERE uaf.user_account_id_follow = u.id
-										AND uaf.user_account_id = :user_accound_id_current_user)) "private",
+										  AND uaf.user_account_id = ua_current.id)) "private",
 						u.user_level "user_level",
 						u.date_created "date_created",
 						u.username "username",
@@ -423,15 +447,15 @@ module.exports = {
 							FROM ${get_schema_name()}.user_account_like    u_liked_current_user
 							WHERE u_liked_current_user.user_account_id_like = u.id
 							AND u_liked_current_user.user_account_id = :user_accound_id_current_user)      "liked"
-					FROM ${get_schema_name()}.user_account u
+				 FROM ${get_schema_name()}.user_account u
 				WHERE (u.id = :id 
-						OR 
-						u.username = :username)
-					AND u.active = 1
-					AND EXISTS(SELECT NULL
-								FROM ${get_schema_name()}.user_account_app uap
-								WHERE uap.user_account_id = u.id
-									AND uap.app_id = :app_id)`;
+					   OR 
+					   u.username = :username)
+				  AND u.active = 1
+				  AND EXISTS(SELECT NULL
+							   FROM ${get_schema_name()}.user_account_app uap
+							  WHERE uap.user_account_id = u.id
+								AND uap.app_id = :app_id)`;
 		parameters ={
 			user_accound_id_current_user: id_current_user,
 			id: id,
@@ -701,7 +725,7 @@ module.exports = {
 						  user_level = :user_level,
 						  username = :username,
 						  password = :password,
-						  password_reminder = :password_reminder,
+						  password_reminder = :Xpassword_reminder,
 						  email = :email,
 						  email_unverified = :new_email,
 						  avatar = :avatar,
@@ -717,7 +741,7 @@ module.exports = {
 				user_level: data.user_level,
 				username: data.username,
 				password: data.password,
-				password_reminder: data.password_reminder,
+				Xpassword_reminder: data.password_reminder,
 				email: data.email,
 				new_email: data.new_email,
 				avatar: data.avatar,
@@ -815,7 +839,7 @@ module.exports = {
 						  provider_first_name = :provider_first_name,
 						  provider_last_name = :provider_last_name,
 						  provider_image = :provider_image,
-						  provider_image_url = :provider_image_url,
+						  provider_image_url = :provider_Ximage_url,
 						  provider_email = :provider_email,
 						  date_modified = CURRENT_TIMESTAMP
 					WHERE id = :id
@@ -829,7 +853,7 @@ module.exports = {
 							provider_first_name: data.provider_first_name,
 							provider_last_name: data.provider_last_name,
 							provider_image: data.provider_image,
-							provider_image_url: data.provider_image_url,
+							provider_Ximage_url: data.provider_image_url,
 							provider_email: data.provider_email,
 							id: id
 						}; 

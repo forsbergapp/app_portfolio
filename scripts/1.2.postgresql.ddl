@@ -5,25 +5,28 @@ CREATE ROLE role_app2;
 CREATE ROLE role_app3;
 
 
-CREATE USER app_admin IDENTIFIED BY 'APP_1_portfolio'
-    ACCOUNT UNLOCK;
+CREATE USER app_admin PASSWORD 'APP_1_portfolio';
 GRANT role_app_admin TO app_admin;
 
-CREATE USER app_portfolio IDENTIFIED BY 'APP_1_portfolio'
-    ACCOUNT UNLOCK;
+CREATE USER app_portfolio PASSWORD 'APP_1_portfolio';
 GRANT role_app_dba TO app_portfolio;
 
-CREATE USER app1 IDENTIFIED BY 'APP_1_portfolio'
-    ACCOUNT UNLOCK;
+CREATE USER app1 PASSWORD 'APP_1_portfolio';
 GRANT role_app1 TO app1;
 
-CREATE USER app2 IDENTIFIED BY 'APP_1_portfolio'
-    ACCOUNT UNLOCK;
+CREATE USER app2 PASSWORD 'APP_1_portfolio';
 GRANT role_app2 TO app2;
 
-CREATE USER app3 IDENTIFIED BY 'APP_1_portfolio'
-    ACCOUNT UNLOCK;
+CREATE USER app3 PASSWORD 'APP_1_portfolio';
 GRANT role_app3 TO app3;
+
+CREATE SCHEMA AUTHORIZATION app_portfolio;
+GRANT USAGE ON SCHEMA app_portfolio TO role_app_dba;
+GRANT USAGE ON SCHEMA app_portfolio TO role_app_admin;
+GRANT USAGE ON SCHEMA app_portfolio TO role_app1;
+GRANT USAGE ON SCHEMA app_portfolio TO role_app2;
+GRANT USAGE ON SCHEMA app_portfolio TO role_app3;
+GRANT ALL PRIVILEGES ON DATABASE app_portfolio TO role_app_dba;
 
 CREATE TABLE app_portfolio.app (
     id        INTEGER NOT NULL,
@@ -46,7 +49,7 @@ GRANT SELECT ON app_portfolio.app TO role_app2;
 GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app TO role_app_admin;
 
 CREATE TABLE app_portfolio.app_category (
-    id            INT NOT NULL AUTO_INCREMENT,
+    id            SERIAL NOT NULL,
     category_name VARCHAR(100) NOT NULL,
     CONSTRAINT app_category_pk PRIMARY KEY ( id )
 );
@@ -97,7 +100,7 @@ GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_device TO role_app_adm
 GRANT ALL PRIVILEGES ON app_portfolio.app_device TO role_app_dba;
 
 CREATE TABLE app_portfolio.app_log (
-    id                           INT NOT NULL AUTO_INCREMENT,
+    id                           SERIAL NOT NULL,
     app_module                   VARCHAR(100),
     app_module_type              VARCHAR(100),
     app_module_request           VARCHAR(500),
@@ -113,12 +116,12 @@ CREATE TABLE app_portfolio.app_log (
     server_user_agent            VARCHAR(1000),
     server_http_host             VARCHAR(1000),
     server_http_accept_language  VARCHAR(1000),
-    date_created                 DATETIME,
+    date_created                 TIMESTAMP,
 	app_id                       INTEGER NOT NULL,
 	CONSTRAINT app_log_pk PRIMARY KEY ( id )
 );
 
-ALTER TABLE app_portfolio.app_log MODIFY COLUMN app_module VARCHAR(100) COMMENT
+COMMENT ON COLUMN app_portfolio.app_log.app_module IS
     'AUTH
 BROADCAST
 FORMS
@@ -127,7 +130,7 @@ MAIL
 REPORT
 WORLDCITIES';
 
-ALTER TABLE app_portfolio.app_log MODIFY COLUMN app_module_type VARCHAR(100) COMMENT
+COMMENT ON COLUMN app_portfolio.app_log.app_module_type IS
     'AUTH
 	DATATOKEN_OK
 	DATATOKEN_FAIL
@@ -144,7 +147,7 @@ FORMS
 GEOLOCATION
 	IP
 	PLACE
-MAI
+MAIL
 	READ
 	SEND
 REPORT
@@ -153,13 +156,13 @@ REPORT
 WORLDCITIES
 	CITIES';
 
-ALTER TABLE app_portfolio.app_log MODIFY COLUMN app_module_request VARCHAR(100) COMMENT
+COMMENT ON COLUMN app_portfolio.app_log.app_module_request IS
     'MAIL%: 		emailaddress
 GEOLOCATION%: 	url
 REPORT%: 		url
 WORLDCITIES%:	countrycode';
 
-ALTER TABLE app_portfolio.app_log MODIFY COLUMN app_module_result VARCHAR(100) COMMENT
+COMMENT ON COLUMN app_portfolio.app_log.app_module_result IS
     'AUTH
 ADMINTOKEN_OK	AT: token
 ADMINTOKEN_FAIL	error message
@@ -181,16 +184,16 @@ MAIL
 			result or error message
 ';
 
-ALTER TABLE app_portfolio.app_log MODIFY COLUMN user_language VARCHAR(100) COMMENT
+COMMENT ON COLUMN app_portfolio.app_log.user_language IS
     'navigator.language';
 
-ALTER TABLE app_portfolio.app_log MODIFY COLUMN user_timezone VARCHAR(100) COMMENT
+COMMENT ON COLUMN app_portfolio.app_log.user_timezone IS
     'Intl.DateTimeFormat().resolvedOptions().timeZone;';
 
-ALTER TABLE app_portfolio.app_log MODIFY COLUMN user_number_system VARCHAR(100) COMMENT
+COMMENT ON COLUMN app_portfolio.app_log.user_number_system IS
     'Intl.NumberFormat().resolvedOptions().numberingSystem';
 
-ALTER TABLE app_portfolio.app_log MODIFY COLUMN user_platform VARCHAR(100) COMMENT
+COMMENT ON COLUMN app_portfolio.app_log.user_platform IS
     'navigator.platform';
 
 CREATE INDEX app_log_date_created_index ON
@@ -371,10 +374,10 @@ GRANT SELECT ON app_portfolio.app_parameter TO role_app3;
 GRANT ALL PRIVILEGES ON app_portfolio.app_parameter TO role_app_dba;
 
 CREATE TABLE app_portfolio.app_screenshot (
-    id                   INT NOT NULL AUTO_INCREMENT,
+    id                   SERIAL NOT NULL,
     app_device_app_id    INTEGER NOT NULL,
     app_device_device_id INTEGER NOT NULL,
-    screenshot           LONGBLOB NOT NULL,
+    screenshot           BYTEA NOT NULL,
     CONSTRAINT app_screenshot_pk PRIMARY KEY ( id )
 );
 
@@ -389,7 +392,7 @@ GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_screenshot TO role_app
 GRANT ALL PRIVILEGES ON app_portfolio.app_screenshot TO role_app_dba;
 
 CREATE TABLE app_portfolio.app2_group_place (
-    id          INT NOT NULL AUTO_INCREMENT,
+    id          SERIAL NOT NULL,
     group_name  VARCHAR(100) NOT NULL,
     icon_emoji  VARCHAR(10) NOT NULL,
     icon_url    VARCHAR(100),
@@ -429,13 +432,13 @@ CREATE TABLE app_portfolio.app2_theme (
     author                VARCHAR(100) NOT NULL,
     author_url            VARCHAR(100),
     premium               DECIMAL(1,0),
-    image_preview         LONGBLOB,
+    image_preview         BYTEA,
     image_preview_url     VARCHAR(100),
-    image_header          LONGBLOB,
+    image_header          BYTEA,
     image_header_url      VARCHAR(100),
-    image_footer          LONGBLOB,
+    image_footer          BYTEA,
     image_footer_url      VARCHAR(100),
-    image_background      LONGBLOB,
+    image_background      BYTEA,
     image_background_url  VARCHAR(100),
     app2_theme_type_id         INTEGER NOT NULL,
     app2_theme_category_id     INTEGER NOT NULL,
@@ -448,7 +451,7 @@ GRANT SELECT ON app_portfolio.app2_theme TO role_app2;
 GRANT ALL PRIVILEGES ON app_portfolio.app2_theme TO role_app_dba;
 
 CREATE TABLE app_portfolio.app2_theme_category (
-    id     INT NOT NULL AUTO_INCREMENT,
+    id     SERIAL NOT NULL,
     title  VARCHAR(100) NOT NULL,
 	CONSTRAINT app2_theme_category_pk PRIMARY KEY ( id )
 );
@@ -459,7 +462,7 @@ GRANT ALL PRIVILEGES ON app_portfolio.app2_theme_category TO role_app_dba;
 GRANT SELECT ON app_portfolio.app2_theme_category TO role_app2;
 
 CREATE TABLE app_portfolio.app2_theme_type (
-    id     INT NOT NULL AUTO_INCREMENT,
+    id     SERIAL NOT NULL,
     title  VARCHAR(10) NOT NULL,
 	CONSTRAINT theme_type_pk PRIMARY KEY ( id )
 );
@@ -470,7 +473,7 @@ GRANT ALL PRIVILEGES ON app_portfolio.app2_theme_type TO role_app_dba;
 GRANT SELECT ON app_portfolio.app2_theme_type TO role_app2;
 
 CREATE TABLE app_portfolio.app2_user_setting (
-    id                                         INT NOT NULL AUTO_INCREMENT,
+    id                                         SERIAL NOT NULL,
     description                                VARCHAR(100),
     regional_language_locale	               VARCHAR(100),
     regional_timezone                          VARCHAR(100),
@@ -497,8 +500,8 @@ CREATE TABLE app_portfolio.app2_user_setting (
     design_column_notes_checked                DECIMAL(1,0),
     design_column_gps_checked                  DECIMAL(1,0),
     design_column_timezone_checked             DECIMAL(1,0),
-    image_header_image_img                     LONGBLOB,
-    image_footer_image_img                     LONGBLOB,
+    image_header_image_img                     BYTEA,
+    image_footer_image_img                     BYTEA,
     text_header_1_text                         VARCHAR(100),
     text_header_2_text                         VARCHAR(100),
     text_header_3_text                         VARCHAR(100),
@@ -521,8 +524,8 @@ CREATE TABLE app_portfolio.app2_user_setting (
     prayer_column_sunset_checked               DECIMAL(1,0),
     prayer_column_midnight_checked             DECIMAL(1,0),
     prayer_column_fast_start_end               VARCHAR(100),
-    date_created                               DATETIME,
-    date_modified                              DATETIME,
+    date_created                               TIMESTAMP,
+    date_modified                              TIMESTAMP,
     user_account_app_user_account_id           INT NOT NULL,
     user_account_app_app_id                    INT NOT NULL,
 	CONSTRAINT app2_user_setting_pk PRIMARY KEY ( id )
@@ -543,9 +546,9 @@ ALTER TABLE app_portfolio.app2_user_setting
                                       AND ( gps_popular_place_id IS NULL ) ) );
 
 CREATE TABLE app_portfolio.app2_user_setting_hist (
-    id                                         INT NOT NULL AUTO_INCREMENT,
+    id                                         SERIAL NOT NULL,
     dml                                        VARCHAR(1),
-    dml_date                                   DATETIME,
+    dml_date                                   TIMESTAMP,
     app2_user_setting_id                       INTEGER,
     description                                VARCHAR(100),
     regional_language_locale	               VARCHAR(100),
@@ -573,8 +576,8 @@ CREATE TABLE app_portfolio.app2_user_setting_hist (
     design_column_notes_checked                DECIMAL(1,0),
     design_column_gps_checked                  DECIMAL(1,0),
     design_column_timezone_checked             DECIMAL(1,0),
-    image_header_image_img                     LONGBLOB,
-    image_footer_image_img                     LONGBLOB,
+    image_header_image_img                     BYTEA,
+    image_footer_image_img                     BYTEA,
     text_header_1_text                         VARCHAR(100),
     text_header_2_text                         VARCHAR(100),
     text_header_3_text                         VARCHAR(100),
@@ -597,8 +600,8 @@ CREATE TABLE app_portfolio.app2_user_setting_hist (
     prayer_column_sunset_checked               DECIMAL(1,0),
     prayer_column_midnight_checked             DECIMAL(1,0),
     prayer_column_fast_start_end               VARCHAR(100),
-    date_created                               DATETIME,
-    date_modified                              DATETIME,
+    date_created                               TIMESTAMP,
+    date_modified                              TIMESTAMP,
     user_account_app_user_account_id           INTEGER,
     user_account_app_app_id                    INTEGER,
 	CONSTRAINT app2_user_setting_hist_pk PRIMARY KEY ( id )
@@ -610,12 +613,12 @@ GRANT SELECT, INSERT ON app_portfolio.app2_user_setting_hist TO role_app2;
 GRANT ALL PRIVILEGES ON app_portfolio.app2_user_setting_hist TO role_app_dba;
 
 CREATE TABLE app_portfolio.app2_user_setting_like (
-    id               INT NOT NULL AUTO_INCREMENT,
+    id               SERIAL NOT NULL,
     user_account_id  INTEGER NOT NULL,
     app2_user_setting_id  INTEGER NOT NULL,
-	date_created     DATETIME,	
+	date_created     TIMESTAMP,	
 	CONSTRAINT app2_user_setting_like_pk PRIMARY KEY ( user_account_id, app2_user_setting_id ),
-    UNIQUE KEY app2_user_setting_like_id_un (id)
+    CONSTRAINT app2_user_setting_like_id_un UNIQUE (id)
 );
 GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app2_user_setting_like TO role_app_admin;
 
@@ -626,13 +629,13 @@ GRANT ALL PRIVILEGES ON app_portfolio.app2_user_setting_like TO role_app_dba;
 ALTER TABLE app_portfolio.app2_user_setting_like ADD CONSTRAINT app2_user_setting_like_un UNIQUE ( id );
 
 CREATE TABLE app_portfolio.app2_user_setting_like_hist (
-    id                    INT NOT NULL AUTO_INCREMENT,
+    id                    SERIAL NOT NULL,
     dml                   VARCHAR(1),
-    dml_date              DATETIME,
+    dml_date              TIMESTAMP,
     app2_user_setting_like_id  INTEGER,
     user_account_id       INTEGER,
     app2_user_setting_id       INTEGER,
-    date_created          DATETIME,
+    date_created          TIMESTAMP,
 	CONSTRAINT app2_user_setting_like_hist_pk PRIMARY KEY ( id )
 );
 GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app2_user_setting_like_hist TO role_app_admin;
@@ -648,7 +651,7 @@ CREATE TABLE app_portfolio.app2_user_setting_view (
     client_user_agent  VARCHAR(1000),
     client_longitude   VARCHAR(100),
     client_latitude    VARCHAR(100),
-    date_created       DATETIME NOT NULL
+    date_created       TIMESTAMP NOT NULL
 );
 GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app2_user_setting_view TO role_app_admin;
 
@@ -657,16 +660,16 @@ GRANT SELECT, INSERT, DELETE, UPDATE ON app_portfolio.app2_user_setting_view TO 
 GRANT ALL PRIVILEGES ON app_portfolio.app2_user_setting_view TO role_app_dba;
 
 CREATE TABLE app_portfolio.app2_user_setting_view_hist (
-    id                 INT NOT NULL AUTO_INCREMENT,
+    id                 SERIAL NOT NULL,
     dml                VARCHAR(1),
-    dml_date           DATETIME,
+    dml_date           TIMESTAMP,
     user_account_id    INTEGER,
     app2_user_setting_id    INTEGER,
     client_ip          VARCHAR(1000),
     client_user_agent  VARCHAR(1000),
     client_latitude    VARCHAR(100),
     client_longitude   VARCHAR(100),
-    date_created       DATETIME,
+    date_created       TIMESTAMP,
 	CONSTRAINT app2_user_setting_view_hist_pk PRIMARY KEY ( id )
 );
 GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app2_user_setting_view_hist TO role_app_admin;
@@ -676,7 +679,7 @@ GRANT SELECT, INSERT ON app_portfolio.app2_user_setting_view_hist TO role_app2;
 GRANT ALL PRIVILEGES ON app_portfolio.app2_user_setting_view_hist TO role_app_dba;
 
 CREATE TABLE app_portfolio.country (
-    id            INT NOT NULL AUTO_INCREMENT,
+    id            SERIAL NOT NULL,
     country_code  VARCHAR(10) NOT NULL,
     flag_emoji    VARCHAR(10),
     flag_url      VARCHAR(100),
@@ -694,7 +697,7 @@ GRANT SELECT ON app_portfolio.country TO role_app3;
 GRANT ALL PRIVILEGES ON app_portfolio.country TO role_app_dba;
 
 CREATE TABLE app_portfolio.country_group (
-    id          INT NOT NULL AUTO_INCREMENT,
+    id          SERIAL NOT NULL,
     group_name  VARCHAR(100) NOT NULL,
 	CONSTRAINT country_group_pk PRIMARY KEY ( id )
 );
@@ -726,7 +729,7 @@ GRANT SELECT ON app_portfolio.country_translation TO role_app3;
 GRANT ALL PRIVILEGES ON app_portfolio.country_translation TO role_app_dba;
 
 CREATE TABLE app_portfolio.device (
-    id             INT NOT NULL AUTO_INCREMENT,
+    id             SERIAL NOT NULL,
     device_name    VARCHAR(100) NOT NULL,
     screen_x       INTEGER,
     screen_y       INTEGER,
@@ -745,7 +748,7 @@ GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.device TO role_app_admin;
 GRANT ALL PRIVILEGES ON app_portfolio.device TO role_app_dba;
 
 CREATE TABLE app_portfolio.device_type (
-    id                          INT NOT NULL AUTO_INCREMENT,
+    id                          SERIAL NOT NULL,
     device_type_name            VARCHAR(100) NOT NULL,
     CONSTRAINT device_type_pk   PRIMARY KEY ( id )
 );
@@ -761,7 +764,7 @@ GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.device_type TO role_app_ad
 GRANT ALL PRIVILEGES ON app_portfolio.device_type TO role_app_dba;
 
 CREATE TABLE app_portfolio.event (
-    id            INT NOT NULL AUTO_INCREMENT,
+    id            SERIAL NOT NULL,
     event_name    VARCHAR(100) NOT NULL,
     event_type_id INTEGER NOT NULL,
     CONSTRAINT event_pk PRIMARY KEY ( id )
@@ -778,7 +781,7 @@ GRANT SELECT ON app_portfolio.event TO role_app2;
 GRANT SELECT ON app_portfolio.event TO role_app3;
 
 CREATE TABLE app_portfolio.event_status (
-    id          INT NOT NULL AUTO_INCREMENT,
+    id          SERIAL NOT NULL,
     status_name VARCHAR(100) NOT NULL,
     CONSTRAINT event_status_pk PRIMARY KEY ( id )
 );
@@ -794,7 +797,7 @@ GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.event_status TO role_app_a
 GRANT ALL PRIVILEGES ON app_portfolio.event_status TO role_app_dba;
 
 CREATE TABLE app_portfolio.event_type (
-    id              INT NOT NULL AUTO_INCREMENT,
+    id              SERIAL NOT NULL,
     event_type_name VARCHAR(100) NOT NULL,
     CONSTRAINT event_type_pk PRIMARY KEY ( id )
 );
@@ -835,7 +838,7 @@ GRANT ALL PRIVILEGES ON app_portfolio.identity_provider TO role_app_dba;
 ALTER TABLE app_portfolio.identity_provider ADD CONSTRAINT identity_provider_order_un UNIQUE ( identity_provider_order );
 
 CREATE TABLE app_portfolio.language (
-    id         INT NOT NULL AUTO_INCREMENT,
+    id         SERIAL NOT NULL,
     lang_code  VARCHAR(10) NOT NULL,
 	CONSTRAINT language_pk PRIMARY KEY ( id )
 );
@@ -905,7 +908,7 @@ GRANT SELECT ON app_portfolio.message TO role_app2;
 GRANT ALL PRIVILEGES ON app_portfolio.message TO role_app_dba;
 
 CREATE TABLE app_portfolio.message_level (
-    id             INT NOT NULL AUTO_INCREMENT,
+    id             SERIAL NOT NULL,
     message_level  VARCHAR(10) NOT NULL,
 	CONSTRAINT message_level_pk PRIMARY KEY ( id )
 );
@@ -939,7 +942,7 @@ GRANT ALL PRIVILEGES ON app_portfolio.message_translation TO role_app_dba;
 GRANT SELECT ON app_portfolio.message_translation TO role_app2;
 
 CREATE TABLE app_portfolio.message_type (
-    id            INT NOT NULL AUTO_INCREMENT,
+    id            SERIAL NOT NULL,
     message_type  VARCHAR(10) NOT NULL,
 	CONSTRAINT message_type_pk PRIMARY KEY ( id )
 );
@@ -978,7 +981,7 @@ CREATE TABLE app_portfolio.profile_search (
     client_user_agent  VARCHAR(1000),
     client_longitude   VARCHAR(100),
     client_latitude    VARCHAR(100),
-    date_created       DATETIME NOT NULL
+    date_created       TIMESTAMP NOT NULL
 );
 GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.profile_search TO role_app_admin;
 
@@ -991,7 +994,7 @@ GRANT ALL PRIVILEGES ON app_portfolio.profile_search TO role_app_dba;
 GRANT SELECT, INSERT ON app_portfolio.profile_search TO role_app2;
 
 CREATE TABLE app_portfolio.setting (
-    id              INT NOT NULL AUTO_INCREMENT,
+    id              SERIAL NOT NULL,
     description     VARCHAR(100) NOT NULL,
     data            VARCHAR(100) NOT NULL,
     data2           VARCHAR(100),
@@ -1032,7 +1035,7 @@ GRANT SELECT ON app_portfolio.setting_translation TO role_app3;
 
                     
 CREATE TABLE app_portfolio.setting_type (
-    id                          INT NOT NULL AUTO_INCREMENT,
+    id                          SERIAL NOT NULL,
     setting_type_name           VARCHAR(100) NOT NULL,
     CONSTRAINT setting_type_pk PRIMARY KEY ( id )
 );
@@ -1049,25 +1052,25 @@ GRANT SELECT ON app_portfolio.setting_type TO role_app3;
 
 	
 CREATE TABLE app_portfolio.user_account (
-    id                    INT NOT NULL AUTO_INCREMENT,
+    id                    SERIAL NOT NULL,
     username              VARCHAR(100),
     bio                   VARCHAR(150),
     private               DECIMAL(1,0),
     user_level            DECIMAL(1,0),
-    date_created          DATETIME,
-    date_modified         DATETIME,
+    date_created          TIMESTAMP,
+    date_modified         TIMESTAMP,
     password              VARCHAR(100),
     password_reminder     VARCHAR(100),
     email                 VARCHAR(100),
     email_unverified      VARCHAR(100),
-    avatar                LONGBLOB,
+    avatar                BYTEA,
     verification_code     VARCHAR(6),
     active                DECIMAL(1,0),
     identity_provider_id  INTEGER,
     provider_id           VARCHAR(100),
     provider_first_name   VARCHAR(1000),
     provider_last_name    VARCHAR(1000),
-    provider_image        LONGBLOB,
+    provider_image        BYTEA,
     provider_image_url    VARCHAR(1000),
     provider_email        VARCHAR(1000),
 	CONSTRAINT user_account_pk PRIMARY KEY ( id )
@@ -1095,7 +1098,7 @@ CREATE TABLE app_portfolio.user_account_app (
     setting_preference_timezone_id                    INTEGER,
     setting_preference_direction_id                   INTEGER,
     setting_preference_arabic_script_id               INTEGER,
-    date_created                                      DATETIME NOT NULL,
+    date_created                                      TIMESTAMP NOT NULL,
     CONSTRAINT user_account_app_pk PRIMARY KEY ( user_account_id,
                                                  app_id
                                                  )
@@ -1111,16 +1114,16 @@ GRANT ALL PRIVILEGES ON app_portfolio.user_account_app TO role_app_dba;
 GRANT SELECT, INSERT, DELETE, UPDATE ON app_portfolio.user_account_app TO role_app2;
 
 CREATE TABLE app_portfolio.user_account_app_hist (
-    id                                                INTEGER NOT NULL AUTO_INCREMENT,
+    id                                                SERIAL NOT NULL,
     dml                                               VARCHAR(1),
-    dml_date                                          DATETIME,
+    dml_date                                          TIMESTAMP,
     user_account_id                                   INTEGER,
     app_id                                            INTEGER,
     preference_locale                                 VARCHAR(100),
     setting_preference_timezone_id                    INTEGER,
     setting_preference_direction_id                   INTEGER,
     setting_preference_arabic_script_id               INTEGER,
-    date_created                                      DATETIME,
+    date_created                                      TIMESTAMP,
     CONSTRAINT user_account_app_hist_pk PRIMARY KEY ( id )
 );
 GRANT SELECT, INSERT ON app_portfolio.user_account_app_hist TO role_app1;
@@ -1137,8 +1140,8 @@ CREATE TABLE app_portfolio.user_account_event (
     user_account_id             INTEGER NOT NULL,
     event_id                    INTEGER NOT NULL,
     event_status_id             INTEGER NOT NULL,
-    date_created                DATETIME NOT NULL,
-    date_modified               DATETIME,
+    date_created                TIMESTAMP NOT NULL,
+    date_modified               TIMESTAMP,
     user_language               VARCHAR(1000),
     user_timezone               VARCHAR(1000),
     user_number_system          VARCHAR(100),
@@ -1162,10 +1165,10 @@ GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.user_account_event TO role
 GRANT ALL PRIVILEGES ON app_portfolio.user_account_event TO role_app_dba;
 
 CREATE TABLE app_portfolio.user_account_follow (
-    id                      INT NOT NULL AUTO_INCREMENT,
+    id                      SERIAL NOT NULL,
     user_account_id         INTEGER NOT NULL,
     user_account_id_follow  INTEGER NOT NULL,
-	date_created            DATETIME,
+	date_created            TIMESTAMP,
     CONSTRAINT user_account_follow_id_un UNIQUE ( id ),
 	CONSTRAINT user_account_follow_pk PRIMARY KEY ( user_account_id, user_account_id_follow )
 );
@@ -1180,13 +1183,13 @@ GRANT ALL PRIVILEGES ON app_portfolio.user_account_follow TO role_app_dba;
 GRANT SELECT, INSERT, DELETE, UPDATE ON app_portfolio.user_account_follow TO role_app2;
 
 CREATE TABLE app_portfolio.user_account_follow_hist (
-    id                      INT NOT NULL AUTO_INCREMENT,
+    id                      SERIAL NOT NULL,
     dml                     VARCHAR(1),
-    dml_date                DATETIME,
+    dml_date                TIMESTAMP,
     user_account_follow_id  INTEGER,
     user_account_id         INTEGER,
     user_account_id_follow  INTEGER,
-    date_created            DATETIME,
+    date_created            TIMESTAMP,
 	CONSTRAINT user_account_follow_hist_pk PRIMARY KEY ( id )
 );
 GRANT SELECT, INSERT ON app_portfolio.user_account_follow_hist TO role_app1;
@@ -1200,21 +1203,21 @@ GRANT ALL PRIVILEGES ON app_portfolio.user_account_follow_hist TO role_app_dba;
 GRANT SELECT, INSERT ON app_portfolio.user_account_follow_hist TO role_app2;
 
 CREATE TABLE app_portfolio.user_account_hist (
-    id                    INT NOT NULL AUTO_INCREMENT,
+    id                    SERIAL NOT NULL,
     dml                   VARCHAR(1),
-    dml_date              DATETIME,
+    dml_date              TIMESTAMP,
     user_account_id       INTEGER,
     username              VARCHAR(100),
     bio                   VARCHAR(150),
     private               DECIMAL(1,0),
     user_level            DECIMAL(1,0),
-    date_created          DATETIME,
-    date_modified         DATETIME,
+    date_created          TIMESTAMP,
+    date_modified         TIMESTAMP,
     password              VARCHAR(100),
     password_reminder     VARCHAR(100),
     email                 VARCHAR(100),
     email_unverified      VARCHAR(100),
-    avatar                LONGBLOB,
+    avatar                BYTEA,
     verification_code     VARCHAR(6),
     active                DECIMAL(1,0),
     identity_provider_id  INTEGER,
@@ -1236,10 +1239,10 @@ GRANT ALL PRIVILEGES ON app_portfolio.user_account_hist TO role_app_dba;
 GRANT SELECT, INSERT ON app_portfolio.user_account_hist TO role_app2;
 
 CREATE TABLE app_portfolio.user_account_like (
-    id                    INT NOT NULL AUTO_INCREMENT,
+    id                    SERIAL NOT NULL,
     user_account_id       INTEGER NOT NULL,
     user_account_id_like  INTEGER NOT NULL,
-	date_created          DATETIME,
+	date_created          TIMESTAMP,
     CONSTRAINT user_account_like_id_un UNIQUE ( id ),
 	CONSTRAINT user_account_like_pk PRIMARY KEY ( user_account_id, user_account_id_like )
 );
@@ -1254,13 +1257,13 @@ GRANT ALL PRIVILEGES ON app_portfolio.user_account_like TO role_app_dba;
 GRANT SELECT, INSERT, DELETE, UPDATE ON app_portfolio.user_account_like TO role_app2;
 
 CREATE TABLE app_portfolio.user_account_like_hist (
-    id                    INT NOT NULL AUTO_INCREMENT,
+    id                    SERIAL NOT NULL,
     dml                   VARCHAR(1),
-    dml_date              DATETIME,
+    dml_date              TIMESTAMP,
     user_account_like_id  INTEGER,
     user_account_id       INTEGER,
     user_account_id_like  INTEGER,
-    date_created          DATETIME,
+    date_created          TIMESTAMP,
 	CONSTRAINT user_account_like_hist_pk PRIMARY KEY ( id )
 );
 GRANT SELECT, INSERT ON app_portfolio.user_account_like_hist TO role_app1;
@@ -1282,7 +1285,7 @@ CREATE TABLE app_portfolio.user_account_logon (
     client_user_agent  VARCHAR(500),
     client_longitude   VARCHAR(100),
     client_latitude    VARCHAR(100),
-    date_created       DATETIME NOT NULL
+    date_created       TIMESTAMP NOT NULL
 );
 GRANT SELECT, INSERT, DELETE, UPDATE ON app_portfolio.user_account_logon TO role_app1;
 
@@ -1303,7 +1306,7 @@ CREATE TABLE app_portfolio.user_account_view (
     client_user_agent     VARCHAR(1000),
     client_longitude      VARCHAR(100),
     client_latitude       VARCHAR(100),
-    date_created          DATETIME NOT NULL
+    date_created          TIMESTAMP NOT NULL
 );
 GRANT SELECT, INSERT, DELETE, UPDATE ON app_portfolio.user_account_view TO role_app1;
 
@@ -1316,16 +1319,16 @@ GRANT ALL PRIVILEGES ON app_portfolio.user_account_view TO role_app_dba;
 GRANT SELECT, INSERT, DELETE, UPDATE ON app_portfolio.user_account_view TO role_app2;
 
 CREATE TABLE app_portfolio.user_account_view_hist (
-    id                    INT NOT NULL AUTO_INCREMENT,
+    id                    SERIAL NOT NULL,
     dml                   VARCHAR(1),
-    dml_date              DATETIME,
+    dml_date              TIMESTAMP,
     user_account_id       INTEGER,
     user_account_id_view  INTEGER,
     client_ip             VARCHAR(1000),
     client_user_agent     VARCHAR(1000),
     client_latitude       VARCHAR(100),
     client_longitude      VARCHAR(100),
-    date_created          DATETIME,
+    date_created          TIMESTAMP,
 	CONSTRAINT user_account_view_hist_pk PRIMARY KEY ( id )
 );
 GRANT SELECT, INSERT ON app_portfolio.user_account_view_hist TO role_app1;
@@ -1706,12 +1709,9 @@ ALTER TABLE app_portfolio.user_account_view
         REFERENCES app_portfolio.user_account ( id )
         ON DELETE CASCADE;
 
-delimiter //
-CREATE TRIGGER app_portfolio.app2_user_setting_after_delete 
-    AFTER DELETE ON app_portfolio.app2_user_setting 
-    FOR EACH ROW 
-BEGIN
-	INSERT INTO app2_user_setting_hist
+CREATE OR REPLACE FUNCTION app_portfolio.app2_user_setting_after_delete() RETURNS TRIGGER LANGUAGE PLPGSQL AS $$
+    BEGIN
+	INSERT INTO app_portfolio.app2_user_setting_hist
 	(dml,
 	dml_date,
 	app2_user_setting_id
@@ -1720,143 +1720,149 @@ BEGIN
 	'D',
 	CURRENT_TIMESTAMP,
 	old.id
-	  FROM app_parameter
+	  FROM app_portfolio.app_parameter
 	 WHERE parameter_name = 'SERVICE_DB_ENABLE_AUDIT'
-	   AND parameter_value= 1;
+	   AND parameter_value= '1';
+    RETURN NULL;
 END; 
-//
+$$;
+CREATE OR REPLACE TRIGGER app2_user_setting_after_delete 
+    AFTER DELETE ON app_portfolio.app2_user_setting 
+    FOR EACH ROW 
+    EXECUTE FUNCTION app_portfolio.app2_user_setting_after_delete();
 
-CREATE TRIGGER app_portfolio.app2_user_setting_after_insert 
+CREATE OR REPLACE FUNCTION app_portfolio.app2_user_setting_after_insert() RETURNS TRIGGER LANGUAGE PLPGSQL AS $$
+    BEGIN
+    INSERT INTO app_portfolio.app2_user_setting_hist
+    (dml,
+    dml_date,
+    app2_user_setting_id,
+    description,
+    regional_language_locale,
+    regional_timezone,
+    regional_number_system,
+    regional_layout_direction,
+    regional_second_language_locale,
+    regional_column_title,
+    regional_arabic_script,
+    regional_calendar_type,
+    regional_calendar_hijri_type,
+    gps_map_type,
+    gps_country_id,
+    gps_city_id,
+    gps_popular_place_id,
+    gps_lat_text,
+    gps_long_text,
+    design_theme_day_id,
+    design_theme_month_id,
+    design_theme_year_id,
+    design_paper_size,
+    design_row_highlight,
+    design_column_weekday_checked,
+    design_column_calendartype_checked,
+    design_column_notes_checked,
+    design_column_gps_checked,
+    design_column_timezone_checked,
+    image_header_image_img,
+    image_footer_image_img,
+    text_header_1_text,
+    text_header_2_text,
+    text_header_3_text,
+    text_header_align,
+    text_footer_1_text,
+    text_footer_2_text,
+    text_footer_3_text,
+    text_footer_align,
+    prayer_method,
+    prayer_asr_method,
+    prayer_high_latitude_adjustment,
+    prayer_time_format,
+    prayer_hijri_date_adjustment,
+    prayer_fajr_iqamat,
+    prayer_dhuhr_iqamat,
+    prayer_asr_iqamat,
+    prayer_maghrib_iqamat,
+    prayer_isha_iqamat,
+    prayer_column_imsak_checked,
+    prayer_column_sunset_checked,
+    prayer_column_midnight_checked,
+    prayer_column_fast_start_end,
+    date_created,
+    date_modified,
+    user_account_app_user_account_id,
+    user_account_app_app_id)
+    SELECT
+    'I',
+    CURRENT_TIMESTAMP,
+    new.id,
+    new.description,
+    new.regional_language_locale,
+    new.regional_timezone,
+    new.regional_number_system,
+    new.regional_layout_direction,
+    new.regional_second_language_locale,
+    new.regional_column_title,
+    new.regional_arabic_script,
+    new.regional_calendar_type,
+    new.regional_calendar_hijri_type,
+    new.gps_map_type,
+    new.gps_country_id,
+    new.gps_city_id,
+    new.gps_popular_place_id,
+    new.gps_lat_text,
+    new.gps_long_text,
+    new.design_theme_day_id,
+    new.design_theme_month_id,
+    new.design_theme_year_id,
+    new.design_paper_size,
+    new.design_row_highlight,
+    new.design_column_weekday_checked,
+    new.design_column_calendartype_checked,
+    new.design_column_notes_checked,
+    new.design_column_gps_checked,
+    new.design_column_timezone_checked,
+    null,
+    null,
+    new.text_header_1_text,
+    new.text_header_2_text,
+    new.text_header_3_text,
+    new.text_header_align,
+    new.text_footer_1_text,
+    new.text_footer_2_text,
+    new.text_footer_3_text,
+    new.text_footer_align,
+    new.prayer_method,
+    new.prayer_asr_method,
+    new.prayer_high_latitude_adjustment,
+    new.prayer_time_format,
+    new.prayer_hijri_date_adjustment,
+    new.prayer_fajr_iqamat,
+    new.prayer_dhuhr_iqamat,
+    new.prayer_asr_iqamat,
+    new.prayer_maghrib_iqamat,
+    new.prayer_isha_iqamat,
+    new.prayer_column_imsak_checked,
+    new.prayer_column_sunset_checked,
+    new.prayer_column_midnight_checked,
+    new.prayer_column_fast_start_end,
+    new.date_created,
+    new.date_modified,
+    new.user_account_app_user_account_id,
+    new.user_account_app_app_id
+    FROM app_portfolio.app_parameter
+    WHERE parameter_name = 'SERVICE_DB_ENABLE_AUDIT'
+    AND   parameter_value= '1';
+    RETURN NULL;
+END; 
+$$;
+CREATE OR REPLACE TRIGGER app2_user_setting_after_insert
     AFTER INSERT ON app_portfolio.app2_user_setting 
     FOR EACH ROW 
-BEGIN
-INSERT INTO app2_user_setting_hist
-(dml,
-dml_date,
-app2_user_setting_id,
-description,
-regional_language_locale,
-regional_timezone,
-regional_number_system,
-regional_layout_direction,
-regional_second_language_locale,
-regional_column_title,
-regional_arabic_script,
-regional_calendar_type,
-regional_calendar_hijri_type,
-gps_map_type,
-gps_country_id,
-gps_city_id,
-gps_popular_place_id,
-gps_lat_text,
-gps_long_text,
-design_theme_day_id,
-design_theme_month_id,
-design_theme_year_id,
-design_paper_size,
-design_row_highlight,
-design_column_weekday_checked,
-design_column_calendartype_checked,
-design_column_notes_checked,
-design_column_gps_checked,
-design_column_timezone_checked,
-image_header_image_img,
-image_footer_image_img,
-text_header_1_text,
-text_header_2_text,
-text_header_3_text,
-text_header_align,
-text_footer_1_text,
-text_footer_2_text,
-text_footer_3_text,
-text_footer_align,
-prayer_method,
-prayer_asr_method,
-prayer_high_latitude_adjustment,
-prayer_time_format,
-prayer_hijri_date_adjustment,
-prayer_fajr_iqamat,
-prayer_dhuhr_iqamat,
-prayer_asr_iqamat,
-prayer_maghrib_iqamat,
-prayer_isha_iqamat,
-prayer_column_imsak_checked,
-prayer_column_sunset_checked,
-prayer_column_midnight_checked,
-prayer_column_fast_start_end,
-date_created,
-date_modified,
-user_account_app_user_account_id,
-user_account_app_app_id)
-SELECT
-'I',
-CURRENT_TIMESTAMP,
-new.id,
-new.description,
-new.regional_language_locale,
-new.regional_timezone,
-new.regional_number_system,
-new.regional_layout_direction,
-new.regional_second_language_locale,
-new.regional_column_title,
-new.regional_arabic_script,
-new.regional_calendar_type,
-new.regional_calendar_hijri_type,
-new.gps_map_type,
-new.gps_country_id,
-new.gps_city_id,
-new.gps_popular_place_id,
-new.gps_lat_text,
-new.gps_long_text,
-new.design_theme_day_id,
-new.design_theme_month_id,
-new.design_theme_year_id,
-new.design_paper_size,
-new.design_row_highlight,
-new.design_column_weekday_checked,
-new.design_column_calendartype_checked,
-new.design_column_notes_checked,
-new.design_column_gps_checked,
-new.design_column_timezone_checked,
-null,
-null,
-new.text_header_1_text,
-new.text_header_2_text,
-new.text_header_3_text,
-new.text_header_align,
-new.text_footer_1_text,
-new.text_footer_2_text,
-new.text_footer_3_text,
-new.text_footer_align,
-new.prayer_method,
-new.prayer_asr_method,
-new.prayer_high_latitude_adjustment,
-new.prayer_time_format,
-new.prayer_hijri_date_adjustment,
-new.prayer_fajr_iqamat,
-new.prayer_dhuhr_iqamat,
-new.prayer_asr_iqamat,
-new.prayer_maghrib_iqamat,
-new.prayer_isha_iqamat,
-new.prayer_column_imsak_checked,
-new.prayer_column_sunset_checked,
-new.prayer_column_midnight_checked,
-new.prayer_column_fast_start_end,
-new.date_created,
-new.date_modified,
-new.user_account_app_user_account_id,
-new.user_account_app_app_id
-FROM app_parameter
-WHERE parameter_name = 'SERVICE_DB_ENABLE_AUDIT'
-AND   parameter_value= 1;
-END; 
-//
+EXECUTE FUNCTION app_portfolio.app2_user_setting_after_insert();
 
-CREATE TRIGGER app_portfolio.app2_user_setting_after_update 
-    AFTER UPDATE ON app_portfolio.app2_user_setting 
-    FOR EACH ROW 
+CREATE OR REPLACE FUNCTION app_portfolio.app2_user_setting_after_update() RETURNS TRIGGER LANGUAGE PLPGSQL AS $$
 BEGIN
-INSERT INTO app2_user_setting_hist
+INSERT INTO app_portfolio.app2_user_setting_hist
 (dml,
 dml_date,
 app2_user_setting_id,
@@ -1972,17 +1978,22 @@ new.date_created,
 new.date_modified,
 new.user_account_app_user_account_id,
 new.user_account_app_app_id
-FROM app_parameter
+FROM app_portfolio.app_parameter
 WHERE parameter_name = 'SERVICE_DB_ENABLE_AUDIT'
-AND   parameter_value= 1;
+AND   parameter_value= '1';
+RETURN NULL;
 END; 
-//
+$$;
 
-CREATE TRIGGER app_portfolio.app2_user_setting_like_after_delete 
-    AFTER DELETE ON app_portfolio.app2_user_setting_like 
+CREATE OR REPLACE TRIGGER app2_user_setting_after_update
+    AFTER INSERT ON app_portfolio.app2_user_setting 
     FOR EACH ROW 
+EXECUTE FUNCTION app_portfolio.app2_user_setting_after_update();
+
+
+CREATE OR REPLACE FUNCTION app_portfolio.app2_user_setting_like_after_delete() RETURNS TRIGGER LANGUAGE PLPGSQL AS $$
 BEGIN
-	INSERT INTO app2_user_setting_like_hist
+	INSERT INTO app_portfolio.app2_user_setting_like_hist
 	(dml,
 	dml_date,
 	app2_user_setting_like_id,
@@ -1994,17 +2005,22 @@ BEGIN
 	old.id,
 	old.user_account_id,
 	old.app2_user_setting_id
-	FROM app_parameter
+	FROM app_portfolio.app_parameter
 	WHERE parameter_name = 'SERVICE_DB_ENABLE_AUDIT'
-	AND   parameter_value= 1;
+	AND   parameter_value= '1';
+    RETURN NULL;
 END; 
-//
+$$;
 
-CREATE TRIGGER app_portfolio.app2_user_setting_like_after_insert 
-    AFTER INSERT ON app_portfolio.app2_user_setting_like 
+CREATE OR REPLACE TRIGGER app2_user_setting_like_after_delete 
+    AFTER DELETE ON app_portfolio.app2_user_setting_like 
     FOR EACH ROW 
+    EXECUTE FUNCTION app_portfolio.app2_user_setting_like_after_delete();
+
+
+CREATE OR REPLACE FUNCTION app_portfolio.app2_user_setting_like_after_insert() RETURNS TRIGGER LANGUAGE PLPGSQL AS $$
 BEGIN
-INSERT INTO app2_user_setting_like_hist
+INSERT INTO app_portfolio.app2_user_setting_like_hist
 (dml,
 dml_date,
 app2_user_setting_like_id,
@@ -2018,17 +2034,20 @@ new.id,
 new.user_account_id,
 new.app2_user_setting_id,
 new.date_created
-FROM app_parameter
+FROM app_portfolio.app_parameter
 WHERE parameter_name = 'SERVICE_DB_ENABLE_AUDIT'
-AND   parameter_value= 1;
+AND   parameter_value= '1';
+RETURN NULL;
 END; 
-//
-
-CREATE TRIGGER app_portfolio.app2_user_setting_like_after_update 
-    AFTER UPDATE ON app_portfolio.app2_user_setting_like 
+$$;
+CREATE OR REPLACE TRIGGER app2_user_setting_like_after_insert 
+    AFTER INSERT ON app_portfolio.app2_user_setting_like 
     FOR EACH ROW 
+    EXECUTE FUNCTION app_portfolio.app2_user_setting_like_after_insert();
+
+CREATE OR REPLACE FUNCTION app_portfolio.app2_user_setting_like_after_update() RETURNS TRIGGER LANGUAGE PLPGSQL AS $$
 BEGIN
-INSERT INTO app2_user_setting_like_hist
+INSERT INTO app_portfolio.app2_user_setting_like_hist
 (dml,
 dml_date,
 app2_user_setting_like_id,
@@ -2042,17 +2061,20 @@ new.id,
 new.user_account_id,
 new.app2_user_setting_id,
 new.date_created
-FROM app_parameter
+FROM app_portfolio.app_parameter
 WHERE parameter_name = 'SERVICE_DB_ENABLE_AUDIT'
-AND   parameter_value= 1;
+AND   parameter_value= '1';
+RETURN NULL;
 END; 
-//
-
-CREATE TRIGGER app_portfolio.app2_user_setting_view_after_delete 
-    AFTER DELETE ON app_portfolio.app2_user_setting_view 
+$$;
+CREATE OR REPLACE TRIGGER app2_user_setting_like_after_update 
+    AFTER UPDATE ON app_portfolio.app2_user_setting_like 
     FOR EACH ROW 
+    EXECUTE FUNCTION app_portfolio.app2_user_setting_like_after_update();
+
+CREATE OR REPLACE FUNCTION app_portfolio.app2_user_setting_view_after_delete() RETURNS TRIGGER LANGUAGE PLPGSQL AS $$
 BEGIN
-	INSERT INTO app2_user_setting_view_hist
+	INSERT INTO app_portfolio.app2_user_setting_view_hist
 	(dml,
 	dml_date,
 	user_account_id,
@@ -2062,17 +2084,20 @@ BEGIN
 	CURRENT_TIMESTAMP,
 	old.user_account_id,
 	old.app2_user_setting_id
-	FROM app_parameter
+	FROM app_portfolio.app_parameter
 	WHERE parameter_name = 'SERVICE_DB_ENABLE_AUDIT'
-	AND   parameter_value= 1;
+	AND   parameter_value= '1';
+    RETURN NULL;
 END; 
-//
-
-CREATE TRIGGER app_portfolio.app2_user_setting_view_after_insert 
-    AFTER INSERT ON app_portfolio.app2_user_setting_view 
+$$;
+CREATE OR REPLACE TRIGGER app2_user_setting_view_after_delete 
+    AFTER DELETE ON app_portfolio.app2_user_setting_view 
     FOR EACH ROW 
+    EXECUTE FUNCTION app_portfolio.app2_user_setting_view_after_delete();
+
+CREATE OR REPLACE FUNCTION app_portfolio.app2_user_setting_view_after_insert() RETURNS TRIGGER LANGUAGE PLPGSQL AS $$
 BEGIN
-INSERT INTO app2_user_setting_view_hist
+INSERT INTO app_portfolio.app2_user_setting_view_hist
 (dml,
 dml_date,
 user_account_id,
@@ -2092,17 +2117,22 @@ new.client_user_agent,
 new.client_longitude,
 new.client_latitude,
 new.date_created
-FROM app_parameter
+FROM app_portfolio.app_parameter
 WHERE parameter_name = 'SERVICE_DB_ENABLE_AUDIT'
-AND   parameter_value= 1;
+AND   parameter_value= '1';
+RETURN NULL;
 END; 
-//
+$$;
 
-CREATE TRIGGER app_portfolio.app2_user_setting_view_after_update 
-    AFTER UPDATE ON app_portfolio.app2_user_setting_view 
+CREATE OR REPLACE TRIGGER app2_user_setting_view_after_insert 
+    AFTER INSERT ON app_portfolio.app2_user_setting_view 
     FOR EACH ROW 
+    EXECUTE FUNCTION app_portfolio.app2_user_setting_view_after_insert();
+
+
+CREATE OR REPLACE FUNCTION app_portfolio.app2_user_setting_view_after_update() RETURNS TRIGGER LANGUAGE PLPGSQL AS $$
 BEGIN
-INSERT INTO app2_user_setting_view_hist
+INSERT INTO app_portfolio.app2_user_setting_view_hist
 (dml,
 dml_date,
 user_account_id,
@@ -2122,17 +2152,21 @@ new.client_user_agent,
 new.client_longitude,
 new.client_latitude,
 new.date_created
-FROM app_parameter
+FROM app_portfolio.app_parameter
 WHERE parameter_name = 'SERVICE_DB_ENABLE_AUDIT'
-AND   parameter_value= 1;
+AND   parameter_value= '1';
+RETURN NULL;
 END; 
-//
+$$;
 
-CREATE TRIGGER app_portfolio.user_account_after_delete 
-    AFTER DELETE ON app_portfolio.user_account 
+CREATE OR REPLACE TRIGGER app2_user_setting_view_after_update 
+    AFTER UPDATE ON app_portfolio.app2_user_setting_view 
     FOR EACH ROW 
+    EXECUTE FUNCTION app_portfolio.app2_user_setting_view_after_update();
+
+CREATE OR REPLACE FUNCTION app_portfolio.user_account_after_delete() RETURNS TRIGGER LANGUAGE PLPGSQL AS $$
 BEGIN
-	INSERT INTO user_account_hist
+	INSERT INTO app_portfolio.user_account_hist
 	(dml,
  	dml_date,
  	user_account_id)
@@ -2140,17 +2174,21 @@ BEGIN
  	'D',
  	CURRENT_TIMESTAMP,
  	old.id
-	FROM app_parameter
+	FROM app_portfolio.app_parameter
     WHERE parameter_name = 'SERVICE_DB_ENABLE_AUDIT'
-	 AND parameter_value= 1;
+	 AND parameter_value= '1';
+     RETURN NULL;
 END; 
-//
+$$;
 
-CREATE TRIGGER app_portfolio.user_account_after_insert 
-    AFTER INSERT ON app_portfolio.user_account 
+CREATE OR REPLACE TRIGGER user_account_after_delete 
+    AFTER DELETE ON app_portfolio.user_account 
     FOR EACH ROW 
+    EXECUTE FUNCTION app_portfolio.user_account_after_delete();
+
+CREATE OR REPLACE FUNCTION app_portfolio.user_account_after_insert() RETURNS TRIGGER LANGUAGE PLPGSQL AS $$
 BEGIN
-	INSERT INTO user_account_hist
+	INSERT INTO app_portfolio.user_account_hist
 	(dml,
 	dml_date,
 	user_account_id,
@@ -2196,17 +2234,22 @@ BEGIN
 	new.provider_last_name,
 	new.provider_image_url,
 	new.provider_email
-	FROM app_parameter
+	FROM app_portfolio.app_parameter
     WHERE parameter_name = 'SERVICE_DB_ENABLE_AUDIT'
-      AND parameter_value= 1;
+      AND parameter_value= '1';
+    RETURN NULL;
 END; 
-//
+$$;
 
-CREATE TRIGGER app_portfolio.user_account_after_update 
-    AFTER UPDATE ON app_portfolio.user_account 
+CREATE OR REPLACE TRIGGER user_account_after_insert 
+    AFTER INSERT ON app_portfolio.user_account 
     FOR EACH ROW 
+    EXECUTE FUNCTION app_portfolio.user_account_after_insert();
+
+
+CREATE OR REPLACE FUNCTION app_portfolio.user_account_after_update() RETURNS TRIGGER LANGUAGE PLPGSQL AS $$
 BEGIN
-	INSERT INTO user_account_hist
+	INSERT INTO app_portfolio.user_account_hist
 		(dml,
 		dml_date,
 		user_account_id,
@@ -2252,17 +2295,21 @@ BEGIN
 		new.provider_last_name,
 		new.provider_image_url,
 		new.provider_email
-		FROM app_parameter
+		FROM app_portfolio.app_parameter
 	    WHERE parameter_name = 'SERVICE_DB_ENABLE_AUDIT'
-           AND parameter_value= 1;
+           AND parameter_value= '1';
+        RETURN NULL;
 END; 
-//
+$$;
 
-CREATE TRIGGER app_portfolio.user_account_app_after_delete 
-    AFTER DELETE ON app_portfolio.user_account_app 
+CREATE OR REPLACE TRIGGER user_account_after_update 
+    AFTER UPDATE ON app_portfolio.user_account 
     FOR EACH ROW 
+    EXECUTE FUNCTION app_portfolio.user_account_after_update();
+
+CREATE OR REPLACE FUNCTION app_portfolio.user_account_app_after_delete() RETURNS TRIGGER LANGUAGE PLPGSQL AS $$
 BEGIN
-	INSERT INTO user_account_app_hist
+	INSERT INTO app_portfolio.user_account_app_hist
 	(dml,
 	dml_date,
 	user_account_id,
@@ -2272,17 +2319,21 @@ BEGIN
 	CURRENT_TIMESTAMP,
 	old.user_account_id,
 	old.app_id
-	FROM app_parameter
+	FROM app_portfolio.app_parameter
 	WHERE parameter_name = 'SERVICE_DB_ENABLE_AUDIT'
-	AND   parameter_value= 1;
+	AND   parameter_value= '1';
+    RETURN NULL;
 END; 
-//
+$$;
 
-CREATE TRIGGER app_portfolio.user_account_app_after_insert 
-    AFTER INSERT ON app_portfolio.user_account_app 
+CREATE OR REPLACE TRIGGER user_account_app_after_delete 
+    AFTER DELETE ON app_portfolio.user_account_app 
     FOR EACH ROW 
+    EXECUTE FUNCTION app_portfolio.user_account_app_after_delete();
+
+CREATE OR REPLACE FUNCTION app_portfolio.user_account_app_after_insert() RETURNS TRIGGER LANGUAGE PLPGSQL AS $$
 BEGIN
-INSERT INTO user_account_app_hist
+INSERT INTO app_portfolio.user_account_app_hist
 (dml,
 dml_date,
 user_account_id,
@@ -2302,17 +2353,21 @@ new.setting_preference_timezone_id,
 new.setting_preference_direction_id,
 new.setting_preference_arabic_script_id,
 new.date_created
-FROM app_parameter
+FROM app_portfolio.app_parameter
 WHERE parameter_name = 'SERVICE_DB_ENABLE_AUDIT'
-AND   parameter_value= 1;
+AND   parameter_value= '1';
+RETURN NULL;
 END; 
-//
+$$;
 
-CREATE TRIGGER app_portfolio.user_account_app_after_update 
-    AFTER UPDATE ON app_portfolio.user_account_app 
+CREATE OR REPLACE TRIGGER user_account_app_after_insert 
+    AFTER INSERT ON app_portfolio.user_account_app 
     FOR EACH ROW 
+    EXECUTE FUNCTION app_portfolio.user_account_app_after_insert();
+
+CREATE OR REPLACE FUNCTION app_portfolio.user_account_app_after_update() RETURNS TRIGGER LANGUAGE PLPGSQL AS $$
 BEGIN
-INSERT INTO user_account_app_hist
+INSERT INTO app_portfolio.user_account_app_hist
 (dml,
 dml_date,
 user_account_id,
@@ -2332,17 +2387,21 @@ new.setting_preference_timezone_id,
 new.setting_preference_direction_id,
 new.setting_preference_arabic_script_id,
 new.date_created
-FROM app_parameter
+FROM app_portfolio.app_parameter
 WHERE parameter_name = 'SERVICE_DB_ENABLE_AUDIT'
-AND   parameter_value= 1;
+AND   parameter_value= '1';
+RETURN NULL;
 END; 
-//
+$$;
 
-CREATE TRIGGER app_portfolio.user_account_follow_after_delete 
-    AFTER DELETE ON app_portfolio.user_account_follow 
+CREATE OR REPLACE TRIGGER user_account_app_after_update 
+    AFTER UPDATE ON app_portfolio.user_account_app 
     FOR EACH ROW 
+    EXECUTE FUNCTION app_portfolio.user_account_app_after_update();
+
+CREATE OR REPLACE FUNCTION app_portfolio.user_account_follow_after_delete() RETURNS TRIGGER LANGUAGE PLPGSQL AS $$
 BEGIN
-INSERT INTO user_account_follow_hist
+INSERT INTO app_portfolio.user_account_follow_hist
 (dml,
 dml_date,
 user_account_follow_id,
@@ -2354,17 +2413,21 @@ CURRENT_TIMESTAMP,
 old.id,
 old.user_account_id,
 old.user_account_id_follow
-FROM app_parameter
+FROM app_portfolio.app_parameter
 WHERE parameter_name = 'SERVICE_DB_ENABLE_AUDIT'
-AND   parameter_value= 1;
+AND   parameter_value= '1';
+RETURN NULL;
 END; 
-//
+$$;
 
-CREATE TRIGGER app_portfolio.user_account_follow_after_insert 
-    AFTER INSERT ON app_portfolio.user_account_follow 
+CREATE OR REPLACE TRIGGER user_account_follow_after_delete 
+    AFTER DELETE ON app_portfolio.user_account_follow 
     FOR EACH ROW 
+    EXECUTE FUNCTION app_portfolio.user_account_follow_after_delete();
+    
+CREATE OR REPLACE FUNCTION app_portfolio.user_account_follow_after_insert() RETURNS TRIGGER LANGUAGE PLPGSQL AS $$
 BEGIN
-INSERT INTO user_account_follow_hist
+INSERT INTO app_portfolio.user_account_follow_hist
 (dml,
 dml_date,
 user_account_follow_id,
@@ -2378,17 +2441,21 @@ new.id,
 new.user_account_id,
 new.user_account_id_follow,
 new.date_created
-FROM app_parameter
+FROM app_portfolio.app_parameter
 WHERE parameter_name = 'SERVICE_DB_ENABLE_AUDIT'
-AND   parameter_value= 1;
+AND   parameter_value= '1';
+RETURN NULL;
 END; 
-//
+$$;
 
-CREATE TRIGGER app_portfolio.user_account_follow_after_update 
-    AFTER UPDATE ON app_portfolio.user_account_follow 
+CREATE OR REPLACE TRIGGER user_account_follow_after_insert 
+    AFTER INSERT ON app_portfolio.user_account_follow 
     FOR EACH ROW 
+    EXECUTE FUNCTION app_portfolio.user_account_follow_after_insert();
+
+CREATE OR REPLACE FUNCTION app_portfolio.user_account_follow_after_update() RETURNS TRIGGER LANGUAGE PLPGSQL AS $$
 BEGIN
-INSERT INTO user_account_follow_hist
+INSERT INTO app_portfolio.user_account_follow_hist
 (dml,
 dml_date,
 user_account_follow_id,
@@ -2402,17 +2469,21 @@ new.id,
 new.user_account_id,
 new.user_account_id_follow,
 new.date_created
-FROM app_parameter
+FROM app_portfolio.app_parameter
 WHERE parameter_name = 'SERVICE_DB_ENABLE_AUDIT'
-AND   parameter_value= 1;
+AND   parameter_value= '1';
+RETURN NULL;
 END; 
-//
+$$;
 
-CREATE TRIGGER app_portfolio.user_account_like_after_delete 
-    AFTER DELETE ON app_portfolio.user_account_like 
+CREATE OR REPLACE TRIGGER user_account_follow_after_update 
+    AFTER UPDATE ON app_portfolio.user_account_follow 
     FOR EACH ROW 
+    EXECUTE FUNCTION app_portfolio.user_account_follow_after_update();
+
+CREATE OR REPLACE FUNCTION app_portfolio.user_account_like_after_delete() RETURNS TRIGGER LANGUAGE PLPGSQL AS $$
 BEGIN
-	INSERT INTO user_account_like_hist
+	INSERT INTO app_portfolio.user_account_like_hist
 	(dml,
 	dml_date,
 	user_account_like_id,
@@ -2424,17 +2495,21 @@ BEGIN
 	old.id,
 	old.user_account_id,
 	old.user_account_id_like
-	FROM app_parameter
+	FROM app_portfolio.app_parameter
 	WHERE parameter_name = 'SERVICE_DB_ENABLE_AUDIT'
-	AND   parameter_value= 1;
+	AND   parameter_value= '1';
+    RETURN NULL;
 END; 
-//
+$$;
 
-CREATE TRIGGER app_portfolio.user_account_like_after_insert 
-    AFTER INSERT ON app_portfolio.user_account_like 
+CREATE OR REPLACE TRIGGER user_account_like_after_delete 
+    AFTER DELETE ON app_portfolio.user_account_like 
     FOR EACH ROW 
+    EXECUTE FUNCTION app_portfolio.user_account_like_after_delete();
+
+CREATE OR REPLACE FUNCTION app_portfolio.user_account_like_after_insert() RETURNS TRIGGER LANGUAGE PLPGSQL AS $$
 BEGIN
-INSERT INTO user_account_like_hist
+INSERT INTO app_portfolio.user_account_like_hist
 (dml,
 dml_date,
 user_account_like_id,
@@ -2448,17 +2523,21 @@ new.id,
 new.user_account_id,
 new.user_account_id_like,
 new.date_created
-FROM app_parameter
+FROM app_portfolio.app_parameter
 WHERE parameter_name = 'SERVICE_DB_ENABLE_AUDIT'
-AND   parameter_value= 1;
+AND   parameter_value= '1';
+RETURN NULL;
 END; 
-//
+$$;
 
-CREATE TRIGGER app_portfolio.user_account_like_after_update 
-    AFTER UPDATE ON app_portfolio.user_account_like 
+CREATE OR REPLACE TRIGGER user_account_like_after_insert 
+    AFTER INSERT ON app_portfolio.user_account_like 
     FOR EACH ROW 
+    EXECUTE FUNCTION app_portfolio.user_account_like_after_insert();
+
+CREATE OR REPLACE FUNCTION app_portfolio.user_account_like_after_update() RETURNS TRIGGER LANGUAGE PLPGSQL AS $$
 BEGIN
-INSERT INTO user_account_like_hist
+INSERT INTO app_portfolio.user_account_like_hist
 (dml,
 dml_date,
 user_account_like_id,
@@ -2472,17 +2551,21 @@ new.id,
 new.user_account_id,
 new.user_account_id_like,
 new.date_created
-FROM app_parameter
+FROM app_portfolio.app_parameter
 WHERE parameter_name = 'SERVICE_DB_ENABLE_AUDIT'
-AND   parameter_value= 1;
+AND   parameter_value= '1';
+RETURN NULL;
 END; 
-//
+$$;
 
-CREATE TRIGGER app_portfolio.user_account_view_after_delete 
-    AFTER DELETE ON app_portfolio.user_account_view 
+CREATE OR REPLACE TRIGGER user_account_like_after_update 
+    AFTER UPDATE ON app_portfolio.user_account_like 
     FOR EACH ROW 
+    EXECUTE FUNCTION app_portfolio.user_account_like_after_update();
+
+CREATE OR REPLACE FUNCTION app_portfolio.user_account_view_after_delete() RETURNS TRIGGER LANGUAGE PLPGSQL AS $$
 BEGIN
-	INSERT INTO user_account_view_hist
+	INSERT INTO app_portfolio.user_account_view_hist
 	(dml,
 	dml_date,
 	user_account_id,
@@ -2492,17 +2575,21 @@ BEGIN
 	CURRENT_TIMESTAMP,
 	old.user_account_id,
 	old.user_account_id_view
-	FROM app_parameter
+	FROM app_portfolio.app_parameter
 	WHERE parameter_name = 'SERVICE_DB_ENABLE_AUDIT'
-	AND   parameter_value= 1;
+	AND   parameter_value= '1';
+    RETURN NULL;
 END; 
-//
+$$;
 
-CREATE TRIGGER app_portfolio.user_account_view_after_insert 
-    AFTER INSERT ON app_portfolio.user_account_view 
+CREATE OR REPLACE TRIGGER user_account_view_after_delete 
+    AFTER DELETE ON app_portfolio.user_account_view 
     FOR EACH ROW 
+    EXECUTE FUNCTION app_portfolio.user_account_view_after_delete();
+
+CREATE OR REPLACE FUNCTION app_portfolio.user_account_view_after_insert() RETURNS TRIGGER LANGUAGE PLPGSQL AS $$
 BEGIN
-INSERT INTO user_account_view_hist
+INSERT INTO app_portfolio.user_account_view_hist
 (dml,
 dml_date,
 user_account_id,
@@ -2522,17 +2609,21 @@ new.client_user_agent,
 new.client_longitude,
 new.client_latitude,
 new.date_created
-FROM app_parameter
+FROM app_portfolio.app_parameter
 WHERE parameter_name = 'SERVICE_DB_ENABLE_AUDIT'
-AND   parameter_value= 1;
+AND   parameter_value= '1';
+RETURN NULL;
 END; 
-//
+$$;
 
-CREATE TRIGGER app_portfolio.user_account_view_after_update 
-    AFTER UPDATE ON app_portfolio.user_account_view 
+CREATE OR REPLACE TRIGGER user_account_view_after_insert 
+    AFTER INSERT ON app_portfolio.user_account_view 
     FOR EACH ROW 
+    EXECUTE FUNCTION app_portfolio.user_account_view_after_insert();
+
+CREATE OR REPLACE FUNCTION app_portfolio.user_account_view_after_update() RETURNS TRIGGER LANGUAGE PLPGSQL AS $$
 BEGIN
-INSERT INTO user_account_view_hist
+INSERT INTO app_portfolio.user_account_view_hist
 (dml,
 dml_date,
 user_account_id,
@@ -2552,8 +2643,126 @@ new.client_user_agent,
 new.client_longitude,
 new.client_latitude,
 new.date_created
-FROM app_parameter
+FROM app_portfolio.app_parameter
 WHERE parameter_name = 'SERVICE_DB_ENABLE_AUDIT'
-AND   parameter_value= 1;
+AND   parameter_value= '1';
+RETURN NULL;
 END; 
-//
+$$;
+
+CREATE OR REPLACE TRIGGER user_account_view_after_update 
+    AFTER UPDATE ON app_portfolio.user_account_view 
+    FOR EACH ROW 
+    EXECUTE FUNCTION app_portfolio.user_account_view_after_update();
+
+
+/*grant to all sequences created for SERIAL columns*/
+GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA app_portfolio TO role_app_admin;
+GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA app_portfolio TO role_app1;
+GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA app_portfolio TO role_app2;
+GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA app_portfolio TO role_app3;
+
+/*if tables are created logged in as postgres, then change owner of tables to app_portfolio
+when postgres user logged in to app_portfolio database
+SELECT format( 'ALTER TABLE %I OWNER TO app_portfolio;', tablename)
+FROM pg_catalog.pg_tables 
+WHERE schemaname = 'app_portfolio';
+*/
+ALTER TABLE app_portfolio.app_category_translation OWNER TO app_portfolio;
+ALTER TABLE app_portfolio.app_device OWNER TO app_portfolio;
+ALTER TABLE app_portfolio.app_category OWNER TO app_portfolio;
+ALTER TABLE app_portfolio.app_object_translation OWNER TO app_portfolio;
+ALTER TABLE app_portfolio.app_parameter OWNER TO app_portfolio;
+ALTER TABLE app_portfolio.device_type OWNER TO app_portfolio;
+ALTER TABLE app_portfolio.event OWNER TO app_portfolio;
+ALTER TABLE app_portfolio.app2_place OWNER TO app_portfolio;
+ALTER TABLE app_portfolio.app2_user_setting_hist OWNER TO app_portfolio;
+ALTER TABLE app_portfolio.app2_group_place OWNER TO app_portfolio;
+ALTER TABLE app_portfolio.app2_theme_category OWNER TO app_portfolio;
+ALTER TABLE app_portfolio.app2_theme OWNER TO app_portfolio;
+ALTER TABLE app_portfolio.app2_user_setting_like_hist OWNER TO app_portfolio;
+ALTER TABLE app_portfolio.app_screenshot OWNER TO app_portfolio;
+ALTER TABLE app_portfolio.app2_user_setting_like OWNER TO app_portfolio;
+ALTER TABLE app_portfolio.app2_user_setting_view OWNER TO app_portfolio;
+ALTER TABLE app_portfolio.app2_user_setting_view_hist OWNER TO app_portfolio;
+ALTER TABLE app_portfolio.device OWNER TO app_portfolio;
+ALTER TABLE app_portfolio.country OWNER TO app_portfolio;
+ALTER TABLE app_portfolio.country_group OWNER TO app_portfolio;
+ALTER TABLE app_portfolio.country_translation OWNER TO app_portfolio;
+ALTER TABLE app_portfolio.language OWNER TO app_portfolio;
+ALTER TABLE app_portfolio.event_type OWNER TO app_portfolio;
+ALTER TABLE app_portfolio.event_status OWNER TO app_portfolio;
+ALTER TABLE app_portfolio.identity_provider OWNER TO app_portfolio;
+ALTER TABLE app_portfolio.language_translation OWNER TO app_portfolio;
+ALTER TABLE app_portfolio.locale OWNER TO app_portfolio;
+ALTER TABLE app_portfolio.message OWNER TO app_portfolio;
+ALTER TABLE app_portfolio.parameter_type OWNER TO app_portfolio;
+ALTER TABLE app_portfolio.message_level OWNER TO app_portfolio;
+ALTER TABLE app_portfolio.message_type OWNER TO app_portfolio;
+ALTER TABLE app_portfolio.message_translation OWNER TO app_portfolio;
+ALTER TABLE app_portfolio.profile_search OWNER TO app_portfolio;
+ALTER TABLE app_portfolio.setting_type OWNER TO app_portfolio;
+ALTER TABLE app_portfolio.user_account_app_hist OWNER TO app_portfolio;
+ALTER TABLE app_portfolio.setting OWNER TO app_portfolio;
+ALTER TABLE app_portfolio.setting_translation OWNER TO app_portfolio;
+ALTER TABLE app_portfolio.user_account_follow_hist OWNER TO app_portfolio;
+ALTER TABLE app_portfolio.user_account_event OWNER TO app_portfolio;
+ALTER TABLE app_portfolio.user_account_hist OWNER TO app_portfolio;
+ALTER TABLE app_portfolio.app2_user_setting OWNER TO app_portfolio;
+ALTER TABLE app_portfolio.user_account_view_hist OWNER TO app_portfolio;
+ALTER TABLE app_portfolio.user_account OWNER TO app_portfolio;
+ALTER TABLE app_portfolio.user_account_like_hist OWNER TO app_portfolio;
+ALTER TABLE app_portfolio.user_account_app OWNER TO app_portfolio;
+ALTER TABLE app_portfolio.user_account_follow OWNER TO app_portfolio;
+ALTER TABLE app_portfolio.user_account_like OWNER TO app_portfolio;
+ALTER TABLE app_portfolio.app OWNER TO app_portfolio;
+ALTER TABLE app_portfolio.app_message OWNER TO app_portfolio;
+ALTER TABLE app_portfolio.app_object OWNER TO app_portfolio;
+ALTER TABLE app_portfolio.app_object_item OWNER TO app_portfolio;
+ALTER TABLE app_portfolio.app_object_item_subitem OWNER TO app_portfolio;
+ALTER TABLE app_portfolio.app_object_item_translation OWNER TO app_portfolio;
+ALTER TABLE app_portfolio.app_object_subitem_translation OWNER TO app_portfolio;
+ALTER TABLE app_portfolio.app2_theme_type OWNER TO app_portfolio;
+ALTER TABLE app_portfolio.user_account_logon OWNER TO app_portfolio;
+ALTER TABLE app_portfolio.user_account_view OWNER TO app_portfolio;
+ALTER TABLE app_portfolio.app_log OWNER TO app_portfolio;
+
+/*if tables are created logged in as postgres, then change owner of sequences to app_portfolio
+this is implicitly already done in changning owner of tables
+list of sequences created:
+SELECT format( 'ALTER SEQUENCE %I OWNER TO app_portfolio;', sequencename)       
+FROM pg_catalog.pg_sequences 
+WHERE schemaname = 'app_portfolio';
+
+ALTER SEQUENCE app_portfolio.app_log_id_seq OWNER TO app_portfolio;
+ALTER SEQUENCE app_portfolio.app_category_id_seq OWNER TO app_portfolio;
+ALTER SEQUENCE app_portfolio.event_id_seq OWNER TO app_portfolio;
+ALTER SEQUENCE app_portfolio.event_status_id_seq OWNER TO app_portfolio;
+ALTER SEQUENCE app_portfolio.app_screenshot_id_seq OWNER TO app_portfolio;
+ALTER SEQUENCE app_portfolio.app2_group_place_id_seq OWNER TO app_portfolio;
+ALTER SEQUENCE app_portfolio.app2_user_setting_id_seq OWNER TO app_portfolio;
+ALTER SEQUENCE app_portfolio.app2_theme_category_id_seq OWNER TO app_portfolio;
+ALTER SEQUENCE app_portfolio.app2_theme_type_id_seq OWNER TO app_portfolio;
+ALTER SEQUENCE app_portfolio.app2_user_setting_hist_id_seq OWNER TO app_portfolio;
+ALTER SEQUENCE app_portfolio.user_account_view_hist_id_seq OWNER TO app_portfolio;
+ALTER SEQUENCE app_portfolio.user_account_like_id_seq OWNER TO app_portfolio;
+ALTER SEQUENCE app_portfolio.app2_user_setting_like_hist_id_seq OWNER TO app_portfolio;
+ALTER SEQUENCE app_portfolio.app2_user_setting_like_id_seq OWNER TO app_portfolio;
+ALTER SEQUENCE app_portfolio.app2_user_setting_view_hist_id_seq OWNER TO app_portfolio;
+ALTER SEQUENCE app_portfolio.country_id_seq OWNER TO app_portfolio;
+ALTER SEQUENCE app_portfolio.country_group_id_seq OWNER TO app_portfolio;
+ALTER SEQUENCE app_portfolio.device_type_id_seq OWNER TO app_portfolio;
+ALTER SEQUENCE app_portfolio.device_id_seq OWNER TO app_portfolio;
+ALTER SEQUENCE app_portfolio.event_type_id_seq OWNER TO app_portfolio;
+ALTER SEQUENCE app_portfolio.language_id_seq OWNER TO app_portfolio;
+ALTER SEQUENCE app_portfolio.message_level_id_seq OWNER TO app_portfolio;
+ALTER SEQUENCE app_portfolio.message_type_id_seq OWNER TO app_portfolio;
+ALTER SEQUENCE app_portfolio.setting_id_seq OWNER TO app_portfolio;
+ALTER SEQUENCE app_portfolio.user_account_follow_id_seq OWNER TO app_portfolio;
+ALTER SEQUENCE app_portfolio.setting_type_id_seq OWNER TO app_portfolio;
+ALTER SEQUENCE app_portfolio.user_account_app_hist_id_seq OWNER TO app_portfolio;
+ALTER SEQUENCE app_portfolio.user_account_id_seq OWNER TO app_portfolio;
+ALTER SEQUENCE app_portfolio.user_account_follow_hist_id_seq OWNER TO app_portfolio;
+ALTER SEQUENCE app_portfolio.user_account_hist_id_seq OWNER TO app_portfolio;
+ALTER SEQUENCE app_portfolio.user_account_like_hist_id_seq OWNER TO app_portfolio;
+*/
