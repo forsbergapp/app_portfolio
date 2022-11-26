@@ -387,13 +387,6 @@ function mobile(){
     return (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent));
    }
    
-//function to convert buffert to one string
-function toBase64_arr(arr) {
-    //arr = new Uint8Array(arr) if it's an ArrayBuffer
-    return window.atob(
-        arr.reduce((data, byte) => data + String.fromCharCode(byte), '')
-    );
-}
 function parseJwt(token) {
     try {
       return JSON.parse(window.atob(token.split('.')[1]));
@@ -415,31 +408,17 @@ function checkbox_checked(checkbox) {
         return 'NO';
 }
 
-//function to check image if to read buffer or not
-function image_format(arr) {
-    //arr = new Uint8Array(arr) if it's an ArrayBuffer
-    if (arr == null || arr == '')
-        return '';
-    else {
-        //Oracle returns buffer for BLOB
-        if (arr.data) {
-            //buffer
-            return toBase64_arr(arr.data);
-        } else {
-            //not buffer
-            try {
-                return window.atob(arr);
-            } catch(e) {        
-                return arr;
-            }
-        }
-    }
-}
-function list_image_format_src(image){
-    if (image=='' ||image==null)
+function image_format(image) {
+    if (image == '' || image == null )
         return '';
     else
-        return `src='${image_format(image)}'`;
+        return arr;
+}
+function list_image_format_src(image){
+    if (image == '' || image == null)
+        return '';
+    else
+        return `src='${image}'`;
 }
 function recreate_img(img_item) {
     //cant set img src to null, it will containt url or show corrupt image
@@ -2262,7 +2241,7 @@ async function user_edit() {
 async function user_update(callBack) {
     let username = document.getElementById('user_edit_input_username').value;
     let bio = document.getElementById('user_edit_input_bio').value;
-    let avatar = window.btoa(document.getElementById('user_edit_avatar_img').src);
+    let avatar = document.getElementById('user_edit_avatar_img').src;
     let new_email = document.getElementById('user_edit_input_new_email').value;
 
     let url;
