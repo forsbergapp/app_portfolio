@@ -120,10 +120,6 @@ module.exports = {
 									WHERE aus2.user_account_app_user_account_id = ua.id
 									  AND aus2.user_account_app_app_id = :app_id
 									  AND :initial_setting = 1)`;
-		if (process.env.SERVICE_DB_USE==2){
-			data.image_header_image_img = Buffer.from(data.image_header_image_img, 'utf8');
-			data.image_footer_image_img = Buffer.from(data.image_footer_image_img, 'utf8');
-		}
 		if (process.env.SERVICE_DB_USE==3)
 			sql = sql + ' RETURNING id';
 		parameters = {
@@ -628,10 +624,6 @@ module.exports = {
 					user_account_app_app_id = :app_id,
 					date_modified = CURRENT_TIMESTAMP
 				WHERE id = :id `;
-		if (process.env.SERVICE_DB_USE==2){
-			data.image_header_image_img = Buffer.from(data.image_header_image_img, 'utf8');
-			data.image_footer_image_img = Buffer.from(data.image_footer_image_img, 'utf8');
-		}
 		parameters = {
 						description: data.description,
 						regional_language_locale: data.regional_language_locale,

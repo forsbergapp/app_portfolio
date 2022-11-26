@@ -178,12 +178,6 @@ module.exports = {
 							:provider_image,
 							:provider_Ximage_url,
 							:provider_email) `;				
-			if (process.env.SERVICE_DB_USE == 2) {
-				if (data.avatar != null)
-					data.avatar = Buffer.from(data.avatar, 'utf8');
-				if (data.provider_image != null)
-					data.provider_image = Buffer.from(data.provider_image, 'utf8');
-			}
 			if (process.env.SERVICE_DB_USE == 3) {
 				sql = sql + ' RETURNING id ';
 			}
@@ -748,9 +742,6 @@ module.exports = {
 						  verification_code = :verification_code,
 						  date_modified = CURRENT_TIMESTAMP
 					WHERE id = :id `;
-			if (process.env.SERVICE_DB_USE == 2) {
-				data.avatar = Buffer.from(data.avatar, 'utf8');
-			}
 			parameters ={
 				bio: data.bio,
 				private: data.private,
@@ -860,9 +851,6 @@ module.exports = {
 						  date_modified = CURRENT_TIMESTAMP
 					WHERE id = :id
 					  AND active =1 `;
-			if (process.env.SERVICE_DB_USE == 2) {
-				data.provider_image = Buffer.from(data.provider_image, 'utf8');
-			}
 			parameters ={
 							identity_provider_id: data.identity_provider_id,
 							provider_id: data.provider_id,
