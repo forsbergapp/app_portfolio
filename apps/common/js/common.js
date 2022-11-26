@@ -413,12 +413,13 @@ function image_format(image) {
         return '';
     else
         return image;
+            
 }
 function list_image_format_src(image){
     if (image == '' || image == null)
         return '';
     else
-        return `src='${image}'`;
+        return `src='${image_format(image)}'`;
 }
 function recreate_img(img_item) {
     //cant set img src to null, it will containt url or show corrupt image
