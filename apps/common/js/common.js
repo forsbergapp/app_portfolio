@@ -412,7 +412,7 @@ function image_format(image) {
     if (image == '' || image == null )
         return '';
     else
-        return arr;
+        return image;
 }
 function list_image_format_src(image){
     if (image == '' || image == null)
