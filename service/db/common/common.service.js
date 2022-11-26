@@ -125,6 +125,18 @@ async function execute_db_sql(app_id, sql, parameters, admin,
 				  .query(parsed_result.text, parsed_result.values)
 				  .then((result) => {
 					pool3.release();
+					//convert blob buffer to string if any column is a BYTEA type
+					if (result.rows.length>0){
+						for (let dbcolumn=0;dbcolumn<result.fields.length; dbcolumn++){
+							if (result.fields[dbcolumn].dataTypeID == 17) { //BYTEA
+								for (let i=0;i<result.rows.length;i++){
+									if (result.fields[dbcolumn]['name'] == Object.keys(result.rows[i])[dbcolumn])
+										if (result.rows[i][Object.keys(result.rows[i])[dbcolumn]]!=null && result.rows[i][Object.keys(result.rows[i])[dbcolumn]]!='')
+											result.rows[i][Object.keys(result.rows[i])[dbcolumn]] = Buffer.from(result.rows[i][Object.keys(result.rows[i])[dbcolumn]]).toString();
+								}
+							}
+						};
+					}
 					return callBack(null, result.rows);
 				  })
 				  .catch((err) => {
