@@ -47,8 +47,21 @@ async function execute_db_sql(app_id, sql, parameters, admin,
 						conn.release();
 						if (err)
 							return callBack(err, null);
-						else
+						else{
+							//convert blob buffer to string if any column is a BLOB type
+							if (result.length>0){
+								for (let dbcolumn=0;dbcolumn<fields.length; dbcolumn++){
+									if (fields[dbcolumn].type == 252) { //BLOB
+										for (let i=0;i<result.length;i++){
+											if (fields[dbcolumn]['name'] == Object.keys(result[i])[dbcolumn])
+												if (result[i][Object.keys(result[i])[dbcolumn]]!=null && result[i][Object.keys(result[i])[dbcolumn]]!='')
+													result[i][Object.keys(result[i])[dbcolumn]] = Buffer.from(result[i][Object.keys(result[i])[dbcolumn]]).toString();
+										}
+									}
+								};
+							}
 							return callBack(null, result);
+						}
 					})
 			});
 			break;
