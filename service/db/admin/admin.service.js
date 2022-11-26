@@ -7,7 +7,7 @@ var pg = require('pg');
 function DBInit(){
    if (process.env.SERVICE_DB_USE==2){
       oracledb.autoCommit = true;
-      oracledb.fetchAsBuffer = [ oracledb.BLOB ];
+      oracledb.fetchAsString = [ oracledb.CLOB ];
       oracledb.initOracleClient({ libDir: process.env.SERVICE_DB_DB2_LIBDIR,
                                   configDir:process.env.SERVICE_DB_DB2_CONFIGDIR});
       oracledb.outFormat = oracledb.OUT_FORMAT_OBJECT;

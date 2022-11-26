@@ -1705,7 +1705,6 @@ async function user_settings_function(function_name, initial_user_setting, callB
         return;
     //boolean use boolean_to_number()
     //store 0/1 for checked value for checkboxes
-    //use btoa() for images to encode with BASE64 to BLOB column.
     let json_data =
         `{"description": "${description}",
           "regional_language_locale": "${document.getElementById('setting_select_locale').value}",
@@ -1736,8 +1735,8 @@ async function user_settings_function(function_name, initial_user_setting, callB
           "design_column_gps_checked": ${boolean_to_number(document.getElementById('setting_checkbox_report_show_gps').checked)},
           "design_column_timezone_checked": ${boolean_to_number(document.getElementById('setting_checkbox_report_show_timezone').checked)},
 
-          "image_header_image_img": "${window.btoa(document.getElementById('setting_reportheader_img').src)}",
-          "image_footer_image_img": "${window.btoa(document.getElementById('setting_reportfooter_img').src)}",
+          "image_header_image_img": "${document.getElementById('setting_reportheader_img').src}",
+          "image_footer_image_img": "${document.getElementById('setting_reportfooter_img').src}",
 
           "text_header_1_text": "${document.getElementById('setting_input_reportheader1').value}",
           "text_header_2_text": "${document.getElementById('setting_input_reportheader2').value}",
