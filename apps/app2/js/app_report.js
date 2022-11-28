@@ -892,7 +892,7 @@ async function displayMonth(settings, item_id) {
 						}
 				month = window.global_session_currentDate.getMonth();
 				year = window.global_session_currentDate.getFullYear();
-				title4 = new Date(year,month,1).toLocaleDateString(settings.locale + window.global_regional_def_locale_ext_prefix + window.global_regional_def_locale_ext_number_system + settings.number_system, options).toUpperCase();
+				title4 = new Date(year,month,1).toLocaleDateString(settings.locale + window.global_regional_def_locale_ext_prefix + window.global_regional_def_locale_ext_number_system + settings.number_system, options).toLocaleUpperCase();
 				callBack(null, title4);
 				}
 			else
@@ -918,7 +918,7 @@ async function displayMonth(settings, item_id) {
 					month = window.global_session_CurrentHijriDate[0];
 					year  = window.global_session_CurrentHijriDate[1];
 					getGregorian(new Array(year,month,1), 0).then(function(title_date){
-						title4 = new Date(title_date[0],title_date[1]-1,title_date[2]).toLocaleDateString(settings.locale + window.global_regional_def_locale_ext_prefix + window.global_regional_def_locale_ext_calendar + settings.calendar_hijri_type + window.global_regional_def_locale_ext_number_system + settings.number_system, options).toUpperCase();
+						title4 = new Date(title_date[0],title_date[1]-1,title_date[2]).toLocaleDateString(settings.locale + window.global_regional_def_locale_ext_prefix + window.global_regional_def_locale_ext_calendar + settings.calendar_hijri_type + window.global_regional_def_locale_ext_number_system + settings.number_system, options).toLocaleUpperCase();
 						callBack(null, title4);
 					})
 				}
@@ -1123,9 +1123,9 @@ async function displayDay(settings, item_id, user_settings){
 				}
 
 		let date_current = new Date(window.global_session_currentDate.getFullYear(),window.global_session_currentDate.getMonth(),window.global_session_currentDate.getDate());
-		let date_title4 = date_current.toLocaleDateString(settings.locale + window.global_regional_def_locale_ext_prefix + window.global_regional_def_locale_ext_number_system + settings.number_system, options).toUpperCase();
+		let date_title4 = date_current.toLocaleDateString(settings.locale + window.global_regional_def_locale_ext_prefix + window.global_regional_def_locale_ext_number_system + settings.number_system, options).toLocaleUpperCase();
 		date_current.setDate(date_current.getDate() + parseInt(settings.hijri_adj));
-		let date_title5 = date_current.toLocaleDateString(settings.locale + window.global_regional_def_locale_ext_prefix + window.global_regional_def_locale_ext_calendar + settings.calendar_hijri_type + window.global_regional_def_locale_ext_number_system + settings.number_system, options_hijri).toUpperCase();
+		let date_title5 = date_current.toLocaleDateString(settings.locale + window.global_regional_def_locale_ext_prefix + window.global_regional_def_locale_ext_calendar + settings.calendar_hijri_type + window.global_regional_def_locale_ext_number_system + settings.number_system, options_hijri).toLocaleUpperCase();
 		
 		//Set theme and font classes on main div
 		timetable.classList = settings.timetable_class + ' ' + settings.theme_day + ' ' + settings.arabic_script;
