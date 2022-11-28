@@ -434,3 +434,8 @@ Installation instructions
 	apps/app{APP_ID}/server.js that is used to init the server generation of the client.
 	
 	Admin does not use window.global_app_id but uses window.global_admin = true.
+
+12. Issues
+	Not supported:
+	Hijri transliteration on Android. 
+	Armenian language on Chrome or Chromium, use Edge or other for Puppeteer if needed.
