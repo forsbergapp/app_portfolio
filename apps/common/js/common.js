@@ -3143,7 +3143,7 @@ async function init_common(parameters, callBack){
         document.getElementById('signup_close').addEventListener('click', function() { document.getElementById('dialogue_signup').style.visibility = 'hidden' }, false);
         document.getElementById('forgot_tab1').addEventListener('click', function() { show_common_dialogue('LOGIN') }, false);
         document.getElementById('forgot_tab2').addEventListener('click', function() { show_common_dialogue('SIGNUP') }, false);
-        document.getElementById("forgot_email").addEventListener("keyup", function(event) {
+        document.getElementById("forgot_email").addEventListener('keyup', function(event) {
             if (event.keyCode === 13) {
                 event.preventDefault();
                 user_forgot().then(function(){
@@ -3170,7 +3170,7 @@ async function init_common(parameters, callBack){
         document.getElementById('lov_close').addEventListener('click', function() { lov_close()}, false); 
         //profile search
         if (document.getElementById('profile_input_row'))
-            document.getElementById('profile_search_icon').addEventListener('click', function() { document.getElementById('profile_search_input').dispatchEvent(new KeyboardEvent('keyup')); }, false);
+            document.getElementById('profile_search_icon').addEventListener('click', function() { document.getElementById('profile_search_input').focus();document.getElementById('profile_search_input').dispatchEvent(new KeyboardEvent('keyup')); }, false);
         //window info
         document.getElementById('common_window_info_toolbar_btn_close').addEventListener('click', function() { document.getElementById('common_window_info').style.visibility = "hidden"; 
                                                                                                                document.getElementById('common_window_info_info').innerHTML='';
@@ -3195,6 +3195,22 @@ async function init_common(parameters, callBack){
                                                                                             menu.style.visibility = 'hidden'; 
                                                                                        else 
                                                                                             menu.style.visibility = 'visible' }, false);
+        
+        document.addEventListener('keydown', function(event) { 
+
+            if (event.key === 'Escape') {
+                event.preventDefault();
+                //hide use menu dropdown
+                if (document.getElementById('user_menu_dropdown').style.visibility=='visible')
+                    document.getElementById('user_menu_dropdown').style.visibility = 'hidden';
+                //hide search
+                let x = document.getElementById('profile_input_row'); 
+                if (x.style.visibility == 'visible') {
+                    x.style.visibility = 'hidden';
+                    document.getElementById('profile_search_list_wrap').style.visibility = 'hidden'
+                } 
+            }
+        }, false);
         document.getElementById('user_menu_dropdown_log_in').addEventListener('click', function() { show_common_dialogue('LOGIN'); document.getElementById('user_menu_dropdown').style.visibility = 'hidden';}, false);
         document.getElementById('user_menu_dropdown_edit').addEventListener('click', function() { user_edit();document.getElementById('user_menu_dropdown').style.visibility = 'hidden'; }, false);
         document.getElementById('user_menu_dropdown_signup').addEventListener('click', function() { show_common_dialogue('SIGNUP'); document.getElementById('user_menu_dropdown').style.visibility = 'hidden'; }, false);
