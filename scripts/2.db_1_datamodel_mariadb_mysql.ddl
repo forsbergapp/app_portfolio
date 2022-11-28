@@ -1711,7 +1711,7 @@ CREATE TRIGGER app_portfolio.app2_user_setting_after_delete
     AFTER DELETE ON app_portfolio.app2_user_setting 
     FOR EACH ROW 
 BEGIN
-	INSERT INTO app2_user_setting_hist
+	INSERT INTO app_portfolio.app2_user_setting_hist
 	(dml,
 	dml_date,
 	app2_user_setting_id
@@ -1720,9 +1720,9 @@ BEGIN
 	'D',
 	CURRENT_TIMESTAMP,
 	old.id
-	  FROM app_parameter
+	  FROM app_portfolio.app_parameter
 	 WHERE parameter_name = 'SERVICE_DB_ENABLE_AUDIT'
-	   AND parameter_value= 1;
+	   AND parameter_value= '1';
 END; 
 //
 
@@ -1730,7 +1730,7 @@ CREATE TRIGGER app_portfolio.app2_user_setting_after_insert
     AFTER INSERT ON app_portfolio.app2_user_setting 
     FOR EACH ROW 
 BEGIN
-INSERT INTO app2_user_setting_hist
+INSERT INTO app_portfolio.app2_user_setting_hist
 (dml,
 dml_date,
 app2_user_setting_id,
@@ -1846,9 +1846,9 @@ new.date_created,
 new.date_modified,
 new.user_account_app_user_account_id,
 new.user_account_app_app_id
-FROM app_parameter
+FROM app_portfolio.app_parameter
 WHERE parameter_name = 'SERVICE_DB_ENABLE_AUDIT'
-AND   parameter_value= 1;
+AND   parameter_value= '1';
 END; 
 //
 
@@ -1856,7 +1856,7 @@ CREATE TRIGGER app_portfolio.app2_user_setting_after_update
     AFTER UPDATE ON app_portfolio.app2_user_setting 
     FOR EACH ROW 
 BEGIN
-INSERT INTO app2_user_setting_hist
+INSERT INTO app_portfolio.app2_user_setting_hist
 (dml,
 dml_date,
 app2_user_setting_id,
@@ -1972,9 +1972,9 @@ new.date_created,
 new.date_modified,
 new.user_account_app_user_account_id,
 new.user_account_app_app_id
-FROM app_parameter
+FROM app_portfolio.app_parameter
 WHERE parameter_name = 'SERVICE_DB_ENABLE_AUDIT'
-AND   parameter_value= 1;
+AND   parameter_value= '1';
 END; 
 //
 
@@ -1982,7 +1982,7 @@ CREATE TRIGGER app_portfolio.app2_user_setting_like_after_delete
     AFTER DELETE ON app_portfolio.app2_user_setting_like 
     FOR EACH ROW 
 BEGIN
-	INSERT INTO app2_user_setting_like_hist
+	INSERT INTO app_portfolio.app2_user_setting_like_hist
 	(dml,
 	dml_date,
 	app2_user_setting_like_id,
@@ -1994,9 +1994,9 @@ BEGIN
 	old.id,
 	old.user_account_id,
 	old.app2_user_setting_id
-	FROM app_parameter
+	FROM app_portfolio.app_parameter
 	WHERE parameter_name = 'SERVICE_DB_ENABLE_AUDIT'
-	AND   parameter_value= 1;
+	AND   parameter_value= '1';
 END; 
 //
 
@@ -2004,7 +2004,7 @@ CREATE TRIGGER app_portfolio.app2_user_setting_like_after_insert
     AFTER INSERT ON app_portfolio.app2_user_setting_like 
     FOR EACH ROW 
 BEGIN
-INSERT INTO app2_user_setting_like_hist
+INSERT INTO app_portfolio.app2_user_setting_like_hist
 (dml,
 dml_date,
 app2_user_setting_like_id,
@@ -2018,9 +2018,9 @@ new.id,
 new.user_account_id,
 new.app2_user_setting_id,
 new.date_created
-FROM app_parameter
+FROM app_portfolio.app_parameter
 WHERE parameter_name = 'SERVICE_DB_ENABLE_AUDIT'
-AND   parameter_value= 1;
+AND   parameter_value= '1';
 END; 
 //
 
@@ -2028,7 +2028,7 @@ CREATE TRIGGER app_portfolio.app2_user_setting_like_after_update
     AFTER UPDATE ON app_portfolio.app2_user_setting_like 
     FOR EACH ROW 
 BEGIN
-INSERT INTO app2_user_setting_like_hist
+INSERT INTO app_portfolio.app2_user_setting_like_hist
 (dml,
 dml_date,
 app2_user_setting_like_id,
@@ -2042,9 +2042,9 @@ new.id,
 new.user_account_id,
 new.app2_user_setting_id,
 new.date_created
-FROM app_parameter
+FROM app_portfolio.app_parameter
 WHERE parameter_name = 'SERVICE_DB_ENABLE_AUDIT'
-AND   parameter_value= 1;
+AND   parameter_value= '1';
 END; 
 //
 
@@ -2052,7 +2052,7 @@ CREATE TRIGGER app_portfolio.app2_user_setting_view_after_delete
     AFTER DELETE ON app_portfolio.app2_user_setting_view 
     FOR EACH ROW 
 BEGIN
-	INSERT INTO app2_user_setting_view_hist
+	INSERT INTO app_portfolio.app2_user_setting_view_hist
 	(dml,
 	dml_date,
 	user_account_id,
@@ -2062,9 +2062,9 @@ BEGIN
 	CURRENT_TIMESTAMP,
 	old.user_account_id,
 	old.app2_user_setting_id
-	FROM app_parameter
+	FROM app_portfolio.app_parameter
 	WHERE parameter_name = 'SERVICE_DB_ENABLE_AUDIT'
-	AND   parameter_value= 1;
+	AND   parameter_value= '1';
 END; 
 //
 
@@ -2072,7 +2072,7 @@ CREATE TRIGGER app_portfolio.app2_user_setting_view_after_insert
     AFTER INSERT ON app_portfolio.app2_user_setting_view 
     FOR EACH ROW 
 BEGIN
-INSERT INTO app2_user_setting_view_hist
+INSERT INTO app_portfolio.app2_user_setting_view_hist
 (dml,
 dml_date,
 user_account_id,
@@ -2092,9 +2092,9 @@ new.client_user_agent,
 new.client_longitude,
 new.client_latitude,
 new.date_created
-FROM app_parameter
+FROM app_portfolio.app_parameter
 WHERE parameter_name = 'SERVICE_DB_ENABLE_AUDIT'
-AND   parameter_value= 1;
+AND   parameter_value= '1';
 END; 
 //
 
@@ -2102,7 +2102,7 @@ CREATE TRIGGER app_portfolio.app2_user_setting_view_after_update
     AFTER UPDATE ON app_portfolio.app2_user_setting_view 
     FOR EACH ROW 
 BEGIN
-INSERT INTO app2_user_setting_view_hist
+INSERT INTO app_portfolio.app2_user_setting_view_hist
 (dml,
 dml_date,
 user_account_id,
@@ -2122,9 +2122,9 @@ new.client_user_agent,
 new.client_longitude,
 new.client_latitude,
 new.date_created
-FROM app_parameter
+FROM app_portfolio.app_parameter
 WHERE parameter_name = 'SERVICE_DB_ENABLE_AUDIT'
-AND   parameter_value= 1;
+AND   parameter_value= '1';
 END; 
 //
 
@@ -2132,7 +2132,7 @@ CREATE TRIGGER app_portfolio.user_account_after_delete
     AFTER DELETE ON app_portfolio.user_account 
     FOR EACH ROW 
 BEGIN
-	INSERT INTO user_account_hist
+	INSERT INTO app_portfolio.user_account_hist
 	(dml,
  	dml_date,
  	user_account_id)
@@ -2140,9 +2140,9 @@ BEGIN
  	'D',
  	CURRENT_TIMESTAMP,
  	old.id
-	FROM app_parameter
+	FROM app_portfolio.app_parameter
     WHERE parameter_name = 'SERVICE_DB_ENABLE_AUDIT'
-	 AND parameter_value= 1;
+	 AND parameter_value= '1';
 END; 
 //
 
@@ -2150,7 +2150,7 @@ CREATE TRIGGER app_portfolio.user_account_after_insert
     AFTER INSERT ON app_portfolio.user_account 
     FOR EACH ROW 
 BEGIN
-	INSERT INTO user_account_hist
+	INSERT INTO app_portfolio.user_account_hist
 	(dml,
 	dml_date,
 	user_account_id,
@@ -2196,9 +2196,9 @@ BEGIN
 	new.provider_last_name,
 	new.provider_image_url,
 	new.provider_email
-	FROM app_parameter
+	FROM app_portfolio.app_parameter
     WHERE parameter_name = 'SERVICE_DB_ENABLE_AUDIT'
-      AND parameter_value= 1;
+      AND parameter_value= '1';
 END; 
 //
 
@@ -2206,7 +2206,7 @@ CREATE TRIGGER app_portfolio.user_account_after_update
     AFTER UPDATE ON app_portfolio.user_account 
     FOR EACH ROW 
 BEGIN
-	INSERT INTO user_account_hist
+	INSERT INTO app_portfolio.user_account_hist
 		(dml,
 		dml_date,
 		user_account_id,
@@ -2252,9 +2252,9 @@ BEGIN
 		new.provider_last_name,
 		new.provider_image_url,
 		new.provider_email
-		FROM app_parameter
+		FROM app_portfolio.app_parameter
 	    WHERE parameter_name = 'SERVICE_DB_ENABLE_AUDIT'
-           AND parameter_value= 1;
+           AND parameter_value= '1';
 END; 
 //
 
@@ -2262,7 +2262,7 @@ CREATE TRIGGER app_portfolio.user_account_app_after_delete
     AFTER DELETE ON app_portfolio.user_account_app 
     FOR EACH ROW 
 BEGIN
-	INSERT INTO user_account_app_hist
+	INSERT INTO app_portfolio.user_account_app_hist
 	(dml,
 	dml_date,
 	user_account_id,
@@ -2272,9 +2272,9 @@ BEGIN
 	CURRENT_TIMESTAMP,
 	old.user_account_id,
 	old.app_id
-	FROM app_parameter
+	FROM app_portfolio.app_parameter
 	WHERE parameter_name = 'SERVICE_DB_ENABLE_AUDIT'
-	AND   parameter_value= 1;
+	AND   parameter_value= '1';
 END; 
 //
 
@@ -2282,7 +2282,7 @@ CREATE TRIGGER app_portfolio.user_account_app_after_insert
     AFTER INSERT ON app_portfolio.user_account_app 
     FOR EACH ROW 
 BEGIN
-INSERT INTO user_account_app_hist
+INSERT INTO app_portfolio.user_account_app_hist
 (dml,
 dml_date,
 user_account_id,
@@ -2302,9 +2302,9 @@ new.setting_preference_timezone_id,
 new.setting_preference_direction_id,
 new.setting_preference_arabic_script_id,
 new.date_created
-FROM app_parameter
+FROM app_portfolio.app_parameter
 WHERE parameter_name = 'SERVICE_DB_ENABLE_AUDIT'
-AND   parameter_value= 1;
+AND   parameter_value= '1';
 END; 
 //
 
@@ -2312,7 +2312,7 @@ CREATE TRIGGER app_portfolio.user_account_app_after_update
     AFTER UPDATE ON app_portfolio.user_account_app 
     FOR EACH ROW 
 BEGIN
-INSERT INTO user_account_app_hist
+INSERT INTO app_portfolio.user_account_app_hist
 (dml,
 dml_date,
 user_account_id,
@@ -2332,9 +2332,9 @@ new.setting_preference_timezone_id,
 new.setting_preference_direction_id,
 new.setting_preference_arabic_script_id,
 new.date_created
-FROM app_parameter
+FROM app_portfolio.app_parameter
 WHERE parameter_name = 'SERVICE_DB_ENABLE_AUDIT'
-AND   parameter_value= 1;
+AND   parameter_value= '1';
 END; 
 //
 
@@ -2342,7 +2342,7 @@ CREATE TRIGGER app_portfolio.user_account_follow_after_delete
     AFTER DELETE ON app_portfolio.user_account_follow 
     FOR EACH ROW 
 BEGIN
-INSERT INTO user_account_follow_hist
+INSERT INTO app_portfolio.user_account_follow_hist
 (dml,
 dml_date,
 user_account_follow_id,
@@ -2354,9 +2354,9 @@ CURRENT_TIMESTAMP,
 old.id,
 old.user_account_id,
 old.user_account_id_follow
-FROM app_parameter
+FROM app_portfolio.app_parameter
 WHERE parameter_name = 'SERVICE_DB_ENABLE_AUDIT'
-AND   parameter_value= 1;
+AND   parameter_value= '1';
 END; 
 //
 
@@ -2364,7 +2364,7 @@ CREATE TRIGGER app_portfolio.user_account_follow_after_insert
     AFTER INSERT ON app_portfolio.user_account_follow 
     FOR EACH ROW 
 BEGIN
-INSERT INTO user_account_follow_hist
+INSERT INTO app_portfolio.user_account_follow_hist
 (dml,
 dml_date,
 user_account_follow_id,
@@ -2378,9 +2378,9 @@ new.id,
 new.user_account_id,
 new.user_account_id_follow,
 new.date_created
-FROM app_parameter
+FROM app_portfolio.app_parameter
 WHERE parameter_name = 'SERVICE_DB_ENABLE_AUDIT'
-AND   parameter_value= 1;
+AND   parameter_value= '1';
 END; 
 //
 
@@ -2388,7 +2388,7 @@ CREATE TRIGGER app_portfolio.user_account_follow_after_update
     AFTER UPDATE ON app_portfolio.user_account_follow 
     FOR EACH ROW 
 BEGIN
-INSERT INTO user_account_follow_hist
+INSERT INTO app_portfolio.user_account_follow_hist
 (dml,
 dml_date,
 user_account_follow_id,
@@ -2402,9 +2402,9 @@ new.id,
 new.user_account_id,
 new.user_account_id_follow,
 new.date_created
-FROM app_parameter
+FROM app_portfolio.app_parameter
 WHERE parameter_name = 'SERVICE_DB_ENABLE_AUDIT'
-AND   parameter_value= 1;
+AND   parameter_value= '1';
 END; 
 //
 
@@ -2412,7 +2412,7 @@ CREATE TRIGGER app_portfolio.user_account_like_after_delete
     AFTER DELETE ON app_portfolio.user_account_like 
     FOR EACH ROW 
 BEGIN
-	INSERT INTO user_account_like_hist
+	INSERT INTO app_portfolio.user_account_like_hist
 	(dml,
 	dml_date,
 	user_account_like_id,
@@ -2424,9 +2424,9 @@ BEGIN
 	old.id,
 	old.user_account_id,
 	old.user_account_id_like
-	FROM app_parameter
+	FROM app_portfolio.app_parameter
 	WHERE parameter_name = 'SERVICE_DB_ENABLE_AUDIT'
-	AND   parameter_value= 1;
+	AND   parameter_value= '1';
 END; 
 //
 
@@ -2434,7 +2434,7 @@ CREATE TRIGGER app_portfolio.user_account_like_after_insert
     AFTER INSERT ON app_portfolio.user_account_like 
     FOR EACH ROW 
 BEGIN
-INSERT INTO user_account_like_hist
+INSERT INTO app_portfolio.user_account_like_hist
 (dml,
 dml_date,
 user_account_like_id,
@@ -2448,9 +2448,9 @@ new.id,
 new.user_account_id,
 new.user_account_id_like,
 new.date_created
-FROM app_parameter
+FROM app_portfolio.app_parameter
 WHERE parameter_name = 'SERVICE_DB_ENABLE_AUDIT'
-AND   parameter_value= 1;
+AND   parameter_value= '1';
 END; 
 //
 
@@ -2458,7 +2458,7 @@ CREATE TRIGGER app_portfolio.user_account_like_after_update
     AFTER UPDATE ON app_portfolio.user_account_like 
     FOR EACH ROW 
 BEGIN
-INSERT INTO user_account_like_hist
+INSERT INTO app_portfolio.user_account_like_hist
 (dml,
 dml_date,
 user_account_like_id,
@@ -2472,9 +2472,9 @@ new.id,
 new.user_account_id,
 new.user_account_id_like,
 new.date_created
-FROM app_parameter
+FROM app_portfolio.app_parameter
 WHERE parameter_name = 'SERVICE_DB_ENABLE_AUDIT'
-AND   parameter_value= 1;
+AND   parameter_value= '1';
 END; 
 //
 
@@ -2482,7 +2482,7 @@ CREATE TRIGGER app_portfolio.user_account_view_after_delete
     AFTER DELETE ON app_portfolio.user_account_view 
     FOR EACH ROW 
 BEGIN
-	INSERT INTO user_account_view_hist
+	INSERT INTO app_portfolio.user_account_view_hist
 	(dml,
 	dml_date,
 	user_account_id,
@@ -2492,9 +2492,9 @@ BEGIN
 	CURRENT_TIMESTAMP,
 	old.user_account_id,
 	old.user_account_id_view
-	FROM app_parameter
+	FROM app_portfolio.app_parameter
 	WHERE parameter_name = 'SERVICE_DB_ENABLE_AUDIT'
-	AND   parameter_value= 1;
+	AND   parameter_value= '1';
 END; 
 //
 
@@ -2502,7 +2502,7 @@ CREATE TRIGGER app_portfolio.user_account_view_after_insert
     AFTER INSERT ON app_portfolio.user_account_view 
     FOR EACH ROW 
 BEGIN
-INSERT INTO user_account_view_hist
+INSERT INTO app_portfolio.user_account_view_hist
 (dml,
 dml_date,
 user_account_id,
@@ -2522,9 +2522,9 @@ new.client_user_agent,
 new.client_longitude,
 new.client_latitude,
 new.date_created
-FROM app_parameter
+FROM app_portfolio.app_parameter
 WHERE parameter_name = 'SERVICE_DB_ENABLE_AUDIT'
-AND   parameter_value= 1;
+AND   parameter_value= '1';
 END; 
 //
 
@@ -2532,7 +2532,7 @@ CREATE TRIGGER app_portfolio.user_account_view_after_update
     AFTER UPDATE ON app_portfolio.user_account_view 
     FOR EACH ROW 
 BEGIN
-INSERT INTO user_account_view_hist
+INSERT INTO app_portfolio.user_account_view_hist
 (dml,
 dml_date,
 user_account_id,
@@ -2552,8 +2552,8 @@ new.client_user_agent,
 new.client_longitude,
 new.client_latitude,
 new.date_created
-FROM app_parameter
+FROM app_portfolio.app_parameter
 WHERE parameter_name = 'SERVICE_DB_ENABLE_AUDIT'
-AND   parameter_value= 1;
+AND   parameter_value= '1';
 END; 
 //
