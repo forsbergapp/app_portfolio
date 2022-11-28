@@ -27,7 +27,7 @@ INSERT INTO app_portfolio.app_object_item_translation (app_object_item_app_objec
 INSERT INTO app_portfolio.app_object_item_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (2,'REPORT','COLTITLE_ASR',198,'אחרי הצהריים');
 INSERT INTO app_portfolio.app_object_item_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (2,'REPORT','COLTITLE_ASR_IQAMAT',198,'Iqamat');
 INSERT INTO app_portfolio.app_object_item_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (2,'REPORT','COLTITLE_CALTYPE_GREGORIAN',198,'גרגוריאני');
-INSERT INTO app_portfolio.app_object_item_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (2,'REPORT','COLTITLE_CALTYPE_HIJRI',198,"היג'רי");
+INSERT INTO app_portfolio.app_object_item_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (2,'REPORT','COLTITLE_CALTYPE_HIJRI',198,'היג''רי');
 INSERT INTO app_portfolio.app_object_item_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (2,'REPORT','COLTITLE_DAY',198,'יְוֹם');
 INSERT INTO app_portfolio.app_object_item_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (2,'REPORT','COLTITLE_DHUHR',198,'צָהֳרַיִים');
 INSERT INTO app_portfolio.app_object_item_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (2,'REPORT','COLTITLE_DHUHR_IQAMAT',198,'Iqamat');
@@ -96,7 +96,7 @@ INSERT INTO app_portfolio.message_translation (language_id, message_code, text) 
 -- setting_translation
 --
 INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (1,198,'דיוקן A4 (210 x 297 מ"מ).');
-INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (2,198,"דיוקן אותיות (8.5 אינץ' x 11 אינץ').");
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (2,198,'דיוקן אותיות (8.5 אינץ'' x 11 אינץ'').');
 INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (3,198,'אף אחד');
 INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (4,198,'יוֹם שִׁישִׁי');
 INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (5,198,'יום שבת');
@@ -132,4 +132,4 @@ INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VA
 INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (536,198,'תרגום, תעתיק');
 INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (537,198,'תִרגוּם');
 INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (543,198,'גרגוריאני');
-INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (544,198,"היג'רי");
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (544,198,'היג''רי');

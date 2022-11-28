@@ -12,7 +12,7 @@ INSERT INTO app_portfolio.app_category_translation(app_category_id, language_id,
 --
 -- app_object_item_translation
 --
-INSERT INTO app_portfolio.app_object_item_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (0,'COMMON','USERNAME',564,"Ім'я користувача");
+INSERT INTO app_portfolio.app_object_item_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (0,'COMMON','USERNAME',564,'Ім''я користувача');
 INSERT INTO app_portfolio.app_object_item_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (0,'COMMON','PASSWORD',564,'Пароль');
 INSERT INTO app_portfolio.app_object_item_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (0,'COMMON','BIO',564,'біографія');
 INSERT INTO app_portfolio.app_object_item_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (0,'COMMON','EMAIL',564,'Електронна пошта');
@@ -66,22 +66,22 @@ INSERT INTO app_portfolio.app_object_translation (app_object_app_id, app_object_
 --
 -- message_translation
 --
-INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (564,'20100',"Ім'я користувача 5 - 100 символів");
-INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (564,'20101',"Недійсне ім'я користувача");
+INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (564,'20100','Ім''я користувача 5 - 100 символів');
+INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (564,'20101','Недійсне ім''я користувача');
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (564,'20102','Біо максимум 100 символів');
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (564,'20103','Електронна пошта не більше 100 символів');
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (564,'20104','Нагадування максимум 100 символів');
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (564,'20105','Недійсна електронна адреса');
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (564,'20106','Пароль 10 - 100 символів');
-INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (564,'20107',"Ім'я користувача, пароль і електронна адреса є обов'язковими");
+INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (564,'20107','Ім''я користувача, пароль і електронна адреса є обов''язковими');
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (564,'20200','Електронна пошта вже існує');
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (564,'20201','Провайдер вже існує');
-INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (564,'20203',"Ім'я користувача вже існує");
+INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (564,'20203','Ім''я користувача вже існує');
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (564,'20204','Занадто довге значення');
-INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (564,'20300',"Ім'я користувача або пароль не знайдено");
+INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (564,'20300','Ім''я користувача або пароль не знайдено');
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (564,'20301','Пароль не той');
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (564,'20302','Ви не можете видалити останні налаштування користувача');
-INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (564,'20303',"Будь ласка, введіть ім'я користувача");
+INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (564,'20303','Будь ласка, введіть ім''я користувача');
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (564,'20304','Будь ласка, введіть пароль');
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (564,'20305','Користувача не знайдено');
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (564,'20306','Код недійсний');
@@ -98,7 +98,7 @@ INSERT INTO app_portfolio.message_translation (language_id, message_code, text) 
 INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (1,564,'А4 (210 х 297 мм) портрет');
 INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (2,564,'Лист (8,5 x 11 дюймів) портрет');
 INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (3,564,'Жодного');
-INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (4,564,"П'ятниця");
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (4,564,'П''ятниця');
 INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (5,564,'Субота');
 INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (6,564,'неділя');
 INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (7,564,'Групи 10 днів');
