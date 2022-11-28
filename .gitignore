@@ -4,7 +4,6 @@ dev/
 logs/
 production_.env/
 node_modules/
-service/db/config/oracle_instantclient/
+service/db/config/
 service/report/tmp/
 ssl/
-

@@ -9,11 +9,12 @@ Services included are authentication, database, forms, report, geolocation, log,
 and worldcities.
 Runs in Node.js using Express framework.
 Apps are component structured and server-side rendered with database data popluation.
-Secure REST API with authentication middleware supporting both mySQL and Oracle Database.
+Secure REST API with authentication middleware, common SQL with minium differences for all databases, 
+centralized common SQL parameter syntax and consolidated data validation in Javascript for all databases.
 Apps are written using pure CSS, HTML and Javascript and ES6+ Javascript using
 AJAX method and JSON in both client and server.
 Oracle SQL Developer Data model designed data model.
-Scripts to create in MySQL, MariaDB or Oracle Database.
+Databases supported are MariaDB, MySQL, Oracle and PostgreSQL.
 Centralized data model error handling of database errors, constraints errors and 
 application errors and showed in users language.
 A global support implemented in client with ALL Unicode characters supported by Noto Sans font
@@ -107,7 +108,7 @@ Installation instructions
 1. install Node.js on server
 
 	modules required:
-	npm install axios bcryptjs dotenv express helmet jsonwebtoken nodemailer mysql mariadb oracledb
+	npm install axios bcryptjs dotenv express helmet jsonwebtoken nodemailer mariadb mysql oracledb pg
 	npm install puppeteer
 	//puppeteer on some Linux with additional yum installations:
 		npm install puppeteer --unsafe-perm=true
@@ -125,7 +126,7 @@ Installation instructions
 
 	npm install -g pm2
 
-2. install MySQL/MariaDB/oracle on same server or other server
+2. install MariaDB/MySQL/Oracle/PostgreSQL on same server or other server
 
    	For Oracle Database, install Oracle Instant Client
    	www.oracle.com/database/technologies/instant-client.html
@@ -135,23 +136,56 @@ Installation instructions
    	use Unicode characterset to support emojis and all languages
 
    	run as root or admin/dba in this order:
-	scripts/1.1.createDB_mariadb.ddl 		MariaDB
-	scripts/1.1.createDB_mysql.ddl 			MySQL
-	scripts/1.2.mariadb_mysql.ddl 			MariaDB or MySQL
-	scripts/1.3.default_role_mariadb.ddl	MariaDB
-	scripts/1.3.default_role_mysql.ddl		MySQL
-   	scripts/1.oracle.ddl 					Oracle
-	scripts/2.oracle_grants_app_admin.ddl 	Oracle
-											contains grants for admin app
+	scripts/1.db_1_create_db_mariadb.ddl 		MariaDB
+	scripts/1.db_1_create_db_mysql.ddl 			MySQL
+	scripts/1.db_3_create_db_postgresql.ddl 	PostgreSQL
+	scripts/2.db_1_datamodel_mariadb_mysql.ddl MariaDB or MySQL
+	scripts/2.db_2_datamodel_oracle.ddl 		Oracle
+	scripts/2.db_3_datamodel_postgresql.ddl 	PostgreSQL
+	scripts/3.db_1_grant_role_fix_mariadb.ddl	MariaDB
+	scripts/3.db_1_grant_role_fix_mysql.ddl		MySQL
+	scripts/3.db_2_grant_role_fix_oracle.ddl 	Oracle
 
-	scripts/3.import.sql					MariaDB, MySQL or Oracle
-	scripts/4.lang_*.sql					MariaDB, MySQL or Oracle
-											Linux:
-											cat 4.lang_*.sql|mysql -uroot -p --default-character-set=utf8mb4
-											Windows:
-											for %S in (4.lang_*.sql) do mysql -uroot -p[password] app_portfolio --default-character-set=utf8mb4  < %S
-	scripts/5.import_demo_accounts.sql		MariaDB, MySQL									 
+	scripts/4.db_all_insert_data.sql			MariaDB, MySQL, Oracle, PostgreSQL
+	scripts/5.db_all_lang_*.sql					MariaDB, MySQL, Oracle, PostgreSQL
+												concatenate files
+												Linux:
+												cat 5.db_all_lang_*.sql > 5.db_all.sql
+												Windows:
+												type 5.db_all_lang_*.sql> 5.db_all.sql
+												
+												run script with unicode parameter, add other parameters if needed
+												MariaDB:
+												mariadb -uroot -p -h localhost app_portfolio --default-character-set=utf8mb4 <5.db_all.sql
+												MySQL:
+												mysql -uroot -p -h localhost app_portfolio --default-character-set=utf8mb4 <5.db_all.sql
+												
+												Oracle from Linux:
+												---------------------
+												export LD_LIBRARY_PATH={PATH}
+												export PATH={PATH}
+												export ORACLE_HOME={PATH}
+												export NLS_LANG=AMERICAN_AMERICA.AL32UTF8
+												export TNS_ADMIN={PATH}
+												sqlplus admin@{TNS_STRING}
+												SET DEFINE OFF
+												SET AUTOCOMMIT ON
+												@5.db_all.sql
+
+												PostgreSQL
+												----------
+												set PGCLIENTENCODING=UTF8
+												psql -U postgres -h localhost -d app_portfolio -f 5.db_all.sql
+
+	scripts/6.db_1_demo_mariadb_mysql.sql		MariaDB, MySQL
+	scripts/6.db_2_demo_oracle.sql				Oracle
+	scripts/6.db_3_demo_postgresql.sql			PostgreSQL
 									 
+	uninstall scripts:
+	7.db_1_uninstall.sql						MariaDB or MySQL
+	7.db_2_uninstall.sql						Oracle
+	7.db_3_uninstall.sql						PostgreSQL
+
    	USER CREATED		ROLE AND APP_ID INFO
    	------------		--------------------
    	app_portfolio		role ROLE_APP_DBA
