@@ -602,6 +602,9 @@ height: 25px;
 #profile_input_row{
 	visibility:hidden;
 }
+#profile_search_input{
+	width:285px !important;
+}
 #profile_search_list_wrap{
 	max-height: calc(100% - 250px) !important;
 	top: 112px;
