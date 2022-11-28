@@ -13,7 +13,7 @@ INSERT INTO app_portfolio.app_category_translation(app_category_id, language_id,
 -- app_object_item_translation
 --
 INSERT INTO app_portfolio.app_object_item_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (0,'COMMON','USERNAME',222,'Nome utente');
-INSERT INTO app_portfolio.app_object_item_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (0,'COMMON','PASSWORD',222,"Parola d'ordine");
+INSERT INTO app_portfolio.app_object_item_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (0,'COMMON','PASSWORD',222,'Parola d''ordine');
 INSERT INTO app_portfolio.app_object_item_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (0,'COMMON','BIO',222,'Bio');
 INSERT INTO app_portfolio.app_object_item_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (0,'COMMON','EMAIL',222,'Email');
 INSERT INTO app_portfolio.app_object_item_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (0,'COMMON','NEW_EMAIL',222,'Nuova email');
@@ -61,7 +61,7 @@ INSERT INTO app_portfolio.app_object_item_translation (app_object_item_app_objec
 --
 -- app_object_translation
 --
-INSERT INTO app_portfolio.app_object_translation (app_object_app_id, app_object_object_name, language_id, text) VALUES (2,'APP_DESCRIPTION',222,"Applicazione a pagina singola (SPA) dell'app Web progressiva (PWA)");
+INSERT INTO app_portfolio.app_object_translation (app_object_app_id, app_object_object_name, language_id, text) VALUES (2,'APP_DESCRIPTION',222,'Applicazione a pagina singola (SPA) dell''app Web progressiva (PWA)');
 INSERT INTO app_portfolio.app_object_translation (app_object_app_id, app_object_object_name, language_id, text) VALUES (3,'APP_DESCRIPTION',222,'Presentazione dei documenti');
 --
 -- message_translation
@@ -74,13 +74,13 @@ INSERT INTO app_portfolio.message_translation (language_id, message_code, text) 
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (222,'20105','E-mail non valida');
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (222,'20106','Password 10 - 100 caratteri');
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (222,'20107','Sono richiesti nome utente, password ed e-mail');
-INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (222,'20200',"L'e-mail esiste già");
+INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (222,'20200','L''e-mail esiste già');
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (222,'20201','Il provider esiste già');
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (222,'20203','Il nome utente è già esistente');
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (222,'20204','Valore troppo lungo');
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (222,'20300','Nome utente o password non trovati');
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (222,'20301','La password non è la stessa');
-INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (222,'20302',"Non è possibile eliminare l'ultima impostazione utente");
+INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (222,'20302','Non è possibile eliminare l''ultima impostazione utente');
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (222,'20303','Per favore inserisci il nome utente');
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (222,'20304','Per favore, inserisci la password');
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (222,'20305','Utente non trovato');
