@@ -2196,11 +2196,12 @@ function setEvents() {
     document.getElementById('toolbar_btn_search').addEventListener('click', function() { let x = document.getElementById('profile_input_row'); 
                                                                                          if (x.style.visibility == 'visible') {
                                                                                             x.style.visibility = 'hidden';
-                                                                                            document.getElementById('profile_search_list_wrap').style.visibility = 'hidden'
+                                                                                            document.getElementById('profile_search_list_wrap').style.visibility = 'hidden';
                                                                                          } 
                                                                                          else{
                                                                                             x.style.visibility = 'visible'; 
-                                                                                            document.getElementById('profile_search_list_wrap').style.visibility = 'visible'
+                                                                                            document.getElementById('profile_search_list_wrap').style.visibility = 'visible';
+                                                                                            document.getElementById('profile_search_input').focus();
                                                                                          }}, false);
     document.getElementById('toolbar_btn_settings').addEventListener('click', function() { toolbar_bottom(5) }, false);    
 
