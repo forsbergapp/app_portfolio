@@ -92,6 +92,12 @@ INSERT INTO app_portfolio.message_translation (language_id, message_code, text) 
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (338,'20401','अवैध पासवर्ड');
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (338,'20500','गहाळ अक्षांश किंवा रेखांश');
 --
+-- parameter_type_translation
+--
+INSERT INTO app_portfolio.parameter_type_translation (text, parameter_type_id, language_id) VALUES ('सार्वजनिक','0',338);
+INSERT INTO app_portfolio.parameter_type_translation (text, parameter_type_id, language_id) VALUES ('खाजगी सामायिक','1',338);
+INSERT INTO app_portfolio.parameter_type_translation (text, parameter_type_id, language_id) VALUES ('खाजगी','2',338);
+--
 -- setting_translation
 --
 INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (1,338,'A4 (210 x 297 मिमी) पोर्ट्रेट');

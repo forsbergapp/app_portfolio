@@ -93,6 +93,12 @@ INSERT INTO app_portfolio.message_translation (language_id, message_code, text) 
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (531,'20401','చెల్లని పాస్వర్డ్');
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (531,'20500','అక్షాంశం లేదా రేఖాంశం లేదు');
 --
+-- parameter_type_translation
+--
+INSERT INTO app_portfolio.parameter_type_translation (text, parameter_type_id, language_id) VALUES ('ప్రజా','0',531);
+INSERT INTO app_portfolio.parameter_type_translation (text, parameter_type_id, language_id) VALUES ('ప్రైవేట్ భాగస్వామ్యం చేయబడింది','1',531);
+INSERT INTO app_portfolio.parameter_type_translation (text, parameter_type_id, language_id) VALUES ('ప్రైవేట్','2',531);
+--
 -- setting_translation
 --
 INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (1,531,'A4 (210 x 297 mm) పోర్ట్రెయిట్');
