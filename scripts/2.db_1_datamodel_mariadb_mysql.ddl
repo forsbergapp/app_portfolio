@@ -971,6 +971,24 @@ GRANT SELECT ON app_portfolio.parameter_type TO role_app2;
 
 ALTER TABLE app_portfolio.parameter_type ADD CONSTRAINT parameter_type_pk PRIMARY KEY ( id );
 
+CREATE TABLE app_portfolio.parameter_type_translation (
+    text              VARCHAR(1000) NOT NULL,
+    parameter_type_id VARCHAR(100) NOT NULL,
+    language_id       INTEGER NOT NULL,
+    CONSTRAINT parameter_type_translation_pk PRIMARY KEY ( parameter_type_id,
+                                                           language_id )
+);
+
+GRANT SELECT ON app_portfolio.parameter_type_translation TO role_app1;
+
+GRANT SELECT ON app_portfolio.parameter_type_translation TO role_app2;
+
+GRANT SELECT ON app_portfolio.parameter_type_translation TO role_app3;
+
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.parameter_type_translation TO role_app_admin;
+
+GRANT ALL PRIVILEGES ON app_portfolio.parameter_type_translation TO role_app_dba;
+
 CREATE TABLE app_portfolio.profile_search (
     user_account_id    INTEGER,
     search             VARCHAR(100) NOT NULL,
@@ -1278,8 +1296,8 @@ CREATE TABLE app_portfolio.user_account_logon (
     app_id             INTEGER NOT NULL,
     result             INTEGER NOT NULL,
     access_token       VARCHAR(500),
-    client_ip          VARCHAR(100),
-    client_user_agent  VARCHAR(500),
+    client_ip          VARCHAR(1000),
+    client_user_agent  VARCHAR(1000),
     client_longitude   VARCHAR(100),
     client_latitude    VARCHAR(100),
     date_created       DATETIME NOT NULL
@@ -1610,6 +1628,14 @@ ALTER TABLE app_portfolio.message_translation
 ALTER TABLE app_portfolio.message_translation
     ADD CONSTRAINT message_translation_message_fk FOREIGN KEY ( message_code )
         REFERENCES app_portfolio.message ( code );
+
+ALTER TABLE app_portfolio.parameter_type_translation
+    ADD CONSTRAINT parameter_type_translation_language_fk FOREIGN KEY ( language_id )
+        REFERENCES app_portfolio.language ( id );
+
+ALTER TABLE app_portfolio.parameter_type_translation
+    ADD CONSTRAINT parameter_type_translation_parameter_type_fk FOREIGN KEY ( parameter_type_id )
+        REFERENCES app_portfolio.parameter_type ( id );
 
 ALTER TABLE app_portfolio.profile_search
     ADD CONSTRAINT profile_search_user_account_fk FOREIGN KEY ( user_account_id )

@@ -93,6 +93,12 @@ INSERT INTO app_portfolio.message_translation (language_id, message_code, text) 
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (31,'20401','Անվավեր գաղտնաբառ');
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (31,'20500','Բացակայում է լայնությունը կամ երկայնությունը');
 --
+-- parameter_type_translation
+--
+INSERT INTO app_portfolio.parameter_type_translation (text, parameter_type_id, language_id) VALUES ('Հանրային','0',31);
+INSERT INTO app_portfolio.parameter_type_translation (text, parameter_type_id, language_id) VALUES ('Մասնավոր կիսվել է','1',31);
+INSERT INTO app_portfolio.parameter_type_translation (text, parameter_type_id, language_id) VALUES ('Մասնավոր','2',31);
+--
 -- setting_translation
 --
 INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (1,31,'A4 (210 x 297 մմ) դիմանկար');

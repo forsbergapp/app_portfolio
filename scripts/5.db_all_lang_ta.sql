@@ -93,6 +93,12 @@ INSERT INTO app_portfolio.message_translation (language_id, message_code, text) 
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (527,'20401','தவறான கடவுச்சொல்');
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (527,'20500','அட்சரேகை அல்லது தீர்க்கரேகை இல்லை');
 --
+-- parameter_type_translation
+--
+INSERT INTO app_portfolio.parameter_type_translation (text, parameter_type_id, language_id) VALUES ('பொது','0',527);
+INSERT INTO app_portfolio.parameter_type_translation (text, parameter_type_id, language_id) VALUES ('தனிப்பட்ட பகிர்வு','1',527);
+INSERT INTO app_portfolio.parameter_type_translation (text, parameter_type_id, language_id) VALUES ('தனியார்','2',527);
+--
 -- setting_translation
 --
 INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (1,527,'A4 (210 x 297 மிமீ) உருவப்படம்');
