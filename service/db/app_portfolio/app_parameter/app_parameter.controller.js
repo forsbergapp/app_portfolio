@@ -26,7 +26,7 @@ module.exports = {
 		});
 	},
 	getParameters_admin: (req, res) => {
-		getParameters_admin(req.query.app_id, req.params.app_id, (err, results) =>{
+		getParameters_admin(req.query.app_id, req.params.app_id, req.query.lang_code, (err, results) =>{
 			if (err) {
 				return res.status(500).send({
 					data: err
