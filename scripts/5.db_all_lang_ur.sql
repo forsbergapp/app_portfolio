@@ -93,6 +93,12 @@ INSERT INTO app_portfolio.message_translation (language_id, message_code, text) 
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (568,'20401','غلط پاسورڈ');
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (568,'20500','عرض بلد یا عرض البلد غائب ہے۔');
 --
+-- parameter_type_translation
+--
+INSERT INTO app_portfolio.parameter_type_translation (text, parameter_type_id, language_id) VALUES ('عوام','0',568);
+INSERT INTO app_portfolio.parameter_type_translation (text, parameter_type_id, language_id) VALUES ('نجی اشتراک کردہ','1',568);
+INSERT INTO app_portfolio.parameter_type_translation (text, parameter_type_id, language_id) VALUES ('نجی','2',568);
+--
 -- setting_translation
 --
 INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (1,568,'A4 (210 x 297 ملی میٹر) پورٹریٹ');

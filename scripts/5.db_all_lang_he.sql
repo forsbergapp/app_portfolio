@@ -93,6 +93,12 @@ INSERT INTO app_portfolio.message_translation (language_id, message_code, text) 
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (198,'20401','סיסמה שגויה');
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (198,'20500','חסרים קו רוחב או קו אורך');
 --
+-- parameter_type_translation
+--
+INSERT INTO app_portfolio.parameter_type_translation (text, parameter_type_id, language_id) VALUES ('פּוּמְבֵּי','0',198);
+INSERT INTO app_portfolio.parameter_type_translation (text, parameter_type_id, language_id) VALUES ('משותף פרטי','1',198);
+INSERT INTO app_portfolio.parameter_type_translation (text, parameter_type_id, language_id) VALUES ('פְּרָטִי','2',198);
+--
 -- setting_translation
 --
 INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (1,198,'דיוקן A4 (210 x 297 מ"מ).');

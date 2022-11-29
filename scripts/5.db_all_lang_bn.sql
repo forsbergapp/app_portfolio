@@ -93,6 +93,12 @@ INSERT INTO app_portfolio.message_translation (language_id, message_code, text) 
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (63,'20401','অবৈধ পাসওয়ার্ড');
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (63,'20500','অনুপস্থিত অক্ষাংশ বা দ্রাঘিমাংশ');
 --
+-- parameter_type_translation
+--
+INSERT INTO app_portfolio.parameter_type_translation (text, parameter_type_id, language_id) VALUES ('পাবলিক','0',63);
+INSERT INTO app_portfolio.parameter_type_translation (text, parameter_type_id, language_id) VALUES ('ব্যক্তিগত ভাগ করা','1',63);
+INSERT INTO app_portfolio.parameter_type_translation (text, parameter_type_id, language_id) VALUES ('ব্যক্তিগত','2',63);
+--
 -- setting_translation
 --
 INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (1,63,'A4 (210 x 297 মিমি) প্রতিকৃতি');

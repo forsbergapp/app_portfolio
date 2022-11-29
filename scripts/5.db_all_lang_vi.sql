@@ -93,6 +93,12 @@ INSERT INTO app_portfolio.message_translation (language_id, message_code, text) 
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (575,'20401','Mật khẩu không hợp lệ');
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (575,'20500','Thiếu vĩ độ hoặc kinh độ');
 --
+-- parameter_type_translation
+--
+INSERT INTO app_portfolio.parameter_type_translation (text, parameter_type_id, language_id) VALUES ('Công cộng','0',575);
+INSERT INTO app_portfolio.parameter_type_translation (text, parameter_type_id, language_id) VALUES ('Chia sẻ riêng tư','1',575);
+INSERT INTO app_portfolio.parameter_type_translation (text, parameter_type_id, language_id) VALUES ('Riêng tư','2',575);
+--
 -- setting_translation
 --
 INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (1,575,'A4 (210 x 297 mm) dọc');
