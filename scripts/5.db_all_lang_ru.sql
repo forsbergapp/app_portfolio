@@ -92,6 +92,12 @@ INSERT INTO app_portfolio.message_translation (language_id, message_code, text) 
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (453,'20401','Неверный пароль');
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (453,'20500','Отсутствующая широта или долгота');
 --
+-- parameter_type_translation
+--
+INSERT INTO app_portfolio.parameter_type_translation (text, parameter_type_id, language_id) VALUES ('Общественный','0',453);
+INSERT INTO app_portfolio.parameter_type_translation (text, parameter_type_id, language_id) VALUES ('Частный общий','1',453);
+INSERT INTO app_portfolio.parameter_type_translation (text, parameter_type_id, language_id) VALUES ('Частный','2',453);
+--
 -- setting_translation
 --
 INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (1,453,'A4 (210 x 297 мм), книжная ориентация');

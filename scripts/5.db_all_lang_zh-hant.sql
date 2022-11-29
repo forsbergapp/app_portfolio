@@ -92,6 +92,12 @@ INSERT INTO app_portfolio.message_translation (language_id, message_code, text) 
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (546,'20401','無效的密碼');
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (546,'20500','缺少緯度或經度');
 --
+-- parameter_type_translation
+--
+INSERT INTO app_portfolio.parameter_type_translation (text, parameter_type_id, language_id) VALUES ('上市','0',546);
+INSERT INTO app_portfolio.parameter_type_translation (text, parameter_type_id, language_id) VALUES ('私人共享','1',546);
+INSERT INTO app_portfolio.parameter_type_translation (text, parameter_type_id, language_id) VALUES ('私人的','2',546);
+--
 -- setting_translation
 --
 INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (1,546,'A4（210 x 297 毫米）縱向');

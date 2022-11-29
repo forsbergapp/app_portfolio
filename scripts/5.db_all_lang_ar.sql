@@ -92,6 +92,12 @@ INSERT INTO app_portfolio.message_translation (language_id, message_code, text) 
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (25,'20401','رمز مرور خاطئ');
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (25,'20500','خط العرض أو خط الطول مفقود');
 --
+-- parameter_type_translation
+--
+INSERT INTO app_portfolio.parameter_type_translation (text, parameter_type_id, language_id) VALUES ('عام','0',25);
+INSERT INTO app_portfolio.parameter_type_translation (text, parameter_type_id, language_id) VALUES ('مشترك خاص','1',25);
+INSERT INTO app_portfolio.parameter_type_translation (text, parameter_type_id, language_id) VALUES ('خاص','2',25);
+--
 -- setting_translation
 --
 INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (1,25,'A4 (210 × 297 مم) عمودي');

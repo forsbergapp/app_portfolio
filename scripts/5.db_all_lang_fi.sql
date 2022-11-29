@@ -93,6 +93,12 @@ INSERT INTO app_portfolio.message_translation (language_id, message_code, text) 
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (162,'20401','Väärä salasana');
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (162,'20500','Leveys- tai pituusaste puuttuu');
 --
+-- parameter_type_translation
+--
+INSERT INTO app_portfolio.parameter_type_translation (text, parameter_type_id, language_id) VALUES ('Julkinen','0',162);
+INSERT INTO app_portfolio.parameter_type_translation (text, parameter_type_id, language_id) VALUES ('Yksityinen jaettu','1',162);
+INSERT INTO app_portfolio.parameter_type_translation (text, parameter_type_id, language_id) VALUES ('Yksityinen','2',162);
+--
 -- setting_translation
 --
 INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (1,162,'A4 (210 x 297 mm) muotokuva');

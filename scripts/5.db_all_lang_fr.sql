@@ -93,6 +93,12 @@ INSERT INTO app_portfolio.message_translation (language_id, message_code, text) 
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (166,'20401','Mot de passe incorrect');
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (166,'20500','Latitude ou longitude manquante');
 --
+-- parameter_type_translation
+--
+INSERT INTO app_portfolio.parameter_type_translation (text, parameter_type_id, language_id) VALUES ('Public','0',166);
+INSERT INTO app_portfolio.parameter_type_translation (text, parameter_type_id, language_id) VALUES ('Privé partagé','1',166);
+INSERT INTO app_portfolio.parameter_type_translation (text, parameter_type_id, language_id) VALUES ('Privé','2',166);
+--
 -- setting_translation
 --
 INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (1,166,'A4 (210 x 297 mm) portrait');

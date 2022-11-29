@@ -92,6 +92,12 @@ INSERT INTO app_portfolio.message_translation (language_id, message_code, text) 
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (178,'20401','Ungültiges Passwort');
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (178,'20500','Breiten- oder Längengrad fehlt');
 --
+-- parameter_type_translation
+--
+INSERT INTO app_portfolio.parameter_type_translation (text, parameter_type_id, language_id) VALUES ('Öffentlichkeit','0',178);
+INSERT INTO app_portfolio.parameter_type_translation (text, parameter_type_id, language_id) VALUES ('Privat geteilt','1',178);
+INSERT INTO app_portfolio.parameter_type_translation (text, parameter_type_id, language_id) VALUES ('Privatgelände','2',178);
+--
 -- setting_translation
 --
 INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (1,178,'A4 (210 x 297 mm) Hochformat');

@@ -92,6 +92,12 @@ INSERT INTO app_portfolio.message_translation (language_id, message_code, text) 
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (438,'20401','ਗਲਤ ਪਾਸਵਰਡ');
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (438,'20500','ਗੁੰਮ ਵਿਥਕਾਰ ਜਾਂ ਲੰਬਕਾਰ');
 --
+-- parameter_type_translation
+--
+INSERT INTO app_portfolio.parameter_type_translation (text, parameter_type_id, language_id) VALUES ('ਜਨਤਕ','0',438);
+INSERT INTO app_portfolio.parameter_type_translation (text, parameter_type_id, language_id) VALUES ('ਨਿੱਜੀ ਸ਼ੇਅਰ','1',438);
+INSERT INTO app_portfolio.parameter_type_translation (text, parameter_type_id, language_id) VALUES ('ਨਿਜੀ','2',438);
+--
 -- setting_translation
 --
 INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES (1,438,'A4 (210 x 297 mm) ਪੋਰਟਰੇਟ');
