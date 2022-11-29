@@ -877,7 +877,7 @@ function lov_show(lov, function_event){
     let lov_column_value='';
     switch (lov){
         case 'PARAMETER_TYPE':{
-            lov_column_value = 'parameter_type_name';
+            lov_column_value = 'parameter_type_text';
             if (window.global_admin){
                 url = window.global_rest_url_base + window.global_rest_parameter_type + `admin?`;
                 token_type = 2;

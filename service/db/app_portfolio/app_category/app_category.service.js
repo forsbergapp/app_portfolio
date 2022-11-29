@@ -15,7 +15,7 @@ module.exports = {
 																	FROM ${get_schema_name()}.app_category_translation act1,
 																		 ${get_schema_name()}.language l1
 																   WHERE l1.id  = act1.language_id
-																	 AND act1.app_category_id  = act.app_category_id
+																	 AND act1.app_category_id  = ac.id
 																	 AND l1.lang_code IN (:lang_code1, :lang_code2, :lang_code3)
 																 )
 											)
