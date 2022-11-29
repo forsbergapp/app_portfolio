@@ -239,64 +239,68 @@ function getReportSettings(){
 }
 // update timetable
 async function update_timetable_report(timetable_type = 0, item_id = null, settings) {
-
-    window.global_timetable_type = timetable_type;
-	switch (timetable_type){
-	//create timetable month or day or year if they are visible instead
-	case 0:{
-        //update user settings to current select option 
-	    set_settings_select();
-        let select_user_settings = document.getElementById('setting_select_user_setting');
-        let current_user_settings =[];
-        for (i=0;i<=select_user_settings.options.length-1;i++){
-            current_user_settings.push(
-            {
-            "description" : select_user_settings[i].getAttribute('description'),
-            "regional_language_locale" : select_user_settings[i].getAttribute('regional_language_locale'),
-            "regional_timezone" : select_user_settings[i].getAttribute('regional_timezone'),
-            "regional_number_system" : select_user_settings[i].getAttribute('regional_number_system'),
-            "regional_calendar_hijri_type" : select_user_settings[i].getAttribute('regional_calendar_hijri_type'),
-            "gps_lat_text" : parseFloat(select_user_settings[i].getAttribute('gps_lat_text')),
-            "gps_long_text" : parseFloat(select_user_settings[i].getAttribute('gps_long_text')),
-            "prayer_method" : select_user_settings[i].getAttribute('prayer_method'),
-            "prayer_asr_method" : select_user_settings[i].getAttribute('prayer_asr_method'),
-            "prayer_high_latitude_adjustment" : select_user_settings[i].getAttribute('prayer_high_latitude_adjustment'),
-            "prayer_time_format" : select_user_settings[i].getAttribute('prayer_time_format'),
-            "prayer_hijri_date_adjustment" : select_user_settings[i].getAttribute('prayer_hijri_date_adjustment')
-            });
+    return await new Promise(function (resolve){
+        window.global_timetable_type = timetable_type;
+        switch (timetable_type){
+            //create timetable month or day or year if they are visible instead
+            case 0:{
+                //update user settings to current select option 
+                set_settings_select();
+                let select_user_settings = document.getElementById('setting_select_user_setting');
+                let current_user_settings =[];
+                for (i=0;i<=select_user_settings.options.length-1;i++){
+                    current_user_settings.push(
+                    {
+                    "description" : select_user_settings[i].getAttribute('description'),
+                    "regional_language_locale" : select_user_settings[i].getAttribute('regional_language_locale'),
+                    "regional_timezone" : select_user_settings[i].getAttribute('regional_timezone'),
+                    "regional_number_system" : select_user_settings[i].getAttribute('regional_number_system'),
+                    "regional_calendar_hijri_type" : select_user_settings[i].getAttribute('regional_calendar_hijri_type'),
+                    "gps_lat_text" : parseFloat(select_user_settings[i].getAttribute('gps_lat_text')),
+                    "gps_long_text" : parseFloat(select_user_settings[i].getAttribute('gps_long_text')),
+                    "prayer_method" : select_user_settings[i].getAttribute('prayer_method'),
+                    "prayer_asr_method" : select_user_settings[i].getAttribute('prayer_asr_method'),
+                    "prayer_high_latitude_adjustment" : select_user_settings[i].getAttribute('prayer_high_latitude_adjustment'),
+                    "prayer_time_format" : select_user_settings[i].getAttribute('prayer_time_format'),
+                    "prayer_hijri_date_adjustment" : select_user_settings[i].getAttribute('prayer_hijri_date_adjustment')
+                    });
+                }
+                document.getElementById('paper').innerHTML = window.global_app_spinner;
+                displayDay(settings, item_id, current_user_settings).then(function(timetable){
+                    timetable.style.display = 'block';
+                    document.getElementById('paper').innerHTML = timetable.outerHTML;
+                    create_qr('timetable_qr_code', getHostname());
+                    resolve();
+                })
+                break;
+            }
+            //1=create timetable month
+            case 1:{
+                document.getElementById('paper').innerHTML = window.global_app_spinner;
+                displayMonth(settings, item_id).then(function(timetable){
+                    timetable.style.display = 'block';
+                    document.getElementById('paper').innerHTML = timetable.outerHTML;
+                    create_qr('timetable_qr_code', getHostname());
+                    resolve();
+                })
+                break;
+            }
+            //2=create timetable year
+            case 2:{
+                document.getElementById('paper').innerHTML = window.global_app_spinner;
+                displayYear(settings, item_id).then(function(timetable){
+                    timetable.style.display = 'block';
+                    document.getElementById('paper').innerHTML = timetable.outerHTML;
+                    create_qr('timetable_qr_code', getHostname());
+                    resolve();
+                })
+                break;
+            }
+            default:{
+                break;
+            }
         }
-        document.getElementById('paper').innerHTML = window.global_app_spinner;
-		await displayDay(settings, item_id, current_user_settings).then(function(timetable){
-            timetable.style.display = 'block';
-            document.getElementById('paper').innerHTML = timetable.outerHTML;
-            create_qr('timetable_qr_code', getHostname());
-        })
-		break;
-	}
-	//1=create timetable month
-	case 1:{
-        document.getElementById('paper').innerHTML = window.global_app_spinner;
-        await displayMonth(settings, item_id).then(function(timetable){
-            timetable.style.display = 'block';
-			document.getElementById('paper').innerHTML = timetable.outerHTML;
-            create_qr('timetable_qr_code', getHostname());
-        })
-		break;
-	}
-	//2=create timetable year
-	case 2:{
-        document.getElementById('paper').innerHTML = window.global_app_spinner;
-		await displayYear(settings, item_id).then(function(timetable){
-            timetable.style.display = 'block';
-		    document.getElementById('paper').innerHTML = timetable.outerHTML;
-            create_qr('timetable_qr_code', getHostname());
-        })
-		break;
-	}
-	default:{
-		break;
-		}
-	}
+    })
 }
 function get_report_url(id, sid, papersize, item, format){
     let server_url = getHostname() + `${window.global_service_report}`;
@@ -398,6 +402,33 @@ async function map_update_app(longitude, latitude, zoom, text1, text2, marker_id
 /*----------------------- */
 /* THEME                  */
 /*----------------------- */
+async function update_all_theme_thumbnails(){
+    await update_timetable_report(0, null, getReportSettings()).then(function(){
+        document.querySelectorAll('#slides_day .slide').forEach(e => {
+            update_theme_thumbnail(e, 'day', 1);
+        })
+    });
+    
+    await update_timetable_report(1, null, getReportSettings()).then(function(){
+        document.querySelectorAll('#slides_month .slide').forEach(e => {
+            update_theme_thumbnail(e, 'month', 2);
+        })
+    });
+    await update_timetable_report(2, null, getReportSettings()).then(function(){
+        document.querySelectorAll('#slides_year .slide').forEach(e => {
+            update_theme_thumbnail(e, 'year', 1);
+        })
+    });
+}
+function update_theme_thumbnail(e, theme_type, classlist_pos){
+    e.children[0].innerHTML = document.getElementById('timetable_' + theme_type).outerHTML;
+    let new_theme_id = e.children[0].getAttribute('data-theme_id');
+    //theme always second class in classList
+    let old_theme = e.children[0].children[0].classList[classlist_pos];
+    e.children[0].children[0].classList.remove(old_theme);
+    e.children[0].children[0].classList.add('theme_'  + theme_type + '_' + new_theme_id);
+}
+
 function get_theme_id(type) {
     let select_user_setting = document.getElementById('setting_select_user_setting');
     if (document.getElementsByClassName('slider_active_' + type)[0])
@@ -422,68 +453,68 @@ function set_theme_id(type, theme_id) {
     return null;
 }
 function set_theme_title(type) {
-    document.getElementById('slider_theme_' + type + '_id').innerHTML =
-        document.getElementById('theme_' + type + '_' + get_theme_id(type)).getAttribute('data-theme_id');
+    document.getElementById(`slider_theme_${type}_id`).innerHTML =
+        document.getElementById(`theme_${type}_${get_theme_id(type)}`).getAttribute('data-theme_id');
     return null;
 }
 function load_themes() {
-    slide(document.getElementById('setting_themes_day_slider'),
-        document.getElementById('slides_day'),
+    slide(document.getElementById('slides_day'),
         document.getElementById('slider_prev_day'),
         document.getElementById('slider_next_day'),
         'day');
-    slide(document.getElementById('setting_themes_month_slider'),
-        document.getElementById('slides_month'),
+    slide(document.getElementById('slides_month'),
         document.getElementById('slider_prev_month'),
         document.getElementById('slider_next_month'),
         'month');
-    slide(document.getElementById('setting_themes_year_slider'),
-        document.getElementById('slides_year'),
+    slide(document.getElementById('slides_year'),
         document.getElementById('slider_prev_year'),
         document.getElementById('slider_next_year'),
         'year');
     return null;
 }
-function slide(wrapper, items, prev, next, type) {
-    let posInitial,
-        slides = items.getElementsByClassName('slide_' + type),
-        slidesLength = slides.length;
-    document.getElementById(items.children[0].children[0].id).classList.add('slider_active_' + type);
+function slide(items, prev, next, type) {
+    document.getElementById(items.children[0].children[0].id).classList.add(`slider_active_${type}`);
     set_theme_title(type);
-    wrapper.classList.add('loaded');
 
     // Click events
-    prev.addEventListener('click', function() { shiftSlide(-1) });
-    next.addEventListener('click', function() { shiftSlide(1) });
+    prev.addEventListener('click', function() { theme_nav(-1) });
+    next.addEventListener('click', function() { theme_nav(1) });
 
-    function shiftSlide(dir, action) {
-        let slideSize = items.getElementsByClassName('slide_' + type)[0].offsetWidth;
-        let index;
-        //read position and divide with image size and remove "px" characters
-        //better solution would be search items and get index where active class is found
-        index = Math.abs(items.style.left.substr(0, items.style.left.length - 2) / slideSize);
-        if (!action) { posInitial = items.offsetLeft; }
-
-        if (dir == 1) {
-            if ((index + 1) == slidesLength) {
-                items.style.left = "0px";
-                index = 0;
-            } else {
-                items.style.left = (posInitial - slideSize) + "px";
-                index++;
-            }
-        } else if (dir == -1) {
-            if (index == 0) {
-                items.style.left = -((slidesLength - 1) * slideSize) + "px";
-                index = slidesLength - 1;
-            } else {
-                items.style.left = (posInitial + slideSize) + "px";
-                index--;
-            }
-        }
-        document.getElementsByClassName('slider_active_' + type)[0].classList.remove('slider_active_' + type);
-        document.getElementById(items.children[index].children[0].id).classList.add('slider_active_' + type);
+    async function theme_nav(dir) {
+        let theme_index;
+        //get current index
+        document.querySelectorAll(`#slides_${type} .slide_${type}`).forEach((e, index) => {
+            if (e.children[0].classList.contains(`slider_active_${type}`))
+                theme_index = index;
+        })
+        //set next index
+        if (dir == 1)
+            if ((theme_index + 1) == items.getElementsByClassName(`slide_${type}`).length)
+                theme_index = 0;
+            else
+                theme_index++;
+        else 
+            if (dir == -1)
+                if (theme_index == 0)
+                    theme_index = items.getElementsByClassName(`slide_${type}`).length -1;
+                else
+                    theme_index--;
+        //remove old active theme class
+        document.getElementsByClassName(`slider_active_${type}`)[0].classList.remove(`slider_active_${type}`);
+        //add new active theme class
+        document.getElementById(items.children[theme_index].children[0].id).classList.add(`slider_active_${type}`);
+        //set theme title
         set_theme_title(type);
+
+        if (type=='month'){
+            //if changing month update year
+            await update_timetable_report(2, null, getReportSettings()).then(function(){
+                document.querySelectorAll('#slides_year .slide').forEach(e => {
+                    update_theme_thumbnail(e, 'year', 1);
+                })
+            });
+        }
+
     }
 }
 /*----------------------- */
@@ -717,6 +748,8 @@ async function toolbar_bottom(choice) {
                     paper.style.display = "none";
                 document.getElementById('profile_btn_top').style.visibility='hidden';
                 settings.style.visibility = 'visible';
+                if (document.getElementById('tab_nav_3').classList.contains('tab_nav_selected'))
+                    update_all_theme_thumbnails();
                 break;
             }
         //profile
@@ -739,7 +772,7 @@ async function toolbar_bottom(choice) {
 }
 
 
-function openTab(tab_selected) {
+async function openTab(tab_selected) {
     let i;
     for (i = 1; i < 8; i++) {
         //hide all tab content
@@ -751,6 +784,11 @@ function openTab(tab_selected) {
     document.getElementById('tab' + tab_selected).style.display = 'block';
     //mark active tab
     document.getElementById("tab_nav_" + tab_selected).classList.add("tab_nav_selected");
+    
+    //update themes for tab 3
+    if (tab_selected==3){
+        update_all_theme_thumbnails();
+    }
 }
 
 
@@ -2203,7 +2241,7 @@ function setEvents() {
                                                                                             document.getElementById('profile_search_list_wrap').style.visibility = 'visible';
                                                                                             document.getElementById('profile_search_input').focus();
                                                                                          }}, false);
-    document.getElementById('toolbar_btn_settings').addEventListener('click', function() { toolbar_bottom(5) }, false);    
+
 
     document.getElementById('user_locale_select').addEventListener('change', function() { common_translate_ui_app(this.value);}, false);
     
@@ -2306,12 +2344,13 @@ function setEvents() {
     //dialogue scan mobile
     document.getElementById('scan_open_mobile_close').addEventListener('click', function() { document.getElementById('dialogue_scan_open_mobile').style.visibility = 'hidden' }, false);
     //toolbar bottom
+    document.getElementById('toolbar_btn_about').addEventListener('click', function() { document.getElementById('dialogue_info').style.visibility = 'visible'; }, false);
     document.getElementById('toolbar_btn_print').addEventListener('click', function() { toolbar_bottom(1) }, false);
     document.getElementById('toolbar_btn_day').addEventListener('click', function() { toolbar_bottom(2) }, false);
     document.getElementById('toolbar_btn_month').addEventListener('click', function() { toolbar_bottom(3) }, false);
     document.getElementById('toolbar_btn_year').addEventListener('click', function() { toolbar_bottom(4) }, false);
-    document.getElementById('toolbar_btn_about').addEventListener('click', function() { document.getElementById('dialogue_info').style.visibility = 'visible'; }, false);
-    
+    document.getElementById('toolbar_btn_settings').addEventListener('click', function() { toolbar_bottom(5) }, false);    
+
     //common
 
     //profile button top
