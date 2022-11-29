@@ -4,7 +4,7 @@ module.exports = {
 	getParameterType: (req, res) => {
 		if (typeof req.query.id == 'undefined')
 			req.query.id = null;
-		getParameterType(req.query.app_id, req.query.id,(err, results) =>{
+		getParameterType(req.query.app_id, req.query.id, req.query.lang_code, (err, results) =>{
 			if (err) {
 				return res.status(500).send({
 					data: err
