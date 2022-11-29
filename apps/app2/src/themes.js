@@ -47,15 +47,15 @@ module.exports = {
             //get themes and save result in three theme variables
             results.map( (themes_map,i) => {
                 //Node does not like eval('span_themes_' + themes_map.type.toLowerCase()) +=
+                //src='${themes_map.image_preview_url}'
                 var new_span = `<span class="slide slide_${themes_map.type.toLowerCase()}">
-                                    <img id='theme_${themes_map.type.toLowerCase()}_${themes_map.id}' 
-                                        src='${themes_map.image_preview_url}'
+                                    <div id='theme_${themes_map.type.toLowerCase()}_${themes_map.id}'                       
                                         data-theme_id='${themes_map.id}'
                                         data-header_image=${themes_map.image_header}
                                         data-footer_image=${themes_map.image_footer}
                                         data-background_image=${themes_map.image_background}
-                                        data-category='${themes_map.category}'
-                                    />
+                                        data-category='${themes_map.category}'> 
+                                    </div>
                                 </span>`;
                 switch (themes_map.type.toLowerCase()){
                     case 'day':{
@@ -72,7 +72,7 @@ module.exports = {
                     }
                 }  
             })
-            //add each theme dynamic variable to wrapping html
+            //add each theme dynamic variable span_themes_day, span_themes_month and span_themes_year to wrapping html
             const theme_type_arr = ['day','month','year'];
             theme_type_arr.forEach(themes_type => {
                 html_themes += 
