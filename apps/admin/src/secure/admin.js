@@ -660,7 +660,7 @@ function show_app_parameter(app_id){
                         <div class='common_lov_button list_lov_click'></div>
                     </div>
                     <div class='list_app_parameter_col'>
-                        <div class='list_readonly_app_parameter'>${json.data[i].parameter_type_name}</div>
+                        <div class='list_readonly_app_parameter'>${json.data[i].parameter_type_text}</div>
                     </div>
                     <div class='list_app_parameter_col'>
                         <div class='list_readonly_app_parameter'>${json.data[i].parameter_name}</div>
@@ -820,7 +820,7 @@ function list_events(item_row, item_edit, column_start_index){
                         json = JSON.parse(result);
                         if (json.data.length == 1){
                             //set new value
-                            document.getElementById(event.target.parentNode.parentNode.id).children[2].children[0].innerHTML = json.data[0].parameter_type_name;
+                            document.getElementById(event.target.parentNode.parentNode.id).children[2].children[0].innerHTML = json.data[0].parameter_type_text;
                         }
                         else{
                             event.stopPropagation();

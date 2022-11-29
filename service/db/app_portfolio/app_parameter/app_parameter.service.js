@@ -1,4 +1,4 @@
-const {execute_db_sql, get_schema_name} = require ("../../common/common.service");
+const {execute_db_sql, get_schema_name, get_locale} = require ("../../common/common.service");
 
 module.exports = {
 	//returns parameters for app_id=0 and given app_id
@@ -52,21 +52,37 @@ module.exports = {
 				return callBack(null, result);
 		});
 	},
-	getParameters_admin: (app_id, data_app_id, callBack) => {
+	getParameters_admin: (app_id, data_app_id, lang_code, callBack) => {
 		let sql;
 		let parameters;
 		sql = `SELECT ap.app_id "app_id",
 					  ap.parameter_type_id "parameter_type_id",
 					  pt.parameter_type_name "parameter_type_name",
+					  ptt.text "parameter_type_text",
 					  ap.parameter_name "parameter_name",
 					  ap.parameter_value "parameter_value",
 					  ap.parameter_comment "parameter_comment"
 				 FROM ${get_schema_name()}.app_parameter ap,
 					  ${get_schema_name()}.parameter_type pt
+				 LEFT OUTER JOIN ${get_schema_name()}.parameter_type_translation ptt
+				   ON ptt.parameter_type_id = pt.id
+				  AND ptt.language_id IN (SELECT id 
+											FROM ${get_schema_name()}.language l
+										   WHERE l.lang_code = (SELECT COALESCE(MAX(l1.lang_code),'en')
+																  FROM ${get_schema_name()}.parameter_type_translation ptt1,
+																	   ${get_schema_name()}.language l1
+																 WHERE l1.id  = ptt1.language_id
+																   AND ptt1.parameter_type_id  = pt.id
+																   AND l1.lang_code IN (:lang_code1, :lang_code2, :lang_code3)
+																)
+										  )
 				WHERE ap.app_id = :app_id
 				  AND pt.id = ap.parameter_type_id
-				ORDER BY 1, 4`;
-		parameters = {app_id: data_app_id};
+				ORDER BY 1, 5`;
+		parameters = {lang_code1: get_locale(lang_code, 1),
+					  lang_code2: get_locale(lang_code, 2),
+					  lang_code3: get_locale(lang_code, 3),
+					  app_id: data_app_id};
 		execute_db_sql(app_id, sql, parameters, true, 
 					   __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
