@@ -370,6 +370,24 @@ GRANT SELECT ON app_portfolio.app_parameter TO role_app3;
 
 GRANT ALL PRIVILEGES ON app_portfolio.app_parameter TO role_app_dba;
 
+CREATE TABLE app_portfolio.app_role (
+    id        INTEGER NOT NULL,
+    role_name VARCHAR(100) NOT NULL,
+    icon      VARCHAR(10) NOT NULL
+);
+
+GRANT SELECT ON app_portfolio.app_role TO role_app1;
+
+GRANT SELECT ON app_portfolio.app_role TO role_app2;
+
+GRANT SELECT ON app_portfolio.app_role TO role_app3;
+
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_role TO role_app_admin;
+
+GRANT ALL PRIVILEGES ON app_portfolio.app_role TO role_app_dba;
+
+ALTER TABLE app_portfolio.app_role ADD CONSTRAINT app_role_pk PRIMARY KEY ( id );
+
 CREATE TABLE app_portfolio.app_screenshot (
     id                   INT NOT NULL AUTO_INCREMENT,
     app_device_app_id    INTEGER NOT NULL,
@@ -1088,6 +1106,7 @@ CREATE TABLE app_portfolio.user_account (
     provider_image        LONGBLOB,
     provider_image_url    VARCHAR(1000),
     provider_email        VARCHAR(1000),
+    app_role_id           INTEGER,
 	CONSTRAINT user_account_pk PRIMARY KEY ( id )
 );
 GRANT SELECT, INSERT, DELETE, UPDATE ON app_portfolio.user_account TO role_app1;
@@ -1241,6 +1260,7 @@ CREATE TABLE app_portfolio.user_account_hist (
     provider_last_name    VARCHAR(1000),
     provider_image_url    VARCHAR(1000),
     provider_email        VARCHAR(1000),
+    app_role_id           INTEGER,
 	CONSTRAINT user_account_hist_pk PRIMARY KEY ( id )
 );
 GRANT SELECT, INSERT ON app_portfolio.user_account_hist TO role_app1;
@@ -1615,6 +1635,10 @@ ALTER TABLE app_portfolio.user_account_app
         REFERENCES app_portfolio.app ( id )
         ON DELETE CASCADE;
 
+ALTER TABLE app_portfolio.user_account
+    ADD CONSTRAINT user_account_app_role_fk FOREIGN KEY ( app_role_id )
+        REFERENCES app_portfolio.app_role ( id );
+        
 ALTER TABLE app_portfolio.user_account_app
     ADD CONSTRAINT user_account_app_setting_arabic_script_fk FOREIGN KEY ( setting_preference_arabic_script_id )
         REFERENCES app_portfolio.setting ( id );
@@ -2154,7 +2178,8 @@ BEGIN
 	provider_first_name,
 	provider_last_name,
 	provider_image_url,
-	provider_email)
+	provider_email,
+    app_role_id)
 	SELECT
 	'I',
 	CURRENT_TIMESTAMP,
@@ -2177,7 +2202,8 @@ BEGIN
 	new.provider_first_name,
 	new.provider_last_name,
 	new.provider_image_url,
-	new.provider_email
+	new.provider_email,
+    new.app_role_id
 	FROM app_portfolio.app_parameter
     WHERE parameter_name = 'SERVICE_DB_ENABLE_AUDIT'
       AND parameter_value= '1';
@@ -2210,7 +2236,8 @@ BEGIN
 		provider_first_name,
 		provider_last_name,
 		provider_image_url,
-		provider_email)
+		provider_email,
+        app_role_id)
 		SELECT
 		'U',
 		CURRENT_TIMESTAMP,
@@ -2233,7 +2260,8 @@ BEGIN
 		new.provider_first_name,
 		new.provider_last_name,
 		new.provider_image_url,
-		new.provider_email
+		new.provider_email,
+        new.app_role_id
 		FROM app_portfolio.app_parameter
 	    WHERE parameter_name = 'SERVICE_DB_ENABLE_AUDIT'
            AND parameter_value= '1';
