@@ -1356,50 +1356,6 @@ GRANT ALL PRIVILEGES ON app_portfolio.user_account_view_hist TO role_app_dba;
 
 GRANT SELECT, INSERT ON app_portfolio.user_account_view_hist TO role_app2;
 
-GRANT trigger on app_portfolio.app2_user_setting to role_app_admin;
-GRANT trigger on app_portfolio.app2_user_setting to role_app2;
-
-GRANT trigger on app_portfolio.app2_user_setting_like to role_app_admin;
-GRANT trigger on app_portfolio.app2_user_setting_like to role_app2;
-
-GRANT trigger on app_portfolio.app2_user_setting_view to role_app_admin;
-GRANT trigger on app_portfolio.app2_user_setting_view to role_app2;
-
-GRANT trigger on app_portfolio.profile_search to role_app_admin;
-GRANT trigger on app_portfolio.profile_search to role_app1;
-GRANT trigger on app_portfolio.profile_search to role_app3;
-GRANT trigger on app_portfolio.profile_search to role_app2;
-
-GRANT trigger on app_portfolio.user_account_app to role_app_admin;
-GRANT trigger on app_portfolio.user_account_app to role_app1;
-GRANT trigger on app_portfolio.user_account_app to role_app3;
-GRANT trigger on app_portfolio.user_account_app to role_app2;
-
-GRANT trigger on app_portfolio.user_account to role_app_admin;
-GRANT trigger on app_portfolio.user_account to role_app1;
-GRANT trigger on app_portfolio.user_account to role_app3;
-GRANT trigger on app_portfolio.user_account to role_app2;
-
-GRANT trigger on app_portfolio.user_account_follow to role_app_admin;
-GRANT trigger on app_portfolio.user_account_follow to role_app1;
-GRANT trigger on app_portfolio.user_account_follow to role_app3;
-GRANT trigger on app_portfolio.user_account_follow to role_app2;
-
-GRANT trigger on app_portfolio.user_account_like to role_app_admin;
-GRANT trigger on app_portfolio.user_account_like to role_app1;
-GRANT trigger on app_portfolio.user_account_like to role_app3;
-GRANT trigger on app_portfolio.user_account_like to role_app2;
-
-GRANT trigger on app_portfolio.user_account_logon to role_app_admin;
-GRANT trigger on app_portfolio.user_account_logon to role_app1;
-GRANT trigger on app_portfolio.user_account_logon to role_app3;
-GRANT trigger on app_portfolio.user_account_logon to role_app2;
-
-GRANT trigger on app_portfolio.user_account_view to role_app_admin;
-GRANT trigger on app_portfolio.user_account_view to role_app1;
-GRANT trigger on app_portfolio.user_account_view to role_app3;
-GRANT trigger on app_portfolio.user_account_view to role_app2;
-
 ALTER TABLE app_portfolio.app
     ADD CONSTRAINT app_app_category_fk FOREIGN KEY ( app_category_id )
         REFERENCES app_portfolio.app_category ( id );
