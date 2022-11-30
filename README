@@ -146,7 +146,7 @@ Installation instructions
 	scripts/3.db_1_grant_role_fix_mysql.ddl		MySQL
 	scripts/3.db_2_grant_role_fix_oracle.ddl 	Oracle
 
-	scripts/4.db_all_insert_data.sql			MariaDB, MySQL, Oracle, PostgreSQL
+	scripts/4.db_all_insert_data.sql			MariaDB, MySQL, Oracle, PostgreSQL (creates admin as superadmin user)
 	scripts/5.db_all_lang_*.sql					MariaDB, MySQL, Oracle, PostgreSQL
 												concatenate files
 												Linux:
