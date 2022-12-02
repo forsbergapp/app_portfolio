@@ -14,7 +14,7 @@ function log_db_sql(app_id, sql, parameters){
 	});
 	createLogDB(app_id, `DB:${process.env.SERVICE_DB_USE} Pool: ${app_id} SQL: ${parsed_sql}`);
 }
-async function execute_db_sql(app_id, sql, parameters, admin, 
+async function execute_db_sql(app_id, sql, parameters, 
 							  app_filename, app_function, app_line, callBack){
 
 		if (process.env.SERVICE_LOG_ENABLE_DB==1){

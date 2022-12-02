@@ -182,7 +182,7 @@ async function common_fetch(url_parameters, method, token_type, json_data, app_i
             }
             case 401:{
                 //Unauthorized, token expired
-                eval(`(function (){${window.global_exception_app_function}()}());`);
+                eval(`(function (){${window.global_exception_app_function}(app_id, result)}());`);
                 break;
             }
             case 403:{
@@ -554,7 +554,8 @@ function get_uservariables(){
             "user_number_system": "${Intl.NumberFormat().resolvedOptions().numberingSystem}",
             "user_platform": "${navigator.platform}",
             "client_latitude": "${window.global_client_latitude}",
-            "client_longitude": "${window.global_client_longitude}"`;
+            "client_longitude": "${window.global_client_longitude}",
+            "client_place": "${window.global_client_place}"`;
 }
 function SearchAndSetSelectedIndex(search, select_item, colcheck) {
     //colcheck=0 search id
@@ -1202,7 +1203,6 @@ function reconnect(){
 function updateOnlineStatus(){
     common_fetch(`/service/broadcast/update_connected`+ 
                  `?client_id=${window.global_clientId}`+
-                 `&admin_id=${window.global_admin_id}` + 
                  `&user_account_id=${window.global_user_account_id}` + 
                  `&identity_provider_id=${window.global_user_identity_provider_id}`, 
                  'PATCH', 0, null, null, null, (err, result) =>{
@@ -1213,7 +1213,6 @@ function connectOnline(updateOnline=false){
     window.global_clientId = Date.now();
     window.global_eventSource = new EventSource(`/service/broadcast/connect/${window.global_clientId}` +
                                                 `?app_id=${window.global_app_id}` +
-                                                `&admin_id=${window.global_admin_id}` +
                                                 `&user_account_id=${window.global_user_account_id}` +
                                                 `&identity_provider_id=${window.global_user_identity_provider_id}` +
                                                 `&admin=${window.global_admin}`);
@@ -1247,7 +1246,7 @@ async function get_place_from_gps(longitude, latitude) {
                     '/admin/?app_user_id=' + window.global_user_account_id +
                     '&longitude=' + longitude +
                     '&latitude=' + latitude;
-            tokentype = 2;
+            tokentype = 1;
         }
         else{
             url = window.global_service_geolocation + window.global_service_geolocation_gps_place + 
@@ -1278,7 +1277,7 @@ async function get_gps_from_ip() {
     if (window.global_admin){
         url = window.global_service_geolocation + window.global_service_geolocation_gps_ip + 
               '/admin?app_user_id=' +  window.global_user_account_id;
-        tokentype = 2;
+        tokentype = 1;
     }
     else{
         url = window.global_service_geolocation + window.global_service_geolocation_gps_ip + 
@@ -1308,7 +1307,7 @@ async function tzlookup(latitude, longitude){
         if (window.global_admin){
             url = window.global_service_geolocation + window.global_service_geolocation_gps_timezone +
                   `/admin?latitude=${latitude}&longitude=${longitude}`;
-            tokentype = 2;
+            tokentype = 1;
         }
         else{
             url = window.global_service_geolocation + window.global_service_geolocation_gps_timezone +
@@ -2155,7 +2154,8 @@ async function user_login(username, password, callBack) {
                     return callBack(null, {user_id: json.items[0].id,
                         username: json.items[0].username,
                         bio: json.items[0].bio,
-                        avatar: json.items[0].avatar})
+                        avatar: json.items[0].avatar,
+                        app: json.app})
                 }
             })
         }
@@ -2898,12 +2898,7 @@ function set_globals(parameters){
 
     //app exception function
     window.global_exception_app_function = parameters.exception_app_function;
-    //admin true/false
-    window.global_admin = parameters.admin;
-    if(parameters.admin_id)
-        window.global_admin_id = parameters.admin_id;
-    else
-        window.global_admin_id = '';
+    
     //service auth path
     window.global_service_auth = parameters.service_auth;
     //client credentials
@@ -2913,12 +2908,21 @@ function set_globals(parameters){
     window.global_rest_app_parameter = parameters.rest_app_parameter;
 
     //user info
-    window.global_user_account_id = '';
     window.global_user_identity_provider_id='';
-    user_preferences_set_default_globals('LOCALE');
-    user_preferences_set_default_globals('TIMEZONE');
-    user_preferences_set_default_globals('DIRECTION');
-    user_preferences_set_default_globals('ARABIC_SCRIPT');
+    if (parameters.close_eventsource==true){
+        //when admin is logged in then eventsource will be closed and reconnected
+        //with new info
+        //only closing after admin logged in and do not set user variables for admin when logged in
+        null;
+    }        
+    else{
+        window.global_user_account_id = '';
+    
+        user_preferences_set_default_globals('LOCALE');
+        user_preferences_set_default_globals('TIMEZONE');
+        user_preferences_set_default_globals('DIRECTION');
+        user_preferences_set_default_globals('ARABIC_SCRIPT');
+    }
     
     //user info set or used by services
     window.global_clientId;
@@ -2999,8 +3003,6 @@ async function init_common(parameters, callBack){
      exception_app_function:
      close_eventsource:
      ui:
-     admin:
-     admin_id:
      service_auth: 
      global_rest_client_id: 
      global_rest_client_secret:
@@ -3292,45 +3294,28 @@ async function init_common(parameters, callBack){
             }
         }
     }
+    //get data token
+    await common_fetch_basic(0, null,  null, null, (err, result)=>{
+        null;
+    })
     //get parameters
-    let json;
-    if (window.global_admin){
-        await common_fetch(`${window.global_rest_url_base}${window.global_rest_app_parameter}admin/all/${window.global_app_id}?`,
-                            'GET', 2, null, null, null, (err, result) =>{
-            if (err)
-                null;
-            else{
-                json = JSON.parse(result);
-                for (let i = 0; i < json.data.length; i++) {
-                    if (json.data[i].app_id == 0)
-                        set_common_parameters(json.data[i].app_id, json.data[i].parameter_name, json.data[i].parameter_value);                            
-                }
-                callBack(null, null);
-            }
-        })
-    }
-    else{
-        await common_fetch_basic(0, null,  null, null, (err, result)=>{
+    await common_fetch(window.global_rest_url_base + window.global_rest_app_parameter + window.global_app_id + '?',
+                        'GET', 0, null, null, null, (err, result) =>{
+        if (err)
             null;
-        })
-        await common_fetch(window.global_rest_url_base + window.global_rest_app_parameter + window.global_app_id + '?',
-                            'GET', 0, null, null, null, (err, result) =>{
-            if (err)
-                null;
-            else{
-                let global_app_parameters = [];
-                json = JSON.parse(result);
-                for (let i = 0; i < json.data.length; i++) {
-                    if (json.data[i].app_id == 0)
-                        set_common_parameters(json.data[i].app_id, json.data[i].parameter_name, json.data[i].parameter_value);
-                    else{
-                        global_app_parameters.push(JSON.parse(`{"app_id":${json.data[i].app_id}, 
-                                                                "parameter_name":"${json.data[i].parameter_name}",
-                                                                "parameter_value":${json.data[i].parameter_value==null?null:'"' + json.data[i].parameter_value + '"'}}`));
-                    }
+        else{
+            let global_app_parameters = [];
+            json = JSON.parse(result);
+            for (let i = 0; i < json.data.length; i++) {
+                if (json.data[i].app_id == 0)
+                    set_common_parameters(json.data[i].app_id, json.data[i].parameter_name, json.data[i].parameter_value);
+                else{
+                    global_app_parameters.push(JSON.parse(`{"app_id":${json.data[i].app_id}, 
+                                                            "parameter_name":"${json.data[i].parameter_name}",
+                                                            "parameter_value":${json.data[i].parameter_value==null?null:'"' + json.data[i].parameter_value + '"'}}`));
                 }
-                callBack(null, global_app_parameters)
             }
-        })
-    }
+            callBack(null, global_app_parameters)
+        }
+    })
 };

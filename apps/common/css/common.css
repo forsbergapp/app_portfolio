@@ -549,6 +549,18 @@ body.font_arabic_nastaliq #user_menu_default_avatar{
 }
 
 /* add animation effects */
+@keyframes common_pulsate {
+    0% { 
+        opacity: 0.5;
+    }
+    50% { 
+        opacity: 1.0;
+    }
+    100% { 
+        opacity: 0.5;
+    }
+}
+
 @keyframes common_animatetop {
 	from {
 		top: -60%;

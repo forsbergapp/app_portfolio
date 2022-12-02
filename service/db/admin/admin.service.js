@@ -85,7 +85,7 @@ module.exports = {
                      database: process.env.SERVICE_DB_USE,
                      Xdatabase_schema: get_schema_name()
                    };
-      execute_db_sql(app_id, sql, parameters, true, 
+      execute_db_sql(app_id, sql, parameters,
 			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);
@@ -152,7 +152,7 @@ module.exports = {
          }
       }
       parameters = {db_schema: get_schema_name()};
-		execute_db_sql(app_id, sql, parameters, true, 
+		execute_db_sql(app_id, sql, parameters,
 			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);
@@ -203,7 +203,7 @@ module.exports = {
          }
       }
       parameters = {db_schema: get_schema_name()};
-		execute_db_sql(app_id, sql, parameters, true, 
+		execute_db_sql(app_id, sql, parameters,
 			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);

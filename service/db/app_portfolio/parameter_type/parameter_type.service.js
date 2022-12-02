@@ -1,6 +1,6 @@
 const {execute_db_sql, get_schema_name, get_locale} = require ("../../common/common.service");
 module.exports = {
-	getParameterType: (app_id, id, lang_code, callBack) => {
+	getParameterTypeAdmin: (app_id, id, lang_code, callBack) => {
 		let sql;
     	let parameters;
 		sql = `SELECT pt.id "id",
@@ -25,7 +25,7 @@ module.exports = {
 					  lang_code2: get_locale(lang_code, 2),
 					  lang_code3: get_locale(lang_code, 3),
 					  id: id};
-		execute_db_sql(app_id, sql, parameters, true, 
+		execute_db_sql(app_id, sql, parameters, 
 			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);

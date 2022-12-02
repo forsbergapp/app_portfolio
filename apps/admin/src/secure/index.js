@@ -1,7 +1,7 @@
 const fs = require("fs");
-const { read_app_files, get_module_with_init_admin } = require("../../../");
+const { read_app_files, get_module_with_init } = require("../../../");
 module.exports = {
-    getAdminSecure:(app_id, gps_lat, gps_long, gps_place, admin_id) => {    
+    getAdminSecure:(app_id, gps_lat, gps_long, gps_place) => {    
         return new Promise(function (resolve, reject){
             const files = [
                 ['APP', __dirname + '/index.html'],
@@ -13,12 +13,10 @@ module.exports = {
                 if (err)
                     reject(err);
                 else{
-                    get_module_with_init_admin(app_id, 
+                    get_module_with_init(app_id, 
                                         'admin_logoff_app',
                                         true, //close eventsource and create new as logged in
                                         true, //ui
-                                        true, //admin
-                                        admin_id,
                                         gps_lat,
                                         gps_long,
                                         gps_place,

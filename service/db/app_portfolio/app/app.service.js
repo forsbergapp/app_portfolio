@@ -47,7 +47,7 @@ module.exports = {
 						lang_code2: get_locale(lang_code, 2),
 						lang_code3: get_locale(lang_code, 3),
 						id: id};
-		execute_db_sql(app_id, sql, parameters, null, 
+		execute_db_sql(app_id, sql, parameters,
 			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);
@@ -83,7 +83,7 @@ module.exports = {
 					  lang_code2: get_locale(lang_code, 2),
 					  lang_code3: get_locale(lang_code, 3)
 					 };
-		execute_db_sql(app_id, sql, parameters, true, 
+		execute_db_sql(app_id, sql, parameters,
 			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);
@@ -91,7 +91,7 @@ module.exports = {
 				return callBack(null, result);
 		});
 	},
-	updateApp:(app_id, id, body, callBack) => {
+	updateAppAdmin:(app_id, id, body, callBack) => {
 		let sql;
 		let parameters;
 		sql = `UPDATE ${get_schema_name()}.app
@@ -105,7 +105,7 @@ module.exports = {
 						logo: body.logo,
 						enabled: body.enabled,
 						id: id};
-		execute_db_sql(app_id, sql, parameters, true, 
+		execute_db_sql(app_id, sql, parameters,
 			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);

@@ -59,7 +59,7 @@ module.exports = {
 						server_http_host: data.server_http_host,
 						server_http_accept_language: data.server_http_accept_language
 					};
-		execute_db_sql(app_id, sql, parameters, null, 
+		execute_db_sql(app_id, sql, parameters, 
 			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);
@@ -126,7 +126,7 @@ module.exports = {
 						server_http_host: data.server_http_host,
 						server_http_accept_language: data.server_http_accept_language
 					};
-		execute_db_sql(app_id, sql, parameters, true, 
+		execute_db_sql(app_id, sql, parameters,
 			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);
@@ -134,7 +134,7 @@ module.exports = {
 				return callBack(null, result);
 		});
 	},
-	getLogs: (app_id, data_app_id, year, month, sort, order_by, offset, limit, callBack) => {
+	getLogsAdmin: (app_id, data_app_id, year, month, sort, order_by, offset, limit, callBack) => {
 		/* 	sort in UI:
 			1=ID
 			2=APP ID
@@ -197,7 +197,7 @@ module.exports = {
 						month:month,
 						offset:offset,
 						limit:limit};
-		execute_db_sql(app_id, sql, parameters, true, 
+		execute_db_sql(app_id, sql, parameters,
 			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);
@@ -205,7 +205,7 @@ module.exports = {
 				return callBack(null, result);
 		});
 	},
-	getStatUniqueVisitor: (app_id, data_app_id, statchoice, year, month, callBack) => {
+	getStatUniqueVisitorAdmin: (app_id, data_app_id, statchoice, year, month, callBack) => {
 		let sql;
 		let parameters;
 		if (data_app_id=='')
@@ -245,7 +245,7 @@ module.exports = {
 						app_id_log: data_app_id,
 						year_log: year,
 						month_log:month};
-		execute_db_sql(app_id, sql, parameters, true, 
+		execute_db_sql(app_id, sql, parameters,
 			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);

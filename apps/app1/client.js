@@ -59,14 +59,13 @@ module.exports = {
                                     '<AppProfileTop/>',
                                     '');   
                             get_module_with_init(app_id, 
-                                                    'app_exception',
-                                                    null,
-                                                    true,
-                                                    null,
-                                                    gps_lat,
-                                                    gps_long,
-                                                    gps_place,
-                                                    app, (err, app_init) =>{
+                                                 'app_exception',
+                                                 null,
+                                                 true,
+                                                 gps_lat,
+                                                 gps_long,
+                                                 gps_place,
+                                                 app, (err, app_init) =>{
                                 if (err)
                                     reject(err);
                                 else{

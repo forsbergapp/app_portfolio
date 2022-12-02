@@ -38,7 +38,7 @@ module.exports = {
                     lang_code3: get_locale(lang_code, 3),
                     setting_type_name: setting_type_name
                    };
-     execute_db_sql(app_id, sql, parameters, null, 
+     execute_db_sql(app_id, sql, parameters, 
                    __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);

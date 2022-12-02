@@ -4,18 +4,28 @@ module.exports = {
 		let sql;
 		let parameters;
 		sql = `SELECT 1
-				 FROM ${get_schema_name()}.user_account_logon
-				WHERE user_account_id = :user_account_id
-				  AND app_id = :app_id
-				  AND access_token = :access_token
-				  AND client_ip = :client_ip`;
+				 FROM ${get_schema_name()}.user_account_logon ual,
+				 	  ${get_schema_name()}.user_account ua
+				WHERE ua.id = :user_account_id
+				  AND ual.user_account_id = ua.id
+				  AND ual.app_id = :app_id
+				  AND ual.access_token = :access_token
+				  AND ual.client_ip = :client_ip
+				  AND ((ual.app_id = :admin_app_id
+				        AND 
+					    ua.app_role_id IN (:super_admin_app_role_id,:admin_app_role_id))
+					   OR
+					   ual.app_id <> :admin_app_id)`;
 		parameters = {
 						user_account_id: user_account_id,
 						app_id: app_id,
 						access_token: access_token,
-						client_ip: client_ip
+						client_ip: client_ip,
+						admin_app_id: process.env.COMMON_APP_ID,
+						super_admin_app_role_id: 0,
+						admin_app_role_id: 1
 					};
-		execute_db_sql(app_id, sql, parameters, null, 
+		execute_db_sql(app_id, sql, parameters, 
 			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);
@@ -41,7 +51,7 @@ module.exports = {
 						client_longitude:  data.client_longitude,
 						client_latitude:  data.client_latitude
 					};
-		execute_db_sql(app_id, sql, parameters, null, 
+		execute_db_sql(app_id, sql, parameters, 
 			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);

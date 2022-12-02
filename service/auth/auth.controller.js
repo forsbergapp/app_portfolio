@@ -13,7 +13,8 @@ module.exports = {
             let ip_v4 = req.ip.replace('::ffff:','');
             block_ip_control(ip_v4, (err, result_range) =>{
                 if (err){
-                    createLogAppCI(req, res, __appfilename, __appfunction, __appline, `ip ${ip_v4} blocked, range: ${result_range}, tried URL: ${req.originalUrl}`, (err_log, result_log)=>{
+                    createLogAppCI(req, res, __appfilename, __appfunction, __appline, `ip ${ip_v4} blocked, range: ${result_range}, tried URL: ${req.originalUrl}`)
+                    .then(function(){
                         return callBack(err,null);
                     })
                 }
@@ -21,7 +22,8 @@ module.exports = {
                     if (process.env.SERVICE_AUTH_ACCESS_CONTROL_HOST_EXIST==1 &&
                         typeof req.headers.host=='undefined'){
                         //check if host exists
-                        createLogAppCI(req, res, __appfilename, __appfunction, __appline, `ip ${ip_v4} blocked, no host, tried URL: ${req.originalUrl}`, (err_log, result_log)=>{
+                        createLogAppCI(req, res, __appfilename, __appfunction, __appline, `ip ${ip_v4} blocked, no host, tried URL: ${req.originalUrl}`)
+                        .then(function(){
                             //406 Not Acceptable
                             return callBack(406,null);
                         })
@@ -31,7 +33,8 @@ module.exports = {
                         if (process.env.SERVICE_AUTH_ACCESS_CONTROL_ACCESS_FROM==1 &&
                             req.headers.host==os.hostname()){
                             //check if accessed from domain and not os hostname
-                            createLogAppCI(req, res, __appfilename, __appfunction, __appline, `ip ${ip_v4} blocked, accessed from hostname ${os.hostname()} not domain, tried URL: ${req.originalUrl}`, (err_log, result_log)=>{
+                            createLogAppCI(req, res, __appfilename, __appfunction, __appline, `ip ${ip_v4} blocked, accessed from hostname ${os.hostname()} not domain, tried URL: ${req.originalUrl}`)
+                            .then(function(){
                                 //406 Not Acceptable
                                 return callBack(406,null);
                             })
@@ -48,7 +51,8 @@ module.exports = {
                                         if(process.env.SERVICE_AUTH_ACCESS_CONTROL_USER_AGENT_EXIST==1 &&
                                             typeof req.headers["user-agent"]=='undefined'){
                                             //check if user-agent exists
-                                            createLogAppCI(req, res, __appfilename, __appfunction, __appline, `ip ${ip_v4} blocked, no user-agent, tried URL: ${req.originalUrl}`, (err_log, result_log)=>{
+                                            createLogAppCI(req, res, __appfilename, __appfunction, __appline, `ip ${ip_v4} blocked, no user-agent, tried URL: ${req.originalUrl}`)
+                                            .then(function(){
                                                 //406 Not Acceptable
                                                 return callBack(406,null);
                                             })
@@ -57,7 +61,8 @@ module.exports = {
                                             if (process.env.SERVICE_AUTH_ACCESS_CONTROL_ACCEPT_LANGUAGE==1 &&
                                                 typeof req.headers["accept-language"]=='undefined'){
                                                 //check if accept-language exists
-                                                createLogAppCI(req, res, __appfilename, __appfunction, __appline, `ip ${ip_v4} blocked, no accept-language, tried URL: ${req.originalUrl}`, (err_log, result_log)=>{
+                                                createLogAppCI(req, res, __appfilename, __appfunction, __appline, `ip ${ip_v4} blocked, no accept-language, tried URL: ${req.originalUrl}`)
+                                                .then(function(){
                                                     //406 Not Acceptable
                                                     return callBack(406,null);
                                                 })
@@ -76,58 +81,73 @@ module.exports = {
         else
             return callBack(null,1);
     },
+    checkAccessTokenCommon: (req, res, next) => {
+        let token = req.get("authorization");
+        if (token){
+            getParameter(req.query.app_id, process.env.COMMON_APP_ID,'SERVICE_AUTH_TOKEN_ACCESS_SECRET', (err, db_SERVICE_AUTH_TOKEN_ACCESS_SECRET)=>{
+                if (err) {
+                    createLogAppSE(req.query.app_id, __appfilename, __appfunction, __appline, err, (err_log, result_log)=>{
+                        res.status(500).send(
+                            err
+                        );
+                    })
+                }
+                else{
+                    token = token.slice(7);
+                    verify(token, db_SERVICE_AUTH_TOKEN_ACCESS_SECRET, (err, decoded) => {
+                        if (err){
+                            res.status(401).send({
+                                message: "Invalid token"
+                            });
+                        } else {
+                            //check access token belongs to user_account.id, app_id and ip saved when logged in
+                            //and if app_id=0 then check user is admin
+                            checkLogin(req.query.app_id, req.query.user_account_logon_user_account_id, req.headers.authorization.replace('Bearer ',''), req.ip, (err, result)=>{
+                                if (err)
+                                    createLogAppSE(req.query.app_id, __appfilename, __appfunction, __appline, err, (err_log, result_log)=>{
+                                        res.status(500).send(
+                                            err
+                                        );
+                                    })
+                                else{
+                                    if (result.length==1)
+                                        next();
+                                    else
+                                        createLogAppCI(req, res, null, __appfilename, __appfunction, __appline, `user  ${req.query.user_account_logon_user_account_id} app_id ${req.query.app_id} with ip ${req.ip} accesstoken unauthorized`)
+                                        .then(function(){
+                                            res.status(401).send({
+                                                message: 'Not authorized'
+                                            });
+                                        })
+                                        
+                                }
+                            })
+                        }
+                    });
+                }
+            });
+            
+        }else{
+            res.status(401).json({
+                message: 'Not authorized'
+            });
+        }
+
+    },
+    checkAccessTokenAdmin: (req, res, next) => {
+        if (req.query.app_id==0){
+            module.exports.checkAccessTokenCommon(req, res, next);
+        }
+        else
+            res.status(401).json({
+                message: '⛔'
+            });
+    },
     checkAccessToken: (req, res, next) => {
         //if user login is disabled then check also current logged in user
         //so they can't modify anything anymore with current accesstoken
         if (process.env.SERVICE_AUTH_ENABLE_USER_LOGIN==1){
-            let token = req.get("authorization");
-            if (token){
-                getParameter(req.query.app_id, process.env.COMMON_APP_ID,'SERVICE_AUTH_TOKEN_ACCESS_SECRET', (err, db_SERVICE_AUTH_TOKEN_ACCESS_SECRET)=>{
-                    if (err) {
-                        createLogAppSE(req.query.app_id, __appfilename, __appfunction, __appline, err, (err_log, result_log)=>{
-                            res.status(500).send(
-                                err
-                            );
-                        })
-                    }
-                    else{
-                        token = token.slice(7);
-                        verify(token, db_SERVICE_AUTH_TOKEN_ACCESS_SECRET, (err, decoded) => {
-                            if (err){
-                                res.status(401).send({
-                                    message: "Invalid token"
-                                });
-                            } else {
-                                //check access token belongs to user_account.id, app_id and ip saved when logged in
-                                checkLogin(req.query.app_id, req.query.user_account_logon_user_account_id, req.headers.authorization.replace('Bearer ',''), req.ip, (err, result)=>{
-                                    if (err)
-                                        createLogAppSE(req.query.app_id, __appfilename, __appfunction, __appline, err, (err_log, result_log)=>{
-                                            res.status(500).send(
-                                                err
-                                            );
-                                        })
-                                    else{
-                                        if (result.length==1)
-                                            next();
-                                        else
-                                            createLogAppCI(req, res, null, __appfilename, __appfunction, __appline, `user  ${req.query.user_account_logon_user_account_id} app_id ${req.query.app_id} with ip ${req.ip} accesstoken unauthorized`, (err_log, result_log)=>{
-                                                res.status(401).send({
-                                                    message: 'Not authorized'
-                                                });
-                                            })
-                                            
-                                    }
-                                })
-                            }
-                        });
-                    }
-                });
-                
-            }else{
-                res.status(401).json({
-                    message: 'Not authorized'
-                });
-            }
+            module.exports.checkAccessTokenCommon(req, res, next);
         }
         else{
             //return 401 Not authorized here instead of 403 Forbidden

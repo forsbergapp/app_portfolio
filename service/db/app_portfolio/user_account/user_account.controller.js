@@ -33,7 +33,7 @@ const { getParameter } = require ("../app_parameter/app_parameter.service");
 const { sendEmail } = require("../../../../service/mail/mail.controller");
 const { createLogAppCI } = require("../../../../service/log/log.controller");
 const { accessToken } = require("../../../../service/auth/auth.controller");
-
+const { getAdminSecure } = require("../../../../apps/admin/src/secure");
 module.exports = {
     
     userSignup: (req, res) => {
@@ -648,7 +648,8 @@ module.exports = {
                         }
                     } else {
                         createLogAppCI(req, res, __appfilename, __appfunction, __appline, 
-                                       'invalid password attempt for user id:' + req.params.id, (err, result_log)=>{
+                                       'invalid password attempt for user id:' + req.params.id)
+                        .then(function(){
                             //invalid password
                             getMessage(req.query.app_id,
                                        process.env.COMMON_APP_ID, 
@@ -872,7 +873,8 @@ module.exports = {
                                     }
                                     else{
                                         createLogAppCI(req, res, __appfilename, __appfunction, __appline, 
-                                                       'invalid password attempt for user id:' + req.params.id, (err, result_log)=>{
+                                                       'invalid password attempt for user id:' + req.params.id)
+                                        .then(function(){
                                             //invalid password
                                             getMessage( req.query.app_id,
                                                         process.env.COMMON_APP_ID, 
@@ -926,11 +928,12 @@ module.exports = {
             else{
                 req.body.client_ip = req.ip;
                 req.body.client_user_agent = req.headers["user-agent"];
-                if (req.body.client_longitude == 'undefined')
+                if (typeof req.body.client_longitude == 'undefined')
                     req.body.client_longitude = '';
-                if (req.body.client_latitude == 'undefined')
+                if (typeof req.body.client_latitude == 'undefined')
                     req.body.client_latitude = '';
-
+                if (typeof req.body.client_place == 'undefined')
+                    req.body.client_place = '';
                 if (results) {
                     req.body.user_account_id = results.id;
                     const result = compareSync(req.body.password, results.password);
@@ -941,109 +944,154 @@ module.exports = {
                         result_pw = 0;
                         req.body.result = 0;
                     }
-                    createUserAccountApp(req.query.app_id, results.id, (err, results_create) => {
-                        if (err) {
-                            return res.status(500).send(
-                                err
-                            );
-                        }
-                        else{
-                            if (result_pw == 1) {
-                                //if user not activated then send email with new verification code
-                                let new_code = verification_code();
-                                if (results.active == 0){
-                                    updateUserVerificationCode(req.query.app_id, results.id, new_code, (err,result_verification) => {
-                                        if (err)
-                                            return res.status(500),send(
-                                                err
-                                            );
-                                        else{
-                                            getParameter(req.query.app_id, process.env.COMMON_APP_ID,'SERVICE_MAIL_TYPE_UNVERIFIED',  (err, parameter_value)=>{
-                                                const emailData = {
-                                                    lang_code : req.query.lang_code,
-                                                    app_id : process.env.COMMON_APP_ID,
-                                                    app_user_id : results.id,
-                                                    emailType : parameter_value,
-                                                    toEmail : results.email,
-                                                    verificationCode : new_code
-                                                }
-                                                //send email UNVERIFIED
-                                                sendEmail(req, emailData, (err, result_email) => {
-                                                    if (err) {
-                                                        return res.status(500).send(
-                                                            err
-                                                        );
-                                                    }
-                                                    else{
-                                                        accessToken(req, (err, Token)=>{
-                                                            req.body.access_token = Token;
-                                                            insertUserAccountLogon(req.query.app_id, req.body, (err, result_user_account_logon) => {
-                                                                if (err) {
-                                                                    return res.status(500).send(
-                                                                        err
-                                                                    );
-                                                                }
-                                                                else
-                                                                    return res.status(200).json({
-                                                                        count: Array(results.items).length,
-                                                                        accessToken: Token,
-                                                                        items: Array(results)
-                                                                    });
-                                                            });
-                                                        });
-                                                    }
-                                                })
-                                            })
-                                        }
-                                    })
+                   
+                    if (result_pw == 1) {
+                        if ((req.query.app_id == process.env.COMMON_APP_ID && (results.app_role_id == 0 || results.app_role_id == 1))||
+                             req.query.app_id != process.env.COMMON_APP_ID){
+                            createUserAccountApp(req.query.app_id, results.id, (err, results_create) => {
+                                if (err) {
+                                    return res.status(500).send(
+                                        err
+                                    );
                                 }
                                 else{
-                                    accessToken(req, (err, Token)=>{
-                                        req.body.access_token = Token;
-                                        insertUserAccountLogon(req.query.app_id, req.body, (err, result_user_account_logon) => {
-                                            if (err) {
-                                                return res.status(500).send(
+                                    //if user not activated then send email with new verification code
+                                    let new_code = verification_code();
+                                    if (results.active == 0){
+                                        updateUserVerificationCode(req.query.app_id, results.id, new_code, (err,result_verification) => {
+                                            if (err)
+                                                return res.status(500),send(
                                                     err
                                                 );
+                                            else{
+                                                getParameter(req.query.app_id, process.env.COMMON_APP_ID,'SERVICE_MAIL_TYPE_UNVERIFIED',  (err, parameter_value)=>{
+                                                    const emailData = {
+                                                        lang_code : req.query.lang_code,
+                                                        app_id : process.env.COMMON_APP_ID,
+                                                        app_user_id : results.id,
+                                                        emailType : parameter_value,
+                                                        toEmail : results.email,
+                                                        verificationCode : new_code
+                                                    }
+                                                    //send email UNVERIFIED
+                                                    sendEmail(req, emailData, (err, result_email) => {
+                                                        if (err) {
+                                                            return res.status(500).send(
+                                                                err
+                                                            );
+                                                        }
+                                                        else{
+                                                            accessToken(req, (err, Token)=>{
+                                                                req.body.access_token = Token;
+                                                                insertUserAccountLogon(req.query.app_id, req.body, (err, result_user_account_logon) => {
+                                                                    if (err) {
+                                                                        return res.status(500).send(
+                                                                            err
+                                                                        );
+                                                                    }
+                                                                    else
+                                                                        if (req.query.app_id == 0)
+                                                                            getAdminSecure(req.query.app_id, 
+                                                                                req.body.client_latitude,
+                                                                                req.body.client_longitude, 
+                                                                                req.body.client_place)
+                                                                            .then(function(app_result){
+                                                                                return res.status(200).json({
+                                                                                    count: Array(results.items).length,
+                                                                                    accessToken: Token,
+                                                                                    items: Array(results),
+                                                                                    app: app_result
+                                                                                });
+                                                                            })
+                                                                        else
+                                                                            return res.status(200).json({
+                                                                                count: Array(results.items).length,
+                                                                                accessToken: Token,
+                                                                                items: Array(results)
+                                                                            });
+                                                                });
+                                                            });
+                                                        }
+                                                    })
+                                                })
                                             }
-                                            else
-                                                return res.status(200).json({
-                                                    count: Array(results.items).length,
-                                                    accessToken: Token,
-                                                    items: Array(results)
-                                                });
                                         })
-                                    });
-                                }           
-                            } else {
-                                insertUserAccountLogon(req.query.app_id, req.body, (err, result_user_account_logon) => {
-                                    if (err) {
-                                        return res.status(500).send(
-                                            err
-                                        );
                                     }
                                     else{
-                                        //Username or password not found
-                                        createLogAppCI(req, res, __appfilename, __appfunction, __appline, 
-                                            'invalid password attempt for user id:' + req.body.user_account_id + ', username:' + req.body.username, (err, result_log)=>{
-                                            getMessage( req.query.app_id,
-                                                        process.env.COMMON_APP_ID, 
-                                                        20300, 
-                                                        req.query.lang_code, (err,results_message)  => {
-                                                                return res.status(400).send(
-                                                                    err ?? results_message.text
-                                                                );
+                                        accessToken(req, (err, Token)=>{
+                                            req.body.access_token = Token;
+                                            insertUserAccountLogon(req.query.app_id, req.body, (err, result_user_account_logon) => {
+                                                if (err) {
+                                                    return res.status(500).send(
+                                                        err
+                                                    );
+                                                }
+                                                else
+                                                if (req.query.app_id == 0)
+                                                    getAdminSecure(req.query.app_id, 
+                                                        req.body.client_latitude,
+                                                        req.body.client_longitude, 
+                                                        req.body.client_place)
+                                                    .then(function(app_result){
+                                                        return res.status(200).json({
+                                                            count: Array(results.items).length,
+                                                            accessToken: Token,
+                                                            items: Array(results),
+                                                            app: app_result
                                                         });
-                                        })
+                                                    })
+                                                else
+                                                    return res.status(200).json({
+                                                        count: Array(results.items).length,
+                                                        accessToken: Token,
+                                                        items: Array(results)
+                                                    });
+                                                })
+                                        });
                                     }
+                                }
+                            });
+                        }
+                        else{
+                            //unauthorized, only admin allow to log in to admin
+                            createLogAppCI(req, res, __appfilename, __appfunction, __appline, 
+                                           'unauthorized admin login attempt for user id:' + req.body.user_account_id + ', username:' + req.body.username)
+                            .then(function(){
+                                    return res.status(401).send(
+                                        '⛔'
+                                    );
+                            })
+                        }
+                        
+                    } else {
+                        insertUserAccountLogon(req.query.app_id, req.body, (err, result_user_account_logon) => {
+                            if (err) {
+                                return res.status(500).send(
+                                    err
+                                );
+                            }
+                            else{
+                                //Username or password not found
+                                createLogAppCI(req, res, __appfilename, __appfunction, __appline, 
+                                               'invalid password attempt for user id:' + req.body.user_account_id + ', username:' + req.body.username)
+                                .then(function(){
+                                    getMessage( req.query.app_id,
+                                                process.env.COMMON_APP_ID, 
+                                                20300, 
+                                                req.query.lang_code, (err,results_message)  => {
+                                                        return res.status(400).send(
+                                                            err ?? results_message.text
+                                                        );
+                                                });
                                 })
                             }
-                        }
-                    });
+                        })
+                    }
                 } else{
                     //User not found
                     createLogAppCI(req, res, __appfilename, __appfunction, __appline, 
-                                   'user not found:' + req.body.username, (err, result_log)=>{
+                                   'user not found:' + req.body.username)
+                    .then(function(){
                         getMessage( req.query.app_id,
                                     process.env.COMMON_APP_ID, 
                                     20305, 
