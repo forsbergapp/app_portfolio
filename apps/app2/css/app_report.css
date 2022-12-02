@@ -341,21 +341,10 @@
 	font-size:0.8em;
 }
 .timetable_month_class #timetable_month_data .timetable_month_data_today_row{
-	animation: pulsate 2s ease-out;
+	animation: common_pulsate 2s ease-out;
 	animation-iteration-count: infinite;
     opacity: 0.5;
 	font-weight:bold;
-}
-@keyframes pulsate {
-    0% { 
-        opacity: 0.5;
-    }
-    50% { 
-        opacity: 1.0;
-    }
-    100% { 
-        opacity: 0.5;
-    }
 }
 .timetable_month_class #timetable_month_data .timetable_month_data_notes {
 	margin: 0px;

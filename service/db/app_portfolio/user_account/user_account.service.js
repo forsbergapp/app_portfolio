@@ -200,7 +200,7 @@ module.exports = {
 							provider_Ximage_url: data.provider_image_url,
 							provider_email: data.provider_email
 						 };
-			execute_db_sql(app_id, sql, parameters, null, 
+			execute_db_sql(app_id, sql, parameters, 
 						   __appfilename, __appfunction, __appline, (err, result)=>{
 				if (err)
 					return callBack(err, null);
@@ -222,7 +222,7 @@ module.exports = {
 							parameters = {
 											lastRowid: lastRowid
 										};
-							execute_db_sql(app_id, sql, parameters, null, 
+							execute_db_sql(app_id, sql, parameters, 
 										__appfilename, __appfunction, __appline, (err, result_id2)=>{
 								if (err)
 									return callBack(err, null);
@@ -273,7 +273,7 @@ module.exports = {
 						id: id,
 						verification_code: verification_code
 					};
-		execute_db_sql(app_id, sql, parameters, null, 
+		execute_db_sql(app_id, sql, parameters, 
 					__appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);
@@ -320,7 +320,7 @@ module.exports = {
 						verification_code: verification_code,
 						id: id   
 					}; 
-		execute_db_sql(app_id, sql, parameters, null, 
+		execute_db_sql(app_id, sql, parameters,
 			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);
@@ -385,7 +385,7 @@ module.exports = {
 		parameters = {
 					  id: id
 					 }; 
-		execute_db_sql(app_id, sql, parameters, null, 
+		execute_db_sql(app_id, sql, parameters, 
 			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);
@@ -472,7 +472,7 @@ module.exports = {
 			username: username,
 			app_id: app_id
 		}; 
-		execute_db_sql(app_id, sql, parameters, null, 
+		execute_db_sql(app_id, sql, parameters, 
 			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);
@@ -506,7 +506,7 @@ module.exports = {
 						provider_first_name: '%' + username + '%',
 						app_id: app_id
 					};
-		execute_db_sql(app_id, sql, parameters, null, 
+		execute_db_sql(app_id, sql, parameters, 
 			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);
@@ -590,7 +590,7 @@ module.exports = {
 						user_account_id: id,
 						detailchoice: detailchoice
 					}; 
-		execute_db_sql(app_id, sql, parameters, null, 
+		execute_db_sql(app_id, sql, parameters, 
 			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);
@@ -671,7 +671,7 @@ module.exports = {
 						statchoice: statchoice,
 						app_id: app_id
 					};
-		execute_db_sql(app_id, sql, parameters, null, 
+		execute_db_sql(app_id, sql, parameters, 
 			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);
@@ -688,7 +688,7 @@ module.exports = {
 		parameters = {
 						id: id
 					};
-		execute_db_sql(app_id, sql, parameters, null, 
+		execute_db_sql(app_id, sql, parameters, 
 			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);
@@ -712,7 +712,7 @@ module.exports = {
 							id: id,
 							auth: data.auth
 						}; 
-			execute_db_sql(app_id, sql, parameters, null, 
+			execute_db_sql(app_id, sql, parameters, 
 						__appfilename, __appfunction, __appline, (err, result)=>{
 				if (err)
 					return callBack(err, null);
@@ -755,7 +755,7 @@ module.exports = {
 				verification_code: data.verification_code,
 				id: search_id
 			}; 
-			execute_db_sql(app_id, sql, parameters, null, 
+			execute_db_sql(app_id, sql, parameters, 
 						__appfilename, __appfunction, __appline, (err, result)=>{
 				if (err)
 					return callBack(err, null);
@@ -784,7 +784,7 @@ module.exports = {
 							user_level: data.user_level,
 							id: id
 						}; 
-			execute_db_sql(app_id, sql, parameters, null, 
+			execute_db_sql(app_id, sql, parameters, 
 						__appfilename, __appfunction, __appline, (err, result)=>{
 				if (err)
 					return callBack(err, null);
@@ -803,7 +803,7 @@ module.exports = {
 		parameters = {
 						id: id
 					 };
-		execute_db_sql(app_id, sql, parameters, null, 
+		execute_db_sql(app_id, sql, parameters, 
 			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);
@@ -820,14 +820,15 @@ module.exports = {
 						password "password",
 						email "email",
 						active "active",
-						avatar "avatar"
+						avatar "avatar",
+						app_role_id "app_role_id"
 					FROM ${get_schema_name()}.user_account
 				WHERE username = :username 
 					AND provider_id IS NULL`;
 		parameters ={
 						username: data.username
 					}; 
-		execute_db_sql(app_id, sql, parameters, null, 
+		execute_db_sql(app_id, sql, parameters, 
 			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);
@@ -861,7 +862,7 @@ module.exports = {
 							provider_email: data.provider_email,
 							id: id
 						}; 
-			execute_db_sql(app_id, sql, parameters, null, 
+			execute_db_sql(app_id, sql, parameters, 
 						__appfilename, __appfunction, __appline, (err, result)=>{
 				if (err)
 					return callBack(err, null);
@@ -904,7 +905,7 @@ module.exports = {
 						provider_id: search_id,
 						identity_provider_id: identity_provider_id
 					};
-		execute_db_sql(app_id, sql, parameters, null, 
+		execute_db_sql(app_id, sql, parameters, 
 			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);
@@ -929,7 +930,7 @@ module.exports = {
 				GROUP BY ua.identity_provider_id, ip.provider_name
 				ORDER BY ua.identity_provider_id`;
 		parameters = {};
-		execute_db_sql(app_id, sql, parameters, true, 
+		execute_db_sql(app_id, sql, parameters,
 			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);
@@ -947,14 +948,46 @@ module.exports = {
 		parameters ={
 						email: email
 					}; 
-		execute_db_sql(app_id, sql, parameters, null, 
+		execute_db_sql(app_id, sql, parameters, 
 			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);
 			else
 				return callBack(null, result[0]);
 		});
-    }
+    },
+	getAppRole: async (app_id, user_account_id, callBack) =>{
+		let sql;
+		let parameters;
+		if (user_account_id =='')
+			user_account_id = null;
+		sql = `SELECT app_role_id "app_role_id",
+					  COALESCE(ar.icon,ar_user.icon) "icon"
+				 FROM ${get_schema_name()}.user_account ua
+				      LEFT OUTER JOIN ${get_schema_name()}.app_role ar
+				      ON ar.id = ua.app_role_id,
+					  ${get_schema_name()}.app_role ar_user
+				WHERE ua.id = :id 
+				 AND  ar_user.id = :id_user_icon
+				 AND :id IS NOT NULL
+				UNION ALL
+			   SELECT NULL "app_role_id",
+			          ar.icon "icon"
+				 FROM ${get_schema_name()}.app_role ar
+				WHERE ar.id = :id_user_icon
+				  AND :id IS NULL`;
+		parameters ={
+						id: user_account_id,
+						id_user_icon: 2
+					}; 
+		await execute_db_sql(app_id, sql, parameters, 
+			           __appfilename, __appfunction, __appline, (err, result)=>{
+			if (err)
+				return callBack(err, null);
+			else
+				return callBack(null, result[0]);
+		});
+	}
 };
 module.exports.password_length_wrong = password_length_wrong;
 module.exports.get_app_code = get_app_code;

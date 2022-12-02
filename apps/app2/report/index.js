@@ -22,7 +22,6 @@ module.exports = {
                                         'report_exception',
                                         null,
                                         false,
-                                        null,
                                         gps_lat,
                                         gps_long,
                                         gps_place,

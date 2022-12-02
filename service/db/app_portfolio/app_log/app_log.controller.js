@@ -1,4 +1,4 @@
-const { createLog, createLogAdmin, getLogs, getStatUniqueVisitor } = require ("./app_log.service");
+const { createLog, createLogAdmin, getLogsAdmin, getStatUniqueVisitorAdmin } = require ("./app_log.service");
 
 module.exports = {
 	createLog: (req, res) =>{
@@ -35,7 +35,7 @@ module.exports = {
 				})
 		});
 	},
-	getLogs: (req, res) => {
+	getLogsAdmin: (req, res) => {
 		let year = parseInt(req.query.year);
 		let month = parseInt(req.query.month);
 		let sort = parseInt(req.query.sort);
@@ -43,7 +43,7 @@ module.exports = {
 		let offset = parseInt(req.query.offset);
 		let limit = parseInt(req.query.limit);
 		
-		getLogs(req.query.app_id, req.query.select_app_id, year, month, sort, order_by, offset, limit, (err, results) =>{
+		getLogsAdmin(req.query.app_id, req.query.select_app_id, year, month, sort, order_by, offset, limit, (err, results) =>{
 			if (err) {
 				return res.status(500).send({
 					data: err
@@ -69,8 +69,8 @@ module.exports = {
 			}
 		});
 	},
-	getStatUniqueVisitor: (req, res) =>{
-		getStatUniqueVisitor(req.query.app_id, req.query.select_app_id, req.query.statchoice, req.query.year, req.query.month,  (err, results)=>{
+	getStatUniqueVisitorAdmin: (req, res) =>{
+		getStatUniqueVisitorAdmin(req.query.app_id, req.query.select_app_id, req.query.statchoice, req.query.year, req.query.month,  (err, results)=>{
 			if (err) {
 				return res.status(500).send({
 					data: err

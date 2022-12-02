@@ -1,5 +1,4 @@
 const { createLog, createLogAdmin} = require ("../../service/db/app_portfolio/app_log/app_log.service");
-const { createLogAppSE} = require("../../service/log/log.controller");
 const { getIp, getIpAdmin} = require ("../../service/geolocation/geolocation.controller");
 module.exports = {
   getForm: (req, res, app_id, params, callBack) => {

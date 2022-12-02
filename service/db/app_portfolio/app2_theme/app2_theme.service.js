@@ -25,7 +25,7 @@ module.exports = {
 					AND tt.id = t.app2_theme_type_id
 				ORDER BY tt.title, t.id`;
 		parameters = {};
-		execute_db_sql(app_id, sql, parameters, null, 
+		execute_db_sql(app_id, sql, parameters, 
 			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);

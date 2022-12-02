@@ -85,7 +85,7 @@ async function get_apps() {
     let json;
 
     common_fetch(window.global_rest_url_base + window.global_rest_app + '/admin?', 
-                 'GET', 2, null, null, null, (err, result) =>{
+                 'GET', 1, null, null, null, (err, result) =>{
         if (err)
             null;
         else{
@@ -140,7 +140,7 @@ function sendBroadcast(){
                         "broadcast_type" :"${broadcast_type}", 
                         "broadcast_message":"${broadcast_message}"}`;
     common_fetch('/service/broadcast?',
-                 'POST', 2, json_data, null, null, (err, result) =>{
+                 'POST', 1, json_data, null, null, (err, result) =>{
         if (err)
             null;
         else{
@@ -226,7 +226,7 @@ async function show_db_info(){
     if (admin_token_has_value()){
         let json;
         await common_fetch('/service/db/admin/DBInfo?',
-                           'GET', 2, null, null, null, (err, result) =>{
+                           'GET', 1, null, null, null, (err, result) =>{
             if (err)
                 null;
             else{
@@ -251,7 +251,7 @@ async function show_db_info_space(){
             return Math.round(num * x) / x;
           }
         document.getElementById('menu_1_db_info_space_detail').innerHTML = window.global_app_spinner;
-        await common_fetch('/service/db/admin/DBInfoSpace?', 'GET', 2, null, null, null, (err, result) =>{
+        await common_fetch('/service/db/admin/DBInfoSpace?', 'GET', 1, null, null, null, (err, result) =>{
             if (err)
                 null;
             else{
@@ -294,7 +294,7 @@ async function show_db_info_space(){
                     </div>`;
                 }
                 document.getElementById('menu_1_db_info_space_detail').innerHTML = html;
-                common_fetch('/service/db/admin/DBInfoSpaceSum?', 'GET', 2, null, null, null, (err, result) =>{
+                common_fetch('/service/db/admin/DBInfoSpaceSum?', 'GET', 1, null, null, null, (err, result) =>{
                     if (err)
                         null;
                     else{
@@ -326,7 +326,7 @@ async function show_db_info_space(){
 async function check_maintenance(){
     if (admin_token_has_value()){
         let json;
-        await common_fetch('/server?parameter_name=SERVER_MAINTENANCE', 'GET', 2, null, null, null, (err, result) =>{
+        await common_fetch('/server?parameter_name=SERVER_MAINTENANCE', 'GET', 1, null, null, null, (err, result) =>{
             if (err)
                 null;
             else{
@@ -350,7 +350,7 @@ function set_maintenance(){
                             "parameter_name":"SERVER_MAINTENANCE",
                             "parameter_value": ${check_value}
                         }`;
-        common_fetch('/server?', 'PATCH', 2, json_data, null, null, (err, result) =>{
+        common_fetch('/server?', 'PATCH', 1, json_data, null, null, (err, result) =>{
             null;
         })
     }
@@ -373,7 +373,7 @@ async function show_chart(chart){
         else
             app_id =document.getElementById('select_app_menu2').value;
         await common_fetch(window.global_rest_url_base + `app_log/admin/stat/uniquevisitor?select_app_id=${app_id}&statchoice=${chart}&year=${year}&month=${month}`,
-                 'GET', 2, null, null, null, (err, result) =>{
+                 'GET', 1, null, null, null, (err, result) =>{
             if (err){
                 document.getElementById(`box${chart}_chart`).innerHTML = '';
                 document.getElementById(`box${chart}_legend`).innerHTML = '';
@@ -462,7 +462,7 @@ async function count_connected(identity_provider_id, count_logged_in, callBack){
     if (admin_token_has_value()){
         let json;
         await common_fetch(`/service/broadcast/connected/count?identity_provider_id=${identity_provider_id}&count_logged_in=${count_logged_in}`,
-                 'GET', 2, null, null, null, (err, result) =>{
+                 'GET', 1, null, null, null, (err, result) =>{
             if (err)
                 callBack(result, null);
             else{
@@ -478,7 +478,7 @@ async function count_users(){
         document.getElementById('list_user_stat').innerHTML = window.global_app_spinner;
 
         await common_fetch(window.global_rest_url_base + window.global_rest_user_account + '/admin/count?',
-                           'GET', 2, null, null, null, (err, result) =>{
+                           'GET', 1, null, null, null, (err, result) =>{
             if (err)
                 document.getElementById('list_user_stat').innerHTML = old_html;
             else{
@@ -542,7 +542,7 @@ async function show_apps(){
     document.getElementById('list_apps').innerHTML = window.global_app_spinner;
 
     await common_fetch(window.global_rest_url_base + window.global_rest_app + '/admin?',
-                       'GET', 2, null, null, null, (err, result) =>{
+                       'GET', 1, null, null, null, (err, result) =>{
         if (err)
             document.getElementById('list_apps').innerHTML = '';
         else{
@@ -624,7 +624,7 @@ function show_app_parameter(app_id){
     document.getElementById('list_app_parameter').innerHTML = window.global_app_spinner;
 
     common_fetch(window.global_rest_url_base + window.global_rest_app_parameter + `admin/all/${parseInt(app_id)}?`,
-                 'GET', 2, null, null, null, (err, result) =>{
+                 'GET', 1, null, null, null, (err, result) =>{
         if (err)
             document.getElementById('list_app_parameter').innerHTML = '';
         else{
@@ -753,7 +753,7 @@ async function update_record(table,
             }
         }
         await common_fetch(window.global_rest_url_base + rest_url,
-                     'PUT', 2, json_data, null, null,(err, result) =>{
+                     'PUT', 1, json_data, null, null,(err, result) =>{
             document.getElementById('apps_save').innerHTML = old_button;
             if (err)
                 null;
@@ -775,7 +775,7 @@ function list_events(item_row, item_edit, column_start_index){
                 event.target.parentNode.parentNode.children[6].children[0].innerHTML ='';
             else{
                 common_fetch(`${window.global_rest_url_base}${window.global_rest_app_category}admin?id=${this.value}`,
-                            'GET', 2, null, null, null, (err, result) =>{
+                            'GET', 1, null, null, null, (err, result) =>{
                     if (err){
                         event.stopPropagation();
                         event.preventDefault();
@@ -807,7 +807,7 @@ function list_events(item_row, item_edit, column_start_index){
                 this.value = event.target.defaultValue;
             else{
                 common_fetch(`${window.global_rest_url_base}${window.global_rest_parameter_type}admin?id=${this.value}`,
-                            'GET', 2, null, null, null, (err, result) =>{
+                            'GET', 1, null, null, null, (err, result) =>{
                     if (err){
                         event.stopPropagation();
                         event.preventDefault();
@@ -932,7 +932,7 @@ async function show_list(list_div, list_div_col_title, url, sort, order_by, cols
                 break;
             }
         }
-        await common_fetch(url, 'GET', 2, null, null, null, (err, result) =>{
+        await common_fetch(url, 'GET', 1, null, null, null, (err, result) =>{
             if (err){
                 switch (list_div){
                     case 'list_pm2_log':{
@@ -971,7 +971,7 @@ async function show_list(list_div, list_div_col_title, url, sort, order_by, cols
                                         <div>APP ID</div>
                                     </div>
                                     <div id='list_connected_col_title4' class='list_connected_col list_connected_sort_click list_title'>
-                                        <div>ADMIN ID</div>
+                                        <div>ROLE</div>
                                     </div>
                                     <div id='list_connected_col_title5' class='list_connected_col list_connected_sort_click list_title'>
                                         <div>USER ID</div>
@@ -1151,8 +1151,13 @@ async function show_list(list_div, list_div_col_title, url, sort, order_by, cols
                 if (json.data.length >0){
                     for (i = 0; i < json.data.length; i++) {
                         switch (list_div){
-                            case 'list_connected':{
-                                html += `<div class='list_connected_row'>
+                            case 'list_connected':{    
+                                let current_user_row='';
+                                if (json.data[i].user_account_id==window.global_user_account_id)
+                                    current_user_row = 'current_user_row';
+                                else
+                                    current_user_row ='';
+                                html += `<div class='list_connected_row ${current_user_row}'>
                                             <div class='list_connected_col'>
                                                 <div>${json.data[i].id}</div>
                                             </div>
@@ -1163,7 +1168,7 @@ async function show_list(list_div, list_div_col_title, url, sort, order_by, cols
                                                 <div>${json.data[i].app_id}</div>
                                             </div>
                                             <div class='list_connected_col'>
-                                                <div>${json.data[i].admin_id}</div>
+                                                <div>${json.data[i].app_role_icon}</div>
                                             </div>
                                             <div class='list_connected_col'>
                                                 <div>${json.data[i].user_account_id}</div>
@@ -1534,7 +1539,7 @@ function list_item_click(item){
                 ip_filter = `&ip=${item.children[0].innerHTML}`;
             common_fetch(window.global_service_geolocation + window.global_service_geolocation_gps_ip + 
                             `/admin?app_user_id=${ip_filter}`,
-                            'GET', 2, null, null, null, (err, result) =>{
+                            'GET', 1, null, null, null, (err, result) =>{
                     if (err)
                         null;
                     else{
@@ -1567,7 +1572,7 @@ function list_item_click(item){
                             '/admin?app_user_id=' +
                             '&latitude=' + lat +
                             '&longitude=' + long,
-                            'GET', 2, null, null, null, (err, result) =>{
+                            'GET', 1, null, null, null, (err, result) =>{
                     if (err)
                         null;
                     else{
@@ -1594,7 +1599,7 @@ function list_item_click(item){
 async function get_server_log_parameters(){
     let json;
     await common_fetch(window.global_service_log + '/parameters?',
-                       'GET', 2, null, null, null, (err, result) =>{
+                       'GET', 1, null, null, null, (err, result) =>{
         if (err)
             null;
         else{
@@ -1742,65 +1747,10 @@ function show_pm2_logs(){
               3); //skip last process id column
 }
 /*----------------------- */
-/* EXCEPTION              */
-/*----------------------- */
-function delete_globals(){
-    //delete all globals in this file, not globals declared elsewhere
-    //and not some start variables
-    delete window.global_rest_app;
-    delete window.global_rest_parameter_type;
-    delete window.global_rest_user_account;
-    delete window.global_service_geolocation;
-    delete window.global_service_geolocation_gps_ip;
-    delete window.global_service_geolocation_gps_place;
-    delete window.global_service_log;
-    delete window.global_service_log_scope_server;
-    delete window.global_service_log_scope_service;
-    delete window.global_service_log_scope_db;
-    delete window.global_service_log_scope_router;
-    delete window.global_service_log_scope_controller;
-    delete window.global_service_log_level_verbose;
-    delete window.global_service_log_level_error;
-    delete window.global_service_log_level_info;                        
-    delete window.global_service_log_destination;
-    delete window.global_service_log_url_destination;
-    delete window.global_service_log_url_destination_username;
-    delete window.global_service_log_url_destination_password;
-    delete window.global_service_log_file_interval;
-    delete window.global_service_log_file_path_server;
-    delete window.global_service_log_date_format;
-    delete window.global_gps_map_container;
-    delete window.global_gps_map_zoom;
-    delete window.global_service_map_style;
-    delete window.global_service_map_flyto;
-    delete window.global_service_map_jumpto;
-    delete window.global_service_map_popup_offset;
-    delete window.global_gps_map_marker_div_gps;
-    delete window.global_client_latitude;
-    delete window.global_client_longitude;
-    delete window.global_client_place;
-    delete window.global_page;
-    delete window.global_page_last;
-    delete window.global_limit;
-    delete window.global_previous_row;
-}
-function admin_logoff_app(){
-    window.global_rest_admin_at = '';
-    delete_globals();
-    document.getElementById('menu_1').removeEventListener('click', function() { show_menu(1) }, false);
-    document.getElementById('menu_2').removeEventListener('click', function() { show_menu(2) }, false);
-    document.getElementById('menu_3').removeEventListener('click', function() { show_menu(3) }, false);
-    document.getElementById('menu_4').removeEventListener('click', function() { show_menu(4) }, false);
-    document.getElementById('menu_5').removeEventListener('click', function() { admin_login() }, false);
-    document.getElementById('dialogue_admin_login').style.visibility = 'visible';
-    document.getElementById('secure').style.visibility = 'hidden';
-    document.getElementById('secure').innerHTML = '';
-}
-/*----------------------- */
 /* INIT                   */
 /*----------------------- */
 function admin_token_has_value(){
-    if (window.global_rest_admin_at =='')
+    if (window.global_rest_at=='' && window.global_rest_admin_at =='')
         return false;
     else
         return true;
