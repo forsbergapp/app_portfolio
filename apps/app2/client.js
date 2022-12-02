@@ -244,7 +244,6 @@ module.exports = {
                                                      'app_exception',
                                                      null,
                                                      true,
-                                                     null,
                                                      gps_lat,
                                                      gps_long,
                                                      gps_place,

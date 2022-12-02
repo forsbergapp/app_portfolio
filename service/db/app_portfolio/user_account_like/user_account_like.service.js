@@ -10,7 +10,7 @@ module.exports = {
 						user_account_id: id,
 						user_account_id_like: id_like
 						};
-		execute_db_sql(app_id, sql, parameters, null, 
+		execute_db_sql(app_id, sql, parameters, 
 			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);
@@ -28,7 +28,7 @@ module.exports = {
 						user_account_id: id,
 						user_account_id_like: id_unlike
 						};
-		execute_db_sql(app_id, sql, parameters, null, 
+		execute_db_sql(app_id, sql, parameters, 
 			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);
