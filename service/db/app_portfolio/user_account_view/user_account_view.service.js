@@ -14,7 +14,7 @@ module.exports = {
 						client_longitude: data.client_longitude,
 						client_latitude: data.client_latitude
 					};
-		execute_db_sql(app_id, sql, parameters, null, 
+		execute_db_sql(app_id, sql, parameters, 
 			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);

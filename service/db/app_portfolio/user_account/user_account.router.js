@@ -17,7 +17,7 @@ const {
     getStatCountAdmin
 } = require("./user_account.controller");
 const { checkAccessToken, checkDataToken, checkDataTokenRegistration, checkDataTokenLogin } = require("../../../auth/auth.controller");
-const { checkAdmin} = require ("../../../auth/admin/admin.controller");
+const { checkAccessTokenAdmin} = require ("../../../auth/auth.controller");
 const { createLogAppRI } = require("../../../log/log.controller");
 router.use((req,res,next)=>{
     createLogAppRI(req, res, __appfilename, __appfunction, __appline, req.body);
@@ -43,6 +43,6 @@ router.post("/profile/id/:id", checkDataToken, getProfileUser);
 router.post("/profile/username/:username", checkDataToken, getProfileUser);
 router.post("/profile/username/searchD/:username", checkDataToken, searchProfileUser);
 router.post("/profile/username/searchA/:username", checkAccessToken, searchProfileUser);
-router.get("/admin/count", checkAdmin, getStatCountAdmin);
+router.get("/admin/count", checkAccessTokenAdmin, getStatCountAdmin);
 
 module.exports = router;

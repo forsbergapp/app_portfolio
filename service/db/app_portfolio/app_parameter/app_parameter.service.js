@@ -18,7 +18,7 @@ module.exports = {
 					AND parameter_type_id IN ('0','1')
 				ORDER BY 1`;
 		parameters = {app_id: data_app_id};
-		execute_db_sql(app_id, sql, parameters, null, 
+		execute_db_sql(app_id, sql, parameters, 
 			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);
@@ -44,7 +44,7 @@ module.exports = {
 					AND parameter_type_id IN ('0','1','2')
 				ORDER BY 1, 3`;
 		parameters = {app_id: data_app_id};
-		execute_db_sql(app_id, sql, parameters, null, 
+		execute_db_sql(app_id, sql, parameters, 
 			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);
@@ -83,7 +83,7 @@ module.exports = {
 					  lang_code2: get_locale(lang_code, 2),
 					  lang_code3: get_locale(lang_code, 3),
 					  app_id: data_app_id};
-		execute_db_sql(app_id, sql, parameters, true, 
+		execute_db_sql(app_id, sql, parameters, 
 					   __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);
@@ -102,7 +102,7 @@ module.exports = {
 				ORDER BY 1`;
 		parameters = {app_id: data_app_id,
 					  parameter_name:parameter_name};
-		execute_db_sql(app_id, sql, parameters, true, 
+		execute_db_sql(app_id, sql, parameters,
 			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);
@@ -121,7 +121,7 @@ module.exports = {
 				ORDER BY 1`;
 		parameters = {app_id: data_app_id,
 					  parameter_name:parameter_name};
-		execute_db_sql(app_id, sql, parameters, null, 
+		execute_db_sql(app_id, sql, parameters, 
 					   __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);
@@ -143,7 +143,7 @@ module.exports = {
 					  parameter_comment: body.parameter_comment,
 					  app_id: body.app_id,
 					  parameter_name: body.parameter_name};
-		execute_db_sql(app_id, sql, parameters, true, 
+		execute_db_sql(app_id, sql, parameters,
 			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);
@@ -161,7 +161,7 @@ module.exports = {
 		parameters = {parameter_value: body.parameter_value, 
 					  app_id: body.app_id,
 					  parameter_name: body.parameter_name};
-		execute_db_sql(app_id, sql, parameters, true, 
+		execute_db_sql(app_id, sql, parameters, 
 					   __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);
@@ -189,7 +189,7 @@ module.exports = {
 		parameters = {db_user: db_user,
 					  db_password: db_password};
 
-		execute_db_sql(app_id, sql, parameters, true, 
+		execute_db_sql(app_id, sql, parameters,
 			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);
@@ -232,49 +232,7 @@ module.exports = {
 						app_rest_client_id: app_rest_client_id,
 						app_rest_client_secret: app_rest_client_secret,
 						rest_app_parameter: rest_app_parameter}
-		execute_db_sql(app_id, sql, parameters, null,
-					   __appfilename, __appfunction, __appline, (err, result)=>{
-			if (err)
-				return callBack(err, null);
-			else
-				return callBack(null, result);
-		});
-	},
-	getAppStartParametersAdmin: (app_id, callBack) => {
-		let sql;
-		let parameters;
-		let service_auth = 'SERVICE_AUTH';
-		let app_rest_client_id = 'APP_REST_CLIENT_ID';
-		let app_rest_client_secret ='APP_REST_CLIENT_SECRET';
-		let rest_app_parameter ='REST_APP_PARAMETER';
-		sql = `SELECT   a.app_name "app_name",
-						a.url "app_url",
-						a.logo "app_logo",
-						(SELECT ap.parameter_value
-							FROM ${get_schema_name()}.app_parameter ap
-							WHERE ap.parameter_name = :service_auth
-							AND ap.app_id = :app_common_id) "service_auth",
-						(SELECT ap.parameter_value
-							FROM ${get_schema_name()}.app_parameter ap
-							WHERE ap.parameter_name = :app_rest_client_id
-							AND ap.app_id = :app_common_id) "app_rest_client_id",
-						(SELECT ap.parameter_value
-							FROM ${get_schema_name()}.app_parameter ap
-							WHERE ap.parameter_name = :app_rest_client_secret
-							AND ap.app_id = :app_common_id) "app_rest_client_secret",
-						(SELECT ap.parameter_value
-							FROM ${get_schema_name()}.app_parameter ap
-							WHERE ap.parameter_name = :rest_app_parameter
-							AND ap.app_id = :app_common_id) "rest_app_parameter"
-			   FROM ${get_schema_name()}.app a
-			  WHERE a.id = :app_id`;
-		parameters = {  app_id: app_id,
-						app_common_id: process.env.COMMON_APP_ID,
-						service_auth: service_auth,
-						app_rest_client_id: app_rest_client_id,
-						app_rest_client_secret: app_rest_client_secret,
-						rest_app_parameter: rest_app_parameter}
-		execute_db_sql(app_id, sql, parameters, true, 
+		execute_db_sql(app_id, sql, parameters,
 					   __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);

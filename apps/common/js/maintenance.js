@@ -11,7 +11,6 @@ function init_maintenance(parameters){
     window.global_app_id = parameters.app_id;
     window.global_user_account_id = '';
     window.global_user_identity_provider_id= '';
-    window.global_admin = '';
     connectOnline();    
     show_maintenance(null,1);
 }
