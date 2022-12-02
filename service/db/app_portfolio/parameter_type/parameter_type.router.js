@@ -1,11 +1,11 @@
 const router = require("express").Router();
-const { getParameterType} = require ("./parameter_type.controller");
+const { getParameterTypeAdmin} = require ("./parameter_type.controller");
 const { createLogAppRI } = require("../../../log/log.controller");
-const { checkAdmin} = require ("../../../auth/admin/admin.controller");
+const { checkAccessTokenAdmin} = require ("../../../auth/auth.controller");
 router.use((req,res,next)=>{
     createLogAppRI(req, res, __appfilename, __appfunction, __appline, req.body);
     next();
 })
-router.get("/admin", checkAdmin, getParameterType);
+router.get("/admin", checkAccessTokenAdmin, getParameterTypeAdmin);
 
 module.exports = router;

@@ -177,7 +177,7 @@ module.exports = {
 						app_id: app_id,
 						initial_setting: initial
 					};
-		execute_db_sql(app_id, sql, parameters, null, 
+		execute_db_sql(app_id, sql, parameters, 
 			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);
@@ -205,7 +205,7 @@ module.exports = {
 							parameters = {
 											lastRowid: lastRowid
 										};
-							execute_db_sql(app_id, sql, parameters, null, 
+							execute_db_sql(app_id, sql, parameters, 
 										   __appfilename, __appfunction, __appline, (err, result_id2)=>{
 								if (err)
 									return callBack(err, null);
@@ -292,7 +292,7 @@ module.exports = {
 		parameters = {
 						id: id
 					};
-		execute_db_sql(app_id, sql, parameters, null, 
+		execute_db_sql(app_id, sql, parameters, 
 			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);
@@ -365,7 +365,7 @@ module.exports = {
 						user_account_id: id,
 						app_id: app_id
 					};
-		execute_db_sql(app_id, sql, parameters, null, 
+		execute_db_sql(app_id, sql, parameters, 
 			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);
@@ -394,7 +394,7 @@ module.exports = {
 						id: id,
 						app_id: app_id
 					}; 
-		execute_db_sql(app_id, sql, parameters, null, 
+		execute_db_sql(app_id, sql, parameters, 
 			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);
@@ -427,7 +427,7 @@ module.exports = {
 						user_account_id: id,
 						app_id: app_id
 						};
-		execute_db_sql(app_id, sql, parameters, null, 
+		execute_db_sql(app_id, sql, parameters, 
 			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);
@@ -491,7 +491,7 @@ module.exports = {
 						app_id: app_id,
 						detailchoice: detailchoice
 					};
-		execute_db_sql(app_id, sql, parameters, null, 
+		execute_db_sql(app_id, sql, parameters, 
 			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);
@@ -558,7 +558,7 @@ module.exports = {
 						app_id: app_id,
 						statchoice: statchoice,
 					};
-		execute_db_sql(app_id, sql, parameters, null, 
+		execute_db_sql(app_id, sql, parameters, 
 			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);
@@ -679,7 +679,7 @@ module.exports = {
 						app_id: app_id,
 						id: id
 					};
-		execute_db_sql(app_id, sql, parameters, null, 
+		execute_db_sql(app_id, sql, parameters, 
 			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);
@@ -695,7 +695,7 @@ module.exports = {
 		parameters = {
 						id: id
 						};
-		execute_db_sql(app_id, sql, parameters, null, 
+		execute_db_sql(app_id, sql, parameters, 
 			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);

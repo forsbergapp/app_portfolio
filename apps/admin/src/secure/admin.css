@@ -496,6 +496,12 @@
         height: 100%;
     }
     /*CONNECTED*/
+    .current_user_row{
+        animation: common_pulsate 2s ease-out;
+        animation-iteration-count: infinite; 
+        opacity: 0.5;
+        font-weight: bold;
+    }
     .list_connected_col:nth-child(1){
         width:70px;
     }

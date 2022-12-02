@@ -1,10 +1,10 @@
-const { getParameterType} = require ("./parameter_type.service");
+const { getParameterTypeAdmin} = require ("./parameter_type.service");
 
 module.exports = {
-	getParameterType: (req, res) => {
+	getParameterTypeAdmin: (req, res) => {
 		if (typeof req.query.id == 'undefined')
 			req.query.id = null;
-		getParameterType(req.query.app_id, req.query.id, req.query.lang_code, (err, results) =>{
+		getParameterTypeAdmin(req.query.app_id, req.query.id, req.query.lang_code, (err, results) =>{
 			if (err) {
 				return res.status(500).send({
 					data: err
