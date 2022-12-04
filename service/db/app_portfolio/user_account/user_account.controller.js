@@ -1196,7 +1196,7 @@ module.exports = {
                                     );
                                 }
                                 else{
-                                    getUserByProviderId(req.query.app_id, req.body.identity_provider_id, req.params.id, (err, results) => {
+                                    providerSignIn(req.query.app_id, req.body.identity_provider_id, req.params.id, (err, results) => {
                                         if (err) {
                                             return res.status(500).send(
                                                 err

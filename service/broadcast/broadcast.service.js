@@ -50,6 +50,7 @@ module.exports = {
                             copyClient = {
                                 id: client.id,
                                 app_id: client.app_id,
+                                app_role_id: '',
                                 app_role_icon: '',
                                 user_account_id: client.user_account_id,
                                 user_agent: client.user_agent,
@@ -117,10 +118,11 @@ module.exports = {
         //copy app role icons
         i=0;
         for (let i=0;i<broadcast_clients_no_res.length;i++){
-            await getAppRole(app_id, broadcast_clients_no_res[i].user_account_id, (err, result_app_role)=>{
+            getAppRole(app_id, broadcast_clients_no_res[i].user_account_id, (err, result_app_role)=>{
                 if (err)
                     null;
                 else{
+                    broadcast_clients_no_res[i].app_role_id = result_app_role.app_role_id;
                     broadcast_clients_no_res[i].app_role_icon = result_app_role.icon;
                 }
                 if (i== broadcast_clients_no_res.length - 1) 
@@ -135,12 +137,15 @@ module.exports = {
         for (let i = 0; i < broadcast_clients.length; i++){
             if ((count_logged_in==1 &&
                  broadcast_clients[i].identity_provider_id == identity_provider_id &&
+                 identity_provider_id !='' &&
                  broadcast_clients[i].user_account_id != '') ||
                 (count_logged_in==1 &&
                  identity_provider_id =='' &&
+                 broadcast_clients[i].identity_provider_id =='' &&
                  broadcast_clients[i].user_account_id != '') ||
                 (count_logged_in==0 && 
                  identity_provider_id =='' &&
+                 broadcast_clients[i].identity_provider_id =='' &&
                  broadcast_clients[i].user_account_id ==''))
                 {
                 count_connected = count_connected + 1;

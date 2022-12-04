@@ -6,7 +6,7 @@ async function admin_login(){
                      document.getElementById('admin_login_password_input').value, (err, result)=>{
         document.getElementById('admin_login_button').innerHTML = old_button;
         if (err==null){         
-            dialogue_close('dialogue_admin_login').then(function(){   
+            dialogue_close('dialogue_admin_login').then(function(){
                 //set avatar or empty
                 set_avatar(result.avatar, document.getElementById('user_menu_avatar_img'));
                 document.getElementById('user_menu_username').innerHTML = result.username;
@@ -126,7 +126,6 @@ function init(parameters){
         document.getElementById('admin_login_username_icon').innerHTML = window.global_icon_user;
         document.getElementById('admin_login_password_icon').innerHTML = window.global_icon_user_password;
         document.title = window.global_app_name;
-        connectOnline();
         init_app();
     })
 }
