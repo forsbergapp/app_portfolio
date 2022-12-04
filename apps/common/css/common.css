@@ -323,6 +323,9 @@ Prio 2 symbols:
 
 :root {
 	/*app colors*/	
+	--app_king: #32398D;
+	--app_prince: #755FBE;
+	--app_princess:#E195CB;
 	--app_blue1: rgb(81, 171, 255);
 	--app_blue2: rgb(197 227 255);
 	--app_black: #404040;
