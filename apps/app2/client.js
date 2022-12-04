@@ -241,6 +241,7 @@ module.exports = {
                                         '<USER_ARABIC_SCRIPT/>',
                                         `<option id='' value=''></option>${USER_ARABIC_SCRIPT}`);
                                 get_module_with_init(app_id, 
+                                                     null,
                                                      'app_exception',
                                                      null,
                                                      true,
