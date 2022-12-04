@@ -103,6 +103,7 @@ module.exports = {
                             result.geoplugin_regionName + ', ' +
                             result.geoplugin_countryName;
             const app = getAdminSecure(req.query.app_id, 
+                                       null,   //no user account id here since it is system admin with no db available
                                        result.geoplugin_latitude,
                                        result.geoplugin_longitude, 
                                        gps_place, 

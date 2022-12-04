@@ -67,7 +67,6 @@
         width: 90%;
         height: 20px;
     }
-
     #main{
         width:100%;
         height:100%;
@@ -332,13 +331,13 @@
         width: 60px;
         text-align: end;
     }
-    /* MENU 3 APP ADMIN*/
-    #menu_3_content_widget1{
+    /* MENU 4 APP ADMIN*/
+    #menu_4_content_widget1{
         height: calc(30% - 10px);
         display: flex;
         flex-direction: column;
     }
-    #menu_3_content_widget2{
+    #menu_4_content_widget2{
         height: calc(70% - 10px);
         display: flex;
         flex-direction: column;
@@ -449,13 +448,13 @@
         box-sizing: border-box;
         border-radius: 4px
     }    
-    /*MENU 4 APP STAT*/
-    #menu_4_content_widget1{
+    /*MENU  MONITOR*/
+    #menu_5_content_widget1{
         height:calc(63% - 10px);
         display: flex;
         flex-direction: column;
     }
-    #menu_4_content_widget2{
+    #menu_5_content_widget2{
         height:calc(37% - 10px);
     }
     /*Navigation*/
@@ -530,7 +529,7 @@
         width:70px;
     }
     /*APP LOG*/
-    #menu4_row_sample_app_log, #menu4_row_sample_list_connected{
+    #menu5_row_sample_app_log, #menu5_row_sample_list_connected{
         margin-top:10px;
         margin-bottom:10px;
     }
@@ -634,20 +633,20 @@
         cursor:pointer;
     }
     /* SERVER LOG*/
-    #filesearch_menu4{
+    #filesearch_menu5{
         font-size: 1.4em;
         height: auto;
     }
-    #menu4_row_sample1, #menu4_row_sample2{
+    #menu5_row_sample1, #menu5_row_sample2{
         margin-top:10px;
         margin-bottom:10px;
     }
-    #menu4_row_parameters{
+    #menu5_row_parameters{
         margin-top: 10px;
         margin-bottom: 10px;
         font-size:0.7em;
     }    
-    #menu4_row_parameters div{
+    #menu5_row_parameters div{
         display: inline-block;
     }
     #list_server_log{
