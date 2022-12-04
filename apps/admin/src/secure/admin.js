@@ -19,6 +19,12 @@ function show_menu(menu){
     document.getElementById('menu_2_content').style.display='none';
     document.getElementById('menu_3_content').style.display='none';
     document.getElementById('menu_4_content').style.display='none';
+    document.getElementById('menu_5_content').style.display='none';
+    document.getElementById('menu_6_content').style.display='none';
+    document.getElementById('menu_7_content').style.display='none';
+    document.getElementById('menu_8_content').style.display='none';
+    document.getElementById('menu_9_content').style.display='none';
+    document.getElementById('menu_10_content').style.display='none';
     document.getElementById(`menu_${menu}_content`).style.display='block';
     let current_year = new Date().getFullYear();
     let yearvalues =   `<option value="${current_year}">${current_year}</option>
@@ -29,6 +35,7 @@ function show_menu(menu){
                         <option value="${current_year -5}">${current_year-5}</option>
                         `;
     switch(menu){
+        //START
         case 1:{
             show_db_info().then(function(){
                 show_db_info_space().then(function(){
@@ -37,6 +44,7 @@ function show_menu(menu){
             })
             break;
         }
+        //USER STAT
         case 2:{
             document.getElementById('select_year_menu2').innerHTML = yearvalues;
             document.getElementById('select_year_menu2').selectedIndex = 0;
@@ -48,31 +56,57 @@ function show_menu(menu){
             });                
             break;    
         }
+        //USERS
         case 3:{
+            break;
+        }
+        //APP ADMIN
+        case 4:{
             show_apps();
             break;    
         }
-        case 4:{
+        //MONITOR
+        case 5:{
             window.global_page = 0;
             //connected
-            document.getElementById('select_year_menu4_list_connected').innerHTML = yearvalues;
-            document.getElementById('select_year_menu4_list_connected').selectedIndex = 0;
-            document.getElementById('select_month_menu4_list_connected').selectedIndex = new Date().getMonth();
+            document.getElementById('select_year_menu5_list_connected').innerHTML = yearvalues;
+            document.getElementById('select_year_menu5_list_connected').selectedIndex = 0;
+            document.getElementById('select_month_menu5_list_connected').selectedIndex = new Date().getMonth();
             //log
-            document.getElementById('select_year_menu4_app_log').innerHTML = yearvalues;
-            document.getElementById('select_year_menu4_app_log').selectedIndex = 0;
-            document.getElementById('select_month_menu4_app_log').selectedIndex = new Date().getMonth();
+            document.getElementById('select_year_menu5_app_log').innerHTML = yearvalues;
+            document.getElementById('select_year_menu5_app_log').selectedIndex = 0;
+            document.getElementById('select_month_menu5_app_log').selectedIndex = new Date().getMonth();
             //server log
-            document.getElementById('select_year_menu4').innerHTML = yearvalues;
-            document.getElementById('select_year_menu4').selectedIndex = 0;
-            document.getElementById('select_month_menu4').selectedIndex = new Date().getMonth();
-            document.getElementById('select_day_menu4').selectedIndex = new Date().getDate() -1;
+            document.getElementById('select_year_menu5').innerHTML = yearvalues;
+            document.getElementById('select_year_menu5').selectedIndex = 0;
+            document.getElementById('select_month_menu5').selectedIndex = new Date().getMonth();
+            document.getElementById('select_day_menu5').selectedIndex = new Date().getDate() -1;
             nav_click(document.getElementById('list_connected_title'));
             get_server_log_parameters().then(function() {
                 if (admin_token_has_value()){
                     map_resize();
                 }
             })
+            break;
+        }
+        //PARAMETER
+        case 6:{
+            break;
+        }
+        //INSTALLATION
+        case 7:{
+            break;
+        }
+        //DATABASE
+        case 8:{
+            break;
+        }
+        //BACKUP/RESTORE
+        case 9:{
+            break;
+        }
+        //SERVER
+        case 10:{
             break;
         }
     }            
@@ -97,9 +131,9 @@ async function get_apps() {
                     `<option value='${json.data[i].id}'>${json.data[i].id} - ${json.data[i].app_name}</option>`;
             }
             document.getElementById('select_app_menu2').innerHTML = html;
-            document.getElementById('select_app_menu4_app_log').innerHTML = html;
-            document.getElementById('select_app_menu4_list_connected').innerHTML = html;
-            document.getElementById('select_app_menu4').innerHTML = html;
+            document.getElementById('select_app_menu5_app_log').innerHTML = html;
+            document.getElementById('select_app_menu5_list_connected').innerHTML = html;
+            document.getElementById('select_app_menu5').innerHTML = html;
             document.getElementById('select_app_broadcast').innerHTML = html;
         
         }
@@ -1423,9 +1457,9 @@ async function show_list(list_div, list_div_col_title, url, sort, order_by, cols
     }
 }
 async function show_connected(sort=4, order_by='desc'){
-    let app_id = document.getElementById('select_app_menu4_list_connected').options[document.getElementById('select_app_menu4_list_connected').selectedIndex].value;
-    let year = document.getElementById('select_year_menu4_list_connected').value;
-    let month = document.getElementById('select_month_menu4_list_connected').value;
+    let app_id = document.getElementById('select_app_menu5_list_connected').options[document.getElementById('select_app_menu5_list_connected').selectedIndex].value;
+    let year = document.getElementById('select_year_menu5_list_connected').value;
+    let month = document.getElementById('select_month_menu5_list_connected').value;
     show_list('list_connected', 
               'list_connected_col_title', 
               `/service/broadcast/connected?select_app_id=${app_id}&year=${year}&month=${month}&sort=${sort}&order_by=${order_by}&limit=${window.global_limit}`, 
@@ -1435,9 +1469,9 @@ async function show_connected(sort=4, order_by='desc'){
 }    
 
 async function show_app_log(sort=8, order_by='desc', offset=0, limit=window.global_limit){
-    let app_id = document.getElementById('select_app_menu4_app_log').options[document.getElementById('select_app_menu4_app_log').selectedIndex].value;
-    let year = document.getElementById('select_year_menu4_app_log').value;
-    let month = document.getElementById('select_month_menu4_app_log').value;
+    let app_id = document.getElementById('select_app_menu5_app_log').options[document.getElementById('select_app_menu5_app_log').selectedIndex].value;
+    let year = document.getElementById('select_year_menu5_app_log').value;
+    let month = document.getElementById('select_month_menu5_app_log').value;
     show_list('list_app_log', 
               'list_app_log_col_title', 
               window.global_rest_url_base + `app_log?select_app_id=${app_id}&year=${year}&month=${month}&sort=${sort}&order_by=${order_by}&offset=${offset}&limit=${limit}`, 
@@ -1625,37 +1659,37 @@ async function get_server_log_parameters(){
             window.global_service_log_scope_router = json.data.SERVICE_LOG_SCOPE_ROUTER;
             window.global_service_log_scope_controller = json.data.SERVICE_LOG_SCOPE_CONTROLLER;
 
-            document.getElementById('menu4_row_parameters_col1_1').style.display = 'none';
-            document.getElementById('menu4_row_parameters_col1_0').style.display = 'none';
-            document.getElementById('menu4_row_parameters_col2_1').style.display = 'none';
-            document.getElementById('menu4_row_parameters_col2_0').style.display = 'none';
-            document.getElementById('menu4_row_parameters_col3_1').style.display = 'none';
-            document.getElementById('menu4_row_parameters_col3_0').style.display = 'none';
-            document.getElementById('menu4_row_parameters_col4_1').style.display = 'none';
-            document.getElementById('menu4_row_parameters_col4_0').style.display = 'none';
-            document.getElementById('menu4_row_parameters_col5_1').style.display = 'none';
-            document.getElementById('menu4_row_parameters_col5_0').style.display = 'none';
+            document.getElementById('menu5_row_parameters_col1_1').style.display = 'none';
+            document.getElementById('menu5_row_parameters_col1_0').style.display = 'none';
+            document.getElementById('menu5_row_parameters_col2_1').style.display = 'none';
+            document.getElementById('menu5_row_parameters_col2_0').style.display = 'none';
+            document.getElementById('menu5_row_parameters_col3_1').style.display = 'none';
+            document.getElementById('menu5_row_parameters_col3_0').style.display = 'none';
+            document.getElementById('menu5_row_parameters_col4_1').style.display = 'none';
+            document.getElementById('menu5_row_parameters_col4_0').style.display = 'none';
+            document.getElementById('menu5_row_parameters_col5_1').style.display = 'none';
+            document.getElementById('menu5_row_parameters_col5_0').style.display = 'none';
 
             if (json.data.SERVICE_LOG_ENABLE_SERVER_INFO==1)
-                document.getElementById('menu4_row_parameters_col1_1').style.display = 'inline-block';
+                document.getElementById('menu5_row_parameters_col1_1').style.display = 'inline-block';
             else
-                document.getElementById('menu4_row_parameters_col1_0').style.display = 'inline-block';
+                document.getElementById('menu5_row_parameters_col1_0').style.display = 'inline-block';
             if (json.data.SERVICE_LOG_ENABLE_SERVER_VERBOSE==1)
-                document.getElementById('menu4_row_parameters_col2_1').style.display = 'inline-block';
+                document.getElementById('menu5_row_parameters_col2_1').style.display = 'inline-block';
             else
-                document.getElementById('menu4_row_parameters_col2_0').style.display = 'inline-block';
+                document.getElementById('menu5_row_parameters_col2_0').style.display = 'inline-block';
             if (json.data.SERVICE_LOG_ENABLE_DB==1)
-                document.getElementById('menu4_row_parameters_col3_1').style.display = 'inline-block';
+                document.getElementById('menu5_row_parameters_col3_1').style.display = 'inline-block';
             else
-                document.getElementById('menu4_row_parameters_col3_0').style.display = 'inline-block';
+                document.getElementById('menu5_row_parameters_col3_0').style.display = 'inline-block';
             if (json.data.SERVICE_LOG_ENABLE_ROUTER==1)
-                document.getElementById('menu4_row_parameters_col4_1').style.display = 'inline-block';
+                document.getElementById('menu5_row_parameters_col4_1').style.display = 'inline-block';
             else
-                document.getElementById('menu4_row_parameters_col4_0').style.display = 'inline-block';
+                document.getElementById('menu5_row_parameters_col4_0').style.display = 'inline-block';
             if (json.data.SERVICE_LOG_PM2_FILE && json.data.SERVICE_LOG_PM2_FILE!=null)
-                document.getElementById('menu4_row_parameters_col5_1').style.display = 'inline-block';
+                document.getElementById('menu5_row_parameters_col5_1').style.display = 'inline-block';
             else
-                document.getElementById('menu4_row_parameters_col5_0').style.display = 'inline-block';
+                document.getElementById('menu5_row_parameters_col5_0').style.display = 'inline-block';
 
             window.global_service_log_level_verbose = json.data.SERVICE_LOG_LEVEL_VERBOSE;
             window.global_service_log_level_error = json.data.SERVICE_LOG_LEVEL_ERROR;
@@ -1674,31 +1708,31 @@ async function get_server_log_parameters(){
             html +=`<option value=7 log_scope='${window.global_service_log_scope_controller}'   log_level='${window.global_service_log_level_info}'>${window.global_service_log_scope_controller} - ${window.global_service_log_level_info}</option>`;
             html +=`<option value=8 log_scope='${window.global_service_log_scope_controller}'   log_level='${window.global_service_log_level_error}'>${window.global_service_log_scope_controller} - ${window.global_service_log_level_error}</option>`;
             
-            document.getElementById('select_logscope4').innerHTML = html;
+            document.getElementById('select_logscope5').innerHTML = html;
 
             if (window.global_service_log_file_interval=='1M')
-                document.getElementById('select_day_menu4').style.display = 'none';
+                document.getElementById('select_day_menu5').style.display = 'none';
             else
-                document.getElementById('select_day_menu4').style.display = 'inline-block';
+                document.getElementById('select_day_menu5').style.display = 'inline-block';
         }
     })
 }
 function show_server_logs(sort=1, order_by='desc'){
-    let logscope = document.getElementById('select_logscope4')[document.getElementById('select_logscope4').selectedIndex].getAttribute('log_scope');
-    let loglevel = document.getElementById('select_logscope4')[document.getElementById('select_logscope4').selectedIndex].getAttribute('log_level');
-    let year = document.getElementById('select_year_menu4').value;
-    let month= document.getElementById('select_month_menu4').value;
-    let day  = document.getElementById('select_day_menu4').value;
+    let logscope = document.getElementById('select_logscope5')[document.getElementById('select_logscope5').selectedIndex].getAttribute('log_scope');
+    let loglevel = document.getElementById('select_logscope5')[document.getElementById('select_logscope5').selectedIndex].getAttribute('log_level');
+    let year = document.getElementById('select_year_menu5').value;
+    let month= document.getElementById('select_month_menu5').value;
+    let day  = document.getElementById('select_day_menu5').value;
     let app_id_filter='';
     if (logscope=='SERVER'){
         //no app filter for server, since this is a server log
-        document.getElementById('select_app_menu4').style.display = 'none';
+        document.getElementById('select_app_menu5').style.display = 'none';
         app_id_filter = `select_app_id=&`;
     }
     else{
         //show app filter and use it
-        document.getElementById('select_app_menu4').style.display = 'inline-block';
-        app_id_filter = `select_app_id=${document.getElementById('select_app_menu4').options[document.getElementById('select_app_menu4').selectedIndex].value}&`;
+        document.getElementById('select_app_menu5').style.display = 'inline-block';
+        app_id_filter = `select_app_id=${document.getElementById('select_app_menu5').options[document.getElementById('select_app_menu5').selectedIndex].value}&`;
     }
     let url_parameters;
     if (window.global_service_log_file_interval=='1M')
@@ -1734,18 +1768,18 @@ function show_existing_logfiles(){
                                         }
                                     }
                                 }
-                                setlogscopelevel(document.getElementById('select_logscope4'),
+                                setlogscopelevel(document.getElementById('select_logscope5'),
                                                 logscope, 
                                                 loglevel);
                                 //year
-                                document.getElementById('select_year_menu4').value = year;
+                                document.getElementById('select_year_menu5').value = year;
                                 //month
-                                document.getElementById('select_month_menu4').value = month;
+                                document.getElementById('select_month_menu5').value = month;
                                 //day if applicable
                                 if (window.global_service_log_file_interval=='1D')
-                                    document.getElementById('select_day_menu4').value = day;
+                                    document.getElementById('select_day_menu5').value = day;
 
-                                document.getElementById('select_logscope4').dispatchEvent(new Event('change'));
+                                document.getElementById('select_logscope5').dispatchEvent(new Event('change'));
                                 lov_close();
                             };
         lov_show('SERVER_LOG_FILES', function_event);
@@ -1773,6 +1807,7 @@ function admin_token_has_value(){
 
 function init_admin_secure(){
 
+    //SET GLOBALS
     window.global_service_log = '/service/log';
     window.global_service_log_scope_server= '';
     window.global_service_log_scope_service= '';
@@ -1799,19 +1834,103 @@ function init_admin_secure(){
     window.global_client_longitude = '';
     window.global_client_place = '';
 
-
-
     window.global_page = 0;
     window.global_page_last =0;
     window.global_limit =1000;
     window.global_previous_row= '';
 
+    //SET MENU
+    //hide all first (display none in css using eval not working)
+    for (let i=1;i<=10;i++){
+        document.getElementById(`menu_${i}`).style.display='none';
+    }
+    if (window.global_system_admin_only==1){
+        //show less menus when database and apps are not enabled yet
+        //show CONNECTED
+        document.getElementById('menu_5').style.display='block';
+        //hide CONNECTED in MONITOR
+        document.getElementById('list_monitor_nav_1').style.display='none';
+        //hide APP LOG in MONITOR
+        document.getElementById('list_monitor_nav_2').style.display='none';
+        //show PARAMETER
+        document.getElementById('menu_6').style.display='block';
+        //show INSTALLATION
+        document.getElementById('menu_7').style.display='block';
+        //show DATABASE
+        document.getElementById('menu_8').style.display='block';
+        //show BACKUP/RESTORE
+        document.getElementById('menu_9').style.display='block';
+        //show SERVER
+        document.getElementById('menu_10').style.display='block';
+        //start with PARAMETER
+        show_menu(6);
+    }
+    else{
+        //show DASHBOARD
+        document.getElementById('menu_1').style.display='block';
+        //show USER STAT
+        document.getElementById('menu_2').style.display='block';
+        //show USERS
+        document.getElementById('menu_3').style.display='block';
+        //show APP ADMIN
+        document.getElementById('menu_4').style.display='block';
+        //show MONITOR
+        document.getElementById('menu_5').style.display='block';
+        if (window.global_user_app_role_id==0){
+            //show PARAMETER
+            document.getElementById('menu_6').style.display='block';
+            //show INSTALLATION
+            document.getElementById('menu_7').style.display='block';
+            //show DATABASE
+            document.getElementById('menu_8').style.display='block';
+            //show BACKUP/RESTORE
+            document.getElementById('menu_9').style.display='block';
+            //show SERVER
+            document.getElementById('menu_10').style.display='block';
+        }
+        //start with DASHBOARD
+        show_menu(1);
+        //SET APPS INFO, INIT MAP
+        get_apps().then(function(){
+            get_gps_from_ip().then(function(){
+                map_init(window.global_gps_map_container,
+                        window.global_service_map_style,
+                        window.global_client_longitude, 
+                        window.global_client_latitude, 
+                        window.global_gps_map_zoom);
+                map_setevent('dblclick', function(e) {
+                    let lng = e.latlng['lng'];
+                    let lat = e.latlng['lat'];
+                    //Update GPS position
+                    get_place_from_gps(lng, lat).then(function(gps_place){
+                        map_update(lng,
+                                lat,
+                                '', //do not change zoom 
+                                gps_place,
+                                null,
+                                window.global_gps_map_marker_div_gps,
+                                window.global_service_map_jumpto);
+                    })
+                })
+                    
+                map_update(window.global_client_longitude,
+                        window.global_client_latitude,
+                        window.global_gps_map_zoom,
+                        window.global_client_place,
+                        null,
+                        window.global_gps_map_marker_div_gps,
+                        window.global_service_map_jumpto);
+
+            })                
+        })
+    }
+    
+
+    //SET ICONS
     //common, since ui=false when called init_common, set some common items here
     document.getElementById('message_close').innerHTML = window.global_icon_app_close;
     //if CONFIRM message is used
     document.getElementById('message_cancel').innerHTML = window.global_icon_app_cancel;
-    document.getElementById('message_cancel').addEventListener('click', function() { document.getElementById("dialogue_message").style.visibility = "hidden"; }, false);
-
     //other in admin
     document.getElementById('menu_open').innerHTML = window.global_icon_app_menu_open;
     document.getElementById('menu_close').innerHTML = window.global_icon_app_menu_close;
@@ -1822,24 +1941,24 @@ function init_admin_secure(){
     document.getElementById('list_app_log_next').innerHTML = window.global_icon_app_next;
     document.getElementById('list_app_log_last').innerHTML = window.global_icon_app_last;
 
-    document.getElementById('filesearch_menu4').innerHTML =  window.global_icon_app_search;
-    document.getElementById('menu4_row_parameters_col1_1').innerHTML = window.global_icon_app_checkbox_checked;
-    document.getElementById('menu4_row_parameters_col1_0').innerHTML = window.global_icon_app_checkbox_empty;
-    document.getElementById('menu4_row_parameters_col2_1').innerHTML = window.global_icon_app_checkbox_checked;
-    document.getElementById('menu4_row_parameters_col2_0').innerHTML = window.global_icon_app_checkbox_empty
-    document.getElementById('menu4_row_parameters_col3_1').innerHTML = window.global_icon_app_checkbox_checked;
-    document.getElementById('menu4_row_parameters_col3_0').innerHTML = window.global_icon_app_checkbox_empty
-    document.getElementById('menu4_row_parameters_col4_1').innerHTML = window.global_icon_app_checkbox_checked;
-    document.getElementById('menu4_row_parameters_col4_0').innerHTML = window.global_icon_app_checkbox_empty
-    document.getElementById('menu4_row_parameters_col5_1').innerHTML = window.global_icon_app_checkbox_checked;
-    document.getElementById('menu4_row_parameters_col5_0').innerHTML = window.global_icon_app_checkbox_empty
+    document.getElementById('filesearch_menu5').innerHTML =  window.global_icon_app_search;
+    document.getElementById('menu5_row_parameters_col1_1').innerHTML = window.global_icon_app_checkbox_checked;
+    document.getElementById('menu5_row_parameters_col1_0').innerHTML = window.global_icon_app_checkbox_empty;
+    document.getElementById('menu5_row_parameters_col2_1').innerHTML = window.global_icon_app_checkbox_checked;
+    document.getElementById('menu5_row_parameters_col2_0').innerHTML = window.global_icon_app_checkbox_empty
+    document.getElementById('menu5_row_parameters_col3_1').innerHTML = window.global_icon_app_checkbox_checked;
+    document.getElementById('menu5_row_parameters_col3_0').innerHTML = window.global_icon_app_checkbox_empty
+    document.getElementById('menu5_row_parameters_col4_1').innerHTML = window.global_icon_app_checkbox_checked;
+    document.getElementById('menu5_row_parameters_col4_0').innerHTML = window.global_icon_app_checkbox_empty
+    document.getElementById('menu5_row_parameters_col5_1').innerHTML = window.global_icon_app_checkbox_checked;
+    document.getElementById('menu5_row_parameters_col5_0').innerHTML = window.global_icon_app_checkbox_empty
 
     document.getElementById('send_broadcast_send').innerHTML = window.global_icon_app_send;
     document.getElementById('send_broadcast_close').innerHTML = window.global_icon_app_close;
     document.getElementById('lov_close').innerHTML = window.global_icon_app_close;
 
-    document.getElementById('menu_1_content').style.display = 'block';
-
+    //SET EVENTLISTENERS
+    document.getElementById('message_cancel').addEventListener('click', function() { document.getElementById("dialogue_message").style.visibility = "hidden"; }, false);
     document.getElementById('menu_open').addEventListener('click', function() { document.getElementById('menu').style.display = 'block' }, false);
     document.getElementById('menu_close').addEventListener('click', function() { document.getElementById('menu').style.display = 'none' }, false);
 
@@ -1847,7 +1966,13 @@ function init_admin_secure(){
     document.getElementById('menu_2').addEventListener('click', function() { show_menu(2) }, false);
     document.getElementById('menu_3').addEventListener('click', function() { show_menu(3) }, false);
     document.getElementById('menu_4').addEventListener('click', function() { show_menu(4) }, false);
-    document.getElementById('menu_5').addEventListener('click', function() { admin_logoff_app() }, false);
+    document.getElementById('menu_5').addEventListener('click', function() { show_menu(5) }, false);
+    document.getElementById('menu_6').addEventListener('click', function() { show_menu(6) }, false);
+    document.getElementById('menu_7').addEventListener('click', function() { show_menu(7) }, false);
+    document.getElementById('menu_8').addEventListener('click', function() { show_menu(8) }, false);
+    document.getElementById('menu_9').addEventListener('click', function() { show_menu(9) }, false);
+    document.getElementById('menu_10').addEventListener('click', function() { show_menu(10) }, false);
+    document.getElementById('menu_11').addEventListener('click', function() { admin_logoff_app() }, false);
 
     document.getElementById('select_app_menu2').addEventListener('change', function() { show_chart(1); show_chart(2);}, false);
     document.getElementById('select_year_menu2').addEventListener('change', function() { show_chart(1);show_chart(2);}, false);
@@ -1861,9 +1986,9 @@ function init_admin_secure(){
     document.getElementById('apps_save').addEventListener('click', function() { apps_save()}, false); 
 
     document.getElementById('list_app_log_title').addEventListener('click', function() { nav_click(this)}, false);
-    document.getElementById('select_app_menu4_app_log').addEventListener('change', function() { nav_click(document.getElementById('list_app_log_title'))}, false);
-    document.getElementById('select_year_menu4_app_log').addEventListener('change', function() { nav_click(document.getElementById('list_app_log_title'))}, false);
-    document.getElementById('select_month_menu4_app_log').addEventListener('change', function() { nav_click(document.getElementById('list_app_log_title'))}, false);
+    document.getElementById('select_app_menu5_app_log').addEventListener('change', function() { nav_click(document.getElementById('list_app_log_title'))}, false);
+    document.getElementById('select_year_menu5_app_log').addEventListener('change', function() { nav_click(document.getElementById('list_app_log_title'))}, false);
+    document.getElementById('select_month_menu5_app_log').addEventListener('change', function() { nav_click(document.getElementById('list_app_log_title'))}, false);
     
     document.getElementById('list_app_log_first').addEventListener('click', function() { page_navigation(this)}, false);
     document.getElementById('list_app_log_previous').addEventListener('click', function() { page_navigation(this)}, false);
@@ -1871,29 +1996,35 @@ function init_admin_secure(){
     document.getElementById('list_app_log_last').addEventListener('click', function() { page_navigation(this)}, false);
     
     document.getElementById('list_connected_title').addEventListener('click', function() { nav_click(this)}, false);
-    document.getElementById('select_app_menu4_list_connected').addEventListener('change', function() { nav_click(document.getElementById('list_connected_title'))}, false);
-    document.getElementById('select_year_menu4_list_connected').addEventListener('change', function() { nav_click(document.getElementById('list_connected_title'))}, false);
-    document.getElementById('select_month_menu4_list_connected').addEventListener('change', function() { nav_click(document.getElementById('list_connected_title'))}, false);
+    document.getElementById('select_app_menu5_list_connected').addEventListener('change', function() { nav_click(document.getElementById('list_connected_title'))}, false);
+    document.getElementById('select_year_menu5_list_connected').addEventListener('change', function() { nav_click(document.getElementById('list_connected_title'))}, false);
+    document.getElementById('select_month_menu5_list_connected').addEventListener('change', function() { nav_click(document.getElementById('list_connected_title'))}, false);
 
     document.getElementById('list_server_log_title').addEventListener('click', function() { nav_click(this)}, false);
-    document.getElementById('select_logscope4').addEventListener('change', function() { nav_click(document.getElementById('list_server_log_title'))}, false);    
-    document.getElementById('select_app_menu4').addEventListener('change', function() { nav_click(document.getElementById('list_server_log_title'))}, false);
-    document.getElementById('select_year_menu4').addEventListener('change', function() { nav_click(document.getElementById('list_server_log_title'))}, false);
-    document.getElementById('select_month_menu4').addEventListener('change', function() { nav_click(document.getElementById('list_server_log_title'))}, false);
-    document.getElementById('select_day_menu4').addEventListener('change', function() { nav_click(document.getElementById('list_server_log_title'))}, false);
+    document.getElementById('select_logscope5').addEventListener('change', function() { nav_click(document.getElementById('list_server_log_title'))}, false);    
+    document.getElementById('select_app_menu5').addEventListener('change', function() { nav_click(document.getElementById('list_server_log_title'))}, false);
+    document.getElementById('select_year_menu5').addEventListener('change', function() { nav_click(document.getElementById('list_server_log_title'))}, false);
+    document.getElementById('select_month_menu5').addEventListener('change', function() { nav_click(document.getElementById('list_server_log_title'))}, false);
+    document.getElementById('select_day_menu5').addEventListener('change', function() { nav_click(document.getElementById('list_server_log_title'))}, false);
 
-    document.getElementById('filesearch_menu4').addEventListener('click', function() { show_existing_logfiles();}, false);
+    document.getElementById('filesearch_menu5').addEventListener('click', function() { show_existing_logfiles();}, false);
     
     document.getElementById('list_pm2_log_title').addEventListener('click', function() { nav_click(this)}, false);
     document.getElementById('select_maptype').addEventListener('change', function() { map_setstyle(document.getElementById('select_maptype').value) }, false);
     
 
-    //set texts
+    //SET TEXTS
     document.getElementById('menu_1').innerHTML = 'DASHBOARD';
     document.getElementById('menu_2').innerHTML = 'USER STAT';
-    document.getElementById('menu_3').innerHTML = 'APP ADMIN';
-    document.getElementById('menu_4').innerHTML = 'MONITOR';
-    document.getElementById('menu_5').innerHTML = 'LOGOUT';
+    document.getElementById('menu_3').innerHTML = 'USERS';
+    document.getElementById('menu_4').innerHTML = 'APP ADMIN';
+    document.getElementById('menu_5').innerHTML = 'MONITOR';
+    document.getElementById('menu_6').innerHTML = 'PARAMETER';
+    document.getElementById('menu_7').innerHTML = 'INSTALLATION';
+    document.getElementById('menu_8').innerHTML = 'DATABASE';
+    document.getElementById('menu_9').innerHTML = 'BACKUP/RESTORE';
+    document.getElementById('menu_10').innerHTML = 'SERVER';
+    document.getElementById('menu_11').innerHTML = 'LOGOUT';
 
     //menu 1
     document.getElementById('menu_1_db_info_database_title').innerHTML = 'Database';
@@ -1923,11 +2054,11 @@ function init_admin_secure(){
     document.getElementById('list_server_log_title').innerHTML = 'Server Log';
     document.getElementById('list_pm2_log_title').innerHTML = 'PM2 Log';
 
-    document.getElementById('menu4_row_parameters_col1').innerHTML = 'Server info';
-    document.getElementById('menu4_row_parameters_col2').innerHTML = 'Server verbose';
-    document.getElementById('menu4_row_parameters_col3').innerHTML = 'DB';
-    document.getElementById('menu4_row_parameters_col4').innerHTML = 'Router';
-    document.getElementById('menu4_row_parameters_col5').innerHTML = 'PM2 JSON log';
+    document.getElementById('menu5_row_parameters_col1').innerHTML = 'Server info';
+    document.getElementById('menu5_row_parameters_col2').innerHTML = 'Server verbose';
+    document.getElementById('menu5_row_parameters_col3').innerHTML = 'DB';
+    document.getElementById('menu5_row_parameters_col4').innerHTML = 'Router';
+    document.getElementById('menu5_row_parameters_col5').innerHTML = 'PM2 JSON log';
 
     document.getElementById('list_pm2_log_path_title').innerHTML = 'FILE PATH';
 
@@ -1941,38 +2072,6 @@ function init_admin_secure(){
 
     document.getElementById('client_id_label').innerHTML = 'CLIENT ID';
 
-    get_apps().then(function(){
-        get_gps_from_ip().then(function(){
-            map_init(window.global_gps_map_container,
-                     window.global_service_map_style,
-                     window.global_client_longitude, 
-                     window.global_client_latitude, 
-                     window.global_gps_map_zoom);
-            map_setevent('dblclick', function(e) {
-                let lng = e.latlng['lng'];
-                let lat = e.latlng['lat'];
-                //Update GPS position
-                get_place_from_gps(lng, lat).then(function(gps_place){
-                    map_update(lng,
-                               lat,
-                               '', //do not change zoom 
-                               gps_place,
-                               null,
-                               window.global_gps_map_marker_div_gps,
-                               window.global_service_map_jumpto);
-                })
-            })
-                
-            map_update(window.global_client_longitude,
-                       window.global_client_latitude,
-                       window.global_gps_map_zoom,
-                       window.global_client_place,
-                       null,
-                       window.global_gps_map_marker_div_gps,
-                       window.global_service_map_jumpto);
-            show_menu(1);
-        })                
-    })
 }
 init_common(<ITEM_COMMON_PARAMETERS/>, (err, global_app_parameters)=>{
     if (err)

@@ -28,7 +28,8 @@ module.exports = {
                     app = app.replace(
                         '<AppProfileTop/>',
                         '');
-                    get_module_with_init(app_id, 
+                    get_module_with_init(app_id,
+                                         null,  
                                          'admin_exception_before',
                                          null, //do not close eventsource before
                                          true, //ui
