@@ -992,9 +992,10 @@ module.exports = {
                                                                     else
                                                                         if (req.query.app_id == 0)
                                                                             getAdminSecure(req.query.app_id, 
-                                                                                req.body.client_latitude,
-                                                                                req.body.client_longitude, 
-                                                                                req.body.client_place)
+                                                                                           results.id,
+                                                                                           req.body.client_latitude,
+                                                                                           req.body.client_longitude, 
+                                                                                           req.body.client_place)
                                                                             .then(function(app_result){
                                                                                 return res.status(200).json({
                                                                                     count: Array(results.items).length,
@@ -1029,9 +1030,10 @@ module.exports = {
                                                 else
                                                 if (req.query.app_id == 0)
                                                     getAdminSecure(req.query.app_id, 
-                                                        req.body.client_latitude,
-                                                        req.body.client_longitude, 
-                                                        req.body.client_place)
+                                                                   results.id,
+                                                                   req.body.client_latitude,
+                                                                   req.body.client_longitude, 
+                                                                   req.body.client_place)
                                                     .then(function(app_result){
                                                         return res.status(200).json({
                                                             count: Array(results.items).length,

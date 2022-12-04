@@ -29,6 +29,7 @@ module.exports = {
                         '<AppProfileTop/>',
                         '');
                     get_module_with_init(app_id, 
+                                         null,
                                          'app_exception',
                                          null,
                                          true,
