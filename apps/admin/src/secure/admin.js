@@ -135,10 +135,11 @@ function sendBroadcast(){
     }
         
     let json_data =`{"destination_app": ${destination_app},
-                        "app_id": ${app_id},
-                        "client_id": ${client_id},
-                        "broadcast_type" :"${broadcast_type}", 
-                        "broadcast_message":"${broadcast_message}"}`;
+                     "app_id": ${app_id},
+                     "client_id": ${client_id},
+                     "client_id_current": ${window.global_clientId},
+                     "broadcast_type" :"${broadcast_type}", 
+                     "broadcast_message":"${broadcast_message}"}`;
     common_fetch('/service/broadcast?',
                  'POST', 1, json_data, null, null, (err, result) =>{
         if (err)
