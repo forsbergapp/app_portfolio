@@ -1152,12 +1152,26 @@ async function show_list(list_div, list_div_col_title, url, sort, order_by, cols
                     for (i = 0; i < json.data.length; i++) {
                         switch (list_div){
                             case 'list_connected':{    
-                                let current_user_row='';
+                                let list_connected_current_user_row='';
                                 if (json.data[i].user_account_id==window.global_user_account_id)
-                                    current_user_row = 'current_user_row';
+                                    list_connected_current_user_row = 'list_connected_current_user_row';
                                 else
-                                    current_user_row ='';
-                                html += `<div class='list_connected_row ${current_user_row}'>
+                                    list_connected_current_user_row ='';
+                                let app_role_color;
+                                switch (json.data[i].app_role_id){
+                                    case 0:{
+                                        app_role_color = 'app_role_color_superadmin';
+                                        break;
+                                    }
+                                    case 1:{
+                                        app_role_color = 'app_role_color_admin';
+                                        break;
+                                    }
+                                    default:{
+                                        app_role_color = 'app_role_color_user';
+                                    }
+                                }
+                                html += `<div class='list_connected_row ${list_connected_current_user_row}'>
                                             <div class='list_connected_col'>
                                                 <div>${json.data[i].id}</div>
                                             </div>
@@ -1167,7 +1181,7 @@ async function show_list(list_div, list_div_col_title, url, sort, order_by, cols
                                             <div class='list_connected_col'>
                                                 <div>${json.data[i].app_id}</div>
                                             </div>
-                                            <div class='list_connected_col'>
+                                            <div class='list_connected_col ${app_role_color}'>
                                                 <div>${json.data[i].app_role_icon}</div>
                                             </div>
                                             <div class='list_connected_col'>
