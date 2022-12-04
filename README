@@ -271,6 +271,9 @@ Installation instructions
 	SERVER_ADMIN_NAME									={ADMIN_USERNAME}
 	SERVER_ADMIN_PASSWORD								={ADMIN_PASSWORD}
 	SERVER_TEST_SUBDOMAIN								=test
+	SERVER_DB_START                             		={0=NO, 1=YES default 0, change to 1 when db configured}
+	SERVER_APP_START                            		={0=NO, 1=YES default 0, change to 1 when apps configured}
+
 	#service variables
 	SERVICE_AUTH_ACCESS_CONTROL_ENABLE          		={0=NO, 1=YES}
 	SERVICE_AUTH_ACCESS_CONTROL_IP             			={0=NO, 1=YES}
