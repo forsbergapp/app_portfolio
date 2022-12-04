@@ -956,7 +956,7 @@ module.exports = {
 				return callBack(null, result[0]);
 		});
     },
-	getAppRole: async (app_id, user_account_id, callBack) =>{
+	getAppRole: (app_id, user_account_id, callBack) =>{
 		let sql;
 		let parameters;
 		if (user_account_id =='')
@@ -980,7 +980,7 @@ module.exports = {
 						id: user_account_id,
 						id_user_icon: 2
 					}; 
-		await execute_db_sql(app_id, sql, parameters, 
+		execute_db_sql(app_id, sql, parameters, 
 			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);

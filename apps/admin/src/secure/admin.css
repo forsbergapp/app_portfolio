@@ -496,7 +496,7 @@
         height: 100%;
     }
     /*CONNECTED*/
-    .current_user_row{
+    .list_connected_current_user_row{
         animation: common_pulsate 2s ease-out;
         animation-iteration-count: infinite; 
         opacity: 0.5;
@@ -834,6 +834,7 @@
         --app_theme_input_error_color:var(--app_theme_main_select_color3);
         --app_theme_nav_selected_color:var(--app_theme_main_branding_color4);
         --app_theme_nav_selected_background_color:var(--app_theme_main_branding_color2);
+        --app_theme_app_role_user_color:var(--app_)
     }
     #box1_pie{
         border: 1px solid var(--app_theme_graph_border_color);
@@ -897,6 +898,15 @@
     }
     #list_user_stat_row_title{
         background-color: var(--app_theme_list_rowtitle_background_color);
+    }
+    .app_role_color_user{
+        color:var(--app_blue1);
+    }
+    .app_role_color_admin{
+        color:var(--app_prince);
+    }
+    .app_role_color_superadmin{
+        color:var(--app_king);
     }
     .list_title{
         font-weight: bold;
