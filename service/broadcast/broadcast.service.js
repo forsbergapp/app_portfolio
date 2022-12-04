@@ -8,24 +8,29 @@ function sortByProperty(property, order_by){
     }  
 }
 module.exports = {
-    BroadcastSend: (app_id, client_id, destination_app, broadcast_type, broadcast_message, callBack) =>{
+    BroadcastSend: (app_id, client_id, client_id_current, destination_app, broadcast_type, broadcast_message, callBack) =>{
         let broadcast;
         if (destination_app ==true){
-            //broadcast to all connected to given app_id
+            //broadcast INFO or MAINTENANCE to all connected to given app_id 
+            //except MAINTENANCE to admin and current user
             broadcast_clients.forEach(client=>{
-                if (client.app_id == app_id || app_id == null){
-                    broadcast =`{"broadcast_type"   : "${broadcast_type}", 
-                                 "broadcast_message": "${broadcast_message}"}`;
-                    client.response.write (`data: ${btoa(broadcast)}\n\n`);
-                }
+                if (client.client_id != client_id_current)
+                    if (broadcast_type=='MAINTENANCE' && client.app_id ==0)
+                        null;
+                    else
+                        if (client.app_id == app_id || app_id == null){
+                            broadcast =`{"broadcast_type"   : "${broadcast_type}", 
+                                        "broadcast_message": "${broadcast_message}"}`;
+                            client.response.write (`data: ${btoa(broadcast)}\n\n`);
+                        }
             })
         }
         if (client_id !==null){
-            //broadcast to specific client
+            //broadcast (INFO) to specific client
             broadcast_clients.forEach(client=>{
                 if (client.id == client_id){
                     broadcast =`{"broadcast_type"   : "${broadcast_type}", 
-                                 "broadcast_message": "${broadcast_message}"}`;
+                                "broadcast_message": "${broadcast_message}"}`;
                     client.response.write (`data: ${btoa(broadcast)}\n\n`);
                     
                 }

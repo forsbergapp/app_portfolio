@@ -103,7 +103,7 @@ module.exports = {
         }
     },
     BroadcastSend: (req, res) => {
-        BroadcastSend(req.body.app_id, req.body.client_id, req.body.destination_app, 
+        BroadcastSend(req.body.app_id, req.body.client_id, req.body.client_id_current, req.body.destination_app, 
                       req.body.broadcast_type, req.body.broadcast_message, (err, result) =>{
             return res.status(200).send(
                 err ?? result
