@@ -654,10 +654,13 @@ a:active {
 }
 /* profile button top*/
 #profile_btn_top{
+	font-size: 48px;
+	text-align: center;
+	cursor:pointer;
 	position:fixed;
 	bottom:60px;
 	width:60px;
-	margin-inline-start: calc(50% - 30px);
+	margin-inline-start: calc(50% - 30px) !important;
 	border-radius: 4px 4px 0px 0px;
 }
 
@@ -760,11 +763,6 @@ a:active {
 	width: 100%;
 }
 
-/*Profile button*/
-#profile_btn_top{
-	font-size: 30px;
-	cursor:pointer;
-}
 
 /* SPINNER */
 #app_spinner{
