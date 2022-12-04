@@ -1180,10 +1180,13 @@ function show_maintenance(message, init){
     }
     else
         if (document.getElementById('maintenance_countdown').innerHTML=='') {
+            //profile_avatar_online_status.onlineprofilehide all divs except broadcast and maintenance
             let divs = document.body.getElementsByTagName('div');
-
             for (let i = 0; i < divs.length; i += 1) {
-                divs[i].style.visibility ='hidden';
+                if (divs[i].id.indexOf('broadcast') !=0 &&
+                    divs[i].id.indexOf('dialogue_maintenance') !=0 &&
+                    divs[i].id.indexOf('maintenance') !=0)
+                    divs[i].style.visibility ='hidden';
             }
             let maintenance_divs = document.getElementById('dialogue_maintenance').getElementsByTagName('div');
             for (let i = 0; i < maintenance_divs.length; i += 1) {
