@@ -881,7 +881,7 @@ function lov_show(lov, function_event){
             lov_column_value = 'parameter_type_text';
             if (window.global_admin){
                 url = window.global_rest_url_base + window.global_rest_parameter_type + `admin?`;
-                token_type = 2;
+                token_type = 1;
             }
             else{
                 url = window.global_rest_url_base + window.global_rest_parameter_type + `?`;
@@ -892,13 +892,13 @@ function lov_show(lov, function_event){
         case 'SERVER_LOG_FILES':{
             lov_column_value = 'filename';
             url = window.global_service_log + '/files?';
-            token_type = 2;
+            token_type = 1;
             break;
         }
         case 'APP_CATEGORY':{
             lov_column_value = 'app_category_text';
             url = window.global_rest_url_base + window.global_rest_app_category + '/admin?'
-            token_type = 2;
+            token_type = 1;
             break;
         }
     }
