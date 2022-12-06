@@ -2341,6 +2341,8 @@ async function user_update(callBack) {
         }
         else{
             json = JSON.parse(result);
+            set_avatar(result.avatar, document.getElementById('user_menu_avatar_img'));
+            document.getElementById('user_menu_username').innerHTML = result.username;
             if (json.sent_change_email == 1){
                 let function_cancel_event = function() { document.getElementById('dialogue_user_verify').style.visibility='hidden';};
                 show_common_dialogue('VERIFY', 'NEW_EMAIL', new_email, window.global_icon_app_cancel, function_cancel_event);
@@ -3267,7 +3269,11 @@ async function init_common(parameters, callBack){
             SearchAndSetSelectedIndex(window.global_user_timezone, document.getElementById('user_timezone_select'), 1);
             SearchAndSetSelectedIndex(window.global_user_direction, document.getElementById('user_direction_select'), 1);
             SearchAndSetSelectedIndex(window.global_user_arabic_script, document.getElementById('user_arabic_script_select'), 1);
-            
+            //dialogue user edit
+            document.getElementById('user_edit_close').addEventListener('click', function() { dialogue_user_edit_clear() }, false);
+            document.getElementById('user_edit_btn_avatar_img').addEventListener('click', function() { document.getElementById('user_edit_input_avatar_img').click() }, false);
+            document.getElementById('user_edit_input_avatar_img').addEventListener('change', function() { show_image(document.getElementById('user_edit_avatar_img'), this.id, window.global_image_avatar_width, window.global_image_avatar_height) }, false);
+            document.getElementById('user_edit_btn_user_update').addEventListener('click', function() { user_update(); }, false);
         }
         function set_common_parameters(app_id, parameter_name, parameter_value){
             if (app_id == 0){
