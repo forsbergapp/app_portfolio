@@ -15,7 +15,11 @@ function seticons(){
                                     <div></div>
                                 </div>`;
     //app
+    window.global_icon_app_apps = `<svg viewBox="0 0 24 24" enable-background="new 0 0 24 24">
+                                        <path d="M10,2H3C2.4,2,2,2.4,2,3v7c0,0.6,0.4,1,1,1h7c0.6,0,1-0.4,1-1V3C11,2.4,10.6,2,10,2z M10,13H3c-0.6,0-1,0.4-1,1v7c0,0.6,0.4,1,1,1h7c0.6,0,1-0.4,1-1v-7C11,13.4,10.6,13,10,13z M21,2h-7c-0.6,0-1,0.4-1,1v7c0,0.6,0.4,1,1,1h7c0.6,0,1-0.4,1-1V3C22,2.4,21.6,2,21,2z M21,13h-7c-0.6,0-1,0.4-1,1v7c0,0.6,0.4,1,1,1h7c0.6,0,1-0.4,1-1v-7C22,13.4,21.6,13,21,13z"/>
+                                   </svg>`;
     window.global_icon_app_maintenance = '⚒';
+    window.global_icon_app_alert = '🚨';
     window.global_icon_app_mobile = '<i class="fa-solid fa-mobile-screen"></i>';
     window.global_icon_app_save = '<i class="fa-solid fa-floppy-disk"></i>';
     window.global_icon_app_add = '<i class="fa-solid fa-plus"></i>';
@@ -27,7 +31,21 @@ function seticons(){
     window.global_icon_app_sendmail = '<i class="fa-solid fa-envelope"></i>';
     window.global_icon_app_email = '<i class="fa-solid fa-envelope"></i>';
     window.global_icon_app_settings = '<i class="fa-solid fa-gear"></i>';
-    window.global_icon_app_chat ='<i class="fa-solid fa-comment"></i>';
+    window.global_icon_app_chat = '<i class="fa-solid fa-comment"></i>';
+    window.global_icon_app_log = '</i><i class="fa-solid fa-list"></i>';
+    window.global_icon_app_chart = '<i class="fa-solid fa-chart-pie"></i>';
+    window.global_icon_app_server = '<i class="fa-solid fa-server"></i>';
+    window.global_icon_app_route = '<i class="fa-solid fa-sitemap"></i>';
+    window.global_icon_app_database = '<i class="fa-solid fa-database"></i>';
+    window.global_icon_app_database_schema = '<i class="fa-solid fa-sitemap"></i>';
+    window.global_icon_app_user_connections = '<i class="fa-solid fa-users-viewfinder"></i>';
+    window.global_icon_app_database_started = '<i class="fa-solid fa-toggle-on"></i>';
+    window.global_icon_app_database_calc = '<i class="fa-solid fa-calculator"></i>';
+    window.global_icon_app_backup = '<i class="fa-solid fa-cloud-arrow-down"></i>';
+    window.global_icon_app_install = '<i class="fa-solid fa-download"></i>';
+    window.global_icon_app_file_path = '<i class="fa-solid fa-folder-tree"></i>';
+    window.global_icon_app_broadcast = '<i class="fa-solid fa-tower-broadcast"></i>';
+    window.global_icon_app_restore = '<i class="fa-solid fa-cloud-arrow-up"></i>';
     window.global_icon_app_checkbox_checked = '<i class="fa-solid fa-square-check"></i>';
     window.global_icon_app_checkbox_empty = '<i class="fa-solid fa-square"></i>';
     window.global_icon_app_info = '<i class="fa-solid fa-circle-info"></i>';
@@ -71,6 +89,7 @@ function seticons(){
     window.global_icon_app_timetable = '<i class="fa-solid fa-calendar-days"></i>';
     //user
     window.global_icon_user = '<i class="fas fa-user-circle"></i>';
+    window.global_icon_user_menu = '<i class="fa-solid fa-user">';
     window.global_icon_user_last_logontime = '<i class="fa-solid fa-right-to-bracket"></i>';
     window.global_icon_user_account_created = '<i class="fa-solid fa-handshake-simple"></i>';
     window.global_icon_user_account_modified = '<i class="fa-solid fa-pen-to-square"></i>';
