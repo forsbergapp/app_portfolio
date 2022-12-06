@@ -1,10 +1,8 @@
-const { read_app_files, get_module_with_init } = require("../");
+const { read_app_files, get_module_with_init, getUserPreferences } = require("../");
 module.exports = {
     getApp:(app_id, username, gps_lat, gps_long, gps_place) => {
         return new Promise(function (resolve, reject){
             function main(app_id){
-                const { locales } = require(__dirname + '/../common/src/locales');
-                const { setting } = require(__dirname + '/../common/src/setting');
                 const files = [
                     ['APP', __dirname + '/src/index.html'],
                     ['<AppCommonHeadFontawesome/>', __dirname + '/../common/src/head_fontawesome.html'],
@@ -26,35 +24,25 @@ module.exports = {
                     ['<AppProfileInfo/>', __dirname + '/src/profile_info.html'],   /*Profile tag in common body*/
                     ['<AppCommonProfileBtnTop/>', __dirname + '/../common/src/profile_btn_top.html'] /*AppCommonProfileBtnTop inside AppToolbarBttom */
                   ];
-                let USER_LOCALE;
-                let USER_TIMEZONE;
-                let USER_DIRECTION;
-                let USER_ARABIC_SCRIPT;
-                async function getAppComponents() {
-                    //modules with fetch from database
-                    USER_LOCALE = await locales(app_id);
-                    USER_TIMEZONE = await setting(app_id, 'en', 'TIMEZONE');
-                    USER_DIRECTION = await setting(app_id, 'en', 'DIRECTION');
-                    USER_ARABIC_SCRIPT = await setting(app_id, 'en', 'ARABIC_SCRIPT');
-                }
-                getAppComponents().then(function(){
+                getUserPreferences(app_id).then(function(user_preferences){
                     read_app_files(app_id, files, (err, app)=>{
                         if (err)
                             reject(err);
                         else{
+                            //COMMON, set user preferences content
                             app = app.replace(
                                     '<USER_LOCALE/>',
-                                    `${USER_LOCALE}`);
+                                    `${user_preferences.user_locales}`);
                             app = app.replace(
                                     '<USER_TIMEZONE/>',
-                                    `${USER_TIMEZONE}`);
+                                    `${user_preferences.user_timezones}`);
                             app = app.replace(
                                     '<USER_DIRECTION/>',
-                                    `<option id='' value=''></option>${USER_DIRECTION}`);
+                                    `<option id='' value=''></option>${user_preferences.user_directions}`);
                             app = app.replace(
                                     '<USER_ARABIC_SCRIPT/>',
-                                    `<option id='' value=''></option>${USER_ARABIC_SCRIPT}`);
-                            //Profile tag not used in common body
+                                    `<option id='' value=''></option>${user_preferences.user_arabic_scripts}`);
+                            //APP Profile tag not used in common body
                             app = app.replace(
                                     '<AppProfileTop/>',
                                     '');   
