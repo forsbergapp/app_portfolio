@@ -94,12 +94,7 @@ function setEvents(){
     });
     document.getElementById('login_button').addEventListener('click', function() { user_login_app() }, false);    
     document.getElementById('signup_button').addEventListener('click', function() { user_signup() }, false);
-    //dialogue user edit
-    document.getElementById('user_edit_close').addEventListener('click', function() { dialogue_user_edit_clear() }, false);
-    document.getElementById('user_edit_btn_avatar_img').addEventListener('click', function() { document.getElementById('user_edit_input_avatar_img').click() }, false);
-    document.getElementById('user_edit_input_avatar_img').addEventListener('change', function() { show_image(document.getElementById('user_edit_avatar_img'), this.id, window.global_image_avatar_width, window.global_image_avatar_height); }, false);
-    document.getElementById('user_edit_close').addEventListener('click', function() { document.getElementById('dialogue_user_edit').style.visibility = 'hidden' }, false);    
-    document.getElementById('user_edit_btn_user_update').addEventListener('click', function() { user_update_app(); }, false);
+    //dialogue user edit    
     document.getElementById('user_edit_btn_user_delete_account').addEventListener('click', function() { user_delete_app(); }, false);
     //dialogue verify
     document.getElementById('user_verify_verification_char1').addEventListener('keyup', function() { user_verify_check_input_app(this, "user_verify_verification_char2") }, false);
@@ -206,14 +201,6 @@ async function user_login_app(){
 }
 function app_exception(){
     user_logoff();
-}
-async function user_update_app(){
-    await user_update((err, result) => {
-        if (err==null){
-            set_avatar(result.avatar, document.getElementById('user_menu_avatar_img'));
-            document.getElementById('user_menu_username').innerHTML = result.username;
-        }
-    });
 }
 async function user_verify_check_input_app(item, nextField){
     await user_verify_check_input(item, nextField, (err, result) => {

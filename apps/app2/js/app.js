@@ -1157,14 +1157,6 @@ async function update_ui(option, item_id=null) {
 /*----------------------- */
 /* USER                   */
 /*----------------------- */
-async function user_update_app(){
-    await user_update((err, result) => {
-        if (err==null){
-            set_avatar(result.avatar, document.getElementById('user_menu_avatar_img'));
-            document.getElementById('user_menu_username').innerHTML = result.username;
-        }
-    });
-}
 async function user_login_app(){
     let username = document.getElementById('login_username');
     let password = document.getElementById('login_password');
@@ -2370,11 +2362,7 @@ function setEvents() {
     });
     document.getElementById('login_button').addEventListener('click', function() { user_login_app() }, false);
     document.getElementById('signup_button').addEventListener('click', function() { user_signup() }, false);
-    //dialogue user edit
-    document.getElementById('user_edit_btn_avatar_img').addEventListener('click', function() { document.getElementById('user_edit_input_avatar_img').click() }, false);
-    document.getElementById('user_edit_input_avatar_img').addEventListener('change', function() { show_image(document.getElementById('user_edit_avatar_img'), this.id, window.global_image_avatar_width, window.global_image_avatar_height) }, false);
-    document.getElementById('user_edit_btn_user_update').addEventListener('click', function() { user_update_app(); }, false);
-    document.getElementById('user_edit_close').addEventListener('click', function() { dialogue_user_edit_clear() }, false);
+    
     //dialogue profile
     document.getElementById('profile_main_btn_following').addEventListener('click', function() { profile_detail_app(1, null, true, null, 'profile_show_app') }, false);
     document.getElementById('profile_main_btn_followed').addEventListener('click', function() { profile_detail_app(2, null, true, null, 'profile_show_app') }, false);

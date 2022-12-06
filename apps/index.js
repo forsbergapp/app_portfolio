@@ -1,6 +1,7 @@
 const { getParameters_server } = require ("../service/db/app_portfolio/app_parameter/app_parameter.service");
 const { getApp } = require("../service/db/app_portfolio/app/app.service");
 const { createLogAppSE } = require("../service/log/log.controller");
+const { getCountries } = require("../service/db/app_portfolio/country/country.service");
 async function getInfo(app_id, info, lang_code, callBack){
     async function get_parameters(callBack){            
         getApp(app_id, app_id, lang_code, (err, result_app)=>{
@@ -373,7 +374,93 @@ module.exports = {
                     return false;
             }
         }
-    }
+    },
+    getUserPreferences: async(app_id) => {
+        return new Promise(function (resolve, reject){
+            const { getLocales } = require("../service/db/app_portfolio/language/locale/locale.service");
+            const { getSettings } = require("../service/db/app_portfolio/setting/setting.service");
+            let default_lang = 'en';
+            getLocales(app_id, default_lang, (err, locales) => {
+                if (err)
+                    resolve(err)
+                else{
+                    let user_locales ='';
+                    locales.forEach( (locale,i) => {
+                        user_locales += `<option id=${i} value=${locale.locale}>${locale.text}</option>`;
+                    })
+                    getSettings(app_id, default_lang, null, (err, settings) => {
+                        let option;
+                        let user_timezones;
+                        let user_directions;
+                        let user_arabic_scripts;
+                        for (i = 0; i < settings.length; i++) {
+                            option = `<option id=${settings[i].id} value='${settings[i].data}'>${settings[i].text}</option>`;
+                            switch (settings[i].setting_type_name){
+                                case 'TIMEZONE':{
+                                    user_timezones += option;
+                                    break;
+                                }
+                                case 'DIRECTION':{
+                                    user_directions += option;
+                                    break;
+                                }
+                                case 'ARABIC_SCRIPT':{
+                                    user_arabic_scripts += option;
+                                    break;
+                                }
+                            }
+                        }
+                        resolve({user_locales: user_locales,
+                                    user_timezones: user_timezones,
+                                    user_directions: user_directions,
+                                    user_arabic_scripts: user_arabic_scripts
+                                })
+                    })
+                }
+            })
+        })
+    },
+    countries:(app_id) => {
+        return new Promise(function (resolve, reject){
+            getCountries(app_id, 'en', (err, results)  => {
+                var select_countries;
+                if (err){
+                    resolve (
+                                `<select name='country' id='setting_select_country'>
+                                <option value='' id='' label='…' selected='selected'>…</option>
+                                </select>`
+                            )
+                }     
+                else{
+                    var current_group_name;
+                    select_countries  =`<select name='country' id='setting_select_country'>
+                                        <option value='' id='' label='…' selected='selected'>…</option>`;
+            
+                    results.map( (countries_map,i) => {
+                        if (i === 0){
+                        select_countries += `<optgroup label=${countries_map.group_name} />`;
+                        current_group_name = countries_map.group_name;
+                        }
+                        else{
+                        if (countries_map.group_name !== current_group_name){
+                            select_countries += `<optgroup label=${countries_map.group_name} />`;
+                            current_group_name = countries_map.group_name;
+                        }
+                        select_countries +=
+                        `<option value=${i}
+                                id=${countries_map.id} 
+                                country_code=${countries_map.country_code} 
+                                flag_emoji=${countries_map.flag_emoji} 
+                                group_name=${countries_map.group_name}>${countries_map.flag_emoji} ${countries_map.text}
+                        </option>`
+                        }
+                    })
+                    select_countries += '</select>';
+                    resolve (select_countries);
+                }
+            });
+        })
+      }
 }
 module.exports.getInfo = getInfo;
 module.exports.read_app_files = read_app_files;

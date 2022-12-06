@@ -20,11 +20,11 @@ module.exports = {
                 if (err)
                     reject(err);
                 else{
-                    //Profile tag not used in common body
+                    //APP Profile tag not used in common body
                     app = app.replace(
                         '<AppProfileInfo/>',
                         '');
-                    //Profile tag not used in common body
+                    //APP Profile tag not used in common body
                     app = app.replace(
                         '<AppProfileTop/>',
                         '');
