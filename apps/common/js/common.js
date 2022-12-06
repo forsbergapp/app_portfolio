@@ -2168,6 +2168,16 @@ async function user_logoff(){
     //remove access token
     window.global_rest_at ='';
     window.global_user_account_id = '';
+    
+    set_avatar(null, document.getElementById('user_menu_avatar_img')); 
+    //clear logged in info
+    document.getElementById('user_menu_username').innerHTML = '';
+    document.getElementById('user_menu_username').style.display = 'none';
+    document.getElementById('user_menu_logged_in').style.display = 'none';
+    document.getElementById('user_menu_logged_out').style.display = 'inline-block';
+    document.getElementById('user_menu_dropdown_logged_in').style.display = 'none';
+    document.getElementById('user_menu_dropdown_logged_out').style.display = 'inline-block';
+
     updateOnlineStatus();
     document.getElementById('profile_avatar_online_status').className='';
     //get new data token to avoid endless loop och invalid token

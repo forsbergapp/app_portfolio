@@ -19,7 +19,7 @@ module.exports = {
                                          user_account_id,
                                         'admin_logoff_app',
                                         true, //close eventsource and create new as logged in
-                                        true, //ui
+                                        false, //ui
                                         gps_lat,
                                         gps_long,
                                         gps_place,
