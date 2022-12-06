@@ -8,6 +8,7 @@ async function admin_login(){
         if (err==null){         
             dialogue_close('dialogue_admin_login').then(function(){
                 //set avatar or empty
+                document.getElementById('user_account').style.visibility = 'visible';
                 set_avatar(result.avatar, document.getElementById('user_menu_avatar_img'));
                 document.getElementById('user_menu_username').innerHTML = result.username;
                 
@@ -22,21 +23,22 @@ async function admin_login(){
                 dialogue_login_clear();
                 dialogue_signup_clear();
                 document.getElementById('admin_login_username_input').value='';
-                    document.getElementById('admin_login_password_input').value='';                        
-                    document.getElementById('secure').style.visibility = 'visible';
-                    document.getElementById('secure').innerHTML = result.app;
-                    //make script in innerHTML work:
-                    var scripts = Array.prototype.slice.call(document.getElementById('secure').getElementsByTagName('script'));
-                    for (var i = 0; i < scripts.length; i++) {
-                        if (scripts[i].src != '') {
-                            var tag = document.createElement('script');
-                            tag.src = scripts[i].src;
-                            document.getElementById('secure').insertBefore(tag, document.getElementById('secure').firstChild);
-                        }
-                        else {
-                            eval(scripts[i].innerHTML);
-                        }
+                document.getElementById('admin_login_password_input').value='';
+                let secure_div = 'admin_secure';                 
+                document.getElementById(secure_div).style.visibility = 'visible';
+                document.getElementById(secure_div).innerHTML = result.app;
+                //make script in innerHTML work:
+                var scripts = Array.prototype.slice.call(document.getElementById(secure_div).getElementsByTagName('script'));
+                for (var i = 0; i < scripts.length; i++) {
+                    if (scripts[i].src != '') {
+                        var tag = document.createElement('script');
+                        tag.src = scripts[i].src;
+                        document.getElementById(secure_div).insertBefore(tag, document.getElementById(secure_div).firstChild);
                     }
+                    else {
+                        eval(scripts[i].innerHTML);
+                    }
+                }
             })  
         }
     })
@@ -106,8 +108,10 @@ function admin_logoff_app(app_id, error){
     user_logoff().then(function(){
         delete_globals();
         document.getElementById('dialogue_admin_login').style.visibility = 'visible';
-        document.getElementById('secure').style.visibility = 'hidden';
-        document.getElementById('secure').innerHTML = '';
+        document.getElementById('menu_open').outerHTML = `<div id='menu_open' class='dialogue_button'></div>`;
+        document.getElementById('admin_secure').style.visibility = 'hidden';
+        document.getElementById('admin_secure').innerHTML = '';
+        document.getElementById('menu_secure').innerHTML = '';
     })
 }
 
@@ -120,12 +124,12 @@ function init_app(){
 }
 function init(parameters){
     window.global_admin = true;
-    //set_globals(parameters);
+    seticons();
+    document.getElementById('user_verify_email_icon').innerHTML = window.global_icon_app_email;
+    document.getElementById('message_close').innerHTML = window.global_icon_app_close;
+    document.getElementById('admin_login_username_icon').innerHTML = window.global_icon_user;
+    document.getElementById('admin_login_password_icon').innerHTML = window.global_icon_user_password;
     init_common(parameters, (err, global_app_parameters)=>{
-        document.getElementById('message_close').innerHTML = window.global_icon_app_close;
-        document.getElementById('admin_login_username_icon').innerHTML = window.global_icon_user;
-        document.getElementById('admin_login_password_icon').innerHTML = window.global_icon_user_password;
-        document.title = window.global_app_name;
         init_app();
     })
 }

@@ -47,6 +47,7 @@
         width:150px;
         height:100%;
         position:fixed;
+        top: 0px;
         padding-top: 20px;
         z-index: 10;
         display:none;
@@ -59,10 +60,13 @@
     }
     #menu_open{
         display: block;
+        margin-inline-start: 20px;
         height: 30px;
     }
     #menu_close{
         display: block;
+        top:10px;
+        position: absolute;
         text-align: end;
         width: 90%;
         height: 20px;
@@ -88,64 +92,10 @@
     }
     /*MENU 1 DASHBOARD*/
     #menu_1_content_widget1{
-        height: 130px;
+        height:calc(80% - 10px);
     }
-    #menu_1_db_info1 div{
-        text-align: start;
-        display: inline-block;
-        font-size: 9px;
-    }
-    #menu_1_db_info1 div:nth-child(odd){
-        width: 150px;
-        text-transform: uppercase;
-    }
-    #menu_1_db_info1 div:nth-child(even){
-        width: calc(100% - 150px);
-    }
-
     #menu_1_content_widget2{
-        height:calc(100% - 280px);;
-        display: flex;
-        flex-direction: column;
-    }
-
-    #menu_1_db_info_space_title{
-        display: inline-block;
-        text-align: start;
-        margin-bottom:10px;
-        text-transform: uppercase;
-    }
-    #menu_1_db_info_space_detail{
-        overflow-y: auto;
-        overflow-x: auto;
-        margin-bottom: 10px;
-        border-radius: 4px;
-    }
-
-    .menu_1_db_info_space_detail_row{
-        height: auto;
-        padding-top:4px;
-        padding-inline-start: 5px;
-        text-align: start;
-    }   
-    #menu_1_db_info_space_detail_row_total{
-        border-top: 1px solid black;
-        margin-top: 2px;
-    }
-    .menu_1_db_info_space_detail_col{
-        display:inline-block;
-        margin-inline-end: 10px;
-        overflow: auto;
-        width: 80px;
-        text-align: end;
-    }
-    .menu_1_db_info_space_detail_col:nth-child(1){
-        width:250px;
-        text-align: start;
-    }
-
-    #menu_1_content_widget3{
-        height:100px;
+        height:calc(20% - 10px);
         vertical-align: middle;
     }
     #menu_1_broadcast_button{
@@ -200,7 +150,7 @@
 
     /*MENU 2 USER STAT*/
     #menu_2_content_widget1{
-        height:calc(70% - 10px);
+        height:calc(100% + 10px);
     }
     #menu_2_content_widget1 select{
         display:inline-block;
@@ -331,6 +281,13 @@
         width: 60px;
         text-align: end;
     }
+    /* MENU 3 USERS */
+    #menu_3_content_widget1{
+        height: calc(50% - 10px);
+    }
+    #menu_3_content_widget2{
+        height: calc(50% - 10px);
+    }
     /* MENU 4 APP ADMIN*/
     #menu_4_content_widget1{
         height: calc(30% - 10px);
@@ -448,7 +405,7 @@
         box-sizing: border-box;
         border-radius: 4px
     }    
-    /*MENU  MONITOR*/
+    /*MENU MONITOR*/
     #menu_5_content_widget1{
         height:calc(63% - 10px);
         display: flex;
@@ -456,6 +413,63 @@
     }
     #menu_5_content_widget2{
         height:calc(37% - 10px);
+    }
+    /* MENU DATABASE*/
+    #menu_8_content_widget1{
+        height: 130px;
+    }
+    #menu_8_db_info1 div{
+        text-align: start;
+        display: inline-block;
+        font-size: 9px;
+    }
+    #menu_8_db_info1 div:nth-child(odd){
+        width: 150px;
+        text-transform: uppercase;
+    }
+    #menu_8_db_info1 div:nth-child(even){
+        width: calc(100% - 150px);
+    }
+
+    #menu_8_content_widget2{
+        height:calc(100% - 180px);
+        display: flex;
+        flex-direction: column;
+    }
+
+    #menu_8_db_info_space_title{
+        display: inline-block;
+        text-align: start;
+        margin-bottom:10px;
+        text-transform: uppercase;
+    }
+    #menu_8_db_info_space_detail{
+        overflow-y: auto;
+        overflow-x: auto;
+        margin-bottom: 10px;
+        border-radius: 4px;
+    }
+
+    .menu_8_db_info_space_detail_row{
+        height: auto;
+        padding-top:4px;
+        padding-inline-start: 5px;
+        text-align: start;
+    }   
+    #menu_8_db_info_space_detail_row_total{
+        border-top: 1px solid black;
+        margin-top: 2px;
+    }
+    .menu_8_db_info_space_detail_col{
+        display:inline-block;
+        margin-inline-end: 10px;
+        overflow: auto;
+        width: 80px;
+        text-align: end;
+    }
+    .menu_8_db_info_space_detail_col:nth-child(1){
+        width:250px;
+        text-align: start;
     }
     /*Navigation*/
     #list_monitor_nav{
@@ -872,7 +886,7 @@
         background-color: var(--app_theme_widget_background_color) !important;
         box-shadow: 0 4px 8px 0 var(--app_theme_widget_boxshadow_color1), 0 6px 20px 0 var(--app_theme_widget_boxshadow_color2);
     }
-    .menu_1_db_info_space_detail_row:nth-child(odd),
+    .menu_8_db_info_space_detail_row:nth-child(odd),
     .list_user_stat_row:nth-child(odd),
     .list_lov_row:nth-child(odd),
     .list_app_log_row:nth-child(odd),
@@ -883,8 +897,8 @@
     #list_pm2_log_process_event .list_pm2_log_row:nth-child(odd){
         background-color: var(--app_theme_list_odd_color);
     }
-    .menu_1_db_info_space_detail_row:last-child,
-    .menu_1_db_info_space_detail_row:nth-child(even),
+    .menu_8_db_info_space_detail_row:last-child,
+    .menu_8_db_info_space_detail_row:nth-child(even),
     .list_user_stat_row:nth-child(even),
     .list_lov_row:nth-child(even),
     .list_app_log_row:nth-child(even),
@@ -910,7 +924,7 @@
     .list_title{
         font-weight: bold;
     }
-    .menu_1_db_info_space_detail_row,
+    .menu_8_db_info_space_detail_row,
     .list_apps_row,
     .list_app_parameter_row,
     .list_app_log_row,
@@ -928,7 +942,7 @@
     #list_app_parameter{
         background-color: var(--app_theme_list_background_color);
     }
-    #menu_1_db_info_space_detail,
+    #menu_8_db_info_space_detail,
     #lov_list,
     #list_app_log,
     #list_connected,

@@ -2909,7 +2909,8 @@ function set_globals(parameters){
     window.global_rest_app_parameter = parameters.rest_app_parameter;
     //set users app role
     window.global_user_app_role_id = parameters.app_role_id;
-    //system admin only
+    //system admin
+    window.global_system_admin = parameters.system_admin;
     window.global_system_admin_only = parameters.system_admin_only;
     if (parameters.system_admin_only==0){
         //set variables after system admin has enabled database and apps
