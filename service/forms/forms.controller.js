@@ -102,7 +102,8 @@ module.exports = {
             let gps_place = result.geoplugin_city + ', ' +
                             result.geoplugin_regionName + ', ' +
                             result.geoplugin_countryName;
-            const app = getAdminSecure(req.query.app_id, 
+            const app = getAdminSecure(req.query.app_id,
+                                       1,      //system admin=1
                                        null,   //no user account id here since it is system admin with no db available
                                        result.geoplugin_latitude,
                                        result.geoplugin_longitude, 
