@@ -107,6 +107,7 @@ function admin_logoff_app(app_id, error){
     window.global_rest_admin_at = '';
     user_logoff().then(function(){
         delete_globals();
+        document.getElementById('user_account').style.visibility = 'hidden';
         document.getElementById('dialogue_admin_login').style.visibility = 'visible';
         document.getElementById('menu_open').outerHTML = `<div id='menu_open' class='dialogue_button'></div>`;
         document.getElementById('admin_secure').style.visibility = 'hidden';
@@ -124,12 +125,12 @@ function init_app(){
 }
 function init(parameters){
     window.global_admin = true;
-    seticons();
-    document.getElementById('user_verify_email_icon').innerHTML = window.global_icon_app_email;
-    document.getElementById('message_close').innerHTML = window.global_icon_app_close;
-    document.getElementById('admin_login_username_icon').innerHTML = window.global_icon_user;
-    document.getElementById('admin_login_password_icon').innerHTML = window.global_icon_user_password;
+    //seticons();
+    //document.getElementById('user_verify_email_icon').innerHTML = window.global_icon_app_email;
     init_common(parameters, (err, global_app_parameters)=>{
+        document.getElementById('message_close').innerHTML = window.global_icon_app_close;
+        document.getElementById('admin_login_username_icon').innerHTML = window.global_icon_user;
+        document.getElementById('admin_login_password_icon').innerHTML = window.global_icon_user_password;
         init_app();
     })
 }
