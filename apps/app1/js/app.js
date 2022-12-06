@@ -170,7 +170,7 @@ function user_menu_item_click(item){
             break;
         }
         case 'user_menu_dropdown_log_out':{
-            user_logoff_app();            
+            user_logoff();            
             break;
         }
         default:
@@ -192,7 +192,6 @@ async function user_login_app(){
             document.getElementById('user_menu_username').innerHTML = result.username;
             
             document.getElementById('user_menu_logged_in').style.display = 'inline-block';
-            document.getElementById('user_menu').classList.add('user_menu_logged_in');
             document.getElementById('user_menu_logged_out').style.display = 'none';
 
             document.getElementById('user_menu_username').style.display = 'block';
@@ -206,19 +205,7 @@ async function user_login_app(){
     })
 }
 function app_exception(){
-    user_logoff_app();
-}
-function user_logoff_app() {
-    user_logoff().then(function(){
-        set_avatar(null, document.getElementById('user_menu_avatar_img'));
-        document.getElementById('user_menu_username').style.display = 'none';
-        document.getElementById('user_menu_username').innerHTML = '';
-        document.getElementById('user_menu_logged_in').style.display = 'none';
-        document.getElementById('user_menu').classList.remove('user_menu_logged_in');
-        document.getElementById('user_menu_logged_out').style.display = 'inline-block';
-        document.getElementById('user_menu_dropdown_logged_in').style.display = 'none';
-        document.getElementById('user_menu_dropdown_logged_out').style.display = 'inline-block';
-    })
+    user_logoff();
 }
 async function user_update_app(){
     await user_update((err, result) => {
@@ -256,13 +243,13 @@ async function  user_delete_app(){
                                             document.getElementById('dialogue_message').style.visibility = 'hidden';
                                             user_delete(1, user_local, null, (err, result)=>{
                                                 if (err==null){
-                                                    user_logoff_app();
+                                                    user_logoff();
                                                 }
                                             }) 
                                         };
     await user_delete(null, user_local, function_delete_user_account, (err, result) =>{
         if (err==null){
-            user_logoff_app();
+            user_logoff();
         }
     })
 }
@@ -274,7 +261,6 @@ async function ProviderUser_update_app(identity_provider_id, profile_id, profile
             document.getElementById('user_menu_username').innerHTML = result.username;
 
             document.getElementById('user_menu_logged_in').style.display = 'inline-block';
-            document.getElementById('user_menu').classList.add('user_menu_logged_in');
             document.getElementById('user_menu_logged_out').style.display = 'none';
 
             document.getElementById('user_menu_dropdown_logged_in').style.display = 'inline-block';
