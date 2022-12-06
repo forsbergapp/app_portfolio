@@ -1256,18 +1256,9 @@ function user_logoff_app() {
     let option;
     //get new data token to avoid endless loop and invalid token
     user_logoff().then(function(){
-        set_avatar(null, document.getElementById('user_menu_avatar_img')); 
         document.getElementById('tab_nav_btn_7').innerHTML = window.global_icon_user;
-        //hide logged in, user_edit and user settings
-        document.getElementById('user_menu_logged_in').style.display = 'none';        
-        document.getElementById('user_menu_logged_out').style.display = 'inline-block';
-        document.getElementById('user_menu_dropdown_logged_in').style.display = 'none';
-        document.getElementById('user_menu_dropdown_logged_out').style.display = 'block';
-        
         document.getElementById('user_settings').style.display = "none";
-        //clear logged in info
-        document.getElementById('user_menu_username').innerHTML = '';
-        document.getElementById('user_menu_username').style.display = 'none';
+        
         profile_clear_app();
         //empty user settings
         select.innerHTML = '';

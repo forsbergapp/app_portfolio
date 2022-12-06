@@ -33,7 +33,7 @@ module.exports = {
                                          null,  
                                          'admin_exception_before',
                                          null, //do not close eventsource before
-                                         false, //ui, admin starts with limited functionality
+                                         true, //ui
                                          gps_lat,
                                          gps_long,
                                          gps_place,
