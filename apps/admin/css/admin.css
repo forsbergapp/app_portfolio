@@ -62,6 +62,9 @@
 	visibility: hidden;
 	margin:10px;
 }
+#user_menu_dropdown_log_out{
+	display:none;
+}
 /*THEME*/
 .theme_light {
 	--app_theme_main_branding_color1: var(--app_blue1);
