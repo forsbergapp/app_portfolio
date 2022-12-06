@@ -20,6 +20,7 @@ module.exports = {
                 else{
                     get_module_with_init(app_id, 
                                          null,
+                                         null,
                                         'report_exception',
                                         null,
                                         false,
