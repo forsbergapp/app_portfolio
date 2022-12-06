@@ -1,15 +1,143 @@
-const { read_app_files, get_module_with_init } = require('../');
-const { options } = require('../../service/auth/auth.router');
+const { read_app_files, get_module_with_init, countries } = require('../');
+const { getPlace } = require("../../service/db/app_portfolio/app2_place/app2_place.service");
+const { getThemes } = require("../../service/db/app_portfolio/app2_theme/app2_theme.service");
 module.exports = {
+    themes:async (app_id) => {
+        return new Promise(function (resolve, reject){
+            getThemes(app_id, (err, results)  => {
+                var html_themes='';
+                if (err){
+                    resolve (
+                            `<div class='setting_horizontal_col'>
+                                <div id='setting_icon_theme_day'></div>
+                                <div id='setting_themes_day_slider' class='slider'>
+                                    <div class='slider_wrapper'>
+                                    <div id='slides_day' class='slides'></div>
+                                    </div>
+                                </div>
+                                <div id='slider_prev_day' class='slider_control slider_prev'></i></div>
+                                <div id='slider_next_day' class='slider_control slider_next'></div>
+                                <div id='slider_theme_day_id'></div>
+                            </div>
+                            <div class='setting_horizontal_col'>
+                                <div id='setting_icon_theme_month'></div>
+                                <div id='setting_themes_month_slider' class='slider'>
+                                    <div class='slider_wrapper'>
+                                    <div id='slides_month' class='slides'></div>
+                                    </div>
+                                </div>
+                                <div id='slider_prev_month' class='dialogue_button slider_prev'></div>
+                                <div id='slider_next_month' class='dialogue_button slider_next'></div>
+                                <div id='slider_theme_month_id'></div>
+                            </div>
+                            <div class='setting_horizontal_col'>
+                                <div id='setting_icon_report_theme_year'></div>
+                                <div id='setting_themes_year_slider' class='slider'>
+                                    <div class='slider_wrapper'>
+                                    <div id='slides_year' class='slides'></div>
+                                    </div>
+                                </div>
+                                <div id='slider_prev_year' class='dialogue_button slider_prev'></div>
+                                <div id='slider_next_year' class='dialogue_button slider_next'></div>
+                                <div id='slider_theme_year_id'></div>
+                            </div>`
+                        )
+                }
+                else{
+                    var span_themes_day ='', span_themes_month='', span_themes_year='';
+                    //get themes and save result in three theme variables
+                    results.map( (themes_map,i) => {
+                        //Node does not like eval('span_themes_' + themes_map.type.toLowerCase()) +=
+                        //src='${themes_map.image_preview_url}'
+                        var new_span = `<span class="slide slide_${themes_map.type.toLowerCase()}">
+                                            <div id='theme_${themes_map.type.toLowerCase()}_${themes_map.id}'                       
+                                                data-theme_id='${themes_map.id}'
+                                                data-header_image=${themes_map.image_header}
+                                                data-footer_image=${themes_map.image_footer}
+                                                data-background_image=${themes_map.image_background}
+                                                data-category='${themes_map.category}'> 
+                                            </div>
+                                        </span>`;
+                        switch (themes_map.type.toLowerCase()){
+                            case 'day':{
+                                span_themes_day += new_span;
+                                break;
+                            }
+                            case 'month':{
+                                span_themes_month += new_span;
+                                break;
+                            }
+                            case 'year':{
+                                span_themes_year += new_span;
+                                break;
+                            }
+                        }  
+                    })
+                    //add each theme dynamic variable span_themes_day, span_themes_month and span_themes_year to wrapping html
+                    const theme_type_arr = ['day','month','year'];
+                    theme_type_arr.forEach(themes_type => {
+                        html_themes += 
+                        `<div class='setting_horizontal_col'>
+                            <div id='setting_icon_design_theme_${themes_type}'></div>
+                            <div id='setting_themes_${themes_type}_slider' class='slider'>
+                            <div class='slider_wrapper'>
+                                <div id='slides_${themes_type}' class='slides'>
+                                    ${eval('span_themes_' + themes_type)}
+                                </div>
+                            </div>
+                            </div>
+                            <div id='slider_prev_${themes_type}' class='dialogue_button slider_prev'></div>
+                            <div id='slider_next_${themes_type}' class='dialogue_button slider_next'></div>
+                            <div id='slider_theme_${themes_type}_id'></div>
+                        </div>`;
+                    })
+                    resolve (html_themes);
+                }
+            });
+        })
+    },
+    places: async (app_id) => {
+        return new Promise(function (resolve, reject){
+            getPlace(app_id, (err, results)  => {
+                var select_places;
+                if (err){
+                resolve (
+                            `<select id='setting_select_popular_place'>
+                            <option value="" id="" latitude="0" longitude="0" timezone="" selected="selected">...</option>`
+                        )
+                }
+                else{
+                    select_places  =`<select id='setting_select_popular_place'>
+                                    <option value="" id="" latitude="0" longitude="0" timezone="" selected="selected">...</option>`
+                    results.map( (places_map,i) => {
+                        if (places_map.country2_flag==null)
+                            select_places +=
+                            `<option  value='${i}' 
+                                        id='${places_map.id}' 
+                                        latitude='${places_map.latitude}' 
+                                        longitude='${places_map.longitude}' 
+                                        timezone='${places_map.timezone}'>${places_map.group1_icon} ${places_map.group2_icon} ${places_map.country_flag} ${places_map.title}
+                                </option>`;
+                        else
+                            select_places +=
+                            `<option  value='${i}' 
+                                        id='${places_map.id}' 
+                                        latitude='${places_map.latitude}' 
+                                        longitude='${places_map.longitude}' 
+                                        timezone='${places_map.timezone}'>${places_map.group1_icon} ${places_map.group2_icon} ${places_map.country_flag} ${places_map.country2_flag} ${places_map.title}
+                                </option>`;
+                })
+                select_places += '</select>';
+                resolve (select_places);
+                }
+            });
+        })
+    },
     getApp:(app_id, username, gps_lat, gps_long, gps_place) => {
         return new Promise(function (resolve, reject){
             function main(app_id){
-                const { locales } = require(__dirname + '/../common/src/locales');
-                //const { setting } = require(__dirname + '/../common/src/setting');
+                const { getLocales } = require("../../service/db/app_portfolio/language/locale/locale.service");
                 const { getSettings } = require("../../service/db/app_portfolio/setting/setting.service");
-                const { countries } = require('./src/countries');                
-                const { places } = require('./src/places');
-                const { themes } = require('./src/themes');
                 const files = [
                   ['APP', __dirname + '/src/index.html'],
                   ['<AppCommonHeadPrayTimes/>', __dirname + '/../common/src/head_praytimes.html'],
@@ -46,19 +174,37 @@ module.exports = {
                   ['<AppToolbarBottom/>', __dirname + '/src/toolbar_bottom.html'],
                   ['<AppCommonProfileBtnTop/>', __dirname + '/../common/src/profile_btn_top.html']
                 ];
-                let AppCountries;
-                let AppLocales;
-                let AppPlaces;
-                let AppSettingsThemes;
-                async function getAppComponents() {
-                    //modules with fetch from database
-                    AppCountries = await countries(app_id);
-                    AppLocales = await locales(app_id);
-                    AppPlaces = await places(app_id);
-                    AppSettingsThemes = await themes(app_id);
-                    
+                async function getAppComponents(app_id) {
+                    return new Promise(function (resolve, reject){
+                        try {
+                            let default_lang = 'en';
+                            getLocales(app_id, default_lang, (err, locales) => {
+                                if (err)
+                                    resolve(err)
+                                else{
+                                    let AppLocales ='';
+                                    locales.forEach( (locale,i) => {
+                                        AppLocales += `<option id=${i} value=${locale.locale}>${locale.text}</option>`;
+                                    })
+                                    countries(app_id).then(function(AppCountries){
+                                        module.exports.places(app_id).then(function(AppPlaces){
+                                            module.exports.themes(app_id).then(function(AppSettingsThemes){
+                                                resolve({AppLocales: AppLocales,
+                                                         AppCountries: AppCountries,
+                                                         AppPlaces: AppPlaces,
+                                                         AppSettingsThemes: AppSettingsThemes
+                                                        })
+                                            });
+                                        });
+                                    });
+                                }
+                            });    
+                        } catch (error) {
+                            reject(error);
+                        }
+                    })                    
                 }
-                getAppComponents().then(function(){
+                getAppComponents(app_id).then(function(app_components){
                     let USER_TIMEZONE ='';
                     let USER_DIRECTION='';
                     let USER_ARABIC_SCRIPT='';
@@ -160,20 +306,20 @@ module.exports = {
                             else{
                                 app = app.replace(
                                         '<AppLocales/>',
-                                        `${AppLocales}`);
+                                        `${app_components.AppLocales}`);
                                 //add extra option for second locale
                                 app = app.replace(
                                         '<AppLocalessecond/>',
-                                        `<option id='' value='0' selected='selected'>None</option>${AppLocales}`);
+                                        `<option id='' value='0' selected='selected'>None</option>${app_components.AppLocales}`);
                                 app = app.replace(
                                         '<AppCountries/>',
-                                        `${AppCountries}`);
+                                        `${app_components.AppCountries}`);
                                 app = app.replace(
                                         '<AppPlaces/>',
-                                        `${AppPlaces}`);
+                                        `${app_components.AppPlaces}`);
                                 app = app.replace(
                                         '<AppSettingsThemes/>',
-                                        `${AppSettingsThemes}`);
+                                        `${app_components.AppSettingsThemes}`);
                                 //app SETTING
                                 app = app.replace(
                                         '<AppTimezones/>',
@@ -227,10 +373,10 @@ module.exports = {
                                 app = app.replace(
                                         '<AppFaststartend/>',
                                         `${APP_FAST_START_END}`);
-                                //common SETTING
+                                //COMMON, set user preferences content
                                 app = app.replace(
                                         '<USER_LOCALE/>',
-                                        `${AppLocales}`);
+                                        `${app_components.AppLocales}`);
                                 app = app.replace(
                                         '<USER_TIMEZONE/>',
                                         `${USER_TIMEZONE}`);
