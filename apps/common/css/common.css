@@ -652,7 +652,7 @@ body.font_arabic_nastaliq #user_menu_default_avatar{
 	padding-top:20px;
 	padding-bottom:20px;
 	font-weight: bold;
-	color: rgb(81, 171, 255);
+	color: var(--app_blue1)
 	font-size: 2em;
 }
 
@@ -685,7 +685,7 @@ body.font_arabic_nastaliq #user_menu_default_avatar{
 	bottom:10px;
 	display:inline-block;
 	border-radius:4px;
-	background-color: #ffffff;
+	background-color:var(--app_white);
 	box-shadow: 0 4px 8px 0 rgb(0 0 0 / 20%), 0 6px 20px 0 rgb(0 0 0 / 19%);
 }
 
@@ -705,8 +705,8 @@ body.font_arabic_nastaliq #user_menu_default_avatar{
 	height:34px;
 	bottom:0px;
 	position: absolute;
-	background-color: #ffffff;
-	border: 2px solid #ffffff;
+	background-color: var(--app_white);
+	border: 2px solid var(--app_white);
 }
 #broadcast_col2 {	
 	width:100%;
@@ -714,7 +714,7 @@ body.font_arabic_nastaliq #user_menu_default_avatar{
 	margin-left:-100px;
 	height: 100px;
 	display:inline-block;
-	background-color: #ffffff;
+	background-color:var(--app_white);
 }
 #broadcast_info_message_wrap{
 	width: 100%;
@@ -750,8 +750,8 @@ body.font_arabic_nastaliq #user_menu_default_avatar{
 	width:100%;
 	height: 35px;
 	float: right;
-	background-color:rgb(224, 38, 38);
-	color:#ffffff;
+	background-color:var(--app_blue1);
+	color:var(--app_white);
 	font-size:30px;
 	font-weight:bold;
 	line-height: 1.1;
