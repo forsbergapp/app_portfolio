@@ -37,8 +37,11 @@ function show_menu(menu){
     switch(menu){
         //START
         case 1:{
-            show_db_info().then(function(){
-                show_db_info_space().then(function(){
+            document.getElementById('select_year_menu1').innerHTML = yearvalues;
+            document.getElementById('select_year_menu1').selectedIndex = 0;
+            document.getElementById('select_month_menu1').selectedIndex = new Date().getMonth();
+            show_chart(1).then(function(){
+                show_chart(2).then(function(){
                     check_maintenance();
                 })
             })
@@ -46,14 +49,7 @@ function show_menu(menu){
         }
         //USER STAT
         case 2:{
-            document.getElementById('select_year_menu2').innerHTML = yearvalues;
-            document.getElementById('select_year_menu2').selectedIndex = 0;
-            document.getElementById('select_month_menu2').selectedIndex = new Date().getMonth();
-            show_chart(1).then(function(){
-                show_chart(2).then(function(){
-                    count_users();
-                });
-            });                
+            count_users();
             break;    
         }
         //USERS
@@ -99,6 +95,9 @@ function show_menu(menu){
         }
         //DATABASE
         case 8:{
+            show_db_info().then(function(){
+                show_db_info_space();
+            })
             break;
         }
         //BACKUP/RESTORE
@@ -130,7 +129,7 @@ async function get_apps() {
                     html +=
                     `<option value='${json.data[i].id}'>${json.data[i].id} - ${json.data[i].app_name}</option>`;
             }
-            document.getElementById('select_app_menu2').innerHTML = html;
+            document.getElementById('select_app_menu1').innerHTML = html;
             document.getElementById('select_app_menu5_app_log').innerHTML = html;
             document.getElementById('select_app_menu5_list_connected').innerHTML = html;
             document.getElementById('select_app_menu5').innerHTML = html;
@@ -266,13 +265,13 @@ async function show_db_info(){
                 null;
             else{
                 json = JSON.parse(result);
-                document.getElementById('menu_1_db_info_database_data').innerHTML = json.data.database_use;
-                document.getElementById('menu_1_db_info_name_data').innerHTML = json.data.database_name;
-                document.getElementById('menu_1_db_info_version_data').innerHTML = json.data.version;
-                document.getElementById('menu_1_db_info_database_schema_data').innerHTML = json.data.database_schema;
-                document.getElementById('menu_1_db_info_host_data').innerHTML = json.data.hostname;
-                document.getElementById('menu_1_db_info_connections_data').innerHTML = json.data.connections;
-                document.getElementById('menu_1_db_info_started_data').innerHTML = json.data.started;
+                document.getElementById('menu_8_db_info_database_data').innerHTML = json.data.database_use;
+                document.getElementById('menu_8_db_info_name_data').innerHTML = json.data.database_name;
+                document.getElementById('menu_8_db_info_version_data').innerHTML = json.data.version;
+                document.getElementById('menu_8_db_info_database_schema_data').innerHTML = json.data.database_schema;
+                document.getElementById('menu_8_db_info_host_data').innerHTML = json.data.hostname;
+                document.getElementById('menu_8_db_info_connections_data').innerHTML = json.data.connections;
+                document.getElementById('menu_8_db_info_started_data').innerHTML = json.data.started;
             }
         })
     }
@@ -285,70 +284,70 @@ async function show_db_info_space(){
             const x = Math.pow(10,2);
             return Math.round(num * x) / x;
           }
-        document.getElementById('menu_1_db_info_space_detail').innerHTML = window.global_app_spinner;
+        document.getElementById('menu_8_db_info_space_detail').innerHTML = window.global_app_spinner;
         await common_fetch('/service/db/admin/DBInfoSpace?', 'GET', 1, null, null, null, (err, result) =>{
             if (err)
                 null;
             else{
                 json = JSON.parse(result);
-                let html = `<div id='menu_1_db_info_space_detail_row_title' class='menu_1_db_info_space_detail_row'>
-                                <div id='menu_1_db_info_space_detail_col_title1' class='menu_1_db_info_space_detail_col list_title'>
+                let html = `<div id='menu_8_db_info_space_detail_row_title' class='menu_8_db_info_space_detail_row'>
+                                <div id='menu_8_db_info_space_detail_col_title1' class='menu_8_db_info_space_detail_col list_title'>
                                     <div>TABLE NAME</div>
                                 </div>
-                                <div id='menu_1_db_info_space_detail_col_title2' class='menu_1_db_info_space_detail_col list_title'>
+                                <div id='menu_8_db_info_space_detail_col_title2' class='menu_8_db_info_space_detail_col list_title'>
                                     <div>SIZE ${size}</div>
                                 </div>
-                                <div id='menu_1_db_info_space_detail_col_title3' class='menu_1_db_info_space_detail_col list_title'>
+                                <div id='menu_8_db_info_space_detail_col_title3' class='menu_8_db_info_space_detail_col list_title'>
                                     <div>DATA USED ${size}</div>
                                 </div>
-                                <div id='menu_1_db_info_space_detail_col_title4' class='menu_1_db_info_space_detail_col list_title'>
+                                <div id='menu_8_db_info_space_detail_col_title4' class='menu_8_db_info_space_detail_col list_title'>
                                     <div>DATA FREE ${size}</div>
                                 </div>
-                                <div id='menu_1_db_info_space_detail_col_title5' class='menu_1_db_info_space_detail_col list_title'>
+                                <div id='menu_8_db_info_space_detail_col_title5' class='menu_8_db_info_space_detail_col list_title'>
                                     <div>% USED</div>
                                 </div>
                             </div>`;
                 for (i = 0; i < json.data.length; i++) {
                     html += 
-                    `<div id='menu_1_db_info_space_detail_row_${i}' class='menu_1_db_info_space_detail_row' >
-                        <div class='menu_1_db_info_space_detail_col'>
+                    `<div id='menu_8_db_info_space_detail_row_${i}' class='menu_8_db_info_space_detail_row' >
+                        <div class='menu_8_db_info_space_detail_col'>
                             <div>${json.data[i].table_name}</div>
                         </div>
-                        <div class='menu_1_db_info_space_detail_col'>
+                        <div class='menu_8_db_info_space_detail_col'>
                             <div>${roundOff(json.data[i].total_size)}</div>
                         </div>
-                        <div class='menu_1_db_info_space_detail_col'>
+                        <div class='menu_8_db_info_space_detail_col'>
                             <div>${roundOff(json.data[i].data_used)}</div>
                         </div>
-                        <div class='menu_1_db_info_space_detail_col'>
+                        <div class='menu_8_db_info_space_detail_col'>
                             <div>${roundOff(json.data[i].data_free)}</div>
                         </div>
-                        <div class='menu_1_db_info_space_detail_col'>
+                        <div class='menu_8_db_info_space_detail_col'>
                             <div>${roundOff(json.data[i].pct_used)}</div>
                         </div>
                     </div>`;
                 }
-                document.getElementById('menu_1_db_info_space_detail').innerHTML = html;
+                document.getElementById('menu_8_db_info_space_detail').innerHTML = html;
                 common_fetch('/service/db/admin/DBInfoSpaceSum?', 'GET', 1, null, null, null, (err, result) =>{
                     if (err)
                         null;
                     else{
                         json = JSON.parse(result);
-                        document.getElementById('menu_1_db_info_space_detail').innerHTML += 
-                            `<div id='menu_1_db_info_space_detail_row_total' class='menu_1_db_info_space_detail_row' >
-                                <div class='menu_1_db_info_space_detail_col'>
+                        document.getElementById('menu_8_db_info_space_detail').innerHTML += 
+                            `<div id='menu_8_db_info_space_detail_row_total' class='menu_8_db_info_space_detail_row' >
+                                <div class='menu_8_db_info_space_detail_col'>
                                     <div>TOTAL</div>
                                 </div>
-                                <div class='menu_1_db_info_space_detail_col'>
+                                <div class='menu_8_db_info_space_detail_col'>
                                     <div>${roundOff(json.data.total_size)}</div>
                                 </div>
-                                <div class='menu_1_db_info_space_detail_col'>
+                                <div class='menu_8_db_info_space_detail_col'>
                                     <div>${roundOff(json.data.data_used)}</div>
                                 </div>
-                                <div class='menu_1_db_info_space_detail_col'>
+                                <div class='menu_8_db_info_space_detail_col'>
                                     <div>${roundOff(json.data.data_free)}</div>
                                 </div>
-                                <div class='menu_1_db_info_space_detail_col'>
+                                <div class='menu_8_db_info_space_detail_col'>
                                     <div>${roundOff(json.data.pct_used)}</div>
                                 </div>
                             </div>`;
@@ -397,8 +396,8 @@ function set_maintenance(){
 async function show_chart(chart){
     if (admin_token_has_value()){
         let app_id;
-        let year = document.getElementById('select_year_menu2').value;
-        let month = document.getElementById('select_month_menu2').value;
+        let year = document.getElementById('select_year_menu1').value;
+        let month = document.getElementById('select_month_menu1').value;
         let json;
         document.getElementById(`box${chart}_chart`).innerHTML = window.global_app_spinner;        
         document.getElementById(`box${chart}_legend`).innerHTML = window.global_app_spinner;
@@ -406,7 +405,7 @@ async function show_chart(chart){
         if (chart==1)
             app_id = '';
         else
-            app_id =document.getElementById('select_app_menu2').value;
+            app_id =document.getElementById('select_app_menu1').value;
         await common_fetch(window.global_rest_url_base + `app_log/admin/stat/uniquevisitor?select_app_id=${app_id}&statchoice=${chart}&year=${year}&month=${month}`,
                  'GET', 1, null, null, null, (err, result) =>{
             if (err){
@@ -445,7 +444,7 @@ async function show_chart(chart){
                         //add to legend below chart
                         html += `<div id='box1_legend_row' class='box_legend_row'>
                                     <div id='box1_legend_col1' class='box_legend_col' style='background-color:rgb(${i/json.data.length*200},${i/json.data.length*200},255)'></div>
-                                    <div id='box1_legend_col2' class='box_legend_col'>${SearchAndGetText(document.getElementById('select_app_menu2'), json.data[i].app_id)}</div>
+                                    <div id='box1_legend_col2' class='box_legend_col'>${SearchAndGetText(document.getElementById('select_app_menu1'), json.data[i].app_id)}</div>
                                 </div>`;
                         degree_start = degree_start + json.data[i].amount/sum_amount*360;
                     }
@@ -486,7 +485,7 @@ async function show_chart(chart){
                         //legend below chart
                         document.getElementById('box2_legend').innerHTML = `<div id='box2_legend_row' class='box_legend_row'>
                                                                                 <div id='box2_legend_col1' class='box_legend_col' style='background-color:${bar_color}'></div>
-                                                                                <div id='box2_legend_col2' class='box_legend_col'>${document.getElementById('select_app_menu2').options[document.getElementById('select_app_menu2').selectedIndex].text}</div>
+                                                                                <div id='box2_legend_col2' class='box_legend_col'>${document.getElementById('select_app_menu1').options[document.getElementById('select_app_menu1').selectedIndex].text}</div>
                                                                             </div>` ;
                     }
             }
@@ -1840,6 +1839,19 @@ function init_admin_secure(){
     window.global_previous_row= '';
 
     //SET MENU
+    document.getElementById('menu_secure').innerHTML = `<div id='menu_close' class='dialogue_button'></div>
+                                                        <div id='menu_1' class='menuitem'></div>
+                                                        <div id='menu_2' class='menuitem'></div>
+                                                        <div id='menu_3' class='menuitem'></div>
+                                                        <div id='menu_4' class='menuitem'></div>
+                                                        <div id='menu_5' class='menuitem'></div>
+                                                        <div id='menu_6' class='menuitem'></div>
+                                                        <div id='menu_7' class='menuitem'></div>
+                                                        <div id='menu_8' class='menuitem'></div>
+                                                        <div id='menu_9' class='menuitem'></div>
+                                                        <div id='menu_10' class='menuitem'></div>
+                                                        <div id='menu_11' class='menuitem'></div>`;
+
     //hide all first (display none in css using eval not working)
     for (let i=1;i<=10;i++){
         document.getElementById(`menu_${i}`).style.display='none';
@@ -1856,8 +1868,6 @@ function init_admin_secure(){
         document.getElementById('menu_6').style.display='block';
         //show INSTALLATION
         document.getElementById('menu_7').style.display='block';
-        //show DATABASE
-        document.getElementById('menu_8').style.display='block';
         //show BACKUP/RESTORE
         document.getElementById('menu_9').style.display='block';
         //show SERVER
@@ -1876,7 +1886,7 @@ function init_admin_secure(){
         document.getElementById('menu_4').style.display='block';
         //show MONITOR
         document.getElementById('menu_5').style.display='block';
-        if (window.global_user_app_role_id==0){
+        if (window.global_system_admin==1){
             //show PARAMETER
             document.getElementById('menu_6').style.display='block';
             //show INSTALLATION
@@ -1888,8 +1898,6 @@ function init_admin_secure(){
             //show SERVER
             document.getElementById('menu_10').style.display='block';
         }
-        //start with DASHBOARD
-        show_menu(1);
         //SET APPS INFO, INIT MAP
         get_apps().then(function(){
             get_gps_from_ip().then(function(){
@@ -1920,7 +1928,8 @@ function init_admin_secure(){
                         null,
                         window.global_gps_map_marker_div_gps,
                         window.global_service_map_jumpto);
-
+                //start with DASHBOARD
+                show_menu(1);
             })                
         })
     }
@@ -1974,9 +1983,9 @@ function init_admin_secure(){
     document.getElementById('menu_10').addEventListener('click', function() { show_menu(10) }, false);
     document.getElementById('menu_11').addEventListener('click', function() { admin_logoff_app() }, false);
 
-    document.getElementById('select_app_menu2').addEventListener('change', function() { show_chart(1); show_chart(2);}, false);
-    document.getElementById('select_year_menu2').addEventListener('change', function() { show_chart(1);show_chart(2);}, false);
-    document.getElementById('select_month_menu2').addEventListener('change', function() { show_chart(1);show_chart(2);}, false);
+    document.getElementById('select_app_menu1').addEventListener('change', function() { show_chart(1); show_chart(2);}, false);
+    document.getElementById('select_year_menu1').addEventListener('change', function() { show_chart(1);show_chart(2);}, false);
+    document.getElementById('select_month_menu1').addEventListener('change', function() { show_chart(1);show_chart(2);}, false);
     document.getElementById('menu_1_broadcast_button').addEventListener('click', function() { show_broadcast_dialogue('ALL'); }, false);
     document.getElementById('menu_1_checkbox_maintenance').addEventListener('click', function() { set_maintenance() }, false);
     document.getElementById('select_broadcast_type').addEventListener('change', function() { set_broadcast_type(); }, false);
@@ -2027,16 +2036,6 @@ function init_admin_secure(){
     document.getElementById('menu_11').innerHTML = 'LOGOUT';
 
     //menu 1
-    document.getElementById('menu_1_db_info_database_title').innerHTML = 'Database';
-    document.getElementById('menu_1_db_info_name_title').innerHTML = 'Name';
-    document.getElementById('menu_1_db_info_version_title').innerHTML = 'Version';
-    document.getElementById('menu_1_db_info_database_schema_title').innerHTML = 'Database schema';
-    document.getElementById('menu_1_db_info_host_title').innerHTML = 'Host';
-    document.getElementById('menu_1_db_info_connections_title').innerHTML = 'Connections';
-    document.getElementById('menu_1_db_info_started_title').innerHTML = 'Started';
-
-    document.getElementById('menu_1_db_info_space_title').innerHTML = 'Database space statistics';
-
     document.getElementById('menu_1_maintenance_title').innerHTML = 'Maintenance';
     //menu 2
     document.getElementById('box1_title').innerHTML = 'Unique Visitors';
@@ -2045,10 +2044,10 @@ function init_admin_secure(){
     document.getElementById('list_user_stat_col_title2').innerHTML = 'PROVIDER';
     document.getElementById('list_user_stat_col_title3').innerHTML = 'COUNT';
     document.getElementById('list_user_stat_col_title4').innerHTML = 'CONNECTED';
-    //menu 3
+    //menu 4
     document.getElementById('list_apps_title').innerHTML = 'APPS';
     document.getElementById('list_app_parameter_title').innerHTML = 'APP PARAMETERS';
-    //menu 4
+    //menu 5
     document.getElementById('list_connected_title').innerHTML = 'Connected';
     document.getElementById('list_app_log_title').innerHTML = 'App Log';
     document.getElementById('list_server_log_title').innerHTML = 'Server Log';
@@ -2071,6 +2070,15 @@ function init_admin_secure(){
     document.getElementById('select_broadcast_type').options[1].text = 'MAINTENANCE';
 
     document.getElementById('client_id_label').innerHTML = 'CLIENT ID';
+    //menu 8
+    document.getElementById('menu_8_db_info_database_title').innerHTML = 'Database';
+    document.getElementById('menu_8_db_info_name_title').innerHTML = 'Name';
+    document.getElementById('menu_8_db_info_version_title').innerHTML = 'Version';
+    document.getElementById('menu_8_db_info_database_schema_title').innerHTML = 'Database schema';
+    document.getElementById('menu_8_db_info_host_title').innerHTML = 'Host';
+    document.getElementById('menu_8_db_info_connections_title').innerHTML = 'Connections';
+    document.getElementById('menu_8_db_info_started_title').innerHTML = 'Started';
+    document.getElementById('menu_8_db_info_space_title').innerHTML = 'Database space statistics';
 
 }
 init_common(<ITEM_COMMON_PARAMETERS/>, (err, global_app_parameters)=>{

@@ -143,7 +143,8 @@ async function read_app_files(app_id, files, callBack){
         })
     });
 }
-async function get_module_with_init(app_id, 
+async function get_module_with_init(app_id,
+                                    system_admin,
                                     user_account_id,
                                     exception_app_function,
                                     close_eventsource,
@@ -153,7 +154,7 @@ async function get_module_with_init(app_id,
                                     gps_place,
                                     module, callBack){
 
-    if (process.env.SERVER_DB_START==0){
+    if (system_admin==1 && process.env.SERVER_DB_START==0){
         //return initial parameters for system admin when database is not enabled
         let parameters = {   
             app_id: app_id,
@@ -170,8 +171,9 @@ async function get_module_with_init(app_id,
             gps_lat: gps_lat, 
             gps_long: gps_long, 
             gps_place: gps_place,
+            system_admin: system_admin,
             system_admin_only: 1,
-            app_role_id: 0      //user can only be system admin since db is not started
+            app_role_id: ''      
         };
         module = module.replace(
                 '<ITEM_COMMON_PARAMETERS/>',
@@ -185,34 +187,62 @@ async function get_module_with_init(app_id,
             if (err)
                 callBack(err, null);
             else{
-                getAppRole(app_id, user_account_id, (err, result_app_role)=>{
-                    if (err)
-                        callBack(err, null);
-                    else{
-                        let parameters = {   
-                            app_id: app_id,
-                            app_name: result[0].app_name,
-                            app_url: result[0].app_url,
-                            app_logo: result[0].app_logo,
-                            exception_app_function: exception_app_function,
-                            close_eventsource: close_eventsource,
-                            ui: ui,
-                            service_auth: result[0].service_auth,
-                            app_rest_client_id: result[0].app_rest_client_id,
-                            app_rest_client_secret: result[0].app_rest_client_secret,
-                            rest_app_parameter: result[0].rest_app_parameter,
-                            gps_lat: gps_lat, 
-                            gps_long: gps_long, 
-                            gps_place: gps_place,
-                            system_admin_only: 0,
-                            app_role_id: result_app_role.app_role_id
-                        };
-                        module = module.replace(
-                                '<ITEM_COMMON_PARAMETERS/>',
-                                JSON.stringify(parameters));
-                        callBack(null, module);
-                    }
-                })
+                if (system_admin==1){
+                    let parameters = {   
+                        app_id: app_id,
+                        app_name: result[0].app_name,
+                        app_url: result[0].app_url,
+                        app_logo: result[0].app_logo,
+                        exception_app_function: exception_app_function,
+                        close_eventsource: close_eventsource,
+                        ui: ui,
+                        service_auth: result[0].service_auth,
+                        app_rest_client_id: result[0].app_rest_client_id,
+                        app_rest_client_secret: result[0].app_rest_client_secret,
+                        rest_app_parameter: result[0].rest_app_parameter,
+                        gps_lat: gps_lat, 
+                        gps_long: gps_long, 
+                        gps_place: gps_place,
+                        system_admin: system_admin,
+                        system_admin_only: 0,
+                        app_role_id: ''
+                    };
+                    module = module.replace(
+                            '<ITEM_COMMON_PARAMETERS/>',
+                            JSON.stringify(parameters));
+                    callBack(null, module);
+                }
+                else{
+                    getAppRole(app_id, user_account_id, (err, result_app_role)=>{
+                        if (err)
+                            callBack(err, null);
+                        else{
+                            let parameters = {   
+                                app_id: app_id,
+                                app_name: result[0].app_name,
+                                app_url: result[0].app_url,
+                                app_logo: result[0].app_logo,
+                                exception_app_function: exception_app_function,
+                                close_eventsource: close_eventsource,
+                                ui: ui,
+                                service_auth: result[0].service_auth,
+                                app_rest_client_id: result[0].app_rest_client_id,
+                                app_rest_client_secret: result[0].app_rest_client_secret,
+                                rest_app_parameter: result[0].rest_app_parameter,
+                                gps_lat: gps_lat, 
+                                gps_long: gps_long, 
+                                gps_place: gps_place,
+                                system_admin: system_admin,
+                                system_admin_only: 0,
+                                app_role_id: result_app_role.app_role_id
+                            };
+                            module = module.replace(
+                                    '<ITEM_COMMON_PARAMETERS/>',
+                                    JSON.stringify(parameters));
+                            callBack(null, module);
+                        }
+                    })
+                }
             }
         })
     }

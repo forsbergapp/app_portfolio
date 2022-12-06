@@ -992,6 +992,7 @@ module.exports = {
                                                                     else
                                                                         if (req.query.app_id == 0)
                                                                             getAdminSecure(req.query.app_id, 
+                                                                                           null,
                                                                                            results.id,
                                                                                            req.body.client_latitude,
                                                                                            req.body.client_longitude, 
@@ -1030,6 +1031,7 @@ module.exports = {
                                                 else
                                                 if (req.query.app_id == 0)
                                                     getAdminSecure(req.query.app_id, 
+                                                                   null,
                                                                    results.id,
                                                                    req.body.client_latitude,
                                                                    req.body.client_longitude, 

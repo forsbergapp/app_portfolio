@@ -60,6 +60,7 @@ module.exports = {
                                     '');   
                             get_module_with_init(app_id, 
                                                  null,
+                                                 null,
                                                  'app_exception',
                                                  null,
                                                  true,
