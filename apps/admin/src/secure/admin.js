@@ -1838,6 +1838,115 @@ function init_admin_secure(){
     window.global_limit =1000;
     window.global_previous_row= '';
 
+    //SET ICONS
+    //common, since ui=false when called init_common, set some common items here
+    document.getElementById('message_close').innerHTML = window.global_icon_app_close;
+    //if CONFIRM message is used
+    document.getElementById('message_cancel').innerHTML = window.global_icon_app_cancel;
+    //other in admin
+    document.getElementById('menu_open').innerHTML = window.global_icon_app_menu_open;
+    document.getElementById('menu_1_broadcast_button').innerHTML = window.global_icon_app_chat;
+    document.getElementById('apps_save').innerHTML = window.global_icon_app_save;
+    document.getElementById('list_app_log_first').innerHTML = window.global_icon_app_first;
+    document.getElementById('list_app_log_previous').innerHTML = window.global_icon_app_previous;
+    document.getElementById('list_app_log_next').innerHTML = window.global_icon_app_next;
+    document.getElementById('list_app_log_last').innerHTML = window.global_icon_app_last;
+
+    document.getElementById('filesearch_menu5').innerHTML =  window.global_icon_app_search;
+    document.getElementById('menu5_row_parameters_col1_1').innerHTML = window.global_icon_app_checkbox_checked;
+    document.getElementById('menu5_row_parameters_col1_0').innerHTML = window.global_icon_app_checkbox_empty;
+    document.getElementById('menu5_row_parameters_col2_1').innerHTML = window.global_icon_app_checkbox_checked;
+    document.getElementById('menu5_row_parameters_col2_0').innerHTML = window.global_icon_app_checkbox_empty
+    document.getElementById('menu5_row_parameters_col3_1').innerHTML = window.global_icon_app_checkbox_checked;
+    document.getElementById('menu5_row_parameters_col3_0').innerHTML = window.global_icon_app_checkbox_empty
+    document.getElementById('menu5_row_parameters_col4_1').innerHTML = window.global_icon_app_checkbox_checked;
+    document.getElementById('menu5_row_parameters_col4_0').innerHTML = window.global_icon_app_checkbox_empty
+    document.getElementById('menu5_row_parameters_col5_1').innerHTML = window.global_icon_app_checkbox_checked;
+    document.getElementById('menu5_row_parameters_col5_0').innerHTML = window.global_icon_app_checkbox_empty
+
+    document.getElementById('send_broadcast_send').innerHTML = window.global_icon_app_send;
+    document.getElementById('send_broadcast_close').innerHTML = window.global_icon_app_close;
+    document.getElementById('lov_close').innerHTML = window.global_icon_app_close;
+
+    //menu 1
+    document.getElementById('menu_1_maintenance_title').innerHTML = window.global_icon_app_maintenance;
+    document.getElementById('send_broadcast_title').innerHTML = window.global_icon_app_broadcast;
+    //menu 4
+    document.getElementById('list_apps_title').innerHTML = window.global_icon_app_apps;
+    document.getElementById('list_app_parameter_title').innerHTML = window.global_icon_app_apps + window.global_icon_app_settings;
+    //menu 5
+    document.getElementById('list_connected_title').innerHTML = window.global_icon_app_user_connections + ' ' + window.global_icon_app_log; 
+    document.getElementById('list_app_log_title').innerHTML = window.global_icon_app_apps + ' ' + window.global_icon_app_log;
+    document.getElementById('list_server_log_title').innerHTML = window.global_icon_app_server + ' ' + window.global_icon_app_log;
+    document.getElementById('list_pm2_log_title').innerHTML = window.global_icon_app_server + '2 ' + window.global_icon_app_log;
+
+    document.getElementById('list_pm2_log_path_title').innerHTML = window.global_icon_app_file_path;
+
+    document.getElementById('menu5_row_parameters_col1').innerHTML = window.global_icon_app_server + ' info';
+    document.getElementById('menu5_row_parameters_col2').innerHTML = window.global_icon_app_server + ' verbose';
+    document.getElementById('menu5_row_parameters_col3').innerHTML = window.global_icon_app_database;
+    document.getElementById('menu5_row_parameters_col4').innerHTML = window.global_icon_app_route;
+    document.getElementById('menu5_row_parameters_col5').innerHTML = window.global_icon_app_server + '2 ' + window.global_icon_app_log + ' JSON';
+
+    document.getElementById('list_pm2_log_title_out').innerHTML = window.global_icon_app_server + '2 ' + window.global_icon_app_log + ' Out';
+    document.getElementById('list_pm2_log_title_err').innerHTML = window.global_icon_app_server + '2 ' + window.global_icon_app_log + ' Error';
+    document.getElementById('list_pm2_log_title_process_event').innerHTML = window.global_icon_app_server + '2 ' + window.global_icon_app_log + ' Process event';
+
+    document.getElementById('select_broadcast_type').options[0].text = window.global_icon_app_alert;
+    document.getElementById('select_broadcast_type').options[1].text = window.global_icon_app_maintenance;
+
+    //menu 8
+    document.getElementById('menu_8_db_info_database_title').innerHTML = window.global_icon_app_database + window.global_icon_regional_numbersystem;
+    document.getElementById('menu_8_db_info_name_title').innerHTML = window.global_icon_app_database;
+    document.getElementById('menu_8_db_info_version_title').innerHTML = window.global_icon_app_database + window.global_icon_regional_numbersystem + window.global_icon_app_info;
+    document.getElementById('menu_8_db_info_database_schema_title').innerHTML = window.global_icon_app_database + window.global_icon_app_database_schema;
+    document.getElementById('menu_8_db_info_host_title').innerHTML = window.global_icon_app_server;
+    document.getElementById('menu_8_db_info_connections_title').innerHTML = window.global_icon_app_user_connections;
+    document.getElementById('menu_8_db_info_started_title').innerHTML = window.global_icon_app_database_started;
+    document.getElementById('menu_8_db_info_space_title').innerHTML = window.global_icon_app_database + window.global_icon_app_database_calc;
+
+    //SET EVENTLISTENERS
+    document.getElementById('message_cancel').addEventListener('click', function() { document.getElementById("dialogue_message").style.visibility = "hidden"; }, false);
+    document.getElementById('menu_open').addEventListener('click', function() { document.getElementById('menu').style.display = 'block' }, false);    
+
+    document.getElementById('select_app_menu1').addEventListener('change', function() { show_chart(1); show_chart(2);}, false);
+    document.getElementById('select_year_menu1').addEventListener('change', function() { show_chart(1);show_chart(2);}, false);
+    document.getElementById('select_month_menu1').addEventListener('change', function() { show_chart(1);show_chart(2);}, false);
+    document.getElementById('menu_1_broadcast_button').addEventListener('click', function() { show_broadcast_dialogue('ALL'); }, false);
+    document.getElementById('menu_1_checkbox_maintenance').addEventListener('click', function() { set_maintenance() }, false);
+    document.getElementById('select_broadcast_type').addEventListener('change', function() { set_broadcast_type(); }, false);
+    document.getElementById('send_broadcast_send').addEventListener('click', function() { sendBroadcast(); }, false);
+    document.getElementById('send_broadcast_close').addEventListener('click', function() { closeBroadcast()}, false);
+
+    document.getElementById('apps_save').addEventListener('click', function() { apps_save()}, false); 
+
+    document.getElementById('list_app_log_title').addEventListener('click', function() { nav_click(this)}, false);
+    document.getElementById('select_app_menu5_app_log').addEventListener('change', function() { nav_click(document.getElementById('list_app_log_title'))}, false);
+    document.getElementById('select_year_menu5_app_log').addEventListener('change', function() { nav_click(document.getElementById('list_app_log_title'))}, false);
+    document.getElementById('select_month_menu5_app_log').addEventListener('change', function() { nav_click(document.getElementById('list_app_log_title'))}, false);
+    
+    document.getElementById('list_app_log_first').addEventListener('click', function() { page_navigation(this)}, false);
+    document.getElementById('list_app_log_previous').addEventListener('click', function() { page_navigation(this)}, false);
+    document.getElementById('list_app_log_next').addEventListener('click', function() { page_navigation(this)}, false);
+    document.getElementById('list_app_log_last').addEventListener('click', function() { page_navigation(this)}, false);
+    
+    document.getElementById('list_connected_title').addEventListener('click', function() { nav_click(this)}, false);
+    document.getElementById('select_app_menu5_list_connected').addEventListener('change', function() { nav_click(document.getElementById('list_connected_title'))}, false);
+    document.getElementById('select_year_menu5_list_connected').addEventListener('change', function() { nav_click(document.getElementById('list_connected_title'))}, false);
+    document.getElementById('select_month_menu5_list_connected').addEventListener('change', function() { nav_click(document.getElementById('list_connected_title'))}, false);
+
+    document.getElementById('list_server_log_title').addEventListener('click', function() { nav_click(this)}, false);
+    document.getElementById('select_logscope5').addEventListener('change', function() { nav_click(document.getElementById('list_server_log_title'))}, false);    
+    document.getElementById('select_app_menu5').addEventListener('change', function() { nav_click(document.getElementById('list_server_log_title'))}, false);
+    document.getElementById('select_year_menu5').addEventListener('change', function() { nav_click(document.getElementById('list_server_log_title'))}, false);
+    document.getElementById('select_month_menu5').addEventListener('change', function() { nav_click(document.getElementById('list_server_log_title'))}, false);
+    document.getElementById('select_day_menu5').addEventListener('change', function() { nav_click(document.getElementById('list_server_log_title'))}, false);
+
+    document.getElementById('filesearch_menu5').addEventListener('click', function() { show_existing_logfiles();}, false);
+    
+    document.getElementById('list_pm2_log_title').addEventListener('click', function() { nav_click(this)}, false);
+    document.getElementById('select_maptype').addEventListener('change', function() { map_setstyle(document.getElementById('select_maptype').value) }, false);
+
     //SET MENU
     document.getElementById('menu_secure').innerHTML = `<div id='menu_close' class='dialogue_button'></div>
                                                         <div id='menu_1' class='menuitem'></div>
@@ -1851,6 +1960,32 @@ function init_admin_secure(){
                                                         <div id='menu_9' class='menuitem'></div>
                                                         <div id='menu_10' class='menuitem'></div>
                                                         <div id='menu_11' class='menuitem'></div>`;
+    //set for menu items created in menu_secure
+    document.getElementById('menu_close').innerHTML = window.global_icon_app_menu_close;
+    document.getElementById('menu_1').innerHTML = window.global_icon_app_chart; //DASHBOARD
+    document.getElementById('menu_2').innerHTML = window.global_icon_user_menu + window.global_icon_app_log; //USER STAT
+    document.getElementById('menu_3').innerHTML = window.global_icon_user_menu; //USERS
+    document.getElementById('menu_4').innerHTML = window.global_icon_app_apps + window.global_icon_app_settings; //APP ADMIN
+    document.getElementById('menu_5').innerHTML = window.global_icon_app_log; //MONITOR
+    document.getElementById('menu_6').innerHTML = window.global_icon_app_server + window.global_icon_app_settings; //PARAMETER
+    document.getElementById('menu_7').innerHTML = window.global_icon_app_server + window.global_icon_app_install; //INSTALLATION
+    document.getElementById('menu_8').innerHTML = window.global_icon_app_server + window.global_icon_app_database; //DATABASE
+    document.getElementById('menu_9').innerHTML = window.global_icon_app_server + window.global_icon_app_backup + window.global_icon_app_restore; //'BACKUP/RESTORE';
+    document.getElementById('menu_10').innerHTML = window.global_icon_app_server; //SERVER
+    document.getElementById('menu_11').innerHTML = window.global_icon_app_logoff; //LOGOUT
+
+    document.getElementById('menu_close').addEventListener('click', function() { document.getElementById('menu').style.display = 'none' }, false);
+    document.getElementById('menu_1').addEventListener('click', function() { show_menu(1) }, false);
+    document.getElementById('menu_2').addEventListener('click', function() { show_menu(2) }, false);
+    document.getElementById('menu_3').addEventListener('click', function() { show_menu(3) }, false);
+    document.getElementById('menu_4').addEventListener('click', function() { show_menu(4) }, false);
+    document.getElementById('menu_5').addEventListener('click', function() { show_menu(5) }, false);
+    document.getElementById('menu_6').addEventListener('click', function() { show_menu(6) }, false);
+    document.getElementById('menu_7').addEventListener('click', function() { show_menu(7) }, false);
+    document.getElementById('menu_8').addEventListener('click', function() { show_menu(8) }, false);
+    document.getElementById('menu_9').addEventListener('click', function() { show_menu(9) }, false);
+    document.getElementById('menu_10').addEventListener('click', function() { show_menu(10) }, false);
+    document.getElementById('menu_11').addEventListener('click', function() { admin_logoff_app() }, false);
 
     //hide all first (display none in css using eval not working)
     for (let i=1;i<=10;i++){
@@ -1932,153 +2067,22 @@ function init_admin_secure(){
                 show_menu(1);
             })                
         })
-    }
-    
+    }    
 
-    //SET ICONS
-    //common, since ui=false when called init_common, set some common items here
-    document.getElementById('message_close').innerHTML = window.global_icon_app_close;
-    //if CONFIRM message is used
-    document.getElementById('message_cancel').innerHTML = window.global_icon_app_cancel;
-    //other in admin
-    document.getElementById('menu_open').innerHTML = window.global_icon_app_menu_open;
-    document.getElementById('menu_close').innerHTML = window.global_icon_app_menu_close;
-    document.getElementById('menu_1_broadcast_button').innerHTML = window.global_icon_app_chat;
-    document.getElementById('apps_save').innerHTML = window.global_icon_app_save;
-    document.getElementById('list_app_log_first').innerHTML = window.global_icon_app_first;
-    document.getElementById('list_app_log_previous').innerHTML = window.global_icon_app_previous;
-    document.getElementById('list_app_log_next').innerHTML = window.global_icon_app_next;
-    document.getElementById('list_app_log_last').innerHTML = window.global_icon_app_last;
-
-    document.getElementById('filesearch_menu5').innerHTML =  window.global_icon_app_search;
-    document.getElementById('menu5_row_parameters_col1_1').innerHTML = window.global_icon_app_checkbox_checked;
-    document.getElementById('menu5_row_parameters_col1_0').innerHTML = window.global_icon_app_checkbox_empty;
-    document.getElementById('menu5_row_parameters_col2_1').innerHTML = window.global_icon_app_checkbox_checked;
-    document.getElementById('menu5_row_parameters_col2_0').innerHTML = window.global_icon_app_checkbox_empty
-    document.getElementById('menu5_row_parameters_col3_1').innerHTML = window.global_icon_app_checkbox_checked;
-    document.getElementById('menu5_row_parameters_col3_0').innerHTML = window.global_icon_app_checkbox_empty
-    document.getElementById('menu5_row_parameters_col4_1').innerHTML = window.global_icon_app_checkbox_checked;
-    document.getElementById('menu5_row_parameters_col4_0').innerHTML = window.global_icon_app_checkbox_empty
-    document.getElementById('menu5_row_parameters_col5_1').innerHTML = window.global_icon_app_checkbox_checked;
-    document.getElementById('menu5_row_parameters_col5_0').innerHTML = window.global_icon_app_checkbox_empty
-
-    document.getElementById('send_broadcast_send').innerHTML = window.global_icon_app_send;
-    document.getElementById('send_broadcast_close').innerHTML = window.global_icon_app_close;
-    document.getElementById('lov_close').innerHTML = window.global_icon_app_close;
-
-    //SET EVENTLISTENERS
-    document.getElementById('message_cancel').addEventListener('click', function() { document.getElementById("dialogue_message").style.visibility = "hidden"; }, false);
-    document.getElementById('menu_open').addEventListener('click', function() { document.getElementById('menu').style.display = 'block' }, false);
-    document.getElementById('menu_close').addEventListener('click', function() { document.getElementById('menu').style.display = 'none' }, false);
-
-    document.getElementById('menu_1').addEventListener('click', function() { show_menu(1) }, false);
-    document.getElementById('menu_2').addEventListener('click', function() { show_menu(2) }, false);
-    document.getElementById('menu_3').addEventListener('click', function() { show_menu(3) }, false);
-    document.getElementById('menu_4').addEventListener('click', function() { show_menu(4) }, false);
-    document.getElementById('menu_5').addEventListener('click', function() { show_menu(5) }, false);
-    document.getElementById('menu_6').addEventListener('click', function() { show_menu(6) }, false);
-    document.getElementById('menu_7').addEventListener('click', function() { show_menu(7) }, false);
-    document.getElementById('menu_8').addEventListener('click', function() { show_menu(8) }, false);
-    document.getElementById('menu_9').addEventListener('click', function() { show_menu(9) }, false);
-    document.getElementById('menu_10').addEventListener('click', function() { show_menu(10) }, false);
-    document.getElementById('menu_11').addEventListener('click', function() { admin_logoff_app() }, false);
-
-    document.getElementById('select_app_menu1').addEventListener('change', function() { show_chart(1); show_chart(2);}, false);
-    document.getElementById('select_year_menu1').addEventListener('change', function() { show_chart(1);show_chart(2);}, false);
-    document.getElementById('select_month_menu1').addEventListener('change', function() { show_chart(1);show_chart(2);}, false);
-    document.getElementById('menu_1_broadcast_button').addEventListener('click', function() { show_broadcast_dialogue('ALL'); }, false);
-    document.getElementById('menu_1_checkbox_maintenance').addEventListener('click', function() { set_maintenance() }, false);
-    document.getElementById('select_broadcast_type').addEventListener('change', function() { set_broadcast_type(); }, false);
-    document.getElementById('send_broadcast_send').addEventListener('click', function() { sendBroadcast(); }, false);
-    document.getElementById('send_broadcast_close').addEventListener('click', function() { closeBroadcast()}, false);
-
-    document.getElementById('apps_save').addEventListener('click', function() { apps_save()}, false); 
-
-    document.getElementById('list_app_log_title').addEventListener('click', function() { nav_click(this)}, false);
-    document.getElementById('select_app_menu5_app_log').addEventListener('change', function() { nav_click(document.getElementById('list_app_log_title'))}, false);
-    document.getElementById('select_year_menu5_app_log').addEventListener('change', function() { nav_click(document.getElementById('list_app_log_title'))}, false);
-    document.getElementById('select_month_menu5_app_log').addEventListener('change', function() { nav_click(document.getElementById('list_app_log_title'))}, false);
-    
-    document.getElementById('list_app_log_first').addEventListener('click', function() { page_navigation(this)}, false);
-    document.getElementById('list_app_log_previous').addEventListener('click', function() { page_navigation(this)}, false);
-    document.getElementById('list_app_log_next').addEventListener('click', function() { page_navigation(this)}, false);
-    document.getElementById('list_app_log_last').addEventListener('click', function() { page_navigation(this)}, false);
-    
-    document.getElementById('list_connected_title').addEventListener('click', function() { nav_click(this)}, false);
-    document.getElementById('select_app_menu5_list_connected').addEventListener('change', function() { nav_click(document.getElementById('list_connected_title'))}, false);
-    document.getElementById('select_year_menu5_list_connected').addEventListener('change', function() { nav_click(document.getElementById('list_connected_title'))}, false);
-    document.getElementById('select_month_menu5_list_connected').addEventListener('change', function() { nav_click(document.getElementById('list_connected_title'))}, false);
-
-    document.getElementById('list_server_log_title').addEventListener('click', function() { nav_click(this)}, false);
-    document.getElementById('select_logscope5').addEventListener('change', function() { nav_click(document.getElementById('list_server_log_title'))}, false);    
-    document.getElementById('select_app_menu5').addEventListener('change', function() { nav_click(document.getElementById('list_server_log_title'))}, false);
-    document.getElementById('select_year_menu5').addEventListener('change', function() { nav_click(document.getElementById('list_server_log_title'))}, false);
-    document.getElementById('select_month_menu5').addEventListener('change', function() { nav_click(document.getElementById('list_server_log_title'))}, false);
-    document.getElementById('select_day_menu5').addEventListener('change', function() { nav_click(document.getElementById('list_server_log_title'))}, false);
-
-    document.getElementById('filesearch_menu5').addEventListener('click', function() { show_existing_logfiles();}, false);
-    
-    document.getElementById('list_pm2_log_title').addEventListener('click', function() { nav_click(this)}, false);
-    document.getElementById('select_maptype').addEventListener('change', function() { map_setstyle(document.getElementById('select_maptype').value) }, false);
-    
-
-    //SET TEXTS
-    document.getElementById('menu_1').innerHTML = 'DASHBOARD';
-    document.getElementById('menu_2').innerHTML = 'USER STAT';
-    document.getElementById('menu_3').innerHTML = 'USERS';
-    document.getElementById('menu_4').innerHTML = 'APP ADMIN';
-    document.getElementById('menu_5').innerHTML = 'MONITOR';
-    document.getElementById('menu_6').innerHTML = 'PARAMETER';
-    document.getElementById('menu_7').innerHTML = 'INSTALLATION';
-    document.getElementById('menu_8').innerHTML = 'DATABASE';
-    document.getElementById('menu_9').innerHTML = 'BACKUP/RESTORE';
-    document.getElementById('menu_10').innerHTML = 'SERVER';
-    document.getElementById('menu_11').innerHTML = 'LOGOUT';
+    //SET TEXT
 
     //menu 1
-    document.getElementById('menu_1_maintenance_title').innerHTML = 'Maintenance';
-    //menu 2
     document.getElementById('box1_title').innerHTML = 'Unique Visitors';
     document.getElementById('box2_title').innerHTML = 'Unique Visitors';
+    
+    //menu 2
     document.getElementById('list_user_stat_col_title1').innerHTML = 'ID';
     document.getElementById('list_user_stat_col_title2').innerHTML = 'PROVIDER';
     document.getElementById('list_user_stat_col_title3').innerHTML = 'COUNT';
     document.getElementById('list_user_stat_col_title4').innerHTML = 'CONNECTED';
-    //menu 4
-    document.getElementById('list_apps_title').innerHTML = 'APPS';
-    document.getElementById('list_app_parameter_title').innerHTML = 'APP PARAMETERS';
+    
     //menu 5
-    document.getElementById('list_connected_title').innerHTML = 'Connected';
-    document.getElementById('list_app_log_title').innerHTML = 'App Log';
-    document.getElementById('list_server_log_title').innerHTML = 'Server Log';
-    document.getElementById('list_pm2_log_title').innerHTML = 'PM2 Log';
-
-    document.getElementById('menu5_row_parameters_col1').innerHTML = 'Server info';
-    document.getElementById('menu5_row_parameters_col2').innerHTML = 'Server verbose';
-    document.getElementById('menu5_row_parameters_col3').innerHTML = 'DB';
-    document.getElementById('menu5_row_parameters_col4').innerHTML = 'Router';
-    document.getElementById('menu5_row_parameters_col5').innerHTML = 'PM2 JSON log';
-
-    document.getElementById('list_pm2_log_path_title').innerHTML = 'FILE PATH';
-
-    document.getElementById('list_pm2_log_title_out').innerHTML = 'PM2 Log Out';
-    document.getElementById('list_pm2_log_title_err').innerHTML = 'PM2 Log Error';
-    document.getElementById('list_pm2_log_title_process_event').innerHTML = 'PM2 Log Process event';
-
-    document.getElementById('send_broadcast_title').innerHTML = 'Broadcast';
-    document.getElementById('select_broadcast_type').options[0].text = 'INFO';
-    document.getElementById('select_broadcast_type').options[1].text = 'MAINTENANCE';
-
     document.getElementById('client_id_label').innerHTML = 'CLIENT ID';
-    //menu 8
-    document.getElementById('menu_8_db_info_database_title').innerHTML = 'Database';
-    document.getElementById('menu_8_db_info_name_title').innerHTML = 'Name';
-    document.getElementById('menu_8_db_info_version_title').innerHTML = 'Version';
-    document.getElementById('menu_8_db_info_database_schema_title').innerHTML = 'Database schema';
-    document.getElementById('menu_8_db_info_host_title').innerHTML = 'Host';
-    document.getElementById('menu_8_db_info_connections_title').innerHTML = 'Connections';
-    document.getElementById('menu_8_db_info_started_title').innerHTML = 'Started';
-    document.getElementById('menu_8_db_info_space_title').innerHTML = 'Database space statistics';
 
 }
 init_common(<ITEM_COMMON_PARAMETERS/>, (err, global_app_parameters)=>{
