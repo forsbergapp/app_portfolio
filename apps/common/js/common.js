@@ -3105,6 +3105,7 @@ async function init_common(parameters, callBack){
             document.getElementById('lov_search_icon').innerHTML = window.global_icon_app_search;
             //broadcast
             document.getElementById('broadcast_close').innerHTML = window.global_icon_app_broadcast_close;
+            document.getElementById('broadcast_info_title').innerHTML = window.global_icon_app_alert;
             //profile detail
             document.getElementById('profile_detail_header_following').innerHTML = window.global_icon_user_follows;
             document.getElementById('profile_detail_header_followed').innerHTML = window.global_icon_user_followed;
