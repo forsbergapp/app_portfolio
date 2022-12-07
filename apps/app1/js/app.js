@@ -29,18 +29,6 @@ function setEvents(){
 
     //app
     document.getElementById('theme_background').addEventListener('click', function() { show_hide_apps_dialogue()  }, false);
-
-    //
-    //user menu
-    
-    document.getElementById('user_menu_username').addEventListener('click', function() { user_menu_item_click(this) }, false);
-
-    document.getElementById('toggle_checkbox').addEventListener('click', function() { toggle_switch() }, false);
-    document.getElementById('user_menu_dropdown_log_out').addEventListener('click', function() { user_menu_item_click(this) }, false);
-    document.getElementById('profile_btn_top').addEventListener('click', function() {profile_top(1)}, false);
-    document.getElementById('user_locale_select').addEventListener('change', function() { document.getElementById('apps').innerHTML = window.global_app_spinner;common_translate_ui(this.value, (err, result)=>{get_apps()});}, false);
-    document.getElementById('user_arabic_script_select').addEventListener('change', function() { toggle_switch()}, false);
-
     //start page
     document.getElementById( 'start_message' ).addEventListener( 'click', function( event ) {
         event.preventDefault();
@@ -56,6 +44,15 @@ function setEvents(){
         document.getElementById( 'dialogue_info_content' ).className = 'dialogue_content dialogue_flip';
         document.getElementById( 'dialogue_start_content' ).className = 'dialogue_content dialogue_flip';
     }, false );
+    //common
+    document.getElementById('profile_btn_top').addEventListener('click', function() {profile_top(1)}, false);
+    //user menu
+    document.getElementById('user_menu_username').addEventListener('click', function() { user_menu_item_click(this) }, false);
+    document.getElementById('user_menu_dropdown_log_out').addEventListener('click', function() { user_menu_item_click(this) }, false);
+    //user preferences
+    document.getElementById('app_theme_checkbox').addEventListener('click', function() { app_theme_switch() }, false);
+    document.getElementById('user_locale_select').addEventListener('change', function() { document.getElementById('apps').innerHTML = window.global_app_spinner;common_translate_ui(this.value, (err, result)=>{get_apps()});}, false);
+    document.getElementById('user_arabic_script_select').addEventListener('change', function() { app_theme_switch()}, false);
     //common with app specific settings
     //dialogue profile
     document.getElementById('profile_home').addEventListener('click', function() {profile_top(1);}, false);
@@ -104,12 +101,12 @@ function setEvents(){
     document.getElementById('user_verify_verification_char5').addEventListener('keyup', function() { user_verify_check_input_app(this, "user_verify_verification_char6") }, false);
     document.getElementById('user_verify_verification_char6').addEventListener('keyup', function() { user_verify_check_input_app(this, "") }, false);
 }
-function toggle_switch(){
-    if(document.getElementById('toggle_checkbox').checked){
-        document.body.className = 'theme_sun ' + document.getElementById('user_arabic_script_select').value;
+function app_theme_switch(){
+    if(document.getElementById('app_theme_checkbox').checked){
+        document.body.className = 'app_theme_' + 'sun ' + document.getElementById('user_arabic_script_select').value;
     }
     else{
-        document.body.className = 'theme_moon ' + document.getElementById('user_arabic_script_select').value;
+        document.body.className = 'app_theme_' + 'moon' + document.getElementById('user_arabic_script_select').value;
     }
     return null;
 }
@@ -272,7 +269,7 @@ async function init_app(){
     document.getElementById('about_name').innerHTML = window.global_app_name;
     document.getElementById('start_message').innerHTML = window.global_icon_app_info;    
     //theme switcher
-    document.getElementById("toggle_checkbox").checked = true;
+    document.getElementById('app_theme_checkbox').checked = true;
     //info
     document.getElementById('info_diagram_img').src=window.global_img_diagram_img;
     document.getElementById('info_datamodel_img').src=window.global_img_datamodel_img;

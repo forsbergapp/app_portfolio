@@ -689,6 +689,9 @@ a:active {
 	font-size:30px;
 }
 /*User account / user preferences*/
+#common_app_select_theme{
+	margin: 10px;
+}
 #user_account{
 	display: grid;
 	margin-top: 10px;
