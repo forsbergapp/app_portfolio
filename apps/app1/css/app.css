@@ -129,6 +129,9 @@ body.font_arabic_nastaliq #user_menu_default_avatar{
 }
 
 /*common*/
+#common_app_select_theme{
+	display:none;
+}
 #profile_search_list_wrap{
 	top:62px;
 }
@@ -331,7 +334,7 @@ div.ray8 {
 }
 
   /*Moon*/
-  .theme_moon .x1{
+  .app_theme_moon .x1{
 	margin-top:47px;
   }
   .moon {
@@ -372,14 +375,14 @@ div.ray8 {
 	transform-origin: -25px 14px;
   }
 
-/* TOGGLE*/
-#toggle_wrapper {
+/* APP THEMES*/
+#app_themes {
 	transform: scale(0.3);
 	transform-origin: 50% 10px;
 	height: 60px;
 	margin-top: 10px;
 }
-#toggle_checkbox {
+#app_theme_checkbox {
 	opacity: 0;
 	height: 0;
 	width: 0;
@@ -513,18 +516,18 @@ div.ray8 {
 	animation-delay: -4s;
   }
   
-  #toggle_checkbox:checked + .toggle .toggle-button {
+  #app_theme_checkbox:checked + .toggle .toggle-button {
 	transform: translateX(102px);
   }
-  #toggle_checkbox:checked + .toggle .toggle-button .crater {
+  #app_theme_checkbox:checked + .toggle .toggle-button .crater {
 	transform: rotate(-45deg) translateX(70px);
   }
-  #toggle_checkbox:checked + .toggle .star {
+  #app_theme_checkbox:checked + .toggle .star {
 	animation: move 2s infinite;
 	transform: none;
 	box-shadow: none;
   }
-  #toggle_checkbox:checked + .toggle .star-1 {
+  #app_theme_checkbox:checked + .toggle .star-1 {
 	width: 40px;
 	height: 10px;
 	border-radius: 10px;
@@ -532,28 +535,28 @@ div.ray8 {
 	top: 25px;
 	box-shadow: none;
   }
-  #toggle_checkbox:checked + .toggle .star-2 {
+  #app_theme_checkbox:checked + .toggle .star-2 {
 	width: 12px;
 	height: 12px;
 	left: 26px;
 	top: 23px;
 	box-shadow: -1px 0 2px 0 rgba(0, 0 , 0, 0.1);
   }
-  #toggle_checkbox:checked + .toggle .star-3 {
+  #app_theme_checkbox:checked + .toggle .star-3 {
 	width: 16px;
 	height: 16px;
 	left: 35px;
 	top: 19px;
 	box-shadow: -1px 0 2px 0 rgba(0, 0 , 0, 0.1);
   }
-  #toggle_checkbox:checked + .toggle .star-4 {
+  #app_theme_checkbox:checked + .toggle .star-4 {
 	width: 14px;
 	height: 14px;
 	left: 46px;
 	top: 21px;
 	box-shadow: -1px 0 2px 0 rgba(0, 0 , 0, 0.1);
   }
-  #toggle_checkbox:checked + .toggle .star-5 {
+  #app_theme_checkbox:checked + .toggle .star-5 {
 	width: 60px;
 	height: 15px;
 	border-radius: 15px;
@@ -561,7 +564,7 @@ div.ray8 {
 	bottom: 20px;
 	box-shadow: none;
   }
-  #toggle_checkbox:checked + .toggle .star-6 {
+  #app_theme_checkbox:checked + .toggle .star-6 {
 	width: 18px;
 	height: 18px;
 	border-radius: 50%;
@@ -569,7 +572,7 @@ div.ray8 {
 	bottom: 20px;
 	box-shadow: -1px 0 2px 0 rgba(0, 0 , 0, 0.1);
   }
-  #toggle_checkbox:checked + .toggle .star-7 {
+  #app_theme_checkbox:checked + .toggle .star-7 {
 	width: 24px;
 	height: 24px;
 	border-radius: 50%;
@@ -577,7 +580,7 @@ div.ray8 {
 	bottom: 20px;
 	box-shadow: -1px 0 2px 0 rgba(0, 0 , 0, 0.1);
   }
-  #toggle_checkbox:checked + .toggle .star-8 {
+  #app_theme_checkbox:checked + .toggle .star-8 {
 	width: 21px;
 	height: 21px;
 	border-radius: 50%;
@@ -605,7 +608,7 @@ div.ray8 {
 	margin:20px;
 	z-index:-1;
 }
-.theme_sun{
+.app_theme_sun{
 
 	/*concept*/
 	--app_theme_main_branding_color1: var(--app_blue1);
@@ -636,13 +639,13 @@ div.ray8 {
 	--app_theme_main_gradient_color1: var(--app_white);
 
 	/*entities*/
-	--app_toggle_animation_box_shadow_color: var(--app_theme_main_shadow_color4);
-	--app_toggle_checked_background_color: var(--app_theme_main_branding_color1);
-	--app_toggle_unchecked_background_color: var(--app_theme_main_branding_color8);
-	--app_toggle_star_background_color:var(--app_theme_main_branding_color10);
-	--app_toggle_star_shadow_color:var(--app_theme_main_branding_color10);
-	--app_toggle_button_color: var(--app_theme_main_branding_color11);
-	--app_toggle_shadow_color: var(--app_theme_main_branding_color10);
+	--app_theme_animation_box_shadow_color: var(--app_theme_main_shadow_color4);
+	--app_theme_checked_background_color: var(--app_theme_main_branding_color1);
+	--app_theme_unchecked_background_color: var(--app_theme_main_branding_color8);
+	--app_theme_star_background_color:var(--app_theme_main_branding_color10);
+	--app_theme_star_shadow_color:var(--app_theme_main_branding_color10);
+	--app_theme_button_color: var(--app_theme_main_branding_color11);
+	--app_theme_shadow_color: var(--app_theme_main_branding_color10);
 	--app_toogle_crater_background_color:var(--app_theme_main_branding_color9);
 	--app_toogle_crater1_background_color:var(--app_theme_main_branding_color12);
 
@@ -686,7 +689,7 @@ div.ray8 {
 	--app_theme_spinner_background_color:var(--app_theme_main_branding_color1);
         
 }
-.theme_moon{
+.app_theme_moon{
 
 	--app_theme_main_branding_color1: var(--app_dark);
 	--app_theme_main_branding_color2: var(--app_blue2);
@@ -716,15 +719,15 @@ div.ray8 {
 	--app_theme_main_gradient_color1: var(--app_white);
 
 	/*entities*/
-	--app_toggle_animation_box_shadow_color: var(--app_theme_main_shadow_color4);
-	--app_toggle_checked_background_color: var(--app_theme_main_branding_color1);
-	--app_toggle_unchecked_background_color: var(--app_theme_main_branding_color8);
-	--app_toggle_star_background_color:var(--app_theme_main_branding_color10);
-	--app_toggle_star_shadow_color:var(--app_theme_main_branding_color10);
-	--app_toggle_button_color: var(--app_theme_main_branding_color9);
-	--app_toggle_shadow_color: var(--app_theme_main_branding_color10);
-	--app_toogle_crater_background_color:var(--app_theme_main_branding_color9);
-	--app_toogle_crater1_background_color:var(--app_theme_main_branding_color12);
+	--app_theme_animation_box_shadow_color: var(--app_theme_main_shadow_color4);
+	--app_theme_checked_background_color: var(--app_theme_main_branding_color1);
+	--app_theme_unchecked_background_color: var(--app_theme_main_branding_color8);
+	--app_theme_star_background_color:var(--app_theme_main_branding_color10);
+	--app_theme_star_shadow_color:var(--app_theme_main_branding_color10);
+	--app_theme_button_color: var(--app_theme_main_branding_color9);
+	--app_theme_shadow_color: var(--app_theme_main_branding_color10);
+	--app_theme_crater_background_color:var(--app_theme_main_branding_color9);
+	--app_theme_crater1_background_color:var(--app_theme_main_branding_color12);
 
 	--app_theme_text_color: var(--app_theme_main_branding_color4);
 	--app_theme_background_color: var(--app_theme_main_branding_color1);
@@ -772,7 +775,7 @@ div.ray8 {
 	}
 	50% {
 	  transform: rotate(-45deg) translateX(-20px);
-	  box-shadow: 5px 0px 6px 1px var(--app_toggle_animation_box_shadow_color);
+	  box-shadow: 5px 0px 6px 1px var(--app_theme_animation_box_shadow_color);
 	}
 	100% {
 	  transform: rotate(-45deg) translateX(-30px);
@@ -789,42 +792,42 @@ div.ray8 {
 	background: var(--app_toogle_crater1_background_color);
 }
 /*theme sun toggle fixes*/
-.theme_sun #toggle_checkbox:checked + .toggle {
-	background: var(--app_toggle_checked_background_color);
+.app_theme_sun #app_theme_checkbox:checked + .toggle {
+	background: var(--app_theme_checked_background_color);
   }
-.theme_sun #toggle_checkbox:checked + .toggle .toggle-button {
-	background: var(--app_toggle_button_color);
-	box-shadow: 0 0 35px 5px var(--app_toggle_shadow_color);
+.app_theme_sun #app_theme_checkbox:checked + .toggle .toggle-button {
+	background: var(--app_theme_button_color);
+	box-shadow: 0 0 35px 5px var(--app_theme_shadow_color);
 }
-.theme_sun #toggle_checkbox:checked + .toggle .star-1,
-.theme_sun #toggle_checkbox:checked + .toggle .star-5 {
-	background: var(--app_toggle_star_background_color);
+.app_theme_sun #app_theme_checkbox:checked + .toggle .star-1,
+.app_theme_sun #app_theme_checkbox:checked + .toggle .star-5 {
+	background: var(--app_theme_star_background_color);
 }
-.theme_sun #toggle_checkbox:checked + .toggle .star-2,
-.theme_sun #toggle_checkbox:checked + .toggle .star-3,
-.theme_sun #toggle_checkbox:checked + .toggle .star-4,
-.theme_sun #toggle_checkbox:checked + .toggle .star-6,
-.theme_sun #toggle_checkbox:checked + .toggle .star-7,
-.theme_sun #toggle_checkbox:checked + .toggle .star-8 {
-	background: var(--app_toggle_star_background_color);
+.app_theme_sun #app_theme_checkbox:checked + .toggle .star-2,
+.app_theme_sun #app_theme_checkbox:checked + .toggle .star-3,
+.app_theme_sun #app_theme_checkbox:checked + .toggle .star-4,
+.app_theme_sun #app_theme_checkbox:checked + .toggle .star-6,
+.app_theme_sun #app_theme_checkbox:checked + .toggle .star-7,
+.app_theme_sun #app_theme_checkbox:checked + .toggle .star-8 {
+	background: var(--app_theme_star_background_color);
 	box-shadow: -1px 0 2px 0 rgba(0, 0 , 0, 0.1);
 }
-.theme_sun .star-6, 
-.theme_sun .star-7, 
-.theme_sun .star-8 {
-	box-shadow: 5px 0px 4px 1px var(--app_toggle_star_shadow_color);
+.app_theme_sun .star-6, 
+.app_theme_sun .star-7, 
+.app_theme_sun .star-8 {
+	box-shadow: 5px 0px 4px 1px var(--app_theme_star_shadow_color);
 }
 /*theme moon toggle fixes*/
-.theme_moon .toggle {
-	background: var(--app_toggle_unchecked_background_color);
+.app_theme_moon .toggle {
+	background: var(--app_theme_unchecked_background_color);
 }
-.theme_moon .toggle-button {
-	background: var(--app_toggle_button_color);  
-	box-shadow: 0 0 35px 4px var(--app_toggle_shadow_color);
+.app_theme_moon .toggle-button {
+	background: var(--app_theme_button_color);  
+	box-shadow: 0 0 35px 4px var(--app_theme_shadow_color);
 }
-.theme_moon .star {
-	background: var(--app_toggle_star_background_color);
-	box-shadow: 1px 0 2px 2px var(--app_toggle_shadow_color);
+.app_theme_moon .star {
+	background: var(--app_theme_star_background_color);
+	box-shadow: 1px 0 2px 2px var(--app_theme_shadow_color);
 }
 /*app colors*/
 body{
@@ -886,16 +889,16 @@ border-left: 12px solid var(--app_theme_sun_color);
 }
 
 /*app other theme css*/
-.theme_sun .sunholder{
+.app_theme_sun .sunholder{
 	display:inline-block;
 }
-.theme_sun .moon{
+.app_theme_sun .moon{
 	display:none;
 }
-.theme_moon .sunholder{
+.app_theme_moon .sunholder{
 	display:none;
 }
-.theme_moon .moon{
+.app_theme_moon .moon{
 	display:inline-block;	
 }
 /*theme common*/

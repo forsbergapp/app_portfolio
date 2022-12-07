@@ -17,7 +17,7 @@ module.exports = {
                     
     
                     ['<AppHead/>', __dirname + '/src/head.html'],
-                    ['<AppThemes/>', __dirname + '/src/toogle.html'],
+                    ['<AppThemes/>', __dirname + '/src/app_themes.html'],
                     ['<AppBackground/>', __dirname + '/src/background.html'],
                     ['<AppToolbarBottom/>', __dirname + '/src/toolbar_bottom.html'],
                     ['<AppDialogues/>', __dirname + '/src/dialogues.html'],

@@ -3241,7 +3241,8 @@ async function init_common(parameters, callBack){
             document.getElementById('user_menu_dropdown_log_in').addEventListener('click', function() { show_common_dialogue('LOGIN'); document.getElementById('user_menu_dropdown').style.visibility = 'hidden';}, false);
             document.getElementById('user_menu_dropdown_edit').addEventListener('click', function() { user_edit();document.getElementById('user_menu_dropdown').style.visibility = 'hidden'; }, false);
             document.getElementById('user_menu_dropdown_signup').addEventListener('click', function() { show_common_dialogue('SIGNUP'); document.getElementById('user_menu_dropdown').style.visibility = 'hidden'; }, false);
-        
+            //user preferences
+            //define globals and save settings here, in apps define what should happen when changing
             if (document.getElementById('user_locale_select'))
                 document.getElementById('user_locale_select').addEventListener('change', function() { window.global_user_locale = this.value; 
                                                                                                     user_preference_save(); }, false);

@@ -520,10 +520,10 @@ function slide(items, prev, next, type) {
 /*----------------------- */
 /* UI                     */
 /*----------------------- */
-async function common_translate_ui_app(lang_code){
+async function common_translate_ui_app(lang_code, callBack){
     await common_translate_ui(lang_code,(err, result) => {
         if (err)
-            null;
+            callBack(err,null);
         else{
             //translate locale in this app
             let select_locale = document.getElementById('setting_select_locale');
@@ -539,7 +539,7 @@ async function common_translate_ui_app(lang_code){
             common_fetch(window.global_rest_url_base + window.global_rest_country + lang_code + '?', 
                          'GET', 0, null, null, null, (err, result) =>{
                 if (err)
-                    null;
+                    callBack(err,null);
                 else{
                     json = JSON.parse(result);
                     let select_country = document.getElementById('setting_select_country');
@@ -565,8 +565,8 @@ async function common_translate_ui_app(lang_code){
                         }
                     }
                     select_country.innerHTML = html;
-                    SearchAndSetSelectedIndex(current_country,
-                                            document.getElementById('setting_select_country'),0);
+                    SearchAndSetSelectedIndex(current_country, document.getElementById('setting_select_country'),0);
+                    callBack(null,null);
                 }
             })
         }
@@ -914,7 +914,7 @@ async function update_ui(option, item_id=null) {
         //Update font, arabic script
         case 3:{
                 //app themes and user preference font
-                document.body.className = 'app_theme' + document.getElementById('app_select_theme').value + ' ' + document.getElementById('user_arabic_script_select').value;
+                document.body.className = 'app_theme' + document.getElementById('common_app_select_theme').value + ' ' + document.getElementById('user_arabic_script_select').value;
                 break;
             }
         //GPS, update map
@@ -2225,16 +2225,6 @@ function setEvents() {
                                                                                             document.getElementById('profile_search_input').focus();
                                                                                          }}, false);
 
-
-    document.getElementById('user_locale_select').addEventListener('change', function() { common_translate_ui_app(this.value);}, false);
-    
-    document.getElementById('user_timezone_select').addEventListener('change', function() { document.getElementById('setting_timezone_current').innerHTML = this.value;}, false);
-    
-    document.getElementById('user_arabic_script_select').addEventListener('change', function() { update_ui(3);}, false);
-    //user menu dropdown
-    document.getElementById('user_menu_dropdown_log_out').addEventListener('click', function() { user_logoff_app() }, false);
-    document.getElementById('user_menu_username').addEventListener('click', function() { toolbar_bottom(6) }, false);
-
     //tab navigation
     document.getElementById('tab_nav_btn_1').addEventListener('click', function() { openTab('1') }, false);
     document.getElementById('tab_nav_btn_2').addEventListener('click', function() { openTab('2'); map_resize(); }, false);
@@ -2258,7 +2248,6 @@ function setEvents() {
     document.getElementById('setting_input_long').addEventListener('keyup', function() { window.global_typewatch("update_ui(9);", 1000); }, false);    
     //settings design
     document.getElementById('setting_select_report_papersize').addEventListener('change', function() { update_ui(10); }, false);
-    document.getElementById('app_select_theme').addEventListener('change', function() { update_ui(3) }, false);
     //settings image
     document.getElementById('setting_icon_image_header_img').addEventListener('click', function() { document.getElementById('setting_input_reportheader_img').click() }, false);
     document.getElementById('setting_icon_image_header_clear').addEventListener('click', function() { update_ui(12) }, false);
@@ -2336,6 +2325,16 @@ function setEvents() {
 
     //common
 
+    //user menu dropdown
+    document.getElementById('user_menu_dropdown_log_out').addEventListener('click', function() { user_logoff_app() }, false);
+    document.getElementById('user_menu_username').addEventListener('click', function() { toolbar_bottom(6) }, false);
+    
+    //user preferences    
+    document.getElementById('common_app_select_theme').addEventListener('change', function() { document.body.className = 'app_theme' + document.getElementById('common_app_select_theme').value + ' ' + document.getElementById('user_arabic_script_select').value; }, false);
+    document.getElementById('user_locale_select').addEventListener('change', function() { common_translate_ui_app(this.value);}, false);    
+    document.getElementById('user_timezone_select').addEventListener('change', function() { document.getElementById('setting_timezone_current').innerHTML = this.value;}, false);
+    document.getElementById('user_arabic_script_select').addEventListener('change', function() { document.getElementById('common_app_select_theme').dispatchEvent(new Event('change'));}, false);
+    
     //profile button top
     document.getElementById('profile_btn_top').addEventListener('click', function() { toolbar_bottom(7) }, false);
 
@@ -2403,250 +2402,256 @@ function app_exception(){
 /*----------------------- */
 /* INIT                   */
 /*----------------------- */
-async function init_app() {
-    dialogue_loading(1);
-    //set app globals
-    //set current date for report month
-    window.global_session_currentDate = new Date();
-    window.global_session_CurrentHijriDate = new Array();
-    //get Hijri date from initial Gregorian date
-    window.global_session_CurrentHijriDate[0] = parseInt(new Date(window.global_session_currentDate.getFullYear(),
-        window.global_session_currentDate.getMonth(),
-        window.global_session_currentDate.getDate()).toLocaleDateString("en-us-u-ca-islamic", { month: "numeric" }));
-    window.global_session_CurrentHijriDate[1] = parseInt(new Date(window.global_session_currentDate.getFullYear(),
-        window.global_session_currentDate.getMonth(),
-        window.global_session_currentDate.getDate()).toLocaleDateString("en-us-u-ca-islamic", { year: "numeric" }));
-    window.global_timetable_type = '';
-
-    //set initial default language from clients settings
-    SearchAndSetSelectedIndex(navigator.language.toLowerCase(), document.getElementById('setting_select_locale'),1);
-    //dialogues
-    document.getElementById('info_close').innerHTML = window.global_icon_app_close;
-    document.getElementById('scan_open_mobile_close').innerHTML = window.global_icon_app_close;
-    document.getElementById('scan_open_mobile_title1').innerHTML = window.global_icon_app_mobile;
-    //profile info
-    document.getElementById('profile_main_btn_user_settings').innerHTML = window.global_icon_regional_day  + window.global_icon_regional_month + window.global_icon_regional_year;
-    document.getElementById('profile_main_btn_user_setting_likes_heart').innerHTML = window.global_icon_user_like;
-    document.getElementById('profile_main_btn_user_setting_likes_user_setting').innerHTML = window.global_icon_regional_day + window.global_icon_regional_month + window.global_icon_regional_year + window.global_icon_user_follows;
-    document.getElementById('profile_main_btn_user_setting_liked_heart').innerHTML = window.global_icon_user_like;
-    document.getElementById('profile_main_btn_user_setting_liked_user_setting').innerHTML = window.global_icon_regional_day + window.global_icon_regional_month + window.global_icon_regional_year + window.global_icon_user_followed;
-
-    document.getElementById('profile_user_settings_day').innerHTML = window.global_icon_regional_day;
-    document.getElementById('profile_user_settings_month').innerHTML = window.global_icon_regional_month;
-    document.getElementById('profile_user_settings_year').innerHTML = window.global_icon_regional_year;
-    document.getElementById('profile_user_settings_like').innerHTML = window.global_icon_user_unlike + window.global_icon_user_like;
-
-    document.getElementById('profile_user_settings_info_likes').innerHTML = window.global_icon_user_like + '<div id="profile_user_settings_info_like_count"></div>';
-    document.getElementById('profile_user_settings_info_views').innerHTML = window.global_icon_user_views + '<div id="profile_user_settings_info_view_count"></div>';
-    //profile top
-    document.getElementById('profile_top_row2_1').innerHTML = window.global_icon_user_like + window.global_icon_regional_day  + window.global_icon_regional_month + window.global_icon_regional_year;
-    document.getElementById('profile_top_row2_2').innerHTML = window.global_icon_user_views + window.global_icon_regional_day  + window.global_icon_regional_month + window.global_icon_regional_year;
-    //tab navigation
-    document.getElementById('tab_nav_btn_1').innerHTML = window.global_icon_regional;
-    document.getElementById('tab_nav_btn_2').innerHTML = window.global_icon_gps;
-    document.getElementById('tab_nav_btn_3').innerHTML = window.global_icon_misc_design;
-    document.getElementById('tab_nav_btn_4').innerHTML = window.global_icon_misc_image;
-    document.getElementById('tab_nav_btn_5').innerHTML = window.global_icon_misc_text;
-    document.getElementById('tab_nav_btn_6').innerHTML = window.global_icon_misc_prayer;
-    //settings tab 1 Regional
-    document.getElementById('setting_icon_regional_locale').innerHTML = window.global_icon_regional_locale;
-    document.getElementById('setting_icon_regional_timezone_current').innerHTML = window.global_icon_regional_timezone + window.global_icon_gps_position;
-    document.getElementById('setting_icon_regional_timezone').innerHTML = window.global_icon_regional_timezone + window.global_icon_regional_calendar;
-    document.getElementById('setting_icon_regional_numbersystem').innerHTML = window.global_icon_regional_numbersystem;
-    document.getElementById('setting_icon_regional_direction').innerHTML = window.global_icon_regional_direction;
-    document.getElementById('setting_icon_regional_locale_second').innerHTML = window.global_icon_regional_locale + window.global_icon_misc_second;
-    document.getElementById('setting_icon_regional_coltitle').innerHTML = window.global_icon_misc_title;
-    document.getElementById('setting_icon_regional_arabic_script').innerHTML = window.global_icon_regional_script;
-    document.getElementById('setting_icon_regional_calendartype').innerHTML = window.global_icon_regional_calendar;
-    document.getElementById('setting_icon_regional_calendar_hijri_type').innerHTML = window.global_icon_regional_calendar_hijri_type;
-    //settings tab 2 GPS
-    document.getElementById('setting_icon_gps_maptype').innerHTML = window.global_icon_gps_map;
-    document.getElementById('setting_icon_gps_country').innerHTML = window.global_icon_gps_country;
-    document.getElementById('setting_icon_gps_city').innerHTML = window.global_icon_gps_city;
-    document.getElementById('setting_icon_gps_popular_place').innerHTML = window.global_icon_gps_popular_place;
-    document.getElementById('setting_icon_gps_place').innerHTML = window.global_icon_gps_position;
-    //settings tab 3 Design
-    document.getElementById('setting_icon_design_theme_day').innerHTML = window.global_icon_regional_day;
-    document.getElementById('setting_icon_design_theme_month').innerHTML = window.global_icon_regional_month;
-    document.getElementById('setting_icon_design_theme_year').innerHTML = window.global_icon_regional_year;
-    document.getElementById('setting_icon_design_papersize').innerHTML = window.global_icon_app_papersize;
-    document.getElementById('setting_icon_design_highlight_row').innerHTML = window.global_icon_app_highlight;
-    document.getElementById('setting_icon_design_show_weekday').innerHTML = window.global_icon_app_show + window.global_icon_regional_weekday;
-    document.getElementById('setting_icon_design_show_calendartype').innerHTML = window.global_icon_app_show + window.global_icon_regional_calendartype;
-    document.getElementById('setting_icon_design_show_notes').innerHTML = window.global_icon_app_show + window.global_icon_app_notes;
-    document.getElementById('setting_icon_design_show_gps').innerHTML = window.global_icon_app_show + window.global_icon_gps_position;
-    document.getElementById('setting_icon_design_show_timezone').innerHTML = window.global_icon_app_show + window.global_icon_regional_timezone;
-    //settings tab 4 Image
-    document.getElementById('setting_icon_image_header_clear').innerHTML = window.global_icon_app_remove;
-    document.getElementById('setting_icon_image_footer_clear').innerHTML = window.global_icon_app_remove;
-    document.getElementById('setting_icon_image_header_img').innerHTML = window.global_icon_app_search;
-    document.getElementById('setting_icon_image_footer_img').innerHTML = window.global_icon_app_search;    
-    //settings tab 5 Text
-    document.getElementById('setting_icon_text_header_aleft').innerHTML =  window.global_icon_app_align_left;
-    document.getElementById('setting_icon_text_header_acenter').innerHTML = window.global_icon_app_align_center
-    document.getElementById('setting_icon_text_header_aright').innerHTML = window.global_icon_app_align_right;
-    document.getElementById('setting_icon_text_footer_aleft').innerHTML = window.global_icon_app_align_left;
-    document.getElementById('setting_icon_text_footer_acenter').innerHTML = window.global_icon_app_align_center;
-    document.getElementById('setting_icon_text_footer_aright').innerHTML = window.global_icon_app_align_right;
-    //settings tab 6 Prayer
-    document.getElementById('setting_icon_prayer_method').innerHTML = window.global_icon_misc_book;
-    document.getElementById('setting_icon_prayer_asr').innerHTML = window.global_icon_misc_book + window.global_icon_sky_afternoon;
-    document.getElementById('setting_icon_prayer_highlatitude').innerHTML = window.global_icon_gps_high_latitude;
-    document.getElementById('setting_icon_prayer_timeformat').innerHTML = window.global_icon_regional_timeformat;
-    document.getElementById('setting_icon_prayer_hijri_adjustment').innerHTML = window.global_icon_app_settings + window.global_icon_regional_calendar;
-    document.getElementById('setting_icon_prayer_report_iqamat_title_fajr').innerHTML = window.global_icon_app_show + 
-                                                                                        window.global_icon_misc_calling + 
-                                                                                        window.global_icon_misc_prayer + 
-                                                                                        window.global_icon_sky_sunrise;
-    document.getElementById('setting_icon_prayer_report_iqamat_title_dhuhr').innerHTML = window.global_icon_app_show + 
-                                                                                         window.global_icon_misc_calling + 
-                                                                                         window.global_icon_misc_prayer +
-                                                                                         window.global_icon_sky_midday;
-    document.getElementById('setting_icon_prayer_report_iqamat_title_asr').innerHTML = window.global_icon_app_show + 
-                                                                                       window.global_icon_misc_calling + 
-                                                                                       window.global_icon_misc_prayer + 
-                                                                                       window.global_icon_sky_afternoon;
-    document.getElementById('setting_icon_prayer_report_iqamat_title_maghrib').innerHTML = window.global_icon_app_show + 
+function init_app() {
+    return new Promise(function (resolve){
+        dialogue_loading(1);
+        //set app globals
+        //set current date for report month
+        window.global_session_currentDate = new Date();
+        window.global_session_CurrentHijriDate = new Array();
+        //get Hijri date from initial Gregorian date
+        window.global_session_CurrentHijriDate[0] = parseInt(new Date(window.global_session_currentDate.getFullYear(),
+            window.global_session_currentDate.getMonth(),
+            window.global_session_currentDate.getDate()).toLocaleDateString("en-us-u-ca-islamic", { month: "numeric" }));
+        window.global_session_CurrentHijriDate[1] = parseInt(new Date(window.global_session_currentDate.getFullYear(),
+            window.global_session_currentDate.getMonth(),
+            window.global_session_currentDate.getDate()).toLocaleDateString("en-us-u-ca-islamic", { year: "numeric" }));
+        window.global_timetable_type = '';
+    
+        //set initial default language from clients settings
+        SearchAndSetSelectedIndex(navigator.language.toLowerCase(), document.getElementById('setting_select_locale'),1);
+        //dialogues
+        document.getElementById('info_close').innerHTML = window.global_icon_app_close;
+        document.getElementById('scan_open_mobile_close').innerHTML = window.global_icon_app_close;
+        document.getElementById('scan_open_mobile_title1').innerHTML = window.global_icon_app_mobile;
+        //profile info
+        document.getElementById('profile_main_btn_user_settings').innerHTML = window.global_icon_regional_day  + window.global_icon_regional_month + window.global_icon_regional_year;
+        document.getElementById('profile_main_btn_user_setting_likes_heart').innerHTML = window.global_icon_user_like;
+        document.getElementById('profile_main_btn_user_setting_likes_user_setting').innerHTML = window.global_icon_regional_day + window.global_icon_regional_month + window.global_icon_regional_year + window.global_icon_user_follows;
+        document.getElementById('profile_main_btn_user_setting_liked_heart').innerHTML = window.global_icon_user_like;
+        document.getElementById('profile_main_btn_user_setting_liked_user_setting').innerHTML = window.global_icon_regional_day + window.global_icon_regional_month + window.global_icon_regional_year + window.global_icon_user_followed;
+    
+        document.getElementById('profile_user_settings_day').innerHTML = window.global_icon_regional_day;
+        document.getElementById('profile_user_settings_month').innerHTML = window.global_icon_regional_month;
+        document.getElementById('profile_user_settings_year').innerHTML = window.global_icon_regional_year;
+        document.getElementById('profile_user_settings_like').innerHTML = window.global_icon_user_unlike + window.global_icon_user_like;
+    
+        document.getElementById('profile_user_settings_info_likes').innerHTML = window.global_icon_user_like + '<div id="profile_user_settings_info_like_count"></div>';
+        document.getElementById('profile_user_settings_info_views').innerHTML = window.global_icon_user_views + '<div id="profile_user_settings_info_view_count"></div>';
+        //profile top
+        document.getElementById('profile_top_row2_1').innerHTML = window.global_icon_user_like + window.global_icon_regional_day  + window.global_icon_regional_month + window.global_icon_regional_year;
+        document.getElementById('profile_top_row2_2').innerHTML = window.global_icon_user_views + window.global_icon_regional_day  + window.global_icon_regional_month + window.global_icon_regional_year;
+        //tab navigation
+        document.getElementById('tab_nav_btn_1').innerHTML = window.global_icon_regional;
+        document.getElementById('tab_nav_btn_2').innerHTML = window.global_icon_gps;
+        document.getElementById('tab_nav_btn_3').innerHTML = window.global_icon_misc_design;
+        document.getElementById('tab_nav_btn_4').innerHTML = window.global_icon_misc_image;
+        document.getElementById('tab_nav_btn_5').innerHTML = window.global_icon_misc_text;
+        document.getElementById('tab_nav_btn_6').innerHTML = window.global_icon_misc_prayer;
+        //settings tab 1 Regional
+        document.getElementById('setting_icon_regional_locale').innerHTML = window.global_icon_regional_locale;
+        document.getElementById('setting_icon_regional_timezone_current').innerHTML = window.global_icon_regional_timezone + window.global_icon_gps_position;
+        document.getElementById('setting_icon_regional_timezone').innerHTML = window.global_icon_regional_timezone + window.global_icon_regional_calendar;
+        document.getElementById('setting_icon_regional_numbersystem').innerHTML = window.global_icon_regional_numbersystem;
+        document.getElementById('setting_icon_regional_direction').innerHTML = window.global_icon_regional_direction;
+        document.getElementById('setting_icon_regional_locale_second').innerHTML = window.global_icon_regional_locale + window.global_icon_misc_second;
+        document.getElementById('setting_icon_regional_coltitle').innerHTML = window.global_icon_misc_title;
+        document.getElementById('setting_icon_regional_arabic_script').innerHTML = window.global_icon_regional_script;
+        document.getElementById('setting_icon_regional_calendartype').innerHTML = window.global_icon_regional_calendar;
+        document.getElementById('setting_icon_regional_calendar_hijri_type').innerHTML = window.global_icon_regional_calendar_hijri_type;
+        //settings tab 2 GPS
+        document.getElementById('setting_icon_gps_maptype').innerHTML = window.global_icon_gps_map;
+        document.getElementById('setting_icon_gps_country').innerHTML = window.global_icon_gps_country;
+        document.getElementById('setting_icon_gps_city').innerHTML = window.global_icon_gps_city;
+        document.getElementById('setting_icon_gps_popular_place').innerHTML = window.global_icon_gps_popular_place;
+        document.getElementById('setting_icon_gps_place').innerHTML = window.global_icon_gps_position;
+        //settings tab 3 Design
+        document.getElementById('setting_icon_design_theme_day').innerHTML = window.global_icon_regional_day;
+        document.getElementById('setting_icon_design_theme_month').innerHTML = window.global_icon_regional_month;
+        document.getElementById('setting_icon_design_theme_year').innerHTML = window.global_icon_regional_year;
+        document.getElementById('setting_icon_design_papersize').innerHTML = window.global_icon_app_papersize;
+        document.getElementById('setting_icon_design_highlight_row').innerHTML = window.global_icon_app_highlight;
+        document.getElementById('setting_icon_design_show_weekday').innerHTML = window.global_icon_app_show + window.global_icon_regional_weekday;
+        document.getElementById('setting_icon_design_show_calendartype').innerHTML = window.global_icon_app_show + window.global_icon_regional_calendartype;
+        document.getElementById('setting_icon_design_show_notes').innerHTML = window.global_icon_app_show + window.global_icon_app_notes;
+        document.getElementById('setting_icon_design_show_gps').innerHTML = window.global_icon_app_show + window.global_icon_gps_position;
+        document.getElementById('setting_icon_design_show_timezone').innerHTML = window.global_icon_app_show + window.global_icon_regional_timezone;
+        //settings tab 4 Image
+        document.getElementById('setting_icon_image_header_clear').innerHTML = window.global_icon_app_remove;
+        document.getElementById('setting_icon_image_footer_clear').innerHTML = window.global_icon_app_remove;
+        document.getElementById('setting_icon_image_header_img').innerHTML = window.global_icon_app_search;
+        document.getElementById('setting_icon_image_footer_img').innerHTML = window.global_icon_app_search;    
+        //settings tab 5 Text
+        document.getElementById('setting_icon_text_header_aleft').innerHTML =  window.global_icon_app_align_left;
+        document.getElementById('setting_icon_text_header_acenter').innerHTML = window.global_icon_app_align_center
+        document.getElementById('setting_icon_text_header_aright').innerHTML = window.global_icon_app_align_right;
+        document.getElementById('setting_icon_text_footer_aleft').innerHTML = window.global_icon_app_align_left;
+        document.getElementById('setting_icon_text_footer_acenter').innerHTML = window.global_icon_app_align_center;
+        document.getElementById('setting_icon_text_footer_aright').innerHTML = window.global_icon_app_align_right;
+        //settings tab 6 Prayer
+        document.getElementById('setting_icon_prayer_method').innerHTML = window.global_icon_misc_book;
+        document.getElementById('setting_icon_prayer_asr').innerHTML = window.global_icon_misc_book + window.global_icon_sky_afternoon;
+        document.getElementById('setting_icon_prayer_highlatitude').innerHTML = window.global_icon_gps_high_latitude;
+        document.getElementById('setting_icon_prayer_timeformat').innerHTML = window.global_icon_regional_timeformat;
+        document.getElementById('setting_icon_prayer_hijri_adjustment').innerHTML = window.global_icon_app_settings + window.global_icon_regional_calendar;
+        document.getElementById('setting_icon_prayer_report_iqamat_title_fajr').innerHTML = window.global_icon_app_show + 
+                                                                                            window.global_icon_misc_calling + 
+                                                                                            window.global_icon_misc_prayer + 
+                                                                                            window.global_icon_sky_sunrise;
+        document.getElementById('setting_icon_prayer_report_iqamat_title_dhuhr').innerHTML = window.global_icon_app_show + 
+                                                                                             window.global_icon_misc_calling + 
+                                                                                             window.global_icon_misc_prayer +
+                                                                                             window.global_icon_sky_midday;
+        document.getElementById('setting_icon_prayer_report_iqamat_title_asr').innerHTML = window.global_icon_app_show + 
                                                                                            window.global_icon_misc_calling + 
                                                                                            window.global_icon_misc_prayer + 
-                                                                                           window.global_icon_sky_sunset;
-    document.getElementById('setting_icon_prayer_report_iqamat_title_isha').innerHTML = window.global_icon_app_show + 
-                                                                                        window.global_icon_misc_calling + 
-                                                                                        window.global_icon_misc_prayer + 
-                                                                                        window.global_icon_sky_night;
-    document.getElementById('setting_icon_prayer_report_show_imsak').innerHTML = window.global_icon_app_show + 
-                                                                                 window.global_icon_sky_sunrise + 
-                                                                                 window.global_icon_misc_food;
-    document.getElementById('setting_icon_prayer_report_show_sunset').innerHTML = window.global_icon_app_show + 
-                                                                                  window.global_icon_sky_sunset;
-    document.getElementById('setting_icon_prayer_report_show_midnight').innerHTML = window.global_icon_app_show +
-                                                                                    window.global_icon_sky_midnight +
-                                                                                    window.global_icon_misc_prayer;
-    document.getElementById('setting_icon_prayer_report_show_fast_start_end').innerHTML = window.global_icon_app_show + 
-                                                                                          window.global_icon_misc_food +
-                                                                                          window.global_icon_misc_ban;
-    //settings tab 7 User settings
-    document.getElementById('setting_icon_user_settings').innerHTML = window.global_icon_app_settings + 
-                                                                      window.global_icon_gps_position;
-    document.getElementById('setting_icon_user_url_day').innerHTML = window.global_icon_regional_day;
-    document.getElementById('setting_icon_user_url_month').innerHTML = window.global_icon_regional_month;
-    document.getElementById('setting_icon_user_url_year').innerHTML = window.global_icon_regional_year;
-
-    document.getElementById('user_day_html').innerHTML = window.global_icon_app_html;
-    document.getElementById('user_day_html_copy').innerHTML = window.global_icon_app_copy;
-    document.getElementById('user_day_pdf').innerHTML = window.global_icon_app_pdf;
-    document.getElementById('user_day_pdf_copy').innerHTML = window.global_icon_app_copy;
-    document.getElementById('user_month_html').innerHTML = window.global_icon_app_html;
-    document.getElementById('user_month_html_copy').innerHTML = window.global_icon_app_copy;
-    document.getElementById('user_month_pdf').innerHTML = window.global_icon_app_pdf;
-    document.getElementById('user_month_pdf_copy').innerHTML = window.global_icon_app_copy;
-    document.getElementById('user_year_html').innerHTML = window.global_icon_app_html;
-    document.getElementById('user_year_html_copy').innerHTML = window.global_icon_app_copy;
-    document.getElementById('user_year_pdf').innerHTML = window.global_icon_app_pdf;
-    document.getElementById('user_year_pdf_copy').innerHTML = window.global_icon_app_copy;
-
-    document.getElementById('setting_btn_user_save').innerHTML = window.global_icon_app_save;
-    document.getElementById('setting_btn_user_add').innerHTML = window.global_icon_app_add;
-    document.getElementById('setting_btn_user_delete').innerHTML = window.global_icon_app_delete;
+                                                                                           window.global_icon_sky_afternoon;
+        document.getElementById('setting_icon_prayer_report_iqamat_title_maghrib').innerHTML = window.global_icon_app_show + 
+                                                                                               window.global_icon_misc_calling + 
+                                                                                               window.global_icon_misc_prayer + 
+                                                                                               window.global_icon_sky_sunset;
+        document.getElementById('setting_icon_prayer_report_iqamat_title_isha').innerHTML = window.global_icon_app_show + 
+                                                                                            window.global_icon_misc_calling + 
+                                                                                            window.global_icon_misc_prayer + 
+                                                                                            window.global_icon_sky_night;
+        document.getElementById('setting_icon_prayer_report_show_imsak').innerHTML = window.global_icon_app_show + 
+                                                                                     window.global_icon_sky_sunrise + 
+                                                                                     window.global_icon_misc_food;
+        document.getElementById('setting_icon_prayer_report_show_sunset').innerHTML = window.global_icon_app_show + 
+                                                                                      window.global_icon_sky_sunset;
+        document.getElementById('setting_icon_prayer_report_show_midnight').innerHTML = window.global_icon_app_show +
+                                                                                        window.global_icon_sky_midnight +
+                                                                                        window.global_icon_misc_prayer;
+        document.getElementById('setting_icon_prayer_report_show_fast_start_end').innerHTML = window.global_icon_app_show + 
+                                                                                              window.global_icon_misc_food +
+                                                                                              window.global_icon_misc_ban;
+        //settings tab 7 User settings
+        document.getElementById('setting_icon_user_settings').innerHTML = window.global_icon_app_settings + 
+                                                                          window.global_icon_gps_position;
+        document.getElementById('setting_icon_user_url_day').innerHTML = window.global_icon_regional_day;
+        document.getElementById('setting_icon_user_url_month').innerHTML = window.global_icon_regional_month;
+        document.getElementById('setting_icon_user_url_year').innerHTML = window.global_icon_regional_year;
     
-    //toolbar bottom
-    document.getElementById('toolbar_btn_about').innerHTML = window.global_icon_app_info;
-    document.getElementById('toolbar_btn_print').innerHTML = window.global_icon_app_print;
-    document.getElementById('toolbar_btn_day').innerHTML = window.global_icon_regional_day;
-    document.getElementById('toolbar_btn_month').innerHTML = window.global_icon_regional_month;
-    document.getElementById('toolbar_btn_year').innerHTML = window.global_icon_regional_year;
-    document.getElementById('toolbar_btn_settings').innerHTML = window.global_icon_app_settings;
-    //toolbar top
-    document.getElementById('user_menu_default_avatar').innerHTML = window.global_icon_user;
-    document.getElementById('toolbar_btn_zoomout').innerHTML = window.global_icon_app_zoomout;
-    document.getElementById('toolbar_btn_zoomin').innerHTML = window.global_icon_app_zoomin;
-    document.getElementById('toolbar_btn_left').innerHTML = window.global_icon_app_left;
-    document.getElementById('toolbar_btn_right').innerHTML = window.global_icon_app_right;
-    document.getElementById('toolbar_btn_search').innerHTML = window.global_icon_app_search;
-    //user menu dropdown
-    document.getElementById('user_menu_dropdown_log_in').innerHTML = window.global_icon_app_login;
-    document.getElementById('user_menu_dropdown_log_out').innerHTML = window.global_icon_app_logoff;
-    document.getElementById('user_menu_dropdown_signup').innerHTML = window.global_icon_app_signup;
-    document.getElementById('user_menu_dropdown_edit').innerHTML = window.global_icon_app_edit;
+        document.getElementById('user_day_html').innerHTML = window.global_icon_app_html;
+        document.getElementById('user_day_html_copy').innerHTML = window.global_icon_app_copy;
+        document.getElementById('user_day_pdf').innerHTML = window.global_icon_app_pdf;
+        document.getElementById('user_day_pdf_copy').innerHTML = window.global_icon_app_copy;
+        document.getElementById('user_month_html').innerHTML = window.global_icon_app_html;
+        document.getElementById('user_month_html_copy').innerHTML = window.global_icon_app_copy;
+        document.getElementById('user_month_pdf').innerHTML = window.global_icon_app_pdf;
+        document.getElementById('user_month_pdf_copy').innerHTML = window.global_icon_app_copy;
+        document.getElementById('user_year_html').innerHTML = window.global_icon_app_html;
+        document.getElementById('user_year_html_copy').innerHTML = window.global_icon_app_copy;
+        document.getElementById('user_year_pdf').innerHTML = window.global_icon_app_pdf;
+        document.getElementById('user_year_pdf_copy').innerHTML = window.global_icon_app_copy;
     
-    //themes from client server generation
-    document.getElementById('slider_prev_day').innerHTML = window.global_icon_app_slider_left;
-    document.getElementById('slider_next_day').innerHTML =  window.global_icon_app_slider_right;
-    document.getElementById('slider_prev_month').innerHTML = window.global_icon_app_slider_left;
-    document.getElementById('slider_next_month').innerHTML = window.global_icon_app_slider_right;
-    document.getElementById('slider_prev_year').innerHTML = window.global_icon_app_slider_left;
-    document.getElementById('slider_next_year').innerHTML = window.global_icon_app_slider_right;
+        document.getElementById('setting_btn_user_save').innerHTML = window.global_icon_app_save;
+        document.getElementById('setting_btn_user_add').innerHTML = window.global_icon_app_add;
+        document.getElementById('setting_btn_user_delete').innerHTML = window.global_icon_app_delete;
+        
+        //toolbar bottom
+        document.getElementById('toolbar_btn_about').innerHTML = window.global_icon_app_info;
+        document.getElementById('toolbar_btn_print').innerHTML = window.global_icon_app_print;
+        document.getElementById('toolbar_btn_day').innerHTML = window.global_icon_regional_day;
+        document.getElementById('toolbar_btn_month').innerHTML = window.global_icon_regional_month;
+        document.getElementById('toolbar_btn_year').innerHTML = window.global_icon_regional_year;
+        document.getElementById('toolbar_btn_settings').innerHTML = window.global_icon_app_settings;
+        //toolbar top
+        document.getElementById('user_menu_default_avatar').innerHTML = window.global_icon_user;
+        document.getElementById('toolbar_btn_zoomout').innerHTML = window.global_icon_app_zoomout;
+        document.getElementById('toolbar_btn_zoomin').innerHTML = window.global_icon_app_zoomin;
+        document.getElementById('toolbar_btn_left').innerHTML = window.global_icon_app_left;
+        document.getElementById('toolbar_btn_right').innerHTML = window.global_icon_app_right;
+        document.getElementById('toolbar_btn_search').innerHTML = window.global_icon_app_search;
+        //user menu dropdown
+        document.getElementById('user_menu_dropdown_log_in').innerHTML = window.global_icon_app_login;
+        document.getElementById('user_menu_dropdown_log_out').innerHTML = window.global_icon_app_logoff;
+        document.getElementById('user_menu_dropdown_signup').innerHTML = window.global_icon_app_signup;
+        document.getElementById('user_menu_dropdown_edit').innerHTML = window.global_icon_app_edit;
+        
+        //themes from client server generation
+        document.getElementById('slider_prev_day').innerHTML = window.global_icon_app_slider_left;
+        document.getElementById('slider_next_day').innerHTML =  window.global_icon_app_slider_right;
+        document.getElementById('slider_prev_month').innerHTML = window.global_icon_app_slider_left;
+        document.getElementById('slider_next_month').innerHTML = window.global_icon_app_slider_right;
+        document.getElementById('slider_prev_year').innerHTML = window.global_icon_app_slider_left;
+        document.getElementById('slider_next_year').innerHTML = window.global_icon_app_slider_right;
+        
+        document.getElementById('app_name').innerHTML = window.global_app_name;
+        //set about info
+        document.getElementById('app_copyright').innerHTML = window.global_app_copyright;
+        if (window.global_info_social_link1_url!=null)
+            document.getElementById('social_link1').innerHTML = `<a href=${window.global_info_social_link1_url} target='_blank'>${window.global_info_social_link1_icon}</a>`;
+        if (window.global_info_social_link2_url!=null)
+            document.getElementById('social_link2').innerHTML = `<a href=${window.global_info_social_link2_url} target='_blank'>${window.global_info_social_link2_icon}</a>`;
+        if (window.global_info_social_link3_url!=null)
+            document.getElementById('social_link3').innerHTML = `<a href=${window.global_info_social_link3_url} target='_blank'>${window.global_info_social_link3_icon}</a>`;
+        if (window.global_info_social_link4_url!=null)
+            document.getElementById('social_link4').innerHTML = `<a href=${window.global_info_social_link4_url} target='_blank'>${window.global_info_social_link4_icon}</a>`;
+        document.getElementById('info_link1').innerHTML = window.global_info_link_policy_name;
+        document.getElementById('info_link2').innerHTML = window.global_info_link_disclaimer_name;
+        document.getElementById('info_link3').innerHTML = window.global_info_link_terms_name;
+        document.getElementById('info_link4').innerHTML = window.global_info_link_about_name;
     
-    document.getElementById('app_name').innerHTML = window.global_app_name;
-    //set about info
-    document.getElementById('app_copyright').innerHTML = window.global_app_copyright;
-    if (window.global_info_social_link1_url!=null)
-        document.getElementById('social_link1').innerHTML = `<a href=${window.global_info_social_link1_url} target='_blank'>${window.global_info_social_link1_icon}</a>`;
-    if (window.global_info_social_link2_url!=null)
-        document.getElementById('social_link2').innerHTML = `<a href=${window.global_info_social_link2_url} target='_blank'>${window.global_info_social_link2_icon}</a>`;
-    if (window.global_info_social_link3_url!=null)
-        document.getElementById('social_link3').innerHTML = `<a href=${window.global_info_social_link3_url} target='_blank'>${window.global_info_social_link3_icon}</a>`;
-    if (window.global_info_social_link4_url!=null)
-        document.getElementById('social_link4').innerHTML = `<a href=${window.global_info_social_link4_url} target='_blank'>${window.global_info_social_link4_icon}</a>`;
-    document.getElementById('info_link1').innerHTML = window.global_info_link_policy_name;
-    document.getElementById('info_link2').innerHTML = window.global_info_link_disclaimer_name;
-    document.getElementById('info_link3').innerHTML = window.global_info_link_terms_name;
-    document.getElementById('info_link4').innerHTML = window.global_info_link_about_name;
-
-    //set default geolocation
-    document.getElementById('setting_select_popular_place').selectedIndex = 0;
-    document.getElementById('setting_input_lat').value = window.global_client_latitude;
-    document.getElementById('setting_input_long').value = window.global_client_longitude;
-    //set prayer method variable, select filled from db when server generated
-    set_prayer_method(true);
-    //init map thirdparty module
-    init_map();
-    //load themes in Design tab
-    load_themes();
-    //set papersize
-    zoom_paper();
-    //user interface font depending selected arabic script in user preference, not in settings
-    update_ui(3);
-    //set events
-    setEvents();
-    //set timers
-    //set current date and time for current locale and timezone
-    clearInterval(showcurrenttime);
-    setInterval(showcurrenttime, 1000);
-    //set report date and time for current locale, report timezone
-    clearInterval(showreporttime);
-    setInterval(showreporttime, 1000);
-    //show dialogue about using mobile and scan QR code after 5 seconds
-    setTimeout(function(){show_dialogue('SCAN')}, 5000);
-    //Start of app:
-    //1.set default settings
-    //2.translate ui
-    //3.display default timetable settings
-    //4.show profile if user in url
-    //5.user provider login
-    //5.service worker
-    set_default_settings().then(function(){
-        settings_translate(true).then(function(){
-            settings_translate(false).then(function(){
-                async function show_start(){
-                    //show default startup
-                    toolbar_bottom(window.global_app_default_startup_page);
-                    let user = window.location.pathname.substring(1);
-                    if (user !='') {
-                        //show profile for user entered in url
-                        document.getElementById('dialogue_profile').style.visibility = "visible";
-                        profile_show_app(null, user);
+        //set default geolocation
+        document.getElementById('setting_select_popular_place').selectedIndex = 0;
+        document.getElementById('setting_input_lat').value = window.global_client_latitude;
+        document.getElementById('setting_input_long').value = window.global_client_longitude;
+        //set prayer method variable, select filled from db when server generated
+        set_prayer_method(true);
+        //init map thirdparty module
+        init_map();
+        //load themes in Design tab
+        load_themes();
+        //set papersize
+        zoom_paper();
+        //set events
+        setEvents();
+        //user interface font depending selected arabic script in user preference, not in settings
+        //dispatch event in common after events har defined above
+        document.getElementById('user_arabic_script_select').dispatchEvent(new Event('change'));
+        //set timers
+        //set current date and time for current locale and timezone
+        clearInterval(showcurrenttime);
+        setInterval(showcurrenttime, 1000);
+        //set report date and time for current locale, report timezone
+        clearInterval(showreporttime);
+        setInterval(showreporttime, 1000);
+        //show dialogue about using mobile and scan QR code after 5 seconds
+        setTimeout(function(){show_dialogue('SCAN')}, 5000);
+        //Start of app:
+        //1.set default settings
+        //2.translate ui
+        //3.display default timetable settings
+        //4.show profile if user in url
+        //5.user provider login
+        //5.service worker
+        set_default_settings().then(function(){
+            settings_translate(true).then(function(){
+                settings_translate(false).then(function(){
+                    async function show_start(){
+                        //show default startup
+                        toolbar_bottom(window.global_app_default_startup_page);
+                        let user = window.location.pathname.substring(1);
+                        if (user !='') {
+                            //show profile for user entered in url
+                            document.getElementById('dialogue_profile').style.visibility = "visible";
+                            profile_show_app(null, user);
+                        }
                     }
-                }
-                show_start().then(function(){
-                    Providers_init(function() { ProviderSignIn_app(this); }).then(function(){
-                        serviceworker();
-                        dialogue_loading(0);
-                    });
-                })
+                    show_start().then(function(){
+                        Providers_init(function() { ProviderSignIn_app(this); }).then(function(){
+                            serviceworker();
+                            common_translate_ui_app(window.global_user_locale, (err, result)=>{
+                                dialogue_loading(0);
+                                resolve();
+                            });
+                        });
+                    })
+                });
             });
         });
-    });
+    })    
 }
 function init(parameters) {
     init_common(parameters, (err, global_app_parameters)=>{
@@ -2878,10 +2883,7 @@ function init(parameters) {
                 if (global_app_parameters[i].parameter_name=='QR_BACKGROUND_COLOR')
                     window.global_qr_background_color = global_app_parameters[i].parameter_value;
             }
-            init_app();
-            common_translate_ui_app(window.global_user_locale, (err, result)=>{
-                null
-            });
+            init_app();   
         }
     })
 }
