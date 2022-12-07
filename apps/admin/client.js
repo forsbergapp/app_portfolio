@@ -10,6 +10,7 @@ module.exports = {
                 ['<AppCommonHeadMap/>', __dirname + '/../common/src/head_map.html'],
                 ['<AppCommonProfileSearch/>', __dirname + '/../common/src/profile_search.html'],
                 ['<AppCommonUserAccount/>', __dirname + '/../common/src/user_account.html'],
+                ['<AppThemes/>', __dirname + '/../common/src/app_themes.html'],
                 ['<AppCommonBody/>', __dirname + '/../common/src/body.html'],
                 ['<AppCommonBodyBroadcast/>', __dirname + '/../common/src/body_broadcast.html'],
                 ['<AppCommonProfileDetail/>', __dirname + '/../common/src/profile_detail.html'], //Profile tag in common body
