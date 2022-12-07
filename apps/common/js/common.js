@@ -2252,7 +2252,7 @@ async function user_edit() {
         }
     })
 }
-async function user_update(callBack) {
+async function user_update() {
     let username = document.getElementById('user_edit_input_username').value;
     let bio = document.getElementById('user_edit_input_bio').value;
     let avatar = document.getElementById('user_edit_avatar_img').src;
@@ -2262,7 +2262,7 @@ async function user_update(callBack) {
     let json_data;
 
     if (check_input(bio, 150) == false)
-        return callBack('ERROR', null);
+        return null;
         
     if (document.getElementById('user_edit_local').style.display == 'block') {
         let email = document.getElementById('user_edit_input_email').innerHTML;    
@@ -2278,7 +2278,7 @@ async function user_update(callBack) {
             check_input(new_password) == false ||
             check_input(new_password_confirm) == false ||
             check_input(password_reminder) == false)
-            return callBack('ERROR', null);
+            return null;
 
         dialogue_user_edit_remove_error();
     
@@ -2287,19 +2287,19 @@ async function user_update(callBack) {
             //"Please enter username"
             document.getElementById('user_edit_input_username').classList.add('input_error');
             show_message('ERROR', 20303, null, null);
-            return callBack('ERROR', null);
+            return null;
         }
         if (password == '') {
             //"Please enter password"
             document.getElementById('user_edit_input_password').classList.add('input_error');
             show_message('ERROR', 20304, null, null, window.global_common_app_id);
-            return callBack('ERROR', null);
+            return null;
         }
         if (password != password_confirm) {
             //Password not the same
             document.getElementById('user_edit_input_password_confirm').classList.add('input_error');
             show_message('ERROR', 20301, null, null, window.global_common_app_id);
-            return callBack('ERROR', null);
+            return null;
         }
         //check new passwords
         if (new_password != new_password_confirm) {
@@ -2307,7 +2307,7 @@ async function user_update(callBack) {
             document.getElementById('user_edit_input_new_password').classList.add('input_error');
             document.getElementById('user_edit_input_new_password_confirm').classList.add('input_error');
             show_message('ERROR', 20301, null, null);
-            return callBack('ERROR', null);
+            return null;
         }
         json_data = `{ 
                         "username":"${username}",
@@ -2337,21 +2337,19 @@ async function user_update(callBack) {
                  'PUT', 1, json_data, null, null, (err, result) =>{
         document.getElementById('user_edit_btn_user_update').innerHTML = old_button;
         if (err){    
-            return callBack(err, null);
+            return null;
         }
         else{
             json = JSON.parse(result);
-            set_avatar(result.avatar, document.getElementById('user_menu_avatar_img'));
-            document.getElementById('user_menu_username').innerHTML = result.username;
+            set_avatar(avatar, document.getElementById('user_menu_avatar_img'));
+            document.getElementById('user_menu_username').innerHTML = username;
             if (json.sent_change_email == 1){
                 let function_cancel_event = function() { document.getElementById('dialogue_user_verify').style.visibility='hidden';};
                 show_common_dialogue('VERIFY', 'NEW_EMAIL', new_email, window.global_icon_app_cancel, function_cancel_event);
             }
             else
                 dialogue_user_edit_clear();
-            return callBack(null, {username: username, 
-                                    avatar: avatar,
-                                    bio: bio});
+            return null;
         }
     })
 }
