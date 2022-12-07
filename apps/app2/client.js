@@ -155,7 +155,7 @@ module.exports = {
                   ['<AppToolbarTop/>', __dirname + '/src/toolbar_top.html'],
 
                   ['<AppCommonUserAccount/>', __dirname + '/../common/src/user_account.html'],
-                  ['<AppThemes/>', __dirname + '/src/app_themes.html'],
+                  ['<AppThemes/>', __dirname + '/../common/src/app_themes.html'],
                   ['<AppCommonProfileSearch/>', __dirname + '/../common/src/profile_search.html'],
 
                   ['<AppPaper/>', __dirname + '/src/paper.html'],

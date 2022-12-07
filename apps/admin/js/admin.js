@@ -61,6 +61,21 @@ function setEvents(){
         }
     });
     document.getElementById('admin_login_button').addEventListener('click', function() { admin_login() }, false);
+    //common
+    //user preferences
+    document.getElementById('common_app_select_theme').addEventListener('change', function() { document.body.className = 'app_theme' + document.getElementById('common_app_select_theme').value + ' ' + document.getElementById('user_arabic_script_select').value; }, false);
+    document.getElementById('user_locale_select').addEventListener('change', function() { common_translate_ui_app(this.value);}, false);
+    document.getElementById('user_arabic_script_select').addEventListener('change', function() { document.getElementById('common_app_select_theme').dispatchEvent(new Event('change'));}, false);
+}
+async function common_translate_ui_app(lang_code){
+    await common_translate_ui(lang_code,(err, result) => {
+        if (err)
+            null;
+        else{
+            //translate locale in this app
+            null;
+        }
+    })
 }
 function delete_globals(){
     //delete all globals in this file, not globals declared elsewhere
@@ -122,6 +137,9 @@ function admin_exception_before(app_id, error){
 function init_app(){
     document.getElementById('admin_login_button').innerHTML = window.global_icon_app_login;
     setEvents();
+    common_translate_ui_app(window.global_user_locale, (err, result)=>{
+        null
+    });
 }
 function init(parameters){
     window.global_admin = true;
