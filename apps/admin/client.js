@@ -5,9 +5,10 @@ module.exports = {
             const files = [
                 ['APP', __dirname + '/src/index.html'],
                 ['<AppHead/>', __dirname + '/src/head.html'],
-                ['<AppCommonHeadFontawesome/>', __dirname + '/../common/src/head_fontawesome.html'],
                 ['<AppCommonHead/>', __dirname + '/../common/src/head.html'],
                 ['<AppCommonHeadMap/>', __dirname + '/../common/src/head_map.html'],
+                ['<AppCommonHeadQRCode/>', __dirname + '/../common/src/head_qrcode.html'],
+                ['<AppCommonHeadFontawesome/>', __dirname + '/../common/src/head_fontawesome.html'],
                 ['<AppCommonProfileSearch/>', __dirname + '/../common/src/profile_search.html'],
                 ['<AppCommonUserAccount/>', __dirname + '/../common/src/user_account.html'],
                 ['<AppThemes/>', __dirname + '/../common/src/app_themes.html'],

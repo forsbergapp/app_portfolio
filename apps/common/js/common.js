@@ -1581,6 +1581,15 @@ function create_qr(div, url) {
 /*----------------------- */
 /* PROFILE                */
 /*----------------------- */
+async function profile_follow_like(function_name){
+    await user_function(function_name, (err, result) => {
+        if (err==null){
+            profile_update_stat((err, result) =>{
+                null;
+            })
+        }
+    })
+}
 function show_profile_click_events(item, click_function){
     document.querySelectorAll(item).forEach(e => e.addEventListener('click', function(event) {
         //execute function from inparameter or use default when not specified
@@ -3282,7 +3291,7 @@ async function init_common(parameters, callBack){
             document.getElementById('user_edit_btn_user_update').addEventListener('click', function() { user_update(); }, false);
         }
         function set_common_parameters(app_id, parameter_name, parameter_value){
-            if (app_id == 0){
+            if (app_id == window.global_common_app_id){
                 switch (parameter_name){
                     case 'IMAGE_FILE_ALLOWED_TYPE1'             :{window.global_image_file_allowed_type1 = parameter_value;break;}
                     case 'IMAGE_FILE_ALLOWED_TYPE2'             :{window.global_image_file_allowed_type2 = parameter_value;break;}
@@ -3343,13 +3352,15 @@ async function init_common(parameters, callBack){
                 let global_app_parameters = [];
                 json = JSON.parse(result);
                 for (let i = 0; i < json.data.length; i++) {
-                    if (json.data[i].app_id == 0)
+                    //sett common parameters
+                    if (json.data[i].app_id == window.global_common_app_id)
                         set_common_parameters(json.data[i].app_id, json.data[i].parameter_name, json.data[i].parameter_value);
-                    else{
+                    //return all parameters for admin app and for other apps all except admin app id parameters
+                    if (window.global_app_id == window.global_common_app_id ||
+                        json.data[i].app_id != window.global_common_app_id)
                         global_app_parameters.push(JSON.parse(`{"app_id":${json.data[i].app_id}, 
                                                                 "parameter_name":"${json.data[i].parameter_name}",
                                                                 "parameter_value":${json.data[i].parameter_value==null?null:'"' + json.data[i].parameter_value + '"'}}`));
-                    }
                 }
                 callBack(null, global_app_parameters)
             }
