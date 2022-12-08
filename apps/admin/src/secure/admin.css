@@ -282,14 +282,13 @@
         display: inline-block;
     }
     .list_user_stat_col:nth-child(1){
-        width:20px;
+        width:120px;
     }
     .list_user_stat_col:nth-child(2){
-        width:40%;
-        min-width: 150px;
+        width:160px;
     }
     .list_user_stat_col:nth-child(3){
-        width: 60px;
+        width: 110px;
         text-align: end;
     }
     /* MENU 3 USERS */
