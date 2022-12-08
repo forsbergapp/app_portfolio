@@ -14,6 +14,15 @@ module.exports = {
                 if (err)
                     reject(err);
                 else{
+                    /*replace commented development tags with production tags*/
+                    app = app.replace(  '/*<APP_SCRIPT_START/>*/',
+                                        '<SCRIPT>');
+                    app = app.replace(  '/*<APP_SCRIPT_END/>*/',
+                                        '</SCRIPT>');
+                    app = app.replace(  '/*<APP_STYLE_START/>*/',
+                                        '<STYLE>');
+                    app = app.replace(  '/*<APP_STYLE_END/>*/',
+                                        '</STYLE>');
                     get_module_with_init(app_id, 
                                          system_admin,
                                          user_account_id,

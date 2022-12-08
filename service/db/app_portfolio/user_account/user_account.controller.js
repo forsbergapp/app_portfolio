@@ -1057,7 +1057,7 @@ module.exports = {
                             });
                         }
                         else{
-                            //unauthorized, only admin allow to log in to admin
+                            //unauthorized, only admin allowed to log in to admin
                             createLogAppCI(req, res, __appfilename, __appfunction, __appline, 
                                            'unauthorized admin login attempt for user id:' + req.body.user_account_id + ', username:' + req.body.username)
                             .then(function(){
