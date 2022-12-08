@@ -51,7 +51,7 @@ function setEvents(){
     document.getElementById('user_menu_dropdown_log_out').addEventListener('click', function() { user_menu_item_click(this) }, false);
     //user preferences
     document.getElementById('app_theme_checkbox').addEventListener('click', function() { app_theme_switch() }, false);
-    document.getElementById('user_locale_select').addEventListener('change', function() { document.getElementById('apps').innerHTML = window.global_app_spinner;common_translate_ui(this.value, (err, result)=>{get_apps()});}, false);
+    document.getElementById('user_locale_select').addEventListener('change', function() { document.getElementById('apps').innerHTML = window.global_app_spinner;common_translate_ui(this.value, null, (err, result)=>{get_apps()});}, false);
     document.getElementById('user_arabic_script_select').addEventListener('change', function() { app_theme_switch()}, false);
     //common with app specific settings
     //dialogue profile
@@ -61,8 +61,8 @@ function setEvents(){
     document.getElementById('profile_top_row1_1').addEventListener('click', function() { profile_top(1)}, false);
     document.getElementById('profile_top_row1_2').addEventListener('click', function() { profile_top(2)}, false);
     document.getElementById('profile_top_row1_3').addEventListener('click', function() { profile_top(3)}, false);
-    document.getElementById('profile_follow').addEventListener('click', function() { user_function_app('FOLLOW') }, false);
-	document.getElementById('profile_like').addEventListener('click', function() { user_function_app('LIKE') }, false);
+    document.getElementById('profile_follow').addEventListener('click', function() { profile_follow_like('FOLLOW') }, false);
+	document.getElementById('profile_like').addEventListener('click', function() { profile_follow_like('LIKE') }, false);
     document.getElementById('profile_main_btn_following').addEventListener('click', function() { profile_detail(1, null, true, null) }, false);
     document.getElementById('profile_main_btn_followed').addEventListener('click', function() { profile_detail(2, null, true, null) }, false);
     document.getElementById('profile_main_btn_likes').addEventListener('click', function() { profile_detail(3, null, true, null) }, false);
@@ -210,13 +210,7 @@ async function user_verify_check_input_app(item, nextField){
             }
     })
 }
-async function user_function_app(function_name){
-    await user_function(function_name, (err, result) => {
-        if (err==null){
-            profile_update_stat();
-        }
-    })
-}
+
 async function  user_delete_app(){
     let user_local;
     if (document.getElementById('user_edit_local').style.display == 'block')
