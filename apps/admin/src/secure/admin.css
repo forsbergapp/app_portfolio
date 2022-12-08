@@ -195,7 +195,7 @@
         padding-bottom: 100%;
       }
     .box_title{
-        margin-bottom:10px;
+        margin:10px;
     }
     .box_legend{
         text-align: start;
@@ -529,6 +529,9 @@
         height: 100%;
     }
     /*CONNECTED*/
+    .app_role_superadmin, .app_role_admin, .app_role_user{
+        transform: translate(5px,-1px) scale(1.5);
+    }
     .list_connected_current_user_row{
         animation: common_pulsate 2s ease-out;
         animation-iteration-count: infinite; 
@@ -545,7 +548,7 @@
         width:40px;
     }
     .list_connected_col:nth-child(4){
-        width:70px;
+        width:30px;
     }
     .list_connected_col:nth-child(5){
         width:90px;
@@ -847,11 +850,11 @@
         --app_theme_widget_background_color:var(--app_theme_main_branding_color3);
         --app_theme_widget_boxshadow_color1:var(--app_theme_main_shadow_color1);
 	    --app_theme_widget_boxshadow_color2:var(--app_theme_main_shadow_color2);
-        --app_theme_list_odd_color:var(--app_theme_main_branding_color1);
+        --app_theme_list_odd_color:var(--app_theme_main_branding_color4);
         --app_theme_list_odd_background_color:var(--app_theme_main_branding_color2);
-        --app_theme_list_even_color:var(--app_theme_main_branding_color1);
+        --app_theme_list_even_color:var(--app_theme_main_branding_color4);
         --app_theme_list_even_background_color:var(--app_theme_main_branding_color3);
-        --app_theme_list_rowtitle_color:var(--app_theme_main_branding_color1);
+        --app_theme_list_rowtitle_color:var(--app_theme_main_branding_color4);
         --app_theme_list_rowtitle_background_color:var(--app_theme_main_branding_color3);
         --app_theme_list_background_color:var(--app_theme_main_branding_color2);
         --app_theme_list_border_color:var(--app_theme_main_branding_color2);
@@ -871,9 +874,6 @@
         --app_theme_input_error_color:var(--app_theme_main_select_color3);
         --app_theme_nav_selected_color:var(--app_theme_main_branding_color4);
         --app_theme_nav_selected_background_color:var(--app_theme_main_branding_color2);
-        --app_theme_app_role_user_color0:var(--app_king);
-        --app_theme_app_role_user_color1:var(--app_prince);
-        --app_theme_app_role_user_color2:var(--app_theme_main_branding_color1);
     }
     .app_theme2{
 
@@ -912,9 +912,6 @@
         --app_theme_input_error_color:var(--app_theme_main_select_color3);
         --app_theme_nav_selected_color:var(--app_theme_main_branding_color4);
         --app_theme_nav_selected_background_color:var(--app_theme_main_branding_color2);
-        --app_theme_app_role_user_color0:var(--app_king);
-        --app_theme_app_role_user_color1:var(--app_prince);
-        --app_theme_app_role_user_color2:var(--app_theme_main_branding_color1);
     }
     .app_theme3{
 
@@ -951,11 +948,8 @@
         --app_theme_online_status_online_color: var(--app_theme_main_select_color2);
         --app_theme_online_status_offline_color: var(--app_theme_main_select_color3);
         --app_theme_input_error_color:var(--app_theme_main_select_color3);
-        --app_theme_nav_selected_color:var(--app_theme_main_branding_color4);
-        --app_theme_nav_selected_background_color:var(--app_theme_main_branding_color2);
-        --app_theme_app_role_user_color0:var(--app_king);
-        --app_theme_app_role_user_color1:var(--app_prince);
-        --app_theme_app_role_user_color2:var(--app_theme_main_branding_color1);
+        --app_theme_nav_selected_color:var(--app_theme_main_branding_color3);
+        --app_theme_nav_selected_background_color:var(--app_theme_main_branding_color1);
     }
     #box1_pie{
         border: 1px solid var(--app_theme_graph_border_color);
@@ -986,8 +980,11 @@
     .list_button svg:hover, .menuitem svg:hover{
         fill: var(--app_theme_hover_color);
     }
-    #list_monitor_nav .list_monitor_nav_selected_tab button{
+    #list_monitor_nav button{
         color: var(--app_theme_nav_selected_color);
+        fill: var(--app_theme_nav_selected_color);
+    }
+    #list_monitor_nav .list_monitor_nav_selected_tab button{
         background-color:var(--app_theme_nav_selected_background_color);
     }
     .widget:hover, .widget:active{
@@ -1025,15 +1022,6 @@
     #list_user_stat_row_title{
         color:var(--app_theme_list_rowtitle_color);
         background-color: var(--app_theme_list_rowtitle_background_color);
-    }
-    .app_role_color_superadmin{
-        color:var(--app_theme_app_role_user_color0);
-    }
-    .app_role_color_admin{
-        color:var(--app_theme_app_role_user_color1);
-    }
-    .app_role_color_user{
-        color:var(--app_theme_app_role_user_color2);
     }
     .list_title{
         font-weight: bold;

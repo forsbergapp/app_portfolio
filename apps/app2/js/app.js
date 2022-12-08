@@ -521,7 +521,7 @@ function slide(items, prev, next, type) {
 /* UI                     */
 /*----------------------- */
 async function common_translate_ui_app(lang_code, callBack){
-    await common_translate_ui(lang_code,(err, result) => {
+    await common_translate_ui(lang_code, null, (err, result) => {
         if (err)
             callBack(err,null);
         else{
