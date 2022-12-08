@@ -130,7 +130,7 @@
 	--app_theme_input_border_color:var(--app_theme_main_branding_color2);
 	--app_theme_hover_color: var(--app_theme_main_select_color2);
 
-	--app_theme_spinner_background_color:var(--app_theme_main_branding_color1);
+	--app_theme_spinner_background_color:var(--app_theme_main_branding_color4);
 }
 .app_theme3 {
 	--app_theme_main_branding_color1: var(--app_cafe_latte);
@@ -163,7 +163,7 @@
 	--app_theme_input_border_color:var(--app_theme_main_branding_color2);
 	--app_theme_hover_color: var(--app_theme_main_select_color2);
 
-	--app_theme_spinner_background_color:var(--app_theme_main_branding_color1);
+	--app_theme_spinner_background_color:var(--app_theme_main_branding_color3);
 }
 
 body{
