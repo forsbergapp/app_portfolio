@@ -38,6 +38,7 @@ function seticons(){
     window.global_icon_app_route = '<i class="fa-solid fa-sitemap"></i>';
     window.global_icon_app_database = '<i class="fa-solid fa-database"></i>';
     window.global_icon_app_database_schema = '<i class="fa-solid fa-sitemap"></i>';
+    window.global_icon_app_users = '<i class="fa-solid fa-users"></i>';
     window.global_icon_app_user_connections = '<i class="fa-solid fa-users-viewfinder"></i>';
     window.global_icon_app_database_started = '<i class="fa-solid fa-toggle-on"></i>';
     window.global_icon_app_database_calc = '<i class="fa-solid fa-calculator"></i>';

@@ -1,20 +1,5 @@
 const {execute_db_sql, get_schema_name, get_locale} = require ("../../common/common.service");
 module.exports = {
-	//get objects from language code or from using this logic:
-	//two levels:
-	//if en-us not found then 
-	//use en
-	//three levels:
-	//if zh-hans-cn, zh-hans-cn, zh-hant-hk, sr-cyrl-ba, sr-latn-ba not found then
-	//use zh-hans, zh-hans, zh-hant, sr-cyrl, sr-latn
-	//else use zh, zh, zh, sr, sr
-	//get objects for common app id and current app id plus all APP_DESCRIPTION
-
-	/*fetch APP_OBJECT
-			APP_OBJECT_ITEM with APP_LOV with setting list to update translation
-			APP_OBJECT_ITEM with APP items to update translation
-			APP_OBJECT_ITEM_SUBITEM with APP items in an app
-	*/
 	getObjects: (app_id, lang_code, object, object_name, callBack) => {
 		let sql;
 		let parameters;

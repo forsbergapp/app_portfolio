@@ -378,7 +378,7 @@ function init(parameters){
             }
             init_app().then(function(){
                 document.getElementById('apps').innerHTML = window.global_app_spinner;
-                common_translate_ui(window.global_user_locale, (err, result)=>{
+                common_translate_ui(window.global_user_locale, null, (err, result)=>{
                         get_apps();
                 })
                 async function show_start(){

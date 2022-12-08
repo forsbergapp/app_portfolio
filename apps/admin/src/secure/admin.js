@@ -966,7 +966,7 @@ async function show_list(list_div, list_div_col_title, url, sort, order_by, cols
                 break;
             }
         }
-        await common_fetch(url, 'GET', 1, null, null, null, (err, result) =>{
+        common_fetch(url, 'GET', 1, null, null, null, (err, result) =>{
             if (err){
                 switch (list_div){
                     case 'list_pm2_log':{
@@ -1191,18 +1191,18 @@ async function show_list(list_div, list_div_col_title, url, sort, order_by, cols
                                     list_connected_current_user_row = 'list_connected_current_user_row';
                                 else
                                     list_connected_current_user_row ='';
-                                let app_role_color;
+                                let app_role_class;
                                 switch (json.data[i].app_role_id){
                                     case 0:{
-                                        app_role_color = 'app_role_color_superadmin';
+                                        app_role_class = 'app_role_superadmin';
                                         break;
                                     }
                                     case 1:{
-                                        app_role_color = 'app_role_color_admin';
+                                        app_role_class = 'app_role_admin';
                                         break;
                                     }
                                     default:{
-                                        app_role_color = 'app_role_color_user';
+                                        app_role_class = 'app_role_user';
                                     }
                                 }
                                 html += `<div class='list_connected_row ${list_connected_current_user_row}'>
@@ -1215,7 +1215,7 @@ async function show_list(list_div, list_div_col_title, url, sort, order_by, cols
                                             <div class='list_connected_col'>
                                                 <div>${json.data[i].app_id}</div>
                                             </div>
-                                            <div class='list_connected_col ${app_role_color}'>
+                                            <div class='list_connected_col ${app_role_class}'>
                                                 <div>${json.data[i].app_role_icon}</div>
                                             </div>
                                             <div class='list_connected_col'>
@@ -1869,6 +1869,8 @@ function init_admin_secure(){
     document.getElementById('lov_close').innerHTML = window.global_icon_app_close;
 
     //menu 1
+    document.getElementById('box1_title').innerHTML = window.global_icon_app_users + ' ' + window.global_icon_app_chart;
+    document.getElementById('box2_title').innerHTML = window.global_icon_app_users + ' ' + window.global_icon_regional_numbersystem;
     document.getElementById('menu_1_maintenance_title').innerHTML = window.global_icon_app_maintenance;
     document.getElementById('send_broadcast_title').innerHTML = window.global_icon_app_broadcast;
     //menu 4
@@ -2065,25 +2067,12 @@ function init_admin_secure(){
                         window.global_service_map_jumpto);
                 //start with DASHBOARD
                 show_menu(1);
+                common_translate_ui(window.global_user_locale, 'APP', (err, result)=>{
+                    null
+                });
             })                
         })
-    }    
-
-    //SET TEXT
-
-    //menu 1
-    document.getElementById('box1_title').innerHTML = 'Unique Visitors';
-    document.getElementById('box2_title').innerHTML = 'Unique Visitors';
-    
-    //menu 2
-    document.getElementById('list_user_stat_col_title1').innerHTML = 'ID';
-    document.getElementById('list_user_stat_col_title2').innerHTML = 'PROVIDER';
-    document.getElementById('list_user_stat_col_title3').innerHTML = 'COUNT';
-    document.getElementById('list_user_stat_col_title4').innerHTML = 'CONNECTED';
-    
-    //menu 5
-    document.getElementById('client_id_label').innerHTML = 'CLIENT ID';
-
+    }
 }
 init_common(<ITEM_COMMON_PARAMETERS/>, (err, global_app_parameters)=>{
     if (err)
