@@ -206,10 +206,15 @@ function toBase64(str) {
 function fromBase64(str) {
     return decodeURIComponent(escape(window.atob(str)));
 }
-async function common_translate_ui(lang_code, callBack){
+async function common_translate_ui(lang_code, object = null, callBack){
     let json;
+    let object_parameter;
+    if  (object==null)
+        object_parameter ='';
+    else
+        objec_parameter = `object=${object}`;
     //translate objects
-    await common_fetch(`${window.global_rest_url_base}${window.global_rest_app_object}${lang_code}?`, 
+    await common_fetch(`${window.global_rest_url_base}${window.global_rest_app_object}${lang_code}?${object_parameter}`, 
                  'GET', 0, null, null, null, (err, result) =>{
         if (err)
             null;
@@ -278,7 +283,8 @@ async function common_translate_ui(lang_code, callBack){
                             }
                             case 'APP':{
                                 //translate items in current app
-                                document.getElementById(json.data[i].object_item_name.toLowerCase()).innerHTML = json.data[i].text;
+                                if (document.getElementById(json.data[i].object_item_name.toLowerCase()))
+                                    document.getElementById(json.data[i].object_item_name.toLowerCase()).innerHTML = json.data[i].text;
                                 break;
                             }
                             case 'APP_LOV':{
