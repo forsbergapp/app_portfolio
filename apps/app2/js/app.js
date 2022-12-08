@@ -695,7 +695,7 @@ function showreporttime() {
     }
     return null;
 }
-async function toolbar_bottom(choice) {
+async function toolbar_button(choice) {
     let paper = document.getElementById('paper');
     let settings = document.getElementById('settings');
 
@@ -909,12 +909,6 @@ async function update_ui(option, item_id=null) {
                 //Update report date and time for current locale, report timezone format
                 clearInterval(showreporttime);
                 setInterval(showreporttime, 1000);
-                break;
-            }
-        //Update font, arabic script
-        case 3:{
-                //app themes and user preference font
-                document.body.className = 'app_theme' + document.getElementById('common_app_select_theme').value + ' ' + document.getElementById('user_arabic_script_select').value;
                 break;
             }
         //GPS, update map
@@ -1197,7 +1191,7 @@ async function user_login_app(){
                             settings_translate(true).then(function(){
                                 settings_translate(false).then(function(){
                                     //show default startup
-                                    toolbar_bottom(window.global_app_default_startup_page);
+                                    toolbar_button(window.global_app_default_startup_page);
                                     dialogue_loading(0);
                                 })
                             })
@@ -1262,7 +1256,7 @@ function user_logoff_app() {
             settings_translate(true).then(function(){
                 settings_translate(false).then(function(){
                     //show default startup
-                    toolbar_bottom(window.global_app_default_startup_page);
+                    toolbar_button(window.global_app_default_startup_page);
                 })
             })
         });
@@ -1295,7 +1289,7 @@ async function ProviderUser_update_app(identity_provider_id, profile_id, profile
                             settings_translate(true).then(function(){
                                 settings_translate(false).then(function(){
                                     //show default startup
-                                    toolbar_bottom(window.global_app_default_startup_page);
+                                    toolbar_button(window.global_app_default_startup_page);
                                     dialogue_loading(0);
                                 })
                             })
@@ -1345,23 +1339,10 @@ async function profile_show_app(user_account_id_other = null, username = null) {
                         null;
                     } else {
                         //public
-                        //show always user settings even if not logged in
                         profile_show_user_setting();
-                        if (window.global_user_account_id != ''){
-                            document.getElementById('profile_main_stat_row2').style.display = "block";
-                            document.getElementById('profile_user_settings_row').style.display = "block";
-                            //user settings
-                            profile_user_setting_stat(result.profile_id);
-                        }
+                        document.getElementById('profile_main_stat_row2').style.display = "block";
+                        profile_user_setting_stat(result.profile_id);
                     }    
-                }
-            }
-            else{
-                if (err == 500 && username !== null) {
-                    document.getElementById('dialogue_profile').style.visibility = 'hidden';
-                    //refresh webpage without not found username
-                    //this does not occur in webapp
-                    document.location.href = "/";
                 }
             }
         });
@@ -2317,17 +2298,17 @@ function setEvents() {
     document.getElementById('scan_open_mobile_close').addEventListener('click', function() { document.getElementById('dialogue_scan_open_mobile').style.visibility = 'hidden' }, false);
     //toolbar bottom
     document.getElementById('toolbar_btn_about').addEventListener('click', function() { document.getElementById('dialogue_info').style.visibility = 'visible'; }, false);
-    document.getElementById('toolbar_btn_print').addEventListener('click', function() { toolbar_bottom(1) }, false);
-    document.getElementById('toolbar_btn_day').addEventListener('click', function() { toolbar_bottom(2) }, false);
-    document.getElementById('toolbar_btn_month').addEventListener('click', function() { toolbar_bottom(3) }, false);
-    document.getElementById('toolbar_btn_year').addEventListener('click', function() { toolbar_bottom(4) }, false);
-    document.getElementById('toolbar_btn_settings').addEventListener('click', function() { toolbar_bottom(5) }, false);    
+    document.getElementById('toolbar_btn_print').addEventListener('click', function() { toolbar_button(1) }, false);
+    document.getElementById('toolbar_btn_day').addEventListener('click', function() { toolbar_button(2) }, false);
+    document.getElementById('toolbar_btn_month').addEventListener('click', function() { toolbar_button(3) }, false);
+    document.getElementById('toolbar_btn_year').addEventListener('click', function() { toolbar_button(4) }, false);
+    document.getElementById('toolbar_btn_settings').addEventListener('click', function() { toolbar_button(5) }, false);    
 
     //common
 
     //user menu dropdown
     document.getElementById('user_menu_dropdown_log_out').addEventListener('click', function() { user_logoff_app() }, false);
-    document.getElementById('user_menu_username').addEventListener('click', function() { toolbar_bottom(6) }, false);
+    document.getElementById('user_menu_username').addEventListener('click', function() { toolbar_button(6) }, false);
     
     //user preferences    
     document.getElementById('common_app_select_theme').addEventListener('change', function() { document.body.className = 'app_theme' + document.getElementById('common_app_select_theme').value + ' ' + document.getElementById('user_arabic_script_select').value; }, false);
@@ -2336,7 +2317,7 @@ function setEvents() {
     document.getElementById('user_arabic_script_select').addEventListener('change', function() { document.getElementById('common_app_select_theme').dispatchEvent(new Event('change'));}, false);
     
     //profile button top
-    document.getElementById('profile_btn_top').addEventListener('click', function() { toolbar_bottom(7) }, false);
+    document.getElementById('profile_btn_top').addEventListener('click', function() { toolbar_button(7) }, false);
 
     //dialogue login/signup/forgot
     let input_username_login = document.getElementById("login_username");
@@ -2372,7 +2353,7 @@ function setEvents() {
     document.getElementById('profile_top_row1_1').addEventListener('click', function() { profile_top(1, null, 'profile_show_app') }, false);
     document.getElementById('profile_top_row1_2').addEventListener('click', function() { profile_top(2, null, 'profile_show_app') }, false);
     document.getElementById('profile_top_row1_3').addEventListener('click', function() { profile_top(3, null, 'profile_show_app') }, false);
-    document.getElementById('profile_home').addEventListener('click', function() {toolbar_bottom(7)}, false);
+    document.getElementById('profile_home').addEventListener('click', function() {toolbar_button(7)}, false);
     document.getElementById('profile_close').addEventListener('click', function() {profile_close_app()}, false);
     //dialogue verify
     document.getElementById('user_verify_verification_char1').addEventListener('keyup', function() { user_verify_check_input_app(this, "user_verify_verification_char2") }, false);
@@ -2631,7 +2612,7 @@ function init_app() {
                 settings_translate(false).then(function(){
                     async function show_start(){
                         //show default startup
-                        toolbar_bottom(window.global_app_default_startup_page);
+                        toolbar_button(window.global_app_default_startup_page);
                         let user = window.location.pathname.substring(1);
                         if (user !='') {
                             //show profile for user entered in url

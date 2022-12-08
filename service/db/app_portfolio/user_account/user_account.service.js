@@ -402,6 +402,7 @@ module.exports = {
 						   FROM ${get_schema_name()}.user_account ua_current
 						  WHERE u.private = 1
 						    AND ua_current.id = :user_accound_id_current_user
+							and u.id <> :user_accound_id_current_user
 							AND (NOT EXISTS (SELECT NULL
 											   FROM ${get_schema_name()}.user_account_follow  uaf 
 											  WHERE uaf.user_account_id = u.id
@@ -411,19 +412,7 @@ module.exports = {
 											   FROM ${get_schema_name()}.user_account_follow  uaf 
 											  WHERE uaf.user_account_id_follow = u.id
 												AND uaf.user_account_id = ua_current.id)
-								)
-						UNION
-						SELECT NULL
-						  FROM ${get_schema_name()}.user_account ua_current
-						 WHERE ua_current.id = :user_accound_id_current_user
-						   AND EXISTS (SELECT NULL
-										 FROM ${get_schema_name()}.user_account_follow  uaf 
-										WHERE uaf.user_account_id = u.id
-										  AND uaf.user_account_id_follow = ua_current.id)
-						   AND EXISTS (SELECT NULL
-										 FROM ${get_schema_name()}.user_account_follow  uaf 
-										WHERE uaf.user_account_id_follow = u.id
-										  AND uaf.user_account_id = ua_current.id)) "private",
+								)) "private",
 						u.user_level "user_level",
 						u.date_created "date_created",
 						u.username "username",

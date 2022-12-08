@@ -1,4 +1,4 @@
-<script>
+/*<APP_SCRIPT_START/>*/
     /*
     Functions and globals in this order:
     MISC
@@ -2082,4 +2082,4 @@ init_common(<ITEM_COMMON_PARAMETERS/>, (err, global_app_parameters)=>{
     }
 })
 
-</script>
+/*<APP_SCRIPT_END/>*/
