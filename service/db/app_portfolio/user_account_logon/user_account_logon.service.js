@@ -1,5 +1,35 @@
 const {execute_db_sql, get_schema_name} = require ("../../common/common.service");
 module.exports = {
+	getUserAccountLogonAdmin:(app_id, user_account_id, app_id_select, callBack)=>{
+		let sql;
+		let parameters;
+		if(typeof app_id_select=='undefined' ||app_id_select == '\'\'')
+			app_id_select = null;
+		sql = `SELECT user_account_id "user_account_id",
+		              app_id "app_id",
+					  result "result",
+					  access_token "access_token",
+					  client_ip "client_ip",
+					  client_user_agent "client_user_agent",
+					  client_longitude "client_longitude",
+					  client_latitude "client_latitude",
+					  date_created "date_created"
+				 FROM ${get_schema_name()}.user_account_logon
+				WHERE user_account_id = :user_account_id
+				  AND app_id = COALESCE(:app_id_select,app_id)
+				ORDER BY 9 DESC`;
+		parameters = {
+						user_account_id: user_account_id,
+						app_id_select: app_id_select
+					};
+		execute_db_sql(app_id, sql, parameters, 
+						__appfilename, __appfunction, __appline, (err, result)=>{
+			if (err)
+				return callBack(err, null);
+			else
+				return callBack(null, result);
+		});
+	},
 	checkLogin: (app_id, user_account_id, access_token, client_ip, callBack)=>{
 		let sql;
 		let parameters;
@@ -48,8 +78,8 @@ module.exports = {
 						access_token: data.access_token,
 						client_ip: data.client_ip,
 						client_user_agent: data.client_user_agent,
-						client_longitude:  data.client_longitude,
-						client_latitude:  data.client_latitude
+						client_longitude:  data.client_longitude ?? null,
+						client_latitude:  data.client_latitude ?? null
 					};
 		execute_db_sql(app_id, sql, parameters, 
 			           __appfilename, __appfunction, __appline, (err, result)=>{

@@ -191,7 +191,7 @@ function get_locale(lang_code, part){
 			}
 		}
 }
-function limit_sql(sql, limit_type){
+function limit_sql(sql, limit_type = null){
 	if (process.env.SERVICE_DB_USE == 1 || process.env.SERVICE_DB_USE == 3)
 		switch (limit_type){
 			case 1:{

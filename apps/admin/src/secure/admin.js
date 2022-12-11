@@ -5,6 +5,7 @@
     BROADCAST
     DB INFO
     USER STAT
+    USERS
     APP ADMIN
     MONITOR
     MAP
@@ -54,6 +55,7 @@ function show_menu(menu){
         }
         //USERS
         case 3:{
+            show_users();
             break;
         }
         //APP ADMIN
@@ -569,6 +571,272 @@ async function count_users(){
     }
 }
 /*----------------------- */
+/* USERS                  */
+/*----------------------- */
+function show_users(focus=true){
+    let json;
+    document.getElementById('list_user_account').innerHTML = window.global_app_spinner;
+    
+    let search_user='*';
+    //show all records if no search criteria
+    if (document.getElementById('list_user_account_search_input').value!='')
+        search_user = document.getElementById('list_user_account_search_input').value;
+    common_fetch(window.global_rest_url_base + window.global_rest_user_account + '/admin/' + search_user + '?',
+                       'GET', 1, null, null, null, (err, result) =>{
+        if (err)
+            document.getElementById('list_user_account').innerHTML = '';
+        else{
+            json = JSON.parse(result);
+            let html = `<div id='list_user_account_row_title' class='list_user_account_row'>
+                            <div id='list_user_account_col_title1' class='list_user_account_col list_title'>
+                                <div>${window.global_icon_user}</div>
+                            </div>
+                            <div id='list_user_account_col_title2' class='list_user_account_col list_title'>
+                                <div>${window.global_icon_provider_id}</div>
+                            </div>
+                            <div id='list_user_account_col_title3' class='list_user_account_col list_title'>
+                                <div>${window.global_icon_app_role}</div>
+                            </div>
+                            <div id='list_user_account_col_title3' class='list_user_account_col list_title'>
+                                <div>${window.global_icon_app_role} ${window.global_icon_misc_image}</div>
+                            </div>
+                            <div id='list_user_account_col_title4' class='list_user_account_col list_title'>
+                                <div>${window.global_icon_app_inactive} ${window.global_icon_app_active}</div>
+                            </div>
+                            <div id='list_user_account_col_title5' class='list_user_account_col list_title'>
+                                <div>LEVEL</div>
+                            </div>
+                            <div id='list_user_account_col_title6' class='list_user_account_col list_title'>
+                                <div>${window.global_icon_app_private}</div>
+                            </div>
+                            <div id='list_user_account_col_title7' class='list_user_account_col list_title'>
+                                <div>${window.global_icon_user} ${window.global_icon_username}</div>
+                            </div>
+                            <div id='list_user_account_col_title7' class='list_user_account_col list_title'>
+                                <div>${window.global_icon_user_bio}</div>
+                            </div>
+                            <div id='list_user_account_col_title7' class='list_user_account_col list_title'>
+                                <div>${window.global_icon_app_email}</div>
+                            </div>
+                            <div id='list_user_account_col_title7' class='list_user_account_col list_title'>
+                                <div>${window.global_icon_app_email} ${window.global_icon_app_forgot}</div>
+                            </div>
+                            <div id='list_user_account_col_title7' class='list_user_account_col list_title'>
+                                <div>${window.global_icon_user_password}</div>
+                            </div>
+                            <div id='list_user_account_col_title7' class='list_user_account_col list_title'>
+                                <div>${window.global_icon_user_password} ${window.global_icon_app_info}</div>
+                            </div>
+                            <div id='list_user_account_col_title7' class='list_user_account_col list_title'>
+                                <div>${window.global_icon_app_verification_code}</div>
+                            </div>
+                            <div id='list_user_account_col_title7' class='list_user_account_col list_title'>
+                                <div>${window.global_icon_provider_id}</div>
+                            </div>
+                            <div id='list_user_account_col_title7' class='list_user_account_col list_title'>
+                                <div>${window.global_icon_provider}</div>
+                            </div>
+                            <div id='list_user_account_col_title7' class='list_user_account_col list_title'>
+                                <div>${window.global_icon_provider_id} ${window.global_icon_user} ID</div>
+                            </div>
+                            <div id='list_user_account_col_title7' class='list_user_account_col list_title'>
+                                <div>${window.global_icon_provider_id} ${window.global_icon_user} ${window.global_icon_username} 1</div>
+                            </div>
+                            <div id='list_user_account_col_title7' class='list_user_account_col list_title'>
+                                <div>${window.global_icon_provider_id} ${window.global_icon_user} ${window.global_icon_username} 2</div>
+                            </div>
+                            <div id='list_user_account_col_title7' class='list_user_account_col list_title'>
+                                <div>${window.global_icon_provider_id} ${window.global_icon_misc_image}</div>
+                            </div>
+                            <div id='list_user_account_col_title7' class='list_user_account_col list_title'>
+                                <div>${window.global_icon_provider_id} URL</div>
+                            </div>
+                            <div id='list_user_account_col_title7' class='list_user_account_col list_title'>
+                                <div>${window.global_icon_provider_id} ${window.global_icon_app_email}</div>
+                            </div>
+                            <div id='list_user_account_col_title7' class='list_user_account_col list_title'>
+                                <div>${window.global_icon_user_account_created}</div>
+                            </div>
+                            <div id='list_user_account_col_title7' class='list_apps_col list_title'>
+                                <div>${window.global_icon_user_account_modified}</div>
+                            </div>
+                        </div>`;
+            for (i = 0; i < json.data.length; i++) {
+                html += 
+                `<div id='list_user_account_row_${i}' data-changed-record='0' class='list_user_account_row' >
+                    <div class='list_user_account_col'>
+                        <div class='list_readonly'>
+                            <img class='list_user_account_avatar' ${list_image_format_src(json.data[i].avatar)}/>
+                        </div>
+                    </div>
+                    <div class='list_user_account_col'>
+                        <div class='list_readonly'>${json.data[i].id}</div>
+                    </div>
+                    <div class='list_user_account_col'>
+                        <input type=text class='list_edit input_lov' value='${get_null_or_value(json.data[i].app_role_id)}'/>
+                        <div class='common_lov_button list_lov_click'></div>
+                    </div>
+                    <div class='list_user_account_col'>
+                        <div class='list_readonly'>${json.data[i].app_role_icon}</div>
+                    </div>
+                    <div class='list_user_account_col'>
+                        <input type=text class='list_edit' value='${get_null_or_value(json.data[i].active)}'/>
+                    </div>
+                    <div class='list_user_account_col'>
+                        <input type=text class='list_edit' value='${get_null_or_value(json.data[i].user_level)}'/>
+                    </div>
+                    <div class='list_user_account_col'>
+                        <input type='text' class='list_edit' value='${get_null_or_value(json.data[i].private)}'/>
+                    </div>
+                    <div class='list_user_account_col'>
+                        <input type='text' class='list_edit' value='${get_null_or_value(json.data[i].username)}'/>
+                    </div>
+                    <div class='list_user_account_col'>
+                        <input type='text' class='list_edit' value='${get_null_or_value(json.data[i].bio)}'/>
+                    </div>
+                    <div class='list_user_account_col'>
+                        <input type='text' class='list_edit' value='${get_null_or_value(json.data[i].email)}'/>
+                    </div>
+                    <div class='list_user_account_col'>
+                        <input type='text' class='list_edit' value='${get_null_or_value(json.data[i].email_unverified)}'/>
+                    </div>
+                    <div class='list_user_account_col'>
+                        <input type='text' class='list_edit' value='${get_null_or_value(json.data[i].password)}'/>
+                    </div>
+                    <div class='list_user_account_col'>
+                        <input type='text' class='list_edit' value='${get_null_or_value(json.data[i].password_reminder)}'/>
+                    </div>
+                    <div class='list_user_account_col'>
+                        <input type='text' class='list_edit' value='${get_null_or_value(json.data[i].verification_code)}'/>
+                    </div>
+                    <div class='list_user_account_col'>
+                        <div class='list_readonly'>${get_null_or_value(json.data[i].identity_provider)}</div>
+                    </div>
+                    <div class='list_user_account_col'>
+                        <div class='list_readonly'>${get_null_or_value(json.data[i].provider_name)}</div>
+                    </div>
+                    <div class='list_user_account_col'>
+                        <div class='list_readonly'>${get_null_or_value(json.data[i].provider_id)}</div>
+                    </div>
+                    <div class='list_user_account_col'>
+                        <div class='list_readonly'>${get_null_or_value(json.data[i].provider_first_name)}</div>
+                    </div>
+                    <div class='list_user_account_col'>
+                        <div class='list_readonly'>${get_null_or_value(json.data[i].provider_last_name)}</div>                        
+                    </div>
+                    <div class='list_user_account_col'>
+                        <div class='list_readonly'>
+                            <img class='list_user_account_avatar' ${list_image_format_src(json.data[i].provider_image)}/>
+                        </div>
+                    </div>
+                    <div class='list_user_account_col'>
+                        <div class='list_readonly'>${get_null_or_value(json.data[i].provider_image_url)}</div>
+                    </div>
+                    <div class='list_user_account_col'>
+                        <div class='list_readonly'>${get_null_or_value(json.data[i].provider_email)}</div>
+                    </div>
+                    <div class='list_user_account_col'>
+                        <div class='list_readonly'>${get_null_or_value(json.data[i].date_created)}</div>
+                    </div>
+                    <div class='list_user_account_col'>
+                        <div class='list_readonly'>${get_null_or_value(json.data[i].date_modified)}</div>
+                    </div>
+                </div>`;
+            }
+            document.getElementById('list_user_account').innerHTML = html;
+            list_events('list_user_account', 'list_user_account_row', ' .list_edit', 1);
+            
+            if (focus==true){
+                //set focus at start
+                //set focus first column in first row
+                //this will trigger to show detail records
+                document.querySelectorAll('#list_user_account .list_edit')[0].focus();
+            }
+            else{
+                //trigger focus event on first row set focus back again to search field
+                document.querySelectorAll('#list_user_account .list_edit')[0].focus();
+                document.getElementById('list_user_account_search_input').focus();;
+            }   
+        }
+    })
+}
+async function show_user_account_logon(user_account_id){
+    let json;
+    document.getElementById('list_user_account_logon').innerHTML = window.global_app_spinner;
+
+    common_fetch(window.global_rest_url_base + window.global_rest_user_account_logon + `admin/${parseInt(user_account_id)}/''?`,
+                 'GET', 1, null, null, null, (err, result) =>{
+        if (err)
+            document.getElementById('list_user_account_logon').innerHTML = '';
+        else{
+            json = JSON.parse(result);
+            let html = `<div id='list_user_account_logon_row_title' class='list_user_account_logon_row'>
+                            <div id='list_user_account_logon_col_title1' class='list_user_account_logon_col list_title'>
+                                <div>USER ACCOUNT ID</div>
+                            </div>
+                            <div id='list_user_account_logon_col_title4' class='list_user_account_logon_col list_title'>
+                                <div>DATE CREATED</div>
+                            </div>
+                            <div id='list_user_account_logon_col_title1' class='list_user_account_logon_col list_title'>
+                                <div>APP ID</div>
+                            </div>
+                            <div id='list_user_account_logon_col_title1' class='list_user_account_logon_col list_title'>
+                                <div>RESULT</div>
+                            </div>
+                            <div id='list_user_account_logon_col_title2' class='list_user_account_logon_col list_title'>
+                                <div>IP</div>
+                            </div>
+                            <div id='list_user_account_logon_col_title4' class='list_user_account_logon_col list_title'>
+                                <div>GPS LONG</div>
+                            </div>
+                            <div id='list_user_account_logon_col_title4' class='list_user_account_logon_col list_title'>
+                                <div>GPS LAT</div>
+                            </div>
+                            <div id='list_user_account_logon_col_title3' class='list_user_account_logon_col list_title'>
+                                <div>USER AGENT</div>
+                            </div>
+                            <div id='list_user_account_logon_col_title1' class='list_user_account_logon_col list_title'>
+                                <div>ACCESS TOKEN</div>
+                            </div>
+                        </div>`;
+            for (i = 0; i < json.data.length; i++) {
+                html += 
+                `<div id='list_user_account_logon_row_${i}' data-changed-record='0' class='list_user_account_logon_row'>
+                    <div class='list_user_account_logon_col'>
+                        <div class='list_readonly'>${json.data[i].user_account_id}</div>
+                    </div>
+                    <div class='list_user_account_logon_col'>
+                        <div class='list_readonly'>${get_null_or_value(json.data[i].date_created)}</div>
+                    </div>
+                    <div class='list_user_account_logon_col'>
+                        <div class='list_readonly'>${json.data[i].app_id}</div>
+                    </div>
+                    <div class='list_user_account_logon_col'>
+                        <div class='list_readonly'>${json.data[i].result}</div>
+                    </div>
+                    <div class='list_user_account_logon_col'>
+                        <div class='list_readonly'>${json.data[i].client_ip}</div>
+                    </div>
+                    <div class='list_user_account_logon_col'>
+                        <div class='list_readonly'>${get_null_or_value(json.data[i].client_longitude)}</div>
+                    </div>
+                    <div class='list_user_account_logon_col'>
+                        <div class='list_readonly'>${get_null_or_value(json.data[i].client_latitude)}</div>
+                    </div>
+                    <div class='list_user_account_logon_col'>
+                        <div class='list_readonly'>${json.data[i].client_user_agent}</div>
+                    </div>
+                    <div class='list_user_account_logon_col'>
+                        <div class='list_readonly'>${get_null_or_value(json.data[i].access_token)}</div>
+                    </div>
+                </div>`;
+            }
+            document.getElementById('list_user_account_logon').innerHTML = html;
+            //list_events('list_user_account_logon', 'list_user_account_logon_row', '.list_edit_user_account_logon', 1);
+        }
+    })
+}
+/*----------------------- */
 /* APP ADMIN              */
 /*----------------------- */
 async function show_apps(){
@@ -608,48 +876,36 @@ async function show_apps(){
                 html += 
                 `<div id='list_apps_row_${i}' data-changed-record='0' class='list_apps_row' >
                     <div class='list_apps_col'>
-                        <div class='list_readonly_app'>${json.data[i].id}</div>
+                        <div class='list_readonly'>${json.data[i].id}</div>
                     </div>
                     <div class='list_apps_col'>
-                        <input type=text class='list_edit_app' value='${json.data[i].app_name}'>
+                        <input type=text class='list_edit' value='${json.data[i].app_name}'/>
                     </div>
                     <div class='list_apps_col'>
-                        <input type=text class='list_edit_app' value='${json.data[i].url}'>
+                        <input type=text class='list_edit' value='${json.data[i].url}'/>
                     </div>
                     <div class='list_apps_col'>
-                        <input type=text class='list_edit_app' value='${json.data[i].logo}'>
+                        <input type=text class='list_edit' value='${json.data[i].logo}'/>
                     </div>
                     <div class='list_apps_col'>
-                        <input type='checkbox' class='list_edit_app' ${json.data[i].enabled==1?'checked':''} />
+                        <input type='checkbox' class='list_edit' ${json.data[i].enabled==1?'checked':''} />
                     </div>
                     <div class='list_apps_col'>
-                        <input type='text' class='list_edit_app input_lov' value='${json.data[i].app_category_id==null?'':json.data[i].app_category_id}' />
+                        <input type='text' class='list_edit input_lov' value='${get_null_or_value(json.data[i].app_category_id)}' />
                         <div class='common_lov_button list_lov_click'></div>
                     </div>
                     <div class='list_apps_col'>
-                        <div class='list_readonly_app'>${json.data[i].app_category_text==null?'':json.data[i].app_category_text} </div>
+                        <div class='list_readonly'>${get_null_or_value(json.data[i].app_category_text)} </div>
                     </div>
                 </div>`;
             }
             document.getElementById('list_apps').innerHTML = html;
-            list_events('list_apps_row', '.list_edit_app', 1);
+            list_events('list_apps', 'list_apps_row', ' .list_edit', 1);
             //disable enabled checkbox for app 0 common
             document.getElementById('list_apps_row_0').children[4].children[0].disabled = true;
-            
-            document.querySelectorAll('#list_apps .common_lov_button').forEach(e => e.innerHTML = window.global_icon_app_lov);
-            document.querySelectorAll('#list_apps .list_lov_click').forEach(e => e.addEventListener('click', function(event) {
-                let function_event = function(event) {
-                    e.parentNode.parentNode.children[5].children[0].value = event.currentTarget.children[0].children[0].innerHTML;
-                    e.parentNode.parentNode.children[5].children[0].focus();
-                    e.parentNode.parentNode.children[5].children[0].dispatchEvent(new Event('change'));
-                    document.getElementById('lov_close').dispatchEvent(new Event('click'))
-                };
-                lov_show('APP_CATEGORY', function_event);
-            }));
-
             //set focus first column in first row
             //this will trigger to show detail records
-            document.querySelectorAll('.list_edit_app')[0].focus();
+            document.querySelectorAll('#list_apps .list_edit')[0].focus();
         }
     })
 }
@@ -687,201 +943,230 @@ function show_app_parameter(app_id){
                 html += 
                 `<div id='list_app_parameter_row_${i}' data-changed-record='0' class='list_app_parameter_row'>
                     <div class='list_app_parameter_col'>
-                        <input type=text class='list_edit_app_parameter' value=${json.data[i].app_id}>
+                        <input type=text class='list_edit' value='${json.data[i].app_id}'/>
                     </div>
                     <div class='list_app_parameter_col'>
-                        <input type=text class='list_edit_app_parameter input_lov' value=${json.data[i].parameter_type_id}>
+                        <input type=text class='list_edit input_lov' value='${json.data[i].parameter_type_id}'/>
                         <div class='common_lov_button list_lov_click'></div>
                     </div>
                     <div class='list_app_parameter_col'>
-                        <div class='list_readonly_app_parameter'>${json.data[i].parameter_type_text}</div>
+                        <div class='list_readonly'>${json.data[i].parameter_type_text}</div>
                     </div>
                     <div class='list_app_parameter_col'>
-                        <div class='list_readonly_app_parameter'>${json.data[i].parameter_name}</div>
+                        <div class='list_readonly'>${json.data[i].parameter_name}</div>
                     </div>
                     <div class='list_app_parameter_col'>
-                        <input type=text class='list_edit_app_parameter' value='${json.data[i].parameter_value==null?'':json.data[i].parameter_value}'>
+                        <input type=text class='list_edit' value='${get_null_or_value(json.data[i].parameter_value)}'/>
                     </div>
                     <div class='list_app_parameter_col'>
-                        <input type=text class='list_edit_app_parameter' value='${json.data[i].parameter_comment==null?'':json.data[i].parameter_comment}'>
+                        <input type=text class='list_edit' value='${get_null_or_value(json.data[i].parameter_comment)}'/>
                     </div>
                 </div>`;
             }
             document.getElementById('list_app_parameter').innerHTML = html;
-            list_events('list_app_parameter_row', '.list_edit_app_parameter', 1);
-            document.querySelectorAll('#list_app_parameter .common_lov_button').forEach(e => e.innerHTML = window.global_icon_app_lov);
-            document.querySelectorAll('#list_app_parameter .list_lov_click').forEach(e => e.addEventListener('click', function(event) {
-                let function_event = function(event) {
-                    e.parentNode.parentNode.children[1].children[0].value = event.currentTarget.children[0].children[0].innerHTML;
-                    e.parentNode.parentNode.children[1].children[0].focus();
-                    e.parentNode.parentNode.children[1].children[0].dispatchEvent(new Event('change'));
-                    document.getElementById('lov_close').dispatchEvent(new Event('click'))
-                };
-                lov_show('PARAMETER_TYPE', function_event);
-            }));
+            list_events('list_app_parameter', 'list_app_parameter_row', '.list_edit', 1);
         }
     })
 }
-async function apps_save(){
-    //save changes in list_apps
-    let x = document.querySelectorAll('.list_apps_row');
-    for (let i=0;i<x.length;i++){
-        if (x[i].getAttribute('data-changed-record')=='1'){
-            await update_record('app',
-                          x[i],
-                          x[i].children[0].children[0].innerHTML,//id
-                          x[i].children[1].children[0].value,    //app_name
-                          x[i].children[2].children[0].value,    //url
-                          x[i].children[3].children[0].value,    //logo
-                          x[i].children[4].children[0].checked); //enabled
+async function button_save(item){
+    if (item=='apps_save'){
+        //save changes in list_apps
+        let x = document.querySelectorAll('.list_apps_row');
+        for (let i=0;i<x.length;i++){
+            if (x[i].getAttribute('data-changed-record')=='1'){
+                await update_record('app',
+                                    x[i],
+                                    item,
+                                    {id: x[i].children[0].children[0].innerHTML,
+                                     app_name: x[i].children[1].children[0].value,
+                                     url: x[i].children[2].children[0].value,
+                                     logo: x[i].children[3].children[0].value,
+                                     enabled: x[i].children[4].children[0].checked});
+            }
+        };
+        //save changes in list_app_parameter
+        x = document.querySelectorAll('.list_app_parameter_row');
+        for (let i=0;i<x.length;i++){
+            if (x[i].getAttribute('data-changed-record')=='1'){
+                await update_record('app_parameter',
+                                    x[i],
+                                    item,
+                                    {app_id: x[i].children[0].children[0].value,
+                                     parameter_type_id: x[i].children[1].children[0].value,
+                                     parameter_name:  x[i].children[3].children[0].innerHTML,
+                                     parameter_value: x[i].children[4].children[0].value,
+                                     parameter_comment: x[i].children[5].children[0].value
+                                    });
+            }
+        };
+    }
+    else 
+        if (item == 'users_save'){
+            //save changes in list_user_account
+            let x = document.querySelectorAll('.list_user_account_row');
+            for (let i=0;i<x.length;i++){
+                if (x[i].getAttribute('data-changed-record')=='1'){
+                    await update_record('user_account',
+                                        x[i],
+                                        item,
+                                        {id: x[i].children[1].children[0].innerHTML,
+                                         app_role_id: x[i].children[2].children[0].value,
+                                         active: x[i].children[4].children[0].value,
+                                         user_level: x[i].children[5].children[0].value,
+                                         private: x[i].children[6].children[0].value,
+                                         username: x[i].children[7].children[0].value,
+                                         bio: x[i].children[8].children[0].value,
+                                         email: x[i].children[9].children[0].value,
+                                         email_unverified: x[i].children[10].children[0].value,
+                                         password: x[i].children[11].children[0].value,
+                                         password_reminder: x[i].children[12].children[0].value,
+                                         verification_code: x[i].children[13].children[0].value
+                                        });
+                }
+            };
         }
-    };
-    //save changes in list_app_parameter
-    x = document.querySelectorAll('.list_app_parameter_row');
-    for (let i=0;i<x.length;i++){
-        if (x[i].getAttribute('data-changed-record')=='1'){
-            await update_record('app_parameter',
-                          x[i],
-                          null, null, null, null, null,
-                          x[i].children[0].children[0].value,    //app_id
-                          x[i].children[1].children[0].value,    //parameter_type_id
-                          x[i].children[3].children[0].innerHTML,//parameter_name
-                          x[i].children[4].children[0].value,    //parameter_value
-                          x[i].children[5].children[0].value);   //parameter_comment
-        }
-    };
+    
 }
 async function update_record(table, 
-                        element,
-                        id=null, app_name=null, url=null, logo=null, enabled=null,
-                        app_id=null, parameter_type_id=null, parameter_name=null, parameter_value=null, parameter_comment=null){
+                             row_element,
+                             button,
+                             parameters){
     if (admin_token_has_value()){
         let rest_url;
         let json_data;
-        let old_button = document.getElementById('apps_save').innerHTML;
-        document.getElementById('apps_save').innerHTML = window.global_app_spinner;
+        let old_button = document.getElementById(button).innerHTML;
+        document.getElementById(button).innerHTML = window.global_app_spinner;
         switch (table){
+            case 'user_account':{
+                json_data = `{"app_role_id": "${parameters.app_role_id}",
+                              "active":"${parameters.active}",
+                              "user_level":"${parameters.user_level}",
+                              "private":"${parameters.private}",
+                              "username":"${parameters.username}",
+                              "bio":"${parameters.bio}",
+                              "email":"${parameters.email}",
+                              "email_unverified":"${parameters.email_unverified}",
+                              "password":"${parameters.password}",
+                              "password_reminder":"${parameters.password_reminder}",
+                              "verification_code":"${parameters.verification_code}"}`;
+                rest_url = `${window.global_rest_user_account}admin/${parameters.id}?`;
+                break;
+            }
             case 'app':{
                 if (id==window.global_common_app_id){
-                    if (element.children[4].children[0].checked == false){
+                    if (row_element.children[4].children[0].checked == false){
                         //app window.global_common_app_id should always be enabled
-                        element.children[4].children[0].checked = true;
+                        row_element.children[4].children[0].checked = true;
                         enabled=true;
                     }
                 }
-                json_data = `{"app_name": "${app_name}",
-                              "url": "${url}",
-                              "logo": "${logo}",
-                              "enabled": "${enabled==true?1:0}"}`;
-                rest_url = `${window.global_rest_app}/admin/${id}?`;
+                json_data = `{"app_name": "${parameters.app_name}",
+                              "url": "${parameters.url}",
+                              "logo": "${parameters.logo}",
+                              "enabled": "${parameters.enabled==true?1:0}"}`;
+                rest_url = `${window.global_rest_app}/admin/${parameters.id}?`;
                 break;
             }
             case 'app_parameter':{
-                json_data = `{"app_id": ${app_id},
-                              "parameter_name":"${parameter_name}",
-                              "parameter_type_id":"${parameter_type_id}",
-                              "parameter_value":"${parameter_value}",
-                              "parameter_comment":"${parameter_comment}"}`;
+                json_data = `{"app_id": ${parameters.app_id},
+                              "parameter_name":"${parameters.parameter_name}",
+                              "parameter_type_id":"${parameters.parameter_type_id}",
+                              "parameter_value":"${parameters.parameter_value}",
+                              "parameter_comment":"${parameters.parameter_comment}"}`;
                 rest_url = `${window.global_rest_app_parameter}admin?`;
                 break;
             }
         }
         await common_fetch(window.global_rest_url_base + rest_url,
                      'PUT', 1, json_data, null, null,(err, result) =>{
-            document.getElementById('apps_save').innerHTML = old_button;
+            document.getElementById(button).innerHTML = old_button;
             if (err)
                 null;
             else{
-                element.setAttribute('data-changed-record', '0');
+                row_element.setAttribute('data-changed-record', '0');
             }
         })
     }
 }
-function list_events(item_row, item_edit, column_start_index){
+function list_events(list_item, item_row, item_edit, column_start_index){
+    //add lov icon
+    document.querySelectorAll(`#${list_item} .common_lov_button`).forEach(e => e.innerHTML = window.global_icon_app_lov);
+
     //on change on all editable fields
     //mark record as changed if any editable field is changed
-    //get parameter_type_name for app_parameter rows
     
-    document.querySelectorAll(item_edit).forEach(e => e.addEventListener('change', function(event) {
+    //change event
+    document.querySelectorAll(`#${list_item} ${item_edit}`).forEach(e => e.addEventListener('change', function(event) {
         event.target.parentNode.parentNode.setAttribute('data-changed-record','1');
+
+        function row_action(err, result, item, event, nextindex){
+            if (err){
+                event.stopPropagation();
+                event.preventDefault();
+                //set old value
+                item.value = event.target.defaultValue;
+                item.focus();
+                item.nextElementSibling.dispatchEvent(new Event('click'));
+            }
+            else{
+                let json = JSON.parse(result);
+                if (json.data.length == 1){
+                    //set new value from 3 column JSON result
+                    document.getElementById(event.target.parentNode.parentNode.id).children[nextindex].children[0].innerHTML = Object.values(json.data[0])[2];
+                }
+                else{
+                    event.stopPropagation();
+                    event.preventDefault();
+                    //set old value
+                    item.value = event.target.defaultValue;
+                    item.focus();
+                    item.nextElementSibling.dispatchEvent(new Event('click'));
+                }
+            }
+        }
+        //app category LOV
         if (item_row == 'list_apps_row' && event.target.parentNode.parentNode.children[5].children[0] == event.target)
             if (this.value=='')
                 event.target.parentNode.parentNode.children[6].children[0].innerHTML ='';
             else{
                 common_fetch(`${window.global_rest_url_base}${window.global_rest_app_category}admin?id=${this.value}`,
                             'GET', 1, null, null, null, (err, result) =>{
-                    if (err){
-                        event.stopPropagation();
-                        event.preventDefault();
-                        //set old value
-                        this.value = event.target.defaultValue;
-                        this.focus();
-                        this.nextElementSibling.dispatchEvent(new Event('click'));
-                    }
-                    else{
-                        json = JSON.parse(result);
-                        if (json.data.length == 1){
-                            //set new value
-                            document.getElementById(event.target.parentNode.parentNode.id).children[6].children[0].innerHTML = json.data[0].app_category_text;
-                        }
-                        else{
-                            event.stopPropagation();
-                            event.preventDefault();
-                            //set old value
-                            this.value = event.target.defaultValue;
-                            this.focus();
-                            this.nextElementSibling.dispatchEvent(new Event('click'));
-                        }
-                    }
+                    row_action(err, result, this, event, 6, '');
                 });
             }
-
+        //parameter type LOV
         if (item_row == 'list_app_parameter_row' && event.target.parentNode.parentNode.children[1].children[0] == event.target)
             if (this.value=='')
                 this.value = event.target.defaultValue;
             else{
                 common_fetch(`${window.global_rest_url_base}${window.global_rest_parameter_type}admin?id=${this.value}`,
                             'GET', 1, null, null, null, (err, result) =>{
-                    if (err){
-                        event.stopPropagation();
-                        event.preventDefault();
-                        //set old value
-                        this.value = event.target.defaultValue;
-                        this.focus();
-                        this.nextElementSibling.dispatchEvent(new Event('click'));
-                    }
-                    else{
-                        json = JSON.parse(result);
-                        if (json.data.length == 1){
-                            //set new value
-                            document.getElementById(event.target.parentNode.parentNode.id).children[2].children[0].innerHTML = json.data[0].parameter_type_text;
-                        }
-                        else{
-                            event.stopPropagation();
-                            event.preventDefault();
-                            //set old value
-                            this.value = event.target.defaultValue;
-                            this.focus();
-                            this.nextElementSibling.dispatchEvent(new Event('click'));
-                        }
-                    }
+                    row_action(err, result, this, event, 2);
+                });
+            }
+        //app role LOV
+        if (item_row == 'list_user_account_row' && event.target.parentNode.parentNode.children[2].children[0] == event.target)
+            if (this.value=='')
+                event.target.parentNode.parentNode.children[3].children[0].innerHTML ='';
+            else{
+                common_fetch(`${window.global_rest_url_base}${window.global_rest_app_role}admin?id=${this.value}`,
+                            'GET', 1, null, null, null, (err, result) =>{
+                    row_action(err, result, this, event, 3);
                 });
             }
     }));
-    //key navigation key-up and key-down
-    document.querySelectorAll(item_edit).forEach(e => e.addEventListener('keydown', function(event) {
-        //up arrow
-        if (event.keyCode === 38) {
-            if (item_row=='list_apps_row')
+    //keydown event
+    document.querySelectorAll(`#${list_item} ${item_edit}`).forEach(e => e.addEventListener('keydown', function(event) {
+        if (event.code=='ArrowUp') {
+            if (item_row=='list_apps_row' || item_row == 'list_user_account')
                 window.global_previous_row = event.target.parentNode.parentNode;
             event.preventDefault();
             let index = parseInt(event.target.parentNode.parentNode.id.substr(item_row.length+1));
             if (index>0)
                 document.getElementById(`${item_row}_${index - 1}`).children[column_start_index].children[0].focus();
         }
-        //down arrow
-        if (event.keyCode === 40) {
-            if (item_row=='list_apps_row')
+        if (event.code=='ArrowDown') {
+            if (item_row=='list_apps_row' || item_row == 'list_user_account')
                 window.global_previous_row = event.target.parentNode.parentNode;
             event.preventDefault();
             let index = parseInt(event.target.parentNode.parentNode.id.substr(item_row.length+1)) +1;
@@ -889,9 +1174,10 @@ function list_events(item_row, item_edit, column_start_index){
                 document.getElementById(`${item_row}_${index}`).children[column_start_index].children[0].focus();
         }
     }));
-    //focus event on master to automatically show detail records
+    //focus event
     if (item_row=='list_apps_row'){
-        document.querySelectorAll(item_edit).forEach(e => 
+        //event on master to automatically show detail records
+        document.querySelectorAll(`#${list_item} ${item_edit}`).forEach(e => 
             e.addEventListener('focus', function(event) {
                 if (window.global_previous_row != event.target.parentNode.parentNode){
                     window.global_previous_row = event.target.parentNode.parentNode;
@@ -900,6 +1186,48 @@ function list_events(item_row, item_edit, column_start_index){
             }
         ));
     }
+    if (item_row=='list_user_account_row'){
+        //event on master to automatically show detail records
+        document.querySelectorAll(`#${list_item} ${item_edit}`).forEach(e => 
+            e.addEventListener('focus', function(event) {
+                if (window.global_previous_row != event.target.parentNode.parentNode){
+                    window.global_previous_row = event.target.parentNode.parentNode;
+                    show_user_account_logon(e.parentNode.parentNode.children[1].children[0].innerHTML);
+                }
+            }
+        ));
+    }
+
+    //click event
+    document.querySelectorAll(`#${list_item} .list_lov_click`).forEach(e => e.addEventListener('click', function(event) {
+        if (list_item == 'list_apps'){
+            let function_event = function(event) {
+                e.parentNode.parentNode.children[5].children[0].value = event.currentTarget.children[0].children[0].innerHTML;
+                e.parentNode.parentNode.children[5].children[0].focus();
+                e.parentNode.parentNode.children[5].children[0].dispatchEvent(new Event('change'));
+                document.getElementById('lov_close').dispatchEvent(new Event('click'))
+            };
+            lov_show('APP_CATEGORY', function_event);
+        }
+        if (list_item == 'list_app_parameter'){
+            let function_event = function(event) {
+                e.parentNode.parentNode.children[1].children[0].value = event.currentTarget.children[0].children[0].innerHTML;
+                e.parentNode.parentNode.children[1].children[0].focus();
+                e.parentNode.parentNode.children[1].children[0].dispatchEvent(new Event('change'));
+                document.getElementById('lov_close').dispatchEvent(new Event('click'))
+            };
+            lov_show('PARAMETER_TYPE', function_event);
+        }
+        if (list_item == 'list_user_account'){
+            let function_event = function(event) {
+                e.parentNode.parentNode.children[2].children[0].value = event.currentTarget.children[0].children[0].innerHTML;
+                e.parentNode.parentNode.children[2].children[0].focus();
+                e.parentNode.parentNode.children[2].children[0].dispatchEvent(new Event('change'));
+                document.getElementById('lov_close').dispatchEvent(new Event('click'))
+            };
+            lov_show('APP_ROLE', function_event);
+        }
+    }));
 }
 /*----------------------- */
 /* MONITOR                */
@@ -1846,6 +2174,7 @@ function init_admin_secure(){
     //other in admin
     document.getElementById('menu_open').innerHTML = window.global_icon_app_menu_open;
     document.getElementById('menu_1_broadcast_button').innerHTML = window.global_icon_app_chat;
+    document.getElementById('users_save').innerHTML = window.global_icon_app_save;
     document.getElementById('apps_save').innerHTML = window.global_icon_app_save;
     document.getElementById('list_app_log_first').innerHTML = window.global_icon_app_first;
     document.getElementById('list_app_log_previous').innerHTML = window.global_icon_app_previous;
@@ -1873,6 +2202,9 @@ function init_admin_secure(){
     document.getElementById('box2_title').innerHTML = window.global_icon_app_users + ' ' + window.global_icon_regional_numbersystem;
     document.getElementById('menu_1_maintenance_title').innerHTML = window.global_icon_app_maintenance;
     document.getElementById('send_broadcast_title').innerHTML = window.global_icon_app_broadcast;
+    //menu 3
+    document.getElementById('list_user_account_title').innerHTML = window.global_icon_app_users;
+    document.getElementById('list_user_account_logon_title').innerHTML = window.global_icon_app_login;
     //menu 4
     document.getElementById('list_apps_title').innerHTML = window.global_icon_app_apps;
     document.getElementById('list_app_parameter_title').innerHTML = window.global_icon_app_apps + window.global_icon_app_settings;
@@ -1920,7 +2252,11 @@ function init_admin_secure(){
     document.getElementById('send_broadcast_send').addEventListener('click', function() { sendBroadcast(); }, false);
     document.getElementById('send_broadcast_close').addEventListener('click', function() { closeBroadcast()}, false);
 
-    document.getElementById('apps_save').addEventListener('click', function() { apps_save()}, false); 
+    document.getElementById('list_user_account_search_input').addEventListener('keyup', function() { window.global_typewatch(show_users(false), 500); }, false);
+    document.getElementById('list_user_account_search_icon').addEventListener('click', function() { document.getElementById('list_user_account_search_input').focus();document.getElementById('list_user_account_search_input').dispatchEvent(new KeyboardEvent('keyup')); }, false);
+    document.getElementById('users_save').addEventListener('click', function() { button_save('users_save')}, false); 
+
+    document.getElementById('apps_save').addEventListener('click', function() { button_save('apps_save')}, false); 
 
     document.getElementById('list_app_log_title').addEventListener('click', function() { nav_click(this)}, false);
     document.getElementById('select_app_menu5_app_log').addEventListener('change', function() { nav_click(document.getElementById('list_app_log_title'))}, false);
@@ -1965,8 +2301,8 @@ function init_admin_secure(){
     //set for menu items created in menu_secure
     document.getElementById('menu_close').innerHTML = window.global_icon_app_menu_close;
     document.getElementById('menu_1').innerHTML = window.global_icon_app_chart; //DASHBOARD
-    document.getElementById('menu_2').innerHTML = window.global_icon_user_menu + window.global_icon_app_log; //USER STAT
-    document.getElementById('menu_3').innerHTML = window.global_icon_user_menu; //USERS
+    document.getElementById('menu_2').innerHTML = window.global_icon_app_users + window.global_icon_app_log; //USER STAT
+    document.getElementById('menu_3').innerHTML = window.global_icon_app_users; //USERS
     document.getElementById('menu_4').innerHTML = window.global_icon_app_apps + window.global_icon_app_settings; //APP ADMIN
     document.getElementById('menu_5').innerHTML = window.global_icon_app_log; //MONITOR
     document.getElementById('menu_6').innerHTML = window.global_icon_app_server + window.global_icon_app_settings; //PARAMETER
