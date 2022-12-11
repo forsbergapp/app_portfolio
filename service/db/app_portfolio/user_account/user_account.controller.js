@@ -1,4 +1,7 @@
 const {
+    getUsersAdmin,
+    getStatCountAdmin,
+    updateUserAdmin,
     password_length_wrong, 
     get_app_code,
     verification_code,
@@ -18,7 +21,6 @@ const {
     userLogin,
     updateSigninProvider,
     providerSignIn,
-    getStatCountAdmin,
     getEmailUser
 } = require("./user_account.service");
 
@@ -35,7 +37,64 @@ const { createLogAppCI } = require("../../../../service/log/log.controller");
 const { accessToken } = require("../../../../service/auth/auth.controller");
 const { getAdminSecure } = require("../../../../apps/admin/src/secure");
 module.exports = {
-    
+    getUsersAdmin: (req, res) => {
+        getUsersAdmin(req.query.app_id, req.params.search, req.query.sort, req.query.order_by, req.query.offset, req.query.limit, (err, results) => {
+            if (err) {
+                return res.status(500).send(
+                    err
+                );
+            }
+            else{
+                return res.status(200).json({
+                    data: results
+                });
+            }
+        });
+    },
+    getStatCountAdmin: (req, res) => {
+        getStatCountAdmin(req.query.app_id, (err, results) => {
+            if (err) {
+                return res.status(500).send(
+                    err
+                );
+            }
+            else{
+                return res.status(200).json({
+                    data: results
+                });
+            }
+        });
+    },
+    updateUserAdmin: (req, res) => {
+        updateUserAdmin(req.query.app_id, req.params.id, req.body, (err, results) => {
+            if (err) {
+                var app_code = get_app_code(err.errorNum, 
+                    err.message, 
+                    err.code, 
+                    err.errno, 
+                    err.sqlMessage);
+                if (app_code != null){
+                    getMessage(req.query.app_id,
+                        process.env.COMMON_APP_ID, 
+                        app_code, 
+                        req.query.lang_code, (err,results_message)  => {
+                                    return res.status(400).send(
+                                        err ?? results_message.text
+                                    );
+                        });
+                    }
+                else
+                    return res.status(500).send(
+                        err
+                    );
+            }
+            else{
+                return res.status(200).json({
+                    data: results
+                });
+            }
+        });
+    },
     userSignup: (req, res) => {
         const salt = genSaltSync(10);
         if (typeof req.body.provider_id == 'undefined') {
@@ -1233,19 +1292,5 @@ module.exports = {
                 }
             }
         });
-    },
-    getStatCountAdmin: (req, res) => {
-        getStatCountAdmin(req.query.app_id, (err, results) => {
-            if (err) {
-                return res.status(500).send(
-                    err
-                );
-            }
-            else{
-                return res.status(200).json({
-                    data: results
-                });
-            }
-        });
-    },
+    }
 }

@@ -1,20 +1,23 @@
 const router = require("express").Router();
 const {
+    getUsersAdmin,
+    getStatCountAdmin,
+    updateUserAdmin,
+    userLogin,
     userSignup,
     activateUser,
     passwordResetUser,
-    getUserByUserId,
-    getProfileUser,
-    searchProfileUser,
-    getProfileDetail,
-    getProfileTop,
-    updateUserLocal,
     updatePassword,
+    updateUserLocal,
+    providerSignIn,
+    getUserByUserId,
     updateUserCommon,
     deleteUser,
-    userLogin,
-    providerSignIn,
-    getStatCountAdmin
+    getProfileDetail,
+    getProfileTop,
+    getProfileUser,
+    searchProfileUser,
+    
 } = require("./user_account.controller");
 const { checkAccessToken, checkDataToken, checkDataTokenRegistration, checkDataTokenLogin } = require("../../../auth/auth.controller");
 const { checkAccessTokenAdmin} = require ("../../../auth/auth.controller");
@@ -23,6 +26,13 @@ router.use((req,res,next)=>{
     createLogAppRI(req, res, __appfilename, __appfunction, __appline, req.body);
     next();
 })
+//admin, all users with option to search
+router.get("/admin/:search", checkAccessTokenAdmin, getUsersAdmin);
+//admin, count user stat
+router.get("/admin/count", checkAccessTokenAdmin, getStatCountAdmin);
+//admin update user
+router.put("/admin/:id", checkAccessTokenAdmin, updateUserAdmin);
+
 router.put("/login", checkDataTokenLogin, userLogin);
 router.post("/signup", checkDataTokenRegistration, userSignup);
 //local user
@@ -43,6 +53,5 @@ router.post("/profile/id/:id", checkDataToken, getProfileUser);
 router.post("/profile/username/:username", checkDataToken, getProfileUser);
 router.post("/profile/username/searchD/:username", checkDataToken, searchProfileUser);
 router.post("/profile/username/searchA/:username", checkAccessToken, searchProfileUser);
-router.get("/admin/count", checkAccessTokenAdmin, getStatCountAdmin);
 
 module.exports = router;

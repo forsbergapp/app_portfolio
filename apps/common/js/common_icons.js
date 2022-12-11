@@ -88,9 +88,13 @@ function seticons(){
     window.global_icon_app_signup = '<i class="fa-solid fa-user-pen"></i>';
     window.global_icon_app_forgot = '<i class="fa-solid fa-circle-question"></i>';
     window.global_icon_app_timetable = '<i class="fa-solid fa-calendar-days"></i>';
+    window.global_icon_app_role = '<i class="fa-solid fa-masks-theater"></i>';
+    window.global_icon_app_active = '<i class="fa-solid fa-toggle-on"></i>';
+    window.global_icon_app_inactive = '<i class="fa-solid fa-toggle-off"></i>';
+    window.global_icon_app_verification_code ='❂❂❂❂❂❂';
     //user
     window.global_icon_user = '<i class="fas fa-user-circle"></i>';
-    window.global_icon_user_menu = '<i class="fa-solid fa-user">';
+    window.global_icon_username = '<i class="fa-solid fa-a"></i><i class="fa-solid fa-b"></i><i class="fa-solid fa-c"></i>';    
     window.global_icon_user_last_logontime = '<i class="fa-solid fa-right-to-bracket"></i>';
     window.global_icon_user_account_created = '<i class="fa-solid fa-handshake-simple"></i>';
     window.global_icon_user_account_modified = '<i class="fa-solid fa-pen-to-square"></i>';
@@ -106,6 +110,7 @@ function seticons(){
     window.global_icon_user_views = '<i class="fa-solid fa-eye"></i>';
     window.global_icon_user_follows = '<i class="fas fa-user-friends"></i>';
     window.global_icon_user_followed = '<i class="fas fa-users"></i>';
+    window.global_icon_user_bio = '<i class="fa-solid fa-id-card"></i><i class="fa-solid fa-a"></i><i class="fa-solid fa-b"></i><i class="fa-solid fa-c"></i>';
     window.global_icon_user_profile = '<i class="fa-solid fa-id-card"></i>';
     window.global_icon_user_profile_top = '<i class="fa-solid fa-medal"></i>';
     //provider
