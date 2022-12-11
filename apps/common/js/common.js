@@ -907,6 +907,12 @@ function lov_show(lov, function_event){
             token_type = 1;
             break;
         }
+        case 'APP_ROLE':{
+            lov_column_value = 'icon';
+            url = window.global_rest_url_base + window.global_rest_app_role + '/admin?'
+            token_type = 1;
+            break;
+        }
     }
     common_fetch(url, 'GET', token_type, null, null, null, (err, result) =>{
         if (err)
@@ -2974,6 +2980,7 @@ function set_globals(parameters){
         window.global_rest_app;
         window.global_rest_app_category;
         window.global_rest_app_object;
+        window.global_rest_app_role;
         window.global_rest_country;
         window.global_rest_identity_provider;
         window.global_rest_language_locale;
@@ -2986,6 +2993,7 @@ function set_globals(parameters){
         window.global_rest_user_account_forgot;
         window.global_rest_user_account_like;
         window.global_rest_user_account_login;
+        window.global_rest_user_account_logon;
         window.global_rest_user_account_profile_detail;
         window.global_rest_user_account_profile_searchA;
         window.global_rest_user_account_profile_searchD;
@@ -3303,6 +3311,7 @@ async function init_common(parameters, callBack){
                     case 'REST_APP'                             :{window.global_rest_app = parameter_value;break;}
                     case 'REST_APP_CATEGORY'                    :{window.global_rest_app_category = parameter_value;break;}
                     case 'REST_APP_OBJECT'                      :{window.global_rest_app_object = parameter_value;break;}
+                    case 'REST_APP_ROLE'                        :{window.global_rest_app_role = parameter_value;break;}
                     case 'REST_COUNTRY'                         :{window.global_rest_country = parameter_value;break;}
                     case 'REST_IDENTITY_PROVIDER'               :{window.global_rest_identity_provider = parameter_value;break;}
                     case 'REST_LANGUAGE_LOCALE'                 :{window.global_rest_language_locale = parameter_value;break;}
@@ -3317,6 +3326,7 @@ async function init_common(parameters, callBack){
                     case 'REST_USER_ACCOUNT_FORGOT'             :{window.global_rest_user_account_forgot = parameter_value;break;}
                     case 'REST_USER_ACCOUNT_LIKE'               :{window.global_rest_user_account_like = parameter_value;break;}
                     case 'REST_USER_ACCOUNT_LOGIN'              :{window.global_rest_user_account_login = parameter_value;break;}
+                    case 'REST_USER_ACCOUNT_LOGON'              :{window.global_rest_user_account_logon = parameter_value;break;}
                     case 'REST_USER_ACCOUNT_PROFILE_DETAIL'     :{window.global_rest_user_account_profile_detail = parameter_value;break;}
                     case 'REST_USER_ACCOUNT_PROFILE_SEARCHA'    :{window.global_rest_user_account_profile_searchA = parameter_value;break;}
                     case 'REST_USER_ACCOUNT_PROFILE_SEARCHD'    :{window.global_rest_user_account_profile_searchD = parameter_value;break;}
