@@ -294,9 +294,114 @@
     /* MENU 3 USERS */
     #menu_3_content_widget1{
         height: calc(50% - 10px);
+        display: flex;
+        flex-direction: column;
     }
     #menu_3_content_widget2{
         height: calc(50% - 10px);
+        display: flex;
+        flex-direction: column;
+    }
+    #list_user_account_search{
+        margin-bottom: 10px;
+        border-radius: 4px;
+    }
+    #list_user_account_search_input{
+        border: none;
+        width: 50%;
+        display: inline-block;
+        padding-left: 3px;
+        padding-right: 3px;
+        margin: 5px;
+        box-sizing: border-box;
+        border-radius: 4px;
+    }
+    
+    #list_user_account_title, #list_user_account_logon_title{
+        text-transform: uppercase;
+        display:inline-block;
+        width:100%;
+        font-size:1.2em;
+    }
+    .list_user_account_avatar{
+        height:1.4em;
+        width:1.4em;
+        border-radius: 50%;
+        vertical-align: middle;
+    }
+    
+    #list_user_account, #list_user_account_logon{
+        overflow-y: auto;
+        overflow-x: auto;
+        margin-bottom: 10px;
+        border-radius: 4px;
+    }
+    .list_user_account_row, .list_user_account_logon_row{
+        padding-top:4px;
+        padding-bottom: 4px;
+        padding-inline-start: 5px;
+        text-align: start;
+    }
+    .list_user_account_col, .list_user_account_logon_col{
+        display:inline-block;
+    }
+    .list_user_account_col:nth-child(1),
+    .list_user_account_col:nth-child(2),
+    .list_user_account_col:nth-child(20){
+        width:25px;
+    }
+    .list_user_account_col:nth-child(3),
+    .list_user_account_col:nth-child(4),
+    .list_user_account_col:nth-child(5),
+    .list_user_account_col:nth-child(6){
+        width: 50px;
+    }
+    .list_user_account_col:nth-child(7){
+        width: 70px;
+    }
+    .list_user_account_col:nth-child(8),
+    .list_user_account_col:nth-child(9),
+    .list_user_account_col:nth-child(10),
+    .list_user_account_col:nth-child(11),
+    .list_user_account_col:nth-child(12),
+    .list_user_account_col:nth-child(13),
+    .list_user_account_col:nth-child(14),
+    .list_user_account_col:nth-child(15),
+    .list_user_account_col:nth-child(16),
+    .list_user_account_col:nth-child(17),
+    .list_user_account_col:nth-child(18),
+    .list_user_account_col:nth-child(19){
+        width: 100px;
+    }
+    .list_user_account_col:nth-child(21),
+    .list_user_account_col:nth-child(22){
+        width: 140px;
+    }
+    .list_user_account_col:nth-child(23),
+    .list_user_account_col:nth-child(24){
+        width: 120px;
+    }
+    .list_user_account_logon_col:nth-child(1){
+        display: none;
+    }
+    .list_user_account_logon_col:nth-child(2){
+        width: 120px;
+    }
+    .list_user_account_logon_col:nth-child(3),
+    .list_user_account_logon_col:nth-child(4){
+        width:50px;
+    }
+    .list_user_account_logon_col:nth-child(5),
+    .list_user_account_logon_col:nth-child(6),
+    .list_user_account_logon_col:nth-child(7){
+        width:70px;
+    }
+    .list_user_account_logon_col:nth-child(8){
+        width: 600px;
+    }
+    #users_buttons, #users_save{
+        height:50px;
+        display:inline-block;
     }
     /* MENU 4 APP ADMIN*/
     #menu_4_content_widget1{
@@ -319,9 +424,6 @@
         font-size: 2em;
         height: 0.6em;
         vertical-align: sub;
-    }
-    #list_app_parameter{
-        height: 70%;
     }
     #list_apps, #list_app_parameter{
         overflow-y: auto;
@@ -387,7 +489,7 @@
         width:150px;
     }
     #apps_buttons, #apps_save{
-        height:30px;
+        height:40px;
         display:inline-block;
     }
     #apps_save #app_spinner{
@@ -398,7 +500,7 @@
     #apps_save i{
         vertical-align: top;
     }
-    .list_edit_app, .list_edit_app_parameter{
+    .list_edit{
         border:none;
         width: 100%;
         display: inline-block;
@@ -411,7 +513,7 @@
     .list_lov_click{
         cursor:pointer;
     }
-    .list_readonly_app, .list_readonly_app_parameter{
+    .list_readonly{
         border:none;
         width: 100%;
         display: inline-block;
@@ -559,7 +661,7 @@
         width:70px;
     }
     .list_connected_col:nth-child(8){
-        width:120px;
+        width:70px;
     }
     .list_connected_col:nth-child(9){
         width:70px;
@@ -1020,6 +1122,8 @@
         font-weight: bold;
     }
     .menu_8_db_info_space_detail_row,
+    .list_user_account_row,
+    .list_user_account_logon_row,
     .list_apps_row,
     .list_app_parameter_row,
     .list_app_log_row,
@@ -1029,10 +1133,15 @@
     .list_pm2_log_process_event_row{
         font-size: 9px;
     }
+    .list_user_account_row input,
+    .list_user_account_logon_row input,
     .list_apps_row input,
     .list_app_parameter_row input{
         font-size: 9px;
     }
+    #list_user_account_search,
+    #list_user_account,
+    #list_user_account_logon,
     #list_apps,
     #list_app_parameter{
         background-color: var(--app_theme_list_background_color);

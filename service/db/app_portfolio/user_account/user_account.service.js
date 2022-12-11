@@ -128,6 +128,148 @@ function validation_before_update(data){
 		return {"errorNum" : error_code};
 }
 module.exports = {
+	getUsersAdmin: (app_id, search, sort, order_by, offset, limit, callBack) => {
+		let sql;
+		let parameters;
+		sort = sort ?? '8';
+		order_by = order_by ?? 'ASC';
+
+		sql = `SELECT ua.avatar "avatar",
+		              ua.id "id",
+					  ua.app_role_id "app_role_id",
+					  (SELECT ap_user.icon
+						 FROM ${get_schema_name()}.app_role ap_user
+						WHERE ap_user.id = COALESCE(ua.app_role_id,2)) "app_role_icon",
+					  ua.active "active",
+					  ua.user_level "user_level",
+					  ua.private "private",
+					  ua.username "username",
+					  ua.bio "bio",
+					  ua.email "email",
+					  ua.email_unverified "email_unverified",
+					  ua.password "password",
+					  ua.password_reminder "password_reminder",
+					  ua.verification_code "verification_code",
+		              ua.identity_provider_id "identity_provider_id",
+					  ip.provider_name "provider_name",
+					  ua.provider_id "provider_id",
+					  ua.provider_first_name "provider_first_name",
+					  ua.provider_last_name "provider_last_name",
+					  ua.provider_image "provider_image",
+					  ua.provider_image_url "provider_image_url",
+					  ua.provider_email "provider_email",
+					  ua.date_created "date_created",
+					  ua.date_modified "date_modified"
+				 FROM ${get_schema_name()}.user_account ua
+					  LEFT OUTER JOIN ${get_schema_name()}.identity_provider ip
+						ON ip.id = ua.identity_provider_id
+					  LEFT OUTER JOIN ${get_schema_name()}.app_role ap
+						ON ap.id = ua.app_role_id
+				WHERE (ua.username LIKE :search
+				   OR ua.bio LIKE :search
+				   OR ua.email LIKE :search
+				   OR ua.email_unverified LIKE :search
+				   OR ua.provider_first_name LIKE :search
+				   OR ua.provider_last_name LIKE :search
+				   OR ua.provider_email LIKE :search)
+				   OR :search = '*'
+				ORDER BY ${sort} ${order_by}`;
+		sql = limit_sql(sql, null);;
+		if (search!='*')
+			search = '%' + search + '%';
+		parameters = {search: search,
+					  offset: offset ?? 0,
+					  limit: limit ?? parseInt(process.env.SERVICE_DB_LIMIT_LIST_SEARCH),
+					 };
+		execute_db_sql(app_id, sql, parameters,
+			           __appfilename, __appfunction, __appline, (err, result)=>{
+			if (err)
+				return callBack(err, null);
+			else
+				return callBack(null, result);
+		});
+    },
+	getStatCountAdmin: (app_id, callBack) => {
+		let sql;
+		let parameters;
+		sql = `SELECT ua.identity_provider_id "identity_provider_id",
+						CASE 
+						WHEN ip.provider_name IS NULL THEN 
+							'Local' 
+						ELSE 
+							ip.provider_name 
+						END "provider_name",
+						COUNT(*) "count_users"
+				 FROM ${get_schema_name()}.user_account ua
+					  LEFT OUTER JOIN ${get_schema_name()}.identity_provider ip
+						ON ip.id = ua.identity_provider_id
+				GROUP BY ua.identity_provider_id, ip.provider_name
+				ORDER BY ua.identity_provider_id`;
+		parameters = {};
+		execute_db_sql(app_id, sql, parameters,
+			           __appfilename, __appfunction, __appline, (err, result)=>{
+			if (err)
+				return callBack(err, null);
+			else
+				return callBack(null, result);
+		});
+    },
+	updateUserAdmin: (app_id, id, data, callBack) => {
+		let sql;
+		let parameters;
+		if (data.active =='')
+			data.active = null;
+		if (data.email_unverified =='')
+			data.email_unverified = null;
+		if (data.app_role_id=='')
+			data.app_role_id = null;
+		if (data.bio=='')
+			data.bio = null;
+		if (data.user_level=='')
+			data.user_level = null;
+		if (data.password_reminder=='')
+			data.password_reminder = null;
+		if (data.verification_code=='')
+			data.verification_code = null;
+		let error_code = validation_before_update(data);
+		if (error_code==null){
+			sql = `UPDATE ${get_schema_name()}.user_account
+					SET app_role_id = :app_role_id,
+						active = :active,
+						user_level = :user_level,
+						private = :private,
+						username = :username,
+						bio = :bio,
+						email = :email,
+						email_unverified = :email_unverified,
+						password = :password,
+						password_reminder = :password_reminder,
+						verification_code = :verification_code
+					WHERE id = :id`;
+			parameters = {id: id,
+						app_role_id: data.app_role_id,
+						active: data.active,
+						user_level: data.user_level,
+						private: data.private,
+						username: data.username,
+						bio: data.bio,
+						email: data.email,
+						email_unverified: data.email_unverified,
+						password: data.password,
+						password_reminder: data.password_reminder,
+						verification_code: data.verification_code
+						};
+			execute_db_sql(app_id, sql, parameters,
+						__appfilename, __appfunction, __appline, (err, result)=>{
+				if (err)
+					return callBack(err, null);
+				else
+					return callBack(null, result);
+			});
+		}
+		else
+			callBack(error_code, null);
+    },
     create: (app_id, data, callBack) => {
 		let sql;
     	let parameters;
@@ -895,31 +1037,6 @@ module.exports = {
 						identity_provider_id: identity_provider_id
 					};
 		execute_db_sql(app_id, sql, parameters, 
-			           __appfilename, __appfunction, __appline, (err, result)=>{
-			if (err)
-				return callBack(err, null);
-			else
-				return callBack(null, result);
-		});
-    },
-    getStatCountAdmin: (app_id, callBack) => {
-		let sql;
-		let parameters;
-		sql = `SELECT ua.identity_provider_id "identity_provider_id",
-						CASE 
-						WHEN ip.provider_name IS NULL THEN 
-							'Local' 
-						ELSE 
-							ip.provider_name 
-						END "provider_name",
-						COUNT(*) "count_users"
-				 FROM ${get_schema_name()}.user_account ua
-					  LEFT OUTER JOIN ${get_schema_name()}.identity_provider ip
-						ON ip.id = ua.identity_provider_id
-				GROUP BY ua.identity_provider_id, ip.provider_name
-				ORDER BY ua.identity_provider_id`;
-		parameters = {};
-		execute_db_sql(app_id, sql, parameters,
 			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);

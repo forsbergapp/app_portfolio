@@ -139,6 +139,7 @@ const app_categoryRouter = require("./service/db/app_portfolio/app_category/app_
 const app_logRouter = require("./service/db/app_portfolio/app_log/app_log.router");
 const app_objectRouter = require("./service/db/app_portfolio/app_object/app_object.router");
 const app_parameterRouter = require("./service/db/app_portfolio/app_parameter/app_parameter.router");
+const app_roleRouter = require("./service/db/app_portfolio/app_role/app_role.router");
 const countryRouter = require("./service/db/app_portfolio/country/country.router");
 const identity_providerRouter = require("./service/db/app_portfolio/identity_provider/identity_provider.router");
 const languageLocaleRouter = require("./service/db/app_portfolio/language/locale/locale.router");
@@ -148,6 +149,7 @@ const settingRouter = require("./service/db/app_portfolio/setting/setting.router
 const user_accountRouter = require("./service/db/app_portfolio/user_account/user_account.router");
 const user_account_appRouter = require("./service/db/app_portfolio/user_account_app/user_account_app.router");
 const user_account_likeRouter = require("./service/db/app_portfolio/user_account_like/user_account_like.router");
+const user_account_logonRouter = require("./service/db/app_portfolio/user_account_logon/user_account_logon.router");
 const user_account_followRouter = require("./service/db/app_portfolio/user_account_follow/user_account_follow.router");
 //service geolocation
 const geolocationRouter = require("./service/geolocation/geolocation.router");
@@ -177,6 +179,7 @@ app.use("/service/db/app_portfolio/app_category", app_categoryRouter);
 app.use("/service/db/app_portfolio/app_log", app_logRouter);
 app.use("/service/db/app_portfolio/app_object", app_objectRouter);
 app.use("/service/db/app_portfolio/app_parameter", app_parameterRouter);
+app.use("/service/db/app_portfolio/app_role", app_roleRouter);
 app.use("/service/db/app_portfolio/country", countryRouter);
 app.use("/service/db/app_portfolio/identity_provider", identity_providerRouter);
 app.use("/service/db/app_portfolio/language/locale", languageLocaleRouter);
@@ -186,6 +189,7 @@ app.use("/service/db/app_portfolio/setting", settingRouter);
 app.use("/service/db/app_portfolio/user_account", user_accountRouter);
 app.use("/service/db/app_portfolio/user_account_app", user_account_appRouter);
 app.use("/service/db/app_portfolio/user_account_like", user_account_likeRouter);
+app.use("/service/db/app_portfolio/user_account_logon", user_account_logonRouter);
 app.use("/service/db/app_portfolio/user_account_follow", user_account_followRouter);
 //service geolocation
 app.use("/service/geolocation", geolocationRouter);
