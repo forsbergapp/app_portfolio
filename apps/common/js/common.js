@@ -919,7 +919,7 @@ function lov_show(lov, function_event){
             document.getElementById('lov_list').innerHTML = '';
         else{
             document.getElementById('lov_list').innerHTML = '';
-            json = JSON.parse(result);
+            let json = JSON.parse(result);
             let html = '';
             for (i = 0; i < json.data.length; i++) {
                 html += 
