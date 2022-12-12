@@ -26,10 +26,10 @@ router.use((req,res,next)=>{
     createLogAppRI(req, res, __appfilename, __appfunction, __appline, req.body);
     next();
 })
-//admin, all users with option to search
-router.get("/admin/:search", checkAccessTokenAdmin, getUsersAdmin);
 //admin, count user stat
 router.get("/admin/count", checkAccessTokenAdmin, getStatCountAdmin);
+//admin, all users with option to search
+router.get("/admin/:search", checkAccessTokenAdmin, getUsersAdmin);
 //admin update user, only for superadmin
 router.put("/admin/:id", checkAccessTokenSuperAdmin, updateUserSuperAdmin);
 

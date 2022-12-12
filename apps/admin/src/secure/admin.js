@@ -524,10 +524,10 @@ async function count_users(){
                 for (i=0;i<=json.data.length-1;i++){
                     html +=  `<div id='list_user_stat_row_${i}' class='list_user_stat_row'>
                                     <div class='list_user_stat_col'>
-                                        <div>${json.data[i].identity_provider_id==null?'':json.data[i].identity_provider_id}</div>
+                                        <div>${get_null_or_value(json.data[i].identity_provider_id)}</div>
                                     </div>
                                     <div class='list_user_stat_col'>
-                                        <div>${json.data[i].provider_name}</div>
+                                        <div>${json.data[i].provider_name==null?window.global_icon_app_home:json.data[i].provider_name}</div>
                                     </div>
                                     <div class='list_user_stat_col'>
                                         <div>${json.data[i].count_users}</div>
@@ -543,7 +543,7 @@ async function count_users(){
                                 <div></div>
                             </div>
                             <div class='list_user_stat_col'>
-                                <div>Not logged in</div>
+                                <div>${window.global_icon_app_logoff}</div>
                             </div>
                             <div class='list_user_stat_col'>
                                 <div></div>
@@ -589,7 +589,7 @@ function show_users(sort=8, order_by='ASC', focus=true){
             json = JSON.parse(result);
             let html = `<div id='list_user_account_row_title' class='list_user_account_row'>
                             <div id='list_user_account_col_title1' class='list_user_account_col list_title'>
-                                <div>${window.global_icon_user}</div>
+                                <div>${window.global_icon_user_avatar}</div>
                             </div>
                             <div id='list_user_account_col_title2' class='list_user_account_col list_sort_click list_title'>
                                 <div>${window.global_icon_provider_id}</div>
@@ -646,13 +646,13 @@ function show_users(sort=8, order_by='ASC', focus=true){
                                 <div>${window.global_icon_provider_id} ${window.global_icon_user} ${window.global_icon_username} 2</div>
                             </div>
                             <div id='list_user_account_col_title20' class='list_user_account_col list_title'>
-                                <div>${window.global_icon_provider_id} ${window.global_icon_misc_image}</div>
+                                <div>${window.global_icon_provider_id} ${window.global_icon_user} ${window.global_icon_user_avatar}</div>
                             </div>
                             <div id='list_user_account_col_title21' class='list_user_account_col list_sort_click list_title'>
-                                <div>${window.global_icon_provider_id} URL</div>
+                                <div>${window.global_icon_provider_id} ${window.global_icon_user} ${window.global_icon_user_avatar} URL</div>
                             </div>
                             <div id='list_user_account_col_title22' class='list_user_account_col list_sort_click list_title'>
-                                <div>${window.global_icon_provider_id} ${window.global_icon_app_email}</div>
+                                <div>${window.global_icon_provider_id} ${window.global_icon_user} ${window.global_icon_app_email}</div>
                             </div>
                             <div id='list_user_account_col_title23' class='list_user_account_col list_sort_click list_title'>
                                 <div>${window.global_icon_user_account_created}</div>
@@ -2215,14 +2215,47 @@ function init_admin_secure(){
     //other in admin
     document.getElementById('menu_open').innerHTML = window.global_icon_app_menu_open;
     document.getElementById('menu_1_broadcast_button').innerHTML = window.global_icon_app_chat;
+    
+    document.getElementById('send_broadcast_send').innerHTML = window.global_icon_app_send;
+    document.getElementById('send_broadcast_close').innerHTML = window.global_icon_app_close;
+    document.getElementById('lov_close').innerHTML = window.global_icon_app_close;
+
+    //menu 1
+    document.getElementById('box1_title').innerHTML = window.global_icon_app_users + ' ' + window.global_icon_app_chart;
+    document.getElementById('box2_title').innerHTML = window.global_icon_app_users + ' ' + window.global_icon_regional_numbersystem;
+    document.getElementById('menu_1_maintenance_title').innerHTML = window.global_icon_app_maintenance;
+    document.getElementById('send_broadcast_title').innerHTML = window.global_icon_app_broadcast;
+    //menu 2
+    //ID
+    document.getElementById('list_user_stat_col_title1').innerHTML = window.global_icon_provider_id;
+    //PROVIDER
+    document.getElementById('list_user_stat_col_title2').innerHTML = window.global_icon_provider;
+    //SUM
+    document.getElementById('list_user_stat_col_title3').innerHTML = window.global_icon_app_sum;
+    //CONNECTED
+    document.getElementById('list_user_stat_col_title4').innerHTML = window.global_icon_app_user_connections;
+
+    //menu 3
+    document.getElementById('list_user_account_search_icon').innerHTML = window.global_icon_app_search;
+    document.getElementById('list_user_account_title').innerHTML = window.global_icon_app_users;
+    document.getElementById('list_user_account_logon_title').innerHTML = window.global_icon_app_login;
     document.getElementById('users_save').innerHTML = window.global_icon_app_save;
+    //menu 4
+    document.getElementById('list_apps_title').innerHTML = window.global_icon_app_apps;
+    document.getElementById('list_app_parameter_title').innerHTML = window.global_icon_app_apps + window.global_icon_app_settings;
     document.getElementById('apps_save').innerHTML = window.global_icon_app_save;
+    //menu 5
+    document.getElementById('list_connected_title').innerHTML = window.global_icon_app_user_connections + ' ' + window.global_icon_app_log; 
+    document.getElementById('list_app_log_title').innerHTML = window.global_icon_app_apps + ' ' + window.global_icon_app_log;
+    document.getElementById('list_server_log_title').innerHTML = window.global_icon_app_server + ' ' + window.global_icon_app_log;
+    document.getElementById('list_pm2_log_title').innerHTML = window.global_icon_app_server + '2 ' + window.global_icon_app_log;
+    document.getElementById('list_pm2_log_path_title').innerHTML = window.global_icon_app_file_path;
     document.getElementById('list_app_log_first').innerHTML = window.global_icon_app_first;
     document.getElementById('list_app_log_previous').innerHTML = window.global_icon_app_previous;
     document.getElementById('list_app_log_next').innerHTML = window.global_icon_app_next;
     document.getElementById('list_app_log_last').innerHTML = window.global_icon_app_last;
-
     document.getElementById('filesearch_menu5').innerHTML =  window.global_icon_app_search;
+
     document.getElementById('menu5_row_parameters_col1_1').innerHTML = window.global_icon_app_checkbox_checked;
     document.getElementById('menu5_row_parameters_col1_0').innerHTML = window.global_icon_app_checkbox_empty;
     document.getElementById('menu5_row_parameters_col2_1').innerHTML = window.global_icon_app_checkbox_checked;
@@ -2234,29 +2267,6 @@ function init_admin_secure(){
     document.getElementById('menu5_row_parameters_col5_1').innerHTML = window.global_icon_app_checkbox_checked;
     document.getElementById('menu5_row_parameters_col5_0').innerHTML = window.global_icon_app_checkbox_empty
 
-    document.getElementById('send_broadcast_send').innerHTML = window.global_icon_app_send;
-    document.getElementById('send_broadcast_close').innerHTML = window.global_icon_app_close;
-    document.getElementById('lov_close').innerHTML = window.global_icon_app_close;
-
-    //menu 1
-    document.getElementById('box1_title').innerHTML = window.global_icon_app_users + ' ' + window.global_icon_app_chart;
-    document.getElementById('box2_title').innerHTML = window.global_icon_app_users + ' ' + window.global_icon_regional_numbersystem;
-    document.getElementById('menu_1_maintenance_title').innerHTML = window.global_icon_app_maintenance;
-    document.getElementById('send_broadcast_title').innerHTML = window.global_icon_app_broadcast;
-    //menu 3
-    document.getElementById('list_user_account_search_icon').innerHTML = window.global_icon_app_search;
-    document.getElementById('list_user_account_title').innerHTML = window.global_icon_app_users;
-    document.getElementById('list_user_account_logon_title').innerHTML = window.global_icon_app_login;
-    //menu 4
-    document.getElementById('list_apps_title').innerHTML = window.global_icon_app_apps;
-    document.getElementById('list_app_parameter_title').innerHTML = window.global_icon_app_apps + window.global_icon_app_settings;
-    //menu 5
-    document.getElementById('list_connected_title').innerHTML = window.global_icon_app_user_connections + ' ' + window.global_icon_app_log; 
-    document.getElementById('list_app_log_title').innerHTML = window.global_icon_app_apps + ' ' + window.global_icon_app_log;
-    document.getElementById('list_server_log_title').innerHTML = window.global_icon_app_server + ' ' + window.global_icon_app_log;
-    document.getElementById('list_pm2_log_title').innerHTML = window.global_icon_app_server + '2 ' + window.global_icon_app_log;
-
-    document.getElementById('list_pm2_log_path_title').innerHTML = window.global_icon_app_file_path;
 
     document.getElementById('menu5_row_parameters_col1').innerHTML = window.global_icon_app_server + ' info';
     document.getElementById('menu5_row_parameters_col2').innerHTML = window.global_icon_app_server + ' verbose';
@@ -2268,6 +2278,7 @@ function init_admin_secure(){
     document.getElementById('list_pm2_log_title_err').innerHTML = window.global_icon_app_server + '2 ' + window.global_icon_app_log + ' Error';
     document.getElementById('list_pm2_log_title_process_event').innerHTML = window.global_icon_app_server + '2 ' + window.global_icon_app_log + ' Process event';
 
+    document.getElementById('client_id_label').innerHTML = window.global_icon_user;
     document.getElementById('select_broadcast_type').options[0].text = window.global_icon_app_alert;
     document.getElementById('select_broadcast_type').options[1].text = window.global_icon_app_maintenance;
 
@@ -2294,7 +2305,7 @@ function init_admin_secure(){
     document.getElementById('send_broadcast_send').addEventListener('click', function() { sendBroadcast(); }, false);
     document.getElementById('send_broadcast_close').addEventListener('click', function() { closeBroadcast()}, false);
 
-    document.getElementById('list_user_account_search_input').addEventListener('keyup', function() { window.global_typewatch(show_users(null, null, false), 500); }, false);
+    document.getElementById('list_user_account_search_input').addEventListener('keyup', function() { window.global_typewatch(show_users(sort=8, order_by='ASC', false), 500); }, false);
     document.getElementById('list_user_account_search_icon').addEventListener('click', function() { document.getElementById('list_user_account_search_input').focus();document.getElementById('list_user_account_search_input').dispatchEvent(new KeyboardEvent('keyup')); }, false);
     document.getElementById('users_save').addEventListener('click', function() { button_save('users_save')}, false); 
 

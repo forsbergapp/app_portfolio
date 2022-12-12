@@ -92,8 +92,10 @@ function seticons(){
     window.global_icon_app_active = '<i class="fa-solid fa-toggle-on"></i>';
     window.global_icon_app_inactive = '<i class="fa-solid fa-toggle-off"></i>';
     window.global_icon_app_verification_code ='❂❂❂❂❂❂';
+    window.global_icon_app_sum = '∑';
+    window.global_icon_app_home = '<i class="fa-solid fa-house"></i>';
     //user
-    window.global_icon_user = '<i class="fas fa-user-circle"></i>';
+    window.global_icon_user = '<i class="fa-solid fa-user"></i>';
     window.global_icon_username = '<i class="fa-solid fa-a"></i><i class="fa-solid fa-b"></i><i class="fa-solid fa-c"></i>';    
     window.global_icon_user_last_logontime = '<i class="fa-solid fa-right-to-bracket"></i>';
     window.global_icon_user_account_created = '<i class="fa-solid fa-handshake-simple"></i>';
