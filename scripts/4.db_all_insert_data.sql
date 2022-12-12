@@ -591,7 +591,6 @@ INSERT INTO app_portfolio.app (id, app_name, url, logo, enabled, app_category_id
 --
 -- app_object
 --
-INSERT INTO app_portfolio.app_object (app_id, object_name) VALUES (0,'APP');
 INSERT INTO app_portfolio.app_object (app_id, object_name) VALUES (0,'COMMON');
 INSERT INTO app_portfolio.app_object (app_id, object_name) VALUES (1,'APP_DESCRIPTION');
 INSERT INTO app_portfolio.app_object (app_id, object_name) VALUES (2,'APP_DESCRIPTION');
@@ -601,11 +600,6 @@ INSERT INTO app_portfolio.app_object (app_id, object_name) VALUES (2,'APP_LOV');
 --
 -- app_object_item
 --
-INSERT INTO app_portfolio.app_object_item (app_object_app_id, app_object_object_name, object_item_name, setting_type_id) VALUES (0,'APP','LIST_USER_STAT_COL_TITLE1',NULL);
-INSERT INTO app_portfolio.app_object_item (app_object_app_id, app_object_object_name, object_item_name, setting_type_id) VALUES (0,'APP','LIST_USER_STAT_COL_TITLE2',NULL);
-INSERT INTO app_portfolio.app_object_item (app_object_app_id, app_object_object_name, object_item_name, setting_type_id) VALUES (0,'APP','LIST_USER_STAT_COL_TITLE3',NULL);
-INSERT INTO app_portfolio.app_object_item (app_object_app_id, app_object_object_name, object_item_name, setting_type_id) VALUES (0,'APP','LIST_USER_STAT_COL_TITLE4',NULL);
-INSERT INTO app_portfolio.app_object_item (app_object_app_id, app_object_object_name, object_item_name, setting_type_id) VALUES (0,'APP','CLIENT_ID_LABEL',NULL);
 INSERT INTO app_portfolio.app_object_item (app_object_app_id, app_object_object_name, object_item_name, setting_type_id) VALUES (0,'COMMON','BIO',NULL);
 INSERT INTO app_portfolio.app_object_item (app_object_app_id, app_object_object_name, object_item_name, setting_type_id) VALUES (0,'COMMON','CONFIRM_QUESTION',NULL);
 INSERT INTO app_portfolio.app_object_item (app_object_app_id, app_object_object_name, object_item_name, setting_type_id) VALUES (0,'COMMON','EMAIL',NULL);
