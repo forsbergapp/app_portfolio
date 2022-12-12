@@ -79,6 +79,7 @@ function show_menu(menu){
             document.getElementById('select_year_menu5').selectedIndex = 0;
             document.getElementById('select_month_menu5').selectedIndex = new Date().getMonth();
             document.getElementById('select_day_menu5').selectedIndex = new Date().getDate() -1;
+            fix_pagination_buttons();
             nav_click(document.getElementById('list_connected_title'));
             get_server_log_parameters().then(function() {
                 if (admin_token_has_value()){
@@ -1269,6 +1270,22 @@ function list_events(list_item, item_row, item_edit){
 /*----------------------- */
 /* MONITOR                */
 /*----------------------- */
+function fix_pagination_buttons(){
+    //fix rtl isse with images, items created after login
+    if (document.getElementById('user_direction_select').value=='ltr'||
+        document.getElementById('user_direction_select').value==''){
+        document.getElementById('list_app_log_first').innerHTML = window.global_icon_app_first;
+        document.getElementById('list_app_log_previous').innerHTML = window.global_icon_app_previous;
+        document.getElementById('list_app_log_next').innerHTML = window.global_icon_app_next;
+        document.getElementById('list_app_log_last').innerHTML = window.global_icon_app_last;
+    }
+    else{
+        document.getElementById('list_app_log_first').innerHTML = window.global_icon_app_last;
+        document.getElementById('list_app_log_previous').innerHTML = window.global_icon_app_next;
+        document.getElementById('list_app_log_next').innerHTML = window.global_icon_app_previous;
+        document.getElementById('list_app_log_last').innerHTML = window.global_icon_app_first;
+    }
+}
 function nav_click(item){
     document.getElementById('list_monitor_nav_1').classList='';
     document.getElementById('list_monitor_nav_2').classList='';
@@ -2250,10 +2267,6 @@ function init_admin_secure(){
     document.getElementById('list_server_log_title').innerHTML = window.global_icon_app_server + ' ' + window.global_icon_app_log;
     document.getElementById('list_pm2_log_title').innerHTML = window.global_icon_app_server + '2 ' + window.global_icon_app_log;
     document.getElementById('list_pm2_log_path_title').innerHTML = window.global_icon_app_file_path;
-    document.getElementById('list_app_log_first').innerHTML = window.global_icon_app_first;
-    document.getElementById('list_app_log_previous').innerHTML = window.global_icon_app_previous;
-    document.getElementById('list_app_log_next').innerHTML = window.global_icon_app_next;
-    document.getElementById('list_app_log_last').innerHTML = window.global_icon_app_last;
     document.getElementById('filesearch_menu5').innerHTML =  window.global_icon_app_search;
 
     document.getElementById('menu5_row_parameters_col1_1').innerHTML = window.global_icon_app_checkbox_checked;
@@ -2377,6 +2390,9 @@ function init_admin_secure(){
     document.getElementById('menu_9').addEventListener('click', function() { show_menu(9) }, false);
     document.getElementById('menu_10').addEventListener('click', function() { show_menu(10) }, false);
     document.getElementById('menu_11').addEventListener('click', function() { admin_logoff_app() }, false);
+
+    document.getElementById('user_direction_select').addEventListener('change', function() { fix_pagination_buttons(this.value)}, false);
+
 
     //hide all first (display none in css using eval not working)
     for (let i=1;i<=10;i++){
