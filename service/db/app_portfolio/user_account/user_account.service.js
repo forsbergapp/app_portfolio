@@ -207,7 +207,7 @@ module.exports = {
 		sql = `SELECT ua.identity_provider_id "identity_provider_id",
 						CASE 
 						WHEN ip.provider_name IS NULL THEN 
-							'Local' 
+							NULL
 						ELSE 
 							ip.provider_name 
 						END "provider_name",
