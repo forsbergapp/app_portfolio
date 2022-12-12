@@ -3,6 +3,7 @@ const { verify } = require("jsonwebtoken");
 const { createLog} = require ("../../service/db/app_portfolio/app_log/app_log.service");
 const { getParameter, getParameters_server } = require ("../../service/db/app_portfolio/app_parameter/app_parameter.service");
 const { createLogAppSE, createLogAppCI } = require("../../service/log/log.controller");
+const { getUserAppRoleAdmin } = require("../../service/db/app_portfolio/user_account/user_account.service");
 const { checkLogin } = require("../../service/db/app_portfolio/user_account_logon/user_account_logon.service");
 const { block_ip_control, safe_user_agents, policy_directives} = require ("./auth.service");
 module.exports = {
@@ -133,6 +134,22 @@ module.exports = {
             });
         }
 
+    },
+    checkAccessTokenSuperAdmin: (req, res, next) => {
+        if (req.query.app_id==0)
+            getUserAppRoleAdmin(req.query.app_id, req.query.user_account_logon_user_account_id, (err, result)=>{
+                if (result[0].app_role_id == 0){
+                    module.exports.checkAccessTokenCommon(req, res, next);
+                }
+                else
+                    res.status(401).json({
+                        message: '⛔'
+                    });
+            })
+        else
+            res.status(401).json({
+                message: '⛔'
+            });
     },
     checkAccessTokenAdmin: (req, res, next) => {
         if (req.query.app_id==0){
