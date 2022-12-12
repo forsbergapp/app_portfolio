@@ -131,9 +131,6 @@ module.exports = {
 	getUsersAdmin: (app_id, search, sort, order_by, offset, limit, callBack) => {
 		let sql;
 		let parameters;
-		sort = sort ?? '8';
-		order_by = order_by ?? 'ASC';
-
 		sql = `SELECT ua.avatar "avatar",
 		              ua.id "id",
 					  ua.app_role_id "app_role_id",
@@ -189,6 +186,21 @@ module.exports = {
 				return callBack(null, result);
 		});
     },
+	getUserAppRoleAdmin:(app_id, id, callBack) =>{
+		let sql;
+		let parameters;
+		sql = `SELECT app_role_id "app_role_id"
+				 FROM ${get_schema_name()}.user_account
+				WHERE id = :id`;
+		parameters = {id: id};
+		execute_db_sql(app_id, sql, parameters,
+			           __appfilename, __appfunction, __appline, (err, result)=>{
+			if (err)
+				return callBack(err, null);
+			else
+				return callBack(null, result);
+		});
+	},
 	getStatCountAdmin: (app_id, callBack) => {
 		let sql;
 		let parameters;
@@ -214,7 +226,7 @@ module.exports = {
 				return callBack(null, result);
 		});
     },
-	updateUserAdmin: (app_id, id, data, callBack) => {
+	updateUserSuperAdmin: (app_id, id, data, callBack) => {
 		let sql;
 		let parameters;
 		if (data.active =='')

@@ -689,9 +689,6 @@
         margin-bottom: 10px;
         border-radius: 4px;
     }
-    #list_app_log_row_title div, #list_connected_row_title div, #list_server_log_row_title div{
-        cursor:pointer;
-    }
     #list_app_log_row_title, #list_connected_row_title{
         height: auto;
     }
@@ -701,7 +698,7 @@
         padding-inline-start: 5px;
         text-align: start;
     }   
-    .list_connected_gps_click, .list_connected_chat_click, .list_app_log_gps_click, .list_server_log_gps_click  {
+    .list_sort_click, .list_gps_click, .list_chat_click {
         cursor:pointer;
     }
     .list_app_log_col, .list_connected_col{
