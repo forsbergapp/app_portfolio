@@ -316,7 +316,11 @@
         box-sizing: border-box;
         border-radius: 4px;
     }
-    
+    #list_user_account_search_icon{
+        display: inline-block;
+        cursor: pointer;
+    }
+
     #list_user_account_title, #list_user_account_logon_title{
         text-transform: uppercase;
         display:inline-block;
