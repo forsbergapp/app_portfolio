@@ -2322,7 +2322,7 @@ function setEvents() {
     //dialogue login/signup/forgot
     let input_username_login = document.getElementById("login_username");
     input_username_login.addEventListener("keyup", function(event) {
-        if (event.keyCode === 13) {
+        if (event.code === 'Enter') {
             event.preventDefault();
             user_login_app().then(function(){
                 //unfocus
@@ -2332,7 +2332,7 @@ function setEvents() {
     });
     let input_password_login = document.getElementById("login_password");
     input_password_login.addEventListener("keyup", function(event) {
-        if (event.keyCode === 13) {
+        if (event.code === 'Enter') {
             event.preventDefault();
             user_login_app().then(function(){
                 //unfocus

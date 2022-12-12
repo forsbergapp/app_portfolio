@@ -45,7 +45,7 @@ async function admin_login(){
 }
 function setEvents(){
     document.getElementById('admin_login_username_input').addEventListener('keyup', function(event) {
-        if (event.keyCode === 13) {
+        if (event.code === 'Enter') {
             event.preventDefault();
             admin_login();
             //unfocus
@@ -53,7 +53,7 @@ function setEvents(){
         }
     });
     document.getElementById('admin_login_password_input').addEventListener('keyup', function(event) {
-        if (event.keyCode === 13) {
+        if (event.code === 'Enter') {
             event.preventDefault();
             admin_login();
             //unfocus
