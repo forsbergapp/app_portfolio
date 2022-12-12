@@ -2,7 +2,7 @@ const router = require("express").Router();
 const {
     getUsersAdmin,
     getStatCountAdmin,
-    updateUserAdmin,
+    updateUserSuperAdmin,
     userLogin,
     userSignup,
     activateUser,
@@ -20,7 +20,7 @@ const {
     
 } = require("./user_account.controller");
 const { checkAccessToken, checkDataToken, checkDataTokenRegistration, checkDataTokenLogin } = require("../../../auth/auth.controller");
-const { checkAccessTokenAdmin} = require ("../../../auth/auth.controller");
+const { checkAccessTokenAdmin, checkAccessTokenSuperAdmin} = require ("../../../auth/auth.controller");
 const { createLogAppRI } = require("../../../log/log.controller");
 router.use((req,res,next)=>{
     createLogAppRI(req, res, __appfilename, __appfunction, __appline, req.body);
@@ -30,8 +30,8 @@ router.use((req,res,next)=>{
 router.get("/admin/:search", checkAccessTokenAdmin, getUsersAdmin);
 //admin, count user stat
 router.get("/admin/count", checkAccessTokenAdmin, getStatCountAdmin);
-//admin update user
-router.put("/admin/:id", checkAccessTokenAdmin, updateUserAdmin);
+//admin update user, only for superadmin
+router.put("/admin/:id", checkAccessTokenSuperAdmin, updateUserSuperAdmin);
 
 router.put("/login", checkDataTokenLogin, userLogin);
 router.post("/signup", checkDataTokenRegistration, userSignup);

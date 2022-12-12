@@ -1,7 +1,7 @@
 const {
     getUsersAdmin,
     getStatCountAdmin,
-    updateUserAdmin,
+    updateUserSuperAdmin,
     password_length_wrong, 
     get_app_code,
     verification_code,
@@ -27,7 +27,7 @@ const {
 const { genSaltSync, hashSync, compareSync } = require("bcryptjs");
 const { getMessage } = require("../message_translation/message_translation.service");
 const { insertProfileSearch } = require("../profile_search/profile_search.service");
-const { createUserAccountApp } = require("../user_account_app/user_account_app.service");
+const { createUserAccountApp, deleteUserAccountApps } = require("../user_account_app/user_account_app.service");
 const { getLastUserEvent, insertUserEvent } = require("../user_account_event/user_account_event.service");
 const { insertUserAccountLogon } = require("../user_account_logon/user_account_logon.service");
 const { insertUserAccountView } = require("../user_account_view/user_account_view.service");
@@ -65,8 +65,8 @@ module.exports = {
             }
         });
     },
-    updateUserAdmin: (req, res) => {
-        updateUserAdmin(req.query.app_id, req.params.id, req.body, (err, results) => {
+    updateUserSuperAdmin: (req, res) => {
+        updateUserSuperAdmin(req.query.app_id, req.params.id, req.body, (err, results) => {
             if (err) {
                 var app_code = get_app_code(err.errorNum, 
                     err.message, 
@@ -89,9 +89,22 @@ module.exports = {
                     );
             }
             else{
-                return res.status(200).json({
-                    data: results
-                });
+                if (req.body.app_role_id!=0 && req.body.app_role_id!=1)
+                    //delete admin app from user if user is not an admin anymore
+                    deleteUserAccountApps(req.query.app_id, req.params.id, req.query.app_id, (err, result_delete_user_acccount_app) =>{
+                        if (err)
+                            return res.status(500).send(
+                                err
+                            );
+                        else
+                            return res.status(200).json({
+                                data: results
+                            });
+                    })
+                else
+                    return res.status(200).json({
+                        data: results
+                    });
             }
         });
     },
