@@ -744,7 +744,7 @@ function show_users(focus=true){
                 </div>`;
             }
             document.getElementById('list_user_account').innerHTML = html;
-            list_events('list_user_account', 'list_user_account_row', ' .list_edit', 1);
+            list_events('list_user_account', 'list_user_account_row', ' .list_edit');
             
             if (focus==true){
                 //set focus at start
@@ -832,7 +832,6 @@ async function show_user_account_logon(user_account_id){
                 </div>`;
             }
             document.getElementById('list_user_account_logon').innerHTML = html;
-            //list_events('list_user_account_logon', 'list_user_account_logon_row', '.list_edit_user_account_logon', 1);
         }
     })
 }
@@ -900,7 +899,7 @@ async function show_apps(){
                 </div>`;
             }
             document.getElementById('list_apps').innerHTML = html;
-            list_events('list_apps', 'list_apps_row', ' .list_edit', 1);
+            list_events('list_apps', 'list_apps_row', ' .list_edit');
             //disable enabled checkbox for app 0 common
             document.getElementById('list_apps_row_0').children[4].children[0].disabled = true;
             //set focus first column in first row
@@ -943,7 +942,7 @@ function show_app_parameter(app_id){
                 html += 
                 `<div id='list_app_parameter_row_${i}' data-changed-record='0' class='list_app_parameter_row'>
                     <div class='list_app_parameter_col'>
-                        <input type=text class='list_edit' value='${json.data[i].app_id}'/>
+                        <div class='list_readonly'>${json.data[i].app_id}</div>
                     </div>
                     <div class='list_app_parameter_col'>
                         <input type=text class='list_edit input_lov' value='${json.data[i].parameter_type_id}'/>
@@ -964,7 +963,7 @@ function show_app_parameter(app_id){
                 </div>`;
             }
             document.getElementById('list_app_parameter').innerHTML = html;
-            list_events('list_app_parameter', 'list_app_parameter_row', '.list_edit', 1);
+            list_events('list_app_parameter', 'list_app_parameter_row', '.list_edit');
         }
     })
 }
@@ -1088,7 +1087,7 @@ async function update_record(table,
         })
     }
 }
-function list_events(list_item, item_row, item_edit, column_start_index){
+function list_events(list_item, item_row, item_edit){
     //add lov icon
     document.querySelectorAll(`#${list_item} .common_lov_button`).forEach(e => e.innerHTML = window.global_icon_app_lov);
 
@@ -1158,20 +1157,21 @@ function list_events(list_item, item_row, item_edit, column_start_index){
     //keydown event
     document.querySelectorAll(`#${list_item} ${item_edit}`).forEach(e => e.addEventListener('keydown', function(event) {
         if (event.code=='ArrowUp') {
-            if (item_row=='list_apps_row' || item_row == 'list_user_account')
-                window.global_previous_row = event.target.parentNode.parentNode;
+            window.global_previous_row = event.target.parentNode.parentNode;
             event.preventDefault();
             let index = parseInt(event.target.parentNode.parentNode.id.substr(item_row.length+1));
+            //focus on first list_edit item in the row
             if (index>0)
-                document.getElementById(`${item_row}_${index - 1}`).children[column_start_index].children[0].focus();
+                document.querySelectorAll(`#${item_row}_${index - 1} ${item_edit}`)[0].focus();
         }
         if (event.code=='ArrowDown') {
-            if (item_row=='list_apps_row' || item_row == 'list_user_account')
-                window.global_previous_row = event.target.parentNode.parentNode;
+            window.global_previous_row = event.target.parentNode.parentNode;
             event.preventDefault();
             let index = parseInt(event.target.parentNode.parentNode.id.substr(item_row.length+1)) +1;
+            //focus on first list_edit item in the row
             if (document.getElementById(`${item_row}_${index}`)!= null)
-                document.getElementById(`${item_row}_${index}`).children[column_start_index].children[0].focus();
+                document.querySelectorAll(`#${item_row}_${index} ${item_edit}`)[0].focus();
+                
         }
     }));
     //focus event
@@ -2203,6 +2203,7 @@ function init_admin_secure(){
     document.getElementById('menu_1_maintenance_title').innerHTML = window.global_icon_app_maintenance;
     document.getElementById('send_broadcast_title').innerHTML = window.global_icon_app_broadcast;
     //menu 3
+    document.getElementById('list_user_account_search_icon').innerHTML = window.global_icon_app_search;
     document.getElementById('list_user_account_title').innerHTML = window.global_icon_app_users;
     document.getElementById('list_user_account_logon_title').innerHTML = window.global_icon_app_login;
     //menu 4
