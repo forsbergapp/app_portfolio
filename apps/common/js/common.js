@@ -939,32 +939,27 @@ function lov_show(lov, function_event){
     })
 }
 function lov_keys(event){
-    //left 37, right 39, up 38, down 40, enter 13
-    switch (event.keyCode){
-        case 37:
-        case 39:{
+    switch (event.code){
+        case 'ArrowLeft':
+        case 'ArrowRight':{
             break;
         }
-        case 38:
-        case 40:{
-            //up 38
-            //down 40
+        case 'ArrowUp':
+        case 'ArrowDown':{
             //loop rows not hidden
             var x = document.querySelectorAll('.list_lov_row:not(.list_lov_row_hide)');
             for (i = 0; i <= x.length -1; i++) {
                 if (x[i].classList.contains('list_lov_row_selected')){
                     //if up and first or
                     //if down and last
-                    if ((event.keyCode==38 && i == 0)||
-                        (event.keyCode==40 && i == x.length -1)){
-                        if(event.keyCode==38){
-                            //up
+                    if ((event.code=='ArrowUp' && i == 0)||
+                        (event.code=='ArrowDown' && i == x.length -1)){
+                        if(event.code=='ArrowUp'){
                             //if the first, set the last
                             x[i].classList.remove ('list_lov_row_selected');
                             x[x.length -1].classList.add ('list_lov_row_selected');
                         }
                         else{
-                            //down
                             //if the last, set the first
                             x[i].classList.remove ('list_lov_row_selected');
                             x[0].classList.add ('list_lov_row_selected');
@@ -972,8 +967,7 @@ function lov_keys(event){
                         return;
                     }
                     else{
-                        if(event.keyCode==38){
-                            //up
+                        if(event.code=='ArrowUp'){
                             //remove highlight, highlight previous
                             x[i].classList.remove ('list_lov_row_selected');
                             x[i-1].classList.add ('list_lov_row_selected');
@@ -992,7 +986,7 @@ function lov_keys(event){
             x[0].classList.add ('list_lov_row_selected');
             break
         }
-        case 13:{
+        case 'Enter':{
             //enter
             var x = document.querySelectorAll('.list_lov_row');
             for (i = 0; i <= x.length -1; i++) {
@@ -2041,26 +2035,22 @@ async function profile_update_stat(callBack){
     })
 }
 function search_input(event, event_function){
-    //left 37, right 39, up 38, down 40, enter 13
-    switch (event.keyCode){
-        case 37:
-        case 39:{
+    switch (event.code){
+        case 'ArrowLeft':
+        case 'ArrowRight':{
             break;
         }
-        case 38:
-        case 40:{
-            //up 38
-            //down 40
+        case 'ArrowUp':
+        case 'ArrowDown':{
             if (document.getElementById('profile_search_list').style.display=='inline-block'){
                 var x = document.querySelectorAll('.profile_search_list_row');
                 for (i = 0; i <= x.length -1; i++) {
                     if (x[i].classList.contains('profile_search_list_selected'))
                         //if up and first or
                         //if down and last
-                        if ((event.keyCode==38 && i == 0)||
-                            (event.keyCode==40 && i == x.length -1)){
-                            if(event.keyCode==38){
-                                //up
+                        if ((event.code=='ArrowUp' && i == 0)||
+                            (event.code=='ArrowDown' && i == x.length -1)){
+                            if(event.code=='ArrowUp'){
                                 //if the first, set the last
                                 x[i].classList.remove ('profile_search_list_selected');
                                 x[x.length -1].classList.add ('profile_search_list_selected');
@@ -2074,8 +2064,7 @@ function search_input(event, event_function){
                             return;
                         }
                         else{
-                            if(event.keyCode==38){
-                                //up
+                            if(event.code=='ArrowUp'){
                                 //remove highlight, highlight previous
                                 x[i].classList.remove ('profile_search_list_selected');
                                 x[i-1].classList.add ('profile_search_list_selected');
@@ -2095,7 +2084,7 @@ function search_input(event, event_function){
             }
             break
         }
-        case 13:{
+        case 'Enter':{
             //enter
             if (document.getElementById('profile_search_list').style.display=='inline-block'){
                 var x = document.querySelectorAll('.profile_search_list_row');
@@ -3194,7 +3183,7 @@ async function init_common(parameters, callBack){
             document.getElementById('forgot_tab1').addEventListener('click', function() { show_common_dialogue('LOGIN') }, false);
             document.getElementById('forgot_tab2').addEventListener('click', function() { show_common_dialogue('SIGNUP') }, false);
             document.getElementById("forgot_email").addEventListener('keyup', function(event) {
-                if (event.keyCode === 13) {
+                if (event.code === 'Enter') {
                     event.preventDefault();
                     user_forgot().then(function(){
                         //unfocus
