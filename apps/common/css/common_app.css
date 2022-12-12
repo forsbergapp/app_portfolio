@@ -925,11 +925,6 @@ a:active {
 	}
 	.profile_detail_list{
 		height:5.6em;
-	}	
-	#user_edit_label_data_last_logontime,
-	#user_edit_label_data_account_created,
-	#user_edit_label_data_account_modified {
-		font-size: 0.7em;
 	}
 }
 .common_dialogue_content a:hover, a:active {

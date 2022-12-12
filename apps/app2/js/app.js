@@ -2538,7 +2538,7 @@ function init_app() {
         document.getElementById('toolbar_btn_year').innerHTML = window.global_icon_regional_year;
         document.getElementById('toolbar_btn_settings').innerHTML = window.global_icon_app_settings;
         //toolbar top
-        document.getElementById('user_menu_default_avatar').innerHTML = window.global_icon_user;
+        document.getElementById('user_menu_default_avatar').innerHTML = window.global_icon_user_avatar;
         document.getElementById('toolbar_btn_zoomout').innerHTML = window.global_icon_app_zoomout;
         document.getElementById('toolbar_btn_zoomin').innerHTML = window.global_icon_app_zoomin;
         document.getElementById('toolbar_btn_left').innerHTML = window.global_icon_app_left;
