@@ -26,16 +26,9 @@ module.exports = {
 						data: results
 					});
 				else{
-					const { getMessage_admin } = require("../../service/db/app_portfolio/message_translation/message_translation.service");
-					//Record not found
-					getMessage_admin(req.query.app_id, 
-									 process.env.COMMON_APP_ID,
-									 20400, 
-									 req.query.lang_code, (err,result_message)  => {
-											return res.status(404).send(
-													err ?? result_message.text
-											);
-									 });
+					return res.status(404).send(
+						'Record not found'
+					);
 				}
 			}
 		});
@@ -52,16 +45,9 @@ module.exports = {
 						data: results
 					});
                 else{
-                    const { getMessage_admin } = require("../../service/db/app_portfolio/message_translation/message_translation.service");
-                    //Record not found
-                    getMessage_admin(req.query.app_id, 
-									 process.env.COMMON_APP_ID,
-									 20400, 
-									 req.query.lang_code, (err,result_message)  => {
-										return res.status(404).send(
-												err ?? result_message.text
-										);
-									 });
+                    return res.status(404).send(
+						'Record not found'
+					);
                 }
             }
 		});
@@ -80,16 +66,9 @@ module.exports = {
 						data: results
 					});
 				else{
-					const { getMessage_admin } = require("../../service/db/app_portfolio/message_translation/message_translation.service");
-					//Record not found
-					getMessage_admin(req.query.app_id, 
-									 process.env.COMMON_APP_ID,
-									 20400, 
-									 req.query.lang_code, (err,result_message)  => {
-										return res.status(404).send(
-												err ?? result_message.text
-										);
-									 });
+					return res.status(404).send(
+						'Record not found'
+					);
 				}
 			}
 		});

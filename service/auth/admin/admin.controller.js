@@ -1,6 +1,6 @@
 const { sign } = require("jsonwebtoken");
 const { verify } = require("jsonwebtoken");
-const { createLogAdmin} = require ("../../../service/db/app_portfolio/app_log/app_log.service");
+const { createLogAppCI } = require("../../../service/log/log.controller");
 module.exports = {
     checkAdmin: (req, res, next) => {
 		let token = req.get("authorization");
@@ -8,8 +8,10 @@ module.exports = {
             token = token.slice(7);
             verify(token, process.env.SERVICE_AUTH_ADMIN_TOKEN_SECRET, (err, decoded) => {
                 if (err){
-                    res.status(401).send({
-                        message: "Invalid token"
+                    createLogAppCI(req, res, __appfilename, __appfunction, __appline, 'SYSTEM ADMIN CheckAdmin token verify error: ' + err).then(function(){
+                        res.status(401).send({
+                            message: '⛔'
+                        });
                     });
                 } else {
                     next();
@@ -17,70 +19,37 @@ module.exports = {
             });
             
 		}else{
-			res.status(401).json({
-				message: 'Not authorized'
-			});
+			createLogAppCI(req, res, __appfilename, __appfunction, __appline, 'SYSTEM ADMIN CheckAdmin token missing').then(function(){
+                res.status(401).send({
+                    message: '⛔'
+                });
+            });
 		}
 	},
-    authAdmin: (req, res, next) => {
+    authAdmin: (req, res) => {
         if(req.headers.authorization){                
-            var userpass = new Buffer.from((req.headers.authorization || '').split(' ')[1] || '', 'base64').toString();
+            let userpass = new Buffer.from((req.headers.authorization || '').split(' ')[1] || '', 'base64').toString();
             if (userpass == process.env.SERVER_ADMIN_NAME + ':' + process.env.SERVER_ADMIN_PASSWORD) {
                 var jsontoken_at;
                 jsontoken_at = sign ({tokentimstamp: Date.now()}, process.env.SERVICE_AUTH_ADMIN_TOKEN_SECRET, {
                                     expiresIn: process.env.SERVICE_AUTH_ADMIN_TOKEN_EXPIRE_ACCESS
                                     });
-                createLogAdmin(req.query.app_id,
-                                { app_id : process.env.COMMON_APP_ID,
-                                    app_module : 'AUTH',
-                                    app_module_type : 'ADMINTOKEN_OK',
-                                    app_module_request : req.baseUrl,
-                                    app_module_result : 'AT:' + jsontoken_at,
-                                    app_user_id : '',
-                                    user_language : req.body.user_language,
-                                    user_timezone : req.body.user_timezone,
-                                    user_number_system : req.body.user_number_system,
-                                    user_platform : req.body.user_platform,
-                                    server_remote_addr : req.ip,
-                                    server_user_agent : req.headers["user-agent"],
-                                    server_http_host : req.headers["host"],
-                                    server_http_accept_language : req.headers["accept-language"],
-                                    client_latitude : req.body.client_latitude,
-                                    client_longitude : req.body.client_longitude
-                                    }, (err,results)  => {
-                                        res.admin_id = process.env.SERVER_ADMIN_ID;
-                                        res.admin_token_at = jsontoken_at;
-                                        next();
-                                    });
+                createLogAppCI(req, res, __appfilename, __appfunction, __appline, 'SYSTEM ADMIN login OK:' + process.env.SERVER_ADMIN_NAME).then(function(){
+                    return res.status(200).json({ 
+                        token_at: jsontoken_at
+                    });
+                });
             }
             else
-                createLogAdmin(req.query.app_id,
-                                { app_id : process.env.COMMON_APP_ID,
-                                    app_module : 'AUTH',
-                                    app_module_type : 'ADMINTOKEN_FAIL',
-                                    app_module_request : req.baseUrl,
-                                    app_module_result : 'Unauthorized: Access is denied.',
-                                    app_user_id : '',
-                                    user_language : req.body.user_language,
-                                    user_timezone : req.body.user_timezone,
-                                    user_number_system : req.body.user_number_system,
-                                    user_platform : req.body.user_platform,
-                                    server_remote_addr : req.ip,
-                                    server_user_agent : req.headers["user-agent"],
-                                    server_http_host : req.headers["host"],
-                                    server_http_accept_language : req.headers["accept-language"],
-                                    client_latitude : req.body.client_latitude,
-                                    client_longitude : req.body.client_longitude
-                                    }, (err,results)  => {
-                                        return res.status(401).send({ 
-                                            message: "Unauthorized: Access is denied."
-                                        });
-                                });
+                createLogAppCI(req, res, __appfilename, __appfunction, __appline, 'SYSTEM ADMIN login FAIL:' + process.env.SERVER_ADMIN_NAME).then(function(){
+                    return res.status(401).send({ 
+                        message: '⛔'
+                    });
+                })
         }
-        else{
+        else
             return res.status(401).send({ 
-                message: "Unauthorized: Access is denied"
+                message: '⛔'
             });
-        }
     }
 }
