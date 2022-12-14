@@ -99,6 +99,7 @@ function show_menu(menu){
                 document.getElementById('select_month_menu5_app_log').selectedIndex = new Date().getMonth();
                 fix_pagination_buttons();
                 nav_click(document.getElementById('list_connected_title'));
+                map_resize();
             }
             break;
         }
@@ -1990,16 +1991,28 @@ function page_navigation(item){
     }
 }
 function list_item_click(item){
+    let url;
+    let tokentype;
     if (item.className.indexOf('gps_click')>0){
+        if (window.global_system_admin==1){
+            tokentype = 2;
+        }
+        else
+            tokentype = 1;
         if (item.parentNode.parentNode.id =='list_server_log'){
             //clicking on IP, get GPS, show on map
             let ip_filter='';
             //if localhost show default position
             if (item.children[0].innerHTML != '::1')
                 ip_filter = `&ip=${item.children[0].innerHTML}`;
-            common_fetch(window.global_service_geolocation + window.global_service_geolocation_gps_ip + 
-                            `/admin?app_user_id=${ip_filter}`,
-                            'GET', 1, null, null, null, (err, result) =>{
+            if (window.global_system_admin==1){
+                url = window.global_service_geolocation + window.global_service_geolocation_gps_ip + 
+                      `/systemadmin?app_user_id=${ip_filter}`;
+            }
+            else
+                url = window.global_service_geolocation + window.global_service_geolocation_gps_ip + 
+                      `/admin?app_user_id=${ip_filter}`;
+            common_fetch(url, 'GET', tokentype, null, null, null, (err, result) =>{
                     if (err)
                         null;
                     else{
@@ -2027,12 +2040,19 @@ function list_item_click(item){
                     long = item.parentNode.children[i+1].children[0].innerHTML;
                     break;
                 }       
-            }    
-            common_fetch(window.global_service_geolocation + window.global_service_geolocation_gps_place + 
-                            '/admin?app_user_id=' +
-                            '&latitude=' + lat +
-                            '&longitude=' + long,
-                            'GET', 1, null, null, null, (err, result) =>{
+            }
+            if (window.global_system_admin==1){
+                url = window.global_service_geolocation + window.global_service_geolocation_gps_place + 
+                      '/systemadmin?app_user_id=' +
+                      '&latitude=' + lat +
+                      '&longitude=' + long;
+            }
+            else
+                url = window.global_service_geolocation + window.global_service_geolocation_gps_place + 
+                        '/admin?app_user_id=' +
+                        '&latitude=' + lat +
+                        '&longitude=' + long;
+            common_fetch(url, 'GET', tokentype, null, null, null, (err, result) =>{
                     if (err)
                         null;
                     else{

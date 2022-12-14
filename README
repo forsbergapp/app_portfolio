@@ -273,7 +273,8 @@ Installation instructions
 	SERVER_TEST_SUBDOMAIN								=test
 	SERVER_DB_START                             		={0=NO, 1=YES default 0, change to 1 when db configured}
 	SERVER_APP_START                            		={0=NO, 1=YES default 0, change to 1 when apps configured}
-
+	SERVER_SERVICE_GEOLOCATION_URL_GPS_IP				=http://www.geoplugin.net/json.gp
+	SERVER_SERVICE_GEOLOCATION_URL_GPS_PLACE			=http://www.geoplugin.net/extras/location.gp
 	#service variables
 	SERVICE_AUTH_ACCESS_CONTROL_ENABLE          		={0=NO, 1=YES}
 	SERVICE_AUTH_ACCESS_CONTROL_IP             			={0=NO, 1=YES}
@@ -288,6 +289,9 @@ Installation instructions
 	SERVICE_AUTH_ADMIN_TOKEN_EXPIRE_ACCESS	    		=1d
 	SERVICE_AUTH_ADMIN_TOKEN_SECRET		        		={ADMIN_TOKEN_SECRET}
 	SERVICE_AUTH_ENABLE_GEOLOCATION						={0=NO, 1=YES}
+	SERVICE_AUTH_ENABLE_USER_REGISTRATION       		={0=NO, 1=YES}
+	SERVICE_AUTH_ENABLE_USER_LOGIN              		={0=NO, 1=YES}
+	SERVICE_AUTH_ENABLE_DBLOG                   		={0=NO, 1=YES}
 	#What database to use
 	#1=DB1 MySQL, 2=DB2 Oracle
 	SERVICE_DB_USE                           			=1
@@ -359,7 +363,7 @@ Installation instructions
 		  update DNS to point to test.[domain], *.test.[domain]/admin,  app1.test.[domain] etc
 		  create SSL for *.test.[domain], *.[domain], [domain]
 	SERVICE_DB_DB1_VARIANT
-		some minor adjustments between MySQL and MariaDB: 
+		comments about MySQL and MariaDB: 
 		- MariaDB global variables in INFORMATION_SCHEMA
 		- MySQL global variables in PERFORMANCE_SCHEMA
 		- both MariaDB and MySQL use npm MySQL module

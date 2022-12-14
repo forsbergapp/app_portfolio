@@ -1241,7 +1241,7 @@ async function get_place_from_gps(longitude, latitude) {
         let tokentype;
         if (window.global_system_admin==1){
             url = window.global_service_geolocation + window.global_service_geolocation_gps_place + 
-                        '/admin?longitude=' + longitude + '&latitude=' + latitude;
+                        '/systemadmin?longitude=' + longitude + '&latitude=' + latitude;
             tokentype = 2;
         }
         else 
