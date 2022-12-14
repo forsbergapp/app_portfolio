@@ -79,7 +79,7 @@ async function admin_login(){
                         })
                 }
                 else{
-                    show_message('EXCEPTION', null,null, result_form, window.global_app_id);
+                    show_message('EXCEPTION', null,null, result_login, window.global_app_id);
                 }
             })
     }
