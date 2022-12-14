@@ -64,6 +64,11 @@ ul#admin_login_nav li{
     height:100%;
 	visibility: hidden;
 }
+#system_admin_avatar{
+	font-size: 30px;
+    position: absolute;
+    margin-inline-start: 20px;
+}
 /* common*/
 #profile_input_row,
 #profile_search_list_wrap{
