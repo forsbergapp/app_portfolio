@@ -865,7 +865,7 @@ function lov_close(){
     
 }
 function lov_show(lov, function_event){
-    document.getElementById('lov_title').innerHTML = lov.replace('_','');
+    
     document.getElementById('dialogue_lov').style.visibility = 'visible';
     document.getElementById('lov_list').innerHTML = window.global_app_spinner;
     let url = '';
@@ -873,6 +873,7 @@ function lov_show(lov, function_event){
     let lov_column_value='';
     switch (lov){
         case 'PARAMETER_TYPE':{
+            document.getElementById('lov_title').innerHTML = window.global_icon_app_apps + ' ' +window.global_icon_app_settings  + ' ' + window.global_icon_app_type;
             lov_column_value = 'parameter_type_text';
             if (window.global_admin){
                 url = window.global_rest_url_base + window.global_rest_parameter_type + `admin?`;
@@ -885,18 +886,21 @@ function lov_show(lov, function_event){
             break;
         }
         case 'SERVER_LOG_FILES':{
+            document.getElementById('lov_title').innerHTML = window.global_icon_app_server + ' ' + window.global_icon_app_file_path;
             lov_column_value = 'filename';
             url = window.global_service_log + '/files?';
             token_type = 2;
             break;
         }
         case 'APP_CATEGORY':{
+            document.getElementById('lov_title').innerHTML = window.global_icon_app_apps + ' ' + window.global_icon_app_type;
             lov_column_value = 'app_category_text';
             url = window.global_rest_url_base + window.global_rest_app_category + '/admin?'
             token_type = 1;
             break;
         }
         case 'APP_ROLE':{
+            document.getElementById('lov_title').innerHTML = window.global_icon_app_role;
             lov_column_value = 'icon';
             url = window.global_rest_url_base + window.global_rest_app_role + '/admin?'
             token_type = 1;
