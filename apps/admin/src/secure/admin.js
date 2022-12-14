@@ -17,16 +17,27 @@
 /*----------------------- */
 function show_menu(menu){
     document.getElementById('menu_1_content').style.display='none';
+    document.getElementById(`menu_1`).classList.remove('menuitem_selected');
     document.getElementById('menu_2_content').style.display='none';
+    document.getElementById(`menu_2`).classList.remove('menuitem_selected');
     document.getElementById('menu_3_content').style.display='none';
+    document.getElementById(`menu_3`).classList.remove('menuitem_selected');
     document.getElementById('menu_4_content').style.display='none';
+    document.getElementById(`menu_4`).classList.remove('menuitem_selected');
     document.getElementById('menu_5_content').style.display='none';
+    document.getElementById(`menu_5`).classList.remove('menuitem_selected');
     document.getElementById('menu_6_content').style.display='none';
+    document.getElementById(`menu_6`).classList.remove('menuitem_selected');
     document.getElementById('menu_7_content').style.display='none';
+    document.getElementById(`menu_7`).classList.remove('menuitem_selected');
     document.getElementById('menu_8_content').style.display='none';
+    document.getElementById(`menu_8`).classList.remove('menuitem_selected');
     document.getElementById('menu_9_content').style.display='none';
+    document.getElementById(`menu_9`).classList.remove('menuitem_selected');
     document.getElementById('menu_10_content').style.display='none';
+    document.getElementById(`menu_10`).classList.remove('menuitem_selected');
     document.getElementById(`menu_${menu}_content`).style.display='block';
+    document.getElementById(`menu_${menu}`).classList.add('menuitem_selected');
     let current_year = new Date().getFullYear();
     let yearvalues =   `<option value="${current_year}">${current_year}</option>
                         <option value="${current_year -1}">${current_year-1}</option>
@@ -65,27 +76,30 @@ function show_menu(menu){
         }
         //MONITOR
         case 5:{
-            window.global_page = 0;
-            //connected
-            document.getElementById('select_year_menu5_list_connected').innerHTML = yearvalues;
-            document.getElementById('select_year_menu5_list_connected').selectedIndex = 0;
-            document.getElementById('select_month_menu5_list_connected').selectedIndex = new Date().getMonth();
-            //log
-            document.getElementById('select_year_menu5_app_log').innerHTML = yearvalues;
-            document.getElementById('select_year_menu5_app_log').selectedIndex = 0;
-            document.getElementById('select_month_menu5_app_log').selectedIndex = new Date().getMonth();
-            //server log
-            document.getElementById('select_year_menu5').innerHTML = yearvalues;
-            document.getElementById('select_year_menu5').selectedIndex = 0;
-            document.getElementById('select_month_menu5').selectedIndex = new Date().getMonth();
-            document.getElementById('select_day_menu5').selectedIndex = new Date().getDate() -1;
-            fix_pagination_buttons();
-            nav_click(document.getElementById('list_connected_title'));
-            get_server_log_parameters().then(function() {
-                if (admin_token_has_value()){
+            if (window.global_system_admin==1){
+                //server log
+                document.getElementById('select_year_menu5').innerHTML = yearvalues;
+                document.getElementById('select_year_menu5').selectedIndex = 0;
+                document.getElementById('select_month_menu5').selectedIndex = new Date().getMonth();
+                document.getElementById('select_day_menu5').selectedIndex = new Date().getDate() -1;
+                get_server_log_parameters().then(function() {
+                    nav_click(document.getElementById('list_server_log_title'));
                     map_resize();
-                }
-            })
+                })
+            }
+            else{
+                window.global_page = 0;
+                //connected
+                document.getElementById('select_year_menu5_list_connected').innerHTML = yearvalues;
+                document.getElementById('select_year_menu5_list_connected').selectedIndex = 0;
+                document.getElementById('select_month_menu5_list_connected').selectedIndex = new Date().getMonth();
+                //log
+                document.getElementById('select_year_menu5_app_log').innerHTML = yearvalues;
+                document.getElementById('select_year_menu5_app_log').selectedIndex = 0;
+                document.getElementById('select_month_menu5_app_log').selectedIndex = new Date().getMonth();
+                fix_pagination_buttons();
+                nav_click(document.getElementById('list_connected_title'));
+            }
             break;
         }
         //PARAMETER
@@ -119,27 +133,30 @@ function show_user_agent(user_agent){
 
 async function get_apps() {
     let json;
-
-    common_fetch(window.global_rest_url_base + window.global_rest_app + '/admin?', 
-                 'GET', 1, null, null, null, (err, result) =>{
-        if (err)
-            null;
-        else{
-            json = JSON.parse(result);
-            
-            let html=`<option value="">${window.global_icon_infinite}</option>`;
-            for (var i = 0; i < json.data.length; i++) {
-                    html +=
-                    `<option value='${json.data[i].id}'>${json.data[i].id} - ${json.data[i].app_name}</option>`;
-            }
-            document.getElementById('select_app_menu1').innerHTML = html;
-            document.getElementById('select_app_menu5_app_log').innerHTML = html;
-            document.getElementById('select_app_menu5_list_connected').innerHTML = html;
-            document.getElementById('select_app_menu5').innerHTML = html;
-            document.getElementById('select_app_broadcast').innerHTML = html;
-        
-        }
-    })
+    let html=`<option value="">${window.global_icon_infinite}</option>`;
+    if (window.global_system_admin==1){
+        //system admin cant select app will show/use all
+        document.getElementById('select_app_menu5').innerHTML = html;
+        document.getElementById('select_app_broadcast').innerHTML = html;
+    }
+    else{
+        common_fetch(window.global_rest_url_base + window.global_rest_app + '/admin?', 'GET', 1, null, null, null, (err, result) =>{
+            if (err)
+                null;
+            else{
+                json = JSON.parse(result);
+                for (var i = 0; i < json.data.length; i++) {
+                        html +=
+                        `<option value='${json.data[i].id}'>${json.data[i].id} - ${json.data[i].app_name}</option>`;
+                }
+                document.getElementById('select_app_menu1').innerHTML = html;
+                document.getElementById('select_app_menu5_app_log').innerHTML = html;
+                document.getElementById('select_app_menu5_list_connected').innerHTML = html;
+                document.getElementById('select_app_menu5').innerHTML = html;
+                document.getElementById('select_app_broadcast').innerHTML = html;
+                }
+            })
+    }
 }
 
 /*----------------------- */
@@ -263,7 +280,7 @@ async function show_db_info(){
     if (admin_token_has_value()){
         let json;
         await common_fetch('/service/db/admin/DBInfo?',
-                           'GET', 1, null, null, null, (err, result) =>{
+                           'GET', 2, null, window.global_common_app_id, null, (err, result) =>{
             if (err)
                 null;
             else{
@@ -288,7 +305,7 @@ async function show_db_info_space(){
             return Math.round(num * x) / x;
           }
         document.getElementById('menu_8_db_info_space_detail').innerHTML = window.global_app_spinner;
-        await common_fetch('/service/db/admin/DBInfoSpace?', 'GET', 1, null, null, null, (err, result) =>{
+        await common_fetch('/service/db/admin/DBInfoSpace?', 'GET', 2, null, window.global_common_app_id, null, (err, result) =>{
             if (err)
                 null;
             else{
@@ -331,7 +348,7 @@ async function show_db_info_space(){
                     </div>`;
                 }
                 document.getElementById('menu_8_db_info_space_detail').innerHTML = html;
-                common_fetch('/service/db/admin/DBInfoSpaceSum?', 'GET', 1, null, null, null, (err, result) =>{
+                common_fetch('/service/db/admin/DBInfoSpaceSum?', 'GET', 2, null, window.global_common_app_id, null, (err, result) =>{
                     if (err)
                         null;
                     else{
@@ -1334,6 +1351,7 @@ function nav_click(item){
 async function show_list(list_div, list_div_col_title, url, sort, order_by, cols){
     if (admin_token_has_value()){
         let json;
+        let token_type;
         //set spinner
         switch (list_div){
             case 'list_pm2_log':{
@@ -1341,14 +1359,22 @@ async function show_list(list_div, list_div_col_title, url, sort, order_by, cols
                 document.getElementById(list_div + '_err').innerHTML = window.global_app_spinner;
                 document.getElementById(list_div + '_process_event').innerHTML = window.global_app_spinner;
                 //sort not implemented for pm2 with different content in one json file
+                token_type = 2;
+                break;
+            }
+            case 'list_server_log':{
+                token_type = 2;
+                document.getElementById(list_div).innerHTML = window.global_app_spinner;
                 break;
             }
             default:{
+                token_type = 1;
                 document.getElementById(list_div).innerHTML = window.global_app_spinner;
                 break;
             }
         }
-        common_fetch(url, 'GET', 1, null, null, null, (err, result) =>{
+
+        common_fetch(url, 'GET', token_type, null, null, null, (err, result) =>{
             if (err){
                 switch (list_div){
                     case 'list_pm2_log':{
@@ -2033,7 +2059,7 @@ function list_item_click(item){
 async function get_server_log_parameters(){
     let json;
     await common_fetch(window.global_service_log + '/parameters?',
-                       'GET', 1, null, null, null, (err, result) =>{
+                       'GET', 2, null, null, null, (err, result) =>{
         if (err)
             null;
         else{
@@ -2214,6 +2240,15 @@ function init_admin_secure(){
     window.global_gps_map_container      ='mapid';
     window.global_gps_map_zoom           = 14;
     window.global_gps_map_marker_div_gps = 'map_marker_gps';
+    if (window.global_system_admin==1){
+        window.global_service_geolocation		        ='/service/geolocation';
+        window.global_service_geolocation_gps_ip        ='/ip';
+        window.global_service_geolocation_gps_place	    ='/place';
+        window.global_service_geolocation_gps_timezone	='/timezone';
+        window.global_service_map_style			        ='OpenStreetMap_Mapnik';
+        window.global_service_map_jumpto		        ='0';
+        window.global_service_map_popup_offset		    ='-25';
+    }
     //session variables
     window.global_client_latitude = '';
     window.global_client_longitude = '';
@@ -2351,133 +2386,127 @@ function init_admin_secure(){
     document.getElementById('list_pm2_log_title').addEventListener('click', function() { nav_click(this)}, false);
     document.getElementById('select_maptype').addEventListener('change', function() { map_setstyle(document.getElementById('select_maptype').value) }, false);
 
-    //SET MENU
-    document.getElementById('menu_secure').innerHTML = `<div id='menu_close' class='dialogue_button'></div>
-                                                        <div id='menu_1' class='menuitem'></div>
-                                                        <div id='menu_2' class='menuitem'></div>
-                                                        <div id='menu_3' class='menuitem'></div>
-                                                        <div id='menu_4' class='menuitem'></div>
-                                                        <div id='menu_5' class='menuitem'></div>
-                                                        <div id='menu_6' class='menuitem'></div>
-                                                        <div id='menu_7' class='menuitem'></div>
-                                                        <div id='menu_8' class='menuitem'></div>
-                                                        <div id='menu_9' class='menuitem'></div>
-                                                        <div id='menu_10' class='menuitem'></div>
-                                                        <div id='menu_11' class='menuitem'></div>`;
-    //set for menu items created in menu_secure
-    document.getElementById('menu_close').innerHTML = window.global_icon_app_menu_close;
-    document.getElementById('menu_1').innerHTML = window.global_icon_app_chart; //DASHBOARD
-    document.getElementById('menu_2').innerHTML = window.global_icon_app_users + window.global_icon_app_log; //USER STAT
-    document.getElementById('menu_3').innerHTML = window.global_icon_app_users; //USERS
-    document.getElementById('menu_4').innerHTML = window.global_icon_app_apps + window.global_icon_app_settings; //APP ADMIN
-    document.getElementById('menu_5').innerHTML = window.global_icon_app_log; //MONITOR
-    document.getElementById('menu_6').innerHTML = window.global_icon_app_server + window.global_icon_app_settings; //PARAMETER
-    document.getElementById('menu_7').innerHTML = window.global_icon_app_server + window.global_icon_app_install; //INSTALLATION
-    document.getElementById('menu_8').innerHTML = window.global_icon_app_server + window.global_icon_app_database; //DATABASE
-    document.getElementById('menu_9').innerHTML = window.global_icon_app_server + window.global_icon_app_backup + window.global_icon_app_restore; //'BACKUP/RESTORE';
-    document.getElementById('menu_10').innerHTML = window.global_icon_app_server; //SERVER
-    document.getElementById('menu_11').innerHTML = window.global_icon_app_logoff; //LOGOUT
-
-    document.getElementById('menu_close').addEventListener('click', function() { document.getElementById('menu').style.display = 'none' }, false);
-    document.getElementById('menu_1').addEventListener('click', function() { show_menu(1) }, false);
-    document.getElementById('menu_2').addEventListener('click', function() { show_menu(2) }, false);
-    document.getElementById('menu_3').addEventListener('click', function() { show_menu(3) }, false);
-    document.getElementById('menu_4').addEventListener('click', function() { show_menu(4) }, false);
-    document.getElementById('menu_5').addEventListener('click', function() { show_menu(5) }, false);
-    document.getElementById('menu_6').addEventListener('click', function() { show_menu(6) }, false);
-    document.getElementById('menu_7').addEventListener('click', function() { show_menu(7) }, false);
-    document.getElementById('menu_8').addEventListener('click', function() { show_menu(8) }, false);
-    document.getElementById('menu_9').addEventListener('click', function() { show_menu(9) }, false);
-    document.getElementById('menu_10').addEventListener('click', function() { show_menu(10) }, false);
-    document.getElementById('menu_11').addEventListener('click', function() { admin_logoff_app() }, false);
-
-    document.getElementById('user_direction_select').addEventListener('change', function() { fix_pagination_buttons(this.value)}, false);
-
-
-    //hide all first (display none in css using eval not working)
-    for (let i=1;i<=10;i++){
-        document.getElementById(`menu_${i}`).style.display='none';
-    }
-    if (window.global_system_admin_only==1){
-        //show less menus when database and apps are not enabled yet
-        //show CONNECTED
-        document.getElementById('menu_5').style.display='block';
-        //hide CONNECTED in MONITOR
-        document.getElementById('list_monitor_nav_1').style.display='none';
-        //hide APP LOG in MONITOR
-        document.getElementById('list_monitor_nav_2').style.display='none';
-        //show PARAMETER
-        document.getElementById('menu_6').style.display='block';
-        //show INSTALLATION
-        document.getElementById('menu_7').style.display='block';
-        //show BACKUP/RESTORE
-        document.getElementById('menu_9').style.display='block';
-        //show SERVER
-        document.getElementById('menu_10').style.display='block';
-        //start with PARAMETER
-        show_menu(6);
-    }
-    else{
-        //show DASHBOARD
-        document.getElementById('menu_1').style.display='block';
-        //show USER STAT
-        document.getElementById('menu_2').style.display='block';
-        //show USERS
-        document.getElementById('menu_3').style.display='block';
-        //show APP ADMIN
-        document.getElementById('menu_4').style.display='block';
-        //show MONITOR
-        document.getElementById('menu_5').style.display='block';
-        if (window.global_system_admin==1){
-            //show PARAMETER
-            document.getElementById('menu_6').style.display='block';
-            //show INSTALLATION
-            document.getElementById('menu_7').style.display='block';
-            //show DATABASE
-            document.getElementById('menu_8').style.display='block';
-            //show BACKUP/RESTORE
-            document.getElementById('menu_9').style.display='block';
-            //show SERVER
-            document.getElementById('menu_10').style.display='block';
-        }
-        //SET APPS INFO, INIT MAP
-        get_apps().then(function(){
-            get_gps_from_ip().then(function(){
-                map_init(window.global_gps_map_container,
-                        window.global_service_map_style,
-                        window.global_client_longitude, 
-                        window.global_client_latitude, 
-                        window.global_gps_map_zoom);
-                map_setevent('dblclick', function(e) {
-                    let lng = e.latlng['lng'];
-                    let lat = e.latlng['lat'];
-                    //Update GPS position
-                    get_place_from_gps(lng, lat).then(function(gps_place){
-                        map_update(lng,
-                                lat,
-                                '', //do not change zoom 
-                                gps_place,
-                                null,
-                                window.global_gps_map_marker_div_gps,
-                                window.global_service_map_jumpto);
-                    })
+    //SET APPS INFO, INIT MAP
+    get_apps().then(function(){
+        get_gps_from_ip().then(function(){
+            map_init(window.global_gps_map_container,
+                    window.global_service_map_style,
+                    window.global_client_longitude, 
+                    window.global_client_latitude, 
+                    window.global_gps_map_zoom);
+            map_setevent('dblclick', function(e) {
+                let lng = e.latlng['lng'];
+                let lat = e.latlng['lat'];
+                //Update GPS position
+                get_place_from_gps(lng, lat).then(function(gps_place){
+                    map_update(lng,
+                            lat,
+                            '', //do not change zoom 
+                            gps_place,
+                            null,
+                            window.global_gps_map_marker_div_gps,
+                            window.global_service_map_jumpto);
                 })
-                    
-                map_update(window.global_client_longitude,
-                        window.global_client_latitude,
-                        window.global_gps_map_zoom,
-                        window.global_client_place,
-                        null,
-                        window.global_gps_map_marker_div_gps,
-                        window.global_service_map_jumpto);
+            })
+                
+            map_update(window.global_client_longitude,
+                    window.global_client_latitude,
+                    window.global_gps_map_zoom,
+                    window.global_client_place,
+                    null,
+                    window.global_gps_map_marker_div_gps,
+                    window.global_service_map_jumpto);
+            //SET MENU
+            document.getElementById('menu_secure').innerHTML = 
+               `<div id='menu_close' class='dialogue_button'></div>
+                <div id='menu_1' class='menuitem'></div>
+                <div id='menu_2' class='menuitem'></div>
+                <div id='menu_3' class='menuitem'></div>
+                <div id='menu_4' class='menuitem'></div>
+                <div id='menu_5' class='menuitem'></div>
+                <div id='menu_6' class='menuitem'></div>
+                <div id='menu_7' class='menuitem'></div>
+                <div id='menu_8' class='menuitem'></div>
+                <div id='menu_9' class='menuitem'></div>
+                <div id='menu_10' class='menuitem'></div>
+                <div id='menu_11' class='menuitem'></div>`;
+            //set for menu items created in menu_secure
+            document.getElementById('menu_close').innerHTML = window.global_icon_app_menu_close;
+            document.getElementById('menu_1').innerHTML = window.global_icon_app_chart; //DASHBOARD
+            document.getElementById('menu_2').innerHTML = window.global_icon_app_users + window.global_icon_app_log; //USER STAT
+            document.getElementById('menu_3').innerHTML = window.global_icon_app_users; //USERS
+            document.getElementById('menu_4').innerHTML = window.global_icon_app_apps + window.global_icon_app_settings; //APP ADMIN
+            document.getElementById('menu_5').innerHTML = window.global_icon_app_log; //MONITOR
+            document.getElementById('menu_6').innerHTML = window.global_icon_app_server + window.global_icon_app_settings; //PARAMETER
+            document.getElementById('menu_7').innerHTML = window.global_icon_app_server + window.global_icon_app_install; //INSTALLATION
+            document.getElementById('menu_8').innerHTML = window.global_icon_app_server + window.global_icon_app_database; //DATABASE
+            document.getElementById('menu_9').innerHTML = window.global_icon_app_server + window.global_icon_app_backup + window.global_icon_app_restore; //'BACKUP/RESTORE';
+            document.getElementById('menu_10').innerHTML = window.global_icon_app_server; //SERVER
+            document.getElementById('menu_11').innerHTML = window.global_icon_app_logoff; //LOGOUT
+
+            document.getElementById('menu_close').addEventListener('click', function() { document.getElementById('menu').style.display = 'none' }, false);
+            document.getElementById('menu_1').addEventListener('click', function() { show_menu(1) }, false);
+            document.getElementById('menu_2').addEventListener('click', function() { show_menu(2) }, false);
+            document.getElementById('menu_3').addEventListener('click', function() { show_menu(3) }, false);
+            document.getElementById('menu_4').addEventListener('click', function() { show_menu(4) }, false);
+            document.getElementById('menu_5').addEventListener('click', function() { show_menu(5) }, false);
+            document.getElementById('menu_6').addEventListener('click', function() { show_menu(6) }, false);
+            document.getElementById('menu_7').addEventListener('click', function() { show_menu(7) }, false);
+            document.getElementById('menu_8').addEventListener('click', function() { show_menu(8) }, false);
+            document.getElementById('menu_9').addEventListener('click', function() { show_menu(9) }, false);
+            document.getElementById('menu_10').addEventListener('click', function() { show_menu(10) }, false);
+            document.getElementById('menu_11').addEventListener('click', function() { admin_logoff_app() }, false);
+
+            document.getElementById('user_direction_select').addEventListener('change', function() { fix_pagination_buttons(this.value)}, false);
+
+
+            //hide all first (display none in css using eval not working)
+            for (let i=1;i<=10;i++){
+                document.getElementById(`menu_${i}`).style.display='none';
+            }
+            if (window.global_system_admin==1){
+                //show MONITOR (only SERVER LOG and PM2LOG)
+                document.getElementById('menu_5').style.display='block';
+                //hide CONNECTED in MONITOR
+                document.getElementById('list_monitor_nav_1').style.display='none';
+                //hide APP LOG in MONITOR
+                document.getElementById('list_monitor_nav_2').style.display='none';
+                //show PARAMETER
+                document.getElementById('menu_6').style.display='block';
+                //show INSTALLATION
+                document.getElementById('menu_7').style.display='block';
+                //show DATABASE
+                document.getElementById('menu_8').style.display='block';
+                //show BACKUP/RESTORE
+                document.getElementById('menu_9').style.display='block';
+                //show SERVER
+                document.getElementById('menu_10').style.display='block';
+                //start with MONITOR
+                show_menu(5);
+            }
+            else{
+                //show DASHBOARD
+                document.getElementById('menu_1').style.display='block';
+                //show USER STAT
+                document.getElementById('menu_2').style.display='block';
+                //show USERS
+                document.getElementById('menu_3').style.display='block';
+                //show APP ADMIN
+                document.getElementById('menu_4').style.display='block';
+                //show MONITOR
+                document.getElementById('menu_5').style.display='block';
+                //hide PM2LOG in MONITOR
+                document.getElementById('list_monitor_nav_3').style.display='none';
+                //hide SERVER LOG in MONITOR
+                document.getElementById('list_monitor_nav_4').style.display='none';
                 //start with DASHBOARD
                 show_menu(1);
                 common_translate_ui(window.global_user_locale, 'APP', (err, result)=>{
                     null
                 });
-            })                
-        })
-    }
+            }
+        })                
+    })
 }
 init_common(<ITEM_COMMON_PARAMETERS/>, (err, global_app_parameters)=>{
     if (err)
