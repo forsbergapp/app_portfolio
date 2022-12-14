@@ -71,6 +71,7 @@ async function admin_login(){
                                     document.getElementById("login_password").value='';                        
                                     document.getElementById('dialogue_login').style.visibility = 'hidden';
                                     start_admin_secure(JSON.parse(result_form).app)
+                                    document.getElementById('system_admin_avatar').innerHTML = window.global_icon_app_system_admin;
                                 })
                             }
                             else{
@@ -204,6 +205,7 @@ function delete_globals(){
 
 function admin_logoff_app(app_id, error){
     window.global_rest_admin_at = '';
+    document.getElementById('system_admin_avatar').innerHTML = '';
     function clear_common(){
         delete_globals();
         document.getElementById('user_account').style.visibility = 'hidden';
