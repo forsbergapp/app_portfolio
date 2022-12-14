@@ -102,7 +102,7 @@ module.exports = {
                 null, 
                 null)
             .then(function(app_result){
-                createLogAppCI(req, res, __appfilename, __appfunction, __appline, 'Forms System admin secure').then(function(){
+                createLogAppCI(req, res, __appfilename, __appfunction, __appline, 'SYSTEM ADMIN Forms admin secure').then(function(){
                     return res.status(200).json({
                         app: app_result
                     });

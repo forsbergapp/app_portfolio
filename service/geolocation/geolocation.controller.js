@@ -1,8 +1,7 @@
 const { getService, getTimezone} = require ("./geolocation.service");
 const { createLogAdmin, createLog} = require ("../../service/db/app_portfolio/app_log/app_log.service");
 const { getMessage, getMessage_admin } = require("../db/app_portfolio/message_translation/message_translation.service");
-const { getParameter_admin, getParameter } = require ("../db/app_portfolio/app_parameter/app_parameter.service");
-const { createLogAppSE, createLogAppCI } = require("../../service/log/log.controller");
+const { createLogAppCI } = require("../../service/log/log.controller");
 const { check_internet } = require("../auth/auth.controller");
 function geodata_empty(geotype){
 	let geodata='';
@@ -76,43 +75,32 @@ module.exports = {
 							});
 				}
 			else{	
-				getParameter(req.query.app_id, process.env.COMMON_APP_ID,'SERVICE_GEOLOCATION_URL_GPS_PLACE',  (err, db_SERVICE_GEOLOCATION_URL_GPS_PLACE)=>{
-					if (err) {
-						createLogAppSE(req.query.app_id, __appfilename, __appfunction, __appline, err, (err_log, result_log)=>{
-							return callBack(err, null);
-						})
-					}
-					else{
-						//service can return other formats, set json
-						const url = `${db_SERVICE_GEOLOCATION_URL_GPS_PLACE}?format=json&lat=${req.query.latitude}&lon=${req.query.longitude}`;
-						async function getasync(){
-							geodata = await getService(url);
-							createLog(req.query.app_id,
-									{ app_id : req.query.app_id,
-										app_module : 'GEOLOCATION',
-										app_module_type : 'PLACE',
-										app_module_request : url,
-										app_module_result : JSON.stringify(geodata),
-										app_user_id : req.query.app_user_id,
-										user_language : null,
-										user_timezone : null,
-										user_number_system : null,
-										user_platform : null,
-										server_remote_addr : req.ip,
-										server_user_agent : req.headers["user-agent"],
-										server_http_host : req.headers["host"],
-										server_http_accept_language : req.headers["accept-language"],
-										client_latitude : geodata.geoplugin_latitude,
-										client_longitude : geodata.geoplugin_longitude
-										}, (err,results)  => {
-											return res.status(200).json(
-												geodata
-											)
-							});
-						};
-						getasync();
-					}
-				});
+				
+				//service can return other formats, set json
+				const url = `${process.env.SERVER_SERVICE_GEOLOCATION_URL_GPS_PLACE}?format=json&lat=${req.query.latitude}&lon=${req.query.longitude}`;
+				geodata = await getService(url);
+				createLog(req.query.app_id,
+						  { app_id : req.query.app_id,
+							app_module : 'GEOLOCATION',
+							app_module_type : 'PLACE',
+							app_module_request : url,
+							app_module_result : JSON.stringify(geodata),
+							app_user_id : req.query.app_user_id,
+							user_language : null,
+							user_timezone : null,
+							user_number_system : null,
+							user_platform : null,
+							server_remote_addr : req.ip,
+							server_user_agent : req.headers["user-agent"],
+							server_http_host : req.headers["host"],
+							server_http_accept_language : req.headers["accept-language"],
+							client_latitude : geodata.geoplugin_latitude,
+							client_longitude : geodata.geoplugin_longitude
+						  }, (err,results)  => {
+								return res.status(200).json(
+									geodata
+								)
+						  });
 			}
 		}
 		else
@@ -138,44 +126,32 @@ module.exports = {
 								});
 				}
 			else{	
-				getParameter_admin(req.query.app_id, process.env.COMMON_APP_ID,'SERVICE_GEOLOCATION_URL_GPS_PLACE', (err, db_SERVICE_GEOLOCATION_URL_GPS_PLACE)=>{
-					if (err) {
-						createLogAppSE(req.query.app_id, __appfilename, __appfunction, __appline, err, (err_log, result_log)=>{
-							return callBack(err, null);
-						})
-					}
-					else{
-						//service can return other formats, set json
-						const url = `${db_SERVICE_GEOLOCATION_URL_GPS_PLACE}?format=json&lat=${req.query.latitude}&lon=${req.query.longitude}`;
-						async function getasync(){
-							geodata = await getService(url);
-							createLogAdmin(req.query.app_id,
-											{ app_id : process.env.COMMON_APP_ID,
-												app_module : 'GEOLOCATION',
-												app_module_type : 'PLACE',
-												app_module_request : url,
-												app_module_result : JSON.stringify(geodata),
-												app_user_id : req.query.app_user_id,
-												user_language : null,
-												user_timezone : null,
-												user_number_system : null,
-												user_platform : null,
-												server_remote_addr : req.ip,
-												server_user_agent : req.headers["user-agent"],
-												server_http_host : req.headers["host"],
-												server_http_accept_language : req.headers["accept-language"],
-												client_latitude : geodata.geoplugin_latitude,
-												client_longitude : geodata.geoplugin_longitude
-												}, (err,results)  => {
-													return res.status(200).json(
-														geodata
-													)
-											});
-						};
-						getasync();
-					}
-				});
-			}
+				//service can return other formats, set json
+				const url = `${process.env.SERVER_SERVICE_GEOLOCATION_URL_GPS_PLACE}?format=json&lat=${req.query.latitude}&lon=${req.query.longitude}`;
+				geodata = await getService(url);
+				createLogAdmin(req.query.app_id,
+								{ app_id : process.env.COMMON_APP_ID,
+									app_module : 'GEOLOCATION',
+									app_module_type : 'PLACE',
+									app_module_request : url,
+									app_module_result : JSON.stringify(geodata),
+									app_user_id : req.query.app_user_id,
+									user_language : null,
+									user_timezone : null,
+									user_number_system : null,
+									user_platform : null,
+									server_remote_addr : req.ip,
+									server_user_agent : req.headers["user-agent"],
+									server_http_host : req.headers["host"],
+									server_http_accept_language : req.headers["accept-language"],
+									client_latitude : geodata.geoplugin_latitude,
+									client_longitude : geodata.geoplugin_longitude
+									}, (err,results)  => {
+										return res.status(200).json(
+											geodata
+										)
+								});
+			};
 		}
 		else
 			return res.status(200).json(
@@ -195,7 +171,7 @@ module.exports = {
 			}
 			else{
 				//service can return other formats, set json
-				const url = `${process.env.SERVICE_GEOLOCATION_URL_GPS_PLACE}?format=json&lat=${req.query.latitude}&lon=${req.query.longitude}`;
+				const url = `${process.env.SERVER_SERVICE_GEOLOCATION_URL_GPS_PLACE}?format=json&lat=${req.query.latitude}&lon=${req.query.longitude}`;
 				geodata = await getService(url);
 				createLogAppCI(req, res, __appfilename, __appfunction, __appline, 'SYSTEM ADMIN getPlaceSystemAdmin').then(function(){
 					return res.status(200).json(
@@ -213,51 +189,39 @@ module.exports = {
 		var geodata;
 		var url;
 		if (process.env.SERVICE_AUTH_ENABLE_GEOLOCATION==1 && await check_internet(req)==1){
-			getParameter(req.query.app_id, process.env.COMMON_APP_ID,'SERVICE_GEOLOCATION_URL_GPS_IP',  (err, db_SERVICE_GEOLOCATION_URL_GPS_IP)=>{
-				if (err) {
-					createLogAppSE(req.query.app_id, __appfilename, __appfunction, __appline, err, (err_log, result_log)=>{
-						return callBack(err, null);
-					})
-				}
-				else{
-					if (typeof req.query.ip == 'undefined')
-						if (req.ip == '::1' || req.ip == '::ffff:127.0.0.1')
-							url = db_SERVICE_GEOLOCATION_URL_GPS_IP + '?ip=';
-						else
-							url = db_SERVICE_GEOLOCATION_URL_GPS_IP + '?ip=' + req.ip;
-					else
-						url = db_SERVICE_GEOLOCATION_URL_GPS_IP + '?ip=' + req.query.ip;
-					async function getasync(){
-						geodata = await getService(url);
-						createLog(req.query.app_id,
-								{ app_id : req.query.app_id,
-									app_module : 'GEOLOCATION',
-									app_module_type : 'IP',
-									app_module_request : url,
-									app_module_result : JSON.stringify(geodata),
-									app_user_id : req.query.app_user_id,
-									user_language : null,
-									user_timezone : null,
-									user_number_system : null,
-									user_platform : null,
-									server_remote_addr : req.ip,
-									server_user_agent : req.headers["user-agent"],
-									server_http_host : req.headers["host"],
-									server_http_accept_language : req.headers["accept-language"],
-									client_latitude : geodata.geoplugin_latitude,
-									client_longitude : geodata.geoplugin_longitude
-									}, (err,results)  => {
-										if (req.query.callback==1)
-											return callBack(null, geodata);
-										else
-											return res.status(200).json(
-													geodata
-											);
+			if (typeof req.query.ip == 'undefined')
+				if (req.ip == '::1' || req.ip == '::ffff:127.0.0.1')
+					url = process.env.SERVER_SERVICE_GEOLOCATION_URL_GPS_IP + '?ip=';
+				else
+					url = process.env.SERVER_SERVICE_GEOLOCATION_URL_GPS_IP + '?ip=' + req.ip;
+			else
+				url = db_SERVICE_GEOLOCATION_URL_GPS_IP + '?ip=' + req.query.ip;
+			geodata = await getService(url);
+			createLog(req.query.app_id,
+					{ app_id : req.query.app_id,
+						app_module : 'GEOLOCATION',
+						app_module_type : 'IP',
+						app_module_request : url,
+						app_module_result : JSON.stringify(geodata),
+						app_user_id : req.query.app_user_id,
+						user_language : null,
+						user_timezone : null,
+						user_number_system : null,
+						user_platform : null,
+						server_remote_addr : req.ip,
+						server_user_agent : req.headers["user-agent"],
+						server_http_host : req.headers["host"],
+						server_http_accept_language : req.headers["accept-language"],
+						client_latitude : geodata.geoplugin_latitude,
+						client_longitude : geodata.geoplugin_longitude
+						}, (err,results)  => {
+							if (req.query.callback==1)
+								return callBack(null, geodata);
+							else
+								return res.status(200).json(
+										geodata
+								);
 						});
-					};
-					getasync();
-				}
-			});
 		}
 		else
 			if (req.query.callback==1)
@@ -271,51 +235,39 @@ module.exports = {
 		var geodata;
 		var url;
 		if (process.env.SERVICE_AUTH_ENABLE_GEOLOCATION==1 && await check_internet(req)==1){
-			getParameter_admin(req.query.app_id, process.env.COMMON_APP_ID, 'SERVICE_GEOLOCATION_URL_GPS_IP', (err, db_SERVICE_GEOLOCATION_URL_GPS_IP)=>{
-				if (err) {
-					createLogAppSE(req.query.app_id, __appfilename, __appfunction, __appline, err, (err_log, result_log)=>{
-						return callBack(err, null);
-					})
-				}
-				else{
-					if (typeof req.query.ip == 'undefined')
-						if (req.ip == '::1' || req.ip == '::ffff:127.0.0.1')
-							url = db_SERVICE_GEOLOCATION_URL_GPS_IP + '?ip=';
-						else
-							url = db_SERVICE_GEOLOCATION_URL_GPS_IP + '?ip=' + req.ip;
-					else
-						url = db_SERVICE_GEOLOCATION_URL_GPS_IP + '?ip=' + req.query.ip;
-					async function getasync(){
-						geodata = await getService(url);
-						createLogAdmin(req.query.app_id,
-										{ app_id : req.query.app_id,
-											app_module : 'GEOLOCATION',
-											app_module_type : 'IP',
-											app_module_request : url,
-											app_module_result : JSON.stringify(geodata),
-											app_user_id : req.query.app_user_id,
-											user_language : null,
-											user_timezone : null,
-											user_number_system : null,
-											user_platform : null,
-											server_remote_addr : req.ip,
-											server_user_agent : req.headers["user-agent"],
-											server_http_host : req.headers["host"],
-											server_http_accept_language : req.headers["accept-language"],
-											client_latitude : geodata.geoplugin_latitude,
-											client_longitude : geodata.geoplugin_longitude
-											}, (err,results)  => {
-												if (req.query.callback==1)
-													return callBack(null, geodata);
-												else
-													return res.status(200).json(
-															geodata
-													);
-										});
-					};
-					getasync();
-				}
-			});
+			if (typeof req.query.ip == 'undefined')
+				if (req.ip == '::1' || req.ip == '::ffff:127.0.0.1')
+					url = process.env.SERVER_SERVICE_GEOLOCATION_URL_GPS_IP + '?ip=';
+				else
+					url = process.env.SERVER_SERVICE_GEOLOCATION_URL_GPS_IP + '?ip=' + req.ip;
+			else
+				url = process.env.SERVER_SERVICE_GEOLOCATION_URL_GPS_IP + '?ip=' + req.query.ip;
+			geodata = await getService(url);
+			createLogAdmin(req.query.app_id,
+							{ app_id : req.query.app_id,
+								app_module : 'GEOLOCATION',
+								app_module_type : 'IP',
+								app_module_request : url,
+								app_module_result : JSON.stringify(geodata),
+								app_user_id : req.query.app_user_id,
+								user_language : null,
+								user_timezone : null,
+								user_number_system : null,
+								user_platform : null,
+								server_remote_addr : req.ip,
+								server_user_agent : req.headers["user-agent"],
+								server_http_host : req.headers["host"],
+								server_http_accept_language : req.headers["accept-language"],
+								client_latitude : geodata.geoplugin_latitude,
+								client_longitude : geodata.geoplugin_longitude
+								}, (err,results)  => {
+									if (req.query.callback==1)
+										return callBack(null, geodata);
+									else
+										return res.status(200).json(
+												geodata
+										);
+							});
 		}
 		else
 			if (req.query.callback==1)
@@ -331,11 +283,11 @@ module.exports = {
 		if (process.env.SERVICE_AUTH_ENABLE_GEOLOCATION==1 && await check_internet(req)==1){
 			if (typeof req.query.ip == 'undefined')
 				if (req.ip == '::1' || req.ip == '::ffff:127.0.0.1')
-					url = process.env.SERVICE_GEOLOCATION_URL_GPS_IP + '?ip=';
+					url = process.env.SERVER_SERVICE_GEOLOCATION_URL_GPS_IP + '?ip=';
 				else
-					url = process.env.SERVICE_GEOLOCATION_URL_GPS_IP + '?ip=' + req.ip;
+					url = process.env.SERVER_SERVICE_GEOLOCATION_URL_GPS_IP + '?ip=' + req.ip;
 			else
-				url = process.env.SERVICE_GEOLOCATION_URL_GPS_IP + '?ip=' + req.query.ip;
+				url = process.env.SERVER_SERVICE_GEOLOCATION_URL_GPS_IP + '?ip=' + req.query.ip;
 			geodata = await getService(url);
 			createLogAppCI(req, res, __appfilename, __appfunction, __appline, 'SYSTEM ADMIN getIpSystemAdmin').then(function(){
 				if (req.query.callback==1)
