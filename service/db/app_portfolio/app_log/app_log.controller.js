@@ -7,16 +7,21 @@ module.exports = {
 		body.server_user_agent 			 = req.headers["user-agent"];
 		body.server_http_host 			 = req.headers["host"];
 		body.server_http_accept_language = req.headers["accept-language"];	
-		createLog(req.query.app_id, body, (err,results) => {
-			if (err)
-				return res.status(500).send({
-					message: err
-				});
-			else
-				return res.status(200).json({
-					data: results
-				})
-		});
+		if (process.env.SERVICE_AUTH_ENABLE_DBLOG==1)
+			createLog(req.query.app_id, body, (err,results) => {
+				if (err)
+					return res.status(500).send({
+						message: err
+					});
+				else
+					return res.status(200).json({
+						data: results
+					})
+			});
+		else
+			return res.status(200).json({
+				data: null
+			})
 	},
 	createLogAdmin: (req, res) =>{
 		const body = req.body;
@@ -24,16 +29,21 @@ module.exports = {
 		body.server_user_agent 			 = req.headers["user-agent"];
 		body.server_http_host 			 = req.headers["host"];
 		body.server_http_accept_language = req.headers["accept-language"];	
-		createLogAdmin(req.query.app_id, body, (err,results) => {
-			if (err)
-				return res.status(500).send({
-					message: err
-				});
-			else
-				return res.status(200).json({
-					data: results
-				})
-		});
+		if (process.env.SERVICE_AUTH_ENABLE_DBLOG==1)
+			createLogAdmin(req.query.app_id, body, (err,results) => {
+				if (err)
+					return res.status(500).send({
+						message: err
+					});
+				else
+					return res.status(200).json({
+						data: results
+					})
+			});
+		else
+			return res.status(200).json({
+				data: null
+			})
 	},
 	getLogsAdmin: (req, res) => {
 		let year = parseInt(req.query.year);

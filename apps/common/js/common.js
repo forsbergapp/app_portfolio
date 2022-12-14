@@ -37,12 +37,6 @@ async function common_fetch_basic(token_type, json_data,  username, password, ca
         username = window.global_app_rest_client_id;
         password = window.global_app_rest_client_secret;
     }
-    else{
-        //admin token
-        url = '/service/forms/admin/secure' + 
-              '?app_id=' + window.global_app_id + 
-              '&lang_code=' + window.global_user_locale;
-    }
     await fetch(url,
                 {method: 'POST',
                  headers: {
@@ -62,11 +56,6 @@ async function common_fetch_basic(token_type, json_data,  username, password, ca
                     case 0:{
                         //data token
                         window.global_rest_dt = JSON.parse(result).token_dt;
-                        break;
-                    }
-                    case 1:{
-                        //admin token
-                        window.global_rest_admin_at = JSON.parse(result).token_at;
                         break;
                     }
                 }
@@ -111,12 +100,12 @@ async function common_fetch(url_parameters, method, token_type, json_data, app_i
             break;
         }
         case 1:{
-            //access token
+            //access token for users admin and superadmin
             token = window.global_rest_at;
             break;
         }
         case 2:{
-            //admin token
+            //systemadmin token
             token = window.global_rest_admin_at;
             break;
         }
@@ -898,7 +887,7 @@ function lov_show(lov, function_event){
         case 'SERVER_LOG_FILES':{
             lov_column_value = 'filename';
             url = window.global_service_log + '/files?';
-            token_type = 1;
+            token_type = 2;
             break;
         }
         case 'APP_CATEGORY':{
@@ -1250,20 +1239,26 @@ async function get_place_from_gps(longitude, latitude) {
     return await new Promise(function (resolve){
         let url;
         let tokentype;
-        if (window.global_admin){
+        if (window.global_system_admin==1){
             url = window.global_service_geolocation + window.global_service_geolocation_gps_place + 
-                    '/admin/?app_user_id=' + window.global_user_account_id +
-                    '&longitude=' + longitude +
-                    '&latitude=' + latitude;
-            tokentype = 1;
+                        '/admin?longitude=' + longitude + '&latitude=' + latitude;
+            tokentype = 2;
         }
-        else{
-            url = window.global_service_geolocation + window.global_service_geolocation_gps_place + 
-                    '?app_user_id=' + window.global_user_account_id +
-                    '&longitude=' + longitude +
-                    '&latitude=' + latitude;
-            tokentype = 0;
-        }
+        else 
+            if (window.global_admin){
+                url = window.global_service_geolocation + window.global_service_geolocation_gps_place + 
+                        '/admin?app_user_id=' + window.global_user_account_id +
+                        '&longitude=' + longitude +
+                        '&latitude=' + latitude;
+                tokentype = 1;
+            }
+            else{
+                url = window.global_service_geolocation + window.global_service_geolocation_gps_place + 
+                        '?app_user_id=' + window.global_user_account_id +
+                        '&longitude=' + longitude +
+                        '&latitude=' + latitude;
+                tokentype = 0;
+            }
         common_fetch(url, 'GET', tokentype, null, null, null, (err, result) =>{
             if (err)
                 resolve('');
@@ -1283,16 +1278,22 @@ async function get_gps_from_ip() {
 
     let url;
     let tokentype;
-    if (window.global_admin){
+    if (window.global_system_admin==1){
         url = window.global_service_geolocation + window.global_service_geolocation_gps_ip + 
-              '/admin?app_user_id=' +  window.global_user_account_id;
-        tokentype = 1;
+        '/systemadmin?';
+        tokentype = 2;
     }
-    else{
-        url = window.global_service_geolocation + window.global_service_geolocation_gps_ip + 
-              '?app_user_id=' +  window.global_user_account_id;
-        tokentype = 0;
-    }
+    else
+        if (window.global_admin){
+            url = window.global_service_geolocation + window.global_service_geolocation_gps_ip + 
+                '/admin?app_user_id=' +  window.global_user_account_id;
+            tokentype = 1;
+        }
+        else{
+            url = window.global_service_geolocation + window.global_service_geolocation_gps_ip + 
+                '?app_user_id=' +  window.global_user_account_id;
+            tokentype = 0;
+        }
     await common_fetch(url, 'GET', tokentype, null, null, null, (err, result) =>{
         if (err)
             null;
@@ -1313,16 +1314,22 @@ async function tzlookup(latitude, longitude){
     return new Promise(function (resolve, reject){
         let url;
         let tokentype;
-        if (window.global_admin){
+        if (window.global_system_admin==1){
             url = window.global_service_geolocation + window.global_service_geolocation_gps_timezone +
-                  `/admin?latitude=${latitude}&longitude=${longitude}`;
-            tokentype = 1;
+                  `/systemadmin?latitude=${latitude}&longitude=${longitude}`;
+            tokentype = 2;
         }
-        else{
-            url = window.global_service_geolocation + window.global_service_geolocation_gps_timezone +
-                  `?latitude=${latitude}&longitude=${longitude}`;
-            tokentype = 0;
-        }
+        else
+            if (window.global_admin){
+                url = window.global_service_geolocation + window.global_service_geolocation_gps_timezone +
+                    `/admin?latitude=${latitude}&longitude=${longitude}`;
+                tokentype = 1;
+            }
+            else{
+                url = window.global_service_geolocation + window.global_service_geolocation_gps_timezone +
+                    `?latitude=${latitude}&longitude=${longitude}`;
+                tokentype = 0;
+            }
         common_fetch(url, 'GET', tokentype, null, null, null, (err, text_timezone) =>{
             resolve (text_timezone);
         })
@@ -3047,6 +3054,7 @@ async function init_common(parameters, callBack){
    if (parameters.system_admin_only==1){
         set_globals(parameters);     
         document.title = parameters.app_name;
+        callBack(null, null)
    }
    else{
         set_globals(parameters);
