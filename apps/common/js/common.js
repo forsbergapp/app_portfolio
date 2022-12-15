@@ -569,7 +569,7 @@ function SearchAndSetSelectedIndex(search, select_item, colcheck) {
 /*----------------------- */
 async function dialogue_close(dialogue){
     return new Promise(function (resolve, reject){
-        var animationDuration = 400;
+        let animationDuration = 400;
         /*
         //add sound effect if needed
         let meepmeep = document.createElement("audio");
@@ -874,15 +874,9 @@ function lov_show(lov, function_event){
     switch (lov){
         case 'PARAMETER_TYPE':{
             document.getElementById('lov_title').innerHTML = window.global_icon_app_apps + ' ' +window.global_icon_app_settings  + ' ' + window.global_icon_app_type;
-            lov_column_value = 'parameter_type_text';
-            if (window.global_admin){
-                url = window.global_rest_url_base + window.global_rest_parameter_type + `admin?`;
-                token_type = 1;
-            }
-            else{
-                url = window.global_rest_url_base + window.global_rest_parameter_type + `?`;
-                token_type = 0;
-            }
+            lov_column_value = 'parameter_type_text';            
+            url = window.global_rest_url_base + window.global_rest_parameter_type + `admin?`;
+            token_type = 1;
             break;
         }
         case 'SERVER_LOG_FILES':{
@@ -940,7 +934,7 @@ function lov_keys(event){
         case 'ArrowUp':
         case 'ArrowDown':{
             //loop rows not hidden
-            var x = document.querySelectorAll('.list_lov_row:not(.list_lov_row_hide)');
+            let x = document.querySelectorAll('.list_lov_row:not(.list_lov_row_hide)');
             for (i = 0; i <= x.length -1; i++) {
                 if (x[i].classList.contains('list_lov_row_selected')){
                     //if up and first or
@@ -981,7 +975,7 @@ function lov_keys(event){
         }
         case 'Enter':{
             //enter
-            var x = document.querySelectorAll('.list_lov_row');
+            let x = document.querySelectorAll('.list_lov_row');
             for (i = 0; i <= x.length -1; i++) {
                 if (x[i].classList.contains('list_lov_row_selected')){
                     //event on row is set in app when calling lov, dispatch it!
@@ -1000,7 +994,7 @@ function lov_keys(event){
     }
 }
 function lov_filter(text_filter){
-    var x = document.querySelectorAll('.list_lov_row');
+    let x = document.querySelectorAll('.list_lov_row');
     for (i = 0; i <= x.length -1; i++) {
         x[i].classList.remove ('list_lov_row_hide');
         x[i].classList.remove ('list_lov_row_selected');
@@ -1161,7 +1155,7 @@ function show_broadcast(broadcast_message){
         }
 }
 function show_broadcast_info(message){
-    var hide_function = function() { document.getElementById('broadcast_info').style.visibility='hidden';
+    let hide_function = function() { document.getElementById('broadcast_info').style.visibility='hidden';
                                      document.getElementById('broadcast_close').removeEventListener('click', hide_function);
                                      document.getElementById('broadcast_info_message_item').innerHTML='';
                                      document.getElementById('broadcast_info_message').style.animationName='unset';};
@@ -1203,11 +1197,25 @@ function reconnect(){
     setTimeout(connectOnline, 5000);
 }
 function updateOnlineStatus(){
-    common_fetch(`/service/broadcast/update_connected`+ 
-                 `?client_id=${window.global_clientId}`+
-                 `&user_account_id=${window.global_user_account_id}` + 
-                 `&identity_provider_id=${window.global_user_identity_provider_id}`, 
-                 'PATCH', 0, null, null, null, (err, result) =>{
+    let token_type='';
+    let url='';
+    if (window.global_system_admin==1){
+        url =   `/service/broadcast/SystemAdmin/update_connected`+ 
+                `?client_id=${window.global_clientId}`+
+                `&user_account_id=${window.global_user_account_id}` + 
+                `&identity_provider_id=${window.global_user_identity_provider_id}` +
+                `&system_admin=${window.global_system_admin}`
+        token_type=2;
+    }
+    else{
+        url =   `/service/broadcast/update_connected`+ 
+                `?client_id=${window.global_clientId}`+
+                `&user_account_id=${window.global_user_account_id}` + 
+                `&identity_provider_id=${window.global_user_identity_provider_id}` +
+                `&system_admin=${window.global_system_admin}`
+        token_type=0;
+    }
+    common_fetch(url, 'PATCH', token_type, null, null, null, (err, result) =>{
         null;
     })
 }
@@ -1217,7 +1225,7 @@ function connectOnline(updateOnline=false){
                                                 `?app_id=${window.global_app_id}` +
                                                 `&user_account_id=${window.global_user_account_id}` +
                                                 `&identity_provider_id=${window.global_user_identity_provider_id}` +
-                                                `&admin=${window.global_admin}`);
+                                                `&system_admin=${window.global_system_admin}`);
     window.global_eventSource.onmessage = function (event) {
         
             show_broadcast(event.data);
@@ -1249,7 +1257,7 @@ async function get_place_from_gps(longitude, latitude) {
             tokentype = 2;
         }
         else 
-            if (window.global_admin){
+            if (window.global_app_id==window.global_common_app_id){
                 url = window.global_service_geolocation + window.global_service_geolocation_gps_place + 
                         '/admin?app_user_id=' + window.global_user_account_id +
                         '&longitude=' + longitude +
@@ -1288,7 +1296,7 @@ async function get_gps_from_ip() {
         tokentype = 2;
     }
     else
-        if (window.global_admin){
+        if (window.global_app_id==window.global_common_app_id){
             url = window.global_service_geolocation + window.global_service_geolocation_gps_ip + 
                 '/admin?app_user_id=' +  window.global_user_account_id;
             tokentype = 1;
@@ -1324,7 +1332,7 @@ async function tzlookup(latitude, longitude){
             tokentype = 2;
         }
         else
-            if (window.global_admin){
+            if (window.global_app_id==window.global_common_app_id){
                 url = window.global_service_geolocation + window.global_service_geolocation_gps_timezone +
                     `/admin?latitude=${latitude}&longitude=${longitude}`;
                 tokentype = 1;
@@ -1388,7 +1396,7 @@ async function map_init(containervalue, stylevalue, longitude, latitude, zoomval
 }
 function map_popup(popup_offset, popuptext, longitude, latitude){
     if (checkconnected()) {
-        var popup = L.popup({ offset: [0, popup_offset], closeOnClick: false })
+        let popup = L.popup({ offset: [0, popup_offset], closeOnClick: false })
                     .setLatLng([latitude, longitude])
                     .setContent(popuptext)
                     .openOn(window.global_session_service_map);
@@ -1396,7 +1404,7 @@ function map_popup(popup_offset, popuptext, longitude, latitude){
 }
 function map_marker(marker_id, longitude, latitude){
     if (checkconnected()) {
-        var marker = L.marker([latitude, longitude]).addTo(window.global_session_service_map);
+        let marker = L.marker([latitude, longitude]).addTo(window.global_session_service_map);
         //setting id so apps can customize if necessary
         marker._icon.id = marker_id;
     }
@@ -1438,7 +1446,7 @@ function map_line_removeall(){
 }
 function map_line_create(id, title, text_size, from_longitude, from_latitude, to_longitude, to_latitude, color, width, opacity){
     if (checkconnected()) {
-        var geojsonFeature = {
+        let geojsonFeature = {
             "id": `"${id}"`,
             "type": "Feature",
             "properties": { "title": title },
@@ -1451,7 +1459,7 @@ function map_line_create(id, title, text_size, from_longitude, from_latitude, to
             }
         };
         //use GeoJSON to draw a line
-        var myStyle = {
+        let myStyle = {
             "color": color,
             "weight": width,
             "opacity": opacity
@@ -2054,7 +2062,7 @@ function search_input(event, event_function){
         case 'ArrowUp':
         case 'ArrowDown':{
             if (document.getElementById('profile_search_list').style.display=='inline-block'){
-                var x = document.querySelectorAll('.profile_search_list_row');
+                let x = document.querySelectorAll('.profile_search_list_row');
                 for (i = 0; i <= x.length -1; i++) {
                     if (x[i].classList.contains('profile_search_list_selected'))
                         //if up and first or
@@ -2098,7 +2106,7 @@ function search_input(event, event_function){
         case 'Enter':{
             //enter
             if (document.getElementById('profile_search_list').style.display=='inline-block'){
-                var x = document.querySelectorAll('.profile_search_list_row');
+                let x = document.querySelectorAll('.profile_search_list_row');
                 for (i = 0; i <= x.length -1; i++) {
                     if (x[i].classList.contains('profile_search_list_selected')){
                         /*Show profile and leave searchresult so user can go back to searchresult again*/
@@ -2943,6 +2951,15 @@ function set_globals(parameters){
     //system admin
     window.global_system_admin = parameters.system_admin;
     window.global_system_admin_only = parameters.system_admin_only;
+
+    //user info set or used by services
+    window.global_clientId;
+    window.global_client_latitude = parameters.gps_lat;
+    window.global_client_longitude = parameters.gps_long;
+    window.global_client_place = parameters.gps_place;
+    //broadcast connection
+    window.global_eventSource;
+
     if (parameters.system_admin_only==0){
         //set variables after system admin has enabled database and apps
         window.global_app_copyright;
@@ -2963,14 +2980,6 @@ function set_globals(parameters){
             user_preferences_set_default_globals('ARABIC_SCRIPT');
         }
 
-        //user info set or used by services
-        window.global_clientId;
-        window.global_client_latitude = parameters.gps_lat;
-        window.global_client_longitude = parameters.gps_long;
-        window.global_client_place = parameters.gps_place;
-
-        //broadcast connection
-        window.global_eventSource;
         //rest api base
         window.global_rest_url_base 				= '/service/db/app_portfolio/';
 
@@ -3020,20 +3029,20 @@ function set_globals(parameters){
         window.global_service_geolocation_gps_ip;
         window.global_service_report;
         window.global_service_worldcities;
-            
-        if (parameters.ui==true){
-            seticons();
 
-            //delay API calls when typing to avoid too many calls 
-            window.global_typewatch = function() {
-                let timer = 0;
-                return function(callback, ms) {
-                    clearTimeout(timer);
-                    timer = setTimeout(callback, ms);
-                };
-            }();
-        }   
     }
+    if (parameters.ui==true){
+        seticons();
+
+        //delay API calls when typing to avoid too many calls 
+        window.global_typewatch = function() {
+            let timer = 0;
+            return function(callback, ms) {
+                clearTimeout(timer);
+                timer = setTimeout(callback, ms);
+            };
+        }();
+    }   
 }
 async function init_common(parameters, callBack){
     /*
@@ -3055,24 +3064,24 @@ async function init_common(parameters, callBack){
      system_admon_only
     }
     */
-   if (parameters.system_admin_only==1){
-        set_globals(parameters);     
+    set_globals(parameters);
+    //broadcast
+    document.getElementById('broadcast_close').innerHTML = window.global_icon_app_broadcast_close;
+    document.getElementById('broadcast_info_title').innerHTML = window.global_icon_app_alert;
+    if (parameters.close_eventsource==true){
+        window.global_eventSource.close();
+        connectOnline();
+    }
+    else{
+        connectOnline();
+    }
+    if (parameters.system_admin_only==1){
         document.title = parameters.app_name;
         callBack(null, null)
    }
    else{
-        set_globals(parameters);
         //set header info
         document.title = window.global_app_name;
-        
-        if (parameters.close_eventsource==true){
-            window.global_eventSource.close();
-            connectOnline();
-        }
-        else{
-            connectOnline();
-        }
-    
         if (parameters.ui==true){
             //icons
             //dialogue user verify
@@ -3125,9 +3134,6 @@ async function init_common(parameters, callBack){
             document.getElementById('message_close').innerHTML = window.global_icon_app_close;
             //dialog lov
             document.getElementById('lov_search_icon').innerHTML = window.global_icon_app_search;
-            //broadcast
-            document.getElementById('broadcast_close').innerHTML = window.global_icon_app_broadcast_close;
-            document.getElementById('broadcast_info_title').innerHTML = window.global_icon_app_alert;
             //profile detail
             document.getElementById('profile_detail_header_following').innerHTML = window.global_icon_user_follows;
             document.getElementById('profile_detail_header_followed').innerHTML = window.global_icon_user_followed;

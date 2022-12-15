@@ -198,7 +198,7 @@ module.exports = {
 							//sample output:
 							//{"lastRowid":"AAAWwdAAAAAAAdHAAC","rowsAffected":1}
 							//remove "" before and after
-							var lastRowid = JSON.stringify(result.lastRowid).replace(/"/g,'');
+							let lastRowid = JSON.stringify(result.lastRowid).replace(/"/g,'');
 							sql = `SELECT id "insertId"
 									 FROM ${get_schema_name()}.app2_user_setting
 									WHERE rowid = :lastRowid`;

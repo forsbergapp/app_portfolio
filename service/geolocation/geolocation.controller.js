@@ -59,7 +59,7 @@ function geodata_empty(geotype){
 module.exports = {
 	getPlace: async (req, res) => {
 		if (process.env.SERVICE_AUTH_ENABLE_GEOLOCATION==1 && await check_internet(req)==1){
-			var geodata;
+			let geodata;
 			if (typeof req.query.latitude=='undefined' ||
 				typeof req.query.longitude=='undefined' ||
 				req.query.latitude=='undefined' ||
@@ -109,7 +109,7 @@ module.exports = {
 			)
 	},
 	getPlaceAdmin: async (req, res) => {
-		var geodata;
+		let geodata;
 		if (process.env.SERVICE_AUTH_ENABLE_GEOLOCATION==1 && await check_internet(req)==1){
 			if (typeof req.query.latitude=='undefined' ||
 				typeof req.query.longitude=='undefined' ||
@@ -159,7 +159,7 @@ module.exports = {
 			)
 	},
 	getPlaceSystemAdmin: async (req, res) => {
-		var geodata;
+		let geodata;
 		if (process.env.SERVICE_AUTH_ENABLE_GEOLOCATION==1 && await check_internet(req)==1){
 			if (typeof req.query.latitude=='undefined' ||
 				typeof req.query.longitude=='undefined' ||
@@ -186,8 +186,8 @@ module.exports = {
 			)
 	},
 	getIp: async (req, res, callBack) => {
-		var geodata;
-		var url;
+		let geodata;
+		let url;
 		if (process.env.SERVICE_AUTH_ENABLE_GEOLOCATION==1 && await check_internet(req)==1){
 			if (typeof req.query.ip == 'undefined')
 				if (req.ip == '::1' || req.ip == '::ffff:127.0.0.1')
@@ -232,8 +232,8 @@ module.exports = {
 				)
 	},
 	getIpAdmin: async (req, res, callBack) => {
-		var geodata;
-		var url;
+		let geodata;
+		let url;
 		if (process.env.SERVICE_AUTH_ENABLE_GEOLOCATION==1 && await check_internet(req)==1){
 			if (typeof req.query.ip == 'undefined')
 				if (req.ip == '::1' || req.ip == '::ffff:127.0.0.1')
@@ -278,8 +278,8 @@ module.exports = {
 				)
 	},
 	getIpSystemAdmin: async (req, res, callBack) => {
-		var geodata;
-		var url;
+		let geodata;
+		let url;
 		if (process.env.SERVICE_AUTH_ENABLE_GEOLOCATION==1 && await check_internet(req)==1){
 			if (typeof req.query.ip == 'undefined')
 				if (req.ip == '::1' || req.ip == '::ffff:127.0.0.1')
