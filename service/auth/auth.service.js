@@ -51,7 +51,7 @@ module.exports = {
                     })
                 else{
                     json = JSON.parse(fileBuffer.toString());
-                    for (var i = 0; i < json.user_agent.length; i++){
+                    for (let i = 0; i < json.user_agent.length; i++){
                         if (json.user_agent[i].user_agent == user_agent)
                             return callBack(null, true);
                     }
@@ -96,7 +96,7 @@ module.exports = {
                 }
                 else{
                     json = JSON.parse(fileBuffer.toString());
-                    for (var i = 0; i < json.directives.length; i++){
+                    for (let i = 0; i < json.directives.length; i++){
                         json.directives[i].domain = json.directives[i].domain.replace(' ','');
                         let arr = json.directives[i].domain.split(",");
                         for (let i=0;i<=arr.length-1;i++){

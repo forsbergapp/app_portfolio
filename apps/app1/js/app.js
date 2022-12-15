@@ -122,7 +122,7 @@ function get_apps() {
         else{
             json = JSON.parse(result);
             let html ='';
-            for (var i = 0; i < json.data.length; i++) {
+            for (let i = 0; i < json.data.length; i++) {
                 html +=`<div class='app_link_row'>
                             <div class='app_link_col'>
                                 <div class='app_id'>${json.data[i].id}</div>
@@ -140,7 +140,7 @@ function get_apps() {
                             </div>
                         </div>`;
             }
-            var clickappevent = function(event) { 
+            let clickappevent = function(event) { 
                 window.open(event.target.parentNode.parentNode.children[1].children[0].innerHTML);};
 
             document.querySelectorAll('.app_logo').forEach(e => e.removeEventListener('click', clickappevent));
@@ -315,7 +315,7 @@ function init(parameters){
         if (err)
             null;
         else{
-            for (var i = 0; i < global_app_parameters.length; i++) {
+            for (let i = 0; i < global_app_parameters.length; i++) {
                 if (global_app_parameters[i].parameter_name=='APP_COPYRIGHT')
                     window.global_app_copyright =global_app_parameters[i].parameter_value;
                 if (global_app_parameters[i].parameter_name=='APP_EMAIL') //0
