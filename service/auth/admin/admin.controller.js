@@ -30,7 +30,7 @@ module.exports = {
         if(req.headers.authorization){                
             let userpass = new Buffer.from((req.headers.authorization || '').split(' ')[1] || '', 'base64').toString();
             if (userpass == process.env.SERVER_ADMIN_NAME + ':' + process.env.SERVER_ADMIN_PASSWORD) {
-                var jsontoken_at;
+                let jsontoken_at;
                 jsontoken_at = sign ({tokentimstamp: Date.now()}, process.env.SERVICE_AUTH_ADMIN_TOKEN_SECRET, {
                                     expiresIn: process.env.SERVICE_AUTH_ADMIN_TOKEN_EXPIRE_ACCESS
                                     });

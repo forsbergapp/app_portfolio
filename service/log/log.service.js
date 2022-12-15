@@ -63,7 +63,7 @@ async function sendLog(logscope, loglevel, log, callBack){
     if (process.env.SERVICE_LOG_DESTINATION==0 ||
         process.env.SERVICE_LOG_DESTINATION==2){
         //file destination
-        var fs = require('fs');
+        let fs = require('fs');
         fs.appendFile(process.env.SERVICE_LOG_FILE_PATH_SERVER + filename, log + '\r\n', 'utf8', (err) => {
             if (err) {
                 pm2log(err);

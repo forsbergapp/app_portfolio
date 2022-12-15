@@ -76,6 +76,10 @@ function show_menu(menu){
         }
         //MONITOR
         case 5:{
+            //connected
+            document.getElementById('select_year_menu5_list_connected').innerHTML = yearvalues;
+            document.getElementById('select_year_menu5_list_connected').selectedIndex = 0;
+            document.getElementById('select_month_menu5_list_connected').selectedIndex = new Date().getMonth();            
             if (window.global_system_admin==1){
                 //server log
                 document.getElementById('select_year_menu5').innerHTML = yearvalues;
@@ -83,23 +87,19 @@ function show_menu(menu){
                 document.getElementById('select_month_menu5').selectedIndex = new Date().getMonth();
                 document.getElementById('select_day_menu5').selectedIndex = new Date().getDate() -1;
                 get_server_log_parameters().then(function() {
-                    nav_click(document.getElementById('list_server_log_title'));
                     map_resize();
+                    nav_click(document.getElementById('list_connected_title'));
                 })
             }
             else{
                 window.global_page = 0;
-                //connected
-                document.getElementById('select_year_menu5_list_connected').innerHTML = yearvalues;
-                document.getElementById('select_year_menu5_list_connected').selectedIndex = 0;
-                document.getElementById('select_month_menu5_list_connected').selectedIndex = new Date().getMonth();
                 //log
                 document.getElementById('select_year_menu5_app_log').innerHTML = yearvalues;
                 document.getElementById('select_year_menu5_app_log').selectedIndex = 0;
                 document.getElementById('select_month_menu5_app_log').selectedIndex = new Date().getMonth();
                 fix_pagination_buttons();
-                nav_click(document.getElementById('list_connected_title'));
                 map_resize();
+                nav_click(document.getElementById('list_connected_title'));
             }
             break;
         }
@@ -138,6 +138,7 @@ async function get_apps() {
     if (window.global_system_admin==1){
         //system admin cant select app will show/use all
         document.getElementById('select_app_menu5').innerHTML = html;
+        document.getElementById('select_app_menu5_list_connected').innerHTML = html;
         document.getElementById('select_app_broadcast').innerHTML = html;
     }
     else{
@@ -146,7 +147,7 @@ async function get_apps() {
                 null;
             else{
                 json = JSON.parse(result);
-                for (var i = 0; i < json.data.length; i++) {
+                for (let i = 0; i < json.data.length; i++) {
                         html +=
                         `<option value='${json.data[i].id}'>${json.data[i].id} - ${json.data[i].app_name}</option>`;
                 }
@@ -194,8 +195,17 @@ function sendBroadcast(){
                      "client_id_current": ${window.global_clientId},
                      "broadcast_type" :"${broadcast_type}", 
                      "broadcast_message":"${broadcast_message}"}`;
-    common_fetch('/service/broadcast?',
-                 'POST', 1, json_data, null, null, (err, result) =>{
+    let url='';
+    if (window.global_system_admin==1){
+        url = '/service/broadcast/SystemAdmin/Send?';
+        token_type = 2;
+    }
+    else{
+        url = '/service/broadcast/Admin/Send?';
+        token_type = 1;
+    }
+        
+    common_fetch(url, 'POST', token_type, json_data, null, null, (err, result) =>{
         if (err)
             null;
         else{
@@ -691,13 +701,13 @@ function show_users(sort=8, order_by='ASC', focus=true){
             else
                 input_readonly = `readonly='true'`;
             for (i = 0; i < json.data.length; i++) {
-                let list_connected_current_user_row='';
+                let list_user_account_current_user_row='';
                 if (json.data[i].id==window.global_user_account_id)
-                    list_connected_current_user_row = 'list_connected_current_user_row';
+                    list_user_account_current_user_row = 'list_current_user_row';
                 else
-                    list_connected_current_user_row ='';
+                    list_user_account_current_user_row ='';
                 html += 
-                `<div id='list_user_account_row_${i}' data-changed-record='0' class='list_user_account_row ${list_connected_current_user_row}' >
+                `<div id='list_user_account_row_${i}' data-changed-record='0' class='list_user_account_row ${list_user_account_current_user_row}' >
                     <div class='list_user_account_col'>
                         <div class='list_readonly'>
                             <img class='list_user_account_avatar' ${list_image_format_src(json.data[i].avatar)}/>
@@ -1349,28 +1359,44 @@ function nav_click(item){
         }
     }
 }
-async function show_list(list_div, list_div_col_title, url, sort, order_by, cols){
+async function show_list(list_div, list_div_col_title, url_parameters, sort, order_by){
     if (admin_token_has_value()){
         let json;
         let token_type;
+        let url;
         //set spinner
         switch (list_div){
+            case 'list_connected':{
+                if (window.global_system_admin==1){
+                    url = `/service/broadcast/SystemAdmin/connected?${url_parameters}`;
+                    token_type = 2;
+                }
+                else{
+                    url = `/service/broadcast/Admin/connected?${url_parameters}`;
+                    token_type = 1;
+                }
+                document.getElementById(list_div).innerHTML = window.global_app_spinner;
+                break;
+            }
+            case 'list_app_log':{
+                url = window.global_rest_url_base + `app_log?${url_parameters}`;
+                token_type = 1;
+                document.getElementById(list_div).innerHTML = window.global_app_spinner;
+                break;
+            }
+            case 'list_server_log':{
+                url = window.global_service_log + `/logs?${url_parameters}`;
+                token_type = 2;
+                document.getElementById(list_div).innerHTML = window.global_app_spinner;
+                break;
+            }
             case 'list_pm2_log':{
+                url = window.global_service_log + `/pm2logs?`;
+                token_type = 2;
                 document.getElementById(list_div + '_out').innerHTML = window.global_app_spinner;
                 document.getElementById(list_div + '_err').innerHTML = window.global_app_spinner;
                 document.getElementById(list_div + '_process_event').innerHTML = window.global_app_spinner;
                 //sort not implemented for pm2 with different content in one json file
-                token_type = 2;
-                break;
-            }
-            case 'list_server_log':{
-                token_type = 2;
-                document.getElementById(list_div).innerHTML = window.global_app_spinner;
-                break;
-            }
-            default:{
-                token_type = 1;
-                document.getElementById(list_div).innerHTML = window.global_app_spinner;
                 break;
             }
         }
@@ -1420,18 +1446,21 @@ async function show_list(list_div, list_div_col_title, url, sort, order_by, cols
                                         <div>USER ID</div>
                                     </div>
                                     <div id='list_connected_col_title6' class='list_connected_col list_sort_click list_title'>
-                                        <div>IP</div>
+                                        <div>SYSTEM ADMIN</div>
                                     </div>
                                     <div id='list_connected_col_title7' class='list_connected_col list_sort_click list_title'>
-                                        <div>GPS LAT</div>
+                                        <div>IP</div>
                                     </div>
                                     <div id='list_connected_col_title8' class='list_connected_col list_sort_click list_title'>
-                                        <div>GPS LONG</div>
+                                        <div>GPS LAT</div>
                                     </div>
                                     <div id='list_connected_col_title9' class='list_connected_col list_sort_click list_title'>
+                                        <div>GPS LONG</div>
+                                    </div>
+                                    <div id='list_connected_col_title10' class='list_connected_col list_sort_click list_title'>
                                         <div>USER AGENT</div>
                                     </div>
-                                    <div id='list_connected_col_title10' class='list_connected_col list_title'>
+                                    <div id='list_connected_col_title11' class='list_connected_col list_title'>
                                         <div>BROADCAST</div>
                                     </div>
                                 </div>`;
@@ -1596,24 +1625,30 @@ async function show_list(list_div, list_div_col_title, url, sort, order_by, cols
                         switch (list_div){
                             case 'list_connected':{    
                                 let list_connected_current_user_row='';
-                                if (json.data[i].user_account_id==window.global_user_account_id)
-                                    list_connected_current_user_row = 'list_connected_current_user_row';
+                                if (json.data[i].id==window.global_clientId)
+                                    list_connected_current_user_row = 'list_current_user_row';
                                 else
                                     list_connected_current_user_row ='';
                                 let app_role_class;
-                                switch (json.data[i].app_role_id){
-                                    case 0:{
-                                        app_role_class = 'app_role_superadmin';
-                                        break;
-                                    }
-                                    case 1:{
-                                        app_role_class = 'app_role_admin';
-                                        break;
-                                    }
-                                    default:{
-                                        app_role_class = 'app_role_user';
-                                    }
+                                let app_role_icon = json.data[i].app_role_icon;
+                                if (json.data[i].system_admin==1){
+                                    app_role_class = 'app_role_system_admin';
+                                    app_role_icon = window.global_icon_app_system_admin;
                                 }
+                                else
+                                    switch (json.data[i].app_role_id){
+                                        case 0:{
+                                            app_role_class = 'app_role_superadmin';
+                                            break;
+                                        }
+                                        case 1:{
+                                            app_role_class = 'app_role_admin';
+                                            break;
+                                        }
+                                        default:{
+                                            app_role_class = 'app_role_user';
+                                        }
+                                    }
                                 html += `<div class='list_connected_row ${list_connected_current_user_row}'>
                                             <div class='list_connected_col'>
                                                 <div>${json.data[i].id}</div>
@@ -1625,10 +1660,13 @@ async function show_list(list_div, list_div_col_title, url, sort, order_by, cols
                                                 <div>${json.data[i].app_id}</div>
                                             </div>
                                             <div class='list_connected_col ${app_role_class}'>
-                                                <div>${json.data[i].app_role_icon}</div>
+                                                <div>${app_role_icon}</div>
                                             </div>
                                             <div class='list_connected_col'>
                                                 <div>${json.data[i].user_account_id}</div>
+                                            </div>
+                                            <div class='list_connected_col'>
+                                                <div>${json.data[i].system_admin}</div>
                                             </div>
                                             <div class='list_connected_col'>
                                                 <div>${json.data[i].ip.replace('::ffff:','')}</div>
@@ -1870,10 +1908,9 @@ async function show_connected(sort=4, order_by='desc'){
     let month = document.getElementById('select_month_menu5_list_connected').value;
     show_list('list_connected', 
               'list_connected_col_title', 
-              `/service/broadcast/connected?select_app_id=${app_id}&year=${year}&month=${month}&sort=${sort}&order_by=${order_by}&limit=${window.global_limit}`, 
+              `select_app_id=${app_id}&year=${year}&month=${month}&sort=${sort}&order_by=${order_by}&limit=${window.global_limit}`, 
               sort,
-              order_by,
-              8);
+              order_by);
 }    
 
 async function show_app_log(sort=8, order_by='desc', offset=0, limit=window.global_limit){
@@ -1882,10 +1919,9 @@ async function show_app_log(sort=8, order_by='desc', offset=0, limit=window.glob
     let month = document.getElementById('select_month_menu5_app_log').value;
     show_list('list_app_log', 
               'list_app_log_col_title', 
-              window.global_rest_url_base + `app_log?select_app_id=${app_id}&year=${year}&month=${month}&sort=${sort}&order_by=${order_by}&offset=${offset}&limit=${limit}`, 
+              `select_app_id=${app_id}&year=${year}&month=${month}&sort=${sort}&order_by=${order_by}&offset=${offset}&limit=${limit}`, 
               sort,
-              order_by,
-              8);
+              order_by);
 } 
 function set_list_eventlisteners(list_type, list_function, event_action){
     let click_function_title = function() { list_sort_click(this)};
@@ -2172,10 +2208,9 @@ function show_server_logs(sort=1, order_by='desc'){
         url_parameters = `${app_id_filter}logscope=${logscope}&loglevel=${loglevel}&year=${year}&month=${month}&day=${day}`;
     show_list('list_server_log', 
                 'list_server_log_col_title', 
-                window.global_service_log + `/logs?${url_parameters}&sort=${sort}&order_by=${order_by}`,
+                `${url_parameters}&sort=${sort}&order_by=${order_by}`,
                 sort,
-                order_by,
-                15);
+                order_by);
 }
 function show_existing_logfiles(){
     if (admin_token_has_value()){
@@ -2221,10 +2256,9 @@ function show_pm2_logs(){
     let order_by = '';
     show_list('list_pm2_log', 
               'list_pm2_log_XXX_row_title', //list_pm2_log_out, list_pm2_log_err, list_pm2_log_process_event
-              window.global_service_log + `/pm2logs?`,
+              null,
               sort,
-              order_by,
-              3); //skip last process id column
+              order_by);
 }
 /*----------------------- */
 /* INIT                   */
@@ -2487,8 +2521,6 @@ function init_admin_secure(){
             if (window.global_system_admin==1){
                 //show MONITOR (only SERVER LOG and PM2LOG)
                 document.getElementById('menu_5').style.display='block';
-                //hide CONNECTED in MONITOR
-                document.getElementById('list_monitor_nav_1').style.display='none';
                 //hide APP LOG in MONITOR
                 document.getElementById('list_monitor_nav_2').style.display='none';
                 //show PARAMETER

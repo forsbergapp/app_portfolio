@@ -5,7 +5,7 @@ module.exports = {
     themes:async (app_id) => {
         return new Promise(function (resolve, reject){
             getThemes(app_id, (err, results)  => {
-                var html_themes='';
+                let html_themes='';
                 if (err){
                     resolve (
                             `<div class='setting_horizontal_col'>
@@ -44,12 +44,12 @@ module.exports = {
                         )
                 }
                 else{
-                    var span_themes_day ='', span_themes_month='', span_themes_year='';
+                    let span_themes_day ='', span_themes_month='', span_themes_year='';
                     //get themes and save result in three theme variables
                     results.map( (themes_map,i) => {
                         //Node does not like eval('span_themes_' + themes_map.type.toLowerCase()) +=
                         //src='${themes_map.image_preview_url}'
-                        var new_span = `<span class="slide slide_${themes_map.type.toLowerCase()}">
+                        let new_span = `<span class="slide slide_${themes_map.type.toLowerCase()}">
                                             <div id='theme_${themes_map.type.toLowerCase()}_${themes_map.id}'                       
                                                 data-theme_id='${themes_map.id}'
                                                 data-header_image=${themes_map.image_header}
@@ -99,12 +99,12 @@ module.exports = {
     places: async (app_id) => {
         return new Promise(function (resolve, reject){
             getPlace(app_id, (err, results)  => {
-                var select_places;
+                let select_places;
                 if (err){
-                resolve (
-                            `<select id='setting_select_popular_place'>
-                            <option value="" id="" latitude="0" longitude="0" timezone="" selected="selected">...</option>`
-                        )
+                    resolve (
+                                `<select id='setting_select_popular_place'>
+                                <option value="" id="" latitude="0" longitude="0" timezone="" selected="selected">...</option>`
+                            )
                 }
                 else{
                     select_places  =`<select id='setting_select_popular_place'>
@@ -126,9 +126,9 @@ module.exports = {
                                         longitude='${places_map.longitude}' 
                                         timezone='${places_map.timezone}'>${places_map.group1_icon} ${places_map.group2_icon} ${places_map.country_flag} ${places_map.country2_flag} ${places_map.title}
                                 </option>`;
-                })
-                select_places += '</select>';
-                resolve (select_places);
+                    })
+                    select_places += '</select>';
+                    resolve (select_places);
                 }
             });
         })

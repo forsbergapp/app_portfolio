@@ -17,7 +17,7 @@ module.exports = {
             //image called direct without parameters
             req.query.et = null;
         }
-        var path = require('path');
+        let path = require('path');
         res.sendFile(path.resolve(__dirname + `/../../apps/app${req.query.app_id}/mail/logo.png`), (err) =>{
             if (err){
                 createLogAppSE(req.query.app_id, __appfilename, __appfunction, __appline, err, (err_log, result_log)=>{
@@ -81,7 +81,7 @@ module.exports = {
             }
             else{
                 let json = JSON.parse(JSON.stringify(result));
-                for (var i = 0; i < json.length; i++){
+                for (let i = 0; i < json.length; i++){
                     if (json[i].parameter_name=='SERVICE_MAIL_TYPE_CHANGE_EMAIL_FROM_NAME')
                         db_SERVICE_MAIL_TYPE_CHANGE_EMAIL_FROM_NAME = json[i].parameter_value;
                     if (json[i].parameter_name=='SERVICE_MAIL_TYPE_PASSWORD_RESET_FROM_NAME')

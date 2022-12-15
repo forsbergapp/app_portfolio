@@ -1,13 +1,18 @@
-const { BroadcastConnect, BroadcastSend, ConnectedList, ConnectedCount, ConnectedUpdate, ConnectedCheck} = require ("./broadcast.controller");
+const { BroadcastConnect, BroadcastSend, ConnectedList, ConnectedListSystemAdmin, ConnectedCount, ConnectedUpdate, ConnectedCheck} = require ("./broadcast.controller");
 const { checkAccessTokenAdmin} = require ("../auth/auth.controller");
+const { checkAdmin} = require ("../auth/admin/admin.controller");
 const { checkDataToken } = require("../auth/auth.controller");
 const router = require("express").Router();
 
-router.get("/connect/:clientId",BroadcastConnect);
-router.post("/",checkAccessTokenAdmin, BroadcastSend);
+router.get("/SystemAdmin/connected", checkAdmin, ConnectedListSystemAdmin);
+router.patch("/SystemAdmin/update_connected", checkAdmin, ConnectedUpdate);
+router.post("/SystemAdmin/Send",checkAdmin, BroadcastSend);
 
-router.get("/connected", checkAccessTokenAdmin, ConnectedList);
-router.get("/connected/count", checkAccessTokenAdmin, ConnectedCount);
+router.post("/Admin/Send",checkAccessTokenAdmin, BroadcastSend);
+router.get("/Admin/connected", checkAccessTokenAdmin, ConnectedList);
+router.get("/Admin/connected/count", checkAccessTokenAdmin, ConnectedCount);
+
+router.get("/connect/:clientId",BroadcastConnect);
 router.patch("/update_connected", checkDataToken, ConnectedUpdate);
 router.get("/checkconnected/:user_account_id", checkDataToken, ConnectedCheck);
 

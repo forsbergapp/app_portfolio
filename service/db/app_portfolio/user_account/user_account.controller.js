@@ -68,7 +68,7 @@ module.exports = {
     updateUserSuperAdmin: (req, res) => {
         updateUserSuperAdmin(req.query.app_id, req.params.id, req.body, (err, results) => {
             if (err) {
-                var app_code = get_app_code(err.errorNum, 
+                let app_code = get_app_code(err.errorNum, 
                     err.message, 
                     err.code, 
                     err.errno, 
@@ -128,7 +128,7 @@ module.exports = {
                 req.body.password = hashSync(req.body.password, salt);
             create(req.query.app_id, req.body, (err, results) => {
                 if (err) {
-                    var app_code = get_app_code(err.errorNum, 
+                    let app_code = get_app_code(err.errorNum, 
                                                 err.message, 
                                                 err.code, 
                                                 err.errno, 
@@ -200,7 +200,7 @@ module.exports = {
         }
         activateUser(req.query.app_id, req.params.id, req.body.verification_type, verification_code_to_check, auth_new_password, (err, results) => {
             if (err) {
-                var app_code = get_app_code(err.errorNum, 
+                let app_code = get_app_code(err.errorNum, 
                     err.message, 
                     err.code, 
                     err.errno, 
@@ -514,7 +514,7 @@ module.exports = {
         });
     },
     getProfileDetail: (req, res) => {
-        var detailchoice;
+        let detailchoice;
         if (typeof req.query.detailchoice !== 'undefined')
             detailchoice = req.query.detailchoice;
 
@@ -546,7 +546,7 @@ module.exports = {
         });
     },
     getProfileTop: (req, res) => {
-        var statchoice;
+        let statchoice;
         if (typeof req.params.statchoice !== 'undefined')
             statchoice = req.params.statchoice;
         getProfileTop(req.query.app_id, statchoice, (err, results) => {
@@ -609,7 +609,7 @@ module.exports = {
                             function updateLocal(send_email){
                                 updateUserLocal(req.query.app_id, req.body, req.params.id, (err, results_update) => {
                                     if (err) {
-                                        var app_code = get_app_code(err.errorNum, 
+                                        let app_code = get_app_code(err.errorNum, 
                                                                     err.message, 
                                                                     err.code, 
                                                                     err.errno, 
@@ -763,7 +763,7 @@ module.exports = {
             req.body.new_password = hashSync(req.body.new_password, salt);
             updatePassword(req.query.app_id, req.params.id, req.body, (err, results) => {
                 if (err) {
-                    var app_code = get_app_code(err.errorNum, 
+                    let app_code = get_app_code(err.errorNum, 
                                                 err.message, 
                                                 err.code, 
                                                 err.errno, 
@@ -830,7 +830,7 @@ module.exports = {
     updateUserCommon: (req, res) => {
         updateUserCommon(req.query.app_id, req.body, req.params.id, (err, results) => {
             if (err) {
-                var app_code = get_app_code(err.errorNum, 
+                let app_code = get_app_code(err.errorNum, 
                     err.message, 
                     err.code, 
                     err.errno, 
@@ -990,7 +990,7 @@ module.exports = {
 
     },
     userLogin: (req, res) => {
-        var result_pw;
+        let result_pw;
         userLogin(req.query.app_id, req.body, (err, results) => {
             if (err) {
                 return res.status(500).send(
@@ -1197,7 +1197,7 @@ module.exports = {
                 if (results.length > 0) {
                     updateSigninProvider(req.query.app_id, results[0].id, req.body, (err, results_update) => {
                         if (err) {
-                            var app_code = get_app_code(err.errorNum, 
+                            let app_code = get_app_code(err.errorNum, 
                                 err.message, 
                                 err.code, 
                                 err.errno, 

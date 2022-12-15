@@ -621,6 +621,12 @@
         height: 0.6em;
         vertical-align: sub;
     }
+    .list_current_user_row{
+        animation: common_pulsate 2s ease-out;
+        animation-iteration-count: infinite; 
+        opacity: 0.5;
+        font-weight: bold;
+    }
     #list_connected_form{
         display: flex;
         flex-direction: column;
@@ -640,14 +646,8 @@
         height: 100%;
     }
     /*CONNECTED*/
-    .app_role_superadmin, .app_role_admin, .app_role_user{
+    .app_role_superadmin, .app_role_admin, .app_role_user, .app_role_system_admin{
         transform: translate(5px,-1px) scale(1.5);
-    }
-    .list_connected_current_user_row{
-        animation: common_pulsate 2s ease-out;
-        animation-iteration-count: infinite; 
-        opacity: 0.5;
-        font-weight: bold;
     }
     .list_connected_col:nth-child(1){
         width:70px;
@@ -674,6 +674,9 @@
         width:70px;
     }
     .list_connected_col:nth-child(9){
+        width:70px;
+    }
+    .list_connected_col:nth-child(10){
         width:70px;
     }
     /*APP LOG*/

@@ -1,13 +1,21 @@
-function sortByProperty(property, order_by){
-    return function(a,b){  
-       if(a[property] > b[property])  
-          return 1 * order_by;
-       else if(a[property] < b[property])  
-          return -1 * order_by;
-       return 0;  
-    }  
-}
+global.broadcast_clients = [];
 module.exports = {
+    ClientConnect: (res) =>{
+        const headers = {
+            "Content-Type": "text/event-stream",
+            "Connection": "keep-alive",
+          };
+        res.writeHead(200, headers);
+    },
+    ClientClose: (res, client_id) =>{
+        res.on('close', ()=>{
+            broadcast_clients = broadcast_clients.filter(client => client.id !== client_id);
+            res.end();
+        })
+    },
+    ClientAdd: (newClient) =>{
+        broadcast_clients.push(newClient);
+    },
     BroadcastSend: (app_id, client_id, client_id_current, destination_app, broadcast_type, broadcast_message, callBack) =>{
         let broadcast;
         if (destination_app ==true){
@@ -57,6 +65,7 @@ module.exports = {
                                 app_role_id: '',
                                 app_role_icon: '',
                                 user_account_id: client.user_account_id,
+                                system_admin: client.system_admin,
                                 user_agent: client.user_agent,
                                 connection_date: client.connection_date,
                                 ip: client.ip,
@@ -69,6 +78,15 @@ module.exports = {
                 }
             }
         })
+        function sortByProperty(property, order_by){
+            return function(a,b){  
+               if(a[property] > b[property])  
+                  return 1 * order_by;
+               else if(a[property] < b[property])  
+                  return -1 * order_by;
+               return 0;  
+            }  
+        }        
         function sort_and_return(){
             let column_sort;
             let order_by_num;
@@ -94,22 +112,26 @@ module.exports = {
                     break;
                 }
                 case 5:{
-                    column_sort = 'user_agent';
+                    column_sort = 'system_admin';
                     break;
                 }
                 case 6:{
-                    column_sort = 'connection_date';
+                    column_sort = 'user_agent';
                     break;
                 }
                 case 7:{
-                    column_sort = 'ip';
+                    column_sort = 'connection_date';
                     break;
                 }
                 case 8:{
-                    column_sort = 'gps_latitude';
+                    column_sort = 'ip';
                     break;
                 }
                 case 9:{
+                    column_sort = 'gps_latitude';
+                    break;
+                }
+                case 10:{
                     column_sort = 'gps_longitude';
                     break;
                 }
@@ -119,26 +141,32 @@ module.exports = {
             }
             callBack(null, broadcast_clients_no_res.sort(sortByProperty(column_sort, order_by_num)));
         }
-        //update list using map with app role icons
-        i=0;
-        if (broadcast_clients_no_res.length>0)
-            broadcast_clients_no_res.map(client=>{
-                getAppRole(app_id, client.user_account_id, (err, result_app_role)=>{
-                    if (err)
-                        callBack(err, null);
-                    else{
-                        client.app_role_id = result_app_role.app_role_id;
-                        client.app_role_icon = result_app_role.icon;
-                        if (i== broadcast_clients_no_res.length - 1) 
-                            sort_and_return();
-                        else
-                            i++;
-                    }
-                    
-                })
-            })
-        else
-            callBack(null, null);
+        
+            i=0;
+            if (broadcast_clients_no_res.length>0)
+                //update list using map with app role icons if database started
+                if(process.env.SERVER_DB_START==1){
+                    broadcast_clients_no_res.map(client=>{
+                        getAppRole(app_id, client.user_account_id, (err, result_app_role)=>{
+                            if (err)
+                                callBack(err, null);
+                            else{
+                                client.app_role_id = result_app_role.app_role_id;
+                                client.app_role_icon = result_app_role.icon;
+                                if (i== broadcast_clients_no_res.length - 1) 
+                                    sort_and_return();
+                                else
+                                    i++;
+                            }
+                            
+                        })
+                    })
+                }
+                else
+                    sort_and_return();
+            else
+                callBack(null, null);
+        
     },
     ConnectedCount: (identity_provider_id, count_logged_in, callBack)=>{
         let i=0;
@@ -151,22 +179,25 @@ module.exports = {
                 (count_logged_in==1 &&
                  identity_provider_id =='' &&
                  broadcast_clients[i].identity_provider_id =='' &&
-                 broadcast_clients[i].user_account_id != '') ||
+                 (broadcast_clients[i].user_account_id != '' ||
+                  broadcast_clients[i].system_admin == 1)) ||
                 (count_logged_in==0 && 
                  identity_provider_id =='' &&
                  broadcast_clients[i].identity_provider_id =='' &&
-                 broadcast_clients[i].user_account_id ==''))
+                 broadcast_clients[i].user_account_id =='' &&
+                 broadcast_clients[i].system_admin == 0))
                 {
                 count_connected = count_connected + 1;
             }
         }
         return callBack(null, count_connected);
     },
-    ConnectedUpdate: (client_id, user_account_id, identity_provider_id, callBack) =>{
+    ConnectedUpdate: (client_id, user_account_id, system_admin, identity_provider_id, callBack) =>{
         let i=0;
         for (let i = 0; i < broadcast_clients.length; i++){
             if (broadcast_clients[i].id==client_id){
                 broadcast_clients[i].user_account_id = user_account_id;
+                broadcast_clients[i].system_admin = system_admin;
                 broadcast_clients[i].connection_date = new Date().toISOString();
                 broadcast_clients[i].identity_provider_id = identity_provider_id;
                 return callBack(null, null);

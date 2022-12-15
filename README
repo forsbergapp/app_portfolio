@@ -473,8 +473,6 @@ Installation instructions
 	Apps server code reads process.env.MAIN_APP_ID for main app
 	and for the apps installed they use APP{APP_ID}_ID variable in
 	apps/app{APP_ID}/server.js that is used to init the server generation of the client.
-	
-	Admin does not use window.global_app_id but uses window.global_admin = true.
 
 12. Issues
 	Not supported:

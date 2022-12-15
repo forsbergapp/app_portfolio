@@ -6,7 +6,7 @@ app.use('/app3/images',express.static(__dirname + '/app3/images'));
 app.use('/app3/js',express.static(__dirname + '/app3/js'));
 
 app.get('/:doc', function(req, res,next) {
-  if (check_app_subdomain(app_id, req.headers.host)) {
+  if (check_app_subdomain(APP3_ID, req.headers.host)) {
     if (req.params.doc =='1' ||
         req.params.doc =='2' ||
         req.params.doc =='3' ) {
@@ -23,7 +23,7 @@ app.get('/:doc', function(req, res,next) {
 });
 
 app.get('/',function (req, res, next) {
-  if (check_app_subdomain(app_id, req.headers.host)){
+  if (check_app_subdomain(APP3_ID, req.headers.host)){
     const { getForm} = require("../service/forms/forms.controller");
     getForm(req, res, APP3_ID, null,(err, app_result)=>{
         return res.send(app_result);
