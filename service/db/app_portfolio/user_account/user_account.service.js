@@ -13,12 +13,12 @@ function password_length_wrong(password){
 function get_app_code (errorNum, message, code, errno, sqlMessage){
 	//if known sql error
 	if (errorNum ==1 || code == 'ER_DUP_ENTRY' || code=='23505') {
-		var text_check;
+		let text_check;
 		if (sqlMessage)
 			text_check = JSON.stringify(sqlMessage);
 		else
 			text_check = JSON.stringify(message);
-		var app_message_code = '';
+		let app_message_code = '';
 		//check constraints errors, must be same name in mySQL and Oracle
 		if (text_check.toUpperCase().includes("USER_ACCOUNT_EMAIL_UN"))
 			app_message_code = 20200;
@@ -369,7 +369,7 @@ module.exports = {
 							//sample output:
 							//{"lastRowid":"AAAWwdAAAAAAAdHAAC","rowsAffected":1}
 							//remove "" before and after
-							var lastRowid = JSON.stringify(result.lastRowid).replace(/"/g, '');
+							let lastRowid = JSON.stringify(result.lastRowid).replace(/"/g, '');
 							sql = `SELECT id "insertId"
 									FROM ${get_schema_name()}.user_account
 									WHERE rowid = :lastRowid`;

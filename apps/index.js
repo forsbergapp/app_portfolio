@@ -20,7 +20,7 @@ async function getInfo(app_id, info, lang_code, callBack){
                 }
                 else{
                     let json = JSON.parse(JSON.stringify(result));
-                    for (var i = 0; i < json.length; i++){
+                    for (let i = 0; i < json.length; i++){
                         if (json[i].parameter_name=='INFO_EMAIL_POLICY')
                             db_info_email_policy = json[i].parameter_value;
                         if (json[i].parameter_name=='INFO_EMAIL_DISCLAIMER')
@@ -156,7 +156,6 @@ async function get_module_with_init(app_id,
                                     module, callBack){
 
     if (system_admin==1 || process.env.SERVER_DB_START==0){
-        //return initial parameters for system admin when database is not enabled
         let parameters = {   
             app_id: app_id,
             app_name: 'SYSTEM ADMIN',
@@ -258,22 +257,35 @@ module.exports = {
                 eval(fileBuffer);
             });
         }
-        const { getAppsAdmin } = require ("../service/db/app_portfolio/app/app.service");
-        getAppsAdmin(process.env.COMMON_APP_ID, null, (err, results) =>{
-            if (err) {
-                createLogAppSE(process.env.COMMON_APP_ID, __appfilename, __appfunction, __appline, `getAppsAdmin, err:${err}`, (err_log, result_log)=>{
-                null;
-                })
-            }
-            else {
-                let json;
-                json = JSON.parse(JSON.stringify(results));
-                //start app pools
-                for (var app_id = 0; app_id < json.length; app_id++) {
-                    load_dynamic_code(app_id);
+        //load apps if database started
+        if (process.env.SERVER_DB_START==1){
+            const { getAppsAdmin } = require ("../service/db/app_portfolio/app/app.service");
+            getAppsAdmin(process.env.COMMON_APP_ID, null, (err, results) =>{
+                if (err) {
+                    createLogAppSE(process.env.COMMON_APP_ID, __appfilename, __appfunction, __appline, `getAppsAdmin, err:${err}`, (err_log, result_log)=>{
+                    null;
+                    })
                 }
-            }
-        })
+                else {
+                    let json;
+                    json = JSON.parse(JSON.stringify(results));
+                    //start apps if enabled else start only admin app
+                    if (process.env.SERVER_APP_START==1){
+                        //start app pools
+                        for (let app_id = 0; app_id < json.length; app_id++) {
+                            load_dynamic_code(app_id);
+                        }
+                    }
+                    else
+                        load_dynamic_code(process.env.COMMON_APP_ID);
+                }
+            })
+        }
+        else{
+            //no database started, start only admin app
+            load_dynamic_code(process.env.COMMON_APP_ID);
+        }
+            
     },
     getMaintenance:(app_id, gps_lat, gps_long, gps_place) => {
         return new Promise(function (resolve, reject){
@@ -405,7 +417,7 @@ module.exports = {
     countries:(app_id) => {
         return new Promise(function (resolve, reject){
             getCountries(app_id, 'en', (err, results)  => {
-                var select_countries;
+                let select_countries;
                 if (err){
                     resolve (
                                 `<select name='country' id='setting_select_country'>
@@ -414,7 +426,7 @@ module.exports = {
                             )
                 }     
                 else{
-                    var current_group_name;
+                    let current_group_name;
                     select_countries  =`<select name='country' id='setting_select_country'>
                                         <option value='' id='' label='…' selected='selected'>…</option>`;
             

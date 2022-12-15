@@ -2,7 +2,7 @@ const { getCountries } = require ("./country.service");
 
 module.exports = {
 	getCountries: (req, res) => {
-        var lang_code;
+        let lang_code;
         if (typeof req.params.lang_code == 'undefined')
             lang_code ='en';
         else

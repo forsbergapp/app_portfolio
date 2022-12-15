@@ -30,7 +30,7 @@ module.exports = {
                         })
                     }
                     else{
-                        var os = require("os");
+                        let os = require("os");
                         if (process.env.SERVICE_AUTH_ACCESS_CONTROL_ACCESS_FROM==1 &&
                             req.headers.host==os.hostname()){
                             //check if accessed from domain and not os hostname
@@ -243,7 +243,7 @@ module.exports = {
                     let db_APP_REST_CLIENT_SECRET;
                     let db_SERVICE_AUTH_TOKEN_DATA_SECRET;
                     let db_SERVICE_AUTH_TOKEN_DATA_EXPIRE;
-                    for (var i = 0; i < json.length; i++){
+                    for (let i = 0; i < json.length; i++){
                         if (json[i].parameter_name=='APP_REST_CLIENT_ID')
                             db_APP_REST_CLIENT_ID = json[i].parameter_value;
                         if (json[i].parameter_name=='APP_REST_CLIENT_SECRET')
@@ -253,7 +253,7 @@ module.exports = {
                         if (json[i].parameter_name=='SERVICE_AUTH_TOKEN_DATA_EXPIRE')
                             db_SERVICE_AUTH_TOKEN_DATA_EXPIRE = json[i].parameter_value;
                     }                    
-                    var userpass = new Buffer.from((req.headers.authorization || '').split(' ')[1] || '', 'base64').toString();
+                    let userpass = new Buffer.from((req.headers.authorization || '').split(' ')[1] || '', 'base64').toString();
                     if (userpass !== db_APP_REST_CLIENT_ID + ':' + db_APP_REST_CLIENT_SECRET) {
                         createLog(req.query.app_id,
                                   { app_id : req.query.app_id,
@@ -279,7 +279,7 @@ module.exports = {
                                 }); 
                     } 
                     else{
-                        var jsontoken_dt;
+                        let jsontoken_dt;
                         jsontoken_dt = sign ({tokentimstamp: Date.now()}, 
                                             db_SERVICE_AUTH_TOKEN_DATA_SECRET, 
                                             {
@@ -328,13 +328,13 @@ module.exports = {
                 let json = JSON.parse(JSON.stringify(result));
                 let db_SERVICE_AUTH_TOKEN_ACCESS_SECRET;
                 let db_SERVICE_AUTH_TOKEN_ACCESS_EXPIRE;
-                for (var i = 0; i < json.length; i++){
+                for (let i = 0; i < json.length; i++){
                     if (json[i].parameter_name=='SERVICE_AUTH_TOKEN_ACCESS_SECRET')
                         db_SERVICE_AUTH_TOKEN_ACCESS_SECRET = json[i].parameter_value;
                     if (json[i].parameter_name=='SERVICE_AUTH_TOKEN_ACCESS_EXPIRE')
                         db_SERVICE_AUTH_TOKEN_ACCESS_EXPIRE = json[i].parameter_value;
                 }                    
-                var jsontoken_at;                    
+                let jsontoken_at;                    
                 jsontoken_at = sign ({tokentimstamp: Date.now()}, 
                                     db_SERVICE_AUTH_TOKEN_ACCESS_SECRET, 
                                     {
@@ -405,7 +405,7 @@ module.exports = {
         })
     },
     check_request: (req, callBack) => {
-        var err = null;
+        let err = null;
         try {
             decodeURIComponent(req.path)
         }
