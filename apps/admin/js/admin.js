@@ -54,6 +54,8 @@ async function admin_login(){
                 if (status == 200){
                     json = JSON.parse(result_login);
                     window.global_rest_admin_at = json.token_at;
+                    window.global_system_admin = 1;
+                    updateOnlineStatus();
                     fetch('/service/forms/admin/secure',
                     {method: 'POST',
                         headers: {
@@ -217,6 +219,7 @@ function admin_logoff_app(app_id, error){
     }
     if (window.global_system_admin==1){
         clear_common();
+        window.global_system_admin==0;
     }
     else
         user_logoff().then(function(){
@@ -235,7 +238,6 @@ function init_app(system_admin_only){
         });
 }
 function init(parameters){
-    window.global_admin = true;    
     //show admin login as default
     admin_login_nav(document.getElementById('admin_login_title'));
 
@@ -252,6 +254,7 @@ function init(parameters){
         if (parameters.system_admin_only == 1){
             document.getElementById('admin_login_nav').style.display = 'none';
             document.getElementById('admin_login').style.display = 'none';
+            document.getElementById('system_admin_login').style.display = 'block';
         }
         else{
             for (let i = 0; i < global_app_parameters.length; i++) {

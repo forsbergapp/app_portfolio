@@ -18,7 +18,54 @@ module.exports = {
                 ['<AppCommonProfileBtnTop/>', __dirname + '/../common/src/profile_btn_top.html'],
                 ['<AppDialogues/>', __dirname + '/src/dialogues.html']
               ];
-            getUserPreferences(app_id).then(function(user_preferences){
+            if (process.env.SERVER_DB_START==1){
+                getUserPreferences(app_id).then(function(user_preferences){
+                    read_app_files('', files, (err, app)=>{
+                        if (err)
+                            reject(err);
+                        else{
+                            //COMMON, set user preferences content
+                            app = app.replace(
+                                '<USER_LOCALE/>',
+                                `${user_preferences.user_locales}`);
+                            app = app.replace(
+                                '<USER_TIMEZONE/>',
+                                `${user_preferences.user_timezones}`);
+                            app = app.replace(
+                                '<USER_DIRECTION/>',
+                                `<option id='' value=''></option>${user_preferences.user_directions}`);
+                            app = app.replace(
+                                '<USER_ARABIC_SCRIPT/>',
+                                `<option id='' value=''></option>${user_preferences.user_arabic_scripts}`);
+                            //APP Profile tag not used in common body
+                            app = app.replace(
+                                '<AppProfileInfo/>',
+                                '');
+                            //APP Profile tag not used in common body
+                            app = app.replace(
+                                '<AppProfileTop/>',
+                                '');
+                            get_module_with_init(app_id,
+                                                null,
+                                                null,  
+                                                'admin_exception_before',
+                                                null, //do not close eventsource before
+                                                true, //ui
+                                                gps_lat,
+                                                gps_long,
+                                                gps_place,
+                                                app, (err, app_init) =>{
+                                if (err)
+                                    reject(err);
+                                else{
+                                    resolve(app_init);
+                                }
+                            })
+                        }
+                    })
+                })
+            }
+            else{
                 read_app_files('', files, (err, app)=>{
                     if (err)
                         reject(err);
@@ -26,16 +73,16 @@ module.exports = {
                         //COMMON, set user preferences content
                         app = app.replace(
                             '<USER_LOCALE/>',
-                            `${user_preferences.user_locales}`);
+                            '');
                         app = app.replace(
                             '<USER_TIMEZONE/>',
-                            `${user_preferences.user_timezones}`);
+                            '');
                         app = app.replace(
                             '<USER_DIRECTION/>',
-                            `<option id='' value=''></option>${user_preferences.user_directions}`);
+                            '');
                         app = app.replace(
                             '<USER_ARABIC_SCRIPT/>',
-                            `<option id='' value=''></option>${user_preferences.user_arabic_scripts}`);
+                            '');
                         //APP Profile tag not used in common body
                         app = app.replace(
                             '<AppProfileInfo/>',
@@ -62,7 +109,8 @@ module.exports = {
                         })
                     }
                 })
-            })
+            }
+            
         })
     }
 }

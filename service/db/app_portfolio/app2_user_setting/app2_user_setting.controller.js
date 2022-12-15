@@ -78,7 +78,7 @@ module.exports = {
 	},
 	getProfileUserSettings: (req, res) => {
 		const id = req.params.id;
-		var id_current_user;
+		let id_current_user;
 		if (typeof req.query.id !== 'undefined')
 			id_current_user = req.query.id;
 		getProfileUserSettings(req.query.app_id, id, id_current_user, (err, results) =>{
@@ -108,7 +108,7 @@ module.exports = {
 	},
 	getProfileUserSettingDetail: (req, res) => {
         const id = req.params.id;
-        var detailchoice;
+        let detailchoice;
         if (typeof req.query.detailchoice !== 'undefined')
             detailchoice = req.query.detailchoice;
 
@@ -140,7 +140,7 @@ module.exports = {
         });
     },
 	getProfileTop: (req, res) => {
-        var statchoice;
+        let statchoice;
         if (typeof req.params.statchoice !== 'undefined')
             statchoice = req.params.statchoice;
         getProfileTop(req.query.app_id, statchoice, (err, results) => {
