@@ -179,7 +179,8 @@ async function get_module_with_init(app_id,
             app_rest_client_secret: '',
             service_auth: '/service/auth',
             rest_api_db_path: process.env.SERVICE_DB_REST_API_PATH,
-            rest_app_parameter: '/service/app_parameter'
+            rest_app_parameter: '/service/app_parameter',
+            common_app_id: process.env.COMMON_APP_ID
         };
         module = module.replace(
                 '<ITEM_COMMON_PARAMETERS/>',
@@ -211,7 +212,8 @@ async function get_module_with_init(app_id,
                     service_auth: result[0].service_auth,
                     app_rest_client_secret: result[0].app_rest_client_secret,
                     rest_api_db_path: process.env.SERVICE_DB_REST_API_PATH,
-                    rest_app_parameter: result[0].rest_app_parameter
+                    rest_app_parameter: result[0].rest_app_parameter,
+                    common_app_id: process.env.COMMON_APP_ID
                 };
                 if (system_admin==1){  
                     module = module.replace(
