@@ -7,4 +7,5 @@ router.use((req,res,next)=>{
     next();
 })
 router.get("/",  checkDataToken, getSettings);
+router.get("/admin",  checkDataToken, getSettings);
 module.exports = router;
