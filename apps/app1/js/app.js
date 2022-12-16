@@ -115,7 +115,7 @@ function get_apps() {
     let json;
     let old_button = document.getElementById('apps').innerHTML;
 
-    common_fetch(window.global_rest_url_base + window.global_rest_app + `?id=${window.global_common_app_id}`, 
+    common_fetch(window.global_rest_api_db_path + window.global_rest_app + `?id=${window.global_common_app_id}`, 
                  'GET', 0, null, null,null, (err, result) =>{
         if (err)
             document.getElementById('apps').innerHTML = old_button;

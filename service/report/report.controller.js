@@ -1,4 +1,4 @@
-const { createLog} = require ("../../service/db/app_portfolio/app_log/app_log.service");
+const { createLog} = require ("../.." + process.env.SERVICE_DB_REST_API_PATH + "app_log/app_log.service");
 module.exports = {
 	getReport: async (req, res) => {
 		let decodedparameters = Buffer.from(req.query.reportid, 'base64').toString('utf-8')

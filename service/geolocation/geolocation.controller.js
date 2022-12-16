@@ -1,5 +1,5 @@
 const { getService, getTimezone} = require ("./geolocation.service");
-const { createLogAdmin, createLog} = require ("../../service/db/app_portfolio/app_log/app_log.service");
+const { createLogAdmin, createLog} = require ("../.." + process.env.SERVICE_DB_REST_API_PATH + "app_log/app_log.service");
 const { getMessage, getMessage_admin } = require("../db/app_portfolio/message_translation/message_translation.service");
 const { createLogAppCI } = require("../../service/log/log.controller");
 const { check_internet } = require("../auth/auth.controller");
