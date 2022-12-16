@@ -7,7 +7,7 @@ router.use((req,res,next)=>{
     createLogAppRI(req, res, __appfilename, __appfunction, __appline, req.body);
     next();
 })
-router.get("/",  checkAccessTokenAdmin, getLogsAdmin);
+router.get("/admin",  checkAccessTokenAdmin, getLogsAdmin);
 router.post("/", checkDataToken, createLog);
 router.get("/admin/stat/uniquevisitor", checkAccessTokenAdmin, getStatUniqueVisitorAdmin);
 module.exports = router;
