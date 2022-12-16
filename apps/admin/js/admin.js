@@ -219,7 +219,7 @@ function admin_logoff_app(app_id, error){
     }
     if (window.global_system_admin==1){
         clear_common();
-        window.global_system_admin==0;
+        window.global_system_admin=0;
     }
     else
         user_logoff().then(function(){

@@ -1303,19 +1303,23 @@ function list_events(list_item, item_row, item_edit){
 /* MONITOR                */
 /*----------------------- */
 function fix_pagination_buttons(){
-    //fix rtl isse with images, items created after login
-    if (document.getElementById('user_direction_select').value=='ltr'||
-        document.getElementById('user_direction_select').value==''){
-        document.getElementById('list_app_log_first').innerHTML = window.global_icon_app_first;
-        document.getElementById('list_app_log_previous').innerHTML = window.global_icon_app_previous;
-        document.getElementById('list_app_log_next').innerHTML = window.global_icon_app_next;
-        document.getElementById('list_app_log_last').innerHTML = window.global_icon_app_last;
-    }
-    else{
-        document.getElementById('list_app_log_first').innerHTML = window.global_icon_app_last;
-        document.getElementById('list_app_log_previous').innerHTML = window.global_icon_app_next;
-        document.getElementById('list_app_log_next').innerHTML = window.global_icon_app_previous;
-        document.getElementById('list_app_log_last').innerHTML = window.global_icon_app_first;
+    //function triggered by change in user preference before innerHTML loaded html
+    //function called again when choosing app log monitor check if exist first
+    if (document.getElementById('list_app_log_first')){
+        //fix rtl isse with images, items created after login
+        if (document.getElementById('user_direction_select').value=='ltr'||
+            document.getElementById('user_direction_select').value==''){
+            document.getElementById('list_app_log_first').innerHTML = window.global_icon_app_first;
+            document.getElementById('list_app_log_previous').innerHTML = window.global_icon_app_previous;
+            document.getElementById('list_app_log_next').innerHTML = window.global_icon_app_next;
+            document.getElementById('list_app_log_last').innerHTML = window.global_icon_app_last;
+        }
+        else{
+            document.getElementById('list_app_log_first').innerHTML = window.global_icon_app_last;
+            document.getElementById('list_app_log_previous').innerHTML = window.global_icon_app_next;
+            document.getElementById('list_app_log_next').innerHTML = window.global_icon_app_previous;
+            document.getElementById('list_app_log_last').innerHTML = window.global_icon_app_first;
+        }
     }
 }
 function nav_click(item){
