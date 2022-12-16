@@ -1,4 +1,4 @@
-const { createLog, createLogAdmin} = require ("../../service/db/app_portfolio/app_log/app_log.service");
+const { createLog, createLogAdmin} = require ("../.." + process.env.SERVICE_DB_REST_API_PATH + "app_log/app_log.service");
 const { createLogAppCI } = require("../../service/log/log.controller");
 const { ClientConnect, ClientClose, ClientAdd, BroadcastSend, ConnectedList, ConnectedCount, ConnectedUpdate, ConnectedCheck} = require ("./broadcast.service");
 module.exports = {
@@ -139,7 +139,7 @@ module.exports = {
                         data: result
                     });
                 else{
-                    const { getMessage_admin } = require("../../service/db/app_portfolio/message_translation/message_translation.service");
+                    const { getMessage_admin } = require("../.." + process.env.SERVICE_DB_REST_API_PATH + "message_translation/message_translation.service");
                     //Record not found
                     getMessage_admin(req.query.app_id,
                                      process.env.COMMON_APP_ID,
