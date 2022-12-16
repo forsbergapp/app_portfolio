@@ -1,6 +1,6 @@
 const { read_app_files, get_module_with_init, countries } = require('../');
-const { getPlace } = require("../../service/db/app_portfolio/app2_place/app2_place.service");
-const { getThemes } = require("../../service/db/app_portfolio/app2_theme/app2_theme.service");
+const { getPlace } = require("../.." + process.env.SERVICE_DB_REST_API_PATH + "app2_place/app2_place.service");
+const { getThemes } = require("../.." + process.env.SERVICE_DB_REST_API_PATH + "app2_theme/app2_theme.service");
 module.exports = {
     themes:async (app_id) => {
         return new Promise(function (resolve, reject){
@@ -136,8 +136,8 @@ module.exports = {
     getApp:(app_id, username, gps_lat, gps_long, gps_place) => {
         return new Promise(function (resolve, reject){
             function main(app_id){
-                const { getLocales } = require("../../service/db/app_portfolio/language/locale/locale.service");
-                const { getSettings } = require("../../service/db/app_portfolio/setting/setting.service");
+                const { getLocales } = require("../.." + process.env.SERVICE_DB_REST_API_PATH + "language/locale/locale.service");
+                const { getSettings } = require("../.." + process.env.SERVICE_DB_REST_API_PATH + "setting/setting.service");
                 const files = [
                   ['APP', __dirname + '/src/index.html'],
                   ['<AppCommonHeadPrayTimes/>', __dirname + '/../common/src/head_praytimes.html'],
@@ -408,7 +408,7 @@ module.exports = {
                 });
             }
             if (username!=null){
-                const {getProfileUser} = require('../../service/db/app_portfolio/user_account/user_account.service');
+                const {getProfileUser} = require('../..' + process.env.SERVICE_DB_REST_API_PATH + 'user_account/user_account.service');
                 getProfileUser(app_id, null, username, null, (err,result)=>{
                     if (result)
                         main(app_id);

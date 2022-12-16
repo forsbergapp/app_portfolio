@@ -96,7 +96,7 @@ window.global_second_language =
 /*----------------------- */
 async function timetable_user_setting_get(user_setting_id, callBack) {
     let json;
-	await common_fetch(window.global_rest_url_base + window.global_rest_app2_user_setting + user_setting_id + '?',
+	await common_fetch(window.global_rest_api_db_path + window.global_rest_app2_user_setting + user_setting_id + '?',
 					   'GET', 0, null, null, null, (err, result) =>{
 		if (err){
 			report_exception(err);
@@ -187,7 +187,7 @@ async function timetable_translate_settings(locale, locale_second) {
     let json;
 	async function fetch_translation(locale, first){
 		//show translation using first or second language
-		await common_fetch(window.global_rest_url_base + window.global_rest_app_object + locale + '?object=APP_OBJECT_ITEM&object_name=REPORT',
+		await common_fetch(window.global_rest_api_db_path + window.global_rest_app_object + locale + '?object=APP_OBJECT_ITEM&object_name=REPORT',
 					       'GET', 0, null, null, null, (err, result) =>{
 			if (err){
 				report_exception(err);
@@ -240,7 +240,7 @@ function updateReportViewStat(user_setting_id, user_account_id) {
                     "client_longitude": "${window.global_client_longitude}",
                     "client_latitude": "${window.global_client_latitude}"
                     }`;
-	common_fetch(window.global_rest_url_base + window.global_rest_app2_user_setting_view + '?',
+	common_fetch(window.global_rest_api_db_path + window.global_rest_app2_user_setting_view + '?',
 				 'POST', 0, json_data, null, null, (err, result) =>{
 		null;
 	})
@@ -456,7 +456,7 @@ async function set_prayer_method(ui){
 	}
 	else{
 		//called from report
-		await common_fetch(window.global_rest_url_base + window.global_rest_setting + '?setting_type=METHOD' , 
+		await common_fetch(window.global_rest_api_db_path + window.global_rest_setting + '?setting_type=METHOD' , 
 					'GET', 0, null, null, null, (err, result) =>{
 			if (err)
 				null;
@@ -1221,7 +1221,7 @@ async function timetable_day_user_settings_get(user_account_id, callBack){
     let i;
 	let user_settings = [];
 
-	await common_fetch(window.global_rest_url_base + window.global_rest_app2_user_setting_user_account_id + user_account_id + '?',
+	await common_fetch(window.global_rest_api_db_path + window.global_rest_app2_user_setting_user_account_id + user_account_id + '?',
 					   'GET', 0, null, null, null, (err, result) =>{
 		if (err)
 			callBack(err, null);

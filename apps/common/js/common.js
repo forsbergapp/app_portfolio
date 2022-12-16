@@ -203,7 +203,7 @@ async function common_translate_ui(lang_code, object = null, callBack){
     else
         objec_parameter = `object=${object}`;
     //translate objects
-    await common_fetch(`${window.global_rest_url_base}${window.global_rest_app_object}${lang_code}?${object_parameter}`, 
+    await common_fetch(`${window.global_rest_api_db_path}${window.global_rest_app_object}${lang_code}?${object_parameter}`, 
                  'GET', 0, null, null, null, (err, result) =>{
         if (err)
             null;
@@ -292,7 +292,7 @@ async function common_translate_ui(lang_code, object = null, callBack){
             }
             //translate locales
             json = '';
-            common_fetch(window.global_rest_url_base + window.global_rest_language_locale + lang_code + '?', 
+            common_fetch(window.global_rest_api_db_path + window.global_rest_language_locale + lang_code + '?', 
                             'GET', 0, null, null, null, (err, result) =>{
                 if (err)
                     null;
@@ -309,7 +309,7 @@ async function common_translate_ui(lang_code, object = null, callBack){
                 }
                 //translate regional settings
                 json = '';
-                common_fetch(window.global_rest_url_base + window.global_rest_setting + '?' +
+                common_fetch(window.global_rest_api_db_path + window.global_rest_setting + '?' +
                              'setting_type=DIRECTION', 
                              'GET', 0, null, null, null, (err, result) =>{
                     if (err)
@@ -677,7 +677,7 @@ function show_message(message_type, code, function_event, message_text='', data_
     //INFO, ERROR, CONFIRM, EXCEPTION
     switch (message_type){
         case 'ERROR':{
-            common_fetch(window.global_rest_url_base + window.global_rest_message_translation + code + `?data_app_id=${data_app_id}`, 
+            common_fetch(window.global_rest_api_db_path + window.global_rest_message_translation + code + `?data_app_id=${data_app_id}`, 
                          'GET', 0, null, null, null, (err, result) =>{
                 confirm_question.style.display = hide;
                 button_cancel.style.display = hide;
@@ -875,7 +875,7 @@ function lov_show(lov, function_event){
         case 'PARAMETER_TYPE':{
             document.getElementById('lov_title').innerHTML = window.global_icon_app_apps + ' ' +window.global_icon_app_settings  + ' ' + window.global_icon_app_type;
             lov_column_value = 'parameter_type_text';            
-            url = window.global_rest_url_base + window.global_rest_parameter_type + `admin?`;
+            url = window.global_rest_api_db_path + window.global_rest_parameter_type + `admin?`;
             token_type = 1;
             break;
         }
@@ -889,14 +889,14 @@ function lov_show(lov, function_event){
         case 'APP_CATEGORY':{
             document.getElementById('lov_title').innerHTML = window.global_icon_app_apps + ' ' + window.global_icon_app_type;
             lov_column_value = 'app_category_text';
-            url = window.global_rest_url_base + window.global_rest_app_category + '/admin?'
+            url = window.global_rest_api_db_path + window.global_rest_app_category + '/admin?'
             token_type = 1;
             break;
         }
         case 'APP_ROLE':{
             document.getElementById('lov_title').innerHTML = window.global_icon_app_role;
             lov_column_value = 'icon';
-            url = window.global_rest_url_base + window.global_rest_app_role + '/admin?'
+            url = window.global_rest_api_db_path + window.global_rest_app_role + '/admin?'
             token_type = 1;
             break;
         }
@@ -1633,11 +1633,11 @@ function profile_top(statschoice, app_rest_url = null, click_function=null) {
                 
     if (statschoice ==1 || statschoice ==2 || statschoice ==3){
         /*statschoice 1,2,3: user_account*/
-        url = window.global_rest_url_base + window.global_rest_user_account_profile_top;
+        url = window.global_rest_api_db_path + window.global_rest_user_account_profile_top;
     }
     else{
         /*other statschoice, apps can use >3 and return same columns*/
-        url = window.global_rest_url_base + app_rest_url;
+        url = window.global_rest_api_db_path + app_rest_url;
     }
     //TOP
     common_fetch(url + statschoice + '?', 
@@ -1681,11 +1681,11 @@ function profile_detail(detailchoice, rest_url_app, fetch_detail, header_app, cl
     let url;
     if (detailchoice == 1 || detailchoice == 2 || detailchoice == 3 || detailchoice == 4){
         /*detailchoice 1,2,3, 4: user_account*/
-        url = window.global_rest_url_base + window.global_rest_user_account_profile_detail;
+        url = window.global_rest_api_db_path + window.global_rest_user_account_profile_detail;
     }
     else{
         /*other detailchoice, apps can use >4 and return same columns*/
-        url = window.global_rest_url_base + rest_url_app;
+        url = window.global_rest_api_db_path + rest_url_app;
     }
     //DETAIL
     //show only if user logged in
@@ -1875,7 +1875,7 @@ function search_profile(click_function) {
             return;
         if (window.global_user_account_id!=''){
             //search using access token with logged in user_account_id
-            url = window.global_rest_url_base + window.global_rest_user_account_profile_searchA;
+            url = window.global_rest_api_db_path + window.global_rest_user_account_profile_searchA;
             token = 1;
             json_data = `{
                         "user_account_id":${window.global_user_account_id},
@@ -1885,7 +1885,7 @@ function search_profile(click_function) {
         }
         else{
             //search using data token without logged in user_account_id
-            url = window.global_rest_url_base + window.global_rest_user_account_profile_searchD;
+            url = window.global_rest_api_db_path + window.global_rest_user_account_profile_searchD;
             token = 0;
             json_data = `{
                         "client_latitude": "${window.global_client_latitude}",
@@ -1947,14 +1947,14 @@ async function profile_show(user_account_id_other = null, username = null, callB
     } else {
         if (user_account_id_other !== null) {
             user_account_id_search = user_account_id_other;
-            url = window.global_rest_url_base + window.global_rest_user_account_profile_userid + user_account_id_search;
+            url = window.global_rest_api_db_path + window.global_rest_user_account_profile_userid + user_account_id_search;
         } else
         if (username !== null) {
             user_account_id_search = '';
-            url = window.global_rest_url_base + window.global_rest_user_account_profile_username + username;
+            url = window.global_rest_api_db_path + window.global_rest_user_account_profile_username + username;
         } else {
             user_account_id_search = window.global_user_account_id;
-            url = window.global_rest_url_base + window.global_rest_user_account_profile_userid + user_account_id_search;
+            url = window.global_rest_api_db_path + window.global_rest_user_account_profile_userid + user_account_id_search;
         }
         //PROFILE MAIN
         let json_data =
@@ -2037,7 +2037,7 @@ async function profile_update_stat(callBack){
     }`;
     //get updated stat for given user
     //to avoid update in stat set searched by same user
-    let url = window.global_rest_url_base + window.global_rest_user_account_profile_userid + profile_id.innerHTML;
+    let url = window.global_rest_api_db_path + window.global_rest_user_account_profile_userid + profile_id.innerHTML;
     common_fetch(url + '?id=' + profile_id.innerHTML, 
                  'POST', 0, json_data, null, null, (err, result) =>{
         if (err)
@@ -2163,7 +2163,7 @@ async function user_login(username, password, callBack) {
                  }`;
 
     //get user with username and password from REST API
-    common_fetch(window.global_rest_url_base + window.global_rest_user_account_login + '?', 
+    common_fetch(window.global_rest_api_db_path + window.global_rest_user_account_login + '?', 
                  'PUT', 0, json_data, null, null, (err, result) =>{
         if (err)
             return callBack(err, null);
@@ -2229,7 +2229,7 @@ async function user_logoff(){
 async function user_edit() {
     let json;
     //get user from REST API
-    common_fetch(window.global_rest_url_base + window.global_rest_user_account + window.global_user_account_id + '?', 
+    common_fetch(window.global_rest_api_db_path + window.global_rest_user_account + window.global_user_account_id + '?', 
                  'GET', 1, null, null, null, (err, result) =>{
         if (err)
             null;
@@ -2350,13 +2350,13 @@ async function user_update() {
                         "avatar":"${avatar}",
                         ${get_uservariables()}
                     }`;
-        url = window.global_rest_url_base + window.global_rest_user_account + window.global_user_account_id;
+        url = window.global_rest_api_db_path + window.global_rest_user_account + window.global_user_account_id;
     } else {
         json_data = `{"username":"${username}",
                       "bio":"${bio}",
                       "private":${boolean_to_number(document.getElementById('user_edit_checkbox_profile_private').checked)}
                      }`;
-        url = window.global_rest_url_base + window.global_rest_user_account_common + window.global_user_account_id;
+        url = window.global_rest_api_db_path + window.global_rest_user_account_common + window.global_user_account_id;
     }
     let old_button = document.getElementById('user_edit_btn_user_update').innerHTML;
     let json;
@@ -2422,7 +2422,7 @@ function user_signup() {
 
     let old_button = document.getElementById('signup_button').innerHTML;
     document.getElementById('signup_button').innerHTML = window.global_app_spinner;
-    common_fetch(window.global_rest_url_base + window.global_rest_user_account_signup + '?', 
+    common_fetch(window.global_rest_api_db_path + window.global_rest_user_account_signup + '?', 
                  'POST', 0, json_data, null, null, (err, result) =>{    
         document.getElementById('signup_button').innerHTML = old_button;
         if (err){    
@@ -2471,7 +2471,7 @@ async function user_verify_check_input(item, nextField, callBack) {
                           "verification_type": ${verification_type},
                           ${get_uservariables()}
                          }`;
-            common_fetch(window.global_rest_url_base + window.global_rest_user_account_activate + window.global_user_account_id + '?', 
+            common_fetch(window.global_rest_api_db_path + window.global_rest_user_account_activate + window.global_user_account_id + '?', 
                          'PUT', 0, json_data, null, null, (err, result) =>{    
                 document.getElementById('user_verify_email').innerHTML = old_button;
                 if (err){    
@@ -2562,7 +2562,7 @@ async function user_delete(choice=null, user_local, function_delete_event, callB
             document.getElementById('user_edit_btn_user_delete_account').innerHTML = window.global_app_spinner;
             let json_data = `{"password":"${password}"}`;
 
-            common_fetch(window.global_rest_url_base + window.global_rest_user_account + window.global_user_account_id + '?', 
+            common_fetch(window.global_rest_api_db_path + window.global_rest_user_account + window.global_user_account_id + '?', 
                          'DELETE', 1, json_data, null, null, (err, result) =>{    
                 document.getElementById('user_edit_btn_user_delete_account').innerHTML = old_button;
                 if (err){
@@ -2609,7 +2609,7 @@ function user_function(user_function, callBack) {
         } else {
             method = 'DELETE';
         }
-        common_fetch(window.global_rest_url_base + rest_path + window.global_user_account_id + '?', 
+        common_fetch(window.global_rest_api_db_path + rest_path + window.global_user_account_id + '?', 
                          method, 1, json_data, null, null, (err, result) =>{    
             if (err)
                 return callBack(err, null);
@@ -2658,7 +2658,7 @@ function user_account_app_delete(choice=null, user_account_id, app_id, function_
         }
         case 1:{
             document.getElementById("dialogue_message").style.visibility = "hidden";
-            common_fetch(window.global_rest_url_base + window.global_rest_user_account_app + user_account_id + '/' + app_id + '?', 
+            common_fetch(window.global_rest_api_db_path + window.global_rest_user_account_app + user_account_id + '/' + app_id + '?', 
                          'DELETE', 1, null, null, null, (err, result) =>{    
                 if (err)
                     null;
@@ -2684,7 +2684,7 @@ async function user_forgot(){
     else{
         let old_button = document.getElementById('forgot_button').innerHTML;
         document.getElementById('forgot_button').innerHTML = window.global_app_spinner;
-        common_fetch(window.global_rest_url_base + window.global_rest_user_account_forgot + '?', 
+        common_fetch(window.global_rest_api_db_path + window.global_rest_user_account_forgot + '?', 
                      'PUT', 0, json_data, null, null, (err, result) =>{
             document.getElementById('forgot_button').innerHTML = old_button;
             if (err)
@@ -2727,7 +2727,7 @@ function updatePassword(){
         let old_button = document.getElementById('user_new_password_icon').innerHTML;
         document.getElementById('user_new_password_icon').innerHTML = window.global_app_spinner;
 
-        common_fetch(window.global_rest_url_base + window.global_rest_user_account_password + window.global_user_account_id + '?', 
+        common_fetch(window.global_rest_api_db_path + window.global_rest_user_account_password + window.global_user_account_id + '?', 
                      'PUT', 1, json_data, null, null, (err, result) =>{
             document.getElementById('user_new_password_icon').innerHTML = old_button;
             if (err)
@@ -2749,7 +2749,7 @@ async function user_preference_save(){
         "setting_preference_arabic_script_id": "${document.getElementById('user_arabic_script_select').options[document.getElementById('user_arabic_script_select').selectedIndex].id}"
         }`;
 
-        await common_fetch(window.global_rest_url_base + window.global_rest_user_account_app + window.global_user_account_id + '?', 
+        await common_fetch(window.global_rest_api_db_path + window.global_rest_user_account_app + window.global_user_account_id + '?', 
                     'PATCH', 1, json_data, null, null, (err, result) =>{
             if (err)
                 null;
@@ -2761,7 +2761,7 @@ async function user_preference_save(){
     
 }
 async function user_preference_get(callBack){
-    await common_fetch(window.global_rest_url_base + window.global_rest_user_account_app + window.global_user_account_id + '?', 
+    await common_fetch(window.global_rest_api_db_path + window.global_rest_user_account_app + window.global_user_account_id + '?', 
                  'GET', 1, null, null, null, (err, result) =>{
         if (err)
             null;
@@ -2840,7 +2840,7 @@ async function Providers_init(function_event){
     let div = document.getElementById('identity_provider_login');
     let json;
     div.innerHTML = window.global_app_spinner;
-    common_fetch(window.global_rest_url_base + window.global_rest_identity_provider + '?', 
+    common_fetch(window.global_rest_api_db_path + window.global_rest_identity_provider + '?', 
                  'GET', 0, null, null, null, (err, result) =>{
         if (err)
             div.innerHTML = '';
@@ -2880,7 +2880,7 @@ async function ProviderUser_update(identity_provider_id, profile_id, profile_fir
         "provider_email":"${profile_email}",
         ${get_uservariables()}
         }`;
-        common_fetch(window.global_rest_url_base + window.global_rest_user_account_provider + profile_id + '?', 
+        common_fetch(window.global_rest_api_db_path + window.global_rest_user_account_provider + profile_id + '?', 
                     'PUT', 0, json_data, null, null, (err, result) =>{
             if (err)
                 return callBack(err, null);
@@ -2952,7 +2952,9 @@ function set_globals(parameters){
     window.global_system_admin = parameters.system_admin;
     window.global_system_admin_only = parameters.system_admin_only;
 
-    //user info set or used by services
+    //user info
+    window.global_user_identity_provider_id='';
+    window.global_user_account_id = '';
     window.global_clientId;
     window.global_client_latitude = parameters.gps_lat;
     window.global_client_longitude = parameters.gps_long;
@@ -2960,28 +2962,16 @@ function set_globals(parameters){
     //broadcast connection
     window.global_eventSource;
 
-    if (parameters.system_admin_only==0){
-        //set variables after system admin has enabled database and apps
+    //rest api db path
+    window.global_rest_api_db_path = parameters.rest_api_db_path;
+
+    if (parameters.system_admin==0){
         window.global_app_copyright;
-        //user info
-        window.global_user_identity_provider_id='';
-        if (parameters.close_eventsource==true){
-            //when admin is logged in then eventsource will be closed and reconnected
-            //with new info
-            //only closing after admin logged in and do not set user variables for admin when logged in
-            null;
-        }        
-        else{
-            window.global_user_account_id = '';
+        user_preferences_set_default_globals('LOCALE');
+        user_preferences_set_default_globals('TIMEZONE');
+        user_preferences_set_default_globals('DIRECTION');
+        user_preferences_set_default_globals('ARABIC_SCRIPT');
 
-            user_preferences_set_default_globals('LOCALE');
-            user_preferences_set_default_globals('TIMEZONE');
-            user_preferences_set_default_globals('DIRECTION');
-            user_preferences_set_default_globals('ARABIC_SCRIPT');
-        }
-
-        //rest api base
-        window.global_rest_url_base 				= '/service/db/app_portfolio/';
 
         //rest api endpoints
         window.global_rest_at;
@@ -3034,6 +3024,11 @@ function set_globals(parameters){
     if (parameters.ui==true){
         seticons();
 
+        window.global_user_locale           = navigator.language.toLowerCase();
+        window.global_user_timezone         = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        window.global_user_direction        = '';
+        window.global_user_arabic_script    = '';
+
         //delay API calls when typing to avoid too many calls 
         window.global_typewatch = function() {
             let timer = 0;
@@ -3064,7 +3059,13 @@ async function init_common(parameters, callBack){
      system_admon_only
     }
     */
-    set_globals(parameters);
+    //reports       parameters.ui==false    (set globals)
+    //admin start   parameters.ui==true     (set globals)
+    //admin secure  parameters.ui==false    (do not set globals again)
+    //apps          parameters.ui==true     (set globals)
+    if (typeof window.global_app_id == 'undefined' || parameters.ui==true)
+        set_globals(parameters);
+    
     //broadcast
     document.getElementById('broadcast_close').innerHTML = window.global_icon_app_broadcast_close;
     document.getElementById('broadcast_info_title').innerHTML = window.global_icon_app_alert;
@@ -3075,7 +3076,7 @@ async function init_common(parameters, callBack){
     else{
         connectOnline();
     }
-    if (parameters.system_admin_only==1){
+    if (parameters.system_admin==1){
         document.title = parameters.app_name;
         callBack(null, null)
    }
@@ -3274,8 +3275,13 @@ async function init_common(parameters, callBack){
             //user preferences
             //define globals and save settings here, in apps define what should happen when changing
             if (document.getElementById('user_locale_select'))
-                document.getElementById('user_locale_select').addEventListener('change', function() { window.global_user_locale = this.value; 
-                                                                                                    user_preference_save(); }, false);
+                document.getElementById('user_locale_select').addEventListener('change', function() { 
+                                                                                            window.global_user_locale = this.value;
+                                                                                            //change navigator.language, however when logging out default navigator.language will be set
+                                                                                            //commented at the moment
+                                                                                            //Object.defineProperties(navigator, {'language': {'value':window.global_user_locale, writable: true}});
+                                                                                            user_preference_save();
+                                                                                        }, false);
             if (document.getElementById('user_timezone_select'))
                 document.getElementById('user_timezone_select').addEventListener('change', function() { window.global_user_timezone = this.value;
                                                                                                         user_preference_save().then(function(){
@@ -3356,12 +3362,15 @@ async function init_common(parameters, callBack){
                 }
             }
         }
+        if (window.global_app_id != window.global_common_app_id){
+            
+        }
         //get data token
         await common_fetch_basic(0, null,  null, null, (err, result)=>{
             null;
         })
         //get parameters
-        await common_fetch(window.global_rest_url_base + window.global_rest_app_parameter + window.global_app_id + '?',
+        await common_fetch(window.global_rest_api_db_path + window.global_rest_app_parameter + window.global_app_id + '?',
                             'GET', 0, null, null, null, (err, result) =>{
             if (err)
                 null;

@@ -1,7 +1,7 @@
 const { sendEmailService } = require("./mail.service");
 const { getIp} = require ("../../service/geolocation/geolocation.controller");
-const { createLog} = require ("../../service/db/app_portfolio/app_log/app_log.service");
-const { getParameters_server} = require ("../../service/db/app_portfolio/app_parameter/app_parameter.service");
+const { createLog} = require ("../.." + process.env.SERVICE_DB_REST_API_PATH + "app_log/app_log.service");
+const { getParameters_server} = require ("../.." + process.env.SERVICE_DB_REST_API_PATH + "app_parameter/app_parameter.service");
 const { createLogAppSE } = require("../../service/log/log.controller");
 module.exports = {
     getLogo: (req, res) => {

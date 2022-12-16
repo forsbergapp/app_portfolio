@@ -1,13 +1,13 @@
 //Express framework
-const express = require ("express");
+const express = require ('express');
 //logging
-const { createLogServer} = require("./service/log/log.controller");
+const { createLogServer} = require('./service/log/log.controller');
 //https
-const https = require("https");
+const https = require('https');
 //read from file system
-const fs = require("fs");
+const fs = require('fs');
 //to configure Content Security Policy
-const helmet = require("helmet");
+const helmet = require('helmet');
 //Create express application
 const app = express();
 //configuration file
@@ -41,14 +41,14 @@ Object.defineProperty(global, '__appfunction', {
 Object.defineProperty(global, '__appfilename', {
     get: function() {
       let filename = __stack[1].getFileName();
-      return filename.substring(__dirname.length).replace(/\\/g, "/");
+      return filename.substring(__dirname.length).replace(/\\/g, '/');
       } 
 });
 //set timezone
 process.env.TZ = 'UTC';
 
 //set Helmet to configure Content Security Policy
-const { policy_directives} = require("./service/auth/auth.controller");
+const { policy_directives} = require('./service/auth/auth.controller');
 policy_directives((err, result_directives)=>{
   if (err)
     null;
@@ -69,7 +69,7 @@ policy_directives((err, result_directives)=>{
 app.use(express.json({ limit: process.env.SERVER_JSON_LIMIT }));
 //define what headers are allowed
 app.use(function(req, res, next) {
-  res.header("Access-Control-Allow-Headers", "Authorization, Origin, X-Requested-With, Content-Type, Accept, Service-Worker-Allowed");
+  res.header('Access-Control-Allow-Headers', 'Authorization, Origin, X-Requested-With, Content-Type, Accept, Service-Worker-Allowed');
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE');
   next();
 });
@@ -84,7 +84,7 @@ app.use((err,req,res,next) => {
 //access control
 app.use((req,res,next) => {
   //access control
-  const { access_control} = require("./service/auth/auth.controller");
+  const { access_control} = require('./service/auth/auth.controller');
   access_control(req, res, (http_err_code, result)=>{
 		if(http_err_code)      
       return res.status(http_err_code).send('stop');
@@ -114,7 +114,7 @@ app.use((req,res,next) => {
 //middleware
 //check request
 app.use(function(req, res, next) {
-  const {check_request} = require ("./service/auth/auth.controller");
+  const {check_request} = require ('./service/auth/auth.controller');
   check_request(req, (err, result) =>{
     if (err)
       res.redirect('https://' + req.headers.host);
@@ -126,96 +126,96 @@ app.use(function(req, res, next) {
 
 //set routing configuration
 //server
-const serverRouter = require("./server/server.router");
+const serverRouter = require('./server/server.router');
 //service auth
-const authRouter = require("./service/auth/auth.router");
-const authAdminRouter = require("./service/auth/admin/admin.router");
+const authRouter = require('./service/auth/auth.router');
+const authAdminRouter = require('./service/auth/admin/admin.router');
 //service broadcast
-const broadcastRouter = require("./service/broadcast/broadcast.router");
+const broadcastRouter = require('./service/broadcast/broadcast.router');
 //service db
-const adminRouter = require("./service/db/admin/admin.router");
-const appRouter = require("./service/db/app_portfolio/app/app.router");
-const app_categoryRouter = require("./service/db/app_portfolio/app_category/app_category.router");
-const app_logRouter = require("./service/db/app_portfolio/app_log/app_log.router");
-const app_objectRouter = require("./service/db/app_portfolio/app_object/app_object.router");
-const app_parameterRouter = require("./service/db/app_portfolio/app_parameter/app_parameter.router");
-const app_roleRouter = require("./service/db/app_portfolio/app_role/app_role.router");
-const countryRouter = require("./service/db/app_portfolio/country/country.router");
-const identity_providerRouter = require("./service/db/app_portfolio/identity_provider/identity_provider.router");
-const languageLocaleRouter = require("./service/db/app_portfolio/language/locale/locale.router");
-const message_translationRouter = require("./service/db/app_portfolio/message_translation/message_translation.router");
-const parameter_typeRouter = require("./service/db/app_portfolio/parameter_type/parameter_type.router");
-const settingRouter = require("./service/db/app_portfolio/setting/setting.router");
-const user_accountRouter = require("./service/db/app_portfolio/user_account/user_account.router");
-const user_account_appRouter = require("./service/db/app_portfolio/user_account_app/user_account_app.router");
-const user_account_likeRouter = require("./service/db/app_portfolio/user_account_like/user_account_like.router");
-const user_account_logonRouter = require("./service/db/app_portfolio/user_account_logon/user_account_logon.router");
-const user_account_followRouter = require("./service/db/app_portfolio/user_account_follow/user_account_follow.router");
+const adminRouter = require('./service/db/admin/admin.router');
+const appRouter = require('.' + process.env.SERVICE_DB_REST_API_PATH + 'app/app.router');
+const app_categoryRouter = require('.' + process.env.SERVICE_DB_REST_API_PATH + 'app_category/app_category.router');
+const app_logRouter = require('.' + process.env.SERVICE_DB_REST_API_PATH + 'app_log/app_log.router');
+const app_objectRouter = require('.' + process.env.SERVICE_DB_REST_API_PATH + 'app_object/app_object.router');
+const app_parameterRouter = require('.' + process.env.SERVICE_DB_REST_API_PATH + 'app_parameter/app_parameter.router');
+const app_roleRouter = require('.' + process.env.SERVICE_DB_REST_API_PATH + 'app_role/app_role.router');
+const countryRouter = require('.' + process.env.SERVICE_DB_REST_API_PATH + 'country/country.router');
+const identity_providerRouter = require('.' + process.env.SERVICE_DB_REST_API_PATH + 'identity_provider/identity_provider.router');
+const languageLocaleRouter = require('.' + process.env.SERVICE_DB_REST_API_PATH + 'language/locale/locale.router');
+const message_translationRouter = require('.' + process.env.SERVICE_DB_REST_API_PATH + 'message_translation/message_translation.router');
+const parameter_typeRouter = require('.' + process.env.SERVICE_DB_REST_API_PATH + 'parameter_type/parameter_type.router');
+const settingRouter = require('.' + process.env.SERVICE_DB_REST_API_PATH + 'setting/setting.router');
+const user_accountRouter = require('.' + process.env.SERVICE_DB_REST_API_PATH + 'user_account/user_account.router');
+const user_account_appRouter = require('.' + process.env.SERVICE_DB_REST_API_PATH + 'user_account_app/user_account_app.router');
+const user_account_likeRouter = require('.' + process.env.SERVICE_DB_REST_API_PATH + 'user_account_like/user_account_like.router');
+const user_account_logonRouter = require('.' + process.env.SERVICE_DB_REST_API_PATH + 'user_account_logon/user_account_logon.router');
+const user_account_followRouter = require('.' + process.env.SERVICE_DB_REST_API_PATH + 'user_account_follow/user_account_follow.router');
 //service geolocation
-const geolocationRouter = require("./service/geolocation/geolocation.router");
+const geolocationRouter = require('./service/geolocation/geolocation.router');
 //service log
-const logRouter = require("./service/log/log.router");
+const logRouter = require('./service/log/log.router');
 //service mail
-const mailRouter = require("./service/mail/mail.router");
+const mailRouter = require('./service/mail/mail.router');
 //service forms
-const formsRouter = require("./service/forms/forms.router");
+const formsRouter = require('./service/forms/forms.router');
 //service report
-const reportRouter = require("./service/report/report.router");
+const reportRouter = require('./service/report/report.router');
 //service worldcities
-const worldcitiesRouter = require("./service/worldcities/worldcities.router");
+const worldcitiesRouter = require('./service/worldcities/worldcities.router');
 
 //set REST API endpoints and connect to routers
 //config
-app.use("/server", serverRouter);
+app.use('/server', serverRouter);
 //authorization
-app.use("/service/auth", authRouter);
-app.use("/service/auth/admin", authAdminRouter);
+app.use('/service/auth', authRouter);
+app.use('/service/auth/admin', authAdminRouter);
 //service broadcast
-app.use("/service/broadcast", broadcastRouter);
+app.use('/service/broadcast', broadcastRouter);
 //service db
-app.use("/service/db/admin", adminRouter);
-app.use("/service/db/app_portfolio/app", appRouter);
-app.use("/service/db/app_portfolio/app_category", app_categoryRouter);
-app.use("/service/db/app_portfolio/app_log", app_logRouter);
-app.use("/service/db/app_portfolio/app_object", app_objectRouter);
-app.use("/service/db/app_portfolio/app_parameter", app_parameterRouter);
-app.use("/service/db/app_portfolio/app_role", app_roleRouter);
-app.use("/service/db/app_portfolio/country", countryRouter);
-app.use("/service/db/app_portfolio/identity_provider", identity_providerRouter);
-app.use("/service/db/app_portfolio/language/locale", languageLocaleRouter);
-app.use("/service/db/app_portfolio/message_translation", message_translationRouter);
-app.use("/service/db/app_portfolio/parameter_type", parameter_typeRouter);
-app.use("/service/db/app_portfolio/setting", settingRouter);
-app.use("/service/db/app_portfolio/user_account", user_accountRouter);
-app.use("/service/db/app_portfolio/user_account_app", user_account_appRouter);
-app.use("/service/db/app_portfolio/user_account_like", user_account_likeRouter);
-app.use("/service/db/app_portfolio/user_account_logon", user_account_logonRouter);
-app.use("/service/db/app_portfolio/user_account_follow", user_account_followRouter);
+app.use('/service/db/admin', adminRouter);
+app.use(process.env.SERVICE_DB_REST_API_PATH + 'app', appRouter);
+app.use(process.env.SERVICE_DB_REST_API_PATH + 'app_category', app_categoryRouter);
+app.use(process.env.SERVICE_DB_REST_API_PATH + 'app_log', app_logRouter);
+app.use(process.env.SERVICE_DB_REST_API_PATH + 'app_object', app_objectRouter);
+app.use(process.env.SERVICE_DB_REST_API_PATH + 'app_parameter', app_parameterRouter);
+app.use(process.env.SERVICE_DB_REST_API_PATH + 'app_role', app_roleRouter);
+app.use(process.env.SERVICE_DB_REST_API_PATH + 'country', countryRouter);
+app.use(process.env.SERVICE_DB_REST_API_PATH + 'identity_provider', identity_providerRouter);
+app.use(process.env.SERVICE_DB_REST_API_PATH + 'language/locale', languageLocaleRouter);
+app.use(process.env.SERVICE_DB_REST_API_PATH + 'message_translation', message_translationRouter);
+app.use(process.env.SERVICE_DB_REST_API_PATH + 'parameter_type', parameter_typeRouter);
+app.use(process.env.SERVICE_DB_REST_API_PATH + 'setting', settingRouter);
+app.use(process.env.SERVICE_DB_REST_API_PATH + 'user_account', user_accountRouter);
+app.use(process.env.SERVICE_DB_REST_API_PATH + 'user_account_app', user_account_appRouter);
+app.use(process.env.SERVICE_DB_REST_API_PATH + 'user_account_like', user_account_likeRouter);
+app.use(process.env.SERVICE_DB_REST_API_PATH + 'user_account_logon', user_account_logonRouter);
+app.use(process.env.SERVICE_DB_REST_API_PATH + 'user_account_follow', user_account_followRouter);
 //service geolocation
-app.use("/service/geolocation", geolocationRouter);
+app.use('/service/geolocation', geolocationRouter);
 //service log
-app.use("/service/log", logRouter);
+app.use('/service/log', logRouter);
 //service mail
-app.use("/service/mail", mailRouter);
+app.use('/service/mail', mailRouter);
 //service forms
-app.use("/service/forms", formsRouter);
+app.use('/service/forms', formsRouter);
 //service report
-app.use("/service/report", reportRouter);
+app.use('/service/report', reportRouter);
 //service worldcities
-app.use("/service/worldcities", worldcitiesRouter);
+app.use('/service/worldcities', worldcitiesRouter);
 
 //for SSL verification using letsencrypt, enable if validating domains
-//app.use("/.well-known/acme-challenge/",express.static(__dirname + '/.well-known/acme-challenge/'));
+//app.use('/.well-known/acme-challenge/',express.static(__dirname + '/.well-known/acme-challenge/'));
 //app.use(express.static(__dirname, { dotfiles: 'allow' }));
 
 //server get before apps code
 //info for search bots
 app.get('/robots.txt', function (req, res) {
   res.type('text/plain');
-  res.send("User-agent: *\nDisallow: /");
+  res.send('User-agent: *\nDisallow: /');
 });
 app.get('/favicon.ico', function (req, res) {
-  res.send("");
+  res.send('');
 });
 //change all requests from http to https and naked domains with prefix https://www. except localhost
 app.get('*', function (req,res, next){
@@ -229,8 +229,8 @@ app.get('*', function (req,res, next){
     else
       next();
 })
-const {DBStart} = require ("./service/db/admin/admin.service");
-const {AppsStart} = require ("./apps");
+const {DBStart} = require ('./service/db/admin/admin.service');
+const {AppsStart} = require ('./apps');
 
 let dbstart = DBStart().then(function(){
   AppsStart(express, app, (err, result) =>{
@@ -240,7 +240,7 @@ let dbstart = DBStart().then(function(){
 
 //start HTTP and HTTPS
 app.listen(process.env.SERVER_PORT, () => {
-  createLogServer(null, null, "HTTP Server up and running on PORT: " + process.env.SERVER_PORT, null);
+  createLogServer(null, null, 'HTTP Server up and running on PORT: ' + process.env.SERVER_PORT, null);
 });
 //SSL files for HTTPS
 let options;
@@ -253,7 +253,7 @@ fs.readFile(process.env.SERVER_HTTPS_KEY, 'utf8', (error, fileBuffer) => {
       cert: env_cert
     };
     https.createServer(options, app).listen(process.env.SERVER_HTTPS_PORT, () => {
-      createLogServer(null, null, "HTTPS Server up and running on PORT: " + process.env.SERVER_HTTPS_PORT, null);
+      createLogServer(null, null, 'HTTPS Server up and running on PORT: ' + process.env.SERVER_HTTPS_PORT, null);
     });    
   });  
 });
