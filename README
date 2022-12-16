@@ -466,13 +466,10 @@ Installation instructions
 	/service/db/api/app{APP_ID}*	rest api for app{APP_ID}
 
 11. App identification
-	Common, admin and main app uses window.global_main_app_id that is 0 by default.
-	
+	Common and admin and uses window.global_common_app_id that is 0 by default.
 	Apps clients use window.global_app_id to identify themselves.
-	Apps use window.global_main_app_id if main app functionality is needed.
 
-	Apps server code reads process.env.MAIN_APP_ID for main app
-	and for the apps installed they use APP{APP_ID}_ID variable in
+	Apps use APP{APP_ID}_ID variable in
 	apps/app{APP_ID}/server.js that is used to init the server generation of the client.
 
 12. Issues
