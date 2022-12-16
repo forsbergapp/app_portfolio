@@ -1711,7 +1711,7 @@ function profile_detail(detailchoice, rest_url_app, fetch_detail, header_app, cl
         url = window.global_rest_api_db_path + window.global_rest_user_account_profile_detail;
     }
     else{
-        /*other detailchoice, apps can use >4 and return same columns*/
+        /* detailchoice 5, apps, returns same columns*/
         url = window.global_rest_api_db_path + rest_url_app;
     }
     //DETAIL
@@ -1806,7 +1806,7 @@ function profile_detail(detailchoice, rest_url_app, fetch_detail, header_app, cl
                     let image = '';
                     let delete_div ='';
                     for (i = 0; i < json.count; i++) {
-                        if (window.global_app_id == window.global_main_app_id && detailchoice==5){
+                        if (detailchoice==5){
                             if (json.items[i].app_id !=0){
                                 if (document.getElementById('profile_id').innerHTML==window.global_user_account_id)
                                     delete_div = `<div class='profile_detail_list_app_delete'>${global_icon_app_delete}</div>`;
@@ -1857,7 +1857,7 @@ function profile_detail(detailchoice, rest_url_app, fetch_detail, header_app, cl
                         }
                     }
                     profile_detail_list.innerHTML = html;
-                    if (window.global_app_id == window.global_main_app_id && detailchoice==5){
+                    if (detailchoice==5){
                         document.querySelectorAll('.profile_detail_list_app_name').forEach(e => e.addEventListener('click', function(event) {
                             event.preventDefault();
                             window.open(event.target.parentNode.parentNode.parentNode.children[4].children[0].innerHTML, '_blank');
@@ -2956,8 +2956,7 @@ function exception(status, message){
 /*----------------------- */
 function set_globals(parameters){
     //app info
-    window.global_common_app_id= 0;
-    window.global_main_app_id= 1;
+    window.global_common_app_id= parseInt(parameters.common_app_id);
     window.global_app_id = parameters.app_id;
     window.global_app_name = parameters.app_name;
     window.global_app_url = parameters.app_url;
