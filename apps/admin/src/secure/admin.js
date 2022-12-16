@@ -530,7 +530,7 @@ async function show_chart(chart){
 async function count_connected(identity_provider_id, count_logged_in, callBack){
     if (admin_token_has_value()){
         let json;
-        await common_fetch(`/service/broadcast/connected/count?identity_provider_id=${identity_provider_id}&count_logged_in=${count_logged_in}`,
+        await common_fetch(`/service/broadcast/Admin/connected/count?identity_provider_id=${identity_provider_id}&count_logged_in=${count_logged_in}`,
                  'GET', 1, null, null, null, (err, result) =>{
             if (err)
                 callBack(result, null);
@@ -1387,7 +1387,7 @@ async function show_list(list_div, list_div_col_title, url_parameters, sort, ord
                 break;
             }
             case 'list_app_log':{
-                url = window.global_rest_api_db_path + `app_log?${url_parameters}`;
+                url = window.global_rest_api_db_path + `app_log/admin?${url_parameters}`;
                 token_type = 1;
                 document.getElementById(list_div).innerHTML = window.global_app_spinner;
                 break;

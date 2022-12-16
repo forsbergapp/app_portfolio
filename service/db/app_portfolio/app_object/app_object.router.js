@@ -7,4 +7,5 @@ router.use((req,res,next)=>{
     next();
 })
 router.get("/:lang_code",  checkDataToken, getObjects);
+router.get("/admin/:lang_code",  checkDataToken, getObjects);
 module.exports = router;
