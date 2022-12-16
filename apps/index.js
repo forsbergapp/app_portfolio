@@ -1,7 +1,7 @@
-const { getParameters_server } = require ("../service/db/app_portfolio/app_parameter/app_parameter.service");
-const { getApp } = require("../service/db/app_portfolio/app/app.service");
+const { getParameters_server } = require (".." + process.env.SERVICE_DB_REST_API_PATH + "app_parameter/app_parameter.service");
+const { getApp } = require(".." + process.env.SERVICE_DB_REST_API_PATH + "app/app.service");
 const { createLogAppSE } = require("../service/log/log.controller");
-const { getCountries } = require("../service/db/app_portfolio/country/country.service");
+const { getCountries } = require(".." + process.env.SERVICE_DB_REST_API_PATH + "country/country.service");
 async function getInfo(app_id, info, lang_code, callBack){
     async function get_parameters(callBack){            
         getApp(app_id, app_id, lang_code, (err, result_app)=>{
@@ -155,7 +155,12 @@ async function get_module_with_init(app_id,
                                     gps_place,
                                     module, callBack){
 
-    if (system_admin==1 || process.env.SERVER_DB_START==0){
+    if (system_admin==1){
+        let system_admin_only = '';
+        if (process.env.SERVER_DB_START==0)
+            system_admin_only = 1;
+        else
+            system_admin_only = 0;
         let parameters = {   
             app_id: app_id,
             app_name: 'SYSTEM ADMIN',
@@ -164,16 +169,17 @@ async function get_module_with_init(app_id,
             exception_app_function: exception_app_function,
             close_eventsource: close_eventsource,
             ui: ui,
-            service_auth: '/service/auth',
-            app_rest_client_id: '',
-            app_rest_client_secret: '',
-            rest_app_parameter: '/service/app_parameter',
             gps_lat: gps_lat, 
             gps_long: gps_long, 
             gps_place: gps_place,
             system_admin: system_admin,
-            system_admin_only: 1,
-            app_role_id: ''      
+            system_admin_only: system_admin_only,
+            app_role_id: '',
+            app_rest_client_id: '',
+            app_rest_client_secret: '',
+            service_auth: '/service/auth',
+            rest_api_db_path: process.env.SERVICE_DB_REST_API_PATH,
+            rest_app_parameter: '/service/app_parameter'
         };
         module = module.replace(
                 '<ITEM_COMMON_PARAMETERS/>',
@@ -181,8 +187,8 @@ async function get_module_with_init(app_id,
         callBack(null, module);
     }
     else{
-        const { getAppStartParameters } = require("../service/db/app_portfolio/app_parameter/app_parameter.service");
-        const { getAppRole } = require("../service/db/app_portfolio/user_account/user_account.service");
+        const { getAppStartParameters } = require(".." + process.env.SERVICE_DB_REST_API_PATH + "app_parameter/app_parameter.service");
+        const { getAppRole } = require(".." + process.env.SERVICE_DB_REST_API_PATH + "user_account/user_account.service");
         getAppStartParameters(app_id, (err,result) =>{
             if (err)
                 callBack(err, null);
@@ -195,16 +201,17 @@ async function get_module_with_init(app_id,
                     exception_app_function: exception_app_function,
                     close_eventsource: close_eventsource,
                     ui: ui,
-                    service_auth: result[0].service_auth,
-                    app_rest_client_id: result[0].app_rest_client_id,
-                    app_rest_client_secret: result[0].app_rest_client_secret,
-                    rest_app_parameter: result[0].rest_app_parameter,
                     gps_lat: gps_lat, 
                     gps_long: gps_long, 
                     gps_place: gps_place,
                     system_admin: system_admin,
                     system_admin_only: 0,
-                    app_role_id: ''
+                    app_role_id: '',
+                    app_rest_client_id: result[0].app_rest_client_id,
+                    service_auth: result[0].service_auth,
+                    app_rest_client_secret: result[0].app_rest_client_secret,
+                    rest_api_db_path: process.env.SERVICE_DB_REST_API_PATH,
+                    rest_app_parameter: result[0].rest_app_parameter
                 };
                 if (system_admin==1){  
                     module = module.replace(
@@ -259,7 +266,7 @@ module.exports = {
         }
         //load apps if database started
         if (process.env.SERVER_DB_START==1){
-            const { getAppsAdmin } = require ("../service/db/app_portfolio/app/app.service");
+            const { getAppsAdmin } = require (".." + process.env.SERVICE_DB_REST_API_PATH + "app/app.service");
             getAppsAdmin(process.env.COMMON_APP_ID, null, (err, results) =>{
                 if (err) {
                     createLogAppSE(process.env.COMMON_APP_ID, __appfilename, __appfunction, __appline, `getAppsAdmin, err:${err}`, (err_log, result_log)=>{
@@ -371,8 +378,8 @@ module.exports = {
     },
     getUserPreferences: async(app_id) => {
         return new Promise(function (resolve, reject){
-            const { getLocales } = require("../service/db/app_portfolio/language/locale/locale.service");
-            const { getSettings } = require("../service/db/app_portfolio/setting/setting.service");
+            const { getLocales } = require(".." + process.env.SERVICE_DB_REST_API_PATH + "language/locale/locale.service");
+            const { getSettings } = require(".." + process.env.SERVICE_DB_REST_API_PATH + "setting/setting.service");
             let default_lang = 'en';
             getLocales(app_id, default_lang, (err, locales) => {
                 if (err)

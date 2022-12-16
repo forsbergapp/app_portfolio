@@ -42,6 +42,7 @@ function seticons(){
     window.global_icon_app_users = '<i class="fa-solid fa-users"></i>';
     window.global_icon_app_user_connections = '<i class="fa-solid fa-users-viewfinder"></i>';
     window.global_icon_app_database_started = '<i class="fa-solid fa-toggle-on"></i>';
+    window.global_icon_app_database_notstarted = '<i class="fa-solid fa-toggle-off"></i>';
     window.global_icon_app_database_calc = '<i class="fa-solid fa-calculator"></i>';
     window.global_icon_app_backup = '<i class="fa-solid fa-cloud-arrow-down"></i>';
     window.global_icon_app_install = '<i class="fa-solid fa-download"></i>';

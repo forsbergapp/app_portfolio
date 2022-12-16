@@ -1,4 +1,4 @@
-const { createLog, createLogAdmin} = require ("../../service/db/app_portfolio/app_log/app_log.service");
+const { createLog, createLogAdmin} = require ("../.." + process.env.SERVICE_DB_REST_API_PATH + "app_log/app_log.service");
 const { getIp, getIpAdmin, getIpSystemAdmin} = require ("../../service/geolocation/geolocation.controller");
 module.exports = {
   getForm: (req, res, app_id, params, callBack) => {

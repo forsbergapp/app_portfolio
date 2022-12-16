@@ -1,5 +1,5 @@
 const { getService} = require ("./worldcities.service");
-const { createLog} = require ("../../service/db/app_portfolio/app_log/app_log.service");
+const { createLog} = require ("../.." + process.env.SERVICE_DB_REST_API_PATH + "app_log/app_log.service");
 module.exports = {
 	getCities: (req, res) => {
 		getService((err, cities) => {
