@@ -2,31 +2,6 @@ const {execute_db_sql, get_schema_name, get_locale} = require ("../../common/com
 
 module.exports = {
 	//returns parameters for app_id=0 and given app_id
-	//and only public and private shared
-	getParameters: (app_id, data_app_id, callBack) => {
-		let sql;
-		let parameters;
-		sql = `SELECT	app_id "app_id",
-						parameter_type_id "parameter_type_id",
-						parameter_name "parameter_name",
-						parameter_value "parameter_value",
-						parameter_comment "parameter_comment"
-				FROM ${get_schema_name()}.app_parameter
-				WHERE (app_id = :app_id
-						OR 
-						app_id = 0)
-					AND parameter_type_id IN ('0','1')
-				ORDER BY 1`;
-		parameters = {app_id: data_app_id};
-		execute_db_sql(app_id, sql, parameters, 
-			           __appfilename, __appfunction, __appline, (err, result)=>{
-			if (err)
-				return callBack(err, null);
-			else
-				return callBack(null, result);
-		});
-	},
-	//returns parameters for app_id=0 and given app_id
 	//and parameter type 0,1,2, only to be called from server
 	//because 2 contains passwords or other sensitive data
 	getParameters_server: (app_id, data_app_id, callBack) => {
@@ -52,7 +27,7 @@ module.exports = {
 				return callBack(null, result);
 		});
 	},
-	getParameters_admin: (app_id, data_app_id, lang_code, callBack) => {
+	getParametersAllAdmin: (app_id, data_app_id, lang_code, callBack) => {
 		let sql;
 		let parameters;
 		sql = `SELECT ap.app_id "app_id",
@@ -89,25 +64,6 @@ module.exports = {
 				return callBack(err, null);
 			else
 				return callBack(null, result); 
-		});
-	},
-	getParameter_admin: (app_id, data_app_id, parameter_name, callBack) =>{
-		let sql;
-		let parameters;
-		sql = `SELECT parameter_value "parameter_value"
-				 FROM ${get_schema_name()}.app_parameter
-				WHERE app_id = :app_id
-				  AND parameter_name = :parameter_name
-				  AND parameter_type_id IN ('0','1','2')
-				ORDER BY 1`;
-		parameters = {app_id: data_app_id,
-					  parameter_name:parameter_name};
-		execute_db_sql(app_id, sql, parameters,
-			           __appfilename, __appfunction, __appline, (err, result)=>{
-			if (err)
-				return callBack(err, null);
-			else
-				return callBack(null, result[0].parameter_value);
 		});
 	},
 	getParameter: (app_id, data_app_id, parameter_name, callBack) =>{
@@ -234,6 +190,31 @@ module.exports = {
 						rest_app_parameter: rest_app_parameter}
 		execute_db_sql(app_id, sql, parameters,
 					   __appfilename, __appfunction, __appline, (err, result)=>{
+			if (err)
+				return callBack(err, null);
+			else
+				return callBack(null, result);
+		});
+	},
+	//returns parameters for app_id=0 and given app_id
+	//and only public and private shared
+	getParameters: (app_id, data_app_id, callBack) => {
+		let sql;
+		let parameters;
+		sql = `SELECT	app_id "app_id",
+						parameter_type_id "parameter_type_id",
+						parameter_name "parameter_name",
+						parameter_value "parameter_value",
+						parameter_comment "parameter_comment"
+				FROM ${get_schema_name()}.app_parameter
+				WHERE (app_id = :app_id
+						OR 
+						app_id = 0)
+					AND parameter_type_id IN ('0','1')
+				ORDER BY 1`;
+		parameters = {app_id: data_app_id};
+		execute_db_sql(app_id, sql, parameters, 
+			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
 				return callBack(err, null);
 			else

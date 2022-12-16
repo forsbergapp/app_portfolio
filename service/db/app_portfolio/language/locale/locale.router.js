@@ -6,5 +6,6 @@ router.use((req,res,next)=>{
     createLogAppRI(req, res, __appfilename, __appfunction, __appline, req.body);
     next();
 })
-router.get("/:lang_code",  checkDataToken, getLocales);
+router.get("/:lang_code", checkDataToken, getLocales);
+router.get("/admin/:lang_code", checkDataToken, getLocales);
 module.exports = router;
