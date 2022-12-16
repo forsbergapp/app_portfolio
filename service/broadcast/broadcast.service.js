@@ -49,7 +49,7 @@ module.exports = {
     ConnectedList: async (app_id, app_id_select, limit, year, month, order_by, sort, callBack)=>{
         let broadcast_clients_no_res = [];
         let i=0;
-        const { getAppRole } = require("../../service/db/app_portfolio/user_account/user_account.service");
+        const { getAppRole } = require("../.." + process.env.SERVICE_DB_REST_API_PATH + "user_account/user_account.service");
         broadcast_clients.forEach(client=>{
             if (client.app_id == app_id_select || app_id_select == ''){
                 i++;

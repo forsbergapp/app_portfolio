@@ -536,7 +536,7 @@ async function common_translate_ui_app(lang_code, callBack){
             select_second_locale.value = current_second_locale;   
             
             //country
-            common_fetch(window.global_rest_url_base + window.global_rest_country + lang_code + '?', 
+            common_fetch(window.global_rest_api_db_path + window.global_rest_country + lang_code + '?', 
                          'GET', 0, null, null, null, (err, result) =>{
                 if (err)
                     callBack(err,null);
@@ -584,7 +584,7 @@ async function settings_translate(first=true) {
     if (locale != 0){
         //fetch any message with first language always
         //show translation using first or second language
-        await common_fetch(`${window.global_rest_url_base}${window.global_rest_app_object}${locale}?object=APP_OBJECT_ITEM&object_name=REPORT`, 
+        await common_fetch(`${window.global_rest_api_db_path}${window.global_rest_app_object}${locale}?object=APP_OBJECT_ITEM&object_name=REPORT`, 
                            'GET', 0, null, null, null, (err, result) =>{
             if (err)
                 null;
@@ -1377,7 +1377,7 @@ async function user_settings_get(user_setting_id = '') {
     let json;
     let i;
     
-    await common_fetch(window.global_rest_url_base + window.global_rest_app2_user_setting_user_account_id + window.global_user_account_id + '?', 
+    await common_fetch(window.global_rest_api_db_path + window.global_rest_app2_user_setting_user_account_id + window.global_user_account_id + '?', 
                        'GET', 0, null, null, null, (err, result) =>{
         if (err)
             null;
@@ -1779,7 +1779,7 @@ async function user_settings_function(function_name, initial_user_setting, callB
                 spinner_item.innerHTML = window.global_app_spinner;    
             }
             method = 'POST';
-            url = window.global_rest_url_base + window.global_rest_app2_user_setting + 
+            url = window.global_rest_api_db_path + window.global_rest_app2_user_setting + 
                   `?initial=${initial_user_setting==true?1:0}`;
             break;
         }
@@ -1790,7 +1790,7 @@ async function user_settings_function(function_name, initial_user_setting, callB
             method = 'PUT';
             let select_user_setting = document.getElementById('setting_select_user_setting');
             let user_setting_id = select_user_setting[select_user_setting.selectedIndex].getAttribute('id');
-            url = window.global_rest_url_base + window.global_rest_app2_user_setting + user_setting_id + '?';
+            url = window.global_rest_api_db_path + window.global_rest_app2_user_setting + user_setting_id + '?';
             break;
         }
         default:{
@@ -1848,7 +1848,7 @@ function user_settings_delete(choice=null) {
             if (select_user_setting.length > 1) {
                 let old_button = document.getElementById('setting_btn_user_delete').innerHTML;
                 document.getElementById('setting_btn_user_delete').innerHTML = window.global_app_spinner;
-                common_fetch(window.global_rest_url_base + window.global_rest_app2_user_setting + user_setting_id + '?', 
+                common_fetch(window.global_rest_api_db_path + window.global_rest_app2_user_setting + user_setting_id + '?', 
                                     'DELETE', 1, null, null, null, (err, result) =>{
                     if (err){
                         document.getElementById('setting_btn_user_delete').innerHTML = old_button;
@@ -2052,7 +2052,7 @@ function set_settings_select() {
 
 function profile_user_setting_stat(id){
     let json;
-    common_fetch(window.global_rest_url_base + window.global_rest_app2_user_setting_profile + id + '?', 
+    common_fetch(window.global_rest_api_db_path + window.global_rest_app2_user_setting_profile + id + '?', 
                  'GET', 0, null, null, null, (err, result) =>{
         if (err)
             null;
@@ -2102,7 +2102,7 @@ function profile_show_user_setting() {
     let json;
     document.getElementById('profile_user_settings_row').style.display = 'block';
 
-    common_fetch(window.global_rest_url_base + window.global_rest_app2_user_setting_profile_all + document.getElementById('profile_id').innerHTML + 
+    common_fetch(window.global_rest_api_db_path + window.global_rest_app2_user_setting_profile_all + document.getElementById('profile_id').innerHTML + 
                  '?id=' + window.global_user_account_id,
                  'GET', 0, null, null, null, (err, result) =>{
         if (err)
@@ -2133,7 +2133,7 @@ function profile_show_user_setting() {
 function profile_user_setting_update_stat(){
     let profile_id = document.getElementById('profile_id').innerHTML;
     let json;
-    common_fetch(window.global_rest_url_base + window.global_rest_app2_user_setting_profile_all + profile_id +
+    common_fetch(window.global_rest_api_db_path + window.global_rest_app2_user_setting_profile_all + profile_id +
                  '?id=' + window.global_user_account_id,
                  'GET', 0, null, null, null, (err, result) =>{
         if (err)
@@ -2173,7 +2173,7 @@ function user_settings_like(user_setting_id) {
         else {
             method = 'DELETE';
         }
-        common_fetch(window.global_rest_url_base + window.global_rest_app2_user_setting_like + window.global_user_account_id + '?',
+        common_fetch(window.global_rest_api_db_path + window.global_rest_app2_user_setting_like + window.global_user_account_id + '?',
                      method, 1, json_data, null, null, (err, result) =>{
             if (err)
                 null;

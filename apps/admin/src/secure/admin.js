@@ -113,9 +113,13 @@ function show_menu(menu){
         }
         //DATABASE
         case 8:{
-            show_db_info().then(function(){
-                show_db_info_space();
-            })
+            if (window.global_system_admin_only==1){
+                show_message('EXCEPTION', null, null, window.global_icon_app_database + ' ' + window.global_icon_app_database_notstarted, window.global_app_id)
+            }
+            else
+                show_db_info().then(function(){
+                    show_db_info_space();
+                })
             break;
         }
         //BACKUP/RESTORE
@@ -142,7 +146,7 @@ async function get_apps() {
         document.getElementById('select_app_broadcast').innerHTML = html;
     }
     else{
-        common_fetch(window.global_rest_url_base + window.global_rest_app + '/admin?', 'GET', 1, null, null, null, (err, result) =>{
+        common_fetch(window.global_rest_api_db_path + window.global_rest_app + '/admin?', 'GET', 1, null, null, null, (err, result) =>{
             if (err)
                 null;
             else{
@@ -437,7 +441,7 @@ async function show_chart(chart){
             app_id = '';
         else
             app_id =document.getElementById('select_app_menu1').value;
-        await common_fetch(window.global_rest_url_base + `app_log/admin/stat/uniquevisitor?select_app_id=${app_id}&statchoice=${chart}&year=${year}&month=${month}`,
+        await common_fetch(window.global_rest_api_db_path + `app_log/admin/stat/uniquevisitor?select_app_id=${app_id}&statchoice=${chart}&year=${year}&month=${month}`,
                  'GET', 1, null, null, null, (err, result) =>{
             if (err){
                 document.getElementById(`box${chart}_chart`).innerHTML = '';
@@ -542,7 +546,7 @@ async function count_users(){
         let old_html = document.getElementById('list_user_stat').innerHTML;
         document.getElementById('list_user_stat').innerHTML = window.global_app_spinner;
 
-        await common_fetch(window.global_rest_url_base + window.global_rest_user_account + '/admin/count?',
+        await common_fetch(window.global_rest_api_db_path + window.global_rest_user_account + '/admin/count?',
                            'GET', 1, null, null, null, (err, result) =>{
             if (err)
                 document.getElementById('list_user_stat').innerHTML = old_html;
@@ -610,7 +614,7 @@ function show_users(sort=8, order_by='ASC', focus=true){
     //show all records if no search criteria
     if (document.getElementById('list_user_account_search_input').value!='')
         search_user = document.getElementById('list_user_account_search_input').value;
-    common_fetch(window.global_rest_url_base + window.global_rest_user_account + `/admin/${search_user}?sort=${sort}&order_by=${order_by}`,
+    common_fetch(window.global_rest_api_db_path + window.global_rest_user_account + `/admin/${search_user}?sort=${sort}&order_by=${order_by}`,
                        'GET', 1, null, null, null, (err, result) =>{
         if (err)
             document.getElementById('list_user_account').innerHTML = '';
@@ -820,7 +824,7 @@ async function show_user_account_logon(user_account_id){
     let json;
     document.getElementById('list_user_account_logon').innerHTML = window.global_app_spinner;
 
-    common_fetch(window.global_rest_url_base + window.global_rest_user_account_logon + `admin/${parseInt(user_account_id)}/''?`,
+    common_fetch(window.global_rest_api_db_path + window.global_rest_user_account_logon + `admin/${parseInt(user_account_id)}/''?`,
                  'GET', 1, null, null, null, (err, result) =>{
         if (err)
             document.getElementById('list_user_account_logon').innerHTML = '';
@@ -898,7 +902,7 @@ async function show_apps(){
     let json;
     document.getElementById('list_apps').innerHTML = window.global_app_spinner;
 
-    await common_fetch(window.global_rest_url_base + window.global_rest_app + '/admin?',
+    await common_fetch(window.global_rest_api_db_path + window.global_rest_app + '/admin?',
                        'GET', 1, null, null, null, (err, result) =>{
         if (err)
             document.getElementById('list_apps').innerHTML = '';
@@ -970,7 +974,7 @@ function show_app_parameter(app_id){
     let json;
     document.getElementById('list_app_parameter').innerHTML = window.global_app_spinner;
 
-    common_fetch(window.global_rest_url_base + window.global_rest_app_parameter + `admin/all/${parseInt(app_id)}?`,
+    common_fetch(window.global_rest_api_db_path + window.global_rest_app_parameter + `admin/all/${parseInt(app_id)}?`,
                  'GET', 1, null, null, null, (err, result) =>{
         if (err)
             document.getElementById('list_app_parameter').innerHTML = '';
@@ -1136,7 +1140,7 @@ async function update_record(table,
                 break;
             }
         }
-        await common_fetch(window.global_rest_url_base + rest_url,
+        await common_fetch(window.global_rest_api_db_path + rest_url,
                      'PUT', 1, json_data, null, null,(err, result) =>{
             document.getElementById(button).innerHTML = old_button;
             if (err)
@@ -1186,7 +1190,7 @@ function list_events(list_item, item_row, item_edit){
             if (this.value=='')
                 event.target.parentNode.parentNode.children[6].children[0].innerHTML ='';
             else{
-                common_fetch(`${window.global_rest_url_base}${window.global_rest_app_category}admin?id=${this.value}`,
+                common_fetch(`${window.global_rest_api_db_path}${window.global_rest_app_category}admin?id=${this.value}`,
                             'GET', 1, null, null, null, (err, result) =>{
                     row_action(err, result, this, event, 6, '');
                 });
@@ -1196,7 +1200,7 @@ function list_events(list_item, item_row, item_edit){
             if (this.value=='')
                 this.value = event.target.defaultValue;
             else{
-                common_fetch(`${window.global_rest_url_base}${window.global_rest_parameter_type}admin?id=${this.value}`,
+                common_fetch(`${window.global_rest_api_db_path}${window.global_rest_parameter_type}admin?id=${this.value}`,
                             'GET', 1, null, null, null, (err, result) =>{
                     row_action(err, result, this, event, 2);
                 });
@@ -1210,7 +1214,7 @@ function list_events(list_item, item_row, item_edit){
                 app_role_id_lookup=2;
             else
                 app_role_id_lookup=this.value;
-            common_fetch(`${window.global_rest_url_base}${window.global_rest_app_role}admin?id=${app_role_id_lookup}`,
+            common_fetch(`${window.global_rest_api_db_path}${window.global_rest_app_role}admin?id=${app_role_id_lookup}`,
                         'GET', 1, null, null, null, (err, result) =>{
                 row_action(err, result, this, event, 3);
                 //if wrong value then field is empty again, fetch default value for empty app_role
@@ -1379,7 +1383,7 @@ async function show_list(list_div, list_div_col_title, url_parameters, sort, ord
                 break;
             }
             case 'list_app_log':{
-                url = window.global_rest_url_base + `app_log?${url_parameters}`;
+                url = window.global_rest_api_db_path + `app_log?${url_parameters}`;
                 token_type = 1;
                 document.getElementById(list_div).innerHTML = window.global_app_spinner;
                 break;
