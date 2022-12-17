@@ -87,7 +87,7 @@ module.exports = {
         if (token){
             getParameter(req.query.app_id, process.env.COMMON_APP_ID,'SERVICE_AUTH_TOKEN_ACCESS_SECRET', (err, db_SERVICE_AUTH_TOKEN_ACCESS_SECRET)=>{
                 if (err) {
-                    createLogAppSE(req.query.app_id, __appfilename, __appfunction, __appline, err, (err_log, result_log)=>{
+                    createLogAppSE(req.query.app_id, __appfilename, __appfunction, __appline, err).then(function(){
                         res.status(500).send(
                             err
                         );
@@ -105,7 +105,7 @@ module.exports = {
                             //and if app_id=0 then check user is admin
                             checkLogin(req.query.app_id, req.query.user_account_logon_user_account_id, req.headers.authorization.replace('Bearer ',''), req.ip, (err, result)=>{
                                 if (err)
-                                    createLogAppSE(req.query.app_id, __appfilename, __appfunction, __appline, err, (err_log, result_log)=>{
+                                    createLogAppSE(req.query.app_id, __appfilename, __appfunction, __appline, err).then(function(){
                                         res.status(500).send(
                                             err
                                         );
@@ -180,7 +180,7 @@ module.exports = {
         if (token){
             getParameter(req.query.app_id, process.env.COMMON_APP_ID,'SERVICE_AUTH_TOKEN_DATA_SECRET', (err, db_SERVICE_AUTH_TOKEN_DATA_SECRET)=>{
                 if (err) {
-                    createLogAppSE(req.query.app_id, __appfilename, __appfunction, __appline, err, (err_log, result_log)=>{
+                    createLogAppSE(req.query.app_id, __appfilename, __appfunction, __appline, err).then(function(){
                         res.status(500).send(
                             err
                         );
@@ -231,7 +231,7 @@ module.exports = {
         if(req.headers.authorization){
             getParameters_server(req.query.app_id, process.env.COMMON_APP_ID,  (err, result)=>{
                 if (err) {
-                    createLogAppSE(req.query.app_id, __appfilename, __appfunction, __appline, err, (err_log, result_log)=>{
+                    createLogAppSE(req.query.app_id, __appfilename, __appfunction, __appline, err).then(function(){
                         res.status(500).send(
                             err
                         );
@@ -320,7 +320,7 @@ module.exports = {
     accessToken: (req, callBack) => {
         getParameters_server(req.query.app_id, process.env.COMMON_APP_ID,  (err, result)=>{
             if (err) {
-                createLogAppSE(req.query.app_id, __appfilename, __appfunction, __appline, err, (err_log, result_log)=>{
+                createLogAppSE(req.query.app_id, __appfilename, __appfunction, __appline, err).then(function(){
                     callBack(err);
                 })
             }
@@ -395,7 +395,7 @@ module.exports = {
                  */
                 //use only resolve here, no reject to avoid .catch statement in calling function
                 if ((err) && err.code=='ECONNREFUSED') {
-                    createLogAppSE(req.query.app_id, __appfilename, __appfunction, __appline, err, (err_log, result_log)=>{
+                    createLogAppSE(req.query.app_id, __appfilename, __appfunction, __appline, err).then(function(){
                         resolve(0);
                     })
                 } else {
@@ -413,15 +413,7 @@ module.exports = {
             err = e;
         }
         if (err){
-            let log_app_id;
-            if (typeof req.query.app_id !='undefined')
-                log_app_id = req.query.app_id;
-            else
-                log_app_id = process.env.COMMON_APP_ID;
-            createLogAppSE(log_app_id, __appfilename, __appfunction, __appline, `Not valid url input, req.url ${req.url} err:${err}`, (err_log, result_log)=>{
-                //just return check request result even if log fails
-                callBack(err, null)
-            });
+            callBack(err, null)
         }
         else
             callBack(null, null)

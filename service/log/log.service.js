@@ -2,82 +2,85 @@ function pm2log(log){
     console.log(log);
 }
     
-async function remote_log(log, callBack){
-    if (process.env.SERVICE_LOG_DESTINATION==1 ||
-        process.env.SERVICE_LOG_DESTINATION==2){
-        //url destination
-        const axios = require('axios');
-        const headers = { 
-            'Authorization': 'Basic ' + btoa(process.env.SERVICE_LOG_URL_DESTINATION_USERNAME + ':' + process.env.SERVICE_LOG_URL_DESTINATION_PASSWORD)
-        };
-        //add logscope and loglevel first and as all logfiles will be sent to same url
-        let url_old  = JSON.parse(log);
-        let url_log  = {};
-        url_log.logscope = logscope;
-        url_log.loglevel = loglevel;
-        url_log.logdate = url_old.logdate;
-        url_log.ip = url_old.ip;
-        url_log.host = url_old.host;
-        url_log.protocol = url_old.protocol;
-        url_log.url = url_old.url;
-        url_log.method = url_old.method;
-        url_log.statusCode = url_old.statusCode;
-        url_log['user-agent'] = url_old['user-agent'];
-        url_log['accept-language'] = url_old['accept-language'];
-        url_log.http_referer = url_old.http_referer;
-        url_log.app_id = url_old.app_id;
-        url_log.app_filename = url_old.app_filename;
-        url_log.app_function_name = url_old.app_function_name;
-        url_log.app_line = url_old.app_line;
-        url_log.logtext = url_old.logtext;
-
-        url_log = JSON.stringify(url_log);
-        axios.post(process.env.SERVICE_LOG_URL_DESTINATION, url_log)
-        .then(function(){
-            callBack(null, 1);
-        })
-    }   
-    else
-        callBack(null, 1);
-}
-async function sendLog(logscope, loglevel, log, callBack){
-    let filename;
-    let logdate = new Date();
-    //make log nice and compact
-    try{        
-        log = JSON.stringify(JSON.parse(log));
-    }
-    catch(err){
-        pm2log(err)
-        pm2log(log);
-    }
-    let month = logdate.toLocaleString("en-US", { month: "2-digit"});
-    let day   = logdate.toLocaleString("en-US", { day: "2-digit"});
-    if (process.env.SERVICE_LOG_FILE_INTERVAL=='1D')
-        filename = `${logscope}_${loglevel}_${logdate.getFullYear()}${month}${day}.log`;
-    else
-        if (process.env.SERVICE_LOG_FILE_INTERVAL=='1M')
-            filename = `${logscope}_${loglevel}_${logdate.getFullYear()}${month}.log`;
+async function remote_log(log){
+    return await new Promise(function (resolve){ 
+        if (process.env.SERVICE_LOG_DESTINATION==1 ||
+            process.env.SERVICE_LOG_DESTINATION==2){
+            //url destination
+            const axios = require('axios');
+            const headers = { 
+                'Authorization': 'Basic ' + btoa(process.env.SERVICE_LOG_URL_DESTINATION_USERNAME + ':' + process.env.SERVICE_LOG_URL_DESTINATION_PASSWORD)
+            };
+            //add logscope and loglevel first and as all logfiles will be sent to same url
+            let url_old  = JSON.parse(log);
+            let url_log  = {};
+            url_log.logscope = logscope;
+            url_log.loglevel = loglevel;
+            url_log.logdate = url_old.logdate;
+            url_log.ip = url_old.ip;
+            url_log.host = url_old.host;
+            url_log.protocol = url_old.protocol;
+            url_log.url = url_old.url;
+            url_log.method = url_old.method;
+            url_log.statusCode = url_old.statusCode;
+            url_log['user-agent'] = url_old['user-agent'];
+            url_log['accept-language'] = url_old['accept-language'];
+            url_log.http_referer = url_old.http_referer;
+            url_log.app_id = url_old.app_id;
+            url_log.app_filename = url_old.app_filename;
+            url_log.app_function_name = url_old.app_function_name;
+            url_log.app_line = url_old.app_line;
+            url_log.logtext = url_old.logtext;
+    
+            url_log = JSON.stringify(url_log);
+            axios.post(process.env.SERVICE_LOG_URL_DESTINATION, url_log)
+            .then(function(){
+                resolve();
+            })
+        }   
         else
-            filename = `${logscope}_${loglevel}_${logdate.getFullYear()}${month}.log`;
-    if (process.env.SERVICE_LOG_DESTINATION==0 ||
-        process.env.SERVICE_LOG_DESTINATION==2){
-        //file destination
-        let fs = require('fs');
-        fs.appendFile(process.env.SERVICE_LOG_FILE_PATH_SERVER + filename, log + '\r\n', 'utf8', (err) => {
-            if (err) {
-                pm2log(err);
-            }
+            resolve();
+    })
+    
+}
+async function sendLog(logscope, loglevel, log){
+    return await new Promise(function (resolve){ 
+        let filename;
+        let logdate = new Date();
+        //make log nice and compact
+        try{        
+            log = JSON.stringify(JSON.parse(log));
+        }
+        catch(err){
+            pm2log(err)
+            pm2log(log);
+        }
+        let month = logdate.toLocaleString("en-US", { month: "2-digit"});
+        let day   = logdate.toLocaleString("en-US", { day: "2-digit"});
+        if (process.env.SERVICE_LOG_FILE_INTERVAL=='1D')
+            filename = `${logscope}_${loglevel}_${logdate.getFullYear()}${month}${day}.log`;
+        else
+            if (process.env.SERVICE_LOG_FILE_INTERVAL=='1M')
+                filename = `${logscope}_${loglevel}_${logdate.getFullYear()}${month}.log`;
             else
-                remote_log(log, (err, result)=>{
-                    callBack(null, result);
-                });
-        });
-    }
-    else
-        remote_log(log, (err, result)=>{
-            callBack(null, result);
-        });
+                filename = `${logscope}_${loglevel}_${logdate.getFullYear()}${month}.log`;
+        if (process.env.SERVICE_LOG_DESTINATION==0 ||
+            process.env.SERVICE_LOG_DESTINATION==2){
+            //file destination
+            let fs = require('fs');
+            fs.appendFile(process.env.SERVICE_LOG_FILE_PATH_SERVER + filename, log + '\r\n', 'utf8', (err) => {
+                if (err) {
+                    //if error here ignore and continue, where else should log file be saved?
+                    pm2log(err);
+                    resolve();
+                }
+                else
+                    resolve(remote_log(log));
+            });
+        }
+        else
+            resolve(remote_log(log));
+    })
 }
 function logdate(){
     let logdate = new Date();
@@ -91,159 +94,206 @@ function logdate(){
     return logdate;
 }
 module.exports = {
-
-	createLogServer: (info=null, err=null,
-                      ip, host, protocol, originalUrl, method, statusCode, 
+	setLogVariables:() =>{
+		//global declaration
+        Object.defineProperty(global, '__stack', {
+            get: function() {
+                    var orig = Error.prepareStackTrace;
+                    Error.prepareStackTrace = function(_, stack) {
+                        return stack;
+                    };
+                    var err = new Error;
+                    Error.captureStackTrace(err, arguments.callee);
+                    var stack = err.stack;
+                    Error.prepareStackTrace = orig;
+                    return stack;
+                }
+        });
+        Object.defineProperty(global, '__appline', {
+            get: function() {
+                    return __stack[1].getLineNumber();
+                }
+        });
+        Object.defineProperty(global, '__appfunction', {
+            get: function() {
+                    return __stack[1].getFunctionName();
+                }
+        });
+        Object.defineProperty(global, '__appfilename', {
+            get: function() {
+                let filename = __stack[1].getFileName();
+                return filename.substring(__dirname.length).replace(/\\/g, '/');
+                } 
+        });
+	},
+    createLogServerE: async (ip, host, protocol, originalUrl, method, statusCode, 
+					   user_agent, accept_language, referer, err) =>{
+        return await new Promise(function (resolve){ 
+            let log_json_server;
+            log_json_server = `{"logdate": "${logdate()}",
+                                "ip":"${ip}",
+                                "host": "${host}",
+                                "protocol": "${protocol}",
+                                "url": ${JSON.stringify(originalUrl.replaceAll('"', '\''))},
+                                "method":"${method}",
+                                "statusCode": ${statusCode},
+                                "user-agent": "${user_agent}",
+                                "accept-language": "${accept_language}",
+                                "http_referer": "${referer}",
+                                "app_id": "",
+                                "app_filename": "",
+                                "app_function_name": "",
+                                "app_app_line": "",
+                                "logtext": ${JSON.stringify(err.status + '-' + err.message)}
+                            }`;
+            resolve(sendLog(process.env.SERVICE_LOG_SCOPE_SERVER, process.env.SERVICE_LOG_LEVEL_ERROR, log_json_server));
+        })
+    },
+	createLogServerI: async (info=null,
+                      ip, host, protocol, originalUrl, method, 
+                      statusCode, statusMessage,
 					  user_agent, accept_language, referer) =>{
-        let log_error_status = '';
-        let log_error_message = '';
-        let log_level;
-        let log_json_server;
-
-        if (err==null){
+        return await new Promise(function (resolve){ 
+            let log_level;
+            let log_json_server;    
             if(process.env.SERVICE_LOG_ENABLE_SERVER_VERBOSE==1)
                 log_level = process.env.SERVICE_LOG_LEVEL_VERBOSE;
             else
                 log_level = process.env.SERVICE_LOG_LEVEL_INFO;
-        }
-        else{
-            log_error_status = err.status;
-            log_error_message = err.message;
-            log_level = process.env.SERVICE_LOG_LEVEL_ERROR;
-        }
-        if (info!=null){
-            log_json_server = 
-            `{"logdate": "${logdate()}",
-             "ip":"",
-             "host": "${require('os').hostname()}",
-             "protocol": "",
-             "url": "",
-             "method":"",
-             "statusCode": "",
-             "user-agent": "",
-             "accept-language": "",
-             "http_referer": "",
-             "app_id": "",
-             "app_filename": "",
-             "app_function_name": "",
-             "app_app_line": "",
-             "logtext": ${JSON.stringify(info)}
-             }`;
-        }
-        else{
-            log_json_server  =
-            `{"logdate": "${logdate()}",
-             "ip":"${ip}",
-             "host": "${host}",
-             "protocol": "${protocol}",
-             "url": "${JSON.stringify(originalUrl).replaceAll('"', '\'')}",
-             "method":"${method}",
-             "statusCode": ${statusCode},
-             "user-agent": "${user_agent}",
-             "accept-language": "${accept_language}",
-             "http_referer": "${referer}",
-             "app_id": "",
-             "app_filename": "",
-             "app_function_name": "",
-             "app_app_line": "",
-             "logtext": ${JSON.stringify(log_error_status + '-' + log_error_message)}
-            }`;
-        }
-        sendLog(process.env.SERVICE_LOG_SCOPE_SERVER, log_level, log_json_server, (err, result)=>{
-            null;
-        });
+            if (info!=null){
+                log_json_server = `{"logdate": "${logdate()}",
+                                    "ip":"",
+                                    "host": "${require('os').hostname()}",
+                                    "protocol": "",
+                                    "url": "",
+                                    "method":"",
+                                    "statusCode": "",
+                                    "user-agent": "",
+                                    "accept-language": "",
+                                    "http_referer": "",
+                                    "app_id": "",
+                                    "app_filename": "",
+                                    "app_function_name": "",
+                                    "app_app_line": "",
+                                    "logtext": ${JSON.stringify(info)}
+                                    }`;
+            }
+            else{
+                log_json_server = `{"logdate": "${logdate()}",
+                                    "ip":"${ip}",
+                                    "host": "${host}",
+                                    "protocol": "${protocol}",
+                                    "url": ${JSON.stringify(originalUrl.replaceAll('"', '\''))},
+                                    "method":"${method}",
+                                    "statusCode": ${statusCode},
+                                    "user-agent": "${user_agent}",
+                                    "accept-language": "${accept_language}",
+                                    "http_referer": "${referer}",
+                                    "app_id": "",
+                                    "app_filename": "",
+                                    "app_function_name": "",
+                                    "app_app_line": "",
+                                    "logtext": ${JSON.stringify(statusMessage)}
+                                    }`;
+            }
+            resolve(sendLog(process.env.SERVICE_LOG_SCOPE_SERVER, log_level, log_json_server));
+        })
     },
-    createLogDB: (app_id, logtext) =>{
-        if (process.env.SERVICE_LOG_ENABLE_DB==1){
-            let log_json_db = `{"logdate": "${logdate()}",
-                                "ip":"",
-                                "host": "${require('os').hostname()}",
-                                "protocol": "",
-                                "url": "",
-                                "method":"",
-                                "statusCode": "",
-                                "user-agent": "",
-                                "accept-language": "",
-                                "http_referer": "",
-                                "app_id": ${app_id},
-                                "app_filename": "",
-                                "app_function_name": "",
-                                "app_app_line": "",
-                                "logtext": ${JSON.stringify(logtext)}
-                                }`;
-            sendLog(process.env.SERVICE_LOG_SCOPE_DB, process.env.SERVICE_LOG_LEVEL_INFO, log_json_db, (err, result)=>{
-                null;
-            });
-        }
+    createLogDB: async (app_id, logtext) =>{
+        return await new Promise(function (resolve){ 
+            if (process.env.SERVICE_LOG_ENABLE_DB==1){
+                let log_json_db = `{"logdate": "${logdate()}",
+                                    "ip":"",
+                                    "host": "${require('os').hostname()}",
+                                    "protocol": "",
+                                    "url": "",
+                                    "method":"",
+                                    "statusCode": "",
+                                    "user-agent": "",
+                                    "accept-language": "",
+                                    "http_referer": "",
+                                    "app_id": ${app_id},
+                                    "app_filename": "",
+                                    "app_function_name": "",
+                                    "app_app_line": "",
+                                    "logtext": ${JSON.stringify(logtext)}
+                                    }`;
+                resolve(sendLog(process.env.SERVICE_LOG_SCOPE_DB, process.env.SERVICE_LOG_LEVEL_INFO, log_json_db));
+            }
+            else
+                resolve();
+        })
     },
-    createLogAppS: (level_info, app_id, app_filename, app_function_name, app_line, logtext, callBack)=>{
-        let log_json =`{"logdate": "${logdate()}",
-                        "ip":"",
-                        "host": "${require('os').hostname()}",
-                        "protocol": "",
-                        "url": "",
-                        "method":"",
-                        "statusCode": "",
-                        "user-agent": "",
-                        "accept-language": "",
-                        "http_referer": "",
-                        "app_id": ${app_id},
-                        "app_filename": "${app_filename}",
-                        "app_function_name": "${app_function_name}",
-                        "app_app_line": ${app_line},
-                        "logtext": ${JSON.stringify(logtext)}
-                        }`;
-        sendLog(process.env.SERVICE_LOG_SCOPE_SERVICE, level_info, log_json, (err, result)=>{
-            callBack(null, 1);
-        });
-    },    
-    createLogAppC: (app_id, level_info, app_filename, app_function_name, app_line, logtext,
-                    ip, host, protocol, originalUrl, method, statusCode, 
-                    user_agent, accept_language, referer, callBack) =>{
-        let log_json =`{"logdate": "${logdate()}",
-            "ip":"${ip}",
-            "host": "${host}",
-            "protocol": "${protocol}",
-            "url": "${JSON.stringify(originalUrl).replaceAll('"', '\'')}",
-            "method":"${method}",
-            "status_code": ${statusCode},
-            "user-agent": "${user_agent}",
-            "accept-language": "${accept_language}",
-            "http_referer": "${referer}",
-            "app_id": ${app_id},
-            "app_filename": "${app_filename}",
-            "app_function_name": "${app_function_name}",
-            "app_app_line": ${app_line},
-            "logtext": ${JSON.stringify(logtext)}
-            }`;
-        sendLog(process.env.SERVICE_LOG_SCOPE_CONTROLLER, level_info, log_json, (err, result)=>{
-            callBack(null, 1);
-        });
-    },
-    createLogAppRI: (app_id, app_filename, app_function_name, app_line, logtext,
-                     ip, host, protocol, originalUrl, method, statusCode, 
-                    user_agent, accept_language, referer) => {
-        if (process.env.SERVICE_LOG_ENABLE_ROUTER==1){
+    createLogAppS: async (level_info, app_id, app_filename, app_function_name, app_line, logtext)=>{
+        return await new Promise(function (resolve){ 
             let log_json =`{"logdate": "${logdate()}",
-                            "ip":"${ip}",
-                            "host": "${host}",
-                            "protocol": "${protocol}",
-                            "url": "${originalUrl}",
-                            "method":"${method}",
-                            "status_code": ${statusCode},
-                            "user-agent": "${user_agent}",
-                            "accept-language": "${accept_language}",
-                            "http_referer": "${referer}",
-                            "app_id": "${app_id}",
+                            "ip":"",
+                            "host": "${require('os').hostname()}",
+                            "protocol": "",
+                            "url": "",
+                            "method":"",
+                            "statusCode": "",
+                            "user-agent": "",
+                            "accept-language": "",
+                            "http_referer": "",
+                            "app_id": ${app_id},
                             "app_filename": "${app_filename}",
                             "app_function_name": "${app_function_name}",
                             "app_app_line": ${app_line},
                             "logtext": ${JSON.stringify(logtext)}
                             }`;
-            sendLog(process.env.SERVICE_LOG_SCOPE_ROUTER, process.env.SERVICE_LOG_LEVEL_INFO, log_json, (err, result)=>{
-               null;
-            });
-        }
+            resolve(sendLog(process.env.SERVICE_LOG_SCOPE_SERVICE, level_info, log_json));
+        })
+    },    
+    createLogAppC: async (app_id, level_info, app_filename, app_function_name, app_line, logtext,
+                    ip, host, protocol, originalUrl, method, statusCode, 
+                    user_agent, accept_language, referer) =>{
+        return await new Promise(function (resolve){ 
+            let log_json =`{"logdate": "${logdate()}",
+                            "ip":"${ip}",
+                            "host": "${host}",
+                            "protocol": "${protocol}",
+                            "url": ${JSON.stringify(originalUrl.replaceAll('"', '\''))},
+                            "method":"${method}",
+                            "status_code": ${statusCode},
+                            "user-agent": "${user_agent}",
+                            "accept-language": "${accept_language}",
+                            "http_referer": "${referer}",
+                            "app_id": ${app_id},
+                            "app_filename": "${app_filename}",
+                            "app_function_name": "${app_function_name}",
+                            "app_app_line": ${app_line},
+                            "logtext": ${JSON.stringify(logtext)}
+                            }`;
+            resolve(sendLog(process.env.SERVICE_LOG_SCOPE_CONTROLLER, level_info, log_json));
+        })
+    },
+    createLogAppRI: async (app_id, app_filename, app_function_name, app_line, logtext,
+                     ip, host, protocol, originalUrl, method, statusCode, 
+                    user_agent, accept_language, referer) => {
+        return await new Promise(function (resolve){  
+            if (process.env.SERVICE_LOG_ENABLE_ROUTER==1){
+                let log_json =`{"logdate": "${logdate()}",
+                                "ip":"${ip}",
+                                "host": "${host}",
+                                "protocol": "${protocol}",
+                                "url": ${JSON.stringify(originalUrl.replaceAll('"', '\''))},
+                                "method":"${method}",
+                                "status_code": ${statusCode},
+                                "user-agent": "${user_agent}",
+                                "accept-language": "${accept_language}",
+                                "http_referer": "${referer}",
+                                "app_id": "${app_id}",
+                                "app_filename": "${app_filename}",
+                                "app_function_name": "${app_function_name}",
+                                "app_app_line": ${app_line},
+                                "logtext": ${JSON.stringify(logtext)}
+                                }`;
+                resolve(sendLog(process.env.SERVICE_LOG_SCOPE_ROUTER, process.env.SERVICE_LOG_LEVEL_INFO, log_json));
+            }
+            else
+                resolve();
+        })
 	},
     getParameters: (app_id, callBack) => {
         let results = {};
