@@ -797,8 +797,8 @@ function show_users(sort=8, order_by='ASC', focus=true){
                 //add lov icon for super admin
                 document.querySelectorAll(`#list_user_account .common_lov_button`).forEach(e => e.innerHTML = window.global_icon_app_lov);
             }
+            set_list_eventlisteners('user_account', 'sort', true);
             list_events('list_user_account', 'list_user_account_row', ' .list_edit');
-            set_list_eventlisteners('user_account', 'sort',1);
             if (focus==true){
                 //set focus at start
                 //set focus first column in first row
@@ -1876,26 +1876,26 @@ async function show_list(list_div, list_div_col_title, url_parameters, sort, ord
                             document.getElementById(list_div).innerHTML = html;
                             document.getElementById(list_div_col_title + sort).classList.add(order_by);
                             //add sort events on title
-                            set_list_eventlisteners('connected', 'sort',1);
+                            set_list_eventlisteners('connected', 'sort',true);
                             //add events on some columns searching in all rows
-                            set_list_eventlisteners('connected', 'gps',1);
-                            set_list_eventlisteners('connected', 'chat',1);
+                            set_list_eventlisteners('connected', 'gps');
+                            set_list_eventlisteners('connected', 'chat');
                             break;
                         }
                         case 'list_app_log':{
                             document.getElementById(list_div).innerHTML = html;
                             document.getElementById(list_div_col_title + sort).classList.add(order_by);
                             //add events on some columns searching in all rows
-                            set_list_eventlisteners('app_log', 'sort',1);
-                            set_list_eventlisteners('app_log', 'gps',1);
+                            set_list_eventlisteners('app_log', 'sort', true);
+                            set_list_eventlisteners('app_log', 'gps');
                             break;
                         }
                         case 'list_server_log':{
                             document.getElementById(list_div).innerHTML = html;
                             document.getElementById(list_div_col_title + sort).classList.add(order_by);
                             //add events on some columns searching in all rows
-                            set_list_eventlisteners('server_log', 'sort',1);
-                            set_list_eventlisteners('server_log', 'gps',1);
+                            set_list_eventlisteners('server_log', 'sort', true);
+                            set_list_eventlisteners('server_log', 'gps');
                             break;
                         }
                         case 'list_pm2_log':{
@@ -1910,7 +1910,7 @@ async function show_list(list_div, list_div_col_title, url_parameters, sort, ord
         })        
     }
 }
-async function show_connected(sort=4, order_by='desc'){
+async function show_connected(sort=1, order_by='desc'){
     let app_id = document.getElementById('select_app_menu5_list_connected').options[document.getElementById('select_app_menu5_list_connected').selectedIndex].value;
     let year = document.getElementById('select_year_menu5_list_connected').value;
     let month = document.getElementById('select_month_menu5_list_connected').value;
@@ -1921,7 +1921,7 @@ async function show_connected(sort=4, order_by='desc'){
               order_by);
 }    
 
-async function show_app_log(sort=8, order_by='desc', offset=0, limit=window.global_limit){
+async function show_app_log(sort=1, order_by='desc', offset=0, limit=window.global_limit){
     let app_id = document.getElementById('select_app_menu5_app_log').options[document.getElementById('select_app_menu5_app_log').selectedIndex].value;
     let year = document.getElementById('select_year_menu5_app_log').value;
     let month = document.getElementById('select_month_menu5_app_log').value;
@@ -1931,26 +1931,26 @@ async function show_app_log(sort=8, order_by='desc', offset=0, limit=window.glob
               sort,
               order_by);
 } 
-function set_list_eventlisteners(list_type, list_function, event_action){
-    let click_function_title = function() { list_sort_click(this)};
-    let click_function_rowcolumn = function() { list_item_click(this)};
-    let elements = document.querySelectorAll(`#list_${list_type} .list_${list_function}_click`);   
+function set_list_eventlisteners(list_type, list_function, remove_events){
+    let click_function_title = function(event) { 
+                                    if (event.target.parentNode.classList.contains(`list_${list_function}_click`))
+                                        list_sort_click(event.target.parentNode)
+                                };
+    let click_function_rowcolumn = function(event) { 
+                                        if (event.target.parentNode.parentNode.classList.contains(`list_${list_function}_click`))
+                                            list_item_click(event.target.parentNode.parentNode)
+                                    };
     
-    let elementsArray = Array.prototype.slice.call(elements);
-    if (event_action==1)
-        elementsArray.forEach(function(elem){
-            if (list_function=='sort')
-                elem.addEventListener("click", click_function_title);
-            else
-                elem.addEventListener("click", click_function_rowcolumn);
-        });
+    let element = document.getElementById(`list_${list_type}`);
+    if (remove_events==true){
+        //remove all eventlisteners
+        element.replaceWith(element.cloneNode(true));
+        element = document.getElementById(`list_${list_type}`);
+    }
+    if (list_function=='sort')
+        element.addEventListener("click", click_function_title);
     else
-        elementsArray.forEach(function(elem){
-            if (list_function=='sort')
-                elem.removeEventListener("click", click_function_title);
-            else
-                elem.removeEventListener("click", click_function_rowcolumn);
-        });
+        element.addEventListener("click", click_function_rowcolumn);
 }
 function get_sort(order_by=0){
     let sort = '';
