@@ -1939,6 +1939,9 @@ function set_list_eventlisteners(list_type, list_function, remove_events){
     let click_function_rowcolumn = function(event) { 
                                         if (event.target.parentNode.parentNode.classList.contains(`list_${list_function}_click`))
                                             list_item_click(event.target.parentNode.parentNode)
+                                        else
+                                            if (event.target.parentNode.classList.contains(`list_${list_function}_click`))
+                                                list_item_click(event.target.parentNode)
                                     };
     
     let element = document.getElementById(`list_${list_type}`);
