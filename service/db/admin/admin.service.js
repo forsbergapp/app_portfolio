@@ -230,7 +230,7 @@ module.exports = {
                         }));
                         // log with common app id at startup for all apps
                         createLogAppSI(process.env.COMMON_APP_ID, __appfilename, __appfunction, __appline, 
-                                    `mysql createPool ${app_id} user: ` + db_user, (err_log, result_log)=>{
+                                       `mysql createPool ${app_id} user: ` + db_user).then(function(){
                            resolve();
                         })
                         break;
@@ -249,15 +249,15 @@ module.exports = {
                            // log with common app id at startup for all apps
                            if (err){
                               createLogAppSE(process.env.COMMON_APP_ID, __appfilename, __appfunction, __appline, 
-                                          `oracledb.createPool ${app_id} user: ` + db_user + `, err:${err}`, (err_log, result_log)=>{
+                                             `oracledb.createPool ${app_id} user: ` + db_user + `, err:${err}`).then(function(){
                                  reject(err);
                               })
                            }
                            else{
                               createLogAppSI(process.env.COMMON_APP_ID, __appfilename, __appfunction, __appline, 
-                                          `oracledb.createPool ${app_id} ok user: ` + db_user, (err_log, result_log)=>{
+                                             `oracledb.createPool ${app_id} ok user: ` + db_user).then(function(){
                                  resolve();
-                              });
+                              })
                            }
                         });
                         break;
@@ -275,7 +275,7 @@ module.exports = {
                         }));
                         // log with common app id at startup for all apps
                         createLogAppSI(process.env.COMMON_APP_ID, __appfilename, __appfunction, __appline, 
-                           `pg createPool ${app_id} user: ` + db_user, (err_log, result_log)=>{
+                                       `pg createPool ${app_id} user: ` + db_user).then(function(){
                            resolve();
                         })
                         break;
@@ -289,9 +289,9 @@ module.exports = {
                //app_id inparameter for log, all apps will be returned
                getAppDBParametersAdmin(process.env.COMMON_APP_ID,(err, results) =>{
                   if (err) {
-                     createLogAppSE(process.env.COMMON_APP_ID, __appfilename, __appfunction, __appline, `getAppDBParameters, err:${err}`, (err_log, result_log)=>{
+                     createLogAppSE(process.env.COMMON_APP_ID, __appfilename, __appfunction, __appline, `getAppDBParameters, err:${err}`).then(function(){
                         reject(err);
-                     })
+                    })
                   }
                   else {
                      json = JSON.parse(JSON.stringify(results));
@@ -324,9 +324,9 @@ module.exports = {
                   }));
                   // log with common app id at startup for all apps
                   createLogAppSI(process.env.COMMON_APP_ID, __appfilename, __appfunction, __appline, 
-                              `mysql createPool ADMIN user: ${process.env.SERVICE_DB_DB1_APP_ADMIN_USER}`, (err_log, result_log)=>{
+                                 `mysql createPool ADMIN user: ${process.env.SERVICE_DB_DB1_APP_ADMIN_USER}`).then(function(){
                      startDBApps()
-                  })		
+                  })
                   break;
                }
                case '2':{
@@ -361,12 +361,12 @@ module.exports = {
                      // log with common app id at startup for all apps
                      if (err)
                         createLogAppSE(process.env.COMMON_APP_ID, __appfilename, __appfunction, __appline, 
-                                    `oracledb.createPool ADMIN user: ${process.env.SERVICE_DB_DB2_APP_ADMIN_USER}, err:${err}`, (err_log, result_log)=>{
+                                       `oracledb.createPool ADMIN user: ${process.env.SERVICE_DB_DB2_APP_ADMIN_USER}, err:${err}`).then(function(){
                            reject(err);
                         })
                      else{
                         createLogAppSI(process.env.COMMON_APP_ID, __appfilename, __appfunction, __appline, 
-                                    `oracledb.createPool ADMIN ok user: ${process.env.SERVICE_DB_DB2_APP_ADMIN_USER}`, (err_log, result_log)=>{
+                                       `oracledb.createPool ADMIN ok user: ${process.env.SERVICE_DB_DB2_APP_ADMIN_USER}`).then(function(){
                            startDBApps()
                         })
                      }							
@@ -386,9 +386,9 @@ module.exports = {
                   }));
                   // log with common app id at startup for all apps
                   createLogAppSI(process.env.COMMON_APP_ID, __appfilename, __appfunction, __appline, 
-                              `pg createPool ADMIN user: ${process.env.SERVICE_DB_DB3_APP_ADMIN_USER}`, (err_log, result_log)=>{
+                                 `pg createPool ADMIN user: ${process.env.SERVICE_DB_DB3_APP_ADMIN_USER}`).then(function(){
                      startDBApps()
-                  })		
+                  })
                   break;
                }
             }
@@ -427,10 +427,10 @@ module.exports = {
             }
          }
       }catch (err) {
-         //log admin admin app id = common app id
-         //since unknown app id requested
+         //unknown app id requested
          createLogAppSE(process.env.COMMON_APP_ID, __appfilename, __appfunction, __appline, 
-                       'get_pool error app_id: ' + app_id, (err_log, result_log)=>{
+                        'get_pool error app_id: ' + app_id).then(function(){
+            return null;
          })
       }
       return pool;

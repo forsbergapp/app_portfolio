@@ -23,8 +23,9 @@ const { checkAccessToken, checkDataToken, checkDataTokenRegistration, checkDataT
 const { checkAccessTokenAdmin, checkAccessTokenSuperAdmin} = require ("../../../auth/auth.controller");
 const { createLogAppRI } = require("../../../log/log.controller");
 router.use((req,res,next)=>{
-    createLogAppRI(req, res, __appfilename, __appfunction, __appline, req.body);
-    next();
+    createLogAppRI(req, res, __appfilename, __appfunction, __appline, req.body).then(function(){
+		next();
+	})
 })
 //admin, count user stat
 router.get("/admin/count", checkAccessTokenAdmin, getStatCountAdmin);
