@@ -3,8 +3,9 @@ const { createUserAccountApp, getUserAccountApps, getUserAccountApp, updateUserA
 const { checkAccessToken } = require("../../../auth/auth.controller");
 const { createLogAppRI } = require("../../../log/log.controller");
 router.use((req,res,next)=>{
-    createLogAppRI(req, res, __appfilename, __appfunction, __appline, req.body);
-    next();
+    createLogAppRI(req, res, __appfilename, __appfunction, __appline, req.body).then(function(){
+		next();
+	})
 })
 router.post("/", checkAccessToken, createUserAccountApp);
 router.get("/:user_account_id", checkAccessToken, getUserAccountApp);
