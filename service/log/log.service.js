@@ -150,12 +150,13 @@ module.exports = {
         })
     },
 	createLogServerI: async (info=null,
-                      ip, host, protocol, originalUrl, method, 
-                      statusCode, statusMessage,
-					  user_agent, accept_language, referer) =>{
+                             ip, host, protocol, originalUrl, method, 
+                             statusCode, statusMessage,
+                             user_agent, accept_language, referer) =>{
         return await new Promise(function (resolve){ 
             let log_level;
-            let log_json_server;    
+            let log_json_server;  
+            let logtext;  
             if(process.env.SERVICE_LOG_ENABLE_SERVER_VERBOSE==1)
                 log_level = process.env.SERVICE_LOG_LEVEL_VERBOSE;
             else
@@ -179,6 +180,10 @@ module.exports = {
                                     }`;
             }
             else{
+                if (typeof statusMessage=='undefined' || statusMessage=='')
+                    logtext = '';
+                else
+                    logtext = JSON.stringify(statusMessage);
                 log_json_server = `{"logdate": "${logdate()}",
                                     "ip":"${ip}",
                                     "host": "${host}",
@@ -193,7 +198,7 @@ module.exports = {
                                     "app_filename": "",
                                     "app_function_name": "",
                                     "app_app_line": "",
-                                    "logtext": ${JSON.stringify(statusMessage)}
+                                    "logtext": ${logtext}
                                     }`;
             }
             resolve(sendLog(process.env.SERVICE_LOG_SCOPE_SERVER, log_level, log_json_server));
