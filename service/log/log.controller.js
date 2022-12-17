@@ -1,5 +1,5 @@
 const { getParameters, getLogs, getFiles, getPM2Logs,
-	    createLogServer, createLogAppS, createLogAppRI, createLogAppC} = require ("./log.service");
+		createLogServerI, createLogServerE, createLogAppS, createLogAppRI, createLogAppC} = require ("./log.service");
 
 module.exports = {
 	getParameters: (req, res) => {
@@ -73,44 +73,72 @@ module.exports = {
 			}
 		});
 	},
-	createLogServer: (req, res, info, err) =>{
-		if (res)
-			createLogServer(info, err, 
-							req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, res.statusCode, 
-							req.headers['user-agent'], req.headers['accept-language'], req.headers['referer']);
-		else
-			createLogServer(info, err, 
-							null, null, null, null, null, null, 
-							null, null, null);
+	createLogServerE:async (req, res, err) =>{
+		return await new Promise(function (resolve){ 
+			resolve(createLogServerE(req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, res.statusCode, 
+							req.headers['user-agent'], req.headers['accept-language'], req.headers['referer'], err));
+		})
 	},
-	createLogAppRI:(req, res, app_filename, app_function_name, app_line, logtext) =>{
-		createLogAppRI(req.query.app_id, app_filename, app_function_name, app_line, logtext,
-					   req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, res.statusCode, 
-					   req.headers['user-agent'], req.headers['accept-language'], req.headers['referer']);
+	createLogServerI: async (info, req, res) =>{
+		return await new Promise(function (resolve){ 
+			if (info)
+				resolve(createLogServerI(info));
+			else
+				if (process.env.SERVICE_LOG_ENABLE_SERVER_VERBOSE==1){
+					const getCircularReplacer = () => {
+						const seen = new WeakSet();
+						return (key, value) => {
+							if (typeof value === 'object' && value !== null) {
+							if (seen.has(value)) {
+								return;
+							}
+							seen.add(value);
+							}
+							return value;
+						};
+					};
+					resolve(createLogServerI('res:' + JSON.stringify(res, getCircularReplacer())));
+				}
+				else
+					if (process.env.SERVICE_LOG_ENABLE_SERVER_INFO==1){
+						resolve(createLogServerI(null,
+												 req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, 
+												 res.statusCode, res.statusMessage, 
+												 req.headers['user-agent'], req.headers['accept-language'], req.headers['referer']));
+					}
+		})
+		
 	},
-	createLogAppSI: (app_id, app_filename, app_function_name, app_line, logtext, callBack) => {
-        createLogAppS(process.env.SERVICE_LOG_LEVEL_INFO, app_id, app_filename, app_function_name, app_line, logtext, (err, result)=>{
-			callBack(null, result);
-		});
+	createLogAppRI: async (req, res, app_filename, app_function_name, app_line, logtext) =>{
+		return await new Promise(function (resolve){ 
+			resolve(createLogAppRI(req.query.app_id, app_filename, app_function_name, app_line, logtext,
+						           req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, res.statusCode, 
+						           req.headers['user-agent'], req.headers['accept-language'], req.headers['referer']));
+		})
 	},
-    createLogAppSE: (app_id, app_filename, app_function_name, app_line, logtext, callBack) => {
-        createLogAppS(process.env.SERVICE_LOG_LEVEL_ERROR, app_id, app_filename, app_function_name, app_line, logtext, (err, result)=>{
-			callBack(null, result);
-		});
+	createLogAppSI: async (app_id, app_filename, app_function_name, app_line, logtext) => {
+		return await new Promise(function (resolve){ 
+			resolve(createLogAppS(process.env.SERVICE_LOG_LEVEL_INFO, app_id, app_filename, app_function_name, app_line, logtext));
+		})
+	},
+    createLogAppSE: async (app_id, app_filename, app_function_name, app_line, logtext) => {
+		return await new Promise(function (resolve){ 
+        	resolve(createLogAppS(process.env.SERVICE_LOG_LEVEL_ERROR, app_id, app_filename, app_function_name, app_line, logtext));
+		})
 	},
 	createLogAppCI: async (req, res, app_filename, app_function_name, app_line, logtext) => {
-		return new Promise(function (resolve){ 
-			createLogAppC(req.query.app_id, process.env.SERVICE_LOG_LEVEL_INFO, app_filename, app_function_name, app_line, logtext,
-							req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, res.statusCode, 
-							req.headers['user-agent'], req.headers['accept-language'], req.headers['referer'],(err, res)=>{
-				resolve();
-			});
+		return await new Promise(function (resolve){ 
+			resolve(createLogAppC(req.query.app_id, process.env.SERVICE_LOG_LEVEL_INFO, app_filename, app_function_name, app_line, logtext,
+							      req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, 
+								  res.statusCode, 
+							      req.headers['user-agent'], req.headers['accept-language'], req.headers['referer']));
 		})
 	},
 	createLogAppCE: async (req, res, app_filename, app_function_name, app_line, logtext) => {
 		return await new Promise(function (resolve){ 
 			createLogAppC(req.query.app_id, process.env.SERVICE_LOG_LEVEL_ERROR, app_filename, app_function_name, app_line, logtext,
-						req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, res.statusCode, 
+						req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, 
+						res.statusCode, 
 						req.headers['user-agent'], req.headers['accept-language'], req.headers['referer'], (err, res) =>{
 				resolve();
 			});

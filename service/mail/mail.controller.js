@@ -20,7 +20,7 @@ module.exports = {
         let path = require('path');
         res.sendFile(path.resolve(__dirname + `/../../apps/app${req.query.app_id}/mail/logo.png`), (err) =>{
             if (err){
-                createLogAppSE(req.query.app_id, __appfilename, __appfunction, __appline, err, (err_log, result_log)=>{
+                createLogAppSE(req.query.app_id, __appfilename, __appfunction, __appline, err).then(function(){
                     return res.send(null);
                 })
             }
@@ -75,7 +75,7 @@ module.exports = {
         
         getParameters_server(req.query.app_id, data.app_id, (err, result)=>{
             if (err) {                
-                createLogAppSE(req.query.app_id, __appfilename, __appfunction, __appline, err, (err_log, result_log)=>{
+                createLogAppSE(req.query.app_id, __appfilename, __appfunction, __appline, err).then(function(){
                     return callBack(err, null);
                 })
             }

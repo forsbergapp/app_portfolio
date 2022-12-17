@@ -3,8 +3,9 @@ const { getParameters, getParametersAdmin, getParametersAllAdmin, setParameter_a
 const { createLogAppRI } = require("../../../log/log.controller");
 const { checkDataToken, checkAccessTokenAdmin} = require ("../../../auth/auth.controller");
 router.use((req,res,next)=>{
-    createLogAppRI(req, res, __appfilename, __appfunction, __appline, req.body);
-    next();
+    createLogAppRI(req, res, __appfilename, __appfunction, __appline, req.body).then(function(){
+		next();
+	})
 })
 
 router.get("/admin/all/:app_id", checkAccessTokenAdmin, getParametersAllAdmin);

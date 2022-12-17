@@ -11,8 +11,9 @@ const { createUserSetting,
 const { checkAccessToken, checkDataToken } = require("../../../auth/auth.controller");
 const { createLogAppRI } = require("../../../log/log.controller");
 router.use((req,res,next)=>{
-    createLogAppRI(req, res, __appfilename, __appfunction, __appline, req.body);
-    next();
+    createLogAppRI(req, res, __appfilename, __appfunction, __appline, req.body).then(function(){
+		next();
+	})
 })
 router.get("/:id", checkDataToken, getUserSetting);
 router.get("/user_account_id/:id", checkDataToken, getUserSettingsByUserId);
