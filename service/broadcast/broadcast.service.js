@@ -100,39 +100,39 @@ module.exports = {
                     break;
                 }
                 case 2:{
-                    column_sort = 'app_id';
-                    break;
-                }
-                case 3:{
-                    column_sort = 'app_role_icon';
-                    break;
-                }
-                case 4:{
-                    column_sort = 'user_account_id';
-                    break;
-                }
-                case 5:{
-                    column_sort = 'system_admin';
-                    break;
-                }
-                case 6:{
-                    column_sort = 'user_agent';
-                    break;
-                }
-                case 7:{
                     column_sort = 'connection_date';
                     break;
                 }
-                case 8:{
+                case 3:{
+                    column_sort = 'app_id';
+                    break;
+                }
+                case 4:{
+                    column_sort = 'app_role_icon';
+                    break;
+                }
+                case 5:{
+                    column_sort = 'user_account_id';
+                    break;
+                }
+                case 6:{
+                    column_sort = 'system_admin';
+                    break;
+                }
+                case 7:{
                     column_sort = 'ip';
                     break;
                 }
-                case 9:{
+                case 8:{
                     column_sort = 'gps_latitude';
                     break;
                 }
-                case 10:{
+                case 9:{
                     column_sort = 'gps_longitude';
+                    break;
+                }
+                case 10:{
+                    column_sort = 'user_agent';
                     break;
                 }
                 default:{
