@@ -1,7 +1,8 @@
 //Express framework
 const express = require ('express');
 //logging
-const { createLogServer} = require('./service/log/log.controller');
+const { setLogVariables} = require('./service/log/log.service');
+const { createLogServerI, createLogServerE} = require('./service/log/log.controller');
 //https
 const https = require('https');
 //read from file system
@@ -14,36 +15,8 @@ const app = express();
 require('dotenv').config({path:__dirname+'/config/.env'})
 
 //Logging variables
-//global declaration
-Object.defineProperty(global, '__stack', {
-  get: function() {
-          var orig = Error.prepareStackTrace;
-          Error.prepareStackTrace = function(_, stack) {
-              return stack;
-          };
-          var err = new Error;
-          Error.captureStackTrace(err, arguments.callee);
-          var stack = err.stack;
-          Error.prepareStackTrace = orig;
-          return stack;
-      }
-});
-Object.defineProperty(global, '__appline', {
-  get: function() {
-          return __stack[1].getLineNumber();
-      }
-});
-Object.defineProperty(global, '__appfunction', {
-  get: function() {
-          return __stack[1].getFunctionName();
-      }
-});
-Object.defineProperty(global, '__appfilename', {
-    get: function() {
-      let filename = __stack[1].getFileName();
-      return filename.substring(__dirname.length).replace(/\\/g, '/');
-      } 
-});
+setLogVariables();
+
 //set timezone
 process.env.TZ = 'UTC';
 
@@ -77,51 +50,53 @@ app.use(function(req, res, next) {
 //middleware
 //logging
 app.use((err,req,res,next) => {
-  createLogServer(req, res, null, err);
-  next();
+  createLogServerE(req, res, err).then(function(){
+    next();
+  });
 })
 //middleware
-//access control
+//access control with log of stopped requests
+//logs only if error
 app.use((req,res,next) => {
   //access control
   const { access_control} = require('./service/auth/auth.controller');
   access_control(req, res, (http_err_code, result)=>{
-		if(http_err_code)      
-      return res.status(http_err_code).send('stop');
-		else
-      if (process.env.SERVICE_LOG_ENABLE_SERVER_VERBOSE==1){
-        const getCircularReplacer = () => {
-          const seen = new WeakSet();
-          return (key, value) => {
-            if (typeof value === 'object' && value !== null) {
-              if (seen.has(value)) {
-                return;
-              }
-              seen.add(value);
-            }
-            return value;
-          };
-        };
-        createLogServer(req, null, 'res:' + JSON.stringify(res, getCircularReplacer()), null);
-      }
-      else{
-        if (process.env.SERVICE_LOG_ENABLE_SERVER_INFO==1)
-          createLogServer(req, res, null, null);
-      }        
+		if(http_err_code){
+      res.statusCode = http_err_code;
+      createLogServerI(null, req, res).then(function(){
+        return res.status(http_err_code).send('stop');
+      });
+    }
+		else{
       next();
+    }
 	});
 })
 //middleware
 //check request
+//logs only if error
 app.use(function(req, res, next) {
   const {check_request} = require ('./service/auth/auth.controller');
   check_request(req, (err, result) =>{
-    if (err)
-      res.redirect('https://' + req.headers.host);
+    if (err){
+      res.statusCode = 500;
+      createLogServerE(req, res, err).then(function(){
+        res.redirect('https://' + req.headers.host);
+      })
+    }
     else{
       next();
     }
   })
+});
+app.use(function(req, res, next) {  
+  res.on('finish',()=>{
+    //logs the result after REST API has modified req and res
+    createLogServerI(null, req, res).then(function(){
+      res.end;
+    });
+  })
+  next();
 });
 
 //set routing configuration
@@ -232,6 +207,7 @@ app.get('*', function (req,res, next){
 const {DBStart} = require ('./service/db/admin/admin.service');
 const {AppsStart} = require ('./apps');
 
+
 let dbstart = DBStart().then(function(){
   AppsStart(express, app, (err, result) =>{
     null;
@@ -240,7 +216,7 @@ let dbstart = DBStart().then(function(){
 
 //start HTTP and HTTPS
 app.listen(process.env.SERVER_PORT, () => {
-  createLogServer(null, null, 'HTTP Server up and running on PORT: ' + process.env.SERVER_PORT, null);
+  createLogServerI('HTTP Server up and running on PORT: ' + process.env.SERVER_PORT);
 });
 //SSL files for HTTPS
 let options;
@@ -253,7 +229,7 @@ fs.readFile(process.env.SERVER_HTTPS_KEY, 'utf8', (error, fileBuffer) => {
       cert: env_cert
     };
     https.createServer(options, app).listen(process.env.SERVER_HTTPS_PORT, () => {
-      createLogServer(null, null, 'HTTPS Server up and running on PORT: ' + process.env.SERVER_HTTPS_PORT, null);
-    });    
+      createLogServerI('HTTPS Server up and running on PORT: ' + process.env.SERVER_HTTPS_PORT);
+    }); 
   });  
 });
