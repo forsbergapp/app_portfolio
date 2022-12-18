@@ -111,17 +111,22 @@
         height:calc(20% - 10px);
         vertical-align: middle;
     }
-    #menu_1_broadcast_button{
-        font-size: 30px;
-        cursor:pointer;
-        transform: translate(0%, 5%);
+    #menu_1_content_widget2 #menu_1_maintenance,
+    #menu_1_content_widget2 #menu_1_broadcast
+    {
+        display: inline-block;
+        width: calc(50% - 10px);
+        vertical-align: middle;
+        margin-top: 20px;
     }
-    #menu_1_maintenance{
-        transform: translate(0%, 5%);
-    }
+
     #menu_1_maintenance_checkbox{
         margin-top: 10px;
         margin-bottom: 5px;
+    }
+    #menu_1_broadcast_button{
+        font-size: 30px;
+        cursor:pointer;
     }
     .switch-input {
         display: none;

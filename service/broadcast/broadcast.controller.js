@@ -1,6 +1,6 @@
 const { createLog, createLogAdmin} = require ("../.." + process.env.SERVICE_DB_REST_API_PATH + "app_log/app_log.service");
 const { createLogAppCI } = require("../../service/log/log.controller");
-const { ClientConnect, ClientClose, ClientAdd, BroadcastSend, ConnectedList, ConnectedCount, ConnectedUpdate, ConnectedCheck} = require ("./broadcast.service");
+const { ClientConnect, ClientClose, ClientAdd, ClientCheckMaintenance, BroadcastSendSystemAdmin, BroadcastSendAdmin, ConnectedList, ConnectedCount, ConnectedUpdate, ConnectedCheck} = require ("./broadcast.service");
 module.exports = {
 	BroadcastConnect: (req, res) => {
         ClientConnect(res);
@@ -70,13 +70,6 @@ module.exports = {
                 })
             }
             else{
-                const intervalId = setInterval(() => {
-                    if (process.env.SERVER_MAINTENANCE==1){
-                        const broadcast =`{"broadcast_type" :"MAINTENANCE", 
-                                        "broadcast_message":""}`;
-                        res.write (`data: ${btoa(broadcast)}\n\n`);
-                    }
-                }, 5000);
                 const { getIp} = require ("../geolocation/geolocation.controller");
                 getIp(req, res_not_used, (err, geodata) =>{
                     const newClient = {
@@ -90,9 +83,11 @@ module.exports = {
                         gps_latitude: geodata.geoplugin_latitude,
                         gps_longitude: geodata.geoplugin_longitude,
                         identity_provider_id: req.query.identity_provider_id,
-                        response: res
+                        response: res,
+                        intervalid : null
                     };
                     ClientAdd(newClient);
+                    ClientCheckMaintenance(res, req.params.clientId);
                     createLog(req.query.app_id,
                             { app_id : req.query.app_id,
                                 app_module : 'BROADCAST',
@@ -111,14 +106,21 @@ module.exports = {
                                 client_latitude : geodata.geoplugin_latitude,
                                 client_longitude : geodata.geoplugin_longitude
                                 }, (err,results)  => {
-                                    clearInterval(intervalId);
                                     ClientClose(res, req.params.clientId);
                     });
                 })
             }
     },
-    BroadcastSend: (req, res) => {
-        BroadcastSend(req.body.app_id, req.body.client_id, req.body.client_id_current, req.body.destination_app, 
+    BroadcastSendSystemAdmin: (req, res) => {
+        BroadcastSendSystemAdmin(req.body.app_id, req.body.client_id, req.body.client_id_current,
+                      req.body.broadcast_type, req.body.broadcast_message, (err, result) =>{
+            return res.status(200).send(
+                err ?? result
+            );
+        });
+    },
+    BroadcastSendAdmin: (req, res) => {
+        BroadcastSendAdmin(req.body.app_id, req.body.client_id, req.body.client_id_current,
                       req.body.broadcast_type, req.body.broadcast_message, (err, result) =>{
             return res.status(200).send(
                 err ?? result

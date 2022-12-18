@@ -52,11 +52,12 @@ function show_menu(menu){
             document.getElementById('select_year_menu1').innerHTML = yearvalues;
             document.getElementById('select_year_menu1').selectedIndex = 0;
             document.getElementById('select_month_menu1').selectedIndex = new Date().getMonth();
-            show_chart(1).then(function(){
-                show_chart(2).then(function(){
-                    check_maintenance();
+            if (window.global_system_admin==1)
+                check_maintenance();
+            else
+                show_chart(1).then(function(){
+                    show_chart(2);
                 })
-            })
             break;
         }
         //USER STAT
@@ -169,11 +170,10 @@ async function get_apps() {
 /* BROADCAST              */
 /*----------------------- */
 function sendBroadcast(){
-    let broadcast_type = document.getElementById('select_broadcast_type').options[document.getElementById('select_broadcast_type').selectedIndex].value;
+    let broadcast_type ='';
     let client_id;
     let app_id;
     let broadcast_message = document.getElementById('send_broadcast_message').value;
-    let destination_app;
 
     if (broadcast_message==''){
         show_message('INFO', null, null, `${window.global_icon_message_text}!`, window.global_app_id);
@@ -181,21 +181,18 @@ function sendBroadcast(){
     }
     
     if (document.getElementById('client_id').innerHTML==''){
-        destination_app=true;
         app_id = document.getElementById('select_app_broadcast').options[document.getElementById('select_app_broadcast').selectedIndex].value;
-        if (app_id == '')
-            app_id = 'null';
-        client_id = 'null';
+        client_id = '';
+        broadcast_type = document.getElementById('select_broadcast_type').options[document.getElementById('select_broadcast_type').selectedIndex].value;
     }
     else{
-        destination_app=false;
         client_id = document.getElementById('client_id').innerHTML;
-        app_id = 'null';
+        app_id = '';
+        broadcast_type = 'CHAT';
     }
         
-    let json_data =`{"destination_app": ${destination_app},
-                     "app_id": ${app_id},
-                     "client_id": ${client_id},
+    let json_data =`{"app_id": ${app_id==''?null:app_id},
+                     "client_id": ${client_id==''?null:client_id},
                      "client_id_current": ${window.global_clientId},
                      "broadcast_type" :"${broadcast_type}", 
                      "broadcast_message":"${broadcast_message}"}`;
@@ -227,7 +224,7 @@ function closeBroadcast(){
 }
 function show_broadcast_dialogue(dialogue_type, client_id=null){
     switch (dialogue_type){
-        case 'CLIENT':{
+        case 'CHAT':{
             //hide and set INFO, should not be able to send MAINTENANCE message here
             document.getElementById('select_broadcast_type').style.display='none';
             document.getElementById('select_broadcast_type').selectedIndex = 0;
@@ -395,7 +392,7 @@ async function show_db_info_space(){
 async function check_maintenance(){
     if (admin_token_has_value()){
         let json;
-        await common_fetch('/server?parameter_name=SERVER_MAINTENANCE', 'GET', 1, null, null, null, (err, result) =>{
+        await common_fetch('/server?parameter_name=SERVER_MAINTENANCE', 'GET', 2, null, null, null, (err, result) =>{
             if (err)
                 null;
             else{
@@ -419,7 +416,7 @@ function set_maintenance(){
                             "parameter_name":"SERVER_MAINTENANCE",
                             "parameter_value": ${check_value}
                         }`;
-        common_fetch('/server?', 'PATCH', 1, json_data, null, null, (err, result) =>{
+        common_fetch('/server?', 'PATCH', 2, json_data, null, null, (err, result) =>{
             null;
         })
     }
@@ -2119,7 +2116,7 @@ function list_item_click(item){
     }
     else
         if (item.className.indexOf('chat_click')>0){
-            show_broadcast_dialogue('CLIENT', item.parentNode.children[0].children[0].innerHTML);
+            show_broadcast_dialogue('CHAT', item.parentNode.children[0].children[0].innerHTML);
         }
     
 }
@@ -2331,6 +2328,7 @@ function init_admin_secure(){
     document.getElementById('message_cancel').innerHTML = window.global_icon_app_cancel;
     //other in admin
     document.getElementById('menu_open').innerHTML = window.global_icon_app_menu_open;
+    document.getElementById('menu_1_broadcast_title').innerHTML = window.global_icon_app_broadcast;
     document.getElementById('menu_1_broadcast_button').innerHTML = window.global_icon_app_chat;
     
     document.getElementById('send_broadcast_send').innerHTML = window.global_icon_app_send;
@@ -2392,8 +2390,6 @@ function init_admin_secure(){
     document.getElementById('list_pm2_log_title_process_event').innerHTML = window.global_icon_app_server + '2 ' + window.global_icon_app_log + ' Process event';
 
     document.getElementById('client_id_label').innerHTML = window.global_icon_user;
-    document.getElementById('select_broadcast_type').options[0].text = window.global_icon_app_alert;
-    document.getElementById('select_broadcast_type').options[1].text = window.global_icon_app_maintenance;
 
     //menu 8
     document.getElementById('menu_8_db_info_database_title').innerHTML = window.global_icon_app_database + window.global_icon_regional_numbersystem;
@@ -2530,6 +2526,12 @@ function init_admin_secure(){
                 document.getElementById(`menu_${i}`).style.display='none';
             }
             if (window.global_system_admin==1){
+                //show DASHBOARD
+                document.getElementById('menu_1').style.display='block';
+                document.getElementById('select_broadcast_type').innerHTML = 
+                    `<option value='INFO' selected='selected'>${window.global_icon_app_alert}</option>
+                     <option value='MAINTENANCE' selected='selected'>${window.global_icon_app_maintenance}</option>`;                 
+                
                 //show MONITOR (only SERVER LOG and PM2LOG)
                 document.getElementById('menu_5').style.display='block';
                 //hide APP LOG in MONITOR
@@ -2544,12 +2546,15 @@ function init_admin_secure(){
                 document.getElementById('menu_9').style.display='block';
                 //show SERVER
                 document.getElementById('menu_10').style.display='block';
-                //start with MONITOR
-                show_menu(5);
+                //start with DASHBOARD
+                show_menu(1);
             }
             else{
                 //show DASHBOARD
                 document.getElementById('menu_1').style.display='block';
+                document.getElementById('select_broadcast_type').innerHTML = 
+                    `<option value='INFO' selected='selected'>${window.global_icon_app_alert}</option>`;
+                document.getElementById('menu_1_maintenance').style.display = 'none';
                 //show USER STAT
                 document.getElementById('menu_2').style.display='block';
                 //show USERS

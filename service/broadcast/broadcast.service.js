@@ -9,6 +9,10 @@ module.exports = {
     },
     ClientClose: (res, client_id) =>{
         res.on('close', ()=>{
+            broadcast_clients.forEach(client=>{
+                if (client.id == client_id)
+                    clearInterval(client.intervalid);
+            })
             broadcast_clients = broadcast_clients.filter(client => client.id !== client_id);
             res.end();
         })
@@ -16,13 +20,27 @@ module.exports = {
     ClientAdd: (newClient) =>{
         broadcast_clients.push(newClient);
     },
-    BroadcastSend: (app_id, client_id, client_id_current, destination_app, broadcast_type, broadcast_message, callBack) =>{
+    ClientCheckMaintenance: (res, client_id)=> {
+        broadcast_clients.map(client=>{
+            if (client.id == client_id)
+                client.intervalid = setInterval(() => {
+                    if (process.env.SERVER_MAINTENANCE==1){
+                        const broadcast =`{"broadcast_type" :"MAINTENANCE", 
+                                        "broadcast_message":""}`;
+                        res.write (`data: ${btoa(broadcast)}\n\n`);
+                    }
+                }, 5000);
+        })
+    },
+    BroadcastSendSystemAdmin: (app_id, client_id, client_id_current, broadcast_type, broadcast_message, callBack) =>{
         let broadcast;
-        if (destination_app ==true){
+        if (app_id == '' || app_id == 'null')
+            app_id = null;
+        if (broadcast_type=='INFO' || broadcast_type=='MAINTENANCE'){
             //broadcast INFO or MAINTENANCE to all connected to given app_id 
             //except MAINTENANCE to admin and current user
             broadcast_clients.forEach(client=>{
-                if (client.client_id != client_id_current)
+                if (client.id != client_id_current)
                     if (broadcast_type=='MAINTENANCE' && client.app_id ==0)
                         null;
                     else
@@ -33,17 +51,49 @@ module.exports = {
                         }
             })
         }
-        if (client_id !==null){
-            //broadcast (INFO) to specific client
-            broadcast_clients.forEach(client=>{
-                if (client.id == client_id){
-                    broadcast =`{"broadcast_type"   : "${broadcast_type}", 
-                                "broadcast_message": "${broadcast_message}"}`;
-                    client.response.write (`data: ${btoa(broadcast)}\n\n`);
-                    
-                }
-            })
+        else
+            if (broadcast_type=='CHAT'){
+                //broadcast CHAT to specific client
+                broadcast_clients.forEach(client=>{
+                    if (client.id == client_id){
+                        broadcast =`{"broadcast_type"   : "${broadcast_type}", 
+                                    "broadcast_message": "${broadcast_message}"}`;
+                        client.response.write (`data: ${btoa(broadcast)}\n\n`);
+                        
+                    }
+                })
+            }
+        callBack(null, null);
+    },
+    BroadcastSendAdmin: (app_id, client_id, client_id_current, broadcast_type, broadcast_message, callBack) =>{
+        let broadcast;
+        if (app_id == '' || app_id == 'null')
+            app_id = null;
+        if (broadcast_type=='INFO' || broadcast_type=='CHAT'){
+            //admin can only broadcast INFO or CHAT
+            if (broadcast_type=='INFO'){
+                broadcast_clients.forEach(client=>{
+                    if (client.id != client_id_current)
+                        if (client.app_id == app_id || app_id == null){
+                            broadcast =`{"broadcast_type"   : "${broadcast_type}", 
+                                         "broadcast_message": "${broadcast_message}"}`;
+                            client.response.write (`data: ${btoa(broadcast)}\n\n`);
+                        }
+                })
+            }
+            if (broadcast_type=='CHAT'){
+                //broadcast CHAT to specific client
+                broadcast_clients.forEach(client=>{
+                    if (client.id == client_id){
+                        broadcast =`{"broadcast_type"   : "${broadcast_type}", 
+                                    "broadcast_message": "${broadcast_message}"}`;
+                        client.response.write (`data: ${btoa(broadcast)}\n\n`);
+                        
+                    }
+                })
+            }
         }
+        
         callBack(null, null);
     },
     ConnectedList: async (app_id, app_id_select, limit, year, month, order_by, sort, callBack)=>{
