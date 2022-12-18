@@ -206,11 +206,11 @@ app.get('*', function (req,res, next){
 })
 const {DBStart} = require ('./service/db/admin/admin.service');
 const {AppsStart} = require ('./apps');
-
+const {BroadcastCheckMaintenance} = require('./service/broadcast/broadcast.service')
 
 let dbstart = DBStart().then(function(){
-  AppsStart(express, app, (err, result) =>{
-    null;
+  AppsStart(express, app).then(function(){
+    BroadcastCheckMaintenance();
   })
 })
 

@@ -9,10 +9,6 @@ module.exports = {
     },
     ClientClose: (res, client_id) =>{
         res.on('close', ()=>{
-            broadcast_clients.forEach(client=>{
-                if (client.id == client_id)
-                    clearInterval(client.intervalid);
-            })
             broadcast_clients = broadcast_clients.filter(client => client.id !== client_id);
             res.end();
         })
@@ -20,17 +16,21 @@ module.exports = {
     ClientAdd: (newClient) =>{
         broadcast_clients.push(newClient);
     },
-    ClientCheckMaintenance: (res, client_id)=> {
-        broadcast_clients.map(client=>{
-            if (client.id == client_id)
-                client.intervalid = setInterval(() => {
-                    if (process.env.SERVER_MAINTENANCE==1){
-                        const broadcast =`{"broadcast_type" :"MAINTENANCE", 
-                                        "broadcast_message":""}`;
-                        res.write (`data: ${btoa(broadcast)}\n\n`);
-                    }
-                }, 5000);
-        })
+    BroadcastCheckMaintenance: ()=> {
+        //start interval if apps are started
+        if (process.env.SERVER_APP_START==1){
+            const intervalId = setInterval(() => {
+                if (process.env.SERVER_MAINTENANCE==1){
+                    broadcast_clients.forEach(client=>{
+                        if (client.app_id != process.env.COMMON_APP_ID){
+                            const broadcast =`{"broadcast_type" :"MAINTENANCE", 
+                                            "broadcast_message":""}`;
+                            client.response.write (`data: ${btoa(broadcast)}\n\n`);
+                        }
+                    })
+                }
+            }, process.env.SERVICE_BROADCAST_CHECK_INTERVALL);
+        }
     },
     BroadcastSendSystemAdmin: (app_id, client_id, client_id_current, broadcast_type, broadcast_message, callBack) =>{
         let broadcast;
