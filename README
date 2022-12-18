@@ -292,6 +292,8 @@ Installation instructions
 	SERVICE_AUTH_ENABLE_USER_REGISTRATION       		={0=NO, 1=YES}
 	SERVICE_AUTH_ENABLE_USER_LOGIN              		={0=NO, 1=YES}
 	SERVICE_AUTH_ENABLE_DBLOG                   		={0=NO, 1=YES}
+	#Broadcast
+	SERVICE_BROADCAST_CHECK_INTERVALL           		=5000
 	#Database
 	SERVICE_DB_REST_API_PATH							=/service/db/app_portfolio/
 	#1=DB1 MySQL, 2=DB2 Oracle
