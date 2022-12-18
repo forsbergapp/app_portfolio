@@ -1,6 +1,6 @@
 const { createLog, createLogAdmin} = require ("../.." + process.env.SERVICE_DB_REST_API_PATH + "app_log/app_log.service");
 const { createLogAppCI } = require("../../service/log/log.controller");
-const { ClientConnect, ClientClose, ClientAdd, ClientCheckMaintenance, BroadcastSendSystemAdmin, BroadcastSendAdmin, ConnectedList, ConnectedCount, ConnectedUpdate, ConnectedCheck} = require ("./broadcast.service");
+const { ClientConnect, ClientClose, ClientAdd, BroadcastSendSystemAdmin, BroadcastSendAdmin, ConnectedList, ConnectedCount, ConnectedUpdate, ConnectedCheck} = require ("./broadcast.service");
 module.exports = {
 	BroadcastConnect: (req, res) => {
         ClientConnect(res);
@@ -83,11 +83,9 @@ module.exports = {
                         gps_latitude: geodata.geoplugin_latitude,
                         gps_longitude: geodata.geoplugin_longitude,
                         identity_provider_id: req.query.identity_provider_id,
-                        response: res,
-                        intervalid : null
+                        response: res
                     };
                     ClientAdd(newClient);
-                    ClientCheckMaintenance(res, req.params.clientId);
                     createLog(req.query.app_id,
                             { app_id : req.query.app_id,
                                 app_module : 'BROADCAST',

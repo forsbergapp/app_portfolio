@@ -250,50 +250,65 @@ async function get_email_verification(data, email, baseUrl, lang_code, callBack)
 }
 module.exports = {
     AppsStart:async (express, app) => {
-        //express needed for dynamic code loading even if not used here, 
-        //inparameter app variable depends on express
-        //const express = require ("express");
-        function load_dynamic_code(app_id){
-            const fs = require("fs");
-            let filename;
-            //load dynamic server app code
-            if (app_id == parseInt(process.env.COMMON_APP_ID))
-              filename = `/admin/server.js`;
-            else
-              filename = `/app${app_id}/server.js`
-            fs.readFile(__dirname + filename, 'utf8', (error, fileBuffer) => {
-                //start one step debug server dynamic loaded code here
-                eval(fileBuffer);
-            });
-        }
-        //load apps if database started
-        if (process.env.SERVER_DB_START==1){
-            const { getAppsAdmin } = require (".." + process.env.SERVICE_DB_REST_API_PATH + "app/app.service");
-            getAppsAdmin(process.env.COMMON_APP_ID, null, (err, results) =>{
-                if (err) {
-                    createLogAppSE(process.env.COMMON_APP_ID, __appfilename, __appfunction, __appline, `getAppsAdmin, err:${err}`, (err_log, result_log)=>{
-                    null;
-                    })
-                }
-                else {
-                    let json;
-                    json = JSON.parse(JSON.stringify(results));
-                    //start apps if enabled else start only admin app
-                    if (process.env.SERVER_APP_START==1){
-                        //start app pools
-                        for (let app_id = 0; app_id < json.length; app_id++) {
-                            load_dynamic_code(app_id);
+        return await new Promise(function (resolve){ 
+            //express needed for dynamic code loading even if not used here, 
+            //inparameter app variable depends on express
+            //const express = require ("express");
+            async function load_dynamic_code(app_id){
+                return await new Promise(function (resolve){ 
+                    const fs = require("fs");
+                    let filename;
+                    //load dynamic server app code
+                    if (app_id == parseInt(process.env.COMMON_APP_ID))
+                        filename = `/admin/server.js`;
+                    else
+                        filename = `/app${app_id}/server.js`
+                    fs.readFile(__dirname + filename, 'utf8', (error, fileBuffer) => {
+                        //start one step debug server dynamic loaded code here
+                        eval(fileBuffer);
+                        resolve();
+                    });
+                })
+                
+            }
+            //load apps if database started
+            if (process.env.SERVER_DB_START==1){
+                const { getAppsAdmin } = require (".." + process.env.SERVICE_DB_REST_API_PATH + "app/app.service");
+                getAppsAdmin(process.env.COMMON_APP_ID, null, (err, results) =>{
+                    if (err) {
+                        createLogAppSE(process.env.COMMON_APP_ID, __appfilename, __appfunction, __appline, `getAppsAdmin, err:${err}`, (err_log, result_log)=>{
+                        null;
+                        })
+                    }
+                    else {
+                        let json;
+                        let loaded = 0;
+                        json = JSON.parse(JSON.stringify(results));
+                        //start apps if enabled else start only admin app
+                        if (process.env.SERVER_APP_START==1){
+                            //start app pools
+                            for (let app_id = 0; app_id < json.length; app_id++) {
+                                load_dynamic_code(app_id).then(function(){
+                                    if (loaded == json.length - 1)
+                                        resolve();
+                                    else
+                                        loaded++;
+                                });
+                            }
+                        }
+                        else{
+                            load_dynamic_code(process.env.COMMON_APP_ID);
+                            resolve();
                         }
                     }
-                    else
-                        load_dynamic_code(process.env.COMMON_APP_ID);
-                }
-            })
-        }
-        else{
-            //no database started, start only admin app
-            load_dynamic_code(process.env.COMMON_APP_ID);
-        }
+                })
+            }
+            else{
+                //no database started, start only admin app
+                load_dynamic_code(process.env.COMMON_APP_ID);
+                resolve();
+            }
+        })
             
     },
     getMaintenance:(app_id, gps_lat, gps_long, gps_place) => {
