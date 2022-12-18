@@ -1177,7 +1177,7 @@ function show_broadcast(broadcast_message){
         show_maintenance(message);
     }
     else
-        if (broadcast_type=='INFO'){
+        if (broadcast_type=='INFO' || broadcast_type=='CHAT'){
             show_broadcast_info(message);
         }
 }
