@@ -1,15 +1,15 @@
-const app2_placeRouter = require(".." + process.env.SERVICE_DB_REST_API_PATH + "app2_place/app2_place.router");
-const app2_themeRouter = require(".." + process.env.SERVICE_DB_REST_API_PATH + "app2_theme/app2_theme.router");
-const app2_user_settingRouter = require(".." + process.env.SERVICE_DB_REST_API_PATH + "app2_user_setting/app2_user_setting.router");
-const app2_user_setting_likeRouter = require(".." + process.env.SERVICE_DB_REST_API_PATH + "app2_user_setting_like/app2_user_setting_like.router");
-const app2_user_setting_viewRouter = require(".." + process.env.SERVICE_DB_REST_API_PATH + "app2_user_setting_view/app2_user_setting_view.router");
+const app2_placeRouter = require(global.SERVER_ROOT + process.env.SERVICE_DB_REST_API_PATH + "/app2_place/app2_place.router");
+const app2_themeRouter = require(global.SERVER_ROOT + process.env.SERVICE_DB_REST_API_PATH + "/app2_theme/app2_theme.router");
+const app2_user_settingRouter = require(global.SERVER_ROOT + process.env.SERVICE_DB_REST_API_PATH + "/app2_user_setting/app2_user_setting.router");
+const app2_user_setting_likeRouter = require(global.SERVER_ROOT + process.env.SERVICE_DB_REST_API_PATH + "/app2_user_setting_like/app2_user_setting_like.router");
+const app2_user_setting_viewRouter = require(global.SERVER_ROOT + process.env.SERVICE_DB_REST_API_PATH + "/app2_user_setting_view/app2_user_setting_view.router");
 const APP2_ID = 2;
-const { check_app_subdomain} = require("../apps");
-app.use(process.env.SERVICE_DB_REST_API_PATH + "app2_place", app2_placeRouter);
-app.use(process.env.SERVICE_DB_REST_API_PATH + "app2_theme", app2_themeRouter);
-app.use(process.env.SERVICE_DB_REST_API_PATH + "app2_user_setting", app2_user_settingRouter);
-app.use(process.env.SERVICE_DB_REST_API_PATH + "app2_user_setting_like", app2_user_setting_likeRouter);
-app.use(process.env.SERVICE_DB_REST_API_PATH + "app2_user_setting_view", app2_user_setting_viewRouter);
+const { check_app_subdomain} = require(global.SERVER_ROOT + "/apps");
+app.use(process.env.SERVICE_DB_REST_API_PATH + "/app2_place", app2_placeRouter);
+app.use(process.env.SERVICE_DB_REST_API_PATH + "/app2_theme", app2_themeRouter);
+app.use(process.env.SERVICE_DB_REST_API_PATH + "/app2_user_setting", app2_user_settingRouter);
+app.use(process.env.SERVICE_DB_REST_API_PATH + "/app2_user_setting_like", app2_user_setting_likeRouter);
+app.use(process.env.SERVICE_DB_REST_API_PATH + "/app2_user_setting_view", app2_user_setting_viewRouter);
 
 app.use('/app2/css',express.static(__dirname + '/app2/css'));
 app.use('/app2/js',express.static(__dirname + '/app2/js'));
@@ -45,7 +45,7 @@ app.get("/info/:info",function (req, res, next) {
 //app 2 progressive webapp menifest
 app.get("/app2/manifest.json",function (req, res, next) {
   if (check_app_subdomain(APP2_ID, req.headers.host)){
-    const { getParameters } = require (".." + process.env.SERVICE_DB_REST_API_PATH + "app_parameter/app_parameter.service");
+    const { getParameters } = require (global.SERVER_ROOT + process.env.SERVICE_DB_REST_API_PATH + "/app_parameter/app_parameter.service");
     getParameters(APP2_ID, APP2_ID, (err, results) =>{
       if (err) {
         return res.send(err);
@@ -140,7 +140,7 @@ app.get('/:user', function(req, res,next) {
       req.params.user!=='images' &&
       req.params.user!=='info' &&
       req.params.user!=='js') {
-      const { getForm} = require("../service/forms/forms.controller");
+      const { getForm} = require(global.SERVER_ROOT + "/service/forms/forms.controller");
       getForm(req, res, APP2_ID, req.params.user, (err, app_result)=>{
         //if app_result=0 means here redirect to /
         if (app_result==0)
@@ -154,7 +154,7 @@ app.get('/:user', function(req, res,next) {
 });
 app.get('/',function (req, res, next) {
   if (check_app_subdomain(APP2_ID, req.headers.host)){
-    const { getForm} = require("../service/forms/forms.controller");
+    const { getForm} = require(global.SERVER_ROOT + "/service/forms/forms.controller");
     getForm(req, res, APP2_ID, null,(err, app_result)=>{
         return res.send(app_result);
     })

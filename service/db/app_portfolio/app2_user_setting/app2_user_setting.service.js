@@ -1,4 +1,4 @@
-const {execute_db_sql, get_schema_name, limit_sql} = require ("../../common/common.service");
+const {execute_db_sql, get_schema_name, limit_sql} = require (global.SERVER_ROOT + "/service/db/common/common.service");
 module.exports = {
 	createUserSetting: (app_id, initial, data, callBack) => {
 		let sql;

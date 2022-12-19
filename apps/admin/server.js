@@ -1,5 +1,5 @@
 const ADMIN_ID = 0;
-const { check_app_subdomain} = require("../apps");
+const { check_app_subdomain} = require(global.SERVER_ROOT + "/apps");
 //admin directories
 app.use('/admin/images',express.static(__dirname + '/admin/images'));
 app.use('/admin/js',express.static(__dirname + '/admin/js'));
@@ -8,7 +8,7 @@ app.use('/admin/css',express.static(__dirname + '/admin/css'));
 app.get("/admin",function (req, res, next) {
     if (check_app_subdomain(ADMIN_ID, req.headers.host) ||
         req.headers.host.substring(0,req.headers.host.indexOf('.'))=='www'){
-        const { getFormAdmin } = require ("../service/forms/forms.controller");
+        const { getFormAdmin } = require (global.SERVER_ROOT + "/service/forms/forms.controller");
         getFormAdmin(req, res, ADMIN_ID, (err, app_result)=>{
             return res.send(app_result);
         })

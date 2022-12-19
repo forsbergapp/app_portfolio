@@ -1,4 +1,4 @@
-const {execute_db_sql, get_schema_name} = require ("../../common/common.service");
+const {execute_db_sql, get_schema_name} = require (global.SERVER_ROOT + "/service/db/common/common.service");
 module.exports = {
 	insertUserEvent: (app_id, data, callBack) => {
 		let sql;

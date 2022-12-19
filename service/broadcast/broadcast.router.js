@@ -1,7 +1,7 @@
 const { BroadcastConnect, BroadcastSendSystemAdmin, BroadcastSendAdmin, ConnectedList, ConnectedListSystemAdmin, ConnectedCount, ConnectedUpdate, ConnectedCheck} = require ("./broadcast.controller");
-const { checkAccessTokenAdmin} = require ("../auth/auth.controller");
-const { checkAdmin} = require ("../auth/admin/admin.controller");
-const { checkDataToken } = require("../auth/auth.controller");
+const { checkAccessTokenAdmin} = require (global.SERVER_ROOT + "/service/auth/auth.controller");
+const { checkAdmin} = require (global.SERVER_ROOT + "/service/auth/admin/admin.controller");
+const { checkDataToken } = require(global.SERVER_ROOT + "/service/auth/auth.controller");
 const router = require("express").Router();
 
 router.get("/SystemAdmin/connected", checkAdmin, ConnectedListSystemAdmin);

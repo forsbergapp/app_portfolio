@@ -1,4 +1,4 @@
-const { read_app_files, get_module_with_init } = require("../");
+const { read_app_files, get_module_with_init } = require(global.SERVER_ROOT + "/apps");
 module.exports = {
     getApp:(app_id, params, gps_lat, gps_long, gps_place) => {
         return new Promise(function (resolve, reject){

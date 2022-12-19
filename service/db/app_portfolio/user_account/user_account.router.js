@@ -19,9 +19,9 @@ const {
     searchProfileUser,
     
 } = require("./user_account.controller");
-const { checkAccessToken, checkDataToken, checkDataTokenRegistration, checkDataTokenLogin } = require("../../../auth/auth.controller");
-const { checkAccessTokenAdmin, checkAccessTokenSuperAdmin} = require ("../../../auth/auth.controller");
-const { createLogAppRI } = require("../../../log/log.controller");
+const { checkAccessToken, checkDataToken, checkDataTokenRegistration, checkDataTokenLogin } = require(global.SERVER_ROOT + "/service/auth/auth.controller");
+const { checkAccessTokenAdmin, checkAccessTokenSuperAdmin} = require (global.SERVER_ROOT + "/service/auth/auth.controller");
+const { createLogAppRI } = require(global.SERVER_ROOT + "/service/log/log.controller");
 router.use((req,res,next)=>{
     createLogAppRI(req, res, __appfilename, __appfunction, __appline, req.body).then(function(){
 		next();
