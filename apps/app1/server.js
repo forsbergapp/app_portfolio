@@ -1,5 +1,5 @@
 const APP1_ID = 1;
-const { check_app_subdomain} = require("../apps");
+const { check_app_subdomain} = require(global.SERVER_ROOT + "/apps");
 //app 1 directories
 app.use('/app1/css',express.static(__dirname + '/app1/css'));
 app.use('/app1/images',express.static(__dirname + '/app1/images'));
@@ -41,7 +41,7 @@ app.get('/:user',function (req, res, next) {
       req.params.user!=='images' &&
       req.params.user!=='info' &&
       req.params.user!=='js'){
-      const { getForm} = require("../service/forms/forms.controller");
+      const { getForm} = require(global.SERVER_ROOT + "/service/forms/forms.controller");
       getForm(req, res, APP1_ID, req.params.user,(err, app_result)=>{
           //if app_result=0 means here redirect to /
           if (app_result==0)
@@ -57,7 +57,7 @@ app.get('/:user',function (req, res, next) {
 app.get('/',function (req, res, next) {
   if (check_app_subdomain(APP1_ID, req.headers.host) ||
       req.headers.host.substring(0,req.headers.host.indexOf('.'))=='www'){
-      const { getForm} = require("../service/forms/forms.controller");
+      const { getForm} = require(global.SERVER_ROOT + "/service/forms/forms.controller");
       getForm(req, res, APP1_ID, null,(err, app_result)=>{
           return res.send(app_result);
       })

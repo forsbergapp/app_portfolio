@@ -1,7 +1,7 @@
-const { getParameters_server } = require (".." + process.env.SERVICE_DB_REST_API_PATH + "app_parameter/app_parameter.service");
-const { getApp } = require(".." + process.env.SERVICE_DB_REST_API_PATH + "app/app.service");
-const { createLogAppSE } = require("../service/log/log.controller");
-const { getCountries } = require(".." + process.env.SERVICE_DB_REST_API_PATH + "country/country.service");
+const { getParameters_server } = require (global.SERVER_ROOT + process.env.SERVICE_DB_REST_API_PATH + "/app_parameter/app_parameter.service");
+const { getApp } = require(global.SERVER_ROOT + process.env.SERVICE_DB_REST_API_PATH + "/app/app.service");
+const { createLogAppSE } = require(global.SERVER_ROOT + "/service/log/log.controller");
+const { getCountries } = require(global.SERVER_ROOT + process.env.SERVICE_DB_REST_API_PATH + "/country/country.service");
 async function getInfo(app_id, info, lang_code, callBack){
     async function get_parameters(callBack){            
         getApp(app_id, app_id, lang_code, (err, result_app)=>{
@@ -157,7 +157,7 @@ async function get_module_with_init(app_id,
 
     if (system_admin==1){
         let system_admin_only = '';
-        if (process.env.SERVER_DB_START==0)
+        if (process.env.SERVICE_DB_START==0)
             system_admin_only = 1;
         else
             system_admin_only = 0;
@@ -180,7 +180,7 @@ async function get_module_with_init(app_id,
             service_auth: '/service/auth',
             rest_api_db_path: process.env.SERVICE_DB_REST_API_PATH,
             rest_app_parameter: '/service/app_parameter',
-            common_app_id: process.env.COMMON_APP_ID
+            common_app_id: process.env.SERVER_APP_COMMON_APP_ID
         };
         module = module.replace(
                 '<ITEM_COMMON_PARAMETERS/>',
@@ -188,8 +188,8 @@ async function get_module_with_init(app_id,
         callBack(null, module);
     }
     else{
-        const { getAppStartParameters } = require(".." + process.env.SERVICE_DB_REST_API_PATH + "app_parameter/app_parameter.service");
-        const { getAppRole } = require(".." + process.env.SERVICE_DB_REST_API_PATH + "user_account/user_account.service");
+        const { getAppStartParameters } = require(global.SERVER_ROOT + process.env.SERVICE_DB_REST_API_PATH + "/app_parameter/app_parameter.service");
+        const { getAppRole } = require(global.SERVER_ROOT + process.env.SERVICE_DB_REST_API_PATH + "/user_account/user_account.service");
         getAppStartParameters(app_id, (err,result) =>{
             if (err)
                 callBack(err, null);
@@ -213,7 +213,7 @@ async function get_module_with_init(app_id,
                     app_rest_client_secret: result[0].app_rest_client_secret,
                     rest_api_db_path: process.env.SERVICE_DB_REST_API_PATH,
                     rest_app_parameter: result[0].rest_app_parameter,
-                    common_app_id: process.env.COMMON_APP_ID
+                    common_app_id: process.env.SERVER_APP_COMMON_APP_ID
                 };
                 if (system_admin==1){  
                     module = module.replace(
@@ -259,7 +259,7 @@ module.exports = {
                     const fs = require("fs");
                     let filename;
                     //load dynamic server app code
-                    if (app_id == parseInt(process.env.COMMON_APP_ID))
+                    if (app_id == parseInt(process.env.SERVER_APP_COMMON_APP_ID))
                         filename = `/admin/server.js`;
                     else
                         filename = `/app${app_id}/server.js`
@@ -272,11 +272,11 @@ module.exports = {
                 
             }
             //load apps if database started
-            if (process.env.SERVER_DB_START==1){
-                const { getAppsAdmin } = require (".." + process.env.SERVICE_DB_REST_API_PATH + "app/app.service");
-                getAppsAdmin(process.env.COMMON_APP_ID, null, (err, results) =>{
+            if (process.env.SERVICE_DB_START==1){
+                const { getAppsAdmin } = require (global.SERVER_ROOT + process.env.SERVICE_DB_REST_API_PATH + "/app/app.service");
+                getAppsAdmin(process.env.SERVER_APP_COMMON_APP_ID, null, (err, results) =>{
                     if (err) {
-                        createLogAppSE(process.env.COMMON_APP_ID, __appfilename, __appfunction, __appline, `getAppsAdmin, err:${err}`, (err_log, result_log)=>{
+                        createLogAppSE(process.env.SERVER_APP_COMMON_APP_ID, __appfilename, __appfunction, __appline, `getAppsAdmin, err:${err}`, (err_log, result_log)=>{
                         null;
                         })
                     }
@@ -297,7 +297,7 @@ module.exports = {
                             }
                         }
                         else{
-                            load_dynamic_code(process.env.COMMON_APP_ID);
+                            load_dynamic_code(process.env.SERVER_APP_COMMON_APP_ID);
                             resolve();
                         }
                     }
@@ -305,7 +305,7 @@ module.exports = {
             }
             else{
                 //no database started, start only admin app
-                load_dynamic_code(process.env.COMMON_APP_ID);
+                load_dynamic_code(process.env.SERVER_APP_COMMON_APP_ID);
                 resolve();
             }
         })
@@ -368,7 +368,7 @@ module.exports = {
     check_app_subdomain: (app_id, host) =>{
         //if using test subdomains, dns wil point to correct server
         switch (app_id){
-            case parseInt(process.env.COMMON_APP_ID):{
+            case parseInt(process.env.SERVER_APP_COMMON_APP_ID):{
                 //show admin app for all subdomains
                 return true;
             }
@@ -395,8 +395,8 @@ module.exports = {
     },
     getUserPreferences: async(app_id) => {
         return new Promise(function (resolve, reject){
-            const { getLocales } = require(".." + process.env.SERVICE_DB_REST_API_PATH + "language/locale/locale.service");
-            const { getSettings } = require(".." + process.env.SERVICE_DB_REST_API_PATH + "setting/setting.service");
+            const { getLocales } = require(global.SERVER_ROOT + process.env.SERVICE_DB_REST_API_PATH + "/language/locale/locale.service");
+            const { getSettings } = require(global.SERVER_ROOT + process.env.SERVICE_DB_REST_API_PATH + "/setting/setting.service");
             let default_lang = 'en';
             getLocales(app_id, default_lang, (err, locales) => {
                 if (err)

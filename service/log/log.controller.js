@@ -61,7 +61,7 @@ module.exports = {
 			else{
 				if (results.length>0)
 					return res.status(200).json({
-						path: process.env.SERVICE_LOG_FILE_PATH_SERVER,
+						path: global.SERVER_ROOT + process.env.SERVICE_LOG_FILE_PATH_SERVER,
 						file: process.env.SERVICE_LOG_PM2_FILE,
 						data: results
 					});

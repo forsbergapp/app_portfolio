@@ -1,5 +1,5 @@
 const fs = require("fs");
-const { read_app_files, get_module_with_init } = require("../../../");
+const { read_app_files, get_module_with_init } = require(global.SERVER_ROOT + "/apps");
 module.exports = {
     getAdminSecure:(app_id, system_admin, user_account_id, gps_lat, gps_long, gps_place) => {    
         return new Promise(function (resolve, reject){

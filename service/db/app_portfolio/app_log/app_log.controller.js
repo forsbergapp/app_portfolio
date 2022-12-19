@@ -65,10 +65,10 @@ module.exports = {
 						data: results
 					});
 				else{
-					const { getMessage_admin } = require("../message_translation/message_translation.service");
+					const { getMessage_admin } = require(global.SERVER_ROOT + process.env.SERVICE_DB_REST_API_PATH +"/message_translation/message_translation.service");
 					//Record not found
 					getMessage_admin(req.query.app_id, 
-									 process.env.COMMON_APP_ID,
+									 process.env.SERVER_APP_COMMON_APP_ID,
 									 20400, 
 									 req.query.lang_code, (err,result_message)  => {
 											return res.status(404).send(
@@ -92,10 +92,10 @@ module.exports = {
 						data: results
 					});
 				else{
-					const { getMessage_admin } = require("../message_translation/message_translation.service");
+					const { getMessage_admin } = require(global.SERVER_ROOT + process.env.SERVICE_DB_REST_API_PATH +"/message_translation/message_translation.service");
 					//Record not found
 					getMessage_admin(req.query.app_id,
-									 process.env.COMMON_APP_ID,
+									 process.env.SERVER_APP_COMMON_APP_ID,
 									 20400,
 									 req.query.lang_code, (err,result_message)  => {
 										return res.status(404).send(

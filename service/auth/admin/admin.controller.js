@@ -1,6 +1,6 @@
 const { sign } = require("jsonwebtoken");
 const { verify } = require("jsonwebtoken");
-const { createLogAppCI } = require("../../../service/log/log.controller");
+const { createLogAppCI } = require(global.SERVER_ROOT + "/service/log/log.controller");
 module.exports = {
     checkAdmin: (req, res, next) => {
 		let token = req.get("authorization");

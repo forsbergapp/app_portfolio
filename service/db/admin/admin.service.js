@@ -14,11 +14,11 @@ function DBInit(){
    }
 }
 
-const { createLogAppSI, createLogAppSE } = require("../../log/log.controller");
+const { createLogAppSI, createLogAppSE } = require(global.SERVER_ROOT + "/service/log/log.controller");
 
 module.exports = {
 	DBInfo:(app_id, callBack) => {
-      const {execute_db_sql, get_schema_name} = require ("../common/common.service");
+      const {execute_db_sql, get_schema_name} = require (global.SERVER_ROOT + "/service/db/common/common.service");
 		let sql;
 		let parameters;
       switch (process.env.SERVICE_DB_USE){
@@ -102,7 +102,7 @@ module.exports = {
 		});
 	},
    DBInfoSpace:(app_id, callBack) => {
-      const {execute_db_sql, get_schema_name} = require ("../common/common.service");
+      const {execute_db_sql, get_schema_name} = require (global.SERVER_ROOT + "/service/db/common/common.service");
 		let sql;
 		let parameters;
       switch (process.env.SERVICE_DB_USE){
@@ -161,7 +161,7 @@ module.exports = {
 		});
 	},
 	DBInfoSpaceSum:(app_id, callBack) => {
-      const {execute_db_sql, get_schema_name} = require ("../common/common.service");
+      const {execute_db_sql, get_schema_name} = require (global.SERVER_ROOT + "/service/db/common/common.service");
 		let sql;
 		let parameters;
       switch (process.env.SERVICE_DB_USE){
@@ -213,7 +213,7 @@ module.exports = {
 	},
 	DBStart: async () => {
       return await new Promise(function (resolve, reject){
-         if (process.env.SERVER_DB_START==1){
+         if (process.env.SERVICE_DB_START==1){
             DBInit();
             async function startDBpool(app_id, db_user, db_password) {
                return await new Promise(function (resolve, reject){
@@ -229,7 +229,7 @@ module.exports = {
                            connnectionLimit: process.env.SERVICE_DB_DB1_CONNECTION_LIMIT
                         }));
                         // log with common app id at startup for all apps
-                        createLogAppSI(process.env.COMMON_APP_ID, __appfilename, __appfunction, __appline, 
+                        createLogAppSI(process.env.SERVER_APP_COMMON_APP_ID, __appfilename, __appfunction, __appline, 
                                        `mysql createPool ${app_id} user: ` + db_user).then(function(){
                            resolve();
                         })
@@ -248,13 +248,13 @@ module.exports = {
                         }, (err,result) => {
                            // log with common app id at startup for all apps
                            if (err){
-                              createLogAppSE(process.env.COMMON_APP_ID, __appfilename, __appfunction, __appline, 
+                              createLogAppSE(process.env.SERVER_APP_COMMON_APP_ID, __appfilename, __appfunction, __appline, 
                                              `oracledb.createPool ${app_id} user: ` + db_user + `, err:${err}`).then(function(){
                                  reject(err);
                               })
                            }
                            else{
-                              createLogAppSI(process.env.COMMON_APP_ID, __appfilename, __appfunction, __appline, 
+                              createLogAppSI(process.env.SERVER_APP_COMMON_APP_ID, __appfilename, __appfunction, __appline, 
                                              `oracledb.createPool ${app_id} ok user: ` + db_user).then(function(){
                                  resolve();
                               })
@@ -274,7 +274,7 @@ module.exports = {
                            max: process.env.SERVICE_DB_DB3_MAX
                         }));
                         // log with common app id at startup for all apps
-                        createLogAppSI(process.env.COMMON_APP_ID, __appfilename, __appfunction, __appline, 
+                        createLogAppSI(process.env.SERVER_APP_COMMON_APP_ID, __appfilename, __appfunction, __appline, 
                                        `pg createPool ${app_id} user: ` + db_user).then(function(){
                            resolve();
                         })
@@ -285,11 +285,11 @@ module.exports = {
             }
             function startDBApps(){
                let json;
-               const { getAppDBParametersAdmin } = require ("../app_portfolio/app_parameter/app_parameter.service");
+               const { getAppDBParametersAdmin } = require (global.SERVER_ROOT + process.env.SERVICE_DB_REST_API_PATH + "/app_parameter/app_parameter.service");
                //app_id inparameter for log, all apps will be returned
-               getAppDBParametersAdmin(process.env.COMMON_APP_ID,(err, results) =>{
+               getAppDBParametersAdmin(process.env.SERVER_APP_COMMON_APP_ID,(err, results) =>{
                   if (err) {
-                     createLogAppSE(process.env.COMMON_APP_ID, __appfilename, __appfunction, __appline, `getAppDBParameters, err:${err}`).then(function(){
+                     createLogAppSE(process.env.SERVER_APP_COMMON_APP_ID, __appfilename, __appfunction, __appline, `getAppDBParameters, err:${err}`).then(function(){
                         reject(err);
                     })
                   }
@@ -323,7 +323,7 @@ module.exports = {
                      connnectionLimit: process.env.SERVICE_DB_DB1_CONNECTION_LIMIT
                   }));
                   // log with common app id at startup for all apps
-                  createLogAppSI(process.env.COMMON_APP_ID, __appfilename, __appfunction, __appline, 
+                  createLogAppSI(process.env.SERVER_APP_COMMON_APP_ID, __appfilename, __appfunction, __appline, 
                                  `mysql createPool ADMIN user: ${process.env.SERVICE_DB_DB1_APP_ADMIN_USER}`).then(function(){
                      startDBApps()
                   })
@@ -350,22 +350,22 @@ module.exports = {
                   // enableStatistics: false // record pool usage for oracledb.getPool().getStatistics() and logStatistics()
                   */
                   // start first with admin app id = common app id 
-                  global_pool_db2_app.push(`global_pool_db2_app_${process.env.COMMON_APP_ID}`);
+                  global_pool_db2_app.push(`global_pool_db2_app_${process.env.SERVER_APP_COMMON_APP_ID}`);
                   oracledb.createPool({ user: process.env.SERVICE_DB_DB2_APP_ADMIN_USER,
                                                 password: process.env.SERVICE_DB_DB2_APP_ADMIN_PASS,
                                                 connectString: process.env.SERVICE_DB_DB2_CONNECTSTRING,
                                                 poolMin: parseInt(process.env.SERVICE_DB_DB2_POOL_MIN),
                                                 poolMax: parseInt(process.env.SERVICE_DB_DB2_POOL_MAX),
                                                 poolIncrement: parseInt(process.env.SERVICE_DB_DB2_POOL_INCREMENT),
-                                                poolAlias: global_pool_db2_app[process.env.COMMON_APP_ID]}, (err,result) => {
+                                                poolAlias: global_pool_db2_app[process.env.SERVER_APP_COMMON_APP_ID]}, (err,result) => {
                      // log with common app id at startup for all apps
                      if (err)
-                        createLogAppSE(process.env.COMMON_APP_ID, __appfilename, __appfunction, __appline, 
+                        createLogAppSE(process.env.SERVER_APP_COMMON_APP_ID, __appfilename, __appfunction, __appline, 
                                        `oracledb.createPool ADMIN user: ${process.env.SERVICE_DB_DB2_APP_ADMIN_USER}, err:${err}`).then(function(){
                            reject(err);
                         })
                      else{
-                        createLogAppSI(process.env.COMMON_APP_ID, __appfilename, __appfunction, __appline, 
+                        createLogAppSI(process.env.SERVER_APP_COMMON_APP_ID, __appfilename, __appfunction, __appline, 
                                        `oracledb.createPool ADMIN ok user: ${process.env.SERVICE_DB_DB2_APP_ADMIN_USER}`).then(function(){
                            startDBApps()
                         })
@@ -385,7 +385,7 @@ module.exports = {
                      max: process.env.SERVICE_DB_DB3_MAX
                   }));
                   // log with common app id at startup for all apps
-                  createLogAppSI(process.env.COMMON_APP_ID, __appfilename, __appfunction, __appline, 
+                  createLogAppSI(process.env.SERVER_APP_COMMON_APP_ID, __appfilename, __appfunction, __appline, 
                                  `pg createPool ADMIN user: ${process.env.SERVICE_DB_DB3_APP_ADMIN_USER}`).then(function(){
                      startDBApps()
                   })
@@ -428,7 +428,7 @@ module.exports = {
          }
       }catch (err) {
          //unknown app id requested
-         createLogAppSE(process.env.COMMON_APP_ID, __appfilename, __appfunction, __appline, 
+         createLogAppSE(process.env.SERVER_APP_COMMON_APP_ID, __appfilename, __appfunction, __appline, 
                         'get_pool error app_id: ' + app_id).then(function(){
             return null;
          })

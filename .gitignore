@@ -6,4 +6,3 @@ production_.env/
 node_modules/
 service/db/config/
 service/report/tmp/
-ssl/
