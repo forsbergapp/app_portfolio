@@ -22,7 +22,7 @@ module.exports = {
             const intervalId = setInterval(() => {
                 if (process.env.SERVER_MAINTENANCE==1){
                     broadcast_clients.forEach(client=>{
-                        if (client.app_id != process.env.COMMON_APP_ID){
+                        if (client.app_id != process.env.SERVER_APP_COMMON_APP_ID){
                             const broadcast =`{"broadcast_type" :"MAINTENANCE", 
                                             "broadcast_message":""}`;
                             client.response.write (`data: ${btoa(broadcast)}\n\n`);
@@ -99,7 +99,7 @@ module.exports = {
     ConnectedList: async (app_id, app_id_select, limit, year, month, order_by, sort, callBack)=>{
         let broadcast_clients_no_res = [];
         let i=0;
-        const { getAppRole } = require("../.." + process.env.SERVICE_DB_REST_API_PATH + "user_account/user_account.service");
+        const { getAppRole } = require(global.SERVER_ROOT +  process.env.SERVICE_DB_REST_API_PATH + "/user_account/user_account.service");
         broadcast_clients.forEach(client=>{
             if (client.app_id == app_id_select || app_id_select == ''){
                 i++;
@@ -195,7 +195,7 @@ module.exports = {
             i=0;
             if (broadcast_clients_no_res.length>0)
                 //update list using map with app role icons if database started
-                if(process.env.SERVER_DB_START==1){
+                if(process.env.SERVICE_DB_START==1){
                     broadcast_clients_no_res.map(client=>{
                         getAppRole(app_id, client.user_account_id, (err, result_app_role)=>{
                             if (err)

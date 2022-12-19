@@ -1,4 +1,4 @@
-const {execute_db_sql, get_schema_name} = require ("../../common/common.service");
+const {execute_db_sql, get_schema_name} = require (global.SERVER_ROOT + "/service/db/common/common.service");
 module.exports = {
 	getThemes: (app_id,callBack) => {
 		let sql;

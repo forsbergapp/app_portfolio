@@ -1,8 +1,8 @@
 const { getPlace, getPlaceAdmin, getPlaceSystemAdmin, getIp, getIpAdmin, getIpSystemAdmin, getTimezone, getTimezoneAdmin, getTimezoneSystemAdmin} = require ("./geolocation.controller");
 const router = require("express").Router();
-const { checkAccessTokenAdmin} = require ("../auth/auth.controller");
-const { checkDataToken } = require("../auth/auth.controller");
-const { checkAdmin } = require("../auth/admin/admin.controller");
+const { checkAccessTokenAdmin} = require(global.SERVER_ROOT + "/service/auth/auth.controller");
+const { checkDataToken } = require(global.SERVER_ROOT + "/service/auth/auth.controller");
+const { checkAdmin } = require(global.SERVER_ROOT + "/service/auth/admin/admin.controller");
 router.get("/place", checkDataToken, getPlace);
 router.get("/place/admin", checkAccessTokenAdmin, getPlaceAdmin);
 router.get("/place/systemadmin", checkAdmin, getPlaceSystemAdmin);

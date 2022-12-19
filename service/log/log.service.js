@@ -68,7 +68,7 @@ async function sendLog(logscope, loglevel, log){
             process.env.SERVICE_LOG_DESTINATION==2){
             //file destination
             let fs = require('fs');
-            fs.appendFile(process.env.SERVICE_LOG_FILE_PATH_SERVER + filename, log + '\r\n', 'utf8', (err) => {
+            fs.appendFile(global.SERVER_ROOT + process.env.SERVICE_LOG_FILE_PATH_SERVER + filename, log + '\r\n', 'utf8', (err) => {
                 if (err) {
                     //if error here ignore and continue, where else should log file be saved?
                     pm2log(err);
@@ -181,7 +181,7 @@ module.exports = {
             }
             else{
                 if (typeof statusMessage=='undefined' || statusMessage=='')
-                    logtext = '';
+                    logtext = '""';
                 else
                     logtext = JSON.stringify(statusMessage);
                 log_json_server = `{"logdate": "${logdate()}",
@@ -340,7 +340,7 @@ module.exports = {
         let loggerror = 0;
         try {
             loggerror = 1;
-            fs.readFile(process.env.SERVICE_LOG_FILE_PATH_SERVER + filename, 'utf8', (error, fileBuffer) => {
+            fs.readFile(global.SERVER_ROOT + process.env.SERVICE_LOG_FILE_PATH_SERVER + filename, 'utf8', (error, fileBuffer) => {
                 loggerror = 2;
                 if (error)
                     return callBack(null, fixed_log);
@@ -450,7 +450,7 @@ module.exports = {
     getFiles: (app_id, callBack) => {
         let fs = require('fs');
         let logfiles =[];
-        fs.readdir(process.env.SERVICE_LOG_FILE_PATH_SERVER, (err, files) => {
+        fs.readdir(global.SERVER_ROOT + process.env.SERVICE_LOG_FILE_PATH_SERVER, (err, files) => {
             if (err) {
                 return callBack(err, null);
             }
@@ -473,7 +473,7 @@ module.exports = {
         let fs = require('fs');
         try {
             let fixed_log = [];
-            fs.readFile(process.env.SERVICE_LOG_FILE_PATH_SERVER + process.env.SERVICE_LOG_PM2_FILE, 'utf8', (error, fileBuffer) => {
+            fs.readFile(global.SERVER_ROOT + process.env.SERVICE_LOG_FILE_PATH_SERVER + process.env.SERVICE_LOG_PM2_FILE, 'utf8', (error, fileBuffer) => {
                 fileBuffer.split('\n').forEach(function (record) {
                     if (record.length>0)
                         fixed_log.push(JSON.parse(record));

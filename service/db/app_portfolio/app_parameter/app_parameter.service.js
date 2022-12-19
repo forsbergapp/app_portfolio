@@ -1,4 +1,4 @@
-const {execute_db_sql, get_schema_name, get_locale} = require ("../../common/common.service");
+const {execute_db_sql, get_schema_name, get_locale} = require (global.SERVER_ROOT + "/service/db/common/common.service");
 
 module.exports = {
 	//returns parameters for app_id=0 and given app_id
@@ -183,7 +183,7 @@ module.exports = {
 			   FROM ${get_schema_name()}.app a
 			  WHERE a.id = :app_id`;
 		parameters = {  app_id: app_id,
-						app_main_id: process.env.COMMON_APP_ID,
+						app_main_id: process.env.SERVER_APP_COMMON_APP_ID,
 						service_auth: service_auth,
 						app_rest_client_id: app_rest_client_id,
 						app_rest_client_secret: app_rest_client_secret,

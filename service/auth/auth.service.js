@@ -10,9 +10,9 @@ module.exports = {
     block_ip_control: async (ip_v4, callBack) =>{
         if (process.env.SERVICE_AUTH_ACCESS_CONTROL_IP){
             let ranges;
-            fs.readFile(process.env.SERVICE_AUTH_ACCESS_CONTROL_IP_PATH, 'utf8', (error, fileBuffer) => {
+            fs.readFile(global.SERVER_ROOT + process.env.SERVICE_AUTH_ACCESS_CONTROL_IP_PATH, 'utf8', (error, fileBuffer) => {
                 if (error)
-                    ranges = null;
+                    return callBack(error, null);
                 else{
                     ranges = fileBuffer.toString();
                     //check if IP is blocked
@@ -21,7 +21,8 @@ module.exports = {
                             if (IPtoNum(element[0]) <= IPtoNum(ip_v4) &&
                                 IPtoNum(element[1]) >= IPtoNum(ip_v4)) {
                                     //403 Forbidden
-                                    return callBack(403,`${IPtoNum(element[0])}-${IPtoNum(element[1])}`);
+                                    return callBack(null,{statusCode: 403,
+                                                          statusMessage: `${IPtoNum(element[0])}-${IPtoNum(element[1])}`});
                             }
                         }
                     }
@@ -44,9 +45,9 @@ module.exports = {
         */
         if (process.env.SERVICE_AUTH_ACCESS_CONTROL_USER_AGENT){
             let json;
-            fs.readFile(process.env.SERVICE_AUTH_ACCESS_CONTROL_USER_AGENT_PATH, 'utf8', (error, fileBuffer) => {
+            fs.readFile(global.SERVER_ROOT + process.env.SERVICE_AUTH_ACCESS_CONTROL_USER_AGENT_PATH, 'utf8', (error, fileBuffer) => {
                 if (error)
-                    createLogAppSE(process.env.COMMON_APP_ID, __appfilename, __appfunction, __appline, error).then(function(){
+                    createLogAppSE(process.env.SERVER_APP_COMMON_APP_ID, __appfilename, __appfunction, __appline, error).then(function(){
                         return callBack(error, null);
                     })
                 else{
@@ -88,9 +89,9 @@ module.exports = {
             let style_src = '';
             let font_src = '';
             let frame_src = '';
-            fs.readFile(process.env.SERVICE_AUTH_POLICY_DIRECTIVES, 'utf8', (error, fileBuffer) => {
+            fs.readFile(global.SERVER_ROOT + process.env.SERVICE_AUTH_POLICY_DIRECTIVES, 'utf8', (error, fileBuffer) => {
                 if (error){
-                    createLogAppSE(process.env.COMMON_APP_ID, __appfilename, __appfunction, __appline, error).then(function(){
+                    createLogAppSE(process.env.SERVER_APP_COMMON_APP_ID, __appfilename, __appfunction, __appline, error).then(function(){
                         return callBack(error, null);
                     })
                 }

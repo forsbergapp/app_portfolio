@@ -1,91 +1,110 @@
 const { sign } = require("jsonwebtoken");
 const { verify } = require("jsonwebtoken");
-const { createLog} = require ("../.." + process.env.SERVICE_DB_REST_API_PATH + "app_log/app_log.service");
-const { getParameter, getParameters_server } = require ("../.." + process.env.SERVICE_DB_REST_API_PATH + "app_parameter/app_parameter.service");
-const { createLogAppSE, createLogAppCI } = require("../../service/log/log.controller");
-const { getUserAppRoleAdmin } = require("../.." + process.env.SERVICE_DB_REST_API_PATH + "user_account/user_account.service");
-const { checkLogin } = require("../.." + process.env.SERVICE_DB_REST_API_PATH + "user_account_logon/user_account_logon.service");
+const { createLog} = require (global.SERVER_ROOT + process.env.SERVICE_DB_REST_API_PATH + "/app_log/app_log.service");
+const { getParameter, getParameters_server } = require (global.SERVER_ROOT + process.env.SERVICE_DB_REST_API_PATH + "/app_parameter/app_parameter.service");
+const { createLogAppSE, createLogAppCI } = require(global.SERVER_ROOT + "/service/log/log.controller");
+const { getUserAppRoleAdmin } = require(global.SERVER_ROOT + process.env.SERVICE_DB_REST_API_PATH + "/user_account/user_account.service");
+const { checkLogin } = require(global.SERVER_ROOT + process.env.SERVICE_DB_REST_API_PATH + "/user_account_logon/user_account_logon.service");
 const { block_ip_control, safe_user_agents, policy_directives} = require ("./auth.service");
 module.exports = {
     access_control: (req, res, callBack) => {
         if (typeof req.query.app_id=='undefined' || req.query.app_id=='')
-            req.query.app_id = process.env.COMMON_APP_ID;
+            req.query.app_id = process.env.SERVER_APP_COMMON_APP_ID;
         if (process.env.SERVICE_AUTH_ACCESS_CONTROL_ENABLE==1){
             let ip_v4 = req.ip.replace('::ffff:','');
             block_ip_control(ip_v4, (err, result_range) =>{
-                if (err){
-                    createLogAppCI(req, res, __appfilename, __appfunction, __appline, `ip ${ip_v4} blocked, range: ${result_range}, tried URL: ${req.originalUrl}`)
-                    .then(function(){
-                        return callBack(err,null);
+                if (err)
+                    createLogAppSE(req.query.app_id, __appfilename, __appfunction, __appline, err).then(function(){
+                        res.status(500).send(
+                            err
+                        );
                     })
-                }
                 else{
-                    if (process.env.SERVICE_AUTH_ACCESS_CONTROL_HOST_EXIST==1 &&
-                        typeof req.headers.host=='undefined'){
-                        //check if host exists
-                        createLogAppCI(req, res, __appfilename, __appfunction, __appline, `ip ${ip_v4} blocked, no host, tried URL: ${req.originalUrl}`)
+                    if (result_range){
+                        res.statusCode = result_range.statusCode;
+                        res.statusMessage = `ip ${ip_v4} blocked, range: ${result_range.statusMessage}, tried URL: ${req.originalUrl}`;
+                        createLogAppCI(req, res, __appfilename, __appfunction, __appline, res.statusMessage)
                         .then(function(){
-                            //406 Not Acceptable
-                            return callBack(406,null);
+                            return callBack(null,result_range);
                         })
                     }
                     else{
-                        let os = require("os");
-                        if (process.env.SERVICE_AUTH_ACCESS_CONTROL_ACCESS_FROM==1 &&
-                            req.headers.host==os.hostname()){
-                            //check if accessed from domain and not os hostname
-                            createLogAppCI(req, res, __appfilename, __appfunction, __appline, `ip ${ip_v4} blocked, accessed from hostname ${os.hostname()} not domain, tried URL: ${req.originalUrl}`)
+                        //check if host exists
+                        if (process.env.SERVICE_AUTH_ACCESS_CONTROL_HOST_EXIST==1 &&
+                            typeof req.headers.host=='undefined'){
+                            res.statusCode = 406;
+                            res.statusMessage = `ip ${ip_v4} blocked, no host, tried URL: ${req.originalUrl}`;
+                            createLogAppCI(req, res, __appfilename, __appfunction, __appline, res.statusMessage)
                             .then(function(){
                                 //406 Not Acceptable
-                                return callBack(406,null);
+                                return callBack(null, 406);
                             })
                         }
                         else{
-                            safe_user_agents(req.headers["user-agent"], (err, safe)=>{
-                                if (err){
-                                    return callBack(err, null);
-                                }
-                                else{
-                                    if (safe==true)
-                                        return callBack(null,1);
+                            //check if accessed from domain and not os hostname
+                            let os = require("os");
+                            let this_hostname = os.hostname();
+                            if (process.env.SERVICE_AUTH_ACCESS_CONTROL_ACCESS_FROM==1 &&
+                                req.headers.host==this_hostname){
+                                res.statusCode = 406;
+                                res.statusMessage = `ip ${ip_v4} blocked, accessed from hostname ${this_hostname} not domain, tried URL: ${req.originalUrl}`;
+                                createLogAppCI(req, res, __appfilename, __appfunction, __appline, res.statusMessage)
+                                .then(function(){
+                                    //406 Not Acceptable
+                                    return callBack(null, 406);
+                                })
+                            }
+                            else{
+                                safe_user_agents(req.headers["user-agent"], (err, safe)=>{
+                                    if (err){
+                                        return callBack(err, null);
+                                    }
                                     else{
-                                        if(process.env.SERVICE_AUTH_ACCESS_CONTROL_USER_AGENT_EXIST==1 &&
-                                            typeof req.headers["user-agent"]=='undefined'){
-                                            //check if user-agent exists
-                                            createLogAppCI(req, res, __appfilename, __appfunction, __appline, `ip ${ip_v4} blocked, no user-agent, tried URL: ${req.originalUrl}`)
-                                            .then(function(){
-                                                //406 Not Acceptable
-                                                return callBack(406,null);
-                                            })
-                                        }
+                                        if (safe==true)
+                                            return callBack(null,null);
                                         else{
-                                            if (process.env.SERVICE_AUTH_ACCESS_CONTROL_ACCEPT_LANGUAGE==1 &&
-                                                typeof req.headers["accept-language"]=='undefined'){
-                                                //check if accept-language exists
-                                                createLogAppCI(req, res, __appfilename, __appfunction, __appline, `ip ${ip_v4} blocked, no accept-language, tried URL: ${req.originalUrl}`)
+                                            //check if user-agent exists
+                                            if(process.env.SERVICE_AUTH_ACCESS_CONTROL_USER_AGENT_EXIST==1 &&
+                                                typeof req.headers["user-agent"]=='undefined'){
+                                                res.statusCode = 406;
+                                                res.statusMessage = `ip ${ip_v4} blocked, no user-agent, tried URL: ${req.originalUrl}`;
+                                                createLogAppCI(req, res, __appfilename, __appfunction, __appline, res.statusMessage)
                                                 .then(function(){
                                                     //406 Not Acceptable
-                                                    return callBack(406,null);
+                                                    return callBack(null,406);
                                                 })
                                             }
-                                            else
-                                                return callBack(null,1);
+                                            else{
+                                                //check if accept-language exists
+                                                if (process.env.SERVICE_AUTH_ACCESS_CONTROL_ACCEPT_LANGUAGE==1 &&
+                                                    typeof req.headers["accept-language"]=='undefined'){
+                                                    res.statusCode = 406;
+                                                    res.statusMessage = `ip ${ip_v4} blocked, no accept-language, tried URL: ${req.originalUrl}`;
+                                                    createLogAppCI(req, res, __appfilename, __appfunction, __appline, res.statusMessage)
+                                                    .then(function(){
+                                                        //406 Not Acceptable
+                                                        return callBack(null,406);
+                                                    })
+                                                }
+                                                else
+                                                    return callBack(null,null);
+                                            }
                                         }
                                     }
-                                }
-                            })
+                                })
+                            }
                         }
                     }
                 }
             })
         }
         else
-            return callBack(null,1);
+            return callBack(null,null);
     },
     checkAccessTokenCommon: (req, res, next) => {
         let token = req.get("authorization");
         if (token){
-            getParameter(req.query.app_id, process.env.COMMON_APP_ID,'SERVICE_AUTH_TOKEN_ACCESS_SECRET', (err, db_SERVICE_AUTH_TOKEN_ACCESS_SECRET)=>{
+            getParameter(req.query.app_id, process.env.SERVER_APP_COMMON_APP_ID,'SERVICE_AUTH_TOKEN_ACCESS_SECRET', (err, db_SERVICE_AUTH_TOKEN_ACCESS_SECRET)=>{
                 if (err) {
                     createLogAppSE(req.query.app_id, __appfilename, __appfunction, __appline, err).then(function(){
                         res.status(500).send(
@@ -178,7 +197,7 @@ module.exports = {
     checkDataToken: (req, res, next) => {
         let token = req.get("authorization");
         if (token){
-            getParameter(req.query.app_id, process.env.COMMON_APP_ID,'SERVICE_AUTH_TOKEN_DATA_SECRET', (err, db_SERVICE_AUTH_TOKEN_DATA_SECRET)=>{
+            getParameter(req.query.app_id, process.env.SERVER_APP_COMMON_APP_ID,'SERVICE_AUTH_TOKEN_DATA_SECRET', (err, db_SERVICE_AUTH_TOKEN_DATA_SECRET)=>{
                 if (err) {
                     createLogAppSE(req.query.app_id, __appfilename, __appfunction, __appline, err).then(function(){
                         res.status(500).send(
@@ -229,7 +248,7 @@ module.exports = {
     },
     dataToken: (req, res) => {
         if(req.headers.authorization){
-            getParameters_server(req.query.app_id, process.env.COMMON_APP_ID,  (err, result)=>{
+            getParameters_server(req.query.app_id, process.env.SERVER_APP_COMMON_APP_ID,  (err, result)=>{
                 if (err) {
                     createLogAppSE(req.query.app_id, __appfilename, __appfunction, __appline, err).then(function(){
                         res.status(500).send(
@@ -318,7 +337,7 @@ module.exports = {
         }
     },
     accessToken: (req, callBack) => {
-        getParameters_server(req.query.app_id, process.env.COMMON_APP_ID,  (err, result)=>{
+        getParameters_server(req.query.app_id, process.env.SERVER_APP_COMMON_APP_ID,  (err, result)=>{
             if (err) {
                 createLogAppSE(req.query.app_id, __appfilename, __appfunction, __appline, err).then(function(){
                     callBack(err);
