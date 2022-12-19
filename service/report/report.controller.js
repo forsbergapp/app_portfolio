@@ -1,4 +1,4 @@
-const { createLog} = require ("../.." + process.env.SERVICE_DB_REST_API_PATH + "app_log/app_log.service");
+const { createLog} = require (global.SERVER_ROOT +  process.env.SERVICE_DB_REST_API_PATH + "/app_log/app_log.service");
 module.exports = {
 	getReport: async (req, res) => {
 		let decodedparameters = Buffer.from(req.query.reportid, 'base64').toString('utf-8')
@@ -10,14 +10,14 @@ module.exports = {
 		req.query.hf = querystring.parse(decodedparameters).hf;
 		//called if format=html or not PDF or puppeteer creating PDF
 		req.query.callback=1;
-		const { getIp} = require ("../../service/geolocation/geolocation.controller");
+		const { getIp} = require (global.SERVER_ROOT + "/service/geolocation/geolocation.controller");
 		getIp(req, res, (err, result)=>{
 			let gps_place = result.geoplugin_city + ', ' +
 							result.geoplugin_regionName + ', ' +
 							result.geoplugin_countryName;
 			//check if maintenance
 			if (process.env.SERVER_MAINTENANCE==1){
-				const { getMaintenance } = require("../../apps");
+				const { getMaintenance } = require(global.SERVER_ROOT + "/apps");
 				const app = getMaintenance(req.query.app_id,
 											result.geoplugin_latitude,
 											result.geoplugin_longitude,
@@ -40,7 +40,7 @@ module.exports = {
 										})
 				}
 				else{
-					const { getReport} = require(`../../apps/app${req.query.app_id}/report`);
+					const { getReport} = require(global.SERVER_ROOT + `/apps/app${req.query.app_id}/report`);
 					const report = getReport(req.query.app_id, 
 											req.query.module, 
 											result.geoplugin_latitude, 

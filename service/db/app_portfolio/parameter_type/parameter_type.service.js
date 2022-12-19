@@ -1,4 +1,4 @@
-const {execute_db_sql, get_schema_name, get_locale} = require ("../../common/common.service");
+const {execute_db_sql, get_schema_name, get_locale} = require (global.SERVER_ROOT + "/service/db/common/common.service");
 module.exports = {
 	getParameterTypeAdmin: (app_id, id, lang_code, callBack) => {
 		let sql;

@@ -1,5 +1,5 @@
-const { createLog, createLogAdmin} = require ("../.." + process.env.SERVICE_DB_REST_API_PATH + "app_log/app_log.service");
-const { createLogAppCI } = require("../../service/log/log.controller");
+const { createLog, createLogAdmin} = require (global.SERVER_ROOT +  process.env.SERVICE_DB_REST_API_PATH + "/app_log/app_log.service");
+const { createLogAppCI } = require(global.SERVER_ROOT + "/service/log/log.controller");
 const { ClientConnect, ClientClose, ClientAdd, BroadcastSendSystemAdmin, BroadcastSendAdmin, ConnectedList, ConnectedCount, ConnectedUpdate, ConnectedCheck} = require ("./broadcast.service");
 module.exports = {
 	BroadcastConnect: (req, res) => {
@@ -8,7 +8,7 @@ module.exports = {
         let res_not_used;
         req.query.callback=1;
         if (req.query.system_admin=='1'){
-            const { getIpSystemAdmin} = require ("../geolocation/geolocation.controller");
+            const { getIpSystemAdmin} = require (global.SERVER_ROOT + "/service/geolocation/geolocation.controller");
             getIpSystemAdmin(req, res, (err, geodata) =>{
                 const newClient = {
                     id: req.params.clientId,
@@ -30,8 +30,8 @@ module.exports = {
             })
         }
         else
-            if (req.query.app_id ==process.env.COMMON_APP_ID){
-                const { getIpAdmin} = require ("../geolocation/geolocation.controller");
+            if (req.query.app_id ==process.env.SERVER_APP_COMMON_APP_ID){
+                const { getIpAdmin} = require (global.SERVER_ROOT + "/service/geolocation/geolocation.controller");
                 getIpAdmin(req, res_not_used, (err, geodata) =>{
                     const newClient = {
                         id: req.params.clientId,
@@ -70,7 +70,7 @@ module.exports = {
                 })
             }
             else{
-                const { getIp} = require ("../geolocation/geolocation.controller");
+                const { getIp} = require (global.SERVER_ROOT + "/service/geolocation/geolocation.controller");
                 getIp(req, res_not_used, (err, geodata) =>{
                     const newClient = {
                         id: req.params.clientId,
@@ -139,10 +139,10 @@ module.exports = {
                         data: result
                     });
                 else{
-                    const { getMessage_admin } = require("../.." + process.env.SERVICE_DB_REST_API_PATH + "message_translation/message_translation.service");
+                    const { getMessage_admin } = require(global.SERVER_ROOT +  process.env.SERVICE_DB_REST_API_PATH + "/message_translation/message_translation.service");
                     //Record not found
                     getMessage_admin(req.query.app_id,
-                                     process.env.COMMON_APP_ID,
+                                     process.env.SERVER_APP_COMMON_APP_ID,
                                      20400,
                                      req.query.lang_code, (err,result_message)  => {
                                         return res.status(404).send(

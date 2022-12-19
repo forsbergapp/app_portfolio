@@ -248,64 +248,60 @@ Installation instructions
 		node_modules/								NodeJS modules (400Mb+)
 		service/db/config/oracle_instantclient/		Oracle Client
 		service/report/tmp/							temporary Report directory
-		ssl/										SSL certificates used by parameters
-													SERVER_HTTPS_KEY and SERVER_HTTPS_CERT
 
-7. create .env file in /app_portfolio
-	recommended paths
-	/config				configuration files
-	/logs				log files
-	/service/db/config	Oracle client
+7. configuration, SSL and logs files
+	all files should be relative to root of /app_portfolio
+	if path outside directory is needed then use ln for linux or mklink for windows.
 
 	hardcoded temporary directory
 	/service/report/tmp	configured in /service/report/report.service.js
 
-	set values in {} and modify default values if necessary
-
 	#server variables
-	SERVER_HTTPS_KEY                        			={PATH}\{FILENAME}
-	SERVER_HTTPS_CERT                       			={PATH}\{FILENAME}
+	SERVER_HTTPS_KEY                        			=/config/ssl/server.key
+	SERVER_HTTPS_CERT                       			=/config/ssl/server.crt
 	SERVER_PORT                             			=80
+	SERVER_HTTPS_ENABLE                                 =0
 	SERVER_HTTPS_PORT                       			=443
 	SERVER_JSON_LIMIT                          			=10MB
-	SERVER_ADMIN_NAME									={ADMIN_USERNAME}
-	SERVER_ADMIN_PASSWORD								={ADMIN_PASSWORD}
+	SERVER_ADMIN_NAME									=admin
+	SERVER_ADMIN_PASSWORD								=
 	SERVER_TEST_SUBDOMAIN								=test
-	SERVER_DB_START                             		={0=NO, 1=YES default 0, change to 1 when db configured}
-	SERVER_APP_START                            		={0=NO, 1=YES default 0, change to 1 when apps configured}
+	SERVER_APP_START                            		=0
+	SERVER_APP_COMMON_APP_ID							=0
 	SERVER_SERVICE_GEOLOCATION_URL_GPS_IP				=http://www.geoplugin.net/json.gp
 	SERVER_SERVICE_GEOLOCATION_URL_GPS_PLACE			=http://www.geoplugin.net/extras/location.gp
 	#service variables
-	SERVICE_AUTH_ACCESS_CONTROL_ENABLE          		={0=NO, 1=YES}
-	SERVICE_AUTH_ACCESS_CONTROL_IP             			={0=NO, 1=YES}
-	SERVICE_AUTH_ACCESS_CONTROL_IP_PATH         		={PATH}\blockip.json
-	SERVICE_AUTH_ACCESS_CONTROL_HOST_EXIST      		={0=NO, 1=YES}
-	SERVICE_AUTH_ACCESS_CONTROL_ACCESS_FROM     		={0=NO, 1=YES}
-	SERVICE_AUTH_ACCESS_CONTROL_USER_AGENT      		={0=NO, 1=YES}
-	SERVICE_AUTH_ACCESS_CONTROL_USER_AGENT_PATH 		={PATH}\safe_user_agent.json
-	SERVICE_AUTH_ACCESS_CONTROL_USER_AGENT_EXIST		={0=NO, 1=YES}
-	SERVICE_AUTH_ACCESS_CONTROL_ACCEPT_LANGUAGE 		={0=NO, 1=YES}
-	SERVICE_AUTH_POLICY_DIRECTIVES              		={PATH}\policy_directives.json
+	SERVICE_AUTH_ACCESS_CONTROL_ENABLE          		=1
+	SERVICE_AUTH_ACCESS_CONTROL_IP             			=1
+	SERVICE_AUTH_ACCESS_CONTROL_IP_PATH         		=/config/blockip.json
+	SERVICE_AUTH_ACCESS_CONTROL_HOST_EXIST      		=1
+	SERVICE_AUTH_ACCESS_CONTROL_ACCESS_FROM     		=1
+	SERVICE_AUTH_ACCESS_CONTROL_USER_AGENT      		=1
+	SERVICE_AUTH_ACCESS_CONTROL_USER_AGENT_PATH 		=/config/safe_user_agent.json
+	SERVICE_AUTH_ACCESS_CONTROL_USER_AGENT_EXIST		=1
+	SERVICE_AUTH_ACCESS_CONTROL_ACCEPT_LANGUAGE 		=1
+	SERVICE_AUTH_POLICY_DIRECTIVES              		=/config/policy_directives.json
 	SERVICE_AUTH_ADMIN_TOKEN_EXPIRE_ACCESS	    		=1d
-	SERVICE_AUTH_ADMIN_TOKEN_SECRET		        		={ADMIN_TOKEN_SECRET}
-	SERVICE_AUTH_ENABLE_GEOLOCATION						={0=NO, 1=YES}
-	SERVICE_AUTH_ENABLE_USER_REGISTRATION       		={0=NO, 1=YES}
-	SERVICE_AUTH_ENABLE_USER_LOGIN              		={0=NO, 1=YES}
-	SERVICE_AUTH_ENABLE_DBLOG                   		={0=NO, 1=YES}
+	SERVICE_AUTH_ADMIN_TOKEN_SECRET		        		=
+	SERVICE_AUTH_ENABLE_GEOLOCATION						=0
+	SERVICE_AUTH_ENABLE_USER_REGISTRATION       		=0
+	SERVICE_AUTH_ENABLE_USER_LOGIN              		=1
+	SERVICE_AUTH_ENABLE_DBLOG                   		=1
 	#Broadcast
 	SERVICE_BROADCAST_CHECK_INTERVALL           		=5000
 	#Database
+	SERVICE_DB_START                             		=0
 	SERVICE_DB_REST_API_PATH							=/service/db/app_portfolio/
-	#1=DB1 MySQL, 2=DB2 Oracle
+	#1=DB1 MySQL, 2=DB2 Oracle, 3=PostreSQL
 	SERVICE_DB_USE                           			=1
 	SERVICE_DB_LIMIT_LIST_SEARCH						=100
 	SERVICE_DB_LIMIT_PROFILE_TOP						=100
 	#mySQL/MariaDB
-	SERVICE_DB_DB1_VARIANT                      		={1=MySQL, 2=MariaDB}
+	SERVICE_DB_DB1_VARIANT                      		=2
 	SERVICE_DB_DB1_APP_ADMIN_USER               		=app_admin
 	SERVICE_DB_DB1_APP_ADMIN_PASS               		=APP_1_portfolio
-	SERVICE_DB_DB1_PORT                         		={PORT}
-	SERVICE_DB_DB1_HOST                         		={HOSTNAME} (or localhost)
+	SERVICE_DB_DB1_PORT                         		=3306
+	SERVICE_DB_DB1_HOST                         		=localhost
 	SERVICE_DB_DB1_NAME                         		=app_portfolio
 	SERVICE_DB_DB1_CHARACTERSET                 		='utf8mb4'
 	SERVICE_DB_DB1_CONNECTION_LIMIT             		=10
@@ -313,18 +309,19 @@ Installation instructions
 	SERVICE_DB_DB2_APP_ADMIN_USER               		=app_admin
 	SERVICE_DB_DB2_APP_ADMIN_PASS               		=APP_1_portfolio
 	SERVICE_DB_DB1_NAME                         		=app_portfolio
-	SERVICE_DB_DB2_CONNECTSTRING                		={CONNECTION STRING}
+	SERVICE_DB_DB2_CONNECTSTRING                		=
 	SERVICE_DB_DB2_POOL_MIN                     		=1
 	SERVICE_DB_DB2_POOL_MAX                     		=1
 	SERVICE_DB_DB2_POOL_INCREMENT               		=0
 	#Oracle Instant Client path
-	SERVICE_DB_DB2_LIBDIR								={ORACLE_INSTANT_CLIENT_PATH}
-	SERVICE_DB_DB2_CONFIGDIR							={PATH_TNSNAMES_SQLNET_OR_WALLET_FILE_CONTENT}
+	SERVICE_DB_DB2_LIBDIR								=
+	#Oracle TNSNAMES_SQLNET_OR_WALLET_FILECONTENT_PATH
+	SERVICE_DB_DB2_CONFIGDIR							=
 	#PostgreSQL
 	SERVICE_DB_DB3_APP_ADMIN_USER               		=app_admin
 	SERVICE_DB_DB3_APP_ADMIN_PASS               		=APP_1_portfolio
-	SERVICE_DB_DB3_HOST                         		={HOSTNAME} (or localhost)
-	SERVICE_DB_DB3_PORT                        	 		={PORT}
+	SERVICE_DB_DB3_HOST                         		=localhost
+	SERVICE_DB_DB3_PORT                        	 		=5432
 	SERVICE_DB_DB3_NAME                         		=app_portfolio
 	SERVICE_DB_DB3_TIMEOUT_CONNECTION           		=5000
 	SERVICE_DB_DB3_TIMEOUT_IDLE                 		=30000
@@ -335,30 +332,43 @@ Installation instructions
 	SERVICE_LOG_SCOPE_DB                        		='DB'
 	SERVICE_LOG_SCOPE_ROUTER                    		='ROUTER'
 	SERVICE_LOG_SCOPE_CONTROLLER                		='CONTROLLER'
-	SERVICE_LOG_ENABLE_SERVER_INFO						={0=NO, 1=YES}
-	SERVICE_LOG_ENABLE_SERVER_VERBOSE					={0=NO, 1=YES}
-	SERVICE_LOG_ENABLE_DB                       		={0=NO, 1=YES}
-	SERVICE_LOG_ENABLE_ROUTER                   		={0=NO, 1=YES}
+	SERVICE_LOG_ENABLE_SERVER_INFO						=1
+	SERVICE_LOG_ENABLE_SERVER_VERBOSE					=0
+	SERVICE_LOG_ENABLE_DB                       		=0
+	SERVICE_LOG_ENABLE_ROUTER                   		=0
 	SERVICE_LOG_LEVEL_VERBOSE		    				='VERBOSE'
 	SERVICE_LOG_LEVEL_ERROR                     		='ERROR'
 	SERVICE_LOG_LEVEL_INFO                      		='INFO'
-	SERVICE_LOG_DESTINATION                     		={0=FILE ONLY
-														  1=URL ONLY REST API METHOD POST
-														  2=FILE AND URL}
-	SERVICE_LOG_URL_DESTINATION                 		={URL TO REST API METHOD POST}
-	SERVICE_LOG_URL_DESTINATION_USERNAME        		={USERNAME}
-	SERVICE_LOG_URL_DESTINATION_PASSWORD        		={PASSWORD}
-	SERVICE_LOG_FILE_INTERVAL                   		={1D or 1M}
-	SERVICE_LOG_FILE_PATH_SERVER                		={PATH with / at the end}
-	SERVICE_LOG_DATE_FORMAT                     		={DEFAULT empty creates ISO8601 format
-														ex: "yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'"}
-	SERVICE_LOG_PM2_FILE                        		={filename.json}
-	SERVICE_REPORT_PDF_TIMEOUT                  		={20000 = milliseconds}
-	SERVICE_REPORT_PDF_WAIT_INTERVAL            		={500 = milliseconds}
-	SERVICE_REPORT_PDF_WAIT_ATTEMPTS            		={20 = number of attempts}
-	SERVICE_REPORT_PDF_EMPTY_SIZE_CHECK         		={900 = bytes, PDF with content should be bigger than this}
-	SERVICE_REPORT_EXECUTABLE_PATH						={if using different browser for Puppeteer}
-	COMMON_APP_ID						                =0
+	#0=File only, 1=URL REST API only method POST, 2=File and URL
+	SERVICE_LOG_DESTINATION                     		=0
+	SERVICE_LOG_URL_DESTINATION                 		=
+	SERVICE_LOG_URL_DESTINATION_USERNAME        		=
+	SERVICE_LOG_URL_DESTINATION_PASSWORD        		=
+	SERVICE_LOG_FILE_INTERVAL                   		=1D
+	#with / at the end
+	SERVICE_LOG_FILE_PATH_SERVER                		=/logs/
+	#DEFAULT empty creates ISO8601 format ex: "yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'"
+	SERVICE_LOG_DATE_FORMAT                     		=
+	SERVICE_LOG_PM2_FILE                        		=PM2_LOG.json
+	SERVICE_REPORT_PDF_TIMEOUT                  		=20000
+	SERVICE_REPORT_PDF_WAIT_INTERVAL            		=100
+	SERVICE_REPORT_PDF_WAIT_ATTEMPTS            		=100
+	#bytes, PDF with content should be bigger than this
+	SERVICE_REPORT_PDF_EMPTY_SIZE_CHECK         		=900
+	#if using different browser for Puppeteer
+	SERVICE_REPORT_EXECUTABLE_PATH						=
+
+	set database parameters as needed if not default MariaDB on localhost will be used
+	when database and server configured:
+	SERVICE_DB_START = 1
+	SERVER_APP_START = 1
+    allow HTTPS after SSL created
+	SERVER_HTTPS_ENABLE=1
+	allow GPS
+	SERVICE_AUTH_ENABLE_GEOLOCATION = 1
+	allow user registration
+	SERVICE_AUTH_ENABLE_USER_REGISTRATION=1
+
 
 	detailed parameter info:
 	SERVER_TEST_SUBDOMAIN
@@ -468,8 +478,8 @@ Installation instructions
 	/service/db/api/app{APP_ID}*	rest api for app{APP_ID}
 
 11. App identification
-	Common and admin and uses window.global_common_app_id that is 0 by default.
-	Apps clients use window.global_app_id to identify themselves.
+	Apps clients use window.global_app_id to identify themselves
+	Common and admin uses window.global_common_app_id derived from SERVER_APP_COMMON_APP_ID
 
 	Apps use APP{APP_ID}_ID variable in
 	apps/app{APP_ID}/server.js that is used to init the server generation of the client.

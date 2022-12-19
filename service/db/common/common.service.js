@@ -1,7 +1,7 @@
-const { createLogAppSE } = require("../../log/log.controller");
-const { createLogDB } = require("../../log/log.service");
+const { createLogAppSE } = require(global.SERVER_ROOT + "/service/log/log.controller");
+const { createLogDB } = require(global.SERVER_ROOT + "/service/log/log.service");
 
-const { oracledb, get_pool} = require("../admin/admin.service");
+const { oracledb, get_pool} = require(global.SERVER_ROOT + "/service/db/admin/admin.service");
 
 function log_db_sql(app_id, sql, parameters){
 	let parsed_sql = sql;

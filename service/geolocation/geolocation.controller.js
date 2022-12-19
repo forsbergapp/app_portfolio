@@ -1,8 +1,8 @@
 const { getService, getTimezone} = require ("./geolocation.service");
-const { createLogAdmin, createLog} = require ("../.." + process.env.SERVICE_DB_REST_API_PATH + "app_log/app_log.service");
-const { getMessage, getMessage_admin } = require("../db/app_portfolio/message_translation/message_translation.service");
-const { createLogAppCI } = require("../../service/log/log.controller");
-const { check_internet } = require("../auth/auth.controller");
+const { createLogAdmin, createLog} = require (global.SERVER_ROOT + process.env.SERVICE_DB_REST_API_PATH + "/app_log/app_log.service");
+const { getMessage, getMessage_admin } = require(global.SERVER_ROOT + process.env.SERVICE_DB_REST_API_PATH + "/message_translation/message_translation.service");
+const { createLogAppCI } = require(global.SERVER_ROOT + "/service/log/log.controller");
+const { check_internet } = require(global.SERVER_ROOT + "/service/auth/auth.controller");
 function geodata_empty(geotype){
 	let geodata='';
 	switch (geotype){
@@ -66,7 +66,7 @@ module.exports = {
 				req.query.longitude=='undefined'){
 				//Missing latitude or longitude
 				getMessage(req.query.app_id,
-							process.env.COMMON_APP_ID, 
+							process.env.SERVER_APP_COMMON_APP_ID, 
 							20500, 
 							req.query.lang_code, (err,results)  => {
 								return res.status(400).send(
@@ -117,7 +117,7 @@ module.exports = {
 				req.query.longitude=='undefined'){
 				//Missing latitude or longitude
 				getMessage_admin(req.query.app_id,
-								process.env.COMMON_APP_ID, 
+								process.env.SERVER_APP_COMMON_APP_ID, 
 								20500, 
 								req.query.lang_code, (err,results)  => {
 									return res.status(400).send(
@@ -130,7 +130,7 @@ module.exports = {
 				const url = `${process.env.SERVER_SERVICE_GEOLOCATION_URL_GPS_PLACE}?format=json&lat=${req.query.latitude}&lon=${req.query.longitude}`;
 				geodata = await getService(url);
 				createLogAdmin(req.query.app_id,
-								{ app_id : process.env.COMMON_APP_ID,
+								{ app_id : process.env.SERVER_APP_COMMON_APP_ID,
 									app_module : 'GEOLOCATION',
 									app_module_type : 'PLACE',
 									app_module_request : url,
