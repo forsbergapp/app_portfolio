@@ -1,12 +1,12 @@
 const { sendEmailService } = require("./mail.service");
-const { getIp} = require ("../../service/geolocation/geolocation.controller");
-const { createLog} = require ("../.." + process.env.SERVICE_DB_REST_API_PATH + "app_log/app_log.service");
-const { getParameters_server} = require ("../.." + process.env.SERVICE_DB_REST_API_PATH + "app_parameter/app_parameter.service");
-const { createLogAppSE } = require("../../service/log/log.controller");
+const { getIp} = require (global.SERVER_ROOT + "/service/geolocation/geolocation.controller");
+const { createLog} = require (global.SERVER_ROOT +  process.env.SERVICE_DB_REST_API_PATH + "/app_log/app_log.service");
+const { getParameters_server} = require (global.SERVER_ROOT +  process.env.SERVICE_DB_REST_API_PATH + "/app_parameter/app_parameter.service");
+const { createLogAppSE } = require(global.SERVER_ROOT + "/service/log/log.controller");
 module.exports = {
     getLogo: (req, res) => {
         if (typeof req.query.id == 'undefined'){
-            req.query.app_id = process.env.COMMON_APP_ID;
+            req.query.app_id = process.env.SERVER_APP_COMMON_APP_ID;
         }
         else{
             req.query.app_id = req.query.id;

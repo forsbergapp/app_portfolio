@@ -1,4 +1,4 @@
-const {execute_db_sql, get_schema_name, limit_sql} = require ("../../common/common.service");
+const {execute_db_sql, get_schema_name, limit_sql} = require (global.SERVER_ROOT + "/service/db/common/common.service");
 function password_length_wrong(password){
     //constraint should be in db but password is encrypted when in db trigger
     //and saved with constant 60 characters length

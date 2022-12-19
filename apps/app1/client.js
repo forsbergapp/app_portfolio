@@ -1,4 +1,4 @@
-const { read_app_files, get_module_with_init, getUserPreferences } = require("../");
+const { read_app_files, get_module_with_init, getUserPreferences } = require(global.SERVER_ROOT + "/apps");
 module.exports = {
     getApp:(app_id, username, gps_lat, gps_long, gps_place) => {
         return new Promise(function (resolve, reject){
@@ -67,7 +67,7 @@ module.exports = {
                 }) 
             }
             if (username!=null){
-                const {getProfileUser} = require("../.." + process.env.SERVICE_DB_REST_API_PATH + "user_account/user_account.service");
+                const {getProfileUser} = require(global.SERVER_ROOT +  process.env.SERVICE_DB_REST_API_PATH + "/user_account/user_account.service");
                 getProfileUser(app_id, null, username, null, (err,result)=>{
                     if (result)
                         main(app_id);

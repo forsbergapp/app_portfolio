@@ -1,5 +1,5 @@
-const { createLog, createLogAdmin} = require ("../.." + process.env.SERVICE_DB_REST_API_PATH + "app_log/app_log.service");
-const { getIp, getIpAdmin, getIpSystemAdmin} = require ("../../service/geolocation/geolocation.controller");
+const { createLog, createLogAdmin} = require (global.SERVER_ROOT +  process.env.SERVICE_DB_REST_API_PATH + "/app_log/app_log.service");
+const { getIp, getIpAdmin, getIpSystemAdmin} = require (global.SERVER_ROOT + "/service/geolocation/geolocation.controller");
 module.exports = {
   getForm: (req, res, app_id, params, callBack) => {
     //getIp and createLog needs app_id
@@ -12,7 +12,7 @@ module.exports = {
                         result.geoplugin_countryName;
         //check if maintenance
         if (process.env.SERVER_MAINTENANCE==1){
-            const { getMaintenance } = require("../../apps");
+            const { getMaintenance } = require(global.SERVER_ROOT + "/apps");
             const app = getMaintenance(app_id,
                                         result.geoplugin_latitude,
                                         result.geoplugin_longitude,
@@ -22,7 +22,7 @@ module.exports = {
             });
         }
         else{
-            const { getApp } = require(`../../apps/app${app_id}/client`);
+            const { getApp } = require(global.SERVER_ROOT + `/apps/app${app_id}/client`);
             const app = getApp(app_id, 
                                 params,
                                 result.geoplugin_latitude,
@@ -58,12 +58,12 @@ module.exports = {
     req.query.app_id = app_id;
     req.query.app_user_id = null;
     req.query.callback=1;
-    if (process.env.SERVER_DB_START==1){
+    if (process.env.SERVICE_DB_START==1){
         getIpAdmin(req, res, (err, result)=>{
             let gps_place = result.geoplugin_city + ', ' +
                             result.geoplugin_regionName + ', ' +
                             result.geoplugin_countryName;
-            const { getAdmin } = require("../../apps/admin/client");
+            const { getAdmin } = require(global.SERVER_ROOT + "/apps/admin/client");
             const app = getAdmin(app_id,
                                  result.geoplugin_latitude,
                                  result.geoplugin_longitude, 
@@ -97,8 +97,8 @@ module.exports = {
             let gps_place = result.geoplugin_city + ', ' +
                             result.geoplugin_regionName + ', ' +
                             result.geoplugin_countryName;
-            const { getAdmin } = require("../../apps/admin/client");
-            const { createLogAppCI } = require("../../service/log/log.controller");
+            const { getAdmin } = require(global.SERVER_ROOT + "/apps/admin/client");
+            const { createLogAppCI } = require(global.SERVER_ROOT + "/service/log/log.controller");
             const app = getAdmin(app_id,
                                  result.geoplugin_latitude,
                                  result.geoplugin_longitude, 
@@ -112,8 +112,8 @@ module.exports = {
     }
   },
   getAdminSecure: (req, res) => {
-        const { getAdminSecure } = require("../../apps/admin/src/secure");
-        const { createLogAppCI } = require("../../service/log/log.controller");
+        const { getAdminSecure } = require(global.SERVER_ROOT + "/apps/admin/src/secure");
+        const { createLogAppCI } = require(global.SERVER_ROOT + "/service/log/log.controller");
         try {
             const app = getAdminSecure(req.query.app_id,
                 1,      //system admin=1

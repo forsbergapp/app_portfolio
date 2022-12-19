@@ -1,4 +1,4 @@
-const {execute_db_sql, get_schema_name} = require ("../../common/common.service");
+const {execute_db_sql, get_schema_name} = require (global.SERVER_ROOT + "/service/db/common/common.service");
 module.exports = {
 	getUserAccountLogonAdmin:(app_id, user_account_id, app_id_select, callBack)=>{
 		let sql;
@@ -51,7 +51,7 @@ module.exports = {
 						app_id: app_id,
 						access_token: access_token,
 						client_ip: client_ip,
-						admin_app_id: process.env.COMMON_APP_ID,
+						admin_app_id: process.env.SERVER_APP_COMMON_APP_ID,
 						super_admin_app_role_id: 0,
 						admin_app_role_id: 1
 					};
