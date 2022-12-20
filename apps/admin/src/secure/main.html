@@ -70,8 +70,8 @@
         <div id='menu_3_content_widget2' class='widget'>
             <div id='list_user_account_logon_title'></div>
             <div id='list_user_account_logon' class='list_scrollbar'></div>
-            <div id='users_buttons'>
-                <button id='users_save' class='dialogue_button' ></button>
+            <div id='users_buttons' class="save_buttons">
+                <button id='users_save' class='dialogue_button button_save' ></button>
             </div>
         </div>
     </div>
@@ -83,18 +83,18 @@
         <div id='menu_4_content_widget2' class='widget'>
             <div id='list_app_parameter_title'></div>
             <div id='list_app_parameter' class='list_scrollbar'></div>
-            <div id='apps_buttons'>
-                <button id='apps_save' class='dialogue_button' ></button>
+            <div id='apps_buttons' class="save_buttons">
+                <button id='apps_save' class='dialogue_button button_save' ></button>
             </div>
         </div>
     </div>
     <div id='menu_5_content' class='main_content'>
         <div id='menu_5_content_widget1' class='widget'>
-            <ul id='list_monitor_nav'>
-                <li id='list_monitor_nav_1'><button id='list_connected_title' class='list_button list_monitor_title' ></button></li>
-                <li id='list_monitor_nav_2'><button id='list_app_log_title' class='list_button list_monitor_title' ></button></li>
-                <li id='list_monitor_nav_3'><button id='list_server_log_title' class='list_button list_monitor_title' ></button></li>
-                <li id='list_monitor_nav_4'><button id='list_pm2_log_title' class='list_button list_monitor_title' ></button></li>
+            <ul class='list_nav'>
+                <li id='list_monitor_nav_1'><button id='list_connected_title' class='list_button' ></button></li>
+                <li id='list_monitor_nav_2'><button id='list_app_log_title' class='list_button' ></button></li>
+                <li id='list_monitor_nav_3'><button id='list_server_log_title' class='list_button' ></button></li>
+                <li id='list_monitor_nav_4'><button id='list_pm2_log_title' class='list_button' ></button></li>
             </ul>
             <div id='list_connected_form'>
                 <div id='menu5_row_sample_list_connected'>
@@ -252,7 +252,20 @@
             </select>
         </div>
     </div>
-    <div id='menu_6_content' class='main_content'></div>
+    <div id='menu_6_content' class='main_content'>
+        <div id='menu_6_content_widget1' class='widget'>
+            <ul class='list_nav'>
+                <li id='list_config_nav_1'><button id='list_config_server_title' class='list_button' ></button></li>
+                <li id='list_config_nav_2'><button id='list_config_blockip_title' class='list_button' ></button></li>
+                <li id='list_config_nav_3'><button id='list_config_useragent_title' class='list_button' ></button></li>
+                <li id='list_config_nav_4'><button id='list_config_policy_title' class='list_button' ></button></li>
+            </ul>
+            <div id='list_config' class='list_scrollbar'></div>
+            <div id='config_buttons' class="save_buttons">
+                <button id='config_save' class='dialogue_button button_save' ></button>
+            </div>
+        </div>
+    </div>
     <div id='menu_7_content' class='main_content'></div>
     <div id='menu_8_content' class='main_content'>
         <div id='menu_8_content_widget1' class='widget'>
