@@ -392,7 +392,7 @@ async function show_db_info_space(){
 async function check_maintenance(){
     if (admin_token_has_value()){
         let json;
-        await common_fetch('/server?parameter_name=SERVER_MAINTENANCE', 'GET', 2, null, null, null, (err, result) =>{
+        await common_fetch('/server/config?parameter_name=SERVER_MAINTENANCE', 'GET', 2, null, null, null, (err, result) =>{
             if (err)
                 null;
             else{
@@ -416,7 +416,7 @@ function set_maintenance(){
                             "parameter_name":"SERVER_MAINTENANCE",
                             "parameter_value": ${check_value}
                         }`;
-        common_fetch('/server?', 'PATCH', 2, json_data, null, null, (err, result) =>{
+        common_fetch('/server/config?', 'PATCH', 2, json_data, null, null, (err, result) =>{
             null;
         })
     }

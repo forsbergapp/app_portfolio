@@ -139,7 +139,7 @@ async function read_app_files(app_id, files, callBack){
         callBack(null, app);
     })
     .catch(err => {
-        createLogAppSE(app_id, __appfilename, __appfunction, __appline, err, (err_log, result_log)=>{
+        createLogAppSE(req.query.app_id, __appfilename, __appfunction, __appline, err).then(function(){
             callBack(err, null);
         })
     });
@@ -276,8 +276,8 @@ module.exports = {
                 const { getAppsAdmin } = require (global.SERVER_ROOT + process.env.SERVICE_DB_REST_API_PATH + "/app/app.service");
                 getAppsAdmin(process.env.SERVER_APP_COMMON_APP_ID, null, (err, results) =>{
                     if (err) {
-                        createLogAppSE(process.env.SERVER_APP_COMMON_APP_ID, __appfilename, __appfunction, __appline, `getAppsAdmin, err:${err}`, (err_log, result_log)=>{
-                        null;
+                        createLogAppSE(req.query.app_id, __appfilename, __appfunction, __appline, `getAppsAdmin, err:${err}`).then(function(){
+                            null;
                         })
                     }
                     else {
