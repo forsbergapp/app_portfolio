@@ -97,6 +97,9 @@ function seticons(){
     window.global_icon_app_sum = '∑';
     window.global_icon_app_home = '<i class="fa-solid fa-house"></i>';
     window.global_icon_app_type = '<i class="fa-solid fa-circle-question"></i>';
+    window.global_icon_app_internet = '<i class="fa-solid fa-globe"></i>';
+    window.global_icon_app_shield = '<i class="fa-solid fa-shield"></i>';
+    window.global_icon_app_browser = '<i class="fa-regular fa-window-restore"></i>';
     //user
     window.global_icon_user = '<i class="fa-solid fa-user"></i>';
     window.global_icon_username = '<i class="fa-solid fa-a"></i><i class="fa-solid fa-b"></i><i class="fa-solid fa-c"></i>';    
