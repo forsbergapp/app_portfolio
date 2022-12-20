@@ -2,7 +2,7 @@ const { createLogAppSE } = require(global.SERVER_ROOT + "/service/log/log.contro
 const { ConfigGet, ConfigUpdateParameter, ConfigSave, DefaultConfig, Info} = require ('./server.service');
 module.exports = {
 	ConfigGet: (req, res) => {
-        ConfigGet(req.query.parameter_name, (err, result)=>{
+        ConfigGet(req.query.config_no, req.query.parameter_name, (err, result)=>{
             if (err){
                 return res.status(500).send(
                     err
@@ -10,6 +10,7 @@ module.exports = {
             }
             else
                 return res.status(200).json({
+                    data: result.config,
                     parameter_name:  result.parameter_name,
                     parameter_value : result.parameter_value
                 });

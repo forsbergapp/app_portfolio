@@ -3,12 +3,12 @@
     Functions and globals in this order:
     MISC
     BROADCAST
-    DB INFO
     USER STAT
     USERS
     APP ADMIN
     MONITOR
-    MAP
+    SERVER PARAMETER
+    DB INFO
     EXCEPTION
     INIT
     */
@@ -106,6 +106,7 @@ function show_menu(menu){
         }
         //PARAMETER
         case 6:{
+            show_parameters();
             break;
         }
         //INSTALLATION
@@ -285,110 +286,6 @@ function set_broadcast_type(){
         }
     }
 }
-/*----------------------- */
-/* DB INFO                */
-/*----------------------- */
-async function show_db_info(){
-    if (admin_token_has_value()){
-        let json;
-        await common_fetch('/service/db/admin/DBInfo?',
-                           'GET', 2, null, window.global_common_app_id, null, (err, result) =>{
-            if (err)
-                null;
-            else{
-                json = JSON.parse(result);
-                document.getElementById('menu_8_db_info_database_data').innerHTML = json.data.database_use;
-                document.getElementById('menu_8_db_info_name_data').innerHTML = json.data.database_name;
-                document.getElementById('menu_8_db_info_version_data').innerHTML = json.data.version;
-                document.getElementById('menu_8_db_info_database_schema_data').innerHTML = json.data.database_schema;
-                document.getElementById('menu_8_db_info_host_data').innerHTML = json.data.hostname;
-                document.getElementById('menu_8_db_info_connections_data').innerHTML = json.data.connections;
-                document.getElementById('menu_8_db_info_started_data').innerHTML = json.data.started;
-            }
-        })
-    }
-}
-async function show_db_info_space(){
-    if (admin_token_has_value()){
-        let json;
-        let size = '(Mb)';
-        let roundOff = (num) => {
-            const x = Math.pow(10,2);
-            return Math.round(num * x) / x;
-          }
-        document.getElementById('menu_8_db_info_space_detail').innerHTML = window.global_app_spinner;
-        await common_fetch('/service/db/admin/DBInfoSpace?', 'GET', 2, null, window.global_common_app_id, null, (err, result) =>{
-            if (err)
-                null;
-            else{
-                json = JSON.parse(result);
-                let html = `<div id='menu_8_db_info_space_detail_row_title' class='menu_8_db_info_space_detail_row'>
-                                <div id='menu_8_db_info_space_detail_col_title1' class='menu_8_db_info_space_detail_col list_title'>
-                                    <div>TABLE NAME</div>
-                                </div>
-                                <div id='menu_8_db_info_space_detail_col_title2' class='menu_8_db_info_space_detail_col list_title'>
-                                    <div>SIZE ${size}</div>
-                                </div>
-                                <div id='menu_8_db_info_space_detail_col_title3' class='menu_8_db_info_space_detail_col list_title'>
-                                    <div>DATA USED ${size}</div>
-                                </div>
-                                <div id='menu_8_db_info_space_detail_col_title4' class='menu_8_db_info_space_detail_col list_title'>
-                                    <div>DATA FREE ${size}</div>
-                                </div>
-                                <div id='menu_8_db_info_space_detail_col_title5' class='menu_8_db_info_space_detail_col list_title'>
-                                    <div>% USED</div>
-                                </div>
-                            </div>`;
-                for (i = 0; i < json.data.length; i++) {
-                    html += 
-                    `<div id='menu_8_db_info_space_detail_row_${i}' class='menu_8_db_info_space_detail_row' >
-                        <div class='menu_8_db_info_space_detail_col'>
-                            <div>${json.data[i].table_name}</div>
-                        </div>
-                        <div class='menu_8_db_info_space_detail_col'>
-                            <div>${roundOff(json.data[i].total_size)}</div>
-                        </div>
-                        <div class='menu_8_db_info_space_detail_col'>
-                            <div>${roundOff(json.data[i].data_used)}</div>
-                        </div>
-                        <div class='menu_8_db_info_space_detail_col'>
-                            <div>${roundOff(json.data[i].data_free)}</div>
-                        </div>
-                        <div class='menu_8_db_info_space_detail_col'>
-                            <div>${roundOff(json.data[i].pct_used)}</div>
-                        </div>
-                    </div>`;
-                }
-                document.getElementById('menu_8_db_info_space_detail').innerHTML = html;
-                common_fetch('/service/db/admin/DBInfoSpaceSum?', 'GET', 2, null, window.global_common_app_id, null, (err, result) =>{
-                    if (err)
-                        null;
-                    else{
-                        json = JSON.parse(result);
-                        document.getElementById('menu_8_db_info_space_detail').innerHTML += 
-                            `<div id='menu_8_db_info_space_detail_row_total' class='menu_8_db_info_space_detail_row' >
-                                <div class='menu_8_db_info_space_detail_col'>
-                                    <div>TOTAL</div>
-                                </div>
-                                <div class='menu_8_db_info_space_detail_col'>
-                                    <div>${roundOff(json.data.total_size)}</div>
-                                </div>
-                                <div class='menu_8_db_info_space_detail_col'>
-                                    <div>${roundOff(json.data.data_used)}</div>
-                                </div>
-                                <div class='menu_8_db_info_space_detail_col'>
-                                    <div>${roundOff(json.data.data_free)}</div>
-                                </div>
-                                <div class='menu_8_db_info_space_detail_col'>
-                                    <div>${roundOff(json.data.pct_used)}</div>
-                                </div>
-                            </div>`;
-                    }
-                })
-            }
-        })
-    }
-}
 async function check_maintenance(){
     if (admin_token_has_value()){
         let json;
@@ -438,7 +335,7 @@ async function show_chart(chart){
             app_id = '';
         else
             app_id =document.getElementById('select_app_menu1').value;
-        await common_fetch(window.global_rest_api_db_path + `app_log/admin/stat/uniquevisitor?select_app_id=${app_id}&statchoice=${chart}&year=${year}&month=${month}`,
+        await common_fetch(window.global_rest_api_db_path + `/app_log/admin/stat/uniquevisitor?select_app_id=${app_id}&statchoice=${chart}&year=${year}&month=${month}`,
                  'GET', 1, null, null, null, (err, result) =>{
             if (err){
                 document.getElementById(`box${chart}_chart`).innerHTML = '';
@@ -1085,6 +982,10 @@ async function button_save(item){
                 }
             };
         }
+        else
+            if (item == 'config_save'){
+                null;
+            }
     
 }
 async function update_record(table, 
@@ -1320,46 +1221,85 @@ function fix_pagination_buttons(){
     }
 }
 function nav_click(item){
-    document.getElementById('list_monitor_nav_1').classList='';
-    document.getElementById('list_monitor_nav_2').classList='';
-    document.getElementById('list_monitor_nav_3').classList='';
-    document.getElementById('list_monitor_nav_4').classList='';
+    function reset_monitor(){
+        document.getElementById('list_monitor_nav_1').classList='';
+        document.getElementById('list_monitor_nav_2').classList='';
+        document.getElementById('list_monitor_nav_3').classList='';
+        document.getElementById('list_monitor_nav_4').classList='';
+    }
+    function reset_config(){
+        document.getElementById('list_config_nav_1').classList='';
+        document.getElementById('list_config_nav_2').classList='';
+        document.getElementById('list_config_nav_3').classList='';
+        document.getElementById('list_config_nav_4').classList='';
+    }
+    
     switch (item.id){
+        //monitor nav
         case 'list_connected_title':{
+            reset_monitor();
             document.getElementById('list_connected_form').style.display='flex';
             document.getElementById('list_app_log_form').style.display='none';
             document.getElementById('list_server_log_form').style.display='none';
             document.getElementById('list_pm2_log_form').style.display='none';
-            document.getElementById('list_monitor_nav_1').classList= 'list_monitor_nav_selected_tab';
+            document.getElementById('list_monitor_nav_1').classList= 'list_nav_selected_tab';
             show_connected();
             break;
         }
         case 'list_app_log_title':{
+            reset_monitor();
             document.getElementById('list_connected_form').style.display='none';
             document.getElementById('list_app_log_form').style.display='flex';
             document.getElementById('list_server_log_form').style.display='none';
             document.getElementById('list_pm2_log_form').style.display='none';
-            document.getElementById('list_monitor_nav_2').classList= 'list_monitor_nav_selected_tab';
+            document.getElementById('list_monitor_nav_2').classList= 'list_nav_selected_tab';
             window.global_page = 0;
             show_app_log();
             break;
         }
         case 'list_server_log_title':{
+            reset_monitor();
             document.getElementById('list_connected_form').style.display='none';
             document.getElementById('list_app_log_form').style.display='none';
             document.getElementById('list_server_log_form').style.display='block';
             document.getElementById('list_pm2_log_form').style.display='none';
-            document.getElementById('list_monitor_nav_3').classList= 'list_monitor_nav_selected_tab';
+            document.getElementById('list_monitor_nav_3').classList= 'list_nav_selected_tab';
             show_server_logs();
             break;
         }
         case 'list_pm2_log_title':{
+            reset_monitor();
             document.getElementById('list_connected_form').style.display='none';
             document.getElementById('list_app_log_form').style.display='none';
             document.getElementById('list_server_log_form').style.display='none';
             document.getElementById('list_pm2_log_form').style.display='block';
-            document.getElementById('list_monitor_nav_4').classList= 'list_monitor_nav_selected_tab';
+            document.getElementById('list_monitor_nav_4').classList= 'list_nav_selected_tab';
             show_pm2_logs();
+            break;
+        }
+        //config nav
+        case 'list_config_server_title':{
+            reset_config();
+            document.getElementById('list_config_nav_1').classList= 'list_nav_selected_tab';
+            show_parameters(1);
+            break;
+        }
+        case 'list_config_blockip_title':{
+            reset_config();
+            document.getElementById('list_config_nav_2').classList= 'list_nav_selected_tab';
+            show_parameters(2);
+            break;
+        }
+        case 'list_config_useragent_title':{
+            reset_config();
+            document.getElementById('list_config_nav_3').classList= 'list_nav_selected_tab';
+            show_parameters(3);
+            break;
+        }
+        case 'list_config_policy_title':{
+            reset_config();
+            document.getElementById('list_config_nav_4').classList= 'list_nav_selected_tab';
+            show_parameters(4);
             break;
         }
     }
@@ -2269,6 +2209,269 @@ function show_pm2_logs(){
               order_by);
 }
 /*----------------------- */
+/* SERVER PARAMETER       */
+/*----------------------- */
+async function show_parameters(config_nav=1){
+    let url;
+    document.getElementById(`list_config`).innerHTML = window.global_app_spinner;
+    url  = `/server/config?config_no=${config_nav}`;
+    await common_fetch(url, 'GET', 2, null, null, null, (err, result) =>{
+        if (err)
+            document.getElementById(`list_config`).innerHTML = '';
+        else{
+            json = JSON.parse(result);
+            switch (config_nav){
+                case 1:{
+                    let html = `<div id='list_config_row_title' class='list_config_row'>
+                            <div id='list_config_col_title1' class='list_config_col list_title'>
+                                <div>PARAMETER NAME</div>
+                            </div>
+                            <div id='list_config_col_title2' class='list_config_col list_title'>
+                                <div>PARAMETER VALUE</div>
+                            </div>
+                            <div id='list_config_col_title3' class='list_config_col list_title'>
+                                <div>COMMENT</div>
+                            </div>
+                        </div>`;
+                    html += 
+                        `<div id='list_config_row_${i}' class='list_config_row' >
+                            <div class='list_config_col list_config_group'>
+                                <div class='list_readonly'>${Object.keys(json.data)[4]}</div>
+                            </div>
+                        </div>`;
+                    for (i = 0; i < json.data.server.length; i++) {
+                        html += 
+                        `<div id='list_config_row_${i}' class='list_config_row' >
+                            <div class='list_config_col'>
+                                <div class='list_readonly'>${Object.keys(json.data.server[i])[0]}</div>
+                            </div>
+                            <div class='list_config_col'>
+                                <input type=text class='list_edit' value='${Object.values(json.data.server[i])[0]}'/>
+                            </div>
+                            <div class='list_config_col'>
+                                <input type=text class='list_edit' value='${Object.values(json.data.server[i])[1]}'/>
+                            </div>
+                        </div>`;
+                    }
+                    html += 
+                        `<div id='list_config_row_${i}' class='list_config_row' >
+                            <div class='list_config_col list_config_group'>
+                                <div class='list_readonly'>${Object.keys(json.data)[5]}</div>
+                            </div>
+                        </div>`;
+                    for (i = 0; i < json.data.service_auth.length; i++) {
+                        html += 
+                        `<div id='list_config_row_${i}' class='list_config_row' >
+                            <div class='list_config_col'>
+                                <div class='list_readonly'>${Object.keys(json.data.service_auth[i])[0]}</div>
+                            </div>
+                            <div class='list_config_col'>
+                                <input type=text class='list_edit' value='${Object.values(json.data.service_auth[i])[0]}'/>
+                            </div>
+                            <div class='list_config_col'>
+                                <input type=text class='list_edit' value='${Object.values(json.data.service_auth[i])[1]}'/>
+                            </div>
+                        </div>`;
+                    }
+                    html += 
+                        `<div id='list_config_row_${i}' class='list_config_row' >
+                            <div class='list_config_col list_config_group'>
+                                <div class='list_readonly'>${Object.keys(json.data)[6]}</div>
+                            </div>
+                        </div>`;
+                    for (i = 0; i < json.data.service_broadcast.length; i++) {
+                        html += 
+                        `<div id='list_config_row_${i}' class='list_config_row' >
+                            <div class='list_config_col'>
+                                <div class='list_readonly'>${Object.keys(json.data.service_broadcast[i])[0]}</div>
+                            </div>
+                            <div class='list_config_col'>
+                                <input type=text class='list_edit' value='${Object.values(json.data.service_broadcast[i])[0]}'/>
+                            </div>
+                            <div class='list_config_col'>
+                                <input type=text class='list_edit' value='${Object.values(json.data.service_broadcast[i])[1]}'/>
+                            </div>
+                        </div>`;
+                    }
+                    html += 
+                        `<div id='list_config_row_${i}' class='list_config_row' >
+                            <div class='list_config_col list_config_group'>
+                                <div class='list_readonly'>${Object.keys(json.data)[7]}</div>
+                            </div>
+                        </div>`;
+                    for (i = 0; i < json.data.service_db.length; i++) {
+                        html += 
+                        `<div id='list_config_row_${i}' class='list_config_row' >
+                            <div class='list_config_col'>
+                                <div class='list_readonly'>${Object.keys(json.data.service_db[i])[0]}</div>
+                            </div>
+                            <div class='list_config_col'>
+                                <input type=text class='list_edit' value='${Object.values(json.data.service_db[i])[0]}'/>
+                            </div>
+                            <div class='list_config_col'>
+                                <input type=text class='list_edit' value='${Object.values(json.data.service_db[i])[1]}'/>
+                            </div>
+                        </div>`;
+                    }
+                    html += 
+                        `<div id='list_config_row_${i}' class='list_config_row' >
+                            <div class='list_config_col list_config_group'>
+                                <div class='list_readonly'>${Object.keys(json.data)[8]}</div>
+                            </div>
+                        </div>`;
+                    for (i = 0; i < json.data.service_log.length; i++) {
+                        html += 
+                        `<div id='list_config_row_${i}' class='list_config_row' >
+                            <div class='list_config_col'>
+                                <div class='list_readonly'>${Object.keys(json.data.service_log[i])[0]}</div>
+                            </div>
+                            <div class='list_config_col'>
+                                <input type=text class='list_edit' value='${Object.values(json.data.service_log[i])[0]}'/>
+                            </div>
+                            <div class='list_config_col'>
+                                <input type=text class='list_edit' value='${Object.values(json.data.service_log[i])[1]}'/>
+                            </div>
+                        </div>`;
+                    }
+                    html += 
+                        `<div id='list_config_row_${i}' class='list_config_row' >
+                            <div class='list_config_col list_config_group'>
+                                <div class='list_readonly'>${Object.keys(json.data)[9]}</div>
+                            </div>
+                        </div>`;
+                    for (i = 0; i < json.data.service_report.length; i++) {
+                        html += 
+                        `<div id='list_config_row_${i}' class='list_config_row' >
+                            <div class='list_config_col'>
+                                <div class='list_readonly'>${Object.keys(json.data.service_report[i])[0]}</div>
+                            </div>
+                            <div class='list_config_col'>
+                                <input type=text class='list_edit' value='${Object.values(json.data.service_report[i])[0]}'/>
+                            </div>
+                            <div class='list_config_col'>
+                                <input type=text class='list_edit' value='${Object.values(json.data.service_report[i])[1]}'/>
+                            </div>
+                        </div>`;
+                    }
+                    document.getElementById('list_config').innerHTML = html;
+                    list_events('list_config', 'list_config_row', ' .list_edit');
+                    //set focus first column in first row
+                    document.querySelectorAll('#list_config .list_edit')[0].focus();
+                    break;
+                }
+                default:{
+                    document.getElementById('list_config').innerHTML = result;
+                    break;
+                }
+            }
+        }
+    })
+}
+/*----------------------- */
+/* DB INFO                */
+/*----------------------- */
+async function show_db_info(){
+    if (admin_token_has_value()){
+        let json;
+        await common_fetch('/service/db/admin/DBInfo?',
+                           'GET', 2, null, window.global_common_app_id, null, (err, result) =>{
+            if (err)
+                null;
+            else{
+                json = JSON.parse(result);
+                document.getElementById('menu_8_db_info_database_data').innerHTML = json.data.database_use;
+                document.getElementById('menu_8_db_info_name_data').innerHTML = json.data.database_name;
+                document.getElementById('menu_8_db_info_version_data').innerHTML = json.data.version;
+                document.getElementById('menu_8_db_info_database_schema_data').innerHTML = json.data.database_schema;
+                document.getElementById('menu_8_db_info_host_data').innerHTML = json.data.hostname;
+                document.getElementById('menu_8_db_info_connections_data').innerHTML = json.data.connections;
+                document.getElementById('menu_8_db_info_started_data').innerHTML = json.data.started;
+            }
+        })
+    }
+}
+async function show_db_info_space(){
+    if (admin_token_has_value()){
+        let json;
+        let size = '(Mb)';
+        let roundOff = (num) => {
+            const x = Math.pow(10,2);
+            return Math.round(num * x) / x;
+          }
+        document.getElementById('menu_8_db_info_space_detail').innerHTML = window.global_app_spinner;
+        await common_fetch('/service/db/admin/DBInfoSpace?', 'GET', 2, null, window.global_common_app_id, null, (err, result) =>{
+            if (err)
+                null;
+            else{
+                json = JSON.parse(result);
+                let html = `<div id='menu_8_db_info_space_detail_row_title' class='menu_8_db_info_space_detail_row'>
+                                <div id='menu_8_db_info_space_detail_col_title1' class='menu_8_db_info_space_detail_col list_title'>
+                                    <div>TABLE NAME</div>
+                                </div>
+                                <div id='menu_8_db_info_space_detail_col_title2' class='menu_8_db_info_space_detail_col list_title'>
+                                    <div>SIZE ${size}</div>
+                                </div>
+                                <div id='menu_8_db_info_space_detail_col_title3' class='menu_8_db_info_space_detail_col list_title'>
+                                    <div>DATA USED ${size}</div>
+                                </div>
+                                <div id='menu_8_db_info_space_detail_col_title4' class='menu_8_db_info_space_detail_col list_title'>
+                                    <div>DATA FREE ${size}</div>
+                                </div>
+                                <div id='menu_8_db_info_space_detail_col_title5' class='menu_8_db_info_space_detail_col list_title'>
+                                    <div>% USED</div>
+                                </div>
+                            </div>`;
+                for (i = 0; i < json.data.length; i++) {
+                    html += 
+                    `<div id='menu_8_db_info_space_detail_row_${i}' class='menu_8_db_info_space_detail_row' >
+                        <div class='menu_8_db_info_space_detail_col'>
+                            <div>${json.data[i].table_name}</div>
+                        </div>
+                        <div class='menu_8_db_info_space_detail_col'>
+                            <div>${roundOff(json.data[i].total_size)}</div>
+                        </div>
+                        <div class='menu_8_db_info_space_detail_col'>
+                            <div>${roundOff(json.data[i].data_used)}</div>
+                        </div>
+                        <div class='menu_8_db_info_space_detail_col'>
+                            <div>${roundOff(json.data[i].data_free)}</div>
+                        </div>
+                        <div class='menu_8_db_info_space_detail_col'>
+                            <div>${roundOff(json.data[i].pct_used)}</div>
+                        </div>
+                    </div>`;
+                }
+                document.getElementById('menu_8_db_info_space_detail').innerHTML = html;
+                common_fetch('/service/db/admin/DBInfoSpaceSum?', 'GET', 2, null, window.global_common_app_id, null, (err, result) =>{
+                    if (err)
+                        null;
+                    else{
+                        json = JSON.parse(result);
+                        document.getElementById('menu_8_db_info_space_detail').innerHTML += 
+                            `<div id='menu_8_db_info_space_detail_row_total' class='menu_8_db_info_space_detail_row' >
+                                <div class='menu_8_db_info_space_detail_col'>
+                                    <div>TOTAL</div>
+                                </div>
+                                <div class='menu_8_db_info_space_detail_col'>
+                                    <div>${roundOff(json.data.total_size)}</div>
+                                </div>
+                                <div class='menu_8_db_info_space_detail_col'>
+                                    <div>${roundOff(json.data.data_used)}</div>
+                                </div>
+                                <div class='menu_8_db_info_space_detail_col'>
+                                    <div>${roundOff(json.data.data_free)}</div>
+                                </div>
+                                <div class='menu_8_db_info_space_detail_col'>
+                                    <div>${roundOff(json.data.pct_used)}</div>
+                                </div>
+                            </div>`;
+                    }
+                })
+            }
+        })
+    }
+}
+/*----------------------- */
 /* INIT                   */
 /*----------------------- */
 function admin_token_has_value(){
@@ -2390,7 +2593,12 @@ function init_admin_secure(){
     document.getElementById('list_pm2_log_title_process_event').innerHTML = window.global_icon_app_server + '2 ' + window.global_icon_app_log + ' Process event';
 
     document.getElementById('client_id_label').innerHTML = window.global_icon_user;
-
+    //menu 6
+    document.getElementById('list_config_server_title').innerHTML = window.global_icon_app_server;
+    document.getElementById('list_config_blockip_title').innerHTML = window.global_icon_app_internet + window.global_icon_app_shield + window.global_icon_regional_numbersystem;
+    document.getElementById('list_config_useragent_title').innerHTML = window.global_icon_app_internet + window.global_icon_app_shield + window.global_icon_app_browser;
+    document.getElementById('list_config_policy_title').innerHTML = window.global_icon_app_internet + window.global_icon_app_shield + window.global_icon_misc_book;
+    document.getElementById('config_save').innerHTML = window.global_icon_app_save;
     //menu 8
     document.getElementById('menu_8_db_info_database_title').innerHTML = window.global_icon_app_database + window.global_icon_regional_numbersystem;
     document.getElementById('menu_8_db_info_name_title').innerHTML = window.global_icon_app_database;
@@ -2417,10 +2625,13 @@ function init_admin_secure(){
     document.getElementById('list_user_account_search_input').addEventListener('keyup', function() { window.global_typewatch(show_users(sort=8, order_by='ASC', false), 500); }, false);
     document.getElementById('list_user_account_search_icon').addEventListener('click', function() { document.getElementById('list_user_account_search_input').focus();document.getElementById('list_user_account_search_input').dispatchEvent(new KeyboardEvent('keyup')); }, false);
     document.getElementById('users_save').addEventListener('click', function() { button_save('users_save')}, false); 
-
     document.getElementById('apps_save').addEventListener('click', function() { button_save('apps_save')}, false); 
+    document.getElementById('config_save').addEventListener('click', function() { button_save('config_save')}, false); 
 
-    document.getElementById('list_app_log_title').addEventListener('click', function() { nav_click(this)}, false);
+    document.querySelectorAll('.list_nav').forEach(e => e.addEventListener('click', function(event) {
+                                                                                        nav_click(event.target.id==''?event.target.parentNode:event.target)
+                                                                                    }, true));
+
     document.getElementById('select_app_menu5_app_log').addEventListener('change', function() { nav_click(document.getElementById('list_app_log_title'))}, false);
     document.getElementById('select_year_menu5_app_log').addEventListener('change', function() { nav_click(document.getElementById('list_app_log_title'))}, false);
     document.getElementById('select_month_menu5_app_log').addEventListener('change', function() { nav_click(document.getElementById('list_app_log_title'))}, false);
@@ -2430,12 +2641,10 @@ function init_admin_secure(){
     document.getElementById('list_app_log_next').addEventListener('click', function() { page_navigation(this)}, false);
     document.getElementById('list_app_log_last').addEventListener('click', function() { page_navigation(this)}, false);
     
-    document.getElementById('list_connected_title').addEventListener('click', function() { nav_click(this)}, false);
     document.getElementById('select_app_menu5_list_connected').addEventListener('change', function() { nav_click(document.getElementById('list_connected_title'))}, false);
     document.getElementById('select_year_menu5_list_connected').addEventListener('change', function() { nav_click(document.getElementById('list_connected_title'))}, false);
     document.getElementById('select_month_menu5_list_connected').addEventListener('change', function() { nav_click(document.getElementById('list_connected_title'))}, false);
 
-    document.getElementById('list_server_log_title').addEventListener('click', function() { nav_click(this)}, false);
     document.getElementById('select_logscope5').addEventListener('change', function() { nav_click(document.getElementById('list_server_log_title'))}, false);    
     document.getElementById('select_app_menu5').addEventListener('change', function() { nav_click(document.getElementById('list_server_log_title'))}, false);
     document.getElementById('select_year_menu5').addEventListener('change', function() { nav_click(document.getElementById('list_server_log_title'))}, false);
@@ -2444,7 +2653,6 @@ function init_admin_secure(){
 
     document.getElementById('filesearch_menu5').addEventListener('click', function() { show_existing_logfiles();}, false);
     
-    document.getElementById('list_pm2_log_title').addEventListener('click', function() { nav_click(this)}, false);
     document.getElementById('select_maptype').addEventListener('change', function() { map_setstyle(document.getElementById('select_maptype').value) }, false);
 
     //SET APPS INFO, INIT MAP
