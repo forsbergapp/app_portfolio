@@ -103,6 +103,15 @@
         text-align: center;
         border-radius: 4px;
     }
+    .save_buttons, .button_save{
+        height:40px;
+        display:inline-block;
+    }
+    .button_save #app_spinner{
+        position:unset;
+        margin:0px;
+        margin-top:-20px;
+    }
     /*MENU 1 DASHBOARD*/
     #menu_1_content_widget1{
         height:calc(80% - 10px);
@@ -415,8 +424,7 @@
         width: 600px;
     }
     #users_buttons, #users_save{
-        height:50px;
-        display:inline-block;
+        height:50px !important;
     }
     /* MENU 4 APP ADMIN*/
     #menu_4_content_widget1{
@@ -503,18 +511,6 @@
     .list_app_parameter_col:nth-child(6){
         width:150px;
     }
-    #apps_buttons, #apps_save{
-        height:40px;
-        display:inline-block;
-    }
-    #apps_save #app_spinner{
-        position:unset;
-        margin:0px;
-        margin-top:-20px;
-    }
-    #apps_save i{
-        vertical-align: top;
-    }
     .list_edit{
         border:none;
         width: 100%;
@@ -546,6 +542,41 @@
     }
     #menu_5_content_widget2{
         height:calc(37% - 10px);
+    }
+    /*MENU PARAMETERS*/
+    #menu_6_content_widget1{
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+    #list_config{
+        display: flex;
+        flex-direction: column;
+        height: calc(100% - 50px);
+        overflow-x:auto;
+        overflow-y:auto;
+    }
+    .list_config_row{
+        height: auto;
+        padding-top:4px;
+        padding-inline-start: 5px;
+        text-align: start;
+    }   
+    .list_config_group{
+        text-transform: uppercase;
+        font-weight: bold;
+    }
+    .list_config_col{
+        display:inline-block;
+    }
+    .list_config_col:nth-child(1){
+        width:250px;
+    }
+    .list_config_col:nth-child(2){
+        width:200px;
+    }
+    .list_config_col:nth-child(3){
+        width:700px;
     }
     /* MENU DATABASE*/
     #menu_8_content_widget1{
@@ -605,27 +636,32 @@
         text-align: start;
     }
     /*Navigation*/
-    #list_monitor_nav{
-        margin: 0px;
-        padding: 0px;
-    }
-    #list_monitor_nav li{
-        display: inline-block;
-        list-style: none;
-    }
-    
-    .list_monitor_title {
+    .list_button{
+        border: none;
+        border-radius: 4px;
         text-transform: uppercase;
+        cursor: pointer;
+        background:none;
         display:inline-block;
         margin-top:10px;
         margin-bottom:10px;
         width:80px;
     }
-    .list_monitor_title svg{
+    .list_button svg{
         font-size: 2em;
         height: 0.6em;
         vertical-align: sub;
     }
+
+    .list_nav{
+        margin: 0px;
+        padding: 0px;
+    }
+    .list_nav li{
+        display: inline-block;
+        list-style: none;
+    }
+    
     .list_current_user_row{
         animation: common_pulsate 2s ease-out;
         animation-iteration-count: infinite; 
@@ -689,14 +725,7 @@
         margin-top:10px;
         margin-bottom:10px;
     }
-    .list_button{
-        border: none;
-        border-radius: 4px;
-        text-transform: uppercase;
-        cursor: pointer;
-        background:none;
-        display:inline-block;
-    }    
+    
     
     #list_app_log, #list_connected{
         overflow-y: auto;
@@ -1097,11 +1126,11 @@
     .list_button svg:hover, .menuitem svg:hover{
         fill: var(--app_theme_hover_color);
     }
-    #list_monitor_nav button{
+    .list_nav button{
         color: var(--app_theme_nav_selected_color);
         fill: var(--app_theme_nav_selected_color);
     }
-    #list_monitor_nav .list_monitor_nav_selected_tab button{
+    .list_nav .list_nav_selected_tab button{
         background-color:var(--app_theme_nav_selected_background_color);
     }
     .widget:hover, .widget:active{
@@ -1155,7 +1184,8 @@
     .list_connected_row,
     .list_server_log_row,
     .list_pm2_log_row,
-    .list_pm2_log_process_event_row{
+    .list_pm2_log_process_event_row,
+    .list_config_row{
         font-size: 9px;
     }
     .list_user_account_row input,
@@ -1168,7 +1198,8 @@
     #list_user_account,
     #list_user_account_logon,
     #list_apps,
-    #list_app_parameter{
+    #list_app_parameter,
+    #list_config{
         background-color: var(--app_theme_list_background_color);
     }
     #menu_8_db_info_space_detail,

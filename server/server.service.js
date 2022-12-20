@@ -2,14 +2,14 @@ const { createLogAppSE } = require(global.SERVER_ROOT + "/service/log/log.contro
 
 function config_files(){
     return [
-        [1, global.SERVER_ROOT + '/config/server.json'],
-        [2, global.SERVER_ROOT + process.env.SERVICE_AUTH_ACCESS_CONTROL_IP_PATH],
-        [3, global.SERVER_ROOT + process.env.SERVICE_AUTH_ACCESS_CONTROL_USER_AGENT_PATH],
-        [4, global.SERVER_ROOT + process.env.SERVICE_AUTH_POLICY_DIRECTIVES] 
+        [1, '/config/config.json'],
+        [2, process.env.SERVICE_AUTH_ACCESS_CONTROL_IP_PATH],
+        [3, process.env.SERVICE_AUTH_ACCESS_CONTROL_USER_AGENT_PATH],
+        [4, process.env.SERVICE_AUTH_POLICY_DIRECTIVES] 
       ];
 }
 module.exports = {
-	ConfigGet: (parameter_name, callBack) => {
+	ConfigGet: (config_no, parameter_name, callBack) => {
         if (parameter_name){
             let parameter_value = eval(`process.env.${parameter_name}`);
             callBack(null, {
@@ -19,23 +19,21 @@ module.exports = {
         }
         else{
             let config=[]
-            const {promises: {readFile}} = require("fs");
-            const files = config_files();
-            Promise.all(files.map(file => {
-                config.push(readFile(file[1], 'utf8'));
-            })).then(function(){
-                callBack(null, {
-                                    config_server: config[0],
-                                    config_blockip: config[1],
-                                    config_useragent: config[2],
-                                    config_policy: config[3]
-                                })
-            })
-            .catch(err => {
-                createLogAppSE(req.query.app_id, __appfilename, __appfunction, __appline, err).then(function(){
-                    callBack(err, null);
-                })
-            });
+            const fs = require("fs");
+            let config_file;
+            if (config_no){
+                config_file = config_files().filter(function(file) {
+                    return (parseInt(file[0]) == parseInt(config_no));
+                })[0][1];
+                fs.readFile(global.SERVER_ROOT + config_file, 'utf8', (err, fileBuffer) => {
+                    if (err)
+                        callBack(err,null);
+                    else
+                        callBack(null,{config: JSON.parse(fileBuffer.toString())});
+                });
+            }
+            else
+                callBack(null, null);
         }
     },
     ConfigUpdateParameter: (parameter_name, parameter_value, callBack) => {
@@ -118,7 +116,7 @@ module.exports = {
                                 "server":[
                                                         {"MAINTENANCE": 0, "COMMENT": ""},
                                                         {"HTTPS_KEY": "${slash}ssl${slash}server.key", "COMMENT": ""},
-                                                        {"HTTPS_CERT": "${slash}ssl${slash}server.cert", "COMMENT": ""}
+                                                        {"HTTPS_CERT": "${slash}ssl${slash}server.cert", "COMMENT": ""},
                                                         {"PORT": "80", "COMMENT": ""},
                                                         {"HTTPS_ENABLE": 0, "COMMENT": ""},
                                                         {"HTTPS_PORT": 443, "COMMENT": ""},
@@ -132,7 +130,7 @@ module.exports = {
                                                         {"APP_COMMON_APP_ID": 0, "COMMENT": ""},
                                                         {"SERVER_SERVICE_GEOLOCATION_URL_GPS_IP": "http://www.geoplugin.net/json.gp", "COMMENT": ""},
                                                         {"SERVER_SERVICE_GEOLOCATION_URL_GPS_PLACE": "http://www.geoplugin.net/extras/location.gp", "COMMENT": ""}
-                                         ]
+                                         ],
                                 "service_auth":[
                                                         {"ACCESS_CONTROL_ENABLE": 1, "COMMENT": ""},
                                                         {"ACCESS_CONTROL_IP": 0, "COMMENT": "1=yes, 0=no, check IP v4 range to block. Could be integrated with iptables on Linux."},
@@ -213,7 +211,7 @@ module.exports = {
                                                         {"PDF_WAIT_INTERVAL": 100, "COMMENT": ""},
                                                         {"PDF_WAIT_ATTEMPTS": 100, "COMMENT": ""},
                                                         {"PDF_EMPTY_SIZE_CHECK": 900, "COMMENT": "bytes, PDF with content should be bigger than this"},
-                                                        {"EXECUTABLE_PATH": "", "COMMENT": "if using different browser for Puppeteer, ex Linux: /snap/bin/chromium, Windows: C:\\Users\\admin\\AppData\\Local\\Chromium\\Application\\chrome.exe"},
+                                                        {"EXECUTABLE_PATH": "", "COMMENT": "if using different browser for Puppeteer, ex Linux: /snap/bin/chromium, Windows: C:\\Users\\admin\\AppData\\Local\\Chromium\\Application\\chrome.exe"}
                                                  ]
                             }`;
         let config_blockip = `[
