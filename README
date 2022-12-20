@@ -4,32 +4,38 @@ A platform to build your app portfolio.
 With most necessary technology configured to get started and with less
 third party libraries and module dependencies for performance and better maintainability
 with code you have control over.
-Microservice architecture with monitoring of each microservice activity.
+Microservice REST API architecture with optional monitoring of each microservice activity.
 Services included are authentication, database, forms, report, geolocation, log, mail
 and worldcities.
 Runs in Node.js using Express framework.
+
 Apps are component structured and server-side rendered with database data popluation.
 Secure REST API with authentication middleware, common SQL with minium differences for all databases, 
 centralized common SQL parameter syntax and consolidated data validation in Javascript for all databases.
 Apps are written using pure CSS, HTML and Javascript and ES6+ Javascript using
 AJAX method and JSON in both client and server.
+Apps third party modules included are Easy QRCode, Fontawesome icons, Leaflet map, sunposition calculations 
+and regional functions. 
+
 Oracle SQL Developer Data model designed data model.
 Databases supported are MariaDB, MySQL, Oracle and PostgreSQL.
 Centralized data model error handling of database errors, constraints errors and 
 application errors and showed in users language.
+
 A global support implemented in client with ALL Unicode characters supported by Noto Sans font
 included different arabic scripts and different font heights (Nastaliq).
 Any regional setting supported including right to left. More than 500 locales with language and
-country translations. The mayor 30 languages are translated in the apps. Icons are frequently
-used to minmize text usage and to provide simplier and better explanation to a global audience.
+country translations. The mayor 30 languages are translated in the apps. Icons are frequently used 
+to minmize text usage and to provide simplier and better explanation to a global audience.
 
 Includes 
 
-	1.App 0 - Admin single page web app (SPA) with sourcecode secured using authentication credentials
-	and dynamically loads app code after login. Logout deletes secured app code and deletes
-	any traces still running as SPA. App monitors database, users and apps, can broadcast messages
-	or remotely shutdown apps for maintenance, provides user statistics in graphs created by 
-	pure css, javascript and html, maintains apps parameters and full log functionality including
+	1.App 0 - Admin single page web app (SPA) with source code secured logged in as admin from database
+	or server system admin authenticated outside database and dynamically loads app code after login. 
+	Logout deletes secured app code and deletes any traces still running as SPA. 
+	App monitors database, users and apps, can broadcast messages or remotely shutdown apps for maintenance, 
+	provides user statistics in graphs created by pure css, javascript and html, 
+	maintains apps parameters and full log functionality including
 	log of server, apps, routers, controllers, services and SQL.
 
 	2.App 1 - Main single page app to display your app portfolio.
@@ -105,7 +111,25 @@ Includes
 
 Installation instructions
 
-1. install Node.js on server
+1. download from Github
+
+	mkdir app_portfolio
+   	cd app_portfolio
+   	git clone https://github.com/appportfolio/app_portfolio.git
+
+	.gitignore content:
+		.vscode/									for Visual Code development
+		config/										configuration files
+		dev/										development files, put your private work here
+		logs/										log files
+		production_.env/							keep copy of production files
+		node_modules/								NodeJS modules (400Mb+)
+		service/db/config/oracle_instantclient/		Oracle Client
+		service/report/tmp/							temporary Report directory
+
+2. install Node.js and modules on server
+
+	install desired version of NodeJS
 
 	modules required:
 	npm install axios bcryptjs dotenv express helmet jsonwebtoken nodemailer mariadb mysql oracledb pg
@@ -126,12 +150,11 @@ Installation instructions
 
 	npm install -g pm2
 
-2. install MariaDB/MySQL/Oracle/PostgreSQL on same server or other server
+3. install MariaDB/MySQL/Oracle/PostgreSQL on same server or other server
+   and run db scripts
 
    	For Oracle Database, install Oracle Instant Client
    	www.oracle.com/database/technologies/instant-client.html
-
-   	See .env file for Oracle Instant Client variables.
 
    	use Unicode characterset to support emojis and all languages
 
@@ -139,7 +162,7 @@ Installation instructions
 	scripts/1.db_1_create_db_mariadb.ddl 		MariaDB
 	scripts/1.db_1_create_db_mysql.ddl 			MySQL
 	scripts/1.db_3_create_db_postgresql.ddl 	PostgreSQL
-	scripts/2.db_1_datamodel_mariadb_mysql.ddl MariaDB or MySQL
+	scripts/2.db_1_datamodel_mariadb_mysql.ddl 	MariaDB and MySQL
 	scripts/2.db_2_datamodel_oracle.ddl 		Oracle
 	scripts/2.db_3_datamodel_postgresql.ddl 	PostgreSQL
 	scripts/3.db_1_grant_role_fix_mariadb.ddl	MariaDB
@@ -147,6 +170,9 @@ Installation instructions
 	scripts/3.db_2_grant_role_fix_oracle.ddl 	Oracle
 
 	scripts/4.db_all_insert_data.sql			MariaDB, MySQL, Oracle, PostgreSQL (creates admin as superadmin user)
+	scripts/4.db_1_insert_data_with_secret.sql	MariaDB and MySQL
+	scripts/4.db_2_insert_data_with_secret.sql	Oracle
+	scripts/4.db_3_insert_data_with_secret.sql	PostgreSQL
 	scripts/5.db_all_lang_*.sql					MariaDB, MySQL, Oracle, PostgreSQL
 												concatenate files
 												Linux:
@@ -177,12 +203,12 @@ Installation instructions
 												set PGCLIENTENCODING=UTF8
 												psql -U postgres -h localhost -d app_portfolio -f 5.db_all.sql
 
-	scripts/6.db_1_demo_mariadb_mysql.sql		MariaDB, MySQL
+	scripts/6.db_1_demo_mariadb_mysql.sql		MariaDB and MySQL
 	scripts/6.db_2_demo_oracle.sql				Oracle
 	scripts/6.db_3_demo_postgresql.sql			PostgreSQL
 									 
 	uninstall scripts:
-	7.db_1_uninstall.sql						MariaDB or MySQL
+	7.db_1_uninstall.sql						MariaDB and MySQL
 	7.db_2_uninstall.sql						Oracle
 	7.db_3_uninstall.sql						PostgreSQL
 
@@ -207,7 +233,59 @@ Installation instructions
 
    	default passsword APP_1_portfolio for all users
 
-3. sign in provider management
+4. start Node.js on supported Node.js platform
+   	starts without logging and restarts automatically when files are changed:
+   	pm2 start server.js --name app_portfolio -o "/dev/null" -e "/dev/null" --watch --ignore-watch=".well-known logs node_modules"
+	start JSON log:
+	windows:
+	start /b pm2 logs --json>{SERVICE_LOG_FILE_PATH_SERVER}{SERVICE_LOG_PM2_FILE}
+	linux:   
+	nohup pm2 logs --json>{SERVICE_LOG_FILE_PATH_SERVER}{SERVICE_LOG_PM2_FILE} &
+
+5. enter app url, localhost or hosted on a domain, in browser to configure admin and set default parameters
+
+	set admin username and password first time
+	
+	Set parameters as needed. Default database is MariaDB on localhost
+	
+	Generate ssl files for https, start using letsencrypt for a domain and
+	use self sign for localhost or use other ssl provider. Copy ssl files
+	to ssl directory.
+
+	When database and server configured:
+	SERVER
+		APP_START = 1
+		HTTPS_ENABLE=1
+		HTTPS_KEY = /ssl/server.key
+		HTTPS_CERT = /ssl/server.crt
+	SERVICE DB
+		START = 1
+	SERVICE AUTH
+		ENABLE_GEOLOCATION = 1
+		ENABLE_USER_REGISTRATION=1
+
+	enter as system admin and server parameter menu
+	to adjust settings and to see comments about
+	parameters
+
+	all files should be relative to root of /app_portfolio
+	if path outside directory is needed then use ln for linux or mklink for windows.
+
+	temporary cache directory for Pupeteer:
+	/service/report/tmp
+	empty cache when needed
+
+6.  database parameters
+	set in admin app as admin not system admin (user with configuration icon)
+
+	parameter types:
+	0 = Public
+	1 = Private shared values sent to app 
+		such as copyright info, api keys, email address or social url links
+	2 = Private values with account names and passwords and sensitive data only available 
+		from NodeJS server such as database, auth control and email parameters
+
+	sign in provider management:
    
    	disabled support because of providers not supporting single page application (SPA)
    	project only allows SPA, however datamodel and all SPA support provider usage for future use
@@ -226,234 +304,11 @@ Installation instructions
 		updateProviderUser()	provider login
 		onProviderSignIn()		provider login management
 
-4. register email provider to send from server
+7. register email provider to send from server
    	hostname, port, username, password
    	Check if email provider allows sending from apps if using free account.
 
-5. generate ssl files for https, start using letsencrypt for a domain and
-	use self sign for localhost or use ssl provider of your choice
-
-6. download from Github
-
-	mkdir app_portfolio
-   	cd app_portfolio
-   	git clone https://github.com/appportfolio/app_portfolio.git
-
-	.gitignore content:
-		.vscode/									for Visual Code development
-		config/										configuration files
-		dev/										development files, put your private work here
-		logs/										log files
-		production_.env/							keep copy of production files
-		node_modules/								NodeJS modules (400Mb+)
-		service/db/config/oracle_instantclient/		Oracle Client
-		service/report/tmp/							temporary Report directory
-
-7. configuration, SSL and logs files
-	all files should be relative to root of /app_portfolio
-	if path outside directory is needed then use ln for linux or mklink for windows.
-
-	hardcoded temporary directory
-	/service/report/tmp	configured in /service/report/report.service.js
-
-	#server variables
-	SERVER_HTTPS_KEY                        			=/config/ssl/server.key
-	SERVER_HTTPS_CERT                       			=/config/ssl/server.crt
-	SERVER_PORT                             			=80
-	SERVER_HTTPS_ENABLE                                 =0
-	SERVER_HTTPS_PORT                       			=443
-	SERVER_JSON_LIMIT                          			=10MB
-	SERVER_ADMIN_NAME									=admin
-	SERVER_ADMIN_PASSWORD								=
-	SERVER_TEST_SUBDOMAIN								=test
-	SERVER_APP_START                            		=0
-	SERVER_APP_COMMON_APP_ID							=0
-	SERVER_SERVICE_GEOLOCATION_URL_GPS_IP				=http://www.geoplugin.net/json.gp
-	SERVER_SERVICE_GEOLOCATION_URL_GPS_PLACE			=http://www.geoplugin.net/extras/location.gp
-	#service variables
-	SERVICE_AUTH_ACCESS_CONTROL_ENABLE          		=1
-	SERVICE_AUTH_ACCESS_CONTROL_IP             			=1
-	SERVICE_AUTH_ACCESS_CONTROL_IP_PATH         		=/config/blockip.json
-	SERVICE_AUTH_ACCESS_CONTROL_HOST_EXIST      		=1
-	SERVICE_AUTH_ACCESS_CONTROL_ACCESS_FROM     		=1
-	SERVICE_AUTH_ACCESS_CONTROL_USER_AGENT      		=1
-	SERVICE_AUTH_ACCESS_CONTROL_USER_AGENT_PATH 		=/config/safe_user_agent.json
-	SERVICE_AUTH_ACCESS_CONTROL_USER_AGENT_EXIST		=1
-	SERVICE_AUTH_ACCESS_CONTROL_ACCEPT_LANGUAGE 		=1
-	SERVICE_AUTH_POLICY_DIRECTIVES              		=/config/policy_directives.json
-	SERVICE_AUTH_ADMIN_TOKEN_EXPIRE_ACCESS	    		=1d
-	SERVICE_AUTH_ADMIN_TOKEN_SECRET		        		=
-	SERVICE_AUTH_ENABLE_GEOLOCATION						=0
-	SERVICE_AUTH_ENABLE_USER_REGISTRATION       		=0
-	SERVICE_AUTH_ENABLE_USER_LOGIN              		=1
-	SERVICE_AUTH_ENABLE_DBLOG                   		=1
-	#Broadcast
-	SERVICE_BROADCAST_CHECK_INTERVALL           		=5000
-	#Database
-	SERVICE_DB_START                             		=0
-	SERVICE_DB_REST_API_PATH							=/service/db/app_portfolio/
-	#1=DB1 MySQL, 2=DB2 Oracle, 3=PostreSQL
-	SERVICE_DB_USE                           			=1
-	SERVICE_DB_LIMIT_LIST_SEARCH						=100
-	SERVICE_DB_LIMIT_PROFILE_TOP						=100
-	#mySQL/MariaDB
-	SERVICE_DB_DB1_VARIANT                      		=2
-	SERVICE_DB_DB1_APP_ADMIN_USER               		=app_admin
-	SERVICE_DB_DB1_APP_ADMIN_PASS               		=APP_1_portfolio
-	SERVICE_DB_DB1_PORT                         		=3306
-	SERVICE_DB_DB1_HOST                         		=localhost
-	SERVICE_DB_DB1_NAME                         		=app_portfolio
-	SERVICE_DB_DB1_CHARACTERSET                 		='utf8mb4'
-	SERVICE_DB_DB1_CONNECTION_LIMIT             		=10
-	#Oracle
-	SERVICE_DB_DB2_APP_ADMIN_USER               		=app_admin
-	SERVICE_DB_DB2_APP_ADMIN_PASS               		=APP_1_portfolio
-	SERVICE_DB_DB1_NAME                         		=app_portfolio
-	SERVICE_DB_DB2_CONNECTSTRING                		=
-	SERVICE_DB_DB2_POOL_MIN                     		=1
-	SERVICE_DB_DB2_POOL_MAX                     		=1
-	SERVICE_DB_DB2_POOL_INCREMENT               		=0
-	#Oracle Instant Client path
-	SERVICE_DB_DB2_LIBDIR								=
-	#Oracle TNSNAMES_SQLNET_OR_WALLET_FILECONTENT_PATH
-	SERVICE_DB_DB2_CONFIGDIR							=
-	#PostgreSQL
-	SERVICE_DB_DB3_APP_ADMIN_USER               		=app_admin
-	SERVICE_DB_DB3_APP_ADMIN_PASS               		=APP_1_portfolio
-	SERVICE_DB_DB3_HOST                         		=localhost
-	SERVICE_DB_DB3_PORT                        	 		=5432
-	SERVICE_DB_DB3_NAME                         		=app_portfolio
-	SERVICE_DB_DB3_TIMEOUT_CONNECTION           		=5000
-	SERVICE_DB_DB3_TIMEOUT_IDLE                 		=30000
-	SERVICE_DB_DB3_MAX                          		=5
-	
-	SERVICE_LOG_SCOPE_SERVER                    		='SERVER'
-	SERVICE_LOG_SCOPE_SERVICE                   		='SERVICE'
-	SERVICE_LOG_SCOPE_DB                        		='DB'
-	SERVICE_LOG_SCOPE_ROUTER                    		='ROUTER'
-	SERVICE_LOG_SCOPE_CONTROLLER                		='CONTROLLER'
-	SERVICE_LOG_ENABLE_SERVER_INFO						=1
-	SERVICE_LOG_ENABLE_SERVER_VERBOSE					=0
-	SERVICE_LOG_ENABLE_DB                       		=0
-	SERVICE_LOG_ENABLE_ROUTER                   		=0
-	SERVICE_LOG_LEVEL_VERBOSE		    				='VERBOSE'
-	SERVICE_LOG_LEVEL_ERROR                     		='ERROR'
-	SERVICE_LOG_LEVEL_INFO                      		='INFO'
-	#0=File only, 1=URL REST API only method POST, 2=File and URL
-	SERVICE_LOG_DESTINATION                     		=0
-	SERVICE_LOG_URL_DESTINATION                 		=
-	SERVICE_LOG_URL_DESTINATION_USERNAME        		=
-	SERVICE_LOG_URL_DESTINATION_PASSWORD        		=
-	SERVICE_LOG_FILE_INTERVAL                   		=1D
-	#with / at the end
-	SERVICE_LOG_FILE_PATH_SERVER                		=/logs/
-	#DEFAULT empty creates ISO8601 format ex: "yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'"
-	SERVICE_LOG_DATE_FORMAT                     		=
-	SERVICE_LOG_PM2_FILE                        		=PM2_LOG.json
-	SERVICE_REPORT_PDF_TIMEOUT                  		=20000
-	SERVICE_REPORT_PDF_WAIT_INTERVAL            		=100
-	SERVICE_REPORT_PDF_WAIT_ATTEMPTS            		=100
-	#bytes, PDF with content should be bigger than this
-	SERVICE_REPORT_PDF_EMPTY_SIZE_CHECK         		=900
-	#if using different browser for Puppeteer
-	SERVICE_REPORT_EXECUTABLE_PATH						=
-
-	set database parameters as needed if not default MariaDB on localhost will be used
-	when database and server configured:
-	SERVICE_DB_START = 1
-	SERVER_APP_START = 1
-    allow HTTPS after SSL created
-	SERVER_HTTPS_ENABLE=1
-	allow GPS
-	SERVICE_AUTH_ENABLE_GEOLOCATION = 1
-	allow user registration
-	SERVICE_AUTH_ENABLE_USER_REGISTRATION=1
-
-
-	detailed parameter info:
-	SERVER_TEST_SUBDOMAIN
-		- test.[domain] test network with subdomains for test environment
-		  update DNS to point to test.[domain], *.test.[domain]/admin,  app1.test.[domain] etc
-		  create SSL for *.test.[domain], *.[domain], [domain]
-	SERVICE_DB_DB1_VARIANT
-		comments about MySQL and MariaDB: 
-		- MariaDB global variables in INFORMATION_SCHEMA
-		- MySQL global variables in PERFORMANCE_SCHEMA
-		- both MariaDB and MySQL use npm MySQL module
-
-	SERVICE_AUTH_ACCESS_CONTROL_IP_PATH
-		/config/blockip.json
-		contains IP v4 range to block, do not comment in file, array format:
-		[
-			["0.0.0.0", "0.0.0.255"],
-			["1.1.1.1", "1.1.1.1"] 
-		]
-		leave SERVICE_AUTH_BLOCK_IP_RANGE empty if no blocking
-		this can be integrated with iptables on Linux or other operating system service
-		will return HTTP 403 Forbidden if IP blocked
-	SERVICE_AUTH_ACCESS_CONTROL_USER_AGENT_EXIST:
-		check if ok to have empty user agent or not
-	SERVICE_AUTH_ACCESS_CONTROL_USER_AGENT_PATH:
-		/config/safe_user_agent.json
-		contains user agent that you want to allow, examples:
-		{"user_agent": [
-			{"Name": "YahooMailProxy", 
-				"user_agent": "YahooMailProxy; https://help.yahoo.com/kb/yahoo-mail-proxy-SLN28749.html"},
-			{"Name": "Let's Encrypt validation", 
-				"user_agent": "Mozilla/5.0 (compatible; Let's Encrypt validation server; +https://www.letsencrypt.org)"}
-		]
-		}
-	SERVICE_AUTH_POLICY_DIRECTIVES:
-		/config/policy_directives.json
-		Content Security Policy using helmet middleware
-		service providers and other providers need to load their fonts, styles and javascript
-		replace domain1.com, domain2.com with desired domain to allow
-
-		{"directives":
-			[
-				{ "type": "script",
-				"domain": "'self', 'unsafe-inline', 'unsafe-eval', domain1.com, domain2.com"
-				},
-				{ "type": "style",
-				"domain": "'self', 'unsafe-inline', domain1.com, domain2.com"
-				},
-				{ "type": "font",
-				"domain": "self, domain1.com, domain2.com"
-				},
-				{ "type": "frame",
-				"domain": "'self', data:, domain1.com, domain2.com"
-				}
-			]
-		}
-
-		/service/auth/auth.controller.js 
-		policy_directives() 	checks at startup in /server.js the file content
-								and loads content into Content Security Policy using helmet middleware
-8.  database parameters
-	update scripts/3.import.sql or after import, observe db username and password for apps 
-	are in APP_PARAMETER table, admin in .env file.
-
-	table app
-	set app name, url, logo and app category
-
-	update {...} values in table app_parameter
-	they have parameter_type_id 0, 1 or 2
-	0 = Public
-	1 = Private shared values sent to app 
-		such as copyright info, api keys, email address or social url links
-	2 = Private values with account names and passwords and sensitive data only available from NodeJS server
-		such as database, auth control and email parameters
-
-9. run app on any supported Node.js platform
-   	starts without logging and restarts automatically when files are changed:
-   	pm2 start server.js --name app_portfolio -o "/dev/null" -e "/dev/null" --watch --ignore-watch=".well-known logs node_modules"
-	start JSON log:
-	windows:
-	start /b pm2 logs --json>{SERVICE_LOG_FILE_PATH_SERVER}{SERVICE_LOG_PM2_FILE}
-	linux:   
-	nohup pm2 logs --json>{SERVICE_LOG_FILE_PATH_SERVER}{SERVICE_LOG_PM2_FILE} &
-
-10. how to add new app
+8. how to add new app
 	optional db scripts:
 	scripts/*.*
 	
@@ -477,14 +332,14 @@ Installation instructions
 	/apps/{APP_ID}/sw.js			service worker for PWA apps
 	/service/db/api/app{APP_ID}*	rest api for app{APP_ID}
 
-11. App identification
+9. App identification
 	Apps clients use window.global_app_id to identify themselves
 	Common and admin uses window.global_common_app_id derived from SERVER_APP_COMMON_APP_ID
 
 	Apps use APP{APP_ID}_ID variable in
 	apps/app{APP_ID}/server.js that is used to init the server generation of the client.
 
-12. Issues
+10. Issues
 	Not supported:
 	Hijri transliteration on Android. 
 	Armenian language on Chrome or Chromium, use Edge or other for Puppeteer if needed.
