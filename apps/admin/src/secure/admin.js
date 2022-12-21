@@ -7,7 +7,7 @@
     USERS
     APP ADMIN
     MONITOR
-    SERVER PARAMETER
+    SERVER CONFIG
     DB INFO
     EXCEPTION
     INIT
@@ -106,7 +106,7 @@ function show_menu(menu){
         }
         //PARAMETER
         case 6:{
-            show_parameters();
+            show_config();
             break;
         }
         //INSTALLATION
@@ -508,7 +508,7 @@ function show_users(sort=8, order_by='ASC', focus=true){
     //show all records if no search criteria
     if (document.getElementById('list_user_account_search_input').value!='')
         search_user = document.getElementById('list_user_account_search_input').value;
-    common_fetch(window.global_rest_api_db_path + window.global_rest_user_account + `/admin/${search_user}?sort=${sort}&order_by=${order_by}`,
+    common_fetch(window.global_rest_api_db_path + window.global_rest_user_account + `admin/${search_user}?sort=${sort}&order_by=${order_by}`,
                        'GET', 1, null, null, null, (err, result) =>{
         if (err)
             document.getElementById('list_user_account').innerHTML = '';
@@ -1055,25 +1055,11 @@ function list_events(list_item, item_row, item_edit){
     //mark record as changed if any editable field is changed
     
     //change event
-    document.querySelectorAll(`#${list_item} ${item_edit}`).forEach(e => e.addEventListener('change', function(event) {
-        event.target.parentNode.parentNode.setAttribute('data-changed-record','1');
-
-        function row_action(err, result, item, event, nextindex){
-            if (err){
-                event.stopPropagation();
-                event.preventDefault();
-                //set old value
-                item.value = event.target.defaultValue;
-                item.focus();
-                item.nextElementSibling.dispatchEvent(new Event('click'));
-            }
-            else{
-                let json = JSON.parse(result);
-                if (json.data.length == 1){
-                    //set new value from 3 column JSON result
-                    document.getElementById(event.target.parentNode.parentNode.id).children[nextindex].children[0].innerHTML = Object.values(json.data[0])[2];
-                }
-                else{
+    document.getElementById(list_item).addEventListener('change', function(event) {
+        if (event.target.classList.contains('list_edit')){
+            event.target.parentNode.parentNode.setAttribute('data-changed-record','1');
+            function row_action(err, result, item, event, nextindex){
+                if (err){
                     event.stopPropagation();
                     event.preventDefault();
                     //set old value
@@ -1081,67 +1067,83 @@ function list_events(list_item, item_row, item_edit){
                     item.focus();
                     item.nextElementSibling.dispatchEvent(new Event('click'));
                 }
+                else{
+                    let json = JSON.parse(result);
+                    if (json.data.length == 1){
+                        //set new value from 3 column JSON result
+                        document.getElementById(event.target.parentNode.parentNode.id).children[nextindex].children[0].innerHTML = Object.values(json.data[0])[2];
+                    }
+                    else{
+                        event.stopPropagation();
+                        event.preventDefault();
+                        //set old value
+                        item.value = event.target.defaultValue;
+                        item.focus();    
+                        item.nextElementSibling.children[0].dispatchEvent(new Event('click', {"bubbles": true}));
+                    }
+                }
             }
-        }
-        //app category LOV
-        if (item_row == 'list_apps_row' && event.target.parentNode.parentNode.children[5].children[0] == event.target)
-            if (this.value=='')
-                event.target.parentNode.parentNode.children[6].children[0].innerHTML ='';
-            else{
-                common_fetch(`${window.global_rest_api_db_path}${window.global_rest_app_category}admin?id=${this.value}`,
+            //app category LOV
+            if (item_row == 'list_apps_row' && event.target.parentNode.parentNode.children[5].children[0] == event.target)
+                if (event.target.value=='')
+                    event.target.parentNode.parentNode.children[6].children[0].innerHTML ='';
+                else{
+                    common_fetch(`${window.global_rest_api_db_path}${window.global_rest_app_category}admin?id=${event.target.value}`,
+                                'GET', 1, null, null, null, (err, result) =>{
+                        row_action(err, result, event.target, event, 6, '');
+                    });
+                }
+            //parameter type LOV
+            if (item_row == 'list_app_parameter_row' && event.target.parentNode.parentNode.children[1].children[0] == event.target)
+                if (event.target.value=='')
+                    event.target.value = event.target.defaultValue;
+                else{
+                    common_fetch(`${window.global_rest_api_db_path}${window.global_rest_parameter_type}admin?id=${event.target.value}`,
+                                'GET', 1, null, null, null, (err, result) =>{
+                        row_action(err, result, event.target, event, 2);
+                    });
+                }
+            //app role LOV
+            if (item_row == 'list_user_account_row' && event.target.parentNode.parentNode.children[2].children[0] == event.target){
+                let app_role_id_lookup='';
+                let old_value =event.target.value;
+                //if empty then lookup default
+                if (event.target.value=='')
+                    app_role_id_lookup=2;
+                else
+                    app_role_id_lookup=event.target.value;
+                common_fetch(`${window.global_rest_api_db_path}${window.global_rest_app_role}admin?id=${app_role_id_lookup}`,
                             'GET', 1, null, null, null, (err, result) =>{
-                    row_action(err, result, this, event, 6, '');
+                    row_action(err, result, event.target, event, 3);
+                    //if wrong value then field is empty again, fetch default value for empty app_role
+                    if (old_value!='' && event.target.value=='')
+                        event.target.dispatchEvent(new Event('change'));
                 });
             }
-        //parameter type LOV
-        if (item_row == 'list_app_parameter_row' && event.target.parentNode.parentNode.children[1].children[0] == event.target)
-            if (this.value=='')
-                this.value = event.target.defaultValue;
-            else{
-                common_fetch(`${window.global_rest_api_db_path}${window.global_rest_parameter_type}admin?id=${this.value}`,
-                            'GET', 1, null, null, null, (err, result) =>{
-                    row_action(err, result, this, event, 2);
-                });
-            }
-        //app role LOV
-        if (item_row == 'list_user_account_row' && event.target.parentNode.parentNode.children[2].children[0] == event.target){
-            let app_role_id_lookup='';
-            let old_value =this.value;
-            //if empty then lookup default
-            if (this.value=='')
-                app_role_id_lookup=2;
-            else
-                app_role_id_lookup=this.value;
-            common_fetch(`${window.global_rest_api_db_path}${window.global_rest_app_role}admin?id=${app_role_id_lookup}`,
-                        'GET', 1, null, null, null, (err, result) =>{
-                row_action(err, result, this, event, 3);
-                //if wrong value then field is empty again, fetch default value for empty app_role
-                if (old_value!='' && this.value=='')
-                    this.dispatchEvent(new Event('change'));
-            });
         }
-            
-    }));
+    })
     //keydown event
-    document.querySelectorAll(`#${list_item} ${item_edit}`).forEach(e => e.addEventListener('keydown', function(event) {
-        if (event.code=='ArrowUp') {
-            window.global_previous_row = event.target.parentNode.parentNode;
-            event.preventDefault();
-            let index = parseInt(event.target.parentNode.parentNode.id.substr(item_row.length+1));
-            //focus on first list_edit item in the row
-            if (index>0)
-                document.querySelectorAll(`#${item_row}_${index - 1} ${item_edit}`)[0].focus();
+    document.getElementById(list_item).addEventListener('keydown', function (event){
+        if (event.target.classList.contains('list_edit')){
+            if (event.code=='ArrowUp') {
+                window.global_previous_row = event.target.parentNode.parentNode;
+                event.preventDefault();
+                let index = parseInt(event.target.parentNode.parentNode.id.substr(item_row.length+1));
+                //focus on first list_edit item in the row
+                if (index>0)
+                    document.querySelectorAll(`#${item_row}_${index - 1} ${item_edit}`)[0].focus();
+            }
+            if (event.code=='ArrowDown') {
+                window.global_previous_row = event.target.parentNode.parentNode;
+                event.preventDefault();
+                let index = parseInt(event.target.parentNode.parentNode.id.substr(item_row.length+1)) +1;
+                //focus on first list_edit item in the row
+                if (document.getElementById(`${item_row}_${index}`)!= null)
+                    document.querySelectorAll(`#${item_row}_${index} ${item_edit}`)[0].focus();
+                    
+            }
         }
-        if (event.code=='ArrowDown') {
-            window.global_previous_row = event.target.parentNode.parentNode;
-            event.preventDefault();
-            let index = parseInt(event.target.parentNode.parentNode.id.substr(item_row.length+1)) +1;
-            //focus on first list_edit item in the row
-            if (document.getElementById(`${item_row}_${index}`)!= null)
-                document.querySelectorAll(`#${item_row}_${index} ${item_edit}`)[0].focus();
-                
-        }
-    }));
+    });
     //focus event
     if (item_row=='list_apps_row'){
         //event on master to automatically show detail records
@@ -1165,37 +1167,45 @@ function list_events(list_item, item_row, item_edit){
             }
         ));
     }
-
     //click event
-    document.querySelectorAll(`#${list_item} .list_lov_click`).forEach(e => e.addEventListener('click', function(event) {
-        if (list_item == 'list_apps'){
-            let function_event = function(event) {
-                e.parentNode.parentNode.children[5].children[0].value = event.currentTarget.children[0].children[0].innerHTML;
-                e.parentNode.parentNode.children[5].children[0].focus();
-                e.parentNode.parentNode.children[5].children[0].dispatchEvent(new Event('change'));
-                document.getElementById('lov_close').dispatchEvent(new Event('click'))
-            };
-            lov_show('APP_CATEGORY', function_event);
-        }
-        if (list_item == 'list_app_parameter'){
-            let function_event = function(event) {
-                e.parentNode.parentNode.children[1].children[0].value = event.currentTarget.children[0].children[0].innerHTML;
-                e.parentNode.parentNode.children[1].children[0].focus();
-                e.parentNode.parentNode.children[1].children[0].dispatchEvent(new Event('change'));
-                document.getElementById('lov_close').dispatchEvent(new Event('click'))
-            };
-            lov_show('PARAMETER_TYPE', function_event);
-        }
-        if (list_item == 'list_user_account'){
-            let function_event = function(event) {
-                e.parentNode.parentNode.children[2].children[0].value = event.currentTarget.children[0].children[0].innerHTML;
-                e.parentNode.parentNode.children[2].children[0].focus();
-                e.parentNode.parentNode.children[2].children[0].dispatchEvent(new Event('change'));
-                document.getElementById('lov_close').dispatchEvent(new Event('click'))
-            };
-            lov_show('APP_ROLE', function_event);
-        }
-    }));
+    if (list_item == 'list_apps')
+        document.getElementById(list_item).addEventListener('click', function(event) {   
+            if (event.target.parentNode.classList.contains('list_lov_click')){
+                let function_event = function(event_lov) {
+                    event.target.parentNode.parentNode.parentNode.children[5].children[0].value = event_lov.currentTarget.children[0].children[0].innerHTML;
+                    event.target.parentNode.parentNode.parentNode.children[5].children[0].focus();
+                    event.target.parentNode.parentNode.parentNode.children[5].children[0].dispatchEvent(new Event('change'));
+                    document.getElementById('lov_close').dispatchEvent(new Event('click'))
+                };
+                lov_show('APP_CATEGORY', function_event);
+            }
+                
+        })
+    if (list_item == 'list_app_parameter')
+        document.getElementById(list_item).addEventListener('click', function(event) {   
+            if (event.target.parentNode.classList.contains('list_lov_click')){
+                let function_event = function(event_lov) {
+                    event.target.parentNode.parentNode.parentNode.children[1].children[0].value = event_lov.currentTarget.children[0].children[0].innerHTML;
+                    event.target.parentNode.parentNode.parentNode.children[1].children[0].focus();
+                    event.target.parentNode.parentNode.parentNode.children[1].children[0].dispatchEvent(new Event('change'));
+                    document.getElementById('lov_close').dispatchEvent(new Event('click'))
+                };
+                lov_show('PARAMETER_TYPE', function_event);
+            }
+        })
+    
+    if (list_item == 'list_user_account')
+        document.getElementById(list_item).addEventListener('click', function(event) {   
+            if (event.target.parentNode.classList.contains('list_lov_click')){
+                let function_event = function(event_lov) {
+                    event.target.parentNode.parentNode.parentNode.children[2].children[0].value = event_lov.currentTarget.children[0].children[0].innerHTML;
+                    event.target.parentNode.parentNode.parentNode.children[2].children[0].focus();
+                    event.target.parentNode.parentNode.parentNode.children[2].children[0].dispatchEvent(new Event('change'));
+                    document.getElementById('lov_close').dispatchEvent(new Event('click'))
+                };
+                lov_show('APP_ROLE', function_event);
+            }
+        })    
 }
 /*----------------------- */
 /* MONITOR                */
@@ -1281,25 +1291,25 @@ function nav_click(item){
         case 'list_config_server_title':{
             reset_config();
             document.getElementById('list_config_nav_1').classList= 'list_nav_selected_tab';
-            show_parameters(1);
+            show_config(1);
             break;
         }
         case 'list_config_blockip_title':{
             reset_config();
             document.getElementById('list_config_nav_2').classList= 'list_nav_selected_tab';
-            show_parameters(2);
+            show_config(2);
             break;
         }
         case 'list_config_useragent_title':{
             reset_config();
             document.getElementById('list_config_nav_3').classList= 'list_nav_selected_tab';
-            show_parameters(3);
+            show_config(3);
             break;
         }
         case 'list_config_policy_title':{
             reset_config();
             document.getElementById('list_config_nav_4').classList= 'list_nav_selected_tab';
-            show_parameters(4);
+            show_config(4);
             break;
         }
     }
@@ -1324,7 +1334,7 @@ async function show_list(list_div, list_div_col_title, url_parameters, sort, ord
                 break;
             }
             case 'list_app_log':{
-                url = window.global_rest_api_db_path + `app_log/admin?${url_parameters}`;
+                url = window.global_rest_api_db_path + `/app_log/admin?${url_parameters}`;
                 token_type = 1;
                 document.getElementById(list_div).innerHTML = window.global_app_spinner;
                 break;
@@ -2209,9 +2219,9 @@ function show_pm2_logs(){
               order_by);
 }
 /*----------------------- */
-/* SERVER PARAMETER       */
+/* SERVER CONFIG          */
 /*----------------------- */
-async function show_parameters(config_nav=1){
+async function show_config(config_nav=1){
     let url;
     document.getElementById(`list_config`).innerHTML = window.global_app_spinner;
     url  = `/server/config?config_no=${config_nav}`;
@@ -2220,6 +2230,7 @@ async function show_parameters(config_nav=1){
             document.getElementById(`list_config`).innerHTML = '';
         else{
             json = JSON.parse(result);
+            let i = 0;
             switch (config_nav){
                 case 1:{
                     let html = `<div id='list_config_row_title' class='list_config_row'>
@@ -2233,125 +2244,29 @@ async function show_parameters(config_nav=1){
                                 <div>COMMENT</div>
                             </div>
                         </div>`;
-                    html += 
-                        `<div id='list_config_row_${i}' class='list_config_row' >
-                            <div class='list_config_col list_config_group'>
-                                <div class='list_readonly'>${Object.keys(json.data)[4]}</div>
-                            </div>
-                        </div>`;
-                    for (i = 0; i < json.data.server.length; i++) {
+                    for (let i_group = 4; i_group <= 9;i_group++){
+                        i++;
                         html += 
                         `<div id='list_config_row_${i}' class='list_config_row' >
-                            <div class='list_config_col'>
-                                <div class='list_readonly'>${Object.keys(json.data.server[i])[0]}</div>
-                            </div>
-                            <div class='list_config_col'>
-                                <input type=text class='list_edit' value='${Object.values(json.data.server[i])[0]}'/>
-                            </div>
-                            <div class='list_config_col'>
-                                <input type=text class='list_edit' value='${Object.values(json.data.server[i])[1]}'/>
-                            </div>
-                        </div>`;
-                    }
-                    html += 
-                        `<div id='list_config_row_${i}' class='list_config_row' >
                             <div class='list_config_col list_config_group'>
-                                <div class='list_readonly'>${Object.keys(json.data)[5]}</div>
+                                <div class='list_readonly'>${Object.keys(json.data)[i_group]}</div>
                             </div>
                         </div>`;
-                    for (i = 0; i < json.data.service_auth.length; i++) {
-                        html += 
-                        `<div id='list_config_row_${i}' class='list_config_row' >
-                            <div class='list_config_col'>
-                                <div class='list_readonly'>${Object.keys(json.data.service_auth[i])[0]}</div>
-                            </div>
-                            <div class='list_config_col'>
-                                <input type=text class='list_edit' value='${Object.values(json.data.service_auth[i])[0]}'/>
-                            </div>
-                            <div class='list_config_col'>
-                                <input type=text class='list_edit' value='${Object.values(json.data.service_auth[i])[1]}'/>
-                            </div>
-                        </div>`;
-                    }
-                    html += 
-                        `<div id='list_config_row_${i}' class='list_config_row' >
-                            <div class='list_config_col list_config_group'>
-                                <div class='list_readonly'>${Object.keys(json.data)[6]}</div>
-                            </div>
-                        </div>`;
-                    for (i = 0; i < json.data.service_broadcast.length; i++) {
-                        html += 
-                        `<div id='list_config_row_${i}' class='list_config_row' >
-                            <div class='list_config_col'>
-                                <div class='list_readonly'>${Object.keys(json.data.service_broadcast[i])[0]}</div>
-                            </div>
-                            <div class='list_config_col'>
-                                <input type=text class='list_edit' value='${Object.values(json.data.service_broadcast[i])[0]}'/>
-                            </div>
-                            <div class='list_config_col'>
-                                <input type=text class='list_edit' value='${Object.values(json.data.service_broadcast[i])[1]}'/>
-                            </div>
-                        </div>`;
-                    }
-                    html += 
-                        `<div id='list_config_row_${i}' class='list_config_row' >
-                            <div class='list_config_col list_config_group'>
-                                <div class='list_readonly'>${Object.keys(json.data)[7]}</div>
-                            </div>
-                        </div>`;
-                    for (i = 0; i < json.data.service_db.length; i++) {
-                        html += 
-                        `<div id='list_config_row_${i}' class='list_config_row' >
-                            <div class='list_config_col'>
-                                <div class='list_readonly'>${Object.keys(json.data.service_db[i])[0]}</div>
-                            </div>
-                            <div class='list_config_col'>
-                                <input type=text class='list_edit' value='${Object.values(json.data.service_db[i])[0]}'/>
-                            </div>
-                            <div class='list_config_col'>
-                                <input type=text class='list_edit' value='${Object.values(json.data.service_db[i])[1]}'/>
-                            </div>
-                        </div>`;
-                    }
-                    html += 
-                        `<div id='list_config_row_${i}' class='list_config_row' >
-                            <div class='list_config_col list_config_group'>
-                                <div class='list_readonly'>${Object.keys(json.data)[8]}</div>
-                            </div>
-                        </div>`;
-                    for (i = 0; i < json.data.service_log.length; i++) {
-                        html += 
-                        `<div id='list_config_row_${i}' class='list_config_row' >
-                            <div class='list_config_col'>
-                                <div class='list_readonly'>${Object.keys(json.data.service_log[i])[0]}</div>
-                            </div>
-                            <div class='list_config_col'>
-                                <input type=text class='list_edit' value='${Object.values(json.data.service_log[i])[0]}'/>
-                            </div>
-                            <div class='list_config_col'>
-                                <input type=text class='list_edit' value='${Object.values(json.data.service_log[i])[1]}'/>
-                            </div>
-                        </div>`;
-                    }
-                    html += 
-                        `<div id='list_config_row_${i}' class='list_config_row' >
-                            <div class='list_config_col list_config_group'>
-                                <div class='list_readonly'>${Object.keys(json.data)[9]}</div>
-                            </div>
-                        </div>`;
-                    for (i = 0; i < json.data.service_report.length; i++) {
-                        html += 
-                        `<div id='list_config_row_${i}' class='list_config_row' >
-                            <div class='list_config_col'>
-                                <div class='list_readonly'>${Object.keys(json.data.service_report[i])[0]}</div>
-                            </div>
-                            <div class='list_config_col'>
-                                <input type=text class='list_edit' value='${Object.values(json.data.service_report[i])[0]}'/>
-                            </div>
-                            <div class='list_config_col'>
-                                <input type=text class='list_edit' value='${Object.values(json.data.service_report[i])[1]}'/>
-                            </div>
-                        </div>`;
+                        for (let j = 0; j < json.data[Object.keys(json.data)[i_group]].length; j++) {
+                            i++;
+                            html += 
+                            `<div id='list_config_row_${i}' class='list_config_row' >
+                                <div class='list_config_col'>
+                                    <div class='list_readonly'>${Object.keys(json.data[Object.keys(json.data)[i_group]][j])[0]}</div>
+                                </div>
+                                <div class='list_config_col'>
+                                    <input type=text class='list_edit' value='${Object.values(json.data[Object.keys(json.data)[i_group]][j])[0]}'/>
+                                </div>
+                                <div class='list_config_col'>
+                                    <input type=text class='list_edit' value='${Object.values(json.data[Object.keys(json.data)[i_group]][j])[1]}'/>
+                                </div>
+                            </div>`;
+                        }    
                     }
                     document.getElementById('list_config').innerHTML = html;
                     list_events('list_config', 'list_config_row', ' .list_edit');
