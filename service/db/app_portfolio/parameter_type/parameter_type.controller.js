@@ -10,24 +10,10 @@ module.exports = {
 					data: err
 				});
 			}
-			else{
-                if (results.length>0)
-                    return res.status(200).json({
-						data: results
-                    });
-                else{
-                    const { getMessage_admin } = require(global.SERVER_ROOT + process.env.SERVICE_DB_REST_API_PATH + "/message/message_translation/message_translation.service");
-                    //Record not found
-                    getMessage_admin(req.query.app_id,
-                                     process.env.SERVER_APP_COMMON_APP_ID,
-                                     20400, 
-                                     req.query.lang_code, (err,result_message)  => {
-                                        return res.status(404).send(
-                                                err ?? result_message.text
-                                        );
-                                     });
-                }
-            }
+			else
+                return res.status(200).json({
+                    data: results
+                });
 		});
 	}
 }
