@@ -69,8 +69,8 @@ async function admin_login(){
                         .then(function(result_form) {
                             if (status == 200){
                                 dialogue_close('dialogue_admin_login').then(function(){
-                                    document.getElementById("login_username").value='';
-                                    document.getElementById("login_password").value='';                        
+                                    document.getElementById('common_app_select_theme').style.display = 'block';
+                                    document.getElementById('common_app_select_theme').style.visibility = 'visible';
                                     document.getElementById('dialogue_login').style.visibility = 'hidden';
                                     start_admin_secure(JSON.parse(result_form).app)
                                     document.getElementById('system_admin_avatar').innerHTML = window.global_icon_app_system_admin;
@@ -92,7 +92,6 @@ async function admin_login(){
             document.getElementById('admin_login_button').innerHTML = old_button;
             if (err==null){         
                 dialogue_close('dialogue_admin_login').then(function(){
-                    //set avatar or empty
                     document.getElementById('user_account').style.visibility = 'visible';
                     set_avatar(result.avatar, document.getElementById('user_menu_avatar_img'));
                     document.getElementById('user_menu_username').innerHTML = result.username;
@@ -210,6 +209,8 @@ function admin_logoff_app(app_id, error){
     document.getElementById('system_admin_avatar').innerHTML = '';
     function clear_common(){
         delete_globals();
+        document.getElementById('common_app_select_theme').style.display = 'unset';
+        document.getElementById('common_app_select_theme').style.visibility = 'unset';
         document.getElementById('user_account').style.visibility = 'hidden';
         document.getElementById('dialogue_admin_login').style.visibility = 'visible';
         document.getElementById('menu_open').outerHTML = `<div id='menu_open' class='dialogue_button'></div>`;

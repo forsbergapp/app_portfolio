@@ -3409,6 +3409,9 @@ async function init_common(parameters, callBack){
     if (typeof window.global_app_id =='undefined')
         set_globals(parameters);
     if (parameters.app_id == window.global_common_app_id){
+        //admin use different exception before and fter login
+    	window.global_exception_app_function = parameters.exception_app_function;
+	    window.global_user_app_role_id = parameters.app_role_id;
         broadcast_init(parameters.close_eventsource);
         if (parameters.system_admin==1){
             document.title = parameters.app_name;
