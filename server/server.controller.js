@@ -1,5 +1,5 @@
 const { createLogAppSE } = require(global.SERVER_ROOT + "/service/log/log.controller");
-const { ConfigGet, ConfigUpdateParameter, ConfigSave, DefaultConfig, Info} = require ('./server.service');
+const { ConfigGet, ConfigUpdateParameter, ConfigMaintenanceGet, ConfigMaintenanceSet, ConfigServerParameterGet, ConfigSave, DefaultConfig, Info} = require ('./server.service');
 module.exports = {
 	ConfigGet: (req, res) => {
         ConfigGet(req.query.config_no, req.query.parameter_name, (err, result)=>{
@@ -30,8 +30,8 @@ module.exports = {
                 });
         })        
     },
-    ConfigSave: (req,res) =>{
-        ConfigSave(req.body.config_server, req.body.config_server, req.body.config_server, req.body.config_server, (err, result)=>{
+    ConfigMaintenanceGet:(req, res) =>{
+        ConfigMaintenanceGet((err, result)=>{
             if (err){
                 return res.status(500).send(
                     err
@@ -39,17 +39,51 @@ module.exports = {
             }
             else
                 return res.status(200).json(
-                    {
-                        config_server: result.config_server,
-                        config_blockip: result.config_blockip,
-                        config_useragent: result.config_useragent,
-                        config_policy: result.config_policy
-                    }
+                    result
+                );
+        })
+    },
+    ConfigMaintenanceSet:(req, res) =>{
+        ConfigMaintenanceSet(req.query.value, (err, result)=>{
+            if (err){
+                return res.status(500).send(
+                    err
+                );
+            }
+            else
+                return res.status(200).json(
+                    result
+                );
+        })
+    },
+    ConfigServerParameterGet:(req, res) =>{
+        ConfigServerParameterGet(req.query.config_type_no, req.query.parameter_name, (err, result)=>{
+            if (err){
+                return res.status(500).send(
+                    err
+                );
+            }
+            else
+                return res.status(200).json(
+                    result
+                );
+        })
+    },
+    ConfigSave: (req,res) =>{
+        ConfigSave(req.query.app_id, req.body.config_no, req.body.config_json, (err, result)=>{
+            if (err){
+                return res.status(500).send(
+                    err
+                );
+            }
+            else
+                return res.status(200).json(
+                    result
                 );
         })
     },
     DefaultConfig:(req,res)=>{
-        DefaultConfig(admin_name, admin_password, (err, result)=>{
+        DefaultConfig(req.body.admin_name, req.body.admin_password, (err, result)=>{
             if (err){
                 return res.status(500).send(
                     err
