@@ -556,6 +556,15 @@
         overflow-x:auto;
         overflow-y:auto;
     }
+    #list_config_edit{
+        white-space: pre;
+        display: flex;
+        flex-direction: column;
+        height: calc(100% - 50px);
+        overflow-x:auto;
+        overflow-y:auto;
+        text-align: start;
+    }
     .list_config_row{
         height: auto;
         padding-top:4px;
@@ -1209,7 +1218,8 @@
     #list_server_log,
     #list_pm2_log_out,
     #list_pm2_log_err,
-    #list_pm2_log_process_event{
+    #list_pm2_log_process_event,
+    #list_config_edit{
         border: var(--app_theme_list_border_color) solid 0.5px;
     }
     #list_app_pagination div{
