@@ -1,4 +1,6 @@
 global.SERVER_ROOT = __dirname;
+const { ConfigServerGlobals} = require( global.SERVER_ROOT + '/server/server.service');
+ConfigServerGlobals();
 //Express framework
 const express = require ('express');
 //logging
