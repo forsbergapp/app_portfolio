@@ -106,7 +106,7 @@ function show_menu(menu){
         }
         //PARAMETER
         case 6:{
-            show_config();
+            nav_click(document.getElementById('list_config_server_title'));
             break;
         }
         //INSTALLATION
@@ -984,7 +984,48 @@ async function button_save(item){
         }
         else
             if (item == 'config_save'){
-                null;
+                let config_no;
+                let json_data;
+                function config_create_server_json(){
+                    let config_json = [];
+                    document.querySelectorAll('#list_config .list_config_group').forEach(e_group => 
+                        {
+                            let config_group='';
+                            document.querySelectorAll(`#${e_group.id} .list_config_row`).forEach(e_row => 
+                                    {
+                                        config_group += `{"${e_row.children[0].children[0].innerHTML}": "${e_row.children[1].children[0].value}", 
+                                                          "COMMENT": ${JSON.stringify(e_row.children[2].children[0].value)}}`;
+                                        if (e_group.lastChild != e_row)
+                                            config_group += ',';
+                                    }
+                            )
+                            config_json.push(JSON.stringify(JSON.parse(`[${config_group}]`), undefined, 2));
+                        }
+                    );
+                    return `{   
+                                "server":${config_json[0]},
+                                "service_auth":${config_json[1]},
+                                "service_broadcast":${config_json[2]},
+                                "service_db":${config_json[3]},
+                                "service_log":${config_json[4]},
+                                "service_report":${config_json[5]}
+                            }`;
+                }
+                //no fetched from end of item name list_config_nav_X
+                config_no = document.querySelectorAll('#menu_6_content .list_nav .list_nav_selected_tab')[0].id.substring(16);
+                if (config_no == 1)
+                    json_data = `{"config_no":   ${config_no},
+                                  "config_json": ${JSON.stringify(config_create_server_json())}}`;
+                else
+                    json_data = `{"config_no":   ${config_no},
+                                  "config_json": ${JSON.stringify(document.getElementById('list_config_edit').innerHTML)}}`;
+                json_data = JSON.stringify(JSON.parse(json_data), undefined, 2);
+                let old_button = document.getElementById(item).innerHTML;
+                document.getElementById(item).innerHTML = window.global_app_spinner;
+                common_fetch('/server/config?',
+                    'PUT', 2, json_data, null, null,(err, result) =>{
+                    document.getElementById(item).innerHTML = old_button;
+                })
             }
     
 }
@@ -2244,38 +2285,48 @@ async function show_config(config_nav=1){
                                 <div>COMMENT</div>
                             </div>
                         </div>`;
-                    for (let i_group = 4; i_group <= 9;i_group++){
-                        i++;
+                    //create div groups with parameters, each group with a title
+                    //first 6 attributes in config json contains array of parameter records
+                    //metadata is saved last in config
+                    for (let i_group = 0; i_group <= 5;i_group++){
                         html += 
-                        `<div id='list_config_row_${i}' class='list_config_row' >
-                            <div class='list_config_col list_config_group'>
+                        `<div id='list_config_row_${i_group}' class='list_config_row list_config_group' >
+                            <div class='list_config_col list_config_group_title'>
                                 <div class='list_readonly'>${Object.keys(json.data)[i_group]}</div>
-                            </div>
-                        </div>`;
-                        for (let j = 0; j < json.data[Object.keys(json.data)[i_group]].length; j++) {
-                            i++;
-                            html += 
-                            `<div id='list_config_row_${i}' class='list_config_row' >
-                                <div class='list_config_col'>
-                                    <div class='list_readonly'>${Object.keys(json.data[Object.keys(json.data)[i_group]][j])[0]}</div>
-                                </div>
-                                <div class='list_config_col'>
-                                    <input type=text class='list_edit' value='${Object.values(json.data[Object.keys(json.data)[i_group]][j])[0]}'/>
-                                </div>
-                                <div class='list_config_col'>
-                                    <input type=text class='list_edit' value='${Object.values(json.data[Object.keys(json.data)[i_group]][j])[1]}'/>
-                                </div>
                             </div>`;
-                        }    
+                            for (let j = 0; j < json.data[Object.keys(json.data)[i_group]].length; j++) {
+                                i++;
+                                html += 
+                                `<div id='list_config_row_${i}' class='list_config_row' >
+                                    <div class='list_config_col'>
+                                        <div class='list_readonly'>${Object.keys(json.data[Object.keys(json.data)[i_group]][j])[0]}</div>
+                                    </div>
+                                    <div class='list_config_col'>
+                                        <input type=text class='list_edit' value='${Object.values(json.data[Object.keys(json.data)[i_group]][j])[0]}'/>
+                                    </div>
+                                    <div class='list_config_col'>
+                                        <input type=text class='list_edit' value='${Object.values(json.data[Object.keys(json.data)[i_group]][j])[1]}'/>
+                                    </div>
+                                </div>`;
+                            }    
+                        html += `</div>`;
+                        
                     }
+                    document.getElementById('list_config_edit').innerHTML = '';
+                    document.getElementById('list_config_edit').style.display = 'none';
+                    document.getElementById('list_config').style.display = 'flex';
                     document.getElementById('list_config').innerHTML = html;
+                    
                     list_events('list_config', 'list_config_row', ' .list_edit');
                     //set focus first column in first row
                     document.querySelectorAll('#list_config .list_edit')[0].focus();
                     break;
                 }
                 default:{
-                    document.getElementById('list_config').innerHTML = result;
+                    document.getElementById('list_config').innerHTML = '';
+                    document.getElementById('list_config').style.display = 'none';
+                    document.getElementById('list_config_edit').style.display = 'flex';
+                    document.getElementById('list_config_edit').innerHTML = JSON.stringify(json.data, undefined, 2);
                     break;
                 }
             }
@@ -2628,22 +2679,37 @@ function init_admin_secure(){
             document.getElementById('menu_10').innerHTML = window.global_icon_app_server; //SERVER
             document.getElementById('menu_11').innerHTML = window.global_icon_app_logoff; //LOGOUT
 
-            document.getElementById('menu_close').addEventListener('click', function() { document.getElementById('menu').style.display = 'none' }, false);
-            document.getElementById('menu_1').addEventListener('click', function() { show_menu(1) }, false);
-            document.getElementById('menu_2').addEventListener('click', function() { show_menu(2) }, false);
-            document.getElementById('menu_3').addEventListener('click', function() { show_menu(3) }, false);
-            document.getElementById('menu_4').addEventListener('click', function() { show_menu(4) }, false);
-            document.getElementById('menu_5').addEventListener('click', function() { show_menu(5) }, false);
-            document.getElementById('menu_6').addEventListener('click', function() { show_menu(6) }, false);
-            document.getElementById('menu_7').addEventListener('click', function() { show_menu(7) }, false);
-            document.getElementById('menu_8').addEventListener('click', function() { show_menu(8) }, false);
-            document.getElementById('menu_9').addEventListener('click', function() { show_menu(9) }, false);
-            document.getElementById('menu_10').addEventListener('click', function() { show_menu(10) }, false);
-            document.getElementById('menu_11').addEventListener('click', function() { admin_logoff_app() }, false);
-
+            document.getElementById('menu_secure').addEventListener('click', function(event) { 
+                                                                                let target_id;
+                                                                                if (event.target.id.startsWith('menu_')){
+                                                                                    //menuitem
+                                                                                    target_id = event.target.id;
+                                                                                }
+                                                                                else
+                                                                                    if (event.target.parentNode.id.startsWith('menu_')){
+                                                                                        //svg or i in menuitem
+                                                                                        target_id = event.target.parentNode.id;
+                                                                                    }
+                                                                                    else
+                                                                                        if (event.target.parentNode.parentNode.id.startsWith('menu_')){
+                                                                                            //path in svg in menuitem
+                                                                                            target_id = event.target.parentNode.parentNode.id;
+                                                                                        }
+                                                                                switch (target_id){
+                                                                                    case 'menu_close':{
+                                                                                        document.getElementById('menu').style.display = 'none';
+                                                                                        break;
+                                                                                    }
+                                                                                    case 'menu_11':{
+                                                                                        admin_logoff_app();
+                                                                                        break;
+                                                                                    }
+                                                                                    default:{
+                                                                                        show_menu(parseInt(target_id.substring(5)))
+                                                                                    }
+                                                                                }
+                                                                             }, false);
             document.getElementById('user_direction_select').addEventListener('change', function() { fix_pagination_buttons(this.value)}, false);
-
-
             //hide all first (display none in css using eval not working)
             for (let i=1;i<=10;i++){
                 document.getElementById(`menu_${i}`).style.display='none';
