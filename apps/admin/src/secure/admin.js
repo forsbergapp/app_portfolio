@@ -77,31 +77,49 @@ function show_menu(menu){
         }
         //MONITOR
         case 5:{
-            //connected
-            document.getElementById('select_year_menu5_list_connected').innerHTML = yearvalues;
-            document.getElementById('select_year_menu5_list_connected').selectedIndex = 0;
-            document.getElementById('select_month_menu5_list_connected').selectedIndex = new Date().getMonth();            
+            let url;
+            let token_type = '';
             if (window.global_system_admin==1){
-                //server log
-                document.getElementById('select_year_menu5').innerHTML = yearvalues;
-                document.getElementById('select_year_menu5').selectedIndex = 0;
-                document.getElementById('select_month_menu5').selectedIndex = new Date().getMonth();
-                document.getElementById('select_day_menu5').selectedIndex = new Date().getDate() -1;
-                get_server_log_parameters().then(function() {
-                    map_resize();
-                    nav_click(document.getElementById('list_connected_title'));
-                })
+                url  = `/server/config/systemadmin?config_type_no=1&config_group=SERVICE_DB&parameter=LIMIT_LIST_SEARCH`;
+                token_type = 2;
             }
             else{
-                window.global_page = 0;
-                //log
-                document.getElementById('select_year_menu5_app_log').innerHTML = yearvalues;
-                document.getElementById('select_year_menu5_app_log').selectedIndex = 0;
-                document.getElementById('select_month_menu5_app_log').selectedIndex = new Date().getMonth();
-                fix_pagination_buttons();
-                map_resize();
-                nav_click(document.getElementById('list_connected_title'));
+                url  = `/server/config/admin?config_type_no=1&config_group=SERVICE_DB&parameter=LIMIT_LIST_SEARCH`;
+                token_type = 1;
             }
+            common_fetch(url, 'GET', token_type, null, null, null, (err, result_limit) =>{
+                if (err)
+                    null;
+                else{
+                    window.global_limit = parseInt(JSON.parse(result_limit).data);
+                    //connected
+                    document.getElementById('select_year_menu5_list_connected').innerHTML = yearvalues;
+                    document.getElementById('select_year_menu5_list_connected').selectedIndex = 0;
+                    document.getElementById('select_month_menu5_list_connected').selectedIndex = new Date().getMonth();            
+                    if (window.global_system_admin==1){
+                        //server log
+                        document.getElementById('select_year_menu5').innerHTML = yearvalues;
+                        document.getElementById('select_year_menu5').selectedIndex = 0;
+                        document.getElementById('select_month_menu5').selectedIndex = new Date().getMonth();
+                        document.getElementById('select_day_menu5').selectedIndex = new Date().getDate() -1;
+                        get_server_log_parameters().then(function() {
+                            map_resize();
+                            nav_click(document.getElementById('list_connected_title'));
+                        })
+                    }
+                    else{
+                        window.global_page = 0;
+                        //log
+                        document.getElementById('select_year_menu5_app_log').innerHTML = yearvalues;
+                        document.getElementById('select_year_menu5_app_log').selectedIndex = 0;
+                        document.getElementById('select_month_menu5_app_log').selectedIndex = new Date().getMonth();
+                        fix_pagination_buttons();
+                        map_resize();
+                        nav_click(document.getElementById('list_connected_title'));
+                    }    
+                }
+                
+            })
             break;
         }
         //PARAMETER
@@ -289,7 +307,7 @@ function set_broadcast_type(){
 async function check_maintenance(){
     if (admin_token_has_value()){
         let json;
-        await common_fetch('/server/config/maintenance?', 'GET', 2, null, null, null, (err, result) =>{
+        await common_fetch('/server/config/systemadmin/maintenance?', 'GET', 2, null, null, null, (err, result) =>{
             if (err)
                 null;
             else{
@@ -312,7 +330,7 @@ function set_maintenance(){
         let json_data = `{
                             "value": ${check_value}
                          }`;
-        common_fetch(`/server/config/maintenance?`, 'PATCH', 2, json_data, null, null, (err, result) =>{
+        common_fetch(`/server/config/systemadmin/maintenance?`, 'PATCH', 2, json_data, null, null, (err, result) =>{
             null;
         })
     }
@@ -1021,7 +1039,7 @@ async function button_save(item){
                 json_data = JSON.stringify(JSON.parse(json_data), undefined, 2);
                 let old_button = document.getElementById(item).innerHTML;
                 document.getElementById(item).innerHTML = window.global_app_spinner;
-                common_fetch('/server/config?',
+                common_fetch('/server/config/systemadmin?',
                     'PUT', 2, json_data, null, null,(err, result) =>{
                     document.getElementById(item).innerHTML = old_button;
                 })
@@ -2262,7 +2280,7 @@ function show_pm2_logs(){
 async function show_config(config_nav=1){
     let url;
     document.getElementById(`list_config`).innerHTML = window.global_app_spinner;
-    url  = `/server/config?config_type_no=${config_nav}`;
+    url  = `/server/config/systemadmin/saved?config_type_no=${config_nav}`;
     await common_fetch(url, 'GET', 2, null, null, null, (err, result) =>{
         if (err)
             document.getElementById(`list_config`).innerHTML = '';
@@ -2484,7 +2502,6 @@ function init_admin_secure(){
 
     window.global_page = 0;
     window.global_page_last =0;
-    window.global_limit =1000;
     window.global_previous_row= '';
 
     //SET ICONS
