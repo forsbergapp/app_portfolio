@@ -1,11 +1,12 @@
+const {ConfigGet} = require(global.SERVER_ROOT + '/server/server.service');
 const puppeteer = require('puppeteer');
 global.browser;
 async function initReportService(){
-    //if process.env.SERVICE_REPORT_EXECUTABLE_PATH is empty then default is used
+    //if ConfigGet(1, 'SERVICE_REPORT', 'EXECUTABLE_PATH') is empty then default is used
     global.browser = await puppeteer.launch({
         pipe:true,
         headless: true,
-        executablePath: process.env.SERVICE_REPORT_EXECUTABLE_PATH,
+        executablePath: ConfigGet(1, 'SERVICE_REPORT', 'EXECUTABLE_PATH'),
         ignoreHTTPSErrors: true,
         ignoreDefaultArgs: ['--enable-automation'],
         args: [ '--ignore-certificate-errors',
@@ -61,7 +62,7 @@ module.exports = {
             global.browser.newPage().then(function(webPage){
                 webPage.goto(url, {
                     waitUntil: "networkidle2",
-                    timeout: process.env.SERVICE_REPORT_PDF_TIMEOUT,
+                    timeout: ConfigGet(1, 'SERVICE_REPORT', 'PDF_TIMEOUT'),
                 }).then(function(){
                     let width_viewport;
                     let height_viewport;
@@ -148,10 +149,10 @@ module.exports = {
                                             676
                                             %%EOF
                                         */
-                                        if (pdf.toString().length < process.env.SERVICE_REPORT_PDF_EMPTY_SIZE_CHECK)
-                                            //try process.env.SERVICE_REPORT_PDF_WAIT_ATTEMPTS * process.env.SERVICE_REPORT_PDF_WAIT_INTERVAL = total time
+                                        if (pdf.toString().length < ConfigGet(1, 'SERVICE_REPORT', 'PDF_EMPTY_SIZE_CHECK'))
+                                            //try ConfigGet(1, 'SERVICE_REPORT', 'PDF_WAIT_ATTEMPTS') * ConfigGet(1, 'SERVICE_REPORT', 'PDF_WAIT_INTERVAL') = total time
                                             //ex. 20 * 500 = 10 seconds
-                                            if (wait_count>process.env.SERVICE_REPORT_PDF_WAIT_ATTEMPTS)
+                                            if (wait_count>ConfigGet(1, 'SERVICE_REPORT', 'PDF_WAIT_ATTEMPTS'))
                                                 resolve(null);
                                             else{
                                                 //continue recursive call until PDF created with content
@@ -164,7 +165,7 @@ module.exports = {
                                                 resolve(pdf);
                                             });
                                         });    
-                        }, process.env.SERVICE_REPORT_PDF_WAIT_INTERVAL);
+                        }, ConfigGet(1, 'SERVICE_REPORT', 'PDF_WAIT_INTERVAL'));
                     }
                     waitpdf();
                     })

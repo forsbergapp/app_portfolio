@@ -1,3 +1,4 @@
+const {ConfigGet} = require(global.SERVER_ROOT + '/server/server.service');
 const {
     getUsersAdmin,
     getStatCountAdmin,
@@ -25,13 +26,13 @@ const {
 } = require("./user_account.service");
 
 const { genSaltSync, hashSync, compareSync } = require("bcryptjs");
-const { getMessage } = require(global.SERVER_ROOT + process.env.SERVICE_DB_REST_API_PATH + "/message_translation/message_translation.service");
-const { insertProfileSearch } = require(global.SERVER_ROOT + process.env.SERVICE_DB_REST_API_PATH + "/profile_search/profile_search.service");
-const { createUserAccountApp, deleteUserAccountApps } = require(global.SERVER_ROOT + process.env.SERVICE_DB_REST_API_PATH + "/user_account_app/user_account_app.service");
-const { getLastUserEvent, insertUserEvent } = require(global.SERVER_ROOT + process.env.SERVICE_DB_REST_API_PATH + "/user_account_event/user_account_event.service");
-const { insertUserAccountLogon } = require(global.SERVER_ROOT + process.env.SERVICE_DB_REST_API_PATH + "/user_account_logon/user_account_logon.service");
-const { insertUserAccountView } = require(global.SERVER_ROOT + process.env.SERVICE_DB_REST_API_PATH + "/user_account_view/user_account_view.service");
-const { getParameter } = require(global.SERVER_ROOT + process.env.SERVICE_DB_REST_API_PATH + "/app_parameter/app_parameter.service");
+const { getMessage } = require(global.SERVER_ROOT + ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH') + "/message_translation/message_translation.service");
+const { insertProfileSearch } = require(global.SERVER_ROOT + ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH') + "/profile_search/profile_search.service");
+const { createUserAccountApp, deleteUserAccountApps } = require(global.SERVER_ROOT + ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH') + "/user_account_app/user_account_app.service");
+const { getLastUserEvent, insertUserEvent } = require(global.SERVER_ROOT + ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH') + "/user_account_event/user_account_event.service");
+const { insertUserAccountLogon } = require(global.SERVER_ROOT + ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH') + "/user_account_logon/user_account_logon.service");
+const { insertUserAccountView } = require(global.SERVER_ROOT + ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH') + "/user_account_view/user_account_view.service");
+const { getParameter } = require(global.SERVER_ROOT + ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH') + "/app_parameter/app_parameter.service");
 const { sendEmail } = require(global.SERVER_ROOT + "/service/mail/mail.controller");
 const { createLogAppCI } = require(global.SERVER_ROOT + "/service/log/log.controller");
 const { accessToken } = require(global.SERVER_ROOT + "/service/auth/auth.controller");
@@ -75,7 +76,7 @@ module.exports = {
                     err.sqlMessage);
                 if (app_code != null){
                     getMessage(req.query.app_id,
-                        process.env.SERVER_APP_COMMON_APP_ID, 
+                        ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), 
                         app_code, 
                         req.query.lang_code, (err,results_message)  => {
                                     return res.status(400).send(
@@ -116,7 +117,7 @@ module.exports = {
         }
         if (password_length_wrong(req.body.password))
             getMessage(req.query.app_id, 
-                       process.env.SERVER_APP_COMMON_APP_ID,
+                       ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),
                        20106, 
                        req.query.lang_code, (err,results_message)  => {
                             return res.status(400).send(
@@ -135,7 +136,7 @@ module.exports = {
                                                 err.sqlMessage);
                     if (app_code != null){
                         getMessage(req.query.app_id,
-                                   process.env.SERVER_APP_COMMON_APP_ID, 
+                                   ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), 
                                    app_code, 
                                    req.query.lang_code, (err,results_message)  => {
                                             return res.status(400).send(
@@ -150,11 +151,11 @@ module.exports = {
                 }
                 else{
                     if (typeof req.body.provider_id == 'undefined' ) {
-                        getParameter(req.query.app_id, process.env.SERVER_APP_COMMON_APP_ID,'SERVICE_MAIL_TYPE_SIGNUP', (err, parameter_value)=>{
+                        getParameter(req.query.app_id, ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),'SERVICE_MAIL_TYPE_SIGNUP', (err, parameter_value)=>{
                             //send email for local users only
                             const emailData = {
                                 lang_code : req.query.lang_code,
-                                app_id : process.env.SERVER_APP_COMMON_APP_ID,
+                                app_id : ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),
                                 app_user_id : results.insertId,
                                 emailType : parameter_value,
                                 toEmail : req.body.email,
@@ -207,7 +208,7 @@ module.exports = {
                     err.sqlMessage);
                 if (app_code != null){
                     getMessage(req.query.app_id,
-                        process.env.SERVER_APP_COMMON_APP_ID, 
+                        ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), 
                         app_code, 
                         req.query.lang_code, (err,results_message)  => {
                                     return res.status(400).send(
@@ -326,10 +327,10 @@ module.exports = {
                                                         err
                                                     );
                                                 else{
-                                                    getParameter(req.query.app_id, process.env.SERVER_APP_COMMON_APP_ID,'SERVICE_MAIL_TYPE_PASSWORD_RESET', (err, parameter_value)=>{
+                                                    getParameter(req.query.app_id, ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),'SERVICE_MAIL_TYPE_PASSWORD_RESET', (err, parameter_value)=>{
                                                         const emailData = {
                                                             lang_code : req.query.lang_code,
-                                                            app_id : process.env.SERVER_APP_COMMON_APP_ID,
+                                                            app_id : ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),
                                                             app_user_id : results.id,
                                                             emailType : parameter_value,
                                                             toEmail : email,
@@ -384,7 +385,7 @@ module.exports = {
                 else{
                     //Record not found
                     getMessage( req.query.app_id,
-                                process.env.SERVER_APP_COMMON_APP_ID, 
+                                ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), 
                                 20400, 
                                 req.query.lang_code, (err,results_message)  => {
                                     return res.status(404).send(
@@ -460,7 +461,7 @@ module.exports = {
                 else{
                     //Record not found
                     getMessage( req.query.app_id,
-                                process.env.SERVER_APP_COMMON_APP_ID, 
+                                ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), 
                                 20400, 
                                 req.query.lang_code, (err,results_message)  => {
                                     return res.status(404).send(
@@ -500,7 +501,7 @@ module.exports = {
                         else {
                             //Record not found
                             getMessage( req.query.app_id,
-                                        process.env.SERVER_APP_COMMON_APP_ID, 
+                                        ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), 
                                         20400, 
                                         req.query.lang_code, (err,results_message)  => {
                                             return res.status(404).send(
@@ -533,7 +534,7 @@ module.exports = {
                 else {
                     //Record not found
                     getMessage( req.query.app_id,
-                                process.env.SERVER_APP_COMMON_APP_ID, 
+                                ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), 
                                 20400, 
                                 req.query.lang_code, (err,results_message)  => {
                                     return res.status(404).json({
@@ -564,7 +565,7 @@ module.exports = {
                 else {
                     //Record not found
                     getMessage( req.query.app_id,
-                                process.env.SERVER_APP_COMMON_APP_ID, 
+                                ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), 
                                 20400, 
                                 req.query.lang_code, (err,results_message)  => {
                                     return res.status(404).json({
@@ -592,7 +593,7 @@ module.exports = {
                             req.body.new_password != '' &&
                             password_length_wrong(req.body.new_password))
                                 getMessage( req.query.app_id,
-                                            process.env.SERVER_APP_COMMON_APP_ID, 
+                                            ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), 
                                             20106, 
                                             req.query.lang_code, (err,results_message)  => {
                                                     return res.status(400).send(
@@ -616,7 +617,7 @@ module.exports = {
                                                                     err.sqlMessage);
                                         if (app_code != null)
                                             getMessage( req.query.app_id,
-                                                        process.env.SERVER_APP_COMMON_APP_ID, 
+                                                        ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), 
                                                         app_code, 
                                                         req.query.lang_code, (err,results_message)  => {
                                                             return res.status(400).send(
@@ -631,10 +632,10 @@ module.exports = {
                                     else{
                                         if (results_update){
                                             if (send_email){
-                                                getParameter(req.query.app_id, process.env.SERVER_APP_COMMON_APP_ID,'SERVICE_MAIL_TYPE_CHANGE_EMAIL',  (err, parameter_value)=>{
+                                                getParameter(req.query.app_id, ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),'SERVICE_MAIL_TYPE_CHANGE_EMAIL',  (err, parameter_value)=>{
                                                     const emailData = {
                                                         lang_code : req.query.lang_code,
-                                                        app_id : process.env.SERVER_APP_COMMON_APP_ID,
+                                                        app_id : ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),
                                                         app_user_id : req.params.id,
                                                         emailType : parameter_value,
                                                         toEmail : req.body.new_email,
@@ -662,7 +663,7 @@ module.exports = {
                                         else{
                                             //record not found
                                             getMessage( req.query.app_id,
-                                                        process.env.SERVER_APP_COMMON_APP_ID, 
+                                                        ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), 
                                                         20400, 
                                                         req.query.lang_code, (err,results_message)  => {
                                                             return res.status(404).send(
@@ -724,7 +725,7 @@ module.exports = {
                         .then(function(){
                             //invalid password
                             getMessage(req.query.app_id,
-                                       process.env.SERVER_APP_COMMON_APP_ID, 
+                                       ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), 
                                        20401, 
                                        req.query.lang_code, (err,results_message)  => {
                                             return res.status(400).send(
@@ -737,7 +738,7 @@ module.exports = {
                 } else {
                     //user not found
                     getMessage( req.query.app_id,
-                                process.env.SERVER_APP_COMMON_APP_ID, 
+                                ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), 
                                 20305, 
                                 req.query.lang_code, (err,results_message)  => {
                                     return res.status(404).send(
@@ -751,7 +752,7 @@ module.exports = {
     updatePassword: (req, res) =>{
         if (password_length_wrong(req.body.new_password))
             getMessage(req.query.app_id,
-                       process.env.SERVER_APP_COMMON_APP_ID, 
+                       ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), 
                        20106, 
                        req.query.lang_code, (err,results_message)  => {
                             return res.status(400).send(
@@ -770,7 +771,7 @@ module.exports = {
                                                 err.sqlMessage);
                     if (app_code != null){
                         getMessage(req.query.app_id,
-                                   process.env.SERVER_APP_COMMON_APP_ID, 
+                                   ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), 
                                    app_code, 
                                    req.query.lang_code, (err,results_message)  => {
                                         return res.status(500).send(
@@ -815,7 +816,7 @@ module.exports = {
                     else{
                         //record not found
                         getMessage( req.query.app_id,
-                                    process.env.SERVER_APP_COMMON_APP_ID, 
+                                    ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), 
                                     20400, 
                                     req.query.lang_code, (err,results_message)  => {
                                         return res.status(404).send(
@@ -837,7 +838,7 @@ module.exports = {
                     err.sqlMessage);
                 if (app_code != null){
                     getMessage(req.query.app_id,
-                        process.env.SERVER_APP_COMMON_APP_ID, 
+                        ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), 
                         app_code, 
                         req.query.lang_code, (err,results_message)  => {
                                     return res.status(400).send(
@@ -859,7 +860,7 @@ module.exports = {
                 else{
                     //record not found
                     getMessage( req.query.app_id,
-                        process.env.SERVER_APP_COMMON_APP_ID, 
+                        ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), 
                         20400, 
                         req.query.lang_code, (err,results_message)  => {
                             return res.status(404).send(
@@ -895,7 +896,7 @@ module.exports = {
                                 else{
                                     //record not found
                                     getMessage( req.query.app_id,
-                                        process.env.SERVER_APP_COMMON_APP_ID, 
+                                        ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), 
                                         20400, 
                                         req.query.lang_code, (err,results_message)  => {
                                             return res.status(404).send(
@@ -932,7 +933,7 @@ module.exports = {
                                                 else{
                                                     //record not found
                                                     getMessage( req.query.app_id,
-                                                        process.env.SERVER_APP_COMMON_APP_ID, 
+                                                        ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), 
                                                         20400, 
                                                         req.query.lang_code, (err,results_message)  => {
                                                             return res.status(404).send(
@@ -949,7 +950,7 @@ module.exports = {
                                         .then(function(){
                                             //invalid password
                                             getMessage( req.query.app_id,
-                                                        process.env.SERVER_APP_COMMON_APP_ID, 
+                                                        ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), 
                                                         20401, 
                                                         req.query.lang_code, (err,results_message)  => {
                                                             return res.status(400).send(
@@ -962,7 +963,7 @@ module.exports = {
                                 else{
                                     //user not found
                                     getMessage( req.query.app_id,
-                                                process.env.SERVER_APP_COMMON_APP_ID, 
+                                                ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), 
                                                 20305, 
                                                 req.query.lang_code, (err,results_message)  => {
                                                     return res.status(404).send(
@@ -977,7 +978,7 @@ module.exports = {
                 else{
                     //user not found
                     getMessage(req.query.app_id,
-                               process.env.SERVER_APP_COMMON_APP_ID, 
+                               ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), 
                                20305, 
                                req.query.lang_code, (err,results_message)  => {
                                     return res.status(404).send(
@@ -1018,8 +1019,8 @@ module.exports = {
                     }
                    
                     if (result_pw == 1) {
-                        if ((req.query.app_id == process.env.SERVER_APP_COMMON_APP_ID && (results.app_role_id == 0 || results.app_role_id == 1))||
-                             req.query.app_id != process.env.SERVER_APP_COMMON_APP_ID){
+                        if ((req.query.app_id == ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID') && (results.app_role_id == 0 || results.app_role_id == 1))||
+                             req.query.app_id != ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID')){
                             createUserAccountApp(req.query.app_id, results.id, (err, results_create) => {
                                 if (err) {
                                     return res.status(500).send(
@@ -1036,10 +1037,10 @@ module.exports = {
                                                     err
                                                 );
                                             else{
-                                                getParameter(req.query.app_id, process.env.SERVER_APP_COMMON_APP_ID,'SERVICE_MAIL_TYPE_UNVERIFIED',  (err, parameter_value)=>{
+                                                getParameter(req.query.app_id, ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),'SERVICE_MAIL_TYPE_UNVERIFIED',  (err, parameter_value)=>{
                                                     const emailData = {
                                                         lang_code : req.query.lang_code,
-                                                        app_id : process.env.SERVER_APP_COMMON_APP_ID,
+                                                        app_id : ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),
                                                         app_user_id : results.id,
                                                         emailType : parameter_value,
                                                         toEmail : results.email,
@@ -1152,7 +1153,7 @@ module.exports = {
                                                'invalid password attempt for user id:' + req.body.user_account_id + ', username:' + req.body.username)
                                 .then(function(){
                                     getMessage( req.query.app_id,
-                                                process.env.SERVER_APP_COMMON_APP_ID, 
+                                                ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), 
                                                 20300, 
                                                 req.query.lang_code, (err,results_message)  => {
                                                         return res.status(400).send(
@@ -1169,7 +1170,7 @@ module.exports = {
                                    'user not found:' + req.body.username)
                     .then(function(){
                         getMessage( req.query.app_id,
-                                    process.env.SERVER_APP_COMMON_APP_ID, 
+                                    ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), 
                                     20305, 
                                     req.query.lang_code, (err,results_message)  => {
                                         return res.status(404).send(
@@ -1204,7 +1205,7 @@ module.exports = {
                                 err.sqlMessage);
                             if (app_code != null){
                                 getMessage(req.query.app_id,
-                                    process.env.SERVER_APP_COMMON_APP_ID, 
+                                    ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), 
                                     app_code, 
                                     req.query.lang_code, (err,results_message)  => {
                                                 return res.status(400).send(

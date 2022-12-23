@@ -1,3 +1,4 @@
+const {ConfigGet} = require(global.SERVER_ROOT + '/server/server.service');
 global.broadcast_clients = [];
 module.exports = {
     ClientConnect: (res) =>{
@@ -18,18 +19,18 @@ module.exports = {
     },
     BroadcastCheckMaintenance: ()=> {
         //start interval if apps are started
-        if (process.env.SERVER_APP_START==1){
+        if (ConfigGet(1, 'SERVER', 'APP_START')==1){
             const intervalId = setInterval(() => {
-                if (process.env.SERVER_MAINTENANCE==1){
+                if (ConfigGet(0, null, 'MAINTENANCE')==1){
                     broadcast_clients.forEach(client=>{
-                        if (client.app_id != process.env.SERVER_APP_COMMON_APP_ID){
+                        if (client.app_id != ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID')){
                             const broadcast =`{"broadcast_type" :"MAINTENANCE", 
                                             "broadcast_message":""}`;
                             client.response.write (`data: ${btoa(broadcast)}\n\n`);
                         }
                     })
                 }
-            }, process.env.SERVICE_BROADCAST_CHECK_INTERVALL);
+            }, ConfigGet(1, 'SERVICE_BROADCAST', 'CHECK_INTERVAL'));
         }
     },
     BroadcastSendSystemAdmin: (app_id, client_id, client_id_current, broadcast_type, broadcast_message, callBack) =>{
@@ -99,7 +100,7 @@ module.exports = {
     ConnectedList: async (app_id, app_id_select, limit, year, month, order_by, sort, callBack)=>{
         let broadcast_clients_no_res = [];
         let i=0;
-        const { getAppRole } = require(global.SERVER_ROOT +  process.env.SERVICE_DB_REST_API_PATH + "/user_account/user_account.service");
+        const { getAppRole } = require(global.SERVER_ROOT +  ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH') + "/user_account/user_account.service");
         broadcast_clients.forEach(client=>{
             if (client.app_id == app_id_select || app_id_select == ''){
                 i++;
@@ -195,7 +196,7 @@ module.exports = {
             i=0;
             if (broadcast_clients_no_res.length>0)
                 //update list using map with app role icons if database started
-                if(process.env.SERVICE_DB_START==1){
+                if(ConfigGet(1, 'SERVICE_DB', 'START')==1){
                     broadcast_clients_no_res.map(client=>{
                         getAppRole(app_id, client.user_account_id, (err, result_app_role)=>{
                             if (err)

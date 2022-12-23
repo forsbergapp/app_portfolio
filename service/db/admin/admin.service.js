@@ -1,3 +1,4 @@
+const {ConfigGet} = require(global.SERVER_ROOT + '/server/server.service');
 var global_pool_db1_app = [];
 var global_pool_db2_app = [];
 var global_pool_db3_app = [];
@@ -5,11 +6,11 @@ var mysql = require("mysql");
 var oracledb = require('oracledb');
 var pg = require('pg');
 function DBInit(){
-   if (process.env.SERVICE_DB_USE==2){
+   if (ConfigGet(1, 'SERVICE_DB', 'USE')==2){
       oracledb.autoCommit = true;
       oracledb.fetchAsString = [ oracledb.CLOB ];
-      oracledb.initOracleClient({ libDir: process.env.SERVICE_DB_DB2_LIBDIR,
-                                  configDir:process.env.SERVICE_DB_DB2_CONFIGDIR});
+      oracledb.initOracleClient({ libDir: ConfigGet(1, 'SERVICE_DB', 'DB2_LIBDIR'),
+                                  configDir:ConfigGet(1, 'SERVICE_DB', 'DB2_CONFIGDIR')});
       oracledb.outFormat = oracledb.OUT_FORMAT_OBJECT;
    }
 }
@@ -21,10 +22,10 @@ module.exports = {
       const {execute_db_sql, get_schema_name} = require (global.SERVER_ROOT + "/service/db/common/common.service");
 		let sql;
 		let parameters;
-      switch (process.env.SERVICE_DB_USE){
+      switch (ConfigGet(1, 'SERVICE_DB', 'USE')){
          case '1':{
             let table_global_variables;
-            if (process.env.SERVICE_DB_DB1_VARIANT==1){
+            if (ConfigGet(1, 'SERVICE_DB', 'DB1_VARIANT')==1){
                //MySQL
                table_global_variables = 'performance_schema';
             }
@@ -82,7 +83,7 @@ module.exports = {
          }
       }
       parameters = {	
-                     database: process.env.SERVICE_DB_USE,
+                     database: ConfigGet(1, 'SERVICE_DB', 'USE'),
                      Xdatabase_schema: get_schema_name()
                    };
       execute_db_sql(app_id, sql, parameters,
@@ -90,7 +91,7 @@ module.exports = {
 			if (err)
 				return callBack(err, null);
 			else{
-                if (process.env.SERVICE_DB_USE==2){
+                if (ConfigGet(1, 'SERVICE_DB', 'USE')==2){
                     let hostname = JSON.parse(result[0].hostname.toLowerCase()).public_domain_name + 
                                    ' (' + JSON.parse(result[0].hostname.toLowerCase()).outbound_ip_address + ')';
                     result[0].database_schema += ' (' + JSON.parse(result[0].hostname.toLowerCase()).database_name + ')';
@@ -105,7 +106,7 @@ module.exports = {
       const {execute_db_sql, get_schema_name} = require (global.SERVER_ROOT + "/service/db/common/common.service");
 		let sql;
 		let parameters;
-      switch (process.env.SERVICE_DB_USE){
+      switch (ConfigGet(1, 'SERVICE_DB', 'USE')){
          case '1':{
             sql = `SELECT t.table_name table_name,
                           IFNULL(ROUND((SUM(t.data_length)+SUM(t.index_length))/1024/1024,2),0.00) total_size,
@@ -164,7 +165,7 @@ module.exports = {
       const {execute_db_sql, get_schema_name} = require (global.SERVER_ROOT + "/service/db/common/common.service");
 		let sql;
 		let parameters;
-      switch (process.env.SERVICE_DB_USE){
+      switch (ConfigGet(1, 'SERVICE_DB', 'USE')){
          case '1':{
             sql = `SELECT IFNULL(ROUND((SUM(t.data_length)+SUM(t.index_length))/1024/1024,2),0.00) total_size,
                           IFNULL(ROUND(((SUM(t.data_length)+SUM(t.index_length))-SUM(t.data_free))/1024/1024,2),0.00) data_used,
@@ -213,25 +214,25 @@ module.exports = {
 	},
 	DBStart: async () => {
       return await new Promise(function (resolve, reject){
-         if (process.env.SERVICE_DB_START==1){
+         if (ConfigGet(1, 'SERVICE_DB', 'START')==1){
             DBInit();
             async function startDBpool(app_id, db_user, db_password) {
                return await new Promise(function (resolve, reject){
-                  switch(process.env.SERVICE_DB_USE){
+                  switch(ConfigGet(1, 'SERVICE_DB', 'USE')){
                      case '1':{
                         global_pool_db1_app.push([app_id,
                                                   mysql.createPool({
-                                                      port: process.env.SERVICE_DB_DB1_PORT,
-                                                      host: process.env.SERVICE_DB_DB1_HOST,
+                                                      port: ConfigGet(1, 'SERVICE_DB', 'DB1_PORT'),
+                                                      host: ConfigGet(1, 'SERVICE_DB', 'DB1_HOST'),
                                                       user: db_user,
                                                       password: db_password,
-                                                      database: process.env.SERVICE_DB_DB1_NAME,
-                                                      charset: process.env.SERVICE_DB_DB1_CHARACTERSET,
-                                                      connnectionLimit: process.env.SERVICE_DB_DB1_CONNECTION_LIMIT
+                                                      database: ConfigGet(1, 'SERVICE_DB', 'DB1_NAME'),
+                                                      charset: ConfigGet(1, 'SERVICE_DB', 'DB1_CHARACTERSET'),
+                                                      connnectionLimit: ConfigGet(1, 'SERVICE_DB', 'DB1_CONNECTION_LIMIT')
                                                    })
                                                  ]);
                         // log with common app id at startup for all apps
-                        createLogAppSI(process.env.SERVER_APP_COMMON_APP_ID, __appfilename, __appfunction, __appline, 
+                        createLogAppSI(ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), __appfilename, __appfunction, __appline, 
                                        `mysql createPool ${app_id} user: ` + db_user).then(function(){
                            resolve();
                         })
@@ -244,21 +245,21 @@ module.exports = {
                         oracledb.createPool({	
                            user:  db_user,
                            password: db_password,
-                           connectString: process.env.SERVICE_DB_DB2_CONNECTSTRING,
-                           poolMin: parseInt(process.env.SERVICE_DB_DB2_POOL_MIN),
-                           poolMax: parseInt(process.env.SERVICE_DB_DB2_POOL_MAX),
-                           poolIncrement: parseInt(process.env.SERVICE_DB_DB2_POOL_INCREMENT),
+                           connectString: ConfigGet(1, 'SERVICE_DB', 'DB2_CONNECTSTRING'),
+                           poolMin: parseInt(ConfigGet(1, 'SERVICE_DB', 'DB2_POOL_MIN')),
+                           poolMax: parseInt(ConfigGet(1, 'SERVICE_DB', 'DB2_POOL_MAX')),
+                           poolIncrement: parseInt(ConfigGet(1, 'SERVICE_DB', 'DB2_POOL_INCREMENT')),
                            poolAlias: `global_pool_db2_app_${app_id}`
                         }, (err,result) => {
                            // log with common app id at startup for all apps
                            if (err){
-                              createLogAppSE(process.env.SERVER_APP_COMMON_APP_ID, __appfilename, __appfunction, __appline, 
+                              createLogAppSE(ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), __appfilename, __appfunction, __appline, 
                                              `oracledb.createPool ${app_id} user: ` + db_user + `, err:${err}`).then(function(){
                                  reject(err);
                               })
                            }
                            else{
-                              createLogAppSI(process.env.SERVER_APP_COMMON_APP_ID, __appfilename, __appfunction, __appline, 
+                              createLogAppSI(ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), __appfilename, __appfunction, __appline, 
                                              `oracledb.createPool ${app_id} ok user: ` + db_user).then(function(){
                                  resolve();
                               })
@@ -271,15 +272,15 @@ module.exports = {
                                                   new pg.Pool({
                                                       user: db_user,
                                                       password: db_password,
-                                                      host: process.env.SERVICE_DB_DB3_HOST,
-                                                      database: process.env.SERVICE_DB_DB3_NAME,
-                                                      port: process.env.SERVICE_DB_DB3_PORT,
-                                                      connectionTimeoutMillis: process.env.SERVICE_DB_DB3_TIMEOUT_CONNECTION,
-                                                      idleTimeoutMillis: process.env.SERVICE_DB_DB3_TIMEOUT_IDLE,
-                                                      max: process.env.SERVICE_DB_DB3_MAX})
+                                                      host: ConfigGet(1, 'SERVICE_DB', 'DB3_HOST'),
+                                                      database: ConfigGet(1, 'SERVICE_DB', 'DB3_NAME'),
+                                                      port: ConfigGet(1, 'SERVICE_DB', 'DB3_PORT'),
+                                                      connectionTimeoutMillis: ConfigGet(1, 'SERVICE_DB', 'DB3_TIMEOUT_CONNECTION'),
+                                                      idleTimeoutMillis: ConfigGet(1, 'SERVICE_DB', 'DB3_TIMEOUT_IDLE'),
+                                                      max: ConfigGet(1, 'SERVICE_DB', 'DB3_MAX')})
                                                   ]);
                         // log with common app id at startup for all apps
-                        createLogAppSI(process.env.SERVER_APP_COMMON_APP_ID, __appfilename, __appfunction, __appline, 
+                        createLogAppSI(ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), __appfilename, __appfunction, __appline, 
                                        `pg createPool ${app_id} user: ` + db_user).then(function(){
                            resolve();
                         })
@@ -290,11 +291,11 @@ module.exports = {
             }
             function startDBApps(){
                let json;
-               const { getAppDBParametersAdmin } = require (global.SERVER_ROOT + process.env.SERVICE_DB_REST_API_PATH + "/app_parameter/app_parameter.service");
+               const { getAppDBParametersAdmin } = require (global.SERVER_ROOT + ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH') + "/app_parameter/app_parameter.service");
                //app_id inparameter for log, all apps will be returned
-               getAppDBParametersAdmin(process.env.SERVER_APP_COMMON_APP_ID,(err, results) =>{
+               getAppDBParametersAdmin(ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),(err, results) =>{
                   if (err) {
-                     createLogAppSE(process.env.SERVER_APP_COMMON_APP_ID, __appfilename, __appfunction, __appline, `getAppDBParameters, err:${err}`).then(function(){
+                     createLogAppSE(ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), __appfilename, __appfunction, __appline, `getAppDBParameters, err:${err}`).then(function(){
                         reject(err);
                     })
                   }
@@ -316,21 +317,21 @@ module.exports = {
                   }
                }); 
             }
-            switch (process.env.SERVICE_DB_USE){
+            switch (ConfigGet(1, 'SERVICE_DB', 'USE')){
                case '1':{
-                  global_pool_db1_app.push([process.env.SERVER_APP_COMMON_APP_ID,
+                  global_pool_db1_app.push([ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),
                                             mysql.createPool({
-                                            port: process.env.SERVICE_DB_DB1_PORT,
-                                            host: process.env.SERVICE_DB_DB1_HOST,
-                                            user: process.env.SERVICE_DB_DB1_APP_ADMIN_USER,
-                                            password: process.env.SERVICE_DB_DB1_APP_ADMIN_PASS,
-                                            database: process.env.SERVICE_DB_DB1_NAME,
-                                            charset: process.env.SERVICE_DB_DB1_CHARACTERSET,
-                                            connnectionLimit: process.env.SERVICE_DB_DB1_CONNECTION_LIMIT})
+                                            port: ConfigGet(1, 'SERVICE_DB', 'DB1_PORT'),
+                                            host: ConfigGet(1, 'SERVICE_DB', 'DB1_HOST'),
+                                            user: ConfigGet(1, 'SERVICE_DB', 'DB1_APP_ADMIN_USER'),
+                                            password: ConfigGet(1, 'SERVICE_DB', 'DB1_APP_ADMIN_PASS'),
+                                            database: ConfigGet(1, 'SERVICE_DB', 'DB1_NAME'),
+                                            charset: ConfigGet(1, 'SERVICE_DB', 'DB1_CHARACTERSET'),
+                                            connnectionLimit: ConfigGet(1, 'SERVICE_DB', 'DB1_CONNECTION_LIMIT')})
                                            ]);
                   // log with common app id at startup for all apps
-                  createLogAppSI(process.env.SERVER_APP_COMMON_APP_ID, __appfilename, __appfunction, __appline, 
-                                 `mysql createPool ADMIN user: ${process.env.SERVICE_DB_DB1_APP_ADMIN_USER}`).then(function(){
+                  createLogAppSI(ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), __appfilename, __appfunction, __appline, 
+                                 `mysql createPool ADMIN user: ${ConfigGet(1, 'SERVICE_DB', 'DB1_APP_ADMIN_USER')}`).then(function(){
                      startDBApps()
                   })
                   break;
@@ -356,25 +357,25 @@ module.exports = {
                   // enableStatistics: false // record pool usage for oracledb.getPool().getStatistics() and logStatistics()
                   */
                   // start first with admin app id = common app id 
-                  global_pool_db2_app.push([process.env.SERVER_APP_COMMON_APP_ID,
-                                            `global_pool_db2_app_${process.env.SERVER_APP_COMMON_APP_ID}`
+                  global_pool_db2_app.push([ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),
+                                            `global_pool_db2_app_${ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID')}`
                                            ]);
-                  oracledb.createPool({ user: process.env.SERVICE_DB_DB2_APP_ADMIN_USER,
-                                                password: process.env.SERVICE_DB_DB2_APP_ADMIN_PASS,
-                                                connectString: process.env.SERVICE_DB_DB2_CONNECTSTRING,
-                                                poolMin: parseInt(process.env.SERVICE_DB_DB2_POOL_MIN),
-                                                poolMax: parseInt(process.env.SERVICE_DB_DB2_POOL_MAX),
-                                                poolIncrement: parseInt(process.env.SERVICE_DB_DB2_POOL_INCREMENT),
-                                                poolAlias: `global_pool_db2_app_${process.env.SERVER_APP_COMMON_APP_ID}`}, (err,result) => {
+                  oracledb.createPool({ user: ConfigGet(1, 'SERVICE_DB', 'DB2_APP_ADMIN_USER'),
+                                                password: ConfigGet(1, 'SERVICE_DB', 'DB2_APP_ADMIN_PASS'),
+                                                connectString: ConfigGet(1, 'SERVICE_DB', 'DB2_CONNECTSTRING'),
+                                                poolMin: parseInt(ConfigGet(1, 'SERVICE_DB', 'DB2_POOL_MIN')),
+                                                poolMax: parseInt(ConfigGet(1, 'SERVICE_DB', 'DB2_POOL_MAX')),
+                                                poolIncrement: parseInt(ConfigGet(1, 'SERVICE_DB', 'DB2_POOL_INCREMENT')),
+                                                poolAlias: `global_pool_db2_app_${ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID')}`}, (err,result) => {
                      // log with common app id at startup for all apps
                      if (err)
-                        createLogAppSE(process.env.SERVER_APP_COMMON_APP_ID, __appfilename, __appfunction, __appline, 
-                                       `oracledb.createPool ADMIN user: ${process.env.SERVICE_DB_DB2_APP_ADMIN_USER}, err:${err}`).then(function(){
+                        createLogAppSE(ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), __appfilename, __appfunction, __appline, 
+                                       `oracledb.createPool ADMIN user: ${ConfigGet(1, 'SERVICE_DB', 'DB2_APP_ADMIN_USER')}, err:${err}`).then(function(){
                            reject(err);
                         })
                      else{
-                        createLogAppSI(process.env.SERVER_APP_COMMON_APP_ID, __appfilename, __appfunction, __appline, 
-                                       `oracledb.createPool ADMIN ok user: ${process.env.SERVICE_DB_DB2_APP_ADMIN_USER}`).then(function(){
+                        createLogAppSI(ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), __appfilename, __appfunction, __appline, 
+                                       `oracledb.createPool ADMIN ok user: ${ConfigGet(1, 'SERVICE_DB', 'DB2_APP_ADMIN_USER')}`).then(function(){
                            startDBApps()
                         })
                      }							
@@ -382,20 +383,20 @@ module.exports = {
                   break;
                }
                case '3':{
-                  global_pool_db3_app.push([process.env.SERVER_APP_COMMON_APP_ID,
+                  global_pool_db3_app.push([ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),
                                             new pg.Pool({
-                                                user: process.env.SERVICE_DB_DB3_APP_ADMIN_USER,
-                                                password: process.env.SERVICE_DB_DB3_APP_ADMIN_PASS,
-                                                host: process.env.SERVICE_DB_DB3_HOST,
-                                                database: process.env.SERVICE_DB_DB3_NAME,
-                                                port: process.env.SERVICE_DB_DB3_PORT,
-                                                connectionTimeoutMillis: process.env.SERVICE_DB_DB3_TIMEOUT_CONNECTION,
-                                                idleTimeoutMillis: process.env.SERVICE_DB_DB3_TIMEOUT_IDLE,
-                                                max: process.env.SERVICE_DB_DB3_MAX})
+                                                user: ConfigGet(1, 'SERVICE_DB', 'DB3_APP_ADMIN_USER'),
+                                                password: ConfigGet(1, 'SERVICE_DB', 'DB3_APP_ADMIN_PASS'),
+                                                host: ConfigGet(1, 'SERVICE_DB', 'DB3_HOST'),
+                                                database: ConfigGet(1, 'SERVICE_DB', 'DB3_NAME'),
+                                                port: ConfigGet(1, 'SERVICE_DB', 'DB3_PORT'),
+                                                connectionTimeoutMillis: ConfigGet(1, 'SERVICE_DB', 'DB3_TIMEOUT_CONNECTION'),
+                                                idleTimeoutMillis: ConfigGet(1, 'SERVICE_DB', 'DB3_TIMEOUT_IDLE'),
+                                                max: ConfigGet(1, 'SERVICE_DB', 'DB3_MAX')})
                                            ]);
                   // log with common app id at startup for all apps
-                  createLogAppSI(process.env.SERVER_APP_COMMON_APP_ID, __appfilename, __appfunction, __appline, 
-                                 `pg createPool ADMIN user: ${process.env.SERVICE_DB_DB3_APP_ADMIN_USER}`).then(function(){
+                  createLogAppSI(ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), __appfilename, __appfunction, __appline, 
+                                 `pg createPool ADMIN user: ${ConfigGet(1, 'SERVICE_DB', 'DB3_APP_ADMIN_USER')}`).then(function(){
                      startDBApps()
                   })
                   break;
@@ -421,7 +422,7 @@ module.exports = {
    get_pool: (app_id) =>{
       let pool = null;
       try{
-         switch (process.env.SERVICE_DB_USE){
+         switch (ConfigGet(1, 'SERVICE_DB', 'USE')){
             case '1':{
                pool = global_pool_db1_app.filter(function(dbpool) {
                         return (parseInt(dbpool[0]) == parseInt(app_id));
@@ -443,7 +444,7 @@ module.exports = {
          }
       }catch (err) {
          //unknown app id requested
-         createLogAppSE(process.env.SERVER_APP_COMMON_APP_ID, __appfilename, __appfunction, __appline, 
+         createLogAppSE(ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), __appfilename, __appfunction, __appline, 
                         'get_pool error app_id: ' + app_id).then(function(){
             return null;
          })

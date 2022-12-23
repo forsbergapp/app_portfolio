@@ -1,4 +1,5 @@
-const { createLog, createLogAdmin} = require (global.SERVER_ROOT +  process.env.SERVICE_DB_REST_API_PATH + "/app_log/app_log.service");
+const {ConfigGet} = require(global.SERVER_ROOT + '/server/server.service');
+const { createLog, createLogAdmin} = require (global.SERVER_ROOT +  ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH') + "/app_log/app_log.service");
 const { getIp, getIpAdmin, getIpSystemAdmin} = require (global.SERVER_ROOT + "/service/geolocation/geolocation.controller");
 module.exports = {
   getForm: (req, res, app_id, params, callBack) => {
@@ -11,7 +12,7 @@ module.exports = {
                         result.geoplugin_regionName + ', ' +
                         result.geoplugin_countryName;
         //check if maintenance
-        if (process.env.SERVER_MAINTENANCE==1){
+        if (ConfigGet(0, null, 'MAINTENANCE')==1){
             const { getMaintenance } = require(global.SERVER_ROOT + "/apps");
             const app = getMaintenance(app_id,
                                         result.geoplugin_latitude,
@@ -58,7 +59,7 @@ module.exports = {
     req.query.app_id = app_id;
     req.query.app_user_id = null;
     req.query.callback=1;
-    if (process.env.SERVICE_DB_START==1){
+    if (ConfigGet(1, 'SERVICE_DB', 'START')==1){
         getIpAdmin(req, res, (err, result)=>{
             let gps_place = result.geoplugin_city + ', ' +
                             result.geoplugin_regionName + ', ' +

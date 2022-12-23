@@ -54,6 +54,7 @@ module.exports = {
 	},
 	getPM2Logs: (req, res) => {
 		getPM2Logs(req.query_app_id, (err, results) =>{
+			const {ConfigGet} = require(global.SERVER_ROOT + '/server/server.service');
 			if (err)
 				return res.status(500).send(
                     err
@@ -61,8 +62,8 @@ module.exports = {
 			else{
 				if (results.length>0)
 					return res.status(200).json({
-						path: global.SERVER_ROOT + process.env.SERVICE_LOG_FILE_PATH_SERVER,
-						file: process.env.SERVICE_LOG_PM2_FILE,
+						path: global.SERVER_ROOT + ConfigGet(0, null, 'PATH_LOG'),
+						file: ConfigGet(1, 'SERVICE_LOG', 'PM2_FILE'),
 						data: results
 					});
 				else{
@@ -81,10 +82,11 @@ module.exports = {
 	},
 	createLogServerI: async (info, req, res) =>{
 		return await new Promise(function (resolve){ 
+			const {ConfigGet} = require(global.SERVER_ROOT + '/server/server.service');
 			if (info)
 				resolve(createLogServerI(info));
 			else
-				if (process.env.SERVICE_LOG_ENABLE_SERVER_VERBOSE==1){
+				if (ConfigGet(1, 'SERVICE_LOG', 'ENABLE_SERVER_VERBOSE')==1){
 					const getCircularReplacer = () => {
 						const seen = new WeakSet();
 						return (key, value) => {
@@ -100,7 +102,7 @@ module.exports = {
 					resolve(createLogServerI('res:' + JSON.stringify(res, getCircularReplacer())));
 				}
 				else
-					if (process.env.SERVICE_LOG_ENABLE_SERVER_INFO==1){
+					if (ConfigGet(1, 'SERVICE_LOG', 'ENABLE_SERVER_INFO')==1){
 						resolve(createLogServerI(null,
 												 req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, 
 												 res.statusCode, res.statusMessage, 
@@ -118,17 +120,20 @@ module.exports = {
 	},
 	createLogAppSI: async (app_id, app_filename, app_function_name, app_line, logtext) => {
 		return await new Promise(function (resolve){ 
-			resolve(createLogAppS(process.env.SERVICE_LOG_LEVEL_INFO, app_id, app_filename, app_function_name, app_line, logtext));
+			const {ConfigGet} = require(global.SERVER_ROOT + '/server/server.service');
+			resolve(createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_INFO'), app_id, app_filename, app_function_name, app_line, logtext));
 		})
 	},
     createLogAppSE: async (app_id, app_filename, app_function_name, app_line, logtext) => {
 		return await new Promise(function (resolve){ 
-        	resolve(createLogAppS(process.env.SERVICE_LOG_LEVEL_ERROR, app_id, app_filename, app_function_name, app_line, logtext));
+			const {ConfigGet} = require(global.SERVER_ROOT + '/server/server.service');
+        	resolve(createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), app_id, app_filename, app_function_name, app_line, logtext));
 		})
 	},
 	createLogAppCI: async (req, res, app_filename, app_function_name, app_line, logtext) => {
 		return await new Promise(function (resolve){ 
-			resolve(createLogAppC(req.query.app_id, process.env.SERVICE_LOG_LEVEL_INFO, app_filename, app_function_name, app_line, logtext,
+			const {ConfigGet} = require(global.SERVER_ROOT + '/server/server.service');
+			resolve(createLogAppC(req.query.app_id, ConfigGet(1, 'SERVICE_LOG', 'LEVEL_INFO'), app_filename, app_function_name, app_line, logtext,
 							      req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, 
 								  res.statusCode, 
 							      req.headers['user-agent'], req.headers['accept-language'], req.headers['referer']));
@@ -136,7 +141,8 @@ module.exports = {
 	},
 	createLogAppCE: async (req, res, app_filename, app_function_name, app_line, logtext) => {
 		return await new Promise(function (resolve){ 
-			createLogAppC(req.query.app_id, process.env.SERVICE_LOG_LEVEL_ERROR, app_filename, app_function_name, app_line, logtext,
+			const {ConfigGet} = require(global.SERVER_ROOT + '/server/server.service');
+			createLogAppC(req.query.app_id, ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), app_filename, app_function_name, app_line, logtext,
 						req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, 
 						res.statusCode, 
 						req.headers['user-agent'], req.headers['accept-language'], req.headers['referer'], (err, res) =>{
