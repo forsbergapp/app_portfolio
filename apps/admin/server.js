@@ -17,7 +17,7 @@ app.get("/admin",function (req, res, next) {
         next();
 });
 app.get("/admin/:sub",function (req, res, next) {
-    return res.redirect('https://' + req.headers.host + "/admin");
+    return res.redirect('/admin');
 });
 //common directories
 app.use('/common/audio',express.static(__dirname + '/common/audio'));
