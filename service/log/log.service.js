@@ -4,8 +4,8 @@ function pm2log(log){
     
 async function remote_log(log){
     return await new Promise(function (resolve){ 
-        if (ConfigGet(1, 'SERVICE_LOG', 'DESTINATION')==1 ||
-            ConfigGet(1, 'SERVICE_LOG', 'DESTINATION')==2){
+        if (ConfigGet(1, 'SERVICE_LOG', 'DESTINATION')=='1' ||
+            ConfigGet(1, 'SERVICE_LOG', 'DESTINATION')=='2'){
             //url destination
             const axios = require('axios');
             const headers = { 
@@ -65,8 +65,8 @@ async function sendLog(logscope, loglevel, log){
                 filename = `${logscope}_${loglevel}_${logdate.getFullYear()}${month}.log`;
             else
                 filename = `${logscope}_${loglevel}_${logdate.getFullYear()}${month}.log`;
-        if (ConfigGet(1, 'SERVICE_LOG', 'DESTINATION')==0 ||
-            ConfigGet(1, 'SERVICE_LOG', 'DESTINATION')==2){
+        if (ConfigGet(1, 'SERVICE_LOG', 'DESTINATION')=='0' ||
+            ConfigGet(1, 'SERVICE_LOG', 'DESTINATION')=='2'){
             //file destination
             let fs = require('fs');
             fs.appendFile(global.SERVER_ROOT + ConfigGet(0, null, 'PATH_LOG') + filename, log + '\r\n', 'utf8', (err) => {
@@ -209,7 +209,7 @@ module.exports = {
     },
     createLogDB: async (app_id, logtext) =>{
         return await new Promise(function (resolve){ 
-            if (ConfigGet(1, 'SERVICE_LOG', 'ENABLE_DB')==1){
+            if (ConfigGet(1, 'SERVICE_LOG', 'ENABLE_DB')=='1'){
                 let log_json_db = `{"logdate": "${logdate()}",
                                     "ip":"",
                                     "host": "${require('os').hostname()}",
@@ -280,7 +280,7 @@ module.exports = {
                      ip, host, protocol, originalUrl, method, statusCode, 
                     user_agent, accept_language, referer) => {
         return await new Promise(function (resolve){  
-            if (ConfigGet(1, 'SERVICE_LOG', 'ENABLE_ROUTER')==1){
+            if (ConfigGet(1, 'SERVICE_LOG', 'ENABLE_ROUTER')=='1'){
                 let log_json =`{"logdate": "${logdate()}",
                                 "ip":"${ip}",
                                 "host": "${host}",

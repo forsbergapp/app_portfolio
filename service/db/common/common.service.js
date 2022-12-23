@@ -18,7 +18,7 @@ function log_db_sql(app_id, sql, parameters){
 async function execute_db_sql(app_id, sql, parameters, 
 							  app_filename, app_function, app_line, callBack){
 
-		if (ConfigGet(1, 'SERVICE_LOG', 'ENABLE_DB')==1){
+		if (ConfigGet(1, 'SERVICE_LOG', 'ENABLE_DB')=='1'){
 			log_db_sql(app_id, sql, parameters);
 		}
 		switch (ConfigGet(1, 'SERVICE_DB', 'USE')){
@@ -193,7 +193,7 @@ function get_locale(lang_code, part){
 		}
 }
 function limit_sql(sql, limit_type = null){
-	if (ConfigGet(1, 'SERVICE_DB', 'USE') == 1 || ConfigGet(1, 'SERVICE_DB', 'USE') == 3)
+	if (ConfigGet(1, 'SERVICE_DB', 'USE') == '1' || ConfigGet(1, 'SERVICE_DB', 'USE') == '3')
 		switch (limit_type){
 			case 1:{
 				//use env limit
@@ -209,7 +209,7 @@ function limit_sql(sql, limit_type = null){
 			}
 		}
 	else 
-		if (ConfigGet(1, 'SERVICE_DB', 'USE') == 2)
+		if (ConfigGet(1, 'SERVICE_DB', 'USE') == '2')
 			switch (limit_type){
 				case 1:{
 					//use env limit

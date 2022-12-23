@@ -19,9 +19,9 @@ module.exports = {
     },
     BroadcastCheckMaintenance: ()=> {
         //start interval if apps are started
-        if (ConfigGet(1, 'SERVER', 'APP_START')==1){
+        if (ConfigGet(1, 'SERVER', 'APP_START')=='1'){
             const intervalId = setInterval(() => {
-                if (ConfigGet(0, null, 'MAINTENANCE')==1){
+                if (ConfigGet(0, null, 'MAINTENANCE')=='1'){
                     broadcast_clients.forEach(client=>{
                         if (client.app_id != ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID')){
                             const broadcast =`{"broadcast_type" :"MAINTENANCE", 

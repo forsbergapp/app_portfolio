@@ -333,7 +333,7 @@ module.exports = {
 							:provider_image,
 							:provider_Ximage_url,
 							:provider_email) `;				
-			if (ConfigGet(1, 'SERVICE_DB', 'USE') == 3) {
+			if (ConfigGet(1, 'SERVICE_DB', 'USE') == '3') {
 				sql = sql + ' RETURNING id ';
 			}
 			parameters = {
@@ -419,7 +419,7 @@ module.exports = {
 						date_modified = CURRENT_TIMESTAMP
 				WHERE id = :id
 					AND verification_code = :verification_code `;
-		if (ConfigGet(1, 'SERVICE_DB', 'USE')==3){
+		if (ConfigGet(1, 'SERVICE_DB', 'USE')=='3'){
 			sql = sql + ' RETURNING id';
 		}
 		parameters ={
@@ -468,7 +468,7 @@ module.exports = {
 					  active = 0,
 					  date_modified = CURRENT_TIMESTAMP
 				WHERE id = :id `;
-		if (ConfigGet(1, 'SERVICE_DB', 'USE')==3){
+		if (ConfigGet(1, 'SERVICE_DB', 'USE')=='3'){
 			sql = sql + ' RETURNING id';
 		}
 		parameters ={

@@ -6,7 +6,7 @@ var mysql = require("mysql");
 var oracledb = require('oracledb');
 var pg = require('pg');
 function DBInit(){
-   if (ConfigGet(1, 'SERVICE_DB', 'USE')==2){
+   if (ConfigGet(1, 'SERVICE_DB', 'USE')=='2'){
       oracledb.autoCommit = true;
       oracledb.fetchAsString = [ oracledb.CLOB ];
       oracledb.initOracleClient({ libDir: ConfigGet(1, 'SERVICE_DB', 'DB2_LIBDIR'),
@@ -25,7 +25,7 @@ module.exports = {
       switch (ConfigGet(1, 'SERVICE_DB', 'USE')){
          case '1':{
             let table_global_variables;
-            if (ConfigGet(1, 'SERVICE_DB', 'DB1_VARIANT')==1){
+            if (ConfigGet(1, 'SERVICE_DB', 'DB1_VARIANT')=='1'){
                //MySQL
                table_global_variables = 'performance_schema';
             }
@@ -91,7 +91,7 @@ module.exports = {
 			if (err)
 				return callBack(err, null);
 			else{
-                if (ConfigGet(1, 'SERVICE_DB', 'USE')==2){
+                if (ConfigGet(1, 'SERVICE_DB', 'USE')=='2'){
                     let hostname = JSON.parse(result[0].hostname.toLowerCase()).public_domain_name + 
                                    ' (' + JSON.parse(result[0].hostname.toLowerCase()).outbound_ip_address + ')';
                     result[0].database_schema += ' (' + JSON.parse(result[0].hostname.toLowerCase()).database_name + ')';
@@ -214,7 +214,7 @@ module.exports = {
 	},
 	DBStart: async () => {
       return await new Promise(function (resolve, reject){
-         if (ConfigGet(1, 'SERVICE_DB', 'START')==1){
+         if (ConfigGet(1, 'SERVICE_DB', 'START')=='1'){
             DBInit();
             async function startDBpool(app_id, db_user, db_password) {
                return await new Promise(function (resolve, reject){
