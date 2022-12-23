@@ -446,8 +446,7 @@ async function count_users(){
             else{
                 json = JSON.parse(result);
                 let html='';
-                let i;
-                for (i=0;i<=json.data.length-1;i++){
+                for (let i=0;i<=json.data.length-1;i++){
                     html +=  `<div id='list_user_stat_row_${i}' class='list_user_stat_row'>
                                     <div class='list_user_stat_col'>
                                         <div>${get_null_or_value(json.data[i].identity_provider_id)}</div>
@@ -597,7 +596,7 @@ function show_users(sort=8, order_by='ASC', focus=true){
             }
             else
                 input_readonly = `readonly='true'`;
-            for (i = 0; i < json.data.length; i++) {
+            for (let i = 0; i < json.data.length; i++) {
                 let list_user_account_current_user_row='';
                 if (json.data[i].id==window.global_user_account_id)
                     list_user_account_current_user_row = 'list_current_user_row';
@@ -752,7 +751,7 @@ async function show_user_account_logon(user_account_id){
                                 <div>ACCESS TOKEN</div>
                             </div>
                         </div>`;
-            for (i = 0; i < json.data.length; i++) {
+            for (let i = 0; i < json.data.length; i++) {
                 html += 
                 `<div id='list_user_account_logon_row_${i}' data-changed-record='0' class='list_user_account_logon_row'>
                     <div class='list_user_account_logon_col'>
@@ -824,7 +823,7 @@ async function show_apps(){
                                 <div>CATEGORY NAME</div>
                             </div>
                         </div>`;
-            for (i = 0; i < json.data.length; i++) {
+            for (let i = 0; i < json.data.length; i++) {
                 html += 
                 `<div id='list_apps_row_${i}' data-changed-record='0' class='list_apps_row' >
                     <div class='list_apps_col'>
@@ -893,7 +892,7 @@ function show_app_parameter(app_id){
                                 <div>COMMENT</div>
                             </div>
                         </div>`;
-            for (i = 0; i < json.data.length; i++) {
+            for (let i = 0; i < json.data.length; i++) {
                 html += 
                 `<div id='list_app_parameter_row_${i}' data-changed-record='0' class='list_app_parameter_row'>
                     <div class='list_app_parameter_col'>
@@ -1007,7 +1006,8 @@ async function button_save(item){
                                 "SERVICE_BROADCAST":${config_json[2]},
                                 "SERVICE_DB":${config_json[3]},
                                 "SERVICE_LOG":${config_json[4]},
-                                "SERVICE_REPORT":${config_json[5]}
+                                "SERVICE_REPORT":${config_json[5]},
+                                "SERVICE_GEOLOCATION":${config_json[6]}
                             }`;
                 }
                 //no fetched from end of item name list_config_nav_X
@@ -1616,7 +1616,7 @@ async function show_list(list_div, list_div_col_title, url_parameters, sort, ord
                     }
                 }
                 if (json.data.length >0){
-                    for (i = 0; i < json.data.length; i++) {
+                    for (let i = 0; i < json.data.length; i++) {
                         switch (list_div){
                             case 'list_connected':{    
                                 let list_connected_current_user_row='';
@@ -1741,59 +1741,57 @@ async function show_list(list_div, list_div_col_title, url_parameters, sort, ord
                                 break;
                             }
                             case 'list_server_log':{
-                                for (i = 0; i < json.data.length; i++) {
-                                    //test if JSON in logtext
-                                    if (typeof json.data[i].logtext === 'object')
-                                        json.data[i].logtext = JSON.stringify(json.data[i].logtext);
-                                    html += 
-                                    `<div class='list_server_log_row'>
-                                        <div class='list_server_log_col'>
-                                            <div>${json.data[i].logdate}</div>
-                                        </div>
-                                        <div class='list_server_log_col'>
-                                            <div>${json.data[i].host}</div>
-                                        </div>
-                                        <div class='list_server_log_col'>
-                                            <div>${json.data[i].app_id}</div>
-                                        </div>
-                                        <div class='list_server_log_col list_gps_click gps_click'>
-                                            <div>${json.data[i].ip==""?"":json.data[i].ip.replace('::ffff:','')}</div>
-                                        </div>
-                                        <div class='list_server_log_col'>
-                                            <div>${json.data[i].protocol}</div>
-                                        </div>
-                                        <div class='list_server_log_col'>
-                                            <div>${json.data[i].url}</div>
-                                        </div>
-                                        <div class='list_server_log_col'>
-                                            <div>${json.data[i].method}</div>
-                                        </div>
-                                        <div class='list_server_log_col'>
-                                            <div>${json.data[i].statusCode}</div>
-                                        </div>
-                                        <div class='list_server_log_col'>
-                                            <div>${json.data[i]['user-agent']}</div>
-                                        </div>
-                                        <div class='list_server_log_col'>
-                                            <div>${json.data[i]['accept-language']}</div>
-                                        </div>
-                                        <div class='list_server_log_col'>
-                                            <div>${json.data[i].http_referer}</div>
-                                        </div>
-                                        <div class='list_server_log_col'>
-                                            <div>${json.data[i].app_filename}</div>
-                                        </div>
-                                        <div class='list_server_log_col'>
-                                            <div>${json.data[i].app_function_name}</div>
-                                        </div>
-                                        <div class='list_server_log_col'>
-                                            <div>${json.data[i].app_app_line}</div>
-                                        </div>
-                                        <div class='list_server_log_col'>
-                                            <div>${json.data[i].logtext}</div>
-                                        </div>
-                                    </div>`;
-                                }
+                                //test if JSON in logtext
+                                if (typeof json.data[i].logtext === 'object')
+                                    json.data[i].logtext = JSON.stringify(json.data[i].logtext);
+                                html += 
+                                `<div class='list_server_log_row'>
+                                    <div class='list_server_log_col'>
+                                        <div>${json.data[i].logdate}</div>
+                                    </div>
+                                    <div class='list_server_log_col'>
+                                        <div>${json.data[i].host}</div>
+                                    </div>
+                                    <div class='list_server_log_col'>
+                                        <div>${json.data[i].app_id}</div>
+                                    </div>
+                                    <div class='list_server_log_col list_gps_click gps_click'>
+                                        <div>${json.data[i].ip==""?"":json.data[i].ip.replace('::ffff:','')}</div>
+                                    </div>
+                                    <div class='list_server_log_col'>
+                                        <div>${json.data[i].protocol}</div>
+                                    </div>
+                                    <div class='list_server_log_col'>
+                                        <div>${json.data[i].url}</div>
+                                    </div>
+                                    <div class='list_server_log_col'>
+                                        <div>${json.data[i].method}</div>
+                                    </div>
+                                    <div class='list_server_log_col'>
+                                        <div>${json.data[i].statusCode}</div>
+                                    </div>
+                                    <div class='list_server_log_col'>
+                                        <div>${json.data[i]['user-agent']}</div>
+                                    </div>
+                                    <div class='list_server_log_col'>
+                                        <div>${json.data[i]['accept-language']}</div>
+                                    </div>
+                                    <div class='list_server_log_col'>
+                                        <div>${json.data[i].http_referer}</div>
+                                    </div>
+                                    <div class='list_server_log_col'>
+                                        <div>${json.data[i].app_filename}</div>
+                                    </div>
+                                    <div class='list_server_log_col'>
+                                        <div>${json.data[i].app_function_name}</div>
+                                    </div>
+                                    <div class='list_server_log_col'>
+                                        <div>${json.data[i].app_app_line}</div>
+                                    </div>
+                                    <div class='list_server_log_col'>
+                                        <div>${json.data[i].logtext}</div>
+                                    </div>
+                                </div>`;
                                 break;
                             }
                             case 'list_pm2_log':{
@@ -2285,9 +2283,9 @@ async function show_config(config_nav=1){
                             </div>
                         </div>`;
                     //create div groups with parameters, each group with a title
-                    //first 6 attributes in config json contains array of parameter records
+                    //first 7 attributes in config json contains array of parameter records
                     //metadata is saved last in config
-                    for (let i_group = 0; i_group <= 5;i_group++){
+                    for (let i_group = 0; i_group <= 6;i_group++){
                         html += 
                         `<div id='list_config_row_${i_group}' class='list_config_row list_config_group' >
                             <div class='list_config_col list_config_group_title'>
@@ -2386,7 +2384,7 @@ async function show_db_info_space(){
                                     <div>% USED</div>
                                 </div>
                             </div>`;
-                for (i = 0; i < json.data.length; i++) {
+                for (let i = 0; i < json.data.length; i++) {
                     html += 
                     `<div id='menu_8_db_info_space_detail_row_${i}' class='menu_8_db_info_space_detail_row' >
                         <div class='menu_8_db_info_space_detail_col'>
