@@ -1,4 +1,5 @@
-const { createLog, createLogAdmin} = require (global.SERVER_ROOT +  process.env.SERVICE_DB_REST_API_PATH + "/app_log/app_log.service");
+const {ConfigGet} = require(global.SERVER_ROOT + '/server/server.service');
+const { createLog, createLogAdmin} = require (global.SERVER_ROOT +  ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH') + "/app_log/app_log.service");
 const { createLogAppCI } = require(global.SERVER_ROOT + "/service/log/log.controller");
 const { ClientConnect, ClientClose, ClientAdd, BroadcastSendSystemAdmin, BroadcastSendAdmin, ConnectedList, ConnectedCount, ConnectedUpdate, ConnectedCheck} = require ("./broadcast.service");
 module.exports = {
@@ -30,7 +31,7 @@ module.exports = {
             })
         }
         else
-            if (req.query.app_id ==process.env.SERVER_APP_COMMON_APP_ID){
+            if (req.query.app_id ==ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID')){
                 const { getIpAdmin} = require (global.SERVER_ROOT + "/service/geolocation/geolocation.controller");
                 getIpAdmin(req, res_not_used, (err, geodata) =>{
                     const newClient = {
@@ -139,10 +140,10 @@ module.exports = {
                         data: result
                     });
                 else{
-                    const { getMessage_admin } = require(global.SERVER_ROOT +  process.env.SERVICE_DB_REST_API_PATH + "/message_translation/message_translation.service");
+                    const { getMessage_admin } = require(global.SERVER_ROOT +  ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH') + "/message_translation/message_translation.service");
                     //Record not found
                     getMessage_admin(req.query.app_id,
-                                     process.env.SERVER_APP_COMMON_APP_ID,
+                                     ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),
                                      20400,
                                      req.query.lang_code, (err,result_message)  => {
                                         return res.status(404).send(

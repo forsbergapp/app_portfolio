@@ -1,16 +1,17 @@
+const {ConfigGet} = require(global.SERVER_ROOT + '/server/server.service');
 const { sign } = require("jsonwebtoken");
 const { verify } = require("jsonwebtoken");
-const { createLog} = require (global.SERVER_ROOT + process.env.SERVICE_DB_REST_API_PATH + "/app_log/app_log.service");
-const { getParameter, getParameters_server } = require (global.SERVER_ROOT + process.env.SERVICE_DB_REST_API_PATH + "/app_parameter/app_parameter.service");
+const { createLog} = require (global.SERVER_ROOT + ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH') + "/app_log/app_log.service");
+const { getParameter, getParameters_server } = require (global.SERVER_ROOT + ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH') + "/app_parameter/app_parameter.service");
 const { createLogAppSE, createLogAppCI } = require(global.SERVER_ROOT + "/service/log/log.controller");
-const { getUserAppRoleAdmin } = require(global.SERVER_ROOT + process.env.SERVICE_DB_REST_API_PATH + "/user_account/user_account.service");
-const { checkLogin } = require(global.SERVER_ROOT + process.env.SERVICE_DB_REST_API_PATH + "/user_account_logon/user_account_logon.service");
+const { getUserAppRoleAdmin } = require(global.SERVER_ROOT + ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH') + "/user_account/user_account.service");
+const { checkLogin } = require(global.SERVER_ROOT + ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH') + "/user_account_logon/user_account_logon.service");
 const { block_ip_control, safe_user_agents, policy_directives} = require ("./auth.service");
 module.exports = {
     access_control: (req, res, callBack) => {
         if (typeof req.query.app_id=='undefined' || req.query.app_id=='')
-            req.query.app_id = process.env.SERVER_APP_COMMON_APP_ID;
-        if (process.env.SERVICE_AUTH_ACCESS_CONTROL_ENABLE==1){
+            req.query.app_id = ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID');
+        if (ConfigGet(1, 'SERVICE_AUTH', 'ACCESS_CONTROL_ENABLE')==1){
             let ip_v4 = req.ip.replace('::ffff:','');
             block_ip_control(ip_v4, (err, result_range) =>{
                 if (err)
@@ -30,7 +31,7 @@ module.exports = {
                     }
                     else{
                         //check if host exists
-                        if (process.env.SERVICE_AUTH_ACCESS_CONTROL_HOST_EXIST==1 &&
+                        if (ConfigGet(1, 'SERVICE_AUTH', 'ACCESS_CONTROL_HOST_EXIST')==1 &&
                             typeof req.headers.host=='undefined'){
                             res.statusCode = 406;
                             res.statusMessage = `ip ${ip_v4} blocked, no host, tried URL: ${req.originalUrl}`;
@@ -44,7 +45,7 @@ module.exports = {
                             //check if accessed from domain and not os hostname
                             let os = require("os");
                             let this_hostname = os.hostname();
-                            if (process.env.SERVICE_AUTH_ACCESS_CONTROL_ACCESS_FROM==1 &&
+                            if (ConfigGet(1, 'SERVICE_AUTH', 'ACCESS_CONTROL_ACCESS_FROM')==1 &&
                                 req.headers.host==this_hostname){
                                 res.statusCode = 406;
                                 res.statusMessage = `ip ${ip_v4} blocked, accessed from hostname ${this_hostname} not domain, tried URL: ${req.originalUrl}`;
@@ -64,7 +65,7 @@ module.exports = {
                                             return callBack(null,null);
                                         else{
                                             //check if user-agent exists
-                                            if(process.env.SERVICE_AUTH_ACCESS_CONTROL_USER_AGENT_EXIST==1 &&
+                                            if(ConfigGet(1, 'SERVICE_AUTH', 'ACCESS_CONTROL_USER_AGENT_EXIST')==1 &&
                                                 typeof req.headers["user-agent"]=='undefined'){
                                                 res.statusCode = 406;
                                                 res.statusMessage = `ip ${ip_v4} blocked, no user-agent, tried URL: ${req.originalUrl}`;
@@ -76,7 +77,7 @@ module.exports = {
                                             }
                                             else{
                                                 //check if accept-language exists
-                                                if (process.env.SERVICE_AUTH_ACCESS_CONTROL_ACCEPT_LANGUAGE==1 &&
+                                                if (ConfigGet(1, 'SERVICE_AUTH', 'ACCESS_CONTROL_ACCEPT_LANGUAGE')==1 &&
                                                     typeof req.headers["accept-language"]=='undefined'){
                                                     res.statusCode = 406;
                                                     res.statusMessage = `ip ${ip_v4} blocked, no accept-language, tried URL: ${req.originalUrl}`;
@@ -104,7 +105,7 @@ module.exports = {
     checkAccessTokenCommon: (req, res, next) => {
         let token = req.get("authorization");
         if (token){
-            getParameter(req.query.app_id, process.env.SERVER_APP_COMMON_APP_ID,'SERVICE_AUTH_TOKEN_ACCESS_SECRET', (err, db_SERVICE_AUTH_TOKEN_ACCESS_SECRET)=>{
+            getParameter(req.query.app_id, ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),'SERVICE_AUTH_TOKEN_ACCESS_SECRET', (err, db_SERVICE_AUTH_TOKEN_ACCESS_SECRET)=>{
                 if (err) {
                     createLogAppSE(req.query.app_id, __appfilename, __appfunction, __appline, err).then(function(){
                         res.status(500).send(
@@ -182,7 +183,7 @@ module.exports = {
     checkAccessToken: (req, res, next) => {
         //if user login is disabled then check also current logged in user
         //so they can't modify anything anymore with current accesstoken
-        if (process.env.SERVICE_AUTH_ENABLE_USER_LOGIN==1){
+        if (ConfigGet(1, 'SERVICE_AUTH', 'ENABLE_USER_LOGIN')==1){
             module.exports.checkAccessTokenCommon(req, res, next);
         }
         else{
@@ -197,7 +198,7 @@ module.exports = {
     checkDataToken: (req, res, next) => {
         let token = req.get("authorization");
         if (token){
-            getParameter(req.query.app_id, process.env.SERVER_APP_COMMON_APP_ID,'SERVICE_AUTH_TOKEN_DATA_SECRET', (err, db_SERVICE_AUTH_TOKEN_DATA_SECRET)=>{
+            getParameter(req.query.app_id, ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),'SERVICE_AUTH_TOKEN_DATA_SECRET', (err, db_SERVICE_AUTH_TOKEN_DATA_SECRET)=>{
                 if (err) {
                     createLogAppSE(req.query.app_id, __appfilename, __appfunction, __appline, err).then(function(){
                         res.status(500).send(
@@ -226,7 +227,7 @@ module.exports = {
         }
 	},
     checkDataTokenRegistration: (req, res, next) => {
-        if (process.env.SERVICE_AUTH_ENABLE_USER_REGISTRATION==1)
+        if (ConfigGet(1, 'SERVICE_AUTH', 'ENABLE_USER_REGISTRATION')==1)
             module.exports.checkDataToken(req, res, next);
         else{
             //return 403 Forbidden
@@ -237,7 +238,7 @@ module.exports = {
             
     },
     checkDataTokenLogin: (req, res, next) => {
-        if (process.env.SERVICE_AUTH_ENABLE_USER_LOGIN==1)
+        if (ConfigGet(1, 'SERVICE_AUTH', 'ENABLE_USER_LOGIN')==1)
             module.exports.checkDataToken(req, res, next);
         else{
             //return 403 Forbidden
@@ -248,7 +249,7 @@ module.exports = {
     },
     dataToken: (req, res) => {
         if(req.headers.authorization){
-            getParameters_server(req.query.app_id, process.env.SERVER_APP_COMMON_APP_ID,  (err, result)=>{
+            getParameters_server(req.query.app_id, ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),  (err, result)=>{
                 if (err) {
                     createLogAppSE(req.query.app_id, __appfilename, __appfunction, __appline, err).then(function(){
                         res.status(500).send(
@@ -337,7 +338,7 @@ module.exports = {
         }
     },
     accessToken: (req, callBack) => {
-        getParameters_server(req.query.app_id, process.env.SERVER_APP_COMMON_APP_ID,  (err, result)=>{
+        getParameters_server(req.query.app_id, ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),  (err, result)=>{
             if (err) {
                 createLogAppSE(req.query.app_id, __appfilename, __appfunction, __appline, err).then(function(){
                     callBack(err);

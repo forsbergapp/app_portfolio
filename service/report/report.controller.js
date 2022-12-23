@@ -1,4 +1,5 @@
-const { createLog} = require (global.SERVER_ROOT +  process.env.SERVICE_DB_REST_API_PATH + "/app_log/app_log.service");
+const {ConfigGet} = require(global.SERVER_ROOT + '/server/server.service');
+const { createLog} = require (global.SERVER_ROOT +  ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH') + "/app_log/app_log.service");
 module.exports = {
 	getReport: async (req, res) => {
 		let decodedparameters = Buffer.from(req.query.reportid, 'base64').toString('utf-8')
@@ -16,7 +17,7 @@ module.exports = {
 							result.geoplugin_regionName + ', ' +
 							result.geoplugin_countryName;
 			//check if maintenance
-			if (process.env.SERVER_MAINTENANCE==1){
+			if (ConfigGet(0, null, 'MAINTENANCE')==1){
 				const { getMaintenance } = require(global.SERVER_ROOT + "/apps");
 				const app = getMaintenance(req.query.app_id,
 											result.geoplugin_latitude,

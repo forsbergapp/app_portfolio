@@ -1,7 +1,8 @@
-const { getParameters_server } = require (global.SERVER_ROOT + process.env.SERVICE_DB_REST_API_PATH + "/app_parameter/app_parameter.service");
-const { getApp } = require(global.SERVER_ROOT + process.env.SERVICE_DB_REST_API_PATH + "/app/app.service");
+const {ConfigGet} = require(global.SERVER_ROOT + '/server/server.service');
+const { getParameters_server } = require (global.SERVER_ROOT + ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH') + "/app_parameter/app_parameter.service");
+const { getApp } = require(global.SERVER_ROOT + ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH') + "/app/app.service");
 const { createLogAppSE } = require(global.SERVER_ROOT + "/service/log/log.controller");
-const { getCountries } = require(global.SERVER_ROOT + process.env.SERVICE_DB_REST_API_PATH + "/country/country.service");
+const { getCountries } = require(global.SERVER_ROOT + ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH') + "/country/country.service");
 async function getInfo(app_id, info, lang_code, callBack){
     async function get_parameters(callBack){            
         getApp(app_id, app_id, lang_code, (err, result_app)=>{
@@ -157,7 +158,7 @@ async function get_module_with_init(app_id,
 
     if (system_admin==1){
         let system_admin_only = '';
-        if (process.env.SERVICE_DB_START==0)
+        if (ConfigGet(1, 'SERVICE_DB', 'START')==0)
             system_admin_only = 1;
         else
             system_admin_only = 0;
@@ -178,9 +179,9 @@ async function get_module_with_init(app_id,
             app_rest_client_id: '',
             app_rest_client_secret: '',
             service_auth: '/service/auth',
-            rest_api_db_path: process.env.SERVICE_DB_REST_API_PATH,
+            rest_api_db_path: ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH'),
             rest_app_parameter: '/service/app_parameter',
-            common_app_id: process.env.SERVER_APP_COMMON_APP_ID
+            common_app_id: ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID')
         };
         module = module.replace(
                 '<ITEM_COMMON_PARAMETERS/>',
@@ -188,8 +189,8 @@ async function get_module_with_init(app_id,
         callBack(null, module);
     }
     else{
-        const { getAppStartParameters } = require(global.SERVER_ROOT + process.env.SERVICE_DB_REST_API_PATH + "/app_parameter/app_parameter.service");
-        const { getAppRole } = require(global.SERVER_ROOT + process.env.SERVICE_DB_REST_API_PATH + "/user_account/user_account.service");
+        const { getAppStartParameters } = require(global.SERVER_ROOT + ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH') + "/app_parameter/app_parameter.service");
+        const { getAppRole } = require(global.SERVER_ROOT + ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH') + "/user_account/user_account.service");
         getAppStartParameters(app_id, (err,result) =>{
             if (err)
                 callBack(err, null);
@@ -211,9 +212,9 @@ async function get_module_with_init(app_id,
                     app_rest_client_id: result[0].app_rest_client_id,
                     service_auth: result[0].service_auth,
                     app_rest_client_secret: result[0].app_rest_client_secret,
-                    rest_api_db_path: process.env.SERVICE_DB_REST_API_PATH,
+                    rest_api_db_path: ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH'),
                     rest_app_parameter: result[0].rest_app_parameter,
-                    common_app_id: process.env.SERVER_APP_COMMON_APP_ID
+                    common_app_id: ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID')
                 };
                 if (system_admin==1){  
                     module = module.replace(
@@ -259,7 +260,7 @@ module.exports = {
                     const fs = require("fs");
                     let filename;
                     //load dynamic server app code
-                    if (app_id == parseInt(process.env.SERVER_APP_COMMON_APP_ID))
+                    if (app_id == parseInt(ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID')))
                         filename = `/admin/server.js`;
                     else
                         filename = `/app${app_id}/server.js`
@@ -272,11 +273,11 @@ module.exports = {
                 
             }
             //start always admin app first
-            load_dynamic_code(process.env.SERVER_APP_COMMON_APP_ID).then(function(){
+            load_dynamic_code(ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID')).then(function(){
                 //load apps if database started
-                if (process.env.SERVICE_DB_START==1){
-                    const { getAppsAdmin } = require (global.SERVER_ROOT + process.env.SERVICE_DB_REST_API_PATH + "/app/app.service");
-                    getAppsAdmin(process.env.SERVER_APP_COMMON_APP_ID, null, (err, results) =>{
+                if (ConfigGet(1, 'SERVICE_DB', 'START')==1){
+                    const { getAppsAdmin } = require (global.SERVER_ROOT + ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH') + "/app/app.service");
+                    getAppsAdmin(ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), null, (err, results) =>{
                         if (err) {
                             createLogAppSE(req.query.app_id, __appfilename, __appfunction, __appline, `getAppsAdmin, err:${err}`).then(function(){
                                 null;
@@ -287,10 +288,10 @@ module.exports = {
                             let loaded = 0;
                             json = JSON.parse(JSON.stringify(results));
                             //start apps if enabled else only admin app will be started
-                            if (process.env.SERVER_APP_START==1){
+                            if (ConfigGet(1, 'SERVER', 'APP_START')==1){
                                 for (let i = 0; i < json.length; i++) {
                                     //skip admin app
-                                    if (json[i].id != process.env.SERVER_APP_COMMON_APP_ID)
+                                    if (json[i].id != ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'))
                                         load_dynamic_code(json[i].id).then(function(){
                                             if (loaded == json.length - 1)
                                                 resolve();
@@ -300,7 +301,7 @@ module.exports = {
                                 }
                             }
                             else{
-                                load_dynamic_code(process.env.SERVER_APP_COMMON_APP_ID);
+                                load_dynamic_code(ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'));
                                 resolve();
                             }
                         }
@@ -370,15 +371,15 @@ module.exports = {
     check_app_subdomain: (app_id, host) =>{
         //if using test subdomains, dns wil point to correct server
         switch (app_id){
-            case parseInt(process.env.SERVER_APP_COMMON_APP_ID):{
+            case parseInt(ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID')):{
                 //show admin app for all subdomains
                 return true;
             }
             case 1:{
                 //app1, app1.test, test, www  or localhost
                 if (host.substring(0,host.indexOf('.')) == `app${app_id}` ||
-                    host.indexOf(`app${app_id}.` + process.env.SERVER_TEST_SUBDOMAIN) == 0 ||
-                    host.substring(0,host.indexOf('.')) == process.env.SERVER_TEST_SUBDOMAIN ||
+                    host.indexOf(`app${app_id}.` + ConfigGet(1, 'SERVER', 'TEST_SUBDOMAIN')) == 0 ||
+                    host.substring(0,host.indexOf('.')) == ConfigGet(1, 'SERVER', 'TEST_SUBDOMAIN') ||
                     host.substring(0,host.indexOf('.')) == 'www' ||
                     host.substring(0,host.indexOf('.')) == '')
                     return true;
@@ -387,7 +388,7 @@ module.exports = {
             }
             default:{
                 //app[app_id].test or app[app_id]
-                if (host.indexOf(`app${app_id}.` + process.env.SERVER_TEST_SUBDOMAIN) == 0 ||
+                if (host.indexOf(`app${app_id}.` + ConfigGet(1, 'SERVER', 'TEST_SUBDOMAIN')) == 0 ||
                     host.substring(0,host.indexOf('.')) == `app${app_id}`)
                     return true;
                 else
@@ -397,8 +398,8 @@ module.exports = {
     },
     getUserPreferences: async(app_id) => {
         return new Promise(function (resolve, reject){
-            const { getLocales } = require(global.SERVER_ROOT + process.env.SERVICE_DB_REST_API_PATH + "/language/locale/locale.service");
-            const { getSettings } = require(global.SERVER_ROOT + process.env.SERVICE_DB_REST_API_PATH + "/setting/setting.service");
+            const { getLocales } = require(global.SERVER_ROOT + ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH') + "/language/locale/locale.service");
+            const { getSettings } = require(global.SERVER_ROOT + ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH') + "/setting/setting.service");
             let default_lang = 'en';
             getLocales(app_id, default_lang, (err, locales) => {
                 if (err)
