@@ -1,3 +1,4 @@
+const {ConfigGet} = require(global.SERVER_ROOT + '/server/server.service');
 const { createLog, createLogAdmin, getLogsAdmin, getStatUniqueVisitorAdmin } = require ("./app_log.service");
 
 module.exports = {
@@ -7,7 +8,7 @@ module.exports = {
 		body.server_user_agent 			 = req.headers["user-agent"];
 		body.server_http_host 			 = req.headers["host"];
 		body.server_http_accept_language = req.headers["accept-language"];	
-		if (process.env.SERVICE_AUTH_ENABLE_DBLOG==1)
+		if (ConfigGet(1, 'SERVICE_AUTH', 'ENABLE_DBLOG')==1)
 			createLog(req.query.app_id, body, (err,results) => {
 				if (err)
 					return res.status(500).send({
@@ -29,7 +30,7 @@ module.exports = {
 		body.server_user_agent 			 = req.headers["user-agent"];
 		body.server_http_host 			 = req.headers["host"];
 		body.server_http_accept_language = req.headers["accept-language"];	
-		if (process.env.SERVICE_AUTH_ENABLE_DBLOG==1)
+		if (ConfigGet(1, 'SERVICE_AUTH', 'ENABLE_DBLOG')==1)
 			createLogAdmin(req.query.app_id, body, (err,results) => {
 				if (err)
 					return res.status(500).send({
@@ -65,10 +66,10 @@ module.exports = {
 						data: results
 					});
 				else{
-					const { getMessage_admin } = require(global.SERVER_ROOT + process.env.SERVICE_DB_REST_API_PATH +"/message_translation/message_translation.service");
+					const { getMessage_admin } = require(global.SERVER_ROOT + ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH') +"/message_translation/message_translation.service");
 					//Record not found
 					getMessage_admin(req.query.app_id, 
-									 process.env.SERVER_APP_COMMON_APP_ID,
+									 ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),
 									 20400, 
 									 req.query.lang_code, (err,result_message)  => {
 											return res.status(404).send(
@@ -92,10 +93,10 @@ module.exports = {
 						data: results
 					});
 				else{
-					const { getMessage_admin } = require(global.SERVER_ROOT + process.env.SERVICE_DB_REST_API_PATH +"/message_translation/message_translation.service");
+					const { getMessage_admin } = require(global.SERVER_ROOT + ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH') +"/message_translation/message_translation.service");
 					//Record not found
 					getMessage_admin(req.query.app_id,
-									 process.env.SERVER_APP_COMMON_APP_ID,
+									 ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),
 									 20400,
 									 req.query.lang_code, (err,result_message)  => {
 										return res.status(404).send(

@@ -565,6 +565,9 @@
         overflow-y:auto;
         text-align: start;
     }
+    #list_config_row_title{
+        margin-inline-start: 4px;
+    }
     .list_config_row{
         height: auto;
         padding-top:4px;

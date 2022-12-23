@@ -1,3 +1,4 @@
+const {ConfigGet} = require(global.SERVER_ROOT + '/server/server.service');
 const {execute_db_sql, get_schema_name, get_locale} = require (global.SERVER_ROOT + "/service/db/common/common.service");
 
 module.exports = {
@@ -183,7 +184,7 @@ module.exports = {
 			   FROM ${get_schema_name()}.app a
 			  WHERE a.id = :app_id`;
 		parameters = {  app_id: app_id,
-						app_main_id: process.env.SERVER_APP_COMMON_APP_ID,
+						app_main_id: ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),
 						service_auth: service_auth,
 						app_rest_client_id: app_rest_client_id,
 						app_rest_client_secret: app_rest_client_secret,

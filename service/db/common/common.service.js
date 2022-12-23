@@ -1,3 +1,4 @@
+const {ConfigGet} = require(global.SERVER_ROOT + '/server/server.service');
 const { createLogAppSE } = require(global.SERVER_ROOT + "/service/log/log.controller");
 const { createLogDB } = require(global.SERVER_ROOT + "/service/log/log.service");
 
@@ -12,15 +13,15 @@ function log_db_sql(app_id, sql, parameters){
 			parsed_sql = parsed_sql.replaceAll(`:${parameter[0]}`, `'${parameter[1]}'`);
 		
 	});
-	createLogDB(app_id, `DB:${process.env.SERVICE_DB_USE} Pool: ${app_id} SQL: ${parsed_sql}`);
+	createLogDB(app_id, `DB:${ConfigGet(1, 'SERVICE_DB', 'USE')} Pool: ${app_id} SQL: ${parsed_sql}`);
 }
 async function execute_db_sql(app_id, sql, parameters, 
 							  app_filename, app_function, app_line, callBack){
 
-		if (process.env.SERVICE_LOG_ENABLE_DB==1){
+		if (ConfigGet(1, 'SERVICE_LOG', 'ENABLE_DB')==1){
 			log_db_sql(app_id, sql, parameters);
 		}
-		switch (process.env.SERVICE_DB_USE){
+		switch (ConfigGet(1, 'SERVICE_DB', 'USE')){
 		case '1':{
 			let conn;
 			function config_connection(conn, query, values){
@@ -149,17 +150,17 @@ async function execute_db_sql(app_id, sql, parameters,
 	}
 }
 function get_schema_name(){
-	switch (process.env.SERVICE_DB_USE){
+	switch (ConfigGet(1, 'SERVICE_DB', 'USE')){
 		case '1':{
-			return process.env.SERVICE_DB_DB1_NAME;
+			return ConfigGet(1, 'SERVICE_DB', 'DB1_NAME');
 			break;
 		}
 		case '2':{
-			return process.env.SERVICE_DB_DB2_NAME;
+			return ConfigGet(1, 'SERVICE_DB', 'DB2_NAME');
 			break;
 		}
 		case '3':{
-			return process.env.SERVICE_DB_DB3_NAME;
+			return ConfigGet(1, 'SERVICE_DB', 'DB3_NAME');
 			break;
 		}
 	}
@@ -192,15 +193,15 @@ function get_locale(lang_code, part){
 		}
 }
 function limit_sql(sql, limit_type = null){
-	if (process.env.SERVICE_DB_USE == 1 || process.env.SERVICE_DB_USE == 3)
+	if (ConfigGet(1, 'SERVICE_DB', 'USE') == 1 || ConfigGet(1, 'SERVICE_DB', 'USE') == 3)
 		switch (limit_type){
 			case 1:{
 				//use env limit
-				return sql + ` LIMIT ${process.env.SERVICE_DB_LIMIT_LIST_SEARCH} `;
+				return sql + ` LIMIT ${ConfigGet(1, 'SERVICE_DB', 'LIMIT_LIST_SEARCH')} `;
 			}
 			case 2:{
 				//use env limit
-				return sql + ` LIMIT ${process.env.SERVICE_DB_LIMIT_LIST_PROFILE_TOP} `;
+				return sql + ` LIMIT ${ConfigGet(1, 'SERVICE_DB', 'LIMIT_LIST_PROFILE_TOP')} `;
 			}
 			case null:{
 				//use app function limit
@@ -208,15 +209,15 @@ function limit_sql(sql, limit_type = null){
 			}
 		}
 	else 
-		if (process.env.SERVICE_DB_USE == 2)
+		if (ConfigGet(1, 'SERVICE_DB', 'USE') == 2)
 			switch (limit_type){
 				case 1:{
 					//use env limit
-					return sql + ` FETCH NEXT ${process.env.SERVICE_DB_LIMIT_LIST_SEARCH} ROWS ONLY`;
+					return sql + ` FETCH NEXT ${ConfigGet(1, 'SERVICE_DB', 'LIMIT_LIST_SEARCH')} ROWS ONLY`;
 				}
 				case 2:{
 					//use env limit
-					return sql + ` FETCH NEXT ${process.env.SERVICE_DB_LIMIT_LIST_PROFILE_TOP} ROWS ONLY`;
+					return sql + ` FETCH NEXT ${ConfigGet(1, 'SERVICE_DB', 'LIMIT_LIST_PROFILE_TOP')} ROWS ONLY`;
 				}
 				case null:{
 					//use app function limit

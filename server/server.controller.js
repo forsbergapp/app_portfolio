@@ -1,35 +1,6 @@
 const { createLogAppSE } = require(global.SERVER_ROOT + "/service/log/log.controller");
-const { ConfigGet, ConfigUpdateParameter, ConfigMaintenanceGet, ConfigMaintenanceSet, ConfigServerParameterGet, ConfigSave, DefaultConfig, Info} = require ('./server.service');
+const { ConfigMaintenanceGet, ConfigMaintenanceSet, ConfigServerParameterGet, ConfigSave, ConfigGetCallBack, DefaultConfig, Info} = require ('./server.service');
 module.exports = {
-	ConfigGet: (req, res) => {
-        ConfigGet(req.query.config_no, req.query.parameter_name, (err, result)=>{
-            if (err){
-                return res.status(500).send(
-                    err
-                );
-            }
-            else
-                return res.status(200).json({
-                    data: result.config,
-                    parameter_name:  result.parameter_name,
-                    parameter_value : result.parameter_value
-                });
-        })
-    },
-    ConfigUpdateParameter: (req, res) => {
-        ConfigUpdateParameter(req.body.parameter_name, req.body.parameter_value, (err, result)=>{
-            if (err){
-                return res.status(500).send(
-                    err
-                );
-            }
-            else
-                return res.status(200).json({
-                    parameter_name  : result.parameter_name,
-                    parameter_value : result.parameter_value
-                });
-        })        
-    },
     ConfigMaintenanceGet:(req, res) =>{
         ConfigMaintenanceGet((err, result)=>{
             if (err){
@@ -39,12 +10,12 @@ module.exports = {
             }
             else
                 return res.status(200).json(
-                    result
+                    {value: result}
                 );
         })
     },
     ConfigMaintenanceSet:(req, res) =>{
-        ConfigMaintenanceSet(req.query.value, (err, result)=>{
+        ConfigMaintenanceSet(req.body.value, (err, result)=>{
             if (err){
                 return res.status(500).send(
                     err
@@ -57,7 +28,7 @@ module.exports = {
         })
     },
     ConfigServerParameterGet:(req, res) =>{
-        ConfigServerParameterGet(req.query.config_type_no, req.query.parameter_name, (err, result)=>{
+        ConfigServerParameterGet(req.query.config_type_no, (err, result)=>{
             if (err){
                 return res.status(500).send(
                     err
@@ -79,6 +50,21 @@ module.exports = {
             else
                 return res.status(200).json(
                     result
+                );
+        })
+    },
+    ConfigGet: (req,res) =>{
+        ConfigGetCallBack(req.query.config_type_no, null, null, (err, result)=>{
+            if (err){
+                return res.status(500).send(
+                    err
+                );
+            }
+            else
+                return res.status(200).json(
+                    {
+                        data: result
+                    }
                 );
         })
     },

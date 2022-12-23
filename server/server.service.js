@@ -1,18 +1,38 @@
 const { createLogAppSE } = require(global.SERVER_ROOT + "/service/log/log.controller");
 
+//save config variables with json as module variable for faster performance
+//to avoid readfile async and diskusage
+//variables only available from ConfigGet function
+//variables are updated when admin updates config
+let CONFIG_INIT;
+let CONFIG;
+let CONFIG_BLOCKIP;
+let CONFIG_USERAGENT;
+let CONFIG_POLICY;
+let CONFIG_USER;
+
+//initial config with file paths and maintenance parameter
+let SERVER_CONFIG_INIT_PATH;
+
 function config_files(){
-     const fs = require('fs');
-     
+    //const fs = require('fs');
+    let slash;
+    if (process.platform == 'win32')
+        slash = '\\';
+    else
+        slash = '/';
     return [
-        [1, '/config/config.json'],
-        [2, '/config/blockip.json'],
-        [3, '/config/safe_user_agent.json'],
-        [4, '/config/policy_directives.json'],
-        [5, '/logs/'] 
+        [0, `${slash}config${slash}config_init.json`],
+        [1, `${slash}config${slash}config.json`],
+        [2, `${slash}config${slash}auth_blockip.json`],
+        [3, `${slash}config${slash}auth_useragent.json`],
+        [4, `${slash}config${slash}auth_policy.json`],
+        [5, `${slash}logs${slash}`],
+        [6, `${slash}config${slash}auth_user.json`] 
         ];
     /*
     //enable when server.js has implemented default config process
-     fs.readFile(global.SERVER_ROOT + global.SERVER_CONFIG_INIT_PATH, 'utf8', (err, fileBuffer) => {
+     fs.readFile(global.SERVER_ROOT + SERVER_CONFIG_INIT_PATH, 'utf8', (err, fileBuffer) => {
             let config_init = JSON.parse(fileBuffer.toString());
             //returns filenames and relative path
             return [
@@ -25,65 +45,144 @@ function config_files(){
      })
     */
 }
-module.exports = {
-    ConfigServerGlobals: () => {
-        global.SERVER_CONFIG_INIT_PATH = '/config/config_init.json';
-        global.SERVER_CONFIG_TYPE_SERVER = 1;
-        global.SERVER_CONFIG_TYPE_SERVICE_AUTH = 2;
-        global.SERVER_CONFIG_TYPE_SERVICE_BROADCAST = 3;
-        global.SERVER_CONFIG_TYPE_SERVICE_DB = 4;
-        global.SERVER_CONFIG_TYPE_SERVICE_LOG = 5;
-        global.SERVER_CONFIG_TYPE_SERVICE_REPORT = 6;
-    },
-	ConfigGet: (config_no, parameter_name, callBack) => {
-        if (parameter_name){
-            let parameter_value = eval(`process.env.${parameter_name}`);
-            callBack(null, {
-                parameter_name:  parameter_name,
-                parameter_value : parameter_value
-            })
-        }
-        else{
-            const fs = require("fs");
-            let config_file;
-            if (config_no){
-                config_file = config_files().filter(function(file) {
-                    return (parseInt(file[0]) == parseInt(config_no));
-                })[0][1];
-                fs.readFile(global.SERVER_ROOT + config_file, 'utf8', (err, fileBuffer) => {
+async function setVariables(){
+    return await new Promise(function(resolve, reject){
+        let files = config_files();
+        let i=0;
+        let slash;
+        if (process.platform == 'win32')
+            slash = '\\';
+        else
+            slash = '/';
+        SERVER_CONFIG_INIT_PATH = `${slash}config${slash}config_init.json`;
+        const fs = require('fs');
+        for (const file of files){
+            //skip log path
+            if (file[0]!=5){
+                fs.readFile(global.SERVER_ROOT + file[1], 'utf8', (err, fileBuffer) => {
                     if (err)
-                        callBack(err,null);
-                    else
-                        callBack(null,{config: JSON.parse(fileBuffer.toString())});
-                });
+                        reject(err);
+                    else{
+                        switch (file[0]){
+                            case 0:{
+                                CONFIG_INIT = fileBuffer.toString();
+                            }
+                            case 1:{
+                                CONFIG = fileBuffer.toString();
+                                break;
+                            }
+                            case 2:{
+                                CONFIG_BLOCKIP = fileBuffer.toString();
+                                break;
+                            }
+                            case 3:{
+                                CONFIG_USERAGENT = fileBuffer.toString();
+                                break;
+                            }
+                            case 4:{
+                                CONFIG_POLICY = fileBuffer.toString();
+                                break;
+                            }
+                            case 6:{
+                                CONFIG_USER = fileBuffer.toString();
+                                break;
+                            }
+                        }
+                        //check if last, dont count skipped log path
+                        if (i == files.length -2)
+                            resolve();
+                        else
+                            i++;
+                    }
+                })
             }
-            else
-                callBack(null, null);
         }
+    })
+}
+function ConfigGet(config_no, config_group = null, parameter = null){
+    switch (parseInt(config_no)){
+        case 0:{
+            //CONFIG INIT
+            return JSON.parse(CONFIG_INIT)[parameter];
+        }
+        case 1:{
+            //SERVER
+            let json = JSON.parse(CONFIG);
+            if (config_group ==null && parameter==null)
+                return json;
+            else{
+                for (config_parameter_row of json[config_group]){
+                    for (let i=0; i < Object.keys(config_parameter_row).length;i++){
+                        if (Object.keys(config_parameter_row)[i]==parameter){
+                            return Object.values(config_parameter_row)[i];
+                        }
+                    }
+                }   
+                return null;
+            }
+        }
+        case 2:{
+            //BLOCKIP json
+            return JSON.parse(CONFIG_BLOCKIP);
+        } 
+        case 3:{
+            //USERAGENT json
+            return JSON.parse(CONFIG_USERAGENT);
+        } 
+        case 4:{
+            //POLICY json
+            return JSON.parse(CONFIG_POLICY);
+        } 
+        case 5:{
+            //LOGS path
+            return config_files()[5];
+        } 
+        case 6:{
+            //ADMIN username and password
+            return JSON.parse(CONFIG_USER);
+            /*async issue
+            let fs = require('fs');
+            fs.readFile(global.SERVER_ROOT + config_files()[config_no][1], 'utf8', (err, fileBuffer) => {
+                return JSON.parse(fileBuffer.toString());
+            })
+            */
+        } 
+    }
+}
+module.exports = {
+    ConfigGetCallBack:(config_no, config_group, parameter, callBack) =>{
+        callBack(null, ConfigGet(config_no, config_group, parameter));
     },
     ConfigMaintenanceSet:(value, callBack)=>{
         const fs = require('fs');
-        fs.readFile(global.SERVER_ROOT + global.SERVER_CONFIG_INIT_PATH, 'utf8', (err, fileBuffer) => {
+        fs.readFile(global.SERVER_ROOT + SERVER_CONFIG_INIT_PATH, 'utf8', (err, fileBuffer) => {
             if (err)
                 callBack(err, null);
             else{
                 let config_init = JSON.parse(fileBuffer.toString());
-                config_init['maintenance'] = value;
-                config_init['modified'] = new Date().toISOString();
-                callBack(null, null);
+                config_init['MAINTENANCE'] = value;
+                config_init['MODIFIED'] = new Date().toISOString();
+                config_init = JSON.stringify(config_init, undefined, 2);
+                //maintenance in this config file is only updated so no need for backup files
+                fs.writeFile(global.SERVER_ROOT + SERVER_CONFIG_INIT_PATH, config_init,  'utf8', (err, result_write_config) => {
+                    if (err)
+                        callBack(err, null);
+                    else
+                        callBack(null, null);
+                })
             }
         })
     },
     ConfigMaintenanceGet:(callBack)=>{
         const fs = require('fs');
-        fs.readFile(global.SERVER_ROOT + global.SERVER_CONFIG_INIT_PATH, 'utf8', (err, fileBuffer) => {
+        fs.readFile(global.SERVER_ROOT + SERVER_CONFIG_INIT_PATH, 'utf8', (err, fileBuffer) => {
             if (err)
                 callBack(err, null);
             else
-                callBack(null, JSON.parse(fileBuffer.toString()['maintenance']));
+                callBack(null, JSON.parse(fileBuffer.toString())['MAINTENANCE']);
         })
     },
-    ConfigServerParameterGet: (config_type_no, parameter_name)=>{
+    ConfigServerParameterGet: (config_type_no)=>{
         /*
         config_type_no
         1 = server
@@ -95,23 +194,14 @@ module.exports = {
         */
         const fs = require('fs');
         let config_file = config_files().filter(function(file) {
-            return (parseInt(file[0]) == parseInt(1));
+            return (parseInt(file[0]) == 1);
         })[0][1];
         fs.readFile(global.SERVER_ROOT + config_file, 'utf8', (err, fileBuffer) => {
             if (err)
                 callBack(err, null);
-            else{
-                let parameter_value = Object.keys(JSON.parse(fileBuffer.toString())[config_type_no][parameter_name])
-                callBack(null, parameter_value);
-            }
+            else
+                callBack(null, JSON.parse(fileBuffer.toString())[config_type_no]);
         })
-    },
-    ConfigUpdateParameter: (parameter_name, parameter_value, callBack) => {
-        eval(` process.env.${parameter_name} = ${parameter_value}`);
-        callBack(null, {
-                            parameter_name  : parameter_name,
-                            parameter_value : eval(`process.env.${parameter_name}`)
-                        });
     },
     ConfigSave: (app_id, config_no, config_json, callBack) =>{
         try {
@@ -145,8 +235,28 @@ module.exports = {
                                 fs.writeFile(global.SERVER_ROOT + config_file, config_json,  'utf8', (err, result_write) => {
                                     if (err)
                                         callBack(err, null);
-                                    else
+                                    else{
+                                        //update module variables for faster access
+                                        switch (config_no){
+                                            case 1:{
+                                                CONFIG = config_json;
+                                                break;
+                                            }
+                                            case 2:{
+                                                CONFIG_BLOCKIP = config_json;
+                                                break;
+                                            }
+                                            case 3:{
+                                                CONFIG_USERAGENT = config_json;
+                                                break;
+                                            }
+                                            case 4:{
+                                                CONFIG_POLICY = config_json;
+                                                break;
+                                            }
+                                        }
                                         callBack(null, null);
+                                    }
                                 });
                             }
                         });
@@ -182,24 +292,20 @@ module.exports = {
         else
             slash = '/';
         let config_file = [];
-        config_file.push(`{ "server":[
+        config_file.push(`{ "SERVER":[
                                                     {"HTTPS_KEY": "${slash}ssl${slash}server.key", "COMMENT": ""},
                                                     {"HTTPS_CERT": "${slash}ssl${slash}server.cert", "COMMENT": ""},
                                                     {"PORT": "80", "COMMENT": ""},
                                                     {"HTTPS_ENABLE": 0, "COMMENT": ""},
                                                     {"HTTPS_PORT": 443, "COMMENT": ""},
                                                     {"JSON_LIMIT": "10MB", "COMMENT": ""},
-                                                    {"ADMIN_NAME": "${admin_name}", "COMMENT": ""},
-                                                    {"ADMIN_PASSWORD": "${admin_password}", "COMMENT": ""},
                                                     {"TEST_SUBDOMAIN": "test", "COMMENT": "test.[domain] test network with subdomains for test environment
                                                                                             update DNS to point to test.[domain], *.test.[domain]/admin,  app1.test.[domain] etc
                                                                                             create SSL for *.test.[domain], *.[domain], [domain]"},
                                                     {"APP_START": 0, "COMMENT": ""},
-                                                    {"APP_COMMON_APP_ID": 0, "COMMENT": ""},
-                                                    {"SERVER_SERVICE_GEOLOCATION_URL_GPS_IP": "http://www.geoplugin.net/json.gp", "COMMENT": ""},
-                                                    {"SERVER_SERVICE_GEOLOCATION_URL_GPS_PLACE": "http://www.geoplugin.net/extras/location.gp", "COMMENT": ""}
+                                                    {"APP_COMMON_APP_ID": 0, "COMMENT": ""}
                                          ],
-                            "service_auth":[
+                            "SERVICE_AUTH":[
                                                     {"ACCESS_CONTROL_ENABLE": 1, "COMMENT": ""},
                                                     {"ACCESS_CONTROL_IP": 0, "COMMENT": "1=yes, 0=no, check IP v4 range to block. Could be integrated with iptables on Linux."},
                                                     {"ACCESS_CONTROL_HOST_EXIST": 1, "COMMENT": ""},
@@ -214,10 +320,10 @@ module.exports = {
                                                     {"ENABLE_USER_LOGIN": 1, "COMMENT": ""},
                                                     {"ENABLE_DBLOG": 0, "COMMENT": ""}
                                                ],
-                            "service_broadcast":[
-                                                    {"CHECK_INTERVALL": 5000, "COMMENT": ""}
+                            "SERVICE_BROADCAST":[
+                                                    {"CHECK_INTERVAL": 5000, "COMMENT": ""}
                                                 ],
-                            "service_db":[
+                            "SERVICE_DB":[
                                                     {"START": 0, "COMMENT": ""},
                                                     {"REST_API_PATH": "/service/db/app_portfolio", "COMMENT": ""},
                                                     {"USE": 1, "COMMENT": "1=MySQL/MariaDB, 2=Oracle, 3=PostgreSQL"},
@@ -249,7 +355,7 @@ module.exports = {
                                                     {"DB3_TIMEOUT_IDLE": 30000, "COMMENT": ""},
                                                     {"DB3_MAX": 5, "COMMENT": ""}
                                          ],
-                            "service_log":[
+                            "SERVICE_LOG":[
                                                     {"SCOPE_SERVER": "SERVER", "COMMENT": ""},
                                                     {"SCOPE_SERVICE": "SERVICE", "COMMENT": ""},
                                                     {"SCOPE_DB": "DB", "COMMENT": ""},
@@ -270,13 +376,17 @@ module.exports = {
                                                     {"DATE_FORMAT": "", "COMMENT": "empty uses ISO8601 format 'yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z' "},
                                                     {"PM2_FILE": "PM2_LOG.json", "COMMENT": ""}
                                           ],
-                            "service_report":[
+                            "SERVICE_REPORT":[
                                                     {"PDF_TIMEOUT": 20000, "COMMENT": ""},
                                                     {"PDF_WAIT_INTERVAL": 100, "COMMENT": ""},
                                                     {"PDF_WAIT_ATTEMPTS": 100, "COMMENT": ""},
                                                     {"PDF_EMPTY_SIZE_CHECK": 900, "COMMENT": "bytes, PDF with content should be bigger than this"},
                                                     {"EXECUTABLE_PATH": "", "COMMENT": "if using different browser for Puppeteer, ex Linux: /snap/bin/chromium, Windows: C:\\Users\\admin\\AppData\\Local\\Chromium\\Application\\chrome.exe"}
-                                             ]
+                                             ],
+                            "SERVICE_GEOLOCATION":[
+                                                    {"URL_GPS_IP": "http://www.geoplugin.net/json.gp", "COMMENT": ""},
+                                                    {"URL_GPS_PLACE": "http://www.geoplugin.net/extras/location.gp", "COMMENT": ""}
+                                                  ]
                             }`);
         config_file.push(`[
                                     ["0.0.0.0", "0.0.0.0"],
@@ -309,15 +419,16 @@ module.exports = {
         //save server metadata
         const fs = require('fs');
         let config_init = `{
-                            "configuration": "App Portfolio",
-                            "created": "${new Date().toISOString()}",
-                            "modified": "${new Date().toISOString()}",
-                            "maintenance": 0,
-                            "file_config_server":"${slash}config${slash}config.json",
-                            "file_config_blockip":"${slash}config${slash}blockip.json",
-                            "file_config_useragent":"${slash}config${slash}useragent.json",
-                            "file_config_policy":"${slash}config${slash}policy.json",
-                            "path_log":"${slash}logs${slash}"
+                            "CONFIGURATION": "App Portfolio",
+                            "CREATED": "${new Date().toISOString()}",
+                            "MODIFIED": "${new Date().toISOString()}",
+                            "MAINTENANCE": 0,
+                            "FILE_CONFIG_AUTH_SERVER":"${slash}config${slash}config.json",
+                            "FILE_CONFIG_AUTH_BLOCKIP":"${slash}config${slash}auth_blockip.json",
+                            "FILE_CONFIG_AUTH_USERAGENT":"${slash}config${slash}auth_useragent.json",
+                            "FILE_CONFIG_AUTH_POLICY":"${slash}config${slash}auth_policy.json",
+                            "PATH_LOG":"${slash}logs${slash}",
+                            "FILE_CONFIG_AUTH_USER":"${slash}config${slash}auth_user.json"
                             }`;
         async function create_config_dir(){
             return new Promise(function(resolve, reject){
@@ -338,7 +449,7 @@ module.exports = {
         create_config_dir()
         .then(function(){
             //save initial config file with metadata including path to config files
-            fs.writeFile(global.SERVER_ROOT + global.SERVER_CONFIG_INIT_PATH, config_init,  'utf8');
+            fs.writeFile(global.SERVER_ROOT + SERVER_CONFIG_INIT_PATH, config_init,  'utf8');
             let config_created=0;
             for (let i=0;i<config_file.length;i++){
                 module.exports.ConfigSave(config_no, config_file[i], (err, result)=>{
@@ -360,3 +471,5 @@ module.exports = {
         callBack(null, null);
     }
 };
+module.exports.ConfigGet = ConfigGet;
+module.exports.setVariables = setVariables;

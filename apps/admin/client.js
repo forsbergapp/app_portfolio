@@ -1,3 +1,4 @@
+const {ConfigGet} = require(global.SERVER_ROOT + '/server/server.service');
 const { read_app_files, get_module_with_init, getUserPreferences } = require(global.SERVER_ROOT + "/apps");
 module.exports = {
     getAdmin:(app_id, gps_lat, gps_long, gps_place) => {
@@ -18,7 +19,7 @@ module.exports = {
                 ['<AppCommonProfileBtnTop/>', __dirname + '/../common/src/profile_btn_top.html'],
                 ['<AppDialogues/>', __dirname + '/src/dialogues.html']
               ];
-            if (process.env.SERVICE_DB_START==1){
+            if (ConfigGet(1, 'SERVICE_DB', 'START')==1){
                 getUserPreferences(app_id).then(function(user_preferences){
                     read_app_files('', files, (err, app)=>{
                         if (err)
