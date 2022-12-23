@@ -248,7 +248,7 @@ async function update_timetable_report(timetable_type = 0, item_id = null, setti
                 set_settings_select();
                 let select_user_settings = document.getElementById('setting_select_user_setting');
                 let current_user_settings =[];
-                for (i=0;i<=select_user_settings.options.length-1;i++){
+                for (let i=0;i<=select_user_settings.options.length-1;i++){
                     current_user_settings.push(
                     {
                     "description" : select_user_settings[i].getAttribute('description'),
@@ -675,7 +675,7 @@ function showreporttime() {
         let user_locale;
         let user_options;
         //loop user settings
-        for (i = 0; i <= select_user_settings.options.length - 1; i++) {
+        for (let i = 0; i <= select_user_settings.options.length - 1; i++) {
             user_options = {
                 timeZone: select_user_settings[i].getAttribute('regional_timezone'),
                 weekday: 'long',
@@ -773,8 +773,7 @@ async function toolbar_button(choice) {
 
 
 async function openTab(tab_selected) {
-    let i;
-    for (i = 1; i < 8; i++) {
+    for (let i = 1; i < 8; i++) {
         //hide all tab content
         document.getElementById("tab" + i).style.display = 'none';
         //remove mark for all tabs
@@ -836,7 +835,7 @@ function select_get_selectindex(select, id) {
     if (id == 0)
         return 0;
     else {
-        for (i = 0; i < document.getElementById(select).options.length; i++) {
+        for (let i = 0; i < document.getElementById(select).options.length; i++) {
             if (document.getElementById(select).options[i].getAttribute('id') == id)
                 return i;
         }
@@ -1375,7 +1374,6 @@ function profile_detail_app(detailchoice, rest_url_app, fetch_detail, header_app
 async function user_settings_get(user_setting_id = '') {
     let select = document.getElementById("setting_select_user_setting");
     let json;
-    let i;
     
     await common_fetch(window.global_rest_api_db_path + window.global_rest_app2_user_setting_user_account_id + window.global_user_account_id + '?', 
                        'GET', 0, null, null, null, (err, result) =>{
@@ -1386,7 +1384,7 @@ async function user_settings_get(user_setting_id = '') {
             select.innerHTML = '';
             //fill select
             let option_html = '';
-            for (i = 0; i < json.count; i++) {
+            for (let i = 0; i < json.count; i++) {
                 option_html += `<option value=${i} id=${json.items[i].id} description='${json.items[i].description}'
                                     regional_language_locale=${json.items[i].regional_language_locale}
                                     regional_timezone=${json.items[i].regional_timezone}
@@ -2112,7 +2110,7 @@ function profile_show_user_setting() {
             let profile_select_user_settings = document.getElementById('profile_select_user_settings');
             profile_select_user_settings.innerHTML='';
             let html = '';
-            for (i = 0; i < json.count; i++) {
+            for (let i = 0; i < json.count; i++) {
                 html += `<option id="${i}" 
                         value=""
                         sid=${json.items[i].id} 
@@ -2141,7 +2139,7 @@ function profile_user_setting_update_stat(){
         else{
             json = JSON.parse(result);
             let profile_select_user_settings = document.getElementById('profile_select_user_settings');
-            for (i = 0; i < json.count; i++) {
+            for (let i = 0; i < json.count; i++) {
                 if (profile_select_user_settings.options[profile_select_user_settings.selectedIndex].getAttribute('sid')==json.items[i].id){
                     profile_select_user_settings.options[profile_select_user_settings.selectedIndex].setAttribute('user_account_id', json.items[i].user_account_id);
                     profile_select_user_settings.options[profile_select_user_settings.selectedIndex].setAttribute('liked', json.items[i].liked);
