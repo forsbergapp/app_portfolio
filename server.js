@@ -224,7 +224,7 @@ setVariables().then(function(){
     app.listen(ConfigGet(1, 'SERVER', 'PORT'), () => {
       createLogServerI('HTTP Server up and running on PORT: ' + ConfigGet(1, 'SERVER', 'PORT'));
     });
-    if (ConfigGet(1, 'SERVER', 'HTTPS_ENABLE')==1){
+    if (ConfigGet(1, 'SERVER', 'HTTPS_ENABLE')=='1'){
       //start HTTPS
       //SSL files for HTTPS
       let options;

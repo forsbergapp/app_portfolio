@@ -17,7 +17,7 @@ module.exports = {
 							result.geoplugin_regionName + ', ' +
 							result.geoplugin_countryName;
 			//check if maintenance
-			if (ConfigGet(0, null, 'MAINTENANCE')==1){
+			if (ConfigGet(0, null, 'MAINTENANCE')=='1'){
 				const { getMaintenance } = require(global.SERVER_ROOT + "/apps");
 				const app = getMaintenance(req.query.app_id,
 											result.geoplugin_latitude,

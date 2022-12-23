@@ -158,7 +158,7 @@ async function get_module_with_init(app_id,
 
     if (system_admin==1){
         let system_admin_only = '';
-        if (ConfigGet(1, 'SERVICE_DB', 'START')==0)
+        if (ConfigGet(1, 'SERVICE_DB', 'START')=='0')
             system_admin_only = 1;
         else
             system_admin_only = 0;
@@ -275,7 +275,7 @@ module.exports = {
             //start always admin app first
             load_dynamic_code(ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID')).then(function(){
                 //load apps if database started
-                if (ConfigGet(1, 'SERVICE_DB', 'START')==1){
+                if (ConfigGet(1, 'SERVICE_DB', 'START')=='1'){
                     const { getAppsAdmin } = require (global.SERVER_ROOT + ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH') + "/app/app.service");
                     getAppsAdmin(ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), null, (err, results) =>{
                         if (err) {
@@ -288,12 +288,12 @@ module.exports = {
                             let loaded = 0;
                             json = JSON.parse(JSON.stringify(results));
                             //start apps if enabled else only admin app will be started
-                            if (ConfigGet(1, 'SERVER', 'APP_START')==1){
+                            if (ConfigGet(1, 'SERVER', 'APP_START')=='1'){
                                 for (let i = 0; i < json.length; i++) {
                                     //skip admin app
                                     if (json[i].id != ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'))
                                         load_dynamic_code(json[i].id).then(function(){
-                                            if (loaded == json.length - 1)
+                                            if (loaded == json.length - 2) //dont count admin app
                                                 resolve();
                                             else
                                                 loaded++;
