@@ -1,5 +1,5 @@
 const { createLogAppSE } = require(global.SERVER_ROOT + "/service/log/log.controller");
-const { ConfigMaintenanceGet, ConfigMaintenanceSet, ConfigServerParameterGet, ConfigSave, ConfigGetCallBack, DefaultConfig, Info} = require ('./server.service');
+const { ConfigMaintenanceGet, ConfigMaintenanceSet, ConfigGetSaved, ConfigSave, ConfigGetCallBack, DefaultConfig, Info} = require ('./server.service');
 module.exports = {
     ConfigMaintenanceGet:(req, res) =>{
         ConfigMaintenanceGet((err, result)=>{
@@ -27,8 +27,8 @@ module.exports = {
                 );
         })
     },
-    ConfigServerParameterGet:(req, res) =>{
-        ConfigServerParameterGet(req.query.config_type_no, (err, result)=>{
+    ConfigGetSaved:(req, res) =>{
+        ConfigGetSaved(req.query.config_type_no, (err, result)=>{
             if (err){
                 return res.status(500).send(
                     err
@@ -36,7 +36,9 @@ module.exports = {
             }
             else
                 return res.status(200).json(
-                    result
+                    {
+                        data: result
+                    }
                 );
         })
     },
@@ -54,7 +56,7 @@ module.exports = {
         })
     },
     ConfigGet: (req,res) =>{
-        ConfigGetCallBack(req.query.config_type_no, null, null, (err, result)=>{
+        ConfigGetCallBack(req.query.config_type_no, req.query.config_group, req.query.parameter, (err, result)=>{
             if (err){
                 return res.status(500).send(
                     err
