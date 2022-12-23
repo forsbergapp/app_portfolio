@@ -1,8 +1,19 @@
+const {ConfigGet} = require(global.SERVER_ROOT + '/server/server.service');
 const { getService, getTimezone} = require ("./geolocation.service");
-const { createLogAdmin, createLog} = require (global.SERVER_ROOT + process.env.SERVICE_DB_REST_API_PATH + "/app_log/app_log.service");
-const { getMessage, getMessage_admin } = require(global.SERVER_ROOT + process.env.SERVICE_DB_REST_API_PATH + "/message_translation/message_translation.service");
+const { createLogAdmin, createLog} = require (global.SERVER_ROOT + ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH') + "/app_log/app_log.service");
+const { getMessage, getMessage_admin } = require(global.SERVER_ROOT + ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH') + "/message_translation/message_translation.service");
 const { createLogAppCI } = require(global.SERVER_ROOT + "/service/log/log.controller");
 const { check_internet } = require(global.SERVER_ROOT + "/service/auth/auth.controller");
+function get_ip_url(req_ip, query_ip){
+	if (typeof query_ip == 'undefined')
+		if (req_ip == '::1' || req_ip == '::ffff:127.0.0.1')
+			url = ConfigGet(1, 'SERVICE_GEOLOCATION', 'URL_GPS_IP') + '?ip=';
+		else
+			url = ConfigGet(1, 'SERVICE_GEOLOCATION', 'URL_GPS_IP') + '?ip=' + req_ip;
+	else
+		url = ConfigGet(1, 'SERVICE_GEOLOCATION', 'URL_GPS_IP') + '?ip=' + query_ip;
+	return url;
+}
 function geodata_empty(geotype){
 	let geodata='';
 	switch (geotype){
@@ -58,7 +69,7 @@ function geodata_empty(geotype){
 }
 module.exports = {
 	getPlace: async (req, res) => {
-		if (process.env.SERVICE_AUTH_ENABLE_GEOLOCATION==1 && await check_internet(req)==1){
+		if (ConfigGet(1, 'SERVICE_AUTH', 'ENABLE_GEOLOCATION')=='1' && await check_internet(req)==1){
 			let geodata;
 			if (typeof req.query.latitude=='undefined' ||
 				typeof req.query.longitude=='undefined' ||
@@ -66,7 +77,7 @@ module.exports = {
 				req.query.longitude=='undefined'){
 				//Missing latitude or longitude
 				getMessage(req.query.app_id,
-							process.env.SERVER_APP_COMMON_APP_ID, 
+							ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), 
 							20500, 
 							req.query.lang_code, (err,results)  => {
 								return res.status(400).send(
@@ -77,7 +88,7 @@ module.exports = {
 			else{	
 				
 				//service can return other formats, set json
-				const url = `${process.env.SERVER_SERVICE_GEOLOCATION_URL_GPS_PLACE}?format=json&lat=${req.query.latitude}&lon=${req.query.longitude}`;
+				const url = `${ConfigGet(1, 'SERVICE_GEOLOCATION', 'URL_GPS_PLACE')}?format=json&lat=${req.query.latitude}&lon=${req.query.longitude}`;
 				geodata = await getService(url);
 				createLog(req.query.app_id,
 						  { app_id : req.query.app_id,
@@ -110,14 +121,14 @@ module.exports = {
 	},
 	getPlaceAdmin: async (req, res) => {
 		let geodata;
-		if (process.env.SERVICE_AUTH_ENABLE_GEOLOCATION==1 && await check_internet(req)==1){
+		if (ConfigGet(1, 'SERVICE_AUTH', 'ENABLE_GEOLOCATION')=='1' && await check_internet(req)==1){
 			if (typeof req.query.latitude=='undefined' ||
 				typeof req.query.longitude=='undefined' ||
 				req.query.latitude=='undefined' ||
 				req.query.longitude=='undefined'){
 				//Missing latitude or longitude
 				getMessage_admin(req.query.app_id,
-								process.env.SERVER_APP_COMMON_APP_ID, 
+								ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), 
 								20500, 
 								req.query.lang_code, (err,results)  => {
 									return res.status(400).send(
@@ -127,10 +138,10 @@ module.exports = {
 				}
 			else{	
 				//service can return other formats, set json
-				const url = `${process.env.SERVER_SERVICE_GEOLOCATION_URL_GPS_PLACE}?format=json&lat=${req.query.latitude}&lon=${req.query.longitude}`;
+				const url = `${ConfigGet(1, 'SERVICE_GEOLOCATION', 'URL_GPS_PLACE')}?format=json&lat=${req.query.latitude}&lon=${req.query.longitude}`;
 				geodata = await getService(url);
 				createLogAdmin(req.query.app_id,
-								{ app_id : process.env.SERVER_APP_COMMON_APP_ID,
+								{ app_id : ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),
 									app_module : 'GEOLOCATION',
 									app_module_type : 'PLACE',
 									app_module_request : url,
@@ -160,7 +171,7 @@ module.exports = {
 	},
 	getPlaceSystemAdmin: async (req, res) => {
 		let geodata;
-		if (process.env.SERVICE_AUTH_ENABLE_GEOLOCATION==1 && await check_internet(req)==1){
+		if (ConfigGet(1, 'SERVICE_AUTH', 'ENABLE_GEOLOCATION')=='1' && await check_internet(req)==1){
 			if (typeof req.query.latitude=='undefined' ||
 				typeof req.query.longitude=='undefined' ||
 				req.query.latitude=='undefined' ||
@@ -171,7 +182,7 @@ module.exports = {
 			}
 			else{
 				//service can return other formats, set json
-				const url = `${process.env.SERVER_SERVICE_GEOLOCATION_URL_GPS_PLACE}?format=json&lat=${req.query.latitude}&lon=${req.query.longitude}`;
+				const url = `${ConfigGet(1, 'SERVICE_GEOLOCATION', 'URL_GPS_PLACE')}?format=json&lat=${req.query.latitude}&lon=${req.query.longitude}`;
 				geodata = await getService(url);
 				createLogAppCI(req, res, __appfilename, __appfunction, __appline, 'SYSTEM ADMIN getPlaceSystemAdmin').then(function(){
 					return res.status(200).json(
@@ -187,15 +198,8 @@ module.exports = {
 	},
 	getIp: async (req, res, callBack) => {
 		let geodata;
-		let url;
-		if (process.env.SERVICE_AUTH_ENABLE_GEOLOCATION==1 && await check_internet(req)==1){
-			if (typeof req.query.ip == 'undefined')
-				if (req.ip == '::1' || req.ip == '::ffff:127.0.0.1')
-					url = process.env.SERVER_SERVICE_GEOLOCATION_URL_GPS_IP + '?ip=';
-				else
-					url = process.env.SERVER_SERVICE_GEOLOCATION_URL_GPS_IP + '?ip=' + req.ip;
-			else
-				url = db_SERVICE_GEOLOCATION_URL_GPS_IP + '?ip=' + req.query.ip;
+		let url = get_ip_url(req.ip, req.query.ip);
+		if (ConfigGet(1, 'SERVICE_AUTH', 'ENABLE_GEOLOCATION')=='1' && await check_internet(req)==1){
 			geodata = await getService(url);
 			createLog(req.query.app_id,
 					{ app_id : req.query.app_id,
@@ -233,15 +237,8 @@ module.exports = {
 	},
 	getIpAdmin: async (req, res, callBack) => {
 		let geodata;
-		let url;
-		if (process.env.SERVICE_AUTH_ENABLE_GEOLOCATION==1 && await check_internet(req)==1){
-			if (typeof req.query.ip == 'undefined')
-				if (req.ip == '::1' || req.ip == '::ffff:127.0.0.1')
-					url = process.env.SERVER_SERVICE_GEOLOCATION_URL_GPS_IP + '?ip=';
-				else
-					url = process.env.SERVER_SERVICE_GEOLOCATION_URL_GPS_IP + '?ip=' + req.ip;
-			else
-				url = process.env.SERVER_SERVICE_GEOLOCATION_URL_GPS_IP + '?ip=' + req.query.ip;
+		let url = get_ip_url(req.ip, req.query.ip);
+		if (ConfigGet(1, 'SERVICE_AUTH', 'ENABLE_GEOLOCATION')=='1' && await check_internet(req)==1){
 			geodata = await getService(url);
 			createLogAdmin(req.query.app_id,
 							{ app_id : req.query.app_id,
@@ -279,15 +276,8 @@ module.exports = {
 	},
 	getIpSystemAdmin: async (req, res, callBack) => {
 		let geodata;
-		let url;
-		if (process.env.SERVICE_AUTH_ENABLE_GEOLOCATION==1 && await check_internet(req)==1){
-			if (typeof req.query.ip == 'undefined')
-				if (req.ip == '::1' || req.ip == '::ffff:127.0.0.1')
-					url = process.env.SERVER_SERVICE_GEOLOCATION_URL_GPS_IP + '?ip=';
-				else
-					url = process.env.SERVER_SERVICE_GEOLOCATION_URL_GPS_IP + '?ip=' + req.ip;
-			else
-				url = process.env.SERVER_SERVICE_GEOLOCATION_URL_GPS_IP + '?ip=' + req.query.ip;
+		let url = get_ip_url(req.ip, req.query.ip);
+		if (ConfigGet(1, 'SERVICE_AUTH', 'ENABLE_GEOLOCATION')=='1' && await check_internet(req)==1){
 			geodata = await getService(url);
 			createLogAppCI(req, res, __appfilename, __appfunction, __appline, 'SYSTEM ADMIN getIpSystemAdmin').then(function(){
 				if (req.query.callback==1)

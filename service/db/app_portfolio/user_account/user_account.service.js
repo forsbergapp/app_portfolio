@@ -1,3 +1,4 @@
+const {ConfigGet} = require(global.SERVER_ROOT + '/server/server.service');
 const {execute_db_sql, get_schema_name, limit_sql} = require (global.SERVER_ROOT + "/service/db/common/common.service");
 function password_length_wrong(password){
     //constraint should be in db but password is encrypted when in db trigger
@@ -176,7 +177,7 @@ module.exports = {
 			search = '%' + search + '%';
 		parameters = {search: search,
 					  offset: offset ?? 0,
-					  limit: limit ?? parseInt(process.env.SERVICE_DB_LIMIT_LIST_SEARCH),
+					  limit: limit ?? parseInt(ConfigGet(1, 'SERVICE_DB', 'LIMIT_LIST_SEARCH')),
 					 };
 		execute_db_sql(app_id, sql, parameters,
 			           __appfilename, __appfunction, __appline, (err, result)=>{
@@ -332,7 +333,7 @@ module.exports = {
 							:provider_image,
 							:provider_Ximage_url,
 							:provider_email) `;				
-			if (process.env.SERVICE_DB_USE == 3) {
+			if (ConfigGet(1, 'SERVICE_DB', 'USE') == 3) {
 				sql = sql + ' RETURNING id ';
 			}
 			parameters = {
@@ -359,7 +360,7 @@ module.exports = {
 				if (err)
 					return callBack(err, null);
 				else
-					switch (process.env.SERVICE_DB_USE){
+					switch (ConfigGet(1, 'SERVICE_DB', 'USE')){
 						case '1':{
 							return callBack(null, result);
 							break;
@@ -418,7 +419,7 @@ module.exports = {
 						date_modified = CURRENT_TIMESTAMP
 				WHERE id = :id
 					AND verification_code = :verification_code `;
-		if (process.env.SERVICE_DB_USE==3){
+		if (ConfigGet(1, 'SERVICE_DB', 'USE')==3){
 			sql = sql + ' RETURNING id';
 		}
 		parameters ={
@@ -432,7 +433,7 @@ module.exports = {
 			if (err)
 				return callBack(err, null);
 			else{
-				switch (process.env.SERVICE_DB_USE){
+				switch (ConfigGet(1, 'SERVICE_DB', 'USE')){
 					case '1':{
 						return callBack(null, result);
 						break;
@@ -467,7 +468,7 @@ module.exports = {
 					  active = 0,
 					  date_modified = CURRENT_TIMESTAMP
 				WHERE id = :id `;
-		if (process.env.SERVICE_DB_USE==3){
+		if (ConfigGet(1, 'SERVICE_DB', 'USE')==3){
 			sql = sql + ' RETURNING id';
 		}
 		parameters ={
@@ -479,7 +480,7 @@ module.exports = {
 			if (err)
 				return callBack(err, null);
 			else{
-				switch (process.env.SERVICE_DB_USE){
+				switch (ConfigGet(1, 'SERVICE_DB', 'USE')){
 					case '1':{
 						return callBack(null, result);
 						break;

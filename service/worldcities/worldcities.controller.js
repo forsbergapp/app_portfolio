@@ -1,5 +1,6 @@
+const {ConfigGet} = require(global.SERVER_ROOT + '/server/server.service');
 const { getService} = require ("./worldcities.service");
-const { createLog} = require (global.SERVER_ROOT +  process.env.SERVICE_DB_REST_API_PATH + "/app_log/app_log.service");
+const { createLog} = require (global.SERVER_ROOT +  ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH') + "/app_log/app_log.service");
 module.exports = {
 	getCities: (req, res) => {
 		getService((err, cities) => {

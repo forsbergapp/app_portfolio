@@ -1,3 +1,4 @@
+const {ConfigGet} = require(global.SERVER_ROOT + '/server/server.service');
 const { read_app_files, get_module_with_init, getUserPreferences } = require(global.SERVER_ROOT + "/apps");
 module.exports = {
     getApp:(app_id, username, gps_lat, gps_long, gps_place) => {
@@ -67,7 +68,7 @@ module.exports = {
                 }) 
             }
             if (username!=null){
-                const {getProfileUser} = require(global.SERVER_ROOT +  process.env.SERVICE_DB_REST_API_PATH + "/user_account/user_account.service");
+                const {getProfileUser} = require(global.SERVER_ROOT +  ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH') + "/user_account/user_account.service");
                 getProfileUser(app_id, null, username, null, (err,result)=>{
                     if (result)
                         main(app_id);

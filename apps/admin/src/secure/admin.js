@@ -289,12 +289,12 @@ function set_broadcast_type(){
 async function check_maintenance(){
     if (admin_token_has_value()){
         let json;
-        await common_fetch('/server/config?parameter_name=SERVER_MAINTENANCE', 'GET', 2, null, null, null, (err, result) =>{
+        await common_fetch('/server/config/maintenance?', 'GET', 2, null, null, null, (err, result) =>{
             if (err)
                 null;
             else{
                 json = JSON.parse(result);
-                if (json.parameter_value==1)
+                if (json.value==1)
                     document.getElementById('menu_1_checkbox_maintenance').checked =true;
                 else
                     document.getElementById('menu_1_checkbox_maintenance').checked =false;
@@ -310,10 +310,9 @@ function set_maintenance(){
         else
             check_value = 0;
         let json_data = `{
-                            "parameter_name":"SERVER_MAINTENANCE",
-                            "parameter_value": ${check_value}
-                        }`;
-        common_fetch('/server/config?', 'PATCH', 2, json_data, null, null, (err, result) =>{
+                            "value": ${check_value}
+                         }`;
+        common_fetch(`/server/config/maintenance?`, 'PATCH', 2, json_data, null, null, (err, result) =>{
             null;
         })
     }
@@ -993,8 +992,8 @@ async function button_save(item){
                             let config_group='';
                             document.querySelectorAll(`#${e_group.id} .list_config_row`).forEach(e_row => 
                                     {
-                                        config_group += `{"${e_row.children[0].children[0].innerHTML}": "${e_row.children[1].children[0].value}", 
-                                                          "COMMENT": ${JSON.stringify(e_row.children[2].children[0].value)}}`;
+                                        config_group += `{"${e_row.children[0].children[0].innerHTML}": ${JSON.stringify(e_row.children[1].children[0].value)}, 
+                                                          "COMMENT": ${JSON.stringify(e_row.children[2].children[0].innerHTML)}}`;
                                         if (e_group.lastChild != e_row)
                                             config_group += ',';
                                     }
@@ -1003,12 +1002,12 @@ async function button_save(item){
                         }
                     );
                     return `{   
-                                "server":${config_json[0]},
-                                "service_auth":${config_json[1]},
-                                "service_broadcast":${config_json[2]},
-                                "service_db":${config_json[3]},
-                                "service_log":${config_json[4]},
-                                "service_report":${config_json[5]}
+                                "SERVER":${config_json[0]},
+                                "SERVICE_AUTH":${config_json[1]},
+                                "SERVICE_BROADCAST":${config_json[2]},
+                                "SERVICE_DB":${config_json[3]},
+                                "SERVICE_LOG":${config_json[4]},
+                                "SERVICE_REPORT":${config_json[5]}
                             }`;
                 }
                 //no fetched from end of item name list_config_nav_X
@@ -2265,7 +2264,7 @@ function show_pm2_logs(){
 async function show_config(config_nav=1){
     let url;
     document.getElementById(`list_config`).innerHTML = window.global_app_spinner;
-    url  = `/server/config?config_no=${config_nav}`;
+    url  = `/server/config?config_type_no=${config_nav}`;
     await common_fetch(url, 'GET', 2, null, null, null, (err, result) =>{
         if (err)
             document.getElementById(`list_config`).innerHTML = '';
@@ -2305,7 +2304,7 @@ async function show_config(config_nav=1){
                                         <input type=text class='list_edit' value='${Object.values(json.data[Object.keys(json.data)[i_group]][j])[0]}'/>
                                     </div>
                                     <div class='list_config_col'>
-                                        <input type=text class='list_edit' value='${Object.values(json.data[Object.keys(json.data)[i_group]][j])[1]}'/>
+                                        <div class='list_readonly'>${Object.values(json.data[Object.keys(json.data)[i_group]][j])[1]}</div>
                                     </div>
                                 </div>`;
                             }    
@@ -2416,7 +2415,7 @@ async function show_db_info_space(){
                         document.getElementById('menu_8_db_info_space_detail').innerHTML += 
                             `<div id='menu_8_db_info_space_detail_row_total' class='menu_8_db_info_space_detail_row' >
                                 <div class='menu_8_db_info_space_detail_col'>
-                                    <div>TOTAL</div>
+                                    <div>${window.global_icon_app_sum}</div>
                                 </div>
                                 <div class='menu_8_db_info_space_detail_col'>
                                     <div>${roundOff(json.data.total_size)}</div>

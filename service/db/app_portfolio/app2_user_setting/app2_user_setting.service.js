@@ -1,3 +1,4 @@
+const {ConfigGet} = require(global.SERVER_ROOT + '/server/server.service');
 const {execute_db_sql, get_schema_name, limit_sql} = require (global.SERVER_ROOT + "/service/db/common/common.service");
 module.exports = {
 	createUserSetting: (app_id, initial, data, callBack) => {
@@ -120,7 +121,7 @@ module.exports = {
 									WHERE aus2.user_account_app_user_account_id = ua.id
 									  AND aus2.user_account_app_app_id = :app_id
 									  AND :initial_setting = 1)`;
-		if (process.env.SERVICE_DB_USE==3)
+		if (ConfigGet(1, 'SERVICE_DB', 'USE')==3)
 			sql = sql + ' RETURNING id';
 		parameters = {
 						description: data.description,
@@ -182,7 +183,7 @@ module.exports = {
 			if (err)
 				return callBack(err, null);
 			else
-				switch (process.env.SERVICE_DB_USE){
+				switch (ConfigGet(1, 'SERVICE_DB', 'USE')){
 					case '1':{
 						return callBack(null, result);
 						break;
