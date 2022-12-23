@@ -225,7 +225,7 @@ module.exports = {
                     let APP_MAP_TYPE='';
                     getSettings(app_id, 'en', null, (err, settings) => {
                         let option;
-                        for (i = 0; i < settings.length; i++) {
+                        for (let i = 0; i < settings.length; i++) {
                             option = `<option id=${settings[i].id} value='${settings[i].data}'>${settings[i].text}</option>`;
                             switch (settings[i].setting_type_name){
                                 case 'TIMEZONE':{

@@ -1199,7 +1199,7 @@ async function displayDay(settings, item_id, user_settings){
 				})
 		}
 		let tot_day_async_html = 0;
-		for (i=0;i<=user_settings.length-1;i++){	
+		for (let i=0;i<=user_settings.length-1;i++){	
 			setMethod_praytimes(user_settings[i].prayer_method, 
 								user_settings[i].prayer_asr_method, 
 								user_settings[i].prayer_high_latitude_adjustment);
@@ -1218,7 +1218,6 @@ async function displayDay(settings, item_id, user_settings){
 }
 async function timetable_day_user_settings_get(user_account_id, callBack){
 	let json;
-    let i;
 	let user_settings = [];
 
 	await common_fetch(window.global_rest_api_db_path + window.global_rest_app2_user_setting_user_account_id + user_account_id + '?',
@@ -1227,7 +1226,7 @@ async function timetable_day_user_settings_get(user_account_id, callBack){
 			callBack(err, null);
 		else{
 			json = JSON.parse(result);
-			for (i = 0; i < json.count; i++) {
+			for (let i = 0; i < json.count; i++) {
 				//use settings that can be used on a day timetable showing different user settings
 				//would be difficult to consider all settings on same page using
 				//different texts, images, second languages, directions, column titles, 
