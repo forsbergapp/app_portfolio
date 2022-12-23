@@ -923,7 +923,7 @@ function lov_show(lov, function_event){
             document.getElementById('lov_list').innerHTML = '';
             let json = JSON.parse(result);
             let html = '';
-            for (i = 0; i < json.data.length; i++) {
+            for (let i = 0; i < json.data.length; i++) {
                 html += 
                 `<div id='list_lov_row_${i}' class='list_lov_row'>
                     <div class='list_lov_col'>
@@ -950,7 +950,7 @@ function lov_keys(event){
         case 'ArrowDown':{
             //loop rows not hidden
             let x = document.querySelectorAll('.list_lov_row:not(.list_lov_row_hide)');
-            for (i = 0; i <= x.length -1; i++) {
+            for (let i = 0; i <= x.length -1; i++) {
                 if (x[i].classList.contains('list_lov_row_selected')){
                     //if up and first or
                     //if down and last
@@ -991,7 +991,7 @@ function lov_keys(event){
         case 'Enter':{
             //enter
             let x = document.querySelectorAll('.list_lov_row');
-            for (i = 0; i <= x.length -1; i++) {
+            for (let i = 0; i <= x.length -1; i++) {
                 if (x[i].classList.contains('list_lov_row_selected')){
                     //event on row is set in app when calling lov, dispatch it!
                     x[i].dispatchEvent(new Event('click'))
@@ -1010,11 +1010,11 @@ function lov_keys(event){
 }
 function lov_filter(text_filter){
     let x = document.querySelectorAll('.list_lov_row');
-    for (i = 0; i <= x.length -1; i++) {
+    for (let i = 0; i <= x.length -1; i++) {
         x[i].classList.remove ('list_lov_row_hide');
         x[i].classList.remove ('list_lov_row_selected');
     }
-    for (i = 0; i <= x.length -1; i++) {
+    for (let i = 0; i <= x.length -1; i++) {
         if (x[i].children[0].children[0].innerHTML.toUpperCase().indexOf(text_filter.toUpperCase()) > -1 ||
             x[i].children[1].children[0].innerHTML.toUpperCase().indexOf(text_filter.toUpperCase()) > -1){
                 x[i].classList.remove ('list_lov_row_hide');
@@ -1467,7 +1467,7 @@ function map_check_source(id){
 }
 function map_line_removeall(){
     if(window.global_session_service_map_layer)
-        for (i=0;i<window.global_session_service_map_layer.length;i++)
+        for (let i=0;i<window.global_session_service_map_layer.length;i++)
             window.global_session_service_map.removeLayer(window.global_session_service_map_layer[i]);
     window.global_session_service_map_layer=[];
 }
@@ -1678,7 +1678,7 @@ function profile_top(statschoice, app_rest_url = null, click_function=null) {
             let html ='';
             let image='';
             let name='';
-            for (i = 0; i < json.count; i++) {
+            for (let i = 0; i < json.count; i++) {
                 image = list_image_format_src(json.items[i].avatar ?? json.items[i].provider_image)
                 name = json.items[i].username;
                 html +=
@@ -1805,7 +1805,7 @@ function profile_detail(detailchoice, rest_url_app, fetch_detail, header_app, cl
                     let html = '';
                     let image = '';
                     let delete_div ='';
-                    for (i = 0; i < json.count; i++) {
+                    for (let i = 0; i < json.count; i++) {
                         if (detailchoice==5){
                             if (json.items[i].app_id !=0){
                                 if (document.getElementById('profile_id').innerHTML==window.global_user_account_id)
@@ -1932,7 +1932,7 @@ function search_profile(click_function) {
                 let html = '';
                 let image= '';
                 let name = '';
-                for (i = 0; i < json.count; i++) {
+                for (let i = 0; i < json.count; i++) {
                     image = list_image_format_src(json.items[i].avatar ?? json.items[i].provider_image)
                     name = json.items[i].username;
                     html +=
@@ -2090,7 +2090,7 @@ function search_input(event, event_function){
         case 'ArrowDown':{
             if (document.getElementById('profile_search_list').style.display=='inline-block'){
                 let x = document.querySelectorAll('.profile_search_list_row');
-                for (i = 0; i <= x.length -1; i++) {
+                for (let i = 0; i <= x.length -1; i++) {
                     if (x[i].classList.contains('profile_search_list_selected'))
                         //if up and first or
                         //if down and last
@@ -2134,7 +2134,7 @@ function search_input(event, event_function){
             //enter
             if (document.getElementById('profile_search_list').style.display=='inline-block'){
                 let x = document.querySelectorAll('.profile_search_list_row');
-                for (i = 0; i <= x.length -1; i++) {
+                for (let i = 0; i <= x.length -1; i++) {
                     if (x[i].classList.contains('profile_search_list_selected')){
                         /*Show profile and leave searchresult so user can go back to searchresult again*/
                         if (event_function ==null){
@@ -2877,7 +2877,7 @@ async function Providers_init(function_event){
             //load the buttons
             //user provider should use REST API on server if used
             let html = '';
-            for (i=0;i <=json.items.length-1;i++){
+            for (let i=0;i <=json.items.length-1;i++){
                 html += `<button id='login_provider_${i}' class='login_button login_provider_button' >
                             <div class='login_provider_id'>${json.items[i].id}</div>
                             <div class='login_provider_name'>${json.items[i].provider_name}</div>
