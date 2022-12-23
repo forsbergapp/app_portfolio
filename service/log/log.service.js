@@ -4,12 +4,12 @@ function pm2log(log){
     
 async function remote_log(log){
     return await new Promise(function (resolve){ 
-        if (process.env.SERVICE_LOG_DESTINATION==1 ||
-            process.env.SERVICE_LOG_DESTINATION==2){
+        if (ConfigGet(1, 'SERVICE_LOG', 'DESTINATION')==1 ||
+            ConfigGet(1, 'SERVICE_LOG', 'DESTINATION')==2){
             //url destination
             const axios = require('axios');
             const headers = { 
-                'Authorization': 'Basic ' + btoa(process.env.SERVICE_LOG_URL_DESTINATION_USERNAME + ':' + process.env.SERVICE_LOG_URL_DESTINATION_PASSWORD)
+                'Authorization': 'Basic ' + btoa(ConfigGet(1, 'SERVICE_LOG', 'URL_DESTINATION_USERNAME') + ':' + ConfigGet(1, 'SERVICE_LOG', 'URL_DESTINATION_PASSWORD'))
             };
             //add logscope and loglevel first and as all logfiles will be sent to same url
             let url_old  = JSON.parse(log);
@@ -33,7 +33,7 @@ async function remote_log(log){
             url_log.logtext = url_old.logtext;
     
             url_log = JSON.stringify(url_log);
-            axios.post(process.env.SERVICE_LOG_URL_DESTINATION, url_log)
+            axios.post(ConfigGet(1, 'SERVICE_LOG', 'URL_DESTINATION'), url_log)
             .then(function(){
                 resolve();
             })
@@ -57,18 +57,19 @@ async function sendLog(logscope, loglevel, log){
         }
         let month = logdate.toLocaleString("en-US", { month: "2-digit"});
         let day   = logdate.toLocaleString("en-US", { day: "2-digit"});
-        if (process.env.SERVICE_LOG_FILE_INTERVAL=='1D')
+        const {ConfigGet} = require(global.SERVER_ROOT + '/server/server.service');
+        if (ConfigGet(1, 'SERVICE_LOG', 'FILE_INTERVAL')=='1D')
             filename = `${logscope}_${loglevel}_${logdate.getFullYear()}${month}${day}.log`;
         else
-            if (process.env.SERVICE_LOG_FILE_INTERVAL=='1M')
+            if (ConfigGet(1, 'SERVICE_LOG', 'FILE_INTERVAL')=='1M')
                 filename = `${logscope}_${loglevel}_${logdate.getFullYear()}${month}.log`;
             else
                 filename = `${logscope}_${loglevel}_${logdate.getFullYear()}${month}.log`;
-        if (process.env.SERVICE_LOG_DESTINATION==0 ||
-            process.env.SERVICE_LOG_DESTINATION==2){
+        if (ConfigGet(1, 'SERVICE_LOG', 'DESTINATION')==0 ||
+            ConfigGet(1, 'SERVICE_LOG', 'DESTINATION')==2){
             //file destination
             let fs = require('fs');
-            fs.appendFile(global.SERVER_ROOT + process.env.SERVICE_LOG_FILE_PATH_SERVER + filename, log + '\r\n', 'utf8', (err) => {
+            fs.appendFile(global.SERVER_ROOT + ConfigGet(0, null, 'PATH_LOG') + filename, log + '\r\n', 'utf8', (err) => {
                 if (err) {
                     //if error here ignore and continue, where else should log file be saved?
                     pm2log(err);
@@ -83,11 +84,12 @@ async function sendLog(logscope, loglevel, log){
     })
 }
 function logdate(){
+    const {ConfigGet} = require(global.SERVER_ROOT + '/server/server.service');
     let logdate = new Date();
-    if (process.env.SERVICE_LOG_DATE_FORMAT!='' &&
-        typeof process.env.SERVICE_LOG_DATE_FORMAT!='undefined'){
+    if (ConfigGet(1, 'SERVICE_LOG', 'DATE_FORMAT')!='' &&
+        typeof ConfigGet(1, 'SERVICE_LOG', 'DATE_FORMAT')!='undefined'){
         //ex ISO8601 format: "yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'"
-        logdate.format(process.env.SERVICE_LOG_DATE_FORMAT);
+        logdate.format(ConfigGet(1, 'SERVICE_LOG', 'DATE_FORMAT'));
     }
     else
         logdate = logdate.toISOString();
@@ -146,7 +148,7 @@ module.exports = {
                                 "app_app_line": "",
                                 "logtext": ${JSON.stringify(err.status + '-' + err.message)}
                             }`;
-            resolve(sendLog(process.env.SERVICE_LOG_SCOPE_SERVER, process.env.SERVICE_LOG_LEVEL_ERROR, log_json_server));
+            resolve(sendLog(ConfigGet(1, 'SERVICE_LOG', 'SCOPE_SERVER'), ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), log_json_server));
         })
     },
 	createLogServerI: async (info=null,
@@ -157,10 +159,11 @@ module.exports = {
             let log_level;
             let log_json_server;  
             let logtext;  
-            if(process.env.SERVICE_LOG_ENABLE_SERVER_VERBOSE==1)
-                log_level = process.env.SERVICE_LOG_LEVEL_VERBOSE;
+            const {ConfigGet} = require(global.SERVER_ROOT + '/server/server.service');
+            if(ConfigGet(1, 'SERVICE_LOG', 'ENABLE_SERVER_VERBOSE')==1)
+                log_level = ConfigGet(1, 'SERVICE_LOG', 'LEVEL_VERBOSE');
             else
-                log_level = process.env.SERVICE_LOG_LEVEL_INFO;
+                log_level = ConfigGet(1, 'SERVICE_LOG', 'LEVEL_INFO');
             if (info!=null){
                 log_json_server = `{"logdate": "${logdate()}",
                                     "ip":"",
@@ -201,12 +204,12 @@ module.exports = {
                                     "logtext": ${logtext}
                                     }`;
             }
-            resolve(sendLog(process.env.SERVICE_LOG_SCOPE_SERVER, log_level, log_json_server));
+            resolve(sendLog(ConfigGet(1, 'SERVICE_LOG', 'SCOPE_SERVER'), log_level, log_json_server));
         })
     },
     createLogDB: async (app_id, logtext) =>{
         return await new Promise(function (resolve){ 
-            if (process.env.SERVICE_LOG_ENABLE_DB==1){
+            if (ConfigGet(1, 'SERVICE_LOG', 'ENABLE_DB')==1){
                 let log_json_db = `{"logdate": "${logdate()}",
                                     "ip":"",
                                     "host": "${require('os').hostname()}",
@@ -223,7 +226,7 @@ module.exports = {
                                     "app_app_line": "",
                                     "logtext": ${JSON.stringify(logtext)}
                                     }`;
-                resolve(sendLog(process.env.SERVICE_LOG_SCOPE_DB, process.env.SERVICE_LOG_LEVEL_INFO, log_json_db));
+                resolve(sendLog(ConfigGet(1, 'SERVICE_LOG', 'SCOPE_DB'), ConfigGet(1, 'SERVICE_LOG', 'LEVEL_INFO'), log_json_db));
             }
             else
                 resolve();
@@ -247,7 +250,7 @@ module.exports = {
                             "app_app_line": ${app_line},
                             "logtext": ${JSON.stringify(logtext)}
                             }`;
-            resolve(sendLog(process.env.SERVICE_LOG_SCOPE_SERVICE, level_info, log_json));
+            resolve(sendLog(ConfigGet(1, 'SERVICE_LOG', 'SCOPE_SERVICE'), level_info, log_json));
         })
     },    
     createLogAppC: async (app_id, level_info, app_filename, app_function_name, app_line, logtext,
@@ -270,14 +273,14 @@ module.exports = {
                             "app_app_line": ${app_line},
                             "logtext": ${JSON.stringify(logtext)}
                             }`;
-            resolve(sendLog(process.env.SERVICE_LOG_SCOPE_CONTROLLER, level_info, log_json));
+            resolve(sendLog(ConfigGet(1, 'SERVICE_LOG', 'SCOPE_CONTROLLER'), level_info, log_json));
         })
     },
     createLogAppRI: async (app_id, app_filename, app_function_name, app_line, logtext,
                      ip, host, protocol, originalUrl, method, statusCode, 
                     user_agent, accept_language, referer) => {
         return await new Promise(function (resolve){  
-            if (process.env.SERVICE_LOG_ENABLE_ROUTER==1){
+            if (ConfigGet(1, 'SERVICE_LOG', 'ENABLE_ROUTER')==1){
                 let log_json =`{"logdate": "${logdate()}",
                                 "ip":"${ip}",
                                 "host": "${host}",
@@ -294,7 +297,7 @@ module.exports = {
                                 "app_app_line": ${app_line},
                                 "logtext": ${JSON.stringify(logtext)}
                                 }`;
-                resolve(sendLog(process.env.SERVICE_LOG_SCOPE_ROUTER, process.env.SERVICE_LOG_LEVEL_INFO, log_json));
+                resolve(sendLog(ConfigGet(1, 'SERVICE_LOG', 'SCOPE_ROUTER'), ConfigGet(1, 'SERVICE_LOG', 'LEVEL_INFO'), log_json));
             }
             else
                 resolve();
@@ -302,22 +305,22 @@ module.exports = {
 	},
     getParameters: (app_id, callBack) => {
         let results = {};
-        results.SERVICE_LOG_SCOPE_SERVER = process.env.SERVICE_LOG_SCOPE_SERVER;
-        results.SERVICE_LOG_SCOPE_SERVICE = process.env.SERVICE_LOG_SCOPE_SERVICE;
-        results.SERVICE_LOG_SCOPE_DB = process.env.SERVICE_LOG_SCOPE_DB;
-        results.SERVICE_LOG_SCOPE_ROUTER = process.env.SERVICE_LOG_SCOPE_ROUTER;
-        results.SERVICE_LOG_SCOPE_CONTROLLER = process.env.SERVICE_LOG_SCOPE_CONTROLLER;
-        results.SERVICE_LOG_ENABLE_SERVER_INFO = process.env.SERVICE_LOG_ENABLE_SERVER_INFO;
-        results.SERVICE_LOG_ENABLE_SERVER_VERBOSE = process.env.SERVICE_LOG_ENABLE_SERVER_VERBOSE;
+        results.SERVICE_LOG_SCOPE_SERVER = ConfigGet(1, 'SERVICE_LOG', 'SCOPE_SERVER');
+        results.SERVICE_LOG_SCOPE_SERVICE = ConfigGet(1, 'SERVICE_LOG', 'SCOPE_SERVICE');
+        results.SERVICE_LOG_SCOPE_DB = ConfigGet(1, 'SERVICE_LOG', 'SCOPE_DB');
+        results.SERVICE_LOG_SCOPE_ROUTER = ConfigGet(1, 'SERVICE_LOG', 'SCOPE_ROUTER');
+        results.SERVICE_LOG_SCOPE_CONTROLLER = ConfigGet(1, 'SERVICE_LOG', 'SCOPE_CONTROLLER');
+        results.SERVICE_LOG_ENABLE_SERVER_INFO = ConfigGet(1, 'SERVICE_LOG', 'ENABLE_SERVER_INFO');
+        results.SERVICE_LOG_ENABLE_SERVER_VERBOSE = ConfigGet(1, 'SERVICE_LOG', 'ENABLE_SERVER_VERBOSE');
         
-        results.SERVICE_LOG_ENABLE_DB = process.env.SERVICE_LOG_ENABLE_DB;
-        results.SERVICE_LOG_ENABLE_ROUTER = process.env.SERVICE_LOG_ENABLE_ROUTER;
-        results.SERVICE_LOG_LEVEL_VERBOSE = process.env.SERVICE_LOG_LEVEL_VERBOSE;
-        results.SERVICE_LOG_LEVEL_ERROR = process.env.SERVICE_LOG_LEVEL_ERROR;
-        results.SERVICE_LOG_LEVEL_INFO = process.env.SERVICE_LOG_LEVEL_INFO;
+        results.SERVICE_LOG_ENABLE_DB = ConfigGet(1, 'SERVICE_LOG', 'ENABLE_DB');
+        results.SERVICE_LOG_ENABLE_ROUTER = ConfigGet(1, 'SERVICE_LOG', 'ENABLE_ROUTER');
+        results.SERVICE_LOG_LEVEL_VERBOSE = ConfigGet(1, 'SERVICE_LOG', 'LEVEL_VERBOSE');
+        results.SERVICE_LOG_LEVEL_ERROR = ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR');
+        results.SERVICE_LOG_LEVEL_INFO = ConfigGet(1, 'SERVICE_LOG', 'LEVEL_INFO');
         
-        results.SERVICE_LOG_FILE_INTERVAL = process.env.SERVICE_LOG_FILE_INTERVAL;
-        results.SERVICE_LOG_PM2_FILE = process.env.SERVICE_LOG_PM2_FILE;
+        results.SERVICE_LOG_FILE_INTERVAL = ConfigGet(1, 'SERVICE_LOG', 'FILE_INTERVAL');
+        results.SERVICE_LOG_PM2_FILE = ConfigGet(1, 'SERVICE_LOG', 'PM2_FILE');
         return callBack(null, results);
     },
     getLogs: (app_id, data, callBack) => {
@@ -326,13 +329,13 @@ module.exports = {
 
         if (parseInt(data.month) <10)
             data.month = '0' + data.month;
-        if (process.env.SERVICE_LOG_FILE_INTERVAL=='1D'){
+        if (ConfigGet(1, 'SERVICE_LOG', 'FILE_INTERVAL')=='1D'){
             if (parseInt(data.day) <10)
                 data.day = '0' + data.day;
             filename = `${data.logscope}_${data.loglevel}_${data.year}${data.month}${data.day}.log`;
         }
         else
-            if (process.env.SERVICE_LOG_FILE_INTERVAL=='1M')
+            if (ConfigGet(1, 'SERVICE_LOG', 'FILE_INTERVAL')=='1M')
                 filename = `${data.logscope}_${data.loglevel}_${data.year}${data.month}.log`;
             else
                 filename = `${data.logscope}_${data.loglevel}_${data.year}${data.month}.log`;
@@ -340,7 +343,7 @@ module.exports = {
         let loggerror = 0;
         try {
             loggerror = 1;
-            fs.readFile(global.SERVER_ROOT + process.env.SERVICE_LOG_FILE_PATH_SERVER + filename, 'utf8', (error, fileBuffer) => {
+            fs.readFile(global.SERVER_ROOT + ConfigGet(0, null, 'PATH_LOG') + filename, 'utf8', (error, fileBuffer) => {
                 loggerror = 2;
                 if (error)
                     return callBack(null, fixed_log);
@@ -450,7 +453,7 @@ module.exports = {
     getFiles: (app_id, callBack) => {
         let fs = require('fs');
         let logfiles =[];
-        fs.readdir(global.SERVER_ROOT + process.env.SERVICE_LOG_FILE_PATH_SERVER, (err, files) => {
+        fs.readdir(global.SERVER_ROOT + ConfigGet(0, null, 'PATH_LOG'), (err, files) => {
             if (err) {
                 return callBack(err, null);
             }
@@ -473,7 +476,7 @@ module.exports = {
         let fs = require('fs');
         try {
             let fixed_log = [];
-            fs.readFile(global.SERVER_ROOT + process.env.SERVICE_LOG_FILE_PATH_SERVER + process.env.SERVICE_LOG_PM2_FILE, 'utf8', (error, fileBuffer) => {
+            fs.readFile(global.SERVER_ROOT + ConfigGet(0, null, 'PATH_LOG') + ConfigGet(1, 'SERVICE_LOG', 'PM2_FILE'), 'utf8', (error, fileBuffer) => {
                 fileBuffer.split('\n').forEach(function (record) {
                     if (record.length>0)
                         fixed_log.push(JSON.parse(record));

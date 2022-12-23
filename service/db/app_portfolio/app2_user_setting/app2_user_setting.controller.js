@@ -1,3 +1,4 @@
+const {ConfigGet} = require(global.SERVER_ROOT + '/server/server.service');
 const { createUserSetting, 
 		getUserSettingsByUserId,
 		getProfileUserSetting,
@@ -7,7 +8,7 @@ const { createUserSetting,
 		getUserSetting,
 		updateUserSetting, 
 		deleteUserSetting} = require ("./app2_user_setting.service");
-		const { getMessage } = require(global.SERVER_ROOT + process.env.SERVICE_DB_REST_API_PATH +"/message_translation/message_translation.service");
+		const { getMessage } = require(global.SERVER_ROOT + ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH') +"/message_translation/message_translation.service");
 module.exports = {
 	createUserSetting: (req, res) =>{
 		const body = req.body;

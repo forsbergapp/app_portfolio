@@ -1,15 +1,16 @@
-const app2_placeRouter = require(global.SERVER_ROOT + process.env.SERVICE_DB_REST_API_PATH + "/app2_place/app2_place.router");
-const app2_themeRouter = require(global.SERVER_ROOT + process.env.SERVICE_DB_REST_API_PATH + "/app2_theme/app2_theme.router");
-const app2_user_settingRouter = require(global.SERVER_ROOT + process.env.SERVICE_DB_REST_API_PATH + "/app2_user_setting/app2_user_setting.router");
-const app2_user_setting_likeRouter = require(global.SERVER_ROOT + process.env.SERVICE_DB_REST_API_PATH + "/app2_user_setting_like/app2_user_setting_like.router");
-const app2_user_setting_viewRouter = require(global.SERVER_ROOT + process.env.SERVICE_DB_REST_API_PATH + "/app2_user_setting_view/app2_user_setting_view.router");
+const {ConfigGet} = require(global.SERVER_ROOT + '/server/server.service');
+const app2_placeRouter = require(global.SERVER_ROOT + ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH') + "/app2_place/app2_place.router");
+const app2_themeRouter = require(global.SERVER_ROOT + ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH') + "/app2_theme/app2_theme.router");
+const app2_user_settingRouter = require(global.SERVER_ROOT + ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH') + "/app2_user_setting/app2_user_setting.router");
+const app2_user_setting_likeRouter = require(global.SERVER_ROOT + ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH') + "/app2_user_setting_like/app2_user_setting_like.router");
+const app2_user_setting_viewRouter = require(global.SERVER_ROOT + ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH') + "/app2_user_setting_view/app2_user_setting_view.router");
 const APP2_ID = 2;
 const { check_app_subdomain} = require(global.SERVER_ROOT + "/apps");
-app.use(process.env.SERVICE_DB_REST_API_PATH + "/app2_place", app2_placeRouter);
-app.use(process.env.SERVICE_DB_REST_API_PATH + "/app2_theme", app2_themeRouter);
-app.use(process.env.SERVICE_DB_REST_API_PATH + "/app2_user_setting", app2_user_settingRouter);
-app.use(process.env.SERVICE_DB_REST_API_PATH + "/app2_user_setting_like", app2_user_setting_likeRouter);
-app.use(process.env.SERVICE_DB_REST_API_PATH + "/app2_user_setting_view", app2_user_setting_viewRouter);
+app.use(ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH') + "/app2_place", app2_placeRouter);
+app.use(ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH') + "/app2_theme", app2_themeRouter);
+app.use(ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH') + "/app2_user_setting", app2_user_settingRouter);
+app.use(ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH') + "/app2_user_setting_like", app2_user_setting_likeRouter);
+app.use(ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH') + "/app2_user_setting_view", app2_user_setting_viewRouter);
 
 app.use('/app2/css',express.static(__dirname + '/app2/css'));
 app.use('/app2/js',express.static(__dirname + '/app2/js'));
@@ -45,7 +46,7 @@ app.get("/info/:info",function (req, res, next) {
 //app 2 progressive webapp menifest
 app.get("/app2/manifest.json",function (req, res, next) {
   if (check_app_subdomain(APP2_ID, req.headers.host)){
-    const { getParameters } = require (global.SERVER_ROOT + process.env.SERVICE_DB_REST_API_PATH + "/app_parameter/app_parameter.service");
+    const { getParameters } = require (global.SERVER_ROOT + ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH') + "/app_parameter/app_parameter.service");
     getParameters(APP2_ID, APP2_ID, (err, results) =>{
       if (err) {
         return res.send(err);

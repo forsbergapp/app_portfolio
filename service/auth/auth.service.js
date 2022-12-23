@@ -1,3 +1,5 @@
+const {ConfigGet} = require(global.SERVER_ROOT + '/server/server.service');
+const { createLogAppSE } = require(global.SERVER_ROOT + "/service/log/log.controller");
 function IPtoNum(ip){
     return Number(
         ip.split(".")
@@ -8,9 +10,9 @@ function IPtoNum(ip){
 const fs = require("fs");
 module.exports = {
     block_ip_control: async (ip_v4, callBack) =>{
-        if (process.env.SERVICE_AUTH_ACCESS_CONTROL_IP){
+        if (ConfigGet(1, 'SERVICE_AUTH', 'ACCESS_CONTROL_IP') == 1){
             let ranges;
-            fs.readFile(global.SERVER_ROOT + process.env.SERVICE_AUTH_ACCESS_CONTROL_IP_PATH, 'utf8', (error, fileBuffer) => {
+            fs.readFile(global.SERVER_ROOT + ConfigGet(0, null, 'FILE_CONFIG_AUTH_BLOCKIP'), 'utf8', (error, fileBuffer) => {
                 if (error)
                     return callBack(error, null);
                 else{
@@ -43,11 +45,11 @@ module.exports = {
                             ]
             }
         */
-        if (process.env.SERVICE_AUTH_ACCESS_CONTROL_USER_AGENT){
-            let json;
-            fs.readFile(global.SERVER_ROOT + process.env.SERVICE_AUTH_ACCESS_CONTROL_USER_AGENT_PATH, 'utf8', (error, fileBuffer) => {
+        if (ConfigGet(1, 'SERVICE_AUTH', 'ACCESS_CONTROL_USER_AGENT') == 1){
+            let json;  
+            fs.readFile(global.SERVER_ROOT + ConfigGet(0, null, 'FILE_CONFIG_AUTH_USERAGENT'), 'utf8', (error, fileBuffer) => {
                 if (error)
-                    createLogAppSE(process.env.SERVER_APP_COMMON_APP_ID, __appfilename, __appfunction, __appline, error).then(function(){
+                    createLogAppSE(ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), __appfilename, __appfunction, __appline, error).then(function(){
                         return callBack(error, null);
                     })
                 else{
@@ -83,15 +85,15 @@ module.exports = {
             }
         */
         const fs = require("fs");
-        if (process.env.SERVICE_AUTH_POLICY_DIRECTIVES){
+        if (ConfigGet(1, 'SERVICE_AUTH', 'ENABLE_POLICY') == 1){
             let json;
             let script_src = '';
             let style_src = '';
             let font_src = '';
             let frame_src = '';
-            fs.readFile(global.SERVER_ROOT + process.env.SERVICE_AUTH_POLICY_DIRECTIVES, 'utf8', (error, fileBuffer) => {
+            fs.readFile(global.SERVER_ROOT + ConfigGet(0, null, 'FILE_CONFIG_AUTH_POLICY'), 'utf8', (error, fileBuffer) => {
                 if (error){
-                    createLogAppSE(process.env.SERVER_APP_COMMON_APP_ID, __appfilename, __appfunction, __appline, error).then(function(){
+                    createLogAppSE(ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), __appfilename, __appfunction, __appline, error).then(function(){
                         return callBack(error, null);
                     })
                 }
