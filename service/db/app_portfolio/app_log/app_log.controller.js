@@ -8,7 +8,7 @@ module.exports = {
 		body.server_user_agent 			 = req.headers["user-agent"];
 		body.server_http_host 			 = req.headers["host"];
 		body.server_http_accept_language = req.headers["accept-language"];	
-		if (ConfigGet(1, 'SERVICE_AUTH', 'ENABLE_DBLOG')==1)
+		if (ConfigGet(1, 'SERVICE_AUTH', 'ENABLE_DBLOG')=='1')
 			createLog(req.query.app_id, body, (err,results) => {
 				if (err)
 					return res.status(500).send({
@@ -30,7 +30,7 @@ module.exports = {
 		body.server_user_agent 			 = req.headers["user-agent"];
 		body.server_http_host 			 = req.headers["host"];
 		body.server_http_accept_language = req.headers["accept-language"];	
-		if (ConfigGet(1, 'SERVICE_AUTH', 'ENABLE_DBLOG')==1)
+		if (ConfigGet(1, 'SERVICE_AUTH', 'ENABLE_DBLOG')=='1')
 			createLogAdmin(req.query.app_id, body, (err,results) => {
 				if (err)
 					return res.status(500).send({

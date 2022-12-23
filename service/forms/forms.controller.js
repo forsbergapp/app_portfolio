@@ -12,7 +12,7 @@ module.exports = {
                         result.geoplugin_regionName + ', ' +
                         result.geoplugin_countryName;
         //check if maintenance
-        if (ConfigGet(0, null, 'MAINTENANCE')==1){
+        if (ConfigGet(0, null, 'MAINTENANCE')=='1'){
             const { getMaintenance } = require(global.SERVER_ROOT + "/apps");
             const app = getMaintenance(app_id,
                                         result.geoplugin_latitude,
@@ -59,7 +59,7 @@ module.exports = {
     req.query.app_id = app_id;
     req.query.app_user_id = null;
     req.query.callback=1;
-    if (ConfigGet(1, 'SERVICE_DB', 'START')==1){
+    if (ConfigGet(1, 'SERVICE_DB', 'START')=='1'){
         getIpAdmin(req, res, (err, result)=>{
             let gps_place = result.geoplugin_city + ', ' +
                             result.geoplugin_regionName + ', ' +
