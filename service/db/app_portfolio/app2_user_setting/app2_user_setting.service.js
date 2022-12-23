@@ -121,7 +121,7 @@ module.exports = {
 									WHERE aus2.user_account_app_user_account_id = ua.id
 									  AND aus2.user_account_app_app_id = :app_id
 									  AND :initial_setting = 1)`;
-		if (ConfigGet(1, 'SERVICE_DB', 'USE')==3)
+		if (ConfigGet(1, 'SERVICE_DB', 'USE')=='3')
 			sql = sql + ' RETURNING id';
 		parameters = {
 						description: data.description,

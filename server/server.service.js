@@ -159,16 +159,18 @@ module.exports = {
             if (err)
                 callBack(err, null);
             else{
-                let config_init = JSON.parse(fileBuffer.toString());
-                config_init['MAINTENANCE'] = value;
-                config_init['MODIFIED'] = new Date().toISOString();
-                config_init = JSON.stringify(config_init, undefined, 2);
+                let config_init_json = JSON.parse(fileBuffer.toString());
+                config_init_json['MAINTENANCE'] = value;
+                config_init_json['MODIFIED'] = new Date().toISOString();
+                config_init_json = JSON.stringify(config_init_json, undefined, 2);
                 //maintenance in this config file is only updated so no need for backup files
-                fs.writeFile(global.SERVER_ROOT + SERVER_CONFIG_INIT_PATH, config_init,  'utf8', (err, result_write_config) => {
+                fs.writeFile(global.SERVER_ROOT + SERVER_CONFIG_INIT_PATH, config_init_json,  'utf8', (err, result_write_config) => {
                     if (err)
                         callBack(err, null);
-                    else
+                    else{
+                        CONFIG_INIT = config_init_json;
                         callBack(null, null);
+                    }
                 })
             }
         })

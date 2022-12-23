@@ -86,7 +86,7 @@ module.exports = {
 			if (info)
 				resolve(createLogServerI(info));
 			else
-				if (ConfigGet(1, 'SERVICE_LOG', 'ENABLE_SERVER_VERBOSE')==1){
+				if (ConfigGet(1, 'SERVICE_LOG', 'ENABLE_SERVER_VERBOSE')=='1'){
 					const getCircularReplacer = () => {
 						const seen = new WeakSet();
 						return (key, value) => {
@@ -102,7 +102,7 @@ module.exports = {
 					resolve(createLogServerI('res:' + JSON.stringify(res, getCircularReplacer())));
 				}
 				else
-					if (ConfigGet(1, 'SERVICE_LOG', 'ENABLE_SERVER_INFO')==1){
+					if (ConfigGet(1, 'SERVICE_LOG', 'ENABLE_SERVER_INFO')=='1'){
 						resolve(createLogServerI(null,
 												 req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, 
 												 res.statusCode, res.statusMessage, 
