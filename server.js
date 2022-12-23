@@ -87,7 +87,7 @@ setVariables().then(function(){
         if (err){
           res.statusCode = 500;
           createLogServerE(req, res, err).then(function(){
-            res.redirect('https://' + req.headers.host);
+            res.redirect(req.headers.host);
           })
         }
         else{
@@ -200,15 +200,18 @@ setVariables().then(function(){
     });
     //change all requests from http to https and naked domains with prefix https://www. except localhost
     app.get('*', function (req,res, next){
-        //redirect from http to https
-        if (req.protocol=='http')
+      //redirect naked domain to www except for localhost
+      if (((req.headers.host.split('.').length - 1) == 1) &&
+        req.headers.host.indexOf('localhost')==-1)
+        return res.redirect('www.' + req.headers.host + req.originalUrl);
+      else{
+        //redirect from http to https if https enabled
+        if (req.protocol=='http' && ConfigGet(1, 'SERVER', 'HTTPS_ENABLE')=='1')
           return res.redirect('https://' + req.headers.host + req.originalUrl);
-        //redirect naked domain to www except for localhost
-        if (((req.headers.host.split('.').length - 1) == 1) &&
-          req.headers.host.indexOf('localhost')==-1)
-          return res.redirect('https://www.' + req.headers.host + req.originalUrl);
-        else
-          next();
+        else{
+          return next();
+        }
+      }
     })
     const {DBStart} = require (global.SERVER_ROOT + '/service/db/admin/admin.service');
     const {AppsStart} = require (global.SERVER_ROOT + '/apps');
