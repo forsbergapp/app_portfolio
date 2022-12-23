@@ -19,7 +19,7 @@ module.exports = {
                 ['<AppCommonProfileBtnTop/>', __dirname + '/../common/src/profile_btn_top.html'],
                 ['<AppDialogues/>', __dirname + '/src/dialogues.html']
               ];
-            if (ConfigGet(1, 'SERVICE_DB', 'START')==1){
+            if (ConfigGet(1, 'SERVICE_DB', 'START')=='1'){
                 getUserPreferences(app_id).then(function(user_preferences){
                     read_app_files('', files, (err, app)=>{
                         if (err)

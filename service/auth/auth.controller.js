@@ -11,7 +11,7 @@ module.exports = {
     access_control: (req, res, callBack) => {
         if (typeof req.query.app_id=='undefined' || req.query.app_id=='')
             req.query.app_id = ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID');
-        if (ConfigGet(1, 'SERVICE_AUTH', 'ACCESS_CONTROL_ENABLE')==1){
+        if (ConfigGet(1, 'SERVICE_AUTH', 'ACCESS_CONTROL_ENABLE')=='1'){
             let ip_v4 = req.ip.replace('::ffff:','');
             block_ip_control(ip_v4, (err, result_range) =>{
                 if (err)
@@ -31,7 +31,7 @@ module.exports = {
                     }
                     else{
                         //check if host exists
-                        if (ConfigGet(1, 'SERVICE_AUTH', 'ACCESS_CONTROL_HOST_EXIST')==1 &&
+                        if (ConfigGet(1, 'SERVICE_AUTH', 'ACCESS_CONTROL_HOST_EXIST')=='1' &&
                             typeof req.headers.host=='undefined'){
                             res.statusCode = 406;
                             res.statusMessage = `ip ${ip_v4} blocked, no host, tried URL: ${req.originalUrl}`;
@@ -45,7 +45,7 @@ module.exports = {
                             //check if accessed from domain and not os hostname
                             let os = require("os");
                             let this_hostname = os.hostname();
-                            if (ConfigGet(1, 'SERVICE_AUTH', 'ACCESS_CONTROL_ACCESS_FROM')==1 &&
+                            if (ConfigGet(1, 'SERVICE_AUTH', 'ACCESS_CONTROL_ACCESS_FROM')=='1' &&
                                 req.headers.host==this_hostname){
                                 res.statusCode = 406;
                                 res.statusMessage = `ip ${ip_v4} blocked, accessed from hostname ${this_hostname} not domain, tried URL: ${req.originalUrl}`;
@@ -77,7 +77,7 @@ module.exports = {
                                             }
                                             else{
                                                 //check if accept-language exists
-                                                if (ConfigGet(1, 'SERVICE_AUTH', 'ACCESS_CONTROL_ACCEPT_LANGUAGE')==1 &&
+                                                if (ConfigGet(1, 'SERVICE_AUTH', 'ACCESS_CONTROL_ACCEPT_LANGUAGE')=='1' &&
                                                     typeof req.headers["accept-language"]=='undefined'){
                                                     res.statusCode = 406;
                                                     res.statusMessage = `ip ${ip_v4} blocked, no accept-language, tried URL: ${req.originalUrl}`;
@@ -183,7 +183,7 @@ module.exports = {
     checkAccessToken: (req, res, next) => {
         //if user login is disabled then check also current logged in user
         //so they can't modify anything anymore with current accesstoken
-        if (ConfigGet(1, 'SERVICE_AUTH', 'ENABLE_USER_LOGIN')==1){
+        if (ConfigGet(1, 'SERVICE_AUTH', 'ENABLE_USER_LOGIN')=='1'){
             module.exports.checkAccessTokenCommon(req, res, next);
         }
         else{
@@ -227,7 +227,7 @@ module.exports = {
         }
 	},
     checkDataTokenRegistration: (req, res, next) => {
-        if (ConfigGet(1, 'SERVICE_AUTH', 'ENABLE_USER_REGISTRATION')==1)
+        if (ConfigGet(1, 'SERVICE_AUTH', 'ENABLE_USER_REGISTRATION')=='1')
             module.exports.checkDataToken(req, res, next);
         else{
             //return 403 Forbidden
@@ -238,7 +238,7 @@ module.exports = {
             
     },
     checkDataTokenLogin: (req, res, next) => {
-        if (ConfigGet(1, 'SERVICE_AUTH', 'ENABLE_USER_LOGIN')==1)
+        if (ConfigGet(1, 'SERVICE_AUTH', 'ENABLE_USER_LOGIN')=='1')
             module.exports.checkDataToken(req, res, next);
         else{
             //return 403 Forbidden

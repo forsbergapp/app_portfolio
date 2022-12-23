@@ -10,7 +10,7 @@ function IPtoNum(ip){
 const fs = require("fs");
 module.exports = {
     block_ip_control: async (ip_v4, callBack) =>{
-        if (ConfigGet(1, 'SERVICE_AUTH', 'ACCESS_CONTROL_IP') == 1){
+        if (ConfigGet(1, 'SERVICE_AUTH', 'ACCESS_CONTROL_IP') == '1'){
             let ranges;
             fs.readFile(global.SERVER_ROOT + ConfigGet(0, null, 'FILE_CONFIG_AUTH_BLOCKIP'), 'utf8', (error, fileBuffer) => {
                 if (error)
@@ -45,7 +45,7 @@ module.exports = {
                             ]
             }
         */
-        if (ConfigGet(1, 'SERVICE_AUTH', 'ACCESS_CONTROL_USER_AGENT') == 1){
+        if (ConfigGet(1, 'SERVICE_AUTH', 'ACCESS_CONTROL_USER_AGENT') == '1'){
             let json;  
             fs.readFile(global.SERVER_ROOT + ConfigGet(0, null, 'FILE_CONFIG_AUTH_USERAGENT'), 'utf8', (error, fileBuffer) => {
                 if (error)
@@ -85,7 +85,7 @@ module.exports = {
             }
         */
         const fs = require("fs");
-        if (ConfigGet(1, 'SERVICE_AUTH', 'ENABLE_POLICY') == 1){
+        if (ConfigGet(1, 'SERVICE_AUTH', 'ENABLE_POLICY') == '1'){
             let json;
             let script_src = '';
             let style_src = '';
