@@ -2,13 +2,22 @@ const {ConfigGet} = require(global.SERVER_ROOT + '/server/server.service');
 const { createLog} = require (global.SERVER_ROOT +  ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH') + "/app_log/app_log.service");
 module.exports = {
 	getReport: async (req, res) => {
-		let decodedparameters = Buffer.from(req.query.reportid, 'base64').toString('utf-8')
-		const querystring = require('querystring');
-		req.query.app_id = querystring.parse(decodedparameters).app_id;
-		req.query.module = querystring.parse(decodedparameters).module;
-		req.query.format = querystring.parse(decodedparameters).format;
-		req.query.ps = querystring.parse(decodedparameters).ps;
-		req.query.hf = querystring.parse(decodedparameters).hf;
+		let decodedparameters = Buffer.from(req.query.reportid, 'base64').toString('utf-8');
+		//example string:
+		//'app_id=2&module=timetable.html&id=1&sid=1&type=0&lang_code=en-us&format=PDF&ps=A4&hf=0'
+		let query_parameters = '{';
+		decodedparameters.split('&').forEach((parameter, index)=>{
+			query_parameters += `"${parameter.split('=')[0]}": "${parameter.split('=')[1]}"`;
+			if (index < decodedparameters.split('&').length - 1)
+				query_parameters += ',';
+		});
+		query_parameters += '}';
+		query_parameters = JSON.parse(query_parameters);
+		req.query.app_id = query_parameters.app_id;
+		req.query.module = query_parameters.module;
+		req.query.format = query_parameters.format;
+		req.query.ps = query_parameters.ps;
+		req.query.hf = query_parameters.hf;
 		//called if format=html or not PDF or puppeteer creating PDF
 		req.query.callback=1;
 		const { getIp} = require (global.SERVER_ROOT + "/service/geolocation/geolocation.controller");

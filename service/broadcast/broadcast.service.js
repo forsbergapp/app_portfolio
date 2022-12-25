@@ -1,5 +1,5 @@
 const {ConfigGet} = require(global.SERVER_ROOT + '/server/server.service');
-global.broadcast_clients = [];
+let CONNECTED_CLIENTS = [];
 module.exports = {
     ClientConnect: (res) =>{
         const headers = {
@@ -10,19 +10,19 @@ module.exports = {
     },
     ClientClose: (res, client_id) =>{
         res.on('close', ()=>{
-            broadcast_clients = broadcast_clients.filter(client => client.id !== client_id);
+            CONNECTED_CLIENTS = CONNECTED_CLIENTS.filter(client => client.id !== client_id);
             res.end();
         })
     },
     ClientAdd: (newClient) =>{
-        broadcast_clients.push(newClient);
+        CONNECTED_CLIENTS.push(newClient);
     },
     BroadcastCheckMaintenance: ()=> {
         //start interval if apps are started
         if (ConfigGet(1, 'SERVER', 'APP_START')=='1'){
             const intervalId = setInterval(() => {
                 if (ConfigGet(0, null, 'MAINTENANCE')=='1'){
-                    broadcast_clients.forEach(client=>{
+                    CONNECTED_CLIENTS.forEach(client=>{
                         if (client.app_id != ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID')){
                             const broadcast =`{"broadcast_type" :"MAINTENANCE", 
                                             "broadcast_message":""}`;
@@ -40,7 +40,7 @@ module.exports = {
         if (broadcast_type=='INFO' || broadcast_type=='MAINTENANCE'){
             //broadcast INFO or MAINTENANCE to all connected to given app_id 
             //except MAINTENANCE to admin and current user
-            broadcast_clients.forEach(client=>{
+            CONNECTED_CLIENTS.forEach(client=>{
                 if (client.id != client_id_current)
                     if (broadcast_type=='MAINTENANCE' && client.app_id ==0)
                         null;
@@ -55,7 +55,7 @@ module.exports = {
         else
             if (broadcast_type=='CHAT'){
                 //broadcast CHAT to specific client
-                broadcast_clients.forEach(client=>{
+                CONNECTED_CLIENTS.forEach(client=>{
                     if (client.id == client_id){
                         broadcast =`{"broadcast_type"   : "${broadcast_type}", 
                                     "broadcast_message": "${broadcast_message}"}`;
@@ -73,7 +73,7 @@ module.exports = {
         if (broadcast_type=='INFO' || broadcast_type=='CHAT'){
             //admin can only broadcast INFO or CHAT
             if (broadcast_type=='INFO'){
-                broadcast_clients.forEach(client=>{
+                CONNECTED_CLIENTS.forEach(client=>{
                     if (client.id != client_id_current)
                         if (client.app_id == app_id || app_id == null){
                             broadcast =`{"broadcast_type"   : "${broadcast_type}", 
@@ -84,7 +84,7 @@ module.exports = {
             }
             if (broadcast_type=='CHAT'){
                 //broadcast CHAT to specific client
-                broadcast_clients.forEach(client=>{
+                CONNECTED_CLIENTS.forEach(client=>{
                     if (client.id == client_id){
                         broadcast =`{"broadcast_type"   : "${broadcast_type}", 
                                     "broadcast_message": "${broadcast_message}"}`;
@@ -98,10 +98,10 @@ module.exports = {
         callBack(null, null);
     },
     ConnectedList: async (app_id, app_id_select, limit, year, month, order_by, sort, callBack)=>{
-        let broadcast_clients_no_res = [];
+        let connected_clients_no_res = [];
         let i=0;
         const { getAppRole } = require(global.SERVER_ROOT +  ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH') + "/user_account/user_account.service");
-        broadcast_clients.forEach(client=>{
+        CONNECTED_CLIENTS.forEach(client=>{
             if (client.app_id == app_id_select || app_id_select == ''){
                 i++;
                 let copyClient;
@@ -124,7 +124,7 @@ module.exports = {
                                 gps_longitude: client.gps_longitude,
                                 identity_provider_id: client.identity_provider_id
                             };
-                            broadcast_clients_no_res.push(copyClient);
+                            connected_clients_no_res.push(copyClient);
                         }
                 }
             }
@@ -190,21 +190,21 @@ module.exports = {
                     column_sort = 'connection_date';
                 }
             }
-            callBack(null, broadcast_clients_no_res.sort(sortByProperty(column_sort, order_by_num)));
+            callBack(null, connected_clients_no_res.sort(sortByProperty(column_sort, order_by_num)));
         }
         
             i=0;
-            if (broadcast_clients_no_res.length>0)
+            if (connected_clients_no_res.length>0)
                 //update list using map with app role icons if database started
                 if(ConfigGet(1, 'SERVICE_DB', 'START')==1){
-                    broadcast_clients_no_res.map(client=>{
+                    connected_clients_no_res.map(client=>{
                         getAppRole(app_id, client.user_account_id, (err, result_app_role)=>{
                             if (err)
                                 callBack(err, null);
                             else{
                                 client.app_role_id = result_app_role.app_role_id;
                                 client.app_role_icon = result_app_role.icon;
-                                if (i== broadcast_clients_no_res.length - 1) 
+                                if (i== connected_clients_no_res.length - 1) 
                                     sort_and_return();
                                 else
                                     i++;
@@ -222,21 +222,21 @@ module.exports = {
     ConnectedCount: (identity_provider_id, count_logged_in, callBack)=>{
         let i=0;
         let count_connected=0;
-        for (let i = 0; i < broadcast_clients.length; i++){
+        for (let i = 0; i < CONNECTED_CLIENTS.length; i++){
             if ((count_logged_in==1 &&
-                 broadcast_clients[i].identity_provider_id == identity_provider_id &&
+                 CONNECTED_CLIENTS[i].identity_provider_id == identity_provider_id &&
                  identity_provider_id !='' &&
-                 broadcast_clients[i].user_account_id != '') ||
+                 CONNECTED_CLIENTS[i].user_account_id != '') ||
                 (count_logged_in==1 &&
                  identity_provider_id =='' &&
-                 broadcast_clients[i].identity_provider_id =='' &&
-                 (broadcast_clients[i].user_account_id != '' ||
-                  broadcast_clients[i].system_admin == 1)) ||
+                 CONNECTED_CLIENTS[i].identity_provider_id =='' &&
+                 (CONNECTED_CLIENTS[i].user_account_id != '' ||
+                  CONNECTED_CLIENTS[i].system_admin == 1)) ||
                 (count_logged_in==0 && 
                  identity_provider_id =='' &&
-                 broadcast_clients[i].identity_provider_id =='' &&
-                 broadcast_clients[i].user_account_id =='' &&
-                 broadcast_clients[i].system_admin == 0))
+                 CONNECTED_CLIENTS[i].identity_provider_id =='' &&
+                 CONNECTED_CLIENTS[i].user_account_id =='' &&
+                 CONNECTED_CLIENTS[i].system_admin == 0))
                 {
                 count_connected = count_connected + 1;
             }
@@ -245,12 +245,12 @@ module.exports = {
     },
     ConnectedUpdate: (client_id, user_account_id, system_admin, identity_provider_id, callBack) =>{
         let i=0;
-        for (let i = 0; i < broadcast_clients.length; i++){
-            if (broadcast_clients[i].id==client_id){
-                broadcast_clients[i].user_account_id = user_account_id;
-                broadcast_clients[i].system_admin = system_admin;
-                broadcast_clients[i].connection_date = new Date().toISOString();
-                broadcast_clients[i].identity_provider_id = identity_provider_id;
+        for (let i = 0; i < CONNECTED_CLIENTS.length; i++){
+            if (CONNECTED_CLIENTS[i].id==client_id){
+                CONNECTED_CLIENTS[i].user_account_id = user_account_id;
+                CONNECTED_CLIENTS[i].system_admin = system_admin;
+                CONNECTED_CLIENTS[i].connection_date = new Date().toISOString();
+                CONNECTED_CLIENTS[i].identity_provider_id = identity_provider_id;
                 return callBack(null, null);
             }
         }
@@ -258,8 +258,8 @@ module.exports = {
     },
     ConnectedCheck: (user_account_id, callBack)=>{
         let i=0;
-        for (let i = 0; i < broadcast_clients.length; i++){
-            if (broadcast_clients[i].user_account_id == user_account_id){
+        for (let i = 0; i < CONNECTED_CLIENTS.length; i++){
+            if (CONNECTED_CLIENTS[i].user_account_id == user_account_id){
                 return callBack(null, 1);
             }
         }

@@ -2,7 +2,7 @@ const {ConfigGet} = require(global.SERVER_ROOT + '/server/server.service');
 const { createLogAppSE } = require(global.SERVER_ROOT + "/service/log/log.controller");
 const { createLogDB } = require(global.SERVER_ROOT + "/service/log/log.service");
 
-const { oracledb, get_pool} = require(global.SERVER_ROOT + "/service/db/admin/admin.service");
+const { ORACLEDB, get_pool} = require(global.SERVER_ROOT + "/service/db/admin/admin.service");
 
 function log_db_sql(app_id, sql, parameters){
 	let parsed_sql = sql;
@@ -70,7 +70,7 @@ async function execute_db_sql(app_id, sql, parameters,
 		case '2':{
 			let pool2;
 			try{
-				pool2 = await oracledb.getConnection(get_pool(app_id));
+				pool2 = await ORACLEDB.getConnection(get_pool(app_id));
 				const result = await pool2.execute(sql, parameters, (err,result) => {
 														if (err) {
 															createLogAppSE(app_id, app_filename, app_function, app_line, `${err.message}, SQL:${sql.substring(0,100)}...`).then(function(){
