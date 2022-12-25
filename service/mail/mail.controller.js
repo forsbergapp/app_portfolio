@@ -18,8 +18,7 @@ module.exports = {
             //image called direct without parameters
             req.query.et = null;
         }
-        let path = require('path');
-        res.sendFile(path.resolve(__dirname + `/../../apps/app${req.query.app_id}/mail/logo.png`), (err) =>{
+        res.sendFile(global.SERVER_ROOT + `/apps/app${req.query.app_id}/mail/logo.png`, (err) =>{
             if (err){
                 createLogAppSE(req.query.app_id, __appfilename, __appfunction, __appline, err).then(function(){
                     return res.send(null);
