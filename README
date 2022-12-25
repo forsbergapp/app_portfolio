@@ -113,6 +113,11 @@ Installation instructions
 
 1. download from Github
 
+	windows
+	cd %HOMEPATH%
+	linux
+	cd $HOME
+
 	mkdir app_portfolio
    	cd app_portfolio
    	git clone https://github.com/appportfolio/app_portfolio.git
@@ -234,13 +239,18 @@ Installation instructions
    	default passsword APP_1_portfolio for all users
 
 4. start Node.js on supported Node.js platform
+	windows
+	cd %HOMEPATH%\app_portfolio
+	linux
+	cd $HOME/app_portfolio
+
    	starts without logging and restarts automatically when files are changed:
    	pm2 start server.js --name app_portfolio -o "/dev/null" -e "/dev/null" --watch --ignore-watch=".well-known logs node_modules"
 	start JSON log:
 	windows:
-	start /b pm2 logs --json>{SERVICE_LOG_FILE_PATH_SERVER}{SERVICE_LOG_PM2_FILE}
+	start /b pm2 logs --json>%HOMEPATH%\app_portfolio\config\PM2_LOG.json
 	linux:   
-	nohup pm2 logs --json>{SERVICE_LOG_FILE_PATH_SERVER}{SERVICE_LOG_PM2_FILE} &
+	nohup pm2 logs --json>$HOME/app_portfolio/config/PM2_LOG.json &
 
 5. enter app url, localhost or hosted on a domain, in browser to configure admin and set default parameters
 

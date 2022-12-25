@@ -203,7 +203,10 @@ setVariables().then(function(){
       //redirect naked domain to www except for localhost
       if (((req.headers.host.split('.').length - 1) == 1) &&
         req.headers.host.indexOf('localhost')==-1)
-        return res.redirect('www.' + req.headers.host + req.originalUrl);
+        if (req.protocol=='http' && ConfigGet(1, 'SERVER', 'HTTPS_ENABLE')=='1')
+          return res.redirect('https://' + 'www.' + req.headers.host + req.originalUrl);
+        else
+          return res.redirect('http://' + 'www.' + req.headers.host + req.originalUrl);
       else{
         //redirect from http to https if https enabled
         if (req.protocol=='http' && ConfigGet(1, 'SERVER', 'HTTPS_ENABLE')=='1')
