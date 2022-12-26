@@ -528,7 +528,7 @@ function show_image(item_img, item_input, image_width, image_height) {
 function getHostname(){
     return `${location.protocol}//${location.hostname}${location.port==''?'':':' + location.port}`;
 }
-function check_input(text, text_length=100){
+function check_input(text, text_length=100, nodb_message=false){
     if (text==null || text=='')
         return true;
     else{
@@ -537,19 +537,28 @@ function check_input(text, text_length=100){
             if (text.includes('"') ||
                 text.includes('\\')){
                 //not valid text
-                show_message('ERROR', 20309, null, null, window.global_common_app_id);
+                if (nodb_message==true)
+                    show_message('INFO', null, null, window.global_icon_message_error, window.global_app_id);
+                else
+                    show_message('ERROR', 20309, null, null, window.global_common_app_id);
                 return false;
             }
         } catch (error) {
             //not valid text
-            show_message('ERROR', 20309, null, null, window.global_common_app_id);
+            if (nodb_message==true)
+                show_message('INFO', null, null, window.global_icon_message_error, window.global_app_id);
+            else
+                show_message('ERROR', 20309, null, null, window.global_common_app_id);
             return false;
         }
         try {
             //check default max length 100 characters or parameter value
             if (text.length>text_length){
                 //text too long
-                show_message('ERROR', 20310, null, null, window.global_common_app_id);
+                if (nodb_message==true)
+                    show_message('INFO', null, null, window.global_icon_message_error, window.global_app_id);
+                else
+                    show_message('ERROR', 20310, null, null, window.global_common_app_id);
                 return false;
             }
         } catch (error) {

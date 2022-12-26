@@ -39,7 +39,9 @@ ul#admin_login_nav li{
 	cursor: pointer;
 	font-size: 1.5em;
 }
-
+#admin_first_time, #system_admin_login_password_confirm{
+	display:none;
+}
 #admin_login_logo {
 	background-image: url('/admin/images/logo.png');
 	background-size: contain;
