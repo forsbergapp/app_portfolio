@@ -1,12 +1,14 @@
 global.SERVER_ROOT = __dirname;
-const {setVariables, ConfigGet} = require(global.SERVER_ROOT + '/server/server.service')
-global.ConfigGet = ConfigGet;
-setVariables().then(function(){
+const {CheckFirstTime, InitConfig, ConfigGet} = require(global.SERVER_ROOT + '/server/server.service')
+//logging
+const { setLogVariables} = require( global.SERVER_ROOT + '/service/log/log.service');
+const { createLogServerI, createLogServerE} = require(global.SERVER_ROOT + '/service/log/log.controller');
+//Logging variables
+setLogVariables();
+
+InitConfig().then(function(){
     //Express framework
     const express = require ('express');
-    //logging
-    const { setLogVariables} = require( global.SERVER_ROOT + '/service/log/log.service');
-    const { createLogServerI, createLogServerE} = require(global.SERVER_ROOT + '/service/log/log.controller');
     //https
     const https = require('https');
     //read from file system
@@ -15,12 +17,6 @@ setVariables().then(function(){
     const helmet = require('helmet');
     //Create express application
     const app = express();
-    //configuration file
-
-    //require('dotenv').config({path:global.SERVER_ROOT+'/config/.env'})
-
-    //Logging variables
-    setLogVariables();
 
     //set timezone
     process.env.TZ = 'UTC';
@@ -200,19 +196,24 @@ setVariables().then(function(){
     });
     //change all requests from http to https and naked domains with prefix https://www. except localhost
     app.get('*', function (req,res, next){
-      //redirect naked domain to www except for localhost
-      if (((req.headers.host.split('.').length - 1) == 1) &&
-        req.headers.host.indexOf('localhost')==-1)
-        if (req.protocol=='http' && ConfigGet(1, 'SERVER', 'HTTPS_ENABLE')=='1')
-          return res.redirect('https://' + 'www.' + req.headers.host + req.originalUrl);
-        else
-          return res.redirect('http://' + 'www.' + req.headers.host + req.originalUrl);
+      //if first time, when no system admin exists, then redirect everything to admin
+      if (CheckFirstTime() && req.originalUrl !='/admin' && req.headers.referer==undefined)
+        return res.redirect('http://' + req.headers.host + '/admin');
       else{
-        //redirect from http to https if https enabled
-        if (req.protocol=='http' && ConfigGet(1, 'SERVER', 'HTTPS_ENABLE')=='1')
-          return res.redirect('https://' + req.headers.host + req.originalUrl);
+        //redirect naked domain to www except for localhost
+        if (((req.headers.host.split('.').length - 1) == 1) &&
+          req.headers.host.indexOf('localhost')==-1)
+          if (req.protocol=='http' && ConfigGet(1, 'SERVER', 'HTTPS_ENABLE')=='1')
+            return res.redirect('https://' + 'www.' + req.headers.host + req.originalUrl);
+          else
+            return res.redirect('http://' + 'www.' + req.headers.host + req.originalUrl);
         else{
-          return next();
+          //redirect from http to https if https enabled
+          if (req.protocol=='http' && ConfigGet(1, 'SERVER', 'HTTPS_ENABLE')=='1')
+            return res.redirect('https://' + req.headers.host + req.originalUrl);
+          else{
+            return next();
+          }
         }
       }
     })

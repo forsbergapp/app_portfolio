@@ -18,6 +18,9 @@ function start_admin_secure(app){
     document.getElementById('admin_login_password_input').value='';
     document.getElementById('system_admin_login_username_input').value='';
     document.getElementById('system_admin_login_password_input').value='';
+    document.getElementById('admin_first_time').style.display = 'none';
+    document.getElementById('system_admin_login_password_confirm_input').value='';
+    document.getElementById('system_admin_login_password_confirm').style.display = 'none';
     let secure_div = 'admin_secure';                 
     document.getElementById(secure_div).style.visibility = 'visible';
     document.getElementById(secure_div).innerHTML = app;
@@ -37,6 +40,39 @@ function start_admin_secure(app){
 async function admin_login(){
     let old_button = document.getElementById('admin_login_button').innerHTML;
     if (document.getElementById('system_admin_login').style.display == 'block'){
+        if (document.getElementById("system_admin_login_username_input").value == '') {
+            show_message('INFO', null, null, window.global_icon_app_system_admin + ' ' + window.global_icon_message_text, window.global_common_app_id);
+            return callBack('ERROR', null);
+        }
+        if (document.getElementById("system_admin_login_password_input").value == '') {
+            show_message('INFO', null, null, window.global_icon_user_password + ' ' + window.global_icon_message_text, window.global_common_app_id);
+            return callBack('ERROR', null);
+        }
+        if (check_input(document.getElementById("system_admin_login_username_input").value, 100, true) == false || 
+            check_input(document.getElementById("system_admin_login_password_input").value, 100, true)== false)
+            return callBack('ERROR', null);
+        //no : in username
+        if (document.getElementById("system_admin_login_username_input").value.indexOf(':') > -1) {
+            show_message('INFO', null, null, window.global_icon_app_system_admin + ' ":" ' + window.global_icon_message_error, window.global_common_app_id);
+            return callBack('ERROR', null);
+        }
+        //no : in username
+        if (document.getElementById("system_admin_login_password_input").value.indexOf(':') > -1) {
+            show_message('INFO', null, null, window.global_icon_user_password + ' ":" ' + window.global_icon_message_error, window.global_common_app_id);
+            return callBack('ERROR', null);
+        }
+        //if first time then password confirm is shown
+        if (document.getElementById("system_admin_login_password_confirm").style.display == 'block'){
+            if (document.getElementById("system_admin_login_password_confirm_input").value == '') {
+                show_message('INFO', null, null, window.global_icon_user_password + ' ' + window.global_icon_message_text, window.global_common_app_id);
+                return callBack('ERROR', null);
+            }
+            if (document.getElementById("system_admin_login_password_input").value != 
+                document.getElementById("system_admin_login_password_confirm_input").value) {
+                show_message('INFO', null, null, window.global_icon_user_password + ' <> ' + window.global_icon_user_password, window.global_common_app_id);
+                return callBack('ERROR', null);
+            }
+        }
         let status;
         let json;
         fetch('/service/auth/admin',
@@ -247,11 +283,19 @@ function init(parameters){
         document.getElementById('system_admin_login_title').innerHTML = window.global_icon_app_system_admin;
         document.getElementById('system_admin_login_username_icon').innerHTML = window.global_icon_app_system_admin;
         document.getElementById('system_admin_login_password_icon').innerHTML = window.global_icon_user_password;
+        
         document.getElementById('admin_login_button').innerHTML = window.global_icon_app_login;
 
         document.getElementById('message_close').innerHTML = window.global_icon_app_close;
         document.getElementById('admin_login_username_icon').innerHTML = window.global_icon_user;
         document.getElementById('admin_login_password_icon').innerHTML = window.global_icon_user_password;
+        if (parameters.first_time == 1){
+            document.getElementById('admin_first_time').innerHTML = window.global_icon_init;
+            document.getElementById('admin_first_time').style.display = 'block';
+            document.getElementById('system_admin_login_password_confirm').style.display = 'block';
+            document.getElementById('system_admin_login_password_icon_confirm').innerHTML = window.global_icon_user_password;
+        }
+
         if (parameters.system_admin_only == 1){
             document.getElementById('admin_login_nav').style.display = 'none';
             document.getElementById('admin_login').style.display = 'none';

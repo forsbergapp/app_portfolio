@@ -1,0 +1,8 @@
+{
+    "user_agent": [
+            {"Name": "YahooMailProxy", 
+            "user_agent": "YahooMailProxy; https://help.yahoo.com/kb/yahoo-mail-proxy-SLN28749.html"},
+            {"Name": "Let's Encrypt validation", 
+            "user_agent": "Mozilla/5.0 (compatible; Let's Encrypt validation server; +https://www.letsencrypt.org)"}
+        ]
+}

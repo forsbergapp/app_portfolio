@@ -1,4 +1,4 @@
-const {ConfigGet} = require(global.SERVER_ROOT + '/server/server.service');
+const {CheckFirstTime, ConfigGet} = require(global.SERVER_ROOT + '/server/server.service');
 const { getParameters_server } = require (global.SERVER_ROOT + ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH') + "/app_parameter/app_parameter.service");
 const { getApp } = require(global.SERVER_ROOT + ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH') + "/app/app.service");
 const { createLogAppSE } = require(global.SERVER_ROOT + "/service/log/log.controller");
@@ -162,6 +162,11 @@ async function get_module_with_init(app_id,
             system_admin_only = 1;
         else
             system_admin_only = 0;
+        let first_time = null;
+        if (CheckFirstTime()){
+            //no system admin created yet, user will be prompt first time
+            first_time = 1;
+        }
         let parameters = {   
             app_id: app_id,
             app_name: 'SYSTEM ADMIN',
@@ -181,7 +186,8 @@ async function get_module_with_init(app_id,
             service_auth: '/service/auth',
             rest_api_db_path: ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH'),
             rest_app_parameter: '/service/app_parameter',
-            common_app_id: ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID')
+            common_app_id: ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),
+            first_time: first_time
         };
         module = module.replace(
                 '<ITEM_COMMON_PARAMETERS/>',
@@ -214,7 +220,8 @@ async function get_module_with_init(app_id,
                     app_rest_client_secret: result[0].app_rest_client_secret,
                     rest_api_db_path: ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH'),
                     rest_app_parameter: result[0].rest_app_parameter,
-                    common_app_id: ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID')
+                    common_app_id: ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),
+                    first_time: null
                 };
                 if (system_admin==1){  
                     module = module.replace(
@@ -369,7 +376,7 @@ module.exports = {
         })
     },
     check_app_subdomain: (app_id, host) =>{
-        //if using test subdomains, dns wil point to correct server
+        //if using test subdomains, dns will point to correct server
         switch (app_id){
             case parseInt(ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID')):{
                 //show admin app for all subdomains
