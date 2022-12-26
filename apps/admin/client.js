@@ -93,7 +93,7 @@ module.exports = {
                             '<AppProfileTop/>',
                             '');
                         get_module_with_init(app_id,
-                                            null,
+                                            1,  //system admin, no db available
                                             null,  
                                             'admin_exception_before',
                                             null, //do not close eventsource before

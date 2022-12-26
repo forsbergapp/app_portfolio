@@ -1,0 +1,17 @@
+{
+    "directives":
+        [
+            { "type": "script",
+            "domain": "'self', 'unsafe-inline', 'unsafe-eval'"
+            },
+            { "type": "style",
+            "domain": "'self', 'unsafe-inline', fonts.googleapis.com"
+            },
+            { "type": "font",
+            "domain": "'self', fonts.gstatic.com"
+            },
+            { "type": "frame",
+            "domain": "'self', data:, "
+            }
+        ]
+}

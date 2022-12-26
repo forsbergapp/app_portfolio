@@ -4,6 +4,7 @@ function pm2log(log){
     
 async function remote_log(log){
     return await new Promise(function (resolve){ 
+        const {ConfigGet} = require(global.SERVER_ROOT + '/server/server.service');
         if (ConfigGet(1, 'SERVICE_LOG', 'DESTINATION')=='1' ||
             ConfigGet(1, 'SERVICE_LOG', 'DESTINATION')=='2'){
             //url destination
@@ -45,6 +46,7 @@ async function remote_log(log){
 }
 async function sendLog(logscope, loglevel, log){
     return await new Promise(function (resolve){ 
+        const {ConfigGet} = require(global.SERVER_ROOT + '/server/server.service');
         let filename;
         let logdate = new Date();
         //make log nice and compact
@@ -57,7 +59,6 @@ async function sendLog(logscope, loglevel, log){
         }
         let month = logdate.toLocaleString("en-US", { month: "2-digit"});
         let day   = logdate.toLocaleString("en-US", { day: "2-digit"});
-        const {ConfigGet} = require(global.SERVER_ROOT + '/server/server.service');
         if (ConfigGet(1, 'SERVICE_LOG', 'FILE_INTERVAL')=='1D')
             filename = `${logscope}_${loglevel}_${logdate.getFullYear()}${month}${day}.log`;
         else
@@ -131,6 +132,7 @@ module.exports = {
     createLogServerE: async (ip, host, protocol, originalUrl, method, statusCode, 
 					   user_agent, accept_language, referer, err) =>{
         return await new Promise(function (resolve){ 
+            const {ConfigGet} = require(global.SERVER_ROOT + '/server/server.service');
             let log_json_server;
             log_json_server = `{"logdate": "${logdate()}",
                                 "ip":"${ip}",
@@ -156,10 +158,10 @@ module.exports = {
                              statusCode, statusMessage,
                              user_agent, accept_language, referer) =>{
         return await new Promise(function (resolve){ 
+            const {ConfigGet} = require(global.SERVER_ROOT + '/server/server.service');
             let log_level;
             let log_json_server;  
             let logtext;  
-            const {ConfigGet} = require(global.SERVER_ROOT + '/server/server.service');
             if(ConfigGet(1, 'SERVICE_LOG', 'ENABLE_SERVER_VERBOSE')==1)
                 log_level = ConfigGet(1, 'SERVICE_LOG', 'LEVEL_VERBOSE');
             else
@@ -209,6 +211,7 @@ module.exports = {
     },
     createLogDB: async (app_id, logtext) =>{
         return await new Promise(function (resolve){ 
+            const {ConfigGet} = require(global.SERVER_ROOT + '/server/server.service');
             if (ConfigGet(1, 'SERVICE_LOG', 'ENABLE_DB')=='1'){
                 let log_json_db = `{"logdate": "${logdate()}",
                                     "ip":"",
@@ -234,6 +237,7 @@ module.exports = {
     },
     createLogAppS: async (level_info, app_id, app_filename, app_function_name, app_line, logtext)=>{
         return await new Promise(function (resolve){ 
+            const {ConfigGet} = require(global.SERVER_ROOT + '/server/server.service');
             let log_json =`{"logdate": "${logdate()}",
                             "ip":"",
                             "host": "${require('os').hostname()}",
@@ -257,6 +261,7 @@ module.exports = {
                     ip, host, protocol, originalUrl, method, statusCode, 
                     user_agent, accept_language, referer) =>{
         return await new Promise(function (resolve){ 
+            const {ConfigGet} = require(global.SERVER_ROOT + '/server/server.service');
             let log_json =`{"logdate": "${logdate()}",
                             "ip":"${ip}",
                             "host": "${host}",
@@ -280,6 +285,7 @@ module.exports = {
                      ip, host, protocol, originalUrl, method, statusCode, 
                     user_agent, accept_language, referer) => {
         return await new Promise(function (resolve){  
+            const {ConfigGet} = require(global.SERVER_ROOT + '/server/server.service');
             if (ConfigGet(1, 'SERVICE_LOG', 'ENABLE_ROUTER')=='1'){
                 let log_json =`{"logdate": "${logdate()}",
                                 "ip":"${ip}",
@@ -304,6 +310,7 @@ module.exports = {
         })
 	},
     getParameters: (app_id, callBack) => {
+        const {ConfigGet} = require(global.SERVER_ROOT + '/server/server.service');
         let results = {};
         results.SERVICE_LOG_SCOPE_SERVER = ConfigGet(1, 'SERVICE_LOG', 'SCOPE_SERVER');
         results.SERVICE_LOG_SCOPE_SERVICE = ConfigGet(1, 'SERVICE_LOG', 'SCOPE_SERVICE');
@@ -325,6 +332,7 @@ module.exports = {
     },
     getLogs: (app_id, data, callBack) => {
         let fs = require('fs');
+        const {ConfigGet} = require(global.SERVER_ROOT + '/server/server.service');
         let filename;
 
         if (parseInt(data.month) <10)
@@ -452,6 +460,7 @@ module.exports = {
     },
     getFiles: (app_id, callBack) => {
         let fs = require('fs');
+        const {ConfigGet} = require(global.SERVER_ROOT + '/server/server.service');
         let logfiles =[];
         fs.readdir(global.SERVER_ROOT + ConfigGet(0, null, 'PATH_LOG'), (err, files) => {
             if (err) {
@@ -474,6 +483,7 @@ module.exports = {
     },
     getPM2Logs: (app_id, callBack) => {
         let fs = require('fs');
+        const {ConfigGet} = require(global.SERVER_ROOT + '/server/server.service');
         try {
             let fixed_log = [];
             fs.readFile(global.SERVER_ROOT + ConfigGet(0, null, 'PATH_LOG') + ConfigGet(1, 'SERVICE_LOG', 'PM2_FILE'), 'utf8', (error, fileBuffer) => {

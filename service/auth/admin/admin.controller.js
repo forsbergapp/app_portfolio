@@ -1,4 +1,4 @@
-const {ConfigGet} = require(global.SERVER_ROOT + '/server/server.service');
+const {CheckFirstTime, ConfigGet, CreateSystemAdmin} = require(global.SERVER_ROOT + '/server/server.service');
 const { sign } = require("jsonwebtoken");
 const { verify } = require("jsonwebtoken");
 const { createLogAppCI } = require(global.SERVER_ROOT + "/service/log/log.controller");
@@ -28,9 +28,11 @@ module.exports = {
 		}
 	},
     authAdmin: (req, res) => {
-        if(req.headers.authorization){                
-            let userpass = new Buffer.from((req.headers.authorization || '').split(' ')[1] || '', 'base64').toString();
-            if (userpass == ConfigGet(6)['username'] + ':' + ConfigGet(6)['password']) {
+        function check_user(username, password){
+            let config_username = ConfigGet(6)['username'];
+            let config_password = ConfigGet(6)['password'];
+            if (username == config_username &&
+                password == config_password) {
                 let jsontoken_at;
                 jsontoken_at = sign ({tokentimstamp: Date.now()}, ConfigGet(1, 'SERVICE_AUTH', 'ADMIN_TOKEN_SECRET'), {
                                     expiresIn: ConfigGet(1, 'SERVICE_AUTH', 'ADMIN_TOKEN_EXPIRE_ACCESS')
@@ -47,6 +49,17 @@ module.exports = {
                         message: '⛔'
                     });
                 })
+        }
+        if(req.headers.authorization){                
+            let userpass = new Buffer.from((req.headers.authorization || '').split(' ')[1] || '', 'base64').toString();
+            let username = userpass.split(':')[0];
+            let password = userpass.split(':')[1];
+            if (CheckFirstTime())
+                CreateSystemAdmin(username, password, (err, result) =>{
+                    check_user(username, password);
+                })
+            else
+                check_user(username, password);
         }
         else
             return res.status(401).send({ 
