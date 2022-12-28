@@ -1,5 +1,6 @@
-SET DEFAULT ROLE role_app_admin TO app_admin;
-SET DEFAULT ROLE role_app_dba TO app_portfolio;
-SET DEFAULT ROLE role_app1 TO app1;
-SET DEFAULT ROLE role_app2 TO app2;
-SET DEFAULT ROLE role_app3 TO app3;
+GRANT role_app2, role_app_common TO role_app2;
+SET DEFAULT ROLE ALL TO app_admin;
+SET DEFAULT ROLE ALL TO app_portfolio;
+SET DEFAULT ROLE ALL TO app1;
+SET DEFAULT ROLE ALL TO app2;
+SET DEFAULT ROLE ALL TO app3;
