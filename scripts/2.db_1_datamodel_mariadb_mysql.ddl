@@ -1,9 +1,7 @@
 CREATE ROLE role_app_admin;
+CREATE ROLE role_app_common;
 CREATE ROLE role_app_dba;
-CREATE ROLE role_app1;
 CREATE ROLE role_app2;
-CREATE ROLE role_app3;
-
 
 CREATE USER app_admin IDENTIFIED BY 'APP_1_portfolio'
     ACCOUNT UNLOCK;
@@ -15,15 +13,14 @@ GRANT role_app_dba TO app_portfolio;
 
 CREATE USER app1 IDENTIFIED BY 'APP_1_portfolio'
     ACCOUNT UNLOCK;
-GRANT role_app1 TO app1;
+GRANT role_app_common TO app1;
 
 CREATE USER app2 IDENTIFIED BY 'APP_1_portfolio'
     ACCOUNT UNLOCK;
-GRANT role_app2 TO app2;
 
 CREATE USER app3 IDENTIFIED BY 'APP_1_portfolio'
     ACCOUNT UNLOCK;
-GRANT role_app3 TO app3;
+GRANT role_app_common TO app3;
 
 CREATE TABLE app_portfolio.app (
     id        INTEGER NOT NULL,
@@ -35,13 +32,9 @@ CREATE TABLE app_portfolio.app (
 	CONSTRAINT app_pk PRIMARY KEY ( id )
 );
 
-GRANT SELECT ON app_portfolio.app TO role_app1;
-
-GRANT SELECT ON app_portfolio.app TO role_app3;
+GRANT SELECT ON app_portfolio.app TO role_app_common;
 
 GRANT ALL PRIVILEGES ON app_portfolio.app TO role_app_dba;
-
-GRANT SELECT ON app_portfolio.app TO role_app2;
 
 GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app TO role_app_admin;
 
@@ -51,11 +44,7 @@ CREATE TABLE app_portfolio.app_category (
     CONSTRAINT app_category_pk PRIMARY KEY ( id )
 );
 
-GRANT SELECT ON app_portfolio.app_category TO role_app1;
-
-GRANT SELECT ON app_portfolio.app_category TO role_app2;
-
-GRANT SELECT ON app_portfolio.app_category TO role_app3;
+GRANT SELECT ON app_portfolio.app_category TO role_app_common;
 
 GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_category TO role_app_admin;
 
@@ -69,11 +58,7 @@ CREATE TABLE app_portfolio.app_category_translation (
                                                          language_id )
 );
 
-GRANT SELECT ON app_portfolio.app_category_translation TO role_app1;
-
-GRANT SELECT ON app_portfolio.app_category_translation TO role_app2;
-
-GRANT SELECT ON app_portfolio.app_category_translation TO role_app3;
+GRANT SELECT ON app_portfolio.app_category_translation TO role_app_common;
 
 GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_category_translation TO role_app_admin;
 
@@ -86,11 +71,7 @@ CREATE TABLE app_portfolio.app_device (
                                            device_id )
 );
 
-GRANT SELECT ON app_portfolio.app_device TO role_app1;
-
-GRANT SELECT ON app_portfolio.app_device TO role_app2;
-
-GRANT SELECT ON app_portfolio.app_device TO role_app3;
+GRANT SELECT ON app_portfolio.app_device TO role_app_common;
 
 GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_device TO role_app_admin;
 
@@ -198,13 +179,9 @@ CREATE INDEX app_log_date_created_index ON
         date_created
     ASC );
 
-GRANT SELECT, INSERT ON app_portfolio.app_log TO role_app1;
-
-GRANT SELECT, INSERT ON app_portfolio.app_log TO role_app3;
+GRANT SELECT, INSERT ON app_portfolio.app_log TO role_app_common;
 
 GRANT ALL PRIVILEGES ON app_portfolio.app_log TO role_app_dba;
-
-GRANT SELECT, INSERT ON app_portfolio.app_log TO role_app2;
 
 GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_log TO role_app_admin;
 
@@ -215,13 +192,9 @@ CREATE TABLE app_portfolio.app_message (
                                             app_id )
 );
 
-GRANT SELECT ON app_portfolio.app_message TO role_app1;
-
-GRANT SELECT ON app_portfolio.app_message TO role_app3;
+GRANT SELECT ON app_portfolio.app_message TO role_app_common;
 
 GRANT ALL PRIVILEGES ON app_portfolio.app_message TO role_app_dba;
-
-GRANT SELECT ON app_portfolio.app_message TO role_app2;
 
 GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_message TO role_app_admin;
 
@@ -232,13 +205,9 @@ CREATE TABLE app_portfolio.app_object (
                                            app_id )
 );
 
-GRANT SELECT ON app_portfolio.app_object TO role_app1;
-
-GRANT SELECT ON app_portfolio.app_object TO role_app3;
+GRANT SELECT ON app_portfolio.app_object TO role_app_common;
 
 GRANT ALL PRIVILEGES ON app_portfolio.app_object TO role_app_dba;
-
-GRANT SELECT ON app_portfolio.app_object TO role_app2;
 
 GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_object TO role_app_admin;
 
@@ -253,15 +222,11 @@ CREATE TABLE app_portfolio.app_object_item (
                                                 object_item_name )
 );
 
-GRANT SELECT ON app_portfolio.app_object_item TO role_app1;
-
-GRANT SELECT ON app_portfolio.app_object_item TO role_app3;
+GRANT SELECT ON app_portfolio.app_object_item TO role_app_common;
 
 GRANT ALL PRIVILEGES ON app_portfolio.app_object_item TO role_app_dba;
 
 GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_object_item TO role_app_admin;
-
-GRANT SELECT ON app_portfolio.app_object_item TO role_app2;
 
 CREATE TABLE app_portfolio.app_object_item_subitem (
     app_object_item_app_object_app_id      INTEGER NOT NULL,
@@ -274,15 +239,11 @@ CREATE TABLE app_portfolio.app_object_item_subitem (
                                                         app_object_item_object_item_name
                                                             )
 );
-GRANT SELECT ON app_portfolio.app_object_item_subitem TO role_app1;
-
-GRANT SELECT ON app_portfolio.app_object_item_subitem TO role_app3;
+GRANT SELECT ON app_portfolio.app_object_item_subitem TO role_app_common;
 
 GRANT ALL PRIVILEGES ON app_portfolio.app_object_item_subitem TO role_app_dba;
 
 GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_object_item_subitem TO role_app_admin;
-
-GRANT SELECT ON app_portfolio.app_object_item_subitem TO role_app2;
 
 
 CREATE TABLE app_portfolio.app_object_item_translation (
@@ -297,13 +258,10 @@ CREATE TABLE app_portfolio.app_object_item_translation (
                                                             app_object_item_object_item_name
                                                           )
 );
-GRANT SELECT ON app_portfolio.app_object_item_translation TO role_app2;
 
 GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_object_item_translation TO role_app_admin;
 
-GRANT SELECT ON app_portfolio.app_object_item_translation TO role_app1;
-
-GRANT SELECT ON app_portfolio.app_object_item_translation TO role_app3;
+GRANT SELECT ON app_portfolio.app_object_item_translation TO role_app_common;
 
 GRANT ALL PRIVILEGES ON app_portfolio.app_object_item_translation TO role_app_dba;
 
@@ -322,13 +280,10 @@ CREATE TABLE app_portfolio.app_object_subitem_translation (
                                                                 app_object_item_subitem_subitem_name
                                                                 )
 );
-GRANT SELECT ON app_portfolio.app_object_subitem_translation TO role_app2;
 
 GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_object_subitem_translation TO role_app_admin;
 
-GRANT SELECT ON app_portfolio.app_object_subitem_translation TO role_app1;
-
-GRANT SELECT ON app_portfolio.app_object_subitem_translation TO role_app3;
+GRANT SELECT ON app_portfolio.app_object_subitem_translation TO role_app_common;
 
 GRANT ALL PRIVILEGES ON app_portfolio.app_object_subitem_translation TO role_app_dba;
 
@@ -343,11 +298,7 @@ CREATE TABLE app_portfolio.app_object_translation (
 );
 GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_object_translation TO role_app_admin;
 
-GRANT SELECT ON app_portfolio.app_object_translation TO role_app2;
-
-GRANT SELECT ON app_portfolio.app_object_translation TO role_app1;
-
-GRANT SELECT ON app_portfolio.app_object_translation TO role_app3;
+GRANT SELECT ON app_portfolio.app_object_translation TO role_app_common;
 
 GRANT ALL PRIVILEGES ON app_portfolio.app_object_translation TO role_app_dba;
 
@@ -362,11 +313,7 @@ CREATE TABLE app_portfolio.app_parameter (
 );
 GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_parameter TO role_app_admin;
 
-GRANT SELECT ON app_portfolio.app_parameter TO role_app2;
-
-GRANT SELECT ON app_portfolio.app_parameter TO role_app1;
-
-GRANT SELECT ON app_portfolio.app_parameter TO role_app3;
+GRANT SELECT ON app_portfolio.app_parameter TO role_app_common;
 
 GRANT ALL PRIVILEGES ON app_portfolio.app_parameter TO role_app_dba;
 
@@ -376,11 +323,7 @@ CREATE TABLE app_portfolio.app_role (
     icon      VARCHAR(10) NOT NULL
 );
 
-GRANT SELECT ON app_portfolio.app_role TO role_app1;
-
-GRANT SELECT ON app_portfolio.app_role TO role_app2;
-
-GRANT SELECT ON app_portfolio.app_role TO role_app3;
+GRANT SELECT ON app_portfolio.app_role TO role_app_common;
 
 GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_role TO role_app_admin;
 
@@ -396,11 +339,7 @@ CREATE TABLE app_portfolio.app_screenshot (
     CONSTRAINT app_screenshot_pk PRIMARY KEY ( id )
 );
 
-GRANT SELECT ON app_portfolio.app_screenshot TO role_app1;
-
-GRANT SELECT ON app_portfolio.app_screenshot TO role_app2;
-
-GRANT SELECT ON app_portfolio.app_screenshot TO role_app3;
+GRANT SELECT ON app_portfolio.app_screenshot TO role_app_common;
 
 GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_screenshot TO role_app_admin;
 
@@ -703,11 +642,7 @@ CREATE TABLE app_portfolio.country (
 );
 GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.country TO role_app_admin;
 
-GRANT SELECT ON app_portfolio.country TO role_app2;
-
-GRANT SELECT ON app_portfolio.country TO role_app1;
-
-GRANT SELECT ON app_portfolio.country TO role_app3;
+GRANT SELECT ON app_portfolio.country TO role_app_common;
 
 GRANT ALL PRIVILEGES ON app_portfolio.country TO role_app_dba;
 
@@ -718,11 +653,7 @@ CREATE TABLE app_portfolio.country_group (
 );
 GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.country_group TO role_app_admin;
 
-GRANT SELECT ON app_portfolio.country_group TO role_app1;
-
-GRANT SELECT ON app_portfolio.country_group TO role_app2;
-
-GRANT SELECT ON app_portfolio.country_group TO role_app3;
+GRANT SELECT ON app_portfolio.country_group TO role_app_common;
 
 GRANT ALL PRIVILEGES ON app_portfolio.country_group TO role_app_dba;
 
@@ -735,11 +666,7 @@ CREATE TABLE app_portfolio.country_translation (
 );
 GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.country_translation TO role_app_admin;
 
-GRANT SELECT ON app_portfolio.country_translation TO role_app1;
-
-GRANT SELECT ON app_portfolio.country_translation TO role_app2;
-
-GRANT SELECT ON app_portfolio.country_translation TO role_app3;
+GRANT SELECT ON app_portfolio.country_translation TO role_app_common;
 
 GRANT ALL PRIVILEGES ON app_portfolio.country_translation TO role_app_dba;
 
@@ -752,11 +679,7 @@ CREATE TABLE app_portfolio.device (
     CONSTRAINT device_pk PRIMARY KEY ( id )
 );
 
-GRANT SELECT ON app_portfolio.device TO role_app1;
-
-GRANT SELECT ON app_portfolio.device TO role_app2;
-
-GRANT SELECT ON app_portfolio.device TO role_app3;
+GRANT SELECT ON app_portfolio.device TO role_app_common;
 
 GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.device TO role_app_admin;
 
@@ -768,11 +691,7 @@ CREATE TABLE app_portfolio.device_type (
     CONSTRAINT device_type_pk   PRIMARY KEY ( id )
 );
 
-GRANT SELECT ON app_portfolio.device_type TO role_app1;
-
-GRANT SELECT ON app_portfolio.device_type TO role_app2;
-
-GRANT SELECT ON app_portfolio.device_type TO role_app3;
+GRANT SELECT ON app_portfolio.device_type TO role_app_common;
 
 GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.device_type TO role_app_admin;
 
@@ -789,11 +708,7 @@ GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.event TO role_app_admin;
 
 GRANT ALL PRIVILEGES ON app_portfolio.event TO role_app_dba;
 
-GRANT SELECT ON app_portfolio.event TO role_app1;
-
-GRANT SELECT ON app_portfolio.event TO role_app2;
-
-GRANT SELECT ON app_portfolio.event TO role_app3;
+GRANT SELECT ON app_portfolio.event TO role_app_common;
 
 CREATE TABLE app_portfolio.event_status (
     id          INT NOT NULL AUTO_INCREMENT,
@@ -801,11 +716,7 @@ CREATE TABLE app_portfolio.event_status (
     CONSTRAINT event_status_pk PRIMARY KEY ( id )
 );
 
-GRANT SELECT ON app_portfolio.event_status TO role_app1;
-
-GRANT SELECT ON app_portfolio.event_status TO role_app2;
-
-GRANT SELECT ON app_portfolio.event_status TO role_app3;
+GRANT SELECT ON app_portfolio.event_status TO role_app_common;
 
 GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.event_status TO role_app_admin;
 
@@ -821,11 +732,7 @@ GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.event_type TO role_app_adm
 
 GRANT ALL PRIVILEGES ON app_portfolio.event_type TO role_app_dba;
 
-GRANT SELECT ON app_portfolio.event_type TO role_app1;
-
-GRANT SELECT ON app_portfolio.event_type TO role_app2;
-
-GRANT SELECT ON app_portfolio.event_type TO role_app3;
+GRANT SELECT ON app_portfolio.event_type TO role_app_common;
 
 CREATE TABLE app_portfolio.identity_provider (
     id                      INTEGER NOT NULL,
@@ -840,11 +747,7 @@ CREATE TABLE app_portfolio.identity_provider (
     CONSTRAINT identity_provider_pk PRIMARY KEY ( id )
 );
 
-GRANT SELECT ON app_portfolio.identity_provider TO role_app1;
-
-GRANT SELECT ON app_portfolio.identity_provider TO role_app2;
-
-GRANT SELECT ON app_portfolio.identity_provider TO role_app3;
+GRANT SELECT ON app_portfolio.identity_provider TO role_app_common;
 
 GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.identity_provider TO role_app_admin;
 
@@ -864,11 +767,7 @@ CREATE INDEX lang_code_index ON
     ASC );
 GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.language TO role_app_admin;
 
-GRANT SELECT ON app_portfolio.language TO role_app1;
-
-GRANT SELECT ON app_portfolio.language TO role_app3;
-
-GRANT SELECT ON app_portfolio.language TO role_app2;
+GRANT SELECT ON app_portfolio.language TO role_app_common;
 
 GRANT ALL PRIVILEGES ON app_portfolio.language TO role_app_dba;
 
@@ -881,13 +780,9 @@ CREATE TABLE app_portfolio.language_translation (
 );
 GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.language_translation TO role_app_admin;
 
-GRANT SELECT ON app_portfolio.language_translation TO role_app3;
-
-GRANT SELECT ON app_portfolio.language_translation TO role_app2;
-
 GRANT ALL PRIVILEGES ON app_portfolio.language_translation TO role_app_dba;
 
-GRANT SELECT ON app_portfolio.language_translation TO role_app1;
+GRANT SELECT ON app_portfolio.language_translation TO role_app_common;
 
 CREATE TABLE app_portfolio.locale (
     language_id  INTEGER NOT NULL,
@@ -895,13 +790,9 @@ CREATE TABLE app_portfolio.locale (
 );
 GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.locale TO role_app_admin;
 
-GRANT SELECT ON app_portfolio.locale TO role_app3;
-
-GRANT SELECT ON app_portfolio.locale TO role_app2;
-
 GRANT ALL PRIVILEGES ON app_portfolio.locale TO role_app_dba;
 
-GRANT SELECT ON app_portfolio.locale TO role_app1;
+GRANT SELECT ON app_portfolio.locale TO role_app_common;
 
 ALTER TABLE app_portfolio.locale ADD CONSTRAINT locale_language_id_country_id_un UNIQUE ( language_id,
                                                      country_id );
@@ -914,11 +805,7 @@ CREATE TABLE app_portfolio.message (
 );
 GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.message TO role_app_admin;
 
-GRANT SELECT ON app_portfolio.message TO role_app1;
-
-GRANT SELECT ON app_portfolio.message TO role_app3;
-
-GRANT SELECT ON app_portfolio.message TO role_app2;
+GRANT SELECT ON app_portfolio.message TO role_app_common;
 
 GRANT ALL PRIVILEGES ON app_portfolio.message TO role_app_dba;
 
@@ -929,11 +816,7 @@ CREATE TABLE app_portfolio.message_level (
 );
 GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.message_level TO role_app_admin;
 
-GRANT SELECT ON app_portfolio.message_level TO role_app1;
-
-GRANT SELECT ON app_portfolio.message_level TO role_app3;
-
-GRANT SELECT ON app_portfolio.message_level TO role_app2;
+GRANT SELECT ON app_portfolio.message_level TO role_app_common;
 
 GRANT ALL PRIVILEGES ON app_portfolio.message_level TO role_app_dba;
 
@@ -948,13 +831,9 @@ CREATE TABLE app_portfolio.message_translation (
 );
 GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.message_translation TO role_app_admin;
 
-GRANT SELECT ON app_portfolio.message_translation TO role_app1;
-
-GRANT SELECT ON app_portfolio.message_translation TO role_app3;
+GRANT SELECT ON app_portfolio.message_translation TO role_app_common;
 
 GRANT ALL PRIVILEGES ON app_portfolio.message_translation TO role_app_dba;
-
-GRANT SELECT ON app_portfolio.message_translation TO role_app2;
 
 CREATE TABLE app_portfolio.message_type (
     id            INT NOT NULL AUTO_INCREMENT,
@@ -963,13 +842,9 @@ CREATE TABLE app_portfolio.message_type (
 );
 GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.message_type TO role_app_admin;
 
-GRANT SELECT ON app_portfolio.message_type TO role_app1;
-
-GRANT SELECT ON app_portfolio.message_type TO role_app3;
+GRANT SELECT ON app_portfolio.message_type TO role_app_common;
 
 GRANT ALL PRIVILEGES ON app_portfolio.message_type TO role_app_dba;
-
-GRANT SELECT ON app_portfolio.message_type TO role_app2;
 
 ALTER TABLE app_portfolio.message_type ADD CONSTRAINT message_type_message_type_un UNIQUE ( message_type );
 
@@ -979,13 +854,9 @@ CREATE TABLE app_portfolio.parameter_type (
 );
 GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.parameter_type TO role_app_admin;
 
-GRANT SELECT ON app_portfolio.parameter_type TO role_app1;
-
-GRANT SELECT ON app_portfolio.parameter_type TO role_app3;
+GRANT SELECT ON app_portfolio.parameter_type TO role_app_common;
 
 GRANT ALL PRIVILEGES ON app_portfolio.parameter_type TO role_app_dba;
-
-GRANT SELECT ON app_portfolio.parameter_type TO role_app2;
 
 ALTER TABLE app_portfolio.parameter_type ADD CONSTRAINT parameter_type_pk PRIMARY KEY ( id );
 
@@ -997,11 +868,7 @@ CREATE TABLE app_portfolio.parameter_type_translation (
                                                            language_id )
 );
 
-GRANT SELECT ON app_portfolio.parameter_type_translation TO role_app1;
-
-GRANT SELECT ON app_portfolio.parameter_type_translation TO role_app2;
-
-GRANT SELECT ON app_portfolio.parameter_type_translation TO role_app3;
+GRANT SELECT ON app_portfolio.parameter_type_translation TO role_app_common;
 
 GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.parameter_type_translation TO role_app_admin;
 
@@ -1018,13 +885,9 @@ CREATE TABLE app_portfolio.profile_search (
 );
 GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.profile_search TO role_app_admin;
 
-GRANT SELECT, INSERT ON app_portfolio.profile_search TO role_app1;
-
-GRANT SELECT, INSERT ON app_portfolio.profile_search TO role_app3;
+GRANT SELECT, INSERT ON app_portfolio.profile_search TO role_app_common;
 
 GRANT ALL PRIVILEGES ON app_portfolio.profile_search TO role_app_dba;
-
-GRANT SELECT, INSERT ON app_portfolio.profile_search TO role_app2;
 
 CREATE TABLE app_portfolio.setting (
     id              INT NOT NULL AUTO_INCREMENT,
@@ -1038,15 +901,11 @@ CREATE TABLE app_portfolio.setting (
     CONSTRAINT setting_pk PRIMARY KEY ( id )
 );
 
-GRANT SELECT ON app_portfolio.setting TO role_app1;
-
-GRANT SELECT ON app_portfolio.setting TO role_app3;
+GRANT SELECT ON app_portfolio.setting TO role_app_common;
 
 GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.setting TO role_app_admin;
 
 GRANT ALL PRIVILEGES ON app_portfolio.setting TO role_app_dba;
-
-GRANT SELECT ON app_portfolio.setting TO role_app2;
 
 CREATE TABLE app_portfolio.setting_translation (
     setting_id  INTEGER NOT NULL,
@@ -1056,16 +915,11 @@ CREATE TABLE app_portfolio.setting_translation (
                                                     language_id)
 );
 
-GRANT SELECT ON app_portfolio.setting_translation TO role_app1;
-
-GRANT SELECT ON app_portfolio.setting_translation TO role_app2;
+GRANT SELECT ON app_portfolio.setting_translation TO role_app_common;
 
 GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.setting_translation TO role_app_admin;
 
 GRANT ALL PRIVILEGES ON app_portfolio.setting_translation TO role_app_dba;
-
-GRANT SELECT ON app_portfolio.setting_translation TO role_app3;
-
                     
 CREATE TABLE app_portfolio.setting_type (
     id                          INT NOT NULL AUTO_INCREMENT,
@@ -1073,16 +927,11 @@ CREATE TABLE app_portfolio.setting_type (
     CONSTRAINT setting_type_pk PRIMARY KEY ( id )
 );
 
-GRANT SELECT ON app_portfolio.setting_type TO role_app2;
-
 GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.setting_type TO role_app_admin;
 
 GRANT ALL PRIVILEGES ON app_portfolio.setting_type TO role_app_dba;
 
-GRANT SELECT ON app_portfolio.setting_type TO role_app1;
-
-GRANT SELECT ON app_portfolio.setting_type TO role_app3;
-
+GRANT SELECT ON app_portfolio.setting_type TO role_app_common;
 	
 CREATE TABLE app_portfolio.user_account (
     id                    INT NOT NULL AUTO_INCREMENT,
@@ -1109,15 +958,11 @@ CREATE TABLE app_portfolio.user_account (
     app_role_id           INTEGER,
 	CONSTRAINT user_account_pk PRIMARY KEY ( id )
 );
-GRANT SELECT, INSERT, DELETE, UPDATE ON app_portfolio.user_account TO role_app1;
+GRANT SELECT, INSERT, DELETE, UPDATE ON app_portfolio.user_account TO role_app_common;
 
 GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.user_account TO role_app_admin;
 
-GRANT SELECT, INSERT, DELETE, UPDATE ON app_portfolio.user_account TO role_app3;
-
 GRANT ALL PRIVILEGES ON app_portfolio.user_account TO role_app_dba;
-
-GRANT SELECT, INSERT, DELETE, UPDATE ON app_portfolio.user_account TO role_app2;
 
 ALTER TABLE app_portfolio.user_account ADD CONSTRAINT user_account_provider_id_un UNIQUE ( provider_id );
 
@@ -1137,15 +982,11 @@ CREATE TABLE app_portfolio.user_account_app (
                                                  app_id
                                                  )
 );
-GRANT SELECT, INSERT, DELETE, UPDATE ON app_portfolio.user_account_app TO role_app1;
+GRANT SELECT, INSERT, DELETE, UPDATE ON app_portfolio.user_account_app TO role_app_common;
 
 GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.user_account_app TO role_app_admin;
 
-GRANT SELECT, INSERT, DELETE, UPDATE ON app_portfolio.user_account_app TO role_app3;
-
 GRANT ALL PRIVILEGES ON app_portfolio.user_account_app TO role_app_dba;
-
-GRANT SELECT, INSERT, DELETE, UPDATE ON app_portfolio.user_account_app TO role_app2;
 
 CREATE TABLE app_portfolio.user_account_app_hist (
     id                                                INTEGER NOT NULL AUTO_INCREMENT,
@@ -1160,15 +1001,11 @@ CREATE TABLE app_portfolio.user_account_app_hist (
     date_created                                      DATETIME,
     CONSTRAINT user_account_app_hist_pk PRIMARY KEY ( id )
 );
-GRANT SELECT, INSERT ON app_portfolio.user_account_app_hist TO role_app1;
+GRANT SELECT, INSERT ON app_portfolio.user_account_app_hist TO role_app_common;
 
 GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.user_account_app_hist TO role_app_admin;
 
-GRANT SELECT, INSERT ON app_portfolio.user_account_app_hist TO role_app3;
-
 GRANT ALL PRIVILEGES ON app_portfolio.user_account_app_hist TO role_app_dba;
-
-GRANT SELECT, INSERT ON app_portfolio.user_account_app_hist TO role_app2;
 
 CREATE TABLE app_portfolio.user_account_event (
     user_account_id             INTEGER NOT NULL,
@@ -1188,11 +1025,7 @@ CREATE TABLE app_portfolio.user_account_event (
     server_http_accept_language VARCHAR(1000)
 );
 
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.user_account_event TO role_app1;
-
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.user_account_event TO role_app2;
-
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.user_account_event TO role_app3;
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.user_account_event TO role_app_common;
 
 GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.user_account_event TO role_app_admin;
 
@@ -1206,15 +1039,11 @@ CREATE TABLE app_portfolio.user_account_follow (
     CONSTRAINT user_account_follow_id_un UNIQUE ( id ),
 	CONSTRAINT user_account_follow_pk PRIMARY KEY ( user_account_id, user_account_id_follow )
 );
-GRANT SELECT, INSERT, DELETE, UPDATE ON app_portfolio.user_account_follow TO role_app1;
+GRANT SELECT, INSERT, DELETE, UPDATE ON app_portfolio.user_account_follow TO role_app_common;
 
 GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.user_account_follow TO role_app_admin;
 
-GRANT SELECT, INSERT, DELETE, UPDATE ON app_portfolio.user_account_follow TO role_app3;
-
 GRANT ALL PRIVILEGES ON app_portfolio.user_account_follow TO role_app_dba;
-
-GRANT SELECT, INSERT, DELETE, UPDATE ON app_portfolio.user_account_follow TO role_app2;
 
 CREATE TABLE app_portfolio.user_account_follow_hist (
     id                      INT NOT NULL AUTO_INCREMENT,
@@ -1226,15 +1055,11 @@ CREATE TABLE app_portfolio.user_account_follow_hist (
     date_created            DATETIME,
 	CONSTRAINT user_account_follow_hist_pk PRIMARY KEY ( id )
 );
-GRANT SELECT, INSERT ON app_portfolio.user_account_follow_hist TO role_app1;
+GRANT SELECT, INSERT ON app_portfolio.user_account_follow_hist TO role_app_common;
 
 GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.user_account_follow_hist TO role_app_admin;
 
-GRANT SELECT, INSERT ON app_portfolio.user_account_follow_hist TO role_app3;
-
 GRANT ALL PRIVILEGES ON app_portfolio.user_account_follow_hist TO role_app_dba;
-
-GRANT SELECT, INSERT ON app_portfolio.user_account_follow_hist TO role_app2;
 
 CREATE TABLE app_portfolio.user_account_hist (
     id                    INT NOT NULL AUTO_INCREMENT,
@@ -1263,15 +1088,11 @@ CREATE TABLE app_portfolio.user_account_hist (
     app_role_id           INTEGER,
 	CONSTRAINT user_account_hist_pk PRIMARY KEY ( id )
 );
-GRANT SELECT, INSERT ON app_portfolio.user_account_hist TO role_app1;
+GRANT SELECT, INSERT ON app_portfolio.user_account_hist TO role_app_common;
 
 GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.user_account_hist TO role_app_admin;
 
-GRANT SELECT, INSERT ON app_portfolio.user_account_hist TO role_app3;
-
 GRANT ALL PRIVILEGES ON app_portfolio.user_account_hist TO role_app_dba;
-
-GRANT SELECT, INSERT ON app_portfolio.user_account_hist TO role_app2;
 
 CREATE TABLE app_portfolio.user_account_like (
     id                    INT NOT NULL AUTO_INCREMENT,
@@ -1281,15 +1102,11 @@ CREATE TABLE app_portfolio.user_account_like (
     CONSTRAINT user_account_like_id_un UNIQUE ( id ),
 	CONSTRAINT user_account_like_pk PRIMARY KEY ( user_account_id, user_account_id_like )
 );
-GRANT SELECT, INSERT, DELETE, UPDATE ON app_portfolio.user_account_like TO role_app1;
+GRANT SELECT, INSERT, DELETE, UPDATE ON app_portfolio.user_account_like TO role_app_common;
 
 GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.user_account_like TO role_app_admin;
 
-GRANT SELECT, INSERT, DELETE, UPDATE ON app_portfolio.user_account_like TO role_app3;
-
 GRANT ALL PRIVILEGES ON app_portfolio.user_account_like TO role_app_dba;
-
-GRANT SELECT, INSERT, DELETE, UPDATE ON app_portfolio.user_account_like TO role_app2;
 
 CREATE TABLE app_portfolio.user_account_like_hist (
     id                    INT NOT NULL AUTO_INCREMENT,
@@ -1301,15 +1118,11 @@ CREATE TABLE app_portfolio.user_account_like_hist (
     date_created          DATETIME,
 	CONSTRAINT user_account_like_hist_pk PRIMARY KEY ( id )
 );
-GRANT SELECT, INSERT ON app_portfolio.user_account_like_hist TO role_app1;
+GRANT SELECT, INSERT ON app_portfolio.user_account_like_hist TO role_app_common;
 
 GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.user_account_like_hist TO role_app_admin;
 
-GRANT SELECT, INSERT ON app_portfolio.user_account_like_hist TO role_app3;
-
 GRANT ALL PRIVILEGES ON app_portfolio.user_account_like_hist TO role_app_dba;
-
-GRANT SELECT, INSERT ON app_portfolio.user_account_like_hist TO role_app2;
 
 CREATE TABLE app_portfolio.user_account_logon (
     user_account_id    INTEGER NOT NULL,
@@ -1322,15 +1135,11 @@ CREATE TABLE app_portfolio.user_account_logon (
     client_latitude    VARCHAR(100),
     date_created       DATETIME NOT NULL
 );
-GRANT SELECT, INSERT, DELETE, UPDATE ON app_portfolio.user_account_logon TO role_app1;
+GRANT SELECT, INSERT, DELETE, UPDATE ON app_portfolio.user_account_logon TO role_app_common;
 
 GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.user_account_logon TO role_app_admin;
 
-GRANT SELECT, INSERT, DELETE, UPDATE ON app_portfolio.user_account_logon TO role_app3;
-
 GRANT ALL PRIVILEGES ON app_portfolio.user_account_logon TO role_app_dba;
-
-GRANT SELECT, INSERT, DELETE, UPDATE ON app_portfolio.user_account_logon TO role_app2;
 
 ALTER TABLE app_portfolio.user_account_logon ADD CONSTRAINT user_account_logon_access_token_un UNIQUE ( access_token );
 
@@ -1343,15 +1152,11 @@ CREATE TABLE app_portfolio.user_account_view (
     client_latitude       VARCHAR(100),
     date_created          DATETIME NOT NULL
 );
-GRANT SELECT, INSERT, DELETE, UPDATE ON app_portfolio.user_account_view TO role_app1;
+GRANT SELECT, INSERT, DELETE, UPDATE ON app_portfolio.user_account_view TO role_app_common;
 
 GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.user_account_view TO role_app_admin;
 
-GRANT SELECT, INSERT, DELETE, UPDATE ON app_portfolio.user_account_view TO role_app3;
-
 GRANT ALL PRIVILEGES ON app_portfolio.user_account_view TO role_app_dba;
-
-GRANT SELECT, INSERT, DELETE, UPDATE ON app_portfolio.user_account_view TO role_app2;
 
 CREATE TABLE app_portfolio.user_account_view_hist (
     id                    INT NOT NULL AUTO_INCREMENT,
@@ -1366,15 +1171,11 @@ CREATE TABLE app_portfolio.user_account_view_hist (
     date_created          DATETIME,
 	CONSTRAINT user_account_view_hist_pk PRIMARY KEY ( id )
 );
-GRANT SELECT, INSERT ON app_portfolio.user_account_view_hist TO role_app1;
+GRANT SELECT, INSERT ON app_portfolio.user_account_view_hist TO role_app_common;
 
 GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.user_account_view_hist TO role_app_admin;
 
-GRANT SELECT, INSERT ON app_portfolio.user_account_view_hist TO role_app3;
-
 GRANT ALL PRIVILEGES ON app_portfolio.user_account_view_hist TO role_app_dba;
-
-GRANT SELECT, INSERT ON app_portfolio.user_account_view_hist TO role_app2;
 
 ALTER TABLE app_portfolio.app
     ADD CONSTRAINT app_app_category_fk FOREIGN KEY ( app_category_id )
