@@ -43,7 +43,7 @@ module.exports = {
         })
     },
     ConfigSave: (req,res) =>{
-        ConfigSave(req.body.config_no, req.body.config_json, (err, result)=>{
+        ConfigSave(req.body.config_no, req.body.config_json, false, (err, result)=>{
             if (err){
                 return res.status(500).send(
                     err
