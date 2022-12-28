@@ -152,7 +152,8 @@ function setEvents(system_admin_only=0){
         if (event.target.id=='admin_login_username_input' ||
             event.target.id=='admin_login_password_input' ||
             event.target.id=='system_admin_login_username_input' ||
-            event.target.id=='system_admin_login_password_input')
+            event.target.id=='system_admin_login_password_input' ||
+            event.target.id=='system_admin_login_password_confirm_input')
             if (event.code === 'Enter') {
                 event.preventDefault();
                 admin_login();
