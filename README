@@ -111,245 +111,43 @@ Includes
 
 Installation instructions
 
-1. download from Github
+1. Download and info about folders
 
-	windows
-	cd %HOMEPATH%
-	linux
-	cd $HOME
+   see /docs/1.download_and_info.md
 
-	mkdir app_portfolio
-   	cd app_portfolio
-   	git clone https://github.com/appportfolio/app_portfolio.git
+2. Install Node.js and modules on server
 
-	.gitignore content:
-		.vscode/									for Visual Code development
-		config/										configuration files
-		dev/										development files, put your private work here
-		logs/										log files
-		production_.env/							keep copy of production files
-		node_modules/								NodeJS modules (400Mb+)
-		service/db/config/oracle_instantclient/		Oracle Client
-		service/report/tmp/							temporary Report directory
+   see /docs/2.install_nodejs.md
 
-2. install Node.js and modules on server
-
-	install desired version of NodeJS
-
-	modules required:
-	npm install axios bcryptjs dotenv express helmet jsonwebtoken nodemailer mariadb mysql oracledb pg
-	npm install puppeteer
-	//puppeteer on some Linux with additional yum installations:
-		npm install puppeteer --unsafe-perm=true
-		sudo yum install atk
-		sudo yum install at-spi2-atk
-		sudo yum install cups-libs
-		sudo yum install libdrm
-		sudo yum install libxkbcommon
-		sudo yum install libXcomposite
-		sudo yum install libXdamage
-		sudo yum install libXrandr
-		sudo yum install mesa-libgbm
-		sudo yum install pango
-		sudo yum install alsa-lib
-
-	npm install -g pm2
-
-3. install MariaDB/MySQL/Oracle/PostgreSQL on same server or other server
+3. Install MariaDB/MySQL/Oracle/PostgreSQL on same server or other server
    and run db scripts
 
-   	For Oracle Database, install Oracle Instant Client
-   	www.oracle.com/database/technologies/instant-client.html
+   see /docs/3.install_database.md
 
-   	use Unicode characterset to support emojis and all languages
-
-   	run as root or admin/dba in this order:
-	scripts/1.db_1_create_db_mariadb.ddl 		MariaDB
-	scripts/1.db_1_create_db_mysql.ddl 			MySQL
-	scripts/1.db_3_create_db_postgresql.ddl 	PostgreSQL
-	scripts/2.db_1_datamodel_mariadb_mysql.ddl 	MariaDB and MySQL
-	scripts/2.db_2_datamodel_oracle.ddl 		Oracle
-	scripts/2.db_3_datamodel_postgresql.ddl 	PostgreSQL
-	scripts/3.db_1_grant_role_fix_mariadb.ddl	MariaDB
-	scripts/3.db_1_grant_role_fix_mysql.ddl		MySQL
-	scripts/3.db_2_grant_role_fix_oracle.ddl 	Oracle
-
-	scripts/4.db_all_insert_data.sql			MariaDB, MySQL, Oracle, PostgreSQL (creates admin as superadmin user)
-	scripts/4.db_1_insert_data_with_secret.sql	MariaDB and MySQL
-	scripts/4.db_2_insert_data_with_secret.sql	Oracle
-	scripts/4.db_3_insert_data_with_secret.sql	PostgreSQL
-	scripts/5.db_all_lang_*.sql					MariaDB, MySQL, Oracle, PostgreSQL
-												concatenate files
-												Linux:
-												cat 5.db_all_lang_*.sql > 5.db_all.sql
-												Windows:
-												type 5.db_all_lang_*.sql> 5.db_all.sql
-												
-												run script with unicode parameter, add other parameters if needed
-												MariaDB:
-												mariadb -uroot -p -h localhost app_portfolio --default-character-set=utf8mb4 <5.db_all.sql
-												MySQL:
-												mysql -uroot -p -h localhost app_portfolio --default-character-set=utf8mb4 <5.db_all.sql
-												
-												Oracle from Linux:
-												---------------------
-												export LD_LIBRARY_PATH={PATH}
-												export PATH={PATH}
-												export ORACLE_HOME={PATH}
-												export NLS_LANG=AMERICAN_AMERICA.AL32UTF8
-												export TNS_ADMIN={PATH}
-												sqlplus admin@{TNS_STRING}
-												SET DEFINE OFF
-												SET AUTOCOMMIT ON
-												@5.db_all.sql
-
-												PostgreSQL
-												----------
-												set PGCLIENTENCODING=UTF8
-												psql -U postgres -h localhost -d app_portfolio -f 5.db_all.sql
-
-	scripts/6.db_1_demo_mariadb_mysql.sql		MariaDB and MySQL
-	scripts/6.db_2_demo_oracle.sql				Oracle
-	scripts/6.db_3_demo_postgresql.sql			PostgreSQL
-									 
-	uninstall scripts:
-	7.db_1_uninstall.sql						MariaDB and MySQL
-	7.db_2_uninstall.sql						Oracle
-	7.db_3_uninstall.sql						PostgreSQL
-
-   	USER CREATED		ROLE AND APP_ID INFO
-   	------------		--------------------
-   	app_portfolio		role ROLE_APP_DBA
-						database user, do not use in app,
-						use app users with less privileges
-						for a more secure app
-
-   	app_admin			role ROLE_APP_ADMIN
-						app admin in app
-						DELETE/INSERT/SELECT/UPATE all tables, but no DDL
-   	app1				role ROLE_APP1
-						app_id=1
-   
-   	app2 				role ROLE_APP2
-						app_id=2
-   
-   	app3 				role ROLE_APP3
-						app_id=3
-
-   	default passsword APP_1_portfolio for all users
-
-4. start Node.js on supported Node.js platform
-	windows
-	cd %HOMEPATH%\app_portfolio
-	linux
-	cd $HOME/app_portfolio
-
-   	starts without logging and restarts automatically when files are changed:
-   	pm2 start server.js --name app_portfolio -o "/dev/null" -e "/dev/null" --watch --ignore-watch=".well-known logs node_modules"
-	start JSON log:
-	windows:
-	start /b pm2 logs --json>%HOMEPATH%\app_portfolio\config\PM2_LOG.json
-	linux:   
-	nohup pm2 logs --json>$HOME/app_portfolio/config/PM2_LOG.json &
-
-5. enter app url, localhost or hosted on a domain, in browser to configure admin and set default parameters
-
-	set admin username and password first time
+4. Start Node.js on supported Node.js platform including process monitor
 	
-	Set parameters as needed. Default database is MariaDB on localhost
-	
-	Generate ssl files for https, start using letsencrypt for a domain and
-	use self sign for localhost or use other ssl provider. Copy ssl files
-	to ssl directory.
+   see /docs/4.start_nodejs.md
 
-	When database and server configured:
-	SERVER
-		APP_START = 1
-		HTTPS_ENABLE=1
-		HTTPS_KEY = /ssl/server.key
-		HTTPS_CERT = /ssl/server.crt
-	SERVICE DB
-		START = 1
-	SERVICE AUTH
-		ENABLE_GEOLOCATION = 1
-		ENABLE_USER_REGISTRATION=1
+5. Enter application at http://localhost/admin or http://[yourdomain]/admin
 
-	enter as system admin and server parameter menu
-	to adjust settings and to see comments about
-	parameters
+   Set parameters and instructions for SSL.
 
-	all files should be relative to root of /app_portfolio
-	if path outside directory is needed then use ln for linux or mklink for windows.
+   see /docs/5.server_parameters_ssl.md
 
-	temporary cache directory for Pupeteer:
-	/service/report/tmp
-	empty cache when needed
+6. Set database parameters
 
-6.  database parameters
-	set in admin app as admin not system admin (user with configuration icon)
+   see /docs/6.database_parameters.md
 
-	parameter types:
-	0 = Public
-	1 = Private shared values sent to app 
-		such as copyright info, api keys, email address or social url links
-	2 = Private values with account names and passwords and sensitive data only available 
-		from NodeJS server such as database, auth control and email parameters
-
-	sign in provider management:
+7. About sign in provider management:
    
-   	disabled support because of providers not supporting single page application (SPA)
-   	project only allows SPA, however datamodel and all SPA support provider usage for future use
-   	and to display how to integrate external user providers
+   see /docs/7.sign_in_provider.md
 
-   	TABLE identity_provider
-   	ID PROVIDER_NAME API_SRC API_SRC2 	API_VERSION API_ID 	IDENTITY_PROVIDER_ORDER ENABLED
-   	1  Provider1		url		js file		version		api key	1						0/1
-   	2  Provider2		url		js file		version		api key	2						0/1
+8. How to add new app
 
-   	enabled = 0 means no logon button will be displayed and no sdk will be loaded
+   see /docs/8.how_to_add_new_app.md
 
-   	apps/common/js/common.js
-		init_providers()		provider db control
-		provider_init()			provider init
-		updateProviderUser()	provider login
-		onProviderSignIn()		provider login management
-
-7. register email provider to send from server
-   	hostname, port, username, password
-   	Check if email provider allows sending from apps if using free account.
-
-8. how to add new app
-	optional db scripts:
-	scripts/*.*
-	
-	required files and folders
-	/apps/{APP_ID}*					contains client app files and server code
-	/apps/{APP_ID}/server.js		read by function load_apps_code() in /server.js
-									contains function getApp, const APP{APP_ID}_ID = {APP_ID} (ex APP1_ID = 1)
-									(loaded dynamically in server.js and should be unique variable name),
-									express app.use() and app.get() declarations
-	/apps/{APP_ID}/client.js		read by service/forms/forms.controller.js
-									contains function getApp(app_id, params) to start client app				
-									/apps/{APP_ID}/client.js
-	optional:
-	/apps/{APP_ID}/css				styles
-	/apps/{APP_ID}/images			images
-	/apps/{APP_ID}/js				js
-	/apps/{APP_ID}/info				info pages about disclaimer, privacy_policy, terms
-	/apps/{APP_ID}/mail				mail
-	/apps/{APP_ID}/report			reports
-	/apps/{APP_ID}/scripts			database scripts
-	/apps/{APP_ID}/sw.js			service worker for PWA apps
-	/service/db/api/app{APP_ID}*	rest api for app{APP_ID}
-
-9. App identification
-	Apps clients use window.global_app_id to identify themselves
-	Common and admin uses window.global_common_app_id derived from SERVER_APP_COMMON_APP_ID
-
-	Apps use APP{APP_ID}_ID variable in
-	apps/app{APP_ID}/server.js that is used to init the server generation of the client.
-
-10. Issues
-	Not supported:
-	Hijri transliteration on Android. 
-	Armenian language on Chrome or Chromium, use Edge or other for Puppeteer if needed.
+9. Issues
+   
+   Not supported:
+   Hijri transliteration on Android.
+   Armenian language on Chrome or Chromium, use Edge or other for Puppeteer if needed.

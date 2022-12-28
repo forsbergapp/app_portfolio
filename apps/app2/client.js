@@ -1,5 +1,5 @@
 const {ConfigGet} = require(global.SERVER_ROOT + '/server/server.service');
-const { read_app_files, get_module_with_init, countries } = require('../');
+const { read_app_files, get_module_with_init, countries } = require(global.SERVER_ROOT + '/apps/');
 const { getPlace } = require(global.SERVER_ROOT +  ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH') + "/app2_place/app2_place.service");
 const { getThemes } = require(global.SERVER_ROOT +  ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH') + "/app2_theme/app2_theme.service");
 module.exports = {
@@ -140,40 +140,40 @@ module.exports = {
                 const { getLocales } = require(global.SERVER_ROOT +  ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH') + "/language/locale/locale.service");
                 const { getSettings } = require(global.SERVER_ROOT +  ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH') + "/setting/setting.service");
                 const files = [
-                  ['APP', __dirname + '/src/index.html'],
-                  ['<AppCommonHeadPrayTimes/>', __dirname + '/../common/src/head_praytimes.html'],
-                  ['<AppCommonHeadRegional/>', __dirname + '/../common/src/head_regional.html'],
-                  ['<AppCommonHead/>', __dirname + '/../common/src/head.html'],
-                  ['<AppCommonHeadMap/>', __dirname + '/../common/src/head_map.html'],
-                  ['<AppCommonHeadQRCode/>', __dirname + '/../common/src/head_qrcode.html'],
-                  ['<AppCommonHeadFontawesome/>', __dirname + '/../common/src/head_fontawesome.html'],
-                  ['<AppCommonBody/>', __dirname + '/../common/src/body.html'],
-                  ['<AppCommonBodyMaintenance/>', __dirname + '/../common/src/body_maintenance.html'],
-                  ['<AppCommonBodyBroadcast/>', __dirname + '/../common/src/body_broadcast.html'],  
-                  ['<AppCommonProfileDetail/>', __dirname + '/../common/src/profile_detail.html'], //Profile tag in common body
+                  ['APP', global.SERVER_ROOT + '/apps/app2/src/index.html'],
+                  ['<AppCommonHeadPrayTimes/>', global.SERVER_ROOT + '/apps/common/src/head_praytimes.html'],
+                  ['<AppCommonHeadRegional/>', global.SERVER_ROOT + '/apps/common/src/head_regional.html'],
+                  ['<AppCommonHead/>', global.SERVER_ROOT + '/apps/common/src/head.html'],
+                  ['<AppCommonHeadMap/>', global.SERVER_ROOT + '/apps/common/src/head_map.html'],
+                  ['<AppCommonHeadQRCode/>', global.SERVER_ROOT + '/apps/common/src/head_qrcode.html'],
+                  ['<AppCommonHeadFontawesome/>', global.SERVER_ROOT + '/apps/common/src/head_fontawesome.html'],
+                  ['<AppCommonBody/>', global.SERVER_ROOT + '/apps/common/src/body.html'],
+                  ['<AppCommonBodyMaintenance/>', global.SERVER_ROOT + '/apps/common/src/body_maintenance.html'],
+                  ['<AppCommonBodyBroadcast/>', global.SERVER_ROOT + '/apps/common/src/body_broadcast.html'],  
+                  ['<AppCommonProfileDetail/>', global.SERVER_ROOT + '/apps/common/src/profile_detail.html'], //Profile tag in common body
                   
-                  ['<AppHead/>', __dirname + '/src/head.html'],
-                  ['<AppToolbarTop/>', __dirname + '/src/toolbar_top.html'],
+                  ['<AppHead/>', global.SERVER_ROOT + '/apps/app2/src/head.html'],
+                  ['<AppToolbarTop/>', global.SERVER_ROOT + '/apps/app2/src/toolbar_top.html'],
 
-                  ['<AppCommonUserAccount/>', __dirname + '/../common/src/user_account.html'],
-                  ['<AppThemes/>', __dirname + '/../common/src/app_themes.html'],
-                  ['<AppCommonProfileSearch/>', __dirname + '/../common/src/profile_search.html'],
+                  ['<AppCommonUserAccount/>', global.SERVER_ROOT + '/apps/common/src/user_account.html'],
+                  ['<AppThemes/>', global.SERVER_ROOT + '/apps/common/src/app_themes.html'],
+                  ['<AppCommonProfileSearch/>', global.SERVER_ROOT + '/apps/common/src/profile_search.html'],
 
-                  ['<AppPaper/>', __dirname + '/src/paper.html'],
-                  ['<AppSettingsTabNavigation/>', __dirname + '/src/settings_tab_navigation.html'],
-                  ['<AppSettingsTabNavigationTab1/>', __dirname + '/src/settings_tab_navigation_tab1.html'],
-                  ['<AppSettingsTabNavigationTab2/>', __dirname + '/src/settings_tab_navigation_tab2.html'],
-                  ['<AppSettingsTabNavigationTab3/>', __dirname + '/src/settings_tab_navigation_tab3.html'],
-                  ['<AppSettingsTabNavigationTab4/>', __dirname + '/src/settings_tab_navigation_tab4.html'],
-                  ['<AppSettingsTabNavigationTab5/>', __dirname + '/src/settings_tab_navigation_tab5.html'],
-                  ['<AppSettingsTabNavigationTab6/>', __dirname + '/src/settings_tab_navigation_tab6.html'],
-                  ['<AppSettingsTabNavigationTab7/>', __dirname + '/src/settings_tab_navigation_tab7.html'],
+                  ['<AppPaper/>', global.SERVER_ROOT + '/apps/app2/src/paper.html'],
+                  ['<AppSettingsTabNavigation/>', global.SERVER_ROOT + '/apps/app2/src/settings_tab_navigation.html'],
+                  ['<AppSettingsTabNavigationTab1/>', global.SERVER_ROOT + '/apps/app2/src/settings_tab_navigation_tab1.html'],
+                  ['<AppSettingsTabNavigationTab2/>', global.SERVER_ROOT + '/apps/app2/src/settings_tab_navigation_tab2.html'],
+                  ['<AppSettingsTabNavigationTab3/>', global.SERVER_ROOT + '/apps/app2/src/settings_tab_navigation_tab3.html'],
+                  ['<AppSettingsTabNavigationTab4/>', global.SERVER_ROOT + '/apps/app2/src/settings_tab_navigation_tab4.html'],
+                  ['<AppSettingsTabNavigationTab5/>', global.SERVER_ROOT + '/apps/app2/src/settings_tab_navigation_tab5.html'],
+                  ['<AppSettingsTabNavigationTab6/>', global.SERVER_ROOT + '/apps/app2/src/settings_tab_navigation_tab6.html'],
+                  ['<AppSettingsTabNavigationTab7/>', global.SERVER_ROOT + '/apps/app2/src/settings_tab_navigation_tab7.html'],
 
-                  ['<AppProfileInfo/>', __dirname + '/src/profile_info.html'], /*Profile tag in common body*/
-                  ['<AppProfileTop/>', __dirname + '/src/profile_top.html'],   //Profile tag in common body
-                  ['<AppDialogues/>', __dirname + '/src/dialogues.html'],
-                  ['<AppToolbarBottom/>', __dirname + '/src/toolbar_bottom.html'],
-                  ['<AppCommonProfileBtnTop/>', __dirname + '/../common/src/profile_btn_top.html']
+                  ['<AppProfileInfo/>', global.SERVER_ROOT + '/apps/app2/src/profile_info.html'], /*Profile tag in common body*/
+                  ['<AppProfileTop/>', global.SERVER_ROOT + '/apps/app2/src/profile_top.html'],   //Profile tag in common body
+                  ['<AppDialogues/>', global.SERVER_ROOT + '/apps/app2/src/dialogues.html'],
+                  ['<AppToolbarBottom/>', global.SERVER_ROOT + '/apps/app2/src/toolbar_bottom.html'],
+                  ['<AppCommonProfileBtnTop/>', global.SERVER_ROOT + '/apps/common/src/profile_btn_top.html']
                 ];
                 async function getAppComponents(app_id) {
                     return new Promise(function (resolve, reject){
@@ -409,7 +409,7 @@ module.exports = {
                 });
             }
             if (username!=null){
-                const {getProfileUser} = require('../..' + ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH') + '/user_account/user_account.service');
+                const {getProfileUser} = require(global.SERVER_ROOT + ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH') + '/user_account/user_account.service');
                 getProfileUser(app_id, null, username, null, (err,result)=>{
                     if (result)
                         main(app_id);

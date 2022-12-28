@@ -71,7 +71,7 @@ module.exports = {
         // return /service/mail not the full OS path and with forward slash
         const baseUrl = __dirname.substring(process.cwd().length).replace(/\\/g, "/");
 
-        const { getMail} = require(`../../apps/`);
+        const { getMail} = require(global.SERVER_ROOT + '/apps/');
         
         getParameters_server(req.query.app_id, data.app_id, (err, result)=>{
             if (err) {                
