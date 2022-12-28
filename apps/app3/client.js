@@ -3,17 +3,17 @@ module.exports = {
     getApp:(app_id, params, gps_lat, gps_long, gps_place) => {
         return new Promise(function (resolve, reject){
             const files = [
-                ['APP', __dirname + '/src/index.html'],
-                ['<AppCommonHeadFontawesome/>', __dirname + '/../common/src/head_fontawesome.html'],
-                ['<AppCommonHead/>', __dirname + '/../common/src/head.html'],
-                ['<AppCommonBody/>', __dirname + '/../common/src/body.html'],
-                ['<AppCommonBodyMaintenance/>', __dirname + '/../common/src/body_maintenance.html'],
-                ['<AppCommonBodyBroadcast/>', __dirname + '/../common/src/body_broadcast.html'],    
+                ['APP', global.SERVER_ROOT + '/apps/app3/src/index.html'],
+                ['<AppCommonHeadFontawesome/>', global.SERVER_ROOT + '/apps/common/src/head_fontawesome.html'],
+                ['<AppCommonHead/>', global.SERVER_ROOT + '/apps/common/src/head.html'],
+                ['<AppCommonBody/>', global.SERVER_ROOT + '/apps/common/src/body.html'],
+                ['<AppCommonBodyMaintenance/>', global.SERVER_ROOT + '/apps/common/src/body_maintenance.html'],
+                ['<AppCommonBodyBroadcast/>', global.SERVER_ROOT + '/apps/common/src/body_broadcast.html'],    
                 /*Profile tag AppCommonProfileDetail in common body */
-                ['<AppCommonProfileDetail/>', __dirname + '/../common/src/profile_detail.html'], 
-                ['<AppCommonProfileSearch/>', __dirname + '/../common/src/profile_search.html'],
-                ['<AppCommonUserAccount/>', __dirname + '/../common/src/user_account.html'],
-                ['<AppHead/>', __dirname + '/src/head.html'],
+                ['<AppCommonProfileDetail/>', global.SERVER_ROOT + '/apps/common/src/profile_detail.html'], 
+                ['<AppCommonProfileSearch/>', global.SERVER_ROOT + '/apps/common/src/profile_search.html'],
+                ['<AppCommonUserAccount/>', global.SERVER_ROOT + '/apps/common/src/user_account.html'],
+                ['<AppHead/>', global.SERVER_ROOT + '/apps/app3/src/head.html'],
                 ['<AppDialogues/>', __dirname + '/src/dialogues.html']
               ];
             read_app_files(app_id, files, (err, app)=>{
