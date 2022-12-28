@@ -94,12 +94,34 @@ function setEvents(){
     //dialogue user edit    
     document.getElementById('user_edit_btn_user_delete_account').addEventListener('click', function() { user_delete_app(); }, false);
     //dialogue verify
-    document.getElementById('user_verify_verification_char1').addEventListener('keyup', function() { user_verify_check_input_app(this, "user_verify_verification_char2") }, false);
-    document.getElementById('user_verify_verification_char2').addEventListener('keyup', function() { user_verify_check_input_app(this, "user_verify_verification_char3") }, false);
-    document.getElementById('user_verify_verification_char3').addEventListener('keyup', function() { user_verify_check_input_app(this, "user_verify_verification_char4") }, false);
-    document.getElementById('user_verify_verification_char4').addEventListener('keyup', function() { user_verify_check_input_app(this, "user_verify_verification_char5") }, false);
-    document.getElementById('user_verify_verification_char5').addEventListener('keyup', function() { user_verify_check_input_app(this, "user_verify_verification_char6") }, false);
-    document.getElementById('user_verify_verification_char6').addEventListener('keyup', function() { user_verify_check_input_app(this, "") }, false);
+    document.getElementById('user_verify_verification_container').addEventListener('keyup', function(event) {
+        switch (event.target.id){
+            case 'user_verify_verification_char1':{
+                user_verify_check_input_app(event.target, "user_verify_verification_char2")
+                break;
+            }
+            case 'user_verify_verification_char2':{
+                user_verify_check_input_app(event.target, "user_verify_verification_char3")
+                break;
+            }
+            case 'user_verify_verification_char3':{
+                user_verify_check_input_app(event.target, "user_verify_verification_char4")
+                break;
+            }
+            case 'user_verify_verification_char4':{
+                user_verify_check_input_app(event.target, "user_verify_verification_char5")
+                break;
+            }
+            case 'user_verify_verification_char5':{
+                user_verify_check_input_app(event.target, "user_verify_verification_char6")
+                break;
+            }
+            case 'user_verify_verification_char6':{
+                user_verify_check_input_app(event.target, "")
+                break;
+            }
+        }
+    }, false);
 }
 function app_theme_switch(){
     if(document.getElementById('app_theme_checkbox').checked){
