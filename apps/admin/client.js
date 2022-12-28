@@ -4,20 +4,20 @@ module.exports = {
     getAdmin:(app_id, gps_lat, gps_long, gps_place) => {
         return new Promise(function (resolve, reject){
             const files = [
-                ['APP', __dirname + '/src/index.html'],
-                ['<AppHead/>', __dirname + '/src/head.html'],
-                ['<AppCommonHead/>', __dirname + '/../common/src/head.html'],
-                ['<AppCommonHeadMap/>', __dirname + '/../common/src/head_map.html'],
-                ['<AppCommonHeadQRCode/>', __dirname + '/../common/src/head_qrcode.html'],
-                ['<AppCommonHeadFontawesome/>', __dirname + '/../common/src/head_fontawesome.html'],
-                ['<AppCommonProfileSearch/>', __dirname + '/../common/src/profile_search.html'],
-                ['<AppCommonUserAccount/>', __dirname + '/../common/src/user_account.html'],
-                ['<AppThemes/>', __dirname + '/../common/src/app_themes.html'],
-                ['<AppCommonBody/>', __dirname + '/../common/src/body.html'],
-                ['<AppCommonBodyBroadcast/>', __dirname + '/../common/src/body_broadcast.html'],
-                ['<AppCommonProfileDetail/>', __dirname + '/../common/src/profile_detail.html'], //Profile tag in common body
-                ['<AppCommonProfileBtnTop/>', __dirname + '/../common/src/profile_btn_top.html'],
-                ['<AppDialogues/>', __dirname + '/src/dialogues.html']
+                ['APP', global.SERVER_ROOT + '/apps/admin/src/index.html'],
+                ['<AppHead/>', global.SERVER_ROOT + '/apps/admin/src/head.html'],
+                ['<AppCommonHead/>', global.SERVER_ROOT + '/apps/common/src/head.html'],
+                ['<AppCommonHeadMap/>', global.SERVER_ROOT + '/apps/common/src/head_map.html'],
+                ['<AppCommonHeadQRCode/>', global.SERVER_ROOT + '/apps/common/src/head_qrcode.html'],
+                ['<AppCommonHeadFontawesome/>', global.SERVER_ROOT + '/apps/common/src/head_fontawesome.html'],
+                ['<AppCommonProfileSearch/>', global.SERVER_ROOT + '/apps/common/src/profile_search.html'],
+                ['<AppCommonUserAccount/>', global.SERVER_ROOT + '/apps/common/src/user_account.html'],
+                ['<AppThemes/>', global.SERVER_ROOT + '/apps/common/src/app_themes.html'],
+                ['<AppCommonBody/>', global.SERVER_ROOT + '/apps/common/src/body.html'],
+                ['<AppCommonBodyBroadcast/>', global.SERVER_ROOT + '/apps/common/src/body_broadcast.html'],
+                ['<AppCommonProfileDetail/>', global.SERVER_ROOT + '/apps/common/src/profile_detail.html'], //Profile tag in common body
+                ['<AppCommonProfileBtnTop/>', global.SERVER_ROOT + '/apps/common/src/profile_btn_top.html'],
+                ['<AppDialogues/>', global.SERVER_ROOT + '/apps/admin/src/dialogues.html']
               ];
             if (ConfigGet(1, 'SERVICE_DB', 'START')=='1'){
                 getUserPreferences(app_id).then(function(user_preferences){

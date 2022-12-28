@@ -94,7 +94,6 @@ async function DefaultConfig(){
         function hash(string) {
             return createHash('sha256').update(string).digest('hex');
         }
-        let config_file = [];
         async function create_config_dir(){
             return new Promise(function(resolve, reject){
                 let fs = require('fs');
@@ -129,9 +128,31 @@ async function DefaultConfig(){
                 return readFile(global.SERVER_ROOT + '/server/' + file[1], 'utf8');
             })).then(function(config_json){
                 //update default file for config 1 server
-                config_json[0] = config_json[0].replace('<HTTPS_KEY/>',JSON.stringify(`${SLASH}config${SLASH}ssl${SLASH}privkey.pem`))
-                config_json[0] = config_json[0].replace('<HTTPS_CERT/>',JSON.stringify(`${SLASH}config${SLASH}ssl${SLASH}fullchain.pem`))
-                config_json[0] = config_json[0].replace('<ADMIN_TOKEN_SECRET/>',`${hash(new Date().toISOString())}`)
+                config_json[0] = JSON.parse(config_json[0]);
+                //update path
+                config_json[0]['SERVER'].forEach((row,index)=>{
+                    for (let i=0; i < Object.keys(row).length;i++){
+                        if (Object.keys(row)[i]=='HTTPS_KEY'){
+                            config_json[0]['SERVER'][index][Object.keys(row)[i]] = JSON.stringify(`${SLASH}config${SLASH}ssl${SLASH}${Object.values(row)[i]}`).replace(/"/g,'');
+                        }
+                    } 
+                })
+                config_json[0]['SERVER'].forEach((row,index)=>{
+                    for (let i=0; i < Object.keys(row).length;i++){
+                        if (Object.keys(row)[i]=='HTTPS_CERT'){
+                            config_json[0]['SERVER'][index][Object.keys(row)[i]] = JSON.stringify(`${SLASH}config${SLASH}ssl${SLASH}${Object.values(row)[i]}`).replace(/"/g,'');
+                        }
+                    } 
+                })
+                //generate hash
+                config_json[0]['SERVICE_AUTH'].forEach((row,index)=>{
+                    for (let i=0; i < Object.keys(row).length;i++){
+                        if (Object.keys(row)[i]=='ADMIN_TOKEN_SECRET'){
+                            config_json[0]['SERVICE_AUTH'][index][Object.keys(row)[i]] = `${hash(new Date().toISOString())}`;
+                        }
+                    } 
+                })
+                config_json[0] = JSON.stringify(config_json[0]);
 
                 config_json[4] = JSON.parse(config_json[4]);
                 config_json[4]['created'] = new Date().toISOString();
