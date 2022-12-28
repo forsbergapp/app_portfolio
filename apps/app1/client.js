@@ -5,25 +5,25 @@ module.exports = {
         return new Promise(function (resolve, reject){
             function main(app_id){
                 const files = [
-                    ['APP', __dirname + '/src/index.html'],
-                    ['<AppCommonHeadFontawesome/>', __dirname + '/../common/src/head_fontawesome.html'],
-                    ['<AppCommonHead/>', __dirname + '/../common/src/head.html'],
-                    ['<AppCommonHeadQRCode/>', __dirname + '/../common/src/head_qrcode.html'],
-                    ['<AppCommonBody/>', __dirname + '/../common/src/body.html'],
-                    ['<AppCommonBodyMaintenance/>', __dirname + '/../common/src/body_maintenance.html'],
-                    ['<AppCommonBodyBroadcast/>', __dirname + '/../common/src/body_broadcast.html'],
-                    ['<AppCommonProfileDetail/>', __dirname + '/../common/src/profile_detail.html'], //Profile tag in common body
-                    ['<AppCommonProfileSearch/>', __dirname + '/../common/src/profile_search.html'],
-                    ['<AppCommonUserAccount/>', __dirname + '/../common/src/user_account.html'],
+                    ['APP', global.SERVER_ROOT + '/apps/app1/src/index.html'],
+                    ['<AppCommonHeadFontawesome/>', global.SERVER_ROOT + '/apps/common/src/head_fontawesome.html'],
+                    ['<AppCommonHead/>', global.SERVER_ROOT + '/apps/common/src/head.html'],
+                    ['<AppCommonHeadQRCode/>', global.SERVER_ROOT + '/apps/common/src/head_qrcode.html'],
+                    ['<AppCommonBody/>', global.SERVER_ROOT + '/apps/common/src/body.html'],
+                    ['<AppCommonBodyMaintenance/>', global.SERVER_ROOT + '/apps/common/src/body_maintenance.html'],
+                    ['<AppCommonBodyBroadcast/>', global.SERVER_ROOT + '/apps/common/src/body_broadcast.html'],
+                    ['<AppCommonProfileDetail/>', global.SERVER_ROOT + '/apps/common/src/profile_detail.html'], //Profile tag in common body
+                    ['<AppCommonProfileSearch/>', global.SERVER_ROOT + '/apps/common/src/profile_search.html'],
+                    ['<AppCommonUserAccount/>', global.SERVER_ROOT + '/apps/common/src/user_account.html'],
                     
     
-                    ['<AppHead/>', __dirname + '/src/head.html'],
-                    ['<AppThemes/>', __dirname + '/src/app_themes.html'],
-                    ['<AppBackground/>', __dirname + '/src/background.html'],
-                    ['<AppToolbarBottom/>', __dirname + '/src/toolbar_bottom.html'],
-                    ['<AppDialogues/>', __dirname + '/src/dialogues.html'],
-                    ['<AppProfileInfo/>', __dirname + '/src/profile_info.html'],   /*Profile tag in common body*/
-                    ['<AppCommonProfileBtnTop/>', __dirname + '/../common/src/profile_btn_top.html'] /*AppCommonProfileBtnTop inside AppToolbarBttom */
+                    ['<AppHead/>', global.SERVER_ROOT + '/apps/app1/src/head.html'],
+                    ['<AppThemes/>', global.SERVER_ROOT + '/apps/app1/src/app_themes.html'],
+                    ['<AppBackground/>', global.SERVER_ROOT + '/apps/app1/src/background.html'],
+                    ['<AppToolbarBottom/>', global.SERVER_ROOT + '/apps/app1/src/toolbar_bottom.html'],
+                    ['<AppDialogues/>', global.SERVER_ROOT + '/apps/app1/src/dialogues.html'],
+                    ['<AppProfileInfo/>', global.SERVER_ROOT + '/apps/app1/src/profile_info.html'],   /*Profile tag in common body*/
+                    ['<AppCommonProfileBtnTop/>', global.SERVER_ROOT + '/apps/common/src/profile_btn_top.html'] /*AppCommonProfileBtnTop inside AppToolbarBttom */
                   ];
                 getUserPreferences(app_id).then(function(user_preferences){
                     read_app_files(app_id, files, (err, app)=>{

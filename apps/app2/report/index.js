@@ -3,16 +3,16 @@ module.exports = {
     getReport:(app_id, module, gps_lat, gps_long, gps_place) => {
         return new Promise(function (resolve, reject){
             const files = [
-                ['REPORT', __dirname + '/' + module],
-                ['<ReportHead/>', __dirname + '/head.html'],
-                ['<ReportCommonHeadPrayTimes/>', __dirname + '/../../common/src/head_praytimes.html'],
-                ['<ReportCommonHeadRegional/>', __dirname + '/../../common/src/head_regional.html'],
-                ['<ReportCommonHeadQRCode/>', __dirname + '/../../common/src/head_qrcode.html'],
-                ['<ReportCommonHead/>', __dirname + '/../../common/report/head.html'],
-                ['<ReportPaper/>', __dirname + '/paper.html'],
-                ['<ReportCommonBody/>', __dirname + '/../../common/report/body.html'],
-                ['<ReportCommonBodyMaintenance/>', __dirname + '/../../common/src/body_maintenance.html'],
-                ['<ReportCommonBodyBroadcast/>', __dirname + '/../../common/src/body_broadcast.html']
+                ['REPORT', global.SERVER_ROOT + '/apps/app2/report/' + module],
+                ['<ReportHead/>', global.SERVER_ROOT + '/apps/app2/report/head.html'],
+                ['<ReportCommonHeadPrayTimes/>', global.SERVER_ROOT + '/apps/common/src/head_praytimes.html'],
+                ['<ReportCommonHeadRegional/>', global.SERVER_ROOT + '/apps/common/src/head_regional.html'],
+                ['<ReportCommonHeadQRCode/>', global.SERVER_ROOT + '/apps/common/src/head_qrcode.html'],
+                ['<ReportCommonHead/>', global.SERVER_ROOT + '/apps/common/report/head.html'],
+                ['<ReportPaper/>', global.SERVER_ROOT + '/apps/app2/report/paper.html'],
+                ['<ReportCommonBody/>', global.SERVER_ROOT + '/apps/common/report/body.html'],
+                ['<ReportCommonBodyMaintenance/>', global.SERVER_ROOT + '/apps/common/src/body_maintenance.html'],
+                ['<ReportCommonBodyBroadcast/>', global.SERVER_ROOT + '/apps/common/src/body_broadcast.html']
             ];
             read_app_files(app_id, files, (err, report)=>{
                 if (err)
