@@ -3220,23 +3220,64 @@ function set_events(){
     if (document.getElementById('profile_input_row'))
         document.getElementById('profile_search_icon').addEventListener('click', function() { document.getElementById('profile_search_input').focus();document.getElementById('profile_search_input').dispatchEvent(new KeyboardEvent('keyup')); }, false);
     //window info
-    document.getElementById('common_window_info_toolbar_btn_close').addEventListener('click', function() { document.getElementById('common_window_info').style.visibility = "hidden"; 
-                                                                                                        document.getElementById('common_window_info_info').innerHTML='';
-                                                                                                        document.getElementById('common_window_info_content').src='';
-                                                                                                        document.getElementById('common_window_info_content').classList=''
-                                                                                                        document.getElementById('common_window_info_toolbar').classList=''}, false);
-    document.getElementById('common_window_info_toolbar_btn_zoomout').addEventListener('click', function() {zoom_info(-1);}, false);
-    document.getElementById('common_window_info_toolbar_btn_zoomin').addEventListener('click', function() {zoom_info(1);}, false);
-    document.getElementById('common_window_info_toolbar_btn_left').addEventListener('click', function() {move_info(-1,0);}, false);
-    document.getElementById('common_window_info_toolbar_btn_right').addEventListener('click', function() {move_info(1,0);}, false);
-    document.getElementById('common_window_info_toolbar_btn_up').addEventListener('click', function() {move_info(0,-1);}, false);
-    document.getElementById('common_window_info_toolbar_btn_down').addEventListener('click', function() {move_info(0,1);}, false);        
-    document.getElementById('common_window_info_toolbar_btn_fullscreen').addEventListener('click', function() { if (document.fullscreenElement)
-                                                                                                                    document.exitFullscreen();
-                                                                                                                else
-                                                                                                                    document.body.requestFullscreen();
-                                                                                                            }, false);
-    
+    document.getElementById('common_window_info_toolbar').addEventListener('click', function(event){
+        let event_target_id;
+        if  (event.target.parentNode.id == 'common_window_info_toolbar'){
+            //button
+            event_target_id = event.target.id;
+        }
+        else
+            if  (event.target.parentNode.parentNode.id == 'common_window_info_toolbar'){
+                //svg or i
+                event_target_id = event.target.parentNode.id;
+            }
+            else{
+                //path in svg
+                event_target_id = event.target.parentNode.parentNode.id;
+            }
+                
+        switch (event_target_id){
+            case 'common_window_info_toolbar_btn_close':{
+                document.getElementById('common_window_info').style.visibility = "hidden"; 
+                document.getElementById('common_window_info_info').innerHTML='';
+                document.getElementById('common_window_info_content').src='';
+                document.getElementById('common_window_info_content').classList='';
+                document.getElementById('common_window_info_toolbar').classList='';
+                break;
+            }
+            case 'common_window_info_toolbar_btn_zoomout':{
+                zoom_info(-1);
+                break;
+            }
+            case 'common_window_info_toolbar_btn_zoomin':{
+                zoom_info(1);
+                break;
+            }
+            case 'common_window_info_toolbar_btn_left':{
+                move_info(-1,0);
+                break;
+            }
+            case 'common_window_info_toolbar_btn_right':{
+                move_info(1,0);
+                break;
+            }
+            case 'common_window_info_toolbar_btn_up':{
+                move_info(0,-1);
+                break;
+            }
+            case 'common_window_info_toolbar_btn_down':{
+                move_info(0,1);
+                break;
+            }
+            case 'common_window_info_toolbar_btn_fullscreen':{
+                if (document.fullscreenElement)
+                    document.exitFullscreen();
+                else
+                    document.body.requestFullscreen();
+                break;
+            }
+        }
+    }, false);
     //user menu
     document.getElementById('user_menu').addEventListener('click', function() { let menu = document.getElementById('user_menu_dropdown');
                                                                                 if (menu.style.visibility == 'visible') 
