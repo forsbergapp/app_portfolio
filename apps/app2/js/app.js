@@ -2188,30 +2188,101 @@ function user_settings_like(user_setting_id) {
 function setEvents() {
     //app
     //toolbar top
-    document.getElementById('toolbar_btn_zoomout').addEventListener('click', function() { zoom_paper(-1) }, false);
-	document.getElementById('toolbar_btn_zoomin').addEventListener('click', function() { zoom_paper(1) }, false);
-	document.getElementById('toolbar_btn_left').addEventListener('click', function() { update_timetable_report(window.global_timetable_type, this.id, getReportSettings()) }, false);
-	document.getElementById('toolbar_btn_right').addEventListener('click', function() { update_timetable_report(window.global_timetable_type, this.id, getReportSettings()) }, false);
-
-    document.getElementById('toolbar_btn_search').addEventListener('click', function() { let x = document.getElementById('profile_input_row'); 
-                                                                                         if (x.style.visibility == 'visible') {
-                                                                                            x.style.visibility = 'hidden';
-                                                                                            document.getElementById('profile_search_list_wrap').style.visibility = 'hidden';
-                                                                                         } 
-                                                                                         else{
-                                                                                            x.style.visibility = 'visible'; 
-                                                                                            document.getElementById('profile_search_list_wrap').style.visibility = 'visible';
-                                                                                            document.getElementById('profile_search_input').focus();
-                                                                                         }}, false);
-
+    document.getElementById('toolbar_top').addEventListener('click', function(event) {
+        let event_target_id;
+        if  (event.target.classList.contains('toolbar_button')){
+            //button
+            event_target_id = event.target.id;
+        }
+        else
+            if  (event.target.parentNode.classList.contains('toolbar_button')){
+                //svg or i
+                event_target_id = event.target.parentNode.id;
+            }
+            else{
+                //path in svg
+                event_target_id = event.target.parentNode.parentNode.id;
+            }
+        switch (event_target_id){
+            case 'toolbar_btn_zoomout':{
+                zoom_paper(-1)
+                break;
+            }
+            case 'toolbar_btn_zoomin':{
+                zoom_paper(1)
+                break;
+            }
+            case 'toolbar_btn_left':{
+                update_timetable_report(window.global_timetable_type, event_target_id, getReportSettings());
+                break;
+            }
+            case 'toolbar_btn_right':{
+                update_timetable_report(window.global_timetable_type, event_target_id, getReportSettings())
+                break;
+            }
+            case 'toolbar_btn_search':{
+                let x = document.getElementById('profile_input_row'); 
+                if (x.style.visibility == 'visible') {
+                    x.style.visibility = 'hidden';
+                    document.getElementById('profile_search_list_wrap').style.visibility = 'hidden';
+                } 
+                else{
+                    x.style.visibility = 'visible'; 
+                    document.getElementById('profile_search_list_wrap').style.visibility = 'visible';
+                    document.getElementById('profile_search_input').focus();
+                }
+                break;
+            }
+        }
+    }, false);
     //tab navigation
-    document.getElementById('tab_nav_btn_1').addEventListener('click', function() { openTab('1') }, false);
-    document.getElementById('tab_nav_btn_2').addEventListener('click', function() { openTab('2'); map_resize(); }, false);
-    document.getElementById('tab_nav_btn_3').addEventListener('click', function() { openTab('3') }, false);
-    document.getElementById('tab_nav_btn_4').addEventListener('click', function() { openTab('4') }, false);
-    document.getElementById('tab_nav_btn_5').addEventListener('click', function() { openTab('5') }, false);
-    document.getElementById('tab_nav_btn_6').addEventListener('click', function() { openTab('6') }, false);
-    document.getElementById('tab_nav_btn_7').addEventListener('click', function() { openTab('7') }, false);
+    document.getElementById('tab_navigation').addEventListener('click', function(event) {
+        let event_target_id;
+        if  (event.target.id.startsWith('tab_nav_btn')){
+            //button
+            event_target_id = event.target.id;
+        }
+        else
+            if  (event.target.parentNode.id.startsWith('tab_nav_btn')){
+                //svg or i
+                event_target_id = event.target.parentNode.id;
+            }
+            else{
+                //path in svg
+                event_target_id = event.target.parentNode.parentNode.id;
+            }
+        switch (event_target_id){
+            case 'tab_nav_btn_1':{
+                openTab('1');
+                break;
+            }
+            case 'tab_nav_btn_2':{
+                openTab('2');
+                map_resize();
+                break;
+            }
+            case 'tab_nav_btn_3':{
+                openTab('3');
+                break;
+            }
+            case 'tab_nav_btn_4':{
+                openTab('4');
+                break;
+            }
+            case 'tab_nav_btn_5':{
+                openTab('5');
+                break;
+            }
+            case 'tab_nav_btn_6':{
+                openTab('6');
+                break;
+            }
+            case 'tab_nav_btn_7':{
+                openTab('7');
+                break;
+            }
+        }
+    }, false);
     //settings regional    
     document.getElementById('setting_select_locale').addEventListener('change', function() { settings_translate(true) }, false);
     document.getElementById('setting_select_report_timezone').addEventListener('change', function() { update_ui(2); }, false);
@@ -2244,22 +2315,49 @@ function setEvents() {
     //settings prayer                 
     document.getElementById('setting_select_method').addEventListener('change', function() { update_ui(17);}, false);
     //settings user
-    document.getElementById('setting_select_user_setting').addEventListener('change', function() {user_settings_load().then(function(){settings_translate(true).then(function(){settings_translate(false);})}) }, false);      
-    document.getElementById('setting_btn_user_save').addEventListener('click', function() { user_settings_function('SAVE', false, (err, result)=>{null;}) }, false);
-    document.getElementById('setting_btn_user_add').addEventListener('click', function() { user_settings_function('ADD', false, (err, result)=>{null;}) }, false);
-    document.getElementById('setting_btn_user_delete').addEventListener('click', function() { user_settings_delete() }, false);
-    document.getElementById('user_day_html').addEventListener('click', function() { user_setting_link(this) }, false);
-    document.getElementById('user_day_html_copy').addEventListener('click', function() { user_setting_link(this) }, false);
-    document.getElementById('user_day_pdf').addEventListener('click', function() { user_setting_link(this) }, false);
-    document.getElementById('user_day_pdf_copy').addEventListener('click', function() { user_setting_link(this) }, false);
-    document.getElementById('user_month_html').addEventListener('click', function() { user_setting_link(this) }, false);
-    document.getElementById('user_month_html_copy').addEventListener('click', function() { user_setting_link(this) }, false);
-    document.getElementById('user_month_pdf').addEventListener('click', function() { user_setting_link(this) }, false);
-    document.getElementById('user_month_pdf_copy').addEventListener('click', function() { user_setting_link(this) }, false);
-    document.getElementById('user_year_html').addEventListener('click', function() { user_setting_link(this) }, false);
-    document.getElementById('user_year_html_copy').addEventListener('click', function() { user_setting_link(this) }, false);
-    document.getElementById('user_year_pdf').addEventListener('click', function() { user_setting_link(this) }, false);
-    document.getElementById('user_year_pdf_copy').addEventListener('click', function() { user_setting_link(this) }, false);
+    document.getElementById('setting_select_user_setting').addEventListener('change', function() {user_settings_load().then(function(){settings_translate(true).then(function(){settings_translate(false);})}) }, false);
+
+    document.getElementById('user_settings').addEventListener('click', function(event) { 
+        let event_target_id;
+        if  (event.target.classList.contains('dialogue_button')){
+            //button
+            event_target_id = event.target.id;
+        }
+        else
+            if  (event.target.parentNode.classList.contains('dialogue_button')){
+                //svg or i
+                event_target_id = event.target.parentNode.id;
+            }
+            else{
+                if (event.target.parentNode.parentNode.classList.contains('dialogue_button')){
+                    //path in svg
+                    event_target_id = event.target.parentNode.parentNode.id;
+                }
+            }
+        if (event_target_id)
+            switch (event_target_id){
+                case 'setting_btn_user_save':{
+                    user_settings_function('SAVE', false, (err, result)=>{null;});
+                    break;
+                }
+                case 'setting_btn_user_add':{
+                    user_settings_function('ADD', false, (err, result)=>{null;});
+                    break;
+                }
+                case 'setting_btn_user_delete':{
+                    user_settings_delete();
+                    break;
+                }
+                default:{
+                    //'user_day_html', 'user_day_html_copy', 'user_day_pdf', 'user_day_pdf_copy'
+                    //'user_month_html', 'user_month_html_copy', 'user_month_pdf', 'user_month_pdf_copy'
+                    //'user_year_html', 'user_year_html_copy', 'user_year_pdf', 'user_year_pdf_copy'
+                    user_setting_link(document.getElementById(event_target_id))
+                    break;
+                }
+            }
+        
+    }, false);
     //profile
     document.getElementById('profile_main_btn_user_settings').addEventListener('click', function() { profile_detail_app(0, window.global_rest_app2_user_setting_profile_detail, false) }, false);
     document.getElementById('profile_main_btn_user_setting_likes').addEventListener('click', function() { profile_detail_app(5, window.global_rest_app2_user_setting_profile_detail, true, 
@@ -2295,13 +2393,48 @@ function setEvents() {
     //dialogue scan mobile
     document.getElementById('scan_open_mobile_close').addEventListener('click', function() { document.getElementById('dialogue_scan_open_mobile').style.visibility = 'hidden' }, false);
     //toolbar bottom
-    document.getElementById('toolbar_btn_about').addEventListener('click', function() { document.getElementById('dialogue_info').style.visibility = 'visible'; }, false);
-    document.getElementById('toolbar_btn_print').addEventListener('click', function() { toolbar_button(1) }, false);
-    document.getElementById('toolbar_btn_day').addEventListener('click', function() { toolbar_button(2) }, false);
-    document.getElementById('toolbar_btn_month').addEventListener('click', function() { toolbar_button(3) }, false);
-    document.getElementById('toolbar_btn_year').addEventListener('click', function() { toolbar_button(4) }, false);
-    document.getElementById('toolbar_btn_settings').addEventListener('click', function() { toolbar_button(5) }, false);    
-
+    document.getElementById('toolbar_bottom').addEventListener('click', function(event) {
+        let event_target_id;
+        if  (event.target.classList.contains('toolbar_button')){
+            //button
+            event_target_id = event.target.id;
+        }
+        else
+            if  (event.target.parentNode.classList.contains('toolbar_button')){
+                //svg or i
+                event_target_id = event.target.parentNode.id;
+            }
+            else{
+                //path in svg
+                event_target_id = event.target.parentNode.parentNode.id;
+            }
+        switch (event_target_id){
+            case 'toolbar_btn_about':{
+                document.getElementById('dialogue_info').style.visibility = 'visible';
+                break;
+            }
+            case 'toolbar_btn_print':{
+                toolbar_button(1);
+                break;
+            }
+            case 'toolbar_btn_day':{
+                toolbar_button(2);
+                break;
+            }
+            case 'toolbar_btn_month':{
+                toolbar_button(3);
+                break;
+            }
+            case 'toolbar_btn_year':{
+                toolbar_button(4);
+                break;
+            }
+            case 'toolbar_btn_settings':{
+                toolbar_button(5);
+                break;
+            }
+        }
+    }, false);
     //common
 
     //user menu dropdown
@@ -2310,7 +2443,7 @@ function setEvents() {
     
     //user preferences    
     document.getElementById('common_app_select_theme').addEventListener('change', function() { document.body.className = 'app_theme' + document.getElementById('common_app_select_theme').value + ' ' + document.getElementById('user_arabic_script_select').value; }, false);
-    document.getElementById('user_locale_select').addEventListener('change', function() { common_translate_ui_app(this.value);}, false);    
+    document.getElementById('user_locale_select').addEventListener('change', function() { common_translate_ui_app(this.value, (err, result)=>{null});}, false);    
     document.getElementById('user_timezone_select').addEventListener('change', function() { document.getElementById('setting_timezone_current').innerHTML = this.value;}, false);
     document.getElementById('user_arabic_script_select').addEventListener('change', function() { document.getElementById('common_app_select_theme').dispatchEvent(new Event('change'));}, false);
     
@@ -2354,12 +2487,34 @@ function setEvents() {
     document.getElementById('profile_home').addEventListener('click', function() {toolbar_button(7)}, false);
     document.getElementById('profile_close').addEventListener('click', function() {profile_close_app()}, false);
     //dialogue verify
-    document.getElementById('user_verify_verification_char1').addEventListener('keyup', function() { user_verify_check_input_app(this, "user_verify_verification_char2") }, false);
-    document.getElementById('user_verify_verification_char2').addEventListener('keyup', function() { user_verify_check_input_app(this, "user_verify_verification_char3") }, false);
-    document.getElementById('user_verify_verification_char3').addEventListener('keyup', function() { user_verify_check_input_app(this, "user_verify_verification_char4") }, false);
-    document.getElementById('user_verify_verification_char4').addEventListener('keyup', function() { user_verify_check_input_app(this, "user_verify_verification_char5") }, false);
-    document.getElementById('user_verify_verification_char5').addEventListener('keyup', function() { user_verify_check_input_app(this, "user_verify_verification_char6") }, false);
-    document.getElementById('user_verify_verification_char6').addEventListener('keyup', function() { user_verify_check_input_app(this, "") }, false);
+    document.getElementById('user_verify_verification_container').addEventListener('keyup', function(event) {
+        switch (event.target.id){
+            case 'user_verify_verification_char1':{
+                user_verify_check_input_app(event.target, "user_verify_verification_char2")
+                break;
+            }
+            case 'user_verify_verification_char2':{
+                user_verify_check_input_app(event.target, "user_verify_verification_char3")
+                break;
+            }
+            case 'user_verify_verification_char3':{
+                user_verify_check_input_app(event.target, "user_verify_verification_char4")
+                break;
+            }
+            case 'user_verify_verification_char4':{
+                user_verify_check_input_app(event.target, "user_verify_verification_char5")
+                break;
+            }
+            case 'user_verify_verification_char5':{
+                user_verify_check_input_app(event.target, "user_verify_verification_char6")
+                break;
+            }
+            case 'user_verify_verification_char6':{
+                user_verify_check_input_app(event.target, "")
+                break;
+            }
+        }
+    }, false);
 };
 /*----------------------- */
 /* SERVICE WORKER         */
