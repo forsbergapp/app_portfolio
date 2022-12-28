@@ -133,14 +133,14 @@ async function DefaultConfig(){
                 config_json[0]['SERVER'].forEach((row,index)=>{
                     for (let i=0; i < Object.keys(row).length;i++){
                         if (Object.keys(row)[i]=='HTTPS_KEY'){
-                            config_json[0]['SERVER'][index][Object.keys(row)[i]] = JSON.stringify(`${SLASH}config${SLASH}ssl${SLASH}${Object.values(row)[i]}`).replace(/"/g,'');
+                            config_json[0]['SERVER'][index][Object.keys(row)[i]] = `${SLASH}config${SLASH}ssl${SLASH}${Object.values(row)[i]}`;
                         }
                     } 
                 })
                 config_json[0]['SERVER'].forEach((row,index)=>{
                     for (let i=0; i < Object.keys(row).length;i++){
                         if (Object.keys(row)[i]=='HTTPS_CERT'){
-                            config_json[0]['SERVER'][index][Object.keys(row)[i]] = JSON.stringify(`${SLASH}config${SLASH}ssl${SLASH}${Object.values(row)[i]}`).replace(/"/g,'');
+                            config_json[0]['SERVER'][index][Object.keys(row)[i]] = `${SLASH}config${SLASH}ssl${SLASH}${Object.values(row)[i]}`;
                         }
                     } 
                 })
