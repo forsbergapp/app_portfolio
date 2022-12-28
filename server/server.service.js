@@ -206,7 +206,7 @@ async function DefaultConfig(){
 async function InitConfig(){
     return await new Promise(function(resolve, reject){
         async function setVariables(){
-            return new Promise(function(resolve, reject){
+            return await new Promise(function(resolve, reject){
                 let files = config_files();
                 let i=0;                
                 const fs = require('fs');
@@ -255,10 +255,14 @@ async function InitConfig(){
         }
         ConfigExists().then(function(result){
             if (result==true)
-                resolve(setVariables());
+                setVariables().then(function(){
+                    resolve();
+                })
             else{
                 DefaultConfig().then(function(){
-                    resolve(setVariables());
+                    setVariables().then(function(){
+                        resolve();
+                    })
                 })
             }
         })
