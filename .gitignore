@@ -1,8 +1,6 @@
 .vscode/
 config/
-dev/
 logs/
-production/
 node_modules/
 service/db/config/
 service/report/tmp/
