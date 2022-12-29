@@ -9,6 +9,7 @@
     MONITOR
     SERVER CONFIG
     DB INFO
+    SERVER
     EXCEPTION
     INIT
     */
@@ -122,7 +123,7 @@ function show_menu(menu){
             })
             break;
         }
-        //PARAMETER
+        //SERVER CONFIG
         case 6:{
             nav_click(document.getElementById('list_config_server_title'));
             break;
@@ -148,6 +149,7 @@ function show_menu(menu){
         }
         //SERVER
         case 10:{
+            show_server_info();
             break;
         }
     }            
@@ -2453,6 +2455,75 @@ async function show_db_info_space(){
     }
 }
 /*----------------------- */
+/* SERVER                 */
+/*----------------------- */
+async function show_server_info(){
+    if (admin_token_has_value()){
+        let json;
+        let size = '(Mb)';
+        let roundOff = (num) => {
+            const x = Math.pow(10,2);
+            return Math.round(num * x) / x;
+          }
+        await common_fetch('/server/info?', 'GET', 2, null, window.global_common_app_id, null, (err, result) =>{
+            if (err)
+                null;
+            else{         
+                function seconds_to_time(seconds){
+                    let ut_sec = seconds;
+                    let ut_min = ut_sec/60;
+                    let ut_hour = ut_min/60;
+                    
+                    ut_sec = Math.floor(ut_sec);
+                    ut_min = Math.floor(ut_min);
+                    ut_hour = Math.floor(ut_hour);
+                    
+                    ut_hour = ut_hour%60;
+                    ut_min = ut_min%60;
+                    ut_sec = ut_sec%60;
+                    return `${ut_hour} Hour(s) ${ut_min} minute(s) ${ut_sec} second(s)`;
+                }
+                json = JSON.parse(result);
+                //os info
+                document.getElementById('menu_10_os_info_hostname_data').innerHTML = json.os.hostname;
+                document.getElementById('menu_10_os_info_machine_data').innerHTML = json.os.machine;
+                //cpus: array of cpus, if 8 cores then 8 array records
+                `[  {"model":"Intel(R) Core(TM) i5-10210U CPU @ 1.60GHz",
+                     "speed":2112,
+                     "times":{"user":14255406,
+                              "nice":0,
+                              "sys":21800421,
+                              "idle":147874109,
+                              "irq":5560156}},
+                    {"model":"Intel(R) Core(TM) i5-10210U CPU @ 1.60GHz",
+                      "...": "..."}
+                ]`
+                document.getElementById('menu_10_os_info_cpus_data').innerHTML = json.os.cpus.length ;
+                document.getElementById('menu_10_os_info_arch_data').innerHTML = json.os.arch;
+                document.getElementById('menu_10_os_info_freemem_data').innerHTML = json.os.freemem;
+                document.getElementById('menu_10_os_info_totalmem_data').innerHTML = json.os.totalmem;
+                document.getElementById('menu_10_os_info_platform_data').innerHTML = json.os.platform;
+                document.getElementById('menu_10_os_info_type_data').innerHTML = json.os.type;
+                document.getElementById('menu_10_os_info_release_data').innerHTML = json.os.release;
+                document.getElementById('menu_10_os_info_version_data').innerHTML = json.os.version;
+                document.getElementById('menu_10_os_info_uptime_data').innerHTML = seconds_to_time(json.os.uptime);
+                document.getElementById('menu_10_os_info_homedir_data').innerHTML = json.os.homedir;
+                document.getElementById('menu_10_os_info_tmpdir_data').innerHTML = json.os.tmpdir;
+                document.getElementById('menu_10_os_info_userinfo_username_data').innerHTML = json.os.userinfo['username']; 
+                document.getElementById('menu_10_os_info_userinfo_homedir_data').innerHTML = json.os.userinfo['homedir']; 
+                //process info
+                document.getElementById('menu_10_process_info_memoryusage_rss_data').innerHTML = json.process.memoryusage_rss;
+                document.getElementById('menu_10_process_info_memoryusage_heaptotal_data').innerHTML = json.process.memoryusage_heaptotal;
+                document.getElementById('menu_10_process_info_memoryusage_heapused_data').innerHTML = json.process.memoryusage_heapused;
+                document.getElementById('menu_10_process_info_memoryusage_external_data').innerHTML = json.process.memoryusage_external;
+                document.getElementById('menu_10_process_info_memoryusage_arraybuffers_data').innerHTML = json.process.memoryusage_arraybuffers;
+                document.getElementById('menu_10_process_info_uptime_data').innerHTML = seconds_to_time(json.process.uptime);
+                document.getElementById('menu_10_process_info_version_data').innerHTML = json.process.version;
+            }
+        })
+    }
+}
+/*----------------------- */
 /* INIT                   */
 /*----------------------- */
 function admin_token_has_value(){
@@ -2588,6 +2659,35 @@ function init_admin_secure(){
     document.getElementById('menu_8_db_info_connections_title').innerHTML = window.global_icon_app_user_connections;
     document.getElementById('menu_8_db_info_started_title').innerHTML = window.global_icon_app_database_started;
     document.getElementById('menu_8_db_info_space_title').innerHTML = window.global_icon_app_database + window.global_icon_app_database_calc;
+
+    //menu 10 
+    //os info
+    document.getElementById('menu_10_os_title').innerHTML = window.global_icon_app_server;
+    document.getElementById('menu_10_os_info_hostname_title').innerHTML = 'HOSTNAME';
+    document.getElementById('menu_10_os_info_machine_title').innerHTML = 'MACHINE';
+    document.getElementById('menu_10_os_info_cpus_title').innerHTML = 'CPUS';
+    document.getElementById('menu_10_os_info_arch_title').innerHTML = 'ARCH';
+    document.getElementById('menu_10_os_info_freemem_title').innerHTML = 'FREEMEM';
+    document.getElementById('menu_10_os_info_totalmem_title').innerHTML = 'TOTALMEM';
+    document.getElementById('menu_10_os_info_platform_title').innerHTML = 'PLATFORM';
+    document.getElementById('menu_10_os_info_type_title').innerHTML = 'TYPE';
+    document.getElementById('menu_10_os_info_release_title').innerHTML = 'RELEASE';
+    document.getElementById('menu_10_os_info_version_title').innerHTML = 'VERSION';
+    document.getElementById('menu_10_os_info_uptime_title').innerHTML = 'UPTIME';
+    document.getElementById('menu_10_os_info_homedir_title').innerHTML = 'HOMEDIR';
+    document.getElementById('menu_10_os_info_tmpdir_title').innerHTML = 'TMPDIR';
+    document.getElementById('menu_10_os_info_userinfo_username_title').innerHTML = 'USERNAME';
+    document.getElementById('menu_10_os_info_userinfo_homedir_title').innerHTML = 'USER HOMEDIR';
+    //process info
+    document.getElementById('menu_10_process_title').innerHTML = window.global_icon_app_server + ' ' + window.global_icon_app_apps;
+    document.getElementById('menu_10_process_info_memoryusage_rss_title').innerHTML = 'MEMORY RSS';
+    document.getElementById('menu_10_process_info_memoryusage_heaptotal_title').innerHTML = 'MEMORY HEAPTOTAL';
+    document.getElementById('menu_10_process_info_memoryusage_heapused_title').innerHTML = 'MEMORY HEAPUSED';
+    document.getElementById('menu_10_process_info_memoryusage_external_title').innerHTML = 'MEMORY EXTERNAL';
+    document.getElementById('menu_10_process_info_memoryusage_arraybuffers_title').innerHTML = 'MEMORY ARRAYBUFFERS';
+    document.getElementById('menu_10_process_info_uptime_title').innerHTML = 'UPTIME';
+    document.getElementById('menu_10_process_info_version_title').innerHTML = 'NODEJS VERSION';
+
 
     //SET EVENTLISTENERS
     document.getElementById('message_cancel').addEventListener('click', function() { document.getElementById("dialogue_message").style.visibility = "hidden"; }, false);
