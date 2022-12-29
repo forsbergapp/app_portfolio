@@ -2486,7 +2486,6 @@ async function show_server_info(){
                 json = JSON.parse(result);
                 //os info
                 document.getElementById('menu_10_os_info_hostname_data').innerHTML = json.os.hostname;
-                document.getElementById('menu_10_os_info_machine_data').innerHTML = json.os.machine;
                 //cpus: array of cpus, if 8 cores then 8 array records
                 `[  {"model":"Intel(R) Core(TM) i5-10210U CPU @ 1.60GHz",
                      "speed":2112,
@@ -2664,7 +2663,6 @@ function init_admin_secure(){
     //os info
     document.getElementById('menu_10_os_title').innerHTML = window.global_icon_app_server;
     document.getElementById('menu_10_os_info_hostname_title').innerHTML = 'HOSTNAME';
-    document.getElementById('menu_10_os_info_machine_title').innerHTML = 'MACHINE';
     document.getElementById('menu_10_os_info_cpus_title').innerHTML = 'CPUS';
     document.getElementById('menu_10_os_info_arch_title').innerHTML = 'ARCH';
     document.getElementById('menu_10_os_info_freemem_title').innerHTML = 'FREEMEM';
