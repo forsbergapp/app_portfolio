@@ -448,7 +448,6 @@ module.exports = {
         let os = require('os');
 		let os_json = {
                         "hostname": os.hostname(),
-                        "machine": "os.machine() from NodeJS 18.9.0",
                         "platform": os.platform(),
                         "type": os.type(),
                         "release": os.release(),
