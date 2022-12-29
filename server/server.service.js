@@ -441,8 +441,40 @@ module.exports = {
             }
         })
     },
-    Info:(callBack)=>{
+    ConfigInfo:(callBack)=>{
         callBack(null, null);
+    },
+    Info:(callBack)=>{
+        let os = require('os');
+		let os_json = {
+                        "hostname": os.hostname(),
+                        "machine": "os.machine() from NodeJS 18.9.0",
+                        "platform": os.platform(),
+                        "type": os.type(),
+                        "release": os.release(),
+                        "cpus": os.cpus(),
+                        "arch": os.arch(),
+                        "freemem": os.freemem(),
+                        "totalmem": os.totalmem(),
+                        "homedir": os.homedir(),
+                        "tmpdir": os.tmpdir(),
+                        "uptime": os.uptime(),
+                        "userinfo": os.userInfo(),
+                        "version": os.version()
+                      };
+        let process_json = { 
+                                "memoryusage_rss" : process.memoryUsage()['rss'],
+                                "memoryusage_heaptotal" : process.memoryUsage()['heapTotal'],
+                                "memoryusage_heapused" : process.memoryUsage()['heapUsed'],
+                                "memoryusage_external" : process.memoryUsage()['external'],
+                                "memoryusage_arraybuffers" : process.memoryUsage()['arrayBuffers'],
+                                "uptime" : process.uptime(),
+                                "version" : process.version
+                           }
+        callBack(null, {
+                        os: os_json,
+                        process: process_json
+                       });
     }
 };
 module.exports.ConfigGet = ConfigGet;
