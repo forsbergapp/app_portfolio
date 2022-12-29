@@ -545,7 +545,7 @@
     }
     /*MENU PARAMETERS*/
     #menu_6_content_widget1{
-        height: 100%;
+        height: calc(100%  + 10px);
         display: flex;
         flex-direction: column;
     }
@@ -608,7 +608,7 @@
     }
 
     #menu_8_content_widget2{
-        height:calc(100% - 180px);
+        height:calc(100% - 150px);
         display: flex;
         flex-direction: column;
     }
@@ -646,6 +646,33 @@
     .menu_8_db_info_space_detail_col:nth-child(1){
         width:250px;
         text-align: start;
+    }
+    /*MENU SERVER*/
+    #menu_10_content_widget1{
+        height:300px;
+    }
+    #menu_10_content_widget2 svg{
+        font-size: 2em;
+        height: 0.6em;
+        vertical-align: sub;
+    }
+    #menu_10_os_info div,
+    #menu_10_process_info div{
+        text-align: start;
+        display: inline-block;
+        font-size: 9px;
+    }
+    #menu_10_os_info div:nth-child(odd),
+    #menu_10_process_info div:nth-child(odd){
+        width: 150px;
+        text-transform: uppercase;
+    }
+    #menu_10_os_info div:nth-child(even),
+    #menu_10_process_info div:nth-child(even){
+        width: calc(100% - 150px);
+    }
+    #menu_10_content_widget2{
+        height:calc(100% - 320px);
     }
     /*Navigation*/
     .list_button{
