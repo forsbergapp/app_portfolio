@@ -2,6 +2,7 @@ const { getParameters, getParameters_server, getParametersAllAdmin, setParameter
 
 module.exports = {
 	getParameters_server: (req, res) => {
+		req.params.app_id = parseInt(req.params.app_id);
 		getParameters_server(req.query.app_id, req.params.app_id, (err, results) =>{
 			if (err) {
 				return res.status(500).send({
@@ -14,6 +15,7 @@ module.exports = {
 		});
 	},
 	getParametersAllAdmin: (req, res) => {
+		req.params.app_id = parseInt(req.params.app_id);
 		getParametersAllAdmin(req.query.app_id, req.params.app_id, req.query.lang_code, (err, results) =>{
 			if (err) {
 				return res.status(500).send({
@@ -50,6 +52,7 @@ module.exports = {
 		});
 	},
 	getParametersAdmin: (req, res) => {
+		req.params.app_id = parseInt(req.params.app_id);
 		getParameters(req.query.app_id, req.params.app_id, (err, results) =>{
 			if (err) {
 				return res.status(500).send({
@@ -62,6 +65,7 @@ module.exports = {
 		});
 	},
 	getParameters: (req, res) => {
+		req.params.app_id = parseInt(req.params.app_id);
 		getParameters(req.query.app_id, req.params.app_id, (err, results) =>{
 			if (err) {
 				return res.status(500).send({

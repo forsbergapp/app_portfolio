@@ -67,6 +67,7 @@ module.exports = {
         });
     },
     updateUserSuperAdmin: (req, res) => {
+        req.params.id = parseInt(req.params.id);
         updateUserSuperAdmin(req.query.app_id, req.params.id, req.body, (err, results) => {
             if (err) {
                 let app_code = get_app_code(err.errorNum, 
@@ -193,6 +194,7 @@ module.exports = {
         }
     },
     activateUser: (req, res) => {
+        req.params.id = parseInt(req.params.id);
         const verification_code_to_check = req.body.verification_code;
         let auth_new_password = null;
         if (req.body.verification_type == 3){
@@ -369,6 +371,7 @@ module.exports = {
         
     },
     getUserByUserId: (req, res) => {
+        req.params.id = parseInt(req.params.id);
         getUserByUserId(req.query.app_id, req.params.id, (err, results) => {
             if (err) {
                 return res.status(500).send(
@@ -515,6 +518,7 @@ module.exports = {
         });
     },
     getProfileDetail: (req, res) => {
+        req.params.id = parseInt(req.params.id);
         let detailchoice;
         if (typeof req.query.detailchoice !== 'undefined')
             detailchoice = req.query.detailchoice;
@@ -547,10 +551,9 @@ module.exports = {
         });
     },
     getProfileTop: (req, res) => {
-        let statchoice;
         if (typeof req.params.statchoice !== 'undefined')
-            statchoice = req.params.statchoice;
-        getProfileTop(req.query.app_id, statchoice, (err, results) => {
+            req.params.statchoice = parseInt(req.params.statchoice);
+        getProfileTop(req.query.app_id, req.params.statchoice, (err, results) => {
             if (err) {
                 return res.status(500).send(
                     err
@@ -578,6 +581,7 @@ module.exports = {
         });
     },
     updateUserLocal: (req, res) => {
+        req.params.id = parseInt(req.params.id);
         const salt = genSaltSync(10);
         checkPassword(req.query.app_id, req.params.id, (err, results) => {
             if (err) {
@@ -750,6 +754,7 @@ module.exports = {
         });
     },
     updatePassword: (req, res) =>{
+        req.params.id = parseInt(req.params.id);
         if (password_length_wrong(req.body.new_password))
             getMessage(req.query.app_id,
                        ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), 
@@ -829,6 +834,7 @@ module.exports = {
         }
     },
     updateUserCommon: (req, res) => {
+        req.params.id = parseInt(req.params.id);
         updateUserCommon(req.query.app_id, req.body, req.params.id, (err, results) => {
             if (err) {
                 let app_code = get_app_code(err.errorNum, 
@@ -872,6 +878,7 @@ module.exports = {
         });
     },
     deleteUser: (req, res) => {
+        req.params.id = parseInt(req.params.id);
         getUserByUserId(req.query.app_id, req.params.id, (err, results) => {
             if (err) {
                 return res.status(500).send(
@@ -1188,6 +1195,7 @@ module.exports = {
         req.body.client_user_agent = req.headers["user-agent"];
         req.body.client_longitude = req.body.client_longitude;
         req.body.client_latitude = req.body.client_latitude;
+        req.params.id = parseInt(req.params.id);
         providerSignIn(req.query.app_id, req.body.identity_provider_id, req.params.id, (err, results) => {
             if (err) {
                 return res.status(500).send(
