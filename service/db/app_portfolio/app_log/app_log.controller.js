@@ -81,6 +81,13 @@ module.exports = {
 		});
 	},
 	getStatUniqueVisitorAdmin: (req, res) =>{
+		if (req.query.select_app_id=='')
+			req.query.select_app_id = null;
+		else
+			req.query.select_app_id = parseInt(req.query.select_app_id);
+		req.query.statchoice = parseInt(req.query.statchoice);
+		req.query.year = parseInt(req.query.year);
+		req.query.month = parseInt(req.query.month);
 		getStatUniqueVisitorAdmin(req.query.app_id, req.query.select_app_id, req.query.statchoice, req.query.year, req.query.month,  (err, results)=>{
 			if (err) {
 				return res.status(500).send({

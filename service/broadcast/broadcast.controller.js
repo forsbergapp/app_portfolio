@@ -4,6 +4,7 @@ const { createLogAppCI } = require(global.SERVER_ROOT + "/service/log/log.contro
 const { ClientConnect, ClientClose, ClientAdd, BroadcastSendSystemAdmin, BroadcastSendAdmin, ConnectedList, ConnectedCount, ConnectedUpdate, ConnectedCheck} = require ("./broadcast.service");
 module.exports = {
 	BroadcastConnect: (req, res) => {
+        req.params.clientId = parseInt(req.params.clientId);
         ClientConnect(res);
         req.query.app_user_id ='';
         let res_not_used;
@@ -111,6 +112,9 @@ module.exports = {
             }
     },
     BroadcastSendSystemAdmin: (req, res) => {
+        req.body.app_id = parseInt(req.body.app_id);
+        req.body.client_id = parseInt(req.body.client_id);
+        req.body.client_id_current = parseInt(req.body.client_id_current);
         BroadcastSendSystemAdmin(req.body.app_id, req.body.client_id, req.body.client_id_current,
                       req.body.broadcast_type, req.body.broadcast_message, (err, result) =>{
             return res.status(200).send(
@@ -119,6 +123,9 @@ module.exports = {
         });
     },
     BroadcastSendAdmin: (req, res) => {
+        req.body.app_id = parseInt(req.body.app_id);
+        req.body.client_id = parseInt(req.body.client_id);
+        req.body.client_id_current = parseInt(req.body.client_id_current);
         BroadcastSendAdmin(req.body.app_id, req.body.client_id, req.body.client_id_current,
                       req.body.broadcast_type, req.body.broadcast_message, (err, result) =>{
             return res.status(200).send(
@@ -190,6 +197,7 @@ module.exports = {
         })
     },
     ConnectedCheck: (req, res) => {
+        req.params.user_account_id = parseInt(req.params.user_account_id);
         ConnectedCheck(req.params.user_account_id, (err, result_connected)=>{
             return res.status(200).json({
                 online: result_connected

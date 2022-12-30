@@ -208,8 +208,7 @@ module.exports = {
 	getStatUniqueVisitorAdmin: (app_id, data_app_id, statchoice, year, month, callBack) => {
 		let sql;
 		let parameters;
-		if (data_app_id=='')
-			data_app_id = null;
+		
 		sql = `SELECT t.app_id "app_id",
 					  t.year_log "year",
 					  t.month_log "month",
@@ -244,7 +243,7 @@ module.exports = {
 		parameters = {	statchoice: statchoice,
 						app_id_log: data_app_id,
 						year_log: year,
-						month_log:month};
+						month_log: month};
 		execute_db_sql(app_id, sql, parameters,
 			           __appfilename, __appfunction, __appline, (err, result)=>{
 			if (err)
