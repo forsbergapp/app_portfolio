@@ -2,6 +2,7 @@ const { getUserAccountLogonAdmin } = require ("./user_account_logon.service");
 
 module.exports = {
 	getUserAccountLogonAdmin: (req, res) => {
+		req.params.user_account_id = parseInt(req.params.user_account_id);
 		getUserAccountLogonAdmin(req.query.app_id, req.params.user_account_id, req.params.app_id, (err, results) =>{
 			if (err) {
 				return res.status(500).send({

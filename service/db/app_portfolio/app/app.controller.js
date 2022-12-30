@@ -26,6 +26,7 @@ module.exports = {
 		});
 	},
 	updateAppAdmin: (req, res) => {
+		req.params.id = parseInt(req.params.id);
 		updateAppAdmin(req.query.app_id, req.params.id, req.body, (err, results) =>{
 			if (err) {
 				return res.status(500).send({
