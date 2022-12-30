@@ -25,8 +25,8 @@ module.exports = {
 		});
 	},
 	getUserSettingsByUserId: (req, res) => {
-		const id = req.params.id;
-		getUserSettingsByUserId(req.query.app_id, id, (err, results) =>{
+		req.params.id = parseInt(req.params.id);
+		getUserSettingsByUserId(req.query.app_id, req.params.id, (err, results) =>{
 			if (err)
 				return res.status(500).send(
 					err
@@ -51,8 +51,8 @@ module.exports = {
 		});
 	},
 	getProfileUserSetting: (req, res) => {
-		const id = req.params.id;
-		getProfileUserSetting(req.query.app_id, id, (err, results) =>{
+		req.params.id = parseInt(req.params.id);
+		getProfileUserSetting(req.query.app_id, req.params.id, (err, results) =>{
 			if (err) {
 				return res.status(500).send(
 					err
@@ -78,11 +78,11 @@ module.exports = {
 		});
 	},
 	getProfileUserSettings: (req, res) => {
-		const id = req.params.id;
+		req.params.id = parseInt(req.params.id);
 		let id_current_user;
 		if (typeof req.query.id !== 'undefined')
 			id_current_user = req.query.id;
-		getProfileUserSettings(req.query.app_id, id, id_current_user, (err, results) =>{
+		getProfileUserSettings(req.query.app_id, req.params.id, id_current_user, (err, results) =>{
 			if (err) {
 				return res.status(500).send(
 					err
@@ -108,12 +108,12 @@ module.exports = {
 		});
 	},
 	getProfileUserSettingDetail: (req, res) => {
-        const id = req.params.id;
+        req.params.id = parseInt(req.params.id);
         let detailchoice;
         if (typeof req.query.detailchoice !== 'undefined')
             detailchoice = req.query.detailchoice;
 
-		getProfileUserSettingDetail(req.query.app_id, id, detailchoice, (err, results) => {
+		getProfileUserSettingDetail(req.query.app_id, req.params.id, detailchoice, (err, results) => {
             if (err) {
                 return res.status(500).send(
                     err
@@ -141,10 +141,9 @@ module.exports = {
         });
     },
 	getProfileTop: (req, res) => {
-        let statchoice;
         if (typeof req.params.statchoice !== 'undefined')
-            statchoice = req.params.statchoice;
-        getProfileTop(req.query.app_id, statchoice, (err, results) => {
+            req.params.statchoice = parseInt(req.params.statchoice)
+        getProfileTop(req.query.app_id, req.params.statchoice, (err, results) => {
             if (err) {
                 return res.status(500).send(
                     err
@@ -172,8 +171,8 @@ module.exports = {
         });
     },
 	getUserSetting: (req, res) => {
-		const id = req.params.id;
-		getUserSetting(req.query.app_id, id, (err, results) =>{
+		req.params.id = parseInt(req.params.id);
+		getUserSetting(req.query.app_id, req.params.id, (err, results) =>{
 			if (err) {
 				return res.status(500).send(
 					err
@@ -188,9 +187,8 @@ module.exports = {
 		});
 	},
 	updateUserSetting: (req, res) => {
-		const body = req.body;
-		const id = req.params.id;
-		updateUserSetting(req.query.app_id, body, id, (err, results) =>{
+		req.params.id = parseInt(req.params.id);
+		updateUserSetting(req.query.app_id, req.body, req.params.id, (err, results) =>{
 			if (err) {
 				return res.status(500).send(
 					err
@@ -215,8 +213,8 @@ module.exports = {
 		});
 	},
 	deleteUserSetting: (req, res) => {
-		const id = req.params.id;
-		deleteUserSetting(req.query.app_id, id, (err, results) =>{
+		req.params.id = parseInt(req.params.id);
+		deleteUserSetting(req.query.app_id, req.params.id, (err, results) =>{
 			if (err) {
 				return res.status(500).send(
 					err
