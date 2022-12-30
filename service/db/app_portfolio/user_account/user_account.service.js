@@ -172,7 +172,7 @@ module.exports = {
 				   OR ua.provider_email LIKE :search)
 				   OR :search = '*'
 				ORDER BY ${sort} ${order_by}`;
-		sql = limit_sql(sql, null);;
+		sql = limit_sql(sql, null);
 		if (search!='*')
 			search = '%' + search + '%';
 		parameters = {search: search,

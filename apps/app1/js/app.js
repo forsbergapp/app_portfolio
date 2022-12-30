@@ -297,32 +297,37 @@ async function init_app(){
     document.getElementById('app_email').href='mailto:' + window.global_app_email;
     document.getElementById('app_email').innerHTML=window.global_app_email;
 
-    if (window.global_info_social_link1_url)
-        document.getElementById('social_link1').addEventListener('click', function() { window.open(window.global_info_social_link1_url,'_blank',''); }, false);
-    if (window.global_info_social_link2_url)
-        document.getElementById('social_link2').addEventListener('click', function() { window.open(window.global_info_social_link2_url,'_blank',''); }, false);
-    if (window.global_info_social_link3_url)
-        document.getElementById('social_link3').addEventListener('click', function() { window.open(window.global_info_social_link3_url,'_blank',''); }, false);
-    if (window.global_info_social_link4_url)
-        document.getElementById('social_link4').addEventListener('click', function() { window.open(window.global_info_social_link4_url,'_blank',''); }, false);            
-
-    if (window.global_info_social_link1_url!=null)
-        document.getElementById('social_link1').innerHTML = window.global_info_social_link1_icon;;
-    if (window.global_info_social_link2_url!=null)
-        document.getElementById('social_link2').innerHTML = window.global_info_social_link2_icon;;
-    if (window.global_info_social_link3_url!=null)
-        document.getElementById('social_link3').innerHTML = window.global_info_social_link3_icon;;
-    if (window.global_info_social_link4_url!=null)
-        document.getElementById('social_link4').innerHTML = window.global_info_social_link4_icon;;
+    //links
+    document.getElementById('start_links').addEventListener('click', function(event) { 
+        //social links ends with an integer and is part of global name
+        if (event.target.id.startsWith('social_link'))
+            if (eval(`window.global_info_${event.target.id}_url`))
+                window.open(eval(`window.global_info_${event.target.id}_url`),'_blank','');
+        //info_link ends with an integer
+        if (event.target.id.startsWith('info_link'))
+            show_window_info(parseInt(event.target.id.substring(9)));
+    }, false);
+    
+    if (window.global_info_social_link1_url==null)
+        document.getElementById('social_link1').style.display = 'none'
+    else
+        document.getElementById('social_link1').innerHTML = window.global_info_social_link1_icon;
+    if (window.global_info_social_link2_url==null)
+        document.getElementById('social_link2').style.display = 'none'
+    else
+        document.getElementById('social_link2').innerHTML = window.global_info_social_link2_icon;
+    if (window.global_info_social_link3_url==null)
+        document.getElementById('social_link3').style.display = 'none'
+    else
+        document.getElementById('social_link3').innerHTML = window.global_info_social_link3_icon;
+    if (window.global_info_social_link4_url==null)
+        document.getElementById('social_link4').style.display = 'none'
+    else
+        document.getElementById('social_link4').innerHTML = window.global_info_social_link4_icon;
     document.getElementById('info_link1').innerHTML = window.global_info_link_policy_name;
     document.getElementById('info_link2').innerHTML = window.global_info_link_disclaimer_name;
     document.getElementById('info_link3').innerHTML = window.global_info_link_terms_name;
     document.getElementById('info_link4').innerHTML = window.global_info_link_about_name;
-
-    document.getElementById('info_link1').addEventListener('click', function() { show_window_info(1);}, false);
-    document.getElementById('info_link2').addEventListener('click', function() { show_window_info(2);}, false);
-    document.getElementById('info_link3').addEventListener('click', function() { show_window_info(3);}, false);
-    document.getElementById('info_link4').addEventListener('click', function() { show_window_info(4);}, false);
 
     //profile info
     document.getElementById('profile_main_btn_cloud').innerHTML = window.global_icon_sky_cloud;
@@ -351,13 +356,13 @@ function init(parameters){
                 if (global_app_parameters[i].parameter_name=='INFO_SOCIAL_LINK4_URL')
                     window.global_info_social_link4_url = global_app_parameters[i].parameter_value;
                 if (global_app_parameters[i].parameter_name=='INFO_SOCIAL_LINK1_ICON')
-                    window.global_info_social_link1_name = global_app_parameters[i].parameter_value;
+                    window.global_info_social_link1_icon = global_app_parameters[i].parameter_value;
                 if (global_app_parameters[i].parameter_name=='INFO_SOCIAL_LINK2_ICON')
-                    window.global_info_social_link2_name = global_app_parameters[i].parameter_value;
+                    window.global_info_social_link2_icon = global_app_parameters[i].parameter_value;
                 if (global_app_parameters[i].parameter_name=='INFO_SOCIAL_LINK3_ICON')
-                    window.global_info_social_link3_name = global_app_parameters[i].parameter_value;
+                    window.global_info_social_link3_icon = global_app_parameters[i].parameter_value;
                 if (global_app_parameters[i].parameter_name=='INFO_SOCIAL_LINK4_ICON')
-                    window.global_info_social_link4_name = global_app_parameters[i].parameter_value;
+                    window.global_info_social_link4_icon = global_app_parameters[i].parameter_value;
                 if (global_app_parameters[i].parameter_name=='INFO_LINK_POLICY_URL')
                     window.global_info_link_policy_url = global_app_parameters[i].parameter_value;
                 if (global_app_parameters[i].parameter_name=='INFO_LINK_DISCLAIMER_URL')
