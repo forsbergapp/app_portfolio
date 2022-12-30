@@ -91,7 +91,21 @@ InitConfig().then(function(){
         }
       })
     });
-    app.use(function(req, res, next) {  
+    app.use(function(req, res, next) { 
+      //convert query id parameters from string to integer
+      //req.params can be modified in controller
+      if (req.query.app_id)
+        req.query.app_id = parseInt(req.query.app_id);
+      if (req.query.id)
+        req.query.id = parseInt(req.query.id);
+      if (req.query.user_account_logon_user_account_id)
+        req.query.user_account_logon_user_account_id = parseInt(req.query.user_account_logon_user_account_id);
+      if (req.query.user_account_id)
+        req.query.user_account_id = parseInt(req.query.user_account_id);
+      if (req.query.app_user_id)
+        req.query.app_user_id = parseInt(req.query.app_user_id);
+      if (req.query.client_id)
+        req.query.client_id = parseInt(req.query.client_id);
       res.on('finish',()=>{
         //logs the result after REST API has modified req and res
         createLogServerI(null, req, res).then(function(){

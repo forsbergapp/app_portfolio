@@ -4,9 +4,9 @@ const { likeUserSetting,
 module.exports = {
 
 likeUserSetting: (req, res) => {
-	const id   = req.params.id;
-	const id_like   = req.body.app2_user_setting_id;
-	likeUserSetting(req.query.app_id, id,id_like, (err,results) => {
+	req.params.id = parseInt(req.params.id);
+	const id_like   = parseInt(req.body.app2_user_setting_id);
+	likeUserSetting(req.query.app_id, req.params.id, id_like, (err,results) => {
 		if (err) {
 			return res.status(500).send(
 				err
@@ -19,9 +19,9 @@ likeUserSetting: (req, res) => {
 	});
 },
 unlikeUserSetting: (req, res) => {
-	const id   = req.params.id;
-	const id_unlike   = req.body.app2_user_setting_id;
-	unlikeUserSetting(req.query.app_id, id,id_unlike, (err,results) => {
+	req.params.id = parseInt(req.params.id);
+	const id_unlike   = parseInt(req.body.app2_user_setting_id);
+	unlikeUserSetting(req.query.app_id, req.params.id,id_unlike, (err,results) => {
 		if (err) {
 			return res.status(500).send(
 				err

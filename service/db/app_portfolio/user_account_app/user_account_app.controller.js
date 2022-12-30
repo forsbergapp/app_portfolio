@@ -16,6 +16,7 @@ module.exports = {
 		});
 	},
 	getUserAccountApps: (req, res) => {
+		req.params.user_account_id = parseInt(req.params.user_account_id);
 		getUserAccountApps(req.query.app_id, req.params.user_account_id, (err,results) => {
 			if (err) {
 				return res.status(500).send(
@@ -29,6 +30,7 @@ module.exports = {
 		});
 	},
 	getUserAccountApp: (req, res) => {
+		req.params.user_account_id = parseInt(req.params.user_account_id);
 		getUserAccountApp(req.query.app_id, req.params.user_account_id, (err,results) => {
 			if (err) {
 				return res.status(500).send(
@@ -41,6 +43,7 @@ module.exports = {
 		});
 	},
 	updateUserAccountApp: (req, res) => {
+		req.params.user_account_id = parseInt(req.params.user_account_id);
 		updateUserAccountApp(req.query.app_id, req.params.user_account_id, req.body, (err,results) => {
 			if (err) {
 				return res.status(500).send(
@@ -54,6 +57,8 @@ module.exports = {
 		});
 	},
 	deleteUserAccountApps: (req, res) => {
+		req.params.user_account_id = parseInt(req.params.user_account_id);
+		req.params.app_id = parseInt(req.params.app_id);
 		deleteUserAccountApps(req.query.app_id, req.params.user_account_id, req.params.app_id, (err,results) => {
 			if (err) {
 				return res.status(500).send(
