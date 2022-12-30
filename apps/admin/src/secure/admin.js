@@ -966,7 +966,7 @@ async function button_save(item){
                 await update_record('app_parameter',
                                     x[i],
                                     item,
-                                    {app_id: x[i].children[0].children[0].value,
+                                    {app_id: x[i].children[0].children[0].innerHTML,
                                      parameter_type_id: x[i].children[1].children[0].value,
                                      parameter_name:  x[i].children[3].children[0].innerHTML,
                                      parameter_value: x[i].children[4].children[0].value,

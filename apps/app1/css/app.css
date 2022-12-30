@@ -113,14 +113,17 @@ body.font_arabic_nastaliq #user_menu_default_avatar{
     margin: 0 auto;
 }
 #start_links, #contact, #copyright{
-	display: block;
 	font-size: 11px;
 	width: 300px;
 }
-#start_links div{
-	width: 24%;
+#start_links #social_link_row, #info_link_row{
+	text-align: center;
+	width: 100%;
+}
+#social_link_row div, #info_link_row div{
 	display: inline-block;
 	cursor: pointer;
+	margin:10px;
 }
 
 #info_diagram_img, #info_datamodel_img{
