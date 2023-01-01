@@ -1,34 +1,42 @@
-App portfolio
+# App portfolio
 
-A platform to build your app portfolio.
-With most necessary technology configured to get started and with less
-third party libraries and module dependencies for performance and better maintainability
-with code you have control over.
-Microservice REST API architecture with optional monitoring of each microservice activity.
-Services included are authentication, database, forms, report, geolocation, log, mail
-and worldcities.
-Runs in Node.js using Express framework.
+	A platform to build your app portfolio in any language and regional settings.
+	With most necessary technology configured to get started and with less
+	third party libraries and module dependencies for performance and better maintainability
+	with code you have control over.
+	Microservice REST API architecture with optional monitoring of each microservice activity.
+	Services included are authentication, database, forms, report, geolocation, log, mail
+	and worldcities. 
+	These services are based on ideas from 
+		- Angular (UI)
+		- Vue (UI)
+		- React (JSX, server component creation, analysis of eventlistener usage, debug and runtime execution) 
+	    - existing log monitor and security solutions using SHA256, Bcrypt, json webtoken, 
+		  Content-Security-Policy, access control of IP and suspicious activity
+		- Oracle Forms and Reports and Oracle Apex.
 
-Apps are component structured and server-side rendered with database data popluation.
-Secure REST API with authentication middleware, common SQL with minium differences for all databases, 
-centralized common SQL parameter syntax and consolidated data validation in Javascript for all databases.
-Apps are written using pure CSS, HTML and Javascript and ES6+ Javascript using
-AJAX method and JSON in both client and server.
-Apps third party modules included are Easy QRCode, Fontawesome icons, Leaflet map, sunposition calculations 
-and regional functions. 
+	Runs in Node.js using Express framework.
 
-Oracle SQL Developer Data model designed data model.
-Databases supported are MariaDB, MySQL, Oracle and PostgreSQL.
-Centralized data model error handling of database errors, constraints errors and 
-application errors and showed in users language.
+	Apps are component structured and server-side rendered with database data popluation.
+	Secure REST API with authentication middleware, common ANSI SQL with minium differences for all databases, 
+	centralized common SQL parameter syntax and consolidated data validation in Javascript for all databases.
+	Apps are written using pure CSS, HTML and Javascript and ES6+ Javascript using
+	AJAX method and JSON in both client and server.
+	Apps third party modules included are Easy QRCode, Fontawesome icons, Leaflet map, sunposition calculations 
+	and regional functions. 
 
-A global support implemented in client with ALL Unicode characters supported by Noto Sans font
-included different arabic scripts and different font heights (Nastaliq).
-Any regional setting supported including right to left. More than 500 locales with language and
-country translations. The mayor 30 languages are translated in the apps. Icons are frequently used 
-to minmize text usage and to provide simplier and better explanation to a global audience.
+	Oracle SQL Developer Data model designed data model.
+	Databases supported are MariaDB, MySQL, Oracle and PostgreSQL.
+	Centralized data model error handling of database errors, constraints errors and 
+	application errors and showed in users language.
 
-Includes 
+	A global support implemented in client with ALL Unicode characters supported by Noto Sans font
+	included different arabic scripts and different font heights (Nastaliq).
+	Any regional setting supported including direction right to left. More than 500 locales with language and
+	country translations. The mayor 30 languages are translated in the apps. Icons are frequently used 
+	to minmize text usage and to provide simplier and better explanation to a global audience.
+
+# Apps included
 
 	1.App 0 - Admin single page web app (SPA) with source code secured logged in as admin from database
 	or server system admin authenticated outside database and dynamically loads app code after login. 
@@ -109,45 +117,47 @@ Includes
 	- service management water, electricity, internet, phone lines etc
 	- board of directors management with reunion schedule
 
-Installation instructions
+# Installation instructions
 
 1. Download and info about folders
 
-   see /docs/1.download_and_info.md
+	[docs/1.download_and_info.md](docs/1.download_and_info.md)
 
-2. Install Node.js and modules on server
+2. Install Node.js, modules on server and SSL
 
-   see /docs/2.install_nodejs.md
+	[docs/2.install_nodejs_ssl.md](docs/2.install_nodejs_ssl.md)
 
 3. Install MariaDB/MySQL/Oracle/PostgreSQL on same server or other server
    and run db scripts
 
-   see /docs/3.install_database.md
+	[docs/3.install_database.md](docs/3.install_database.md)
 
 4. Start Node.js on supported Node.js platform including process monitor
 	
-   see /docs/4.start_nodejs.md
+	[docs/4.start_nodejs.md](docs/4.start_nodejs.md)
 
 5. Enter application at http://localhost/admin or http://[yourdomain]/admin
 
-   Set parameters and instructions for SSL.
+   	Set server parameters.
 
-   see /docs/5.server_parameters_ssl.md
+	[docs/5.server_parameters.md](docs/5.server_parameters.md)
 
 6. Set database parameters
 
-   see /docs/6.database_parameters.md
+	[docs/6.database_parameters.md](docs/6.database_parameters.md)
 
 7. About sign in provider management:
    
-   see /docs/7.sign_in_provider.md
+	[docs/7.sign_in_provider.md](docs/7.sign_in_provider.md)
 
-8. How to add new app
+8. How to add a new app
 
-   see /docs/8.how_to_add_new_app.md
+	[docs/8.how_to_add_new_app.md](docs/8.how_to_add_new_app.md)
 
 9. Issues
    
    Not supported:
+
    Hijri transliteration on Android.
+
    Armenian language on Chrome or Chromium, use Edge or other for Puppeteer if needed.
