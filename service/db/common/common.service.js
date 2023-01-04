@@ -7,10 +7,16 @@ const { ORACLEDB, get_pool} = require(global.SERVER_ROOT + "/service/db/admin/ad
 function log_db_sql(app_id, sql, parameters){
 	let parsed_sql = sql;
 	Object.entries(parameters).forEach(function(parameter){
-		if (parameter[1] == null)
-			parsed_sql = parsed_sql.replaceAll(`:${parameter[0]}`, `${parameter[1]}`);
-		else
-			parsed_sql = parsed_sql.replaceAll(`:${parameter[0]}`, `'${parameter[1]}'`);
+		//replace bind parameters with values in log
+		parsed_sql = parsed_sql.replace(/\:(\w+)/g, function (txt, key) {
+			if (key == parameter[0])
+				if (parameter[1] == null)
+					return parameter[1];
+				else 
+					return `'${parameter[1]}'`;
+			else
+				return txt;
+		})
 		
 	});
 	createLogDB(app_id, `DB:${ConfigGet(1, 'SERVICE_DB', 'USE')} Pool: ${app_id} SQL: ${parsed_sql}`);
@@ -25,9 +31,9 @@ async function execute_db_sql(app_id, sql, parameters,
 		case '1':{
 			let conn;
 			function config_connection(conn, query, values){
-				//change parameters from [] to json syntax with bind variable names
-				//old syntax: connection.query("UPDATE posts SET title = ?", ["value"];
-				//new syntax: connection.query("UPDATE posts SET title = :title", { title: "value" });
+				//change json parameters to [] syntax with bind variable names
+				//common syntax: connection.query("UPDATE [table] SET [column] = :title", { title: "value" });
+				//mysql syntax: connection.query("UPDATE [table] SET [column] = ?", ["value"];
 				conn.config.queryFormat = function (query, values) {
 					if (!values) return query;
 					return query.replace(/\:(\w+)/g, function (txt, key) {
@@ -103,19 +109,22 @@ async function execute_db_sql(app_id, sql, parameters,
 		}
 		case '3':{
 			let conn;
-			/*original typescript
-			type QueryReducerArray = [string, any[], number];
-			function queryConvert(parameterizedSql: string, params: Dict<any>) {
-			    const [text, values] = Object.entries(params).reduce(
-			        ([sql, array, index], [key, value]) => [sql.replace(`:${key}`, `$${index}`), [...array, value], index + 1] as QueryReducerArray,
-				        [parameterizedSql, [], 1] as QueryReducerArray
-			    );
-			    return { text, values };
-			}	
-			*/
 			function queryConvert(parameterizedSql, params) {
+				//change json parameters to $ syntax
+				//use unique index with $1, $2 etc, parameter can be used several times
+				//example: sql with parameters :id, :id, :id and :id2, will get $1, $1, $1 and $2
+				//use indexorder received from parameters
+				//common syntax: connection.query("UPDATE [table] SET [column] = :title", { title: "value" });
+				//postgresql syntax: connection.query("UPDATE [table] SET [column] = $1", [0, "value"];
 			    const [text, values] = Object.entries(params).reduce(
-			        ([sql, array, index], [key, value]) => [sql.replaceAll(`:${key}`, `$${index}`), [...array, value], index + 1],
+			        ([sql, array, index], [key, value]) => [sql.replace(/\:(\w+)/g, function (txt, key) {
+																						if (params.hasOwnProperty(key)){
+																							return `$${Object.keys(params).indexOf(key) + 1}`;
+																						}
+																						else
+																							return txt;
+																					}), 
+														   [...array, value], index + 1],
 				        								   [parameterizedSql, [], 1]
 			    );
 			    return { text, values };
