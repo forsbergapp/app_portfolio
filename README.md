@@ -154,7 +154,11 @@
 
 	[docs/8.how_to_add_new_app.md](docs/8.how_to_add_new_app.md)
 
-9. Issues
+9. Install development environment
+	
+	[docs/9.development.md](docs/9.development.md)
+
+10. Issues
    
    Not supported:
 
