@@ -1,19 +1,20 @@
-const {ConfigGet} = require(global.SERVER_ROOT + '/server/server.service');
-const { getService} = require ("./worldcities.service");
-const { createLog} = require (global.SERVER_ROOT +  ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH') + "/app_log/app_log.service");
-module.exports = {
-	getCities: (req, res) => {
-		getService((err, cities) => {
-			if (err)
-				return res.status(500).json(
-					err
-				);
-			else{
-				cities = JSON.parse(cities).filter(function(item) {
-					return (item.iso2 == req.params.country);
-				});	
+const service = await import('./worldcities.service.js')
+
+const { ConfigGet } = await import(`file://${process.cwd()}/server/server.service.js`);
+
+function getCities(req, res){
+	service.getService((err, cities) => {
+		if (err)
+			return res.status(500).json(
+				err
+			);
+		else{
+			cities = JSON.parse(cities).filter(function(item) {
+				return (item.iso2 == req.params.country);
+			});	
+			import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/app_log/app_log.service.js`).then(function({createLog}){
 				createLog(req.query.app_id,
-					      { app_id : req.query.app_id, 
+							{ app_id : req.query.app_id, 
 							app_module : 'WORLDCITIES',
 							app_module_type : 'CITIES', 
 							app_module_request : req.params.country,
@@ -34,7 +35,8 @@ module.exports = {
 										cities
 								);
 				});
-			}
-		})
-	}
-};
+			})
+		}
+	})
+}
+export{getCities};

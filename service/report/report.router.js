@@ -1,5 +1,6 @@
-const { getReport } = require ("./report.controller");
-const router = require("express").Router();
+const { getReport } = await import("./report.controller.js");
+const {Router} = await import('express');
+const router = Router();
 
 router.get("/", getReport);
-module.exports = router;
+export {router};

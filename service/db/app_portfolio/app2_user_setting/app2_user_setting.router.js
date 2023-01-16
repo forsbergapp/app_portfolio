@@ -1,17 +1,18 @@
-const router = require("express").Router();
 const { createUserSetting, 
-	getUserSettingsByUserId, 
-	getProfileUserSetting,
-	getProfileUserSettings,
-	getProfileUserSettingDetail,
-	getProfileTop,
-	getUserSetting,
-	updateUserSetting, 
-	deleteUserSetting} = require ("./app2_user_setting.controller");
-const { checkAccessToken, checkDataToken } = require(global.SERVER_ROOT + "/service/auth/auth.controller");
-const { createLogAppRI } = require(global.SERVER_ROOT + "/service/log/log.controller");
+		getUserSettingsByUserId, 
+		getProfileUserSetting,
+		getProfileUserSettings,
+		getProfileUserSettingDetail,
+		getProfileTop,
+		getUserSetting,
+		updateUserSetting, 
+		deleteUserSetting} = await import("./app2_user_setting.controller.js");
+const { checkAccessToken, checkDataToken } = await import(`file://${process.cwd()}/service/auth/auth.controller.js`);
+const { createLogAppRI } = await import(`file://${process.cwd()}/service/log/log.controller.js`);
+const {Router} = await import('express');
+const router = Router();
 router.use((req,res,next)=>{
-    createLogAppRI(req, res, __appfilename, __appfunction, __appline, req.body).then(function(){
+    createLogAppRI(req, res, __appfilename(import.meta.url), __appfunction(), __appline(), req.body).then(function(){
 		next();
 	})
 })
@@ -25,4 +26,4 @@ router.post("/", checkAccessToken, createUserSetting);
 router.put("/:id", checkAccessToken, updateUserSetting);
 router.delete("/:id", checkAccessToken, deleteUserSetting);
 
-module.exports = router;
+export{router};

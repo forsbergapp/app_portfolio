@@ -1,11 +1,11 @@
-module.exports = {
-    getService: (callBack) => {
-        const fs = require('fs');
-        fs.readFile(__dirname + '/worldcities.json', 'utf8', (error, fileBuffer) => {
+function getService(callBack){
+    import('node:fs').then(function(fs){
+        fs.readFile(process.cwd() + '/service/worldcities/worldcities.json', 'utf8', (error, fileBuffer) => {
             if (error)
                 callBack(error,null);
             else
                 callBack(null,fileBuffer.toString());
         });
-    }
+    })
 }
+export{getService};

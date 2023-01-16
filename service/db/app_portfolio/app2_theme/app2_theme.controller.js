@@ -1,16 +1,15 @@
-const { getThemes } = require ("./app2_theme.service");
+const sercice = await import("./app2_theme.service.js");
 
-module.exports = {
-	getThemes: (req, res) => {
-		getThemes(req.query.app_id,(err, results) =>{
-			if (err) {
-				return res.status(500).send({
-					data: err
-				});
-			}
-			return res.status(200).json({
-				themes: results
+function getThemes(req, res){
+	service.getThemes(req.query.app_id,(err, results) =>{
+		if (err) {
+			return res.status(500).send({
+				data: err
 			});
+		}
+		return res.status(200).json({
+			themes: results
 		});
-	}
+	});
 }
+export{getThemes};

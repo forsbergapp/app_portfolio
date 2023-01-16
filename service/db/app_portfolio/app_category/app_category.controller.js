@@ -1,16 +1,15 @@
-const { getAppCategoryAdmin } = require ("./app_category.service");
+const service = await import('./app_category.service.js');
 
-module.exports = {
-	getAppCategoryAdmin: (req, res) => {
-		getAppCategoryAdmin(req.query.app_id, req.query.id, req.query.lang_code, (err, results) =>{
-			if (err) {
-				return res.status(500).send({
-					data: err
-				});
-			}
-			return res.status(200).json({
-				data: results
+function getAppCategoryAdmin(req, res){
+	service.getAppCategoryAdmin(req.query.app_id, req.query.id, req.query.lang_code, (err, results) =>{
+		if (err) {
+			return res.status(500).send({
+				data: err
 			});
+		}
+		return res.status(200).json({
+			data: results
 		});
-	}
+	});
 }
+export{getAppCategoryAdmin}
