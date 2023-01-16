@@ -1,8 +1,9 @@
-const { getParameters, getLogs, getFiles, getPM2Logs} = require ("./log.controller");
-const router = require("express").Router();
-const { checkAdmin} = require(global.SERVER_ROOT + "/service/auth/admin/admin.controller");
+const {getParameters, getLogs, getFiles, getPM2Logs} = await import('./log.controller.js');
+const { checkAdmin} = await import(`file://${process.cwd()}/service/auth/admin/admin.controller.js`);
+const {Router} = await import('express');
+const router = Router();
 router.get("/parameters", checkAdmin, getParameters);
 router.get("/logs", checkAdmin, getLogs);
 router.get("/files", checkAdmin, getFiles);
 router.get("/pm2logs", checkAdmin, getPM2Logs);
-module.exports = router;
+export {router};

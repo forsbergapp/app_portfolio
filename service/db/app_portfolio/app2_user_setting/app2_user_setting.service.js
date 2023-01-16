@@ -1,7 +1,6 @@
-const {ConfigGet} = require(global.SERVER_ROOT + '/server/server.service');
-const {execute_db_sql, get_schema_name, limit_sql} = require (global.SERVER_ROOT + "/service/db/common/common.service");
-module.exports = {
-	createUserSetting: (app_id, initial, data, callBack) => {
+const {execute_db_sql, get_schema_name, limit_sql} = await import(`file://${process.cwd()}/service/db/common/common.service.js`);
+
+function createUserSetting(app_id, initial, data, callBack){
 		let sql;
 		let parameters;
 		//insert user settings if first time and no user settings exists already
@@ -121,116 +120,118 @@ module.exports = {
 									WHERE aus2.user_account_app_user_account_id = ua.id
 									  AND aus2.user_account_app_app_id = :app_id
 									  AND :initial_setting = 1)`;
-		if (ConfigGet(1, 'SERVICE_DB', 'USE')=='3')
-			sql = sql + ' RETURNING id';
-		parameters = {
-						description: data.description,
-						regional_language_locale: data.regional_language_locale,
-						regional_timezone: data.regional_timezone,
-						regional_number_system: data.regional_number_system,
-						regional_layout_direction: data.regional_layout_direction,
-						regional_second_language_locale: data.regional_second_language_locale,
-						regional_column_title: data.regional_column_title,
-						regional_arabic_script: data.regional_arabic_script,
-						regional_calendar_type: data.regional_calendar_type,
-						regional_calendar_hijri_type: data.regional_calendar_hijri_type,
-						gps_map_type: data.gps_map_type,
-						gps_country_id: data.gps_country_id,
-						gps_city_id: data.gps_city_id,
-						gps_popular_place_id: data.gps_popular_place_id,
-						gps_lat_text: data.gps_lat_text,
-						gps_long_text: data.gps_long_text,
-						design_theme_day_id: data.design_theme_day_id,
-						design_theme_month_id: data.design_theme_month_id,
-						design_theme_year_id: data.design_theme_year_id,
-						design_paper_size: data.design_paper_size,
-						design_row_highlight: data.design_row_highlight,
-						design_column_weekday_checked: data.design_column_weekday_checked,
-						design_column_calendartype_checked: data.design_column_calendartype_checked,
-						design_column_notes_checked: data.design_column_notes_checked,
-						design_column_gps_checked: data.design_column_gps_checked,
-						design_column_timezone_checked: data.design_column_timezone_checked,
-						image_header_image_img: data.image_header_image_img,
-						image_footer_image_img: data.image_footer_image_img,
-						text_header_1_text: data.text_header_1_text,
-						text_header_2_text: data.text_header_2_text,
-						text_header_3_text: data.text_header_3_text,
-						text_header_align: data.text_header_align,
-						text_footer_1_text: data.text_footer_1_text,
-						text_footer_2_text: data.text_footer_2_text,
-						text_footer_3_text: data.text_footer_3_text,
-						text_footer_align: data.text_footer_align,
-						prayer_method: data.prayer_method,
-						prayer_asr_method: data.prayer_asr_method,
-						prayer_high_latitude_adjustment: data.prayer_high_latitude_adjustment,
-						prayer_time_format: data.prayer_time_format,
-						prayer_hijri_date_adjustment: data.prayer_hijri_date_adjustment,
-						prayer_fajr_iqamat: data.prayer_fajr_iqamat,
-						prayer_dhuhr_iqamat: data.prayer_dhuhr_iqamat,
-						prayer_asr_iqamat: data.prayer_asr_iqamat,
-						prayer_maghrib_iqamat: data.prayer_maghrib_iqamat,
-						prayer_isha_iqamat: data.prayer_isha_iqamat,
-						prayer_column_imsak_checked: data.prayer_column_imsak_checked,
-						prayer_column_sunset_checked: data.prayer_column_sunset_checked,
-						prayer_column_midnight_checked: data.prayer_column_midnight_checked,
-						prayer_column_fast_start_end: data.prayer_column_fast_start_end,
-						user_account_id: data.user_account_id,
-						app_id: app_id,
-						initial_setting: initial
-					};
-		execute_db_sql(app_id, sql, parameters, 
-			           __appfilename, __appfunction, __appline, (err, result)=>{
-			if (err)
-				return callBack(err, null);
-			else
-				switch (ConfigGet(1, 'SERVICE_DB', 'USE')){
-					case '1':{
-						return callBack(null, result);
-						break;
-					}
-					case '2':{
-						if (initial==1){
-							//user logged in and if user setting is created or not
-							//not used here
+		import(`file://${process.cwd()}/server/server.service.js`).then(function({ConfigGet}){
+			if (ConfigGet(1, 'SERVICE_DB', 'USE')=='3')
+				sql = sql + ' RETURNING id';
+			parameters = {
+							description: data.description,
+							regional_language_locale: data.regional_language_locale,
+							regional_timezone: data.regional_timezone,
+							regional_number_system: data.regional_number_system,
+							regional_layout_direction: data.regional_layout_direction,
+							regional_second_language_locale: data.regional_second_language_locale,
+							regional_column_title: data.regional_column_title,
+							regional_arabic_script: data.regional_arabic_script,
+							regional_calendar_type: data.regional_calendar_type,
+							regional_calendar_hijri_type: data.regional_calendar_hijri_type,
+							gps_map_type: data.gps_map_type,
+							gps_country_id: data.gps_country_id,
+							gps_city_id: data.gps_city_id,
+							gps_popular_place_id: data.gps_popular_place_id,
+							gps_lat_text: data.gps_lat_text,
+							gps_long_text: data.gps_long_text,
+							design_theme_day_id: data.design_theme_day_id,
+							design_theme_month_id: data.design_theme_month_id,
+							design_theme_year_id: data.design_theme_year_id,
+							design_paper_size: data.design_paper_size,
+							design_row_highlight: data.design_row_highlight,
+							design_column_weekday_checked: data.design_column_weekday_checked,
+							design_column_calendartype_checked: data.design_column_calendartype_checked,
+							design_column_notes_checked: data.design_column_notes_checked,
+							design_column_gps_checked: data.design_column_gps_checked,
+							design_column_timezone_checked: data.design_column_timezone_checked,
+							image_header_image_img: data.image_header_image_img,
+							image_footer_image_img: data.image_footer_image_img,
+							text_header_1_text: data.text_header_1_text,
+							text_header_2_text: data.text_header_2_text,
+							text_header_3_text: data.text_header_3_text,
+							text_header_align: data.text_header_align,
+							text_footer_1_text: data.text_footer_1_text,
+							text_footer_2_text: data.text_footer_2_text,
+							text_footer_3_text: data.text_footer_3_text,
+							text_footer_align: data.text_footer_align,
+							prayer_method: data.prayer_method,
+							prayer_asr_method: data.prayer_asr_method,
+							prayer_high_latitude_adjustment: data.prayer_high_latitude_adjustment,
+							prayer_time_format: data.prayer_time_format,
+							prayer_hijri_date_adjustment: data.prayer_hijri_date_adjustment,
+							prayer_fajr_iqamat: data.prayer_fajr_iqamat,
+							prayer_dhuhr_iqamat: data.prayer_dhuhr_iqamat,
+							prayer_asr_iqamat: data.prayer_asr_iqamat,
+							prayer_maghrib_iqamat: data.prayer_maghrib_iqamat,
+							prayer_isha_iqamat: data.prayer_isha_iqamat,
+							prayer_column_imsak_checked: data.prayer_column_imsak_checked,
+							prayer_column_sunset_checked: data.prayer_column_sunset_checked,
+							prayer_column_midnight_checked: data.prayer_column_midnight_checked,
+							prayer_column_fast_start_end: data.prayer_column_fast_start_end,
+							user_account_id: data.user_account_id,
+							app_id: app_id,
+							initial_setting: initial
+						};
+			execute_db_sql(app_id, sql, parameters, 
+						__appfilename(import.meta.url), __appfunction(), __appline(), (err, result)=>{
+				if (err)
+					return callBack(err, null);
+				else
+					switch (ConfigGet(1, 'SERVICE_DB', 'USE')){
+						case '1':{
 							return callBack(null, result);
-						}									
-						else{
-							//Fetch id from rowid returned from Oracle
-							//sample output:
-							//{"lastRowid":"AAAWwdAAAAAAAdHAAC","rowsAffected":1}
-							//remove "" before and after
-							let lastRowid = JSON.stringify(result.lastRowid).replace(/"/g,'');
-							sql = `SELECT id "insertId"
-									 FROM ${get_schema_name()}.app2_user_setting
-									WHERE rowid = :lastRowid`;
-							parameters = {
-											lastRowid: lastRowid
-										};
-							execute_db_sql(app_id, sql, parameters, 
-										   __appfilename, __appfunction, __appline, (err, result_id2)=>{
-								if (err)
-									return callBack(err, null);
-								else
-									return callBack(null, result_id2[0]);
-							});
+							break;
 						}
-						break;
-					}
-					case '3':{
-						if (initial==1){
-							//user logged in and if user setting is created or not
-							//not used here
-							return callBack(null, result);
-						}									
-						else{
-							return callBack(null, {insertId: result[0].id});
+						case '2':{
+							if (initial==1){
+								//user logged in and if user setting is created or not
+								//not used here
+								return callBack(null, result);
+							}									
+							else{
+								//Fetch id from rowid returned from Oracle
+								//sample output:
+								//{"lastRowid":"AAAWwdAAAAAAAdHAAC","rowsAffected":1}
+								//remove "" before and after
+								let lastRowid = JSON.stringify(result.lastRowid).replace(/"/g,'');
+								sql = `SELECT id "insertId"
+										FROM ${get_schema_name()}.app2_user_setting
+										WHERE rowid = :lastRowid`;
+								parameters = {
+												lastRowid: lastRowid
+											};
+								execute_db_sql(app_id, sql, parameters, 
+											__appfilename(import.meta.url), __appfunction(), __appline(), (err, result_id2)=>{
+									if (err)
+										return callBack(err, null);
+									else
+										return callBack(null, result_id2[0]);
+								});
+							}
+							break;
 						}
-						break;
+						case '3':{
+							if (initial==1){
+								//user logged in and if user setting is created or not
+								//not used here
+								return callBack(null, result);
+							}									
+							else{
+								return callBack(null, {insertId: result[0].id});
+							}
+							break;
+						}
 					}
-				}
-		});
-	},
-	getUserSetting:  (app_id, id, callBack) => {
+			});
+		})
+	}
+function getUserSetting(app_id, id, callBack){
 		let sql;
 		let parameters;
 		sql = `SELECT	id "id",
@@ -294,14 +295,14 @@ module.exports = {
 						id: id
 					};
 		execute_db_sql(app_id, sql, parameters, 
-			           __appfilename, __appfunction, __appline, (err, result)=>{
+			           __appfilename(import.meta.url), __appfunction(), __appline(), (err, result)=>{
 			if (err)
 				return callBack(err, null);
 			else
 				return callBack(null, result);
 		});
-	},
-	getUserSettingsByUserId: (app_id, id, callBack) => {
+	}
+function getUserSettingsByUserId(app_id, id, callBack){
 		let sql;
 		let parameters;
 		sql = `SELECT	id "id",
@@ -367,14 +368,14 @@ module.exports = {
 						app_id: app_id
 					};
 		execute_db_sql(app_id, sql, parameters, 
-			           __appfilename, __appfunction, __appline, (err, result)=>{
+			           __appfilename(import.meta.url), __appfunction(), __appline(), (err, result)=>{
 			if (err)
 				return callBack(err, null);
 			else
 				return callBack(null, result);
 		});
-	},
-	getProfileUserSetting: (app_id, id, callBack) => {
+	}
+function getProfileUserSetting(app_id, id, callBack){
 		let sql;
 		let parameters;
 		sql = `SELECT (SELECT COUNT(DISTINCT us.user_account_app_user_account_id)
@@ -396,14 +397,14 @@ module.exports = {
 						app_id: app_id
 					}; 
 		execute_db_sql(app_id, sql, parameters, 
-			           __appfilename, __appfunction, __appline, (err, result)=>{
+			           __appfilename(import.meta.url), __appfunction(), __appline(), (err, result)=>{
 			if (err)
 				return callBack(err, null);
 			else
 				return callBack(null, result[0]);
 		});
-    },
-	getProfileUserSettings: (app_id, id, id_current_user, callBack) => {
+    }
+function getProfileUserSettings(app_id, id, id_current_user, callBack){
 		let sql;
 		let parameters;
 		sql = `SELECT us.id "id",
@@ -429,14 +430,14 @@ module.exports = {
 						app_id: app_id
 						};
 		execute_db_sql(app_id, sql, parameters, 
-			           __appfilename, __appfunction, __appline, (err, result)=>{
+			           __appfilename(import.meta.url), __appfunction(), __appline(), (err, result)=>{
 			if (err)
 				return callBack(err, null);
 			else
 				return callBack(null, result);
 		});
-	},
-	getProfileUserSettingDetail: (app_id, id, detailchoice, callBack) => {
+	}
+function getProfileUserSettingDetail(app_id, id, detailchoice, callBack){
 		let sql;
 		let parameters;
 		sql = `SELECT detail "detail", 
@@ -493,14 +494,14 @@ module.exports = {
 						detailchoice: detailchoice
 					};
 		execute_db_sql(app_id, sql, parameters, 
-			           __appfilename, __appfunction, __appline, (err, result)=>{
+			           __appfilename(import.meta.url), __appfunction(), __appline(), (err, result)=>{
 			if (err)
 				return callBack(err, null);
 			else
 				return callBack(null, result);
 		});
-    },
-	getProfileTop: (app_id, statchoice, callBack) => {
+    }
+function getProfileTop(app_id, statchoice, callBack){
 		let sql;
 		let parameters;
     
@@ -560,14 +561,14 @@ module.exports = {
 						statchoice: statchoice,
 					};
 		execute_db_sql(app_id, sql, parameters, 
-			           __appfilename, __appfunction, __appline, (err, result)=>{
+			           __appfilename(import.meta.url), __appfunction(), __appline(), (err, result)=>{
 			if (err)
 				return callBack(err, null);
 			else
 				return callBack(null, result);
 		});
-    },
-	updateUserSetting: (app_id, data, id, callBack) => {
+    }
+function updateUserSetting(app_id, data, id, callBack){
 		let sql;
 		let parameters;
 		sql = `UPDATE ${get_schema_name()}.app2_user_setting
@@ -681,14 +682,14 @@ module.exports = {
 						id: id
 					};
 		execute_db_sql(app_id, sql, parameters, 
-			           __appfilename, __appfunction, __appline, (err, result)=>{
+			           __appfilename(import.meta.url), __appfunction(), __appline(), (err, result)=>{
 			if (err)
 				return callBack(err, null);
 			else
 				return callBack(null, result);
 		});
-	},
-	deleteUserSetting: (app_id, id, callBack) => {
+	}
+function deleteUserSetting(app_id, id, callBack){
 		let sql;
 		let parameters;
 		sql = `DELETE FROM ${get_schema_name()}.app2_user_setting
@@ -697,11 +698,12 @@ module.exports = {
 						id: id
 						};
 		execute_db_sql(app_id, sql, parameters, 
-			           __appfilename, __appfunction, __appline, (err, result)=>{
+			           __appfilename(import.meta.url), __appfunction(), __appline(), (err, result)=>{
 			if (err)
 				return callBack(err, null);
 			else
 				return callBack(null, result);
 		});
 	}
-};
+export{createUserSetting, getUserSetting, getUserSettingsByUserId, getProfileUserSetting, getProfileUserSettings, 
+	   getProfileUserSettingDetail, getProfileTop, updateUserSetting, deleteUserSetting};

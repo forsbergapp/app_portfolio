@@ -1,11 +1,8 @@
-const {ConfigGet} = require(global.SERVER_ROOT + '/server/server.service');
-const { createLogAppSE } = require(global.SERVER_ROOT + "/service/log/log.controller");
-const { createLogDB } = require(global.SERVER_ROOT + "/service/log/log.service");
-
-const { ORACLEDB, get_pool} = require(global.SERVER_ROOT + "/service/db/admin/admin.service");
+const {ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
 
 function log_db_sql(app_id, sql, parameters){
 	let parsed_sql = sql;
+	//ES7 Object.entries
 	Object.entries(parameters).forEach(function(parameter){
 		//replace bind parameters with values in log
 		parsed_sql = parsed_sql.replace(/\:(\w+)/g, function (txt, key) {
@@ -17,17 +14,19 @@ function log_db_sql(app_id, sql, parameters){
 			else
 				return txt;
 		})
-		
 	});
-	createLogDB(app_id, `DB:${ConfigGet(1, 'SERVICE_DB', 'USE')} Pool: ${app_id} SQL: ${parsed_sql}`);
+	import(`file://${process.cwd()}/service/log/log.service.js`).then(function({createLogDB}){
+		createLogDB(app_id, `DB:${ConfigGet(1, 'SERVICE_DB', 'USE')} Pool: ${app_id} SQL: ${parsed_sql}`);
+	})
 }
 async function execute_db_sql(app_id, sql, parameters, 
 							  app_filename, app_function, app_line, callBack){
-
-		if (ConfigGet(1, 'SERVICE_LOG', 'ENABLE_DB')=='1'){
-			log_db_sql(app_id, sql, parameters);
-		}
-		switch (ConfigGet(1, 'SERVICE_DB', 'USE')){
+	const {createLogAppSE} = await import(`file://${process.cwd()}/service/log/log.controller.js`);
+	const { ORACLEDB, get_pool} = await import(`file://${process.cwd()}/service/db/admin/admin.service.js`);
+	if (ConfigGet(1, 'SERVICE_LOG', 'ENABLE_DB')=='1'){
+		log_db_sql(app_id, sql, parameters);
+	}
+	switch (ConfigGet(1, 'SERVICE_DB', 'USE')){
 		case '1':{
 			let conn;
 			function config_connection(conn, query, values){
@@ -91,7 +90,7 @@ async function execute_db_sql(app_id, sql, parameters,
 														}
 													});
 			}catch (err) {
-				createLogAppSE(app_id, __appfilename, __appfunction, __appline, err.message).then(function(){
+				createLogAppSE(app_id, __appfilename(import.meta.url), __appfunction(), __appline(), err.message).then(function(){
 					return callBack(err.message);
 				})
 			} finally {
@@ -99,7 +98,7 @@ async function execute_db_sql(app_id, sql, parameters,
 					try {
 						await pool2.close(); 
 					} catch (err) {
-						createLogAppSE(app_id, __appfilename, __appfunction, __appline, err.message).then(function(){
+						createLogAppSE(app_id, __appfilename(import.meta.url), __appfunction(), __appline(), err.message).then(function(){
 							return callBack(err.message);
 						})
 					}
@@ -236,7 +235,19 @@ function limit_sql(sql, limit_type = null){
 		else
 			return sql;
 }
-module.exports.execute_db_sql = execute_db_sql;
-module.exports.get_schema_name = get_schema_name;
-module.exports.get_locale = get_locale;
-module.exports.limit_sql = limit_sql;
+function record_not_found(app_id, lang_code){
+	import(`file://${process.cwd()}/server/server.service.js`).then(function({ConfigGet}){
+		import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/message_translation/message_translation.service.js`).then(function({ getMessage }){
+			getMessage( app_id, 
+						ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),
+						20400, 
+						lang_code, (err,results_message)  => {
+							return res.status(404).send(
+								err ?? results_message.text
+							);
+						});
+		})
+	})
+}
+
+export{execute_db_sql, get_schema_name, get_locale, limit_sql, record_not_found}

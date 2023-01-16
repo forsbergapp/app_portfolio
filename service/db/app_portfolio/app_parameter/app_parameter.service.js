@@ -1,11 +1,11 @@
-const {ConfigGet} = require(global.SERVER_ROOT + '/server/server.service');
-const {execute_db_sql, get_schema_name, get_locale} = require (global.SERVER_ROOT + "/service/db/common/common.service");
+const {ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
+const {execute_db_sql, get_schema_name, get_locale} = await import(`file://${process.cwd()}/service/db/common/common.service.js`);
 
-module.exports = {
-	//returns parameters for app_id=0 and given app_id
-	//and parameter type 0,1,2, only to be called from server
-	//because 2 contains passwords or other sensitive data
-	getParameters_server: (app_id, data_app_id, callBack) => {
+function getParameters_server(app_id, data_app_id, callBack){
+		//returns parameters for app_id=0 and given app_id
+		//and parameter type 0,1,2, only to be called from server
+		//because 2 contains passwords or other sensitive data
+
 		let sql;
 		let parameters;
 		sql = `SELECT	app_id "app_id",
@@ -21,14 +21,14 @@ module.exports = {
 				ORDER BY 1, 3`;
 		parameters = {app_id: data_app_id};
 		execute_db_sql(app_id, sql, parameters, 
-			           __appfilename, __appfunction, __appline, (err, result)=>{
+			           __appfilename(import.meta.url), __appfunction(), __appline(), (err, result)=>{
 			if (err)
 				return callBack(err, null);
 			else
 				return callBack(null, result);
 		});
-	},
-	getParametersAllAdmin: (app_id, data_app_id, lang_code, callBack) => {
+	}
+function getParametersAllAdmin(app_id, data_app_id, lang_code, callBack){
 		let sql;
 		let parameters;
 		sql = `SELECT ap.app_id "app_id",
@@ -60,14 +60,14 @@ module.exports = {
 					  lang_code3: get_locale(lang_code, 3),
 					  app_id: data_app_id};
 		execute_db_sql(app_id, sql, parameters, 
-					   __appfilename, __appfunction, __appline, (err, result)=>{
+					   __appfilename(import.meta.url), __appfunction(), __appline(), (err, result)=>{
 			if (err)
 				return callBack(err, null);
 			else
 				return callBack(null, result); 
 		});
-	},
-	getParameter: (app_id, data_app_id, parameter_name, callBack) =>{
+	}
+function getParameter(app_id, data_app_id, parameter_name, callBack){
 		let sql;
 		let parameters;
 		sql = `SELECT parameter_value "parameter_value"
@@ -79,14 +79,14 @@ module.exports = {
 		parameters = {app_id: data_app_id,
 					  parameter_name:parameter_name};
 		execute_db_sql(app_id, sql, parameters, 
-					   __appfilename, __appfunction, __appline, (err, result)=>{
+					   __appfilename(import.meta.url), __appfunction(), __appline(), (err, result)=>{
 			if (err)
 				return callBack(err, null);
 			else
 				return callBack(null, result[0].parameter_value);
 		});
-	},
-	setParameter_admin: (app_id, body, callBack) =>{
+	}
+function setParameter_admin(app_id, body, callBack){
 		let sql;
 		let parameters;
 		sql = `UPDATE ${get_schema_name()}.app_parameter
@@ -101,14 +101,14 @@ module.exports = {
 					  app_id: body.app_id,
 					  parameter_name: body.parameter_name};
 		execute_db_sql(app_id, sql, parameters,
-			           __appfilename, __appfunction, __appline, (err, result)=>{
+			           __appfilename(import.meta.url), __appfunction(), __appline(), (err, result)=>{
 			if (err)
 				return callBack(err, null);
 			else
 				return callBack(null, result);
 		});
-	},
-	setParameterValue_admin: (app_id, body, callBack) =>{
+	}
+function setParameterValue_admin(app_id, body, callBack){
 		let sql;
 		let parameters;
 		sql = `UPDATE ${get_schema_name()}.app_parameter
@@ -119,14 +119,14 @@ module.exports = {
 					  app_id: body.app_id,
 					  parameter_name: body.parameter_name};
 		execute_db_sql(app_id, sql, parameters, 
-					   __appfilename, __appfunction, __appline, (err, result)=>{
+					   __appfilename(import.meta.url), __appfunction(), __appline(), (err, result)=>{
 			if (err)
 				return callBack(err, null);
 			else
 				return callBack(null, result);
 		});
-	},
-	getAppDBParametersAdmin: (app_id, callBack) => {
+	}
+function getAppDBParametersAdmin(app_id, callBack){
 		let sql;
 		let parameters;
 		let db_user = 'SERVICE_DB_APP_USER';
@@ -147,15 +147,15 @@ module.exports = {
 					  db_password: db_password};
 
 		execute_db_sql(app_id, sql, parameters,
-			           __appfilename, __appfunction, __appline, (err, result)=>{
+			           __appfilename(import.meta.url), __appfunction(), __appline(), (err, result)=>{
 			if (err)
 				return callBack(err, null);
 			else
 				return callBack(null, result);
 		});
 		
-	},
-	getAppStartParameters: (app_id, callBack) => {
+	}
+function getAppStartParameters(app_id, callBack){
 		let sql;
 		let parameters;
 		let service_auth = 'SERVICE_AUTH';
@@ -190,16 +190,16 @@ module.exports = {
 						app_rest_client_secret: app_rest_client_secret,
 						rest_app_parameter: rest_app_parameter}
 		execute_db_sql(app_id, sql, parameters,
-					   __appfilename, __appfunction, __appline, (err, result)=>{
+					   __appfilename(import.meta.url), __appfunction(), __appline(), (err, result)=>{
 			if (err)
 				return callBack(err, null);
 			else
 				return callBack(null, result);
 		});
-	},
-	//returns parameters for app_id=0 and given app_id
-	//and only public and private shared
-	getParameters: (app_id, data_app_id, callBack) => {
+	}
+function getParameters(app_id, data_app_id, callBack){
+		//returns parameters for app_id=0 and given app_id
+		//and only public and private shared
 		let sql;
 		let parameters;
 		sql = `SELECT	app_id "app_id",
@@ -215,11 +215,12 @@ module.exports = {
 				ORDER BY 1`;
 		parameters = {app_id: data_app_id};
 		execute_db_sql(app_id, sql, parameters, 
-			           __appfilename, __appfunction, __appline, (err, result)=>{
+			           __appfilename(import.meta.url), __appfunction(), __appline(), (err, result)=>{
 			if (err)
 				return callBack(err, null);
 			else
 				return callBack(null, result);
 		});
 	}
-};
+export{getParameters_server, getParametersAllAdmin, getParameter, setParameter_admin, setParameterValue_admin, 
+	   getAppDBParametersAdmin, getAppStartParameters, getParameters};

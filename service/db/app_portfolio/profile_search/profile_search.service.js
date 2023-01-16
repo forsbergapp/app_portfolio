@@ -1,6 +1,6 @@
-const {execute_db_sql, get_schema_name} = require (global.SERVER_ROOT + "/service/db/common/common.service");
-module.exports = {
-	insertProfileSearch: (app_id, data, callBack) => {
+const {execute_db_sql, get_schema_name} = await import(`file://${process.cwd()}/service/db/common/common.service.js`);
+
+function insertProfileSearch(app_id, data, callBack){
 		let sql;
     	let parameters;
 		sql = `INSERT INTO ${get_schema_name()}.profile_search(
@@ -15,11 +15,11 @@ module.exports = {
 						client_latitude: data.client_latitude
 						};
 		execute_db_sql(app_id, sql, parameters, 
-			           __appfilename, __appfunction, __appline, (err, result)=>{
+			           __appfilename(import.meta.url), __appfunction(), __appline(), (err, result)=>{
 			if (err)
 				return callBack(err, null);
 			else
 				return callBack(null, result);
 		});
 	}
-};
+export{insertProfileSearch};

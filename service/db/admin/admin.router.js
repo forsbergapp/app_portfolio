@@ -1,9 +1,10 @@
-const { DBInfo, DBInfoSpace, DBInfoSpaceSum, DBStart, DBStop } = require ("./admin.controller");
-const router = require("express").Router();
-const { createLogAppRI } = require(global.SERVER_ROOT + "/service/log/log.controller");
-const { checkAdmin} = require (global.SERVER_ROOT + "/service/auth/admin/admin.controller");
+const { DBInfo, DBInfoSpace, DBInfoSpaceSum, DBStart, DBStop } = await import('./admin.controller.js');
+const {createLogAppRI} = await import(`file://${process.cwd()}/service/log/log.controller.js`);
+const {checkAdmin} = await import(`file://${process.cwd()}/service/auth/admin/admin.controller.js`);
+const {Router} = await import('express');
+const router = Router();
 router.use((req,res,next)=>{
-    createLogAppRI(req, res, __appfilename, __appfunction, __appline, req.body).then(function(){
+    createLogAppRI(req, res, __appfilename(import.meta.url), __appfunction(), __appline(), req.body).then(function(){
 		next();
 	})
 })
@@ -12,4 +13,4 @@ router.get("/DBInfoSpace",  checkAdmin, DBInfoSpace);
 router.get("/DBInfoSpaceSum",  checkAdmin, DBInfoSpaceSum);
 router.get("/DBStart",  checkAdmin, DBStart);
 router.get("/DBStop",  checkAdmin, DBStop);
-module.exports = router;
+export{router};

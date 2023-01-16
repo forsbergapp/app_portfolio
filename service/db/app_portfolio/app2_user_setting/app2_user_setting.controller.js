@@ -1,241 +1,183 @@
-const {ConfigGet} = require(global.SERVER_ROOT + '/server/server.service');
-const { createUserSetting, 
-		getUserSettingsByUserId,
-		getProfileUserSetting,
-		getProfileUserSettings,
-		getProfileUserSettingDetail,
-		getProfileTop,
-		getUserSetting,
-		updateUserSetting, 
-		deleteUserSetting} = require ("./app2_user_setting.service");
-		const { getMessage } = require(global.SERVER_ROOT + ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH') +"/message_translation/message_translation.service");
-module.exports = {
-	createUserSetting: (req, res) =>{
-		const body = req.body;
-		createUserSetting(req.query.app_id, req.query.initial, body, (err,results) => {
-			if (err)
-				return res.status(500).send(
-					err
-				);
-			else
-				return res.status(200).json({
-					id: results.insertId,
-					data: results
-				})
-		});
-	},
-	getUserSettingsByUserId: (req, res) => {
-		req.params.id = parseInt(req.params.id);
-		getUserSettingsByUserId(req.query.app_id, req.params.id, (err, results) =>{
-			if (err)
-				return res.status(500).send(
-					err
-				);
-			else
-				if (results)
-					return res.status(200).json({
-						count: results.length,
-						items: results
-					});
-				else{
-					//Record not found
-					getMessage( req.query.app_id, 
-								req.query.app_id,
-								20400, 
-								req.query.lang_code, (err,results_message)  => {
-									return res.status(404).send(
-											err ?? results_message.text
-									);
-								});
-				}
-		});
-	},
-	getProfileUserSetting: (req, res) => {
-		req.params.id = parseInt(req.params.id);
-		getProfileUserSetting(req.query.app_id, req.params.id, (err, results) =>{
-			if (err) {
-				return res.status(500).send(
-					err
-				);
-			}
-			else
-				if (results)
-					return res.status(200).json({
-						count: results.length,
-						items: results
-					});
-				else{
-					//Record not found
-					getMessage( req.query.app_id, 
-								req.query.app_id, 
-								20400, 
-								req.query.lang_code, (err,results_message)  => {
-									return res.status(404).send(
-										err ?? results_message.text
-									);
-								});
-				}
-		});
-	},
-	getProfileUserSettings: (req, res) => {
-		req.params.id = parseInt(req.params.id);
-		let id_current_user;
-		if (typeof req.query.id !== 'undefined')
-			id_current_user = req.query.id;
-		getProfileUserSettings(req.query.app_id, req.params.id, id_current_user, (err, results) =>{
-			if (err) {
-				return res.status(500).send(
-					err
-				);
-			}
-			else
-				if (results)
-					return res.status(200).json({
-						count: results.length,
-						items: results
-					});
-				else{
-					//Record not found
-					getMessage( req.query.app_id, 
-								req.query.app_id, 
-								20400, 
-								req.query.lang_code, (err,results_message)  => {
-									return res.status(404).send(
-										err ?? results_message.text
-									);
-								});
-				}
-		});
-	},
-	getProfileUserSettingDetail: (req, res) => {
-        req.params.id = parseInt(req.params.id);
-        let detailchoice;
-        if (typeof req.query.detailchoice !== 'undefined')
-            detailchoice = req.query.detailchoice;
+const service = await import("./app2_user_setting.service.js");
 
-		getProfileUserSettingDetail(req.query.app_id, req.params.id, detailchoice, (err, results) => {
-            if (err) {
-                return res.status(500).send(
-                    err
-                );
-            }
-            else{
-                if (results)
-					return res.status(200).json({
-						count: results.length,
-						items: results
-					});
-				else {
-                    //Record not found
-                    getMessage( req.query.app_id, 
-								req.query.app_id, 
-								20400, 
-								req.query.lang_code, (err,results_message)  => {
-									return res.status(404).json({
-											count: 0,
-											message: err ?? results_message.text
-										});
-								});
-				}
-            }
-        });
-    },
-	getProfileTop: (req, res) => {
-        if (typeof req.params.statchoice !== 'undefined')
-            req.params.statchoice = parseInt(req.params.statchoice)
-        getProfileTop(req.query.app_id, req.params.statchoice, (err, results) => {
-            if (err) {
-                return res.status(500).send(
-                    err
-                );
-            }
-            else{
-                if (results)
-					return res.status(200).json({
-						count: results.length,
-						items: results
-					}); 
-				else{
-                    //Record not found
-                    getMessage( req.query.app_id, 
-								req.query.app_id, 
-								20400, 
-								req.query.lang_code, (err,results_message)  => {
-									return res.status(404).json({
-											count: 0,
-											message: err ?? results_message.text
-										});
-								});
-                }   
-            }
-        });
-    },
-	getUserSetting: (req, res) => {
-		req.params.id = parseInt(req.params.id);
-		getUserSetting(req.query.app_id, req.params.id, (err, results) =>{
-			if (err) {
-				return res.status(500).send(
-					err
-				);
-			}
-			else{
-				//send without {} so the variablename is not sent
-				return res.status(200).json(
-					results[0]
-				);
-			}
-		});
-	},
-	updateUserSetting: (req, res) => {
-		req.params.id = parseInt(req.params.id);
-		updateUserSetting(req.query.app_id, req.body, req.params.id, (err, results) =>{
-			if (err) {
-				return res.status(500).send(
-					err
-				);
-			}
-			else{
-				if (results)
-					return res.status(200).json(
-						results
-					);
-				else
-					//Record not found
-					getMessage( req.query.app_id, 
-								req.query.app_id, 
-								20400, 
-								req.query.lang_code, (err,results_message)  => {
-									return res.status(404).send(
-										err ?? results_message.text
-									);
-								});
-			}
-		});
-	},
-	deleteUserSetting: (req, res) => {
-		req.params.id = parseInt(req.params.id);
-		deleteUserSetting(req.query.app_id, req.params.id, (err, results) =>{
-			if (err) {
-				return res.status(500).send(
-					err
-				);
-			}
-			else{
-				if (results)
-					return res.status(200).json(
-						results
-					);
-				else
-					//Record not found
-					getMessage( req.query.app_id, 
-								req.query.app_id, 
-								20400, 
-								req.query.lang_code, (err,results_message)  => {
-									return res.status(404).send(
-										err ?? results_message.text
-									);
-								});
-			}
-		});
-	}
+function createUserSetting(req, res){
+	const body = req.body;
+	service.createUserSetting(req.query.app_id, req.query.initial, body, (err,results) => {
+		if (err)
+			return res.status(500).send(
+				err
+			);
+		else
+			return res.status(200).json({
+				id: results.insertId,
+				data: results
+			})
+	});
 }
+function getUserSettingsByUserId(req, res){
+	req.params.id = parseInt(req.params.id);
+	service.getUserSettingsByUserId(req.query.app_id, req.params.id, (err, results) =>{
+		if (err)
+			return res.status(500).send(
+				err
+			);
+		else
+			if (results)
+				return res.status(200).json({
+					count: results.length,
+					items: results
+				});
+			else
+				import(`file://${process.cwd()}/service/db/common.service.js`).then(function({record_not_found}){
+					return record_not_found(req.query.app_id, req.query.lang_code);
+				})
+	});
+}
+function getProfileUserSetting(req, res){
+	req.params.id = parseInt(req.params.id);
+	service.getProfileUserSetting(req.query.app_id, req.params.id, (err, results) =>{
+		if (err) {
+			return res.status(500).send(
+				err
+			);
+		}
+		else
+			if (results)
+				return res.status(200).json({
+					count: results.length,
+					items: results
+				});
+			else
+				import(`file://${process.cwd()}/service/db/common.service.js`).then(function({record_not_found}){
+					return record_not_found(req.query.app_id, req.query.lang_code);
+				})
+	});
+}
+function getProfileUserSettings(req, res){
+	req.params.id = parseInt(req.params.id);
+	let id_current_user;
+	if (typeof req.query.id !== 'undefined')
+		id_current_user = req.query.id;
+	service.getProfileUserSettings(req.query.app_id, req.params.id, id_current_user, (err, results) =>{
+		if (err) {
+			return res.status(500).send(
+				err
+			);
+		}
+		else
+			if (results)
+				return res.status(200).json({
+					count: results.length,
+					items: results
+				});
+			else
+				import(`file://${process.cwd()}/service/db/common.service.js`).then(function({record_not_found}){
+					return record_not_found(req.query.app_id, req.query.lang_code);
+				})
+	});
+}
+function getProfileUserSettingDetail(req, res){
+	req.params.id = parseInt(req.params.id);
+	let detailchoice;
+	if (typeof req.query.detailchoice !== 'undefined')
+		detailchoice = req.query.detailchoice;
+
+	service.getProfileUserSettingDetail(req.query.app_id, req.params.id, detailchoice, (err, results) => {
+		if (err) {
+			return res.status(500).send(
+				err
+			);
+		}
+		else{
+			if (results)
+				return res.status(200).json({
+					count: results.length,
+					items: results
+				});
+			else
+				import(`file://${process.cwd()}/service/db/common.service.js`).then(function({record_not_found}){
+					return record_not_found(req.query.app_id, req.query.lang_code);
+				})
+		}
+	});
+}
+function getProfileTop(req, res){
+	if (typeof req.params.statchoice !== 'undefined')
+		req.params.statchoice = parseInt(req.params.statchoice)
+	service.getProfileTop(req.query.app_id, req.params.statchoice, (err, results) => {
+		if (err) {
+			return res.status(500).send(
+				err
+			);
+		}
+		else{
+			if (results)
+				return res.status(200).json({
+					count: results.length,
+					items: results
+				}); 
+			else
+				import(`file://${process.cwd()}/service/db/common.service.js`).then(function({record_not_found}){
+					return record_not_found(req.query.app_id, req.query.lang_code);
+				})
+		}
+	});
+}
+function getUserSetting(req, res){
+	req.params.id = parseInt(req.params.id);
+	service.getUserSetting(req.query.app_id, req.params.id, (err, results) =>{
+		if (err) {
+			return res.status(500).send(
+				err
+			);
+		}
+		else{
+			//send without {} so the variablename is not sent
+			return res.status(200).json(
+				results[0]
+			);
+		}
+	});
+}
+function updateUserSetting(req, res){
+	req.params.id = parseInt(req.params.id);
+	service.updateUserSetting(req.query.app_id, req.body, req.params.id, (err, results) =>{
+		if (err) {
+			return res.status(500).send(
+				err
+			);
+		}
+		else{
+			if (results)
+				return res.status(200).json(
+					results
+				);
+			else
+				import(`file://${process.cwd()}/service/db/common.service.js`).then(function({record_not_found}){
+					return record_not_found(req.query.app_id, req.query.lang_code);
+				})
+		}
+	});
+}
+function deleteUserSetting(req, res){
+	req.params.id = parseInt(req.params.id);
+	service.deleteUserSetting(req.query.app_id, req.params.id, (err, results) =>{
+		if (err) {
+			return res.status(500).send(
+				err
+			);
+		}
+		else{
+			if (results)
+				return res.status(200).json(
+					results
+				);
+			else
+				import(`file://${process.cwd()}/service/db/common.service.js`).then(function({record_not_found}){
+					return record_not_found(req.query.app_id, req.query.lang_code);
+				})
+		}
+	});
+}
+export{createUserSetting, getUserSettingsByUserId, getProfileUserSetting, getProfileUserSettings, getProfileUserSettingDetail,
+	   getProfileTop, getUserSetting, updateUserSetting, deleteUserSetting};

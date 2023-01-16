@@ -1,7 +1,6 @@
-const {ConfigGet} = require(global.SERVER_ROOT + '/server/server.service');
-const {execute_db_sql, get_schema_name} = require (global.SERVER_ROOT + "/service/db/common/common.service");
-module.exports = {
-	getUserAccountLogonAdmin:(app_id, user_account_id, app_id_select, callBack)=>{
+const {execute_db_sql, get_schema_name} = await import(`file://${process.cwd()}/service/db/common/common.service.js`);
+
+function getUserAccountLogonAdmin(app_id, user_account_id, app_id_select, callBack){
 		let sql;
 		let parameters;
 		if(typeof app_id_select=='undefined' ||app_id_select == '\'\'')
@@ -24,14 +23,14 @@ module.exports = {
 						app_id_select: app_id_select
 					};
 		execute_db_sql(app_id, sql, parameters, 
-						__appfilename, __appfunction, __appline, (err, result)=>{
+						__appfilename(import.meta.url), __appfunction(), __appline(), (err, result)=>{
 			if (err)
 				return callBack(err, null);
 			else
 				return callBack(null, result);
 		});
-	},
-	checkLogin: (app_id, user_account_id, access_token, client_ip, callBack)=>{
+	}
+function checkLogin(app_id, user_account_id, access_token, client_ip, callBack){
 		let sql;
 		let parameters;
 		sql = `SELECT 1
@@ -47,25 +46,27 @@ module.exports = {
 					    ua.app_role_id IN (:super_admin_app_role_id,:admin_app_role_id))
 					   OR
 					   ual.app_id <> :admin_app_id)`;
-		parameters = {
-						user_account_id: user_account_id,
-						app_id: app_id,
-						access_token: access_token,
-						client_ip: client_ip,
-						admin_app_id: ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),
-						super_admin_app_role_id: 0,
-						admin_app_role_id: 1
-					};
-		execute_db_sql(app_id, sql, parameters, 
-			           __appfilename, __appfunction, __appline, (err, result)=>{
-			if (err)
-				return callBack(err, null);
-			else
-				return callBack(null, result);
-		});
-	},
+		import(`file://${process.cwd()}/server/server.service.js`).then(function({ConfigGet}){
+			parameters = {
+				user_account_id: user_account_id,
+				app_id: app_id,
+				access_token: access_token,
+				client_ip: client_ip,
+				admin_app_id: ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),
+				super_admin_app_role_id: 0,
+				admin_app_role_id: 1
+			};
+			execute_db_sql(app_id, sql, parameters, 
+						__appfilename(import.meta.url), __appfunction(), __appline(), (err, result)=>{
+				if (err)
+					return callBack(err, null);
+				else
+					return callBack(null, result);
+			});
+		})
+	}
 	
-	insertUserAccountLogon: (app_id, data, callBack) => {
+function insertUserAccountLogon(app_id, data, callBack){
 		let sql;
 		let parameters;
 		data.access_token = data.access_token ?? null;
@@ -83,11 +84,11 @@ module.exports = {
 						client_latitude:  data.client_latitude ?? null
 					};
 		execute_db_sql(app_id, sql, parameters, 
-			           __appfilename, __appfunction, __appline, (err, result)=>{
+			           __appfilename(import.meta.url), __appfunction(), __appline(), (err, result)=>{
 			if (err)
 				return callBack(err, null);
 			else
 				return callBack(null, result);
 		});
 	}
-};
+export{getUserAccountLogonAdmin, checkLogin, insertUserAccountLogon};

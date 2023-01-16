@@ -1,19 +1,18 @@
-const { getParameterTypeAdmin} = require ("./parameter_type.service");
+const service = await import("./parameter_type.service.js");
 
-module.exports = {
-	getParameterTypeAdmin: (req, res) => {
-		if (typeof req.query.id == 'undefined')
-			req.query.id = null;
-		getParameterTypeAdmin(req.query.app_id, req.query.id, req.query.lang_code, (err, results) =>{
-			if (err) {
-				return res.status(500).send({
-					data: err
-				});
-			}
-			else
-                return res.status(200).json({
-                    data: results
-                });
-		});
-	}
+function getParameterTypeAdmin(req, res){
+	if (typeof req.query.id == 'undefined')
+		req.query.id = null;
+	service.getParameterTypeAdmin(req.query.app_id, req.query.id, req.query.lang_code, (err, results) =>{
+		if (err) {
+			return res.status(500).send({
+				data: err
+			});
+		}
+		else
+			return res.status(200).json({
+				data: results
+			});
+	});
 }
+export{getParameterTypeAdmin};

@@ -1,6 +1,6 @@
-const {execute_db_sql, get_schema_name} = require (global.SERVER_ROOT + "/service/db/common/common.service");
-module.exports = {
-	insertUserEvent: (app_id, data, callBack) => {
+const {execute_db_sql, get_schema_name} = await import(`file://${process.cwd()}/service/db/common/common.service.js`);
+
+function insertUserEvent(app_id, data, callBack){
 		let sql;
 		let parameters;
 		sql = `INSERT INTO ${get_schema_name()}.user_account_event(
@@ -34,14 +34,14 @@ module.exports = {
 						event_status : data.event_status
 					};
 		execute_db_sql(app_id, sql, parameters, 
-			           __appfilename, __appfunction, __appline, (err, result)=>{
+			           __appfilename(import.meta.url), __appfunction(), __appline(), (err, result)=>{
 			if (err)
 				return callBack(err, null);
 			else
 				return callBack(null, result);
 		});
-	},
-	getLastUserEvent: (app_id, user_account_id, event, callBack) => {
+	}
+function getLastUserEvent(app_id, user_account_id, event, callBack){
 		let sql;
 		let parameters;
 		sql = `SELECT uae.user_account_id "user_account_id",
@@ -70,11 +70,11 @@ module.exports = {
 						event : event
 					};
 		execute_db_sql(app_id, sql, parameters, 
-			           __appfilename, __appfunction, __appline, (err, result)=>{
+			           __appfilename(import.meta.url), __appfunction(), __appline(), (err, result)=>{
 			if (err)
 				return callBack(err, null);
 			else
 				return callBack(null, result[0]);
 		});
 	}
-};
+export{insertUserEvent, getLastUserEvent};
