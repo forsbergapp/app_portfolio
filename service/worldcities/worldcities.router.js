@@ -1,6 +1,6 @@
-const { getCities} = require ("./worldcities.controller");
-const router = require("express").Router();
-const { checkDataToken } = require(global.SERVER_ROOT + "/service/auth/auth.controller");
-
+const { getCities} = await import('./worldcities.controller.js');
+const { checkDataToken } = await import(`file://${process.cwd()}/service/auth/auth.controller.js`);
+const {Router} = await import('express');
+const router = Router();
 router.get("/:country", checkDataToken, getCities);
-module.exports = router;
+export {router};

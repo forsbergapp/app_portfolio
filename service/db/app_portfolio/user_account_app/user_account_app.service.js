@@ -1,6 +1,6 @@
-const {execute_db_sql, get_schema_name} = require (global.SERVER_ROOT + "/service/db/common/common.service");
-module.exports = {
-	createUserAccountApp: (app_id, user_account_id, callBack) => {
+const {execute_db_sql, get_schema_name} = await import(`file://${process.cwd()}/service/db/common/common.service.js`);
+
+function createUserAccountApp(app_id, user_account_id, callBack){
 		let sql;
 		let parameters;
 		sql = `INSERT INTO ${get_schema_name()}.user_account_app(
@@ -17,14 +17,14 @@ module.exports = {
 						user_account_id: user_account_id
 					};
 		execute_db_sql(app_id, sql, parameters, 
-			           __appfilename, __appfunction, __appline, (err, result)=>{
+			           __appfilename(import.meta.url), __appfunction(), __appline(), (err, result)=>{
 			if (err)
 				return callBack(err, null);
 			else
 				return callBack(null, result);
 		});
-	},
-	getUserAccountApps: (app_id, user_account_id, callBack) => {
+	}
+function getUserAccountApps(app_id, user_account_id, callBack){
 		let sql;
 		let parameters;
 		sql = `SELECT uap.app_id "app_id",
@@ -41,14 +41,14 @@ module.exports = {
 						user_account_id: user_account_id
 						};
 		execute_db_sql(app_id, sql, parameters, 
-			           __appfilename, __appfunction, __appline, (err, result)=>{
+			           __appfilename(import.meta.url), __appfunction(), __appline(), (err, result)=>{
 			if (err)
 				return callBack(err, null);
 			else
 				return callBack(null, result);
 		});
-	},
-	getUserAccountApp: (app_id, user_account_id, callBack) => {
+	}
+function getUserAccountApp(app_id, user_account_id, callBack){
 		let sql;
 		let parameters;
 		sql = `SELECT preference_locale "preference_locale",
@@ -64,14 +64,14 @@ module.exports = {
 						app_id: app_id
 					 };
 		execute_db_sql(app_id, sql, parameters, 
-			           __appfilename, __appfunction, __appline, (err, result)=>{
+			           __appfilename(import.meta.url), __appfunction(), __appline(), (err, result)=>{
 			if (err)
 				return callBack(err, null);
 			else
 				return callBack(null, result);
 		});
-	},
-	updateUserAccountApp: (app_id, user_account_id, data, callBack) => {
+	}
+function updateUserAccountApp(app_id, user_account_id, data, callBack){
 		let sql;
 		let parameters;
 		if (data.setting_preference_direction_id=='')
@@ -95,14 +95,14 @@ module.exports = {
 						app_id: app_id
 						};
 		execute_db_sql(app_id, sql, parameters, 
-			           __appfilename, __appfunction, __appline, (err, result)=>{
+			           __appfilename(import.meta.url), __appfunction(), __appline(), (err, result)=>{
 			if (err)
 				return callBack(err, null);
 			else
 				return callBack(null, result);
 		});
-	},
-	deleteUserAccountApps: (app_id, user_account_id, data_app_id, callBack) => {
+	}
+function deleteUserAccountApps(app_id, user_account_id, data_app_id, callBack){
 		let sql;
 		let parameters;
 		sql = `DELETE FROM ${get_schema_name()}.user_account_app
@@ -113,11 +113,11 @@ module.exports = {
 						app_id: data_app_id
 						};
 		execute_db_sql(app_id, sql, parameters, 
-			           __appfilename, __appfunction, __appline, (err, result)=>{
+			           __appfilename(import.meta.url), __appfunction(), __appline(), (err, result)=>{
 			if (err)
 				return callBack(err, null);
 			else
 				return callBack(null, result);
 		});
 	}
-};
+export{createUserAccountApp, getUserAccountApps, getUserAccountApp, updateUserAccountApp, deleteUserAccountApps};

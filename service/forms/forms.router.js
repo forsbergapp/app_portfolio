@@ -1,6 +1,6 @@
-const { getAdminSecure } = require ("./forms.controller");
-const router = require("express").Router();
-const { checkAdmin} = require(global.SERVER_ROOT + "/service/auth/admin/admin.controller");
-
-router.post("/admin/secure", checkAdmin, getAdminSecure);
-module.exports = router;
+const { getFormAdminSecure } = await import("./forms.controller.js");
+const { checkAdmin} = await import(`file://${process.cwd()}/service/auth/admin/admin.controller.js`);
+const {Router} = await import('express');
+const router = Router();
+router.post("/admin/secure", checkAdmin, getFormAdminSecure);
+export {router};

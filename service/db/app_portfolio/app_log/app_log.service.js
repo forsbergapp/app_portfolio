@@ -1,6 +1,6 @@
-const {execute_db_sql, get_schema_name, limit_sql} = require (global.SERVER_ROOT + "/service/db/common/common.service");
-module.exports = {
-	createLog: (app_id, data, callBack) => {
+const {execute_db_sql, get_schema_name, limit_sql} = await import(`file://${process.cwd()}/service/db/common/common.service.js`);
+
+function createLog(app_id, data, callBack){
 		let sql;
 		let parameters;
 		//max 4000 characters can be saved
@@ -60,14 +60,14 @@ module.exports = {
 						server_http_accept_language: data.server_http_accept_language
 					};
 		execute_db_sql(app_id, sql, parameters, 
-			           __appfilename, __appfunction, __appline, (err, result)=>{
+			           __appfilename(import.meta.url), __appfunction(), __appline(), (err, result)=>{
 			if (err)
 				return callBack(err, null);
 			else
 				return callBack(null, result);
 		});
-	},
-	createLogAdmin: (app_id, data, callBack) => {
+	}
+function createLogAdmin(app_id, data, callBack){
 		let sql;
 		let parameters;
 		//max 4000 characters can be saved
@@ -127,14 +127,14 @@ module.exports = {
 						server_http_accept_language: data.server_http_accept_language
 					};
 		execute_db_sql(app_id, sql, parameters,
-			           __appfilename, __appfunction, __appline, (err, result)=>{
+			           __appfilename(import.meta.url), __appfunction(), __appline(), (err, result)=>{
 			if (err)
 				return callBack(err, null);
 			else
 				return callBack(null, result);
 		});
-	},
-	getLogsAdmin: (app_id, data_app_id, year, month, sort, order_by, offset, limit, callBack) => {
+	}
+function getLogsAdmin(app_id, data_app_id, year, month, sort, order_by, offset, limit, callBack){
 		/* 	sort in UI:
 			1=ID
 			2=APP ID
@@ -198,14 +198,14 @@ module.exports = {
 						offset:offset,
 						limit:limit};
 		execute_db_sql(app_id, sql, parameters,
-			           __appfilename, __appfunction, __appline, (err, result)=>{
+			           __appfilename(import.meta.url), __appfunction(), __appline(), (err, result)=>{
 			if (err)
 				return callBack(err, null);
 			else
 				return callBack(null, result);
 		});
-	},
-	getStatUniqueVisitorAdmin: (app_id, data_app_id, statchoice, year, month, callBack) => {
+	}
+function getStatUniqueVisitorAdmin(app_id, data_app_id, statchoice, year, month, callBack){
 		let sql;
 		let parameters;
 		
@@ -245,11 +245,11 @@ module.exports = {
 						year_log: year,
 						month_log: month};
 		execute_db_sql(app_id, sql, parameters,
-			           __appfilename, __appfunction, __appline, (err, result)=>{
+			           __appfilename(import.meta.url), __appfunction(), __appline(), (err, result)=>{
 			if (err)
 				return callBack(err, null);
 			else
 				return callBack(null, result);
 		});
 	}
-};
+export{createLog, createLogAdmin, getLogsAdmin, getStatUniqueVisitorAdmin}

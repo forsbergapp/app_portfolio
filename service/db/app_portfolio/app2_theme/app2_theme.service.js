@@ -1,6 +1,5 @@
-const {execute_db_sql, get_schema_name} = require (global.SERVER_ROOT + "/service/db/common/common.service");
-module.exports = {
-	getThemes: (app_id,callBack) => {
+const {execute_db_sql, get_schema_name} = await import(`file://${process.cwd()}/service/db/common/common.service.js`);
+function getThemes(app_id,callBack){
 		let sql;
 		let parameters;
 		sql = `SELECT t.id "id",
@@ -26,11 +25,11 @@ module.exports = {
 				ORDER BY tt.title, t.id`;
 		parameters = {};
 		execute_db_sql(app_id, sql, parameters, 
-			           __appfilename, __appfunction, __appline, (err, result)=>{
+			           __appfilename(import.meta.url), __appfunction(), __appline(), (err, result)=>{
 			if (err)
 				return callBack(err, null);
 			else
 				return callBack(null, result);
 		});
 	}
-};
+export{getThemes};

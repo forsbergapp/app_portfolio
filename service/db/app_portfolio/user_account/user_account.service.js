@@ -1,5 +1,5 @@
-const {ConfigGet} = require(global.SERVER_ROOT + '/server/server.service');
-const {execute_db_sql, get_schema_name, limit_sql} = require (global.SERVER_ROOT + "/service/db/common/common.service");
+const {ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
+const {execute_db_sql, get_schema_name, limit_sql} = await import(`file://${process.cwd()}/service/db/common/common.service.js`);
 function password_length_wrong(password){
     //constraint should be in db but password is encrypted when in db trigger
     //and saved with constant 60 characters length
@@ -108,7 +108,7 @@ function data_validation(data){
 							}
 							else
 								if (data.provider_id == null && (data.username == null || data.password==null || data.email==null)){
-									//'Username, password and email are required'
+									//'Username, password and email are importd'
 									return 20107;
 								}
 								else
@@ -128,8 +128,8 @@ function validation_before_update(data){
 	else
 		return {"errorNum" : error_code};
 }
-module.exports = {
-	getUsersAdmin: (app_id, search, sort, order_by, offset, limit, callBack) => {
+
+function getUsersAdmin(app_id, search, sort, order_by, offset, limit, callBack){
 		let sql;
 		let parameters;
 		sql = `SELECT ua.avatar "avatar",
@@ -180,14 +180,14 @@ module.exports = {
 					  limit: limit ?? parseInt(ConfigGet(1, 'SERVICE_DB', 'LIMIT_LIST_SEARCH')),
 					 };
 		execute_db_sql(app_id, sql, parameters,
-			           __appfilename, __appfunction, __appline, (err, result)=>{
+			           __appfilename(import.meta.url), __appfunction(), __appline(), (err, result)=>{
 			if (err)
 				return callBack(err, null);
 			else
 				return callBack(null, result);
 		});
-    },
-	getUserAppRoleAdmin:(app_id, id, callBack) =>{
+    }
+function getUserAppRoleAdmin(app_id, id, callBack){
 		let sql;
 		let parameters;
 		sql = `SELECT app_role_id "app_role_id"
@@ -195,14 +195,14 @@ module.exports = {
 				WHERE id = :id`;
 		parameters = {id: id};
 		execute_db_sql(app_id, sql, parameters,
-			           __appfilename, __appfunction, __appline, (err, result)=>{
+			           __appfilename(import.meta.url), __appfunction(), __appline(), (err, result)=>{
 			if (err)
 				return callBack(err, null);
 			else
 				return callBack(null, result);
 		});
-	},
-	getStatCountAdmin: (app_id, callBack) => {
+	}
+function getStatCountAdmin(app_id, callBack){
 		let sql;
 		let parameters;
 		sql = `SELECT ua.identity_provider_id "identity_provider_id",
@@ -220,14 +220,14 @@ module.exports = {
 				ORDER BY ua.identity_provider_id`;
 		parameters = {};
 		execute_db_sql(app_id, sql, parameters,
-			           __appfilename, __appfunction, __appline, (err, result)=>{
+			           __appfilename(import.meta.url), __appfunction(), __appline(), (err, result)=>{
 			if (err)
 				return callBack(err, null);
 			else
 				return callBack(null, result);
 		});
-    },
-	updateUserSuperAdmin: (app_id, id, data, callBack) => {
+    }
+function updateUserSuperAdmin(app_id, id, data, callBack){
 		let sql;
 		let parameters;
 		if (data.active =='')
@@ -273,7 +273,7 @@ module.exports = {
 						verification_code: data.verification_code
 						};
 			execute_db_sql(app_id, sql, parameters,
-						__appfilename, __appfunction, __appline, (err, result)=>{
+						__appfilename(import.meta.url), __appfunction(), __appline(), (err, result)=>{
 				if (err)
 					return callBack(err, null);
 				else
@@ -282,8 +282,8 @@ module.exports = {
 		}
 		else
 			callBack(error_code, null);
-    },
-    create: (app_id, data, callBack) => {
+    }
+function create(app_id, data, callBack){
 		let sql;
     	let parameters;
 		if (typeof data.provider_id != 'undefined' && 
@@ -356,7 +356,7 @@ module.exports = {
 							provider_email: data.provider_email
 						 };
 			execute_db_sql(app_id, sql, parameters, 
-						   __appfilename, __appfunction, __appline, (err, result)=>{
+						   __appfilename(import.meta.url), __appfunction(), __appline(), (err, result)=>{
 				if (err)
 					return callBack(err, null);
 				else
@@ -378,7 +378,7 @@ module.exports = {
 											lastRowid: lastRowid
 										};
 							execute_db_sql(app_id, sql, parameters, 
-										__appfilename, __appfunction, __appline, (err, result_id2)=>{
+										__appfilename(import.meta.url), __appfunction(), __appline(), (err, result_id2)=>{
 								if (err)
 									return callBack(err, null);
 								else
@@ -396,8 +396,8 @@ module.exports = {
 		else
 			callBack(error_code, null);
         
-    },
-    activateUser: (app_id, id, verification_type, verification_code, auth, callBack) => {
+    }
+function activateUser(app_id, id, verification_type, verification_code, auth, callBack){
 		let sql;
     	let parameters;
 
@@ -429,7 +429,7 @@ module.exports = {
 						verification_code: verification_code
 					};
 		execute_db_sql(app_id, sql, parameters, 
-					__appfilename, __appfunction, __appline, (err, result)=>{
+					__appfilename(import.meta.url), __appfunction(), __appline(), (err, result)=>{
 			if (err)
 				return callBack(err, null);
 			else{
@@ -459,8 +459,8 @@ module.exports = {
 				}
 			}
 		});
-    },
-	updateUserVerificationCode: (app_id, id, verification_code, callBack) => {
+    }
+function updateUserVerificationCode(app_id, id, verification_code, callBack){
 		let sql;
     	let parameters;
 		sql = `UPDATE ${get_schema_name()}.user_account
@@ -476,7 +476,7 @@ module.exports = {
 						id: id   
 					}; 
 		execute_db_sql(app_id, sql, parameters,
-			           __appfilename, __appfunction, __appline, (err, result)=>{
+			           __appfilename(import.meta.url), __appfunction(), __appline(), (err, result)=>{
 			if (err)
 				return callBack(err, null);
 			else{
@@ -506,8 +506,8 @@ module.exports = {
 				}
 			}
 		});
-    },
-    getUserByUserId: (app_id, id, callBack) => {
+    }
+function getUserByUserId(app_id, id, callBack){
 		let sql;
 		let parameters;
 		sql = `SELECT	u.id "id",
@@ -541,14 +541,14 @@ module.exports = {
 					  id: id
 					 }; 
 		execute_db_sql(app_id, sql, parameters, 
-			           __appfilename, __appfunction, __appline, (err, result)=>{
+			           __appfilename(import.meta.url), __appfunction(), __appline(), (err, result)=>{
 			if (err)
 				return callBack(err, null);
 			else
 				return callBack(null, result[0]);
 		});
-    },
-    getProfileUser: (app_id, id, username, id_current_user, callBack) => {
+    }
+function getProfileUser(app_id, id, username, id_current_user, callBack){
 		let sql;
 		let parameters;
 		sql = `SELECT	u.id "id",
@@ -617,14 +617,14 @@ module.exports = {
 			app_id: app_id
 		}; 
 		execute_db_sql(app_id, sql, parameters, 
-			           __appfilename, __appfunction, __appline, (err, result)=>{
+			           __appfilename(import.meta.url), __appfunction(), __appline(), (err, result)=>{
 			if (err)
 				return callBack(err, null);
 			else
 				return callBack(null, result[0]);
 		});
-    },
-    searchProfileUser: (app_id, username, callBack) => {
+    }
+function searchProfileUser(app_id, username, callBack){
 		let sql;
 		let parameters;
 		sql= `SELECT	u.id "id",
@@ -651,14 +651,14 @@ module.exports = {
 						app_id: app_id
 					};
 		execute_db_sql(app_id, sql, parameters, 
-			           __appfilename, __appfunction, __appline, (err, result)=>{
+			           __appfilename(import.meta.url), __appfunction(), __appline(), (err, result)=>{
 			if (err)
 				return callBack(err, null);
 			else
 				return callBack(null, result);
 		});
-    },
-    getProfileDetail: (app_id, id, detailchoice, callBack) => {
+    }
+function getProfileDetail(app_id, id, detailchoice, callBack){
 		let sql;
 		let parameters;
 		sql = `SELECT detail "detail",
@@ -735,14 +735,14 @@ module.exports = {
 						detailchoice: detailchoice
 					}; 
 		execute_db_sql(app_id, sql, parameters, 
-			           __appfilename, __appfunction, __appline, (err, result)=>{
+			           __appfilename(import.meta.url), __appfunction(), __appline(), (err, result)=>{
 			if (err)
 				return callBack(err, null);
 			else
 				return callBack(null, result);
 		});
-    },
-    getProfileTop: (app_id, statchoice, callBack) => {
+    }
+function getProfileTop(app_id, statchoice, callBack){
 		let sql;
 		let parameters;
 		sql = `SELECT top "top", 
@@ -816,14 +816,14 @@ module.exports = {
 						app_id: app_id
 					};
 		execute_db_sql(app_id, sql, parameters, 
-			           __appfilename, __appfunction, __appline, (err, result)=>{
+			           __appfilename(import.meta.url), __appfunction(), __appline(), (err, result)=>{
 			if (err)
 				return callBack(err, null);
 			else
 				return callBack(null, result);
 		});
-    },
-    checkPassword: (app_id, id, callBack) => {
+    }
+function checkPassword(app_id, id, callBack){
 		let sql;
 		let parameters;
 		sql = `SELECT password "password"
@@ -833,14 +833,14 @@ module.exports = {
 						id: id
 					};
 		execute_db_sql(app_id, sql, parameters, 
-			           __appfilename, __appfunction, __appline, (err, result)=>{
+			           __appfilename(import.meta.url), __appfunction(), __appline(), (err, result)=>{
 			if (err)
 				return callBack(err, null);
 			else
 				return callBack(null, result[0]);
 		});
-    },
-	updatePassword: (app_id, id, data, callBack) => {
+    }
+function updatePassword(app_id, id, data, callBack){
 		let sql;
 		let parameters;
 		let error_code = validation_before_update(data);
@@ -857,7 +857,7 @@ module.exports = {
 							auth: data.auth
 						}; 
 			execute_db_sql(app_id, sql, parameters, 
-						__appfilename, __appfunction, __appline, (err, result)=>{
+						__appfilename(import.meta.url), __appfunction(), __appline(), (err, result)=>{
 				if (err)
 					return callBack(err, null);
 				else
@@ -866,8 +866,8 @@ module.exports = {
 		}
 		else
 			callBack(error_code, null);
-    },
-    updateUserLocal: (app_id, data, search_id, callBack) => {
+    }
+function updateUserLocal(app_id, data, search_id, callBack){
 		let sql;
 		let parameters;
 		let error_code = validation_before_update(data);
@@ -900,7 +900,7 @@ module.exports = {
 				id: search_id
 			}; 
 			execute_db_sql(app_id, sql, parameters, 
-						__appfilename, __appfunction, __appline, (err, result)=>{
+						__appfilename(import.meta.url), __appfunction(), __appline(), (err, result)=>{
 				if (err)
 					return callBack(err, null);
 				else
@@ -909,8 +909,8 @@ module.exports = {
 		}
 		else
 			callBack(error_code, null);
-    },
-    updateUserCommon: (app_id, data, id, callBack) => {
+    }
+function updateUserCommon(app_id, data, id, callBack){
 		let sql;
 		let parameters;
 		let error_code = validation_before_update(data);
@@ -929,7 +929,7 @@ module.exports = {
 							id: id
 						}; 
 			execute_db_sql(app_id, sql, parameters, 
-						__appfilename, __appfunction, __appline, (err, result)=>{
+						__appfilename(import.meta.url), __appfunction(), __appline(), (err, result)=>{
 				if (err)
 					return callBack(err, null);
 				else
@@ -938,8 +938,8 @@ module.exports = {
 		}
 		else
 			callBack(error_code, null);
-    },
-    deleteUser: (app_id, id, callBack) => {
+    }
+function deleteUser(app_id, id, callBack){
 		let sql;
 		let parameters;
 		sql = `DELETE FROM ${get_schema_name()}.user_account
@@ -948,14 +948,14 @@ module.exports = {
 						id: id
 					 };
 		execute_db_sql(app_id, sql, parameters, 
-			           __appfilename, __appfunction, __appline, (err, result)=>{
+			           __appfilename(import.meta.url), __appfunction(), __appline(), (err, result)=>{
 			if (err)
 				return callBack(err, null);
 			else
 				return callBack(null, result);
 		});
-    },
-    userLogin: (app_id, data, callBack) => {
+    }
+function userLogin(app_id, data, callBack){
 		let sql;
 		let parameters;
 		sql = `SELECT	id "id",
@@ -973,14 +973,14 @@ module.exports = {
 						username: data.username
 					}; 
 		execute_db_sql(app_id, sql, parameters, 
-			           __appfilename, __appfunction, __appline, (err, result)=>{
+			           __appfilename(import.meta.url), __appfunction(), __appline(), (err, result)=>{
 			if (err)
 				return callBack(err, null);
 			else
 				return callBack(null, result[0]);
 		});
-    },
-    updateSigninProvider: (app_id, id, data, callBack) => {
+    }
+function updateSigninProvider(app_id, id, data, callBack){
 		let sql;
 		let parameters;
 		let error_code = validation_before_update(data);
@@ -1007,7 +1007,7 @@ module.exports = {
 							id: id
 						}; 
 			execute_db_sql(app_id, sql, parameters, 
-						__appfilename, __appfunction, __appline, (err, result)=>{
+						__appfilename(import.meta.url), __appfunction(), __appline(), (err, result)=>{
 				if (err)
 					return callBack(err, null);
 				else
@@ -1016,8 +1016,8 @@ module.exports = {
 		}
 		else
 			callBack(error_code, null);
-    },
-    providerSignIn: (app_id, identity_provider_id, search_id, callBack) => {
+    }
+function providerSignIn(app_id, identity_provider_id, search_id, callBack){
 		let sql;
 		let parameters;
 		sql = `SELECT	u.id "id",
@@ -1050,14 +1050,14 @@ module.exports = {
 						identity_provider_id: identity_provider_id
 					};
 		execute_db_sql(app_id, sql, parameters, 
-			           __appfilename, __appfunction, __appline, (err, result)=>{
+			           __appfilename(import.meta.url), __appfunction(), __appline(), (err, result)=>{
 			if (err)
 				return callBack(err, null);
 			else
 				return callBack(null, result);
 		});
-    },
-	getEmailUser: (app_id, email, callBack) => {
+    }
+function getEmailUser(app_id, email, callBack){
 		let sql;
 		let parameters;
 		sql = `SELECT id "id",
@@ -1068,14 +1068,14 @@ module.exports = {
 						email: email
 					}; 
 		execute_db_sql(app_id, sql, parameters, 
-			           __appfilename, __appfunction, __appline, (err, result)=>{
+			           __appfilename(import.meta.url), __appfunction(), __appline(), (err, result)=>{
 			if (err)
 				return callBack(err, null);
 			else
 				return callBack(null, result[0]);
 		});
-    },
-	getAppRole: (app_id, user_account_id, callBack) =>{
+    }
+function getAppRole(app_id, user_account_id, callBack){
 		let sql;
 		let parameters;
 		if (user_account_id =='')
@@ -1100,14 +1100,17 @@ module.exports = {
 						id_user_icon: 2
 					}; 
 		execute_db_sql(app_id, sql, parameters, 
-			           __appfilename, __appfunction, __appline, (err, result)=>{
+			           __appfilename(import.meta.url), __appfunction(), __appline(), (err, result)=>{
 			if (err)
 				return callBack(err, null);
 			else
 				return callBack(null, result[0]);
 		});
 	}
-};
-module.exports.password_length_wrong = password_length_wrong;
-module.exports.get_app_code = get_app_code;
-module.exports.verification_code = verification_code;
+
+export{password_length_wrong, get_app_code, verification_code,
+	   getUsersAdmin, getUserAppRoleAdmin, getStatCountAdmin, updateUserSuperAdmin, create,
+	   activateUser, updateUserVerificationCode, getUserByUserId, getProfileUser,
+	   searchProfileUser, getProfileDetail, getProfileTop, checkPassword, updatePassword,
+	   updateUserLocal, updateUserCommon, deleteUser, userLogin, updateSigninProvider, providerSignIn,
+	   getEmailUser, getAppRole}

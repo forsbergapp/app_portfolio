@@ -1,14 +1,15 @@
-const router = require("express").Router();
-const { getLogsAdmin,createLog, getStatUniqueVisitorAdmin} = require ("./app_log.controller");
-const { checkDataToken } = require(global.SERVER_ROOT + "/service/auth/auth.controller");
-const { createLogAppRI } = require(global.SERVER_ROOT + "/service/log/log.controller");
-const { checkAccessTokenAdmin} = require (global.SERVER_ROOT + "/service/auth/auth.controller");
+const { getLogsAdmin,createLog, getStatUniqueVisitorAdmin} = await import("./app_log.controller.js");
+const { checkDataToken } = await import(`file://${process.cwd()}/service/auth/auth.controller.js`);
+const { createLogAppRI } = await import(`file://${process.cwd()}/service/log/log.controller.js`);
+const { checkAccessTokenAdmin} = await import(`file://${process.cwd()}/service/auth/auth.controller.js`);
+const {Router} = await import('express');
+const router = Router();
 router.use((req,res,next)=>{
-    createLogAppRI(req, res, __appfilename, __appfunction, __appline, req.body).then(function(){
+    createLogAppRI(req, res, __appfilename(import.meta.url), __appfunction(), __appline(), req.body).then(function(){
 		next();
 	})
 })
 router.get("/admin",  checkAccessTokenAdmin, getLogsAdmin);
 router.post("/", checkDataToken, createLog);
 router.get("/admin/stat/uniquevisitor", checkAccessTokenAdmin, getStatUniqueVisitorAdmin);
-module.exports = router;
+export{router};

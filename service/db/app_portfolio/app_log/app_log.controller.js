@@ -1,15 +1,14 @@
-const {ConfigGet} = require(global.SERVER_ROOT + '/server/server.service');
-const { createLog, createLogAdmin, getLogsAdmin, getStatUniqueVisitorAdmin } = require ("./app_log.service");
+const service = await import("./app_log.service.js");
+const {ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
 
-module.exports = {
-	createLog: (req, res) =>{
+function createLog(req, res){
 		const body = req.body;
 		body.server_remote_addr 		 = req.ip;
 		body.server_user_agent 			 = req.headers["user-agent"];
 		body.server_http_host 			 = req.headers["host"];
 		body.server_http_accept_language = req.headers["accept-language"];	
 		if (ConfigGet(1, 'SERVICE_AUTH', 'ENABLE_DBLOG')=='1')
-			createLog(req.query.app_id, body, (err,results) => {
+			service.createLog(req.query.app_id, body, (err,results) => {
 				if (err)
 					return res.status(500).send({
 						message: err
@@ -23,15 +22,15 @@ module.exports = {
 			return res.status(200).json({
 				data: null
 			})
-	},
-	createLogAdmin: (req, res) =>{
+	}
+function createLogAdmin(req, res){
 		const body = req.body;
 		body.server_remote_addr 		 = req.ip;
 		body.server_user_agent 			 = req.headers["user-agent"];
 		body.server_http_host 			 = req.headers["host"];
 		body.server_http_accept_language = req.headers["accept-language"];	
 		if (ConfigGet(1, 'SERVICE_AUTH', 'ENABLE_DBLOG')=='1')
-			createLogAdmin(req.query.app_id, body, (err,results) => {
+			service.createLogAdmin(req.query.app_id, body, (err,results) => {
 				if (err)
 					return res.status(500).send({
 						message: err
@@ -45,8 +44,8 @@ module.exports = {
 			return res.status(200).json({
 				data: null
 			})
-	},
-	getLogsAdmin: (req, res) => {
+	}
+function getLogsAdmin(req, res){
 		let year = parseInt(req.query.year);
 		let month = parseInt(req.query.month);
 		let sort = parseInt(req.query.sort);
@@ -54,7 +53,7 @@ module.exports = {
 		let offset = parseInt(req.query.offset);
 		let limit = parseInt(req.query.limit);
 		
-		getLogsAdmin(req.query.app_id, req.query.select_app_id, year, month, sort, order_by, offset, limit, (err, results) =>{
+		service.getLogsAdmin(req.query.app_id, req.query.select_app_id, year, month, sort, order_by, offset, limit, (err, results) =>{
 			if (err) {
 				return res.status(500).send({
 					data: err
@@ -66,21 +65,14 @@ module.exports = {
 						data: results
 					});
 				else{
-					const { getMessage_admin } = require(global.SERVER_ROOT + ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH') +"/message_translation/message_translation.service");
-					//Record not found
-					getMessage_admin(req.query.app_id, 
-									 ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),
-									 20400, 
-									 req.query.lang_code, (err,result_message)  => {
-											return res.status(404).send(
-													err ?? result_message.text
-											);
-									 });
+					import(`file://${process.cwd()}/service/db/common.service.js`).then(function({record_not_found}){
+						return record_not_found(req.query.app_id, req.query.lang_code);
+					})
 				}
 			}
 		});
-	},
-	getStatUniqueVisitorAdmin: (req, res) =>{
+	}
+function getStatUniqueVisitorAdmin(req, res){
 		if (req.query.select_app_id=='')
 			req.query.select_app_id = null;
 		else
@@ -88,7 +80,7 @@ module.exports = {
 		req.query.statchoice = parseInt(req.query.statchoice);
 		req.query.year = parseInt(req.query.year);
 		req.query.month = parseInt(req.query.month);
-		getStatUniqueVisitorAdmin(req.query.app_id, req.query.select_app_id, req.query.statchoice, req.query.year, req.query.month,  (err, results)=>{
+		service.getStatUniqueVisitorAdmin(req.query.app_id, req.query.select_app_id, req.query.statchoice, req.query.year, req.query.month,  (err, results)=>{
 			if (err) {
 				return res.status(500).send({
 					data: err
@@ -100,18 +92,11 @@ module.exports = {
 						data: results
 					});
 				else{
-					const { getMessage_admin } = require(global.SERVER_ROOT + ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH') +"/message_translation/message_translation.service");
-					//Record not found
-					getMessage_admin(req.query.app_id,
-									 ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),
-									 20400,
-									 req.query.lang_code, (err,result_message)  => {
-										return res.status(404).send(
-												err ?? result_message.text
-										);
-									 });
+					import(`file://${process.cwd()}/service/db/common.service.js`).then(function({record_not_found}){
+						return record_not_found(req.query.app_id, req.query.lang_code);
+					})
 				}
 			}
 		})
 	}
-}
+export{createLog, createLogAdmin, getLogsAdmin, getStatUniqueVisitorAdmin}

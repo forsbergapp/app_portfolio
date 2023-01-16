@@ -1,8 +1,9 @@
-const {CheckFirstTime, ConfigGet} = require(global.SERVER_ROOT + '/server/server.service');
-const { getParameters_server } = require (global.SERVER_ROOT + ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH') + "/app_parameter/app_parameter.service");
-const { getApp } = require(global.SERVER_ROOT + ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH') + "/app/app.service");
-const { createLogAppSE } = require(global.SERVER_ROOT + "/service/log/log.controller");
-const { getCountries } = require(global.SERVER_ROOT + ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH') + "/country/country.service");
+const {CheckFirstTime, ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
+const {getParameters_server} = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/app_parameter/app_parameter.service.js`);
+const {getApp} = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/app/app.service.js`);
+const {createLogAppSE} = await import(`file://${process.cwd()}/service/log/log.controller.js`);
+const {getCountries} = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/country/country.service.js`);
+
 async function getInfo(app_id, info, lang_code, callBack){
     async function get_parameters(callBack){            
         getApp(app_id, app_id, lang_code, (err, result_app)=>{
@@ -16,7 +17,7 @@ async function getInfo(app_id, info, lang_code, callBack){
                 let db_info_link_terms_url;
                 let db_info_link_about_url;            
                 if (err) {
-                    createLogAppSE(app_id, __appfilename, __appfunction, __appline, err);
+                    createLogAppSE(app_id, __appfilename(import.meta.url), __appfunction(), __appline(), err);
                     callBack(err, null);
                 }
                 else{
@@ -63,55 +64,59 @@ async function getInfo(app_id, info, lang_code, callBack){
     switch (info){
     case 'privacy_policy':{
         get_parameters((err, result)=>{
-            const fs = require("fs");
-            fs.readFile(__dirname + `/app${app_id}${result.info_link_policy_url}.html`, 'utf8', (error, fileBuffer) => {
-                let infopage = fileBuffer.toString();
-                infopage = infopage.replace('<APPNAME1/>', result.app_name );
-                infopage = infopage.replace('<APPNAME2/>', result.app_name );
-                infopage = infopage.replace('<APPURL_HREF/>', result.app_url );
-                infopage = infopage.replace('<APPURL_INNERTEXT/>', result.app_url );
-                infopage = infopage.replace('<APPEMAIL_HREF/>', 'mailto:' + result.info_email_policy );
-                infopage = infopage.replace('<APPEMAIL_INNERTEXT/>', result.info_email_policy );
-                callBack(null, info_html1 + infopage + info_html2);
-            })
+            import('node:fs').then(function(fs){
+                fs.readFile(process.cwd() + `/apps/app${app_id}${result.info_link_policy_url}.html`, 'utf8', (error, fileBuffer) => {
+                    let infopage = fileBuffer.toString();
+                    infopage = infopage.replace('<APPNAME1/>', result.app_name );
+                    infopage = infopage.replace('<APPNAME2/>', result.app_name );
+                    infopage = infopage.replace('<APPURL_HREF/>', result.app_url );
+                    infopage = infopage.replace('<APPURL_INNERTEXT/>', result.app_url );
+                    infopage = infopage.replace('<APPEMAIL_HREF/>', 'mailto:' + result.info_email_policy );
+                    infopage = infopage.replace('<APPEMAIL_INNERTEXT/>', result.info_email_policy );
+                    callBack(null, info_html1 + infopage + info_html2);
+                })
+            });
         })
         break;
     }
     case 'disclaimer':{
         get_parameters((err, result)=>{
-            const fs = require("fs");
-            fs.readFile(__dirname + `/app${app_id}${result.info_link_disclaimer_url}.html`, 'utf8', (error, fileBuffer) => {
-                let infopage = fileBuffer.toString();
-                infopage = infopage.replace('<APPNAME1/>', result.app_name );
-                infopage = infopage.replace('<APPNAME2/>', result.app_name );
-                infopage = infopage.replace('<APPNAME3/>', result.app_name );
-                infopage = infopage.replace('<APPEMAIL_HREF/>', 'mailto:' + result.info_email_disclaimer );
-                infopage = infopage.replace('<APPEMAIL_INNERTEXT/>', result.info_email_disclaimer );
-                callBack(null, info_html1 + infopage + info_html2);
+            import('node:fs').then(function(fs){
+                fs.readFile(process.cwd() + `/apps/app${app_id}${result.info_link_disclaimer_url}.html`, 'utf8', (error, fileBuffer) => {
+                    let infopage = fileBuffer.toString();
+                    infopage = infopage.replace('<APPNAME1/>', result.app_name );
+                    infopage = infopage.replace('<APPNAME2/>', result.app_name );
+                    infopage = infopage.replace('<APPNAME3/>', result.app_name );
+                    infopage = infopage.replace('<APPEMAIL_HREF/>', 'mailto:' + result.info_email_disclaimer );
+                    infopage = infopage.replace('<APPEMAIL_INNERTEXT/>', result.info_email_disclaimer );
+                    callBack(null, info_html1 + infopage + info_html2);
+                })
             })
         })
         break;
     }
     case 'terms':{
         get_parameters((err, result)=>{
-            const fs = require("fs");
-            fs.readFile(__dirname + `/app${app_id}${result.info_link_terms_url}.html`, 'utf8', (error, fileBuffer) => {
-                let infopage = fileBuffer.toString();
-                infopage = infopage.replace('<APPNAME/>', result.app_name );
-                infopage = infopage.replace('<APPURL_HREF/>', result.app_url );
-                infopage = infopage.replace('<APPURL_INNERTEXT/>', result.app_url );
-                infopage = infopage.replace('<APPEMAIL_HREF/>', 'mailto:' + result.info_email_terms );
-                infopage = infopage.replace('<APPEMAIL_INNERTEXT/>', result.info_email_terms );
-                callBack(null, info_html1 + infopage + info_html2);
+            import('node:fs').then(function(fs){
+                fs.readFile(process.cwd() + `/apps/app${app_id}${result.info_link_terms_url}.html`, 'utf8', (error, fileBuffer) => {
+                    let infopage = fileBuffer.toString();
+                    infopage = infopage.replace('<APPNAME/>', result.app_name );
+                    infopage = infopage.replace('<APPURL_HREF/>', result.app_url );
+                    infopage = infopage.replace('<APPURL_INNERTEXT/>', result.app_url );
+                    infopage = infopage.replace('<APPEMAIL_HREF/>', 'mailto:' + result.info_email_terms );
+                    infopage = infopage.replace('<APPEMAIL_INNERTEXT/>', result.info_email_terms );
+                    callBack(null, info_html1 + infopage + info_html2);
+                })
             })
         })
         break;
     }
     case 'about':{
         get_parameters((err, result)=>{
-            const fs = require("fs");
-            fs.readFile(__dirname + `/app${app_id}${result.info_link_about_url}.html`, 'utf8', (error, fileBuffer) => {
-                callBack(null, info_html1 + fileBuffer.toString() + info_html2);
+            import('node:fs').then(function(fs){
+                fs.readFile(process.cwd() + `/apps/app${app_id}${result.info_link_about_url}.html`, 'utf8', (error, fileBuffer) => {
+                    callBack(null, info_html1 + fileBuffer.toString() + info_html2);
+                })
             })
         });
         break;
@@ -122,28 +127,30 @@ async function getInfo(app_id, info, lang_code, callBack){
     }
 }
 async function read_app_files(app_id, files, callBack){
-    const {promises: {readFile}} = require("fs");
     let i = 0;
-    Promise.all(files.map(file => {
-        return readFile(file[1], 'utf8');
-    })).then(fileBuffers => {
-        let app ='';
-        fileBuffers.forEach(fileBuffer => {
-            if (app=='')
-                app = fileBuffer.toString();
-            else
-                app = app.replace(
-                        files[i][0],
-                        `${fileBuffer.toString()}`);
-            i++;
-        });
-        callBack(null, app);
-    })
-    .catch(err => {
-        createLogAppSE(req.query.app_id, __appfilename, __appfunction, __appline, err).then(function(){
-            callBack(err, null);
+    //ES2020 import() with ES6 promises, object destructuring
+    import('node:fs').then(function({promises: {readFile}}){
+        Promise.all(files.map(file => {
+            return readFile(file[1], 'utf8');
+        })).then(fileBuffers => {
+            let app ='';
+            fileBuffers.forEach(fileBuffer => {
+                if (app=='')
+                    app = fileBuffer.toString();
+                else
+                    app = app.replace(
+                            files[i][0],
+                            `${fileBuffer.toString()}`);
+                i++;
+            });
+            callBack(null, app);
         })
-    });
+        .catch(err => {
+            createLogAppSE(req.query.app_id, __appfilename(import.meta.url), __appfunction(), __appline(), err).then(function(){
+                callBack(err, null);
+            })
+        });
+    })
 }
 async function get_module_with_init(app_id,
                                     system_admin,
@@ -195,8 +202,8 @@ async function get_module_with_init(app_id,
         callBack(null, module);
     }
     else{
-        const { getAppStartParameters } = require(global.SERVER_ROOT + ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH') + "/app_parameter/app_parameter.service");
-        const { getAppRole } = require(global.SERVER_ROOT + ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH') + "/user_account/user_account.service");
+        const { getAppStartParameters } = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/app_parameter/app_parameter.service.js`);
+        const { getAppRole } = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/user_account/user_account.service.js`);
         getAppStartParameters(app_id, (err,result) =>{
             if (err)
                 callBack(err, null);
@@ -256,37 +263,38 @@ async function get_email_verification(data, email, baseUrl, lang_code, callBack)
     callBack(null, {"subject": '❂❂❂❂❂❂',
                     "email": email});
 }
-module.exports = {
-    AppsStart:async (express, app) => {
-        return await new Promise(function (resolve){ 
-            //express needed for dynamic code loading even if not used here, 
-            //inparameter app variable depends on express
-            //const express = require ("express");
-            async function load_dynamic_code(app_id){
-                return await new Promise(function (resolve){ 
-                    const fs = require("fs");
+
+async function AppsStart(express, app){
+    return await new Promise(function (resolve){ 
+        //express needed for dynamic code loading even if not used here, 
+        //inparameter app variable depends on express
+        //const express = await import("express");
+        async function load_dynamic_code(app_id){
+            return await new Promise(function (resolve){ 
+                import('node:fs').then(function(fs){
                     let filename;
                     //load dynamic server app code
                     if (app_id == parseInt(ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID')))
-                        filename = `/admin/server.js`;
+                        filename = `/apps/admin/server.js`;
                     else
-                        filename = `/app${app_id}/server.js`
-                    fs.readFile(__dirname + filename, 'utf8', (error, fileBuffer) => {
+                        filename = `/apps/app${app_id}/server.js`
+                    fs.readFile(process.cwd() + filename, 'utf8', (error, fileBuffer) => {
                         //start one step debug server dynamic loaded code here
                         eval(fileBuffer);
                         resolve();
                     });
-                })
-                
-            }
-            //start always admin app first
-            load_dynamic_code(ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID')).then(function(){
-                //load apps if database started
-                if (ConfigGet(1, 'SERVICE_DB', 'START')=='1'){
-                    const { getAppsAdmin } = require (global.SERVER_ROOT + ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH') + "/app/app.service");
+                });
+            })
+            
+        }
+        //start always admin app first
+        load_dynamic_code(ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID')).then(function(){
+            //load apps if database started
+            if (ConfigGet(1, 'SERVICE_DB', 'START')=='1'){
+                import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/app/app.service.js`).then(function({ getAppsAdmin }){
                     getAppsAdmin(ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), null, (err, results) =>{
                         if (err) {
-                            createLogAppSE(req.query.app_id, __appfilename, __appfunction, __appline, `getAppsAdmin, err:${err}`).then(function(){
+                            createLogAppSE(req.query.app_id, __appfilename(import.meta.url), __appfunction(), __appline(), `getAppsAdmin, err:${err}`).then(function(){
                                 null;
                             })
                         }
@@ -313,100 +321,103 @@ module.exports = {
                             }
                         }
                     })
-                }
-                else{
-                    resolve();
-                }
-            });
+                });
+            }
+            else{
+                resolve();
+            }
+        });
+    })
+}
+function getMaintenance(app_id, gps_lat, gps_long, gps_place){
+    return new Promise(function (resolve, reject){
+        const files = [
+            ['APP', process.cwd() + '/apps/common/src/index_maintenance.html'],
+            ['<AppCommonHeadMaintenance/>', process.cwd() + '/apps/common/src/head_maintenance.html'],
+            ['<AppCommonBodyMaintenance/>', process.cwd() + '/apps/common/src/body_maintenance.html'],
+            ['<AppCommonBodyBroadcast/>', process.cwd() + '/apps/common/src/body_broadcast.html'] 
+            ];
+        read_app_files(app_id, files, (err, app)=>{
+            if (err)
+                reject(err);
+            else{
+                //maintenance can be used from all app_id
+                let parameters = {   
+                    app_id: app_id
+                };
+                app = app.replace('<ITEM_COMMON_PARAMETERS/>',
+                                    JSON.stringify(parameters));
+                resolve(app);
+            }
         })
-            
-    },
-    getMaintenance:(app_id, gps_lat, gps_long, gps_place) => {
-        return new Promise(function (resolve, reject){
-            const files = [
-                ['APP', __dirname + '/common/src/index_maintenance.html'],
-                ['<AppCommonHeadMaintenance/>', __dirname + '/common/src/head_maintenance.html'],
-                ['<AppCommonBodyMaintenance/>', __dirname + '/common/src/body_maintenance.html'],
-                ['<AppCommonBodyBroadcast/>', __dirname + '/common/src/body_broadcast.html'] 
-              ];
-            read_app_files(app_id, files, (err, app)=>{
-                if (err)
-                    reject(err);
-                else{
-                    //maintenance can be used from all app_id
-                    let parameters = {   
-                        app_id: app_id
-                    };
-                    app = app.replace('<ITEM_COMMON_PARAMETERS/>',
-                                      JSON.stringify(parameters));
-                    resolve(app);
-                }
-            })
-        })
-    },
-    getMail:(app_id, data, baseUrl) => {
-        return new Promise(function (resolve, reject){
-            let mailfile = '';
-            let files= [];
-            //email type 1-4 implented are emails with verification code
-            if (parseInt(data.emailType)==1 || 
-                parseInt(data.emailType)==2 || 
-                parseInt(data.emailType)==3 ||
-                parseInt(data.emailType)==4){
-                files = [
-                    ['MAIL', __dirname + '/common/mail/mail.html'],
-                    ['<MailHeader/>', __dirname + `/app${app_id}/mail/mail_header_verification.html`],
-                    ['<MailBody/>', __dirname + `/app${app_id}/mail/mail_body_verification.html`]
-                ];
-            }
-            read_app_files(app_id, files, (err, email)=>{
-                if (err)
-                    reject(err);
-                else{
-                    //email type 1-4 are emails with verification code
-                    get_email_verification(data, email, baseUrl, data.lang_code, (err,email_verification)=>{
-                        if (err)
-                            reject(err);
-                        else
-                            resolve({"subject":         email_verification.subject, 
-                                     "html":            email_verification.email});    
-                    })
-                }
-            })
-        })
-    },
-    check_app_subdomain: (app_id, host) =>{
-        //if using test subdomains, dns will point to correct server
-        switch (app_id){
-            case parseInt(ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID')):{
-                //show admin app for all subdomains
-                return true;
-            }
-            case 1:{
-                //app1, app1.test, test, www  or localhost
-                if (host.substring(0,host.indexOf('.')) == `app${app_id}` ||
-                    host.indexOf(`app${app_id}.` + ConfigGet(1, 'SERVER', 'TEST_SUBDOMAIN')) == 0 ||
-                    host.substring(0,host.indexOf('.')) == ConfigGet(1, 'SERVER', 'TEST_SUBDOMAIN') ||
-                    host.substring(0,host.indexOf('.')) == 'www' ||
-                    host.substring(0,host.indexOf('.')) == '')
-                    return true;
-                else
-                    return false;
-            }
-            default:{
-                //app[app_id].test or app[app_id]
-                if (host.indexOf(`app${app_id}.` + ConfigGet(1, 'SERVER', 'TEST_SUBDOMAIN')) == 0 ||
-                    host.substring(0,host.indexOf('.')) == `app${app_id}`)
-                    return true;
-                else
-                    return false;
-            }
+    })
+}
+function getMail(app_id, data, baseUrl){
+    return new Promise(function (resolve, reject){
+        let mailfile = '';
+        let files= [];
+        //email type 1-4 implented are emails with verification code
+        if (parseInt(data.emailType)==1 || 
+            parseInt(data.emailType)==2 || 
+            parseInt(data.emailType)==3 ||
+            parseInt(data.emailType)==4){
+            files = [
+                ['MAIL', process.cwd() + '/apps/common/mail/mail.html'],
+                ['<MailHeader/>', process.cwd() + `/apps/app${app_id}/mail/mail_header_verification.html`],
+                ['<MailBody/>', process.cwd() + `/apps/app${app_id}/mail/mail_body_verification.html`]
+            ];
         }
-    },
-    getUserPreferences: async(app_id) => {
-        return new Promise(function (resolve, reject){
-            const { getLocales } = require(global.SERVER_ROOT + ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH') + "/language/locale/locale.service");
-            const { getSettings } = require(global.SERVER_ROOT + ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH') + "/setting/setting.service");
+        read_app_files(app_id, files, (err, email)=>{
+            if (err)
+                reject(err);
+            else{
+                //email type 1-4 are emails with verification code
+                get_email_verification(data, email, baseUrl, data.lang_code, (err,email_verification)=>{
+                    if (err)
+                        reject(err);
+                    else
+                        resolve({"subject":         email_verification.subject, 
+                                    "html":            email_verification.email});    
+                })
+            }
+        })
+    })
+}
+function check_app_subdomain(app_id, host){
+    //if using test subdomains, dns will point to correct server
+    switch (app_id){
+        case parseInt(ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID')):{
+            //show admin app for all subdomains
+            return true;
+        }
+        case 1:{
+            //app1, app1.test, test, www  or localhost
+            if (host.substring(0,host.indexOf('.')) == `app${app_id}` ||
+                host.indexOf(`app${app_id}.` + ConfigGet(1, 'SERVER', 'TEST_SUBDOMAIN')) == 0 ||
+                host.substring(0,host.indexOf('.')) == ConfigGet(1, 'SERVER', 'TEST_SUBDOMAIN') ||
+                host.substring(0,host.indexOf('.')) == 'www' ||
+                host.substring(0,host.indexOf('.')) == '')
+                return true;
+            else
+                return false;
+        }
+        default:{
+            //app[app_id].test or app[app_id]
+            if (host.indexOf(`app${app_id}.` + ConfigGet(1, 'SERVER', 'TEST_SUBDOMAIN')) == 0 ||
+                host.substring(0,host.indexOf('.')) == `app${app_id}`)
+                return true;
+            else
+                return false;
+        }
+    }
+}
+function getUserPreferences(app_id){
+    return new Promise(function (resolve, reject){
+        //ES2020 import and ES2015 Promise.all and template literals
+        Promise.all([
+            import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/language/locale/locale.service.js`),
+            import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/setting/setting.service.js`)
+        ]).then(function([{getLocales},{getSettings}]){
             let default_lang = 'en';
             getLocales(app_id, default_lang, (err, locales) => {
                 if (err)
@@ -447,50 +458,52 @@ module.exports = {
                 }
             })
         })
-    },
-    countries:(app_id) => {
-        return new Promise(function (resolve, reject){
-            getCountries(app_id, 'en', (err, results)  => {
-                let select_countries;
-                if (err){
-                    resolve (
-                                `<select name='country' id='setting_select_country'>
-                                <option value='' id='' label='…' selected='selected'>…</option>
-                                </select>`
-                            )
-                }     
-                else{
-                    let current_group_name;
-                    select_countries  =`<select name='country' id='setting_select_country'>
-                                        <option value='' id='' label='…' selected='selected'>…</option>`;
-            
-                    results.map( (countries_map,i) => {
-                        if (i === 0){
+
+        
+        
+    })
+}
+function countries(app_id){
+    return new Promise(function (resolve, reject){
+        getCountries(app_id, 'en', (err, results)  => {
+            let select_countries;
+            if (err){
+                resolve (
+                            `<select name='country' id='setting_select_country'>
+                            <option value='' id='' label='…' selected='selected'>…</option>
+                            </select>`
+                        )
+            }     
+            else{
+                let current_group_name;
+                select_countries  =`<select name='country' id='setting_select_country'>
+                                    <option value='' id='' label='…' selected='selected'>…</option>`;
+        
+                results.map( (countries_map,i) => {
+                    if (i === 0){
+                    select_countries += `<optgroup label=${countries_map.group_name} />`;
+                    current_group_name = countries_map.group_name;
+                    }
+                    else{
+                    if (countries_map.group_name !== current_group_name){
                         select_countries += `<optgroup label=${countries_map.group_name} />`;
                         current_group_name = countries_map.group_name;
-                        }
-                        else{
-                        if (countries_map.group_name !== current_group_name){
-                            select_countries += `<optgroup label=${countries_map.group_name} />`;
-                            current_group_name = countries_map.group_name;
-                        }
-                        select_countries +=
-                        `<option value=${i}
-                                id=${countries_map.id} 
-                                country_code=${countries_map.country_code} 
-                                flag_emoji=${countries_map.flag_emoji} 
-                                group_name=${countries_map.group_name}>${countries_map.flag_emoji} ${countries_map.text}
-                        </option>`
-                        }
-                    })
-                    select_countries += '</select>';
-                    resolve (select_countries);
-                }
-            });
-        })
-      }
+                    }
+                    select_countries +=
+                    `<option value=${i}
+                            id=${countries_map.id} 
+                            country_code=${countries_map.country_code} 
+                            flag_emoji=${countries_map.flag_emoji} 
+                            group_name=${countries_map.group_name}>${countries_map.flag_emoji} ${countries_map.text}
+                    </option>`
+                    }
+                })
+                select_countries += '</select>';
+                resolve (select_countries);
+            }
+        });
+    })
 }
-module.exports.getInfo = getInfo;
-module.exports.read_app_files = read_app_files;
-module.exports.get_module_with_init = get_module_with_init;
-module.exports.get_email_verification = get_email_verification;
+
+export {getInfo, read_app_files, get_module_with_init, get_email_verification,
+        AppsStart, getMaintenance, getMail, check_app_subdomain, getUserPreferences, countries}

@@ -1,10 +1,9 @@
-const {ConfigGet} = require(global.SERVER_ROOT + '/server/server.service');
-const { read_app_files, get_module_with_init, countries } = require(global.SERVER_ROOT + '/apps/');
-const { getPlace } = require(global.SERVER_ROOT +  ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH') + "/app2_place/app2_place.service");
-const { getThemes } = require(global.SERVER_ROOT +  ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH') + "/app2_theme/app2_theme.service");
-module.exports = {
-    themes:async (app_id) => {
-        return new Promise(function (resolve, reject){
+const {ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
+const { read_app_files, get_module_with_init, countries } = await import(`file://${process.cwd()}/apps/index.js`);
+
+async function themes(app_id){
+    return new Promise(function (resolve, reject){
+        import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/app2_theme/app2_theme.service.js`).then(function({getThemes}){
             getThemes(app_id, (err, results)  => {
                 let html_themes='';
                 if (err){
@@ -96,9 +95,11 @@ module.exports = {
                 }
             });
         })
-    },
-    places: async (app_id) => {
-        return new Promise(function (resolve, reject){
+    })
+}
+async function places(app_id){
+    return new Promise(function (resolve, reject){
+        import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/app2_place/app2_place.service.js`).then(function({getPlace}){
             getPlace(app_id, (err, results)  => {
                 let select_places;
                 if (err){
@@ -133,52 +134,52 @@ module.exports = {
                 }
             });
         })
-    },
-    getApp:(app_id, username, gps_lat, gps_long, gps_place) => {
-        return new Promise(function (resolve, reject){
-            function main(app_id){
-                const { getLocales } = require(global.SERVER_ROOT +  ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH') + "/language/locale/locale.service");
-                const { getSettings } = require(global.SERVER_ROOT +  ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH') + "/setting/setting.service");
-                const files = [
-                  ['APP', global.SERVER_ROOT + '/apps/app2/src/index.html'],
-                  ['<AppCommonHeadPrayTimes/>', global.SERVER_ROOT + '/apps/common/src/head_praytimes.html'],
-                  ['<AppCommonHeadRegional/>', global.SERVER_ROOT + '/apps/common/src/head_regional.html'],
-                  ['<AppCommonHead/>', global.SERVER_ROOT + '/apps/common/src/head.html'],
-                  ['<AppCommonHeadMap/>', global.SERVER_ROOT + '/apps/common/src/head_map.html'],
-                  ['<AppCommonHeadQRCode/>', global.SERVER_ROOT + '/apps/common/src/head_qrcode.html'],
-                  ['<AppCommonHeadFontawesome/>', global.SERVER_ROOT + '/apps/common/src/head_fontawesome.html'],
-                  ['<AppCommonBody/>', global.SERVER_ROOT + '/apps/common/src/body.html'],
-                  ['<AppCommonBodyMaintenance/>', global.SERVER_ROOT + '/apps/common/src/body_maintenance.html'],
-                  ['<AppCommonBodyBroadcast/>', global.SERVER_ROOT + '/apps/common/src/body_broadcast.html'],  
-                  ['<AppCommonProfileDetail/>', global.SERVER_ROOT + '/apps/common/src/profile_detail.html'], //Profile tag in common body
-                  
-                  ['<AppHead/>', global.SERVER_ROOT + '/apps/app2/src/head.html'],
-                  ['<AppToolbarTop/>', global.SERVER_ROOT + '/apps/app2/src/toolbar_top.html'],
+    })
+}
+function getApp(app_id, username, gps_lat, gps_long, gps_place){
+    return new Promise(function (resolve, reject){
+        function main(app_id){
+            const files = [
+                ['APP', process.cwd() + '/apps/app2/src/index.html'],
+                ['<AppCommonHeadPrayTimes/>', process.cwd() + '/apps/common/src/head_praytimes.html'],
+                ['<AppCommonHeadRegional/>', process.cwd() + '/apps/common/src/head_regional.html'],
+                ['<AppCommonHead/>', process.cwd() + '/apps/common/src/head.html'],
+                ['<AppCommonHeadMap/>', process.cwd() + '/apps/common/src/head_map.html'],
+                ['<AppCommonHeadQRCode/>', process.cwd() + '/apps/common/src/head_qrcode.html'],
+                ['<AppCommonHeadFontawesome/>', process.cwd() + '/apps/common/src/head_fontawesome.html'],
+                ['<AppCommonBody/>', process.cwd() + '/apps/common/src/body.html'],
+                ['<AppCommonBodyMaintenance/>', process.cwd() + '/apps/common/src/body_maintenance.html'],
+                ['<AppCommonBodyBroadcast/>', process.cwd() + '/apps/common/src/body_broadcast.html'],  
+                ['<AppCommonProfileDetail/>', process.cwd() + '/apps/common/src/profile_detail.html'], //Profile tag in common body
+                
+                ['<AppHead/>', process.cwd() + '/apps/app2/src/head.html'],
+                ['<AppToolbarTop/>', process.cwd() + '/apps/app2/src/toolbar_top.html'],
 
-                  ['<AppCommonUserAccount/>', global.SERVER_ROOT + '/apps/common/src/user_account.html'],
-                  ['<AppThemes/>', global.SERVER_ROOT + '/apps/common/src/app_themes.html'],
-                  ['<AppCommonProfileSearch/>', global.SERVER_ROOT + '/apps/common/src/profile_search.html'],
+                ['<AppCommonUserAccount/>', process.cwd() + '/apps/common/src/user_account.html'],
+                ['<AppThemes/>', process.cwd() + '/apps/common/src/app_themes.html'],
+                ['<AppCommonProfileSearch/>', process.cwd() + '/apps/common/src/profile_search.html'],
 
-                  ['<AppPaper/>', global.SERVER_ROOT + '/apps/app2/src/paper.html'],
-                  ['<AppSettingsTabNavigation/>', global.SERVER_ROOT + '/apps/app2/src/settings_tab_navigation.html'],
-                  ['<AppSettingsTabNavigationTab1/>', global.SERVER_ROOT + '/apps/app2/src/settings_tab_navigation_tab1.html'],
-                  ['<AppSettingsTabNavigationTab2/>', global.SERVER_ROOT + '/apps/app2/src/settings_tab_navigation_tab2.html'],
-                  ['<AppSettingsTabNavigationTab3/>', global.SERVER_ROOT + '/apps/app2/src/settings_tab_navigation_tab3.html'],
-                  ['<AppSettingsTabNavigationTab4/>', global.SERVER_ROOT + '/apps/app2/src/settings_tab_navigation_tab4.html'],
-                  ['<AppSettingsTabNavigationTab5/>', global.SERVER_ROOT + '/apps/app2/src/settings_tab_navigation_tab5.html'],
-                  ['<AppSettingsTabNavigationTab6/>', global.SERVER_ROOT + '/apps/app2/src/settings_tab_navigation_tab6.html'],
-                  ['<AppSettingsTabNavigationTab7/>', global.SERVER_ROOT + '/apps/app2/src/settings_tab_navigation_tab7.html'],
+                ['<AppPaper/>', process.cwd() + '/apps/app2/src/paper.html'],
+                ['<AppSettingsTabNavigation/>', process.cwd() + '/apps/app2/src/settings_tab_navigation.html'],
+                ['<AppSettingsTabNavigationTab1/>', process.cwd() + '/apps/app2/src/settings_tab_navigation_tab1.html'],
+                ['<AppSettingsTabNavigationTab2/>', process.cwd() + '/apps/app2/src/settings_tab_navigation_tab2.html'],
+                ['<AppSettingsTabNavigationTab3/>', process.cwd() + '/apps/app2/src/settings_tab_navigation_tab3.html'],
+                ['<AppSettingsTabNavigationTab4/>', process.cwd() + '/apps/app2/src/settings_tab_navigation_tab4.html'],
+                ['<AppSettingsTabNavigationTab5/>', process.cwd() + '/apps/app2/src/settings_tab_navigation_tab5.html'],
+                ['<AppSettingsTabNavigationTab6/>', process.cwd() + '/apps/app2/src/settings_tab_navigation_tab6.html'],
+                ['<AppSettingsTabNavigationTab7/>', process.cwd() + '/apps/app2/src/settings_tab_navigation_tab7.html'],
 
-                  ['<AppProfileInfo/>', global.SERVER_ROOT + '/apps/app2/src/profile_info.html'], /*Profile tag in common body*/
-                  ['<AppProfileTop/>', global.SERVER_ROOT + '/apps/app2/src/profile_top.html'],   //Profile tag in common body
-                  ['<AppDialogues/>', global.SERVER_ROOT + '/apps/app2/src/dialogues.html'],
-                  ['<AppToolbarBottom/>', global.SERVER_ROOT + '/apps/app2/src/toolbar_bottom.html'],
-                  ['<AppCommonProfileBtnTop/>', global.SERVER_ROOT + '/apps/common/src/profile_btn_top.html']
-                ];
-                async function getAppComponents(app_id) {
-                    return new Promise(function (resolve, reject){
-                        try {
-                            let default_lang = 'en';
+                ['<AppProfileInfo/>', process.cwd() + '/apps/app2/src/profile_info.html'], /*Profile tag in common body*/
+                ['<AppProfileTop/>', process.cwd() + '/apps/app2/src/profile_top.html'],   //Profile tag in common body
+                ['<AppDialogues/>', process.cwd() + '/apps/app2/src/dialogues.html'],
+                ['<AppToolbarBottom/>', process.cwd() + '/apps/app2/src/toolbar_bottom.html'],
+                ['<AppCommonProfileBtnTop/>', process.cwd() + '/apps/common/src/profile_btn_top.html']
+            ];
+            async function getAppComponents(app_id) {
+                return new Promise(function (resolve, reject){
+                    try {
+                        let default_lang = 'en';
+                        import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/language/locale/locale.service.js`).then(function({getLocales}){
                             getLocales(app_id, default_lang, (err, locales) => {
                                 if (err)
                                     resolve(err)
@@ -188,41 +189,43 @@ module.exports = {
                                         AppLocales += `<option id=${i} value=${locale.locale}>${locale.text}</option>`;
                                     })
                                     countries(app_id).then(function(AppCountries){
-                                        module.exports.places(app_id).then(function(AppPlaces){
-                                            module.exports.themes(app_id).then(function(AppSettingsThemes){
+                                        places(app_id).then(function(AppPlaces){
+                                            themes(app_id).then(function(AppSettingsThemes){
                                                 resolve({AppLocales: AppLocales,
-                                                         AppCountries: AppCountries,
-                                                         AppPlaces: AppPlaces,
-                                                         AppSettingsThemes: AppSettingsThemes
+                                                            AppCountries: AppCountries,
+                                                            AppPlaces: AppPlaces,
+                                                            AppSettingsThemes: AppSettingsThemes
                                                         })
                                             });
                                         });
                                     });
                                 }
                             });    
-                        } catch (error) {
-                            reject(error);
-                        }
-                    })                    
-                }
-                getAppComponents(app_id).then(function(app_components){
-                    let USER_TIMEZONE ='';
-                    let USER_DIRECTION='';
-                    let USER_ARABIC_SCRIPT='';
-                    let APP_NUMBER_SYSTEM='';
-                    let APP_COLUMN_TITLE='';
-                    let APP_CALENDAR_TYPE='';
-                    let APP_CALENDAR_HIJRI_TYPE='';
-                    let APP_PAPER_SIZE='';
-                    let APP_HIGHLIGHT_ROW='';
-                    let APP_METHOD='';
-                    let APP_METHOD_ASR='';
-                    let APP_HIGH_LATITUDE_ADJUSTMENT='';
-                    let APP_TIMEFORMAT='';
-                    let APP_HIJRI_DATE_ADJUSTMENT='';
-                    let APP_IQAMAT='';
-                    let APP_FAST_START_END='';
-                    let APP_MAP_TYPE='';
+                        });
+                    } catch (error) {
+                        reject(error);
+                    }
+                })                    
+            }
+            getAppComponents(app_id).then(function(app_components){
+                let USER_TIMEZONE ='';
+                let USER_DIRECTION='';
+                let USER_ARABIC_SCRIPT='';
+                let APP_NUMBER_SYSTEM='';
+                let APP_COLUMN_TITLE='';
+                let APP_CALENDAR_TYPE='';
+                let APP_CALENDAR_HIJRI_TYPE='';
+                let APP_PAPER_SIZE='';
+                let APP_HIGHLIGHT_ROW='';
+                let APP_METHOD='';
+                let APP_METHOD_ASR='';
+                let APP_HIGH_LATITUDE_ADJUSTMENT='';
+                let APP_TIMEFORMAT='';
+                let APP_HIJRI_DATE_ADJUSTMENT='';
+                let APP_IQAMAT='';
+                let APP_FAST_START_END='';
+                let APP_MAP_TYPE='';
+                import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/setting/setting.service.js`).then(function({getSettings}){
                     getSettings(app_id, 'en', null, (err, settings) => {
                         let option;
                         for (let i = 0; i < settings.length; i++) {
@@ -271,7 +274,7 @@ module.exports = {
                                 case 'METHOD':{
                                     function nvl(value){return value==null?'':value}
                                     option = `<option id=${settings[i].id} value='${settings[i].data}' ` +
-                                             `data2='${nvl(settings[i].data2)}' data3='${nvl(settings[i].data3)}' data4='${nvl(settings[i].data4)}' data5='${nvl(settings[i].data5)}'>${settings[i].text}</option>`;
+                                                `data2='${nvl(settings[i].data2)}' data3='${nvl(settings[i].data3)}' data4='${nvl(settings[i].data4)}' data5='${nvl(settings[i].data5)}'>${settings[i].text}</option>`;
                                     APP_METHOD += option;
                                     break;
                                 }
@@ -388,15 +391,15 @@ module.exports = {
                                         '<USER_ARABIC_SCRIPT/>',
                                         `<option id='' value=''></option>${USER_ARABIC_SCRIPT}`);
                                 get_module_with_init(app_id, 
-                                                     null,
-                                                     null,
-                                                     'app_exception',
-                                                     null,
-                                                     true,
-                                                     gps_lat,
-                                                     gps_long,
-                                                     gps_place,
-                                                     app, (err, app_init) =>{
+                                                        null,
+                                                        null,
+                                                        'app_exception',
+                                                        null,
+                                                        true,
+                                                        gps_lat,
+                                                        gps_long,
+                                                        gps_place,
+                                                        app, (err, app_init) =>{
                                     if (err)
                                         reject(err);
                                     else{
@@ -405,11 +408,12 @@ module.exports = {
                                 })
                             } 
                         }) 
-                    })                      
-                });
-            }
-            if (username!=null){
-                const {getProfileUser} = require(global.SERVER_ROOT + ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH') + '/user_account/user_account.service');
+                    })  
+                })                    
+            });
+        }
+        if (username!=null){
+            import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/user_account/user_account.service.js`).then(function({getProfileUser}){
                 getProfileUser(app_id, null, username, null, (err,result)=>{
                     if (result)
                         main(app_id);
@@ -418,10 +422,12 @@ module.exports = {
                         resolve (0);
                     }
                 })
-            }
-            else
-                main(app_id);
+            })
+        }
+        else
+            main(app_id);
 
-        })
-    }
+    })
 }
+
+export{themes, places, getApp}
