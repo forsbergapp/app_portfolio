@@ -1,6 +1,6 @@
-const {execute_db_sql, get_schema_name, get_locale} = require (global.SERVER_ROOT + "/service/db/common/common.service");
-module.exports = {
-	getAppRoleAdmin:(app_id, id, lang_code, callBack) => {
+const {execute_db_sql, get_schema_name, get_locale} = await import(`file://${process.cwd()}/service/db/common/common.service.js`);
+
+function getAppRoleAdmin(app_id, id, lang_code, callBack){
 		let sql;
 		let parameters;
         sql = `SELECT ar.id "id",
@@ -35,11 +35,11 @@ module.exports = {
 					  lang_code3: get_locale(lang_code, 3),
 					  id: id};
 		execute_db_sql(app_id, sql, parameters,
-			           __appfilename, __appfunction, __appline, (err, result)=>{
+			           __appfilename(import.meta.url), __appfunction(), __appline(), (err, result)=>{
 			if (err)
 				return callBack(err, null);
 			else
 				return callBack(null, result);
 		});
 	}
-};
+export{getAppRoleAdmin};

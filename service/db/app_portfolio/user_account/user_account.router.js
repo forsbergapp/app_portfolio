@@ -1,4 +1,3 @@
-const router = require("express").Router();
 const {
     getUsersAdmin,
     getStatCountAdmin,
@@ -16,14 +15,14 @@ const {
     getProfileDetail,
     getProfileTop,
     getProfileUser,
-    searchProfileUser,
-    
-} = require("./user_account.controller");
-const { checkAccessToken, checkDataToken, checkDataTokenRegistration, checkDataTokenLogin } = require(global.SERVER_ROOT + "/service/auth/auth.controller");
-const { checkAccessTokenAdmin, checkAccessTokenSuperAdmin} = require (global.SERVER_ROOT + "/service/auth/auth.controller");
-const { createLogAppRI } = require(global.SERVER_ROOT + "/service/log/log.controller");
+    searchProfileUser} = await import("./user_account.controller.js");
+const { checkAccessToken, checkDataToken, checkDataTokenRegistration, checkDataTokenLogin } = await import(`file://${process.cwd()}/service/auth/auth.controller.js`);
+const { checkAccessTokenAdmin, checkAccessTokenSuperAdmin} = await import(`file://${process.cwd()}/service/auth/auth.controller.js`);
+const { createLogAppRI } = await import(`file://${process.cwd()}/service/log/log.controller.js`);
+const {Router} = await import('express');
+const router = Router();
 router.use((req,res,next)=>{
-    createLogAppRI(req, res, __appfilename, __appfunction, __appline, req.body).then(function(){
+    createLogAppRI(req, res, __appfilename(import.meta.url), __appfunction(), __appline(), req.body).then(function(){
 		next();
 	})
 })
@@ -55,4 +54,4 @@ router.post("/profile/username/:username", checkDataToken, getProfileUser);
 router.post("/profile/username/searchD/:username", checkDataToken, searchProfileUser);
 router.post("/profile/username/searchA/:username", checkAccessToken, searchProfileUser);
 
-module.exports = router;
+export{router};

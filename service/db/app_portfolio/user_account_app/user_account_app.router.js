@@ -1,9 +1,10 @@
-const router = require("express").Router();
-const { createUserAccountApp, getUserAccountApps, getUserAccountApp, updateUserAccountApp, deleteUserAccountApps} = require ("./user_account_app.controller");
-const { checkAccessToken } = require(global.SERVER_ROOT + "/service/auth/auth.controller");
-const { createLogAppRI } = require(global.SERVER_ROOT + "/service/log/log.controller");
+const { createUserAccountApp, getUserAccountApps, getUserAccountApp, updateUserAccountApp, deleteUserAccountApps} = await import("./user_account_app.controller.js");
+const { checkAccessToken } = await import(`file://${process.cwd()}/service/auth/auth.controller.js`);
+const { createLogAppRI } = await import(`file://${process.cwd()}/service/log/log.controller.js`);
+const {Router} = await import('express');
+const router = Router();
 router.use((req,res,next)=>{
-    createLogAppRI(req, res, __appfilename, __appfunction, __appline, req.body).then(function(){
+    createLogAppRI(req, res, __appfilename(import.meta.url), __appfunction(), __appline(), req.body).then(function(){
 		next();
 	})
 })
@@ -12,4 +13,4 @@ router.get("/:user_account_id", checkAccessToken, getUserAccountApp);
 router.get("/apps/:user_account_id", checkAccessToken, getUserAccountApps);
 router.patch("/:user_account_id", checkAccessToken, updateUserAccountApp);
 router.delete("/:user_account_id/:app_id", checkAccessToken, deleteUserAccountApps);
-module.exports = router;
+export{router};

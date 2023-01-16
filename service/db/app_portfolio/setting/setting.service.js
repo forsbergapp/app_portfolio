@@ -1,6 +1,6 @@
-const {execute_db_sql, get_schema_name, get_locale} = require (global.SERVER_ROOT + "/service/db/common/common.service");
-module.exports = {
-	getSettings: (app_id, lang_code, setting_type_name, callBack) => {
+const {execute_db_sql, get_schema_name, get_locale} = await import(`file://${process.cwd()}/service/db/common/common.service.js`);
+
+function getSettings(app_id, lang_code, setting_type_name, callBack){
     let sql;
     let parameters;
     if (typeof setting_type_name=='undefined' ||setting_type_name=='' ||setting_type_name==null)
@@ -39,11 +39,11 @@ module.exports = {
                     setting_type_name: setting_type_name
                    };
      execute_db_sql(app_id, sql, parameters, 
-                   __appfilename, __appfunction, __appline, (err, result)=>{
+                   __appfilename(import.meta.url), __appfunction(), __appline(), (err, result)=>{
 			if (err)
 				return callBack(err, null);
 			else
 				return callBack(null, result);
 		});
 	}
-};
+export{getSettings};
