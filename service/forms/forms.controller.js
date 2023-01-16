@@ -126,7 +126,7 @@ function getFormAdmin(req, res, app_id, callBack){
 }
 function getFormAdminSecure(req, res){
     try {
-        import(`file://${process.cwd()}/apps/admin/src/secure.js`).then(function({ getAdminSecure }){
+        import(`file://${process.cwd()}/apps/admin/src/secure/index.js`).then(function({ getAdminSecure }){
             const app = getAdminSecure(req.query.app_id,
                 1,      //system admin=1
                 null,
