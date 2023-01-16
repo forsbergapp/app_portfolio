@@ -1,8 +1,11 @@
-const { BroadcastConnect, BroadcastSendSystemAdmin, BroadcastSendAdmin, ConnectedList, ConnectedListSystemAdmin, ConnectedCount, ConnectedUpdate, ConnectedCheck} = require ("./broadcast.controller");
-const { checkAccessTokenAdmin} = require (global.SERVER_ROOT + "/service/auth/auth.controller");
-const { checkAdmin} = require (global.SERVER_ROOT + "/service/auth/admin/admin.controller");
-const { checkDataToken } = require(global.SERVER_ROOT + "/service/auth/auth.controller");
-const router = require("express").Router();
+const { BroadcastConnect, BroadcastSendSystemAdmin, BroadcastSendAdmin, ConnectedList, ConnectedListSystemAdmin, ConnectedCount, ConnectedUpdate, ConnectedCheck} = await import("./broadcast.controller.js");
+
+const {checkAccessTokenAdmin} = await import(`file://${process.cwd()}/service/auth/auth.controller.js`);
+const {checkAdmin} = await import(`file://${process.cwd()}/service/auth/admin/admin.controller.js`);
+const {checkDataToken} = await import(`file://${process.cwd()}/service/auth/auth.controller.js`);
+
+const {Router} = await import('express');
+const router = Router();
 
 router.get("/SystemAdmin/connected", checkAdmin, ConnectedListSystemAdmin);
 router.patch("/SystemAdmin/update_connected", checkAdmin, ConnectedUpdate);
@@ -16,4 +19,4 @@ router.get("/connect/:clientId",BroadcastConnect);
 router.patch("/update_connected", checkDataToken, ConnectedUpdate);
 router.get("/checkconnected/:user_account_id", checkDataToken, ConnectedCheck);
 
-module.exports = router;
+export {router};

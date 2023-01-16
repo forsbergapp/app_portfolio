@@ -1,8 +1,8 @@
-const { createLogAppSE } = require(global.SERVER_ROOT + "/service/log/log.controller");
-const { ConfigMaintenanceGet, ConfigMaintenanceSet, ConfigGetSaved, ConfigSave, ConfigGetCallBack, ConfigInfo, Info} = require ('./server.service');
-module.exports = {
-    ConfigMaintenanceGet:(req, res) =>{
-        ConfigMaintenanceGet((err, result)=>{
+const service = await import('./server.service.js')
+const {createLogAppSE} = await import(`file://${process.cwd()}/service/log/log.controller.js`);
+
+    function ConfigMaintenanceGet(req, res){
+        service.ConfigMaintenanceGet((err, result)=>{
             if (err){
                 return res.status(500).send(
                     err
@@ -13,9 +13,9 @@ module.exports = {
                     {value: result}
                 );
         })
-    },
-    ConfigMaintenanceSet:(req, res) =>{
-        ConfigMaintenanceSet(req.body.value, (err, result)=>{
+    }
+    function ConfigMaintenanceSet(req, res) {
+        service.ConfigMaintenanceSet(req.body.value, (err, result)=>{
             if (err){
                 return res.status(500).send(
                     err
@@ -26,9 +26,9 @@ module.exports = {
                     result
                 );
         })
-    },
-    ConfigGetSaved:(req, res) =>{
-        ConfigGetSaved(req.query.config_type_no, (err, result)=>{
+    }
+    function ConfigGetSaved(req, res){
+        service.ConfigGetSaved(req.query.config_type_no, (err, result)=>{
             if (err){
                 return res.status(500).send(
                     err
@@ -41,9 +41,9 @@ module.exports = {
                     }
                 );
         })
-    },
-    ConfigSave: (req,res) =>{
-        ConfigSave(req.body.config_no, req.body.config_json, false, (err, result)=>{
+    }
+    function ConfigSave (req,res){
+        service.ConfigSave(req.body.config_no, req.body.config_json, false, (err, result)=>{
             if (err){
                 return res.status(500).send(
                     err
@@ -54,9 +54,9 @@ module.exports = {
                     result
                 );
         })
-    },
-    ConfigGet: (req,res) =>{
-        ConfigGetCallBack(req.query.config_type_no, req.query.config_group, req.query.parameter, (err, result)=>{
+    }
+    function ConfigGet(req,res){
+        service.ConfigGetCallBack(req.query.config_type_no, req.query.config_group, req.query.parameter, (err, result)=>{
             if (err){
                 return res.status(500).send(
                     err
@@ -69,9 +69,9 @@ module.exports = {
                     }
                 );
         })
-    },
-    ConfigInfo:(req,res)=>{
-        ConfigInfo((err, result)=>{
+    }
+    function ConfigInfo(req,res){
+        service.ConfigInfo((err, result)=>{
             if (err){
                 return res.status(500).send(
                     err
@@ -84,9 +84,9 @@ module.exports = {
                     }
                 );
         })
-    },
-    Info:(req,res)=>{
-        Info((err, result)=>{
+    }
+    function Info(req,res){
+        service.Info((err, result)=>{
             if (err){
                 return res.status(500).send(
                     err
@@ -98,4 +98,4 @@ module.exports = {
                 );
         })
     }
-};
+export{ConfigMaintenanceGet, ConfigMaintenanceSet, ConfigGetSaved, ConfigSave,ConfigGet, ConfigInfo, Info}

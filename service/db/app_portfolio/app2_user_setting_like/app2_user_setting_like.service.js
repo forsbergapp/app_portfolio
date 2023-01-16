@@ -1,6 +1,6 @@
-const {execute_db_sql, get_schema_name} = require (global.SERVER_ROOT + "/service/db/common/common.service");
-module.exports = {
-	likeUserSetting: (app_id, id, id_like, callBack) => {
+const {execute_db_sql, get_schema_name} = await import(`file://${process.cwd()}/service/db/common/common.service.js`);
+
+function likeUserSetting(app_id, id, id_like, callBack){
 		let sql;
 		let parameters;
 		sql = `INSERT INTO ${get_schema_name()}.app2_user_setting_like(
@@ -11,14 +11,14 @@ module.exports = {
 						app2_user_setting_id: id_like
 					};
 		execute_db_sql(app_id, sql, parameters, 
-			           __appfilename, __appfunction, __appline, (err, result)=>{
+			           __appfilename(import.meta.url), __appfunction(), __appline(), (err, result)=>{
 			if (err)
 				return callBack(err, null);
 			else
 				return callBack(null, result);
 		});
-	},
-	unlikeUserSetting: (app_id, id, id_unlike, callBack) => {
+	}
+function unlikeUserSetting(app_id, id, id_unlike, callBack){
 		let sql;
 		let parameters;
 		sql = `DELETE FROM ${get_schema_name()}.app2_user_setting_like
@@ -29,11 +29,11 @@ module.exports = {
 						app2_user_setting_id: id_unlike
 						};
 		execute_db_sql(app_id, sql, parameters, 
-			           __appfilename, __appfunction, __appline, (err, result)=>{
+			           __appfilename(import.meta.url), __appfunction(), __appline(), (err, result)=>{
 			if (err)
 				return callBack(err, null);
 			else
 				return callBack(null, result);
 		});
-	},
-};
+	}
+export{likeUserSetting, unlikeUserSetting};

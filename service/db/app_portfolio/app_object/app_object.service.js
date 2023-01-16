@@ -1,7 +1,7 @@
-const {ConfigGet} = require(global.SERVER_ROOT + '/server/server.service');
-const {execute_db_sql, get_schema_name, get_locale} = require (global.SERVER_ROOT + "/service/db/common/common.service");
-module.exports = {
-	getObjects: (app_id, lang_code, object, object_name, callBack) => {
+const {ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
+const {execute_db_sql, get_schema_name, get_locale} = await import(`file://${process.cwd()}/service/db/common/common.service.js`);
+
+function getObjects(app_id, lang_code, object, object_name, callBack){
 		let sql;
 		let parameters;
 		sql = ` SELECT 	object "object", 
@@ -97,11 +97,11 @@ module.exports = {
 						Xobject_Xname: object_name
 					 };
 		execute_db_sql(app_id, sql, parameters, 
-			           __appfilename, __appfunction, __appline, (err, result)=>{
+			           __appfilename(import.meta.url), __appfunction(), __appline(), (err, result)=>{
 			if (err)
 				return callBack(err, null);
 			else
 				return callBack(null, result);
 		});
 	}
-};
+export{getObjects};

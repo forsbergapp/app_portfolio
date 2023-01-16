@@ -1,4 +1,5 @@
-const { authAdmin} = require ("./admin.controller");
-const router = require("express").Router();
+const { authAdmin} = await import("./admin.controller.js");
+const {Router} = await import('express');
+const router = Router();
 router.post("/", authAdmin);
-module.exports = router;
+export {router};
