@@ -983,7 +983,7 @@ function userLogin(req, res){
                                                                 }
                                                                 else
                                                                     if (req.query.app_id == 0)
-                                                                        import(`file://${process.cwd()}/apps/admin/src/secure`).then(function({ getAdminSecure }){
+                                                                        import(`file://${process.cwd()}/apps/admin/src/secure/index.js`).then(function({ getAdminSecure }){
                                                                             getAdminSecure(req.query.app_id, 
                                                                                 null,
                                                                                 results.id,
@@ -1024,7 +1024,7 @@ function userLogin(req, res){
                                             }
                                             else
                                             if (req.query.app_id == 0)
-                                                import(`file://${process.cwd()}/apps/admin/src/secure`).then(function({ getAdminSecure }){
+                                                import(`file://${process.cwd()}/apps/admin/src/secure/index.js`).then(function({ getAdminSecure }){
                                                     getAdminSecure(req.query.app_id, 
                                                         null,
                                                         results.id,
