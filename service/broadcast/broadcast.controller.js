@@ -8,6 +8,7 @@ function BroadcastConnect(req, res){
     req.query.app_user_id ='';
     let res_not_used;
     req.query.callback=1;
+    let stack = new Error().stack;
     if (req.query.system_admin=='1'){
         import(`file://${process.cwd()}/service/geolocation/geolocation.controller.js`).then(function({getIpSystemAdmin}){
             getIpSystemAdmin(req, res, (err, geodata) =>{
@@ -25,9 +26,11 @@ function BroadcastConnect(req, res){
                     response: res
                 };
                 service.ClientAdd(newClient);
-                import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/service/log/log.controller.js`).then(function({createLogAppCI}){
-                    createLogAppCI(req, res, __appfilename(import.meta.url), __appfunction(), __appline(), 'SYSTEM ADMIN Broadcast connect').then(function(){
-                        service.ClientClose(res, req.params.clientId);
+                import(`file://${process.cwd()}/service/log/log.controller.js`).then(function({createLogAppCI}){
+                    import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
+                        createLogAppCI(req, res, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 'SYSTEM ADMIN Broadcast connect').then(function(){
+                            service.ClientClose(res, req.params.clientId);
+                        })
                     })
                 })
             })

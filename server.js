@@ -1,14 +1,9 @@
 //ES2020 import() and ES2022 top level await
 const express = await import('express');
-//logging
-const {setLogVariables} =  await import(`file://${process.cwd()}/service/log/log.service.js`);
 const {CheckFirstTime, InitConfig, ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
 
-//Logging variables
-setLogVariables();
-
 InitConfig().then(function(){
-    //Create express application
+  //Create express application
     const app = express.default();
 
     (async function(){
@@ -118,9 +113,9 @@ InitConfig().then(function(){
           if (err)
             null;
           else{
-              import('helmet').then(function(helmet){
+              import('helmet').then(function({default: helmet}){
                 app.use(
-                  helmet.default({
+                  helmet({
                     crossOriginEmbedderPolicy: false,
                     contentSecurityPolicy: {
                       directives: result_directives
