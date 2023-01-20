@@ -424,9 +424,12 @@ async function ConfigSave(config_no, config_json, first_time, callBack){
             }
         }
     } catch (error) {
+        let stack = new Error().stack;
         import(`file://${process.cwd()}/service/log/log.controller.js`).then(function({createLogAppSE}){
-            createLogAppSE(0, __appfilename(import.meta.url), __appfunction(), __appline(), err).then(function(){
-                callBack(err, null);
+            import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
+                createLogAppSE(0, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), err).then(function(){
+                    callBack(err, null);
+                })
             })
         })
     }

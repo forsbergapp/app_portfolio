@@ -59,13 +59,16 @@ function createLog(app_id, data, callBack){
 						server_http_host: data.server_http_host,
 						server_http_accept_language: data.server_http_accept_language
 					};
-		execute_db_sql(app_id, sql, parameters, 
-			           __appfilename(import.meta.url), __appfunction(), __appline(), (err, result)=>{
-			if (err)
-				return callBack(err, null);
-			else
-				return callBack(null, result);
-		});
+		let stack = new Error().stack;
+		import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
+			execute_db_sql(app_id, sql, parameters, 
+						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+				if (err)
+					return callBack(err, null);
+				else
+					return callBack(null, result);
+			});
+		})
 	}
 function createLogAdmin(app_id, data, callBack){
 		let sql;
@@ -126,13 +129,16 @@ function createLogAdmin(app_id, data, callBack){
 						server_http_host: data.server_http_host,
 						server_http_accept_language: data.server_http_accept_language
 					};
-		execute_db_sql(app_id, sql, parameters,
-			           __appfilename(import.meta.url), __appfunction(), __appline(), (err, result)=>{
-			if (err)
-				return callBack(err, null);
-			else
-				return callBack(null, result);
-		});
+		let stack = new Error().stack;
+		import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
+			execute_db_sql(app_id, sql, parameters,
+						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+				if (err)
+					return callBack(err, null);
+				else
+					return callBack(null, result);
+			});
+		})
 	}
 function getLogsAdmin(app_id, data_app_id, year, month, sort, order_by, offset, limit, callBack){
 		/* 	sort in UI:
@@ -197,13 +203,16 @@ function getLogsAdmin(app_id, data_app_id, year, month, sort, order_by, offset, 
 						month:month,
 						offset:offset,
 						limit:limit};
-		execute_db_sql(app_id, sql, parameters,
-			           __appfilename(import.meta.url), __appfunction(), __appline(), (err, result)=>{
-			if (err)
-				return callBack(err, null);
-			else
-				return callBack(null, result);
-		});
+		let stack = new Error().stack;
+		import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){						
+			execute_db_sql(app_id, sql, parameters,
+						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+				if (err)
+					return callBack(err, null);
+				else
+					return callBack(null, result);
+			});
+		})
 	}
 function getStatUniqueVisitorAdmin(app_id, data_app_id, statchoice, year, month, callBack){
 		let sql;
@@ -244,12 +253,15 @@ function getStatUniqueVisitorAdmin(app_id, data_app_id, statchoice, year, month,
 						app_id_log: data_app_id,
 						year_log: year,
 						month_log: month};
-		execute_db_sql(app_id, sql, parameters,
-			           __appfilename(import.meta.url), __appfunction(), __appline(), (err, result)=>{
-			if (err)
-				return callBack(err, null);
-			else
-				return callBack(null, result);
-		});
+		let stack = new Error().stack;
+		import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
+			execute_db_sql(app_id, sql, parameters,
+						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+				if (err)
+					return callBack(err, null);
+				else
+					return callBack(null, result);
+			});
+		})
 	}
 export{createLog, createLogAdmin, getLogsAdmin, getStatUniqueVisitorAdmin}

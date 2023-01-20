@@ -90,16 +90,22 @@ async function execute_db_sql(app_id, sql, parameters,
 														}
 													});
 			}catch (err) {
-				createLogAppSE(app_id, __appfilename(import.meta.url), __appfunction(), __appline(), err.message).then(function(){
-					return callBack(err.message);
+				let stack = new Error().stack;
+				import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
+					createLogAppSE(app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), err.message).then(function(){
+						return callBack(err.message);
+					})
 				})
 			} finally {
 				if (pool2) {
 					try {
 						await pool2.close(); 
 					} catch (err) {
-						createLogAppSE(app_id, __appfilename(import.meta.url), __appfunction(), __appline(), err.message).then(function(){
-							return callBack(err.message);
+						let stack = new Error().stack;
+						import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
+							createLogAppSE(app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), err.message).then(function(){
+								return callBack(err.message);
+							})
 						})
 					}
 				}

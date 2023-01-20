@@ -2,156 +2,122 @@ function pm2log(log){
     console.log(log);
 }
     
-async function remote_log(log){
+async function remote_log(ConfigGet, config_destination, log){
     return await new Promise(function (resolve){ 
-        import(`file://${process.cwd()}/server/server.service.js`).then(function({ConfigGet}){
-            if (ConfigGet(1, 'SERVICE_LOG', 'DESTINATION')=='1' ||
-                ConfigGet(1, 'SERVICE_LOG', 'DESTINATION')=='2'){
-                //url destination
-                const headers = { 
-                    'Authorization': 'Basic ' + btoa(ConfigGet(1, 'SERVICE_LOG', 'URL_DESTINATION_USERNAME') + ':' + ConfigGet(1, 'SERVICE_LOG', 'URL_DESTINATION_PASSWORD'))
-                };
-                //add logscope and loglevel first and as all logfiles will be sent to same url
-                let url_old  = JSON.parse(log);
-                let url_log  = {};
-                url_log.logscope = logscope;
-                url_log.loglevel = loglevel;
-                url_log.logdate = url_old.logdate;
-                url_log.ip = url_old.ip;
-                url_log.host = url_old.host;
-                url_log.protocol = url_old.protocol;
-                url_log.url = url_old.url;
-                url_log.method = url_old.method;
-                url_log.statusCode = url_old.statusCode;
-                url_log['user-agent'] = url_old['user-agent'];
-                url_log['accept-language'] = url_old['accept-language'];
-                url_log.http_referer = url_old.http_referer;
-                url_log.app_id = url_old.app_id;
-                url_log.app_filename = url_old.app_filename;
-                url_log.app_function_name = url_old.app_function_name;
-                url_log.app_line = url_old.app_line;
-                url_log.logtext = url_old.logtext;
-        
-                url_log = JSON.stringify(url_log);
-                import('axios').then(function({default: axios}){
-                    axios.post(ConfigGet(1, 'SERVICE_LOG', 'URL_DESTINATION'), url_log).then(function(){
-                        resolve();
-                    })
-                });
-            }   
-            else
-                resolve();
-        })
-    })
-}
-async function sendLog(logscope, loglevel, log){
-    return await new Promise(function (resolve){ 
-        import(`file://${process.cwd()}/server/server.service.js`).then(function({ConfigGet}){
-            let filename;
-            let logdate = new Date();
-            //make log nice and compact
-            try{        
-                log = JSON.stringify(JSON.parse(log));
-            }
-            catch(err){
-                pm2log(err)
-                pm2log(log);
-            }
-            let month = logdate.toLocaleString("en-US", { month: "2-digit"});
-            let day   = logdate.toLocaleString("en-US", { day: "2-digit"});
-            if (ConfigGet(1, 'SERVICE_LOG', 'FILE_INTERVAL')=='1D')
-                filename = `${logscope}_${loglevel}_${logdate.getFullYear()}${month}${day}.log`;
-            else
-                if (ConfigGet(1, 'SERVICE_LOG', 'FILE_INTERVAL')=='1M')
-                    filename = `${logscope}_${loglevel}_${logdate.getFullYear()}${month}.log`;
-                else
-                    filename = `${logscope}_${loglevel}_${logdate.getFullYear()}${month}.log`;
-            if (ConfigGet(1, 'SERVICE_LOG', 'DESTINATION')=='0' ||
-                ConfigGet(1, 'SERVICE_LOG', 'DESTINATION')=='2'){
-                //file destination
-                import('node:fs').then(function(fs){
-                    fs.appendFile(process.cwd() + ConfigGet(0, null, 'PATH_LOG') + filename, log + '\r\n', 'utf8', (err) => {
-                        if (err) {
-                            //if error here ignore and continue, where else should log file be saved?
-                            pm2log(err);
-                            resolve();
-                        }
-                        else
-                            resolve(remote_log(log));
-                    });
+        if (config_destination=='1' || config_destination=='2'){
+            //url destination
+            const headers = { 
+                'Authorization': 'Basic ' + btoa(ConfigGet(1, 'SERVICE_LOG', 'URL_DESTINATION_USERNAME') + ':' + ConfigGet(1, 'SERVICE_LOG', 'URL_DESTINATION_PASSWORD'))
+            };
+            //add logscope and loglevel first and as all logfiles will be sent to same url
+            let url_old  = JSON.parse(log);
+            let url_log  = {};
+            url_log.logscope = logscope;
+            url_log.loglevel = loglevel;
+            url_log.logdate = url_old.logdate;
+            url_log.ip = url_old.ip;
+            url_log.host = url_old.host;
+            url_log.protocol = url_old.protocol;
+            url_log.url = url_old.url;
+            url_log.method = url_old.method;
+            url_log.statusCode = url_old.statusCode;
+            url_log['user-agent'] = url_old['user-agent'];
+            url_log['accept-language'] = url_old['accept-language'];
+            url_log.http_referer = url_old.http_referer;
+            url_log.app_id = url_old.app_id;
+            url_log.app_filename = url_old.app_filename;
+            url_log.app_function_name = url_old.app_function_name;
+            url_log.app_line = url_old.app_line;
+            url_log.logtext = url_old.logtext;
+    
+            url_log = JSON.stringify(url_log);
+            import('axios').then(function({default: axios}){
+                axios.post(ConfigGet(1, 'SERVICE_LOG', 'URL_DESTINATION'), url_log).then(function(){
+                    resolve();
                 })
-            }
-            else
-                resolve(remote_log(log));
-        })
+            });
+        }   
+        else
+            resolve();
     })
 }
-function logdate(){
-    let logdate = new Date();
-    import(`file://${process.cwd()}/server/server.service.js`).then(function({ConfigGet}){
-        if (ConfigGet(1, 'SERVICE_LOG', 'DATE_FORMAT')!='' &&
-            typeof ConfigGet(1, 'SERVICE_LOG', 'DATE_FORMAT')!='undefined'){
-            //ex ISO8601 format: "yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'"
-            logdate.format(ConfigGet(1, 'SERVICE_LOG', 'DATE_FORMAT'));
+async function sendLog(ConfigGet, logscope, loglevel, log){
+    return await new Promise(function (resolve){ 
+        let filename;
+        let logdate = new Date();
+        //make log nice and compact
+        try{        
+            log = JSON.stringify(JSON.parse(log));
+        }
+        catch(err){
+            pm2log(err)
+            pm2log(log);
+        }
+        let month = logdate.toLocaleString("en-US", { month: "2-digit"});
+        let day   = logdate.toLocaleString("en-US", { day: "2-digit"});
+        let config_file_interval = ConfigGet(1, 'SERVICE_LOG', 'FILE_INTERVAL')
+        if (config_file_interval=='1D')
+            filename = `${logscope}_${loglevel}_${logdate.getFullYear()}${month}${day}.log`;
+        else
+            if (config_file_interval=='1M')
+                filename = `${logscope}_${loglevel}_${logdate.getFullYear()}${month}.log`;
+            else
+                filename = `${logscope}_${loglevel}_${logdate.getFullYear()}${month}.log`;
+        let config_destination = ConfigGet(1, 'SERVICE_LOG', 'DESTINATION')
+        if (config_destination=='0' || config_destination=='2'){
+            //file destination
+            import('node:fs').then(function(fs){
+                fs.appendFile(process.cwd() + ConfigGet(0, null, 'PATH_LOG') + filename, log + '\r\n', 'utf8', (err) => {
+                    if (err) {
+                        //if error here ignore and continue, where else should log file be saved?
+                        pm2log(err);
+                        resolve();
+                    }
+                    else
+                        resolve(remote_log(ConfigGet, config_destination, log));
+                });
+            })
         }
         else
-            logdate = logdate.toISOString();
-        return logdate;
+            resolve(remote_log(ConfigGet, config_destination, log));
     })
 }
-async function setLogVariables(){
-    global.__appline = function get_appline(){
-        let e = new Error();
-        let frame = e.stack.split("\n")[2];
-        let lineNumber = frame.split(":").reverse()[1];
-        return lineNumber;
+function logdate(date_format){
+    let logdate = new Date();
+    if (date_format!='' && typeof date_format!='undefined'){
+        //ex ISO8601 format: "yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'"
+        logdate.format(date_format);
     }
-    global.__appfunction = function get_appfunction(){
-        let e = (new Error().stack).split("at ");
-        let functionName;
-        //loop from last to first
-        for (let line of e.reverse()) {
-            //ES6 startsWith and includes
-            if (line.startsWith('file')==false && 
-                line.includes('node_modules')==false &&
-                line.startsWith('Query')==false){
-                functionName = line.split(" ")[0];
-                break;
-            }
-        }
-        return functionName;
-    }
-    global.__appfilename = function get_appfilename(module){
-        let from_app_root = ('file:///' + process.cwd().replace(/\\/g, '/')).length;
-        return module.substring(from_app_root);
-    }
+    else
+        logdate = logdate.toISOString();
+    return logdate;
 }
 async function createLogServerE (ip, host, protocol, originalUrl, method, statusCode, 
                                  user_agent, accept_language, referer, err){
     return await new Promise(function (resolve){ 
         let log_json_server;
-        log_json_server = `{"logdate": "${logdate()}",
-                            "ip":"${ip}",
-                            "host": "${host}",
-                            "protocol": "${protocol}",
-                            "url": ${JSON.stringify(originalUrl.replaceAll('"', '\''))},
-                            "method":"${method}",
-                            "statusCode": ${statusCode},
-                            "user-agent": "${user_agent}",
-                            "accept-language": "${accept_language}",
-                            "http_referer": "${referer}",
-                            "app_id": "",
-                            "app_filename": "",
-                            "app_function_name": "",
-                            "app_app_line": "",
-                            "logtext": ${JSON.stringify(err.status + '-' + err.message)}
-                        }`;
         import(`file://${process.cwd()}/server/server.service.js`).then(function({ConfigGet}){
-            resolve(sendLog(ConfigGet(1, 'SERVICE_LOG', 'SCOPE_SERVER'), ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), log_json_server));
+            log_json_server = `{"logdate": "${logdate(ConfigGet(1, 'SERVICE_LOG', 'DATE_FORMAT'))}",
+                                "ip":"${ip}",
+                                "host": "${host}",
+                                "protocol": "${protocol}",
+                                "url": ${JSON.stringify(originalUrl.replaceAll('"', '\''))},
+                                "method":"${method}",
+                                "statusCode": ${statusCode},
+                                "user-agent": "${user_agent}",
+                                "accept-language": "${accept_language}",
+                                "http_referer": "${referer}",
+                                "app_id": "",
+                                "app_filename": "",
+                                "app_function_name": "",
+                                "app_app_line": "",
+                                "logtext": ${JSON.stringify(err.status + '-' + err.message)}
+                            }`;
+            resolve(sendLog(ConfigGet, ConfigGet(1, 'SERVICE_LOG', 'SCOPE_SERVER'), ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), log_json_server));
         })
     })
 }
-async function createLogServerI (info=null,
+async function createLogServerI (info=null,req=null,
                                  ip, host, protocol, originalUrl, method, 
                                  statusCode, statusMessage,
                                  user_agent, accept_language, referer){
@@ -160,53 +126,118 @@ async function createLogServerI (info=null,
         let log_json_server;  
         let logtext;
         import(`file://${process.cwd()}/server/server.service.js`).then(function({ConfigGet}){
-            if(ConfigGet(1, 'SERVICE_LOG', 'ENABLE_SERVER_VERBOSE')==1)
+            if(ConfigGet(1, 'SERVICE_LOG', 'ENABLE_SERVER_VERBOSE')=='1'){
                 log_level = ConfigGet(1, 'SERVICE_LOG', 'LEVEL_VERBOSE');
-            else
-                log_level = ConfigGet(1, 'SERVICE_LOG', 'LEVEL_INFO');
-            if (info!=null){
-                import('node:os').then(function({hostname}){
-                    log_json_server = `{"logdate": "${logdate()}",
-                    "ip":"",
-                    "host": "${hostname()}", 
-                    "protocol": "",
-                    "url": "",
-                    "method":"",
-                    "statusCode": "",
-                    "user-agent": "",
-                    "accept-language": "",
-                    "http_referer": "",
-                    "app_id": "",
-                    "app_filename": "",
-                    "app_function_name": "",
-                    "app_app_line": "",
-                    "logtext": ${JSON.stringify(info)}
-                    }`;
-                    resolve(sendLog(ConfigGet(1, 'SERVICE_LOG', 'SCOPE_SERVER'), log_level, log_json_server));
-                })
+                if (info ==null){
+                    //log verbose log with request 
+                    logtext = Object.assign({}, req);
+                    const getCircularReplacer = () => {
+                        const seen = new WeakSet();
+                        return (key, value) => {
+                            if (typeof value === 'object' && value !== null) {
+                            if (seen.has(value)) {
+                                return;
+                            }
+                            seen.add(value);
+                            }
+                            return value;
+                        };
+                    };
+                    //remove password
+                    if (logtext.body.password)
+                        logtext.body.password = null;
+                    //remove Basic authorization with password
+                    logtext.rawHeaders.forEach((rawheader,index)=>{
+                        if (rawheader.startsWith('Basic'))
+                            logtext.rawHeaders[index] = 'Basic ...';
+                    })
+                    logtext = 'req:' + JSON.stringify(logtext, getCircularReplacer());
+                    log_json_server = `{"logdate": "${logdate(ConfigGet(1, 'SERVICE_LOG', 'DATE_FORMAT'))}",
+                                        "ip":"${ip}",
+                                        "host": "${host}",
+                                        "protocol": "${protocol}",
+                                        "url": ${JSON.stringify(originalUrl.replaceAll('"', '\''))},
+                                        "method":"${method}",
+                                        "statusCode": ${statusCode},
+                                        "user-agent": "${user_agent}",
+                                        "accept-language": "${accept_language}",
+                                        "http_referer": "${referer}",
+                                        "app_id": "",
+                                        "app_filename": "",
+                                        "app_function_name": "",
+                                        "app_app_line": "",
+                                        "logtext": ${JSON.stringify(logtext)}
+                                        }`;
+                }
+                else{
+                    logtext = info;
+                    log_json_server = `{"logdate": "${logdate(ConfigGet(1, 'SERVICE_LOG', 'DATE_FORMAT'))}",
+                                        "ip":"",
+                                        "host": "",
+                                        "protocol": "",
+                                        "url": "",
+                                        "method":"",
+                                        "statusCode": "",
+                                        "user-agent": "",
+                                        "accept-language": "",
+                                        "http_referer": "",
+                                        "app_id": "",
+                                        "app_filename": "",
+                                        "app_function_name": "",
+                                        "app_app_line": "",
+                                        "logtext": ${JSON.stringify(logtext)}
+                                        }`;
+                }                
+                resolve(sendLog(ConfigGet, ConfigGet(1, 'SERVICE_LOG', 'SCOPE_SERVER'), log_level, log_json_server));
             }
             else{
-                if (typeof statusMessage=='undefined' || statusMessage=='')
-                    logtext = '""';
+                if (ConfigGet(1, 'SERVICE_LOG', 'ENABLE_SERVER_INFO')=='1'){
+                    log_level = ConfigGet(1, 'SERVICE_LOG', 'LEVEL_INFO');
+                    if (info ==null){
+                        if (typeof statusMessage=='undefined' || statusMessage=='')
+                            logtext = '""';
+                        else
+                            logtext = JSON.stringify(statusMessage);
+                        log_json_server = `{"logdate": "${logdate(ConfigGet(1, 'SERVICE_LOG', 'DATE_FORMAT'))}",
+                                            "ip":"${ip}",
+                                            "host": "${host}",
+                                            "protocol": "${protocol}",
+                                            "url": ${JSON.stringify(originalUrl.replaceAll('"', '\''))},
+                                            "method":"${method}",
+                                            "statusCode": ${statusCode},
+                                            "user-agent": "${user_agent}",
+                                            "accept-language": "${accept_language}",
+                                            "http_referer": "${referer}",
+                                            "app_id": "",
+                                            "app_filename": "",
+                                            "app_function_name": "",
+                                            "app_app_line": "",
+                                            "logtext": ${logtext}
+                                            }`;
+                    }
+                    else{
+                        logtext = info;
+                        log_json_server = `{"logdate": "${logdate(ConfigGet(1, 'SERVICE_LOG', 'DATE_FORMAT'))}",
+                                            "ip":"",
+                                            "host": "",
+                                            "protocol": "",
+                                            "url": "",
+                                            "method":"",
+                                            "statusCode": "",
+                                            "user-agent": "",
+                                            "accept-language": "",
+                                            "http_referer": "",
+                                            "app_id": "",
+                                            "app_filename": "",
+                                            "app_function_name": "",
+                                            "app_app_line": "",
+                                            "logtext": ${JSON.stringify(logtext)}
+                                            }`;
+                    }
+                    resolve(sendLog(ConfigGet, ConfigGet(1, 'SERVICE_LOG', 'SCOPE_SERVER'), log_level, log_json_server));
+                }
                 else
-                    logtext = JSON.stringify(statusMessage);
-                log_json_server = `{"logdate": "${logdate()}",
-                                    "ip":"${ip}",
-                                    "host": "${host}",
-                                    "protocol": "${protocol}",
-                                    "url": ${JSON.stringify(originalUrl.replaceAll('"', '\''))},
-                                    "method":"${method}",
-                                    "statusCode": ${statusCode},
-                                    "user-agent": "${user_agent}",
-                                    "accept-language": "${accept_language}",
-                                    "http_referer": "${referer}",
-                                    "app_id": "",
-                                    "app_filename": "",
-                                    "app_function_name": "",
-                                    "app_app_line": "",
-                                    "logtext": ${logtext}
-                                    }`;
-                resolve(sendLog(ConfigGet(1, 'SERVICE_LOG', 'SCOPE_SERVER'), log_level, log_json_server));
+                    resolve();
             }
         })
     })
@@ -216,23 +247,23 @@ async function createLogDB (app_id, logtext) {
         import(`file://${process.cwd()}/server/server.service.js`).then(function({ConfigGet}){
             if (ConfigGet(1, 'SERVICE_LOG', 'ENABLE_DB')=='1'){
                 import('node:os').then(function({hostname}){
-                    let log_json_db = `{"logdate": "${logdate()}",
-                                    "ip":"",
-                                    "host": "${hostname()}",
-                                    "protocol": "",
-                                    "url": "",
-                                    "method":"",
-                                    "statusCode": "",
-                                    "user-agent": "",
-                                    "accept-language": "",
-                                    "http_referer": "",
-                                    "app_id": ${app_id},
-                                    "app_filename": "",
-                                    "app_function_name": "",
-                                    "app_app_line": "",
-                                    "logtext": ${JSON.stringify(logtext)}
-                                    }`;
-                    resolve(sendLog(ConfigGet(1, 'SERVICE_LOG', 'SCOPE_DB'), ConfigGet(1, 'SERVICE_LOG', 'LEVEL_INFO'), log_json_db));
+                    let log_json_db = `{"logdate": "${logdate(ConfigGet(1, 'SERVICE_LOG', 'DATE_FORMAT'))}",
+                                        "ip":"",
+                                        "host": "${hostname()}",
+                                        "protocol": "",
+                                        "url": "",
+                                        "method":"",
+                                        "statusCode": "",
+                                        "user-agent": "",
+                                        "accept-language": "",
+                                        "http_referer": "",
+                                        "app_id": ${app_id},
+                                        "app_filename": "",
+                                        "app_function_name": "",
+                                        "app_app_line": "",
+                                        "logtext": ${JSON.stringify(logtext)}
+                                        }`;
+                    resolve(sendLog(ConfigGet, ConfigGet(1, 'SERVICE_LOG', 'SCOPE_DB'), ConfigGet(1, 'SERVICE_LOG', 'LEVEL_INFO'), log_json_db));
                 })
             }
             else
@@ -243,24 +274,24 @@ async function createLogDB (app_id, logtext) {
 async function createLogAppS (level_info, app_id, app_filename, app_function_name, app_line, logtext){
     return await new Promise(function (resolve){ 
         import('node:os').then(function({hostname}){
-            let log_json =`{"logdate": "${logdate()}",
-                        "ip":"",
-                        "host": "${hostname()}",
-                        "protocol": "",
-                        "url": "",
-                        "method":"",
-                        "statusCode": "",
-                        "user-agent": "",
-                        "accept-language": "",
-                        "http_referer": "",
-                        "app_id": ${app_id},
-                        "app_filename": "${app_filename}",
-                        "app_function_name": "${app_function_name}",
-                        "app_app_line": ${app_line},
-                        "logtext": ${JSON.stringify(logtext)}
-                        }`;
             import(`file://${process.cwd()}/server/server.service.js`).then(function({ConfigGet}){
-                resolve(sendLog(ConfigGet(1, 'SERVICE_LOG', 'SCOPE_SERVICE'), level_info, log_json));
+                let log_json =`{"logdate": "${logdate(ConfigGet(1, 'SERVICE_LOG', 'DATE_FORMAT'))}",
+                                "ip":"",
+                                "host": "${hostname()}",
+                                "protocol": "",
+                                "url": "",
+                                "method":"",
+                                "statusCode": "",
+                                "user-agent": "",
+                                "accept-language": "",
+                                "http_referer": "",
+                                "app_id": ${app_id},
+                                "app_filename": "${app_filename}",
+                                "app_function_name": "${app_function_name}",
+                                "app_app_line": ${app_line},
+                                "logtext": ${JSON.stringify(logtext)}
+                                }`;    
+                resolve(sendLog(ConfigGet, ConfigGet(1, 'SERVICE_LOG', 'SCOPE_SERVICE'), level_info, log_json));
             })
         })
     })
@@ -269,24 +300,24 @@ async function createLogAppC (app_id, level_info, app_filename, app_function_nam
                               ip, host, protocol, originalUrl, method, statusCode, 
                               user_agent, accept_language, referer){
     return await new Promise(function (resolve){ 
-        let log_json =`{"logdate": "${logdate()}",
-                        "ip":"${ip}",
-                        "host": "${host}",
-                        "protocol": "${protocol}",
-                        "url": ${JSON.stringify(originalUrl.replaceAll('"', '\''))},
-                        "method":"${method}",
-                        "status_code": ${statusCode},
-                        "user-agent": "${user_agent}",
-                        "accept-language": "${accept_language}",
-                        "http_referer": "${referer}",
-                        "app_id": ${app_id},
-                        "app_filename": "${app_filename}",
-                        "app_function_name": "${app_function_name}",
-                        "app_app_line": ${app_line},
-                        "logtext": ${JSON.stringify(logtext)}
-                        }`;
         import(`file://${process.cwd()}/server/server.service.js`).then(function({ConfigGet}){
-            resolve(sendLog(ConfigGet(1, 'SERVICE_LOG', 'SCOPE_CONTROLLER'), level_info, log_json));
+            let log_json =`{"logdate": "${logdate(ConfigGet(1, 'SERVICE_LOG', 'DATE_FORMAT'))}",
+                            "ip":"${ip}",
+                            "host": "${host}",
+                            "protocol": "${protocol}",
+                            "url": ${JSON.stringify(originalUrl.replaceAll('"', '\''))},
+                            "method":"${method}",
+                            "status_code": ${statusCode},
+                            "user-agent": "${user_agent}",
+                            "accept-language": "${accept_language}",
+                            "http_referer": "${referer}",
+                            "app_id": ${app_id},
+                            "app_filename": "${app_filename}",
+                            "app_function_name": "${app_function_name}",
+                            "app_app_line": ${app_line},
+                            "logtext": ${JSON.stringify(logtext)}
+                            }`;
+            resolve(sendLog(ConfigGet, ConfigGet(1, 'SERVICE_LOG', 'SCOPE_CONTROLLER'), level_info, log_json));
         })
     })
 }
@@ -294,9 +325,14 @@ async function createLogAppRI (app_id, app_filename, app_function_name, app_line
                     ip, host, protocol, originalUrl, method, statusCode, 
                 user_agent, accept_language, referer){
     return await new Promise(function (resolve){  
+        //remove sensitive data without modifying original log
+        //ES6 Object.assign clone 
+        let router_logtext = Object.assign({}, logtext);
+        if (router_logtext.password)
+            router_logtext.password = null;
         import(`file://${process.cwd()}/server/server.service.js`).then(function({ConfigGet}){
             if (ConfigGet(1, 'SERVICE_LOG', 'ENABLE_ROUTER')=='1'){
-                let log_json =`{"logdate": "${logdate()}",
+                let log_json =`{"logdate": "${logdate(ConfigGet(1, 'SERVICE_LOG', 'DATE_FORMAT'))}",
                                 "ip":"${ip}",
                                 "host": "${host}",
                                 "protocol": "${protocol}",
@@ -310,9 +346,9 @@ async function createLogAppRI (app_id, app_filename, app_function_name, app_line
                                 "app_filename": "${app_filename}",
                                 "app_function_name": "${app_function_name}",
                                 "app_app_line": ${app_line},
-                                "logtext": ${JSON.stringify(logtext)}
+                                "logtext": ${JSON.stringify(router_logtext)}
                                 }`;
-                resolve(sendLog(ConfigGet(1, 'SERVICE_LOG', 'SCOPE_ROUTER'), ConfigGet(1, 'SERVICE_LOG', 'LEVEL_INFO'), log_json));
+                resolve(sendLog(ConfigGet, ConfigGet(1, 'SERVICE_LOG', 'SCOPE_ROUTER'), ConfigGet(1, 'SERVICE_LOG', 'LEVEL_INFO'), log_json));
             }
             else
                 resolve();
@@ -474,7 +510,7 @@ function getFiles (app_id, callBack) {
     let logfiles =[];
     import(`file://${process.cwd()}/server/server.service.js`).then(function({ConfigGet}){
         import('node:fs').then(function(fs){
-            fs.readdir(global.process.cwd() + ConfigGet(0, null, 'PATH_LOG'), (err, files) => {
+            fs.readdir(process.cwd() + ConfigGet(0, null, 'PATH_LOG'), (err, files) => {
                 if (err) {
                     return callBack(err, null);
                 }
@@ -513,4 +549,4 @@ function getPM2Logs (app_id, callBack) {
         return callBack(error.message);
     }
 }
-export {setLogVariables, createLogServerE, createLogServerI, createLogDB, createLogAppS, createLogAppC, createLogAppRI, getParameters, getLogs, getFiles, getPM2Logs}
+export {createLogServerE, createLogServerI, createLogDB, createLogAppS, createLogAppC, createLogAppRI, getParameters, getLogs, getFiles, getPM2Logs}

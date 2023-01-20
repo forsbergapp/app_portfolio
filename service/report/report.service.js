@@ -161,7 +161,7 @@ async function getReportService(url, ps, hf){
                                     else
                                         webPage.close().then(function(){
                                             //if closing browser and not only page:
-                                            //global.browser.close();
+                                            //BROWSER.close();
                                             resolve(pdf);
                                         });
                                     });    
