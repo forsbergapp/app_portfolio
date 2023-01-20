@@ -241,7 +241,7 @@ function limit_sql(sql, limit_type = null){
 		else
 			return sql;
 }
-function record_not_found(app_id, lang_code){
+function record_not_found(res, app_id, lang_code){
 	import(`file://${process.cwd()}/server/server.service.js`).then(function({ConfigGet}){
 		import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/message_translation/message_translation.service.js`).then(function({ getMessage }){
 			getMessage( app_id, 
