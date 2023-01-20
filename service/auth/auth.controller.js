@@ -50,6 +50,7 @@ function access_control (req, res, callBack) {
                         })
                     }
                     else{
+                        let stack = new Error().stack;
                         //check if accessed from domain and not os hostname
                         import('node:os').then(function({hostname}){
                             let this_hostname = hostname();
@@ -57,7 +58,6 @@ function access_control (req, res, callBack) {
                                 req.headers.host==this_hostname){
                                 res.statusCode = 406;
                                 res.statusMessage = `ip ${ip_v4} blocked, accessed from hostname ${this_hostname} not domain, tried URL: ${req.originalUrl}`;
-                                let stack = new Error().stack;
                                 import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
                                     createLogAppCI(req, res, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), res.statusMessage)
                                     .then(function(){
@@ -80,7 +80,6 @@ function access_control (req, res, callBack) {
                                                 typeof req.headers["user-agent"]=='undefined'){
                                                 res.statusCode = 406;
                                                 res.statusMessage = `ip ${ip_v4} blocked, no user-agent, tried URL: ${req.originalUrl}`;
-                                                let stack = new Error().stack;
                                                 import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
                                                     createLogAppCI(req, res, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), res.statusMessage)
                                                     .then(function(){
@@ -95,7 +94,6 @@ function access_control (req, res, callBack) {
                                                     typeof req.headers["accept-language"]=='undefined'){
                                                     res.statusCode = 406;
                                                     res.statusMessage = `ip ${ip_v4} blocked, no accept-language, tried URL: ${req.originalUrl}`;
-                                                    let stack = new Error().stack;
                                                     import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
                                                         createLogAppCI(req, res, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), res.statusMessage)
                                                         .then(function(){
