@@ -29,7 +29,7 @@ function getUserSettingsByUserId(req, res){
 				});
 			else
 				import(`file://${process.cwd()}/service/db/common/common.service.js`).then(function({record_not_found}){
-					return record_not_found(req.query.app_id, req.query.lang_code);
+					return record_not_found(res, req.query.app_id, req.query.lang_code);
 				})
 	});
 }
@@ -49,7 +49,7 @@ function getProfileUserSetting(req, res){
 				});
 			else
 				import(`file://${process.cwd()}/service/db/common/common.service.js`).then(function({record_not_found}){
-					return record_not_found(req.query.app_id, req.query.lang_code);
+					return record_not_found(res, req.query.app_id, req.query.lang_code);
 				})
 	});
 }
@@ -72,7 +72,7 @@ function getProfileUserSettings(req, res){
 				});
 			else
 				import(`file://${process.cwd()}/service/db/common/common.service.js`).then(function({record_not_found}){
-					return record_not_found(req.query.app_id, req.query.lang_code);
+					return record_not_found(res, req.query.app_id, req.query.lang_code);
 				})
 	});
 }
@@ -96,7 +96,7 @@ function getProfileUserSettingDetail(req, res){
 				});
 			else
 				import(`file://${process.cwd()}/service/db/common/common.service.js`).then(function({record_not_found}){
-					return record_not_found(req.query.app_id, req.query.lang_code);
+					return record_not_found(res, req.query.app_id, req.query.lang_code);
 				})
 		}
 	});
@@ -118,7 +118,7 @@ function getProfileTop(req, res){
 				}); 
 			else
 				import(`file://${process.cwd()}/service/db/common/common.service.js`).then(function({record_not_found}){
-					return record_not_found(req.query.app_id, req.query.lang_code);
+					return record_not_found(res, req.query.app_id, req.query.lang_code);
 				})
 		}
 	});
@@ -154,7 +154,7 @@ function updateUserSetting(req, res){
 				);
 			else
 				import(`file://${process.cwd()}/service/db/common/common.service.js`).then(function({record_not_found}){
-					return record_not_found(req.query.app_id, req.query.lang_code);
+					return record_not_found(res, req.query.app_id, req.query.lang_code);
 				})
 		}
 	});
@@ -174,7 +174,7 @@ function deleteUserSetting(req, res){
 				);
 			else
 				import(`file://${process.cwd()}/service/db/common/common.service.js`).then(function({record_not_found}){
-					return record_not_found(req.query.app_id, req.query.lang_code);
+					return record_not_found(res, req.query.app_id, req.query.lang_code);
 				})
 		}
 	});
