@@ -22,13 +22,16 @@ function getUserAccountLogonAdmin(app_id, user_account_id, app_id_select, callBa
 						user_account_id: user_account_id,
 						app_id_select: app_id_select
 					};
-		execute_db_sql(app_id, sql, parameters, 
-						__appfilename(import.meta.url), __appfunction(), __appline(), (err, result)=>{
-			if (err)
-				return callBack(err, null);
-			else
-				return callBack(null, result);
-		});
+		let stack = new Error().stack;
+		import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
+			execute_db_sql(app_id, sql, parameters, 
+							COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+				if (err)
+					return callBack(err, null);
+				else
+					return callBack(null, result);
+			});
+		})
 	}
 function checkLogin(app_id, user_account_id, access_token, client_ip, callBack){
 		let sql;
@@ -56,13 +59,16 @@ function checkLogin(app_id, user_account_id, access_token, client_ip, callBack){
 				super_admin_app_role_id: 0,
 				admin_app_role_id: 1
 			};
-			execute_db_sql(app_id, sql, parameters, 
-						__appfilename(import.meta.url), __appfunction(), __appline(), (err, result)=>{
-				if (err)
-					return callBack(err, null);
-				else
-					return callBack(null, result);
-			});
+			let stack = new Error().stack;
+			import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
+				execute_db_sql(app_id, sql, parameters, 
+							COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+					if (err)
+						return callBack(err, null);
+					else
+						return callBack(null, result);
+				});
+			})
 		})
 	}
 	
@@ -83,12 +89,15 @@ function insertUserAccountLogon(app_id, data, callBack){
 						client_longitude:  data.client_longitude ?? null,
 						client_latitude:  data.client_latitude ?? null
 					};
-		execute_db_sql(app_id, sql, parameters, 
-			           __appfilename(import.meta.url), __appfunction(), __appline(), (err, result)=>{
-			if (err)
-				return callBack(err, null);
-			else
-				return callBack(null, result);
-		});
+		let stack = new Error().stack;
+		import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
+			execute_db_sql(app_id, sql, parameters, 
+						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+				if (err)
+					return callBack(err, null);
+				else
+					return callBack(null, result);
+			});
+		})
 	}
 export{getUserAccountLogonAdmin, checkLogin, insertUserAccountLogon};

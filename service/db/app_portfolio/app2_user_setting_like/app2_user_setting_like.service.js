@@ -10,13 +10,16 @@ function likeUserSetting(app_id, id, id_like, callBack){
 						user_account_id: id,
 						app2_user_setting_id: id_like
 					};
-		execute_db_sql(app_id, sql, parameters, 
-			           __appfilename(import.meta.url), __appfunction(), __appline(), (err, result)=>{
-			if (err)
-				return callBack(err, null);
-			else
-				return callBack(null, result);
-		});
+		let stack = new Error().stack;
+		import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
+			execute_db_sql(app_id, sql, parameters, 
+						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+				if (err)
+					return callBack(err, null);
+				else
+					return callBack(null, result);
+			});
+		})
 	}
 function unlikeUserSetting(app_id, id, id_unlike, callBack){
 		let sql;
@@ -28,12 +31,15 @@ function unlikeUserSetting(app_id, id, id_unlike, callBack){
 						user_account_id: id,
 						app2_user_setting_id: id_unlike
 						};
-		execute_db_sql(app_id, sql, parameters, 
-			           __appfilename(import.meta.url), __appfunction(), __appline(), (err, result)=>{
-			if (err)
-				return callBack(err, null);
-			else
-				return callBack(null, result);
-		});
+		let stack = new Error().stack;
+		import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){						
+			execute_db_sql(app_id, sql, parameters, 
+						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+				if (err)
+					return callBack(err, null);
+				else
+					return callBack(null, result);
+			});
+		})
 	}
 export{likeUserSetting, unlikeUserSetting};

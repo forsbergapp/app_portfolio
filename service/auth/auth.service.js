@@ -51,10 +51,14 @@ function IPtoNum(ip){
             let json;  
             import('node:fs').then(function(fs){
                 fs.readFile(process.cwd() + ConfigGet(0, null, 'FILE_CONFIG_AUTH_USERAGENT'), 'utf8', (error, fileBuffer) => {
-                    if (error)
-                        createLogAppSE(ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), __appfilename(import.meta.url), __appfunction(), __appline(), error).then(function(){
-                            return callBack(error, null);
+                    if (error){
+                        let stack = new Error().stack;
+                        import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
+                            createLogAppSE(ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), error).then(function(){
+                                return callBack(error, null);
+                            })
                         })
+                    }
                     else{
                         json = JSON.parse(fileBuffer.toString());
                         for (let i = 0; i < json.user_agent.length; i++){
@@ -97,8 +101,11 @@ function IPtoNum(ip){
                 let frame_src = '';
                 fs.readFile(process.cwd() + ConfigGet(0, null, 'FILE_CONFIG_AUTH_POLICY'), 'utf8', (error, fileBuffer) => {
                     if (error){
-                        createLogAppSE(ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), __appfilename(import.meta.url), __appfunction(), __appline(), error).then(function(){
-                            return callBack(error, null);
+                        let stack = new Error().stack;
+                        import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
+                            createLogAppSE(ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), error).then(function(){
+                                return callBack(error, null);
+                            })
                         })
                     }
                     else{

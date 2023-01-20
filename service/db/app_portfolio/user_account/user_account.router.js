@@ -22,9 +22,12 @@ const { createLogAppRI } = await import(`file://${process.cwd()}/service/log/log
 const {Router} = await import('express');
 const router = Router();
 router.use((req,res,next)=>{
-    createLogAppRI(req, res, __appfilename(import.meta.url), __appfunction(), __appline(), req.body).then(function(){
-		next();
-	})
+    let stack = new Error().stack;
+    import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
+        createLogAppRI(req, res, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), req.body).then(function(){
+            next();
+        })
+    })
 })
 //admin, count user stat
 router.get("/admin/count", checkAccessTokenAdmin, getStatCountAdmin);

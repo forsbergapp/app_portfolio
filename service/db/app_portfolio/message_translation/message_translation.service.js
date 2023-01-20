@@ -33,13 +33,16 @@ function getMessage(app_id, data_app_id, code, lang_code, callBack){
                   		lang_code2: get_locale(lang_code, 2),
                   		lang_code3: get_locale(lang_code, 3)
 					};
-		execute_db_sql(app_id, sql, parameters, 
-			           __appfilename(import.meta.url), __appfunction(), __appline(), (err, result)=>{
-			if (err)
-				return callBack(err, null);
-			else
-				return callBack(null, result[0]);
-		});
+		let stack = new Error().stack;
+		import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
+			execute_db_sql(app_id, sql, parameters, 
+						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+				if (err)
+					return callBack(err, null);
+				else
+					return callBack(null, result[0]);
+			});
+		})
 	}
 function getMessage_admin(app_id, data_app_id, code, lang_code, callBack){
 		let sql;
@@ -74,12 +77,15 @@ function getMessage_admin(app_id, data_app_id, code, lang_code, callBack){
                   		lang_code2: get_locale(lang_code, 2),
                   		lang_code3: get_locale(lang_code, 3)
 					};
-		execute_db_sql(app_id, sql, parameters,
-			           __appfilename(import.meta.url), __appfunction(), __appline(), (err, result)=>{
-			if (err)
-				return callBack(err, null);
-			else
-				return callBack(null, result[0]);
-		});
+		let stack = new Error().stack;
+		import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){					
+			execute_db_sql(app_id, sql, parameters,
+						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+				if (err)
+					return callBack(err, null);
+				else
+					return callBack(null, result[0]);
+			});
+		})
 	}
 export{getMessage, getMessage_admin};
