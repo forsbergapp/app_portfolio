@@ -188,11 +188,14 @@ async function getPlaceSystemAdmin(req, res){
 			//service can return other formats, set json
 			const url = `${ConfigGet(1, 'SERVICE_GEOLOCATION', 'URL_GPS_PLACE')}?format=json&lat=${req.query.latitude}&lon=${req.query.longitude}`;
 			geodata = await service.getService(url);
+			let stack = new Error().stack;
 			import(`file://${process.cwd()}/service/log/log.controller.js`).then(function({createLogAppCI}){
-				createLogAppCI(req, res, __appfilename(import.meta.url), __appfunction(), __appline(), 'SYSTEM ADMIN getPlaceSystemAdmin').then(function(){
-					return res.status(200).json(
-						geodata
-					)
+				import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
+					createLogAppCI(req, res, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 'SYSTEM ADMIN getPlaceSystemAdmin').then(function(){
+						return res.status(200).json(
+							geodata
+						)
+					})
 				})
 			})
 		}
@@ -285,14 +288,17 @@ async function getIpSystemAdmin(req, res, callBack){
 	let url = get_ip_url(req.ip, req.query.ip);
 	if (ConfigGet(1, 'SERVICE_AUTH', 'ENABLE_GEOLOCATION')=='1' && await check_internet(req)==1){
 		geodata = await service.getService(url);
+		let stack = new Error().stack;
 		import(`file://${process.cwd()}/service/log/log.controller.js`).then(function({createLogAppCI}){
-			createLogAppCI(req, res, __appfilename(import.meta.url), __appfunction(), __appline(), 'SYSTEM ADMIN getIpSystemAdmin').then(function(){
-				if (req.query.callback==1)
-					return callBack(null, geodata);
-				else
-					return res.status(200).json(
-							geodata
-					);
+			import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
+				createLogAppCI(req, res, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 'SYSTEM ADMIN getIpSystemAdmin').then(function(){
+					if (req.query.callback==1)
+						return callBack(null, geodata);
+					else
+						return res.status(200).json(
+								geodata
+						);
+				})
 			})
 		})
 	}

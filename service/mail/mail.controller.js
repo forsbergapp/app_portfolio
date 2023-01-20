@@ -17,9 +17,12 @@ function getLogo(req, res){
     }
     res.sendFile(process.cwd() + `/apps/app${req.query.app_id}/mail/logo.png`, (err) =>{
         if (err){
+            let stack = new Error().stack;
             import(`file://${process.cwd()}/service/log/log.controller.js`).then(function({createLogAppSE}){
-                createLogAppSE(req.query.app_id, __appfilename(import.meta.url), __appfunction(), __appline(), err).then(function(){
-                    return res.send(null);
+                import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
+                    createLogAppSE(req.query.app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), err).then(function(){
+                        return res.send(null);
+                    })
                 })
             })
         }
@@ -78,9 +81,12 @@ function sendEmail(req, data, callBack){
     import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/app_parameter/app_parameter.service.js`).then(function({getParameters_server}){
         getParameters_server(req.query.app_id, data.app_id, (err, result)=>{
             if (err) {                
+                let stack = new Error().stack;
                 import(`file://${process.cwd()}/service/log/log.controller.js`).then(function({createLogAppSE}){
-                    createLogAppSE(req.query.app_id, __appfilename(import.meta.url), __appfunction(), __appline(), err).then(function(){
-                        return callBack(err, null);
+                    import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
+                        createLogAppSE(req.query.app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), err).then(function(){
+                            return callBack(err, null);
+                        })
                     })
                 })
             }

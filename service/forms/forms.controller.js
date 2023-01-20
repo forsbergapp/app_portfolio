@@ -112,9 +112,12 @@ function getFormAdmin(req, res, app_id, callBack){
                                          result.geoplugin_latitude,
                                          result.geoplugin_longitude, 
                                          gps_place).then(function(app_result){
+                                            let stack = new Error().stack;
                                             import(`file://${process.cwd()}/service/log/log.controller.js`).then(function({ createLogAppCI }){
-                                                createLogAppCI(req, res, __appfilename(import.meta.url), __appfunction(), __appline(), 'SYSTEM ADMIN Forms Admin').then(function(){
-                                                    return callBack(null, app_result);
+                                                import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
+                                                    createLogAppCI(req, res, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 'SYSTEM ADMIN Forms Admin').then(function(){
+                                                        return callBack(null, app_result);
+                                                    })
                                                 })
                                             })
                                          })
@@ -126,6 +129,7 @@ function getFormAdmin(req, res, app_id, callBack){
 }
 function getFormAdminSecure(req, res){
     try {
+        let stack = new Error().stack;
         import(`file://${process.cwd()}/apps/admin/src/secure/index.js`).then(function({ getAdminSecure }){
             const app = getAdminSecure(req.query.app_id,
                 1,      //system admin=1
@@ -135,10 +139,12 @@ function getFormAdminSecure(req, res){
                 null)
             .then(function(app_result){
                 import(`file://${process.cwd()}/service/log/log.controller.js`).then(function({ createLogAppCI }){
-                    createLogAppCI(req, res, __appfilename(import.meta.url), __appfunction(), __appline(), 'SYSTEM ADMIN Forms admin secure').then(function(){
-                        return res.status(200).json({
-                            app: app_result
-                        });
+                    import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
+                        createLogAppCI(req, res, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 'SYSTEM ADMIN Forms admin secure').then(function(){
+                            return res.status(200).json({
+                                app: app_result
+                            });
+                        })
                     })
                 })
             })    
