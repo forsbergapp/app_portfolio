@@ -360,7 +360,7 @@ function getUserByUserId(req, res){
                 );
             }
             else{
-                import(`file://${process.cwd()}/service/db/common.service.js`).then(function({record_not_found}){
+                import(`file://${process.cwd()}/service/db/common/common.service.js`).then(function({record_not_found}){
                     return record_not_found(req.query.app_id, req.query.lang_code);
                 })
             }
@@ -432,7 +432,7 @@ function getProfileUser(req, res){
                 }
             }
             else{
-                import(`file://${process.cwd()}/service/db/common.service.js`).then(function({record_not_found}){
+                import(`file://${process.cwd()}/service/db/common/common.service.js`).then(function({record_not_found}){
                     return record_not_found(req.query.app_id, req.query.lang_code);
                 })
             }
@@ -467,7 +467,7 @@ function searchProfileUser(req, res){
                                 items: results
                             });
                         else {
-                            import(`file://${process.cwd()}/service/db/common.service.js`).then(function({record_not_found}){
+                            import(`file://${process.cwd()}/service/db/common/common.service.js`).then(function({record_not_found}){
                                 return record_not_found(req.query.app_id, req.query.lang_code);
                             })
                         }
@@ -607,7 +607,7 @@ function updateUserLocal(req, res){
                                             });
                                     } 
                                     else{
-                                        import(`file://${process.cwd()}/service/db/common.service.js`).then(function({record_not_found}){
+                                        import(`file://${process.cwd()}/service/db/common/common.service.js`).then(function({record_not_found}){
                                             return record_not_found(req.query.app_id, req.query.lang_code);
                                         })
                                     }
@@ -758,7 +758,7 @@ function updatePassword(req, res){
                     })
                 }
                 else{
-                    import(`file://${process.cwd()}/service/db/common.service.js`).then(function({record_not_found}){
+                    import(`file://${process.cwd()}/service/db/common/common.service.js`).then(function({record_not_found}){
                         return record_not_found(req.query.app_id, req.query.lang_code);
                     })
                 }
@@ -797,7 +797,7 @@ function updateUserCommon(req, res){
                 );
             }
             else{
-                import(`file://${process.cwd()}/service/db/common.service.js`).then(function({record_not_found}){
+                import(`file://${process.cwd()}/service/db/common/common.service.js`).then(function({record_not_found}){
                     return record_not_found(req.query.app_id, req.query.lang_code);
                 })
             }
@@ -828,7 +828,7 @@ function deleteUser(req, res){
                                 );
                             }
                             else{
-                                import(`file://${process.cwd()}/service/db/common.service.js`).then(function({record_not_found}){
+                                import(`file://${process.cwd()}/service/db/common/common.service.js`).then(function({record_not_found}){
                                     return record_not_found(req.query.app_id, req.query.lang_code);
                                 })
                             }
@@ -859,7 +859,7 @@ function deleteUser(req, res){
                                                 );
                                             }
                                             else{
-                                                import(`file://${process.cwd()}/service/db/common.service.js`).then(function({record_not_found}){
+                                                import(`file://${process.cwd()}/service/db/common/common.service.js`).then(function({record_not_found}){
                                                     return record_not_found(req.query.app_id, req.query.lang_code);
                                                 })
                                             }
