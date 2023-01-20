@@ -20,13 +20,16 @@ function getParameters_server(app_id, data_app_id, callBack){
 					AND parameter_type_id IN ('0','1','2')
 				ORDER BY 1, 3`;
 		parameters = {app_id: data_app_id};
-		execute_db_sql(app_id, sql, parameters, 
-			           __appfilename(import.meta.url), __appfunction(), __appline(), (err, result)=>{
-			if (err)
-				return callBack(err, null);
-			else
-				return callBack(null, result);
-		});
+		let stack = new Error().stack;
+		import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
+			execute_db_sql(app_id, sql, parameters, 
+						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+				if (err)
+					return callBack(err, null);
+				else
+					return callBack(null, result);
+			});
+		})
 	}
 function getParametersAllAdmin(app_id, data_app_id, lang_code, callBack){
 		let sql;
@@ -59,13 +62,16 @@ function getParametersAllAdmin(app_id, data_app_id, lang_code, callBack){
 					  lang_code2: get_locale(lang_code, 2),
 					  lang_code3: get_locale(lang_code, 3),
 					  app_id: data_app_id};
-		execute_db_sql(app_id, sql, parameters, 
-					   __appfilename(import.meta.url), __appfunction(), __appline(), (err, result)=>{
-			if (err)
-				return callBack(err, null);
-			else
-				return callBack(null, result); 
-		});
+		let stack = new Error().stack;
+import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
+			execute_db_sql(app_id, sql, parameters, 
+						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+				if (err)
+					return callBack(err, null);
+				else
+					return callBack(null, result); 
+			});
+		})
 	}
 function getParameter(app_id, data_app_id, parameter_name, callBack){
 		let sql;
@@ -78,13 +84,16 @@ function getParameter(app_id, data_app_id, parameter_name, callBack){
 				ORDER BY 1`;
 		parameters = {app_id: data_app_id,
 					  parameter_name:parameter_name};
-		execute_db_sql(app_id, sql, parameters, 
-					   __appfilename(import.meta.url), __appfunction(), __appline(), (err, result)=>{
-			if (err)
-				return callBack(err, null);
-			else
-				return callBack(null, result[0].parameter_value);
-		});
+		let stack = new Error().stack;
+		import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
+			execute_db_sql(app_id, sql, parameters, 
+						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+				if (err)
+					return callBack(err, null);
+				else
+					return callBack(null, result[0].parameter_value);
+			});
+		})
 	}
 function setParameter_admin(app_id, body, callBack){
 		let sql;
@@ -100,13 +109,16 @@ function setParameter_admin(app_id, body, callBack){
 					  parameter_comment: body.parameter_comment,
 					  app_id: body.app_id,
 					  parameter_name: body.parameter_name};
-		execute_db_sql(app_id, sql, parameters,
-			           __appfilename(import.meta.url), __appfunction(), __appline(), (err, result)=>{
-			if (err)
-				return callBack(err, null);
-			else
-				return callBack(null, result);
-		});
+		let stack = new Error().stack;
+		import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
+			execute_db_sql(app_id, sql, parameters,
+						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+				if (err)
+					return callBack(err, null);
+				else
+					return callBack(null, result);
+			});
+		})
 	}
 function setParameterValue_admin(app_id, body, callBack){
 		let sql;
@@ -118,13 +130,16 @@ function setParameterValue_admin(app_id, body, callBack){
 		parameters = {parameter_value: body.parameter_value, 
 					  app_id: body.app_id,
 					  parameter_name: body.parameter_name};
-		execute_db_sql(app_id, sql, parameters, 
-					   __appfilename(import.meta.url), __appfunction(), __appline(), (err, result)=>{
-			if (err)
-				return callBack(err, null);
-			else
-				return callBack(null, result);
-		});
+		let stack = new Error().stack;
+		import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
+			execute_db_sql(app_id, sql, parameters, 
+						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+				if (err)
+					return callBack(err, null);
+				else
+					return callBack(null, result);
+			});
+		})
 	}
 function getAppDBParametersAdmin(app_id, callBack){
 		let sql;
@@ -145,15 +160,16 @@ function getAppDBParametersAdmin(app_id, callBack){
 				ORDER BY 1, 3`;
 		parameters = {db_user: db_user,
 					  db_password: db_password};
-
-		execute_db_sql(app_id, sql, parameters,
-			           __appfilename(import.meta.url), __appfunction(), __appline(), (err, result)=>{
-			if (err)
-				return callBack(err, null);
-			else
-				return callBack(null, result);
-		});
-		
+		let stack = new Error().stack;
+		import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
+			execute_db_sql(app_id, sql, parameters,
+						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+				if (err)
+					return callBack(err, null);
+				else
+					return callBack(null, result);
+			});
+		})
 	}
 function getAppStartParameters(app_id, callBack){
 		let sql;
@@ -189,13 +205,16 @@ function getAppStartParameters(app_id, callBack){
 						app_rest_client_id: app_rest_client_id,
 						app_rest_client_secret: app_rest_client_secret,
 						rest_app_parameter: rest_app_parameter}
-		execute_db_sql(app_id, sql, parameters,
-					   __appfilename(import.meta.url), __appfunction(), __appline(), (err, result)=>{
-			if (err)
-				return callBack(err, null);
-			else
-				return callBack(null, result);
-		});
+		let stack = new Error().stack;
+		import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
+			execute_db_sql(app_id, sql, parameters,
+						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+				if (err)
+					return callBack(err, null);
+				else
+					return callBack(null, result);
+			});
+		})
 	}
 function getParameters(app_id, data_app_id, callBack){
 		//returns parameters for app_id=0 and given app_id
@@ -214,13 +233,16 @@ function getParameters(app_id, data_app_id, callBack){
 					AND parameter_type_id IN ('0','1')
 				ORDER BY 1`;
 		parameters = {app_id: data_app_id};
-		execute_db_sql(app_id, sql, parameters, 
-			           __appfilename(import.meta.url), __appfunction(), __appline(), (err, result)=>{
-			if (err)
-				return callBack(err, null);
-			else
-				return callBack(null, result);
-		});
+		let stack = new Error().stack;
+		import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
+			execute_db_sql(app_id, sql, parameters, 
+						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+				if (err)
+					return callBack(err, null);
+				else
+					return callBack(null, result);
+			});
+		})
 	}
 export{getParameters_server, getParametersAllAdmin, getParameter, setParameter_admin, setParameterValue_admin, 
 	   getAppDBParametersAdmin, getAppStartParameters, getParameters};

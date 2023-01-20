@@ -179,13 +179,16 @@ function getUsersAdmin(app_id, search, sort, order_by, offset, limit, callBack){
 					  offset: offset ?? 0,
 					  limit: limit ?? parseInt(ConfigGet(1, 'SERVICE_DB', 'LIMIT_LIST_SEARCH')),
 					 };
-		execute_db_sql(app_id, sql, parameters,
-			           __appfilename(import.meta.url), __appfunction(), __appline(), (err, result)=>{
-			if (err)
-				return callBack(err, null);
-			else
-				return callBack(null, result);
-		});
+		let stack = new Error().stack;
+		import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){					 
+			execute_db_sql(app_id, sql, parameters,
+						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+				if (err)
+					return callBack(err, null);
+				else
+					return callBack(null, result);
+			});
+		})
     }
 function getUserAppRoleAdmin(app_id, id, callBack){
 		let sql;
@@ -194,13 +197,16 @@ function getUserAppRoleAdmin(app_id, id, callBack){
 				 FROM ${get_schema_name()}.user_account
 				WHERE id = :id`;
 		parameters = {id: id};
-		execute_db_sql(app_id, sql, parameters,
-			           __appfilename(import.meta.url), __appfunction(), __appline(), (err, result)=>{
-			if (err)
-				return callBack(err, null);
-			else
-				return callBack(null, result);
-		});
+		let stack = new Error().stack;
+		import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
+			execute_db_sql(app_id, sql, parameters,
+						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+				if (err)
+					return callBack(err, null);
+				else
+					return callBack(null, result);
+			});
+		})
 	}
 function getStatCountAdmin(app_id, callBack){
 		let sql;
@@ -219,13 +225,16 @@ function getStatCountAdmin(app_id, callBack){
 				GROUP BY ua.identity_provider_id, ip.provider_name
 				ORDER BY ua.identity_provider_id`;
 		parameters = {};
-		execute_db_sql(app_id, sql, parameters,
-			           __appfilename(import.meta.url), __appfunction(), __appline(), (err, result)=>{
-			if (err)
-				return callBack(err, null);
-			else
-				return callBack(null, result);
-		});
+		let stack = new Error().stack;
+		import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
+			execute_db_sql(app_id, sql, parameters,
+						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+				if (err)
+					return callBack(err, null);
+				else
+					return callBack(null, result);
+			});
+		})
     }
 function updateUserSuperAdmin(app_id, id, data, callBack){
 		let sql;
@@ -272,13 +281,16 @@ function updateUserSuperAdmin(app_id, id, data, callBack){
 						password_reminder: data.password_reminder,
 						verification_code: data.verification_code
 						};
-			execute_db_sql(app_id, sql, parameters,
-						__appfilename(import.meta.url), __appfunction(), __appline(), (err, result)=>{
-				if (err)
-					return callBack(err, null);
-				else
-					return callBack(null, result);
-			});
+			let stack = new Error().stack;
+			import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){						
+				execute_db_sql(app_id, sql, parameters,
+							COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+					if (err)
+						return callBack(err, null);
+					else
+						return callBack(null, result);
+				});
+			})
 		}
 		else
 			callBack(error_code, null);
@@ -355,43 +367,49 @@ function create(app_id, data, callBack){
 							provider_Ximage_url: data.provider_image_url,
 							provider_email: data.provider_email
 						 };
-			execute_db_sql(app_id, sql, parameters, 
-						   __appfilename(import.meta.url), __appfunction(), __appline(), (err, result)=>{
-				if (err)
-					return callBack(err, null);
-				else
-					switch (ConfigGet(1, 'SERVICE_DB', 'USE')){
-						case '1':{
-							return callBack(null, result);
-							break;
+			let stack = new Error().stack;
+			import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
+				execute_db_sql(app_id, sql, parameters, 
+							COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+					if (err)
+						return callBack(err, null);
+					else
+						switch (ConfigGet(1, 'SERVICE_DB', 'USE')){
+							case '1':{
+								return callBack(null, result);
+								break;
+							}
+							case '2':{
+								//Fetch id from rowid returned from Oracle
+								//sample output:
+								//{"lastRowid":"AAAWwdAAAAAAAdHAAC","rowsAffected":1}
+								//remove "" before and after
+								let lastRowid = JSON.stringify(result.lastRowid).replace(/"/g, '');
+								sql = `SELECT id "insertId"
+										FROM ${get_schema_name()}.user_account
+										WHERE rowid = :lastRowid`;
+								parameters = {
+												lastRowid: lastRowid
+											};
+								let stack = new Error().stack;
+								import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){											
+									execute_db_sql(app_id, sql, parameters, 
+												COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result_id2)=>{
+										if (err)
+											return callBack(err, null);
+										else
+											return callBack(null, result_id2[0]);
+									})
+								})
+								break;
+							}
+							case '3':{
+								return callBack(null, {insertId: result[0].id});
+								break;
+							}
 						}
-						case '2':{
-							//Fetch id from rowid returned from Oracle
-							//sample output:
-							//{"lastRowid":"AAAWwdAAAAAAAdHAAC","rowsAffected":1}
-							//remove "" before and after
-							let lastRowid = JSON.stringify(result.lastRowid).replace(/"/g, '');
-							sql = `SELECT id "insertId"
-									FROM ${get_schema_name()}.user_account
-									WHERE rowid = :lastRowid`;
-							parameters = {
-											lastRowid: lastRowid
-										};
-							execute_db_sql(app_id, sql, parameters, 
-										__appfilename(import.meta.url), __appfunction(), __appline(), (err, result_id2)=>{
-								if (err)
-									return callBack(err, null);
-								else
-									return callBack(null, result_id2[0]);
-							})
-							break;
-						}
-						case '3':{
-							return callBack(null, {insertId: result[0].id});
-							break;
-						}
-					}
-			});
+				});
+			})
 		}
 		else
 			callBack(error_code, null);
@@ -428,37 +446,40 @@ function activateUser(app_id, id, verification_type, verification_code, auth, ca
 						id: id,
 						verification_code: verification_code
 					};
-		execute_db_sql(app_id, sql, parameters, 
-					__appfilename(import.meta.url), __appfunction(), __appline(), (err, result)=>{
-			if (err)
-				return callBack(err, null);
-			else{
-				switch (ConfigGet(1, 'SERVICE_DB', 'USE')){
-					case '1':{
-						return callBack(null, result);
-						break;
-					}
-					case '2':{
-						let oracle_json = {
-							"count": result.rowsAffected,
-							"affectedRows": result.rowsAffected
-						};
-						//use affectedRows as mysql in app
-						return callBack(null, oracle_json);
-						break;
-					}
-					case '3':{
-						let pg_json = {
-							"count": result.length,
-							"affectedRows": result.length
-						};
-						//use affectedRows as mysql in app
-						return callBack(null, pg_json);
-						break;
+		let stack = new Error().stack;
+		import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
+			execute_db_sql(app_id, sql, parameters, 
+						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+				if (err)
+					return callBack(err, null);
+				else{
+					switch (ConfigGet(1, 'SERVICE_DB', 'USE')){
+						case '1':{
+							return callBack(null, result);
+							break;
+						}
+						case '2':{
+							let oracle_json = {
+								"count": result.rowsAffected,
+								"affectedRows": result.rowsAffected
+							};
+							//use affectedRows as mysql in app
+							return callBack(null, oracle_json);
+							break;
+						}
+						case '3':{
+							let pg_json = {
+								"count": result.length,
+								"affectedRows": result.length
+							};
+							//use affectedRows as mysql in app
+							return callBack(null, pg_json);
+							break;
+						}
 					}
 				}
-			}
-		});
+			});
+		})
     }
 function updateUserVerificationCode(app_id, id, verification_code, callBack){
 		let sql;
@@ -475,37 +496,40 @@ function updateUserVerificationCode(app_id, id, verification_code, callBack){
 						verification_code: verification_code,
 						id: id   
 					}; 
-		execute_db_sql(app_id, sql, parameters,
-			           __appfilename(import.meta.url), __appfunction(), __appline(), (err, result)=>{
-			if (err)
-				return callBack(err, null);
-			else{
-				switch (ConfigGet(1, 'SERVICE_DB', 'USE')){
-					case '1':{
-						return callBack(null, result);
-						break;
-					}
-					case '2':{
-						let oracle_json = {
-							"count": result.rowsAffected,
-							"affectedRows": result.rowsAffected
-						};
-						//use affectedRows as mysql in app
-						return callBack(null, oracle_json);
-						break;
-					}
-					case '3':{
-						let pg_json = {
-							"count": result.length,
-							"affectedRows": result.length
-						};
-						//use affectedRows as mysql in app
-						return callBack(null, pg_json);
-						break;
+		let stack = new Error().stack;
+		import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
+			execute_db_sql(app_id, sql, parameters,
+						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+				if (err)
+					return callBack(err, null);
+				else{
+					switch (ConfigGet(1, 'SERVICE_DB', 'USE')){
+						case '1':{
+							return callBack(null, result);
+							break;
+						}
+						case '2':{
+							let oracle_json = {
+								"count": result.rowsAffected,
+								"affectedRows": result.rowsAffected
+							};
+							//use affectedRows as mysql in app
+							return callBack(null, oracle_json);
+							break;
+						}
+						case '3':{
+							let pg_json = {
+								"count": result.length,
+								"affectedRows": result.length
+							};
+							//use affectedRows as mysql in app
+							return callBack(null, pg_json);
+							break;
+						}
 					}
 				}
-			}
-		});
+			});
+		})
     }
 function getUserByUserId(app_id, id, callBack){
 		let sql;
@@ -539,14 +563,17 @@ function getUserByUserId(app_id, id, callBack){
 				WHERE   u.id = :id `;
 		parameters = {
 					  id: id
-					 }; 
-		execute_db_sql(app_id, sql, parameters, 
-			           __appfilename(import.meta.url), __appfunction(), __appline(), (err, result)=>{
-			if (err)
-				return callBack(err, null);
-			else
-				return callBack(null, result[0]);
-		});
+					 };
+		let stack = new Error().stack;
+		import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
+			execute_db_sql(app_id, sql, parameters, 
+						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+				if (err)
+					return callBack(err, null);
+				else
+					return callBack(null, result[0]);
+			});
+		})
     }
 function getProfileUser(app_id, id, username, id_current_user, callBack){
 		let sql;
@@ -616,13 +643,16 @@ function getProfileUser(app_id, id, username, id_current_user, callBack){
 			username: username,
 			app_id: app_id
 		}; 
-		execute_db_sql(app_id, sql, parameters, 
-			           __appfilename(import.meta.url), __appfunction(), __appline(), (err, result)=>{
-			if (err)
-				return callBack(err, null);
-			else
-				return callBack(null, result[0]);
-		});
+		let stack = new Error().stack;
+		import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
+			execute_db_sql(app_id, sql, parameters, 
+						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+				if (err)
+					return callBack(err, null);
+				else
+					return callBack(null, result[0]);
+			});
+		})
     }
 function searchProfileUser(app_id, username, callBack){
 		let sql;
@@ -650,13 +680,16 @@ function searchProfileUser(app_id, username, callBack){
 						provider_first_name: '%' + username + '%',
 						app_id: app_id
 					};
-		execute_db_sql(app_id, sql, parameters, 
-			           __appfilename(import.meta.url), __appfunction(), __appline(), (err, result)=>{
-			if (err)
-				return callBack(err, null);
-			else
-				return callBack(null, result);
-		});
+		let stack = new Error().stack;
+		import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
+			execute_db_sql(app_id, sql, parameters, 
+						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+				if (err)
+					return callBack(err, null);
+				else
+					return callBack(null, result);
+			});
+		})
     }
 function getProfileDetail(app_id, id, detailchoice, callBack){
 		let sql;
@@ -734,13 +767,16 @@ function getProfileDetail(app_id, id, detailchoice, callBack){
 						user_account_id: id,
 						detailchoice: detailchoice
 					}; 
-		execute_db_sql(app_id, sql, parameters, 
-			           __appfilename(import.meta.url), __appfunction(), __appline(), (err, result)=>{
-			if (err)
-				return callBack(err, null);
-			else
-				return callBack(null, result);
-		});
+		let stack = new Error().stack;
+		import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
+			execute_db_sql(app_id, sql, parameters, 
+						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+				if (err)
+					return callBack(err, null);
+				else
+					return callBack(null, result);
+			});
+		})
     }
 function getProfileTop(app_id, statchoice, callBack){
 		let sql;
@@ -815,13 +851,16 @@ function getProfileTop(app_id, statchoice, callBack){
 						statchoice: statchoice,
 						app_id: app_id
 					};
-		execute_db_sql(app_id, sql, parameters, 
-			           __appfilename(import.meta.url), __appfunction(), __appline(), (err, result)=>{
-			if (err)
-				return callBack(err, null);
-			else
-				return callBack(null, result);
-		});
+		let stack = new Error().stack;
+		import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
+			execute_db_sql(app_id, sql, parameters, 
+						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+				if (err)
+					return callBack(err, null);
+				else
+					return callBack(null, result);
+			});
+		})
     }
 function checkPassword(app_id, id, callBack){
 		let sql;
@@ -832,13 +871,16 @@ function checkPassword(app_id, id, callBack){
 		parameters = {
 						id: id
 					};
-		execute_db_sql(app_id, sql, parameters, 
-			           __appfilename(import.meta.url), __appfunction(), __appline(), (err, result)=>{
-			if (err)
-				return callBack(err, null);
-			else
-				return callBack(null, result[0]);
-		});
+		let stack = new Error().stack;
+		import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
+			execute_db_sql(app_id, sql, parameters, 
+						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+				if (err)
+					return callBack(err, null);
+				else
+					return callBack(null, result[0]);
+			});
+		})
     }
 function updatePassword(app_id, id, data, callBack){
 		let sql;
@@ -856,13 +898,16 @@ function updatePassword(app_id, id, data, callBack){
 							id: id,
 							auth: data.auth
 						}; 
-			execute_db_sql(app_id, sql, parameters, 
-						__appfilename(import.meta.url), __appfunction(), __appline(), (err, result)=>{
-				if (err)
-					return callBack(err, null);
-				else
-					return callBack(null, result);
-			});
+			let stack = new Error().stack;
+			import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
+				execute_db_sql(app_id, sql, parameters, 
+							COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+					if (err)
+						return callBack(err, null);
+					else
+						return callBack(null, result);
+				});
+			})
 		}
 		else
 			callBack(error_code, null);
@@ -899,13 +944,16 @@ function updateUserLocal(app_id, data, search_id, callBack){
 				verification_code: data.verification_code,
 				id: search_id
 			}; 
-			execute_db_sql(app_id, sql, parameters, 
-						__appfilename(import.meta.url), __appfunction(), __appline(), (err, result)=>{
-				if (err)
-					return callBack(err, null);
-				else
-					return callBack(null, result);
-			});
+			let stack = new Error().stack;
+			import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
+				execute_db_sql(app_id, sql, parameters, 
+							COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+					if (err)
+						return callBack(err, null);
+					else
+						return callBack(null, result);
+				});
+			})
 		}
 		else
 			callBack(error_code, null);
@@ -927,14 +975,17 @@ function updateUserCommon(app_id, data, id, callBack){
 							private: data.private,
 							user_level: data.user_level,
 							id: id
-						}; 
-			execute_db_sql(app_id, sql, parameters, 
-						__appfilename(import.meta.url), __appfunction(), __appline(), (err, result)=>{
-				if (err)
-					return callBack(err, null);
-				else
-					return callBack(null, result);
-			});
+						};
+			let stack = new Error().stack;
+			import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
+				execute_db_sql(app_id, sql, parameters, 
+							COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+					if (err)
+						return callBack(err, null);
+					else
+						return callBack(null, result);
+				});
+			})
 		}
 		else
 			callBack(error_code, null);
@@ -947,13 +998,16 @@ function deleteUser(app_id, id, callBack){
 		parameters = {
 						id: id
 					 };
-		execute_db_sql(app_id, sql, parameters, 
-			           __appfilename(import.meta.url), __appfunction(), __appline(), (err, result)=>{
-			if (err)
-				return callBack(err, null);
-			else
-				return callBack(null, result);
-		});
+		let stack = new Error().stack;
+		import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
+			execute_db_sql(app_id, sql, parameters, 
+						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+				if (err)
+					return callBack(err, null);
+				else
+					return callBack(null, result);
+			});
+		})
     }
 function userLogin(app_id, data, callBack){
 		let sql;
@@ -971,14 +1025,17 @@ function userLogin(app_id, data, callBack){
 					AND provider_id IS NULL`;
 		parameters ={
 						username: data.username
-					}; 
-		execute_db_sql(app_id, sql, parameters, 
-			           __appfilename(import.meta.url), __appfunction(), __appline(), (err, result)=>{
-			if (err)
-				return callBack(err, null);
-			else
-				return callBack(null, result[0]);
-		});
+					};
+		let stack = new Error().stack;
+		import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
+			execute_db_sql(app_id, sql, parameters, 
+						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+				if (err)
+					return callBack(err, null);
+				else
+					return callBack(null, result[0]);
+			});
+		})
     }
 function updateSigninProvider(app_id, id, data, callBack){
 		let sql;
@@ -1005,14 +1062,17 @@ function updateSigninProvider(app_id, id, data, callBack){
 							provider_Ximage_url: data.provider_image_url,
 							provider_email: data.provider_email,
 							id: id
-						}; 
-			execute_db_sql(app_id, sql, parameters, 
-						__appfilename(import.meta.url), __appfunction(), __appline(), (err, result)=>{
-				if (err)
-					return callBack(err, null);
-				else
-					return callBack(null, result[0]);
-			});
+						};
+			let stack = new Error().stack;
+import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
+				execute_db_sql(app_id, sql, parameters, 
+							COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+					if (err)
+						return callBack(err, null);
+					else
+						return callBack(null, result[0]);
+				});
+			})
 		}
 		else
 			callBack(error_code, null);
@@ -1049,13 +1109,16 @@ function providerSignIn(app_id, identity_provider_id, search_id, callBack){
 						provider_id: search_id,
 						identity_provider_id: identity_provider_id
 					};
-		execute_db_sql(app_id, sql, parameters, 
-			           __appfilename(import.meta.url), __appfunction(), __appline(), (err, result)=>{
-			if (err)
-				return callBack(err, null);
-			else
-				return callBack(null, result);
-		});
+		let stack = new Error().stack;
+		import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
+			execute_db_sql(app_id, sql, parameters, 
+						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+				if (err)
+					return callBack(err, null);
+				else
+					return callBack(null, result);
+			});
+		})
     }
 function getEmailUser(app_id, email, callBack){
 		let sql;
@@ -1066,14 +1129,17 @@ function getEmailUser(app_id, email, callBack){
 				WHERE email = :email `;
 		parameters ={
 						email: email
-					}; 
-		execute_db_sql(app_id, sql, parameters, 
-			           __appfilename(import.meta.url), __appfunction(), __appline(), (err, result)=>{
-			if (err)
-				return callBack(err, null);
-			else
-				return callBack(null, result[0]);
-		});
+					};
+		let stack = new Error().stack;
+		import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
+			execute_db_sql(app_id, sql, parameters, 
+						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+				if (err)
+					return callBack(err, null);
+				else
+					return callBack(null, result[0]);
+			});
+		})
     }
 function getAppRole(app_id, user_account_id, callBack){
 		let sql;
@@ -1098,14 +1164,17 @@ function getAppRole(app_id, user_account_id, callBack){
 		parameters ={
 						id: user_account_id,
 						id_user_icon: 2
-					}; 
-		execute_db_sql(app_id, sql, parameters, 
-			           __appfilename(import.meta.url), __appfunction(), __appline(), (err, result)=>{
-			if (err)
-				return callBack(err, null);
-			else
-				return callBack(null, result[0]);
-		});
+					};
+		let stack = new Error().stack;
+		import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
+			execute_db_sql(app_id, sql, parameters, 
+						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+				if (err)
+					return callBack(err, null);
+				else
+					return callBack(null, result[0]);
+			});
+		})
 	}
 
 export{password_length_wrong, get_app_code, verification_code,

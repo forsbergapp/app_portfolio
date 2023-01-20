@@ -17,8 +17,12 @@ async function getInfo(app_id, info, lang_code, callBack){
                 let db_info_link_terms_url;
                 let db_info_link_about_url;            
                 if (err) {
-                    createLogAppSE(app_id, __appfilename(import.meta.url), __appfunction(), __appline(), err);
-                    callBack(err, null);
+                    let stack = new Error().stack;
+                    import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
+                        createLogAppSE(app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), err).then(function(){
+                            callBack(err, null);
+                        })
+                    })
                 }
                 else{
                     let json = JSON.parse(JSON.stringify(result));
@@ -146,8 +150,11 @@ async function read_app_files(app_id, files, callBack){
             callBack(null, app);
         })
         .catch(err => {
-            createLogAppSE(req.query.app_id, __appfilename(import.meta.url), __appfunction(), __appline(), err).then(function(){
-                callBack(err, null);
+            let stack = new Error().stack;
+            import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
+                createLogAppSE(req.query.app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), err).then(function(){
+                    callBack(err, null);
+                })
             })
         });
     })
@@ -294,8 +301,11 @@ async function AppsStart(express, app){
                 import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/app/app.service.js`).then(function({ getAppsAdmin }){
                     getAppsAdmin(ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), null, (err, results) =>{
                         if (err) {
-                            createLogAppSE(req.query.app_id, __appfilename(import.meta.url), __appfunction(), __appline(), `getAppsAdmin, err:${err}`).then(function(){
-                                null;
+                            let stack = new Error().stack;
+                            import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
+                                createLogAppSE(req.query.app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), `getAppsAdmin, err:${err}`).then(function(){
+                                    null;
+                                })
                             })
                         }
                         else {

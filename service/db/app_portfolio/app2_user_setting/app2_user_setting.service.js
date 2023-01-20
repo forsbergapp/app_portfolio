@@ -178,57 +178,63 @@ function createUserSetting(app_id, initial, data, callBack){
 							app_id: app_id,
 							initial_setting: initial
 						};
-			execute_db_sql(app_id, sql, parameters, 
-						__appfilename(import.meta.url), __appfunction(), __appline(), (err, result)=>{
-				if (err)
-					return callBack(err, null);
-				else
-					switch (ConfigGet(1, 'SERVICE_DB', 'USE')){
-						case '1':{
-							return callBack(null, result);
-							break;
-						}
-						case '2':{
-							if (initial==1){
-								//user logged in and if user setting is created or not
-								//not used here
+			let stack = new Error().stack;
+			import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
+				execute_db_sql(app_id, sql, parameters, 
+							   COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+					if (err)
+						return callBack(err, null);
+					else
+						switch (ConfigGet(1, 'SERVICE_DB', 'USE')){
+							case '1':{
 								return callBack(null, result);
-							}									
-							else{
-								//Fetch id from rowid returned from Oracle
-								//sample output:
-								//{"lastRowid":"AAAWwdAAAAAAAdHAAC","rowsAffected":1}
-								//remove "" before and after
-								let lastRowid = JSON.stringify(result.lastRowid).replace(/"/g,'');
-								sql = `SELECT id "insertId"
-										FROM ${get_schema_name()}.app2_user_setting
-										WHERE rowid = :lastRowid`;
-								parameters = {
-												lastRowid: lastRowid
-											};
-								execute_db_sql(app_id, sql, parameters, 
-											__appfilename(import.meta.url), __appfunction(), __appline(), (err, result_id2)=>{
-									if (err)
-										return callBack(err, null);
-									else
-										return callBack(null, result_id2[0]);
-								});
+								break;
 							}
-							break;
-						}
-						case '3':{
-							if (initial==1){
-								//user logged in and if user setting is created or not
-								//not used here
-								return callBack(null, result);
-							}									
-							else{
-								return callBack(null, {insertId: result[0].id});
+							case '2':{
+								if (initial==1){
+									//user logged in and if user setting is created or not
+									//not used here
+									return callBack(null, result);
+								}									
+								else{
+									//Fetch id from rowid returned from Oracle
+									//sample output:
+									//{"lastRowid":"AAAWwdAAAAAAAdHAAC","rowsAffected":1}
+									//remove "" before and after
+									let lastRowid = JSON.stringify(result.lastRowid).replace(/"/g,'');
+									sql = `SELECT id "insertId"
+											FROM ${get_schema_name()}.app2_user_setting
+											WHERE rowid = :lastRowid`;
+									parameters = {
+													lastRowid: lastRowid
+												};
+									let stack = new Error().stack;
+									import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
+										execute_db_sql(app_id, sql, parameters, 
+													COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result_id2)=>{
+											if (err)
+												return callBack(err, null);
+											else
+												return callBack(null, result_id2[0]);
+										});
+									})
+								}
+								break;
 							}
-							break;
+							case '3':{
+								if (initial==1){
+									//user logged in and if user setting is created or not
+									//not used here
+									return callBack(null, result);
+								}									
+								else{
+									return callBack(null, {insertId: result[0].id});
+								}
+								break;
+							}
 						}
-					}
-			});
+				});
+			})
 		})
 	}
 function getUserSetting(app_id, id, callBack){
@@ -294,13 +300,16 @@ function getUserSetting(app_id, id, callBack){
 		parameters = {
 						id: id
 					};
-		execute_db_sql(app_id, sql, parameters, 
-			           __appfilename(import.meta.url), __appfunction(), __appline(), (err, result)=>{
-			if (err)
-				return callBack(err, null);
-			else
-				return callBack(null, result);
-		});
+		let stack = new Error().stack;
+		import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
+			execute_db_sql(app_id, sql, parameters, 
+							COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+				if (err)
+					return callBack(err, null);
+				else
+					return callBack(null, result);
+			});
+		})
 	}
 function getUserSettingsByUserId(app_id, id, callBack){
 		let sql;
@@ -367,13 +376,16 @@ function getUserSettingsByUserId(app_id, id, callBack){
 						user_account_id: id,
 						app_id: app_id
 					};
-		execute_db_sql(app_id, sql, parameters, 
-			           __appfilename(import.meta.url), __appfunction(), __appline(), (err, result)=>{
-			if (err)
-				return callBack(err, null);
-			else
-				return callBack(null, result);
-		});
+		let stack = new Error().stack;
+		import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
+			execute_db_sql(app_id, sql, parameters, 
+						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+				if (err)
+					return callBack(err, null);
+				else
+					return callBack(null, result);
+			});
+		})
 	}
 function getProfileUserSetting(app_id, id, callBack){
 		let sql;
@@ -396,13 +408,16 @@ function getProfileUserSetting(app_id, id, callBack){
 						id: id,
 						app_id: app_id
 					}; 
-		execute_db_sql(app_id, sql, parameters, 
-			           __appfilename(import.meta.url), __appfunction(), __appline(), (err, result)=>{
-			if (err)
-				return callBack(err, null);
-			else
-				return callBack(null, result[0]);
-		});
+		let stack = new Error().stack;
+		import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
+			execute_db_sql(app_id, sql, parameters, 
+						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+				if (err)
+					return callBack(err, null);
+				else
+					return callBack(null, result[0]);
+			});
+		})
     }
 function getProfileUserSettings(app_id, id, id_current_user, callBack){
 		let sql;
@@ -429,13 +444,16 @@ function getProfileUserSettings(app_id, id, id_current_user, callBack){
 						user_account_id: id,
 						app_id: app_id
 						};
-		execute_db_sql(app_id, sql, parameters, 
-			           __appfilename(import.meta.url), __appfunction(), __appline(), (err, result)=>{
-			if (err)
-				return callBack(err, null);
-			else
-				return callBack(null, result);
-		});
+		let stack = new Error().stack;
+		import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
+			execute_db_sql(app_id, sql, parameters, 
+						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+				if (err)
+					return callBack(err, null);
+				else
+					return callBack(null, result);
+			});
+		})
 	}
 function getProfileUserSettingDetail(app_id, id, detailchoice, callBack){
 		let sql;
@@ -493,13 +511,16 @@ function getProfileUserSettingDetail(app_id, id, detailchoice, callBack){
 						app_id: app_id,
 						detailchoice: detailchoice
 					};
-		execute_db_sql(app_id, sql, parameters, 
-			           __appfilename(import.meta.url), __appfunction(), __appline(), (err, result)=>{
-			if (err)
-				return callBack(err, null);
-			else
-				return callBack(null, result);
-		});
+		let stack = new Error().stack;
+		import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
+			execute_db_sql(app_id, sql, parameters, 
+						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+				if (err)
+					return callBack(err, null);
+				else
+					return callBack(null, result);
+			});
+		})
     }
 function getProfileTop(app_id, statchoice, callBack){
 		let sql;
@@ -560,13 +581,16 @@ function getProfileTop(app_id, statchoice, callBack){
 						app_id: app_id,
 						statchoice: statchoice,
 					};
-		execute_db_sql(app_id, sql, parameters, 
-			           __appfilename(import.meta.url), __appfunction(), __appline(), (err, result)=>{
-			if (err)
-				return callBack(err, null);
-			else
-				return callBack(null, result);
-		});
+		let stack = new Error().stack;
+		import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
+			execute_db_sql(app_id, sql, parameters, 
+						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+				if (err)
+					return callBack(err, null);
+				else
+					return callBack(null, result);
+			});
+		})
     }
 function updateUserSetting(app_id, data, id, callBack){
 		let sql;
@@ -681,13 +705,16 @@ function updateUserSetting(app_id, data, id, callBack){
 						app_id: app_id,
 						id: id
 					};
-		execute_db_sql(app_id, sql, parameters, 
-			           __appfilename(import.meta.url), __appfunction(), __appline(), (err, result)=>{
-			if (err)
-				return callBack(err, null);
-			else
-				return callBack(null, result);
-		});
+		let stack = new Error().stack;
+		import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){				
+			execute_db_sql(app_id, sql, parameters, 
+						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+				if (err)
+					return callBack(err, null);
+				else
+					return callBack(null, result);
+			});
+		})
 	}
 function deleteUserSetting(app_id, id, callBack){
 		let sql;
@@ -697,13 +724,16 @@ function deleteUserSetting(app_id, id, callBack){
 		parameters = {
 						id: id
 						};
-		execute_db_sql(app_id, sql, parameters, 
-			           __appfilename(import.meta.url), __appfunction(), __appline(), (err, result)=>{
-			if (err)
-				return callBack(err, null);
-			else
-				return callBack(null, result);
-		});
+		let stack = new Error().stack;
+		import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
+			execute_db_sql(app_id, sql, parameters, 
+						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+				if (err)
+					return callBack(err, null);
+				else
+					return callBack(null, result);
+			});
+		})
 	}
 export{createUserSetting, getUserSetting, getUserSettingsByUserId, getProfileUserSetting, getProfileUserSettings, 
 	   getProfileUserSettingDetail, getProfileTop, updateUserSetting, deleteUserSetting};

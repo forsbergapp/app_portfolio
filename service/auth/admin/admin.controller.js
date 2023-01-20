@@ -9,22 +9,28 @@ function checkAdmin(req, res, next){
         token = token.slice(7);
         verify(token, ConfigGet(1, 'SERVICE_AUTH', 'ADMIN_TOKEN_SECRET'), (err, decoded) => {
             if (err){
-                createLogAppCI(req, res, __appfilename(import.meta.url), __appfunction(), __appline(), 'SYSTEM ADMIN CheckAdmin token verify error: ' + err).then(function(){
-                    res.status(401).send({
-                        message: '⛔'
+                let stack = new Error().stack;
+                import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
+                    createLogAppCI(req, res, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 'SYSTEM ADMIN CheckAdmin token verify error: ' + err).then(function(){
+                        res.status(401).send({
+                            message: '⛔'
+                        });
                     });
-                });
+                })
             } else {
                 next();
             }
         });
         
     }else{
-        createLogAppCI(req, res, __appfilename(import.meta.url), __appfunction(), __appline(), 'SYSTEM ADMIN CheckAdmin token missing').then(function(){
-            res.status(401).send({
-                message: '⛔'
+        let stack = new Error().stack;
+        import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
+            createLogAppCI(req, res, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 'SYSTEM ADMIN CheckAdmin token missing').then(function(){
+                res.status(401).send({
+                    message: '⛔'
+                });
             });
-        });
+        })
     }
 }
 function authAdmin(req, res){
@@ -37,18 +43,25 @@ function authAdmin(req, res){
             jsontoken_at = sign ({tokentimstamp: Date.now()}, ConfigGet(1, 'SERVICE_AUTH', 'ADMIN_TOKEN_SECRET'), {
                                 expiresIn: ConfigGet(1, 'SERVICE_AUTH', 'ADMIN_TOKEN_EXPIRE_ACCESS')
                                 });
-            createLogAppCI(req, res, __appfilename(import.meta.url), __appfunction(), __appline(), 'SYSTEM ADMIN login OK:' + ConfigGet(1, 'SERVER', 'ADMIN_NAME')).then(function(){
-                return res.status(200).json({ 
-                    token_at: jsontoken_at
-                });
-            });
-        }
-        else
-            createLogAppCI(req, res, __appfilename(import.meta.url), __appfunction(), __appline(), 'SYSTEM ADMIN login FAIL:' + ConfigGet(1, 'SERVER', 'ADMIN_NAME')).then(function(){
-                return res.status(401).send({ 
-                    message: '⛔'
+            let stack = new Error().stack;
+            import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
+                createLogAppCI(req, res, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 'SYSTEM ADMIN login OK:' + ConfigGet(1, 'SERVER', 'ADMIN_NAME')).then(function(){
+                    return res.status(200).json({ 
+                        token_at: jsontoken_at
+                    });
                 });
             })
+        }
+        else{
+            let stack = new Error().stack;
+            import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
+                createLogAppCI(req, res, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 'SYSTEM ADMIN login FAIL:' + ConfigGet(1, 'SERVER', 'ADMIN_NAME')).then(function(){
+                    return res.status(401).send({ 
+                        message: '⛔'
+                    });
+                })
+            })
+        }            
     }
     if(req.headers.authorization){                
         let userpass = new Buffer.from((req.headers.authorization || '').split(' ')[1] || '', 'base64').toString();
