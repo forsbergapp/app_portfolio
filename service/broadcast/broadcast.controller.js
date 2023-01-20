@@ -159,7 +159,7 @@ function ConnectedList(req, res){
                 });
             else{
                 import(`file://${process.cwd()}/service/db/common/common.service.js`).then(function({record_not_found}){
-                    return record_not_found(req.query.app_id, req.query.lang_code);
+                    return record_not_found(res, req.query.app_id, req.query.lang_code);
                 })
             }
         }
