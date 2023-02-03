@@ -1,13 +1,14 @@
-<link rel='stylesheet' type='text/css' href='/app2/css/app.css' />
-<link rel='stylesheet' type='text/css' href='/app2/css/app_report.css' />
-
-<script type='text/javascript' src='/app2/js/app_globals.js'></script>
-<script type='text/javascript' type='module' >
-    import('/app2/js/app.js').then(function(app){
-        window.app = app;
-        document.addEventListener("DOMContentLoaded", app.init(<ITEM_COMMON_PARAMETERS/>));
+<script type='module'>
+    document.addEventListener("DOMContentLoaded", (event) =>{
+        import('/app2/js/app.js').then(function(app){
+                window.app = app;
+                app.init(<ITEM_COMMON_PARAMETERS/>);
+        })
     });
 </script>
+<script type='text/javascript' src='/app2/js/app_globals.js'></script>
+<link rel='stylesheet' type='text/css' href='/app2/css/app.css' />
+<link rel='stylesheet' type='text/css' href='/app2/css/app_report.css' />
 <meta name='viewport' content='width=device-width, minimum-scale=1.0, maximum-scale = 1'>
 <link rel='manifest' href='/app2/manifest.json'>
 <link rel='icon' type='image/png' href='/app2/images/favicon-32x32.png' sizes='32x32'>
