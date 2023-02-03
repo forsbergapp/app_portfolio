@@ -1,3 +1,7 @@
+const common = await import('/common/js/common.js');
+const regional = await import('/common/modules/regional/regional.js');
+//uses modules easy.qrcode and PrayTimes
+
 /*  Functions and globals in this order:
     GLOBALS APP & REPORT
 	COMMON REPORT
@@ -96,7 +100,7 @@ window.global_second_language =
 /*----------------------- */
 async function timetable_user_setting_get(user_setting_id, callBack) {
     let json;
-	await common_fetch(window.global_rest_api_db_path + window.global_rest_app2_user_setting + user_setting_id + '?',
+	await common.common_fetch(window.global_rest_api_db_path + window.global_rest_app2_user_setting + user_setting_id + '?',
 					   'GET', 0, null, null, null, (err, result) =>{
 		if (err){
 			report_exception(err);
@@ -134,23 +138,23 @@ async function timetable_user_setting_get(user_setting_id, callBack) {
 							//in report service
 							//papersize				: json.design_paper_size
 							highlight           	: json.design_row_highlight,
-							show_weekday        	: checkbox_checked(json.design_column_weekday_checked),
-							show_calendartype   	: checkbox_checked(json.design_column_calendartype_checked),
-							show_notes          	: checkbox_checked(json.design_column_notes_checked),
-							show_gps   	       		: checkbox_checked(json.design_column_gps_checked),
-							show_timezone       	: checkbox_checked(json.design_column_timezone_checked),
+							show_weekday        	: common.checkbox_checked(json.design_column_weekday_checked),
+							show_calendartype   	: common.checkbox_checked(json.design_column_calendartype_checked),
+							show_notes          	: common.checkbox_checked(json.design_column_notes_checked),
+							show_gps   	       		: common.checkbox_checked(json.design_column_gps_checked),
+							show_timezone       	: common.checkbox_checked(json.design_column_timezone_checked),
 										
-							header_img_src      	: image_format(json.image_header_image_img),
-							footer_img_src      	: image_format(json.image_footer_image_img),
+							header_img_src      	: common.image_format(json.image_header_image_img),
+							footer_img_src      	: common.image_format(json.image_footer_image_img),
 
-							header_txt1         	: get_null_or_value(json.text_header_1_text),
-							header_txt2         	: get_null_or_value(json.text_header_2_text),
-							header_txt3         	: get_null_or_value(json.text_header_3_text),
-							header_align      		: get_null_or_value(json.text_header_align),
-							footer_txt1         	: get_null_or_value(json.text_footer_1_text),
-							footer_txt2         	: get_null_or_value(json.text_footer_2_text),
-							footer_txt3    	   		: get_null_or_value(json.text_footer_3_text),
-							footer_align			: get_null_or_value(json.text_footer_align),
+							header_txt1         	: common.get_null_or_value(json.text_header_1_text),
+							header_txt2         	: common.get_null_or_value(json.text_header_2_text),
+							header_txt3         	: common.get_null_or_value(json.text_header_3_text),
+							header_align      		: common.get_null_or_value(json.text_header_align),
+							footer_txt1         	: common.get_null_or_value(json.text_footer_1_text),
+							footer_txt2         	: common.get_null_or_value(json.text_footer_2_text),
+							footer_txt3    	   		: common.get_null_or_value(json.text_footer_3_text),
+							footer_align			: common.get_null_or_value(json.text_footer_align),
 
 							method              	: json.prayer_method,
 							asr                 	: json.prayer_asr_method,
@@ -162,9 +166,9 @@ async function timetable_user_setting_get(user_setting_id, callBack) {
 							iqamat_asr          	: json.prayer_asr_iqamat,
 							iqamat_maghrib      	: json.prayer_maghrib_iqamat,
 							iqamat_isha         	: json.prayer_isha_iqamat,
-							show_imsak          	: checkbox_checked(json.prayer_column_imsak_checked),
-							show_sunset         	: checkbox_checked(json.prayer_column_sunset_checked),
-							show_midnight       	: checkbox_checked(json.prayer_column_midnight_checked),
+							show_imsak          	: common.checkbox_checked(json.prayer_column_imsak_checked),
+							show_sunset         	: common.checkbox_checked(json.prayer_column_sunset_checked),
+							show_midnight       	: common.checkbox_checked(json.prayer_column_midnight_checked),
 							show_fast_start_end 	: json.prayer_column_fast_start_end,
 							
 							timetable_class			: 'timetable_class',
@@ -187,7 +191,7 @@ async function timetable_translate_settings(locale, locale_second) {
     let json;
 	async function fetch_translation(locale, first){
 		//show translation using first or second language
-		await common_fetch(window.global_rest_api_db_path + window.global_rest_app_object + locale + '?object=APP_OBJECT_ITEM&object_name=REPORT',
+		await common.common_fetch(window.global_rest_api_db_path + window.global_rest_app_object + locale + '?object=APP_OBJECT_ITEM&object_name=REPORT',
 					       'GET', 0, null, null, null, (err, result) =>{
 			if (err){
 				report_exception(err);
@@ -240,7 +244,7 @@ function updateReportViewStat(user_setting_id, user_account_id) {
                     "client_longitude": "${window.global_client_longitude}",
                     "client_latitude": "${window.global_client_latitude}"
                     }`;
-	common_fetch(window.global_rest_api_db_path + window.global_rest_app2_user_setting_view + '?',
+	common.common_fetch(window.global_rest_api_db_path + window.global_rest_app2_user_setting_view + '?',
 				 'POST', 0, json_data, null, null, (err, result) =>{
 		null;
 	})
@@ -421,12 +425,12 @@ async function set_prayer_method(ui){
 			isha = `isha: '${isha_data}'`;
 		}
 		//show only maghrib if there is a value
-		if (get_null_or_value(maghrib_data) != '')
+		if (common.get_null_or_value(maghrib_data) != '')
 			  maghrib = `,maghrib: ${maghrib_data}`;
 		else
 			maghrib = '';
 		//show only midnight if there is a value
-		if (get_null_or_value(midnight_data) != '')
+		if (common.get_null_or_value(midnight_data) != '')
 			  midnight = `,midnight: '${midnight_data}'`;
 		else
 			midnight = '';
@@ -456,12 +460,12 @@ async function set_prayer_method(ui){
 	}
 	else{
 		//called from report
-		await common_fetch(window.global_rest_api_db_path + window.global_rest_setting + '?setting_type=METHOD' , 
+		await common.common_fetch(window.global_rest_api_db_path + window.global_rest_setting + '?setting_type=METHOD' , 
 					'GET', 0, null, null, null, (err, result) =>{
 			if (err)
 				null;
 			else{
-				json = JSON.parse(result);
+				let json = JSON.parse(result);
 				for (let i=0;i <json.settings.length;i++){
 					set_prayer_value(json.settings[i].data3,
 									json.settings[i].data4,
@@ -1000,7 +1004,7 @@ async function displayMonth(settings, item_id) {
 			}
 			get_date_enddate((err, date, endDate)=>{
 				setMethod_praytimes(settings.method, settings.asr, settings.highlat);
-				getTimezoneOffset(settings.timezone).then(function(timezone_offset){
+				regional.getTimezoneOffset(settings.timezone).then(function(timezone_offset){
 					let month_async_html =[]
 					let i_days = 0;
 					let tot_days = 0;
@@ -1151,7 +1155,7 @@ async function displayDay(settings, item_id, user_settings){
 		
 		function day_timetable(user_locale, user_timezone, user_number_system, user_calendar_hijri_type,
 			user_gps_latitude, user_gps_longitude, user_format, user_hijri_adjustment, user_place){
-				getTimezoneOffset(user_timezone).then(function(timezone_offset){
+				regional.getTimezoneOffset(user_timezone).then(function(timezone_offset){
 					tot_day_async_html++;
 					times = prayTimes.getTimes(window.global_session_currentDate, [user_gps_latitude, user_gps_longitude], parseInt(timezone_offset), 0, user_format);				
 					let col_imsak = settings.show_imsak == 'YES'?show_col(1, 'imsak', window.global_session_currentDate.getFullYear(), window.global_session_currentDate.getMonth(), window.global_session_currentDate.getDate(), 'GREGORIAN', settings.show_fast_start_end, user_timezone, user_calendar_hijri_type, user_hijri_adjustment,user_locale, user_number_system, times['imsak']):''; 
@@ -1220,7 +1224,7 @@ async function timetable_day_user_settings_get(user_account_id, callBack){
 	let json;
 	let user_settings = [];
 
-	await common_fetch(window.global_rest_api_db_path + window.global_rest_app2_user_setting_user_account_id + user_account_id + '?',
+	await common.common_fetch(window.global_rest_api_db_path + window.global_rest_app2_user_setting_user_account_id + user_account_id + '?',
 					   'GET', 0, null, null, null, (err, result) =>{
 		if (err)
 			callBack(err, null);
@@ -1418,7 +1422,7 @@ function report_exception(error){
 			message_divs[i].style.visibility ='visible';
 		}
 		document.getElementById('dialogue_message').style.visibility='visible';
-		show_message('EXCEPTION', null,null, error, window.global_app_id);
+		common.show_message('EXCEPTION', null,null, error, window.global_app_id);
 	}	
 	else{
 		//app error
@@ -1442,16 +1446,16 @@ async function init_app_report() {
 		window.global_session_currentDate.getDate()).toLocaleDateString("en-us-u-ca-islamic", { year: "numeric" }));
 	await set_prayer_method();
 }
-async function init_report(parameters) {
+async function init(parameters) {
 	let encodedParams = new URLSearchParams(window.location.search);
-	let decodedparameters = fromBase64(encodedParams.get('reportid'))
+	let decodedparameters = common.fromBase64(encodedParams.get('reportid'))
 	let urlParams = new URLSearchParams(decodedparameters);
 	let user_account_id = urlParams.get('id');
 	let user_setting_id = urlParams.get('sid');
 	let lang_code = urlParams.get('lang_code');
 	let reporttype = urlParams.get('type');
 	return await new Promise(function (resolve){
-		init_common(parameters, (err, global_app_parameters)=>{
+		common.init_common(parameters, (err, global_app_parameters)=>{
 			if (err){
 				report_exception(err);
 				resolve();
@@ -1499,7 +1503,7 @@ async function init_report(parameters) {
 				}
 				init_app_report().then(function(){
 					//report start
-					if (inIframe() == false) {
+					if (common.inIframe() == false) {
 						updateReportViewStat(user_setting_id, user_account_id);
 					}
 					timetable_user_setting_get(user_setting_id, (err, report_parameters) =>{
@@ -1519,7 +1523,7 @@ async function init_report(parameters) {
 												displayDay(report_parameters, null, user_settings_parameters).then(function(timetable){
 													timetable.style.display = 'block';
 													document.getElementById('paper').innerHTML = timetable.outerHTML;
-													create_qr('timetable_qr_code', window.location.href);
+													common.create_qr('timetable_qr_code', window.location.href);
 													resolve();
 												})
 											}
@@ -1531,7 +1535,7 @@ async function init_report(parameters) {
 											displayMonth(report_parameters, null).then(function(timetable){
 												timetable.style.display = 'block';
 												document.getElementById('paper').innerHTML = timetable.outerHTML;
-												create_qr('timetable_qr_code', window.location.href);
+												common.create_qr('timetable_qr_code', window.location.href);
 												resolve();
 											})
 										else 
@@ -1539,7 +1543,7 @@ async function init_report(parameters) {
 												displayYear(report_parameters, null).then(function(timetable){
 													timetable.style.display = 'block';
 													document.getElementById('paper').innerHTML = timetable.outerHTML;
-													create_qr('timetable_qr_code', window.location.href);
+													common.create_qr('timetable_qr_code', window.location.href);
 													resolve();
 												})
 							});
@@ -1550,3 +1554,12 @@ async function init_report(parameters) {
 		})
 	})
 }
+export{timetable_user_setting_get, timetable_translate_settings, updateReportViewStat, getColumnTitles,
+	   isToday, set_prayer_method, is_ramadan_day, setMethod_praytimes, getstyle, fileisloaded,
+	   convertnumberlocale, show_col, timetable_headers, 
+	   calculateIqamat, makeTableRow, 
+	   displayMonth, 
+	   create_day_title_row, displayDay, timetable_day_user_settings_get,
+	   displayYear,
+	   report_exception,
+	   init_app_report, init}

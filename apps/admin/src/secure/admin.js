@@ -88,7 +88,7 @@ function show_menu(menu){
                 url  = `/server/config/admin?config_type_no=1&config_group=SERVICE_DB&parameter=LIMIT_LIST_SEARCH`;
                 token_type = 1;
             }
-            common_fetch(url, 'GET', token_type, null, null, null, (err, result_limit) =>{
+            common.common_fetch(url, 'GET', token_type, null, null, null, (err, result_limit) =>{
                 if (err)
                     null;
                 else{
@@ -104,7 +104,7 @@ function show_menu(menu){
                         document.getElementById('select_month_menu5').selectedIndex = new Date().getMonth();
                         document.getElementById('select_day_menu5').selectedIndex = new Date().getDate() -1;
                         get_server_log_parameters().then(function() {
-                            map_resize();
+                            common.map_resize();
                             nav_click(document.getElementById('list_connected_title'));
                         })
                     }
@@ -115,7 +115,7 @@ function show_menu(menu){
                         document.getElementById('select_year_menu5_app_log').selectedIndex = 0;
                         document.getElementById('select_month_menu5_app_log').selectedIndex = new Date().getMonth();
                         fix_pagination_buttons();
-                        map_resize();
+                        common.map_resize();
                         nav_click(document.getElementById('list_connected_title'));
                     }    
                 }
@@ -135,7 +135,7 @@ function show_menu(menu){
         //DATABASE
         case 8:{
             if (window.global_system_admin_only==1){
-                show_message('EXCEPTION', null, null, window.global_icon_app_database + ' ' + window.global_icon_app_database_notstarted, window.global_app_id)
+                common.show_message('EXCEPTION', null, null, window.global_icon_app_database + ' ' + window.global_icon_app_database_notstarted, window.global_app_id)
             }
             else
                 show_db_info().then(function(){
@@ -168,7 +168,7 @@ async function get_apps() {
         document.getElementById('select_app_broadcast').innerHTML = html;
     }
     else{
-        common_fetch(window.global_rest_api_db_path + window.global_rest_app + '/admin?', 'GET', 1, null, null, null, (err, result) =>{
+        common.common_fetch(window.global_rest_api_db_path + window.global_rest_app + '/admin?', 'GET', 1, null, null, null, (err, result) =>{
             if (err)
                 null;
             else{
@@ -197,7 +197,7 @@ function sendBroadcast(){
     let broadcast_message = document.getElementById('send_broadcast_message').value;
 
     if (broadcast_message==''){
-        show_message('INFO', null, null, `${window.global_icon_message_text}!`, window.global_app_id);
+        common.show_message('INFO', null, null, `${window.global_icon_message_text}!`, window.global_app_id);
         return null;
     }
     
@@ -218,6 +218,7 @@ function sendBroadcast(){
                      "broadcast_type" :"${broadcast_type}", 
                      "broadcast_message":"${broadcast_message}"}`;
     let url='';
+    let token_type;
     if (window.global_system_admin==1){
         url = '/service/broadcast/SystemAdmin/Send?';
         token_type = 2;
@@ -227,11 +228,11 @@ function sendBroadcast(){
         token_type = 1;
     }
         
-    common_fetch(url, 'POST', token_type, json_data, null, null, (err, result) =>{
+    common.common_fetch(url, 'POST', token_type, json_data, null, null, (err, result) =>{
         if (err)
             null;
         else{
-            show_message('INFO', null, null, `${window.global_icon_app_send}!`, window.global_app_id);
+            common.show_message('INFO', null, null, `${window.global_icon_app_send}!`, window.global_app_id);
         }
     });
 }    
@@ -309,7 +310,7 @@ function set_broadcast_type(){
 async function check_maintenance(){
     if (admin_token_has_value()){
         let json;
-        await common_fetch('/server/config/systemadmin/maintenance?', 'GET', 2, null, null, null, (err, result) =>{
+        await common.common_fetch('/server/config/systemadmin/maintenance?', 'GET', 2, null, null, null, (err, result) =>{
             if (err)
                 null;
             else{
@@ -332,7 +333,7 @@ function set_maintenance(){
         let json_data = `{
                             "value": ${check_value}
                          }`;
-        common_fetch(`/server/config/systemadmin/maintenance?`, 'PATCH', 2, json_data, null, null, (err, result) =>{
+        common.common_fetch(`/server/config/systemadmin/maintenance?`, 'PATCH', 2, json_data, null, null, (err, result) =>{
             null;
         })
     }
@@ -354,7 +355,7 @@ async function show_chart(chart){
             app_id = '';
         else
             app_id =document.getElementById('select_app_menu1').value;
-        await common_fetch(window.global_rest_api_db_path + `/app_log/admin/stat/uniquevisitor?select_app_id=${app_id}&statchoice=${chart}&year=${year}&month=${month}`,
+        await common.common_fetch(window.global_rest_api_db_path + `/app_log/admin/stat/uniquevisitor?select_app_id=${app_id}&statchoice=${chart}&year=${year}&month=${month}`,
                  'GET', 1, null, null, null, (err, result) =>{
             if (err){
                 document.getElementById(`box${chart}_chart`).innerHTML = '';
@@ -443,7 +444,7 @@ async function show_chart(chart){
 async function count_connected(identity_provider_id, count_logged_in, callBack){
     if (admin_token_has_value()){
         let json;
-        await common_fetch(`/service/broadcast/Admin/connected/count?identity_provider_id=${identity_provider_id}&count_logged_in=${count_logged_in}`,
+        await common.common_fetch(`/service/broadcast/Admin/connected/count?identity_provider_id=${identity_provider_id}&count_logged_in=${count_logged_in}`,
                  'GET', 1, null, null, null, (err, result) =>{
             if (err)
                 callBack(result, null);
@@ -459,7 +460,7 @@ async function count_users(){
         let old_html = document.getElementById('list_user_stat').innerHTML;
         document.getElementById('list_user_stat').innerHTML = window.global_app_spinner;
 
-        await common_fetch(window.global_rest_api_db_path + window.global_rest_user_account + '/admin/count?',
+        await common.common_fetch(window.global_rest_api_db_path + window.global_rest_user_account + '/admin/count?',
                            'GET', 1, null, null, null, (err, result) =>{
             if (err)
                 document.getElementById('list_user_stat').innerHTML = old_html;
@@ -469,7 +470,7 @@ async function count_users(){
                 for (let i=0;i<=json.data.length-1;i++){
                     html +=  `<div id='list_user_stat_row_${i}' class='list_user_stat_row'>
                                     <div class='list_user_stat_col'>
-                                        <div>${get_null_or_value(json.data[i].identity_provider_id)}</div>
+                                        <div>${common.get_null_or_value(json.data[i].identity_provider_id)}</div>
                                     </div>
                                     <div class='list_user_stat_col'>
                                         <div>${json.data[i].provider_name==null?window.global_icon_app_home:json.data[i].provider_name}</div>
@@ -526,7 +527,7 @@ function show_users(sort=8, order_by='ASC', focus=true){
     //show all records if no search criteria
     if (document.getElementById('list_user_account_search_input').value!='')
         search_user = document.getElementById('list_user_account_search_input').value;
-    common_fetch(window.global_rest_api_db_path + window.global_rest_user_account + `admin/${search_user}?sort=${sort}&order_by=${order_by}`,
+    common.common_fetch(window.global_rest_api_db_path + window.global_rest_user_account + `admin/${search_user}?sort=${sort}&order_by=${order_by}`,
                        'GET', 1, null, null, null, (err, result) =>{
         if (err)
             document.getElementById('list_user_account').innerHTML = '';
@@ -626,80 +627,80 @@ function show_users(sort=8, order_by='ASC', focus=true){
                 `<div id='list_user_account_row_${i}' data-changed-record='0' class='list_user_account_row ${list_user_account_current_user_row}' >
                     <div class='list_user_account_col'>
                         <div class='list_readonly'>
-                            <img class='list_user_account_avatar' ${list_image_format_src(json.data[i].avatar)}/>
+                            <img class='list_user_account_avatar' ${common.list_image_format_src(json.data[i].avatar)}/>
                         </div>
                     </div>
                     <div class='list_user_account_col'>
                         <div class='list_readonly'>${json.data[i].id}</div>
                     </div>
                     <div class='list_user_account_col'>
-                        <input ${input_readonly} type=text class='list_edit ${lov_class}' value='${get_null_or_value(json.data[i].app_role_id)}'/>
+                        <input ${input_readonly} type=text class='list_edit ${lov_class}' value='${common.get_null_or_value(json.data[i].app_role_id)}'/>
                         ${lov_div}
                     </div>
                     <div class='list_user_account_col'>
                         <div class='list_readonly'>${json.data[i].app_role_icon}</div>
                     </div>
                     <div class='list_user_account_col'>
-                        <input ${input_readonly} type=text class='list_edit' value='${get_null_or_value(json.data[i].active)}'/>
+                        <input ${input_readonly} type=text class='list_edit' value='${common.get_null_or_value(json.data[i].active)}'/>
                     </div>
                     <div class='list_user_account_col'>
-                        <input ${input_readonly} type=text class='list_edit' value='${get_null_or_value(json.data[i].user_level)}'/>
+                        <input ${input_readonly} type=text class='list_edit' value='${common.get_null_or_value(json.data[i].user_level)}'/>
                     </div>
                     <div class='list_user_account_col'>
-                        <input ${input_readonly} type='text' class='list_edit' value='${get_null_or_value(json.data[i].private)}'/>
+                        <input ${input_readonly} type='text' class='list_edit' value='${common.get_null_or_value(json.data[i].private)}'/>
                     </div>
                     <div class='list_user_account_col'>
-                        <input ${input_readonly} type='text' class='list_edit' value='${get_null_or_value(json.data[i].username)}'/>
+                        <input ${input_readonly} type='text' class='list_edit' value='${common.get_null_or_value(json.data[i].username)}'/>
                     </div>
                     <div class='list_user_account_col'>
-                        <input ${input_readonly} type='text' class='list_edit' value='${get_null_or_value(json.data[i].bio)}'/>
+                        <input ${input_readonly} type='text' class='list_edit' value='${common.get_null_or_value(json.data[i].bio)}'/>
                     </div>
                     <div class='list_user_account_col'>
-                        <input ${input_readonly} type='text' class='list_edit' value='${get_null_or_value(json.data[i].email)}'/>
+                        <input ${input_readonly} type='text' class='list_edit' value='${common.get_null_or_value(json.data[i].email)}'/>
                     </div>
                     <div class='list_user_account_col'>
-                        <input ${input_readonly} type='text' class='list_edit' value='${get_null_or_value(json.data[i].email_unverified)}'/>
+                        <input ${input_readonly} type='text' class='list_edit' value='${common.get_null_or_value(json.data[i].email_unverified)}'/>
                     </div>
                     <div class='list_user_account_col'>
-                        <input ${input_readonly} type='text' class='list_edit' value='${get_null_or_value(json.data[i].password)}'/>
+                        <input ${input_readonly} type='text' class='list_edit' value='${common.get_null_or_value(json.data[i].password)}'/>
                     </div>
                     <div class='list_user_account_col'>
-                        <input ${input_readonly} type='text' class='list_edit' value='${get_null_or_value(json.data[i].password_reminder)}'/>
+                        <input ${input_readonly} type='text' class='list_edit' value='${common.get_null_or_value(json.data[i].password_reminder)}'/>
                     </div>
                     <div class='list_user_account_col'>
-                        <input ${input_readonly} type='text' class='list_edit' value='${get_null_or_value(json.data[i].verification_code)}'/>
+                        <input ${input_readonly} type='text' class='list_edit' value='${common.get_null_or_value(json.data[i].verification_code)}'/>
                     </div>
                     <div class='list_user_account_col'>
-                        <div class='list_readonly'>${get_null_or_value(json.data[i].identity_provider)}</div>
+                        <div class='list_readonly'>${common.get_null_or_value(json.data[i].identity_provider)}</div>
                     </div>
                     <div class='list_user_account_col'>
-                        <div class='list_readonly'>${get_null_or_value(json.data[i].provider_name)}</div>
+                        <div class='list_readonly'>${common.get_null_or_value(json.data[i].provider_name)}</div>
                     </div>
                     <div class='list_user_account_col'>
-                        <div class='list_readonly'>${get_null_or_value(json.data[i].provider_id)}</div>
+                        <div class='list_readonly'>${common.get_null_or_value(json.data[i].provider_id)}</div>
                     </div>
                     <div class='list_user_account_col'>
-                        <div class='list_readonly'>${get_null_or_value(json.data[i].provider_first_name)}</div>
+                        <div class='list_readonly'>${common.get_null_or_value(json.data[i].provider_first_name)}</div>
                     </div>
                     <div class='list_user_account_col'>
-                        <div class='list_readonly'>${get_null_or_value(json.data[i].provider_last_name)}</div>                        
+                        <div class='list_readonly'>${common.get_null_or_value(json.data[i].provider_last_name)}</div>                        
                     </div>
                     <div class='list_user_account_col'>
                         <div class='list_readonly'>
-                            <img class='list_user_account_avatar' ${list_image_format_src(json.data[i].provider_image)}/>
+                            <img class='list_user_account_avatar' ${common.list_image_format_src(json.data[i].provider_image)}/>
                         </div>
                     </div>
                     <div class='list_user_account_col'>
-                        <div class='list_readonly'>${get_null_or_value(json.data[i].provider_image_url)}</div>
+                        <div class='list_readonly'>${common.get_null_or_value(json.data[i].provider_image_url)}</div>
                     </div>
                     <div class='list_user_account_col'>
-                        <div class='list_readonly'>${get_null_or_value(json.data[i].provider_email)}</div>
+                        <div class='list_readonly'>${common.get_null_or_value(json.data[i].provider_email)}</div>
                     </div>
                     <div class='list_user_account_col'>
-                        <div class='list_readonly'>${get_null_or_value(json.data[i].date_created)}</div>
+                        <div class='list_readonly'>${common.get_null_or_value(json.data[i].date_created)}</div>
                     </div>
                     <div class='list_user_account_col'>
-                        <div class='list_readonly'>${get_null_or_value(json.data[i].date_modified)}</div>
+                        <div class='list_readonly'>${common.get_null_or_value(json.data[i].date_modified)}</div>
                     </div>
                 </div>`;
             }
@@ -736,7 +737,7 @@ async function show_user_account_logon(user_account_id){
     let json;
     document.getElementById('list_user_account_logon').innerHTML = window.global_app_spinner;
 
-    common_fetch(window.global_rest_api_db_path + window.global_rest_user_account_logon + `admin/${parseInt(user_account_id)}/''?`,
+    common.common_fetch(window.global_rest_api_db_path + window.global_rest_user_account_logon + `admin/${parseInt(user_account_id)}/''?`,
                  'GET', 1, null, null, null, (err, result) =>{
         if (err)
             document.getElementById('list_user_account_logon').innerHTML = '';
@@ -778,7 +779,7 @@ async function show_user_account_logon(user_account_id){
                         <div class='list_readonly'>${json.data[i].user_account_id}</div>
                     </div>
                     <div class='list_user_account_logon_col'>
-                        <div class='list_readonly'>${get_null_or_value(json.data[i].date_created)}</div>
+                        <div class='list_readonly'>${common.get_null_or_value(json.data[i].date_created)}</div>
                     </div>
                     <div class='list_user_account_logon_col'>
                         <div class='list_readonly'>${json.data[i].app_id}</div>
@@ -790,16 +791,16 @@ async function show_user_account_logon(user_account_id){
                         <div class='list_readonly'>${json.data[i].client_ip}</div>
                     </div>
                     <div class='list_user_account_logon_col'>
-                        <div class='list_readonly'>${get_null_or_value(json.data[i].client_longitude)}</div>
+                        <div class='list_readonly'>${common.get_null_or_value(json.data[i].client_longitude)}</div>
                     </div>
                     <div class='list_user_account_logon_col'>
-                        <div class='list_readonly'>${get_null_or_value(json.data[i].client_latitude)}</div>
+                        <div class='list_readonly'>${common.get_null_or_value(json.data[i].client_latitude)}</div>
                     </div>
                     <div class='list_user_account_logon_col'>
                         <div class='list_readonly'>${json.data[i].client_user_agent}</div>
                     </div>
                     <div class='list_user_account_logon_col'>
-                        <div class='list_readonly'>${get_null_or_value(json.data[i].access_token)}</div>
+                        <div class='list_readonly'>${common.get_null_or_value(json.data[i].access_token)}</div>
                     </div>
                 </div>`;
             }
@@ -814,7 +815,7 @@ async function show_apps(){
     let json;
     document.getElementById('list_apps').innerHTML = window.global_app_spinner;
 
-    await common_fetch(window.global_rest_api_db_path + window.global_rest_app + '/admin?',
+    await common.common_fetch(window.global_rest_api_db_path + window.global_rest_app + '/admin?',
                        'GET', 1, null, null, null, (err, result) =>{
         if (err)
             document.getElementById('list_apps').innerHTML = '';
@@ -862,11 +863,11 @@ async function show_apps(){
                         <input type='checkbox' class='list_edit' ${json.data[i].enabled==1?'checked':''} />
                     </div>
                     <div class='list_apps_col'>
-                        <input type='text' class='list_edit input_lov' value='${get_null_or_value(json.data[i].app_category_id)}' />
+                        <input type='text' class='list_edit input_lov' value='${common.get_null_or_value(json.data[i].app_category_id)}' />
                         <div class='common_lov_button list_lov_click'></div>
                     </div>
                     <div class='list_apps_col'>
-                        <div class='list_readonly'>${get_null_or_value(json.data[i].app_category_text)} </div>
+                        <div class='list_readonly'>${common.get_null_or_value(json.data[i].app_category_text)} </div>
                     </div>
                 </div>`;
             }
@@ -886,7 +887,7 @@ function show_app_parameter(app_id){
     let json;
     document.getElementById('list_app_parameter').innerHTML = window.global_app_spinner;
 
-    common_fetch(window.global_rest_api_db_path + window.global_rest_app_parameter + `admin/all/${parseInt(app_id)}?`,
+    common.common_fetch(window.global_rest_api_db_path + window.global_rest_app_parameter + `admin/all/${parseInt(app_id)}?`,
                  'GET', 1, null, null, null, (err, result) =>{
         if (err)
             document.getElementById('list_app_parameter').innerHTML = '';
@@ -929,10 +930,10 @@ function show_app_parameter(app_id){
                         <div class='list_readonly'>${json.data[i].parameter_name}</div>
                     </div>
                     <div class='list_app_parameter_col'>
-                        <input type=text class='list_edit' value='${get_null_or_value(json.data[i].parameter_value)}'/>
+                        <input type=text class='list_edit' value='${common.get_null_or_value(json.data[i].parameter_value)}'/>
                     </div>
                     <div class='list_app_parameter_col'>
-                        <input type=text class='list_edit' value='${get_null_or_value(json.data[i].parameter_comment)}'/>
+                        <input type=text class='list_edit' value='${common.get_null_or_value(json.data[i].parameter_comment)}'/>
                     </div>
                 </div>`;
             }
@@ -1041,7 +1042,7 @@ async function button_save(item){
                 json_data = JSON.stringify(JSON.parse(json_data), undefined, 2);
                 let old_button = document.getElementById(item).innerHTML;
                 document.getElementById(item).innerHTML = window.global_app_spinner;
-                common_fetch('/server/config/systemadmin?',
+                common.common_fetch('/server/config/systemadmin?',
                     'PUT', 2, json_data, null, null,(err, result) =>{
                     document.getElementById(item).innerHTML = old_button;
                 })
@@ -1098,7 +1099,7 @@ async function update_record(table,
                 break;
             }
         }
-        await common_fetch(window.global_rest_api_db_path + rest_url,
+        await common.common_fetch(window.global_rest_api_db_path + rest_url,
                      'PUT', 1, json_data, null, null,(err, result) =>{
             document.getElementById(button).innerHTML = old_button;
             if (err)
@@ -1148,7 +1149,7 @@ function list_events(list_item, item_row, item_edit){
                 if (event.target.value=='')
                     event.target.parentNode.parentNode.children[6].children[0].innerHTML ='';
                 else{
-                    common_fetch(`${window.global_rest_api_db_path}${window.global_rest_app_category}admin?id=${event.target.value}`,
+                    common.common_fetch(`${window.global_rest_api_db_path}${window.global_rest_app_category}admin?id=${event.target.value}`,
                                 'GET', 1, null, null, null, (err, result) =>{
                         row_action(err, result, event.target, event, 6, '');
                     });
@@ -1158,7 +1159,7 @@ function list_events(list_item, item_row, item_edit){
                 if (event.target.value=='')
                     event.target.value = event.target.defaultValue;
                 else{
-                    common_fetch(`${window.global_rest_api_db_path}${window.global_rest_parameter_type}admin?id=${event.target.value}`,
+                    common.common_fetch(`${window.global_rest_api_db_path}${window.global_rest_parameter_type}admin?id=${event.target.value}`,
                                 'GET', 1, null, null, null, (err, result) =>{
                         row_action(err, result, event.target, event, 2);
                     });
@@ -1172,7 +1173,7 @@ function list_events(list_item, item_row, item_edit){
                     app_role_id_lookup=2;
                 else
                     app_role_id_lookup=event.target.value;
-                common_fetch(`${window.global_rest_api_db_path}${window.global_rest_app_role}admin?id=${app_role_id_lookup}`,
+                common.common_fetch(`${window.global_rest_api_db_path}${window.global_rest_app_role}admin?id=${app_role_id_lookup}`,
                             'GET', 1, null, null, null, (err, result) =>{
                     row_action(err, result, event.target, event, 3);
                     //if wrong value then field is empty again, fetch default value for empty app_role
@@ -1237,7 +1238,7 @@ function list_events(list_item, item_row, item_edit){
                     event.target.parentNode.parentNode.parentNode.children[5].children[0].dispatchEvent(new Event('change'));
                     document.getElementById('lov_close').dispatchEvent(new Event('click'))
                 };
-                lov_show('APP_CATEGORY', function_event);
+                common.lov_show('APP_CATEGORY', function_event);
             }
                 
         })
@@ -1250,7 +1251,7 @@ function list_events(list_item, item_row, item_edit){
                     event.target.parentNode.parentNode.parentNode.children[1].children[0].dispatchEvent(new Event('change'));
                     document.getElementById('lov_close').dispatchEvent(new Event('click'))
                 };
-                lov_show('PARAMETER_TYPE', function_event);
+                common.lov_show('PARAMETER_TYPE', function_event);
             }
         })
     
@@ -1263,7 +1264,7 @@ function list_events(list_item, item_row, item_edit){
                     event.target.parentNode.parentNode.parentNode.children[2].children[0].dispatchEvent(new Event('change'));
                     document.getElementById('lov_close').dispatchEvent(new Event('click'))
                 };
-                lov_show('APP_ROLE', function_event);
+                common.lov_show('APP_ROLE', function_event);
             }
         })    
 }
@@ -1416,7 +1417,7 @@ async function show_list(list_div, list_div_col_title, url_parameters, sort, ord
             }
         }
 
-        common_fetch(url, 'GET', token_type, null, null, null, (err, result) =>{
+        common.common_fetch(url, 'GET', token_type, null, null, null, (err, result) =>{
             if (err){
                 switch (list_div){
                     case 'list_pm2_log':{
@@ -2064,12 +2065,12 @@ function list_item_click(item){
             else
                 url = window.global_service_geolocation + window.global_service_geolocation_gps_ip + 
                       `/admin?app_user_id=${ip_filter}`;
-            common_fetch(url, 'GET', tokentype, null, null, null, (err, result) =>{
+            common.common_fetch(url, 'GET', tokentype, null, null, null, (err, result) =>{
                     if (err)
                         null;
                     else{
                         let json = JSON.parse(result);
-                        map_update(json.geoplugin_longitude,
+                        common.map_update(json.geoplugin_longitude,
                                    json.geoplugin_latitude,
                                    window.global_gps_map_zoom,
                                    json.geoplugin_city + ', ' +
@@ -2104,12 +2105,12 @@ function list_item_click(item){
                         '/admin?app_user_id=' +
                         '&latitude=' + lat +
                         '&longitude=' + long;
-            common_fetch(url, 'GET', tokentype, null, null, null, (err, result) =>{
+            common.common_fetch(url, 'GET', tokentype, null, null, null, (err, result) =>{
                     if (err)
                         null;
                     else{
                         let json = JSON.parse(result);
-                        map_update(long,
+                        common.map_update(long,
                                    lat,
                                    window.global_gps_map_zoom,
                                    json.geoplugin_place + ', ' + 
@@ -2130,7 +2131,7 @@ function list_item_click(item){
 }
 async function get_server_log_parameters(){
     let json;
-    await common_fetch(window.global_service_log + '/parameters?',
+    await common.common_fetch(window.global_service_log + '/parameters?',
                        'GET', 2, null, null, null, (err, result) =>{
         if (err)
             null;
@@ -2262,9 +2263,9 @@ function show_existing_logfiles(){
                                     document.getElementById('select_day_menu5').value = day;
 
                                 document.getElementById('select_logscope5').dispatchEvent(new Event('change'));
-                                lov_close();
+                                common.lov_close();
                             };
-        lov_show('SERVER_LOG_FILES', function_event);
+        common.lov_show('SERVER_LOG_FILES', function_event);
     }
 }
 function show_pm2_logs(){
@@ -2283,11 +2284,11 @@ async function show_config(config_nav=1){
     let url;
     document.getElementById(`list_config`).innerHTML = window.global_app_spinner;
     url  = `/server/config/systemadmin/saved?config_type_no=${config_nav}`;
-    await common_fetch(url, 'GET', 2, null, null, null, (err, result) =>{
+    await common.common_fetch(url, 'GET', 2, null, null, null, (err, result) =>{
         if (err)
             document.getElementById(`list_config`).innerHTML = '';
         else{
-            json = JSON.parse(result);
+            let json = JSON.parse(result);
             let i = 0;
             switch (config_nav){
                 case 1:{
@@ -2356,7 +2357,7 @@ async function show_config(config_nav=1){
 async function show_db_info(){
     if (admin_token_has_value()){
         let json;
-        await common_fetch('/service/db/admin/DBInfo?',
+        await common.common_fetch('/service/db/admin/DBInfo?',
                            'GET', 2, null, window.global_common_app_id, null, (err, result) =>{
             if (err)
                 null;
@@ -2382,7 +2383,7 @@ async function show_db_info_space(){
             return Math.round(num * x) / x;
           }
         document.getElementById('menu_8_db_info_space_detail').innerHTML = window.global_app_spinner;
-        await common_fetch('/service/db/admin/DBInfoSpace?', 'GET', 2, null, window.global_common_app_id, null, (err, result) =>{
+        await common.common_fetch('/service/db/admin/DBInfoSpace?', 'GET', 2, null, window.global_common_app_id, null, (err, result) =>{
             if (err)
                 null;
             else{
@@ -2425,7 +2426,7 @@ async function show_db_info_space(){
                     </div>`;
                 }
                 document.getElementById('menu_8_db_info_space_detail').innerHTML = html;
-                common_fetch('/service/db/admin/DBInfoSpaceSum?', 'GET', 2, null, window.global_common_app_id, null, (err, result) =>{
+                common.common_fetch('/service/db/admin/DBInfoSpaceSum?', 'GET', 2, null, window.global_common_app_id, null, (err, result) =>{
                     if (err)
                         null;
                     else{
@@ -2465,7 +2466,7 @@ async function show_server_info(){
             const x = Math.pow(10,2);
             return Math.round(num * x) / x;
           }
-        await common_fetch('/server/info?', 'GET', 2, null, window.global_common_app_id, null, (err, result) =>{
+        await common.common_fetch('/server/info?', 'GET', 2, null, window.global_common_app_id, null, (err, result) =>{
             if (err)
                 null;
             else{         
@@ -2700,7 +2701,7 @@ function init_admin_secure(){
     document.getElementById('send_broadcast_send').addEventListener('click', function() { sendBroadcast(); }, false);
     document.getElementById('send_broadcast_close').addEventListener('click', function() { closeBroadcast()}, false);
 
-    document.getElementById('list_user_account_search_input').addEventListener('keyup', function() { window.global_typewatch(show_users(sort=8, order_by='ASC', false), 500); }, false);
+    document.getElementById('list_user_account_search_input').addEventListener('keyup', function() { common.typewatch(show_users, 8, 'ASC', false); }, false);
     document.getElementById('list_user_account_search_icon').addEventListener('click', function() { document.getElementById('list_user_account_search_input').focus();document.getElementById('list_user_account_search_input').dispatchEvent(new KeyboardEvent('keyup')); }, false);
     document.getElementById('users_save').addEventListener('click', function() { button_save('users_save')}, false); 
     document.getElementById('apps_save').addEventListener('click', function() { button_save('apps_save')}, false); 
@@ -2731,22 +2732,22 @@ function init_admin_secure(){
 
     document.getElementById('filesearch_menu5').addEventListener('click', function() { show_existing_logfiles();}, false);
     
-    document.getElementById('select_maptype').addEventListener('change', function() { map_setstyle(document.getElementById('select_maptype').value) }, false);
+    document.getElementById('select_maptype').addEventListener('change', function() { common.map_setstyle(document.getElementById('select_maptype').value) }, false);
 
     //SET APPS INFO, INIT MAP
     get_apps().then(function(){
-        get_gps_from_ip().then(function(){
-            map_init(window.global_gps_map_container,
-                    window.global_service_map_style,
-                    window.global_client_longitude, 
-                    window.global_client_latitude, 
-                    window.global_gps_map_zoom);
-            map_setevent('dblclick', function(e) {
+        common.get_gps_from_ip().then(function(){
+            common.map_init(window.global_gps_map_container,
+                            window.global_service_map_style,
+                            window.global_client_longitude, 
+                            window.global_client_latitude, 
+                            window.global_gps_map_zoom);
+            common.map_setevent('dblclick', function(e) {
                 let lng = e.latlng['lng'];
                 let lat = e.latlng['lat'];
                 //Update GPS position
-                get_place_from_gps(lng, lat).then(function(gps_place){
-                    map_update(lng,
+                common.get_place_from_gps(lng, lat).then(function(gps_place){
+                    common.map_update(lng,
                             lat,
                             '', //do not change zoom 
                             gps_place,
@@ -2756,7 +2757,7 @@ function init_admin_secure(){
                 })
             })
                 
-            map_update(window.global_client_longitude,
+            common.map_update(window.global_client_longitude,
                     window.global_client_latitude,
                     window.global_gps_map_zoom,
                     window.global_client_place,
@@ -2870,14 +2871,14 @@ function init_admin_secure(){
                 document.getElementById('list_monitor_nav_4').style.display='none';
                 //start with DASHBOARD
                 show_menu(1);
-                common_translate_ui(window.global_user_locale, 'APP', (err, result)=>{
+                common.common_translate_ui(window.global_user_locale, 'APP', (err, result)=>{
                     null
                 });
             }
         })                
     })
 }
-init_common(<ITEM_COMMON_PARAMETERS/>, (err, global_app_parameters)=>{
+common.init_common(<ITEM_COMMON_PARAMETERS/>, (err, global_app_parameters)=>{
     if (err)
         null;
     else{

@@ -187,3 +187,4 @@ function seticons(){
     window.global_icon_message_email = '<i class="fa-solid fa-envelope"></i>';
     window.global_icon_message_record = '<i class="fa-solid fa-database"></i>';
 }         
+export{seticons}
