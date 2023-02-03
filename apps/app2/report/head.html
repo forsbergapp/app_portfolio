@@ -1,5 +1,10 @@
 <meta charset='UTF-8'>
 <title></title>
 <link rel='stylesheet' type='text/css' href='/app2/css/app_report.css' />
-<script type='text/javascript' src='/app2/js/app_report.js'></script>
 <script type='text/javascript' src='/app2/js/app_globals.js'></script>
+<script type='text/javascript' type='module' >
+    import('/app2/js/app_report.js').then(function(report){
+                window.report = report;
+                document.addEventListener("DOMContentLoaded", report.init(<ITEM_COMMON_PARAMETERS/>));
+        });
+</script>

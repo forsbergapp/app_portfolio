@@ -49,7 +49,7 @@ function  getAdmin(app_id, gps_lat, gps_long, gps_place) {
                         get_module_with_init(app_id,
                                             null,
                                             null,  
-                                            'admin_exception_before',
+                                            'app.admin_exception_before',
                                             null, //do not close eventsource before
                                             true, //ui
                                             gps_lat,

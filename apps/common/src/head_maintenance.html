@@ -3,9 +3,12 @@
 <link rel='stylesheet' type='text/css' href='/common/modules/fontawesome/css/all.css' />
 <link rel='stylesheet' type='text/css' href='/common/css/common.css' />
 <link rel='stylesheet' type='text/css' href='/common/css/maintenance.css' />
-<script type='text/javascript' src='/common/js/common_icons.js'></script>
-<script type='text/javascript' src='/common/js/common.js'></script>
-<script type='text/javascript' src='/common/js/maintenance.js'></script>
+<script type='text/javascript' type='module' >
+    import('/common/js/maintenance.js').then(function(maintenance){
+        window.maintenance = maintenance;
+        document.addEventListener("DOMContentLoaded", maintenance.init(<ITEM_COMMON_PARAMETERS/>));
+    });
+</script>
 <link rel='icon' type='image/png' href='/app1/images/favicon-32x32.png' sizes='32x32'>
 <link rel='icon' type='image/png' href='/app1/images/favicon-192x192.png' sizes='192x192'>
 <meta name="HandheldFriendly" content="true"/>

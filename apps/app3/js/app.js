@@ -1,3 +1,4 @@
+const common = await import('/common/js/common.js');
 function app_exception() {
     null;
 }
@@ -37,8 +38,8 @@ function getdocs(docid = null){
 }
 async function init_app(){
     document.getElementById('app_title').innerHTML = window.global_app_name;
-    zoom_info('');
-    move_info(null,null);
+    common.zoom_info('');
+    common.move_info(null,null);
     let docid = window.location.pathname.substring(1);
     if (docid!=''){
         document.getElementById('dialogue_documents').style.visibility = 'hidden';
@@ -66,15 +67,16 @@ async function init_app(){
         document.getElementById('common_window_info').style.visibility = 'hidden';
     }
     
-    await common_fetch_basic(0, null,  null, null, (err, result)=>{
+    await common.common_fetch_basic(0, null,  null, null, (err, result)=>{
         null;
     })
 
 }
 function init(parameters){
-    init_common(parameters, (err, global_app_parameters)=>{
+    common.init_common(parameters, (err, global_app_parameters)=>{
         init_app().then(function(){
             null;
         })
     })
 }
+export{app_exception, show_doc, getdocs, init_app, init}
