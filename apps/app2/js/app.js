@@ -1,6 +1,6 @@
 const common = await import('/common/js/common.js');
 const app2_report = await import('/app2/js/app_report.js');
-//uses modeul easy.qrcode
+//uses module easy.qrcode
 /*  Functions and globals in this order:
     GLOBALS
     REPORT
