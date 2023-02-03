@@ -49,7 +49,7 @@ function getApp(app_id, username, gps_lat, gps_long, gps_place){
                         get_module_with_init(app_id, 
                                                 null,
                                                 null,
-                                                'app_exception',
+                                                'app.app_exception',
                                                 null,
                                                 true,
                                                 gps_lat,
