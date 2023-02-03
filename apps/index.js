@@ -152,7 +152,7 @@ async function read_app_files(app_id, files, callBack){
         .catch(err => {
             let stack = new Error().stack;
             import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
-                createLogAppSE(req.query.app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), err).then(function(){
+                createLogAppSE(app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), err).then(function(){
                     callBack(err, null);
                 })
             })

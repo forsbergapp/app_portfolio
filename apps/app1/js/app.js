@@ -1,7 +1,8 @@
+const common = await import('/common/js/common.js');
+
 window.global_app_email;
 window.global_img_diagram_img = '/app1/images/app_portfolio.png';
 window.global_img_datamodel_img = '/app1/images/data_model.png';
-
 
 window.global_qr_width;
 window.global_qr_height;
@@ -36,8 +37,8 @@ function setEvents(){
         document.getElementById( 'dialogue_start_content' ).className = 'dialogue_content dialogue_flip dialogue_flip-side-2';
     }, false );
     //second page
-    document.getElementById('info_diagram').addEventListener('click', function() {show_window_info(0, true, window.global_img_diagram_img)}, false);
-    document.getElementById('info_datamodel').addEventListener('click', function() {show_window_info(0, true, window.global_img_datamodel_img)}, false);
+    document.getElementById('info_diagram').addEventListener('click', function() {common.show_window_info(0, true, window.global_img_diagram_img)}, false);
+    document.getElementById('info_datamodel').addEventListener('click', function() {common.show_window_info(0, true, window.global_img_datamodel_img)}, false);
    
     document.getElementById( 'info_message' ).addEventListener( 'click', function( event ) {
         event.preventDefault();
@@ -45,29 +46,29 @@ function setEvents(){
         document.getElementById( 'dialogue_start_content' ).className = 'dialogue_content dialogue_flip';
     }, false );
     //common
-    document.getElementById('profile_btn_top').addEventListener('click', function() {profile_top(1)}, false);
+    document.getElementById('profile_btn_top').addEventListener('click', function() {common.profile_top(1)}, false);
     //user menu
     document.getElementById('user_menu_username').addEventListener('click', function() { user_menu_item_click(this) }, false);
     document.getElementById('user_menu_dropdown_log_out').addEventListener('click', function() { user_menu_item_click(this) }, false);
     //user preferences
     document.getElementById('app_theme_checkbox').addEventListener('click', function() { app_theme_switch() }, false);
-    document.getElementById('user_locale_select').addEventListener('change', function() { document.getElementById('apps').innerHTML = window.global_app_spinner;common_translate_ui(this.value, null, (err, result)=>{get_apps()});}, false);
+    document.getElementById('user_locale_select').addEventListener('change', function() { document.getElementById('apps').innerHTML = window.global_app_spinner;common.common_translate_ui(this.value, null, (err, result)=>{get_apps()});}, false);
     document.getElementById('user_arabic_script_select').addEventListener('change', function() { app_theme_switch()}, false);
     //common with app specific settings
     //dialogue profile
-    document.getElementById('profile_home').addEventListener('click', function() {profile_top(1);}, false);
-    document.getElementById('profile_close').addEventListener('click', function() {profile_close()}, false);
-    document.getElementById('profile_search_input').addEventListener('keyup', function(event) { search_input(event, null);}, false);
-    document.getElementById('profile_top_row1_1').addEventListener('click', function() { profile_top(1)}, false);
-    document.getElementById('profile_top_row1_2').addEventListener('click', function() { profile_top(2)}, false);
-    document.getElementById('profile_top_row1_3').addEventListener('click', function() { profile_top(3)}, false);
-    document.getElementById('profile_follow').addEventListener('click', function() { profile_follow_like('FOLLOW') }, false);
-	document.getElementById('profile_like').addEventListener('click', function() { profile_follow_like('LIKE') }, false);
-    document.getElementById('profile_main_btn_following').addEventListener('click', function() { profile_detail(1, null, true, null) }, false);
-    document.getElementById('profile_main_btn_followed').addEventListener('click', function() { profile_detail(2, null, true, null) }, false);
-    document.getElementById('profile_main_btn_likes').addEventListener('click', function() { profile_detail(3, null, true, null) }, false);
-    document.getElementById('profile_main_btn_liked').addEventListener('click', function() { profile_detail(4, null, true, null) }, false);
-    document.getElementById('profile_main_btn_cloud').addEventListener('click', function() { profile_detail(5, window.global_rest_user_account_app + 'apps/', true, global_icon_sky_cloud, null) }, false);
+    document.getElementById('profile_home').addEventListener('click', function() {common.profile_top(1);}, false);
+    document.getElementById('profile_close').addEventListener('click', function() {common.profile_close()}, false);
+    document.getElementById('profile_search_input').addEventListener('keyup', function(event) { common.search_input(event, null);}, false);
+    document.getElementById('profile_top_row1_1').addEventListener('click', function() { common.profile_top(1)}, false);
+    document.getElementById('profile_top_row1_2').addEventListener('click', function() { common.profile_top(2)}, false);
+    document.getElementById('profile_top_row1_3').addEventListener('click', function() { common.profile_top(3)}, false);
+    document.getElementById('profile_follow').addEventListener('click', function() { common.profile_follow_like('FOLLOW') }, false);
+	document.getElementById('profile_like').addEventListener('click', function() { common.profile_follow_like('LIKE') }, false);
+    document.getElementById('profile_main_btn_following').addEventListener('click', function() { common.profile_detail(1, null, true, null) }, false);
+    document.getElementById('profile_main_btn_followed').addEventListener('click', function() { common.profile_detail(2, null, true, null) }, false);
+    document.getElementById('profile_main_btn_likes').addEventListener('click', function() { common.profile_detail(3, null, true, null) }, false);
+    document.getElementById('profile_main_btn_liked').addEventListener('click', function() { common.profile_detail(4, null, true, null) }, false);
+    document.getElementById('profile_main_btn_cloud').addEventListener('click', function() { common.profile_detail(5, window.global_rest_user_account_app + 'apps/', true, global_icon_sky_cloud, null) }, false);
     //dialogue login/signup/forgot
     let input_username_login = document.getElementById("login_username");
     input_username_login.addEventListener("keyup", function(event) {
@@ -90,7 +91,7 @@ function setEvents(){
         }
     });
     document.getElementById('login_button').addEventListener('click', function() { user_login_app() }, false);    
-    document.getElementById('signup_button').addEventListener('click', function() { user_signup() }, false);
+    document.getElementById('signup_button').addEventListener('click', function() { common.user_signup() }, false);
     //dialogue user edit    
     document.getElementById('user_edit_btn_user_delete_account').addEventListener('click', function() { user_delete_app(); }, false);
     //dialogue verify
@@ -137,7 +138,7 @@ function get_apps() {
     let json;
     let old_button = document.getElementById('apps').innerHTML;
 
-    common_fetch(window.global_rest_api_db_path + window.global_rest_app + `?id=${window.global_common_app_id}`, 
+    common.common_fetch(window.global_rest_api_db_path + window.global_rest_app + `?id=${window.global_common_app_id}`, 
                  'GET', 0, null, null,null, (err, result) =>{
         if (err)
             document.getElementById('apps').innerHTML = old_button;
@@ -176,7 +177,7 @@ function user_menu_item_click(item){
     switch (item.id){
         case 'user_menu_username':{
             document.getElementById('dialogue_profile').style.visibility = 'visible';
-            profile_show(null,
+            common.profile_show(null,
                          null,
                         (err, result)=>{
                             null;
@@ -184,7 +185,7 @@ function user_menu_item_click(item){
             break;
         }
         case 'user_menu_dropdown_log_out':{
-            user_logoff();            
+            common.user_logoff();            
             break;
         }
         default:
@@ -198,11 +199,11 @@ async function user_login_app(){
     let old_button = document.getElementById('login_button').innerHTML;
     document.getElementById('login_button').innerHTML = window.global_app_spinner;
             
-    await user_login(username.value, password.value, (err, result)=>{
+    await common.user_login(username.value, password.value, (err, result)=>{
         document.getElementById('login_button').innerHTML = old_button;
         if (err==null){            
             //set avatar or empty
-            set_avatar(result.avatar, document.getElementById('user_menu_avatar_img'));
+            common.set_avatar(result.avatar, document.getElementById('user_menu_avatar_img'));
             document.getElementById('user_menu_username').innerHTML = result.username;
             
             document.getElementById('user_menu_logged_in').style.display = 'inline-block';
@@ -212,17 +213,17 @@ async function user_login_app(){
             document.getElementById('user_menu_dropdown_logged_in').style.display = 'inline-block';
             document.getElementById('user_menu_dropdown_logged_out').style.display = 'none';
 
-            dialogue_login_clear();
-            dialogue_signup_clear();
+            common.dialogue_login_clear();
+            common.dialogue_signup_clear();
         }
         
     })
 }
 function app_exception(){
-    user_logoff();
+    common.user_logoff();
 }
 async function user_verify_check_input_app(item, nextField){
-    await user_verify_check_input(item, nextField, (err, result) => {
+    await common.user_verify_check_input(item, nextField, (err, result) => {
         if ((err==null && result==null)==false)
             if(err==null){
                 //login if LOGIN  or SIGNUP were verified successfully
@@ -241,23 +242,23 @@ async function  user_delete_app(){
         user_local = false;
     let function_delete_user_account = function() { 
                                             document.getElementById('dialogue_message').style.visibility = 'hidden';
-                                            user_delete(1, user_local, null, (err, result)=>{
+                                            common.user_delete(1, user_local, null, (err, result)=>{
                                                 if (err==null){
-                                                    user_logoff();
+                                                    common.user_logoff();
                                                 }
                                             }) 
                                         };
-    await user_delete(null, user_local, function_delete_user_account, (err, result) =>{
+    await common.user_delete(null, user_local, function_delete_user_account, (err, result) =>{
         if (err==null){
-            user_logoff();
+            common.user_logoff();
         }
     })
 }
 async function ProviderUser_update_app(identity_provider_id, profile_id, profile_first_name, profile_last_name, profile_image_url, profile_email){
-    await ProviderUser_update(identity_provider_id, profile_id, profile_first_name, profile_last_name, profile_image_url, profile_email, (err, result)=>{
+    await common.ProviderUser_update(identity_provider_id, profile_id, profile_first_name, profile_last_name, profile_image_url, profile_email, (err, result)=>{
         if(err==null){
             //set avatar or empty
-            set_avatar(result.avatar, document.getElementById('user_menu_avatar_img'));
+            common.set_avatar(result.avatar, document.getElementById('user_menu_avatar_img'));
             document.getElementById('user_menu_username').innerHTML = result.username;
 
             document.getElementById('user_menu_logged_in').style.display = 'inline-block';
@@ -269,7 +270,7 @@ async function ProviderUser_update_app(identity_provider_id, profile_id, profile
     })
 }
 async function ProviderSignIn_app(provider_button){
-    await ProviderSignIn(provider_button, (err, result)=>{
+    await common.ProviderSignIn(provider_button, (err, result)=>{
         if (err==null){
             ProviderUser_update_app(result.identity_provider_id, 
                                    result.profile_id, 
@@ -305,7 +306,7 @@ async function init_app(){
                 window.open(eval(`window.global_info_${event.target.id}_url`),'_blank','');
         //info_link ends with an integer
         if (event.target.id.startsWith('info_link'))
-            show_window_info(parseInt(event.target.id.substring(9)));
+            common.show_window_info(parseInt(event.target.id.substring(9)));
     }, false);
     
     if (window.global_info_social_link1_url==null)
@@ -333,12 +334,12 @@ async function init_app(){
     document.getElementById('profile_main_btn_cloud').innerHTML = window.global_icon_sky_cloud;
     
     setEvents();
-    zoom_info('');
-    move_info(null,null);
+    common.zoom_info('');
+    common.move_info(null,null);
 }
 
 function init(parameters){
-    init_common(parameters, (err, global_app_parameters)=>{
+    common.init_common(parameters, (err, global_app_parameters)=>{
         if (err)
             null;
         else{
@@ -399,7 +400,7 @@ function init(parameters){
             }
             init_app().then(function(){
                 document.getElementById('apps').innerHTML = window.global_app_spinner;
-                common_translate_ui(window.global_user_locale, null, (err, result)=>{
+                common.common_translate_ui(window.global_user_locale, null, (err, result)=>{
                         get_apps();
                 })
                 async function show_start(){
@@ -407,7 +408,7 @@ function init(parameters){
                     if (user !='') {
                         //show profile for user entered in url
                         document.getElementById('dialogue_profile').style.visibility = "visible";
-                        profile_show(null, 
+                        common.profile_show(null, 
                                         user,
                                         (err, result)=>{
                                         null;
@@ -415,9 +416,12 @@ function init(parameters){
                     }
                 }
                 show_start().then(function(){
-                    Providers_init(function() { ProviderSignIn_app(this); });
+                    common.Providers_init(function() { ProviderSignIn_app(this); });
                 })
             })
         }
     })
 }
+export{show_hide_apps_dialogue, setEvents, app_theme_switch, get_apps, user_menu_item_click, user_login_app,
+       app_exception, user_verify_check_input_app, user_delete_app, ProviderUser_update_app, ProviderSignIn_app,
+       init_app, init}

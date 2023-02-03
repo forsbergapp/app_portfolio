@@ -123,8 +123,10 @@ function BroadcastConnect(req, res){
         }
 }
 function BroadcastSendSystemAdmin(req, res){
-    req.body.app_id = parseInt(req.body.app_id);
-    req.body.client_id = parseInt(req.body.client_id);
+    if (req.body.app_id)
+        req.body.app_id = parseInt(req.body.app_id);
+    if (req.body.client_id)
+        req.body.client_id = parseInt(req.body.client_id);
     req.body.client_id_current = parseInt(req.body.client_id_current);
     service.BroadcastSendSystemAdmin(req.body.app_id, req.body.client_id, req.body.client_id_current,
                                         req.body.broadcast_type, req.body.broadcast_message, (err, result) =>{
@@ -134,8 +136,10 @@ function BroadcastSendSystemAdmin(req, res){
     });
 }
 function BroadcastSendAdmin(req, res){
-    req.body.app_id = parseInt(req.body.app_id);
-    req.body.client_id = parseInt(req.body.client_id);
+    if (req.body.app_id)
+        req.body.app_id = parseInt(req.body.app_id);
+    if (req.body.client_id)        
+        req.body.client_id = parseInt(req.body.client_id);
     req.body.client_id_current = parseInt(req.body.client_id_current);
     service.BroadcastSendAdmin(req.body.app_id, req.body.client_id, req.body.client_id_current,
                                 req.body.broadcast_type, req.body.broadcast_message, (err, result) =>{

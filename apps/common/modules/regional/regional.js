@@ -197,3 +197,4 @@ async function getTimezoneOffset(tz_str){
         parseDate( utc_f.format( now )),
         parseDate( loc_f.format( now ))) / 60;
 }
+export{getGregorian, getTimezoneOffset}
