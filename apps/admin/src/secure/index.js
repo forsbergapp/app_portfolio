@@ -25,7 +25,7 @@ function getAdminSecure(app_id, system_admin, user_account_id, gps_lat, gps_long
                 get_module_with_init(app_id, 
                                         system_admin,
                                         user_account_id,
-                                    'admin_logoff_app',
+                                    'app.admin_logoff_app',
                                     true, //close eventsource and create new as logged in
                                     false, //ui
                                     gps_lat,

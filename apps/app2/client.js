@@ -142,7 +142,6 @@ function getApp(app_id, username, gps_lat, gps_long, gps_place){
             const files = [
                 ['APP', process.cwd() + '/apps/app2/src/index.html'],
                 ['<AppCommonHeadPrayTimes/>', process.cwd() + '/apps/common/src/head_praytimes.html'],
-                ['<AppCommonHeadRegional/>', process.cwd() + '/apps/common/src/head_regional.html'],
                 ['<AppCommonHead/>', process.cwd() + '/apps/common/src/head.html'],
                 ['<AppCommonHeadMap/>', process.cwd() + '/apps/common/src/head_map.html'],
                 ['<AppCommonHeadQRCode/>', process.cwd() + '/apps/common/src/head_qrcode.html'],
@@ -393,7 +392,7 @@ function getApp(app_id, username, gps_lat, gps_long, gps_place){
                                 get_module_with_init(app_id, 
                                                         null,
                                                         null,
-                                                        'app_exception',
+                                                        'app.app_exception',
                                                         null,
                                                         true,
                                                         gps_lat,
