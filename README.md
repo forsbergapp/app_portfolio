@@ -160,8 +160,29 @@
 
 10. Issues
    
-   Not supported:
+	Not supported:
 
-   Hijri transliteration on Android.
+	Hijri transliteration on Android.
 
-   Armenian language on Chrome or Chromium, use Edge or other for Puppeteer if needed.
+	Armenian language on Chrome or Chromium, use Edge or other for Puppeteer if needed.
+
+	Hanidec numbers Javascript bugs:
+
+	Javascript does not support Hanidec numbers used in Chinese and North Korean numbers from 10 and above. Fore example 10 in latn number system will display the individual numbers 1 and 0 in Hanidec 一〇 (Yī and Líng) and not 10 in Hanidec that should be 十 (Shí). 
+
+	new Intl.NumberFormat('zh-u-nu-hanidec').format(10); 
+	result: 一〇 (Yī and Líng) should be 十 (Shí)
+	or
+	(10).toLocaleString('zh-u-nu-hanidec')
+	result: 一〇 (Yī and Líng) should be 十 (Shí)
+
+	(十).toLocaleString('en') should convert hanidec to 10 in latn numbers but returns NaN
+
+	String.fromCharCode(0x5341).toLocaleString('en-u-nu-latin') 
+	UTF-16 code unit of Hanidec 十 (Shí),
+	should return 10 in latin number but returns 十.
+
+	Oracle issues:
+	oracle can not save long BASE64 strings to CLOB column
+	oracle ORA-0932 in admin dashboard, sql valid, oracledb module error
+	oracle ORA-0905 in admin users
