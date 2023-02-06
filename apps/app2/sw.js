@@ -4,7 +4,6 @@ const assetsToCache = [
     '/common/css/common_app.css',
 	'/common/css/maintenance.css',
     '/common/js/common.js',
-    '/common/js/common_icons.js',
     '/common/js/maintenance.js',
     '/common/images/logo.png',    
     '/common/modules/easy.qrcode/easy.qrcode.js',
@@ -37,7 +36,7 @@ const assetsToCache = [
     '/app2/info/disclaimer.html',
     '/app2/info/privacy_policy.html',
     '/app2/info/terms.html',
-    '/app2/js/app_globals.js',
+    '/app2/js/app_common.js',
     '/app2/js/app_report.js',
     '/app2/js/app.js'
 ]
