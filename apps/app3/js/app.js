@@ -8,7 +8,7 @@ function show_doc(docid){
     document.getElementById('common_window_info_info').innerHTML = `<img src="${document.getElementById(`${docid}`).src}"/>`;
 }
 function getdocs(docid = null){
-    document.getElementById('doc_list').innerHTML = window.global_app_spinner;
+    document.getElementById('doc_list').innerHTML = common.APP_SPINNER;
     let result = `{"data":[{"id":1,
                             "doc_title":"Diagram",
                             "doc_url":"/app1/images/app_portfolio.png"},
@@ -37,7 +37,7 @@ function getdocs(docid = null){
     }
 }
 async function init_app(){
-    document.getElementById('app_title').innerHTML = window.global_app_name;
+    document.getElementById('app_title').innerHTML = common.COMMON_GLOBAL['app_name'];
     common.zoom_info('');
     common.move_info(null,null);
     let docid = window.location.pathname.substring(1);
