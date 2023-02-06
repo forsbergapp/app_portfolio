@@ -104,7 +104,7 @@ async function ConnectedList(app_id, app_id_select, limit, year, month, order_by
         if (client.app_id == app_id_select || app_id_select == ''){
             i++;
             let copyClient;
-            if (typeof limit=='undefined' || (typeof limit!='undefined' && i<=limit)){
+            if (limit=='' || (limit!='' && i<=limit)){
                 //connection date in ISO8601 format: "yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'"
                 //return selected year and month
                 if (parseInt(client.connection_date.substring(0,4)) == parseInt(year) && 
