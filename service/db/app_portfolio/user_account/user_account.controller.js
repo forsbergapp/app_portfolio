@@ -917,6 +917,7 @@ function deleteUser(req, res){
 }
 function userLogin(req, res){
     let result_pw;
+    let stack = new Error().stack;
     service.userLogin(req.query.app_id, req.body, (err, results) => {
         if (err) {
             return res.status(500).send(
@@ -1060,7 +1061,6 @@ function userLogin(req, res){
                     }
                     else{
                         //unauthorized, only admin allowed to log in to admin
-                        let stack = new Error().stack;
                         import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
                             createLogAppCI(req, res, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
                                             'unauthorized admin login attempt for user id:' + req.body.user_account_id + ', username:' + req.body.username)
@@ -1081,7 +1081,6 @@ function userLogin(req, res){
                         }
                         else{
                             //Username or password not found
-                            let stack = new Error().stack;
                             import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
                                 createLogAppCI(req, res, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
                                                 'invalid password attempt for user id:' + req.body.user_account_id + ', username:' + req.body.username)
@@ -1101,7 +1100,6 @@ function userLogin(req, res){
                 }
             } else{
                 //User not found
-                let stack = new Error().stack;
                 import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
                     createLogAppCI(req, res, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
                                     'user not found:' + req.body.username)
