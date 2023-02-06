@@ -1,18 +1,27 @@
 const common = await import('/common/js/common.js');
 
-window.global_app_email;
-window.global_img_diagram_img = '/app1/images/app_portfolio.png';
-window.global_img_datamodel_img = '/app1/images/data_model.png';
-
-window.global_qr_width;
-window.global_qr_height;
-window.global_qr_color_dark;
-window.global_qr_color_light;
-window.global_qr_logo_file_path;
-window.global_qr_logo_width;
-window.global_qr_logo_height;
-window.global_qr_background_color;
-
+let APP_GLOBAL = {
+    "app_copyright":"",
+    "app_email":"",
+    "img_diagram_img":"/app1/images/app_portfolio.png",
+    "img_datamodel_img":"/app1/images/data_model.png",
+    "info_social_link1_url":"",
+    "info_social_link2_url":"",
+    "info_social_link3_url":"",
+    "info_social_link4_url":"",
+    "info_social_link1_icon":"",
+    "info_social_link2_icon":"",
+    "info_social_link3_icon":"",
+    "info_social_link4_icon":"",
+    "info_link_policy_name":"",
+    "info_link_policy_url":"",
+    "info_link_disclaimer_name":"",
+    "info_link_disclaimer_url":"",
+    "info_link_terms_name":"",
+    "info_link_terms_url":"",
+    "info_link_about_name":"",
+    "info_link_about_url":""
+}
 function show_hide_apps_dialogue(){
     if (document.getElementById('dialogue_start_content').style.visibility=='visible' ||
         document.getElementById('dialogue_start_content').style.visibility==''){
@@ -37,8 +46,8 @@ function setEvents(){
         document.getElementById( 'dialogue_start_content' ).className = 'dialogue_content dialogue_flip dialogue_flip-side-2';
     }, false );
     //second page
-    document.getElementById('info_diagram').addEventListener('click', function() {common.show_window_info(0, true, window.global_img_diagram_img)}, false);
-    document.getElementById('info_datamodel').addEventListener('click', function() {common.show_window_info(0, true, window.global_img_datamodel_img)}, false);
+    document.getElementById('info_diagram').addEventListener('click', function() {common.show_window_info(0, true, APP_GLOBAL['img_diagram_img'])}, false);
+    document.getElementById('info_datamodel').addEventListener('click', function() {common.show_window_info(0, true, APP_GLOBAL['img_datamodel_img'])}, false);
    
     document.getElementById( 'info_message' ).addEventListener( 'click', function( event ) {
         event.preventDefault();
@@ -52,7 +61,7 @@ function setEvents(){
     document.getElementById('user_menu_dropdown_log_out').addEventListener('click', function() { user_menu_item_click(this) }, false);
     //user preferences
     document.getElementById('app_theme_checkbox').addEventListener('click', function() { app_theme_switch() }, false);
-    document.getElementById('user_locale_select').addEventListener('change', function() { document.getElementById('apps').innerHTML = window.global_app_spinner;common.common_translate_ui(this.value, null, (err, result)=>{get_apps()});}, false);
+    document.getElementById('user_locale_select').addEventListener('change', function() { document.getElementById('apps').innerHTML = common.APP_SPINNER;common.common_translate_ui(this.value, null, (err, result)=>{get_apps()});}, false);
     document.getElementById('user_arabic_script_select').addEventListener('change', function() { app_theme_switch()}, false);
     //common with app specific settings
     //dialogue profile
@@ -68,7 +77,7 @@ function setEvents(){
     document.getElementById('profile_main_btn_followed').addEventListener('click', function() { common.profile_detail(2, null, true, null) }, false);
     document.getElementById('profile_main_btn_likes').addEventListener('click', function() { common.profile_detail(3, null, true, null) }, false);
     document.getElementById('profile_main_btn_liked').addEventListener('click', function() { common.profile_detail(4, null, true, null) }, false);
-    document.getElementById('profile_main_btn_cloud').addEventListener('click', function() { common.profile_detail(5, window.global_rest_user_account_app + 'apps/', true, global_icon_sky_cloud, null) }, false);
+    document.getElementById('profile_main_btn_cloud').addEventListener('click', function() { common.profile_detail(5, common.COMMON_GLOBAL['rest_user_account_app'] + 'apps/', true, global_icon_sky_cloud, null) }, false);
     //dialogue login/signup/forgot
     let input_username_login = document.getElementById("login_username");
     input_username_login.addEventListener("keyup", function(event) {
@@ -138,7 +147,7 @@ function get_apps() {
     let json;
     let old_button = document.getElementById('apps').innerHTML;
 
-    common.common_fetch(window.global_rest_api_db_path + window.global_rest_app + `?id=${window.global_common_app_id}`, 
+    common.common_fetch(common.COMMON_GLOBAL['rest_api_db_path'] + common.COMMON_GLOBAL['rest_app'] + `?id=${common.COMMON_GLOBAL['common_app_id']}`, 
                  'GET', 0, null, null,null, (err, result) =>{
         if (err)
             document.getElementById('apps').innerHTML = old_button;
@@ -197,7 +206,7 @@ async function user_login_app(){
     let username = document.getElementById('login_username');
     let password = document.getElementById('login_password');
     let old_button = document.getElementById('login_button').innerHTML;
-    document.getElementById('login_button').innerHTML = window.global_app_spinner;
+    document.getElementById('login_button').innerHTML = common.APP_SPINNER;
             
     await common.user_login(username.value, password.value, (err, result)=>{
         document.getElementById('login_button').innerHTML = old_button;
@@ -283,55 +292,61 @@ async function ProviderSignIn_app(provider_button){
 }
 async function init_app(){
     //start
-    document.getElementById('about_name').innerHTML = window.global_app_name;
-    document.getElementById('start_message').innerHTML = window.global_icon_app_info;    
+    document.getElementById('about_name').innerHTML = common.COMMON_GLOBAL['app_name'];
+    document.getElementById('start_message').innerHTML = common.ICONS['app_info'];    
     //theme switcher
     document.getElementById('app_theme_checkbox').checked = true;
     //info
-    document.getElementById('info_diagram_img').src=window.global_img_diagram_img;
-    document.getElementById('info_datamodel_img').src=window.global_img_datamodel_img;
+    document.getElementById('info_diagram_img').src=APP_GLOBAL['img_diagram_img'];
+    document.getElementById('info_datamodel_img').src=APP_GLOBAL['img_datamodel_img'];
     document.getElementById('title1').innerHTML = 'App Portfolio Diagram';
     document.getElementById('title2').innerHTML = 'App Portfolio Data model';
-    document.getElementById('info_message').innerHTML = window.global_icon_app_close;
+    document.getElementById('info_message').innerHTML = common.ICONS['app_close'];
     document.getElementById('contact_text').innerHTML = 'Contact'    
-    document.getElementById('copyright').innerHTML = window.global_app_copyright;
-    document.getElementById('app_email').href='mailto:' + window.global_app_email;
-    document.getElementById('app_email').innerHTML=window.global_app_email;
+    document.getElementById('copyright').innerHTML = APP_GLOBAL['app_copyright'];
+    document.getElementById('app_email').href='mailto:' + APP_GLOBAL['app_email'];
+    document.getElementById('app_email').innerHTML=APP_GLOBAL['app_email'];
 
     //links
     document.getElementById('start_links').addEventListener('click', function(event) { 
-        //social links ends with an integer and is part of global name
+        //social links ends with an integer and is part of app global
         if (event.target.id.startsWith('social_link'))
-            if (eval(`window.global_info_${event.target.id}_url`))
-                window.open(eval(`window.global_info_${event.target.id}_url`),'_blank','');
+            if (eval(`APP_GLOBAL['info_${event.target.id}_url']`))
+                window.open(eval(`APP_GLOBAL['info_${event.target.id}_url']`),'_blank','');
         //info_link ends with an integer
-        if (event.target.id.startsWith('info_link'))
-            common.show_window_info(parseInt(event.target.id.substring(9)));
+        if (event.target.id == 'info_link1')
+            common.show_window_info(1, null, APP_GLOBAL['info_link_policy_url']);
+        if (event.target.id == 'info_link2')
+            common.show_window_info(2, null, APP_GLOBAL['info_link_disclaimer_url']);
+        if (event.target.id == 'info_link3')
+            common.show_window_info(3, null, APP_GLOBAL['info_link_terms_url']);
+        if (event.target.id == 'info_link4')
+            common.show_window_info(4, null, APP_GLOBAL['info_link_about_url']);
     }, false);
     
-    if (window.global_info_social_link1_url==null)
+    if (APP_GLOBAL['info_social_link1_url']==null)
         document.getElementById('social_link1').style.display = 'none'
     else
-        document.getElementById('social_link1').innerHTML = window.global_info_social_link1_icon;
-    if (window.global_info_social_link2_url==null)
+        document.getElementById('social_link1').innerHTML = APP_GLOBAL['info_social_link1_icon'];
+    if (APP_GLOBAL['info_social_link2_url']==null)
         document.getElementById('social_link2').style.display = 'none'
     else
-        document.getElementById('social_link2').innerHTML = window.global_info_social_link2_icon;
-    if (window.global_info_social_link3_url==null)
+        document.getElementById('social_link2').innerHTML = APP_GLOBAL['info_social_link2_icon'];
+    if (APP_GLOBAL['info_social_link3_url']==null)
         document.getElementById('social_link3').style.display = 'none'
     else
-        document.getElementById('social_link3').innerHTML = window.global_info_social_link3_icon;
-    if (window.global_info_social_link4_url==null)
+        document.getElementById('social_link3').innerHTML = APP_GLOBAL['info_social_link3_icon'];
+    if (APP_GLOBAL['info_social_link4_url']==null)
         document.getElementById('social_link4').style.display = 'none'
     else
-        document.getElementById('social_link4').innerHTML = window.global_info_social_link4_icon;
-    document.getElementById('info_link1').innerHTML = window.global_info_link_policy_name;
-    document.getElementById('info_link2').innerHTML = window.global_info_link_disclaimer_name;
-    document.getElementById('info_link3').innerHTML = window.global_info_link_terms_name;
-    document.getElementById('info_link4').innerHTML = window.global_info_link_about_name;
+        document.getElementById('social_link4').innerHTML = APP_GLOBAL['info_social_link4_icon'];
+    document.getElementById('info_link1').innerHTML = APP_GLOBAL['info_link_policy_name'];
+    document.getElementById('info_link2').innerHTML = APP_GLOBAL['info_link_disclaimer_name'];
+    document.getElementById('info_link3').innerHTML = APP_GLOBAL['info_link_terms_name'];
+    document.getElementById('info_link4').innerHTML = APP_GLOBAL['info_link_about_name'];
 
     //profile info
-    document.getElementById('profile_main_btn_cloud').innerHTML = window.global_icon_sky_cloud;
+    document.getElementById('profile_main_btn_cloud').innerHTML = common.ICONS['sky_cloud'];
     
     setEvents();
     common.zoom_info('');
@@ -345,62 +360,62 @@ function init(parameters){
         else{
             for (let i = 0; i < global_app_parameters.length; i++) {
                 if (global_app_parameters[i].parameter_name=='APP_COPYRIGHT')
-                    window.global_app_copyright =global_app_parameters[i].parameter_value;
+                    APP_GLOBAL['app_copyright'] =global_app_parameters[i].parameter_value;
                 if (global_app_parameters[i].parameter_name=='APP_EMAIL') //0
-                    window.global_app_email = global_app_parameters[i].parameter_value;
+                    APP_GLOBAL['app_email'] = global_app_parameters[i].parameter_value;
                 if (global_app_parameters[i].parameter_name=='INFO_SOCIAL_LINK1_URL')
-                    window.global_info_social_link1_url = global_app_parameters[i].parameter_value;
+                    APP_GLOBAL['info_social_link1_url'] = global_app_parameters[i].parameter_value;
                 if (global_app_parameters[i].parameter_name=='INFO_SOCIAL_LINK2_URL')
-                    window.global_info_social_link2_url = global_app_parameters[i].parameter_value;
+                    APP_GLOBAL['info_social_link2_url'] = global_app_parameters[i].parameter_value;
                 if (global_app_parameters[i].parameter_name=='INFO_SOCIAL_LINK3_URL')
-                    window.global_info_social_link3_url = global_app_parameters[i].parameter_value;
+                    APP_GLOBAL['info_social_link3_url'] = global_app_parameters[i].parameter_value;
                 if (global_app_parameters[i].parameter_name=='INFO_SOCIAL_LINK4_URL')
-                    window.global_info_social_link4_url = global_app_parameters[i].parameter_value;
+                    APP_GLOBAL['info_social_link4_url'] = global_app_parameters[i].parameter_value;
                 if (global_app_parameters[i].parameter_name=='INFO_SOCIAL_LINK1_ICON')
-                    window.global_info_social_link1_icon = global_app_parameters[i].parameter_value;
+                    APP_GLOBAL['info_social_link1_icon'] = global_app_parameters[i].parameter_value;
                 if (global_app_parameters[i].parameter_name=='INFO_SOCIAL_LINK2_ICON')
-                    window.global_info_social_link2_icon = global_app_parameters[i].parameter_value;
+                    APP_GLOBAL['info_social_link2_icon'] = global_app_parameters[i].parameter_value;
                 if (global_app_parameters[i].parameter_name=='INFO_SOCIAL_LINK3_ICON')
-                    window.global_info_social_link3_icon = global_app_parameters[i].parameter_value;
+                    APP_GLOBAL['info_social_link3_icon'] = global_app_parameters[i].parameter_value;
                 if (global_app_parameters[i].parameter_name=='INFO_SOCIAL_LINK4_ICON')
-                    window.global_info_social_link4_icon = global_app_parameters[i].parameter_value;
+                    APP_GLOBAL['info_social_link4_icon'] = global_app_parameters[i].parameter_value;
                 if (global_app_parameters[i].parameter_name=='INFO_LINK_POLICY_URL')
-                    window.global_info_link_policy_url = global_app_parameters[i].parameter_value;
+                    APP_GLOBAL['info_link_policy_url'] = global_app_parameters[i].parameter_value;
                 if (global_app_parameters[i].parameter_name=='INFO_LINK_DISCLAIMER_URL')
-                    window.global_info_link_disclaimer_url = global_app_parameters[i].parameter_value;
+                    APP_GLOBAL['info_link_disclaimer_url'] = global_app_parameters[i].parameter_value;
                 if (global_app_parameters[i].parameter_name=='INFO_LINK_TERMS_URL')
-                    window.global_info_link_terms_url = global_app_parameters[i].parameter_value;
+                    APP_GLOBAL['info_link_terms_url'] = global_app_parameters[i].parameter_value;
                 if (global_app_parameters[i].parameter_name=='INFO_LINK_ABOUT_URL')
-                    window.global_info_link_about_url = global_app_parameters[i].parameter_value;
+                    APP_GLOBAL['info_link_about_url'] = global_app_parameters[i].parameter_value;
                 if (global_app_parameters[i].parameter_name=='INFO_LINK_POLICY_NAME')
-                    window.global_info_link_policy_name = global_app_parameters[i].parameter_value;
+                    APP_GLOBAL['info_link_policy_name'] = global_app_parameters[i].parameter_value;
                 if (global_app_parameters[i].parameter_name=='INFO_LINK_DISCLAIMER_NAME')
-                    window.global_info_link_disclaimer_name = global_app_parameters[i].parameter_value;
+                    APP_GLOBAL['info_link_disclaimer_name'] = global_app_parameters[i].parameter_value;
                 if (global_app_parameters[i].parameter_name=='INFO_LINK_TERMS_NAME')
-                    window.global_info_link_terms_name = global_app_parameters[i].parameter_value;
+                    APP_GLOBAL['info_link_terms_name'] = global_app_parameters[i].parameter_value;
                 if (global_app_parameters[i].parameter_name=='INFO_LINK_ABOUT_NAME')
-                    window.global_info_link_about_name = global_app_parameters[i].parameter_value;
+                    APP_GLOBAL['info_link_about_name'] = global_app_parameters[i].parameter_value;
                 //QR
-                if (global_app_parameters[i].parameter_name=='QR_LOGO_FILE_PATH')
-                    window.global_qr_logo_file_path = global_app_parameters[i].parameter_value;
                 if (global_app_parameters[i].parameter_name=='QR_WIDTH')
-                    window.global_qr_width = parseInt(global_app_parameters[i].parameter_value);
+                    common.COMMON_GLOBAL['qr_width'] = parseInt(global_app_parameters[i].parameter_value);
                 if (global_app_parameters[i].parameter_name=='QR_HEIGHT')
-                    window.global_qr_height = parseInt(global_app_parameters[i].parameter_value);
+                    common.COMMON_GLOBAL['qr_height'] = parseInt(global_app_parameters[i].parameter_value);
                 if (global_app_parameters[i].parameter_name=='QR_COLOR_DARK')
-                    window.global_qr_color_dark = global_app_parameters[i].parameter_value;
+                    common.COMMON_GLOBAL['qr_color_dark'] = global_app_parameters[i].parameter_value;
                 if (global_app_parameters[i].parameter_name=='QR_COLOR_LIGHT')
-                    window.global_qr_color_light = global_app_parameters[i].parameter_value;
+                    common.COMMON_GLOBAL['qr_color_light'] = global_app_parameters[i].parameter_value;
+                if (global_app_parameters[i].parameter_name=='QR_LOGO_FILE_PATH')
+                    common.COMMON_GLOBAL['qr_logo_file_path'] = global_app_parameters[i].parameter_value;
                 if (global_app_parameters[i].parameter_name=='QR_LOGO_WIDTH')
-                    window.global_qr_logo_width = parseInt(global_app_parameters[i].parameter_value);
+                    common.COMMON_GLOBAL['qr_logo_width'] = parseInt(global_app_parameters[i].parameter_value);
                 if (global_app_parameters[i].parameter_name=='QR_LOGO_HEIGHT')
-                    window.global_qr_logo_height = parseInt(global_app_parameters[i].parameter_value);
+                    common.COMMON_GLOBAL['qr_logo_height'] = parseInt(global_app_parameters[i].parameter_value);
                 if (global_app_parameters[i].parameter_name=='QR_BACKGROUND_COLOR')
-                    window.global_qr_background_color = global_app_parameters[i].parameter_value;
+                    common.COMMON_GLOBAL['qr_background_color'] = global_app_parameters[i].parameter_value;
             }
             init_app().then(function(){
-                document.getElementById('apps').innerHTML = window.global_app_spinner;
-                common.common_translate_ui(window.global_user_locale, null, (err, result)=>{
+                document.getElementById('apps').innerHTML = common.APP_SPINNER;
+                common.common_translate_ui(common.COMMON_GLOBAL['user_locale'], null, (err, result)=>{
                         get_apps();
                 })
                 async function show_start(){

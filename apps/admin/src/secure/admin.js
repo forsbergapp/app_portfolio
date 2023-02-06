@@ -53,7 +53,7 @@ function show_menu(menu){
             document.getElementById('select_year_menu1').innerHTML = yearvalues;
             document.getElementById('select_year_menu1').selectedIndex = 0;
             document.getElementById('select_month_menu1').selectedIndex = new Date().getMonth();
-            if (window.global_system_admin==1)
+            if (common.COMMON_GLOBAL['system_admin']==1)
                 check_maintenance();
             else
                 show_chart(1).then(function(){
@@ -80,7 +80,7 @@ function show_menu(menu){
         case 5:{
             let url;
             let token_type = '';
-            if (window.global_system_admin==1){
+            if (common.COMMON_GLOBAL['system_admin']==1){
                 url  = `/server/config/systemadmin?config_type_no=1&config_group=SERVICE_DB&parameter=LIMIT_LIST_SEARCH`;
                 token_type = 2;
             }
@@ -92,12 +92,12 @@ function show_menu(menu){
                 if (err)
                     null;
                 else{
-                    window.global_limit = parseInt(JSON.parse(result_limit).data);
+                    APP_GLOBAL['limit'] = parseInt(JSON.parse(result_limit).data);
                     //connected
                     document.getElementById('select_year_menu5_list_connected').innerHTML = yearvalues;
                     document.getElementById('select_year_menu5_list_connected').selectedIndex = 0;
                     document.getElementById('select_month_menu5_list_connected').selectedIndex = new Date().getMonth();            
-                    if (window.global_system_admin==1){
+                    if (common.COMMON_GLOBAL['system_admin']==1){
                         //server log
                         document.getElementById('select_year_menu5').innerHTML = yearvalues;
                         document.getElementById('select_year_menu5').selectedIndex = 0;
@@ -109,7 +109,7 @@ function show_menu(menu){
                         })
                     }
                     else{
-                        window.global_page = 0;
+                        APP_GLOBAL['page'] = 0;
                         //log
                         document.getElementById('select_year_menu5_app_log').innerHTML = yearvalues;
                         document.getElementById('select_year_menu5_app_log').selectedIndex = 0;
@@ -134,8 +134,8 @@ function show_menu(menu){
         }
         //DATABASE
         case 8:{
-            if (window.global_system_admin_only==1){
-                common.show_message('EXCEPTION', null, null, window.global_icon_app_database + ' ' + window.global_icon_app_database_notstarted, window.global_app_id)
+            if (common.COMMON_GLOBAL['system_admin_only']==1){
+                common.show_message('EXCEPTION', null, null, common.ICONS['app_database'] + ' ' + common.ICONS['app_database_notstarted'], common.COMMON_GLOBAL['app_id'])
             }
             else
                 show_db_info().then(function(){
@@ -160,15 +160,15 @@ function show_user_agent(user_agent){
 
 async function get_apps() {
     let json;
-    let html=`<option value="">${window.global_icon_infinite}</option>`;
-    if (window.global_system_admin==1){
+    let html=`<option value="">${common.ICONS['infinite']}</option>`;
+    if (common.COMMON_GLOBAL['system_admin']==1){
         //system admin cant select app will show/use all
         document.getElementById('select_app_menu5').innerHTML = html;
         document.getElementById('select_app_menu5_list_connected').innerHTML = html;
         document.getElementById('select_app_broadcast').innerHTML = html;
     }
     else{
-        common.common_fetch(window.global_rest_api_db_path + window.global_rest_app + '/admin?', 'GET', 1, null, null, null, (err, result) =>{
+        common.common_fetch(common.COMMON_GLOBAL['rest_api_db_path'] + common.COMMON_GLOBAL['rest_app'] + '/admin?', 'GET', 1, null, null, null, (err, result) =>{
             if (err)
                 null;
             else{
@@ -197,7 +197,7 @@ function sendBroadcast(){
     let broadcast_message = document.getElementById('send_broadcast_message').value;
 
     if (broadcast_message==''){
-        common.show_message('INFO', null, null, `${window.global_icon_message_text}!`, window.global_app_id);
+        common.show_message('INFO', null, null, `${common.ICONS['message_text']}!`, common.COMMON_GLOBAL['app_id']);
         return null;
     }
     
@@ -214,12 +214,12 @@ function sendBroadcast(){
         
     let json_data =`{"app_id": ${app_id==''?null:app_id},
                      "client_id": ${client_id==''?null:client_id},
-                     "client_id_current": ${window.global_clientId},
+                     "client_id_current": ${common.COMMON_GLOBAL['clientId']},
                      "broadcast_type" :"${broadcast_type}", 
                      "broadcast_message":"${broadcast_message}"}`;
     let url='';
     let token_type;
-    if (window.global_system_admin==1){
+    if (common.COMMON_GLOBAL['system_admin']==1){
         url = '/service/broadcast/SystemAdmin/Send?';
         token_type = 2;
     }
@@ -232,7 +232,7 @@ function sendBroadcast(){
         if (err)
             null;
         else{
-            common.show_message('INFO', null, null, `${window.global_icon_app_send}!`, window.global_app_id);
+            common.show_message('INFO', null, null, `${common.ICONS['app_send']}!`, common.COMMON_GLOBAL['app_id']);
         }
     });
 }    
@@ -348,14 +348,14 @@ async function show_chart(chart){
         let year = document.getElementById('select_year_menu1').value;
         let month = document.getElementById('select_month_menu1').value;
         let json;
-        document.getElementById(`box${chart}_chart`).innerHTML = window.global_app_spinner;        
-        document.getElementById(`box${chart}_legend`).innerHTML = window.global_app_spinner;
+        document.getElementById(`box${chart}_chart`).innerHTML = common.APP_SPINNER;        
+        document.getElementById(`box${chart}_legend`).innerHTML = common.APP_SPINNER;
         //no meaning showing one app in a pie chart will always be full
         if (chart==1)
             app_id = '';
         else
             app_id =document.getElementById('select_app_menu1').value;
-        await common.common_fetch(window.global_rest_api_db_path + `/app_log/admin/stat/uniquevisitor?select_app_id=${app_id}&statchoice=${chart}&year=${year}&month=${month}`,
+        await common.common_fetch(common.COMMON_GLOBAL['rest_api_db_path'] + `/app_log/admin/stat/uniquevisitor?select_app_id=${app_id}&statchoice=${chart}&year=${year}&month=${month}`,
                  'GET', 1, null, null, null, (err, result) =>{
             if (err){
                 document.getElementById(`box${chart}_chart`).innerHTML = '';
@@ -458,9 +458,9 @@ async function count_users(){
     if (admin_token_has_value()){
         let json;
         let old_html = document.getElementById('list_user_stat').innerHTML;
-        document.getElementById('list_user_stat').innerHTML = window.global_app_spinner;
+        document.getElementById('list_user_stat').innerHTML = common.APP_SPINNER;
 
-        await common.common_fetch(window.global_rest_api_db_path + window.global_rest_user_account + '/admin/count?',
+        await common.common_fetch(common.COMMON_GLOBAL['rest_api_db_path'] + common.COMMON_GLOBAL['rest_user_account'] + '/admin/count?',
                            'GET', 1, null, null, null, (err, result) =>{
             if (err)
                 document.getElementById('list_user_stat').innerHTML = old_html;
@@ -473,7 +473,7 @@ async function count_users(){
                                         <div>${common.get_null_or_value(json.data[i].identity_provider_id)}</div>
                                     </div>
                                     <div class='list_user_stat_col'>
-                                        <div>${json.data[i].provider_name==null?window.global_icon_app_home:json.data[i].provider_name}</div>
+                                        <div>${json.data[i].provider_name==null?common.ICONS['app_home']:json.data[i].provider_name}</div>
                                     </div>
                                     <div class='list_user_stat_col'>
                                         <div>${json.data[i].count_users}</div>
@@ -489,7 +489,7 @@ async function count_users(){
                                 <div></div>
                             </div>
                             <div class='list_user_stat_col'>
-                                <div>${window.global_icon_app_logoff}</div>
+                                <div>${common.ICONS['app_logoff']}</div>
                             </div>
                             <div class='list_user_stat_col'>
                                 <div></div>
@@ -521,13 +521,13 @@ async function count_users(){
 /*----------------------- */
 function show_users(sort=8, order_by='ASC', focus=true){
     let json;
-    document.getElementById('list_user_account').innerHTML = window.global_app_spinner;
+    document.getElementById('list_user_account').innerHTML = common.APP_SPINNER;
     
     let search_user='*';
     //show all records if no search criteria
     if (document.getElementById('list_user_account_search_input').value!='')
         search_user = document.getElementById('list_user_account_search_input').value;
-    common.common_fetch(window.global_rest_api_db_path + window.global_rest_user_account + `admin/${search_user}?sort=${sort}&order_by=${order_by}`,
+    common.common_fetch(common.COMMON_GLOBAL['rest_api_db_path'] + common.COMMON_GLOBAL['rest_user_account'] + `admin/${search_user}?sort=${sort}&order_by=${order_by}`,
                        'GET', 1, null, null, null, (err, result) =>{
         if (err)
             document.getElementById('list_user_account').innerHTML = '';
@@ -535,83 +535,83 @@ function show_users(sort=8, order_by='ASC', focus=true){
             json = JSON.parse(result);
             let html = `<div id='list_user_account_row_title' class='list_user_account_row'>
                             <div id='list_user_account_col_title1' class='list_user_account_col list_title'>
-                                <div>${window.global_icon_user_avatar}</div>
+                                <div>${common.ICONS['user_avatar']}</div>
                             </div>
                             <div id='list_user_account_col_title2' class='list_user_account_col list_sort_click list_title'>
-                                <div>${window.global_icon_provider_id}</div>
+                                <div>${common.ICONS['provider_id']}</div>
                             </div>
                             <div id='list_user_account_col_title3' class='list_user_account_col list_sort_click list_title'>
-                                <div>${window.global_icon_app_role}</div>
+                                <div>${common.ICONS['app_role']}</div>
                             </div>
                             <div id='list_user_account_col_title4' class='list_user_account_col list_sort_click list_title'>
-                                <div>${window.global_icon_app_role} ${window.global_icon_misc_image}</div>
+                                <div>${common.ICONS['app_role']} ${common.ICONS['misc_image']}</div>
                             </div>
                             <div id='list_user_account_col_title5' class='list_user_account_col list_sort_click list_title'>
-                                <div>${window.global_icon_app_inactive} ${window.global_icon_app_active}</div>
+                                <div>${common.ICONS['app_inactive']} ${common.ICONS['app_active']}</div>
                             </div>
                             <div id='list_user_account_col_title6' class='list_user_account_col list_sort_click list_title'>
                                 <div>LEVEL</div>
                             </div>
                             <div id='list_user_account_col_title7' class='list_user_account_col list_sort_click list_title'>
-                                <div>${window.global_icon_app_private}</div>
+                                <div>${common.ICONS['app_private']}</div>
                             </div>
                             <div id='list_user_account_col_title8' class='list_user_account_col list_sort_click list_title'>
-                                <div>${window.global_icon_user} ${window.global_icon_username}</div>
+                                <div>${common.ICONS['user']} ${common.ICONS['username']}</div>
                             </div>
                             <div id='list_user_account_col_title9' class='list_user_account_col list_sort_click list_title'>
-                                <div>${window.global_icon_user_bio}</div>
+                                <div>${common.ICONS['user_bio']}</div>
                             </div>
                             <div id='list_user_account_col_title10' class='list_user_account_col list_sort_click list_title'>
-                                <div>${window.global_icon_app_email}</div>
+                                <div>${common.ICONS['app_email']}</div>
                             </div>
                             <div id='list_user_account_col_title11' class='list_user_account_col list_sort_click list_title'>
-                                <div>${window.global_icon_app_email} ${window.global_icon_app_forgot}</div>
+                                <div>${common.ICONS['app_email']} ${common.ICONS['app_forgot']}</div>
                             </div>
                             <div id='list_user_account_col_title12' class='list_user_account_col list_sort_click list_title'>
-                                <div>${window.global_icon_user_password}</div>
+                                <div>${common.ICONS['user_password']}</div>
                             </div>
                             <div id='list_user_account_col_title13' class='list_user_account_col list_sort_click list_title'>
-                                <div>${window.global_icon_user_password} ${window.global_icon_app_info}</div>
+                                <div>${common.ICONS['user_password']} ${common.ICONS['app_info']}</div>
                             </div>
                             <div id='list_user_account_col_title14' class='list_user_account_col list_sort_click list_title'>
-                                <div>${window.global_icon_app_verification_code}</div>
+                                <div>${common.ICONS['app_verification_code']}</div>
                             </div>
                             <div id='list_user_account_col_title15' class='list_user_account_col list_sort_click list_title'>
-                                <div>${window.global_icon_provider_id}</div>
+                                <div>${common.ICONS['provider_id']}</div>
                             </div>
                             <div id='list_user_account_col_title16' class='list_user_account_col list_sort_click list_title'>
-                                <div>${window.global_icon_provider}</div>
+                                <div>${common.ICONS['provider']}</div>
                             </div>
                             <div id='list_user_account_col_title17' class='list_user_account_col list_sort_click list_title'>
-                                <div>${window.global_icon_provider_id} ${window.global_icon_user} ID</div>
+                                <div>${common.ICONS['provider_id']} ${common.ICONS['user']} ID</div>
                             </div>
                             <div id='list_user_account_col_title18' class='list_user_account_col list_sort_click list_title'>
-                                <div>${window.global_icon_provider_id} ${window.global_icon_user} ${window.global_icon_username} 1</div>
+                                <div>${common.ICONS['provider_id']} ${common.ICONS['user']} ${common.ICONS['username']} 1</div>
                             </div>
                             <div id='list_user_account_col_title19' class='list_user_account_col list_sort_click list_title'>
-                                <div>${window.global_icon_provider_id} ${window.global_icon_user} ${window.global_icon_username} 2</div>
+                                <div>${common.ICONS['provider_id']} ${common.ICONS['user']} ${common.ICONS['username']} 2</div>
                             </div>
                             <div id='list_user_account_col_title20' class='list_user_account_col list_title'>
-                                <div>${window.global_icon_provider_id} ${window.global_icon_user} ${window.global_icon_user_avatar}</div>
+                                <div>${common.ICONS['provider_id']} ${common.ICONS['user']} ${common.ICONS['user_avatar']}</div>
                             </div>
                             <div id='list_user_account_col_title21' class='list_user_account_col list_sort_click list_title'>
-                                <div>${window.global_icon_provider_id} ${window.global_icon_user} ${window.global_icon_user_avatar} URL</div>
+                                <div>${common.ICONS['provider_id']} ${common.ICONS['user']} ${common.ICONS['user_avatar']} URL</div>
                             </div>
                             <div id='list_user_account_col_title22' class='list_user_account_col list_sort_click list_title'>
-                                <div>${window.global_icon_provider_id} ${window.global_icon_user} ${window.global_icon_app_email}</div>
+                                <div>${common.ICONS['provider_id']} ${common.ICONS['user']} ${common.ICONS['app_email']}</div>
                             </div>
                             <div id='list_user_account_col_title23' class='list_user_account_col list_sort_click list_title'>
-                                <div>${window.global_icon_user_account_created}</div>
+                                <div>${common.ICONS['user_account_created']}</div>
                             </div>
                             <div id='list_user_account_col_title24' class='list_apps_col list_sort_click list_title'>
-                                <div>${window.global_icon_user_account_modified}</div>
+                                <div>${common.ICONS['user_account_modified']}</div>
                             </div>
                         </div>`;
             let input_readonly = '';
             let lov_div = '';
             let lov_class = '';
             //superadmin can edit
-            if (window.global_user_app_role_id==0){
+            if (common.COMMON_GLOBAL['user_app_role_id']==0){
                 lov_div = `<div class='common_lov_button list_lov_click'></div>`;
                 lov_class = 'input_lov';
             }
@@ -619,7 +619,7 @@ function show_users(sort=8, order_by='ASC', focus=true){
                 input_readonly = `readonly='true'`;
             for (let i = 0; i < json.data.length; i++) {
                 let list_user_account_current_user_row='';
-                if (json.data[i].id==window.global_user_account_id)
+                if (json.data[i].id==common.COMMON_GLOBAL['user_account_id'])
                     list_user_account_current_user_row = 'list_current_user_row';
                 else
                     list_user_account_current_user_row ='';
@@ -706,9 +706,9 @@ function show_users(sort=8, order_by='ASC', focus=true){
             }
             document.getElementById('list_user_account').innerHTML = html;
             document.getElementById('list_user_account_col_title' + sort).classList.add(order_by);
-            if (window.global_user_app_role_id==0){
+            if (common.COMMON_GLOBAL['user_app_role_id']==0){
                 //add lov icon for super admin
-                document.querySelectorAll(`#list_user_account .common_lov_button`).forEach(e => e.innerHTML = window.global_icon_app_lov);
+                document.querySelectorAll(`#list_user_account .common_lov_button`).forEach(e => e.innerHTML = common.ICONS['app_lov']);
             }
             set_list_eventlisteners('user_account', 'sort', true);
             list_events('list_user_account', 'list_user_account_row', ' .list_edit');
@@ -735,9 +735,9 @@ function show_users(sort=8, order_by='ASC', focus=true){
 }
 async function show_user_account_logon(user_account_id){
     let json;
-    document.getElementById('list_user_account_logon').innerHTML = window.global_app_spinner;
+    document.getElementById('list_user_account_logon').innerHTML = common.APP_SPINNER;
 
-    common.common_fetch(window.global_rest_api_db_path + window.global_rest_user_account_logon + `admin/${parseInt(user_account_id)}/''?`,
+    common.common_fetch(common.COMMON_GLOBAL['rest_api_db_path'] + common.COMMON_GLOBAL['rest_user_account_logon'] + `admin/${parseInt(user_account_id)}/''?`,
                  'GET', 1, null, null, null, (err, result) =>{
         if (err)
             document.getElementById('list_user_account_logon').innerHTML = '';
@@ -813,9 +813,9 @@ async function show_user_account_logon(user_account_id){
 /*----------------------- */
 async function show_apps(){
     let json;
-    document.getElementById('list_apps').innerHTML = window.global_app_spinner;
+    document.getElementById('list_apps').innerHTML = common.APP_SPINNER;
 
-    await common.common_fetch(window.global_rest_api_db_path + window.global_rest_app + '/admin?',
+    await common.common_fetch(common.COMMON_GLOBAL['rest_api_db_path'] + common.COMMON_GLOBAL['rest_app'] + '/admin?',
                        'GET', 1, null, null, null, (err, result) =>{
         if (err)
             document.getElementById('list_apps').innerHTML = '';
@@ -873,7 +873,7 @@ async function show_apps(){
             }
             document.getElementById('list_apps').innerHTML = html;
             //add lov icon
-            document.querySelectorAll(`#list_apps .common_lov_button`).forEach(e => e.innerHTML = window.global_icon_app_lov);
+            document.querySelectorAll(`#list_apps .common_lov_button`).forEach(e => e.innerHTML = common.ICONS['app_lov']);
             list_events('list_apps', 'list_apps_row', ' .list_edit');
             //disable enabled checkbox for app 0 common
             document.getElementById('list_apps_row_0').children[4].children[0].disabled = true;
@@ -885,9 +885,9 @@ async function show_apps(){
 }
 function show_app_parameter(app_id){
     let json;
-    document.getElementById('list_app_parameter').innerHTML = window.global_app_spinner;
+    document.getElementById('list_app_parameter').innerHTML = common.APP_SPINNER;
 
-    common.common_fetch(window.global_rest_api_db_path + window.global_rest_app_parameter + `admin/all/${parseInt(app_id)}?`,
+    common.common_fetch(common.COMMON_GLOBAL['rest_api_db_path'] + common.COMMON_GLOBAL['rest_app_parameter'] + `admin/all/${parseInt(app_id)}?`,
                  'GET', 1, null, null, null, (err, result) =>{
         if (err)
             document.getElementById('list_app_parameter').innerHTML = '';
@@ -939,7 +939,7 @@ function show_app_parameter(app_id){
             }
             document.getElementById('list_app_parameter').innerHTML = html;
             //add lov icon
-            document.querySelectorAll(`#list_app_parameter .common_lov_button`).forEach(e => e.innerHTML = window.global_icon_app_lov);
+            document.querySelectorAll(`#list_app_parameter .common_lov_button`).forEach(e => e.innerHTML = common.ICONS['app_lov']);
             list_events('list_app_parameter', 'list_app_parameter_row', '.list_edit');
         }
     })
@@ -1041,7 +1041,7 @@ async function button_save(item){
                                   "config_json": ${JSON.stringify(document.getElementById('list_config_edit').innerHTML)}}`;
                 json_data = JSON.stringify(JSON.parse(json_data), undefined, 2);
                 let old_button = document.getElementById(item).innerHTML;
-                document.getElementById(item).innerHTML = window.global_app_spinner;
+                document.getElementById(item).innerHTML = common.APP_SPINNER;
                 common.common_fetch('/server/config/systemadmin?',
                     'PUT', 2, json_data, null, null,(err, result) =>{
                     document.getElementById(item).innerHTML = old_button;
@@ -1057,7 +1057,7 @@ async function update_record(table,
         let rest_url;
         let json_data;
         let old_button = document.getElementById(button).innerHTML;
-        document.getElementById(button).innerHTML = window.global_app_spinner;
+        document.getElementById(button).innerHTML = common.APP_SPINNER;
         switch (table){
             case 'user_account':{
                 json_data = `{"app_role_id": "${parameters.app_role_id}",
@@ -1071,13 +1071,13 @@ async function update_record(table,
                               "password":"${parameters.password}",
                               "password_reminder":"${parameters.password_reminder}",
                               "verification_code":"${parameters.verification_code}"}`;
-                rest_url = `${window.global_rest_user_account}admin/${parameters.id}?`;
+                rest_url = `${common.COMMON_GLOBAL['rest_user_account']}admin/${parameters.id}?`;
                 break;
             }
             case 'app':{
-                if (id==window.global_common_app_id){
+                if (id==common.COMMON_GLOBAL['common_app_id']){
                     if (row_element.children[4].children[0].checked == false){
-                        //app window.global_common_app_id should always be enabled
+                        //app common.COMMON_GLOBAL['common_app_id'] should always be enabled
                         row_element.children[4].children[0].checked = true;
                         enabled=true;
                     }
@@ -1086,7 +1086,7 @@ async function update_record(table,
                               "url": "${parameters.url}",
                               "logo": "${parameters.logo}",
                               "enabled": "${parameters.enabled==true?1:0}"}`;
-                rest_url = `${window.global_rest_app}/admin/${parameters.id}?`;
+                rest_url = `${common.COMMON_GLOBAL['rest_app']}/admin/${parameters.id}?`;
                 break;
             }
             case 'app_parameter':{
@@ -1095,11 +1095,11 @@ async function update_record(table,
                               "parameter_type_id":"${parameters.parameter_type_id}",
                               "parameter_value":"${parameters.parameter_value}",
                               "parameter_comment":"${parameters.parameter_comment}"}`;
-                rest_url = `${window.global_rest_app_parameter}admin?`;
+                rest_url = `${common.COMMON_GLOBAL['rest_app_parameter']}admin?`;
                 break;
             }
         }
-        await common.common_fetch(window.global_rest_api_db_path + rest_url,
+        await common.common_fetch(common.COMMON_GLOBAL['rest_api_db_path'] + rest_url,
                      'PUT', 1, json_data, null, null,(err, result) =>{
             document.getElementById(button).innerHTML = old_button;
             if (err)
@@ -1149,7 +1149,7 @@ function list_events(list_item, item_row, item_edit){
                 if (event.target.value=='')
                     event.target.parentNode.parentNode.children[6].children[0].innerHTML ='';
                 else{
-                    common.common_fetch(`${window.global_rest_api_db_path}${window.global_rest_app_category}admin?id=${event.target.value}`,
+                    common.common_fetch(`${common.COMMON_GLOBAL['rest_api_db_path']}${common.COMMON_GLOBAL['rest_app_category']}admin?id=${event.target.value}`,
                                 'GET', 1, null, null, null, (err, result) =>{
                         row_action(err, result, event.target, event, 6, '');
                     });
@@ -1159,7 +1159,7 @@ function list_events(list_item, item_row, item_edit){
                 if (event.target.value=='')
                     event.target.value = event.target.defaultValue;
                 else{
-                    common.common_fetch(`${window.global_rest_api_db_path}${window.global_rest_parameter_type}admin?id=${event.target.value}`,
+                    common.common_fetch(`${common.COMMON_GLOBAL['rest_api_db_path']}${common.COMMON_GLOBAL['rest_parameter_type']}admin?id=${event.target.value}`,
                                 'GET', 1, null, null, null, (err, result) =>{
                         row_action(err, result, event.target, event, 2);
                     });
@@ -1173,7 +1173,7 @@ function list_events(list_item, item_row, item_edit){
                     app_role_id_lookup=2;
                 else
                     app_role_id_lookup=event.target.value;
-                common.common_fetch(`${window.global_rest_api_db_path}${window.global_rest_app_role}admin?id=${app_role_id_lookup}`,
+                common.common_fetch(`${common.COMMON_GLOBAL['rest_api_db_path']}${common.COMMON_GLOBAL['rest_app_role']}admin?id=${app_role_id_lookup}`,
                             'GET', 1, null, null, null, (err, result) =>{
                     row_action(err, result, event.target, event, 3);
                     //if wrong value then field is empty again, fetch default value for empty app_role
@@ -1187,7 +1187,7 @@ function list_events(list_item, item_row, item_edit){
     document.getElementById(list_item).addEventListener('keydown', function (event){
         if (event.target.classList.contains('list_edit')){
             if (event.code=='ArrowUp') {
-                window.global_previous_row = event.target.parentNode.parentNode;
+                APP_GLOBAL['previous_row'] = event.target.parentNode.parentNode;
                 event.preventDefault();
                 let index = parseInt(event.target.parentNode.parentNode.id.substr(item_row.length+1));
                 //focus on first list_edit item in the row
@@ -1195,7 +1195,7 @@ function list_events(list_item, item_row, item_edit){
                     document.querySelectorAll(`#${item_row}_${index - 1} ${item_edit}`)[0].focus();
             }
             if (event.code=='ArrowDown') {
-                window.global_previous_row = event.target.parentNode.parentNode;
+                APP_GLOBAL['previous_row'] = event.target.parentNode.parentNode;
                 event.preventDefault();
                 let index = parseInt(event.target.parentNode.parentNode.id.substr(item_row.length+1)) +1;
                 //focus on first list_edit item in the row
@@ -1210,8 +1210,8 @@ function list_events(list_item, item_row, item_edit){
         //event on master to automatically show detail records
         document.querySelectorAll(`#${list_item} ${item_edit}`).forEach(e => 
             e.addEventListener('focus', function(event) {
-                if (window.global_previous_row != event.target.parentNode.parentNode){
-                    window.global_previous_row = event.target.parentNode.parentNode;
+                if (APP_GLOBAL['previous_row'] != event.target.parentNode.parentNode){
+                    APP_GLOBAL['previous_row'] = event.target.parentNode.parentNode;
                     show_app_parameter(e.parentNode.parentNode.children[0].children[0].innerHTML);
                 }
             }
@@ -1221,8 +1221,8 @@ function list_events(list_item, item_row, item_edit){
         //event on master to automatically show detail records
         document.querySelectorAll(`#${list_item} ${item_edit}`).forEach(e => 
             e.addEventListener('focus', function(event) {
-                if (window.global_previous_row != event.target.parentNode.parentNode){
-                    window.global_previous_row = event.target.parentNode.parentNode;
+                if (APP_GLOBAL['previous_row'] != event.target.parentNode.parentNode){
+                    APP_GLOBAL['previous_row'] = event.target.parentNode.parentNode;
                     show_user_account_logon(e.parentNode.parentNode.children[1].children[0].innerHTML);
                 }
             }
@@ -1278,16 +1278,16 @@ function fix_pagination_buttons(){
         //fix rtl isse with images, items created after login
         if (document.getElementById('user_direction_select').value=='ltr'||
             document.getElementById('user_direction_select').value==''){
-            document.getElementById('list_app_log_first').innerHTML = window.global_icon_app_first;
-            document.getElementById('list_app_log_previous').innerHTML = window.global_icon_app_previous;
-            document.getElementById('list_app_log_next').innerHTML = window.global_icon_app_next;
-            document.getElementById('list_app_log_last').innerHTML = window.global_icon_app_last;
+            document.getElementById('list_app_log_first').innerHTML = common.ICONS['app_first'];
+            document.getElementById('list_app_log_previous').innerHTML = common.ICONS['app_previous'];
+            document.getElementById('list_app_log_next').innerHTML = common.ICONS['app_next'];
+            document.getElementById('list_app_log_last').innerHTML = common.ICONS['app_last'];
         }
         else{
-            document.getElementById('list_app_log_first').innerHTML = window.global_icon_app_last;
-            document.getElementById('list_app_log_previous').innerHTML = window.global_icon_app_next;
-            document.getElementById('list_app_log_next').innerHTML = window.global_icon_app_previous;
-            document.getElementById('list_app_log_last').innerHTML = window.global_icon_app_first;
+            document.getElementById('list_app_log_first').innerHTML = common.ICONS['app_last'];
+            document.getElementById('list_app_log_previous').innerHTML = common.ICONS['app_next'];
+            document.getElementById('list_app_log_next').innerHTML = common.ICONS['app_previous'];
+            document.getElementById('list_app_log_last').innerHTML = common.ICONS['app_first'];
         }
     }
 }
@@ -1324,7 +1324,7 @@ function nav_click(item){
             document.getElementById('list_server_log_form').style.display='none';
             document.getElementById('list_pm2_log_form').style.display='none';
             document.getElementById('list_monitor_nav_2').classList= 'list_nav_selected_tab';
-            window.global_page = 0;
+            APP_GLOBAL['page'] = 0;
             show_app_log();
             break;
         }
@@ -1383,7 +1383,7 @@ async function show_list(list_div, list_div_col_title, url_parameters, sort, ord
         //set spinner
         switch (list_div){
             case 'list_connected':{
-                if (window.global_system_admin==1){
+                if (common.COMMON_GLOBAL['system_admin']==1){
                     url = `/service/broadcast/SystemAdmin/connected?${url_parameters}`;
                     token_type = 2;
                 }
@@ -1391,27 +1391,27 @@ async function show_list(list_div, list_div_col_title, url_parameters, sort, ord
                     url = `/service/broadcast/Admin/connected?${url_parameters}`;
                     token_type = 1;
                 }
-                document.getElementById(list_div).innerHTML = window.global_app_spinner;
+                document.getElementById(list_div).innerHTML = common.APP_SPINNER;
                 break;
             }
             case 'list_app_log':{
-                url = window.global_rest_api_db_path + `/app_log/admin?${url_parameters}`;
+                url = common.COMMON_GLOBAL['rest_api_db_path'] + `/app_log/admin?${url_parameters}`;
                 token_type = 1;
-                document.getElementById(list_div).innerHTML = window.global_app_spinner;
+                document.getElementById(list_div).innerHTML = common.APP_SPINNER;
                 break;
             }
             case 'list_server_log':{
-                url = window.global_service_log + `/logs?${url_parameters}`;
+                url = common.COMMON_GLOBAL['service_log'] + `/logs?${url_parameters}`;
                 token_type = 2;
-                document.getElementById(list_div).innerHTML = window.global_app_spinner;
+                document.getElementById(list_div).innerHTML = common.APP_SPINNER;
                 break;
             }
             case 'list_pm2_log':{
-                url = window.global_service_log + `/pm2logs?`;
+                url = common.COMMON_GLOBAL['service_log'] + `/pm2logs?`;
                 token_type = 2;
-                document.getElementById(list_div + '_out').innerHTML = window.global_app_spinner;
-                document.getElementById(list_div + '_err').innerHTML = window.global_app_spinner;
-                document.getElementById(list_div + '_process_event').innerHTML = window.global_app_spinner;
+                document.getElementById(list_div + '_out').innerHTML = common.APP_SPINNER;
+                document.getElementById(list_div + '_err').innerHTML = common.APP_SPINNER;
+                document.getElementById(list_div + '_process_event').innerHTML = common.APP_SPINNER;
                 //sort not implemented for pm2 with different content in one json file
                 break;
             }
@@ -1483,7 +1483,7 @@ async function show_list(list_div, list_div_col_title, url_parameters, sort, ord
                         break;
                     }
                     case 'list_app_log':{
-                        window.global_page_last = Math.floor(json.data[0].total_rows/window.global_limit) * window.global_limit;
+                        APP_GLOBAL['page_last'] = Math.floor(json.data[0].total_rows/APP_GLOBAL['limit']) * APP_GLOBAL['limit'];
                         html = `<div id='list_app_log_row_title' class='list_app_log_row'>
                                     <div id='list_app_log_col_title1' class='list_app_log_col list_sort_click list_title'>
                                         <div>ID</div>
@@ -1641,7 +1641,7 @@ async function show_list(list_div, list_div_col_title, url_parameters, sort, ord
                         switch (list_div){
                             case 'list_connected':{    
                                 let list_connected_current_user_row='';
-                                if (json.data[i].id==window.global_clientId)
+                                if (json.data[i].id==common.COMMON_GLOBAL['clientId'])
                                     list_connected_current_user_row = 'list_current_user_row';
                                 else
                                     list_connected_current_user_row ='';
@@ -1649,7 +1649,7 @@ async function show_list(list_div, list_div_col_title, url_parameters, sort, ord
                                 let app_role_icon = json.data[i].app_role_icon;
                                 if (json.data[i].system_admin==1){
                                     app_role_class = 'app_role_system_admin';
-                                    app_role_icon = window.global_icon_app_system_admin;
+                                    app_role_icon = common.ICONS['app_system_admin'];
                                 }
                                 else
                                     switch (json.data[i].app_role_id){
@@ -1697,7 +1697,7 @@ async function show_list(list_div, list_div_col_title, url_parameters, sort, ord
                                                 <div>${show_user_agent(json.data[i].user_agent)}</div>
                                             </div>
                                             <div class='list_connected_col list_chat_click chat_click'>
-                                                <div>${window.global_icon_app_chat}</div>
+                                                <div>${common.ICONS['app_chat']}</div>
                                             </div>
                                         </div>`;
                                 break;
@@ -1922,12 +1922,12 @@ async function show_connected(sort=1, order_by='desc'){
     let month = document.getElementById('select_month_menu5_list_connected').value;
     show_list('list_connected', 
               'list_connected_col_title', 
-              `select_app_id=${app_id}&year=${year}&month=${month}&sort=${sort}&order_by=${order_by}&limit=${window.global_limit}`, 
+              `select_app_id=${app_id}&year=${year}&month=${month}&sort=${sort}&order_by=${order_by}&limit=${APP_GLOBAL['limit']}`, 
               sort,
               order_by);
 }    
 
-async function show_app_log(sort=1, order_by='desc', offset=0, limit=window.global_limit){
+async function show_app_log(sort=1, order_by='desc', offset=0, limit=APP_GLOBAL['limit']){
     let app_id = document.getElementById('select_app_menu5_app_log').options[document.getElementById('select_app_menu5_app_log').selectedIndex].value;
     let year = document.getElementById('select_year_menu5_app_log').value;
     let month = document.getElementById('select_month_menu5_app_log').value;
@@ -2015,30 +2015,30 @@ function page_navigation(item){
         sort = 8;
     switch (item.id){
         case 'list_app_log_first':{
-            window.global_page = 0;
-            show_app_log(sort, order_by, 0,window.global_limit);
+            APP_GLOBAL['page'] = 0;
+            show_app_log(sort, order_by, 0,APP_GLOBAL['limit']);
             break;
         }
         case 'list_app_log_previous':{
-            window.global_page = window.global_page - window.global_limit;
-            if (window.global_page - window.global_limit < 0)
-                window.global_page = 0;
+            APP_GLOBAL['page'] = APP_GLOBAL['page'] - APP_GLOBAL['limit'];
+            if (APP_GLOBAL['page'] - APP_GLOBAL['limit'] < 0)
+                APP_GLOBAL['page'] = 0;
             else
-                window.global_page = window.global_page - window.global_limit;
-            show_app_log(sort, order_by, window.global_page, window.global_limit);
+                APP_GLOBAL['page'] = APP_GLOBAL['page'] - APP_GLOBAL['limit'];
+            show_app_log(sort, order_by, APP_GLOBAL['page'], APP_GLOBAL['limit']);
             break;
         }
         case 'list_app_log_next':{
-            if (window.global_page + window.global_limit > window.global_page_last)
-                window.global_page = window.global_page_last;
+            if (APP_GLOBAL['page'] + APP_GLOBAL['limit'] > APP_GLOBAL['page_last'])
+                APP_GLOBAL['page'] = APP_GLOBAL['page_last'];
             else
-                window.global_page = window.global_page + window.global_limit;
-            show_app_log(sort, order_by, window.global_page, window.global_limit);
+                APP_GLOBAL['page'] = APP_GLOBAL['page'] + APP_GLOBAL['limit'];
+            show_app_log(sort, order_by, APP_GLOBAL['page'], APP_GLOBAL['limit']);
             break;
         }
         case 'list_app_log_last':{
-            window.global_page = window.global_page_last;
-            show_app_log(sort, order_by, window.global_page, window.global_limit);
+            APP_GLOBAL['page'] = APP_GLOBAL['page_last'];
+            show_app_log(sort, order_by, APP_GLOBAL['page'], APP_GLOBAL['limit']);
             break;
         }
     }
@@ -2047,7 +2047,7 @@ function list_item_click(item){
     let url;
     let tokentype;
     if (item.className.indexOf('gps_click')>0){
-        if (window.global_system_admin==1){
+        if (common.COMMON_GLOBAL['system_admin']==1){
             tokentype = 2;
         }
         else
@@ -2058,12 +2058,12 @@ function list_item_click(item){
             //if localhost show default position
             if (item.children[0].innerHTML != '::1')
                 ip_filter = `&ip=${item.children[0].innerHTML}`;
-            if (window.global_system_admin==1){
-                url = window.global_service_geolocation + window.global_service_geolocation_gps_ip + 
+            if (common.COMMON_GLOBAL['system_admin']==1){
+                url = common.COMMON_GLOBAL['service_geolocation'] + common.COMMON_GLOBAL['service_geolocation_gps_ip'] + 
                       `/systemadmin?app_user_id=${ip_filter}`;
             }
             else
-                url = window.global_service_geolocation + window.global_service_geolocation_gps_ip + 
+                url = common.COMMON_GLOBAL['service_geolocation'] + common.COMMON_GLOBAL['service_geolocation_gps_ip'] + 
                       `/admin?app_user_id=${ip_filter}`;
             common.common_fetch(url, 'GET', tokentype, null, null, null, (err, result) =>{
                     if (err)
@@ -2072,13 +2072,13 @@ function list_item_click(item){
                         let json = JSON.parse(result);
                         common.map_update(json.geoplugin_longitude,
                                    json.geoplugin_latitude,
-                                   window.global_gps_map_zoom,
+                                   APP_GLOBAL['gps_map_zoom'],
                                    json.geoplugin_city + ', ' +
                                    json.geoplugin_regionName + ', ' +
                                    json.geoplugin_countryName,
                                    null,
-                                   window.global_gps_map_marker_div_gps,
-                                   window.global_service_map_jumpto);
+                                   APP_GLOBAL['gps_map_marker_div_gps'],
+                                   common.COMMON_GLOBAL['service_map_jumpto']);
                     }
             })
         }
@@ -2094,14 +2094,14 @@ function list_item_click(item){
                     break;
                 }       
             }
-            if (window.global_system_admin==1){
-                url = window.global_service_geolocation + window.global_service_geolocation_gps_place + 
+            if (common.COMMON_GLOBAL['system_admin']==1){
+                url = common.COMMON_GLOBAL['service_geolocation'] + common.COMMON_GLOBAL['service_geolocation_gps_place'] + 
                       '/systemadmin?app_user_id=' +
                       '&latitude=' + lat +
                       '&longitude=' + long;
             }
             else
-                url = window.global_service_geolocation + window.global_service_geolocation_gps_place + 
+                url = common.COMMON_GLOBAL['service_geolocation'] + common.COMMON_GLOBAL['service_geolocation_gps_place'] + 
                         '/admin?app_user_id=' +
                         '&latitude=' + lat +
                         '&longitude=' + long;
@@ -2112,13 +2112,13 @@ function list_item_click(item){
                         let json = JSON.parse(result);
                         common.map_update(long,
                                    lat,
-                                   window.global_gps_map_zoom,
+                                   APP_GLOBAL['gps_map_zoom'],
                                    json.geoplugin_place + ', ' + 
                                    json.geoplugin_region + ', ' + 
                                    json.geoplugin_countryCode,
                                    null,
-                                   window.global_gps_map_marker_div_gps,
-                                   window.global_service_map_jumpto);
+                                   APP_GLOBAL['gps_map_marker_div_gps'],
+                                   common.COMMON_GLOBAL['service_map_jumpto']);
                     }
             })
         }
@@ -2131,17 +2131,17 @@ function list_item_click(item){
 }
 async function get_server_log_parameters(){
     let json;
-    await common.common_fetch(window.global_service_log + '/parameters?',
+    await common.common_fetch(common.COMMON_GLOBAL['service_log'] + '/parameters?',
                        'GET', 2, null, null, null, (err, result) =>{
         if (err)
             null;
         else{
             json = JSON.parse(result);
-            window.global_service_log_scope_server = json.data.SERVICE_LOG_SCOPE_SERVER;
-            window.global_service_log_scope_service = json.data.SERVICE_LOG_SCOPE_SERVICE;
-            window.global_service_log_scope_db = json.data.SERVICE_LOG_SCOPE_DB;
-            window.global_service_log_scope_router = json.data.SERVICE_LOG_SCOPE_ROUTER;
-            window.global_service_log_scope_controller = json.data.SERVICE_LOG_SCOPE_CONTROLLER;
+            APP_GLOBAL['service_log_scope_server'] = json.data.SERVICE_LOG_SCOPE_SERVER;
+            APP_GLOBAL['service_log_scope_service'] = json.data.SERVICE_LOG_SCOPE_SERVICE;
+            APP_GLOBAL['service_log_scope_db'] = json.data.SERVICE_LOG_SCOPE_DB;
+            APP_GLOBAL['service_log_scope_router'] = json.data.SERVICE_LOG_SCOPE_ROUTER;
+            APP_GLOBAL['service_log_scope_controller'] = json.data.SERVICE_LOG_SCOPE_CONTROLLER;
 
             document.getElementById('menu5_row_parameters_col1_1').style.display = 'none';
             document.getElementById('menu5_row_parameters_col1_0').style.display = 'none';
@@ -2175,26 +2175,26 @@ async function get_server_log_parameters(){
             else
                 document.getElementById('menu5_row_parameters_col5_0').style.display = 'inline-block';
 
-            window.global_service_log_level_verbose = json.data.SERVICE_LOG_LEVEL_VERBOSE;
-            window.global_service_log_level_error = json.data.SERVICE_LOG_LEVEL_ERROR;
-            window.global_service_log_level_info = json.data.SERVICE_LOG_LEVEL_INFO;
+            APP_GLOBAL['service_log_level_verbose'] = json.data.SERVICE_LOG_LEVEL_VERBOSE;
+            APP_GLOBAL['service_log_level_error'] = json.data.SERVICE_LOG_LEVEL_ERROR;
+            APP_GLOBAL['service_log_level_info'] = json.data.SERVICE_LOG_LEVEL_INFO;
 
-            window.global_service_log_file_interval = json.data.SERVICE_LOG_FILE_INTERVAL;
+            APP_GLOBAL['service_log_file_interval'] = json.data.SERVICE_LOG_FILE_INTERVAL;
 
             let html = '';
-            html +=`<option value=0 log_scope='${window.global_service_log_scope_server}'       log_level='${window.global_service_log_level_info}'>${window.global_service_log_scope_server} - ${window.global_service_log_level_info}</option>`;
-            html +=`<option value=1 log_scope='${window.global_service_log_scope_server}'       log_level='${window.global_service_log_level_error}'>${window.global_service_log_scope_server} - ${window.global_service_log_level_error}</option>`;
-            html +=`<option value=2 log_scope='${window.global_service_log_scope_server}'       log_level='${window.global_service_log_level_verbose}'>${window.global_service_log_scope_server} - ${window.global_service_log_level_verbose}</option>`;
-            html +=`<option value=3 log_scope='${window.global_service_log_scope_service}'      log_level='${window.global_service_log_level_info}'>${window.global_service_log_scope_service} - ${window.global_service_log_level_info}</option>`;
-            html +=`<option value=4 log_scope='${window.global_service_log_scope_service}'      log_level='${window.global_service_log_level_error}'>${window.global_service_log_scope_service} - ${window.global_service_log_level_error}</option>`;
-            html +=`<option value=5 log_scope='${window.global_service_log_scope_db}'           log_level='${window.global_service_log_level_info}'>${window.global_service_log_scope_db} - ${window.global_service_log_level_info}</option>`;
-            html +=`<option value=6 log_scope='${window.global_service_log_scope_router}'       log_level='${window.global_service_log_level_info}'>${window.global_service_log_scope_router} - ${window.global_service_log_level_info}</option>`;
-            html +=`<option value=7 log_scope='${window.global_service_log_scope_controller}'   log_level='${window.global_service_log_level_info}'>${window.global_service_log_scope_controller} - ${window.global_service_log_level_info}</option>`;
-            html +=`<option value=8 log_scope='${window.global_service_log_scope_controller}'   log_level='${window.global_service_log_level_error}'>${window.global_service_log_scope_controller} - ${window.global_service_log_level_error}</option>`;
+            html +=`<option value=0 log_scope='${APP_GLOBAL['service_log_scope_server']}'       log_level='${APP_GLOBAL['service_log_level_info']}'>${APP_GLOBAL['service_log_scope_server']} - ${APP_GLOBAL['service_log_level_info']}</option>`;
+            html +=`<option value=1 log_scope='${APP_GLOBAL['service_log_scope_server']}'       log_level='${APP_GLOBAL['service_log_level_error']}'>${APP_GLOBAL['service_log_scope_server']} - ${APP_GLOBAL['service_log_level_error']}</option>`;
+            html +=`<option value=2 log_scope='${APP_GLOBAL['service_log_scope_server']}'       log_level='${APP_GLOBAL['service_log_level_verbose']}'>${APP_GLOBAL['service_log_scope_server']} - ${APP_GLOBAL['service_log_level_verbose']}</option>`;
+            html +=`<option value=3 log_scope='${APP_GLOBAL['service_log_scope_service']}'      log_level='${APP_GLOBAL['service_log_level_info']}'>${APP_GLOBAL['service_log_scope_service']} - ${APP_GLOBAL['service_log_level_info']}</option>`;
+            html +=`<option value=4 log_scope='${APP_GLOBAL['service_log_scope_service']}'      log_level='${APP_GLOBAL['service_log_level_error']}'>${APP_GLOBAL['service_log_scope_service']} - ${APP_GLOBAL['service_log_level_error']}</option>`;
+            html +=`<option value=5 log_scope='${APP_GLOBAL['service_log_scope_db']}'           log_level='${APP_GLOBAL['service_log_level_info']}'>${APP_GLOBAL['service_log_scope_db']} - ${APP_GLOBAL['service_log_level_info']}</option>`;
+            html +=`<option value=6 log_scope='${APP_GLOBAL['service_log_scope_router']}'       log_level='${APP_GLOBAL['service_log_level_info']}'>${APP_GLOBAL['service_log_scope_router']} - ${APP_GLOBAL['service_log_level_info']}</option>`;
+            html +=`<option value=7 log_scope='${APP_GLOBAL['service_log_scope_controller']}'   log_level='${APP_GLOBAL['service_log_level_info']}'>${APP_GLOBAL['service_log_scope_controller']} - ${APP_GLOBAL['service_log_level_info']}</option>`;
+            html +=`<option value=8 log_scope='${APP_GLOBAL['service_log_scope_controller']}'   log_level='${APP_GLOBAL['service_log_level_error']}'>${APP_GLOBAL['service_log_scope_controller']} - ${APP_GLOBAL['service_log_level_error']}</option>`;
             
             document.getElementById('select_logscope5').innerHTML = html;
 
-            if (window.global_service_log_file_interval=='1M')
+            if (APP_GLOBAL['service_log_file_interval']=='1M')
                 document.getElementById('select_day_menu5').style.display = 'none';
             else
                 document.getElementById('select_day_menu5').style.display = 'inline-block';
@@ -2219,7 +2219,7 @@ function show_server_logs(sort=1, order_by='desc'){
         app_id_filter = `select_app_id=${document.getElementById('select_app_menu5').options[document.getElementById('select_app_menu5').selectedIndex].value}&`;
     }
     let url_parameters;
-    if (window.global_service_log_file_interval=='1M')
+    if (APP_GLOBAL['service_log_file_interval']=='1M')
         url_parameters = `${app_id_filter}logscope=${logscope}&loglevel=${loglevel}&year=${year}&month=${month}`;
     else
         url_parameters = `${app_id_filter}logscope=${logscope}&loglevel=${loglevel}&year=${year}&month=${month}&day=${day}`;
@@ -2259,7 +2259,7 @@ function show_existing_logfiles(){
                                 //month
                                 document.getElementById('select_month_menu5').value = month;
                                 //day if applicable
-                                if (window.global_service_log_file_interval=='1D')
+                                if (APP_GLOBAL['service_log_file_interval']=='1D')
                                     document.getElementById('select_day_menu5').value = day;
 
                                 document.getElementById('select_logscope5').dispatchEvent(new Event('change'));
@@ -2282,7 +2282,7 @@ function show_pm2_logs(){
 /*----------------------- */
 async function show_config(config_nav=1){
     let url;
-    document.getElementById(`list_config`).innerHTML = window.global_app_spinner;
+    document.getElementById(`list_config`).innerHTML = common.APP_SPINNER;
     url  = `/server/config/systemadmin/saved?config_type_no=${config_nav}`;
     await common.common_fetch(url, 'GET', 2, null, null, null, (err, result) =>{
         if (err)
@@ -2358,7 +2358,7 @@ async function show_db_info(){
     if (admin_token_has_value()){
         let json;
         await common.common_fetch('/service/db/admin/DBInfo?',
-                           'GET', 2, null, window.global_common_app_id, null, (err, result) =>{
+                           'GET', 2, null, common.COMMON_GLOBAL['common_app_id'], null, (err, result) =>{
             if (err)
                 null;
             else{
@@ -2382,8 +2382,8 @@ async function show_db_info_space(){
             const x = Math.pow(10,2);
             return Math.round(num * x) / x;
           }
-        document.getElementById('menu_8_db_info_space_detail').innerHTML = window.global_app_spinner;
-        await common.common_fetch('/service/db/admin/DBInfoSpace?', 'GET', 2, null, window.global_common_app_id, null, (err, result) =>{
+        document.getElementById('menu_8_db_info_space_detail').innerHTML = common.APP_SPINNER;
+        await common.common_fetch('/service/db/admin/DBInfoSpace?', 'GET', 2, null, common.COMMON_GLOBAL['common_app_id'], null, (err, result) =>{
             if (err)
                 null;
             else{
@@ -2426,7 +2426,7 @@ async function show_db_info_space(){
                     </div>`;
                 }
                 document.getElementById('menu_8_db_info_space_detail').innerHTML = html;
-                common.common_fetch('/service/db/admin/DBInfoSpaceSum?', 'GET', 2, null, window.global_common_app_id, null, (err, result) =>{
+                common.common_fetch('/service/db/admin/DBInfoSpaceSum?', 'GET', 2, null, common.COMMON_GLOBAL['common_app_id'], null, (err, result) =>{
                     if (err)
                         null;
                     else{
@@ -2434,7 +2434,7 @@ async function show_db_info_space(){
                         document.getElementById('menu_8_db_info_space_detail').innerHTML += 
                             `<div id='menu_8_db_info_space_detail_row_total' class='menu_8_db_info_space_detail_row' >
                                 <div class='menu_8_db_info_space_detail_col'>
-                                    <div>${window.global_icon_app_sum}</div>
+                                    <div>${common.ICONS['app_sum']}</div>
                                 </div>
                                 <div class='menu_8_db_info_space_detail_col'>
                                     <div>${roundOff(json.data.total_size)}</div>
@@ -2466,7 +2466,7 @@ async function show_server_info(){
             const x = Math.pow(10,2);
             return Math.round(num * x) / x;
           }
-        await common.common_fetch('/server/info?', 'GET', 2, null, window.global_common_app_id, null, (err, result) =>{
+        await common.common_fetch('/server/info?', 'GET', 2, null, common.COMMON_GLOBAL['common_app_id'], null, (err, result) =>{
             if (err)
                 null;
             else{         
@@ -2527,7 +2527,7 @@ async function show_server_info(){
 /* INIT                   */
 /*----------------------- */
 function admin_token_has_value(){
-    if (window.global_rest_at=='' && window.global_rest_admin_at =='')
+    if (common.COMMON_GLOBAL['rest_at']=='' && common.COMMON_GLOBAL['rest_admin_at'] =='')
         return false;
     else
         return true;
@@ -2536,133 +2536,134 @@ function admin_token_has_value(){
 function init_admin_secure(){
 
     //SET GLOBALS
-    window.global_service_log = '/service/log';
-    window.global_service_log_scope_server= '';
-    window.global_service_log_scope_service= '';
-    window.global_service_log_scope_db= '';
-    window.global_service_log_scope_router= '';
-    window.global_service_log_scope_controller= '';
-    window.global_service_log_level_verbose= '';
-    window.global_service_log_level_error= '';
-    window.global_service_log_level_info= '';
+    APP_GLOBAL['service_log_scope_server']= '';
+    APP_GLOBAL['service_log_scope_service']= '';
+    APP_GLOBAL['service_log_scope_db']= '';
+    APP_GLOBAL['service_log_scope_router']= '';
+    APP_GLOBAL['service_log_scope_controller']= '';
+    APP_GLOBAL['service_log_level_verbose']= '';
+    APP_GLOBAL['service_log_level_error']= '';
+    APP_GLOBAL['service_log_level_info']= '';
                     
-    window.global_service_log_destination= '';
-    window.global_service_log_url_destination= '';
-    window.global_service_log_url_destination_username= '';
-    window.global_service_log_url_destination_password= '';
-    window.global_service_log_file_interval= '';
-    window.global_service_log_file_path_server= '';
-    window.global_service_log_date_format= '';
-    //map variables
-    window.global_gps_map_container      ='mapid';
-    window.global_gps_map_zoom           = 14;
-    window.global_gps_map_marker_div_gps = 'map_marker_gps';
-    if (window.global_system_admin==1){
-        window.global_service_geolocation		        ='/service/geolocation';
-        window.global_service_geolocation_gps_ip        ='/ip';
-        window.global_service_geolocation_gps_place	    ='/place';
-        window.global_service_geolocation_gps_timezone	='/timezone';
-        window.global_service_map_style			        ='OpenStreetMap_Mapnik';
-        window.global_service_map_jumpto		        ='0';
-        window.global_service_map_popup_offset		    ='-25';
+    APP_GLOBAL['service_log_destination']= '';
+    APP_GLOBAL['service_log_url_destination']= '';
+    APP_GLOBAL['service_log_url_destination_username']= '';
+    APP_GLOBAL['service_log_url_destination_password']= '';
+    APP_GLOBAL['service_log_file_interval']= '';
+    APP_GLOBAL['service_log_file_path_server']= '';
+    APP_GLOBAL['service_log_date_format']= '';
+    APP_GLOBAL['gps_map_container']      ='mapid';
+    APP_GLOBAL['gps_map_zoom'] = 14;
+    APP_GLOBAL['gps_map_marker_div_gps'] = 'map_marker_gps';
+    APP_GLOBAL['page'] = 0;
+    APP_GLOBAL['page_last'] =0;
+    APP_GLOBAL['previous_row']= '';
+
+    common.COMMON_GLOBAL['service_log'] = '/service/log';
+
+    if (common.COMMON_GLOBAL['system_admin']==1){
+        common.COMMON_GLOBAL['service_geolocation']		            ='/service/geolocation';
+        common.COMMON_GLOBAL['service_geolocation_gps_ip']          ='/ip';
+        common.COMMON_GLOBAL['service_geolocation_gps_place']	    ='/place';
+        common.COMMON_GLOBAL['service_geolocation_gps_timezone']	='/timezone';
+        common.COMMON_GLOBAL['service_map_style']			        ='OpenStreetMap_Mapnik';
+        common.COMMON_GLOBAL['service_map_jumpto']		            ='0';
+        common.COMMON_GLOBAL['service_map_popup_offset']		    ='-25';
     }
     //session variables
-    window.global_client_latitude = '';
-    window.global_client_longitude = '';
-    window.global_client_place = '';
+    common.COMMON_GLOBAL['client_latitude'] = '';
+    common.COMMON_GLOBAL['client_longitude'] = '';
+    common.COMMON_GLOBAL['client_place'] = '';
 
-    window.global_page = 0;
-    window.global_page_last =0;
-    window.global_previous_row= '';
 
     //SET ICONS
     //common, since ui=false when called init_common, set some common items here
-    document.getElementById('message_close').innerHTML = window.global_icon_app_close;
+    document.getElementById('message_close').innerHTML = common.ICONS['app_close'];
     //if CONFIRM message is used
-    document.getElementById('message_cancel').innerHTML = window.global_icon_app_cancel;
+    document.getElementById('message_cancel').innerHTML = common.ICONS['app_cancel'];
     //other in admin
-    document.getElementById('menu_open').innerHTML = window.global_icon_app_menu_open;
-    document.getElementById('menu_1_broadcast_title').innerHTML = window.global_icon_app_broadcast;
-    document.getElementById('menu_1_broadcast_button').innerHTML = window.global_icon_app_chat;
+    document.getElementById('menu_open').innerHTML = common.ICONS['app_menu_open'];
+    document.getElementById('menu_1_broadcast_title').innerHTML = common.ICONS['app_broadcast'];
+    document.getElementById('menu_1_broadcast_button').innerHTML = common.ICONS['app_chat'];
     
-    document.getElementById('send_broadcast_send').innerHTML = window.global_icon_app_send;
-    document.getElementById('send_broadcast_close').innerHTML = window.global_icon_app_close;
-    document.getElementById('lov_close').innerHTML = window.global_icon_app_close;
+    document.getElementById('send_broadcast_send').innerHTML = common.ICONS['app_send'];
+    document.getElementById('send_broadcast_close').innerHTML = common.ICONS['app_close'];
+    document.getElementById('lov_close').innerHTML = common.ICONS['app_close'];
 
     //menu 1
-    document.getElementById('box1_title').innerHTML = window.global_icon_app_users + ' ' + window.global_icon_app_chart;
-    document.getElementById('box2_title').innerHTML = window.global_icon_app_users + ' ' + window.global_icon_regional_numbersystem;
-    document.getElementById('menu_1_maintenance_title').innerHTML = window.global_icon_app_maintenance;
-    document.getElementById('send_broadcast_title').innerHTML = window.global_icon_app_broadcast;
+    document.getElementById('box1_title').innerHTML = common.ICONS['app_users'] + ' ' + common.ICONS['app_chart'];
+    document.getElementById('box2_title').innerHTML = common.ICONS['app_users'] + ' ' + common.ICONS['regional_numbersystem'];
+    document.getElementById('menu_1_maintenance_title').innerHTML = common.ICONS['app_maintenance'];
+    document.getElementById('send_broadcast_title').innerHTML = common.ICONS['app_broadcast'];
     //menu 2
     //ID
-    document.getElementById('list_user_stat_col_title1').innerHTML = window.global_icon_provider_id;
+    document.getElementById('list_user_stat_col_title1').innerHTML = common.ICONS['provider_id'];
     //PROVIDER
-    document.getElementById('list_user_stat_col_title2').innerHTML = window.global_icon_provider;
+    document.getElementById('list_user_stat_col_title2').innerHTML = common.ICONS['provider'];
     //SUM
-    document.getElementById('list_user_stat_col_title3').innerHTML = window.global_icon_app_sum;
+    document.getElementById('list_user_stat_col_title3').innerHTML = common.ICONS['app_sum'];
     //CONNECTED
-    document.getElementById('list_user_stat_col_title4').innerHTML = window.global_icon_app_user_connections;
+    document.getElementById('list_user_stat_col_title4').innerHTML = common.ICONS['app_user_connections'];
 
     //menu 3
-    document.getElementById('list_user_account_search_icon').innerHTML = window.global_icon_app_search;
-    document.getElementById('list_user_account_title').innerHTML = window.global_icon_app_users;
-    document.getElementById('list_user_account_logon_title').innerHTML = window.global_icon_app_login;
-    document.getElementById('users_save').innerHTML = window.global_icon_app_save;
+    document.getElementById('list_user_account_search_icon').innerHTML = common.ICONS['app_search'];
+    document.getElementById('list_user_account_title').innerHTML = common.ICONS['app_users'];
+    document.getElementById('list_user_account_logon_title').innerHTML = common.ICONS['app_login'];
+    document.getElementById('users_save').innerHTML = common.ICONS['app_save'];
     //menu 4
-    document.getElementById('list_apps_title').innerHTML = window.global_icon_app_apps;
-    document.getElementById('list_app_parameter_title').innerHTML = window.global_icon_app_apps + window.global_icon_app_settings;
-    document.getElementById('apps_save').innerHTML = window.global_icon_app_save;
+    document.getElementById('list_apps_title').innerHTML = common.ICONS['app_apps'];
+    document.getElementById('list_app_parameter_title').innerHTML = common.ICONS['app_apps'] + common.ICONS['app_settings'];
+    document.getElementById('apps_save').innerHTML = common.ICONS['app_save'];
     //menu 5
-    document.getElementById('list_connected_title').innerHTML = window.global_icon_app_user_connections + ' ' + window.global_icon_app_log; 
-    document.getElementById('list_app_log_title').innerHTML = window.global_icon_app_apps + ' ' + window.global_icon_app_log;
-    document.getElementById('list_server_log_title').innerHTML = window.global_icon_app_server + ' ' + window.global_icon_app_log;
-    document.getElementById('list_pm2_log_title').innerHTML = window.global_icon_app_server + '2 ' + window.global_icon_app_log;
-    document.getElementById('list_pm2_log_path_title').innerHTML = window.global_icon_app_file_path;
-    document.getElementById('filesearch_menu5').innerHTML =  window.global_icon_app_search;
+    document.getElementById('list_connected_title').innerHTML = common.ICONS['app_user_connections'] + ' ' + common.ICONS['app_log']; 
+    document.getElementById('list_app_log_title').innerHTML = common.ICONS['app_apps'] + ' ' + common.ICONS['app_log'];
+    document.getElementById('list_server_log_title').innerHTML = common.ICONS['app_server'] + ' ' + common.ICONS['app_log'];
+    document.getElementById('list_pm2_log_title').innerHTML = common.ICONS['app_server'] + '2 ' + common.ICONS['app_log'];
+    document.getElementById('list_pm2_log_path_title').innerHTML = common.ICONS['app_file_path'];
+    document.getElementById('filesearch_menu5').innerHTML =  common.ICONS['app_search'];
 
-    document.getElementById('menu5_row_parameters_col1_1').innerHTML = window.global_icon_app_checkbox_checked;
-    document.getElementById('menu5_row_parameters_col1_0').innerHTML = window.global_icon_app_checkbox_empty;
-    document.getElementById('menu5_row_parameters_col2_1').innerHTML = window.global_icon_app_checkbox_checked;
-    document.getElementById('menu5_row_parameters_col2_0').innerHTML = window.global_icon_app_checkbox_empty
-    document.getElementById('menu5_row_parameters_col3_1').innerHTML = window.global_icon_app_checkbox_checked;
-    document.getElementById('menu5_row_parameters_col3_0').innerHTML = window.global_icon_app_checkbox_empty
-    document.getElementById('menu5_row_parameters_col4_1').innerHTML = window.global_icon_app_checkbox_checked;
-    document.getElementById('menu5_row_parameters_col4_0').innerHTML = window.global_icon_app_checkbox_empty
-    document.getElementById('menu5_row_parameters_col5_1').innerHTML = window.global_icon_app_checkbox_checked;
-    document.getElementById('menu5_row_parameters_col5_0').innerHTML = window.global_icon_app_checkbox_empty
+    document.getElementById('menu5_row_parameters_col1_1').innerHTML = common.ICONS['app_checkbox_checked'];
+    document.getElementById('menu5_row_parameters_col1_0').innerHTML = common.ICONS['app_checkbox_empty'];
+    document.getElementById('menu5_row_parameters_col2_1').innerHTML = common.ICONS['app_checkbox_checked'];
+    document.getElementById('menu5_row_parameters_col2_0').innerHTML = common.ICONS['app_checkbox_empty'];
+    document.getElementById('menu5_row_parameters_col3_1').innerHTML = common.ICONS['app_checkbox_checked'];
+    document.getElementById('menu5_row_parameters_col3_0').innerHTML = common.ICONS['app_checkbox_empty'];
+    document.getElementById('menu5_row_parameters_col4_1').innerHTML = common.ICONS['app_checkbox_checked'];
+    document.getElementById('menu5_row_parameters_col4_0').innerHTML = common.ICONS['app_checkbox_empty'];
+    document.getElementById('menu5_row_parameters_col5_1').innerHTML = common.ICONS['app_checkbox_checked'];
+    document.getElementById('menu5_row_parameters_col5_0').innerHTML = common.ICONS['app_checkbox_empty'];
 
 
-    document.getElementById('menu5_row_parameters_col1').innerHTML = window.global_icon_app_server + ' info';
-    document.getElementById('menu5_row_parameters_col2').innerHTML = window.global_icon_app_server + ' verbose';
-    document.getElementById('menu5_row_parameters_col3').innerHTML = window.global_icon_app_database;
-    document.getElementById('menu5_row_parameters_col4').innerHTML = window.global_icon_app_route;
-    document.getElementById('menu5_row_parameters_col5').innerHTML = window.global_icon_app_server + '2 ' + window.global_icon_app_log + ' JSON';
+    document.getElementById('menu5_row_parameters_col1').innerHTML = common.ICONS['app_server'] + ' info';
+    document.getElementById('menu5_row_parameters_col2').innerHTML = common.ICONS['app_server'] + ' verbose';
+    document.getElementById('menu5_row_parameters_col3').innerHTML = common.ICONS['app_database'];
+    document.getElementById('menu5_row_parameters_col4').innerHTML = common.ICONS['app_route'];
+    document.getElementById('menu5_row_parameters_col5').innerHTML = common.ICONS['app_server'] + '2 ' + common.ICONS['app_log'] + ' JSON';
 
-    document.getElementById('list_pm2_log_title_out').innerHTML = window.global_icon_app_server + '2 ' + window.global_icon_app_log + ' Out';
-    document.getElementById('list_pm2_log_title_err').innerHTML = window.global_icon_app_server + '2 ' + window.global_icon_app_log + ' Error';
-    document.getElementById('list_pm2_log_title_process_event').innerHTML = window.global_icon_app_server + '2 ' + window.global_icon_app_log + ' Process event';
+    document.getElementById('list_pm2_log_title_out').innerHTML = common.ICONS['app_server'] + '2 ' + common.ICONS['app_log'] + ' Out';
+    document.getElementById('list_pm2_log_title_err').innerHTML = common.ICONS['app_server'] + '2 ' + common.ICONS['app_log'] + ' Error';
+    document.getElementById('list_pm2_log_title_process_event').innerHTML = common.ICONS['app_server'] + '2 ' + common.ICONS['app_log'] + ' Process event';
 
-    document.getElementById('client_id_label').innerHTML = window.global_icon_user;
+    document.getElementById('client_id_label').innerHTML = common.ICONS['user'];
     //menu 6
-    document.getElementById('list_config_server_title').innerHTML = window.global_icon_app_server;
-    document.getElementById('list_config_blockip_title').innerHTML = window.global_icon_app_internet + window.global_icon_app_shield + window.global_icon_regional_numbersystem;
-    document.getElementById('list_config_useragent_title').innerHTML = window.global_icon_app_internet + window.global_icon_app_shield + window.global_icon_app_browser;
-    document.getElementById('list_config_policy_title').innerHTML = window.global_icon_app_internet + window.global_icon_app_shield + window.global_icon_misc_book;
-    document.getElementById('config_save').innerHTML = window.global_icon_app_save;
+    document.getElementById('list_config_server_title').innerHTML = common.ICONS['app_server'];
+    document.getElementById('list_config_blockip_title').innerHTML = common.ICONS['app_internet'] + common.ICONS['app_shield'] + common.ICONS['regional_numbersystem'];
+    document.getElementById('list_config_useragent_title').innerHTML = common.ICONS['app_internet'] + common.ICONS['app_shield'] + common.ICONS['app_browser'];
+    document.getElementById('list_config_policy_title').innerHTML = common.ICONS['app_internet'] + common.ICONS['app_shield'] + common.ICONS['misc_book'];
+    document.getElementById('config_save').innerHTML = common.ICONS['app_save'];
     //menu 8
-    document.getElementById('menu_8_db_info_database_title').innerHTML = window.global_icon_app_database + window.global_icon_regional_numbersystem;
-    document.getElementById('menu_8_db_info_name_title').innerHTML = window.global_icon_app_database;
-    document.getElementById('menu_8_db_info_version_title').innerHTML = window.global_icon_app_database + window.global_icon_regional_numbersystem + window.global_icon_app_info;
-    document.getElementById('menu_8_db_info_database_schema_title').innerHTML = window.global_icon_app_database + window.global_icon_app_database_schema;
-    document.getElementById('menu_8_db_info_host_title').innerHTML = window.global_icon_app_server;
-    document.getElementById('menu_8_db_info_connections_title').innerHTML = window.global_icon_app_user_connections;
-    document.getElementById('menu_8_db_info_started_title').innerHTML = window.global_icon_app_database_started;
-    document.getElementById('menu_8_db_info_space_title').innerHTML = window.global_icon_app_database + window.global_icon_app_database_calc;
+    document.getElementById('menu_8_db_info_database_title').innerHTML = common.ICONS['app_database'] + common.ICONS['regional_numbersystem'];
+    document.getElementById('menu_8_db_info_name_title').innerHTML = common.ICONS['app_database'];
+    document.getElementById('menu_8_db_info_version_title').innerHTML = common.ICONS['app_database'] + common.ICONS['regional_numbersystem'] + common.ICONS['app_info'];
+    document.getElementById('menu_8_db_info_database_schema_title').innerHTML = common.ICONS['app_database'] + common.ICONS['app_database_schema'];
+    document.getElementById('menu_8_db_info_host_title').innerHTML = common.ICONS['app_server'];
+    document.getElementById('menu_8_db_info_connections_title').innerHTML = common.ICONS['app_user_connections'];
+    document.getElementById('menu_8_db_info_started_title').innerHTML = common.ICONS['app_database_started'];
+    document.getElementById('menu_8_db_info_space_title').innerHTML = common.ICONS['app_database'] + common.ICONS['app_database_calc'];
 
     //menu 10 
     //os info
-    document.getElementById('menu_10_os_title').innerHTML = window.global_icon_app_server;
+    document.getElementById('menu_10_os_title').innerHTML = common.ICONS['app_server'];
     document.getElementById('menu_10_os_info_hostname_title').innerHTML = 'HOSTNAME';
     document.getElementById('menu_10_os_info_cpus_title').innerHTML = 'CPUS';
     document.getElementById('menu_10_os_info_arch_title').innerHTML = 'ARCH';
@@ -2678,7 +2679,7 @@ function init_admin_secure(){
     document.getElementById('menu_10_os_info_userinfo_username_title').innerHTML = 'USERNAME';
     document.getElementById('menu_10_os_info_userinfo_homedir_title').innerHTML = 'USER HOMEDIR';
     //process info
-    document.getElementById('menu_10_process_title').innerHTML = window.global_icon_app_server + ' ' + window.global_icon_app_apps;
+    document.getElementById('menu_10_process_title').innerHTML = common.ICONS['app_server'] + ' ' + common.ICONS['app_apps'];
     document.getElementById('menu_10_process_info_memoryusage_rss_title').innerHTML = 'MEMORY RSS';
     document.getElementById('menu_10_process_info_memoryusage_heaptotal_title').innerHTML = 'MEMORY HEAPTOTAL';
     document.getElementById('menu_10_process_info_memoryusage_heapused_title').innerHTML = 'MEMORY HEAPUSED';
@@ -2737,11 +2738,12 @@ function init_admin_secure(){
     //SET APPS INFO, INIT MAP
     get_apps().then(function(){
         common.get_gps_from_ip().then(function(){
-            common.map_init(window.global_gps_map_container,
-                            window.global_service_map_style,
-                            window.global_client_longitude, 
-                            window.global_client_latitude, 
-                            window.global_gps_map_zoom);
+            common.map_init(APP_GLOBAL['gps_map_container'],
+                            common.COMMON_GLOBAL['service_map_style'],
+                            common.COMMON_GLOBAL['client_longitude'],
+                            common.COMMON_GLOBAL['client_latitude'],
+                            APP_GLOBAL['gps_map_marker_div_gps'],
+                            APP_GLOBAL['gps_map_zoom']);
             common.map_setevent('dblclick', function(e) {
                 let lng = e.latlng['lng'];
                 let lat = e.latlng['lat'];
@@ -2752,18 +2754,18 @@ function init_admin_secure(){
                             '', //do not change zoom 
                             gps_place,
                             null,
-                            window.global_gps_map_marker_div_gps,
-                            window.global_service_map_jumpto);
+                            APP_GLOBAL['gps_map_marker_div_gps'],
+                            common.COMMON_GLOBAL['service_map_jumpto']);
                 })
             })
                 
-            common.map_update(window.global_client_longitude,
-                    window.global_client_latitude,
-                    window.global_gps_map_zoom,
-                    window.global_client_place,
+            common.map_update(common.COMMON_GLOBAL['client_longitude'],
+                    common.COMMON_GLOBAL['client_latitude'],
+                    APP_GLOBAL['gps_map_zoom'],
+                    common.COMMON_GLOBAL['client_place'],
                     null,
-                    window.global_gps_map_marker_div_gps,
-                    window.global_service_map_jumpto);
+                    APP_GLOBAL['gps_map_marker_div_gps'],
+                    common.COMMON_GLOBAL['service_map_jumpto']);
             //SET MENU
             document.getElementById('menu_secure').innerHTML = 
                `<div id='menu_close' class='dialogue_button'></div>
@@ -2779,18 +2781,18 @@ function init_admin_secure(){
                 <div id='menu_10' class='menuitem'></div>
                 <div id='menu_11' class='menuitem'></div>`;
             //set for menu items created in menu_secure
-            document.getElementById('menu_close').innerHTML = window.global_icon_app_menu_close;
-            document.getElementById('menu_1').innerHTML = window.global_icon_app_chart; //DASHBOARD
-            document.getElementById('menu_2').innerHTML = window.global_icon_app_users + window.global_icon_app_log; //USER STAT
-            document.getElementById('menu_3').innerHTML = window.global_icon_app_users; //USERS
-            document.getElementById('menu_4').innerHTML = window.global_icon_app_apps + window.global_icon_app_settings; //APP ADMIN
-            document.getElementById('menu_5').innerHTML = window.global_icon_app_log; //MONITOR
-            document.getElementById('menu_6').innerHTML = window.global_icon_app_server + window.global_icon_app_settings; //PARAMETER
-            document.getElementById('menu_7').innerHTML = window.global_icon_app_server + window.global_icon_app_install; //INSTALLATION
-            document.getElementById('menu_8').innerHTML = window.global_icon_app_server + window.global_icon_app_database; //DATABASE
-            document.getElementById('menu_9').innerHTML = window.global_icon_app_server + window.global_icon_app_backup + window.global_icon_app_restore; //'BACKUP/RESTORE';
-            document.getElementById('menu_10').innerHTML = window.global_icon_app_server; //SERVER
-            document.getElementById('menu_11').innerHTML = window.global_icon_app_logoff; //LOGOUT
+            document.getElementById('menu_close').innerHTML = common.ICONS['app_menu_close'];
+            document.getElementById('menu_1').innerHTML = common.ICONS['app_chart']; //DASHBOARD
+            document.getElementById('menu_2').innerHTML = common.ICONS['app_users'] + common.ICONS['app_log']; //USER STAT
+            document.getElementById('menu_3').innerHTML = common.ICONS['app_users']; //USERS
+            document.getElementById('menu_4').innerHTML = common.ICONS['app_apps'] + common.ICONS['app_settings']; //APP ADMIN
+            document.getElementById('menu_5').innerHTML = common.ICONS['app_log']; //MONITOR
+            document.getElementById('menu_6').innerHTML = common.ICONS['app_server'] + common.ICONS['app_settings']; //PARAMETER
+            document.getElementById('menu_7').innerHTML = common.ICONS['app_server'] + common.ICONS['app_install']; //INSTALLATION
+            document.getElementById('menu_8').innerHTML = common.ICONS['app_server'] + common.ICONS['app_database']; //DATABASE
+            document.getElementById('menu_9').innerHTML = common.ICONS['app_server'] + common.ICONS['app_backup'] + common.ICONS['app_restore']; //'BACKUP/RESTORE';
+            document.getElementById('menu_10').innerHTML = common.ICONS['app_server']; //SERVER
+            document.getElementById('menu_11').innerHTML = common.ICONS['app_logoff']; //LOGOUT
 
             document.getElementById('menu_secure').addEventListener('click', function(event) { 
                                                                                 let target_id;
@@ -2827,12 +2829,12 @@ function init_admin_secure(){
             for (let i=1;i<=10;i++){
                 document.getElementById(`menu_${i}`).style.display='none';
             }
-            if (window.global_system_admin==1){
+            if (common.COMMON_GLOBAL['system_admin']==1){
                 //show DASHBOARD
                 document.getElementById('menu_1').style.display='block';
                 document.getElementById('select_broadcast_type').innerHTML = 
-                    `<option value='INFO' selected='selected'>${window.global_icon_app_alert}</option>
-                     <option value='MAINTENANCE' selected='selected'>${window.global_icon_app_maintenance}</option>`;                 
+                    `<option value='INFO' selected='selected'>${common.ICONS['app_alert']}</option>
+                     <option value='MAINTENANCE' selected='selected'>${common.ICONS['app_maintenance']}</option>`;                 
                 
                 //show MONITOR (only SERVER LOG and PM2LOG)
                 document.getElementById('menu_5').style.display='block';
@@ -2855,7 +2857,7 @@ function init_admin_secure(){
                 //show DASHBOARD
                 document.getElementById('menu_1').style.display='block';
                 document.getElementById('select_broadcast_type').innerHTML = 
-                    `<option value='INFO' selected='selected'>${window.global_icon_app_alert}</option>`;
+                    `<option value='INFO' selected='selected'>${common.ICONS['app_alert']}</option>`;
                 document.getElementById('menu_1_maintenance').style.display = 'none';
                 //show USER STAT
                 document.getElementById('menu_2').style.display='block';
@@ -2871,7 +2873,7 @@ function init_admin_secure(){
                 document.getElementById('list_monitor_nav_4').style.display='none';
                 //start with DASHBOARD
                 show_menu(1);
-                common.common_translate_ui(window.global_user_locale, 'APP', (err, result)=>{
+                common.common_translate_ui(common.COMMON_GLOBAL['user_locale'], 'APP', (err, result)=>{
                     null
                 });
             }
