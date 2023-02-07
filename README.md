@@ -36,6 +36,96 @@
 	country translations. The mayor 30 languages are translated in the apps. Icons are frequently used 
 	to minmize text usage and to provide simplier and better explanation to a global audience.
 
+	Developed in Visual Studio Code in Windows with integration with Github and Jira following Scrum agile project management framework and deployed on Oracle Cloud and Ubuntu server.
+
+# Project description
+	
+	Why 
+	As a certified professional developer, develop a new platform using latest technology and paradigm used today
+	and to show a well structured enterprise level platform implemented with pure technology without unnecessary
+	obscure frameworks.
+	
+	What
+	Create a platform with latest technology supporting any language and regional setting with the most optimized,
+	structured and most pragmatic and academic implementation in mind using years of empirical knowledge of full stack
+	development.
+
+	How
+	Aquiring latest certifications, studying latest technologies trying out pros and cons.
+	Finding common factors in MariaDB, Mysql, PostgreSQL and Oracle databases to implement easier maintainable REST API and datamodel.
+	Consolidate ideas from Angular, Vue, React, jQuery, Oracle Forms, Oracle Reports and Oracle APEX, existing log and monitor solutions, javascript frameworks to optimal structure and implementation.
+
+	Requirements
+	- all apps should be single page application (SPA)
+	- one app should be Progressive Web App (PWA)
+	- any language, all unicode characters in client and in server, any regional setting, double bilanguage calendar
+	  realtime timetable calculations with all known needed settings configurable with different themes using CSS,
+	- social network
+	- Javascript ECMAScript modules and ES6+ javsscript using Express in Node.js.
+	- report PDF with QR codes pixel perfect design using css pt font size measurement and full unicode support
+	- forms server with client component servergeneration
+	- database and file logging
+	- apps are component servergenerated with database data population
+	- microservice arquitecture
+	- MariaDB, MySQL, PostgreSQL and Oracle databases supported deployed on Oracle Cloud with dynamic pool arquitecture
+	  and sql logging stratified per app
+	- dynamic app installation
+	- admin app with monitoring of live connections and logs, statistics, broadcast maintenance, messaging to clients,
+	  database info, OS info, process info and user role management.
+	- admin app with access for admin database user supporting superadmin role to monitor apps
+	- admin app with access for system admin to manage installation, configuration and server
+	- vendor specific coding as for example -webkit-, -moz-, -o-, -ms- and filter: progid:DXImageTransform.Microsoft 
+	  in CSS removed. 
+	- third party modules should be canvas free solutions or configured to not use canvas.
+
+	Security requirements
+	- Content Security Policy against XSS
+	- SHA256 for REST API and Bcrypt for user security
+	- JSON web tokens with extra validation that checks token is authorized to correct userid, appid and ip.
+	- admin app logs in with fetched code from server after accesstoken fetched and code deleted after logout
+	  with no traces in navigator history
+	- no cookies used, means no user info is saved in browser
+	- access control IP blocking,
+	- access control user agent
+	- access control hostname
+	- access control accept language
+	- access control request url
+	- access control app input text
+	- access control robots search engine
+	- access control internet
+	- access control geolocation
+
+# Providers
+
+	Oracle Cloud
+	www.oracle.com/cloud
+	MariaDB
+	www.mariadb.org
+	MySQL
+	www.mysql.com
+	PostgreSQL
+	www.postgresql.org
+	Oracle Instant Client
+	www.oracle.com/database/technologies/instant-client.html
+	Node.js
+	www.nodejs.org
+	Express
+	www.expressjs.com
+	Font Awesome
+	www.fontawesome.com
+	Google Fonts
+	fonts.google.com
+	Leaflet
+	www.leafletjs.com
+	Geoplugin Geolocation
+	www.geoplugin.com
+	EasyQRCodeJS
+	www.github.com/ushelp/EasyQRCodeJS
+	Country Translations
+	www.github.com/umpirsky/country-list
+	Language Translations
+	www.github.com/umpirsky/language-list
+
 # Apps included
 
 	1.App 0 - Admin single page web app (SPA) with source code secured logged in as admin from database
