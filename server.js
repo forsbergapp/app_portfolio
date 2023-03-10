@@ -211,9 +211,12 @@ InitConfig().then(function(){
         next();
       });
 
-      //for SSL verification using letsencrypt, enable if validating domains
-      //app.use('/.well-known/acme-challenge/',express.static(process.cwd() + '/.well-known/acme-challenge/'));
-      //app.use(express.static(process.cwd(), { dotfiles: 'allow' }));
+      //check if SSL verification using letsencrypt should be enabled when validating domains
+      if (ConfigGet(1, 'SERVER', 'HTTPS_SSL_VERIFICATION')=='1'){
+        let ssl_verification_path = ConfigGet(1, 'SERVER', 'HTTPS_SSL_VERIFICATION_PATH');
+        app.use(ssl_verification_path,express.static(process.cwd() + ssl_verification_path));
+        app.use(express.static(process.cwd(), { dotfiles: 'allow' }));
+      };
 
       //server get before apps code
       //info for search bots
