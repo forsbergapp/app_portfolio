@@ -125,76 +125,76 @@ async function DefaultConfig(){
                 Promise.all(default_files.map(file => {
                     return readFile(process.cwd() + '/server/' + file[1], 'utf8');
                 })).then(function(config_json){
-                    //update default file for config 1 server
-                    config_json[0] = JSON.parse(config_json[0]);
-                    //update path
-                    config_json[0]['SERVER'].forEach((row,index)=>{
-                        for (let i=0; i < Object.keys(row).length;i++){
-                            if (Object.keys(row)[i]=='HTTPS_KEY'){
-                                config_json[0]['SERVER'][index][Object.keys(row)[i]] = `${SLASH}config${SLASH}ssl${SLASH}${Object.values(row)[i]}`;
-                            }
-                        } 
-                    })
-                    config_json[0]['SERVER'].forEach((row,index)=>{
-                        for (let i=0; i < Object.keys(row).length;i++){
-                            if (Object.keys(row)[i]=='HTTPS_CERT'){
-                                config_json[0]['SERVER'][index][Object.keys(row)[i]] = `${SLASH}config${SLASH}ssl${SLASH}${Object.values(row)[i]}`;
-                            }
-                        } 
-                    })
-                    //generate hash
-                    config_json[0]['SERVICE_AUTH'].forEach((row,index)=>{
-                        for (let i=0; i < Object.keys(row).length;i++){
-                            if (Object.keys(row)[i]=='ADMIN_TOKEN_SECRET'){                            
-                                import('node:crypto').then(function({ createHash }){
-                                    config_json[0]['SERVICE_AUTH'][index][Object.keys(row)[i]] = `${createHash('sha256').update(new Date().toISOString()).digest('hex')}`;
-                                })
-                            }
-                        } 
-                    })
-                    config_json[0] = JSON.stringify(config_json[0]);
-    
-                    config_json[4] = JSON.parse(config_json[4]);
-                    config_json[4]['created'] = new Date().toISOString();
-                    config_json[4] = JSON.stringify(config_json[4], undefined, 2);
-                    //default server metadata
-                    let config_init = {
-                                        "CONFIGURATION": "App Portfolio",
-                                        "CREATED": `${new Date().toISOString()}`,
-                                        "MODIFIED": "",
-                                        "MAINTENANCE": "0",
-                                        "FILE_CONFIG_SERVER": `${SLASH}config${SLASH}config.json`,
-                                        "FILE_CONFIG_AUTH_BLOCKIP":`${SLASH}config${SLASH}auth_blockip.json`,
-                                        "FILE_CONFIG_AUTH_USERAGENT":`${SLASH}config${SLASH}auth_useragent.json`,
-                                        "FILE_CONFIG_AUTH_POLICY":`${SLASH}config${SLASH}auth_policy.json`,
-                                        "PATH_LOG":`${SLASH}logs${SLASH}`,
-                                        "FILE_CONFIG_AUTH_USER":`${SLASH}config${SLASH}auth_user.json`
-                                        };
-                    config_init = JSON.stringify(config_init, undefined, 2);
-                    //save initial config files with metadata including path to config files
-                    import('node:fs').then(function(fs){
-                        fs.writeFile(process.cwd() + SERVER_CONFIG_INIT_PATH, config_init,  'utf8', (err) => {
-                            if (err)
-                                reject(err);
-                            else{
-                                //save json in variable
-                                CONFIG_INIT = config_init;
-                                let config_created=0;
-                                for (let config_no=0;config_no<config_json.length;config_no++){
-                                    let json_pretty = JSON.stringify(JSON.parse(config_json[config_no]), undefined, 2);
-                                    //send fileno in file array
-                                    ConfigSave(default_files[config_no][0], json_pretty, true, (err, result)=>{
-                                        if (err)
-                                            reject(err);
-                                        else{
-                                            if (config_created== config_json.length - 1)
-                                                resolve();
-                                            else
-                                                config_created++;
-                                        }
-                                    })
+                    import('node:crypto').then(function({ createHash }){
+                        //update default file for config 1 server
+                        config_json[0] = JSON.parse(config_json[0]);
+                        //update path
+                        config_json[0]['SERVER'].forEach((row,index)=>{
+                            for (let i=0; i < Object.keys(row).length;i++){
+                                if (Object.keys(row)[i]=='HTTPS_KEY'){
+                                    config_json[0]['SERVER'][index][Object.keys(row)[i]] = `${SLASH}config${SLASH}ssl${SLASH}${Object.values(row)[i]}`;
                                 }
-                            }
+                            } 
+                        })
+                        config_json[0]['SERVER'].forEach((row,index)=>{
+                            for (let i=0; i < Object.keys(row).length;i++){
+                                if (Object.keys(row)[i]=='HTTPS_CERT'){
+                                    config_json[0]['SERVER'][index][Object.keys(row)[i]] = `${SLASH}config${SLASH}ssl${SLASH}${Object.values(row)[i]}`;
+                                }
+                            } 
+                        })
+                        //generate hash
+                        config_json[0]['SERVICE_AUTH'].forEach((row,index)=>{
+                            for (let i=0; i < Object.keys(row).length;i++){
+                                if (Object.keys(row)[i]=='ADMIN_TOKEN_SECRET'){                            
+                                    config_json[0]['SERVICE_AUTH'][index][Object.keys(row)[i]] = `${createHash('sha256').update(new Date().toISOString()).digest('hex')}`;
+                                }
+                            } 
+                        })
+                        config_json[0] = JSON.stringify(config_json[0]);
+        
+                        config_json[4] = JSON.parse(config_json[4]);
+                        config_json[4]['created'] = new Date().toISOString();
+                        config_json[4] = JSON.stringify(config_json[4], undefined, 2);
+                        //default server metadata
+                        let config_init = {
+                                            "CONFIGURATION": "App Portfolio",
+                                            "CREATED": `${new Date().toISOString()}`,
+                                            "MODIFIED": "",
+                                            "MAINTENANCE": "0",
+                                            "FILE_CONFIG_SERVER": `${SLASH}config${SLASH}config.json`,
+                                            "FILE_CONFIG_AUTH_BLOCKIP":`${SLASH}config${SLASH}auth_blockip.json`,
+                                            "FILE_CONFIG_AUTH_USERAGENT":`${SLASH}config${SLASH}auth_useragent.json`,
+                                            "FILE_CONFIG_AUTH_POLICY":`${SLASH}config${SLASH}auth_policy.json`,
+                                            "PATH_LOG":`${SLASH}logs${SLASH}`,
+                                            "FILE_CONFIG_AUTH_USER":`${SLASH}config${SLASH}auth_user.json`
+                                            };
+                        config_init = JSON.stringify(config_init, undefined, 2);
+                        //save initial config files with metadata including path to config files
+                        import('node:fs').then(function(fs){
+                            fs.writeFile(process.cwd() + SERVER_CONFIG_INIT_PATH, config_init,  'utf8', (err) => {
+                                if (err)
+                                    reject(err);
+                                else{
+                                    //save json in variable
+                                    CONFIG_INIT = config_init;
+                                    let config_created=0;
+                                    for (let config_no=0;config_no<config_json.length;config_no++){
+                                        let json_pretty = JSON.stringify(JSON.parse(config_json[config_no]), undefined, 2);
+                                        //send fileno in file array
+                                        ConfigSave(default_files[config_no][0], json_pretty, true, (err, result)=>{
+                                            if (err)
+                                                reject(err);
+                                            else{
+                                                if (config_created== config_json.length - 1)
+                                                    resolve();
+                                                else
+                                                    config_created++;
+                                            }
+                                        })
+                                    }
+                                }
+                            })
                         })
                     })
                 })  
