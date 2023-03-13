@@ -277,7 +277,7 @@ let ICONS = {
     "message_email":'<i class="fa-solid fa-envelope"></i>',
     "message_record":'<i class="fa-solid fa-database"></i>'
 };
-let APP_SPINNER = `<div id="app_spinner" class="load-spinner">
+let APP_SPINNER = `<div id="common_app_spinner" class="common_load-spinner">
                                     <div></div>
                                     <div></div>
                                     <div></div>
@@ -510,54 +510,54 @@ async function common_translate_ui(lang_code, object = null, callBack){
                                 //translate common items
                                 switch  (json.data[i].object_item_name){
                                     case 'USERNAME':{
-                                        document.getElementById('login_username').placeholder = json.data[i].text;
-                                        document.getElementById('signup_username').placeholder = json.data[i].text;
-                                        document.getElementById('user_edit_input_username').placeholder = json.data[i].text;
+                                        document.getElementById('common_login_username').placeholder = json.data[i].text;
+                                        document.getElementById('common_signup_username').placeholder = json.data[i].text;
+                                        document.getElementById('common_user_edit_input_username').placeholder = json.data[i].text;
                                         break;
                                     }
                                     case 'EMAIL':{
-                                        document.getElementById('signup_email').placeholder = json.data[i].text;
-                                        document.getElementById('forgot_email').placeholder = json.data[i].text;
+                                        document.getElementById('common_signup_email').placeholder = json.data[i].text;
+                                        document.getElementById('common_forgot_email').placeholder = json.data[i].text;
                                         break;
                                     }
                                     case 'NEW_EMAIL':{
-                                        document.getElementById('user_edit_input_new_email').placeholder = json.data[i].text;
+                                        document.getElementById('common_user_edit_input_new_email').placeholder = json.data[i].text;
                                         break;
                                     }
                                     case 'BIO':{
-                                        document.getElementById('signup_email').placeholder = json.data[i].text;
-                                        document.getElementById('forgot_email').placeholder = json.data[i].text;
-                                        document.getElementById('user_edit_input_bio').placeholder = json.data[i].text;
+                                        document.getElementById('common_signup_email').placeholder = json.data[i].text;
+                                        document.getElementById('common_forgot_email').placeholder = json.data[i].text;
+                                        document.getElementById('common_user_edit_input_bio').placeholder = json.data[i].text;
                                         break;
                                     }
                                     case 'PASSWORD':{
-                                        document.getElementById('login_password').placeholder = json.data[i].text;
-                                        document.getElementById('signup_password').placeholder = json.data[i].text;
-                                        document.getElementById('user_edit_input_password').placeholder = json.data[i].text;
+                                        document.getElementById('common_login_password').placeholder = json.data[i].text;
+                                        document.getElementById('common_signup_password').placeholder = json.data[i].text;
+                                        document.getElementById('common_user_edit_input_password').placeholder = json.data[i].text;
                                         break;
                                     }
                                     case 'PASSWORD_CONFIRM':{
-                                        document.getElementById('signup_password_confirm').placeholder = json.data[i].text;
-                                        document.getElementById('user_edit_input_password_confirm').placeholder = json.data[i].text;
+                                        document.getElementById('common_signup_password_confirm').placeholder = json.data[i].text;
+                                        document.getElementById('common_user_edit_input_password_confirm').placeholder = json.data[i].text;
                                         break;
                                     }
                                     case 'PASSWORD_REMINDER':{
-                                        document.getElementById('signup_password_reminder').placeholder = json.data[i].text;
-                                        document.getElementById('user_edit_input_password_reminder').placeholder = json.data[i].text;
+                                        document.getElementById('common_signup_password_reminder').placeholder = json.data[i].text;
+                                        document.getElementById('common_user_edit_input_password_reminder').placeholder = json.data[i].text;
                                         break;
                                     }
                                     case 'NEW_PASSWORD_CONFIRM':{
-                                        document.getElementById('user_edit_input_new_password_confirm').placeholder = json.data[i].text;
-                                        document.getElementById('user_new_password_confirm').placeholder = json.data[i].text;    
+                                        document.getElementById('common_user_edit_input_new_password_confirm').placeholder = json.data[i].text;
+                                        document.getElementById('common_user_new_password_confirm').placeholder = json.data[i].text;    
                                         break;
                                     }
                                     case 'NEW_PASSWORD':{
-                                        document.getElementById('user_edit_input_new_password').placeholder = json.data[i].text;
-                                        document.getElementById('user_new_password').placeholder = json.data[i].text;    
+                                        document.getElementById('common_user_edit_input_new_password').placeholder = json.data[i].text;
+                                        document.getElementById('common_user_new_password').placeholder = json.data[i].text;    
                                         break;
                                     }
                                     case 'CONFIRM_QUESTION':{
-                                        document.getElementById(json.data[i].object_item_name.toLowerCase()).innerHTML = json.data[i].text;
+                                        document.getElementById('common_confirm_question').innerHTML = json.data[i].text;
                                         break;
                                     }
                                 } 
@@ -597,7 +597,7 @@ async function common_translate_ui(lang_code, object = null, callBack){
                 else{
                     json = JSON.parse(result);
                     let html='';
-                    let select_locale = document.getElementById('user_locale_select');
+                    let select_locale = document.getElementById('common_user_locale_select');
                     let current_locale = select_locale.value;
                     for (let i = 0; i < json.locales.length; i++){
                         html += `<option id="${i}" value="${json.locales[i].locale}">${json.locales[i].text}</option>`;
@@ -619,7 +619,7 @@ async function common_translate_ui(lang_code, object = null, callBack){
                     else{
                         json = JSON.parse(result);
                         let html='';
-                        let select = document.getElementById('user_direction_select');
+                        let select = document.getElementById('common_user_direction_select');
                         let current_value = select.value;
                         for (let i = 0; i < json.settings.length; i++){
                             html += `<option id="${json.settings[i].id}" value="${json.settings[i].data}">${json.settings[i].text}</option>`;
@@ -888,10 +888,10 @@ async function dialogue_close(dialogue){
         meepmeep.play();
         */
         //setTimeout(function(){
-            document.getElementById(dialogue).classList.add('dialogue_close');
+            document.getElementById(dialogue).classList.add('common_dialogue_close');
             setTimeout(function(){
                 document.getElementById(dialogue).style.visibility = 'hidden';
-                document.getElementById(dialogue).classList.remove('dialogue_close');
+                document.getElementById(dialogue).classList.remove('common_dialogue_close');
                 resolve();
             }, animationDuration);
         //}, animationDuration);
@@ -902,15 +902,15 @@ function show_common_dialogue(dialogue, user_verification_type, title=null, icon
         case 'PROFILE':
             {    
                 dialogue_profile_clear();
-                document.getElementById('dialogue_profile').style.visibility = 'visible';
+                document.getElementById('common_dialogue_profile').style.visibility = 'visible';
                 break;
             }
         case 'NEW_PASSWORD':
             {    
-                document.getElementById('user_new_password_auth').innerHTML=title;
-                document.getElementById('user_new_password').value='';
-                document.getElementById('user_new_password_confirm').value='';
-                document.getElementById('dialogue_user_new_password').style.visibility = 'visible';
+                document.getElementById('common_user_new_password_auth').innerHTML=title;
+                document.getElementById('common_user_new_password').value='';
+                document.getElementById('common_user_new_password_confirm').value='';
+                document.getElementById('common_dialogue_user_new_password').style.visibility = 'visible';
                 break;
             }
         case 'VERIFY':
@@ -918,55 +918,55 @@ function show_common_dialogue(dialogue, user_verification_type, title=null, icon
                 dialogue_verify_clear();
                 switch (user_verification_type){
                     case 'LOGIN':{
-                        document.getElementById('user_verification_type').innerHTML = 1;
+                        document.getElementById('common_user_verification_type').innerHTML = 1;
                         break;
                     }
                     case 'SIGNUP':{
-                        document.getElementById('user_verification_type').innerHTML = 2;
+                        document.getElementById('common_user_verification_type').innerHTML = 2;
                         break;
                     }
                     case 'FORGOT':{
-                        document.getElementById('user_verification_type').innerHTML = 3;
+                        document.getElementById('common_user_verification_type').innerHTML = 3;
                         break;
                     }
                     case 'NEW_EMAIL':{
-                        document.getElementById('user_verification_type').innerHTML = 4;
+                        document.getElementById('common_user_verification_type').innerHTML = 4;
                         break;
                     }
                 }
-                document.getElementById('user_verify_cancel').addEventListener('click', click_cancel_event);
+                document.getElementById('common_user_verify_cancel').addEventListener('click', click_cancel_event);
 
-                document.getElementById('user_verify_email').innerHTML = title;
-                document.getElementById('user_verify_cancel').innerHTML = icon;
+                document.getElementById('common_user_verify_email').innerHTML = title;
+                document.getElementById('common_user_verify_cancel').innerHTML = icon;
                 
-                document.getElementById('dialogue_login').style.visibility = 'hidden';
-                document.getElementById('dialogue_signup').style.visibility = 'hidden';
-                document.getElementById('dialogue_forgot').style.visibility = 'hidden';
-                document.getElementById('dialogue_user_verify').style.visibility = 'visible';
+                document.getElementById('common_dialogue_login').style.visibility = 'hidden';
+                document.getElementById('common_dialogue_signup').style.visibility = 'hidden';
+                document.getElementById('common_dialogue_forgot').style.visibility = 'hidden';
+                document.getElementById('common_dialogue_user_verify').style.visibility = 'visible';
                 break;
             }
         case 'LOGIN':
             {
-                document.getElementById('dialogue_login').style.visibility = 'visible';
-                document.getElementById('dialogue_signup').style.visibility = 'hidden';
-                document.getElementById('dialogue_forgot').style.visibility = 'hidden';
-                document.getElementById('login_username').focus();
+                document.getElementById('common_dialogue_login').style.visibility = 'visible';
+                document.getElementById('common_dialogue_signup').style.visibility = 'hidden';
+                document.getElementById('common_dialogue_forgot').style.visibility = 'hidden';
+                document.getElementById('common_login_username').focus();
                 break;
             }
         case 'SIGNUP':
             {
-                document.getElementById('dialogue_login').style.visibility = 'hidden';
-                document.getElementById('dialogue_signup').style.visibility = 'visible';
-                document.getElementById('dialogue_forgot').style.visibility = 'hidden';
-                document.getElementById('signup_username').focus();
+                document.getElementById('common_dialogue_login').style.visibility = 'hidden';
+                document.getElementById('common_dialogue_signup').style.visibility = 'visible';
+                document.getElementById('common_dialogue_forgot').style.visibility = 'hidden';
+                document.getElementById('common_signup_username').focus();
                 break;
             }
         case 'FORGOT':
             {
-                document.getElementById('dialogue_login').style.visibility = 'hidden';
-                document.getElementById('dialogue_signup').style.visibility = 'hidden';
-                document.getElementById('dialogue_forgot').style.visibility = 'visible';
-                document.getElementById('forgot_email').focus();
+                document.getElementById('common_dialogue_login').style.visibility = 'hidden';
+                document.getElementById('common_dialogue_signup').style.visibility = 'hidden';
+                document.getElementById('common_dialogue_forgot').style.visibility = 'visible';
+                document.getElementById('common_forgot_email').focus();
                 break;
             }
     }
@@ -974,12 +974,12 @@ function show_common_dialogue(dialogue, user_verification_type, title=null, icon
 }
 
 function show_message(message_type, code, function_event, message_text='', data_app_id=null){
-    let confirm_question = document.getElementById('confirm_question');
-    let message_title = document.getElementById('message_title');
-    let dialogue = document.getElementById('dialogue_message');
-    let old_close = document.getElementById('message_close');
-    let button_cancel = document.getElementById('message_cancel');
-    let function_close = function() { document.getElementById('dialogue_message').style.visibility = 'hidden'};
+    let confirm_question = document.getElementById('common_confirm_question');
+    let message_title = document.getElementById('common_message_title');
+    let dialogue = document.getElementById('common_dialogue_message');
+    let old_close = document.getElementById('common_message_close');
+    let button_cancel = document.getElementById('common_message_cancel');
+    let function_close = function() { document.getElementById('common_dialogue_message').style.visibility = 'hidden'};
     let show = 'inline-block';
     let hide = 'none';
     //this removes old eventlistener
@@ -1060,152 +1060,152 @@ function show_message(message_type, code, function_event, message_text='', data_
     }
 }
 function dialogue_verify_clear(){
-    document.getElementById('dialogue_user_verify').style.visibility = 'hidden';
+    document.getElementById('common_dialogue_user_verify').style.visibility = 'hidden';
     //this removes old eventlistener
-    let old_cancel = document.getElementById('user_verify_cancel');
+    let old_cancel = document.getElementById('common_user_verify_cancel');
     let button_cancel = old_cancel.cloneNode(true);
     old_cancel.parentNode.replaceChild(button_cancel, old_cancel);
-    document.getElementById('user_verification_type').innerHTML='';
-    document.getElementById('user_verify_email').innerHTML='';
-    document.getElementById('user_verify_cancel').innerHTML='';
-    document.getElementById('user_verify_verification_char1').value = '';
-    document.getElementById('user_verify_verification_char2').value = '';
-    document.getElementById('user_verify_verification_char3').value = '';
-    document.getElementById('user_verify_verification_char4').value = '';
-    document.getElementById('user_verify_verification_char5').value = '';
-    document.getElementById('user_verify_verification_char6').value = '';
+    document.getElementById('common_user_verification_type').innerHTML='';
+    document.getElementById('common_user_verify_email').innerHTML='';
+    document.getElementById('common_user_verify_cancel').innerHTML='';
+    document.getElementById('common_user_verify_verification_char1').value = '';
+    document.getElementById('common_user_verify_verification_char2').value = '';
+    document.getElementById('common_user_verify_verification_char3').value = '';
+    document.getElementById('common_user_verify_verification_char4').value = '';
+    document.getElementById('common_user_verify_verification_char5').value = '';
+    document.getElementById('common_user_verify_verification_char6').value = '';
 }
 function dialogue_new_password_clear(){
-    document.getElementById("dialogue_user_new_password").style.visibility = "hidden";
-    document.getElementById("user_new_password_auth").innerHTML='';
-    document.getElementById("user_new_password").value='';
-    document.getElementById("user_new_password_confirm").value='';
+    document.getElementById("common_dialogue_user_new_password").style.visibility = "hidden";
+    document.getElementById("common_user_new_password_auth").innerHTML='';
+    document.getElementById("common_user_new_password").value='';
+    document.getElementById("common_user_new_password_confirm").value='';
     COMMON_GLOBAL['user_account_id'] = '';
     COMMON_GLOBAL['rest_at'] = '';
 }
 function dialogue_user_edit_clear(){
-    document.getElementById('dialogue_user_edit').style.visibility = "hidden";
-    document.getElementById('user_edit_avatar').style.display = 'none';
+    document.getElementById('common_dialogue_user_edit').style.visibility = "hidden";
+    document.getElementById('common_user_edit_avatar').style.display = 'none';
                 
     //common
-    document.getElementById('user_edit_checkbox_profile_private').checked = false;
-    document.getElementById('user_edit_input_username').value = '';
-    document.getElementById('user_edit_input_bio').value = '';
+    document.getElementById('common_user_edit_checkbox_profile_private').checked = false;
+    document.getElementById('common_user_edit_input_username').value = '';
+    document.getElementById('common_user_edit_input_bio').value = '';
     //local
-    document.getElementById('user_edit_input_email').innerHTML = '';
-    document.getElementById('user_edit_input_new_email').value = '';
-    document.getElementById('user_edit_input_password').value = '';
-    document.getElementById('user_edit_input_password_confirm').value = '';
-    document.getElementById('user_edit_input_new_password').value = '';
-    document.getElementById('user_edit_input_new_password_confirm').value = '';
-    document.getElementById('user_edit_input_password_reminder').value = '';
+    document.getElementById('common_user_edit_input_email').innerHTML = '';
+    document.getElementById('common_user_edit_input_new_email').value = '';
+    document.getElementById('common_user_edit_input_password').value = '';
+    document.getElementById('common_user_edit_input_password_confirm').value = '';
+    document.getElementById('common_user_edit_input_new_password').value = '';
+    document.getElementById('common_user_edit_input_new_password_confirm').value = '';
+    document.getElementById('common_user_edit_input_password_reminder').value = '';
     //provider
-    document.getElementById('user_edit_provider_id').innerHTML = '';
-    document.getElementById('user_edit_label_provider_id_data').innerHTML = '';
-    document.getElementById('user_edit_label_provider_name_data').innerHTML = '';
-    document.getElementById('user_edit_label_provider_email_data').innerHTML = '';
-    document.getElementById('user_edit_label_provider_image_url_data').innerHTML = '';
+    document.getElementById('common_user_edit_provider_id').innerHTML = '';
+    document.getElementById('common_user_edit_label_provider_id_data').innerHTML = '';
+    document.getElementById('common_user_edit_label_provider_name_data').innerHTML = '';
+    document.getElementById('common_user_edit_label_provider_email_data').innerHTML = '';
+    document.getElementById('common_user_edit_label_provider_image_url_data').innerHTML = '';
     //account info
-    document.getElementById('user_edit_label_data_last_logontime').innerHTML = '';
-    document.getElementById('user_edit_label_data_account_created').innerHTML = '';
-    document.getElementById('user_edit_label_data_account_modified').innerHTML = '';
+    document.getElementById('common_user_edit_label_data_last_logontime').innerHTML = '';
+    document.getElementById('common_user_edit_label_data_account_created').innerHTML = '';
+    document.getElementById('common_user_edit_label_data_account_modified').innerHTML = '';
 }
 function dialogue_login_clear(){
-    document.getElementById('dialogue_login').style.visibility = 'hidden';
-    document.getElementById('login_username').value = '';
-    document.getElementById('login_password').value = '';
+    document.getElementById('common_dialogue_login').style.visibility = 'hidden';
+    document.getElementById('common_login_username').value = '';
+    document.getElementById('common_login_password').value = '';
 }
 function dialogue_signup_clear(){
-    document.getElementById('dialogue_signup').style.visibility = 'hidden';
-    document.getElementById('signup_username').value = '';
-    document.getElementById('signup_email').value = '';
-    document.getElementById('signup_password').value = '';
-    document.getElementById('signup_password_confirm').value = '';
-    document.getElementById('signup_password_reminder').value = '';
+    document.getElementById('common_dialogue_signup').style.visibility = 'hidden';
+    document.getElementById('common_signup_username').value = '';
+    document.getElementById('common_signup_email').value = '';
+    document.getElementById('common_signup_password').value = '';
+    document.getElementById('common_signup_password_confirm').value = '';
+    document.getElementById('common_signup_password_reminder').value = '';
 }
 function dialogue_forgot_clear(){
-    document.getElementById('forgot_email').value = '';
+    document.getElementById('common_forgot_email').value = '';
 }
 function dialogue_profile_clear(){
-    document.getElementById('profile_info').style.display = 'none';
-    document.getElementById('profile_top').style.display = 'none';
-    document.getElementById('profile_detail').style.display = 'none';
+    document.getElementById('common_profile_info').style.display = 'none';
+    document.getElementById('common_profile_top').style.display = 'none';
+    document.getElementById('common_profile_detail').style.display = 'none';
     
-    document.getElementById('profile_follow').children[0].style.display = 'block';
-    document.getElementById('profile_follow').children[1].style.display = 'none';
-    document.getElementById('profile_like').children[0].style.display = 'block';
-    document.getElementById('profile_like').children[1].style.display = 'none';
+    document.getElementById('common_profile_follow').children[0].style.display = 'block';
+    document.getElementById('common_profile_follow').children[1].style.display = 'none';
+    document.getElementById('common_profile_like').children[0].style.display = 'block';
+    document.getElementById('common_profile_like').children[1].style.display = 'none';
 
-    document.getElementById('profile_avatar').src = '';
-    document.getElementById('profile_username').innerHTML = '';
-    document.getElementById('profile_bio').innerHTML = '';
-    document.getElementById('profile_joined_date').innerHTML = '';
+    document.getElementById('common_profile_avatar').src = '';
+    document.getElementById('common_profile_username').innerHTML = '';
+    document.getElementById('common_profile_bio').innerHTML = '';
+    document.getElementById('common_profile_joined_date').innerHTML = '';
 
-    document.getElementById('profile_info_view_count').innerHTML = '';
-    document.getElementById('profile_info_following_count').innerHTML = '';
-    document.getElementById('profile_info_followers_count').innerHTML = '';
-    document.getElementById('profile_info_likes_count').innerHTML = '';
-    document.getElementById('profile_info_liked_count').innerHTML = '';
+    document.getElementById('common_profile_info_view_count').innerHTML = '';
+    document.getElementById('common_profile_info_following_count').innerHTML = '';
+    document.getElementById('common_profile_info_followers_count').innerHTML = '';
+    document.getElementById('common_profile_info_likes_count').innerHTML = '';
+    document.getElementById('common_profile_info_liked_count').innerHTML = '';
     
-    document.getElementById('profile_qr').innerHTML = '';
-    document.getElementById('profile_detail_list').innerHTML = '';
-    document.getElementById('profile_top_list').innerHTML = '';
+    document.getElementById('common_profile_qr').innerHTML = '';
+    document.getElementById('common_profile_detail_list').innerHTML = '';
+    document.getElementById('common_profile_top_list').innerHTML = '';
 }
 function dialogue_user_edit_remove_error(){
-    document.getElementById('user_edit_input_username').classList.remove('input_error');
+    document.getElementById('common_user_edit_input_username').classList.remove('common_input_error');
 
-    document.getElementById('user_edit_input_bio').classList.remove('input_error');
-    document.getElementById('user_edit_input_new_email').classList.remove('input_error');
+    document.getElementById('common_user_edit_input_bio').classList.remove('common_input_error');
+    document.getElementById('common_user_edit_input_new_email').classList.remove('common_input_error');
 
-    document.getElementById('user_edit_input_password').classList.remove('input_error');
-    document.getElementById('user_edit_input_password_confirm').classList.remove('input_error');
-    document.getElementById('user_edit_input_new_password').classList.remove('input_error');
-    document.getElementById('user_edit_input_new_password_confirm').classList.remove('input_error');
+    document.getElementById('common_user_edit_input_password').classList.remove('common_input_error');
+    document.getElementById('common_user_edit_input_password_confirm').classList.remove('common_input_error');
+    document.getElementById('common_user_edit_input_new_password').classList.remove('common_input_error');
+    document.getElementById('common_user_edit_input_new_password_confirm').classList.remove('common_input_error');
 
-    document.getElementById('user_edit_input_password_reminder').classList.remove('input_error');
+    document.getElementById('common_user_edit_input_password_reminder').classList.remove('common_input_error');
 }
 function lov_close(){
     //remove all event listeners
-    document.querySelectorAll('.list_lov_row').forEach(e => 
+    document.querySelectorAll('.common_list_lov_row').forEach(e => 
         e.replaceWith(e.cloneNode(true))
     );
-    document.getElementById('dialogue_lov').style.visibility = 'hidden';
-    document.getElementById('lov_title').innerHTML='';
-    document.getElementById('lov_search_input').value='';
-    document.getElementById('lov_list').innerHTML='';
+    document.getElementById('common_dialogue_lov').style.visibility = 'hidden';
+    document.getElementById('common_lov_title').innerHTML='';
+    document.getElementById('common_lov_search_input').value='';
+    document.getElementById('common_lov_list').innerHTML='';
     
 }
 function lov_show(lov, function_event){
     
-    document.getElementById('dialogue_lov').style.visibility = 'visible';
-    document.getElementById('lov_list').innerHTML = APP_SPINNER;
+    document.getElementById('common_dialogue_lov').style.visibility = 'visible';
+    document.getElementById('common_lov_list').innerHTML = APP_SPINNER;
     let url = '';
     let token_type = '';
     let lov_column_value='';
     switch (lov){
         case 'PARAMETER_TYPE':{
-            document.getElementById('lov_title').innerHTML = ICONS['app_apps'] + ' ' + ICONS['app_settings']  + ' ' + ICONS['app_type'];
+            document.getElementById('common_lov_title').innerHTML = ICONS['app_apps'] + ' ' + ICONS['app_settings']  + ' ' + ICONS['app_type'];
             lov_column_value = 'parameter_type_text';            
             url = COMMON_GLOBAL['rest_api_db_path'] + COMMON_GLOBAL['rest_parameter_type'] + `admin?`;
             token_type = 1;
             break;
         }
         case 'SERVER_LOG_FILES':{
-            document.getElementById('lov_title').innerHTML = ICONS['app_server'] + ' ' + ICONS['app_file_path'];
+            document.getElementById('common_lov_title').innerHTML = ICONS['app_server'] + ' ' + ICONS['app_file_path'];
             lov_column_value = 'filename';
             url = COMMON_GLOBAL['service_log'] + '/files?';
             token_type = 2;
             break;
         }
         case 'APP_CATEGORY':{
-            document.getElementById('lov_title').innerHTML = ICONS['app_apps'] + ' ' + ICONS['app_type'];
+            document.getElementById('common_lov_title').innerHTML = ICONS['app_apps'] + ' ' + ICONS['app_type'];
             lov_column_value = 'app_category_text';
             url = COMMON_GLOBAL['rest_api_db_path'] + COMMON_GLOBAL['rest_app_category'] + '/admin?'
             token_type = 1;
             break;
         }
         case 'APP_ROLE':{
-            document.getElementById('lov_title').innerHTML = ICONS['app_role'];
+            document.getElementById('common_lov_title').innerHTML = ICONS['app_role'];
             lov_column_value = 'icon';
             url = COMMON_GLOBAL['rest_api_db_path'] + COMMON_GLOBAL['rest_app_role'] + '/admin?'
             token_type = 1;
@@ -1214,25 +1214,25 @@ function lov_show(lov, function_event){
     }
     common_fetch(url, 'GET', token_type, null, null, null, (err, result) =>{
         if (err)
-            document.getElementById('lov_list').innerHTML = '';
+            document.getElementById('common_lov_list').innerHTML = '';
         else{
-            document.getElementById('lov_list').innerHTML = '';
+            document.getElementById('common_lov_list').innerHTML = '';
             let json = JSON.parse(result);
             let html = '';
             for (let i = 0; i < json.data.length; i++) {
                 html += 
-                `<div id='list_lov_row_${i}' class='list_lov_row'>
-                    <div class='list_lov_col'>
+                `<div id='common_list_lov_row_${i}' class='common_list_lov_row'>
+                    <div class='common_list_lov_col'>
                         <div>${json.data[i].id}</div>
                     </div>
-                    <div class='list_lov_col'>
+                    <div class='common_list_lov_col'>
                         <div>${eval('json.data[i].' + lov_column_value)}</div>
                     </div>
                 </div>`;
             }
-            document.getElementById('lov_list').innerHTML = html;
-            document.getElementById('lov_search_input').focus();
-            document.querySelectorAll('.list_lov_row').forEach(e => e.addEventListener('click', function_event));
+            document.getElementById('common_lov_list').innerHTML = html;
+            document.getElementById('common_lov_search_input').focus();
+            document.querySelectorAll('.common_list_lov_row').forEach(e => e.addEventListener('click', function_event));
         }
     })
 }
@@ -1245,79 +1245,79 @@ function lov_keys(event){
         case 'ArrowUp':
         case 'ArrowDown':{
             //loop rows not hidden
-            let x = document.querySelectorAll('.list_lov_row:not(.list_lov_row_hide)');
+            let x = document.querySelectorAll('.common_list_lov_row:not(.list_lov_row_hide)');
             for (let i = 0; i <= x.length -1; i++) {
-                if (x[i].classList.contains('list_lov_row_selected')){
+                if (x[i].classList.contains('common_list_lov_row_selected')){
                     //if up and first or
                     //if down and last
                     if ((event.code=='ArrowUp' && i == 0)||
                         (event.code=='ArrowDown' && i == x.length -1)){
                         if(event.code=='ArrowUp'){
                             //if the first, set the last
-                            x[i].classList.remove ('list_lov_row_selected');
-                            x[x.length -1].classList.add ('list_lov_row_selected');
+                            x[i].classList.remove ('common_list_lov_row_selected');
+                            x[x.length -1].classList.add ('common_list_lov_row_selected');
                         }
                         else{
                             //if the last, set the first
-                            x[i].classList.remove ('list_lov_row_selected');
-                            x[0].classList.add ('list_lov_row_selected');
+                            x[i].classList.remove ('common_list_lov_row_selected');
+                            x[0].classList.add ('common_list_lov_row_selected');
                         }
                         return;
                     }
                     else{
                         if(event.code=='ArrowUp'){
                             //remove highlight, highlight previous
-                            x[i].classList.remove ('list_lov_row_selected');
-                            x[i-1].classList.add ('list_lov_row_selected');
+                            x[i].classList.remove ('common_list_lov_row_selected');
+                            x[i-1].classList.add ('common_list_lov_row_selected');
                         }
                         else{
                             //down
                             //remove highlight, highlight next
-                            x[i].classList.remove ('list_lov_row_selected');
-                            x[i+1].classList.add ('list_lov_row_selected');
+                            x[i].classList.remove ('common_list_lov_row_selected');
+                            x[i+1].classList.add ('common_list_lov_row_selected');
                         }
                         return;
                     }
                 }
             }
             //no highlight found, highlight first
-            x[0].classList.add ('list_lov_row_selected');
+            x[0].classList.add ('common_list_lov_row_selected');
             break
         }
         case 'Enter':{
             //enter
-            let x = document.querySelectorAll('.list_lov_row');
+            let x = document.querySelectorAll('.common_list_lov_row');
             for (let i = 0; i <= x.length -1; i++) {
-                if (x[i].classList.contains('list_lov_row_selected')){
+                if (x[i].classList.contains('common_list_lov_row_selected')){
                     //event on row is set in app when calling lov, dispatch it!
                     x[i].dispatchEvent(new Event('click'))
-                    x[i].classList.remove ('list_lov_row_selected');
+                    x[i].classList.remove ('common_list_lov_row_selected');
                 }
             }
             break
         }
         default:{
             //if db call will be implemented, add delay
-            //typewatch(lov_filter, document.getElementById('lov_search_input').value); 
-            lov_filter(document.getElementById('lov_search_input').value); 
+            //typewatch(lov_filter, document.getElementById('common_lov_search_input').value); 
+            lov_filter(document.getElementById('common_lov_search_input').value); 
             break;
         }    
     }
 }
 function lov_filter(text_filter){
-    let x = document.querySelectorAll('.list_lov_row');
+    let x = document.querySelectorAll('.common_list_lov_row');
     for (let i = 0; i <= x.length -1; i++) {
-        x[i].classList.remove ('list_lov_row_hide');
-        x[i].classList.remove ('list_lov_row_selected');
+        x[i].classList.remove ('common_list_lov_row_hide');
+        x[i].classList.remove ('common_list_lov_row_selected');
     }
     for (let i = 0; i <= x.length -1; i++) {
         if (x[i].children[0].children[0].innerHTML.toUpperCase().indexOf(text_filter.toUpperCase()) > -1 ||
             x[i].children[1].children[0].innerHTML.toUpperCase().indexOf(text_filter.toUpperCase()) > -1){
-                x[i].classList.remove ('list_lov_row_hide');
+                x[i].classList.remove ('common_list_lov_row_hide');
             }
         else{
-            x[i].classList.remove ('list_lov_row_hide');
-            x[i].classList.add ('list_lov_row_hide');
+            x[i].classList.remove ('common_list_lov_row_hide');
+            x[i].classList.add ('common_list_lov_row_hide');
         }
     }
 }
@@ -1446,8 +1446,8 @@ function show_window_info(info, show_toolbar, url, content_type, iframe_content)
 /*----------------------- */
 function broadcast_init(close_eventsource){
     //broadcast
-    document.getElementById('broadcast_close').innerHTML = ICONS['app_broadcast_close'];
-    document.getElementById('broadcast_info_title').innerHTML = ICONS['app_alert'];
+    document.getElementById('common_broadcast_close').innerHTML = ICONS['app_broadcast_close'];
+    document.getElementById('common_broadcast_info_title').innerHTML = ICONS['app_alert'];
     if (close_eventsource==true){
         COMMON_GLOBAL['eventSource'].close();
         connectOnline();
@@ -1459,7 +1459,7 @@ function broadcast_init(close_eventsource){
 function maintenance_countdown(remaining) {
     if(remaining <= 0)
         location.reload(true);
-    document.getElementById('maintenance_countdown').innerHTML = remaining;
+    document.getElementById('common_maintenance_countdown').innerHTML = remaining;
     setTimeout(function(){ maintenance_countdown(remaining - 1); }, 1000);
 };
 function show_broadcast(broadcast_message){
@@ -1469,7 +1469,7 @@ function show_broadcast(broadcast_message){
     if (broadcast_type=='MAINTENANCE'){
         if (COMMON_GLOBAL['user_account_id'] !='' && COMMON_GLOBAL['user_account_id'] !=null)
             eval(`(function (){${COMMON_GLOBAL['exception_app_function']}()}());`);
-        document.getElementById('maintenance_message').innerHTML = ICONS['app_maintenance'];
+        document.getElementById('common_maintenance_message').innerHTML = ICONS['app_maintenance'];
         show_maintenance(message);
     }
     else
@@ -1478,43 +1478,43 @@ function show_broadcast(broadcast_message){
         }
 }
 function show_broadcast_info(message){
-    let hide_function = function() { document.getElementById('broadcast_info').style.visibility='hidden';
-                                     document.getElementById('broadcast_close').removeEventListener('click', hide_function);
-                                     document.getElementById('broadcast_info_message_item').innerHTML='';
-                                     document.getElementById('broadcast_info_message').style.animationName='unset';};
-    document.getElementById('broadcast_info_message').style.animationName='ticker';
-    document.getElementById('broadcast_close').addEventListener('click', hide_function);
-    document.getElementById('broadcast_info_message_item').innerHTML = message;
-    document.getElementById('broadcast_info').style.visibility='visible';
+    let hide_function = function() { document.getElementById('common_broadcast_info').style.visibility='hidden';
+                                     document.getElementById('common_broadcast_close').removeEventListener('click', hide_function);
+                                     document.getElementById('common_broadcast_info_message_item').innerHTML='';
+                                     document.getElementById('common_broadcast_info_message').style.animationName='unset';};
+    document.getElementById('common_broadcast_info_message').style.animationName='common_ticker';
+    document.getElementById('common_broadcast_close').addEventListener('click', hide_function);
+    document.getElementById('common_broadcast_info_message_item').innerHTML = message;
+    document.getElementById('common_broadcast_info').style.visibility='visible';
 }
 function show_maintenance(message, init){
     let countdown_timer = 60;
 
     if (init==1){
-        document.getElementById('dialogue_maintenance').style.visibility='visible';
+        document.getElementById('common_dialogue_maintenance').style.visibility='visible';
         maintenance_countdown(countdown_timer);
     }
     else
-        if (document.getElementById('maintenance_countdown').innerHTML=='') {
-            //profile_avatar_online_status.onlineprofilehide all divs except broadcast and maintenance
+        if (document.getElementById('common_maintenance_countdown').innerHTML=='') {
+            //hide all divs except broadcast and maintenance
             let divs = document.body.getElementsByTagName('div');
             for (let i = 0; i < divs.length; i += 1) {
-                if (divs[i].id.indexOf('broadcast') !=0 &&
-                    divs[i].id.indexOf('dialogue_maintenance') !=0 &&
-                    divs[i].id.indexOf('maintenance') !=0)
+                if (divs[i].id.indexOf('common_broadcast') !=0 &&
+                    divs[i].id.indexOf('common_dialogue_maintenance') !=0 &&
+                    divs[i].id.indexOf('common_maintenance') !=0)
                     divs[i].style.visibility ='hidden';
             }
-            let maintenance_divs = document.getElementById('dialogue_maintenance').getElementsByTagName('div');
+            let maintenance_divs = document.getElementById('common_dialogue_maintenance').getElementsByTagName('div');
             for (let i = 0; i < maintenance_divs.length; i += 1) {
                 maintenance_divs[i].style.visibility ='visible';
             }
-            document.getElementById('dialogue_maintenance').style.visibility='visible';
+            document.getElementById('common_dialogue_maintenance').style.visibility='visible';
             maintenance_countdown(countdown_timer);
-            document.getElementById('maintenance_footer').innerHTML = message;
+            document.getElementById('common_maintenance_footer').innerHTML = message;
         }
         else
             if (message!='')
-                document.getElementById('maintenance_footer').innerHTML = message;
+                document.getElementById('common_maintenance_footer').innerHTML = message;
 }
 function reconnect(){
     setTimeout(connectOnline, 5000);
@@ -1684,14 +1684,14 @@ async function map_init(containervalue, stylevalue, longitude, latitude, map_mar
 
             //add fullscreen button and my location button with eventlisteners
             let mapcontrol = document.querySelectorAll(`#${containervalue} .leaflet-control`)
-            mapcontrol[0].innerHTML += `<a id='map_fullscreen_id' href="#" title="Full Screen" role="button" aria-label="Full Screen"></a>`;
-            document.getElementById('map_fullscreen_id').innerHTML= ICONS['map_fullscreen'];
+            mapcontrol[0].innerHTML += `<a id='common_leaflet_fullscreen_id' href="#" title="Full Screen" role="button" aria-label="Full Screen"></a>`;
+            document.getElementById('common_leaflet_fullscreen_id').innerHTML= ICONS['map_fullscreen'];
             if (COMMON_GLOBAL['client_latitude']!='' && COMMON_GLOBAL['client_longitude']!=''){
-                mapcontrol[0].innerHTML += `<a id='map_my_location_id' href="#" title="My location" role="button" aria-label="My location"></a>`;
-                document.getElementById('map_my_location_id').innerHTML= ICONS['map_my_location'];
+                mapcontrol[0].innerHTML += `<a id='common_leaflet_my_location_id' href="#" title="My location" role="button" aria-label="My location"></a>`;
+                document.getElementById('common_leaflet_my_location_id').innerHTML= ICONS['map_my_location'];
             }
             //add events to the buttons
-            document.getElementById('map_fullscreen_id').addEventListener('click', 
+            document.getElementById('common_leaflet_fullscreen_id').addEventListener('click', 
                                     function() { 
                                                 if (document.fullscreenElement)
                                                     document.exitFullscreen();
@@ -1700,7 +1700,7 @@ async function map_init(containervalue, stylevalue, longitude, latitude, map_mar
                                                 }, 
                                     false);
             if (COMMON_GLOBAL['client_latitude']!='' && COMMON_GLOBAL['client_longitude']!='')
-                document.getElementById('map_my_location_id').addEventListener('click', 
+                document.getElementById('common_leaflet_my_location_id').addEventListener('click', 
                                         function() { 
                                                     map_update(COMMON_GLOBAL['client_longitude'],
                                                                COMMON_GLOBAL['client_latitude'],
@@ -1826,14 +1826,14 @@ function map_setstyle(mapstyle){
     }
 }
 function map_update_popup(title) {
-    document.getElementById('map_popup_title').innerHTML = title;
+    document.getElementById('common_leaflet_popup_title').innerHTML = title;
 }
 async function map_update(longitude, latitude, zoom, text_place, timezone_text = null, marker_id, to_method) {
     return new Promise(function (resolve){
         function map_update_text(timezone_text){
-            let popuptext = `<div id="map_popup_title">${text_place}</div>
-                             <div id="map_popup_sub_title">${ICONS['regional_timezone'] + ICONS['gps_position']}</div>
-                             <div id="map_popup_sub_title_timezone">${timezone_text}</div>`;
+            let popuptext = `<div id="common_leaflet_popup_title">${text_place}</div>
+                             <div id="common_leaflet_popup_sub_title">${ICONS['regional_timezone'] + ICONS['gps_position']}</div>
+                             <div id="common_leaflet_popup_sub_title_timezone">${timezone_text}</div>`;
             map_popup(COMMON_GLOBAL['service_map_popup_offset'], popuptext, longitude, latitude);
             map_marker(marker_id, longitude, latitude);
             resolve(timezone_text);
@@ -1950,9 +1950,9 @@ function show_profile_click_events(item, click_function){
 }
 function profile_top(statschoice, app_rest_url = null, click_function=null) {
     let url;
-    document.getElementById('dialogue_profile').style.visibility = 'visible';
-    document.getElementById('profile_info').style.display = 'none';
-    document.getElementById('profile_top').style.display = 'block';
+    document.getElementById('common_dialogue_profile').style.visibility = 'visible';
+    document.getElementById('common_profile_info').style.display = 'none';
+    document.getElementById('common_profile_top').style.display = 'block';
                 
     if (statschoice ==1 || statschoice ==2 || statschoice ==3){
         /*statschoice 1,2,3: user_account*/
@@ -1969,7 +1969,7 @@ function profile_top(statschoice, app_rest_url = null, click_function=null) {
             null;
         else{
             let json = JSON.parse(result);
-            let profile_top_list = document.getElementById('profile_top_list');
+            let profile_top_list = document.getElementById('common_profile_top_list');
             profile_top_list.innerHTML = '';
             let html ='';
             let image='';
@@ -1978,25 +1978,25 @@ function profile_top(statschoice, app_rest_url = null, click_function=null) {
                 image = list_image_format_src(json.items[i].avatar ?? json.items[i].provider_image)
                 name = json.items[i].username;
                 html +=
-                `<div class='profile_top_list_row'>
-                    <div class='profile_top_list_col'>
-                        <div class='profile_top_list_user_account_id'>${json.items[i].id}</div>
+                `<div class='common_profile_top_list_row'>
+                    <div class='common_profile_top_list_col'>
+                        <div class='common_profile_top_list_user_account_id'>${json.items[i].id}</div>
                     </div>
-                    <div class='profile_top_list_col'>
-                        <img class='profile_top_list_avatar' ${image}>
+                    <div class='common_profile_top_list_col'>
+                        <img class='common_profile_top_list_avatar' ${image}>
                     </div>
-                    <div class='profile_top_list_col'>
-                        <div class='profile_top_list_username'>
+                    <div class='common_profile_top_list_col'>
+                        <div class='common_profile_top_list_username'>
                             <a href='#'>${name}</a>
                         </div>
                     </div>
-                    <div class='profile_top_list_col'>
-                        <div class='profile_top_list_count'>${json.items[i].count}</div>
+                    <div class='common_profile_top_list_col'>
+                        <div class='common_profile_top_list_count'>${json.items[i].count}</div>
                     </div>
                 </div>`;
             }
             profile_top_list.innerHTML = html;
-            show_profile_click_events('.profile_top_list_username', click_function);
+            show_profile_click_events('.common_profile_top_list_username', click_function);
         }
     })
 }
@@ -2017,85 +2017,85 @@ function profile_detail(detailchoice, rest_url_app, fetch_detail, header_app, cl
             case 0:
                 {
                     //show only other app specific hide common
-                    document.getElementById('profile_detail').style.display = 'none';
-                    document.getElementById('profile_detail_header_following').style.display = 'none';
-                    document.getElementById('profile_detail_header_followed').style.display = 'none';
-                    document.getElementById('profile_detail_header_like').style.display = 'none';
-                    document.getElementById('profile_detail_header_liked').style.display = 'none';
-                    document.getElementById('profile_detail_header_app').style.display = 'none';
-                    document.getElementById('profile_detail_header_app').innerHTML = '';
+                    document.getElementById('common_profile_detail').style.display = 'none';
+                    document.getElementById('common_profile_detail_header_following').style.display = 'none';
+                    document.getElementById('common_profile_detail_header_followed').style.display = 'none';
+                    document.getElementById('common_profile_detail_header_like').style.display = 'none';
+                    document.getElementById('common_profile_detail_header_liked').style.display = 'none';
+                    document.getElementById('common_profile_detail_header_app').style.display = 'none';
+                    document.getElementById('common_profile_detail_header_app').innerHTML = '';
                     break;
                 }
             case 1:
                 {
                     //Following
-                    document.getElementById('profile_detail').style.display = 'block';
-                    document.getElementById('profile_detail_header_following').style.display = 'block';
-                    document.getElementById('profile_detail_header_followed').style.display = 'none';
-                    document.getElementById('profile_detail_header_like').style.display = 'none';
-                    document.getElementById('profile_detail_header_liked').style.display = 'none';
-                    document.getElementById('profile_detail_header_app').style.display = 'none';
-                    document.getElementById('profile_detail_header_app').innerHTML = '';
+                    document.getElementById('common_profile_detail').style.display = 'block';
+                    document.getElementById('common_profile_detail_header_following').style.display = 'block';
+                    document.getElementById('common_profile_detail_header_followed').style.display = 'none';
+                    document.getElementById('common_profile_detail_header_like').style.display = 'none';
+                    document.getElementById('common_profile_detail_header_liked').style.display = 'none';
+                    document.getElementById('common_profile_detail_header_app').style.display = 'none';
+                    document.getElementById('common_profile_detail_header_app').innerHTML = '';
                     break;
                 }
             case 2:
                 {
                     //Followed
-                    document.getElementById('profile_detail').style.display = 'block';
-                    document.getElementById('profile_detail_header_following').style.display = 'none';
-                    document.getElementById('profile_detail_header_followed').style.display = 'block';
-                    document.getElementById('profile_detail_header_like').style.display = 'none';
-                    document.getElementById('profile_detail_header_liked').style.display = 'none';
-                    document.getElementById('profile_detail_header_app').style.display = 'none';
-                    document.getElementById('profile_detail_header_app').innerHTML = '';
+                    document.getElementById('common_profile_detail').style.display = 'block';
+                    document.getElementById('common_profile_detail_header_following').style.display = 'none';
+                    document.getElementById('common_profile_detail_header_followed').style.display = 'block';
+                    document.getElementById('common_profile_detail_header_like').style.display = 'none';
+                    document.getElementById('common_profile_detail_header_liked').style.display = 'none';
+                    document.getElementById('common_profile_detail_header_app').style.display = 'none';
+                    document.getElementById('common_profile_detail_header_app').innerHTML = '';
                     break;
                 }
             case 3:
                 {
                     //Like user
-                    document.getElementById('profile_detail').style.display = 'block';
-                    document.getElementById('profile_detail_header_following').style.display = 'none';
-                    document.getElementById('profile_detail_header_followed').style.display = 'none';
-                    document.getElementById('profile_detail_header_like').style.display = 'block';
-                    document.getElementById('profile_detail_header_liked').style.display = 'none';
-                    document.getElementById('profile_detail_header_app').style.display = 'none';
-                    document.getElementById('profile_detail_header_app').innerHTML = '';
+                    document.getElementById('common_profile_detail').style.display = 'block';
+                    document.getElementById('common_profile_detail_header_following').style.display = 'none';
+                    document.getElementById('common_profile_detail_header_followed').style.display = 'none';
+                    document.getElementById('common_profile_detail_header_like').style.display = 'block';
+                    document.getElementById('common_profile_detail_header_liked').style.display = 'none';
+                    document.getElementById('common_profile_detail_header_app').style.display = 'none';
+                    document.getElementById('common_profile_detail_header_app').innerHTML = '';
                     break;
                 }
             case 4:
                 {
                     //Liked user
-                    document.getElementById('profile_detail').style.display = 'block';
-                    document.getElementById('profile_detail_header_following').style.display = 'none';
-                    document.getElementById('profile_detail_header_followed').style.display = 'none';
-                    document.getElementById('profile_detail_header_like').style.display = 'none';
-                    document.getElementById('profile_detail_header_liked').style.display = 'block';
-                    document.getElementById('profile_detail_header_app').style.display = 'none';
-                    document.getElementById('profile_detail_header_app').innerHTML = '';
+                    document.getElementById('common_profile_detail').style.display = 'block';
+                    document.getElementById('common_profile_detail_header_following').style.display = 'none';
+                    document.getElementById('common_profile_detail_header_followed').style.display = 'none';
+                    document.getElementById('common_profile_detail_header_like').style.display = 'none';
+                    document.getElementById('common_profile_detail_header_liked').style.display = 'block';
+                    document.getElementById('common_profile_detail_header_app').style.display = 'none';
+                    document.getElementById('common_profile_detail_header_app').innerHTML = '';
                     break;
                 }
             default:
                 {
                     //show app specific
-                    document.getElementById('profile_detail').style.display = 'block';
-                    document.getElementById('profile_detail_header_following').style.display = 'none';
-                    document.getElementById('profile_detail_header_followed').style.display = 'none';
-                    document.getElementById('profile_detail_header_like').style.display = 'none';
-                    document.getElementById('profile_detail_header_liked').style.display = 'none';
-                    document.getElementById('profile_detail_header_app').style.display = 'block';
-                    document.getElementById('profile_detail_header_app').innerHTML = header_app;
+                    document.getElementById('common_profile_detail').style.display = 'block';
+                    document.getElementById('common_profile_detail_header_following').style.display = 'none';
+                    document.getElementById('common_profile_detail_header_followed').style.display = 'none';
+                    document.getElementById('common_profile_detail_header_like').style.display = 'none';
+                    document.getElementById('common_profile_detail_header_liked').style.display = 'none';
+                    document.getElementById('common_profile_detail_header_app').style.display = 'block';
+                    document.getElementById('common_profile_detail_header_app').innerHTML = header_app;
                     break;
                 }
         }
         if (fetch_detail){
-            common_fetch(url + document.getElementById('profile_id').innerHTML +
+            common_fetch(url + document.getElementById('common_profile_id').innerHTML +
                         '?detailchoice=' + detailchoice, 
                          'GET', 1, null, null, null, (err, result) =>{
                 if (err)
                     null;
                 else{
                     let json = JSON.parse(result);
-                    let profile_detail_list = document.getElementById('profile_detail_list');
+                    let profile_detail_list = document.getElementById('common_profile_detail_list');
                     profile_detail_list.innerHTML = '';
 
                     let html = '';
@@ -2104,31 +2104,31 @@ function profile_detail(detailchoice, rest_url_app, fetch_detail, header_app, cl
                     for (let i = 0; i < json.count; i++) {
                         //id for username list, app_id for app list
                         if (detailchoice==5 && typeof json.items[i].id =='undefined'){
-                            if (document.getElementById('profile_id').innerHTML==COMMON_GLOBAL['user_account_id'])
-                                delete_div = `<div class='profile_detail_list_app_delete'>${global_icon_app_delete}</div>`;
+                            if (document.getElementById('common_profile_id').innerHTML==COMMON_GLOBAL['user_account_id'])
+                                delete_div = `<div class='common_profile_detail_list_app_delete'>${global_icon_app_delete}</div>`;
                                 
                             //App list in app 0
                             html += 
-                            `<div class='profile_detail_list_row'>
-                                <div class='profile_detail_list_col'>
-                                    <div class='profile_detail_list_app_id'>${json.items[i].app_id}</div>
+                            `<div class='common_profile_detail_list_row'>
+                                <div class='common_profile_detail_list_col'>
+                                    <div class='common_profile_detail_list_app_id'>${json.items[i].app_id}</div>
                                 </div>
-                                <div class='profile_detail_list_col'>
-                                    <img class='profile_detail_list_app_logo' src='${json.items[i].logo}'>
+                                <div class='common_profile_detail_list_col'>
+                                    <img class='common_profile_detail_list_app_logo' src='${json.items[i].logo}'>
                                 </div>
-                                <div class='profile_detail_list_col'>
-                                    <div class='profile_detail_list_app_name'>
+                                <div class='common_profile_detail_list_col'>
+                                    <div class='common_profile_detail_list_app_name'>
                                         <a href='${json.items[i].url}'>${json.items[i].app_name}</a>
                                     </div>
                                 </div>
-                                <div class='profile_detail_list_col'>
+                                <div class='common_profile_detail_list_col'>
                                     ${delete_div}
                                 </div>
-                                <div class='profile_detail_list_col'>
-                                    <div class='profile_detail_list_app_url'>${json.items[i].url}</div>
+                                <div class='common_profile_detail_list_col'>
+                                    <div class='common_profile_detail_list_app_url'>${json.items[i].url}</div>
                                 </div>
-                                <div class='profile_detail_list_col'>
-                                    <div class='profile_detail_list_date_created'>${json.items[i].date_created}</div>
+                                <div class='common_profile_detail_list_col'>
+                                    <div class='common_profile_detail_list_date_created'>${json.items[i].date_created}</div>
                                 </div>
                             </div>`;
                         }
@@ -2136,15 +2136,15 @@ function profile_detail(detailchoice, rest_url_app, fetch_detail, header_app, cl
                             //Username list
                             image = list_image_format_src(json.items[i].avatar ?? json.items[i].provider_image)
                             html += 
-                            `<div class='profile_detail_list_row'>
-                                <div class='profile_detail_list_col'>
-                                    <div class='profile_detail_list_user_account_id'>${json.items[i].id}</div>
+                            `<div class='common_profile_detail_list_row'>
+                                <div class='common_profile_detail_list_col'>
+                                    <div class='common_profile_detail_list_user_account_id'>${json.items[i].id}</div>
                                 </div>
-                                <div class='profile_detail_list_col'>
-                                    <img class='profile_detail_list_avatar' ${image}>
+                                <div class='common_profile_detail_list_col'>
+                                    <img class='common_profile_detail_list_avatar' ${image}>
                                 </div>
-                                <div class='profile_detail_list_col'>
-                                    <div class='profile_detail_list_username'>
+                                <div class='common_profile_detail_list_col'>
+                                    <div class='common_profile_detail_list_username'>
                                         <a href='#'>${json.items[i].username}</a>
                                     </div>
                                 </div>
@@ -2153,19 +2153,19 @@ function profile_detail(detailchoice, rest_url_app, fetch_detail, header_app, cl
                     }
                     profile_detail_list.innerHTML = html;
                     if (detailchoice==5){
-                        document.querySelectorAll('.profile_detail_list_app_name').forEach(e => e.addEventListener('click', function(event) {
+                        document.querySelectorAll('.common_profile_detail_list_app_name').forEach(e => e.addEventListener('click', function(event) {
                             event.preventDefault();
                             window.open(event.target.parentNode.parentNode.parentNode.children[4].children[0].innerHTML, '_blank');
                         }))
-                        if (document.getElementById('profile_id').innerHTML==COMMON_GLOBAL['user_account_id']){
-                            document.querySelectorAll('.profile_detail_list_app_delete').forEach(e => e.addEventListener('click', function(event) {
+                        if (document.getElementById('common_profile_id').innerHTML==COMMON_GLOBAL['user_account_id']){
+                            document.querySelectorAll('.common_profile_detail_list_app_delete').forEach(e => e.addEventListener('click', function(event) {
                                 user_account_app_delete(null, 
-                                                        document.getElementById('profile_id').innerHTML,
+                                                        document.getElementById('common_profile_id').innerHTML,
                                                         event.target.parentNode.parentNode.parentNode.children[0].children[0].innerHTML,
                                                         function() { 
-                                                            document.getElementById('dialogue_message').style.visibility = 'hidden';
+                                                            document.getElementById('common_dialogue_message').style.visibility = 'hidden';
                                                             user_account_app_delete(1, 
-                                                                                    document.getElementById('profile_id').innerHTML, 
+                                                                                    document.getElementById('common_profile_id').innerHTML, 
                                                                                     event.target.parentNode.parentNode.parentNode.children[0].children[0].innerHTML, 
                                                                                     null);
                                                         });
@@ -2173,7 +2173,7 @@ function profile_detail(detailchoice, rest_url_app, fetch_detail, header_app, cl
                         }
                     }
                     else
-                        show_profile_click_events('.profile_detail_list_username', click_function);
+                        show_profile_click_events('.common_profile_detail_list_username', click_function);
                 }
             })
         }
@@ -2181,15 +2181,15 @@ function profile_detail(detailchoice, rest_url_app, fetch_detail, header_app, cl
         show_common_dialogue('LOGIN');
 }
 function search_profile(click_function) {
-    document.getElementById('profile_search_input').classList.remove('input_error');
-    let profile_search_list = document.getElementById('profile_search_list');
+    document.getElementById('common_profile_search_input').classList.remove('common_input_error');
+    let profile_search_list = document.getElementById('common_profile_search_list');
     profile_search_list.innerHTML = '';
-    document.getElementById('profile_search_list_wrap').style.display = 'none';
+    document.getElementById('common_profile_search_list_wrap').style.display = 'none';
     profile_search_list.style.display = 'none';
-    if (document.getElementById('profile_search_input').value=='')
-        document.getElementById('profile_search_input').classList.add('input_error');
+    if (document.getElementById('common_profile_search_input').value=='')
+        document.getElementById('common_profile_search_input').classList.add('common_input_error');
     else{
-        let searched_username = document.getElementById('profile_search_input').value;
+        let searched_username = document.getElementById('common_profile_search_input').value;
         let url;
         let token;
         let json_data;
@@ -2222,7 +2222,7 @@ function search_profile(click_function) {
                 let json = JSON.parse(result);
                 if (json.count > 0){
                     profile_search_list.style.display = "inline-block";
-                    document.getElementById('profile_search_list_wrap').style.display = 'flex';
+                    document.getElementById('common_profile_search_list_wrap').style.display = 'flex';
                 }
                 let html = '';
                 let image= '';
@@ -2231,22 +2231,22 @@ function search_profile(click_function) {
                     image = list_image_format_src(json.items[i].avatar ?? json.items[i].provider_image)
                     name = json.items[i].username;
                     html +=
-                    `<div class='profile_search_list_row'>
-                        <div class='profile_search_list_col'>
-                            <div class='profile_search_list_user_account_id'>${json.items[i].id}</div>
+                    `<div class='common_profile_search_list_row'>
+                        <div class='common_profile_search_list_col'>
+                            <div class='common_profile_search_list_user_account_id'>${json.items[i].id}</div>
                         </div>
-                        <div class='profile_search_list_col'>
-                            <img class='profile_search_list_avatar' ${image}>
+                        <div class='common_profile_search_list_col'>
+                            <img class='common_profile_search_list_avatar' ${image}>
                         </div>
-                        <div class='profile_search_list_col'>
-                            <div class='profile_search_list_username'>
+                        <div class='common_profile_search_list_col'>
+                            <div class='common_profile_search_list_username'>
                                 <a href='#'>${name}</a>
                             </div>
                         </div>
                     </div>`;
                 }
                 profile_search_list.innerHTML = html;
-                show_profile_click_events('.profile_search_list_username', click_function);
+                show_profile_click_events('.common_profile_search_list_username', click_function);
             }
         })
     }
@@ -2291,55 +2291,55 @@ async function profile_show(user_account_id_other = null, username = null, callB
                 return callBack(err,null);
             else{
                 json = JSON.parse(result);
-                document.getElementById('profile_info').style.display = "block";
-                document.getElementById('profile_main').style.display = "block";
-                document.getElementById('profile_id').innerHTML = json.id;
-                set_avatar(json.avatar ?? json.provider_image, document.getElementById('profile_avatar')); 
+                document.getElementById('common_profile_info').style.display = "block";
+                document.getElementById('common_profile_main').style.display = "block";
+                document.getElementById('common_profile_id').innerHTML = json.id;
+                set_avatar(json.avatar ?? json.provider_image, document.getElementById('common_profile_avatar')); 
                 //show local username
-                document.getElementById('profile_username').innerHTML = json.username;
+                document.getElementById('common_profile_username').innerHTML = json.username;
 
-                document.getElementById('profile_bio').innerHTML = get_null_or_value(json.bio);
-                document.getElementById('profile_joined_date').innerHTML = format_json_date(json.date_created, true);
-                document.getElementById("profile_qr").innerHTML = '';
-                create_qr('profile_qr', getHostname() + '/' + json.username);
+                document.getElementById('common_profile_bio').innerHTML = get_null_or_value(json.bio);
+                document.getElementById('common_profile_joined_date').innerHTML = format_json_date(json.date_created, true);
+                document.getElementById("common_profile_qr").innerHTML = '';
+                create_qr('common_profile_qr', getHostname() + '/' + json.username);
                 //User account followed and liked
                 if (json.followed == 1) {
                     //followed
-                    document.getElementById('profile_follow').children[0].style.display = 'none';
-                    document.getElementById('profile_follow').children[1].style.display = 'block';
+                    document.getElementById('common_profile_follow').children[0].style.display = 'none';
+                    document.getElementById('common_profile_follow').children[1].style.display = 'block';
                 } else {
                     //not followed
-                    document.getElementById('profile_follow').children[0].style.display = 'block';
-                    document.getElementById('profile_follow').children[1].style.display = 'none';
+                    document.getElementById('common_profile_follow').children[0].style.display = 'block';
+                    document.getElementById('common_profile_follow').children[1].style.display = 'none';
                 }
                 if (json.liked == 1) {
                     //liked
-                    document.getElementById('profile_like').children[0].style.display = 'none';
-                    document.getElementById('profile_like').children[1].style.display = 'block';
+                    document.getElementById('common_profile_like').children[0].style.display = 'none';
+                    document.getElementById('common_profile_like').children[1].style.display = 'block';
                 } else {
                     //not liked
-                    document.getElementById('profile_like').children[0].style.display = 'block';
-                    document.getElementById('profile_like').children[1].style.display = 'none';
+                    document.getElementById('common_profile_like').children[0].style.display = 'block';
+                    document.getElementById('common_profile_like').children[1].style.display = 'none';
                 } 
                 //if private then hide info, sql decides if private, no need to check here if same user
                 if (json.private==1) {
                     //private
-                    document.getElementById('profile_public').style.display = "none";
-                    document.getElementById('profile_private').style.display = "block";
+                    document.getElementById('common_profile_public').style.display = "none";
+                    document.getElementById('common_profile_private').style.display = "block";
                 } else {
                     //public
-                    document.getElementById('profile_public').style.display = "block";
-                    document.getElementById('profile_private').style.display = "none";
-                    document.getElementById('profile_info_view_count').innerHTML = json.count_views;
-                    document.getElementById('profile_info_following_count').innerHTML = json.count_following;
-                    document.getElementById('profile_info_followers_count').innerHTML = json.count_followed;
-                    document.getElementById('profile_info_likes_count').innerHTML = json.count_likes;
-                    document.getElementById('profile_info_liked_count').innerHTML = json.count_liked;
+                    document.getElementById('common_profile_public').style.display = "block";
+                    document.getElementById('common_profile_private').style.display = "none";
+                    document.getElementById('common_profile_info_view_count').innerHTML = json.count_views;
+                    document.getElementById('common_profile_info_following_count').innerHTML = json.count_following;
+                    document.getElementById('common_profile_info_followers_count').innerHTML = json.count_followed;
+                    document.getElementById('common_profile_info_likes_count').innerHTML = json.count_likes;
+                    document.getElementById('common_profile_info_liked_count').innerHTML = json.count_liked;
                 }    
                 if (COMMON_GLOBAL['user_account_id'] =='')
                     setTimeout(function(){show_common_dialogue('LOGIN')}, 2000);
                 else
-                    checkOnline('profile_avatar_online_status', json.id);
+                    checkOnline('common_profile_avatar_online_status', json.id);
                 return callBack(null,{profile_id: json.id,
                                       private: json.private});   
             }
@@ -2347,11 +2347,11 @@ async function profile_show(user_account_id_other = null, username = null, callB
     }
 }
 function profile_close(){
-    document.getElementById('dialogue_profile').style.visibility = 'hidden';
+    document.getElementById('common_dialogue_profile').style.visibility = 'hidden';
     dialogue_profile_clear();
 }
 async function profile_update_stat(callBack){
-    let profile_id = document.getElementById('profile_id');
+    let profile_id = document.getElementById('common_profile_id');
     let json_data =
     `{
         "client_latitude": "${COMMON_GLOBAL['client_latitude']}",
@@ -2366,11 +2366,11 @@ async function profile_update_stat(callBack){
             return callBack(err,null);
         else{
             let json = JSON.parse(result);
-            document.getElementById('profile_info_view_count').innerHTML = json.count_views;
-            document.getElementById('profile_info_following_count').innerHTML = json.count_following;
-            document.getElementById('profile_info_followers_count').innerHTML = json.count_followed;
-            document.getElementById('profile_info_likes_count').innerHTML = json.count_likes;
-            document.getElementById('profile_info_liked_count').innerHTML = json.count_liked;
+            document.getElementById('common_profile_info_view_count').innerHTML = json.count_views;
+            document.getElementById('common_profile_info_following_count').innerHTML = json.count_following;
+            document.getElementById('common_profile_info_followers_count').innerHTML = json.count_followed;
+            document.getElementById('common_profile_info_likes_count').innerHTML = json.count_likes;
+            document.getElementById('common_profile_info_liked_count').innerHTML = json.count_liked;
             return callBack(null, {id : json.id})
         }
     })
@@ -2383,54 +2383,54 @@ function search_input(event, event_function){
         }
         case 'ArrowUp':
         case 'ArrowDown':{
-            if (document.getElementById('profile_search_list').style.display=='inline-block'){
-                let x = document.querySelectorAll('.profile_search_list_row');
+            if (document.getElementById('common_profile_search_list').style.display=='inline-block'){
+                let x = document.querySelectorAll('.common_profile_search_list_row');
                 for (let i = 0; i <= x.length -1; i++) {
-                    if (x[i].classList.contains('profile_search_list_selected'))
+                    if (x[i].classList.contains('common_profile_search_list_selected'))
                         //if up and first or
                         //if down and last
                         if ((event.code=='ArrowUp' && i == 0)||
                             (event.code=='ArrowDown' && i == x.length -1)){
                             if(event.code=='ArrowUp'){
                                 //if the first, set the last
-                                x[i].classList.remove ('profile_search_list_selected');
-                                x[x.length -1].classList.add ('profile_search_list_selected');
+                                x[i].classList.remove ('common_profile_search_list_selected');
+                                x[x.length -1].classList.add ('common_profile_search_list_selected');
                             }
                             else{
                                 //down
                                 //if the last, set the first
-                                x[i].classList.remove ('profile_search_list_selected');
-                                x[0].classList.add ('profile_search_list_selected');
+                                x[i].classList.remove ('common_profile_search_list_selected');
+                                x[0].classList.add ('common_profile_search_list_selected');
                             }
                             return;
                         }
                         else{
                             if(event.code=='ArrowUp'){
                                 //remove highlight, highlight previous
-                                x[i].classList.remove ('profile_search_list_selected');
-                                x[i-1].classList.add ('profile_search_list_selected');
+                                x[i].classList.remove ('common_profile_search_list_selected');
+                                x[i-1].classList.add ('common_profile_search_list_selected');
                             }
                             else{
                                 //down
                                 //remove highlight, highlight next
-                                x[i].classList.remove ('profile_search_list_selected');
-                                x[i+1].classList.add ('profile_search_list_selected');
+                                x[i].classList.remove ('common_profile_search_list_selected');
+                                x[i+1].classList.add ('common_profile_search_list_selected');
                             }
                             return;
                         }
                 }
                 //no highlight found, highlight first
-                x[0].classList.add ('profile_search_list_selected');
+                x[0].classList.add ('common_profile_search_list_selected');
                 return;
             }
             break
         }
         case 'Enter':{
             //enter
-            if (document.getElementById('profile_search_list').style.display=='inline-block'){
-                let x = document.querySelectorAll('.profile_search_list_row');
+            if (document.getElementById('common_profile_search_list').style.display=='inline-block'){
+                let x = document.querySelectorAll('.common_profile_search_list_row');
                 for (let i = 0; i <= x.length -1; i++) {
-                    if (x[i].classList.contains('profile_search_list_selected')){
+                    if (x[i].classList.contains('common_profile_search_list_selected')){
                         /*Show profile and leave searchresult so user can go back to searchresult again*/
                         if (event_function ==null){
                             profile_show(x[i].children[0].children[0].innerHTML,
@@ -2445,7 +2445,7 @@ function search_input(event, event_function){
                             //   ${null})}());`);
                         }
                             
-                        x[i].classList.remove ('profile_search_list_selected');
+                        x[i].classList.remove ('common_profile_search_list_selected');
                     }
                 }
                 return;
@@ -2523,17 +2523,17 @@ async function user_logoff(){
     COMMON_GLOBAL['rest_at'] ='';
     COMMON_GLOBAL['user_account_id'] = '';
     
-    set_avatar(null, document.getElementById('user_menu_avatar_img')); 
+    set_avatar(null, document.getElementById('common_user_menu_avatar_img')); 
     //clear logged in info
-    document.getElementById('user_menu_username').innerHTML = '';
-    document.getElementById('user_menu_username').style.display = 'none';
-    document.getElementById('user_menu_logged_in').style.display = 'none';
-    document.getElementById('user_menu_logged_out').style.display = 'inline-block';
-    document.getElementById('user_menu_dropdown_logged_in').style.display = 'none';
-    document.getElementById('user_menu_dropdown_logged_out').style.display = 'inline-block';
+    document.getElementById('common_user_menu_username').innerHTML = '';
+    document.getElementById('common_user_menu_username').style.display = 'none';
+    document.getElementById('common_user_menu_logged_in').style.display = 'none';
+    document.getElementById('common_user_menu_logged_out').style.display = 'inline-block';
+    document.getElementById('common_user_menu_dropdown_logged_in').style.display = 'none';
+    document.getElementById('common_user_menu_dropdown_logged_out').style.display = 'inline-block';
 
     updateOnlineStatus();
-    document.getElementById('profile_avatar_online_status').className='';
+    document.getElementById('common_profile_avatar_online_status').className='';
     //get new data token to avoid endless loop och invalid token
     await common_fetch_basic(0, null,  null, null,  (err, result)=>{
         dialogue_user_edit_clear();
@@ -2542,7 +2542,7 @@ async function user_logoff(){
         dialogue_login_clear();
         dialogue_signup_clear();
         dialogue_forgot_clear();
-        document.getElementById('dialogue_profile').style.visibility = 'hidden';
+        document.getElementById('common_dialogue_profile').style.visibility = 'hidden';
         dialogue_profile_clear();
         user_preferences_set_default_globals('LOCALE');
         user_preferences_set_default_globals('TIMEZONE');
@@ -2561,44 +2561,44 @@ async function user_edit() {
         else{
             json = JSON.parse(result);
             if (COMMON_GLOBAL['user_account_id'] == json.id) {
-                document.getElementById('user_edit_local').style.display = 'none';
-                document.getElementById('user_edit_provider').style.display = 'none';
-                document.getElementById('dialogue_user_edit').style.visibility = "visible";
+                document.getElementById('common_user_edit_local').style.display = 'none';
+                document.getElementById('common_user_edit_provider').style.display = 'none';
+                document.getElementById('common_dialogue_user_edit').style.visibility = "visible";
 
-                document.getElementById('user_edit_checkbox_profile_private').checked = number_to_boolean(json.private);
-                document.getElementById('user_edit_input_username').value = json.username;
-                document.getElementById('user_edit_input_bio').value = get_null_or_value(json.bio);
+                document.getElementById('common_user_edit_checkbox_profile_private').checked = number_to_boolean(json.private);
+                document.getElementById('common_user_edit_input_username').value = json.username;
+                document.getElementById('common_user_edit_input_bio').value = get_null_or_value(json.bio);
 
                 if (json.provider_id == null) {
-                    document.getElementById('user_edit_local').style.display = 'block';
-                    document.getElementById('user_edit_provider').style.display = 'none';
+                    document.getElementById('common_user_edit_local').style.display = 'block';
+                    document.getElementById('common_user_edit_provider').style.display = 'none';
 
                     //display fetched avatar editable
-                    document.getElementById('user_edit_avatar').style.display = 'block';
-                    set_avatar(json.avatar, document.getElementById('user_edit_avatar_img')); 
-                    document.getElementById('user_edit_input_email').innerHTML = json.email;
-                    document.getElementById('user_edit_input_new_email').value = json.email_unverified;
-                    document.getElementById('user_edit_input_password').value = '',
-                        document.getElementById('user_edit_input_password_confirm').value = '',
-                        document.getElementById('user_edit_input_new_password').value = '';
-                    document.getElementById('user_edit_input_new_password_confirm').value = '';
+                    document.getElementById('common_user_edit_avatar').style.display = 'block';
+                    set_avatar(json.avatar, document.getElementById('common_user_edit_avatar_img')); 
+                    document.getElementById('common_user_edit_input_email').innerHTML = json.email;
+                    document.getElementById('common_user_edit_input_new_email').value = json.email_unverified;
+                    document.getElementById('common_user_edit_input_password').value = '',
+                        document.getElementById('common_user_edit_input_password_confirm').value = '',
+                        document.getElementById('common_user_edit_input_new_password').value = '';
+                    document.getElementById('common_user_edit_input_new_password_confirm').value = '';
 
-                    document.getElementById('user_edit_input_password_reminder').value = json.password_reminder;
+                    document.getElementById('common_user_edit_input_password_reminder').value = json.password_reminder;
                 } else{
-                        document.getElementById('user_edit_local').style.display = 'none';
-                        document.getElementById('user_edit_provider').style.display = 'block';
-                        document.getElementById('user_edit_provider_id').innerHTML = json.identity_provider_id;
-                        document.getElementById('user_edit_label_provider_id_data').innerHTML = json.provider_id;
-                        document.getElementById('user_edit_label_provider_name_data').innerHTML = json.provider_first_name + ' ' + json.provider_last_name;
-                        document.getElementById('user_edit_label_provider_email_data').innerHTML = json.provider_email;
-                        document.getElementById('user_edit_label_provider_image_url_data').innerHTML = json.provider_image_url;
-                        document.getElementById('user_edit_avatar').style.display = 'none';
-                        set_avatar(json.provider_image, document.getElementById('user_edit_avatar_img')); 
+                        document.getElementById('common_user_edit_local').style.display = 'none';
+                        document.getElementById('common_user_edit_provider').style.display = 'block';
+                        document.getElementById('common_user_edit_provider_id').innerHTML = json.identity_provider_id;
+                        document.getElementById('common_user_edit_label_provider_id_data').innerHTML = json.provider_id;
+                        document.getElementById('common_user_edit_label_provider_name_data').innerHTML = json.provider_first_name + ' ' + json.provider_last_name;
+                        document.getElementById('common_user_edit_label_provider_email_data').innerHTML = json.provider_email;
+                        document.getElementById('common_user_edit_label_provider_image_url_data').innerHTML = json.provider_image_url;
+                        document.getElementById('common_user_edit_avatar').style.display = 'none';
+                        set_avatar(json.provider_image, document.getElementById('common_user_edit_avatar_img')); 
                     } 
-                document.getElementById('user_edit_label_data_last_logontime').innerHTML = format_json_date(json.last_logontime, null);
-                document.getElementById('user_edit_label_data_account_created').innerHTML = format_json_date(json.date_created, null);
-                document.getElementById('user_edit_label_data_account_modified').innerHTML = format_json_date(json.date_modified, null);
-                set_avatar(json.avatar ?? json.provider_image, document.getElementById('user_menu_avatar_img'));
+                document.getElementById('common_user_edit_label_data_last_logontime').innerHTML = format_json_date(json.last_logontime, null);
+                document.getElementById('common_user_edit_label_data_account_created').innerHTML = format_json_date(json.date_created, null);
+                document.getElementById('common_user_edit_label_data_account_modified').innerHTML = format_json_date(json.date_modified, null);
+                set_avatar(json.avatar ?? json.provider_image, document.getElementById('common_user_menu_avatar_img'));
             } else {
                 //User not found
                 show_message('ERROR', 20305, null, null, COMMON_GLOBAL['common_app_id']);
@@ -2607,10 +2607,10 @@ async function user_edit() {
     })
 }
 async function user_update() {
-    let username = document.getElementById('user_edit_input_username').value;
-    let bio = document.getElementById('user_edit_input_bio').value;
-    let avatar = document.getElementById('user_edit_avatar_img').src;
-    let new_email = document.getElementById('user_edit_input_new_email').value;
+    let username = document.getElementById('common_user_edit_input_username').value;
+    let bio = document.getElementById('common_user_edit_input_bio').value;
+    let avatar = document.getElementById('common_user_edit_avatar_img').src;
+    let new_email = document.getElementById('common_user_edit_input_new_email').value;
 
     let url;
     let json_data;
@@ -2618,13 +2618,13 @@ async function user_update() {
     if (check_input(bio, 150) == false)
         return null;
         
-    if (document.getElementById('user_edit_local').style.display == 'block') {
-        let email = document.getElementById('user_edit_input_email').innerHTML;    
-        let password = document.getElementById('user_edit_input_password').value;
-        let password_confirm = document.getElementById('user_edit_input_password_confirm').value;
-        let new_password = document.getElementById('user_edit_input_new_password').value;
-        let new_password_confirm = document.getElementById('user_edit_input_new_password_confirm').value;
-        let password_reminder = document.getElementById('user_edit_input_password_reminder').value;
+    if (document.getElementById('common_user_edit_local').style.display == 'block') {
+        let email = document.getElementById('common_user_edit_input_email').innerHTML;    
+        let password = document.getElementById('common_user_edit_input_password').value;
+        let password_confirm = document.getElementById('common_user_edit_input_password_confirm').value;
+        let new_password = document.getElementById('common_user_edit_input_new_password').value;
+        let new_password_confirm = document.getElementById('common_user_edit_input_new_password_confirm').value;
+        let password_reminder = document.getElementById('common_user_edit_input_password_reminder').value;
         if (check_input(username) == false ||
             check_input(new_email) == false ||
             check_input(password) == false ||
@@ -2639,34 +2639,34 @@ async function user_update() {
         //validate input
         if (username == '') {
             //"Please enter username"
-            document.getElementById('user_edit_input_username').classList.add('input_error');
+            document.getElementById('common_user_edit_input_username').classList.add('common_input_error');
             show_message('ERROR', 20303, null, null);
             return null;
         }
         if (password == '') {
             //"Please enter password"
-            document.getElementById('user_edit_input_password').classList.add('input_error');
+            document.getElementById('common_user_edit_input_password').classList.add('common_input_error');
             show_message('ERROR', 20304, null, null, COMMON_GLOBAL['common_app_id']);
             return null;
         }
         if (password != password_confirm) {
             //Password not the same
-            document.getElementById('user_edit_input_password_confirm').classList.add('input_error');
+            document.getElementById('common_user_edit_input_password_confirm').classList.add('common_input_error');
             show_message('ERROR', 20301, null, null, COMMON_GLOBAL['common_app_id']);
             return null;
         }
         //check new passwords
         if (new_password != new_password_confirm) {
             //New Password are entered but they are not the same
-            document.getElementById('user_edit_input_new_password').classList.add('input_error');
-            document.getElementById('user_edit_input_new_password_confirm').classList.add('input_error');
+            document.getElementById('common_user_edit_input_new_password').classList.add('common_input_error');
+            document.getElementById('common_user_edit_input_new_password_confirm').classList.add('common_input_error');
             show_message('ERROR', 20301, null, null);
             return null;
         }
         json_data = `{ 
                         "username":"${username}",
                         "bio":"${bio}",
-                        "private": ${boolean_to_number(document.getElementById('user_edit_checkbox_profile_private').checked)},
+                        "private": ${boolean_to_number(document.getElementById('common_user_edit_checkbox_profile_private').checked)},
                         "password":"${password}",
                         "new_password":"${new_password}",
                         "password_reminder":"${password_reminder}",
@@ -2677,29 +2677,29 @@ async function user_update() {
                     }`;
         url = COMMON_GLOBAL['rest_api_db_path'] + COMMON_GLOBAL['rest_user_account'] + COMMON_GLOBAL['user_account_id'];
     } else {
-        json_data = `{"provider_id": "${document.getElementById('user_edit_provider_id').innerHTML}",
+        json_data = `{"provider_id": "${document.getElementById('common_user_edit_provider_id').innerHTML}",
                       "username":"${username}",
                       "bio":"${bio}",
-                      "private":${boolean_to_number(document.getElementById('user_edit_checkbox_profile_private').checked)}
+                      "private":${boolean_to_number(document.getElementById('common_user_edit_checkbox_profile_private').checked)}
                      }`;
         url = COMMON_GLOBAL['rest_api_db_path'] + COMMON_GLOBAL['rest_user_account_common'] + COMMON_GLOBAL['user_account_id'];
     }
-    let old_button = document.getElementById('user_edit_btn_user_update').innerHTML;
+    let old_button = document.getElementById('common_user_edit_btn_user_update').innerHTML;
     let json;
-    document.getElementById('user_edit_btn_user_update').innerHTML = APP_SPINNER;
+    document.getElementById('common_user_edit_btn_user_update').innerHTML = APP_SPINNER;
     //update user using REST API
     common_fetch(url + '?', 
                  'PUT', 1, json_data, null, null, (err, result) =>{
-        document.getElementById('user_edit_btn_user_update').innerHTML = old_button;
+        document.getElementById('common_user_edit_btn_user_update').innerHTML = old_button;
         if (err){    
             return null;
         }
         else{
             json = JSON.parse(result);
-            set_avatar(avatar, document.getElementById('user_menu_avatar_img'));
-            document.getElementById('user_menu_username').innerHTML = username;
+            set_avatar(avatar, document.getElementById('common_user_menu_avatar_img'));
+            document.getElementById('common_user_menu_username').innerHTML = username;
             if (json.sent_change_email == 1){
-                let function_cancel_event = function() { document.getElementById('dialogue_user_verify').style.visibility='hidden';};
+                let function_cancel_event = function() { document.getElementById('common_dialogue_user_verify').style.visibility='hidden';};
                 show_common_dialogue('VERIFY', 'NEW_EMAIL', new_email, ICONS['app_cancel'], function_cancel_event);
             }
             else
@@ -2709,11 +2709,11 @@ async function user_update() {
     })
 }
 function user_signup() {
-    let username = document.getElementById('signup_username').value;
-    let email = document.getElementById('signup_email').value;
-    let password = document.getElementById('signup_password').value;
-    let password_confirm = document.getElementById('signup_password_confirm').value;
-    let password_reminder = document.getElementById('signup_password_reminder').value;
+    let username = document.getElementById('common_signup_username').value;
+    let email = document.getElementById('common_signup_email').value;
+    let password = document.getElementById('common_signup_password').value;
+    let password_confirm = document.getElementById('common_signup_password_confirm').value;
+    let password_reminder = document.getElementById('common_signup_password_reminder').value;
 
     if (check_input(username) == false || 
         check_input(email)== false ||
@@ -2746,11 +2746,11 @@ function user_signup() {
         return null;
     }
 
-    let old_button = document.getElementById('signup_button').innerHTML;
-    document.getElementById('signup_button').innerHTML = APP_SPINNER;
+    let old_button = document.getElementById('common_signup_button').innerHTML;
+    document.getElementById('common_signup_button').innerHTML = APP_SPINNER;
     common_fetch(COMMON_GLOBAL['rest_api_db_path'] + COMMON_GLOBAL['rest_user_account_signup'] + '?', 
                  'POST', 0, json_data, null, null, (err, result) =>{    
-        document.getElementById('signup_button').innerHTML = old_button;
+        document.getElementById('common_signup_button').innerHTML = old_button;
         if (err){    
             null;
         }
@@ -2767,30 +2767,30 @@ async function user_verify_check_input(item, nextField, callBack) {
 
     let json;
     let json_data;
-    let verification_type = parseInt(document.getElementById('user_verification_type').innerHTML);
+    let verification_type = parseInt(document.getElementById('common_user_verification_type').innerHTML);
     //only accept 0-9
     if (['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'].indexOf(document.getElementById(item.id).value) > -1)
-        if (nextField == '' || (document.getElementById('user_verify_verification_char1').value != '' &
-                document.getElementById('user_verify_verification_char2').value != '' &
-                document.getElementById('user_verify_verification_char3').value != '' &
-                document.getElementById('user_verify_verification_char4').value != '' &
-                document.getElementById('user_verify_verification_char5').value != '' &
-                document.getElementById('user_verify_verification_char6').value != '')) {
+        if (nextField == '' || (document.getElementById('common_user_verify_verification_char1').value != '' &
+                document.getElementById('common_user_verify_verification_char2').value != '' &
+                document.getElementById('common_user_verify_verification_char3').value != '' &
+                document.getElementById('common_user_verify_verification_char4').value != '' &
+                document.getElementById('common_user_verify_verification_char5').value != '' &
+                document.getElementById('common_user_verify_verification_char6').value != '')) {
             //last field, validate entered code
-            let verification_code = parseInt(document.getElementById('user_verify_verification_char1').value +
-                document.getElementById('user_verify_verification_char2').value +
-                document.getElementById('user_verify_verification_char3').value +
-                document.getElementById('user_verify_verification_char4').value +
-                document.getElementById('user_verify_verification_char5').value +
-                document.getElementById('user_verify_verification_char6').value);
-            let old_button = document.getElementById('user_verify_email').innerHTML;
-            document.getElementById('user_verify_email').innerHTML = APP_SPINNER;
-            document.getElementById('user_verify_verification_char1').classList.remove('input_error');
-            document.getElementById('user_verify_verification_char2').classList.remove('input_error');
-            document.getElementById('user_verify_verification_char3').classList.remove('input_error');
-            document.getElementById('user_verify_verification_char4').classList.remove('input_error');
-            document.getElementById('user_verify_verification_char5').classList.remove('input_error');
-            document.getElementById('user_verify_verification_char6').classList.remove('input_error');
+            let verification_code = parseInt(document.getElementById('common_user_verify_verification_char1').value +
+                document.getElementById('common_user_verify_verification_char2').value +
+                document.getElementById('common_user_verify_verification_char3').value +
+                document.getElementById('common_user_verify_verification_char4').value +
+                document.getElementById('common_user_verify_verification_char5').value +
+                document.getElementById('common_user_verify_verification_char6').value);
+            let old_button = document.getElementById('common_user_verify_email').innerHTML;
+            document.getElementById('common_user_verify_email').innerHTML = APP_SPINNER;
+            document.getElementById('common_user_verify_verification_char1').classList.remove('common_input_error');
+            document.getElementById('common_user_verify_verification_char2').classList.remove('common_input_error');
+            document.getElementById('common_user_verify_verification_char3').classList.remove('common_input_error');
+            document.getElementById('common_user_verify_verification_char4').classList.remove('common_input_error');
+            document.getElementById('common_user_verify_verification_char5').classList.remove('common_input_error');
+            document.getElementById('common_user_verify_verification_char6').classList.remove('common_input_error');
 
             //activate user
             json_data = `{"verification_code":${verification_code},
@@ -2799,7 +2799,7 @@ async function user_verify_check_input(item, nextField, callBack) {
                          }`;
             common_fetch(COMMON_GLOBAL['rest_api_db_path'] + COMMON_GLOBAL['rest_user_account_activate'] + COMMON_GLOBAL['user_account_id'] + '?', 
                          'PUT', 0, json_data, null, null, (err, result) =>{    
-                document.getElementById('user_verify_email').innerHTML = old_button;
+                document.getElementById('common_user_verify_email').innerHTML = old_button;
                 if (err){    
                     return callBack(err, null);
                 }
@@ -2814,10 +2814,10 @@ async function user_verify_check_input(item, nextField, callBack) {
                             case 2:{
                                 //SIGNUP
                                 //login with username and password from signup fields
-                                document.getElementById('login_username').value =
-                                    document.getElementById('signup_username').value;
-                                document.getElementById('login_password').value =
-                                    document.getElementById('signup_password').value;
+                                document.getElementById('common_login_username').value =
+                                    document.getElementById('common_signup_username').value;
+                                document.getElementById('common_login_password').value =
+                                    document.getElementById('common_signup_password').value;
                                 break;
                             }
                             case 3:{
@@ -2833,7 +2833,7 @@ async function user_verify_check_input(item, nextField, callBack) {
                             }
                         }
                         
-                        document.getElementById('dialogue_login').style.visibility = "hidden";
+                        document.getElementById('common_dialogue_login').style.visibility = "hidden";
                         
                         dialogue_signup_clear();
                         dialogue_forgot_clear();
@@ -2843,12 +2843,12 @@ async function user_verify_check_input(item, nextField, callBack) {
                                                 "verification_type" : verification_type});
 
                         } else {
-                            document.getElementById('user_verify_verification_char1').classList.add('input_error');
-                            document.getElementById('user_verify_verification_char2').classList.add('input_error');
-                            document.getElementById('user_verify_verification_char3').classList.add('input_error');
-                            document.getElementById('user_verify_verification_char4').classList.add('input_error');
-                            document.getElementById('user_verify_verification_char5').classList.add('input_error');
-                            document.getElementById('user_verify_verification_char6').classList.add('input_error');
+                            document.getElementById('common_user_verify_verification_char1').classList.add('common_input_error');
+                            document.getElementById('common_user_verify_verification_char2').classList.add('common_input_error');
+                            document.getElementById('common_user_verify_verification_char3').classList.add('common_input_error');
+                            document.getElementById('common_user_verify_verification_char4').classList.add('common_input_error');
+                            document.getElementById('common_user_verify_verification_char5').classList.add('common_input_error');
+                            document.getElementById('common_user_verify_verification_char6').classList.add('common_input_error');
                             //code not valid
                             show_message('ERROR', 20306, null, null, COMMON_GLOBAL['common_app_id']);
                             return callBack('ERROR', null);
@@ -2867,12 +2867,12 @@ async function user_verify_check_input(item, nextField, callBack) {
     }
 }
 async function user_delete(choice=null, user_local, function_delete_event, callBack ) {
-    let password = document.getElementById('user_edit_input_password').value;
+    let password = document.getElementById('common_user_edit_input_password').value;
     switch (choice){
         case null:{
             if (user_local==true && password == '') {
                 //"Please enter password"
-                document.getElementById('user_edit_input_password').classList.add('input_error');
+                document.getElementById('common_user_edit_input_password').classList.add('common_input_error');
                 show_message('ERROR', 20304, null, null, COMMON_GLOBAL['common_app_id']);
                 return null;
             }
@@ -2881,16 +2881,16 @@ async function user_delete(choice=null, user_local, function_delete_event, callB
             break;
         }
         case 1:{
-            document.getElementById("dialogue_message").style.visibility = "hidden";
+            document.getElementById('common_dialogue_message').style.visibility = "hidden";
             dialogue_user_edit_remove_error();
     
-            let old_button = document.getElementById('user_edit_btn_user_delete_account').innerHTML;
-            document.getElementById('user_edit_btn_user_delete_account').innerHTML = APP_SPINNER;
+            let old_button = document.getElementById('common_user_edit_btn_user_delete_account').innerHTML;
+            document.getElementById('common_user_edit_btn_user_delete_account').innerHTML = APP_SPINNER;
             let json_data = `{"password":"${password}"}`;
 
             common_fetch(COMMON_GLOBAL['rest_api_db_path'] + COMMON_GLOBAL['rest_user_account'] + COMMON_GLOBAL['user_account_id'] + '?', 
                          'DELETE', 1, json_data, null, null, (err, result) =>{    
-                document.getElementById('user_edit_btn_user_delete_account').innerHTML = old_button;
+                document.getElementById('common_user_edit_btn_user_delete_account').innerHTML = old_button;
                 if (err){
                     return callBack(err,null);
                 }
@@ -2905,7 +2905,7 @@ async function user_delete(choice=null, user_local, function_delete_event, callB
     }
 }
 function user_function(user_function, callBack) {
-    let user_id_profile = document.getElementById('profile_id').innerHTML;
+    let user_id_profile = document.getElementById('common_profile_id').innerHTML;
     let json_data;
     let method;
     let rest_path;
@@ -2915,14 +2915,14 @@ function user_function(user_function, callBack) {
             {
                 rest_path = COMMON_GLOBAL['rest_user_account_follow'];
                 json_data = '{"user_account_id":' + user_id_profile + '}';
-                check_div = document.getElementById('profile_follow');
+                check_div = document.getElementById('common_profile_follow');
                 break;
             }
         case 'LIKE':
             {
                 rest_path = COMMON_GLOBAL['rest_user_account_like'];
                 json_data = '{"user_account_id":' + user_id_profile + '}';
-                check_div = document.getElementById('profile_like');
+                check_div = document.getElementById('common_profile_like');
                 break;
             }
     }
@@ -2944,29 +2944,29 @@ function user_function(user_function, callBack) {
                 switch (user_function) {
                     case 'FOLLOW':
                         {
-                            if (document.getElementById('profile_follow').children[0].style.display == 'block'){
+                            if (document.getElementById('common_profile_follow').children[0].style.display == 'block'){
                                 //follow
-                                document.getElementById('profile_follow').children[0].style.display = 'none';
-                                document.getElementById('profile_follow').children[1].style.display = 'block';
+                                document.getElementById('common_profile_follow').children[0].style.display = 'none';
+                                document.getElementById('common_profile_follow').children[1].style.display = 'block';
                             }
                             else{
                                 //unfollow
-                                document.getElementById('profile_follow').children[0].style.display = 'block';
-                                document.getElementById('profile_follow').children[1].style.display = 'none';
+                                document.getElementById('common_profile_follow').children[0].style.display = 'block';
+                                document.getElementById('common_profile_follow').children[1].style.display = 'none';
                             }
                             break;
                         }
                     case 'LIKE':
                         {
-                            if (document.getElementById('profile_like').children[0].style.display == 'block'){
+                            if (document.getElementById('common_profile_like').children[0].style.display == 'block'){
                                 //like
-                                document.getElementById('profile_like').children[0].style.display = 'none';
-                                document.getElementById('profile_like').children[1].style.display = 'block';
+                                document.getElementById('common_profile_like').children[0].style.display = 'none';
+                                document.getElementById('common_profile_like').children[1].style.display = 'block';
                             }
                             else{
                                 //unlike
-                                document.getElementById('profile_like').children[0].style.display = 'block';
-                                document.getElementById('profile_like').children[1].style.display = 'none';
+                                document.getElementById('common_profile_like').children[0].style.display = 'block';
+                                document.getElementById('common_profile_like').children[1].style.display = 'none';
                             }
                             break;
                         }
@@ -2983,14 +2983,14 @@ function user_account_app_delete(choice=null, user_account_id, app_id, function_
             break;
         }
         case 1:{
-            document.getElementById("dialogue_message").style.visibility = "hidden";
+            document.getElementById('common_dialogue_message').style.visibility = "hidden";
             common_fetch(COMMON_GLOBAL['rest_api_db_path'] + COMMON_GLOBAL['rest_user_account_app'] + user_account_id + '/' + app_id + '?', 
                          'DELETE', 1, null, null, null, (err, result) =>{    
                 if (err)
                     null;
                 else{
                     //execute event and refresh app list
-                    document.getElementById('profile_main_btn_cloud').click()
+                    document.getElementById('common_profile_main_btn_cloud').click()
                 }
             })
             break;
@@ -3000,7 +3000,7 @@ function user_account_app_delete(choice=null, user_account_id, app_id, function_
     }
 }
 async function user_forgot(){
-    let email = document.getElementById('forgot_email').value;
+    let email = document.getElementById('common_forgot_email').value;
     let json_data = `{
                         "email": "${email}",
                         ${get_uservariables()}
@@ -3008,18 +3008,18 @@ async function user_forgot(){
     if (check_input(email) == false || email =='')
         return;
     else{
-        let old_button = document.getElementById('forgot_button').innerHTML;
-        document.getElementById('forgot_button').innerHTML = APP_SPINNER;
+        let old_button = document.getElementById('common_forgot_button').innerHTML;
+        document.getElementById('common_forgot_button').innerHTML = APP_SPINNER;
         common_fetch(COMMON_GLOBAL['rest_api_db_path'] + COMMON_GLOBAL['rest_user_account_forgot'] + '?', 
                      'PUT', 0, json_data, null, null, (err, result) =>{
-            document.getElementById('forgot_button').innerHTML = old_button;
+            document.getElementById('common_forgot_button').innerHTML = old_button;
             if (err)
                 null;
             else{
                 let json = JSON.parse(result);
                 if (json.sent == 1){
                     COMMON_GLOBAL['user_account_id'] = json.id;
-                    let function_cancel_event = function() { document.getElementById('dialogue_user_verify').style.visibility='hidden';};
+                    let function_cancel_event = function() { document.getElementById('common_dialogue_user_verify').style.visibility='hidden';};
                     show_common_dialogue('VERIFY', 'FORGOT', email, ICONS['app_cancel'], function_cancel_event);
                 }
             }
@@ -3027,9 +3027,9 @@ async function user_forgot(){
     }
 }
 function updatePassword(){
-    let new_password = document.getElementById('user_new_password').value;
-    let new_password_confirm = document.getElementById('user_new_password_confirm').value;
-    let user_new_password_auth = document.getElementById('user_new_password_auth').innerHTML;
+    let new_password = document.getElementById('common_user_new_password').value;
+    let new_password_confirm = document.getElementById('common_user_new_password_confirm').value;
+    let user_new_password_auth = document.getElementById('common_user_new_password_auth').innerHTML;
     let json_data = `{
                         "new_password" : "${new_password}",
                         "auth" : "${user_new_password_auth}",
@@ -3041,7 +3041,7 @@ function updatePassword(){
     else{
         if (new_password == '') {
             //"Please enter password"
-            document.getElementById('user_new_password').classList.add('input_error');
+            document.getElementById('common_user_new_password').classList.add('common_input_error');
             show_message('ERROR', 20304, null, null, COMMON_GLOBAL['common_app_id']);
             return callBack('ERROR', null);
         }
@@ -3050,12 +3050,12 @@ function updatePassword(){
             show_message('ERROR', 20301, null, null, COMMON_GLOBAL['common_app_id']);
             return null;
         }
-        let old_button = document.getElementById('user_new_password_icon').innerHTML;
-        document.getElementById('user_new_password_icon').innerHTML = APP_SPINNER;
+        let old_button = document.getElementById('common_user_new_password_icon').innerHTML;
+        document.getElementById('common_user_new_password_icon').innerHTML = APP_SPINNER;
 
         common_fetch(COMMON_GLOBAL['rest_api_db_path'] + COMMON_GLOBAL['rest_user_account_password'] + COMMON_GLOBAL['user_account_id'] + '?', 
                      'PUT', 1, json_data, null, null, (err, result) =>{
-            document.getElementById('user_new_password_icon').innerHTML = old_button;
+            document.getElementById('common_user_new_password_icon').innerHTML = old_button;
             if (err)
                 null;
             else{
@@ -3069,10 +3069,10 @@ async function user_preference_save(){
     if (COMMON_GLOBAL['user_preference_save']==true && COMMON_GLOBAL['user_account_id'] != ''){
         let json_data =
         `{
-        "preference_locale": "${document.getElementById('user_locale_select').value}",
-        "setting_preference_timezone_id": "${document.getElementById('user_timezone_select').options[document.getElementById('user_timezone_select').selectedIndex].id}",
-        "setting_preference_direction_id": "${document.getElementById('user_direction_select').options[document.getElementById('user_direction_select').selectedIndex].id}",
-        "setting_preference_arabic_script_id": "${document.getElementById('user_arabic_script_select').options[document.getElementById('user_arabic_script_select').selectedIndex].id}"
+        "preference_locale": "${document.getElementById('common_user_locale_select').value}",
+        "setting_preference_timezone_id": "${document.getElementById('common_user_timezone_select').options[document.getElementById('common_user_timezone_select').selectedIndex].id}",
+        "setting_preference_direction_id": "${document.getElementById('common_user_direction_select').options[document.getElementById('common_user_direction_select').selectedIndex].id}",
+        "setting_preference_arabic_script_id": "${document.getElementById('common_user_arabic_script_select').options[document.getElementById('common_user_arabic_script_select').selectedIndex].id}"
         }`;
 
         await common_fetch(COMMON_GLOBAL['rest_api_db_path'] + COMMON_GLOBAL['rest_user_account_app'] + COMMON_GLOBAL['user_account_id'] + '?', 
@@ -3105,15 +3105,15 @@ async function user_preference_get(callBack){
                 user_preferences_set_default_globals('TIMEZONE');
             }
             else{
-                SearchAndSetSelectedIndex(json.items[0].setting_preference_timezone_id, document.getElementById('user_timezone_select'), 0);
-                COMMON_GLOBAL['user_timezone'] = document.getElementById('user_timezone_select').value;
+                SearchAndSetSelectedIndex(json.items[0].setting_preference_timezone_id, document.getElementById('common_user_timezone_select'), 0);
+                COMMON_GLOBAL['user_timezone'] = document.getElementById('common_user_timezone_select').value;
             }
             //direction
-            SearchAndSetSelectedIndex(json.items[0].setting_preference_direction_id, document.getElementById('user_direction_select'), 0);
-            COMMON_GLOBAL['user_direction'] = document.getElementById('user_direction_select').value;
+            SearchAndSetSelectedIndex(json.items[0].setting_preference_direction_id, document.getElementById('common_user_direction_select'), 0);
+            COMMON_GLOBAL['user_direction'] = document.getElementById('common_user_direction_select').value;
             //arabic script
-            SearchAndSetSelectedIndex(json.items[0].setting_preference_arabic_script_id, document.getElementById('user_arabic_script_select'), 0);
-            COMMON_GLOBAL['user_arabic_script'] = document.getElementById('user_arabic_script_select').value;
+            SearchAndSetSelectedIndex(json.items[0].setting_preference_arabic_script_id, document.getElementById('common_user_arabic_script_select'), 0);
+            COMMON_GLOBAL['user_arabic_script'] = document.getElementById('common_user_arabic_script_select').value;
             user_preferences_update_select();
             return callBack(null, null)
         }
@@ -3145,18 +3145,18 @@ function user_preferences_set_default_globals(preference){
     }
 }
 function user_preferences_update_select(){
-    SearchAndSetSelectedIndex(COMMON_GLOBAL['user_locale'], document.getElementById('user_locale_select'), 1);
-    SearchAndSetSelectedIndex(COMMON_GLOBAL['user_timezone'], document.getElementById('user_timezone_select'), 1);
-    SearchAndSetSelectedIndex(COMMON_GLOBAL['user_direction'], document.getElementById('user_direction_select'), 1);
-    SearchAndSetSelectedIndex(COMMON_GLOBAL['user_arabic_script'], document.getElementById('user_arabic_script_select'), 1);
+    SearchAndSetSelectedIndex(COMMON_GLOBAL['user_locale'], document.getElementById('common_user_locale_select'), 1);
+    SearchAndSetSelectedIndex(COMMON_GLOBAL['user_timezone'], document.getElementById('common_user_timezone_select'), 1);
+    SearchAndSetSelectedIndex(COMMON_GLOBAL['user_direction'], document.getElementById('common_user_direction_select'), 1);
+    SearchAndSetSelectedIndex(COMMON_GLOBAL['user_arabic_script'], document.getElementById('common_user_arabic_script_select'), 1);
 
     //don't save changes now, just execute other code
     //or it would save preferences 4 times
     COMMON_GLOBAL['user_preference_save'] = false;
-    document.getElementById('user_locale_select').dispatchEvent(new Event('change'))
-	document.getElementById('user_timezone_select').dispatchEvent(new Event('change'))
-	document.getElementById('user_direction_select').dispatchEvent(new Event('change'))
-	document.getElementById('user_arabic_script_select').dispatchEvent(new Event('change'))
+    document.getElementById('common_user_locale_select').dispatchEvent(new Event('change'))
+	document.getElementById('common_user_timezone_select').dispatchEvent(new Event('change'))
+	document.getElementById('common_user_direction_select').dispatchEvent(new Event('change'))
+	document.getElementById('common_user_arabic_script_select').dispatchEvent(new Event('change'))
     COMMON_GLOBAL['user_preference_save'] = true;
 }
 /*----------------------- */
@@ -3177,14 +3177,14 @@ async function Providers_init(function_event){
             //user provider should use REST API on server if used
             let html = '';
             for (let i=0;i <=json.items.length-1;i++){
-                html += `<button id='login_provider_${i}' class='login_button login_provider_button' >
-                            <div class='login_provider_id'>${json.items[i].id}</div>
-                            <div class='login_provider_name'>${json.items[i].provider_name}</div>
+                html += `<button id='login_provider_${i}' class='common_login_button common_login_provider_button' >
+                            <div class='common_login_provider_id'>${json.items[i].id}</div>
+                            <div class='common_login_provider_name'>${json.items[i].provider_name}</div>
                          </button>`;
                 
             }
             div.innerHTML = html;
-            document.querySelectorAll('.login_provider_button').forEach(e => e.addEventListener('click', function_event));
+            document.querySelectorAll('.common_login_provider_button').forEach(e => e.addEventListener('click', function_event));
         }
     })
 }
@@ -3302,88 +3302,88 @@ function set_globals(parameters){
 }
 function assign_icons(){
     //dialogue user verify
-    document.getElementById('user_verify_email_icon').innerHTML = ICONS['app_email'];
+    document.getElementById('common_user_verify_email_icon').innerHTML = ICONS['app_email'];
     //dialogue login
-    document.getElementById('login_tab1').innerHTML = ICONS['app_login'];
-    document.getElementById('login_tab2').innerHTML = ICONS['app_signup'];
-    document.getElementById('login_tab3').innerHTML = ICONS['app_forgot'];
-    document.getElementById('login_button').innerHTML = ICONS['app_login'];
-    document.getElementById('login_close').innerHTML = ICONS['app_close'];
+    document.getElementById('common_login_tab1').innerHTML = ICONS['app_login'];
+    document.getElementById('common_login_tab2').innerHTML = ICONS['app_signup'];
+    document.getElementById('common_login_tab3').innerHTML = ICONS['app_forgot'];
+    document.getElementById('common_login_button').innerHTML = ICONS['app_login'];
+    document.getElementById('common_login_close').innerHTML = ICONS['app_close'];
     //dialogue signup
-    document.getElementById('signup_tab1').innerHTML = ICONS['app_login'];
-    document.getElementById('signup_tab2').innerHTML = ICONS['app_signup'];
-    document.getElementById('signup_tab3').innerHTML = ICONS['app_forgot'];
-    document.getElementById('signup_button').innerHTML = ICONS['app_signup'];
-    document.getElementById('signup_close').innerHTML = ICONS['app_close'];
+    document.getElementById('common_signup_tab1').innerHTML = ICONS['app_login'];
+    document.getElementById('common_signup_tab2').innerHTML = ICONS['app_signup'];
+    document.getElementById('common_signup_tab3').innerHTML = ICONS['app_forgot'];
+    document.getElementById('common_signup_button').innerHTML = ICONS['app_signup'];
+    document.getElementById('common_signup_close').innerHTML = ICONS['app_close'];
     //dialogue forgot
-    document.getElementById('forgot_tab1').innerHTML = ICONS['app_login'];
-    document.getElementById('forgot_tab2').innerHTML = ICONS['app_signup'];
-    document.getElementById('forgot_tab3').innerHTML = ICONS['app_forgot'];
-    document.getElementById('forgot_button').innerHTML = ICONS['app_sendmail'];
-    document.getElementById('forgot_close').innerHTML = ICONS['app_close'];
+    document.getElementById('common_forgot_tab1').innerHTML = ICONS['app_login'];
+    document.getElementById('common_forgot_tab2').innerHTML = ICONS['app_signup'];
+    document.getElementById('common_forgot_tab3').innerHTML = ICONS['app_forgot'];
+    document.getElementById('common_forgot_button').innerHTML = ICONS['app_sendmail'];
+    document.getElementById('common_forgot_close').innerHTML = ICONS['app_close'];
     //dialogue new password
-    document.getElementById('user_new_password_icon').innerHTML = ICONS['user_password'];
-    document.getElementById('user_new_password_cancel').innerHTML = ICONS['app_cancel'];
-    document.getElementById('user_new_password_ok').innerHTML = ICONS['app_close'];
+    document.getElementById('common_user_new_password_icon').innerHTML = ICONS['user_password'];
+    document.getElementById('common_user_new_password_cancel').innerHTML = ICONS['app_cancel'];
+    document.getElementById('common_user_new_password_ok').innerHTML = ICONS['app_close'];
     //dialogue user edit
-    document.getElementById('user_edit_btn_avatar_img').innerHTML = ICONS['user_avatar_edit'];
-    document.getElementById('user_edit_private').innerHTML = ICONS['app_private'];
-    document.getElementById('user_edit_btn_user_update').innerHTML = ICONS['app_update'];
-    document.getElementById('user_edit_btn_user_delete_account').innerHTML = ICONS['user_delete_account'];
-    document.getElementById('user_edit_close').innerHTML = ICONS['app_close'];
-    document.getElementById('user_edit_label_provider').innerHTML = ICONS['provider'];
-    document.getElementById('user_edit_label_provider_id').innerHTML = ICONS['provider_id'];
-    document.getElementById('user_edit_label_provider_email').innerHTML = ICONS['app_email'];
-    document.getElementById('user_edit_input_username_icon').innerHTML = ICONS['user'];
-    document.getElementById('user_edit_input_bio_icon').innerHTML = ICONS['user_profile'];
-    document.getElementById('user_edit_input_email_icon').innerHTML = ICONS['app_email'];
-    document.getElementById('user_edit_input_new_email_icon').innerHTML = ICONS['app_email'];
-    document.getElementById('user_edit_input_password_icon').innerHTML = ICONS['user_password'];
-    document.getElementById('user_edit_input_password_confirm_icon').innerHTML = ICONS['user_password'];
-    document.getElementById('user_edit_input_new_password_icon').innerHTML = ICONS['user_password'];
-    document.getElementById('user_edit_input_new_password_confirm_icon').innerHTML = ICONS['user_passsword'];
-    document.getElementById('user_edit_input_password_reminder_icon').innerHTML = ICONS['user_account_reminder'];
-    document.getElementById('user_edit_label_last_logontime').innerHTML = ICONS['user_last_logontime'];
-    document.getElementById('user_edit_label_account_created').innerHTML = ICONS['user_account_created'];
-    document.getElementById('user_edit_label_account_modified').innerHTML = ICONS['user_account_modified'];
+    document.getElementById('common_user_edit_btn_avatar_img').innerHTML = ICONS['user_avatar_edit'];
+    document.getElementById('common_user_edit_private').innerHTML = ICONS['app_private'];
+    document.getElementById('common_user_edit_btn_user_update').innerHTML = ICONS['app_update'];
+    document.getElementById('common_user_edit_btn_user_delete_account').innerHTML = ICONS['user_delete_account'];
+    document.getElementById('common_user_edit_close').innerHTML = ICONS['app_close'];
+    document.getElementById('common_user_edit_label_provider').innerHTML = ICONS['provider'];
+    document.getElementById('common_user_edit_label_provider_id').innerHTML = ICONS['provider_id'];
+    document.getElementById('common_user_edit_label_provider_email').innerHTML = ICONS['app_email'];
+    document.getElementById('common_user_edit_input_username_icon').innerHTML = ICONS['user'];
+    document.getElementById('common_user_edit_input_bio_icon').innerHTML = ICONS['user_profile'];
+    document.getElementById('common_user_edit_input_email_icon').innerHTML = ICONS['app_email'];
+    document.getElementById('common_user_edit_input_new_email_icon').innerHTML = ICONS['app_email'];
+    document.getElementById('common_user_edit_input_password_icon').innerHTML = ICONS['user_password'];
+    document.getElementById('common_user_edit_input_password_confirm_icon').innerHTML = ICONS['user_password'];
+    document.getElementById('common_user_edit_input_new_password_icon').innerHTML = ICONS['user_password'];
+    document.getElementById('common_user_edit_input_new_password_confirm_icon').innerHTML = ICONS['user_password'];
+    document.getElementById('common_user_edit_input_password_reminder_icon').innerHTML = ICONS['user_account_reminder'];
+    document.getElementById('common_user_edit_label_last_logontime').innerHTML = ICONS['user_last_logontime'];
+    document.getElementById('common_user_edit_label_account_created').innerHTML = ICONS['user_account_created'];
+    document.getElementById('common_user_edit_label_account_modified').innerHTML = ICONS['user_account_modified'];
     //dialogue message
-    document.getElementById('message_cancel').innerHTML = ICONS['app_cancel'];
-    document.getElementById('message_close').innerHTML = ICONS['app_close'];
+    document.getElementById('common_message_cancel').innerHTML = ICONS['app_cancel'];
+    document.getElementById('common_message_close').innerHTML = ICONS['app_close'];
     //dialog lov
-    document.getElementById('lov_search_icon').innerHTML = ICONS['app_search'];
+    document.getElementById('common_lov_search_icon').innerHTML = ICONS['app_search'];
     //profile detail
-    document.getElementById('profile_detail_header_following').innerHTML = ICONS['user_follows'];
-    document.getElementById('profile_detail_header_followed').innerHTML = ICONS['user_followed'];
-    document.getElementById('profile_detail_header_like').innerHTML = ICONS['user_like'];
-    document.getElementById('profile_detail_header_liked_heart').innerHTML = ICONS['user_like'];
-    document.getElementById('profile_detail_header_liked_users').innerHTML =  ICONS['user_followed'];
+    document.getElementById('common_profile_detail_header_following').innerHTML = ICONS['user_follows'];
+    document.getElementById('common_profile_detail_header_followed').innerHTML = ICONS['user_followed'];
+    document.getElementById('common_profile_detail_header_like').innerHTML = ICONS['user_like'];
+    document.getElementById('common_profile_detail_header_liked_heart').innerHTML = ICONS['user_like'];
+    document.getElementById('common_profile_detail_header_liked_users').innerHTML =  ICONS['user_followed'];
     //profile info search
-    document.getElementById('profile_search_icon').innerHTML = ICONS['app_search'];
+    document.getElementById('common_profile_search_icon').innerHTML = ICONS['app_search'];
     //profile info
-    document.getElementById('profile_joined_date_icon').innerHTML = ICONS['user_account_created'];
-    document.getElementById('profile_follow_follow').innerHTML = ICONS['user_follow_user'];
-    document.getElementById('profile_follow_followed').innerHTML = ICONS['user_followed_user'];
-    document.getElementById('profile_like_like').innerHTML = ICONS['user_like'];
-    document.getElementById('profile_like_unlike').innerHTML = ICONS['user_unlike'];
-    document.getElementById('profile_info_view_count_icon').innerHTML = ICONS['user_views'];
-    document.getElementById('profile_main_btn_following').innerHTML = ICONS['user_follows'];
-    document.getElementById('profile_main_btn_followed').innerHTML = ICONS['user_followed'];
-    document.getElementById('profile_main_btn_likes').innerHTML = ICONS['user_like'];
-    document.getElementById('profile_main_btn_liked_heart').innerHTML = ICONS['user_like'];
-    document.getElementById('profile_main_btn_liked_users').innerHTML = ICONS['user_followed'];
+    document.getElementById('common_profile_joined_date_icon').innerHTML = ICONS['user_account_created'];
+    document.getElementById('common_profile_follow_follow').innerHTML = ICONS['user_follow_user'];
+    document.getElementById('common_profile_follow_followed').innerHTML = ICONS['user_followed_user'];
+    document.getElementById('common_profile_like_like').innerHTML = ICONS['user_like'];
+    document.getElementById('common_profile_like_unlike').innerHTML = ICONS['user_unlike'];
+    document.getElementById('common_profile_info_view_count_icon').innerHTML = ICONS['user_views'];
+    document.getElementById('common_profile_main_btn_following').innerHTML = ICONS['user_follows'];
+    document.getElementById('common_profile_main_btn_followed').innerHTML = ICONS['user_followed'];
+    document.getElementById('common_profile_main_btn_likes').innerHTML = ICONS['user_like'];
+    document.getElementById('common_profile_main_btn_liked_heart').innerHTML = ICONS['user_like'];
+    document.getElementById('common_profile_main_btn_liked_users').innerHTML = ICONS['user_followed'];
     
-    document.getElementById('profile_private_title').innerHTML = ICONS['app_private'];
-    document.getElementById('profile_avatar_online_status').innerHTML = ICONS['app_online'];
+    document.getElementById('common_profile_private_title').innerHTML = ICONS['app_private'];
+    document.getElementById('common_profile_avatar_online_status').innerHTML = ICONS['app_online'];
     //profile top
-    document.getElementById('profile_top_row1_1').innerHTML = ICONS['user_views'];
-    document.getElementById('profile_top_row1_2').innerHTML = ICONS['user_follows'];
-    document.getElementById('profile_top_row1_3').innerHTML = ICONS['user_like'] + ICONS['user_follows'];
-    document.getElementById('profile_home').innerHTML = ICONS['user_profile_top'];
-    document.getElementById('profile_close').innerHTML = ICONS['app_close'];
+    document.getElementById('common_profile_top_row1_1').innerHTML = ICONS['user_views'];
+    document.getElementById('common_profile_top_row1_2').innerHTML = ICONS['user_follows'];
+    document.getElementById('common_profile_top_row1_3').innerHTML = ICONS['user_like'] + ICONS['user_follows'];
+    document.getElementById('common_profile_home').innerHTML = ICONS['user_profile_top'];
+    document.getElementById('common_profile_close').innerHTML = ICONS['app_close'];
 
     //profile button top
-    if (document.getElementById('profile_btn_top'))
-        document.getElementById('profile_btn_top').innerHTML = ICONS['user_profile_top'];
+    if (document.getElementById('common_profile_btn_top'))
+        document.getElementById('common_profile_btn_top').innerHTML = ICONS['user_profile_top'];
 
     //window info
     document.getElementById('common_window_info_toolbar_btn_close').innerHTML = ICONS['app_close'];
@@ -3396,55 +3396,55 @@ function assign_icons(){
     document.getElementById('common_window_info_toolbar_btn_fullscreen').innerHTML = ICONS['presentacion'];
     
     //user menu
-    //document.getElementById('user_menu_dropdown_profile').innerHTML = ICONS['button_default_icon_profile'];
-    document.getElementById('user_menu_dropdown_edit').innerHTML = ICONS['app_edit'];
-    document.getElementById('user_menu_dropdown_log_out').innerHTML = ICONS['app_logoff'];
-    document.getElementById('user_menu_dropdown_signup').innerHTML = ICONS['app_signup'];
-    document.getElementById('user_menu_dropdown_log_in').innerHTML = ICONS['app_login'];
-    document.getElementById('user_menu_default_avatar').innerHTML = ICONS['user_avatar'];
-    document.getElementById('user_preference_locale').innerHTML = ICONS['regional_locale'];
-    document.getElementById('user_preference_timezone').innerHTML = ICONS['regional_timezone'];
-    document.getElementById('user_preference_direction').innerHTML = ICONS['regional_direction'];        
-    document.getElementById('user_preference_arabic_script').innerHTML = ICONS['regional_script'];
+    //document.getElementById('common_user_menu_dropdown_profile').innerHTML = ICONS['button_default_icon_profile'];
+    document.getElementById('common_user_menu_dropdown_edit').innerHTML = ICONS['app_edit'];
+    document.getElementById('common_user_menu_dropdown_log_out').innerHTML = ICONS['app_logoff'];
+    document.getElementById('common_user_menu_dropdown_signup').innerHTML = ICONS['app_signup'];
+    document.getElementById('common_user_menu_dropdown_log_in').innerHTML = ICONS['app_login'];
+    document.getElementById('common_user_menu_default_avatar').innerHTML = ICONS['user_avatar'];
+    document.getElementById('common_user_preference_locale').innerHTML = ICONS['regional_locale'];
+    document.getElementById('common_user_preference_timezone').innerHTML = ICONS['regional_timezone'];
+    document.getElementById('common_user_preference_direction').innerHTML = ICONS['regional_direction'];        
+    document.getElementById('common_user_preference_arabic_script').innerHTML = ICONS['regional_script'];
 }
 function set_events(){
     //login/signup/forgot
-    document.getElementById('login_tab2').addEventListener('click', function() { show_common_dialogue('SIGNUP') }, false);
-    document.getElementById('login_tab3').addEventListener('click', function() { show_common_dialogue('FORGOT') }, false);
-    document.getElementById('login_close').addEventListener('click', function() { document.getElementById('dialogue_login').style.visibility = 'hidden' }, false);
-    document.getElementById('signup_tab1').addEventListener('click', function() { show_common_dialogue('LOGIN') }, false);
-    document.getElementById('signup_tab3').addEventListener('click', function() { show_common_dialogue('FORGOT') }, false);
-    document.getElementById('signup_close').addEventListener('click', function() { document.getElementById('dialogue_signup').style.visibility = 'hidden' }, false);
-    document.getElementById('forgot_tab1').addEventListener('click', function() { show_common_dialogue('LOGIN') }, false);
-    document.getElementById('forgot_tab2').addEventListener('click', function() { show_common_dialogue('SIGNUP') }, false);
-    document.getElementById("forgot_email").addEventListener('keyup', function(event) {
+    document.getElementById('common_login_tab2').addEventListener('click', function() { show_common_dialogue('SIGNUP') }, false);
+    document.getElementById('common_login_tab3').addEventListener('click', function() { show_common_dialogue('FORGOT') }, false);
+    document.getElementById('common_login_close').addEventListener('click', function() { document.getElementById('common_dialogue_login').style.visibility = 'hidden' }, false);
+    document.getElementById('common_signup_tab1').addEventListener('click', function() { show_common_dialogue('LOGIN') }, false);
+    document.getElementById('common_signup_tab3').addEventListener('click', function() { show_common_dialogue('FORGOT') }, false);
+    document.getElementById('common_signup_close').addEventListener('click', function() { document.getElementById('common_dialogue_signup').style.visibility = 'hidden' }, false);
+    document.getElementById('common_forgot_tab1').addEventListener('click', function() { show_common_dialogue('LOGIN') }, false);
+    document.getElementById('common_forgot_tab2').addEventListener('click', function() { show_common_dialogue('SIGNUP') }, false);
+    document.getElementById('common_forgot_email').addEventListener('keyup', function(event) {
         if (event.code === 'Enter') {
             event.preventDefault();
             user_forgot().then(function(){
                 //unfocus
-                document.getElementById("forgot_email").blur();
+                document.getElementById('common_forgot_email').blur();
             });
         }
     });
-    document.getElementById('forgot_button').addEventListener('click', function() { user_forgot()}, false);
-    document.getElementById('forgot_close').addEventListener('click', function() { document.getElementById('dialogue_forgot').style.visibility = 'hidden' }, false);
+    document.getElementById('common_forgot_button').addEventListener('click', function() { user_forgot()}, false);
+    document.getElementById('common_forgot_close').addEventListener('click', function() { document.getElementById('common_dialogue_forgot').style.visibility = 'hidden' }, false);
     //set app info
-    document.getElementById('login_app_name').innerHTML = COMMON_GLOBAL['app_name'];
-    document.getElementById('signup_app_name').innerHTML = COMMON_GLOBAL['app_name'];
-    document.getElementById('forgot_app_name').innerHTML = COMMON_GLOBAL['app_name'];
+    document.getElementById('common_login_app_name').innerHTML = COMMON_GLOBAL['app_name'];
+    document.getElementById('common_signup_app_name').innerHTML = COMMON_GLOBAL['app_name'];
+    document.getElementById('common_forgot_app_name').innerHTML = COMMON_GLOBAL['app_name'];
 
     //dialogue message
-    document.getElementById('message_cancel').addEventListener('click', function() { document.getElementById("dialogue_message").style.visibility = "hidden"; }, false);
+    document.getElementById('common_message_cancel').addEventListener('click', function() { document.getElementById('common_dialogue_message').style.visibility = 'hidden'; }, false);
     //dialogue new password
-    document.getElementById('user_new_password_cancel').addEventListener('click', function() { dialogue_new_password_clear(); }, false);
-    document.getElementById('user_new_password_ok').addEventListener('click', function() { updatePassword(); }, false);
+    document.getElementById('common_user_new_password_cancel').addEventListener('click', function() { dialogue_new_password_clear(); }, false);
+    document.getElementById('common_user_new_password_ok').addEventListener('click', function() { updatePassword(); }, false);
     //dialogue lov
-    document.getElementById('lov_search_input').addEventListener('keyup', function(event) {lov_keys(event)});
-    document.getElementById('lov_search_icon').addEventListener('click', function() {lov_filter(document.getElementById('lov_search_input').value);});
-    document.getElementById('lov_close').addEventListener('click', function() { lov_close()}, false); 
+    document.getElementById('common_lov_search_input').addEventListener('keyup', function(event) {lov_keys(event)});
+    document.getElementById('common_lov_search_icon').addEventListener('click', function() {lov_filter(document.getElementById('common_lov_search_input').value);});
+    document.getElementById('common_lov_close').addEventListener('click', function() { lov_close()}, false); 
     //profile search
-    if (document.getElementById('profile_input_row'))
-        document.getElementById('profile_search_icon').addEventListener('click', function() { document.getElementById('profile_search_input').focus();document.getElementById('profile_search_input').dispatchEvent(new KeyboardEvent('keyup')); }, false);
+    if (document.getElementById('common_profile_input_row'))
+        document.getElementById('common_profile_search_icon').addEventListener('click', function() { document.getElementById('common_profile_search_input').focus();document.getElementById('common_profile_search_input').dispatchEvent(new KeyboardEvent('keyup')); }, false);
     //window info
     document.getElementById('common_window_info_toolbar').addEventListener('click', function(event){
         let event_target_id;
@@ -3464,7 +3464,7 @@ function set_events(){
                 
         switch (event_target_id){
             case 'common_window_info_toolbar_btn_close':{
-                document.getElementById('common_window_info').style.visibility = "hidden"; 
+                document.getElementById('common_window_info').style.visibility = 'hidden'; 
                 document.getElementById('common_window_info_info').innerHTML='';
                 document.getElementById('common_window_info_content').src='';
                 document.getElementById('common_window_info_content').classList='';
@@ -3505,7 +3505,7 @@ function set_events(){
         }
     }, false);
     //user menu
-    document.getElementById('user_menu').addEventListener('click', function() { let menu = document.getElementById('user_menu_dropdown');
+    document.getElementById('common_user_menu').addEventListener('click', function() { let menu = document.getElementById('common_user_menu_dropdown');
                                                                                 if (menu.style.visibility == 'visible') 
                                                                                         menu.style.visibility = 'hidden'; 
                                                                                 else 
@@ -3516,57 +3516,57 @@ function set_events(){
         if (event.key === 'Escape') {
             event.preventDefault();
             //hide use menu dropdown
-            if (document.getElementById('user_menu_dropdown').style.visibility=='visible')
-                document.getElementById('user_menu_dropdown').style.visibility = 'hidden';
+            if (document.getElementById('common_user_menu_dropdown').style.visibility=='visible')
+                document.getElementById('common_user_menu_dropdown').style.visibility = 'hidden';
             //hide search
-            let x = document.getElementById('profile_input_row'); 
+            let x = document.getElementById('common_profile_input_row'); 
             if (x.style.visibility == 'visible') {
                 x.style.visibility = 'hidden';
-                document.getElementById('profile_search_list_wrap').style.visibility = 'hidden'
+                document.getElementById('common_profile_search_list_wrap').style.visibility = 'hidden'
             } 
         }
     }, false);
-    document.getElementById('user_menu_dropdown_log_in').addEventListener('click', function() { show_common_dialogue('LOGIN'); document.getElementById('user_menu_dropdown').style.visibility = 'hidden';}, false);
-    document.getElementById('user_menu_dropdown_edit').addEventListener('click', function() { user_edit();document.getElementById('user_menu_dropdown').style.visibility = 'hidden'; }, false);
-    document.getElementById('user_menu_dropdown_signup').addEventListener('click', function() { show_common_dialogue('SIGNUP'); document.getElementById('user_menu_dropdown').style.visibility = 'hidden'; }, false);
+    document.getElementById('common_user_menu_dropdown_log_in').addEventListener('click', function() { show_common_dialogue('LOGIN'); document.getElementById('common_user_menu_dropdown').style.visibility = 'hidden';}, false);
+    document.getElementById('common_user_menu_dropdown_edit').addEventListener('click', function() { user_edit();document.getElementById('common_user_menu_dropdown').style.visibility = 'hidden'; }, false);
+    document.getElementById('common_user_menu_dropdown_signup').addEventListener('click', function() { show_common_dialogue('SIGNUP'); document.getElementById('common_user_menu_dropdown').style.visibility = 'hidden'; }, false);
     //user preferences
     //define globals and save settings here, in apps define what should happen when changing
-    if (document.getElementById('user_locale_select'))
-        document.getElementById('user_locale_select').addEventListener('change', function() { 
+    if (document.getElementById('common_user_locale_select'))
+        document.getElementById('common_user_locale_select').addEventListener('change', function() { 
                                                                                     COMMON_GLOBAL['user_locale'] = this.value;
                                                                                     //change navigator.language, however when logging out default navigator.language will be set
                                                                                     //commented at the moment
                                                                                     //Object.defineProperties(navigator, {'language': {'value':COMMON_GLOBAL['user_locale'], writable: true}});
                                                                                     user_preference_save();
                                                                                 }, false);
-    if (document.getElementById('user_timezone_select'))
-        document.getElementById('user_timezone_select').addEventListener('change', function() { COMMON_GLOBAL['user_timezone'] = this.value;
+    if (document.getElementById('common_user_timezone_select'))
+        document.getElementById('common_user_timezone_select').addEventListener('change', function() { COMMON_GLOBAL['user_timezone'] = this.value;
                                                                                                 user_preference_save().then(function(){
-                                                                                                    if (document.getElementById('dialogue_user_edit').style.visibility == 'visible') {
+                                                                                                    if (document.getElementById('common_dialogue_user_edit').style.visibility == 'visible') {
                                                                                                         dialogue_user_edit_clear();
                                                                                                         user_edit();
                                                                                                     }
                                                                                                 });
                                                                                                 }, false);
     //define also in app if needed to adjust ui
-    if (document.getElementById('user_direction_select'))
-        document.getElementById('user_direction_select').addEventListener('change', function() { document.body.style.direction = this.value;
+    if (document.getElementById('common_user_direction_select'))
+        document.getElementById('common_user_direction_select').addEventListener('change', function() { document.body.style.direction = this.value;
                                                                                                 COMMON_GLOBAL['user_direction'] = this.value;  
                                                                                                 user_preference_save();
                                                                                                 }, false);
-    if (document.getElementById('user_arabic_script_select'))
-        document.getElementById('user_arabic_script_select').addEventListener('change', function() { COMMON_GLOBAL['user_arabic_script'] = this.value;
+    if (document.getElementById('common_user_arabic_script_select'))
+        document.getElementById('common_user_arabic_script_select').addEventListener('change', function() { COMMON_GLOBAL['user_arabic_script'] = this.value;
                                                                                                     user_preference_save();
                                                                                                     }, false);
-    SearchAndSetSelectedIndex(COMMON_GLOBAL['user_locale'], document.getElementById('user_locale_select'), 1);
-    SearchAndSetSelectedIndex(COMMON_GLOBAL['user_timezone'], document.getElementById('user_timezone_select'), 1);
-    SearchAndSetSelectedIndex(COMMON_GLOBAL['user_direction'], document.getElementById('user_direction_select'), 1);
-    SearchAndSetSelectedIndex(COMMON_GLOBAL['user_arabic_script'], document.getElementById('user_arabic_script_select'), 1);
+    SearchAndSetSelectedIndex(COMMON_GLOBAL['user_locale'], document.getElementById('common_user_locale_select'), 1);
+    SearchAndSetSelectedIndex(COMMON_GLOBAL['user_timezone'], document.getElementById('common_user_timezone_select'), 1);
+    SearchAndSetSelectedIndex(COMMON_GLOBAL['user_direction'], document.getElementById('common_user_direction_select'), 1);
+    SearchAndSetSelectedIndex(COMMON_GLOBAL['user_arabic_script'], document.getElementById('common_user_arabic_script_select'), 1);
     //dialogue user edit
-    document.getElementById('user_edit_close').addEventListener('click', function() { dialogue_user_edit_clear() }, false);
-    document.getElementById('user_edit_btn_avatar_img').addEventListener('click', function() { document.getElementById('user_edit_input_avatar_img').click() }, false);
-    document.getElementById('user_edit_input_avatar_img').addEventListener('change', function() { show_image(document.getElementById('user_edit_avatar_img'), this.id, COMMON_GLOBAL['image_avatar_width'], COMMON_GLOBAL['image_avatar_height']) }, false);
-    document.getElementById('user_edit_btn_user_update').addEventListener('click', function() { user_update(); }, false);
+    document.getElementById('common_user_edit_close').addEventListener('click', function() { dialogue_user_edit_clear() }, false);
+    document.getElementById('common_user_edit_btn_avatar_img').addEventListener('click', function() { document.getElementById('common_user_edit_input_avatar_img').click() }, false);
+    document.getElementById('common_user_edit_input_avatar_img').addEventListener('change', function() { show_image(document.getElementById('common_user_edit_avatar_img'), this.id, COMMON_GLOBAL['image_avatar_width'], COMMON_GLOBAL['image_avatar_height']) }, false);
+    document.getElementById('common_user_edit_btn_user_update').addEventListener('click', function() { user_update(); }, false);
 }
 function set_common_parameters(app_id, parameter_name, parameter_value){
     if (app_id == COMMON_GLOBAL['common_app_id']){
