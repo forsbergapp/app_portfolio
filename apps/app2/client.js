@@ -26,8 +26,8 @@ async function themes(app_id){
                                     <div id='slides_month' class='slides'></div>
                                     </div>
                                 </div>
-                                <div id='slider_prev_month' class='dialogue_button slider_prev'></div>
-                                <div id='slider_next_month' class='dialogue_button slider_next'></div>
+                                <div id='slider_prev_month' class='common_dialogue_button slider_prev'></div>
+                                <div id='slider_next_month' class='common_dialogue_button slider_next'></div>
                                 <div id='slider_theme_month_id'></div>
                             </div>
                             <div class='setting_horizontal_col'>
@@ -37,8 +37,8 @@ async function themes(app_id){
                                     <div id='slides_year' class='slides'></div>
                                     </div>
                                 </div>
-                                <div id='slider_prev_year' class='dialogue_button slider_prev'></div>
-                                <div id='slider_next_year' class='dialogue_button slider_next'></div>
+                                <div id='slider_prev_year' class='common_dialogue_button slider_prev'></div>
+                                <div id='slider_next_year' class='common_dialogue_button slider_next'></div>
                                 <div id='slider_theme_year_id'></div>
                             </div>`
                         )
@@ -86,8 +86,8 @@ async function themes(app_id){
                                 </div>
                             </div>
                             </div>
-                            <div id='slider_prev_${themes_type}' class='dialogue_button slider_prev'></div>
-                            <div id='slider_next_${themes_type}' class='dialogue_button slider_next'></div>
+                            <div id='slider_prev_${themes_type}' class='common_dialogue_button slider_prev'></div>
+                            <div id='slider_next_${themes_type}' class='common_dialogue_button slider_next'></div>
                             <div id='slider_theme_${themes_type}_id'></div>
                         </div>`;
                     })

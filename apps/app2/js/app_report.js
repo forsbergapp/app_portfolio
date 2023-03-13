@@ -1416,11 +1416,11 @@ function report_exception(error){
 		for (let i = 0; i < divs.length; i += 1) {
 			divs[i].style.visibility ='hidden';
 		}
-		let message_divs = document.getElementById('dialogue_message').getElementsByTagName('div');
+		let message_divs = document.getElementById('common_dialogue_message').getElementsByTagName('div');
 		for (let i = 0; i < message_divs.length; i += 1) {
 			message_divs[i].style.visibility ='visible';
 		}
-		document.getElementById('dialogue_message').style.visibility='visible';
+		document.getElementById('common_dialogue_message').style.visibility='visible';
 		common.show_message('EXCEPTION', null,null, error, common.COMMON_GLOBAL['app_id']);
 	}	
 	else{
