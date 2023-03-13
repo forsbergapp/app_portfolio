@@ -4,12 +4,12 @@ body {
     font-size: 14px;
 }
 
-#policy_app_name1, 
-#policy_app_name2, 
-#disclaimer_app_name1,
-#disclaimer_app_name2,
-#disclaimer_app_name3,
-#terms_app_name {
+#common_policy_app_name1, 
+#common_policy_app_name2, 
+#common_disclaimer_app_name1,
+#common_disclaimer_app_name2,
+#common_disclaimer_app_name3,
+#common_terms_app_name {
 	padding: 0 !important;
 	display: inline-block;
 }

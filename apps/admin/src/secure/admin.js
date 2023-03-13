@@ -612,8 +612,8 @@ function show_users(sort=8, order_by='ASC', focus=true){
             let lov_class = '';
             //superadmin can edit
             if (common.COMMON_GLOBAL['user_app_role_id']==0){
-                lov_div = `<div class='common_lov_button list_lov_click'></div>`;
-                lov_class = 'input_lov';
+                lov_div = `<div class='common_lov_button common_list_lov_click'></div>`;
+                lov_class = 'common_input_lov';
             }
             else
                 input_readonly = `readonly='true'`;
@@ -863,8 +863,8 @@ async function show_apps(){
                         <input type='checkbox' class='list_edit' ${json.data[i].enabled==1?'checked':''} />
                     </div>
                     <div class='list_apps_col'>
-                        <input type='text' class='list_edit input_lov' value='${common.get_null_or_value(json.data[i].app_category_id)}' />
-                        <div class='common_lov_button list_lov_click'></div>
+                        <input type='text' class='list_edit common_input_lov' value='${common.get_null_or_value(json.data[i].app_category_id)}' />
+                        <div class='common_lov_button common_list_lov_click'></div>
                     </div>
                     <div class='list_apps_col'>
                         <div class='list_readonly'>${common.get_null_or_value(json.data[i].app_category_text)} </div>
@@ -920,8 +920,8 @@ function show_app_parameter(app_id){
                         <div class='list_readonly'>${json.data[i].app_id}</div>
                     </div>
                     <div class='list_app_parameter_col'>
-                        <input type=text class='list_edit input_lov' value='${json.data[i].parameter_type_id}'/>
-                        <div class='common_lov_button list_lov_click'></div>
+                        <input type=text class='list_edit common_input_lov' value='${json.data[i].parameter_type_id}'/>
+                        <div class='common_lov_button common_list_lov_click'></div>
                     </div>
                     <div class='list_app_parameter_col'>
                         <div class='list_readonly'>${json.data[i].parameter_type_text}</div>
@@ -1231,12 +1231,12 @@ function list_events(list_item, item_row, item_edit){
     //click event
     if (list_item == 'list_apps')
         document.getElementById(list_item).addEventListener('click', function(event) {   
-            if (event.target.parentNode.classList.contains('list_lov_click')){
+            if (event.target.parentNode.classList.contains('common_list_lov_click')){
                 let function_event = function(event_lov) {
                     event.target.parentNode.parentNode.parentNode.children[5].children[0].value = event_lov.currentTarget.children[0].children[0].innerHTML;
                     event.target.parentNode.parentNode.parentNode.children[5].children[0].focus();
                     event.target.parentNode.parentNode.parentNode.children[5].children[0].dispatchEvent(new Event('change'));
-                    document.getElementById('lov_close').dispatchEvent(new Event('click'))
+                    document.getElementById('common_lov_close').dispatchEvent(new Event('click'))
                 };
                 common.lov_show('APP_CATEGORY', function_event);
             }
@@ -1244,12 +1244,12 @@ function list_events(list_item, item_row, item_edit){
         })
     if (list_item == 'list_app_parameter')
         document.getElementById(list_item).addEventListener('click', function(event) {   
-            if (event.target.parentNode.classList.contains('list_lov_click')){
+            if (event.target.parentNode.classList.contains('common_list_lov_click')){
                 let function_event = function(event_lov) {
                     event.target.parentNode.parentNode.parentNode.children[1].children[0].value = event_lov.currentTarget.children[0].children[0].innerHTML;
                     event.target.parentNode.parentNode.parentNode.children[1].children[0].focus();
                     event.target.parentNode.parentNode.parentNode.children[1].children[0].dispatchEvent(new Event('change'));
-                    document.getElementById('lov_close').dispatchEvent(new Event('click'))
+                    document.getElementById('common_lov_close').dispatchEvent(new Event('click'))
                 };
                 common.lov_show('PARAMETER_TYPE', function_event);
             }
@@ -1257,12 +1257,12 @@ function list_events(list_item, item_row, item_edit){
     
     if (list_item == 'list_user_account')
         document.getElementById(list_item).addEventListener('click', function(event) {   
-            if (event.target.parentNode.classList.contains('list_lov_click')){
+            if (event.target.parentNode.classList.contains('common_list_lov_click')){
                 let function_event = function(event_lov) {
                     event.target.parentNode.parentNode.parentNode.children[2].children[0].value = event_lov.currentTarget.children[0].children[0].innerHTML;
                     event.target.parentNode.parentNode.parentNode.children[2].children[0].focus();
                     event.target.parentNode.parentNode.parentNode.children[2].children[0].dispatchEvent(new Event('change'));
-                    document.getElementById('lov_close').dispatchEvent(new Event('click'))
+                    document.getElementById('common_lov_close').dispatchEvent(new Event('click'))
                 };
                 common.lov_show('APP_ROLE', function_event);
             }
@@ -1276,8 +1276,8 @@ function fix_pagination_buttons(){
     //function called again when choosing app log monitor check if exist first
     if (document.getElementById('list_app_log_first')){
         //fix rtl isse with images, items created after login
-        if (document.getElementById('user_direction_select').value=='ltr'||
-            document.getElementById('user_direction_select').value==''){
+        if (document.getElementById('common_user_direction_select').value=='ltr'||
+            document.getElementById('common_user_direction_select').value==''){
             document.getElementById('list_app_log_first').innerHTML = common.ICONS['app_first'];
             document.getElementById('list_app_log_previous').innerHTML = common.ICONS['app_previous'];
             document.getElementById('list_app_log_next').innerHTML = common.ICONS['app_next'];
@@ -2578,9 +2578,9 @@ function init_admin_secure(){
 
     //SET ICONS
     //common, since ui=false when called init_common, set some common items here
-    document.getElementById('message_close').innerHTML = common.ICONS['app_close'];
+    document.getElementById('common_message_close').innerHTML = common.ICONS['app_close'];
     //if CONFIRM message is used
-    document.getElementById('message_cancel').innerHTML = common.ICONS['app_cancel'];
+    document.getElementById('common_message_cancel').innerHTML = common.ICONS['app_cancel'];
     //other in admin
     document.getElementById('menu_open').innerHTML = common.ICONS['app_menu_open'];
     document.getElementById('menu_1_broadcast_title').innerHTML = common.ICONS['app_broadcast'];
@@ -2588,7 +2588,7 @@ function init_admin_secure(){
     
     document.getElementById('send_broadcast_send').innerHTML = common.ICONS['app_send'];
     document.getElementById('send_broadcast_close').innerHTML = common.ICONS['app_close'];
-    document.getElementById('lov_close').innerHTML = common.ICONS['app_close'];
+    document.getElementById('common_lov_close').innerHTML = common.ICONS['app_close'];
 
     //menu 1
     document.getElementById('box1_title').innerHTML = common.ICONS['app_users'] + ' ' + common.ICONS['app_chart'];
@@ -2690,7 +2690,7 @@ function init_admin_secure(){
 
 
     //SET EVENTLISTENERS
-    document.getElementById('message_cancel').addEventListener('click', function() { document.getElementById("dialogue_message").style.visibility = "hidden"; }, false);
+    document.getElementById('common_message_cancel').addEventListener('click', function() { document.getElementById('common_dialogue_message').style.visibility = "hidden"; }, false);
     document.getElementById('menu_open').addEventListener('click', function() { document.getElementById('menu').style.display = 'block' }, false);    
 
     document.getElementById('select_app_menu1').addEventListener('change', function() { show_chart(1); show_chart(2);}, false);
@@ -2768,7 +2768,7 @@ function init_admin_secure(){
                     common.COMMON_GLOBAL['service_map_jumpto']);
             //SET MENU
             document.getElementById('menu_secure').innerHTML = 
-               `<div id='menu_close' class='dialogue_button'></div>
+               `<div id='menu_close' class='common_dialogue_button'></div>
                 <div id='menu_1' class='menuitem'></div>
                 <div id='menu_2' class='menuitem'></div>
                 <div id='menu_3' class='menuitem'></div>
@@ -2824,7 +2824,7 @@ function init_admin_secure(){
                                                                                     }
                                                                                 }
                                                                              }, false);
-            document.getElementById('user_direction_select').addEventListener('change', function() { fix_pagination_buttons(this.value)}, false);
+            document.getElementById('common_user_direction_select').addEventListener('change', function() { fix_pagination_buttons(this.value)}, false);
             //hide all first (display none in css using eval not working)
             for (let i=1;i<=10;i++){
                 document.getElementById(`menu_${i}`).style.display='none';
