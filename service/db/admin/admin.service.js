@@ -2,8 +2,9 @@ const {ConfigGet} = await import(`file://${process.cwd()}/server/server.service.
 const { createLogAppSI, createLogAppSE } = await import(`file://${process.cwd()}/service/log/log.controller.js`);
 
 let MYSQL = await import("mysql");
-let ORACLEDB = await import('oracledb');
-let PG = await import('pg');
+let {default: ORACLEDB} = await import('oracledb');
+
+let {default: PG} = await import('pg');
 
 let POOL_DB1_APP = [];
 let POOL_DB2_APP = [];

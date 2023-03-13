@@ -18,13 +18,24 @@ function get_app_code (errorNum, message, code, errno, sqlMessage){
         return app_error_code;
     } 
     else{
-		//if known sql error
-		if (errorNum ==1 || code == 'ER_DUP_ENTRY' || code=='23505') {
+		//if known SQL error, example:
+		//MySQL sqlMessage
+		//'Duplicate entry '[value]' for key 'user_account.user_account_username_un''
+		//MariaDB sqlMessage
+		//'Duplicate entry '[value]' for key 'user_account_username_un''
+		//Oracle message:
+		//'ORA-00001: unique constraint (APP_PORTFOLIO.USER_ACCOUNT_USERNAME_UN) violated'
+		//PostgreSQL message:
+		//'duplicate key value violates unique constraint "user_account_username_un"'
+
+		if ((ConfigGet(1, 'SERVICE_DB', 'USE')=='1' && code == 'ER_DUP_ENTRY') || //MariaDB/MySQL
+		    (ConfigGet(1, 'SERVICE_DB', 'USE')=='2' && errorNum ==1) ||  		  //Oracle
+			(ConfigGet(1, 'SERVICE_DB', 'USE')=='3' && code=='23505')){ 		  //PostgreSQL
 			let text_check;
 			if (sqlMessage)
-				text_check = JSON.stringify(sqlMessage);
+				text_check = JSON.stringify(sqlMessage);	//MariaDB/MySQL
 			else
-				text_check = JSON.stringify(message);
+				text_check = JSON.stringify(message);		//Oracle/PostgreSQL
 			let app_message_code = '';
 			//check constraints errors, must be same name in mySQL and Oracle
 			if (text_check.toUpperCase().includes("USER_ACCOUNT_EMAIL_UN"))
@@ -33,25 +44,13 @@ function get_app_code (errorNum, message, code, errno, sqlMessage){
 				app_message_code = 20201;
 			if (text_check.toUpperCase().includes("USER_ACCOUNT_USERNAME_UN"))
 				app_message_code = 20203;
-			if (app_message_code != ''){
+			if (app_message_code != '')
 				return app_message_code;
-			}
 			else
 				return null;	
 		}
-		else{
-			//Oracle: value too large for column...
-			//returns errorNum, message and offset 
-			//mySQL:  gives more info
-			//"code":"ER_DATA_TOO_LONG",
-			//"errno":1406,
-			//"sqlMessage":"Data too long for column 'password_reminder' at row 1",
-			//"sqlState":"22001"
-			if (errorNum ==12899 || errno==1406)
-				return 20204;
-			else
-				return null;
-		}
+		else
+			return null;
 	}
 };
 function verification_code(){
