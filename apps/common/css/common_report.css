@@ -8,16 +8,16 @@
 	box-shadow: 0 4px 8px 0 var(--app_shadow1),0 6px 20px 0 var(--app_shadow2);
 }
 /*DIALOGUE MESSAGE*/
-#dialogue_message_content{
+#common_dialogue_message_content{
 	padding: 25px;
 }
-#dialogue_message, #confirm_question, #message_cancel, #message_close{
+#common_dialogue_message, #common_confirm_question, #common_message_cancel, #common_message_close{
 	visibility: hidden;
 }
-#message_buttons{
+#common_message_buttons{
 	height: 0;
 }
-#message_title{
+#common_message_title{
 	display:inline-block;
 }
 @media only screen and (min-width: 768px) {

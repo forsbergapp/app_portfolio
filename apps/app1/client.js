@@ -22,7 +22,8 @@ function getApp(app_id, username, gps_lat, gps_long, gps_place){
                 ['<AppToolbarBottom/>', process.cwd() + '/apps/app1/src/toolbar_bottom.html'],
                 ['<AppDialogues/>', process.cwd() + '/apps/app1/src/dialogues.html'],
                 ['<AppProfileInfo/>', process.cwd() + '/apps/app1/src/profile_info.html'],   /*Profile tag in common body*/
-                ['<AppCommonProfileBtnTop/>', process.cwd() + '/apps/common/src/profile_btn_top.html'] /*AppCommonProfileBtnTop inside AppToolbarBttom */
+                ['<AppCommonProfileBtnTop/>', process.cwd() + '/apps/common/src/profile_btn_top.html'], /*AppCommonProfileBtnTop inside AppToolbarBttom */
+                ['<AppCommonProfileInfoCloud/>', process.cwd() + '/apps/common/src/profile_info_cloud.html'] /*AppCommonProfileInfoCloud inside AppProfileInfo */
                 ];
             getUserPreferences(app_id).then(function(user_preferences){
                 read_app_files(app_id, files, (err, app)=>{

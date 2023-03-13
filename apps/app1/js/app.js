@@ -27,12 +27,12 @@ function show_hide_apps_dialogue(){
         document.getElementById('dialogue_start_content').style.visibility==''){
         document.getElementById('dialogue_start_content').style.visibility='hidden';
         document.getElementById('dialogue_info_content').style.visibility='hidden';
-        document.getElementById('profile_btn_top').style.visibility='hidden';
+        document.getElementById('common_profile_btn_top').style.visibility='hidden';
     }
     else{
         document.getElementById('dialogue_start_content').style.visibility='visible';
         document.getElementById('dialogue_info_content').style.visibility='visible';
-        document.getElementById('profile_btn_top').style.visibility='visible';
+        document.getElementById('common_profile_btn_top').style.visibility='visible';
     }
 }
 function setEvents(){
@@ -55,79 +55,79 @@ function setEvents(){
         document.getElementById( 'dialogue_start_content' ).className = 'dialogue_content dialogue_flip';
     }, false );
     //common
-    document.getElementById('profile_btn_top').addEventListener('click', function() {common.profile_top(1)}, false);
+    document.getElementById('common_profile_btn_top').addEventListener('click', function() {common.profile_top(1)}, false);
     //user menu
-    document.getElementById('user_menu_username').addEventListener('click', function() { user_menu_item_click(this) }, false);
-    document.getElementById('user_menu_dropdown_log_out').addEventListener('click', function() { user_menu_item_click(this) }, false);
+    document.getElementById('common_user_menu_username').addEventListener('click', function() { user_menu_item_click(this) }, false);
+    document.getElementById('common_user_menu_dropdown_log_out').addEventListener('click', function() { user_menu_item_click(this) }, false);
     //user preferences
     document.getElementById('app_theme_checkbox').addEventListener('click', function() { app_theme_switch() }, false);
-    document.getElementById('user_locale_select').addEventListener('change', function() { document.getElementById('apps').innerHTML = common.APP_SPINNER;common.common_translate_ui(this.value, null, (err, result)=>{get_apps()});}, false);
-    document.getElementById('user_arabic_script_select').addEventListener('change', function() { app_theme_switch()}, false);
+    document.getElementById('common_user_locale_select').addEventListener('change', function() { document.getElementById('apps').innerHTML = common.APP_SPINNER;common.common_translate_ui(this.value, null, (err, result)=>{get_apps()});}, false);
+    document.getElementById('common_user_arabic_script_select').addEventListener('change', function() { app_theme_switch()}, false);
     //common with app specific settings
     //dialogue profile
-    document.getElementById('profile_home').addEventListener('click', function() {common.profile_top(1);}, false);
-    document.getElementById('profile_close').addEventListener('click', function() {common.profile_close()}, false);
-    document.getElementById('profile_search_input').addEventListener('keyup', function(event) { common.search_input(event, null);}, false);
-    document.getElementById('profile_top_row1_1').addEventListener('click', function() { common.profile_top(1)}, false);
-    document.getElementById('profile_top_row1_2').addEventListener('click', function() { common.profile_top(2)}, false);
-    document.getElementById('profile_top_row1_3').addEventListener('click', function() { common.profile_top(3)}, false);
-    document.getElementById('profile_follow').addEventListener('click', function() { common.profile_follow_like('FOLLOW') }, false);
-	document.getElementById('profile_like').addEventListener('click', function() { common.profile_follow_like('LIKE') }, false);
-    document.getElementById('profile_main_btn_following').addEventListener('click', function() { common.profile_detail(1, null, true, null) }, false);
-    document.getElementById('profile_main_btn_followed').addEventListener('click', function() { common.profile_detail(2, null, true, null) }, false);
-    document.getElementById('profile_main_btn_likes').addEventListener('click', function() { common.profile_detail(3, null, true, null) }, false);
-    document.getElementById('profile_main_btn_liked').addEventListener('click', function() { common.profile_detail(4, null, true, null) }, false);
-    document.getElementById('profile_main_btn_cloud').addEventListener('click', function() { common.profile_detail(5, common.COMMON_GLOBAL['rest_user_account_app'] + 'apps/', true, global_icon_sky_cloud, null) }, false);
+    document.getElementById('common_profile_home').addEventListener('click', function() {common.profile_top(1);}, false);
+    document.getElementById('common_profile_close').addEventListener('click', function() {common.profile_close()}, false);
+    document.getElementById('common_profile_search_input').addEventListener('keyup', function(event) { common.search_input(event, null);}, false);
+    document.getElementById('common_profile_top_row1_1').addEventListener('click', function() { common.profile_top(1)}, false);
+    document.getElementById('common_profile_top_row1_2').addEventListener('click', function() { common.profile_top(2)}, false);
+    document.getElementById('common_profile_top_row1_3').addEventListener('click', function() { common.profile_top(3)}, false);
+    document.getElementById('common_profile_follow').addEventListener('click', function() { common.profile_follow_like('FOLLOW') }, false);
+	document.getElementById('common_profile_like').addEventListener('click', function() { common.profile_follow_like('LIKE') }, false);
+    document.getElementById('common_profile_main_btn_following').addEventListener('click', function() { common.profile_detail(1, null, true, null) }, false);
+    document.getElementById('common_profile_main_btn_followed').addEventListener('click', function() { common.profile_detail(2, null, true, null) }, false);
+    document.getElementById('common_profile_main_btn_likes').addEventListener('click', function() { common.profile_detail(3, null, true, null) }, false);
+    document.getElementById('common_profile_main_btn_liked').addEventListener('click', function() { common.profile_detail(4, null, true, null) }, false);
+    document.getElementById('common_profile_main_btn_cloud').addEventListener('click', function() { common.profile_detail(5, common.COMMON_GLOBAL['rest_user_account_app'] + 'apps/', true, global_icon_sky_cloud, null) }, false);
     //dialogue login/signup/forgot
-    let input_username_login = document.getElementById("login_username");
-    input_username_login.addEventListener("keyup", function(event) {
+    let input_username_login = document.getElementById('common_login_username');
+    input_username_login.addEventListener('keyup', function(event) {
         if (event.code === 'Enter') {
             event.preventDefault();
             user_login_app().then(function(){
                 //unfocus
-                document.getElementById("login_username").blur();
+                document.getElementById('common_login_username').blur();
             });
         }
     });
-    let input_password_login = document.getElementById("login_password");
-    input_password_login.addEventListener("keyup", function(event) {
+    let input_password_login = document.getElementById('common_login_password');
+    input_password_login.addEventListener('keyup', function(event) {
         if (event.code === 'Enter') {
             event.preventDefault();
             user_login_app().then(function(){
                 //unfocus
-                document.getElementById("login_password").blur();
+                document.getElementById('common_login_password').blur();
             });
         }
     });
-    document.getElementById('login_button').addEventListener('click', function() { user_login_app() }, false);    
-    document.getElementById('signup_button').addEventListener('click', function() { common.user_signup() }, false);
+    document.getElementById('common_login_button').addEventListener('click', function() { user_login_app() }, false);    
+    document.getElementById('common_signup_button').addEventListener('click', function() { common.user_signup() }, false);
     //dialogue user edit    
-    document.getElementById('user_edit_btn_user_delete_account').addEventListener('click', function() { user_delete_app(); }, false);
+    document.getElementById('common_user_edit_btn_user_delete_account').addEventListener('click', function() { user_delete_app(); }, false);
     //dialogue verify
-    document.getElementById('user_verify_verification_container').addEventListener('keyup', function(event) {
+    document.getElementById('common_user_verify_verification_container').addEventListener('keyup', function(event) {
         switch (event.target.id){
-            case 'user_verify_verification_char1':{
-                user_verify_check_input_app(event.target, "user_verify_verification_char2")
+            case 'common_user_verify_verification_char1':{
+                user_verify_check_input_app(event.target, 'common_user_verify_verification_char2')
                 break;
             }
-            case 'user_verify_verification_char2':{
-                user_verify_check_input_app(event.target, "user_verify_verification_char3")
+            case 'common_user_verify_verification_char2':{
+                user_verify_check_input_app(event.target, 'common_user_verify_verification_char3')
                 break;
             }
-            case 'user_verify_verification_char3':{
-                user_verify_check_input_app(event.target, "user_verify_verification_char4")
+            case 'common_user_verify_verification_char3':{
+                user_verify_check_input_app(event.target, 'common_user_verify_verification_char4')
                 break;
             }
-            case 'user_verify_verification_char4':{
-                user_verify_check_input_app(event.target, "user_verify_verification_char5")
+            case 'common_user_verify_verification_char4':{
+                user_verify_check_input_app(event.target, 'common_user_verify_verification_char5')
                 break;
             }
-            case 'user_verify_verification_char5':{
-                user_verify_check_input_app(event.target, "user_verify_verification_char6")
+            case 'common_user_verify_verification_char5':{
+                user_verify_check_input_app(event.target, 'common_user_verify_verification_char6')
                 break;
             }
-            case 'user_verify_verification_char6':{
-                user_verify_check_input_app(event.target, "")
+            case 'common_user_verify_verification_char6':{
+                user_verify_check_input_app(event.target, '')
                 break;
             }
         }
@@ -135,10 +135,10 @@ function setEvents(){
 }
 function app_theme_switch(){
     if(document.getElementById('app_theme_checkbox').checked){
-        document.body.className = 'app_theme_' + 'sun ' + document.getElementById('user_arabic_script_select').value;
+        document.body.className = 'app_theme_' + 'sun ' + document.getElementById('common_user_arabic_script_select').value;
     }
     else{
-        document.body.className = 'app_theme_' + 'moon' + document.getElementById('user_arabic_script_select').value;
+        document.body.className = 'app_theme_' + 'moon' + document.getElementById('common_user_arabic_script_select').value;
     }
     return null;
 }
@@ -184,8 +184,8 @@ function get_apps() {
 
 function user_menu_item_click(item){
     switch (item.id){
-        case 'user_menu_username':{
-            document.getElementById('dialogue_profile').style.visibility = 'visible';
+        case 'common_user_menu_username':{
+            document.getElementById('common_dialogue_profile').style.visibility = 'visible';
             common.profile_show(null,
                          null,
                         (err, result)=>{
@@ -193,34 +193,34 @@ function user_menu_item_click(item){
                         });
             break;
         }
-        case 'user_menu_dropdown_log_out':{
+        case 'common_user_menu_dropdown_log_out':{
             common.user_logoff();            
             break;
         }
         default:
             break;
     }
-    document.getElementById('user_menu_dropdown').style='none';
+    document.getElementById('common_user_menu_dropdown').style='none';
 }
 async function user_login_app(){
-    let username = document.getElementById('login_username');
-    let password = document.getElementById('login_password');
-    let old_button = document.getElementById('login_button').innerHTML;
-    document.getElementById('login_button').innerHTML = common.APP_SPINNER;
+    let username = document.getElementById('common_login_username');
+    let password = document.getElementById('common_login_password');
+    let old_button = document.getElementById('common_login_button').innerHTML;
+    document.getElementById('common_login_button').innerHTML = common.APP_SPINNER;
             
     await common.user_login(username.value, password.value, (err, result)=>{
-        document.getElementById('login_button').innerHTML = old_button;
+        document.getElementById('common_login_button').innerHTML = old_button;
         if (err==null){            
             //set avatar or empty
-            common.set_avatar(result.avatar, document.getElementById('user_menu_avatar_img'));
-            document.getElementById('user_menu_username').innerHTML = result.username;
+            common.set_avatar(result.avatar, document.getElementById('common_user_menu_avatar_img'));
+            document.getElementById('common_user_menu_username').innerHTML = result.username;
             
-            document.getElementById('user_menu_logged_in').style.display = 'inline-block';
-            document.getElementById('user_menu_logged_out').style.display = 'none';
+            document.getElementById('common_user_menu_logged_in').style.display = 'inline-block';
+            document.getElementById('common_user_menu_logged_out').style.display = 'none';
 
-            document.getElementById('user_menu_username').style.display = 'block';
-            document.getElementById('user_menu_dropdown_logged_in').style.display = 'inline-block';
-            document.getElementById('user_menu_dropdown_logged_out').style.display = 'none';
+            document.getElementById('common_user_menu_username').style.display = 'block';
+            document.getElementById('common_user_menu_dropdown_logged_in').style.display = 'inline-block';
+            document.getElementById('common_user_menu_dropdown_logged_out').style.display = 'none';
 
             common.dialogue_login_clear();
             common.dialogue_signup_clear();
@@ -245,12 +245,12 @@ async function user_verify_check_input_app(item, nextField){
 
 async function  user_delete_app(){
     let user_local;
-    if (document.getElementById('user_edit_local').style.display == 'block')
+    if (document.getElementById('common_user_edit_local').style.display == 'block')
         user_local = true;
     else
         user_local = false;
     let function_delete_user_account = function() { 
-                                            document.getElementById('dialogue_message').style.visibility = 'hidden';
+                                            document.getElementById('common_dialogue_message').style.visibility = 'hidden';
                                             common.user_delete(1, user_local, null, (err, result)=>{
                                                 if (err==null){
                                                     common.user_logoff();
@@ -267,14 +267,14 @@ async function ProviderUser_update_app(identity_provider_id, profile_id, profile
     await common.ProviderUser_update(identity_provider_id, profile_id, profile_first_name, profile_last_name, profile_image_url, profile_email, (err, result)=>{
         if(err==null){
             //set avatar or empty
-            common.set_avatar(result.avatar, document.getElementById('user_menu_avatar_img'));
-            document.getElementById('user_menu_username').innerHTML = result.username;
+            common.set_avatar(result.avatar, document.getElementById('common_user_menu_avatar_img'));
+            document.getElementById('common_user_menu_username').innerHTML = result.username;
 
-            document.getElementById('user_menu_logged_in').style.display = 'inline-block';
-            document.getElementById('user_menu_logged_out').style.display = 'none';
+            document.getElementById('common_user_menu_logged_in').style.display = 'inline-block';
+            document.getElementById('common_user_menu_logged_out').style.display = 'none';
 
-            document.getElementById('user_menu_dropdown_logged_in').style.display = 'inline-block';
-            document.getElementById('user_menu_dropdown_logged_out').style.display = 'none';
+            document.getElementById('common_user_menu_dropdown_logged_in').style.display = 'inline-block';
+            document.getElementById('common_user_menu_dropdown_logged_out').style.display = 'none';
         }
     })
 }
@@ -346,7 +346,7 @@ async function init_app(){
     document.getElementById('info_link4').innerHTML = APP_GLOBAL['info_link_about_name'];
 
     //profile info
-    document.getElementById('profile_main_btn_cloud').innerHTML = common.ICONS['sky_cloud'];
+    document.getElementById('common_profile_main_btn_cloud').innerHTML = common.ICONS['sky_cloud'];
     
     setEvents();
     common.zoom_info('');
@@ -415,14 +415,14 @@ function init(parameters){
             }
             init_app().then(function(){
                 document.getElementById('apps').innerHTML = common.APP_SPINNER;
-                common.common_translate_ui(common.COMMON_GLOBAL['user_locale'], null, (err, result)=>{
+                common.common_translate_ui(common.COMMON_GLOBAL['common_user_locale'], null, (err, result)=>{
                         get_apps();
                 })
                 async function show_start(){
                     let user = window.location.pathname.substring(1);
                     if (user !='') {
                         //show profile for user entered in url
-                        document.getElementById('dialogue_profile').style.visibility = "visible";
+                        document.getElementById('common_dialogue_profile').style.visibility = 'visible';
                         common.profile_show(null, 
                                         user,
                                         (err, result)=>{
