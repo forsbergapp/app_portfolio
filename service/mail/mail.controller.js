@@ -18,12 +18,12 @@ function getLogo(req, res){
     res.sendFile(process.cwd() + `/apps/app${req.query.app_id}/mail/logo.png`, (err) =>{
         if (err){
             let stack = new Error().stack;
-            import(`file://${process.cwd()}/service/log/log.controller.js`).then(function({createLogAppSE}){
-                import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
-                    createLogAppSE(req.query.app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), err).then(function(){
+            import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
+                import(`file://${process.cwd()}/service/log/log.service.js`).then(function({createLogAppS}){
+                    createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), req.query.app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), err).then(function(){
                         return res.send(null);
                     })
-                })
+                });
             })
         }
         else {
@@ -82,12 +82,12 @@ function sendEmail(req, data, callBack){
         getParameters_server(req.query.app_id, data.app_id, (err, result)=>{
             if (err) {                
                 let stack = new Error().stack;
-                import(`file://${process.cwd()}/service/log/log.controller.js`).then(function({createLogAppSE}){
-                    import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
-                        createLogAppSE(req.query.app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), err).then(function(){
+                import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
+                    import(`file://${process.cwd()}/service/log/log.service.js`).then(function({createLogAppS}){
+                        createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), req.query.app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), err).then(function(){
                             return callBack(err, null);
                         })
-                    })
+                    });
                 })
             }
             else{
