@@ -4,7 +4,6 @@ const {default:{sign, verify}} = await import("jsonwebtoken");
 
 const {ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
 const {getParameter, getParameters_server} = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/app_parameter/app_parameter.service.js`);
-const {createLogAppSE, createLogAppCI} = await import(`file://${process.cwd()}/service/log/log.controller.js`);
 
 function access_control (req, res, callBack) {
     let stack = new Error().stack;
@@ -15,11 +14,13 @@ function access_control (req, res, callBack) {
         service.block_ip_control(ip_v4, (err, result_range) =>{
             if (err){
                 import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
-                    createLogAppSE(req.query.app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), err).then(function(){
-                        res.status(500).send(
-                            err
-                        );
-                    })
+                    import(`file://${process.cwd()}/service/log/log.service.js`).then(function({createLogAppS}){
+                        createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), req.query.app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), err).then(function(){
+                            res.status(500).send(
+                                err
+                            );
+                        })
+                    });
                 })
             }
             else{
@@ -27,10 +28,14 @@ function access_control (req, res, callBack) {
                     res.statusCode = result_range.statusCode;
                     res.statusMessage = `ip ${ip_v4} blocked, range: ${result_range.statusMessage}, tried URL: ${req.originalUrl}`;
                     import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
-                        createLogAppCI(req, res, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), res.statusMessage)
-                        .then(function(){
-                            return callBack(null,result_range);
-                        })
+                        import(`file://${process.cwd()}/service/log/log.service.js`).then(function({createLogAppC}){
+                            createLogAppC(req.query.app_id, ConfigGet(1, 'SERVICE_LOG', 'LEVEL_INFO'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), res.statusMessage,
+										  req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, 
+										  res.statusCode, 
+										  req.headers['user-agent'], req.headers['accept-language'], req.headers['referer']).then(function(){
+                                return callBack(null,result_range);
+                            })
+                        });
                     })
                 }
                 else{
@@ -40,11 +45,15 @@ function access_control (req, res, callBack) {
                         res.statusCode = 406;
                         res.statusMessage = `ip ${ip_v4} blocked, no host, tried URL: ${req.originalUrl}`;
                         import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
-                            createLogAppCI(req, res, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), res.statusMessage)
-                            .then(function(){
-                                //406 Not Acceptable
-                                return callBack(null, 406);
-                            })
+                            import(`file://${process.cwd()}/service/log/log.service.js`).then(function({createLogAppC}){
+                                createLogAppC(req.query.app_id, ConfigGet(1, 'SERVICE_LOG', 'LEVEL_INFO'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), res.statusMessage,
+                                            req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, 
+                                            res.statusCode, 
+                                            req.headers['user-agent'], req.headers['accept-language'], req.headers['referer']).then(function(){
+                                    //406 Not Acceptable
+                                    return callBack(null, 406);
+                                })
+                            });
                         })
                     }
                     else{
@@ -56,11 +65,15 @@ function access_control (req, res, callBack) {
                                 res.statusCode = 406;
                                 res.statusMessage = `ip ${ip_v4} blocked, accessed from hostname ${this_hostname} not domain, tried URL: ${req.originalUrl}`;
                                 import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
-                                    createLogAppCI(req, res, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), res.statusMessage)
-                                    .then(function(){
-                                        //406 Not Acceptable
-                                        return callBack(null, 406);
-                                    })
+                                    import(`file://${process.cwd()}/service/log/log.service.js`).then(function({createLogAppC}){
+                                        createLogAppC(req.query.app_id, ConfigGet(1, 'SERVICE_LOG', 'LEVEL_INFO'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), res.statusMessage,
+                                                    req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, 
+                                                    res.statusCode, 
+                                                    req.headers['user-agent'], req.headers['accept-language'], req.headers['referer']).then(function(){
+                                            //406 Not Acceptable
+                                            return callBack(null, 406);
+                                        })
+                                    });
                                 })
                             }
                             else{
@@ -78,11 +91,15 @@ function access_control (req, res, callBack) {
                                                 res.statusCode = 406;
                                                 res.statusMessage = `ip ${ip_v4} blocked, no user-agent, tried URL: ${req.originalUrl}`;
                                                 import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
-                                                    createLogAppCI(req, res, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), res.statusMessage)
-                                                    .then(function(){
-                                                        //406 Not Acceptable
-                                                        return callBack(null,406);
-                                                    })
+                                                    import(`file://${process.cwd()}/service/log/log.service.js`).then(function({createLogAppC}){
+                                                        createLogAppC(req.query.app_id, ConfigGet(1, 'SERVICE_LOG', 'LEVEL_INFO'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), res.statusMessage,
+                                                                    req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, 
+                                                                    res.statusCode, 
+                                                                    req.headers['user-agent'], req.headers['accept-language'], req.headers['referer']).then(function(){
+                                                            //406 Not Acceptable
+                                                            return callBack(null, 406);
+                                                        })
+                                                    });
                                                 })
                                             }
                                             else{
@@ -92,11 +109,15 @@ function access_control (req, res, callBack) {
                                                     res.statusCode = 406;
                                                     res.statusMessage = `ip ${ip_v4} blocked, no accept-language, tried URL: ${req.originalUrl}`;
                                                     import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
-                                                        createLogAppCI(req, res, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), res.statusMessage)
-                                                        .then(function(){
-                                                            //406 Not Acceptable
-                                                            return callBack(null,406);
-                                                        })
+                                                        import(`file://${process.cwd()}/service/log/log.service.js`).then(function({createLogAppC}){
+                                                            createLogAppC(req.query.app_id, ConfigGet(1, 'SERVICE_LOG', 'LEVEL_INFO'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), res.statusMessage,
+                                                                        req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, 
+                                                                        res.statusCode, 
+                                                                        req.headers['user-agent'], req.headers['accept-language'], req.headers['referer']).then(function(){
+                                                                //406 Not Acceptable
+                                                                return callBack(null, 406);
+                                                            })
+                                                        });
                                                     })
                                                 }
                                                 else
@@ -122,11 +143,13 @@ function checkAccessTokenCommon (req, res, next) {
         getParameter(req.query.app_id, ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),'SERVICE_AUTH_TOKEN_ACCESS_SECRET', (err, db_SERVICE_AUTH_TOKEN_ACCESS_SECRET)=>{
             if (err) {
                 import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
-                    createLogAppSE(req.query.app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), err).then(function(){
-                        res.status(500).send(
-                            err
-                        );
-                    })
+                    import(`file://${process.cwd()}/service/log/log.service.js`).then(function({createLogAppS}){
+                        createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), req.query.app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), err).then(function(){
+                            res.status(500).send(
+                                err
+                            );
+                        })
+                    });
                 })
             }
             else{
@@ -144,11 +167,13 @@ function checkAccessTokenCommon (req, res, next) {
                             checkLogin(req.query.app_id, req.query.user_account_logon_user_account_id, req.headers.authorization.replace('Bearer ',''), req.ip, (err, result)=>{
                                 if (err){
                                     import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
-                                        createLogAppSE(req.query.app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), err).then(function(){
-                                            res.status(500).send(
-                                                err
-                                            );
-                                        })
+                                        import(`file://${process.cwd()}/service/log/log.service.js`).then(function({createLogAppS}){
+                                            createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), req.query.app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), err).then(function(){
+                                                res.status(500).send(
+                                                    err
+                                                );
+                                            })
+                                        });
                                     })
                                 }
                                 else{
@@ -156,12 +181,17 @@ function checkAccessTokenCommon (req, res, next) {
                                         next();
                                     else{
                                         import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
-                                            createLogAppCI(req, res, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), `user  ${req.query.user_account_logon_user_account_id} app_id ${req.query.app_id} with ip ${req.ip} accesstoken unauthorized`)
-                                            .then(function(){
-                                                res.status(401).send({
-                                                    message: 'Not authorized'
-                                                });
-                                            })
+                                            import(`file://${process.cwd()}/service/log/log.service.js`).then(function({createLogAppC}){
+                                                createLogAppC(req.query.app_id, ConfigGet(1, 'SERVICE_LOG', 'LEVEL_INFO'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
+                                                             `user  ${req.query.user_account_logon_user_account_id} app_id ${req.query.app_id} with ip ${req.ip} accesstoken unauthorized`,
+                                                              req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, 
+                                                              res.statusCode, 
+                                                              req.headers['user-agent'], req.headers['accept-language'], req.headers['referer']).then(function(){
+                                                    res.status(401).send({
+                                                        message: 'Not authorized'
+                                                    });
+                                                })
+                                            });
                                         })
                                     }
                                 }
@@ -228,11 +258,13 @@ function checkDataToken (req, res, next){
         getParameter(req.query.app_id, ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),'SERVICE_AUTH_TOKEN_DATA_SECRET', (err, db_SERVICE_AUTH_TOKEN_DATA_SECRET)=>{
             if (err) {
                 import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
-                    createLogAppSE(req.query.app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), err).then(function(){
-                        res.status(500).send(
-                            err
-                        );
-                    })
+                    import(`file://${process.cwd()}/service/log/log.service.js`).then(function({createLogAppS}){
+                        createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), req.query.app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), err).then(function(){
+                            res.status(500).send(
+                                err
+                            );
+                        })
+                    });
                 })
             }
             else{
@@ -282,11 +314,13 @@ function dataToken (req, res) {
         getParameters_server(req.query.app_id, ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),  (err, result)=>{
             if (err) {
                 import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
-                    createLogAppSE(req.query.app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), err).then(function(){
-                        res.status(500).send(
-                            err
-                        );
-                    })
+                    import(`file://${process.cwd()}/service/log/log.service.js`).then(function({createLogAppS}){
+                        createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), req.query.app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), err).then(function(){
+                            res.status(500).send(
+                                err
+                            );
+                        })
+                    });
                 })
             }
             else{
@@ -379,9 +413,11 @@ function accessToken (req, callBack) {
         if (err) {
             
             import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
-                createLogAppSE(req.query.app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), err).then(function(){
-                    callBack(err);
-                })
+                import(`file://${process.cwd()}/service/log/log.service.js`).then(function({createLogAppS}){
+                    createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), req.query.app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), err).then(function(){
+                        callBack(err);
+                    })
+                });
             })
         }
         else{
@@ -461,9 +497,11 @@ async function check_internet (req){
                 if ((err) && err.code=='ECONNREFUSED') {
                     
                     import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
-                        createLogAppSE(req.query.app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), err).then(function(){
-                            resolve(0);
-                        })
+                        import(`file://${process.cwd()}/service/log/log.service.js`).then(function({createLogAppS}){
+                            createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), req.query.app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), err).then(function(){
+                                resolve(0);
+                            })
+                        });
                     })
                 } else {
                     resolve(1);
