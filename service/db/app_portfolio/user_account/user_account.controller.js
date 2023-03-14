@@ -7,7 +7,6 @@ const { getLastUserEvent, insertUserEvent } = await import(`file://${process.cwd
 const { insertUserAccountLogon } = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/user_account_logon/user_account_logon.service.js`);
 const { getParameter } = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/app_parameter/app_parameter.service.js`);
 const { sendEmail } = await import(`file://${process.cwd()}/service/mail/mail.controller.js`);
-const { createLogAppCI } = await import(`file://${process.cwd()}/service/log/log.controller.js`);
 const { accessToken } = await import(`file://${process.cwd()}/service/auth/auth.controller.js`);
 
 function getUsersAdmin(req, res){
@@ -662,19 +661,23 @@ function updateUserLocal(req, res){
                 } else {
                     let stack = new Error().stack;
                     import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
-                        createLogAppCI(req, res, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
-                                        'invalid password attempt for user id:' + req.params.id)
-                        .then(function(){
-                            //invalid password
-                            getMessage(req.query.app_id,
-                                        ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), 
-                                        20401, 
-                                        req.query.lang_code, (err,results_message)  => {
-                                            return res.status(400).send(
-                                                err ?? results_message.text
-                                            );
-                                        });
-                        })
+                        import(`file://${process.cwd()}/service/log/log.service.js`).then(function({createLogAppC}){
+                            createLogAppC(req.query.app_id, ConfigGet(1, 'SERVICE_LOG', 'LEVEL_INFO'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
+                                          'invalid password attempt for user id:' + req.params.id,
+                                          req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, 
+                                          res.statusCode, 
+                                          req.headers['user-agent'], req.headers['accept-language'], req.headers['referer']).then(function(){
+                                //invalid password
+                                getMessage(req.query.app_id,
+                                           ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), 
+                                           20401, 
+                                           req.query.lang_code, (err,results_message)  => {
+                                                return res.status(400).send(
+                                                    err ?? results_message.text
+                                                );
+                                           });
+                                })
+                        });
                     })
                     
                 }
@@ -869,19 +872,23 @@ function deleteUser(req, res){
                                 else{
                                     let stack = new Error().stack;
                                     import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
-                                        createLogAppCI(req, res, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
-                                                        'invalid password attempt for user id:' + req.params.id)
-                                        .then(function(){
-                                            //invalid password
-                                            getMessage( req.query.app_id,
+                                        import(`file://${process.cwd()}/service/log/log.service.js`).then(function({createLogAppC}){
+                                            createLogAppC(req.query.app_id, ConfigGet(1, 'SERVICE_LOG', 'LEVEL_INFO'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
+                                                        'invalid password attempt for user id:' + req.params.id,
+                                                        req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, 
+                                                        res.statusCode, 
+                                                        req.headers['user-agent'], req.headers['accept-language'], req.headers['referer']).then(function(){
+                                                //invalid password
+                                                getMessage(req.query.app_id,
                                                         ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), 
                                                         20401, 
                                                         req.query.lang_code, (err,results_message)  => {
-                                                            return res.status(400).send(
-                                                                err ?? results_message.text
-                                                            );
+                                                                return res.status(400).send(
+                                                                    err ?? results_message.text
+                                                                );
                                                         });
-                                        })
+                                                })
+                                        });
                                     })
                                 } 
                             }
@@ -1062,13 +1069,17 @@ function userLogin(req, res){
                     else{
                         //unauthorized, only admin allowed to log in to admin
                         import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
-                            createLogAppCI(req, res, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
-                                            'unauthorized admin login attempt for user id:' + req.body.user_account_id + ', username:' + req.body.username)
-                            .then(function(){
+                            import(`file://${process.cwd()}/service/log/log.service.js`).then(function({createLogAppC}){
+                                createLogAppC(req.query.app_id, ConfigGet(1, 'SERVICE_LOG', 'LEVEL_INFO'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
+                                                'unauthorized admin login attempt for user id:' + req.body.user_account_id + ', username:' + req.body.username,
+                                                req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, 
+                                                res.statusCode, 
+                                                req.headers['user-agent'], req.headers['accept-language'], req.headers['referer']).then(function(){
                                     return res.status(401).send(
                                         '⛔'
                                     );
-                            })
+                                })
+                            });
                         })
                     }
                     
@@ -1082,18 +1093,22 @@ function userLogin(req, res){
                         else{
                             //Username or password not found
                             import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
-                                createLogAppCI(req, res, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
-                                                'invalid password attempt for user id:' + req.body.user_account_id + ', username:' + req.body.username)
-                                .then(function(){
-                                    getMessage( req.query.app_id,
-                                                ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), 
-                                                20300, 
-                                                req.query.lang_code, (err,results_message)  => {
-                                                        return res.status(400).send(
-                                                            err ?? results_message.text
-                                                        );
-                                                });
-                                })
+                                import(`file://${process.cwd()}/service/log/log.service.js`).then(function({createLogAppC}){
+                                    createLogAppC(req.query.app_id, ConfigGet(1, 'SERVICE_LOG', 'LEVEL_INFO'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
+                                                  'invalid password attempt for user id:' + req.body.user_account_id + ', username:' + req.body.username,
+                                                  req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, 
+                                                  res.statusCode, 
+                                                  req.headers['user-agent'], req.headers['accept-language'], req.headers['referer']).then(function(){
+                                        getMessage( req.query.app_id,
+                                                    ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), 
+                                                    20300, 
+                                                    req.query.lang_code, (err,results_message)  => {
+                                                            return res.status(400).send(
+                                                                err ?? results_message.text
+                                                            );
+                                                    });
+                                    })
+                                });
                             })
                         }
                     })
@@ -1101,18 +1116,22 @@ function userLogin(req, res){
             } else{
                 //User not found
                 import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
-                    createLogAppCI(req, res, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
-                                    'user not found:' + req.body.username)
-                    .then(function(){
-                        getMessage( req.query.app_id,
-                                    ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), 
-                                    20305, 
-                                    req.query.lang_code, (err,results_message)  => {
-                                        return res.status(404).send(
-                                            err ?? results_message.text
-                                        );
-                                    });
-                    })
+                    import(`file://${process.cwd()}/service/log/log.service.js`).then(function({createLogAppC}){
+                        createLogAppC(req.query.app_id, ConfigGet(1, 'SERVICE_LOG', 'LEVEL_INFO'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
+                                      'user not found:' + req.body.username,
+                                      req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, 
+                                      res.statusCode, 
+                                      req.headers['user-agent'], req.headers['accept-language'], req.headers['referer']).then(function(){
+                            getMessage( req.query.app_id,
+                                        ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), 
+                                        20305, 
+                                        req.query.lang_code, (err,results_message)  => {
+                                            return res.status(404).send(
+                                                err ?? results_message.text
+                                            );
+                                        });
+                        })
+                    });
                 })
             }
         }

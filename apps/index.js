@@ -1,7 +1,7 @@
 const {CheckFirstTime, ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
 const {getParameters_server} = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/app_parameter/app_parameter.service.js`);
 const {getApp} = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/app/app.service.js`);
-const {createLogAppSE} = await import(`file://${process.cwd()}/service/log/log.controller.js`);
+
 const {getCountries} = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/country/country.service.js`);
 
 async function getInfo(app_id, info, lang_code, callBack){
@@ -19,9 +19,11 @@ async function getInfo(app_id, info, lang_code, callBack){
                 if (err) {
                     let stack = new Error().stack;
                     import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
-                        createLogAppSE(app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), err).then(function(){
-                            callBack(err, null);
-                        })
+                        import(`file://${process.cwd()}/service/log/log.service.js`).then(function({createLogAppS}){
+                            createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), err).then(function(){
+                                callBack(err, null);
+                            })
+                        });
                     })
                 }
                 else{
@@ -152,9 +154,11 @@ async function read_app_files(app_id, files, callBack){
         .catch(err => {
             let stack = new Error().stack;
             import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
-                createLogAppSE(app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), err).then(function(){
-                    callBack(err, null);
-                })
+                import(`file://${process.cwd()}/service/log/log.service.js`).then(function({createLogAppS}){
+                    createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), err).then(function(){
+                        callBack(err, null);
+                    })
+                });
             })
         });
     })
@@ -303,9 +307,11 @@ async function AppsStart(express, app){
                         if (err) {
                             let stack = new Error().stack;
                             import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
-                                createLogAppSE(req.query.app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), `getAppsAdmin, err:${err}`).then(function(){
-                                    null;
-                                })
+                                import(`file://${process.cwd()}/service/log/log.service.js`).then(function({createLogAppS}){
+                                    createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), req.query.app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), `getAppsAdmin, err:${err}`).then(function(){
+                                        resolve();
+                                    })
+                                });
                             })
                         }
                         else {

@@ -189,14 +189,18 @@ async function getPlaceSystemAdmin(req, res){
 			const url = `${ConfigGet(1, 'SERVICE_GEOLOCATION', 'URL_GPS_PLACE')}?format=json&lat=${req.query.latitude}&lon=${req.query.longitude}`;
 			geodata = await service.getService(url);
 			let stack = new Error().stack;
-			import(`file://${process.cwd()}/service/log/log.controller.js`).then(function({createLogAppCI}){
-				import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
-					createLogAppCI(req, res, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 'SYSTEM ADMIN getPlaceSystemAdmin').then(function(){
+			import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
+				import(`file://${process.cwd()}/service/log/log.service.js`).then(function({createLogAppC}){
+					createLogAppC(req.query.app_id, ConfigGet(1, 'SERVICE_LOG', 'LEVEL_INFO'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
+								  'SYSTEM ADMIN getPlaceSystemAdmin',
+								  req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, 
+								  res.statusCode, 
+								  req.headers['user-agent'], req.headers['accept-language'], req.headers['referer']).then(function(){
 						return res.status(200).json(
 							geodata
 						)
 					})
-				})
+				});
 			})
 		}
 	}
@@ -289,9 +293,13 @@ async function getIpSystemAdmin(req, res, callBack){
 	if (ConfigGet(1, 'SERVICE_AUTH', 'ENABLE_GEOLOCATION')=='1' && await check_internet(req)==1){
 		geodata = await service.getService(url);
 		let stack = new Error().stack;
-		import(`file://${process.cwd()}/service/log/log.controller.js`).then(function({createLogAppCI}){
-			import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
-				createLogAppCI(req, res, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 'SYSTEM ADMIN getIpSystemAdmin').then(function(){
+		import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
+			import(`file://${process.cwd()}/service/log/log.service.js`).then(function({createLogAppC}){
+				createLogAppC(req.query.app_id, ConfigGet(1, 'SERVICE_LOG', 'LEVEL_INFO'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
+							  'SYSTEM ADMIN getIpSystemAdmin',
+							  req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, 
+							  res.statusCode, 
+							  req.headers['user-agent'], req.headers['accept-language'], req.headers['referer']).then(function(){
 					if (req.query.callback==1)
 						return callBack(null, geodata);
 					else
@@ -299,7 +307,7 @@ async function getIpSystemAdmin(req, res, callBack){
 								geodata
 						);
 				})
-			})
+			});
 		})
 	}
 	else

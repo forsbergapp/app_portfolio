@@ -1,6 +1,7 @@
 const {execute_db_sql, get_schema_name, limit_sql} = await import(`file://${process.cwd()}/service/db/common/common.service.js`);
 
 function createLog(app_id, data, callBack){
+	let stack = new Error().stack;
 	import(`file://${process.cwd()}/server/server.service.js`).then(function({ConfigGet}){
 		if (ConfigGet(1, 'SERVICE_AUTH', 'ENABLE_DBLOG')=='1'){
 			let sql;
@@ -61,7 +62,6 @@ function createLog(app_id, data, callBack){
 							server_http_host: data.server_http_host,
 							server_http_accept_language: data.server_http_accept_language
 						};
-			let stack = new Error().stack;
 			import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
 				execute_db_sql(app_id, sql, parameters, 
 							COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
