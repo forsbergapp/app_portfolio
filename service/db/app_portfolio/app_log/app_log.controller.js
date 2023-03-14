@@ -1,50 +1,5 @@
 const service = await import("./app_log.service.js");
-const {ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
 
-function createLog(req, res){
-		const body = req.body;
-		body.server_remote_addr 		 = req.ip;
-		body.server_user_agent 			 = req.headers["user-agent"];
-		body.server_http_host 			 = req.headers["host"];
-		body.server_http_accept_language = req.headers["accept-language"];	
-		if (ConfigGet(1, 'SERVICE_AUTH', 'ENABLE_DBLOG')=='1')
-			service.createLog(req.query.app_id, body, (err,results) => {
-				if (err)
-					return res.status(500).send({
-						message: err
-					});
-				else
-					return res.status(200).json({
-						data: results
-					})
-			});
-		else
-			return res.status(200).json({
-				data: null
-			})
-	}
-function createLogAdmin(req, res){
-		const body = req.body;
-		body.server_remote_addr 		 = req.ip;
-		body.server_user_agent 			 = req.headers["user-agent"];
-		body.server_http_host 			 = req.headers["host"];
-		body.server_http_accept_language = req.headers["accept-language"];	
-		if (ConfigGet(1, 'SERVICE_AUTH', 'ENABLE_DBLOG')=='1')
-			service.createLogAdmin(req.query.app_id, body, (err,results) => {
-				if (err)
-					return res.status(500).send({
-						message: err
-					});
-				else
-					return res.status(200).json({
-						data: results
-					})
-			});
-		else
-			return res.status(200).json({
-				data: null
-			})
-	}
 function getLogsAdmin(req, res){
 		let year = parseInt(req.query.year);
 		let month = parseInt(req.query.month);
@@ -99,4 +54,4 @@ function getStatUniqueVisitorAdmin(req, res){
 			}
 		})
 	}
-export{createLog, createLogAdmin, getLogsAdmin, getStatUniqueVisitorAdmin}
+export{getLogsAdmin, getStatUniqueVisitorAdmin}
