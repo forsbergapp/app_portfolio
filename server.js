@@ -141,9 +141,10 @@ InitConfig().then(function(){
       //middleware
       //logging
       app.use((err,req,res,next) => {
-        import(`file://${process.cwd()}/service/log/log.controller.js`).then(function({createLogServerE}){
-          createLogServerE(req, res, err).then(function(){
-            next();
+        import(`file://${process.cwd()}/service/log/log.service.js`).then(function({createLogServerE}){
+          createLogServerE(req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, res.statusCode, 
+				                   req.headers['user-agent'], req.headers['accept-language'], req.headers['referer'], err).then(function(){
+                            next();
           });
         })
       })
@@ -173,10 +174,11 @@ InitConfig().then(function(){
           check_request(req, (err, result) =>{
             if (err){
               res.statusCode = 500;
-              import(`file://${process.cwd()}/service/log/log.controller.js`).then(function({createLogServerE}){
-                createLogServerE(req, res, err).then(function(){
+              import(`file://${process.cwd()}/service/log/log.service.js`).then(function({createLogServerE}){
+                createLogServerE(req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, res.statusCode, 
+                                req.headers['user-agent'], req.headers['accept-language'], req.headers['referer'], err).then(function(){
                   res.redirect(req.headers.host);
-                })
+                });
               })
             }
             else{
@@ -202,8 +204,12 @@ InitConfig().then(function(){
           req.query.client_id = parseInt(req.query.client_id);
         res.on('finish',()=>{
           //logs the result after REST API has modified req and res
-          import(`file://${process.cwd()}/service/log/log.controller.js`).then(function({createLogServerI}){
-            createLogServerI(null, req, res).then(function(){
+          import(`file://${process.cwd()}/service/log/log.service.js`).then(function({createLogServerI}){
+            createLogServerI(null,
+              req,
+              req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, 
+              res.statusCode, res.statusMessage, 
+              req.headers['user-agent'], req.headers['accept-language'], req.headers['referer']).then(function(){
               res.end;
             });
           })
@@ -264,9 +270,11 @@ InitConfig().then(function(){
 
       //start HTTP
       app.listen(ConfigGet(1, 'SERVER', 'PORT'), () => {
-        import(`file://${process.cwd()}/service/log/log.controller.js`).then(function({createLogServerI}){
-          createLogServerI('HTTP Server up and running on PORT: ' + ConfigGet(1, 'SERVER', 'PORT'));
-        })
+        import(`file://${process.cwd()}/service/log/log.service.js`).then(function({createLogServerI}){
+            createLogServerI('HTTP Server up and running on PORT: ' + ConfigGet(1, 'SERVER', 'PORT')).then(function(){
+              null;
+            });
+          })
       });
       if (ConfigGet(1, 'SERVER', 'HTTPS_ENABLE')=='1'){
         //start HTTPS
@@ -283,8 +291,10 @@ InitConfig().then(function(){
               };
               import('node:https').then(function(https){
                 https.createServer(options, app).listen(ConfigGet(1, 'SERVER', 'HTTPS_PORT'), () => {
-                  import(`file://${process.cwd()}/service/log/log.controller.js`).then(function({createLogServerI}){
-                    createLogServerI('HTTPS Server up and running on PORT: ' + ConfigGet(1, 'SERVER', 'HTTPS_PORT'));
+                  import(`file://${process.cwd()}/service/log/log.service.js`).then(function({createLogServerI}){
+                    createLogServerI('HTTPS Server up and running on PORT: ' + ConfigGet(1, 'SERVER', 'HTTPS_PORT')).then(function(){
+                      null;
+                    });
                   })
                 }); 
               });
