@@ -20,15 +20,14 @@ function log_db_sql(app_id, sql, parameters){
 	})
 }
 async function execute_db_sql(app_id, sql, parameters, 
-							  app_filename, app_function, app_line, callBack){
-	const {createLogAppSE} = await import(`file://${process.cwd()}/service/log/log.controller.js`);
+							  app_filename, app_function, app_line, callBack){	
 	const { ORACLEDB, get_pool} = await import(`file://${process.cwd()}/service/db/admin/admin.service.js`);
+	const database_error = 'DATABASE ERROR';
 	if (ConfigGet(1, 'SERVICE_LOG', 'ENABLE_DB')=='1'){
 		log_db_sql(app_id, sql, parameters);
 	}
 	switch (ConfigGet(1, 'SERVICE_DB', 'USE')){
 		case '1':{
-			let conn;
 			function config_connection(conn, query, values){
 				//change json parameters to [] syntax with bind variable names
 				//common syntax: connection.query("UPDATE [table] SET [column] = :title", { title: "value" });
@@ -45,14 +44,25 @@ async function execute_db_sql(app_id, sql, parameters,
 			}
 			//Both MySQL and MariaDB use MySQL npm module
 			get_pool(app_id).getConnection(function (err, conn){
-				if (err)
-					return callBack(err, null);
+				if (err){
+					import(`file://${process.cwd()}/service/log/log.service.js`).then(function({createLogAppS}){
+						//Both MariaDB and MySQL use err.sqlMessage
+						createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), app_id, app_filename, app_function, app_line, 'DB 1 getConnection:' + err.sqlMessage).then(function(){
+							return callBack(database_error, null);
+						})
+					});
+				}
 				else
 					config_connection(conn, sql, parameters);
 					conn.query(sql, parameters, function (err, result, fields){
 						conn.release();
 						if (err)
-							return callBack(err, null);
+							import(`file://${process.cwd()}/service/log/log.service.js`).then(function({createLogAppS}){
+								//Both MariaDB and MySQL use err.sqlMessage
+								createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), app_id, app_filename, app_function, app_line, 'DB 1 query:' + err.sqlMessage).then(function(){
+									return callBack(database_error, null);
+								})
+							});
 						else{
 							//convert blob buffer to string if any column is a BLOB type
 							if (result.length>0){
@@ -78,9 +88,13 @@ async function execute_db_sql(app_id, sql, parameters,
 				pool2 = await ORACLEDB.getConnection(get_pool(app_id));
 				const result = await pool2.execute(sql, parameters, (err,result) => {
 														if (err) {
-															createLogAppSE(app_id, app_filename, app_function, app_line, `${err.message}, SQL:${sql.substring(0,100)}...`).then(function(){
-																return callBack(err);
-															})
+															import(`file://${process.cwd()}/service/log/log.service.js`).then(function({createLogAppS}){
+																//Oracle uses err.message
+																createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), app_id, app_filename, app_function, app_line,
+																			  'DB 2 execute:' + `${err.message}, SQL:${sql.substring(0,100)}...`).then(function(){
+																	return callBack(database_error, null);
+																})
+															});
 														}
 														else{
 															if (!result.rows && result)
@@ -90,30 +104,27 @@ async function execute_db_sql(app_id, sql, parameters,
 														}
 													});
 			}catch (err) {
-				let stack = new Error().stack;
-				import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
-					createLogAppSE(app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), err.message).then(function(){
-						return callBack(err.message);
+				import(`file://${process.cwd()}/service/log/log.service.js`).then(function({createLogAppS}){
+					createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), app_id, app_filename, app_function, app_line, 'DB 2 catch:' + err.message).then(function(){
+						return callBack(database_error);
 					})
-				})
+				});
 			} finally {
 				if (pool2) {
 					try {
 						await pool2.close(); 
 					} catch (err) {
-						let stack = new Error().stack;
-						import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
-							createLogAppSE(app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), err.message).then(function(){
-								return callBack(err.message);
+						import(`file://${process.cwd()}/service/log/log.service.js`).then(function({createLogAppS}){
+							createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), app_id, app_filename, app_function, app_line, 'DB 2 finally:' + err.message).then(function(){
+								return callBack(database_error);
 							})
-						})
+						});
 					}
 				}
 			}
 			break;
 		}
 		case '3':{
-			let conn;
 			function queryConvert(parameterizedSql, params) {
 				//change json parameters to $ syntax
 				//use unique index with $1, $2 etc, parameter can be used several times
@@ -156,7 +167,12 @@ async function execute_db_sql(app_id, sql, parameters,
 				  })
 				  .catch((err) => {
 					pool3.release();
-					return callBack(err, null);
+					import(`file://${process.cwd()}/service/log/log.service.js`).then(function({createLogAppS}){
+						//PostgreSQL use err.message
+						createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), app_id, app_filename, app_function, app_line, 'DB 3 catch:' + err.message).then(function(){
+							return callBack(database_error, null);
+						})
+					});
 				  })
 			  })
 			break;

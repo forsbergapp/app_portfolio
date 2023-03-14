@@ -113,12 +113,16 @@ function getFormAdmin(req, res, app_id, callBack){
                                          result.geoplugin_longitude, 
                                          gps_place).then(function(app_result){
                                             let stack = new Error().stack;
-                                            import(`file://${process.cwd()}/service/log/log.controller.js`).then(function({ createLogAppCI }){
-                                                import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
-                                                    createLogAppCI(req, res, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 'SYSTEM ADMIN Forms Admin').then(function(){
+                                            import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
+                                                import(`file://${process.cwd()}/service/log/log.service.js`).then(function({createLogAppC}){
+                                                    createLogAppC(req.query.app_id, ConfigGet(1, 'SERVICE_LOG', 'LEVEL_INFO'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
+                                                                  'SYSTEM ADMIN Forms Admin',
+                                                                  req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, 
+                                                                  res.statusCode, 
+                                                                  req.headers['user-agent'], req.headers['accept-language'], req.headers['referer']).then(function(){
                                                         return callBack(null, app_result);
                                                     })
-                                                })
+                                                });
                                             })
                                          })
                 })
@@ -138,14 +142,18 @@ function getFormAdminSecure(req, res){
                 null, 
                 null)
             .then(function(app_result){
-                import(`file://${process.cwd()}/service/log/log.controller.js`).then(function({ createLogAppCI }){
-                    import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
-                        createLogAppCI(req, res, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 'SYSTEM ADMIN Forms admin secure').then(function(){
+                import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
+                    import(`file://${process.cwd()}/service/log/log.service.js`).then(function({createLogAppC}){
+                        createLogAppC(req.query.app_id, ConfigGet(1, 'SERVICE_LOG', 'LEVEL_INFO'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
+                                      'SYSTEM ADMIN Forms admin secure',
+                                      req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, 
+                                      res.statusCode, 
+                                      req.headers['user-agent'], req.headers['accept-language'], req.headers['referer']).then(function(){
                             return res.status(200).json({
                                 app: app_result
                             });
                         })
-                    })
+                    });
                 })
             })    
         })

@@ -26,12 +26,16 @@ function BroadcastConnect(req, res){
                     response: res
                 };
                 service.ClientAdd(newClient);
-                import(`file://${process.cwd()}/service/log/log.controller.js`).then(function({createLogAppCI}){
-                    import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
-                        createLogAppCI(req, res, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 'SYSTEM ADMIN Broadcast connect').then(function(){
+                import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
+                    import(`file://${process.cwd()}/service/log/log.service.js`).then(function({createLogAppC}){
+                        createLogAppC(req.query.app_id, ConfigGet(1, 'SERVICE_LOG', 'LEVEL_INFO'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
+                                      'SYSTEM ADMIN Broadcast connect',
+                                      req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, 
+                                      res.statusCode, 
+                                      req.headers['user-agent'], req.headers['accept-language'], req.headers['referer']).then(function(){
                             service.ClientClose(res, req.params.clientId);
                         })
-                    })
+                    });
                 })
             })
         })

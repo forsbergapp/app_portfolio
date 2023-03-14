@@ -1,5 +1,4 @@
 const {ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
-const {createLogAppSE} = await import(`file://${process.cwd()}/service/log/log.controller.js`);
 
 function IPtoNum(ip){
     return Number(
@@ -13,9 +12,9 @@ function IPtoNum(ip){
         if (ConfigGet(1, 'SERVICE_AUTH', 'ACCESS_CONTROL_IP') == '1'){
             let ranges;
             import('node:fs').then(function(fs){
-                fs.readFile(process.cwd() + ConfigGet(0, null, 'FILE_CONFIG_AUTH_BLOCKIP'), 'utf8', (error, fileBuffer) => {
-                    if (error)
-                        return callBack(error, null);
+                fs.readFile(process.cwd() + ConfigGet(0, null, 'FILE_CONFIG_AUTH_BLOCKIP'), 'utf8', (err, fileBuffer) => {
+                    if (err)
+                        return callBack(err, null);
                     else{
                         ranges = fileBuffer.toString();
                         //check if IP is blocked
@@ -50,13 +49,15 @@ function IPtoNum(ip){
         if (ConfigGet(1, 'SERVICE_AUTH', 'ACCESS_CONTROL_USER_AGENT') == '1'){
             let json;  
             import('node:fs').then(function(fs){
-                fs.readFile(process.cwd() + ConfigGet(0, null, 'FILE_CONFIG_AUTH_USERAGENT'), 'utf8', (error, fileBuffer) => {
-                    if (error){
+                fs.readFile(process.cwd() + ConfigGet(0, null, 'FILE_CONFIG_AUTH_USERAGENT'), 'utf8', (err, fileBuffer) => {
+                    if (err){
                         let stack = new Error().stack;
                         import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
-                            createLogAppSE(ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), error).then(function(){
-                                return callBack(error, null);
-                            })
+                            import(`file://${process.cwd()}/service/log/log.service.js`).then(function({createLogAppS}){
+                                createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), err).then(function(){
+                                    return callBack(err, null);
+                                })
+                            });
                         })
                     }
                     else{
@@ -99,13 +100,15 @@ function IPtoNum(ip){
                 let style_src = '';
                 let font_src = '';
                 let frame_src = '';
-                fs.readFile(process.cwd() + ConfigGet(0, null, 'FILE_CONFIG_AUTH_POLICY'), 'utf8', (error, fileBuffer) => {
-                    if (error){
+                fs.readFile(process.cwd() + ConfigGet(0, null, 'FILE_CONFIG_AUTH_POLICY'), 'utf8', (err, fileBuffer) => {
+                    if (err){
                         let stack = new Error().stack;
                         import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
-                            createLogAppSE(ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), error).then(function(){
-                                return callBack(error, null);
-                            })
+                            import(`file://${process.cwd()}/service/log/log.service.js`).then(function({createLogAppS}){
+                                createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), err).then(function(){
+                                    return callBack(err, null);
+                                })
+                            });
                         })
                     }
                     else{
