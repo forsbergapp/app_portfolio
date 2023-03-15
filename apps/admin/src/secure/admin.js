@@ -1033,19 +1033,25 @@ async function button_save(item){
                 }
                 //no fetched from end of item name list_config_nav_X
                 config_no = document.querySelectorAll('#menu_6_content .list_nav .list_nav_selected_tab')[0].id.substring(16);
-                if (config_no == 1)
-                    json_data = `{"config_no":   ${config_no},
-                                  "config_json": ${JSON.stringify(config_create_server_json())}}`;
-                else
-                    json_data = `{"config_no":   ${config_no},
-                                  "config_json": ${JSON.stringify(document.getElementById('list_config_edit').innerHTML)}}`;
-                json_data = JSON.stringify(JSON.parse(json_data), undefined, 2);
-                let old_button = document.getElementById(item).innerHTML;
-                document.getElementById(item).innerHTML = common.APP_SPINNER;
-                common.common_fetch('/server/config/systemadmin?',
-                    'PUT', 2, json_data, null, null,(err, result) =>{
-                    document.getElementById(item).innerHTML = old_button;
-                })
+                if (config_no == 0){
+                    //no action, just display info of config_init.json
+                    null;
+                }
+                else{
+                    if (config_no == 1)
+                        json_data = `{"config_no":   ${config_no},
+                                    "config_json": ${JSON.stringify(config_create_server_json())}}`;
+                    else
+                        json_data = `{"config_no":   ${config_no},
+                                    "config_json": ${JSON.stringify(document.getElementById('list_config_edit').innerHTML)}}`;
+                    json_data = JSON.stringify(JSON.parse(json_data), undefined, 2);
+                    let old_button = document.getElementById(item).innerHTML;
+                    document.getElementById(item).innerHTML = common.APP_SPINNER;
+                    common.common_fetch('/server/config/systemadmin?',
+                        'PUT', 2, json_data, null, null,(err, result) =>{
+                        document.getElementById(item).innerHTML = old_button;
+                    })
+                }
             }
     
 }
@@ -1303,6 +1309,7 @@ function nav_click(item){
         document.getElementById('list_config_nav_2').classList='';
         document.getElementById('list_config_nav_3').classList='';
         document.getElementById('list_config_nav_4').classList='';
+        document.getElementById('list_config_nav_0').classList='';
     }
     
     switch (item.id){
@@ -1371,6 +1378,12 @@ function nav_click(item){
             reset_config();
             document.getElementById('list_config_nav_4').classList= 'list_nav_selected_tab';
             show_config(4);
+            break;
+        }
+        case 'list_config_info_title':{
+            reset_config();
+            document.getElementById('list_config_nav_0').classList= 'list_nav_selected_tab';
+            show_config(0);
             break;
         }
     }
@@ -2290,6 +2303,10 @@ async function show_config(config_nav=1){
         else{
             let json = JSON.parse(result);
             let i = 0;
+            if (config_nav==0)
+                document.getElementById('list_config_edit').contentEditable = false;
+            else
+                document.getElementById('list_config_edit').contentEditable = true;
             switch (config_nav){
                 case 1:{
                     let html = `<div id='list_config_row_title' class='list_config_row'>
@@ -2519,6 +2536,9 @@ async function show_server_info(){
                 document.getElementById('menu_10_process_info_memoryusage_arraybuffers_data').innerHTML = json.process.memoryusage_arraybuffers;
                 document.getElementById('menu_10_process_info_uptime_data').innerHTML = seconds_to_time(json.process.uptime);
                 document.getElementById('menu_10_process_info_version_data').innerHTML = json.process.version;
+                document.getElementById('menu_10_process_info_path_data').innerHTML = json.process.path;
+                document.getElementById('menu_10_process_info_start_arg_0_data').innerHTML = json.process.start_arg_0;
+                document.getElementById('menu_10_process_info_start_arg_1_data').innerHTML = json.process.start_arg_1;
             }
         })
     }
@@ -2650,6 +2670,7 @@ function init_admin_secure(){
     document.getElementById('list_config_blockip_title').innerHTML = common.ICONS['app_internet'] + common.ICONS['app_shield'] + common.ICONS['regional_numbersystem'];
     document.getElementById('list_config_useragent_title').innerHTML = common.ICONS['app_internet'] + common.ICONS['app_shield'] + common.ICONS['app_browser'];
     document.getElementById('list_config_policy_title').innerHTML = common.ICONS['app_internet'] + common.ICONS['app_shield'] + common.ICONS['misc_book'];
+    document.getElementById('list_config_info_title').innerHTML = common.ICONS['app_info'];
     document.getElementById('config_save').innerHTML = common.ICONS['app_save'];
     //menu 8
     document.getElementById('menu_8_db_info_database_title').innerHTML = common.ICONS['app_database'] + common.ICONS['regional_numbersystem'];
@@ -2687,6 +2708,9 @@ function init_admin_secure(){
     document.getElementById('menu_10_process_info_memoryusage_arraybuffers_title').innerHTML = 'MEMORY ARRAYBUFFERS';
     document.getElementById('menu_10_process_info_uptime_title').innerHTML = 'UPTIME';
     document.getElementById('menu_10_process_info_version_title').innerHTML = 'NODEJS VERSION';
+    document.getElementById('menu_10_process_info_path_title').innerHTML = 'PATH';
+    document.getElementById('menu_10_process_info_start_arg_0_title').innerHTML = 'START ARG 0';
+    document.getElementById('menu_10_process_info_start_arg_1_title').innerHTML = 'START ARG 1';
 
 
     //SET EVENTLISTENERS
