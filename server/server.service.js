@@ -392,35 +392,41 @@ async function ConfigSave(config_no, config_json, first_time, callBack){
                 });
             }
             else{
-                import('node:fs').then(function(fs){
-                    //get old config file
-                    fs.readFile(process.cwd() + config_file,  'utf8', (err, result_read) => {
-                        if (err)
-                            callBack(err, null);
-                        else{
-                            let old_config = result_read.toString();
-                            //write backup of old file
-                            fs.writeFile(process.cwd() + `${config_file}.${new Date().toISOString().replace(new RegExp(':', 'g'),'.')}`, old_config,  'utf8', (err) => {
-                                if (err)
-                                    callBack(err, null);
-                                else{
-                                    if (config_no == 1){
-                                        //add metadata to server config
-                                        config_json = JSON.parse(config_json);
-                                        config_json['configuration'] = 'App Portfolio';
-                                        config_json['comment'] = '';
-                                        config_json['created'] = JSON.parse(old_config)['created'];
-                                        config_json['modified'] = new Date().toISOString();
-                                        config_json = JSON.stringify(config_json, undefined, 2);
-                                    }  
-                                    write_config(config_no, config_file, config_json).then(function(){
-                                        callBack(null, null);
-                                    });
-                                }
-                            });
-                        }
-                    });
-                })
+                if (config_no == 0){
+                    //config_init.json file displayed info, do not update
+                    callBack(null, null);
+                }
+                else{
+                    import('node:fs').then(function(fs){
+                        //get old config file
+                        fs.readFile(process.cwd() + config_file,  'utf8', (err, result_read) => {
+                            if (err)
+                                callBack(err, null);
+                            else{
+                                let old_config = result_read.toString();
+                                //write backup of old file
+                                fs.writeFile(process.cwd() + `${config_file}.${new Date().toISOString().replace(new RegExp(':', 'g'),'.')}`, old_config,  'utf8', (err) => {
+                                    if (err)
+                                        callBack(err, null);
+                                    else{
+                                        if (config_no == 1){
+                                            //add metadata to server config
+                                            config_json = JSON.parse(config_json);
+                                            config_json['configuration'] = 'App Portfolio';
+                                            config_json['comment'] = '';
+                                            config_json['created'] = JSON.parse(old_config)['created'];
+                                            config_json['modified'] = new Date().toISOString();
+                                            config_json = JSON.stringify(config_json, undefined, 2);
+                                        }  
+                                        write_config(config_no, config_file, config_json).then(function(){
+                                            callBack(null, null);
+                                        });
+                                    }
+                                });
+                            }
+                        });
+                    })
+                }
             }
         }
     } catch (error) {
@@ -484,7 +490,10 @@ async function Info(callBack){
                             "memoryusage_external" : process.memoryUsage()['external'],
                             "memoryusage_arraybuffers" : process.memoryUsage()['arrayBuffers'],
                             "uptime" : process.uptime(),
-                            "version" : process.version
+                            "version" : process.version,
+                            "path" : process.cwd(),
+                            "start_arg_0" : process.argv[0],
+                            "start_arg_1" : process.argv[1]
                         }
     callBack(null, {
                     os: os_json,

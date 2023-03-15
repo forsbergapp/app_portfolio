@@ -1116,7 +1116,7 @@
         --app_theme_list_rowtitle_color:var(--app_theme_main_branding_color1);
         --app_theme_list_rowtitle_background_color:var(--app_theme_main_branding_color3);
         --app_theme_list_background_color:var(--app_theme_main_branding_color1);
-        --app_theme_list_border_color:var(--app_theme_main_branding_color2);
+        --app_theme_list_border_color:var(--app_theme_main_branding_color1);
         --app_theme_list_selected_background_color: var(--app_theme_main_select_color);
         --app_theme_list_scrollbar_color1: var(--app_theme_main_branding_color2);
         --app_theme_list_scrollbar_color2: var(--app_theme_main_branding_color5);
