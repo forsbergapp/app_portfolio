@@ -3393,7 +3393,7 @@ function assign_icons(){
     document.getElementById('common_window_info_toolbar_btn_right').innerHTML = ICONS['app_right'];
     document.getElementById('common_window_info_toolbar_btn_up').innerHTML =  ICONS['app_up'];
     document.getElementById('common_window_info_toolbar_btn_down').innerHTML = ICONS['app_down'];
-    document.getElementById('common_window_info_toolbar_btn_fullscreen').innerHTML = ICONS['presentacion'];
+    document.getElementById('common_window_info_toolbar_btn_fullscreen').innerHTML = ICONS['presentation'];
     
     //user menu
     //document.getElementById('common_user_menu_dropdown_profile').innerHTML = ICONS['button_default_icon_profile'];
