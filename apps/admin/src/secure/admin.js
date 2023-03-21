@@ -1239,9 +1239,10 @@ function list_events(list_item, item_row, item_edit){
         document.getElementById(list_item).addEventListener('click', function(event) {   
             if (event.target.parentNode.classList.contains('common_list_lov_click')){
                 let function_event = function(event_lov) {
+                    //setting values from LOV
                     event.target.parentNode.parentNode.parentNode.children[5].children[0].value = event_lov.currentTarget.children[0].children[0].innerHTML;
                     event.target.parentNode.parentNode.parentNode.children[5].children[0].focus();
-                    event.target.parentNode.parentNode.parentNode.children[5].children[0].dispatchEvent(new Event('change'));
+                    event.target.parentNode.parentNode.parentNode.children[6].children[0].innerHTML = event_lov.currentTarget.children[1].children[0].innerHTML;
                     document.getElementById('common_lov_close').dispatchEvent(new Event('click'))
                 };
                 common.lov_show('APP_CATEGORY', function_event);
@@ -1252,9 +1253,10 @@ function list_events(list_item, item_row, item_edit){
         document.getElementById(list_item).addEventListener('click', function(event) {   
             if (event.target.parentNode.classList.contains('common_list_lov_click')){
                 let function_event = function(event_lov) {
+                    //setting values from LOV
                     event.target.parentNode.parentNode.parentNode.children[1].children[0].value = event_lov.currentTarget.children[0].children[0].innerHTML;
                     event.target.parentNode.parentNode.parentNode.children[1].children[0].focus();
-                    event.target.parentNode.parentNode.parentNode.children[1].children[0].dispatchEvent(new Event('change'));
+                    event.target.parentNode.parentNode.parentNode.children[2].children[0].innerHTML = event_lov.currentTarget.children[1].children[0].innerHTML;
                     document.getElementById('common_lov_close').dispatchEvent(new Event('click'))
                 };
                 common.lov_show('PARAMETER_TYPE', function_event);
@@ -1265,9 +1267,10 @@ function list_events(list_item, item_row, item_edit){
         document.getElementById(list_item).addEventListener('click', function(event) {   
             if (event.target.parentNode.classList.contains('common_list_lov_click')){
                 let function_event = function(event_lov) {
+                    //setting values from LOV
                     event.target.parentNode.parentNode.parentNode.children[2].children[0].value = event_lov.currentTarget.children[0].children[0].innerHTML;
                     event.target.parentNode.parentNode.parentNode.children[2].children[0].focus();
-                    event.target.parentNode.parentNode.parentNode.children[2].children[0].dispatchEvent(new Event('change'));
+                    event.target.parentNode.parentNode.parentNode.children[3].children[0].innerHTML = event_lov.currentTarget.children[1].children[0].innerHTML;
                     document.getElementById('common_lov_close').dispatchEvent(new Event('click'))
                 };
                 common.lov_show('APP_ROLE', function_event);
