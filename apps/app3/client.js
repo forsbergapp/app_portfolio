@@ -6,6 +6,7 @@ function getApp(app_id, params, gps_lat, gps_long, gps_place){
             ['APP', process.cwd() + '/apps/app3/src/index.html'],
             ['<AppCommonHeadFontawesome/>', process.cwd() + '/apps/common/src/head_fontawesome.html'],
             ['<AppCommonHead/>', process.cwd() + '/apps/common/src/head.html'],
+            ['<AppCommonHeadFonts/>', process.cwd() + '/apps/common/src/head_fonts.html'],
             ['<AppCommonBody/>', process.cwd() + '/apps/common/src/body.html'],
             ['<AppCommonBodyMaintenance/>', process.cwd() + '/apps/common/src/body_maintenance.html'],
             ['<AppCommonBodyBroadcast/>', process.cwd() + '/apps/common/src/body_broadcast.html'],    
