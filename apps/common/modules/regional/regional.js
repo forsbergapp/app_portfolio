@@ -159,7 +159,6 @@ async function getGregorian (arabicDate, adjustment){
 //https://github.com/mobz/get-timezone-offset
 //It returns the timezone offset in minutes for any IANA timezone name 
 //for any valid javascript date in the past, present and future.
-//used for sending offset to prayTimes.getTimes
 //function getTimezoneOffset( tz_str, date ) {
 async function getTimezoneOffset(tz_str){
     //https://github.com/mobz/get-timezone-offset
