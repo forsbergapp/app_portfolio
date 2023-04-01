@@ -349,8 +349,9 @@ function isToday(checkdate){
             (checkdate.getFullYear() == today.getFullYear());
 }
 async function set_prayer_method(ui){
+	return new Promise(function (resolve, reject){
 		/* praytimes.org override without modifying original code
-		   should look like this
+			should look like this
 		app_common.APP_GLOBAL['prayer_praytimes_methods'] = {
 			ALGERIAN: {
 				name: 'Algerian Ministry of Religious Affairs and Wakfs',
@@ -409,82 +410,85 @@ async function set_prayer_method(ui){
 		};
 		*/
 
-	let isha;
-	let maghrib;
-	let midnight;
-	function set_prayer_value(isha_data, maghrib_data, midnight_data){
-		//first two parameters always have values		
-		//check if integer or number with decimal 
-		if (/^\d+$/.test(isha_data) ||
-			/^\d+\.\d+$/.test(isha_data)){
-			//do not convert
-			isha = `isha: ${isha_data}`;
-		}			
-		else{
-			isha = `isha: '${isha_data}'`;
-		}
-		//show only maghrib if there is a value
-		if (common.get_null_or_value(maghrib_data) != '')
-			  maghrib = `,maghrib: ${maghrib_data}`;
-		else
-			maghrib = '';
-		//show only midnight if there is a value
-		if (common.get_null_or_value(midnight_data) != '')
-			  midnight = `,midnight: '${midnight_data}'`;
-		else
-			midnight = '';
-	}
-	app_common.APP_GLOBAL['prayer_praytimes_methods'] = '';
-	let praytime_methods = '';
-	if (ui==true){
-		//called from app where there is a DOM select
-		let methods = document.getElementById('setting_select_method');
-		for (let i=0;i <methods.options.length;i++){
-			set_prayer_value(methods[i].getAttribute('data3'),
-							 methods[i].getAttribute('data4'),
-							 methods[i].getAttribute('data5'));
-			if (praytime_methods!='')
-				praytime_methods += ',';
-			praytime_methods += `${methods[i].value.toUpperCase()}:{
-									name:  '${methods[i].text}',
-									params: { fajr: ${methods[i].getAttribute('data2')},
-											  ${isha}
-											  ${maghrib}
-											  ${midnight}
-											}
-								}`;
-		}	
-		praytime_methods = `{${praytime_methods}}`;
-		eval(`app_common.APP_GLOBAL['prayer_praytimes_methods']=`+praytime_methods);
-	}
-	else{
-		//called from report
-		await common.common_fetch(common.COMMON_GLOBAL['rest_api_db_path'] + common.COMMON_GLOBAL['rest_setting'] + '?setting_type=METHOD' , 
-					'GET', 0, null, null, null, (err, result) =>{
-			if (err)
-				null;
+		let isha;
+		let maghrib;
+		let midnight;
+		function set_prayer_value(isha_data, maghrib_data, midnight_data){
+			//first two parameters always have values		
+			//check if integer or number with decimal 
+			if (/^\d+$/.test(isha_data) ||
+				/^\d+\.\d+$/.test(isha_data)){
+				//do not convert
+				isha = `"isha": ${isha_data}`;
+			}			
 			else{
-				let json = JSON.parse(result);
-				for (let i=0;i <json.settings.length;i++){
-					set_prayer_value(json.settings[i].data3,
-									json.settings[i].data4,
-									json.settings[i].data5);
-					if (praytime_methods!='')
-						praytime_methods += ',';
-					praytime_methods += `${json.settings[i].data.toUpperCase()}:{
-											name:  '${json.settings[i].text}',
-											params: { fajr: ${json.settings[i].data2},
-													  ${isha}
-													  ${maghrib}
-													  ${midnight}
-													}
-										}`;
-				}
-				praytime_methods = `{${praytime_methods}}`;
-				eval(`app_common.APP_GLOBAL['prayer_praytimes_methods']=`+praytime_methods);
+				isha = `"isha": "${isha_data}"`;
 			}
-		})
-	}
+			//show only maghrib if there is a value
+			if (common.get_null_or_value(maghrib_data) != '')
+				maghrib = `,"maghrib": ${maghrib_data}`;
+			else
+				maghrib = '';
+			//show only midnight if there is a value
+			if (common.get_null_or_value(midnight_data) != '')
+				midnight = `,"midnight": "${midnight_data}"`;
+			else
+				midnight = '';
+		}
+		app_common.APP_GLOBAL['prayer_praytimes_methods'] = '';
+		let praytime_methods = '';
+		if (ui==true){
+			//called from app where there is a DOM select
+			let methods = document.getElementById('setting_select_method');
+			for (let i=0;i <methods.options.length;i++){
+				set_prayer_value(methods[i].getAttribute('data3'),
+								methods[i].getAttribute('data4'),
+								methods[i].getAttribute('data5'));
+				if (praytime_methods!='')
+					praytime_methods += ',';
+				praytime_methods += `"${methods[i].value.toUpperCase()}":{
+										"name":  "${methods[i].text}",
+										"params": { "fajr": ${methods[i].getAttribute('data2')},
+												${isha}
+												${maghrib}
+												${midnight}
+												}
+									}`;
+			}	
+			praytime_methods = `{${praytime_methods}}`;
+			app_common.APP_GLOBAL['prayer_praytimes_methods']=JSON.parse(praytime_methods);
+			resolve();
+		}
+		else{
+			//called from report
+			common.common_fetch(common.COMMON_GLOBAL['rest_api_db_path'] + common.COMMON_GLOBAL['rest_setting'] + '?setting_type=METHOD' , 
+						'GET', 0, null, null, null, (err, result) =>{
+				if (err)
+					reject(err);
+				else{
+					let json = JSON.parse(result);
+					for (let i=0;i <json.settings.length;i++){
+						set_prayer_value(json.settings[i].data3,
+										json.settings[i].data4,
+										json.settings[i].data5);
+						if (praytime_methods!='')
+							praytime_methods += ',';
+						praytime_methods += `"${json.settings[i].data.toUpperCase()}":{
+												"name":  "${json.settings[i].text}",
+												"params": { "fajr": ${json.settings[i].data2},
+														${isha}
+														${maghrib}
+														${midnight}
+														}
+											}`;
+					}
+					praytime_methods = `{${praytime_methods}}`;
+					app_common.APP_GLOBAL['prayer_praytimes_methods']=JSON.parse(praytime_methods);
+					resolve();
+				}
+			})
+		}
+	})
 }
 
 //check if day is ramadan day
@@ -505,7 +509,7 @@ function is_ramadan_day(year, month, day, timezone, calendartype, calendar_hijri
 	return false;
 }
 
-function setMethod_praytimes(settings_method, settings_asr, settings_highlat){
+function setMethod_praytimes(prayTimes, settings_method, settings_asr, settings_highlat){
 	prayTimes.setMethod(settings_method);
 	//use methods without modifying original code
 	if (app_common.APP_GLOBAL['prayer_praytimes_methods'][settings_method].params.maghrib && 
@@ -838,7 +842,7 @@ function makeTableRow(data, items, timerow, year, month, settings, date) {
 	return html;
 }
 // display timetable month
-async function displayMonth(settings, item_id) {
+async function displayMonth(prayTimes, settings, item_id) {
 	return new Promise(function (resolve, reject){
 		let timetable = document.createElement('div');
 		let month;
@@ -1002,7 +1006,7 @@ async function displayMonth(settings, item_id) {
 				resolve(timetable);
 			}
 			get_date_enddate((err, date, endDate)=>{
-				setMethod_praytimes(settings.method, settings.asr, settings.highlat);
+				setMethod_praytimes(prayTimes, settings.method, settings.asr, settings.highlat);
 				regional.getTimezoneOffset(settings.timezone).then(function(timezone_offset){
 					let month_async_html =[]
 					let i_days = 0;
@@ -1100,7 +1104,7 @@ function create_day_title_row (col_titles, show_imsak, show_sunset, show_midnigh
 			</div>`;
 }
 
-async function displayDay(settings, item_id, user_settings){
+async function displayDay(prayTimes, settings, item_id, user_settings){
 	return new Promise(function (resolve, reject){
 		let timetable = document.createElement('div');
 		timetable.id = settings.ui_timetable_day_id;
@@ -1203,7 +1207,8 @@ async function displayDay(settings, item_id, user_settings){
 		}
 		let tot_day_async_html = 0;
 		for (let i=0;i<=user_settings.length-1;i++){	
-			setMethod_praytimes(user_settings[i].prayer_method, 
+			setMethod_praytimes(prayTimes, 
+								user_settings[i].prayer_method, 
 								user_settings[i].prayer_asr_method, 
 								user_settings[i].prayer_high_latitude_adjustment);
 			
@@ -1259,7 +1264,7 @@ async function timetable_day_user_settings_get(user_account_id, callBack){
 /* COMMON APP & REPORT    */
 /* TIMETABLE YEAR         */
 /*----------------------- */
-async function displayYear(settings, item_id){
+async function displayYear(prayTimes, settings, item_id){
 	return new Promise(function (resolve, reject){
 		let timetable = document.createElement('div');
 		timetable.id = settings.ui_timetable_year_id;
@@ -1395,7 +1400,7 @@ async function displayYear(settings, item_id){
 				app_common.APP_GLOBAL['session_currentDate'].setMonth(monthindex -1);
 			else
 				app_common.APP_GLOBAL['session_CurrentHijriDate'][0] = monthindex;
-			displayMonth(settings, null).then(function(timetable_result){
+			displayMonth(prayTimes, settings, null).then(function(timetable_result){
 				month_processed++;
 				timetable_result.classList.add(settings.timetable_year_month);
 				months[monthindex-1] = timetable_result.outerHTML;
@@ -1432,19 +1437,6 @@ function report_exception(error){
 /*----------------------- */
 /* INIT REPORT            */
 /*----------------------- */
-async function init_app_report() {
-	//set current date for report month
-	app_common.APP_GLOBAL['session_currentDate'] = new Date();
-	app_common.APP_GLOBAL['session_CurrentHijriDate'] = new Array();
-	//get Hijri date from initial Gregorian date
-	app_common.APP_GLOBAL['session_CurrentHijriDate'][0] = parseInt(new Date(app_common.APP_GLOBAL['session_currentDate'].getFullYear(),
-		app_common.APP_GLOBAL['session_currentDate'].getMonth(),
-		app_common.APP_GLOBAL['session_currentDate'].getDate()).toLocaleDateString("en-us-u-ca-islamic", { month: "numeric" }));
-	app_common.APP_GLOBAL['session_CurrentHijriDate'][1] = parseInt(new Date(app_common.APP_GLOBAL['session_currentDate'].getFullYear(),
-		app_common.APP_GLOBAL['session_currentDate'].getMonth(),
-		app_common.APP_GLOBAL['session_currentDate'].getDate()).toLocaleDateString("en-us-u-ca-islamic", { year: "numeric" }));
-	await set_prayer_method();
-}
 async function init(parameters) {
 	let encodedParams = new URLSearchParams(window.location.search);
 	let decodedparameters = common.fromBase64(encodedParams.get('reportid'))
@@ -1500,66 +1492,77 @@ async function init(parameters) {
 						common.COMMON_GLOBAL['qr_background_color'] = global_app_parameters[i].parameter_value;
 				
 				}
-				init_app_report().then(function(){
-					//report start
-					if (common.inIframe() == false) {
-						updateReportViewStat(user_setting_id, user_account_id);
-					}
-					timetable_user_setting_get(user_setting_id, (err, report_parameters) =>{
-						if (err)
-							resolve();
-						else{
-							document.body.classList = report_parameters.arabic_script;
-							timetable_translate_settings(report_parameters.locale, report_parameters.second_locale).then(function(){
-								if (err)
-									resolve();
-								else
-									if (reporttype==0){
-										timetable_day_user_settings_get(user_account_id, (err, user_settings_parameters) =>{
-											if (err)
-												resolve();
-											else{
-												displayDay(report_parameters, null, user_settings_parameters).then(function(timetable){
-													timetable.style.display = 'block';
-													document.getElementById('paper').innerHTML = timetable.outerHTML;
-													common.create_qr('timetable_qr_code', window.location.href);
+				//report start
+				if (common.inIframe() == false) {
+					updateReportViewStat(user_setting_id, user_account_id);
+				}
+				timetable_user_setting_get(user_setting_id, (err, report_parameters) =>{
+					if (err)
+						resolve();
+					else{
+						document.body.classList = report_parameters.arabic_script;
+						timetable_translate_settings(report_parameters.locale, report_parameters.second_locale).then(function(){
+							if (err)
+								resolve();
+							else
+								import('/common/modules/PrayTimes/PrayTimes.js').then(function({prayTimes}){
+									//set current date for report month
+									app_common.APP_GLOBAL['session_currentDate'] = new Date();
+									app_common.APP_GLOBAL['session_CurrentHijriDate'] = new Array();
+									//get Hijri date from initial Gregorian date
+									app_common.APP_GLOBAL['session_CurrentHijriDate'][0] = parseInt(new Date(app_common.APP_GLOBAL['session_currentDate'].getFullYear(),
+									app_common.APP_GLOBAL['session_currentDate'].getMonth(),
+									app_common.APP_GLOBAL['session_currentDate'].getDate()).toLocaleDateString("en-us-u-ca-islamic", { month: "numeric" }));
+									app_common.APP_GLOBAL['session_CurrentHijriDate'][1] = parseInt(new Date(app_common.APP_GLOBAL['session_currentDate'].getFullYear(),
+									app_common.APP_GLOBAL['session_currentDate'].getMonth(),
+									app_common.APP_GLOBAL['session_currentDate'].getDate()).toLocaleDateString("en-us-u-ca-islamic", { year: "numeric" }));
+									set_prayer_method().then(function(){
+										if (reporttype==0){
+											timetable_day_user_settings_get(user_account_id, (err, user_settings_parameters) =>{
+												if (err)
 													resolve();
-												})
-											}
-												
-										})
-									}
-									else
-										if (reporttype==1)
-											displayMonth(report_parameters, null).then(function(timetable){
-												timetable.style.display = 'block';
-												document.getElementById('paper').innerHTML = timetable.outerHTML;
-												common.create_qr('timetable_qr_code', window.location.href);
-												resolve();
+												else{
+													displayDay(prayTimes, report_parameters, null, user_settings_parameters).then(function(timetable){
+														timetable.style.display = 'block';
+														document.getElementById('paper').innerHTML = timetable.outerHTML;
+														common.create_qr('timetable_qr_code', window.location.href);
+														resolve();
+													})
+												}
+													
 											})
-										else 
-											if (reporttype==2)
-												displayYear(report_parameters, null).then(function(timetable){
+										}
+										else
+											if (reporttype==1)
+												displayMonth(prayTimes, report_parameters, null).then(function(timetable){
 													timetable.style.display = 'block';
 													document.getElementById('paper').innerHTML = timetable.outerHTML;
 													common.create_qr('timetable_qr_code', window.location.href);
 													resolve();
 												})
-							});
-						}
-					});
-				}) 
+											else 
+												if (reporttype==2)
+													displayYear(prayTimes, report_parameters, null).then(function(timetable){
+														timetable.style.display = 'block';
+														document.getElementById('paper').innerHTML = timetable.outerHTML;
+														common.create_qr('timetable_qr_code', window.location.href);
+														resolve();
+													})
+									});
+								})
+								
+						});
+					}
+				});
 			}
 		})
 	})
 }
 export{REPORT_GLOBAL,
-	   timetable_user_setting_get, timetable_translate_settings, updateReportViewStat, getColumnTitles,
-	   isToday, set_prayer_method, is_ramadan_day, setMethod_praytimes, getstyle, fileisloaded,
-	   convertnumberlocale, show_col, timetable_headers, 
-	   calculateIqamat, makeTableRow, 
+	   updateReportViewStat,
+	   set_prayer_method, 
 	   displayMonth, 
-	   create_day_title_row, displayDay, timetable_day_user_settings_get,
+	   displayDay,
 	   displayYear,
 	   report_exception,
-	   init_app_report, init}
+	   init}

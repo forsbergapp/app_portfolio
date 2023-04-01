@@ -141,7 +141,6 @@ function getApp(app_id, username, gps_lat, gps_long, gps_place){
         function main(app_id){
             const files = [
                 ['APP', process.cwd() + '/apps/app2/src/index.html'],
-                ['<AppCommonHeadPrayTimes/>', process.cwd() + '/apps/common/src/head_praytimes.html'],
                 ['<AppCommonHead/>', process.cwd() + '/apps/common/src/head.html'],
                 ['<AppCommonHeadMap/>', process.cwd() + '/apps/common/src/head_map.html'],
                 ['<AppCommonHeadFontawesome/>', process.cwd() + '/apps/common/src/head_fontawesome.html'],

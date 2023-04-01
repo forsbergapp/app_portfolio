@@ -127,65 +127,67 @@ function getReportSettings(){
 async function update_timetable_report(timetable_type = 0, item_id = null, settings) {
     return await new Promise(function (resolve){
         app_common.APP_GLOBAL['timetable_type'] = timetable_type;
-        switch (timetable_type){
-            //create timetable month or day or year if they are visible instead
-            case 0:{
-                //update user settings to current select option 
-                set_settings_select();
-                let select_user_settings = document.getElementById('setting_select_user_setting');
-                let current_user_settings =[];
-                for (let i=0;i<=select_user_settings.options.length-1;i++){
-                    current_user_settings.push(
-                    {
-                    "description" : select_user_settings[i].getAttribute('description'),
-                    "regional_language_locale" : select_user_settings[i].getAttribute('regional_language_locale'),
-                    "regional_timezone" : select_user_settings[i].getAttribute('regional_timezone'),
-                    "regional_number_system" : select_user_settings[i].getAttribute('regional_number_system'),
-                    "regional_calendar_hijri_type" : select_user_settings[i].getAttribute('regional_calendar_hijri_type'),
-                    "gps_lat_text" : parseFloat(select_user_settings[i].getAttribute('gps_lat_text')),
-                    "gps_long_text" : parseFloat(select_user_settings[i].getAttribute('gps_long_text')),
-                    "prayer_method" : select_user_settings[i].getAttribute('prayer_method'),
-                    "prayer_asr_method" : select_user_settings[i].getAttribute('prayer_asr_method'),
-                    "prayer_high_latitude_adjustment" : select_user_settings[i].getAttribute('prayer_high_latitude_adjustment'),
-                    "prayer_time_format" : select_user_settings[i].getAttribute('prayer_time_format'),
-                    "prayer_hijri_date_adjustment" : select_user_settings[i].getAttribute('prayer_hijri_date_adjustment')
-                    });
+        import('/common/modules/PrayTimes/PrayTimes.js').then(function({prayTimes}){
+            switch (timetable_type){
+                //create timetable month or day or year if they are visible instead
+                case 0:{
+                    //update user settings to current select option 
+                    set_settings_select();
+                    let select_user_settings = document.getElementById('setting_select_user_setting');
+                    let current_user_settings =[];
+                    for (let i=0;i<=select_user_settings.options.length-1;i++){
+                        current_user_settings.push(
+                        {
+                        "description" : select_user_settings[i].getAttribute('description'),
+                        "regional_language_locale" : select_user_settings[i].getAttribute('regional_language_locale'),
+                        "regional_timezone" : select_user_settings[i].getAttribute('regional_timezone'),
+                        "regional_number_system" : select_user_settings[i].getAttribute('regional_number_system'),
+                        "regional_calendar_hijri_type" : select_user_settings[i].getAttribute('regional_calendar_hijri_type'),
+                        "gps_lat_text" : parseFloat(select_user_settings[i].getAttribute('gps_lat_text')),
+                        "gps_long_text" : parseFloat(select_user_settings[i].getAttribute('gps_long_text')),
+                        "prayer_method" : select_user_settings[i].getAttribute('prayer_method'),
+                        "prayer_asr_method" : select_user_settings[i].getAttribute('prayer_asr_method'),
+                        "prayer_high_latitude_adjustment" : select_user_settings[i].getAttribute('prayer_high_latitude_adjustment'),
+                        "prayer_time_format" : select_user_settings[i].getAttribute('prayer_time_format'),
+                        "prayer_hijri_date_adjustment" : select_user_settings[i].getAttribute('prayer_hijri_date_adjustment')
+                        });
+                    }
+                    document.getElementById('paper').innerHTML = common.APP_SPINNER;
+                    app2_report.displayDay(prayTimes, settings, item_id, current_user_settings).then(function(timetable){
+                        timetable.style.display = 'block';
+                        document.getElementById('paper').innerHTML = timetable.outerHTML;
+                        common.create_qr('timetable_qr_code', common.getHostname());
+                        resolve();
+                    })
+                    break;
                 }
-                document.getElementById('paper').innerHTML = common.APP_SPINNER;
-                app2_report.displayDay(settings, item_id, current_user_settings).then(function(timetable){
-                    timetable.style.display = 'block';
-                    document.getElementById('paper').innerHTML = timetable.outerHTML;
-                    common.create_qr('timetable_qr_code', common.getHostname());
-                    resolve();
-                })
-                break;
+                //1=create timetable month
+                case 1:{
+                    document.getElementById('paper').innerHTML = common.APP_SPINNER;
+                    app2_report.displayMonth(prayTimes, settings, item_id).then(function(timetable){
+                        timetable.style.display = 'block';
+                        document.getElementById('paper').innerHTML = timetable.outerHTML;
+                        common.create_qr('timetable_qr_code', common.getHostname());
+                        resolve();
+                    })
+                    break;
+                }
+                //2=create timetable year
+                case 2:{
+                    document.getElementById('paper').innerHTML = common.APP_SPINNER;
+                    app2_report.displayYear(prayTimes, settings, item_id).then(function(timetable){
+                        timetable.style.display = 'block';
+                        document.getElementById('paper').innerHTML = timetable.outerHTML;
+                        common.create_qr('timetable_qr_code', common.getHostname());
+                        resolve();
+                    })
+                    break;
+                }
+                default:{
+                    break;
+                }
             }
-            //1=create timetable month
-            case 1:{
-                document.getElementById('paper').innerHTML = common.APP_SPINNER;
-                app2_report.displayMonth(settings, item_id).then(function(timetable){
-                    timetable.style.display = 'block';
-                    document.getElementById('paper').innerHTML = timetable.outerHTML;
-                    common.create_qr('timetable_qr_code', common.getHostname());
-                    resolve();
-                })
-                break;
-            }
-            //2=create timetable year
-            case 2:{
-                document.getElementById('paper').innerHTML = common.APP_SPINNER;
-                app2_report.displayYear(settings, item_id).then(function(timetable){
-                    timetable.style.display = 'block';
-                    document.getElementById('paper').innerHTML = timetable.outerHTML;
-                    common.create_qr('timetable_qr_code', common.getHostname());
-                    resolve();
-                })
-                break;
-            }
-            default:{
-                break;
-            }
-        }
+        })
     })
 }
 function get_report_url(id, sid, papersize, item, format){
@@ -2614,8 +2616,6 @@ function init_app() {
         document.getElementById('setting_select_popular_place').selectedIndex = 0;
         document.getElementById('setting_input_lat').value = common.COMMON_GLOBAL['client_latitude'];
         document.getElementById('setting_input_long').value = common.COMMON_GLOBAL['client_longitude'];
-        //set prayer method variable, select filled from db when server generated
-        app2_report.set_prayer_method(true);
         //init map thirdparty module
         init_map();
         //load themes in Design tab
@@ -2637,37 +2637,40 @@ function init_app() {
         //show dialogue about using mobile and scan QR code after 5 seconds
         setTimeout(function(){show_dialogue('SCAN')}, 5000);
         //Start of app:
-        //1.set default settings
-        //2.translate ui
-        //3.display default timetable settings
-        //4.show profile if user in url
-        //5.user provider login
-        //5.service worker
-        set_default_settings().then(function(){
-            settings_translate(true).then(function(){
-                settings_translate(false).then(function(){
-                    async function show_start(){
-                        //show default startup
-                        toolbar_button(app_common.APP_GLOBAL['app_default_startup_page']);
-                        let user = window.location.pathname.substring(1);
-                        if (user !='') {
-                            //show profile for user entered in url
-                            document.getElementById('common_dialogue_profile').style.visibility = "visible";
-                            profile_show_app(null, user);
+        //1.set_prayer_method
+        //2.set default settings
+        //3.translate ui
+        //4.display default timetable settings
+        //5.show profile if user in url
+        //6.user provider login
+        //7.service worker
+        app2_report.set_prayer_method(true).then(function(){
+            set_default_settings().then(function(){
+                settings_translate(true).then(function(){
+                    settings_translate(false).then(function(){
+                        async function show_start(){
+                            //show default startup
+                            toolbar_button(app_common.APP_GLOBAL['app_default_startup_page']);
+                            let user = window.location.pathname.substring(1);
+                            if (user !='') {
+                                //show profile for user entered in url
+                                document.getElementById('common_dialogue_profile').style.visibility = "visible";
+                                profile_show_app(null, user);
+                            }
                         }
-                    }
-                    show_start().then(function(){
-                        common.Providers_init(function() { ProviderSignIn_app(this); }).then(function(){
-                            serviceworker();
-                            common_translate_ui_app(common.COMMON_GLOBAL['user_locale'], (err, result)=>{
-                                dialogue_loading(0);
-                                resolve();
+                        show_start().then(function(){
+                            common.Providers_init(function() { ProviderSignIn_app(this); }).then(function(){
+                                serviceworker();
+                                common_translate_ui_app(common.COMMON_GLOBAL['user_locale'], (err, result)=>{
+                                    dialogue_loading(0);
+                                    resolve();
+                                });
                             });
-                        });
-                    })
+                        })
+                    });
                 });
             });
-        });
+        })
     })    
 }
 function init(parameters) {
