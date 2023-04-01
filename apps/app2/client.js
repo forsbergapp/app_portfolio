@@ -144,7 +144,6 @@ function getApp(app_id, username, gps_lat, gps_long, gps_place){
                 ['<AppCommonHeadPrayTimes/>', process.cwd() + '/apps/common/src/head_praytimes.html'],
                 ['<AppCommonHead/>', process.cwd() + '/apps/common/src/head.html'],
                 ['<AppCommonHeadMap/>', process.cwd() + '/apps/common/src/head_map.html'],
-                ['<AppCommonHeadQRCode/>', process.cwd() + '/apps/common/src/head_qrcode.html'],
                 ['<AppCommonHeadFontawesome/>', process.cwd() + '/apps/common/src/head_fontawesome.html'],
                 ['<AppCommonHeadFonts/>', process.cwd() + '/apps/common/src/head_fonts.html'],
                 ['<AppCommonBody/>', process.cwd() + '/apps/common/src/body.html'],
