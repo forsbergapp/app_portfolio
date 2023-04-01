@@ -17,8 +17,13 @@
  * [Support AMD, CMD, CommonJS/Node.js]
  * 
  */
-;
-(function() {
+
+/* START ADD CODE APP PORTFOLIO*/
+let {ctx} = await import('./canvas2svg.js');
+let C2S = ctx;
+var QRCode;
+/* END ADD CODE APP PORTFOLIO*/
+;(function() {
 
     // 启用严格模式
     "use strict";
@@ -43,8 +48,9 @@
 
     var _QRCode = root.QRCode;
 
-    var QRCode;
-
+    /* START REMOV CODE APP PORTFOLIO*/
+    //var QRCode;
+    /* END REMOVE CODE APP PORTFOLIO*/
     function QR8bitByte(data, binary, utf8WithoutBOM) {
         this.mode = QRMode.MODE_8BIT_BYTE;
         this.data = data;
@@ -2193,7 +2199,8 @@
 
     /*--------------------------------------------------------------------------*/
     // Export QRCode
-
+    /* START REMOV CODE APP PORTFOLIO*/
+    /*
     // AMD & CMD Compatibility
     if (typeof define == 'function' && (define.amd || define.cmd)) {
 
@@ -2213,7 +2220,10 @@
         // Export Global
         root.QRCode = QRCode;
     }
-
-
+    */
+    /* END REMOVE CODE APP PORTFOLIO*/
 
 }.call(this));
+/* START ADD CODE APP PORTFOLIO*/
+export{QRCode}
+/* END ADD CODE APP PORTFOLIO*/

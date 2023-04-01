@@ -7,7 +7,6 @@ function getReport(app_id, module, gps_lat, gps_long, gps_place){
             ['<ReportHead/>', process.cwd() + '/apps/app2/report/head.html'],
             ['<ReportCommonHead/>', process.cwd() + '/apps/common/report/head.html'],
             ['<ReportCommonHeadPrayTimes/>', process.cwd() + '/apps/common/src/head_praytimes.html'],
-            ['<ReportCommonHeadQRCode/>', process.cwd() + '/apps/common/src/head_qrcode.html'],
             ['<ReportCommonHeadFonts/>', process.cwd() + '/apps/common/src/head_fonts.html'],
             ['<ReportPaper/>', process.cwd() + '/apps/app2/report/paper.html'],
             ['<ReportCommonBody/>', process.cwd() + '/apps/common/report/body.html'],

@@ -1906,19 +1906,28 @@ async function get_cities(countrycode, callBack){
 /* QR                     */
 /*----------------------- */
 function create_qr(div, url) {
-    let qrcode = new QRCode(document.getElementById(div), {
-        text: url,
-        width: COMMON_GLOBAL['qr_width'],
-        height: COMMON_GLOBAL['qr_height'],
-        colorDark: COMMON_GLOBAL['qr_color_dark'],
-        colorLight: COMMON_GLOBAL['qr_color_light'],
-        logo: COMMON_GLOBAL['qr_logo_file_path'],
-        logoWidth: COMMON_GLOBAL['qr_logo_width'],
-        logoHeight: COMMON_GLOBAL['qr_logo_height'],
-        logoBackgroundColor: COMMON_GLOBAL['qr_background_color'],
-        logoBackgroundTransparent: false,
-        drawer: 'svg'
-    });
+
+    /*Using modified modules to support ES2020 import() with ES6 object destructuring
+    the small changes documented in the modules
+    <script type='text/javascript' src='/common/modules/easy.qrcode/canvas2svg.js'></script>    
+    <script type='text/javascript' src='/common/modules/easy.qrcode/easy.qrcode.js'></script>
+    */
+    import('/common/modules/easy.qrcode/easy.qrcode.js').then(function({QRCode}){
+        let qrcode = new QRCode(document.getElementById(div), {
+            text: url,
+            width: COMMON_GLOBAL['qr_width'],
+            height: COMMON_GLOBAL['qr_height'],
+            colorDark: COMMON_GLOBAL['qr_color_dark'],
+            colorLight: COMMON_GLOBAL['qr_color_light'],
+            logo: COMMON_GLOBAL['qr_logo_file_path'],
+            logoWidth: COMMON_GLOBAL['qr_logo_width'],
+            logoHeight: COMMON_GLOBAL['qr_logo_height'],
+            logoBackgroundColor: COMMON_GLOBAL['qr_background_color'],
+            logoBackgroundTransparent: false,
+            drawer: 'svg'
+        });
+    })
+    
 }
 /*----------------------- */
 /* PROFILE                */
