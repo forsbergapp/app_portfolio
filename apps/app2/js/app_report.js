@@ -1,7 +1,7 @@
 const common = await import('/common/js/common.js');
 const regional = await import('/common/modules/regional/regional.js');
 const app_common = await import('/app2/js/app_common.js');
-//uses modules easy.qrcode and PrayTimes
+//uses module PrayTimes
 
 /*  Functions and globals in this order:
     GLOBALS APP & REPORT

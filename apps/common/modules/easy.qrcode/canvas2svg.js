@@ -3,11 +3,18 @@
  *  A low level canvas to SVG converter. Uses a mock canvas context to build an SVG document.
  *  
  */
+/* START ADDED CODE APP PORTFOLIO*/
+let ctx;
+/* END ADDED CODE APP PORTFOLIO*/
 ;(function () {
     "use strict";
 
-    var STYLES, ctx, CanvasGradient, CanvasPattern, namedEntities;
-
+    /* START REMOVE CODE APP PORTFOLIO*/
+    //var STYLES, ctx, CanvasGradient, CanvasPattern, namedEntities;
+    /* END REMOVE CODE APP PORTFOLIO*/
+    /* START ADDED CODE APP PORTFOLIO*/
+    var STYLES, CanvasGradient, CanvasPattern, namedEntities;
+    /* END ADDED CODE APP PORTFOLIO*/
     //helper function to format a string
     function format(str, args) {
         var keys = Object.keys(args), i;
@@ -1197,6 +1204,8 @@
     ctx.prototype.setTransform = function () {};
 
     //add options for alternative namespace
+    /* START REMOVE CODE APP PORTFOLIO*/
+    /*
     if (typeof window === "object") {
         window.C2S = ctx;
     }
@@ -1205,5 +1214,9 @@
     if (typeof module === "object" && typeof module.exports === "object") {
         module.exports = ctx;
     }
-
+    */
+    /* END REMOVE CODE APP PORTFOLIO*/
 }());
+/* START ADD CODE APP PORTFOLIO*/
+export{ctx};
+/* END ADD CODE APP PORTFOLIO*/
