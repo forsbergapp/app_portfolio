@@ -228,18 +228,19 @@ function updateViewStat_app(user_setting_id, user_setting_user_account_id) {
 /* MAP                    */
 /*----------------------- */
 async function init_map() {
-    common.map_init(    app_common.APP_GLOBAL['gps_map_container'],
-                        common.COMMON_GLOBAL['service_map_style'], 
-                        document.getElementById('setting_input_long').value, 
-                        document.getElementById('setting_input_lat').value, 
-                        app_common.APP_GLOBAL['gps_map_marker_div_gps'],
-                        app_common.APP_GLOBAL['gps_map_zoom']);
-    common.map_setevent('dblclick', function(e) {
-        document.getElementById('setting_input_lat').value = e.latlng['lat'];
-        document.getElementById('setting_input_long').value = e.latlng['lng'];
-        //Update GPS position
-        update_ui(9);
-    })
+    common.map_init(app_common.APP_GLOBAL['gps_map_container'],
+                    common.COMMON_GLOBAL['service_map_style'], 
+                    document.getElementById('setting_input_long').value, 
+                    document.getElementById('setting_input_lat').value, 
+                    app_common.APP_GLOBAL['gps_map_marker_div_gps'],
+                    app_common.APP_GLOBAL['gps_map_zoom']).then(function(){
+                        common.map_setevent('dblclick', function(e) {
+                            document.getElementById('setting_input_lat').value = e.latlng['lat'];
+                            document.getElementById('setting_input_long').value = e.latlng['lng'];
+                            //Update GPS position
+                            update_ui(9);
+                        })
+                    })
 }
 
 function map_show_qibbla() {
@@ -790,14 +791,15 @@ async function update_ui(option, item_id=null) {
         //GPS, update map
         case 4:
             {
-                common.map_setstyle(settings.maptype.value);
-                map_update_app(settings.gps_long_input.value,
-                               settings.gps_lat_input.value,
-                               app_common.APP_GLOBAL['gps_map_zoom'],
-                               document.getElementById('setting_input_place').value,
-                               null,
-                               app_common.APP_GLOBAL['gps_map_marker_div_gps'],
-                               common.COMMON_GLOBAL['service_map_jumpto']);
+                common.map_setstyle(settings.maptype.value).then(function(){
+                    map_update_app(settings.gps_long_input.value,
+                        settings.gps_lat_input.value,
+                        app_common.APP_GLOBAL['gps_map_zoom'],
+                        document.getElementById('setting_input_place').value,
+                        null,
+                        app_common.APP_GLOBAL['gps_map_marker_div_gps'],
+                        common.COMMON_GLOBAL['service_map_jumpto']);
+                })
                 break;
             }
         //GPS, update cities from country
