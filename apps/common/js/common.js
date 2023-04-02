@@ -88,6 +88,7 @@ let COMMON_GLOBAL = {
     "user_direction":"",
     "user_arabic_script":"",
     "user_preference_save":"",
+    "module_map_path":"/common/modules/leaflet/leaflet-src.js",
     "service_map_flyto":"",
     "service_map_jumpto":"",
     "service_map_popup_offset":"",
@@ -96,6 +97,7 @@ let COMMON_GLOBAL = {
     "session_service_map_layer":"",
     "session_service_map_OpenStreetMap_Mapnik":"",
     "session_service_map_Esri_WorldImagery":"",
+    "module_qrcode_path":"/common/modules/easy.qrcode/easy.qrcode.js",
     "qr_width":"",
     "qr_height":"",
     "qr_color_dark":"",
@@ -1676,89 +1678,55 @@ async function tzlookup(latitude, longitude){
 async function map_init(containervalue, stylevalue, longitude, latitude, map_marker_div_gps, zoomvalue) {
     return await new Promise(function (resolve){
         if (checkconnected()) {
-            COMMON_GLOBAL['session_service_map'] = '';
-            COMMON_GLOBAL['session_service_map'] = L.map(containervalue).setView([latitude, longitude], zoomvalue);
-            map_setstyle(stylevalue);
-            //disable doubleclick in event dblclick since e.preventdefault() does not work
-            COMMON_GLOBAL['session_service_map'].doubleClickZoom.disable(); 
-
-            //add fullscreen button and my location button with eventlisteners
-            let mapcontrol = document.querySelectorAll(`#${containervalue} .leaflet-control`)
-            mapcontrol[0].innerHTML += `<a id='common_leaflet_fullscreen_id' href="#" title="Full Screen" role="button" aria-label="Full Screen"></a>`;
-            document.getElementById('common_leaflet_fullscreen_id').innerHTML= ICONS['map_fullscreen'];
-            if (COMMON_GLOBAL['client_latitude']!='' && COMMON_GLOBAL['client_longitude']!=''){
-                mapcontrol[0].innerHTML += `<a id='common_leaflet_my_location_id' href="#" title="My location" role="button" aria-label="My location"></a>`;
-                document.getElementById('common_leaflet_my_location_id').innerHTML= ICONS['map_my_location'];
-            }
-            //add events to the buttons
-            document.getElementById('common_leaflet_fullscreen_id').addEventListener('click', 
-                                    function() { 
-                                                if (document.fullscreenElement)
-                                                    document.exitFullscreen();
-                                                else
-                                                    document.getElementById(containervalue).requestFullscreen();
-                                                }, 
-                                    false);
-            if (COMMON_GLOBAL['client_latitude']!='' && COMMON_GLOBAL['client_longitude']!='')
-                document.getElementById('common_leaflet_my_location_id').addEventListener('click', 
-                                        function() { 
-                                                    map_update(COMMON_GLOBAL['client_longitude'],
-                                                               COMMON_GLOBAL['client_latitude'],
-                                                               zoomvalue,
-                                                               COMMON_GLOBAL['client_place'],
-                                                               null,
-                                                               map_marker_div_gps,
-                                                               COMMON_GLOBAL['service_map_jumpto']);
-                                                    }, 
-                                        false);
+            import(COMMON_GLOBAL['module_map_path']).then(function({L}){
+                COMMON_GLOBAL['session_service_map'] = '';
+                COMMON_GLOBAL['session_service_map'] = L.map(containervalue).setView([latitude, longitude], zoomvalue);
+                map_setstyle(stylevalue).then(function(){
+                    //disable doubleclick in event dblclick since e.preventdefault() does not work
+                    COMMON_GLOBAL['session_service_map'].doubleClickZoom.disable(); 
+        
+                    //add fullscreen button and my location button with eventlisteners
+                    let mapcontrol = document.querySelectorAll(`#${containervalue} .leaflet-control`)
+                    mapcontrol[0].innerHTML += `<a id='common_leaflet_fullscreen_id' href="#" title="Full Screen" role="button" aria-label="Full Screen"></a>`;
+                    document.getElementById('common_leaflet_fullscreen_id').innerHTML= ICONS['map_fullscreen'];
+                    if (COMMON_GLOBAL['client_latitude']!='' && COMMON_GLOBAL['client_longitude']!=''){
+                        mapcontrol[0].innerHTML += `<a id='common_leaflet_my_location_id' href="#" title="My location" role="button" aria-label="My location"></a>`;
+                        document.getElementById('common_leaflet_my_location_id').innerHTML= ICONS['map_my_location'];
+                    }
+                    //add events to the buttons
+                    document.getElementById('common_leaflet_fullscreen_id').addEventListener('click', 
+                                            function() { 
+                                                        if (document.fullscreenElement)
+                                                            document.exitFullscreen();
+                                                        else
+                                                            document.getElementById(containervalue).requestFullscreen();
+                                                        }, 
+                                            false);
+                    if (COMMON_GLOBAL['client_latitude']!='' && COMMON_GLOBAL['client_longitude']!='')
+                        document.getElementById('common_leaflet_my_location_id').addEventListener('click', 
+                                                function() { 
+                                                            map_update(COMMON_GLOBAL['client_longitude'],
+                                                                    COMMON_GLOBAL['client_latitude'],
+                                                                    zoomvalue,
+                                                                    COMMON_GLOBAL['client_place'],
+                                                                    null,
+                                                                    map_marker_div_gps,
+                                                                    COMMON_GLOBAL['service_map_jumpto']);
+                                                            }, 
+                                                false);
+                    resolve();
+                })
+            })
         }
         else
             resolve();
     })
     
 }
-function map_popup(popup_offset, popuptext, longitude, latitude){
-    if (checkconnected()) {
-        let popup = L.popup({ offset: [0, popup_offset], closeOnClick: false })
-                    .setLatLng([latitude, longitude])
-                    .setContent(popuptext)
-                    .openOn(COMMON_GLOBAL['session_service_map']);
-    }
-}
-function map_marker(marker_id, longitude, latitude){
-    if (checkconnected()) {
-        let marker = L.marker([latitude, longitude]).addTo(COMMON_GLOBAL['session_service_map']);
-        //setting id so apps can customize if necessary
-        marker._icon.id = marker_id;
-    }
-}
-function map_update_gps(to_method, zoomvalue, longitude, latitude){
-    if (checkconnected()) {
-        switch (to_method){
-            case 0:{
-                if (zoomvalue == '')
-                    COMMON_GLOBAL['session_service_map'].setView(new L.LatLng(latitude, longitude));
-                else
-                    COMMON_GLOBAL['session_service_map'].setView(new L.LatLng(latitude, longitude), zoomvalue);
-                break;
-            }
-            case 1:{
-                COMMON_GLOBAL['session_service_map'].flyTo([latitude, longitude], zoomvalue)
-                break;
-            }
-            //also have COMMON_GLOBAL['session_service_map'].panTo(new L.LatLng({lng: longitude, lat: latitude}));
-        }
-    }
-}
 async function map_resize() {
     if (checkconnected()) {
         //fixes not rendering correct showing map div
         COMMON_GLOBAL['session_service_map'].invalidateSize();
-    }
-}
-function map_check_source(id){
-    if (checkconnected()) {
-        return false;
     }
 }
 function map_line_removeall(){
@@ -1769,28 +1737,30 @@ function map_line_removeall(){
 }
 function map_line_create(id, title, text_size, from_longitude, from_latitude, to_longitude, to_latitude, color, width, opacity){
     if (checkconnected()) {
-        let geojsonFeature = {
-            "id": `"${id}"`,
-            "type": "Feature",
-            "properties": { "title": title },
-            "geometry": {
-                "type": "LineString",
-                    "coordinates": [
-                        [from_longitude, from_latitude],
-                        [to_longitude, to_latitude]
-                    ]
-            }
-        };
-        //use GeoJSON to draw a line
-        let myStyle = {
-            "color": color,
-            "weight": width,
-            "opacity": opacity
-        };
-        let layer = L.geoJSON(geojsonFeature, {style: myStyle}).addTo(COMMON_GLOBAL['session_service_map']);
-        if(!COMMON_GLOBAL['session_service_map_layer'])
-            COMMON_GLOBAL['session_service_map_layer']=[];
-            COMMON_GLOBAL['session_service_map_layer'].push(layer);
+        import(COMMON_GLOBAL['module_map_path']).then(function({L}){
+            let geojsonFeature = {
+                "id": `"${id}"`,
+                "type": "Feature",
+                "properties": { "title": title },
+                "geometry": {
+                    "type": "LineString",
+                        "coordinates": [
+                            [from_longitude, from_latitude],
+                            [to_longitude, to_latitude]
+                        ]
+                }
+            };
+            //use GeoJSON to draw a line
+            let myStyle = {
+                "color": color,
+                "weight": width,
+                "opacity": opacity
+            };
+            let layer = L.geoJSON(geojsonFeature, {style: myStyle}).addTo(COMMON_GLOBAL['session_service_map']);
+            if(!COMMON_GLOBAL['session_service_map_layer'])
+                COMMON_GLOBAL['session_service_map_layer']=[];
+                COMMON_GLOBAL['session_service_map_layer'].push(layer);
+        })
     }
 }
 function map_setevent(event, function_event){
@@ -1800,51 +1770,83 @@ function map_setevent(event, function_event){
         COMMON_GLOBAL['session_service_map'].on(event, function_event);
     }
 }
-function map_setstyle(mapstyle){
-    if (checkconnected()) {
-        if(COMMON_GLOBAL['session_service_map_OpenStreetMap_Mapnik'])
-            COMMON_GLOBAL['session_service_map'].removeLayer(COMMON_GLOBAL['session_service_map_OpenStreetMap_Mapnik']);
-        if (COMMON_GLOBAL['session_service_map_Esri_WorldImagery'])
-            COMMON_GLOBAL['session_service_map'].removeLayer(COMMON_GLOBAL['session_service_map_Esri_WorldImagery']);
-        switch (mapstyle){
-            case 'OpenStreetMap_Mapnik':{
-                COMMON_GLOBAL['session_service_map_OpenStreetMap_Mapnik'] = 
-                    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                        maxZoom: 19,
-                        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-                    }).addTo(COMMON_GLOBAL['session_service_map']);
-                break;
-            }
-            case 'Esri.WorldImagery':{
-                COMMON_GLOBAL['session_service_map_Esri_WorldImagery'] = 
-                    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-                        attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
-                    }).addTo(COMMON_GLOBAL['session_service_map']);
-                break;
-            }
-        }
-    }
+async function map_setstyle(mapstyle){
+    return await new Promise (function(resolve, reject) {
+        if (checkconnected()) {
+            import(COMMON_GLOBAL['module_map_path']).then(function({L}){
+                if(COMMON_GLOBAL['session_service_map_OpenStreetMap_Mapnik'])
+                    COMMON_GLOBAL['session_service_map'].removeLayer(COMMON_GLOBAL['session_service_map_OpenStreetMap_Mapnik']);
+                if (COMMON_GLOBAL['session_service_map_Esri_WorldImagery'])
+                    COMMON_GLOBAL['session_service_map'].removeLayer(COMMON_GLOBAL['session_service_map_Esri_WorldImagery']);
+                switch (mapstyle){
+                    case 'OpenStreetMap_Mapnik':{
+                        COMMON_GLOBAL['session_service_map_OpenStreetMap_Mapnik'] = 
+                            L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                                maxZoom: 19,
+                                attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+                            }).addTo(COMMON_GLOBAL['session_service_map']);
+                        break;
+                    }
+                    case 'Esri.WorldImagery':{
+                        COMMON_GLOBAL['session_service_map_Esri_WorldImagery'] = 
+                            L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+                                attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+                            }).addTo(COMMON_GLOBAL['session_service_map']);
+                        break;
+                    }
+                }
+                resolve();
+            })
+        }  
+        else
+            resolve();
+    })
 }
 function map_update_popup(title) {
     document.getElementById('common_leaflet_popup_title').innerHTML = title;
 }
 async function map_update(longitude, latitude, zoom, text_place, timezone_text = null, marker_id, to_method) {
     return new Promise(function (resolve){
-        function map_update_text(timezone_text){
-            let popuptext = `<div id="common_leaflet_popup_title">${text_place}</div>
-                             <div id="common_leaflet_popup_sub_title">${ICONS['regional_timezone'] + ICONS['gps_position']}</div>
-                             <div id="common_leaflet_popup_sub_title_timezone">${timezone_text}</div>`;
-            map_popup(COMMON_GLOBAL['service_map_popup_offset'], popuptext, longitude, latitude);
-            map_marker(marker_id, longitude, latitude);
-            resolve(timezone_text);
-        }
-        map_update_gps(to_method, zoom, longitude, latitude);
-        if (timezone_text == null)
-            tzlookup(latitude, longitude).then(function(tzlookup_text){
-                map_update_text(tzlookup_text);
+        if (checkconnected()) {
+            import(COMMON_GLOBAL['module_map_path']).then(function({L}){
+                function map_update_gps(to_method, zoomvalue, longitude, latitude){
+                    switch (to_method){
+                        case 0:{
+                            if (zoomvalue == '')
+                                COMMON_GLOBAL['session_service_map'].setView(new L.LatLng(latitude, longitude));
+                            else
+                                COMMON_GLOBAL['session_service_map'].setView(new L.LatLng(latitude, longitude), zoomvalue);
+                            break;
+                        }
+                        case 1:{
+                            COMMON_GLOBAL['session_service_map'].flyTo([latitude, longitude], zoomvalue)
+                            break;
+                        }
+                        //also have COMMON_GLOBAL['session_service_map'].panTo(new L.LatLng({lng: longitude, lat: latitude}));
+                    }
+                }
+                function map_update_text(timezone_text){
+                    let popuptext = `<div id="common_leaflet_popup_title">${text_place}</div>
+                                     <div id="common_leaflet_popup_sub_title">${ICONS['regional_timezone'] + ICONS['gps_position']}</div>
+                                     <div id="common_leaflet_popup_sub_title_timezone">${timezone_text}</div>`;
+                    let popup = L.popup({ offset: [0, COMMON_GLOBAL['service_map_popup_offset']], closeOnClick: false })
+                                .setLatLng([latitude, longitude])
+                                .setContent(popuptext)
+                                .openOn(COMMON_GLOBAL['session_service_map']);
+                    let marker = L.marker([latitude, longitude]).addTo(COMMON_GLOBAL['session_service_map']);
+                    //setting id so apps can customize if necessary
+                    marker._icon.id = marker_id;
+                    resolve(timezone_text);
+                }
+                map_update_gps(to_method, zoom, longitude, latitude);
+                if (timezone_text == null)
+                    tzlookup(latitude, longitude).then(function(tzlookup_text){
+                        map_update_text(tzlookup_text);
+                    })
+                else{
+                    map_update_text(timezone_text);
+                }        
             })
-        else{
-            map_update_text(timezone_text);
         }
     })
 }
@@ -1912,7 +1914,7 @@ function create_qr(div, url) {
     <script type='text/javascript' src='/common/modules/easy.qrcode/canvas2svg.js'></script>    
     <script type='text/javascript' src='/common/modules/easy.qrcode/easy.qrcode.js'></script>
     */
-    import('/common/modules/easy.qrcode/easy.qrcode.js').then(function({QRCode}){
+    import(COMMON_GLOBAL['module_qrcode_path']).then(function({QRCode}){
         let qrcode = new QRCode(document.getElementById(div), {
             text: url,
             width: COMMON_GLOBAL['qr_width'],
@@ -3733,7 +3735,7 @@ export{/* GLOBALS*/
        /* GPS */
        get_place_from_gps, get_gps_from_ip, tzlookup,
        /* MAP  */
-       map_init, map_popup, map_marker, map_update_gps, map_resize, map_check_source, map_line_removeall, map_line_create,
+       map_init, map_resize, map_line_removeall, map_line_create,
        map_setevent, map_setstyle, map_update_popup, map_update,
        /* COUNTRY & CITIES */
        get_cities,

@@ -2760,151 +2760,151 @@ function init_admin_secure(){
 
     document.getElementById('filesearch_menu5').addEventListener('click', function() { show_existing_logfiles();}, false);
     
-    document.getElementById('select_maptype').addEventListener('change', function() { common.map_setstyle(document.getElementById('select_maptype').value) }, false);
+    document.getElementById('select_maptype').addEventListener('change', function() { common.map_setstyle(document.getElementById('select_maptype').value).then(function(){null;}) }, false);
 
     //SET APPS INFO, INIT MAP
     get_apps().then(function(){
+        //SET MENU
+        document.getElementById('menu_secure').innerHTML = 
+            `<div id='menu_close' class='common_dialogue_button'></div>
+            <div id='menu_1' class='menuitem'></div>
+            <div id='menu_2' class='menuitem'></div>
+            <div id='menu_3' class='menuitem'></div>
+            <div id='menu_4' class='menuitem'></div>
+            <div id='menu_5' class='menuitem'></div>
+            <div id='menu_6' class='menuitem'></div>
+            <div id='menu_7' class='menuitem'></div>
+            <div id='menu_8' class='menuitem'></div>
+            <div id='menu_9' class='menuitem'></div>
+            <div id='menu_10' class='menuitem'></div>
+            <div id='menu_11' class='menuitem'></div>`;
+        //set for menu items created in menu_secure
+        document.getElementById('menu_close').innerHTML = common.ICONS['app_menu_close'];
+        document.getElementById('menu_1').innerHTML = common.ICONS['app_chart']; //DASHBOARD
+        document.getElementById('menu_2').innerHTML = common.ICONS['app_users'] + common.ICONS['app_log']; //USER STAT
+        document.getElementById('menu_3').innerHTML = common.ICONS['app_users']; //USERS
+        document.getElementById('menu_4').innerHTML = common.ICONS['app_apps'] + common.ICONS['app_settings']; //APP ADMIN
+        document.getElementById('menu_5').innerHTML = common.ICONS['app_log']; //MONITOR
+        document.getElementById('menu_6').innerHTML = common.ICONS['app_server'] + common.ICONS['app_settings']; //PARAMETER
+        document.getElementById('menu_7').innerHTML = common.ICONS['app_server'] + common.ICONS['app_install']; //INSTALLATION
+        document.getElementById('menu_8').innerHTML = common.ICONS['app_server'] + common.ICONS['app_database']; //DATABASE
+        document.getElementById('menu_9').innerHTML = common.ICONS['app_server'] + common.ICONS['app_backup'] + common.ICONS['app_restore']; //'BACKUP/RESTORE';
+        document.getElementById('menu_10').innerHTML = common.ICONS['app_server']; //SERVER
+        document.getElementById('menu_11').innerHTML = common.ICONS['app_logoff']; //LOGOUT
+
+        document.getElementById('menu_secure').addEventListener('click', function(event) { 
+                                                                            let target_id;
+                                                                            if (event.target.id.startsWith('menu_')){
+                                                                                //menuitem
+                                                                                target_id = event.target.id;
+                                                                            }
+                                                                            else
+                                                                                if (event.target.parentNode.id.startsWith('menu_')){
+                                                                                    //svg or i in menuitem
+                                                                                    target_id = event.target.parentNode.id;
+                                                                                }
+                                                                                else
+                                                                                    if (event.target.parentNode.parentNode.id.startsWith('menu_')){
+                                                                                        //path in svg in menuitem
+                                                                                        target_id = event.target.parentNode.parentNode.id;
+                                                                                    }
+                                                                            switch (target_id){
+                                                                                case 'menu_close':{
+                                                                                    document.getElementById('menu').style.display = 'none';
+                                                                                    break;
+                                                                                }
+                                                                                case 'menu_11':{
+                                                                                    admin_logoff_app();
+                                                                                    break;
+                                                                                }
+                                                                                default:{
+                                                                                    show_menu(parseInt(target_id.substring(5)))
+                                                                                }
+                                                                            }
+                                                                            }, false);
+        document.getElementById('common_user_direction_select').addEventListener('change', function() { fix_pagination_buttons(this.value)}, false);
+        //hide all first (display none in css using eval not working)
+        for (let i=1;i<=10;i++){
+            document.getElementById(`menu_${i}`).style.display='none';
+        }
+        if (common.COMMON_GLOBAL['system_admin']==1){
+            //show DASHBOARD
+            document.getElementById('menu_1').style.display='block';
+            document.getElementById('select_broadcast_type').innerHTML = 
+                `<option value='INFO' selected='selected'>${common.ICONS['app_alert']}</option>
+                    <option value='MAINTENANCE' selected='selected'>${common.ICONS['app_maintenance']}</option>`;                 
+            
+            //show MONITOR (only SERVER LOG and PM2LOG)
+            document.getElementById('menu_5').style.display='block';
+            //hide APP LOG in MONITOR
+            document.getElementById('list_monitor_nav_2').style.display='none';
+            //show PARAMETER
+            document.getElementById('menu_6').style.display='block';
+            //show INSTALLATION
+            document.getElementById('menu_7').style.display='block';
+            //show DATABASE
+            document.getElementById('menu_8').style.display='block';
+            //show BACKUP/RESTORE
+            document.getElementById('menu_9').style.display='block';
+            //show SERVER
+            document.getElementById('menu_10').style.display='block';
+            //start with DASHBOARD
+            show_menu(1);
+        }
+        else{
+            //show DASHBOARD
+            document.getElementById('menu_1').style.display='block';
+            document.getElementById('select_broadcast_type').innerHTML = 
+                `<option value='INFO' selected='selected'>${common.ICONS['app_alert']}</option>`;
+            document.getElementById('menu_1_maintenance').style.display = 'none';
+            //show USER STAT
+            document.getElementById('menu_2').style.display='block';
+            //show USERS
+            document.getElementById('menu_3').style.display='block';
+            //show APP ADMIN
+            document.getElementById('menu_4').style.display='block';
+            //show MONITOR
+            document.getElementById('menu_5').style.display='block';
+            //hide PM2LOG in MONITOR
+            document.getElementById('list_monitor_nav_3').style.display='none';
+            //hide SERVER LOG in MONITOR
+            document.getElementById('list_monitor_nav_4').style.display='none';
+            //start with DASHBOARD
+            show_menu(1);
+            common.common_translate_ui(common.COMMON_GLOBAL['user_locale'], 'APP', (err, result)=>{
+                null
+            });
+        }
         common.get_gps_from_ip().then(function(){
             common.map_init(APP_GLOBAL['gps_map_container'],
                             common.COMMON_GLOBAL['service_map_style'],
                             common.COMMON_GLOBAL['client_longitude'],
                             common.COMMON_GLOBAL['client_latitude'],
                             APP_GLOBAL['gps_map_marker_div_gps'],
-                            APP_GLOBAL['gps_map_zoom']);
-            common.map_setevent('dblclick', function(e) {
-                let lng = e.latlng['lng'];
-                let lat = e.latlng['lat'];
-                //Update GPS position
-                common.get_place_from_gps(lng, lat).then(function(gps_place){
-                    common.map_update(lng,
-                            lat,
-                            '', //do not change zoom 
-                            gps_place,
-                            null,
-                            APP_GLOBAL['gps_map_marker_div_gps'],
-                            common.COMMON_GLOBAL['service_map_jumpto']);
-                })
-            })
-                
-            common.map_update(common.COMMON_GLOBAL['client_longitude'],
-                    common.COMMON_GLOBAL['client_latitude'],
-                    APP_GLOBAL['gps_map_zoom'],
-                    common.COMMON_GLOBAL['client_place'],
-                    null,
-                    APP_GLOBAL['gps_map_marker_div_gps'],
-                    common.COMMON_GLOBAL['service_map_jumpto']);
-            //SET MENU
-            document.getElementById('menu_secure').innerHTML = 
-               `<div id='menu_close' class='common_dialogue_button'></div>
-                <div id='menu_1' class='menuitem'></div>
-                <div id='menu_2' class='menuitem'></div>
-                <div id='menu_3' class='menuitem'></div>
-                <div id='menu_4' class='menuitem'></div>
-                <div id='menu_5' class='menuitem'></div>
-                <div id='menu_6' class='menuitem'></div>
-                <div id='menu_7' class='menuitem'></div>
-                <div id='menu_8' class='menuitem'></div>
-                <div id='menu_9' class='menuitem'></div>
-                <div id='menu_10' class='menuitem'></div>
-                <div id='menu_11' class='menuitem'></div>`;
-            //set for menu items created in menu_secure
-            document.getElementById('menu_close').innerHTML = common.ICONS['app_menu_close'];
-            document.getElementById('menu_1').innerHTML = common.ICONS['app_chart']; //DASHBOARD
-            document.getElementById('menu_2').innerHTML = common.ICONS['app_users'] + common.ICONS['app_log']; //USER STAT
-            document.getElementById('menu_3').innerHTML = common.ICONS['app_users']; //USERS
-            document.getElementById('menu_4').innerHTML = common.ICONS['app_apps'] + common.ICONS['app_settings']; //APP ADMIN
-            document.getElementById('menu_5').innerHTML = common.ICONS['app_log']; //MONITOR
-            document.getElementById('menu_6').innerHTML = common.ICONS['app_server'] + common.ICONS['app_settings']; //PARAMETER
-            document.getElementById('menu_7').innerHTML = common.ICONS['app_server'] + common.ICONS['app_install']; //INSTALLATION
-            document.getElementById('menu_8').innerHTML = common.ICONS['app_server'] + common.ICONS['app_database']; //DATABASE
-            document.getElementById('menu_9').innerHTML = common.ICONS['app_server'] + common.ICONS['app_backup'] + common.ICONS['app_restore']; //'BACKUP/RESTORE';
-            document.getElementById('menu_10').innerHTML = common.ICONS['app_server']; //SERVER
-            document.getElementById('menu_11').innerHTML = common.ICONS['app_logoff']; //LOGOUT
-
-            document.getElementById('menu_secure').addEventListener('click', function(event) { 
-                                                                                let target_id;
-                                                                                if (event.target.id.startsWith('menu_')){
-                                                                                    //menuitem
-                                                                                    target_id = event.target.id;
-                                                                                }
-                                                                                else
-                                                                                    if (event.target.parentNode.id.startsWith('menu_')){
-                                                                                        //svg or i in menuitem
-                                                                                        target_id = event.target.parentNode.id;
-                                                                                    }
-                                                                                    else
-                                                                                        if (event.target.parentNode.parentNode.id.startsWith('menu_')){
-                                                                                            //path in svg in menuitem
-                                                                                            target_id = event.target.parentNode.parentNode.id;
-                                                                                        }
-                                                                                switch (target_id){
-                                                                                    case 'menu_close':{
-                                                                                        document.getElementById('menu').style.display = 'none';
-                                                                                        break;
-                                                                                    }
-                                                                                    case 'menu_11':{
-                                                                                        admin_logoff_app();
-                                                                                        break;
-                                                                                    }
-                                                                                    default:{
-                                                                                        show_menu(parseInt(target_id.substring(5)))
-                                                                                    }
-                                                                                }
-                                                                             }, false);
-            document.getElementById('common_user_direction_select').addEventListener('change', function() { fix_pagination_buttons(this.value)}, false);
-            //hide all first (display none in css using eval not working)
-            for (let i=1;i<=10;i++){
-                document.getElementById(`menu_${i}`).style.display='none';
-            }
-            if (common.COMMON_GLOBAL['system_admin']==1){
-                //show DASHBOARD
-                document.getElementById('menu_1').style.display='block';
-                document.getElementById('select_broadcast_type').innerHTML = 
-                    `<option value='INFO' selected='selected'>${common.ICONS['app_alert']}</option>
-                     <option value='MAINTENANCE' selected='selected'>${common.ICONS['app_maintenance']}</option>`;                 
-                
-                //show MONITOR (only SERVER LOG and PM2LOG)
-                document.getElementById('menu_5').style.display='block';
-                //hide APP LOG in MONITOR
-                document.getElementById('list_monitor_nav_2').style.display='none';
-                //show PARAMETER
-                document.getElementById('menu_6').style.display='block';
-                //show INSTALLATION
-                document.getElementById('menu_7').style.display='block';
-                //show DATABASE
-                document.getElementById('menu_8').style.display='block';
-                //show BACKUP/RESTORE
-                document.getElementById('menu_9').style.display='block';
-                //show SERVER
-                document.getElementById('menu_10').style.display='block';
-                //start with DASHBOARD
-                show_menu(1);
-            }
-            else{
-                //show DASHBOARD
-                document.getElementById('menu_1').style.display='block';
-                document.getElementById('select_broadcast_type').innerHTML = 
-                    `<option value='INFO' selected='selected'>${common.ICONS['app_alert']}</option>`;
-                document.getElementById('menu_1_maintenance').style.display = 'none';
-                //show USER STAT
-                document.getElementById('menu_2').style.display='block';
-                //show USERS
-                document.getElementById('menu_3').style.display='block';
-                //show APP ADMIN
-                document.getElementById('menu_4').style.display='block';
-                //show MONITOR
-                document.getElementById('menu_5').style.display='block';
-                //hide PM2LOG in MONITOR
-                document.getElementById('list_monitor_nav_3').style.display='none';
-                //hide SERVER LOG in MONITOR
-                document.getElementById('list_monitor_nav_4').style.display='none';
-                //start with DASHBOARD
-                show_menu(1);
-                common.common_translate_ui(common.COMMON_GLOBAL['user_locale'], 'APP', (err, result)=>{
-                    null
-                });
-            }
-        })                
+                            APP_GLOBAL['gps_map_zoom']).then(function(){
+                                common.map_setevent('dblclick', function(e) {
+                                    let lng = e.latlng['lng'];
+                                    let lat = e.latlng['lat'];
+                                    //Update GPS position
+                                    common.get_place_from_gps(lng, lat).then(function(gps_place){
+                                        common.map_update(lng,
+                                                          lat,
+                                                          '', //do not change zoom 
+                                                          gps_place,
+                                                          null,
+                                                          APP_GLOBAL['gps_map_marker_div_gps'],
+                                                          common.COMMON_GLOBAL['service_map_jumpto']);
+                                    })
+                                })
+                                common.map_update(common.COMMON_GLOBAL['client_longitude'],
+                                                  common.COMMON_GLOBAL['client_latitude'],
+                                                  APP_GLOBAL['gps_map_zoom'],
+                                                  common.COMMON_GLOBAL['client_place'],
+                                                  null,
+                                                  APP_GLOBAL['gps_map_marker_div_gps'],
+                                                  common.COMMON_GLOBAL['service_map_jumpto']);
+                            })
+        })
     })
 }
 common.init_common(<ITEM_COMMON_PARAMETERS/>, (err, global_app_parameters)=>{

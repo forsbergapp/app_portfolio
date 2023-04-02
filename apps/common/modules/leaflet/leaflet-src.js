@@ -2,7 +2,9 @@
  * Leaflet 1.9.2, a JS library for interactive maps. https://leafletjs.com
  * (c) 2010-2022 Vladimir Agafonkin, (c) 2010-2011 CloudMade
  */
-
+/*START ADD CODE APP PORTFOLIO*/
+let L;
+/*END ADD CODE APP PORTFOLIO*/
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
   typeof define === 'function' && define.amd ? define(['exports'], factory) :
@@ -14397,6 +14399,7 @@
   exports.version = version;
   exports.videoOverlay = videoOverlay;
 
+  /*START REMOVE CODE APP PORTFOLIO
   var oldL = window.L;
   exports.noConflict = function() {
   	window.L = oldL;
@@ -14405,5 +14408,12 @@
   // Always export us to window global (see #2364)
   window.L = exports;
 
+  END REMOVE CODE APP PORTFOLIO*/
+  /*START ADD CODE APP PORTFOLIO*/
+  L = exports;
+  /*REMOVE ADD CODE APP PORTFOLIO*/
 }));
 //# sourceMappingURL=leaflet-src.js.map
+/* START ADD CODE APP PORTFOLIO*/
+export{L}
+/* END ADD CODE APP PORTFOLIO*/
