@@ -6,29 +6,16 @@ app.use('/app1/js',express.static(process.cwd() + '/apps/app1/js'));
 app.get("/info/:info",function (req, res, next) {
     import(`file://${process.cwd()}/apps/index.js`).then(function({ check_app_subdomain}){
       if (check_app_subdomain(APP1_ID, req.headers.host) ||
-          req.headers.host.substring(0,req.headers.host.indexOf('.'))=='www'){
-          switch (req.params.info){
-            case 'data_model.png':{
-              res.sendFile(process.cwd() + "/apps/app1/images/data_model.png");
-              break;
+        req.headers.host.substring(0,req.headers.host.indexOf('.'))=='www'){
+            if (typeof req.query.lang_code !='undefined'){
+              req.query.lang_code = 'en';
             }
-            case 'app_portfolio.png':{
-                res.sendFile(process.cwd() + "/apps/app1/images/app_portfolio.png");
-                break;
-            }
-            default:{
-              if (typeof req.query.lang_code !='undefined'){
-                req.query.lang_code = 'en';
-              }
-              import(`file://${process.cwd()}/apps/index.js`).then(function({ getInfo }){
-                getInfo(APP1_ID, req.params.info, req.query.lang_code, (err, info_result)=>{
-                  res.send(info_result);
-                })
+            import(`file://${process.cwd()}/apps/index.js`).then(function({ getInfo }){
+              getInfo(APP1_ID, req.params.info, req.query.lang_code, (err, info_result)=>{
+                res.send(info_result);
               })
-              break;
-            }
-          }
-        }
+            })
+      }
       else
           next();
     })
