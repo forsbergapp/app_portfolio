@@ -3,8 +3,10 @@ const common = await import('/common/js/common.js');
 let APP_GLOBAL = {
     "app_copyright":"",
     "app_email":"",
-    "img_diagram_img":"/app1/images/app_portfolio.png",
-    "img_datamodel_img":"/app1/images/data_model.png",
+    "img_diagram_img":"/app1/images/app_portfolio.webp",
+    "img_diagram_img_small":"/app1/images/app_portfolio_small.webp",
+    "img_datamodel_img":"/app1/images/data_model.webp",
+    "img_datamodel_img_small":"/app1/images/data_model_small.webp",
     "info_social_link1_url":"",
     "info_social_link2_url":"",
     "info_social_link3_url":"",
@@ -297,8 +299,8 @@ async function init_app(){
     //theme switcher
     document.getElementById('app_theme_checkbox').checked = true;
     //info
-    document.getElementById('info_diagram_img').src=APP_GLOBAL['img_diagram_img'];
-    document.getElementById('info_datamodel_img').src=APP_GLOBAL['img_datamodel_img'];
+    document.getElementById('info_diagram_img').src=APP_GLOBAL['img_diagram_img_small'];
+    document.getElementById('info_datamodel_img').src=APP_GLOBAL['img_datamodel_img_small'];
     document.getElementById('title1').innerHTML = 'App Portfolio Diagram';
     document.getElementById('title2').innerHTML = 'App Portfolio Data model';
     document.getElementById('info_message').innerHTML = common.ICONS['app_close'];
