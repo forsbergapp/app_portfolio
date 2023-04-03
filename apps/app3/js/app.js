@@ -2,39 +2,41 @@ const common = await import('/common/js/common.js');
 function app_exception() {
     null;
 }
-function show_doc(docid){
-    document.getElementById('dialogue_documents').style.visibility = 'hidden';
-    document.getElementById('common_window_info').style.visibility = 'visible';
-    document.getElementById('common_window_info_info').innerHTML = `<img src="${document.getElementById(`${docid}`).src}"/>`;
+function show_doc(item){
+    if (item.classList.contains('doc_list_item_image')){
+        document.getElementById('dialogue_documents').style.visibility = 'hidden';
+        document.getElementById('common_window_info').style.visibility = 'visible';
+        document.getElementById('common_window_info_info').innerHTML = `<img src="${item.parentNode.getAttribute('full_size')}"/>`;
+    }
 }
 function getdocs(docid = null){
     document.getElementById('doc_list').innerHTML = common.APP_SPINNER;
     let result = `{"data":[{"id":1,
                             "doc_title":"Diagram",
-                            "doc_url":"/app1/images/app_portfolio.png"},
+                            "doc_url":"/app1/images/app_portfolio.webp",
+                            "doc_url_small":"/app1/images/app_portfolio_small.webp"},
                             {"id":2,
                             "doc_title":"Data Model",
-                            "doc_url":"/app1/images/data_model.png"},
+                            "doc_url":"/app1/images/data_model.webp",
+                            "doc_url_small":"/app1/images/data_model_small.webp"},
                             {"id":3,
                             "doc_title":"Property Management",
-                            "doc_url":"/app3/images/datamodel_pm.jpg"}
+                            "doc_url":"/app3/images/datamodel_pm.webp",
+                            "doc_url_small":"/app3/images/datamodel_pm_small.webp"}
                             ]}`;
     let html ='';
     let json = JSON.parse(result);
     for (let i = 0; i < json.data.length; i++) {
         if (docid== json.data[i].id || docid==null)
-            html += `<div class='doc_list_item'>
-                        <div class='doc_list_item_image_div'>
-                            <img id='${json.data[i].id}' class='doc_list_item_image' src='${json.data[i].doc_url}'>
+            html += `<div id='doc_list_item'>
+                        <div id='${json.data[i].id}' full_size='${json.data[i].doc_url}' class='doc_list_item_image_div'>
+                            <img class='doc_list_item_image' src='${json.data[i].doc_url_small}'>
                         </div>
                         <div class='doc_list_item_title'>${json.data[i].doc_title}</div>
                     </div>`;
     }
-    document.getElementById('doc_list').innerHTML = html;
-    let x = document.querySelectorAll('.doc_list_item_image');
-    for (let i = 0; i <= x.length -1; i++) {
-        x[i].addEventListener('click', function() {show_doc(x[i].getAttribute('id'))});
-    }
+    document.querySelector('#doc_list').innerHTML = html;
+    document.querySelector('#doc_list').addEventListener('click',function(event){show_doc(event.target)});
 }
 async function init_app(){
     document.getElementById('app_title').innerHTML = common.COMMON_GLOBAL['app_name'];
