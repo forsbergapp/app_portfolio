@@ -430,7 +430,7 @@ function check_app_subdomain(app_id, host){
 }
 function getUserPreferences(app_id){
     return new Promise(function (resolve, reject){
-        //ES2020 import and ES2015 Promise.all and template literals
+        //ES2020 import and ES2015 Promise.all and ES6 template literals
         Promise.all([
             import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/language/locale/locale.service.js`),
             import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/setting/setting.service.js`)
