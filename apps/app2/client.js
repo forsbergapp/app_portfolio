@@ -143,7 +143,6 @@ function getApp(app_id, username, gps_lat, gps_long, gps_place){
                 ['APP', process.cwd() + '/apps/app2/src/index.html'],
                 ['<AppCommonHead/>', process.cwd() + '/apps/common/src/head.html'],
                 ['<AppCommonHeadMap/>', process.cwd() + '/apps/common/src/head_map.html'],
-                ['<AppCommonHeadFontawesome/>', process.cwd() + '/apps/common/src/head_fontawesome.html'],
                 ['<AppCommonHeadFonts/>', process.cwd() + '/apps/common/src/head_fonts.html'],
                 ['<AppCommonBody/>', process.cwd() + '/apps/common/src/body.html'],
                 ['<AppCommonBodyMaintenance/>', process.cwd() + '/apps/common/src/body_maintenance.html'],
