@@ -3,6 +3,7 @@ const APP1_ID = 1;
 app.use('/app1/css',express.static(process.cwd() + '/apps/app1/css'));
 app.use('/app1/images',express.static(process.cwd() + '/apps/app1/images'));
 app.use('/app1/js',express.static(process.cwd() + '/apps/app1/js'));
+//routes
 app.get("/info/:info",function (req, res, next) {
     import(`file://${process.cwd()}/apps/index.js`).then(function({ check_app_subdomain}){
       if (check_app_subdomain(APP1_ID, req.headers.host) ||
