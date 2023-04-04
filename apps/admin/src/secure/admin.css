@@ -561,11 +561,11 @@
         display: inline-block;
         font-size: 9px;
     }
-    #menu_8_db_info1 div:nth-child(odd){
+    #menu_8_db_info1>div:nth-child(odd){
         width: 150px;
         text-transform: uppercase;
     }
-    #menu_8_db_info1 div:nth-child(even){
+    #menu_8_db_info1>div:nth-child(even){
         width: calc(100% - 150px);
     }
 
@@ -610,6 +610,9 @@
         text-align: start;
     }
     /*MENU SERVER*/
+    #menu_10_content{
+        line-height: 110%;
+    }
     #menu_10_content_widget1{
         height:300px;
     }
