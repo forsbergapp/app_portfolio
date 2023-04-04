@@ -263,11 +263,16 @@ InitConfig().then(function(){
                 let env_key = fileBuffer.toString();
                 fs.readFile(process.cwd() + ConfigGet(1, 'SERVER', 'HTTPS_CERT'), 'utf8', (error, fileBuffer) => {
                   let env_cert = fileBuffer.toString();
+                  //disables protocols 'spdy/3.1', 'spdy/3', 'spdy/2'
+                  //that causes protocol errors in browser
                   options = {
                     key: env_key,
-                    cert: env_cert
+                    cert: env_cert,
+                    spdy: {
+                      protocols: ['h2','http/1.1', 'http/1.0']
+                    }
                   };
-                  import('node:https').then(function(https){
+                  import('spdy').then(function({default:https}){
                     https.createServer(options, app).listen(ConfigGet(1, 'SERVER', 'HTTPS_PORT'), () => {
                       import(`file://${process.cwd()}/service/log/log.service.js`).then(function({createLogServerI}){
                         createLogServerI('HTTPS Server up and running on PORT: ' + ConfigGet(1, 'SERVER', 'HTTPS_PORT')).then(function(){
