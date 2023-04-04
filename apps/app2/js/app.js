@@ -2661,10 +2661,10 @@ function init_app() {
                             }
                         }
                         show_start().then(function(){
+                            dialogue_loading(0);
                             common.Providers_init(function() { ProviderSignIn_app(this); }).then(function(){
                                 serviceworker();
                                 common_translate_ui_app(common.COMMON_GLOBAL['user_locale'], (err, result)=>{
-                                    dialogue_loading(0);
                                     resolve();
                                 });
                             });
