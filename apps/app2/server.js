@@ -1,28 +1,10 @@
 const APP2_ID = 2;
-
-import(`file://${process.cwd()}/server/server.service.js`).then(function({ConfigGet}){
-  import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/app2_place/app2_place.router.js`).then(function({router}){
-    app.use(ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH') + "/app2_place", router);
-  })
-  import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/app2_theme/app2_theme.router.js`).then(function({router}){
-    app.use(ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH') + "/app2_theme", router);
-  })
-  import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/app2_user_setting/app2_user_setting.router.js`).then(function({router}){
-    app.use(ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH') + "/app2_user_setting", router);
-  })
-  import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/app2_user_setting_like/app2_user_setting_like.router.js`).then(function({router}){
-    app.use(ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH') + "/app2_user_setting_like", router);
-  })
-  import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/app2_user_setting_view/app2_user_setting_view.router.js`).then(function({router}){
-    app.use(ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH') + "/app2_user_setting_view", router);
-  })  
-})
-
+//app2 directories
 app.use('/app2/css',express.static(process.cwd() + '/apps/app2/css'));
 app.use('/app2/js',express.static(process.cwd() + '/apps/app2/js'));
 app.use('/app2/info',express.static(process.cwd() + '/apps/app2/info'));
 app.use('/app2/images',express.static(process.cwd() + '/apps/app2/images'));
-
+//routes
 //app 2 pwa service worker, placed in root
 app.get("/sw.js",function (req, res,next) {
   import(`file://${process.cwd()}/apps/index.js`).then(function({ check_app_subdomain}){
@@ -36,7 +18,6 @@ app.get("/sw.js",function (req, res,next) {
       next();
   })
 });
-
 app.get("/info/:info",function (req, res, next) {
   import(`file://${process.cwd()}/apps/index.js`).then(function({ check_app_subdomain}){
     if (check_app_subdomain(APP2_ID, req.headers.host)) {
@@ -53,7 +34,6 @@ app.get("/info/:info",function (req, res, next) {
       next();
   })
 });
-
 //app 2 progressive webapp menifest
 app.get("/app2/manifest.json",function (req, res, next) {
   import(`file://${process.cwd()}/apps/index.js`).then(function({ check_app_subdomain}){
@@ -185,3 +165,26 @@ app.get('/',function (req, res, next) {
       next();
   })
 });
+//routes to database rest api
+//ES6 IIFE arrow function
+(async ()=>{
+  //mount routers to endpoints
+  const {ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
+  const rest_api_path = ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH');
+  const files = [
+    [rest_api_path + '/app2_place',             rest_api_path + '/app2_place/app2_place.router.js'],
+    [rest_api_path + '/app2_theme',             rest_api_path + '/app2_theme/app2_theme.router.js'],
+    [rest_api_path + '/app2_user_setting',      rest_api_path + '/app2_user_setting/app2_user_setting.router.js'],
+    [rest_api_path + '/app2_user_setting_like', rest_api_path + '/app2_user_setting_like/app2_user_setting_like.router.js'],
+    [rest_api_path + '/app2_user_setting_view', rest_api_path + '/app2_user_setting_view/app2_user_setting_view.router.js']
+    ];  
+  //ES6 for of loop
+  for (const file of files){
+    //ES2020 import with ES6 template literals
+    await import(`file://${process.cwd()}${file[1]}`).then(function({router}){
+      // MIDDLEWARE
+      // endpoint, router file
+      app.use(file[0], router);
+    })
+  }
+})();
