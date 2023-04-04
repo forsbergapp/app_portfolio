@@ -4,7 +4,6 @@ function getApp(app_id, params, gps_lat, gps_long, gps_place){
     return new Promise(function (resolve, reject){
         const files = [
             ['APP', process.cwd() + '/apps/app3/src/index.html'],
-            ['<AppCommonHeadFontawesome/>', process.cwd() + '/apps/common/src/head_fontawesome.html'],
             ['<AppCommonHead/>', process.cwd() + '/apps/common/src/head.html'],
             ['<AppCommonHeadFonts/>', process.cwd() + '/apps/common/src/head_fonts.html'],
             ['<AppCommonBody/>', process.cwd() + '/apps/common/src/body.html'],

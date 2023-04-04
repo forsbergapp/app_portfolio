@@ -355,8 +355,8 @@
 	justify-content:space-between;
 	border: 1px solid;
 }
-#setting_paper_preview_header_image div,
-#setting_paper_preview_footer_image div{
+#setting_paper_preview_header_image > div,
+#setting_paper_preview_footer_image > div{
 	min-height: 69px;
 }
 #setting_paper_preview_footer_image{
@@ -467,7 +467,6 @@
 }
 #profile_main_stat_row2 div{
 	display:inline-block;
-	margin-inline-end: 0.3em;
 }
 #profile_main_btn_user_settings,
 #profile_main_btn_user_setting_likes,
