@@ -1,10 +1,15 @@
 const ADMIN_ID = 0;
-
 //admin directories
 app.use('/admin/images',express.static(process.cwd() + '/apps/admin/images'));
 app.use('/admin/js',express.static(process.cwd() + '/apps/admin/js'));
 app.use('/admin/css',express.static(process.cwd() + '/apps/admin/css'));
-
+//common directories
+app.use('/common/audio',express.static(process.cwd() + '/apps/common/audio'));
+app.use('/common/css',express.static(process.cwd() + '/apps/common/css'));
+app.use('/common/images',express.static(process.cwd() + '/apps/common/images'));
+app.use('/common/js',express.static(process.cwd() + '/apps/common/js'));
+app.use('/common/modules',express.static(process.cwd() + '/apps/common/modules'));
+//routes
 app.get("/admin",function (req, res, next) {
     import(`file://${process.cwd()}/apps/index.js`).then(function({ check_app_subdomain}){
         if (check_app_subdomain(ADMIN_ID, req.headers.host) ||
@@ -22,9 +27,3 @@ app.get("/admin",function (req, res, next) {
 app.get("/admin/:sub",function (req, res, next) {
     return res.redirect('/admin');
 });
-//common directories
-app.use('/common/audio',express.static(process.cwd() + '/apps/common/audio'));
-app.use('/common/css',express.static(process.cwd() + '/apps/common/css'));
-app.use('/common/images',express.static(process.cwd() + '/apps/common/images'));
-app.use('/common/js',express.static(process.cwd() + '/apps/common/js'));
-app.use('/common/modules',express.static(process.cwd() + '/apps/common/modules'));

@@ -3,7 +3,7 @@ const APP3_ID = 3;
 app.use('/app3/css',express.static(process.cwd() + '/apps/app3/css'));
 app.use('/app3/images',express.static(process.cwd() + '/apps/app3/images'));
 app.use('/app3/js',express.static(process.cwd() + '/apps/app3/js'));
-
+//routes
 app.get('/:doc', function(req, res,next) {
   import(`file://${process.cwd()}/apps/index.js`).then(function({ check_app_subdomain}){
     if (check_app_subdomain(APP3_ID, req.headers.host)) {
@@ -23,7 +23,6 @@ app.get('/:doc', function(req, res,next) {
         next();
   })
 });
-
 app.get('/',function (req, res, next) {
   import(`file://${process.cwd()}/apps/index.js`).then(function({ check_app_subdomain}){
     if (check_app_subdomain(APP3_ID, req.headers.host)){
