@@ -5,7 +5,6 @@ function getApp(app_id, username, gps_lat, gps_long, gps_place){
         function main(app_id){
             const files = [
                 ['APP', process.cwd() + '/apps/app1/src/index.html'],
-                ['<AppCommonHeadFontawesome/>', process.cwd() + '/apps/common/src/head_fontawesome.html'],
                 ['<AppCommonHead/>', process.cwd() + '/apps/common/src/head.html'],
                 ['<AppCommonHeadFonts/>', process.cwd() + '/apps/common/src/head_fonts.html'],
                 ['<AppCommonBody/>', process.cwd() + '/apps/common/src/body.html'],

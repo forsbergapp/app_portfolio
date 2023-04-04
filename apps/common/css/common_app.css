@@ -489,7 +489,8 @@ a:active {
 }
 #common_profile_main_stat_row1 div{
 	display:inline-block;
-	margin-inline-end: 0.3em;
+	margin-left: 1px;
+	margin-right: 1px;
 }
 #common_profile_joined_date,
 #common_profile_info_following_count,

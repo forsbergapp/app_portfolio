@@ -163,6 +163,31 @@
 									'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK',
 									var(--global_font_languages_1), var(--global_font_symbols), var(--global_font_languages_2);
 }
+/*Fontawesome icons*/
+@font-face {
+	font-family: "Font Awesome 6 Free";
+	font-style: normal;
+	font-weight: 400;
+	font-display: block;
+	src: url(/common/modules/fontawesome/webfonts/fa-regular-400.woff2) format("woff2"), 
+		 url(/common/modules/fontawesome/webfonts/fa-regular-400.ttf) format("truetype")
+}
+@font-face {
+	font-family: "Font Awesome 6 Free";
+	font-style: normal;
+	font-weight: 900;
+	font-display: block;
+	src: url(/common/modules/fontawesome/webfonts/fa-solid-900.woff2) format("woff2"), 
+		 url(/common/modules/fontawesome/webfonts/fa-solid-900.ttf) format("truetype")
+}
+/*use this class to display icons*/
+.common_icon {
+	font-family: "Font Awesome 6 Free";
+	font-weight: 900;
+	font-display: swap;
+	font-style: normal;
+	display: inline-block;
+}  
 
 /*default font*/
 body
