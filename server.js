@@ -72,7 +72,8 @@ InitConfig().then(function(){
       })
     }
   }
-  (async function(){
+  //ES6 IIFE arrow function
+  (async () =>{
     return await new Promise(function(resolve){
       //configuration of Content Security Policies
       import(`file://${process.cwd()}/service/auth/auth.controller.js`).then(function({ policy_directives}){
