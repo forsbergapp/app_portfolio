@@ -169,16 +169,14 @@
 	font-style: normal;
 	font-weight: 400;
 	font-display: block;
-	src: url(/common/modules/fontawesome/webfonts/fa-regular-400.woff2) format("woff2"), 
-		 url(/common/modules/fontawesome/webfonts/fa-regular-400.ttf) format("truetype")
+	src: url(/common/modules/fontawesome/webfonts/fa-regular-400.woff2) format("woff2")
 }
 @font-face {
 	font-family: "Font Awesome 6 Free";
 	font-style: normal;
 	font-weight: 900;
 	font-display: block;
-	src: url(/common/modules/fontawesome/webfonts/fa-solid-900.woff2) format("woff2"), 
-		 url(/common/modules/fontawesome/webfonts/fa-solid-900.ttf) format("truetype")
+	src: url(/common/modules/fontawesome/webfonts/fa-solid-900.woff2) format("woff2")
 }
 /*use this class to display icons*/
 .common_icon {
