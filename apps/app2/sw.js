@@ -24,7 +24,7 @@ const assetsToCache = [
     '/common/modules/regional/regional.js',
     '/app2/css/app.css',
     '/app2/css/app_report.css',
-    '/app2/images/banner_default.png',
+    '/app2/images/banner_default.webp',
     '/app2/images/favicon-32x32.png',
     '/app2/images/favicon-192x192.png',
     '/app2/images/logo.png',
