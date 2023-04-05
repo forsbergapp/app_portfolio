@@ -10,6 +10,7 @@
 	--font_8: 'Source Sans Pro';
 	--font_9: 'Montserrat';
 	--font_10: 'Lato';
+	--font_11: 'Caveat';
 
 	--report_theme_text_color: var(--report_black);
 	--report_theme_notes_background_color:inherit !important;
@@ -991,30 +992,30 @@
 	background-image: linear-gradient(to bottom,var(--report_lightgrey12) 0%,var(--report_white) 100%);
 }
 .theme_month_20014{
-	--report_theme_display_font_family:var(--font_9);
-	--report_theme_default_font_family:var(--font_7);
-	--report_theme_header_color:var(--report_grey5);
+	--report_theme_display_font_family:var(--font_11);
+	--report_theme_default_font_family:var(--font_9);
+	--report_theme_header_color:var(--report_gold);
 	--report_theme_header_background_color:inherit;
 	--report_theme_timetable_header_background_color:inherit;
-	--report_theme_timetable_header_color:var(--report_grey5);
-	--report_theme_timetable_data_header_background_color:var(--report_red);
+	--report_theme_timetable_header_color:var(--report_gold);
+	--report_theme_timetable_data_header_background_color:var(--report_blue2);
 	--report_theme_timetable_data_header_color:var(--report_white);
 	--report_theme_timetable_data_background_color:inherit;
-	--report_theme_timetable_data_color:var(--report_grey5);
-	--report_theme_timetable_footer_background_color:var(--report_lightgrey7);
-	--report_theme_timetable_footer_color:var(--report_grey6);
-	--report_theme_footer_color:var(--report_grey5);
+	--report_theme_timetable_data_color:var(--report_gold);
+	--report_theme_timetable_footer_background_color:var(--report_blue2);
+	--report_theme_timetable_footer_color:var(--report_white);
+	--report_theme_footer_color:var(--report_gold);
 	--report_theme_footer_background_color:inherit;	
-	--report_theme_fast_start_end_color:var(--report_grey5);
-	--report_theme_fast_start_end_background_color:var(--report_lightgrey7);
-	--report_theme_fast_start_end_border_color:var(--report_grey5);
+	--report_theme_fast_start_end_color:var(--report_white);
+	--report_theme_fast_start_end_background_color:var(--report_blue2);
+	--report_theme_fast_start_end_border_color:var(--report_gold);
 
 	--report_theme_timetable_data_border_color:inherit;
 	--report_theme_timetable_data_highlight_row_color:var(--report_white);
-	--report_theme_timetable_data_highlight_row_background_color:var(--report_grey5);
-	--report_theme_timetable_data_highlight_1_10_background_color:var(--report_lightgrey11);
+	--report_theme_timetable_data_highlight_row_background_color:var(--report_gold);
+	--report_theme_timetable_data_highlight_1_10_background_color:var(--report_lightgold3);
 	--report_theme_timetable_data_highlight_11_20_background_color:var(--report_white);
-	--report_theme_timetable_data_highlight_21_30_background_color:var(--report_lightgrey11);
+	--report_theme_timetable_data_highlight_21_30_background_color:var(--report_lightgold3);
 	--report_theme_timetable_data_row_odd_color:inherit;
 	--report_theme_timetable_data_row_odd_background_color:inherit;
 	--report_theme_timetable_data_row_even_color:inherit;
