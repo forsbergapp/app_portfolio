@@ -415,12 +415,10 @@
 #setting_paper_preview_footer_image > div{
 	min-height: 69px;
 }
-#setting_paper_preview_footer_image{
-	margin-bottom: -7px;
-}
 .setting_paper_preview_header,
 .setting_paper_preview_footer{
 	text-align: center;
+	height: 92px;
 }
 #setting_btn_reportheader_img,
 #setting_btn_reportfooter_img{
@@ -623,6 +621,9 @@
 	.profile_user_settings_row div:nth-child(1){
 		width:200px;
 	}
+	#setting_paper_preview_footer_image{
+		margin-bottom: 2px;
+	}	
 }
 
 /* APP THEME */
