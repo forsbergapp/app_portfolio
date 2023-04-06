@@ -72,7 +72,7 @@ async function getInfo(app_id, info, lang_code, callBack){
     case 'privacy_policy':{
         get_parameters((err, result)=>{
             import('node:fs').then(function(fs){
-                fs.readFile(process.cwd() + `/apps/app${app_id}${result.info_link_policy_url}.html`, 'utf8', (error, fileBuffer) => {
+                fs.readFile(process.cwd() + `/apps/app${app_id}/src${result.info_link_policy_url}.html`, 'utf8', (error, fileBuffer) => {
                     let infopage = fileBuffer.toString();
                     infopage = infopage.replace('<APPNAME1/>', result.app_name );
                     infopage = infopage.replace('<APPNAME2/>', result.app_name );
@@ -89,7 +89,7 @@ async function getInfo(app_id, info, lang_code, callBack){
     case 'disclaimer':{
         get_parameters((err, result)=>{
             import('node:fs').then(function(fs){
-                fs.readFile(process.cwd() + `/apps/app${app_id}${result.info_link_disclaimer_url}.html`, 'utf8', (error, fileBuffer) => {
+                fs.readFile(process.cwd() + `/apps/app${app_id}/src${result.info_link_disclaimer_url}.html`, 'utf8', (error, fileBuffer) => {
                     let infopage = fileBuffer.toString();
                     infopage = infopage.replace('<APPNAME1/>', result.app_name );
                     infopage = infopage.replace('<APPNAME2/>', result.app_name );
@@ -105,7 +105,7 @@ async function getInfo(app_id, info, lang_code, callBack){
     case 'terms':{
         get_parameters((err, result)=>{
             import('node:fs').then(function(fs){
-                fs.readFile(process.cwd() + `/apps/app${app_id}${result.info_link_terms_url}.html`, 'utf8', (error, fileBuffer) => {
+                fs.readFile(process.cwd() + `/apps/app${app_id}/src${result.info_link_terms_url}.html`, 'utf8', (error, fileBuffer) => {
                     let infopage = fileBuffer.toString();
                     infopage = infopage.replace('<APPNAME/>', result.app_name );
                     infopage = infopage.replace('<APPURL_HREF/>', result.app_url );
@@ -121,7 +121,7 @@ async function getInfo(app_id, info, lang_code, callBack){
     case 'about':{
         get_parameters((err, result)=>{
             import('node:fs').then(function(fs){
-                fs.readFile(process.cwd() + `/apps/app${app_id}${result.info_link_about_url}.html`, 'utf8', (error, fileBuffer) => {
+                fs.readFile(process.cwd() + `/apps/app${app_id}/src${result.info_link_about_url}.html`, 'utf8', (error, fileBuffer) => {
                     callBack(null, info_html1 + fileBuffer.toString() + info_html2);
                 })
             })
