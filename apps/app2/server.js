@@ -2,7 +2,6 @@ const APP2_ID = 2;
 //app2 directories
 app.use('/app2/css',express.static(process.cwd() + '/apps/app2/css'));
 app.use('/app2/js',express.static(process.cwd() + '/apps/app2/js'));
-app.use('/app2/info',express.static(process.cwd() + '/apps/app2/info'));
 app.use('/app2/images',express.static(process.cwd() + '/apps/app2/images'));
 //routes
 //app 2 pwa service worker, placed in root
@@ -22,12 +21,24 @@ app.get("/info/:info",function (req, res, next) {
   import(`file://${process.cwd()}/apps/index.js`).then(function({ check_app_subdomain}){
     if (check_app_subdomain(APP2_ID, req.headers.host)) {
         import(`file://${process.cwd()}/apps/index.js`).then(function({ getInfo}){
-          if (typeof req.query.lang_code !='undefined'){
-            req.query.lang_code = 'en';
+          switch (req.params.info){
+            case 'about':
+            case 'disclaimer':
+            case 'privacy_policy':
+            case 'terms':{
+              if (typeof req.query.lang_code !='undefined'){
+                req.query.lang_code = 'en';
+              }
+              getInfo(APP2_ID, req.params.info, req.query.lang_code, (err, info_result)=>{
+                res.send(info_result);
+              })
+              break;
+            }
+            default:{
+              res.send(null);
+              break;
+            }
           }
-          getInfo(APP2_ID, req.params.info, req.query.lang_code, (err, info_result)=>{
-            res.send(info_result);
-          })
         });
     }
     else
