@@ -28,10 +28,6 @@ const assetsToCache = [
     '/app2/images/favicon-32x32.png',
     '/app2/images/favicon-192x192.png',
     '/app2/images/logo.png',
-    '/app2/info/about.html',
-    '/app2/info/disclaimer.html',
-    '/app2/info/privacy_policy.html',
-    '/app2/info/terms.html',
     '/app2/js/app_common.js',
     '/app2/js/app_report.js',
     '/app2/js/app.js'
