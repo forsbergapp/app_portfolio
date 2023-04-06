@@ -417,7 +417,7 @@ function init(parameters){
             }
             init_app().then(function(){
                 document.getElementById('apps').innerHTML = common.APP_SPINNER;
-                common.common_translate_ui(common.COMMON_GLOBAL['common_user_locale'], null, (err, result)=>{
+                common.common_translate_ui(common.COMMON_GLOBAL['user_locale'], null, (err, result)=>{
                         get_apps();
                 })
                 async function show_start(){
