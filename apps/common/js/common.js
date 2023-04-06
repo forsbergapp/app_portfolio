@@ -89,6 +89,7 @@ let COMMON_GLOBAL = {
     "user_arabic_script":"",
     "user_preference_save":"",
     "module_map_path":"/common/modules/leaflet/leaflet-src.js",
+    "module_map_library": "",
     "service_map_flyto":"",
     "service_map_jumpto":"",
     "service_map_popup_offset":"",
@@ -1681,8 +1682,10 @@ async function map_init(containervalue, stylevalue, longitude, latitude, map_mar
     return await new Promise(function (resolve){
         if (checkconnected()) {
             import(COMMON_GLOBAL['module_map_path']).then(function({L}){
+                //save library in variable for optimization
+                COMMON_GLOBAL['module_map_library'] = L;
                 COMMON_GLOBAL['session_service_map'] = '';
-                COMMON_GLOBAL['session_service_map'] = L.map(containervalue).setView([latitude, longitude], zoomvalue);
+                COMMON_GLOBAL['session_service_map'] = COMMON_GLOBAL['module_map_library'].map(containervalue).setView([latitude, longitude], zoomvalue);
                 map_setstyle(stylevalue).then(function(){
                     //disable doubleclick in event dblclick since e.preventdefault() does not work
                     COMMON_GLOBAL['session_service_map'].doubleClickZoom.disable(); 
@@ -1739,66 +1742,62 @@ function map_line_removeall(){
 }
 function map_line_create(id, title, text_size, from_longitude, from_latitude, to_longitude, to_latitude, color, width, opacity){
     if (checkconnected()) {
-        import(COMMON_GLOBAL['module_map_path']).then(function({L}){
-            let geojsonFeature = {
-                "id": `"${id}"`,
-                "type": "Feature",
-                "properties": { "title": title },
-                "geometry": {
-                    "type": "LineString",
-                        "coordinates": [
-                            [from_longitude, from_latitude],
-                            [to_longitude, to_latitude]
-                        ]
-                }
-            };
-            //use GeoJSON to draw a line
-            let myStyle = {
-                "color": color,
-                "weight": width,
-                "opacity": opacity
-            };
-            let layer = L.geoJSON(geojsonFeature, {style: myStyle}).addTo(COMMON_GLOBAL['session_service_map']);
-            if(!COMMON_GLOBAL['session_service_map_layer'])
-                COMMON_GLOBAL['session_service_map_layer']=[];
-                COMMON_GLOBAL['session_service_map_layer'].push(layer);
-        })
+        let geojsonFeature = {
+            "id": `"${id}"`,
+            "type": "Feature",
+            "properties": { "title": title },
+            "geometry": {
+                "type": "LineString",
+                    "coordinates": [
+                        [from_longitude, from_latitude],
+                        [to_longitude, to_latitude]
+                    ]
+            }
+        };
+        //use GeoJSON to draw a line
+        let myStyle = {
+            "color": color,
+            "weight": width,
+            "opacity": opacity
+        };
+        let layer = COMMON_GLOBAL['module_map_library'].geoJSON(geojsonFeature, {style: myStyle}).addTo(COMMON_GLOBAL['session_service_map']);
+        if(!COMMON_GLOBAL['session_service_map_layer'])
+            COMMON_GLOBAL['session_service_map_layer']=[];
+            COMMON_GLOBAL['session_service_map_layer'].push(layer);
     }
 }
 function map_setevent(event, function_event){
     if (checkconnected()) {
         //also creates event:
-        //L.DomEvent.addListener(COMMON_GLOBAL['session_service_map'], 'dblclick', function_event);
+        //COMMON_GLOBAL['module_map_library'].DomEvent.addListener(COMMON_GLOBAL['session_service_map'], 'dblclick', function_event);
         COMMON_GLOBAL['session_service_map'].on(event, function_event);
     }
 }
 async function map_setstyle(mapstyle){
     return await new Promise (function(resolve, reject) {
         if (checkconnected()) {
-            import(COMMON_GLOBAL['module_map_path']).then(function({L}){
-                if(COMMON_GLOBAL['session_service_map_OpenStreetMap_Mapnik'])
-                    COMMON_GLOBAL['session_service_map'].removeLayer(COMMON_GLOBAL['session_service_map_OpenStreetMap_Mapnik']);
-                if (COMMON_GLOBAL['session_service_map_Esri_WorldImagery'])
-                    COMMON_GLOBAL['session_service_map'].removeLayer(COMMON_GLOBAL['session_service_map_Esri_WorldImagery']);
-                switch (mapstyle){
-                    case 'OpenStreetMap_Mapnik':{
-                        COMMON_GLOBAL['session_service_map_OpenStreetMap_Mapnik'] = 
-                            L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                                maxZoom: 19,
-                                attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-                            }).addTo(COMMON_GLOBAL['session_service_map']);
-                        break;
-                    }
-                    case 'Esri.WorldImagery':{
-                        COMMON_GLOBAL['session_service_map_Esri_WorldImagery'] = 
-                            L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-                                attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
-                            }).addTo(COMMON_GLOBAL['session_service_map']);
-                        break;
-                    }
+            if(COMMON_GLOBAL['session_service_map_OpenStreetMap_Mapnik'])
+                COMMON_GLOBAL['session_service_map'].removeLayer(COMMON_GLOBAL['session_service_map_OpenStreetMap_Mapnik']);
+            if (COMMON_GLOBAL['session_service_map_Esri_WorldImagery'])
+                COMMON_GLOBAL['session_service_map'].removeLayer(COMMON_GLOBAL['session_service_map_Esri_WorldImagery']);
+            switch (mapstyle){
+                case 'OpenStreetMap_Mapnik':{
+                    COMMON_GLOBAL['session_service_map_OpenStreetMap_Mapnik'] = 
+                        COMMON_GLOBAL['module_map_library'].tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                            maxZoom: 19,
+                            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+                        }).addTo(COMMON_GLOBAL['session_service_map']);
+                    break;
                 }
-                resolve();
-            })
+                case 'Esri.WorldImagery':{
+                    COMMON_GLOBAL['session_service_map_Esri_WorldImagery'] = 
+                        COMMON_GLOBAL['module_map_library'].tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+                            attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+                        }).addTo(COMMON_GLOBAL['session_service_map']);
+                    break;
+                }
+            }
+            resolve();
         }  
         else
             resolve();
@@ -1810,45 +1809,43 @@ function map_update_popup(title) {
 async function map_update(longitude, latitude, zoom, text_place, timezone_text = null, marker_id, to_method) {
     return new Promise(function (resolve){
         if (checkconnected()) {
-            import(COMMON_GLOBAL['module_map_path']).then(function({L}){
-                function map_update_gps(to_method, zoomvalue, longitude, latitude){
-                    switch (to_method){
-                        case 0:{
-                            if (zoomvalue == '')
-                                COMMON_GLOBAL['session_service_map'].setView(new L.LatLng(latitude, longitude));
-                            else
-                                COMMON_GLOBAL['session_service_map'].setView(new L.LatLng(latitude, longitude), zoomvalue);
-                            break;
-                        }
-                        case 1:{
-                            COMMON_GLOBAL['session_service_map'].flyTo([latitude, longitude], zoomvalue)
-                            break;
-                        }
-                        //also have COMMON_GLOBAL['session_service_map'].panTo(new L.LatLng({lng: longitude, lat: latitude}));
+            function map_update_gps(to_method, zoomvalue, longitude, latitude){
+                switch (to_method){
+                    case 0:{
+                        if (zoomvalue == '')
+                            COMMON_GLOBAL['session_service_map'].setView(new COMMON_GLOBAL['module_map_library'].LatLng(latitude, longitude));
+                        else
+                            COMMON_GLOBAL['session_service_map'].setView(new COMMON_GLOBAL['module_map_library'].LatLng(latitude, longitude), zoomvalue);
+                        break;
                     }
+                    case 1:{
+                        COMMON_GLOBAL['session_service_map'].flyTo([latitude, longitude], zoomvalue)
+                        break;
+                    }
+                    //also have COMMON_GLOBAL['session_service_map'].panTo(new COMMON_GLOBAL['module_map_library'].LatLng({lng: longitude, lat: latitude}));
                 }
-                function map_update_text(timezone_text){
-                    let popuptext = `<div id="common_leaflet_popup_title">${text_place}</div>
-                                     <div id="common_leaflet_popup_sub_title">${ICONS['regional_timezone'] + ICONS['gps_position']}</div>
-                                     <div id="common_leaflet_popup_sub_title_timezone">${timezone_text}</div>`;
-                    let popup = L.popup({ offset: [0, COMMON_GLOBAL['service_map_popup_offset']], closeOnClick: false })
-                                .setLatLng([latitude, longitude])
-                                .setContent(popuptext)
-                                .openOn(COMMON_GLOBAL['session_service_map']);
-                    let marker = L.marker([latitude, longitude]).addTo(COMMON_GLOBAL['session_service_map']);
-                    //setting id so apps can customize if necessary
-                    marker._icon.id = marker_id;
-                    resolve(timezone_text);
-                }
-                map_update_gps(to_method, zoom, longitude, latitude);
-                if (timezone_text == null)
-                    tzlookup(latitude, longitude).then(function(tzlookup_text){
-                        map_update_text(tzlookup_text);
-                    })
-                else{
-                    map_update_text(timezone_text);
-                }        
-            })
+            }
+            function map_update_text(timezone_text){
+                let popuptext = `<div id="common_leaflet_popup_title">${text_place}</div>
+                                 <div id="common_leaflet_popup_sub_title">${ICONS['regional_timezone'] + ICONS['gps_position']}</div>
+                                 <div id="common_leaflet_popup_sub_title_timezone">${timezone_text}</div>`;
+                let popup = COMMON_GLOBAL['module_map_library'].popup({ offset: [0, COMMON_GLOBAL['service_map_popup_offset']], closeOnClick: false })
+                            .setLatLng([latitude, longitude])
+                            .setContent(popuptext)
+                            .openOn(COMMON_GLOBAL['session_service_map']);
+                let marker = COMMON_GLOBAL['module_map_library'].marker([latitude, longitude]).addTo(COMMON_GLOBAL['session_service_map']);
+                //setting id so apps can customize if necessary
+                marker._icon.id = marker_id;
+                resolve(timezone_text);
+            }
+            map_update_gps(to_method, zoom, longitude, latitude);
+            if (timezone_text == null)
+                tzlookup(latitude, longitude).then(function(tzlookup_text){
+                    map_update_text(tzlookup_text);
+                })
+            else{
+                map_update_text(timezone_text);
+            }
         }
     })
 }
