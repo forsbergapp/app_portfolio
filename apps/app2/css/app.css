@@ -237,7 +237,7 @@
 #settings .setting_horizontal_row{
 	width:100%;
 	max-height: 30px;
-	display: inline-table;
+	display: block;
 }
 #settings .setting_horizontal_col{
 	display: inline-block;
@@ -270,6 +270,7 @@
 /* SETTINGS DESIGN*/
 #settings #tab3 .setting_horizontal_row:nth-child(1){
 	direction:ltr;
+	min-height:	230px;
 }
 #settings #tab3 .setting_horizontal_row:first-child .setting_horizontal_col:nth-child(1),
 #settings #tab3 .setting_horizontal_row:first-child .setting_horizontal_col:nth-child(2),
@@ -304,7 +305,7 @@
 		height: 136px;
 		cursor: pointer;
 }
-.slide div:first-child{
+.slide > div:first-child{
 	display: none;
 }
 .slider_active_day, 
@@ -329,14 +330,69 @@
 	height: 40px !important;
 	margin-top: -15px;
 }
-#setting_themes_day_slider #timetable_day {
-	zoom: 0.13;
+/*theme live thumbnail fixes*/
+/*Browsers that support zoom*/
+@supports (zoom: 0.125) {
+	#setting_themes_day_slider #timetable_day {
+		zoom: 0.125;
+	}
+	#setting_themes_day_slider #timetable_footer{
+		margin-top: 505px;
+		position:static;
+	}
+	#setting_themes_month_slider #timetable_month {
+		zoom: 0.125;
+	}
+	#setting_themes_month_slider #timetable_footer{
+		position:static;
+	}
+	#setting_themes_year_slider #timetable_year {
+		zoom: 0.125;
+	}	
+	#setting_themes_year_slider .timetable_month_class #timetable_month_data .timetable_month_data_row .timetable_month_data_col {
+		border-bottom: unset;
+	}
+	#setting_themes_year_slider #timetable_year #timetable_year_timetables_footer.three_columntitles{
+		margin-top:unset;
+	}
+	#setting_themes_year_slider #timetable_year #timetable_year_timetables_footer.three_columntitles ~ #timetable_footer{
+		margin-top:35px;
+	}
+	#setting_themes_year_slider #timetable_footer{
+		margin-top: 25px;
+		position:static;
+	}
 }
-#setting_themes_month_slider #timetable_month {
-	zoom: 0.13;
-}
-#setting_themes_year_slider #timetable_year {
-	zoom: 0.13;
+/*Firefox and other browsers that does not support zoom*/
+@supports not (zoom: 0.13) {
+	#setting_themes_day_slider #timetable_day {
+		transform: scale(0.13) translate(-334%,-334%);
+		width: 734px;
+	}
+	#setting_themes_day_slider #timetable_footer{
+		bottom: -908px;
+	}
+	#setting_themes_month_slider #timetable_month {
+		transform: scale(0.126) translate(-347%,-347%);
+		width: 765px;
+	}
+	#setting_themes_month_slider #timetable_footer{
+		bottom: -160px;
+	}
+	#setting_themes_year_slider #timetable_year {
+		transform: scale(0.13) translate(-334%,-334%);
+		width: 734px;
+	}
+	#setting_themes_year_slider #timetable_year #timetable_year_timetables.two_columntitles {
+		margin-top: -40px;
+		transform: scale(0.9);
+	}
+	#setting_themes_year_slider #timetable_year #timetable_year_timetables_footer.two_columntitles {
+		margin-top: -40px;
+	}
+	#setting_themes_year_slider #timetable_footer{
+		bottom: -908px;
+	}
 }
 /*SETTINGS IMAGE*/
 #settings #tab4 .setting_horizontal_row .setting_horizontal_col:nth-child(1),

@@ -480,7 +480,7 @@
 }
 /*YEAR theme specific month fontsize and lineheight fixes*/
 #timetable_year .timetable_year_month.theme_month_20004 #timetable_month_data {
-	line-height: 0.75em !important;
+	line-height: 0.65em !important;
 }
 
 .theme_day_10001{
