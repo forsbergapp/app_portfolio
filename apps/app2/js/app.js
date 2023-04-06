@@ -228,19 +228,22 @@ function updateViewStat_app(user_setting_id, user_setting_user_account_id) {
 /* MAP                    */
 /*----------------------- */
 async function init_map() {
-    common.map_init(app_common.APP_GLOBAL['gps_map_container'],
-                    common.COMMON_GLOBAL['service_map_style'], 
-                    document.getElementById('setting_input_long').value, 
-                    document.getElementById('setting_input_lat').value, 
-                    app_common.APP_GLOBAL['gps_map_marker_div_gps'],
-                    app_common.APP_GLOBAL['gps_map_zoom']).then(function(){
-                        common.map_setevent('dblclick', function(e) {
-                            document.getElementById('setting_input_lat').value = e.latlng['lat'];
-                            document.getElementById('setting_input_long').value = e.latlng['lng'];
-                            //Update GPS position
-                            update_ui(9);
-                        })
-                    })
+    return await new Promise(function(resolve){
+        common.map_init(app_common.APP_GLOBAL['gps_map_container'],
+        common.COMMON_GLOBAL['service_map_style'], 
+        document.getElementById('setting_input_long').value, 
+        document.getElementById('setting_input_lat').value, 
+        app_common.APP_GLOBAL['gps_map_marker_div_gps'],
+        app_common.APP_GLOBAL['gps_map_zoom']).then(function(){
+            common.map_setevent('dblclick', function(e) {
+                document.getElementById('setting_input_lat').value = e.latlng['lat'];
+                document.getElementById('setting_input_long').value = e.latlng['lng'];
+                //Update GPS position
+                update_ui(9);
+            })
+            resolve();
+        })
+    })
 }
 
 function map_show_qibbla() {
@@ -2618,8 +2621,6 @@ function init_app() {
         document.getElementById('setting_select_popular_place').selectedIndex = 0;
         document.getElementById('setting_input_lat').value = common.COMMON_GLOBAL['client_latitude'];
         document.getElementById('setting_input_long').value = common.COMMON_GLOBAL['client_longitude'];
-        //init map thirdparty module
-        init_map();
         //load themes in Design tab
         load_themes();
         //set papersize
@@ -2638,41 +2639,44 @@ function init_app() {
         setInterval(showreporttime, 1000);
         //show dialogue about using mobile and scan QR code after 5 seconds
         setTimeout(function(){show_dialogue('SCAN')}, 5000);
-        //Start of app:
-        //1.set_prayer_method
-        //2.set default settings
-        //3.translate ui
-        //4.display default timetable settings
-        //5.show profile if user in url
-        //6.user provider login
-        //7.service worker
-        app2_report.set_prayer_method(true).then(function(){
-            set_default_settings().then(function(){
-                settings_translate(true).then(function(){
-                    settings_translate(false).then(function(){
-                        async function show_start(){
-                            //show default startup
-                            toolbar_button(app_common.APP_GLOBAL['app_default_startup_page']);
-                            let user = window.location.pathname.substring(1);
-                            if (user !='') {
-                                //show profile for user entered in url
-                                document.getElementById('common_dialogue_profile').style.visibility = "visible";
-                                profile_show_app(null, user);
+        //init map thirdparty module
+        init_map().then(function(){
+            //Start of app:
+            //1.set_prayer_method
+            //2.set default settings
+            //3.translate ui
+            //4.display default timetable settings
+            //5.show profile if user in url
+            //6.user provider login
+            //7.service worker
+            app2_report.set_prayer_method(true).then(function(){
+                set_default_settings().then(function(){
+                    settings_translate(true).then(function(){
+                        settings_translate(false).then(function(){
+                            async function show_start(){
+                                //show default startup
+                                toolbar_button(app_common.APP_GLOBAL['app_default_startup_page']);
+                                let user = window.location.pathname.substring(1);
+                                if (user !='') {
+                                    //show profile for user entered in url
+                                    document.getElementById('common_dialogue_profile').style.visibility = "visible";
+                                    profile_show_app(null, user);
+                                }
                             }
-                        }
-                        show_start().then(function(){
-                            dialogue_loading(0);
-                            common.Providers_init(function() { ProviderSignIn_app(this); }).then(function(){
-                                serviceworker();
-                                common_translate_ui_app(common.COMMON_GLOBAL['user_locale'], (err, result)=>{
-                                    resolve();
+                            show_start().then(function(){
+                                dialogue_loading(0);
+                                common.Providers_init(function() { ProviderSignIn_app(this); }).then(function(){
+                                    serviceworker();
+                                    common_translate_ui_app(common.COMMON_GLOBAL['user_locale'], (err, result)=>{
+                                        resolve();
+                                    });
                                 });
-                            });
-                        })
+                            })
+                        });
                     });
                 });
-            });
-        })
+            })
+        });
     })    
 }
 function init(parameters) {
