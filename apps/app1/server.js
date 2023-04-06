@@ -8,14 +8,24 @@ app.get("/info/:info",function (req, res, next) {
     import(`file://${process.cwd()}/apps/index.js`).then(function({ check_app_subdomain}){
       if (check_app_subdomain(APP1_ID, req.headers.host) ||
         req.headers.host.substring(0,req.headers.host.indexOf('.'))=='www'){
-            if (typeof req.query.lang_code !='undefined'){
-              req.query.lang_code = 'en';
-            }
-            import(`file://${process.cwd()}/apps/index.js`).then(function({ getInfo }){
+          switch (req.params.info){
+            case 'about':
+            case 'disclaimer':
+            case 'privacy_policy':
+            case 'terms':{
+              if (typeof req.query.lang_code !='undefined'){
+                req.query.lang_code = 'en';
+              }
               getInfo(APP1_ID, req.params.info, req.query.lang_code, (err, info_result)=>{
                 res.send(info_result);
               })
-            })
+              break;
+            }
+            default:{
+              res.send(null);
+              break;
+            }
+          }
       }
       else
           next();
