@@ -603,12 +603,11 @@ async function common_translate_ui(lang_code, object = null, callBack){
                     json = JSON.parse(result);
                     let html='';
                     let select_locale = document.getElementById('common_user_locale_select');
-                    let current_locale = select_locale.value;
                     for (let i = 0; i < json.locales.length; i++){
                         html += `<option id="${i}" value="${json.locales[i].locale}">${json.locales[i].text}</option>`;
                     }
                     select_locale.innerHTML = html;
-                    select_locale.value = current_locale;
+                    select_locale.value = lang_code;
                 }
                 //translate regional settings
                 json = '';
