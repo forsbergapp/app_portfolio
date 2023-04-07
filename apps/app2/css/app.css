@@ -103,6 +103,7 @@
 /*Dialogue loading */
 #dialogue_loading{
 	text-align:center;
+	background-color: inherit;
 }
 
 /*Dialogue Info */

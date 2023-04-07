@@ -2,10 +2,12 @@
 <title></title>
 <link rel='stylesheet' type='text/css' href='/app2/css/app_report.css' />
 <script type='text/javascript' type='module' >
-        document.addEventListener("DOMContentLoaded", (event) =>{
-                import('/app2/js/app_report.js').then(function(report){
-                        window.report = report;
-                        report.init(<ITEM_COMMON_PARAMETERS/>);
-                })
-        });
+        import('/app2/js/app_report.js').then(function(report){
+                window.report = report;
+                report.init(<ITEM_COMMON_PARAMETERS/>);
+        })
+        //enable fonts after report init
+        document.querySelectorAll('.css_fonts').forEach(link => {
+                link.rel ="stylesheet";
+        })
 </script>
