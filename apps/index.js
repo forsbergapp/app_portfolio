@@ -430,50 +430,41 @@ function check_app_subdomain(app_id, host){
 }
 function getUserPreferences(app_id){
     return new Promise(function (resolve, reject){
-        //ES2020 import and ES2015 Promise.all and ES6 template literals
-        Promise.all([
-            import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/language/locale/locale.service.js`),
-            import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/setting/setting.service.js`)
-        ]).then(function([{getLocales},{getSettings}]){
+        import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/setting/setting.service.js`).then(function({getSettings}){
             let default_lang = 'en';
-            getLocales(app_id, default_lang, (err, locales) => {
-                if (err)
-                    resolve(err)
-                else{
-                    let user_locales ='';
-                    locales.forEach( (locale,i) => {
-                        user_locales += `<option id=${i} value=${locale.locale}>${locale.text}</option>`;
-                    })
-                    getSettings(app_id, default_lang, null, (err, settings) => {
-                        let option;
-                        let user_timezones;
-                        let user_directions;
-                        let user_arabic_scripts;
-                        for (let i = 0; i < settings.length; i++) {
-                            option = `<option id=${settings[i].id} value='${settings[i].data}'>${settings[i].text}</option>`;
-                            switch (settings[i].setting_type_name){
-                                case 'TIMEZONE':{
-                                    user_timezones += option;
-                                    break;
-                                }
-                                case 'DIRECTION':{
-                                    user_directions += option;
-                                    break;
-                                }
-                                case 'ARABIC_SCRIPT':{
-                                    user_arabic_scripts += option;
-                                    break;
-                                }
-                            }
+            //do not fetch locales at startup, locales will be translated and fetched when app starts
+            let user_locales =`<option value='en'>English</option>`;
+            getSettings(app_id, default_lang, null, (err, settings) => {
+                let option;
+                let user_timezones;
+                let user_directions;
+                let user_arabic_scripts;
+                for (let i = 0; i < settings.length; i++) {
+                    option = `<option id=${settings[i].id} value='${settings[i].data}'>${settings[i].text}</option>`;
+                    switch (settings[i].setting_type_name){
+                        //static content
+                        case 'TIMEZONE':{
+                            user_timezones += option;
+                            break;
                         }
-                        resolve({user_locales: user_locales,
-                                    user_timezones: user_timezones,
-                                    user_directions: user_directions,
-                                    user_arabic_scripts: user_arabic_scripts
-                                })
-                    })
+                        //will be translated in app
+                        case 'DIRECTION':{
+                            user_directions += option;
+                            break;
+                        }
+                        //static content
+                        case 'ARABIC_SCRIPT':{
+                            user_arabic_scripts += option;
+                            break;
+                        }
+                    }
                 }
-            })
+                resolve({user_locales: user_locales,
+                            user_timezones: user_timezones,
+                            user_directions: user_directions,
+                            user_arabic_scripts: user_arabic_scripts
+                        })
+            })            
         })
 
         
