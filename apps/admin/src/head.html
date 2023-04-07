@@ -1,10 +1,12 @@
 <script type='text/javascript' type='module' >
-    document.addEventListener("DOMContentLoaded", (event) =>{
-        import('/admin/js/admin.js').then(function(app){
-                window.app = app;
-                app.init(<ITEM_COMMON_PARAMETERS/>);
-        })
-    });
+    import('/admin/js/admin.js').then(function(app){
+            window.app = app;
+            app.init(<ITEM_COMMON_PARAMETERS/>);
+            //enable fonts after app init
+            document.querySelectorAll('.css_fonts').forEach(link => {
+                    link.rel = "stylesheet";
+            })
+    })
 </script>
 <link rel='stylesheet' type='text/css' href='/admin/css/admin.css' />
 <link rel='icon' type='image/png' href='/admin/images/favicon-32x32.png' sizes='32x32'>

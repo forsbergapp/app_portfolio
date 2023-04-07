@@ -7,7 +7,7 @@ function  getAdmin(app_id, gps_lat, gps_long, gps_place) {
             ['APP', process.cwd() + '/apps/admin/src/index.html'],
             ['<AppHead/>', process.cwd() + '/apps/admin/src/head.html'],
             ['<AppCommonHead/>', process.cwd() + '/apps/common/src/head.html'],
-            ['<AppCommonHeadFonts/>', process.cwd() + '/apps/common/src/head_fonts.html'],
+            ['<AppCommonFonts/>', process.cwd() + '/apps/common/src/fonts.html'],
             ['<AppCommonHeadMap/>', process.cwd() + '/apps/common/src/head_map.html'],
             ['<AppCommonProfileSearch/>', process.cwd() + '/apps/common/src/profile_search.html'],
             ['<AppCommonUserAccount/>', process.cwd() + '/apps/common/src/user_account.html'],
