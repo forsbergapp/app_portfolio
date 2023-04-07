@@ -104,8 +104,7 @@ app.get("/app2/manifest.json",function (req, res, next) {
                 if (json[i].parameter_name=='PWA_SCOPE')
                   pwa_scope = json[i].parameter_value;
               }
-              return res.send(JSON.stringify(JSON.parse(
-                                  `{
+              return res.send(    `{
                                       "short_name": "${pwa_short_name}",
                                       "name": "${pwa_name}",
                                       "description": "${pwa_description}",
@@ -127,8 +126,7 @@ app.get("/app2/manifest.json",function (req, res, next) {
                                       }
                                       ],
                                       "scope": "${pwa_scope}"
-                                  }`),null,2)
-                              );
+                                  }`);
             } 
           })
         })
