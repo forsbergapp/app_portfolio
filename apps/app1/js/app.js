@@ -303,7 +303,7 @@ async function init_app(){
     document.getElementById('info_datamodel_img').src=APP_GLOBAL['img_datamodel_img_small'];
     document.getElementById('title1').innerHTML = 'App Portfolio Diagram';
     document.getElementById('title2').innerHTML = 'App Portfolio Data model';
-    document.getElementById('info_message').innerHTML = common.ICONS['app_close'];
+    document.getElementById('info_message').innerHTML = common.ICONS['app_home'];
     document.getElementById('contact_text').innerHTML = 'Contact'    
     document.getElementById('copyright').innerHTML = APP_GLOBAL['app_copyright'];
     document.getElementById('app_email').href='mailto:' + APP_GLOBAL['app_email'];
@@ -363,7 +363,7 @@ function init(parameters){
             for (let i = 0; i < global_app_parameters.length; i++) {
                 if (global_app_parameters[i].parameter_name=='APP_COPYRIGHT')
                     APP_GLOBAL['app_copyright'] =global_app_parameters[i].parameter_value;
-                if (global_app_parameters[i].parameter_name=='APP_EMAIL') //0
+                if (global_app_parameters[i].parameter_name=='APP_EMAIL')
                     APP_GLOBAL['app_email'] = global_app_parameters[i].parameter_value;
                 if (global_app_parameters[i].parameter_name=='INFO_SOCIAL_LINK1_URL')
                     APP_GLOBAL['info_social_link1_url'] = global_app_parameters[i].parameter_value;
@@ -434,6 +434,12 @@ function init(parameters){
                 }
                 show_start().then(function(){
                     common.Providers_init(function() { ProviderSignIn_app(this); });
+                    //use transition from now and not when starting app
+                    document.querySelectorAll('.dialogue_flip').forEach(dialogue =>{
+                        dialogue.style.transition = 'all 1s';
+                    })
+                    //show app themes from now to avoid startup css render issues
+                    document.querySelector('#app_themes').style.display = 'block';
                 })
             })
         }
