@@ -60,7 +60,7 @@ http://praytimes.org/calculation
 //----------------------- PrayTimes Class ------------------------
 
 
-function PrayTimes(method) {
+function PrayTimes (method) {
 
 
 	//------------------------ Constants --------------------------
@@ -540,7 +540,6 @@ function PrayTimes(method) {
 }}
 
 
-
 //---------------------- Degree-Based Math Class -----------------------
 
 
@@ -572,7 +571,10 @@ var DMath = {
 
 //---------------------- Init Object -----------------------
 
-
-var prayTimes = new PrayTimes();
-
-
+/* START REMOVE CODE APP PORTFOLIO*/
+//var prayTimes = new PrayTimes();
+/* END REMOVE CODE APP PORTFOLIO*/
+/* START ADD CODE APP PORTFOLIO*/
+let prayTimes = new PrayTimes();
+export{prayTimes};
+/* END ADD CODE APP PORTFOLIO*/
