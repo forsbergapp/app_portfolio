@@ -71,6 +71,8 @@ let COMMON_GLOBAL = {
     "image_file_allowed_type1":"",
     "image_file_allowed_type2":"",
     "image_file_allowed_type3":"",
+    "image_file_allowed_type4":"",
+    "image_file_allowed_type5":"",
     "image_file_mime_type":"",
     "image_file_max_size":"",
     "image_avatar_width":"",
@@ -790,7 +792,9 @@ function show_image(item_img, item_input, image_width, image_height) {
 
     const allowedExtensions = [COMMON_GLOBAL['image_file_allowed_type1'],
                                COMMON_GLOBAL['image_file_allowed_type2'],
-                               COMMON_GLOBAL['image_file_allowed_type3']
+                               COMMON_GLOBAL['image_file_allowed_type3'],
+                               COMMON_GLOBAL['image_file_allowed_type4'],
+                               COMMON_GLOBAL['image_file_allowed_type5']
                               ];
     const { name: fileName, size: fileSize } = file;
     const fileExtension = fileName.split(".").pop();
@@ -3583,6 +3587,8 @@ function set_common_parameters(app_id, parameter_name, parameter_value){
             case 'IMAGE_FILE_ALLOWED_TYPE1'             :{COMMON_GLOBAL['image_file_allowed_type1'] = parameter_value;break;}
             case 'IMAGE_FILE_ALLOWED_TYPE2'             :{COMMON_GLOBAL['image_file_allowed_type2'] = parameter_value;break;}
             case 'IMAGE_FILE_ALLOWED_TYPE3'             :{COMMON_GLOBAL['image_file_allowed_type3'] = parameter_value;break;}
+            case 'IMAGE_FILE_ALLOWED_TYPE4'             :{COMMON_GLOBAL['image_file_allowed_type4'] = parameter_value;break;}
+            case 'IMAGE_FILE_ALLOWED_TYPE5'             :{COMMON_GLOBAL['image_file_allowed_type5'] = parameter_value;break;}
             case 'IMAGE_FILE_MIME_TYPE'                 :{COMMON_GLOBAL['image_file_mime_type'] = parameter_value;break;}
             case 'IMAGE_FILE_MAX_SIZE'                  :{COMMON_GLOBAL['image_file_max_size'] = parameter_value;break;}
             case 'IMAGE_AVATAR_WIDTH'                   :{COMMON_GLOBAL['image_avatar_width'] = parameter_value;break;}
