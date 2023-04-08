@@ -21,7 +21,7 @@
 	Secure REST API with authentication middleware, common ANSI SQL with minium differences for all databases, 
 	centralized common SQL parameter syntax and consolidated data validation in Javascript for all databases.
 	Apps are written using pure CSS, HTML and Javascript and ES6+ Javascript using
-	AJAX method and JSON in both client and server.
+	AJAX method and JSON, ECMAScript modules only in both client and server.
 	Apps third party modules included are Easy QRCode, Fontawesome icons, Leaflet map, sunposition calculations 
 	and regional functions. 
 
@@ -36,39 +36,52 @@
 	country translations. The mayor 30 languages are translated in the apps. Icons are frequently used 
 	to minmize text usage and to provide simplier and better explanation to a global audience.
 
-	Developed in Visual Studio Code in Windows with integration with Github and Jira following Scrum agile project management framework and deployed on Oracle Cloud and Ubuntu server.
+	Developed in Visual Studio Code in Windows with integration with Github and Jira following 
+	Scrum agile project management framework and deployed on Oracle Cloud and Ubuntu server.
 
 # Project description
 	
 	Why 
 	As a certified professional developer, develop a new platform using latest technology and paradigm used today
 	and to show a well structured enterprise level platform implemented with pure technology without unnecessary
-	obscure frameworks.
+	obscure frameworks to be used as reference project and a manual and guidance for future projects.
 	
 	What
-	Create a platform with latest technology supporting any language and regional setting with the most optimized,
+	Create a web app platform with latest technology supporting any language and regional setting with the most optimized,
 	structured and most pragmatic and academic implementation in mind using years of empirical knowledge of full stack
-	development.
+	development using Javascript, HTML, CSS as the most popular technology used for front end web development and using 
+	most popular open source or free SQL databases for back end development. The web app platform should be deployed on
+	the popular Node.js that supports Javascript in the server.
 
 	How
 	Aquiring latest certifications, studying latest technologies trying out pros and cons.
-	Finding common factors in MariaDB, Mysql, PostgreSQL and Oracle databases to implement easier maintainable REST API and datamodel.
-	Consolidate ideas from Angular, Vue, React, jQuery, Oracle Forms, Oracle Reports and Oracle APEX, existing log and monitor solutions, javascript frameworks to optimal structure and implementation.
+	Finding common factors in MariaDB, Mysql, PostgreSQL and Oracle databases to implement easier maintainable REST API 
+	and datamodel.
+	Consolidate ideas from Angular, Vue, React, jQuery, Oracle Forms, Oracle Reports and Oracle APEX, existing log and 
+	monitor solutions, javascript frameworks to optimal structure and implementation.
 
 	Requirements
+
+	- all apps should be web apps with open source written in Javascript, HTML and CSS both for front end and back end 
+	  and using JSON and REST API between front end and back end
+    - all apps should work on mobile, tablet and desktop computers
 	- all apps should be single page application (SPA)
 	- one app should be Progressive Web App (PWA)
 	- any language, all unicode characters in client and in server, any regional setting, double bilanguage calendar
 	  realtime timetable calculations with all known needed settings configurable with different themes using CSS,
 	- social network
-	- Javascript ECMAScript modules and ES6+ javsscript using Express in Node.js.
+	- Javascript ECMAScript modules and ES6+ Javascript using Express in Node.js. Thirdparty javascript modules 
+	  should be converted from CommonJS to ECMScript modules if necessary.
 	- report PDF with QR codes pixel perfect design using css pt font size measurement and full unicode support
-	- forms server with client component servergeneration
+	- forms server with client component server generation
 	- database and file logging
-	- apps are component servergenerated with database data population
+	- apps are component server generated with database data population
 	- microservice arquitecture
 	- MariaDB, MySQL, PostgreSQL and Oracle databases supported deployed on Oracle Cloud with dynamic pool arquitecture
 	  and sql logging stratified per app
+	- database should support transactions with rollback and commit and be able to save images in the database
+	- database ER model and server datamodel using a database data model designer tool that can generate SQL from 
+	  the server data model
 	- dynamic app installation
 	- admin app with monitoring of live connections and logs, statistics, broadcast maintenance, messaging to clients,
 	  database info, OS info, process info and user role management.
@@ -77,11 +90,16 @@
 	- vendor specific coding as for example -webkit-, -moz-, -o-, -ms- and filter: progid:DXImageTransform.Microsoft 
 	  in CSS removed. 
 	- third party modules should be canvas free solutions or configured to not use canvas.
+	- own solution for statistics displayed in graphs
+	- no exposure of server code in client like for example React framework is doing by default
+	- using Scrum agile project management framework to manage project with integrated version control that supports 
+	  code releases of all source code and documentation
 
 	Security requirements
+
 	- Content Security Policy against XSS
 	- SHA256 for REST API and Bcrypt for user security
-	- JSON web tokens with extra validation that checks token is authorized to correct userid, appid and ip.
+	- JSON web tokens with extra validation that checks at least token is authorized to correct userid, appid and ip.
 	- admin app logs in with fetched code from server after accesstoken fetched and code deleted after logout
 	  with no traces in navigator history
 	- no cookies used, means no user info is saved in browser
@@ -94,6 +112,16 @@
 	- access control robots search engine
 	- access control internet
 	- access control geolocation
+
+	Not included in the scope
+	
+	- Production features like
+	  - Load balancer with for example popular NGINX for performance
+	  - Reverse Proxy server with for example popular NGINX for multiple application servers on the same host
+	  - Containers like Kubernetes and Docker
+	  - Continuos Delivery (CD) and Continuos Integration (CI)
+	  - Automatic IP control integration with for example iptables
+    - Social media monitoring
 
 # Providers
 

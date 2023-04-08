@@ -19,11 +19,11 @@
 
 	Runs in Node.js using Express framework.
 
-	Apps are component structured and server-side rendered with database data population.
+	Apps are component structured and server-side rendered with database data population and single page apps.
 	Secure REST API with authentication middleware, common ANSI SQL with minium differences for all databases, 
 	centralized common SQL parameter syntax and consolidated data validation in Javascript for all databases.
 	Apps are written using pure CSS, HTML and Javascript and ES6+ Javascript using
-	AJAX method and JSON in both client and server.
+	AJAX method and JSON, ECMAScript modules only in both client and server.
 	Apps third party modules included are Easy QRCode, Fontawesome icons, Leaflet map, sunposition calculations 
 	and regional functions. 
 
@@ -75,7 +75,8 @@
 	- any language, all unicode characters in client and in server, any regional setting, double bilanguage calendar
 	  realtime timetable calculations with all known needed settings configurable with different themes using CSS,
 	- social network
-	- Javascript ECMAScript modules and ES6+ Javascript using Express in Node.js.
+	- Javascript ECMAScript modules and ES6+ Javascript using Express in Node.js. Thirdparty javascript modules 
+	  should be converted from CommonJS to ECMScript modules if necessary.
 	- report PDF with QR codes pixel perfect design using CSS pt font size measurement and full unicode support
 	- forms server with client component server generation
 	- database and file logging
@@ -118,6 +119,7 @@
 	- access control geolocation
 	
 	Not included in the scope
+	
 	- Production features like
 	  - Load balancer with for example popular NGINX for performance
 	  - Reverse Proxy server with for example popular NGINX for multiple application servers on the same host
