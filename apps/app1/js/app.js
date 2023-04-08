@@ -1,6 +1,6 @@
 const common = await import('/common/js/common.js');
 
-let APP_GLOBAL = {
+const APP_GLOBAL = {
     "app_copyright":"",
     "app_email":"",
     "img_diagram_img":"/app1/images/app_portfolio.webp",
@@ -397,23 +397,22 @@ function init(parameters){
                     APP_GLOBAL['info_link_terms_name'] = global_app_parameters[i].parameter_value;
                 if (global_app_parameters[i].parameter_name=='INFO_LINK_ABOUT_NAME')
                     APP_GLOBAL['info_link_about_name'] = global_app_parameters[i].parameter_value;
-                //QR
-                if (global_app_parameters[i].parameter_name=='QR_WIDTH')
-                    common.COMMON_GLOBAL['qr_width'] = parseInt(global_app_parameters[i].parameter_value);
-                if (global_app_parameters[i].parameter_name=='QR_HEIGHT')
-                    common.COMMON_GLOBAL['qr_height'] = parseInt(global_app_parameters[i].parameter_value);
-                if (global_app_parameters[i].parameter_name=='QR_COLOR_DARK')
-                    common.COMMON_GLOBAL['qr_color_dark'] = global_app_parameters[i].parameter_value;
-                if (global_app_parameters[i].parameter_name=='QR_COLOR_LIGHT')
-                    common.COMMON_GLOBAL['qr_color_light'] = global_app_parameters[i].parameter_value;
-                if (global_app_parameters[i].parameter_name=='QR_LOGO_FILE_PATH')
-                    common.COMMON_GLOBAL['qr_logo_file_path'] = global_app_parameters[i].parameter_value;
-                if (global_app_parameters[i].parameter_name=='QR_LOGO_WIDTH')
-                    common.COMMON_GLOBAL['qr_logo_width'] = parseInt(global_app_parameters[i].parameter_value);
-                if (global_app_parameters[i].parameter_name=='QR_LOGO_HEIGHT')
-                    common.COMMON_GLOBAL['qr_logo_height'] = parseInt(global_app_parameters[i].parameter_value);
-                if (global_app_parameters[i].parameter_name=='QR_BACKGROUND_COLOR')
-                    common.COMMON_GLOBAL['qr_background_color'] = global_app_parameters[i].parameter_value;
+                if (global_app_parameters[i].parameter_name=='MODULE_EASY.QRCODE_WIDTH')
+                    common.COMMON_GLOBAL['module_easy.qrcode_width'] = parseInt(global_app_parameters[i].parameter_value);
+                if (global_app_parameters[i].parameter_name=='MODULE_EASY.QRCODE_HEIGHT')
+                    common.COMMON_GLOBAL['module_easy.qrcode_height'] = parseInt(global_app_parameters[i].parameter_value);
+                if (global_app_parameters[i].parameter_name=='MODULE_EASY.QRCODE_COLOR_DARK')
+                    common.COMMON_GLOBAL['module_easy.qrcode_color_dark'] = global_app_parameters[i].parameter_value;
+                if (global_app_parameters[i].parameter_name=='MODULE_EASY.QRCODE_COLOR_LIGHT')
+                    common.COMMON_GLOBAL['module_easy.qrcode_color_light'] = global_app_parameters[i].parameter_value;
+                if (global_app_parameters[i].parameter_name=='MODULE_EASY.QRCODE_LOGO_FILE_PATH')
+                    common.COMMON_GLOBAL['module_easy.qrcode_logo_file_path'] = global_app_parameters[i].parameter_value;
+                if (global_app_parameters[i].parameter_name=='MODULE_EASY.QRCODE_LOGO_WIDTH')
+                    common.COMMON_GLOBAL['module_easy.qrcode_logo_width'] = parseInt(global_app_parameters[i].parameter_value);
+                if (global_app_parameters[i].parameter_name=='MODULE_EASY.QRCODE_LOGO_HEIGHT')
+                    common.COMMON_GLOBAL['module_easy.qrcode_logo_height'] = parseInt(global_app_parameters[i].parameter_value);
+                if (global_app_parameters[i].parameter_name=='MODULE_EASY.QRCODE_BACKGROUND_COLOR')
+                    common.COMMON_GLOBAL['module_easy.qrcode_background_color'] = global_app_parameters[i].parameter_value;
             }
             init_app().then(function(){
                 document.getElementById('apps').innerHTML = common.APP_SPINNER;

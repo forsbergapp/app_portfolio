@@ -1,11 +1,14 @@
 const common = await import('/common/js/common.js');
 common.COMMON_GLOBAL['rest_admin_at'] = '';
 
-let APP_GLOBAL = {
+const APP_GLOBAL = {
     "page":"",
     "page_last":"",
     "limit":"",
     "previous_row":"",
+    "module_leaflet_map_container":"",
+    "module_leaflet_map_zoom":"",
+    "module_leaflet_map_marker_div_gps":"",
     "service_log_scope_server":"",
     "service_log_scope_service":"",
     "service_log_scope_db":"",
@@ -20,10 +23,7 @@ let APP_GLOBAL = {
     "service_log_url_destination":"",
     "service_log_url_destination_username":"",
     "service_log_url_destination_password":"",
-    "service_log_date_format":"",
-    "gps_map_container":"",
-    "gps_map_zoom":"",
-    "gps_map_marker_div_gps":""
+    "service_log_date_format":""
 }
 
 function admin_login_nav(target){
@@ -228,6 +228,13 @@ function setEvents(system_admin_only=0){
     
 }
 function delete_globals(){
+    APP_GLOBAL['page'] = null;
+    APP_GLOBAL['page_last'] = null;
+    APP_GLOBAL['limit'] = null;
+    APP_GLOBAL['previous_row'] = null;
+    APP_GLOBAL['module_leaflet_map_zoom'] = null;
+    APP_GLOBAL['module_leaflet_map_marker_div_gps'] = null;
+    APP_GLOBAL['module_leaflet_map_container'] = null;
     APP_GLOBAL['service_log_scope_server'] = null;
     APP_GLOBAL['service_log_scope_service'] = null;
     APP_GLOBAL['service_log_scope_db'] = null;
@@ -243,30 +250,21 @@ function delete_globals(){
     APP_GLOBAL['service_log_file_interval'] = null;
     APP_GLOBAL['service_log_file_path_server'] = null;
     APP_GLOBAL['service_log_date_format'] = null;
-    APP_GLOBAL['gps_map_zoom'] = null;
-    APP_GLOBAL['gps_map_marker_div_gps'] = null;
-    APP_GLOBAL['gps_container'] = null;
-    APP_GLOBAL['page'] = null;
-    APP_GLOBAL['page_last'] = null;
-    APP_GLOBAL['limit'] = null;
-    APP_GLOBAL['previous_row'] = null;
 
+    common.COMMON_GLOBAL['client_latitude'] = null;
+    common.COMMON_GLOBAL['client_longitude'] = null;
+    common.COMMON_GLOBAL['client_place'] = null;
     common.COMMON_GLOBAL['rest_app'] = null;
     common.COMMON_GLOBAL['rest_parameter_type'] = null;
     common.COMMON_GLOBAL['rest_user_account'] = null;
+    common.COMMON_GLOBAL['module_leaflet_style'] = null;
+    common.COMMON_GLOBAL['module_leaflet_jumpto'] = null;
+    common.COMMON_GLOBAL['module_leaflet_popup_offset'] = null;
     common.COMMON_GLOBAL['service_geolocation'] = null;
     common.COMMON_GLOBAL['service_geolocation_gps_ip'] = null;
     common.COMMON_GLOBAL['service_geolocation_gps_place'] = null;
     common.COMMON_GLOBAL['service_geolocation_gps_timezone'] = null;
     common.COMMON_GLOBAL['service_log'] = null;
-    common.COMMON_GLOBAL['service_map_style'] = null;
-    common.COMMON_GLOBAL['service_map_jumpto'] = null;
-    common.COMMON_GLOBAL['service_map_popup_offset'] = null;
-    common.COMMON_GLOBAL['client_latitude'] = null;
-    common.COMMON_GLOBAL['client_longitude'] = null;
-    common.COMMON_GLOBAL['client_place'] = null;
-
-    
 }
 
 function admin_logoff_app(app_id, error){
@@ -332,23 +330,22 @@ function init(parameters){
         }
         else{
             for (let i = 0; i < global_app_parameters.length; i++) {
-                //QR
-                if (global_app_parameters[i].parameter_name=='QR_WIDTH')
-                    common.COMMON_GLOBAL['qr_width'] = parseInt(global_app_parameters[i].parameter_value);
-                if (global_app_parameters[i].parameter_name=='QR_HEIGHT')
-                    common.COMMON_GLOBAL['qr_height'] = parseInt(global_app_parameters[i].parameter_value);
-                if (global_app_parameters[i].parameter_name=='QR_COLOR_DARK')
-                    common.COMMON_GLOBAL['qr_color_dark'] = global_app_parameters[i].parameter_value;
-                if (global_app_parameters[i].parameter_name=='QR_COLOR_LIGHT')
-                    common.COMMON_GLOBAL['qr_color_light'] = global_app_parameters[i].parameter_value;
-                if (global_app_parameters[i].parameter_name=='QR_LOGO_FILE_PATH')
-                    common.COMMON_GLOBAL['qr_logo_file_path'] = global_app_parameters[i].parameter_value;
-                if (global_app_parameters[i].parameter_name=='QR_LOGO_WIDTH')
-                    common.COMMON_GLOBAL['qr_logo_width'] = parseInt(global_app_parameters[i].parameter_value);
-                if (global_app_parameters[i].parameter_name=='QR_LOGO_HEIGHT')
-                    common.COMMON_GLOBAL['qr_logo_height'] = parseInt(global_app_parameters[i].parameter_value);
-                if (global_app_parameters[i].parameter_name=='QR_BACKGROUND_COLOR')
-                    common.COMMON_GLOBAL['qr_background_color'] = global_app_parameters[i].parameter_value;
+                if (global_app_parameters[i].parameter_name=='MODULE_EASY.QRCODE_WIDTH')
+                    common.COMMON_GLOBAL['module_easy.qrcode_width'] = parseInt(global_app_parameters[i].parameter_value);
+                if (global_app_parameters[i].parameter_name=='MODULE_EASY.QRCODE_HEIGHT')
+                    common.COMMON_GLOBAL['module_easy.qrcode_height'] = parseInt(global_app_parameters[i].parameter_value);
+                if (global_app_parameters[i].parameter_name=='MODULE_EASY.QRCODE_COLOR_DARK')
+                    common.COMMON_GLOBAL['module_easy.qrcode_color_dark'] = global_app_parameters[i].parameter_value;
+                if (global_app_parameters[i].parameter_name=='MODULE_EASY.QRCODE_COLOR_LIGHT')
+                    common.COMMON_GLOBAL['module_easy.qrcode_color_light'] = global_app_parameters[i].parameter_value;
+                if (global_app_parameters[i].parameter_name=='MODULE_EASY.QRCODE_LOGO_FILE_PATH')
+                    common.COMMON_GLOBAL['module_easy.qrcode_logo_file_path'] = global_app_parameters[i].parameter_value;
+                if (global_app_parameters[i].parameter_name=='MODULE_EASY.QRCODE_LOGO_WIDTH')
+                    common.COMMON_GLOBAL['module_easy.qrcode_logo_width'] = parseInt(global_app_parameters[i].parameter_value);
+                if (global_app_parameters[i].parameter_name=='MODULE_EASY.QRCODE_LOGO_HEIGHT')
+                    common.COMMON_GLOBAL['module_easy.qrcode_logo_height'] = parseInt(global_app_parameters[i].parameter_value);
+                if (global_app_parameters[i].parameter_name=='MODULE_EASY.QRCODE_BACKGROUND_COLOR')
+                    common.COMMON_GLOBAL['module_easy.qrcode_background_color'] = global_app_parameters[i].parameter_value;
             }
         }
         init_app(parameters.system_admin_only);
