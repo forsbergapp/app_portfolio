@@ -1,20 +1,18 @@
-const common = await import('/common/js/common.js');
-const app2_report = await import('/app2/js/app_report.js');
-const app_common = await import('/app2/js/app_common.js');
-//uses module easy.qrcode
 /*  Functions and globals in this order:
-    REPORT
-    MAP
+    REPORT (USES MODULE PRAYTIMES)
     THEME
     UI
     USER
     USER SETTING
     EVENTS
     SERVICE WORKER
+    MODULE LEAFLET
     EXCEPTION
     INIT
- */
-
+*/
+const common = await import('/common/js/common.js');
+const app2_report = await import('/app2/js/app_report.js');
+const app_common = await import('/app2/js/app_common.js');
 /*----------------------- */
 /* REPORT                 */
 /*----------------------- */
@@ -223,61 +221,6 @@ function updateViewStat_app(user_setting_id, user_setting_user_account_id) {
             app2_report.updateReportViewStat(user_setting_id, parseInt(common.COMMON_GLOBAL['user_account_id']));
     }
         
-}
-/*----------------------- */
-/* MAP                    */
-/*----------------------- */
-async function init_map() {
-    return await new Promise(function(resolve){
-        common.map_init(app_common.APP_GLOBAL['gps_map_container'],
-        common.COMMON_GLOBAL['service_map_style'], 
-        document.getElementById('setting_input_long').value, 
-        document.getElementById('setting_input_lat').value, 
-        app_common.APP_GLOBAL['gps_map_marker_div_gps'],
-        app_common.APP_GLOBAL['gps_map_zoom']).then(function(){
-            common.map_setevent('dblclick', function(e) {
-                document.getElementById('setting_input_lat').value = e.latlng['lat'];
-                document.getElementById('setting_input_long').value = e.latlng['lng'];
-                //Update GPS position
-                update_ui(9);
-            })
-            resolve();
-        })
-    })
-}
-
-function map_show_qibbla() {
-    common.map_line_removeall();
-    common.map_line_create('qibbla', 
-                    app_common.APP_GLOBAL['gps_map_qibbla_title'], 
-                    app_common.APP_GLOBAL['gps_map_qibbla_text_size'], 
-                    app_common.APP_GLOBAL['gps_map_qibbla_long'], 
-                    app_common.APP_GLOBAL['gps_map_qibbla_lat'], 
-                    document.getElementById('setting_input_long').value, 
-                    document.getElementById('setting_input_lat').value, 
-                    app_common.APP_GLOBAL['gps_map_qibbla_color'], 
-                    app_common.APP_GLOBAL['gps_map_qibbla_width'], 
-                    app_common.APP_GLOBAL['gps_map_qibbla_opacity']);
-    common.map_line_create('qibbla_old', 
-                    app_common.APP_GLOBAL['gps_map_qibbla_old_title'], 
-                    app_common.APP_GLOBAL['gps_map_qibbla_old_text_size'],
-                    app_common.APP_GLOBAL['gps_map_qibbla_old_long'], 
-                    app_common.APP_GLOBAL['gps_map_qibbla_old_lat'],
-                    document.getElementById('setting_input_long').value, 
-                    document.getElementById('setting_input_lat').value, 
-                    app_common.APP_GLOBAL['gps_map_qibbla_old_color'], 
-                    app_common.APP_GLOBAL['gps_map_qibbla_old_width'], 
-                    app_common.APP_GLOBAL['gps_map_qibbla_old_opacity']);
-    return null;
-}
-
-async function map_update_app(longitude, latitude, zoom, text1, text2, marker_id, to_method) {
-    return new Promise(function (resolve){
-        map_show_qibbla();
-        common.map_update(longitude, latitude, zoom, text1, text2, marker_id, to_method).then(function(timezonetext){
-            resolve(timezonetext);
-        });
-    })
 }
 /*----------------------- */
 /* THEME                  */
@@ -797,11 +740,11 @@ async function update_ui(option, item_id=null) {
                 common.map_setstyle(settings.maptype.value).then(function(){
                     map_update_app(settings.gps_long_input.value,
                         settings.gps_lat_input.value,
-                        app_common.APP_GLOBAL['gps_map_zoom'],
+                        app_common.APP_GLOBAL['gps_module_leaflet_zoom'],
                         document.getElementById('setting_input_place').value,
                         null,
-                        app_common.APP_GLOBAL['gps_map_marker_div_gps'],
-                        common.COMMON_GLOBAL['service_map_jumpto']);
+                        app_common.APP_GLOBAL['gps_module_leaflet_marker_div_gps'],
+                        common.COMMON_GLOBAL['module_leaflet_jumpto']);
                 })
                 break;
             }
@@ -842,11 +785,11 @@ async function update_ui(option, item_id=null) {
                 //Update map
                 map_update_app(settings.gps_long_input.value,
                                settings.gps_lat_input.value,
-                               app_common.APP_GLOBAL['gps_map_zoom_city'],
+                               app_common.APP_GLOBAL['gps_module_leaflet_zoom_city'],
                                document.getElementById('setting_input_place').value,
                                null,
-                               app_common.APP_GLOBAL['gps_map_marker_div_city'],
-                               common.COMMON_GLOBAL['service_map_flyto']).then(function(timezone_selected){
+                               app_common.APP_GLOBAL['gps_module_leaflet_marker_div_city'],
+                               common.COMMON_GLOBAL['module_leaflet_flyto']).then(function(timezone_selected){
                                    settings.timezone_report.value = timezone_selected;
                                });
                 break;
@@ -863,11 +806,11 @@ async function update_ui(option, item_id=null) {
                 //Update map
                 map_update_app(settings.gps_long_input.value,
                                settings.gps_lat_input.value,
-                               app_common.APP_GLOBAL['gps_map_zoom_pp'], //zoom for popular places
+                               app_common.APP_GLOBAL['gps_module_leaflet_zoom_pp'], //zoom for popular places
                                settings.select_place.options[settings.select_place.selectedIndex].text,
                                timezone_selected,
-                               app_common.APP_GLOBAL['gps_map_marker_div_pp'], //marker for popular places
-                               common.COMMON_GLOBAL['service_map_flyto']);
+                               app_common.APP_GLOBAL['gps_module_leaflet_marker_div_pp'], //marker for popular places
+                               common.COMMON_GLOBAL['module_leaflet_flyto']);
                 settings.timezone_report.value = timezone_selected;
 
                 //display empty country
@@ -900,8 +843,8 @@ async function update_ui(option, item_id=null) {
                                    '', //do not change zoom 
                                    gps_place,
                                    null,
-                                   app_common.APP_GLOBAL['gps_map_marker_div_gps'],
-                                   common.COMMON_GLOBAL['service_map_jumpto']).then(function(timezone_text){
+                                   app_common.APP_GLOBAL['gps_module_leaflet_marker_div_gps'],
+                                   common.COMMON_GLOBAL['module_leaflet_jumpto']).then(function(timezone_text){
                                            settings.timezone_report.value = timezone_text;
                                    });
                     //display empty country
@@ -1014,16 +957,16 @@ async function update_ui(option, item_id=null) {
 
                 document.getElementById('setting_method_param_fajr').innerHTML = '';
                 document.getElementById('setting_method_param_isha').innerHTML = '';
-                if (typeof app_common.APP_GLOBAL['prayer_praytimes_methods'][method].params.fajr == 'string')
+                if (typeof app_common.APP_GLOBAL['module_praytimes_methods'][method].params.fajr == 'string')
                     suffix = '';
                 else
                     suffix = '°';
-                document.getElementById('setting_method_param_fajr').innerHTML = 'Fajr:' + app_common.APP_GLOBAL['prayer_praytimes_methods'][method].params.fajr + suffix;
-                if (typeof app_common.APP_GLOBAL['prayer_praytimes_methods'][method].params.isha == 'string')
+                document.getElementById('setting_method_param_fajr').innerHTML = 'Fajr:' + app_common.APP_GLOBAL['module_praytimes_methods'][method].params.fajr + suffix;
+                if (typeof app_common.APP_GLOBAL['module_praytimes_methods'][method].params.isha == 'string')
                     suffix = '';
                 else
                     suffix = '°';
-                document.getElementById('setting_method_param_isha').innerHTML = 'Isha:' + app_common.APP_GLOBAL['prayer_praytimes_methods'][method].params.isha + suffix;
+                document.getElementById('setting_method_param_isha').innerHTML = 'Isha:' + app_common.APP_GLOBAL['module_praytimes_methods'][method].params.isha + suffix;
                 break;
             }
     }
@@ -1452,11 +1395,11 @@ async function user_settings_load() {
         select_user_setting[select_user_setting.selectedIndex].getAttribute('gps_popular_place_id')||null == null) {
         map_update_app(document.getElementById('setting_input_long').value,
                        document.getElementById('setting_input_lat').value,
-                       app_common.APP_GLOBAL['gps_map_zoom'], //default zoom
+                       app_common.APP_GLOBAL['gps_module_leaflet_zoom'], //default zoom
                        document.getElementById('setting_input_place').value,
                        document.getElementById('setting_select_report_timezone').value,
-                       app_common.APP_GLOBAL['gps_map_marker_div_gps'],
-                       common.COMMON_GLOBAL['service_map_jumpto']);
+                       app_common.APP_GLOBAL['gps_module_leaflet_marker_div_gps'],
+                       common.COMMON_GLOBAL['module_leaflet_jumpto']);
     }
     //Design
     set_theme_id('day', select_user_setting[select_user_setting.selectedIndex].getAttribute('design_theme_day_id'));
@@ -1785,7 +1728,7 @@ async function set_default_settings() {
     common.SearchAndSetSelectedIndex(app_common.APP_GLOBAL['regional_default_calendar_hijri_type'], document.getElementById('setting_select_calendar_hijri_type'),1);
 
     //GPS 
-    common.SearchAndSetSelectedIndex(common.COMMON_GLOBAL['service_map_style'], document.getElementById('setting_select_maptype'),1);
+    common.SearchAndSetSelectedIndex(common.COMMON_GLOBAL['module_leaflet_style'], document.getElementById('setting_select_maptype'),1);
     common.map_setstyle(document.getElementById('setting_select_maptype').value);
     common.SearchAndSetSelectedIndex(app_common.APP_GLOBAL['gps_default_country'], document.getElementById('setting_select_country'),0);
     common.SearchAndSetSelectedIndex(app_common.APP_GLOBAL['gps_default_city'], document.getElementById('setting_select_city'),0);
@@ -2418,6 +2361,61 @@ function serviceworker(){
     }
 }
 /*----------------------- */
+/* MODULE LEAFLET         */
+/*----------------------- */
+async function init_map() {
+    return await new Promise(function(resolve){
+        common.map_init(app_common.APP_GLOBAL['gps_module_leaflet_container'],
+        common.COMMON_GLOBAL['module_leaflet_style'], 
+        document.getElementById('setting_input_long').value, 
+        document.getElementById('setting_input_lat').value, 
+        app_common.APP_GLOBAL['gps_module_leaflet_marker_div_gps'],
+        app_common.APP_GLOBAL['gps_module_leaflet_zoom']).then(function(){
+            common.map_setevent('dblclick', function(e) {
+                document.getElementById('setting_input_lat').value = e.latlng['lat'];
+                document.getElementById('setting_input_long').value = e.latlng['lng'];
+                //Update GPS position
+                update_ui(9);
+            })
+            resolve();
+        })
+    })
+}
+
+function map_show_qibbla() {
+    common.map_line_removeall();
+    common.map_line_create('qibbla', 
+                    app_common.APP_GLOBAL['gps_module_leaflet_qibbla_title'], 
+                    app_common.APP_GLOBAL['gps_module_leaflet_qibbla_text_size'], 
+                    app_common.APP_GLOBAL['gps_module_leaflet_qibbla_long'], 
+                    app_common.APP_GLOBAL['gps_module_leaflet_qibbla_lat'], 
+                    document.getElementById('setting_input_long').value, 
+                    document.getElementById('setting_input_lat').value, 
+                    app_common.APP_GLOBAL['gps_module_leaflet_qibbla_color'], 
+                    app_common.APP_GLOBAL['gps_module_leaflet_qibbla_width'], 
+                    app_common.APP_GLOBAL['gps_module_leaflet_qibbla_opacity']);
+    common.map_line_create('qibbla_old', 
+                    app_common.APP_GLOBAL['gps_module_leaflet_qibbla_old_title'], 
+                    app_common.APP_GLOBAL['gps_module_leaflet_qibbla_old_text_size'],
+                    app_common.APP_GLOBAL['gps_module_leaflet_qibbla_old_long'], 
+                    app_common.APP_GLOBAL['gps_module_leaflet_qibbla_old_lat'],
+                    document.getElementById('setting_input_long').value, 
+                    document.getElementById('setting_input_lat').value, 
+                    app_common.APP_GLOBAL['gps_module_leaflet_qibbla_old_color'], 
+                    app_common.APP_GLOBAL['gps_module_leaflet_qibbla_old_width'], 
+                    app_common.APP_GLOBAL['gps_module_leaflet_qibbla_old_opacity']);
+    return null;
+}
+
+async function map_update_app(longitude, latitude, zoom, text1, text2, marker_id, to_method) {
+    return new Promise(function (resolve){
+        map_show_qibbla();
+        common.map_update(longitude, latitude, zoom, text1, text2, marker_id, to_method).then(function(timezonetext){
+            resolve(timezonetext);
+        });
+    })
+}
+/*----------------------- */
 /* EXCEPTION              */
 /*----------------------- */
 function app_exception(){
@@ -2777,48 +2775,48 @@ function init(parameters) {
                     app_common.APP_GLOBAL['gps_default_city'] = global_app_parameters[i].parameter_value;
                 if (global_app_parameters[i].parameter_name=='GPS_DEFAULT_PLACE_ID')
                     app_common.APP_GLOBAL['gps_default_place_id'] = global_app_parameters[i].parameter_value;
-                if (global_app_parameters[i].parameter_name=='GPS_MAP_CONTAINER')
-                    app_common.APP_GLOBAL['gps_map_container'] = global_app_parameters[i].parameter_value;
-                if (global_app_parameters[i].parameter_name=='GPS_MAP_ZOOM')
-                    app_common.APP_GLOBAL['gps_map_zoom'] = parseInt(global_app_parameters[i].parameter_value);
-                if (global_app_parameters[i].parameter_name=='GPS_MAP_ZOOM_CITY')
-                    app_common.APP_GLOBAL['gps_map_zoom_city'] = parseInt(global_app_parameters[i].parameter_value);
-                if (global_app_parameters[i].parameter_name=='GPS_MAP_ZOOM_PP')
-                    app_common.APP_GLOBAL['gps_map_zoom_pp'] = parseInt(global_app_parameters[i].parameter_value);
-                if (global_app_parameters[i].parameter_name=='GPS_MAP_MARKER_DIV_PP')
-                    app_common.APP_GLOBAL['gps_map_marker_div_pp'] = global_app_parameters[i].parameter_value;
-                if (global_app_parameters[i].parameter_name=='GPS_MAP_MARKER_DIV_CITY')
-                    app_common.APP_GLOBAL['gps_map_marker_div_city'] = global_app_parameters[i].parameter_value;
-                if (global_app_parameters[i].parameter_name=='GPS_MAP_MARKER_DIV_GPS')
-                    app_common.APP_GLOBAL['gps_map_marker_div_gps'] = global_app_parameters[i].parameter_value;
-                if (global_app_parameters[i].parameter_name=='GPS_MAP_QIBBLA_TITLE')
-                    app_common.APP_GLOBAL['gps_map_qibbla_title'] = global_app_parameters[i].parameter_value;
-                if (global_app_parameters[i].parameter_name=='GPS_MAP_QIBBLA_TEXT_SIZE')
-                    app_common.APP_GLOBAL['gps_map_qibbla_text_size'] = parseFloat(global_app_parameters[i].parameter_value);
-                if (global_app_parameters[i].parameter_name=='GPS_MAP_QIBBLA_LAT')
-                    app_common.APP_GLOBAL['gps_map_qibbla_lat'] = parseFloat(global_app_parameters[i].parameter_value);
-                if (global_app_parameters[i].parameter_name=='GPS_MAP_QIBBLA_LONG')
-                    app_common.APP_GLOBAL['gps_map_qibbla_long'] = parseFloat(global_app_parameters[i].parameter_value);
-                if (global_app_parameters[i].parameter_name=='GPS_MAP_QIBBLA_COLOR')
-                    app_common.APP_GLOBAL['gps_map_qibbla_color'] = global_app_parameters[i].parameter_value;
-                if (global_app_parameters[i].parameter_name=='GPS_MAP_QIBBLA_WIDTH')
-                    app_common.APP_GLOBAL['gps_map_qibbla_width'] = parseFloat(global_app_parameters[i].parameter_value);
-                if (global_app_parameters[i].parameter_name=='GPS_MAP_QIBBLA_OPACITY')
-                    app_common.APP_GLOBAL['gps_map_qibbla_opacity'] = parseFloat(global_app_parameters[i].parameter_value);
-                if (global_app_parameters[i].parameter_name=='GPS_MAP_QIBBLA_OLD_TITLE')
-                    app_common.APP_GLOBAL['gps_map_qibbla_old_title'] = global_app_parameters[i].parameter_value;
-                if (global_app_parameters[i].parameter_name=='GPS_MAP_QIBBLA_OLD_TEXT_SIZE')
-                    app_common.APP_GLOBAL['gps_map_qibbla_old_text_size'] = parseFloat(global_app_parameters[i].parameter_value);
-                if (global_app_parameters[i].parameter_name=='GPS_MAP_QIBBLA_OLD_LAT')
-                    app_common.APP_GLOBAL['gps_map_qibbla_old_lat'] = parseFloat(global_app_parameters[i].parameter_value);
-                if (global_app_parameters[i].parameter_name=='GPS_MAP_QIBBLA_OLD_LONG')
-                    app_common.APP_GLOBAL['gps_map_qibbla_old_long'] = parseFloat(global_app_parameters[i].parameter_value);
-                if (global_app_parameters[i].parameter_name=='GPS_MAP_QIBBLA_OLD_COLOR')
-                    app_common.APP_GLOBAL['gps_map_qibbla_old_color'] = global_app_parameters[i].parameter_value;
-                if (global_app_parameters[i].parameter_name=='GPS_MAP_QIBBLA_OLD_WIDTH')
-                    app_common.APP_GLOBAL['gps_map_qibbla_old_width'] = parseFloat(global_app_parameters[i].parameter_value);
-                if (global_app_parameters[i].parameter_name=='GPS_MAP_QIBBLA_OLD_OPACITY')
-                    app_common.APP_GLOBAL['gps_map_qibbla_old_opacity'] = parseFloat(global_app_parameters[i].parameter_value);
+                if (global_app_parameters[i].parameter_name=='GPS_MODULE_LEAFLET_CONTAINER')
+                    app_common.APP_GLOBAL['gps_module_leaflet_container'] = global_app_parameters[i].parameter_value;
+                if (global_app_parameters[i].parameter_name=='GPS_MODULE_LEAFLET_ZOOM')
+                    app_common.APP_GLOBAL['gps_module_leaflet_zoom'] = parseInt(global_app_parameters[i].parameter_value);
+                if (global_app_parameters[i].parameter_name=='GPS_MODULE_LEAFLET_ZOOM_CITY')
+                    app_common.APP_GLOBAL['gps_module_leaflet_zoom_city'] = parseInt(global_app_parameters[i].parameter_value);
+                if (global_app_parameters[i].parameter_name=='GPS_MODULE_LEAFLET_ZOOM_PP')
+                    app_common.APP_GLOBAL['gps_module_leaflet_zoom_pp'] = parseInt(global_app_parameters[i].parameter_value);
+                if (global_app_parameters[i].parameter_name=='GPS_MODULE_LEAFLET_MARKER_DIV_PP')
+                    app_common.APP_GLOBAL['gps_module_leaflet_marker_div_pp'] = global_app_parameters[i].parameter_value;
+                if (global_app_parameters[i].parameter_name=='GPS_MODULE_LEAFLET_MARKER_DIV_CITY')
+                    app_common.APP_GLOBAL['gps_module_leaflet_marker_div_city'] = global_app_parameters[i].parameter_value;
+                if (global_app_parameters[i].parameter_name=='GPS_MODULE_LEAFLET_MARKER_DIV_GPS')
+                    app_common.APP_GLOBAL['gps_module_leaflet_marker_div_gps'] = global_app_parameters[i].parameter_value;
+                if (global_app_parameters[i].parameter_name=='GPS_MODULE_LEAFLET_QIBBLA_TITLE')
+                    app_common.APP_GLOBAL['gps_module_leaflet_qibbla_title'] = global_app_parameters[i].parameter_value;
+                if (global_app_parameters[i].parameter_name=='GPS_MODULE_LEAFLET_QIBBLA_TEXT_SIZE')
+                    app_common.APP_GLOBAL['gps_module_leaflet_qibbla_text_size'] = parseFloat(global_app_parameters[i].parameter_value);
+                if (global_app_parameters[i].parameter_name=='GPS_MODULE_LEAFLET_QIBBLA_LAT')
+                    app_common.APP_GLOBAL['gps_module_leaflet_qibbla_lat'] = parseFloat(global_app_parameters[i].parameter_value);
+                if (global_app_parameters[i].parameter_name=='GPS_MODULE_LEAFLET_QIBBLA_LONG')
+                    app_common.APP_GLOBAL['gps_module_leaflet_qibbla_long'] = parseFloat(global_app_parameters[i].parameter_value);
+                if (global_app_parameters[i].parameter_name=='GPS_MODULE_LEAFLET_QIBBLA_COLOR')
+                    app_common.APP_GLOBAL['gps_module_leaflet_qibbla_color'] = global_app_parameters[i].parameter_value;
+                if (global_app_parameters[i].parameter_name=='GPS_MODULE_LEAFLET_QIBBLA_WIDTH')
+                    app_common.APP_GLOBAL['gps_module_leaflet_qibbla_width'] = parseFloat(global_app_parameters[i].parameter_value);
+                if (global_app_parameters[i].parameter_name=='GPS_MODULE_LEAFLET_QIBBLA_OPACITY')
+                    app_common.APP_GLOBAL['gps_module_leaflet_qibbla_opacity'] = parseFloat(global_app_parameters[i].parameter_value);
+                if (global_app_parameters[i].parameter_name=='GPS_MODULE_LEAFLET_QIBBLA_OLD_TITLE')
+                    app_common.APP_GLOBAL['gps_module_leaflet_qibbla_old_title'] = global_app_parameters[i].parameter_value;
+                if (global_app_parameters[i].parameter_name=='GPS_MODULE_LEAFLET_QIBBLA_OLD_TEXT_SIZE')
+                    app_common.APP_GLOBAL['gps_module_leaflet_qibbla_old_text_size'] = parseFloat(global_app_parameters[i].parameter_value);
+                if (global_app_parameters[i].parameter_name=='GPS_MODULE_LEAFLET_QIBBLA_OLD_LAT')
+                    app_common.APP_GLOBAL['gps_module_leaflet_qibbla_old_lat'] = parseFloat(global_app_parameters[i].parameter_value);
+                if (global_app_parameters[i].parameter_name=='GPS_MODULE_LEAFLET_QIBBLA_OLD_LONG')
+                    app_common.APP_GLOBAL['gps_module_leaflet_qibbla_old_long'] = parseFloat(global_app_parameters[i].parameter_value);
+                if (global_app_parameters[i].parameter_name=='GPS_MODULE_LEAFLET_QIBBLA_OLD_COLOR')
+                    app_common.APP_GLOBAL['gps_module_leaflet_qibbla_old_color'] = global_app_parameters[i].parameter_value;
+                if (global_app_parameters[i].parameter_name=='GPS_MODULE_LEAFLET_QIBBLA_OLD_WIDTH')
+                    app_common.APP_GLOBAL['gps_module_leaflet_qibbla_old_width'] = parseFloat(global_app_parameters[i].parameter_value);
+                if (global_app_parameters[i].parameter_name=='GPS_MODULE_LEAFLET_QIBBLA_OLD_OPACITY')
+                    app_common.APP_GLOBAL['gps_module_leaflet_qibbla_old_opacity'] = parseFloat(global_app_parameters[i].parameter_value);
                 if (global_app_parameters[i].parameter_name=='DESIGN_DEFAULT_THEME_DAY')
                     app_common.APP_GLOBAL['design_default_theme_day'] = global_app_parameters[i].parameter_value;
                 if (global_app_parameters[i].parameter_name=='DESIGN_DEFAULT_THEME_MONTH')
@@ -2891,23 +2889,22 @@ function init(parameters) {
                     app_common.APP_GLOBAL['prayer_default_show_midnight'] = (global_app_parameters[i].parameter_value=== 'true');
                 if (global_app_parameters[i].parameter_name=='PRAYER_DEFAULT_SHOW_FAST_START_END')
                     app_common.APP_GLOBAL['prayer_default_show_fast_start_end'] = global_app_parameters[i].parameter_value;
-                //QR
-                if (global_app_parameters[i].parameter_name=='QR_WIDTH')
-                    common.COMMON_GLOBAL['qr_width'] = parseInt(global_app_parameters[i].parameter_value);
-                if (global_app_parameters[i].parameter_name=='QR_HEIGHT')
-                    common.COMMON_GLOBAL['qr_height'] = parseInt(global_app_parameters[i].parameter_value);
-                if (global_app_parameters[i].parameter_name=='QR_COLOR_DARK')
-                    common.COMMON_GLOBAL['qr_color_dark'] = global_app_parameters[i].parameter_value;
-                if (global_app_parameters[i].parameter_name=='QR_COLOR_LIGHT')
-                    common.COMMON_GLOBAL['qr_color_light'] = global_app_parameters[i].parameter_value;
-                if (global_app_parameters[i].parameter_name=='QR_LOGO_FILE_PATH')
-                    common.COMMON_GLOBAL['qr_logo_file_path'] = global_app_parameters[i].parameter_value;
-                if (global_app_parameters[i].parameter_name=='QR_LOGO_WIDTH')
-                    common.COMMON_GLOBAL['qr_logo_width'] = parseInt(global_app_parameters[i].parameter_value);
-                if (global_app_parameters[i].parameter_name=='QR_LOGO_HEIGHT')
-                    common.COMMON_GLOBAL['qr_logo_height'] = parseInt(global_app_parameters[i].parameter_value);
-                if (global_app_parameters[i].parameter_name=='QR_BACKGROUND_COLOR')
-                    common.COMMON_GLOBAL['qr_background_color'] = global_app_parameters[i].parameter_value;
+                if (global_app_parameters[i].parameter_name=='MODULE_EASY.QRCODE_WIDTH')
+                    common.COMMON_GLOBAL['module_easy.qrcode_width'] = parseInt(global_app_parameters[i].parameter_value);
+                if (global_app_parameters[i].parameter_name=='MODULE_EASY.QRCODE_HEIGHT')
+                    common.COMMON_GLOBAL['module_easy.qrcode_height'] = parseInt(global_app_parameters[i].parameter_value);
+                if (global_app_parameters[i].parameter_name=='MODULE_EASY.QRCODE_COLOR_DARK')
+                    common.COMMON_GLOBAL['module_easy.qrcode_color_dark'] = global_app_parameters[i].parameter_value;
+                if (global_app_parameters[i].parameter_name=='MODULE_EASY.QRCODE_COLOR_LIGHT')
+                    common.COMMON_GLOBAL['module_easy.qrcode_color_light'] = global_app_parameters[i].parameter_value;
+                if (global_app_parameters[i].parameter_name=='MODULE_EASY.QRCODE_LOGO_FILE_PATH')
+                    common.COMMON_GLOBAL['module_easy.qrcode_logo_file_path'] = global_app_parameters[i].parameter_value;
+                if (global_app_parameters[i].parameter_name=='MODULE_EASY.QRCODE_LOGO_WIDTH')
+                    common.COMMON_GLOBAL['module_easy.qrcode_logo_width'] = parseInt(global_app_parameters[i].parameter_value);
+                if (global_app_parameters[i].parameter_name=='MODULE_EASY.QRCODE_LOGO_HEIGHT')
+                    common.COMMON_GLOBAL['module_easy.qrcode_logo_height'] = parseInt(global_app_parameters[i].parameter_value);
+                if (global_app_parameters[i].parameter_name=='MODULE_EASY.QRCODE_BACKGROUND_COLOR')
+                    common.COMMON_GLOBAL['module_easy.qrcode_background_color'] = global_app_parameters[i].parameter_value;
             }
             init_app();   
         }
