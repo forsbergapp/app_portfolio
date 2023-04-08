@@ -1501,7 +1501,7 @@ async function init(parameters) {
 							if (err)
 								resolve();
 							else
-								import('/common/modules/PrayTimes/PrayTimes.js').then(function({prayTimes}){
+								import('/common/modules/PrayTimes/PrayTimes.module.js').then(function({prayTimes}){
 									//set current date for report month
 									app_common.APP_GLOBAL['session_currentDate'] = new Date();
 									app_common.APP_GLOBAL['session_CurrentHijriDate'] = new Array();

@@ -80,7 +80,7 @@ const COMMON_GLOBAL = {
     "user_direction":"",
     "user_arabic_script":"",
     "user_preference_save":"",
-    "module_leaflet_path":"/common/modules/leaflet/leaflet-src.js",
+    "module_leaflet_path":"/common/modules/leaflet/leaflet-src.module.js",
     "module_leaflet_library": "",
     "module_leaflet_flyto":"",
     "module_leaflet_jumpto":"",
@@ -90,7 +90,7 @@ const COMMON_GLOBAL = {
     "module_leaflet_session_map_layer":"",
     "module_leaflet_session_map_OpenStreetMap_Mapnik":"",
     "module_leaflet_session_map_Esri_WorldImagery":"",
-    "module_easy.qrcode_path":"/common/modules/easy.qrcode/easy.qrcode.js",
+    "module_easy.qrcode_path":"/common/modules/easy.qrcode/easy.qrcode.module.js",
     "module_easy.qrcode_width":"",
     "module_easy.qrcode_height":"",
     "module_easy.qrcode_color_dark":"",
@@ -2774,12 +2774,6 @@ async function ProviderSignIn(provider_button, callBack) {
 /* MODULE EASY.QRCODE     */
 /*----------------------- */
 function create_qr(div, url) {
-
-    /*Using modified modules to support ES2020 import() with ES6 object destructuring
-    the small changes documented in the modules
-    <script type='text/javascript' src='/common/modules/easy.qrcode/canvas2svg.js'></script>    
-    <script type='text/javascript' src='/common/modules/easy.qrcode/easy.qrcode.js'></script>
-    */
     import(COMMON_GLOBAL['module_easy.qrcode_path']).then(function({QRCode}){
         let qrcode = new QRCode(document.getElementById(div), {
             text: url,
