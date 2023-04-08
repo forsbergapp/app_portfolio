@@ -1,25 +1,23 @@
-const common = await import('/common/js/common.js');
-const regional = await import('/common/modules/regional/regional.js');
-const app_common = await import('/app2/js/app_common.js');
-//uses module PrayTimes
-
 /*  Functions and globals in this order:
     GLOBALS APP & REPORT
 	COMMON REPORT
 	COMMON APP & REPORT
-	COMMON APP & REPORT TIMETABLE MONTH & YEAR
-	COMMON APP & REPORT TIMETABLE DAY
+	COMMON APP & REPORT TIMETABLE MONTH & YEAR (USES MODULE REGIONAL)
+	COMMON APP & REPORT TIMETABLE DAY (USES MODULE REGIONAL)
 	COMMON APP & REPORT TIMETABLE YEAR
     EXCEPTION REPORT
-    INIT REPORT
+    INIT REPORT (USES MODULE PRAYTIMES)
 
 	APP    = USED IN APP
 	REPORT = USED IN REPORT
 */
+const common = await import('/common/js/common.js');
+const regional = await import('/common/modules/regional/regional.js');
+const app_common = await import('/app2/js/app_common.js');
 /*----------------------- */
 /* GLOBALS APP & REPORT   */
 /*----------------------- */
-let REPORT_GLOBAL = {
+const REPORT_GLOBAL = {
 	"regional_def_calendar_lang":"",
 	"regional_def_locale_ext_prefix":"",
 	"regional_def_locale_ext_number_system":"",
@@ -92,8 +90,6 @@ let REPORT_GLOBAL = {
 						"coltitle_notes": "Notes"
 					}
 }
-
-
 /*----------------------- */
 /* COMMON REPORT		  */
 /*----------------------- */
@@ -352,7 +348,7 @@ async function set_prayer_method(ui){
 	return new Promise(function (resolve, reject){
 		/* praytimes.org override without modifying original code
 			should look like this
-		app_common.APP_GLOBAL['prayer_praytimes_methods'] = {
+		app_common.APP_GLOBAL['module_praytimes_methods'] = {
 			ALGERIAN: {
 				name: 'Algerian Ministry of Religious Affairs and Wakfs',
 				params: { fajr: 18, isha: 17 } },
@@ -435,7 +431,7 @@ async function set_prayer_method(ui){
 			else
 				midnight = '';
 		}
-		app_common.APP_GLOBAL['prayer_praytimes_methods'] = '';
+		app_common.APP_GLOBAL['module_praytimes_methods'] = '';
 		let praytime_methods = '';
 		if (ui==true){
 			//called from app where there is a DOM select
@@ -456,7 +452,7 @@ async function set_prayer_method(ui){
 									}`;
 			}	
 			praytime_methods = `{${praytime_methods}}`;
-			app_common.APP_GLOBAL['prayer_praytimes_methods']=JSON.parse(praytime_methods);
+			app_common.APP_GLOBAL['module_praytimes_methods']=JSON.parse(praytime_methods);
 			resolve();
 		}
 		else{
@@ -483,7 +479,7 @@ async function set_prayer_method(ui){
 											}`;
 					}
 					praytime_methods = `{${praytime_methods}}`;
-					app_common.APP_GLOBAL['prayer_praytimes_methods']=JSON.parse(praytime_methods);
+					app_common.APP_GLOBAL['module_praytimes_methods']=JSON.parse(praytime_methods);
 					resolve();
 				}
 			})
@@ -512,33 +508,33 @@ function is_ramadan_day(year, month, day, timezone, calendartype, calendar_hijri
 function setMethod_praytimes(prayTimes, settings_method, settings_asr, settings_highlat){
 	prayTimes.setMethod(settings_method);
 	//use methods without modifying original code
-	if (app_common.APP_GLOBAL['prayer_praytimes_methods'][settings_method].params.maghrib && 
-		app_common.APP_GLOBAL['prayer_praytimes_methods'][settings_method].params.midnight)
+	if (app_common.APP_GLOBAL['module_praytimes_methods'][settings_method].params.maghrib && 
+		app_common.APP_GLOBAL['module_praytimes_methods'][settings_method].params.midnight)
 		prayTimes.adjust( { asr:      settings_asr,
 							highLats: settings_highlat,
-							fajr:     app_common.APP_GLOBAL['prayer_praytimes_methods'][settings_method].params.fajr,
-							isha:     app_common.APP_GLOBAL['prayer_praytimes_methods'][settings_method].params.isha,
-							maghrib:  app_common.APP_GLOBAL['prayer_praytimes_methods'][settings_method].params.maghrib,
-							midnight: app_common.APP_GLOBAL['prayer_praytimes_methods'][settings_method].params.midnight} );
+							fajr:     app_common.APP_GLOBAL['module_praytimes_methods'][settings_method].params.fajr,
+							isha:     app_common.APP_GLOBAL['module_praytimes_methods'][settings_method].params.isha,
+							maghrib:  app_common.APP_GLOBAL['module_praytimes_methods'][settings_method].params.maghrib,
+							midnight: app_common.APP_GLOBAL['module_praytimes_methods'][settings_method].params.midnight} );
 	else
-		if (app_common.APP_GLOBAL['prayer_praytimes_methods'][settings_method].params.maghrib)
+		if (app_common.APP_GLOBAL['module_praytimes_methods'][settings_method].params.maghrib)
 			prayTimes.adjust( { asr:      settings_asr,
 								highLats: settings_highlat,
-								fajr:     app_common.APP_GLOBAL['prayer_praytimes_methods'][settings_method].params.fajr,
-								isha:     app_common.APP_GLOBAL['prayer_praytimes_methods'][settings_method].params.isha,
-								maghrib:  app_common.APP_GLOBAL['prayer_praytimes_methods'][settings_method].params.maghrib} );
+								fajr:     app_common.APP_GLOBAL['module_praytimes_methods'][settings_method].params.fajr,
+								isha:     app_common.APP_GLOBAL['module_praytimes_methods'][settings_method].params.isha,
+								maghrib:  app_common.APP_GLOBAL['module_praytimes_methods'][settings_method].params.maghrib} );
 		else
-			if (app_common.APP_GLOBAL['prayer_praytimes_methods'][settings_method].params.midnight)
+			if (app_common.APP_GLOBAL['module_praytimes_methods'][settings_method].params.midnight)
 				prayTimes.adjust( { asr:      settings_asr,
 									highLats: settings_highlat,
-									fajr:     app_common.APP_GLOBAL['prayer_praytimes_methods'][settings_method].params.fajr,
-									isha:     app_common.APP_GLOBAL['prayer_praytimes_methods'][settings_method].params.isha,
-									midnight: app_common.APP_GLOBAL['prayer_praytimes_methods'][settings_method].params.midnight} );
+									fajr:     app_common.APP_GLOBAL['module_praytimes_methods'][settings_method].params.fajr,
+									isha:     app_common.APP_GLOBAL['module_praytimes_methods'][settings_method].params.isha,
+									midnight: app_common.APP_GLOBAL['module_praytimes_methods'][settings_method].params.midnight} );
 			else
 				prayTimes.adjust( { asr:      settings_asr,
 									highLats: settings_highlat,
-									fajr:     app_common.APP_GLOBAL['prayer_praytimes_methods'][settings_method].params.fajr,
-									isha:     app_common.APP_GLOBAL['prayer_praytimes_methods'][settings_method].params.isha} );
+									fajr:     app_common.APP_GLOBAL['module_praytimes_methods'][settings_method].params.fajr,
+									isha:     app_common.APP_GLOBAL['module_praytimes_methods'][settings_method].params.isha} );
 }
 //header and footer style
 function getstyle(img_src, align){
@@ -1474,22 +1470,22 @@ async function init(parameters) {
 					if (global_app_parameters[i].parameter_name=='REGIONAL_DEFAULT_CALENDAR_NUMBER_SYSTEM')
 						REPORT_GLOBAL['regional_def_calendar_number_system'] = global_app_parameters[i].parameter_value;
 					//QR
-					if (global_app_parameters[i].parameter_name=='QR_WIDTH')
-						common.COMMON_GLOBAL['qr_width'] = parseInt(global_app_parameters[i].parameter_value);
-					if (global_app_parameters[i].parameter_name=='QR_HEIGHT')
-						common.COMMON_GLOBAL['qr_height'] = parseInt(global_app_parameters[i].parameter_value);
-					if (global_app_parameters[i].parameter_name=='QR_COLOR_DARK')
-						common.COMMON_GLOBAL['qr_color_dark'] = global_app_parameters[i].parameter_value;
-					if (global_app_parameters[i].parameter_name=='QR_COLOR_LIGHT')
-						common.COMMON_GLOBAL['qr_color_light'] = global_app_parameters[i].parameter_value;
-					if (global_app_parameters[i].parameter_name=='QR_LOGO_FILE_PATH')
-						common.COMMON_GLOBAL['qr_logo_file_path'] = global_app_parameters[i].parameter_value;
-					if (global_app_parameters[i].parameter_name=='QR_LOGO_WIDTH')
-						common.COMMON_GLOBAL['qr_logo_width'] = parseInt(global_app_parameters[i].parameter_value);
-					if (global_app_parameters[i].parameter_name=='QR_LOGO_HEIGHT')
-						common.COMMON_GLOBAL['qr_logo_height'] = parseInt(global_app_parameters[i].parameter_value);
-					if (global_app_parameters[i].parameter_name=='QR_BACKGROUND_COLOR')
-						common.COMMON_GLOBAL['qr_background_color'] = global_app_parameters[i].parameter_value;
+					if (global_app_parameters[i].parameter_name=='MODULE_EASY.QRCODE_WIDTH')
+						common.COMMON_GLOBAL['module_easy.qrcode_width'] = parseInt(global_app_parameters[i].parameter_value);
+					if (global_app_parameters[i].parameter_name=='MODULE_EASY.QRCODE_HEIGHT')
+						common.COMMON_GLOBAL['module_easy.qrcode_height'] = parseInt(global_app_parameters[i].parameter_value);
+					if (global_app_parameters[i].parameter_name=='MODULE_EASY.QRCODE_COLOR_DARK')
+						common.COMMON_GLOBAL['module_easy.qrcode_color_dark'] = global_app_parameters[i].parameter_value;
+					if (global_app_parameters[i].parameter_name=='MODULE_EASY.QRCODE_COLOR_LIGHT')
+						common.COMMON_GLOBAL['module_easy.qrcode_color_light'] = global_app_parameters[i].parameter_value;
+					if (global_app_parameters[i].parameter_name=='MODULE_EASY.QRCODE_LOGO_FILE_PATH')
+						common.COMMON_GLOBAL['module_easy.qrcode_logo_file_path'] = global_app_parameters[i].parameter_value;
+					if (global_app_parameters[i].parameter_name=='MODULE_EASY.QRCODE_LOGO_WIDTH')
+						common.COMMON_GLOBAL['module_easy.qrcode_logo_width'] = parseInt(global_app_parameters[i].parameter_value);
+					if (global_app_parameters[i].parameter_name=='MODULE_EASY.QRCODE_LOGO_HEIGHT')
+						common.COMMON_GLOBAL['module_easy.qrcode_logo_height'] = parseInt(global_app_parameters[i].parameter_value);
+					if (global_app_parameters[i].parameter_name=='MODULE_EASY.QRCODE_BACKGROUND_COLOR')
+						common.COMMON_GLOBAL['module_easy.qrcode_background_color'] = global_app_parameters[i].parameter_value;
 				
 				}
 				//report start

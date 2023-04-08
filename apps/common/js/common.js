@@ -3,14 +3,14 @@
     MISC
     MESSAGE & DIALOGUE
     WINDOW INFO
-    BROADCAST
-    GPS
-    MAP
-    COUNTRY & CITIES
-    QR
     PROFILE
     USER
-    USER PROVIDER    
+    USER PROVIDER
+    MODULE EASY.QRCODE
+    MODULE LEAFLET
+    SERVICE BROADCAST
+    SERVICE GEOLOCATION
+    SERVICE WORLDCITIES
     EXCEPTION
     INIT
  */
@@ -19,7 +19,7 @@
 /*----------------------- */
 
 //CONTINUE
-let COMMON_GLOBAL = {
+const COMMON_GLOBAL = {
     "common_app_id":"",
     "app_id":null,
     "app_name":"",
@@ -33,11 +33,9 @@ let COMMON_GLOBAL = {
     "system_admin_only":"",
     "user_identity_provider_id":"",
     "user_account_id":"",
-    "client_ID":"",
     "client_latitude":"",
     "client_longitude":"",
     "client_place":"",
-    "eventsource":"",
     "rest_api_db_path":"",
     "rest_at":"",
     "rest_dt":"",
@@ -77,38 +75,40 @@ let COMMON_GLOBAL = {
     "image_file_max_size":"",
     "image_avatar_width":"",
     "image_avatar_height":"",
+    "user_locale":"",
+    "user_timezone":"",
+    "user_direction":"",
+    "user_arabic_script":"",
+    "user_preference_save":"",
+    "module_leaflet_path":"/common/modules/leaflet/leaflet-src.js",
+    "module_leaflet_library": "",
+    "module_leaflet_flyto":"",
+    "module_leaflet_jumpto":"",
+    "module_leaflet_popup_offset":"",
+    "module_leaflet_style":"",
+    "module_leaflet_session_map":"",
+    "module_leaflet_session_map_layer":"",
+    "module_leaflet_session_map_OpenStreetMap_Mapnik":"",
+    "module_leaflet_session_map_Esri_WorldImagery":"",
+    "module_easy.qrcode_path":"/common/modules/easy.qrcode/easy.qrcode.js",
+    "module_easy.qrcode_width":"",
+    "module_easy.qrcode_height":"",
+    "module_easy.qrcode_color_dark":"",
+    "module_easy.qrcode_color_light":"",
+    "module_easy.qrcode_logo_file_path":"",
+    "module_easy.qrcode_logo_width":"",
+    "module_easy.qrcode_logo_height":"",
+    "module_easy.qrcode_background_color":"",
     "service_auth":"",
+    "service_broadcast_client_ID":"",
+    "service_broadcast_eventsource":"",
     "service_geolocation":"",
     "service_geolocation_gps_timezone":"",
     "service_geolocation_gps_place":"",
     "service_geolocation_gps_ip":"",
     "service_log":"",
     "service_report":"",
-    "service_worldcities":"",
-    "user_locale":"",
-    "user_timezone":"",
-    "user_direction":"",
-    "user_arabic_script":"",
-    "user_preference_save":"",
-    "module_map_path":"/common/modules/leaflet/leaflet-src.js",
-    "module_map_library": "",
-    "service_map_flyto":"",
-    "service_map_jumpto":"",
-    "service_map_popup_offset":"",
-    "service_map_style":"",
-    "session_service_map":"",
-    "session_service_map_layer":"",
-    "session_service_map_OpenStreetMap_Mapnik":"",
-    "session_service_map_Esri_WorldImagery":"",
-    "module_qrcode_path":"/common/modules/easy.qrcode/easy.qrcode.js",
-    "qr_width":"",
-    "qr_height":"",
-    "qr_color_dark":"",
-    "qr_color_light":"",
-    "qr_logo_file_path":"",
-    "qr_logo_width":"",
-    "qr_logo_height":"",
-    "qr_background_color":""
+    "service_worldcities":""
 };
 let icon_string = (hexvalue) => 
     `<div class='common_icon'>${String.fromCharCode(parseInt(hexvalue, 16))}</div>`;
@@ -1450,490 +1450,6 @@ function show_window_info(info, show_toolbar, url, content_type, iframe_content)
     }
 }
 /*----------------------- */
-/* BROADCAST              */
-/*----------------------- */
-function broadcast_init(close_eventsource){
-    //broadcast
-    document.getElementById('common_broadcast_close').innerHTML = ICONS['app_broadcast_close'];
-    document.getElementById('common_broadcast_info_title').innerHTML = ICONS['app_alert'];
-    if (close_eventsource==true){
-        COMMON_GLOBAL['eventSource'].close();
-        connectOnline();
-    }
-    else{
-        connectOnline();
-    }
-}
-function maintenance_countdown(remaining) {
-    if(remaining <= 0)
-        location.reload(true);
-    document.getElementById('common_maintenance_countdown').innerHTML = remaining;
-    setTimeout(function(){ maintenance_countdown(remaining - 1); }, 1000);
-};
-function show_broadcast(broadcast_message){
-    broadcast_message = window.atob(broadcast_message);
-    let broadcast_type = JSON.parse(broadcast_message).broadcast_type;
-    let message = JSON.parse(broadcast_message).broadcast_message;
-    if (broadcast_type=='MAINTENANCE'){
-        if (COMMON_GLOBAL['user_account_id'] !='' && COMMON_GLOBAL['user_account_id'] !=null)
-            eval(`(function (){${COMMON_GLOBAL['exception_app_function']}()}());`);
-        document.getElementById('common_maintenance_message').innerHTML = ICONS['app_maintenance'];
-        show_maintenance(message);
-    }
-    else
-        if (broadcast_type=='INFO' || broadcast_type=='CHAT'){
-            show_broadcast_info(message);
-        }
-}
-function show_broadcast_info(message){
-    let hide_function = function() { document.getElementById('common_broadcast_info').style.visibility='hidden';
-                                     document.getElementById('common_broadcast_close').removeEventListener('click', hide_function);
-                                     document.getElementById('common_broadcast_info_message_item').innerHTML='';
-                                     document.getElementById('common_broadcast_info_message').style.animationName='unset';};
-    document.getElementById('common_broadcast_info_message').style.animationName='common_ticker';
-    document.getElementById('common_broadcast_close').addEventListener('click', hide_function);
-    document.getElementById('common_broadcast_info_message_item').innerHTML = message;
-    document.getElementById('common_broadcast_info').style.visibility='visible';
-}
-function show_maintenance(message, init){
-    let countdown_timer = 60;
-
-    if (init==1){
-        document.getElementById('common_dialogue_maintenance').style.visibility='visible';
-        maintenance_countdown(countdown_timer);
-    }
-    else
-        if (document.getElementById('common_maintenance_countdown').innerHTML=='') {
-            //hide all divs except broadcast and maintenance
-            let divs = document.body.getElementsByTagName('div');
-            for (let i = 0; i < divs.length; i += 1) {
-                if (divs[i].id.indexOf('common_broadcast') !=0 &&
-                    divs[i].id.indexOf('common_dialogue_maintenance') !=0 &&
-                    divs[i].id.indexOf('common_maintenance') !=0)
-                    divs[i].style.visibility ='hidden';
-            }
-            let maintenance_divs = document.getElementById('common_dialogue_maintenance').getElementsByTagName('div');
-            for (let i = 0; i < maintenance_divs.length; i += 1) {
-                maintenance_divs[i].style.visibility ='visible';
-            }
-            document.getElementById('common_dialogue_maintenance').style.visibility='visible';
-            maintenance_countdown(countdown_timer);
-            document.getElementById('common_maintenance_footer').innerHTML = message;
-        }
-        else
-            if (message!='')
-                document.getElementById('common_maintenance_footer').innerHTML = message;
-}
-function reconnect(){
-    setTimeout(connectOnline, 5000);
-}
-function updateOnlineStatus(){
-    let token_type='';
-    let url='';
-    if (COMMON_GLOBAL['system_admin']==1){
-        url =   `/service/broadcast/SystemAdmin/update_connected`+ 
-                `?client_id=${COMMON_GLOBAL['clientId']}`+
-                `&user_account_id=${COMMON_GLOBAL['user_account_id']}` + 
-                `&identity_provider_id=${COMMON_GLOBAL['user_identity_provider_id']}` +
-                `&system_admin=${COMMON_GLOBAL['system_admin']}`
-        token_type=2;
-    }
-    else{
-        url =   `/service/broadcast/update_connected`+ 
-                `?client_id=${COMMON_GLOBAL['clientId']}`+
-                `&user_account_id=${COMMON_GLOBAL['user_account_id']}` + 
-                `&identity_provider_id=${COMMON_GLOBAL['user_identity_provider_id']}` +
-                `&system_admin=${COMMON_GLOBAL['system_admin']}`
-        token_type=0;
-    }
-    common_fetch(url, 'PATCH', token_type, null, null, null, (err, result) =>{
-        null;
-    })
-}
-function connectOnline(updateOnline=false){
-    COMMON_GLOBAL['clientId'] = Date.now();
-    COMMON_GLOBAL['eventSource'] = new EventSource(`/service/broadcast/connect/${COMMON_GLOBAL['clientId']}` +
-                                                `?app_id=${COMMON_GLOBAL['app_id']}` +
-                                                `&user_account_id=${COMMON_GLOBAL['user_account_id']}` +
-                                                `&identity_provider_id=${COMMON_GLOBAL['user_identity_provider_id']}` +
-                                                `&system_admin=${COMMON_GLOBAL['system_admin']}`);
-    COMMON_GLOBAL['eventSource'].onmessage = function (event) {
-        
-            show_broadcast(event.data);
-    }
-    COMMON_GLOBAL['eventSource'].onerror = function (err) {
-        COMMON_GLOBAL['eventSource'].close();
-        reconnect();
-    }
-}
-function checkOnline(div_icon_online, user_account_id){
-    common_fetch(`/service/broadcast/checkconnected/${user_account_id}?`, 
-                 'GET', 0, null, null, null, (err, result) =>{
-        if (JSON.parse(result).online == 1)
-            document.getElementById(div_icon_online).className = 'online';
-        else
-            document.getElementById(div_icon_online).className= 'offline';
-    })
-}
-/*----------------------- */
-/* GPS                    */
-/*----------------------- */
-async function get_place_from_gps(longitude, latitude) {
-    return await new Promise(function (resolve){
-        let url;
-        let tokentype;
-        if (COMMON_GLOBAL['system_admin']==1){
-            url = COMMON_GLOBAL['service_geolocation'] + COMMON_GLOBAL['service_geolocation_gps_place'] + 
-                        '/systemadmin?longitude=' + longitude + '&latitude=' + latitude;
-            tokentype = 2;
-        }
-        else 
-            if (COMMON_GLOBAL['app_id']==COMMON_GLOBAL['common_app_id']){
-                url = COMMON_GLOBAL['service_geolocation'] + COMMON_GLOBAL['service_geolocation_gps_place'] + 
-                        '/admin?app_user_id=' + COMMON_GLOBAL['user_account_id'] +
-                        '&longitude=' + longitude +
-                        '&latitude=' + latitude;
-                tokentype = 1;
-            }
-            else{
-                url = COMMON_GLOBAL['service_geolocation'] + COMMON_GLOBAL['service_geolocation_gps_place'] + 
-                        '?app_user_id=' + COMMON_GLOBAL['user_account_id'] +
-                        '&longitude=' + longitude +
-                        '&latitude=' + latitude;
-                tokentype = 0;
-            }
-        common_fetch(url, 'GET', tokentype, null, null, null, (err, result) =>{
-            if (err)
-                resolve('');
-            else{
-                let json = JSON.parse(result);
-                if (json.geoplugin_place=='' && json.geoplugin_region =='' && json.geoplugin_countryCode =='')
-                    resolve('');
-                else
-                    resolve(json.geoplugin_place + ', ' +
-                            json.geoplugin_region + ', ' +
-                            json.geoplugin_countryCode);
-            }
-        })
-    })
-}
-async function get_gps_from_ip() {
-
-    let url;
-    let tokentype;
-    if (COMMON_GLOBAL['system_admin']==1){
-        url = COMMON_GLOBAL['service_geolocation'] + COMMON_GLOBAL['service_geolocation_gps_ip'] + 
-        '/systemadmin?';
-        tokentype = 2;
-    }
-    else
-        if (COMMON_GLOBAL['app_id']==COMMON_GLOBAL['common_app_id']){
-            url = COMMON_GLOBAL['service_geolocation'] + COMMON_GLOBAL['service_geolocation_gps_ip'] + 
-                '/admin?app_user_id=' +  COMMON_GLOBAL['user_account_id'];
-            tokentype = 1;
-        }
-        else{
-            url = COMMON_GLOBAL['service_geolocation'] + COMMON_GLOBAL['service_geolocation_gps_ip'] + 
-                '?app_user_id=' +  COMMON_GLOBAL['user_account_id'];
-            tokentype = 0;
-        }
-    await common_fetch(url, 'GET', tokentype, null, null, null, (err, result) =>{
-        if (err)
-            null;
-        else{
-            let json = JSON.parse(result);
-            COMMON_GLOBAL['client_latitude']  = json.geoplugin_latitude;
-            COMMON_GLOBAL['client_longitude'] = json.geoplugin_longitude;
-            if (json.geoplugin_city=='' && json.geoplugin_regionName =='' && json.geoplugin_countryName =='')
-                COMMON_GLOBAL['client_place'] = '';
-            else
-                COMMON_GLOBAL['client_place'] = json.geoplugin_city + ', ' +
-                                                       json.geoplugin_regionName + ', ' +
-                                                       json.geoplugin_countryName;
-        }
-    })
-}
-async function tzlookup(latitude, longitude){
-    return new Promise(function (resolve, reject){
-        let url;
-        let tokentype;
-        if (COMMON_GLOBAL['system_admin']==1){
-            url = COMMON_GLOBAL['service_geolocation'] + COMMON_GLOBAL['service_geolocation_gps_timezone'] +
-                  `/systemadmin?latitude=${latitude}&longitude=${longitude}`;
-            tokentype = 2;
-        }
-        else
-            if (COMMON_GLOBAL['app_id']==COMMON_GLOBAL['common_app_id']){
-                url = COMMON_GLOBAL['service_geolocation'] + COMMON_GLOBAL['service_geolocation_gps_timezone'] +
-                    `/admin?latitude=${latitude}&longitude=${longitude}`;
-                tokentype = 1;
-            }
-            else{
-                url = COMMON_GLOBAL['service_geolocation'] + COMMON_GLOBAL['service_geolocation_gps_timezone'] +
-                    `?latitude=${latitude}&longitude=${longitude}`;
-                tokentype = 0;
-            }
-        common_fetch(url, 'GET', tokentype, null, null, null, (err, text_timezone) =>{
-            resolve (text_timezone);
-        })
-    })
-}
-/*----------------------- */
-/* MAP                    */
-/*----------------------- */
-async function map_init(containervalue, stylevalue, longitude, latitude, map_marker_div_gps, zoomvalue) {
-    return await new Promise(function (resolve){
-        if (checkconnected()) {
-            import(COMMON_GLOBAL['module_map_path']).then(function({L}){
-                //save library in variable for optimization
-                COMMON_GLOBAL['module_map_library'] = L;
-                COMMON_GLOBAL['session_service_map'] = '';
-                COMMON_GLOBAL['session_service_map'] = COMMON_GLOBAL['module_map_library'].map(containervalue).setView([latitude, longitude], zoomvalue);
-                map_setstyle(stylevalue).then(function(){
-                    //disable doubleclick in event dblclick since e.preventdefault() does not work
-                    COMMON_GLOBAL['session_service_map'].doubleClickZoom.disable(); 
-        
-                    //add fullscreen button and my location button with eventlisteners
-                    let mapcontrol = document.querySelectorAll(`#${containervalue} .leaflet-control`)
-                    mapcontrol[0].innerHTML += `<a id='common_leaflet_fullscreen_id' href="#" title="Full Screen" role="button" aria-label="Full Screen"></a>`;
-                    document.getElementById('common_leaflet_fullscreen_id').innerHTML= ICONS['map_fullscreen'];
-                    if (COMMON_GLOBAL['client_latitude']!='' && COMMON_GLOBAL['client_longitude']!=''){
-                        mapcontrol[0].innerHTML += `<a id='common_leaflet_my_location_id' href="#" title="My location" role="button" aria-label="My location"></a>`;
-                        document.getElementById('common_leaflet_my_location_id').innerHTML= ICONS['map_my_location'];
-                    }
-                    //add events to the buttons
-                    document.getElementById('common_leaflet_fullscreen_id').addEventListener('click', 
-                                            function() { 
-                                                        if (document.fullscreenElement)
-                                                            document.exitFullscreen();
-                                                        else
-                                                            document.getElementById(containervalue).requestFullscreen();
-                                                        }, 
-                                            false);
-                    if (COMMON_GLOBAL['client_latitude']!='' && COMMON_GLOBAL['client_longitude']!='')
-                        document.getElementById('common_leaflet_my_location_id').addEventListener('click', 
-                                                function() { 
-                                                            map_update(COMMON_GLOBAL['client_longitude'],
-                                                                    COMMON_GLOBAL['client_latitude'],
-                                                                    zoomvalue,
-                                                                    COMMON_GLOBAL['client_place'],
-                                                                    null,
-                                                                    map_marker_div_gps,
-                                                                    COMMON_GLOBAL['service_map_jumpto']);
-                                                            }, 
-                                                false);
-                    resolve();
-                })
-            })
-        }
-        else
-            resolve();
-    })
-    
-}
-async function map_resize() {
-    if (checkconnected()) {
-        //fixes not rendering correct showing map div
-        COMMON_GLOBAL['session_service_map'].invalidateSize();
-    }
-}
-function map_line_removeall(){
-    if(COMMON_GLOBAL['session_service_map_layer'])
-        for (let i=0;i<COMMON_GLOBAL['session_service_map_layer'].length;i++)
-            COMMON_GLOBAL['session_service_map'].removeLayer(COMMON_GLOBAL['session_service_map_layer'][i]);
-            COMMON_GLOBAL['session_service_map_layer']=[];
-}
-function map_line_create(id, title, text_size, from_longitude, from_latitude, to_longitude, to_latitude, color, width, opacity){
-    if (checkconnected()) {
-        let geojsonFeature = {
-            "id": `"${id}"`,
-            "type": "Feature",
-            "properties": { "title": title },
-            "geometry": {
-                "type": "LineString",
-                    "coordinates": [
-                        [from_longitude, from_latitude],
-                        [to_longitude, to_latitude]
-                    ]
-            }
-        };
-        //use GeoJSON to draw a line
-        let myStyle = {
-            "color": color,
-            "weight": width,
-            "opacity": opacity
-        };
-        let layer = COMMON_GLOBAL['module_map_library'].geoJSON(geojsonFeature, {style: myStyle}).addTo(COMMON_GLOBAL['session_service_map']);
-        if(!COMMON_GLOBAL['session_service_map_layer'])
-            COMMON_GLOBAL['session_service_map_layer']=[];
-            COMMON_GLOBAL['session_service_map_layer'].push(layer);
-    }
-}
-function map_setevent(event, function_event){
-    if (checkconnected()) {
-        //also creates event:
-        //COMMON_GLOBAL['module_map_library'].DomEvent.addListener(COMMON_GLOBAL['session_service_map'], 'dblclick', function_event);
-        COMMON_GLOBAL['session_service_map'].on(event, function_event);
-    }
-}
-async function map_setstyle(mapstyle){
-    return await new Promise (function(resolve, reject) {
-        if (checkconnected()) {
-            if(COMMON_GLOBAL['session_service_map_OpenStreetMap_Mapnik'])
-                COMMON_GLOBAL['session_service_map'].removeLayer(COMMON_GLOBAL['session_service_map_OpenStreetMap_Mapnik']);
-            if (COMMON_GLOBAL['session_service_map_Esri_WorldImagery'])
-                COMMON_GLOBAL['session_service_map'].removeLayer(COMMON_GLOBAL['session_service_map_Esri_WorldImagery']);
-            switch (mapstyle){
-                case 'OpenStreetMap_Mapnik':{
-                    COMMON_GLOBAL['session_service_map_OpenStreetMap_Mapnik'] = 
-                        COMMON_GLOBAL['module_map_library'].tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                            maxZoom: 19,
-                            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-                        }).addTo(COMMON_GLOBAL['session_service_map']);
-                    break;
-                }
-                case 'Esri.WorldImagery':{
-                    COMMON_GLOBAL['session_service_map_Esri_WorldImagery'] = 
-                        COMMON_GLOBAL['module_map_library'].tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-                            attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
-                        }).addTo(COMMON_GLOBAL['session_service_map']);
-                    break;
-                }
-            }
-            resolve();
-        }  
-        else
-            resolve();
-    })
-}
-function map_update_popup(title) {
-    document.getElementById('common_leaflet_popup_title').innerHTML = title;
-}
-async function map_update(longitude, latitude, zoom, text_place, timezone_text = null, marker_id, to_method) {
-    return new Promise(function (resolve){
-        if (checkconnected()) {
-            function map_update_gps(to_method, zoomvalue, longitude, latitude){
-                switch (to_method){
-                    case 0:{
-                        if (zoomvalue == '')
-                            COMMON_GLOBAL['session_service_map'].setView(new COMMON_GLOBAL['module_map_library'].LatLng(latitude, longitude));
-                        else
-                            COMMON_GLOBAL['session_service_map'].setView(new COMMON_GLOBAL['module_map_library'].LatLng(latitude, longitude), zoomvalue);
-                        break;
-                    }
-                    case 1:{
-                        COMMON_GLOBAL['session_service_map'].flyTo([latitude, longitude], zoomvalue)
-                        break;
-                    }
-                    //also have COMMON_GLOBAL['session_service_map'].panTo(new COMMON_GLOBAL['module_map_library'].LatLng({lng: longitude, lat: latitude}));
-                }
-            }
-            function map_update_text(timezone_text){
-                let popuptext = `<div id="common_leaflet_popup_title">${text_place}</div>
-                                 <div id="common_leaflet_popup_sub_title">${ICONS['regional_timezone'] + ICONS['gps_position']}</div>
-                                 <div id="common_leaflet_popup_sub_title_timezone">${timezone_text}</div>`;
-                let popup = COMMON_GLOBAL['module_map_library'].popup({ offset: [0, COMMON_GLOBAL['service_map_popup_offset']], closeOnClick: false })
-                            .setLatLng([latitude, longitude])
-                            .setContent(popuptext)
-                            .openOn(COMMON_GLOBAL['session_service_map']);
-                let marker = COMMON_GLOBAL['module_map_library'].marker([latitude, longitude]).addTo(COMMON_GLOBAL['session_service_map']);
-                //setting id so apps can customize if necessary
-                marker._icon.id = marker_id;
-                resolve(timezone_text);
-            }
-            map_update_gps(to_method, zoom, longitude, latitude);
-            if (timezone_text == null)
-                tzlookup(latitude, longitude).then(function(tzlookup_text){
-                    map_update_text(tzlookup_text);
-                })
-            else{
-                map_update_text(timezone_text);
-            }
-        }
-    })
-}
-
-/*----------------------- */
-/* COUNTRY & CITIES       */
-/*----------------------- */
-async function get_cities(countrycode, callBack){
-    await common_fetch(COMMON_GLOBAL['service_worldcities'] + '/' + countrycode +
-                       '?app_user_id=' + COMMON_GLOBAL['user_account_id'], 
-                       'GET', 0, null, null, null, (err, result) =>{
-        if (err)
-            callBack(err, null);
-        else{
-            let json = JSON.parse(result);
-            json.sort(function(a, b) {
-                let x = a.admin_name.toLowerCase() + a.city.toLowerCase();
-                let y = b.admin_name.toLowerCase() + b.city.toLowerCase();
-                if (x < y) {
-                    return -1;
-                }
-                if (x > y) {
-                    return 1;
-                }
-                return 0;
-            });
-
-            let current_admin_name;
-            //fill list with cities
-            let cities='';
-            for (let i = 0; i < json.length; i++) {
-                if (i == 0) {
-                    cities += `<option value='' id='' label='…' selected='selected'>…</option>
-                                <optgroup label='${json[i].admin_name}'>`;
-                    current_admin_name = json[i].admin_name;
-                } else
-                if (json[i].admin_name != current_admin_name) {
-                    cities += `</optgroup>
-                                <optgroup label='${json[i].admin_name}'>`;
-                    current_admin_name = json[i].admin_name;
-                }
-                cities +=
-                `<option 
-                    id=${json[i].id} 
-                    value=${i + 1}
-                    countrycode=${json[i].iso2}
-                    country='${json[i].country}'
-                    admin_name='${json[i].admin_name}'
-                    latitude=${json[i].lat}
-                    longitude=${json[i].lng}  
-                    >${json[i].city}
-                </option>`;
-            }
-            callBack(null, `${cities} </optgroup>`);
-        }
-    })
-}
-/*----------------------- */
-/* QR                     */
-/*----------------------- */
-function create_qr(div, url) {
-
-    /*Using modified modules to support ES2020 import() with ES6 object destructuring
-    the small changes documented in the modules
-    <script type='text/javascript' src='/common/modules/easy.qrcode/canvas2svg.js'></script>    
-    <script type='text/javascript' src='/common/modules/easy.qrcode/easy.qrcode.js'></script>
-    */
-    import(COMMON_GLOBAL['module_qrcode_path']).then(function({QRCode}){
-        let qrcode = new QRCode(document.getElementById(div), {
-            text: url,
-            width: COMMON_GLOBAL['qr_width'],
-            height: COMMON_GLOBAL['qr_height'],
-            colorDark: COMMON_GLOBAL['qr_color_dark'],
-            colorLight: COMMON_GLOBAL['qr_color_light'],
-            logo: COMMON_GLOBAL['qr_logo_file_path'],
-            logoWidth: COMMON_GLOBAL['qr_logo_width'],
-            logoHeight: COMMON_GLOBAL['qr_logo_height'],
-            logoBackgroundColor: COMMON_GLOBAL['qr_background_color'],
-            logoBackgroundTransparent: false,
-            drawer: 'svg'
-        });
-    })
-    
-}
-/*----------------------- */
 /* PROFILE                */
 /*----------------------- */
 async function profile_follow_like(function_name){
@@ -3255,6 +2771,489 @@ async function ProviderSignIn(provider_button, callBack) {
     
 }
 /*----------------------- */
+/* MODULE EASY.QRCODE     */
+/*----------------------- */
+function create_qr(div, url) {
+
+    /*Using modified modules to support ES2020 import() with ES6 object destructuring
+    the small changes documented in the modules
+    <script type='text/javascript' src='/common/modules/easy.qrcode/canvas2svg.js'></script>    
+    <script type='text/javascript' src='/common/modules/easy.qrcode/easy.qrcode.js'></script>
+    */
+    import(COMMON_GLOBAL['module_easy.qrcode_path']).then(function({QRCode}){
+        let qrcode = new QRCode(document.getElementById(div), {
+            text: url,
+            width: COMMON_GLOBAL['module_easy.qrcode_width'],
+            height: COMMON_GLOBAL['module_easy.qrcode_height'],
+            colorDark: COMMON_GLOBAL['module_easy.qrcode_color_dark'],
+            colorLight: COMMON_GLOBAL['module_easy.qrcode_color_light'],
+            logo: COMMON_GLOBAL['module_easy.qrcode_logo_file_path'],
+            logoWidth: COMMON_GLOBAL['module_easy.qrcode_logo_width'],
+            logoHeight: COMMON_GLOBAL['module_easy.qrcode_logo_height'],
+            logoBackgroundColor: COMMON_GLOBAL['module_easy.qrcode_background_color'],
+            logoBackgroundTransparent: false,
+            drawer: 'svg'
+        });
+    })
+    
+}
+/*----------------------- */
+/* MODULE LEAFLET         */
+/*----------------------- */
+async function map_init(containervalue, stylevalue, longitude, latitude, map_marker_div_gps, zoomvalue) {
+    return await new Promise(function (resolve){
+        if (checkconnected()) {
+            import(COMMON_GLOBAL['module_leaflet_path']).then(function({L}){
+                //save library in variable for optimization
+                COMMON_GLOBAL['module_leaflet_library'] = L;
+                COMMON_GLOBAL['module_leaflet_session_map'] = '';
+                COMMON_GLOBAL['module_leaflet_session_map'] = COMMON_GLOBAL['module_leaflet_library'].map(containervalue).setView([latitude, longitude], zoomvalue);
+                map_setstyle(stylevalue).then(function(){
+                    //disable doubleclick in event dblclick since e.preventdefault() does not work
+                    COMMON_GLOBAL['module_leaflet_session_map'].doubleClickZoom.disable(); 
+        
+                    //add fullscreen button and my location button with eventlisteners
+                    let mapcontrol = document.querySelectorAll(`#${containervalue} .leaflet-control`)
+                    mapcontrol[0].innerHTML += `<a id='common_leaflet_fullscreen_id' href="#" title="Full Screen" role="button" aria-label="Full Screen"></a>`;
+                    document.getElementById('common_leaflet_fullscreen_id').innerHTML= ICONS['map_fullscreen'];
+                    if (COMMON_GLOBAL['client_latitude']!='' && COMMON_GLOBAL['client_longitude']!=''){
+                        mapcontrol[0].innerHTML += `<a id='common_leaflet_my_location_id' href="#" title="My location" role="button" aria-label="My location"></a>`;
+                        document.getElementById('common_leaflet_my_location_id').innerHTML= ICONS['map_my_location'];
+                    }
+                    //add events to the buttons
+                    document.getElementById('common_leaflet_fullscreen_id').addEventListener('click', 
+                                            function() { 
+                                                        if (document.fullscreenElement)
+                                                            document.exitFullscreen();
+                                                        else
+                                                            document.getElementById(containervalue).requestFullscreen();
+                                                        }, 
+                                            false);
+                    if (COMMON_GLOBAL['client_latitude']!='' && COMMON_GLOBAL['client_longitude']!='')
+                        document.getElementById('common_leaflet_my_location_id').addEventListener('click', 
+                                                function() { 
+                                                            map_update(COMMON_GLOBAL['client_longitude'],
+                                                                    COMMON_GLOBAL['client_latitude'],
+                                                                    zoomvalue,
+                                                                    COMMON_GLOBAL['client_place'],
+                                                                    null,
+                                                                    map_marker_div_gps,
+                                                                    COMMON_GLOBAL['module_leaflet_jumpto']);
+                                                            }, 
+                                                false);
+                    resolve();
+                })
+            })
+        }
+        else
+            resolve();
+    })
+    
+}
+async function map_resize() {
+    if (checkconnected()) {
+        //fixes not rendering correct showing map div
+        COMMON_GLOBAL['module_leaflet_session_map'].invalidateSize();
+    }
+}
+function map_line_removeall(){
+    if(COMMON_GLOBAL['module_leaflet_session_map_layer'])
+        for (let i=0;i<COMMON_GLOBAL['module_leaflet_session_map_layer'].length;i++)
+            COMMON_GLOBAL['module_leaflet_session_map'].removeLayer(COMMON_GLOBAL['module_leaflet_session_map_layer'][i]);
+            COMMON_GLOBAL['module_leaflet_session_map_layer']=[];
+}
+function map_line_create(id, title, text_size, from_longitude, from_latitude, to_longitude, to_latitude, color, width, opacity){
+    if (checkconnected()) {
+        let geojsonFeature = {
+            "id": `"${id}"`,
+            "type": "Feature",
+            "properties": { "title": title },
+            "geometry": {
+                "type": "LineString",
+                    "coordinates": [
+                        [from_longitude, from_latitude],
+                        [to_longitude, to_latitude]
+                    ]
+            }
+        };
+        //use GeoJSON to draw a line
+        let myStyle = {
+            "color": color,
+            "weight": width,
+            "opacity": opacity
+        };
+        let layer = COMMON_GLOBAL['module_leaflet_library'].geoJSON(geojsonFeature, {style: myStyle}).addTo(COMMON_GLOBAL['module_leaflet_session_map']);
+        if(!COMMON_GLOBAL['module_leaflet_session_map_layer'])
+            COMMON_GLOBAL['module_leaflet_session_map_layer']=[];
+            COMMON_GLOBAL['module_leaflet_session_map_layer'].push(layer);
+    }
+}
+function map_setevent(event, function_event){
+    if (checkconnected()) {
+        //also creates event:
+        //COMMON_GLOBAL['module_leaflet_library'].DomEvent.addListener(COMMON_GLOBAL['module_leaflet_session_map'], 'dblclick', function_event);
+        COMMON_GLOBAL['module_leaflet_session_map'].on(event, function_event);
+    }
+}
+async function map_setstyle(mapstyle){
+    return await new Promise (function(resolve, reject) {
+        if (checkconnected()) {
+            if(COMMON_GLOBAL['module_leaflet_session_map_OpenStreetMap_Mapnik'])
+                COMMON_GLOBAL['module_leaflet_session_map'].removeLayer(COMMON_GLOBAL['module_leaflet_session_map_OpenStreetMap_Mapnik']);
+            if (COMMON_GLOBAL['module_leaflet_session_map_Esri_WorldImagery'])
+                COMMON_GLOBAL['module_leaflet_session_map'].removeLayer(COMMON_GLOBAL['module_leaflet_session_map_Esri_WorldImagery']);
+            switch (mapstyle){
+                case 'OpenStreetMap_Mapnik':{
+                    COMMON_GLOBAL['module_leaflet_session_map_OpenStreetMap_Mapnik'] = 
+                        COMMON_GLOBAL['module_leaflet_library'].tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                            maxZoom: 19,
+                            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+                        }).addTo(COMMON_GLOBAL['module_leaflet_session_map']);
+                    break;
+                }
+                case 'Esri.WorldImagery':{
+                    COMMON_GLOBAL['module_leaflet_session_map_Esri_WorldImagery'] = 
+                        COMMON_GLOBAL['module_leaflet_library'].tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+                            attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+                        }).addTo(COMMON_GLOBAL['module_leaflet_session_map']);
+                    break;
+                }
+            }
+            resolve();
+        }  
+        else
+            resolve();
+    })
+}
+function map_update_popup(title) {
+    document.getElementById('common_module_leaflet_popup_title').innerHTML = title;
+}
+async function map_update(longitude, latitude, zoom, text_place, timezone_text = null, marker_id, to_method) {
+    return new Promise(function (resolve){
+        if (checkconnected()) {
+            function map_update_gps(to_method, zoomvalue, longitude, latitude){
+                switch (to_method){
+                    case 0:{
+                        if (zoomvalue == '')
+                            COMMON_GLOBAL['module_leaflet_session_map'].setView(new COMMON_GLOBAL['module_leaflet_library'].LatLng(latitude, longitude));
+                        else
+                            COMMON_GLOBAL['module_leaflet_session_map'].setView(new COMMON_GLOBAL['module_leaflet_library'].LatLng(latitude, longitude), zoomvalue);
+                        break;
+                    }
+                    case 1:{
+                        COMMON_GLOBAL['module_leaflet_session_map'].flyTo([latitude, longitude], zoomvalue)
+                        break;
+                    }
+                    //also have COMMON_GLOBAL['module_leaflet_session_map'].panTo(new COMMON_GLOBAL['module_leaflet_library'].LatLng({lng: longitude, lat: latitude}));
+                }
+            }
+            function map_update_text(timezone_text){
+                let popuptext = `<div id="common_module_leaflet_popup_title">${text_place}</div>
+                                 <div id="common_module_leaflet_popup_sub_title">${ICONS['regional_timezone'] + ICONS['gps_position']}</div>
+                                 <div id="common_module_leaflet_popup_sub_title_timezone">${timezone_text}</div>`;
+                let popup = COMMON_GLOBAL['module_leaflet_library'].popup({ offset: [0, COMMON_GLOBAL['module_leaflet_popup_offset']], closeOnClick: false })
+                            .setLatLng([latitude, longitude])
+                            .setContent(popuptext)
+                            .openOn(COMMON_GLOBAL['module_leaflet_session_map']);
+                let marker = COMMON_GLOBAL['module_leaflet_library'].marker([latitude, longitude]).addTo(COMMON_GLOBAL['module_leaflet_session_map']);
+                //setting id so apps can customize if necessary
+                marker._icon.id = marker_id;
+                resolve(timezone_text);
+            }
+            map_update_gps(to_method, zoom, longitude, latitude);
+            if (timezone_text == null)
+                tzlookup(latitude, longitude).then(function(tzlookup_text){
+                    map_update_text(tzlookup_text);
+                })
+            else{
+                map_update_text(timezone_text);
+            }
+        }
+    })
+}
+/*----------------------- */
+/* SERVICE BROADCAST      */
+/*----------------------- */
+function broadcast_init(close_eventsource){
+    //broadcast
+    document.getElementById('common_broadcast_close').innerHTML = ICONS['app_broadcast_close'];
+    document.getElementById('common_broadcast_info_title').innerHTML = ICONS['app_alert'];
+    if (close_eventsource==true){
+        COMMON_GLOBAL['service_broadcast_eventsource'].close();
+        connectOnline();
+    }
+    else{
+        connectOnline();
+    }
+}
+function maintenance_countdown(remaining) {
+    if(remaining <= 0)
+        location.reload(true);
+    document.getElementById('common_maintenance_countdown').innerHTML = remaining;
+    setTimeout(function(){ maintenance_countdown(remaining - 1); }, 1000);
+};
+function show_broadcast(broadcast_message){
+    broadcast_message = window.atob(broadcast_message);
+    let broadcast_type = JSON.parse(broadcast_message).broadcast_type;
+    let message = JSON.parse(broadcast_message).broadcast_message;
+    if (broadcast_type=='MAINTENANCE'){
+        if (COMMON_GLOBAL['user_account_id'] !='' && COMMON_GLOBAL['user_account_id'] !=null)
+            eval(`(function (){${COMMON_GLOBAL['exception_app_function']}()}());`);
+        document.getElementById('common_maintenance_message').innerHTML = ICONS['app_maintenance'];
+        show_maintenance(message);
+    }
+    else
+        if (broadcast_type=='INFO' || broadcast_type=='CHAT'){
+            show_broadcast_info(message);
+        }
+}
+function show_broadcast_info(message){
+    let hide_function = function() { document.getElementById('common_broadcast_info').style.visibility='hidden';
+                                     document.getElementById('common_broadcast_close').removeEventListener('click', hide_function);
+                                     document.getElementById('common_broadcast_info_message_item').innerHTML='';
+                                     document.getElementById('common_broadcast_info_message').style.animationName='unset';};
+    document.getElementById('common_broadcast_info_message').style.animationName='common_ticker';
+    document.getElementById('common_broadcast_close').addEventListener('click', hide_function);
+    document.getElementById('common_broadcast_info_message_item').innerHTML = message;
+    document.getElementById('common_broadcast_info').style.visibility='visible';
+}
+function show_maintenance(message, init){
+    let countdown_timer = 60;
+
+    if (init==1){
+        document.getElementById('common_dialogue_maintenance').style.visibility='visible';
+        maintenance_countdown(countdown_timer);
+    }
+    else
+        if (document.getElementById('common_maintenance_countdown').innerHTML=='') {
+            //hide all divs except broadcast and maintenance
+            let divs = document.body.getElementsByTagName('div');
+            for (let i = 0; i < divs.length; i += 1) {
+                if (divs[i].id.indexOf('common_broadcast') !=0 &&
+                    divs[i].id.indexOf('common_dialogue_maintenance') !=0 &&
+                    divs[i].id.indexOf('common_maintenance') !=0)
+                    divs[i].style.visibility ='hidden';
+            }
+            let maintenance_divs = document.getElementById('common_dialogue_maintenance').getElementsByTagName('div');
+            for (let i = 0; i < maintenance_divs.length; i += 1) {
+                maintenance_divs[i].style.visibility ='visible';
+            }
+            document.getElementById('common_dialogue_maintenance').style.visibility='visible';
+            maintenance_countdown(countdown_timer);
+            document.getElementById('common_maintenance_footer').innerHTML = message;
+        }
+        else
+            if (message!='')
+                document.getElementById('common_maintenance_footer').innerHTML = message;
+}
+function reconnect(){
+    setTimeout(connectOnline, 5000);
+}
+function updateOnlineStatus(){
+    let token_type='';
+    let url='';
+    if (COMMON_GLOBAL['system_admin']==1){
+        url =   `/service/broadcast/SystemAdmin/update_connected`+ 
+                `?client_id=${COMMON_GLOBAL['service_broadcast_client_ID']}`+
+                `&user_account_id=${COMMON_GLOBAL['user_account_id']}` + 
+                `&identity_provider_id=${COMMON_GLOBAL['user_identity_provider_id']}` +
+                `&system_admin=${COMMON_GLOBAL['system_admin']}`
+        token_type=2;
+    }
+    else{
+        url =   `/service/broadcast/update_connected`+ 
+                `?client_id=${COMMON_GLOBAL['service_broadcast_client_ID']}`+
+                `&user_account_id=${COMMON_GLOBAL['user_account_id']}` + 
+                `&identity_provider_id=${COMMON_GLOBAL['user_identity_provider_id']}` +
+                `&system_admin=${COMMON_GLOBAL['system_admin']}`
+        token_type=0;
+    }
+    common_fetch(url, 'PATCH', token_type, null, null, null, (err, result) =>{
+        null;
+    })
+}
+function connectOnline(updateOnline=false){
+    COMMON_GLOBAL['service_broadcast_client_ID'] = Date.now();
+    COMMON_GLOBAL['service_broadcast_eventsource'] = new EventSource(`/service/broadcast/connect/${COMMON_GLOBAL['service_broadcast_client_ID']}` +
+                                                `?app_id=${COMMON_GLOBAL['app_id']}` +
+                                                `&user_account_id=${COMMON_GLOBAL['user_account_id']}` +
+                                                `&identity_provider_id=${COMMON_GLOBAL['user_identity_provider_id']}` +
+                                                `&system_admin=${COMMON_GLOBAL['system_admin']}`);
+    COMMON_GLOBAL['service_broadcast_eventsource'].onmessage = function (event) {
+        
+            show_broadcast(event.data);
+    }
+    COMMON_GLOBAL['service_broadcast_eventsource'].onerror = function (err) {
+        COMMON_GLOBAL['service_broadcast_eventsource'].close();
+        reconnect();
+    }
+}
+function checkOnline(div_icon_online, user_account_id){
+    common_fetch(`/service/broadcast/checkconnected/${user_account_id}?`, 
+                 'GET', 0, null, null, null, (err, result) =>{
+        if (JSON.parse(result).online == 1)
+            document.getElementById(div_icon_online).className = 'online';
+        else
+            document.getElementById(div_icon_online).className= 'offline';
+    })
+}
+/*----------------------- */
+/* SERVICE GEOLOCATION    */
+/*----------------------- */
+async function get_place_from_gps(longitude, latitude) {
+    return await new Promise(function (resolve){
+        let url;
+        let tokentype;
+        if (COMMON_GLOBAL['system_admin']==1){
+            url = COMMON_GLOBAL['service_geolocation'] + COMMON_GLOBAL['service_geolocation_gps_place'] + 
+                        '/systemadmin?longitude=' + longitude + '&latitude=' + latitude;
+            tokentype = 2;
+        }
+        else 
+            if (COMMON_GLOBAL['app_id']==COMMON_GLOBAL['common_app_id']){
+                url = COMMON_GLOBAL['service_geolocation'] + COMMON_GLOBAL['service_geolocation_gps_place'] + 
+                        '/admin?app_user_id=' + COMMON_GLOBAL['user_account_id'] +
+                        '&longitude=' + longitude +
+                        '&latitude=' + latitude;
+                tokentype = 1;
+            }
+            else{
+                url = COMMON_GLOBAL['service_geolocation'] + COMMON_GLOBAL['service_geolocation_gps_place'] + 
+                        '?app_user_id=' + COMMON_GLOBAL['user_account_id'] +
+                        '&longitude=' + longitude +
+                        '&latitude=' + latitude;
+                tokentype = 0;
+            }
+        common_fetch(url, 'GET', tokentype, null, null, null, (err, result) =>{
+            if (err)
+                resolve('');
+            else{
+                let json = JSON.parse(result);
+                if (json.geoplugin_place=='' && json.geoplugin_region =='' && json.geoplugin_countryCode =='')
+                    resolve('');
+                else
+                    resolve(json.geoplugin_place + ', ' +
+                            json.geoplugin_region + ', ' +
+                            json.geoplugin_countryCode);
+            }
+        })
+    })
+}
+async function get_gps_from_ip() {
+
+    let url;
+    let tokentype;
+    if (COMMON_GLOBAL['system_admin']==1){
+        url = COMMON_GLOBAL['service_geolocation'] + COMMON_GLOBAL['service_geolocation_gps_ip'] + 
+        '/systemadmin?';
+        tokentype = 2;
+    }
+    else
+        if (COMMON_GLOBAL['app_id']==COMMON_GLOBAL['common_app_id']){
+            url = COMMON_GLOBAL['service_geolocation'] + COMMON_GLOBAL['service_geolocation_gps_ip'] + 
+                '/admin?app_user_id=' +  COMMON_GLOBAL['user_account_id'];
+            tokentype = 1;
+        }
+        else{
+            url = COMMON_GLOBAL['service_geolocation'] + COMMON_GLOBAL['service_geolocation_gps_ip'] + 
+                '?app_user_id=' +  COMMON_GLOBAL['user_account_id'];
+            tokentype = 0;
+        }
+    await common_fetch(url, 'GET', tokentype, null, null, null, (err, result) =>{
+        if (err)
+            null;
+        else{
+            let json = JSON.parse(result);
+            COMMON_GLOBAL['client_latitude']  = json.geoplugin_latitude;
+            COMMON_GLOBAL['client_longitude'] = json.geoplugin_longitude;
+            if (json.geoplugin_city=='' && json.geoplugin_regionName =='' && json.geoplugin_countryName =='')
+                COMMON_GLOBAL['client_place'] = '';
+            else
+                COMMON_GLOBAL['client_place'] = json.geoplugin_city + ', ' +
+                                                       json.geoplugin_regionName + ', ' +
+                                                       json.geoplugin_countryName;
+        }
+    })
+}
+async function tzlookup(latitude, longitude){
+    return new Promise(function (resolve, reject){
+        let url;
+        let tokentype;
+        if (COMMON_GLOBAL['system_admin']==1){
+            url = COMMON_GLOBAL['service_geolocation'] + COMMON_GLOBAL['service_geolocation_gps_timezone'] +
+                  `/systemadmin?latitude=${latitude}&longitude=${longitude}`;
+            tokentype = 2;
+        }
+        else
+            if (COMMON_GLOBAL['app_id']==COMMON_GLOBAL['common_app_id']){
+                url = COMMON_GLOBAL['service_geolocation'] + COMMON_GLOBAL['service_geolocation_gps_timezone'] +
+                    `/admin?latitude=${latitude}&longitude=${longitude}`;
+                tokentype = 1;
+            }
+            else{
+                url = COMMON_GLOBAL['service_geolocation'] + COMMON_GLOBAL['service_geolocation_gps_timezone'] +
+                    `?latitude=${latitude}&longitude=${longitude}`;
+                tokentype = 0;
+            }
+        common_fetch(url, 'GET', tokentype, null, null, null, (err, text_timezone) =>{
+            resolve (text_timezone);
+        })
+    })
+}
+/*----------------------- */
+/* SERVICE WORLDCITIES    */
+/*----------------------- */
+async function get_cities(countrycode, callBack){
+    await common_fetch(COMMON_GLOBAL['service_worldcities'] + '/' + countrycode +
+                       '?app_user_id=' + COMMON_GLOBAL['user_account_id'], 
+                       'GET', 0, null, null, null, (err, result) =>{
+        if (err)
+            callBack(err, null);
+        else{
+            let json = JSON.parse(result);
+            json.sort(function(a, b) {
+                let x = a.admin_name.toLowerCase() + a.city.toLowerCase();
+                let y = b.admin_name.toLowerCase() + b.city.toLowerCase();
+                if (x < y) {
+                    return -1;
+                }
+                if (x > y) {
+                    return 1;
+                }
+                return 0;
+            });
+
+            let current_admin_name;
+            //fill list with cities
+            let cities='';
+            for (let i = 0; i < json.length; i++) {
+                if (i == 0) {
+                    cities += `<option value='' id='' label='…' selected='selected'>…</option>
+                                <optgroup label='${json[i].admin_name}'>`;
+                    current_admin_name = json[i].admin_name;
+                } else
+                if (json[i].admin_name != current_admin_name) {
+                    cities += `</optgroup>
+                                <optgroup label='${json[i].admin_name}'>`;
+                    current_admin_name = json[i].admin_name;
+                }
+                cities +=
+                `<option 
+                    id=${json[i].id} 
+                    value=${i + 1}
+                    countrycode=${json[i].iso2}
+                    country='${json[i].country}'
+                    admin_name='${json[i].admin_name}'
+                    latitude=${json[i].lat}
+                    longitude=${json[i].lng}  
+                    >${json[i].city}
+                </option>`;
+            }
+            callBack(null, `${cities} </optgroup>`);
+        }
+    })
+}
+/*----------------------- */
 /* EXCEPTION              */
 /*----------------------- */
 function exception(status, message){
@@ -3621,14 +3620,14 @@ function set_common_parameters(app_id, parameter_name, parameter_value){
             case 'REST_USER_ACCOUNT_PROVIDER'           :{COMMON_GLOBAL['rest_user_account_provider'] = parameter_value;break;}
             case 'REST_USER_ACCOUNT_SIGNUP'             :{COMMON_GLOBAL['rest_user_account_signup'] = parameter_value;break;}
             case 'REST_USER_ACCOUNT_PASSWORD'           :{COMMON_GLOBAL['rest_user_account_password'] = parameter_value;break;}
+            case 'MODULE_LEAFLET_FLYTO'                 :{COMMON_GLOBAL['module_leaflet_flyto'] = parseInt(parameter_value);break;}
+            case 'MODULE_LEAFLET_JUMPTO'                :{COMMON_GLOBAL['module_leaflet_jumpto'] = parseInt(parameter_value);break;}
+            case 'MODULE_LEAFLET_POPUP_OFFSET'          :{COMMON_GLOBAL['module_leaflet_popup_offset'] = parseInt(parameter_value);break;}
+            case 'MODULE_LEAFLET_STYLE'                 :{COMMON_GLOBAL['module_leaflet_style'] = parameter_value;break;}
             case 'SERVICE_GEOLOCATION'                  :{COMMON_GLOBAL['service_geolocation'] = parameter_value;break;}
             case 'SERVICE_GEOLOCATION_GPS_IP'           :{COMMON_GLOBAL['service_geolocation_gps_ip'] = parameter_value;break;}
             case 'SERVICE_GEOLOCATION_GPS_PLACE'        :{COMMON_GLOBAL['service_geolocation_gps_place'] = parameter_value;break;}
             case 'SERVICE_GEOLOCATION_GPS_TIMEZONE'     :{COMMON_GLOBAL['service_geolocation_gps_timezone'] = parameter_value;break;}
-            case 'SERVICE_MAP_FLYTO'                    :{COMMON_GLOBAL['service_map_flyto'] = parseInt(parameter_value);break;}
-            case 'SERVICE_MAP_JUMPTO'                   :{COMMON_GLOBAL['service_map_jumpto'] = parseInt(parameter_value);break;}
-            case 'SERVICE_MAP_POPUP_OFFSET'             :{COMMON_GLOBAL['service_map_popup_offset'] = parseInt(parameter_value);break;}
-            case 'SERVICE_MAP_STYLE'                    :{COMMON_GLOBAL['service_map_style'] = parameter_value;break;}
             case 'SERVICE_REPORT'                       :{COMMON_GLOBAL['service_report'] = parameter_value;break;}
             case 'SERVICE_WORLDCITIES'                  :{COMMON_GLOBAL['service_worldcities'] = parameter_value;break;}
         }

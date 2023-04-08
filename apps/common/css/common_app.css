@@ -934,14 +934,13 @@ a:active {
 #common_profile_detail_header_app div{
 	display: inline-block;
 }
-/*Map dynamically created popup*/
-#common_leaflet_popup_title,
-#common_leaflet_popup_sub_title,
-#common_leaflet_popup_sub_title_timezone {
+/*Module leaflet, dynamically created popup*/
+#common_module_leaflet_popup_title,
+#common_module_leaflet_popup_sub_title,
+#common_module_leaflet_popup_sub_title_timezone {
 	font-weight: bold;
 	text-align: center;
 }
-/*service map*/
 .leaflet-popup-content{
 	width:200px !important;
 }
