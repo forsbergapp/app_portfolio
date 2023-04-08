@@ -125,7 +125,7 @@ function getReportSettings(){
 async function update_timetable_report(timetable_type = 0, item_id = null, settings) {
     return await new Promise(function (resolve){
         app_common.APP_GLOBAL['timetable_type'] = timetable_type;
-        import('/common/modules/PrayTimes/PrayTimes.js').then(function({prayTimes}){
+        import('/common/modules/PrayTimes/PrayTimes.module.js').then(function({prayTimes}){
             switch (timetable_type){
                 //create timetable month or day or year if they are visible instead
                 case 0:{
