@@ -199,7 +199,6 @@ body.font_arabic_sans_kufi
 /*Arabic NotoKufi*/
 body.font_arabic_kufi{
 	font-family: var(--global_font_arabic_kufi);
-	line-height:1.5;
 }
 /*Arabic NotoNashk*/
 body.font_arabic_nashk{
@@ -208,7 +207,7 @@ body.font_arabic_nashk{
 /*Arabic NotoNastaliq*/
 body.font_arabic_nastaliq{
 	font-family: var(--global_font_arabic_nastaliq);
-	line-height:1.7;
+	line-height:1.6;
 }
 body.font_arabic_nastaliq select,
 body.font_arabic_nastaliq input{
