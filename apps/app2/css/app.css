@@ -338,14 +338,13 @@
 		zoom: 0.125;
 	}
 	#setting_themes_day_slider #timetable_footer{
-		margin-top: 505px;
-		position:static;
+		position:absolute;
 	}
 	#setting_themes_month_slider #timetable_month {
 		zoom: 0.125;
 	}
 	#setting_themes_month_slider #timetable_footer{
-		position:static;
+		position:absolute;
 	}
 	#setting_themes_year_slider #timetable_year {
 		zoom: 0.125;
@@ -360,8 +359,7 @@
 		margin-top:35px;
 	}
 	#setting_themes_year_slider #timetable_footer{
-		margin-top: 25px;
-		position:static;
+		position:absolute;
 	}
 }
 /*Firefox and other browsers that does not support zoom*/
@@ -374,11 +372,11 @@
 		bottom: -908px;
 	}
 	#setting_themes_month_slider #timetable_month {
-		transform: scale(0.126) translate(-347%,-347%);
-		width: 765px;
+		transform: scale(0.127) translate(-343%,-343%);
+		width: 750px;
 	}
 	#setting_themes_month_slider #timetable_footer{
-		bottom: -160px;
+		position:static;
 	}
 	#setting_themes_year_slider #timetable_year {
 		transform: scale(0.13) translate(-334%,-334%);
