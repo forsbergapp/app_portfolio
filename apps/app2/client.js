@@ -7,48 +7,12 @@ async function themes(app_id){
             getThemes(app_id, (err, results)  => {
                 let html_themes='';
                 if (err){
-                    resolve (
-                            `<div class='setting_horizontal_col'>
-                                <div id='setting_icon_theme_day'></div>
-                                <div id='setting_themes_day_slider' class='slider'>
-                                    <div class='slider_wrapper'>
-                                    <div id='slides_day' class='slides'></div>
-                                    </div>
-                                </div>
-                                <div id='slider_prev_day' class='slider_control slider_prev'></i></div>
-                                <div id='slider_next_day' class='slider_control slider_next'></div>
-                                <div id='slider_theme_day_id'></div>
-                            </div>
-                            <div class='setting_horizontal_col'>
-                                <div id='setting_icon_theme_month'></div>
-                                <div id='setting_themes_month_slider' class='slider'>
-                                    <div class='slider_wrapper'>
-                                    <div id='slides_month' class='slides'></div>
-                                    </div>
-                                </div>
-                                <div id='slider_prev_month' class='common_dialogue_button slider_prev'></div>
-                                <div id='slider_next_month' class='common_dialogue_button slider_next'></div>
-                                <div id='slider_theme_month_id'></div>
-                            </div>
-                            <div class='setting_horizontal_col'>
-                                <div id='setting_icon_report_theme_year'></div>
-                                <div id='setting_themes_year_slider' class='slider'>
-                                    <div class='slider_wrapper'>
-                                    <div id='slides_year' class='slides'></div>
-                                    </div>
-                                </div>
-                                <div id='slider_prev_year' class='common_dialogue_button slider_prev'></div>
-                                <div id='slider_next_year' class='common_dialogue_button slider_next'></div>
-                                <div id='slider_theme_year_id'></div>
-                            </div>`
-                        )
+                    resolve ([null, null, null])
                 }
                 else{
                     let span_themes_day ='', span_themes_month='', span_themes_year='';
                     //get themes and save result in three theme variables
                     results.map( (themes_map,i) => {
-                        //Node does not like eval('span_themes_' + themes_map.type.toLowerCase()) +=
-                        //src='${themes_map.image_preview_url}'
                         let new_span = `<span class="slide slide_${themes_map.type.toLowerCase()}">
                                             <div id='theme_${themes_map.type.toLowerCase()}_${themes_map.id}'                       
                                                 data-theme_id='${themes_map.id}'
@@ -73,25 +37,7 @@ async function themes(app_id){
                             }
                         }  
                     })
-                    //add each theme dynamic variable span_themes_day, span_themes_month and span_themes_year to wrapping html
-                    const theme_type_arr = ['day','month','year'];
-                    theme_type_arr.forEach(themes_type => {
-                        html_themes += 
-                        `<div class='setting_horizontal_col'>
-                            <div id='setting_icon_design_theme_${themes_type}'></div>
-                            <div id='setting_themes_${themes_type}_slider' class='slider'>
-                            <div class='slider_wrapper'>
-                                <div id='slides_${themes_type}' class='slides'>
-                                    ${eval('span_themes_' + themes_type)}
-                                </div>
-                            </div>
-                            </div>
-                            <div id='slider_prev_${themes_type}' class='common_dialogue_button slider_prev'></div>
-                            <div id='slider_next_${themes_type}' class='common_dialogue_button slider_next'></div>
-                            <div id='slider_theme_${themes_type}_id'></div>
-                        </div>`;
-                    })
-                    resolve (html_themes);
+                    resolve ([span_themes_day, span_themes_month, span_themes_year]);
                 }
             });
         })
@@ -320,8 +266,14 @@ function getApp(app_id, username, gps_lat, gps_long, gps_place){
                                         '<AppPlaces/>',
                                         `${app_components.AppPlaces}`);
                                 app = app.replace(
-                                        '<AppSettingsThemes/>',
-                                        `${app_components.AppSettingsThemes}`);
+                                        '<AppSettingsThemesDay/>',
+                                        `${app_components.AppSettingsThemes[0]}`);
+                                app = app.replace(
+                                        '<AppSettingsThemesMonth/>',
+                                        `${app_components.AppSettingsThemes[1]}`);
+                                app = app.replace(
+                                        '<AppSettingsThemesYear/>',
+                                        `${app_components.AppSettingsThemes[2]}`);
                                 //app SETTING
                                 app = app.replace(
                                         '<AppTimezones/>',
