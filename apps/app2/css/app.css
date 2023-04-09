@@ -297,7 +297,6 @@
 }
 .slider .slides {
 		display: flex;
-		position: relative;
 		top: 0;
 		left: -96px;
 }
