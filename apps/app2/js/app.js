@@ -608,9 +608,11 @@ async function openTab(tab_selected) {
     //mark active tab
     document.getElementById("tab_nav_" + tab_selected).classList.add("tab_nav_selected");
     
-    //update themes for tab 3
     if (tab_selected==3){
         update_all_theme_thumbnails();
+    }
+    if (tab_selected==5){
+        document.getElementById('setting_icon_text_theme_row').dispatchEvent(new Event('click'));
     }
 }
 
@@ -970,7 +972,6 @@ async function update_ui(option, item_id=null) {
                 break;
             }
     }
-
 }
 /*----------------------- */
 /* USER                   */
@@ -2117,8 +2118,8 @@ function setEvents() {
     //settings regional    
     document.getElementById('setting_select_locale').addEventListener('change', function() { settings_translate(true) }, false);
     document.getElementById('setting_select_report_timezone').addEventListener('change', function() { update_ui(2); }, false);
-    document.getElementById('setting_select_report_locale_second').addEventListener('change', function() { settings_translate(false) }, false);
-    
+    document.getElementById('setting_select_report_locale_second').addEventListener('change', function() { settings_translate(false) }, false);                                                        
+
     //settings gps    
     document.getElementById('setting_select_maptype').addEventListener('change', function() { update_ui(4); }, false);
     document.getElementById('setting_select_country').addEventListener('change', function() { update_ui(5); }, false);         
@@ -2137,6 +2138,30 @@ function setEvents() {
     document.getElementById('setting_icon_image_footer_clear').addEventListener('click', function() { update_ui(14) }, false);
     document.getElementById('setting_input_reportfooter_img').addEventListener('change', function() { update_ui(13, this.id) }, false);
     //settings text
+    document.getElementById('setting_icon_text_theme_row').addEventListener('click', function(event) {  
+                                                                                                        document.getElementById('setting_icon_text_theme_day').classList.remove('common_dialogue_button');
+                                                                                                        document.getElementById('setting_icon_text_theme_month').classList.remove('common_dialogue_button');
+                                                                                                        document.getElementById('setting_icon_text_theme_year').classList.remove('common_dialogue_button');
+                                                                                                        let theme_type;
+                                                                                                        if (event.target.id == 'setting_icon_text_theme_row'){
+                                                                                                            //default when clicking on tab
+                                                                                                            theme_type = 'day';
+                                                                                                        }
+                                                                                                        else
+                                                                                                            if (event.target.id.substring(24) == 'day' ||
+                                                                                                                event.target.id.substring(24) == 'month'||
+                                                                                                                event.target.id.substring(24) == 'year')
+                                                                                                                theme_type = event.target.id.substring(24);
+                                                                                                            else
+                                                                                                                theme_type = event.target.parentElement.id.substring(24);
+                                                                                                            
+                                                                                                        //mark active icon
+                                                                                                        document.getElementById('setting_icon_text_theme_' + theme_type).classList.add('common_dialogue_button');
+                                                                                                        if (theme_type=='day' || theme_type=='month' || theme_type=='year'){
+                                                                                                            document.querySelector('#setting_paper_preview_text').className =  'setting_paper_preview' + ' ' +
+                                                                                                                                                                                `theme_${theme_type}_${get_theme_id(theme_type)} ` + 
+                                                                                                                                                                                document.getElementById('setting_select_report_arabic_script').value;
+                                                                                                        }}, false);
     document.getElementById('setting_icon_text_header_aleft').addEventListener('click', function() { update_ui(15, this.id) }, false);
     document.getElementById('setting_icon_text_header_acenter').addEventListener('click', function() { update_ui(15, this.id) }, false);
     document.getElementById('setting_icon_text_header_aright').addEventListener('click', function() { update_ui(15, this.id) }, false);
@@ -2274,7 +2299,9 @@ function setEvents() {
     document.getElementById('common_user_menu_username').addEventListener('click', function() { toolbar_button(6) }, false);
     
     //user preferences    
-    document.getElementById('common_app_select_theme').addEventListener('change', function() { document.body.className = 'app_theme' + document.getElementById('common_app_select_theme').value + ' ' + document.getElementById('common_user_arabic_script_select').value; }, false);
+    document.getElementById('common_app_select_theme').addEventListener('change', function() { document.body.className = 'app_theme' + 
+                                                                                                                         document.getElementById('common_app_select_theme').value + ' ' + 
+                                                                                                                         document.getElementById('common_user_arabic_script_select').value;}, false);
     document.getElementById('common_user_locale_select').addEventListener('change', function() { common_translate_ui_app(this.value, (err, result)=>{null});}, false);    
     document.getElementById('common_user_timezone_select').addEventListener('change', function() { document.getElementById('setting_timezone_current').innerHTML = this.value;}, false);
     document.getElementById('common_user_arabic_script_select').addEventListener('change', function() { document.getElementById('common_app_select_theme').dispatchEvent(new Event('change'));}, false);
@@ -2504,6 +2531,9 @@ function init_app() {
         document.getElementById('setting_icon_image_header_img').innerHTML = common.ICONS['app_search'];
         document.getElementById('setting_icon_image_footer_img').innerHTML = common.ICONS['app_search'];    
         //settings tab 5 Text
+        document.getElementById('setting_icon_text_theme_day').innerHTML = common.ICONS['regional_day'];
+        document.getElementById('setting_icon_text_theme_month').innerHTML = common.ICONS['regional_month'];
+        document.getElementById('setting_icon_text_theme_year').innerHTML = common.ICONS['regional_year'];
         document.getElementById('setting_icon_text_header_aleft').innerHTML =  common.ICONS['app_align_left'];
         document.getElementById('setting_icon_text_header_acenter').innerHTML = common.ICONS['app_align_center'];
         document.getElementById('setting_icon_text_header_aright').innerHTML = common.ICONS['app_align_right'];
