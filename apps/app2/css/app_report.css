@@ -86,10 +86,6 @@
 	visibility: hidden;
 }
 
-#paper #copyright{
- 	font-family:"Noto Sans";
-	 text-align: center;	
-}	
 /*Common styles for all timetables*/
 /*QR code*/
 #printbody #timetable_qr_code{
@@ -164,8 +160,7 @@
 }
 
 #timetable_day_timetable {
-	display: block;
-	margin: 0 auto;
+	display: inline-grid;
 }
 #timetable_day .timetable_day_timetable_header_row{
 	display: block;
@@ -197,13 +192,18 @@
 #timetable_day .timetable_data_fast_end {
 	font-size: 1.2em !important;
 }
+#timetable_day .copyright{
+   text-align: center;	
+   width: 100%;
+   position: absolute;
+   bottom: 160px;
+}
 /*Footer timetable info*/
-#timetable_day .timetable_day_timetable_footer {
-	vertical-align: middle;
-	text-align: center;
-	margin-bottom:10px;
+#timetable_day .timetable_day_timetable_footer{
+	margin-top: 10px;
+}
+#timetable_day .timetable_day_timetable_footer > .timetable_day_timetable_footer_row{
 	width: 100%;
-	display: table;
 }
 #timetable_day .timetable_day_timetable_footer_row:nth-child(odd) div {
 	display: inline-block;
@@ -217,7 +217,6 @@
 	padding-left: 5px;
 	padding-right: 5px;
 }
-
 #timetable_day #timetable_day_time{
 	text-align: center;
 	z-index:-1;
@@ -482,8 +481,8 @@
 	--report_theme_timetable_header_color:var(--report_gold);
 	--report_theme_timetable_data_header_background_color:var(--report_blue2);
 	--report_theme_timetable_data_header_color:var(--report_white);
-	--report_theme_timetable_footer_background_color:inherit;
-	--report_theme_timetable_footer_color:inherit;
+	--report_theme_timetable_footer_background_color:var(--report_blue2);
+	--report_theme_timetable_footer_color:var(--report_white);
 	--report_theme_copyright_color:var(--report_white);
 	--report_theme_copyright_background_color:var(--report_blue2);
 	--report_theme_footer_color:var(--report_gold);
@@ -507,8 +506,8 @@
 	--report_theme_timetable_header_color:var(--report_blue2);
 	--report_theme_timetable_data_header_background_color:var(--report_blue2);
 	--report_theme_timetable_data_header_color:var(--report_white);
-	--report_theme_timetable_footer_background_color:inherit;
-	--report_theme_timetable_footer_color:var(--report_blue2);
+	--report_theme_timetable_footer_background_color:var(--report_blue2);
+	--report_theme_timetable_footer_color:var(--report_white);
 	--report_theme_copyright_color:var(--report_white);
 	--report_theme_copyright_background_color:var(--report_blue2);
 	--report_theme_footer_color:var(--report_blue2);
@@ -532,8 +531,8 @@
 	--report_theme_timetable_header_color:var(--report_lightblue);
 	--report_theme_timetable_data_header_background_color:var(--report_lightblue);
 	--report_theme_timetable_data_header_color:var(--report_white);
-	--report_theme_timetable_footer_background_color:inherit;
-	--report_theme_timetable_footer_color:var(--report_lightblue);
+	--report_theme_timetable_footer_background_color:var(--report_lightblue);
+	--report_theme_timetable_footer_color:var(--report_white);
 	--report_theme_copyright_color:var(--report_white);
 	--report_theme_copyright_background_color:var(--report_lightblue);
 	--report_theme_footer_color:inherit;
@@ -557,8 +556,8 @@
 	--report_theme_timetable_header_color:inherit;
 	--report_theme_timetable_data_header_background_color:var(--report_lightblue);
 	--report_theme_timetable_data_header_color:var(--report_white);
-	--report_theme_timetable_footer_background_color:inherit;
-	--report_theme_timetable_footer_color:inherit;
+	--report_theme_timetable_footer_background_color:var(--report_lightblue);
+	--report_theme_timetable_footer_color:var(--report_white);
 	--report_theme_copyright_color:inherit;
 	--report_theme_copyright_background_color:inherit;
 	--report_theme_footer_color:inherit;
@@ -1093,13 +1092,11 @@
 	color: var(--report_theme_timetable_footer_color);
 	background-color: var(--report_theme_timetable_footer_background_color);
 }
-#timetable_day #copyright {
+#timetable_day .copyright {
 	color: var(--report_theme_copyright_color);
 	background-color: var(--report_theme_copyright_background_color);
 }
-
 /*MONTH*/
-
 #timetable_month .timetable_month_data_notes {
 	background-color: var(--report_theme_notes_background_color) !important;
 }
