@@ -476,13 +476,6 @@
 #settings #tab5 #setting_paper_preview_footer_text input{
 	font-size: 0.4em;
 }
-#settings #tab5 .theme_month_20004 #setting_paper_preview_footer_text input{
-	font-size: 0.3em;
-    line-height: 3.9;
-}
-#settings #tab5 .theme_month_20004 #setting_paper_preview_footer_text #setting_input_footer{
-	padding-bottom: 4px;
-}
 #settings #tab5 .setting_report_title{
 	min-width: 99%;
 	margin: -2px;
