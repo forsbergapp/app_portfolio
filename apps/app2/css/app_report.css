@@ -1,17 +1,13 @@
 /*Variables*/
 :root{
 	--font_1: 'Noto Sans';
-	--font_2: 'Roboto';
-	--font_3: 'Exo';
-	--font_4: 'Roboto Condensed';
-	--font_5: 'Press Start 2P';
-	--font_6: 'Cinzel Decorative';
-	--font_7: 'Merriweather';
-	--font_8: 'Source Sans Pro';
-	--font_9: 'Montserrat';
-	--font_10: 'Lato';
-	--font_11: 'Caveat';
+	--font_2: 'Cinzel Decorative';
+	--font_3: 'Caveat';
+	--font_4: 'Montserrat';
 
+
+	--report_theme_display_font_family:var(--font_1);
+	--report_theme_default_font_family:var(--font_1);
 	--report_theme_text_color: var(--report_black);
 	--report_theme_notes_background_color:inherit !important;
 	--report_qr_code_shadow_color1:var(--report_shadow1);
@@ -478,244 +474,395 @@
 #timetable_year .timetable_year_month #timetable_month_data .timetable_month_data_col.timetable_data_fast_end {
 	width: inherit;
 }
-/*YEAR theme specific month fontsize and lineheight fixes*/
-#timetable_year .timetable_year_month.theme_month_20004 #timetable_month_data {
-	line-height: 0.65em !important;
-}
 
+.theme_day_10001,
+.theme_day_10002{
+	--report_theme_header_color:var(--report_gold);
+	--report_theme_timetable_header_background_color:inherit;
+	--report_theme_timetable_header_color:var(--report_gold);
+	--report_theme_timetable_data_header_background_color:var(--report_blue2);
+	--report_theme_timetable_data_header_color:var(--report_white);
+	--report_theme_timetable_footer_background_color:inherit;
+	--report_theme_timetable_footer_color:inherit;
+	--report_theme_copyright_color:var(--report_white);
+	--report_theme_copyright_background_color:var(--report_blue2);
+	--report_theme_footer_color:var(--report_gold);
+	--report_theme_footer_background_color:inherit;
+	--report_theme_fast_start_end_color:var(--report_white);
+	--report_theme_fast_start_end_background_color:var(--report_blue2);
+	--report_theme_fast_start_end_border_color:var(--report_gold)
+}
 .theme_day_10001{
-	--report_theme_display_font_family:var(--font_2);
-	--report_theme_default_font_family:var(--font_2);
+	--report_theme_timetable_data_background_color:inherit;
+	--report_theme_timetable_data_color:var(--report_black);	
+}
+.theme_day_10002{
+	--report_theme_timetable_data_background_color:var(--report_blue2);
+	--report_theme_timetable_data_color:var(--report_white);
+}
+.theme_day_10003,
+.theme_day_10004{
+	--report_theme_header_color:var(--report_blue2);
+	--report_theme_timetable_header_background_color:inherit;
+	--report_theme_timetable_header_color:var(--report_blue2);
+	--report_theme_timetable_data_header_background_color:var(--report_blue2);
+	--report_theme_timetable_data_header_color:var(--report_white);
+	--report_theme_timetable_footer_background_color:inherit;
+	--report_theme_timetable_footer_color:var(--report_blue2);
+	--report_theme_copyright_color:var(--report_white);
+	--report_theme_copyright_background_color:var(--report_blue2);
+	--report_theme_footer_color:var(--report_blue2);
+	--report_theme_footer_background_color:inherit;
+	--report_theme_fast_start_end_color:var(--report_white);
+	--report_theme_fast_start_end_background_color:var(--report_blue2);
+	--report_theme_fast_start_end_border_color:var(--report_blue2);
+}
+.theme_day_10003{
+	--report_theme_timetable_data_background_color:inherit;
+	--report_theme_timetable_data_color:var(--report_black);	
+}
+.theme_day_10004{
+	--report_theme_timetable_data_background_color:var(--report_blue2);
+	--report_theme_timetable_data_color:var(--report_white);
+}
+.theme_day_10005,
+.theme_day_10006{
 	--report_theme_header_color:inherit;
 	--report_theme_timetable_header_background_color:inherit;
 	--report_theme_timetable_header_color:var(--report_lightblue);
 	--report_theme_timetable_data_header_background_color:var(--report_lightblue);
 	--report_theme_timetable_data_header_color:var(--report_white);
-	--report_theme_timetable_data_background_color:var(--report_lightblue);
-	--report_theme_timetable_data_color:var(--report_white);
 	--report_theme_timetable_footer_background_color:inherit;
 	--report_theme_timetable_footer_color:var(--report_lightblue);
+	--report_theme_copyright_color:var(--report_white);
+	--report_theme_copyright_background_color:var(--report_lightblue);
 	--report_theme_footer_color:inherit;
 	--report_theme_footer_background_color:inherit;
 	--report_theme_fast_start_end_color:var(--report_white);
 	--report_theme_fast_start_end_background_color:var(--report_lightblue);
+	--report_theme_fast_start_end_border_color:var(--report_lightblue);
 }
-.theme_day_10002{
-	--report_theme_display_font_family:var(--font_3);
-	--report_theme_default_font_family:var(--font_3);
+.theme_day_10005{
+	--report_theme_timetable_data_background_color:inherit;
+	--report_theme_timetable_data_color:var(--report_black);
+}
+.theme_day_10006{
+	--report_theme_timetable_data_background_color:var(--report_lightblue2);
+	--report_theme_timetable_data_color:var(--report_white);
+}
+.theme_day_10007,
+.theme_day_10008{
 	--report_theme_header_color:inherit;
 	--report_theme_timetable_header_background_color:inherit;
-	--report_theme_timetable_header_color:var(--report_lightgreen);
-	--report_theme_timetable_data_header_background_color:var(--report_lightgreen);
+	--report_theme_timetable_header_color:inherit;
+	--report_theme_timetable_data_header_background_color:var(--report_lightblue);
 	--report_theme_timetable_data_header_color:var(--report_white);
-	--report_theme_timetable_data_background_color:var(--report_lightgreen);
-	--report_theme_timetable_data_color:var(--report_white);
 	--report_theme_timetable_footer_background_color:inherit;
-	--report_theme_timetable_footer_color:var(--report_lightgreen);
+	--report_theme_timetable_footer_color:inherit;
+	--report_theme_copyright_color:inherit;
+	--report_theme_copyright_background_color:inherit;
 	--report_theme_footer_color:inherit;
 	--report_theme_footer_background_color:inherit;
 	--report_theme_fast_start_end_color:var(--report_white);
-	--report_theme_fast_start_end_background_color:var(--report_lightgreen);
+	--report_theme_fast_start_end_background_color:var(--report_lightblue);
+	--report_theme_fast_start_end_border_color:var(--report_lightblue);
 }
-.theme_day_10003{
-	--report_theme_display_font_family:var(--font_2);
-	--report_theme_default_font_family:var(--font_2);
-	--report_theme_header_color:inherit;
+.theme_day_10007{
+	--report_theme_timetable_data_background_color:inherit;
+	--report_theme_timetable_data_color:inherit;
+}
+.theme_day_10008{
+	--report_theme_timetable_data_background_color:var(--report_lightblue);
+	--report_theme_timetable_data_color:inherit;
+}
+.theme_day_10009,
+.theme_day_10010{
 	--report_theme_timetable_header_background_color:inherit;
-	--report_theme_timetable_header_color:var(--report_lightyellow);
-	--report_theme_timetable_data_header_background_color:var(--report_lightgreen);
+	--report_theme_timetable_data_header_background_color:inherit;
+	--report_theme_timetable_data_header_color:inherit;
+	--report_theme_timetable_data_background_color:inherit;
+	--report_theme_timetable_data_color:inherit;
+	--report_theme_timetable_footer_background_color:inherit;
+	--report_theme_copyright_background_color:inherit;
+	--report_theme_footer_background_color:inherit;
+	--report_theme_fast_start_end_color:inherit;
+	--report_theme_fast_start_end_background_color:var(--report_lightblue3);
+	--report_theme_fast_start_end_border_color:var(--report_lightblue3);
+}
+.theme_day_10009{
+	--report_theme_header_color:var(--report_blue2);
+	--report_theme_timetable_header_color:var(--report_blue2);
+	--report_theme_timetable_footer_color:var(--report_blue2);
+	--report_theme_copyright_color:var(--report_blue2);
+	--report_theme_footer_color:var(--report_blue2);
+}
+.theme_day_10010{
+	--report_theme_header_color:inherit;
+	--report_theme_timetable_header_color:inherit;
+	--report_theme_timetable_footer_color:inherit;
+	--report_theme_copyright_color:inherit;
+	--report_theme_footer_color:inherit;
+}
+.theme_month_20001,
+.theme_month_20002,
+.theme_month_20003,
+.theme_month_20004{
+	--report_theme_header_color:var(--report_gold);
+	--report_theme_header_background_color:inherit;
+	--report_theme_timetable_header_background_color:inherit;
+	--report_theme_timetable_header_color:var(--report_gold);
+	--report_theme_timetable_data_header_background_color:var(--report_blue2);
 	--report_theme_timetable_data_header_color:var(--report_white);
 	--report_theme_timetable_data_background_color:inherit;
-	--report_theme_timetable_data_color:var(--report_darkgrey);
-	--report_theme_timetable_footer_background_color:inherit;
-	--report_theme_timetable_footer_color:var(--report_lightgreen);
-	--report_theme_footer_color:inherit;
-	--report_theme_footer_background_color:inherit;
+	--report_theme_timetable_data_color:var(--report_black);
+	--report_theme_timetable_footer_background_color:var(--report_blue2);
+	--report_theme_timetable_footer_color:var(--report_white);
+	--report_theme_footer_color:var(--report_gold);
+	--report_theme_footer_background_color:inherit;	
 	--report_theme_fast_start_end_color:var(--report_white);
-	--report_theme_fast_start_end_background_color:var(--report_lightyellow);
+	--report_theme_fast_start_end_background_color:var(--report_blue2);
+	--report_theme_fast_start_end_border_color:var(--report_gold);
+
+	--report_theme_timetable_data_border_color:inherit;
+	--report_theme_timetable_data_highlight_row_color:var(--report_white);
+	--report_theme_timetable_data_highlight_row_background_color:var(--report_gold);
 }
 .theme_month_20001{
-	--report_theme_display_font_family:var(--font_4);
-	--report_theme_default_font_family:var(--font_4);
-	--report_theme_header_color:inherit;
-	--report_theme_header_background_color:inherit;
-	--report_theme_timetable_header_background_color:inherit;
-	--report_theme_timetable_header_color:var(--report_lightblue2);
-	--report_theme_timetable_data_header_background_color:var(--report_lightblue2);
-	--report_theme_timetable_data_header_color:var(--report_white);
-	--report_theme_timetable_data_background_color:inherit;
-	--report_theme_timetable_data_color:var(--report_darkgrey);
-	--report_theme_timetable_footer_background_color:inherit;
-	--report_theme_timetable_footer_color:var(--report_lightblue2);
-	--report_theme_footer_color:inherit;
-	--report_theme_footer_background_color:inherit;
-	--report_theme_fast_start_end_color:var(--report_white);
-	--report_theme_fast_start_end_background_color:var(--report_lightblue2);
-	--report_theme_fast_start_end_border_color:inherit;
-
-	--report_theme_timetable_data_border_color:var(--report_lightblue2);
-	--report_theme_timetable_data_highlight_row_color:inherit;
-	--report_theme_timetable_data_highlight_row_background_color:var(--report_lightblue4);
-	--report_theme_timetable_data_highlight_1_10_background_color:var(--report_lightblue5);
+	--report_theme_timetable_data_highlight_1_10_background_color:var(--report_lightgold);
+	--report_theme_timetable_data_highlight_1_10_color:var(--report_black);
 	--report_theme_timetable_data_highlight_11_20_background_color:var(--report_white);
-	--report_theme_timetable_data_highlight_21_30_background_color:var(--report_lightblue4);
-	--report_theme_timetable_data_row_odd_color:inherit;
-	--report_theme_timetable_data_row_odd_background_color:inherit;
-	--report_theme_timetable_data_row_even_color:inherit;
-	--report_theme_timetable_data_row_even_background_color:inherit;
-	--report_theme_timetable_data_column_odd_color:var(--report_black);
-	--report_theme_timetable_data_column_odd_background_color:var(--report_lightblue5);
-	--report_theme_timetable_data_column_even_color:inherit;
-	--report_theme_timetable_data_column_even_background_color:var(--report_white);
+	--report_theme_timetable_data_highlight_11_20_color:inherit;
+	--report_theme_timetable_data_highlight_21_30_background_color:var(--report_lightblue);
+	--report_theme_timetable_data_highlight_21_30_color:var(--report_black);
 }
 .theme_month_20002{
-	--report_theme_display_font_family:var(--font_1);
-	--report_theme_default_font_family:var(--font_1);
-	--report_theme_header_color:inherit;
-	--report_theme_header_background_color:inherit;
-	--report_theme_timetable_header_background_color:inherit;
-	--report_theme_timetable_header_color:inherit;
-	--report_theme_timetable_data_header_background_color:inherit;
-	--report_theme_timetable_data_header_color:inherit;
-	--report_theme_timetable_data_background_color:inherit;
-	--report_theme_timetable_data_color:inherit;
-	--report_theme_timetable_footer_background_color:inherit;
-	--report_theme_timetable_footer_color:inherit;
-	--report_theme_footer_color:inherit;
-	--report_theme_footer_background_color:inherit;
-	--report_theme_fast_start_end_color:inherit;
-	--report_theme_fast_start_end_background_color:var(--report_lightgrey);
-	--report_theme_fast_start_end_border_color:var(--report_black);
-
-	--report_theme_timetable_data_border_color:inherit;
-	--report_theme_timetable_data_highlight_row_color:inherit;
-	--report_theme_timetable_data_highlight_row_background_color:var(--report_lightgrey);
-	--report_theme_timetable_data_highlight_1_10_background_color:var(--report_lightgrey);
+	--report_theme_timetable_data_highlight_1_10_background_color:var(--report_lightblue);
+	--report_theme_timetable_data_highlight_1_10_color:var(--report_black);
 	--report_theme_timetable_data_highlight_11_20_background_color:var(--report_white);
-	--report_theme_timetable_data_highlight_21_30_background_color:var(--report_lightgrey);
-	--report_theme_timetable_data_row_odd_color:inherit;
-	--report_theme_timetable_data_row_odd_background_color:inherit;
-	--report_theme_timetable_data_row_even_color:inherit;
-	--report_theme_timetable_data_row_even_background_color:inherit;
-	--report_theme_timetable_data_column_odd_color:inherit;
-	--report_theme_timetable_data_column_odd_background_color:inherit;
-	--report_theme_timetable_data_column_even_color:inherit;
-	--report_theme_timetable_data_column_even_background_color:inherit;
+	--report_theme_timetable_data_highlight_11_20_color:inherit;
+	--report_theme_timetable_data_highlight_21_30_background_color:var(--report_lightgold);
+	--report_theme_timetable_data_highlight_21_30_color:var(--report_black);
 }
 .theme_month_20003{
-	--report_theme_display_font_family:var(--font_2);
-	--report_theme_default_font_family:var(--font_2);
-	--report_theme_header_color:var(--report_darkgrey);
-	--report_theme_header_background_color:inherit;
-	--report_theme_timetable_header_background_color:inherit;
-	--report_theme_timetable_header_color:var(--report_lightyellow);
-	--report_theme_timetable_data_header_background_color:var(--report_green);
-	--report_theme_timetable_data_header_color:var(--report_white);
-	--report_theme_timetable_data_background_color:inherit;
-	--report_theme_timetable_data_color:var(--report_darkgrey);
-	--report_theme_timetable_footer_background_color:var(--report_grey);
-	--report_theme_timetable_footer_color:var(--report_lightgrey);
-	--report_theme_footer_color:var(--report_darkgrey);
-	--report_theme_footer_background_color:inherit;
-	--report_theme_fast_start_end_color:var(--report_white);
-	--report_theme_fast_start_end_background_color:var(--report_lightyellow);
-	--report_theme_fast_start_end_border_color:var(--report_lightyellow);
-
-	--report_theme_timetable_data_border_color:inherit;
-	--report_theme_timetable_data_highlight_row_color:inherit;
-	--report_theme_timetable_data_highlight_row_background_color:var(--report_lightyellow3);
-	--report_theme_timetable_data_highlight_1_10_background_color:var(--report_lightyellow3);
+	--report_theme_timetable_data_highlight_1_10_background_color:var(--report_lightblue2);
+	--report_theme_timetable_data_highlight_1_10_color:var(--report_black);
 	--report_theme_timetable_data_highlight_11_20_background_color:var(--report_white);
-	--report_theme_timetable_data_highlight_21_30_background_color:var(--report_lightyellow3);
-	--report_theme_timetable_data_row_odd_color:inherit;
-	--report_theme_timetable_data_row_odd_background_color:inherit;
-	--report_theme_timetable_data_row_even_color:inherit;
-	--report_theme_timetable_data_row_even_background_color:inherit;
-	--report_theme_timetable_data_column_odd_color:inherit;
-	--report_theme_timetable_data_column_odd_background_color:inherit;
-	--report_theme_timetable_data_column_even_color:inherit;
-	--report_theme_timetable_data_column_even_background_color:inherit;
+	--report_theme_timetable_data_highlight_11_20_color:inherit;
+	--report_theme_timetable_data_highlight_21_30_background_color:var(--report_lightblue);
+	--report_theme_timetable_data_highlight_21_30_color:var(--report_black);
 }
 .theme_month_20004{
-	--report_theme_display_font_family:var(--font_5);
-	--report_theme_default_font_family:var(--font_5);
-	--report_theme_header_color:var(--report_white);
-	--report_theme_header_background_color:var(--report_lightgreen2);
-	--report_theme_timetable_header_background_color:var(--report_lightgreen2);
-	--report_theme_timetable_header_color:inherit;
-	--report_theme_timetable_data_header_background_color:var(--report_black);
-	--report_theme_timetable_data_header_color:var(--report_white);
-	--report_theme_timetable_data_background_color:inherit;
-	--report_theme_timetable_data_color:inherit;
-	--report_theme_timetable_footer_background_color:var(--report_black);
-	--report_theme_timetable_footer_color:var(--report_white);
-	--report_theme_footer_color:var(--report_white);
-	--report_theme_footer_background_color:var(--report_lightgreen2);
-	--report_theme_fast_start_end_color:inherit;
-	--report_theme_fast_start_end_background_color:var(--report_lightyellow2);
-	--report_theme_fast_start_end_border_color:var(--report_lightgold);
-
-	--report_theme_timetable_data_border_color:inherit;
-	--report_theme_timetable_data_highlight_row_color:inherit;
-	--report_theme_timetable_data_highlight_row_background_color:var(--report_gold3);
-	--report_theme_timetable_data_highlight_1_10_background_color:var(--report_gold3);
+	--report_theme_timetable_data_highlight_1_10_background_color:var(--report_lightblue);
+	--report_theme_timetable_data_highlight_1_10_color:var(--report_black);
 	--report_theme_timetable_data_highlight_11_20_background_color:var(--report_white);
-	--report_theme_timetable_data_highlight_21_30_background_color:var(--report_gold2);
-	--report_theme_timetable_data_row_odd_color:inherit;
-	--report_theme_timetable_data_row_odd_background_color:var(--report_lightgrey8);
-	--report_theme_timetable_data_row_even_color:inherit;
-	--report_theme_timetable_data_row_even_background_color:var(--report_white);
-	--report_theme_timetable_data_column_odd_color:inherit;
-	--report_theme_timetable_data_column_odd_background_color:inherit;
-	--report_theme_timetable_data_column_even_color:inherit;
-	--report_theme_timetable_data_column_even_background_color:inherit;
+	--report_theme_timetable_data_highlight_11_20_color:inherit;
+	--report_theme_timetable_data_highlight_21_30_background_color:var(--report_lightblue2);
+	--report_theme_timetable_data_highlight_21_30_color:var(--report_black);
 }
-/*shrink font size compared to parent div for this font on this theme*/
-.theme_month_20004 .timetable_month_data_row, 
-.theme_month_20004 #timetable_month_data_footer_row, 
-.theme_month_20004 #timetable_footer{
-	font-size:0.75em;
-}
-.theme_month_20004 #timetable_footer div {
-	padding: 5px;
-}
-.theme_month_20005{
-	--report_theme_display_font_family:var(--font_4);
-	--report_theme_default_font_family:var(--font_4);
-	--report_theme_header_color:inherit;
+.theme_month_20005,
+.theme_month_20006,
+.theme_month_20007,
+.theme_month_20008{
+	--report_theme_header_color:var(--report_blue2);
 	--report_theme_header_background_color:inherit;
 	--report_theme_timetable_header_background_color:inherit;
-	--report_theme_timetable_header_color:inherit;
-	--report_theme_timetable_data_header_background_color:var(--report_green2);
+	--report_theme_timetable_header_color:var(--report_blue2);
+	--report_theme_timetable_data_header_background_color:var(--report_blue2);
 	--report_theme_timetable_data_header_color:var(--report_white);
 	--report_theme_timetable_data_background_color:inherit;
-	--report_theme_timetable_data_color:inherit;
-	--report_theme_timetable_footer_background_color:inherit;
-	--report_theme_timetable_footer_color:inherit;
-	--report_theme_footer_color:inherit;
+	--report_theme_timetable_data_color:var(--report_black);
+	--report_theme_timetable_footer_background_color:var(--report_blue2);
+	--report_theme_timetable_footer_color:var(--report_white);
+	--report_theme_footer_color:var(--report_blue2);
 	--report_theme_footer_background_color:inherit;	
-	--report_theme_fast_start_end_color:inherit;
-	--report_theme_fast_start_end_background_color:var(--report_green3);
-	--report_theme_fast_start_end_border_color:var(--report_green2);
+	--report_theme_fast_start_end_color:var(--report_white);
+	--report_theme_fast_start_end_background_color:var(--report_blue2);
+	--report_theme_fast_start_end_border_color:var(--report_blue2);
 
-	--report_theme_timetable_data_border_color:var(--report_green2);
-	--report_theme_timetable_data_highlight_row_color:inherit;
-	--report_theme_timetable_data_highlight_row_background_color:var(--report_lightgreen3);
-	--report_theme_timetable_data_highlight_1_10_background_color:var(--report_lightgreen4);
+	--report_theme_timetable_data_border_color:inherit;
+	--report_theme_timetable_data_highlight_row_color:var(--report_white);
+	--report_theme_timetable_data_highlight_row_background_color:var(--report_blue2);
+}
+.theme_month_20005{
+	--report_theme_timetable_data_highlight_1_10_background_color:var(--report_blue);
+	--report_theme_timetable_data_highlight_1_10_color:var(--report_black);
 	--report_theme_timetable_data_highlight_11_20_background_color:var(--report_white);
-	--report_theme_timetable_data_highlight_21_30_background_color:var(--report_lightgreen3);
-	--report_theme_timetable_data_row_odd_color:inherit;
-	--report_theme_timetable_data_row_odd_background_color:inherit;
-	--report_theme_timetable_data_row_even_color:inherit;
-	--report_theme_timetable_data_row_even_background_color:inherit;
-	--report_theme_timetable_data_column_odd_color:inherit;
-	--report_theme_timetable_data_column_odd_background_color:var(--report_lightgreen4);
-	--report_theme_timetable_data_column_even_color:inherit;
-	--report_theme_timetable_data_column_even_background_color:var(--report_white);
+	--report_theme_timetable_data_highlight_11_20_color:inherit;
+	--report_theme_timetable_data_highlight_21_30_background_color:var(--report_blue);
+	--report_theme_timetable_data_highlight_21_30_color:var(--report_black);
 }
 .theme_month_20006{
-	--report_theme_display_font_family:var(--font_1);
-	--report_theme_default_font_family:var(--font_1);
+	--report_theme_timetable_data_highlight_1_10_background_color:var(--report_blue);
+	--report_theme_timetable_data_highlight_1_10_color:var(--report_black);
+	--report_theme_timetable_data_highlight_11_20_background_color:var(--report_lightblue2);
+	--report_theme_timetable_data_highlight_11_20_color:inherit;
+	--report_theme_timetable_data_highlight_21_30_background_color:var(--report_white);
+	--report_theme_timetable_data_highlight_21_30_color:var(--report_black);
+}
+.theme_month_20007{
+	--report_theme_timetable_data_highlight_1_10_background_color:var(--report_white);
+	--report_theme_timetable_data_highlight_1_10_color:var(--report_black);
+	--report_theme_timetable_data_highlight_11_20_background_color:var(--report_lightblue2);
+	--report_theme_timetable_data_highlight_11_20_color:inherit;
+	--report_theme_timetable_data_highlight_21_30_background_color:var(--report_blue);
+	--report_theme_timetable_data_highlight_21_30_color:var(--report_black);
+}
+.theme_month_20008{
+	--report_theme_timetable_data_highlight_1_10_background_color:var(--report_lightblue2);
+	--report_theme_timetable_data_highlight_1_10_color:var(--report_black);
+	--report_theme_timetable_data_highlight_11_20_background_color:var(--report_white);
+	--report_theme_timetable_data_highlight_11_20_color:inherit;
+	--report_theme_timetable_data_highlight_21_30_background_color:var(--report_lightblue2);
+	--report_theme_timetable_data_highlight_21_30_color:var(--report_black);
+}
+.theme_month_20009,
+.theme_month_20010,
+.theme_month_20011,
+.theme_month_20012{
+	--report_theme_header_color:var(--report_lightblue);
+	--report_theme_header_background_color:inherit;
+	--report_theme_timetable_header_background_color:inherit;
+	--report_theme_timetable_header_color:var(--report_lightblue);
+	--report_theme_timetable_data_header_background_color:var(--report_lightblue);
+	--report_theme_timetable_data_header_color:var(--report_white);
+	--report_theme_timetable_data_background_color:var(--report_lightblue3);
+	--report_theme_timetable_data_color:var(--report_black);
+	--report_theme_timetable_footer_background_color:var(--report_lightblue);
+	--report_theme_timetable_footer_color:var(--report_white);
+	--report_theme_footer_color:var(--report_lightblue);
+	--report_theme_footer_background_color:inherit;	
+	--report_theme_fast_start_end_color:var(--report_white);
+	--report_theme_fast_start_end_background_color:var(--report_lightblue);
+	--report_theme_fast_start_end_border_color:var(--report_lightblue);
+
+	--report_theme_timetable_data_border_color:inherit;
+	--report_theme_timetable_data_highlight_row_color:var(--report_white);
+	--report_theme_timetable_data_highlight_row_background_color:var(--report_lightblue);
+}
+.theme_month_20009{
+	--report_theme_timetable_data_highlight_1_10_background_color:var(--report_darkblue);
+	--report_theme_timetable_data_highlight_1_10_color:var(--report_white);
+	--report_theme_timetable_data_highlight_11_20_background_color:var(--report_white);
+	--report_theme_timetable_data_highlight_11_20_color:inherit;
+	--report_theme_timetable_data_highlight_21_30_background_color:var(--report_lightblue2);
+	--report_theme_timetable_data_highlight_21_30_color:var(--report_black);
+}
+.theme_month_20010{
+	--report_theme_timetable_data_highlight_1_10_background_color:var(--report_lightblue2);
+	--report_theme_timetable_data_highlight_1_10_color:var(--report_black);
+	--report_theme_timetable_data_highlight_11_20_background_color:var(--report_white);
+	--report_theme_timetable_data_highlight_11_20_color:inherit;
+	--report_theme_timetable_data_highlight_21_30_background_color:var(--report_darkblue);
+	--report_theme_timetable_data_highlight_21_30_color:var(--report_white);
+}
+.theme_month_20011{
+	--report_theme_timetable_data_highlight_1_10_background_color:var(--report_white);
+	--report_theme_timetable_data_highlight_1_10_color:var(--report_black);
+	--report_theme_timetable_data_highlight_11_20_background_color:var(--report_lightblue2);
+	--report_theme_timetable_data_highlight_11_20_color:inherit;
+	--report_theme_timetable_data_highlight_21_30_background_color:var(--report_darkblue);
+	--report_theme_timetable_data_highlight_21_30_color:var(--report_white);
+}
+.theme_month_20012{
+	--report_theme_timetable_data_highlight_1_10_background_color:var(--report_white);
+	--report_theme_timetable_data_highlight_1_10_color:var(--report_black);
+	--report_theme_timetable_data_highlight_11_20_background_color:var(--report_darkblue);
+	--report_theme_timetable_data_highlight_11_20_color:var(--report_white);
+	--report_theme_timetable_data_highlight_21_30_background_color:var(--report_lightblue2);
+	--report_theme_timetable_data_highlight_21_30_color:var(--report_black);
+}
+.theme_month_20013,
+.theme_month_20014,
+.theme_month_20015,
+.theme_month_20016{
+	--report_theme_header_color:var(--report_lightblue);
+	--report_theme_header_background_color:inherit;
+	--report_theme_timetable_header_background_color:inherit;
+	--report_theme_timetable_header_color:var(--report_lightblue);
+	--report_theme_timetable_data_header_background_color:var(--report_lightblue);
+	--report_theme_timetable_data_header_color:var(--report_white);
+	--report_theme_timetable_data_background_color:inherit;
+	--report_theme_timetable_data_color:var(--report_black);
+	--report_theme_timetable_footer_background_color:var(--report_lightblue);
+	--report_theme_timetable_footer_color:var(--report_white);
+	--report_theme_footer_color:var(--report_lightblue);
+	--report_theme_footer_background_color:inherit;	
+	--report_theme_fast_start_end_color:var(--report_white);
+	--report_theme_fast_start_end_background_color:var(--report_lightblue);
+	--report_theme_fast_start_end_border_color:var(--report_lightblue);
+
+	--report_theme_timetable_data_border_color:inherit;
+	--report_theme_timetable_data_highlight_row_color:var(--report_white);
+	--report_theme_timetable_data_highlight_row_background_color:var(--report_lightblue);
+}
+.theme_month_20017,
+.theme_month_20018,
+.theme_month_20019,
+.theme_month_20020{
+	--report_theme_header_color:var(--report_blue2);
+	--report_theme_header_background_color:inherit;
+	--report_theme_timetable_header_background_color:inherit;
+	--report_theme_timetable_header_color:var(--report_blue2);
+	--report_theme_timetable_data_header_background_color:inherit;
+	--report_theme_timetable_data_header_color:var(--report_blue2);
+	--report_theme_timetable_data_background_color:inherit;
+	--report_theme_timetable_data_color:var(--report_black);
+	--report_theme_timetable_footer_background_color:inherit;
+	--report_theme_timetable_footer_color:var(--report_blue2);
+	--report_theme_footer_color:var(--report_blue2);
+	--report_theme_footer_background_color:inherit;	
+	--report_theme_fast_start_end_color:var(--report_white);
+	--report_theme_fast_start_end_background_color:var(--report_lightblue);
+	--report_theme_fast_start_end_border_color:var(--report_lightblue);
+
+	--report_theme_timetable_data_border_color:inherit;
+	--report_theme_timetable_data_highlight_row_color:var(--report_white);
+	--report_theme_timetable_data_highlight_row_background_color:var(--report_lightblue);
+}
+.theme_month_20017.timetable_month_class #timetable_month_data .timetable_month_data_row.timetable_month_data_header_row,
+.theme_month_20018.timetable_month_class #timetable_month_data .timetable_month_data_row.timetable_month_data_header_row,
+.theme_month_20019.timetable_month_class #timetable_month_data .timetable_month_data_row.timetable_month_data_header_row,
+.theme_month_20020.timetable_month_class #timetable_month_data .timetable_month_data_row.timetable_month_data_header_row{
+	background-color:inherit !important;
+}
+.theme_month_20013,
+.theme_month_20017{
+	--report_theme_timetable_data_highlight_1_10_background_color:var(--report_lightblue);
+	--report_theme_timetable_data_highlight_1_10_color:var(--report_white);
+	--report_theme_timetable_data_highlight_11_20_background_color:var(--report_white);
+	--report_theme_timetable_data_highlight_11_20_color:inherit;
+	--report_theme_timetable_data_highlight_21_30_background_color:var(--report_lightblue2);
+	--report_theme_timetable_data_highlight_21_30_color:var(--report_black);
+}
+.theme_month_20014,
+.theme_month_20018{
+	--report_theme_timetable_data_highlight_1_10_background_color:var(--report_lightblue2);
+	--report_theme_timetable_data_highlight_1_10_color:var(--report_black);
+	--report_theme_timetable_data_highlight_11_20_background_color:var(--report_white);
+	--report_theme_timetable_data_highlight_11_20_color:inherit;
+	--report_theme_timetable_data_highlight_21_30_background_color:var(--report_lightblue);
+	--report_theme_timetable_data_highlight_21_30_color:var(--report_white);
+}
+.theme_month_20015,
+.theme_month_20019{
+	--report_theme_timetable_data_highlight_1_10_background_color:var(--report_white);
+	--report_theme_timetable_data_highlight_1_10_color:var(--report_black);
+	--report_theme_timetable_data_highlight_11_20_background_color:var(--report_lightblue2);
+	--report_theme_timetable_data_highlight_11_20_color:inherit;
+	--report_theme_timetable_data_highlight_21_30_background_color:var(--report_lightblue);
+	--report_theme_timetable_data_highlight_21_30_color:var(--report_white);
+}
+.theme_month_20016,
+.theme_month_20020{
+	--report_theme_timetable_data_highlight_1_10_background_color:var(--report_white);
+	--report_theme_timetable_data_highlight_1_10_color:var(--report_black);
+	--report_theme_timetable_data_highlight_11_20_background_color:var(--report_lightblue);
+	--report_theme_timetable_data_highlight_11_20_color:var(--report_white);
+	--report_theme_timetable_data_highlight_21_30_background_color:var(--report_lightblue2);
+	--report_theme_timetable_data_highlight_21_30_color:var(--report_black);
+}
+.theme_month_20021,
+.theme_month_20022{
 	--report_theme_header_color:inherit;
 	--report_theme_header_background_color:inherit;
 	--report_theme_timetable_header_background_color:inherit;
@@ -729,64 +876,28 @@
 	--report_theme_footer_color:inherit;
 	--report_theme_footer_background_color:inherit;	
 	--report_theme_fast_start_end_color:inherit;
-	--report_theme_fast_start_end_background_color:var(--report_lightgrey);
+
+	--report_theme_timetable_data_highlight_row_color:inherit;
+	--report_theme_timetable_data_highlight_row_background_color:var(--report_lightblue3);
+	--report_theme_timetable_data_highlight_1_10_background_color:var(--report_lightblue3);
+	--report_theme_timetable_data_highlight_1_10_color:var(--report_black);
+	--report_theme_timetable_data_highlight_11_20_background_color:var(--report_white);
+	--report_theme_timetable_data_highlight_11_20_color:inherit;
+	--report_theme_timetable_data_highlight_21_30_background_color:var(--report_lightblue3);
+	--report_theme_timetable_data_highlight_21_30_color:var(--report_black);
+}
+.theme_month_20021{
+	--report_theme_fast_start_end_background_color:var(--report_lightblue3);
 	--report_theme_fast_start_end_border_color:inherit;
-
 	--report_theme_timetable_data_border_color:inherit;
-	--report_theme_timetable_data_highlight_row_color:inherit;
-	--report_theme_timetable_data_highlight_row_background_color:var(--report_lightgrey);
-	--report_theme_timetable_data_highlight_1_10_background_color:var(--report_lightgrey);
-	--report_theme_timetable_data_highlight_11_20_background_color:var(--report_white);
-	--report_theme_timetable_data_highlight_21_30_background_color:var(--report_lightgrey);
-	--report_theme_timetable_data_row_odd_color:inherit;
-	--report_theme_timetable_data_row_odd_background_color:inherit;
-	--report_theme_timetable_data_row_even_color:inherit;
-	--report_theme_timetable_data_row_even_background_color:inherit;
-	--report_theme_timetable_data_column_odd_color:inherit;
-	--report_theme_timetable_data_column_odd_background_color:inherit;
-	--report_theme_timetable_data_column_even_color:inherit;
-	--report_theme_timetable_data_column_even_background_color:inherit;
 }
-.theme_month_20007{
-	--report_theme_display_font_family:var(--font_4);
-	--report_theme_default_font_family:var(--font_4);
-	--report_theme_header_color:var(--report_brown);
-	--report_theme_header_background_color:inherit;
-	--report_theme_timetable_header_background_color:inherit;
-	--report_theme_timetable_header_color:var(--report_brown);
-	--report_theme_timetable_data_header_background_color:var(--report_lightgold);
-	--report_theme_timetable_data_header_color:var(--report_white);
-	--report_theme_timetable_data_background_color:inherit;
-	--report_theme_timetable_data_color:inherit;
-	--report_theme_timetable_footer_background_color:var(--report_lightgold2);
-	--report_theme_timetable_footer_color:var(--report_brown);
-	--report_theme_footer_color:var(--report_brown);
-	--report_theme_footer_background_color:inherit;	
-	--report_theme_fast_start_end_color:inherit;
-	--report_theme_fast_start_end_background_color:var(--report_lightyellow2);
-	--report_theme_fast_start_end_border_color:var(--report_lightgold);
-
-	--report_theme_timetable_data_border_color:var(--report_lightgold);
-	--report_theme_timetable_data_highlight_row_color:inherit;
-	--report_theme_timetable_data_highlight_row_background_color:var(--report_lightgold);
-	--report_theme_timetable_data_highlight_1_10_background_color:var(--report_lightyellow2);
-	--report_theme_timetable_data_highlight_11_20_background_color:var(--report_white);
-	--report_theme_timetable_data_highlight_21_30_background_color:var(--report_lightgold2);
-	--report_theme_timetable_data_row_odd_color:inherit;
-	--report_theme_timetable_data_row_odd_background_color:inherit;
-	--report_theme_timetable_data_row_even_color:inherit;
-	--report_theme_timetable_data_row_even_background_color:inherit;
-	--report_theme_timetable_data_column_odd_color:var(--report_black);
-	--report_theme_timetable_data_column_odd_background_color:var(--report_lightyellow4);
-	--report_theme_timetable_data_column_even_color:var(--report_black);
-	--report_theme_timetable_data_column_even_background_color:var(--report_white);
+.theme_month_20022{
+	--report_theme_fast_start_end_background_color:var(--report_lightblue3);
+	--report_theme_fast_start_end_border_color:var(--report_black);
+	--report_theme_timetable_data_border_color:var(--report_black);
 }
-.theme_month_20007.timetable_month_class #timetable_month_data .timetable_month_data_row .timetable_month_data_col:first-child {
-	background-color: var(--report_lightgold2);
-	color: inherit;
-}
-.theme_month_20008{
-	--report_theme_display_font_family:var(--font_6);
+.theme_month_20030{
+	--report_theme_display_font_family:var(--font_2);
 	--report_theme_default_font_family:var(--font_1);
 	--report_theme_header_color:var(--report_pink);
 	--report_theme_header_background_color:inherit;
@@ -808,192 +919,15 @@
 	--report_theme_timetable_data_highlight_row_color:var(--report_white);
 	--report_theme_timetable_data_highlight_row_background_color:var(--report_black);
 	--report_theme_timetable_data_highlight_1_10_background_color:var(--report_pink2);
+	--report_theme_timetable_data_highlight_1_10_color:var(--report_black);
 	--report_theme_timetable_data_highlight_11_20_background_color:var(--report_white);
+	--report_theme_timetable_data_highlight_1_10_color:inherit;
 	--report_theme_timetable_data_highlight_21_30_background_color:var(--report_pink2);
-	--report_theme_timetable_data_row_odd_color:inherit;
-	--report_theme_timetable_data_row_odd_background_color:inherit;
-	--report_theme_timetable_data_row_even_color:inherit;
-	--report_theme_timetable_data_row_even_background_color:inherit;
-	--report_theme_timetable_data_column_odd_color:inherit;
-	--report_theme_timetable_data_column_odd_background_color:inherit;
-	--report_theme_timetable_data_column_even_color:inherit;
-	--report_theme_timetable_data_column_even_background_color:inherit;
+	--report_theme_timetable_data_highlight_1_10_color:var(--report_black);
 }
-.theme_month_20009{
-	--report_theme_display_font_family:var(--font_1);
-	--report_theme_default_font_family:var(--font_1);
-	--report_theme_header_color:inherit;
-	--report_theme_header_background_color:inherit;
-	--report_theme_timetable_header_background_color:inherit;
-	--report_theme_timetable_header_color:inherit;
-	--report_theme_timetable_data_header_background_color:var(--report_blue);
-	--report_theme_timetable_data_header_color:var(--report_white);
-	--report_theme_timetable_data_background_color:inherit;
-	--report_theme_timetable_data_color:inherit;
-	--report_theme_timetable_footer_background_color:var(--report_blue);
-	--report_theme_timetable_footer_color:var(--report_white);
-	--report_theme_footer_color:inherit;
-	--report_theme_footer_background_color:inherit;	
-	--report_theme_fast_start_end_color:var(--report_white);
-	--report_theme_fast_start_end_background_color:var(--report_blue2);
-	--report_theme_fast_start_end_border_color:var(--report_white);
-
-	--report_theme_timetable_data_border_color:inherit;
-	--report_theme_timetable_data_highlight_row_color:inherit;
-	--report_theme_timetable_data_highlight_row_background_color:var(--report_lightgrey9);
-	--report_theme_timetable_data_highlight_1_10_background_color:var(--report_lightgrey9);
-	--report_theme_timetable_data_highlight_11_20_background_color:var(--report_white);
-	--report_theme_timetable_data_highlight_21_30_background_color:var(--report_lightgrey9);
-	--report_theme_timetable_data_row_odd_color:inherit;
-	--report_theme_timetable_data_row_odd_background_color:inherit;
-	--report_theme_timetable_data_row_even_color:inherit;
-	--report_theme_timetable_data_row_even_background_color:inherit;
-	--report_theme_timetable_data_column_odd_color:inherit;
-	--report_theme_timetable_data_column_odd_background_color:inherit;
-	--report_theme_timetable_data_column_even_color:inherit;
-	--report_theme_timetable_data_column_even_background_color:inherit;
-}
-.theme_month_20010{
+.theme_month_20031{
 	--report_theme_display_font_family:var(--font_3);
-	--report_theme_default_font_family:var(--font_3);
-	--report_theme_header_color:var(--report_darkblue);
-	--report_theme_header_background_color:inherit;
-	--report_theme_timetable_header_background_color:inherit;
-	--report_theme_timetable_header_color:var(--report_darkblue);
-	--report_theme_timetable_data_header_background_color:var(--report_darkblue2);
-	--report_theme_timetable_data_header_color:var(--report_white);
-	--report_theme_timetable_data_background_color:var(--report_lightgrey3);
-	--report_theme_timetable_data_color:var(--report_grey2);
-	--report_theme_timetable_footer_background_color:var(--report_grey2);
-	--report_theme_timetable_footer_color:var(--report_white);
-	--report_theme_footer_color:var(--report_darkblue);
-	--report_theme_footer_background_color:inherit;	
-	--report_theme_fast_start_end_color:var(--report_white);
-	--report_theme_fast_start_end_background_color:var(--report_orange);
-	--report_theme_fast_start_end_border_color:inherit;
-
-	--report_theme_timetable_data_border_color:inherit;
-	--report_theme_timetable_data_highlight_row_color:var(--report_white);
-	--report_theme_timetable_data_highlight_row_background_color:var(--report_lightblue3);
-	--report_theme_timetable_data_highlight_1_10_background_color:var(--report_lightgrey3);
-	--report_theme_timetable_data_highlight_11_20_background_color:var(--report_white);
-	--report_theme_timetable_data_highlight_21_30_background_color:var(--report_lightgrey3);
-	--report_theme_timetable_data_row_odd_color:var(--report_grey2);
-	--report_theme_timetable_data_row_odd_background_color:var(--report_lightgrey3);
-	--report_theme_timetable_data_row_even_color:var(--report_grey2);
-	--report_theme_timetable_data_row_even_background_color:var(--report_lightgrey3);
-	--report_theme_timetable_data_column_odd_color:inherit;
-	--report_theme_timetable_data_column_odd_background_color:inherit;
-	--report_theme_timetable_data_column_even_color:inherit;
-	--report_theme_timetable_data_column_even_background_color:inherit;
-}
-.theme_month_20011{
-	--report_theme_display_font_family:var(--font_7);
-	--report_theme_default_font_family:var(--font_7);
-	--report_theme_header_color:var(--report_grey3);
-	--report_theme_header_background_color:inherit;
-	--report_theme_timetable_header_background_color:var(--report_lightgrey4);
-	--report_theme_timetable_header_color:var(--report_grey3);
-	--report_theme_timetable_data_header_background_color:var(--report_orange2);
-	--report_theme_timetable_data_header_color:var(--report_white);
-	--report_theme_timetable_data_background_color:var(--report_lightgrey4);
-	--report_theme_timetable_data_color:var(--report_darkbrown);
-	--report_theme_timetable_footer_background_color:inherit;
-	--report_theme_timetable_footer_color:var(--report_darkbrown);
-	--report_theme_footer_color:var(--report_grey3);
-	--report_theme_footer_background_color:inherit;	
-	--report_theme_fast_start_end_color:inherit;
-	--report_theme_fast_start_end_background_color:var(--report_lightgrey6);
-	--report_theme_fast_start_end_border_color:inherit;
-
-	--report_theme_timetable_data_border_color:inherit;
-	--report_theme_timetable_data_highlight_row_color:inherit;
-	--report_theme_timetable_data_highlight_row_background_color:var(--report_lightgrey);
-	--report_theme_timetable_data_highlight_1_10_background_color:var(--report_lightgrey);
-	--report_theme_timetable_data_highlight_11_20_background_color:var(--report_lightgrey10);
-	--report_theme_timetable_data_highlight_21_30_background_color:var(--report_lightgrey);
-	--report_theme_timetable_data_row_odd_color:var(--report_darkbrown);
-	--report_theme_timetable_data_row_odd_background_color:var(--report_lightgrey4);
-	--report_theme_timetable_data_row_even_color:var(--report_darkbrown);
-	--report_theme_timetable_data_row_even_background_color:var(--report_lightgrey4);
-	--report_theme_timetable_data_column_odd_color:inherit;
-	--report_theme_timetable_data_column_odd_background_color:inherit;
-	--report_theme_timetable_data_column_even_color:inherit;
-	--report_theme_timetable_data_column_even_background_color:inherit;
-}
-.theme_month_20012{
-	--report_theme_display_font_family:var(--font_10);
-	--report_theme_default_font_family:var(--font_10);
-	--report_theme_header_color:var(--report_blue4);
-	--report_theme_header_background_color:inherit;
-	--report_theme_timetable_header_background_color:inherit;
-	--report_theme_timetable_header_color:var(--report_blue4);
-	--report_theme_timetable_data_header_background_color:inherit;
-	--report_theme_timetable_data_header_color:var(--report_blue4);
-	--report_theme_timetable_data_background_color:inherit;
-	--report_theme_timetable_data_color:var(--report_grey4);
-	--report_theme_timetable_footer_background_color:inherit;
-	--report_theme_timetable_footer_color:var(--report_blue4);
-	--report_theme_footer_color:var(--report_blue4);
-	--report_theme_footer_background_color:inherit;	
-	--report_theme_fast_start_end_color:var(--report_white);
-	--report_theme_fast_start_end_background_color:var(--report_blue4);
-	--report_theme_fast_start_end_border_color:inherit;
-
-	--report_theme_timetable_data_border_color:inherit;
-	--report_theme_timetable_data_highlight_row_color:var(--report_white);
-	--report_theme_timetable_data_highlight_row_background_color:var(--report_orange3);
-	--report_theme_timetable_data_highlight_1_10_background_color:var(--report_lightgrey3);
-	--report_theme_timetable_data_highlight_11_20_background_color:var(--report_white);
-	--report_theme_timetable_data_highlight_21_30_background_color:var(--report_lightgrey3);
-	--report_theme_timetable_data_row_odd_color:inherit;
-	--report_theme_timetable_data_row_odd_background_color:inherit;
-	--report_theme_timetable_data_row_even_color:inherit;
-	--report_theme_timetable_data_row_even_background_color:inherit;
-	--report_theme_timetable_data_column_odd_color:inherit;
-	--report_theme_timetable_data_column_odd_background_color:inherit;
-	--report_theme_timetable_data_column_even_color:inherit;
-	--report_theme_timetable_data_column_even_background_color:inherit;
-}
-.theme_month_20013{
-	--report_theme_display_font_family:var(--font_7);
-	--report_theme_default_font_family:var(--font_8);
-	--report_theme_header_color:var(--report_darkblue3);
-	--report_theme_header_background_color:inherit;
-	--report_theme_timetable_header_background_color:inherit;
-	--report_theme_timetable_header_color:var(--report_darkblue3);
-	--report_theme_timetable_data_header_background_color:inherit;
-	--report_theme_timetable_data_header_color:var(--report_darkblue3);
-	--report_theme_timetable_data_background_color:inherit;
-	--report_theme_timetable_data_color:var(--report_darkblue3);
-	--report_theme_timetable_footer_background_color:var(--report_darkblue3);
-	--report_theme_timetable_footer_color:var(--report_white);
-	--report_theme_footer_color:var(--report_darkblue3);
-	--report_theme_footer_background_color:inherit;	
-	--report_theme_fast_start_end_color:var(--report_white);
-	--report_theme_fast_start_end_background_color:var(--report_gold);
-	--report_theme_fast_start_end_border_color:var(--report_darkblue5);
-
-	--report_theme_timetable_data_border_color:inherit;
-	--report_theme_timetable_data_highlight_row_color:var(--report_white);
-	--report_theme_timetable_data_highlight_row_background_color:var(--report_darkblue4);
-	--report_theme_timetable_data_highlight_1_10_background_color:inherit;
-	--report_theme_timetable_data_highlight_11_20_background_color:var(--report_white);
-	--report_theme_timetable_data_highlight_21_30_background_color:inherit;
-	--report_theme_timetable_data_row_odd_color:inherit;
-	--report_theme_timetable_data_row_odd_background_color:inherit;
-	--report_theme_timetable_data_row_even_color:inherit;
-	--report_theme_timetable_data_row_even_background_color:inherit;
-	--report_theme_timetable_data_column_odd_color:inherit;
-	--report_theme_timetable_data_column_odd_background_color:inherit;
-	--report_theme_timetable_data_column_even_color:inherit;
-	--report_theme_timetable_data_column_even_background_color:inherit;
-
-	background-image: linear-gradient(to bottom,var(--report_lightgrey12) 0%,var(--report_white) 100%);
-}
-.theme_month_20014{
-	--report_theme_display_font_family:var(--font_11);
-	--report_theme_default_font_family:var(--font_9);
+	--report_theme_default_font_family:var(--font_4);
 	--report_theme_header_color:var(--report_gold);
 	--report_theme_header_background_color:inherit;
 	--report_theme_timetable_header_background_color:inherit;
@@ -1013,56 +947,89 @@
 	--report_theme_timetable_data_border_color:inherit;
 	--report_theme_timetable_data_highlight_row_color:var(--report_white);
 	--report_theme_timetable_data_highlight_row_background_color:var(--report_gold);
-	--report_theme_timetable_data_highlight_1_10_background_color:var(--report_lightgold3);
+	--report_theme_timetable_data_highlight_1_10_background_color:var(--report_lightgold);
+	--report_theme_timetable_data_highlight_1_10_color:var(--report_black);
 	--report_theme_timetable_data_highlight_11_20_background_color:var(--report_white);
-	--report_theme_timetable_data_highlight_21_30_background_color:var(--report_lightgold3);
+	--report_theme_timetable_data_highlight_1_10_color:inherit;
+	--report_theme_timetable_data_highlight_21_30_background_color:var(--report_lightgold);
+	--report_theme_timetable_data_highlight_1_10_color:var(--report_black);
+}
+/*no odd even row colors*/
+.theme_month_20001, .theme_month_20003, .theme_month_20004, .theme_month_20005,
+.theme_month_20013, .theme_month_20015, .theme_month_20016, .theme_month_20017, 
+.theme_month_20021, .theme_month_20022{
 	--report_theme_timetable_data_row_odd_color:inherit;
 	--report_theme_timetable_data_row_odd_background_color:inherit;
 	--report_theme_timetable_data_row_even_color:inherit;
 	--report_theme_timetable_data_row_even_background_color:inherit;
+}
+/*no odd even row colors but background color*/
+.theme_month_20009, .theme_month_20010{
+	--report_theme_timetable_data_row_odd_color:inherit;
+	--report_theme_timetable_data_row_odd_background_color:var(--report_lightblue3);
+	--report_theme_timetable_data_row_even_color:inherit;
+	--report_theme_timetable_data_row_even_background_color:var(--report_lightblue3);
+}
+/*with odd even row colors lightblue*/
+.theme_month_20002, .theme_month_20006{
+	--report_theme_timetable_data_row_odd_color:inherit;
+	--report_theme_timetable_data_row_odd_background_color:var(--report_lightblue);
+	--report_theme_timetable_data_row_even_color:inherit;
+	--report_theme_timetable_data_row_even_background_color:var(--report_white);
+}
+/*with odd even row colors lightblue 2*/
+.theme_month_20010, .theme_month_20014, .theme_month_20018{
+	--report_theme_timetable_data_row_odd_color:inherit;
+	--report_theme_timetable_data_row_odd_background_color:var(--report_lightblue2);
+	--report_theme_timetable_data_row_even_color:inherit;
+	--report_theme_timetable_data_row_even_background_color:var(--report_white);
+}
+/*no odd even column colors*/
+.theme_month_20001, .theme_month_20002, .theme_month_20005, .theme_month_20006, .theme_month_20009, .theme_month_20010, 
+.theme_month_20013, .theme_month_20014, .theme_month_20017, .theme_month_20018, .theme_month_20021,
+.theme_month_20022{
 	--report_theme_timetable_data_column_odd_color:inherit;
 	--report_theme_timetable_data_column_odd_background_color:inherit;
 	--report_theme_timetable_data_column_even_color:inherit;
 	--report_theme_timetable_data_column_even_background_color:inherit;
 }
-.theme_month_20015{
-	--report_theme_display_font_family:var(--font_1);
-	--report_theme_default_font_family:var(--font_1);
-	--report_theme_header_color:inherit;
-	--report_theme_header_background_color:inherit;
-	--report_theme_timetable_header_background_color:inherit;
-	--report_theme_timetable_header_color:inherit;
-	--report_theme_timetable_data_header_background_color:var(--report_lightgold3);
-	--report_theme_timetable_data_header_color:inherit;
-	--report_theme_timetable_data_background_color:inherit;
-	--report_theme_timetable_data_color:inherit;
-	--report_theme_timetable_footer_background_color:var(--report_lightgold3);
-	--report_theme_timetable_footer_color:inherit;
-	--report_theme_footer_color:inherit;
-	--report_theme_footer_background_color:inherit;	
-	--report_theme_fast_start_end_color:inherit;
-	--report_theme_fast_start_end_background_color:var(--report_lightyellow2);
-	--report_theme_fast_start_end_border_color:inherit;
-
-	--report_theme_timetable_data_border_color:var(--report_lightgold3);
-	--report_theme_timetable_data_highlight_row_color:inherit;
-	--report_theme_timetable_data_highlight_row_background_color:var(--report_lightgold2);
-	--report_theme_timetable_data_highlight_1_10_background_color:var(--report_lightgold2);
-	--report_theme_timetable_data_highlight_11_20_background_color:var(--report_white);
-	--report_theme_timetable_data_highlight_21_30_background_color:var(--report_lightgold2);
-	--report_theme_timetable_data_row_odd_color:inherit;
-	--report_theme_timetable_data_row_odd_background_color:inherit;
-	--report_theme_timetable_data_row_even_color:inherit;
-	--report_theme_timetable_data_row_even_background_color:inherit;
+/*no odd even column colors but background color*/
+.theme_month_20011, .theme_month_20012{
 	--report_theme_timetable_data_column_odd_color:inherit;
-	--report_theme_timetable_data_column_odd_background_color:var(--report_lightyellow5);
+	--report_theme_timetable_data_column_odd_background_color:inherit;
+	--report_theme_timetable_data_column_even_color:inherit;
+	--report_theme_timetable_data_column_even_background_color:var(--report_lightblue3) !important;
+}
+
+/*width odd even column colors lightblue*/
+.theme_month_20003, .theme_month_20004, .theme_month_20007, .theme_month_20008{
+	--report_theme_timetable_data_column_odd_color:var(--report_black);
+	--report_theme_timetable_data_column_odd_background_color:var(--report_lightblue);
 	--report_theme_timetable_data_column_even_color:inherit;
 	--report_theme_timetable_data_column_even_background_color:var(--report_white);
 }
-.theme_year_30001{
-	--report_theme_display_font_family:var(--font_1);
-	--report_theme_default_font_family:var(--font_1);
+/*width odd even column colors lightblue2*/
+.theme_month_20011, .theme_month_20012, .theme_month_20015, .theme_month_20016, .theme_month_20019, .theme_month_20020{
+	--report_theme_timetable_data_column_odd_color:var(--report_black);
+	--report_theme_timetable_data_column_odd_background_color:var(--report_lightblue2);
+	--report_theme_timetable_data_column_even_color:inherit;
+	--report_theme_timetable_data_column_even_background_color:var(--report_white);
 }
+/*first column extra highlight*/
+.theme_month_20004.timetable_month_class #timetable_month_data .timetable_month_data_row .timetable_month_data_col:first-child,
+.theme_month_20008.timetable_month_class #timetable_month_data .timetable_month_data_row .timetable_month_data_col:first-child,
+.theme_month_20012.timetable_month_class #timetable_month_data .timetable_month_data_row .timetable_month_data_col:first-child,
+.theme_month_20016.timetable_month_class #timetable_month_data .timetable_month_data_row .timetable_month_data_col:first-child,
+.theme_month_20020.timetable_month_class #timetable_month_data .timetable_month_data_row .timetable_month_data_col:first-child{
+	background-color: var(--report_darkblue);
+	color: var(--report_white);
+}
+
+/*
+.theme_year_30001{
+	
+}
+*/
 
 /*Themes*/
 /*DISPLAY FONT*/
@@ -1095,8 +1062,8 @@
 .timetable_class{
 	color: var(--report_theme_text_color);
 }
-.timetable_class .timetable_month_data_col.timetable_data_fast_start, 
-.timetable_class .timetable_month_data_col.timetable_data_fast_end{
+.timetable_class .timetable_data_fast_start, 
+.timetable_class .timetable_data_fast_end{
 	color: var(--report_theme_fast_start_end_color) !important;
 	background-color: var(--report_theme_fast_start_end_background_color) !important;
 	border-left: 1px solid var(--report_theme_fast_start_end_border_color);
@@ -1122,6 +1089,14 @@
 	background-color: var(--report_theme_timetable_data_background_color);
 	color: var(--report_theme_timetable_data_color);
 }
+#timetable_day .timetable_day_timetable_footer {
+	color: var(--report_theme_timetable_footer_color);
+	background-color: var(--report_theme_timetable_footer_background_color);
+}
+#timetable_day #copyright {
+	color: var(--report_theme_copyright_color);
+	background-color: var(--report_theme_copyright_background_color);
+}
 
 /*MONTH*/
 
@@ -1142,12 +1117,15 @@
 }
 .timetable_month_class #timetable_month_data .timetable_month_data_row.timetable_month_data_day_01-10_row .timetable_month_data_col {
 	background-color: var(--report_theme_timetable_data_highlight_1_10_background_color) !important;
+	color: var(--report_theme_timetable_data_highlight_1_10_color) !important;
 }
 .timetable_month_class #timetable_month_data .timetable_month_data_row.timetable_month_data_day_11-20_row .timetable_month_data_col {
 	background-color: var(--report_theme_timetable_data_highlight_11_20_background_color) !important;
+	color: var(--report_theme_timetable_data_highlight_11_20_color) !important;
 }
 .timetable_month_class #timetable_month_data .timetable_month_data_row.timetable_month_data_day_21-30_row .timetable_month_data_col {
 	background-color: var(--report_theme_timetable_data_highlight_21_30_background_color) !important;
+	color: var(--report_theme_timetable_data_highlight_21_30_color) !important;
 }
 /*when both hightlight and fasting info at the same time then choose fasting colors*/
 .timetable_month_class #timetable_month_data .timetable_month_data_row.timetable_month_data_highlight_row .timetable_month_data_col.timetable_data_fast_start,
@@ -1164,16 +1142,16 @@
 /* odd and even row colors*/
 /* if not using this but using background colors or color then set the same for even and odd rows colors in theme*/
 .timetable_month_class #timetable_month_data .timetable_month_data_row:nth-child(odd) {
-	color: var(--report_theme_timetable_data_row_odd_color);
-	background-color: var(--report_theme_timetable_data_row_odd_background_color);
+	color: var(--report_theme_timetable_data_row_odd_color) !important;
+	background-color: var(--report_theme_timetable_data_row_odd_background_color) !important;
 }
 .timetable_month_class #timetable_month_data .timetable_month_data_row:nth-child(even) {
 	color: var(--report_theme_timetable_data_row_even_color);
 	background-color: var(--report_theme_timetable_data_row_even_background_color);
 }
 .timetable_month_class #timetable_month_data .timetable_month_data_row{
-	color: var(--report_theme_timetable_data_color);
-	background-color: var(--report_theme_timetable_data_background_color);	
+	color: var(--report_theme_timetable_data_color) !important;
+	background-color: var(--report_theme_timetable_data_background_color) !important;
 }
 .timetable_month_class #timetable_month_data .timetable_month_data_row .timetable_month_data_col {
 	border-bottom: 0.5px solid var(--report_theme_timetable_data_border_color);
