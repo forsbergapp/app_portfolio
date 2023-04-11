@@ -305,7 +305,7 @@ async function init_app(){
     document.getElementById('title2').innerHTML = 'App Portfolio Data model';
     document.getElementById('info_message').innerHTML = common.ICONS['app_home'];
     document.getElementById('contact_text').innerHTML = 'Contact'    
-    document.getElementById('copyright').innerHTML = APP_GLOBAL['app_copyright'];
+    document.querySelector('#app_copyright').innerHTML = APP_GLOBAL['app_copyright'];
     document.getElementById('app_email').href='mailto:' + APP_GLOBAL['app_email'];
     document.getElementById('app_email').innerHTML=APP_GLOBAL['app_email'];
 
