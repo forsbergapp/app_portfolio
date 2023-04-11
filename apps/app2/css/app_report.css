@@ -5,7 +5,7 @@
 	--font_3: 'Caveat';
 	--font_4: 'Montserrat';
 
-
+	--app_day_columns:6;
 	--report_theme_display_font_family:var(--font_1);
 	--report_theme_default_font_family:var(--font_1);
 	--report_theme_text_color: var(--report_black);
@@ -161,18 +161,21 @@
 
 #timetable_day_timetable {
 	display: inline-grid;
+	width:100%;
 }
-#timetable_day .timetable_day_timetable_header_row{
-	display: block;
+#timetable_day .timetable_day_timetable_header_row,
+#timetable_day .timetable_day_timetable_row_data{
+	display: grid;
+	grid-template-columns: repeat(var(--app_day_columns), 1fr);
+    grid-column-gap: 0.2em;
+	font-size: calc(9/var(--app_day_columns) * 6pt);
 }
-#timetable_day .timetable_day_timetable_header_row div {
-	display: inline-block;
-	width: 110px;
+#timetable_day .timetable_day_timetable_header_row div,
+#timetable_day .timetable_day_timetable_row_data div{
+	padding: 0.2em;
 }
-
 #timetable_day .timetable_day_timetable_row_data{
 	margin-top:10px;
-	display: inline-block;
 }
 #timetable_day .timetable_day_timetable_row_data.timetable_day_today_row{
 	animation: pulsate 2s ease-out;
@@ -181,13 +184,6 @@
 	font-weight: bold;
 }
 
-#timetable_day .timetable_day_timetable_row_data div {
-	display: inline-block;
-	width: 111px;
-	line-height: 2em;
-	margin: 1px;
-	vertical-align: middle;
-}
 #timetable_day .timetable_data_fast_start,
 #timetable_day .timetable_data_fast_end {
 	font-size: 1.2em !important;
