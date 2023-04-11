@@ -110,7 +110,7 @@ body.font_arabic_nastaliq #common_user_menu_default_avatar{
     height: 30px;
     margin: 0 auto;
 }
-#start_links, #contact, #copyright{
+#start_links, #contact, #app_copyright{
 	font-size: 11px;
 	width: 300px;
 }
@@ -564,7 +564,7 @@ div.ray8 {
 	#apps{
 		width: 390px;
 	}
-	#start_links, #contact, #copyright{
+	#start_links, #contact, #app_copyright{
 		font-size: 14px;
 		width: 390px;
 	}

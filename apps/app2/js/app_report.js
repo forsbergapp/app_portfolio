@@ -988,7 +988,7 @@ async function displayMonth(prayTimes, settings, item_id) {
 									`<div >${REPORT_GLOBAL['first_language'].timezone_text}</div>
 									<div >${settings.timezone}</div>`
 									:''}
-								<div id='copyright'>${app_common.APP_GLOBAL['app_copyright']}</div>
+								<div class='copyright'>${app_common.APP_GLOBAL['app_copyright']}</div>
 							</div>
 						</div>
 					</div>
@@ -1187,7 +1187,7 @@ async function displayDay(prayTimes, settings, item_id, user_settings){
 						//Footer
 						day_html += 
 						`</div>
-						<div id='copyright'>${app_common.APP_GLOBAL['app_copyright']}</div>
+						<div class='copyright'>${app_common.APP_GLOBAL['app_copyright']}</div>
 						<div id='timetable_footer' class='display_font' style='${footer_style}'>
 							<div>${settings.footer_txt1}</div>
 							<div>${settings.footer_txt2}</div>
@@ -1374,7 +1374,7 @@ async function displayYear(prayTimes, settings, item_id){
 										<div ${settings.show_gps == 'YES'?'class=""':'class="hidden"'}>${settings.show_gps == 'YES'?settings.gps_long.toLocaleString(settings.locale + REPORT_GLOBAL['regional_def_locale_ext_prefix'] + REPORT_GLOBAL['regional_def_locale_ext_number_system'] + settings.number_system):''}</div>
 										<div ${settings.show_timezone == 'YES'?'class=""':'class="hidden"'}>${settings.show_timezone == 'YES'?REPORT_GLOBAL['first_language'].timezone_text:''}</div>
 										<div ${settings.show_timezone == 'YES'?'class=""':'class="hidden"'}>${settings.show_timezone == 'YES'?settings.timezone:''}</div>
-										<div id='copyright'>${app_common.APP_GLOBAL['app_copyright']}</div>
+										<div class='copyright'>${app_common.APP_GLOBAL['app_copyright']}</div>
 									</div>
 								</div>
 							</div>
