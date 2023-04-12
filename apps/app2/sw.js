@@ -38,11 +38,11 @@ self.addEventListener('install', ( event ) => {
       );
 });
 
-self.addEventListener('activate', function(event) {
+self.addEventListener('activate', (event) => {
     event.waitUntil(
         caches.keys()
-        .then(function(keyList) {
-            return Promise.all(keyList.map(function(key) {
+        .then((keyList) => {
+            return Promise.all(keyList.map((key) => {
                 if (key !== cacheName) {
                     return caches.delete(key);
                 }
@@ -52,10 +52,10 @@ self.addEventListener('activate', function(event) {
     return self.clients.claim();
 });
 
-self.addEventListener('fetch', function(event) {
+self.addEventListener('fetch', (event) => {
     event.respondWith(
         caches.match(event.request)
-        .then(function(response) {
+        .then((response) => {
             if (response) {
                 return response;
             } else {

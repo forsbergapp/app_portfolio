@@ -4,8 +4,8 @@ app.use('/app1/css',express.static(process.cwd() + '/apps/app1/css'));
 app.use('/app1/images',express.static(process.cwd() + '/apps/app1/images'));
 app.use('/app1/js',express.static(process.cwd() + '/apps/app1/js'));
 //routes
-app.get("/info/:info",function (req, res, next) {
-    import(`file://${process.cwd()}/apps/index.js`).then(function({ check_app_subdomain}){
+app.get("/info/:info",(req, res, next) => {
+    import(`file://${process.cwd()}/apps/index.js`).then(({ check_app_subdomain}) => {
       if (check_app_subdomain(APP1_ID, req.headers.host) ||
         req.headers.host.substring(0,req.headers.host.indexOf('.'))=='www'){
           switch (req.params.info){
@@ -31,8 +31,8 @@ app.get("/info/:info",function (req, res, next) {
           next();
     })
 });
-app.get('/:user',function (req, res, next) {
-  import(`file://${process.cwd()}/apps/index.js`).then(function({ check_app_subdomain}){
+app.get('/:user',(req, res, next) => {
+  import(`file://${process.cwd()}/apps/index.js`).then(({ check_app_subdomain}) => {
     if ((check_app_subdomain(APP1_ID, req.headers.host) ||
         req.headers.host.substring(0,req.headers.host.indexOf('.'))=='www') &&
         req.params.user !== '' && 
@@ -42,7 +42,7 @@ app.get('/:user',function (req, res, next) {
         req.params.user!=='images' &&
         req.params.user!=='info' &&
         req.params.user!=='js'){
-        import(`file://${process.cwd()}/service/forms/forms.controller.js`).then(function({ getForm }){
+        import(`file://${process.cwd()}/service/forms/forms.controller.js`).then(({ getForm }) => {
           getForm(req, res, APP1_ID, req.params.user,(err, app_result)=>{
               //if app_result=0 means here redirect to /
               if (app_result==0)
@@ -57,11 +57,11 @@ app.get('/:user',function (req, res, next) {
   })
 });
 //config root url
-app.get('/',function (req, res, next) {
-  import(`file://${process.cwd()}/apps/index.js`).then(function({ check_app_subdomain}){
+app.get('/',(req, res, next) => {
+  import(`file://${process.cwd()}/apps/index.js`).then(({ check_app_subdomain}) => {
     if (check_app_subdomain(APP1_ID, req.headers.host) ||
         req.headers.host.substring(0,req.headers.host.indexOf('.'))=='www'){
-        import(`file://${process.cwd()}/service/forms/forms.controller.js`).then(function({ getForm }){
+        import(`file://${process.cwd()}/service/forms/forms.controller.js`).then(({ getForm }) => {
           getForm(req, res, APP1_ID, null,(err, app_result)=>{
               return res.send(app_result);
           })

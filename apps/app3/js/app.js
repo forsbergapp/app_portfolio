@@ -1,15 +1,15 @@
 const common = await import('/common/js/common.js');
-function app_exception() {
+const app_exception = () => {
     null;
 }
-function show_doc(item){
+const show_doc = (item) => {
     if (item.classList.contains('doc_list_item_image')){
         document.getElementById('dialogue_documents').style.visibility = 'hidden';
         document.getElementById('common_window_info').style.visibility = 'visible';
         document.getElementById('common_window_info_info').innerHTML = `<img src="${item.parentNode.getAttribute('full_size')}"/>`;
     }
 }
-function getdocs(docid = null){
+const getdocs = (docid = null) => {
     document.getElementById('doc_list').innerHTML = common.APP_SPINNER;
     let result = `{"data":[{"id":1,
                             "doc_title":"Diagram",
@@ -36,9 +36,9 @@ function getdocs(docid = null){
                     </div>`;
     }
     document.querySelector('#doc_list').innerHTML = html;
-    document.querySelector('#doc_list').addEventListener('click',function(event){show_doc(event.target)});
+    document.querySelector('#doc_list').addEventListener('click',(event) => {show_doc(event.target)});
 }
-async function init_app(){
+const init_app = async () => {
     document.getElementById('app_title').innerHTML = common.COMMON_GLOBAL['app_name'];
     common.zoom_info('');
     common.move_info(null,null);
@@ -74,9 +74,9 @@ async function init_app(){
     })
 
 }
-function init(parameters){
+const init = (parameters) => {
     common.init_common(parameters, (err, global_app_parameters)=>{
-        init_app().then(function(){
+        init_app().then(() => {
             null;
         })
     })
