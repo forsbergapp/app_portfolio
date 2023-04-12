@@ -2349,28 +2349,28 @@ const setEvents = () => {
     //dialogue verify
     document.getElementById('common_user_verify_verification_container').addEventListener('keyup', (event) => {
         switch (event.target.id){
-            case 'user_verify_verification_char1':{
-                user_verify_common.check_input_app(event.target, "user_verify_verification_char2")
+            case 'common_user_verify_verification_char1':{
+                user_verify_check_input_app(event.target, "common_user_verify_verification_char2")
                 break;
             }
-            case 'user_verify_verification_char2':{
-                user_verify_common.check_input_app(event.target, "user_verify_verification_char3")
+            case 'common_user_verify_verification_char2':{
+                user_verify_check_input_app(event.target, "common_user_verify_verification_char3")
                 break;
             }
-            case 'user_verify_verification_char3':{
-                user_verify_common.check_input_app(event.target, "user_verify_verification_char4")
+            case 'common_user_verify_verification_char3':{
+                user_verify_check_input_app(event.target, "common_user_verify_verification_char4")
                 break;
             }
-            case 'user_verify_verification_char4':{
-                user_verify_common.check_input_app(event.target, "user_verify_verification_char5")
+            case 'common_user_verify_verification_char4':{
+                user_verify_check_input_app(event.target, "common_user_verify_verification_char5")
                 break;
             }
-            case 'user_verify_verification_char5':{
-                user_verify_common.check_input_app(event.target, "user_verify_verification_char6")
+            case 'common_user_verify_verification_char5':{
+                user_verify_check_input_app(event.target, "common_user_verify_verification_char6")
                 break;
             }
-            case 'user_verify_verification_char6':{
-                user_verify_common.check_input_app(event.target, "")
+            case 'common_user_verify_verification_char6':{
+                user_verify_check_input_app(event.target, "")
                 break;
             }
         }
