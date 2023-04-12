@@ -1,8 +1,8 @@
 const { read_app_files, get_module_with_init, getUserPreferences } = await import(`file://${process.cwd()}/apps/index.js`);
 
-function getApp(app_id, username, gps_lat, gps_long, gps_place){
-    return new Promise(function (resolve, reject){
-        function main(app_id){
+const getApp = (app_id, username, gps_lat, gps_long, gps_place) => {
+    return new Promise((resolve, reject) => {
+        const main = (app_id) => {
             const files = [
                 ['APP', process.cwd() + '/apps/app1/src/index.html'],
                 ['<AppCommonHead/>', process.cwd() + '/apps/common/src/head.html'],
@@ -24,7 +24,7 @@ function getApp(app_id, username, gps_lat, gps_long, gps_place){
                 ['<AppCommonProfileBtnTop/>', process.cwd() + '/apps/common/src/profile_btn_top.html'], /*AppCommonProfileBtnTop inside AppToolbarBttom */
                 ['<AppCommonProfileInfoCloud/>', process.cwd() + '/apps/common/src/profile_info_cloud.html'] /*AppCommonProfileInfoCloud inside AppProfileInfo */
                 ];
-            getUserPreferences(app_id).then(function(user_preferences){
+            getUserPreferences(app_id).then((user_preferences) => {
                 read_app_files(app_id, files, (err, app)=>{
                     if (err)
                         reject(err);
@@ -67,8 +67,8 @@ function getApp(app_id, username, gps_lat, gps_long, gps_place){
             }) 
         }
         if (username!=null){
-            import(`file://${process.cwd()}/server/server.service.js`).then(function({ConfigGet}){
-                import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/user_account/user_account.service.js`).then(function({getProfileUser}){
+            import(`file://${process.cwd()}/server/server.service.js`).then(({ConfigGet}) => {
+                import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/user_account/user_account.service.js`).then(({getProfileUser}) => {
                     getProfileUser(app_id, null, username, null, (err,result)=>{
                         if (result)
                             main(app_id);

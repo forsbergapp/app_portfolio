@@ -24,7 +24,7 @@ const APP_GLOBAL = {
     "info_link_about_name":"",
     "info_link_about_url":""
 }
-function show_hide_apps_dialogue(){
+const show_hide_apps_dialogue = () => {
     if (document.getElementById('dialogue_start_content').style.visibility=='visible' ||
         document.getElementById('dialogue_start_content').style.visibility==''){
         document.getElementById('dialogue_start_content').style.visibility='hidden';
@@ -37,76 +37,76 @@ function show_hide_apps_dialogue(){
         document.getElementById('common_profile_btn_top').style.visibility='visible';
     }
 }
-function setEvents(){
+const setEvents = () => {
 
     //app
-    document.getElementById('theme_background').addEventListener('click', function() { show_hide_apps_dialogue()  }, false);
+    document.getElementById('theme_background').addEventListener('click', () => { show_hide_apps_dialogue()  }, false);
     //start page
-    document.getElementById( 'start_message' ).addEventListener( 'click', function( event ) {
+    document.getElementById( 'start_message' ).addEventListener( 'click', ( event ) => {
         event.preventDefault();
         document.getElementById( 'dialogue_info_content' ).className = 'dialogue_content dialogue_flip dialogue_flip-side-1';
         document.getElementById( 'dialogue_start_content' ).className = 'dialogue_content dialogue_flip dialogue_flip-side-2';
     }, false );
     //second page
-    document.getElementById('info_diagram').addEventListener('click', function() {common.show_window_info(0, true, APP_GLOBAL['img_diagram_img'])}, false);
-    document.getElementById('info_datamodel').addEventListener('click', function() {common.show_window_info(0, true, APP_GLOBAL['img_datamodel_img'])}, false);
-   
-    document.getElementById( 'info_message' ).addEventListener( 'click', function( event ) {
+    document.getElementById('info_diagram').addEventListener('click', () => {common.show_window_info(0, true, APP_GLOBAL['img_diagram_img'])}, false);
+    document.getElementById('info_datamodel').addEventListener('click', () => {common.show_window_info(0, true, APP_GLOBAL['img_datamodel_img'])}, false);
+    
+    document.getElementById( 'info_message' ).addEventListener( 'click', ( event ) => {
         event.preventDefault();
         document.getElementById( 'dialogue_info_content' ).className = 'dialogue_content dialogue_flip';
         document.getElementById( 'dialogue_start_content' ).className = 'dialogue_content dialogue_flip';
     }, false );
     //common
-    document.getElementById('common_profile_btn_top').addEventListener('click', function() {common.profile_top(1)}, false);
+    document.getElementById('common_profile_btn_top').addEventListener('click', () => {common.profile_top(1)}, false);
     //user menu
-    document.getElementById('common_user_menu_username').addEventListener('click', function() { user_menu_item_click(this) }, false);
-    document.getElementById('common_user_menu_dropdown_log_out').addEventListener('click', function() { user_menu_item_click(this) }, false);
+    document.getElementById('common_user_menu_username').addEventListener('click', (event) => { user_menu_item_click(event.target) }, false);
+    document.getElementById('common_user_menu_dropdown_log_out').addEventListener('click', (event) => { user_menu_item_click(event.target) }, false);
     //user preferences
-    document.getElementById('app_theme_checkbox').addEventListener('click', function() { app_theme_switch() }, false);
-    document.getElementById('common_user_locale_select').addEventListener('change', function() { document.getElementById('apps').innerHTML = common.APP_SPINNER;common.common_translate_ui(this.value, null, (err, result)=>{get_apps()});}, false);
-    document.getElementById('common_user_arabic_script_select').addEventListener('change', function() { app_theme_switch()}, false);
+    document.getElementById('app_theme_checkbox').addEventListener('click', () => { app_theme_switch() }, false);
+    document.getElementById('common_user_locale_select').addEventListener('change', (event) => { document.getElementById('apps').innerHTML = common.APP_SPINNER;common.common_translate_ui(event.target.value, null, (err, result)=>{get_apps()});}, false);
+    document.getElementById('common_user_arabic_script_select').addEventListener('change', () => { app_theme_switch()}, false);
     //common with app specific settings
     //dialogue profile
-    document.getElementById('common_profile_home').addEventListener('click', function() {common.profile_top(1);}, false);
-    document.getElementById('common_profile_close').addEventListener('click', function() {common.profile_close()}, false);
-    document.getElementById('common_profile_search_input').addEventListener('keyup', function(event) { common.search_input(event, null);}, false);
-    document.getElementById('common_profile_top_row1_1').addEventListener('click', function() { common.profile_top(1)}, false);
-    document.getElementById('common_profile_top_row1_2').addEventListener('click', function() { common.profile_top(2)}, false);
-    document.getElementById('common_profile_top_row1_3').addEventListener('click', function() { common.profile_top(3)}, false);
-    document.getElementById('common_profile_follow').addEventListener('click', function() { common.profile_follow_like('FOLLOW') }, false);
-	document.getElementById('common_profile_like').addEventListener('click', function() { common.profile_follow_like('LIKE') }, false);
-    document.getElementById('common_profile_main_btn_following').addEventListener('click', function() { common.profile_detail(1, null, true, null) }, false);
-    document.getElementById('common_profile_main_btn_followed').addEventListener('click', function() { common.profile_detail(2, null, true, null) }, false);
-    document.getElementById('common_profile_main_btn_likes').addEventListener('click', function() { common.profile_detail(3, null, true, null) }, false);
-    document.getElementById('common_profile_main_btn_liked').addEventListener('click', function() { common.profile_detail(4, null, true, null) }, false);
-    document.getElementById('common_profile_main_btn_cloud').addEventListener('click', function() { common.profile_detail(5, common.COMMON_GLOBAL['rest_user_account_app'] + 'apps/', true, global_icon_sky_cloud, null) }, false);
+    document.getElementById('common_profile_home').addEventListener('click', () => {common.profile_top(1);}, false);
+    document.getElementById('common_profile_close').addEventListener('click', () => {common.profile_close()}, false);
+    document.getElementById('common_profile_search_input').addEventListener('keyup', (event) => { common.search_input(event, null);}, false);
+    document.getElementById('common_profile_top_row1_1').addEventListener('click', () => { common.profile_top(1)}, false);
+    document.getElementById('common_profile_top_row1_2').addEventListener('click', () => { common.profile_top(2)}, false);
+    document.getElementById('common_profile_top_row1_3').addEventListener('click', () => { common.profile_top(3)}, false);
+    document.getElementById('common_profile_follow').addEventListener('click', () => { common.profile_follow_like('FOLLOW') }, false);
+    document.getElementById('common_profile_like').addEventListener('click', () => { common.profile_follow_like('LIKE') }, false);
+    document.getElementById('common_profile_main_btn_following').addEventListener('click', () => { common.profile_detail(1, null, true, null) }, false);
+    document.getElementById('common_profile_main_btn_followed').addEventListener('click', () => { common.profile_detail(2, null, true, null) }, false);
+    document.getElementById('common_profile_main_btn_likes').addEventListener('click', () => { common.profile_detail(3, null, true, null) }, false);
+    document.getElementById('common_profile_main_btn_liked').addEventListener('click', () => { common.profile_detail(4, null, true, null) }, false);
+    document.getElementById('common_profile_main_btn_cloud').addEventListener('click', () => { common.profile_detail(5, common.COMMON_GLOBAL['rest_user_account_app'] + 'apps/', true, common.ICONS['sky_cloud'], null) }, false);
     //dialogue login/signup/forgot
     let input_username_login = document.getElementById('common_login_username');
-    input_username_login.addEventListener('keyup', function(event) {
+    input_username_login.addEventListener('keyup', (event) => {
         if (event.code === 'Enter') {
             event.preventDefault();
-            user_login_app().then(function(){
+            user_login_app().then(() => {
                 //unfocus
                 document.getElementById('common_login_username').blur();
             });
         }
     });
     let input_password_login = document.getElementById('common_login_password');
-    input_password_login.addEventListener('keyup', function(event) {
+    input_password_login.addEventListener('keyup', (event) => {
         if (event.code === 'Enter') {
             event.preventDefault();
-            user_login_app().then(function(){
+            user_login_app().then(() => {
                 //unfocus
                 document.getElementById('common_login_password').blur();
             });
         }
     });
-    document.getElementById('common_login_button').addEventListener('click', function() { user_login_app() }, false);    
-    document.getElementById('common_signup_button').addEventListener('click', function() { common.user_signup() }, false);
+    document.getElementById('common_login_button').addEventListener('click', () => { user_login_app() }, false);    
+    document.getElementById('common_signup_button').addEventListener('click', () => { common.user_signup() }, false);
     //dialogue user edit    
-    document.getElementById('common_user_edit_btn_user_delete_account').addEventListener('click', function() { user_delete_app(); }, false);
+    document.getElementById('common_user_edit_btn_user_delete_account').addEventListener('click', () => { user_delete_app(); }, false);
     //dialogue verify
-    document.getElementById('common_user_verify_verification_container').addEventListener('keyup', function(event) {
+    document.getElementById('common_user_verify_verification_container').addEventListener('keyup', (event) => {
         switch (event.target.id){
             case 'common_user_verify_verification_char1':{
                 user_verify_check_input_app(event.target, 'common_user_verify_verification_char2')
@@ -135,7 +135,7 @@ function setEvents(){
         }
     }, false);
 }
-function app_theme_switch(){
+const app_theme_switch = () => {
     if(document.getElementById('app_theme_checkbox').checked){
         document.body.className = 'app_theme_' + 'sun ' + document.getElementById('common_user_arabic_script_select').value;
     }
@@ -145,12 +145,12 @@ function app_theme_switch(){
     return null;
 }
 
-function get_apps() {
+const get_apps = () => {
     let json;
     let old_button = document.getElementById('apps').innerHTML;
 
     common.common_fetch(common.COMMON_GLOBAL['rest_api_db_path'] + common.COMMON_GLOBAL['rest_app'] + `?id=${common.COMMON_GLOBAL['common_app_id']}`, 
-                 'GET', 0, null, null,null, (err, result) =>{
+                    'GET', 0, null, null,null, (err, result) =>{
         if (err)
             document.getElementById('apps').innerHTML = old_button;
         else{
@@ -174,7 +174,7 @@ function get_apps() {
                             </div>
                         </div>`;
             }
-            let clickappevent = function(event) { 
+            let clickappevent = (event) => { 
                 window.open(event.target.parentNode.parentNode.children[1].children[0].innerHTML);};
 
             document.querySelectorAll('.app_logo').forEach(e => e.removeEventListener('click', clickappevent));
@@ -184,12 +184,12 @@ function get_apps() {
     })
 }
 
-function user_menu_item_click(item){
+const user_menu_item_click = (item) => {
     switch (item.id){
         case 'common_user_menu_username':{
             document.getElementById('common_dialogue_profile').style.visibility = 'visible';
             common.profile_show(null,
-                         null,
+                            null,
                         (err, result)=>{
                             null;
                         });
@@ -204,7 +204,7 @@ function user_menu_item_click(item){
     }
     document.getElementById('common_user_menu_dropdown').style='none';
 }
-async function user_login_app(){
+const user_login_app = async () => {
     let username = document.getElementById('common_login_username');
     let password = document.getElementById('common_login_password');
     let old_button = document.getElementById('common_login_button').innerHTML;
@@ -230,10 +230,10 @@ async function user_login_app(){
         
     })
 }
-function app_exception(){
+const app_exception = () => {
     common.user_logoff();
 }
-async function user_verify_check_input_app(item, nextField){
+const user_verify_check_input_app = async (item, nextField) => {
     await common.user_verify_check_input(item, nextField, (err, result) => {
         if ((err==null && result==null)==false)
             if(err==null){
@@ -245,13 +245,13 @@ async function user_verify_check_input_app(item, nextField){
     })
 }
 
-async function  user_delete_app(){
+const user_delete_app = async () => {
     let user_local;
     if (document.getElementById('common_user_edit_local').style.display == 'block')
         user_local = true;
     else
         user_local = false;
-    let function_delete_user_account = function() { 
+    let function_delete_user_account = () => { 
                                             document.getElementById('common_dialogue_message').style.visibility = 'hidden';
                                             common.user_delete(1, user_local, null, (err, result)=>{
                                                 if (err==null){
@@ -265,7 +265,7 @@ async function  user_delete_app(){
         }
     })
 }
-async function ProviderUser_update_app(identity_provider_id, profile_id, profile_first_name, profile_last_name, profile_image_url, profile_email){
+const ProviderUser_update_app = async (identity_provider_id, profile_id, profile_first_name, profile_last_name, profile_image_url, profile_email) => {
     await common.ProviderUser_update(identity_provider_id, profile_id, profile_first_name, profile_last_name, profile_image_url, profile_email, (err, result)=>{
         if(err==null){
             //set avatar or empty
@@ -280,19 +280,19 @@ async function ProviderUser_update_app(identity_provider_id, profile_id, profile
         }
     })
 }
-async function ProviderSignIn_app(provider_button){
+const ProviderSignIn_app = async (provider_button) => {
     await common.ProviderSignIn(provider_button, (err, result)=>{
         if (err==null){
             ProviderUser_update_app(result.identity_provider_id, 
-                                   result.profile_id, 
-                                   result.profile_first_name, 
-                                   result.profile_last_name, 
-                                   result.profile_image_url, 
-                                   result.profile_email);
+                                    result.profile_id, 
+                                    result.profile_first_name, 
+                                    result.profile_last_name, 
+                                    result.profile_image_url, 
+                                    result.profile_email);
         }
     })
 }
-async function init_app(){
+const init_app = async () => {
     //start
     document.getElementById('about_name').innerHTML = common.COMMON_GLOBAL['app_name'];
     document.getElementById('start_message').innerHTML = common.ICONS['app_info'];    
@@ -310,7 +310,7 @@ async function init_app(){
     document.getElementById('app_email').innerHTML=APP_GLOBAL['app_email'];
 
     //links
-    document.getElementById('start_links').addEventListener('click', function(event) { 
+    document.getElementById('start_links').addEventListener('click', (event) => { 
         //social links ends with an integer and is part of app global
         if (event.target.id.startsWith('social_link'))
             if (eval(`APP_GLOBAL['info_${event.target.id}_url']`))
@@ -355,7 +355,7 @@ async function init_app(){
     common.move_info(null,null);
 }
 
-function init(parameters){
+const init = (parameters) => {
     common.init_common(parameters, (err, global_app_parameters)=>{
         if (err)
             null;
@@ -414,12 +414,12 @@ function init(parameters){
                 if (global_app_parameters[i].parameter_name=='MODULE_EASY.QRCODE_BACKGROUND_COLOR')
                     common.COMMON_GLOBAL['module_easy.qrcode_background_color'] = global_app_parameters[i].parameter_value;
             }
-            init_app().then(function(){
+            init_app().then(()=>{
                 document.getElementById('apps').innerHTML = common.APP_SPINNER;
                 common.common_translate_ui(common.COMMON_GLOBAL['user_locale'], null, (err, result)=>{
                         get_apps();
                 })
-                async function show_start(){
+                const show_start = async () => {
                     let user = window.location.pathname.substring(1);
                     if (user !='') {
                         //show profile for user entered in url
@@ -431,8 +431,8 @@ function init(parameters){
                                         });
                     }
                 }
-                show_start().then(function(){
-                    common.Providers_init(function() { ProviderSignIn_app(this); });
+                show_start().then(()=>{
+                    common.Providers_init((event) => { ProviderSignIn_app(event.target.id==''?event.target.parentElement:event.target); });
                     //use transition from now and not when starting app
                     document.querySelectorAll('.dialogue_flip').forEach(dialogue =>{
                         dialogue.style.transition = 'all 1s';

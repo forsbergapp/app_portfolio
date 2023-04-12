@@ -10,11 +10,11 @@ app.use('/common/images',express.static(process.cwd() + '/apps/common/images'));
 app.use('/common/js',express.static(process.cwd() + '/apps/common/js'));
 app.use('/common/modules',express.static(process.cwd() + '/apps/common/modules'));
 //routes
-app.get("/admin",function (req, res, next) {
-    import(`file://${process.cwd()}/apps/index.js`).then(function({ check_app_subdomain}){
+app.get("/admin",(req, res, next) => {
+    import(`file://${process.cwd()}/apps/index.js`).then(({ check_app_subdomain}) => {
         if (check_app_subdomain(ADMIN_ID, req.headers.host) ||
             req.headers.host.substring(0,req.headers.host.indexOf('.'))=='www'){
-            import(`file://${process.cwd()}/service/forms/forms.controller.js`).then(function({ getFormAdmin }){
+            import(`file://${process.cwd()}/service/forms/forms.controller.js`).then(({ getFormAdmin }) => {
                 getFormAdmin(req, res, ADMIN_ID, (err, app_result)=>{
                     return res.send(app_result);
                 })
@@ -24,6 +24,6 @@ app.get("/admin",function (req, res, next) {
             next();
     })
 });
-app.get("/admin/:sub",function (req, res, next) {
+app.get("/admin/:sub",(req, res, next) => {
     return res.redirect('/admin');
 });

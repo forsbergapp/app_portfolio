@@ -1,7 +1,7 @@
 const { read_app_files, get_module_with_init } = await import(`file://${process.cwd()}/apps/index.js`);
 
-function getReport(app_id, module, gps_lat, gps_long, gps_place){
-    return new Promise(function (resolve, reject){
+const getReport = (app_id, module, gps_lat, gps_long, gps_place) => {
+    return new Promise((resolve, reject) => {
         const files = [
             ['REPORT', process.cwd() + '/apps/app2/report/' + module],
             ['<ReportHead/>', process.cwd() + '/apps/app2/report/head.html'],

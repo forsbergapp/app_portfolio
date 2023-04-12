@@ -1,9 +1,9 @@
 const {ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
 const { read_app_files, get_module_with_init, countries } = await import(`file://${process.cwd()}/apps/index.js`);
 
-async function themes(app_id){
-    return new Promise(function (resolve, reject){
-        import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/app2_theme/app2_theme.service.js`).then(function({getThemes}){
+const themes = async (app_id) =>{
+    return new Promise((resolve, reject) => {
+        import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/app2_theme/app2_theme.service.js`).then(({getThemes}) => {
             getThemes(app_id, (err, results)  => {
                 let html_themes='';
                 if (err){
@@ -43,9 +43,9 @@ async function themes(app_id){
         })
     })
 }
-async function places(app_id){
-    return new Promise(function (resolve, reject){
-        import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/app2_place/app2_place.service.js`).then(function({getPlace}){
+const places = async (app_id) => {
+    return new Promise((resolve, reject) => {
+        import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/app2_place/app2_place.service.js`).then(({getPlace}) => {
             getPlace(app_id, (err, results)  => {
                 let select_places;
                 if (err){
@@ -82,9 +82,9 @@ async function places(app_id){
         })
     })
 }
-function getApp(app_id, username, gps_lat, gps_long, gps_place){
-    return new Promise(function (resolve, reject){
-        function main(app_id){
+const getApp = (app_id, username, gps_lat, gps_long, gps_place) => {
+    return new Promise((resolve, reject) => {
+        const main = (app_id) => {
             const files = [
                 ['APP', process.cwd() + '/apps/app2/src/index.html'],
                 ['<AppCommonHead/>', process.cwd() + '/apps/common/src/head.html'],
@@ -119,11 +119,11 @@ function getApp(app_id, username, gps_lat, gps_long, gps_place){
                 ['<AppToolbarBottom/>', process.cwd() + '/apps/app2/src/toolbar_bottom.html'],
                 ['<AppCommonProfileBtnTop/>', process.cwd() + '/apps/common/src/profile_btn_top.html']
             ];
-            async function getAppComponents(app_id) {
-                return new Promise(function (resolve, reject){
+            const getAppComponents = async (app_id) => {
+                return new Promise((resolve, reject) => {
                     try {
                         let default_lang = 'en';
-                        import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/language/locale/locale.service.js`).then(function({getLocales}){
+                        import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/language/locale/locale.service.js`).then(({getLocales}) => {
                             getLocales(app_id, default_lang, (err, locales) => {
                                 if (err)
                                     resolve(err)
@@ -132,9 +132,9 @@ function getApp(app_id, username, gps_lat, gps_long, gps_place){
                                     locales.forEach( (locale,i) => {
                                         AppLocales += `<option id=${i} value=${locale.locale}>${locale.text}</option>`;
                                     })
-                                    countries(app_id).then(function(AppCountries){
-                                        places(app_id).then(function(AppPlaces){
-                                            themes(app_id).then(function(AppSettingsThemes){
+                                    countries(app_id).then((AppCountries) => {
+                                        places(app_id).then((AppPlaces) => {
+                                            themes(app_id).then((AppSettingsThemes) => {
                                                 resolve({AppLocales: AppLocales,
                                                             AppCountries: AppCountries,
                                                             AppPlaces: AppPlaces,
@@ -151,7 +151,7 @@ function getApp(app_id, username, gps_lat, gps_long, gps_place){
                     }
                 })                    
             }
-            getAppComponents(app_id).then(function(app_components){
+            getAppComponents(app_id).then((app_components) => {
                 let USER_TIMEZONE ='';
                 let USER_DIRECTION='';
                 let USER_ARABIC_SCRIPT='';
@@ -169,7 +169,7 @@ function getApp(app_id, username, gps_lat, gps_long, gps_place){
                 let APP_IQAMAT='';
                 let APP_FAST_START_END='';
                 let APP_MAP_TYPE='';
-                import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/setting/setting.service.js`).then(function({getSettings}){
+                import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/setting/setting.service.js`).then(({getSettings}) => {
                     getSettings(app_id, 'en', null, (err, settings) => {
                         let option;
                         for (let i = 0; i < settings.length; i++) {
@@ -216,7 +216,7 @@ function getApp(app_id, username, gps_lat, gps_long, gps_place){
                                     break;
                                 }
                                 case 'METHOD':{
-                                    function nvl(value){return value==null?'':value}
+                                    const nvl = (value) => value==null?'':value;
                                     option = `<option id=${settings[i].id} value='${settings[i].data}' ` +
                                                 `data2='${nvl(settings[i].data2)}' data3='${nvl(settings[i].data3)}' data4='${nvl(settings[i].data4)}' data5='${nvl(settings[i].data5)}'>${settings[i].text}</option>`;
                                     APP_METHOD += option;
@@ -363,7 +363,7 @@ function getApp(app_id, username, gps_lat, gps_long, gps_place){
             });
         }
         if (username!=null){
-            import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/user_account/user_account.service.js`).then(function({getProfileUser}){
+            import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/user_account/user_account.service.js`).then(({getProfileUser}) => {
                 getProfileUser(app_id, null, username, null, (err,result)=>{
                     if (result)
                         main(app_id);
