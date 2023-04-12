@@ -145,33 +145,34 @@ const sendEmail = (req, data, callBack) => {
                             subject:            mail_result.subject,
                             html:               mail_result.html		
                             };
-                        service.sendEmailService(emailData, (err, result) => {
-                            if (err)
-                                return callBack(err, result);
-                            else
-                                import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/app_log/app_log.service.js`).then(({createLog}) => {
-                                    createLog(req.query.app_id,
-                                                {   app_id : req.query.app_id,
-                                                    app_module : 'MAIL',
-                                                    app_module_type : 'SEND',
-                                                    app_module_request : `mailhost: ${emailData.email_host}, type: ${data.emailType}, from: ${emailData.from} (${emailData.email_auth_user}), to: ${data.toEmail}, subject: ${emailData.subject}`,
-                                                    app_module_result : `${(err)?JSON.stringify(err):JSON.stringify(result)}`,
-                                                    app_user_id : data.app_user_id,
-                                                    user_language : req.body.user_language,
-                                                    user_timezone : req.body.user_timezone,
-                                                    user_number_system : req.body.user_number_system,
-                                                    user_platform : req.body.user_platform,
-                                                    server_remote_addr : req.ip,
-                                                    server_user_agent : req.headers["user-agent"],
-                                                    server_http_host : req.headers["host"],
-                                                    server_http_accept_language : req.headers["accept-language"],
-                                                    client_latitude : req.body.client_latitude,
-                                                    client_longitude : req.body.client_longitude
-                                                    }, (err,results)  => {
-                                                        //email is sent ignore any error here
-                                                        return callBack(null, result);
-                                        });
-                                })
+                        service.sendEmailService(emailData, (err_email, result_email) => {
+                            import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/app_log/app_log.service.js`).then(({createLog}) => {
+                                createLog(req.query.app_id,
+                                    {   app_id : req.query.app_id,
+                                        app_module : 'MAIL',
+                                        app_module_type : 'SEND',
+                                        app_module_request : `mailhost: ${emailData.email_host}, type: ${data.emailType}, from: ${emailData.from} (${emailData.email_auth_user}), to: ${data.toEmail}, subject: ${emailData.subject}`,
+                                        app_module_result : `${(err_email)?JSON.stringify(err_email):JSON.stringify(result_email)}`,
+                                        app_user_id : data.app_user_id,
+                                        user_language : req.body.user_language,
+                                        user_timezone : req.body.user_timezone,
+                                        user_number_system : req.body.user_number_system,
+                                        user_platform : req.body.user_platform,
+                                        server_remote_addr : req.ip,
+                                        server_user_agent : req.headers["user-agent"],
+                                        server_http_host : req.headers["host"],
+                                        server_http_accept_language : req.headers["accept-language"],
+                                        client_latitude : req.body.client_latitude,
+                                        client_longitude : req.body.client_longitude
+                                        }, (err_log,results_log)  => {
+                                            if (err_email)
+                                                return callBack(err_email, result_email);
+                                            else{
+                                                //email is sent ignore any error here
+                                                return callBack(null, result_log);
+                                            }
+                                    });
+                            })
                         });
                     }) 
                 })
