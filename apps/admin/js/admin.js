@@ -26,7 +26,7 @@ const APP_GLOBAL = {
     "service_log_date_format":""
 }
 
-function admin_login_nav(target){
+const admin_login_nav = (target) => {
     document.getElementById('admin_login_title').classList.remove('login_nav_button_selected');
     document.getElementById('system_admin_login_title').classList.remove('login_nav_button_selected');
     if (target.id=='admin_login_title' ||target.parentElement.id=='admin_login_title'){
@@ -40,7 +40,7 @@ function admin_login_nav(target){
             document.getElementById('system_admin_login_title').classList.add('login_nav_button_selected');
     }
 }
-function start_admin_secure(app){
+const start_admin_secure = (app) => {
     document.getElementById('admin_login_username_input').value='';
     document.getElementById('admin_login_password_input').value='';
     document.getElementById('system_admin_login_username_input').value='';
@@ -64,7 +64,7 @@ function start_admin_secure(app){
         }
     }
 }
-async function admin_login(){
+const admin_login = async () => {
     let old_button = document.getElementById('admin_login_button').innerHTML;
     if (document.getElementById('system_admin_login').style.display == 'block'){
         if (document.getElementById("system_admin_login_username_input").value == '') {
@@ -108,11 +108,11 @@ async function admin_login(){
             'Authorization': 'Basic ' + window.btoa(document.getElementById("system_admin_login_username_input").value + ':' + document.getElementById("system_admin_login_password_input").value)
             }
         })
-            .then(function(response) {
+            .then((response) => {
                 status = response.status;
                 return response.text();
             })
-            .then(function(result_login) {
+            .then((result_login) => {
                 document.getElementById('admin_login_button').innerHTML = old_button;
                 if (status == 200){
                     json = JSON.parse(result_login);
@@ -125,13 +125,13 @@ async function admin_login(){
                             'Authorization': 'Bearer ' + common.COMMON_GLOBAL['rest_admin_at'],
                         }
                     })
-                        .then(function(response) {
+                        .then((response) => {
                             status = response.status;
                             return response.text();
                         })
-                        .then(function(result_form) {
+                        .then((result_form) => {
                             if (status == 200){
-                                common.dialogue_close('dialogue_admin_login').then(function(){
+                                common.dialogue_close('dialogue_admin_login').then(() => {
                                     document.getElementById('common_app_select_theme').style.display = 'block';
                                     document.getElementById('common_app_select_theme').style.visibility = 'visible';
                                     document.getElementById('common_dialogue_login').style.visibility = 'hidden';
@@ -154,7 +154,7 @@ async function admin_login(){
                                 document.getElementById('admin_login_password_input').value, (err, result)=>{
             document.getElementById('admin_login_button').innerHTML = old_button;
             if (err==null){         
-                common.dialogue_close('dialogue_admin_login').then(function(){
+                common.dialogue_close('dialogue_admin_login').then(() => {
                     document.getElementById('common_user_account').style.visibility = 'visible';
                     common.set_avatar(result.avatar, document.getElementById('common_user_menu_avatar_img'));
                     document.getElementById('common_user_menu_username').innerHTML = result.username;
@@ -173,9 +173,9 @@ async function admin_login(){
         })
     }
 }
-function setEvents(system_admin_only=0){
+const setEvents = (system_admin_only=0) => {
     
-    document.getElementById('admin_login_form').addEventListener('keyup', function(event) {
+    document.getElementById('admin_login_form').addEventListener('keyup', (event) => {
         if (event.target.id=='admin_login_username_input' ||
             event.target.id=='admin_login_password_input' ||
             event.target.id=='system_admin_login_username_input' ||
@@ -188,26 +188,26 @@ function setEvents(system_admin_only=0){
                 document.getElementById(event.target.id).blur();
             }
     })
-    document.getElementById('admin_login_button').addEventListener('click', function() { admin_login() }, false);
-    document.getElementById('admin_login_nav').addEventListener('click', function(event) { admin_login_nav(event.target) }, true);
+    document.getElementById('admin_login_button').addEventListener('click', () => { admin_login() }, false);
+    document.getElementById('admin_login_nav').addEventListener('click', (event) => { admin_login_nav(event.target) }, true);
     
     if (system_admin_only==0){
         //common
         //profile
-        document.getElementById('common_profile_home').addEventListener('click', function() {common.profile_top(1);}, false);
-        document.getElementById('common_profile_close').addEventListener('click', function() {common.profile_close()}, false);
-        document.getElementById('common_profile_search_input').addEventListener('keyup', function(event) { common.search_input(event, null);}, false);
-        document.getElementById('common_profile_top_row1_1').addEventListener('click', function() { common.profile_top(1)}, false);
-        document.getElementById('common_profile_top_row1_2').addEventListener('click', function() { common.profile_top(2)}, false);
-        document.getElementById('common_profile_top_row1_3').addEventListener('click', function() { common.profile_top(3)}, false);
-        document.getElementById('common_profile_follow').addEventListener('click', function() { common.profile_follow_like('FOLLOW') }, false);
-        document.getElementById('common_profile_like').addEventListener('click', function() { common.profile_follow_like('LIKE') }, false);
-        document.getElementById('common_profile_main_btn_following').addEventListener('click', function() { common.profile_detail(1, null, true, null) }, false);
-        document.getElementById('common_profile_main_btn_followed').addEventListener('click', function() { common.profile_detail(2, null, true, null) }, false);
-        document.getElementById('common_profile_main_btn_likes').addEventListener('click', function() { common.profile_detail(3, null, true, null) }, false);
-        document.getElementById('common_profile_main_btn_liked').addEventListener('click', function() { common.profile_detail(4, null, true, null) }, false);
+        document.getElementById('common_profile_home').addEventListener('click', () => {common.profile_top(1);}, false);
+        document.getElementById('common_profile_close').addEventListener('click', () => {common.profile_close()}, false);
+        document.getElementById('common_profile_search_input').addEventListener('keyup', (event) => { common.search_input(event, null);}, false);
+        document.getElementById('common_profile_top_row1_1').addEventListener('click', () => { common.profile_top(1)}, false);
+        document.getElementById('common_profile_top_row1_2').addEventListener('click', () => { common.profile_top(2)}, false);
+        document.getElementById('common_profile_top_row1_3').addEventListener('click', () => { common.profile_top(3)}, false);
+        document.getElementById('common_profile_follow').addEventListener('click', () => { common.profile_follow_like('FOLLOW') }, false);
+        document.getElementById('common_profile_like').addEventListener('click', () => { common.profile_follow_like('LIKE') }, false);
+        document.getElementById('common_profile_main_btn_following').addEventListener('click', () => { common.profile_detail(1, null, true, null) }, false);
+        document.getElementById('common_profile_main_btn_followed').addEventListener('click', () => { common.profile_detail(2, null, true, null) }, false);
+        document.getElementById('common_profile_main_btn_likes').addEventListener('click', () => { common.profile_detail(3, null, true, null) }, false);
+        document.getElementById('common_profile_main_btn_liked').addEventListener('click', () => { common.profile_detail(4, null, true, null) }, false);
         //user preferences
-        document.getElementById('common_user_menu_username').addEventListener('click', function() { 
+        document.getElementById('common_user_menu_username').addEventListener('click', () => { 
                                                                                     document.getElementById('common_dialogue_profile').style.visibility = 'visible';
                                                                                     common.profile_show(null,
                                                                                                         null,
@@ -217,17 +217,17 @@ function setEvents(system_admin_only=0){
                                                                                     document.getElementById('common_user_menu_dropdown').style='none';
                                                                                 }, false);
 
-        document.getElementById('common_app_select_theme').addEventListener('change', function() { document.body.className = 'app_theme' + document.getElementById('common_app_select_theme').value + ' ' + document.getElementById('common_user_arabic_script_select').value; }, false);
-        document.getElementById('common_user_locale_select').addEventListener('change', function() { 
-                                                                                    common.common_translate_ui(this.value, null, (err, result)=>{
+        document.getElementById('common_app_select_theme').addEventListener('change', () => { document.body.className = 'app_theme' + document.getElementById('common_app_select_theme').value + ' ' + document.getElementById('common_user_arabic_script_select').value; }, false);
+        document.getElementById('common_user_locale_select').addEventListener('change', (event) => { 
+                                                                                    common.common_translate_ui(event.target.value, null, (err, result)=>{
                                                                                             null
                                                                                         });
                                                                                 }, false);
-        document.getElementById('common_user_arabic_script_select').addEventListener('change', function() { document.getElementById('common_app_select_theme').dispatchEvent(new Event('change'));}, false);
+        document.getElementById('common_user_arabic_script_select').addEventListener('change', () => { document.getElementById('common_app_select_theme').dispatchEvent(new Event('change'));}, false);
     }
     
 }
-function delete_globals(){
+const delete_globals = () => {
     APP_GLOBAL['page'] = null;
     APP_GLOBAL['page_last'] = null;
     APP_GLOBAL['limit'] = null;
@@ -267,10 +267,10 @@ function delete_globals(){
     common.COMMON_GLOBAL['service_log'] = null;
 }
 
-function admin_logoff_app(app_id, error){
+const admin_logoff_app = (app_id, error) => {
     common.COMMON_GLOBAL['rest_admin_at'] = '';
     document.getElementById('system_admin_avatar').innerHTML = '';
-    function clear_common(){
+    const clear_common = () => {
         delete_globals();
         document.getElementById('common_app_select_theme').style.display = 'unset';
         document.getElementById('common_app_select_theme').style.visibility = 'unset';
@@ -286,22 +286,22 @@ function admin_logoff_app(app_id, error){
         common.COMMON_GLOBAL['system_admin']=0;
     }
     else
-        common.user_logoff().then(function(){
+        common.user_logoff().then(() => {
             clear_common();
         })
 }
 
-function admin_exception_before(app_id, error){
+const admin_exception_before = (app_id, error) => {
     common.show_message('EXCEPTION', null,null, error, app_id);
 }
-function init_app(system_admin_only){
+const init_app = (system_admin_only) => {
     setEvents(system_admin_only);
     if (system_admin_only==0)
         common.common_translate_ui(common.COMMON_GLOBAL['user_locale'], null, (err, result)=>{
             null
         });
 }
-function init(parameters){
+const init = (parameters) => {
     //show admin login as default
     admin_login_nav(document.getElementById('admin_login_title'));
 

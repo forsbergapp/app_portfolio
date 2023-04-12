@@ -16,7 +16,7 @@
 /*----------------------- */
 /* MISC                   */
 /*----------------------- */
-function show_menu(menu){
+const show_menu = (menu) => {
     document.getElementById('menu_1_content').style.display='none';
     document.getElementById(`menu_1`).classList.remove('menuitem_selected');
     document.getElementById('menu_2_content').style.display='none';
@@ -56,7 +56,7 @@ function show_menu(menu){
             if (common.COMMON_GLOBAL['system_admin']==1)
                 check_maintenance();
             else
-                show_chart(1).then(function(){
+                show_chart(1).then(() => {
                     show_chart(2);
                 })
             break;
@@ -103,7 +103,7 @@ function show_menu(menu){
                         document.getElementById('select_year_menu5').selectedIndex = 0;
                         document.getElementById('select_month_menu5').selectedIndex = new Date().getMonth();
                         document.getElementById('select_day_menu5').selectedIndex = new Date().getDate() -1;
-                        get_server_log_parameters().then(function() {
+                        get_server_log_parameters().then(() => {
                             common.map_resize();
                             nav_click(document.getElementById('list_connected_title'));
                         })
@@ -138,7 +138,7 @@ function show_menu(menu){
                 common.show_message('EXCEPTION', null, null, common.ICONS['app_database'] + ' ' + common.ICONS['app_database_notstarted'], common.COMMON_GLOBAL['app_id'])
             }
             else
-                show_db_info().then(function(){
+                show_db_info().then(() => {
                     show_db_info_space();
                 })
             break;
@@ -154,11 +154,11 @@ function show_menu(menu){
         }
     }            
 }
-function show_user_agent(user_agent){
+const show_user_agent = (user_agent) => {
     return null;
 }
 
-async function get_apps() {
+const get_apps = async () => {
     let json;
     let html=`<option value="">${common.ICONS['infinite']}</option>`;
     if (common.COMMON_GLOBAL['system_admin']==1){
@@ -190,7 +190,7 @@ async function get_apps() {
 /*----------------------- */
 /* BROADCAST              */
 /*----------------------- */
-function sendBroadcast(){
+const sendBroadcast = () => {
     let broadcast_type ='';
     let client_id;
     let app_id;
@@ -236,7 +236,7 @@ function sendBroadcast(){
         }
     });
 }    
-function closeBroadcast(){
+const closeBroadcast = () => {
     document.getElementById('dialogue_send_broadcast').style.visibility='hidden'; 
     document.getElementById('client_id_label').style.display='inline-block';
     document.getElementById('client_id').style.display='inline-block';
@@ -244,7 +244,7 @@ function closeBroadcast(){
     document.getElementById('client_id').innerHTML='';
     document.getElementById('send_broadcast_message').value='';
 }
-function show_broadcast_dialogue(dialogue_type, client_id=null){
+const show_broadcast_dialogue = (dialogue_type, client_id=null) => {
     switch (dialogue_type){
         case 'CHAT':{
             //hide and set INFO, should not be able to send MAINTENANCE message here
@@ -285,7 +285,7 @@ function show_broadcast_dialogue(dialogue_type, client_id=null){
     }
     document.getElementById('dialogue_send_broadcast').style.visibility='visible';
 }
-function set_broadcast_type(){
+const set_broadcast_type = () => {
     switch (document.getElementById('select_broadcast_type').value){
         case 'INFO':{
             //show app selection
@@ -307,7 +307,7 @@ function set_broadcast_type(){
         }
     }
 }
-async function check_maintenance(){
+const check_maintenance = async () => {
     if (admin_token_has_value()){
         let json;
         await common.common_fetch('/server/config/systemadmin/maintenance?', 'GET', 2, null, null, null, (err, result) =>{
@@ -323,7 +323,7 @@ async function check_maintenance(){
         })
 }
 }
-function set_maintenance(){
+const set_maintenance = () => {
     if (admin_token_has_value()){
         let check_value;
         if (document.getElementById('menu_1_checkbox_maintenance').checked ==true)
@@ -342,7 +342,7 @@ function set_maintenance(){
 /* USER STAT              */
 /*----------------------- */
 //chart 1=Piechart, 2= Barchart
-async function show_chart(chart){
+const show_chart = async (chart) => {
     if (admin_token_has_value()){
         let app_id;
         let year = document.getElementById('select_year_menu1').value;
@@ -366,7 +366,7 @@ async function show_chart(chart){
                 document.getElementById(`box${chart}_chart`).innerHTML = '';
                 document.getElementById(`box${chart}_legend`).innerHTML = '';
                 if (chart==1){
-                    function SearchAndGetText(item, search){
+                    const SearchAndGetText = (item, search) => {
                         for (let i=1;i<item.options.length;i++){
                             if (item.options[i].value == search)
                                 return item.options[i].text
@@ -441,7 +441,7 @@ async function show_chart(chart){
         })
     }
 }
-async function count_connected(identity_provider_id, count_logged_in, callBack){
+const count_connected = async (identity_provider_id, count_logged_in, callBack) => {
     if (admin_token_has_value()){
         let json;
         await common.common_fetch(`/service/broadcast/Admin/connected/count?identity_provider_id=${identity_provider_id}&count_logged_in=${count_logged_in}`,
@@ -454,7 +454,7 @@ async function count_connected(identity_provider_id, count_logged_in, callBack){
         });
     }
 }
-async function count_users(){
+const count_users = async () => {
     if (admin_token_has_value()){
         let json;
         let old_html = document.getElementById('list_user_stat').innerHTML;
@@ -519,7 +519,7 @@ async function count_users(){
 /*----------------------- */
 /* USERS                  */
 /*----------------------- */
-function show_users(sort=8, order_by='ASC', focus=true){
+const show_users = (sort=8, order_by='ASC', focus=true) => {
     let json;
     document.getElementById('list_user_account').innerHTML = common.APP_SPINNER;
     
@@ -733,7 +733,7 @@ function show_users(sort=8, order_by='ASC', focus=true){
         }
     })
 }
-async function show_user_account_logon(user_account_id){
+const show_user_account_logon = async (user_account_id) => {
     let json;
     document.getElementById('list_user_account_logon').innerHTML = common.APP_SPINNER;
 
@@ -811,7 +811,7 @@ async function show_user_account_logon(user_account_id){
 /*----------------------- */
 /* APP ADMIN              */
 /*----------------------- */
-async function show_apps(){
+const show_apps = async () => {
     let json;
     document.getElementById('list_apps').innerHTML = common.APP_SPINNER;
 
@@ -883,7 +883,7 @@ async function show_apps(){
         }
     })
 }
-function show_app_parameter(app_id){
+const show_app_parameter = (app_id) => {
     let json;
     document.getElementById('list_app_parameter').innerHTML = common.APP_SPINNER;
 
@@ -944,7 +944,7 @@ function show_app_parameter(app_id){
         }
     })
 }
-async function button_save(item){
+const button_save = async (item) => {
     if (item=='apps_save'){
         //save changes in list_apps
         let x = document.querySelectorAll('.list_apps_row');
@@ -1005,7 +1005,7 @@ async function button_save(item){
             if (item == 'config_save'){
                 let config_no;
                 let json_data;
-                function config_create_server_json(){
+                const config_create_server_json = () => {
                     let config_json = [];
                     document.querySelectorAll('#list_config .list_config_group').forEach(e_group => 
                         {
@@ -1055,10 +1055,10 @@ async function button_save(item){
             }
     
 }
-async function update_record(table, 
+const update_record = async (table, 
                              row_element,
                              button,
-                             parameters){
+                             parameters) => {
     if (admin_token_has_value()){
         let rest_url;
         let json_data;
@@ -1116,16 +1116,16 @@ async function update_record(table,
         })
     }
 }
-function list_events(list_item, item_row, item_edit){
+const list_events = (list_item, item_row, item_edit) => {
 
     //on change on all editable fields
     //mark record as changed if any editable field is changed
     
     //change event
-    document.getElementById(list_item).addEventListener('change', function(event) {
+    document.getElementById(list_item).addEventListener('change', (event) => {
         if (event.target.classList.contains('list_edit')){
             event.target.parentNode.parentNode.setAttribute('data-changed-record','1');
-            function row_action(err, result, item, event, nextindex){
+            const row_action = (err, result, item, event, nextindex) => {
                 if (err){
                     event.stopPropagation();
                     event.preventDefault();
@@ -1190,7 +1190,7 @@ function list_events(list_item, item_row, item_edit){
         }
     })
     //keydown event
-    document.getElementById(list_item).addEventListener('keydown', function (event){
+    document.getElementById(list_item).addEventListener('keydown', (event) => {
         if (event.target.classList.contains('list_edit')){
             if (event.code=='ArrowUp') {
                 APP_GLOBAL['previous_row'] = event.target.parentNode.parentNode;
@@ -1215,7 +1215,7 @@ function list_events(list_item, item_row, item_edit){
     if (item_row=='list_apps_row'){
         //event on master to automatically show detail records
         document.querySelectorAll(`#${list_item} ${item_edit}`).forEach(e => 
-            e.addEventListener('focus', function(event) {
+            e.addEventListener('focus', (event) => {
                 if (APP_GLOBAL['previous_row'] != event.target.parentNode.parentNode){
                     APP_GLOBAL['previous_row'] = event.target.parentNode.parentNode;
                     show_app_parameter(e.parentNode.parentNode.children[0].children[0].innerHTML);
@@ -1226,7 +1226,7 @@ function list_events(list_item, item_row, item_edit){
     if (item_row=='list_user_account_row'){
         //event on master to automatically show detail records
         document.querySelectorAll(`#${list_item} ${item_edit}`).forEach(e => 
-            e.addEventListener('focus', function(event) {
+            e.addEventListener('focus', (event) => {
                 if (APP_GLOBAL['previous_row'] != event.target.parentNode.parentNode){
                     APP_GLOBAL['previous_row'] = event.target.parentNode.parentNode;
                     show_user_account_logon(e.parentNode.parentNode.children[1].children[0].innerHTML);
@@ -1236,9 +1236,9 @@ function list_events(list_item, item_row, item_edit){
     }
     //click event
     if (list_item == 'list_apps')
-        document.getElementById(list_item).addEventListener('click', function(event) {   
+        document.getElementById(list_item).addEventListener('click', (event) => {   
             if (event.target.parentNode.classList.contains('common_list_lov_click')){
-                let function_event = function(event_lov) {
+                let function_event = (event_lov) => {
                     //setting values from LOV
                     event.target.parentNode.parentNode.parentNode.children[5].children[0].value = event_lov.currentTarget.children[0].children[0].innerHTML;
                     event.target.parentNode.parentNode.parentNode.children[5].children[0].focus();
@@ -1250,9 +1250,9 @@ function list_events(list_item, item_row, item_edit){
                 
         })
     if (list_item == 'list_app_parameter')
-        document.getElementById(list_item).addEventListener('click', function(event) {   
+        document.getElementById(list_item).addEventListener('click', (event) => {   
             if (event.target.parentNode.classList.contains('common_list_lov_click')){
-                let function_event = function(event_lov) {
+                let function_event = (event_lov) => {
                     //setting values from LOV
                     event.target.parentNode.parentNode.parentNode.children[1].children[0].value = event_lov.currentTarget.children[0].children[0].innerHTML;
                     event.target.parentNode.parentNode.parentNode.children[1].children[0].focus();
@@ -1264,9 +1264,9 @@ function list_events(list_item, item_row, item_edit){
         })
     
     if (list_item == 'list_user_account')
-        document.getElementById(list_item).addEventListener('click', function(event) {   
+        document.getElementById(list_item).addEventListener('click', (event) => {   
             if (event.target.parentNode.classList.contains('common_list_lov_click')){
-                let function_event = function(event_lov) {
+                let function_event = (event_lov) => {
                     //setting values from LOV
                     event.target.parentNode.parentNode.parentNode.children[2].children[0].value = event_lov.currentTarget.children[0].children[0].innerHTML;
                     event.target.parentNode.parentNode.parentNode.children[2].children[0].focus();
@@ -1280,7 +1280,7 @@ function list_events(list_item, item_row, item_edit){
 /*----------------------- */
 /* MONITOR                */
 /*----------------------- */
-function fix_pagination_buttons(){
+const fix_pagination_buttons = () => {
     //function triggered by change in user preference before innerHTML loaded html
     //function called again when choosing app log monitor check if exist first
     if (document.getElementById('list_app_log_first')){
@@ -1300,14 +1300,14 @@ function fix_pagination_buttons(){
         }
     }
 }
-function nav_click(item){
-    function reset_monitor(){
+const nav_click = (item) => {
+    const reset_monitor = () => {
         document.getElementById('list_monitor_nav_1').classList='';
         document.getElementById('list_monitor_nav_2').classList='';
         document.getElementById('list_monitor_nav_3').classList='';
         document.getElementById('list_monitor_nav_4').classList='';
     }
-    function reset_config(){
+    const reset_config = () => {
         document.getElementById('list_config_nav_1').classList='';
         document.getElementById('list_config_nav_2').classList='';
         document.getElementById('list_config_nav_3').classList='';
@@ -1391,7 +1391,7 @@ function nav_click(item){
         }
     }
 }
-async function show_list(list_div, list_div_col_title, url_parameters, sort, order_by){
+const show_list = async (list_div, list_div_col_title, url_parameters, sort, order_by) => {
     if (admin_token_has_value()){
         let json;
         let token_type;
@@ -1932,7 +1932,7 @@ async function show_list(list_div, list_div_col_title, url_parameters, sort, ord
         })        
     }
 }
-async function show_connected(sort=1, order_by='desc'){
+const show_connected = async (sort=1, order_by='desc') => {
     let app_id = document.getElementById('select_app_menu5_list_connected').options[document.getElementById('select_app_menu5_list_connected').selectedIndex].value;
     let year = document.getElementById('select_year_menu5_list_connected').value;
     let month = document.getElementById('select_month_menu5_list_connected').value;
@@ -1943,7 +1943,7 @@ async function show_connected(sort=1, order_by='desc'){
               order_by);
 }    
 
-async function show_app_log(sort=1, order_by='desc', offset=0, limit=APP_GLOBAL['limit']){
+const show_app_log = async (sort=1, order_by='desc', offset=0, limit=APP_GLOBAL['limit']) => {
     let app_id = document.getElementById('select_app_menu5_app_log').options[document.getElementById('select_app_menu5_app_log').selectedIndex].value;
     let year = document.getElementById('select_year_menu5_app_log').value;
     let month = document.getElementById('select_month_menu5_app_log').value;
@@ -1953,12 +1953,12 @@ async function show_app_log(sort=1, order_by='desc', offset=0, limit=APP_GLOBAL[
               sort,
               order_by);
 } 
-function set_list_eventlisteners(list_type, list_function, remove_events){
-    let click_function_title = function(event) { 
+const set_list_eventlisteners = (list_type, list_function, remove_events) => {
+    let click_function_title = (event) => { 
                                     if (event.target.parentNode.classList.contains(`list_${list_function}_click`))
                                         list_sort_click(event.target.parentNode)
                                 };
-    let click_function_rowcolumn = function(event) { 
+    let click_function_rowcolumn = (event) => { 
                                         if (event.target.parentNode.parentNode.classList.contains(`list_${list_function}_click`))
                                             list_item_click(event.target.parentNode.parentNode)
                                         else
@@ -1977,7 +1977,7 @@ function set_list_eventlisteners(list_type, list_function, remove_events){
     else
         element.addEventListener("click", click_function_rowcolumn);
 }
-function get_sort(order_by=0){
+const get_sort = (order_by=0) => {
     let sort = '';
     for (let i=1;i <=8;i++){
         if (document.getElementById('list_app_log_col_title' + i).classList.contains('asc'))
@@ -1993,7 +1993,7 @@ function get_sort(order_by=0){
     }
     return sort;
 }
-function get_order(item){
+const get_order = (item) => {
     let order_by = '';
     if (document.getElementById(item.id).classList.contains('asc'))
         order_by = 'desc';
@@ -2003,7 +2003,7 @@ function get_order(item){
         order_by = 'desc';
     return order_by;
 }
-function list_sort_click(item){
+const list_sort_click = (item) => {
     switch (item.id.substring(0, item.id.indexOf('_col_title'))){
         case 'list_app_log':{
             show_app_log(item.id.substr(item.id.length - 1), get_order(item));    
@@ -2023,7 +2023,7 @@ function list_sort_click(item){
         }
     }
 }
-function page_navigation(item){
+const page_navigation = (item) => {
     
     let sort = get_sort();
     let order_by = get_sort(1);
@@ -2059,7 +2059,7 @@ function page_navigation(item){
         }
     }
 }
-function list_item_click(item){
+const list_item_click = (item) => {
     let url;
     let tokentype;
     if (item.className.indexOf('gps_click')>0){
@@ -2145,7 +2145,7 @@ function list_item_click(item){
         }
     
 }
-async function get_server_log_parameters(){
+const get_server_log_parameters = async () => {
     let json;
     await common.common_fetch(common.COMMON_GLOBAL['service_log'] + '/parameters?',
                        'GET', 2, null, null, null, (err, result) =>{
@@ -2217,7 +2217,7 @@ async function get_server_log_parameters(){
         }
     })
 }
-function show_server_logs(sort=1, order_by='desc'){
+const show_server_logs = (sort=1, order_by='desc') => {
     let logscope = document.getElementById('select_logscope5')[document.getElementById('select_logscope5').selectedIndex].getAttribute('log_scope');
     let loglevel = document.getElementById('select_logscope5')[document.getElementById('select_logscope5').selectedIndex].getAttribute('log_level');
     let year = document.getElementById('select_year_menu5').value;
@@ -2245,12 +2245,12 @@ function show_server_logs(sort=1, order_by='desc'){
                 sort,
                 order_by);
 }
-function show_existing_logfiles(){
+const show_existing_logfiles = () => {
     if (admin_token_has_value()){
-        let function_event = function(event) {                    
+        let function_event = (event) => {                    
                                 //format: 'LOGSCOPE_LOGLEVEL_20220101.log'
                                 //logscope and loglevel
-                                let filename = this.children[1].children[0].innerHTML;
+                                let filename = event.target.children[1].children[0].innerHTML;
                                 let logscope = filename.substring(0,filename.indexOf('_'));
                                 filename = filename.substring(filename.indexOf('_')+1);
                                 let loglevel = filename.substring(0,filename.indexOf('_'));
@@ -2258,7 +2258,7 @@ function show_existing_logfiles(){
                                 let year     = parseInt(filename.substring(0, 4));
                                 let month    = parseInt(filename.substring(4, 6));
                                 let day      = parseInt(filename.substring(6, 8));
-                                function setlogscopelevel(select, logscope, loglevel){
+                                const setlogscopelevel = (select, logscope, loglevel) =>{
                                     for (let i = 0; i < select.options.length; i++) {
                                         if (select[i].getAttribute('log_scope') == logscope &&
                                             select[i].getAttribute('log_level') == loglevel) {
@@ -2284,7 +2284,7 @@ function show_existing_logfiles(){
         common.lov_show('SERVER_LOG_FILES', function_event);
     }
 }
-function show_pm2_logs(){
+const show_pm2_logs = () => {
     let sort = '';
     let order_by = '';
     show_list('list_pm2_log', 
@@ -2296,7 +2296,7 @@ function show_pm2_logs(){
 /*----------------------- */
 /* SERVER CONFIG          */
 /*----------------------- */
-async function show_config(config_nav=1){
+const show_config = async (config_nav=1) => {
     let url;
     document.getElementById(`list_config`).innerHTML = common.APP_SPINNER;
     url  = `/server/config/systemadmin/saved?config_type_no=${config_nav}`;
@@ -2374,7 +2374,7 @@ async function show_config(config_nav=1){
 /*----------------------- */
 /* DB INFO                */
 /*----------------------- */
-async function show_db_info(){
+const show_db_info = async () => {
     if (admin_token_has_value()){
         let json;
         await common.common_fetch('/service/db/admin/DBInfo?',
@@ -2394,7 +2394,7 @@ async function show_db_info(){
         })
     }
 }
-async function show_db_info_space(){
+const show_db_info_space = async () => {
     if (admin_token_has_value()){
         let json;
         let size = '(Mb)';
@@ -2478,7 +2478,7 @@ async function show_db_info_space(){
 /*----------------------- */
 /* SERVER                 */
 /*----------------------- */
-async function show_server_info(){
+const show_server_info = async () => {
     if (admin_token_has_value()){
         let json;
         let size = '(Mb)';
@@ -2490,7 +2490,7 @@ async function show_server_info(){
             if (err)
                 null;
             else{         
-                function seconds_to_time(seconds){
+                const seconds_to_time = (seconds) => {
                     let ut_sec = seconds;
                     let ut_min = ut_sec/60;
                     let ut_hour = ut_min/60;
@@ -2549,14 +2549,14 @@ async function show_server_info(){
 /*----------------------- */
 /* INIT                   */
 /*----------------------- */
-function admin_token_has_value(){
+const admin_token_has_value = () => {
     if (common.COMMON_GLOBAL['rest_at']=='' && common.COMMON_GLOBAL['rest_admin_at'] =='')
         return false;
     else
         return true;
 }
 
-function init_admin_secure(){
+const init_admin_secure = () => {
 
     //SET GLOBALS
     APP_GLOBAL['page'] = 0;
@@ -2718,53 +2718,53 @@ function init_admin_secure(){
 
 
     //SET EVENTLISTENERS
-    document.getElementById('common_message_cancel').addEventListener('click', function() { document.getElementById('common_dialogue_message').style.visibility = "hidden"; }, false);
-    document.getElementById('menu_open').addEventListener('click', function() { document.getElementById('menu').style.display = 'block' }, false);    
+    document.getElementById('common_message_cancel').addEventListener('click', () => { document.getElementById('common_dialogue_message').style.visibility = "hidden"; }, false);
+    document.getElementById('menu_open').addEventListener('click', () => { document.getElementById('menu').style.display = 'block' }, false);    
 
-    document.getElementById('select_app_menu1').addEventListener('change', function() { show_chart(1); show_chart(2);}, false);
-    document.getElementById('select_year_menu1').addEventListener('change', function() { show_chart(1);show_chart(2);}, false);
-    document.getElementById('select_month_menu1').addEventListener('change', function() { show_chart(1);show_chart(2);}, false);
-    document.getElementById('menu_1_broadcast_button').addEventListener('click', function() { show_broadcast_dialogue('ALL'); }, false);
-    document.getElementById('menu_1_checkbox_maintenance').addEventListener('click', function() { set_maintenance() }, false);
-    document.getElementById('select_broadcast_type').addEventListener('change', function() { set_broadcast_type(); }, false);
-    document.getElementById('send_broadcast_send').addEventListener('click', function() { sendBroadcast(); }, false);
-    document.getElementById('send_broadcast_close').addEventListener('click', function() { closeBroadcast()}, false);
+    document.getElementById('select_app_menu1').addEventListener('change', () => { show_chart(1); show_chart(2);}, false);
+    document.getElementById('select_year_menu1').addEventListener('change', () => { show_chart(1);show_chart(2);}, false);
+    document.getElementById('select_month_menu1').addEventListener('change', () => { show_chart(1);show_chart(2);}, false);
+    document.getElementById('menu_1_broadcast_button').addEventListener('click', () => { show_broadcast_dialogue('ALL'); }, false);
+    document.getElementById('menu_1_checkbox_maintenance').addEventListener('click', () => { set_maintenance() }, false);
+    document.getElementById('select_broadcast_type').addEventListener('change', () => { set_broadcast_type(); }, false);
+    document.getElementById('send_broadcast_send').addEventListener('click', () => { sendBroadcast(); }, false);
+    document.getElementById('send_broadcast_close').addEventListener('click', () => { closeBroadcast()}, false);
 
-    document.getElementById('list_user_account_search_input').addEventListener('keyup', function() { common.typewatch(show_users, 8, 'ASC', false); }, false);
-    document.getElementById('list_user_account_search_icon').addEventListener('click', function() { document.getElementById('list_user_account_search_input').focus();document.getElementById('list_user_account_search_input').dispatchEvent(new KeyboardEvent('keyup')); }, false);
-    document.getElementById('users_save').addEventListener('click', function() { button_save('users_save')}, false); 
-    document.getElementById('apps_save').addEventListener('click', function() { button_save('apps_save')}, false); 
-    document.getElementById('config_save').addEventListener('click', function() { button_save('config_save')}, false); 
+    document.getElementById('list_user_account_search_input').addEventListener('keyup', () => { common.typewatch(show_users, 8, 'ASC', false); }, false);
+    document.getElementById('list_user_account_search_icon').addEventListener('click', () => { document.getElementById('list_user_account_search_input').focus();document.getElementById('list_user_account_search_input').dispatchEvent(new KeyboardEvent('keyup')); }, false);
+    document.getElementById('users_save').addEventListener('click', () => { button_save('users_save')}, false); 
+    document.getElementById('apps_save').addEventListener('click', () => { button_save('apps_save')}, false); 
+    document.getElementById('config_save').addEventListener('click', () => { button_save('config_save')}, false); 
 
-    document.querySelectorAll('.list_nav').forEach(e => e.addEventListener('click', function(event) {
+    document.querySelectorAll('.list_nav').forEach(e => e.addEventListener('click', (event) => {
                                                                                         nav_click(event.target.id==''?event.target.parentNode:event.target)
                                                                                     }, true));
 
-    document.getElementById('select_app_menu5_app_log').addEventListener('change', function() { nav_click(document.getElementById('list_app_log_title'))}, false);
-    document.getElementById('select_year_menu5_app_log').addEventListener('change', function() { nav_click(document.getElementById('list_app_log_title'))}, false);
-    document.getElementById('select_month_menu5_app_log').addEventListener('change', function() { nav_click(document.getElementById('list_app_log_title'))}, false);
+    document.getElementById('select_app_menu5_app_log').addEventListener('change', () => { nav_click(document.getElementById('list_app_log_title'))}, false);
+    document.getElementById('select_year_menu5_app_log').addEventListener('change', () => { nav_click(document.getElementById('list_app_log_title'))}, false);
+    document.getElementById('select_month_menu5_app_log').addEventListener('change', () => { nav_click(document.getElementById('list_app_log_title'))}, false);
     
-    document.getElementById('list_app_log_first').addEventListener('click', function() { page_navigation(this)}, false);
-    document.getElementById('list_app_log_previous').addEventListener('click', function() { page_navigation(this)}, false);
-    document.getElementById('list_app_log_next').addEventListener('click', function() { page_navigation(this)}, false);
-    document.getElementById('list_app_log_last').addEventListener('click', function() { page_navigation(this)}, false);
+    document.getElementById('list_app_log_first').addEventListener('click', (event) => { page_navigation(event.target)}, false);
+    document.getElementById('list_app_log_previous').addEventListener('click', (event) => { page_navigation(event.target)}, false);
+    document.getElementById('list_app_log_next').addEventListener('click', (event) => { page_navigation(event.target)}, false);
+    document.getElementById('list_app_log_last').addEventListener('click', (event) => { page_navigation(event.target)}, false);
     
-    document.getElementById('select_app_menu5_list_connected').addEventListener('change', function() { nav_click(document.getElementById('list_connected_title'))}, false);
-    document.getElementById('select_year_menu5_list_connected').addEventListener('change', function() { nav_click(document.getElementById('list_connected_title'))}, false);
-    document.getElementById('select_month_menu5_list_connected').addEventListener('change', function() { nav_click(document.getElementById('list_connected_title'))}, false);
+    document.getElementById('select_app_menu5_list_connected').addEventListener('change', () => { nav_click(document.getElementById('list_connected_title'))}, false);
+    document.getElementById('select_year_menu5_list_connected').addEventListener('change', () => { nav_click(document.getElementById('list_connected_title'))}, false);
+    document.getElementById('select_month_menu5_list_connected').addEventListener('change', () => { nav_click(document.getElementById('list_connected_title'))}, false);
 
-    document.getElementById('select_logscope5').addEventListener('change', function() { nav_click(document.getElementById('list_server_log_title'))}, false);    
-    document.getElementById('select_app_menu5').addEventListener('change', function() { nav_click(document.getElementById('list_server_log_title'))}, false);
-    document.getElementById('select_year_menu5').addEventListener('change', function() { nav_click(document.getElementById('list_server_log_title'))}, false);
-    document.getElementById('select_month_menu5').addEventListener('change', function() { nav_click(document.getElementById('list_server_log_title'))}, false);
-    document.getElementById('select_day_menu5').addEventListener('change', function() { nav_click(document.getElementById('list_server_log_title'))}, false);
+    document.getElementById('select_logscope5').addEventListener('change', () => { nav_click(document.getElementById('list_server_log_title'))}, false);    
+    document.getElementById('select_app_menu5').addEventListener('change', () => { nav_click(document.getElementById('list_server_log_title'))}, false);
+    document.getElementById('select_year_menu5').addEventListener('change', () => { nav_click(document.getElementById('list_server_log_title'))}, false);
+    document.getElementById('select_month_menu5').addEventListener('change', () => { nav_click(document.getElementById('list_server_log_title'))}, false);
+    document.getElementById('select_day_menu5').addEventListener('change', () => { nav_click(document.getElementById('list_server_log_title'))}, false);
 
-    document.getElementById('filesearch_menu5').addEventListener('click', function() { show_existing_logfiles();}, false);
+    document.getElementById('filesearch_menu5').addEventListener('click', () => { show_existing_logfiles();}, false);
     
-    document.getElementById('select_maptype').addEventListener('change', function() { common.map_setstyle(document.getElementById('select_maptype').value).then(function(){null;}) }, false);
+    document.getElementById('select_maptype').addEventListener('change', () => { common.map_setstyle(document.getElementById('select_maptype').value).then(()=>{null;}) }, false);
 
     //SET APPS INFO, INIT MAP
-    get_apps().then(function(){
+    get_apps().then(() => {
         //SET MENU
         document.getElementById('menu_secure').innerHTML = 
             `<div id='menu_close' class='common_dialogue_button'></div>
@@ -2793,7 +2793,7 @@ function init_admin_secure(){
         document.getElementById('menu_10').innerHTML = common.ICONS['app_server']; //SERVER
         document.getElementById('menu_11').innerHTML = common.ICONS['app_logoff']; //LOGOUT
 
-        document.getElementById('menu_secure').addEventListener('click', function(event) { 
+        document.getElementById('menu_secure').addEventListener('click', (event) => { 
                                                                             let target_id;
                                                                             if (event.target.id.startsWith('menu_')){
                                                                                 //menuitem
@@ -2801,7 +2801,7 @@ function init_admin_secure(){
                                                                             }
                                                                             else
                                                                                 if (event.target.parentNode.id.startsWith('menu_')){
-                                                                                    //svg or i in menuitem
+                                                                                    //svg or icon in menuitem
                                                                                     target_id = event.target.parentNode.id;
                                                                                 }
                                                                                 else
@@ -2823,7 +2823,7 @@ function init_admin_secure(){
                                                                                 }
                                                                             }
                                                                             }, false);
-        document.getElementById('common_user_direction_select').addEventListener('change', function() { fix_pagination_buttons(this.value)}, false);
+        document.getElementById('common_user_direction_select').addEventListener('change', (event) => { fix_pagination_buttons(event.target.value)}, false);
         //hide all first (display none in css using eval not working)
         for (let i=1;i<=10;i++){
             document.getElementById(`menu_${i}`).style.display='none';
@@ -2876,18 +2876,18 @@ function init_admin_secure(){
                 null
             });
         }
-        common.get_gps_from_ip().then(function(){
+        common.get_gps_from_ip().then(() =>{
             common.map_init(APP_GLOBAL['module_leaflet_map_container'],
                             common.COMMON_GLOBAL['module_leaflet_style'],
                             common.COMMON_GLOBAL['client_longitude'],
                             common.COMMON_GLOBAL['client_latitude'],
                             APP_GLOBAL['module_leaflet_map_marker_div_gps'],
-                            APP_GLOBAL['module_leaflet_map_zoom']).then(function(){
-                                common.map_setevent('dblclick', function(e) {
+                            APP_GLOBAL['module_leaflet_map_zoom']).then(() => {
+                                common.map_setevent('dblclick', (e) => {
                                     let lng = e.latlng['lng'];
                                     let lat = e.latlng['lat'];
                                     //Update GPS position
-                                    common.get_place_from_gps(lng, lat).then(function(gps_place){
+                                    common.get_place_from_gps(lng, lat).then((gps_place) => {
                                         common.map_update(lng,
                                                           lat,
                                                           '', //do not change zoom 
