@@ -1,6 +1,6 @@
 const service = await import("./country.service.js");
 
-function getCountries(req, res){
+const getCountries = (req, res) => {
 	let lang_code;
 	if (typeof req.params.lang_code == 'undefined')
 		lang_code ='en';

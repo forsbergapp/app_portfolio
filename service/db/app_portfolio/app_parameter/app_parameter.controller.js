@@ -1,6 +1,6 @@
 const service = await import("./app_parameter.service.js");
 
-function getParameters_server(req, res){
+const getParameters_server = (req, res) => {
 	req.params.app_id = parseInt(req.params.app_id);
 	service.getParameters_server(req.query.app_id, req.params.app_id, (err, results) =>{
 		if (err) {
@@ -13,7 +13,7 @@ function getParameters_server(req, res){
 		});
 	});
 }
-function getParametersAllAdmin(req, res){
+const getParametersAllAdmin = (req, res) => {
 	req.params.app_id = parseInt(req.params.app_id);
 	service.getParametersAllAdmin(req.query.app_id, req.params.app_id, req.query.lang_code, (err, results) =>{
 		if (err) {
@@ -26,7 +26,7 @@ function getParametersAllAdmin(req, res){
 		});
 	});
 }
-function setParameter_admin(req, res){
+const setParameter_admin = (req, res) => {
 	service.setParameter_admin(req.query.app_id, req.body, (err, results) =>{
 		if (err) {
 			return res.status(500).send({
@@ -38,7 +38,7 @@ function setParameter_admin(req, res){
 		});
 	});
 }
-function setParameterValue_admin(req, res){
+const setParameterValue_admin = (req, res) => {
 	service.setParameterValue_admin(req.query.app_id, req.body, (err, results) =>{
 		if (err) {
 			return res.status(500).send({
@@ -50,7 +50,7 @@ function setParameterValue_admin(req, res){
 		});
 	});
 }
-function getParametersAdmin(req, res){
+const getParametersAdmin = (req, res) => {
 	req.params.app_id = parseInt(req.params.app_id);
 	service.getParameters(req.query.app_id, req.params.app_id, (err, results) =>{
 		if (err) {
@@ -63,7 +63,7 @@ function getParametersAdmin(req, res){
 		});
 	});
 }
-function getParameters(req, res){
+const getParameters = (req, res) => {
 	req.params.app_id = parseInt(req.params.app_id);
 	service.getParameters(req.query.app_id, req.params.app_id, (err, results) =>{
 		if (err) {

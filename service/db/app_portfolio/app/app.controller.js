@@ -1,6 +1,6 @@
 const service = await import('./app.service.js');
 
-function getApp(req, res){
+const getApp = (req, res) => {
 	service.getApp(req.query.app_id, req.query.id, req.query.lang_code, (err, results) =>{
 		if (err) {
 			return res.status(500).send({
@@ -12,7 +12,7 @@ function getApp(req, res){
 		});
 	});
 }
-function getAppsAdmin(req, res){
+const getAppsAdmin = (req, res) => {
 	service.getAppsAdmin(req.query.app_id, req.query.lang_code, (err, results) =>{
 		if (err) {
 			return res.status(500).send({
@@ -24,7 +24,7 @@ function getAppsAdmin(req, res){
 		});
 	});
 }
-function updateAppAdmin(req, res){
+const updateAppAdmin = (req, res) => {
 	req.params.id = parseInt(req.params.id);
 	service.updateAppAdmin(req.query.app_id, req.params.id, req.body, (err, results) =>{
 		if (err) {

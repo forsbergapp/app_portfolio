@@ -2,7 +2,7 @@ const service = await import("./mail.service.js");
 
 const {ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
 
-function getLogo(req, res){
+const getLogo = (req, res) => {
     if (typeof req.query.id == 'undefined'){
         req.query.app_id = ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID');
     }
@@ -18,9 +18,9 @@ function getLogo(req, res){
     res.sendFile(process.cwd() + `/apps/app${req.query.app_id}/mail/logo.png`, (err) =>{
         if (err){
             let stack = new Error().stack;
-            import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
-                import(`file://${process.cwd()}/service/log/log.service.js`).then(function({createLogAppS}){
-                    createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), req.query.app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), err).then(function(){
+            import(`file://${process.cwd()}/service/common/common.service.js`).then(({COMMON}) => {
+                import(`file://${process.cwd()}/service/log/log.service.js`).then(({createLogAppS}) => {
+                    createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), req.query.app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), err).then(() => {
                         return res.send(null);
                     })
                 });
@@ -28,9 +28,9 @@ function getLogo(req, res){
         }
         else {
             req.query.callback = 1;
-            import(`file://${process.cwd()}/service/geolocation/geolocation.controller`).then(function({getIp}){
+            import(`file://${process.cwd()}/service/geolocation/geolocation.controller`).then(({getIp}) => {
                 getIp(req, res, (err, result)=>{
-                    import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/app_log/app_log.service.js`).then(function({createLog}){
+                    import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/app_log/app_log.service.js`).then(({createLog}) => {
                         createLog(req.query.app_id,
                                     { app_id : req.query.app_id,
                                     app_module : 'MAIL',
@@ -59,7 +59,7 @@ function getLogo(req, res){
         }
     });
 }
-function sendEmail(req, data, callBack){
+const sendEmail = (req, data, callBack) => {
     let emailData;
     let db_SERVICE_MAIL_TYPE_CHANGE_EMAIL_FROM_NAME;
     let db_SERVICE_MAIL_TYPE_PASSWORD_RESET_FROM_NAME;
@@ -78,13 +78,13 @@ function sendEmail(req, data, callBack){
     let from_app_root = ('file:///' + process.cwd().replace(/\\/g, '/')).length;
     const baseUrl = import.meta.url.substring(from_app_root);
     
-    import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/app_parameter/app_parameter.service.js`).then(function({getParameters_server}){
+    import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/app_parameter/app_parameter.service.js`).then(({getParameters_server}) => {
         getParameters_server(req.query.app_id, data.app_id, (err, result)=>{
             if (err) {                
                 let stack = new Error().stack;
-                import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
-                    import(`file://${process.cwd()}/service/log/log.service.js`).then(function({createLogAppS}){
-                        createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), req.query.app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), err).then(function(){
+                import(`file://${process.cwd()}/service/common/common.service.js`).then(({COMMON}) => {
+                    import(`file://${process.cwd()}/service/log/log.service.js`).then(({createLogAppS}) => {
+                        createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), req.query.app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), err).then(() => {
                             return callBack(err, null);
                         })
                     });
@@ -131,9 +131,9 @@ function sendEmail(req, data, callBack){
                         break;
                     }
                 }
-                import(`file://${process.cwd()}/apps/index.js`).then(function({getMail}){
+                import(`file://${process.cwd()}/apps/index.js`).then(({getMail}) => {
                     let mail = getMail(data.app_id, data, baseUrl)
-                    .then(function(mail_result){
+                    .then((mail_result) => {
                         emailData =  {
                             email_host:         db_SERVICE_MAIL_HOST,
                             email_port:         db_SERVICE_MAIL_PORT,
@@ -149,7 +149,7 @@ function sendEmail(req, data, callBack){
                             if (err)
                                 return callBack(err, result);
                             else
-                                import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/app_log/app_log.service.js`).then(function({createLog}){
+                                import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/app_log/app_log.service.js`).then(({createLog}) => {
                                     createLog(req.query.app_id,
                                                 { app_id : data.app_id,
                                                     app_module : 'MAIL',

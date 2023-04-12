@@ -1,6 +1,6 @@
 const {execute_db_sql, get_schema_name, get_locale} = await import(`file://${process.cwd()}/service/db/common/common.service.js`);
 
-function getLocales(app_id, lang_code, callBack){
+const getLocales = (app_id, lang_code, callBack) => {
     let sql;
     let parameters;
     sql = `SELECT CONCAT(l2.lang_code, CASE 
@@ -82,7 +82,7 @@ function getLocales(app_id, lang_code, callBack){
                   lang_code3: get_locale(lang_code, 3)
                 };
     let stack = new Error().stack;
-    import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
+    import(`file://${process.cwd()}/service/common/common.service.js`).then(({COMMON}) => {
       execute_db_sql(app_id, sql, parameters, 
                     COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
         if (err)

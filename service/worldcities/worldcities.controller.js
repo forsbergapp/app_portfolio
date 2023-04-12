@@ -2,17 +2,17 @@ const service = await import('./worldcities.service.js')
 
 const { ConfigGet } = await import(`file://${process.cwd()}/server/server.service.js`);
 
-function getCities(req, res){
+const getCities = (req, res) => {
 	service.getService((err, cities) => {
 		if (err)
 			return res.status(500).json(
 				err
 			);
 		else{
-			cities = JSON.parse(cities).filter(function(item) {
+			cities = JSON.parse(cities).filter((item) => {
 				return (item.iso2 == req.params.country);
 			});	
-			import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/app_log/app_log.service.js`).then(function({createLog}){
+			import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/app_log/app_log.service.js`).then(({createLog}) => {
 				createLog(req.query.app_id,
 							{ app_id : req.query.app_id, 
 							app_module : 'WORLDCITIES',

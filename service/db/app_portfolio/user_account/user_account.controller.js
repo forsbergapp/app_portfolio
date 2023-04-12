@@ -9,7 +9,7 @@ const { getParameter } = await import(`file://${process.cwd()}${ConfigGet(1, 'SE
 const { sendEmail } = await import(`file://${process.cwd()}/service/mail/mail.controller.js`);
 const { accessToken } = await import(`file://${process.cwd()}/service/auth/auth.controller.js`);
 
-function getUsersAdmin(req, res){
+const getUsersAdmin = (req, res) => {
     service.getUsersAdmin(req.query.app_id, req.params.search, req.query.sort, req.query.order_by, req.query.offset, req.query.limit, (err, results) => {
         if (err) {
             return res.status(500).send(
@@ -23,7 +23,7 @@ function getUsersAdmin(req, res){
         }
     });
 }
-function getStatCountAdmin(req, res){
+const getStatCountAdmin = (req, res) => {
     service.getStatCountAdmin(req.query.app_id, (err, results) => {
         if (err) {
             return res.status(500).send(
@@ -37,7 +37,7 @@ function getStatCountAdmin(req, res){
         }
     });
 }
-function updateUserSuperAdmin(req, res){
+const updateUserSuperAdmin = (req, res) => {
     req.params.id = parseInt(req.params.id);
     service.updateUserSuperAdmin(req.query.app_id, req.params.id, req.body, (err, results) => {
         if (err) {
@@ -64,7 +64,7 @@ function updateUserSuperAdmin(req, res){
         else{
             if (req.body.app_role_id!=0 && req.body.app_role_id!=1)
                 //delete admin app from user if user is not an admin anymore
-                import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/user_account_app/user_account_app.service.js`).then(function({ deleteUserAccountApps }){
+                import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/user_account_app/user_account_app.service.js`).then(({ deleteUserAccountApps }) => {
                     deleteUserAccountApps(req.query.app_id, req.params.id, req.query.app_id, (err, result_delete_user_acccount_app) =>{
                         if (err)
                             return res.status(500).send(
@@ -83,7 +83,7 @@ function updateUserSuperAdmin(req, res){
         }
     });
 }
-function userSignup(req, res){
+const userSignup = (req, res) => {
     const salt = genSaltSync(10);
     if (typeof req.body.provider_id == 'undefined') {
         //generate verification code for local users only
@@ -166,7 +166,7 @@ function userSignup(req, res){
         });
     }
 }
-function activateUser(req, res){
+const activateUser = (req, res) => {
     req.params.id = parseInt(req.params.id);
     const verification_code_to_check = req.body.verification_code;
     let auth_new_password = null;
@@ -249,7 +249,7 @@ function activateUser(req, res){
             }
     });
 }
-function passwordResetUser(req, res){
+const passwordResetUser = (req, res) => {
     let email = req.body.email ?? '';
     if (email !='')
         service.getEmailUser(req.query.app_id, email, (err, results) => {
@@ -343,7 +343,7 @@ function passwordResetUser(req, res){
         });
     
 }
-function getUserByUserId(req, res){
+const getUserByUserId = (req, res) => {
     req.params.id = parseInt(req.params.id);
     service.getUserByUserId(req.query.app_id, req.params.id, (err, results) => {
         if (err) {
@@ -359,13 +359,13 @@ function getUserByUserId(req, res){
                 );
             }
             else{
-                import(`file://${process.cwd()}/service/db/common/common.service.js`).then(function({record_not_found}){
+                import(`file://${process.cwd()}/service/db/common/common.service.js`).then(({record_not_found}) => {
                     return record_not_found(res, req.query.app_id, req.query.lang_code);
                 })
             }
     });
 }
-function getProfileUser(req, res){
+const getProfileUser = (req, res) => {
     if (typeof req.params.id == 'undefined' || req.params.id=='' || req.params.id==null){
         //searching for username
         //user not logged in
@@ -413,7 +413,7 @@ function getProfileUser(req, res){
                     //set user id when username is searched
                     if (req.body.user_account_id_view==null)
                         req.body.user_account_id_view = results.id;
-                    import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/user_account_view/user_account_view.service.js`).then(function({ insertUserAccountView }){
+                    import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/user_account_view/user_account_view.service.js`).then(({ insertUserAccountView }) => {
                         insertUserAccountView(req.query.app_id, req.body, (err, results_insert) => {
                             if (err) {
                                 return res.status(500).send(
@@ -431,14 +431,14 @@ function getProfileUser(req, res){
                 }
             }
             else{
-                import(`file://${process.cwd()}/service/db/common/common.service.js`).then(function({record_not_found}){
+                import(`file://${process.cwd()}/service/db/common/common.service.js`).then(({record_not_found}) => {
                     return record_not_found(res, req.query.app_id, req.query.lang_code);
                 })
             }
         }            
     });
 }
-function searchProfileUser(req, res){
+const searchProfileUser = (req, res) => {
     const username = req.params.username;
     service.searchProfileUser(req.query.app_id, username, (err, results) => {
         if (err) {
@@ -452,7 +452,7 @@ function searchProfileUser(req, res){
             req.body.client_user_agent = req.headers["user-agent"];
             req.body.client_longitude = req.body.client_longitude;
             req.body.client_latitude = req.body.client_latitude;
-            import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/profile_search/profile_search.service.js`).then(function({ insertProfileSearch }){
+            import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/profile_search/profile_search.service.js`).then(({ insertProfileSearch }) => {
                 insertProfileSearch(req.query.app_id, req.body, (err, results_insert) => {
                     if (err) {
                         return res.status(500).send(
@@ -466,7 +466,7 @@ function searchProfileUser(req, res){
                                 items: results
                             });
                         else {
-                            import(`file://${process.cwd()}/service/db/common/common.service.js`).then(function({record_not_found}){
+                            import(`file://${process.cwd()}/service/db/common/common.service.js`).then(({record_not_found}) => {
                                 return record_not_found(res, req.query.app_id, req.query.lang_code);
                             })
                         }
@@ -476,7 +476,7 @@ function searchProfileUser(req, res){
         }
     });
 }
-function getProfileDetail(req, res){
+const getProfileDetail = (req, res) => {
     req.params.id = parseInt(req.params.id);
     let detailchoice;
     if (typeof req.query.detailchoice !== 'undefined')
@@ -500,7 +500,7 @@ function getProfileDetail(req, res){
         }
     });
 }
-function getProfileTop(req, res){
+const getProfileTop = (req, res) => {
     if (typeof req.params.statchoice !== 'undefined')
         req.params.statchoice = parseInt(req.params.statchoice);
     service.getProfileTop(req.query.app_id, req.params.statchoice, (err, results) => {
@@ -521,7 +521,7 @@ function getProfileTop(req, res){
         }
     });
 }
-function updateUserLocal(req, res){
+const updateUserLocal = (req, res) => {
     req.params.id = parseInt(req.params.id);
     const salt = genSaltSync(10);
     service.checkPassword(req.query.app_id, req.params.id, (err, results) => {
@@ -552,7 +552,7 @@ function updateUserLocal(req, res){
                             if (req.body.password)
                                 req.body.password = hashSync(req.body.password, salt);
                         }
-                        function updateLocal(send_email){
+                        const updateLocal = (send_email) => {
                             service.updateUserLocal(req.query.app_id, req.body, req.params.id, (err, results_update) => {
                                 if (err) {
                                     let app_code = service.get_app_code(err.errorNum, 
@@ -606,7 +606,7 @@ function updateUserLocal(req, res){
                                             });
                                     } 
                                     else{
-                                        import(`file://${process.cwd()}/service/db/common/common.service.js`).then(function({record_not_found}){
+                                        import(`file://${process.cwd()}/service/db/common/common.service.js`).then(({record_not_found}) => {
                                             return record_not_found(res, req.query.app_id, req.query.lang_code);
                                         })
                                     }
@@ -660,13 +660,13 @@ function updateUserLocal(req, res){
                     }
                 } else {
                     let stack = new Error().stack;
-                    import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
-                        import(`file://${process.cwd()}/service/log/log.service.js`).then(function({createLogAppC}){
+                    import(`file://${process.cwd()}/service/common/common.service.js`).then(({COMMON}) => {
+                        import(`file://${process.cwd()}/service/log/log.service.js`).then(({createLogAppC}) => {
                             createLogAppC(req.query.app_id, ConfigGet(1, 'SERVICE_LOG', 'LEVEL_INFO'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
                                           'invalid password attempt for user id:' + req.params.id,
                                           req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, 
                                           res.statusCode, 
-                                          req.headers['user-agent'], req.headers['accept-language'], req.headers['referer']).then(function(){
+                                          req.headers['user-agent'], req.headers['accept-language'], req.headers['referer']).then(() => {
                                 //invalid password
                                 getMessage(req.query.app_id,
                                            ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), 
@@ -695,7 +695,7 @@ function updateUserLocal(req, res){
         }
     });
 }
-function updatePassword(req, res){
+const updatePassword = (req, res) => {
     req.params.id = parseInt(req.params.id);
     if (service.password_length_wrong(req.body.new_password))
         getMessage(req.query.app_id,
@@ -761,7 +761,7 @@ function updatePassword(req, res){
                     })
                 }
                 else{
-                    import(`file://${process.cwd()}/service/db/common/common.service.js`).then(function({record_not_found}){
+                    import(`file://${process.cwd()}/service/db/common/common.service.js`).then(({record_not_found}) => {
                         return record_not_found(res, req.query.app_id, req.query.lang_code);
                     })
                 }
@@ -769,7 +769,7 @@ function updatePassword(req, res){
         });
     }
 }
-function updateUserCommon(req, res){
+const updateUserCommon = (req, res) => {
     req.params.id = parseInt(req.params.id);
     service.updateUserCommon(req.query.app_id, req.body, req.params.id, (err, results) => {
         if (err) {
@@ -800,14 +800,14 @@ function updateUserCommon(req, res){
                 );
             }
             else{
-                import(`file://${process.cwd()}/service/db/common/common.service.js`).then(function({record_not_found}){
+                import(`file://${process.cwd()}/service/db/common/common.service.js`).then(({record_not_found}) => {
                     return record_not_found(res, req.query.app_id, req.query.lang_code);
                 })
             }
         }
     });
 }
-function deleteUser(req, res){
+const deleteUser = (req, res) => {
     req.params.id = parseInt(req.params.id);
     service.getUserByUserId(req.query.app_id, req.params.id, (err, results) => {
         if (err) {
@@ -831,7 +831,7 @@ function deleteUser(req, res){
                                 );
                             }
                             else{
-                                import(`file://${process.cwd()}/service/db/common/common.service.js`).then(function({record_not_found}){
+                                import(`file://${process.cwd()}/service/db/common/common.service.js`).then(({record_not_found}) => {
                                     return record_not_found(res, req.query.app_id, req.query.lang_code);
                                 })
                             }
@@ -862,7 +862,7 @@ function deleteUser(req, res){
                                                 );
                                             }
                                             else{
-                                                import(`file://${process.cwd()}/service/db/common/common.service.js`).then(function({record_not_found}){
+                                                import(`file://${process.cwd()}/service/db/common/common.service.js`).then(({record_not_found}) => {
                                                     return record_not_found(res, req.query.app_id, req.query.lang_code);
                                                 })
                                             }
@@ -871,13 +871,13 @@ function deleteUser(req, res){
                                 }
                                 else{
                                     let stack = new Error().stack;
-                                    import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
-                                        import(`file://${process.cwd()}/service/log/log.service.js`).then(function({createLogAppC}){
+                                    import(`file://${process.cwd()}/service/common/common.service.js`).then(({COMMON}) => {
+                                        import(`file://${process.cwd()}/service/log/log.service.js`).then(({createLogAppC}) => {
                                             createLogAppC(req.query.app_id, ConfigGet(1, 'SERVICE_LOG', 'LEVEL_INFO'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
                                                         'invalid password attempt for user id:' + req.params.id,
                                                         req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, 
                                                         res.statusCode, 
-                                                        req.headers['user-agent'], req.headers['accept-language'], req.headers['referer']).then(function(){
+                                                        req.headers['user-agent'], req.headers['accept-language'], req.headers['referer']).then(() => {
                                                 //invalid password
                                                 getMessage(req.query.app_id,
                                                         ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), 
@@ -922,7 +922,7 @@ function deleteUser(req, res){
     })
 
 }
-function userLogin(req, res){
+const userLogin = (req, res) => {
     let result_pw;
     let stack = new Error().stack;
     service.userLogin(req.query.app_id, req.body, (err, results) => {
@@ -997,14 +997,14 @@ function userLogin(req, res){
                                                                 }
                                                                 else
                                                                     if (req.query.app_id == 0)
-                                                                        import(`file://${process.cwd()}/apps/admin/src/secure/index.js`).then(function({ getAdminSecure }){
+                                                                        import(`file://${process.cwd()}/apps/admin/src/secure/index.js`).then(({ getAdminSecure }) => {
                                                                             getAdminSecure(req.query.app_id, 
                                                                                 null,
                                                                                 results.id,
                                                                                 req.body.client_latitude,
                                                                                 req.body.client_longitude, 
                                                                                 req.body.client_place)
-                                                                            .then(function(app_result){
+                                                                            .then((app_result) => {
                                                                                 return res.status(200).json({
                                                                                     count: Array(results.items).length,
                                                                                     accessToken: Token,
@@ -1038,14 +1038,14 @@ function userLogin(req, res){
                                             }
                                             else
                                             if (req.query.app_id == 0)
-                                                import(`file://${process.cwd()}/apps/admin/src/secure/index.js`).then(function({ getAdminSecure }){
+                                                import(`file://${process.cwd()}/apps/admin/src/secure/index.js`).then(({ getAdminSecure }) => {
                                                     getAdminSecure(req.query.app_id, 
                                                         null,
                                                         results.id,
                                                         req.body.client_latitude,
                                                         req.body.client_longitude, 
                                                         req.body.client_place)
-                                                    .then(function(app_result){
+                                                    .then((app_result) => {
                                                         return res.status(200).json({
                                                             count: Array(results.items).length,
                                                             accessToken: Token,
@@ -1068,13 +1068,13 @@ function userLogin(req, res){
                     }
                     else{
                         //unauthorized, only admin allowed to log in to admin
-                        import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
-                            import(`file://${process.cwd()}/service/log/log.service.js`).then(function({createLogAppC}){
+                        import(`file://${process.cwd()}/service/common/common.service.js`).then(({COMMON}) => {
+                            import(`file://${process.cwd()}/service/log/log.service.js`).then(({createLogAppC}) => {
                                 createLogAppC(req.query.app_id, ConfigGet(1, 'SERVICE_LOG', 'LEVEL_INFO'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
                                                 'unauthorized admin login attempt for user id:' + req.body.user_account_id + ', username:' + req.body.username,
                                                 req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, 
                                                 res.statusCode, 
-                                                req.headers['user-agent'], req.headers['accept-language'], req.headers['referer']).then(function(){
+                                                req.headers['user-agent'], req.headers['accept-language'], req.headers['referer']).then(() => {
                                     return res.status(401).send(
                                         '⛔'
                                     );
@@ -1092,13 +1092,13 @@ function userLogin(req, res){
                         }
                         else{
                             //Username or password not found
-                            import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
-                                import(`file://${process.cwd()}/service/log/log.service.js`).then(function({createLogAppC}){
+                            import(`file://${process.cwd()}/service/common/common.service.js`).then(({COMMON}) => {
+                                import(`file://${process.cwd()}/service/log/log.service.js`).then(({createLogAppC}) => {
                                     createLogAppC(req.query.app_id, ConfigGet(1, 'SERVICE_LOG', 'LEVEL_INFO'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
                                                   'invalid password attempt for user id:' + req.body.user_account_id + ', username:' + req.body.username,
                                                   req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, 
                                                   res.statusCode, 
-                                                  req.headers['user-agent'], req.headers['accept-language'], req.headers['referer']).then(function(){
+                                                  req.headers['user-agent'], req.headers['accept-language'], req.headers['referer']).then(() => {
                                         getMessage( req.query.app_id,
                                                     ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), 
                                                     20300, 
@@ -1115,13 +1115,13 @@ function userLogin(req, res){
                 }
             } else{
                 //User not found
-                import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
-                    import(`file://${process.cwd()}/service/log/log.service.js`).then(function({createLogAppC}){
+                import(`file://${process.cwd()}/service/common/common.service.js`).then(({COMMON}) => {
+                    import(`file://${process.cwd()}/service/log/log.service.js`).then(({createLogAppC}) => {
                         createLogAppC(req.query.app_id, ConfigGet(1, 'SERVICE_LOG', 'LEVEL_INFO'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
                                       'user not found:' + req.body.username,
                                       req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, 
                                       res.statusCode, 
-                                      req.headers['user-agent'], req.headers['accept-language'], req.headers['referer']).then(function(){
+                                      req.headers['user-agent'], req.headers['accept-language'], req.headers['referer']).then(() => {
                             getMessage( req.query.app_id,
                                         ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), 
                                         20305, 
@@ -1137,7 +1137,7 @@ function userLogin(req, res){
         }
     });
 }
-function providerSignIn(req, res){
+const providerSignIn = (req, res) => {
     req.body.result = 1;
     req.body.client_ip = req.ip;
     req.body.client_user_agent = req.headers["user-agent"];

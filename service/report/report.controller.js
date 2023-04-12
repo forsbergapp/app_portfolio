@@ -1,7 +1,7 @@
 const service = await import("./report.service.js");
 const {ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
 
-async function getReport(req, res){
+const getReport = async (req, res) => {
 	let decodedparameters = Buffer.from(req.query.reportid, 'base64').toString('utf-8');
 	//example string:
 	//'app_id=2&module=timetable.html&id=1&sid=1&type=0&lang_code=en-us&format=PDF&ps=A4&hf=0'
@@ -20,19 +20,19 @@ async function getReport(req, res){
 	req.query.hf = query_parameters.hf;
 	//called if format=html or not PDF or puppeteer creating PDF
 	req.query.callback=1;
-	import(`file://${process.cwd()}/service/geolocation/geolocation.controller.js`).then(function({getIp}){
+	import(`file://${process.cwd()}/service/geolocation/geolocation.controller.js`).then(({getIp}) => {
 		getIp(req, res, (err, result)=>{
 			let gps_place = result.geoplugin_city + ', ' +
 							result.geoplugin_regionName + ', ' +
 							result.geoplugin_countryName;
 			//check if maintenance
 			if (ConfigGet(0, null, 'MAINTENANCE')=='1'){
-				import(`file://${process.cwd()}/apps/index.js`).then(function({getMaintenance}){
+				import(`file://${process.cwd()}/apps/index.js`).then(({getMaintenance}) => {
 					const app = getMaintenance(req.query.app_id,
 												result.geoplugin_latitude,
 												result.geoplugin_longitude,
 												gps_place)
-					.then(function(app_result){
+					.then((app_result) => {
 						res.send(app_result);
 					});
 				})
@@ -44,20 +44,20 @@ async function getReport(req, res){
 					let pdf_result = service.getReportService(  url, 
 														req.query.ps, 			//papersize		A4, Letter
 														(req.query.hf==1))		//headerfooter	1/0
-										.then(function(pdf){
+										.then((pdf) => {
 											res.type('application/pdf');
 											res.send(pdf);
 										})
 				}
 				else{
-					import(`file://${process.cwd()}/apps/app${req.query.app_id}/report/index.js`).then(function({getReport}){
+					import(`file://${process.cwd()}/apps/app${req.query.app_id}/report/index.js`).then(({getReport}) => {
 						const report = getReport(req.query.app_id, 
 											req.query.module, 
 											result.geoplugin_latitude, 
 											result.geoplugin_longitude, 
 											gps_place)
-						.then(function(report_result){
-							import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/app_log/app_log.service.js`).then(function({createLog}){
+						.then((report_result) => {
+							import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/app_log/app_log.service.js`).then(({createLog}) => {
 								createLog(req.query.app_id,
 											{ app_id : req.query.app_id,
 											app_module : 'REPORT',

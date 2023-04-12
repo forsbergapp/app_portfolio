@@ -1,6 +1,6 @@
 const service = await import("./message_translation.service.js");
 
-function getMessage(req, res){
+const getMessage = (req, res) => {
 	service.getMessage(req.query.app_id, req.query.data_app_id, req.params.code, req.query.lang_code, (err, results) =>{
 		if (err) {
 			return res.status(500).send({

@@ -1,6 +1,6 @@
 const {execute_db_sql, get_schema_name, get_locale} = await import(`file://${process.cwd()}/service/db/common/common.service.js`);
 
-function getMessage(app_id, data_app_id, code, lang_code, callBack){
+const getMessage = (app_id, data_app_id, code, lang_code, callBack) => {
 		let sql;
     	let parameters;
 		sql = `SELECT m.code "code",
@@ -34,7 +34,7 @@ function getMessage(app_id, data_app_id, code, lang_code, callBack){
                   		lang_code3: get_locale(lang_code, 3)
 					};
 		let stack = new Error().stack;
-		import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
+		import(`file://${process.cwd()}/service/common/common.service.js`).then(({COMMON}) => {
 			execute_db_sql(app_id, sql, parameters, 
 						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 				if (err)
@@ -44,7 +44,7 @@ function getMessage(app_id, data_app_id, code, lang_code, callBack){
 			});
 		})
 	}
-function getMessage_admin(app_id, data_app_id, code, lang_code, callBack){
+const getMessage_admin = (app_id, data_app_id, code, lang_code, callBack) => {
 		let sql;
     	let parameters;
 		sql = `SELECT m.code "code",
@@ -78,7 +78,7 @@ function getMessage_admin(app_id, data_app_id, code, lang_code, callBack){
                   		lang_code3: get_locale(lang_code, 3)
 					};
 		let stack = new Error().stack;
-		import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){					
+		import(`file://${process.cwd()}/service/common/common.service.js`).then(({COMMON}) => {					
 			execute_db_sql(app_id, sql, parameters,
 						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 				if (err)
