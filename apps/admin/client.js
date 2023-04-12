@@ -1,8 +1,8 @@
 const {ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
 const { read_app_files, get_module_with_init, getUserPreferences } = await import(`file://${process.cwd()}/apps/index.js`);
 
-function  getAdmin(app_id, gps_lat, gps_long, gps_place) {
-    return new Promise(function (resolve, reject){
+const getAdmin = (app_id, gps_lat, gps_long, gps_place) => {
+    return new Promise((resolve, reject) => {
         const files = [
             ['APP', process.cwd() + '/apps/admin/src/index.html'],
             ['<AppHead/>', process.cwd() + '/apps/admin/src/head.html'],
@@ -19,7 +19,7 @@ function  getAdmin(app_id, gps_lat, gps_long, gps_place) {
             ['<AppDialogues/>', process.cwd() + '/apps/admin/src/dialogues.html']
             ];
         if (ConfigGet(1, 'SERVICE_DB', 'START')=='1'){
-            getUserPreferences(app_id).then(function(user_preferences){
+            getUserPreferences(app_id).then((user_preferences) => {
                 read_app_files('', files, (err, app)=>{
                     if (err)
                         reject(err);

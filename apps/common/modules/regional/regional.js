@@ -1,89 +1,89 @@
-async function getGregorian (arabicDate, adjustment){
-        //http://www.islamicity.org
-        MHK = false;
+const getGregorian = async (arabicDate, adjustment) => {
+    //http://www.islamicity.org
+    MHK = false;
 
-        //http://www.islamicity.org/PrayerTimes/assets/js/config.js
-        var delta = 0;
+    //http://www.islamicity.org/PrayerTimes/assets/js/config.js
+    var delta = 0;
 
-        //http://www.islamicity.org/PrayerTimes/assets/js/prayertime.lib.js
+    //http://www.islamicity.org/PrayerTimes/assets/js/prayertime.lib.js
 
-        /** Date conversion English to Arabic and Arabic to English months **/
-        function intPart(floatNum){
-            if (floatNum< -0.0000001){
-                return Math.ceil(floatNum-0.0000001);
-            }
-            return Math.floor(floatNum+0.0000001);
+    /** Date conversion English to Arabic and Arabic to English months **/
+    const intPart = (floatNum) => {
+        if (floatNum< -0.0000001){
+            return Math.ceil(floatNum-0.0000001);
         }
+        return Math.floor(floatNum+0.0000001);
+    }
 
-        function adjustDelta(m,y){
+    const adjustDelta = (m,y) => {
 
-            // whenever there is an adjustment to be made 
-            // ( be it for the current month or for a future month/date ), use this! 
-            // add new cases, without deleting the previous ones
-            // make sure each case comes with its hijriToGreg and GregToHijri pairs ( ex: 1438 & 2017 )
-            
-            // note whenever you make changes to the scripts, update the version at /prayertimes/version-integer.php
-            var bingo = false; // this gets set to true only if there is an adjustment match and allow us to short-circuit the function	
-            var returnVal = delta; // this is what comes from the config.js, if no adjustment match occurs, this prevails at the end of the function return
-            
-            var deltaORGNOW = delta;
+        // whenever there is an adjustment to be made 
+        // ( be it for the current month or for a future month/date ), use this! 
+        // add new cases, without deleting the previous ones
+        // make sure each case comes with its hijriToGreg and GregToHijri pairs ( ex: 1438 & 2017 )
+        
+        // note whenever you make changes to the scripts, update the version at /prayertimes/version-integer.php
+        var bingo = false; // this gets set to true only if there is an adjustment match and allow us to short-circuit the function	
+        var returnVal = delta; // this is what comes from the config.js, if no adjustment match occurs, this prevails at the end of the function return
+        
+        var deltaORGNOW = delta;
 
-            if ( MHK && false ) {
-                alert( 'get the m and y correct for both cases first:\n\n' + 'm: ' + m  + '\ny: ' + y   );
-            } 
-
-
-            // ramadan 1438 fix
-            //-----------------------------------------------------------------
-            if ( ( m == 6 && y == 2017 ) ||  ( m == 9 && y == 1438 ) ) {
-                bingo = true;
-                returnVal = 0; 
-            };
-
-            if ( ( m == 7 && y == 2017 ) ||  ( m == 11 && y == 1438 ) ) {
-                bingo = true;
-                returnVal = 0; 
-            };
-
-            if ( ( m == 2 && y == 2018 ) ||  ( m == 6 && y == 1438 ) ) {
-                bingo = true;
-                returnVal = 0; 
-            };
+        if ( MHK && false ) {
+            alert( 'get the m and y correct for both cases first:\n\n' + 'm: ' + m  + '\ny: ' + y   );
+        } 
 
 
-            if ( ( m == 5 && y == 2018 ) || ( m == 8 && y == 1439 ) ) {
-                bingo = true;
-                returnVal = 0; 
-            };
-            
-            if ( ( m == 8 && y == 2018 ) || ( m == 12 && y == 1439 ) ) {
-                    bingo = true;
-                    returnVal = 1; 
-            };
-                
-                
-                
-            if ( ( m == 6 && y == 2019 ) || ( m == 9 && y == 1440 ) ) {
-                //alert("Happy Ramadan");
-                bingo = true;
-                returnVal = 1;   // -1 maps to ramaan 30, 0 maps to shawaal 1, 1 maps to shawaal 2
-            };
+        // ramadan 1438 fix
+        //-----------------------------------------------------------------
+        if ( ( m == 6 && y == 2017 ) ||  ( m == 9 && y == 1438 ) ) {
+            bingo = true;
+            returnVal = 0; 
+        };
 
-            if ( ( m == 9 && y == 2019 ) || ( m == 1 && y == 1441 ) ) {
+        if ( ( m == 7 && y == 2017 ) ||  ( m == 11 && y == 1438 ) ) {
+            bingo = true;
+            returnVal = 0; 
+        };
+
+        if ( ( m == 2 && y == 2018 ) ||  ( m == 6 && y == 1438 ) ) {
+            bingo = true;
+            returnVal = 0; 
+        };
+
+
+        if ( ( m == 5 && y == 2018 ) || ( m == 8 && y == 1439 ) ) {
+            bingo = true;
+            returnVal = 0; 
+        };
+        
+        if ( ( m == 8 && y == 2018 ) || ( m == 12 && y == 1439 ) ) {
                 bingo = true;
                 returnVal = 1; 
-            };
+        };
+            
+            
+            
+        if ( ( m == 6 && y == 2019 ) || ( m == 9 && y == 1440 ) ) {
+            //alert("Happy Ramadan");
+            bingo = true;
+            returnVal = 1;   // -1 maps to ramaan 30, 0 maps to shawaal 1, 1 maps to shawaal 2
+        };
 
-            // read the ^ readme-txt 
+        if ( ( m == 9 && y == 2019 ) || ( m == 1 && y == 1441 ) ) {
+            bingo = true;
+            returnVal = 1; 
+        };
+
+        // read the ^ readme-txt 
 
 
-            if ( bingo ) {
-                return returnVal;
-            } 
-            //-----------------------------------------------------------------
-
+        if ( bingo ) {
             return returnVal;
-        }
+        } 
+        //-----------------------------------------------------------------
+
+        return returnVal;
+    }
 
     //arabicDate[0] = year
     //arabicDate[1] = month
@@ -160,9 +160,9 @@ async function getGregorian (arabicDate, adjustment){
 //It returns the timezone offset in minutes for any IANA timezone name 
 //for any valid javascript date in the past, present and future.
 //function getTimezoneOffset( tz_str, date ) {
-async function getTimezoneOffset(tz_str){
+const getTimezoneOffset = async (tz_str) => {
     //https://github.com/mobz/get-timezone-offset
-    function parseDate( date_str ) {
+    const parseDate = ( date_str ) => {
         var us_re = /(\d+).(\d+).(\d+),?\s+(\d+).(\d+)(.(\d+))?/;
         date_str = date_str.replace(/[\u200E\u200F]/g, '');
         var date_a = us_re.exec( date_str );
@@ -170,7 +170,7 @@ async function getTimezoneOffset(tz_str){
             .map( Math.floor );
     }
     //https://github.com/mobz/get-timezone-offset
-    function diffMinutes( d1, d2 ) {
+    const diffMinutes = ( d1, d2 ) => {
         var day = d1[1] - d2[1];
         var hour = d1[3] - d2[3];
         var min = d1[4] - d2[4];

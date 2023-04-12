@@ -1,7 +1,7 @@
 const { read_app_files, get_module_with_init} = await import(`file://${process.cwd()}/apps/index.js`);
 
-function getAdminSecure(app_id, system_admin, user_account_id, gps_lat, gps_long, gps_place){
-    return new Promise(function (resolve, reject){
+const getAdminSecure = (app_id, system_admin, user_account_id, gps_lat, gps_long, gps_place) => {
+    return new Promise((resolve, reject) => {
         const files = [
             ['APP', process.cwd() + '/apps/admin/src/secure/index.html'],
             ['<AppHeadJS/>', process.cwd() + '/apps/admin/src/secure/admin.js'],
