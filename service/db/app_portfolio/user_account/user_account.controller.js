@@ -86,6 +86,7 @@ const updateUserSuperAdmin = (req, res) => {
 const userSignup = (req, res) => {
     const salt = genSaltSync(10);
     if (typeof req.body.provider_id == 'undefined') {
+        req.body.provider_id = null;
         //generate verification code for local users only
         req.body.verification_code = service.verification_code();
     }
@@ -124,7 +125,7 @@ const userSignup = (req, res) => {
                     );
             }
             else{
-                if (typeof req.body.provider_id == 'undefined' ) {
+                if (req.body.provider_id == null ) {
                     getParameter(req.query.app_id, ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),'SERVICE_MAIL_TYPE_SIGNUP', (err, parameter_value)=>{
                         //send email for local users only
                         const emailData = {
