@@ -1,7 +1,7 @@
 const {ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
 const {execute_db_sql, get_schema_name, get_locale} = await import(`file://${process.cwd()}/service/db/common/common.service.js`);
 
-function getObjects(app_id, lang_code, object, object_name, callBack){
+const getObjects = (app_id, lang_code, object, object_name, callBack) => {
 		let sql;
 		let parameters;
 		sql = ` SELECT 	object "object", 
@@ -97,7 +97,7 @@ function getObjects(app_id, lang_code, object, object_name, callBack){
 						Xobject_Xname: object_name
 					 };
 		let stack = new Error().stack;
-		import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
+		import(`file://${process.cwd()}/service/common/common.service.js`).then(({COMMON}) => {
 			execute_db_sql(app_id, sql, parameters, 
 						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 				if (err)

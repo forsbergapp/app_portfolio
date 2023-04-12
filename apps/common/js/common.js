@@ -986,7 +986,7 @@ const show_message = (message_type, code, function_event, message_text='', data_
     let dialogue = document.getElementById('common_dialogue_message');
     let old_close = document.getElementById('common_message_close');
     let button_cancel = document.getElementById('common_message_cancel');
-    let function_close = () => { document.getElementById('common_dialogue_message').style.visibility = 'hidden'};
+    const function_close = () => { document.getElementById('common_dialogue_message').style.visibility = 'hidden'};
     let show = 'inline-block';
     let hide = 'none';
     //this removes old eventlistener
@@ -2027,7 +2027,7 @@ const user_login = async (username, password, callBack) => {
             updateOnlineStatus();
             user_preference_get((err, results) =>{
                 if (json.items[0].active==0){
-                    let function_cancel_event = () => { dialogue_verify_clear();eval(`( ()=> {${COMMON_GLOBAL['exception_app_function']}()}());`);};
+                    const function_cancel_event = () => { dialogue_verify_clear();eval(`( ()=> {${COMMON_GLOBAL['exception_app_function']}()}());`);};
                     show_common_dialogue('VERIFY', 'LOGIN', json.items[0].email, ICONS['app_logoff'], function_cancel_event);
                     return callBack('ERROR', null);
                 }
@@ -2225,7 +2225,7 @@ const user_update = async () => {
             set_avatar(avatar, document.getElementById('common_user_menu_avatar_img'));
             document.getElementById('common_user_menu_username').innerHTML = username;
             if (json.sent_change_email == 1){
-                let function_cancel_event = () => { document.getElementById('common_dialogue_user_verify').style.visibility='hidden';};
+                const function_cancel_event = () => { document.getElementById('common_dialogue_user_verify').style.visibility='hidden';};
                 show_common_dialogue('VERIFY', 'NEW_EMAIL', new_email, ICONS['app_cancel'], function_cancel_event);
             }
             else
@@ -2284,7 +2284,7 @@ const user_signup = () => {
             let json = JSON.parse(result);
             COMMON_GLOBAL['rest_at'] = json.accessToken;
             COMMON_GLOBAL['user_account_id'] = json.id;
-            let function_cancel_event = () => { dialogue_verify_clear();eval(`(()=> {${COMMON_GLOBAL['exception_app_function']}()}());`);};
+            const function_cancel_event = () => { dialogue_verify_clear();eval(`(()=> {${COMMON_GLOBAL['exception_app_function']}()}());`);};
             show_common_dialogue('VERIFY', 'SIGNUP', email, ICONS['app_logoff'], function_cancel_event);
         }
     })
@@ -2545,7 +2545,7 @@ const user_forgot = async () => {
                 let json = JSON.parse(result);
                 if (json.sent == 1){
                     COMMON_GLOBAL['user_account_id'] = json.id;
-                    let function_cancel_event = () => { document.getElementById('common_dialogue_user_verify').style.visibility='hidden';};
+                    const function_cancel_event = () => { document.getElementById('common_dialogue_user_verify').style.visibility='hidden';};
                     show_common_dialogue('VERIFY', 'FORGOT', email, ICONS['app_cancel'], function_cancel_event);
                 }
             }
@@ -2999,7 +2999,7 @@ const show_broadcast = (broadcast_message) => {
         }
 }
 const show_broadcast_info = (message) => {
-    let hide_function = () => { document.getElementById('common_broadcast_info').style.visibility='hidden';
+    const hide_function = () => { document.getElementById('common_broadcast_info').style.visibility='hidden';
                                 document.getElementById('common_broadcast_close').removeEventListener('click', hide_function);
                                 document.getElementById('common_broadcast_info_message_item').innerHTML='';
                                 document.getElementById('common_broadcast_info_message').style.animationName='unset';};

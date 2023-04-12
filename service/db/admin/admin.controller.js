@@ -1,6 +1,6 @@
 const service = await import('./admin.service.js');
 
-function DBInfo(req, res){
+const DBInfo = (req, res) => {
 	service.DBInfo(req.query.app_id, (err, results) =>{
 		if (err) {
 			return res.status(500).send({
@@ -12,7 +12,7 @@ function DBInfo(req, res){
 		});
 	});
 }
-function DBInfoSpace(req, res){
+const DBInfoSpace = (req, res) => {
 	service.DBInfoSpace(req.query.app_id, (err, results) =>{
 		if (err) {
 			return res.status(500).send({
@@ -24,7 +24,7 @@ function DBInfoSpace(req, res){
 		});
 	});
 }
-function DBInfoSpaceSum(req, res){
+const DBInfoSpaceSum = (req, res) => {
 	service.DBInfoSpaceSum(req.query.app_id, (err, results) =>{
 		if (err) {
 			return res.status(500).send({
@@ -36,7 +36,7 @@ function DBInfoSpaceSum(req, res){
 		});
 	});
 }
-async function DBStart(req, res, callBack){
+const DBStart = async (req, res, callBack) => {
 	service.DBStart(req.query.app_id, (err, results) =>{
 		if (err) {
 			return res.status(500).send({
@@ -48,7 +48,7 @@ async function DBStart(req, res, callBack){
 		});
 	});
 }
-function DBStop(req, res){
+const DBStop = (req, res) => {
 	service.DBStop(req.query.app_id, (err, results) =>{
 		if (err) {
 			return res.status(500).send({

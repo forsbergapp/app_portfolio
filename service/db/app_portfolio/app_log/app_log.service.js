@@ -1,8 +1,8 @@
 const {execute_db_sql, get_schema_name, limit_sql} = await import(`file://${process.cwd()}/service/db/common/common.service.js`);
 
-function createLog(app_id, data, callBack){
+const createLog = (app_id, data, callBack) => {
 	let stack = new Error().stack;
-	import(`file://${process.cwd()}/server/server.service.js`).then(function({ConfigGet}){
+	import(`file://${process.cwd()}/server/server.service.js`).then(({ConfigGet}) => {
 		if (ConfigGet(1, 'SERVICE_AUTH', 'ENABLE_DBLOG')=='1'){
 			let sql;
 			let parameters;
@@ -62,7 +62,7 @@ function createLog(app_id, data, callBack){
 							server_http_host: data.server_http_host,
 							server_http_accept_language: data.server_http_accept_language
 						};
-			import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
+			import(`file://${process.cwd()}/service/common/common.service.js`).then(({COMMON}) => {
 				execute_db_sql(app_id, sql, parameters, 
 							COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 					if (err)
@@ -76,8 +76,8 @@ function createLog(app_id, data, callBack){
 			return callBack(null, null);
 	});	
 }
-function createLogAdmin(app_id, data, callBack){
-	import(`file://${process.cwd()}/server/server.service.js`).then(function({ConfigGet}){
+const createLogAdmin = (app_id, data, callBack) => {
+	import(`file://${process.cwd()}/server/server.service.js`).then(({ConfigGet}) => {
 		if (ConfigGet(1, 'SERVICE_AUTH', 'ENABLE_DBLOG')=='1'){
 			let sql;
 			let parameters;
@@ -138,7 +138,7 @@ function createLogAdmin(app_id, data, callBack){
 							server_http_accept_language: data.server_http_accept_language
 						};
 			let stack = new Error().stack;
-			import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
+			import(`file://${process.cwd()}/service/common/common.service.js`).then(({COMMON}) => {
 				execute_db_sql(app_id, sql, parameters,
 							COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 					if (err)
@@ -152,7 +152,7 @@ function createLogAdmin(app_id, data, callBack){
 			return callBack(null, null);
 	})
 }
-function getLogsAdmin(app_id, data_app_id, year, month, sort, order_by, offset, limit, callBack){
+const getLogsAdmin = (app_id, data_app_id, year, month, sort, order_by, offset, limit, callBack) => {
 		/* 	sort in UI:
 			1=ID
 			2=APP ID
@@ -216,7 +216,7 @@ function getLogsAdmin(app_id, data_app_id, year, month, sort, order_by, offset, 
 						offset:offset,
 						limit:limit};
 		let stack = new Error().stack;
-		import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){						
+		import(`file://${process.cwd()}/service/common/common.service.js`).then(({COMMON}) => {						
 			execute_db_sql(app_id, sql, parameters,
 						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 				if (err)
@@ -226,7 +226,7 @@ function getLogsAdmin(app_id, data_app_id, year, month, sort, order_by, offset, 
 			});
 		})
 	}
-function getStatUniqueVisitorAdmin(app_id, data_app_id, statchoice, year, month, callBack){
+const getStatUniqueVisitorAdmin = (app_id, data_app_id, statchoice, year, month, callBack) => {
 		let sql;
 		let parameters;
 		
@@ -266,7 +266,7 @@ function getStatUniqueVisitorAdmin(app_id, data_app_id, statchoice, year, month,
 						year_log: year,
 						month_log: month};
 		let stack = new Error().stack;
-		import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
+		import(`file://${process.cwd()}/service/common/common.service.js`).then(({COMMON}) => {
 			execute_db_sql(app_id, sql, parameters,
 						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 				if (err)

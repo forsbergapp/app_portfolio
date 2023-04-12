@@ -1,6 +1,6 @@
 const service = await import("./parameter_type.service.js");
 
-function getParameterTypeAdmin(req, res){
+const getParameterTypeAdmin = (req, res) => {
 	if (typeof req.query.id == 'undefined')
 		req.query.id = null;
 	service.getParameterTypeAdmin(req.query.app_id, req.query.id, req.query.lang_code, (err, results) =>{

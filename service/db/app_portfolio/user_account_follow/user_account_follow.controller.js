@@ -1,6 +1,6 @@
 const service = await import("./user_account_follow.service.js");
 	
-function followUser(req, res){
+const followUser = (req, res) => {
 	req.params.id   = parseInt(req.params.id);
 	const id_follow = parseInt(req.body.user_account_id);
 	service.followUser(req.query.app_id, req.params.id,id_follow, (err,results) => {
@@ -15,7 +15,7 @@ function followUser(req, res){
 		});
 	});
 }
-function unfollowUser(req, res){
+const unfollowUser = (req, res) => {
 	req.params.id     = parseInt(req.params.id);
 	const id_unfollow = parseInt(req.body.user_account_id);
 	service.unfollowUser(req.query.app_id, req.params.id,id_unfollow, (err,results) => {

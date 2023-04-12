@@ -1,6 +1,6 @@
 const {execute_db_sql, get_schema_name} = await import(`file://${process.cwd()}/service/db/common/common.service.js`);
 
-function getUserAccountLogonAdmin(app_id, user_account_id, app_id_select, callBack){
+const getUserAccountLogonAdmin = (app_id, user_account_id, app_id_select, callBack) => {
 		let sql;
 		let parameters;
 		if(typeof app_id_select=='undefined' ||app_id_select == '\'\'')
@@ -23,7 +23,7 @@ function getUserAccountLogonAdmin(app_id, user_account_id, app_id_select, callBa
 						app_id_select: app_id_select
 					};
 		let stack = new Error().stack;
-		import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
+		import(`file://${process.cwd()}/service/common/common.service.js`).then(({COMMON}) => {
 			execute_db_sql(app_id, sql, parameters, 
 							COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 				if (err)
@@ -33,7 +33,7 @@ function getUserAccountLogonAdmin(app_id, user_account_id, app_id_select, callBa
 			});
 		})
 	}
-function checkLogin(app_id, user_account_id, access_token, client_ip, callBack){
+const checkLogin = (app_id, user_account_id, access_token, client_ip, callBack) => {
 		let sql;
 		let parameters;
 		sql = `SELECT 1
@@ -49,7 +49,7 @@ function checkLogin(app_id, user_account_id, access_token, client_ip, callBack){
 					    ua.app_role_id IN (:super_admin_app_role_id,:admin_app_role_id))
 					   OR
 					   ual.app_id <> :admin_app_id)`;
-		import(`file://${process.cwd()}/server/server.service.js`).then(function({ConfigGet}){
+		import(`file://${process.cwd()}/server/server.service.js`).then(({ConfigGet}) => {
 			parameters = {
 				user_account_id: user_account_id,
 				app_id: app_id,
@@ -60,7 +60,7 @@ function checkLogin(app_id, user_account_id, access_token, client_ip, callBack){
 				admin_app_role_id: 1
 			};
 			let stack = new Error().stack;
-			import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
+			import(`file://${process.cwd()}/service/common/common.service.js`).then(({COMMON}) => {
 				execute_db_sql(app_id, sql, parameters, 
 							COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 					if (err)
@@ -72,7 +72,7 @@ function checkLogin(app_id, user_account_id, access_token, client_ip, callBack){
 		})
 	}
 	
-function insertUserAccountLogon(app_id, data, callBack){
+const insertUserAccountLogon = (app_id, data, callBack) => {
 		let sql;
 		let parameters;
 		data.access_token = data.access_token ?? null;
@@ -90,7 +90,7 @@ function insertUserAccountLogon(app_id, data, callBack){
 						client_latitude:  data.client_latitude ?? null
 					};
 		let stack = new Error().stack;
-		import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
+		import(`file://${process.cwd()}/service/common/common.service.js`).then(({COMMON}) => {
 			execute_db_sql(app_id, sql, parameters, 
 						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 				if (err)

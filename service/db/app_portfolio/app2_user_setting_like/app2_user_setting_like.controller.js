@@ -1,6 +1,6 @@
 const service = await import("./app2_user_setting_like.service.js");
 
-function likeUserSetting(req, res){
+const likeUserSetting = (req, res) => {
 	req.params.id = parseInt(req.params.id);
 	const id_like = parseInt(req.body.app2_user_setting_id);
 	service.likeUserSetting(req.query.app_id, req.params.id, id_like, (err,results) => {
@@ -15,7 +15,7 @@ function likeUserSetting(req, res){
 		});
 	});
 }
-function unlikeUserSetting(req, res){
+const unlikeUserSetting = (req, res) => {
 	req.params.id   = parseInt(req.params.id);
 	const id_unlike = parseInt(req.body.app2_user_setting_id);
 	service.unlikeUserSetting(req.query.app_id, req.params.id, id_unlike, (err,results) => {

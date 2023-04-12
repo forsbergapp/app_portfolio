@@ -1,6 +1,6 @@
 const service = await import("./app2_user_setting.service.js");
 
-function createUserSetting(req, res){
+const createUserSetting = (req, res) => {
 	const body = req.body;
 	service.createUserSetting(req.query.app_id, req.query.initial, body, (err,results) => {
 		if (err)
@@ -14,7 +14,7 @@ function createUserSetting(req, res){
 			})
 	});
 }
-function getUserSettingsByUserId(req, res){
+const getUserSettingsByUserId = (req, res) => {
 	req.params.id = parseInt(req.params.id);
 	service.getUserSettingsByUserId(req.query.app_id, req.params.id, (err, results) =>{
 		if (err)
@@ -28,12 +28,12 @@ function getUserSettingsByUserId(req, res){
 					items: results
 				});
 			else
-				import(`file://${process.cwd()}/service/db/common/common.service.js`).then(function({record_not_found}){
+				import(`file://${process.cwd()}/service/db/common/common.service.js`).then(({record_not_found}) => {
 					return record_not_found(res, req.query.app_id, req.query.lang_code);
 				})
 	});
 }
-function getProfileUserSetting(req, res){
+const getProfileUserSetting = (req, res) => {
 	req.params.id = parseInt(req.params.id);
 	service.getProfileUserSetting(req.query.app_id, req.params.id, (err, results) =>{
 		if (err) {
@@ -48,12 +48,12 @@ function getProfileUserSetting(req, res){
 					items: results
 				});
 			else
-				import(`file://${process.cwd()}/service/db/common/common.service.js`).then(function({record_not_found}){
+				import(`file://${process.cwd()}/service/db/common/common.service.js`).then(({record_not_found}) => {
 					return record_not_found(res, req.query.app_id, req.query.lang_code);
 				})
 	});
 }
-function getProfileUserSettings(req, res){
+const getProfileUserSettings = (req, res) => {
 	req.params.id = parseInt(req.params.id);
 	let id_current_user;
 	if (typeof req.query.id !== 'undefined')
@@ -71,12 +71,12 @@ function getProfileUserSettings(req, res){
 					items: results
 				});
 			else
-				import(`file://${process.cwd()}/service/db/common/common.service.js`).then(function({record_not_found}){
+				import(`file://${process.cwd()}/service/db/common/common.service.js`).then(({record_not_found}) => {
 					return record_not_found(res, req.query.app_id, req.query.lang_code);
 				})
 	});
 }
-function getProfileUserSettingDetail(req, res){
+const getProfileUserSettingDetail = (req, res) => {
 	req.params.id = parseInt(req.params.id);
 	let detailchoice;
 	if (typeof req.query.detailchoice !== 'undefined')
@@ -95,13 +95,13 @@ function getProfileUserSettingDetail(req, res){
 					items: results
 				});
 			else
-				import(`file://${process.cwd()}/service/db/common/common.service.js`).then(function({record_not_found}){
+				import(`file://${process.cwd()}/service/db/common/common.service.js`).then(({record_not_found}) => {
 					return record_not_found(res, req.query.app_id, req.query.lang_code);
 				})
 		}
 	});
 }
-function getProfileTop(req, res){
+const getProfileTop = (req, res) => {
 	if (typeof req.params.statchoice !== 'undefined')
 		req.params.statchoice = parseInt(req.params.statchoice)
 	service.getProfileTop(req.query.app_id, req.params.statchoice, (err, results) => {
@@ -117,13 +117,13 @@ function getProfileTop(req, res){
 					items: results
 				}); 
 			else
-				import(`file://${process.cwd()}/service/db/common/common.service.js`).then(function({record_not_found}){
+				import(`file://${process.cwd()}/service/db/common/common.service.js`).then(({record_not_found}) => {
 					return record_not_found(res, req.query.app_id, req.query.lang_code);
 				})
 		}
 	});
 }
-function getUserSetting(req, res){
+const getUserSetting = (req, res) => {
 	req.params.id = parseInt(req.params.id);
 	service.getUserSetting(req.query.app_id, req.params.id, (err, results) =>{
 		if (err) {
@@ -139,7 +139,7 @@ function getUserSetting(req, res){
 		}
 	});
 }
-function updateUserSetting(req, res){
+const updateUserSetting = (req, res) => {
 	req.params.id = parseInt(req.params.id);
 	service.updateUserSetting(req.query.app_id, req.body, req.params.id, (err, results) =>{
 		if (err) {
@@ -153,13 +153,13 @@ function updateUserSetting(req, res){
 					results
 				);
 			else
-				import(`file://${process.cwd()}/service/db/common/common.service.js`).then(function({record_not_found}){
+				import(`file://${process.cwd()}/service/db/common/common.service.js`).then(({record_not_found}) => {
 					return record_not_found(res, req.query.app_id, req.query.lang_code);
 				})
 		}
 	});
 }
-function deleteUserSetting(req, res){
+const deleteUserSetting = (req, res) => {
 	req.params.id = parseInt(req.params.id);
 	service.deleteUserSetting(req.query.app_id, req.params.id, (err, results) =>{
 		if (err) {
@@ -173,7 +173,7 @@ function deleteUserSetting(req, res){
 					results
 				);
 			else
-				import(`file://${process.cwd()}/service/db/common/common.service.js`).then(function({record_not_found}){
+				import(`file://${process.cwd()}/service/db/common/common.service.js`).then(({record_not_found}) => {
 					return record_not_found(res, req.query.app_id, req.query.lang_code);
 				})
 		}

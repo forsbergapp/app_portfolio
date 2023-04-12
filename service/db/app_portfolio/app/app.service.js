@@ -1,6 +1,6 @@
 const {execute_db_sql, get_schema_name, get_locale} = await import(`file://${process.cwd()}/service/db/common/common.service.js`);
 
-function getApp(app_id, id,lang_code, callBack){
+const getApp = (app_id, id,lang_code, callBack) => {
 		let sql;
 		let parameters;
 		if (typeof id=='undefined')
@@ -48,7 +48,7 @@ function getApp(app_id, id,lang_code, callBack){
 						lang_code3: get_locale(lang_code, 3),
 						id: id};
 		let stack = new Error().stack;
-		import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
+		import(`file://${process.cwd()}/service/common/common.service.js`).then(({COMMON}) => {
 			execute_db_sql(app_id, sql, parameters,
 						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 				if (err)
@@ -58,7 +58,7 @@ function getApp(app_id, id,lang_code, callBack){
 			});
 		})
 	}
-function getAppsAdmin(app_id, lang_code, callBack){
+const getAppsAdmin = (app_id, lang_code, callBack) => {
 		let sql;
 		let parameters;
 		sql = `SELECT	a.id "id",
@@ -87,7 +87,7 @@ function getAppsAdmin(app_id, lang_code, callBack){
 					  lang_code3: get_locale(lang_code, 3)
 					 };
 		let stack = new Error().stack;
-		import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
+		import(`file://${process.cwd()}/service/common/common.service.js`).then(({COMMON}) => {
 			execute_db_sql(app_id, sql, parameters,
 						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 				if (err)
@@ -97,7 +97,7 @@ function getAppsAdmin(app_id, lang_code, callBack){
 			});
 		})
 	}
-function updateAppAdmin(app_id, id, body, callBack){
+const updateAppAdmin = (app_id, id, body, callBack) => {
 		let sql;
 		let parameters;
 		sql = `UPDATE ${get_schema_name()}.app
@@ -112,7 +112,7 @@ function updateAppAdmin(app_id, id, body, callBack){
 						enabled: body.enabled,
 						id: id};
 		let stack = new Error().stack;
-		import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
+		import(`file://${process.cwd()}/service/common/common.service.js`).then(({COMMON}) => {
 			execute_db_sql(app_id, sql, parameters,
 						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 				if (err)

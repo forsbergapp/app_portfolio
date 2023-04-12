@@ -1,23 +1,23 @@
 const {ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
 let CONNECTED_CLIENTS = [];
 
-function ClientConnect(res){
+const ClientConnect = (res) => {
     const headers = {
         "Content-Type": "text/event-stream",
         "Connection": "keep-alive",
         };
     res.writeHead(200, headers);
 }
-function ClientClose(res, client_id){
+const ClientClose = (res, client_id) => {
     res.on('close', ()=>{
         CONNECTED_CLIENTS = CONNECTED_CLIENTS.filter(client => client.id !== client_id);
         res.end();
     })
 }
-function ClientAdd(newClient){
+const ClientAdd = (newClient) => {
     CONNECTED_CLIENTS.push(newClient);
 }
-function BroadcastCheckMaintenance(){
+const BroadcastCheckMaintenance = () => {
     //start interval if apps are started
     if (ConfigGet(1, 'SERVER', 'APP_START')=='1'){
         const intervalId = setInterval(() => {
@@ -33,7 +33,7 @@ function BroadcastCheckMaintenance(){
         }, ConfigGet(1, 'SERVICE_BROADCAST', 'CHECK_INTERVAL'));
     }
 }
-function BroadcastSendSystemAdmin(app_id, client_id, client_id_current, broadcast_type, broadcast_message, callBack){
+const BroadcastSendSystemAdmin = (app_id, client_id, client_id_current, broadcast_type, broadcast_message, callBack) => {
     let broadcast;
     if (app_id == '' || app_id == 'null')
         app_id = null;
@@ -66,7 +66,7 @@ function BroadcastSendSystemAdmin(app_id, client_id, client_id_current, broadcas
         }
     callBack(null, null);
 }
-function BroadcastSendAdmin(app_id, client_id, client_id_current, broadcast_type, broadcast_message, callBack){
+const BroadcastSendAdmin = (app_id, client_id, client_id_current, broadcast_type, broadcast_message, callBack) => {
     let broadcast;
     if (app_id == '' || app_id == 'null')
         app_id = null;
@@ -97,7 +97,7 @@ function BroadcastSendAdmin(app_id, client_id, client_id_current, broadcast_type
     
     callBack(null, null);
 }
-async function ConnectedList(app_id, app_id_select, limit, year, month, order_by, sort, callBack){
+const ConnectedList = async (app_id, app_id_select, limit, year, month, order_by, sort, callBack) => {
     let connected_clients_no_res = [];
     let i=0;
     CONNECTED_CLIENTS.forEach(client=>{
@@ -128,8 +128,8 @@ async function ConnectedList(app_id, app_id_select, limit, year, month, order_by
             }
         }
     })
-    function sortByProperty(property, order_by){
-        return function(a,b){  
+    const sortByProperty = (property, order_by) => {
+        return (a,b) => {
             if(a[property] > b[property])  
                 return 1 * order_by;
             else if(a[property] < b[property])  
@@ -137,7 +137,7 @@ async function ConnectedList(app_id, app_id_select, limit, year, month, order_by
             return 0;  
         }  
     }        
-    function sort_and_return(){
+    const sort_and_return = () => {
         let column_sort;
         let order_by_num;
         if (order_by =='asc')
@@ -195,7 +195,7 @@ async function ConnectedList(app_id, app_id_select, limit, year, month, order_by
     if (connected_clients_no_res.length>0)
         //update list using map with app role icons if database started
         if(ConfigGet(1, 'SERVICE_DB', 'START')==1){
-            import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/user_account/user_account.service.js`).then(function({ getAppRole }){
+            import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/user_account/user_account.service.js`).then(({ getAppRole }) => {
                 connected_clients_no_res.map(client=>{
                     getAppRole(app_id, client.user_account_id, (err, result_app_role)=>{
                         if (err)
@@ -218,7 +218,7 @@ async function ConnectedList(app_id, app_id_select, limit, year, month, order_by
     else
         callBack(null, null);
 }
-function ConnectedCount(identity_provider_id, count_logged_in, callBack){
+const ConnectedCount = (identity_provider_id, count_logged_in, callBack) => {
     let i=0;
     let count_connected=0;
     for (let i = 0; i < CONNECTED_CLIENTS.length; i++){
@@ -242,7 +242,7 @@ function ConnectedCount(identity_provider_id, count_logged_in, callBack){
     }
     return callBack(null, count_connected);
 }
-function ConnectedUpdate(client_id, user_account_id, system_admin, identity_provider_id, callBack){
+const ConnectedUpdate = (client_id, user_account_id, system_admin, identity_provider_id, callBack) => {
     let i=0;
     for (let i = 0; i < CONNECTED_CLIENTS.length; i++){
         if (CONNECTED_CLIENTS[i].id==client_id){
@@ -255,7 +255,7 @@ function ConnectedUpdate(client_id, user_account_id, system_admin, identity_prov
     }
     return callBack(null, null);
 }
-function ConnectedCheck(user_account_id, callBack){
+const ConnectedCheck = (user_account_id, callBack) => {
     let i=0;
     for (let i = 0; i < CONNECTED_CLIENTS.length; i++){
         if (CONNECTED_CLIENTS[i].user_account_id == user_account_id){

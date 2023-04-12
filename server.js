@@ -25,10 +25,10 @@ const {default: helmet} = await import('helmet');
 const {CheckFirstTime, InitConfig, ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
 
 //2. START CONFIGURATION
-InitConfig().then(function(){
+InitConfig().then(() => {
   //Create express application
   const app = express.default();
-  async function load_routers(){
+  const load_routers = async () => {
     //mount routers to endpoints
     const rest_api_path = ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH');
     //array of  [endpoint, router file]:
@@ -65,7 +65,7 @@ InitConfig().then(function(){
     //ES6 for of loop
     for (const file of files){
       //ES2020 import with ES6 template literals
-      await import(`file://${process.cwd()}${file[1]}`).then(function({router}){
+      await import(`file://${process.cwd()}${file[1]}`).then(({router}) => {
         // MIDDLEWARE
         // endpoint, router file
         app.use(file[0], router);
@@ -74,13 +74,13 @@ InitConfig().then(function(){
   }
   //ES6 IIFE arrow function
   (async () =>{
-    return await new Promise(function(resolve){
+    return await new Promise((resolve) => {
       //configuration of Content Security Policies
-      import(`file://${process.cwd()}/service/auth/auth.controller.js`).then(function({ policy_directives}){
+      import(`file://${process.cwd()}/service/auth/auth.controller.js`).then(({ policy_directives}) => {
         policy_directives((err, result_directives)=>{
           if (err){
-            import(`file://${process.cwd()}/service/log/log.service.js`).then(function({createLogServerI}){
-              createLogServerI('Content Security Policies error :' + err).then(function(){
+            import(`file://${process.cwd()}/service/log/log.service.js`).then(({createLogServerI}) => {
+              createLogServerI('Content Security Policies error :' + err).then(() => {
                 resolve();
               })
             })
@@ -90,7 +90,7 @@ InitConfig().then(function(){
         })
       })
     })
-  })().then(function(result_directives){
+  })().then((result_directives) => {
         //3. PROCESS INFO
         //set timezone
         process.env.TZ = 'UTC';
@@ -109,7 +109,7 @@ InitConfig().then(function(){
         // Helmet referrer policy
         app.use(helmet.referrerPolicy({ policy: 'strict-origin-when-cross-origin' }));
         //define what headers are allowed
-        app.use(function(req, res, next) {
+        app.use((req, res, next) => {
           res.header('Access-Control-Allow-Headers', 'Authorization, Origin, X-Requested-With, Content-Type, Accept, Service-Worker-Allowed');
           res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE');
           next();
@@ -118,9 +118,9 @@ InitConfig().then(function(){
         app.use(express.json({ limit: ConfigGet(1, 'SERVER', 'JSON_LIMIT') }));
         //logging
         app.use((err,req,res,next) => {
-          import(`file://${process.cwd()}/service/log/log.service.js`).then(function({createLogServerE}){
+          import(`file://${process.cwd()}/service/log/log.service.js`).then(({createLogServerE}) => {
             createLogServerE(req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, res.statusCode, 
-                            req.headers['user-agent'], req.headers['accept-language'], req.headers['referer'], err).then(function(){
+                            req.headers['user-agent'], req.headers['accept-language'], req.headers['referer'], err).then(() => {
                               next();
             });
           })
@@ -128,7 +128,7 @@ InitConfig().then(function(){
         //access control with log of stopped requests
         //logs only if error
         app.use((req,res,next) => {
-          import(`file://${process.cwd()}/service/auth/auth.controller.js`).then(function({ access_control}){
+          import(`file://${process.cwd()}/service/auth/auth.controller.js`).then(({ access_control}) => {
             access_control(req, res, (err, result)=>{
               if(err){
                 null;
@@ -144,14 +144,14 @@ InitConfig().then(function(){
         })
         //check request
         //logs only if error
-        app.use(function(req, res, next) {
-          import(`file://${process.cwd()}/service/auth/auth.controller.js`).then(function({check_request}){
+        app.use((req, res, next) => {
+          import(`file://${process.cwd()}/service/auth/auth.controller.js`).then(({check_request}) => {
             check_request(req, (err, result) =>{
               if (err){
                 res.statusCode = 500;
-                import(`file://${process.cwd()}/service/log/log.service.js`).then(function({createLogServerE}){
+                import(`file://${process.cwd()}/service/log/log.service.js`).then(({createLogServerE}) => {
                   createLogServerE(req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, res.statusCode, 
-                                  req.headers['user-agent'], req.headers['accept-language'], req.headers['referer'], err).then(function(){
+                                  req.headers['user-agent'], req.headers['accept-language'], req.headers['referer'], err).then(() => {
                     res.redirect(req.headers.host);
                   });
                 })
@@ -163,7 +163,7 @@ InitConfig().then(function(){
           })
         });
         //convert query id parameters from string to integer
-        app.use(function(req, res, next) { 
+        app.use((req, res, next) => { 
           //req.params can be modified in controller
           if (req.query.app_id)
             req.query.app_id = parseInt(req.query.app_id);
@@ -179,12 +179,12 @@ InitConfig().then(function(){
             req.query.client_id = parseInt(req.query.client_id);
           res.on('finish',()=>{
             //logs the result after REST API has modified req and res
-            import(`file://${process.cwd()}/service/log/log.service.js`).then(function({createLogServerI}){
+            import(`file://${process.cwd()}/service/log/log.service.js`).then(({createLogServerI}) => {
               createLogServerI(null,
                 req,
                 req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, 
                 res.statusCode, res.statusMessage, 
-                req.headers['user-agent'], req.headers['accept-language'], req.headers['referer']).then(function(){
+                req.headers['user-agent'], req.headers['accept-language'], req.headers['referer']).then(() => {
                 res.end;
               });
             })
@@ -200,16 +200,16 @@ InitConfig().then(function(){
         //5. ROUTES
         //get before apps code
         //info for search bots
-        app.get('/robots.txt', function (req, res) {
+        app.get('/robots.txt',  (req, res) => {
           res.type('text/plain');
           res.send('User-agent: *\nDisallow: /');
         });
         //browser favorite icon to ignore
-        app.get('/favicon.ico', function (req, res) {
+        app.get('/favicon.ico', (req, res) => {
           res.send('');
         });
         //change all requests from http to https and naked domains with prefix https://www. except localhost
-        app.get('*', function (req,res, next){
+        app.get('*', (req,res, next) => {
           //if first time, when no system admin exists, then redirect everything to admin
           if (CheckFirstTime() && req.originalUrl !='/admin' && req.headers.referer==undefined)
             return res.redirect('http://' + req.headers.host + '/admin');
@@ -231,14 +231,14 @@ InitConfig().then(function(){
             }
           }
         })
-        load_routers().then(function(){
+        load_routers().then(() => {
           //6. START DATABASE
-          import(`file://${process.cwd()}/service/db/admin/admin.service.js`).then(function({DBStart}){
-            DBStart().then(function(result){
-              import(`file://${process.cwd()}/apps/index.js`).then(function({AppsStart}){
+          import(`file://${process.cwd()}/service/db/admin/admin.service.js`).then(({DBStart}) => {
+            DBStart().then((result) => {
+              import(`file://${process.cwd()}/apps/index.js`).then(({AppsStart}) => {
                 //7. START APPS
-                AppsStart(express, app).then(function(){
-                  import(`file://${process.cwd()}/service/broadcast/broadcast.service.js`).then(function({BroadcastCheckMaintenance}){
+                AppsStart(express, app).then(() => {
+                  import(`file://${process.cwd()}/service/broadcast/broadcast.service.js`).then(({BroadcastCheckMaintenance}) => {
                     //8. START MAINTENANCE CHECK
                     BroadcastCheckMaintenance();
                   })
@@ -248,8 +248,8 @@ InitConfig().then(function(){
           })
           //9. START HTTP SERVER
           app.listen(ConfigGet(1, 'SERVER', 'PORT'), () => {
-            import(`file://${process.cwd()}/service/log/log.service.js`).then(function({createLogServerI}){
-                createLogServerI('HTTP Server up and running on PORT: ' + ConfigGet(1, 'SERVER', 'PORT')).then(function(){
+            import(`file://${process.cwd()}/service/log/log.service.js`).then(({createLogServerI}) => {
+                createLogServerI('HTTP Server up and running on PORT: ' + ConfigGet(1, 'SERVER', 'PORT')).then(() => {
                   null;
                 });
               })
@@ -258,7 +258,7 @@ InitConfig().then(function(){
             //10. START HTTPS SERVER
             //SSL files for HTTPS
             let options;
-            import('node:fs').then(function(fs){
+            import('node:fs').then((fs) => {
               fs.readFile(process.cwd() + ConfigGet(1, 'SERVER', 'HTTPS_KEY'), 'utf8', (error, fileBuffer) => {
                 let env_key = fileBuffer.toString();
                 fs.readFile(process.cwd() + ConfigGet(1, 'SERVER', 'HTTPS_CERT'), 'utf8', (error, fileBuffer) => {
@@ -267,10 +267,10 @@ InitConfig().then(function(){
                     key: env_key,
                     cert: env_cert
                   };
-                  import('node:https').then(function(https){
+                  import('node:https').then((https) => {
                     https.createServer(options, app).listen(ConfigGet(1, 'SERVER', 'HTTPS_PORT'), () => {
-                      import(`file://${process.cwd()}/service/log/log.service.js`).then(function({createLogServerI}){
-                        createLogServerI('HTTPS Server up and running on PORT: ' + ConfigGet(1, 'SERVER', 'HTTPS_PORT')).then(function(){
+                      import(`file://${process.cwd()}/service/log/log.service.js`).then(({createLogServerI}) => {
+                        createLogServerI('HTTPS Server up and running on PORT: ' + ConfigGet(1, 'SERVER', 'HTTPS_PORT')).then(() => {
                           null;
                         });
                       })
